@@ -1,0 +1,39 @@
+{
+  "name": "@republik/theme",
+  "private": true,
+  "version": "0.0.0",
+  "devDependencies": {
+    "@pandacss/dev": "^0.36.1"
+  },
+  "exports": {
+    "./presets": {
+      "import": "./presets.ts"
+    },
+    "./css": {
+      "types": "./__generated__/css/index.d.ts",
+      "require": "./__generated__/css/index.mjs",
+      "import": "./__generated__/css/index.mjs"
+    },
+    "./tokens": {
+      "types": "./__generated__/tokens/index.d.ts",
+      "require": "./__generated__/tokens/index.mjs",
+      "import": "./__generated__/tokens/index.mjs"
+    },
+    "./types": {
+      "types": "./__generated__/types/index.d.ts",
+      "require": "./__generated__/types/index.mjs",
+      "import": "./__generated__/types/index.mjs"
+    },
+    "./patterns": {
+      "types": "./__generated__/patterns/index.d.ts",
+      "require": "./__generated__/patterns/index.mjs",
+      "import": "./__generated__/patterns/index.mjs"
+    },
+    "./jsx": {
+      "types": "./__generated__/jsx/index.d.ts",
+      "require": "./__generated__/jsx/index.mjs",
+      "import": "./__generated__/jsx/index.mjs"
+    },
+    "./styles.css": "./__generated__/styles.css"
+  }
+}

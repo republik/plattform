@@ -1,0 +1,12 @@
+query ChallengeAcceptedHubMeta {
+  hub: challengeAcceptedHub {
+    id
+    metadata {
+      title
+      description
+      image {
+        url(imgixParams: { w: "1500" })
+      }
+    }
+  }
+}

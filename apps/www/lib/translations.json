@@ -13,6 +13,10 @@
       "value": "Community"
     },
     {
+      "key": "nav/genossenschaftsrat",
+      "value": "Genossenschaftsrat"
+    },
+    {
       "key": "nav/team",
       "value": "Team"
     },
@@ -434,7 +438,7 @@
     },
     {
       "key": "marketing/page/reasons/3/text",
-      "value": "Die Republik wird finanziert durch ihre rund 29’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
+      "value": "Die Republik wird finanziert durch ihre rund 27’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
     },
     {
       "key": "marketing/page/vision/headline",
@@ -897,6 +901,18 @@
       "value": "Die aktuellsten Beiträge der Republik. Jeden Morgen in Ihrem virtuellen Briefkasten."
     },
     {
+      "key": "account/newsletterSubscriptions/WDWWW/label",
+      "value": "Was diese Woche wichtig war"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WDWWW/frequency",
+      "value": "Jeden Freitag"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WDWWW/description",
+      "value": "Wir beobachten für Sie das Weltgeschehen, filtern das Wichtigste heraus, ordnen es ein – und schicken es Ihnen jeden Freitag ansprechend verpackt in Ihre Inbox."
+    },
+    {
       "key": "account/newsletterSubscriptions/PROJECTR/label",
       "value": "Project-R-Newsletter"
     },
@@ -922,7 +938,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/label",
-      "value": "Klimalabor-Newsletter"
+      "value": "Challenge-Accepted-Newsletter"
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/frequency",
@@ -930,7 +946,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/description",
-      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Was tun? Gemeinsam mit Ihnen machen wir uns auf die Suche nach Antworten."
+      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Challenge accepted. Ein frischer Blick auf die grossen Herausforderungen und auf Menschen, die sie anpacken. Und jede Menge Gelegenheiten, sich auszutauschen, voneinander zu lernen und sich gegenseitig zu inspirieren."
     },
     {
       "key": "account/newsletterSubscriptions/onlyName/subscribe",
@@ -2194,7 +2210,7 @@
     },
     {
       "key": "styleguide/comment/header/unpublishedByAdmin",
-      "value": "(von der Redaktion verborgen)"
+      "value": "(von der Moderation verborgen)"
     },
     {
       "key": "styleguide/comment/header/unavailable",
@@ -6992,6 +7008,22 @@
       "value": "Lesha Berezovskiys Bildkolumne «Leben in Trümmern» als Buch. Lieferung innerhalb von 7 Werktagen."
     },
     {
+      "key": "Goodie/label/COOKIE",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "Goodie/description/COOKIE",
+      "value": "Buchstaben zum Naschen, limitiertes Sonderangebot. Versand bis 22.12., nur innerhalb der Schweiz möglich."
+    },
+    {
+      "key": "Goodie/label/TOTEBAG_BLACK",
+      "value": "Republik-Tasche, schwarz"
+    },
+    {
+      "key": "Goodie/description/TOTEBAG_BLACK",
+      "value": "Mit Logo auf der Vorderseite und Manifest auf der Rückseite. Versand im April, nur in die Schweiz und nach Liechtenstein."
+    },
+    {
       "key": "option/TABLEBOOK/label/other",
       "value": "Republik bei Stromausfall"
     },
@@ -7034,6 +7066,14 @@
     {
       "key": "option/LESHA/label/other",
       "value": "Bücher «We Stay»"
+    },
+    {
+      "key": "option/COOKIE/label/1",
+      "value": "Republik-Guetsliform"
+    },
+    {
+      "key": "option/COOKIE/label/other",
+      "value": "Republik-Guetsliformen"
     },
     {
       "key": "package/customize/price/payMore/userPrice",
@@ -7197,7 +7237,7 @@
     },
     {
       "key": "article/payNote/220404-v1/before",
-      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den rund 29’000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
+      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den rund 27’000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
     },
     {
       "key": "article/payNote/220404-v1/after",
@@ -7217,7 +7257,7 @@
     },
     {
       "key": "article/tryNote/220404-v1/after",
-      "value": "Rund 29’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
+      "value": "Rund 27’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
     },
     {
       "key": "article/tryNote/220404-v2/before",

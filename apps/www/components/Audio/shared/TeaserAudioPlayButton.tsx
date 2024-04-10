@@ -1,11 +1,11 @@
-import {
-  plainButtonRule,
-} from '@project-r/styleguide'
+import { plainButtonRule } from '@project-r/styleguide'
 
 import useAudioQueue from '../hooks/useAudioQueue'
 import { useAudioContext } from '../AudioProvider'
 import { AudioPlayerLocations } from '../types/AudioActionTracking'
 import { IconPauseCircle, IconPlayCircleOutline } from '@republik/icons'
+import { getFragmentData } from '#graphql/cms/__generated__/gql'
+import { AudioQueueItemFragmentDoc } from '#graphql/republik-api/__generated__/gql/graphql'
 
 type FrontAudioPlayButtonProps = {
   documentId?: string
@@ -41,14 +41,16 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
         if (isActivePlayerItem) {
           toggleAudioPlayback()
         } else {
-          addAudioQueueItem({ id: documentId }, 1).then(
-            ({ data: { audioQueueItems } }) => {
-              const item = audioQueueItems.find(
-                (i) => i.document.id === documentId,
-              )
-              toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
-            },
-          )
+          addAudioQueueItem({ id: documentId } as never, 1).then(({ data }) => {
+            const audioQueueItems = getFragmentData(
+              AudioQueueItemFragmentDoc,
+              data.audioQueueItems,
+            )
+            const item = audioQueueItems.find(
+              (i) => i.document.id === documentId,
+            )
+            toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
+          })
         }
       }}
     >

@@ -21,6 +21,7 @@ const MarketingHeader = () => {
 
 const styles = {
   header: css({
+    background: 'var(--color-default)',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',

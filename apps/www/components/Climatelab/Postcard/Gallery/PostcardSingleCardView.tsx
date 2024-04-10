@@ -53,10 +53,14 @@ const styles = {
     height: '100%',
     gap: '1rem',
   }),
-  image: css({
+  imageWrapper: css({
     position: 'relative',
     margin: '0 0 40px',
-    '> span': { display: 'block !important' },
+  }),
+  image: css({
+    maxWidth: '100%',
+    height: 'auto',
+    display: 'block',
   }),
   count: css({
     marginTop: '5px',
@@ -237,8 +241,9 @@ const PostcardContent = ({ postcard, t, isDesktop }) => {
     />
   ) : (
     <div {...styles.mobileContainer}>
-      <figure {...styles.image}>
+      <figure {...styles.imageWrapper}>
         <AssetImage
+          {...styles.image}
           width={'600'}
           height={'400'}
           src={postcard.imageUrl}

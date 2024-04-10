@@ -133,15 +133,17 @@ type Meta {
   paynoteMode: PaynoteMode
   
   isRestricted: Boolean
+  
+  sendAsEmail: Boolean
 }
 
-enum DocumentType {
+enum DocumenSchemaType {
   mdast
   slate
 }
 
 input DocumentInput {
-  type: DocumentType
+  type: DocumenSchemaType
   content: JSON!
 }
 
@@ -150,7 +152,7 @@ type Document {
   repoId: ID!
   issuedForUserId: ID
 
-  type: DocumentType!
+  type: DocumenSchemaType!
   content: JSON!
 
   meta: Meta!
@@ -160,7 +162,7 @@ type Document {
     before: ID
     after: ID
     only: ID
-  ): DocumentNodeConnection!
+  ): DocumentBlockConnection!
   linkedDocuments(
     first: Int
     last: Int
@@ -170,21 +172,21 @@ type Document {
   ): DocumentConnection!
 }
 
-type DocumentNode {
+type DocumentBlock {
   id: ID!
   body: JSON!
 }
 
-type DocumentNodePageInfo {
+type DocumentBlockPageInfo {
   endCursor: String
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
 }
 
-type DocumentNodeConnection {
-  nodes: [DocumentNode!]!
-  pageInfo: DocumentNodePageInfo!
+type DocumentBlockConnection {
+  nodes: [DocumentBlock!]!
+  pageInfo: DocumentBlockPageInfo!
   totalCount: Int!
 }
 
@@ -194,7 +196,7 @@ type DocumentZone {
   identifier: String!
   data: JSON!
   text: String
-  type: DocumentType!
+  type: DocumenSchemaType!
   node: JSON!
   document: Document
 }

@@ -15,6 +15,11 @@ const getAuthors = gql`
       name
       email
       portrait
+      credentials {
+        description
+        verified
+        isListed
+      }
     }
   }
 `

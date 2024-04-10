@@ -3,6 +3,7 @@ const {
   checkUsername,
   transformUser,
   Users,
+  Roles,
 } = require('@orbiting/backend-modules-auth')
 const { getKeyId, containsPrivateKey } = require('../../../lib/pgp')
 const {
@@ -10,7 +11,6 @@ const {
   isInCandidacy,
   isInCandidacyInCandidacyPhase,
   isInCandidacyInElectionPhase,
-  hasCards,
 } = require('../../../lib/profile')
 const { upsertAddress } = require('../../../lib/address')
 const {
@@ -176,7 +176,10 @@ module.exports = async (_, args, context) => {
     (isListed && !me._raw.isListed) ||
     (args.hasPublicProfile && !me.hasPublicProfile)
   ) {
-    const check = await isEligible(me.id, pgdb)
+    // Authors always have the option to make their profile public,
+    // we can skip the DB check if the user has the role 'author'.
+    const check =
+      Roles.userHasRole(me, 'author') || (await isEligible(me.id, pgdb))
     if (!check) {
       throw new Error(t('profile/notEligible'))
     }
@@ -221,12 +224,6 @@ module.exports = async (_, args, context) => {
       ) {
         throw new Error(t('profile/candidacy/electionPhase'))
       }
-    }
-  }
-
-  if (await hasCards(me._raw, pgdb)) {
-    if (args.hasPublicProfile === false) {
-      throw new Error(t('profile/cards/needed'))
     }
   }
 

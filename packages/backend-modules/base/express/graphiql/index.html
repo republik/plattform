@@ -39,6 +39,9 @@
       favored resource bundler.
      -->
   <link rel="stylesheet" href="https://unpkg.com/graphiql@3/graphiql.min.css" />
+
+  <script src="//unpkg.com/subscriptions-transport-ws@0.5.4/browser/client.js"></script>
+  <script src="//unpkg.com/graphiql-subscriptions-fetcher@0.0.2/browser/client.js"></script>
 </head>
 
 <body>
@@ -60,11 +63,21 @@
 
     const DEFAULT_QUERY = 'query ActiveUser { me { id email } }'
 
+    const websocketURL = [
+      window.location.hostname !== 'localhost' ? 'wss' : 'ws',
+      '://',
+      window.location.origin.replace(window.location.protocol + '//', ''),
+      '/graphql',
+    ].join('')
+
     const root = ReactDOM.createRoot(document.getElementById('graphiql'))
     root.render(
       React.createElement(GraphiQL, {
         fetcher: GraphiQL.createFetcher({
           url: '/graphql',
+          wsClient: new window.SubscriptionsTransportWs.SubscriptionClient(websocketURL, {
+            reconnect: true,
+          }),
         }),
         defaultEditorToolsVisibility: true,
         defaultQuery: getQueryFromURL() || DEFAULT_QUERY,

@@ -1,45 +1,67 @@
-import { useEffect, useState } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import Router, { withRouter } from 'next/router'
-import { extent } from 'd3-array'
 import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
+import { extent } from 'd3-array'
 import { timeMonth } from 'd3-time'
+import compose from 'lodash/flowRight'
+import Router, { withRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 import {
-  P,
-  H2,
-  Editorial,
-  Interaction,
-  Loader,
-  LazyLoad,
-  ChartTitle,
+  Chart,
   ChartLead,
   ChartLegend,
-  Chart,
+  ChartTitle,
+  Editorial,
+  H2,
+  Interaction,
+  LazyLoad,
+  Loader,
+  P,
   mediaQueries,
 } from '@project-r/styleguide'
 
 import Frame from '../components/Frame'
 import { countFormat } from '../lib/utils/format'
 
-import { PackageItem, PackageBuffer } from '../components/Pledge/Accordion'
+import { PackageBuffer, PackageItem } from '../components/Pledge/Accordion'
 
+import { RawStatus } from '../components/Crowdfunding/Status'
 import {
   mapActionData,
   userSurviveActionsFragment,
 } from '../components/Crowdfunding/withSurviveStatus'
-import { RawStatus } from '../components/Crowdfunding/Status'
 import withT from '../lib/withT'
 
 import { ListWithQuery as TestimonialList } from '../components/Testimonial/List'
 
-import { CROWDFUNDING, CDN_FRONTEND_BASE_URL } from '../lib/constants'
-import withMe from '../lib/apollo/withMe'
-import { swissTime } from '../lib/utils/format'
-import withInNativeApp from '../lib/withInNativeApp'
 import Link from 'next/link'
 import { withDefaultSSR } from '../lib/apollo/helpers'
+import withMe from '../lib/apollo/withMe'
+import { CDN_FRONTEND_BASE_URL, CROWDFUNDING } from '../lib/constants'
+import { swissTime } from '../lib/utils/format'
+import withInNativeApp from '../lib/withInNativeApp'
+
+import { CAMPAIGN_META_ARTICLE_URL } from '@app/app/(campaign)/constants'
+
+/**
+ * Generate a list of ticks for a chart, starting at 0 and going to max, then from 0 to min
+ * at a given step size.
+ * @param {number} minimum value (expected to be negative)
+ * @param {number} max value (expected to be positive)
+ * @param {number[]} step size
+ */
+function getChartTicks(min, max, step) {
+  const ticks = [0]
+  // from 0 to max, add step
+  for (let i = 0; i <= max; i += step) {
+    ticks.push(i)
+  }
+  // from 0 to min, add step
+  for (let i = 0; i >= min; i -= step) {
+    ticks.push(i)
+  }
+  return Array.from(new Set(ticks)).sort((a, b) => a - b)
+}
 
 const statusQuery = gql`
   query CockpitStatus(
@@ -150,7 +172,8 @@ const Accordion = withInNativeApp(
                       query: { package: 'PROLONG', token: query.token },
                     }}
                     passHref
-                    legacyBehavior>
+                    legacyBehavior
+                  >
                     <PackageItem
                       t={t}
                       crowdfundingName={CROWDFUNDING}
@@ -171,7 +194,8 @@ const Accordion = withInNativeApp(
                       },
                     }}
                     passHref
-                    legacyBehavior>
+                    legacyBehavior
+                  >
                     <PackageItem
                       t={t}
                       crowdfundingName={CROWDFUNDING}
@@ -196,7 +220,8 @@ const Accordion = withInNativeApp(
                       },
                     }}
                     passHref
-                    legacyBehavior>
+                    legacyBehavior
+                  >
                     <PackageItem
                       t={t}
                       crowdfundingName={CROWDFUNDING}
@@ -219,7 +244,8 @@ const Accordion = withInNativeApp(
                         query: { package: 'ABO_GIVE' },
                       }}
                       passHref
-                      legacyBehavior>
+                      legacyBehavior
+                    >
                       <PackageItem
                         t={t}
                         crowdfundingName={CROWDFUNDING}
@@ -237,7 +263,8 @@ const Accordion = withInNativeApp(
                           query: { package: 'MONTHLY_ABO' },
                         }}
                         passHref
-                        legacyBehavior>
+                        legacyBehavior
+                      >
                         <PackageItem
                           t={t}
                           crowdfundingName={CROWDFUNDING}
@@ -253,7 +280,8 @@ const Accordion = withInNativeApp(
                           query: { package: 'ABO' },
                         }}
                         passHref
-                        legacyBehavior>
+                        legacyBehavior
+                      >
                         <PackageItem
                           t={t}
                           crowdfundingName={CROWDFUNDING}
@@ -269,7 +297,8 @@ const Accordion = withInNativeApp(
                           query: { package: 'BENEFACTOR' },
                         }}
                         passHref
-                        legacyBehavior>
+                        legacyBehavior
+                      >
                         <PackageItem
                           t={t}
                           crowdfundingName={CROWDFUNDING}
@@ -289,7 +318,8 @@ const Accordion = withInNativeApp(
                   query: { package: 'DONATE' },
                 }}
                 passHref
-                legacyBehavior>
+                legacyBehavior
+              >
                 <PackageItem
                   t={t}
                   crowdfundingName={CROWDFUNDING}
@@ -313,7 +343,7 @@ const Accordion = withInNativeApp(
             </Interaction.P>
           )}
         </div>
-      );
+      )
     },
   ),
 )
@@ -384,12 +414,20 @@ const Page = ({
 
           const labels = [
             { key: 'preactive', color: '#256900', label: 'Crowdfunder' },
-            { key: 'active', color: '#3CAD00', label: 'aktive' },
-            { key: 'loss', color: '#9970ab', label: 'Abgänge' },
+            {
+              key: 'active',
+              color: '#2ca02c',
+              label: 'Aktive Mitgliedschaften oder Abos',
+            },
+            { key: 'loss', color: '#9467bd', label: 'Abgänge' },
             { key: 'missing', color: '#444', label: 'fehlende' },
             { key: 'pending', color: '#444', label: 'offene' },
-            { key: 'base', color: '#3CAD00', label: 'bestehende' },
-            // { key: 'gaining', color: '#2A7A00', label: 'neue' }
+            { key: 'base', color: '#2ca02c', label: 'bestehende' },
+            {
+              key: 'gaining',
+              color: '#2ca02c',
+              label: 'Zugänge',
+            },
           ]
           const labelMap = labels.reduce((map, d) => {
             map[d.key] = d.label
@@ -424,37 +462,38 @@ const Page = ({
                     label: labelMap.active,
                     value: active + overdue,
                   })
-                  acc.push({
-                    month: key,
-                    label: labelMap.loss,
-                    value: -ended,
-                  })
+                  // acc.push({
+                  //   month: key,
+                  //   label: labelMap.loss,
+                  //   value: -ended,
+                  // })
                   return acc
                 }, []),
             )
 
-          const pendingBuckets = buckets.slice(-7)
+          const pendingBuckets = buckets.slice(-16, -3)
           const pendingValues = pendingBuckets.reduce(
             (agg, month) => {
               // agg.gaining += month.gaining
-              const pendingYearly =
-                month.pending - month.pendingSubscriptionsOnly
+              // const pendingYearly =
+              //   month.pending - month.pendingSubscriptionsOnly
+
               agg.values = agg.values.concat([
-                {
-                  month: month.key,
-                  label: labelMap.base,
-                  value: month.active - pendingYearly, // - month.gaining
-                },
                 // {
                 //   month: month.key,
-                //   label: labelMap.gaining,
-                //   value: month.gaining
+                //   label: labelMap.base,
+                //   value: month.active - pendingYearly, // - month.gaining
                 // },
                 {
                   month: month.key,
-                  label: labelMap.pending,
-                  value: pendingYearly + month.overdue,
+                  label: labelMap.gaining,
+                  value: month.gaining,
                 },
+                // {
+                //   month: month.key,
+                //   label: labelMap.pending,
+                //   value: pendingYearly + month.overdue,
+                // },
                 {
                   month: month.key,
                   label: labelMap.loss,
@@ -497,25 +536,50 @@ const Page = ({
                 date: bucket.key,
                 value: String(bucket.users),
               })),
-            data.collectionsStats.progress.buckets
-              .slice(0, -1)
-              .map((bucket) => ({
-                type: 'Lesepositionen',
-                date: bucket.key,
-                value: String(bucket.users),
-              })),
-            data.collectionsStats.bookmarks.buckets
-              .slice(0, -1)
-              .map((bucket) => ({
-                type: 'Lesezeichen',
-                date: bucket.key,
-                value: String(bucket.users),
-              })),
+            // data.collectionsStats.progress.buckets
+            //   .slice(0, -1)
+            //   .map((bucket) => ({
+            //     type: 'Lesepositionen',
+            //     date: bucket.key,
+            //     value: String(bucket.users),
+            //   })),
+            // data.collectionsStats.bookmarks.buckets
+            //   .slice(0, -1)
+            //   .map((bucket) => ({
+            //     type: 'Lesezeichen',
+            //     date: bucket.key,
+            //     value: String(bucket.users),
+            //   })),
           )
+
+          const [pendingVlauesMin, pendingValuesMax] = extent(
+            pendingValues,
+            (d) => d.value,
+          )
+          // round min down to next 100 and max up to next 100
+          const pendingValuesMinMax = [
+            Math.floor(pendingVlauesMin / 100) * 100,
+            Math.ceil(pendingValuesMax / 100) * 100,
+          ]
 
           return (
             <>
-              <div style={{ marginBottom: 60 }}>
+              <Interaction.Headline style={{ marginBottom: 20 }}>
+                Das Cockpit zum Stand unseres Unternehmens
+              </Interaction.Headline>
+              <P>
+                Die Aufgabe der Republik ist, brauchbaren Journalismus zu
+                machen. Einen, der die Köpfe klarer, das Handeln mutiger, die
+                Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die
+                Freiheit, den Rechtsstaat, die Demokratie.
+              </P>
+              <P>
+                Die Grundlage dafür ist ein Geschäftsmodell für werbefreien,
+                unabhängigen, leserfinanzierten Journalismus. Um am Markt zu
+                bestehen und einen entscheidenden Unterschied im Mediensystem zu
+                machen, braucht die Republik eine starke Community.
+              </P>
+              <div style={{ margin: '60px 0' }}>
                 <RawStatus
                   t={t}
                   color='#fff'
@@ -539,36 +603,31 @@ const Page = ({
                   }
                 />
               </div>
-              <Interaction.Headline style={{ marginBottom: 20 }}>
-                Das Cockpit zum Stand unseres Unternehmens
-              </Interaction.Headline>
               <P>
-                Die Aufgabe der Republik ist, brauchbaren Journalismus zu
-                machen. Einen, der die Köpfe klarer, das Handeln mutiger, die
-                Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die
-                Freiheit, den Rechtsstaat, die Demokratie.
+                An dieser Stelle machen wir, anders als in unserer finanziellen
+                Planung, keinen Unterschied zwischen weniger und mehr zahlenden
+                Verlegerinnen. Jeder Verleger, egal wie viel er zahlen kann,
+                unterstützt uns und leistet einen Beitrag. Es gibt Menschen in
+                unserer Community, die sich eine Jahresmitgliedschaft nicht
+                leisten können und deshalb einen vergünstigten Preis zahlen; es
+                gibt aber auch Mitglieder, die als Gönner mehr bezahlen. Im
+                Frühjahr 2023 kamen zudem Menschen an Bord, die zum
+                5-Jahres-Jubiläum ein 12-Monats-Abo zu einem frei wählbaren
+                Preis abschliessen konnten. Zwischen Mitte Februar und Anfang
+                April 2024 laufen diese Abonnements aus, was wir hier ebenfalls
+                abbilden.{' '}
+                <Editorial.A href={CAMPAIGN_META_ARTICLE_URL}>Hier</Editorial.A>{' '}
+                erfahren Sie mehr über unsere Kampagnen.
               </P>
-              <P>
-                Die Grundlage dafür ist ein Geschäftsmodell für werbefreien,
-                unabhängigen, leserfinanzierten Journalismus. Damit die Republik
-                einen entscheidenden Unterschied im Mediensystem machen kann,
-                muss sie mittelfristig selbsttragend sein. Um am Markt zu
-                bestehen und durch Einfluss auf die gesellschaftliche Debatte
-                nachhaltige Relevanz zu erreichen, muss sie jedoch auch weiter
-                wachsen.
-              </P>
-
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
                   Aktuell {countFormat(activeCount)} Mitglieder
                   und&nbsp;Abonnentinnen
                 </ChartTitle>
-                <ChartLead>
-                  Entwicklung vom Crowdfunding im April 2017 bis heute
-                </ChartLead>
+                <ChartLead>Entwicklung seit Januar 2018 bis heute</ChartLead>
                 <Chart
                   config={{
-                    type: 'TimeBar',
+                    type: 'Line',
                     color: 'label',
                     colorMap,
                     numberFormat: 's',
@@ -576,7 +635,6 @@ const Page = ({
                     timeParse: '%Y-%m',
                     timeFormat: '%Y',
                     xInterval: 'month',
-                    padding: isMobile ? 30 : 50,
                     xTicks: [
                       '2018-01',
                       '2019-01',
@@ -584,27 +642,43 @@ const Page = ({
                       '2021-01',
                       '2022-01',
                       '2023-01',
+                      '2024-01',
                     ],
                     height: 300,
-                    domain: [minValue, maxValue + 2000],
-                    yTicks: [
-                      -5000, 0, 5000, 10000, 15000, 20000, 25000, 30000, 35000,
-                    ],
-                    xBandPadding: 0,
+                    domain: [0, 35000],
+                    yTicks: [0, 5000, 10000, 15000, 20000, 25000, 30000, 35000],
+                    endLabel: false,
+                    endValue: false,
+                    colorLegend: false,
+                    padding: 0,
+                    zero: true,
+                    yNice: 0,
                   }}
-                  values={values.map((d) => ({ ...d, value: String(d.value) }))}
+                  values={values
+                    .filter((d) => d.month > '2018-01')
+                    .map((d) => ({ ...d, value: String(d.value) }))}
                 />
               </div>
-
+              <P>
+                Der strategische{' '}
+                <Editorial.A href='/2023/11/10/der-fokus-liegt-auf-stabilitaet'>
+                  Fokus für das 7. Geschäftsjahr
+                </Editorial.A>{' '}
+                (Juli 2023 bis Juni 2024) liegt auf Stabilität: Zu- und Abgänge
+                bei Mitgliedschaften und Abonnements müssen sich dafür über das
+                Jahr die Waage halten.
+              </P>
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
-                  {countFormat(
+                  {/* {countFormat(
                     lastBucket.pending - lastBucket.pendingSubscriptionsOnly,
                   )}{' '}
-                  anstehende Verläng&shy;erungen in den nächsten&nbsp;Monaten
+                  anstehende Verläng&shy;erungen in den nächsten&nbsp;Monaten */}
+                  {countFormat(currentBucket.gaining)} Zugänge und{' '}
+                  {countFormat(currentBucket.ended)} Abgänge im laufenden Monat
                 </ChartTitle>
                 <ChartLead>
-                  Anzahl Mitgliedschaften und Abos per Monatsende
+                  Anzahl neue und beendete Mitgliedschaften und Abos pro Monat
                 </ChartLead>
                 <Chart
                   config={{
@@ -616,19 +690,25 @@ const Page = ({
                     timeParse: '%Y-%m',
                     timeFormat: '%b %y',
                     xInterval: 'month',
-                    height: 300,
-                    domain: [minValue, maxValue + 2000],
-                    yTicks: [
-                      -5000, 0, 5000, 10000, 15000, 20000, 25000, 30000, 35000,
-                    ],
-                    xAnnotations: [
-                      {
-                        x1: currentBucket.key,
-                        x2: currentBucket.key,
-                        value: activeCount,
-                        label: 'Stand jetzt',
-                      },
-                    ],
+                    height: 360,
+                    domain: pendingValuesMinMax,
+                    yTicks: getChartTicks(
+                      pendingValuesMinMax[0],
+                      pendingValuesMinMax[1],
+                      250,
+                    ),
+                    // [
+                    // -2000, -1750, -1500, -1250, -1000, -750, -500, -250, 0,
+                    // 250, 500, 750, 1000, 1250, 1500, 1750, 2000,
+                    // ],
+                    // xAnnotations: [
+                    //   {
+                    //     x1: currentBucket.key,
+                    //     x2: currentBucket.key,
+                    //     value: activeCount,
+                    //     label: 'Stand jetzt',
+                    //   },
+                    // ],
                   }}
                   values={pendingValues.map((d) => ({
                     ...d,
@@ -636,11 +716,14 @@ const Page = ({
                   }))}
                 />
                 <ChartLegend>
-                  Als offen gelten Jahres­mitgliedschaften ohne
-                  Verlängerungszahlung. Datenstand:{' '}
-                  {formatDateTime(new Date(updatedAt))}
+                  Datenstand: {formatDateTime(new Date(updatedAt))}
                 </ChartLegend>
               </div>
+              <P>
+                Bei der Zahl der Abgänge ist zu berücksichtigen, dass die
+                12-Monats-Abos aus der 5-Jahres-Jubiläums-Kampagne das Bild
+                verzerren. Diese vergünstigten Abos laufen im Frühjahr 2024 aus.
+              </P>
               <H2>
                 {countFormat(lastSeen)} Verlegerinnen sind monatlich&nbsp;aktiv
               </H2>
@@ -652,10 +735,10 @@ const Page = ({
 
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
-                  Wie beliebt sind Dialog, Lesezeichen und Leseposition?
+                  Wie viele Verlegerinnen beteiligen sich am Dialog
                 </ChartTitle>
                 <ChartLead>
-                  Anzahl Verleger, welche pro Monat eine Funktion benutzen.
+                  Anzahl Schreibende und Reagierende (Up- und Downvotes)
                 </ChartLead>
                 <Chart
                   config={{
@@ -667,6 +750,8 @@ const Page = ({
                     x: 'date',
                     timeParse: '%Y-%m',
                     timeFormat: '%Y',
+                    endLabel: false,
+                    colorLegend: false,
                     xTicks: isMobile
                       ? ['2018-01', '2020-01', '2022-01']
                       : [
@@ -676,22 +761,18 @@ const Page = ({
                           '2021-01',
                           '2022-01',
                           '2023-01',
+                          '2024-01',
                         ], // lastSeenBucket.key
                     yNice: 0,
-                    yTicks: [0, 3000, 6000, 9000, 12000, 15000],
+                    yTicks: [0, 1000, 2000, 3000, 4000, 5000],
                     colorMap: {
                       Lesepositionen: '#9467bd',
                       Lesezeichen: '#e377c2',
-                      Dialog: '#bcbd22',
+                      Dialog: '#2ca02c',
                     },
                   }}
                   values={engagedUsers}
                 />
-                <ChartLegend>
-                  Beim Dialog werden Schreibende und Reagierende (Up- und
-                  Downvotes) gezählt. Lesezeichen wurden Mitte Januar 2019
-                  eingeführt, die Leseposition Ende März&nbsp;2019.
-                </ChartLegend>
               </div>
 
               <br />

@@ -53,6 +53,7 @@ export const SubmissionLink = ({ id, children, personPagePath }) => {
 export const QuestionLink = ({ questions, children }) => {
   const router = useRouter()
   const pathname = router.asPath.split('?')[0].split('#')[0]
+
   return (
     <Link
       href={{
@@ -61,7 +62,6 @@ export const QuestionLink = ({ questions, children }) => {
           share: questions.map((q) => q.id).join(QUESTION_SEPARATOR),
         },
       }}
-      shallow
       passHref
       legacyBehavior
     >
@@ -113,7 +113,7 @@ export const LinkToEditQuestionnaire = ({
 
 export const AnswersChart = ({ question, skipTitle }) => {
   if (!question.result) return
-  const totalAnswers = question.result.reduce((agg, r) => agg + r.count, 0)
+  const totalAnswers = question.turnout.submitted
   const values = question.options.map((option) => ({
     answer: option.label,
     value:

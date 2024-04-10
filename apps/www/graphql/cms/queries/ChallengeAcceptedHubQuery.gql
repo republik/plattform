@@ -1,0 +1,61 @@
+query ChallengeAcceptedHub {
+  hub: challengeAcceptedHub {
+    id
+    logo {
+      url
+    }
+    introduction {
+      value
+    }
+    outro {
+      value
+    }
+    newsletterSignupTagline
+    items {
+      __typename
+      ... on EventRecord {
+        id
+        title
+        slug
+        description {
+          value
+        }
+        membersOnly
+        nonMemberCta {
+          value
+        }
+        fullyBooked
+        signUpLink
+        location
+        locationLink
+        startAt
+        endAt
+        _updatedAt
+        _status
+      }
+      ... on ChallengeAcceptedArticleRecord {
+        id
+        path
+        image {
+          url
+          width
+          height
+        }
+      }
+      ... on ChallengeAcceptedNewsletterRecord {
+        id
+        path
+      }
+    }
+  }
+  people: allChallengeAcceptedPeople(first: 50) {
+    id
+    slug
+    name
+    portrait {
+      url
+      height
+      width
+    }
+  }
+}

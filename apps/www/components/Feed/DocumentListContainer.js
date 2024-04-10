@@ -63,6 +63,8 @@ export const makeLoadMore =
         ...variables,
         cursor: connection.pageInfo.endCursor,
       },
+      // When graphQLErrors happen, we still want to get partial data to render the feed
+      errorPolicy: 'all',
     })
 
 const DocumentListContainer = ({

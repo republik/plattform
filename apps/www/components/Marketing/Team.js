@@ -1,6 +1,5 @@
 import { css } from 'glamor'
 import {
-  Loader,
   TeaserFrontTileRow,
   TeaserFrontTile,
   Label,
@@ -12,7 +11,6 @@ import {
 import SectionTitle from './Common/SectionTitle'
 import SectionContainer from './Common/SectionContainer'
 import Link from 'next/link'
-import { useTranslation } from '../../lib/withT'
 
 const EmployeeLink = ({ employee, children }) => (
   <Link href={`/~${employee.user.slug || employee.user.id}`} {...styles.link}>
@@ -20,50 +18,39 @@ const EmployeeLink = ({ employee, children }) => (
   </Link>
 )
 
-const Team = ({ loading, error, employees }) => {
-  const { t } = useTranslation()
+const Team = ({ employees, title, description }) => {
   const [colorScheme] = useColorContext()
   return (
     <SectionContainer>
-      <SectionTitle
-        title={t('marketing/page/team/title')}
-        lead={t('marketing/page/team/lead')}
-      />
-      <Loader
-        loading={loading}
-        error={error}
-        style={{ minHeight: 400 }}
-        render={() => (
-          <TeaserFrontTileRow autoColumns>
-            {employees.map((employee) => {
-              return (
-                <TeaserFrontTile key={employee.name}>
-                  <h3 {...styles.pitch}>{`«${employee.pitch}»`}</h3>
-                  <div {...styles.employee}>
+      <SectionTitle title={title} lead={description} />
+      <TeaserFrontTileRow autoColumns>
+        {employees.map((employee) => {
+          return (
+            <TeaserFrontTile key={employee.name}>
+              <h3 {...styles.pitch}>{`«${employee.pitch}»`}</h3>
+              <div {...styles.employee}>
+                <EmployeeLink employee={employee}>
+                  <img
+                    {...styles.profilePicture}
+                    src={employee.user.portrait}
+                    alt=''
+                  />
+                </EmployeeLink>
+                <div {...styles.employeeText}>
+                  <p {...styles.employeeName}>
                     <EmployeeLink employee={employee}>
-                      <img
-                        {...styles.profilePicture}
-                        src={employee.user.portrait}
-                        alt=''
-                      />
+                      {employee.name}
                     </EmployeeLink>
-                    <div {...styles.employeeText}>
-                      <p {...styles.employeeName}>
-                        <EmployeeLink employee={employee}>
-                          {employee.name}
-                        </EmployeeLink>
-                      </p>
-                      <Label {...colorScheme.set('color', 'disabled')}>
-                        {employee.title || employee.group}
-                      </Label>
-                    </div>
-                  </div>
-                </TeaserFrontTile>
-              )
-            })}
-          </TeaserFrontTileRow>
-        )}
-      />
+                  </p>
+                  <Label {...colorScheme.set('color', 'disabled')}>
+                    {employee.title || employee.group}
+                  </Label>
+                </div>
+              </div>
+            </TeaserFrontTile>
+          )
+        })}
+      </TeaserFrontTileRow>
       <Editorial.P style={{ textAlign: 'center' }}>
         <Link href='/impressum' passHref legacyBehavior>
           <Editorial.A>Alle Teammitglieder</Editorial.A>
@@ -88,6 +75,7 @@ const styles = {
   pitch: css({
     ...fontStyles.serifTitle26,
     wordWrap: 'break-word',
+    marginBlock: '1em',
   }),
   employee: css({
     display: 'flex',

@@ -20,6 +20,7 @@ import { ZINDEX_FOOTER } from '../constants'
 import SocialLinks from './SocialLinks'
 import Address from './Address'
 import { IconOpensource } from '@republik/icons'
+import LightSwitch from './lightswitch'
 
 const styles = {
   bg: css({
@@ -110,10 +111,20 @@ const styles = {
       },
     },
   }),
+  meta: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.5rem',
+    [mediaQueries.mUp]: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+  }),
   devInfo: css({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'end',
+    alignSelf: 'flex-end',
   }),
 }
 
@@ -271,7 +282,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
                 <a
                   {...navLinkStyle}
                   href='https://project-r.construction/'
-                  rel='noopener'
+                  rel='noreferrer'
                   target='_blank'
                 >
                   {t('footer/about/projecR')}
@@ -288,6 +299,11 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
               <li>
                 <FooterNavLink href='/community'>
                   <a {...navLinkStyle}>{t('nav/community')}</a>
+                </FooterNavLink>
+              </li>
+              <li>
+                <FooterNavLink href='/format/genossenschaftsrat'>
+                  <a {...navLinkStyle}>{t('nav/genossenschaftsrat')}</a>
                 </FooterNavLink>
               </li>
               <li>
@@ -334,35 +350,44 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
             <Address t={t} />
           </div>
         </div>
-        <div {...styles.devInfo}>
-          <span
-            style={{ ...fontStyles.sansSerifRegular14 }}
-            {...colorScheme.set('color', 'text')}
-          >
-            <IconOpensource
-              style={{ margin: '0 6px 5px 0', verticalAlign: 'middle' }}
-              size={20}
-              {...colorScheme.set('fill', 'text')}
-            />
-            <a
-              {...navLinkStyle}
-              style={{ ...fontStyles.sansSerifRegular14 }}
-              href='https://github.com/republik/plattform'
-              rel='noopener'
-              target='_blank'
-            >
-              {t('footer/opensource')}
-            </a>
-          </span>
-          {inNativeApp && (
+        <div {...styles.meta}>
+          <div>
+            <LightSwitch />
+          </div>
+          <div {...styles.devInfo}>
             <span
-              {...navLinkStyle}
               style={{ ...fontStyles.sansSerifRegular14 }}
+              {...colorScheme.set('color', 'text')}
             >
-              v{inNativeAppVersion}
-              {inNativeAppBuildId && ` / ${inNativeAppBuildId}`}
+              <IconOpensource
+                style={{
+                  margin: '0 6px 5px 0',
+                  verticalAlign: 'middle',
+                  display: 'inline',
+                }}
+                size={20}
+                {...colorScheme.set('fill', 'text')}
+              />
+              <a
+                {...navLinkStyle}
+                style={{ ...fontStyles.sansSerifRegular14 }}
+                href='https://github.com/republik/plattform'
+                rel='noreferrer'
+                target='_blank'
+              >
+                {t('footer/opensource')}
+              </a>
             </span>
-          )}
+            {inNativeApp && (
+              <span
+                {...navLinkStyle}
+                style={{ ...fontStyles.sansSerifRegular14 }}
+              >
+                v{inNativeAppVersion}
+                {inNativeAppBuildId && ` / ${inNativeAppBuildId}`}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -8,15 +8,17 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "PORT=3005 next dev",
+    "dev": "concurrently \"PORT=3005 next dev\" \"yarn gql:types --watch\"",
     "start": "next start",
-    "build": "next build",
+    "build": "yarn gql:types && next build",
     "test": "jest",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "eslint --fix .",
-    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
+    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1J3kMAE8mi4gPeP7c72XAsKHJTB5VdYepTx6Y26qfH38 --title=live --pretty --out lib/translations.json",
     "translations": "npm run translations-raw && git add -p lib/translations.json && git checkout -- lib/translations.json",
-    "analyze": "ANALYZE=true next build"
+    "analyze": "ANALYZE=true next build",
+    "gql:types": "graphql-codegen --config graphql/configs/codegen-dev.ts",
+    "gql:schema": "graphql-codegen --config graphql/configs/codegen-schema.ts"
   },
   "repository": {
     "type": "git",
@@ -29,8 +31,12 @@
   },
   "homepage": "https://github.com/republik/plattform#readme",
   "devDependencies": {
-    "@next/env": "^13.5.1",
-    "@next/eslint-plugin-next": "^13.5.1",
+    "@graphql-codegen/cli": "5.0.0",
+    "@graphql-codegen/client-preset": "4.1.0",
+    "@graphql-codegen/introspection": "4.0.0",
+    "@graphql-codegen/schema-ast": "^4.0.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@next/env": "^14.1.4",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
     "@testing-library/jest-dom": "^5.16.5",
@@ -38,6 +44,7 @@
     "@types/jest": "^29.5.1",
     "@types/lodash": "^4.14.194",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
+    "concurrently": "^8.2.1",
     "cross-env": "^5.2.1",
     "diff": "^3.5.0",
     "enzyme": "^3.11.0",
@@ -48,15 +55,15 @@
     "raf": "^3.4.0"
   },
   "dependencies": {
-    "@apollo/client": "~3.8.1",
-    "@next/bundle-analyzer": "^12.3.1",
+    "@apollo/client": "~3.8.4",
+    "@next/bundle-analyzer": "^14.1.4",
     "@project-r/styleguide": "*",
     "@republik/icons": "*",
     "@republik/mdast-react-render": "*",
     "@republik/nextjs-apollo-client": "*",
     "@republik/remark-preset": "*",
     "@republik/slate-mdast-serializer": "*",
-    "@sentry/nextjs": "^7.66.0",
+    "@sentry/nextjs": "^7.102.1",
     "axios": "^1.0.0",
     "clipboard-copy": "^3.1.0",
     "codemirror": "^5.57.0",
@@ -80,7 +87,7 @@
     "js-yaml": "^3.14.0",
     "jsonlint-mod": "^1.7.6",
     "lodash": "^4.17.21",
-    "next": "^13.5.1",
+    "next": "^14.1.4",
     "prop-types": "^15.6.2",
     "query-string": "^7.1.1",
     "ramda": "^0.29.0",
@@ -110,6 +117,7 @@
     "unified": "^7.0.0",
     "unist-util-visit": "^2.0.3",
     "url": "^0.11.0",
+    "uuid": "^9.0.1",
     "validator": "^10.11.0"
   }
 }

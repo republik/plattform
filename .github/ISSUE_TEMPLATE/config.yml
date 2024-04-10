@@ -1,5 +1,8 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
-  - name: Republik FAQ / Support
+  - name: FAQ / Support
     url: https://republik.ch/faq
-    about: Got a question / problem about your account or membership? VIsit the FAQ or contact us.
+    about: Got a question/problem about your account or membership? Feel free to visit the FAQ or contact us by email.
+  - name: Feedback
+    url: https://www.republik.love/dialog?t=general
+    about: Submit feedback for the software in our general discussion or contact us via the email provided in the link above.

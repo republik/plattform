@@ -75,7 +75,8 @@ const propTypes = {
   onOpenPreferences: PropTypes.func,
   onPreviewComment: PropTypes.func,
 
-  secondaryActions: PropTypes.node,
+  // Disable because of TS funkiness
+  // secondaryActions: PropTypes.node,
   hintValidators: PropTypes.arrayOf(PropTypes.func),
 
   displayAuthor: DisplayAuthorPropType,

@@ -1,10 +1,28 @@
 {
   "extends": "@republik/tsconfig/nextjs.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "target": "ES2020",
+    "strictNullChecks": false,
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": [
+        "./src/*"
+      ],
+      "#graphql/*": [
+        "./graphql/*"
+      ],
+    }
+  },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "components/PoliticsQuestionnaire/loader.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -573,10 +573,193 @@ const text = {
       ?
     </>
   ),
-  //September: (p) => <></>,
-  //Oktober: (p) => <></>,
-  //November: (p) => <></>,
-  //Dezember: (p) => <></>,
+  September: (p) => (
+    <>
+      Stellen Sie sich vor,{' '}
+      <Highlight {...p} ids={['E33Uu4xIT']}>
+        Sie wären steinreich und wollten in die Politik eingreifen
+      </Highlight>
+      . Ein{' '}
+      <Highlight {...p} ids={['Y4FLQHVHT']}>
+        Beschaffungsskandal
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['Q0utOXDpy']}>
+        junges Theater
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['VWa8Wo1rL']}>
+        junge Täter
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['IV8haI_oi']}>
+        Gesundheitskosten
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['mTRw55AhgC']}>
+        Was die Schweiz zum Einwanderungsland macht
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['fd_sIUOka']}>
+        was uns die Staatsstreiche in Afrika über die neue Weltordnung sagen
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['rUj_uTUGR']}>
+        10 Vorschläge für eine bessere Verfassung
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['oEm6pdrxV']}>
+        33 Bücher gegen die Repression
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['f28gw-LEW']}>
+        Wie die Schweizer Medien nach rechts rücken
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['TFcU8PNiH']}>
+        warum sich die Meere erhitzen
+      </Highlight>
+      . Dazu:{' '}
+      <Highlight {...p} ids={['g6cOdxTkY']}>
+        Im Restaurant mit zwei Zuckerforscherinnen
+      </Highlight>
+      .
+    </>
+  ),
+  Oktober: (p) => (
+    <>
+      Krieg im Nahen Osten:{' '}
+      <Highlight {...p} ids={['qq67AcMXh']}>
+        Zwischen Empathie und Vernunft
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['N-mGwhHp5']}>
+        das Trauma der jüdischen Gemeinschaft
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['nyBWq1qmN']}>
+        Angst in Gaza-Stadt
+      </Highlight>{' '}
+      – und{' '}
+      <Highlight {...p} ids={['e4DoTct2l']}>
+        der Umgang mit Falschinformationen
+      </Highlight>
+      . Vor den eidgenössischen Wahlen:{' '}
+      <Highlight {...p} ids={['ASZiy2LOJ']}>
+        Sie kämpfen
+      </Highlight>{' '}
+      <Highlight {...p} ids={['Jdg6qjqxh']}>
+        um jede Stimme
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['5G9Pqoyal']}>
+        er prognostiziert das Resultat
+      </Highlight>
+      . Und danach:{' '}
+      <Highlight {...p} ids={['n-zB_TmBP']}>
+        Ein Porträt zweier Parteipräsidenten
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['MwIFXp7TA']}>
+        der Rechtsrutsch
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['Yi7zTn7Gu']}>
+        seine Bedeutung
+      </Highlight>
+      , dazu{' '}
+      <Highlight {...p} ids={['c5AZ6EWhq']}>
+        düstere Zeiten für die Digitalisierung
+      </Highlight>
+      . Ausserdem:{' '}
+      <Highlight {...p} ids={['siG4zty8E']}>
+        Ab wann erhält man ein Verfallsdatum
+      </Highlight>
+      ?{' '}
+      <Highlight {...p} ids={['n8P4yWAbf']}>
+        Die Reportage aus Kosovo
+      </Highlight>
+      ,{' '}
+      <Highlight {...p} ids={['eikZejRsQ']}>
+        Strategien für eine Energiewende
+      </Highlight>{' '}
+      und{' '}
+      <Highlight {...p} ids={['gcd2uy_fs']}>
+        ein neuer Republik-Podcast
+      </Highlight>
+      .
+    </>
+  ),
+  November: (p) => (
+    <>
+      Ein{' '}
+      <Highlight {...p} ids={['hVezg8QiQ']}>
+        erschütterndes Tagebuch aus Gaza
+      </Highlight>{' '}
+      und ein{' '}
+      <Highlight {...p} ids={['HaI0eURLC']}>
+        Gespräch über die existenzielle Angst auf beiden Seiten des Krieges
+      </Highlight>
+      . Der wohl bekannteste Gefangene der Schweiz{' '}
+      <Highlight {...p} ids={['T2QdrTvQD']}>
+        kommt frei
+      </Highlight>{' '}
+      – und der frühere Amtschef{' '}
+      <Highlight {...p} ids={['GT6WE_Dp_']}>
+        entschuldigt sich bei ihm.
+      </Highlight>{' '}
+      Warum das mit dem{' '}
+      <Highlight {...p} ids={['dYmCb6FLH']}>
+        Winterschlaf
+      </Highlight>{' '}
+      nichts wird.{' '}
+      <Highlight {...p} ids={['CrFWwKs-W']}>
+        Diese vier Curler
+      </Highlight>{' '}
+      müssen Sie kennenlernen. Und: Wir richten den Blick auf{' '}
+      <Highlight {...p} ids={['']} format='republik/format-challenge-accepted'>
+        25 Menschen, die in der Klimakrise einen Unterschied machen
+      </Highlight>
+      .
+    </>
+  ),
+  Dezember: (p) => (
+    <>
+      Gibt es eine{' '}
+      <Highlight {...p} ids={['BDLKnVqc8']}>
+        friedliche Lösung für den Nahostkonflikt
+      </Highlight>
+      ? Die Würdigung des{' '}
+      <Highlight {...p} ids={['yxo5cF_JY']}>
+        Schweizer Mafiajägers
+      </Highlight>{' '}
+      Dick Marty. Wie der{' '}
+      <Highlight {...p} ids={['rFaW2Hyhc']}>
+        Bauernverband erfolgreich Interessenpolitik macht
+      </Highlight>{' '}
+      und wie Bundesrat Albert Rösti sein Departement{' '}
+      <Highlight {...p} ids={['zQrb2S6oP']}>
+        auf SVP-Kurs trimmt
+      </Highlight>
+      . Der{' '}
+      <Highlight {...p} ids={['1XEJrq8lU']}>
+        Zustand des Planeten
+      </Highlight>{' '}
+      in Zahlen.{' '}
+      <Highlight {...p} ids={['Tb6FX3tPR']}>
+        Tanzen in Kyjiw
+      </Highlight>
+      .{' '}
+      <Highlight {...p} ids={['QfhlLuzMA']}>
+        Weihnachten im Gefängnis
+      </Highlight>{' '}
+      und ein{' '}
+      <Highlight {...p} ids={['V6hTDanbb']}>
+        satirischer Jahresrückblick
+      </Highlight>
+      .
+    </>
+  ),
 }
 
 const Overview2023 = (props) => <Page {...props} year={2023} text={text} />

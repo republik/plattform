@@ -16,14 +16,14 @@
     "generate::possibleTypes": "node scripts/generatePossibleTypes.js"
   },
   "devDependencies": {
-    "@apollo/client": "~3.8.1",
+    "@apollo/client": "~3.8.4",
     "@republik/eslint-config-frontend": "*",
     "@types/node": "^17.0.41",
-    "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.11",
+    "@types/react": "^18.2.22",
+    "@types/react-dom": "^18.2.7",
     "cross-fetch": "^3.1.5",
     "graphql": "^15.3.0",
-    "next": "^13.5.1",
+    "next": "^14.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^3.0.2",
@@ -31,9 +31,9 @@
     "uuid": "^3.4.0"
   },
   "peerDependencies": {
-    "@apollo/client": "~3.8.1",
+    "@apollo/client": "~3.8.4",
     "graphql": "^15.3.0",
-    "next": "^13.5.1",
+    "next": "^14.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "^3.4.0"

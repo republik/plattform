@@ -3,10 +3,11 @@ node_modules
 **/*.min.js
 **/*.min.css
 
-.vscode
 .idea
 .next
 .turbo
 .cache
 dist
 build
+
+/apps/www/src/graphql/*/gql/**/*.ts

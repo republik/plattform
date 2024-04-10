@@ -1,47 +1,24 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:base"],
   "automerge": false,
   "commitMessagePrefix": "chore(renovate): ",
-  "labels": [
-    "renovate",
-    "maintenance"
-  ],
-  "schedule": [
-    "every wednesday"
-  ],
+  "labels": ["renovate", "maintenance"],
+  "schedule": ["every wednesday"],
   "vulnerabilityAlerts": {
-    "schedule": [
-      "at any time"
-    ],
-    "labels": [
-      "renovate",
-      "maintenance",
-      "security"
-    ]
+    "schedule": ["at any time"],
+    "labels": ["renovate", "maintenance", "security"]
   },
   "packageRules": [
     {
       "enabled": false,
-      "packagePatterns": [
-        "*"
-      ]
+      "packagePatterns": ["*"]
     },
     {
       "enabled": true,
       "description": "All Next.js dependencies are updated to the latest minor or patch version.",
-      "matchDepPatterns": [
-        "next",
-        "@next/*"
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor",
-        "patch",
-        "pin"
-      ]
+      "matchDepPatterns": ["next", "@next/*"],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin"]
     },
     {
       "enabled": true,
@@ -49,14 +26,10 @@
       "matchDepPatterns": [
         "react",
         "react-dom",
-        "@types/react"
+        "@types/react",
+        "@types/react-dom"
       ],
-      "matchUpdateTypes": [
-        "major",
-        "minor",
-        "patch",
-        "pin"
-      ]
+      "matchUpdateTypes": ["major", "minor", "patch", "pin"]
     },
     {
       "enabled": true,
@@ -87,11 +60,7 @@
         "react-test-renderer",
         "ts-jest"
       ],
-      "matchUpdateTypes": [
-        "major",
-        "minor",
-        "patch"
-      ]
+      "matchUpdateTypes": ["major", "minor", "patch"]
     }
   ]
 }

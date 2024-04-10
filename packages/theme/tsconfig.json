@@ -1,0 +1,10 @@
+{
+  "extends": "@republik/tsconfig/nextjs.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "strictNullChecks": false,
+    "baseUrl": "."
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}
