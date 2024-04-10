@@ -30,7 +30,7 @@ module.exports = {
   svgProps: {
     fill: 'currentColor',
     style:
-      "{props.style ? { verticalAlign: 'middle', ...props.style } : { verticalAlign: 'middle' }}",
+      "{props.style ? { verticalAlign: 'middle', display: 'inline-block', ...props.style } : { verticalAlign: 'middle', display: 'inline-block' }}",
     width: '{props.width ?? props.size ?? "1em"}',
     height: '{props.height ?? props.size ?? "1em"}',
   },
