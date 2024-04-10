@@ -1072,7 +1072,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     await save(
       destination,
       'campaign-referrals',
-      'Referrals bei einer Mitglieder Kampagne',
+      'Vermittlungen bei einer Mitgliederkampagne',
       campaignReferrals.map((referral) => {
         return {
           campaign: campaignsById.get(referral.campaignId)?.name,
@@ -1091,7 +1091,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     await save(
       destination,
       'campaign-referral-rewards',
-      'Erhaltene Rewards durch Vermittlungen bei einer Mitgliederkampagne',
+      'Erhaltene Belohnungen durch Vermittlungen bei einer Mitgliederkampagne',
       userCampaignRewards.map((userReward) => {
         const reward = campaignsRewardsById.get(userReward.campaignRewardId)
         const campaginName = campaignsById.get(reward.campaignId)?.name
