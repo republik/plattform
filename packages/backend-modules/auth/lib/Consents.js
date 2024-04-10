@@ -29,8 +29,6 @@ const REVOKABLE_POLICIES = [
   'NEWSLETTER_PROJECTR',
 ]
 
-const ENFORCE_CONSENTS = ['PRIVACY']
-
 const getAllConsentRecords = ({ userId, pgdb }) =>
   pgdb.public.consents.find(
     {
@@ -75,9 +73,14 @@ const statusForPolicyForUser = async ({ userId, policy, pgdb }) =>
   )
 
 const requiredConsents = async ({ userId, pgdb }) => {
-  const consented = userId ? await consentsOfUser({ userId, pgdb }) : []
 
-  return ENFORCE_CONSENTS.filter((consent) => !consented.includes(consent))
+  const { ENFORCE_CONSENTS = '' } = process.env
+
+  if (ENFORCE_CONSENTS) {
+    const consented = userId ? await consentsOfUser({ userId, pgdb }) : []
+    return ENFORCE_CONSENTS.split(',').filter((consent) => !consented.includes(consent))
+  }
+  return []
 }
 
 const missingConsents = async ({ userId, consents = [], pgdb }) => {
