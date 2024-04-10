@@ -1,3 +1,5 @@
+jest.mock('check-env')
+
 const revokeConsent = require('../../../../graphql/resolvers/_mutations/revokeConsent')
 
 describe('check revoked consent', () => {

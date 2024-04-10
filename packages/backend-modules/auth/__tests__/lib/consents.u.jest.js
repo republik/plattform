@@ -1,3 +1,5 @@
+jest.mock('check-env')
+
 const {
   statusForPolicyForUser,
   requiredConsents,

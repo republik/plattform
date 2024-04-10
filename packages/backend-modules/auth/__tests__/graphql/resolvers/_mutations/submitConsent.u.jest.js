@@ -1,3 +1,5 @@
+jest.mock('check-env')
+
 const submitConsent = require('../../../../graphql/resolvers/_mutations/submitConsent')
 
 describe('check submitted consent', () => {

@@ -1,5 +1,4 @@
-const ensureSignedIn = require('../../../lib/ensureSignedIn')
-const Consents = require('../../../lib/Consents')
+const { ensureSignedIn, Consents } = require('../../../lib')
 
 module.exports = async (_, { name }, { user: me, pgdb, req, t }) => {
   ensureSignedIn(req)
