@@ -1,8 +1,8 @@
 import LightSwitch from '@app/components/lightswitch'
 import { getMe } from '@app/lib/auth/me'
 import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
-import { css } from '@app/styled-system/css'
-import { vstack } from '@app/styled-system/patterns'
+import { css } from '@republik/theme/css'
+import { vstack } from '@republik/theme/patterns'
 import {
   IconInstagram,
   IconLogoFacebook,

@@ -1,4 +1,4 @@
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { scalePoint } from 'd3-scale'
 import {
   MotionValue,

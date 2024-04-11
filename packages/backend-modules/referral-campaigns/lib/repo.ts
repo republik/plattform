@@ -125,6 +125,7 @@ export class PGReferralsRepo implements ReferralCampaignRepo, ReferralCodeRepo {
       FROM referrals r
       LEFT JOIN "userCampaignRewards" ucr ON r."referrerId" = ucr."userId"
       WHERE ucr."userId" IS NULL
+      AND r."referrerId" IS NOT NULL
       GROUP BY r."referrerId", r."campaignId"`)
   }
 

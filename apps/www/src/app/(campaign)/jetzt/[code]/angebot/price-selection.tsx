@@ -1,6 +1,6 @@
 'use client'
 
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { PriceRewards } from './price-rewards'
 import { PriceSliderWithState } from './price-slider-with-state'
 import { CAMPAIGN_SLUG } from '@app/app/(campaign)/constants'

@@ -1,5 +1,3 @@
-import './setup-glamor'
-
 import * as allMediaQueries from './theme/mediaQueries'
 
 export { default as zIndex } from './theme/zIndex'
