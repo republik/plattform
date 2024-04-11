@@ -1,4 +1,4 @@
-import { AudioQueueItem } from '../graphql/AudioQueueHooks'
+import { AudioQueueItem } from './AudioPlayerItem'
 
 export enum AudioEvent {
   // Sent to app

@@ -1,4 +1,4 @@
-import { useFragment } from '#graphql/cms/__generated__/gql'
+import { getFragmentData } from '#graphql/cms/__generated__/gql'
 import {
   EventDocument,
   EventRecordFieldsFragmentDoc,
@@ -19,7 +19,7 @@ export async function GET(
     query: EventDocument,
     variables: { slug },
   })
-  const event = useFragment(EventRecordFieldsFragmentDoc, data.event)
+  const event = getFragmentData(EventRecordFieldsFragmentDoc, data.event)
 
   if (!event) {
     return notFound()

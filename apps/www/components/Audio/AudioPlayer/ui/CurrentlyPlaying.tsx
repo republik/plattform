@@ -1,11 +1,11 @@
 import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { IconDownload } from '@republik/icons'
 import { css } from 'glamor'
-import { AudioQueueItem } from '../../graphql/AudioQueueHooks'
 import { dateFormatter, formatMinutes } from '../shared'
 import AudioCover from './AudioCover'
 import AudioPlayerTitle from './AudioPlayerTitle'
 import AudioCalloutMenu from './tabs/shared/AudioCalloutMenu'
+import { AudioQueueItem } from 'components/Audio/types/AudioPlayerItem'
 
 const styles = {
   root: css({

@@ -2,7 +2,7 @@ import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
 import { EventTeaser } from './components/event-teaser'
 import { css } from '@republik/theme/css'
-import { useFragment } from '#graphql/cms/__generated__/gql'
+import { getFragmentData } from '#graphql/cms/__generated__/gql'
 import {
   EventRecordFieldsFragmentDoc,
   EventsDocument,
@@ -22,8 +22,14 @@ export default async function Page() {
       },
     },
   })
-  const currentEvents = useFragment(EventRecordFieldsFragmentDoc, data.events)
-  const pastEvents = useFragment(EventRecordFieldsFragmentDoc, data.pastEvents)
+  const currentEvents = getFragmentData(
+    EventRecordFieldsFragmentDoc,
+    data.events,
+  )
+  const pastEvents = getFragmentData(
+    EventRecordFieldsFragmentDoc,
+    data.pastEvents,
+  )
 
   const me = await getMe()
   const isMember =
