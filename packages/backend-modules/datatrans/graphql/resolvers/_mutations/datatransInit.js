@@ -7,26 +7,45 @@ const {
   formatHridAsRefno,
 } = require('../../../lib/helpers')
 
+async function checkPledgeValidity(pledgeId, { pgdb, loaders }) {
+  const pledge = await loaders.Pledge.byId.load(pledgeId)
+  if (!pledge) {
+    throw new Error('pledgeId not found')
+  }
+
+  if (pledge.status !== 'DRAFT') {
+    throw new Error('pledge not in status "DRAFT"')
+  }
+
+  const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
+  if (!pkg) {
+    throw new Error('package not found')
+  }
+  return { pledge, pkg }
+}
+
+async function updatePaymentWithTransactionId({ paymentId, transactionId, args }, tx, { req, t }) {
+  try {
+    await tx.public.payments.updateOne(
+      { id: paymentId },
+      { pspId: transactionId, pspPayload: args },
+    )
+    tx.transactionCommit()
+  }  catch (e) {
+    await tx.transactionRollback()
+    console.info('update payment after init transaction rollback', { req: req._log(), args, error: e })
+    throw new Error(t('api/unexpected'))
+  }
+}
+
 module.exports = async (_, args, context) => {
   const { pledgeId, method, accessToken } = args
   const { loaders, pgdb, req, t } = context
 
-  const tx = await pgdb.transactionBegin()
+  const initPaymentTx = await pgdb.transactionBegin()
 
   try {
-    const pledge = await loaders.Pledge.byId.load(pledgeId)
-    if (!pledge) {
-      throw new Error('pledgeId not found')
-    }
-
-    if (pledge.status !== 'DRAFT') {
-      throw new Error('pledge not in status "DRAFT"')
-    }
-
-    const pkg = await pgdb.public.packages.findOne({ id: pledge.packageId })
-    if (!pkg) {
-      throw new Error('package not found')
-    }
+    const { pledge, pkg } = await checkPledgeValidity(pledgeId, { pgdb, loaders })
 
     const pledgeOptionsWithAutoPay = await pgdb.public.pledgeOptions.count({
       pledgeId,
@@ -34,7 +53,7 @@ module.exports = async (_, args, context) => {
     })
 
     // insert payment
-    const payment = await tx.public.payments.insertAndGet({
+    const payment = await initPaymentTx.public.payments.insertAndGet({
       type: 'PLEDGE',
       method,
       total: pledge.total,
@@ -42,7 +61,7 @@ module.exports = async (_, args, context) => {
     })
 
     // insert pledgePayment
-    await tx.public.pledgePayments.insert({
+    await initPaymentTx.public.pledgePayments.insert({
       pledgeId,
       paymentId: payment.id,
       paymentType: 'PLEDGE',
@@ -58,19 +77,18 @@ module.exports = async (_, args, context) => {
       refno: formatHridAsRefno(payment.hrid),
       amount: pledge.total,
       method,
-      createAlias: pledgeOptionsWithAutoPay > 0,
+      createAlias: pledgeOptionsWithAutoPay > 0, // if we want to save credit cards also from single payments we would need to create an alias here for credit card payments
       accessToken: hasValidToken && accessToken,
     })
 
-    await tx.public.payments.updateOne(
-      { id: payment.id },
-      { pspId: transactionId, pspPayload: args },
-    )
+    await initPaymentTx.transactionCommit()
 
-    await tx.transactionCommit()
+    const updatePaymentTx = await pgdb.transactionBegin()
+    await updatePaymentWithTransactionId({ paymentId: payment.id, transactionId, args }, updatePaymentTx, { req, t })
+
     return { authorizeUrl }
   } catch (e) {
-    await tx.transactionRollback()
+    await initPaymentTx.transactionRollback()
     console.info('transaction rollback', { req: req._log(), args, error: e })
     throw new Error(t('api/unexpected'))
   }
