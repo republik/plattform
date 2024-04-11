@@ -94,51 +94,38 @@ export default async function Page({ searchParams }) {
   return (
     <EventTrackingContext category='ChallengeAcceptedLandingPage'>
       <Container>
-        {/* TODO: Only show when Signup is actually visible */}
-        <div
-          className={css({
-            display: 'flex',
-            justifyContent: 'center',
-            mx: '4',
-            mt: { base: '4', md: '8' },
-            mb: { base: '4', md: '8' },
-          })}
-        >
-          <div
-            className={css({
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-              textDecoration: 'none',
-              gap: '0.5',
-              color: 'contrast',
-              fontSize: 'sm',
-              justifyContent: 'center',
-              _dark: {
-                filter: 'invert(1)',
-              },
-              width: { base: 80, md: 156 },
-            })}
-          >
-            <Image
-              src={hub.logo?.url}
-              priority
-              width={156}
-              height={100}
-              className={css({ objectFit: 'contain' })}
-              alt='Challenge Accepted Logo'
-            />
-          </div>
-        </div>
-
         <CANewsletterSignUp
           me={me}
           id='newsletter-top'
-          description={hub.newsletterSignupIntro}
+          description={
+            <>
+              <div
+                className={css({
+                  width: { base: 80, md: 156 },
+                  mx: 'auto',
+                  mt: { base: '4', md: '8' },
+                  mb: { base: '4', md: '8' },
+
+                  _dark: {
+                    filter: 'invert(1)',
+                  },
+                })}
+              >
+                <Image
+                  src={hub.logo?.url}
+                  priority
+                  width={156}
+                  height={100}
+                  className={css({ objectFit: 'contain' })}
+                  alt='Challenge Accepted Logo'
+                />
+              </div>
+              <div>{hub.newsletterSignupIntro}</div>
+            </>
+          }
           title={hub.newsletterSignupTagline}
         >
-          {<StructuredText data={hub.newsletterSignupBenefits?.value} />}
+          <StructuredText data={hub.newsletterSignupBenefits?.value} />
         </CANewsletterSignUp>
       </Container>
       <h1
