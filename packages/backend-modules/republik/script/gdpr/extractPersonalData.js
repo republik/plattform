@@ -1091,7 +1091,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     await save(
       destination,
       'campaign-referral-rewards',
-      'Erhaltene Belohnungen durch Vermittlungen bei einer Mitgliederkampagne',
+      'Erhaltene Belohnungen für Vermittlungen bei einer Mitgliederkampagne',
       userCampaignRewards.map((userReward) => {
         const reward = campaignsRewardsById.get(userReward.campaignRewardId)
         const campaginName = campaignsById.get(reward.campaignId)?.name
