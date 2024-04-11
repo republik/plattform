@@ -1,5 +1,3 @@
-
----
 # Backend Module Generation Script
 
 This package contains a script for generating a new backend module that is TypeScript compatible.
