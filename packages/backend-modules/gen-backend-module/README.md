@@ -1,4 +1,3 @@
-Here's the spell-checked version of your text:
 
 ---
 # Backend Module Generation Script
