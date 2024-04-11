@@ -58,6 +58,8 @@ describe('statusForPolicyForUser:', () => {
 })
 
 describe('required consents:', () => {
+  process.env.ENFORCE_CONSENTS = 'PRIVACY'
+
   test('no userId', async () => {
     const userId = undefined
     const pgdb = {}
@@ -191,7 +193,7 @@ describe('missing consents:', () => {
         },
       },
     }
-    expect(ensureAllRequiredConsents({ userId, pgdb })).rejects.toThrowError(
+    expect(ensureAllRequiredConsents({ userId, pgdb })).rejects.toThrow(
       'Sie müssen folgenden Policies zustimmen um sich anmelden zu können: PRIVACY.',
     )
   })
