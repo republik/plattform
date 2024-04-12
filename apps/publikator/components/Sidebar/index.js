@@ -19,6 +19,7 @@ const styles = {
     zIndex: ZINDEX_SIDEBAR,
     // ensure 10px white space for <UIForm>s negative magins
     padding: 10 + 1 * 2, // 1px border
+    minWidth: 0,
 
     transition: 'transform 0.2s ease-in-out',
     transform: `translateX(${SIDEBAR_WIDTH}px)`,

@@ -914,7 +914,7 @@ export class EditorPage extends Component {
               loading={showLoading}
               error={error}
               render={() => (
-                <div>
+                <div {...css({ minWidth: 0 })}>
                   {interruptingUsers && (
                     <ActiveInterruptionOverlay
                       uncommittedChanges={uncommittedChanges}
