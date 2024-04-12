@@ -6,6 +6,7 @@ import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash/debounce'
 import { timeFormat } from 'd3-time-format'
 import { parse, stringify } from '@republik/remark-preset'
+import { css } from 'glamor'
 
 import Frame from '../Frame'
 import { HEADER_HEIGHT } from '../Frame/constants'
@@ -44,6 +45,7 @@ import {
   ColorContextProvider,
   colors,
   ErrorBoundary,
+  mediaQueries,
   plainButtonRule,
 } from '@project-r/styleguide'
 import { IconGears as SettingsIcon } from '@republik/icons'
@@ -896,14 +898,17 @@ export class EditorPage extends Component {
         </Frame.Header>
         <Frame.Body raw>
           <div
-            style={{
-              display: 'grid',
-              transition: 'all 0.2s ease-in-out',
-              gridTemplateColumns:
-                !showPreview && showSidebar
-                  ? `1fr ${SIDEBAR_WIDTH}px`
-                  : '1fr 0px',
-            }}
+            {...css({
+              display: 'block',
+              [mediaQueries.mUp]: {
+                display: 'grid',
+                transition: 'all 0.2s ease-in-out',
+                gridTemplateColumns:
+                  !showPreview && showSidebar
+                    ? `1fr ${SIDEBAR_WIDTH}px`
+                    : '1fr 0px',
+              },
+            })}
           >
             <Loader
               loading={showLoading}
