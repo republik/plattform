@@ -6,6 +6,7 @@ import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash/debounce'
 import { timeFormat } from 'd3-time-format'
 import { parse, stringify } from '@republik/remark-preset'
+import { css } from 'glamor'
 
 import Frame from '../Frame'
 import { HEADER_HEIGHT } from '../Frame/constants'
@@ -25,7 +26,7 @@ import {
   joinUsers,
   withUncommittedChangesMutation,
 } from '../VersionControl/UncommittedChanges'
-import Sidebar from '../Sidebar'
+import Sidebar, { SIDEBAR_WIDTH } from '../Sidebar'
 import Warning from '../Sidebar/Warning'
 
 import Loader from '../Loader'
@@ -44,6 +45,7 @@ import {
   ColorContextProvider,
   colors,
   ErrorBoundary,
+  mediaQueries,
   plainButtonRule,
 } from '@project-r/styleguide'
 import { IconGears as SettingsIcon } from '@republik/icons'
@@ -895,104 +897,118 @@ export class EditorPage extends Component {
           </Frame.Header.Section>
         </Frame.Header>
         <Frame.Body raw>
-          <Loader
-            loading={showLoading}
-            error={error}
-            render={() => (
-              <div>
-                {interruptingUsers && (
-                  <ActiveInterruptionOverlay
-                    uncommittedChanges={uncommittedChanges}
-                    interruptingUsers={interruptingUsers}
-                    onRevert={this.revertHandler}
-                    onAcknowledged={() =>
-                      this.setState({
-                        acknowledgedUsers: this.state.activeUsers,
-                        interruptingUsers: undefined,
-                      })
-                    }
-                  />
-                )}
-                <ColorContextProvider
-                  colorSchemeKey={
-                    dark
-                      ? 'dark'
-                      : (showPreview && this.state.previewDarkmode) || 'light'
-                  }
-                >
-                  {showPreview ? (
-                    <Preview
-                      previewScreenSize={this.state.previewScreenSize}
-                      repoId={repoId}
-                      commitId={commitId}
-                      darkmode={this.state.previewDarkmode}
-                    />
-                  ) : null}
-                  <ErrorBoundary
-                    failureMessage='Ein Fehler trat im Editor auf. Bitte den Quellcode bearbeiten.'
-                    showException
-                  >
-                    <Editor
-                      ref={this.editorRef}
-                      schema={schema}
-                      isTemplate={isTemplate}
-                      meta={meta}
-                      value={editorState}
-                      onChange={this.changeHandler}
-                      onDocumentChange={this.documentChangeHandler}
-                      readOnly={readOnly}
-                      hide={showPreview}
-                    />
-                  </ErrorBoundary>
-                </ColorContextProvider>
-              </div>
-            )}
-          />
-          <Sidebar
-            prependChildren={sidebarPrependChildren}
-            isDisabled={sidebarDisabled}
-            selectedTabId={
-              showPreview ? 'view' : readOnly ? 'workflow' : 'edit'
-            }
-            isOpen={!showPreview && showSidebar}
+          <div
+            {...css({
+              display: 'block',
+              [mediaQueries.mUp]: {
+                display: 'grid',
+                transition: 'all 0.2s ease-in-out',
+                gridTemplateColumns:
+                  !showPreview && showSidebar
+                    ? `1fr ${SIDEBAR_WIDTH}px`
+                    : '1fr 0px',
+              },
+            })}
           >
-            {!readOnly && !showPreview && (
-              <Sidebar.Tab tabId='edit' label='Editieren'>
-                <Replace
-                  value={this.editor?.serializer.serialize(editorState)}
-                  onSave={this.persistChanges.bind(this)}
-                />
-                <CharCount value={editorState} />
-                {!!this.editor && (
-                  <EditorUI
-                    editorRef={this.editor}
-                    onChange={this.uiChangeHandler}
-                    value={editorState}
-                  />
-                )}
-                <button
-                  onClick={() => this.goToRaw(isTemplate)}
-                  {...plainButtonRule}
-                  style={{ color: colors.primary }}
-                >
-                  {t('pages/raw/title')}
-                </button>
-              </Sidebar.Tab>
-            )}
-            {!showPreview && (
-              <Sidebar.Tab tabId='workflow' label='Workflow'>
-                <div style={{ marginBottom: 10 }}>
-                  <CharCount value={editorState} />
+            <Loader
+              loading={showLoading}
+              error={error}
+              render={() => (
+                <div>
+                  {interruptingUsers && (
+                    <ActiveInterruptionOverlay
+                      uncommittedChanges={uncommittedChanges}
+                      interruptingUsers={interruptingUsers}
+                      onRevert={this.revertHandler}
+                      onAcknowledged={() =>
+                        this.setState({
+                          acknowledgedUsers: this.state.activeUsers,
+                          interruptingUsers: undefined,
+                        })
+                      }
+                    />
+                  )}
+                  <ColorContextProvider
+                    colorSchemeKey={
+                      dark
+                        ? 'dark'
+                        : (showPreview && this.state.previewDarkmode) || 'light'
+                    }
+                  >
+                    {showPreview ? (
+                      <Preview
+                        previewScreenSize={this.state.previewScreenSize}
+                        repoId={repoId}
+                        commitId={commitId}
+                        darkmode={this.state.previewDarkmode}
+                      />
+                    ) : null}
+                    <ErrorBoundary
+                      failureMessage='Ein Fehler trat im Editor auf. Bitte den Quellcode bearbeiten.'
+                      showException
+                    >
+                      <Editor
+                        ref={this.editorRef}
+                        schema={schema}
+                        isTemplate={isTemplate}
+                        meta={meta}
+                        value={editorState}
+                        onChange={this.changeHandler}
+                        onDocumentChange={this.documentChangeHandler}
+                        readOnly={readOnly}
+                        hide={showPreview}
+                      />
+                    </ErrorBoundary>
+                  </ColorContextProvider>
                 </div>
-                <VersionControl
-                  repoId={repoId}
-                  commit={commit}
-                  isNew={isNew}
-                  hasUncommittedChanges={hasUncommittedChanges}
-                />
-              </Sidebar.Tab>
-            )}
-          </Sidebar>
+              )}
+            />
+            <Sidebar
+              prependChildren={sidebarPrependChildren}
+              isDisabled={sidebarDisabled}
+              selectedTabId={
+                showPreview ? 'view' : readOnly ? 'workflow' : 'edit'
+              }
+              isOpen={!showPreview && showSidebar}
+            >
+              {!readOnly && !showPreview && (
+                <Sidebar.Tab tabId='edit' label='Editieren'>
+                  <Replace
+                    value={this.editor?.serializer.serialize(editorState)}
+                    onSave={this.persistChanges.bind(this)}
+                  />
+                  <CharCount value={editorState} />
+                  {!!this.editor && (
+                    <EditorUI
+                      editorRef={this.editor}
+                      onChange={this.uiChangeHandler}
+                      value={editorState}
+                    />
+                  )}
+                  <button
+                    onClick={() => this.goToRaw(isTemplate)}
+                    {...plainButtonRule}
+                    style={{ color: colors.primary }}
+                  >
+                    {t('pages/raw/title')}
+                  </button>
+                </Sidebar.Tab>
+              )}
+              {!showPreview && (
+                <Sidebar.Tab tabId='workflow' label='Workflow'>
+                  <div style={{ marginBottom: 10 }}>
+                    <CharCount value={editorState} />
+                  </div>
+                  <VersionControl
+                    repoId={repoId}
+                    commit={commit}
+                    isNew={isNew}
+                    hasUncommittedChanges={hasUncommittedChanges}
+                  />
+                </Sidebar.Tab>
+              )}
+            </Sidebar>
+          </div>
         </Frame.Body>
       </Frame>
     )
