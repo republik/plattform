@@ -25,6 +25,9 @@ const styles = {
     '&.open': {
       transform: 'translateX(0px)',
     },
+    '@media print': {
+      display: 'none',
+    },
   }),
   overlay: css({
     opacity: '0.5',
