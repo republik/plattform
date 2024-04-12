@@ -9,13 +9,9 @@ const styles = {
   container: css({
     position: 'fixed',
     top: HEADER_HEIGHT,
-    width: SIDEBAR_WIDTH,
-    right: -SIDEBAR_WIDTH * 1.1,
-    transition: 'right 0.2s ease',
-    '&.open': {
-      right: 0,
-    },
+    right: 0,
     bottom: 0,
+    width: SIDEBAR_WIDTH,
     overflow: 'auto',
     backgroundColor: '#fff',
     borderLeft: `1px solid ${colors.divider}`,
@@ -23,6 +19,12 @@ const styles = {
     zIndex: ZINDEX_SIDEBAR,
     // ensure 10px white space for <UIForm>s negative magins
     padding: 10 + 1 * 2, // 1px border
+
+    transition: 'transform 0.2s ease-in-out',
+    transform: `translateX(${SIDEBAR_WIDTH}px)`,
+    '&.open': {
+      transform: 'translateX(0px)',
+    },
   }),
   overlay: css({
     opacity: '0.5',
