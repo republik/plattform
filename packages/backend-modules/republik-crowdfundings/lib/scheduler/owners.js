@@ -196,7 +196,7 @@ const createJobs = (now) => [
     name: 'membership_owner_prolong_missed',
     prolongBefore: {
       minDate: getMinEndDate(now, -720),
-      maxDate: getMaxEndDate(now, -180),
+      maxDate: getMaxEndDate(now, -120),
     },
     payload: {
       templateName: 'membership_owner_prolong_missed',
