@@ -1,4 +1,4 @@
-import { useFragment } from '#graphql/cms/__generated__/gql'
+import { getFragmentData } from '#graphql/cms/__generated__/gql'
 import {
   EventDocument,
   EventRecordFieldsFragmentDoc,
@@ -6,6 +6,7 @@ import {
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import dayjs from 'dayjs'
 import ical, { ICalCalendarMethod } from 'ical-generator'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 import { notFound } from 'next/navigation'
 import { v5 as uuidV5 } from 'uuid'
 
@@ -18,13 +19,13 @@ export async function GET(
     query: EventDocument,
     variables: { slug },
   })
-  const event = useFragment(EventRecordFieldsFragmentDoc, data.event)
+  const event = getFragmentData(EventRecordFieldsFragmentDoc, data.event)
 
   if (!event) {
     return notFound()
   }
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`
+  const url = `${PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`
 
   // Deterministic UUID
   const id = uuidV5(url, uuidV5.URL)

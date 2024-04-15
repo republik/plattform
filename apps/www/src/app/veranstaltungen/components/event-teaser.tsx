@@ -1,9 +1,10 @@
 import { CMSItemStatus } from '@app/components/cms/item-status'
 import { Share } from '@app/components/share/share'
 import { formatEventDateRange, isFutureEvent } from '@app/lib/util/time-format'
-import { css } from '@app/styled-system/css'
-import { hstack, vstack } from '@app/styled-system/patterns'
+import { css } from '@republik/theme/css'
+import { hstack, vstack } from '@republik/theme/patterns'
 import { IconCalendar, IconShare } from '@republik/icons'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms'
@@ -56,6 +57,9 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
           color: 'text',
           _hover: { color: 'textSoft' },
         },
+        '& :where(p a)': {
+          textDecoration: 'underline',
+        },
         '& em': { fontStyle: 'italic' },
       })}
     >
@@ -85,10 +89,12 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
               textStyle: 'h1Sans',
               fontSize: { base: '3xl', md: '4xl' },
               mt: '-0.1lh',
-              '& a': { textDecoration: 'none' },
             })}
           >
-            <Link href={`/veranstaltungen/${event.slug}`}>
+            <Link
+              className={css({ textDecoration: 'none' })}
+              href={`/veranstaltungen/${event.slug}`}
+            >
               {event.title} <CMSItemStatus status={event._status} />
             </Link>
           </h2>
@@ -104,8 +110,12 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
               fontSize: 's',
               color: 'textSoft',
             },
+
             '& dd': {
               fontWeight: 'medium',
+              '& a': {
+                textDecoration: 'underline',
+              },
             },
           })}
         >
@@ -169,7 +179,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
         <div className={hstack({ gap: '4', mt: '2' })}>
           <Share
             title={event.title}
-            url={`${process.env.NEXT_PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`}
+            url={`${PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`}
             emailSubject={`Republik: ${event.title}`}
           >
             <div

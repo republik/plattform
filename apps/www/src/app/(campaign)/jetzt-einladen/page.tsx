@@ -7,7 +7,7 @@ import {
   ShareLink,
 } from '@app/app/(campaign)/jetzt-einladen/share-components'
 import Container from '@app/components/container'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import {
@@ -16,21 +16,27 @@ import {
 } from '../constants'
 import { Success } from '@app/app/(campaign)/jetzt-einladen/success'
 import { Metadata } from 'next'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 
 export const metadata: Metadata = {
   title: 'Laden Sie jemanden ein',
 }
 
 export default async function Page() {
-  const { me } = await getSenderData()
+  const { me, campaign } = await getSenderData()
 
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/jetzt/${
+  const url = `${PUBLIC_BASE_URL}/jetzt/${
     me?.hasPublicProfile ? me.username : me?.referralCode
   }`
 
   const imageUrl = `${process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL}/jetzt/${
     me?.hasPublicProfile ? me.username : me?.referralCode
   }`
+
+  // Redirect to campaign thank you page
+  if (!campaign?.isActive) {
+    return redirect('/jetzt-danke')
+  }
 
   if (!me) {
     return redirect('/anmelden')
@@ -79,7 +85,7 @@ export default async function Page() {
           hasRegularAbo={hasRegularAbo}
         />
 
-        <p>
+        {/* <p>
           Lassen Sie uns diese Verantwortung auf mehr Schultern verteilen:{' '}
           <Link href={CAMPAIGN_META_ARTICLE_URL}>
             Bis zum 31. März suchen wir {CAMPAIGN_REFERRALS_GOAL} zusätzliche
@@ -88,6 +94,18 @@ export default async function Page() {
           . Denn je mehr Menschen sich einsetzen, desto breiter ist die
           Grundlage für das, weshalb wir alle hier sind: unabhängiger
           Journalismus.
+        </p> */}
+
+        <p>
+          Ihr Einsatz wirkt: In genau drei Wochen haben wir gemeinsam 1000 neue
+          Verlegerinnen und Verleger an Bord geholt! Und wir bleiben dran – denn
+          je mehr Menschen sich engagieren, desto breiter ist die Grundlage für
+          unser gemeinsames Projekt: unabhängiger Journalismus.
+        </p>
+        <p>
+          Laden Sie heute noch weitere Freundinnen und Bekannte zum
+          vergünstigten Einstiegspreis ein. Wie viele schaffen wir bis zum 31.
+          März?
         </p>
 
         <p>Aktueller Zwischenstand:</p>

@@ -1,6 +1,5 @@
 import { useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import AudioListItem from '../shared/AudioListItem'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -10,6 +9,7 @@ import {
   IconLink,
   IconRemoveCircle,
 } from '@republik/icons'
+import { AudioQueueItem } from 'components/Audio/types/AudioPlayerItem'
 
 const styles = {
   root: css({

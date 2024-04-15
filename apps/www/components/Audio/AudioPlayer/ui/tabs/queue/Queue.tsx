@@ -3,7 +3,6 @@ import QueueItem from './QueueItem'
 import EmptyQueue from './EmptyQueue'
 import NoAccess from '../shared/NoAccess'
 import useAudioQueue from '../../../../hooks/useAudioQueue'
-import { AudioQueueItem } from '../../../../graphql/AudioQueueHooks'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import throttle from 'lodash/throttle'
 import LoadingPlaceholder from '../shared/LoadingPlaceholder'
@@ -29,6 +28,7 @@ import {
   AudioPlayerActions,
 } from '../../../../types/AudioActionTracking'
 import { trackEvent } from '../../../../../../lib/matomo'
+import { AudioQueueItem } from 'components/Audio/types/AudioPlayerItem'
 
 const styles = {
   list: css({

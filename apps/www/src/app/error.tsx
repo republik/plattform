@@ -1,10 +1,11 @@
 'use client' // Error components must be Client Components
 
 import { useEffect } from 'react'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import Container from '@app/components/container'
-import { stack } from '@app/styled-system/patterns'
+import { stack } from '@republik/theme/patterns'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 
 const linkClass = css({
   color: 'primary',
@@ -84,13 +85,13 @@ export default function Error({
                 href={[
                   'mailto:kontakt@republik.ch',
                   '?subject=Fehlermeldung%20auf%20' +
-                    process.env.NEXT_PUBLIC_BASE_URL +
+                    PUBLIC_BASE_URL +
                     window.location.pathname,
                   '&body=' +
                     encodeURIComponent(
                       [
                         'Hallo Republik-Team, ich bin auf folgenden Fehler in der Webseite gestossen:',
-                        `URL: ${process.env.NEXT_PUBLIC_BASE_URL}${window.location.pathname}`,
+                        `URL: ${PUBLIC_BASE_URL}${window.location.pathname}`,
                         error.stack,
                       ].join('\n\n'),
                     ),

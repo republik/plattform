@@ -144,7 +144,7 @@ const init = async (context) => {
         await rewardReferrers(args, pgdb)
       },
       lockTtlSecs,
-      runIntervalSecs: 60 * 10,
+      runIntervalSecs: 60 * 60 * 6,
     }),
   )
 

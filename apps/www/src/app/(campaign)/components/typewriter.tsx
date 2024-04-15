@@ -1,5 +1,5 @@
 'use client'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { Cursor, useTypewriter } from 'react-simple-typewriter'
 
 export const Typewriter = ({ words }: { words: string[] }) => {

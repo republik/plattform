@@ -5,9 +5,10 @@ import {
   formatEventDateRange,
   isFutureEvent,
 } from '@app/lib/util/time-format'
-import { css } from '@app/styled-system/css'
-import { hstack } from '@app/styled-system/patterns'
+import { css } from '@republik/theme/css'
+import { hstack } from '@republik/theme/patterns'
 import { IconCalendar, IconShare } from '@republik/icons'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms'
@@ -57,6 +58,10 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
         '& ol': { listStyleType: 'decimal', pl: '6' },
         '& h2, & h3, & h4, & h5, & h6': {
           fontWeight: 'bold',
+        },
+        '& p a': {
+          color: 'link',
+          textDecoration: 'underline',
         },
       })}
     >
@@ -136,7 +141,7 @@ export const EventTeaser = ({ isMember, event }: EventProps) => {
         <div className={hstack({ gap: '4', mt: '2' })}>
           <Share
             title={event.title}
-            url={`${process.env.NEXT_PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`}
+            url={`${PUBLIC_BASE_URL}/veranstaltungen/${event.slug}`}
             emailSubject={`Republik: ${event.title}`}
           >
             <div

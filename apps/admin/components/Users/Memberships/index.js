@@ -235,7 +235,11 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
               <Fragment>
                 <DT>Gekauft durch</DT>
                 <DD>
-                  <Link href={`/users/${membership.pledge.user.id}`} passHref legacyBehavior>
+                  <Link
+                    href={`/users/${membership.pledge.user.id}`}
+                    passHref
+                    legacyBehavior
+                  >
                     <A>{membership.pledge.user.name}</A>
                   </Link>
                 </DD>
@@ -425,7 +429,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
         </DL>
       </td>
     </tr>
-  );
+  )
 }
 
 const Index = ({ userId }) => {
@@ -439,9 +443,8 @@ const Index = ({ userId }) => {
             loading={isInitialLoading}
             error={isInitialLoading && error}
             render={() => {
-              const {
-                user: { memberships, accessToken },
-              } = data
+              const { user } = data
+              const { memberships = [] } = user || {}
               return (
                 <Section>
                   <SectionTitle>Memberships</SectionTitle>

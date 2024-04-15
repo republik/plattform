@@ -37,6 +37,7 @@ import {
 import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { AUDIO_PLAYER_WRAPPER_ID } from './constants'
 import Time from './ui/Time'
+import { AudioSourceKind } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const styles = {
   container: css({
@@ -85,8 +86,6 @@ type PlayerProps = {
   }
 }
 
-type PlayerKind = 'readAloud' | 'syntheticReadAloud' | 'other'
-
 export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
   const {
     toggleAudioPlayer,
@@ -119,7 +118,7 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
     isActiveAudioItem && currentTime > 0 ? currentTime : mediaProgress
   const duration = (audioSource?.durationMs || 0) / 1000
 
-  const playerKind: PlayerKind = audioSource?.kind ?? 'other'
+  const playerKind: AudioSourceKind = audioSource?.kind
 
   const readAloudSubscription = document.subscribedBy?.nodes.find(
     ({ isEligibleForNotifications, object: { id } }) =>
@@ -129,7 +128,7 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
   const showReadAloudSubscribe =
     meta.willBeReadAloud &&
     readAloudSubscription &&
-    (playerKind === 'syntheticReadAloud' || playerKind === 'other')
+    (!playerKind || playerKind === 'syntheticReadAloud')
       ? true
       : false
 

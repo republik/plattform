@@ -2,7 +2,7 @@
 
 import { SliderStep } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slider/config'
 import { getSliderStepForValue } from '@app/app/(campaign)/jetzt/[code]/angebot/price-slider/helpers'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import Image from 'next/image'
 import { ReactNode } from 'react'
 

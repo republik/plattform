@@ -1,4 +1,4 @@
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 
 export const CMSItemStatus = ({ status }: { status: string }) => {
   if (status === 'published') {

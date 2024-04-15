@@ -1,3 +1,5 @@
+jest.mock('check-env')
+
 const membershipResolver = require('../../../graphql/resolvers/Membership')
 
 describe('check if autopay is mutable on membership', () => {
