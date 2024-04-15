@@ -205,7 +205,7 @@ const PledgeDetails = ({ userId, pledge, ...props }) => {
               .map(
                 (option) =>
                   option.reward && (
-                    <Fragment>
+                    <Fragment key={option.reward.name}>
                       {option.amount} x{' '}
                       {option.reward ? `«${option.reward.name}»` : ''} à{' '}
                       {chfFormat(option.price / 100)}
@@ -403,7 +403,7 @@ const MembershipDetails = ({ membership, ...props }) => {
         </DL>
       )}
     </div>
-  );
+  )
 }
 
 export default class Pledges extends Component {
@@ -426,7 +426,7 @@ export default class Pledges extends Component {
           return (
             <Loader
               loading={isInitialLoading}
-              error={isInitialLoading && error}
+              error={isInitialLoading || error}
               render={() => {
                 const {
                   user: { pledges },
