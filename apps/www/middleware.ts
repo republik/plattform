@@ -51,6 +51,7 @@ function curtainHOC(middleware: Middleware): Middleware {
 
     const isBackdoorPath = req.nextUrl.pathname === BACKDOOR_URL
     const isAllowedUserAgent =
+      userAgent &&
       process.env.CURTAIN_UA_ALLOW_LIST &&
       (process.env.CURTAIN_UA_ALLOW_LIST || '')
         .split(',')
