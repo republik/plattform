@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { AudioCoverGenerator } from '@project-r/styleguide'
 import {
-  AudioCoverPropsOptions,
+  AudioCoverCropOptions,
   getImageCropURL,
 } from '../../helpers/getImageCropURL'
 
@@ -11,7 +11,7 @@ type AudioCoverProps = {
   size: number
   format?: any
   image?: string
-  audioCoverCrop?: AudioCoverPropsOptions
+  audioCoverCrop?: AudioCoverCropOptions
   alt?: string
 }
 

@@ -28,12 +28,12 @@ const datoCMSConfig = {
       },
     },
   ],
-  documents: ['src/graphql/cms/**/*.{ts,tsx,gql,graphql}'],
+  documents: ['graphql/cms/**/*.{ts,tsx,gql,graphql}'],
 }
 
 const republikAPIConfig = {
   schema: process.env.NEXT_PUBLIC_API_URL,
-  documents: ['src/graphql/republik-api/**/*.{ts,tsx,gql,graphql}'],
+  documents: ['graphql/republik-api/**/*.{ts,tsx,gql,graphql}'],
 }
 
 const config: CodegenConfig = {

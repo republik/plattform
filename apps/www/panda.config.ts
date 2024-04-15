@@ -1,23 +1,25 @@
 import { defineConfig } from '@pandacss/dev'
-import { presetRepublik } from '@app/theme/preset'
-import { presetChallengeAccepted } from '@app/theme/preset-challenge-accepted'
+import { presets } from '@republik/theme/presets'
 
 export default defineConfig({
-  // Whether to use css reset
   preflight: true,
+  polyfill: true,
+  prefix: 'r',
+  // strictTokens: true,
 
-  presets: [presetRepublik, presetChallengeAccepted],
+  presets,
 
-  // conditions:
-  // Where to look for your css declarations
+  // Files where CSS is extracted from
+  // NOTE: must include any component packages that are imported in the app
   include: ['./src/**/*.{js,jsx,ts,tsx}'],
 
   // Files to exclude
   exclude: [],
 
-  // The output directory for your css system
-  outdir: 'src/styled-system',
-  // strictTokens: true,
+  // Package name where style functions get imported from
+  importMap: '@republik/theme',
 
-  polyfill: true,
+  // Output directory for generated files.
+  // NOTE: this must be directory where `importMap` module resolves to
+  outdir: '../../packages/theme/__generated__',
 })

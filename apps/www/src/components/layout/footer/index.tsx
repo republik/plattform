@@ -1,8 +1,8 @@
 import LightSwitch from '@app/components/lightswitch'
 import { getMe } from '@app/lib/auth/me'
 import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
-import { css } from '@app/styled-system/css'
-import { vstack } from '@app/styled-system/patterns'
+import { css } from '@republik/theme/css'
+import { vstack } from '@republik/theme/patterns'
 import {
   IconInstagram,
   IconLogoFacebook,
@@ -10,6 +10,7 @@ import {
   IconLogoTwitter,
   IconOpensource,
 } from '@republik/icons'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 import Link, { LinkProps } from 'next/link'
 import { ComponentType, ReactElement, isValidElement } from 'react'
 import { UrlObject } from 'url'
@@ -291,7 +292,7 @@ export default async function Footer() {
                         return <li key={name}>{link}</li>
                       }
 
-                      const baseURL = process.env.NEXT_PUBLIC_BASE_URL
+                      const baseURL = PUBLIC_BASE_URL
 
                       const isExternalLink = !isLinkOfSameHost(link, baseURL)
 

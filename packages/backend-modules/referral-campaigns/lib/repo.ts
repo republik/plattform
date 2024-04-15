@@ -1,14 +1,14 @@
 import type { UserRow } from '@orbiting/backend-modules-types'
 import type { PgDb } from 'pogi'
-import type { Campaign } from '../graphql/types'
 import type {
   CampaignRewardRow,
   UserCampaignRewardsRow,
   ReferrersWithCountRow,
+  CampaignRow,
 } from './types'
 
 export interface ReferralCampaignRepo {
-  getCampaignBySlug(slug: string): Promise<Campaign | null>
+  getCampaignBySlug(slug: string): Promise<CampaignRow | null>
   getCampaignReferralCount(campaignId: string): Promise<number | number>
   getUserCampaignReferralCount(
     campaignId: string,
@@ -43,7 +43,7 @@ export class PGReferralsRepo implements ReferralCampaignRepo, ReferralCodeRepo {
     this.#pgdb = pgdb
   }
 
-  async getCampaignBySlug(slug: string): Promise<Campaign | null> {
+  async getCampaignBySlug(slug: string): Promise<CampaignRow | null> {
     return await this.#pgdb.public.campaigns.findOne({
       slug: slug,
     })
@@ -125,6 +125,7 @@ export class PGReferralsRepo implements ReferralCampaignRepo, ReferralCodeRepo {
       FROM referrals r
       LEFT JOIN "userCampaignRewards" ucr ON r."referrerId" = ucr."userId"
       WHERE ucr."userId" IS NULL
+      AND r."referrerId" IS NOT NULL
       GROUP BY r."referrerId", r."campaignId"`)
   }
 

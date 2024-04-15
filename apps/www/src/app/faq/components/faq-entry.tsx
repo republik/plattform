@@ -1,6 +1,6 @@
-import { FaqEntryRecord } from '@app/graphql/cms/gql/graphql'
+import { FaqEntryRecord } from '#graphql/cms/__generated__/gql/graphql'
 import { StructuredText } from 'react-datocms'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 
 type FAQEntryProps = {
   entry: FaqEntryRecord

@@ -154,6 +154,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             'discussionNotificationChannels',
             'preferredFirstFactor',
             'disclosures',
+            'referralCode',
           ]),
           ...(address && {
             address_name: address.name,
@@ -763,6 +764,24 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
     )
 
     /**
+     * Mailchimp lead campaigns data
+     *
+     * Checks if the users email shows up in the imported mailchimp data
+     * from our 'Zapier to mailchimp ad campaigns'
+     */
+
+    const leadTrackingResults = await pgdb.public.leadTracking.find({
+      email: user.email,
+    })
+
+    await save(
+      destination,
+      'direct-newsletter-signups',
+      'Newsletter Sign-Ups, die nicht über die Republik Webseite geschehen sind, sondern durch das Angeben der Email beim Klicken auf Online-Werbung für die Republik-Newsletter (z.B. auf Instagram)',
+      leadTrackingResults.map((leads) => pick(leads, ['email', 'leadTag'])),
+    )
+
+    /**
      * membershipPeriods, membershipCancellations, chargeAttempts
      */
 
@@ -1033,6 +1052,56 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
           'readAt',
         ]),
       ),
+    )
+
+    /**
+     * Campaign Referrals
+     *
+     * Saves the referral created at time as well as the campaign name.
+     * The pledge id is not part of the export because it
+     * conerns a diffrent user.
+     */
+
+    const campaignsById = new Map()
+    const campaigns = await pgdb.public.campaigns.findAll()
+    campaigns.forEach((c) => campaignsById.set(c.id, c))
+
+    const campaignReferrals = await pgdb.public.referrals.find({
+      referrerId: user.id,
+    })
+    await save(
+      destination,
+      'campaign-referrals',
+      'Vermittlungen bei einer Mitgliederkampagne',
+      campaignReferrals.map((referral) => {
+        return {
+          campaign: campaignsById.get(referral.campaignId)?.name,
+          createdAt: referral.createdAt,
+        }
+      }),
+    )
+
+    const campaignsRewardsById = new Map()
+    const campaignRewards = await pgdb.public.campaignRewards.findAll()
+    const userCampaignRewards = await pgdb.public.userCampaignRewards.find({
+      userId: user.id,
+    })
+    campaignRewards.forEach((c) => campaignsRewardsById.set(c.id, c))
+
+    await save(
+      destination,
+      'campaign-referral-rewards',
+      'Erhaltene Belohnungen für Vermittlungen bei einer Mitgliederkampagne',
+      userCampaignRewards.map((userReward) => {
+        const reward = campaignsRewardsById.get(userReward.campaignRewardId)
+        const campaginName = campaignsById.get(reward.campaignId)?.name
+
+        return {
+          reward: reward?.name,
+          campaign: campaginName,
+          createdAt: userReward.createdAt,
+        }
+      }),
     )
 
     await saveReadMe(destination)

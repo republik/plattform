@@ -352,16 +352,17 @@ const ActionBar = ({
     {
       title: t('bookmark/title/default'),
       element: (
-        <BookmarkButton
-          bookmarked={document && !!document.userBookmark}
-          documentId={document.id}
-          label={!forceShortLabel ? t('bookmark/label') : ''}
-          labelShort={
-            !forceShortLabel && isArticleBottom ? t('bookmark/label') : ''
-          }
-          disabled={meLoading || documentLoading}
-          attributes={{ ['data-show-if-active-membership']: true }}
-        />
+        <span data-show-if-active-membership style={{ marginRight: 24 }}>
+          <BookmarkButton
+            bookmarked={document && !!document.userBookmark}
+            documentId={document.id}
+            label={!forceShortLabel ? t('bookmark/label') : ''}
+            labelShort={
+              !forceShortLabel && isArticleBottom ? t('bookmark/label') : ''
+            }
+            disabled={meLoading || documentLoading}
+          />
+        </span>
       ),
       modes: [
         'articleTop',

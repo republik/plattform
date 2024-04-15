@@ -5,7 +5,7 @@ export type Campaign = {
   description: string
   beginDate: string
   endDate: string
-  referrals: object
+  isActive: boolean
 }
 
 export type ReferralCount = {

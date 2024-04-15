@@ -1,6 +1,7 @@
 import type { User, UserRow } from '@orbiting/backend-modules-types'
 import type { ReferralCodeRepo } from './repo'
 import { CrockfordBase32 } from 'crockford-base32'
+const debug = require('debug')('referralCampaigns:lib:referralCode')
 
 const crypto = require('crypto')
 
@@ -81,7 +82,7 @@ export async function resolveUserByReferralCode(
     const normalizedCode = normalizeReferralCode(referralCode)
     return await repo.getUserByReferralCode(normalizedCode)
   } catch (e) {
-    console.log(`REFERRAL_CODE invalid Base32 code ${referralCode}`)
+    debug(`REFERRAL_CODE invalid Base32 code ${referralCode}`)
   }
   return null
 }

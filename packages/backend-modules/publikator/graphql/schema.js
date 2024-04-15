@@ -115,6 +115,8 @@ type mutations {
   ): RepoFile!
   "Make repo file public"
   repoFileMakePublic(id: ID!): RepoFile!
+  "Make repo file private"
+  repoFileMakePrivate(id: ID!): RepoFile!
   "Destroy repo file"
   repoFileDestroy(id: ID!): RepoFile!
 }

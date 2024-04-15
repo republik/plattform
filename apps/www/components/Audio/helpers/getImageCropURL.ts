@@ -1,9 +1,6 @@
-export type AudioCoverPropsOptions = {
-  x: number
-  y: number
-  width: number
-  height: number
-}
+import { Crop } from '#graphql/republik-api/__generated__/gql/graphql'
+
+export type AudioCoverCropOptions = Crop
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
@@ -31,7 +28,7 @@ const getResizefromURL = (url, size) => {
 export function getImageCropURL(
   imageUrl: string,
   size: number,
-  audioCoverCrop?: AudioCoverPropsOptions,
+  audioCoverCrop?: AudioCoverCropOptions,
 ) {
   const url = new URL(imageUrl)
   if (!url.searchParams.has('size')) {

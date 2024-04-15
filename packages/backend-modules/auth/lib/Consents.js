@@ -6,22 +6,29 @@ const MissingConsentsError = newAuthError(
 
 const revokeHooks = []
 
-/*
-const POLICIES = [
+const VALID_POLICIES = [
   'PRIVACY',
   'TOS',
   'STATUTE',
-  'NEWSLETTER_PROJECTR',
+  'PROGRESS',
+  'PROLITTERIS_OPT_OUT',
   'NEWSLETTER_DAILY',
   'NEWSLETTER_WEEKLY',
-  'PROGRESS'
+  'NEWSLETTER_CLIMATE',
+  'NEWSLETTER_ACCOMPLICE',
+  'NEWSLETTER_PROJECTR',
+  'NEWSLETTER_WDWWW',
 ]
-*/
 
 const REVOKABLE_POLICIES = [
   'PROGRESS',
-  '5YEAR_DONATE_MONTHS',
   'PROLITTERIS_OPT_OUT',
+  'NEWSLETTER_DAILY',
+  'NEWSLETTER_WEEKLY',
+  'NEWSLETTER_CLIMATE',
+  'NEWSLETTER_ACCOMPLICE',
+  'NEWSLETTER_PROJECTR',
+  'NEWSLETTER_WDWWW',
 ]
 
 const getAllConsentRecords = ({ userId, pgdb }) =>
@@ -62,20 +69,18 @@ const lastRecordForPolicyForUser = async ({ userId, policy, pgdb }) =>
     },
   )
 
-const statusForPolicyForUser = async (args) =>
-  lastRecordForPolicyForUser(args).then(
+const statusForPolicyForUser = async ({ userId, policy, pgdb }) =>
+  lastRecordForPolicyForUser({ userId, policy, pgdb }).then(
     (record) => record && record.record === 'GRANT',
   )
 
 const requiredConsents = async ({ userId, pgdb }) => {
+
   const { ENFORCE_CONSENTS = '' } = process.env
 
   if (ENFORCE_CONSENTS) {
     const consented = userId ? await consentsOfUser({ userId, pgdb }) : []
-
-    return ENFORCE_CONSENTS.split(',').filter(
-      (consent) => consented.indexOf(consent) === -1,
-    )
+    return ENFORCE_CONSENTS.split(',').filter((consent) => !consented.includes(consent))
   }
   return []
 }
@@ -98,7 +103,12 @@ const ensureAllRequiredConsents = async (args) => {
   }
 }
 
-const saveConsents = async ({ userId, consents = [], req, pgdb }) => {
+const saveConsents = async ({ userId, consents = [], req, pgdb, t }) => {
+  if (!consents.every((consent) => VALID_POLICIES.includes(consent))) {
+    throw new Error(
+      t('api/consents/notValid', { consent: consents.join(', ') }),
+    )
+  }
   // deduplicate
   const existingConsents = await consentsOfUser({ userId, pgdb })
   const insertConsents = consents.filter(
@@ -116,7 +126,10 @@ const saveConsents = async ({ userId, consents = [], req, pgdb }) => {
 }
 
 const revokeConsent = async ({ userId, consent }, context) => {
-  const { req, pgdb } = context
+  const { req, pgdb, t } = context
+  if (!REVOKABLE_POLICIES.includes(consent)) {
+    throw new Error(t('api/consents/notRevokable', { consent: consent }))
+  }
   await pgdb.public.consents.insert({
     userId,
     policy: consent,
@@ -132,6 +145,7 @@ const registerRevokeHook = (hook) => revokeHooks.push(hook)
 
 module.exports = {
   REVOKABLE_POLICIES,
+  VALID_POLICIES,
   lastRecordForPolicyForUser,
   statusForPolicyForUser,
   requiredConsents,

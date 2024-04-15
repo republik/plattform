@@ -1,5 +1,5 @@
 'use client'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { useRouter } from 'next/navigation'
 
 export const DraftModeIndicator = () => {
