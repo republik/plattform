@@ -5,8 +5,7 @@ import { gql } from '@apollo/client'
 import { getDocument } from '../components/Article/graphql/getDocument'
 import { createGetStaticProps } from '../lib/apollo/helpers'
 import { isExternal } from '../components/StatusError'
-import { DocumentDiscussionIdDocument } from '@app/graphql/republik-api/gql/graphql'
-
+import { DocumentDiscussionIdDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 type Params = {
   path: string[]
 } & ParsedUrlQuery
