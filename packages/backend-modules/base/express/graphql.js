@@ -139,6 +139,7 @@ module.exports = async (
       execute: execute,
       subscribe: subscribe,
       onConnect: webSocketOnConnect,
+      keepAlive: WS_KEEPALIVE_INTERVAL || 40000,
     },
     {
       server: httpServer,
@@ -155,5 +156,4 @@ module.exports = async (
       limit: '128mb',
     },
   })
-
 }

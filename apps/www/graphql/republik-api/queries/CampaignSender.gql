@@ -13,4 +13,8 @@ query CampaignSender($campaignSlug: String!) {
       count
     }
   }
+  campaign(slug: $campaignSlug) {
+    id
+    isActive
+  }
 }

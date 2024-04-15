@@ -1,5 +1,5 @@
 import { getCampaignReferralsData } from '@app/app/(campaign)/campaign-data'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import { CAMPAIGN_REFERRALS_GOAL } from '../constants'
 
 export const CampaignProgress = async () => {

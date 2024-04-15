@@ -1,7 +1,7 @@
 import Container from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
-import { css } from '@app/styled-system/css'
-import { stack } from '@app/styled-system/patterns'
+import { css } from '@republik/theme/css'
+import { stack } from '@republik/theme/patterns'
 import Link from 'next/link'
 import React from 'react'
 

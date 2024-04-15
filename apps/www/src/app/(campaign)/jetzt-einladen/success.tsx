@@ -1,6 +1,6 @@
 'use client'
 import { CAMPAIGN_META_ARTICLE_DIALOG_URL } from '@app/app/(campaign)/constants'
-import { css } from '@app/styled-system/css'
+import { css } from '@republik/theme/css'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRef, useState } from 'react'

@@ -8,6 +8,7 @@ const svgIcon = css({
   height: '1em',
   width: '1em',
   '& svg': {
+    display: 'inline',
     height: '1em',
     width: '1em',
     fill: colors.secondary,
