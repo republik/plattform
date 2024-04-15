@@ -5,6 +5,7 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { withPlausibleProxy } = require('next-plausible')
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -235,7 +236,7 @@ const nextConfig = {
 }
 
 const withConfiguredPlausibleProxy = withPlausibleProxy({
-  subdirectory: 'plsbl',
+  subdirectory: '__plsb',
 })
 
 module.exports = withBundleAnalyzer(withConfiguredPlausibleProxy(nextConfig))
