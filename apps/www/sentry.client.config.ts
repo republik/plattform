@@ -7,7 +7,7 @@ import * as Sentry from '@sentry/nextjs'
 const isProduction = process.env.NODE_ENV === 'production'
 
 Sentry.init({
-  dsn: 'https://d5839f83efbf888e1f8108a48fecc287@o4505721260212224.ingest.sentry.io/4506817347977216',
+  dsn: 'https://ba8ba4ea6d7f9ad150547a6a15ac51f2@o4507101684105216.ingest.de.sentry.io/4507101768908880',
 
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: isProduction ? 0.25 : 1,
