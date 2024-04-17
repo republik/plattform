@@ -59,8 +59,8 @@ export const UPVOTE_COMMENT_MUTATION = gql`
 `
 
 export const REPORT_COMMENT_MUTATION = gql`
-  mutation reportCommentMutation($commentId: ID!) {
-    reportComment(id: $commentId) {
+  mutation reportCommentMutation($commentId: ID!, $description: String) {
+    reportComment(id: $commentId, description: $description) {
       ...Comment
     }
   }

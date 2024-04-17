@@ -2,10 +2,14 @@ import { CommentFragmentType } from '../graphql/fragments/CommentFragment.graphq
 import { ReportCommentHandler } from '../hooks/actions/useReportCommentHandler'
 import { UnpublishCommentHandler } from '../hooks/actions/useUnpublishCommentHandler'
 import { Dispatch, SetStateAction } from 'react'
-import {
-} from '@project-r/styleguide'
+import {} from '@project-r/styleguide'
 import { timeFormat } from 'd3-time-format'
-import { IconEdit, IconFeatured, IconReport, IconUnpublish } from '@republik/icons'
+import {
+  IconEdit,
+  IconFeatured,
+  IconReport,
+  IconUnpublish,
+} from '@republik/icons'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 const hmFormat = timeFormat('%H:%M')
@@ -54,9 +58,31 @@ function getCommentActions({
       // TODO: check against local storage if user is guest
       disabled: !!comment.userReportedAt || hasLocalReport,
       onClick: async () => {
-        if (window.confirm(t('styleguide/CommentActions/reportMessage'))) {
-          await actions.reportCommentHandler(comment.id)
+        const reportReason = window.prompt(
+          'Sind Sie sicher, dass dieser Kommentar gegen die Etikette verstossen hat und Sie die Moderation herbeirufen möchten? Nennen Sie bitte den Grund für diese Meldung.',
+        )
+        if (reportReason === null) {
+          return
         }
+        if (reportReason.length === 0) {
+          alert(
+            'Bitte geben Sie einen Grund an, warum Sie diesen Kommentar melden möchten.',
+          )
+          return
+        }
+        const maxLength = 500
+        if (reportReason.length > maxLength) {
+          alert(
+            `Sie können maximal ${maxLength} Zeichen eingeben.\nIhre Eingabe: ${
+              reportReason.slice(0, maxLength) + '…'
+            }`,
+          )
+        }
+
+        await actions.reportCommentHandler(
+          comment.id,
+          reportReason?.length > 0 ? reportReason : undefined,
+        )
       },
     })
   }
