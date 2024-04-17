@@ -3,7 +3,7 @@ const { v4 } = require('uuid')
 const { REPORTS_NOTIFY_THRESHOLD = 2 } = process.env
 
 module.exports = async (_, args, context) => {
-  const { id } = args
+  const { id, description } = args
   const { pgdb, user: me, t, loaders } = context
 
   const comment = await loaders.Comment.byId.load(id)
@@ -65,6 +65,7 @@ module.exports = async (_, args, context) => {
         newComment,
         discussion,
         context,
+        description,
       )
     }
   }
