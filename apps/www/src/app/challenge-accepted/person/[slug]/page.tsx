@@ -121,6 +121,7 @@ export default async function Page({ params: { slug } }: PageProps) {
                 fontSize: '2xl',
               })}
             >
+              <p>{hub.newsletterSignupIntro}</p>
               <h2 className={css({ fontWeight: 'bold' })}>
                 {hub.newsletterSignupTagline}
               </h2>
