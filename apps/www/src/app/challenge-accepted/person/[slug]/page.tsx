@@ -1,4 +1,3 @@
-import { CANewsletterSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up'
 import Container from '@app/components/container'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
@@ -8,11 +7,14 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { PersonDetail } from './components/person-detail'
 
+import { PersonDetailDocument } from '#graphql/cms/__generated__/gql/graphql'
+import { NewsletterName } from '#graphql/republik-api/__generated__/gql/graphql'
+import { EmailSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up/email-signup'
 import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
+import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
+import { getNewsletterSubscriptionStatus } from '@app/lib/newsletters'
 import { vstack } from '@republik/theme/patterns'
 import Image from 'next/image'
-import { PersonDetailDocument } from '#graphql/cms/__generated__/gql/graphql'
-import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 
 type PageProps = {
   params: {
@@ -37,7 +39,15 @@ export default async function Page({ params: { slug } }: PageProps) {
     notFound()
   }
 
-  const me = await getMe()
+  const { hub } = data
+
+  const [me, isNewsletterSubscribed] = await Promise.all([
+    getMe(),
+    getNewsletterSubscriptionStatus({
+      newsletterName: NewsletterName.Climate,
+    }),
+  ])
+
   const isMember =
     me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
 
@@ -84,7 +94,7 @@ export default async function Page({ params: { slug } }: PageProps) {
           title='Zur Übersicht'
         >
           <Image
-            src={data.hub.logo?.url}
+            src={hub.logo?.url}
             priority
             width={156}
             height={100}
@@ -102,24 +112,23 @@ export default async function Page({ params: { slug } }: PageProps) {
             alignItems: 'stretch',
           })}
         >
-          <CANewsletterSignUp
-            tagline={data.hub?.newsletterSignupTagline}
-            me={me}
-            description={
-              <p
-                className={css({
-                  textStyle: 'paragraph',
-                  mb: '4',
-                })}
-              >
-                Die Klimakrise ist hier. Die Lage ist ernst. Wir richten den
-                Blick auf Menschen, die die Herausforderung annehmen. Gemeinsam
-                gehen wir der Frage nach: Wie kommen wir aus dieser Krise wieder
-                raus? Neugierig, kritisch, konstruktiv. Mit Artikeln, Debatten,
-                Veranstaltungen. Sind Sie dabei?
-              </p>
-            }
-          />
+          {!isNewsletterSubscribed && (
+            <div
+              className={css({
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8',
+                fontSize: '2xl',
+              })}
+            >
+              <p>{hub.newsletterSignupIntro}</p>
+              <h2 className={css({ fontWeight: 'bold' })}>
+                {hub.newsletterSignupTagline}
+              </h2>
+              <EmailSignUp me={me} newsletterName={NewsletterName.Climate} />
+            </div>
+          )}
+
           <section>
             <h2
               className={css({

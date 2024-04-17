@@ -79,6 +79,12 @@ type ChallengeAcceptedHubModelIntroductionField {
 
 union ChallengeAcceptedHubModelItemsField = ChallengeAcceptedArticleRecord | ChallengeAcceptedNewsletterRecord | EventRecord
 
+type ChallengeAcceptedHubModelNewsletterSignupBenefitsField {
+  blocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
 type ChallengeAcceptedHubModelOutroField {
   blocks: [String!]!
   links: [String!]!
@@ -110,6 +116,8 @@ type ChallengeAcceptedHubRecord implements RecordInterface {
   items: [ChallengeAcceptedHubModelItemsField!]!
   logo: FileField
   metadata: SeoField
+  newsletterSignupBenefits: ChallengeAcceptedHubModelNewsletterSignupBenefitsField
+  newsletterSignupIntro: String
   newsletterSignupTagline: String
   outro: ChallengeAcceptedHubModelOutroField!
 }
