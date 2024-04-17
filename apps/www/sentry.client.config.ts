@@ -10,7 +10,7 @@ Sentry.init({
   dsn: 'https://ba8ba4ea6d7f9ad150547a6a15ac51f2@o4507101684105216.ingest.de.sentry.io/4507101768908880',
 
   // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: isProduction ? 0.25 : 1,
+  tracesSampleRate: isProduction ? 0.1 : 1,
   debug: false,
   integrations: [],
 })
