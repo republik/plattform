@@ -68,12 +68,13 @@ export default async function Page({ searchParams }) {
     },
   })
 
-  const me = await getMe()
-
-  const isNewsletterSubscribed = await getNewsletterSubscriptionStatus({
-    newsletterName: NewsletterName.Climate,
-  })
-
+  const [me, isNewsletterSubscribed] = await Promise.all([
+    getMe(),
+    getNewsletterSubscriptionStatus({
+      newsletterName: NewsletterName.Climate,
+    }),
+  ])
+  
   const share = (
     <Share
       title='Challenge Accepted'
