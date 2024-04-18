@@ -19,6 +19,7 @@ import UserAgentProvider from '../lib/context/UserAgentContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { reportError } from '../lib/errors/reportError'
 import { ThemeProvider } from '../components/ColorScheme/ThemeProvider'
+import PlausibleProvider from 'next-plausible'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -60,34 +61,36 @@ const WebApp = ({
 
   return (
     <PageErrorBoundary>
-      <MeContextProvider assumeAccess={assumeAccess}>
-        <UserAgentProvider providedValue={providedUserAgent}>
-          <MediaProgressContext>
-            <AudioProvider>
-              <AppVariableContext>
-                <ThemeProvider>
-                  <RootColorVariables />
-                  <ColorContextProvider colorSchemeKey='auto'>
-                    <MessageSync />
-                    <Head>
-                      <meta
-                        name='viewport'
-                        content='width=device-width, initial-scale=1'
+      <PlausibleProvider domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}>
+        <MeContextProvider assumeAccess={assumeAccess}>
+          <UserAgentProvider providedValue={providedUserAgent}>
+            <MediaProgressContext>
+              <AudioProvider>
+                <AppVariableContext>
+                  <ThemeProvider>
+                    <RootColorVariables />
+                    <ColorContextProvider colorSchemeKey='auto'>
+                      <MessageSync />
+                      <Head>
+                        <meta
+                          name='viewport'
+                          content='width=device-width, initial-scale=1'
+                        />
+                      </Head>
+                      <Component
+                        serverContext={serverContext}
+                        {...otherPageProps}
                       />
-                    </Head>
-                    <Component
-                      serverContext={serverContext}
-                      {...otherPageProps}
-                    />
-                    <Track />
-                    <AudioPlayerOrchestrator />
-                  </ColorContextProvider>
-                </ThemeProvider>
-              </AppVariableContext>
-            </AudioProvider>
-          </MediaProgressContext>
-        </UserAgentProvider>
-      </MeContextProvider>
+                      <Track />
+                      <AudioPlayerOrchestrator />
+                    </ColorContextProvider>
+                  </ThemeProvider>
+                </AppVariableContext>
+              </AudioProvider>
+            </MediaProgressContext>
+          </UserAgentProvider>
+        </MeContextProvider>
+      </PlausibleProvider>
     </PageErrorBoundary>
   )
 }

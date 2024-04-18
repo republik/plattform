@@ -5,6 +5,8 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
+const { withPlausibleProxy } = require('next-plausible')
+
 const isProduction = process.env.NODE_ENV === 'production'
 
 const buildId =
@@ -232,7 +234,11 @@ const nextConfig = {
   },
 }
 
-module.exports = withBundleAnalyzer(nextConfig)
+const withConfiguredPlausibleProxy = withPlausibleProxy({
+  subdirectory: 'plsbl',
+})
+
+module.exports = withBundleAnalyzer(withConfiguredPlausibleProxy(nextConfig))
 
 // Injected content via Sentry wizard below
 
