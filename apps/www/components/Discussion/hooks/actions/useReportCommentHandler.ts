@@ -4,7 +4,10 @@ import { useMutation } from '@apollo/client'
 import { REPORT_COMMENT_MUTATION } from '../../graphql/documents'
 import { useLocalCommentReports } from '../../helpers/useLocalCommentReports'
 
-export type ReportCommentHandler = (commentId: string) => Promise<unknown>
+export type ReportCommentHandler = (
+  commentId: string,
+  description?: string,
+) => Promise<unknown>
 
 function useReportCommentHandler(): ReportCommentHandler {
   const [reportCommentMutation] = useMutation(REPORT_COMMENT_MUTATION)
@@ -13,10 +16,11 @@ function useReportCommentHandler(): ReportCommentHandler {
 
   // TODO: if guest store the reported comments in local storage for 30 days
 
-  function reportCommentHandler(commentId) {
+  function reportCommentHandler(commentId, description) {
     return reportCommentMutation({
       variables: {
         commentId: commentId,
+        description: description,
       },
     })
       .then((res) => {

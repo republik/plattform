@@ -88,6 +88,7 @@ exports.publishCommentReport = async (
   comment,
   discussion,
   context,
+  description,
 ) => {
   const author = await getDisplayAuthor(comment, {}, context)
 
@@ -100,7 +101,9 @@ exports.publishCommentReport = async (
     context,
   )}|${discussion.title}> (${comment.reports.length}. report):\n${
     comment.content
-  }`
+  }\n
+  Reason:\n
+  ${description || 'Non provided'}`
 
   return publish(SLACK_CHANNEL_COMMENTS_ADMIN, content, {
     unfurl_links: true,
