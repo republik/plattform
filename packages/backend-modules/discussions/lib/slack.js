@@ -101,8 +101,9 @@ exports.publishCommentReport = async (
     context,
   )}|${discussion.title}> (${comment.reports.length}. report):\n${
     comment.content
-  }
-  ${description ? '\nErgänzung zur Meldung:\n' + description : ''}`
+  }\n
+  Reason:\n
+  ${description || 'Non provided'}`
 
   return publish(SLACK_CHANNEL_COMMENTS_ADMIN, content, {
     unfurl_links: true,
