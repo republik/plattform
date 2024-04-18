@@ -63,7 +63,7 @@
     "@republik/nextjs-apollo-client": "*",
     "@republik/remark-preset": "*",
     "@republik/slate-mdast-serializer": "*",
-    "@sentry/nextjs": "^7.102.1",
+    "@sentry/nextjs": "^7.110.1",
     "axios": "^1.0.0",
     "clipboard-copy": "^3.1.0",
     "codemirror": "^5.57.0",
