@@ -10,7 +10,11 @@ query ChallengeAcceptedHub {
     outro {
       value
     }
+    newsletterSignupIntro
     newsletterSignupTagline
+    newsletterSignupBenefits {
+      value
+    }
     items {
       __typename
       ... on EventRecord {

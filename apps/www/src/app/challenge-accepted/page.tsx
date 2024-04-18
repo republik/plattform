@@ -1,25 +1,27 @@
 import type { Metadata, ResolvingMetadata } from 'next'
 
-import { PersonBubble } from '@app/app/challenge-accepted/person/[slug]/components/person-bubble'
-import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
-import { CANewsletterSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up'
-import { CollectionFilter } from '@app/app/challenge-accepted/components/collection-filter'
-import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
-import Container from '@app/components/container'
-import { getCMSClient } from '@app/lib/apollo/cms-client'
-import { getMe } from '@app/lib/auth/me'
-import { css } from '@republik/theme/css'
-import { hstack, vstack } from '@republik/theme/patterns'
-import Image from 'next/image'
-import { StructuredText } from 'react-datocms'
-import { Share } from '@app/components/share/share'
-import { IconShare } from '@republik/icons'
 import {
   ChallengeAcceptedHubDocument,
   ChallengeAcceptedHubMetaDocument,
 } from '#graphql/cms/__generated__/gql/graphql'
+import { NewsletterName } from '#graphql/republik-api/__generated__/gql/graphql'
+import { EmailSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up/email-signup'
+import { CollectionFilter } from '@app/app/challenge-accepted/components/collection-filter'
+import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
+import { PersonBubble } from '@app/app/challenge-accepted/person/[slug]/components/person-bubble'
+import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
+import Container from '@app/components/container'
+import { Share } from '@app/components/share/share'
+import { getCMSClient } from '@app/lib/apollo/cms-client'
+import { getMe } from '@app/lib/auth/me'
 import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
+import { getNewsletterSubscriptionStatus } from '@app/lib/newsletters'
+import { IconShare } from '@republik/icons'
+import { css } from '@republik/theme/css'
+import { hstack, vstack } from '@republik/theme/patterns'
 import { PUBLIC_BASE_URL } from 'lib/constants'
+import Image from 'next/image'
+import { StructuredText } from 'react-datocms'
 
 export async function generateMetadata(
   _, // params
@@ -66,8 +68,13 @@ export default async function Page({ searchParams }) {
     },
   })
 
-  const me = await getMe()
-
+  const [me, isNewsletterSubscribed] = await Promise.all([
+    getMe(),
+    getNewsletterSubscriptionStatus({
+      newsletterName: NewsletterName.Climate,
+    }),
+  ])
+  
   const share = (
     <Share
       title='Challenge Accepted'
@@ -93,6 +100,56 @@ export default async function Page({ searchParams }) {
 
   return (
     <EventTrackingContext category='ChallengeAcceptedLandingPage'>
+      {!isNewsletterSubscribed && (
+        <Container>
+          <div
+            className={css({
+              width: { base: 100, md: 156 },
+              mx: 'auto',
+              mt: { base: '4', md: '8' },
+              mb: { base: '8', md: '12' },
+
+              _dark: {
+                filter: 'invert(1)',
+              },
+            })}
+          >
+            <Image
+              src={hub.logo?.url}
+              priority
+              width={156}
+              height={100}
+              className={css({ objectFit: 'contain' })}
+              alt='Challenge Accepted Logo'
+            />
+          </div>
+          <div
+            className={css({
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8',
+              fontSize: '2xl',
+            })}
+          >
+            <p>{hub.newsletterSignupIntro}</p>
+            <h2 className={css({ fontWeight: 'bold', fontSize: 'xl' })}>
+              {hub.newsletterSignupTagline}
+            </h2>
+            <EmailSignUp me={me} newsletterName={NewsletterName.Climate} />
+            <div
+              className={css({
+                fontSize: 'l',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '2',
+              })}
+            >
+              <StructuredText data={hub.newsletterSignupBenefits?.value} />
+            </div>
+          </div>
+        </Container>
+      )}
+
       <h1
         className={css({
           mt: '8',
@@ -131,12 +188,6 @@ export default async function Page({ searchParams }) {
             <StructuredText data={hub.introduction.value} />
           </section>
 
-          <CANewsletterSignUp
-            me={me}
-            id='newsletter-top'
-            tagline={hub.newsletterSignupTagline}
-          />
-
           <section>
             <h2
               className={css({
@@ -166,12 +217,22 @@ export default async function Page({ searchParams }) {
               }
             />
           </section>
-          <CANewsletterSignUp
-            title='Keine neuen Beiträge und Verstaltungen verpassen: für den
-                  Newsletter anmelden.'
-            me={me}
-            tagline={hub.newsletterSignupTagline}
-          />
+
+          {!isNewsletterSubscribed && (
+            <div
+              className={css({
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8',
+                fontSize: '2xl',
+              })}
+            >
+              <h2 className={css({ fontWeight: 'bold' })}>
+                {hub.newsletterSignupTagline}
+              </h2>
+              <EmailSignUp me={me} newsletterName={NewsletterName.Climate} />
+            </div>
+          )}
 
           <section
             className={css({

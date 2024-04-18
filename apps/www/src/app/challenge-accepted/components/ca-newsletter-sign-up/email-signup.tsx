@@ -1,16 +1,16 @@
 'use client'
 
-import { useMutation } from '@apollo/client'
 import {
   MeQuery,
   NewsletterName,
   SignUpForNewsletterDocument,
   UpdateNewsletterSubscriptionDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useMutation } from '@apollo/client'
 import { useTrackEvent } from '@app/lib/matomo/event-tracking'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { css } from '@republik/theme/css'
 import { stack, wrap } from '@republik/theme/patterns'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -23,26 +23,10 @@ type FormValues = z.infer<typeof formSchema>
 
 type EmailSignUpProps = {
   me: MeQuery['me']
-  // Override the default heading
-  title?: string
-  // Text that is shown between the heading & the form
-  description?: React.ReactNode
-  // Tagline below the form
-  tagline?: string
   newsletterName: NewsletterName
-  newsletterSetting?: { id: string; name: string; subscribed: boolean }
-  id?: string
 }
 
-export function EmailSignUp({
-  me,
-  title,
-  description,
-  tagline,
-  newsletterName,
-  newsletterSetting,
-  id,
-}: EmailSignUpProps) {
+export function EmailSignUp({ me, newsletterName }: EmailSignUpProps) {
   const fieldId = useId()
   const [signUpForNewsletter] = useMutation(SignUpForNewsletterDocument)
   const [updateNewsletterSubscription] = useMutation(
@@ -119,23 +103,16 @@ export function EmailSignUp({
   }
 
   return (
-    <div id={id}>
-      <h2
-        className={css({
-          mb: '6',
-          textStyle: 'h1Sans',
-          fontWeight: 'bold',
-        })}
-        style={{
-          letterSpacing: '-1px',
-        }}
-      >
-        {title || 'Für den Newsletter anmelden'}
-      </h2>
-      {description}
+    <div
+      className={css({
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4',
+      })}
+    >
       {!signUpSuccessfulText ? (
         <>
-          {me && newsletterSetting?.subscribed === false ? (
+          {me ? (
             <button
               className={css({
                 position: 'relative',
@@ -147,40 +124,20 @@ export function EmailSignUp({
                 fontWeight: 'bold',
                 fontSize: 'xl',
                 cursor: 'pointer',
-                color: 'text',
+                background: 'contrast',
+                color: 'text.inverted',
                 width: '100%',
-                md: {
-                  width: 'auto',
-                },
               })}
+              disabled={isLoading}
               onClick={() => enableSubscription()}
             >
-              <span
-                className={css({
-                  visibility: isLoading ? 'hidden' : 'visible',
-                })}
-              >
-                Abonnieren
-              </span>
-              {isLoading && (
-                <div
-                  className={css({
-                    position: 'absolute',
-                    inset: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  })}
-                >
-                  Lädt...
-                </div>
-              )}
+              {isLoading ? 'Lädt …' : 'Newsletter abonnieren'}
             </button>
           ) : (
             <>
               <form
                 className={wrap({
-                  gap: '2',
+                  gap: '4',
                   position: 'relative',
                 })}
                 onSubmit={form.handleSubmit(handleSubmit)}
@@ -197,7 +154,8 @@ export function EmailSignUp({
                       display: 'flex',
                       flexDirection: 'row',
                       color: 'contrast',
-                      fontSize: 'sm',
+                      fontSize: 's',
+                      fontWeight: 'medium',
                     })}
                   >
                     E-Mail-Adresse
@@ -209,9 +167,9 @@ export function EmailSignUp({
                       width: 'full',
                       fontSize: 'xl',
                       background: 'transparent',
-                      borderBottomWidth: 1,
+                      borderBottomWidth: 2,
                       borderBottomStyle: 'solid',
-                      borderBottomColor: 'text',
+                      borderBottomColor: 'contrast',
                       borderRadius: 0,
                       color: 'text',
                       '&:focus': {
@@ -236,40 +194,23 @@ export function EmailSignUp({
                     fontWeight: 'bold',
                     fontSize: 'xl',
                     cursor: 'pointer',
-                    color: 'text',
+                    background: 'contrast',
+                    color: 'text.inverted',
                     width: '100%',
                     md: {
-                      width: 'auto',
+                      width: '33%',
                     },
                   })}
                   type='submit'
+                  disabled={isLoading}
                 >
-                  <span
-                    className={css({
-                      visibility: isLoading ? 'hidden' : 'visible',
-                    })}
-                  >
-                    Abonnieren
-                  </span>
-                  {isLoading && (
-                    <div
-                      className={css({
-                        position: 'absolute',
-                        inset: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      })}
-                    >
-                      Lädt...
-                    </div>
-                  )}
+                  {isLoading ? 'Lädt …' : 'Abonnieren'}
                 </button>
                 {form.formState.errors.email && (
                   <p
                     className={css({
                       width: 'full',
-                      fontSize: 'sm',
+                      fontSize: 's',
                       color: 'error',
                     })}
                   >
@@ -278,9 +219,6 @@ export function EmailSignUp({
                 )}
               </form>
             </>
-          )}
-          {tagline && (
-            <p className={css({ fontSize: 'xl', mt: '4' })}>{tagline}</p>
           )}
         </>
       ) : (
