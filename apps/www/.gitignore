@@ -21,6 +21,7 @@ dump.rdb
 
 styled-system
 
-# Generated GQL types
+# Sentry Config File
+.sentryclirc
 !graphql/*/__generated__/gql/README.md
 graphql/*/__generated__/gql
