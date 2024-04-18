@@ -1,4 +1,5 @@
 'use client'
+import { usePlausible } from 'next-plausible'
 import { ReactNode, createContext, useContext, useMemo } from 'react'
 
 type TrackEventParams = {
@@ -63,6 +64,9 @@ export const EventTrackingContext = ({
 export const useTrackEvent = () => {
   const ctxValue = useContext(ctx)
 
+  // TODO: implement plausible properly
+  const plausible = usePlausible()
+
   if (!ctxValue) {
     if (process.env.NODE_ENV === 'development') {
       console.warn(
@@ -85,6 +89,9 @@ export const useTrackEvent = () => {
       }
     } else {
       trackEvent({ category, action, name, value })
+
+      // TODO: implement plausible properly
+      plausible(category, { props: { action, name, value } })
     }
   }
 }
