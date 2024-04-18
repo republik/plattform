@@ -40,7 +40,7 @@ export default function Header({ meta }) {
     : { width: 178, height: 79 } // default
 
   const imageFile =
-    (isClimate && 'logo_republik_newsletter_challenge_accepted.png') ||
+    (isClimate && 'logo_republik_newsletter_challenge_accepted.png?v=2') ||
     (isWdwww && 'logo_republik_newsletter_wdwww.png') ||
     'logo_republik_newsletter.png'
 
