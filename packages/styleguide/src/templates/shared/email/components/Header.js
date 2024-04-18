@@ -3,8 +3,17 @@ import colors from '../../../../theme/colors'
 import { getFormatLine } from '../../../../components/TeaserFeed/utils'
 import { matchProjectR } from '../../../EditorialNewsletter/email/project-r/utils'
 
-export default ({ meta }) => {
+export default function Header({ meta }) {
   const { slug, path, format } = meta
+
+  const formatLine = useMemo(() => {
+    return getFormatLine({
+      format: meta.format,
+      series: meta.series,
+      repoId: meta.repoId,
+      path: meta.path,
+    })
+  }, [meta])
 
   const isProjectR = matchProjectR(format)
 
@@ -35,15 +44,6 @@ export default ({ meta }) => {
     (isWdwww && 'logo_republik_newsletter_wdwww.png') ||
     'logo_republik_newsletter.png'
 
-  const formatLine = useMemo(() => {
-    return getFormatLine({
-      format: meta.format,
-      series: meta.series,
-      repoId: meta.repoId,
-      path: meta.path,
-    })
-  }, [meta])
-
   const logoLink = (
     <a
       href={`https://www.republik.ch${path ? path : `/${slug}`}`}
@@ -72,6 +72,7 @@ export default ({ meta }) => {
           align={'center'}
           valign='top'
           style={{
+            backgroundColor: isClimate ? '#EBEA2B' : null,
             borderBottom:
               formatLine && formatLine.color
                 ? `3px solid ${formatLine.color}`
