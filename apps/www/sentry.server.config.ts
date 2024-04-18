@@ -4,14 +4,15 @@
 
 import * as Sentry from '@sentry/nextjs'
 
+const isProduction = process.env.NODE_ENV === 'production'
 const isDev = process.env.NODE_ENV === 'development'
 const sentryDisabled = process.env.SENTRY_DISABLED === 'true'
 
 Sentry.init({
-  dsn: 'https://59222d7d8b93d1c0324ea380eeab9233@o4507101684105216.ingest.de.sentry.io/4507101797220432',
+  dsn: 'https://ba8ba4ea6d7f9ad150547a6a15ac51f2@o4507101684105216.ingest.de.sentry.io/4507101768908880',
 
   // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1,
+  tracesSampleRate: isProduction ? 0.1 : 1,
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
