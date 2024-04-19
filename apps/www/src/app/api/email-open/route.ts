@@ -1,3 +1,5 @@
+import { NextRequest } from 'next/server'
+
 // A transparent 1x1 px PNG
 const pixel =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC'
@@ -7,9 +9,8 @@ const pixel =
  *
  * Embed in emails as an image and add the `url` param. E.g. <img src="https://www.republik.ch/api/email-open?url=<encoded_url>">
  */
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const url = searchParams.get('url')
+export async function GET(request: NextRequest) {
+  const url = request.nextUrl.searchParams.get('url')
 
   // If url param is not set, just do nothing
   if (url) {
