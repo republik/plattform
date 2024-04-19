@@ -386,6 +386,15 @@ module.exports = async (_, args, context) => {
       )
     }
 
+    // Plausible beacon
+    const plausibleBeacon = new URL(`/api/email-open`, FRONTEND_BASE_URL)
+    plausibleBeacon.searchParams.set('url', FRONTEND_BASE_URL + path)
+    // TODO: Should we add the UTM parameters here like in the Matomo implementation? Shouldn't they just be used in links in the email?
+    html = html.replace(
+      '</body>',
+      `<img alt="" src="${plausibleBeacon}" height="1" width="1"></body>`,
+    )
+
     await updateCampaignContent({ campaignId, html }).catch((error) => {
       console.error(error)
       throw new Error(t('api/publish/error/updateCampaignContent'))
