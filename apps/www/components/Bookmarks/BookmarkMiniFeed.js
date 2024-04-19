@@ -13,7 +13,7 @@ import UserProgress from '../ActionBar/UserProgress'
 import { getCollectionItems } from './queries'
 import Link from 'next/link'
 
-const BookmarkMiniFeed = ({ data, closeHandler, style }) => {
+const BookmarkMiniFeed = ({ data, style }) => {
   const [colorScheme] = useColorContext()
   return (
     <Loader
@@ -50,7 +50,6 @@ const BookmarkMiniFeed = ({ data, closeHandler, style }) => {
                       <Link
                         href={href}
                         passHref
-                        onClick={() => closeHandler()}
                         {...styles.tileHeadline}
                         {...colorScheme.set('color', 'text')}
                       >
