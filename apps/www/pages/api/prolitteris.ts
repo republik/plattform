@@ -31,27 +31,49 @@ function getHash(input: string | number | object): string {
 }
 
 /**
+ * Returns a the IP of the request.
+ * In case of multiple IPs (comma separated string or array) the first IP is returned.
+ * If no IP is found, null is returned.
+ * @param request
+ * @returns IP address or null
+ */
+function getRequestIP(request: NextApiRequest): string | null {
+  const requestIps =
+    request.headers['x-forwarded-for'] || request.socket.remoteAddress
+
+  if (Array.isArray(requestIps)) {
+    return requestIps[0]
+  }
+
+  if (typeof requestIps === 'string' && requestIps.includes(',')) {
+    return requestIps.split(',')[0].trim()
+  }
+
+  if (typeof requestIps === 'string') {
+    return requestIps
+  }
+
+  return null
+}
+
+/**
  * Proxy a request to the ProLitteris API & anonymize the IP
  * @param req
  * @param res
  */
 async function handler(request: NextApiRequest, response: NextApiResponse) {
-  const requestIps =
-    request.headers['x-forwarded-for'] || request.socket.remoteAddress
+  const requestIp = getRequestIP(request)
 
   const ua = request.headers['user-agent']
   const requestID = v4()
 
   // throw error if no IP is supplied
-  if (!requestIps) {
+  if (!requestIp) {
     console.error(requestID, 'IP undefined')
     return response.status(400).json({
       body: 'IP undefined',
     })
   }
-
-  // if x-forwarded-for contains an array of ip's, use the left most (client)
-  const requestIp = Array.isArray(requestIps) ? requestIps[0] : requestIps
 
   // Query Parameters of request
   // 1) paid (string, 'pw' || 'na'): request by paying user (pw) or public (na)
