@@ -23,10 +23,7 @@ const groupByDate = nest().key((n) => {
   return dateFormat(new Date(n.createdAt))
 })
 
-const NotificationFeedMini = ({
-  data: { notifications, loading, error },
-  closeHandler,
-}) => {
+const NotificationFeedMini = ({ data: { notifications, loading, error } }) => {
   const [colorScheme] = useColorContext()
   const { t } = useTranslation()
 
@@ -78,7 +75,6 @@ const NotificationFeedMini = ({
                             }
                             passHref
                             {...styles.cleanLink}
-                            onClick={() => closeHandler()}
                           >
                             {dateFormat(new Date(node.createdAt))}{' '}
                             {node.content.title}
