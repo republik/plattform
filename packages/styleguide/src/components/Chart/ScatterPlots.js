@@ -169,11 +169,10 @@ const ScatterPlot = ({
   )
   const plotYLines =
     yLines ||
-    (
-      yTicks || (yScale === 'log' ? get3EqualDistTicks(plotY) : yAxis.ticks)
-    ).map((tick) => ({ tick }))
-  // ensure highest value is last: the last value is labled with the unit
-  plotYLines.sort((a, b) => ascending(a.tick, b.tick))
+    (yTicks || (yScale === 'log' ? get3EqualDistTicks(plotY) : yAxis.ticks))
+      .map((tick) => ({ tick }))
+      // ensure highest value is last: the last value is labled with the unit
+      .sort((a, b) => ascending(a.tick, b.tick))
   const maxYLine = plotYLines[plotYLines.length - 1]
 
   const colorAccessor = (d) => d.datum[color]
