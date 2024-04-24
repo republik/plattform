@@ -12,7 +12,13 @@ import makeWithApollo from './helpers/withApollo'
  */
 type CreateApolloClientUtilitiesOptions = Pick<
   ApolloClientOptions,
-  'apiUrl' | 'wsUrl' | 'mobileConfigOptions' | 'name' | 'version' | 'headers'
+  | 'apiUrl'
+  | 'wsUrl'
+  | 'mobileConfigOptions'
+  | 'name'
+  | 'version'
+  | 'headers'
+  | 'errorLink'
 >
 
 /**
