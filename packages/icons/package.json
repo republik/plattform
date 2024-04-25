@@ -18,7 +18,8 @@
   "scripts": {
     "generate:icons": "svgr --out-dir ./lib/components ./lib/svg --silent",
     "dev": "nodemon --watch lib/svg --exec 'yarn build'",
-    "build": "yarn generate:icons && tsup lib/components/index.ts --format cjs,esm --dts --minify --clean --out-dir dist"
+    "build": "yarn generate:icons && tsup lib/components/index.ts --format cjs,esm --dts --minify --clean --out-dir dist",
+    "prepare": "yarn build"
   },
   "devDependencies": {
     "@svgr/cli": "^6.1.2",
