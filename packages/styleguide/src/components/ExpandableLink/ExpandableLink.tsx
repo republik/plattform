@@ -1,4 +1,4 @@
-import React, { useRef, CSSProperties, ReactElement, useState } from 'react'
+import React, { useRef, CSSProperties, useState, ReactNode } from 'react'
 import ReactDOM from 'react-dom'
 import { useColorContext } from '../Colors/ColorContext'
 import { css } from 'glamor'
@@ -31,7 +31,7 @@ export const DELAY = 300
 
 export const SEPARATOR = '%%'
 
-const Portal: React.FC<{ children: ReactElement }> = ({ children }) => {
+const Portal = ({ children }: { children: ReactNode }) => {
   return typeof document === 'object'
     ? ReactDOM.createPortal(children, document.body)
     : null
