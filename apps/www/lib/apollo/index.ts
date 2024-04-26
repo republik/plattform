@@ -5,8 +5,6 @@ import {
   inNativeAppBrowserLegacy,
 } from '../withInNativeApp'
 import { createAppWorkerLink } from './appWorkerLink'
-import { SentryLink } from './sentry-link'
-// import { SentryErrorLink } from 'lib/sentry/apollo-error-link'
 
 export const { initializeApollo, withApollo } = createApolloClientUtilities({
   name: '@orbiting/www-app',
@@ -17,5 +15,4 @@ export const { initializeApollo, withApollo } = createApolloClientUtilities({
     isInMobileApp: inNativeAppBrowser && inNativeAppBrowserLegacy,
     createAppWorkerLink,
   },
-  errorLink: SentryLink,
 })
