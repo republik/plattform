@@ -68,13 +68,39 @@ async function resolveAppEnvFile(appName) {
   return envFile.pathname
 }
 
-const SUPPORTED_APPS = ['www', 'api', 'assets', 'admin', 'publikator']
+const SUPPORTED_APPS = ['www', 'api', 'assets', 'admin', 'publikator'].sort()
 
 async function main() {
-  const app = process.argv[2] ?? 'api'
+  const app = process.argv[2] ?? null
+  if (!app) {
+    console.error(
+      'You need to provide an app to build (%s)',
+      SUPPORTED_APPS.join('|'),
+    )
+    process.exit(1)
+  }
   if (!SUPPORTED_APPS.includes(app)) {
     console.error('Unsupported app: %s', app)
     process.exit(1)
+  }
+
+  function buildCNBContainer(packPath, app, envFile, controller) {
+    const args = [
+      'build',
+      `${app}-republik-test:latest`,
+      '--builder',
+      'heroku/builder:22',
+      '--descriptor',
+      'packages/container-builder/cnb_project.toml',
+      '--env',
+      `SERVER=${app}`,
+      `--env-file=${envFile}`,
+    ]
+    const cmd = spawn(packPath, args, {
+      signal: controller ? controller.signal : undefined,
+    })
+
+    return cmd
   }
 
   let packPath = locate('pack')
@@ -87,23 +113,9 @@ async function main() {
 
   try {
     const envFile = await resolveAppEnvFile(app)
-
-    console.log(envFile)
-
-    const args = [
-      'build',
-      `${app}-republik-test:latest`,
-      '--builder',
-      'heroku/builder:22',
-      '--descriptor',
-      'packages/container-builder/cnb_project.toml',
-      '--env',
-      `SERVER=${app}`,
-      `--env-file=${envFile}`,
-    ]
-
     const controller = new AbortController()
-    const cmd = spawn(packPath, args, { signal: controller.signal })
+
+    const job = buildCNBContainer(packPath, app, envFile, controller)
 
     process.on('SIGINT', () => {
       controller.abort()
@@ -115,8 +127,8 @@ async function main() {
       process.exit(0)
     })
 
-    process.stdin.pipe(cmd.stdin)
-    cmd.stdout.pipe(process.stdout)
+    process.stdin.pipe(job.stdin)
+    job.stdout.pipe(process.stdout)
   } catch (err) {
     console.error(err)
   }
