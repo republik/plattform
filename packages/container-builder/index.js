@@ -68,6 +68,25 @@ async function resolveAppEnvFile(appName) {
   return envFile.pathname
 }
 
+function buildCNBContainer(packPath, app, envFile, controller) {
+  const args = [
+    'build',
+    `${app}-republik-test:latest`,
+    '--builder',
+    'heroku/builder:22',
+    '--descriptor',
+    'packages/container-builder/cnb_project.toml',
+    '--env',
+    `SERVER=${app}`,
+    `--env-file=${envFile}`,
+  ]
+  const cmd = spawn(packPath, args, {
+    signal: controller ? controller.signal : undefined,
+  })
+
+  return cmd
+}
+
 const SUPPORTED_APPS = ['www', 'api', 'assets', 'admin', 'publikator'].sort()
 
 async function main() {
@@ -82,25 +101,6 @@ async function main() {
   if (!SUPPORTED_APPS.includes(app)) {
     console.error('Unsupported app: %s', app)
     process.exit(1)
-  }
-
-  function buildCNBContainer(packPath, app, envFile, controller) {
-    const args = [
-      'build',
-      `${app}-republik-test:latest`,
-      '--builder',
-      'heroku/builder:22',
-      '--descriptor',
-      'packages/container-builder/cnb_project.toml',
-      '--env',
-      `SERVER=${app}`,
-      `--env-file=${envFile}`,
-    ]
-    const cmd = spawn(packPath, args, {
-      signal: controller ? controller.signal : undefined,
-    })
-
-    return cmd
   }
 
   let packPath = locate('pack')
