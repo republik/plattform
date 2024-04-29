@@ -16,6 +16,20 @@ const track = (...args) => {
   if (__DEV__) {
     console.log('track', ...args[0])
   }
+
+  const params = [...args[0]]
+
+  // TODO: implement plausible properly
+  try {
+    if (params[0] === 'trackEcommerceOrder') {
+      window.plausible?.('Sales', {
+        revenue: { currency: 'CHF', amount: params[2] },
+      })
+    }
+  } catch (e) {
+    console.error(e)
+  }
+
   window._paq.push(...args)
 }
 
