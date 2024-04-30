@@ -16,6 +16,11 @@ function getOSName() {
   }
 }
 
+async function fileExists(path) {
+  const res = await stat(path).catch(() => false)
+  return res
+}
+
 async function downloadPack() {
   const OS_NAME = getOSName()
   const CPU_ARCH = process.arch
@@ -23,12 +28,14 @@ async function downloadPack() {
   const url = `${PACK_GITHUB_URL}/${PACK_VERSION}/${tarfile}`
 
   const DOWNLOAD_DIR = new URL('./bin', import.meta.url)
+  console.log(DOWNLOAD_DIR.pathname)
 
-  if (!(await stat(DOWNLOAD_DIR))) {
+  if (!(await fileExists(DOWNLOAD_DIR.pathname))) {
+    console.error('mkdir %s', DOWNLOAD_DIR.pathname)
     await mkdir(DOWNLOAD_DIR)
   }
 
-  if (await stat(DOWNLOAD_DIR.pathname + '/pack')) {
+  if (await fileExists(DOWNLOAD_DIR.pathname + '/pack')) {
     console.error('pack already downloaded')
     return DOWNLOAD_DIR.pathname + '/pack'
   }
@@ -44,7 +51,7 @@ async function downloadPack() {
   }
 
   console.error('Extrackting pack into %s', DOWNLOAD_DIR)
-  await pipeline(res.body, tar.x({ cwd: './bin' }))
+  await pipeline(res.body, tar.x({ cwd: DOWNLOAD_DIR.pathname }))
 
   console.error('Done downloading pack')
 
