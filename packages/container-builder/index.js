@@ -60,12 +60,20 @@ function locate(name) {
   }
 }
 
-async function resolveAppEnvFile(appName) {
+async function resolveDefaultAppEnvFile(appName) {
   const envFile = new URL(`./../../apps/${appName}/.env`, import.meta.url)
   if (!(await stat(envFile))) {
     throw new Error('app .env file is missing')
   }
   return envFile.pathname
+}
+
+function buildEnvFromArgs(argv) {
+  const idx = argv.indexOf('--env-file')
+  if (idx === -1) {
+    return null
+  }
+  return argv[idx + 1] ?? null
 }
 
 function buildCNBContainer(packPath, app, envFile, controller) {
@@ -112,7 +120,8 @@ async function main() {
   }
 
   try {
-    const envFile = await resolveAppEnvFile(app)
+    const envFile =
+      buildEnvFromArgs(process.argv) || (await resolveDefaultAppEnvFile(app))
     const controller = new AbortController()
 
     const job = buildCNBContainer(packPath, app, envFile, controller)
