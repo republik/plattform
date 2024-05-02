@@ -61,7 +61,10 @@ const WebApp = ({
 
   return (
     <PageErrorBoundary>
-      <PlausibleProvider domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}>
+      <PlausibleProvider
+        domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
+        revenue
+      >
         <MeContextProvider assumeAccess={assumeAccess}>
           <UserAgentProvider providedValue={providedUserAgent}>
             <MediaProgressContext>
