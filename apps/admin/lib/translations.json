@@ -2231,6 +2231,14 @@
       "value": "Nachname fehlt"
     },
     {
+      "key": "user/gender/label",
+      "value": "Gender"
+    },
+    {
+      "key": "user/prolitterisId/label",
+      "value": "ProLitteris ID"
+    },
+    {
       "key": "pledge/contact/email/label",
       "value": "Ihre E-Mail"
     },

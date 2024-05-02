@@ -147,6 +147,7 @@ const getPublicUser = gql`
       username
       firstName
       lastName
+      gender
       updatedAt
       name
       email

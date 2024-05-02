@@ -29,6 +29,8 @@ const cleanUser = ({
   lastName,
   phoneNumber,
   birthday,
+  prolitterisId,
+  gender,
   address,
 }) => ({
   id,
@@ -37,6 +39,8 @@ const cleanUser = ({
   lastName,
   phoneNumber,
   birthday,
+  prolitterisId,
+  gender,
   address,
 })
 

@@ -181,6 +181,7 @@ export const mutation = gql`
     $pgpPublicKey: String
     $isListed: Boolean
     $prolitterisId: String
+    $gender: String
   ) {
     updateMe(
       username: $username
@@ -198,6 +199,7 @@ export const mutation = gql`
       pgpPublicKey: $pgpPublicKey
       isListed: $isListed
       prolitterisId: $prolitterisId
+      gender: $gender
     ) {
       id
       username
@@ -217,6 +219,7 @@ export const mutation = gql`
       pgpPublicKeyId
       isListed
       prolitterisId
+      gender
       credentials {
         isListed
         description

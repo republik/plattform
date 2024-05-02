@@ -121,18 +121,27 @@ const Contact = ({
             },
           ]}
         />
-        <FieldSet
-          values={values}
-          errors={errors}
-          dirty={dirty}
-          onChange={onChange}
-          fields={[
-            {
-              label: t('profile/contact/prolitterisId/label'),
-              name: 'prolitterisId',
-            },
-          ]}
-        />
+        {!!user.documents.totalCount && (
+          <>
+            <Label style={{ display: 'block', margin: '16px 0' }} >Author*innenen-Felder</Label>
+            <FieldSet
+              values={values}
+              errors={errors}
+              dirty={dirty}
+              onChange={onChange}
+              fields={[
+                {
+                  label: t('profile/contact/prolitterisId/label'),
+                  name: 'prolitterisId',
+                },
+                {
+                  label: t('profile/contact/gender/label'),
+                  name: 'gender',
+                },
+              ]}
+            />
+          </>
+        )}
 
         {!!user.phoneNumber && (
           <Fragment>

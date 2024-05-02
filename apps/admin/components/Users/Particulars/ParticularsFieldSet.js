@@ -39,6 +39,14 @@ const fields = (t) => [
       )
     },
   },
+  {
+    label: t('user/gender/label'),
+    name: 'gender',
+  },
+  {
+    label: t('user/prolitterisId/label'),
+    name: 'prolitterisId',
+  },
 ]
 
 const Form = ({ t, values, errors, dirty, onChange }) => (

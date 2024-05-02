@@ -1381,6 +1381,10 @@
       "value": "Prolitteris ID"
     },
     {
+      "key": "profile/contact/gender/label",
+      "value": "Gender"
+    },
+    {
       "key": "profile/contact/twitter/label",
       "value": "Twitter"
     },

@@ -34,6 +34,8 @@ export const GET_USER = gql`
       firstName
       lastName
       birthday
+      gender
+      prolitterisId
       address {
         id
         name
@@ -51,6 +53,8 @@ export const UPDATE_USER = gql`
   mutation updateUser(
     $id: ID!
     $birthday: Date
+    $gender: String
+    $prolitterisId: String
     $firstName: String!
     $lastName: String!
     $phoneNumber: String
@@ -59,6 +63,8 @@ export const UPDATE_USER = gql`
     updateUser(
       userId: $id
       birthday: $birthday
+      gender: $gender
+      prolitterisId: $prolitterisId
       firstName: $firstName
       lastName: $lastName
       phoneNumber: $phoneNumber
