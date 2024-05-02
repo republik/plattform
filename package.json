@@ -32,6 +32,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "heroku-prebuild": "scripts/prune.sh",
     "heroku-postbuild": "scripts/build.sh && scripts/heroku-postbuild.sh",
+    "heroku-cleanup": "scripts/heroku-cleanup.sh",
     "dev:setup": "yarn migrate:db:create && yarn migrate:up && yarn migrate:db:import && yarn pull:elasticsearch --flush && yarn populate",
     "pull:elasticsearch": "packages/backend-modules/search/script/pullElasticsearch.js",
     "pull:images": "packages/backend-modules/publikator/script/copyImages.js",
