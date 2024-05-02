@@ -13,7 +13,15 @@ module.exports = async (_, args, { pgdb, req, t, mail }) => {
     throw new Error(t('api/users/404'))
   }
 
-  const { firstName, lastName, birthday, address, phoneNumber } = args
+  const {
+    firstName,
+    lastName,
+    birthday,
+    address,
+    phoneNumber,
+    gender,
+    prolitterisId,
+  } = args
   const transaction = await pgdb.transactionBegin()
   try {
     if (firstName || lastName || birthday || phoneNumber) {
@@ -24,6 +32,8 @@ module.exports = async (_, args, { pgdb, req, t, mail }) => {
           lastName,
           birthday,
           phoneNumber,
+          gender,
+          prolitterisId,
         },
         { skipUndefined: true },
       )

@@ -65,12 +65,15 @@ type mutations {
   updateUser(
     firstName: String
     lastName: String
-    
+
     address: AddressInput
 
     birthday: Date
     phoneNumber: String
-    
+
+    gender: String
+    prolitterisId: String
+
     userId: ID!
   ): User!
 
