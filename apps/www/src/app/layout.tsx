@@ -34,7 +34,10 @@ export default async function RootLayout({
       className={css({ scrollPaddingTop: '16-32' })}
     >
       <head>
-        <PlausibleProvider domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN} />
+        <PlausibleProvider
+          domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
+          revenue
+        />
       </head>
       <body
         className={css({

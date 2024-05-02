@@ -1214,6 +1214,12 @@ export const withPay = (Component) => {
                 throw confirmResult.error.message
               }
             }
+
+            // TODO: implement plausible properly
+            window.plausible?.('Sales', {
+              revenue: { currency: 'CHF', amount: pendingOrder.total / 100 },
+            })
+
             await Promise.all(
               [
                 pendingOrder &&
