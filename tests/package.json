@@ -1,0 +1,26 @@
+{
+  "name": "@republik/tests",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:playwright": "playwright test",
+    "test:all": "npm run test:coverage && npm run test:playwright"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@playwright/test": "^1.43.1",
+    "@testcontainers/elasticsearch": "^10.9.0",
+    "@testcontainers/postgresql": "^10.9.0",
+    "@testcontainers/redis": "^10.9.0",
+    "@vitest/coverage-c8": "^0.33.0",
+    "@vitest/coverage-v8": "^1.5.3",
+    "testcontainers": "^10.9.0",
+    "typescript": "^5.4.5",
+    "uuid": "^9.0.1",
+    "vitest": "^1.5.3"
+  }
+}
