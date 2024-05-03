@@ -7,7 +7,7 @@
 /.next
 
 # env files
-*.env
+.env
 # local env files
 .env*.local
 
