@@ -12,7 +12,7 @@ const withNextra = nextra({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@project-r/styleguide', '@republik/ui-docs-demo'],
+  transpilePackages: ['@republik/ui-docs-demo'],
 }
 
 export default withDocs(withNextra(nextConfig))
