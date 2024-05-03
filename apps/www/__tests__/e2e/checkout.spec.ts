@@ -1,5 +1,4 @@
-// tests/e2e/example.spec.ts
-import { test } from '@playwright/test'
+import { test, expect } from '@playwright/test'
 import { v4 } from 'uuid'
 
 function getCheckoutAccount() {
@@ -18,10 +17,30 @@ function getCheckoutAccount() {
   }
 }
 
-test('republik checkout test (payment-slip)', async ({ page }) => {
+test('checkout snapshot', async ({ page }) => {
+  await page.goto('/angebote')
+
+  // screenshot packages
+  await expect(page).toHaveScreenshot(['overview.png'], {
+    fullPage: true,
+  })
+  await page.goto('/angebote?package=ABO')
+
+  const packages = ['ABO', 'MONTHLY_ABO', 'BENEFACTOR']
+
+  for (const pkg of packages) {
+    await page.goto(`/angebote?package=${pkg}`)
+    await expect(page).toHaveScreenshot([`package-${pkg}.png`], {
+      fullPage: true,
+    })
+  }
+})
+
+test('checkout with payment-slip', async ({ page }) => {
   const user = getCheckoutAccount()
 
-  await page.goto('/')
+  await page.goto('/angebote')
+  // print page url
   await page.getByRole('link', { name: 'Jahresmitgliedschaft CHF 240' }).click()
   await page.getByLabel('Visa/Mastercard/Amex').check()
   await page.getByText('Ihr Vorname').click()
