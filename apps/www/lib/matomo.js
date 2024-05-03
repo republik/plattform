@@ -16,6 +16,7 @@ const track = (...args) => {
   if (__DEV__) {
     console.log('track', ...args[0])
   }
+
   window._paq.push(...args)
 }
 
