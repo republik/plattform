@@ -2,7 +2,10 @@
 import { defineConfig } from '@playwright/test'
 import { loadEnvConfig } from '@next/env'
 
-loadEnvConfig('.')
+const nodeEnv = process.env.NODE_ENV || 'development'
+const isDev = nodeEnv === 'development'
+
+loadEnvConfig('.', isDev)
 
 export default defineConfig({
   testDir: './e2e/',
@@ -17,9 +20,12 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: 'yarn dev',
+    command: isDev
+      ? 'yarn turbo run dev --filter=@orbiting/www-app'
+      : 'yarn turbo run build --filter=@orbiting/www-app && yarn start',
     url: process.env.NEXT_PUBLIC_BASE_URL,
     stdout: 'pipe',
     stderr: 'pipe',
+    timeout: 120_000, // building the app can take a while
   },
 })
