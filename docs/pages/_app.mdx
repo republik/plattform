@@ -1,8 +1,9 @@
 import "../root.css";
 import "lib/styles.css";
+import { RootColorVariables } from '@project-r/styleguide'
 
 export default function App({ Component, pageProps }) {
 
-return <Component {...pageProps} />
+return <><RootColorVariables /><Component {...pageProps} /></>
 
 }

@@ -19,7 +19,77 @@ const colorTokens = [
   'textSoft',
 ]
 
-export function Colors() {
+const legacyColorTokens = [
+  'logo',
+  'default',
+  'overlay',
+  'hover',
+  'alert',
+  'error',
+  'defaultInverted',
+  'overlayInverted',
+  'divider',
+  'dividerInverted',
+  'primary',
+  'primaryHover',
+  'primaryText',
+  'text',
+  'textInverted',
+  'textSoft',
+  'textSoftInverted',
+  'disabled',
+  'accentColorBriefing',
+  'accentColorInteraction',
+  'accentColorOppinion',
+  'accentColorFormats',
+  'accentColorMeta',
+  'accentColorAudio',
+  'accentColorFlyer',
+  'overlayShadow',
+  'fadeOutGradientDefault',
+  'fadeOutGradientDefault90',
+  'fadeOutGradientOverlay',
+  'displayLight',
+  'displayDark',
+  'sequential100',
+  'sequential95',
+  'sequential90',
+  'sequential85',
+  'sequential80',
+  'sequential75',
+  'sequential70',
+  'sequential65',
+  'sequential60',
+  'sequential55',
+  'sequential50',
+  'opposite100',
+  'opposite80',
+  'opposite60',
+  'neutral',
+  'discrete1',
+  'discrete2',
+  'discrete3',
+  'discrete4',
+  'discrete5',
+  'discrete6',
+  'discrete7',
+  'discrete8',
+  'discrete9',
+  'discrete10',
+  'chartsInverted',
+  'flyerBg',
+  'flyerText',
+  'flyerMetaText',
+  'flyerFormatText',
+]
+
+export function Colors({
+  tokens,
+  tokenType = 'pandacss',
+}: {
+  tokens: string[]
+  tokenType: 'legacy' | 'pandacss'
+}) {
   return (
     <ul
       className={css({
@@ -31,14 +101,17 @@ export function Colors() {
         color: 'text',
       })}
     >
-      {colorTokens.map((name) => {
-        // const value = colors.base?.value
-
-        // const tokenValue = context.tokens.deepResolveReference(value)
-
+      {tokens.map((name) => {
         return (
           <li key={name}>
-            <Color name={name} />
+            <Color
+              name={name}
+              value={
+                tokenType === 'pandacss'
+                  ? token.var(`colors.${name}`)
+                  : `var(--color-${name})`
+              }
+            />
           </li>
         )
       })}
@@ -46,7 +119,7 @@ export function Colors() {
   )
 }
 
-const Color = ({ name }: { name: string }) => {
+const Color = ({ name, value }: { name: string; value: string }) => {
   return (
     <div className={hstack()}>
       <div
@@ -56,12 +129,12 @@ const Color = ({ name }: { name: string }) => {
           // borderColor: 'contrast',
           borderWidth: 1,
         })}
-        style={{ background: token.var(`colors.${name}`) }}
+        style={{ background: value }}
       ></div>
       <div>
         <div>{name}</div>
         <div className={css({ fontSize: 'xs', color: 'textSoft' })}>
-          {token.var(`colors.${name}`)}
+          {value}
         </div>
       </div>
     </div>

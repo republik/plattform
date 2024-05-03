@@ -1,26 +1,43 @@
 import { Colors } from 'lib/components/colors'
 
+export const tokens = [
+  'text',
+  'text.inverted',
+  'text.white',
+  'contrast',
+  'background',
+  'pageBackground',
+  'link',
+  'primary',
+  'primaryHover',
+  'overlay',
+  'error',
+  'divider',
+  'disabled',
+  'textSoft',
+]
+
 # Colors
 
 <div data-theme='light'>
-  <Colors />
+  <Colors tokens={tokens} />
 </div>
 
 <div data-theme='dark' style={{ background: '#222' }}>
-  <Colors />
+  <Colors tokens={tokens} />
 </div>
 
 ## Challenge Accepted
 
 <div data-theme='light'>
   <div data-page-theme='challenge-accepted'>
-    <Colors />
+    <Colors tokens={tokens} />
   </div>
 </div>
 
 <div data-theme='dark' style={{ background: '#222' }}>
   <div data-page-theme='challenge-accepted'>
-    <Colors />
+    <Colors tokens={tokens} />
   </div>
 </div>
 
@@ -28,7 +45,7 @@ import { Colors } from 'lib/components/colors'
 
 <div data-theme='light'>
   <div data-page-theme='campaign-2024'>
-    <Colors />
+    <Colors tokens={tokens} />
   </div>
 </div>
 
@@ -36,6 +53,6 @@ import { Colors } from 'lib/components/colors'
 
 <div data-theme='light'>
   <div data-page-theme='campaign-2024' data-theme-inverted>
-    <Colors />
+    <Colors tokens={tokens} />
   </div>
 </div>

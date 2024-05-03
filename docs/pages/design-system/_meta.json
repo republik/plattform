@@ -1,3 +1,5 @@
 {
-  "index": "Overview"
+  "index": "Overview",
+  "colors": "Colors",
+  "legacy": { "title": "Legacy Styles" }
 }
