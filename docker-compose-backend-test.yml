@@ -1,0 +1,29 @@
+version: '3.4'
+services:
+  republik-api-setup:
+    image: api-republik-test:latest
+    env_file:
+      - apps/api/.env
+    environment:
+      - DATABASE_URL=postgres://postgres@postgres:5432/republik-test
+    entrypoint: ["launcher", "yarn migrate:db:create && yarn migrate:up && yarn migrate:db:import"]
+    depends_on:
+      - elastic
+      - redis
+      - postgres
+  republik-api:
+    image: api-republik-test:latest
+    env_file:
+      - apps/api/.env
+    environment:
+      - DATABASE_URL=postgres://postgres@postgres:5432/republik-test
+      - ELASTIC_URL=http://elastic:9200
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - elastic
+      - redis
+      - postgres
+      - republik-api-setup
+    ports:
+      - 5010:5010
+
