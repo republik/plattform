@@ -8,8 +8,7 @@
       "apps/*",
       "packages/*",
       "packages/mdast/*",
-      "packages/backend-modules/*",
-      "tests"
+      "packages/backend-modules/*"
     ],
     "nohoist": [
       "styleguide/slate",

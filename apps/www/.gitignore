@@ -25,3 +25,5 @@ styled-system
 .sentryclirc
 !graphql/*/__generated__/gql/README.md
 graphql/*/__generated__/gql
+
+playwright-report

@@ -1,5 +1,5 @@
 // tests/e2e/example.spec.ts
-import { test, expect } from '@playwright/test'
+import { test } from '@playwright/test'
 import { v4 } from 'uuid'
 
 function getCheckoutAccount() {
@@ -21,7 +21,7 @@ function getCheckoutAccount() {
 test('republik checkout test (payment-slip)', async ({ page }) => {
   const user = getCheckoutAccount()
 
-  await page.goto('https://republik.love/angebote?open_sesame=<secret>')
+  await page.goto('/')
   await page.getByRole('link', { name: 'Jahresmitgliedschaft CHF 240' }).click()
   await page.getByLabel('Visa/Mastercard/Amex').check()
   await page.getByText('Ihr Vorname').click()
