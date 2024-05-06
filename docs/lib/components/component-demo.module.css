@@ -1,7 +1,6 @@
 .demoArea {
   display: flex;
   justify-content: center;
-  padding: 50px 0;
   overflow-x: auto;
 
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAAAAACoWZBhAAAAF0lEQVQI12P4BAI/QICBFCaYBPNJYQIAkUZftTbC4sIAAAAASUVORK5CYII=');
@@ -17,6 +16,12 @@
   background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAAAAACoWZBhAAAAFklEQVQI12NQBQF2EGAghQkmwXxSmADZJQiZ2ZZ46gAAAABJRU5ErkJggg==');
   border: 1px solid #222;
   box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.demoComponent {
+  min-width: 0;
+  width: 100%;
+  padding: 30px 30px;
 }
 
 .demoCode :global(pre) {

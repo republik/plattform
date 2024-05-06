@@ -12,16 +12,22 @@ export const ComponentDemo = ({
   file,
   Component,
   children,
+  variant,
 }: {
   file: string
   Component: () => JSX.Element
   children: ReactNode
+  variant?: 'light' | 'dark'
 }) => (
   <div data-file={file}>
-    <div className={styles.demoArea}>
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Component />
-      </ErrorBoundary>
+    <div className={variant}>
+      <div className={styles.demoArea}>
+        <div className={styles.demoComponent}>
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Component />
+          </ErrorBoundary>
+        </div>
+      </div>
     </div>
 
     <div className={styles.demoCode}>{children}</div>
