@@ -77,7 +77,10 @@ const UserProgress = (
     return null
   }
 
-  const { percentage, updatedAt } = userProgress
+  const {
+    max: { percentage },
+    updatedAt,
+  } = userProgress
   const percent = Math.round(percentage * 100)
 
   const ReadIcon = forwardRef((props, ref) => (
