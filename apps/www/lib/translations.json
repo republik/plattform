@@ -2573,12 +2573,20 @@
       "value": "Monats-Abo"
     },
     {
+      "key": "package/MONTHLY_ABO/einstiegsmonat/title",
+      "value": "Monats-Abo zum Einstiegspreis"
+    },
+    {
       "key": "package/MONTHLY_ABO/price",
       "value": "{formattedCHF}"
     },
     {
       "key": "package/MONTHLY_ABO/description",
       "value": "Schön, dass Sie dabei sind. Sie erhalten ab sofort unser Magazin. Und sind während der Zeit Ihres Abonnements Verlegerin oder Verleger der Republik. Das Monatsabonnement wird jeweils automatisch verlängert. Sie können es aber jederzeit in Ihrem Konto kündigen."
+    },
+    {
+      "key": "package/MONTHLY_ABO/einstiegsmonat/description",
+      "value": "Das Abo erneuert nach 30 Tagen automatisch zum regulären Preis von CHF 22.-. Es ist jederzeit kündbar."
     },
     {
       "key": "package/LESHA/title",

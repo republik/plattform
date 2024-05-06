@@ -1093,6 +1093,7 @@ Submit.propTypes = {
   paymentMethods: PropTypes.array,
   total: PropTypes.number,
   reason: PropTypes.string,
+  coupon: PropTypes.string,
   options: PropTypes.array.isRequired,
   submit: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
@@ -1105,6 +1106,7 @@ const submitPledge = gql`
     $options: [PackageOptionInput!]!
     $user: UserInput
     $reason: String
+    $coupon: String
     $consents: [String!]
     $accessToken: ID
     $payload: JSON
@@ -1119,6 +1121,7 @@ const submitPledge = gql`
         address: $address
         shippingAddress: $shippingAddress
         reason: $reason
+        coupon: $coupon
         accessToken: $accessToken
         payload: $payload
       }

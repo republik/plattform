@@ -227,6 +227,14 @@ class CustomizePackage extends Component {
   getPriceWithSuggestion() {
     const { pkg, values, userPrice, router } = this.props
 
+    // EINSTIEGSMONAT-TEST (remove after test)
+    if (
+      pkg.name === 'MONTHLY_ABO' &&
+      router.query.coupon === 'einstiegsmonat'
+    ) {
+      return 1000
+    }
+
     if (values.price === undefined && pkg.suggestedTotal) {
       if (process.browser) {
         this.setState({ customPrice: true })
@@ -514,6 +522,9 @@ class CustomizePackage extends Component {
         `package/${crowdfundingName}/${pkg.name}/${ownMembership.type.name}/description`,
       ownMembership &&
         `package/${pkg.name}/${ownMembership.type.name}/description`,
+      // EINSTIEGSMONAT-TEST (remove after test)
+      router.query.coupon === 'einstiegsmonat' &&
+        `package/${pkg.name}/einstiegsmonat/description`,
       `package/${crowdfundingName}/${pkg.name}/description`,
       `package/${pkg.name}/description`,
     ].filter(Boolean)
@@ -530,6 +541,9 @@ class CustomizePackage extends Component {
                 ownMembership &&
                   new Date(ownMembership.graceEndDate) < new Date() &&
                   `package/${pkg.name}/reactivate/pageTitle`,
+                // EINSTIEGSMONAT-TEST (remove after test)
+                router.query.coupon === 'einstiegsmonat' &&
+                  `package/${pkg.name}/einstiegsmonat/title`,
                 `package/${pkg.name}/pageTitle`,
                 `package/${pkg.name}/title`,
               ].filter(Boolean),
