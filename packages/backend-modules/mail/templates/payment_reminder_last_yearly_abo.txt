@@ -2,8 +2,8 @@ Guten Tag
 
 Journalismus lebt nicht nur von Worten, sondern auch von Taten: Handeln Sie
 jetzt und zahlen Sie Ihren ausstehenden Abo-Beitrag. Falls sich unsere
-Buchhaltung nicht irrt, ist der von Ihnen gewählte Beitrag in Höhe von CHF
-{{total}} nämlich weiterhin ausstehend.
+Buchhaltung nicht irrt, ist der Beitrag in Höhe von CHF {{total}} nämlich
+weiterhin ausstehend.
 
 Unser Projekt ist auf Ihren Beitrag angewiesen.
 
