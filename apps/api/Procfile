@@ -1,2 +1,3 @@
 web: yarn start
 scheduler: yarn start:scheduler
+release: yarn migrate:up

@@ -2,6 +2,7 @@
 schema-version = "0.2"
 
 [io.buildpacks]
+builder = "heroku/builder:22"
 exclude = [
     ".env",
     "node_modules",

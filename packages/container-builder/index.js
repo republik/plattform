@@ -87,8 +87,6 @@ function buildCNBContainer(packPath, app, envFile, controller) {
   const args = [
     'build',
     `${app}-republik-test:latest`,
-    '--builder',
-    'heroku/builder:22',
     '--descriptor',
     'packages/container-builder/cnb_project.toml',
     '--env',
