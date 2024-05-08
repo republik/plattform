@@ -3,7 +3,7 @@ Guten Tag
 Kaum zu glauben, aber es ist tatsächlich schon der {{today}}.
 
 Das bedeutet: Am {{grace_end_date}} verlieren Ihre Zugangsdaten für das
-Republik-Magazin ihre Gültigkeit, da Ihr Mitstreiter-Abo ausgelaufen ist.
+Republik-Magazin ihre Gültigkeit, da Ihr Abo ausgelaufen ist.
 
 Aber keine Sorge, so weit muss es nicht kommen. Sie können einfach ein neues
 Abonnement für das nächste Jahr (oder den nächsten Monat) abschliessen und
