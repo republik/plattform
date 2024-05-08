@@ -79,7 +79,7 @@
     "glob": "^7.1.6",
     "gsheets": "^2.0.0",
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.5.0",
+    "jest-environment-jsdom": "^29.7.0",
     "nodemon": "^2.0.6"
   }
 }
