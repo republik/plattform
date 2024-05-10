@@ -23,8 +23,7 @@
   "devDependencies": {
     "@orbiting/backend-modules-types": "*",
     "@types/jsonwebtoken": "^8.5.8",
-    "@types/uuid": "^8.3.0",
-    "gsheets": "^3.0.0"
+    "@types/uuid": "^8.3.0"
   },
   "dependencies": {
     "@types/is-uuid": "^1.0.0",

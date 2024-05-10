@@ -26,6 +26,7 @@ t.pluralize.elements(baseKey, replacements, [missingValue]): ReactNode[]
 **`t.first.elements`** combines `t.elements` and `t.first` functionality.
 
 **`t.pluralize`** is a convenience helper for pluralization. It requires an replacements object with an count. Under the hood it translates to `t.first` and enforces following key convention for consistency:
+
 ```
 t.first([
   `${baseKey}/${replacements.count}`,
@@ -67,8 +68,6 @@ export default (Component) => (props) => (
   <Component {...props} t={t} />
 )
 ```
-
-Usually we setup a gsheet to manage our translations and download them with  `npm run translations` – running  `gsheets --key=$GSHEET_ID --title=live --pretty --out lib/translations.json`.
 
 ### Placeholder Formatter
 
@@ -134,7 +133,6 @@ t.pluralize('styleguide/Hello/message', {
 </div>
 ```
 
-
 ## Interactive Example
 
 ```react
@@ -167,4 +165,3 @@ state: {visits: 0, name: 'Thomas'}
   ))}
 </div>
 ```
-

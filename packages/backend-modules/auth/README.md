@@ -60,7 +60,7 @@ PUBLIC_URL=http://localhost:3020
 
 ## static-texts
 
-This package comes with it's own messages. You may want run `yarn translations` to refresh it from the gsheet configured in [package.json](package.json) or change it manually in [translations.js](/lib/translations.json).
+This package comes with it's own messages. Edit them in [translations.js](/lib/translations.json).
 
 ## Caveats
 
