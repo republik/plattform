@@ -47,9 +47,15 @@ export default async function Page() {
       >
         Veranstaltungen
       </h1>
-      {currentEvents.map((ev) => {
-        return <EventTeaser key={ev.id} event={ev} isMember={isMember} />
-      })}
+      {currentEvents.length === 0 ? (
+        <p className={css({ py: '6', fontStyle: 'italic' })}>
+          Aktuell sind keine Veranstaltungen geplant.
+        </p>
+      ) : (
+        currentEvents.map((ev) => {
+          return <EventTeaser key={ev.id} event={ev} isMember={isMember} />
+        })
+      )}
       {pastEvents.length > 0 && (
         <>
           <h2
