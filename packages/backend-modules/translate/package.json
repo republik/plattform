@@ -18,7 +18,6 @@
   "homepage": "https://github.com/republik/plattform#readme",
   "scripts": {},
   "dependencies": {
-    "dotenv": "^10.0.0",
-    "gsheets": "^3.0.1"
+    "dotenv": "^10.0.0"
   }
 }
