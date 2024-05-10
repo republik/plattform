@@ -111,7 +111,6 @@
     "d3-time-format": "^2.3.0",
     "d3-timer": "^1.0.10",
     "dayjs": "^1.11.10",
-    "dotenv": "^8.6.0",
     "downshift": "^2.2.3",
     "events": "^3.3.0",
     "framer-motion": "^11.0.3",
