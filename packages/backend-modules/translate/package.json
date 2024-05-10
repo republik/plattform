@@ -16,11 +16,7 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "scripts": {
-    "link": "yarn link",
-    "translations-raw": "NODE_OPTIONS='-r dotenv/config' DOTENV_CONFIG_PATH=../../../apps/api/.env gsheets --key=1B4bRsqQNMXrmBh0rf_OHD7IamHhVJzR31JPuQQEwymI --title=live --pretty --out ./translations.json",
-    "translations": "npm run translations-raw && git add -p ./translations.json && git checkout -- ./translations.json"
-  },
+  "scripts": {},
   "dependencies": {
     "dotenv": "^10.0.0",
     "gsheets": "^3.0.1"

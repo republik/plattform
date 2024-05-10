@@ -37,9 +37,7 @@
     "start": "serve -s build",
     "dev": "tsc -w --project tsconfig.dist.json",
     "test": "jest",
-    "test:dev": "jest --watch",
-    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1MAYxcThiYZ8L2wTrFITxmjSYnoxBPmv2QFFQtfWtwDc --title=live --pretty --out src/lib/translations.json",
-    "translations": "yarn translations-raw && git add -p src/lib/translations.json && git checkout -- src/lib/translations.json"
+    "test:dev": "jest --watch"
   },
   "dependencies": {
     "body-scroll-lock": "^3.1.5",
