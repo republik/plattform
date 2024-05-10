@@ -53,7 +53,7 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
         '& h3, & h4, & h5, & h6, & p > strong': {
           fontWeight: 'medium',
         },
-        '& a': {
+        '& :where(a)': {
           color: 'text',
           _hover: { color: 'textSoft' },
         },
@@ -167,7 +167,16 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
               ) : (
                 <>
                   {event.signUpLink && (
-                    <Link target='_blank' href={event.signUpLink}>
+                    <Link
+                      className={css({
+                        // Ugh, use important here to circumvent specificity issues with the parent `& :where(a)` selector
+                        color: 'primary !important',
+                        textDecoration: 'underline',
+                        _hover: { color: 'primaryHover !important' },
+                      })}
+                      target='_blank'
+                      href={event.signUpLink}
+                    >
                       Zur Anmeldung
                     </Link>
                   )}
