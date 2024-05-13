@@ -230,9 +230,9 @@ class CustomizePackage extends Component {
     // EINSTIEGSMONAT-TEST (remove after test)
     if (
       pkg.name === 'MONTHLY_ABO' &&
-      router.query.coupon === 'einstiegsmonat'
+      router.query.coupon === 'EINSTIEG24'
     ) {
-      return 1000
+      return 200
     }
 
     if (values.price === undefined && pkg.suggestedTotal) {
@@ -523,7 +523,7 @@ class CustomizePackage extends Component {
       ownMembership &&
         `package/${pkg.name}/${ownMembership.type.name}/description`,
       // EINSTIEGSMONAT-TEST (remove after test)
-      router.query.coupon === 'einstiegsmonat' &&
+      router.query.coupon === 'EINSTIEG24' &&
         `package/${pkg.name}/einstiegsmonat/description`,
       `package/${crowdfundingName}/${pkg.name}/description`,
       `package/${pkg.name}/description`,
@@ -542,7 +542,7 @@ class CustomizePackage extends Component {
                   new Date(ownMembership.graceEndDate) < new Date() &&
                   `package/${pkg.name}/reactivate/pageTitle`,
                 // EINSTIEGSMONAT-TEST (remove after test)
-                router.query.coupon === 'einstiegsmonat' &&
+                router.query.coupon === 'EINSTIEG24' &&
                   `package/${pkg.name}/einstiegsmonat/title`,
                 `package/${pkg.name}/pageTitle`,
                 `package/${pkg.name}/title`,

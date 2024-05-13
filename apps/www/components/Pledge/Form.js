@@ -220,8 +220,8 @@ class Pledge extends Component {
       paymentMethods: pkg ? pkg.paymentMethods : undefined,
       // EINSTIEGSMONAT-TEST (remove after test) change total back
       total:
-        pkg.name === 'MONTHLY_ABO' && query.coupon === 'einstiegsmonat'
-          ? values.price + 1200
+        pkg.name === 'MONTHLY_ABO' && query.coupon === 'EINSTIEG24'
+          ? values.price + 2000
           : values.price || undefined,
       options,
       reason: userPrice ? values.reason : undefined,
