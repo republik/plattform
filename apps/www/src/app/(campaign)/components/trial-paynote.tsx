@@ -51,113 +51,134 @@ export function TrialPaynote() {
       >
         <div
           className={css({
-            backgroundColor: 'pageBackground',
             margin: '0 auto',
-            width: '665px',
+            width: '695px',
             maxWidth: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8',
-            padding: '12',
-            alignItems: 'center',
-            borderWidth: 1,
-            borderColor: 'overlay',
-            borderRadius: 4,
-            my: '12',
+            p: '15px',
           })}
         >
-          <CampaignLogo
-            className={css({
-              display: 'block',
-              width: 180,
-              maxWidth: '100%',
-              height: 'auto',
-              flexShrink: 0,
-            })}
-            variant='black'
-          />
-
-          <p
-            className={css({
-              textStyle: 'h2Sans',
-              fontWeight: 'bold',
-              fontSize: '2xl',
-            })}
-          >
-            CHF 5 für 30 Tage
-          </p>
-
-          <Button />
-
           <div
             className={css({
+              backgroundColor: 'pageBackground',
+
               display: 'flex',
               flexDirection: 'column',
+              gap: '8',
+              padding: '6',
               alignItems: 'center',
-            })}
-          >
-            <p
-              className={css({
-                fontWeight: 'medium',
-                fontSize: 'm',
-                // mb: '2',
-              })}
-            >
-              danach CHF 22 pro Monat
-            </p>
-            <p>jederzeit kündbar</p>
-          </div>
-
-          <h2
-            className={css({
-              textStyle: 'h2Sans',
-              fontWeight: 'bold',
-              fontSize: 'xl',
-            })}
-          >
-            Nur unsere Leserinnen können uns kaufen
-          </h2>
-
-          <ul
-            className={css({
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '6',
-              '& > li': {
-                listStyleType: 'none',
-                pl: '6',
-                position: 'relative',
-                '&::before': {
-                  content: '"–"',
-                  position: 'absolute',
-                  left: '0',
-                },
+              borderWidth: 1,
+              borderColor: 'overlay',
+              borderRadius: 4,
+              my: '6',
+              md: {
+                padding: '12',
               },
             })}
           >
-            <li>
-              Unterstützen sie ein zu 100% unabhängiges, leserinnenfinanziertes
-              Medium: Komplett Werbefrei
-            </li>
-            <li>Diskutieren Sie in der besten Online-Community der Schweiz</li>
-            <li>
-              Briefing aus Bern mit den wichtigsten Themen zur Schweizer Politik
-              und einem Wochenbriefing zum Weltgeschehen
-            </li>
-          </ul>
-
-          <p>
-            <Link
+            <CampaignLogo
               className={css({
-                color: '#757575',
-                fontSize: 's',
-                textDecoration: 'underline',
+                display: 'block',
+                width: 180,
+                maxWidth: '100%',
+                height: 'auto',
+                flexShrink: 0,
               })}
-              href='/angebote?package=ABO'
+              variant='black'
+            />
+
+            <p
+              className={css({
+                textStyle: 'h2Sans',
+                fontWeight: 'bold',
+                fontSize: '2xl',
+              })}
             >
-              oder sparen Sie 10% mit der Jahresmitgliedschaft für 240.-
-            </Link>
-          </p>
+              CHF 5 für 30 Tage
+            </p>
+
+            <Button />
+
+            <div
+              className={css({
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              })}
+            >
+              <p
+                className={css({
+                  fontWeight: 'medium',
+                  fontSize: 'm',
+                  // mb: '2',
+                })}
+              >
+                danach CHF 22 pro Monat
+              </p>
+              <p>jederzeit kündbar</p>
+            </div>
+
+            <hr
+              className={css({
+                width: 'full',
+                borderTopWidth: '1px',
+                borderTopColor: 'rgba(40,40,40,0.2)',
+              })}
+            />
+
+            <h2
+              className={css({
+                textStyle: 'h2Sans',
+                fontWeight: 'bold',
+                fontSize: 'xl',
+                textAlign: 'center',
+              })}
+            >
+              Nur unsere Leserinnen können uns kaufen
+            </h2>
+
+            <ul
+              className={css({
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6',
+                '& > li': {
+                  listStyleType: 'none',
+                  pl: '6',
+                  position: 'relative',
+                  '&::before': {
+                    content: '"–"',
+                    position: 'absolute',
+                    left: '0',
+                  },
+                },
+              })}
+            >
+              <li>
+                Unterstützen sie ein zu 100% unabhängiges,
+                leserinnenfinanziertes Medium: Komplett Werbefrei
+              </li>
+              <li>
+                Diskutieren Sie in der besten Online-Community der Schweiz
+              </li>
+              <li>
+                Briefing aus Bern mit den wichtigsten Themen zur Schweizer
+                Politik und einem Wochenbriefing zum Weltgeschehen
+              </li>
+            </ul>
+
+            <p className={css({ textAlign: 'center' })}>
+              <Link
+                className={css({
+                  color: '#757575',
+                  fontSize: 's',
+                  textDecoration: 'underline',
+                })}
+                href='/angebote?package=ABO'
+              >
+                oder sparen Sie 10% mit der Jahresmitgliedschaft für 240.-
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </EventTrackingContext>
