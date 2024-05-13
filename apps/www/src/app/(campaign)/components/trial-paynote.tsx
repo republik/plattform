@@ -1,0 +1,164 @@
+'use client'
+import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
+import {
+  EventTrackingContext,
+  useTrackEvent,
+} from '@app/lib/matomo/event-tracking'
+import { css } from '@republik/theme/css'
+import Link from 'next/link'
+
+const Button = () => {
+  const trackEvent = useTrackEvent()
+
+  return (
+    <Link
+      href='/angebote'
+      className={css({
+        backgroundColor: 'primary',
+        color: 'text.primary',
+        cursor: 'pointer',
+        borderRadius: '4px',
+        border: '2px solid token(colors.primary)',
+        fontWeight: 'medium',
+        lineHeight: 1.2,
+        display: 'block',
+        minWidth: 'max-content',
+        textDecoration: 'none',
+        fontSize: 'xl',
+        padding: '0.75rem 1rem',
+        _hover: {
+          color: 'primary',
+          backgroundColor: 'text.primary',
+        },
+      })}
+      onClick={() => trackEvent({ action: 'linkClicked', name: '/angebote' })}
+    >
+      Abonnieren
+    </Link>
+  )
+}
+
+export function TrialPaynote() {
+  return (
+    <EventTrackingContext category='TrialPaynote'>
+      <div
+        data-page-theme='campaign-2024'
+        className={css({
+          textStyle: 'body',
+          color: 'colors.text',
+          lineHeight: 1.5,
+        })}
+      >
+        <div
+          className={css({
+            backgroundColor: 'pageBackground',
+            margin: '0 auto',
+            width: '665px',
+            maxWidth: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8',
+            padding: '12',
+            alignItems: 'center',
+            borderWidth: 1,
+            borderColor: 'overlay',
+            borderRadius: 4,
+            my: '12',
+          })}
+        >
+          <CampaignLogo
+            className={css({
+              display: 'block',
+              width: 180,
+              maxWidth: '100%',
+              height: 'auto',
+              flexShrink: 0,
+            })}
+          />
+
+          <p
+            className={css({
+              textStyle: 'h2Sans',
+              fontWeight: 'bold',
+              fontSize: '2xl',
+            })}
+          >
+            CHF 5 für 30 Tage
+          </p>
+
+          <Button />
+
+          <div
+            className={css({
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            })}
+          >
+            <p
+              className={css({
+                fontWeight: 'medium',
+                fontSize: 'm',
+                // mb: '2',
+              })}
+            >
+              danach CHF 22 pro Monat
+            </p>
+            <p>jederzeit kündbar</p>
+          </div>
+
+          <h2
+            className={css({
+              textStyle: 'h2Sans',
+              fontWeight: 'bold',
+              fontSize: 'xl',
+            })}
+          >
+            Nur unsere Leserinnen können uns kaufen
+          </h2>
+
+          <ul
+            className={css({
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '6',
+              '& > li': {
+                listStyleType: 'none',
+                pl: '6',
+                position: 'relative',
+                '&::before': {
+                  content: '"–"',
+                  position: 'absolute',
+                  left: '0',
+                },
+              },
+            })}
+          >
+            <li>
+              Unterstützen sie ein zu 100% unabhängiges, leserinnenfinanziertes
+              Medium: Komplett Werbefrei
+            </li>
+            <li>Diskutieren Sie in der besten Online-Community der Schweiz</li>
+            <li>
+              Briefing aus Bern mit den wichtigsten Themen zur Schweizer Politik
+              und einem Wochenbriefing zum Weltgeschehen
+            </li>
+          </ul>
+
+          <p>
+            <Link
+              className={css({
+                color: 'textSoft',
+                fontSize: 's',
+                textDecoration: 'underline',
+              })}
+              href='/angebote?package=ABO'
+            >
+              oder sparen Sie 10% mit der Jahresmitgliedschaft für 240.-
+            </Link>
+          </p>
+        </div>
+      </div>
+    </EventTrackingContext>
+  )
+}
