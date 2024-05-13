@@ -38,7 +38,11 @@ const Button = () => {
   )
 }
 
-export function TrialPaynote() {
+export function TrialPaynote({
+  variant = 'regular',
+}: {
+  variant?: 'mini' | 'regular'
+}) {
   return (
     <EventTrackingContext category='TrialPaynote'>
       <div
@@ -75,6 +79,7 @@ export function TrialPaynote() {
                 padding: '12',
               },
             })}
+            style={{ margin: variant === 'mini' ? 0 : undefined }}
           >
             <CampaignLogo
               className={css({
@@ -118,67 +123,71 @@ export function TrialPaynote() {
               <p>jederzeit kündbar</p>
             </div>
 
-            <hr
-              className={css({
-                width: 'full',
-                borderTopWidth: '1px',
-                borderTopColor: 'rgba(40,40,40,0.2)',
-              })}
-            />
+            {variant === 'regular' && (
+              <>
+                <hr
+                  className={css({
+                    width: 'full',
+                    borderTopWidth: '1px',
+                    borderTopColor: 'rgba(40,40,40,0.2)',
+                  })}
+                />
 
-            <h2
-              className={css({
-                textStyle: 'h2Sans',
-                fontWeight: 'bold',
-                fontSize: 'xl',
-                textAlign: 'center',
-              })}
-            >
-              Nur unsere Leserinnen können uns kaufen
-            </h2>
+                <h2
+                  className={css({
+                    textStyle: 'h2Sans',
+                    fontWeight: 'bold',
+                    fontSize: 'xl',
+                    textAlign: 'center',
+                  })}
+                >
+                  Nur unsere Leserinnen können uns kaufen
+                </h2>
 
-            <ul
-              className={css({
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '6',
-                '& > li': {
-                  listStyleType: 'none',
-                  pl: '6',
-                  position: 'relative',
-                  '&::before': {
-                    content: '"–"',
-                    position: 'absolute',
-                    left: '0',
-                  },
-                },
-              })}
-            >
-              <li>
-                Unterstützen sie ein zu 100% unabhängiges,
-                leserinnenfinanziertes Medium: Komplett Werbefrei
-              </li>
-              <li>
-                Diskutieren Sie in der besten Online-Community der Schweiz
-              </li>
-              <li>
-                Briefing aus Bern mit den wichtigsten Themen zur Schweizer
-                Politik und einem Wochenbriefing zum Weltgeschehen
-              </li>
-            </ul>
+                <ul
+                  className={css({
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6',
+                    '& > li': {
+                      listStyleType: 'none',
+                      pl: '6',
+                      position: 'relative',
+                      '&::before': {
+                        content: '"–"',
+                        position: 'absolute',
+                        left: '0',
+                      },
+                    },
+                  })}
+                >
+                  <li>
+                    Unterstützen sie ein zu 100% unabhängiges,
+                    leserinnenfinanziertes Medium: Komplett Werbefrei
+                  </li>
+                  <li>
+                    Diskutieren Sie in der besten Online-Community der Schweiz
+                  </li>
+                  <li>
+                    Briefing aus Bern mit den wichtigsten Themen zur Schweizer
+                    Politik und einem Wochenbriefing zum Weltgeschehen
+                  </li>
+                </ul>
 
-            <p className={css({ textAlign: 'center' })}>
-              <Link
-                className={css({
-                  color: '#757575',
-                  fontSize: 's',
-                  textDecoration: 'underline',
-                })}
-                href='/angebote?package=ABO'
-              >
-                oder sparen Sie 10% mit der Jahresmitgliedschaft für 240.-
-              </Link>
-            </p>
+                <p className={css({ textAlign: 'center' })}>
+                  <Link
+                    className={css({
+                      color: '#757575',
+                      fontSize: 's',
+                      textDecoration: 'underline',
+                    })}
+                    href='/angebote?package=ABO'
+                  >
+                    oder sparen Sie 10% mit der Jahresmitgliedschaft für 240.-
+                  </Link>
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>
