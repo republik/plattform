@@ -45,7 +45,7 @@ export function TrialPaynote() {
         data-page-theme='campaign-2024'
         className={css({
           textStyle: 'body',
-          color: 'colors.text',
+          color: 'text.black',
           lineHeight: 1.5,
         })}
       >
@@ -149,7 +149,7 @@ export function TrialPaynote() {
           <p>
             <Link
               className={css({
-                color: 'textSoft',
+                color: '#757575',
                 fontSize: 's',
                 textDecoration: 'underline',
               })}
