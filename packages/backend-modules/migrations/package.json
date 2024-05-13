@@ -11,6 +11,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "main": "index.js",
   "bugs": {
     "url": "https://github.com/republik/plattform/issues"
   },
