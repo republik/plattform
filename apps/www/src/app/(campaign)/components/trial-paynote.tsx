@@ -74,6 +74,7 @@ export function TrialPaynote() {
               height: 'auto',
               flexShrink: 0,
             })}
+            variant='black'
           />
 
           <p
