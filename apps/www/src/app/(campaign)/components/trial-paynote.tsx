@@ -42,6 +42,7 @@ export function TrialPaynote() {
   return (
     <EventTrackingContext category='TrialPaynote'>
       <div
+        data-hide-if-active-membership='true'
         data-page-theme='campaign-2024'
         className={css({
           textStyle: 'body',
