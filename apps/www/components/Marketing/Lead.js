@@ -37,6 +37,7 @@ const styles = {
     lineHeight: 1.3,
     marginBottom: 0,
     textAlign: 'center',
+    marginBlock: '1em 0',
     [mediaQueries.mUp]: {
       fontSize: 22,
       textAlign: 'left',

@@ -26,6 +26,7 @@ export type ApolloClientOptions = {
     isInMobileApp: boolean
     createAppWorkerLink: () => ApolloLink
   }
+  errorLink?: ApolloLink
 }
 
 function createApolloClient(
@@ -70,7 +71,9 @@ function createApolloClient(
       // Generated with the script located in scripts/generatePossibleTypes.js
       possibleTypes,
     }),
-    link: createLink(options),
+    link: ApolloLink.from(
+      [options.errorLink, createLink(options)].filter(Boolean),
+    ),
     name: options.name,
     version: options.version,
   })
