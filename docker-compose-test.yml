@@ -61,6 +61,7 @@ services:
       - elastic
       - redis
       - postgres
+
   republik-api:
     image: api-republik-test:latest
     env_file:
@@ -76,4 +77,3 @@ services:
       - republik-api-setup
     ports:
       - 5010:5010
-

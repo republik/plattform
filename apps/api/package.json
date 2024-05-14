@@ -85,6 +85,7 @@
     "nodemon": "^2.0.4",
     "snoowrap": "^1.21.0",
     "tap-diff": "^0.1.1",
+    "testcontainers": "^10.9.0",
     "zero-fill": "^2.2.3"
   }
 }
