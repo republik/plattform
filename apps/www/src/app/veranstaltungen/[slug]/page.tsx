@@ -84,7 +84,16 @@ export default async function Page({ params: { slug } }: PageProps) {
         }
       />
       <p className={css({ mt: '6' })}>
-        <Link href='/veranstaltungen'>Alle Veranstaltungen</Link>
+        <Link
+          className={css({
+            color: 'primary',
+            textDecoration: 'underline',
+            _hover: { color: 'primaryHover' },
+          })}
+          href='/veranstaltungen'
+        >
+          Alle Veranstaltungen
+        </Link>
       </p>
     </div>
   )

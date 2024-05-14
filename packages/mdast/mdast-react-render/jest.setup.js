@@ -1,4 +1,4 @@
-require('@testing-library/jest-dom/extend-expect')
+require('@testing-library/jest-dom')
 
 import { TextEncoder, TextDecoder } from 'util'
 global.TextEncoder = TextEncoder

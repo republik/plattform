@@ -19,13 +19,13 @@
     "@apollo/client": "^3.8.4",
     "@republik/eslint-config-frontend": "*",
     "@types/node": "18",
-    "@types/react": "^18.2.22",
-    "@types/react-dom": "^18.2.7",
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
     "cross-fetch": "^3.1.5",
     "graphql": "^15.3.0",
     "next": "^14.2.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "rimraf": "^3.0.2",
     "tsup": "^7.2.0",
     "uuid": "^3.4.0"
@@ -34,8 +34,8 @@
     "@apollo/client": "^3.8.4",
     "graphql": "^15.3.0",
     "next": "^14.2.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "uuid": "^3.4.0"
   }
 }

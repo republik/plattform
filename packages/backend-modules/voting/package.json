@@ -19,11 +19,10 @@
     "url": "https://github.com/republik/plattform/issues"
   },
   "homepage": "https://github.com/republik/plattform#readme",
-  "devDependencies": {
-    "dotenv": "^8.2.0"
-  },
+  "devDependencies": {},
   "dependencies": {
     "apollo-modules-node": "*",
-    "d3": "^5.16.0"
+    "d3": "^5.16.0",
+    "gsheets": "^3.0.1"
   }
 }

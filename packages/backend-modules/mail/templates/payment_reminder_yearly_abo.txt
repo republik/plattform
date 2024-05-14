@@ -7,8 +7,8 @@ werbefreies digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur.
 Und Sie fördern eine wirklich unabhängige vierte Gewalt als zentrale Institution
 unserer Demokratie.
 
-Falls sich unsere Buchhaltung nicht irrt, ist allerdings der von Ihnen gewählte
-Abo-Beitrag in Höhe von CHF {{total}} noch ausstehend.
+Falls sich unsere Buchhaltung nicht irrt, ist allerdings der Abo-Beitrag in Höhe
+von CHF {{total}} noch ausstehend.
 
 Dürfen wir Sie freundlich bitten, den Betrag in den nächsten Tagen zu
 überweisen?
