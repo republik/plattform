@@ -1,5 +1,6 @@
 const { PgDb } = require('pogi')
 const DBMigrate = require('db-migrate')
+const path = require('node:path')
 
 function parseDBConnectionString(urlString) {
   const url = new URL(urlString)
@@ -80,7 +81,7 @@ function getMigrator() {
 
   migrator.setConfigParam(
     'migrations-dir',
-    'packages/backend-modules/migrations/migrations',
+    path.resolve(__dirname, '../migrations'),
   )
 
   return migrator

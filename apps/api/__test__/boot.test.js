@@ -5,15 +5,17 @@ const {
   migrateUp,
   seedSampleData,
 } = require('@orbiting/backend-modules-migrations/lib')
+const path = require('node:path')
 
 describe('api boot tests', () => {
   let composeEnv = null
   let server = null
 
   beforeAll(async () => {
-    composeEnv = await new DockerComposeEnvironment('./', [
-      'docker-compose-test.yml',
-    ])
+    composeEnv = await new DockerComposeEnvironment(
+      path.resolve(__dirname, '../../..'),
+      ['docker-compose-test.yml'],
+    )
       .withWaitStrategy(
         'redis',
         Wait.forLogMessage('Ready to accept connections'),
