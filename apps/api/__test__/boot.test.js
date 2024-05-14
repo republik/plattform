@@ -15,7 +15,7 @@ describe('api boot tests', () => {
       'docker-compose-test.yml',
     ])
       .withWaitStrategy(
-        'redis-1',
+        'redis',
         Wait.forLogMessage('Ready to accept connections'),
       )
       .withWaitStrategy('postgres', Wait.forHealthCheck())
