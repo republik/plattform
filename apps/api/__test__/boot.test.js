@@ -1,10 +1,10 @@
 require('@orbiting/backend-modules-env').config('apps/api/.env.test.local')
 const { Wait, DockerComposeEnvironment } = require('testcontainers')
-const { createDB } = require('@orbiting/backend-modules-migrations')
 const {
+  createDB,
   migrateUp,
   seedSampleData,
-} = require('@orbiting/backend-modules-migrations/lib')
+} = require('@orbiting/backend-modules-migrations')
 const path = require('node:path')
 
 describe('api boot tests', () => {
