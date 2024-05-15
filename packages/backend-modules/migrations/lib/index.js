@@ -13,13 +13,17 @@ function parseDBConnectionString(urlString) {
   }
 }
 
-async function createDB(DATABASE_URL) {
+async function createDB(DATABASE_URL, dropOld = false) {
   const { CONNECTION_URI, DATABASE } = parseDBConnectionString(DATABASE_URL)
 
   const pgdb = await PgDb.connect({
     application_name: 'setup',
     connectionString: CONNECTION_URI,
   })
+
+  if (dropOld) {
+    await pgdb.run(`DROP DATABASE IF EXISTS "${DATABASE}"`)
+  }
 
   await pgdb.run(`CREATE DATABASE "${DATABASE}"`)
 

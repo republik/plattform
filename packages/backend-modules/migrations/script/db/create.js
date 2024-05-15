@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+require('@orbiting/backend-modules-env').config()
 const { createDB } = require('../../lib')
 
 async function main(DATABASE_URL) {
@@ -9,7 +10,10 @@ async function main(DATABASE_URL) {
 
   try {
     console.error(`Creating database...`)
-    const dbName = await createDB(DATABASE_URL)
+    const dbName = await createDB(
+      DATABASE_URL,
+      process.env.NODE_ENV !== 'production',
+    )
     console.error(`Database "${dbName}" created.`)
   } catch (e) {
     console.error('Unable to connect to database. Error:', e.message)
