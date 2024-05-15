@@ -31,6 +31,7 @@ module.exports = async (_, args, context) => {
         })
         throw new Error(t('api/unexpected'))
       }
+
       if (pledge.status === 'SUCCESSFUL') {
         // check if the pledge was paid with the same paypal transaction
         // happens if the webhook is faster than redirect
@@ -109,6 +110,7 @@ module.exports = async (_, args, context) => {
           sourceId: pledgePayment.sourceId,
           pspPayload: pledgePayment.pspPayload,
           makeDefault: pledgePayment.makeDefault,
+          promoCode: pledge?.payload?.coupon,
           userId: user.id,
           pkg,
           transaction,

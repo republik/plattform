@@ -91,6 +91,7 @@ const payWithSource = async ({
         metadata: {
           pledgeId,
         },
+        idempotencyKey: pledgeId,
         pgdb: transaction,
       })
     } else {
@@ -139,6 +140,7 @@ const payWithPaymentMethod = async ({
   stripePlatformPaymentMethodId,
   makeDefault = false,
   userId,
+  promoCode,
   pkg,
   pgdb,
   t,
@@ -180,6 +182,18 @@ const payWithPaymentMethod = async ({
     )
   }
 
+  const discounts = []
+  if (promoCode) {
+    console.log(promoCode)
+    const promotions = await fetchPromotions(clients, companyId, promoCode)
+    console.log(promotions)
+    discounts.push(
+      ...promotions.map((p) => ({
+        promotion_code: p.id,
+      })),
+    )
+  }
+
   const isSubscription = pkg.name === 'MONTHLY_ABO'
   let paymentIntent
   if (isSubscription) {
@@ -191,6 +205,8 @@ const payWithPaymentMethod = async ({
       metadata: {
         pledgeId,
       },
+      idempotencyKey: pledgeId,
+      discounts,
       pgdb,
       clients,
       t,
@@ -261,4 +277,15 @@ const payWithPaymentMethod = async ({
     stripePublishableKey: account.publishableKey,
     companyId,
   }
+}
+
+async function fetchPromotions(clients, companyId, promoCode) {
+  const { stripe } = clients.accountForCompanyId(companyId)
+
+  const discounts = await stripe.promotionCodes.list({
+    active: true,
+    code: promoCode,
+  })
+
+  return discounts.data
 }
