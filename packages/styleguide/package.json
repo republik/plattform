@@ -37,9 +37,7 @@
     "start": "serve -s build",
     "dev": "tsc -w --project tsconfig.dist.json",
     "test": "jest",
-    "test:dev": "jest --watch",
-    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1MAYxcThiYZ8L2wTrFITxmjSYnoxBPmv2QFFQtfWtwDc --title=live --pretty --out src/lib/translations.json",
-    "translations": "yarn translations-raw && git add -p src/lib/translations.json && git checkout -- src/lib/translations.json"
+    "test:dev": "jest --watch"
   },
   "dependencies": {
     "body-scroll-lock": "^3.1.5",
@@ -82,7 +80,6 @@
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "glamor": "^2.20.40",
     "graphql": "^15.3.0",
-    "gsheets": "^3.0.1",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",

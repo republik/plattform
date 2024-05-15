@@ -34,3 +34,6 @@ graphql/*/__generated__/gql
 
 playwright-report/
 test-results/
+
+# Vercel
+.vercel

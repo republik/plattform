@@ -14,8 +14,6 @@
     "test": "jest",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "eslint --fix .",
-    "translations-raw": "NODE_OPTIONS='-r dotenv/config' gsheets --key=1J3kMAE8mi4gPeP7c72XAsKHJTB5VdYepTx6Y26qfH38 --title=live --pretty --out lib/translations.json",
-    "translations": "npm run translations-raw && git add -p lib/translations.json && git checkout -- lib/translations.json",
     "analyze": "ANALYZE=true next build",
     "gql:types": "graphql-codegen --config graphql/configs/codegen-dev.ts",
     "gql:schema": "graphql-codegen --config graphql/configs/codegen-schema.ts"
@@ -48,7 +46,6 @@
     "cross-env": "^5.2.1",
     "diff": "^3.5.0",
     "enzyme": "^3.11.0",
-    "gsheets": "^3.0.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "nodemon": "^2.0.4",
