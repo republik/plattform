@@ -21,11 +21,11 @@ async function createDB(DATABASE_URL) {
     connectionString: CONNECTION_URI,
   })
 
-  console.log(`Creating database "${DATABASE}"...`)
   await pgdb.run(`CREATE DATABASE "${DATABASE}"`)
-  console.log(`Database "${DATABASE}" created.`)
 
   await pgdb.close()
+
+  return DATABASE
 }
 
 async function seedSampleData(DATABASE_URL) {
