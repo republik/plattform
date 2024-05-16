@@ -184,9 +184,11 @@ const payWithPaymentMethod = async ({
 
   const discounts = []
   if (promoCode) {
-    console.log(promoCode)
-    const promotions = await fetchPromotions(clients, companyId, promoCode)
-    console.log(promotions)
+    const promotions = await fetchStripePromotions(
+      clients,
+      companyId,
+      promoCode,
+    )
     discounts.push(
       ...promotions.map((p) => ({
         promotion_code: p.id,
@@ -279,13 +281,13 @@ const payWithPaymentMethod = async ({
   }
 }
 
-async function fetchPromotions(clients, companyId, promoCode) {
+async function fetchStripePromotions(clients, companyId, promoCode) {
   const { stripe } = clients.accountForCompanyId(companyId)
 
-  const discounts = await stripe.promotionCodes.list({
+  const promotions = await stripe.promotionCodes.list({
     active: true,
     code: promoCode,
   })
 
-  return discounts.data
+  return promotions.data
 }
