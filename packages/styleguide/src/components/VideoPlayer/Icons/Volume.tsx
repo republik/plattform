@@ -1,6 +1,12 @@
 import React from 'react'
 
-const Icon = ({ size, fill, off }) => (
+type IconProps = {
+  size?: number
+  fill?: string
+  off?: boolean
+}
+
+const Icon = ({ size = 24, fill = '#ffffff', off = false }: IconProps) => (
   <svg width={size} height={size} viewBox='0 0 24 24'>
     <path
       fill={fill}
@@ -12,11 +18,5 @@ const Icon = ({ size, fill, off }) => (
     />
   </svg>
 )
-
-Icon.defaultProps = {
-  size: 24,
-  fill: '#fff',
-  off: false,
-}
 
 export default Icon

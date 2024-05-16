@@ -1,7 +1,13 @@
 import { IconFullscreen, IconFullscreenExit } from '@republik/icons'
 import React from 'react'
 
-const Icon = ({ size, fill, off }) => {
+type IconProps = {
+  size?: number
+  fill?: string
+  off?: boolean
+}
+
+const Icon = ({ size = 24, fill = '#ffffff', off = true }: IconProps) => {
   if (off) {
     return (
       <IconFullscreen
@@ -21,12 +27,6 @@ const Icon = ({ size, fill, off }) => {
       />
     )
   }
-}
-
-Icon.defaultProps = {
-  size: 24,
-  fill: '#fff',
-  off: true,
 }
 
 export default Icon

@@ -9,7 +9,6 @@ import { css, merge, simulate } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { mUp } from '../../theme/mediaQueries'
 import { useColorContext } from '../Colors/ColorContext'
-import PropTypes from 'prop-types'
 import {
   X_PADDING,
   Y_PADDING,
@@ -170,7 +169,7 @@ const Field = React.forwardRef<
       disabled,
       required,
       value,
-      renderInput,
+      renderInput = (props) => <input {...props} />,
     },
     forwardRef,
   ) => {
@@ -322,16 +321,5 @@ const Field = React.forwardRef<
     )
   },
 )
-
-Field.propTypes = {
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  renderInput: PropTypes.func.isRequired,
-  icon: PropTypes.node,
-  disabled: PropTypes.bool,
-}
-
-Field.defaultProps = {
-  renderInput: (props) => <input {...props} />,
-}
 
 export default Field

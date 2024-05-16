@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import PropTypes from 'prop-types'
 import colors from '../../theme/colors'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 import { ellipsize } from '../../lib/styleMixins'
@@ -93,15 +92,25 @@ const Link = ({ href, children }) => (
   </a>
 )
 
+type MetaProps = {
+  url: string
+  platform: 'vimeo' | 'youtube'
+  title: string
+  userName: string
+  userUrl: string
+  userProfileImageUrl: string
+  date: Date
+}
+
 export const Meta = ({
   url,
-  platform,
+  platform = 'youtube',
   title,
   userName,
   userUrl,
   userProfileImageUrl,
   date,
-}) => {
+}: MetaProps) => {
   const Icon = ICON[platform]
   return (
     <div {...styles.root}>
@@ -125,20 +134,6 @@ export const Meta = ({
       </div>
     </div>
   )
-}
-
-Meta.propTypes = {
-  url: PropTypes.string.isRequired,
-  platform: PropTypes.oneOf(['vimeo', 'youtube']).isRequired,
-  title: PropTypes.string.isRequired,
-  userName: PropTypes.string.isRequired,
-  userUrl: PropTypes.string.isRequired,
-  userProfileImageUrl: PropTypes.string.isRequired,
-  date: PropTypes.object.isRequired,
-}
-
-Meta.defaultProps = {
-  platform: 'youtube',
 }
 
 export default Meta
