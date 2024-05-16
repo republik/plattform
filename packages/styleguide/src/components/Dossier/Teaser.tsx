@@ -1,5 +1,4 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { ComponentPropsWithoutRef } from 'react'
 import { css } from 'glamor'
 import { mUp } from '../TeaserFront/mediaQueries'
 
@@ -16,7 +15,13 @@ const styles = {
   }),
 }
 
-const Teaser = ({ children, attributes, onClick }) => {
+type TeaserProps = {
+  children: React.ReactNode
+  attributes?: ComponentPropsWithoutRef<'div'>
+  onClick?: ComponentPropsWithoutRef<'div'>['onClick']
+}
+
+const Teaser = ({ children, attributes, onClick }: TeaserProps) => {
   return (
     <div
       {...attributes}
@@ -30,13 +35,5 @@ const Teaser = ({ children, attributes, onClick }) => {
     </div>
   )
 }
-
-Teaser.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  onClick: PropTypes.func,
-}
-
-Teaser.defaultProps = {}
 
 export default Teaser

@@ -15,12 +15,12 @@ const styles = {
   }),
 }
 
-const Headline = ({ children, poster, large, medium }) => {
-  return (
-    <h1 {...styles.base} {...styles.editorial}>
-      {children}
-    </h1>
-  )
+type HeadlineProps = {
+  children: React.ReactNode
+}
+
+const Headline = ({ children }: HeadlineProps) => {
+  return <h1 {...styles.base}>{children}</h1>
 }
 
 export default Headline

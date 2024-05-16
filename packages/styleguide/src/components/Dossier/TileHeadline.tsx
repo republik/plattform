@@ -39,7 +39,11 @@ const styles = {
   }),
 }
 
-export const Editorial = ({ children }) => {
+type EditorialProps = {
+  children: React.ReactNode
+}
+
+export const Editorial = ({ children }: EditorialProps) => {
   return (
     <h1 {...styles.base} {...styles.editorial}>
       {children}
@@ -47,7 +51,11 @@ export const Editorial = ({ children }) => {
   )
 }
 
-export const Interaction = ({ children }) => {
+type InteractionProps = {
+  children: React.ReactNode
+}
+
+export const Interaction = ({ children }: InteractionProps) => {
   return (
     <h1 {...styles.base} {...styles.interaction}>
       {children}
@@ -55,7 +63,11 @@ export const Interaction = ({ children }) => {
   )
 }
 
-export const Scribble = ({ children }) => {
+type ScribbleProps = {
+  children: React.ReactNode
+}
+
+export const Scribble = ({ children }: ScribbleProps) => {
   return (
     <h1 {...styles.base} {...styles.scribble}>
       {children}

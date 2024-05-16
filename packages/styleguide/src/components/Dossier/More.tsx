@@ -24,7 +24,12 @@ const styles = {
   }),
 }
 
-const More = ({ children, attributes }) => {
+type MoreProps = {
+  children: React.ReactNode
+  attributes?: React.ComponentPropsWithoutRef<'p'>
+}
+
+const More = ({ children, attributes }: MoreProps) => {
   return (
     <p {...styles.more} {...attributes}>
       {children}

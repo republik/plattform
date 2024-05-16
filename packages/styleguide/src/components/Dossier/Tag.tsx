@@ -19,7 +19,12 @@ const styles = {
   }),
 }
 
-const Tag = ({ children, attributes }) => {
+type TagProps = {
+  children: React.ReactNode
+  attributes?: React.ComponentPropsWithoutRef<'div'>
+}
+
+const Tag = ({ children, attributes }: TagProps) => {
   return (
     <div {...attributes} {...styles.tag}>
       <IconFolder {...styles.icon} size={24} />

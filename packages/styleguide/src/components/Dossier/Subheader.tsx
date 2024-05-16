@@ -22,7 +22,12 @@ const styles = {
   }),
 }
 
-const Subheader = ({ children, singleColumn }) => {
+type SubheaderProps = {
+  children: React.ReactNode
+  singleColumn?: boolean
+}
+
+const Subheader = ({ children, singleColumn }: SubheaderProps) => {
   const [colorScheme] = useColorContext()
 
   return (

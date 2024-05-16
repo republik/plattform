@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../TeaserFront/mediaQueries'
 import { serifRegular17, serifRegular23 } from '../Typography/styles'
@@ -15,12 +14,12 @@ const styles = {
   }),
 }
 
-const Lead = ({ children }) => {
-  return <p {...styles.lead}>{children}</p>
+type LeadProps = {
+  children: React.ReactNode
 }
 
-Lead.propTypes = {
-  children: PropTypes.node,
+const Lead = ({ children }: LeadProps) => {
+  return <p {...styles.lead}>{children}</p>
 }
 
 export default Lead

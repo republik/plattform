@@ -1,5 +1,4 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { ComponentPropsWithoutRef } from 'react'
 import { css, merge } from 'glamor'
 import { mUp, tUp } from '../TeaserFront/mediaQueries'
 import { FigureImage, FigureByline } from '../Figure'
@@ -53,15 +52,23 @@ const styles = {
   }),
 }
 
+type TeaserIntroProps = {
+  children: React.ReactNode
+  attributes?: ComponentPropsWithoutRef<'div'>
+  image?: string
+  alt?: string
+  onClick?: ComponentPropsWithoutRef<'div'>['onClick']
+  byline?: string
+}
+
 const TeaserIntro = ({
   children,
   attributes,
   image,
-  alt,
+  alt = '',
   onClick,
   byline,
-  t,
-}) => {
+}: TeaserIntroProps) => {
   return (
     <div
       {...attributes}
@@ -87,18 +94,6 @@ const TeaserIntro = ({
       </div>
     </div>
   )
-}
-TeaserIntro.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  image: PropTypes.string,
-  byline: PropTypes.string,
-  alt: PropTypes.string,
-  onClick: PropTypes.func,
-}
-
-TeaserIntro.defaultProps = {
-  alt: '',
 }
 
 export default TeaserIntro
