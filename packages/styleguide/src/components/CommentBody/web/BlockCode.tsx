@@ -25,7 +25,11 @@ const styles = {
   }),
 }
 
-export default ({ children }) => {
+export type BlockCodeProps = {
+  children: React.ReactNode
+}
+
+export default function BlockCode({ children }: BlockCodeProps) {
   const [colorScheme] = useColorContext()
   return (
     <pre {...styles.pre}>

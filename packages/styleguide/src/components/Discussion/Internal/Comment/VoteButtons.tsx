@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { css } from 'glamor'
 import IconButton from '../../../IconButton'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { fontStyles } from '../../../Typography'
-import comment from '../../../../templates/Comment'
 import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
+import { Formatter } from '../../../../lib/translate'
+import { Comment } from './types'
 
 const styles = {
   votes: css({
@@ -30,9 +31,9 @@ const styles = {
   }),
 }
 
-type Props = {
-  t: any
-  comment: any
+type VoteButtonsProps = {
+  t: Formatter
+  comment: Comment
   disabled?: boolean
   handleUpVote: (commentId: string) => unknown
   handleDownVote: (commentId: string) => unknown
@@ -46,7 +47,7 @@ export const VoteButtons = ({
   handleUpVote,
   handleDownVote,
   handleUnVote,
-}: Props) => {
+}: VoteButtonsProps) => {
   const [colorScheme] = useColorContext()
 
   const upVoteHandler = comment?.userVote !== 'UP' ? handleUpVote : handleUnVote

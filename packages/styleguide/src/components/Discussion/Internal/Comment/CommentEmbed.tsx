@@ -1,5 +1,5 @@
-import React from 'react'
-import * as Interaction from '../../../../components/Typography/Interaction'
+import React, { ReactNode } from 'react'
+import * as Interaction from '../../../Typography/Interaction'
 import { css } from 'glamor'
 import {
   sansSerifRegular13,
@@ -13,6 +13,7 @@ import { useColorContext } from '../../../Colors/ColorContext'
 import { timeFormat } from '../../../../lib/timeFormat'
 import PropTypes from 'prop-types'
 import { IconLogoTwitter } from '@republik/icons'
+import { Embed } from './types'
 
 const styles = {
   link: css({
@@ -84,7 +85,13 @@ const styles = {
 
 const dateFormat = timeFormat('%d.%m.%Y %H:%M')
 
-const normalizeEmbed = (embed) => ({
+type NormalizedEmbed = {
+  header: Embed['siteName'] | Embed['userName']
+  headerImageUrl: Embed['siteImageUrl'] | Embed['userProfileImageUrl']
+  body: Embed['description']
+} & Embed
+
+const normalizeEmbed = (embed: Embed): NormalizedEmbed => ({
   ...embed,
   imageUrl: embed?.imageUrl ?? embed?.image,
   header: embed?.siteName ?? embed?.userName,
@@ -101,7 +108,23 @@ const propTypes = {
   mentioningDocument: PropTypes.object,
 }
 
-export const CommentEmbed = ({ embed, mentioningDocument }) => {
+type CommentEmbedProps = {
+  embed: Embed
+  mentioningDocument?: {
+    document: {
+      meta: {
+        path: string
+      }
+    }
+    fragmentId: string
+    iconUrl: string
+  }
+}
+
+export const CommentEmbed = ({
+  embed,
+  mentioningDocument,
+}: CommentEmbedProps) => {
   const [colorScheme] = useColorContext()
   const { url, title, imageUrl, header, headerImageUrl, body, html, imageAlt } =
     normalizeEmbed(embed)
@@ -160,7 +183,10 @@ export const CommentEmbed = ({ embed, mentioningDocument }) => {
         )}
         {embed?.userScreenName && (
           <Interaction.P {...styles.paragraph}>
-            <IconLogoTwitter size={19} {...colorScheme.set('fill', 'disabled')} />{' '}
+            <IconLogoTwitter
+              size={19}
+              {...colorScheme.set('fill', 'disabled')}
+            />{' '}
             {dateFormat(new Date(embed.createdAt))}
           </Interaction.P>
         )}

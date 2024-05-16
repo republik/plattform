@@ -1,8 +1,9 @@
 import React from 'react'
 
 import { fontFamilies } from '../../../theme/fonts'
+import { BlockCodeProps } from '../web/BlockCode'
 
-export default ({ children }) => (
+const BlockCode = ({ children }: BlockCodeProps) => (
   <pre style={{ margin: '20px auto', whiteSpace: 'pre-wrap' }}>
     <code
       style={{
@@ -18,3 +19,5 @@ export default ({ children }) => (
     </code>
   </pre>
 )
+
+export default BlockCode

@@ -22,8 +22,14 @@ const styles = {
   }),
 }
 
-export default ({ children }) => (
+export type ContainerProps = {
+  children: React.ReactNode
+}
+
+const Container = ({ children }: ContainerProps) => (
   <div {...styles.container} {...Editorial.fontRule}>
     {children}
   </div>
 )
+
+export default Container

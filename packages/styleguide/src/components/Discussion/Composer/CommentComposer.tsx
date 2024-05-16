@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import Textarea from 'react-textarea-autosize'
@@ -14,6 +14,8 @@ import { DisplayAuthorPropType } from '../Internal/PropTypes'
 import { CommentUI } from '../Tree/CommentNode'
 import Loader from '../../Loader'
 import { fontStyles } from '../../Typography'
+import { Formatter } from '../../../lib/translate'
+import { DisplayAuthor } from '../Internal/Comment/types'
 
 const styles = {
   root: css({}),
@@ -92,6 +94,45 @@ const propTypes = {
   hideHeader: PropTypes.bool,
 }
 
+type CommentComposerProps = {
+  t: Formatter
+  isRoot: boolean
+
+  discussionId: string
+  parentId?: string
+  commentId?: string
+
+  onSubmit: (_: {
+    text: string
+    tags?: string[]
+  }) => Promise<{ ok: boolean; error?: string }>
+  onSubmitLabel: string
+  onClose: () => void
+  onCloseLabel: string
+  onOpenPreferences: () => void
+  onPreviewComment: (_: {
+    discussionId: string
+    parentId?: string
+    content: string
+    id: string
+    tags: string[]
+  }) => Promise<unknown>
+
+  secondaryActions: ReactNode
+  hintValidators: ((_: string) => unknown)[]
+
+  displayAuthor: DisplayAuthor
+  placeholder: string
+  maxLength: number
+  tags: string[]
+
+  initialText: string
+  initialTagValue: string
+
+  autoFocus: boolean
+  hideHeader: boolean
+}
+
 export const CommentComposer = ({
   t,
   isRoot,
@@ -119,10 +160,9 @@ export const CommentComposer = ({
   initialText,
   initialTagValue,
 
-  isBoard,
   autoFocus = true,
   hideHeader,
-}) => {
+}: CommentComposerProps) => {
   const [colorScheme] = useColorContext()
   /*
    * Refs

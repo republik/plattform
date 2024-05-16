@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from 'react'
+import React, { ComponentType, Fragment, useMemo } from 'react'
 import { css } from 'glamor'
 import get from 'lodash/get'
 
@@ -12,10 +12,19 @@ import {
   CommentBodyFeaturedText,
 } from '../CommentBody/web'
 import { Context, Header } from '../Discussion/Internal/Comment'
-import RawHtml from '../RawHtml/'
+import RawHtml from '../RawHtml'
 import { useColorContext } from '../Colors/ColorContext'
 import { DiscussionContext } from '../Discussion/DiscussionContext'
 import DiscussionFooter from './DiscussionFooter'
+import { Formatter } from '../../lib/translate'
+import {
+  CommentLinkProps,
+  DefaultCommentLink,
+} from '../Discussion/Internal/Comment/CommentLink'
+import {
+  DisplayAuthor,
+  Comment as CommentType,
+} from '../Discussion/Internal/Comment/types'
 
 const styles = {
   root: css({
@@ -49,17 +58,40 @@ const styles = {
   }),
 }
 
-const DefaultLink = ({ children }) => children
+type CommentTeaserProps = {
+  t: Formatter
+  CommentLink: ComponentType<CommentLinkProps>
+  onClick?: () => void
+  highlighted?: boolean
+  menu?: React.ReactNode
+  children: React.ReactNode
+  id: string
+  discussion: {
+    image: string
+    title: string
+  }
+  tags: string[]
+  displayAuthor: DisplayAuthor
+  preview: {
+    string: string
+    more: boolean
+  }
+  featuredText: string
+  highlights: {
+    fragments: string[]
+  }[]
+  createdAt: string
+} & CommentType
 
 export const CommentTeaser = ({
   t,
-  CommentLink = DefaultLink,
+  CommentLink = DefaultCommentLink,
   onClick,
   highlighted,
   menu,
   children,
   ...comment
-}) => {
+}: CommentTeaserProps) => {
   const {
     id,
     discussion,
@@ -125,7 +157,7 @@ export const CommentTeaser = ({
                 displayAuthor,
                 createdAt,
               }}
-              menu={menu}
+              // menu={menu}
               CommentLink={CommentLink}
             />
           </div>
@@ -189,7 +221,11 @@ export const CommentTeaser = ({
           </CommentLink>
         )}
 
-        <DiscussionFooter comment={comment} t={t} CommentLink={CommentLink} />
+        <DiscussionFooter
+          comment={comment as CommentType}
+          t={t}
+          CommentLink={CommentLink}
+        />
       </div>
     </DiscussionContext.Provider>
   )

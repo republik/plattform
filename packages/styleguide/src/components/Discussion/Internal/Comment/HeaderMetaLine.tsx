@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { ComponentType } from 'react'
 import RelativeTime from './RelativeTime'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { timeFormat } from 'd3-time-format'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { sansSerifRegular14 } from '../../../Typography/styles'
@@ -10,6 +9,9 @@ import { ellipsize, underline } from '../../../../lib/styleMixins'
 import * as mediaQueries from '../../../../theme/mediaQueries'
 import { useMediaQuery } from '../../../../lib/useMediaQuery'
 import { IconCheck } from '@republik/icons'
+import { Formatter } from '../../../../lib/translate'
+import { CommentLinkProps } from './CommentLink'
+import { Comment } from './types'
 
 const styles = {
   meta: css({
@@ -51,11 +53,28 @@ const styles = {
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = (string) => dateTimeFormat(new Date(string))
 
+type HeaderMetaLineProps = {
+  t: Formatter
+  discussion: unknown
+  comment: Pick<
+    Comment,
+    'id' | 'displayAuthor' | 'createdAt' | 'updatedAt' | 'published'
+  >
+  CommentLink: ComponentType<CommentLinkProps>
+  isPreview?: boolean
+}
+
 /**
  * Render the meta line of the comment-header
  * user credential - published at - edited state
  */
-const HeaderMetaLine = ({ t, comment, discussion, CommentLink, isPreview }) => {
+const HeaderMetaLine = ({
+  t,
+  comment,
+  discussion,
+  CommentLink,
+  isPreview,
+}: HeaderMetaLineProps) => {
   const [colorScheme] = useColorContext()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
 
@@ -126,12 +145,6 @@ const HeaderMetaLine = ({ t, comment, discussion, CommentLink, isPreview }) => {
       )}
     </div>
   )
-}
-
-HeaderMetaLine.propTypes = {
-  t: PropTypes.func.isRequired,
-  comment: PropTypes.object.isRequired,
-  CommentLink: PropTypes.elementType.isRequired,
 }
 
 export default HeaderMetaLine

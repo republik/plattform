@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { css } from 'glamor'
 import { sansSerifRegular16 } from '../../../Typography/styles'
 import { convertStyleToRem } from '../../../Typography/utils'
@@ -11,7 +11,7 @@ const styles = {
   }),
 }
 
-export const Error = ({ children }) => {
+export const Error = ({ children }: { children: ReactNode }) => {
   const [colorScheme] = useColorContext()
   return (
     <div {...styles.root} {...colorScheme.set('color', 'error')}>

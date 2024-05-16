@@ -1,5 +1,4 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { Dispatch, SetStateAction } from 'react'
 import { css } from 'glamor'
 import Radio from '../../../Form/Radio'
 import { mUp } from '../../../../theme/mediaQueries'
@@ -27,7 +26,13 @@ const styles = {
   }),
 }
 
-export const Tags = ({ tags, value, onChange }) => {
+type TagsProps = {
+  tags: string[]
+  value: string
+  onChange: Dispatch<SetStateAction<string>>
+}
+
+export const Tags = ({ tags, value, onChange }: TagsProps) => {
   if (!tags || tags.length === 0) {
     return null
   } else {
@@ -47,10 +52,4 @@ export const Tags = ({ tags, value, onChange }) => {
       </div>
     )
   }
-}
-
-Tags.propTypes = {
-  tags: PropTypes.arrayOf(PropTypes.string),
-  value: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
 }

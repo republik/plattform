@@ -34,11 +34,19 @@ const styles = {
   }),
 }
 
-export const BlockQuoteParagraph = ({ children }) => (
+export type BlockQuoteParagraphProps = {
+  children: React.ReactNode
+}
+
+export const BlockQuoteParagraph = ({ children }: BlockQuoteParagraphProps) => (
   <p {...styles.paragraph}>{children}</p>
 )
 
-export const BlockQuoteNested = ({ children }) => {
+export type BlockQuoteNestedProps = {
+  children: React.ReactNode
+}
+
+export const BlockQuoteNested = ({ children }: BlockQuoteNestedProps) => {
   const [colorScheme] = useColorContext()
   return (
     <div
@@ -52,7 +60,11 @@ export const BlockQuoteNested = ({ children }) => {
   )
 }
 
-export default ({ children }) => {
+export type BlockQuoteProps = {
+  children: React.ReactNode
+}
+
+const BlockQuote = ({ children }: BlockQuoteProps) => {
   const [colorScheme] = useColorContext()
   return (
     <div
@@ -63,3 +75,5 @@ export default ({ children }) => {
     </div>
   )
 }
+
+export default BlockQuote

@@ -1,9 +1,9 @@
-import React, { FC, PropsWithChildren } from 'react'
-import PropTypes, { InferProps } from 'prop-types'
+import React from 'react'
 import { css } from 'glamor'
 import { LoadMore } from './Tree/LoadMore'
 import { useColorContext } from '../Colors/ColorContext'
 import ColorContextHelper from './Statements/helpers/ColorContextHelper'
+import { Formatter } from '../../lib/translate'
 
 const styles = {
   wrapper: css({
@@ -14,32 +14,29 @@ const styles = {
   }),
 }
 
-const propTypes = {
-  t: PropTypes.func.isRequired,
-  loadMore: PropTypes.func.isRequired,
-  moreAvailableCount: PropTypes.number,
-  errorMessage: PropTypes.string,
-  tagMappings: PropTypes.arrayOf(
-    PropTypes.shape({
-      tag: PropTypes.string.isRequired,
-      color: PropTypes.shape({
-        light: PropTypes.string.isRequired,
-        dark: PropTypes.string.isRequired,
-      }),
-    }),
-  ),
+type DiscussionCommentsWrapperProps = {
+  children: React.ReactNode
+  t: Formatter
+  loadMore: () => void | Promise<void>
+  moreAvailableCount: number
+  errorMessage?: string
+  tagMappings?: Array<{
+    tag: string
+    color: {
+      light: string
+      dark: string
+    }
+  }>
 }
 
-const DiscussionCommentsWrapper: FC<
-  PropsWithChildren<InferProps<typeof propTypes>>
-> = ({
+const DiscussionCommentsWrapper = ({
   children,
   t,
   loadMore,
   moreAvailableCount,
   errorMessage,
   tagMappings,
-}) => {
+}: DiscussionCommentsWrapperProps) => {
   const [colorScheme] = useColorContext()
   return (
     <ColorContextHelper tagMappings={tagMappings}>
@@ -55,7 +52,5 @@ const DiscussionCommentsWrapper: FC<
     </ColorContextHelper>
   )
 }
-
-DiscussionCommentsWrapper.propTypes = propTypes
 
 export default DiscussionCommentsWrapper

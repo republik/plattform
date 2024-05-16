@@ -2,8 +2,13 @@ import React from 'react'
 
 import colors from '../../../theme/colors'
 import { paragraphStyle } from './Paragraph'
+import {
+  BlockQuoteNestedProps,
+  BlockQuoteParagraphProps,
+  BlockQuoteProps,
+} from '../web/Blockquote'
 
-export const BlockQuoteParagraph = ({ children }) => (
+export const BlockQuoteParagraph = ({ children }: BlockQuoteParagraphProps) => (
   <p
     style={{
       ...paragraphStyle,
@@ -15,7 +20,7 @@ export const BlockQuoteParagraph = ({ children }) => (
   </p>
 )
 
-export const BlockQuoteNested = ({ children }) => (
+export const BlockQuoteNested = ({ children }: BlockQuoteNestedProps) => (
   <div
     style={{
       backgroundColor: '#f7f7f7',
@@ -28,7 +33,7 @@ export const BlockQuoteNested = ({ children }) => (
   </div>
 )
 
-export default ({ children }) => (
+const BlockQuote = ({ children }: BlockQuoteProps) => (
   <div
     style={{
       backgroundColor: '#f7f7f7',
@@ -39,3 +44,5 @@ export default ({ children }) => (
     {children}
   </div>
 )
+
+export default BlockQuote

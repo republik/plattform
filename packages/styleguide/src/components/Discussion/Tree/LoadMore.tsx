@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import { sansSerifRegular14 } from '../../Typography/styles'
@@ -7,6 +6,7 @@ import { usePrevious } from '../../../lib/usePrevious'
 import { convertStyleToRem, pxToRem } from '../../Typography/utils'
 import { useColorContext } from '../../Colors/ColorContext'
 import BabySpinner from '../../Spinner/BabySpinner'
+import { Formatter } from '../../../lib/translate'
 
 const styles = {
   root: css({
@@ -40,31 +40,39 @@ const styles = {
   }),
 }
 
-export const LoadMore = React.memo(({ t, count, onClick }) => {
-  const previousCount = usePrevious(count)
-  if (count > 0) {
-    return (
-      <LoadMore1
-        t={t}
-        alternative={previousCount !== undefined && count !== previousCount}
-        count={count}
-        onClick={onClick}
-      />
-    )
-  }
-  return null
-})
+export const LoadMore = React.memo(
+  ({ t, count, onClick }: Omit<LoadMore1Props, 'alternative'>) => {
+    const previousCount = usePrevious(count)
+    if (count > 0) {
+      return (
+        <LoadMore1
+          t={t}
+          alternative={previousCount !== undefined && count !== previousCount}
+          count={count}
+          onClick={onClick}
+        />
+      )
+    }
+    return null
+  },
+)
 
-LoadMore.propTypes = {
-  t: PropTypes.func.isRequired,
-  count: PropTypes.number.isRequired,
-  onClick: PropTypes.func.isRequired,
+type LoadMore1Props = {
+  t: Formatter
+  count: number
+  onClick: (e: React.MouseEvent) => Promise<void | unknown>
+  alternative?: boolean
 }
 
 /**
  * This component is exported only so that we can document it in the styleguide.
  */
-export const LoadMore1 = ({ t, alternative, count, onClick }) => {
+export const LoadMore1 = ({
+  t,
+  alternative,
+  count,
+  onClick,
+}: LoadMore1Props) => {
   const [colorScheme] = useColorContext()
   const [showSpinner, setShowSpinner] = useState(false)
   const styleRules = useMemo(() => {

@@ -9,6 +9,8 @@ import { COLLAPSE_WRAPPER_CLASSNAME } from '../Internal/Comment'
 import { Header } from '../Internal/Comment/Header'
 import { LoadMore } from './LoadMore'
 import { ActionMenuItem } from '../Internal/Comment/ActionsMenu'
+import { Comment as CommentType } from '../Internal/Comment/types'
+import { Formatter } from '../../../lib/translate'
 
 const buttonStyle = {
   display: 'block',
@@ -131,8 +133,8 @@ const styles = {
 const MockLink = (props) => <>{props.children}</>
 
 type CommentUIProps = {
-  t: any
-  comment: any
+  t: Formatter
+  comment: CommentType
   isExpanded: boolean
   onToggle?: () => void
   tagText?: string
@@ -180,16 +182,16 @@ export const CommentUI = ({
   </div>
 )
 
-export type CommentProps<CommentType = any> = {
+export type CommentProps = {
   children?: React.ReactNode
-  t: any
+  t: Formatter
   comment: CommentType
   actions: {
     handleShare: (comment: CommentType) => Promise<unknown>
     handleReply: () => void
     handleLoadReplies: () => Promise<unknown>
   }
-  voteActions?: {
+  voteActions: {
     handleUpVote: (commentId: string) => Promise<unknown>
     handleDownVote: (commentId: string) => Promise<unknown>
     handleUnVote: (commentId: string) => Promise<unknown>
@@ -324,7 +326,7 @@ const CommentNode = ({
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             t={t}
-            visualDepth={0}
+            // visualDepth={0}
             count={
               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               // @ts-ignore

@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-
 import { mUp } from '../../../theme/mediaQueries'
 import {
   sansSerifRegular12,
@@ -51,23 +50,45 @@ const styles = {
   }),
 }
 
-const Paragraph = ({ children }) => <p {...styles.p}>{children}</p>
+export type ParagraphProps = {
+  children: React.ReactNode
+}
 
-export const FeaturedText = ({ children }) => (
+const Paragraph = ({ children }: ParagraphProps) => (
+  <p {...styles.p}>{children}</p>
+)
+
+export type FeaturedTextProps = {
+  children: React.ReactNode
+}
+
+export const FeaturedText = ({ children }: FeaturedTextProps) => (
   <span {...styles.featuredText}>{children}</span>
 )
 
-export const Heading = ({ children }) => (
+export type HeadingProps = {
+  children: React.ReactNode
+}
+
+export const Heading = ({ children }: HeadingProps) => (
   <Paragraph>
     <strong>{children}</strong>
   </Paragraph>
 )
 
-export const Definition = ({ children }) => (
+export type DefinitionProps = {
+  children: React.ReactNode
+}
+
+export const Definition = ({ children }: DefinitionProps) => (
   <p {...styles.definition}>{children}</p>
 )
 
-export const Code = ({ children }) => {
+export type CodeProps = {
+  children: React.ReactNode
+}
+
+export const Code = ({ children }: CodeProps) => {
   const [colorScheme] = useColorContext()
   return (
     <code {...styles.code} {...colorScheme.set('backgroundColor', 'hover')}>

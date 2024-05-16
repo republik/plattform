@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { useColorContext } from '../../../Colors/ColorContext'
+import { Formatter } from '../../../../lib/translate'
 
 const actionButtonStyle = {
   ...convertStyleToRem(sansSerifMedium14),
@@ -49,6 +49,16 @@ const styles = {
   }),
 }
 
+type ActionsProps = {
+  t: Formatter
+  onClose: () => void
+  onPreview?: () => void
+  onCloseLabel?: string
+  onSubmit?: () => void
+  onSubmitLabel?: string
+  secondaryActions?: React.ReactNode
+}
+
 export const Actions = ({
   t,
   onClose,
@@ -57,7 +67,7 @@ export const Actions = ({
   onSubmitLabel,
   onPreview,
   secondaryActions,
-}) => {
+}: ActionsProps) => {
   const [colorScheme] = useColorContext()
   const styleRules = useMemo(() => {
     return {
@@ -117,15 +127,4 @@ export const Actions = ({
       </div>
     </div>
   )
-}
-
-Actions.propTypes = {
-  t: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onCloseLabel: PropTypes.string,
-  onSubmit: PropTypes.func,
-  onSubmitLabel: PropTypes.string,
-  onPreview: PropTypes.func,
-  onPreviewLabel: PropTypes.string,
-  secondaryActions: PropTypes.node,
 }

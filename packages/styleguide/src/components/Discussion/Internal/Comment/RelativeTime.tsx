@@ -2,8 +2,21 @@ import React from 'react'
 
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
 import { formatTimeRelative } from '../../DiscussionContext'
+import { Formatter } from '../../../../lib/translate'
 
-const RelativeTime = ({ date, t, isDesktop, direction = 'past' }) => {
+type RelativeTimeProps = {
+  date: string
+  t: Formatter
+  isDesktop: boolean
+  direction?: 'past' | 'future'
+}
+
+const RelativeTime = ({
+  date,
+  t,
+  isDesktop,
+  direction = 'past',
+}: RelativeTimeProps) => {
   const now = useCurrentMinute()
 
   return (

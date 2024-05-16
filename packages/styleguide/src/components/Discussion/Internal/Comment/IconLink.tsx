@@ -1,6 +1,5 @@
 import { IconDiscussion } from '@republik/icons'
 import { css } from 'glamor'
-import PropTypes from 'prop-types'
 import React, { useMemo } from 'react'
 import { useColorContext } from '../../../Colors/useColorContext'
 import { sansSerifMedium16 } from '../../../Typography/styles'
@@ -42,7 +41,15 @@ const styles = {
   }),
 }
 
-export const IconLink = React.forwardRef(
+type IconLinkProps = {
+  href?: string
+  onClick?: React.ComponentProps<'a'>['onClick']
+  style?: React.CSSProperties
+  small?: boolean
+  discussionCommentsCount: number
+}
+
+export const IconLink = React.forwardRef<HTMLAnchorElement, IconLinkProps>(
   ({ href, onClick, discussionCommentsCount, style, small }, ref) => {
     const [colorScheme] = useColorContext()
     const dimension = small ? 22 : 24
@@ -88,13 +95,5 @@ export const IconLink = React.forwardRef(
     )
   },
 )
-
-IconLink.propTypes = {
-  href: PropTypes.string,
-  onClick: PropTypes.func,
-  discussionCommentsCount: PropTypes.number,
-  style: PropTypes.object,
-  small: PropTypes.bool,
-}
 
 export default IconLink

@@ -1,4 +1,8 @@
-import React, { useContext } from 'react'
+import React, {
+  ComponentPropsWithoutRef,
+  ComponentType,
+  useContext,
+} from 'react'
 import { css } from 'glamor'
 import { sansSerifMedium16 } from '../../../Typography/styles'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
@@ -7,11 +11,13 @@ import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { useColorContext } from '../../../Colors/ColorContext'
 import IconButton from '../../../IconButton'
 
-import ActionsMenu, { ActionsMenuItemPropType } from './ActionsMenu'
-import PropTypes from 'prop-types'
+import ActionsMenu from './ActionsMenu'
 import HeaderMetaLine from './HeaderMetaLine'
 import { DiscussionContext } from '../../DiscussionContext'
 import { IconAdd, IconRemove } from '@republik/icons'
+import { CommentLinkProps, DefaultCommentLink } from './CommentLink'
+import { Formatter } from '../../../../lib/translate'
+import { Comment } from './types'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -87,29 +93,26 @@ const styles = {
  */
 export const COLLAPSE_WRAPPER_CLASSNAME = 'comment-collapse-wrapper'
 
-const propTypes = {
-  t: PropTypes.func.isRequired,
-  comment: PropTypes.shape({
-    displayAuthor: PropTypes.shape({
-      profilePicture: PropTypes.string,
-      name: PropTypes.string,
-    }),
-    published: PropTypes.bool,
-    adminUnpublished: PropTypes.bool,
-    unavailable: PropTypes.bool,
-    comments: PropTypes.shape({
-      totalCount: PropTypes.number,
-    }),
-    parentIds: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
-  menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
-  isExpanded: PropTypes.bool,
-  onToggle: PropTypes.func,
-  CommentLink: PropTypes.elementType,
-  isPreview: PropTypes.bool,
+type HeaderProps = {
+  t: Formatter
+  comment: Pick<Comment, 'id' | 'createdAt' | 'displayAuthor'> &
+    Partial<
+      Pick<
+        Comment,
+        | 'published'
+        | 'adminUnpublished'
+        | 'unavailable'
+        | 'comments'
+        | 'parentIds'
+        | 'updatedAt'
+      >
+    >
+  menuItems?: ComponentPropsWithoutRef<typeof ActionsMenu>['items']
+  isExpanded?: boolean
+  onToggle?: () => void
+  CommentLink?: ComponentType<CommentLinkProps>
+  isPreview?: boolean
 }
-
-const DefaultLink = ({ children }) => <>{children}</>
 
 export const Header = ({
   t,
@@ -117,9 +120,9 @@ export const Header = ({
   menuItems,
   isExpanded,
   onToggle,
-  CommentLink = DefaultLink,
+  CommentLink = DefaultCommentLink,
   isPreview = false,
-}) => {
+}: HeaderProps) => {
   const [colorScheme] = useColorContext()
   const { discussion } = useContext(DiscussionContext)
   const {
@@ -218,5 +221,3 @@ export const Header = ({
     </div>
   )
 }
-
-Header.propTypes = propTypes

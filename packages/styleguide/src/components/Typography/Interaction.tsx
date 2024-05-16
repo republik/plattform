@@ -100,7 +100,7 @@ const interactionP = css({
 })
 
 type ParagraphProps = {
-  children: React.ReactNode
+  children?: React.ReactNode
 } & React.ComponentPropsWithoutRef<'p'>
 
 export const P = ({ children, ...props }: ParagraphProps) => {

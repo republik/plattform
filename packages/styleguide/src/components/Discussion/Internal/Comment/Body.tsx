@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ComponentPropsWithoutRef } from 'react'
 import { css } from 'glamor'
 
 import { Collapsable } from '../../../Collapsable'
@@ -7,6 +7,8 @@ import { Label } from '../../../Typography'
 
 import { Context } from './Context'
 import { renderCommentMdast } from './render'
+import { Formatter } from '../../../../lib/translate'
+import { Comment } from './types'
 
 const styles = {
   container: css({
@@ -24,15 +26,23 @@ const styles = {
   }),
 }
 
+type BodyProps = {
+  t: Formatter
+  comment: Comment
+  context: ComponentPropsWithoutRef<typeof Context>
+  isPreview?: boolean
+  isHighlighted?: boolean
+}
+
 export const Body = ({
   t,
   comment,
   context,
   isPreview = false,
   isHighlighted = false,
-}) => {
+}: BodyProps) => {
   const { discussion } = React.useContext(DiscussionContext)
-  const { collapsable } = discussion
+  const { collapsable } = discussion as { collapsable: boolean }
   const { published, content, userCanEdit, adminUnpublished } = comment
 
   const body = (
@@ -49,7 +59,7 @@ export const Body = ({
     collapsable && !isHighlighted ? (
       <Collapsable
         t={t}
-        collapsable={collapsable && !isHighlighted}
+        // collapsable={collapsable && !isHighlighted}
         style={{ opacity: published || isPreview ? 1 : 0.5 }}
       >
         {body}

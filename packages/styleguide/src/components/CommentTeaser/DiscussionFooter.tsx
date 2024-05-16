@@ -7,10 +7,16 @@ import { useMediaQuery } from '../../lib/useMediaQuery'
 import { underline } from '../../lib/styleMixins'
 
 import { sansSerifMedium15 } from '../Typography/styles'
-import { A } from '../Typography/'
+import { A } from '../Typography'
 import { IconLink } from '../Discussion/Internal/Comment'
 import RelativeTime from '../Discussion/Internal/Comment/RelativeTime'
 import { useColorContext } from '../Colors/ColorContext'
+import {
+  CommentLinkProps,
+  DefaultCommentLink,
+} from '../Discussion/Internal/Comment/CommentLink'
+import { Formatter } from '../../lib/translate'
+import { Comment } from '../Discussion/Internal/Comment/types'
 
 const styles = {
   footer: css({
@@ -32,9 +38,17 @@ const styles = {
   }),
 }
 
-const DefaultLink = ({ children }) => children
+type DiscussionFooterProps = {
+  t: Formatter
+  CommentLink?: React.ComponentType<CommentLinkProps>
+  comment: Comment
+}
 
-export const DiscussionFooter = ({ t, CommentLink = DefaultLink, comment }) => {
+export const DiscussionFooter = ({
+  t,
+  CommentLink = DefaultCommentLink,
+  comment,
+}: DiscussionFooterProps) => {
   const { id, discussion, parentIds, createdAt } = comment
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()

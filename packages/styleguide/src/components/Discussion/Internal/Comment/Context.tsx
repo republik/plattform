@@ -36,7 +36,12 @@ const styles = {
   }),
 }
 
-export const Context = ({ title, description }) => {
+type ContextProps = {
+  title: React.ReactNode
+  description?: string
+}
+
+export const Context = ({ title, description }: ContextProps) => {
   const [colorScheme] = useColorContext()
   return (
     <div {...styles.root}>

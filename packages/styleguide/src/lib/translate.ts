@@ -38,6 +38,12 @@ type FirstElementsFunction = (
 
 type CreateFormatter = (translations: Translations) => Formatter
 
+export type TranslationFunc = FormatterFunction &
+  FirstFunction &
+  PluralizeFunction &
+  ElementsFunction &
+  FirstElementsFunction
+
 export type Formatter = FormatterFunction & {
   elements: ElementsFunction
   first: FirstFunction & { elements?: FirstElementsFunction }
