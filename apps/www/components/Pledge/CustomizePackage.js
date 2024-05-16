@@ -39,7 +39,11 @@ const dayFormat = timeFormat('%d. %B %Y')
 const { P } = Interaction
 
 const absolutMinPrice = 100
-const calculateMinPrice = (pkg, values, userPrice) => {
+const calculateMinPrice = (pkg, values, userPrice, router) => {
+  // EINSTIEGSMONAT-TEST (remove after test)
+  if (pkg.name === 'MONTHLY_ABO' && router.query.coupon === 'EINSTIEG24') {
+    return 200
+  }
   const minPrice = pkg.options.reduce((price, option) => {
     const amountValue = values[getOptionFieldKey(option)]
     const amount =
@@ -79,14 +83,18 @@ const calculateMinPrice = (pkg, values, userPrice) => {
   return absolutMinPrice
 }
 
-const getPrice = ({ values, pkg, userPrice }) => {
+const getPrice = ({ values, pkg, userPrice, router }) => {
+  // EINSTIEGSMONAT-TEST (remove after test)
+  if (pkg.name === 'MONTHLY_ABO' && router.query.coupon === 'EINSTIEG24') {
+    return 200
+  }
   if (values.price !== undefined) {
     return values.price
   } else {
     if (userPrice) {
       return ''
     }
-    const minPrice = calculateMinPrice(pkg, values, userPrice)
+    const minPrice = calculateMinPrice(pkg, values, userPrice, router)
     if (minPrice === absolutMinPrice) {
       return ''
     }
@@ -195,7 +203,7 @@ class CustomizePackage extends Component {
     }
   }
   calculateNextPrice(nextFields) {
-    const { pkg, values, userPrice, t } = this.props
+    const { pkg, values, userPrice, t, router } = this.props
 
     const minPrice = calculateMinPrice(
       pkg,
@@ -204,6 +212,7 @@ class CustomizePackage extends Component {
         ...nextFields.values,
       },
       userPrice,
+      router
     )
 
     let price = values.price
@@ -227,18 +236,10 @@ class CustomizePackage extends Component {
   getPriceWithSuggestion() {
     const { pkg, values, userPrice, router } = this.props
 
-    // EINSTIEGSMONAT-TEST (remove after test)
-    if (
-      pkg.name === 'MONTHLY_ABO' &&
-      router.query.coupon === 'EINSTIEG24'
-    ) {
-      return 200
-    }
-
     if (values.price === undefined && pkg.suggestedTotal) {
       if (process.browser) {
         this.setState({ customPrice: true })
-        const regularMinPrice = calculateMinPrice(pkg, values, false)
+        const regularMinPrice = calculateMinPrice(pkg, values, false, router)
         if (pkg.suggestedTotal < regularMinPrice && !userPrice) {
           router.replace(
             {
@@ -266,10 +267,10 @@ class CustomizePackage extends Component {
       }
     }
 
-    const { onChange, pkg, values, userPrice, fixedPrice, t } = this.props
+    const { onChange, pkg, values, userPrice, fixedPrice, t, router } = this.props
 
     const price = this.getPriceWithSuggestion()
-    const minPrice = calculateMinPrice(pkg, values, userPrice)
+    const minPrice = calculateMinPrice(pkg, values, userPrice, router)
     onChange({
       values: {
         price,
@@ -281,11 +282,11 @@ class CustomizePackage extends Component {
     })
   }
   componentDidUpdate(prevProps) {
-    const { onChange, pkg, values, userPrice, t } = this.props
+    const { onChange, pkg, values, userPrice, t, router } = this.props
 
     if (values.price === undefined || userPrice !== prevProps.userPrice) {
       const price = this.getPriceWithSuggestion()
-      const minPrice = calculateMinPrice(pkg, values, userPrice)
+      const minPrice = calculateMinPrice(pkg, values, userPrice, router)
       onChange({
         values: {
           price,
@@ -368,8 +369,8 @@ class CustomizePackage extends Component {
       return fields
     }, [])
 
-    const minPrice = calculateMinPrice(pkg, values, userPrice)
-    const regularMinPrice = calculateMinPrice(pkg, values, false)
+    const minPrice = calculateMinPrice(pkg, values, userPrice, router)
+    const regularMinPrice = calculateMinPrice(pkg, values, false, router)
 
     const onPriceChange = (_, value, shouldValidate) => {
       const price = String(value).length
