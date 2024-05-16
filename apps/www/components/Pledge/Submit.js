@@ -1110,7 +1110,6 @@ const submitPledge = gql`
     $options: [PackageOptionInput!]!
     $user: UserInput
     $reason: String
-    $coupon: String
     $consents: [String!]
     $accessToken: ID
     $payload: JSON
@@ -1125,7 +1124,6 @@ const submitPledge = gql`
         address: $address
         shippingAddress: $shippingAddress
         reason: $reason
-        coupon: $coupon
         accessToken: $accessToken
         payload: $payload
       }
