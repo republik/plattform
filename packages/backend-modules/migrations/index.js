@@ -2,7 +2,7 @@ const {
   createDB,
   migrateUp,
   migrateDown,
-  migrateRest,
+  migrateReset,
   seedSampleData,
 } = require('./lib')
 
@@ -10,6 +10,6 @@ module.exports = {
   createDB,
   migrateUp,
   migrateDown,
-  migrateRest,
+  migrateReset,
   seedSampleData,
 }

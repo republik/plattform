@@ -68,7 +68,7 @@ async function migrateUp(upTo = undefined) {
   return migrator.up(upTo)
 }
 
-async function migrateRest() {
+async function migrateReset() {
   const migrator = getMigrator()
 
   return migrator.reset()
@@ -95,6 +95,6 @@ module.exports = {
   createDB,
   migrateUp,
   migrateDown,
-  migrateRest,
+  migrateReset,
   seedSampleData,
 }
