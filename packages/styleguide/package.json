@@ -3,20 +3,23 @@
   "private": true,
   "version": "0.0.0",
   "main": "dist/lib.js",
-  "module": "src/lib.ts",
+  "module": "dist/lib.mjs",
   "types": "dist/lib.d.ts",
   "exports": {
     ".": {
-      "import": "./src/lib.ts",
-      "require": "./dist/lib.js"
+      "import": "./dist/lib.mjs",
+      "require": "./dist/lib.js",
+      "types": "./dist/lib.d.ts"
     },
     "./chart": {
-      "import": "./src/chart.ts",
-      "require": "./dist/chart.js"
+      "import": "./dist/chart.mjs",
+      "require": "./dist/chart.js",
+      "types": "./dist/chart.d.ts"
     },
     "./editor": {
-      "import": "./src/editor.ts",
-      "require": "./dist/editor.js"
+      "import": "./dist/editor.mjs",
+      "require": "./dist/editor.js",
+      "types": "./dist/editor.d.ts"
     }
   },
   "engines": {
