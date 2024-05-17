@@ -40,6 +40,6 @@ describe('api boot tests', () => {
 
   afterAll(async () => {
     await server.close()
-    composeEnv.down()
+    await composeEnv.down()
   })
 })

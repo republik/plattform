@@ -59,6 +59,7 @@ describe('some example tests', () => {
         }
       `,
     })
+
     expect(results.data.crowdfundings).toHaveLength(5)
   })
 
@@ -74,6 +75,6 @@ describe('some example tests', () => {
 
   afterAll(async () => {
     await server.close()
-    composeEnv.down()
+    await composeEnv.down()
   })
 })
