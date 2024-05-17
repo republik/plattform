@@ -235,7 +235,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
     <>
       <button
         {...plainButtonRule}
-        style={{ color: colors.primary, marginTop: 10 }}
+        style={{ color: colors.light.primary, marginTop: 10 }}
         onClick={() => setReplacerVisible(true)}
       >
         {title}
