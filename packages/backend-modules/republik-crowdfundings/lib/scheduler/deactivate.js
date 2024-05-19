@@ -7,7 +7,12 @@ const { activeMembershipsQuery } = require('./changeover')
 
 const deactivate = async (
   { dryRun },
-  { pgdb, mail: { sendMembershipDeactivated, enforceSubscriptions }, t, redis },
+  {
+    pgdb,
+    mail: { /* sendMembershipDeactivated, */ enforceSubscriptions },
+    t,
+    redis,
+  },
 ) => {
   const cancelledEndDate = moment().startOf('day')
 
@@ -59,9 +64,10 @@ const deactivate = async (
 
     await enforceSubscriptions({ userId: membership.userId, pgdb })
 
-    if (membership.renew) {
-      await sendMembershipDeactivated({ membership, pgdb, t })
-    }
+    // disable mail
+    // if (membership.renew) {
+    //   await sendMembershipDeactivated({ membership, pgdb, t })
+    // }
   })
 }
 

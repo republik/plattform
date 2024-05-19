@@ -9,6 +9,7 @@ const { loaderBuilders } = require('@orbiting/api-app/server')
 
 const { run: membershipsOwnersHandler } = require('./owners')
 const { changeover } = require('./changeover')
+const { deactivate } = require('./deactivate')
 
 const applicationName = ['backends', 'runner', process.env.DYNO, 'scheduler']
   .filter(Boolean)
@@ -32,6 +33,7 @@ ConnectionContext.create(applicationName).then(async (connectionContext) => {
 
   const context = await createGraphQLContext({ scope: 'scheduler' })
 
+  await deactivate({}, context)
   await changeover({}, context)
   await membershipsOwnersHandler({}, context)
 
