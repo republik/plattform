@@ -63,8 +63,6 @@ un autre mode de paiement {{prolong_url}} .
 {{/if}}
 
 Avec nos meilleures salutations
-Thomas Angeli & Otto Hostettler
-Co-présidents Lobbywatch
 
 
 Lobbywatch.ch

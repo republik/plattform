@@ -23,8 +23,6 @@ transparente.
 {{frontend_base_url}}/fr/patronage?package=DONATE {{/if}}
 
 Avec nos meilleures salutations
-Thomas Angeli et Otto Hostettler
-Co-présidents
 
 
 Lobbywatch.ch

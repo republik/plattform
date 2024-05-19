@@ -62,8 +62,6 @@ andere Zahlungsart auswählen {{prolong_url}} .
 {{/if}}
 
 Mit freundlichen Grüssen
-Thomas Angeli & Otto Hostettler
-Co-Präsidenten Lobbywatch
 
 
 Lobbywatch.ch

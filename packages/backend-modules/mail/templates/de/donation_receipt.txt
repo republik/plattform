@@ -22,8 +22,6 @@ machen.
 {{else}} Jetzt spenden {{frontend_base_url}}/de/patronage?package=DONATE {{/if}}
 
 Mit freundlichen Grüssen
-Thomas Angeli und Otto Hostettler
-Co-Präsidenten
 
 
 Lobbywatch.ch
