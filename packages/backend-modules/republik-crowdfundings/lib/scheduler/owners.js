@@ -192,20 +192,20 @@ const createJobs = (now) => [
     },
     handleFn: mailings,
   },
-  {
-    name: 'membership_owner_prolong_missed',
-    prolongBefore: {
-      minDate: getMinEndDate(now, -720),
-      maxDate: getMaxEndDate(now, -120),
-    },
-    payload: {
-      templateName: 'membership_owner_prolong_missed',
-    },
-    predicateFn: ({ membershipType }) => {
-      return ['YEAR'].includes(membershipType)
-    },
-    handleFn: mailings,
-  },
+  // {
+  //   name: 'membership_owner_prolong_missed',
+  //   prolongBefore: {
+  //     minDate: getMinEndDate(now, -720),
+  //     maxDate: getMaxEndDate(now, -120),
+  //   },
+  //   payload: {
+  //     templateName: 'membership_owner_prolong_missed',
+  //   },
+  //   predicateFn: ({ membershipType }) => {
+  //     return ['YEAR'].includes(membershipType)
+  //   },
+  //   handleFn: mailings,
+  // },
   {
     name: 'membership_owner_autopay_notice',
     prolongBefore: {
