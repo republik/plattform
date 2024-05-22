@@ -54,7 +54,7 @@ const GalleryButton = ({ gallerySize, onClick }: GalleryButtonProps) => {
 }
 
 type ImageProps = {
-  src: string
+  src?: string
   dark?: {
     src: string
     srcSet?: string
