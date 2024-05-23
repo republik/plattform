@@ -12,7 +12,7 @@ const Button = () => {
 
   return (
     <Link
-      href='/angebote'
+      href='/angebote?package=MONTHLY_ABO&coupon=EINSTIEG24'
       className={css({
         backgroundColor: 'primary',
         color: 'text.primary',
@@ -99,7 +99,7 @@ export function TrialPaynote({
                 fontSize: '2xl',
               })}
             >
-              CHF 5 für 30 Tage
+              CHF 2 für 30 Tage
             </p>
 
             <Button />
