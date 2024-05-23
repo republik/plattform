@@ -3,7 +3,6 @@ services:
   elastic:
     # in order to get elastic to work, see https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-cli-run-prod-mode
     image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
-    container_name: elasticsearch
     environment:
       - cluster.routing.allocation.disk.threshold_enabled=false
       - 'ES_JAVA_OPTS=-Xms1024m -Xmx1024m'
@@ -20,14 +19,11 @@ services:
       memlock:
         soft: -1
         hard: -1
-    volumes:
-      - ./docker-data/elastic:/usr/share/elasticsearch/data:delegated
     ports:
       - 9200:9200
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.16.2
-    container_name: kibana
     ports:
       - 5601:5601
     depends_on:
@@ -37,15 +33,45 @@ services:
     image: redis:6.2-alpine
     ports:
       - 6379:6379
-    volumes:
-      - ./docker-data/redis:/data:delegated
 
   postgres:
     image: postgres:14.11
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
-    volumes:
-      - ./docker-data/postgres:/var/lib/postgresql/data:delegated
     ports:
       - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
     command: ['postgres', '-c', 'log_statement=all']
+
+  republik-api-setup:
+    image: api-republik-test:latest
+    env_file:
+      - apps/api/.env.test.local
+    environment:
+      - DATABASE_URL=postgres://postgres@postgres:5432/republik-test
+    entrypoint: ["launcher", "yarn migrate:db:create && yarn migrate:up && yarn migrate:db:import"]
+    depends_on:
+      - elastic
+      - redis
+      - postgres
+
+  republik-api:
+    image: api-republik-test:latest
+    env_file:
+      - apps/api/.env.test.local
+    environment:
+      - DATABASE_URL=postgres://postgres@postgres:5432/republik-test
+      - ELASTIC_URL=http://elastic:9200
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - elastic
+      - redis
+      - postgres
+      - republik-api-setup
+    ports:
+      - 5010:5010

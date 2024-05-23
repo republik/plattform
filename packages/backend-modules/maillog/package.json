@@ -1,0 +1,13 @@
+{
+  "name": "@orbiting/backend-modules-maillog",
+  "version": "0.0.1",
+  "private": true,
+  "description": "maillog-migrations",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/republik/plattform.git"
+  },
+  "license": "AGPL-3.0",
+  "homepage": "https://github.com/republik/plattform#readme",
+  "dependencies": {}
+}

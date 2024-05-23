@@ -1,6 +1,6 @@
 const path = require('path')
 
-const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
+const DEV = process.env.NODE_ENV !== 'production'
 const OVERWRITE_ENV = process.env.OVERWRITE_ENV
 
 const config = (envFile) => {
