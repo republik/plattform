@@ -43,20 +43,20 @@ const getTemplate = async (filehandler) => {
 }
 
 const getTemplates = async (name) => {
-  const { html, text } = await Promise.props({
+  const { html } = await Promise.props({
     html: fs
       .open(path.resolve(`${__dirname}/../templates/${name}.html`))
       .then(getTemplate)
       .catch(() => null),
-    text: fs
-      .open(path.resolve(`${__dirname}/../templates/${name}.txt`))
-      .then(getTemplate)
-      .catch(() => null),
+    // text: fs
+    //   .open(path.resolve(`${__dirname}/../templates/${name}.txt`))
+    //   .then(getTemplate)
+    //   .catch(() => null),
   })
 
   return {
-    text,
-    getText: handlebars.compile(text || '', { noEscape: true }),
+    // text,
+    // getText: handlebars.compile(text || '', { noEscape: true }),
     html,
     getHtml: handlebars.compile(html || ''),
     getCompiler: handlebars.compile,
@@ -292,12 +292,12 @@ module.exports = async (mail, context, log) => {
     return prev
   }, {})
 
-  const { getHtml, getText, getCompiler } = await getTemplates(
+  const { getHtml } = await getTemplates(
     mail.templateName,
   )
 
   const html = getHtml(values)
-  const text = getText(values) || getCompiler(mail.text)(values)
+  // const text = getText(values) || getCompiler(mail.text)(values)
 
   const message = {
     to: [{ email: mail.to }],
@@ -308,10 +308,10 @@ module.exports = async (mail, context, log) => {
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     html,
-    text,
+    // text,
     merge_language: mail.mergeLanguage || 'handlebars',
     global_merge_vars: mergeVars,
-    auto_text: !text,
+    auto_text: true,
     tags,
     attachments: mail.attachments,
   }
@@ -319,7 +319,7 @@ module.exports = async (mail, context, log) => {
   debug({
     ...message,
     html: !!message.html,
-    text: !!message.text,
+    // text: !!message.text,
     attachments: message.attachments?.map(({ name, type }) => ({ name, type })),
   })
 
@@ -353,7 +353,7 @@ module.exports = async (mail, context, log) => {
     message: {
       ...message,
       html: !!message.html,
-      text: !!message.text,
+      // text: !!message.text,
       attachments: message.attachments?.map(({ name, type }) => ({
         name,
         type,
