@@ -12,6 +12,8 @@ module.exports = async ({
   platformPaymentMethodId, // optional
   errIfIncomplete, // optional
   metadata,
+  idempotencyKey,
+  discounts = [],
   pgdb,
   clients: _clients, // optional
   t,
@@ -35,6 +37,7 @@ module.exports = async ({
     items: [{ plan }],
     metadata,
     expand: ['latest_invoice', 'latest_invoice.payment_intent'],
+    discounts,
   }
 
   if (errIfIncomplete) {
@@ -54,7 +57,9 @@ module.exports = async ({
 
   if (!platformPaymentMethodId) {
     debug('subscribe user with default payment method %o', subscription)
-    return stripe.subscriptions.create(subscription)
+    return stripe.subscriptions.create(subscription, {
+      idempotencyKey,
+    })
   }
 
   subscription.default_payment_method = await getPaymentMethodForCompany({
