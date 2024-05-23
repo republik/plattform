@@ -2550,15 +2550,15 @@
     },
     {
       "key": "package/YEARLY_ABO/price",
-      "value": "{formattedCHF}"
+      "value": "{formattedCHF} für ein Jahr"
     },
     {
       "key": "package/YEARLY_ABO/title",
-      "value": "Mitstreiterinnen-Abo"
+      "value": "Republik-Abonnement"
     },
     {
       "key": "package/YEARLY_ABO/description",
-      "value": "Es freut uns, dass Sie dabei sind! Mit Ihrem selbst gewählten Beitrag erhalten Sie ab sofort und für ein Jahr unser Magazin, zum Lesen und zum Hören. Und Sie investieren in die Zukunft unseres Journalismus."
+      "value": "Es freut uns, dass Sie dabei sind! Sie bekommen Zugriff auf unser Magazin, zum Lesen und zum Hören, können Briefings und Newsletter abonnieren und sich mit Autorinnen und anderen Abonnentinnen in unserem Dialog-Bereich austauschen."
     },
     {
       "key": "package/BENEFACTOR/title",

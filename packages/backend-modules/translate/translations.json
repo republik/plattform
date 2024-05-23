@@ -2130,7 +2130,7 @@
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:YEARLY_ABO/subject",
-      "value": "Sie haben den Preis gewählt: Zahlungserinnerung für Ihr neues Republik-Abo"
+      "value": "Zahlungserinnerung für Ihr neues Republik-Abo"
     },
     {
       "key": "api/email/payment/reminder/isLast:false/packageName:LESHA/subject",

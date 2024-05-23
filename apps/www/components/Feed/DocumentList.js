@@ -1,16 +1,17 @@
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import { A, Spinner, Interaction } from '@project-r/styleguide'
+import { A, Spinner, Interaction, Button } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
-import withInNativeApp from '../../lib/withInNativeApp'
+import withInNativeApp, { useInNativeApp } from '../../lib/withInNativeApp'
 import Feed from './Feed'
 import ErrorMessage from '../ErrorMessage'
 
 import { useInfiniteScroll } from '../../lib/hooks/useInfiniteScroll'
 import { WithoutAccess } from '../Auth/withMembership'
 import Box from '../Frame/Box'
+import Link from 'next/link'
 
 const styles = {
   more: css({
@@ -34,6 +35,7 @@ const DocumentList = ({
     { containerRef, infiniteScroll, loadingMore, loadingMoreError },
     setInfiniteScroll,
   ] = useInfiniteScroll({ hasMore, loadMore })
+  const { inNativeIOSApp } = useInNativeApp()
 
   if (totalCount < 1) {
     return null
@@ -63,13 +65,36 @@ const DocumentList = ({
       {(hasNoDocument || hasSampleDocuments) && (
         <WithoutAccess
           render={() => (
-            <Box style={{ marginBottom: 30, padding: '15px 20px' }}>
-              <Interaction.P>
-                {t(
-                  `section/feed/payNote${hasSampleDocuments ? '/sample' : ''}`,
+            <div>
+              <Box style={{ marginBottom: 30, padding: '15px 20px' }}>
+                <Interaction.P>
+                  Sie brauchen ein gültiges Abo, um{' '}
+                  {hasSampleDocuments ? 'alle' : 'diese'} Beiträge zu lesen. Sie
+                  sind schon dabei? Wunderbar, dann{' '}
+                  <Link
+                    href='/anmelden'
+                    style={{ textDecoration: 'underline' }}
+                  >
+                    melden Sie sich hier an
+                  </Link>
+                  .
+                </Interaction.P>
+                {!inNativeIOSApp && (
+                  <>
+                    <Interaction.P>
+                      Falls nicht: Höchste Zeit, an Bord zu kommen!
+                    </Interaction.P>
+                    <Button
+                      style={{ marginTop: '1rem' }}
+                      href='/angebot'
+                      primary
+                    >
+                      Jetzt abonnieren
+                    </Button>
+                  </>
                 )}
-              </Interaction.P>
-            </Box>
+              </Box>
+            </div>
           )}
         />
       )}
