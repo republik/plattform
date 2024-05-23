@@ -2,6 +2,7 @@
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
+const { withPlausibleProxy } = require('next-plausible')
 
 const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
@@ -26,7 +27,7 @@ const unprefixedStyleguideEnvVariables = {
 /**
  * @type {import('next').NextConfig}
  */
-module.exports = withBundleAnalyzer({
+const nextConfig = withBundleAnalyzer({
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -70,6 +71,12 @@ module.exports = withBundleAnalyzer({
     ]
   },
 })
+
+const withConfiguredPlausibleProxy = withPlausibleProxy({
+  subdirectory: '__plsb',
+})
+
+module.exports = withBundleAnalyzer(withConfiguredPlausibleProxy(nextConfig))
 
 // Injected content via Sentry wizard below
 
