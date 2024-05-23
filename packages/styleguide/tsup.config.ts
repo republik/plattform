@@ -7,7 +7,7 @@ const config = defineConfig({
   // dts: true,
   sourcemap: true,
   clean: true,
-  minify: true,
+  minify: process.env.NODE_ENV === 'production',
   target: 'es6',
   external: ['react', 'react-dom'],
   outDir: 'dist',
@@ -22,10 +22,10 @@ const config = defineConfig({
           reject(err)
         }
         console.log(stdout)
-        return resolve()
+        resolve()
       })
     })
-    console.log('⚡ TypeScript declaration files generated!')
+    console.log('⚡ TypeScript declaration files generated')
   },
 })
 
