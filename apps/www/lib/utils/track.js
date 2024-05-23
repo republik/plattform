@@ -43,6 +43,18 @@ export const getCampaignReferralParams = (query) => {
   return params
 }
 
+export const getCouponCodeParams = (query) => {
+  let params = {}
+  Object.keys(query)
+    .filter((key) => key.startsWith('coupon'))
+    .sort((a, b) => ascending(a, b))
+    .forEach((key) => {
+      params[key] = query[key]
+    })
+
+  return params
+}
+
 const createPayloadStore = (storeKey, limit = 15) => {
   let payload = {}
   let isEnabled = true
@@ -111,5 +123,6 @@ export const getConversionPayload = (query = {}) => {
     ...payload.get(),
     ...getUtmParams(query),
     ...getCampaignReferralParams(query),
+    ...getCouponCodeParams(query),
   }
 }
