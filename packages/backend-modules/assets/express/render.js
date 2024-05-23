@@ -1,33 +1,11 @@
 const nodePath = require('path')
-const { returnImage, getWidthHeight, s3 } = require('../lib')
+const { returnImage, getWidthHeight } = require('../lib')
 const screenshot = require('../lib/screenshot/chromium')
 const debug = require('debug')('assets:render')
-const crypto = require('crypto')
-const { ascending } = require('d3-array')
-const { Readable } = require('stream')
-
-const { AWS_S3_BUCKET } = process.env
-const cacheS3Path = `render-cache/`
-
-const getCacheKey = (params) => {
-  const paramsString = Object.keys(params)
-    .sort(ascending)
-    .map((key) => `${key}:${params[key]}`)
-    .join('::')
-  const sha = crypto.createHash('sha256').update(paramsString).digest('hex')
-  const s3KeyEncode = (string) => encodeURIComponent(string).replace(/%/g, 'C')
-  const url = (params.url || '').replace('https://', '')
-  return `${s3KeyEncode(url).slice(0, 500)}-${sha}`
-}
 
 module.exports = (server) => {
   server.get('/render', async function (req, res) {
-    const {
-      viewport,
-      width: _width,
-      height: _height,
-      permanentCacheKey,
-    } = req.query
+    const { viewport, width: _width, height: _height } = req.query
 
     let width, height
     if (viewport) {
@@ -45,33 +23,6 @@ module.exports = (server) => {
       ...req.query,
       width,
       height,
-    }
-
-    let cachePath
-    if (!!permanentCacheKey && AWS_S3_BUCKET) {
-      cachePath = `${cacheS3Path}${getCacheKey(params)}`
-
-      const cacheResult = await s3.get({
-        bucket: AWS_S3_BUCKET,
-        path: cachePath,
-      })
-
-      if (cacheResult.ok) {
-        ;['Content-Type', 'Content-Length'].forEach((key) => {
-          res.set(key, cacheResult.headers.get(key))
-        })
-        res.set(
-          'Cache-Tag',
-          ['render', 'permanentCache']
-            .concat((res.get('Content-Type') || '').split('/'))
-            .filter(Boolean)
-            .join(' '),
-        )
-
-        const readableStream = Readable.fromWeb(cacheResult.body)
-        readableStream.pipe(res)
-        return
-      }
     }
 
     debug('GET %o', params)
@@ -100,24 +51,14 @@ module.exports = (server) => {
       }
     }
 
-    const imageResult = await returnImage({
+    await returnImage({
       response: res,
       stream: result,
       options: {
         ...req.query,
         cacheTags: ['render'],
       },
-      returnResult: !!cachePath,
       req,
     })
-
-    if (imageResult && cachePath && AWS_S3_BUCKET) {
-      await s3.upload({
-        stream: imageResult.body,
-        mimeType: imageResult.mime,
-        path: cachePath,
-        bucket: AWS_S3_BUCKET,
-      })
-    }
   })
 }

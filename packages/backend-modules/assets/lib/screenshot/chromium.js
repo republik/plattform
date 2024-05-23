@@ -1,5 +1,4 @@
-const { CHROMIUM_LAMBDA_URL, RENDER_COOKIE, BASIC_AUTH_USER, BASIC_AUTH_PASS } =
-  process.env
+const { CHROMIUM_LAMBDA_URL } = process.env
 
 if (!CHROMIUM_LAMBDA_URL) {
   console.warn(
@@ -13,16 +12,20 @@ const render = (params) => {
   }
   const url = new URL(CHROMIUM_LAMBDA_URL)
   for (const key of Object.keys(params)) {
-    url.searchParams.set(key, params[key])
+    // Don't pass format to screenshot service
+    if (key !== 'format') {
+      url.searchParams.set(key, params[key])
+    }
   }
-  if (RENDER_COOKIE) {
-    url.searchParams.set('cookie', RENDER_COOKIE)
-  }
-  if (BASIC_AUTH_USER) {
-    url.searchParams.set('basicAuthUser', BASIC_AUTH_USER)
-    url.searchParams.set('basicAuthPass', BASIC_AUTH_PASS)
-  }
-  return fetch(url.toString()).then((result) => result.body)
+
+  return fetch(url.toString()).then((res) => {
+    if (!res.ok) {
+      throw new Error(
+        `render failed with status ${res.status} - ${res.statusText}`,
+      )
+    }
+    return res.body
+  })
 }
 
 module.exports = render
