@@ -1,5 +1,6 @@
 {
   "mdx.experimentalLanguageServer": true,
   "jest.jestCommandLine": "yarn test",
-  "jest.rootPath": "packages/backend-modules/testing"
+  "jest.rootPath": "packages/backend-modules/testing",
+  "asciidoc.antora.enableAntoraSupport": false
 }
