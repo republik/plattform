@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
 import { renderMdast } from '@republik/mdast-react-render'
-import { PUBLIC_BASE_URL } from '../../lib/publicEnv'
+import { NEWSLETTER_ID, PUBLIC_BASE_URL } from '../../lib/publicEnv'
 
 import Layout, { Paragraph, List, ListItem } from '../../src/Layout'
 import {
@@ -13,14 +13,11 @@ import {
 import { splitByTitle } from '../../src/utils/helpers'
 import StatusError from '../../src/StatusError'
 import { css } from 'glamor'
-import { useRouter, withRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import { gql, useQuery } from '@apollo/client'
-import { graphql } from '@apollo/client/react/hoc'
-import { makeWithDefaultSSR } from '@republik/nextjs-apollo-client'
 import {
   createGetStaticPaths,
   createGetStaticProps,
-  withDefaultSSR,
 } from '../../lib/apollo/helpers'
 const styles = {
   prepub: css({
@@ -35,11 +32,9 @@ const styles = {
 
 const schema = createNewsletterWebSchema({ Paragraph, List, ListItem })
 
-const PROJECT_R_NEWSLETTER_FORMAT = 'republik/format-project-r-newsletter'
-
 const getDocuments = gql`
 query getAllNewsletters {
-  documents(format: "${PROJECT_R_NEWSLETTER_FORMAT}") {
+  documents(format: "${NEWSLETTER_ID}") {
     totalCount
     nodes {
       repoId
@@ -106,37 +101,6 @@ const Newsletter = ({ newsletter }) => {
       )}
       {renderMdast(splitContent.main, schema)}
     </Layout>
-  )
-}
-
-const Page = ({
-  path,
-  externalBaseUrl,
-  data: { loading, error, newsletter, refetch },
-  serverContext,
-}) => {
-  useEffect(() => {
-    if (!loading && !newsletter && path.includes('/vorschau/')) {
-      refetch()
-    }
-  }, [loading, newsletter, path])
-
-  return (
-    <Loader
-      loading={loading}
-      error={error}
-      render={() =>
-        newsletter ? (
-          <Newsletter newsletter={newsletter} />
-        ) : (
-          <StatusError
-            path={path}
-            externalBaseUrl={externalBaseUrl}
-            serverContext={serverContext}
-          />
-        )
-      }
-    />
   )
 }
 
