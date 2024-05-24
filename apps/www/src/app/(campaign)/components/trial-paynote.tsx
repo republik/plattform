@@ -12,7 +12,7 @@ const Button = () => {
 
   return (
     <Link
-      href='/angebote?package=MONTHLY_ABO&coupon=EINSTIEG24&utm_campaign=TEST'
+      href='/angebote?package=MONTHLY_ABO&coupon=EINSTIEG24&utm_campaign=TEST2'
       className={css({
         backgroundColor: 'primary',
         color: 'text.primary',
