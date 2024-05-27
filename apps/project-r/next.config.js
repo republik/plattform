@@ -1,14 +1,30 @@
 const { withPlausibleProxy } = require('next-plausible')
 
-/**
- * @type {import('next').NextConfig}
- */
-
 const withConfiguredPlausibleProxy = withPlausibleProxy({
   subdirectory: '__plsb',
 })
 
-module.exports = withConfiguredPlausibleProxy({
+const cdnUrl = process.env.NEXT_PUBLIC_CDN_URL
+
+/**
+ * Validates the CDN URL
+ * @param {string} url
+ * @returns {boolean}
+ */
+function validateUrl(url) {
+  try {
+    // check if the url is valid
+    new URL(url)
+    return true
+  } catch (error) {
+    return false
+  }
+}
+
+/**
+ * @type {import('next').NextConfig}
+ */
+const config = {
   transpilePackages: [
     '@project-r/styleguide',
     '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11 and older safari versions
@@ -16,6 +32,7 @@ module.exports = withConfiguredPlausibleProxy({
   eslint: {
     ignoreDuringBuilds: true,
   },
+  assetPrefix: validateUrl(cdnUrl) ? cdnUrl : undefined,
   poweredByHeader: false,
   redirects: async () => {
     return [
@@ -52,4 +69,6 @@ module.exports = withConfiguredPlausibleProxy({
       },
     ]
   },
-})
+}
+
+module.exports = withConfiguredPlausibleProxy(config)
