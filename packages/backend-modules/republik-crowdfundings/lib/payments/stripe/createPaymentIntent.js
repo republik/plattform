@@ -1,4 +1,5 @@
 const getStripeClients = require('./clients')
+const { genIdempotencyKey } = require('./genIdempotencyKey')
 const { getPaymentMethodForCompany } = require('./paymentMethod')
 
 // paymentMethod(Id) is expected to be in company(Id)
@@ -59,7 +60,7 @@ module.exports = async ({
       ...(offSession ? {} : { setup_future_usage: 'off_session' }),
     },
     {
-      idempotencyKey: pledgeId,
+      idempotencyKey: genIdempotencyKey(pledgeId, paymentMethodId),
     },
   )
 }

@@ -91,7 +91,6 @@ const payWithSource = async ({
         metadata: {
           pledgeId,
         },
-        idempotencyKey: pledgeId,
         pgdb: transaction,
       })
     } else {
@@ -207,7 +206,6 @@ const payWithPaymentMethod = async ({
       metadata: {
         pledgeId,
       },
-      idempotencyKey: pledgeId,
       discounts,
       pgdb,
       clients,
