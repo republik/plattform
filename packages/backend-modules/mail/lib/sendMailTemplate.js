@@ -48,15 +48,9 @@ const getTemplates = async (name) => {
       .open(path.resolve(`${__dirname}/../templates/${name}.html`))
       .then(getTemplate)
       .catch(() => null),
-    // text: fs
-    //   .open(path.resolve(`${__dirname}/../templates/${name}.txt`))
-    //   .then(getTemplate)
-    //   .catch(() => null),
   })
 
   return {
-    // text,
-    // getText: handlebars.compile(text || '', { noEscape: true }),
     html,
     getHtml: handlebars.compile(html || ''),
     getCompiler: handlebars.compile,
@@ -297,7 +291,6 @@ module.exports = async (mail, context, log) => {
   )
 
   const html = getHtml(values)
-  // const text = getText(values) || getCompiler(mail.text)(values)
 
   const message = {
     to: [{ email: mail.to }],
@@ -308,7 +301,6 @@ module.exports = async (mail, context, log) => {
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     html,
-    // text,
     merge_language: mail.mergeLanguage || 'handlebars',
     global_merge_vars: mergeVars,
     auto_text: true,
@@ -319,7 +311,6 @@ module.exports = async (mail, context, log) => {
   debug({
     ...message,
     html: !!message.html,
-    // text: !!message.text,
     attachments: message.attachments?.map(({ name, type }) => ({ name, type })),
   })
 
@@ -353,7 +344,6 @@ module.exports = async (mail, context, log) => {
     message: {
       ...message,
       html: !!message.html,
-      // text: !!message.text,
       attachments: message.attachments?.map(({ name, type }) => ({
         name,
         type,
