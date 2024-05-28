@@ -146,7 +146,7 @@ const run = async () => {
       file.replace(/\.html$/gi, '.txt'),
       htmlToText.fromString(html, {
         decodeOptions: {
-          strict: true,
+          strict: false,
         },
         formatters: {
           formatAnchorRepublik,
