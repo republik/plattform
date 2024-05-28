@@ -14,7 +14,7 @@ This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package ma
 - `api`: providing the graphql api
 - `assets`: fetching, compressing and resizing assets
 
-The frontends are Next.js apps, the backends use Express.js. 
+The frontends are Next.js apps, the backends use Express.js.
 
 ### Packages
 
@@ -47,8 +47,8 @@ This turborepo has some additional tools already setup for you:
 To get started you'll need:
 
 - yarn v1.22
-- Node.js v14.4
-- Docker or native postgresql@12, elasticsearch@6 and redis
+- Node.js v20
+- Docker or native postgresql@14, elasticsearch@6 and redis
 
 <details><summary>Setup with Docker</summary>
 <p>
@@ -112,12 +112,12 @@ Note:
 All apps and the styleguide provide an `.env.example`, the provided default values should be enough to get started:
 
 ```bash
-cp apps/www/.env.example apps/www/.env 
-cp apps/publikator/.env.example apps/publikator/.env 
+cp apps/www/.env.example apps/www/.env
+cp apps/publikator/.env.example apps/publikator/.env
 cp apps/admin/.env.example apps/admin/.env
 
-cp apps/api/.env.example apps/api/.env 
-cp apps/assets/.env.example apps/assets/.env 
+cp apps/api/.env.example apps/api/.env
+cp apps/assets/.env.example apps/assets/.env
 ```
 
 <details><summary>Migrating from Individual Repos</summary>
