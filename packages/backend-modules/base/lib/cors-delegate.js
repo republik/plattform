@@ -1,4 +1,5 @@
 const originRegex = /^(https?:\/\/)?/i
+// TODO: ensure domain is not 'https://*.' or 'http://*.'
 const wildcardOriginRegex = /^(https?:\/\/\*\.)/
 
 /**
@@ -9,15 +10,27 @@ const wildcardOriginRegex = /^(https?:\/\/\*\.)/
  */
 function matchWildcardDomain(origin, wildcardDomain) {
   // should have the same number of domain parts
-  if (origin.split('.').length !== wildcardDomain.split('.').length) {
+  const getParts = (domain) => domain.replace(/^https?:\/\//, '').split('.')
+  const originParts = getParts(origin)
+  const wildcardParts = getParts(wildcardDomain)
+
+  if (originParts.length < wildcardParts.length) {
     return false
   }
 
-  // strip wildcard prefix
-  const prefixMatch = wildcardDomain.match(wildcardOriginRegex)
-  const domain = wildcardDomain.slice(prefixMatch[0].length)
+  // walk through the domain parts from right to left
+  // and check if the origin matches the wildcard domain
+  for (let i = wildcardParts.length - 1; i >= 0; i--) {
+    // if the '*.' part of a wildcard domain is reached, the origin matches
+    if (wildcardParts[i] === '*') {
+      break
+    }
+    if (originParts[i] !== wildcardParts[i]) {
+      return false
+    }
+  }
 
-  return origin.endsWith(domain)
+  return true
 }
 
 /**
@@ -70,4 +83,6 @@ function makeCorsOptionsDelegateFunc(corsAllowList, corsOptions) {
   }
 }
 
-module.exports = { makeCorsOptionsDelegateFunc }
+module.exports = {
+  makeCorsOptionsDelegateFunc,
+}
