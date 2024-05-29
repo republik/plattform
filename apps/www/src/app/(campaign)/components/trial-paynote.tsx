@@ -166,7 +166,7 @@ export function TrialPaynote({
                   // mb: '2',
                 })}
               >
-                danach CHF 22 pro Monat
+                danach 22.– pro Monat
               </p>
               <p>jederzeit kündbar</p>
             </div>
