@@ -1,6 +1,6 @@
-const originRegex = /^(https?:\/\/)?/i
-// TODO: ensure domain is not 'https://*.' or 'http://*.'
-const wildcardOriginRegex = /^(https?:\/\/\*\.)/
+const domainRegex = /^https?:\/\/?[a-z0-9]+([-.][a-z0-9]+)*\.[a-z]{2,6}$/i
+const wildcardDomainRegex =
+  /^https?:\/\/?\*\.[a-z0-9]+([-.][a-z0-9]+)*\.[a-z]{2,6}$/i
 
 /**
  * Check if the origin matches the wildcard domain.
@@ -10,7 +10,11 @@ const wildcardOriginRegex = /^(https?:\/\/\*\.)/
  */
 function matchWildcardDomain(origin, wildcardDomain) {
   // should have the same number of domain parts
-  const getParts = (domain) => domain.replace(/^https?:\/\//, '').split('.')
+  const getParts = (domain) =>
+    domain
+      .replace(/^https?:\/\//, '')
+      .split('.')
+      .reverse()
   const originParts = getParts(origin)
   const wildcardParts = getParts(wildcardDomain)
 
@@ -20,12 +24,12 @@ function matchWildcardDomain(origin, wildcardDomain) {
 
   // walk through the domain parts from right to left
   // and check if the origin matches the wildcard domain
-  for (let i = wildcardParts.length - 1; i >= 0; i--) {
+  for (let i = 0; i < wildcardParts.length; i++) {
     // if the '*.' part of a wildcard domain is reached, the origin matches
     if (wildcardParts[i] === '*') {
       break
     }
-    if (originParts[i] !== wildcardParts[i]) {
+    if (originParts?.[i] !== wildcardParts[i]) {
       return false
     }
   }
@@ -50,10 +54,10 @@ function matchWildcardDomain(origin, wildcardDomain) {
  */
 function makeCorsOptionsDelegateFunc(corsAllowList, corsOptions) {
   const domainAllowList = corsAllowList.filter(
-    (domain) => originRegex.test(domain) && !wildcardOriginRegex.test(domain),
+    (domain) => domainRegex.test(domain) && !wildcardDomainRegex.test(domain),
   )
   const wildcardDomainAllowList = corsAllowList.filter((domain) =>
-    wildcardOriginRegex.test(domain),
+    wildcardDomainRegex.test(domain),
   )
 
   return function corsDelegate(req, callback) {
