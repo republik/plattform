@@ -147,7 +147,7 @@ export function TrialPaynote({
                 fontSize: '2xl',
               })}
             >
-              CHF 2 für 30 Tage
+              2.– für 30 Tage
             </p>
 
             <Button utm={textVariant.utm} />
