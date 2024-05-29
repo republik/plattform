@@ -85,6 +85,7 @@ import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
 import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 import { reportError } from 'lib/errors/reportError'
+import { TrialPaynote } from '@app/app/(campaign)/components/trial-paynote'
 
 const LoadingComponent = () => <SmallLoader loading />
 
@@ -684,29 +685,36 @@ const ArticlePage = ({
             meta.path === '/top-storys' ||
             hasNewsletterUtms ||
             (router.query.utm_source && router.query.utm_source === 'flyer-v1')
-
-          // For this proof of concept I chose to show the climate paynote
-          // only at the bottom. This could/should be evaluated.
-          // We could also suppress the second paynote. (Code commented below.)
-          // I wouldn't show both, since it's a very big paynote,
-          // and the text would be the same twice.
-          // const suppressSecondPayNote = climatePaynote
-          const payNote = (
-            <PayNote
-              seed={payNoteSeed}
-              tryOrBuy={payNoteTryOrBuy}
-              documentId={documentId}
-              repoId={repoId}
-              customPayNotes={meta.paynotes ?? []}
-              customMode={meta.paynoteMode}
-              customOnly={isPage || isFormat}
-              position='before'
-            />
-          )
-          const payNoteAfter =
-            // !suppressSecondPayNote &&
-            payNote && cloneElement(payNote, { position: 'after' })
-
+          let payNote
+          let payNoteAfter
+          if (!isPage) {
+            // TODO: REMOVE AFTER CAMPAIGN
+            payNote = meta.paynoteMode === 'noPaynote' ? null : <TrialPaynote />
+            payNoteAfter =
+              meta.paynoteMode === 'noPaynote' ? null : <TrialPaynote />
+          } else {
+            // For this proof of concept I chose to show the climate paynote
+            // only at the bottom. This could/should be evaluated.
+            // We could also suppress the second paynote. (Code commented below.)
+            // I wouldn't show both, since it's a very big paynote,
+            // and the text would be the same twice.
+            // const suppressSecondPayNote = climatePaynote
+            payNote = (
+              <PayNote
+                seed={payNoteSeed}
+                tryOrBuy={payNoteTryOrBuy}
+                documentId={documentId}
+                repoId={repoId}
+                customPayNotes={meta.paynotes ?? []}
+                customMode={meta.paynoteMode}
+                customOnly={isPage || isFormat}
+                position='before'
+              />
+            )
+            payNoteAfter =
+              // !suppressSecondPayNote &&
+              payNote && cloneElement(payNote, { position: 'after' })
+          }
           const ownDiscussion = meta.ownDiscussion
 
           const ProgressComponent =
