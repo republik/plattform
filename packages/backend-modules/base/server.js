@@ -32,6 +32,7 @@ const {
 } = require('@orbiting/backend-modules-auth')
 const requestLog = require('./express/requestLog')
 const keepalive = require('./express/keepalive')
+const { makeCorsOptionsDelegateFunc } = require('./lib/cors-delegate')
 
 // init httpServer and express and start listening
 const start = async (
@@ -118,7 +119,11 @@ const start = async (
       maxAge: 60 * 60 * 24,
       optionsSuccessStatus: 200,
     }
-    server.use('*', cors(corsOptions))
+    const corsDelegate = makeCorsOptionsDelegateFunc(
+      CORS_ALLOWLIST_URL,
+      corsOptions,
+    )
+    server.use('*', cors(corsDelegate))
   }
 
   server.use(express.static('public'))
