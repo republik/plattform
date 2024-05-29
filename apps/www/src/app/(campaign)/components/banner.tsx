@@ -140,7 +140,7 @@ export function CampaignBanner({
             })}
           >
             <CampaignLogo
-              inverted
+              variant='red-inverted'
               className={css({
                 display: 'block',
                 width: 90,
