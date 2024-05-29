@@ -1,18 +1,53 @@
 'use client'
 import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
-import {
-  EventTrackingContext,
-  useTrackEvent,
-} from '@app/lib/matomo/event-tracking'
+import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
 import { css } from '@republik/theme/css'
-import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
-const Button = () => {
-  const trackEvent = useTrackEvent()
+type Variant = {
+  utm: string
+  slogan: string
+  benefits: string[]
+  upsell: string
+}
+const TEXT_VARIANTS: Variant[] = [
+  {
+    utm: 'utm_medium=website&utm_source=direct&utm_campaign=einsteigertest&utm_content=v1',
+    slogan:
+      'Wir gehören niemandem, aber jeder unserer Leserinnen ein bisschen.',
+    benefits: [
+      'Alles, was Sie wissen müssen, und nicht mehr – bis zu drei Beiträge pro Tag zum Lesen und zum Hören.',
+      'Werbefrei, unabhängig, finanziert von über 26’000 Abonnentinnen.',
+      'Die beste und höflichste Onlinecommunity der Schweiz, in der sich Republik-Autorinnen und Abonnenten täglich austauschen.',
+    ],
+    upsell: 'Für Wagemutige: die Republik-Jahresmitgliedschaft',
+  },
+  {
+    utm: 'utm_medium=website&utm_source=direct&utm_campaign=einsteigertest&utm_content=v2',
+    slogan: 'Was Sie mit einem Abo bekommen',
+    benefits: [
+      'Bis zu drei Artikel pro Tag zum Lesen und zum Hören – werbefrei, unabhängig, finanziert von über 26’000 Abonnentinnen.',
+      'Die beste und höflichste Onlinecommunity der Schweiz, in der sich Republik-Autorinnen und Abonnentinnen täglich austauschen.',
+      'Jeden Donnerstag das Wichtigste in Kürze zur Schweizer Politik und jeden Freitag das Wichtigste aus der ganzen Welt.',
+    ],
+    upsell: 'Oder sparen Sie mit einem Jahresabo',
+  },
+  {
+    utm: 'utm_medium=website&utm_source=direct&utm_campaign=einsteigertest&utm_content=v3',
+    slogan: 'Über 26’000 sind bereits dabei',
+    benefits: [
+      'Bis zu drei Artikel pro Tag zum Lesen und zum Hören – werbefrei, unabhängig, finanziert von über 26’000 Abonnentinnen.',
+      'Die beste und höflichste Onlinecommunity der Schweiz, in der sich Republik-Autorinnen und Abonnentinnen täglich austauschen.',
+      'Jeden Donnerstag das Wichtigste in Kürze zur Schweizer Politik und jeden Freitag das Wichtigste aus der ganzen Welt.',
+    ],
+    upsell: 'Oder sparen Sie mit einem Jahresabo',
+  },
+]
 
+const Button = ({ utm }: { utm: string }) => {
   return (
-    <Link
-      href='/angebote?package=MONTHLY_ABO&coupon=EINSTIEG24&utm_campaign=TEST2'
+    <a
+      href={`/angebote?package=MONTHLY_ABO&coupon=EINSTIEG24&${utm}`}
       className={css({
         backgroundColor: 'primary',
         color: 'text.primary',
@@ -31,10 +66,9 @@ const Button = () => {
           backgroundColor: 'text.primary',
         },
       })}
-      onClick={() => trackEvent({ action: 'linkClicked', name: '/angebote' })}
     >
       Abonnieren
-    </Link>
+    </a>
   )
 }
 
@@ -43,6 +77,20 @@ export function TrialPaynote({
 }: {
   variant?: 'mini' | 'regular'
 }) {
+  // Choose random variant
+  const [textVariant, setTextVariant] = useState<Variant | undefined>(undefined)
+  useEffect(() => {
+    if (!textVariant) {
+      setTextVariant(
+        TEXT_VARIANTS[Math.floor(Math.random() * TEXT_VARIANTS.length)],
+      )
+    }
+  }, [textVariant])
+
+  if (!textVariant) {
+    return
+  }
+
   return (
     <EventTrackingContext category='TrialPaynote'>
       <div
@@ -102,7 +150,7 @@ export function TrialPaynote({
               CHF 2 für 30 Tage
             </p>
 
-            <Button />
+            <Button utm={textVariant.utm} />
 
             <div
               className={css({
@@ -141,7 +189,7 @@ export function TrialPaynote({
                     textAlign: 'center',
                   })}
                 >
-                  Nur unsere Leserinnen können uns kaufen
+                  {textVariant.slogan}
                 </h2>
 
                 <ul
@@ -161,30 +209,22 @@ export function TrialPaynote({
                     },
                   })}
                 >
-                  <li>
-                    Unterstützen sie ein zu 100% unabhängiges,
-                    leserinnenfinanziertes Medium: Komplett Werbefrei
-                  </li>
-                  <li>
-                    Diskutieren Sie in der besten Online-Community der Schweiz
-                  </li>
-                  <li>
-                    Briefing aus Bern mit den wichtigsten Themen zur Schweizer
-                    Politik und einem Wochenbriefing zum Weltgeschehen
-                  </li>
+                  {textVariant.benefits.map((benefit) => {
+                    return <li key={benefit}>{benefit}</li>
+                  })}
                 </ul>
 
                 <p className={css({ textAlign: 'center' })}>
-                  <Link
+                  <a
                     className={css({
                       color: '#757575',
                       fontSize: 's',
                       textDecoration: 'underline',
                     })}
-                    href='/angebote?package=ABO'
+                    href={`/angebote?package=ABO&${textVariant.utm}`}
                   >
-                    oder sparen Sie 10% mit der Jahresmitgliedschaft für 240.-
-                  </Link>
+                    {textVariant.upsell}
+                  </a>
                 </p>
               </>
             )}
