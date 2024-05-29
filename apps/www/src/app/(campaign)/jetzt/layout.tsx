@@ -55,7 +55,7 @@ export default async function CampaignLayout({
               })}
             >
               <CampaignLogo
-                inverted
+                variant='red-inverted'
                 className={css({
                   width: { base: '120px', md: '240px' },
                   maxWidth: 'full',
