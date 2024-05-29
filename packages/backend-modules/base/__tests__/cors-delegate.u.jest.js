@@ -11,15 +11,12 @@ describe('custom cors-delegate with wildcard domain support', () => {
       origin: true,
     })
 
-    const origins = corsList.filter(
-      (x) => !x.startsWith('https://*.') && !x.startsWith('http://*.'),
-    )
-
     test(`✅ - origin '${origin}' is allowed with cors-list '${JSON.stringify(
       corsList,
     )}'`, () => {
       expect(res({ headers: { origin } }, callback)).toEqual({
-        origin: [...new Set([...origins, origin])],
+        // origin true, will reflect the request origin
+        origin: true,
       })
     })
   }
