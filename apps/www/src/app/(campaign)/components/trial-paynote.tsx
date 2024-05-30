@@ -100,6 +100,9 @@ export function TrialPaynote({
           textStyle: 'body',
           color: 'text.black',
           lineHeight: 1.5,
+          '@media print': {
+            display: 'none',
+          },
         })}
       >
         <div

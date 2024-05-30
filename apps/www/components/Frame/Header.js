@@ -342,7 +342,7 @@ const styles = {
     left: 0,
     right: 0,
     '@media print': {
-      position: 'absolute',
+      display: 'none',
     },
   }),
   primary: css({
