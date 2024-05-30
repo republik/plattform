@@ -138,7 +138,7 @@ exports.getPaymentMethodForCompany = async ({
   companyId,
   platformPaymentMethodId, // optional: if ommited, the default is used
   pgdb,
-  clients: _clients, // optional
+  clients: _clients = null, // optional
   t,
   acceptCachedData,
 }) => {
