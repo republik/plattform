@@ -1,13 +1,12 @@
 import { exec } from 'child_process'
 import { defineConfig } from 'tsup'
 
-const config = defineConfig({
+const config = defineConfig((options) => ({
   entryPoints: ['src/lib.ts', 'src/editor.ts', 'src/chart.ts'],
   format: ['cjs', 'esm'],
-  // dts: true,
   sourcemap: true,
-  clean: true,
-  minify: process.env.NODE_ENV === 'production',
+  clean: !options.watch,
+  minify: !options.watch,
   target: 'es6',
   external: ['react', 'react-dom'],
   outDir: 'dist',
@@ -27,6 +26,6 @@ const config = defineConfig({
     })
     console.log('⚡ TypeScript declaration files generated')
   },
-})
+}))
 
 export default config
