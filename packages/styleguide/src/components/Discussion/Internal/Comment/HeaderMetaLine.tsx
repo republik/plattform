@@ -56,10 +56,8 @@ const titleDate = (string) => dateTimeFormat(new Date(string))
 type HeaderMetaLineProps = {
   t: Formatter
   discussion: unknown
-  comment: Pick<
-    Comment,
-    'id' | 'displayAuthor' | 'createdAt' | 'updatedAt' | 'published'
-  >
+  comment: Pick<Comment, 'id' | 'displayAuthor' | 'createdAt'> &
+    Partial<Pick<Comment, 'published' | 'updatedAt'>>
   CommentLink: ComponentType<CommentLinkProps>
   isPreview?: boolean
 }

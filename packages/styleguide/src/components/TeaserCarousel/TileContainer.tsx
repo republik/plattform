@@ -4,7 +4,18 @@ import CarouselContext from './Context'
 import Grid from './Grid'
 import Row from './Row'
 
-const Container = ({ initialScrollTileIndex, children, isSeriesNav }) => {
+type ContainerProps = {
+  children: React.ReactNode
+} & Pick<
+  React.ComponentPropsWithoutRef<typeof Row>,
+  'initialScrollTileIndex' | 'isSeriesNav'
+>
+
+const Container = ({
+  initialScrollTileIndex,
+  children,
+  isSeriesNav,
+}: ContainerProps) => {
   const context = useContext(CarouselContext)
   if (context.grid) {
     return <Grid>{children}</Grid>

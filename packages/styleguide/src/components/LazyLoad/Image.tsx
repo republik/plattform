@@ -1,8 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
-import PropTypes from 'prop-types'
 
-import LazyLoad from './'
+import LazyLoad from '.'
 
 import SwitchImage from '../Figure/SwitchImage'
 
@@ -17,6 +16,17 @@ const styles = {
 
 const transparentExtension = /\.(png|gif|svg)(\.webp)?(\?|$)/
 
+type LazyImageProps = {
+  aspectRatio: number
+} & Pick<
+  React.ComponentPropsWithoutRef<typeof SwitchImage>,
+  'src' | 'dark' | 'srcSet' | 'sizes' | 'alt' | 'onClick'
+> &
+  Pick<
+    React.ComponentPropsWithoutRef<typeof LazyLoad>,
+    'attributes' | 'visible' | 'offset'
+  >
+
 const LazyImage = ({
   src,
   dark,
@@ -27,7 +37,7 @@ const LazyImage = ({
   attributes,
   visible,
   onClick,
-}) => {
+}: LazyImageProps) => {
   return (
     <SwitchImage
       {...attributes}
@@ -49,20 +59,6 @@ const LazyImage = ({
       onClick={onClick}
     />
   )
-}
-
-LazyImage.propTypes = {
-  src: PropTypes.string.isRequired,
-  dark: PropTypes.shape({
-    src: PropTypes.string.isRequired,
-  }),
-  srcSet: PropTypes.string,
-  sizes: PropTypes.string,
-  alt: PropTypes.string,
-  aspectRatio: PropTypes.number.isRequired,
-  attributes: PropTypes.object,
-  visible: PropTypes.bool,
-  onClick: PropTypes.func,
 }
 
 export default LazyImage

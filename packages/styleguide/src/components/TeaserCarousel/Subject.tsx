@@ -15,7 +15,11 @@ const styles = css({
   },
 })
 
-const Subject = ({ children }) => {
+type SubjectProps = {
+  children: React.ReactNode
+}
+
+const Subject = ({ children }: SubjectProps) => {
   const [colorScheme] = useColorContext()
   const customStyles = css(styles, {
     '&::after': {
@@ -30,7 +34,3 @@ const Subject = ({ children }) => {
 }
 
 export default Subject
-
-Subject.propTypes = {
-  children: PropTypes.node,
-}

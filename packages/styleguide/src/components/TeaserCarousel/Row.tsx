@@ -1,3 +1,4 @@
+import React from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { useRef, useState, useContext, useEffect } from 'react'
@@ -73,9 +74,15 @@ const styles = {
   }),
 }
 
-const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
+type RowProps = {
+  children: React.ReactNode
+  initialScrollTileIndex: number
+  isSeriesNav?: boolean
+}
+
+const Row = ({ initialScrollTileIndex, children, isSeriesNav }: RowProps) => {
   const context = useContext(CarouselContext)
-  const overflow = useRef()
+  const overflow = useRef<HTMLDivElement>(null)
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
 
@@ -218,7 +225,3 @@ const Row = ({ initialScrollTileIndex, children, isSeriesNav }) => {
 }
 
 export default Row
-
-Row.propTypes = {
-  children: PropTypes.node,
-}

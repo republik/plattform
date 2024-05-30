@@ -1,5 +1,4 @@
 import { css } from 'glamor'
-import PropTypes from 'prop-types'
 import React from 'react'
 import { sansSerifMedium14 } from '../Typography/styles'
 import { useColorContext } from '../Colors/useColorContext'
@@ -10,7 +9,12 @@ const styles = css({
   margin: '0 0 10px 0',
 })
 
-const Format = ({ children, color }) => {
+type FormatProps = {
+  children: React.ReactNode
+  color?: string
+}
+
+const Format = ({ children, color }: FormatProps) => {
   const context = React.useContext(CarouselContext)
   const mapping = context.color === defaultValue.color ? 'format' : undefined
   const textColor = color || context.color
@@ -23,8 +27,3 @@ const Format = ({ children, color }) => {
 }
 
 export default Format
-
-Format.propTypes = {
-  children: PropTypes.node,
-  color: PropTypes.string,
-}

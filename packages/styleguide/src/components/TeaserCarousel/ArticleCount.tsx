@@ -1,12 +1,16 @@
 import { css } from 'glamor'
 import React from 'react'
 import { sansSerifMedium16 } from '../Typography/styles'
-import PropTypes from 'prop-types'
 import { useColorContext } from '../Colors/useColorContext'
 
 const ICON_SIZE = 29
 
-const Icon = ({ size, fill, ...props }) => (
+type IconProps = React.ComponentPropsWithoutRef<'svg'> & {
+  size: number
+  fill?: string
+}
+
+const Icon = ({ size, fill, ...props }: IconProps) => (
   <svg
     {...styles.icon}
     width={`${size}px`}
@@ -50,7 +54,17 @@ const styles = {
   }),
 }
 
-const ArticleCount = ({ count, bgColor, color: textColor }) => {
+type ArticleCountProps = {
+  count: number
+  bgColor: string
+  color: string
+}
+
+const ArticleCount = ({
+  count,
+  bgColor,
+  color: textColor,
+}: ArticleCountProps) => {
   const [colorScheme] = useColorContext()
   return (
     <div {...styles.container}>
@@ -63,9 +77,3 @@ const ArticleCount = ({ count, bgColor, color: textColor }) => {
 }
 
 export default ArticleCount
-
-ArticleCount.propTypes = {
-  bgColor: PropTypes.string,
-  color: PropTypes.string,
-  count: PropTypes.number,
-}

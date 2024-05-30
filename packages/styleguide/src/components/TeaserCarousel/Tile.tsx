@@ -1,5 +1,4 @@
 import { css, merge } from 'glamor'
-import PropTypes from 'prop-types'
 import React from 'react'
 import TeaserCarouselArticleCount from './ArticleCount'
 import { FigureByline, FigureImage } from '../Figure'
@@ -114,6 +113,22 @@ const styles = {
   }),
 }
 
+type TileProps = {
+  children: React.ReactNode
+  count?: number
+  image?: string
+  imageDark?: string
+  color?: string
+  bgColor?: string
+  outline?: string
+  bigger?: boolean
+  alt?: string
+  onClick?: () => void
+  aboveTheFold?: boolean
+  byline?: string
+  audioPlayButton?: React.ReactNode
+}
+
 const Tile = ({
   count,
   image,
@@ -128,7 +143,7 @@ const Tile = ({
   outline: tileOutlineColor,
   bigger: tileBigger,
   audioPlayButton,
-}) => {
+}: TileProps) => {
   const [colorScheme] = useColorContext()
   const context = React.useContext(CarouselContext)
 
@@ -184,6 +199,8 @@ const Tile = ({
         {/* Image */}
         {imageProps && !isPortrait && (
           <div {...imageContainerStyles}>
+            {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+            {/* @ts-ignore */}
             <FigureImage
               aboveTheFold={aboveTheFold}
               {...imageProps}
@@ -199,6 +216,8 @@ const Tile = ({
         {imageProps && isPortrait && (
           <div {...imageContainerStyles}>
             <div {...styles.imageWrapper}>
+              {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+              {/* @ts-ignore */}
               <SwitchImage {...imageStyles} {...imageProps} alt={alt} />
               {byline && (
                 <FigureByline position={bigger ? 'aboveRight' : 'rightCompact'}>
@@ -238,18 +257,3 @@ const Tile = ({
   )
 }
 export default Tile
-
-Tile.propTypes = {
-  bigger: PropTypes.bool,
-  color: PropTypes.string,
-  bgColor: PropTypes.string,
-  outline: PropTypes.string,
-  count: PropTypes.number,
-  image: PropTypes.string,
-  alt: PropTypes.string,
-  onClick: PropTypes.func,
-  aboveTheFold: PropTypes.bool,
-  byline: PropTypes.string,
-  children: PropTypes.node,
-  audioPlayButton: PropTypes.node,
-}

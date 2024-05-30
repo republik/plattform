@@ -13,7 +13,11 @@ const styles = {
   }),
 }
 
-const Grid = ({ children }) => {
+type GridProps = {
+  children: React.ReactNode
+}
+
+const Grid = ({ children }: GridProps) => {
   return (
     <div role='group' {...styles.container}>
       {children}

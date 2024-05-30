@@ -1,5 +1,4 @@
 import { css } from 'glamor'
-import PropTypes from 'prop-types'
 import React from 'react'
 import { fontStyles } from '../../theme/fonts'
 import CarouselContext from './Context'
@@ -26,7 +25,15 @@ const styles = {
   bigger: css({ fontSize: 28, lineHeight: '28px' }),
 }
 
-export const Editorial = ({ children, bigger: biggerProp }) => {
+type EditorialProps = {
+  children: React.ReactNode
+  bigger?: boolean
+}
+
+export const Editorial = ({
+  children,
+  bigger: biggerProp = false,
+}: EditorialProps) => {
   const context = React.useContext(CarouselContext)
   const bigger = biggerProp || context.bigger
 
@@ -39,7 +46,15 @@ export const Editorial = ({ children, bigger: biggerProp }) => {
   return <h1 {...headlineStyles}>{children}</h1>
 }
 
-export const Interaction = ({ children, bigger: biggerProp }) => {
+type InteractionProps = {
+  children: React.ReactNode
+  bigger?: boolean
+}
+
+export const Interaction = ({
+  children,
+  bigger: biggerProp = false,
+}: InteractionProps) => {
   const context = React.useContext(CarouselContext)
   const bigger = biggerProp || context.bigger
 
@@ -51,7 +66,15 @@ export const Interaction = ({ children, bigger: biggerProp }) => {
   return <h1 {...headlineStyles}>{children}</h1>
 }
 
-export const Scribble = ({ children, bigger: biggerProp }) => {
+type ScribbleProps = {
+  children: React.ReactNode
+  bigger?: boolean
+}
+
+export const Scribble = ({
+  children,
+  bigger: biggerProp = false,
+}: ScribbleProps) => {
   const context = React.useContext(CarouselContext)
   const bigger = biggerProp || context.bigger
 
@@ -61,28 +84,4 @@ export const Scribble = ({ children, bigger: biggerProp }) => {
     bigger && styles.bigger,
   )
   return <h1 {...headlineStyles}>{children}</h1>
-}
-
-Editorial.propTypes = {
-  children: PropTypes.node,
-  bigger: PropTypes.bool,
-}
-Editorial.defaultProps = {
-  bigger: false,
-}
-
-Interaction.propTypes = {
-  children: PropTypes.node,
-  bigger: PropTypes.bool,
-}
-Interaction.defaultProps = {
-  bigger: false,
-}
-
-Scribble.propTypes = {
-  children: PropTypes.node,
-  bigger: PropTypes.bool,
-}
-Scribble.defaultProps = {
-  bigger: false,
 }

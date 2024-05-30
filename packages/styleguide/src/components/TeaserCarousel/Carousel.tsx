@@ -19,17 +19,29 @@ const styles = {
   }),
 }
 
+type CarouselProps = {
+  bgColor?: string
+  color?: string
+  outline: string | boolean
+  bigger: boolean
+  children: React.ReactNode
+  tileCount: number
+  article?: boolean
+  grid?: boolean
+  isSeriesNav?: boolean
+}
+
 export const Carousel = ({
   bigger,
   children,
   tileCount: tileCountFromProps,
   article,
   outline,
-  bgColor,
-  color,
+  bgColor = defaultValue.bgColor,
+  color = defaultValue.color,
   grid,
   isSeriesNav,
-}) => {
+}: CarouselProps) => {
   const [colorScheme] = useColorContext()
   const row = children && children[1]
   const tileCount =
@@ -85,13 +97,3 @@ export const Carousel = ({
 }
 
 export default React.memo(Carousel)
-
-Carousel.propTypes = {
-  bgColor: PropTypes.string,
-  color: PropTypes.string,
-  outline: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  bigger: PropTypes.bool,
-  children: PropTypes.node,
-}
-
-Carousel.defaultProps = defaultValue

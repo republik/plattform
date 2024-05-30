@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import { rafDebounce } from '../../lib/helpers'
 import debounce from 'lodash/debounce'
 
@@ -57,14 +56,33 @@ const instances = {
   all: [],
 }
 
-class LazyLoad extends Component {
-  constructor(...args) {
-    super(...args)
+type LazyLoadProps<T = unknown> = {
+  children: React.ReactNode
+  attributes: Partial<T>
+  style: React.CSSProperties
+  type: React.ElementType<T>
+  visible: boolean
+  offset?: number
+  consistentPlaceholder: boolean
+}
+
+type LazyLoadState = {
+  visible?: boolean
+}
+
+class LazyLoad<T> extends Component<LazyLoadProps<T>, LazyLoadState> {
+  constructor(props) {
+    super(props)
     this.state = {}
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     this.setRef = (ref) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       this.ref = ref
     }
   }
+
   componentDidMount() {
     instances.add(this)
   }
@@ -84,6 +102,8 @@ class LazyLoad extends Component {
       return <>{children}</>
     }
     return (
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       <Element ref={this.setRef} {...attributes} style={style}>
         {visible ? (
           children
@@ -93,22 +113,12 @@ class LazyLoad extends Component {
       </Element>
     )
   }
-}
 
-LazyLoad.propTypes = {
-  children: PropTypes.node,
-  attributes: PropTypes.object,
-  style: PropTypes.object,
-  type: PropTypes.elementType,
-  visible: PropTypes.bool,
-  offset: PropTypes.number,
-  consistentPlaceholder: PropTypes.bool,
-}
-
-LazyLoad.defaultProps = {
-  offset: 0.5,
-  type: 'div',
-  consistentPlaceholder: false,
+  static defaultProps: Partial<LazyLoadProps<unknown>> = {
+    offset: 0.5,
+    type: 'div',
+    consistentPlaceholder: false,
+  }
 }
 
 export default LazyLoad

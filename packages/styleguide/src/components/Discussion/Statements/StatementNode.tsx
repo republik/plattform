@@ -1,5 +1,4 @@
-import React, { useContext } from 'react'
-import PropTypes from 'prop-types'
+import React, { ComponentPropsWithoutRef, useContext } from 'react'
 import { css } from 'glamor'
 import { fontStyles, Label } from '../../Typography'
 import { useMemo } from 'react'
@@ -10,13 +9,14 @@ import { useColorContext } from '../../Colors/ColorContext'
 import { stripTag } from './helpers/tagHelper'
 import { renderCommentMdast } from '../Internal/Comment/render'
 import IconButton from '../../IconButton'
-import ActionsMenu, {
-  ActionsMenuItemPropType,
-} from '../Internal/Comment/ActionsMenu'
+import ActionsMenu, { ActionMenuItem } from '../Internal/Comment/ActionsMenu'
 import HeaderMetaLine from '../Internal/Comment/HeaderMetaLine'
 import { pxToRem } from '../../Typography/utils'
 import { DiscussionContext } from '../DiscussionContext'
 import { IconShare } from '@republik/icons'
+import { Formatter } from '../../../lib/translate'
+import { Comment } from '../Internal/Comment/types'
+import { CommentLinkProps } from '../Internal/Comment/CommentLink'
 
 const HIGHLIGHT_PADDING = 7
 
@@ -122,6 +122,26 @@ const styles = {
 
 const MockLink = (props) => <>{props.children}</>
 
+type StatementNodeProps = {
+  comment: Comment
+  t: Formatter
+  tagMappings?: Array<{
+    tag: string
+    text: string
+  }>
+  actions: {
+    handleShare: (comment: Comment) => void
+  }
+  voteActions?: Pick<
+    ComponentPropsWithoutRef<typeof VoteButtons>,
+    'handleUpVote' | 'handleDownVote' | 'handleUnVote'
+  >
+  menuItems?: ActionMenuItem[]
+  disableVoting?: boolean
+  isHighlighted?: boolean
+  CommentLink?: React.ComponentType<CommentLinkProps>
+}
+
 const StatementNode = ({
   comment,
   tagMappings = [],
@@ -132,7 +152,7 @@ const StatementNode = ({
   disableVoting = false,
   isHighlighted = false,
   CommentLink = MockLink,
-}) => {
+}: StatementNodeProps) => {
   const [colorScheme] = useColorContext()
   const { discussion } = useContext(DiscussionContext)
 
@@ -266,26 +286,3 @@ const StatementNode = ({
 }
 
 export default StatementNode
-
-StatementNode.propTypes = {
-  comment: PropTypes.object.isRequired,
-  t: PropTypes.func.isRequired,
-  tagMappings: PropTypes.arrayOf(
-    PropTypes.shape({
-      tag: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-    }),
-  ),
-  actions: PropTypes.shape({
-    handleShare: PropTypes.func.isRequired,
-  }),
-  voteActions: PropTypes.shape({
-    handleUpVote: PropTypes.func.isRequired,
-    handleDownVote: PropTypes.func.isRequired,
-    handleUnVote: PropTypes.func.isRequired,
-  }),
-  menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
-  disableVoting: PropTypes.bool,
-  isHighlighted: PropTypes.bool,
-  CommentLink: PropTypes.elementType,
-}

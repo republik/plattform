@@ -53,7 +53,30 @@ const GalleryButton = ({ gallerySize, onClick }: GalleryButtonProps) => {
   )
 }
 
-const Image = (props, context) => {
+type ImageProps = {
+  src: string
+  dark?: {
+    src: string
+    srcSet?: string
+    size?: {
+      width: number
+      height: number
+    }
+  }
+  srcSet?: string
+  alt?: string
+  size?: {
+    width: number
+    height: number
+  }
+  maxWidth?: number
+  aboveTheFold?: boolean
+  enableGallery?: boolean
+  gallerySize?: number
+  attributes?: React.HTMLAttributes<HTMLImageElement>
+}
+
+const Image = (props: ImageProps, context) => {
   const {
     src,
     dark,
@@ -72,7 +95,14 @@ const Image = (props, context) => {
       ? () => context.toggleGallery(src)
       : undefined
 
-  const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
+  const size =
+    sizeProp ||
+    ((sizeProp === undefined && imageSizeInfo(src)) as
+      | {
+          width: never
+          height: never
+        }
+      | undefined)
   let aspectRatio = size ? size.width / size.height : undefined
   if (dark?.size) {
     aspectRatio = Math.min(aspectRatio, dark.size.width / dark.size.height)
@@ -88,6 +118,7 @@ const Image = (props, context) => {
       srcSet={srcSet}
       alt={alt}
       onClick={onClick}
+      offset={0}
     />
   ) : (
     <SwitchImage
@@ -132,24 +163,6 @@ const Image = (props, context) => {
       {wrappedImage}
     </div>
   )
-}
-
-Image.propTypes = {
-  src: PropTypes.string.isRequired,
-  dark: PropTypes.shape({
-    src: PropTypes.string.isRequired,
-    srcSet: PropTypes.string,
-  }),
-  srcSet: PropTypes.string,
-  alt: PropTypes.string,
-  size: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number,
-  }),
-  maxWidth: PropTypes.number,
-  aboveTheFold: PropTypes.bool,
-  enableGallery: PropTypes.bool,
-  gallerySize: PropTypes.number,
 }
 
 Image.contextTypes = {
