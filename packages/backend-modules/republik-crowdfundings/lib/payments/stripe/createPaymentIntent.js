@@ -1,4 +1,5 @@
 const getStripeClients = require('./clients')
+const { genIdempotencyKey } = require('./genIdempotencyKey')
 const { getPaymentMethodForCompany } = require('./paymentMethod')
 
 // paymentMethod(Id) is expected to be in company(Id)
@@ -44,17 +45,22 @@ module.exports = async ({
 
   // customer needs to be attached to PaymentIntent
   // otherwise she can't use her saved paymentMethods
-  return stripe.paymentIntents.create({
-    amount: total,
-    currency: 'chf',
-    customer: customer.id,
-    payment_method: paymentMethodId,
-    metadata: {
-      pledgeId,
-      ...metadata,
+  return stripe.paymentIntents.create(
+    {
+      amount: total,
+      currency: 'chf',
+      customer: customer.id,
+      payment_method: paymentMethodId,
+      metadata: {
+        pledgeId,
+        ...metadata,
+      },
+      confirm,
+      off_session: offSession,
+      ...(offSession ? {} : { setup_future_usage: 'off_session' }),
     },
-    confirm,
-    off_session: offSession,
-    ...(offSession ? {} : { setup_future_usage: 'off_session' }),
-  })
+    {
+      idempotencyKey: genIdempotencyKey(pledgeId, paymentMethodId),
+    },
+  )
 }

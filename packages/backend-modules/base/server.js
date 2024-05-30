@@ -32,6 +32,7 @@ const {
 } = require('@orbiting/backend-modules-auth')
 const requestLog = require('./express/requestLog')
 const keepalive = require('./express/keepalive')
+const { createCORSMatcher } = require('./lib/corsRegex')
 
 // init httpServer and express and start listening
 const start = async (
@@ -111,7 +112,7 @@ const start = async (
 
   if (CORS_ALLOWLIST_URL) {
     const corsOptions = {
-      origin: CORS_ALLOWLIST_URL.split(','),
+      origin: createCORSMatcher(CORS_ALLOWLIST_URL.split(',')),
       credentials: true,
       // maxAge: <seconds>; up to 24 hours
       // @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Max-Age

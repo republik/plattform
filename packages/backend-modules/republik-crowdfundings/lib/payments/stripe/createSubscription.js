@@ -3,6 +3,7 @@ const debug = require('debug')(
 )
 
 const getClients = require('./clients')
+const { genIdempotencyKey } = require('./genIdempotencyKey')
 const { getPaymentMethodForCompany } = require('./paymentMethod')
 
 module.exports = async ({
@@ -12,7 +13,6 @@ module.exports = async ({
   platformPaymentMethodId, // optional
   errIfIncomplete, // optional
   metadata,
-  idempotencyKey,
   discounts = [],
   pgdb,
   clients: _clients, // optional
@@ -58,7 +58,7 @@ module.exports = async ({
   if (!platformPaymentMethodId) {
     debug('subscribe user with default payment method %o', subscription)
     return stripe.subscriptions.create(subscription, {
-      idempotencyKey,
+      idempotencyKey: genIdempotencyKey(metadata.pledgeId),
     })
   }
 
@@ -72,5 +72,10 @@ module.exports = async ({
   }).then((pm) => pm.id)
 
   debug('subscribe with payment method %o', subscription)
-  return stripe.subscriptions.create(subscription)
+  return stripe.subscriptions.create(subscription, {
+    idempotencyKey: genIdempotencyKey(
+      metadata.pledgeId,
+      platformPaymentMethodId,
+    ),
+  })
 }
