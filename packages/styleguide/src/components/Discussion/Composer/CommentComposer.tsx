@@ -1,5 +1,4 @@
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import Textarea from 'react-textarea-autosize'
 import scrollIntoView from 'scroll-into-view'
@@ -10,7 +9,6 @@ import { Header, Tags, Actions, Error } from '../Internal/Composer'
 import { convertStyleToRem } from '../../Typography/utils'
 import { useColorContext } from '../../Colors/ColorContext'
 import { deleteDraft, readDraft, writeDraft } from './CommentDraftHelper'
-import { DisplayAuthorPropType } from '../Internal/PropTypes'
 import { CommentUI } from '../Tree/CommentNode'
 import Loader from '../../Loader'
 import { fontStyles } from '../../Typography'
@@ -62,38 +60,6 @@ const styles = {
   }),
 }
 
-const propTypes = {
-  t: PropTypes.func.isRequired,
-  isRoot: PropTypes.bool.isRequired,
-
-  discussionId: PropTypes.string,
-  parentId: PropTypes.string,
-  commentId: PropTypes.string,
-
-  onSubmit: PropTypes.func.isRequired,
-  onSubmitLabel: PropTypes.string,
-  onClose: PropTypes.func.isRequired,
-  onCloseLabel: PropTypes.string,
-  onOpenPreferences: PropTypes.func,
-  onPreviewComment: PropTypes.func,
-
-  // Disable because of TS funkiness
-  // secondaryActions: PropTypes.node,
-  hintValidators: PropTypes.arrayOf(PropTypes.func),
-
-  displayAuthor: DisplayAuthorPropType,
-  placeholder: PropTypes.string,
-  maxLength: PropTypes.number,
-  tags: PropTypes.arrayOf(PropTypes.string),
-
-  initialText: PropTypes.string,
-  initialTagValue: PropTypes.string,
-
-  isBoard: PropTypes.bool,
-  autoFocus: PropTypes.bool,
-  hideHeader: PropTypes.bool,
-}
-
 type CommentComposerProps = {
   t: Formatter
   isRoot: boolean
@@ -105,10 +71,10 @@ type CommentComposerProps = {
   onSubmit: (_: {
     text: string
     tags?: string[]
-  }) => Promise<{ ok: boolean; error?: string }>
+  }) => Promise<{ ok?: boolean; error?: any }>
   onSubmitLabel: string
-  onClose: () => void
-  onCloseLabel: string
+  onClose?: () => void
+  onCloseLabel?: string
   onOpenPreferences: () => void
   onPreviewComment: (_: {
     discussionId: string
@@ -129,8 +95,8 @@ type CommentComposerProps = {
   initialText: string
   initialTagValue: string
 
-  autoFocus: boolean
-  hideHeader: boolean
+  autoFocus?: boolean
+  hideHeader?: boolean
 }
 
 export const CommentComposer = ({
@@ -435,9 +401,13 @@ export const CommentComposer = ({
   )
 }
 
-CommentComposer.propTypes = propTypes
-
-const MaxLengthIndicator = ({ maxLength, length }) => {
+const MaxLengthIndicator = ({
+  maxLength,
+  length,
+}: {
+  maxLength: number
+  length: number
+}) => {
   const [colorScheme] = useColorContext()
   const remaining = maxLength - length
   if (remaining > maxLength * 0.33) {

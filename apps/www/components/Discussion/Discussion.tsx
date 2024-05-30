@@ -54,7 +54,7 @@ const Discussion = ({
     return makeCommentTree(discussion?.comments)
   }, [discussion])
 
-  const loadMore = async (): Promise<unknown> => {
+  const loadMore = async (): Promise<void> => {
     if (!discussion) return
     const lastNode =
       discussion.comments.nodes[discussion.comments.nodes.length - 1]

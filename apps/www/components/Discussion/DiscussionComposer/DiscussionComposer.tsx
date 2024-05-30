@@ -192,5 +192,3 @@ const DiscussionComposer = ({
 }
 
 export default DiscussionComposer
-
-DiscussionComposer.propTypes = propTypes
