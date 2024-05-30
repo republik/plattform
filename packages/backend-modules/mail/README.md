@@ -2,10 +2,9 @@
 
 Send simple and templated mails via Mandrill or Nodemailer, and manage subscriptions on MailChimp.
 
-## Generate plain-text emails from existing HTML templates
+## Important for automatic generation of plaintext mails
 
-1. Run `script/generateTextTemplates.js`
-2. Edit `.txt` templates to fit your ASCII beautification needs.
+Do not introduce linebreaks inside of html link tags, otherwise the transactional service doesn't recognise them as links in the automatically generated plaintext version.
 
 ## Send mails to specific segments
 
