@@ -31,6 +31,9 @@ const corsList = [
 ]
 
 const expectedToPass = [
+  'http://localhost',
+  'http://localhost:3010',
+  'https://localhost:3010',
   'http://republik.test',
   'http://www.republik.test',
   'http://api.republik.test',
