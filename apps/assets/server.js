@@ -2,6 +2,9 @@ const express = require('express')
 const cors = require('cors')
 const { express: middlewares } = require('@orbiting/backend-modules-assets')
 const basicAuthMiddleware = require('@orbiting/backend-modules-auth/express/basicAuth')
+const {
+  createCORSMatcher,
+} = require('@orbiting/backend-modules-base/lib/corsRegex')
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
@@ -33,7 +36,7 @@ const start = (workerId) => {
 
   if (CORS_ALLOWLIST_URL) {
     const corsOptions = {
-      origin: CORS_ALLOWLIST_URL.split(','),
+      origin: createCORSMatcher(CORS_ALLOWLIST_URL.split(',')),
       credentials: true,
       // maxAge: <seconds>; up to 24 hours
       // @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Max-Age

@@ -35,7 +35,7 @@
     "connect-timeout": "^1.9.0",
     "cookie": "^0.4.1",
     "cookie-parser": "^1.4.5",
-    "cors": "^2.8.4",
+    "cors": "^2.8.5",
     "d3-time-format": "^2.2.3",
     "express": "^4.16.3",
     "graphql": "^15.3.0",
@@ -48,6 +48,8 @@
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "*",
-    "@types/debug": "^4.1.5"
+    "@types/debug": "^4.1.5",
+    "supertest": "^7.0.0",
+    "@faker-js/faker": "^8.4.1"
   }
 }
