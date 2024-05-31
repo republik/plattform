@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.1.0",
   "engines": {
-    "node": "^18.0.0"
+    "node": "^20.0.0"
   },
   "scripts": {
     "dev": "concurrently \"PORT=3006 next dev\" \"yarn gql:types --watch\"",
@@ -45,7 +45,6 @@
     "lodash.debounce": "^4.0.8",
     "moment": "^2.29.1",
     "next": "^14.2.3",
-    "next-plausible": "^3.12.0",
     "prop-types": "^15.7.2",
     "react": "^18.3.1",
     "react-autosize-textarea": "^5.0.1",
@@ -72,7 +71,7 @@
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.7",
     "@types/jest": "^29.5.1",
-    "@types/node": "18",
+    "@types/node": "20",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "concurrently": "^8.2.1",
