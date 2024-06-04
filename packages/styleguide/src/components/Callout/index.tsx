@@ -1,6 +1,5 @@
-import React, { FC, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { css, keyframes } from 'glamor'
-import PropTypes from 'prop-types'
 import { mUp } from '../../theme/mediaQueries'
 import zIndex from '../../theme/zIndex'
 import { useColorContext } from '../Colors/useColorContext'
@@ -80,10 +79,10 @@ const styles = {
   },
 }
 
-type Props = {
-  children?: React.ReactNode
+interface CalloutProps {
+  children: React.ReactNode
   align?: 'left' | 'right'
-  onClose: () => void
+  onClose?(...args: unknown[]): unknown
   contentPaddingMobile?: string
 }
 
@@ -92,7 +91,7 @@ const Callout = ({
   align = 'left',
   onClose,
   contentPaddingMobile = '15px 15px 50px',
-}: Props) => {
+}: CalloutProps) => {
   const [colorScheme] = useColorContext()
   const calloutRule = useMemo(
     () =>
@@ -122,12 +121,6 @@ const Callout = ({
       </span>
     </span>
   )
-}
-
-Callout.propTypes = {
-  align: PropTypes.oneOf(['left', 'right']),
-  onClose: PropTypes.func,
-  contentPaddingMobile: PropTypes.string,
 }
 
 export default Callout

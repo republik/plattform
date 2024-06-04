@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
@@ -46,12 +45,6 @@ export const Caption = ({
       {children}
     </figcaption>
   )
-}
-
-Caption.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  groupCaption: PropTypes.bool,
 }
 
 export default Caption

@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react'
-import PropTypes, { InferProps } from 'prop-types'
 import { css } from 'glamor'
 import { serifRegular16 } from '../../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../../Typography/utils'
 import { useColorContext } from '../../Colors/ColorContext'
+import { Formatter } from '../../../lib/translate'
 
 const styles = {
   root: css({
@@ -30,13 +30,13 @@ const styles = {
   }),
 }
 
-const propTypes = {
-  t: PropTypes.func.isRequired,
-  displayAuthor: PropTypes.shape({
-    profilePicture: PropTypes.string,
-  }),
-  onClick: PropTypes.func,
-  placeholder: PropTypes.string,
+type CommentComposerPlaceholderProps = {
+  t: Formatter
+  displayAuthor?: {
+    profilePicture?: string
+  }
+  onClick?: () => void
+  placeholder?: string
 }
 
 export const CommentComposerPlaceholder = ({
@@ -44,7 +44,7 @@ export const CommentComposerPlaceholder = ({
   displayAuthor,
   onClick,
   placeholder,
-}: InferProps<typeof propTypes>) => {
+}: CommentComposerPlaceholderProps) => {
   const [colorScheme] = useColorContext()
   const rootHover = useMemo(
     () =>
@@ -65,7 +65,7 @@ export const CommentComposerPlaceholder = ({
       {...rootHover}
       onClick={onClick}
     >
-      {displayAuthor.profilePicture && (
+      {displayAuthor?.profilePicture && (
         <img
           {...styles.profilePicture}
           src={displayAuthor.profilePicture}
@@ -78,5 +78,3 @@ export const CommentComposerPlaceholder = ({
     </div>
   )
 }
-
-CommentComposerPlaceholder.propTypes = propTypes

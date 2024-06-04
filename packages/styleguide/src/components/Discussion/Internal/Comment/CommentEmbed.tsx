@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React from 'react'
 import * as Interaction from '../../../Typography/Interaction'
 import { css } from 'glamor'
 import {
@@ -11,7 +11,6 @@ import { mUp } from '../../../../theme/mediaQueries'
 import { linkStyle } from '../../../Typography'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { timeFormat } from '../../../../lib/timeFormat'
-import PropTypes from 'prop-types'
 import { IconLogoTwitter } from '@republik/icons'
 import { Embed } from './types'
 
@@ -103,11 +102,6 @@ const normalizeEmbed = (embed: Embed): NormalizedEmbed => ({
   body: embed?.description,
 })
 
-const propTypes = {
-  embed: PropTypes.object.isRequired,
-  mentioningDocument: PropTypes.object,
-}
-
 type CommentEmbedProps = {
   embed: Embed
   mentioningDocument?: {
@@ -194,5 +188,3 @@ export const CommentEmbed = ({
     </div>
   )
 }
-
-CommentEmbed.propTypes = propTypes
