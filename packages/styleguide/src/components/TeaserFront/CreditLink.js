@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { lab } from 'd3-color'
 import { css } from 'glamor'
 import { underline } from '../../lib/styleMixins'
@@ -9,6 +8,18 @@ import { useColorContext } from '../Colors/useColorContext'
 const getHoverColor = (labColor) =>
   labColor.l > 50 ? labColor.darker(0.6) : labColor.brighter(3)
 
+/**
+ * @typedef {object} CreditLinkProps
+ * @property {React.ReactNode} children
+ * @property {string} [color]
+ * @property {string} [collapsedColor]
+ */
+
+/**
+ * CreditLink component
+ * @param {CreditLinkProps} props
+ * @returns {JSX.Element}
+ */
 const CreditLink = React.forwardRef(
   ({ attributes, children, color, collapsedColor, ...props }, ref) => {
     const [colorScheme] = useColorContext()
@@ -51,11 +62,5 @@ const CreditLink = React.forwardRef(
     )
   },
 )
-
-CreditLink.propTypes = {
-  children: PropTypes.node.isRequired,
-  color: PropTypes.string,
-  collapsedColor: PropTypes.string,
-}
 
 export default CreditLink

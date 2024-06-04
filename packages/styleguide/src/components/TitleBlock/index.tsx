@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import {
   PADDED_MAX_WIDTH,
   PADDED_MAX_WIDTH_BREAKOUT,
@@ -30,7 +29,21 @@ const styles = {
   }),
 }
 
-const TitleBlock = ({ children, attributes, center, margin, breakout }) => {
+interface TitleBlockProps {
+  children: React.ReactNode
+  attributes?: React.ComponentPropsWithoutRef<'section'>
+  center?: boolean
+  margin?: boolean
+  breakout?: boolean
+}
+
+const TitleBlock = ({
+  children,
+  attributes,
+  center,
+  margin,
+  breakout,
+}: TitleBlockProps) => {
   return (
     <section
       className='title-block'
@@ -48,12 +61,6 @@ const TitleBlock = ({ children, attributes, center, margin, breakout }) => {
       {children}
     </section>
   )
-}
-
-TitleBlock.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  center: PropTypes.bool,
 }
 
 export default TitleBlock

@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { Format } from './Format'
@@ -36,6 +35,27 @@ const MoreIconWithProps = (props) => (
   <IconButton title='Mehr' Icon={IconMoreVertical} {...props} />
 )
 
+/**
+ * @typedef {object} TeaserProps
+ * @property {React.ReactNode} children
+ * @property {string} [formatColor]
+ * @property {object} [format]
+ * @property {string} [series]
+ * @property {string} [repoId]
+ * @property {string} [title]
+ * @property {string} [href]
+ * @property {React.ComponentType} Link
+ * @property {React.ReactNode} [highlighted]
+ * @property {React.ReactNode} [menu]
+ * @property {boolean} [dense]
+ * @property {boolean} [nonInteractive]
+ */
+
+/*
+ * Teaser component
+ * @param {TeaserProps} props
+ * @returns {JSX.Element}
+ */
 const Teaser = ({
   children,
   formatColor,
@@ -94,14 +114,6 @@ const Teaser = ({
       {children}
     </div>
   )
-}
-
-Teaser.propTypes = {
-  children: PropTypes.node.isRequired,
-  color: PropTypes.string,
-  format: PropTypes.object,
-  interaction: PropTypes.bool,
-  Link: PropTypes.func.isRequired, // a react component
 }
 
 export default Teaser

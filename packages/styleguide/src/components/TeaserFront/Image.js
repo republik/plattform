@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, tUp } from './mediaQueries'
 import colors from '../../theme/colors'
@@ -50,20 +49,43 @@ const styles = {
   }),
 }
 
+/**
+ * @typedef {object} ImageBlockProps
+ * @property {React.ReactNode} children
+ * @property {object} [attributes]
+ * @property {string} image
+ * @property {string} [byline]
+ * @property {string} [alt]
+ * @property {() => void} [onClick]
+ * @property {string} [color]
+ * @property {string} [bgColor]
+ * @property {'topleft' | 'topright' | 'bottomleft' | 'bottomright' | 'top' | 'middle' | 'bottom' | 'underneath'} [textPosition]
+ * @property {boolean} [center]
+ * @property {boolean} [aboveTheFold]
+ * @property {boolean} [onlyImage]
+ * @property {boolean} [feuilleton]
+ * @property {React.ReactNode} [audioPlayButton]
+ */
+
+/**
+ * ImageBlock component
+ * @param {ImageBlockProps} props
+ * @returns {JSX.Element}
+ */
 const ImageBlock = ({
   children,
   attributes,
   image,
   maxWidth,
   byline,
-  alt,
+  alt = '',
   onClick,
   color,
   bgColor,
-  textPosition,
+  textPosition = 'topleft',
   center,
   aboveTheFold,
-  onlyImage,
+  onlyImage = false,
   feuilleton,
   audioPlayButton,
 }) => {
@@ -130,36 +152,6 @@ const ImageBlock = ({
       </div>
     </div>
   )
-}
-
-ImageBlock.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  image: PropTypes.string.isRequired,
-  byline: PropTypes.string,
-  alt: PropTypes.string,
-  color: PropTypes.string,
-  bgColor: PropTypes.string,
-  center: PropTypes.bool,
-  textPosition: PropTypes.oneOf([
-    'topleft',
-    'topright',
-    'bottomleft',
-    'bottomright',
-    'top',
-    'middle',
-    'bottom',
-    'underneath',
-  ]),
-  onlyImage: PropTypes.bool,
-  feuilleton: PropTypes.bool,
-  shouldRenderPlayButton: PropTypes.node,
-}
-
-ImageBlock.defaultProps = {
-  textPosition: 'topleft',
-  alt: '',
-  onlyImage: false,
 }
 
 export default ImageBlock

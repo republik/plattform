@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, dUp } from './mediaQueries'
 import { FigureImage, FigureByline } from '../Figure'
@@ -86,12 +85,35 @@ const styles = {
   }),
 }
 
+/**
+ * @typedef {object} SplitProps
+ * @property {React.ReactNode} children
+ * @property {object} [attributes]
+ * @property {string} image
+ * @property {string} [byline]
+ * @property {string} [alt]
+ * @property {() => void} [onClick]
+ * @property {string} [color]
+ * @property {string} [bgColor]
+ * @property {boolean} [center]
+ * @property {boolean} [reverse]
+ * @property {boolean} [portrait]
+ * @property {boolean} [aboveTheFold]
+ * @property {boolean} [feuilleton]
+ * @property {React.ReactNode} [audioPlayButton]
+ */
+
+/**
+ * Split component
+ * @param {SplitProps} props
+ * @returns {JSX.Element}
+ */
 const Split = ({
   children,
   attributes,
   image,
   byline,
-  alt,
+  alt = '',
   onClick,
   color,
   bgColor,
@@ -163,23 +185,6 @@ const Split = ({
       </div>
     </div>
   )
-}
-
-Split.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  image: PropTypes.string.isRequired,
-  byline: PropTypes.string,
-  alt: PropTypes.string,
-  color: PropTypes.string,
-  bgColor: PropTypes.string,
-  center: PropTypes.bool,
-  reverse: PropTypes.bool,
-  audioPlayButton: PropTypes.node,
-}
-
-Split.defaultProps = {
-  alt: '',
 }
 
 export default Split

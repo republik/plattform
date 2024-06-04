@@ -18,6 +18,17 @@ const limitedTitle = (title, limit = 130) =>
     title.length >= limit ? `${NBSP}…` : ''
   }`
 
+/**
+ * @typedef {object} TeaserMyMagazineProps
+ * @property {object[]} latestSubscribedArticles
+ * @property {object[]} latestProgressOrBookmarkedArticles
+ */
+
+/**
+ * TeaserMyMagazine component
+ * @param {TeaserMyMagazineProps} props
+ * @returns
+ */
 const TeaserMyMagazine = ({
   latestSubscribedArticles,
   latestProgressOrBookmarkedArticles,
@@ -245,11 +256,6 @@ const styles = {
       ...convertStyleToRem(sansSerifMedium16),
     },
   }),
-}
-
-TeaserMyMagazine.propTypes = {
-  latestSubscribedArticles: PropTypes.array,
-  latestProgressOrBookmarkedArticles: PropTypes.array,
 }
 
 const WrappedTeaserMyMagazine = (props) => <TeaserMyMagazine {...props} />

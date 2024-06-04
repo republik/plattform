@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import colors from '../../theme/colors'
 import { css } from 'glamor'
 import { mUp } from './mediaQueries'
@@ -33,6 +32,17 @@ const leadSmall = css({
   },
 })
 
+/**
+ * @typedef {object} LeadProps
+ * @property {React.ReactNode} children
+ * @property {number} [columns]
+ */
+
+/**
+ * Lead component
+ * @param {LeadProps} props
+ * @returns {JSX.Element}
+ */
 const Lead = ({ children, columns, attributes }) => (
   <span
     {...attributes}
@@ -42,10 +52,5 @@ const Lead = ({ children, columns, attributes }) => (
     {children}
   </span>
 )
-
-Lead.propTypes = {
-  children: PropTypes.node.isRequired,
-  columns: PropTypes.number,
-}
 
 export default Lead

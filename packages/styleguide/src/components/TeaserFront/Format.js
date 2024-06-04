@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { lab } from 'd3-color'
 import { mUp, tUp } from './mediaQueries'
@@ -15,6 +14,17 @@ const format = css({
   },
 })
 
+/**
+ * @typedef {object} FormatProps
+ * @property {React.ReactNode} children
+ * @property {string} color
+ * @property {string} [collapsedColor]
+ */
+
+/**
+ * Format component
+ * @param {FormatProps} props
+ */
 const Format = ({ children, color, collapsedColor }) => {
   const labColor = lab(color)
   const labCollapsedColor = lab(collapsedColor || color)
@@ -39,12 +49,6 @@ const Format = ({ children, color, collapsedColor }) => {
       {children}
     </p>
   )
-}
-
-Format.propTypes = {
-  children: PropTypes.node.isRequired,
-  color: PropTypes.string,
-  collapsedColor: PropTypes.string,
 }
 
 export default Format

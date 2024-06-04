@@ -1,5 +1,4 @@
 import { css } from 'glamor'
-import PropTypes from 'prop-types'
 import React from 'react'
 import ActiveDebateHeader from './DebateHeader'
 import ActiveDebateComment from './DebateComment'
@@ -39,6 +38,18 @@ const styles = {
 
 const DefaultLink = ({ children }) => children
 
+/**
+ * @typedef {object} DebateTeaserProps
+ * @property {import('../../lib/translate').Formatter} t
+ * @property {object} discussion
+ * @property {React.ComponentType} [DiscussionLink]
+ * @property {React.ComponentType} [CommentLink]
+ */
+
+/**
+ * DebateTeaser component
+ * @param {DebateTeaserProps} props
+ */
 export const DebateTeaser = ({
   t,
   discussion,
@@ -99,8 +110,3 @@ export const DebateTeaser = ({
 }
 
 export default DebateTeaser
-
-DebateTeaser.propTypes = {
-  t: PropTypes.func,
-  discussion: PropTypes.object,
-}

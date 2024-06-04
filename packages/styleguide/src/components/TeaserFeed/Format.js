@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { sansSerifMedium14, sansSerifMedium16 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
@@ -17,6 +16,17 @@ const styles = {
   }),
 }
 
+/**
+ * @typedef {object} FormatProps
+ * @property {React.ReactNode} children
+ * @property {string} [color]
+ */
+
+/**
+ * Format component
+ * @param {FormatProps} props
+ * @returns {JSX.Element}
+ */
 export const Format = ({ children, color }) => {
   const [colorScheme] = useColorContext()
 
@@ -28,11 +38,6 @@ export const Format = ({ children, color }) => {
       {children}
     </p>
   )
-}
-
-Format.propTypes = {
-  children: PropTypes.node.isRequired,
-  color: PropTypes.string,
 }
 
 export default Format

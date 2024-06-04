@@ -1,5 +1,4 @@
 import { css } from 'glamor'
-import PropTypes from 'prop-types'
 import React from 'react'
 import { IconLink } from '../Discussion/Internal/Comment'
 import { sansSerifMedium16 } from '../Typography/styles'
@@ -18,6 +17,18 @@ const styles = {
   }),
 }
 
+/**
+ * @typedef {object} DebateHeaderProps
+ * @property {string} [title]
+ * @property {number} commentCount
+ * @property {string} href
+ * @property {() => void} onClick
+ */
+
+/**
+ * DebateHeader component
+ * @param {DebateHeaderProps} props
+ */
 const DebateHeader = React.forwardRef(
   ({ title, commentCount, href, onClick }, ref) => {
     const [colorScheme] = useColorContext()
@@ -45,9 +56,3 @@ const DebateHeader = React.forwardRef(
 )
 
 export default DebateHeader
-
-DebateHeader.propTypes = {
-  title: PropTypes.string,
-  commentCount: PropTypes.number,
-  href: PropTypes.string,
-}
