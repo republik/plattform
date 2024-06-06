@@ -44,9 +44,9 @@ const PUBLIC_BASE_URL = appendProtocol(
     process.env.NEXT_PUBLIC_VERCEL_URL,
 )
 
-const PUBLIC_CDN_URL =
-  appendProtocol(process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL) ||
-  PUBLIC_BASE_URL
+const PUBLIC_CDN_URL = appendProtocol(
+  process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL,
+)
 
 /**
  * @type {import('next').NextConfig}
