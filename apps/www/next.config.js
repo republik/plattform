@@ -30,23 +30,47 @@ const unprefixedStyleguideEnvVariables = {
     }, []),
 }
 
-function appendProtocol(href) {
-  if (href && !href.startsWith('http')) {
-    return `${isProduction ? 'https' : 'http'}://${href}`
+/**
+ * Append the protocol to a given href if it doesn't have one.
+ * @param {string} url
+ * @returns {string} prefixed URL
+ */
+function appendProtocol(url) {
+  if (url && !url.startsWith('http')) {
+    return `${isProduction ? 'https' : 'http'}://${url}`
   }
-  return href
+  return url
 }
-
-const PUBLIC_BASE_URL = appendProtocol(
-  process.env.NEXT_PUBLIC_BASE_URL ||
-    process.env.VERCEL_BRANCH_URL ||
-    process.env.VERCEL_URL ||
-    process.env.NEXT_PUBLIC_VERCEL_URL,
-)
 
 const PUBLIC_CDN_URL = appendProtocol(
   process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL,
 )
+
+/**
+ * Resolve the base URL for the application.
+ * If this is called within a Vercel deployment that's not a production deployment,
+ * the base URL will be the Vercel deployment URL.
+ *
+ * @returns {string} base URL
+ */
+function resolveBaseURL() {
+  if (!process.env.VERCEL) {
+    return process.env.NEXT_PUBLIC_BASE_URL
+  }
+  if (process.env.VERCEL_ENV === 'production') {
+    return appendProtocol(
+      process.env.NEXT_PUBLIC_BASE_URL ||
+        process.env.NEXT_PUBLIC_VERCEL_PROJECT_PRODUCTION_URL ||
+        process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    )
+  }
+
+  return appendProtocol(
+    process.env.NEXT_PUBLIC_VERCEL_URL ||
+      process.env.VERCEL_URL ||
+      process.env.NEXT_PUBLIC_BASE_URL,
+  )
+}
 
 /**
  * @type {import('next').NextConfig}
@@ -55,7 +79,7 @@ const nextConfig = {
   generateBuildId: () => buildId,
   env: {
     BUILD_ID: buildId,
-    PUBLIC_BASE_URL,
+    PUBLIC_BASE_URL: resolveBaseURL(),
     PUBLIC_CDN_URL,
     ...unprefixedStyleguideEnvVariables,
   },
