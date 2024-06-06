@@ -91,7 +91,7 @@ const Carousel: React.FC<CarouselProps> = ({
   const carouselRef = useRef<HTMLDivElement>()
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
-  const [disableScrollIntoView, setDisableScrollIntoView] = useState(false)
+  const [disableScrollIntoView, setDisableScrollIntoView] = useState(true)
   const [disableScrollListener, setDisableScrollListener] = useState(false)
 
   useEffect(() => {
