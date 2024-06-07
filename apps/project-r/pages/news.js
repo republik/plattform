@@ -10,7 +10,6 @@ import { NEWSLETTER_ID } from '../lib/publicEnv'
 import { Loader } from '@project-r/styleguide'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql, useQuery } from '@apollo/client'
-import { css } from 'glamor'
 import { createGetStaticProps } from '../lib/apollo/helpers'
 
 const getNewsletterTeasers = gql`
