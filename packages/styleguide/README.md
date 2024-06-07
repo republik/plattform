@@ -73,24 +73,6 @@ export default class MyDocument extends Document {
 ```
 
 See also:
+
 - [next.js Example](https://github.com/zeit/next.js/blob/master/examples/with-glamor/pages/_document.js)
 - [Webfonts Integration](/typographie)
-
-### Theming
-
-We want to keep the style guide code simple and will keep the theming options to a minimum. Fork if you want to customize more.
-
-Following environment variables are available for theming:
-
-```
-SG_COLORS={"primary":"Maroon"}
-SG_FONT_STYLES={"serifRegular":{"fontFamily":"'Merriweather', serif"},"serifTitle":{"fontFamily":"'Merriweather', serif","fontWeight":900}}
-SG_FONT_FACES=@import url('https://fonts.googleapis.com/css?family=Merriweather:400,900&display=swap')
-SG_LOGO_PATH=M0 0 L4 0 L4 1.5 L3 0.5 L2 4 L1 0.5 L0 1.5 Z
-SG_LOGO_VIEWBOX=0 0 4 1.5
-SG_LOGO_GRADIENT=<linearGradient id="logo-gradient"></linearGradient>
-SG_BRAND_MARK_PATH=M0 4 L1 0 L4 4 Z
-SG_BRAND_MARK_VIEWBOX=0 0 4 4
-```
-
-They may be prefixed with `REACT_APP_` for [CRA compatibility](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables). And will be retrieved from `window.ENV`, `window.__NEXT_DATA__.env` or  `process.env`.

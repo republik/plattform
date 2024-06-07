@@ -14,13 +14,6 @@ export const TEMPLATES = process.env.NEXT_PUBLIC_TEMPLATES
 export const REPO_PREFIX = process.env.NEXT_PUBLIC_REPO_PREFIX
 export const TEMPLATE_PREFIX = 'template-'
 
-export const SG_COLORS = process.env.SG_COLORS
-export const SG_FONT_STYLES = process.env.SG_FONT_STYLES
-export const SG_FONT_FACES = process.env.SG_FONT_FACES
-export const SG_LOGO_PATH = process.env.SG_LOGO_PATH
-export const SG_LOGO_VIEWBOX = process.env.SG_LOGO_VIEWBOX
-export const SG_BRAND_MARK_PATH = process.env.SG_BRAND_MARK_PATH
-export const SG_BRAND_MARK_VIEWBOX = process.env.SG_BRAND_MARK_VIEWBOX
 export const SG_DYNAMIC_COMPONENT_BASE_URLS =
   process.env.SG_DYNAMIC_COMPONENT_BASE_URLS
 
