@@ -1,16 +1,17 @@
+import { LOGO_VIEWBOX, LOGO_PATH } from '@republik/theme/logo'
 import { css } from '@republik/theme/css'
 
 export const Logo = () => {
   return (
     <svg
-      viewBox={process.env.NEXT_PUBLIC_SG_LOGO_VIEWBOX}
+      viewBox={LOGO_VIEWBOX}
       className={css({
         width: 'full',
         fill: 'text',
         height: '1rem',
       })}
     >
-      <path d={process.env.NEXT_PUBLIC_SG_LOGO_PATH}></path>
+      <path d={LOGO_PATH}></path>
     </svg>
   )
 }

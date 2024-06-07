@@ -14,6 +14,7 @@ import { PUBLIC_BASE_URL } from 'lib/constants'
 import Link, { LinkProps } from 'next/link'
 import { ComponentType, ReactElement, isValidElement } from 'react'
 import { UrlObject } from 'url'
+import { LOGO_VIEWBOX, LOGO_PATH } from '@republik/theme/logo'
 
 /**
  * isLinkOfSameHost checks if a link is of the same host as the host provided.
@@ -174,13 +175,13 @@ export default async function Footer() {
           >
             <div>
               <svg
-                viewBox={process.env.NEXT_PUBLIC_SG_LOGO_VIEWBOX}
+                viewBox={LOGO_VIEWBOX}
                 className={css({
                   fill: 'text',
                   height: '20px',
                 })}
               >
-                <path d={process.env.NEXT_PUBLIC_SG_LOGO_PATH}></path>
+                <path d={LOGO_PATH}></path>
               </svg>
             </div>
             <span

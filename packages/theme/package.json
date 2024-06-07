@@ -35,6 +35,10 @@
       "import": "./__generated__/jsx/index.mjs"
     },
     "./styles.css": "./__generated__/styles.css",
-    "./fonts.css": "./fonts.css"
+    "./fonts.css": "./fonts.css",
+    "./logo": {
+      "require": "./logo.mjs",
+      "import": "./logo.mjs"
+    }
   }
 }

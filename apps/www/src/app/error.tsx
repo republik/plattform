@@ -1,4 +1,5 @@
 'use client' // Error components must be Client Components
+import { LOGO_VIEWBOX, LOGO_PATH } from '@republik/theme/logo'
 
 import { useEffect } from 'react'
 import { css } from '@republik/theme/css'
@@ -42,13 +43,13 @@ export default function Error({
         })}
       >
         <svg
-          viewBox={process.env.NEXT_PUBLIC_SG_LOGO_VIEWBOX}
+          viewBox={LOGO_VIEWBOX}
           className={css({
             fill: 'text',
             height: 'header.logoHeight',
           })}
         >
-          <path d={process.env.NEXT_PUBLIC_SG_LOGO_PATH}></path>
+          <path d={LOGO_PATH}></path>
         </svg>
       </div>
       <div
