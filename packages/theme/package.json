@@ -37,6 +37,7 @@
     "./styles.css": "./__generated__/styles.css",
     "./fonts.css": "./fonts.css",
     "./logo": {
+      "types": "./logo.d.ts",
       "require": "./logo.mjs",
       "import": "./logo.mjs"
     }
