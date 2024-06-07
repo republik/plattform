@@ -34,6 +34,7 @@
       "require": "./__generated__/jsx/index.mjs",
       "import": "./__generated__/jsx/index.mjs"
     },
-    "./styles.css": "./__generated__/styles.css"
+    "./styles.css": "./__generated__/styles.css",
+    "./fonts.css": "./fonts.css"
   }
 }
