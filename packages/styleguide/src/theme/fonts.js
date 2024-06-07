@@ -68,5 +68,3 @@ export const fontStyles = {
   },
   ...FONT_STYLES,
 }
-
-export const fontFaces = () => SG.FONT_FACES || ''
