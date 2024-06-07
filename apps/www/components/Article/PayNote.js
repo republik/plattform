@@ -24,6 +24,9 @@ import { useMe } from '../../lib/context/MeContext'
 const styles = {
   banner: css({
     padding: '5px 0',
+    '@media print': {
+      display: 'none',
+    },
   }),
   content: css({
     paddingBottom: 0,
