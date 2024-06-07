@@ -46,7 +46,7 @@ export default function Container({
               format('truetype');
         }
         @font-face {
-          font-family: 'Rubis-Regular';
+          font-family: 'Rubis';
           font-style: italic;
           src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.eot);
           src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.eot?#iefix)
