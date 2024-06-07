@@ -14,9 +14,6 @@ export const TEMPLATES = process.env.NEXT_PUBLIC_TEMPLATES
 export const REPO_PREFIX = process.env.NEXT_PUBLIC_REPO_PREFIX
 export const TEMPLATE_PREFIX = 'template-'
 
-export const SG_DYNAMIC_COMPONENT_BASE_URLS =
-  process.env.SG_DYNAMIC_COMPONENT_BASE_URLS
-
 export const WEEK_TEMPLATE_REPOS = process.env.NEXT_PUBLIC_WEEK_TEMPLATE_REPOS
 
 export const UNCOMMITTED_CHANGES_POLL_INTERVAL_MS =
