@@ -135,27 +135,6 @@
     "SESSION_SECRET": {
       "generator": "secret"
     },
-    "SG_BRAND_MARK_PATH": {
-      "required": true
-    },
-    "SG_BRAND_MARK_VIEWBOX": {
-      "required": true
-    },
-    "SG_COLORS": {
-      "required": true
-    },
-    "SG_FONT_FACES": {
-      "required": true
-    },
-    "SG_FONT_FAMILIES": {
-      "required": true
-    },
-    "SG_LOGO_PATH": {
-      "required": true
-    },
-    "SG_LOGO_VIEWBOX": {
-      "required": true
-    },
     "SLACK_API_TOKEN": "",
     "SLACK_CHANNEL_COMMENTS": "",
     "SLACK_CHANNEL_GREETING": "",

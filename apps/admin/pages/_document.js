@@ -1,6 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { renderStatic } from 'glamor/server'
-import { fontFaces } from '@project-r/styleguide'
 
 export default class MyDocument extends Document {
   static async getInitialProps({ renderPage }) {
@@ -19,11 +18,6 @@ export default class MyDocument extends Document {
       <Html>
         <Head>
           <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
-          <style
-            dangerouslySetInnerHTML={{
-              __html: fontFaces(),
-            }}
-          />
           {css ? (
             <style
               dangerouslySetInnerHTML={{

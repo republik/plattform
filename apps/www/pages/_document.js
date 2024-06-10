@@ -6,7 +6,6 @@ import Document, {
   NextScript,
 } from 'next/document'
 import { renderStaticOptimized } from 'glamor/server'
-import { fontFaces, DEFAULT_FONT_SIZE } from '@project-r/styleguide'
 
 // filter our preload links (js files)
 // see https://github.com/zeit/next.js/issues/5054
@@ -78,14 +77,6 @@ export default class MyDocument extends Document {
       <Html lang='de'>
         <Head>
           <meta httpEquiv='X-UA-Compatible' content='IE=edge' />
-          <style
-            dangerouslySetInnerHTML={{
-              __html: [
-                fontFaces(),
-                `html, body { font-size: ${DEFAULT_FONT_SIZE}px }`,
-              ].join('\n'),
-            }}
-          />
           {css ? (
             <style data-glamor-ssr dangerouslySetInnerHTML={{ __html: css }} />
           ) : null}

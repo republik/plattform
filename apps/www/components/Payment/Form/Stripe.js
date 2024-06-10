@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useMemo, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import { css } from 'glamor'
 
 import {
@@ -11,8 +11,6 @@ import {
 } from '@stripe/react-stripe-js'
 
 import { fontStyles, useColorContext, Interaction } from '@project-r/styleguide'
-
-import { SG_FONT_FACES } from '../../../lib/constants'
 
 import { loadStripe } from '../stripe'
 import StripeField from './StripeField'
@@ -163,27 +161,16 @@ const PrivacyWrapper = forwardRef((props, ref) => {
       })
     }
   }, [unlockFieldKey])
-  const options = useMemo(() => {
-    const fontFamily = fontStyles.sansSerifRegular.fontFamily.split(',')[0]
-    const def = SG_FONT_FACES?.split('@font-face').find((d) =>
-      d.includes(fontFamily),
-    )
-    return {
-      fonts: def
-        ? [
-            {
-              family: fontFamily,
-              weight: fontStyles.sansSerifRegular.fontWeight,
-              src: def
-                .split('src:')
-                .slice(-1)[0] // get last src which wins in css
-                .split(';')[0] // stop at ;
-                .split('}')[0], // or }
-            },
-          ]
-        : [],
-    }
-  })
+
+  const options = {
+    fonts: [
+      {
+        family: 'GT-America-Standard-Regular',
+        weight: '400',
+        src: 'url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.woff) format("woff"),url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.ttf) format("truetype")',
+      },
+    ],
+  }
 
   return (
     <Elements

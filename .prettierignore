@@ -11,3 +11,5 @@ dist
 build
 
 /apps/www/src/graphql/*/gql/**/*.ts
+
+/packages/backend-modules/**/*.html
