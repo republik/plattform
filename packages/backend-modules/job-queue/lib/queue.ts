@@ -1,9 +1,9 @@
 import PgBoss from 'pg-boss'
-import { Worker, WorkerJobArgMap, WorkerQueues } from './types'
+import { Worker, WorkerJobArgs, WorkerQueueName } from './types'
 
-export class Queue<T extends Worker<any>[]> {
+export class Queue {
   protected readonly pgBoss: PgBoss
-  protected workers = new Map<WorkerQueues<T>, Worker<any>>()
+  protected workers = new Map<WorkerQueueName<Worker<any>>, Worker<any>>()
 
   constructor(options: PgBoss.ConstructorOptions) {
     this.pgBoss = new PgBoss(options)
@@ -13,7 +13,7 @@ export class Queue<T extends Worker<any>[]> {
     })
   }
 
-  registerWorker(worker: new (pgBoss: PgBoss) => Worker<any>): Queue<T> {
+  registerWorker(worker: new (pgBoss: PgBoss) => Worker<any>): Queue {
     const workerInstance = new worker(this.pgBoss)
     this.workers.set(workerInstance.queue, workerInstance)
     return this
@@ -51,13 +51,16 @@ export class Queue<T extends Worker<any>[]> {
     return Promise.all(workers)
   }
 
-  async getQueueSize<K extends WorkerQueues<T>>(queue: K, options?: object) {
+  async getQueueSize<K extends Worker<any>>(
+    queue: WorkerQueueName<K>,
+    options?: object,
+  ) {
     return this.pgBoss.getQueueSize(queue, options)
   }
 
-  async send<K extends WorkerQueues<T>>(
-    queue: K,
-    data: WorkerJobArgMap<T>[K],
+  async send<K extends Worker<any>>(
+    queue: WorkerQueueName<K>,
+    data: WorkerJobArgs<K>,
     options?: PgBoss.SendOptions,
   ): Promise<string | null> {
     const worker = this.workers.get(queue)
@@ -69,10 +72,10 @@ export class Queue<T extends Worker<any>[]> {
     return this.pgBoss.send(worker.queue, data, opts)
   }
 
-  async schedule<K extends WorkerQueues<T>>(
-    queue: K,
+  async schedule<K extends Worker<any>>(
+    queue: WorkerQueueName<K>,
     cron: string,
-    data?: WorkerJobArgMap<T>[K],
+    data?: WorkerJobArgs<K>,
     options?: PgBoss.ScheduleOptions,
   ): Promise<void> {
     const worker = this.workers.get(queue)
@@ -82,7 +85,7 @@ export class Queue<T extends Worker<any>[]> {
     return this.pgBoss.schedule(queue, cron, data, options)
   }
 
-  async unschedule<k extends WorkerQueues<T>>(queue: k) {
+  async unschedule<k extends WorkerQueueName<Worker<any>>>(queue: k) {
     return this.pgBoss.unschedule(queue)
   }
 

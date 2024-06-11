@@ -21,13 +21,13 @@ class DemoWorker extends BaseWorker<DemoWorkerArgs> {
 }
 
 describe('pg-boss worker test', () => {
-  let queue: Queue<[DemoWorker]>
+  let queue: Queue
   let postgresContainer: StartedPostgreSqlContainer
 
   beforeAll(async () => {
     postgresContainer = await new PostgreSqlContainer().start()
 
-    queue = new Queue<[DemoWorker]>({
+    queue = new Queue({
       application_name: 'job-queue',
       connectionString: postgresContainer.getConnectionUri(),
     })
@@ -44,7 +44,7 @@ describe('pg-boss worker test', () => {
   })
 
   test('queue class interface test', async () => {
-    const jobID = await queue.send('queue:demo', {
+    const jobID = await queue.send<DemoWorker>('queue:demo', {
       recipientEmail: 'example@republik.ch',
     })
 
@@ -52,7 +52,7 @@ describe('pg-boss worker test', () => {
       throw Error('Job no queued')
     }
 
-    const size = await queue.getQueueSize('queue:demo')
+    const size = await queue.getQueueSize<DemoWorker>('queue:demo')
     expect(size).toBe(1)
 
     let job = await queue.getJobById(jobID)
