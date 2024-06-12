@@ -58,9 +58,9 @@ export class Queue {
     return this.pgBoss.getQueueSize(queue, options)
   }
 
-  async send<K extends Worker<any>>(
-    queue: WorkerQueueName<K>,
-    data: WorkerJobArgs<K>,
+  async send<T extends Worker<any>>(
+    queue: WorkerQueueName<T>,
+    data: WorkerJobArgs<T>,
     options?: PgBoss.SendOptions,
   ): Promise<string | null> {
     const worker = this.workers.get(queue)
@@ -72,10 +72,10 @@ export class Queue {
     return this.pgBoss.send(worker.queue, data, opts)
   }
 
-  async schedule<K extends Worker<any>>(
-    queue: WorkerQueueName<K>,
+  async schedule<T extends Worker<any>>(
+    queue: WorkerQueueName<T>,
     cron: string,
-    data?: WorkerJobArgs<K>,
+    data?: WorkerJobArgs<T>,
     options?: PgBoss.ScheduleOptions,
   ): Promise<void> {
     const worker = this.workers.get(queue)
@@ -85,7 +85,7 @@ export class Queue {
     return this.pgBoss.schedule(queue, cron, data, options)
   }
 
-  async unschedule<k extends WorkerQueueName<Worker<any>>>(queue: k) {
+  async unschedule<T extends WorkerQueueName<Worker<any>>>(queue: T) {
     return this.pgBoss.unschedule(queue)
   }
 
