@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "concurrently \"PORT=3010 next dev\" \"yarn gql:types --watch\"",
     "start": "next start",
-    "build": "panda codegen && yarn gql:types && next build",
+    "build": "panda codegen --clean && yarn gql:types && next build",
     "heroku-postbuild": "npm run build",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -39,7 +39,7 @@
     "@graphql-codegen/schema-ast": "^4.0.0",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@next/env": "^14.2.3",
-    "@pandacss/dev": "^0.37.2",
+    "@pandacss/dev": "^0.39.1",
     "@parcel/watcher": "^2.3.0",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
