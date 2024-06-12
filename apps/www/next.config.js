@@ -28,10 +28,6 @@ const PUBLIC_BASE_URL = appendProtocol(
     process.env.NEXT_PUBLIC_VERCEL_URL,
 )
 
-const PUBLIC_CDN_URL = process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
-  ? appendProtocol(process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL)
-  : ''
-
 /**
  * @type {import('next').NextConfig}
  */
@@ -40,7 +36,6 @@ const nextConfig = {
   env: {
     BUILD_ID: buildId,
     PUBLIC_BASE_URL,
-    PUBLIC_CDN_URL,
   },
   transpilePackages: [
     '@project-r/styleguide',
@@ -54,7 +49,7 @@ const nextConfig = {
     return config
   },
   poweredByHeader: false,
-  assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
+  assetPrefix: process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL,
   useFileSystemPublicRoutes: true,
   // , onDemandEntries: {
   //   // wait 5 minutes before disposing entries
