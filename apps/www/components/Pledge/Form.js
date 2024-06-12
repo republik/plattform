@@ -221,7 +221,7 @@ class Pledge extends Component {
       // EINSTIEGSMONAT-TEST (remove after test) change total back
       total:
         pkg.name === 'MONTHLY_ABO' && query.coupon === 'EINSTIEG24'
-          ? values.price + 2000
+          ? values.price + 1100
           : values.price || undefined,
       options,
       reason: userPrice ? values.reason : undefined,
