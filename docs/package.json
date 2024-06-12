@@ -25,7 +25,7 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@pandacss/dev": "^0.37.2",
+    "@pandacss/dev": "^0.39.1",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
     "@types/node": "20"
