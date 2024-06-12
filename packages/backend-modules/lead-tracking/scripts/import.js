@@ -15,7 +15,15 @@ async function main(argv) {
   const pgdb = await connect()
 
   try {
-    const rows = await pgdb.public.leadTracking.insert(preparedResults, {
+    const existingEmails = (await pgdb.public.leadTracking.find({leadTag: argv.tag}, {fields: 'email'})).map((o) => o.email)
+
+    if (existingEmails.length !== 0) {
+      console.log('%i Emails already present with tag %s, skipping those', existingEmails.length, argv.tag)
+    }
+
+    const filteredResults = preparedResults.filter((res) => !existingEmails.includes(res.email))
+
+    const rows = await pgdb.public.leadTracking.insert(filteredResults, {
       return: ['id'],
     })
 
