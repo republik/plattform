@@ -1221,9 +1221,11 @@ export const withPay = (Component) => {
             }
 
             // TODO: implement plausible properly
-            window.plausible?.('Sales', {
-              revenue: { currency: 'CHF', amount: pendingOrder.total / 100 },
-            })
+            if (pendingOrder) {
+              window.plausible?.('Sales', {
+                revenue: { currency: 'CHF', amount: pendingOrder.total / 100 },
+              })
+            }
 
             await Promise.all(
               [
