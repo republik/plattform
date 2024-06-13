@@ -1,5 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const MailchimpInterface = require('../../../../mail/MailchimpInterface')
+const MailchimpInterface = require('../../../../mailchimp/MailchimpInterface')
 const logger = console
 
 const {

@@ -18,7 +18,7 @@ const { getLastEndDate, getMembershipCompany } = require('./utils')
 
 const dateFormat = timeFormat('%x')
 
-const MailchimpInterface = require('../../mail/MailchimpInterface')
+const MailchimpInterface = require('../../mailchimp/MailchimpInterface')
 
 const {
   MAILCHIMP_INTEREST_PLEDGE,

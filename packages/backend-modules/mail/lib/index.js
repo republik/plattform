@@ -1,19 +1,19 @@
 const handlers = {
-  deleteEmail: require('./deleteEmail'),
-  getNewsletterSettings: require('./getNewsletterSettings'),
+  deleteEmail: require('../../mailchimp/lib/deleteEmail'),
+  getNewsletterSettings: require('../../mailchimp/lib/getNewsletterSettings'),
   mailLog: require('./mailLog'),
-  changeEmailOnMailchimp: require('./changeEmailOnMailchimp'),
+  changeEmailOnMailchimp: require('../../mailchimp/lib/changeEmailOnMailchimp'),
   sendMailTemplate: require('./sendMailTemplate'),
-  updateMergeFields: require('./updateMergeFields'),
-  updateNewsletterSubscriptions: require('./updateNewsletterSubscriptions'),
+  updateMergeFields: require('../../mailchimp/lib/updateMergeFields'),
+  updateNewsletterSubscriptions: require('../../mailchimp/lib/updateNewsletterSubscriptions'),
 
   // MailChimp batch operations types
   operations: {
-    covidAccessToken: require('./operations/covidAccessTokens'),
-    nameAndEmailBase64u: require('./operations/nameAndEmailBase64u'),
+    covidAccessToken: require('../../mailchimp/lib/operations/covidAccessTokens'),
+    nameAndEmailBase64u: require('../../mailchimp/lib/operations/nameAndEmailBase64u'),
   },
 }
-const { withConfiguration } = require('../NewsletterSubscription')
+const { withConfiguration } = require('../../mailchimp/NewsletterSubscription')
 const errors = require('../errors')
 
 module.exports = {

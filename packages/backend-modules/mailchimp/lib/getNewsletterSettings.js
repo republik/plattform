@@ -1,5 +1,5 @@
 const MailchimpInterface = require('../MailchimpInterface')
-const { SubscriptionHandlerMissingMailError } = require('../errors')
+const { SubscriptionHandlerMissingMailError } = require('@orbiting/backend-modules-mail/errors')
 const logger = console
 
 module.exports = async ({ user }, NewsletterSubscription) => {

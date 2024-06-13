@@ -15,7 +15,7 @@ afterAll(async () => {
 })
 
 const { createMail: _createMail } = require('./lib')
-const MailchimpInterface = require('./MailchimpInterface')
+const MailchimpInterface = require('../mailchimp/MailchimpInterface')
 
 const createMail = () =>
   _createMail([
@@ -43,7 +43,7 @@ const user = () => ({
 })
 
 test('get some member data without configuring mail first', async () => {
-  const getNewsletterSettings = require('./lib/getNewsletterSettings')
+  const getNewsletterSettings = require('../mailchimp/lib/getNewsletterSettings')
   expect(
     // updateNewsletterSubscriptions returns a promise
     getNewsletterSettings({ user: user('member') }),

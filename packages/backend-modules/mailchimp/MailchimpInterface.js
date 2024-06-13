@@ -5,7 +5,7 @@ const { omitBy, isNil } = require('lodash')
 
 const base64u = require('@orbiting/backend-modules-base64u')
 
-const { NewsletterMemberMailError } = require('./errors')
+const { NewsletterMemberMailError } = require('@orbiting/backend-modules-mail/errors')
 
 const {
   MAILCHIMP_API_KEY,
