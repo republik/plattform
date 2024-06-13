@@ -2,7 +2,7 @@ const handlers = {
   deleteEmail: require('./deleteEmail'),
   getNewsletterSettings: require('./getNewsletterSettings'),
   mailLog: require('./mailLog'),
-  moveNewsletterSubscriptions: require('./moveNewsletterSubscriptions'),
+  changeEmailOnMailchimp: require('./changeEmailOnMailchimp'),
   sendMailTemplate: require('./sendMailTemplate'),
   updateMergeFields: require('./updateMergeFields'),
   updateNewsletterSubscriptions: require('./updateNewsletterSubscriptions'),

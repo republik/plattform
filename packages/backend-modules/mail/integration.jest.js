@@ -132,10 +132,10 @@ test('resubscribe after unsubscription', async () => {
 })
 
 test('move subscriptions from one to another email address', async () => {
-  const { moveNewsletterSubscriptions, getNewsletterSettings } = createMail()
+  const { changeEmailOnMailchimp, getNewsletterSettings } = createMail()
   const oldEmail = user().email
   const newEmail = `new_${oldEmail}`
-  await moveNewsletterSubscriptions({
+  await changeEmailOnMailchimp({
     user: user(),
     newEmail,
   })
