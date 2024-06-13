@@ -113,12 +113,6 @@ test('single-subscribe: unsubscribe from 1 interest', async () => {
   expect(subscribedSubscriptions.length).toBe(1)
 })
 
-test('unsubscripe from mailchimp completely (opt-out)', async () => {
-  const { unsubscribeEmail } = createMail()
-  const member = await unsubscribeEmail(user())
-  expect(member.status).toBe('unsubscribed')
-})
-
 test('resubscribe after unsubscription', async () => {
   const { updateNewsletterSubscriptions, getNewsletterSettings } = createMail()
   const settings = await updateNewsletterSubscriptions({

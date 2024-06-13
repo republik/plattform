@@ -4,7 +4,6 @@ const handlers = {
   mailLog: require('./mailLog'),
   moveNewsletterSubscriptions: require('./moveNewsletterSubscriptions'),
   sendMailTemplate: require('./sendMailTemplate'),
-  unsubscribeEmail: require('./unsubscribeEmail'),
   updateMergeFields: require('./updateMergeFields'),
   updateNewsletterSubscriptions: require('./updateNewsletterSubscriptions'),
 
