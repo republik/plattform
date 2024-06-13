@@ -1,5 +1,5 @@
 import '../lib/polyfill'
-import './root.css'
+import '@republik/theme/styles.css'
 import '@republik/theme/fonts.css'
 import '../globals.css'
 
