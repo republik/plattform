@@ -42,7 +42,7 @@ const absolutMinPrice = 100
 const calculateMinPrice = (pkg, values, userPrice, router) => {
   // EINSTIEGSMONAT-TEST (remove after test)
   if (pkg.name === 'MONTHLY_ABO' && router.query.coupon === 'EINSTIEG24') {
-    return 200
+    return 1100
   }
   const minPrice = pkg.options.reduce((price, option) => {
     const amountValue = values[getOptionFieldKey(option)]
@@ -86,7 +86,7 @@ const calculateMinPrice = (pkg, values, userPrice, router) => {
 const getPrice = ({ values, pkg, userPrice, router }) => {
   // EINSTIEGSMONAT-TEST (remove after test)
   if (pkg.name === 'MONTHLY_ABO' && router.query.coupon === 'EINSTIEG24') {
-    return 200
+    return 1100
   }
   if (values.price !== undefined) {
     return values.price
@@ -212,7 +212,7 @@ class CustomizePackage extends Component {
         ...nextFields.values,
       },
       userPrice,
-      router
+      router,
     )
 
     let price = values.price
@@ -267,7 +267,8 @@ class CustomizePackage extends Component {
       }
     }
 
-    const { onChange, pkg, values, userPrice, fixedPrice, t, router } = this.props
+    const { onChange, pkg, values, userPrice, fixedPrice, t, router } =
+      this.props
 
     const price = this.getPriceWithSuggestion()
     const minPrice = calculateMinPrice(pkg, values, userPrice, router)
