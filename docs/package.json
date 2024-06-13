@@ -4,8 +4,8 @@
   "private": true,
   "main": "./lib/index.ts",
   "scripts": {
-    "dev": "next",
-    "build": "next build",
+    "dev": "concurrently \"panda --watch\" next",
+    "build": "panda && next build",
     "start": "next start",
     "prepare": "panda codegen"
   },
@@ -25,9 +25,10 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
-    "@pandacss/dev": "^0.39.1",
+    "@pandacss/dev": "^0.40.1",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
-    "@types/node": "20"
+    "@types/node": "20",
+    "concurrently": "^8.2.1"
   }
 }
