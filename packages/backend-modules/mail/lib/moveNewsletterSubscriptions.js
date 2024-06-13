@@ -49,6 +49,8 @@ const moveSubscriptionsInAudience = async ({
             ? MailchimpInterface.MemberStatus.Subscribed
             : member.status,
         interests: member.interests,
+        merge_fields: member.merge_fields,
+        tags: member.tags,
       },
       audienceId,
     )
