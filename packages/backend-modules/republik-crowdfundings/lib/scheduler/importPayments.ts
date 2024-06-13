@@ -34,8 +34,8 @@ export async function importPayments(
       createPaymentImporter(context),
       context.pgdb,
     )
-    await notifyAccountants(report)
-    await sendPaymentReminders(context)
+    //await notifyAccountants(report)
+    //await sendPaymentReminders(context)
   } catch (e) {
     await informFailed(
       `importPayments(): postfinance sync failed with the following error: ${
