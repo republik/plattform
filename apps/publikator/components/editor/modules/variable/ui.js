@@ -62,11 +62,11 @@ Willkommen
 {"present": "hasAccess"}
 \`\`\`
 
-Nur sichtbar mit Magazin-Zugriff – für Mitglieder, Abonnentinnen oder Probeleser.
+Nur sichtbar für Mitglieder und Abonnentinnen.
 
 <section><h6>ELSE</h6>
 
-Nur ohne Magazin-Zugriff sichtbar – als Gast.
+Nur ohne Mitgliedschaft oder Abonnement sichtbar – als Gast oder Probeleserin.
 
 <hr /></section>
 

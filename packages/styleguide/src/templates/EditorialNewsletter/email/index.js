@@ -33,7 +33,7 @@ const createNewsletterEmailSchema = ({ ...args } = {}) => {
       firstName: 'FNAME',
       lastName: 'LNAME',
       groups: {
-        hasAccess: 'Customer:Member,Geteilter Zugriff',
+        hasAccess: 'Customer:Member',
       },
       _mergeTags: true,
     },
