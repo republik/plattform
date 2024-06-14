@@ -4,4 +4,5 @@ module.exports = {
   getNewsletterSettings: require('./getNewsletterSettings'),
   updateMergeFields: require('./updateMergeFields'),
   updateNewsletterSubscriptions: require('./updateNewsletterSubscriptions'),
+  getInterestsForUser: require('./getInterestsForUser'),
 }
