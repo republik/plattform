@@ -19,6 +19,7 @@ const dateFormat = timeFormat('%x')
 
 const MailchimpInterface = require('../../mailchimp/MailchimpInterface')
 const getInterestsForUser = require('../../mailchimp/lib/getInterestsForUser')
+const isUserInAudience = require('../../mailchimp/lib/isUserInAudience')
 
 const {
   MAILCHIMP_INTEREST_MEMBER,
@@ -67,13 +68,6 @@ const mail = createMail([
 ])
 
 mail.getInterestsForUser = getInterestsForUser
-
-const isUserInAudience = async ({ user, audienceId }) => {
-  const mailchimp = MailchimpInterface({ console })
-  const member = await mailchimp.getMember(user.email, audienceId)
-  return !!member
-}
-
 mail.isUserInAudience = isUserInAudience
 
 const addUserToMarketingAudience = async ({ user }) => {

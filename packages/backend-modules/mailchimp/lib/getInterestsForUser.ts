@@ -21,7 +21,7 @@ export type GetInterestsForUserParams = {
   pgdb: PgDb,
 }
 
-export function assertEnvVariableExists(envVariable: string | any): asserts envVariable is string {
+export function assertEnvVariableExists(envVariable: string | undefined): asserts envVariable is string {
   if (!envVariable) {
     throw new Error('Not all necessary Mailchimp Interest IDs are declared as env-Variables')
   }
