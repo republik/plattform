@@ -10,14 +10,15 @@ import { useTranslation } from '../lib/withT'
 import { withDefaultSSR } from '../lib/apollo/helpers'
 import { useMe } from '../lib/context/MeContext'
 
-const allowedSignInRedirectHosts =
-  process.env.NEXT_PUBLIC_ALLOWED_SIGNIN_REDIRECT_HOSTS?.split(',') || []
+const allowedSignInRedirectOrigins =
+  process.env.NEXT_PUBLIC_ALLOWED_SIGNIN_REDIRECT_ORIGINS?.split(',') || []
 
 const SigninPage = () => {
   const router = useRouter()
   const { query } = router
   const { me } = useMe()
   const { t } = useTranslation()
+
   useEffect(() => {
     if (me && query?.redirect) {
       try {
@@ -26,15 +27,15 @@ const SigninPage = () => {
 
         if (
           redirectTarget.startsWith('/') &&
-          redirectUrl.hostname === window.location.hostname
+          redirectUrl.origin === window.location.origin
         ) {
-          router.replace(redirectTarget)
+          router.replace(redirectUrl)
           return
         }
 
-        if (allowedSignInRedirectHosts.includes(redirectUrl.host)) {
+        if (allowedSignInRedirectOrigins.includes(redirectUrl.origin)) {
           // redirect to the target URL using the browser's native redirect
-          window.location.assign(redirectTarget)
+          window.location.replace(redirectUrl)
           return
         }
 
@@ -46,7 +47,7 @@ const SigninPage = () => {
     } else if (me) {
       router.replace('/')
     }
-  }, [me])
+  }, [me, query.redirect, router])
 
   const meta = {
     title: t('pages/signin/title'),
