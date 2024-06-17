@@ -3,7 +3,10 @@ import type { PgDb } from 'pogi'
 const { grants } = require('@orbiting/backend-modules-access')
 
 import debug from 'debug'
+import { UserInterests } from '../types'
 debug.enable('mailchimp:lib:getInterestsForUser')
+
+import { assertEnvVariableExists } from '../types'
 
 const {
   MAILCHIMP_INTEREST_PLEDGE,
@@ -21,17 +24,11 @@ export type GetInterestsForUserParams = {
   pgdb: PgDb,
 }
 
-export function assertEnvVariableExists(envVariable: string | undefined): asserts envVariable is string {
-  if (!envVariable) {
-    throw new Error('Not all necessary Mailchimp Interest IDs are declared as env-Variables')
-  }
-}
-
 export async function getInterestsForUser({
   userId,
   subscribeToEditorialNewsletters,
   pgdb
-}: GetInterestsForUserParams) {
+}: GetInterestsForUserParams): Promise<UserInterests> {
   assertEnvVariableExists(MAILCHIMP_INTEREST_PLEDGE)
   assertEnvVariableExists(MAILCHIMP_INTEREST_MEMBER)
   assertEnvVariableExists(MAILCHIMP_INTEREST_MEMBER_BENEFACTOR)

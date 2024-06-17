@@ -20,6 +20,7 @@ const dateFormat = timeFormat('%x')
 const MailchimpInterface = require('../../mailchimp/MailchimpInterface')
 const getInterestsForUser = require('../../mailchimp/lib/getInterestsForUser')
 const isUserInAudience = require('../../mailchimp/lib/isUserInAudience')
+const { addUserToAudience, addUserToMarketingAudience } = require('../../mailchimp/lib/addUserToAudience')
 
 const {
   MAILCHIMP_INTEREST_MEMBER,
@@ -33,7 +34,6 @@ const {
   MAILCHIMP_MAIN_LIST_ID,
   MAILCHIMP_ONBOARDING_AUDIENCE_ID,
   MAILCHIMP_MARKETING_AUDIENCE_ID,
-  MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY,
   MAILCHIMP_PROBELESEN_AUDIENCE_ID,
   MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
   FRONTEND_BASE_URL,
@@ -69,63 +69,7 @@ const mail = createMail([
 
 mail.getInterestsForUser = getInterestsForUser
 mail.isUserInAudience = isUserInAudience
-
-const addUserToMarketingAudience = async ({ user }) => {
-  const interest = {}
-  interest[MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY] = true
-  return addUserToAudience({
-    user: user,
-    audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
-    interests: interest,
-    statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
-    defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
-  })
-}
-
 mail.addUserToMarketingAudience = addUserToMarketingAudience
-
-const addUserToAudience = async ({
-  user,
-  name,
-  audienceId,
-  interests,
-  statusIfNew = MailchimpInterface.MemberStatus.Subscribed,
-  defaultStatus = MailchimpInterface.MemberStatus.Unsubscribed,
-}) => {
-  const { email } = user
-
-  debug(
-    'addUserToAudience called with ' +
-      { email, user, name, audienceId, interests, statusIfNew, defaultStatus },
-  )
-
-  if (!audienceId) {
-    console.error('AudienceId is not defined')
-  }
-
-  const data = {
-    email_address: email,
-    status_if_new: statusIfNew,
-    status: defaultStatus,
-    interests,
-  }
-
-  debug(data)
-
-  const mailchimp = MailchimpInterface({ console })
-  await mailchimp.updateMember(email, data, audienceId)
-
-  // TODO tbd, maybe merge this with NewsletterSubscription
-  const result = {
-    user,
-    interests,
-    status_if_new: statusIfNew,
-    status: defaultStatus,
-  }
-  debug(result)
-  return result
-}
-
 mail.addUserToAudience = addUserToAudience
 
 const archiveMemberInAudience = async ({ user, audienceId }) => {
