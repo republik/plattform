@@ -21,6 +21,7 @@ const MailchimpInterface = require('../../mailchimp/MailchimpInterface')
 const getInterestsForUser = require('../../mailchimp/lib/getInterestsForUser')
 const isUserInAudience = require('../../mailchimp/lib/isUserInAudience')
 const { addUserToAudience, addUserToMarketingAudience } = require('../../mailchimp/lib/addUserToAudience')
+const archiveMemberInAudience = require('../../mailchimp/lib/archiveMemberInAudience')
 
 const {
   MAILCHIMP_INTEREST_MEMBER,
@@ -71,30 +72,6 @@ mail.getInterestsForUser = getInterestsForUser
 mail.isUserInAudience = isUserInAudience
 mail.addUserToMarketingAudience = addUserToMarketingAudience
 mail.addUserToAudience = addUserToAudience
-
-const archiveMemberInAudience = async ({ user, audienceId }) => {
-  const { email } = user
-  if (!audienceId) {
-    console.error('AudienceId is not defined')
-  }
-  const isAudienceMember = await isUserInAudience({
-    user: user || { email },
-    audienceId: audienceId,
-  })
-  if (isAudienceMember) {
-    debug('archiving user %s in audience with id %s', email, audienceId)
-    const mailchimp = MailchimpInterface({ console })
-    const result = await mailchimp.archiveMember(email, audienceId)
-    if (!result) {
-      console.error(
-        'Error while archiving user %s in audience id %s',
-        email,
-        audienceId,
-      )
-    }
-  }
-}
-
 mail.archiveMemberInAudience = archiveMemberInAudience
 
 mail.enforceSubscriptions = async ({
