@@ -1,3 +1,5 @@
-module.exports = {
-  ...require('./lib'),
+import { MailchimpInterface } from './MailchimpInterface'
+
+export {
+  MailchimpInterface,
 }
