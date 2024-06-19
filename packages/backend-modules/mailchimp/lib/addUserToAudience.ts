@@ -26,7 +26,7 @@ const {
 export async function addUserToAudience({
   user,
   audienceId,
-  interests,
+  interests = {},
   statusIfNew = MailchimpInterface.MemberStatus.Subscribed,
   defaultStatus = MailchimpInterface.MemberStatus.Unsubscribed,
 }: AddUserToAudienceParams): Promise<AudienceSubscriptionResult> {

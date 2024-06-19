@@ -1,4 +1,3 @@
-const debug = require('debug')('crowdfundings:lib:Mail')
 const moment = require('moment')
 const { ascending, descending } = require('d3-array')
 
@@ -17,30 +16,25 @@ const { getLastEndDate, getMembershipCompany } = require('./utils')
 
 const dateFormat = timeFormat('%x')
 
-const MailchimpInterface = require('../../mailchimp/MailchimpInterface')
-const getInterestsForUser = require('../../mailchimp/lib/getInterestsForUser')
-const isUserInAudience = require('../../mailchimp/lib/isUserInAudience')
-const { addUserToAudience, addUserToMarketingAudience } = require('../../mailchimp/lib/addUserToAudience')
-const archiveMemberInAudience = require('../../mailchimp/lib/archiveMemberInAudience')
+const {
+  getInterestsForUser,
+  isUserInAudience,
+  addUserToAudience,
+  addUserToMarketingAudience,
+  archiveMemberInAudience,
+} = require('@orbiting/backend-modules-mailchimp')
 
 const {
-  MAILCHIMP_INTEREST_MEMBER,
-  MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
-  MAILCHIMP_MAIN_LIST_ID,
-  MAILCHIMP_ONBOARDING_AUDIENCE_ID,
-  MAILCHIMP_MARKETING_AUDIENCE_ID,
-  MAILCHIMP_PROBELESEN_AUDIENCE_ID,
-  MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
   FRONTEND_BASE_URL,
 } = process.env
 
-const mail = createMail([
+const NewsletterSubscriptionConfig = [
   {
     name: 'DAILY',
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
@@ -66,7 +60,9 @@ const mail = createMail([
     name: 'WDWWW',
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
   },
-])
+]
+
+const mail = createMail(NewsletterSubscriptionConfig)
 
 mail.getInterestsForUser = getInterestsForUser
 mail.isUserInAudience = isUserInAudience
@@ -81,101 +77,7 @@ mail.enforceSubscriptions = async ({
   subscribeToEditorialNewsletters,
   pgdb,
   ...rest
-}) => {
-  const user = !!userId && (await pgdb.public.users.findOne({ id: userId }))
-
-  const interests = await getInterestsForUser({
-    userId: !!user && user.id,
-    subscribeToEditorialNewsletters,
-    pgdb,
-  })
-
-  const hasActiveMembership =
-    interests[MAILCHIMP_INTEREST_MEMBER] ||
-    interests[MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]
-
-  const subscribedToFreeNewsletters =
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] ||
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ||
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]
-
-  const newsletterSubscriptions = await mail.updateNewsletterSubscriptions({
-    user: user || { email },
-    interests,
-    ...rest,
-  })
-  const allSubscriptions = [
-    {
-      audienceId: MAILCHIMP_MAIN_LIST_ID,
-      subscriptions: newsletterSubscriptions,
-    },
-  ]
-
-  // always add to marketing audience when newsletter settings are updated, except if MEMBER or BENEFACTOR are true
-  if (!hasActiveMembership) {
-    debug('add to marketing audience')
-    const marketingSubscription = await addUserToMarketingAudience({
-      user: user || { email },
-    })
-    allSubscriptions.push({
-      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
-      subscriptions: marketingSubscription,
-    })
-
-    debug('archive in produktinfos audience if present')
-    archiveMemberInAudience({
-      user: user || { email },
-      audienceId: MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
-    })
-
-    if (!subscribedToFreeNewsletters) {
-      archiveMemberInAudience({
-        user: user || { email },
-        audienceId: MAILCHIMP_MAIN_LIST_ID,
-      })
-    }
-  } else {
-    // user has an active subscription/membership
-    debug('update status in marketing audience to not receive marketing mails')
-    archiveMemberInAudience({
-      user: user || { email },
-      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
-    })
-
-    debug('add to produktinfos audience')
-    const produktinfosSubscription = await addUserToAudience({
-      user: user || { email },
-      statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
-      defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
-    })
-    allSubscriptions.push({
-      audienceId: MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
-      subscriptions: produktinfosSubscription,
-    })
-
-    debug('unsubscribe from Probelesen audience if subscribed')
-    archiveMemberInAudience({
-      user: user || { email },
-      audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
-    })
-  }
-
-  if (subscribeToOnboardingMails) {
-    debug('add to onboarding audience')
-    const onboardingSubscription = await addUserToAudience({
-      user: user || { email },
-      audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
-      ...rest,
-    })
-
-    allSubscriptions.push({
-      audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
-      subscriptions: onboardingSubscription,
-    })
-  }
-
-  return allSubscriptions
-}
+}) => {}
 
 mail.sendMembershipProlongConfirmation = async ({
   pledger,
@@ -1252,4 +1154,4 @@ mail.sendReferralCampaignMail = async (
   )
 }
 
-module.exports = mail
+module.exports = { mail, NewsletterSubscriptionConfig }
