@@ -23,9 +23,3 @@ export type MemberData = {
   status: MemberStatus
   interests: UserInterests,
 }
-
-export function assertEnvVariableExists(envVariable: string | undefined): asserts envVariable is string {
-  if (!envVariable) {
-    throw new Error('Not all necessary env-variables exist')
-  }
-}
