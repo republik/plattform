@@ -7428,18 +7428,6 @@
       "value": "Zum gesamten Angebot"
     },
     {
-      "key": "crowdfunding/SurviveStatus/title",
-      "value": "Aktueller Stand der Märzkampagne"
-    },
-    {
-      "key": "crowdfunding/SurviveStatus/link/crowdfunding2",
-      "value": "Zur Märzkampagne"
-    },
-    {
-      "key": "crowdfunding/SurviveStatus/link/shareTemplates",
-      "value": "Republik bekannter machen"
-    },
-    {
       "key": "Account/Access/Campaigns/Grants/givingMemberships/title/1",
       "value": "Verschenkte Mitgliedschaft"
     },

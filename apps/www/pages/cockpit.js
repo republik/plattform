@@ -26,10 +26,7 @@ import { countFormat } from '../lib/utils/format'
 import { PackageBuffer, PackageItem } from '../components/Pledge/Accordion'
 
 import { RawStatus } from '../components/Crowdfunding/Status'
-import {
-  mapActionData,
-  userSurviveActionsFragment,
-} from '../components/Crowdfunding/withSurviveStatus'
+
 import withT from '../lib/withT'
 
 import { ListWithQuery as TestimonialList } from '../components/Testimonial/List'
@@ -37,7 +34,7 @@ import { ListWithQuery as TestimonialList } from '../components/Testimonial/List
 import Link from 'next/link'
 import { withDefaultSSR } from '../lib/apollo/helpers'
 import withMe from '../lib/apollo/withMe'
-import { CDN_FRONTEND_BASE_URL, CROWDFUNDING } from '../lib/constants'
+import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import { swissTime } from '../lib/utils/format'
 import withInNativeApp from '../lib/withInNativeApp'
 
@@ -113,10 +110,8 @@ const statusQuery = gql`
     }
     actionMe: me(accessToken: $accessToken) {
       id
-      ...SurviveActionsOnUser
     }
   }
-  ${userSurviveActionsFragment}
 `
 
 const numMembersNeeded = 33000
@@ -153,7 +148,6 @@ const Accordion = withInNativeApp(
               <Link href='/komplizin' passHref legacyBehavior>
                 <PackageItem
                   t={t}
-                  crowdfundingName={CROWDFUNDING}
                   name='PROMOTE'
                   title={'Republik bekannter machen'}
                   hover={hover}
@@ -176,7 +170,6 @@ const Accordion = withInNativeApp(
                   >
                     <PackageItem
                       t={t}
-                      crowdfundingName={CROWDFUNDING}
                       name='PROLONG'
                       title={isReactivating ? 'Zurückkehren' : undefined}
                       hover={hover}
@@ -198,7 +191,6 @@ const Accordion = withInNativeApp(
                   >
                     <PackageItem
                       t={t}
-                      crowdfundingName={CROWDFUNDING}
                       name='PROLONG-BIG'
                       hover={hover}
                       setHover={setHover}
@@ -224,7 +216,6 @@ const Accordion = withInNativeApp(
                   >
                     <PackageItem
                       t={t}
-                      crowdfundingName={CROWDFUNDING}
                       name='PROLONG-BEN'
                       hover={hover}
                       setHover={setHover}
@@ -248,7 +239,6 @@ const Accordion = withInNativeApp(
                     >
                       <PackageItem
                         t={t}
-                        crowdfundingName={CROWDFUNDING}
                         name='ABO_GIVE'
                         hover={hover}
                         setHover={setHover}
@@ -267,7 +257,6 @@ const Accordion = withInNativeApp(
                       >
                         <PackageItem
                           t={t}
-                          crowdfundingName={CROWDFUNDING}
                           name='MONTHLY_ABO'
                           hover={hover}
                           setHover={setHover}
@@ -284,7 +273,6 @@ const Accordion = withInNativeApp(
                       >
                         <PackageItem
                           t={t}
-                          crowdfundingName={CROWDFUNDING}
                           name='ABO'
                           hover={hover}
                           setHover={setHover}
@@ -301,7 +289,6 @@ const Accordion = withInNativeApp(
                       >
                         <PackageItem
                           t={t}
-                          crowdfundingName={CROWDFUNDING}
                           name='BENEFACTOR'
                           hover={hover}
                           setHover={setHover}
@@ -322,7 +309,6 @@ const Accordion = withInNativeApp(
               >
                 <PackageItem
                   t={t}
-                  crowdfundingName={CROWDFUNDING}
                   name='DONATE'
                   hover={hover}
                   setHover={setHover}
@@ -823,10 +809,9 @@ const EnhancedPage = compose(
   withRouter,
   withInNativeApp,
   graphql(statusQuery, {
-    props: ({ data, ownProps }) => {
+    props: ({ data }) => {
       return {
         data,
-        ...mapActionData({ data, ownProps }),
       }
     },
     options: ({ router: { query } }) => {

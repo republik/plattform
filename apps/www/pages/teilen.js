@@ -51,7 +51,6 @@ const Page = () => {
           >
             <PackageItem
               t={t}
-              crowdfundingName={CROWDFUNDING}
               name='ABO'
               hover={hover}
               setHover={setHover}
@@ -68,7 +67,6 @@ const Page = () => {
           >
             <PackageItem
               t={t}
-              crowdfundingName={CROWDFUNDING}
               name='MONTHLY_ABO'
               hover={hover}
               setHover={setHover}
