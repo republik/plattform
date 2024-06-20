@@ -62,7 +62,7 @@ assertEnvVariableExists(
   'MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID',
 )
 
-function assertEnvVariableExists(
+export function assertEnvVariableExists(
   envVariable: string | undefined,
   envVariableName: string,
 ): asserts envVariable is string {
