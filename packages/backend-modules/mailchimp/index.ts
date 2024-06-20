@@ -1,4 +1,4 @@
-import { MailchimpInterface } from './MailchimpInterface'
+import MailchimpInterface = require('./MailchimpInterface')
 
 export {
   MailchimpInterface,

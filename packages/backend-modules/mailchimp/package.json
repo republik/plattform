@@ -10,5 +10,10 @@
     "@orbiting/backend-modules-scalars": "*",
     "@orbiting/backend-modules-types": "*",
     "apollo-modules-node": "*"
+  },
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
+    "test": "jest"
   }
 }
