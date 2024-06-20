@@ -16,22 +16,6 @@ cp .env.example .env
 
 Check the readme inside the root-folder of the mono-repo, on how to setup the env-variables for the authentication to work correctly.
 
-
-### Pledge
-
-An online magazine is financed by people pledging to pay for its content. And if a crowd forms around a magazine it becomes crowdfunded. Crowdfundings have a dedicated name in the backend. You can configure the currently active one via the environment. You can only point the front end at one crowdfunding at a time.
-
-```text
-CROWDFUNDING=REPUBLIK
-```
-
-Additionally you can configure `CROWDFUNDING_PLEDGE` and `CROWDFUNDING_META` crowdfundings. Both default to `CROWDFUNDING`. One controls the default sales channel and the other what is displayed on the meta page, e.g. prolongs.
-
-```text
-CROWDFUNDING_PLEDGE=PRESALE
-CROWDFUNDING_META=PROLONG
-```
-
 #### Payment
 
 Payment provider configuration can be passed in via the environment. `PUBLIC_BASE_URL` is used for PostFinance and PayPal return urls.
@@ -73,10 +57,10 @@ MATOMO_SITE_ID=1
 When working in the Next.js app-dir located in `src/app`, the type for the queries written in `src/app/*` are automatically generated.
 The generation is done based on the persisted schema files located in `./graphql/*.schema.graphql`.
 
-| Schema file | Query folder |
-| ----------- | ------------ |
-| `./graphql/republik-api.schema.graphql` | `src/app/graphql/republik-api/**/*.(ts|graphql|gql)` |
-| `./graphql/dato-cms.schema.graphql` | `src/app/graphql/cms/**/*.(ts|graphql|gql)` |
+| Schema file                             | Query folder                            |
+| --------------------------------------- | --------------------------------------- | ------- | ----- |
+| `./graphql/republik-api.schema.graphql` | `src/app/graphql/republik-api/\*_/_.(ts | graphql | gql)` |
+| `./graphql/dato-cms.schema.graphql`     | `src/app/graphql/cms/\*_/_.(ts          | graphql | gql)` |
 
 In order to update the schema files run `yarn gql:schema`, which then refetches the schema from the backend and DatoCMS and persists it in the schema files.
 This has to be done manually whenever the backend schema changes.
@@ -87,7 +71,7 @@ When writting a GraphQL query in a `.ts|.tsx`-file, you have to use the `gql`-fu
 When writting the queries in `.gql` or `.graphql` files, the generated query-object, that can be used inside the apollo-client operations are named as follows `<Query-Name-in-pascal-case>Document` and can be imported from `@app/graphql/<republik-api|cms>/gql/graphql`.
 The generated types can also be imported from the same path. The typed Query/Mutation result follows the naming pattern `<Query-Name-in-pascal-case><Query|Mutation|Fragment>`. In addition all TS-types for all the types defined by the schema can also be imported from that same path.
 
-Depending on the component you write, you might want it to make use of the Query types or the schema-types. 
+Depending on the component you write, you might want it to make use of the Query types or the schema-types.
 In general, reusable components should use the generic schema-types.
 
 #### Example
@@ -130,7 +114,7 @@ export default async function FAQPage() {
 import {
   FaqEntryRecord,
   FaqQuery // <-- FaqQuery is the typed query
-} from '@app/graphql/cms/__generated__/gql/graphql' 
+} from '@app/graphql/cms/__generated__/gql/graphql'
 
 type FAQListProps = {
   entries: FaqQuery['faq']['entries']
@@ -146,9 +130,7 @@ export default function FAQList({
   …
 ```
 
-
 #####
-
 
 ### Theming
 
