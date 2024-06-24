@@ -2,7 +2,7 @@ const MailchimpInterface = require('../MailchimpInterface')
 const { SubscriptionHandlerMissingMailError } = require('@orbiting/backend-modules-mail/errors')
 const logger = console
 
-module.exports = async (
+const updateNewsletterSubscriptions = async (
   { user, interests = {}, name, subscribed },
   NewsletterSubscription,
 ) => {
@@ -52,3 +52,5 @@ module.exports = async (
     })
   )
 }
+
+module.exports = { updateNewsletterSubscriptions }

@@ -7,7 +7,7 @@ import {
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW
 } from './config'
 
-export const NewsletterSubscriptionConfig = [
+const NewsletterSubscriptionConfig = [
   {
     name: 'DAILY',
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
@@ -34,3 +34,5 @@ export const NewsletterSubscriptionConfig = [
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
   },
 ]
+
+export { NewsletterSubscriptionConfig }

@@ -7,7 +7,7 @@ import {
 import { addUserToAudience, addUserToMarketingAudience } from './addUserToAudience'
 import { archiveMemberInAudience } from './archiveMemberInAudience'
 import { updateNewsletterSubscriptions } from './updateNewsletterSubscriptions'
-import { NewsletterSubcsriptionConfig } from '@orbiting/backend-modules-republik-crowdfundings/lib/Mail'
+import { NewsletterSubscriptionConfig } from './../NewsletterSubscriptionConfig'
 
 const MailchimpInterface = require('../index')
 
@@ -76,7 +76,7 @@ export async function enforceSubscriptions({
     interests,
     name,
     subscribed,
-  }, NewsletterSubcsriptionConfig)
+  }, NewsletterSubscriptionConfig)
   const allSubscriptions = [
     {
       audienceId: MAILCHIMP_MAIN_LIST_ID,

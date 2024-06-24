@@ -5,8 +5,9 @@ import {
   UserInterests,
   AudienceSubscriptionResult,
   MemberData,
-  assertEnvVariableExists,
 } from '../types'
+
+import { assertEnvVariableExists } from './../config'
 
 const MailchimpInterface = require('../index')
 
@@ -59,8 +60,8 @@ export async function addUserToAudience({
 export async function addUserToMarketingAudience(user: User) {
   const interest: UserInterests = {}
 
-  assertEnvVariableExists(MAILCHIMP_MARKETING_AUDIENCE_ID)
-  assertEnvVariableExists(MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY)
+  assertEnvVariableExists(MAILCHIMP_MARKETING_AUDIENCE_ID, 'MAILCHIMP_MARKETING_AUDIENCE_ID')
+  assertEnvVariableExists(MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY, 'MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY')
   interest[MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY] = true
 
   return addUserToAudience({
