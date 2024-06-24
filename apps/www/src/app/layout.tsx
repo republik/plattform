@@ -1,7 +1,8 @@
 import PlausibleProvider from 'next-plausible'
 
 import { NativeAppMessageSync } from '@app/components/native-app'
-import './root.css'
+import '@republik/theme/styles.css'
+import '@republik/theme/fonts.css'
 
 import { ThemeProvider } from '@app/components/theme-provider'
 import { ApolloWrapper } from '@app/lib/apollo/provider'

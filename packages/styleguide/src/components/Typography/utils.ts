@@ -8,8 +8,8 @@ export function pxToRem(pxSize: number | string): `${number}rem` | string {
 }
 
 type CSSRules = {
-  fontSize: string
-  lineHeight: string
+  fontSize: string | number
+  lineHeight: string | number
 } & React.CSSProperties
 
 export function convertStyleToRem(cssRules: CSSRules): CSSRules {

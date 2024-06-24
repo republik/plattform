@@ -9,7 +9,7 @@ const styles = {
     lineHeight: '22px',
   }),
   heading: css({
-    ...fontStyles.sansSerifMedizm18,
+    ...fontStyles.sansSerifMedium18,
   }),
 }
 

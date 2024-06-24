@@ -1,11 +1,11 @@
 import React from 'react'
 import { css } from 'glamor'
-import SG from '../../theme/env'
 import { useColorContext } from '../Colors/useColorContext'
+import logo from '@republik/theme/logo.json'
 
-const VIEWBOX = SG.LOGO_VIEWBOX || '0 0 4 1.5'
-const GRADIENT = SG.LOGO_GRADIENT
-const PATH = SG.LOGO_PATH || 'M0 0 L4 0 L4 1.5 L3 0.5 L2 4 L1 0.5 L0 1.5 Z'
+const VIEWBOX = logo.LOGO_VIEWBOX || '0 0 4 1.5'
+const GRADIENT = logo.LOGO_GRADIENT
+const PATH = logo.LOGO_PATH || 'M0 0 L4 0 L4 1.5 L3 0.5 L2 4 L1 0.5 L0 1.5 Z'
 const VIEWBOX_ARRAY = VIEWBOX.split(' ').map((d) => +d)
 const WIDTH = VIEWBOX_ARRAY[2] - VIEWBOX_ARRAY[0]
 const HEIGHT = VIEWBOX_ARRAY[3] - VIEWBOX_ARRAY[1]

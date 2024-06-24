@@ -1,7 +1,10 @@
 import * as Sentry from '@sentry/nextjs'
 
-export const reportError = async (context: string, error: Error | string) => {
-  Sentry.captureException(error, {
+export async function reportError(
+  context: string,
+  error: Error | string,
+): Promise<string> {
+  return Sentry.captureException(error, {
     tags: {
       origin: 'reportError-func',
       reportErrorContext: context,

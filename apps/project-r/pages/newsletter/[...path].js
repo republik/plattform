@@ -8,7 +8,6 @@ import {
   createNewsletterWebSchema,
   Loader,
   Center,
-  colors,
 } from '@project-r/styleguide'
 import { splitByTitle } from '../../src/utils/helpers'
 import StatusError from '../../src/StatusError'
@@ -22,7 +21,7 @@ import {
 const styles = {
   prepub: css({
     position: 'absolute',
-    background: colors.social,
+    background: '#E9A733',
     width: '100%',
     padding: '2px 5px',
     color: '#ffffff',

@@ -1,72 +1,78 @@
-import SG, { getJson } from './env'
-
-const FONT_STYLES = getJson('FONT_STYLES')
-
-export const fontFamilies = {
-  serifTitle: 'Georgia, serif',
-  serifRegular: 'Georgia, serif',
-  serifItalic: 'Georgia, serif',
-  serifBold: 'Georgia, serif',
-  serifBoldItalic: 'Georgia, serif',
-  sansSerifRegular: 'Helvetica Neue, Helvetica, sans-serif',
-  sansSerifItalic: 'Helvetica Neue, Helvetica, sans-serif',
-  sansSerifMedium: 'Helvetica Neue, Helvetica, sans-serif',
-  sansSerifBold: 'Helvetica Neue, Helvetica, sans-serif',
-  monospaceRegular: 'Menlo, Courier, monospace',
-  cursiveTitle: 'sans-serif',
-  ...getJson('FONT_FAMILIES'),
-  // FONT_STYLES supersedes FONT_FAMILIES
-  ...Object.keys(FONT_STYLES).reduce((fams, key) => {
-    fams[key] = FONT_STYLES[key].fontFamily
-    return fams
-  }, {}),
-}
-
 export const fontStyles = {
   serifTitle: {
-    fontFamily: fontFamilies.serifTitle,
+    fontFamily: 'RepublikSerif, Rubis, Georgia, serif',
     fontWeight: 900,
+    fontStyle: 'normal',
   },
   serifRegular: {
-    fontFamily: fontFamilies.serifRegular,
+    fontFamily: 'Rubis, Georgia, serif',
+    fontWeight: 400,
+    fontStyle: 'normal',
   },
   serifItalic: {
-    fontFamily: fontFamilies.serifItalic,
+    fontFamily: 'Rubis, Georgia, serif',
+    fontWeight: 400,
     fontStyle: 'italic',
   },
   serifBold: {
-    fontFamily: fontFamilies.serifBold,
+    fontFamily: 'Rubis, Georgia, serif',
     fontWeight: 700,
+    fontStyle: 'normal',
   },
   serifBoldItalic: {
-    fontFamily: fontFamilies.serifBoldItalic,
+    fontFamily: 'Rubis, Georgia, serif',
     fontWeight: 700,
     fontStyle: 'italic',
   },
   sansSerifRegular: {
-    fontFamily: fontFamilies.sansSerifRegular,
+    fontFamily: 'GT-America-Standard, Helvetica Neue, Helvetica, sans-serif',
+    fontWeight: 400,
+    fontStyle: 'normal',
   },
   sansSerifItalic: {
-    fontFamily: fontFamilies.sansSerifItalic,
+    fontFamily: 'GT-America-Standard, Helvetica Neue, Helvetica, sans-serif',
+    fontWeight: 400,
     fontStyle: 'italic',
   },
   sansSerifMedium: {
-    fontFamily: fontFamilies.sansSerifMedium,
+    fontFamily: 'GT-America-Standard, Helvetica Neue, Helvetica, sans-serif',
     fontWeight: 500,
+    fontStyle: 'normal',
   },
   sansSerifBold: {
-    fontFamily: fontFamilies.sansSerifBold,
+    fontFamily: 'GT-America-Standard, Helvetica Neue, Helvetica, sans-serif',
     fontWeight: 700,
+    fontStyle: 'normal',
   },
   monospaceRegular: {
-    fontFamily: fontFamilies.monospaceRegular,
+    fontFamily: 'Menlo, Courier, monospace',
+    fontWeight: 400,
+    fontStyle: 'normal',
   },
   cursiveTitle: {
-    fontFamily: fontFamilies.cursiveTitle,
+    fontFamily: 'Inicia, Roboto, sans-serif',
     fontWeight: 500,
     fontStyle: 'italic',
   },
-  ...FONT_STYLES,
+  flyerTitle: {
+    fontFamily: 'Druk-Wide, Roboto, sans-serif',
+    fontWeight: 500,
+    fontStyle: 'normal',
+  },
 }
 
-export const fontFaces = () => SG.FONT_FACES || ''
+// Export for backwards compatibility
+export const fontFamilies = {
+  serifTitle: fontStyles.serifTitle.fontFamily,
+  serifRegular: fontStyles.serifRegular.fontFamily,
+  serifItalic: fontStyles.serifItalic.fontFamily,
+  serifBold: fontStyles.serifBold.fontFamily,
+  serifBoldItalic: fontStyles.serifBoldItalic.fontFamily,
+  sansSerifRegular: fontStyles.sansSerifRegular.fontFamily,
+  sansSerifItalic: fontStyles.sansSerifItalic.fontFamily,
+  sansSerifMedium: fontStyles.sansSerifMedium.fontFamily,
+  sansSerifBold: fontStyles.sansSerifBold.fontFamily,
+  monospaceRegular: fontStyles.monospaceRegular.fontFamily,
+  cursiveTitle: fontStyles.cursiveTitle.fontFamily,
+  flyerTitle: fontStyles.flyerTitle.fontFamily,
+}

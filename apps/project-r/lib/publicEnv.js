@@ -1,6 +1,4 @@
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
-export const REACT_APP_SG_FONT_STYLES =
-  process.env.NEXT_PUBLIC_REACT_APP_SG_FONT_STYLES
 export const NEWSLETTER_ID = process.env.NEXT_PUBLIC_NEWSLETTER_ID
 export const META_ROBOTS = process.env.NEXT_PUBLIC_META_ROBOTS
 export const PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL

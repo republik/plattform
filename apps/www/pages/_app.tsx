@@ -1,5 +1,6 @@
 import '../lib/polyfill'
-import '@app/app/root.css'
+import '@republik/theme/styles.css'
+import '@republik/theme/fonts.css'
 import '../globals.css'
 
 import Head from 'next/head'

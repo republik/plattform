@@ -1,6 +1,6 @@
 # @orbiting/backend-modules-mail
 
-Send simple and templated mails via Mandrill or Nodemailer, and manage subscriptions on MailChimp.
+Send simple and templated mails via Mandrill or Nodemailer.
 
 ## Important for automatic generation of plaintext mails
 

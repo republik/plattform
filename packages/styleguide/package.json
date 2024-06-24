@@ -55,6 +55,7 @@
     "@republik/icons": "*",
     "@republik/mdast-react-render": "*",
     "@republik/remark-preset": "*",
+    "@republik/theme": "*",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.7",
     "@types/body-scroll-lock": "^3.1.0",

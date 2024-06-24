@@ -2,12 +2,11 @@ import React from 'react'
 import Link from 'next/link'
 
 import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
 
 const styles = {
   prepub: css({
     position: 'absolute',
-    background: colors.social,
+    background: '#E9A733',
     width: '100%',
     padding: '2px 5px',
     color: '#ffffff',

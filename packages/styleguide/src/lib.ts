@@ -4,7 +4,7 @@ export { default as zIndex } from './theme/zIndex'
 export { default as colors } from './theme/colors'
 export const mediaQueries = allMediaQueries
 
-export { fontFamilies, fontFaces } from './theme/fonts'
+export { fontFamilies } from './theme/fonts'
 
 export { timeFormat, timeParse } from './lib/timeFormat'
 export { default as timeago } from './lib/timeago'

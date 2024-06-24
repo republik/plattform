@@ -100,59 +100,6 @@ type AccessGrantInfo {
   message: String
 }
 
-type AccessGrantStats {
-  """Returns events on access grants in daily buckets"""
-  events(
-    """An AccessCampaign.id"""
-    accessCampaignId: ID!
-
-    """Maximum day (DD-MM-YYYY)"""
-    max: Date!
-
-    """Minimum day (DD-MM-YYYY)"""
-    min: Date!
-  ): AccessGrantStatsEvents!
-
-  """Returns access grant states per in daily buckets."""
-  evolution(
-    """An AccessCampaign.id"""
-    accessCampaignId: ID!
-
-    """Maximum day (DD-MM-YYYY)"""
-    max: Date!
-
-    """Minimum day (DD-MM-YYYY)"""
-    min: Date!
-  ): AccessGrantStatsEvolution!
-}
-
-type AccessGrantStatsEvents {
-  buckets: [AccessGrantStatsEventsBucket!]
-  updatedAt: DateTime!
-}
-
-type AccessGrantStatsEventsBucket {
-  claims: Int!
-  date: Date!
-  invites: Int!
-  key: String!
-  pledges: Int!
-  revenue: Int!
-}
-
-type AccessGrantStatsEvolution {
-  buckets: [AccessGrantStatsPeriodBucket!]
-  updatedAt: DateTime!
-}
-
-type AccessGrantStatsPeriodBucket {
-  active: Int!
-  activeUnconverted: Int!
-  converted: Int!
-  date: Date!
-  key: String!
-}
-
 enum AccessRole {
   ADMIN
   EDITOR
@@ -341,10 +288,11 @@ type CallToActionCustomComponent {
 union CallToActionPayload = CallToActionBasicPayload | CallToActionComponentPayload
 
 type Campaign {
-  beginDate: Date!
+  beginDate: DateTime!
   description: String
-  endDate: Date!
+  endDate: DateTime!
   id: ID!
+  isActive: Boolean!
   name: String!
   referrals: Referrals!
   slug: String!
@@ -3004,6 +2952,9 @@ type mutations {
   """Destroy repo file"""
   repoFileDestroy(id: ID!): RepoFile!
 
+  """Make repo file private"""
+  repoFileMakePrivate(id: ID!): RepoFile!
+
   """Make repo file public"""
   repoFileMakePublic(id: ID!): RepoFile!
 
@@ -3015,7 +2966,7 @@ type mutations {
 
   """Commit an upload to file"""
   repoFileUploadCommit(id: ID!): RepoFile!
-  reportComment(id: ID!): Comment!
+  reportComment(description: String, id: ID!): Comment!
   reportUser(
     """Reason for reporting the user. Max 500 characters."""
     reason: String!
@@ -3094,7 +3045,6 @@ type mutations {
 
 type queries {
   accessGrantInfo(id: ID!): AccessGrantInfo
-  accessGrantStats: AccessGrantStats!
   activeDiscussions(first: Int, lastDays: Int!): [CommentAggregation!]!
   adminUsers(limit: Int!, offset: Int, search: String): Users!
   campaign(slug: String!): Campaign

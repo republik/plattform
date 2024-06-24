@@ -3,8 +3,6 @@ const debug = require('debug')('access:lib:accessScheduler')
 
 const campaignsLib = require('./campaigns')
 const grantsLib = require('./grants')
-const { populate: populateEvents } = require('./AccessGrantStats/events')
-const { populate: populateEvolution } = require('./AccessGrantStats/evolution')
 
 // Interval in which scheduler runs
 const intervalSecs = 60 * 10
@@ -38,7 +36,6 @@ const init = async (context) => {
       await recommendations(t, pgdb, mail)
       await expireGrants(t, pgdb, mail)
       await followupGrants(t, pgdb, mail)
-      await updateStats(context)
 
       // Extend lock for a fraction of usual interval to prevent runner to
       // be executed back-to-back to previous run.
@@ -160,19 +157,4 @@ const followupGrants = async (t, pgdb, mail) => {
     }
   }
   debug('followupGrants done')
-}
-
-/**
- * Updates statistics
- */
-const updateStats = async (context) => {
-  debug('updateStats...')
-  try {
-    await populateEvents(context)
-    await populateEvolution(context)
-  } catch (e) {
-    debug('updateStats failed: %s', e.message)
-    console.warn(e)
-  }
-  debug('updateStats done')
 }
