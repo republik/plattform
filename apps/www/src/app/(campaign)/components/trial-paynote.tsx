@@ -179,7 +179,7 @@ export function TrialPaynote({
                     fontSize: '2xl',
                   })}
                 >
-                  2.– für 30 Tage
+                  11.– für 30 Tage
                 </p>
               </div>
 

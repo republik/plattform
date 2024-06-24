@@ -7,11 +7,11 @@ import { Chart, ChartTitle, ChartLead, ChartLegend } from '../Chart'
 import { requireFrom } from './require'
 import Loader from '../Loader'
 
-import SG from '../../theme/env'
-
-const DEFAULT_ALLOW_LIST = (SG.DYNAMIC_COMPONENT_BASE_URLS || '')
-  .split(',')
-  .filter(Boolean)
+const DEFAULT_ALLOW_LIST = [
+  'https://cdn.repub.ch/',
+  'https://cdn.republik.space/',
+  'https://assets.republik.space/',
+]
 
 export const createRequire = (allowList = DEFAULT_ALLOW_LIST) => {
   const allowed = ['/', './'].concat(allowList)
@@ -48,9 +48,7 @@ class DynamicComponent extends Component {
         .require(this.props.src)
         .then((module) => {
           this.setState({
-            LoadedComponent: module.hasOwnProperty('default')
-              ? module['default']
-              : module,
+            LoadedComponent: module.default ?? module,
           })
         })
         .catch((error) => {

@@ -1077,7 +1077,7 @@ class Submit extends Component {
                   formattedChf:
                     // EINSTIEGSMONAT-TEST (remove after test)
                     this.props.coupon === 'EINSTIEG24'
-                      ? chfFormat(2)
+                      ? chfFormat(11)
                       : this.props.total
                       ? chfFormat(this.props.total / 100)
                       : '',
@@ -1221,9 +1221,11 @@ export const withPay = (Component) => {
             }
 
             // TODO: implement plausible properly
-            window.plausible?.('Sales', {
-              revenue: { currency: 'CHF', amount: pendingOrder.total / 100 },
-            })
+            if (pendingOrder) {
+              window.plausible?.('Sales', {
+                revenue: { currency: 'CHF', amount: pendingOrder.total / 100 },
+              })
+            }
 
             await Promise.all(
               [

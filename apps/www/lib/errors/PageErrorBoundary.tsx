@@ -1,9 +1,8 @@
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { reportError } from './reportError'
-import { A, Interaction, Button } from '@project-r/styleguide'
+import { A, Interaction, Button, Logo } from '@project-r/styleguide'
 import { PUBLIC_BASE_URL } from '../constants'
-import { divide } from 'lodash'
 import Head from 'next/head'
 
 type ErrorBoundaryProps = {
@@ -11,6 +10,8 @@ type ErrorBoundaryProps = {
 }
 
 function PageErrorBoundary({ children }: ErrorBoundaryProps) {
+  const [errorId, setErrorId] = useState<string | null>(null)
+
   return (
     <ErrorBoundary
       FallbackComponent={({ error, resetErrorBoundary }) => (
@@ -21,20 +22,36 @@ function PageErrorBoundary({ children }: ErrorBoundaryProps) {
           </Head>
           <div
             style={{
+              minHeight: '100dvh',
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              minHeight: '80vh',
+              flexDirection: 'column',
             }}
           >
+            <a
+              style={{
+                width: '100%',
+                height: '8vh',
+                minHeight: 48,
+                maxHeight: 64,
+                padding: 16,
+                marginTop: 32,
+                margin: '0 auto',
+                cursor: 'pointer',
+              }}
+              title='Zur Startseite'
+            >
+              <Logo fill='var(--color-primary)' height='100%' />
+            </a>
             <div
               style={{
                 margin: '0 auto',
                 maxWidth: '60ch',
                 padding: '1rem',
+                flexGrow: 1,
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'flex-start',
+                alignItems: 'start',
+                justifyContent: 'center',
                 gap: '1rem',
               }}
             >
@@ -42,6 +59,7 @@ function PageErrorBoundary({ children }: ErrorBoundaryProps) {
               <Button primary onClick={() => resetErrorBoundary()}>
                 Seite neu laden
               </Button>
+
               <Interaction.P>
                 Sollte dieser Fehler zum wiederholten Male aufgetreten sein,
                 wenden Sie sich bitte an{' '}
@@ -57,17 +75,40 @@ function PageErrorBoundary({ children }: ErrorBoundaryProps) {
 Hallo Republik-Team, ich bin auf folgenden Fehler in der Webseite gestossen:
 
 URL: ${PUBLIC_BASE_URL}${window.location.pathname}
+${errorId ? `Fehler ID: ${errorId}` : ''}
 Fehler:
 ${error.message}
 ${error.stack}
                   `,
                       ),
                   ].join('')}
+                  style={{
+                    textDecoration: 'underline',
+                  }}
                 >
                   kontakt@republik.ch
                 </A>
                 .
               </Interaction.P>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+                padding: 16,
+              }}
+            >
+              {errorId && (
+                <Interaction.P
+                  style={{
+                    fontSize: '1rem',
+                  }}
+                >
+                  Fehler: {errorId}
+                </Interaction.P>
+              )}
             </div>
           </div>
         </>
@@ -76,7 +117,7 @@ ${error.stack}
         reportError(
           'componentDidCatch',
           `${error}${info.componentStack}\n${error && error.stack}`,
-        )
+        ).then((id) => setErrorId(id))
       }}
       onReset={() => {
         // reload after error

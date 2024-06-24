@@ -10,31 +10,44 @@ import { useTranslation } from '../lib/withT'
 import { withDefaultSSR } from '../lib/apollo/helpers'
 import { useMe } from '../lib/context/MeContext'
 
+const allowedSignInRedirectOrigins =
+  process.env.NEXT_PUBLIC_ALLOWED_SIGNIN_REDIRECT_ORIGINS?.split(',') || []
+
 const SigninPage = () => {
   const router = useRouter()
   const { query } = router
   const { me } = useMe()
   const { t } = useTranslation()
+
   useEffect(() => {
     if (me && query?.redirect) {
       try {
         const redirectTarget = decodeURIComponent(query.redirect)
         const redirectUrl = new URL(redirectTarget, window.location.origin)
-        // ensure that the redirect target can only be a relative path
+
         if (
-          redirectUrl.hostname !== window.location.hostname ||
-          !redirectTarget.startsWith('/')
+          redirectTarget.startsWith('/') &&
+          redirectUrl.origin === window.location.origin
         ) {
-          throw new Error('Invalid redirect URL')
+          router.replace(redirectUrl)
+          return
         }
-        router.replace(redirectUrl)
+
+        if (allowedSignInRedirectOrigins.includes(redirectUrl.origin)) {
+          // redirect to the target URL using the browser's native redirect
+          window.location.replace(redirectUrl)
+          return
+        }
+
+        // ensure that the redirect target can only be a relative path
+        throw new Error('Invalid redirect URL')
       } catch (e) {
         router.replace('/')
       }
     } else if (me) {
       router.replace('/')
     }
-  }, [me])
+  }, [me, query.redirect, router])
 
   const meta = {
     title: t('pages/signin/title'),

@@ -16,7 +16,7 @@ import Formats from './Formats'
 import Vision from './Vision'
 import Logo from './Logo'
 import Community from './Community'
-import Pledge from './Pledge'
+import MarketingProducts from './MarketingProducts'
 import SectionContainer from './Common/SectionContainer'
 import ChallengeAcceptedMarketingTeaser from '../ChallengeAccepted/ChallengeAcceptedMarketingTeaser'
 import { TrialPaynote } from '@app/app/(campaign)/components/trial-paynote'
@@ -81,7 +81,7 @@ const Marketing = ({ data }) => {
       />
       <Community featuredComments={data.featuredComments} />
       <Vision />
-      {inNativeApp ? <MarketingTrialForm /> : <Pledge />}
+      {inNativeApp ? <MarketingTrialForm /> : <MarketingProducts />}
       <Logo />
     </>
   )

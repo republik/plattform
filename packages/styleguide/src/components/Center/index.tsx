@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import PropTypes from 'prop-types'
 
 export const PADDING = 15
 
