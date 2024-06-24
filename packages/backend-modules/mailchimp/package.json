@@ -1,0 +1,14 @@
+{
+  "name": "@orbiting/backend-modules-mailchimp",
+  "description": "Libraries related to MailChimp for newsletters and segmentation",
+  "author": "Luciana Kolbeck <luciana.kolbeck@republik.ch>",
+  "version": "0.1.0",
+  "private": true,
+  "main": "build/index.js",
+  "types": "build/@types",
+  "dependencies": {
+    "@orbiting/backend-modules-scalars": "*",
+    "@orbiting/backend-modules-types": "*",
+    "apollo-modules-node": "*"
+  }
+}

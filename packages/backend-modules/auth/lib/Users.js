@@ -6,7 +6,7 @@ const Promise = require('bluebird')
 const debug = require('debug')('auth:lib:Users')
 const {
   sendMailTemplate,
-  moveNewsletterSubscriptions,
+  changeEmailOnMailchimp,
 } = require('@orbiting/backend-modules-mail')
 const t = require('./t')
 const useragent = require('./useragent')
@@ -824,7 +824,7 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
   )
 
   try {
-    await moveNewsletterSubscriptions({
+    await changeEmailOnMailchimp({
       user,
       newEmail: email,
     })
