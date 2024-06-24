@@ -1,0 +1,20 @@
+{
+  "name": "@orbiting/backend-modules-job-queue",
+  "author": "Henning Dahlheim <henning.dahlheim@republik.ch>",
+  "version": "0.1.0",
+  "private": true,
+  "main": "build/index.js",
+  "types": "build/@types",
+  "dependencies": {
+    "pg-boss": "^9.0.3",
+    "debug": "^4.3.5"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "^10.9.0",
+    "@faker-js/faker": "^8.4.1",
+    "@types/jest": "^29.5.12",
+    "pg": "^8.12.0",
+    "testcontainers": "^10.9.0",
+    "ts-jest": "^29.1.2"
+  }
+}

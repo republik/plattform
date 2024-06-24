@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "devDependencies": {
-    "@pandacss/dev": "^0.37.2"
+    "@pandacss/dev": "^0.40.1"
   },
   "exports": {
     "./presets": {
@@ -34,6 +34,8 @@
       "require": "./__generated__/jsx/index.mjs",
       "import": "./__generated__/jsx/index.mjs"
     },
-    "./styles.css": "./__generated__/styles.css"
+    "./styles.css": "./__generated__/styles.css",
+    "./fonts.css": "./fonts.css",
+    "./logo.json": "./logo.json"
   }
 }

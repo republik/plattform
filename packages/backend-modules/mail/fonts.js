@@ -1,55 +1,61 @@
-@layer reset, base, tokens, recipes, utilities;
+/**
+ * NOTE: these are only used directly by the mail module.
+ *
+ * The font definitions are outdated compared to the ones used in the apps and styleguide (i.e. the font names should not differ for each weight/style).
+ * Ideally, these would be the same but I don't know how often these font family names are relied upon in emails.
+ *  */
 
-@font-face {
+module.exports = {
+  FONT_FACES: `@font-face {
   font-family: 'Rubis';
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.eot?#iefix)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot);
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot?#iefix)
       format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.woff2)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff2)
       format('woff2'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.woff)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff)
       format('woff'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.ttf)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.ttf)
       format('truetype');
 }
 @font-face {
-  font-family: 'Rubis-Regular';
+  font-family: 'Rubis';
   font-style: italic;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.eot?#iefix)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot);
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot?#iefix)
       format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.woff2)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff2)
       format('woff2'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.woff)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff)
       format('woff'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.ttf)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.ttf)
       format('truetype');
 }
 @font-face {
   font-family: 'Rubis';
   font-weight: 700;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.eot?#iefix)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot);
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot?#iefix)
       format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.woff2)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff2)
       format('woff2'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.woff)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff)
       format('woff'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.ttf)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.ttf)
       format('truetype');
 }
 @font-face {
   font-family: 'Rubis';
   font-weight: 700;
   font-style: italic;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.eot?#iefix)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot);
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot?#iefix)
       format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.woff2)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff2)
       format('woff2'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.woff)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff)
       format('woff'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.ttf)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.ttf)
       format('truetype');
 }
 @font-face {
@@ -147,4 +153,67 @@
       format('woff2'),
     url(https://cdn.repub.ch/s3/republik-assets/fonts/Druk-MediumItalic-Web.woff)
       format('woff');
+}`,
+  FONT_STYLES: {
+    serifTitle: {
+      fontFamily: 'RepublikSerif, Rubis, Georgia, serif',
+      fontWeight: 900,
+      fontStyle: 'normal',
+    },
+    serifRegular: {
+      fontFamily: 'Rubis, Georgia, serif',
+      fontWeight: 400,
+      fontStyle: 'normal',
+    },
+    serifItalic: {
+      fontFamily: 'Rubis, Georgia, serif',
+      fontWeight: 400,
+      fontStyle: 'italic',
+    },
+    serifBold: {
+      fontFamily: 'Rubis, Georgia, serif',
+      fontWeight: 700,
+      fontStyle: 'normal',
+    },
+    serifBoldItalic: {
+      fontFamily: 'Rubis, Georgia, serif',
+      fontWeight: 700,
+      fontStyle: 'italic',
+    },
+    sansSerifRegular: {
+      fontFamily: 'GT-America-Standard, Helvetica Neue, Helvetica, sans-serif',
+      fontWeight: 400,
+      fontStyle: 'normal',
+    },
+    sansSerifItalic: {
+      fontFamily: 'GT-America-Standard, Helvetica Neue, Helvetica, sans-serif',
+      fontWeight: 400,
+      fontStyle: 'italic',
+    },
+    sansSerifMedium: {
+      fontFamily: 'GT-America-Standard, Helvetica Neue, Helvetica, sans-serif',
+      fontWeight: 500,
+      fontStyle: 'normal',
+    },
+    sansSerifBold: {
+      fontFamily: 'GT-America-Standard, Helvetica Neue, Helvetica, sans-serif',
+      fontWeight: 700,
+      fontStyle: 'normal',
+    },
+    monospaceRegular: {
+      fontFamily: 'Menlo, Courier, monospace',
+      fontWeight: 400,
+      fontStyle: 'normal',
+    },
+    cursiveTitle: {
+      fontFamily: 'Inicia, Roboto, sans-serif',
+      fontWeight: 500,
+      fontStyle: 'italic',
+    },
+    flyerTitle: {
+      fontFamily: 'Druk-Wide, Roboto, sans-serif',
+      fontWeight: 500,
+      fontStyle: 'normal',
+    },
+  },
 }

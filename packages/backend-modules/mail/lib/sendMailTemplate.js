@@ -14,6 +14,8 @@ const NodemailerInterface = require('../NodemailerInterface')
 const MandrillInterface = require('../MandrillInterface')
 const { send } = require('./mailLog')
 
+const { FONT_FACES, FONT_STYLES } = require('../fonts')
+
 const dateFormat = timeFormat('%x')
 
 checkEnv([
@@ -29,8 +31,6 @@ const {
   SEND_MAILS_TAGS,
   SEND_MAILS_SUBJECT_PREFIX,
   FRONTEND_BASE_URL,
-  SG_FONT_STYLES,
-  SG_FONT_FACES,
   ASSETS_SERVER_BASE_URL,
 } = process.env
 
@@ -216,16 +216,16 @@ const envMergeVars = [
   },
 ]
 
-if (SG_FONT_FACES) {
+if (FONT_FACES) {
   envMergeVars.push({
     name: 'sg_font_faces',
-    content: SG_FONT_FACES,
+    content: FONT_FACES,
   })
 }
 
-if (SG_FONT_STYLES) {
+if (FONT_STYLES) {
   try {
-    const styles = JSON.parse(SG_FONT_STYLES)
+    const styles = FONT_STYLES
     Object.keys(styles).forEach((styleKey) => {
       const style = styles[styleKey]
       envMergeVars.push({
@@ -245,7 +245,7 @@ if (SG_FONT_STYLES) {
       })
     })
   } catch (e) {
-    console.warn('invalid SG_FONT_STYLES env')
+    console.warn('invalid FONT_STYLES')
   }
 }
 
@@ -286,9 +286,7 @@ module.exports = async (mail, context, log) => {
     return prev
   }, {})
 
-  const { getHtml } = await getTemplates(
-    mail.templateName,
-  )
+  const { getHtml } = await getTemplates(mail.templateName)
 
   const html = getHtml(values)
 

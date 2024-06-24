@@ -1,5 +1,3 @@
-import { getJson } from './env'
-
 // some defaults are precomputed colors from d3-scale-chromatic
 /*
  sequential = [
@@ -21,24 +19,25 @@ import { getJson } from './env'
  */
 
 const colorsDeprecated = {
-  primary: '#00508C',
-  primaryBg: '#BFE1FF',
+  primary: '#3CAD00',
+  primaryBg: '#EBF6E5',
+  secondary: '#4B6359',
+  secondaryBg: '#F6F8F7',
+  disabled: '#B7C1BD',
+  text: '#282828',
+  error: '#9F2500',
+  divider: '#DADDDC',
+  editorial: '#08809A',
+  feuilleton: '#7C7C7C',
+  scribble: '#D44338',
+  meta: '#000000',
+
   containerBg: '#FFF',
-  secondary: '#00335A',
-  secondaryBg: '#D8EEFF',
-  disabled: '#B8BDC1',
-  text: '#191919',
   lightText: '#979797',
   fill: '#000',
   lightFill: '#E9E9E9',
-  error: '#9F2500',
-  divider: '#DBDCDD',
   online: '#00DC00',
   social: '#E9A733',
-  editorial: '#00B4FF',
-  meta: '#64966E',
-  feuilleton: '#555555',
-  scribble: '#ef4533',
   flyer: '#405080',
   neutral: '#bbb',
   highlight: '#FFFFCC',
@@ -80,7 +79,6 @@ const colorsDeprecated = {
     error: 'rgb(239,69,51)',
     disabled: '#242424',
   },
-  ...getJson('COLORS'),
 }
 
 // ToDos

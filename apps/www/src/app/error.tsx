@@ -1,10 +1,12 @@
 'use client' // Error components must be Client Components
+import logo from '@republik/theme/logo.json'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import Container from '@app/components/container'
 import { stack } from '@republik/theme/patterns'
+import * as Sentry from '@sentry/nextjs'
 import { PUBLIC_BASE_URL } from 'lib/constants'
 
 const linkClass = css({
@@ -22,14 +24,25 @@ export default function Error({
   error: Error
   reset: () => void
 }) {
+  const [errorId, setErrorId] = useState<string | null>(null)
+
   useEffect(() => {
     // Log the error to an error reporting service
-    console.error(error)
-  }, [error])
+    const eventId = Sentry.captureException(error, {
+      tags: {
+        origin: 'ErrorBoundary',
+        routing: 'app-dir',
+      },
+    })
+    setErrorId(eventId)
+  }, [error, setErrorId])
+
   return (
     <div
       className={css({
         minHeight: '100dvh',
+        display: 'flex',
+        flexDirection: 'column',
       })}
     >
       <div
@@ -42,13 +55,13 @@ export default function Error({
         })}
       >
         <svg
-          viewBox={process.env.NEXT_PUBLIC_SG_LOGO_VIEWBOX}
+          viewBox={logo.LOGO_VIEWBOX}
           className={css({
             fill: 'text',
             height: 'header.logoHeight',
           })}
         >
-          <path d={process.env.NEXT_PUBLIC_SG_LOGO_PATH}></path>
+          <path d={logo.LOGO_PATH}></path>
         </svg>
       </div>
       <div
@@ -67,11 +80,6 @@ export default function Error({
               className={css({
                 textStyle: 'sansSerifBold',
                 fontSize: '3xl',
-                mt: '16',
-                mb: '4',
-                md: {
-                  mt: '32',
-                },
               })}
             >
               Es ist ein Fehler aufgetreten
@@ -91,9 +99,12 @@ export default function Error({
                     encodeURIComponent(
                       [
                         'Hallo Republik-Team, ich bin auf folgenden Fehler in der Webseite gestossen:',
+                        errorId ? `Fehler ID: ${errorId}` : null,
                         `URL: ${PUBLIC_BASE_URL}${window.location.pathname}`,
                         error.stack,
-                      ].join('\n\n'),
+                      ]
+                        .filter(Boolean)
+                        .join('\n\n'),
                     ),
                 ].join('')}
               >
@@ -144,6 +155,20 @@ export default function Error({
             </div>
           </div>
         </Container>
+      </div>
+      <div>
+        {errorId && (
+          <p
+            className={css({
+              color: 'text',
+              fontSize: 'sm',
+              textAlign: 'center',
+              pb: '4',
+            })}
+          >
+            Fehler: {errorId}
+          </p>
+        )}
       </div>
     </div>
   )
