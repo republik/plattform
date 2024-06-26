@@ -20,7 +20,7 @@ const PADDING_TOP = MARKER_HEIGHT + 10
 const PADDING_BOTTOM = 10
 const COLUMN_PADDING = 30
 
-export default (props, geoJson) => {
+export default function mapsLayout(props, geoJson) {
   const {
     values,
     width,
@@ -154,19 +154,24 @@ export default (props, geoJson) => {
     ])
   }
 
-  const colorLegendValues = colorValues
-    .map((color) => ({
-      label: color.label,
-      color: colorScale(color.value),
-    }))
-    .concat(
-      missingDataLegend
-        ? {
-            label: missingDataLegend,
-            color: props.missingDataColor,
-          }
-        : [],
-    )
+  const colorLegendValues = (
+    props.colorLegendValues
+      ? props.colorLegendValues.map((label) => ({
+          label,
+          color: colorScale(label),
+        }))
+      : colorValues.map((color) => ({
+          label: color.label,
+          color: colorScale(color.value),
+        }))
+  ).concat(
+    missingDataLegend
+      ? {
+          label: missingDataLegend,
+          color: props.missingDataColor,
+        }
+      : [],
+  )
 
   const geotiffs = {}
   const geotiff = props.geotiff
