@@ -1,11 +1,4 @@
-import { User } from '@orbiting/backend-modules-types'
 
-export type AudienceSubscriptionResult = {
-  user: User
-  interests: UserInterests
-  status_if_new: MemberStatus
-  status: MemberStatus
-}
 
 export type UserInterests = {
   [x: string]: boolean

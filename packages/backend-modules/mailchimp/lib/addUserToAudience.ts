@@ -3,7 +3,6 @@ import { User } from '@orbiting/backend-modules-types'
 import {
   MemberStatus,
   UserInterests,
-  AudienceSubscriptionResult,
   MemberData,
 } from '../types'
 
@@ -30,7 +29,7 @@ export async function addUserToAudience({
   interests = {},
   statusIfNew = MailchimpInterface.MemberStatus.Subscribed,
   defaultStatus = MailchimpInterface.MemberStatus.Unsubscribed,
-}: AddUserToAudienceParams): Promise<AudienceSubscriptionResult> {
+}: AddUserToAudienceParams) {
   const { email } = user
 
   if (!audienceId) {
@@ -46,15 +45,6 @@ export async function addUserToAudience({
 
   const mailchimp = MailchimpInterface({ console })
   await mailchimp.updateMember(email, data, audienceId)
-
-  const result: AudienceSubscriptionResult = {
-    user,
-    interests,
-    status_if_new: statusIfNew,
-    status: defaultStatus,
-  }
-
-  return result
 }
 
 export async function addUserToMarketingAudience(user: User) {

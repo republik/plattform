@@ -71,26 +71,35 @@ export async function enforceSubscriptions({
     interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ||
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]
 
-  const newsletterSubscriptions = await updateNewsletterSubscriptions({
+  await updateNewsletterSubscriptions({
     user: user || { email },
     interests,
     name,
     subscribed,
   }, NewsletterSubscriptionConfig)
-  const allSubscriptions = [
-    {
-      audienceId: MAILCHIMP_MAIN_LIST_ID,
-      subscriptions: newsletterSubscriptions,
-    },
-  ]
 
   // always add to marketing audience when newsletter settings are updated, except if MEMBER or BENEFACTOR are true
-  if (!hasActiveMembership) {
-    const marketingSubscription = await addUserToMarketingAudience(user || { email })
-    allSubscriptions.push({
+  if (hasActiveMembership) {
+    archiveMemberInAudience({
+      user: user || { email },
       audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
-      subscriptions: marketingSubscription,
     })
+
+    await addUserToAudience({
+      user: user || { email },
+      audienceId: MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
+      interests: {},
+      statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
+      defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
+    })
+
+    archiveMemberInAudience({
+      user: user || { email },
+      audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+    })
+  } else {
+    // no active membership
+    await addUserToMarketingAudience(user || { email })
 
     archiveMemberInAudience({
       user: user || { email },
@@ -103,45 +112,15 @@ export async function enforceSubscriptions({
         audienceId: MAILCHIMP_MAIN_LIST_ID,
       })
     }
-  } else {
-    // user has an active subscription/membership
-    archiveMemberInAudience({
-      user: user || { email },
-      audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
-    })
-
-    const produktinfosSubscription = await addUserToAudience({
-      user: user || { email },
-      audienceId: MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
-      interests: {},
-      statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
-      defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
-    })
-    allSubscriptions.push({
-      audienceId: MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
-      subscriptions: produktinfosSubscription,
-    })
-
-    archiveMemberInAudience({
-      user: user || { email },
-      audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
-    })
   }
 
   if (subscribeToOnboardingMails) {
-    const onboardingSubscription = await addUserToAudience({
+    await addUserToAudience({
       user: user || { email },
       audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
       interests: {},
       statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
       defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
     })
-
-    allSubscriptions.push({
-      audienceId: MAILCHIMP_ONBOARDING_AUDIENCE_ID,
-      subscriptions: onboardingSubscription,
-    })
   }
-
-  return allSubscriptions
 }
