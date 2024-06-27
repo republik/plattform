@@ -1,0 +1,61 @@
+import { ComponentDemo } from '@republik/docs'
+
+# Bars
+
+<ComponentDemo file='demos/legacy/charts/bars.tsx' />
+
+## Columns
+
+<ComponentDemo file='demos/legacy/charts/bars-column.tsx' />
+
+## Stacked with a Legend
+
+<ComponentDemo file='demos/legacy/charts/bars-stacked.tsx' />
+
+Use `colorLegendValues` to only label specific colors:
+
+<ComponentDemo file='demos/legacy/charts/bars-colorlegend.tsx' />
+
+## Inline Values and Labels
+
+<ComponentDemo file='demos/legacy/charts/bars-inlinelabels.tsx' />
+
+## Links
+
+<ComponentDemo file='demos/legacy/charts/bars-links.tsx' />
+
+## Negative Values
+
+<ComponentDemo file='demos/legacy/charts/bars-negative.tsx' />
+
+## Advanced Labeling
+
+### Bar Values
+
+Bar values can also work in advanced cases if one wants to display the total of a bar.
+
+<ComponentDemo file='demos/legacy/charts/bars-valuelabels.tsx' />
+
+### Inline Positions
+
+By default the first and middle bar segment labels are `left` and the last (if not also the first) is `right` ordiented. For negative values `right` and `left` are flipped.
+
+If needed this can be overwritten with a custom `inlineLabelPosition`. Valid values are: `left`, `right`, `center`.
+
+<ComponentDemo file='demos/legacy/charts/bars-inlinepositions.tsx' />
+
+### X-Ticks
+
+See [lollipop example](/charts/lollipops#x-ticks).
+
+### Skip Y Labels
+
+When `y` and `color` point to the same data attribute (example below: `type`), the system automatically shows the color legend and hides the y labels. (Except if we have only a single group.)
+
+<ComponentDemo file='demos/legacy/charts/bars-skipy.tsx' />
+
+## Dark Colors
+
+Maybe you've noticed the `colorDarkMapping` above. It can be used to switch out colors when in dark mode. This is how it looks when forced into dark:
+
+<ComponentDemo variant='dark' file='demos/legacy/charts/bars-dark.tsx' />
