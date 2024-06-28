@@ -10,18 +10,24 @@ import { NextResponse, type NextRequest } from 'next/server'
 type EmailOtpType = 'token-authorization'
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url)
+  const { searchParams } = request.nextUrl
   // const token_hash = searchParams.get('token_hash')
   const type = searchParams.get('type') as EmailOtpType | null
   const email = Buffer.from(searchParams.get('email') ?? '', 'base64').toString(
     'utf8',
   )
   const token = searchParams.get('token')
-  // const next = searchParams.get('next') ?? '/'
 
-  const redirectTo = request.nextUrl.clone()
+  // Use context param for redirect whoop
+  const context = searchParams.get('context')
 
-  // TODO VALIDATE THINGS
+  let redirectTo: URL
+  try {
+    // TODO: validate context as URL/pathname
+    redirectTo = new URL(context ?? '/', request.nextUrl)
+  } catch (e) {
+    redirectTo = new URL('/', request.nextUrl)
+  }
 
   const gqlClient = getClient()
 
@@ -51,14 +57,6 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    // TODO add actual redirect
-    redirectTo.pathname = '/'
-
-    redirectTo.searchParams.delete('email')
-    redirectTo.searchParams.delete('token')
-    redirectTo.searchParams.delete('tokenType')
-    redirectTo.searchParams.delete('context')
-    redirectTo.searchParams.delete('type')
     return NextResponse.redirect(redirectTo)
   } catch (e) {
     throw Error(e)

@@ -6,6 +6,7 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { NetworkStatus, useMutation, useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
+import { useSearchParams } from 'next/navigation'
 import { useId } from 'react'
 
 function LogOut() {
@@ -55,7 +56,7 @@ function WaitForLogin({ phrase }: { phrase: string }) {
 export function LoginForm() {
   const [signIn, { data, loading, error }] = useMutation(SignInDocument, {})
   const emailId = useId()
-
+  const searchParams = useSearchParams()
   if (data?.signIn) {
     return <WaitForLogin phrase={data.signIn.phrase} />
   }
@@ -79,6 +80,7 @@ export function LoginForm() {
           if (typeof email === 'string') {
             signIn({
               variables: {
+                context: searchParams.get('redirect'),
                 email,
               },
             })
