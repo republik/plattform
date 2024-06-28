@@ -11,6 +11,9 @@
     "@orbiting/backend-modules-types": "*",
     "apollo-modules-node": "*"
   },
+  "devDependencies": {
+    "ts-jest": "^29.1.5"
+  },
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc",
