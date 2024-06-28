@@ -218,11 +218,7 @@ class Pledge extends Component {
         ? !['YEARLY_ABO', 'MONTHLY_ABO', 'DONATE', 'LESHA'].includes(pkg.name)
         : undefined,
       paymentMethods: pkg ? pkg.paymentMethods : undefined,
-      // EINSTIEGSMONAT-TEST (remove after test) change total back
-      total:
-        pkg.name === 'MONTHLY_ABO' && query.coupon === 'EINSTIEG24'
-          ? values.price + 1100
-          : values.price || undefined,
+      total: values.price || undefined,
       options,
       reason: userPrice ? values.reason : undefined,
       coupon: query.coupon,
