@@ -4,7 +4,6 @@ import { Interaction } from '@project-r/styleguide'
 
 import { t, useTranslation } from '../lib/withT'
 import { withDefaultSSR } from '../lib/apollo/helpers'
-import { CROWDFUNDING } from '../lib/constants'
 import { useMe } from '../lib/context/MeContext'
 import { PackageBuffer, PackageItem } from '../components/Pledge/Accordion'
 import AccessCampaigns from '../components/Access/Campaigns'
@@ -51,7 +50,6 @@ const Page = () => {
           >
             <PackageItem
               t={t}
-              crowdfundingName={CROWDFUNDING}
               name='ABO'
               hover={hover}
               setHover={setHover}
@@ -68,7 +66,6 @@ const Page = () => {
           >
             <PackageItem
               t={t}
-              crowdfundingName={CROWDFUNDING}
               name='MONTHLY_ABO'
               hover={hover}
               setHover={setHover}

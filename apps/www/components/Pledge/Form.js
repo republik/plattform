@@ -347,7 +347,7 @@ class Pledge extends Component {
           loading={loading}
           error={error}
           render={() => {
-            const { receiveError, crowdfundingName, hasEnded } = this.props
+            const { receiveError, hasEnded } = this.props
 
             if (hasEnded && !this.props.pledge) {
               return (
@@ -427,7 +427,6 @@ class Pledge extends Component {
                   {pkg ? (
                     <CustomizePackage
                       key={pkg.id}
-                      crowdfundingName={crowdfundingName}
                       values={values}
                       errors={errors}
                       dirty={dirty}
@@ -443,7 +442,6 @@ class Pledge extends Component {
                     />
                   ) : (
                     <Accordion
-                      crowdfundingName={crowdfundingName}
                       packages={packages.filter(
                         ({ group }) => group !== 'HIDDEN',
                       )}
@@ -494,8 +492,8 @@ Pledge.propTypes = {
 }
 
 const query = gql`
-  query pledgeForm($crowdfundingName: String!, $accessToken: ID) {
-    crowdfunding(name: $crowdfundingName) {
+  query pledgeForm($accessToken: ID) {
+    crowdfunding(name: "LAUNCH") {
       id
       name
       hasEnded
@@ -644,9 +642,8 @@ const PledgeWithQueries = compose(
     },
   }),
   graphql(query, {
-    options: ({ query, crowdfundingName }) => ({
+    options: ({ query }) => ({
       variables: {
-        crowdfundingName,
         accessToken: query.token,
       },
     }),

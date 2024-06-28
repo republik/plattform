@@ -323,7 +323,6 @@ class CustomizePackage extends Component {
       customMe,
       ownMembership,
       router,
-      crowdfundingName,
       values,
       errors,
       dirty,
@@ -513,10 +512,10 @@ class CustomizePackage extends Component {
 
     const descriptionKeys = [
       ownMembership &&
-        `package/${crowdfundingName}/${pkg.name}/${ownMembership.type.name}/description`,
+        `package/LAUNCH/${pkg.name}/${ownMembership.type.name}/description`,
       ownMembership &&
         `package/${pkg.name}/${ownMembership.type.name}/description`,
-      `package/${crowdfundingName}/${pkg.name}/description`,
+      `package/LAUNCH/${pkg.name}/description`,
       `package/${pkg.name}/description`,
     ].filter(Boolean)
     const description = t.first(descriptionKeys)
