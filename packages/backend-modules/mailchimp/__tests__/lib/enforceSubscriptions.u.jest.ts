@@ -29,7 +29,7 @@ describe('test enforceSubscriptions', () => {
     const pgdb = { public: { users: { findOne: jest.fn(() => user) }}}
     // mock return value for getInterestForUser
     const memberInterest = {}
-    jest.mock('./getInterestsForUser', () => { () => memberInterest })
+    jest.mock('./getInterestsForUser', () => { jest.fn(() => memberInterest) })
 
     await enforceSubscriptions({
       userId: userId,
