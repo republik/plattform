@@ -12,9 +12,8 @@ export const APP_OPTIONS =
   process.env.NEXT_PUBLIC_APP_OPTIONS !== '0'
 
 export const PUBLIC_BASE_URL = process.env.PUBLIC_BASE_URL
-export const CDN_FRONTEND_BASE_URL = process.env.PUBLIC_CDN_URL
-export const RENDER_FRONTEND_BASE_URL =
-  process.env.NEXT_PUBLIC_RENDER_FRONTEND_BASE_URL || PUBLIC_BASE_URL
+export const CDN_FRONTEND_BASE_URL =
+  process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
 
 export const PUBLIKATOR_BASE_URL = process.env.NEXT_PUBLIC_PUBLIKATOR_BASE_URL
 export const ADMIN_BASE_URL = process.env.NEXT_PUBLIC_ADMIN_BASE_URL
