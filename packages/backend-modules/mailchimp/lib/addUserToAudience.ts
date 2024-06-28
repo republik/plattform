@@ -1,12 +1,8 @@
 import { User } from '@orbiting/backend-modules-types'
 
-import {
-  MemberStatus,
-  UserInterests,
-  MemberData,
-} from '../types'
+import { MemberStatus, UserInterests, MemberData } from '../types'
 
-import { assertEnvVariableExists } from './../config'
+import { getConfig } from './../config'
 
 const MailchimpInterface = require('../index')
 
@@ -21,7 +17,7 @@ export type AddUserToAudienceParams = {
 const {
   MAILCHIMP_MARKETING_AUDIENCE_ID,
   MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY,
-} = process.env
+} = getConfig()
 
 export async function addUserToAudience({
   user,
@@ -50,8 +46,6 @@ export async function addUserToAudience({
 export async function addUserToMarketingAudience(user: User) {
   const interest: UserInterests = {}
 
-  assertEnvVariableExists(MAILCHIMP_MARKETING_AUDIENCE_ID, 'MAILCHIMP_MARKETING_AUDIENCE_ID')
-  assertEnvVariableExists(MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY, 'MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY')
   interest[MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY] = true
 
   return addUserToAudience({

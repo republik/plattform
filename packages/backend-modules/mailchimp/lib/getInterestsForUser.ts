@@ -4,9 +4,10 @@ const { grants } = require('@orbiting/backend-modules-access')
 
 import debug from 'debug'
 import { UserInterests } from '../types'
+import { getConfig } from '../config'
 debug.enable('mailchimp:lib:getInterestsForUser')
 
-import {
+const {
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
@@ -14,20 +15,19 @@ import {
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-} from '../config'
+} = getConfig()
 
 export type GetInterestsForUserParams = {
-  userId: string,
-  subscribeToEditorialNewsletters?: boolean,
-  pgdb: PgDb,
+  userId: string
+  subscribeToEditorialNewsletters?: boolean
+  pgdb: PgDb
 }
 
 export async function getInterestsForUser({
   userId,
   subscribeToEditorialNewsletters,
-  pgdb
+  pgdb,
 }: GetInterestsForUserParams): Promise<UserInterests> {
-
   const pledges =
     !!userId &&
     (await pgdb.public.pledges.find({
@@ -58,13 +58,15 @@ export async function getInterestsForUser({
   const accessGrants = !!user && (await grants.findByRecipient(user, { pgdb }))
   const hasGrantedAccess = !!user && !!accessGrants && accessGrants.length > 0
 
-  debug(JSON.stringify({
-    userId,
-    hasPledge,
-    hasMembership,
-    isBenefactor,
-    hasGrantedAccess,
-  }))
+  debug(
+    JSON.stringify({
+      userId,
+      hasPledge,
+      hasMembership,
+      isBenefactor,
+      hasGrantedAccess,
+    }),
+  )
 
   // Update the membership type interests on mailchimp
   const interests = {

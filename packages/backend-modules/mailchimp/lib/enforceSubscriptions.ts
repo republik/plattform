@@ -1,14 +1,18 @@
 import type { PgDb } from 'pogi'
 import { getInterestsForUser } from './getInterestsForUser'
 
-import { addUserToAudience, addUserToMarketingAudience } from './addUserToAudience'
+import {
+  addUserToAudience,
+  addUserToMarketingAudience,
+} from './addUserToAudience'
 import { archiveMemberInAudience } from './archiveMemberInAudience'
 import { updateNewsletterSubscriptions } from './updateNewsletterSubscriptions'
 import { NewsletterSubscriptionConfig } from './../NewsletterSubscriptionConfig'
+import { getConfig } from '../config'
 
 const MailchimpInterface = require('../index')
 
-import {
+const {
   MAILCHIMP_INTEREST_MEMBER,
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
   MAILCHIMP_MAIN_LIST_ID,
@@ -19,7 +23,7 @@ import {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
-} from '../config'
+} = getConfig()
 
 export type EnforceSubscriptionsParams = {
   userId: string
@@ -57,12 +61,15 @@ export async function enforceSubscriptions({
     interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ||
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]
 
-  await updateNewsletterSubscriptions({
-    user: user || { email },
-    interests,
-    name,
-    subscribed,
-  }, NewsletterSubscriptionConfig)
+  await updateNewsletterSubscriptions(
+    {
+      user: user || { email },
+      interests,
+      name,
+      subscribed,
+    },
+    NewsletterSubscriptionConfig,
+  )
 
   // always add to marketing audience when newsletter settings are updated, except if MEMBER or BENEFACTOR are true
   if (hasActiveMembership) {
