@@ -63,3 +63,26 @@ export async function GET(request: NextRequest) {
     // return NextResponse.redirect(redirectTo)
   }
 }
+
+export async function POST(request: NextRequest) {
+  const fd = await request.formData()
+
+  const email = Buffer.from(
+    (fd.get('email') as string) ?? '',
+    'base64',
+  ).toString('utf8')
+
+  const token = fd.get('token') as string
+
+  const gqlClient = getClient()
+
+  await gqlClient.mutate({
+    mutation: AuthorizeSessionDocument,
+    variables: {
+      email,
+      tokens: [{ type: SignInTokenType.EmailToken, payload: token }],
+    },
+  })
+
+  return NextResponse.redirect(new URL('/auth/confirm-ok', request.nextUrl))
+}
