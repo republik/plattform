@@ -1,9 +1,6 @@
 import type { PgDb } from 'pogi'
 import { getInterestsForUser } from './getInterestsForUser'
 
-import {
-  assertEnvVariableExists,
-} from '../config'
 import { addUserToAudience, addUserToMarketingAudience } from './addUserToAudience'
 import { archiveMemberInAudience } from './archiveMemberInAudience'
 import { updateNewsletterSubscriptions } from './updateNewsletterSubscriptions'
@@ -11,7 +8,7 @@ import { NewsletterSubscriptionConfig } from './../NewsletterSubscriptionConfig'
 
 const MailchimpInterface = require('../index')
 
-const {
+import {
   MAILCHIMP_INTEREST_MEMBER,
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
   MAILCHIMP_MAIN_LIST_ID,
@@ -22,7 +19,7 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
-} = process.env
+} from '../config'
 
 export type EnforceSubscriptionsParams = {
   userId: string
@@ -44,17 +41,6 @@ export async function enforceSubscriptions({
   subscribed,
 }: EnforceSubscriptionsParams) {
   const user = !!userId && (await pgdb.public.users.findOne({ id: userId }))
-
-  assertEnvVariableExists(MAILCHIMP_INTEREST_MEMBER, 'MAILCHIMP_INTEREST_MEMBER')
-  assertEnvVariableExists(MAILCHIMP_INTEREST_MEMBER_BENEFACTOR, 'MAILCHIMP_INTEREST_MEMBER_BENEFACTOR')
-  assertEnvVariableExists(MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR, 'MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR')
-  assertEnvVariableExists(MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE, 'MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE')
-  assertEnvVariableExists(MAILCHIMP_INTEREST_NEWSLETTER_WDWWW, 'MAILCHIMP_INTEREST_NEWSLETTER_WDWWW')
-  assertEnvVariableExists(MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID, 'MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID')
-  assertEnvVariableExists(MAILCHIMP_MAIN_LIST_ID, 'MAILCHIMP_MAIN_LIST_ID')
-  assertEnvVariableExists(MAILCHIMP_MARKETING_AUDIENCE_ID, 'MAILCHIMP_MARKETING_AUDIENCE_ID')
-  assertEnvVariableExists(MAILCHIMP_PROBELESEN_AUDIENCE_ID, 'MAILCHIMP_PROBELESEN_AUDIENCE_ID')
-  assertEnvVariableExists(MAILCHIMP_ONBOARDING_AUDIENCE_ID, 'MAILCHIMP_ONBOARDING_AUDIENCE_ID')
 
   const interests = await getInterestsForUser({
     userId: !!user && user.id,

@@ -6,9 +6,7 @@ import debug from 'debug'
 import { UserInterests } from '../types'
 debug.enable('mailchimp:lib:getInterestsForUser')
 
-import { assertEnvVariableExists } from '../config'
-
-const {
+import {
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
@@ -16,7 +14,7 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-} = process.env
+} from '../config'
 
 export type GetInterestsForUserParams = {
   userId: string,
@@ -29,13 +27,6 @@ export async function getInterestsForUser({
   subscribeToEditorialNewsletters,
   pgdb
 }: GetInterestsForUserParams): Promise<UserInterests> {
-  assertEnvVariableExists(MAILCHIMP_INTEREST_PLEDGE, 'MAILCHIMP_INTEREST_PLEDGE')
-  assertEnvVariableExists(MAILCHIMP_INTEREST_MEMBER, 'MAILCHIMP_INTEREST_MEMBER')
-  assertEnvVariableExists(MAILCHIMP_INTEREST_MEMBER_BENEFACTOR, 'MAILCHIMP_INTEREST_MEMBER_BENEFACTOR')
-  assertEnvVariableExists(MAILCHIMP_INTEREST_GRANTED_ACCESS, 'MAILCHIMP_INTEREST_GRANTED_ACCESS')
-  assertEnvVariableExists(MAILCHIMP_INTEREST_NEWSLETTER_DAILY, 'MAILCHIMP_INTEREST_NEWSLETTER_DAILY')
-  assertEnvVariableExists(MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY, 'MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY')
-  assertEnvVariableExists(MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR, 'MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR')
 
   const pledges =
     !!userId &&
