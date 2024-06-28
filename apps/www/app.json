@@ -19,9 +19,6 @@
     "CDN_FRONTEND_BASE_URL": {
       "required": true
     },
-    "CROWDFUNDING_NAME": {
-      "required": true
-    },
     "DISCUSSION_POLL_INTERVAL_MS": {
       "required": true
     },
