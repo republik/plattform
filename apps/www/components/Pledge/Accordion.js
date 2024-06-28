@@ -109,8 +109,8 @@ const styles = {
 }
 
 const query = gql`
-  query pledgeAccordion($crowdfundingName: String!) {
-    crowdfunding(name: $crowdfundingName) {
+  query pledgeAccordion {
+    crowdfunding(name: "LAUNCH") {
       id
       name
       packages {
@@ -144,10 +144,7 @@ const query = gql`
 `
 
 export const PackageItem = forwardRef(
-  (
-    { t, hover, setHover, crowdfundingName, name, title, price, onClick, href },
-    ref,
-  ) => {
+  ({ t, hover, setHover, name, title, price, onClick, href }, ref) => {
     const [colorScheme] = useColorContext()
     return (
       <a
@@ -166,7 +163,7 @@ export const PackageItem = forwardRef(
           <div {...styles.packageTitle}>
             {title ||
               t.first([
-                `package/${crowdfundingName}/${name}/title`,
+                `package/LAUNCH/${name}/title`,
                 `package/${name}/title`,
               ])}
           </div>
@@ -208,8 +205,7 @@ class Accordion extends Component {
 
     const { hover } = this.state
 
-    const { t, packages, filter, group, crowdfundingName, renderIntro } =
-      this.props
+    const { t, packages, filter, group, renderIntro } = this.props
 
     const groups = nest()
       .key((d) => d.group)
@@ -321,7 +317,6 @@ class Accordion extends Component {
                       setHover={setHover}
                       name={name}
                       title={title}
-                      crowdfundingName={crowdfundingName}
                       price={price}
                     />
                   </Link>
