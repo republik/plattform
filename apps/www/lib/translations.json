@@ -4480,50 +4480,6 @@
       "value": "Inhalt nur für Mitglieder. <a href=\"/probelesen\">Probelesen?</a>"
     },
     {
-      "key": "matomo/optOut/label",
-      "value": "Ihr Tracking-Status"
-    },
-    {
-      "key": "matomo/optOut/noscript",
-      "value": "Aktivieren Sie JavaScript, um Ihren Status zu sehen."
-    },
-    {
-      "key": "matomo/optOut/status/loading",
-      "value": "lädt…"
-    },
-    {
-      "key": "matomo/optOut/status/timeout",
-      "value": "Konnte nicht geladen werden. Bitte versuchen Sie es später nochmals."
-    },
-    {
-      "key": "matomo/optOut/status/fail",
-      "value": "Konnte nicht gespeichert werden. Bitte versuchen Sie es später nochmals."
-    },
-    {
-      "key": "matomo/optOut/status/on",
-      "value": "Aktiv. Danke!"
-    },
-    {
-      "key": "matomo/optOut/status/off",
-      "value": "Sie haben das Tracking deaktiviert. Bitte beachten Sie, dass Sie, wenn Sie einen anderen Computer, das Deaktivierungs-Cookie löschen oder einen anderen Webbrowser verwenden, die Deaktivierungsprozedur nochmals absolvieren müssen."
-    },
-    {
-      "key": "matomo/optOut/status/saving",
-      "value": "speichert…"
-    },
-    {
-      "key": "matomo/optOut/status/dnt",
-      "value": "Das Tracking ist bei Ihnen derzeit nicht aktiv, denn Ihr Browser hat uns mitgeteilt, dass Sie kein Tracking wünschen."
-    },
-    {
-      "key": "matomo/optOut/turn/off",
-      "value": "Deaktivieren?"
-    },
-    {
-      "key": "matomo/optOut/turn/on",
-      "value": "Aktivieren?"
-    },
-    {
       "key": "styleguide/DynamicComponent/error",
       "value": "Diese Komponente kann, aufgrund eines technischen Fehlers, nicht dargestellt werden."
     },

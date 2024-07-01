@@ -19,9 +19,6 @@ export const RENDER_FRONTEND_BASE_URL =
 export const PUBLIKATOR_BASE_URL = process.env.NEXT_PUBLIC_PUBLIKATOR_BASE_URL
 export const ADMIN_BASE_URL = process.env.NEXT_PUBLIC_ADMIN_BASE_URL
 
-export const MATOMO_URL_BASE = process.env.NEXT_PUBLIC_MATOMO_URL_BASE
-export const MATOMO_SITE_ID = process.env.NEXT_PUBLIC_MATOMO_SITE_ID
-
 export const STRIPE_PUBLISHABLE_KEY =
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 export const PF_PSPID = process.env.NEXT_PUBLIC_PF_PSPID

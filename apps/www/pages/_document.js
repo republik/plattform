@@ -68,10 +68,9 @@ export default class MyDocument extends Document {
   render() {
     const {
       css,
-      env: { MATOMO_URL_BASE, MATOMO_SITE_ID, PUBLIC_BASE_URL },
+      env: { PUBLIC_BASE_URL },
       nojs,
     } = this.props
-    const matomo = !!MATOMO_URL_BASE && !!MATOMO_SITE_ID
     const Head = nojs ? NoJsHead : DefaultHead
     return (
       <Html lang='de'>
@@ -133,34 +132,6 @@ export default class MyDocument extends Document {
           )}
           <Main />
           {!nojs && <NextScript />}
-          {!nojs && matomo && (
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-            _paq.push(['enableLinkTracking']);
-            ${
-              PUBLIC_BASE_URL.indexOf('https') === 0
-                ? "_paq.push(['setSecureCookie', true]);"
-                : ''
-            }
-            (function() {
-              _paq.push(['setTrackerUrl', '${MATOMO_URL_BASE}/matomo.php']);
-              _paq.push(['setSiteId', '${MATOMO_SITE_ID}']);
-              var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-              g.type='text/javascript'; g.async=true; g.defer=true; g.src='${MATOMO_URL_BASE}/matomo.js'; s.parentNode.insertBefore(g,s);
-            })();`,
-              }}
-            />
-          )}
-          {!nojs && matomo && (
-            <noscript>
-              <img
-                src={`${MATOMO_URL_BASE}/matomo.php?idsite=${MATOMO_SITE_ID}&rec=1`}
-                style={{ border: 0, position: 'fixed', left: -1 }}
-                alt=''
-              />
-            </noscript>
-          )}
         </body>
       </Html>
     )
