@@ -43,13 +43,12 @@ EMAIL_IR=ir@example.com
 EMAIL_PAYMENT=payment@example.com
 ```
 
-### Matomo
+### Analytics
 
-You can enable tracking by setting a base url and site id:
+You can enable tracking by setting a [Plausible Domain](https://plausible.io/docs/add-website#enter-the-domain-name-of-the-website-you-want-to-track)
 
 ```text
-MATOMO_URL_BASE=https://matomo.example.com
-MATOMO_SITE_ID=1
+NEXT_PUBLIC_PLAUSIBLE_DOMAIN=republik.ch
 ```
 
 ### GraphQL code generation
