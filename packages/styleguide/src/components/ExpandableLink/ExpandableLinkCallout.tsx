@@ -224,6 +224,8 @@ const ExpandableLinkCallout = ({
           } alternate`,
           ...expandedLink.position,
         },
+        // Display above audio player
+        zIndex: 42,
       })}
     >
       <div
