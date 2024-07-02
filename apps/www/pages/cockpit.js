@@ -596,14 +596,11 @@ const Page = ({
                 unterstützt uns und leistet einen Beitrag. Es gibt Menschen in
                 unserer Community, die sich eine Jahresmitgliedschaft nicht
                 leisten können und deshalb einen vergünstigten Preis zahlen; es
-                gibt aber auch Mitglieder, die als Gönner mehr bezahlen. Im
-                Frühjahr 2023 kamen zudem Menschen an Bord, die zum
-                5-Jahres-Jubiläum ein 12-Monats-Abo zu einem frei wählbaren
-                Preis abschliessen konnten. Zwischen Mitte Februar und Anfang
-                April 2024 laufen diese Abonnements aus, was wir hier ebenfalls
-                abbilden.{' '}
+                gibt aber auch Mitglieder, die als Gönner mehr bezahlen. Dazu
+                kommen Verlegerinnen, die mit einem zeitlich begrenzten
+                Einstiegsangebot an Bord gekommen sind.{' '}
                 <Editorial.A href={CAMPAIGN_META_ARTICLE_URL}>Hier</Editorial.A>{' '}
-                erfahren Sie mehr über unsere Kampagnen.
+                erfahren Sie mehr über unsere letzte Mitgliederkampagne.
               </P>
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
