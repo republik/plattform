@@ -9,7 +9,11 @@ const RETAINED_BITS_IN_IPv4_MASKING = 24 // 3 octets
 // Can only be a mutiple of 16.
 const RETAINED_BITS_IN_IPv6_MASKING = 48 // 3 blocks
 
-export default function truncateIP(ip: string): string {
+export default function truncateIP(ips: string | string[]): string {
+  // if x-forwarded-for contains an string of one or more IP's, seperated with commas
+  // if an array is provided, use the left most (client), if a string is provided, split and use first item
+  const ip = Array.isArray(ips) ? ips[0] : ips.split(',')[0]
+
   const ipV = net.isIP(ip)
   if (ipV === 0) {
     throw new Error('no valid IP supplied: ' + ip)
