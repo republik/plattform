@@ -10,7 +10,7 @@ import { updateNewsletterSubscriptions } from './updateNewsletterSubscriptions'
 import { NewsletterSubscriptionConfig } from './../NewsletterSubscriptionConfig'
 import { getConfig } from '../config'
 
-const MailchimpInterface = require('../index')
+import MailchimpInterface from '../MailchimpInterface'
 
 const {
   MAILCHIMP_INTEREST_MEMBER,
@@ -73,7 +73,7 @@ export async function enforceSubscriptions({
 
   // always add to marketing audience when newsletter settings are updated, except if MEMBER or BENEFACTOR are true
   if (hasActiveMembership) {
-    archiveMemberInAudience({
+    await archiveMemberInAudience({
       user: user || { email },
       audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
     })
@@ -86,7 +86,7 @@ export async function enforceSubscriptions({
       defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
     })
 
-    archiveMemberInAudience({
+    await archiveMemberInAudience({
       user: user || { email },
       audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
     })
@@ -94,13 +94,13 @@ export async function enforceSubscriptions({
     // no active membership
     await addUserToMarketingAudience(user || { email })
 
-    archiveMemberInAudience({
+    await archiveMemberInAudience({
       user: user || { email },
       audienceId: MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
     })
 
     if (!subscribedToFreeNewsletters) {
-      archiveMemberInAudience({
+      await archiveMemberInAudience({
         user: user || { email },
         audienceId: MAILCHIMP_MAIN_LIST_ID,
       })
