@@ -540,10 +540,11 @@ class CustomizePackage extends Component {
             <Link
               href={{
                 pathname: '/angebote',
-                query:
-                  pkg.group && pkg.group !== 'ME'
-                    ? { group: pkg.group }
-                    : undefined,
+                query: Object.assign(
+                  {},
+                  pkg.group && pkg.group !== 'ME' && { group: pkg.group },
+                  query.token && { token: query.token },
+                ),
               }}
               passHref
               legacyBehavior
@@ -1115,7 +1116,11 @@ class CustomizePackage extends Component {
                       <Editorial.A
                         href={format({
                           pathname: '/angebote',
-                          query: { package: 'ABO_GIVE' },
+                          query: Object.assign(
+                            {},
+                            { package: 'ABO_GIVE' },
+                            query.token && { token: query.token },
+                          ),
                         })}
                         onClick={(e) => {
                           if (shouldIgnoreClick(e)) {
@@ -1194,7 +1199,11 @@ class CustomizePackage extends Component {
                             .push(
                               {
                                 pathname: '/angebote',
-                                query: { package: 'ABO_GIVE' },
+                                query: Object.assign(
+                                  {},
+                                  { package: 'ABO_GIVE' },
+                                  query.token && { token: query.token },
+                                ),
                               },
                               undefined,
                               { shallow: router.pathname === '/angebote' },
