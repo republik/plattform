@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react'
-import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 
 import { sansSerifRegular14 } from '../Typography/styles'
@@ -10,6 +9,7 @@ import { useBoundingClientRect } from '../../lib/useBoundingClientRect'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
 import { recalculateLazyLoads } from '../LazyLoad'
+import { Formatter } from '../../lib/translate'
 
 const COLLAPSED_HEIGHT = {
   mobile: 180,
@@ -50,7 +50,7 @@ const collapsedEditorPreviewStyle = (mobile, desktop) =>
   })
 
 type CollapsableProps = {
-  t: any
+  t: Formatter
   children: React.ReactNode
   height?: {
     mobile: number

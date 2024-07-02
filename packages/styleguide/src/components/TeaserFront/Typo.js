@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, tUp } from './mediaQueries'
 import Text from './Text'
@@ -23,6 +22,20 @@ const styles = {
   }),
 }
 
+/**
+ * @typedef {object} TypoBlockProps
+ * @property {React.ReactNode} children
+ * @property {object} [attributes]
+ * @property {() => void} [onClick]
+ * @property {string} [color]
+ * @property {string} [bgColor]
+ */
+
+/**
+ * TypoBlock component
+ * @param {TypoBlockProps} props
+ * @returns {JSX.Element}
+ */
 const TypoBlock = ({
   children,
   attributes,
@@ -49,14 +62,6 @@ const TypoBlock = ({
       </div>
     </div>
   )
-}
-
-TypoBlock.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  color: PropTypes.string,
-  bgColor: PropTypes.string,
-  audioPlayButton: PropTypes.node,
 }
 
 export default TypoBlock

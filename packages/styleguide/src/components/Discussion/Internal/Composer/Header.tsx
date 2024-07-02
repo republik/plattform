@@ -10,6 +10,7 @@ import { useColorContext } from '../../../Colors/ColorContext'
 import PropTypes, { InferProps } from 'prop-types'
 import { DisplayAuthorPropType } from '../PropTypes'
 import { IconCheck, IconEditCircle } from '@republik/icons'
+import { Formatter } from '../../../../lib/translate'
 
 const buttonStyle = {
   background: 'none',
@@ -96,17 +97,24 @@ const styles = {
   }),
 }
 
-const commentHeaderProfilePropTypes = {
-  t: PropTypes.func.isRequired,
-  displayAuthor: DisplayAuthorPropType.isRequired,
-  canEditRole: PropTypes.bool,
+type CommentHeaderProfileProps = {
+  t: Formatter
+  displayAuthor: {
+    name: string
+    profilePicture?: string
+    credential?: {
+      description: string
+      verified?: boolean
+    }
+  }
+  canEditRole?: boolean
 }
 
 export const CommentHeaderProfile = ({
   t,
   displayAuthor,
   canEditRole,
-}: InferProps<typeof commentHeaderProfilePropTypes>) => {
+}: CommentHeaderProfileProps) => {
   const { name, profilePicture, credential } = displayAuthor || {}
 
   const [colorScheme] = useColorContext()
@@ -156,8 +164,6 @@ export const CommentHeaderProfile = ({
   )
 }
 
-CommentHeaderProfile.propTypes = commentHeaderProfilePropTypes
-
 const headerPropTypes = {
   t: PropTypes.func.isRequired,
   displayAuthor: DisplayAuthorPropType.isRequired,
@@ -200,5 +206,3 @@ export const Header = ({
     </button>
   )
 }
-
-Header.propTypes = headerPropTypes

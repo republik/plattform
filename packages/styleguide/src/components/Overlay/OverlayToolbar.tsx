@@ -1,5 +1,4 @@
-import React, { MouseEventHandler, ReactElement, ReactNode } from 'react'
-import PropTypes from 'prop-types'
+import React, { ReactElement, ReactNode } from 'react'
 import { css } from 'glamor'
 
 import { useColorContext } from '../Colors/ColorContext'
@@ -54,11 +53,13 @@ const styles = {
   }),
 }
 
+interface OverlayToolbarCloseProps {
+  onClick(...args: unknown[]): unknown
+}
+
 const OverlayToolbarClose = ({
   onClick,
-}: {
-  onClick: MouseEventHandler<HTMLButtonElement>
-}): ReactElement => {
+}: OverlayToolbarCloseProps): ReactElement => {
   const [colorScheme] = useColorContext()
   return (
     <button {...styles.close} onClick={onClick}>
@@ -66,15 +67,18 @@ const OverlayToolbarClose = ({
     </button>
   )
 }
-OverlayToolbarClose.propTypes = {
-  onClick: PropTypes.func.isRequired,
+
+interface OverlayToolbarProps {
+  children?: ReactNode
+  onClose?(...args: unknown[]): unknown
+  title?: React.ReactNode
 }
 
-export const OverlayToolbar: React.FC<{
-  children?: ReactNode
-  title?: string | ReactNode
-  onClose: MouseEventHandler<HTMLButtonElement>
-}> = ({ title, onClose, children }) => {
+export const OverlayToolbar = ({
+  title,
+  onClose,
+  children,
+}: OverlayToolbarProps) => {
   const [colorScheme] = useColorContext()
   return (
     <div
@@ -87,9 +91,4 @@ export const OverlayToolbar: React.FC<{
       {children}
     </div>
   )
-}
-
-OverlayToolbar.propTypes = {
-  onClose: PropTypes.func,
-  title: PropTypes.node,
 }

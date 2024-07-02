@@ -1,5 +1,4 @@
 import { css, merge } from 'glamor'
-import PropTypes from 'prop-types'
 import React from 'react'
 import { breakoutUp } from '../Center'
 import { mUp } from './mediaQueries'
@@ -136,14 +135,30 @@ const styles = {
   }),
 }
 
+/**
+ * @typedef {object} TeaserFrontTileRowProps
+ * @property {React.ReactNode} children
+ * @property {object} [attributes]
+ * @property {boolean} [singleColumn]
+ * @property {boolean} [autoColumns]
+ * @property {boolean} [mobileReverse]
+ * @property {1 | 2 | 3} columns
+ * @property {1 | 2} mobileColumns
+ */
+
+/**
+ * TeaserFrontTileRow component
+ * @param {TeaserFrontTileRowProps} props
+ * @returns {JSX.Element}
+ */
 export const TeaserFrontTileRow = ({
   children,
   attributes,
-  columns,
+  columns = 1,
   singleColumn,
   autoColumns,
   mobileReverse,
-  mobileColumns,
+  mobileColumns = 1,
 }) => {
   const [colorScheme] = useColorContext()
   const autoBorders = css({
@@ -200,24 +215,6 @@ export const TeaserFrontTileRow = ({
       {children}
     </div>
   )
-}
-
-TeaserFrontTileRow.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.any),
-    PropTypes.any,
-  ]).isRequired,
-  attributes: PropTypes.object,
-  mobileReverse: PropTypes.bool,
-  autoColumns: PropTypes.bool,
-  columns: PropTypes.oneOf([1, 2, 3]).isRequired,
-  mobileColumns: PropTypes.oneOf([1, 2]).isRequired,
-  singleColumn: PropTypes.bool,
-}
-
-TeaserFrontTileRow.defaultProps = {
-  columns: 1,
-  mobileColumns: 1,
 }
 
 export default TeaserFrontTileRow
