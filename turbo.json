@@ -1,6 +1,10 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "pipeline": {
+  "globalDependencies": [
+    ".env.local",
+    ".env"
+  ],
+  "tasks": {
     "build": {
       "dependsOn": [
         "^build"
@@ -10,7 +14,8 @@
         ".next/**",
         "!.next/cache/**"
       ],
-      "dotEnv": [
+      "inputs": [
+        "$TURBO_DEFAULT$",
         ".env.production.local",
         ".env.development.local",
         ".env.local",
@@ -20,15 +25,13 @@
       ]
     },
     "start": {
+      "persistent": true,
       "dependsOn": [
         "^build",
         "build"
       ],
-      "outputs": [
-        "dist/**",
-        ".next/**"
-      ],
-      "dotEnv": [
+      "inputs": [
+        "$TURBO_DEFAULT$",
         ".env.production.local",
         ".env.development.local",
         ".env.local",
@@ -88,25 +91,11 @@
     "lint": {
       "outputs": []
     },
-    "start": {
-      "persistent": true,
-      "dependsOn": [
-        "^build",
-        "build"
-      ],
-      "dotEnv": [
-        ".env.production.local",
-        ".env.development.local",
-        ".env.local",
-        ".env.production",
-        ".env.development",
-        ".env"
-      ]
-    },
     "dev": {
       "cache": false,
       "persistent": true,
-      "dotEnv": [
+      "inputs": [
+        "$TURBO_DEFAULT$",
         ".env.development.local",
         ".env.local",
         ".env.development",
@@ -121,7 +110,8 @@
         "^build",
         "build"
       ],
-      "dotEnv": [
+      "inputs": [
+        "$TURBO_DEFAULT$",
         ".env.test.local",
         ".env.local",
         ".env.test",
@@ -137,9 +127,5 @@
         "build/**"
       ]
     }
-  },
-  "globalDotEnv": [
-    ".env.local",
-    ".env"
-  ]
+  }
 }
