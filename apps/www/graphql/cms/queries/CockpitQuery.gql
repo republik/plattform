@@ -1,0 +1,17 @@
+query Cockpit {
+  cockpit {
+    id
+    paragraph1 {
+      value
+    }
+    paragraph2 {
+      value
+    }
+    paragraph3 {
+      value
+    }
+    paragraph4 {
+      value
+    }
+  }
+}

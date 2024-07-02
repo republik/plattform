@@ -272,6 +272,57 @@ type ChallengeAcceptedPersonRecord implements RecordInterface {
   slug: String!
 }
 
+type CockpitModelParagraph1Field {
+  blocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+type CockpitModelParagraph2Field {
+  blocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+type CockpitModelParagraph3Field {
+  blocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+type CockpitModelParagraph4Field {
+  blocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+"""Record of type 📝 Cockpit (cockpit)"""
+type CockpitRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  id: ItemId!
+  paragraph1: CockpitModelParagraph1Field
+  paragraph2: CockpitModelParagraph2Field
+  paragraph3: CockpitModelParagraph3Field
+  paragraph4: CockpitModelParagraph4Field
+}
+
 type CollectionMetadata {
   count: IntType!
 }
@@ -3037,6 +3088,17 @@ type Query {
     locale: SiteLocale
     orderBy: [ChallengeAcceptedPersonModelOrderBy] = [_updatedAt_DESC]
   ): ChallengeAcceptedPersonRecord
+
+  """Returns the single instance record"""
+  cockpit(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): CockpitRecord
 
   """Returns a specific record"""
   event(
