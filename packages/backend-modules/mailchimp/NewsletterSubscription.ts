@@ -20,11 +20,10 @@ const createNewsletterSubscription = (interestConfigurationMap) => ({
   },
 
   interestConfiguration(interestId) {
-    return interestConfigurationMap
-      .filter(
-        ({ interestId: currentInterestId }) => currentInterestId === interestId,
-      )
-      .reduce((last, interest) => interest, {})
+    const interests = interestConfigurationMap.filter(
+      ({ interestId: currentInterestId }) => currentInterestId === interestId,
+    )
+    return interests.length !== 0 ? interests[0] : null
   },
 })
 
@@ -36,7 +35,7 @@ const withConfiguration = (interestConfiguration, fn) => {
   return (data) => fn(data, NewsletterSubscription)
 }
 
-module.exports = {
+export {
   withConfiguration,
   createNewsletterSubscription,
 }

@@ -15,7 +15,7 @@ afterAll(async () => {
 })
 
 const { createMail: _createMail } = require('./lib')
-const MailchimpInterface = require('../mailchimp/MailchimpInterface')
+const MailchimpInterface = require('@orbiting/backend-modules-mailchimp')
 
 const createMail = () =>
   _createMail([

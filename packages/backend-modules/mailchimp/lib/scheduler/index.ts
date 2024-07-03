@@ -1,15 +1,16 @@
 const debug = require('debug')('mail:lib:scheduler')
 const { timeScheduler } = require('@orbiting/backend-modules-schedulers')
-const dayjs = require('dayjs')
-const cleanedUserMailing = require('./cleanedUserMailing')
-const archiveUnsubscribed = require('./archiveUnsubscribed')
+import dayjs from 'dayjs'
+import { cleanedUserMailing } from './cleanedUserMailing'
+import { archiveUnsubscribed } from './archiveUnsubscribed'
+import bluebird from 'bluebird'
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 const init = async (context) => {
   debug('init')
 
-  const schedulers = []
+  const schedulers: any[] = []
 
   schedulers.push(
     timeScheduler.init({
@@ -38,7 +39,7 @@ const init = async (context) => {
     timeScheduler.init({
       name: 'archive-unsubscribed',
       context,
-      runFunc: async (_args, context) => {
+      runFunc: async (_args) => {
         const { dryRun } = _args
         debug(
           `starting job to archive unsubscribed users in audiences on mailchimp`,
@@ -53,7 +54,7 @@ const init = async (context) => {
   )
 
   const close = async () => {
-    await Promise.each(schedulers, (scheduler) => scheduler.close())
+    await bluebird.each(schedulers, (scheduler) => scheduler.close())
   }
 
   return {
@@ -61,6 +62,6 @@ const init = async (context) => {
   }
 }
 
-module.exports = {
+export {
   init,
 }

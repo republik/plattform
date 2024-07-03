@@ -1,9 +1,9 @@
-import changeEmailOnMailchimp = require('./changeEmailOnMailchimp')
-import deleteEmail = require('./deleteEmail')
-import getNewsletterSettings = require('./getNewsletterSettings')
-import updateMergeFields = require('./updateMergeFields')
-import updateNewsletterSubscriptions = require('./updateNewsletterSubscriptions')
-import getInterestsForUser = require('./getInterestsForUser')
+import { changeEmailOnMailchimp } from './changeEmailOnMailchimp'
+import { deleteEmail } from './deleteEmail'
+import { getNewsletterSettings } from './getNewsletterSettings'
+import { updateMergeFields } from './updateMergeFields'
+import { updateNewsletterSubscriptions } from './updateNewsletterSubscriptions'
+import { getInterestsForUser } from './getInterestsForUser'
 
 export {
   changeEmailOnMailchimp,

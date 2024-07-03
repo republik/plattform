@@ -59,7 +59,7 @@ const {
 const PublicationScheduler = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
 const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
 const DatabroomScheduler = require('@orbiting/backend-modules-databroom/lib/scheduler')
-const MailScheduler = require('@orbiting/backend-modules-mailchimp/lib/scheduler')
+const MailScheduler = require('@orbiting/backend-modules-mailchimp')
 
 const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 

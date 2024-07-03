@@ -1,9 +1,9 @@
+import MailchimpInterface from '../../MailchimpInterface'
 const debug = require('debug')('mail:lib:scheduler:archive')
 const checkEnv = require('check-env')
 const BluePromise = require('bluebird')
-const MailchimpInterface = require('../../MailchimpInterface.js')
 
-module.exports = async (dryRun = false) => {
+export async function archiveUnsubscribed(dryRun: boolean) {
   // get all unsubscribed from mailchimp onboarding audience and set to archived
   debug('archive unsubscribed from onboarding scheduler')
   checkEnv([
@@ -24,11 +24,11 @@ module.exports = async (dryRun = false) => {
   ]
 
   audiencesToArchiveUnsubscribed.forEach((audienceId) => {
-    archiveUnsubscribed({ dryRun, audienceId })
+    archiveUnsubscribedInAudience({ dryRun, audienceId })
   })
 }
 
-const archiveUnsubscribed = async ({ dryRun, audienceId }) => {
+const archiveUnsubscribedInAudience = async ({ dryRun, audienceId }) => {
   const mailchimp = MailchimpInterface({ console })
   const unsubscribedMembers = await mailchimp.getMembersFromAudienceWithStatus(
     MailchimpInterface.MemberStatus.Unsubscribed,
@@ -44,7 +44,7 @@ const archiveUnsubscribed = async ({ dryRun, audienceId }) => {
   )
   debug(emailsToArchive)
 
-  const results = []
+  const results: boolean[] = []
 
   if (dryRun) {
     console.log(
@@ -59,7 +59,7 @@ const archiveUnsubscribed = async ({ dryRun, audienceId }) => {
       results.push(true)
     } else {
       const result = await mailchimp.archiveMember(email, audienceId)
-      results.push(result)
+      results.push(!!result)
     }
   })
   return results

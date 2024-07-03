@@ -1,7 +1,7 @@
-const MailchimpInterface = require('../MailchimpInterface')
+import MailchimpInterface from '../MailchimpInterface'
 const logger = console
 
-module.exports = async ({ user }) => {
+export async function updateMergeFields({ user }) {
   const { email, firstName, lastName } = user
 
   const body = {

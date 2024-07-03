@@ -29,7 +29,7 @@ const audiences = [
 
 const MINIMUM_HTTP_RESPONSE_STATUS_ERROR = 400
 
-const MailchimpInterface = ({ logger }) => {
+const MailchimpInterface = ({ logger }: any) => {
   checkEnv(['MAILCHIMP_API_KEY', 'MAILCHIMP_URL', 'MAILCHIMP_MAIN_LIST_ID'])
   return {
     buildApiUrl(path, audienceId = MAILCHIMP_MAIN_LIST_ID) {

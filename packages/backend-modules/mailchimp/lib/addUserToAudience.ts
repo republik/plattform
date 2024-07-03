@@ -4,7 +4,7 @@ import { MemberStatus, UserInterests, MemberData } from '../types'
 
 import { getConfig } from './../config'
 
-const MailchimpInterface = require('../index')
+import MailchimpInterface from '../MailchimpInterface'
 
 export type AddUserToAudienceParams = {
   user: User

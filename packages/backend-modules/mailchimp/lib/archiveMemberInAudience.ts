@@ -1,7 +1,7 @@
 import { User } from '@orbiting/backend-modules-types'
 import { isUserInAudience } from './isUserInAudience'
 
-const MailchimpInterface = require('../index')
+import MailchimpInterface from '../MailchimpInterface'
 
 export type ArchiveMemberInAudienceParams = {
   user: User,

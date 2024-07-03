@@ -1,8 +1,8 @@
-const MailchimpInterface = require('../MailchimpInterface')
-const { EmailRequiredMailError } = require('@orbiting/backend-modules-mail/errors')
+import MailchimpInterface from '../MailchimpInterface'
+import { EmailRequiredMailError } from '@orbiting/backend-modules-mail/errors'
 const logger = console
 
-module.exports = async ({ user, newEmail }) => {
+export async function changeEmailOnMailchimp({ user, newEmail }) {
   const { email: oldEmail } = user
   if (!oldEmail || !newEmail) {
     throw new EmailRequiredMailError()

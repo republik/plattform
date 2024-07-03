@@ -1,4 +1,4 @@
-const MailchimpInterface = require('../MailchimpInterface')
+import MailchimpInterface from '../MailchimpInterface'
 const { SubscriptionHandlerMissingMailError } = require('@orbiting/backend-modules-mail/errors')
 const logger = console
 
@@ -16,7 +16,7 @@ const updateNewsletterSubscriptions = async (
 
   const { email, firstName, lastName, roles } = user
 
-  const body = {
+  const body: any = {
     email_address: email,
     status_if_new: MailchimpInterface.MemberStatus.Subscribed,
     interests,
@@ -53,4 +53,4 @@ const updateNewsletterSubscriptions = async (
   )
 }
 
-module.exports = { updateNewsletterSubscriptions }
+export { updateNewsletterSubscriptions }
