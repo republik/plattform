@@ -1,5 +1,6 @@
 'use client'
 import {
+  AuthorizeSessionDocument,
   MeDocument,
   SignInDocument,
   SignInTokenType,
@@ -39,6 +40,32 @@ function useSignIn() {
   }
 }
 
+function AuthorizeCode({ email }: { email: string }) {
+  const [authorizeSession] = useMutation(AuthorizeSessionDocument)
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault()
+        const formData = new FormData(e.currentTarget)
+
+        const code = (formData.get('code') as string)
+          ?.replace(/[^0-9]/g, '')
+          .slice(0, 6)
+
+        authorizeSession({
+          variables: {
+            email,
+            tokens: [{ type: SignInTokenType.EmailCode, payload: code }],
+          },
+        })
+      }}
+    >
+      <input name='code'></input>
+      <button type='submit'>OK</button>
+    </form>
+  )
+}
+
 export function LoginForm() {
   const { signIn, me, error, loading, data } = useSignIn()
 
@@ -66,6 +93,11 @@ export function LoginForm() {
   // Signing in
   if (data) {
     const { tokenType, phrase, alternativeFirstFactors } = data
+
+    if (tokenType === SignInTokenType.EmailCode) {
+      return <AuthorizeCode email={email} />
+    }
+
     return (
       <>
         <p>
@@ -114,7 +146,7 @@ export function LoginForm() {
               variables: {
                 context: searchParams.get('redirect'),
                 email,
-                // tokenType: SignInTokenType.EmailCode,
+                tokenType: SignInTokenType.EmailCode,
               },
             })
           }
