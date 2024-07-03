@@ -272,25 +272,31 @@ type ChallengeAcceptedPersonRecord implements RecordInterface {
   slug: String!
 }
 
-type CockpitModelParagraph1Field {
+type CockpitModelActiveMembersField {
   blocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-type CockpitModelParagraph2Field {
+type CockpitModelIntroField {
   blocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-type CockpitModelParagraph3Field {
+type CockpitModelMembershipsChangeChartField {
   blocks: [String!]!
   links: [String!]!
   value: JsonField!
 }
 
-type CockpitModelParagraph4Field {
+type CockpitModelMembershipsCountChartField {
+  blocks: [String!]!
+  links: [String!]!
+  value: JsonField!
+}
+
+type CockpitModelOurCommunityField {
   blocks: [String!]!
   links: [String!]!
   value: JsonField!
@@ -316,11 +322,12 @@ type CockpitRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
+  activeMembers: CockpitModelActiveMembersField
   id: ItemId!
-  paragraph1: CockpitModelParagraph1Field
-  paragraph2: CockpitModelParagraph2Field
-  paragraph3: CockpitModelParagraph3Field
-  paragraph4: CockpitModelParagraph4Field
+  intro: CockpitModelIntroField
+  membershipsChangeChart: CockpitModelMembershipsChangeChartField
+  membershipsCountChart: CockpitModelMembershipsCountChartField
+  ourCommunity: CockpitModelOurCommunityField
 }
 
 type CollectionMetadata {

@@ -148,6 +148,9 @@ const styles = {
     '& h2, & h3, & h4, & h5, & h6': {
       fontWeight: 'bold',
     },
+    '& a': {
+      textDecoration: 'underline',
+    },
   }),
 }
 
@@ -591,10 +594,7 @@ const Page = ({
                 Das Cockpit zum Stand unseres Unternehmens
               </Interaction.Headline>
               <div className={styles.structuredText}>
-                <StructuredText data={data.cockpit.paragraph1} />
-              </div>
-              <div className={styles.structuredText}>
-                <StructuredText data={data.cockpit.paragraph2} />
+                <StructuredText data={data.cockpit.intro} />
               </div>
               <div style={{ margin: '60px 0' }}>
                 <RawStatus
@@ -621,7 +621,7 @@ const Page = ({
                 />
               </div>
               <div className={styles.structuredText}>
-                <StructuredText data={data.cockpit.paragraph3} />
+                <StructuredText data={data.cockpit.ourCommunity} />
               </div>
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
@@ -664,7 +664,7 @@ const Page = ({
                 />
               </div>
               <div className={styles.structuredText}>
-                <StructuredText data={data.cockpit.paragraph4} />
+                <StructuredText data={data.cockpit.membershipsCountChart} />
               </div>
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
@@ -717,19 +717,15 @@ const Page = ({
                   Datenstand: {formatDateTime(new Date(updatedAt))}
                 </ChartLegend>
               </div>
-              <P>
-                Bei der Zahl der Abgänge ist zu berücksichtigen, dass die
-                12-Monats-Abos aus der 5-Jahres-Jubiläums-Kampagne das Bild
-                verzerren. Diese vergünstigten Abos laufen im Frühjahr 2024 aus.
-              </P>
+              <div className={styles.structuredText}>
+                <StructuredText data={data.cockpit.membershipsChangeChart} />
+              </div>
               <H2>
                 {countFormat(lastSeen)} Verlegerinnen sind monatlich&nbsp;aktiv
               </H2>
-              <P>
-                Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für
-                ein gesundes Unternehmen braucht es eine aktive und
-                interessierte Verlegerschaft.
-              </P>
+              <div className={styles.structuredText}>
+                <StructuredText data={data.cockpit.activeMembers} />
+              </div>
 
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>

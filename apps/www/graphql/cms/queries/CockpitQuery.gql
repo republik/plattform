@@ -1,16 +1,19 @@
 query Cockpit {
   cockpit {
     id
-    paragraph1 {
+    intro {
       value
     }
-    paragraph2 {
+    membershipsCountChart {
       value
     }
-    paragraph3 {
+    membershipsChangeChart {
       value
     }
-    paragraph4 {
+    ourCommunity {
+      value
+    }
+    activeMembers {
       value
     }
   }
