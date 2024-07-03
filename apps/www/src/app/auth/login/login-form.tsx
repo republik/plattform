@@ -2,12 +2,13 @@
 import {
   MeDocument,
   SignInDocument,
+  SignInTokenType,
   SignOutDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { NetworkStatus, useMutation, useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { useSearchParams } from 'next/navigation'
-import { useId } from 'react'
+import { useId, useState } from 'react'
 
 function LogOut() {
   const [signOut, { loading }] = useMutation(SignOutDocument)
@@ -22,49 +23,81 @@ function LogOut() {
   )
 }
 
-function WaitForLogin({ phrase }: { phrase: string }) {
-  const { data, loading, error, networkStatus } = useQuery(MeDocument, {
-    pollInterval: 1000,
-    notifyOnNetworkStatusChange: true,
+function useSignIn() {
+  const meQuery = useQuery(MeDocument, {
+    pollInterval: 2000,
   })
 
-  if (data?.me) {
-    return (
-      <>
-        Logged in! <LogOut />
-      </>
-    )
-  }
+  const [signIn, signInQuery] = useMutation(SignInDocument, {})
 
-  if (error) {
-    console.error(error)
+  return {
+    signIn,
+    error: meQuery.error || signInQuery.error,
+    loading: meQuery.loading || signInQuery.loading,
+    me: meQuery.data?.me,
+    data: signInQuery.data?.signIn,
   }
-
-  return (
-    <>
-      <p>
-        Check dein Mail: <strong>{phrase}</strong>
-      </p>
-      <pre>data: {JSON.stringify(data, null, 2)}</pre>
-      <pre>loading: {loading ? 'true' : 'false'}</pre>
-      <pre>poll: {networkStatus === NetworkStatus.poll ? 'true' : 'false'}</pre>
-      <pre>error: {error?.message}</pre>
-    </>
-  )
 }
 
 export function LoginForm() {
-  const [signIn, { data, loading, error }] = useMutation(SignInDocument, {})
+  const { signIn, me, error, loading, data } = useSignIn()
+
+  const [email, setEmail] = useState('')
   const emailId = useId()
   const searchParams = useSearchParams()
-  if (data?.signIn) {
-    return <WaitForLogin phrase={data.signIn.phrase} />
-  }
 
   if (error) {
     return <div>Ups</div>
   }
 
+  if (loading) {
+    return <div>Momentchen …</div>
+  }
+
+  // Logged in
+  if (me) {
+    return (
+      <>
+        Eingeloggt! <LogOut />
+      </>
+    )
+  }
+
+  // Signing in
+  if (data) {
+    const { tokenType, phrase, alternativeFirstFactors } = data
+    return (
+      <>
+        <p>
+          Check dein {tokenType}: <strong>{phrase}</strong>
+        </p>
+
+        <ul>
+          {alternativeFirstFactors.map((altTokenType) => {
+            return (
+              <form
+                key={altTokenType}
+                onSubmit={() => {
+                  signIn({
+                    variables: {
+                      email,
+                      tokenType: altTokenType,
+                    },
+                  })
+                }}
+              >
+                <button disabled={loading} type='submit'>
+                  ODER {altTokenType}
+                </button>
+              </form>
+            )
+          })}
+        </ul>
+      </>
+    )
+  }
+
+  // Show login form
   return (
     <div>
       <form
@@ -75,20 +108,26 @@ export function LoginForm() {
         })}
         onSubmit={(e) => {
           e.preventDefault()
-          const email = (document.getElementById(emailId) as HTMLInputElement)
-            ?.value
+
           if (typeof email === 'string') {
             signIn({
               variables: {
                 context: searchParams.get('redirect'),
                 email,
+                // tokenType: SignInTokenType.EmailCode,
               },
             })
           }
         }}
       >
         <label htmlFor={emailId}>E-Mail</label>
-        <input name='email' id={emailId} type='email'></input>
+        <input
+          name='email'
+          id={emailId}
+          type='email'
+          value={email}
+          onChange={(e) => setEmail(e.currentTarget.value)}
+        ></input>
         <button disabled={loading} type='submit'>
           Anmelden
         </button>
