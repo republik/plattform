@@ -811,29 +811,7 @@ const Page = ({
   )
 }
 
-const EnhancedPage = compose(
-  withT,
-  withMe,
-  withRouter,
-  withInNativeApp,
-  // graphql(statusQuery, {
-  //   props: ({ data }) => {
-  //     return {
-  //       data,
-  //     }
-  //   },
-  //   options: ({ router: { query } }) => {
-  //     const currentMonth = timeMonth.floor(new Date())
-  //     return {
-  //       variables: {
-  //         prev: formatYearMonthKey(timeMonth.offset(currentMonth, -1)),
-  //         max: formatYearMonthKey(timeMonth.offset(currentMonth, 3)),
-  //         accessToken: query.token,
-  //       },
-  //     }
-  //   },
-  // }),
-)(Page)
+const EnhancedPage = compose(withT, withMe, withRouter, withInNativeApp)(Page)
 
 export default EnhancedPage
 
