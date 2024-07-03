@@ -1,11 +1,10 @@
 import { gql } from '@apollo/client'
-import { graphql } from '@apollo/client/react/hoc'
 import { extent } from 'd3-array'
 import { timeMonth } from 'd3-time'
 import compose from 'lodash/flowRight'
 import Router, { withRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-
+import { css } from '@republik/theme/css'
 import {
   Chart,
   ChartLead,
@@ -32,13 +31,19 @@ import withT from '../lib/withT'
 import { ListWithQuery as TestimonialList } from '../components/Testimonial/List'
 
 import Link from 'next/link'
-import { withDefaultSSR } from '../lib/apollo/helpers'
+import { createGetStaticProps } from '../lib/apollo/helpers'
 import withMe from '../lib/apollo/withMe'
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import { swissTime } from '../lib/utils/format'
 import withInNativeApp from '../lib/withInNativeApp'
 
 import { CAMPAIGN_META_ARTICLE_URL } from '@app/app/(campaign)/constants'
+import { getCMSClientBase } from '@app/lib/apollo/cms-client-base'
+import { CockpitDocument } from '#graphql/cms/__generated__/gql/graphql'
+import { StructuredText } from 'react-datocms'
+
+// Revalidate every 5 minutes
+const COCKPIT_PAGE_SSG_REVALIDATE = 60 * 5
 
 /**
  * Generate a list of ticks for a chart, starting at 0 and going to max, then from 0 to min
@@ -113,6 +118,41 @@ const statusQuery = gql`
     }
   }
 `
+
+const styles = {
+  structuredText: css({
+    color: 'contrast',
+    textStyle: 'serif',
+    fontSize: 'xl',
+    '& p': {
+      marginY: 6,
+    },
+    '&>*:not(:first-child)': {
+      marginTop: '3',
+    },
+    '& ul > li': {
+      listStyleType: 'none',
+      pl: '6',
+      position: 'relative',
+      '&:not(:first-child)': {
+        marginTop: '1',
+      },
+      '&::before': { content: '"–"', position: 'absolute', left: '0' },
+    },
+    '& ol': { listStyleType: 'decimal', paddingLeft: '6', marginLeft: '2' },
+    '& ol > li': {
+      '&:not(:first-child)': {
+        marginTop: '1',
+      },
+    },
+    '& h2, & h3, & h4, & h5, & h6': {
+      fontWeight: 'bold',
+    },
+    '& a': {
+      textDecoration: 'underline',
+    },
+  }),
+}
 
 const numMembersNeeded = 33000
 
@@ -553,18 +593,9 @@ const Page = ({
               <Interaction.Headline style={{ marginBottom: 20 }}>
                 Das Cockpit zum Stand unseres Unternehmens
               </Interaction.Headline>
-              <P>
-                Die Aufgabe der Republik ist, brauchbaren Journalismus zu
-                machen. Einen, der die Köpfe klarer, das Handeln mutiger, die
-                Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die
-                Freiheit, den Rechtsstaat, die Demokratie.
-              </P>
-              <P>
-                Die Grundlage dafür ist ein Geschäftsmodell für werbefreien,
-                unabhängigen, leserfinanzierten Journalismus. Um am Markt zu
-                bestehen und einen entscheidenden Unterschied im Mediensystem zu
-                machen, braucht die Republik eine starke Community.
-              </P>
+              <div className={styles.structuredText}>
+                <StructuredText data={data.cockpit.intro} />
+              </div>
               <div style={{ margin: '60px 0' }}>
                 <RawStatus
                   t={t}
@@ -589,19 +620,9 @@ const Page = ({
                   }
                 />
               </div>
-              <P>
-                An dieser Stelle machen wir, anders als in unserer finanziellen
-                Planung, keinen Unterschied zwischen weniger und mehr zahlenden
-                Verlegerinnen. Jeder Verleger, egal wie viel er zahlen kann,
-                unterstützt uns und leistet einen Beitrag. Es gibt Menschen in
-                unserer Community, die sich eine Jahresmitgliedschaft nicht
-                leisten können und deshalb einen vergünstigten Preis zahlen; es
-                gibt aber auch Mitglieder, die als Gönner mehr bezahlen. Dazu
-                kommen Verlegerinnen, die mit einem zeitlich begrenzten
-                Einstiegsangebot an Bord gekommen sind.{' '}
-                <Editorial.A href={CAMPAIGN_META_ARTICLE_URL}>Hier</Editorial.A>{' '}
-                erfahren Sie mehr über unsere letzte Mitgliederkampagne.
-              </P>
+              <div className={styles.structuredText}>
+                <StructuredText data={data.cockpit.ourCommunity} />
+              </div>
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
                   Aktuell {countFormat(activeCount)} Mitglieder
@@ -642,15 +663,9 @@ const Page = ({
                     .map((d) => ({ ...d, value: String(d.value) }))}
                 />
               </div>
-              <P>
-                Der strategische{' '}
-                <Editorial.A href='/2023/11/10/der-fokus-liegt-auf-stabilitaet'>
-                  Fokus für das 7. Geschäftsjahr
-                </Editorial.A>{' '}
-                (Juli 2023 bis Juni 2024) liegt auf Stabilität: Zu- und Abgänge
-                bei Mitgliedschaften und Abonnements müssen sich dafür über das
-                Jahr die Waage halten.
-              </P>
+              <div className={styles.structuredText}>
+                <StructuredText data={data.cockpit.membershipsCountChart} />
+              </div>
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
                   {/* {countFormat(
@@ -702,19 +717,15 @@ const Page = ({
                   Datenstand: {formatDateTime(new Date(updatedAt))}
                 </ChartLegend>
               </div>
-              <P>
-                Bei der Zahl der Abgänge ist zu berücksichtigen, dass die
-                12-Monats-Abos aus der 5-Jahres-Jubiläums-Kampagne das Bild
-                verzerren. Diese vergünstigten Abos laufen im Frühjahr 2024 aus.
-              </P>
+              <div className={styles.structuredText}>
+                <StructuredText data={data.cockpit.membershipsChangeChart} />
+              </div>
               <H2>
                 {countFormat(lastSeen)} Verlegerinnen sind monatlich&nbsp;aktiv
               </H2>
-              <P>
-                Der beste Journalismus nützt nichts, wenn ihn niemand sieht. Für
-                ein gesundes Unternehmen braucht es eine aktive und
-                interessierte Verlegerschaft.
-              </P>
+              <div className={styles.structuredText}>
+                <StructuredText data={data.cockpit.activeMembers} />
+              </div>
 
               <div style={{ marginTop: 20 }}>
                 <ChartTitle>
@@ -800,28 +811,36 @@ const Page = ({
   )
 }
 
-const EnhancedPage = compose(
-  withT,
-  withMe,
-  withRouter,
-  withInNativeApp,
-  graphql(statusQuery, {
-    props: ({ data }) => {
-      return {
-        data,
-      }
-    },
-    options: ({ router: { query } }) => {
-      const currentMonth = timeMonth.floor(new Date())
-      return {
+const EnhancedPage = compose(withT, withMe, withRouter, withInNativeApp)(Page)
+
+export default EnhancedPage
+
+export const getStaticProps = createGetStaticProps(
+  async (client, { draftMode, params }) => {
+    const currentMonth = timeMonth.floor(new Date())
+    const [apiData, datoCMSData] = await Promise.all([
+      client.query({
+        query: statusQuery,
         variables: {
           prev: formatYearMonthKey(timeMonth.offset(currentMonth, -1)),
           max: formatYearMonthKey(timeMonth.offset(currentMonth, 3)),
-          accessToken: query.token,
+          accessToken: params?.token,
         },
-      }
-    },
-  }),
-)(Page)
+      }),
+      getCMSClientBase({ draftMode }).query({
+        query: CockpitDocument,
+      }),
+    ])
 
-export default withDefaultSSR(EnhancedPage)
+    return {
+      props: {
+        data: {
+          ...apiData.data,
+          ...datoCMSData.data,
+        },
+        draftMode: draftMode ?? false,
+      },
+      revalidate: COCKPIT_PAGE_SSG_REVALIDATE,
+    }
+  },
+)
