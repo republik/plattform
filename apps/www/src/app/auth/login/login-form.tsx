@@ -11,11 +11,24 @@ import { css } from '@republik/theme/css'
 import { useSearchParams } from 'next/navigation'
 import { useId, useState } from 'react'
 
+const buttonStyle = css({
+  background: 'primary',
+  color: 'white',
+  px: '4',
+  py: '3',
+})
+
+const inputStyle = css({
+  borderBottom: '1px solid token(colors.text)',
+  py: '3',
+})
+
 function LogOut() {
   const [signOut, { loading }] = useMutation(SignOutDocument)
 
   return (
     <button
+      className={buttonStyle}
       onClick={() => signOut().then(() => window.location.reload())}
       disabled={loading}
     >
@@ -60,8 +73,10 @@ function AuthorizeCode({ email }: { email: string }) {
         })
       }}
     >
-      <input name='code'></input>
-      <button type='submit'>OK</button>
+      <input className={inputStyle} name='code'></input>
+      <button className={buttonStyle} type='submit'>
+        OK
+      </button>
     </form>
   )
 }
@@ -118,7 +133,11 @@ export function LoginForm() {
                   })
                 }}
               >
-                <button disabled={loading} type='submit'>
+                <button
+                  className={buttonStyle}
+                  disabled={loading}
+                  type='submit'
+                >
                   ODER {altTokenType}
                 </button>
               </form>
@@ -154,13 +173,14 @@ export function LoginForm() {
       >
         <label htmlFor={emailId}>E-Mail</label>
         <input
+          className={inputStyle}
           name='email'
           id={emailId}
           type='email'
           value={email}
           onChange={(e) => setEmail(e.currentTarget.value)}
         ></input>
-        <button disabled={loading} type='submit'>
+        <button className={buttonStyle} disabled={loading} type='submit'>
           Anmelden
         </button>
       </form>
