@@ -1,5 +1,6 @@
 import MailchimpInterface from '../MailchimpInterface'
 import { EmailRequiredMailError } from './errors'
+import bluebird from 'bluebird'
 const logger = console
 
 export async function changeEmailOnMailchimp({ user, newEmail }) {
@@ -10,8 +11,8 @@ export async function changeEmailOnMailchimp({ user, newEmail }) {
 
   const mailchimp = MailchimpInterface({ logger })
 
-  MailchimpInterface.audiences.map((audienceId) =>
-    moveSubscriptionsInAudience({
+  await bluebird.map(MailchimpInterface.audiences, async (audienceId) =>
+    await moveSubscriptionsInAudience({
       mailchimp,
       oldEmail,
       newEmail,
@@ -27,6 +28,7 @@ const moveSubscriptionsInAudience = async ({
   audienceId,
 }) => {
   const member = await mailchimp.getMember(oldEmail, audienceId)
+  console.log(member)
 
   if (member) {
     // archive oldEmail
@@ -40,14 +42,8 @@ const moveSubscriptionsInAudience = async ({
       newEmail,
       {
         email_address: newEmail,
-        status_if_new:
-          member.status !== MailchimpInterface.MemberStatus.Unsubscribed
-            ? MailchimpInterface.MemberStatus.Subscribed
-            : member.status,
-        status:
-          member.status !== MailchimpInterface.MemberStatus.Unsubscribed
-            ? MailchimpInterface.MemberStatus.Subscribed
-            : member.status,
+        status_if_new: member.status,
+        status: member.status,
         interests: member.interests,
         merge_fields: member.merge_fields,
         tags: member.tags,
