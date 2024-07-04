@@ -111,7 +111,6 @@ module.exports = async (segment, mail, pgdb, data) => {
       message: {
         ...message,
         html: !!message.html,
-        text: !!message.text,
         attachments: message.attachments?.map(({ name, type }) => ({
           name,
           type,
@@ -141,5 +140,7 @@ module.exports = async (segment, mail, pgdb, data) => {
       sentData.result,
       accessEvent?.id,
     )
+  }).catch((e) => {
+    console.warn('Error while trying to send mails to segment: %s', e)
   })
 }
