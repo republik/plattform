@@ -23,7 +23,8 @@ const {
   addUserToMarketingAudience,
   archiveMemberInAudience,
   NewsletterSubscriptionConfig,
-  enforceSubscriptions
+  enforceSubscriptions,
+  resubscribeEmail,
 } = require('@orbiting/backend-modules-mailchimp')
 
 const {
@@ -38,6 +39,7 @@ mail.addUserToMarketingAudience = addUserToMarketingAudience
 mail.addUserToAudience = addUserToAudience
 mail.archiveMemberInAudience = archiveMemberInAudience
 mail.enforceSubscriptions = enforceSubscriptions
+mail.resubscribeEmail = resubscribeEmail
 
 mail.sendMembershipProlongConfirmation = async ({
   pledger,

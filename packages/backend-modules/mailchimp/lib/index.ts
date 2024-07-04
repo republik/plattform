@@ -9,6 +9,7 @@ import { addUserToAudience, addUserToMarketingAudience } from './addUserToAudien
 import { archiveMemberInAudience } from './archiveMemberInAudience'
 import { NewsletterSubscriptionConfig } from '../NewsletterSubscriptionConfig'
 import { enforceSubscriptions } from './enforceSubscriptions'
+import { resubscribeEmail } from './resubscribeEmail'
 
 export {
   changeEmailOnMailchimp,
@@ -23,4 +24,5 @@ export {
   archiveMemberInAudience,
   NewsletterSubscriptionConfig,
   enforceSubscriptions,
+  resubscribeEmail,
 }
