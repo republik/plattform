@@ -1,5 +1,5 @@
 import MailchimpInterface from '../MailchimpInterface'
-const { EmailRequiredMailError } = require('@orbiting/backend-modules-mail/errors')
+import { EmailRequiredMailError } from './errors'
 const logger = console
 
 export async function deleteEmail({ email }) {

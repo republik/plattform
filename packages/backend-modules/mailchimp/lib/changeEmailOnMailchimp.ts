@@ -1,5 +1,5 @@
 import MailchimpInterface from '../MailchimpInterface'
-import { EmailRequiredMailError } from '@orbiting/backend-modules-mail/errors'
+import { EmailRequiredMailError } from './errors'
 const logger = console
 
 export async function changeEmailOnMailchimp({ user, newEmail }) {
