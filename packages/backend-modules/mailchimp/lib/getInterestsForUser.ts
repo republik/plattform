@@ -1,7 +1,6 @@
 import type { PgDb } from 'pogi'
 
-const { grants } = require('@orbiting/backend-modules-access')
-
+import moment from 'moment'
 import debug from 'debug'
 import { UserInterests } from '../types'
 import { getConfig } from '../config'
@@ -55,7 +54,7 @@ export async function getInterestsForUser({
       : false
 
   const user = !!userId && (await pgdb.public.users.findOne({ id: userId }))
-  const accessGrants = !!user && (await grants.findByRecipient(user, { pgdb }))
+  const accessGrants = !!user && (await findGrants(user, pgdb))
   const hasGrantedAccess = !!user && !!accessGrants && accessGrants.length > 0
 
   debug(
@@ -84,4 +83,23 @@ export async function getInterestsForUser({
   }
 
   return interests
+}
+
+async function findGrants(user, pgdb) {
+  const now = moment()
+  const query = {
+    or: [
+      { recipientUserId: user.id },
+      { recipientUserId: null, email: user.email },
+    ],
+    'beginAt <=': now,
+    'endAt >': now,
+    invalidatedAt: null,
+  }
+
+  const grants = await pgdb.public.accessGrants.find(query, {
+    orderBy: { createdAt: 'desc' },
+  })
+
+  return grants
 }
