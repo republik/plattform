@@ -9,7 +9,7 @@ import {
 import { useMutation, useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { useSearchParams } from 'next/navigation'
-import { useId, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 
 const buttonStyle = css({
   background: 'primary',
@@ -38,11 +38,20 @@ function LogOut() {
 }
 
 function useSignIn() {
-  const meQuery = useQuery(MeDocument, {
-    pollInterval: 2000,
-  })
-
+  const meQuery = useQuery(MeDocument, {})
   const [signIn, signInQuery] = useMutation(SignInDocument, {})
+
+  // Only poll for `me` when a signIn request is in progress
+  const shouldPoll = !meQuery.data?.me && !!signInQuery.data?.signIn
+
+  useEffect(() => {
+    if (shouldPoll) {
+      meQuery.startPolling(2000)
+    } else {
+      meQuery.stopPolling()
+    }
+    return () => meQuery.stopPolling()
+  }, [meQuery, shouldPoll])
 
   return {
     signIn,
