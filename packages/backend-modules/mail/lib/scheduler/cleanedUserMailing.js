@@ -2,7 +2,7 @@ const debug = require('debug')('mail:lib:scheduler:cleanedUser')
 const sendMailsToSegment = require('@orbiting/backend-modules-mail/lib/sendMailsToSegment')
 const dayjs = require('dayjs')
 
-export async function cleanedUserMailing(from, to, { pgdb }, dryRun = false, onceFor = true) {
+module.exports = async (from, to, { pgdb }, dryRun = false, onceFor = true) => {
   const mail = {
     subject: 'Warum Sie von uns keine Newsletter mehr erhalten',
     templateName: 'cleaned_user_subscription_invitation',
