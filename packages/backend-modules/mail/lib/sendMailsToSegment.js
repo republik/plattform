@@ -35,12 +35,11 @@ module.exports = async (segment, mail, pgdb, data) => {
     return prev
   }, {})
 
-  const { getHtml, getText, getCompiler } = await getTemplates(
+  const { getHtml } = await getTemplates(
     mail.templateName,
   )
 
   const html = getHtml(values)
-  const text = getText(values) || getCompiler(mail.text)(values)
 
   const message = {
     subject:
@@ -50,10 +49,9 @@ module.exports = async (segment, mail, pgdb, data) => {
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     html,
-    text,
     merge_language: 'handlebars',
     global_merge_vars: envMergeVars,
-    auto_text: !text,
+    auto_text: true,
     tags,
     attachments: mail.attachments,
   }
