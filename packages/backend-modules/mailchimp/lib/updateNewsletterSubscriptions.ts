@@ -4,7 +4,7 @@ const logger = console
 
 const updateNewsletterSubscriptions = async (
   { user, interests = {}, name, subscribed },
-  NewsletterSubscription,
+  NewsletterSubscription?,
 ) => {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 

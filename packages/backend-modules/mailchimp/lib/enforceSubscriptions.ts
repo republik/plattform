@@ -11,6 +11,7 @@ import { NewsletterSubscriptionConfig } from './../NewsletterSubscriptionConfig'
 import { getConfig } from '../config'
 
 import MailchimpInterface from '../MailchimpInterface'
+import { withConfiguration } from '../NewsletterSubscription'
 
 const {
   MAILCHIMP_INTEREST_MEMBER,
@@ -61,15 +62,14 @@ export async function enforceSubscriptions({
     interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ||
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]
 
-  await updateNewsletterSubscriptions(
+  withConfiguration(NewsletterSubscriptionConfig, async () => await updateNewsletterSubscriptions(
     {
       user: user || { email },
       interests,
       name,
       subscribed,
     },
-    NewsletterSubscriptionConfig,
-  )
+  ))
 
   // always add to marketing audience when newsletter settings are updated, except if MEMBER or BENEFACTOR are true
   if (hasActiveMembership) {

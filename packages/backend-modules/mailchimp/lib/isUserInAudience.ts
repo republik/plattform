@@ -1,4 +1,4 @@
-const MailchimpInterface = require('../index')
+import MailchimpInterface from '../MailchimpInterface'
 
 import { User } from '@orbiting/backend-modules-types'
 
