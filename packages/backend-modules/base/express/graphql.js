@@ -99,6 +99,7 @@ module.exports = async (
         ? connection.context
         : createContext({ user: req.user, req, res, scope: 'request' }),
     debug: true,
+    cache: 'bounded',
     introspection: true,
     playground: false, // see ./graphiql.js
     tracing: NODE_ENV === 'development',

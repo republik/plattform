@@ -3,8 +3,6 @@ import { withRouter } from 'next/router'
 
 import { NarrowContainer } from '@project-r/styleguide'
 
-import { CROWDFUNDING_PLEDGE } from '../lib/constants'
-
 import Frame, { Content } from '../components/Frame'
 import PledgeForm from '../components/Pledge/Form'
 import PledgeReceivePayment from '../components/Pledge/ReceivePayment'
@@ -71,16 +69,9 @@ class PledgePage extends Component {
         <NarrowContainer>
           <Content>
             {pledgeId ? (
-              <PledgeReceivePayment
-                crowdfundingName={CROWDFUNDING_PLEDGE}
-                pledgeId={pledgeId}
-                query={query}
-              />
+              <PledgeReceivePayment pledgeId={pledgeId} query={query} />
             ) : (
-              <PledgeForm
-                crowdfundingName={CROWDFUNDING_PLEDGE}
-                query={query}
-              />
+              <PledgeForm query={query} />
             )}
           </Content>
         </NarrowContainer>
