@@ -20,6 +20,8 @@ export async function resubscribeEmail(user: User, createResubscribeEmailCacheFn
     }
     await mailchimp.updateMember(email, body)
   } else {
+    // to resend a confirmation email and hence resubscribe a contact through the API, 
+    // we need to set the contact's status to unsubscribed and then to pending again
     const cacheLock = createResubscribeEmailCacheFn(userId, context)
 
     const isLocked = await cacheLock.get()
