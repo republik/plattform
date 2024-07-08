@@ -1,7 +1,7 @@
 const debug = require('debug')('mail:lib:scheduler')
 const { timeScheduler } = require('@orbiting/backend-modules-schedulers')
 const dayjs = require('dayjs')
-const { cleanedUserMailing } = './cleanedUserMailing'
+const cleanedUserMailing = require('./cleanedUserMailing')
 const bluebird = require('bluebird')
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
