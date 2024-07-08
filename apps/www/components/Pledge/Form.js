@@ -218,11 +218,7 @@ class Pledge extends Component {
         ? !['YEARLY_ABO', 'MONTHLY_ABO', 'DONATE', 'LESHA'].includes(pkg.name)
         : undefined,
       paymentMethods: pkg ? pkg.paymentMethods : undefined,
-      // EINSTIEGSMONAT-TEST (remove after test) change total back
-      total:
-        pkg.name === 'MONTHLY_ABO' && query.coupon === 'EINSTIEG24'
-          ? values.price + 1100
-          : values.price || undefined,
+      total: values.price || undefined,
       options,
       reason: userPrice ? values.reason : undefined,
       coupon: query.coupon,
@@ -351,7 +347,7 @@ class Pledge extends Component {
           loading={loading}
           error={error}
           render={() => {
-            const { receiveError, crowdfundingName, hasEnded } = this.props
+            const { receiveError, hasEnded } = this.props
 
             if (hasEnded && !this.props.pledge) {
               return (
@@ -431,7 +427,6 @@ class Pledge extends Component {
                   {pkg ? (
                     <CustomizePackage
                       key={pkg.id}
-                      crowdfundingName={crowdfundingName}
                       values={values}
                       errors={errors}
                       dirty={dirty}
@@ -447,7 +442,6 @@ class Pledge extends Component {
                     />
                   ) : (
                     <Accordion
-                      crowdfundingName={crowdfundingName}
                       packages={packages.filter(
                         ({ group }) => group !== 'HIDDEN',
                       )}
@@ -498,8 +492,8 @@ Pledge.propTypes = {
 }
 
 const query = gql`
-  query pledgeForm($crowdfundingName: String!, $accessToken: ID) {
-    crowdfunding(name: $crowdfundingName) {
+  query pledgeForm($accessToken: ID) {
+    crowdfunding(name: "LAUNCH") {
       id
       name
       hasEnded
@@ -648,9 +642,8 @@ const PledgeWithQueries = compose(
     },
   }),
   graphql(query, {
-    options: ({ query, crowdfundingName }) => ({
+    options: ({ query }) => ({
       variables: {
-        crowdfundingName,
         accessToken: query.token,
       },
     }),

@@ -1,0 +1,20 @@
+query Cockpit {
+  cockpit {
+    id
+    intro {
+      value
+    }
+    membershipsCountChart {
+      value
+    }
+    membershipsChangeChart {
+      value
+    }
+    ourCommunity {
+      value
+    }
+    activeMembers {
+      value
+    }
+  }
+}

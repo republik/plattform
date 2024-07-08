@@ -19,7 +19,9 @@ import Community from './Community'
 import MarketingProducts from './MarketingProducts'
 import SectionContainer from './Common/SectionContainer'
 import ChallengeAcceptedMarketingTeaser from '../ChallengeAccepted/ChallengeAcceptedMarketingTeaser'
-import { TrialPaynote } from '@app/app/(campaign)/components/trial-paynote'
+
+// CAMPAIGN MODE
+// import { TrialPaynote } from '@app/app/(campaign)/components/trial-paynote'
 
 const meGuidanceQuery = gql`
   query Marketing {
@@ -59,7 +61,12 @@ const Marketing = ({ data }) => {
       {meError && (
         <ErrorMessage error={meError} style={{ textAlign: 'center' }} />
       )}
-      <TrialPaynote variant='marketing' />
+      {/* 
+      
+      CAMPAIGN MODE
+      <TrialPaynote variant='marketing' /> 
+      
+      */}
       <ColorContextProvider colorSchemeKey='dark'>
         <Top carouselData={data.carousel} />
       </ColorContextProvider>
