@@ -1,12 +1,21 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const MailchimpInterface = require('../../../../mail/MailchimpInterface')
-const logger = console
 
 const {
   cache: { create },
 } = require('@orbiting/backend-modules-utils')
 
 const QUERY_CACHE_TTL_SECONDS = 60 // One minute
+
+const createResubscribeEmailCacheFn = (userId, context) => {
+  return create(
+  {
+    namespace: 'republik',
+    prefix: 'mail:resubscribeEmail',
+    key: userId,
+    ttl: QUERY_CACHE_TTL_SECONDS,
+  },
+  context,
+)}
 
 module.exports = async (_, args, context) => {
   const { userId } = args
@@ -15,7 +24,7 @@ module.exports = async (_, args, context) => {
     pgdb,
     req,
     t,
-    mail: { getNewsletterSettings },
+    mail: { getNewsletterSettings, resubscribeEmail },
   } = context
 
   const user = userId ? await pgdb.public.users.findOne({ id: userId }) : me
@@ -27,56 +36,7 @@ module.exports = async (_, args, context) => {
 
   Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
 
-  const { id, email, firstName, lastName } = user
-
-  const mailchimp = MailchimpInterface({ logger })
-  const member = await mailchimp.getMember(email)
-
-  const body = {
-    email_address: email,
-  }
-
-  if (!member) {
-    body.status_if_new = MailchimpInterface.MemberStatus.Subscribed
-    body.status = MailchimpInterface.MemberStatus.Subscribed
-    body.merge_fields = {
-      FNAME: firstName || '',
-      LNAME: lastName || '',
-    }
-    await mailchimp.updateMember(email, body)
-  } else {
-    const cacheLock = create(
-      {
-        namespace: 'republik',
-        prefix: 'mail:resubscribeEmail',
-        key: id,
-        ttl: QUERY_CACHE_TTL_SECONDS,
-      },
-      context,
-    )
-
-    const isLocked = await cacheLock.get()
-
-    if (isLocked && member.status === MailchimpInterface.MemberStatus.Pending) {
-      console.warn(`resubscribe email: user ${id} goes crazy`)
-    }
-
-    if (
-      !isLocked &&
-      member.status === MailchimpInterface.MemberStatus.Pending
-    ) {
-      body.status = MailchimpInterface.MemberStatus.Unsubscribed
-      await mailchimp.updateMember(email, body)
-    }
-
-    if (member.status !== MailchimpInterface.MemberStatus.Subscribed) {
-      body.status = MailchimpInterface.MemberStatus.Pending
-      await mailchimp.updateMember(email, body)
-      if (!isLocked) {
-        await cacheLock.set(true)
-      }
-    }
-  }
+  await resubscribeEmail(user, createResubscribeEmailCacheFn, context)
 
   try {
     return getNewsletterSettings({ user })

@@ -6,8 +6,8 @@ const Promise = require('bluebird')
 const debug = require('debug')('auth:lib:Users')
 const {
   sendMailTemplate,
-  changeEmailOnMailchimp,
 } = require('@orbiting/backend-modules-mail')
+const { changeEmailOnMailchimp } = require('@orbiting/backend-modules-mailchimp')
 const t = require('./t')
 const useragent = require('./useragent')
 const AuthError = require('./AuthError')

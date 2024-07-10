@@ -1,19 +1,29 @@
+const {
+  deleteEmail,
+  getNewsletterSettings,
+  changeEmailOnMailchimp,
+  updateMergeFields,
+  updateNewsletterSubscriptions,
+  covidAccessToken,
+  nameAndEmailBase64u,
+  withConfiguration,
+} = require('@orbiting/backend-modules-mailchimp')
+
 const handlers = {
-  deleteEmail: require('./deleteEmail'),
-  getNewsletterSettings: require('./getNewsletterSettings'),
+  deleteEmail: deleteEmail,
+  getNewsletterSettings: getNewsletterSettings,
   mailLog: require('./mailLog'),
-  changeEmailOnMailchimp: require('./changeEmailOnMailchimp'),
+  changeEmailOnMailchimp: changeEmailOnMailchimp,
   sendMailTemplate: require('./sendMailTemplate'),
-  updateMergeFields: require('./updateMergeFields'),
-  updateNewsletterSubscriptions: require('./updateNewsletterSubscriptions'),
+  updateMergeFields: updateMergeFields,
+  updateNewsletterSubscriptions: updateNewsletterSubscriptions,
 
   // MailChimp batch operations types
   operations: {
-    covidAccessToken: require('./operations/covidAccessTokens'),
-    nameAndEmailBase64u: require('./operations/nameAndEmailBase64u'),
+    covidAccessToken: covidAccessToken,
+    nameAndEmailBase64u: nameAndEmailBase64u,
   },
 }
-const { withConfiguration } = require('../NewsletterSubscription')
 const errors = require('../errors')
 
 module.exports = {

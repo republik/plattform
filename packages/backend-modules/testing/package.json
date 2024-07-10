@@ -39,6 +39,7 @@
     "@orbiting/backend-modules-invoices": "*",
     "@orbiting/backend-modules-keyCDN": "*",
     "@orbiting/backend-modules-mail": "*",
+    "@orbiting/backend-modules-mailchimp": "*",
     "@orbiting/backend-modules-mailbox": "*",
     "@orbiting/backend-modules-matomo": "*",
     "@orbiting/backend-modules-migrations": "*",
