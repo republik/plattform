@@ -7,11 +7,12 @@ import {
 } from './addUserToAudience'
 import { archiveMemberInAudience } from './archiveMemberInAudience'
 import { updateNewsletterSubscriptions } from './updateNewsletterSubscriptions'
-import { NewsletterSubscriptionConfig } from './../NewsletterSubscriptionConfig'
 import { getConfig } from '../config'
+import { getSegmentDataForUser } from './getSegmentDataForUser'
 
 import MailchimpInterface from '../MailchimpInterface'
-import { withConfiguration } from '../NewsletterSubscription'
+import { NewsletterSubscriptionConfig } from '../NewsletterSubscriptionConfig'
+import { createNewsletterSubscription } from '../NewsletterSubscription'
 
 const {
   MAILCHIMP_INTEREST_MEMBER,
@@ -24,6 +25,7 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
+  MAILCHIMP_INTEREST_PLEDGE,
 } = getConfig()
 
 export type EnforceSubscriptionsParams = {
@@ -47,10 +49,15 @@ export async function enforceSubscriptions({
 }: EnforceSubscriptionsParams) {
   const user = !!userId && (await pgdb.public.users.findOne({ id: userId }))
 
-  const interests = await getInterestsForUser({
-    userId: !!user && user.id,
-    subscribeToEditorialNewsletters,
+  const segmentData = await getSegmentDataForUser({
+    user,
     pgdb,
+  })
+
+  const interests = await getInterestsForUser({
+    user: user,
+    subscribeToEditorialNewsletters,
+    segmentData,
   })
 
   const hasActiveMembership =
@@ -62,14 +69,17 @@ export async function enforceSubscriptions({
     interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ||
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]
 
-  withConfiguration(NewsletterSubscriptionConfig, async () => await updateNewsletterSubscriptions(
-    {
-      user: user || { email },
-      interests,
-      name,
-      subscribed,
-    },
-  ))
+  console.log(interests[MAILCHIMP_INTEREST_MEMBER])
+  console.log(interests[MAILCHIMP_INTEREST_PLEDGE])
+
+  const newsletterSubscription = createNewsletterSubscription(NewsletterSubscriptionConfig)
+
+  await updateNewsletterSubscriptions({
+    user: user || { email },
+    interests,
+    name,
+    subscribed,
+  }, newsletterSubscription)
 
   // always add to marketing audience when newsletter settings are updated, except if MEMBER or BENEFACTOR are true
   if (hasActiveMembership) {

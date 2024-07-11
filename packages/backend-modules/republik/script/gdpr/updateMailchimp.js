@@ -9,6 +9,7 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const rw = require('rw')
 const {
   getInterestsForUser,
+  getSegmentDataForUser,
 } = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail.js')
 // const util = require('util')
 const crypto = require('crypto')
@@ -136,9 +137,10 @@ PgDb.connect()
         const user = users.find(
           (u) => u.email.toLowerCase() === email.toLowerCase(),
         )
+        const segmentData = await getSegmentDataForUser({ user, pgdb })
         const interests = await getInterestsForUser({
           userId: !!user && user.id,
-          pgdb,
+          segmentData,
         })
         let subscribeUrl = ''
         if (!user || missingConsent(user.id)) {

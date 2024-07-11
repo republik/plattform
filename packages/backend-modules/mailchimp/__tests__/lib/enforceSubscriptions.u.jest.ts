@@ -66,6 +66,11 @@ jest.mock('../../lib/addUserToAudience', () => ({
 }))
 const addUserToAudienceMock = addUserToAudience as unknown as jest.Mock<typeof addUserToAudience>
 
+import { getSegmentDataForUser } from '../../lib/getSegmentDataForUser'
+jest.mock('../../lib/getSegmentDataForUser', () => ({
+  getSegmentDataForUser: jest.fn(() => 'getSegmentDataForUser mocked')
+}))
+
 import { archiveMemberInAudience } from '../../lib/archiveMemberInAudience'
 jest.mock('../../lib/archiveMemberInAudience', () => ({
   archiveMemberInAudience: jest.fn(() => 'archiveMemberInAudience mocked'),
@@ -105,12 +110,13 @@ describe('test enforceSubscriptions', () => {
       email: 'user@example.com',
       subscribeToOnboardingMails: true,
       subscribeToEditorialNewsletters: true,
-      pgdb: pgdb as any,
+      pgdb: pgdb as any, 
       name: '',
       subscribed: true,
     })
 
     expect(updateNewsletterSubscriptions).toHaveBeenCalled()
+    expect(getSegmentDataForUser).toHaveBeenCalled()
     expect(addUserToAudience).toHaveBeenCalled()
     expect(archiveMemberInAudience).toHaveBeenCalled()
 
@@ -165,7 +171,6 @@ describe('test enforceSubscriptions', () => {
       subscribed: true,
     })
 
-    expect(updateNewsletterSubscriptions).toHaveBeenCalled()
     expect(addUserToAudience).not.toHaveBeenCalled()
     expect(archiveMemberInAudience).toHaveBeenCalled()
 

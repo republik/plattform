@@ -1,10 +1,6 @@
-import type { PgDb } from 'pogi'
-
-import moment from 'moment'
-import debug from 'debug'
-import { UserInterests } from '../types'
+import { SegmentData, UserInterests } from '../types'
 import { getConfig } from '../config'
-debug.enable('mailchimp:lib:getInterestsForUser')
+import { UserRow } from '@orbiting/backend-modules-types'
 
 const {
   MAILCHIMP_INTEREST_PLEDGE,
@@ -16,64 +12,35 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
 } = getConfig()
 
-export type GetInterestsForUserParams = {
-  userId: string
+type GetInterestsForUserParams = {
+  user: UserRow
   subscribeToEditorialNewsletters?: boolean
-  pgdb: PgDb
+  segmentData: SegmentData
 }
 
 export async function getInterestsForUser({
-  userId,
+  user,
   subscribeToEditorialNewsletters,
-  pgdb,
+  segmentData,
 }: GetInterestsForUserParams): Promise<UserInterests> {
-  const pledges =
-    !!userId &&
-    (await pgdb.public.pledges.find({
-      userId,
-      status: 'SUCCESSFUL',
-    }))
-  const hasPledge = !!pledges && pledges.length > 0
+  const userId = user.id
 
-  const hasMembership =
-    !!userId &&
-    !!(await pgdb.public.memberships.findFirst({
-      userId,
-      active: true,
-    }))
+  const hasPledge = !!segmentData.pledges && segmentData.pledges.length > 0
 
-  const membershipTypeBenefactor = await pgdb.public.membershipTypes.findOne({
-    name: 'BENEFACTOR_ABO',
-  })
-  const isBenefactor =
-    !!userId && membershipTypeBenefactor
-      ? !!(await pgdb.public.memberships.findFirst({
-          userId,
-          membershipTypeId: membershipTypeBenefactor.id,
-        }))
-      : false
+  const hasMembership = !!userId && !!segmentData.activeMembership
 
-  const user = !!userId && (await pgdb.public.users.findOne({ id: userId }))
-  const accessGrants = !!user && (await findGrants(user, pgdb))
-  const hasGrantedAccess = !!user && !!accessGrants && accessGrants.length > 0
+  const isBenefactor = !!userId && !!segmentData.benefactorMembership
 
-  debug(
-    JSON.stringify({
-      userId,
-      hasPledge,
-      hasMembership,
-      isBenefactor,
-      hasGrantedAccess,
-    }),
-  )
+  const hasGrantedAccess =
+    !!user && !!segmentData.accessGrants && segmentData.accessGrants.length > 0
+
+  const interests = { ...segmentData.newsletterInterests }
 
   // Update the membership type interests on mailchimp
-  const interests = {
-    [MAILCHIMP_INTEREST_PLEDGE]: hasPledge,
-    [MAILCHIMP_INTEREST_MEMBER]: hasMembership,
-    [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: isBenefactor,
-    [MAILCHIMP_INTEREST_GRANTED_ACCESS]: hasGrantedAccess,
-  }
+  interests[MAILCHIMP_INTEREST_PLEDGE] = hasPledge
+  interests[MAILCHIMP_INTEREST_MEMBER] = hasMembership
+  interests[MAILCHIMP_INTEREST_MEMBER_BENEFACTOR] = isBenefactor
+  interests[MAILCHIMP_INTEREST_GRANTED_ACCESS] = hasGrantedAccess
 
   if (subscribeToEditorialNewsletters && (hasMembership || hasGrantedAccess)) {
     // Autosubscribe all newsletters when new user just paid the membersh.
@@ -83,23 +50,4 @@ export async function getInterestsForUser({
   }
 
   return interests
-}
-
-async function findGrants(user, pgdb) {
-  const now = moment()
-  const query = {
-    or: [
-      { recipientUserId: user.id },
-      { recipientUserId: null, email: user.email },
-    ],
-    'beginAt <=': now,
-    'endAt >': now,
-    invalidatedAt: null,
-  }
-
-  const grants = await pgdb.public.accessGrants.find(query, {
-    orderBy: { createdAt: 'desc' },
-  })
-
-  return grants
 }

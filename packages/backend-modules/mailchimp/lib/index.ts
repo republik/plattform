@@ -10,6 +10,7 @@ import { archiveMemberInAudience } from './archiveMemberInAudience'
 import { NewsletterSubscriptionConfig } from '../NewsletterSubscriptionConfig'
 import { enforceSubscriptions } from './enforceSubscriptions'
 import { resubscribeEmail } from './resubscribeEmail'
+import { getSegmentDataForUser } from './getSegmentDataForUser'
 
 export {
   changeEmailOnMailchimp,
@@ -25,4 +26,5 @@ export {
   NewsletterSubscriptionConfig,
   enforceSubscriptions,
   resubscribeEmail,
+  getSegmentDataForUser,
 }

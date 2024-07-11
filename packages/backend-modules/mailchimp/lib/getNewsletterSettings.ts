@@ -2,7 +2,7 @@ import MailchimpInterface from '../MailchimpInterface'
 import { SubscriptionHandlerMissingMailError } from './errors'
 const logger = console
 
-export async function getNewsletterSettings({ user }, NewsletterSubscription) {
+export async function getNewsletterSettings({ user }, NewsletterSubscription?) {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
   const { email, roles } = user

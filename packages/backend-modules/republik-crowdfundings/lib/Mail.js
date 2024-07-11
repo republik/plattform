@@ -17,6 +17,7 @@ const { getLastEndDate, getMembershipCompany } = require('./utils')
 const dateFormat = timeFormat('%x')
 
 const {
+  getSegmentDataForUser,
   getInterestsForUser,
   isUserInAudience,
   addUserToAudience,
@@ -33,6 +34,7 @@ const {
 
 const mail = createMail(NewsletterSubscriptionConfig)
 
+mail.getSegmentDataForUser = getSegmentDataForUser
 mail.getInterestsForUser = getInterestsForUser
 mail.isUserInAudience = isUserInAudience
 mail.addUserToMarketingAudience = addUserToMarketingAudience
