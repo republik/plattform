@@ -1,7 +1,7 @@
 import MailchimpInterface from '../MailchimpInterface'
 const logger = console
 
-export async function updateMergeFields({ user }) {
+export async function updateNameMergeFields({ user }) {
   const { email, firstName, lastName } = user
 
   const body = {

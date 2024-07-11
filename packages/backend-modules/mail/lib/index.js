@@ -2,7 +2,7 @@ const {
   deleteEmail,
   getNewsletterSettings,
   changeEmailOnMailchimp,
-  updateMergeFields,
+  updateNameMergeFields,
   updateNewsletterSubscriptions,
   covidAccessToken,
   nameAndEmailBase64u,
@@ -15,7 +15,7 @@ const handlers = {
   mailLog: require('./mailLog'),
   changeEmailOnMailchimp: changeEmailOnMailchimp,
   sendMailTemplate: require('./sendMailTemplate'),
-  updateMergeFields: updateMergeFields,
+  updateNameMergeFields: updateNameMergeFields,
   updateNewsletterSubscriptions: updateNewsletterSubscriptions,
 
   // MailChimp batch operations types

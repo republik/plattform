@@ -1,7 +1,7 @@
 import { changeEmailOnMailchimp } from './changeEmailOnMailchimp'
 import { deleteEmail } from './deleteEmail'
 import { getNewsletterSettings } from './getNewsletterSettings'
-import { updateMergeFields } from './updateMergeFields'
+import { updateNameMergeFields } from './updateNameMergeFields'
 import { updateNewsletterSubscriptions } from './updateNewsletterSubscriptions'
 import { getInterestsForUser } from './getInterestsForUser'
 import { isUserInAudience } from './isUserInAudience'
@@ -15,7 +15,7 @@ export {
   changeEmailOnMailchimp,
   deleteEmail,
   getNewsletterSettings,
-  updateMergeFields,
+  updateNameMergeFields,
   updateNewsletterSubscriptions,
   getInterestsForUser,
   isUserInAudience,
