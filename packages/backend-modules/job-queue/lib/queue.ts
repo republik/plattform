@@ -1,9 +1,24 @@
 import PgBoss from 'pg-boss'
 import { Worker, WorkerJobArgs, WorkerQueueName } from './types'
+import { getConfig } from './config'
 
 export class Queue {
+  static instance: Queue
+
   protected readonly pgBoss: PgBoss
   protected workers = new Map<WorkerQueueName<Worker<any>>, Worker<any>>()
+
+  static getInstance(): Queue {
+    if (!this.instance) {
+      const config = getConfig()
+      this.instance = new Queue({
+        application_name: config.queueApplicationName,
+        connectionString: config.connectionString,
+      })
+    }
+
+    return this.instance
+  }
 
   constructor(options: PgBoss.ConstructorOptions) {
     this.pgBoss = new PgBoss(options)
