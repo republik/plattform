@@ -8,6 +8,7 @@ const { omitBy, isNil } = require('lodash')
 const base64u = require('@orbiting/backend-modules-base64u')
 
 import { NewsletterMemberMailError } from './lib/errors'
+import { MailchimpContact } from './types'
 
 const {
   MAILCHIMP_API_KEY,
@@ -65,7 +66,7 @@ const MailchimpInterface = ({ logger }: any) => {
       }
       return fetch(url, options)
     },
-    async getMember(email, audienceId = MAILCHIMP_MAIN_LIST_ID) {
+    async getMember(email, audienceId = MAILCHIMP_MAIN_LIST_ID): Promise<MailchimpContact | null> {
       const url = this.buildMembersApiUrl(email, audienceId)
       try {
         const response = await this.fetchAuthenticated('GET', url)
@@ -204,7 +205,8 @@ const memberStatus = {
   Subscribed: 'subscribed',
   Pending: 'pending',
   Unsubscribed: 'unsubscribed',
-  Cleaned: 'cleaned'
+  Cleaned: 'cleaned',
+  Archived: 'archived',
 } as const 
 
 MailchimpInterface.MemberStatus = memberStatus

@@ -10,5 +10,6 @@ export type IsUserInAudienceParams = {
 export async function isUserInAudience({ user, audienceId }: IsUserInAudienceParams): Promise<boolean> {
   const mailchimp = MailchimpInterface({ console })
   const member = await mailchimp.getMember(user.email, audienceId)
-  return !!member
+  const notArchived = !(member?.status === MailchimpInterface.MemberStatus.Archived)
+  return !!member && notArchived
 }

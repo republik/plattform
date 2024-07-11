@@ -1,7 +1,12 @@
+import { UserRow } from '@orbiting/backend-modules-types'
 import MailchimpInterface from '../MailchimpInterface'
 const logger = console
 
-export async function updateNameMergeFields({ user }) {
+type UpdateNameMergeFieldsParams = {
+  user: UserRow
+}
+
+export async function updateNameMergeFields({ user }: UpdateNameMergeFieldsParams) {
   const { email, firstName, lastName } = user
 
   const body = {
