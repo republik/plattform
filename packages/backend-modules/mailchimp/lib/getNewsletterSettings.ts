@@ -22,6 +22,6 @@ export async function getNewsletterSettings({ user }, NewsletterSubscription?) {
       !!member?.interests?.[interestId], // subscribed
       roles,
     ),
-  )
+  ).filter((subscription) => !!subscription)
   return { id, status, subscriptions }
 }

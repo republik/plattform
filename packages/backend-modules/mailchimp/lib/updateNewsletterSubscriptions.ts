@@ -1,11 +1,10 @@
 import MailchimpInterface from '../MailchimpInterface'
 import { SubscriptionHandlerMissingMailError } from './errors'
-const logger = console
 
-const updateNewsletterSubscriptions = async (
+export async function updateNewsletterSubscriptions(
   { user, interests = {}, name, subscribed },
-  NewsletterSubscription?,
-) => {
+  NewsletterSubscription,
+) {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
   // single subscription update
@@ -26,7 +25,7 @@ const updateNewsletterSubscriptions = async (
     },
   }
 
-  const mailchimp = MailchimpInterface({ logger })
+  const mailchimp = MailchimpInterface({ console })
   const member = await mailchimp.getMember(email)
   if (
     member &&
@@ -39,18 +38,15 @@ const updateNewsletterSubscriptions = async (
   await mailchimp.updateMember(email, body)
 
   // user might be null if using with just {email, roles}
-  return (
-    user &&
-    user.id &&
-    Object.keys(interests).map((interestId) => {
-      return NewsletterSubscription.buildSubscription(
-        user.id,
-        interestId,
-        interests[interestId],
-        roles,
-      )
-    })
-  )
+  const subscriptions = user &&
+  user.id &&
+  Object.keys(interests).map((interestId) => {
+    return NewsletterSubscription.buildSubscription(
+      user.id,
+      interestId,
+      interests[interestId],
+      roles,
+    )
+  }).filter((subscription) => !!subscription)
+  return subscriptions
 }
-
-export { updateNewsletterSubscriptions }
