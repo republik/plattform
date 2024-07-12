@@ -25,6 +25,13 @@ export async function getSegmentDataForUser({
     active: true,
   })
 
+  const now = moment()
+  const activeMembershipPeriod = await pgdb.public.membershipPeriods.findFirst({
+    membershipId: activeMembership.id,
+    'beginDate <=': now,
+    'endDate >': now,
+  })
+
   const membershipTypeBenefactor = await pgdb.public.membershipTypes.findOne({
     name: 'BENEFACTOR_ABO',
   })
@@ -40,6 +47,7 @@ export async function getSegmentDataForUser({
   return {
     pledges,
     activeMembership,
+    activeMembershipPeriod,
     benefactorMembership,
     accessGrants,
     newsletterInterests,

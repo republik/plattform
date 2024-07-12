@@ -1,3 +1,4 @@
+import { mergeFieldNames } from "./lib/getMergeFieldsForUser"
 import MailchimpInterface from "./MailchimpInterface"
 
 export type UserInterests = {
@@ -5,6 +6,8 @@ export type UserInterests = {
 }
 
 export type MemberStatus = typeof MailchimpInterface.MemberStatus[keyof typeof MailchimpInterface.MemberStatus]
+
+export type MergeFieldName = typeof mergeFieldNames[keyof typeof mergeFieldNames]
 
 export type MemberData = {
   email_address: string,
@@ -37,6 +40,14 @@ type Membership = {
   succeedingMembershipId: string
 }
 
+type MembershipPeriod = {
+  id: string,
+  membershipId: string,
+  beginDate: Date,
+  endDate: Date,
+  pledgeId: string
+}
+
 type AccessGrant = {
   id: string,
   granterUserId: string,
@@ -52,6 +63,7 @@ type AccessGrant = {
 export type SegmentData = {
   pledges: Pledge[] | undefined,
   activeMembership: Membership | undefined,
+  activeMembershipPeriod: MembershipPeriod | undefined,
   benefactorMembership: Membership | undefined,
   accessGrants: AccessGrant[] | undefined,
   newsletterInterests: UserInterests | undefined,

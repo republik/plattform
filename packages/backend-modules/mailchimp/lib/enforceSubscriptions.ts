@@ -13,6 +13,7 @@ import { getSegmentDataForUser } from './getSegmentDataForUser'
 import MailchimpInterface from '../MailchimpInterface'
 import { NewsletterSubscriptionConfig } from '../NewsletterSubscriptionConfig'
 import { createNewsletterSubscription } from '../NewsletterSubscription'
+import { getMergeFieldsForUser } from './getMergeFieldsForUser'
 
 const {
   MAILCHIMP_INTEREST_MEMBER,
@@ -25,7 +26,6 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
-  MAILCHIMP_INTEREST_PLEDGE,
 } = getConfig()
 
 export type EnforceSubscriptionsParams = {
@@ -54,6 +54,11 @@ export async function enforceSubscriptions({
     pgdb,
   })
 
+  const mergeFields = await getMergeFieldsForUser({
+    user: user,
+    segmentData,
+  })
+
   const interests = await getInterestsForUser({
     user: user,
     subscribeToEditorialNewsletters,
@@ -69,14 +74,12 @@ export async function enforceSubscriptions({
     interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ||
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]
 
-  console.log(interests[MAILCHIMP_INTEREST_MEMBER])
-  console.log(interests[MAILCHIMP_INTEREST_PLEDGE])
-
   const newsletterSubscription = createNewsletterSubscription(NewsletterSubscriptionConfig)
 
   await updateNewsletterSubscriptions({
     user: user || { email },
     interests,
+    mergeFields,
     name,
     subscribed,
   }, newsletterSubscription)
