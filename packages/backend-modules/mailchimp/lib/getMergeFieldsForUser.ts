@@ -2,24 +2,30 @@ import { UserRow } from '@orbiting/backend-modules-types'
 import { MergeFieldName, SegmentData } from '../types'
 
 type GetMergeFieldsForUserParams = { user: UserRow; segmentData: SegmentData }
-type UserMergeFields = Partial<Record<MergeFieldName, string | number >>
+type UserMergeFields = Partial<Record<MergeFieldName, string | number | Date>>
 
-export const mergeFieldNames = { firstName: 'FNAME', lastName: 'LNAME', latestPledgeAmount: 'PL_AMOUNT' } as const
+export const mergeFieldNames = {
+  firstName: 'FNAME',
+  lastName: 'LNAME',
+  latestPledgeAmount: 'PL_AMOUNT',
+  subscriptionEndDate: 'END_DATE',
+} as const
 
 export async function getMergeFieldsForUser({
   user,
   segmentData,
 }: GetMergeFieldsForUserParams): Promise<UserMergeFields> {
   const latestMembershipPledgeId = segmentData.activeMembershipPeriod?.pledgeId
-  const filteredPledges = segmentData.pledges?.filter((pledge) => pledge.id === latestMembershipPledgeId)
-  const latestMembershipPledgeAmount = filteredPledges?.length === 1 ? filteredPledges[0].total/100 : 0
-
-
-  
+  const filteredPledges = segmentData.pledges?.filter(
+    (pledge) => pledge.id === latestMembershipPledgeId,
+  )
+  const latestMembershipPledgeAmount =
+    filteredPledges?.length === 1 ? filteredPledges[0].total / 100 : 0
 
   return {
     [mergeFieldNames.firstName]: user.firstName,
     [mergeFieldNames.lastName]: user.lastName,
     [mergeFieldNames.latestPledgeAmount]: latestMembershipPledgeAmount,
+    [mergeFieldNames.subscriptionEndDate]: segmentData.activeMembershipPeriod?.endDate,
   }
 }
