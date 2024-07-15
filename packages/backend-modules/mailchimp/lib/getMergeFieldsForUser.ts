@@ -9,6 +9,7 @@ export const mergeFieldNames = {
   lastName: 'LNAME',
   latestPledgeAmount: 'PL_AMOUNT',
   subscriptionEndDate: 'END_DATE',
+  subscriptionType: 'SUB_TYPE',
 } as const
 
 export async function getMergeFieldsForUser({
@@ -27,5 +28,6 @@ export async function getMergeFieldsForUser({
     [mergeFieldNames.lastName]: user.lastName,
     [mergeFieldNames.latestPledgeAmount]: latestMembershipPledgeAmount,
     [mergeFieldNames.subscriptionEndDate]: segmentData.activeMembershipPeriod?.endDate,
+    [mergeFieldNames.subscriptionType]: segmentData.activeMembership?.membershipTypeName,
   }
 }

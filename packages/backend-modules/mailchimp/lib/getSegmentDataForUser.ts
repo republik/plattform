@@ -2,7 +2,7 @@ import type { PgDb } from 'pogi'
 import moment from 'moment'
 import { UserRow } from '@orbiting/backend-modules-types'
 import MailchimpInterface from '../MailchimpInterface'
-import { SegmentData } from '../types'
+import { SegmentData, Membership } from '../types'
 
 type GetSegmentDataForUserParams = {
   user: UserRow
@@ -20,10 +20,14 @@ export async function getSegmentDataForUser({
       status: 'SUCCESSFUL',
     }))
 
-  const activeMembership = await pgdb.public.memberships.findFirst({
+  const activeMembership: Membership = await pgdb.public.memberships.findFirst({
     userId: user.id,
     active: true,
   })
+  const membershipType = await pgdb.public.membershipTypes.findFirst({
+    id: activeMembership.membershipTypeId,
+  })
+  activeMembership.membershipTypeName = membershipType.name
 
   const now = moment()
   const activeMembershipPeriod = await pgdb.public.membershipPeriods.findFirst({

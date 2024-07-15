@@ -27,11 +27,12 @@ type Pledge = {
   payload: object,
 }
 
-type Membership = {
+export type Membership = {
   id: string,
   userId: string,
   pledgeId: string,
   membershipTypeId: string,
+  membershipTypeName: 'ABO' | 'MONTHLY_ABO' | 'BENEFACTOR_ABO' | 'YEARLY_ABO' | 'ABO_GIVE_MONTHS',
   createdAt: Date,
   active: boolean,
   renew: boolean,
