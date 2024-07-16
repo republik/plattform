@@ -1,11 +1,14 @@
-import { UserRow } from '@orbiting/backend-modules-types'
 import { getConsentLink } from '@orbiting/backend-modules-republik/lib/Newsletter'
 import { MergeFieldName, SegmentData } from '../types'
 
-type GetMergeFieldsForUserParams = { user: UserRow; segmentData: SegmentData }
+type User = { firstName: string; lastName: string; email: string }
+type GetMergeFieldsForUserParams = { user: User; segmentData: SegmentData }
 type SubscriptionState = 'Cancelled' | 'Autopay' | 'Active' | undefined
 type TrialState = 'Active' | 'Past' | undefined
-type UserMergeFields = Partial<Record<MergeFieldName, string | number | Date>>
+export type UserMergeFields = Record<
+  MergeFieldName,
+  string | number | Date | undefined
+>
 
 export const mergeFieldNames = {
   firstName: 'FNAME',
@@ -23,19 +26,21 @@ export async function getMergeFieldsForUser({
   user,
   segmentData,
 }: GetMergeFieldsForUserParams): Promise<UserMergeFields> {
-  
-  const latestMembershipPledgeAmount = getLatestMembershipPledgeAmount(segmentData)
+  const latestMembershipPledgeAmount =
+    getLatestMembershipPledgeAmount(segmentData)
   const subscriptionState = getSubscriptionState(segmentData)
-  const linkCa = getConsentLink(user.email, 'CLIMATE')
-  const linkWdwww = getConsentLink(user.email, 'WDWWW')
+  const linkCa = user?.email && getConsentLink(user.email, 'CLIMATE')
+  const linkWdwww = user?.email && getConsentLink(user.email, 'WDWWW')
   const trialState = getTrialState(segmentData)
 
   return {
-    [mergeFieldNames.firstName]: user.firstName,
-    [mergeFieldNames.lastName]: user.lastName,
+    [mergeFieldNames.firstName]: user?.firstName,
+    [mergeFieldNames.lastName]: user?.lastName,
     [mergeFieldNames.latestPledgeAmount]: latestMembershipPledgeAmount,
-    [mergeFieldNames.subscriptionEndDate]: segmentData.activeMembershipPeriod?.endDate,
-    [mergeFieldNames.subscriptionType]: segmentData.activeMembership?.membershipTypeName,
+    [mergeFieldNames.subscriptionEndDate]:
+      segmentData.activeMembershipPeriod?.endDate,
+    [mergeFieldNames.subscriptionType]:
+      segmentData.activeMembership?.membershipTypeName,
     [mergeFieldNames.subscriptionState]: subscriptionState,
     [mergeFieldNames.newsletterOptInCa]: linkCa,
     [mergeFieldNames.newsletterOptInWb]: linkWdwww,
@@ -44,11 +49,23 @@ export async function getMergeFieldsForUser({
 }
 
 function getLatestMembershipPledgeAmount(segmentData: SegmentData): number {
+  // no pledges
+  if (!segmentData.pledges || !segmentData.pledges.length) {
+    return 0
+  }
+  // latest pledge of active membership
   const latestMembershipPledgeId = segmentData.activeMembershipPeriod?.pledgeId
-  const filteredPledges = segmentData.pledges?.filter(
+  const filteredPledges = segmentData.pledges.filter(
     (pledge) => pledge.id === latestMembershipPledgeId,
   )
-  return filteredPledges?.length === 1 ? filteredPledges[0].total / 100 : 0
+  if (filteredPledges?.length === 1) {
+    return filteredPledges[0].total / 100
+  }
+  // amount of any latest pledge
+  segmentData.pledges.sort((a, b) =>
+    Math.max(a.createdAt.valueOf(), b.createdAt.valueOf()),
+  )
+  return segmentData.pledges[0].total / 100
 }
 
 function getSubscriptionState(segmentData: SegmentData): SubscriptionState {
@@ -71,7 +88,8 @@ function getTrialState(segmentData: SegmentData): TrialState {
   const activeAccessGrants = segmentData.accessGrants?.filter(
     (ag) => ag.beginAt <= now && ag.endAt > now && !ag.invalidatedAt,
   )
-  const hasActiveGrantedAccess = !!activeAccessGrants && activeAccessGrants.length > 0
+  const hasActiveGrantedAccess =
+    !!activeAccessGrants && activeAccessGrants.length > 0
   if (hasActiveGrantedAccess) {
     return 'Active'
   }
