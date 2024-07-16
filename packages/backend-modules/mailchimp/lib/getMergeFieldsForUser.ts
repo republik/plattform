@@ -4,6 +4,7 @@ import { MergeFieldName, SegmentData } from '../types'
 
 type GetMergeFieldsForUserParams = { user: UserRow; segmentData: SegmentData }
 type SubscriptionState = 'Cancelled' | 'Autopay' | 'Active' | undefined
+type TrialState = 'Active' | 'Past' | undefined
 type UserMergeFields = Partial<Record<MergeFieldName, string | number | Date>>
 
 export const mergeFieldNames = {
@@ -15,17 +16,19 @@ export const mergeFieldNames = {
   subscriptionState: 'SUB_STATE',
   newsletterOptInCa: 'NL_LINK_CA',
   newsletterOptInWb: 'NL_LINK_WD',
+  trialState: 'TRIAL',
 } as const
 
-export function getMergeFieldsForUser({
+export async function getMergeFieldsForUser({
   user,
   segmentData,
-}: GetMergeFieldsForUserParams): UserMergeFields {
+}: GetMergeFieldsForUserParams): Promise<UserMergeFields> {
   
   const latestMembershipPledgeAmount = getLatestMembershipPledgeAmount(segmentData)
   const subscriptionState = getSubscriptionState(segmentData)
   const linkCa = getConsentLink(user.email, 'CLIMATE')
   const linkWdwww = getConsentLink(user.email, 'WDWWW')
+  const trialState = getTrialState(segmentData)
 
   return {
     [mergeFieldNames.firstName]: user.firstName,
@@ -36,6 +39,7 @@ export function getMergeFieldsForUser({
     [mergeFieldNames.subscriptionState]: subscriptionState,
     [mergeFieldNames.newsletterOptInCa]: linkCa,
     [mergeFieldNames.newsletterOptInWb]: linkWdwww,
+    [mergeFieldNames.trialState]: trialState,
   }
 }
 
@@ -60,4 +64,18 @@ function getSubscriptionState(segmentData: SegmentData): SubscriptionState {
     return 'Autopay'
   }
   return 'Active'
+}
+
+function getTrialState(segmentData: SegmentData): TrialState {
+  const now = new Date()
+  const activeAccessGrants = segmentData.accessGrants?.filter(
+    (ag) => ag.beginAt <= now && ag.endAt > now && !ag.invalidatedAt,
+  )
+  const hasActiveGrantedAccess = !!activeAccessGrants && activeAccessGrants.length > 0
+  if (hasActiveGrantedAccess) {
+    return 'Active'
+  }
+  if (segmentData.accessGrants?.length) {
+    return 'Past'
+  }
 }

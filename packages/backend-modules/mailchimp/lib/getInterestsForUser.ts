@@ -31,8 +31,13 @@ export async function getInterestsForUser({
 
   const isBenefactor = !!userId && !!segmentData.benefactorMembership
 
-  const hasGrantedAccess =
-    !!user && !!segmentData.accessGrants && segmentData.accessGrants.length > 0
+  const now = new Date()
+  const activeAccessGrants = segmentData.accessGrants?.filter(
+    (ag) => ag.beginAt <= now && ag.endAt > now && !!ag.invalidatedAt,
+  )
+
+  const hasActiveGrantedAccess =
+    !!user && !!activeAccessGrants && activeAccessGrants.length > 0
 
   const interests = { ...segmentData.newsletterInterests }
 
@@ -40,9 +45,12 @@ export async function getInterestsForUser({
   interests[MAILCHIMP_INTEREST_PLEDGE] = hasPledge
   interests[MAILCHIMP_INTEREST_MEMBER] = hasMembership
   interests[MAILCHIMP_INTEREST_MEMBER_BENEFACTOR] = isBenefactor
-  interests[MAILCHIMP_INTEREST_GRANTED_ACCESS] = hasGrantedAccess
+  interests[MAILCHIMP_INTEREST_GRANTED_ACCESS] = hasActiveGrantedAccess
 
-  if (subscribeToEditorialNewsletters && (hasMembership || hasGrantedAccess)) {
+  if (
+    subscribeToEditorialNewsletters &&
+    (hasMembership || hasActiveGrantedAccess)
+  ) {
     // Autosubscribe all newsletters when new user just paid the membersh.
     interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true

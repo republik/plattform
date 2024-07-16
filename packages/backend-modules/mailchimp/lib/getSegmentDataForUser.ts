@@ -24,13 +24,16 @@ export async function getSegmentDataForUser({
     userId: user.id,
     active: true,
   })
-  const membershipType = await pgdb.public.membershipTypes.findFirst({
+  
+  const membershipType = activeMembership && await pgdb.public.membershipTypes.findFirst({
     id: activeMembership.membershipTypeId,
   })
-  activeMembership.membershipTypeName = membershipType.name
-
+  if (membershipType) {
+    activeMembership.membershipTypeName = membershipType.name
+  }
+  
   const now = moment()
-  const activeMembershipPeriod = await pgdb.public.membershipPeriods.findFirst({
+  const activeMembershipPeriod = activeMembership && await pgdb.public.membershipPeriods.findFirst({
     membershipId: activeMembership.id,
     'beginDate <=': now,
     'endDate >': now,
@@ -65,15 +68,11 @@ async function getNewsletterInterests(email) {
 }
 
 async function findGrants(user: UserRow, pgdb: PgDb) {
-  const now = moment()
   const query = {
     or: [
       { recipientUserId: user.id },
       { recipientUserId: null, email: user.email },
     ],
-    'beginAt <=': now,
-    'endAt >': now,
-    invalidatedAt: null,
   }
 
   const grants = await pgdb.public.accessGrants.find(query, {

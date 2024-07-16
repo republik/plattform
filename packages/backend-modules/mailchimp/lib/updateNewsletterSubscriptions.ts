@@ -34,8 +34,6 @@ export async function updateNewsletterSubscriptions(
     body.status = MailchimpInterface.MemberStatus.Subscribed
   }
 
-  console.log('--------updateNewsletterSubscription %s', JSON.stringify(mergeFields))
-
   await mailchimp.updateMember(email, body)
 
   // user might be null if using with just {email, roles}
