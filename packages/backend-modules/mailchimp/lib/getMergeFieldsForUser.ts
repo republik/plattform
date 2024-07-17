@@ -86,7 +86,7 @@ function getSubscriptionState(segmentData: SegmentData): SubscriptionState {
 function getTrialState(segmentData: SegmentData): TrialState {
   const now = new Date()
   const activeAccessGrants = segmentData.accessGrants?.filter(
-    (ag) => ag.beginAt <= now && ag.endAt > now && !ag.invalidatedAt,
+    (ag) => ag.beginAt <= now && ag.endAt > now && !ag.invalidatedAt && !ag.revokedAt,
   )
   const hasActiveGrantedAccess =
     !!activeAccessGrants && activeAccessGrants.length > 0

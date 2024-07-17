@@ -52,11 +52,11 @@ type AccessGrant = {
   id: string,
   granterUserId: string,
   email: string,
-  recipientUserId: string,
+  recipientUserId: string | null,
   beginAt: Date,
   endAt: Date,
-  revokedAt: Date,
-  invalidatedAt: Date,
+  revokedAt: Date | null,
+  invalidatedAt: Date | null,
   payload: object,
 }
 
