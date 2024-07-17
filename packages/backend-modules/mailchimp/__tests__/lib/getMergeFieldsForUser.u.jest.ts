@@ -140,7 +140,55 @@ describe('latest pledge amount', () => {
     expect(mergeFields.PL_AMOUNT).toBe(270)
   })
 
-  test('no active membership pledge, amount from latest pledge', () => {
-    // TODO
+  test('no active membership pledge, amount from latest pledge', async () => {
+    const membershipId = 'm-245'
+    const segmentData: SegmentData = {
+      pledges: [
+        {
+          id: 'pledge-1084',
+          packageId: 'package-1234',
+          userId: userId,
+          status: 'SUCCESSFUL',
+          total: 28000,
+          donation: 4000,
+          createdAt: new Date('2020-07-09'),
+          payload: {},
+        },
+        {
+          id: 'pledge-0987',
+          packageId: 'package-1234',
+          userId: userId,
+          status: 'SUCCESSFUL',
+          total: 30000,
+          donation: -12000,
+          createdAt: new Date('2021-04-03'),
+          payload: {},
+        },
+      ],
+      activeMembership: {
+        id: membershipId,
+        userId: userId,
+        pledgeId: 'pledge-10034',
+        membershipTypeId: 'mt-1',
+        membershipTypeName: 'ABO',
+        createdAt: new Date('2019-01-01'),
+        active: true,
+        renew: true,
+        autoPay: true,
+        initialInterval: 'year',
+      },
+      activeMembershipPeriod: {
+        id: 'mp-123',
+        pledgeId: 'pledge-10034',
+        membershipId: membershipId,
+        beginDate: new Date('2019-01-01'),
+        endDate: new Date('2035-01-01'),
+      },
+      benefactorMembership: undefined,
+      accessGrants: [],
+      newsletterInterests: undefined,
+    }
+    const mergeFields = await getMergeFieldsForUser({user, segmentData})
+    expect(mergeFields.PL_AMOUNT).toBe(300)
   })
 })
