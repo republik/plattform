@@ -50,7 +50,7 @@ export async function getMergeFieldsForUser({
 
 function getLatestMembershipPledgeAmount(segmentData: SegmentData): number {
   // no pledges
-  if (!segmentData.pledges || !segmentData.pledges.length) {
+  if (!segmentData.pledges?.length) {
     return 0
   }
   // latest pledge of active membership
@@ -62,10 +62,10 @@ function getLatestMembershipPledgeAmount(segmentData: SegmentData): number {
     return filteredPledges[0].total / 100
   }
   // amount of any latest pledge
-  segmentData.pledges.sort((a, b) =>
-    Math.max(a.createdAt.valueOf(), b.createdAt.valueOf()),
-  )
-  return segmentData.pledges[0].total / 100
+  const latestPledge = segmentData.pledges.sort((a, b) =>
+    b.createdAt.valueOf() - a.createdAt.valueOf(),
+  )[0]
+  return latestPledge.total / 100
 }
 
 function getSubscriptionState(segmentData: SegmentData): SubscriptionState {
