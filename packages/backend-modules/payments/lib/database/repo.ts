@@ -3,7 +3,7 @@ import type {
   Order,
   PaymentGateway,
   Subscription,
-  SubscriptionKind,
+  SubscriptionType,
   Webhook,
   WebhookSource,
 } from '../types'
@@ -26,6 +26,10 @@ export interface CustomerRepo {
     company: Company,
     customerId: string,
   ): Promise<string>
+  saveCustomerIds(
+    userId: string,
+    customerIds: { customerId: string; company: string }[],
+  ): Promise<string>
 }
 
 export interface SubscriptionRepo {
@@ -38,7 +42,7 @@ export interface SubscriptionRepo {
 
 export type OrderArgs = {
   total: number
-  payement_status: Order['payment_status']
+  payementStatus: Order['paymentStatus']
 }
 
 export interface OrderRepo {
@@ -48,7 +52,7 @@ export interface OrderRepo {
 
 export type AddSubscriptionArgs = {
   userId: string
-  kind: SubscriptionKind
+  kind: SubscriptionType
   gateway: PaymentGateway
   gatewayId: string
 }

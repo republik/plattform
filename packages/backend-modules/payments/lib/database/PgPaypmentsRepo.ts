@@ -18,7 +18,7 @@ export class PgPaymentRepo
 
   constructor(pgdb: PgDb) {
     this.#pgdb = pgdb
-    this.#schemaName = getConfig().schemaName
+    this.#schemaName = getConfig().SCHEMA_NAME
   }
 
   logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>> {
@@ -51,6 +51,18 @@ export class PgPaymentRepo
       customerId,
     })
     throw new Error('Method not implemented.')
+  }
+
+  async saveCustomerIds(
+    userId: string,
+    customerIds: { customerId: string; company: string }[],
+  ): Promise<string> {
+    const values = customerIds.map((c) => {
+      return { userId, company: c.company, customerId: c.customerId }
+    })
+
+    await this.#pgdb.payments.stripeCustomers.insert(values)
+    return 'ok'
   }
 
   async getOrders(userId: string): Promise<Order> {

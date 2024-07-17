@@ -1,28 +1,25 @@
 import { Company, Subscription } from './../types'
 import Stripe from 'stripe'
-import { CustomerRepo } from '../database/repo'
 import { PaymentGatwayActions } from './type'
 import { getConfig } from '../config'
 
 export class PaymentGateway {
   #gateways: Record<Company, PaymentGatwayActions>
 
-  constructor(gateways: Record<Company, Stripe>, customerRepo: CustomerRepo) {
+  constructor(gateways: Record<Company, Stripe>) {
     const confg = getConfig()
 
     //TODO: make this a bit prettier
     this.#gateways = {
-      project_r: new StripeGatewayActions(
-        'project_r',
-        customerRepo,
-        gateways.project_r,
-        confg.project_r_stripe_endpoint_secret,
+      PROJECT_R: new StripeGatewayActions(
+        'PROJECT_R',
+        gateways.PROJECT_R,
+        confg.PROJECT_R_STRIPE_ENDPOINT_SECRET,
       ),
-      republik_ag: new StripeGatewayActions(
-        'republik_ag',
-        customerRepo,
-        gateways.project_r,
-        confg.republik_stripe_endpoint_secret,
+      REPUBLIK_AG: new StripeGatewayActions(
+        'REPUBLIK_AG',
+        gateways.REPUBLIK_AG,
+        confg.REPUBLIK_STRIPE_ENDPOINT_SECRET,
       ),
     }
   }
@@ -33,20 +30,14 @@ export class PaymentGateway {
 }
 
 class StripeGatewayActions implements PaymentGatwayActions {
+  // @ts-expect-error company might be used later
   #company: Company
-  #customerRepo: CustomerRepo
   #stripe: Stripe
   #webhookSecret: string
 
-  constructor(
-    company: Company,
-    customerRepo: CustomerRepo,
-    stripe: Stripe,
-    webhookSecret: string,
-  ) {
+  constructor(company: Company, stripe: Stripe, webhookSecret: string) {
     this.#company = company
     this.#stripe = stripe
-    this.#customerRepo = customerRepo
     this.#webhookSecret = webhookSecret
   }
   async createCustomer(email: string, userId: string): Promise<string> {
@@ -57,21 +48,10 @@ class StripeGatewayActions implements PaymentGatwayActions {
       },
     })
 
-    await this.#customerRepo.saveCustomerIdForCompany(
-      userId,
-      this.#company,
-      customer.id,
-    )
-
     return customer.id
   }
 
-  async getUserSubscriptions(userId: string): Promise<Subscription[]> {
-    const customerId = await this.#customerRepo.getCustomerIdForCompany(
-      userId,
-      this.#company,
-    )
-
+  async getCustomerSubscriptions(customerId: string): Promise<Subscription[]> {
     const stripeSubs = this.#stripe.subscriptions.list({
       customer: customerId,
     })

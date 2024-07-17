@@ -1,46 +1,88 @@
-import { CustomerRepo } from './database/repo'
+import { PgDb } from 'pogi'
+import { OrderArgs } from './database/repo'
 import { PaymentGateway } from './gateway/gateway'
 import { ProjectRStripe, RepublikAGStripe } from './gateway/stripe'
-import { Company } from './types'
+import { Company, Order, Subscription } from './types'
+import { PgPaymentRepo } from './database/PgPaypmentsRepo'
+import assert from 'node:assert'
 
-const Gateway = new PaymentGateway(
-  {
-    project_r: ProjectRStripe,
-    republik_ag: RepublikAGStripe,
-  },
-  {} as CustomerRepo,
-)
+const Gateway = new PaymentGateway({
+  PROJECT_R: ProjectRStripe,
+  REPUBLIK_AG: RepublikAGStripe,
+})
 
-type CustomerIds = {
-  userId: string
-  project_r: string
-  republik_ag: string
+const Companies: Company[] = ['PROJECT_R', 'REPUBLIK_AG']
+
+export interface PaymentService {
+  listSubscriptions(userId: string): Promise<Subscription[]>
+  createCustomer(email: string, userId: string): any
+  saveOrder(userId: string, order: OrderArgs): Promise<Order>
 }
 
-const Companies: Company[] = ['project_r', 'republik_ag']
+export class Payments implements PaymentService {
+  static instance: PaymentService
+  protected pgdb: PgDb
+  protected repo: PgPaymentRepo
 
-export async function createCustomer(
-  email: string,
-  userId: string,
-): Promise<CustomerIds> {
-  const tasks = Companies.map(async (c) => {
-    const id = await Gateway.forCompany(c).createCustomer(email, userId)
-    return { id: id, company: c }
-  })
-  const results = await Promise.allSettled(tasks)
-
-  const ids: Record<Company, string> = {} as Record<Company, string>
-  for (const result of results) {
-    if (result.status === 'fulfilled') {
-      ids[result.value.company] = result.value.id
-    } else {
-      throw Error(result.reason)
-    }
+  static start(pgdb: PgDb) {
+    this.instance = new this(pgdb)
   }
 
-  return {
-    userId: userId,
-    project_r: ids.project_r,
-    republik_ag: ids.republik_ag,
+  static assertRunning() {
+    assert(this.instance !== null, 'PaymentService has not been stared')
+  }
+
+  constructor(pgdb: PgDb) {
+    this.pgdb = pgdb
+    this.repo = new PgPaymentRepo(pgdb)
+  }
+
+  async listSubscriptions(userId: string): Promise<Subscription[]> {
+    return this.repo.getUserSubscriptions(userId)
+  }
+
+  async createCustomer(email: string, userId: string) {
+    const tasks = Companies.map(async (c) => {
+      const id = await Gateway.forCompany(c).createCustomer(email, userId)
+      return { customerId: id, company: c }
+    })
+    const results = await Promise.allSettled(tasks)
+
+    const ids = results
+      .filter((r) => r.status === 'fulfilled')
+      .map((r) => {
+        return (
+          r as PromiseFulfilledResult<{
+            customerId: string
+            company: Company
+          }>
+        ).value
+      })
+
+    await this.repo.saveCustomerIds(userId, ids)
+
+    return ids
+  }
+
+  async saveOrder(userId: string, order: OrderArgs): Promise<Order> {
+    return this.repo.saveOrder(userId, order)
+  }
+
+  static createCustomer(email: string, userId: string) {
+    this.assertRunning()
+
+    return this.instance.createCustomer(email, userId)
+  }
+
+  static saveOrder(userId: string, order: OrderArgs): Promise<Order> {
+    this.assertRunning()
+
+    return this.instance.saveOrder(userId, order)
+  }
+
+  static listSubscriptions(userId: string) {
+    this.assertRunning()
+
+    return this.instance.listSubscriptions(userId)
   }
 }

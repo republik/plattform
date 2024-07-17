@@ -1,18 +1,18 @@
-export type Company = 'project_r' | 'republik_ag'
+export type Company = 'PROJECT_R' | 'REPUBLIK_AG'
 
-export type PaymentGateway = 'stripe_project_r' | 'stripe_republik_ag'
+export type PaymentGateway = 'STRIPE_PROJECT_R' | 'STRIPE_REPUBLIK_AG'
 
 export type Order = {
   id: string
   userId: string
   items: Record<string, any>
   total: number
-  payment_status: 'paid' | 'unpaid'
+  paymentStatus: 'paid' | 'unpaid'
   createdAt: Date
   updatedAt: Date
 }
 
-export type SubscriptionKind = 'project_r_yearly' | 'republik_ag_mothly'
+export type SubscriptionType = 'YEARLY_SUBSCRIPTION' | 'MONTHLY_SUBSCRIPTION'
 
 export type Subscription = {
   id: string
@@ -21,15 +21,25 @@ export type Subscription = {
   gatewayId: string
   hrId: string
   status: string
-  kind: SubscriptionKind
-  cancel_at_period_end: boolean
-  current_period_start: Date
-  current_period_end: Date
-  cancel_at: Date
-  canceled_at: Date
+  type: SubscriptionType
+  cancelAtPeriodEnd: boolean
+  currentPeriodStart: Date
+  currentPeriodEnd: Date
+  cancelAt?: Date
+  canceledAt?: Date
   endedAt?: Date
   createdAt: Date
   updatedAt: Date
+}
+
+export type RepublikAGSubscription = Subscription & {
+  type: 'MONTHLY_SUBSCRIPTION'
+  company: 'REPUBLIK_AG'
+}
+
+export type ProjectRYearlySubscription = Subscription & {
+  type: 'YEARLY_SUBSCRIPTION'
+  company: 'PROJECT_R'
 }
 
 export type Invoice = {
@@ -52,5 +62,7 @@ export type Webhook<T> = {
   source: WebhookSource
   sourceId: string
   payload: T
+  processed: boolean
   createdAt: string
+  updatedAt: string
 }
