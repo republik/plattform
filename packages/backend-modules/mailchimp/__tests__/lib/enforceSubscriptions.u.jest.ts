@@ -22,6 +22,9 @@ jest.mock('../../config', () => ({
     return config
   },
 }))
+jest.mock('@orbiting/backend-modules-republik/lib/Newsletter', () => ({
+  getConsentLink: jest.fn(() => 'getConsentLink mocked'),
+}))
 jest.mock('../../lib/getInterestsForUser', () => ({
   getInterestsForUser: 
     jest.fn()
