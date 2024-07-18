@@ -43,7 +43,7 @@ const user = () => ({
 })
 
 test('get some member data without configuring mail first', async () => {
-  const getNewsletterSettings = require('../mailchimp/lib/getNewsletterSettings')
+  const getNewsletterSettings = require('@orbiting/backend-modules-mailchimp')
   expect(
     // updateNewsletterSubscriptions returns a promise
     getNewsletterSettings({ user: user('member') }),

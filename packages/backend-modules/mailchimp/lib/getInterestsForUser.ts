@@ -25,7 +25,7 @@ export async function getInterestsForUser({
 }: GetInterestsForUserParams): Promise<UserInterests> {
   const userId = user.id
 
-  const hasPledge = !!segmentData.pledges && segmentData.pledges.length > 0
+  const hasPledge = !!segmentData.pledges?.length
 
   const hasMembership = !!userId && !!segmentData.activeMembership
 
@@ -37,7 +37,7 @@ export async function getInterestsForUser({
   )
 
   const hasActiveGrantedAccess =
-    !!user && !!activeAccessGrants && activeAccessGrants.length > 0
+    !!user && !!activeAccessGrants?.length
 
   const interests = { ...segmentData.newsletterInterests }
 
