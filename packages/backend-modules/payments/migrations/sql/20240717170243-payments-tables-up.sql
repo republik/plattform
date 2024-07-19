@@ -35,29 +35,12 @@ CREATE TABLE IF NOT EXISTS payments."stripeCustomers" (
     "id" uuid default uuid_generate_v4() PRIMARY KEY,
     "userId" uuid NOT NULL,
     "company" payments.company NOT NULL,
-    "stripeId" text NOT NULL,
+    "customerId" text NOT NULL,
     CONSTRAINT fk_stripe_customer_user FOREIGN KEY("userId")
       REFERENCES public.users("id")
 );
 
-CREATE TABLE IF NOT EXISTS payments.orders (
-   "id" uuid default uuid_generate_v4() PRIMARY KEY,
-   "gatewayId" text NOT NULL,
-   "company" payments.company NOT NULL,
-   "userId" uuid NOT NULL,
-   "total" integer NOT NULL,
-   "totalBeforeDiscount" integer NOT NULL,
-   "dscountAmount" integer,
-   "discountCode" text,
-   "invoiceId"  uuid NOT NULL,
-   "items" jsonb NOT NULL,
-   "createdAt" timestamptz DEFAULT now(),
-   "updatedAt" timestamptz DEFAULT now(),
-   CONSTRAINT fk_order_user FOREIGN KEY("userId")
-      REFERENCES public.users("id"),
-   CONSTRAINT fk_order_invoice FOREIGN KEY("invoiceId")
-      REFERENCES payments.invocies("id")
-);
+CREATE INDEX stripe_customer_id_idx ON payments."stripeCustomers" ("customerId");
 
 CREATE TABLE IF NOT EXISTS payments.subscriptions (
     "id" uuid default uuid_generate_v4() PRIMARY KEY,
@@ -77,6 +60,8 @@ CREATE TABLE IF NOT EXISTS payments.subscriptions (
       REFERENCES public.users("id")
 );
 
+CREATE INDEX subscription_gateway_id_idx ON payments.subscriptions ("gatewayId");
+
 CREATE TABLE IF NOT EXISTS payments.invoices (
   "id" uuid default uuid_generate_v4() PRIMARY KEY,
   "hrId" text NOT NULL,
@@ -91,6 +76,30 @@ CREATE TABLE IF NOT EXISTS payments.invoices (
     REFERENCES payments.subscriptions("id")
 );
 
+CREATE INDEX invoices_subscription_id_idx ON payments.invoices ("subscriptionId");
+CREATE INDEX invoices_hr_id_idx ON payments.invoices ("hrId");
+
+CREATE TABLE IF NOT EXISTS payments.orders (
+   "id" uuid default uuid_generate_v4() PRIMARY KEY,
+   "gatewayId" text NOT NULL,
+   "company" payments.company NOT NULL,
+   "userId" uuid NOT NULL,
+   "total" integer NOT NULL,
+   "totalBeforeDiscount" integer NOT NULL,
+   "dscountAmount" integer,
+   "discountCode" text,
+   "invoiceId"  uuid NOT NULL,
+   "items" jsonb NOT NULL,
+   "createdAt" timestamptz DEFAULT now(),
+   "updatedAt" timestamptz DEFAULT now(),
+   CONSTRAINT fk_order_user FOREIGN KEY("userId")
+      REFERENCES public.users("id"),
+   CONSTRAINT fk_order_invoice FOREIGN KEY("invoiceId")
+      REFERENCES payments.invoices("id")
+);
+
+CREATE INDEX order_gateway_id_idx ON payments.orders ("gatewayId");
+
 CREATE TABLE IF NOT EXISTS payments.webhooks (
   "id" uuid default uuid_generate_v4() PRIMARY KEY,
   "source" text NOT NULL,
@@ -100,3 +109,5 @@ CREATE TABLE IF NOT EXISTS payments.webhooks (
   "createdAt" timestamptz DEFAULT now(),
   "updatedAt" timestamptz DEFAULT now()
 );
+
+CREATE INDEX webhook_source_id_idx ON payments.webhooks ("sourceId");
