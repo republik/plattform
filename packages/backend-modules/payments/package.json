@@ -8,6 +8,7 @@
     "@orbiting/backend-modules-job-queue": "*",
     "@orbiting/backend-modules-scalars": "*",
     "@orbiting/backend-modules-types": "*",
+    "@orbiting/backend-modules-auth": "*",
     "apollo-modules-node": "*",
     "body-parser": "^1.19.1",
     "stripe": "^16.1.0",

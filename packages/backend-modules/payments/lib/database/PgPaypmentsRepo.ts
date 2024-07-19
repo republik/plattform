@@ -7,18 +7,15 @@ import {
   SubscriptionRepo,
   WebhookArgs,
 } from './repo'
-import { getConfig } from '../config'
 import { Company, Order, Subscription, Webhook } from '../types'
 
 export class PgPaymentRepo
   implements CustomerRepo, OrderRepo, SubscriptionRepo, PaymentWebhookRepo
 {
   #pgdb: PgDb
-  #schemaName: string
 
   constructor(pgdb: PgDb) {
     this.#pgdb = pgdb
-    this.#schemaName = getConfig().SCHEMA_NAME
   }
 
   logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>> {
@@ -26,18 +23,47 @@ export class PgPaymentRepo
       sourceId: webhook.sourceId,
       source: webhook.source,
       payload: webhook.payload,
+      processed: false,
     })
   }
 
-  findWebhookEvent<T>(sourceId: string): Promise<Webhook<T>> {
+  findWebhookEvent<T>(
+    sourceId: string,
+    processed?: boolean,
+  ): Promise<Webhook<T> | null> {
     return this.#pgdb.payments.webhoook.findOne({
       sourceId,
+      processed,
     })
   }
 
-  getCustomerIdForCompany(userId: string, company: Company): Promise<string> {
-    console.log({ userId, company })
-    throw new Error('Method not implemented.')
+  getWebhookEvent<T>(id: string): Promise<Webhook<T>> {
+    return this.#pgdb.payments.webhoook.findOne({
+      id,
+    })
+  }
+
+  async getCustomerIdForCompany(
+    userId: string,
+    company: Company,
+  ): Promise<{ companyId: string; company: Company } | null> {
+    const row = await this.#pgdb.payments.stripeCustomers.findOne(
+      {
+        userId,
+        company,
+      },
+      { fields: ['customerId', 'company'] },
+    )
+
+    return row
+  }
+
+  async getUserIdByCustomerId(customerId: string): Promise<string | null> {
+    const row = await this.#pgdb.payments.stripeCustomers.findOne({
+      customerId,
+    })
+
+    return row?.userId
   }
 
   saveCustomerIdForCompany(
@@ -45,46 +71,55 @@ export class PgPaymentRepo
     company: Company,
     customerId: string,
   ): Promise<string> {
-    console.log({
-      userId,
-      company,
-      customerId,
-    })
-    throw new Error('Method not implemented.')
+    return this.#pgdb.payments.stipeCustomers.insertAndGet(
+      {
+        userId,
+        company,
+        customerId,
+      },
+      { return: ['id'] },
+    )
   }
 
   async saveCustomerIds(
     userId: string,
     customerIds: { customerId: string; company: string }[],
-  ): Promise<string> {
+  ): Promise<void> {
     const values = customerIds.map((c) => {
       return { userId, company: c.company, customerId: c.customerId }
     })
 
     await this.#pgdb.payments.stripeCustomers.insert(values)
-    return 'ok'
   }
 
-  async getOrders(userId: string): Promise<Order> {
-    console.log(userId)
-    throw new Error('Method not implemented.')
+  getOrder(orderId: string): Promise<Order> {
+    return this.#pgdb.payments.orders.findOne({
+      id: orderId,
+    })
+  }
+
+  async getUserOrders(userId: string): Promise<Order[]> {
+    return await this.#pgdb.payments.orders.findWhere({
+      userId,
+    })
   }
 
   async saveOrder(userId: string, order: OrderArgs): Promise<Order> {
-    console.log({ userId, order })
-    throw new Error('Method not implemented.')
+    return this.#pgdb.payments.orders.insert({
+      userId,
+      gatewayId: order.gatewayId,
+      company: order.customerId,
+      items: order.items,
+      paymentStatus: order.paymentStatus,
+      total: order.total,
+      totalBeforeDiscount: order.totalBeforeDiscount,
+    })
   }
 
   async getUserSubscriptions(userId: string): Promise<Subscription[]> {
-    const query = `select id, "hrId", kind, status, "userId", gateway, "gatewayId", "createdAt", "updatedAt" from ${
-      this.#schemaName
-    }.subscriptions where "userId" = :userId`
-    const rows = await this.#pgdb.query(query, {
+    return this.#pgdb.payments.subscriptions.findWhere({
       userId,
     })
-
-    return rows
-    // return rows.map(transformRowToSubscription)
   }
   async addUserSubscriptions(
     userId: string,

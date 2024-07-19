@@ -5,8 +5,11 @@ export type PaymentGateway = 'STRIPE_PROJECT_R' | 'STRIPE_REPUBLIK_AG'
 export type Order = {
   id: string
   userId: string
-  items: Record<string, any>
+  items: any
   total: number
+  totalBeforeDiscount: number
+  discountTotal: number
+  discountCode: string
   paymentStatus: 'paid' | 'unpaid'
   createdAt: Date
   updatedAt: Date

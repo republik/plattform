@@ -38,6 +38,13 @@ const {
   graphql: referralCampaigns,
 } = require('@orbiting/backend-modules-referral-campaigns')
 
+const {
+  graphql: paymentsGraphql,
+  express: paymentsWebhook,
+  Payments: PaymentsService,
+  StripeWebhookWorker,
+} = require('@orbiting/backend-modules-payments')
+
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-voting/loaders'),
   ...require('@orbiting/backend-modules-discussions/loaders'),
@@ -63,6 +70,12 @@ const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
 
 const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 
+const { Queue } = require('@orbiting/backend-modules-job-queue')
+
+const queue = Queue.getInstance()
+
+queue.registerWorker(StripeWebhookWorker)
+
 const {
   LOCAL_ASSETS_SERVER,
   MAIL_EXPRESS_RENDER,
@@ -85,9 +98,12 @@ const start = async () => {
   const server = await run()
   const _runOnce = await runOnce()
 
+  await queue.start()
+
   const close = async () => {
     await server.close()
     await _runOnce.close()
+    await queue.stop()
   }
 
   return {
@@ -123,10 +139,12 @@ const run = async (workerId, config) => {
     slots,
     callToActions,
     referralCampaigns,
+    paymentsGraphql,
   ])
 
   // middlewares
   const middlewares = [
+    paymentsWebhook,
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-mail/express/mandrill'),
@@ -185,6 +203,8 @@ const run = async (workerId, config) => {
     })
     return context
   }
+
+  PaymentsService.start(connectionContext.pgdb)
 
   const server = await Server.start(
     graphqlSchema,
@@ -311,6 +331,8 @@ const runOnce = async () => {
     })
   }
 
+  await queue.startWorkers()
+
   const close = async () => {
     await Promise.all(
       [
@@ -321,6 +343,7 @@ const runOnce = async () => {
         publicationScheduler && (await publicationScheduler.close()),
         databroomScheduler && databroomScheduler.close(),
         mailScheduler && mailScheduler.close(),
+        queue && queue.stop(),
       ].filter(Boolean),
     )
     await ConnectionContext.close(context)

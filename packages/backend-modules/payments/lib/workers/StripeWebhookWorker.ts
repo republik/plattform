@@ -6,8 +6,8 @@ import Stripe from 'stripe'
 import { Payments, PaymentService } from '../payments'
 
 type WorkerArgsV1 = {
-  // TODO! Use webhook event id stead of entire webhook body
   $version: 'v1'
+  // TODO! Use webhook event id stead of entire webhook body
   event: Webhook<Stripe.Event>
 }
 
@@ -15,22 +15,24 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
   readonly queue = 'payment:stripe:webhook'
 
   async perform(job: Job<WorkerArgsV1>): Promise<void> {
-    console.log('event.data')
+    console.log('event.data %v', job.data.$version)
     const event = job.data.event.payload
+
+    const PaymentService = Payments.getInstance()
 
     switch (event.type) {
       case 'checkout.session.completed':
-        return processCheckout(Payments, event)
+        return processCheckout(PaymentService, event)
       case 'customer.subscription.created':
-        return processSubscriptionCreated(Payments, event)
+        return processSubscriptionCreated(PaymentService, event)
       case 'customer.subscription.updated':
-        return processSubscriptionUpdate(Payments, event)
+        return processSubscriptionUpdate(PaymentService, event)
       case 'customer.subscription.deleted':
         // TODO scubription canceld
         console.log(event.data)
         throw new Error('Method not implemented.')
       default:
-        throw new Error('Method not implemented.')
+        console.log('skipping %s no handler for this event', event.type)
     }
   }
 }
@@ -47,10 +49,17 @@ export async function processCheckout(
 
   const customerId = event.data.object.customer as string
   const total = event.data.object.amount_total || 0
+  const totalBeforeDiscount = event.data.object.amount_subtotal || 0
 
-  await paymentService.saveOrder(customerId, {
+  await paymentService.saveOrder({
+    customerId: customerId,
     total: total,
-    payementStatus: paymentStatus as 'paid' | 'unpaid',
+    totalBeforeDiscount: totalBeforeDiscount,
+    company: 'REPUBLIK_AG',
+    gatewayId: event.data.object.id,
+    items: event.data.object.line_items,
+    invocieId: event.data.object.invoice as string | undefined,
+    paymentStatus: paymentStatus as 'paid' | 'unpaid',
   })
 }
 

@@ -11,25 +11,37 @@ const Gateway = new PaymentGateway({
   REPUBLIK_AG: RepublikAGStripe,
 })
 
-const Companies: Company[] = ['PROJECT_R', 'REPUBLIK_AG']
+const Companies: Company[] = ['PROJECT_R', 'REPUBLIK_AG'] as const
 
+/*
+ * Payment Service public Interface
+ */
 export interface PaymentService {
   listSubscriptions(userId: string): Promise<Subscription[]>
+  saveSubscription(args: any): Promise<Subscription>
+  updateSubscription(args: any): Promise<Subscription>
+  disableSubscription(args: any): Promise<Subscription>
+  getCustomerIdForCompany(userId: string, company: Company): Promise<any>
   createCustomer(email: string, userId: string): any
-  saveOrder(userId: string, order: OrderArgs): Promise<Order>
+  listUserOrders(userId: string): Promise<Order[]>
+  getOrder(id: string): Promise<Order>
+  saveOrder(order: OrderArgs): Promise<Order>
 }
 
 export class Payments implements PaymentService {
-  static instance: PaymentService
+  static #instance: PaymentService
   protected pgdb: PgDb
   protected repo: PgPaymentRepo
 
   static start(pgdb: PgDb) {
-    this.instance = new this(pgdb)
+    this.#instance = new this(pgdb)
   }
 
   static assertRunning() {
-    assert(this.instance !== null, 'PaymentService has not been stared')
+    assert(
+      this.#instance !== undefined || this.#instance !== null,
+      'PaymentService has not been stared',
+    )
   }
 
   constructor(pgdb: PgDb) {
@@ -37,8 +49,60 @@ export class Payments implements PaymentService {
     this.repo = new PgPaymentRepo(pgdb)
   }
 
+  async getCustomerIdForCompany(
+    userId: string,
+    company: Company,
+  ): Promise<any> {
+    const customer = await this.repo.getCustomerIdForCompany(userId, company)
+    if (!customer) {
+      console.log('legecy lookup')
+      const row = await this.pgdb.queryOne(
+        `SELECT
+        s.id as "customerId"
+        from "stripeCustomers" s
+        JOIN companies c ON s."companyId" = c.id
+        WHERE
+        "userId" = :userId AND
+        c.name = :company`,
+        {
+          userId,
+          company: company === 'REPUBLIK_AG' ? 'REPUBLIK' : company,
+        },
+      )
+      if (!row) {
+        return null
+      }
+
+      return { customerId: row.customerId, company }
+    }
+    return customer
+  }
+
+  async listUserOrders(userId: string): Promise<Order[]> {
+    return await this.repo.getUserOrders(userId)
+  }
+
+  async getOrder(id: string): Promise<Order> {
+    return await this.repo.getOrder(id)
+  }
+
   async listSubscriptions(userId: string): Promise<Subscription[]> {
     return this.repo.getUserSubscriptions(userId)
+  }
+
+  async saveSubscription(args: any): Promise<Subscription> {
+    console.log(args)
+    throw new Error('Method not implemented.')
+  }
+
+  async updateSubscription(args: any): Promise<Subscription> {
+    console.log(args)
+    throw new Error('Method not implemented.')
+  }
+
+  async disableSubscription(args: any): Promise<Subscription> {
+    console.log(args)
+    throw new Error('Method not implemented.')
   }
 
   async createCustomer(email: string, userId: string) {
@@ -64,25 +128,17 @@ export class Payments implements PaymentService {
     return ids
   }
 
-  async saveOrder(userId: string, order: OrderArgs): Promise<Order> {
+  async saveOrder(order: OrderArgs): Promise<Order> {
+    const userId = await this.repo.getUserIdByCustomerId(order.customerId)
+    if (!userId) {
+      throw Error('unable to find customer')
+    }
+
     return this.repo.saveOrder(userId, order)
   }
 
-  static createCustomer(email: string, userId: string) {
+  static getInstance(): PaymentService {
     this.assertRunning()
-
-    return this.instance.createCustomer(email, userId)
-  }
-
-  static saveOrder(userId: string, order: OrderArgs): Promise<Order> {
-    this.assertRunning()
-
-    return this.instance.saveOrder(userId, order)
-  }
-
-  static listSubscriptions(userId: string) {
-    this.assertRunning()
-
-    return this.instance.listSubscriptions(userId)
+    return this.#instance
   }
 }

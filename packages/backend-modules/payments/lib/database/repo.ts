@@ -16,11 +16,14 @@ export type WebhookArgs<T> = {
 
 export interface PaymentWebhookRepo {
   logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>>
-  findWebhookEvent<T>(sourceId: string): Promise<Webhook<T>>
+  findWebhookEvent<T>(sourceId: string): Promise<Webhook<T> | null>
 }
 
 export interface CustomerRepo {
-  getCustomerIdForCompany(userId: string, company: Company): Promise<string>
+  getCustomerIdForCompany(
+    userId: string,
+    company: Company,
+  ): Promise<{ companyId: string; company: Company } | null>
   saveCustomerIdForCompany(
     userId: string,
     company: Company,
@@ -29,7 +32,7 @@ export interface CustomerRepo {
   saveCustomerIds(
     userId: string,
     customerIds: { customerId: string; company: string }[],
-  ): Promise<string>
+  ): Promise<void>
 }
 
 export interface SubscriptionRepo {
@@ -41,12 +44,19 @@ export interface SubscriptionRepo {
 }
 
 export type OrderArgs = {
+  customerId: string
   total: number
-  payementStatus: Order['paymentStatus']
+  totalBeforeDiscount: number
+  company: Company
+  paymentStatus: 'paid' | 'unpaid'
+  items: any
+  gatewayId: string
+  invocieId?: string
 }
 
 export interface OrderRepo {
-  getOrders(userId: string): Promise<Order>
+  getUserOrders(userId: string): Promise<Order[]>
+  getOrder(orderId: string): Promise<Order>
   saveOrder(userId: string, order: OrderArgs): Promise<Order>
 }
 

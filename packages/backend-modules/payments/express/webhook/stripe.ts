@@ -46,8 +46,10 @@ export async function handleStripeWebhook(
 function getCompanyName(pathSegment: string): Company {
   switch (pathSegment) {
     case 'project-r':
+    case 'project_r':
       return 'PROJECT_R'
     case 'republik-ag':
+    case 'republik_ag':
       return 'REPUBLIK_AG'
     default:
       throw Error(`Unsupported company ${pathSegment}`)
