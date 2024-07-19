@@ -23,6 +23,11 @@ CREATE TYPE payments.subscription_status as ENUM (
     'ended' -- not part of stripe
 );
 
+CREATE TYPE payments.order_status as ENUM (
+    'paid',
+    'unpaid'
+);
+
 CREATE TYPE payments.invoice_status as ENUM (
     'draft',
     'open',
@@ -86,9 +91,10 @@ CREATE TABLE IF NOT EXISTS payments.orders (
    "userId" uuid NOT NULL,
    "total" integer NOT NULL,
    "totalBeforeDiscount" integer NOT NULL,
+   "payementStatus" payments.order_status NOT NULL,
    "dscountAmount" integer,
    "discountCode" text,
-   "invoiceId"  uuid NOT NULL,
+   "invoiceId"  uuid,
    "items" jsonb NOT NULL,
    "createdAt" timestamptz DEFAULT now(),
    "updatedAt" timestamptz DEFAULT now(),
