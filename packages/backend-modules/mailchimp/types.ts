@@ -1,4 +1,4 @@
-import { mergeFieldNames } from "./lib/getMergeFieldsForUser"
+import { mergeFieldNames, UserMergeFields } from "./lib/getMergeFieldsForUser"
 import MailchimpInterface from "./MailchimpInterface"
 
 export type UserInterests = {
@@ -14,6 +14,7 @@ export type MemberData = {
   status_if_new: MemberStatus,
   status: MemberStatus
   interests: UserInterests,
+  merge_fields: Partial<UserMergeFields>,
 }
 
 type Pledge = {

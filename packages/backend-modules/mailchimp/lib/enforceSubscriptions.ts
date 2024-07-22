@@ -95,6 +95,7 @@ export async function enforceSubscriptions({
       user: user || { email },
       audienceId: MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
       interests: {},
+      mergeFields: mergeFields,
       statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
       defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
     })
@@ -105,7 +106,7 @@ export async function enforceSubscriptions({
     })
   } else {
     // no active membership
-    await addUserToMarketingAudience(user || { email })
+    await addUserToMarketingAudience(user || { email }, mergeFields)
 
     await archiveMemberInAudience({
       user: user || { email },
