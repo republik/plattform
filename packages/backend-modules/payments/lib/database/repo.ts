@@ -1,9 +1,8 @@
 import type {
   Company,
   Order,
-  PaymentGateway,
   Subscription,
-  SubscriptionType,
+  SubscriptionArgs,
   Webhook,
   WebhookSource,
 } from '../types'
@@ -39,7 +38,7 @@ export interface SubscriptionRepo {
   getUserSubscriptions(userId: string): Promise<Subscription[]>
   addUserSubscriptions(
     userId: string,
-    args: AddSubscriptionArgs,
+    args: SubscriptionArgs,
   ): Promise<Subscription>
 }
 
@@ -58,11 +57,4 @@ export interface OrderRepo {
   getUserOrders(userId: string): Promise<Order[]>
   getOrder(orderId: string): Promise<Order>
   saveOrder(userId: string, order: OrderArgs): Promise<Order>
-}
-
-export type AddSubscriptionArgs = {
-  userId: string
-  kind: SubscriptionType
-  gateway: PaymentGateway
-  gatewayId: string
 }

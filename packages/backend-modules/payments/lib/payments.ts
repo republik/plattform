@@ -2,7 +2,7 @@ import { PgDb } from 'pogi'
 import { OrderArgs } from './database/repo'
 import { PaymentGateway } from './gateway/gateway'
 import { ProjectRStripe, RepublikAGStripe } from './gateway/stripe'
-import { Company, Order, Subscription } from './types'
+import { Company, Order, Subscription, SubscriptionArgs } from './types'
 import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
 
@@ -18,7 +18,7 @@ const Companies: Company[] = ['PROJECT_R', 'REPUBLIK_AG'] as const
  */
 export interface PaymentService {
   listSubscriptions(userId: string): Promise<Subscription[]>
-  saveSubscription(args: any): Promise<Subscription>
+  setupSubscription(args: any): Promise<Subscription>
   updateSubscription(args: any): Promise<Subscription>
   disableSubscription(args: any): Promise<Subscription>
   getCustomerIdForCompany(userId: string, company: Company): Promise<any>
@@ -47,6 +47,34 @@ export class Payments implements PaymentService {
   constructor(pgdb: PgDb) {
     this.pgdb = pgdb
     this.repo = new PgPaymentRepo(pgdb)
+  }
+
+  async setupSubscription(
+    args: SubscriptionArgs & { customerId: string },
+  ): Promise<Subscription> {
+    const tx = await this.pgdb.transactionBegin()
+    const txRepo = new PgPaymentRepo(tx)
+
+    try {
+      const userId = await txRepo.getUserIdByCustomerId(args.customerId)
+      if (!userId) {
+        throw Error(
+          `CustomerId ${args.customerId} is not associated with a user`,
+        )
+      }
+
+      const sub = await txRepo.addUserSubscriptions(userId, args)
+      await tx.query(`PERFORM public.add_user_to_role(:userId, 'member')`, {
+        userId: userId,
+      })
+
+      await tx.transactionCommit()
+      return sub
+    } catch (e) {
+      await tx.transactionRollback()
+
+      throw e
+    }
   }
 
   async getCustomerIdForCompany(
@@ -88,11 +116,6 @@ export class Payments implements PaymentService {
 
   async listSubscriptions(userId: string): Promise<Subscription[]> {
     return this.repo.getUserSubscriptions(userId)
-  }
-
-  async saveSubscription(args: any): Promise<Subscription> {
-    console.log(args)
-    throw new Error('Method not implemented.')
   }
 
   async updateSubscription(args: any): Promise<Subscription> {

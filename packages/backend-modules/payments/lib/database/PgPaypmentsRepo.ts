@@ -7,7 +7,13 @@ import {
   SubscriptionRepo,
   WebhookArgs,
 } from './repo'
-import { Company, Order, Subscription, Webhook } from '../types'
+import {
+  Company,
+  Order,
+  Subscription,
+  SubscriptionArgs,
+  Webhook,
+} from '../types'
 
 export class PgPaymentRepo
   implements CustomerRepo, OrderRepo, SubscriptionRepo, PaymentWebhookRepo
@@ -123,12 +129,11 @@ export class PgPaymentRepo
   }
   async addUserSubscriptions(
     userId: string,
-    args: object,
+    args: SubscriptionArgs,
   ): Promise<Subscription> {
-    console.log({
-      userId,
-      args,
+    return await this.#pgdb.payments.subscriptions.insert({
+      userId: userId,
+      ...args,
     })
-    throw new Error('Method not implemented.')
   }
 }

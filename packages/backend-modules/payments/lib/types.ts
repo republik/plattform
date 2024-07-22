@@ -35,6 +35,19 @@ export type Subscription = {
   updatedAt: Date
 }
 
+export type SubscriptionArgs = {
+  company: Company
+  gatewayId: string
+  status: string
+  type: SubscriptionType
+  cancelAtPeriodEnd?: boolean
+  currentPeriodStart: Date
+  currentPeriodEnd: Date
+  cancelAt?: Date
+  canceledAt?: Date
+  endedAt?: Date
+}
+
 export type RepublikAGSubscription = Subscription & {
   type: 'MONTHLY_SUBSCRIPTION'
   company: 'REPUBLIK_AG'

@@ -64,10 +64,10 @@ export async function processCheckout(
 }
 
 export async function processSubscriptionCreated(
-  _paymentService: PaymentService,
-  _event: Stripe.CustomerSubscriptionCreatedEvent,
+  paymentService: PaymentService,
+  event: Stripe.CustomerSubscriptionCreatedEvent,
 ) {
-  throw new Error('Method not implemented.')
+  paymentService.setupSubscription(event)
 }
 
 export async function processSubscriptionUpdate(
