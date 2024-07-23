@@ -1,5 +1,7 @@
 import MailchimpInterface from '../MailchimpInterface'
 import { SubscriptionHandlerMissingMailError } from './errors'
+import { getConfig } from '../config'
+import { mergeFieldNames } from './getMergeFieldsForUser'
 
 export async function updateNewsletterSubscriptions(
   { user, interests = {}, mergeFields = {}, name, subscribed },
@@ -11,9 +13,14 @@ export async function updateNewsletterSubscriptions(
   if (!Object.keys(interests).length && !!name) {
     const interestId = NewsletterSubscription.interestIdByName(name)
     interests[interestId] = subscribed
+    mergeFields[mergeFieldNames[interestId]] = subscribed ? 'Subscribed' : 'Unsubscribed'
   }
 
   const { email, roles } = user
+
+  Object.keys(interests).forEach((interestId) => {
+    mergeFields[mergeFieldNames[interestId]] = interests[interestId] ? 'Subscribed' : 'Unsubscribed'
+  })
 
   const body: any = {
     email_address: email,
@@ -35,6 +42,24 @@ export async function updateNewsletterSubscriptions(
   }
 
   await mailchimp.updateMember(email, body)
+
+  // also update merge fields for other audiences
+  const {MAILCHIMP_MARKETING_AUDIENCE_ID, MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID} = getConfig()
+  await mailchimp.updateMember(email, {
+    email_address: email,
+    status_if_new: MailchimpInterface.MemberStatus.Subscribed,
+    merge_fields: {
+      ...mergeFields,
+    },
+  }, MAILCHIMP_MARKETING_AUDIENCE_ID)
+
+  await mailchimp.updateMember(email, {
+    email_address: email,
+    status_if_new: MailchimpInterface.MemberStatus.Subscribed,
+    merge_fields: {
+      ...mergeFields,
+    },
+  }, MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID)
 
   // user might be null if using with just {email, roles}
   const subscriptions = user &&

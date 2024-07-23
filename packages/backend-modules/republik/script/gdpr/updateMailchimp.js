@@ -137,7 +137,7 @@ PgDb.connect()
         const user = users.find(
           (u) => u.email.toLowerCase() === email.toLowerCase(),
         )
-        const segmentData = await getSegmentDataForUser({ user, pgdb })
+        const segmentData = await getSegmentDataForUser({ user, pgdb, getNewsletterInterests: (email) => {}, })
         const interests = await getInterestsForUser({
           userId: !!user && user.id,
           segmentData,
