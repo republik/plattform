@@ -52,6 +52,7 @@ export async function enforceSubscriptions({
   const segmentData = await getSegmentDataForUser({
     user,
     pgdb,
+    getNewsletterInterests
   })
 
   const mergeFields = await getMergeFieldsForUser({
@@ -130,4 +131,10 @@ export async function enforceSubscriptions({
       defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
     })
   }
+}
+
+async function getNewsletterInterests(email) {
+  const mailchimp = MailchimpInterface({ console })
+  const member = await mailchimp.getMember(email)
+  return member?.interests
 }

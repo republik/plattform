@@ -1,17 +1,18 @@
 import type { PgDb } from 'pogi'
 import moment from 'moment'
 import { UserRow } from '@orbiting/backend-modules-types'
-import MailchimpInterface from '../MailchimpInterface'
-import { SegmentData, Membership } from '../types'
+import { SegmentData, Membership, UserInterests } from '../types'
 
 type GetSegmentDataForUserParams = {
   user: UserRow
   pgdb: PgDb
+  getNewsletterInterests: (email: string) => Promise<UserInterests | undefined>
 }
 
 export async function getSegmentDataForUser({
   user,
   pgdb,
+  getNewsletterInterests,
 }: GetSegmentDataForUserParams): Promise<SegmentData> {
   const pledges =
     !!user.id &&
@@ -59,12 +60,6 @@ export async function getSegmentDataForUser({
     accessGrants,
     newsletterInterests,
   }
-}
-
-async function getNewsletterInterests(email) {
-  const mailchimp = MailchimpInterface({ console })
-  const member = await mailchimp.getMember(email)
-  return member?.interests
 }
 
 async function findGrants(user: UserRow, pgdb: PgDb) {
