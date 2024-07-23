@@ -6,13 +6,13 @@ import { SegmentData, Membership, UserInterests } from '../types'
 type GetSegmentDataForUserParams = {
   user: UserRow
   pgdb: PgDb
-  getNewsletterInterests: (email: string) => Promise<UserInterests | undefined>
+  newsletterInterests: UserInterests | undefined
 }
 
 export async function getSegmentDataForUser({
   user,
   pgdb,
-  getNewsletterInterests,
+  newsletterInterests,
 }: GetSegmentDataForUserParams): Promise<SegmentData> {
   const pledges =
     !!user.id &&
@@ -49,8 +49,6 @@ export async function getSegmentDataForUser({
   })
 
   const accessGrants = !!user && (await findGrants(user, pgdb))
-
-  const newsletterInterests = await getNewsletterInterests(user.email)
 
   return {
     pledges,
