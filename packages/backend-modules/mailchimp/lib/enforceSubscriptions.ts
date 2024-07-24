@@ -14,6 +14,7 @@ import MailchimpInterface from '../MailchimpInterface'
 import { NewsletterSubscriptionConfig } from '../NewsletterSubscriptionConfig'
 import { createNewsletterSubscription } from '../NewsletterSubscription'
 import { getMergeFieldsForUser } from './getMergeFieldsForUser'
+import { getNewsletterInterests } from './getNewsletterInterests'
 
 const {
   MAILCHIMP_INTEREST_MEMBER,
@@ -133,10 +134,4 @@ export async function enforceSubscriptions({
       defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
     })
   }
-}
-
-async function getNewsletterInterests(email) {
-  const mailchimp = MailchimpInterface({ console })
-  const member = await mailchimp.getMember(email)
-  return member?.interests
 }

@@ -12,6 +12,7 @@ import { enforceSubscriptions } from './enforceSubscriptions'
 import { resubscribeEmail } from './resubscribeEmail'
 import { getSegmentDataForUser } from './getSegmentDataForUser'
 import { getMergeFieldsForUser } from './getMergeFieldsForUser'
+import { getNewsletterInterests } from './getNewsletterInterests'
 
 export {
   changeEmailOnMailchimp,
@@ -29,4 +30,5 @@ export {
   resubscribeEmail,
   getSegmentDataForUser,
   getMergeFieldsForUser,
+  getNewsletterInterests,
 }

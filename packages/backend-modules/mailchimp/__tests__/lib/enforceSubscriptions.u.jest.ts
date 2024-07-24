@@ -87,6 +87,11 @@ jest.mock('../../lib/updateNewsletterSubscriptions', () => ({
   ),
 }))
 
+import { getNewsletterInterests } from '../../lib/getNewsletterInterests'
+jest.mock('../../lib/getNewsletterInterests', () => ({
+  getNewsletterInterests: jest.fn()
+}))
+
 import MailchimpInterface from '../../MailchimpInterface'
 import { enforceSubscriptions } from '../../lib/enforceSubscriptions'
 
@@ -118,6 +123,7 @@ describe('test enforceSubscriptions', () => {
       subscribed: true,
     })
 
+    expect(getNewsletterInterests).toHaveBeenCalled()
     expect(updateNewsletterSubscriptions).toHaveBeenCalled()
     expect(getSegmentDataForUser).toHaveBeenCalled()
     expect(addUserToAudience).toHaveBeenCalled()
@@ -138,6 +144,23 @@ describe('test enforceSubscriptions', () => {
       user: user,
       audienceId: config.MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
       interests: {},
+      mergeFields: {
+        FNAME: undefined,
+        LNAME: undefined,
+        PL_AMOUNT: 0,
+        END_DATE: undefined,
+        SUB_STATE: undefined,
+        SUB_TYPE: undefined,
+        TRIAL: undefined,
+        NL_LINK_CA: undefined,
+        NL_LINK_WD: undefined,
+        NL_DAILY: undefined,
+        NL_WEEKLY: undefined,
+        NL_PROJ_R: undefined,
+        NL_CLIMATE: undefined,
+        NL_WDWWW: undefined,
+        NL_ACCOMPL: undefined,
+      },
       statusIfNew: MailchimpInterface.MemberStatus.Subscribed,
       defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
     })

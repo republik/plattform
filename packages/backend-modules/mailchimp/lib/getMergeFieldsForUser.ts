@@ -62,27 +62,27 @@ export async function getMergeFieldsForUser({
     [mergeFieldNames.newsletterOptInCa]: linkCa,
     [mergeFieldNames.newsletterOptInWb]: linkWdwww,
     [mergeFieldNames.trialState]: trialState,
-    [mergeFieldNames[MAILCHIMP_INTEREST_NEWSLETTER_DAILY]]: hasInterest(
+    'NL_DAILY': hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
     ),
-    [mergeFieldNames[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]]: hasInterest(
+    'NL_WEEKLY': hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
     ),
-    [mergeFieldNames[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]]: hasInterest(
+    'NL_PROJ_R': hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
     ),
-    [mergeFieldNames[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE]]: hasInterest(
+    'NL_CLIMATE': hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
     ),
-    [mergeFieldNames[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]]: hasInterest(
+    'NL_WDWWW': hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
     ),
-    [mergeFieldNames[MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]]: hasInterest(
+    'NL_ACCOMPL': hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
     ),
