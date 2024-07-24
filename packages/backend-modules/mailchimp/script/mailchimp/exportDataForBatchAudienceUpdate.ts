@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-require('@orbiting/backend-modules-env').config()
-
+import env from '@orbiting/backend-modules-env'
+env.config()
 import yargs from 'yargs'
 import csvParser from 'csv-parser'
 import { ConnectionContext } from '@orbiting/backend-modules-base'
@@ -53,7 +53,13 @@ ConnectionContext.create('Export script for mailchimp audience batch update')
         'SUB_STATE',
         'TRIAL',
         'NL_LINK_CA',
-        'NL_LINK_WD'
+        'NL_LINK_WD',
+        'NL_DAILY',
+        'NL_WEEKLY',
+        'NL_PROJ_R',
+        'NL_CLIMATE',
+        'NL_WDWWW',
+        'NL_ACCOMPL'
       ].join(','),
     )
 
@@ -91,12 +97,12 @@ ConnectionContext.create('Export script for mailchimp audience batch update')
         TRIAL: mergeFields.TRIAL,
         NL_LINK_CA: mergeFields.NL_LINK_CA,
         NL_LINK_WD: mergeFields.NL_LINK_WD,
-        [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] ? 'Subscribed' : 'Unsubscribed',
-        [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] ? 'Subscribed' : 'Unsubscribed',
-        [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] ? 'Subscribed' : 'Unsubscribed',
-        [MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE]: interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ? 'Subscribed' : 'Unsubscribed',
-        [MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]: interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW] ? 'Subscribed' : 'Unsubscribed',
-        [MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]: interests[MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE] ? 'Subscribed' : 'Unsubscribed',
+        NL_DAILY: interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] ? 'Subscribed' : 'Unsubscribed',
+        NL_WEEKLY: interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] ? 'Subscribed' : 'Unsubscribed',
+        NL_PROJ_R: interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] ? 'Subscribed' : 'Unsubscribed',
+        NL_CLIMATE: interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ? 'Subscribed' : 'Unsubscribed',
+        NL_WDWWW: interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW] ? 'Subscribed' : 'Unsubscribed',
+        NL_ACCOMPL: interests[MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE] ? 'Subscribed' : 'Unsubscribed',
       }
 
       if (audience === 'newsletter') {
