@@ -31,6 +31,12 @@ describe('test that merge fields are generated correctly from user data with mis
       NL_LINK_CA: undefined,
       NL_LINK_WD: undefined,
       TRIAL: undefined,
+      NL_DAILY: undefined,
+      NL_WEEKLY: undefined,
+      NL_PROJ_R: undefined,
+      NL_CLIMATE: undefined,
+      NL_WDWWW: undefined,
+      NL_ACCOMPL: undefined,
     }
     expect(mergeFields).resolves.toStrictEqual(expectedResult)
   })
@@ -61,6 +67,12 @@ describe('test that merge fields are generated correctly from user data with mis
       NL_LINK_CA: 'getConsentLink mocked',
       NL_LINK_WD: 'getConsentLink mocked',
       TRIAL: undefined,
+      NL_DAILY: undefined,
+      NL_WEEKLY: undefined,
+      NL_PROJ_R: undefined,
+      NL_CLIMATE: undefined,
+      NL_WDWWW: undefined,
+      NL_ACCOMPL: undefined,
     }
     expect(mergeFields).resolves.toStrictEqual(expectedResult)
   })

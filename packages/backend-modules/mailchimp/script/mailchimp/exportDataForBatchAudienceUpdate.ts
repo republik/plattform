@@ -3,7 +3,7 @@ import env from '@orbiting/backend-modules-env'
 env.config()
 import yargs from 'yargs'
 import csvParser from 'csv-parser'
-import { ConnectionContext } from '@orbiting/backend-modules-base'
+import { ConnectionContext } from '@orbiting/backend-modules-base/lib'
 import { UserRow } from '@orbiting/backend-modules-types'
 import bluebird from 'bluebird'
 import { getInterestsForUser, getMergeFieldsForUser, getSegmentDataForUser } from '../../lib'
@@ -63,22 +63,21 @@ ConnectionContext.create('Export script for mailchimp audience batch update')
       ].join(','),
     )
 
-    // get users from mailchimp audience (csv?)
     const rawMailchimpData = await parse(process.stdin) 
 
-    // one DB call to find all user rows
     const emails: string[] = rawMailchimpData.map((csvImport) => csvImport.email)
     const users: UserRow[] = await pgdb.public.users.find({email: emails})
     const newsletterData: string[][] = rawMailchimpData.map((csvImport) => csvImport.newsletters)
 
     const mailchimpData: MailchimpData[] = []
     for (let i = 0; i < users.length; i++) {
-      const data: MailchimpData = {user: users[i], newsletterData: newsletterData[i]}
+      const index = emails.findIndex((email) => email === users[i].email)
+      const data: MailchimpData = {user: users[i], newsletterData: newsletterData[index]}
       mailchimpData.push(data)
     }
 
     // go through all users and get segment data
-    bluebird.map(mailchimpData, async (mailchimpData) => {
+    await bluebird.map(mailchimpData, async (mailchimpData) => {
       const {user, newsletterData } = mailchimpData
       const newsletterInterests = await getNewsletterInterests(newsletterData)
       const segmentData = await getSegmentDataForUser({user, pgdb, newsletterInterests})
@@ -136,19 +135,19 @@ ConnectionContext.create('Export script for mailchimp audience batch update')
       [MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]: false,
     }
 
-    if (data.includes('Täglich')) {
+    if (data.includes('DAILY')) {
       interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
     }
 
-    if (data.includes('Wochenende')) {
+    if (data.includes('WEEKLY')) {
       interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
     }
 
-    if (data.includes('Project R')) {
+    if (data.includes('PROJECTR')) {
       interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
     }
 
-    if (data.includes('CLIMATE')) {
+    if (data.includes('CHALLENGE_ACCEPTED')) {
       interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] = true
     }
 
@@ -177,7 +176,7 @@ async function parse(readStream) {
 
   for await (const line of stream) {
     results.push({
-      email: line['e-mail-adresse'],
+      email: line['email address'],
       newsletters: line['republik nl'].split(', '),
     })
   }
