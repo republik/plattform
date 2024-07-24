@@ -95,7 +95,7 @@ module.exports = async (_, args, context) => {
     // update audiences and merge fields
     await enforceSubscriptions({
       userId: user.id,
-      email,
+      email: user.email,
       subscribeToOnboardingMails: false,
       subscribeToEditorialNewsletters: false,
       pgdb,

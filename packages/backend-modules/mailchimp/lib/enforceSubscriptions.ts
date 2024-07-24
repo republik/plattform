@@ -50,7 +50,7 @@ export async function enforceSubscriptions({
 }: EnforceSubscriptionsParams) {
   const user = !!userId && (await pgdb.public.users.findOne({ id: userId }))
 
-  const newsletterInterests = await getNewsletterInterests(user || { email })
+  const newsletterInterests = await getNewsletterInterests(user.email)
 
   const segmentData = await getSegmentDataForUser({
     user,
