@@ -106,16 +106,28 @@ ConnectionContext.create('Export script for mailchimp audience batch update')
 
       if (audience === 'newsletter') {
         // update all downloaded contacts with segments, archive Unsubscribed and not subscribed to NL manually on mailchimp
-        console.log(record)
+        console.log(
+          Object.keys(record)
+            .map((key) => record[key])
+            .join(','),
+        )
       } else if (audience === 'produktinfos') {
         // update and upload only people with active subscription
         if (segmentData?.activeMembership) {
-          console.log(record)
+          console.log(
+            Object.keys(record)
+              .map((key) => record[key])
+              .join(','),
+          )
         }
       } else if (audience === 'marketing') {
         // update and upload only people without active subscription, archive people with subscription on mailchimp manually
         if (!segmentData?.activeMembership) {
-          console.log(record)
+          console.log(
+            Object.keys(record)
+              .map((key) => record[key])
+              .join(','),
+          )
         }
       }
     })
