@@ -17,13 +17,24 @@ export type Order = {
 
 export type SubscriptionType = 'YEARLY_SUBSCRIPTION' | 'MONTHLY_SUBSCRIPTION'
 
+export type SubscriptionStatus =
+  | 'trialing'
+  | 'incomplete'
+  | 'incomplete_expired'
+  | 'paused'
+  | 'active'
+  | 'canceled'
+  | 'unpaid'
+  | 'past_due'
+  | 'ended'
+
 export type Subscription = {
   id: string
   userId: string
   company: Company
   gatewayId: string
   hrId: string
-  status: string
+  status: SubscriptionStatus
   type: SubscriptionType
   cancelAtPeriodEnd: boolean
   currentPeriodStart: Date
@@ -38,7 +49,7 @@ export type Subscription = {
 export type SubscriptionArgs = {
   company: Company
   gatewayId: string
-  status: string
+  status: SubscriptionStatus
   type: SubscriptionType
   cancelAtPeriodEnd?: boolean
   currentPeriodStart: Date
@@ -61,7 +72,7 @@ export type ProjectRYearlySubscription = Subscription & {
 export type Invoice = {
   id: string
   subscriptionId: string
-  gateway: PaymentGateway
+  company: Company
   gatewayId: string
   status: 'paid' | 'void' | 'refunded'
   price: number
@@ -69,6 +80,18 @@ export type Invoice = {
   periodEnd: Date
   createdAt: Date
   updatedAt: Date
+}
+
+export type InvoiceArgs = {
+  company: Company
+  gatewayId: string
+  hrId: string
+  discountCode?: string
+  subscriptionId?: string
+  status: 'draft' | 'paid' | 'void' | 'refunded'
+  total: number
+  totalBeforeDiscount: number
+  items: any
 }
 
 export type WebhookSource = 'stripe'
@@ -81,4 +104,18 @@ export type Webhook<T> = {
   processed: boolean
   createdAt: string
   updatedAt: string
+}
+
+export type SubscriptionLocator =
+  | { id: string; gatewayId?: never }
+  | { gatewayId: string; id?: never }
+
+export type SubscriptionUpdateArgs = {
+  status?: SubscriptionStatus
+  cancelAtPeriodEnd?: boolean
+  currentPeriodStart?: Date
+  currentPeriodEnd?: Date
+  endedAt?: Date
+  canceledAt?: Date
+  cancelAt?: Date | null
 }

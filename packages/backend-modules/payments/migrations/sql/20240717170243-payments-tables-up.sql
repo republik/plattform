@@ -69,16 +69,22 @@ CREATE INDEX subscription_gateway_id_idx ON payments.subscriptions ("gatewayId")
 
 CREATE TABLE IF NOT EXISTS payments.invoices (
   "id" uuid default uuid_generate_v4() PRIMARY KEY,
+  "userId" uuid NOT NULL,
   "hrId" text NOT NULL,
+  "company" payments.company NOT NULL,
   "gatewayId" text NOT NULL,
   "total" integer NOT NULL,
   "totalBeforeDiscount" integer NOT NULL,
+  "status" payments.invoice_status NOT NULL,
+  "items" jsonb NOT NULL,
   "discountCode" text,
   "subscriptionId" uuid,
   "createdAt" timestamptz DEFAULT now(),
   "updatedAt" timestamptz DEFAULT now(),
   CONSTRAINT fk_invoice_for_subscription FOREIGN KEY("subscriptionId")
-    REFERENCES payments.subscriptions("id")
+    REFERENCES payments.subscriptions("id"),
+  CONSTRAINT fk_invoice_for_user FOREIGN KEY("userId")
+    REFERENCES public.users("id")
 );
 
 CREATE INDEX invoices_subscription_id_idx ON payments.invoices ("subscriptionId");

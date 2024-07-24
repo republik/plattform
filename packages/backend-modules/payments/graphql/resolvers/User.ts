@@ -10,8 +10,37 @@ export = {
     ctx: GraphqlContext,
   ) {
     Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
-    const PaymentsService = Payments.getInstance()
 
-    return PaymentsService.getCustomerIdForCompany(user.id, company)
+    return await Payments.getInstance().getCustomerIdForCompany(
+      user.id,
+      company,
+    )
+  },
+
+  async activeMagazineSubscriptions(
+    user: User,
+    _args: never,
+    ctx: GraphqlContext,
+  ) {
+    Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
+
+    try {
+      const res = await Payments.getInstance().listActiveSubscriptions(user.id)
+      return res
+    } catch (e) {
+      console.log(e)
+      return []
+    }
+  },
+
+  async magazineSubscriptions(user: User, _args: never, ctx: GraphqlContext) {
+    Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
+    try {
+      const res = await Payments.getInstance().listSubscriptions(user.id)
+      return res
+    } catch (e) {
+      console.log(e)
+      return []
+    }
   },
 }

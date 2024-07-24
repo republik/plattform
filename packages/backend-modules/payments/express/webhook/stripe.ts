@@ -33,7 +33,7 @@ export async function handleStripeWebhook(
         event: e,
       },
     )
-    return res.sendStatus(200)
+    return res.sendStatus(202)
   } catch (err) {
     console.log(
       `Webhook signature verification failed.`,

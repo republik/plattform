@@ -1,23 +1,16 @@
 import { PgDb } from 'pogi'
-import {
-  CustomerRepo,
-  OrderArgs,
-  OrderRepo,
-  PaymentWebhookRepo,
-  SubscriptionRepo,
-  WebhookArgs,
-} from './repo'
+import { OrderArgs, PaymentServiceRepo, WebhookArgs } from './repo'
 import {
   Company,
   Order,
   Subscription,
   SubscriptionArgs,
+  SubscriptionUpdateArgs,
+  SubscriptionLocator,
   Webhook,
 } from '../types'
 
-export class PgPaymentRepo
-  implements CustomerRepo, OrderRepo, SubscriptionRepo, PaymentWebhookRepo
-{
+export class PgPaymentRepo implements PaymentServiceRepo {
   #pgdb: PgDb
 
   constructor(pgdb: PgDb) {
@@ -33,7 +26,7 @@ export class PgPaymentRepo
     })
   }
 
-  findWebhookEvent<T>(
+  findWebhookEventBySourceId<T>(
     sourceId: string,
     processed?: boolean,
   ): Promise<Webhook<T> | null> {
@@ -49,19 +42,17 @@ export class PgPaymentRepo
     })
   }
 
-  async getCustomerIdForCompany(
+  getCustomerIdForCompany(
     userId: string,
     company: Company,
   ): Promise<{ companyId: string; company: Company } | null> {
-    const row = await this.#pgdb.payments.stripeCustomers.findOne(
+    return this.#pgdb.payments.stripeCustomers.findOne(
       {
         userId,
         company,
       },
       { fields: ['customerId', 'company'] },
     )
-
-    return row
   }
 
   async getUserIdByCustomerId(customerId: string): Promise<string | null> {
@@ -87,7 +78,7 @@ export class PgPaymentRepo
     )
   }
 
-  async saveCustomerIds(
+  saveCustomerIds(
     userId: string,
     customerIds: { customerId: string; company: string }[],
   ): Promise<void> {
@@ -95,7 +86,7 @@ export class PgPaymentRepo
       return { userId, company: c.company, customerId: c.customerId }
     })
 
-    await this.#pgdb.payments.stripeCustomers.insert(values)
+    return this.#pgdb.payments.stripeCustomers.insert(values)
   }
 
   getOrder(orderId: string): Promise<Order> {
@@ -104,13 +95,13 @@ export class PgPaymentRepo
     })
   }
 
-  async getUserOrders(userId: string): Promise<Order[]> {
-    return await this.#pgdb.payments.orders.findWhere({
+  getUserOrders(userId: string): Promise<Order[]> {
+    return this.#pgdb.payments.orders.findWhere({
       userId,
     })
   }
 
-  async saveOrder(userId: string, order: OrderArgs): Promise<Order> {
+  saveOrder(userId: string, order: OrderArgs): Promise<Order> {
     return this.#pgdb.payments.orders.insert({
       userId,
       gatewayId: order.gatewayId,
@@ -122,18 +113,51 @@ export class PgPaymentRepo
     })
   }
 
-  async getUserSubscriptions(userId: string): Promise<Subscription[]> {
-    return this.#pgdb.payments.subscriptions.findWhere({
+  getSubscription(by: SubscriptionLocator): Promise<Subscription> {
+    return this.#pgdb.payments.subscriptions.findOne(by)
+  }
+
+  getActiveUserSubscriptions(userId: string): Promise<Subscription[]> {
+    return this.#pgdb.payments.subscriptions.find({
+      userId,
+      'status !=': 'ended',
+    })
+  }
+
+  getUserSubscriptions(userId: string): Promise<Subscription[]> {
+    return this.#pgdb.payments.subscriptions.find({
       userId,
     })
   }
-  async addUserSubscriptions(
+
+  addUserSubscriptions(
     userId: string,
     args: SubscriptionArgs,
   ): Promise<Subscription> {
-    return await this.#pgdb.payments.subscriptions.insert({
+    return this.#pgdb.payments.subscriptions.insert({
       userId: userId,
       ...args,
     })
+  }
+
+  updateSubscription(
+    by: SubscriptionLocator,
+    args: SubscriptionUpdateArgs,
+  ): Promise<Subscription> {
+    return this.#pgdb.payments.subscriptions.updateAndGet(by, {
+      endedAt: args.endedAt,
+    })
+  }
+
+  saveInvoice(userId: string, args: any): Promise<any> {
+    return this.#pgdb.payments.invoices.insert({
+      userId,
+      ...args,
+    })
+  }
+
+  async updateInvoice(userId: string, args: any): Promise<any> {
+    console.log(userId, args)
+    return
   }
 }

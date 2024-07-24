@@ -3,6 +3,8 @@ import type {
   Order,
   Subscription,
   SubscriptionArgs,
+  SubscriptionLocator,
+  SubscriptionUpdateArgs,
   Webhook,
   WebhookSource,
 } from '../types'
@@ -15,7 +17,7 @@ export type WebhookArgs<T> = {
 
 export interface PaymentWebhookRepo {
   logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>>
-  findWebhookEvent<T>(sourceId: string): Promise<Webhook<T> | null>
+  findWebhookEventBySourceId<T>(sourceId: string): Promise<Webhook<T> | null>
 }
 
 export interface CustomerRepo {
@@ -35,10 +37,15 @@ export interface CustomerRepo {
 }
 
 export interface SubscriptionRepo {
+  getSubscription(by: SubscriptionLocator): Promise<Subscription>
   getUserSubscriptions(userId: string): Promise<Subscription[]>
   addUserSubscriptions(
     userId: string,
     args: SubscriptionArgs,
+  ): Promise<Subscription>
+  updateSubscription(
+    by: SubscriptionLocator,
+    args: SubscriptionUpdateArgs,
   ): Promise<Subscription>
 }
 
@@ -57,4 +64,12 @@ export interface OrderRepo {
   getUserOrders(userId: string): Promise<Order[]>
   getOrder(orderId: string): Promise<Order>
   saveOrder(userId: string, order: OrderArgs): Promise<Order>
+  saveInvoice(userId: string, args: any): Promise<any>
+  updateInvoice(userId: string, args: any): Promise<any>
 }
+
+export interface PaymentServiceRepo
+  extends CustomerRepo,
+    OrderRepo,
+    SubscriptionRepo,
+    PaymentWebhookRepo {}

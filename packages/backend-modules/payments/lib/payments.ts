@@ -2,7 +2,15 @@ import { PgDb } from 'pogi'
 import { OrderArgs } from './database/repo'
 import { PaymentGateway } from './gateway/gateway'
 import { ProjectRStripe, RepublikAGStripe } from './gateway/stripe'
-import { Company, Order, Subscription, SubscriptionArgs } from './types'
+import {
+  Company,
+  Invoice,
+  InvoiceArgs,
+  Order,
+  Subscription,
+  SubscriptionArgs,
+  SubscriptionLocator,
+} from './types'
 import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
 
@@ -18,14 +26,28 @@ const Companies: Company[] = ['PROJECT_R', 'REPUBLIK_AG'] as const
  */
 export interface PaymentService {
   listSubscriptions(userId: string): Promise<Subscription[]>
-  setupSubscription(args: any): Promise<Subscription>
+  listActiveSubscriptions(userId: string): Promise<Subscription[]>
+  setupSubscription(
+    args: SubscriptionArgs & { customerId: string },
+  ): Promise<Subscription>
   updateSubscription(args: any): Promise<Subscription>
-  disableSubscription(args: any): Promise<Subscription>
-  getCustomerIdForCompany(userId: string, company: Company): Promise<any>
+  disableSubscription(
+    by: SubscriptionLocator,
+    args: {
+      endedAt: Date
+      canceledAt: Date
+    },
+  ): Promise<Subscription>
+  getCustomerIdForCompany(
+    userId: string,
+    company: Company,
+  ): Promise<{ customerId: string; company: string }>
   createCustomer(email: string, userId: string): any
   listUserOrders(userId: string): Promise<Order[]>
   getOrder(id: string): Promise<Order>
   saveOrder(order: OrderArgs): Promise<Order>
+  getSubscriptionInvoices(subscriptionId: string): Promise<Invoice>
+  saveInvoice(customerId: string, args: InvoiceArgs): Promise<Invoice>
 }
 
 export class Payments implements PaymentService {
@@ -49,28 +71,82 @@ export class Payments implements PaymentService {
     this.repo = new PgPaymentRepo(pgdb)
   }
 
-  async setupSubscription(
-    args: SubscriptionArgs & { customerId: string },
-  ): Promise<Subscription> {
+  getSubscriptionInvoices(subscriptionId: string): Promise<Invoice> {
+    return this.pgdb.payments.invoices.find({
+      subscriptionId,
+    })
+  }
+
+  async saveInvoice(customerId: string, args: InvoiceArgs): Promise<Invoice> {
+    const tx = await this.pgdb.transactionBegin()
+    const txRepo = new PgPaymentRepo(tx)
+    console.log(args)
+    try {
+      let userId = await txRepo.getUserIdByCustomerId(customerId)
+      if (!userId) {
+        const row = await tx.queryOne(
+          `SELECT userId FROM public."stripeCustomers" where id = :customerId`,
+          { customerId },
+        )
+        userId = row.userId
+      }
+
+      if (!userId) {
+        throw Error(`CustomerId ${customerId} is not associated with a user`)
+      }
+
+      if (args.subscriptionId) {
+        const sub = await txRepo.getSubscription({
+          gatewayId: args.subscriptionId,
+        })
+
+        console.log(sub)
+
+        args.subscriptionId = sub.id
+      }
+
+      const sub = await txRepo.saveInvoice(userId, args)
+
+      await tx.transactionCommit()
+      return sub
+    } catch (e) {
+      console.log(e)
+      await tx.transactionRollback()
+
+      throw e
+    }
+  }
+
+  async setupSubscription({
+    customerId,
+    ...args
+  }: { customerId: string } & SubscriptionArgs): Promise<Subscription> {
     const tx = await this.pgdb.transactionBegin()
     const txRepo = new PgPaymentRepo(tx)
 
     try {
-      const userId = await txRepo.getUserIdByCustomerId(args.customerId)
+      let userId = await txRepo.getUserIdByCustomerId(customerId)
       if (!userId) {
-        throw Error(
-          `CustomerId ${args.customerId} is not associated with a user`,
+        const row = await tx.queryOne(
+          `SELECT userId FROM public."stripeCustomers" where id = :customerId`,
+          { customerId },
         )
+        userId = row.userId
+      }
+
+      if (!userId) {
+        throw Error(`CustomerId ${customerId} is not associated with a user`)
       }
 
       const sub = await txRepo.addUserSubscriptions(userId, args)
-      await tx.query(`PERFORM public.add_user_to_role(:userId, 'member')`, {
+      await tx.query(`SELECT public.add_user_to_role(:userId, 'member');`, {
         userId: userId,
       })
 
       await tx.transactionCommit()
       return sub
     } catch (e) {
+      console.log(e)
       await tx.transactionRollback()
 
       throw e
@@ -81,9 +157,12 @@ export class Payments implements PaymentService {
     userId: string,
     company: Company,
   ): Promise<any> {
-    const customer = await this.repo.getCustomerIdForCompany(userId, company)
-    if (!customer) {
-      console.log('legecy lookup')
+    const customerInfo = await this.repo.getCustomerIdForCompany(
+      userId,
+      company,
+    )
+    if (!customerInfo) {
+      // lookup strip customerIds in the old stripeCustomer table
       const row = await this.pgdb.queryOne(
         `SELECT
         s.id as "customerId"
@@ -103,19 +182,23 @@ export class Payments implements PaymentService {
 
       return { customerId: row.customerId, company }
     }
-    return customer
+    return customerInfo
   }
 
-  async listUserOrders(userId: string): Promise<Order[]> {
-    return await this.repo.getUserOrders(userId)
+  listUserOrders(userId: string): Promise<Order[]> {
+    return this.repo.getUserOrders(userId)
   }
 
-  async getOrder(id: string): Promise<Order> {
-    return await this.repo.getOrder(id)
+  getOrder(id: string): Promise<Order> {
+    return this.repo.getOrder(id)
   }
 
-  async listSubscriptions(userId: string): Promise<Subscription[]> {
+  listSubscriptions(userId: string): Promise<Subscription[]> {
     return this.repo.getUserSubscriptions(userId)
+  }
+
+  listActiveSubscriptions(userId: string): Promise<Subscription[]> {
+    return this.repo.getActiveUserSubscriptions(userId)
   }
 
   async updateSubscription(args: any): Promise<Subscription> {
@@ -123,9 +206,17 @@ export class Payments implements PaymentService {
     throw new Error('Method not implemented.')
   }
 
-  async disableSubscription(args: any): Promise<Subscription> {
-    console.log(args)
-    throw new Error('Method not implemented.')
+  async disableSubscription(
+    locator: SubscriptionLocator,
+    args: any,
+  ): Promise<Subscription> {
+    const sub = await this.repo.updateSubscription(locator, {
+      status: 'ended',
+      endedAt: args.endedAt,
+      canceledAt: args.canceledAt,
+    })
+
+    return sub
   }
 
   async createCustomer(email: string, userId: string) {
