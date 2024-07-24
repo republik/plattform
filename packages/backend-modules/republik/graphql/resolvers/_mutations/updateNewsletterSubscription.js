@@ -29,7 +29,7 @@ module.exports = async (_, args, context) => {
     pgdb,
     req,
     t,
-    mail: { updateNewsletterSubscriptions, addUserToMarketingAudience, errors },
+    mail: { updateNewsletterSubscriptions, enforceSubscriptions, errors },
   } = context
 
   // if userId is null, the logged in user's subscription is changed
@@ -81,21 +81,6 @@ module.exports = async (_, args, context) => {
     )
   }
 
-  // add user to marketing audience if not a member
-  try {
-    const isMember = Roles.userHasRole(user, 'member')
-    if (subscribed && !isMember) {
-      await addUserToMarketingAudience({
-        user,
-      })
-    }
-  } catch (error) {
-    console.error(
-      `Adding user ${user.email} to marketing audience failed.`,
-      error.meta,
-    )
-  }
-
   try {
     const subscriptions = await updateNewsletterSubscriptions(
       {
@@ -106,6 +91,18 @@ module.exports = async (_, args, context) => {
       },
       context,
     )
+
+    // update audiences and merge fields
+    await enforceSubscriptions({
+      userId: user.id,
+      email,
+      subscribeToOnboardingMails: false,
+      subscribeToEditorialNewsletters: false,
+      pgdb,
+      name,
+      subscribed,
+    })
+
     if (subscriptions.length) {
       return subscriptions[0]
     } else {
