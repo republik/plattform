@@ -9,8 +9,8 @@
      "declarationDir": "build/@types",
      "declarationMap": true,
      "noImplicitAny": false,
+     "allowJs": false,
    },
    "include": ["."],
-   "exclude": ["node_modules", "__tests__", "build", "./build/**/*",
-    "./build/@types/**/*"]
+   "exclude": ["node_modules", "__tests__", "build", "./build/**/*", "./build/@types/**/*"]
  }
