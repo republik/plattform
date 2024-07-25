@@ -3,7 +3,7 @@ import { SubscriptionHandlerMissingMailError } from './errors'
 import { mergeFieldNames } from './getMergeFieldsForUser'
 
 export async function updateNewsletterSubscriptions(
-  { user, interests = {}, mergeFields = {}, name, subscribed },
+  { user, interests = {}, mergeFields = {}, name, subscribed, status },
   NewsletterSubscription,
 ) {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
@@ -31,10 +31,18 @@ export async function updateNewsletterSubscriptions(
   }
 
   const mailchimp = MailchimpInterface({ console })
-  const member = await mailchimp.getMember(email)
+
+  let mailchimpStatus
+  if (!status) {
+    const member = await mailchimp.getMember(email)
+    mailchimpStatus = member?.status
+  } else {
+    mailchimpStatus = status
+  }
+  
   if (
-    member &&
-    member.status !== MailchimpInterface.MemberStatus.Unsubscribed
+    mailchimpStatus &&
+    mailchimpStatus !== MailchimpInterface.MemberStatus.Unsubscribed
   ) {
     // if a user is unsubscribed we don't update a status, if archived and resubscribes to newsletters we do
     body.status = MailchimpInterface.MemberStatus.Subscribed

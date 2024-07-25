@@ -14,7 +14,7 @@ import MailchimpInterface from '../MailchimpInterface'
 import { NewsletterSubscriptionConfig } from '../NewsletterSubscriptionConfig'
 import { createNewsletterSubscription } from '../NewsletterSubscription'
 import { getMergeFieldsForUser } from './getMergeFieldsForUser'
-import { getNewsletterInterests } from './getNewsletterInterests'
+import { getMailchimpMember } from './getNewsletterInterests'
 
 const {
   MAILCHIMP_INTEREST_MEMBER,
@@ -51,12 +51,12 @@ export async function enforceSubscriptions({
 }: EnforceSubscriptionsParams) {
   const user = !!userId && (await pgdb.public.users.findOne({ id: userId }))
 
-  const newsletterInterests = await getNewsletterInterests(user.email)
+  const mailchimpMember = await getMailchimpMember(user.email)
 
   const segmentData = await getSegmentDataForUser({
     user,
     pgdb,
-    newsletterInterests,
+    mailchimpMember,
   })
 
   const mergeFields = await getMergeFieldsForUser({
@@ -89,6 +89,7 @@ export async function enforceSubscriptions({
     mergeFields,
     name,
     subscribed,
+    status: mailchimpMember?.status,
   }, newsletterSubscription)
 
   // always add to marketing audience when newsletter settings are updated, except if MEMBER or BENEFACTOR are true

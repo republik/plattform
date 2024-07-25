@@ -97,7 +97,7 @@ jest.mock('../../lib/updateNewsletterSubscriptions', () => ({
   ),
 }))
 
-import { getNewsletterInterests } from '../../lib/getNewsletterInterests'
+import { getMailchimpMember } from '../../lib/getNewsletterInterests'
 jest.mock('../../lib/getNewsletterInterests', () => ({
   getNewsletterInterests: jest.fn()
 }))
@@ -133,7 +133,7 @@ describe('test enforceSubscriptions', () => {
       subscribed: true,
     })
 
-    expect(getNewsletterInterests).toHaveBeenCalled()
+    expect(getMailchimpMember).toHaveBeenCalled()
     expect(updateNewsletterSubscriptions).toHaveBeenCalled()
     expect(getSegmentDataForUser).toHaveBeenCalled()
     expect(addUserToAudience).toHaveBeenCalled()

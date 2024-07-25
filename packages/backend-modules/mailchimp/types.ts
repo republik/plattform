@@ -67,7 +67,7 @@ export type SegmentData = {
   activeMembershipPeriod: MembershipPeriod | undefined,
   benefactorMembership: Membership | undefined,
   accessGrants: AccessGrant[] | undefined,
-  newsletterInterests: UserInterests | undefined,
+  mailchimpMember: MailchimpContact | undefined | null,
 }
 
 export type MailchimpContact = {

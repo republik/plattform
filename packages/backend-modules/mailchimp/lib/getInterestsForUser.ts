@@ -33,7 +33,7 @@ export async function getInterestsForUser({
 
   const now = new Date()
   const activeAccessGrants = segmentData.accessGrants?.filter(
-    (ag) => ag.beginAt <= now && ag.endAt > now && !!ag.invalidatedAt,
+    (ag) => ag.beginAt <= now && ag.endAt > now && !ag.invalidatedAt,
   )
 
   const hasActiveGrantedAccess =

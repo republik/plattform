@@ -1,7 +1,7 @@
 import MailchimpInterface from '../MailchimpInterface'
+import { MailchimpContact } from '../types'
 
-export async function getNewsletterInterests(email) {
+export async function getMailchimpMember(email): Promise<MailchimpContact | null> {
   const mailchimp = MailchimpInterface({ console })
-  const member = await mailchimp.getMember(email)
-  return member?.interests
+  return mailchimp.getMember(email)
 }
