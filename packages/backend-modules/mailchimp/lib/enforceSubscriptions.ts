@@ -14,7 +14,7 @@ import MailchimpInterface from '../MailchimpInterface'
 import { NewsletterSubscriptionConfig } from '../NewsletterSubscriptionConfig'
 import { createNewsletterSubscription } from '../NewsletterSubscription'
 import { getMergeFieldsForUser } from './getMergeFieldsForUser'
-import { getMailchimpMember } from './getNewsletterInterests'
+import { getMailchimpMember } from './getMailchimpMember'
 
 const {
   MAILCHIMP_INTEREST_MEMBER,

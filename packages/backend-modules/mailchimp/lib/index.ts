@@ -12,7 +12,7 @@ import { enforceSubscriptions } from './enforceSubscriptions'
 import { resubscribeEmail } from './resubscribeEmail'
 import { getSegmentDataForUser } from './getSegmentDataForUser'
 import { getMergeFieldsForUser } from './getMergeFieldsForUser'
-import { getMailchimpMember } from './getNewsletterInterests'
+import { getMailchimpMember } from './getMailchimpMember'
 
 export {
   changeEmailOnMailchimp,

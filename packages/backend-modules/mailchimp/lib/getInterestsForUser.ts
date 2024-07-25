@@ -39,7 +39,7 @@ export async function getInterestsForUser({
   const hasActiveGrantedAccess =
     !!user && !!activeAccessGrants?.length
 
-  const interests = { ...segmentData.newsletterInterests }
+  const interests = { ...segmentData.mailchimpMember?.interests }
 
   // Update the membership type interests on mailchimp
   interests[MAILCHIMP_INTEREST_PLEDGE] = hasPledge

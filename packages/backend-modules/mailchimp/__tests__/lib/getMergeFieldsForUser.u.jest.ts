@@ -41,7 +41,7 @@ describe('test that merge fields are generated correctly from user data with mis
       activeMembershipPeriod: undefined,
       benefactorMembership: undefined,
       accessGrants: [],
-      newsletterInterests: undefined,
+      mailchimpMember: undefined,
     }
 
     const mergeFields = getMergeFieldsForUser({ user, segmentData })
@@ -77,7 +77,7 @@ describe('test that merge fields are generated correctly from user data with mis
       activeMembershipPeriod: undefined,
       benefactorMembership: undefined,
       accessGrants: [],
-      newsletterInterests: undefined,
+      mailchimpMember: undefined,
     }
 
     const mergeFields = getMergeFieldsForUser({ user, segmentData })
@@ -117,7 +117,7 @@ describe('latest pledge amount', () => {
       activeMembershipPeriod: { id: '234-456', pledgeId: '345-678' } as any,
       benefactorMembership: undefined,
       accessGrants: [],
-      newsletterInterests: undefined,
+      mailchimpMember: undefined,
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.PL_AMOUNT).toBe(0)
@@ -170,7 +170,7 @@ describe('latest pledge amount', () => {
       },
       benefactorMembership: undefined,
       accessGrants: [],
-      newsletterInterests: undefined,
+      mailchimpMember: undefined,
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.PL_AMOUNT).toBe(270)
@@ -222,7 +222,7 @@ describe('latest pledge amount', () => {
       },
       benefactorMembership: undefined,
       accessGrants: [],
-      newsletterInterests: undefined,
+      mailchimpMember: undefined,
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.PL_AMOUNT).toBe(300)
@@ -267,7 +267,7 @@ describe('subscription end date', () => {
     activeMembershipPeriod: undefined,
     benefactorMembership: undefined,
     accessGrants: [],
-    newsletterInterests: undefined,
+    mailchimpMember: undefined,
   }
   test('no active membership period', async () => {
     segmentData.activeMembershipPeriod = undefined
@@ -327,7 +327,7 @@ describe('subscription state', () => {
     activeMembershipPeriod: undefined,
     benefactorMembership: undefined,
     accessGrants: [],
-    newsletterInterests: undefined,
+    mailchimpMember: undefined,
   }
   test('no active membership defined', async () => {
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
@@ -401,7 +401,7 @@ describe('trial state', () => {
     activeMembershipPeriod: undefined,
     benefactorMembership: undefined,
     accessGrants: undefined,
-    newsletterInterests: undefined,
+    mailchimpMember: undefined,
   }
   test('trial state undefined', async () => {
     const mergeFields = await getMergeFieldsForUser({user, segmentData})

@@ -49,8 +49,10 @@ export async function getMergeFieldsForUser({
   const linkWdwww = user?.email && getConsentLink(user.email, 'WDWWW')
   const trialState = getTrialState(segmentData)
 
-  const { activeMembershipPeriod, activeMembership, newsletterInterests } =
+  const { activeMembershipPeriod, activeMembership, mailchimpMember } =
     segmentData
+
+  const newsletterInterests = mailchimpMember?.interests
 
   return {
     [mergeFieldNames.firstName]: user?.firstName,

@@ -97,7 +97,7 @@ jest.mock('../../lib/updateNewsletterSubscriptions', () => ({
   ),
 }))
 
-import { getMailchimpMember } from '../../lib/getNewsletterInterests'
+import { getMailchimpMember } from '../../lib/getMailchimpMember'
 jest.mock('../../lib/getNewsletterInterests', () => ({
   getNewsletterInterests: jest.fn()
 }))
