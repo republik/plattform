@@ -48,12 +48,22 @@ jest.mock('../../lib/getInterestsForUser', () => ({
       [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true,
     }))
-    // noc active membership, no free newsletters
+    // no active membership, no free newsletters
     .mockImplementationOnce(() => ({
       [config.MAILCHIMP_INTEREST_PLEDGE]: true,
       [config.MAILCHIMP_INTEREST_MEMBER]: false,
       [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
       [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: false,
+      [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
+      [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
+      [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
+    }))
+    // no active membership, no free newsletters, active trial
+    .mockImplementationOnce(() => ({
+      [config.MAILCHIMP_INTEREST_PLEDGE]: false,
+      [config.MAILCHIMP_INTEREST_MEMBER]: false,
+      [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
+      [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
@@ -241,6 +251,41 @@ describe('test enforceSubscriptions', () => {
       audienceId: config.MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
     })
     expect(archiveMemberInAudience).toHaveBeenCalledWith({
+      user: user,
+      audienceId: config.MAILCHIMP_MAIN_LIST_ID,
+    })
+  })
+
+  test('user has active trial, no free newsletters', async () => {
+    const userId = 'u12345678'
+    const membershipTypeId = 'mt12345678'
+    const user = { id: userId }
+    const membershipType = { id: membershipTypeId }
+    const pgdb = {
+      public: {
+        users: { findOne: jest.fn(() => user) },
+        membershipTypes: { findOne: jest.fn(() => membershipType) },
+      },
+    }
+
+    await enforceSubscriptions({
+      userId: userId,
+      email: 'user@example.com',
+      subscribeToOnboardingMails: false,
+      subscribeToEditorialNewsletters: true,
+      pgdb: pgdb as any,
+      name: '',
+      subscribed: true,
+    })
+
+    expect(addUserToAudience).not.toHaveBeenCalled()
+    expect(addUserToMarketingAudience).toHaveBeenCalled()
+
+    expect(archiveMemberInAudience).toHaveBeenCalledWith({
+      user: user,
+      audienceId: config.MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
+    })
+    expect(archiveMemberInAudience).not.toHaveBeenCalledWith({
       user: user,
       audienceId: config.MAILCHIMP_MAIN_LIST_ID,
     })

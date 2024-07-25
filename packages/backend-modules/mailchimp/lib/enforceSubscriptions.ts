@@ -27,6 +27,7 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
+  MAILCHIMP_INTEREST_GRANTED_ACCESS,
 } = getConfig()
 
 export type EnforceSubscriptionsParams = {
@@ -73,6 +74,8 @@ export async function enforceSubscriptions({
     interests[MAILCHIMP_INTEREST_MEMBER] ||
     interests[MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]
 
+  const hasActiveTrial = interests[MAILCHIMP_INTEREST_GRANTED_ACCESS]
+
   const subscribedToFreeNewsletters =
     interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] ||
     interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ||
@@ -117,7 +120,7 @@ export async function enforceSubscriptions({
       audienceId: MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
     })
 
-    if (!subscribedToFreeNewsletters) {
+    if (!subscribedToFreeNewsletters && !hasActiveTrial) {
       await archiveMemberInAudience({
         user: user || { email },
         audienceId: MAILCHIMP_MAIN_LIST_ID,
