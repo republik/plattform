@@ -3,20 +3,25 @@ import env from '@orbiting/backend-modules-env'
 env.config()
 import yargs from 'yargs'
 import csvParser from 'csv-parser'
-import { ConnectionContext } from '@orbiting/backend-modules-base/lib'
+import { PgDb } from '@orbiting/backend-modules-base/lib'
 import { UserRow } from '@orbiting/backend-modules-types'
 import bluebird from 'bluebird'
-import { getInterestsForUser, getMergeFieldsForUser, getSegmentDataForUser } from '../../lib'
-import { UserInterests } from '../../types'
+import {
+  getInterestsForUser,
+  getMergeFieldsForUser,
+  getSegmentDataForUser,
+} from '../../lib'
+import { MailchimpContact } from '../../types'
 import { getConfig } from '../../config'
+import MailchimpInterface from '../../MailchimpInterface'
 
-const { 
-  MAILCHIMP_INTEREST_NEWSLETTER_DAILY, 
+const {
+  MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
-  MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE
+  MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
 } = getConfig()
 
 type CsvImport = {
@@ -24,156 +29,196 @@ type CsvImport = {
   newsletters: string[]
 }
 type Audience = 'newsletter' | 'produktinfos' | 'marketing'
-type MailchimpData = { user: UserRow, newsletterData: string[] }
+type MailchimpData = { user: UserRow; newsletterData: string[] }
 
-const argv = yargs.option('audience', {
-  default: 'newsletter',
-}).argv
+async function main(argv) {
+  const audience: Audience = argv['audience']
 
-const audience: Audience = argv['audience']
-
-if (audience !== 'newsletter' && audience !== 'produktinfos' && audience !== 'marketing') {
-  throw new Error('Audience %s not valid, has to be newsletter, produktinfos or marketing')
-}
-
-// do stuff
-ConnectionContext.create('Export script for mailchimp audience batch update')
-  .then(async (context) => {
-    const { pgdb } = context
-
-    console.log(
-      [
-        'id',
-        'EMAIL',
-        'FNAME',
-        'LNAME',
-        'PL_AMOUNT',
-        'END_DATE',
-        'SUB_TYPE',
-        'SUB_STATE',
-        'TRIAL',
-        'NL_LINK_CA',
-        'NL_LINK_WD',
-        'NL_DAILY',
-        'NL_WEEKLY',
-        'NL_PROJ_R',
-        'NL_CLIMATE',
-        'NL_WDWWW',
-        'NL_ACCOMPL'
-      ].join(','),
+  if (
+    audience !== 'newsletter' &&
+    audience !== 'produktinfos' &&
+    audience !== 'marketing'
+  ) {
+    throw new Error(
+      'Audience %s not valid, has to be newsletter, produktinfos or marketing',
     )
+  }
 
-    const rawMailchimpData = await parse(process.stdin) 
+  const pgdb = await PgDb.connect({
+    applicationName: 'Export script for mailchimp audience batch update',
+  })
 
-    const emails: string[] = rawMailchimpData.map((csvImport) => csvImport.email)
-    const users: UserRow[] = await pgdb.public.users.find({email: emails})
-    const newsletterData: string[][] = rawMailchimpData.map((csvImport) => csvImport.newsletters)
+  console.log(
+    [
+      'id',
+      'EMAIL',
+      'FNAME',
+      'LNAME',
+      'PL_AMOUNT',
+      'END_DATE',
+      'SUB_TYPE',
+      'SUB_STATE',
+      'TRIAL',
+      'NL_LINK_CA',
+      'NL_LINK_WD',
+      'NL_DAILY',
+      'NL_WEEKLY',
+      'NL_PROJ_R',
+      'NL_CLIMATE',
+      'NL_WDWWW',
+      'NL_ACCOMPL',
+    ].join(','),
+  )
 
-    const mailchimpData: MailchimpData[] = []
-    for (let i = 0; i < users.length; i++) {
-      const index = emails.findIndex((email) => email === users[i].email)
-      const data: MailchimpData = {user: users[i], newsletterData: newsletterData[index]}
+  const rawMailchimpData: CsvImport[] = await parse(process.stdin)
+
+  const emails: string[] = rawMailchimpData.map((csvImport) => csvImport.email)
+  const newsletterData: string[][] = rawMailchimpData.map(
+    (csvImport) => csvImport.newsletters,
+  )
+  const emailIndex: Map<string, number> = new Map()
+  for (let i = 0; i < emails.length; i++) {
+    emailIndex.set(emails[i], i)
+  }
+
+  const users: UserRow[] = await pgdb.public.users.find({ email: emails })
+  
+  const mailchimpData: MailchimpData[] = []
+  for (let i = 0; i < users.length; i++) {
+    const user = users[i]
+    const nlIndex = emailIndex.get(user.email)
+    if (nlIndex) {
+      const data: MailchimpData = {
+        user,
+        newsletterData: newsletterData[nlIndex],
+      }
       mailchimpData.push(data)
     }
+  }
 
-    // go through all users and get segment data
-    await bluebird.map(mailchimpData, async (mailchimpData) => {
-      const {user, newsletterData } = mailchimpData
-      const newsletterInterests = await getNewsletterInterests(newsletterData)
-      const segmentData = await getSegmentDataForUser({user, pgdb, newsletterInterests})
-      const interests = await getInterestsForUser({ user, segmentData })
-      const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+  // go through all users and get segment data
+  await bluebird.map(mailchimpData, async (mailchimpData) => {
+    const { user, newsletterData } = mailchimpData
+    const mailchimpMember = await getMailchimpMember(user.email, newsletterData)
+    const segmentData = await getSegmentDataForUser({
+      user,
+      pgdb,
+      mailchimpMember,
+    })
+    const interests = await getInterestsForUser({ user, segmentData })
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
 
-      const record = {
-        id: user.id,
-        EMAIL: user.email,
-        FNAME: `"${user.firstName ?? ''}"`,
-        LNAME: `"${user.lastName ?? ''}"`,
-        PL_AMOUNT: mergeFields.PL_AMOUNT,
-        END_DATE: mergeFields.END_DATE,
-        SUB_TYPE: mergeFields.SUB_TYPE,
-        SUB_STATE: mergeFields.SUB_STATE,
-        TRIAL: mergeFields.TRIAL,
-        NL_LINK_CA: mergeFields.NL_LINK_CA,
-        NL_LINK_WD: mergeFields.NL_LINK_WD,
-        NL_DAILY: interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] ? 'Subscribed' : 'Unsubscribed',
-        NL_WEEKLY: interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] ? 'Subscribed' : 'Unsubscribed',
-        NL_PROJ_R: interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] ? 'Subscribed' : 'Unsubscribed',
-        NL_CLIMATE: interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ? 'Subscribed' : 'Unsubscribed',
-        NL_WDWWW: interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW] ? 'Subscribed' : 'Unsubscribed',
-        NL_ACCOMPL: interests[MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE] ? 'Subscribed' : 'Unsubscribed',
-      }
+    const record = {
+      id: user.id,
+      EMAIL: user.email,
+      FNAME: `"${user.firstName ?? ''}"`,
+      LNAME: `"${user.lastName ?? ''}"`,
+      PL_AMOUNT: mergeFields.PL_AMOUNT,
+      END_DATE: mergeFields.END_DATE,
+      SUB_TYPE: mergeFields.SUB_TYPE,
+      SUB_STATE: mergeFields.SUB_STATE,
+      TRIAL: mergeFields.TRIAL,
+      NL_LINK_CA: mergeFields.NL_LINK_CA,
+      NL_LINK_WD: mergeFields.NL_LINK_WD,
+      NL_DAILY: interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY]
+        ? 'Subscribed'
+        : 'Unsubscribed',
+      NL_WEEKLY: interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]
+        ? 'Subscribed'
+        : 'Unsubscribed',
+      NL_PROJ_R: interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]
+        ? 'Subscribed'
+        : 'Unsubscribed',
+      NL_CLIMATE: interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE]
+        ? 'Subscribed'
+        : 'Unsubscribed',
+      NL_WDWWW: interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]
+        ? 'Subscribed'
+        : 'Unsubscribed',
+      NL_ACCOMPL: interests[MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]
+        ? 'Subscribed'
+        : 'Unsubscribed',
+    }
 
-      if (audience === 'newsletter') {
-        // update all downloaded contacts with segments, archive Unsubscribed and not subscribed to NL manually on mailchimp
+    if (audience === 'newsletter') {
+      // update all downloaded contacts with segments, archive Unsubscribed and not subscribed to NL manually on mailchimp
+      console.log(
+        Object.keys(record)
+          .map((key) => record[key])
+          .join(','),
+      )
+    } else if (audience === 'produktinfos') {
+      // update and upload only people with active subscription
+      if (segmentData?.activeMembership) {
         console.log(
           Object.keys(record)
             .map((key) => record[key])
             .join(','),
         )
-      } else if (audience === 'produktinfos') {
-        // update and upload only people with active subscription
-        if (segmentData?.activeMembership) {
-          console.log(
-            Object.keys(record)
-              .map((key) => record[key])
-              .join(','),
-          )
-        }
-      } else if (audience === 'marketing') {
-        // update and upload only people without active subscription, archive people with subscription on mailchimp manually
-        if (!segmentData?.activeMembership) {
-          console.log(
-            Object.keys(record)
-              .map((key) => record[key])
-              .join(','),
-          )
-        }
       }
-    })
-
-    return context
+    } else if (audience === 'marketing') {
+      // update and upload only people without active subscription, archive people with subscription on mailchimp manually
+      if (!segmentData?.activeMembership) {
+        console.log(
+          Object.keys(record)
+            .map((key) => record[key])
+            .join(','),
+        )
+      }
+    }
   })
-  .then((context) => ConnectionContext.close(context))
-  .catch((error) => console.error('Error: %s', error))
 
-  async function getNewsletterInterests(data: string[]): Promise<UserInterests | undefined> {
-    const interests = {
-      [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false, 
-      [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false,
-      [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
-      [MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE]: false,
-      [MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]: false,
-      [MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]: false,
-    }
+  await PgDb.disconnect(pgdb)
+}
 
-    if (data.includes('DAILY')) {
-      interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
-    }
-
-    if (data.includes('WEEKLY')) {
-      interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
-    }
-
-    if (data.includes('PROJECTR')) {
-      interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
-    }
-
-    if (data.includes('CHALLENGE_ACCEPTED')) {
-      interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] = true
-    }
-
-    if (data.includes('WDWWW')) {
-      interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW] = true
-    }
-
-    if (data.includes('ACCOMPLICE')) {
-      interests[MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE] = true
-    }
-    return interests
+async function getMailchimpMember(
+  email,
+  data: string[],
+): Promise<MailchimpContact | undefined> {
+  const mailchimpMember: MailchimpContact = {
+    id: '',
+    email_address: email,
+    status: MailchimpInterface.MemberStatus.Subscribed,
+    merge_fields: {},
+    interests: {},
+  }
+  const interests = {
+    [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
+    [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false,
+    [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
+    [MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE]: false,
+    [MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]: false,
+    [MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]: false,
   }
 
-  /**
+  if (data.includes('DAILY')) {
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
+  }
+
+  if (data.includes('WEEKLY')) {
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
+  }
+
+  if (data.includes('PROJECTR')) {
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
+  }
+
+  if (data.includes('CHALLENGE_ACCEPTED')) {
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] = true
+  }
+
+  if (data.includes('WDWWW')) {
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW] = true
+  }
+
+  if (data.includes('ACCOMPLICE')) {
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE] = true
+  }
+  mailchimpMember.interests = interests
+  return mailchimpMember
+}
+
+/**
  * Parse and process csv input from readable stream
  * @param {import('stream').Readable} readStream
  * @returns
@@ -195,3 +240,9 @@ async function parse(readStream) {
 
   return results
 }
+
+const argv = yargs.option('audience', {
+  default: 'newsletter',
+}).argv
+
+main(argv)
