@@ -51,6 +51,7 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
       case 'invoice.finalized':
       case 'invoice.updated':
       case 'invoice.voided':
+      case 'invoice.paid':
         return processInvoiceUpdated(PaymentService, job.data.company, event)
       default:
         console.log('skipping %s no handler for this event', event.type)
@@ -176,7 +177,8 @@ export async function processInvoiceUpdated(
   event:
     | Stripe.InvoiceUpdatedEvent
     | Stripe.InvoiceFinalizedEvent
-    | Stripe.InvoiceVoidedEvent,
+    | Stripe.InvoiceVoidedEvent
+    | Stripe.InvoicePaidEvent,
 ) {
   await paymentService.updateInvoice(
     {
