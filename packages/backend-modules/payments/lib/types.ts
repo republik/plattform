@@ -50,13 +50,13 @@ export type SubscriptionArgs = {
   company: Company
   gatewayId: string
   status: SubscriptionStatus
-  type: SubscriptionType
+  type?: SubscriptionType
   cancelAtPeriodEnd?: boolean
   currentPeriodStart: Date
   currentPeriodEnd: Date
-  cancelAt?: Date
-  canceledAt?: Date
-  endedAt?: Date
+  cancelAt?: Date | null
+  canceledAt?: Date | null
+  endedAt?: Date | null
 }
 
 export type RepublikAGSubscription = Subscription & {
@@ -85,13 +85,20 @@ export type Invoice = {
 export type InvoiceArgs = {
   company: Company
   gatewayId: string
-  hrId: string
-  discountCode?: string
+  discounts?: any
   subscriptionId?: string
   status: 'draft' | 'paid' | 'void' | 'refunded'
   total: number
   totalBeforeDiscount: number
   items: any
+}
+
+export type InvoiceUpdateArgs = {
+  discounts?: any
+  status: 'draft' | 'paid' | 'void' | 'refunded'
+  total?: number
+  totalBeforeDiscount?: number
+  items?: any
 }
 
 export type WebhookSource = 'stripe'
@@ -106,7 +113,7 @@ export type Webhook<T> = {
   updatedAt: string
 }
 
-export type SubscriptionLocator =
+export type PaymentItemLocator =
   | { id: string; gatewayId?: never }
   | { gatewayId: string; id?: never }
 

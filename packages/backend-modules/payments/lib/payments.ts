@@ -9,7 +9,8 @@ import {
   Order,
   Subscription,
   SubscriptionArgs,
-  SubscriptionLocator,
+  PaymentItemLocator,
+  InvoiceUpdateArgs,
 } from './types'
 import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
@@ -30,9 +31,9 @@ export interface PaymentService {
   setupSubscription(
     args: SubscriptionArgs & { customerId: string },
   ): Promise<Subscription>
-  updateSubscription(args: any): Promise<Subscription>
+  updateSubscription(args: SubscriptionArgs): Promise<Subscription>
   disableSubscription(
-    by: SubscriptionLocator,
+    by: PaymentItemLocator,
     args: {
       endedAt: Date
       canceledAt: Date
@@ -48,6 +49,10 @@ export interface PaymentService {
   saveOrder(order: OrderArgs): Promise<Order>
   getSubscriptionInvoices(subscriptionId: string): Promise<Invoice>
   saveInvoice(customerId: string, args: InvoiceArgs): Promise<Invoice>
+  updateInvoice(
+    by: PaymentItemLocator,
+    args: InvoiceUpdateArgs,
+  ): Promise<Invoice>
 }
 
 export class Payments implements PaymentService {
@@ -80,14 +85,16 @@ export class Payments implements PaymentService {
   async saveInvoice(customerId: string, args: InvoiceArgs): Promise<Invoice> {
     const tx = await this.pgdb.transactionBegin()
     const txRepo = new PgPaymentRepo(tx)
-    console.log(args)
     try {
       let userId = await txRepo.getUserIdByCustomerId(customerId)
       if (!userId) {
-        const row = await tx.queryOne(
-          `SELECT userId FROM public."stripeCustomers" where id = :customerId`,
-          { customerId },
+        const row = await tx.public.stripeCustomers.findOne(
+          {
+            customerId,
+          },
+          { fields: ['userId'] },
         )
+
         userId = row.userId
       }
 
@@ -95,17 +102,25 @@ export class Payments implements PaymentService {
         throw Error(`CustomerId ${customerId} is not associated with a user`)
       }
 
+      let dbSubId = undefined
       if (args.subscriptionId) {
         const sub = await txRepo.getSubscription({
           gatewayId: args.subscriptionId,
         })
 
-        console.log(sub)
-
-        args.subscriptionId = sub.id
+        dbSubId = sub.id
       }
 
-      const sub = await txRepo.saveInvoice(userId, args)
+      const sub = await txRepo.saveInvoice(userId, {
+        gatewayId: args.gatewayId,
+        items: args.items,
+        company: args.company,
+        status: args.status,
+        total: args.total,
+        totalBeforeDiscount: args.totalBeforeDiscount,
+        discounts: args.discounts,
+        subscriptionId: dbSubId,
+      })
 
       await tx.transactionCommit()
       return sub
@@ -115,6 +130,13 @@ export class Payments implements PaymentService {
 
       throw e
     }
+  }
+
+  async updateInvoice(
+    by: PaymentItemLocator,
+    args: InvoiceArgs,
+  ): Promise<Invoice> {
+    return await this.repo.updateInvoice(by, args)
   }
 
   async setupSubscription({
@@ -127,10 +149,13 @@ export class Payments implements PaymentService {
     try {
       let userId = await txRepo.getUserIdByCustomerId(customerId)
       if (!userId) {
-        const row = await tx.queryOne(
-          `SELECT userId FROM public."stripeCustomers" where id = :customerId`,
-          { customerId },
+        const row = await tx.public.stripeCustomers.findOne(
+          {
+            customerId,
+          },
+          { fields: ['userId'] },
         )
+
         userId = row.userId
       }
 
@@ -201,13 +226,25 @@ export class Payments implements PaymentService {
     return this.repo.getActiveUserSubscriptions(userId)
   }
 
-  async updateSubscription(args: any): Promise<Subscription> {
+  async updateSubscription(args: SubscriptionArgs): Promise<Subscription> {
     console.log(args)
-    throw new Error('Method not implemented.')
+
+    return this.repo.updateSubscription(
+      { gatewayId: args.gatewayId },
+      {
+        status: args.status,
+        cancelAt: args.cancelAt,
+        canceledAt: args.canceledAt,
+        cancelAtPeriodEnd: args.cancelAtPeriodEnd,
+        endedAt: args.endedAt,
+        currentPeriodStart: args.currentPeriodStart,
+        currentPeriodEnd: args.currentPeriodEnd,
+      },
+    )
   }
 
   async disableSubscription(
-    locator: SubscriptionLocator,
+    locator: PaymentItemLocator,
     args: any,
   ): Promise<Subscription> {
     const sub = await this.repo.updateSubscription(locator, {

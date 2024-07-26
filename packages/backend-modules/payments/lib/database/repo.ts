@@ -3,7 +3,7 @@ import type {
   Order,
   Subscription,
   SubscriptionArgs,
-  SubscriptionLocator,
+  PaymentItemLocator,
   SubscriptionUpdateArgs,
   Webhook,
   WebhookSource,
@@ -37,14 +37,14 @@ export interface CustomerRepo {
 }
 
 export interface SubscriptionRepo {
-  getSubscription(by: SubscriptionLocator): Promise<Subscription>
+  getSubscription(by: PaymentItemLocator): Promise<Subscription>
   getUserSubscriptions(userId: string): Promise<Subscription[]>
   addUserSubscriptions(
     userId: string,
     args: SubscriptionArgs,
   ): Promise<Subscription>
   updateSubscription(
-    by: SubscriptionLocator,
+    by: PaymentItemLocator,
     args: SubscriptionUpdateArgs,
   ): Promise<Subscription>
 }
@@ -65,7 +65,7 @@ export interface OrderRepo {
   getOrder(orderId: string): Promise<Order>
   saveOrder(userId: string, order: OrderArgs): Promise<Order>
   saveInvoice(userId: string, args: any): Promise<any>
-  updateInvoice(userId: string, args: any): Promise<any>
+  updateInvoice(by: PaymentItemLocator, args: any): Promise<any>
 }
 
 export interface PaymentServiceRepo

@@ -6,8 +6,10 @@ import {
   Subscription,
   SubscriptionArgs,
   SubscriptionUpdateArgs,
-  SubscriptionLocator,
+  PaymentItemLocator,
   Webhook,
+  InvoiceArgs,
+  Invoice,
 } from '../types'
 
 export class PgPaymentRepo implements PaymentServiceRepo {
@@ -113,7 +115,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     })
   }
 
-  getSubscription(by: SubscriptionLocator): Promise<Subscription> {
+  getSubscription(by: PaymentItemLocator): Promise<Subscription> {
     return this.#pgdb.payments.subscriptions.findOne(by)
   }
 
@@ -141,23 +143,23 @@ export class PgPaymentRepo implements PaymentServiceRepo {
   }
 
   updateSubscription(
-    by: SubscriptionLocator,
+    by: PaymentItemLocator,
     args: SubscriptionUpdateArgs,
   ): Promise<Subscription> {
-    return this.#pgdb.payments.subscriptions.updateAndGet(by, {
-      endedAt: args.endedAt,
-    })
+    return this.#pgdb.payments.subscriptions.updateAndGet(by, args)
   }
 
-  saveInvoice(userId: string, args: any): Promise<any> {
+  saveInvoice(userId: string, args: InvoiceArgs): Promise<any> {
     return this.#pgdb.payments.invoices.insert({
       userId,
       ...args,
     })
   }
 
-  async updateInvoice(userId: string, args: any): Promise<any> {
-    console.log(userId, args)
+  async updateInvoice(by: PaymentItemLocator, args: any): Promise<Invoice> {
+    return this.#pgdb.payments.invoices.update(by, {
+      ...args,
+    })
     return
   }
 }

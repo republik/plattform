@@ -47,5 +47,10 @@ type MagazineSubscription {
 
 type Invoice {
   id: ID!
+  hrId: String!
+  total: Int!
+  totalBeforeDiscount: Int!
+  createdAt: Date!
+  items: JSON!
 }
 `

@@ -12,12 +12,16 @@ CREATE TYPE payments.subscription_type as ENUM (
     'MONTHLY_SUBSCRIPTION'
 );
 
+CREATE TYPE payments.payment_gateway as ENUM (
+    'STRIPE'
+);
+
 CREATE TYPE payments.subscription_status as ENUM (
     'trialing',
     'incomplete',
     'paused',
     'active',
-    'canceld',
+    'canceled',
     'unpaid',
     'past_due',
     'ended' -- not part of stripe
@@ -51,11 +55,13 @@ CREATE TABLE IF NOT EXISTS payments.subscriptions (
     "id" uuid default uuid_generate_v4() PRIMARY KEY,
     "userId" uuid NOT NULL,
     "company" payments.company NOT NULL,
+    "gateway" payments.payment_gateway default 'STRIPE',
     "gatewayId" text NOT NULL,
     "type" payments.subscription_type NOT NULL,
     "status" payments.subscription_status NOT NULL,
     "currentPeriodStart" timestamptz,
     "currentPeriodEnd" timestamptz,
+    "cancelAtPeriodEnd" boolean,
     "cancelAt" timestamptz,
     "canceledAt" timestamptz,
     "endedAt" timestamptz,
@@ -65,20 +71,21 @@ CREATE TABLE IF NOT EXISTS payments.subscriptions (
       REFERENCES public.users("id")
 );
 
-CREATE INDEX subscription_gateway_id_idx ON payments.subscriptions ("gatewayId");
+CREATE UNIQUE INDEX subscription_gateway_id_idx ON payments.subscriptions ("gatewayId");
 
 CREATE TABLE IF NOT EXISTS payments.invoices (
   "id" uuid default uuid_generate_v4() PRIMARY KEY,
   "userId" uuid NOT NULL,
-  "hrId" text NOT NULL,
+  "subscriptionId" uuid,
   "company" payments.company NOT NULL,
+  "gateway" payments.payment_gateway default 'STRIPE',
   "gatewayId" text NOT NULL,
+  "hrId" text NOT NULL default public.make_hrid('payments.invoices'::regclass, 'hrId'::text, (6)::bigint),
   "total" integer NOT NULL,
   "totalBeforeDiscount" integer NOT NULL,
   "status" payments.invoice_status NOT NULL,
   "items" jsonb NOT NULL,
-  "discountCode" text,
-  "subscriptionId" uuid,
+  "discounts" jsonb,
   "createdAt" timestamptz DEFAULT now(),
   "updatedAt" timestamptz DEFAULT now(),
   CONSTRAINT fk_invoice_for_subscription FOREIGN KEY("subscriptionId")
@@ -88,10 +95,11 @@ CREATE TABLE IF NOT EXISTS payments.invoices (
 );
 
 CREATE INDEX invoices_subscription_id_idx ON payments.invoices ("subscriptionId");
-CREATE INDEX invoices_hr_id_idx ON payments.invoices ("hrId");
+CREATE UNIQUE INDEX invoices_hr_id_idx ON payments.invoices ("hrId");
 
 CREATE TABLE IF NOT EXISTS payments.orders (
    "id" uuid default uuid_generate_v4() PRIMARY KEY,
+   "gateway" payments.payment_gateway default 'STRIPE',
    "gatewayId" text NOT NULL,
    "company" payments.company NOT NULL,
    "userId" uuid NOT NULL,
@@ -99,7 +107,7 @@ CREATE TABLE IF NOT EXISTS payments.orders (
    "totalBeforeDiscount" integer NOT NULL,
    "payementStatus" payments.order_status NOT NULL,
    "dscountAmount" integer,
-   "discountCode" text,
+   "discounts" jsonb,
    "invoiceId"  uuid,
    "items" jsonb NOT NULL,
    "createdAt" timestamptz DEFAULT now(),
@@ -110,7 +118,7 @@ CREATE TABLE IF NOT EXISTS payments.orders (
       REFERENCES payments.invoices("id")
 );
 
-CREATE INDEX order_gateway_id_idx ON payments.orders ("gatewayId");
+CREATE UNIQUE INDEX order_gateway_id_idx ON payments.orders ("gatewayId");
 
 CREATE TABLE IF NOT EXISTS payments.webhooks (
   "id" uuid default uuid_generate_v4() PRIMARY KEY,
@@ -122,4 +130,4 @@ CREATE TABLE IF NOT EXISTS payments.webhooks (
   "updatedAt" timestamptz DEFAULT now()
 );
 
-CREATE INDEX webhook_source_id_idx ON payments.webhooks ("sourceId");
+CREATE UNIQUE INDEX webhook_source_id_idx ON payments.webhooks ("sourceId");

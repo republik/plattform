@@ -18,8 +18,8 @@ export async function handleStripeWebhook(
   res: Response,
 ) {
   try {
-    const account = getCompanyName(req.params['company'])
-    const event = Gateway.forCompany(account).verifyWebhook<Stripe.Event>(req)
+    const company = getCompanyName(req.params['company'])
+    const event = Gateway.forCompany(company).verifyWebhook<Stripe.Event>(req)
     const e = await repo.logWebhookEvent<Stripe.Event>({
       source: 'stripe',
       sourceId: event.id,
@@ -31,6 +31,7 @@ export async function handleStripeWebhook(
       {
         $version: 'v1',
         event: e,
+        company: company,
       },
     )
     return res.sendStatus(202)
