@@ -86,6 +86,8 @@ CREATE TABLE IF NOT EXISTS payments.invoices (
   "status" payments.invoice_status NOT NULL,
   "items" jsonb NOT NULL,
   "discounts" jsonb,
+  "periodStart" timestamptz,
+  "periodEnd" timestamptz,
   "createdAt" timestamptz DEFAULT now(),
   "updatedAt" timestamptz DEFAULT now(),
   CONSTRAINT fk_invoice_for_subscription FOREIGN KEY("subscriptionId")

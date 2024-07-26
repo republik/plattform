@@ -109,6 +109,9 @@ export async function processSubscriptionUpdate(
   company: Company,
   event: Stripe.CustomerSubscriptionUpdatedEvent,
 ) {
+  const cancelAt = event.data.object.cancel_at
+  const canceledAt = event.data.object.canceled_at
+
   await paymentService.updateSubscription({
     company: company,
     gatewayId: event.data.object.id,
@@ -116,13 +119,13 @@ export async function processSubscriptionUpdate(
     currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
     status: event.data.object.status,
     cancelAt:
-      typeof event.data.object.cancel_at === 'number'
-        ? new Date(event.data.object.cancel_at * 1000)
-        : (event.data.object.cancel_at as null | undefined),
+      typeof cancelAt === 'number'
+        ? new Date(cancelAt * 1000)
+        : (cancelAt as null | undefined),
     canceledAt:
-      typeof event.data.object.canceled_at === 'number'
-        ? new Date(event.data.object.canceled_at * 1000)
-        : (event.data.object.cancel_at as null | undefined),
+      typeof canceledAt === 'number'
+        ? new Date(canceledAt * 1000)
+        : (cancelAt as null | undefined),
     cancelAtPeriodEnd: event.data.object.cancel_at_period_end,
   })
 }
@@ -158,6 +161,8 @@ export async function processInvoiceCreated(
     items: event.data.object.lines.data,
     discounts: event.data.object.discounts,
     gatewayId: event.data.object.id,
+    periodStart: new Date(event.data.object.period_start * 1000),
+    periodEnd: new Date(event.data.object.period_end * 1000),
     status: event.data.object.status as any,
     subscriptionId: event.data.object.subscription as string,
   })

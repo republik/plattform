@@ -116,6 +116,8 @@ export class Payments implements PaymentService {
         items: args.items,
         company: args.company,
         status: args.status,
+        periodStart: args.periodStart,
+        periodEnd: args.periodEnd,
         total: args.total,
         totalBeforeDiscount: args.totalBeforeDiscount,
         discounts: args.discounts,

@@ -87,6 +87,8 @@ export type InvoiceArgs = {
   gatewayId: string
   discounts?: any
   subscriptionId?: string
+  periodStart?: Date
+  periodEnd?: Date
   status: 'draft' | 'paid' | 'void' | 'refunded'
   total: number
   totalBeforeDiscount: number
