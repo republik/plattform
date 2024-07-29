@@ -1220,11 +1220,9 @@ export const withPay = (Component) => {
               trackRevenue(pendingOrder.total / 100)
             }
 
-            await Promise.all(
-              [
-                payPledge.stripePaymentIntentId && syncPaymentIntent(payPledge),
-              ].filter(Boolean),
-            )
+            if (payPledge.stripePaymentIntentId) {
+              await syncPaymentIntent(payPledge)
+            }
 
             return response
           }),
