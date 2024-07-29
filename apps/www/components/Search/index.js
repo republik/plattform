@@ -12,7 +12,7 @@ import withSearchRouter from './withSearchRouter'
 import { withResults, withAggregations } from './enhancers'
 import ZeroResults from './ZeroResults'
 
-import track from '../../lib/matomo'
+import { trackEvent } from '@app/lib/analytics/event-tracking'
 
 import {
   DEFAULT_FILTER,
@@ -57,7 +57,7 @@ export default compose(
 
     useEffect(() => {
       if (searchCount !== undefined && !startState) {
-        track(['trackSiteSearch', keyword, category, searchCount])
+        trackEvent(['trackSiteSearch', keyword, category, searchCount])
       }
     }, [startState, keyword, category, searchCount])
 

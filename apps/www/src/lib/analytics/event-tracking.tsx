@@ -2,10 +2,22 @@
 import { usePlausible } from 'next-plausible'
 import { ReactNode, createContext, useContext, useMemo } from 'react'
 
+declare global {
+  interface Window {
+    plausible?: (
+      eventName: string,
+      eventProps?: {
+        props?: Record<string, unknown>
+        revenue?: { currency: string; amount: number }
+      },
+    ) => void
+  }
+}
+
 type TrackingContextValue = { category: string; action?: string } | null
 
 const ctx = createContext<TrackingContextValue>(null)
-ctx.displayName = 'MatomoTrackingContext'
+ctx.displayName = 'EventTrackingContext'
 const { Provider } = ctx
 
 /**
@@ -63,3 +75,38 @@ export const useTrackEvent = () => {
     }
   }
 }
+import { shouldIgnoreClick } from '@project-r/styleguide'
+
+/**
+ * Track Revenue
+ */
+export const trackRevenue = (amount: number) => {
+  window.plausible?.('Sales', {
+    revenue: { currency: 'CHF', amount },
+  })
+}
+
+/**
+ * LEGACY trackEvent that can be used globally
+ */
+export const trackEvent = ([eventName, action, name, value = undefined]) => {
+  window.plausible?.(eventName, {
+    props: { action, name, value },
+  })
+}
+
+/**
+ * LEGACY trackEvent that can be used to intercept clicks
+ */
+export const trackEventOnClick =
+  ([eventName, action, name, value], onClick) =>
+  (e) => {
+    trackEvent([eventName, action, name, value])
+
+    if (shouldIgnoreClick(e)) {
+      return
+    }
+
+    e.preventDefault()
+    onClick(e)
+  }

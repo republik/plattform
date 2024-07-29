@@ -14,7 +14,10 @@ import {
 import TrialForm from '../Trial/Form'
 import { css } from 'glamor'
 import { getElementFromSeed } from '../../lib/utils/helpers'
-import { trackEvent, trackEventOnClick } from '../../lib/matomo'
+import {
+  trackEvent,
+  trackEventOnClick,
+} from '@app/lib/analytics/event-tracking'
 import { useRouter } from 'next/router'
 import compose from 'lodash/flowRight'
 import withT, { t } from '../../lib/withT'

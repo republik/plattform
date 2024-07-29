@@ -13,7 +13,6 @@ import AudioPlayerOrchestrator from '../components/Audio/AudioPlayerOrchestrator
 import AudioProvider from '../components/Audio/AudioProvider'
 import MediaProgressContext from '../components/Audio/MediaProgress'
 import MessageSync from '../components/NativeApp/MessageSync'
-import Track from '../components/Track'
 import { withApollo } from '../lib/apollo'
 import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
@@ -82,7 +81,6 @@ const WebApp = ({
                         serverContext={serverContext}
                         {...otherPageProps}
                       />
-                      <Track />
                       <AudioPlayerOrchestrator />
                     </ColorContextProvider>
                   </ThemeProvider>

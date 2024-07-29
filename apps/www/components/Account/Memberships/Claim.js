@@ -11,7 +11,7 @@ import Consents, { getConsentsError } from '../../Pledge/Consents'
 import withT from '../../../lib/withT'
 import withMe, { meQuery } from '../../../lib/apollo/withMe'
 import isEmail from 'validator/lib/isEmail'
-import { trackEvent } from '../../../lib/matomo'
+import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { intersperse } from '../../../lib/utils/helpers'
 import SwitchBoard from '../../Auth/SwitchBoard'
 import FieldSet from '../../FieldSet'
@@ -86,7 +86,7 @@ export const sanitizeVoucherCode = (value) => {
     .replace(/[^a-zA-Z0-9]/g, '')
     .trim()
     .substr(0, 7)
-    .toUpperCase();
+    .toUpperCase()
 }
 
 const relocateToOnboarding = (context) => {

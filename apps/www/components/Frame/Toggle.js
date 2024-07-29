@@ -15,7 +15,7 @@ import {
 } from '../constants'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { useAudioContext } from '../Audio/AudioProvider'
-import { trackEvent } from '../../lib/matomo'
+import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { IconClose, IconMic } from '@republik/icons'
 
 const SIZE = 28

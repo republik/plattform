@@ -13,7 +13,7 @@ import {
 } from '@stripe/stripe-js'
 import { loadStripe } from '../stripe'
 import { makePaymentRequestOptions } from './PaymentRequestOption.helper'
-import { trackEvent } from '../../../lib/matomo'
+import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { useTranslation } from '../../../lib/withT'
 
 export enum WalletPaymentMethod {

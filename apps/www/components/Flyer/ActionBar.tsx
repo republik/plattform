@@ -4,7 +4,7 @@ import { css } from 'glamor'
 import { IconButton } from '@project-r/styleguide'
 
 import { PUBLIC_BASE_URL } from '../../lib/constants'
-import { trackEvent } from '../../lib/matomo'
+import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { useTranslation } from '../../lib/withT'
 import { postMessage } from '../../lib/withInNativeApp'
 

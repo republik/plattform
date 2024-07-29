@@ -13,8 +13,8 @@ import { errorToString } from '../../lib/utils/errors'
 import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
 import { chfFormat } from '../../lib/utils/format'
-import track from '../../lib/matomo'
-import { getConversionPayload } from '../../lib/utils/track'
+import { trackRevenue } from '@app/lib/analytics/event-tracking'
+import { getConversionPayload } from '../../lib/utils/conversion-payload'
 
 import { gotoMerci, encodeSignInResponseQuery } from './Merci'
 
@@ -1216,41 +1216,12 @@ export const withPay = (Component) => {
               }
             }
 
-            // TODO: implement plausible properly
             if (pendingOrder) {
-              window.plausible?.('Sales', {
-                revenue: { currency: 'CHF', amount: pendingOrder.total / 100 },
-              })
+              trackRevenue(pendingOrder.total / 100)
             }
 
             await Promise.all(
               [
-                pendingOrder &&
-                  new Promise((resolve) => {
-                    pendingOrder.options.forEach((option) => {
-                      track([
-                        'addEcommerceItem',
-                        option.templateId, // (required) SKU: Product unique identifier
-                        undefined, // (optional) Product name
-                        undefined, // (optional) Product category
-                        option.price / 100, // (recommended) Product price
-                        option.amount, // (optional, default to 1) Product quantity
-                      ])
-                    })
-                    track([
-                      'trackEcommerceOrder',
-                      payPledge.pledgeId, // (required) Unique Order ID
-                      pendingOrder.total / 100, // (required) Order Revenue grand total (includes tax, shipping, and subtracted discount)
-                      undefined, // (optional) Order sub total (excludes shipping)
-                      undefined, // (optional) Tax amount
-                      undefined, // (optional) Shipping amount
-                      !!pendingOrder.reason, // (optional) Discount offered (set to false for unspecified parameter)
-                    ])
-                    // give matomo half a second to track
-                    setTimeout(() => {
-                      resolve()
-                    }, 500)
-                  }),
                 payPledge.stripePaymentIntentId && syncPaymentIntent(payPledge),
               ].filter(Boolean),
             )
