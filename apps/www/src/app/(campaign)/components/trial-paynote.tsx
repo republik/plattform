@@ -1,7 +1,7 @@
 'use client'
 import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
-import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { token } from '@republik/theme/tokens'
 import { useEffect, useState } from 'react'

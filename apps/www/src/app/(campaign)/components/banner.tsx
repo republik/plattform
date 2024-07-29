@@ -4,7 +4,7 @@ import { getCampaignMemberBannerText } from '@app/app/(campaign)/constants'
 import {
   EventTrackingContext,
   useTrackEvent,
-} from '@app/lib/matomo/event-tracking'
+} from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'

@@ -27,7 +27,7 @@ import {
   A,
 } from '@project-r/styleguide'
 import { withRouter } from 'next/router'
-import { getConversionPayload } from '../../lib/utils/track'
+import { getConversionPayload } from '../../lib/utils/conversion-payload'
 import { TRIAL_CAMPAIGN } from '../../lib/constants'
 import { IconArrowForward } from '@republik/icons'
 

@@ -7,7 +7,7 @@ import {
   UpdateNewsletterSubscriptionDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
-import { useTrackEvent } from '@app/lib/matomo/event-tracking'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { css } from '@republik/theme/css'
 import { stack, wrap } from '@republik/theme/patterns'

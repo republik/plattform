@@ -11,6 +11,7 @@ Development code names: Mauka, Haku
 This frontend needs an API, provided by [publikator-backend](https://github.com/orbiting/publikator-backend), running on the same TLD (for cookie sharing).
 
 Install and run:
+
 ```
 npm install
 npm run dev
@@ -27,15 +28,6 @@ cp .env.example .env
 ```
 
 Make sure to adapt `GITHUB_ORG` to the `GITHUB_LOGIN` used in the backend env.
-
-### MATOMO
-
-You can enable tracking by setting a base url and site id:
-
-```
-MATOMO_URL_BASE=https://matomo.example.com
-MATOMO_SITE_ID=1
-```
 
 ### Theming
 

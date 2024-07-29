@@ -17,7 +17,7 @@ import ChallengeAcceptedSVG from '../../public/static/challenge-accepted/challen
 import ChallengeAcceptedSVGDark from '../../public/static/challenge-accepted/challenge-accepted_dark.svg'
 import { useRouter } from 'next/router'
 import { IconArrowRight } from '@republik/icons'
-import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 
 const styles = {
   p: css({

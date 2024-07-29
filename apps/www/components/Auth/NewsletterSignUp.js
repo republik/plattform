@@ -10,7 +10,7 @@ import NewsletterSubscriptions from '../Account/NewsletterSubscriptions'
 import EmailForm, { checkEmail } from './EmailForm'
 
 import { Interaction } from '@project-r/styleguide'
-import { useTrackEvent } from '@app/lib/matomo/event-tracking'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 
 const SignUp = ({
   me,

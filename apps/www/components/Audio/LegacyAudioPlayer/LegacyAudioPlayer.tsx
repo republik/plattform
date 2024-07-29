@@ -8,7 +8,7 @@ import Link from '../../Link/Href'
 import BottomPanel from '../../Frame/BottomPanel'
 import { useMe } from '../../../lib/context/MeContext'
 import { usePlaybackRate } from '../../../lib/playbackRate'
-import { trackEvent } from '../../../lib/matomo'
+import { trackEvent } from '@app/lib/analytics/event-tracking'
 import {
   AudioPlayerLocations,
   AudioPlayerActions,

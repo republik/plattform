@@ -19,7 +19,7 @@ import Link from 'next/link'
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import { useMe } from '../../../lib/context/MeContext'
 import EventObjectType from '../../../lib/graphql-types/EventObjectType'
-import { trackEvent } from '../../../lib/matomo'
+import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { intersperse } from '../../../lib/utils/helpers'
 import { useTranslation } from '../../../lib/withT'
 import {

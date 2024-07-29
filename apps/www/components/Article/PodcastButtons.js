@@ -4,10 +4,18 @@ import { css } from 'glamor'
 import { IconButton, shouldIgnoreClick } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
-import { trackEvent } from '../../lib/matomo'
+import { trackEvent } from '@app/lib/analytics/event-tracking'
 
 import { useUserAgent } from '../../lib/context/UserAgentContext'
-import { IconLink, IconLogoApple, IconLogoGoogle, IconOpenInNew, IconPlayCircleOutline, IconRssFeed, IconSpotify } from '@republik/icons'
+import {
+  IconLink,
+  IconLogoApple,
+  IconLogoGoogle,
+  IconOpenInNew,
+  IconPlayCircleOutline,
+  IconRssFeed,
+  IconSpotify,
+} from '@republik/icons'
 
 const styles = {
   buttonGroup: css({

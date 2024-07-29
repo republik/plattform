@@ -2,7 +2,7 @@
 
 import { Share } from '@app/components/share/share'
 import { ShareImage } from '@app/components/share/share-image'
-import { useTrackEvent } from '@app/lib/matomo/event-tracking'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { hstack, vstack } from '@republik/theme/patterns'
 import { IconDownload, IconShare } from '@republik/icons'

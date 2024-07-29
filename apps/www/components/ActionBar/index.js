@@ -10,7 +10,7 @@ import withT from '../../lib/withT'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
 
 import { splitByTitle } from '../../lib/utils/mdast'
-import { trackEvent } from '../../lib/matomo'
+import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { getDiscussionLinkProps } from './utils'
 import { PUBLIC_BASE_URL, PUBLIKATOR_BASE_URL } from '../../lib/constants'
 import PdfOverlay, { getPdfUrl } from '../Article/PdfOverlay'

@@ -13,7 +13,7 @@ import {
   AudioPlayerLocations,
   AudioPlayerActions,
 } from '../../../../types/AudioActionTracking'
-import { trackEvent } from '../../../../../../lib/matomo'
+import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { IconDownload, IconLink, IconPlaylistAdd } from '@republik/icons'
 
 type ArticleItemProps = {
