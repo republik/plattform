@@ -2,34 +2,6 @@
 import { usePlausible } from 'next-plausible'
 import { ReactNode, createContext, useContext, useMemo } from 'react'
 
-type TrackEventParams = {
-  category: string
-  action: string
-  name?: string
-  value?: number
-  dimension?: Record<`dimension${number}`, string>
-}
-
-/**
- * Track Matomo events
- */
-export const trackEvent = (params: TrackEventParams) => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('trackEvent', params)
-  }
-
-  if (window?._paq) {
-    window._paq.push([
-      'trackEvent',
-      params.category,
-      params.action,
-      params.name,
-      params.value,
-      params.dimension,
-    ])
-  }
-}
-
 type TrackingContextValue = { category: string; action?: string } | null
 
 const ctx = createContext<TrackingContextValue>(null)
@@ -64,8 +36,7 @@ export const EventTrackingContext = ({
 export const useTrackEvent = () => {
   const ctxValue = useContext(ctx)
 
-  // TODO: implement plausible properly
-  const plausible = usePlausible()
+  const trackPlausibleEvent = usePlausible()
 
   if (!ctxValue) {
     if (process.env.NODE_ENV === 'development') {
@@ -88,10 +59,7 @@ export const useTrackEvent = () => {
         )
       }
     } else {
-      trackEvent({ category, action, name, value })
-
-      // TODO: implement plausible properly
-      plausible(category, { props: { action, name, value } })
+      trackPlausibleEvent(category, { props: { action, name, value } })
     }
   }
 }

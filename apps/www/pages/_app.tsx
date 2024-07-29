@@ -20,7 +20,7 @@ import UserAgentProvider from '../lib/context/UserAgentContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { reportError } from '../lib/errors/reportError'
 import { ThemeProvider } from '../components/ColorScheme/ThemeProvider'
-import PlausibleProvider from 'next-plausible'
+import { AnalyticsProvider } from '@app/lib/analytics/provider'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -62,10 +62,7 @@ const WebApp = ({
 
   return (
     <PageErrorBoundary>
-      <PlausibleProvider
-        domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
-        revenue
-      >
+      <AnalyticsProvider>
         <MeContextProvider assumeAccess={assumeAccess}>
           <UserAgentProvider providedValue={providedUserAgent}>
             <MediaProgressContext>
@@ -94,7 +91,7 @@ const WebApp = ({
             </MediaProgressContext>
           </UserAgentProvider>
         </MeContextProvider>
-      </PlausibleProvider>
+      </AnalyticsProvider>
     </PageErrorBoundary>
   )
 }

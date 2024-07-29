@@ -14,7 +14,7 @@ import Container from '@app/components/container'
 import { Share } from '@app/components/share/share'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
-import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { getNewsletterSubscriptionStatus } from '@app/lib/newsletters'
 import { IconShare } from '@republik/icons'
 import { css } from '@republik/theme/css'
@@ -74,7 +74,7 @@ export default async function Page({ searchParams }) {
       newsletterName: NewsletterName.Climate,
     }),
   ])
-  
+
   const share = (
     <Share
       title='Challenge Accepted'

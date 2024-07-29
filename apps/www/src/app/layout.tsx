@@ -1,5 +1,3 @@
-import PlausibleProvider from 'next-plausible'
-
 import { NativeAppMessageSync } from '@app/components/native-app'
 import '@republik/theme/styles.css'
 import '@republik/theme/fonts.css'
@@ -10,6 +8,7 @@ import { css } from '@republik/theme/css'
 import { PUBLIC_BASE_URL } from 'lib/constants'
 import { Metadata } from 'next'
 import { ReactNode } from 'react'
+import { AnalyticsProvider } from '@app/lib/analytics/provider'
 
 export const metadata: Metadata = {
   metadataBase: new URL(PUBLIC_BASE_URL),
@@ -33,10 +32,7 @@ export default async function RootLayout({
       className={css({ scrollPaddingTop: '16-32' })}
     >
       <head>
-        <PlausibleProvider
-          domain={process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN}
-          revenue
-        />
+        <AnalyticsProvider />
       </head>
       <body
         className={css({

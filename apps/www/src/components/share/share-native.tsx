@@ -4,7 +4,7 @@ import { usePostMessage } from '@app/lib/hooks/usePostMessage'
 import { ReactNode } from 'react'
 import type { ShareProps } from './types'
 import { css } from '@republik/theme/css'
-import { useTrackEvent } from '@app/lib/matomo/event-tracking'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 
 export function ShareNative({
   title,
