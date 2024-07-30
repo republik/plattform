@@ -98,8 +98,8 @@ jest.mock('../../lib/updateNewsletterSubscriptions', () => ({
 }))
 
 import { getMailchimpMember } from '../../lib/getMailchimpMember'
-jest.mock('../../lib/getNewsletterInterests', () => ({
-  getNewsletterInterests: jest.fn()
+jest.mock('../../lib/getMailchimpMember', () => ({
+  getMailchimpMember: jest.fn()
 }))
 
 import MailchimpInterface from '../../MailchimpInterface'
