@@ -106,7 +106,7 @@ const Footer = ({ meta }) => {
           republik.ch
         </a>
         .{' '}
-        <a href='*|UNSUB|*' style={footerLinkStyle}>
+        <a href='https://republik.us14.list-manage.com/unsubscribe?u=650c1ec9003c7d8567eef4c5e&id=c9cb2eaed4&t=1' style={footerLinkStyle}>
           Alle Newsletter sofort pausieren
         </a>
       </p>
