@@ -6,7 +6,7 @@
 require('@orbiting/backend-modules-env').config()
 const {
   enforceSubscriptions,
-} = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
+} = require('@orbiting/backend-modules-mailchimp')
 const debug = require('debug')('republik:script:enforceSubscriptions')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Promise = require('bluebird')

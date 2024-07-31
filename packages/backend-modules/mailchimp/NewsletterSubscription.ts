@@ -1,6 +1,10 @@
 const createNewsletterSubscription = (interestConfigurationMap) => ({
   buildSubscription(userId, interestId, subscribed, roles) {
-    const { name, ...rest } = this.interestConfiguration(interestId)
+    const interestConfig = this.interestConfiguration(interestId)
+    if (!interestConfig) {
+      return
+    }
+    const { name, ...rest } = interestConfig
     const id = Buffer.from(userId + name).toString('base64')
     return { ...rest, name, id, userId, interestId, subscribed, roles }
   },
@@ -20,11 +24,10 @@ const createNewsletterSubscription = (interestConfigurationMap) => ({
   },
 
   interestConfiguration(interestId) {
-    return interestConfigurationMap
-      .filter(
-        ({ interestId: currentInterestId }) => currentInterestId === interestId,
-      )
-      .reduce((last, interest) => interest, {})
+    const interests = interestConfigurationMap.filter(
+      ({ interestId: currentInterestId }) => currentInterestId === interestId,
+    )
+    return interests.length !== 0 ? interests[0] : null
   },
 })
 
@@ -36,7 +39,7 @@ const withConfiguration = (interestConfiguration, fn) => {
   return (data) => fn(data, NewsletterSubscription)
 }
 
-module.exports = {
+export {
   withConfiguration,
   createNewsletterSubscription,
 }

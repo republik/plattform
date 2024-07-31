@@ -1,8 +1,8 @@
-const MailchimpInterface = require('../MailchimpInterface')
-const { SubscriptionHandlerMissingMailError } = require('../errors')
+import MailchimpInterface from '../MailchimpInterface'
+import { SubscriptionHandlerMissingMailError } from './errors'
 const logger = console
 
-module.exports = async ({ user }, NewsletterSubscription) => {
+export async function getNewsletterSettings({ user }, NewsletterSubscription?) {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
   const { email, roles } = user
@@ -22,6 +22,6 @@ module.exports = async ({ user }, NewsletterSubscription) => {
       !!member?.interests?.[interestId], // subscribed
       roles,
     ),
-  )
+  ).filter((subscription) => !!subscription)
   return { id, status, subscriptions }
 }

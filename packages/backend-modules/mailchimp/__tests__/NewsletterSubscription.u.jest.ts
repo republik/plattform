@@ -1,4 +1,4 @@
-const { createNewsletterSubscription } = require('./NewsletterSubscription')
+const { createNewsletterSubscription } = require('../NewsletterSubscription')
 
 const INTEREST_ID_MEMBER_RESTRICTED = 'daily_interest_id'
 const INTEREST_ID_PUBLIC = 'public_interest_id'

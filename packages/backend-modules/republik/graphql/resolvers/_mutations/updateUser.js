@@ -46,7 +46,7 @@ module.exports = async (_, args, { pgdb, req, t, mail }) => {
     await transaction.transactionCommit()
 
     const updatedUser = await pgdb.public.users.findOne({ id: user.id })
-    await mail.updateMergeFields({ user: updatedUser })
+    await mail.updateNameMergeFields({ user: updatedUser })
 
     return transformUser(updatedUser)
   } catch (e) {

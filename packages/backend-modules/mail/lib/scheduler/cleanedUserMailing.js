@@ -1,5 +1,5 @@
 const debug = require('debug')('mail:lib:scheduler:cleanedUser')
-const sendMailsToSegment = require('../sendMailsToSegment')
+const sendMailsToSegment = require('@orbiting/backend-modules-mail/lib/sendMailsToSegment')
 const dayjs = require('dayjs')
 
 module.exports = async (from, to, { pgdb }, dryRun = false, onceFor = true) => {

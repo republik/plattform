@@ -364,7 +364,7 @@ module.exports = async (_, args, context) => {
       )
     }
 
-    await mail.updateMergeFields({ user: updatedUser })
+    await mail.updateNameMergeFields({ user: updatedUser })
 
     return transformUser(updatedUser)
   } catch (e) {

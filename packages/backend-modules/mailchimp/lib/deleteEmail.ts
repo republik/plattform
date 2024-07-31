@@ -1,8 +1,8 @@
-const MailchimpInterface = require('../MailchimpInterface')
-const { EmailRequiredMailError } = require('../errors')
+import MailchimpInterface from '../MailchimpInterface'
+import { EmailRequiredMailError } from './errors'
 const logger = console
 
-module.exports = async ({ email }) => {
+export async function deleteEmail({ email }) {
   if (!email) {
     throw new EmailRequiredMailError()
   }
