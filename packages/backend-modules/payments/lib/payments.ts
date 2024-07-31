@@ -116,6 +116,7 @@ export class Payments implements PaymentService {
         items: args.items,
         company: args.company,
         status: args.status,
+        metadata: args.metadata,
         periodStart: args.periodStart,
         periodEnd: args.periodEnd,
         total: args.total,
@@ -136,7 +137,7 @@ export class Payments implements PaymentService {
 
   async updateInvoice(
     by: PaymentItemLocator,
-    args: InvoiceArgs,
+    args: InvoiceUpdateArgs,
   ): Promise<Invoice> {
     return await this.repo.updateInvoice(by, args)
   }

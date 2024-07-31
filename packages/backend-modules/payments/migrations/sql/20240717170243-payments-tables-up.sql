@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS payments.subscriptions (
     "gatewayId" text NOT NULL,
     "type" payments.subscription_type NOT NULL,
     "status" payments.subscription_status NOT NULL,
+    "metadata" jsonb,
     "currentPeriodStart" timestamptz,
     "currentPeriodEnd" timestamptz,
     "cancelAtPeriodEnd" boolean,
@@ -86,6 +87,7 @@ CREATE TABLE IF NOT EXISTS payments.invoices (
   "status" payments.invoice_status NOT NULL,
   "items" jsonb NOT NULL,
   "discounts" jsonb,
+  "metadata" jsonb,
   "periodStart" timestamptz,
   "periodEnd" timestamptz,
   "createdAt" timestamptz DEFAULT now(),
@@ -127,6 +129,7 @@ CREATE TABLE IF NOT EXISTS payments.webhooks (
   "source" text NOT NULL,
   "sourceId" text NOT NULL,
   "payload" jsonb,
+  "company" payments.company NOT NULL,
   "processed" boolean NOT NULL DEFAULT FALSE,
   "createdAt" timestamptz DEFAULT now(),
   "updatedAt" timestamptz DEFAULT now()

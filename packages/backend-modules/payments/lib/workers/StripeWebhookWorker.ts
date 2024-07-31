@@ -100,6 +100,7 @@ export async function processSubscriptionCreated(
     currentPeriodStart: new Date(event.data.object.current_period_start * 1000),
     currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
     status: event.data.object.status,
+    metadata: event.data.object.metadata,
   })
 
   return
@@ -119,6 +120,7 @@ export async function processSubscriptionUpdate(
     currentPeriodStart: new Date(event.data.object.current_period_start * 1000),
     currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
     status: event.data.object.status,
+    metadata: event.data.object.metadata,
     cancelAt:
       typeof cancelAt === 'number'
         ? new Date(cancelAt * 1000)
@@ -161,6 +163,7 @@ export async function processInvoiceCreated(
     company: company,
     items: event.data.object.lines.data,
     discounts: event.data.object.discounts,
+    metadata: event.data.object.metadata,
     gatewayId: event.data.object.id,
     periodStart: new Date(event.data.object.period_start * 1000),
     periodEnd: new Date(event.data.object.period_end * 1000),

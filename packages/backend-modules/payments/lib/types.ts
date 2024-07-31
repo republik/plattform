@@ -51,6 +51,7 @@ export type SubscriptionArgs = {
   gatewayId: string
   status: SubscriptionStatus
   type?: SubscriptionType
+  metadata: Record<string, string> | null
   cancelAtPeriodEnd?: boolean
   currentPeriodStart: Date
   currentPeriodEnd: Date
@@ -74,6 +75,7 @@ export type Invoice = {
   subscriptionId: string
   company: Company
   gatewayId: string
+  metadata: Record<string, any>
   status: 'paid' | 'void' | 'refunded'
   price: number
   periodStart: Date
@@ -86,6 +88,7 @@ export type InvoiceArgs = {
   company: Company
   gatewayId: string
   discounts?: any
+  metadata: Record<string, string> | null
   subscriptionId?: string
   periodStart?: Date
   periodEnd?: Date
@@ -98,6 +101,7 @@ export type InvoiceArgs = {
 export type InvoiceUpdateArgs = {
   discounts?: any
   status: 'draft' | 'paid' | 'void' | 'refunded'
+  metadata?: Record<string, any>
   total?: number
   totalBeforeDiscount?: number
   items?: any

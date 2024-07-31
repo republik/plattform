@@ -160,6 +160,5 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     return this.#pgdb.payments.invoices.update(by, {
       ...args,
     })
-    return
   }
 }
