@@ -32,19 +32,19 @@ const {
 
 export type EnforceSubscriptionsParams = {
   userId: string
-  email: string
-  subscribeToOnboardingMails: boolean
-  subscribeToEditorialNewsletters: boolean
+  email?: string
+  subscribeToOnboardingMails?: boolean
+  subscribeToEditorialNewsletters?: boolean
   pgdb: PgDb
-  name: string
-  subscribed: boolean
+  name?: string
+  subscribed?: boolean
 }
 
 export async function enforceSubscriptions({
   userId,
   email,
-  subscribeToOnboardingMails,
-  subscribeToEditorialNewsletters,
+  subscribeToOnboardingMails = false,
+  subscribeToEditorialNewsletters = false,
   pgdb,
   name,
   subscribed,
