@@ -63,8 +63,8 @@ export default ({ rule, subModules, TYPE }) => {
     match: (object) => object.kind === 'document',
     matchMdast: rule.matchMdast,
     fromMdast: (node) => {
-      const visibleNodes = node.children.slice(0, 42)
-      const invisibleMdastNodes = node.children.slice(42)
+      const visibleNodes = node.children.slice(0, 60)
+      const invisibleMdastNodes = node.children.slice(60)
       const res = {
         document: {
           data: {
