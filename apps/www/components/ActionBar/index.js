@@ -44,6 +44,7 @@ import {
   IconReadTime,
   IconShare,
   IconPauseCircleOutline,
+  IconChart,
 } from '@republik/icons'
 
 const RenderItems = ({ items }) => (
@@ -468,6 +469,25 @@ const ActionBar = ({
           href={`${PUBLIKATOR_BASE_URL}/repo/${document?.repoId}/tree`}
           target='_blank'
           title={t('feed/actionbar/edit')}
+          fill={'#E9A733'}
+        />
+      ),
+      modes: ['articleTop', 'flyer'],
+      show: document?.repoId && isEditor,
+    },
+    {
+      title: t('feed/actionbar/edit'),
+      element: (
+        <IconButton
+          Icon={IconChart}
+          href={`https://plausible.io/${
+            process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+          }/?${new URLSearchParams({
+            filters: `((is,page,(${document?.meta?.path})))`,
+            period: '30d',
+          })}`}
+          target='_blank'
+          title={'Statistiken auf Plausible'}
           fill={'#E9A733'}
         />
       ),
