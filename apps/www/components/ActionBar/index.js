@@ -44,7 +44,9 @@ import {
   IconReadTime,
   IconShare,
   IconPauseCircleOutline,
+  IconChart,
 } from '@republik/icons'
+import { getAnalyticsDashboardUrl } from '@app/lib/analytics/dashboard-url'
 
 const RenderItems = ({ items }) => (
   <>
@@ -473,6 +475,20 @@ const ActionBar = ({
       ),
       modes: ['articleTop', 'flyer'],
       show: document?.repoId && isEditor,
+    },
+    {
+      title: t('feed/actionbar/edit'),
+      element: (
+        <IconButton
+          Icon={IconChart}
+          href={getAnalyticsDashboardUrl(meta.path)}
+          target='_blank'
+          title={'Statistiken auf Plausible'}
+          fill={'#E9A733'}
+        />
+      ),
+      modes: ['articleTop', 'flyer'],
+      show: document?.repoId && isEditor && getAnalyticsDashboardUrl(meta.path),
     },
     {
       title: t('article/actionbar/audio/play'),
