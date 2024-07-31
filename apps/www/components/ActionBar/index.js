@@ -46,6 +46,7 @@ import {
   IconPauseCircleOutline,
   IconChart,
 } from '@republik/icons'
+import { getAnalyticsDashboardUrl } from '@app/lib/analytics/dashboard-url'
 
 const RenderItems = ({ items }) => (
   <>
@@ -480,19 +481,14 @@ const ActionBar = ({
       element: (
         <IconButton
           Icon={IconChart}
-          href={`https://plausible.io/${
-            process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN
-          }/?${new URLSearchParams({
-            filters: `((is,page,(${document?.meta?.path})))`,
-            period: '30d',
-          })}`}
+          href={getAnalyticsDashboardUrl(meta.path)}
           target='_blank'
           title={'Statistiken auf Plausible'}
           fill={'#E9A733'}
         />
       ),
       modes: ['articleTop', 'flyer'],
-      show: document?.repoId && isEditor,
+      show: document?.repoId && isEditor && getAnalyticsDashboardUrl(meta.path),
     },
     {
       title: t('article/actionbar/audio/play'),
