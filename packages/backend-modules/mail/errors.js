@@ -1,4 +1,3 @@
-const INTERESTID_NOT_FOUND_ERROR = 'INTERESTID_NOT_FOUND_ERROR'
 const SUBSCRIPTION_CONFIG_MISSING_ERROR = 'SUBSCRIPTION_CONFIG_MISSING_ERROR'
 const SEND_ERROR = 'SEND_ERROR'
 
@@ -17,11 +16,6 @@ class SubscriptionConfigurationMissingMailError extends MailError {
   }
 }
 
-class InterestIdNotFoundMailError extends MailError {
-  constructor(meta) {
-    super(INTERESTID_NOT_FOUND_ERROR, meta)
-  }
-}
 class SendMailError extends MailError {
   constructor(meta) {
     super(SEND_ERROR, meta)
@@ -29,7 +23,6 @@ class SendMailError extends MailError {
 }
 
 module.exports = {
-  InterestIdNotFoundMailError,
   SubscriptionConfigurationMissingMailError,
   SendMailError,
 }

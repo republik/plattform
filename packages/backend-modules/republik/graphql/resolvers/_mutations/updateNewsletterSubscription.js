@@ -29,7 +29,7 @@ module.exports = async (_, args, context) => {
     pgdb,
     req,
     t,
-    mail: { updateNewsletterSubscriptions, enforceSubscriptions, errors },
+    mail: { updateNewsletterSubscriptions, enforceSubscriptions },
   } = context
 
   // if userId is null, the logged in user's subscription is changed
@@ -109,21 +109,7 @@ module.exports = async (_, args, context) => {
       throw new Error()
     }
   } catch (error) {
-    if (error instanceof errors.InterestIdNotFoundMailError) {
-      console.error(
-        'interestId not supported in updateNewsletterSubscription',
-        error.meta,
-      )
-      throw new Error(t('api/newsletters/update/interestIdNotSupported'))
-    } else if (error instanceof errors.RolesNotEligibleMailError) {
-      console.error(
-        'roles not eligible for interestId in updateNewsletterSubscription',
-        error.meta,
-      )
-      throw new Error(t('api/newsletters/update/rolesNotEligible'))
-    } else {
-      console.error('updateNewsletterSubscription failed', error.meta)
-      throw new Error(t('api/newsletters/update/failed'))
-    }
+    console.error('updateNewsletterSubscription failed', error.meta)
+    throw new Error(t('api/newsletters/update/failed'))
   }
 }
