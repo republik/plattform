@@ -20,9 +20,16 @@ export async function handleStripeWebhook(
   try {
     const company = getCompanyName(req.params['company'])
     const event = Gateway.forCompany(company).verifyWebhook<Stripe.Event>(req)
+
+    if (!event.livemode && !process.env.STRIPE_TEST_MODE) {
+      console.log('skipping test event in live mode')
+      return res.sendStatus(304)
+    }
+
     const e = await repo.logWebhookEvent<Stripe.Event>({
       source: 'stripe',
       sourceId: event.id,
+      company: company,
       payload: event,
     })
 

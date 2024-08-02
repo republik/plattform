@@ -128,7 +128,7 @@ export type SubscriptionUpdateArgs = {
   cancelAtPeriodEnd?: boolean
   currentPeriodStart?: Date
   currentPeriodEnd?: Date
-  endedAt?: Date
-  canceledAt?: Date
+  endedAt?: Date | null
+  canceledAt?: Date | null
   cancelAt?: Date | null
 }

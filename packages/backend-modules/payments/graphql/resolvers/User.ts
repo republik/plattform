@@ -17,7 +17,7 @@ export = {
     )
   },
 
-  async activeMagazineSubscriptions(
+  async activeMagazineSubscription(
     user: User,
     _args: never,
     ctx: GraphqlContext,
@@ -25,7 +25,7 @@ export = {
     Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
 
     try {
-      const res = await Payments.getInstance().listActiveSubscriptions(user.id)
+      const res = await Payments.getInstance().fetchActiveSubscription(user.id)
       return res
     } catch (e) {
       console.log(e)

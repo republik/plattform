@@ -3,7 +3,7 @@ export = `
 extend type User {
   stripeCustomer(company: Company): StripeCustomer
   magazineSubscriptions: [MagazineSubscription!]!
-  activeMagazineSubscriptions: [MagazineSubscription!]!
+  activeMagazineSubscription: MagazineSubscription
 }
 
 

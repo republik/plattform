@@ -27,6 +27,7 @@ const Companies: Company[] = ['PROJECT_R', 'REPUBLIK_AG'] as const
  */
 export interface PaymentService {
   listSubscriptions(userId: string): Promise<Subscription[]>
+  fetchActiveSubscription(userId: string): Promise<Subscription | null>
   listActiveSubscriptions(userId: string): Promise<Subscription[]>
   setupSubscription(
     args: SubscriptionArgs & { customerId: string },
@@ -223,6 +224,10 @@ export class Payments implements PaymentService {
 
   listSubscriptions(userId: string): Promise<Subscription[]> {
     return this.repo.getUserSubscriptions(userId)
+  }
+
+  fetchActiveSubscription(userId: string): Promise<Subscription | null> {
+    return this.repo.getActiveUserSubscription(userId)
   }
 
   listActiveSubscriptions(userId: string): Promise<Subscription[]> {

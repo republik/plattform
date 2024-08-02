@@ -23,6 +23,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     return this.#pgdb.payments.webhooks.insertAndGet({
       sourceId: webhook.sourceId,
       source: webhook.source,
+      company: webhook.company,
       payload: webhook.payload,
       processed: false,
     })
@@ -121,6 +122,13 @@ export class PgPaymentRepo implements PaymentServiceRepo {
 
   getActiveUserSubscriptions(userId: string): Promise<Subscription[]> {
     return this.#pgdb.payments.subscriptions.find({
+      userId,
+      'status !=': 'ended',
+    })
+  }
+
+  getActiveUserSubscription(userId: string): Promise<Subscription | null> {
+    return this.#pgdb.payments.subscriptions.findOne({
       userId,
       'status !=': 'ended',
     })

@@ -11,6 +11,7 @@ import type {
 
 export type WebhookArgs<T> = {
   source: WebhookSource
+  company: Company
   sourceId: string
   payload: T
 }
