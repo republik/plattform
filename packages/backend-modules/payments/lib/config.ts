@@ -29,6 +29,6 @@ export function getConfig(): Config {
     PROJECT_R_STRIPE_ENDPOINT_SECRET:
       process.env.STRIPE_PLATFORM_ENDPOINT_SECRET,
     REPUBLIK_STRIPE_ENDPOINT_SECRET:
-      process.env.STRIPE_PLATFORM_ENDPOINT_SECRET,
+      process.env.STRIPE_CONNECTED_ENDPOINT_SECRET,
   }
 }
