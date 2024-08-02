@@ -331,6 +331,9 @@ const runOnce = async () => {
   }
 
   await queue.start()
+
+  PaymentsService.start(context.pgdb)
+
   await queue.startWorkers()
 
   const close = async () => {

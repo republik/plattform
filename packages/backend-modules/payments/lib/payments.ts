@@ -62,6 +62,10 @@ export class Payments implements PaymentService {
   protected repo: PgPaymentRepo
 
   static start(pgdb: PgDb) {
+    if (this.#instance) {
+      console.log('Payment Service is already running')
+      return
+    }
     this.#instance = new this(pgdb)
   }
 
