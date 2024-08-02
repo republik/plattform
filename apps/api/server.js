@@ -98,12 +98,9 @@ const start = async () => {
   const server = await run()
   const _runOnce = await runOnce()
 
-  await queue.start()
-
   const close = async () => {
     await server.close()
     await _runOnce.close()
-    await queue.stop()
   }
 
   return {
@@ -187,6 +184,8 @@ const run = async (workerId, config) => {
     .join(' ')
 
   const connectionContext = await ConnectionContext.create(applicationName)
+
+  await queue.start()
 
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
@@ -331,6 +330,7 @@ const runOnce = async () => {
     })
   }
 
+  await queue.start()
   await queue.startWorkers()
 
   const close = async () => {
