@@ -71,7 +71,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     company: Company,
     customerId: string,
   ): Promise<string> {
-    return this.#pgdb.payments.stipeCustomers.insertAndGet(
+    return this.#pgdb.payments.stripeCustomers.insertAndGet(
       {
         userId,
         company,

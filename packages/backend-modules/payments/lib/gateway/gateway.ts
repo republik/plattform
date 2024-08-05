@@ -32,6 +32,7 @@ class StripeGatewayActions implements PaymentGatwayActions {
   }
   async createCustomer(email: string, userId: string): Promise<string> {
     const customer = await this.#stripe.customers.create({
+      name: email,
       email: email,
       metadata: {
         userId: userId,

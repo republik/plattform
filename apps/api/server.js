@@ -43,6 +43,7 @@ const {
   express: paymentsWebhook,
   Payments: PaymentsService,
   StripeWebhookWorker,
+  StripeCustomerCreateWorker,
 } = require('@orbiting/backend-modules-payments')
 
 const loaderBuilders = {
@@ -75,6 +76,7 @@ const { Queue } = require('@orbiting/backend-modules-job-queue')
 const queue = Queue.getInstance()
 
 queue.registerWorker(StripeWebhookWorker)
+queue.registerWorker(StripeCustomerCreateWorker)
 
 const {
   LOCAL_ASSETS_SERVER,
@@ -171,6 +173,8 @@ const run = async (workerId, config) => {
   // signin hooks
   const signInHooks = [
     ({ userId, pgdb }) => mail.sendPledgeConfirmations({ userId, pgdb, t }),
+    ({ userId }) =>
+      PaymentsService.getInstance().ensureUserHasCustomerIds(userId),
   ]
 
   const applicationName = [

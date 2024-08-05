@@ -14,13 +14,15 @@ import {
 } from './types'
 import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
+import { Queue } from '@orbiting/backend-modules-job-queue'
+import { StripeCustomerCreateWorker } from './workers/StripeCustomerCreateWorker'
 
 const Gateway = new PaymentGateway({
   PROJECT_R: ProjectRStripe,
   REPUBLIK_AG: RepublikAGStripe,
 })
 
-const Companies: Company[] = ['PROJECT_R', 'REPUBLIK_AG'] as const
+export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK_AG'] as const
 
 /*
  * Payment Service public Interface
@@ -44,7 +46,8 @@ export interface PaymentService {
     userId: string,
     company: Company,
   ): Promise<{ customerId: string; company: string }>
-  createCustomer(email: string, userId: string): any
+  ensureUserHasCustomerIds(userId: string): Promise<void>
+  createCustomer(company: Company, userId: string): any
   listUserOrders(userId: string): Promise<Order[]>
   getOrder(id: string): Promise<Order>
   saveOrder(order: OrderArgs): Promise<Order>
@@ -210,6 +213,7 @@ export class Payments implements PaymentService {
         },
       )
       if (!row) {
+        console.log(`No stripe customer for ${userId} and ${company}`)
         return null
       }
 
@@ -268,27 +272,63 @@ export class Payments implements PaymentService {
     return sub
   }
 
-  async createCustomer(email: string, userId: string) {
-    const tasks = Companies.map(async (c) => {
-      const id = await Gateway.forCompany(c).createCustomer(email, userId)
-      return { customerId: id, company: c }
-    })
-    const results = await Promise.allSettled(tasks)
-
-    const ids = results
-      .filter((r) => r.status === 'fulfilled')
-      .map((r) => {
-        return (
-          r as PromiseFulfilledResult<{
-            customerId: string
-            company: Company
-          }>
-        ).value
+  async ensureUserHasCustomerIds(userId: string): Promise<void> {
+    const tasks = Companies.map(async (company) => {
+      const customer = await this.pgdb.payments.stripeCustomers.findOne({
+        userId,
+        company,
       })
 
-    await this.repo.saveCustomerIds(userId, ids)
+      if (!customer) {
+        await Queue.getInstance().send<StripeCustomerCreateWorker>(
+          'payments:stripe:customer:create',
+          {
+            $version: 'v1',
+            userId,
+            company,
+          },
+          {
+            singletonKey: `stripe:customer:create:for:${userId}:${company}`,
+          },
+        )
+      }
+    })
 
-    return ids
+    await Promise.all(tasks)
+  }
+
+  async createCustomer(company: Company, userId: string) {
+    const user = await this.pgdb.public.users.findOne(
+      { id: userId },
+      { fields: ['email', 'id'] },
+    )
+
+    const oldCustomerData = await this.pgdb.queryOne(
+      `SELECT
+      s.id as "customerId"
+      from "stripeCustomers" s
+      JOIN companies c ON s."companyId" = c.id
+      WHERE
+      "userId" = :userId AND
+      c.name = :company`,
+      {
+        userId,
+        company: company === 'REPUBLIK_AG' ? 'REPUBLIK' : company,
+      },
+    )
+    let customerId
+    if (oldCustomerData === null) {
+      customerId = await Gateway.forCompany(company).createCustomer(
+        user.email,
+        user.id,
+      )
+    } else {
+      customerId = oldCustomerData.customerId
+    }
+
+    await this.repo.saveCustomerIdForCompany(user.id, company, customerId)
+
+    return customerId
   }
 
   async saveOrder(order: OrderArgs): Promise<Order> {
