@@ -1,25 +1,17 @@
 import { Company, Subscription } from './../types'
 import Stripe from 'stripe'
 import { PaymentGatwayActions } from './type'
-import { getConfig } from '../config'
 
 export class PaymentGateway {
   #gateways: Record<Company, PaymentGatwayActions>
 
   constructor(gateways: Record<Company, Stripe>) {
-    const confg = getConfig()
-
     //TODO: make this a bit prettier
     this.#gateways = {
-      PROJECT_R: new StripeGatewayActions(
-        'PROJECT_R',
-        gateways.PROJECT_R,
-        confg.PROJECT_R_STRIPE_ENDPOINT_SECRET,
-      ),
+      PROJECT_R: new StripeGatewayActions('PROJECT_R', gateways.PROJECT_R),
       REPUBLIK_AG: new StripeGatewayActions(
         'REPUBLIK_AG',
         gateways.REPUBLIK_AG,
-        confg.REPUBLIK_STRIPE_ENDPOINT_SECRET,
       ),
     }
   }
@@ -30,15 +22,13 @@ export class PaymentGateway {
 }
 
 class StripeGatewayActions implements PaymentGatwayActions {
-  // @ts-expect-error company might be used later
+  // @ts-expect-error company is unused
   #company: Company
   #stripe: Stripe
-  #webhookSecret: string
 
-  constructor(company: Company, stripe: Stripe, webhookSecret: string) {
+  constructor(company: Company, stripe: Stripe) {
     this.#company = company
     this.#stripe = stripe
-    this.#webhookSecret = webhookSecret
   }
   async createCustomer(email: string, userId: string): Promise<string> {
     const customer = await this.#stripe.customers.create({
@@ -66,13 +56,9 @@ class StripeGatewayActions implements PaymentGatwayActions {
     return {} as Subscription
   }
 
-  verifyWebhook(req: any): any {
+  verifyWebhook(req: any, secret: string): any {
     const signature = req.headers['stripe-signature']
 
-    return this.#stripe.webhooks.constructEvent(
-      req.body,
-      signature,
-      this.#webhookSecret,
-    )
+    return this.#stripe.webhooks.constructEvent(req.body, signature, secret)
   }
 }

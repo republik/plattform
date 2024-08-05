@@ -6,6 +6,7 @@ import { StripeWebhookWorker } from '../../lib/workers/StripeWebhookWorker'
 import { ProjectRStripe, RepublikAGStripe } from '../../lib/gateway/stripe'
 import type { Request, Response } from 'express'
 import Stripe from 'stripe'
+import assert from 'node:assert'
 
 const Gateway = new PaymentGateway({
   PROJECT_R: ProjectRStripe,
@@ -19,7 +20,11 @@ export async function handleStripeWebhook(
 ) {
   try {
     const company = getCompanyName(req.params['company'])
-    const event = Gateway.forCompany(company).verifyWebhook<Stripe.Event>(req)
+    const whsec = getWhsecForCompany(company)
+    const event = Gateway.forCompany(company).verifyWebhook<Stripe.Event>(
+      req,
+      whsec,
+    )
 
     if (!event.livemode && !process.env.STRIPE_TEST_MODE) {
       console.log('skipping test event in live mode')
@@ -62,4 +67,25 @@ function getCompanyName(pathSegment: string): Company {
     default:
       throw Error(`Unsupported company ${pathSegment}`)
   }
+}
+
+function getWhsecForCompany(company: Company) {
+  let whsec
+  switch (company) {
+    case 'PROJECT_R':
+      whsec = process.env.STRIPE_PLATFORM_ENDPOINT_SECRET
+      break
+    case 'REPUBLIK_AG':
+      whsec = process.env.STRIPE_CONNECTED_ENDPOINT_SECRET
+      break
+    default:
+      throw Error(`Unsupported company ${company}`)
+  }
+
+  assert(
+    typeof whsec === 'string',
+    `Webhook secret for ${company} is not configured`,
+  )
+
+  return whsec
 }
