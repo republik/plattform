@@ -470,7 +470,7 @@ mail.sendMembershipDeactivated = async ({ membership, pgdb, t }) => {
 
   const cancelState = membership.renew ? 'uncancelled' : 'cancelled'
   const templateName = `membership_deactivated_${type.name.toLowerCase()}_${cancelState}`
-  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+  const submitPledgeToken = AccessToken.generateForUser(user, 'SUBMIT_PLEDGE')
   const sequenceNumber = membership.sequenceNumber
 
   return sendMailTemplate(
@@ -493,7 +493,7 @@ mail.sendMembershipDeactivated = async ({ membership, pgdb, t }) => {
         },
         {
           name: 'prolong_url',
-          content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`,
+          content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
         },
         {
           name: 'sequence_number',
@@ -510,7 +510,7 @@ mail.prepareMembershipGiversProlongNotice = async (
   { t, pgdb },
 ) => {
   const user = transformUser(await pgdb.public.users.findOne({ id: userId }))
-  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+  const submitPledgeToken = AccessToken.generateForUser(user, 'SUBMIT_PLEDGE')
 
   const memberships = await pgdb.public.memberships.find({
     id: membershipIds,
@@ -541,7 +541,7 @@ mail.prepareMembershipGiversProlongNotice = async (
         name: 'prolong_url',
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&membershipIds=${membershipIds.join(
           '~',
-        )}&token=${customPledgeToken}`,
+        )}&token=${submitPledgeToken}`,
       },
       {
         name: 'gifted_memberships_count',
@@ -578,7 +578,7 @@ mail.prepareMembershipWinback = async (
   { t, pgdb },
 ) => {
   const user = transformUser(await pgdb.public.users.findOne({ id: userId }))
-  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+  const submitPledgeToken = AccessToken.generateForUser(user, 'SUBMIT_PLEDGE')
 
   return {
     to: user.email,
@@ -595,11 +595,11 @@ mail.prepareMembershipWinback = async (
       },
       {
         name: 'prolong_url',
-        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`,
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
       },
       {
         name: 'prolong_url_reduced',
-        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}&userPrice=1`,
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}&userPrice=1`,
       },
       {
         name: 'cancelled_at',
@@ -613,7 +613,7 @@ mail.prepareMembershipOwnerNotice = async (
   { user, endDate, graceEndDate, cancelUntilDate, templateName },
   { pgdb, t },
 ) => {
-  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+  const submitPledgeToken = AccessToken.generateForUser(user, 'SUBMIT_PLEDGE')
 
   const formattedEndDate = dateFormat(endDate)
   const formattedGraceEndDate = dateFormat(graceEndDate)
@@ -647,11 +647,11 @@ mail.prepareMembershipOwnerNotice = async (
       },
       {
         name: 'prolong_url',
-        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`,
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
       },
       {
         name: 'cockpit_url',
-        content: `${FRONTEND_BASE_URL}/angebote?goto=cockpit&token=${customPledgeToken}`,
+        content: `${FRONTEND_BASE_URL}/angebote?goto=cockpit&token=${submitPledgeToken}`,
       },
       {
         name: 'cancel_url',
@@ -738,7 +738,7 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
   }
 
   const user = await pgdb.public.users.findOne({ id: autoPay.userId })
-  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+  const submitPledgeToken = AccessToken.generateForUser(user, 'SUBMIT_PLEDGE')
   const version =
     payload.chargeAttemptStatus === 'SUCCESS' ? 'successful' : 'failed'
   const templateName = `membership_owner_autopay_${version}`
@@ -757,11 +757,11 @@ mail.sendMembershipOwnerAutoPay = async ({ autoPay, payload, pgdb, t }) => {
       globalMergeVars: [
         {
           name: 'prolong_url',
-          content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`,
+          content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${submitPledgeToken}`,
         },
         {
           name: 'prolong_url_reduced',
-          content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}&userPrice=1`,
+          content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&userPrice=1&token=${submitPledgeToken}`,
         },
         {
           name: 'end_date',
