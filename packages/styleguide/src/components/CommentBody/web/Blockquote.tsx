@@ -1,0 +1,79 @@
+import React from 'react'
+import { css } from 'glamor'
+
+import { useColorContext } from '../../Colors/useColorContext'
+import { mUp } from '../../../theme/mediaQueries'
+import { serifRegular14, serifRegular16 } from '../../Typography/styles'
+import { convertStyleToRem } from '../../Typography/utils'
+
+const styles = {
+  blockquote: css({
+    margin: '20px auto',
+    padding: '15px',
+    [mUp]: {
+      padding: '25px',
+    },
+  }),
+  nestedBlockQuote: css({
+    borderLeftWidth: 2,
+    borderLeftStyle: 'solid',
+  }),
+  paragraph: css({
+    margin: '6px 0',
+    ...convertStyleToRem(serifRegular14),
+    [mUp]: {
+      ...convertStyleToRem(serifRegular16),
+      margin: '10px 0',
+    },
+    '&:first-child': {
+      marginTop: 0,
+    },
+    '&:last-child': {
+      marginBottom: 0,
+    },
+  }),
+}
+
+export type BlockQuoteParagraphProps = {
+  children: React.ReactNode
+}
+
+export const BlockQuoteParagraph = ({ children }: BlockQuoteParagraphProps) => (
+  <p {...styles.paragraph}>{children}</p>
+)
+
+export type BlockQuoteNestedProps = {
+  children: React.ReactNode
+}
+
+export const BlockQuoteNested = ({ children }: BlockQuoteNestedProps) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div
+      {...styles.blockquote}
+      {...styles.nestedBlockQuote}
+      {...colorScheme.set('backgroundColor', 'hover')}
+      {...colorScheme.set('borderColor', 'divider')}
+    >
+      {children}
+    </div>
+  )
+}
+
+export type BlockQuoteProps = {
+  children: React.ReactNode
+}
+
+const BlockQuote = ({ children }: BlockQuoteProps) => {
+  const [colorScheme] = useColorContext()
+  return (
+    <div
+      {...styles.blockquote}
+      {...colorScheme.set('backgroundColor', 'hover')}
+    >
+      {children}
+    </div>
+  )
+}
+
+export default BlockQuote

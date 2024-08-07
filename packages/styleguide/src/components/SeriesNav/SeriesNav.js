@@ -38,6 +38,38 @@ const styles = {
 
 const DefaultLink = ({ children }) => children
 
+SeriesNav.propTypes = {
+  repoId: PropTypes.string,
+  series: PropTypes.object.isRequired,
+  ActionBar: PropTypes.func,
+  Link: PropTypes.elementType,
+  PayNote: PropTypes.func,
+  inline: PropTypes.bool,
+  height: PropTypes.number,
+  onEpisodeClick: PropTypes.func,
+  t: PropTypes.func.isRequired,
+  seriesDescription: PropTypes.bool,
+}
+
+/**
+ * @typedef SeriesNavProps
+ * @property {string} repoId
+ * @property {object} series
+ * @property {any} ActionBar
+ * @property {React.ComponentType} Link
+ * @property {any} PayNote
+ * @property {boolean} [inline]
+ * @property {number} height
+ * @property {any} onEpisodeClick
+ * @property {import('../../lib/translate').Formatter} t
+ * @property {boolean} seriesDescription
+ */
+
+/**
+ * SeriesNav component
+ * @param {SeriesNavProps} props
+ * @returns {JSX.Element}
+ */
 function SeriesNav({
   t,
   repoId,
@@ -166,19 +198,6 @@ function SeriesNav({
       )}
     </div>
   )
-}
-
-SeriesNav.propTypes = {
-  repoId: PropTypes.string,
-  series: PropTypes.object.isRequired,
-  ActionBar: PropTypes.func,
-  Link: PropTypes.elementType,
-  PayNote: PropTypes.func,
-  inline: PropTypes.bool,
-  height: PropTypes.number,
-  onEpisodeClick: PropTypes.func,
-  t: PropTypes.func.isRequired,
-  seriesDescription: PropTypes.bool,
 }
 
 export default SeriesNav
