@@ -6,7 +6,9 @@ import {
 
 import { inNativeAppBrowserAppVersion } from '../withInNativeApp'
 
-const getUtmParams = (query) => {
+import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
+
+export const getUtmParams = (query) => {
   // support /probelesen?campaign=x
   let defaultCampaign = query.campaign
 
@@ -58,6 +60,7 @@ export const getConversionPayload = (query = {}) => {
             : 'unknown',
         }
       : undefined,
+    ...getUTMSessionStorage(),
     ...getUtmParams(query),
     ...getCampaignReferralParams(query),
     ...getCouponCodeParams(query),
