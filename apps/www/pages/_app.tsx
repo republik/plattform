@@ -20,7 +20,7 @@ import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { reportError } from '../lib/errors/reportError'
 import { ThemeProvider } from '../components/ColorScheme/ThemeProvider'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
-import { StoreUTM } from '@app/lib/analytics/utm-session-storage'
+import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -83,7 +83,7 @@ const WebApp = ({
                         {...otherPageProps}
                       />
                       <AudioPlayerOrchestrator />
-                      <StoreUTM />
+                      <SyncUTMToSessionStorage />
                     </ColorContextProvider>
                   </ThemeProvider>
                 </AppVariableContext>

@@ -28,7 +28,7 @@ export function getUTMSessionStorage(): Record<string, string> {
   return {}
 }
 
-export function StoreUTM() {
+export function SyncUTMToSessionStorage() {
   useEffect(() => {
     setUTMSessionStorage()
   }, [])
