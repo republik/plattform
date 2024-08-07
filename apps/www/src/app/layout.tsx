@@ -9,6 +9,7 @@ import { PUBLIC_BASE_URL } from 'lib/constants'
 import { Metadata } from 'next'
 import { ReactNode } from 'react'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
+import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
 
 export const metadata: Metadata = {
   metadataBase: new URL(PUBLIC_BASE_URL),
@@ -48,6 +49,7 @@ export default async function RootLayout({
           <ApolloWrapper>
             {children}
             <NativeAppMessageSync />
+            <SyncUTMToSessionStorage />
           </ApolloWrapper>
         </ThemeProvider>
       </body>
