@@ -108,7 +108,8 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     return this.#pgdb.payments.orders.insert({
       userId,
       gatewayId: order.gatewayId,
-      company: order.customerId,
+      company: order.company,
+      customerId: order.customerId,
       items: order.items,
       paymentStatus: order.paymentStatus,
       total: order.total,

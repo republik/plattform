@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
-import { Company, Webhook } from '../types'
+import { Company, SubscriptionType, Webhook } from '../types'
 import Stripe from 'stripe'
 import { Payments, PaymentService } from '../payments'
 
@@ -106,7 +106,7 @@ export async function processSubscriptionCreated(
   return
 }
 
-function getSubscriptionType(company: Company) {
+function getSubscriptionType(company: Company): SubscriptionType {
   switch (company) {
     case 'REPUBLIK_AG':
       return 'MONTHLY_SUBSCRIPTION'
