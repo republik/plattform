@@ -41,15 +41,12 @@ export default async function Page({ params: { slug } }: PageProps) {
 
   const { hub } = data
 
-  const [me, isNewsletterSubscribed] = await Promise.all([
+  const [{ me, isMember }, isNewsletterSubscribed] = await Promise.all([
     getMe(),
     getNewsletterSubscriptionStatus({
       newsletterName: NewsletterName.Climate,
     }),
   ])
-
-  const isMember =
-    me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
 
   const personData: (typeof data)['person'] = {
     ...data.person,

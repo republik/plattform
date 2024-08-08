@@ -21,7 +21,7 @@ export default async function CampaignLayout({
 }: {
   children: ReactNode
 }) {
-  const [me, { campaign }] = await Promise.all([
+  const [{ me }, { campaign }] = await Promise.all([
     getMe(),
     getCampaignReferralsData(),
   ])

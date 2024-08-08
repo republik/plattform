@@ -13,7 +13,7 @@ export async function NativeAppMessageSync() {
     return null
   }
 
-  const me = await getMe()
+  const { me } = await getMe()
 
   return <NativeAppHandlers me={me} />
 }
