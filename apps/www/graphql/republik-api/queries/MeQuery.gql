@@ -28,5 +28,8 @@ query Me {
       graceEndDate
       canProlong
     }
+    activeMagazineSubscription {
+      id
+    }
   }
 }
