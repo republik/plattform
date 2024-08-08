@@ -94,7 +94,7 @@ export async function processSubscriptionCreated(
 ) {
   await paymentService.setupSubscription({
     company: company,
-    type: 'MONTHLY_SUBSCRIPTION',
+    type: getSubscriptionType(company),
     gatewayId: event.data.object.id,
     customerId: event.data.object.customer as string,
     currentPeriodStart: new Date(event.data.object.current_period_start * 1000),
@@ -104,6 +104,15 @@ export async function processSubscriptionCreated(
   })
 
   return
+}
+
+function getSubscriptionType(company: Company) {
+  switch (company) {
+    case 'REPUBLIK_AG':
+      return 'MONTHLY_SUBSCRIPTION'
+    case 'PROJECT_R':
+      return 'YEARLY_SUBSCRIPTION'
+  }
 }
 
 export async function processSubscriptionUpdate(

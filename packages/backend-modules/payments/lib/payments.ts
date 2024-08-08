@@ -243,8 +243,6 @@ export class Payments implements PaymentService {
   }
 
   async updateSubscription(args: SubscriptionArgs): Promise<Subscription> {
-    console.log(args)
-
     return this.repo.updateSubscription(
       { gatewayId: args.gatewayId },
       {
@@ -264,7 +262,7 @@ export class Payments implements PaymentService {
     args: any,
   ): Promise<Subscription> {
     const sub = await this.repo.updateSubscription(locator, {
-      status: 'ended',
+      status: 'canceled',
       endedAt: args.endedAt,
       canceledAt: args.canceledAt,
     })
@@ -316,6 +314,7 @@ export class Payments implements PaymentService {
         company: company === 'REPUBLIK_AG' ? 'REPUBLIK' : company,
       },
     )
+
     let customerId
     if (oldCustomerData === null) {
       customerId = await Gateway.forCompany(company).createCustomer(
