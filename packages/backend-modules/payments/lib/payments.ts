@@ -316,7 +316,7 @@ export class Payments implements PaymentService {
     )
 
     let customerId
-    if (oldCustomerData === null) {
+    if (!oldCustomerData || oldCustomerData?.customerId === null) {
       customerId = await Gateway.forCompany(company).createCustomer(
         user.email,
         user.id,
