@@ -10,7 +10,12 @@ extend type User {
 enum MagazineSubscriptionStatus {
   trailing
   active
-  canceld
+  incomplete
+  incomplete_expired
+  unpaid
+  past_due
+  paused
+  canceled
   overdue
   ended
 }
