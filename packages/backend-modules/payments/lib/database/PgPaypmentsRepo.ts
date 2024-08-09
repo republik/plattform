@@ -131,7 +131,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
   getActiveUserSubscription(userId: string): Promise<Subscription | null> {
     return this.#pgdb.payments.subscriptions.findOne({
       userId,
-      'status !=': 'ended',
+      'status !=': 'canceled',
     })
   }
 
