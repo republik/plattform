@@ -109,7 +109,6 @@ export class PgPaymentRepo implements PaymentServiceRepo {
       userId,
       gatewayId: order.gatewayId,
       company: order.company,
-      customerId: order.customerId,
       items: order.items,
       paymentStatus: order.paymentStatus,
       total: order.total,
