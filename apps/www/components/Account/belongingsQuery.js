@@ -45,6 +45,17 @@ export default gql`
           name
         }
       }
+      magazineSubscriptions {
+        id
+        type
+        company
+        status
+      }
+      activeMagazineSubscription {
+        id
+        type
+        company
+      }
       accessGrants {
         endAt
         campaign {

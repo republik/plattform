@@ -38,6 +38,13 @@ const Memberships = ({
   const { query } = useRouter()
   const { inNativeIOSApp } = useInNativeApp()
 
+  console.log({
+    hasActiveMemberships,
+    hasMemberships,
+    hasAccessGrants,
+    paymentMethodCompany,
+  })
+
   useEffect(() => {
     if (window.location.hash.substr(1).length > 0) {
       const node = document.getElementById(window.location.hash.substr(1))
@@ -78,6 +85,7 @@ const Memberships = ({
                 id='payment'
                 title={t('memberships/title/payment')}
               >
+                PAYMENT METHOD COMPANY {paymentMethodCompany}
                 <PaymentSources company={paymentMethodCompany} query={query} />
               </AccountSection>
             )}
@@ -94,14 +102,23 @@ export default compose(
   graphql(belongingsQuery, {
     props: ({ data }) => {
       const isReady = !data.loading && !data.error && data.me
+
+      console.log(data.me)
+
       const hasMemberships =
-        isReady && data.me.memberships && !!data.me.memberships.length
+        isReady &&
+        (!!data.me.memberships?.length ||
+          !!data.me.magazineSubscriptions?.length)
       const hasActiveMemberships =
-        isReady && hasMemberships && data.me.memberships.some((m) => m.active)
+        isReady &&
+        hasMemberships &&
+        (data.me.memberships.some((m) => m.active) ||
+          !!data.me.activeMagazineSubscription)
       const monthlyMembership =
         isReady &&
         hasMemberships &&
-        data.me.memberships.find((m) => m.type.name === 'MONTHLY_ABO')
+        (data.me.memberships.find((m) => m.type.name === 'MONTHLY_ABO') ||
+          data.me.activeMagazineSubscription.type === 'MONTHLY_SUBSCRIPTION')
       const hasAccessGrants =
         isReady && data.me.accessGrants && !!data.me.accessGrants.length
       const autoPayMembership =
@@ -115,7 +132,8 @@ export default compose(
         (!hasActiveMemberships && monthlyMembership)
 
       const paymentMethodCompany =
-        autoPayMembership && autoPayMembership.pledge.package.company
+        (autoPayMembership && autoPayMembership.pledge.package.company) ||
+        data.me?.activeMagazineSubscription?.company
       return {
         loading: data.loading,
         error: data.error,
