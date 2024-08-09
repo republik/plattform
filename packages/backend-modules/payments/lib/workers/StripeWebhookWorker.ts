@@ -80,7 +80,7 @@ export async function processCheckout(
     totalBeforeDiscount: totalBeforeDiscount,
     company: company,
     gatewayId: event.data.object.id,
-    items: event.data.object.line_items,
+    items: event.data.object.line_items || [],
     invocieId: event.data.object.invoice as string | undefined,
     paymentStatus: paymentStatus as 'paid' | 'unpaid',
   })
