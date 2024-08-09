@@ -70,9 +70,7 @@ const CONTACT_EMAIL = 'kontakt@republik.ch'
  * @returns Server-Side rendered Footer component per request
  */
 export default async function Footer() {
-  const me = await getMe()
-
-  const hasActiveMembership = !!me?.activeMembership?.id
+  const { me, hasActiveMembership } = await getMe()
 
   const { isIOSApp } = getPlatformInformation()
 

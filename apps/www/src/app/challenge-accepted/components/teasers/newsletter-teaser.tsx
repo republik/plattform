@@ -17,7 +17,7 @@ export const NewsletterTeaser = async ({ path }: NewsletterProps) => {
   const { article } = data
 
   if (!article) {
-    const me = await getMe()
+    const { me } = await getMe()
 
     // Show warning to editors
     if (

@@ -5,7 +5,7 @@ import { graphql, withApollo } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 
 import withT from '../../lib/withT'
-import { meQuery } from '../../lib/apollo/withMe'
+import { MeDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import withInNativeApp from '../../lib/withInNativeApp'
 
 import ErrorMessage from '../ErrorMessage'
@@ -85,7 +85,7 @@ class SignIn extends Component {
 
   componentWillUnmount() {
     if (this.state.polling) {
-      const data = this.props.client.readQuery({ query: meQuery })
+      const data = this.props.client.readQuery({ query: MeDocument })
       if (data.me) {
         this.reloadOnSuccess()
       }

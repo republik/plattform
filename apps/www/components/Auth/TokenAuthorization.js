@@ -18,7 +18,6 @@ import {
 import Consents, { getConsentsError } from '../Pledge/Consents'
 
 import withT from '../../lib/withT'
-import { meQuery } from '../../lib/apollo/withMe'
 import { reportError } from '../../lib/errors/reportError'
 
 import ErrorMessage from '../ErrorMessage'
@@ -27,6 +26,7 @@ import Me from './Me'
 
 import withAuthorizeSession from './withAuthorizeSession'
 import { withRouter } from 'next/router'
+import { MeDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const styles = {
   actions: css({
@@ -435,7 +435,7 @@ export default compose(
             email,
             token: { type: tokenType, payload: token },
           },
-          refetchQueries: [{ query: meQuery }],
+          refetchQueries: [{ query: MeDocument }],
         }),
     }),
   }),

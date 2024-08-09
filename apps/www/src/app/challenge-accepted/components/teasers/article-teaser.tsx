@@ -85,7 +85,7 @@ export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
   const { article } = data
 
   if (!data.article) {
-    const me = await getMe()
+    const { me } = await getMe()
 
     // Show warning to editors
     if (

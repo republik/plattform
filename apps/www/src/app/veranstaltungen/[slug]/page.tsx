@@ -67,7 +67,7 @@ export default async function Page({ params: { slug } }: PageProps) {
     },
   })
   const event = getFragmentData(EventRecordFieldsFragmentDoc, data.event)
-  const me = await getMe()
+  const { isMember } = await getMe()
 
   if (!event) {
     return notFound()
@@ -75,14 +75,7 @@ export default async function Page({ params: { slug } }: PageProps) {
 
   return (
     <div>
-      <EventTeaser
-        key={event.id}
-        event={event}
-        isPage
-        isMember={
-          me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
-        }
-      />
+      <EventTeaser key={event.id} event={event} isPage isMember={isMember} />
       <p className={css({ mt: '6' })}>
         <Link
           className={css({

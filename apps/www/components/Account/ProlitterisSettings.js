@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { css } from 'glamor'
 import { useTranslation } from '../../lib/withT'
-import { userProlitterisConsentFragment } from '../../lib/apollo/withMe'
 
 import Box from '../Frame/Box'
 import ErrorMessage from '../ErrorMessage'
@@ -30,6 +29,12 @@ const styles = {
     paddingLeft: '28px',
   }),
 }
+
+const userProlitterisConsentFragment = `
+  fragment ProlitterisConsent on User {
+    prolitterisOptOut: hasConsentedTo(name: "${PROLITTERIS_OPT_OUT_CONSENT}")
+  }
+`
 
 const CONSENT_TO_PROLITTERIS = gql`
   mutation submitConsent {

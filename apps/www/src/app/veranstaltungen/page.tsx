@@ -31,9 +31,7 @@ export default async function Page() {
     data.pastEvents,
   )
 
-  const me = await getMe()
-  const isMember =
-    me?.roles && Array.isArray(me.roles) && me.roles.includes('member')
+  const { isMember } = await getMe()
 
   return (
     <div>

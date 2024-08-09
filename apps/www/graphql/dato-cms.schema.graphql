@@ -302,7 +302,7 @@ type CockpitModelOurCommunityField {
   value: JsonField!
 }
 
-"""Record of type 📝 Cockpit (cockpit)"""
+"""Record of type Cockpit (cockpit)"""
 type CockpitRecord implements RecordInterface {
   _createdAt: DateTime!
 

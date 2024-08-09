@@ -1,7 +1,6 @@
+import { MeDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
-
-import { meQuery } from '../../lib/apollo/withMe'
 
 const mutation = gql`
   mutation authorizeSession(
@@ -24,7 +23,7 @@ export default graphql(mutation, {
     authorizeSession: (variables) =>
       mutate({
         variables,
-        refetchQueries: [{ query: meQuery }],
+        refetchQueries: [{ query: MeDocument }],
         awaitRefetchQueries: true,
       }),
   }),

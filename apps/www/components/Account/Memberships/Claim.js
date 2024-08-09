@@ -9,7 +9,7 @@ import ErrorMessage from '../../ErrorMessage'
 import Consents, { getConsentsError } from '../../Pledge/Consents'
 
 import withT from '../../../lib/withT'
-import withMe, { meQuery } from '../../../lib/apollo/withMe'
+import withMe from '../../../lib/apollo/withMe'
 import isEmail from 'validator/lib/isEmail'
 import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { intersperse } from '../../../lib/utils/helpers'
@@ -18,6 +18,7 @@ import FieldSet from '../../FieldSet'
 
 import { withSignOut } from '../../Auth/SignOut'
 import { withSignIn } from '../../Auth/SignIn'
+import { MeDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 import { css } from 'glamor'
 
@@ -561,7 +562,7 @@ export default compose(
           variables,
           refetchQueries: [
             {
-              query: meQuery,
+              query: MeDocument,
             },
           ],
         }),

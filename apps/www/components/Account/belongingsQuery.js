@@ -26,10 +26,7 @@ export default gql`
           package {
             name
             group
-            company {
-              id
-              name
-            }
+            company
           }
           options {
             price
@@ -48,6 +45,17 @@ export default gql`
           name
         }
       }
+      magazineSubscriptions {
+        id
+        type
+        company
+        status
+      }
+      activeMagazineSubscription {
+        id
+        type
+        company
+      }
       accessGrants {
         endAt
         campaign {
@@ -61,10 +69,7 @@ export default gql`
         package {
           name
           group
-          company {
-            id
-            name
-          }
+          company
         }
         options {
           templateId
