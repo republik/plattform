@@ -1,16 +1,13 @@
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import { createContext, ReactNode, useContext, useEffect } from 'react'
 import NextHead from 'next/head'
 import { ApolloError, useQuery } from '@apollo/client'
-import { checkRoles, meQuery } from '../apollo/withMe'
+import { checkRoles } from '../apollo/withMe'
 import { css } from 'glamor'
 import { getInitials } from '../../components/Frame/User'
+import {
+  MeDocument,
+  MeQuery,
+} from '#graphql/republik-api/__generated__/gql/graphql'
 
 const HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE = 'data-has-active-membership'
 const HAS_ACTIVE_MEMBERSHIP_STORAGE_KEY = 'me.hasActiveMembership'
@@ -69,36 +66,7 @@ css.global(`:root [${CLIMATELAB_ONLY_ITEM_ATTRIBUTE}="true"]`, {
   display: 'none !important',
 })
 
-export type MeObjectType = {
-  id: string
-  username: string
-  name: string
-  initials: string
-  firstName: string
-  lastName: string
-  email: string
-  portrait: string
-  roles: string[]
-  isListed: boolean
-  hasPublicProfile: boolean
-  discussionNotificationChannels: string[]
-  accessCampaigns: { id: string }[]
-  prolongBeforeDate: string
-  activeMembership: {
-    id: string
-    type: {
-      name: string
-    }
-    endDate: string
-    graceEndDate: string
-  }
-  progressConsent: boolean
-  prolitterisOptOut: boolean
-}
-
-type MeResponse = {
-  me: MeObjectType | null
-}
+export type MeObjectType = MeQuery['me']
 
 type MeContextValues = {
   me?: MeObjectType
@@ -125,12 +93,14 @@ type Props = {
 }
 
 const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
-  const { data, loading, error, refetch } = useQuery<MeResponse>(meQuery, {})
+  const { data, loading, error, refetch } = useQuery(MeDocument, {})
 
   const me = data?.me
   const isMember = checkRoles(me, ['member'])
   const isClimateLabMember = checkRoles(me, ['climate'])
-  const hasActiveMembership = !!me?.activeMembership
+  const hasActiveMembership =
+    !!me?.activeMembership || !!me?.activeMagazineSubscription
+
   const portraitOrInitials = me ? me.portrait ?? getInitials(me) : false
 
   useEffect(() => {
