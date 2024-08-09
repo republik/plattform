@@ -2,32 +2,8 @@
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".next/**",
-        "!.next/cache/**"
-      ],
-      "dotEnv": [
-        ".env.production.local",
-        ".env.development.local",
-        ".env.local",
-        ".env.production",
-        ".env.development",
-        ".env"
-      ]
-    },
-    "start": {
-      "dependsOn": [
-        "^build",
-        "build"
-      ],
-      "outputs": [
-        "dist/**",
-        ".next/**"
-      ],
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
       "dotEnv": [
         ".env.production.local",
         ".env.development.local",
@@ -67,6 +43,9 @@
     "@orbiting/backend-modules-republik#build": {
       "cache": false
     },
+    "@orbiting/backend-modules-payments#build": {
+      "cache": false
+    },
     "@orbiting/backend-modules-republik-crowdfundings#build": {
       "cache": false
     },
@@ -74,26 +53,17 @@
       "cache": false
     },
     "@project-r/styleguide#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "dist/**",
-        "build/**"
-      ],
-      "env": [
-        "SERVER"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "build/**"],
+      "env": ["SERVER"]
     },
     "lint": {
       "outputs": []
     },
     "start": {
       "persistent": true,
-      "dependsOn": [
-        "^build",
-        "build"
-      ],
+      "dependsOn": ["^build", "build"],
+      "outputs": ["dist/**", ".next/**"],
       "dotEnv": [
         ".env.production.local",
         ".env.development.local",
@@ -114,32 +84,16 @@
       ]
     },
     "test": {
-      "outputs": [
-        "coverage/**"
-      ],
-      "dependsOn": [
-        "^build",
-        "build"
-      ],
-      "dotEnv": [
-        ".env.test.local",
-        ".env.local",
-        ".env.test",
-        ".env"
-      ]
+      "outputs": ["coverage/**"],
+      "dependsOn": ["^build", "build"],
+      "dotEnv": [".env.test.local", ".env.local", ".env.test", ".env"]
     },
     "@orbiting/backend-modules-test#test": {
       "cache": false
     },
     "prepare": {
-      "outputs": [
-        "dist/**",
-        "build/**"
-      ]
+      "outputs": ["dist/**", "build/**"]
     }
   },
-  "globalDotEnv": [
-    ".env.local",
-    ".env"
-  ]
+  "globalDotEnv": [".env.local", ".env"]
 }

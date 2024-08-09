@@ -1797,6 +1797,10 @@
       "value": "Bestätigungsziffern für Zugriff: {code}"
     },
     {
+      "key": "api/register/EMAIL_CODE/mail/subject",
+      "value": "Bestätigungsziffern für Registrierung: {code}"
+    },
+    {
       "key": "api/signin/app/title",
       "value": "Republik"
     },

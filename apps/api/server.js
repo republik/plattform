@@ -38,6 +38,14 @@ const {
   graphql: referralCampaigns,
 } = require('@orbiting/backend-modules-referral-campaigns')
 
+const {
+  graphql: paymentsGraphql,
+  express: paymentsWebhook,
+  Payments: PaymentsService,
+  StripeWebhookWorker,
+  StripeCustomerCreateWorker,
+} = require('@orbiting/backend-modules-payments')
+
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-voting/loaders'),
   ...require('@orbiting/backend-modules-discussions/loaders'),
@@ -62,6 +70,13 @@ const DatabroomScheduler = require('@orbiting/backend-modules-databroom/lib/sche
 const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
 
 const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
+
+const { Queue } = require('@orbiting/backend-modules-job-queue')
+
+const queue = Queue.getInstance()
+
+queue.registerWorker(StripeWebhookWorker)
+queue.registerWorker(StripeCustomerCreateWorker)
 
 const {
   LOCAL_ASSETS_SERVER,
@@ -123,10 +138,12 @@ const run = async (workerId, config) => {
     slots,
     callToActions,
     referralCampaigns,
+    paymentsGraphql,
   ])
 
   // middlewares
   const middlewares = [
+    paymentsWebhook,
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-mail/express/mandrill'),
@@ -156,6 +173,8 @@ const run = async (workerId, config) => {
   // signin hooks
   const signInHooks = [
     ({ userId, pgdb }) => mail.sendPledgeConfirmations({ userId, pgdb, t }),
+    ({ userId }) =>
+      PaymentsService.getInstance().ensureUserHasCustomerIds(userId),
   ]
 
   const applicationName = [
@@ -169,6 +188,8 @@ const run = async (workerId, config) => {
     .join(' ')
 
   const connectionContext = await ConnectionContext.create(applicationName)
+
+  await queue.start()
 
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
@@ -185,6 +206,8 @@ const run = async (workerId, config) => {
     })
     return context
   }
+
+  PaymentsService.start(connectionContext.pgdb)
 
   const server = await Server.start(
     graphqlSchema,
@@ -311,6 +334,12 @@ const runOnce = async () => {
     })
   }
 
+  await queue.start()
+
+  PaymentsService.start(context.pgdb)
+
+  await queue.startWorkers()
+
   const close = async () => {
     await Promise.all(
       [
@@ -321,6 +350,7 @@ const runOnce = async () => {
         publicationScheduler && (await publicationScheduler.close()),
         databroomScheduler && databroomScheduler.close(),
         mailScheduler && mailScheduler.close(),
+        queue && queue.stop(),
       ].filter(Boolean),
     )
     await ConnectionContext.close(context)

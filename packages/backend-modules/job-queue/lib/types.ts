@@ -11,13 +11,17 @@ export type JobState =
 
 export type WorkerQueue = string
 
-export interface Worker<T extends object> {
+export interface Worker<T extends BasePayload> {
   readonly queue: WorkerQueue
   readonly options: SendOptions
   readonly performOptions?: WorkOptions
   perform: (job: Job<T>) => Promise<void>
   schedule: (cron: string, data?: T, options?: ScheduleOptions) => Promise<void>
   send: (data: T) => Promise<string | null>
+}
+
+export type BasePayload = {
+  $version?: string
 }
 
 export type WorkerQueueName<T extends Worker<any>> = T['queue']

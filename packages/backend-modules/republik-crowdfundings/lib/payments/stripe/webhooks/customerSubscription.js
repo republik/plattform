@@ -18,6 +18,10 @@ module.exports = {
     const subscription = event.data.object
     const pledgeId = subscription.metadata.pledgeId
 
+    // new subscriptions do not contain a pledge id
+    // skip this event handler
+    if (!pledgeId) return 200
+
     return forUpdate({
       pledgeId,
       pgdb,
