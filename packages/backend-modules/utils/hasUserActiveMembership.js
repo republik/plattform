@@ -12,7 +12,7 @@ module.exports = async (user, pgdb) => {
   // stripe subscriptions
   const hasActiveSubscription = !!(await pgdb.payments.subscriptions.count({
     userId: user.id,
-    and: [{ 'status !=': 'paused' }, { 'status !=': 'canceld' }],
+    and: [{ 'status !=': 'paused' }, { 'status !=': 'canceled' }],
   }))
 
   return hasActiveSubscription
