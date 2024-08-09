@@ -1035,16 +1035,22 @@ type MagazineSubscription {
   id: ID!
   invoices: [Invoice!]!
   status: MagazineSubscriptionStatus!
+  stripeId: String!
   type: MagazineSubscriptionType!
   updatedAt: Date!
 }
 
 enum MagazineSubscriptionStatus {
   active
-  canceld
+  canceled
   ended
+  incomplete
+  incomplete_expired
   overdue
+  past_due
+  paused
   trailing
+  unpaid
 }
 
 enum MagazineSubscriptionType {
