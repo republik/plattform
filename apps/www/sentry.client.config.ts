@@ -16,4 +16,5 @@ Sentry.init({
   debug: false,
   integrations: [],
   enabled: !sentryDisabled && !isDev,
+  ignoreErrors: ['<unknown>'],
 })
