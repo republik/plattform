@@ -1,5 +1,5 @@
 'use client'
-import { useTrackEvent } from '@app/lib/matomo/event-tracking'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { ReactNode, useEffect, useState } from 'react'
 
 export const ShareImage = ({

@@ -4,8 +4,6 @@ import Head from 'next/head'
 import { withApollo } from '../lib/apollo'
 import { RootColorVariables } from '@project-r/styleguide'
 
-import Track from '../components/Track'
-
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/lint/lint.css'
 import 'codemirror/addon/fold/foldgutter.css'
@@ -24,7 +22,6 @@ const WebApp = ({ Component, pageProps }: AppProps<WebAppProps>) => {
       </Head>
       <RootColorVariables />
       <Component serverContext={serverContext} {...otherPageProps} />
-      <Track />
     </>
   )
 }

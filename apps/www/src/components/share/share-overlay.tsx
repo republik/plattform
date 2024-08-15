@@ -14,7 +14,7 @@ import {
 import { ComponentPropsWithoutRef, useState } from 'react'
 import { ShareProps } from './types'
 import copyToClipboard from 'clipboard-copy'
-import { useTrackEvent } from '@app/lib/matomo/event-tracking'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 
 function ShareButton({
   icon: Icon,

@@ -19,7 +19,7 @@ import LatestArticles from './ui/tabs/latest/LatestArticles'
 import AudioError from './ui/AudioError'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
 import downloadAudioSourceFile from '../helpers/DownloadAudioSource'
-import { trackEvent } from '../../../lib/matomo'
+import { trackEvent } from '@app/lib/analytics/event-tracking'
 import {
   AudioPlayerLocations,
   AudioPlayerActions,

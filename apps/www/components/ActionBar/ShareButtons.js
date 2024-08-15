@@ -5,7 +5,7 @@ import { IconButton } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
-import { trackEvent } from '../../lib/matomo'
+import { trackEvent } from '@app/lib/analytics/event-tracking'
 
 import copyToClipboard from 'clipboard-copy'
 import { useUserAgent } from '../../lib/context/UserAgentContext'

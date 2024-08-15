@@ -61,6 +61,7 @@
     "auth:role:users": "node packages/backend-modules/auth/script/roleUsers",
     "yaproxy": "CORS_ORIGIN=http://localhost:3010,http://localhost:3000,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api.republik.ch yaproxy",
     "yaproxy:staging": "CORS_ORIGIN=http://localhost:3010,http://localhost:3000,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api.republik.love yaproxy",
+    "yaproxy:staging-r25": "CORS_ORIGIN=http://localhost:3010,http://localhost:3000,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api-r25.republik.love yaproxy",
     "yaproxy:staging-kufo": "CORS_ORIGIN=http://localhost:3010,http://localhost:3000,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api.kufo.republik.love yaproxy",
     "yaproxy:android": "COOKIE_DOMAIN_REWRITE=*:10.0.2.2 CORS_ORIGIN=http://10.0.2.2:3010 PORT=5010 TARGET=https://api.republik.ch yaproxy",
     "yaproxy:android-staging": "COOKIE_DOMAIN_REWRITE=*:10.0.2.2 CORS_ORIGIN=http://10.0.2.2:3010 PORT=5010 TARGET=https://api.republik.love yaproxy",

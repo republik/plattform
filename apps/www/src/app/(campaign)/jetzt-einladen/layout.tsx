@@ -1,5 +1,5 @@
 import { PageLayout } from '@app/components/layout'
-import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 
 export default async function Layout(props: { children: React.ReactNode }) {

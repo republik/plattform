@@ -9,8 +9,6 @@
     "PAYPAL_FORM_ACTION": "",
     "PF_FORM_ACTION": "",
     "PF_PSPID": "",
-    "MATOMO_SITE_ID": "",
-    "MATOMO_URL_BASE": "",
     "PUBLIC_BASE_URL": "",
     "STRIPE_PUBLISHABLE_KEY": "",
     "ASSETS_SERVER_BASE_URL": {

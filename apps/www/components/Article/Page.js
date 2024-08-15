@@ -92,10 +92,6 @@ import { reportError } from 'lib/errors/reportError'
 const LoadingComponent = () => <SmallLoader loading />
 
 // Identifier-based dynamic components mapping
-const MatomoOptOut = dynamic(() => import('../Matomo/OptOut'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
 
 const Manifest = dynamic(() => import('../About/Manifest'), {
   ssr: true,
@@ -456,7 +452,6 @@ const ArticlePage = ({
           : undefined,
         dynamicComponentRequire,
         dynamicComponentIdentifiers: {
-          MATOMO_OPT_OUT: MatomoOptOut,
           MANIFEST: Manifest,
           TEAM_TEASER: TeamTeaser,
           REASONS_VIDEO: ReasonsVideo,

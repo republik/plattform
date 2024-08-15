@@ -1,13 +1,11 @@
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { css } from 'glamor'
 import Head from 'next/head'
-import Router, { withRouter } from 'next/router'
+import { withRouter } from 'next/router'
 import Link from 'next/link'
 
 import ActionBar from '../components/ActionBar'
 import PureFooter, { SPACE } from '../components/Frame/PureFooter'
-
-import track from '../lib/matomo'
 
 import { Back, Strong, Highlight, styles as manifest } from './manifest'
 
@@ -65,42 +63,8 @@ const styles = {
   }),
 }
 
-const EnPage = ({
-  router: {
-    pathname,
-    query,
-    query: { st },
-  },
-}) => {
+const EnPage = ({ router: { pathname, query } }) => {
   const [colorScheme] = useColorContext()
-
-  useEffect(() => {
-    if (!st) return
-    const url = {
-      pathname: '/en',
-      query: {
-        m: st === 'Completed' ? 'thank-you' : 'welcome-back',
-      },
-    }
-    track([
-      'addEcommerceItem',
-      'en-donation', // (required) SKU: Product unique identifier
-      undefined, // (optional) Product name
-      undefined, // (optional) Product category
-      parseFloat(query.amt), // (recommended) Product price
-      1, // (optional, default to 1) Product quantity
-    ])
-    track([
-      'trackEcommerceOrder',
-      query.tx, // (required) Unique Order ID
-      parseFloat(query.amt), // (required) Order Revenue grand total (includes tax, shipping, and subtracted discount)
-      undefined, // (optional) Order sub total (excludes shipping)
-      undefined, // (optional) Tax amount
-      undefined, // (optional) Shipping amount
-      false, // (optional) Discount offered (set to false for unspecified parameter)
-    ])
-    Router.replace(url, url, { shallow: true })
-  }, st)
 
   const selectionRule = useMemo(
     () =>
