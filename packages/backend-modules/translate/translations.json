@@ -1794,11 +1794,11 @@
     },
     {
       "key": "api/signin/EMAIL_CODE/mail/subject",
-      "value": "Bestätigungsziffern für Zugriff: {code}"
+      "value": "Bestätigungs-Code für Zugriff: {code}"
     },
     {
       "key": "api/register/EMAIL_CODE/mail/subject",
-      "value": "Bestätigungsziffern für Registrierung: {code}"
+      "value": "Bestätigungs-Code für Registrierung: {code}"
     },
     {
       "key": "api/signin/app/title",
