@@ -18,6 +18,8 @@ const MembershipsList = ({
   error,
   highlightId,
   activeMembership,
+  magazineSubscriptions,
+  activeMagazineSubscription,
   hasWaitingMemberships,
 }) => {
   return (
@@ -25,7 +27,7 @@ const MembershipsList = ({
       loading={loading}
       error={error}
       render={() => {
-        if (!memberships.length) {
+        if (!memberships.length && !magazineSubscriptions.length) {
           return null
         }
 
@@ -34,10 +36,10 @@ const MembershipsList = ({
             <AccountSection
               id='abos'
               title={t.pluralize('memberships/title', {
-                count: memberships.length,
+                count: memberships.length + magazineSubscriptions.length,
               })}
             >
-              {!activeMembership && (
+              {!activeMembership && !activeMagazineSubscription && (
                 <Box style={{ padding: '15px 20px', margin: '1em 0em' }}>
                   <Interaction.P>{t('memberships/noActive')}</Interaction.P>
                 </Box>
@@ -50,6 +52,13 @@ const MembershipsList = ({
                   activeMembership={activeMembership}
                   hasWaitingMemberships={hasWaitingMemberships}
                 />
+              ))}
+              <h3>MAGAZINE SUBSCRIPTIONS</h3>
+              {magazineSubscriptions.map((magazineSubscription) => (
+                <li key={magazineSubscription.id}>
+                  {magazineSubscription.type} / {magazineSubscription.company} /{' '}
+                  {magazineSubscription.status}
+                </li>
               ))}
             </AccountSection>
           </>
@@ -75,6 +84,9 @@ export default compose(
           )) ||
         []
 
+      const magazineSubscriptions = data?.me?.magazineSubscriptions
+      const activeMagazineSubscription = data?.me?.activeMagazineSubscription
+
       const activeMembership = memberships.find(
         (membership) => membership.active,
       )
@@ -84,6 +96,8 @@ export default compose(
         error: data.error,
         activeMembership,
         memberships,
+        magazineSubscriptions,
+        activeMagazineSubscription,
         hasWaitingMemberships: data?.me?.hasDormantMembership,
       }
     },
