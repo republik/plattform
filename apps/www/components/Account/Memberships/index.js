@@ -118,7 +118,7 @@ export default compose(
         isReady &&
         hasMemberships &&
         (data.me.memberships.find((m) => m.type.name === 'MONTHLY_ABO') ||
-          data.me.activeMagazineSubscription.type === 'MONTHLY_SUBSCRIPTION')
+          data.me.activeMagazineSubscription?.type === 'MONTHLY_SUBSCRIPTION')
       const hasAccessGrants =
         isReady && data.me.accessGrants && !!data.me.accessGrants.length
       const autoPayMembership =
