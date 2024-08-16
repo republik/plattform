@@ -128,10 +128,13 @@ export class PgPaymentRepo implements PaymentServiceRepo {
   }
 
   getActiveUserSubscription(userId: string): Promise<Subscription | null> {
-    return this.#pgdb.payments.subscriptions.findOne({
-      userId,
-      'status !=': 'canceled',
-    })
+    return this.#pgdb.payments.subscriptions.findFirst(
+      {
+        userId,
+        'status !=': 'canceled',
+      },
+      { orderBy: { currentPeriodStart: 'asc' } },
+    )
   }
 
   getUserSubscriptions(userId: string): Promise<Subscription[]> {
