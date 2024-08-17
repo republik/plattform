@@ -3,6 +3,7 @@ import {
   Loader,
   DiscussionCommentsWrapper,
   pxToRem,
+  CommentTeaser,
 } from '@project-r/styleguide'
 import { useTranslation } from '../../lib/withT'
 import { useDiscussion } from './context/DiscussionContext'
@@ -10,9 +11,10 @@ import DiscussionComposer from './DiscussionComposer/DiscussionComposer'
 import DiscussionCommentTreeRenderer from './DiscussionCommentTreeRenderer'
 import DiscussionOptions from './DiscussionOptions/DiscussionOptions'
 import TagFilter from './DiscussionOptions/TagFilter'
-import makeCommentTree from './helpers/makeCommentTree'
+import makeCommentTree, { CommentTreeNode } from './helpers/makeCommentTree'
 import { css } from 'glamor'
 import useDiscussionFocusHelper from './hooks/useDiscussionFocusHelper'
+import CommentLink from './shared/CommentLink'
 
 const styles = {
   commentsWrapper: css({
@@ -65,6 +67,10 @@ const Discussion = ({
     })
   }
 
+  const featuredComments: CommentTreeNode[] | [] = comments.nodes.filter(
+    (comment: CommentTreeNode) => comment.featuredAt !== null,
+  )
+
   return (
     <Loader
       loading={discussionLoading}
@@ -78,6 +84,38 @@ const Discussion = ({
       }
       render={() => (
         <>
+          {!!featuredComments && (
+            <div
+              style={{
+                padding: 16,
+                border: '1px solid rgba(0,0,0,0.2)',
+                marginBottom: 24,
+              }}
+            >
+              <h2
+                style={{
+                  fontWeight: 'semibold',
+                  fontSize: 23,
+                  marginBottom: 16,
+                }}
+              >
+                Lesenswert aus dem Dialog
+              </h2>
+              {featuredComments.map((comment) => {
+                return (
+                  <div key={comment.id}>
+                    <CommentTeaser
+                      style={{ marginBottom: 0 }}
+                      id={comment.id}
+                      {...comment}
+                      CommentLink={CommentLink}
+                      t={t}
+                    />
+                  </div>
+                )
+              })}
+            </div>
+          )}
           {!inRootCommentOverlay && (
             <>
               <TagFilter discussion={discussion} />
