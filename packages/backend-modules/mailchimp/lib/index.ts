@@ -30,5 +30,5 @@ export {
   resubscribeEmail,
   getSegmentDataForUser,
   getMergeFieldsForUser,
-  getMailchimpMember as getNewsletterInterests,
+  getMailchimpMember,
 }

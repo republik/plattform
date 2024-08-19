@@ -39,6 +39,7 @@ export type Membership = {
   renew: boolean,
   autoPay: boolean,
   initialInterval: 'year' | 'month' | 'week' | 'day',
+  cancellationReason?: string
 }
 
 type MembershipPeriod = {

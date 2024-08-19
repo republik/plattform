@@ -125,8 +125,12 @@ function getSubscriptionState(segmentData: SegmentData): SubscriptionState {
     return undefined
   }
   const { activeMembership } = segmentData
-  // Cancelled: Monatsabonnent*innen, die auf ein Jahresabo gewechselt haben, das aber noch nicht gestartet ist, fallen auch unter cancelled
+ 
   if (!activeMembership.renew) {
+    // Monatsabos, die auf ein Jahresabo gewechselt haben, haben auch ein gecancelltes Abo, werden hier aber künstlich auf State 'Active' gesetzt
+    if (activeMembership.membershipTypeName === 'MONTHLY_ABO' && activeMembership.cancellationReason === 'Auto Cancellation (generateMemberships)') {
+      return 'Autopay'
+    }
     return 'Cancelled'
   }
   if (activeMembership.autoPay) {

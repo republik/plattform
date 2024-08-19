@@ -363,6 +363,7 @@ describe('subscription state', () => {
       renew: false,
       autoPay: true,
       initialInterval: 'year',
+      cancellationReason: 'dont like',
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.SUB_STATE).toBe('Cancelled')
@@ -383,6 +384,42 @@ describe('subscription state', () => {
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.SUB_STATE).toBe('Active')
+  })
+
+  test('cancelled monthly abo, manual cancellation', async () => {
+    segmentData.activeMembership = {
+      id: membershipId,
+      userId: userId,
+      pledgeId: pledgeId,
+      membershipTypeId: 'mt-1',
+      membershipTypeName: 'MONTHLY_ABO',
+      createdAt: new Date('2019-01-01'),
+      active: true,
+      renew: false,
+      autoPay: true,
+      initialInterval: 'month',
+      cancellationReason: 'no time',
+    }
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.SUB_STATE).toBe('Cancelled')
+  })
+
+  test('cancelled monthly abo, cancellation due to change to membership', async () => {
+    segmentData.activeMembership = {
+      id: membershipId,
+      userId: userId,
+      pledgeId: pledgeId,
+      membershipTypeId: 'mt-1',
+      membershipTypeName: 'MONTHLY_ABO',
+      createdAt: new Date('2019-01-01'),
+      active: true,
+      renew: false,
+      autoPay: true,
+      initialInterval: 'month',
+      cancellationReason: 'Auto Cancellation (generateMemberships)',
+    }
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.SUB_STATE).toBe('Autopay')
   })
 })
 

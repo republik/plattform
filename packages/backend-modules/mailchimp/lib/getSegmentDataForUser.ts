@@ -25,20 +25,34 @@ export async function getSegmentDataForUser({
     userId: user.id,
     active: true,
   })
-  
-  const membershipType = activeMembership && await pgdb.public.membershipTypes.findFirst({
-    id: activeMembership.membershipTypeId,
-  })
+
+  const activeMembershipCancellation =
+    activeMembership &&
+    (await pgdb.public.membershipCancellations.findFirst({
+      membershipId: activeMembership.id,
+      revokedAt: null,
+    }, {orderBy: {createdAt: 'desc'}}))
+  if (activeMembershipCancellation) {
+    activeMembership.cancellationReason = activeMembershipCancellation?.reason
+  }
+
+  const membershipType =
+    activeMembership &&
+    (await pgdb.public.membershipTypes.findFirst({
+      id: activeMembership.membershipTypeId,
+    }))
   if (membershipType) {
     activeMembership.membershipTypeName = membershipType.name
   }
-  
+
   const now = moment()
-  const activeMembershipPeriod = activeMembership && await pgdb.public.membershipPeriods.findFirst({
-    membershipId: activeMembership.id,
-    'beginDate <=': now,
-    'endDate >': now,
-  })
+  const activeMembershipPeriod =
+    activeMembership &&
+    (await pgdb.public.membershipPeriods.findFirst({
+      membershipId: activeMembership.id,
+      'beginDate <=': now,
+      'endDate >': now,
+    }))
 
   const membershipTypeBenefactor = await pgdb.public.membershipTypes.findOne({
     name: 'BENEFACTOR_ABO',
