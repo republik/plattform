@@ -42,13 +42,13 @@ type MagazineSubscription {
   status: MagazineSubscriptionStatus!
   stripeId: String! # Only Supporter Admin
   invoices: [Invoice!]!
-  currentPeriodStart: Date
-  currentPeriodEnd: Date
-  endedAt: Date
-  cancelAt: Date
-  canceledAt: Date
-  createdAt: Date!
-  updatedAt: Date!
+  currentPeriodStart: DateTime
+  currentPeriodEnd: DateTime
+  endedAt: DateTime
+  cancelAt: DateTime
+  canceledAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Invoice {
@@ -56,7 +56,7 @@ type Invoice {
   hrId: String!
   total: Int!
   totalBeforeDiscount: Int!
-  createdAt: Date!
+  createdAt: DateTime!
   items: JSON!
 }
 `
