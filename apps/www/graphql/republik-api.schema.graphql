@@ -1002,7 +1002,7 @@ input ImageProperties {
 }
 
 type Invoice {
-  createdAt: Date!
+  createdAt: DateTime!
   hrId: String!
   id: ID!
   items: JSON!
@@ -1025,19 +1025,19 @@ type LinkPreview {
 }
 
 type MagazineSubscription {
-  cancelAt: Date
-  canceledAt: Date
+  cancelAt: DateTime
+  canceledAt: DateTime
   company: Company!
-  createdAt: Date!
-  currentPeriodEnd: Date
-  currentPeriodStart: Date
-  endedAt: Date
+  createdAt: DateTime!
+  currentPeriodEnd: DateTime
+  currentPeriodStart: DateTime
+  endedAt: DateTime
   id: ID!
   invoices: [Invoice!]!
   status: MagazineSubscriptionStatus!
   stripeId: String!
   type: MagazineSubscriptionType!
-  updatedAt: Date!
+  updatedAt: DateTime!
 }
 
 enum MagazineSubscriptionStatus {
