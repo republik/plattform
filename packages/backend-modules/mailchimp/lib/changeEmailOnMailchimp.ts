@@ -28,7 +28,6 @@ const moveSubscriptionsInAudience = async ({
   audienceId,
 }) => {
   const member = await mailchimp.getMember(oldEmail, audienceId)
-  console.log(member)
 
   if (member) {
     // archive oldEmail
