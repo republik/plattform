@@ -19,7 +19,7 @@ module.exports = async (_, args, context) => {
     redis,
     req,
     t,
-    mail: { moveNewsletterSubscriptions },
+    mail: { changeEmailOnMailchimp },
   } = context
   Roles.ensureUserHasRole(req.user, 'supporter')
 
@@ -309,7 +309,7 @@ module.exports = async (_, args, context) => {
     await transaction.transactionCommit()
 
     try {
-      await moveNewsletterSubscriptions({
+      await changeEmailOnMailchimp({
         user: sourceUser,
         newEmail: targetUser.email,
       })

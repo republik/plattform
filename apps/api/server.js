@@ -59,6 +59,7 @@ const {
 const PublicationScheduler = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
 const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
 const DatabroomScheduler = require('@orbiting/backend-modules-databroom/lib/scheduler')
+const MailchimpScheduler = require('@orbiting/backend-modules-mailchimp')
 const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
 
 const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
@@ -299,6 +300,7 @@ const runOnce = async () => {
   }
 
   let mailScheduler
+  let mailchimpScheduler
   if (MAIL_SCHEDULER === 'false' || (DEV && MAIL_SCHEDULER !== 'true')) {
     console.log('MAIL_SCHEDULER prevented scheduler from being started', {
       MAIL_SCHEDULER,
@@ -306,6 +308,10 @@ const runOnce = async () => {
     })
   } else {
     mailScheduler = await MailScheduler.init(context).catch((error) => {
+      console.log(error)
+      throw new Error(error)
+    })
+    mailchimpScheduler = await MailchimpScheduler.init(context).catch((error) => {
       console.log(error)
       throw new Error(error)
     })
@@ -321,6 +327,7 @@ const runOnce = async () => {
         publicationScheduler && (await publicationScheduler.close()),
         databroomScheduler && databroomScheduler.close(),
         mailScheduler && mailScheduler.close(),
+        mailchimpScheduler && mailchimpScheduler.close(),
       ].filter(Boolean),
     )
     await ConnectionContext.close(context)
