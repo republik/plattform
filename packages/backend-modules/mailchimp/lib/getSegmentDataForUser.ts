@@ -18,7 +18,6 @@ export async function getSegmentDataForUser({
     !!user.id &&
     (await pgdb.public.pledges.find({
       userId: user.id,
-      status: 'SUCCESSFUL',
     }))
 
   const activeMembership: Membership = await pgdb.public.memberships.findFirst({
