@@ -8,7 +8,7 @@ extend type User {
 
 
 enum MagazineSubscriptionStatus {
-  trailing
+  trialing
   active
   incomplete
   incomplete_expired
