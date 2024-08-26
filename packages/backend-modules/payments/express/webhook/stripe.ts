@@ -10,7 +10,7 @@ import assert from 'node:assert'
 
 const Gateway = new PaymentGateway({
   PROJECT_R: ProjectRStripe,
-  REPUBLIK_AG: RepublikAGStripe,
+  REPUBLIK: RepublikAGStripe,
 })
 
 export async function handleStripeWebhook(
@@ -63,7 +63,8 @@ function getCompanyName(pathSegment: string): Company {
       return 'PROJECT_R'
     case 'republik-ag':
     case 'republik_ag':
-      return 'REPUBLIK_AG'
+    case 'republik':
+      return 'REPUBLIK'
     default:
       throw Error(`Unsupported company ${pathSegment}`)
   }
@@ -75,7 +76,7 @@ function getWhsecForCompany(company: Company) {
     case 'PROJECT_R':
       whsec = process.env.STRIPE_PLATFORM_ENDPOINT_SECRET
       break
-    case 'REPUBLIK_AG':
+    case 'REPUBLIK':
       whsec = process.env.STRIPE_CONNECTED_ENDPOINT_SECRET
       break
     default:

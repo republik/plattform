@@ -9,10 +9,7 @@ export class PaymentGateway {
     //TODO: make this a bit prettier
     this.#gateways = {
       PROJECT_R: new StripeGatewayActions('PROJECT_R', gateways.PROJECT_R),
-      REPUBLIK_AG: new StripeGatewayActions(
-        'REPUBLIK_AG',
-        gateways.REPUBLIK_AG,
-      ),
+      REPUBLIK: new StripeGatewayActions('REPUBLIK', gateways.REPUBLIK),
     }
   }
 

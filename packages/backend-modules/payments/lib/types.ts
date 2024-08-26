@@ -1,6 +1,4 @@
-export type Company = 'PROJECT_R' | 'REPUBLIK_AG'
-
-export type PaymentGateway = 'STRIPE_PROJECT_R' | 'STRIPE_REPUBLIK_AG'
+export type Company = 'PROJECT_R' | 'REPUBLIK'
 
 export type Order = {
   id: string

@@ -81,8 +81,8 @@ export async function processCheckout(
     company: company,
     gatewayId: event.data.object.id,
     items: event.data.object.line_items || [],
-    invocieId: event.data.object.invoice as string | undefined,
-    subscriptionId: event.data.object.subscription as string | undefined,
+    invocieGatewayId: event.data.object.invoice as string | undefined,
+    subscriptionGatewayId: event.data.object.subscription as string | undefined,
     paymentStatus: paymentStatus as 'paid' | 'unpaid',
   })
   return
@@ -109,7 +109,7 @@ export async function processSubscriptionCreated(
 
 function getSubscriptionType(company: Company): SubscriptionType {
   switch (company) {
-    case 'REPUBLIK_AG':
+    case 'REPUBLIK':
       return 'MONTHLY_SUBSCRIPTION'
     case 'PROJECT_R':
       return 'YEARLY_SUBSCRIPTION'

@@ -19,10 +19,10 @@ import { StripeCustomerCreateWorker } from './workers/StripeCustomerCreateWorker
 
 const Gateway = new PaymentGateway({
   PROJECT_R: ProjectRStripe,
-  REPUBLIK_AG: RepublikAGStripe,
+  REPUBLIK: RepublikAGStripe,
 })
 
-export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK_AG'] as const
+export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
 
 /*
  * Payment Service public Interface
@@ -209,7 +209,7 @@ export class Payments implements PaymentService {
         c.name = :company`,
         {
           userId,
-          company: company === 'REPUBLIK_AG' ? 'REPUBLIK' : company,
+          company: company,
         },
       )
       if (!row) {
@@ -311,7 +311,7 @@ export class Payments implements PaymentService {
       c.name = :company`,
       {
         userId,
-        company: company === 'REPUBLIK_AG' ? 'REPUBLIK' : company,
+        company: company,
       },
     )
 

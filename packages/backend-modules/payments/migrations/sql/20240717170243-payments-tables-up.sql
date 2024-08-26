@@ -3,7 +3,7 @@
 CREATE SCHEMA IF NOT EXISTS payments;
 
 CREATE TYPE payments.company as ENUM (
-    'REPUBLIK_AG',
+    'REPUBLIK',
     'PROJECT_R'
 );
 

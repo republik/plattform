@@ -1,7 +1,7 @@
 export = `
 
 extend type User {
-  stripeCustomer(company: Company): StripeCustomer
+  stripeCustomer(company: CompanyName): StripeCustomer
   magazineSubscriptions: [MagazineSubscription!]!
   activeMagazineSubscription: MagazineSubscription
 }
@@ -25,19 +25,19 @@ enum MagazineSubscriptionType {
   MONTHLY_SUBSCRIPTION
 }
 
-enum Company {
+enum CompanyName {
   PROJECT_R
-  REPUBLIK_AG
+  REPUBLIK
 }
 
 type StripeCustomer {
   customerId: String!
-  company: Company!
+  company: CompanyName!
 }
 
 type MagazineSubscription {
   id: ID!
-  company: Company!
+  company: CompanyName!
   type: MagazineSubscriptionType!
   status: MagazineSubscriptionStatus!
   stripeId: String! # Only Supporter Admin
