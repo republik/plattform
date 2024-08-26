@@ -58,7 +58,8 @@ export type OrderArgs = {
   paymentStatus: 'paid' | 'unpaid'
   items: any
   gatewayId: string
-  invocieId?: string
+  invocieGatewayId?: string
+  subscriptionGatewayId?: string
 }
 
 export interface OrderRepo {

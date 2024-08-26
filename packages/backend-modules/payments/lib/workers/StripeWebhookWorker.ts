@@ -82,6 +82,7 @@ export async function processCheckout(
     gatewayId: event.data.object.id,
     items: event.data.object.line_items || [],
     invocieId: event.data.object.invoice as string | undefined,
+    subscriptionId: event.data.object.subscription as string | undefined,
     paymentStatus: paymentStatus as 'paid' | 'unpaid',
   })
   return

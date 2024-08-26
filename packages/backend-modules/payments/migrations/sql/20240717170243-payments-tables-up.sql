@@ -113,16 +113,20 @@ CREATE TABLE IF NOT EXISTS payments.orders (
    "discountAmount" integer,
    "discounts" jsonb,
    "invoiceId"  uuid,
+   "subscriptionId" uuid,
    "items" jsonb NOT NULL,
    "createdAt" timestamptz DEFAULT now(),
    "updatedAt" timestamptz DEFAULT now(),
    CONSTRAINT fk_order_user FOREIGN KEY("userId")
       REFERENCES public.users("id"),
+   CONSTRAINT fk_order_subscription FOREIGN KEY("subscriptionId")
+      REFERENCES payments.subscriptions("id"),
    CONSTRAINT fk_order_invoice FOREIGN KEY("invoiceId")
       REFERENCES payments.invoices("id")
 );
 
 CREATE UNIQUE INDEX order_gateway_id_idx ON payments.orders ("gatewayId");
+CREATE UNIQUE INDEX order_subscription_id_idx ON payments.orders ("subscriptionId");
 
 CREATE TABLE IF NOT EXISTS payments.webhooks (
   "id" uuid default uuid_generate_v4() PRIMARY KEY,
