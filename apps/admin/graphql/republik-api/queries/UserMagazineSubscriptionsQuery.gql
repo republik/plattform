@@ -1,0 +1,16 @@
+query UserMagazineSubscriptions($userId: ID!) {
+  user(id: $userId) {
+    magazineSubscriptions {
+      company
+      type
+      status
+      stripeId
+      currentPeriodStart
+      currentPeriodEnd
+      createdAt
+      updatedAt
+      endedAt
+      canceledAt
+    }
+  }
+}
