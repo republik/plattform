@@ -165,11 +165,18 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
    * @returns NextResponse
    */
   function rewriteBasedOnRoles(roles: string[] = []): NextResponse {
-    if (roles?.includes('member')) {
-      resUrl.pathname = '/front'
-      return NextResponse.rewrite(resUrl)
-    }
-    return NextResponse.next()
+    /**
+     * OPEN ACCESS
+     *
+     * Always rewrite to /front instead of checking for member role
+     */
+    // if (roles?.includes('member')) {
+    //   resUrl.pathname = '/front'
+    //   return NextResponse.rewrite(resUrl)
+    // }
+    // return NextResponse.next()
+    resUrl.pathname = '/front'
+    return NextResponse.rewrite(resUrl)
   }
 
   /**
@@ -181,14 +188,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   async function rewriteBasedOnMe(req: NextRequest): Promise<NextResponse> {
     const { me, cookie } = await fetchMyRoles(req)
 
-    /**
-     * OPEN ACCESS
-     *
-     * Always rewrite to /front instead of checking for member role
-     */
-    // const response = rewriteBasedOnRoles(me?.roles)
-    resUrl.pathname = '/front'
-    const response = NextResponse.rewrite(resUrl)
+    const response = rewriteBasedOnRoles(me?.roles)
 
     if (cookie) {
       // Forward cookies to the client
