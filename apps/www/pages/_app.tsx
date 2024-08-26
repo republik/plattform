@@ -56,7 +56,11 @@ const WebApp = ({
     // SSR only props
     providedUserAgent = undefined,
     serverContext = undefined,
-    assumeAccess = false,
+    /**
+     * OPEN ACCESS
+     */
+    // assumeAccess = false,
+    assumeAccess = true,
     ...otherPageProps
   } = pageProps
 

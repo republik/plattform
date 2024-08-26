@@ -194,7 +194,11 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
         meError: error,
         meRefetch: refetch,
         hasActiveMembership,
-        hasAccess: !data && assumeAccess ? assumeAccess : isMember,
+        /**
+         * OPEN ACCESS
+         */
+        // hasAccess: !data && assumeAccess ? assumeAccess : isMember,
+        hasAccess: true,
         isEditor: checkRoles(me, ['editor']),
         isClimateLabMember,
       }}

@@ -66,6 +66,10 @@ export default graphql(meQuery, {
     me,
     meRefetch: refetch,
     hasActiveMembership: !!me?.activeMembership,
-    hasAccess: checkRoles(me, ['member']),
+    /**
+     * OPEN ACCESS
+     */
+    // hasAccess: checkRoles(me, ['member']),
+    hasAccess: true,
   }),
 })

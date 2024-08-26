@@ -181,7 +181,14 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   async function rewriteBasedOnMe(req: NextRequest): Promise<NextResponse> {
     const { me, cookie } = await fetchMyRoles(req)
 
-    const response = rewriteBasedOnRoles(me?.roles)
+    /**
+     * OPEN ACCESS
+     *
+     * Always rewrite to /front instead of checking for member role
+     */
+    // const response = rewriteBasedOnRoles(me?.roles)
+    resUrl.pathname = '/front'
+    const response = NextResponse.rewrite(resUrl)
 
     if (cookie) {
       // Forward cookies to the client

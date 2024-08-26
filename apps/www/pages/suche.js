@@ -26,5 +26,9 @@ const SearchPage = ({ router, t }) => {
 }
 
 export default withDefaultSSR(
-  compose(enforceMembership(), withT, withRouter)(SearchPage),
+  /**
+   * OPEN ACCESS
+   */
+  // compose(enforceMembership(), withT, withRouter)(SearchPage),
+  compose(withT, withRouter)(SearchPage),
 )
