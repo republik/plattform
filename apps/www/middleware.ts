@@ -136,6 +136,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
 
   // Rewrite if someone tries to directly access the front or the front-preview url
   if (
+    req.nextUrl.pathname === '/marketing' ||
     req.nextUrl.pathname === '/front' ||
     req.nextUrl.pathname.startsWith('/_front/')
   ) {
@@ -174,9 +175,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
     //   resUrl.pathname = '/front'
     //   return NextResponse.rewrite(resUrl)
     // }
-    // return NextResponse.next()
-    resUrl.pathname = '/front'
-    return NextResponse.rewrite(resUrl)
+    return NextResponse.next()
   }
 
   /**
