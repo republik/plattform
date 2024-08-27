@@ -40,7 +40,7 @@ type MagazineSubscription {
   company: CompanyName!
   type: MagazineSubscriptionType!
   status: MagazineSubscriptionStatus!
-  stripeId: String! # Only Supporter Admin
+  stripeId: String!
   invoices: [Invoice!]!
   currentPeriodStart: DateTime
   currentPeriodEnd: DateTime
