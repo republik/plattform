@@ -410,8 +410,11 @@ const evaluateCompanyMonth = async (
        *
        */
       StornierteJahresabonnements.forEach((a) => {
-        if (endFiscalYear.isBefore(a.updatedAt)) {
-          console.log(a)
+        const year = endFiscalYear.get('year')
+        let endLastFiscalYear = endFiscalYear
+        endLastFiscalYear = endLastFiscalYear.set('year', year - 1)
+        if (endFiscalYear.isBefore(a.updatedAt) || endLastFiscalYear.isBefore(a.updatedAt)) {
+          console.log('unhandled' + a)
           throw new Error(
             'Unhandled: Computing cancellation YEARLY_ABO outside fiscal year it was bought',
           )
