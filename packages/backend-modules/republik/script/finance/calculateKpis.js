@@ -399,37 +399,42 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.type === 'MembershipType')
         .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
-      /**
-       * SAFETY MEASURE, a rather dirty one. Computing a cancellation
-       * of a YEARLY_ABO outside fiscal year it was bought requires
-       * some more code changes:
-       *
-       * Instead of splitting cancellation to AktuellesGeschaeftsjahr
-       * and TransitorischePassive, full amount should wander into
-       * AktuellesGeschaeftsjahr.
-       *
-       */
-      StornierteJahresabonnements.forEach((a) => {
-        const year = endFiscalYear.get('year')
-        let endLastFiscalYear = endFiscalYear
-        endLastFiscalYear = endLastFiscalYear.set('year', year - 1)
-        if (endFiscalYear.isBefore(a.updatedAt) || endLastFiscalYear.isBefore(a.updatedAt)) {
-          console.log('unhandled' + a)
-          throw new Error(
-            'Unhandled: Computing cancellation YEARLY_ABO outside fiscal year it was bought',
-          )
-        }
-      })
+      const year = endFiscalYear.get('year')
+      let endLastFiscalYear = endFiscalYear
+      endLastFiscalYear = endLastFiscalYear.set('year', year - 1)
+
+      const StornierteJahresabonnementsLetztesGeschaeftsjahr =
+        StornierteJahresabonnements.filter(
+          (a) =>
+            a.createdAt <= endLastFiscalYear && a.updatedAt > endLastFiscalYear,
+        )
+
+      const StornierteJahresabonnementsGleichesGeschaeftsjahr =
+        StornierteJahresabonnements.filter(
+          (a) =>
+            !(
+              a.createdAt <= endLastFiscalYear &&
+              a.updatedAt > endLastFiscalYear
+            ),
+        )
+
+        // should go into aktuelles Geschäftsjahr too
+      const betrag =
+        StornierteJahresabonnementsLetztesGeschaeftsjahr.map(
+          (a) => a.total,
+        ).reduce((p, c) => p - c, 0) / 100
 
       results.StornierteJahresabonnementsAktuellesGeschaeftsjahr = {
         Betrag:
-          StornierteJahresabonnements.map(
+          StornierteJahresabonnementsGleichesGeschaeftsjahr.map(
             (a) => a.precomputed.totalFiscalYear,
-          ).reduce((p, c) => p - c, 0) / 100,
+          ).reduce((p, c) => p - c, 0) /
+            100 +
+          betrag,
       }
       results.StornierteJahresabonnementsTransitorischePassive = {
         Betrag:
-          StornierteJahresabonnements.map(
+          StornierteJahresabonnementsGleichesGeschaeftsjahr.map(
             (a) => a.precomputed.totalTransitoryLiabilites,
           ).reduce((p, c) => p - c, 0) / 100,
       }
