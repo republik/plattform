@@ -2,3 +2,4 @@ lib/portrait.js
 script/fixMissingPortraitUrls.js
 script/generateNewsletterHmac.js
 lib/calculateKpis/kpiCalculations.js
+__tests__/lib/calculateKpis/kpiCalculations.u.jest.js

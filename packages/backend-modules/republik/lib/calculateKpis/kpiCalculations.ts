@@ -9,16 +9,22 @@ type CancelledYearyAboResults = {
   }
 }
 
-type YearlyAbo = {
+export type YearlyAbo = {
   createdAt: Date
   updatedAt: Date
   total: number
 }
 
-type YearlyAboPrecomputed = YearlyAbo & {
+export type YearlyAboPrecomputed = YearlyAbo & {
   precomputed: { totalFiscalYear: number; totalTransitoryLiabilities: number }
 }
 
+/**
+ * precompute distribution of yearly abo total between current fiscal year and transitory liabilities
+ * @param yearlyAbos 
+ * @param endFiscalYear 
+ * @returns 
+ */
 export function precomputeTransitoryLiabilities(yearlyAbos: YearlyAbo[], endFiscalYear: Dayjs) {
   return yearlyAbos.map((i) => {
     const days = endFiscalYear.diff(i.createdAt, 'days')
