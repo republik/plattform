@@ -4,6 +4,9 @@ const dayjs = require('dayjs')
 const duration = require('dayjs/plugin/duration')
 const _ = require('lodash')
 const yargs = require('yargs')
+const {
+  calculateCancelledYearlyAbos,
+} = require('../../lib/calculateKpis/kpiCalculations')
 
 dayjs.extend(duration)
 
@@ -93,13 +96,13 @@ const evaluateCompanyMonth = async (
     const days = endFiscalYear.diff(i.createdAt, 'days')
 
     const totalFiscalYear = Math.round((i.total / 365) * days)
-    const totalTransitoryLiabilites = i.total - totalFiscalYear
+    const totalTransitoryLiabilities = i.total - totalFiscalYear
 
     return {
       ...i,
       precomputed: {
         totalFiscalYear,
-        totalTransitoryLiabilites,
+        totalTransitoryLiabilities,
       },
     }
   })
@@ -384,7 +387,7 @@ const evaluateCompanyMonth = async (
       results.JahresabonnementsTransitorischePassive = {
         Betrag:
           Jahresabonnements.map(
-            (a) => a.precomputed.totalTransitoryLiabilites,
+            (a) => a.precomputed.totalTransitoryLiabilities,
           ).reduce((p, c) => p + c, 0) / 100,
       }
 
@@ -399,49 +402,14 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.type === 'MembershipType')
         .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
-      const year = endFiscalYear.get('year')
-      let endLastFiscalYear = endFiscalYear
-      endLastFiscalYear = endLastFiscalYear.set('year', year - 1)
-
-      const StornierteJahresabonnementsLetztesGeschaeftsjahr =
-        StornierteJahresabonnements.filter(
-          (a) =>
-            a.createdAt <= endLastFiscalYear && a.updatedAt > endLastFiscalYear,
-        )
-
-      const StornierteJahresabonnementsGleichesGeschaeftsjahr =
-        StornierteJahresabonnements.filter(
-          (a) =>
-            !(
-              a.createdAt <= endLastFiscalYear &&
-              a.updatedAt > endLastFiscalYear
-            ),
-        )
-
-      // total goes into aktuelles Geschäftsjahr, because the abonnements
-      // were bought in last fiscal year and cancelled in the current fiscal year
-      const betragStornierteJahresabonnementsLetztesGJ =
-        StornierteJahresabonnementsLetztesGeschaeftsjahr.map(
-          (a) => a.total,
-        ).reduce((p, c) => p - c, 0) / 100
-
-      // only the part for the current fiscal year goes into the current fiscal year. the rest in transitorische passive
-      const betragStornierteJahresabonnementsGleichesGJ =
-        StornierteJahresabonnementsGleichesGeschaeftsjahr.map(
-          (a) => a.precomputed.totalFiscalYear,
-        ).reduce((p, c) => p - c, 0) / 100
-
-      results.StornierteJahresabonnementsAktuellesGeschaeftsjahr = {
-        Betrag:
-          betragStornierteJahresabonnementsGleichesGJ +
-          betragStornierteJahresabonnementsLetztesGJ,
-      }
-      results.StornierteJahresabonnementsTransitorischePassive = {
-        Betrag:
-          StornierteJahresabonnementsGleichesGeschaeftsjahr.map(
-            (a) => a.precomputed.totalTransitoryLiabilites,
-          ).reduce((p, c) => p - c, 0) / 100,
-      }
+      const stornierteJahresabonnementsResults = calculateCancelledYearlyAbos(
+        StornierteJahresabonnements,
+        endFiscalYear,
+      )
+      results.StornierteJahresabonnementsAktuellesGeschaeftsjahr =
+        stornierteJahresabonnementsResults.StornierteJahresabonnementsAktuellesGeschaeftsjahr
+      results.StornierteJahresabonnementsTransitorischePassive =
+        stornierteJahresabonnementsResults.StornierteJahresabonnementsTransitorischePassive
     }
 
     /**
