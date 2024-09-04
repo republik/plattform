@@ -9,15 +9,35 @@ type CancelledYearyAboResults = {
   }
 }
 
-type CancelledYearlyAbo = {
+type YearlyAbo = {
   createdAt: Date
   updatedAt: Date
   total: number
+}
+
+type YearlyAboPrecomputed = YearlyAbo & {
   precomputed: { totalFiscalYear: number; totalTransitoryLiabilities: number }
 }
 
+export function precomputeTransitoryLiabilities(yearlyAbos: YearlyAbo[], endFiscalYear: Dayjs) {
+  return yearlyAbos.map((i) => {
+    const days = endFiscalYear.diff(i.createdAt, 'days')
+
+    const totalFiscalYear = Math.round((i.total / 365) * days)
+    const totalTransitoryLiabilities = i.total - totalFiscalYear
+  
+    return {
+      ...i,
+      precomputed: {
+        totalFiscalYear,
+        totalTransitoryLiabilities,
+      },
+    }
+  })
+}
+
 export function calculateCancelledYearlyAbos(
-  StornierteJahresabonnements: CancelledYearlyAbo[],
+  StornierteJahresabonnements: YearlyAboPrecomputed[],
   endFiscalYear: Dayjs,
 ): CancelledYearyAboResults {
   const year = endFiscalYear.get('year')
