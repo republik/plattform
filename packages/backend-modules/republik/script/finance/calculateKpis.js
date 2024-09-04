@@ -418,19 +418,23 @@ const evaluateCompanyMonth = async (
             ),
         )
 
-        // should go into aktuelles Geschäftsjahr too
-      const betrag =
+      // total goes into aktuelles Geschäftsjahr, because the abonnements
+      // were bought in last fiscal year and cancelled in the current fiscal year
+      const betragStornierteJahresabonnementsLetztesGJ =
         StornierteJahresabonnementsLetztesGeschaeftsjahr.map(
           (a) => a.total,
         ).reduce((p, c) => p - c, 0) / 100
 
+      // only the part for the current fiscal year goes into the current fiscal year. the rest in transitorische passive
+      const betragStornierteJahresabonnementsGleichesGJ =
+        StornierteJahresabonnementsGleichesGeschaeftsjahr.map(
+          (a) => a.precomputed.totalFiscalYear,
+        ).reduce((p, c) => p - c, 0) / 100
+
       results.StornierteJahresabonnementsAktuellesGeschaeftsjahr = {
         Betrag:
-          StornierteJahresabonnementsGleichesGeschaeftsjahr.map(
-            (a) => a.precomputed.totalFiscalYear,
-          ).reduce((p, c) => p - c, 0) /
-            100 +
-          betrag,
+          betragStornierteJahresabonnementsGleichesGJ +
+          betragStornierteJahresabonnementsLetztesGJ,
       }
       results.StornierteJahresabonnementsTransitorischePassive = {
         Betrag:
