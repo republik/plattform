@@ -952,7 +952,8 @@ const ArticlePage = ({
                 />
               )}
 
-              {me && hasActiveMembership && (
+              {/* open access test */}
+              {(
                 <ArticleRecommendationsFeed path={cleanedPath} />
               )}
               {hasActiveMembership &&
