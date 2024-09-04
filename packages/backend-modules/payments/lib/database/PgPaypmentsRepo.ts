@@ -29,13 +29,9 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     })
   }
 
-  findWebhookEventBySourceId<T>(
-    sourceId: string,
-    processed?: boolean,
-  ): Promise<Webhook<T> | null> {
-    return this.#pgdb.payments.webhoook.findOne({
+  findWebhookEventBySourceId<T>(sourceId: string): Promise<Webhook<T> | null> {
+    return this.#pgdb.payments.webhooks.findOne({
       sourceId,
-      processed,
     })
   }
 
@@ -107,7 +103,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
   saveOrder(userId: string, order: OrderArgs): Promise<Order> {
     return this.#pgdb.payments.orders.insert({
       userId,
-      gatewayId: order.gatewayId,
+      externalId: order.externalId,
       company: order.company,
       items: order.items,
       paymentStatus: order.paymentStatus,

@@ -11,5 +11,6 @@ type queries {
 
 type mutations {
   cancelMagazineSubscription(subscriptionId: String!): Boolean
+  createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
 }
 `

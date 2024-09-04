@@ -1,7 +1,7 @@
 import { PgDb } from 'pogi'
 import { OrderArgs } from './database/repo'
-import { PaymentGateway } from './gateway/gateway'
-import { ProjectRStripe, RepublikAGStripe } from './gateway/stripe'
+import { PaymentProvider } from './providers/PaymentProvider'
+import { ProjectRStripe, RepublikAGStripe } from './providers/stripe'
 import {
   Company,
   Invoice,
@@ -17,7 +17,7 @@ import assert from 'node:assert'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { StripeCustomerCreateWorker } from './workers/StripeCustomerCreateWorker'
 
-const Gateway = new PaymentGateway({
+const Provider = new PaymentProvider({
   PROJECT_R: ProjectRStripe,
   REPUBLIK: RepublikAGStripe,
 })
@@ -113,14 +113,14 @@ export class Payments implements PaymentService {
       let dbSubId = undefined
       if (args.subscriptionId) {
         const sub = await txRepo.getSubscription({
-          gatewayId: args.subscriptionId,
+          externalId: args.subscriptionId,
         })
 
         dbSubId = sub.id
       }
 
       const sub = await txRepo.saveInvoice(userId, {
-        gatewayId: args.gatewayId,
+        externalId: args.externalId,
         items: args.items,
         company: args.company,
         status: args.status,
@@ -244,7 +244,7 @@ export class Payments implements PaymentService {
 
   async updateSubscription(args: SubscriptionArgs): Promise<Subscription> {
     return this.repo.updateSubscription(
-      { gatewayId: args.gatewayId },
+      { externalId: args.externalId },
       {
         status: args.status,
         cancelAt: args.cancelAt,
@@ -317,7 +317,7 @@ export class Payments implements PaymentService {
 
     let customerId
     if (!oldCustomerData || oldCustomerData?.customerId === null) {
-      customerId = await Gateway.forCompany(company).createCustomer(
+      customerId = await Provider.forCompany(company).createCustomer(
         user.email,
         user.id,
       )

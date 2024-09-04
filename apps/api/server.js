@@ -74,7 +74,6 @@ const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail'
 const { Queue } = require('@orbiting/backend-modules-job-queue')
 
 const queue = Queue.getInstance()
-
 queue.registerWorker(StripeWebhookWorker)
 queue.registerWorker(StripeCustomerCreateWorker)
 

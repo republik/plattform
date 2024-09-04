@@ -1,14 +1,14 @@
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { PaymentWebhookRepo } from '../../lib/database/repo'
-import { PaymentGateway } from '../../lib/gateway/gateway'
 import { Company } from '../../lib/types'
 import { StripeWebhookWorker } from '../../lib/workers/StripeWebhookWorker'
-import { ProjectRStripe, RepublikAGStripe } from '../../lib/gateway/stripe'
+import { ProjectRStripe, RepublikAGStripe } from '../../lib/providers/stripe'
 import type { Request, Response } from 'express'
 import Stripe from 'stripe'
 import assert from 'node:assert'
+import { PaymentProvider } from '../../lib/providers/PaymentProvider'
 
-const Gateway = new PaymentGateway({
+const Provider = new PaymentProvider({
   PROJECT_R: ProjectRStripe,
   REPUBLIK: RepublikAGStripe,
 })
@@ -21,10 +21,18 @@ export async function handleStripeWebhook(
   try {
     const company = getCompanyName(req.params['company'])
     const whsec = getWhsecForCompany(company)
-    const event = Gateway.forCompany(company).verifyWebhook<Stripe.Event>(
+    const event = Provider.forCompany(company).verifyWebhook<Stripe.Event>(
       req,
       whsec,
     )
+
+    const alreadySeen = await repo.findWebhookEventBySourceId(event.id)
+
+    if (alreadySeen) {
+      // if we have already logged the webhook we can retrun
+      const status = alreadySeen.processed ? 200 : 204
+      return res.status(status)
+    }
 
     if (!event.livemode && !process.env.STRIPE_TEST_MODE) {
       console.log('skipping test event in live mode')

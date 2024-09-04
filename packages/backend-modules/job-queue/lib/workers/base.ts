@@ -1,7 +1,9 @@
 import PgBoss, { Job, ScheduleOptions, SendOptions } from 'pg-boss'
 import { BasePayload, Worker, WorkerQueue } from '../types'
 
-export abstract class BaseWorker<T extends BasePayload> implements Worker<T> {
+export abstract class BaseWorker<T extends Omit<BasePayload, '$version'>>
+  implements Worker<T>
+{
   protected pgBoss: PgBoss
   abstract readonly queue: WorkerQueue
   readonly options: SendOptions = { retryLimit: 3, retryDelay: 1000 }
@@ -11,7 +13,7 @@ export abstract class BaseWorker<T extends BasePayload> implements Worker<T> {
     this.pgBoss = pgBoss
   }
 
-  abstract perform(job: Job<T>): Promise<void>
+  abstract perform(jobs: Job<T>[]): Promise<void>
 
   async send(data: T, options?: SendOptions) {
     const opts = options ?? this.options

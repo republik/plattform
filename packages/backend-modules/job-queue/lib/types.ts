@@ -15,7 +15,7 @@ export interface Worker<T extends BasePayload> {
   readonly queue: WorkerQueue
   readonly options: SendOptions
   readonly performOptions?: WorkOptions
-  perform: (job: Job<T>) => Promise<void>
+  perform: (jobs: Job<T>[]) => Promise<void>
   schedule: (cron: string, data?: T, options?: ScheduleOptions) => Promise<void>
   send: (data: T) => Promise<string | null>
 }

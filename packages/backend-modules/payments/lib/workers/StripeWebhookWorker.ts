@@ -19,7 +19,7 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
     retryDelay: 120, // retry every 2 minutes
   }
 
-  async perform(job: Job<WorkerArgsV1>): Promise<void> {
+  async perform([job]: Job<WorkerArgsV1>[]): Promise<void> {
     console.log('event.id %s', job.data.event.id)
     const event = job.data.event.payload
 
@@ -53,6 +53,13 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
       case 'invoice.voided':
       case 'invoice.paid':
         return processInvoiceUpdated(PaymentService, job.data.company, event)
+      // case 'invoice.payment_failed':
+      //   console.log(event)
+      //   return new Promise((v) => v)
+      case 'invoice.payment_action_required':
+        // 3d Secure or failed paypal payment
+        console.log(event.object)
+        return new Promise((v) => v)
       default:
         console.log('skipping %s no handler for this event', event.type)
     }
@@ -79,10 +86,12 @@ export async function processCheckout(
     total: total,
     totalBeforeDiscount: totalBeforeDiscount,
     company: company,
-    gatewayId: event.data.object.id,
+    externalId: event.data.object.id,
     items: event.data.object.line_items || [],
-    invocieGatewayId: event.data.object.invoice as string | undefined,
-    subscriptionGatewayId: event.data.object.subscription as string | undefined,
+    invocieExternalId: event.data.object.invoice as string | undefined,
+    subscriptionExternalId: event.data.object.subscription as
+      | string
+      | undefined,
     paymentStatus: paymentStatus as 'paid' | 'unpaid',
   })
   return
@@ -96,7 +105,7 @@ export async function processSubscriptionCreated(
   await paymentService.setupSubscription({
     company: company,
     type: getSubscriptionType(company),
-    gatewayId: event.data.object.id,
+    externalId: event.data.object.id,
     customerId: event.data.object.customer as string,
     currentPeriodStart: new Date(event.data.object.current_period_start * 1000),
     currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
@@ -126,7 +135,7 @@ export async function processSubscriptionUpdate(
 
   await paymentService.updateSubscription({
     company: company,
-    gatewayId: event.data.object.id,
+    externalId: event.data.object.id,
     currentPeriodStart: new Date(event.data.object.current_period_start * 1000),
     currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
     status: event.data.object.status,
@@ -152,7 +161,7 @@ export async function processSubscriptionDeleted(
   const canceledAtTimestamp = (event.data.object.canceled_at || 0) * 1000
 
   await paymentService.disableSubscription(
-    { gatewayId: event.data.object.id },
+    { externalId: event.data.object.id },
     {
       endedAt: new Date(endTimestamp),
       canceledAt: new Date(canceledAtTimestamp),
@@ -174,7 +183,7 @@ export async function processInvoiceCreated(
     items: event.data.object.lines.data,
     discounts: event.data.object.discounts,
     metadata: event.data.object.metadata,
-    gatewayId: event.data.object.id,
+    externalId: event.data.object.id,
     periodStart: new Date(event.data.object.period_start * 1000),
     periodEnd: new Date(event.data.object.period_end * 1000),
     status: event.data.object.status as any,
@@ -195,7 +204,7 @@ export async function processInvoiceUpdated(
 ) {
   await paymentService.updateInvoice(
     {
-      gatewayId: event.data.object.id,
+      externalId: event.data.object.id,
     },
     {
       total: event.data.object.total,

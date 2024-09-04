@@ -30,7 +30,7 @@ export type Subscription = {
   id: string
   userId: string
   company: Company
-  gatewayId: string
+  externalId: string
   hrId: string
   status: SubscriptionStatus
   type: SubscriptionType
@@ -46,7 +46,7 @@ export type Subscription = {
 
 export type SubscriptionArgs = {
   company: Company
-  gatewayId: string
+  externalId: string
   status: SubscriptionStatus
   type?: SubscriptionType
   metadata: Record<string, string> | null
@@ -72,7 +72,7 @@ export type Invoice = {
   id: string
   subscriptionId: string
   company: Company
-  gatewayId: string
+  externalId: string
   metadata: Record<string, any>
   status: 'paid' | 'void' | 'refunded'
   price: number
@@ -84,7 +84,7 @@ export type Invoice = {
 
 export type InvoiceArgs = {
   company: Company
-  gatewayId: string
+  externalId: string
   discounts?: any
   metadata: Record<string, string> | null
   subscriptionId?: string
@@ -118,8 +118,8 @@ export type Webhook<T> = {
 }
 
 export type PaymentItemLocator =
-  | { id: string; gatewayId?: never }
-  | { gatewayId: string; id?: never }
+  | { id: string; externalId?: never }
+  | { externalId: string; id?: never }
 
 export type SubscriptionUpdateArgs = {
   status?: SubscriptionStatus

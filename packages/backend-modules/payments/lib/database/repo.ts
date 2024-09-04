@@ -57,9 +57,9 @@ export type OrderArgs = {
   company: Company
   paymentStatus: 'paid' | 'unpaid'
   items: any
-  gatewayId: string
-  invocieGatewayId?: string
-  subscriptionGatewayId?: string
+  externalId: string
+  invocieExternalId?: string
+  subscriptionExternalId?: string
 }
 
 export interface OrderRepo {

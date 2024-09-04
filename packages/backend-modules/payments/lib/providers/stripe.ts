@@ -1,24 +1,21 @@
-import { Company, Subscription } from './../types'
 import Stripe from 'stripe'
-import { PaymentGatwayActions } from './type'
+import { Company, Subscription } from './../types'
+import { getConfig } from '../config'
+import { PaymentProviderActions } from './PaymentProvider'
 
-export class PaymentGateway {
-  #gateways: Record<Company, PaymentGatwayActions>
+const config = getConfig()
 
-  constructor(gateways: Record<Company, Stripe>) {
-    //TODO: make this a bit prettier
-    this.#gateways = {
-      PROJECT_R: new StripeGatewayActions('PROJECT_R', gateways.PROJECT_R),
-      REPUBLIK: new StripeGatewayActions('REPUBLIK', gateways.REPUBLIK),
-    }
-  }
+export const ProjectRStripe = new Stripe(config.PROJECT_R_STRIPE_API_KEY, {
+  // @ts-expect-error stripe-version-2020-08-27
+  apiVersion: config.stripe_api_version,
+})
 
-  forCompany(company: Company): PaymentGatwayActions {
-    return this.#gateways[company]
-  }
-}
+export const RepublikAGStripe = new Stripe(config.REPUBLIK_STRIPE_API_KEY, {
+  // @ts-expect-error stripe-version-2020-08-27
+  apiVersion: config.stripe_api_version,
+})
 
-class StripeGatewayActions implements PaymentGatwayActions {
+export class StripeProviderActions implements PaymentProviderActions {
   // @ts-expect-error company is unused
   #company: Company
   #stripe: Stripe
@@ -52,6 +49,16 @@ class StripeGatewayActions implements PaymentGatwayActions {
   async cancelSubscriptionAtPeriodEnd(subId: string): Promise<Subscription> {
     console.log(subId)
     return {} as Subscription
+  }
+
+  async createCustomerPortalSession(
+    customerId: string,
+    opts: object,
+  ): Promise<Stripe.Response<Stripe.BillingPortal.Session>> {
+    return await this.#stripe.billingPortal.sessions.create({
+      customer: customerId,
+      ...opts,
+    })
   }
 
   verifyWebhook(req: any, secret: string): any {

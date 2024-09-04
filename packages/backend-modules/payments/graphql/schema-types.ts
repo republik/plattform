@@ -59,4 +59,8 @@ type Invoice {
   createdAt: DateTime!
   items: JSON!
 }
+
+type CustomerPortalSession {
+  sessionUrl: String
+}
 `

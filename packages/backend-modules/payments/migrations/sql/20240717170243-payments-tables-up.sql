@@ -12,7 +12,7 @@ CREATE TYPE payments.subscription_type as ENUM (
     'MONTHLY_SUBSCRIPTION'
 );
 
-CREATE TYPE payments.payment_gateway as ENUM (
+CREATE TYPE payments.payment_provider as ENUM (
     'STRIPE'
 );
 
@@ -55,8 +55,8 @@ CREATE TABLE IF NOT EXISTS payments.subscriptions (
     "id" uuid default uuid_generate_v4() PRIMARY KEY,
     "userId" uuid NOT NULL,
     "company" payments.company NOT NULL,
-    "gateway" payments.payment_gateway default 'STRIPE',
-    "gatewayId" text NOT NULL,
+    "provider" payments.payment_provider default 'STRIPE',
+    "externalId" text NOT NULL,
     "type" payments.subscription_type NOT NULL,
     "status" payments.subscription_status NOT NULL,
     "metadata" jsonb,
@@ -72,15 +72,17 @@ CREATE TABLE IF NOT EXISTS payments.subscriptions (
       REFERENCES public.users("id")
 );
 
-CREATE UNIQUE INDEX subscription_gateway_id_idx ON payments.subscriptions ("gatewayId");
+
+
+CREATE UNIQUE INDEX subscription_external_id_idx ON payments.subscriptions ("externalId");
 
 CREATE TABLE IF NOT EXISTS payments.invoices (
   "id" uuid default uuid_generate_v4() PRIMARY KEY,
   "userId" uuid NOT NULL,
   "subscriptionId" uuid,
   "company" payments.company NOT NULL,
-  "gateway" payments.payment_gateway default 'STRIPE',
-  "gatewayId" text NOT NULL,
+  "provider" payments.payment_provider default 'STRIPE',
+  "externalId" text NOT NULL,
   "hrId" text NOT NULL default public.make_hrid('payments.invoices'::regclass, 'hrId'::text, (6)::bigint),
   "total" integer NOT NULL,
   "totalBeforeDiscount" integer NOT NULL,
@@ -103,8 +105,8 @@ CREATE UNIQUE INDEX invoices_hr_id_idx ON payments.invoices ("hrId");
 
 CREATE TABLE IF NOT EXISTS payments.orders (
    "id" uuid default uuid_generate_v4() PRIMARY KEY,
-   "gateway" payments.payment_gateway default 'STRIPE',
-   "gatewayId" text NOT NULL,
+   "provider" payments.payment_provider default 'STRIPE',
+   "externalId" text NOT NULL,
    "company" payments.company NOT NULL,
    "userId" uuid NOT NULL,
    "total" integer NOT NULL,
@@ -125,7 +127,7 @@ CREATE TABLE IF NOT EXISTS payments.orders (
       REFERENCES payments.invoices("id")
 );
 
-CREATE UNIQUE INDEX order_gateway_id_idx ON payments.orders ("gatewayId");
+CREATE UNIQUE INDEX order_external_id_idx ON payments.orders ("externalId");
 CREATE UNIQUE INDEX order_subscription_id_idx ON payments.orders ("subscriptionId");
 
 CREATE TABLE IF NOT EXISTS payments.webhooks (

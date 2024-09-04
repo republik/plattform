@@ -12,7 +12,7 @@ type Args = {
 export class StripeCustomerCreateWorker extends BaseWorker<Args> {
   readonly queue = 'payments:stripe:customer:create'
 
-  async perform(job: Job<Args>): Promise<void> {
+  async perform([job]: Job<Args>[]): Promise<void> {
     if (job.data.$version !== 'v1') {
       throw Error('unable to perform this job version. Expected v1')
     }
