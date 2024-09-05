@@ -180,6 +180,13 @@ export async function processSubscriptionCreated(
     metadata: event.data.object.metadata,
   })
 
+  // send transactional
+  await paymentService.sendSetupSubscriptionTransactionalMail({
+    externalId: externalId,
+    customerId: customerId,
+    status: status,
+  })
+
   return
 }
 

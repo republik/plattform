@@ -15,14 +15,9 @@ import {
   Webhook,
   InvoiceArgs,
   Invoice,
+  ACTIVE_STATUS_TYPES,
 } from '../types'
-
-const ACTIVE_STATUS_TYPES: Subscription['status'][] = [
-  'active',
-  'past_due',
-  'unpaid',
-  'paused',
-]
+import { UserRow } from '@orbiting/backend-modules-types'
 
 export class PgPaymentRepo implements PaymentServiceRepo {
   #pgdb: PgDb
@@ -178,5 +173,9 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     return this.#pgdb.payments.invoices.update(by, {
       ...args,
     })
+  }
+
+  async getUser(userId: string): Promise<UserRow> {
+    return this.#pgdb.public.users.findOne({id: userId})
   }
 }

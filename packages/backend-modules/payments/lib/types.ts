@@ -26,6 +26,13 @@ export type SubscriptionStatus =
   | 'past_due'
   | 'ended'
 
+export const ACTIVE_STATUS_TYPES: Subscription['status'][] = [
+    'active',
+    'past_due',
+    'unpaid',
+    'paused',
+  ]
+
 export type Subscription = {
   id: string
   userId: string

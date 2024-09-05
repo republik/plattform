@@ -1,3 +1,4 @@
+import { UserRow } from '@orbiting/backend-modules-types'
 import type {
   Company,
   Order,
@@ -78,6 +79,10 @@ export interface OrderRepo {
   saveOrder(userId: string, order: OrderArgs): Promise<Order>
   saveInvoice(userId: string, args: any): Promise<any>
   updateInvoice(by: PaymentItemLocator, args: any): Promise<any>
+}
+
+export interface TransactionalRepo {
+  getUser(userId: string): Promise<UserRow>
 }
 
 export interface PaymentServiceRepo
