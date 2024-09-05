@@ -1,7 +1,6 @@
 import { PgDb } from 'pogi'
 import { OrderArgs } from './database/repo'
-import { PaymentProvider } from './providers/PaymentProvider'
-import { ProjectRStripe, RepublikAGStripe } from './providers/stripe'
+import { PaymentProvider } from './providers/provider'
 import {
   Company,
   Invoice,
@@ -16,11 +15,6 @@ import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { StripeCustomerCreateWorker } from './workers/StripeCustomerCreateWorker'
-
-const Provider = new PaymentProvider({
-  PROJECT_R: ProjectRStripe,
-  REPUBLIK: RepublikAGStripe,
-})
 
 export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
 
@@ -317,7 +311,7 @@ export class Payments implements PaymentService {
 
     let customerId
     if (!oldCustomerData || oldCustomerData?.customerId === null) {
-      customerId = await Provider.forCompany(company).createCustomer(
+      customerId = await PaymentProvider.forCompany(company).createCustomer(
         user.email,
         user.id,
       )

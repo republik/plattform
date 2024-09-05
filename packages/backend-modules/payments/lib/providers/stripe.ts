@@ -1,7 +1,7 @@
 import Stripe from 'stripe'
 import { Company, Subscription } from './../types'
 import { getConfig } from '../config'
-import { PaymentProviderActions } from './PaymentProvider'
+import { PaymentProviderActions } from './base'
 
 const config = getConfig()
 
@@ -15,7 +15,7 @@ export const RepublikAGStripe = new Stripe(config.REPUBLIK_STRIPE_API_KEY, {
   apiVersion: config.stripe_api_version,
 })
 
-export class StripeProviderActions implements PaymentProviderActions {
+export class StripeProvider implements PaymentProviderActions {
   // @ts-expect-error company is unused
   #company: Company
   #stripe: Stripe
@@ -53,12 +53,15 @@ export class StripeProviderActions implements PaymentProviderActions {
 
   async createCustomerPortalSession(
     customerId: string,
-    opts: object,
-  ): Promise<Stripe.Response<Stripe.BillingPortal.Session>> {
-    return await this.#stripe.billingPortal.sessions.create({
+    opts: { returnUrl: string; locale: 'auto' | 'de' | 'en' | 'fr' },
+  ): Promise<string> {
+    const sess = await this.#stripe.billingPortal.sessions.create({
       customer: customerId,
-      ...opts,
+      return_url: opts.returnUrl,
+      locale: opts.locale,
     })
+
+    return sess.url
   }
 
   verifyWebhook(req: any, secret: string): any {

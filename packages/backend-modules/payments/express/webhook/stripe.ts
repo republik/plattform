@@ -2,16 +2,10 @@ import { Queue } from '@orbiting/backend-modules-job-queue'
 import { PaymentWebhookRepo } from '../../lib/database/repo'
 import { Company } from '../../lib/types'
 import { StripeWebhookWorker } from '../../lib/workers/StripeWebhookWorker'
-import { ProjectRStripe, RepublikAGStripe } from '../../lib/providers/stripe'
 import type { Request, Response } from 'express'
 import Stripe from 'stripe'
 import assert from 'node:assert'
-import { PaymentProvider } from '../../lib/providers/PaymentProvider'
-
-const Provider = new PaymentProvider({
-  PROJECT_R: ProjectRStripe,
-  REPUBLIK: RepublikAGStripe,
-})
+import { PaymentProvider } from '../../lib/providers/provider'
 
 export async function handleStripeWebhook(
   repo: PaymentWebhookRepo,
@@ -21,10 +15,9 @@ export async function handleStripeWebhook(
   try {
     const company = getCompanyName(req.params['company'])
     const whsec = getWhsecForCompany(company)
-    const event = Provider.forCompany(company).verifyWebhook<Stripe.Event>(
-      req,
-      whsec,
-    )
+    const event = PaymentProvider.forCompany(
+      company,
+    ).verifyWebhook<Stripe.Event>(req, whsec)
 
     const alreadySeen = await repo.findWebhookEventBySourceId(event.id)
 
@@ -34,7 +27,7 @@ export async function handleStripeWebhook(
       return res.status(status)
     }
 
-    if (!event.livemode && !process.env.STRIPE_TEST_MODE) {
+    if (!event.livemode && !isInStripeTestMode()) {
       console.log('skipping test event in live mode')
       return res.sendStatus(304)
     }
@@ -97,4 +90,8 @@ function getWhsecForCompany(company: Company) {
   )
 
   return whsec
+}
+
+function isInStripeTestMode() {
+  return process.env.STRIPE_TEST_MODE
 }
