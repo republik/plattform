@@ -12,6 +12,13 @@ import {
   Invoice,
 } from '../types'
 
+const ACTIVE_STATUS_TYPES: Subscription['status'][] = [
+  'active',
+  'past_due',
+  'unpaid',
+  'paused',
+]
+
 export class PgPaymentRepo implements PaymentServiceRepo {
   #pgdb: PgDb
 
@@ -127,7 +134,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     return this.#pgdb.payments.subscriptions.findFirst(
       {
         userId,
-        'status !=': 'canceled',
+        status: ACTIVE_STATUS_TYPES,
       },
       { orderBy: { currentPeriodStart: 'asc' } },
     )
