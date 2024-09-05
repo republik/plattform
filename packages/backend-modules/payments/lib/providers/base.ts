@@ -19,6 +19,6 @@ export interface PaymentProviderActions {
   verifyWebhook<T>(req: any, secret: string): T
   createCustomerPortalSession(
     customerId: string,
-    opts: { returnUrl: string; locale: string },
+    opts: { returnUrl: string; locale: 'auto' | 'de' | 'en' | 'fr' },
   ): Promise<string>
 }
