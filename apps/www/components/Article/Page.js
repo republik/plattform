@@ -306,7 +306,7 @@ const ArticlePage = ({
   const router = useRouter()
   const { share, extract, showAll } = router.query
 
-  const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
+  const { me, meLoading, hasAccess, isEditor } = useMe()
 
   const { isAudioQueueAvailable } = useAudioQueue()
 
@@ -951,12 +951,8 @@ const ArticlePage = ({
                   variables={feedQueryVariables}
                 />
               )}
-
-              {/* open access test */}
-              {(
-                <ArticleRecommendationsFeed path={cleanedPath} />
-              )}
-              {hasActiveMembership &&
+              {hasAccess && <ArticleRecommendationsFeed path={cleanedPath} />}
+              {hasAccess &&
                 (isEditorialNewsletter ||
                   meta.template === 'article' ||
                   meta.template === 'page') && <div style={{ height: 60 }} />}
