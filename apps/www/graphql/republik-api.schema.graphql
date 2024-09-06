@@ -514,9 +514,14 @@ type CommitConnection {
   totalCount: Int!
 }
 
-enum Company {
+type Company {
+  id: ID!
+  name: String!
+}
+
+enum CompanyName {
   PROJECT_R
-  REPUBLIK_AG
+  REPUBLIK
 }
 
 type Contributor {
@@ -564,6 +569,10 @@ type CrowdfundingStatus {
   memberships: Int!
   money: Int!
   people: Int!
+}
+
+type CustomerPortalSession {
+  sessionUrl: String
 }
 
 """Date (format %d.%m.%Y)"""
@@ -1027,7 +1036,7 @@ type LinkPreview {
 type MagazineSubscription {
   cancelAt: DateTime
   canceledAt: DateTime
-  company: Company!
+  company: CompanyName!
   createdAt: DateTime!
   currentPeriodEnd: DateTime
   currentPeriodStart: DateTime
@@ -1049,7 +1058,7 @@ enum MagazineSubscriptionStatus {
   overdue
   past_due
   paused
-  trailing
+  trialing
   unpaid
 }
 
@@ -2455,7 +2464,7 @@ input StringArrayFilter {
 scalar StringOrNumber
 
 type StripeCustomer {
-  company: Company!
+  company: CompanyName!
   customerId: String!
 }
 
@@ -2694,7 +2703,7 @@ type User {
   sessions: [Session!]
   slug: String
   statement: String
-  stripeCustomer(company: Company): StripeCustomer
+  stripeCustomer(company: CompanyName): StripeCustomer
   subscribedBy(after: String, before: String, first: Int, last: Int, onlyMe: Boolean): SubscriptionConnection!
   subscribedByMe: Subscription
   subscribedTo(after: String, before: String, first: Int, last: Int, objectType: SubscriptionObjectType): SubscriptionConnection!
@@ -2912,6 +2921,7 @@ type mutations {
   bookCalendarSlot(id: ID!, userId: ID): CalendarSlot!
   cancelCalendarSlot(id: ID!, userId: ID): CalendarSlot!
   cancelCandidacy(slug: String!): Election!
+  cancelMagazineSubscription(subscriptionId: String!): Boolean
   cancelMembership(details: CancellationInput!, id: ID!, immediately: Boolean): Membership!
   cancelPledge(pledgeId: ID!): Pledge
 
@@ -2928,6 +2938,7 @@ type mutations {
   commit(document: DocumentInput!, isTemplate: Boolean, message: String!, parentId: ID, repoId: ID!): Commit!
   createDiscussion(anonymity: Permission!, maxLength: Int, minInterval: Int, tagRequired: Boolean!, tags: [String!], title: String): ID!
   createElection(electionInput: ElectionInput!): Election!
+  createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
   createVoting(votingInput: VotingInput!): Voting!
   deleteRedirection(id: ID!): Boolean!
   deleteUser(unpublishComments: Boolean, userId: ID!): User
