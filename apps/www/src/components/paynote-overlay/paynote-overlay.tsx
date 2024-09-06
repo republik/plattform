@@ -68,16 +68,19 @@ export function PaynoteOverlay() {
       >
         <h2
           className={css({
-            textStyle: { base: 'h3Serif', md: 'h2Serif' },
+            textStyle: { base: 'h3Serif', sm: 'h2Serif' },
             lineHeight: 1.5,
             textAlign: 'center',
           })}
         >
           <span
+            className={css({
+              boxDecorationBreak: 'clone',
+              px: '1.5',
+            })}
             style={{
               backgroundColor: expanded ? '#FDE047' : null,
               color: expanded ? token('colors.text.black') : null,
-              paddingInline: token('spacing.0.5'),
             }}
           >
             Unterstützen Sie unabhängigen Journalismus
