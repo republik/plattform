@@ -10,6 +10,7 @@ import { Metadata } from 'next'
 import { ReactNode } from 'react'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
+import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
 
 export const metadata: Metadata = {
   metadataBase: new URL(PUBLIC_BASE_URL),
@@ -48,6 +49,7 @@ export default async function RootLayout({
         <ThemeProvider>
           <ApolloWrapper>
             {children}
+            <PaynoteOverlay />
             <NativeAppMessageSync />
             <SyncUTMToSessionStorage />
           </ApolloWrapper>

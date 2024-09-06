@@ -21,6 +21,7 @@ import { reportError } from '../lib/errors/reportError'
 import { ThemeProvider } from '../components/ColorScheme/ThemeProvider'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
+import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -86,6 +87,7 @@ const WebApp = ({
                         serverContext={serverContext}
                         {...otherPageProps}
                       />
+                      <PaynoteOverlay />
                       <AudioPlayerOrchestrator />
                       <SyncUTMToSessionStorage />
                     </ColorContextProvider>
