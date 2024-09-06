@@ -1,30 +1,25 @@
-import assert from 'node:assert'
 import { Queue } from '@orbiting/backend-modules-job-queue'
-import { PaymentWebhookRepo } from '../../lib/database/repo'
 import { Company } from '../../lib/types'
 import { StripeWebhookWorker } from '../../lib/workers/StripeWebhookWorker'
 import type { Request, Response } from 'express'
 import Stripe from 'stripe'
-import { PaymentProvider } from '../../lib/providers/provider'
+import { Payments } from '../../lib/payments'
 
-export async function handleStripeWebhook(
-  repo: PaymentWebhookRepo,
-  req: Request,
-  res: Response,
-) {
+export async function handleStripeWebhook(req: Request, res: Response) {
   try {
+    const payments = Payments.getInstance()
+
     const company = getCompanyName(req.params['company'])
-    const whsec = getWhsecForCompany(company)
-    const event = PaymentProvider.forCompany(
-      company,
-    ).verifyWebhook<Stripe.Event>(req, whsec)
+    const event = payments.verifyWebhookForCompany<Stripe.Event>(company, req)
 
     if (!event.livemode && !isInStripeTestMode()) {
       console.log('skipping test event in live mode')
       return res.sendStatus(304)
     }
 
-    const alreadySeen = await repo.findWebhookEventBySourceId(event.id)
+    const alreadySeen = await payments.findWebhookEventBySourceId<Stripe.Event>(
+      event.id,
+    )
 
     if (alreadySeen) {
       // if we have already logged the webhook we can retrun
@@ -32,7 +27,7 @@ export async function handleStripeWebhook(
       return res.sendStatus(status)
     }
 
-    const e = await repo.logWebhookEvent<Stripe.Event>({
+    const e = await payments.logWebhookEvent<Stripe.Event>({
       source: 'stripe',
       sourceId: event.id,
       company: company,
@@ -43,7 +38,7 @@ export async function handleStripeWebhook(
       'payment:stripe:webhook',
       {
         $version: 'v1',
-        event: e,
+        eventSourceId: e.sourceId,
         company: company,
       },
     )
@@ -69,27 +64,6 @@ function getCompanyName(pathSegment: string): Company {
     default:
       throw Error(`Unsupported company ${pathSegment}`)
   }
-}
-
-function getWhsecForCompany(company: Company) {
-  let whsec
-  switch (company) {
-    case 'PROJECT_R':
-      whsec = process.env.STRIPE_PLATFORM_ENDPOINT_SECRET
-      break
-    case 'REPUBLIK':
-      whsec = process.env.STRIPE_CONNECTED_ENDPOINT_SECRET
-      break
-    default:
-      throw Error(`Unsupported company ${company}`)
-  }
-
-  assert(
-    typeof whsec === 'string',
-    `Webhook secret for ${company} is not configured`,
-  )
-
-  return whsec
 }
 
 function isInStripeTestMode() {

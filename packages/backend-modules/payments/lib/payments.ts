@@ -1,5 +1,5 @@
 import { PgDb } from 'pogi'
-import { OrderArgs } from './database/repo'
+import { OrderArgs, WebhookArgs } from './database/repo'
 import { PaymentProvider } from './providers/provider'
 import {
   Company,
@@ -10,6 +10,7 @@ import {
   SubscriptionArgs,
   PaymentItemLocator,
   InvoiceUpdateArgs,
+  Webhook,
 } from './types'
 import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
@@ -51,6 +52,10 @@ export interface PaymentService {
     by: PaymentItemLocator,
     args: InvoiceUpdateArgs,
   ): Promise<Invoice>
+  verifyWebhookForCompany<T>(company: string, req: any): T
+  logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>>
+  findWebhookEventBySourceId<T>(sourceId: string): Promise<Webhook<T> | null>
+  markWebhookAsProcessed<T>(sourceId: string): Promise<Webhook<T>>
 }
 
 export class Payments implements PaymentService {
@@ -338,5 +343,41 @@ export class Payments implements PaymentService {
   static getInstance(): PaymentService {
     this.assertRunning()
     return this.#instance
+  }
+
+  verifyWebhookForCompany<T>(company: string, req: any): T {
+    let whsec
+    switch (company) {
+      case 'PROJECT_R':
+        whsec = process.env.STRIPE_PLATFORM_ENDPOINT_SECRET
+        break
+      case 'REPUBLIK':
+        whsec = process.env.STRIPE_CONNECTED_ENDPOINT_SECRET
+        break
+      default:
+        throw Error(`Unsupported company ${company}`)
+    }
+
+    assert(
+      typeof whsec === 'string',
+      `Webhook secret for ${company} is not configured`,
+    )
+
+    const event = PaymentProvider.forCompany(company).verifyWebhook<T>(
+      req,
+      whsec,
+    )
+
+    return event
+  }
+
+  logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>> {
+    return this.repo.insertWebhookEvent(webhook)
+  }
+  findWebhookEventBySourceId<T>(sourceId: string): Promise<Webhook<T> | null> {
+    return this.repo.findWebhookEventBySourceId(sourceId)
+  }
+  markWebhookAsProcessed<T>(sourceId: string): Promise<Webhook<T>> {
+    return this.repo.updateWebhookEvent(sourceId, { processed: true })
   }
 }

@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
-import { Company, SubscriptionType, Webhook } from '../types'
+import { Company, SubscriptionType } from '../types'
 import Stripe from 'stripe'
 import { Payments, PaymentService } from '../payments'
 
 type WorkerArgsV1 = {
   $version: 'v1'
   // TODO! Use webhook event id stead of entire webhook body
-  event: Webhook<Stripe.Event>
+  eventSourceId: string
   company: Company
 }
 
@@ -20,49 +20,81 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
   }
 
   async perform([job]: Job<WorkerArgsV1>[]): Promise<void> {
-    console.log('event.id %s', job.data.event.id)
-    const event = job.data.event.payload
-
     const PaymentService = Payments.getInstance()
 
-    switch (event.type) {
-      case 'checkout.session.completed':
-        return processCheckout(PaymentService, job.data.company, event)
-      case 'customer.subscription.created':
-        return processSubscriptionCreated(
-          PaymentService,
-          job.data.company,
-          event,
-        )
-      case 'customer.subscription.updated':
-        return processSubscriptionUpdate(
-          PaymentService,
-          job.data.company,
-          event,
-        )
-      case 'customer.subscription.deleted':
-        return processSubscriptionDeleted(
-          PaymentService,
-          job.data.company,
-          event,
-        )
-      case 'invoice.created':
-        return processInvoiceCreated(PaymentService, job.data.company, event)
-      case 'invoice.finalized':
-      case 'invoice.updated':
-      case 'invoice.voided':
-      case 'invoice.paid':
-        return processInvoiceUpdated(PaymentService, job.data.company, event)
-      // case 'invoice.payment_failed':
-      //   console.log(event)
-      //   return new Promise((v) => v)
-      case 'invoice.payment_action_required':
-        // 3d Secure or failed paypal payment
-        console.log(event.object)
-        return new Promise((v) => v)
-      default:
-        console.log('skipping %s no handler for this event', event.type)
+    const wh = await PaymentService.findWebhookEventBySourceId<Stripe.Event>(
+      job.data.eventSourceId,
+    )
+
+    if (!wh) {
+      console.error('Webhook dose not exist')
+      return await this.pgBoss.fail(this.queue, job.id)
     }
+
+    const event = wh.payload
+    try {
+      console.log('processing stripe event %s [%s]', event.id, event.type)
+
+      switch (event.type) {
+        case 'checkout.session.completed':
+          await processCheckout(PaymentService, job.data.company, event)
+          break
+        case 'customer.subscription.created':
+          await processSubscriptionCreated(
+            PaymentService,
+            job.data.company,
+            event,
+          )
+          break
+        case 'customer.subscription.updated':
+          await processSubscriptionUpdate(
+            PaymentService,
+            job.data.company,
+            event,
+          )
+          break
+        case 'customer.subscription.deleted':
+          await processSubscriptionDeleted(
+            PaymentService,
+            job.data.company,
+            event,
+          )
+          break
+        case 'invoice.created':
+          await processInvoiceCreated(PaymentService, job.data.company, event)
+          break
+        case 'invoice.finalized':
+        case 'invoice.updated':
+        case 'invoice.voided':
+        case 'invoice.paid':
+          await processInvoiceUpdated(PaymentService, job.data.company, event)
+          break
+        // case 'invoice.payment_failed':
+        //   console.log(event)
+        //   await new Promise((v) => v)
+        case 'invoice.payment_action_required':
+          // 3d Secure or failed paypal payment
+          console.log(event.object)
+          await new Promise((v) => v)
+          break
+        default:
+          console.log('skipping %s no handler for this event', event.type)
+      }
+    } catch (e) {
+      console.error(
+        'processing stripe event %s [%s] failed',
+        event.id,
+        event.type,
+      )
+      throw e
+    }
+
+    console.log(
+      'successfully processed stripe event %s [%s]',
+      event.id,
+      event.type,
+    )
+    await PaymentService.markWebhookAsProcessed(event.id)
   }
 }
 

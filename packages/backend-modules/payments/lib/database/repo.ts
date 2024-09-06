@@ -16,9 +16,20 @@ export type WebhookArgs<T> = {
   payload: T
 }
 
+export type WebhookUpdateArgs<T> = {
+  company?: Company
+  sourceId?: string
+  processed?: boolean
+  payload?: T
+}
+
 export interface PaymentWebhookRepo {
-  logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>>
+  insertWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>>
   findWebhookEventBySourceId<T>(sourceId: string): Promise<Webhook<T> | null>
+  updateWebhookEvent<T>(
+    eventId: string,
+    webhook: WebhookUpdateArgs<T>,
+  ): Promise<Webhook<T>>
 }
 
 export interface CustomerRepo {

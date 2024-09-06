@@ -1,5 +1,10 @@
 import { PgDb } from 'pogi'
-import { OrderArgs, PaymentServiceRepo, WebhookArgs } from './repo'
+import {
+  OrderArgs,
+  PaymentServiceRepo,
+  WebhookArgs,
+  WebhookUpdateArgs,
+} from './repo'
 import {
   Company,
   Order,
@@ -26,7 +31,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     this.#pgdb = pgdb
   }
 
-  logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>> {
+  insertWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>> {
     return this.#pgdb.payments.webhooks.insertAndGet({
       sourceId: webhook.sourceId,
       source: webhook.source,
@@ -34,6 +39,13 @@ export class PgPaymentRepo implements PaymentServiceRepo {
       payload: webhook.payload,
       processed: false,
     })
+  }
+
+  updateWebhookEvent<T>(
+    sourceId: string,
+    webhook: WebhookUpdateArgs<T>,
+  ): Promise<Webhook<T>> {
+    return this.#pgdb.payments.webhooks.updateAndGet({ sourceId }, webhook)
   }
 
   findWebhookEventBySourceId<T>(sourceId: string): Promise<Webhook<T> | null> {
