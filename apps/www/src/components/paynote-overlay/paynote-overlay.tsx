@@ -158,6 +158,16 @@ function Offers() {
           </span>
         </Option>
 
+        <div
+          className={css({
+            fontSize: 'xs',
+          })}
+        >
+          {option === 'YEARLY'
+            ? 'Unlimitierter Zugang. 240.– jährlich nach dem ersten Jahr. Jederzeit kündbar.'
+            : 'Unlimitierter Zugang. 24.– monatlich nach dem ersten Monat. Jederzeit kündbar.'}
+        </div>
+
         <button
           type='submit'
           className={css({
