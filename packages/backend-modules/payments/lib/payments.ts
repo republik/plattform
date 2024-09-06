@@ -237,7 +237,7 @@ export class Payments implements PaymentService {
   }
 
   async updateSubscription(args: SubscriptionArgs): Promise<Subscription> {
-    return this.repo.updateSubscription(
+    const sub = await this.repo.updateSubscription(
       { externalId: args.externalId },
       {
         status: args.status,
@@ -249,6 +249,8 @@ export class Payments implements PaymentService {
         currentPeriodEnd: args.currentPeriodEnd,
       },
     )
+
+    return sub
   }
 
   async disableSubscription(

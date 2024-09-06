@@ -160,7 +160,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     by: PaymentItemLocator,
     args: SubscriptionUpdateArgs,
   ): Promise<Subscription> {
-    return this.#pgdb.payments.subscriptions.updateAndGet(by, args)
+    return this.#pgdb.payments.subscriptions.updateAndGetOne(by, args)
   }
 
   saveInvoice(userId: string, args: InvoiceArgs): Promise<any> {
@@ -170,7 +170,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     })
   }
 
-  async updateInvoice(by: PaymentItemLocator, args: any): Promise<Invoice> {
+  updateInvoice(by: PaymentItemLocator, args: any): Promise<Invoice> {
     return this.#pgdb.payments.invoices.update(by, {
       ...args,
     })

@@ -1,10 +1,10 @@
+import assert from 'node:assert'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { PaymentWebhookRepo } from '../../lib/database/repo'
 import { Company } from '../../lib/types'
 import { StripeWebhookWorker } from '../../lib/workers/StripeWebhookWorker'
 import type { Request, Response } from 'express'
 import Stripe from 'stripe'
-import assert from 'node:assert'
 import { PaymentProvider } from '../../lib/providers/provider'
 
 export async function handleStripeWebhook(
@@ -19,17 +19,17 @@ export async function handleStripeWebhook(
       company,
     ).verifyWebhook<Stripe.Event>(req, whsec)
 
+    if (!event.livemode && !isInStripeTestMode()) {
+      console.log('skipping test event in live mode')
+      return res.sendStatus(304)
+    }
+
     const alreadySeen = await repo.findWebhookEventBySourceId(event.id)
 
     if (alreadySeen) {
       // if we have already logged the webhook we can retrun
       const status = alreadySeen.processed ? 200 : 204
-      return res.status(status)
-    }
-
-    if (!event.livemode && !isInStripeTestMode()) {
-      console.log('skipping test event in live mode')
-      return res.sendStatus(304)
+      return res.sendStatus(status)
     }
 
     const e = await repo.logWebhookEvent<Stripe.Event>({
@@ -93,5 +93,5 @@ function getWhsecForCompany(company: Company) {
 }
 
 function isInStripeTestMode() {
-  return process.env.STRIPE_TEST_MODE
+  return process.env.STRIPE_TEST_MODE || false
 }
