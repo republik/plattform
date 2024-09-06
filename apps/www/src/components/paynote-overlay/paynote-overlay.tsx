@@ -3,7 +3,7 @@
 import { IconExpandLess, IconExpandMore } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import { token } from '@republik/theme/tokens'
-import { useState } from 'react'
+import { ChangeEventHandler, ReactNode, useId, useState } from 'react'
 
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { useMe } from 'lib/context/MeContext'
@@ -67,24 +67,157 @@ export function PaynoteOverlay() {
         })}
       >
         <h2 className={css({ textStyle: 'h3Serif', lineHeight: 1.5 })}>
-          <span style={{ backgroundColor: expanded ? '#FDE047' : null }}>
+          <span
+            style={{
+              backgroundColor: expanded ? '#FDE047' : null,
+              color: expanded ? token('colors.text.black') : null,
+              paddingInline: token('spacing.0.5'),
+            }}
+          >
             Unterstützen Sie unabhängigen Journalismus
           </span>
         </h2>
 
         <Collapsible.Content>
           <div className={css({ mt: '4' })}>
-            Unterstützen Sie unabhängigen Journalismus, Unterstützen Sie
-            unabhängigen Journalismus, Unterstützen Sie unabhängigen
-            Journalismus, Unterstützen Sie unabhängigen Journalismus,
-            Unterstützen Sie unabhängigen Journalismus, Unterstützen Sie
-            unabhängigen Journalismus, Unterstützen Sie unabhängigen
-            Journalismus, Unterstützen Sie unabhängigen Journalismus,
-            Unterstützen Sie unabhängigen Journalismus, Unterstützen Sie
-            unabhängigen Journalismus
+            <Offers />
           </div>
         </Collapsible.Content>
       </div>
     </Collapsible.Root>
+  )
+}
+
+type OfferOptions = 'MONTHLY' | 'YEARLY'
+
+function Offers() {
+  const [option, setOption] = useState<OfferOptions>('YEARLY')
+
+  return (
+    <form method='GET' action='https://shop.republik.love/angebot'>
+      <div
+        className={css({
+          display: 'flex',
+          gap: '4',
+          flexDir: 'column',
+          textStyle: 'body',
+        })}
+      >
+        <Option
+          value='MONTHLY'
+          selected={option === 'MONTHLY'}
+          onChange={(e) => setOption('MONTHLY')}
+        >
+          <span className={css({ display: 'block' })}>
+            <del
+              className={css({
+                color: '#ccc',
+                mr: '1',
+              })}
+            >
+              24.–
+            </del>
+            <span className={css({ fontWeight: 'medium' })}>
+              11.– für einen Monat
+            </span>
+          </span>
+        </Option>
+        <Option
+          value='YEARLY'
+          selected={option === 'YEARLY'}
+          onChange={(e) => setOption('YEARLY')}
+        >
+          <span
+            className={css({ display: 'flex', gap: '2', flexDir: 'column' })}
+          >
+            <span>
+              <del
+                className={css({
+                  color: '#ccc',
+                  mr: '1',
+                })}
+              >
+                240.–
+              </del>
+              <span className={css({ fontWeight: 'medium' })}>
+                222.– für ein Jahr
+              </span>
+            </span>
+            <span
+              className={css({
+                backgroundColor: '#FDE047',
+                color: 'text.black',
+                px: '1',
+                py: '0.5',
+                borderRadius: '2px',
+                fontSize: 's',
+              })}
+            >
+              14% günstiger als ein Monatsabo
+            </span>
+          </span>
+        </Option>
+
+        <button
+          type='submit'
+          className={css({
+            display: 'inline-flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '5px',
+            fontSize: 'base',
+            lineHeight: '1',
+            fontWeight: 'bold',
+            whiteSpace: 'nowrap',
+            px: '6',
+            py: '3',
+            background: 'text',
+            color: 'text.inverted',
+          })}
+        >
+          Jetzt abonnieren
+        </button>
+      </div>
+    </form>
+  )
+}
+
+function Option({
+  value,
+  selected,
+  children,
+  onChange,
+}: {
+  value: string
+  selected: boolean
+  children: ReactNode
+  onChange: ChangeEventHandler<HTMLInputElement>
+}) {
+  const id = useId()
+  return (
+    <label
+      className={css({
+        borderWidth: 2,
+        borderStyle: 'solid',
+        borderRadius: '5px',
+        p: '4',
+        display: 'flex',
+        gap: '4',
+      })}
+    >
+      <input
+        id={id}
+        value={value}
+        name='product'
+        type='radio'
+        checked={selected}
+        onChange={onChange}
+        className={css({
+          border: '2px solid black',
+        })}
+      />
+
+      {children}
+    </label>
   )
 }
