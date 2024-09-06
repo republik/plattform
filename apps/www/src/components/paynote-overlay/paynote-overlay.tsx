@@ -62,11 +62,17 @@ export function PaynoteOverlay() {
       <div
         className={css({
           margin: '0 auto',
-          maxW: 'maxContentWidth',
+          maxW: '30rem',
           textStyle: 'serifRegular',
         })}
       >
-        <h2 className={css({ textStyle: 'h3Serif', lineHeight: 1.5 })}>
+        <h2
+          className={css({
+            textStyle: { base: 'h3Serif', md: 'h2Serif' },
+            lineHeight: 1.5,
+            textAlign: 'center',
+          })}
+        >
           <span
             style={{
               backgroundColor: expanded ? '#FDE047' : null,
