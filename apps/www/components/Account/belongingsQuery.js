@@ -26,7 +26,10 @@ export default gql`
           package {
             name
             group
-            company
+            company {
+              id
+              name
+            }
           }
           options {
             price
@@ -69,7 +72,10 @@ export default gql`
         package {
           name
           group
-          company
+          company {
+            id
+            name
+          }
         }
         options {
           templateId
