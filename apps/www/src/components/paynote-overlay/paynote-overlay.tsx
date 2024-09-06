@@ -222,6 +222,7 @@ function Option({
         p: '4',
         display: 'flex',
         gap: '4',
+        alignItems: 'center',
       })}
     >
       <input
@@ -232,7 +233,28 @@ function Option({
         checked={selected}
         onChange={onChange}
         className={css({
-          border: '2px solid black',
+          flexShrink: 0,
+          // Custom checkbox style, see https://moderncss.dev/pure-css-custom-styled-radio-buttons/
+          appearance: 'none',
+          backgroundColor: 'text.inverted',
+          margin: 0,
+          color: 'currentColor',
+          width: '1.15em',
+          height: '1.15em',
+          border: '2px solid currentColor',
+          borderRadius: 'full',
+          display: 'grid',
+          placeContent: 'center',
+          _before: {
+            content: '""',
+            width: '0.35em',
+            height: '0.35em',
+            borderRadius: 'full',
+            backgroundColor: 'text.inverted',
+          },
+          _checked: {
+            backgroundColor: 'text',
+          },
         })}
       />
 
