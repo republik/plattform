@@ -466,13 +466,20 @@ const invalidate = async (grant, reason, t, pgdb, mail, requestUserId) => {
         })
       }
 
-      const perks = await revokePerks(grant, recipient, campaign, pgdb)
-      if (perks.length > 0) {
-        grant.perks = {}
+      try {
+        const perks = await revokePerks(grant, recipient, campaign, pgdb)
+        if (perks.length > 0) {
+          grant.perks = {}
 
-        await Promise.map(perks, (perk) => {
-          eventsLib.log(grant, `perk.${perk.name}.revoked`, pgdb)
-        })
+          await Promise.map(perks, (perk) => {
+            eventsLib.log(grant, `perk.${perk.name}.revoked`, pgdb)
+          })
+        }
+      } catch (e) {
+        console.error(
+          `failed to revoke perks of ${campaign.name} for grant ${grant.id}; reason: ${e.message}`,
+        )
+        console.error(e.stack)
       }
 
       if (!(await hasUserActiveMembership(recipient, pgdb)) && sendMail) {
