@@ -6,9 +6,15 @@ import { token } from '@republik/theme/tokens'
 import { useState } from 'react'
 
 import * as Collapsible from '@radix-ui/react-collapsible'
+import { useMe } from 'lib/context/MeContext'
 
 export function PaynoteOverlay() {
   const [expanded, setExpanded] = useState<boolean>(true)
+  const { hasActiveMembership, meLoading } = useMe()
+
+  if (meLoading || hasActiveMembership) {
+    return null
+  }
 
   return (
     <Collapsible.Root
@@ -60,8 +66,10 @@ export function PaynoteOverlay() {
           textStyle: 'serifRegular',
         })}
       >
-        <h2 className={css({ textStyle: 'h3Serif' })}>
-          Unterstützen Sie unabhängigen Journalismus
+        <h2 className={css({ textStyle: 'h3Serif', lineHeight: 1.5 })}>
+          <span style={{ backgroundColor: expanded ? '#FDE047' : null }}>
+            Unterstützen Sie unabhängigen Journalismus
+          </span>
         </h2>
 
         <Collapsible.Content>
