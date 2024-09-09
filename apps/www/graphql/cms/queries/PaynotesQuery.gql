@@ -1,0 +1,9 @@
+query Paynotes {
+  paynotes: allPaynotes {
+    id
+    title
+    message {
+      value
+    }
+  }
+}

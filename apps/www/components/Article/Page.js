@@ -85,6 +85,7 @@ import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
 import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 import { reportError } from 'lib/errors/reportError'
+import { PaynoteArticle } from '@app/components/paynote-overlay/paynote-article'
 
 // CAMPAIGN MODE
 // import { TrialPaynote } from '@app/app/(campaign)/components/trial-paynote'
@@ -653,6 +654,8 @@ const ArticlePage = ({
       pageColorSchemeKey={colorSchemeKey}
       location={meta?.template === 'article' ? 'article' : undefined}
     >
+      <PaynoteArticle />
+
       <PageLoader
         loading={articleLoading && !articleData}
         render={() => {
@@ -951,6 +954,7 @@ const ArticlePage = ({
                   variables={feedQueryVariables}
                 />
               )}
+
               {hasAccess && <ArticleRecommendationsFeed path={cleanedPath} />}
               {hasAccess &&
                 (isEditorialNewsletter ||
