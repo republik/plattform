@@ -17,59 +17,11 @@ import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { StripeCustomerCreateWorker } from './workers/StripeCustomerCreateWorker'
-<<<<<<< HEAD
 import { UserRow } from '@orbiting/backend-modules-types'
-
-export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
-
-=======
 import { sendSetupSubscriptionMail } from './transactionals/sendTransactionalMails'
 
 export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
 
-/*
- * Payment Service public Interface
- */
-export interface PaymentService {
-  listSubscriptions(userId: string): Promise<Subscription[]>
-  fetchActiveSubscription(userId: string): Promise<Subscription | null>
-  listActiveSubscriptions(userId: string): Promise<Subscription[]>
-  setupSubscription(
-    args: SubscriptionArgs & { customerId: string },
-  ): Promise<Subscription>
-  updateSubscription(args: SubscriptionArgs): Promise<Subscription>
-  disableSubscription(
-    by: PaymentItemLocator,
-    args: {
-      endedAt: Date
-      canceledAt: Date
-    },
-  ): Promise<Subscription>
-  getCustomerIdForCompany(
-    userId: string,
-    company: Company,
-  ): Promise<{ customerId: string; company: string }>
-  ensureUserHasCustomerIds(userId: string): Promise<void>
-  createCustomer(company: Company, userId: string): any
-  listUserOrders(userId: string): Promise<Order[]>
-  getOrder(id: string): Promise<Order>
-  saveOrder(order: OrderArgs): Promise<Order>
-  getSubscriptionInvoices(subscriptionId: string): Promise<Invoice>
-  saveInvoice(customerId: string, args: InvoiceArgs): Promise<Invoice>
-  updateInvoice(
-    by: PaymentItemLocator,
-    args: InvoiceUpdateArgs,
-  ): Promise<Invoice>
-  verifyWebhookForCompany<T>(company: string, req: any): T
-  logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>>
-  findWebhookEventBySourceId<T>(sourceId: string): Promise<Webhook<T> | null>
-  markWebhookAsProcessed<T>(sourceId: string): Promise<Webhook<T>>
-  sendSetupSubscriptionTransactionalMail(
-    externalId, status, customerId,
-  ): Promise<void>
-}
-
->>>>>>> 1c3f1b17e (feat(payments): basic transactional flow for subscription_created event, wip)
 export class Payments implements PaymentService {
   static #instance: PaymentService
   protected pgdb: PgDb
@@ -95,7 +47,7 @@ export class Payments implements PaymentService {
     this.repo = new PgPaymentRepo(pgdb)
   }
 
-  async sendSetupSubscriptionTransactionalMail({externalId, status, customerId}): Promise<void> {
+  async sendSetupSubscriptionTransactionalMail({externalId, status, userId}): Promise<void> {
     // get the subscription 
     // macht es mehr Sinn, die subscription durchzureichen, oder nochmal zu fetchen? versteh glaub noch nicht ganz, wie die abfolge ist
     if (!ACTIVE_STATUS_TYPES.includes(status)) {
@@ -103,15 +55,12 @@ export class Payments implements PaymentService {
     }
 
     // if subscription is active, prepare mail
-    const userId = await this.repo.getUserIdByCustomerId(customerId)
-    if (!userId) {
-      throw Error(`CustomerId ${customerId} is not associated with a user`)
-    }
     const subscription = await this.repo.getSubscription(externalId)
+    const order = await this.repo.getOrderBySubscription(subscription.id)
     const userRow = await this.repo.getUser(userId)
 
     // send mail
-    await sendSetupSubscriptionMail(subscription, userRow.email, this.pgdb)
+    await sendSetupSubscriptionMail(subscription, order, userRow.email, this.pgdb)
     
   }
 
@@ -125,27 +74,7 @@ export class Payments implements PaymentService {
     const tx = await this.pgdb.transactionBegin()
     const txRepo = new PgPaymentRepo(tx)
     try {
-<<<<<<< HEAD
-      let dbSubId = undefined
-=======
-      let userId = await txRepo.getUserIdByCustomerId(customerId)
-      if (!userId) {
-        const row = await tx.public.stripeCustomers.findOne(
-          {
-            customerId,
-          },
-          { fields: ['userId'] },
-        )
-
-        userId = row.userId
-      }
-
-      if (!userId) {
-        throw Error(`CustomerId ${customerId} is not associated with a user`)
-      }
-
       let dbSubId: string | undefined = undefined
->>>>>>> 1c3f1b17e (feat(payments): basic transactional flow for subscription_created event, wip)
       if (args.subscriptionId) {
         const sub = await txRepo.getSubscription({
           externalId: args.subscriptionId,
@@ -518,4 +447,7 @@ export interface PaymentService {
     firstName: string,
     lastName: string,
   ): Promise<UserRow>
+  sendSetupSubscriptionTransactionalMail(
+    {externalId, status, userId}
+  ): Promise<void>
 }

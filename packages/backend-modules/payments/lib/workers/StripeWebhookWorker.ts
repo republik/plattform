@@ -182,9 +182,9 @@ export async function processSubscriptionCreated(
 
   // send transactional
   await paymentService.sendSetupSubscriptionTransactionalMail({
-    externalId: externalId,
-    customerId: customerId,
-    status: status,
+    externalId: event.data.object.id,
+    userId: userId,
+    status: event.data.object.status,
   })
 
   return
