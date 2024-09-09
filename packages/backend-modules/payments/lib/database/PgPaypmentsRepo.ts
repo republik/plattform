@@ -118,6 +118,12 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     })
   }
 
+  async getOrderBySubscription(subscriptionId: string): Promise<Order> {
+    return this.#pgdb.payments.orders.findOne({
+      subscriptionId: subscriptionId,
+    })
+  }
+
   getSubscription(by: PaymentItemLocator): Promise<Subscription> {
     return this.#pgdb.payments.subscriptions.findOne(by)
   }
