@@ -46,6 +46,16 @@ export class StripeProvider implements PaymentProviderActions {
     return []
   }
 
+  async getCustomer(customerId: string): Promise<Stripe.Customer | null> {
+    const cus = await this.#stripe.customers.retrieve(customerId)
+
+    if (cus.deleted) {
+      return null
+    }
+
+    return cus
+  }
+
   async cancelSubscriptionAtPeriodEnd(subId: string): Promise<Subscription> {
     console.log(subId)
     return {} as Subscription

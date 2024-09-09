@@ -16,47 +16,9 @@ import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { StripeCustomerCreateWorker } from './workers/StripeCustomerCreateWorker'
+import { UserRow } from '@orbiting/backend-modules-types'
 
 export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
-
-/*
- * Payment Service public Interface
- */
-export interface PaymentService {
-  listSubscriptions(userId: string): Promise<Subscription[]>
-  fetchActiveSubscription(userId: string): Promise<Subscription | null>
-  listActiveSubscriptions(userId: string): Promise<Subscription[]>
-  setupSubscription(
-    args: SubscriptionArgs & { customerId: string },
-  ): Promise<Subscription>
-  updateSubscription(args: SubscriptionArgs): Promise<Subscription>
-  disableSubscription(
-    by: PaymentItemLocator,
-    args: {
-      endedAt: Date
-      canceledAt: Date
-    },
-  ): Promise<Subscription>
-  getCustomerIdForCompany(
-    userId: string,
-    company: Company,
-  ): Promise<{ customerId: string; company: string }>
-  ensureUserHasCustomerIds(userId: string): Promise<void>
-  createCustomer(company: Company, userId: string): any
-  listUserOrders(userId: string): Promise<Order[]>
-  getOrder(id: string): Promise<Order>
-  saveOrder(order: OrderArgs): Promise<Order>
-  getSubscriptionInvoices(subscriptionId: string): Promise<Invoice>
-  saveInvoice(customerId: string, args: InvoiceArgs): Promise<Invoice>
-  updateInvoice(
-    by: PaymentItemLocator,
-    args: InvoiceUpdateArgs,
-  ): Promise<Invoice>
-  verifyWebhookForCompany<T>(company: string, req: any): T
-  logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>>
-  findWebhookEventBySourceId<T>(sourceId: string): Promise<Webhook<T> | null>
-  markWebhookAsProcessed<T>(sourceId: string): Promise<Webhook<T>>
-}
 
 export class Payments implements PaymentService {
   static #instance: PaymentService
@@ -89,26 +51,10 @@ export class Payments implements PaymentService {
     })
   }
 
-  async saveInvoice(customerId: string, args: InvoiceArgs): Promise<Invoice> {
+  async saveInvoice(userId: string, args: InvoiceArgs): Promise<Invoice> {
     const tx = await this.pgdb.transactionBegin()
     const txRepo = new PgPaymentRepo(tx)
     try {
-      let userId = await txRepo.getUserIdByCustomerId(customerId)
-      if (!userId) {
-        const row = await tx.public.stripeCustomers.findOne(
-          {
-            customerId,
-          },
-          { fields: ['userId'] },
-        )
-
-        userId = row.userId
-      }
-
-      if (!userId) {
-        throw Error(`CustomerId ${customerId} is not associated with a user`)
-      }
-
       let dbSubId = undefined
       if (args.subscriptionId) {
         const sub = await txRepo.getSubscription({
@@ -149,30 +95,14 @@ export class Payments implements PaymentService {
     return await this.repo.updateInvoice(by, args)
   }
 
-  async setupSubscription({
-    customerId,
-    ...args
-  }: { customerId: string } & SubscriptionArgs): Promise<Subscription> {
+  async setupSubscription(
+    userId: string,
+    args: SubscriptionArgs,
+  ): Promise<Subscription> {
     const tx = await this.pgdb.transactionBegin()
     const txRepo = new PgPaymentRepo(tx)
 
     try {
-      let userId = await txRepo.getUserIdByCustomerId(customerId)
-      if (!userId) {
-        const row = await tx.public.stripeCustomers.findOne(
-          {
-            customerId,
-          },
-          { fields: ['userId'] },
-        )
-
-        userId = row.userId
-      }
-
-      if (!userId) {
-        throw Error(`CustomerId ${customerId} is not associated with a user`)
-      }
-
       const sub = await txRepo.addUserSubscriptions(userId, args)
       await tx.query(`SELECT public.add_user_to_role(:userId, 'member');`, {
         userId: userId,
@@ -221,6 +151,20 @@ export class Payments implements PaymentService {
     return customerInfo
   }
 
+  async getUserIdForCompanyCustomer(
+    company: Company,
+    customerId: string,
+  ): Promise<string | null> {
+    const cus = await PaymentProvider.forCompany(company).getCustomer(
+      customerId,
+    )
+    if (!cus) {
+      return null
+    }
+
+    return cus.metadata?.userId
+  }
+
   listUserOrders(userId: string): Promise<Order[]> {
     return this.repo.getUserOrders(userId)
   }
@@ -262,13 +206,39 @@ export class Payments implements PaymentService {
     locator: PaymentItemLocator,
     args: any,
   ): Promise<Subscription> {
-    const sub = await this.repo.updateSubscription(locator, {
-      status: 'canceled',
-      endedAt: args.endedAt,
-      canceledAt: args.canceledAt,
-    })
+    const tx = await this.pgdb.transactionBegin()
+    const txRepo = new PgPaymentRepo(tx)
 
-    return sub
+    try {
+      const sub = await txRepo.updateSubscription(locator, {
+        status: 'canceled',
+        endedAt: args.endedAt,
+        canceledAt: args.canceledAt,
+      })
+
+      console.log(sub)
+
+      if (!sub) {
+        throw new Error(
+          `subscription for ${locator.externalId || locator.id} dose not exist`,
+        )
+      }
+
+      await tx.query(
+        `SELECT public.remove_user_from_role(:userId, 'member');`,
+        {
+          userId: sub.userId,
+        },
+      )
+
+      await tx.transactionCommit()
+
+      return sub
+    } catch (e) {
+      console.error(e)
+      await tx.transactionRollback()
+      throw e
+    }
   }
 
   async ensureUserHasCustomerIds(userId: string): Promise<void> {
@@ -331,13 +301,42 @@ export class Payments implements PaymentService {
     return customerId
   }
 
-  async saveOrder(order: OrderArgs): Promise<Order> {
-    const userId = await this.repo.getUserIdByCustomerId(order.customerId)
+  async saveOrder(userId: string, order: OrderArgs): Promise<Order> {
     if (!userId) {
       throw Error('unable to find customer')
     }
 
     return this.repo.saveOrder(userId, order)
+  }
+
+  async updateUserName(
+    userId: string,
+    firstName: string,
+    lastName: string,
+  ): Promise<UserRow> {
+    console.table({
+      userId,
+      firstName,
+      lastName,
+    })
+
+    const tx = await this.pgdb.transactionBegin()
+    try {
+      const user = await tx.public.users.updateAndGet(
+        { id: userId },
+        {
+          firstName,
+          lastName,
+        },
+      )
+
+      tx.transactionCommit()
+      return user
+    } catch (e) {
+      console.log(e)
+      await tx.transactionRollback()
+      throw e
+    }
   }
 
   static getInstance(): PaymentService {
@@ -380,4 +379,53 @@ export class Payments implements PaymentService {
   markWebhookAsProcessed<T>(sourceId: string): Promise<Webhook<T>> {
     return this.repo.updateWebhookEvent(sourceId, { processed: true })
   }
+}
+
+/*
+ * Payment Service public Interface
+ */
+export interface PaymentService {
+  listSubscriptions(userId: string): Promise<Subscription[]>
+  fetchActiveSubscription(userId: string): Promise<Subscription | null>
+  listActiveSubscriptions(userId: string): Promise<Subscription[]>
+  setupSubscription(
+    userId: string,
+    args: SubscriptionArgs,
+  ): Promise<Subscription>
+  updateSubscription(args: SubscriptionArgs): Promise<Subscription>
+  disableSubscription(
+    by: PaymentItemLocator,
+    args: {
+      endedAt: Date
+      canceledAt: Date
+    },
+  ): Promise<Subscription>
+  getCustomerIdForCompany(
+    userId: string,
+    company: Company,
+  ): Promise<{ customerId: string; company: string }>
+  getUserIdForCompanyCustomer(
+    comany: Company,
+    customerId: string,
+  ): Promise<string | null>
+  ensureUserHasCustomerIds(userId: string): Promise<void>
+  createCustomer(company: Company, userId: string): any
+  listUserOrders(userId: string): Promise<Order[]>
+  getOrder(id: string): Promise<Order>
+  saveOrder(userId: string, order: OrderArgs): Promise<Order>
+  getSubscriptionInvoices(subscriptionId: string): Promise<Invoice>
+  saveInvoice(userId: string, args: InvoiceArgs): Promise<Invoice>
+  updateInvoice(
+    by: PaymentItemLocator,
+    args: InvoiceUpdateArgs,
+  ): Promise<Invoice>
+  verifyWebhookForCompany<T>(company: string, req: any): T
+  logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>>
+  findWebhookEventBySourceId<T>(sourceId: string): Promise<Webhook<T> | null>
+  markWebhookAsProcessed<T>(sourceId: string): Promise<Webhook<T>>
+  updateUserName(
+    userId: string,
+    firstName: string,
+    lastName: string,
+  ): Promise<UserRow>
 }

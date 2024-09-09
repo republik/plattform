@@ -62,7 +62,6 @@ export interface SubscriptionRepo {
 }
 
 export type OrderArgs = {
-  customerId: string
   total: number
   totalBeforeDiscount: number
   company: Company

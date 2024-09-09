@@ -1,10 +1,10 @@
+import Stripe from 'stripe'
 import { Company, Subscription } from '../types'
 
 export class PaymentProviderRecord {
   #providers: Record<Company, PaymentProviderActions>
 
   constructor(providers: Record<Company, PaymentProviderActions>) {
-    //TODO: make this a bit prettier
     this.#providers = providers
   }
 
@@ -15,6 +15,7 @@ export class PaymentProviderRecord {
 
 export interface PaymentProviderActions {
   getCustomerSubscriptions(customerId: string): Promise<Subscription[]>
+  getCustomer(customerId: string): Promise<Stripe.Customer | null>
   createCustomer(email: string, userId: string): Promise<string>
   verifyWebhook<T>(req: any, secret: string): T
   createCustomerPortalSession(

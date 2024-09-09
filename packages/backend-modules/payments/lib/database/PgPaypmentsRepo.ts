@@ -73,14 +73,6 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     )
   }
 
-  async getUserIdByCustomerId(customerId: string): Promise<string | null> {
-    const row = await this.#pgdb.payments.stripeCustomers.findOne({
-      customerId,
-    })
-
-    return row?.userId
-  }
-
   saveCustomerIdForCompany(
     userId: string,
     company: Company,

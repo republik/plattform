@@ -36,6 +36,9 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
       console.log('processing stripe event %s [%s]', event.id, event.type)
 
       switch (event.type) {
+        case 'customer.updated':
+          // await processCustomerUpdated(PaymentService, job.data.company, event)
+          break
         case 'checkout.session.completed':
           await processCheckout(PaymentService, job.data.company, event)
           break
@@ -69,13 +72,11 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
         case 'invoice.paid':
           await processInvoiceUpdated(PaymentService, job.data.company, event)
           break
-        // case 'invoice.payment_failed':
-        //   console.log(event)
-        //   await new Promise((v) => v)
-        case 'invoice.payment_action_required':
+          // case 'invoice.payment_failed':
+          //   console.log(event)
+          //   await new Promise((v) => v)
+          // case 'invoice.payment_action_required':
           // 3d Secure or failed paypal payment
-          console.log(event.object)
-          await new Promise((v) => v)
           break
         default:
           console.log('skipping %s no handler for this event', event.type)
@@ -103,18 +104,42 @@ export async function processCheckout(
   company: Company,
   event: Stripe.CheckoutSessionCompletedEvent,
 ) {
+  const customerId = event.data.object.customer as string
+
+  const userId = await paymentService.getUserIdForCompanyCustomer(
+    company,
+    customerId,
+  )
+  if (!userId) {
+    throw Error(`User for ${customerId} does not exists`)
+  }
+
+  const customFields = event.data.object.custom_fields
+  if (customFields.length > 0) {
+    console.log(customFields)
+    const firstNameField = customFields.find(
+      (field) => field.key === 'firstName',
+    )
+    const lastNameField = customFields.find((field) => field.key === 'lastName')
+
+    const firstName = firstNameField?.text?.value
+    const lastName = lastNameField?.text?.value
+
+    if (firstName && lastName) {
+      await paymentService.updateUserName(userId, firstName, lastName)
+    }
+  }
+
   let paymentStatus = event.data.object.payment_status
   if (paymentStatus === 'no_payment_required') {
     // no payments required are treated as paid
     paymentStatus = 'paid'
   }
 
-  const customerId = event.data.object.customer as string
   const total = event.data.object.amount_total || 0
   const totalBeforeDiscount = event.data.object.amount_subtotal || 0
 
-  await paymentService.saveOrder({
-    customerId: customerId,
+  await paymentService.saveOrder(userId, {
     total: total,
     totalBeforeDiscount: totalBeforeDiscount,
     company: company,
@@ -134,11 +159,21 @@ export async function processSubscriptionCreated(
   company: Company,
   event: Stripe.CustomerSubscriptionCreatedEvent,
 ) {
-  await paymentService.setupSubscription({
+  const customerId = event.data.object.customer as string
+
+  const userId = await paymentService.getUserIdForCompanyCustomer(
+    company,
+    customerId,
+  )
+
+  if (!userId) {
+    throw new Error(`Unknown customer ${customerId}`)
+  }
+
+  await paymentService.setupSubscription(userId, {
     company: company,
     type: getSubscriptionType(company),
     externalId: event.data.object.id,
-    customerId: event.data.object.customer as string,
     currentPeriodStart: new Date(event.data.object.current_period_start * 1000),
     currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
     status: event.data.object.status,
@@ -208,7 +243,18 @@ export async function processInvoiceCreated(
   company: Company,
   event: Stripe.InvoiceCreatedEvent,
 ) {
-  await paymentService.saveInvoice(event.data.object.customer as string, {
+  const customerId = event.data.object.customer as string
+
+  const userId = await paymentService.getUserIdForCompanyCustomer(
+    company,
+    customerId,
+  )
+
+  if (!userId) {
+    throw new Error(`Unknown customer ${customerId}`)
+  }
+
+  await paymentService.saveInvoice(userId, {
     total: event.data.object.total,
     totalBeforeDiscount: event.data.object.subtotal,
     company: company,
