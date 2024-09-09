@@ -42,8 +42,20 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-                    <p>Wir freuen uns, dass Sie sich für eine Mitgliedschaft 
+                    <p>Wir freuen uns, dass Sie sich für ein Republik Monats-Abo 
                       entschieden haben.</p>
+                      <p>
+                        Das Monats-Abo verlängert sich automatisch jeweils um einen weiteren Monat.
+                        Die von Ihnen angegebene Kreditkarte belasten wir dementsprechend ab Beginn der
+                        ersten Verlängerungsperiode monatlich mit CHF {{total_before_discount}}.-.
+                      </p>
+                      <p>
+                        Unter
+                        <a href="{{link_account_goto}}">Konto</a> finden Sie Ihre
+                        <a href="{{link_account_abos_goto}}">persönliche Übersicht zu Ihrem Abonnement</a>. Am gleichen Ort können Sie alle Einstellungen vornehmen
+                        (z. B. Kreditkarteninformationen ändern) oder das Abo
+                        jederzeit kündigen.
+                      </p>
                     <p>
                       Sie können ab sofort
                       <a href="{{link_signin}}">das Magazin lesen</a>, an
@@ -53,13 +65,14 @@
                     </p>
 
                     <p>Details zum Kauf:</p>
+
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                    <li>Jährlicher Preis: {{total_before_discount}} CHF</li>
+                    <li>Monatlicher Preis: {{total_before_discount}} CHF</li>
                       {{#if discount_code}}
                       <li>
-                        Einstiegsangebot 225 CHF: –{{discount_total}} CHF
+                        Einstiegsangebot 7 CHF: –{{discount_total}} CHF
                       </li>
                       {{/if}}
                       <li>
@@ -67,20 +80,7 @@
                       </li>
                     </ul>
 
-                    <p>
-                      Ihre Jahresmitgliedschaft verlängert sich automatisch.
-                      Die von Ihnen angegebene Kreditkarte belasten wir dementsprechend ab Beginn der
-                      ersten Verlängerungsperiode in einem Jahr mit CHF {{total_before_discount}}.-.
-                    </p>
-                    <p>
-                      Unter
-                      <a href="{{link_account_goto}}">Konto</a> finden Sie Ihre
-                      <a href="{{link_account_abos_goto}}">persönliche Übersicht zu Ihrer Mitgliedschaft</a>. Am gleichen Ort können Sie alle Einstellungen vornehmen
-                      (z. B. Kreditkarteninformationen ändern) oder die Mitgliedschaft
-                      jederzeit kündigen.
-                    </p>
-
-                    <p>Wir wünschen Ihnen viel Vergnügen mit der Republik.</p>
+                    <p>Viel Vergnügen beim Start mit der Republik.</p>
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
