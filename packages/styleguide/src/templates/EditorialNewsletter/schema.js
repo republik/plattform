@@ -276,11 +276,6 @@ const createNewsletterSchema = ({
             editorOptions: {
               customFields: [
                 {
-                  label: 'Kein synthetisches Vorlesen',
-                  key: 'suppressSyntheticReadAloud',
-                  ref: 'bool',
-                },
-                {
                   label: 'Format',
                   key: 'format',
                   ref: 'repo',

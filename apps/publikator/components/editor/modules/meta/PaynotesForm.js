@@ -17,6 +17,12 @@ import { css } from 'glamor'
 import withT from '../../../../lib/withT'
 import PaynoteForm from './PaynoteForm'
 import UIForm from '../../UIForm'
+import {
+  MetaOptionGroup,
+  MetaOptionGroupTitle,
+  MetaSection,
+  MetaSectionTitle
+} from "../../../MetaDataForm/components/Layout";
 
 const styles = {
   paynotes: css({
@@ -235,7 +241,8 @@ export default withT(({ t, editor, node, isFormat }) => {
     paynotesMode || (paynotes?.length ? MODE_KEYS.CUSTOM : MODE_KEYS.AUTO)
 
   return (
-    <div {...styles.paynotes}>
+    <MetaSection>
+      <MetaSectionTitle>{t('metaData/paynotes')}</MetaSectionTitle>
       <UIForm getWidth={() => '50%'}>
         <Dropdown
           black
@@ -249,60 +256,62 @@ export default withT(({ t, editor, node, isFormat }) => {
       </UIForm>
       {dropdownMode === MODE_KEYS.CUSTOM && (
         <>
-          <Label {...styles.title}>{t('metaData/paynotes/title')}</Label>
-          {paynotes.map((paynote, i) => {
-            return (
-              <div key={i} {...styles.paynote}>
-                <A href='#remove' onClick={removePaynote(i)} {...styles.close}>
-                  <MdClose size={20} fill='#000' />
-                </A>
-                <div>
-                  <Label>
-                    {t('metaData/paynotes/index', { index: i + 1 })}
-                  </Label>
+          <MetaOptionGroupTitle>{t('metaData/paynotes/title')}</MetaOptionGroupTitle>
+          <MetaOptionGroup>
+            {paynotes.map((paynote, i) => {
+              return (
+                <div key={i} {...styles.paynote}>
+                  <A href='#remove' onClick={removePaynote(i)} {...styles.close}>
+                    <MdClose size={20} fill='#000' />
+                  </A>
+                  <div>
+                    <Label>
+                      {t('metaData/paynotes/index', { index: i + 1 })}
+                    </Label>
+                    <br />
+                    <br />
+                    <TargetForm
+                      isFormat={isFormat}
+                      target={paynote.target}
+                      inherit={paynote.inherit}
+                      onTargetChange={editPaynote(i, paynote, 'target')}
+                      onInheritChange={editPaynote(i, paynote, 'inherit', true)}
+                    />
+                    <br />
+                    <br />
+                  </div>
                   <br />
-                  <br />
-                  <TargetForm
-                    isFormat={isFormat}
-                    target={paynote.target}
-                    inherit={paynote.inherit}
-                    onTargetChange={editPaynote(i, paynote, 'target')}
-                    onInheritChange={editPaynote(i, paynote, 'inherit', true)}
+                  <Interaction.H3>{t('metaData/paynotes/before')}</Interaction.H3>
+                  <PaynoteForm
+                    data={paynote.before}
+                    onInputChange={editPaynote(i, paynote, 'before')}
                   />
                   <br />
                   <br />
+                  <Interaction.H3>{t('metaData/paynotes/after')}</Interaction.H3>
+                  <PaynoteForm
+                    data={paynote.after}
+                    onInputChange={editPaynote(i, paynote, 'after')}
+                  />
                 </div>
-                <br />
-                <Interaction.H3>{t('metaData/paynotes/before')}</Interaction.H3>
-                <PaynoteForm
-                  data={paynote.before}
-                  onInputChange={editPaynote(i, paynote, 'before')}
+              )
+            })}
+            <p {...styles.help}>
+              <small>
+                <MdInfoOutline style={{ verticalAlign: 'sub' }} />{' '}
+                <RawHtml
+                  dangerouslySetInnerHTML={{
+                    __html: t('metaData/paynotes/help'),
+                  }}
                 />
-                <br />
-                <br />
-                <Interaction.H3>{t('metaData/paynotes/after')}</Interaction.H3>
-                <PaynoteForm
-                  data={paynote.after}
-                  onInputChange={editPaynote(i, paynote, 'after')}
-                />
-              </div>
-            )
-          })}
-          <p {...styles.help}>
-            <small>
-              <MdInfoOutline style={{ verticalAlign: 'sub' }} />{' '}
-              <RawHtml
-                dangerouslySetInnerHTML={{
-                  __html: t('metaData/paynotes/help'),
-                }}
-              />
-            </small>
-          </p>
-          <A href='#add' onClick={addPaynote} {...styles.add}>
-            <MdAdd /> {t('metaData/paynotes/new')}
-          </A>
+              </small>
+            </p>
+            <A href='#add' onClick={addPaynote} {...styles.add}>
+              <MdAdd /> {t('metaData/paynotes/new')}
+            </A>
+          </MetaOptionGroup>
         </>
       )}
-    </div>
+    </MetaSection>
   )
 })

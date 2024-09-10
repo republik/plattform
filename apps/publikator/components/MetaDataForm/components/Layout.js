@@ -12,6 +12,7 @@ const styles = {
   metaOptionGroupTitle: css({
     ...fontStyles.sansSerifMedium16,
     margin: '32px 0 8px 0',
+    textTransform: 'capitalize'
   }),
   autoSize: css({
     paddingTop: '7px !important',

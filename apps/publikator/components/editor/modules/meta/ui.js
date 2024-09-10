@@ -22,6 +22,13 @@ import ShareImageForm from './ShareImageForm'
 import GooglePreview from './GooglePreview'
 import ArticleRecommendations from './ArticleRecommendations/ArticleRecommendations'
 import PublishPathNotice from './PublishPathNotice'
+import {
+  MetaOptionGroup,
+  MetaOptionGroupTitle,
+  MetaSection,
+  MetaSectionTitle
+} from '../../../MetaDataForm/components/Layout'
+import TextToSpeechForm from "./TextToSpeechForm";
 
 const styles = {
   container: css({
@@ -295,48 +302,46 @@ const MetaData = ({
             />
           </div>
         )}
-        <br />
-        <br />
-        <br />
-        <ShareImageForm
-          onInputChange={onInputChange}
-          format={formatData}
+
+        <MetaSection>
+          <MetaSectionTitle>Social</MetaSectionTitle>
+          <ShareImageForm
+            onInputChange={onInputChange}
+            format={formatData}
+            editor={editor}
+            node={node}
+          />
+          <MetaOptionGroupTitle>SEO</MetaOptionGroupTitle>
+          <MetaOptionGroup>
+            <MetaForm data={seoData} onInputChange={onInputChange} black />
+            {slugFieldElement}
+            <GooglePreview
+              title={
+                node.data.get('seoTitle') ||
+                node.data.get('twitterTitle') ||
+                node.data.get('title')
+              }
+              description={
+                node.data.get('seoDescription') ||
+                node.data.get('twitterDescription') ||
+                node.data.get('description')
+              }
+              publishDate={previewPublishDate}
+              path={dataAsJs.path || previewPath}
+            />
+          </MetaOptionGroup>
+        </MetaSection>
+        <TextToSpeechForm
           editor={editor}
           node={node}
-        />
-        <br />
-        <MetaForm data={seoData} onInputChange={onInputChange} black />
-        {slugFieldElement}
-        <GooglePreview
-          title={
-            node.data.get('seoTitle') ||
-            node.data.get('twitterTitle') ||
-            node.data.get('title')
-          }
-          description={
-            node.data.get('seoDescription') ||
-            node.data.get('twitterDescription') ||
-            node.data.get('description')
-          }
-          publishDate={previewPublishDate}
-          path={dataAsJs.path || previewPath}
-        />
-        <br />
-        <br />
-        <br />
+          onInputChange={onInputChange} />
         <AudioForm
           editor={editor}
           node={node}
           onInputChange={onInputChange}
           format={titleData?.format?.meta}
         />
-        <br />
-        <br />
-        <br />
         <ArticleRecommendations editor={editor} node={node} />
-        <br />
-        <br />
-        <br />
         {!!paynotes && (
           <PaynotesForm
             editor={editor}
