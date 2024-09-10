@@ -83,7 +83,6 @@ export interface OrderRepo {
 
 export interface TransactionalRepo {
   getUser(userId: string): Promise<UserRow>
-  getOrderBySubscription(subscriptionId: string): Promise<Order>
 }
 
 export interface PaymentServiceRepo

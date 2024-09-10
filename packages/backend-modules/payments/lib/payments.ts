@@ -47,16 +47,11 @@ export class Payments implements PaymentService {
     this.repo = new PgPaymentRepo(pgdb)
   }
 
-  async sendSetupSubscriptionTransactionalMail({externalId, status, userId}): Promise<void> {
-    // get the subscription 
-    // macht es mehr Sinn, die subscription durchzureichen, oder nochmal zu fetchen? versteh glaub noch nicht ganz, wie die abfolge ist
-    if (!ACTIVE_STATUS_TYPES.includes(status)) {
+  async sendSetupSubscriptionTransactionalMail({externalId, userId, order}): Promise<void> {
+    const subscription = await this.repo.getSubscription(externalId)
+    if (!ACTIVE_STATUS_TYPES.includes(subscription.status)) {
       console.log('not sending transactional for subscription %s with status %s', externalId, status)
     }
-
-    // if subscription is active, prepare mail
-    const subscription = await this.repo.getSubscription(externalId)
-    const order = await this.repo.getOrderBySubscription(subscription.id)
     const userRow = await this.repo.getUser(userId)
 
     // send mail
@@ -448,6 +443,6 @@ export interface PaymentService {
     lastName: string,
   ): Promise<UserRow>
   sendSetupSubscriptionTransactionalMail(
-    {externalId, status, userId}
+    {externalId, userId, order}
   ): Promise<void>
 }

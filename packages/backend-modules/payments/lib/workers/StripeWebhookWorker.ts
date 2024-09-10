@@ -139,7 +139,7 @@ export async function processCheckout(
   const total = event.data.object.amount_total || 0
   const totalBeforeDiscount = event.data.object.amount_subtotal || 0
 
-  await paymentService.saveOrder(userId, {
+  const order = await paymentService.saveOrder(userId, {
     total: total,
     totalBeforeDiscount: totalBeforeDiscount,
     company: company,
@@ -151,6 +151,14 @@ export async function processCheckout(
       | undefined,
     paymentStatus: paymentStatus as 'paid' | 'unpaid',
   })
+
+  // send transactional
+  await paymentService.sendSetupSubscriptionTransactionalMail({
+    externalId: event.data.object.subscription,
+    userId: userId,
+    order: order,
+  })
+
   return
 }
 
@@ -178,13 +186,6 @@ export async function processSubscriptionCreated(
     currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
     status: event.data.object.status,
     metadata: event.data.object.metadata,
-  })
-
-  // send transactional
-  await paymentService.sendSetupSubscriptionTransactionalMail({
-    externalId: event.data.object.id,
-    userId: userId,
-    status: event.data.object.status,
   })
 
   return
