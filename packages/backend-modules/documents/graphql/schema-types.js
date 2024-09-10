@@ -113,6 +113,7 @@ type Meta {
   audioCover(properties: ImageProperties): String
   podcast: Podcast
   willBeReadAloud: Boolean
+  syntheticVoice: String
 
   newsletter: Newsletter
 

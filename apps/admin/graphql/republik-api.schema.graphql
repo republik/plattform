@@ -1383,6 +1383,7 @@ type Meta {
   audioCover(properties: ImageProperties): String
   audioCoverCrop: Crop
   audioSource: AudioSource
+  syntheticVoice: String
   color: String
   contributors: [Contributor!]!
   credits: JSON
