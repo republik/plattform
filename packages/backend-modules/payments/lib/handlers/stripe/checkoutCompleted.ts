@@ -3,6 +3,7 @@ import { PaymentService } from '../../payments'
 import { Company } from '../../types'
 import { PaymentSetupTransactionalWorker } from '../../workers/PaymentSetupTransactionalWorker'
 import { Queue } from '@orbiting/backend-modules-job-queue'
+import { SyncMailchimpWorker } from '../../workers/SyncMailchimpWorker'
 
 export async function processCheckoutCompleted(
   paymentService: PaymentService,
@@ -69,6 +70,14 @@ export async function processCheckoutCompleted(
         userId: userId,
       },
     ),
+    queue.send<SyncMailchimpWorker>(
+      'payments:mailchimp:sync',
+      {
+        $version: 'v1',
+        eventSourceId: event.id,
+        userId: userId,
+      }
+    )
   ])
 
   return

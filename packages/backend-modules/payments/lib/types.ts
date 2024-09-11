@@ -32,6 +32,12 @@ export const ACTIVE_STATUS_TYPES: SubscriptionStatus[] = [
   'paused',
 ]
 
+export const NOT_STARTED_STATUS_TYPES: SubscriptionStatus[] = [
+  'trialing',
+  'incomplete',
+  'incomplete_expired'
+]
+
 export type Subscription = {
   id: string
   userId: string

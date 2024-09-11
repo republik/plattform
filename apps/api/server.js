@@ -45,6 +45,7 @@ const {
   StripeWebhookWorker,
   StripeCustomerCreateWorker,
   PaymentSetupTransactionalWorker,
+  SyncMailchimpWorker,
 } = require('@orbiting/backend-modules-payments')
 
 const loaderBuilders = {
@@ -79,6 +80,7 @@ const queue = Queue.getInstance()
 queue.registerWorker(StripeWebhookWorker)
 queue.registerWorker(StripeCustomerCreateWorker)
 queue.registerWorker(PaymentSetupTransactionalWorker)
+queue.registerWorker(SyncMailchimpWorker)
 
 const {
   LOCAL_ASSETS_SERVER,

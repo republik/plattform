@@ -16,6 +16,7 @@ import {
   InvoiceArgs,
   Invoice,
   ACTIVE_STATUS_TYPES,
+  NOT_STARTED_STATUS_TYPES,
 } from '../types'
 import { UserRow } from '@orbiting/backend-modules-types'
 
@@ -166,5 +167,11 @@ export class PgPaymentRepo implements PaymentServiceRepo {
 
   async getUser(userId: string): Promise<UserRow> {
     return this.#pgdb.public.users.findOne({ id: userId })
+  }
+
+  async isUserFirstTimeSubscriber(userId: string, subscriptionExternalId: string): Promise<boolean> {
+    const memberships = await this.#pgdb.public.memberships.find({userId: userId})
+    const subscriptions = await this.#pgdb.payments.subscriptions.find({'externalId !=': subscriptionExternalId, status: NOT_STARTED_STATUS_TYPES})
+    return !(memberships?.length > 0 || subscriptions?.length > 0)
   }
 }

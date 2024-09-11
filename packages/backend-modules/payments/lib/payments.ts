@@ -19,6 +19,7 @@ import { Queue } from '@orbiting/backend-modules-job-queue'
 import { StripeCustomerCreateWorker } from './workers/StripeCustomerCreateWorker'
 import { UserRow } from '@orbiting/backend-modules-types'
 import { sendSetupSubscriptionMail } from './transactionals/sendTransactionalMails'
+import { enforceSubscriptions } from '@orbiting/backend-modules-mailchimp'
 
 export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
 
@@ -86,6 +87,20 @@ export class Payments implements PaymentService {
       userRow.email,
       this.pgdb,
     )
+  }
+
+  async syncMailchimp({ userId, subscriptionExternalId }: { userId: string, subscriptionExternalId: string }): Promise<void> {
+
+    const subscribeToOnboardingMails = await this.repo.isUserFirstTimeSubscriber(userId, subscriptionExternalId)
+
+    // sync to mailchimp
+    // TODO take subscriptions into account when updating audience and segment data
+    await enforceSubscriptions({
+      userId: userId,
+      subscribeToOnboardingMails: subscribeToOnboardingMails,
+      subscribeToEditorialNewsletters: true,
+      pgdb: this.pgdb,
+    })
   }
 
   getSubscriptionInvoices(subscriptionId: string): Promise<Invoice> {
@@ -519,4 +534,5 @@ export interface PaymentService {
     userId: string
     orderId: string
   }): Promise<void>
+  syncMailchimp({ userId, subscriptionExternalId }: { userId: string, subscriptionExternalId: string }): Promise<void>
 }

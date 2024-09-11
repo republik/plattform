@@ -95,12 +95,14 @@ export interface OrderRepo {
   updateInvoice(by: PaymentItemLocator, args: any): Promise<Invoice>
 }
 
-export interface TransactionalRepo {
+export interface MailingsRepo {
   getUser(userId: string): Promise<UserRow>
+  isUserFirstTimeSubscriber(userId: string, subscriptionId: string): Promise<boolean>
 }
 
 export interface PaymentServiceRepo
   extends CustomerRepo,
     OrderRepo,
     SubscriptionRepo,
-    PaymentWebhookRepo {}
+    PaymentWebhookRepo,
+    MailingsRepo {}
