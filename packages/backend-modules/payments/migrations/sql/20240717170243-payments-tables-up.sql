@@ -23,8 +23,7 @@ CREATE TYPE payments.subscription_status as ENUM (
     'active',
     'canceled',
     'unpaid',
-    'past_due',
-    'ended' -- not part of stripe
+    'past_due'
 );
 
 CREATE TYPE payments.order_status as ENUM (
@@ -45,8 +44,11 @@ CREATE TABLE IF NOT EXISTS payments."stripeCustomers" (
     "userId" uuid NOT NULL,
     "company" payments.company NOT NULL,
     "customerId" text NOT NULL,
+    "createdAt" timestamptz DEFAULT now(),
+    "updatedAt" timestamptz DEFAULT now(),
     CONSTRAINT fk_stripe_customer_user FOREIGN KEY("userId")
-      REFERENCES public.users("id")
+      REFERENCES public.users("id"),
+    CONSTRAINT stripe_customers_for_company UNIQUE ("userId", "company")
 );
 
 CREATE INDEX stripe_customer_id_idx ON payments."stripeCustomers" ("customerId");
