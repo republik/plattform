@@ -79,6 +79,19 @@
       "problemMatcher": []
     },
     {
+      "label": "proxy:staging-r25",
+      "type": "shell",
+      "command": "yarn yaproxy:staging-r25",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": false
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
       "label": "proxy:prod",
       "type": "shell",
       "command": "yarn yaproxy",

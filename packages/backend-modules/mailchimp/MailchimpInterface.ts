@@ -5,7 +5,8 @@ const { omitBy, isNil } = require('lodash')
 
 const base64u = require('@orbiting/backend-modules-base64u')
 
-const { NewsletterMemberMailError } = require('./errors')
+import { NewsletterMemberMailError } from './lib/errors'
+import { MailchimpContact } from './types'
 
 const {
   MAILCHIMP_API_KEY,
@@ -14,6 +15,7 @@ const {
   MAILCHIMP_ONBOARDING_AUDIENCE_ID,
   MAILCHIMP_MARKETING_AUDIENCE_ID,
   MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+  MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
 } = process.env
 
 const audiences = [
@@ -21,11 +23,12 @@ const audiences = [
   MAILCHIMP_ONBOARDING_AUDIENCE_ID,
   MAILCHIMP_MARKETING_AUDIENCE_ID,
   MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+  MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID
 ]
 
 const MINIMUM_HTTP_RESPONSE_STATUS_ERROR = 400
 
-const MailchimpInterface = ({ logger }) => {
+const MailchimpInterface = ({ logger }: any) => {
   checkEnv(['MAILCHIMP_API_KEY', 'MAILCHIMP_URL', 'MAILCHIMP_MAIN_LIST_ID'])
   return {
     buildApiUrl(path, audienceId = MAILCHIMP_MAIN_LIST_ID) {
@@ -39,7 +42,7 @@ const MailchimpInterface = ({ logger }) => {
 
       return this.buildApiUrl(`/members/${hash}`, audienceId)
     },
-    buildBatchesApiUrl(id) {
+    buildBatchesApiUrl(id?) {
       // returns {MAILCHIMP_URL}/3.0/batches[/{id}]
       return [
         `${MAILCHIMP_URL}/3.0/batches`,
@@ -61,7 +64,7 @@ const MailchimpInterface = ({ logger }) => {
       }
       return fetch(url, options)
     },
-    async getMember(email, audienceId = MAILCHIMP_MAIN_LIST_ID) {
+    async getMember(email, audienceId = MAILCHIMP_MAIN_LIST_ID): Promise<MailchimpContact | null> {
       const url = this.buildMembersApiUrl(email, audienceId)
       try {
         const response = await this.fetchAuthenticated('GET', url)
@@ -71,7 +74,7 @@ const MailchimpInterface = ({ logger }) => {
           return null
         }
         return json
-      } catch (error) {
+      } catch (error: any) {
         logger.error(`mailchimp -> exception: ${error.message}`)
         throw new NewsletterMemberMailError({ error, email })
       }
@@ -99,7 +102,7 @@ const MailchimpInterface = ({ logger }) => {
           return null
         }
         return json
-      } catch (error) {
+      } catch (error: any) {
         logger.error(`mailchimp -> exception: ${error.message}`)
         throw new NewsletterMemberMailError({ error, email })
       }
@@ -123,7 +126,7 @@ const MailchimpInterface = ({ logger }) => {
           return null
         }
         return json
-      } catch (error) {
+      } catch (error: any) {
         logger.error(`mailchimp -> exception: ${error.message}`)
         throw new NewsletterMemberMailError({ error })
       }
@@ -146,7 +149,7 @@ const MailchimpInterface = ({ logger }) => {
           return null
         }
         return true
-      } catch (error) {
+      } catch (error: any) {
         logger.error(`mailchimp -> exception: ${error.message}`)
         throw new NewsletterMemberMailError({ error, email })
       }
@@ -162,7 +165,7 @@ const MailchimpInterface = ({ logger }) => {
           return false
         }
         return true
-      } catch (error) {
+      } catch (error: any) {
         logger.error(`mailchimp -> exception: ${error.message}`)
         throw new NewsletterMemberMailError({ error, email })
       }
@@ -196,12 +199,16 @@ const MailchimpInterface = ({ logger }) => {
   }
 }
 
-MailchimpInterface.MemberStatus = {
+const memberStatus = {
   Subscribed: 'subscribed',
   Pending: 'pending',
   Unsubscribed: 'unsubscribed',
-}
+  Cleaned: 'cleaned',
+  Archived: 'archived',
+} as const 
+
+MailchimpInterface.MemberStatus = memberStatus
 
 MailchimpInterface.audiences = audiences
 
-module.exports = MailchimpInterface
+export default MailchimpInterface

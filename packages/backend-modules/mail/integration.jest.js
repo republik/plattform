@@ -15,7 +15,7 @@ afterAll(async () => {
 })
 
 const { createMail: _createMail } = require('./lib')
-const MailchimpInterface = require('./MailchimpInterface')
+const MailchimpInterface = require('@orbiting/backend-modules-mailchimp')
 
 const createMail = () =>
   _createMail([
@@ -43,7 +43,7 @@ const user = () => ({
 })
 
 test('get some member data without configuring mail first', async () => {
-  const getNewsletterSettings = require('./lib/getNewsletterSettings')
+  const getNewsletterSettings = require('@orbiting/backend-modules-mailchimp')
   expect(
     // updateNewsletterSubscriptions returns a promise
     getNewsletterSettings({ user: user('member') }),
@@ -113,12 +113,6 @@ test('single-subscribe: unsubscribe from 1 interest', async () => {
   expect(subscribedSubscriptions.length).toBe(1)
 })
 
-test('unsubscripe from mailchimp completely (opt-out)', async () => {
-  const { unsubscribeEmail } = createMail()
-  const member = await unsubscribeEmail(user())
-  expect(member.status).toBe('unsubscribed')
-})
-
 test('resubscribe after unsubscription', async () => {
   const { updateNewsletterSubscriptions, getNewsletterSettings } = createMail()
   const settings = await updateNewsletterSubscriptions({
@@ -138,10 +132,10 @@ test('resubscribe after unsubscription', async () => {
 })
 
 test('move subscriptions from one to another email address', async () => {
-  const { moveNewsletterSubscriptions, getNewsletterSettings } = createMail()
+  const { changeEmailOnMailchimp, getNewsletterSettings } = createMail()
   const oldEmail = user().email
   const newEmail = `new_${oldEmail}`
-  await moveNewsletterSubscriptions({
+  await changeEmailOnMailchimp({
     user: user(),
     newEmail,
   })

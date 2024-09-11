@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@orbiting/backend-modules-referral-campaigns": "*",
+    "@orbiting/backend-modules-mailchimp": "*",
     "apollo-modules-node": "*",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",

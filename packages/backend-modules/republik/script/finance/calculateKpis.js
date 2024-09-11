@@ -4,6 +4,10 @@ const dayjs = require('dayjs')
 const duration = require('dayjs/plugin/duration')
 const _ = require('lodash')
 const yargs = require('yargs')
+const {
+  calculateCancelledYearlyAbos,
+  precomputeTransitoryLiabilities,
+} = require('../../lib/calculateKpis/kpiCalculations')
 
 dayjs.extend(duration)
 
@@ -89,20 +93,7 @@ const evaluateCompanyMonth = async (
 
   // console.log(query)
 
-  const transactionItems = (await pgdb.query(query)).map((i) => {
-    const days = endFiscalYear.diff(i.createdAt, 'days')
-
-    const totalFiscalYear = Math.round((i.total / 365) * days)
-    const totalTransitoryLiabilites = i.total - totalFiscalYear
-
-    return {
-      ...i,
-      precomputed: {
-        totalFiscalYear,
-        totalTransitoryLiabilites,
-      },
-    }
-  })
+  const transactionItems = await pgdb.query(query)
 
   const data = {}
 
@@ -374,17 +365,19 @@ const evaluateCompanyMonth = async (
         .filter((i) => ['YEARLY_ABO'].includes(i.packageName))
         .filter((i) => i.type === 'MembershipType')
 
+      const JahresabonnementsWithPrecomputed = precomputeTransitoryLiabilities(Jahresabonnements, endFiscalYear)
+
       results.JahresabonnementsAktuellesGeschaeftsjahr = {
         Betrag:
-          Jahresabonnements.map((a) => a.precomputed.totalFiscalYear).reduce(
+        JahresabonnementsWithPrecomputed.map((a) => a.precomputed.totalFiscalYear).reduce(
             (p, c) => p + c,
             0,
           ) / 100,
       }
       results.JahresabonnementsTransitorischePassive = {
         Betrag:
-          Jahresabonnements.map(
-            (a) => a.precomputed.totalTransitoryLiabilites,
+        JahresabonnementsWithPrecomputed.map(
+            (a) => a.precomputed.totalTransitoryLiabilities,
           ).reduce((p, c) => p + c, 0) / 100,
       }
 
@@ -399,37 +392,16 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.type === 'MembershipType')
         .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
 
-      /**
-       * SAFETY MEASURE, a rather dirty one. Computing a cancellation
-       * of a YEARLY_ABO outside fiscal year it was bought requires
-       * some more code changes:
-       *
-       * Instead of splitting cancellation to AktuellesGeschaeftsjahr
-       * and TransitorischePassive, full amount should wander into
-       * AktuellesGeschaeftsjahr.
-       *
-       */
-      StornierteJahresabonnements.forEach((a) => {
-        if (endFiscalYear.isBefore(a.updatedAt)) {
-          console.log(a)
-          throw new Error(
-            'Unhandled: Computing cancellation YEARLY_ABO outside fiscal year it was bought',
-          )
-        }
-      })
+      const StornierteJahresabonnementsWithPrecomputed = precomputeTransitoryLiabilities(StornierteJahresabonnements, endFiscalYear)
 
-      results.StornierteJahresabonnementsAktuellesGeschaeftsjahr = {
-        Betrag:
-          StornierteJahresabonnements.map(
-            (a) => a.precomputed.totalFiscalYear,
-          ).reduce((p, c) => p - c, 0) / 100,
-      }
-      results.StornierteJahresabonnementsTransitorischePassive = {
-        Betrag:
-          StornierteJahresabonnements.map(
-            (a) => a.precomputed.totalTransitoryLiabilites,
-          ).reduce((p, c) => p - c, 0) / 100,
-      }
+      const stornierteJahresabonnementsResults = calculateCancelledYearlyAbos(
+        StornierteJahresabonnementsWithPrecomputed,
+        endFiscalYear,
+      )
+      results.StornierteJahresabonnementsAktuellesGeschaeftsjahr =
+        stornierteJahresabonnementsResults.StornierteJahresabonnementsAktuellesGeschaeftsjahr
+      results.StornierteJahresabonnementsTransitorischePassive =
+        stornierteJahresabonnementsResults.StornierteJahresabonnementsTransitorischePassive
     }
 
     /**
