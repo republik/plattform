@@ -107,7 +107,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
   }
 
   saveOrder(userId: string, order: OrderArgs): Promise<Order> {
-    return this.#pgdb.payments.orders.insert({
+    return this.#pgdb.payments.orders.insertAndGet({
       userId,
       externalId: order.externalId,
       company: order.company,
@@ -176,6 +176,6 @@ export class PgPaymentRepo implements PaymentServiceRepo {
   }
 
   async getUser(userId: string): Promise<UserRow> {
-    return this.#pgdb.public.users.findOne({id: userId})
+    return this.#pgdb.public.users.findOne({ id: userId })
   }
 }

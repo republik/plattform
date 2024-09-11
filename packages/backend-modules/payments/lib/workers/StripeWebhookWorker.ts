@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BaseWorker } from '@orbiting/backend-modules-job-queue'
+import { BaseWorker, Queue } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
 import { Company, SubscriptionType } from '../types'
 import Stripe from 'stripe'
 import { Payments, PaymentService } from '../payments'
+import { PaymentSetupTransactionalWorker } from './PaymentSetupTransactionalWorker'
 
 type WorkerArgsV1 = {
   $version: 'v1'
@@ -36,9 +37,9 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
       console.log('processing stripe event %s [%s]', event.id, event.type)
 
       switch (event.type) {
-        case 'customer.updated':
-          // await processCustomerUpdated(PaymentService, job.data.company, event)
-          break
+        // case 'customer.updated':
+        //   // await processCustomerUpdated(PaymentService, job.data.company, event)
+        //   break
         case 'checkout.session.completed':
           await processCheckout(PaymentService, job.data.company, event)
           break
@@ -87,6 +88,7 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
         event.id,
         event.type,
       )
+      console.error(e)
       throw e
     }
 
@@ -152,12 +154,21 @@ export async function processCheckout(
     paymentStatus: paymentStatus as 'paid' | 'unpaid',
   })
 
-  // send transactional
-  await paymentService.sendSetupSubscriptionTransactionalMail({
-    externalId: event.data.object.subscription,
-    userId: userId,
-    order: order,
-  })
+  console.log(order)
+
+  const queue = Queue.getInstance()
+
+  await Promise.all([
+    queue.send<PaymentSetupTransactionalWorker>(
+      'payments:transactional:mail:setup',
+      {
+        $version: 'v1',
+        eventSourceId: event.id,
+        orderId: order.id,
+        userId: userId,
+      },
+    ),
+  ])
 
   return
 }

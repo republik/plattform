@@ -6,8 +6,8 @@ export type Order = {
   items: any
   total: number
   totalBeforeDiscount: number
-  discountTotal: number
-  discountCode: string
+  discountTotal?: number
+  discountCode?: string
   paymentStatus: 'paid' | 'unpaid'
   createdAt: Date
   updatedAt: Date
@@ -26,12 +26,12 @@ export type SubscriptionStatus =
   | 'past_due'
   | 'ended'
 
-export const ACTIVE_STATUS_TYPES: Subscription['status'][] = [
-    'active',
-    'past_due',
-    'unpaid',
-    'paused',
-  ]
+export const ACTIVE_STATUS_TYPES: SubscriptionStatus[] = [
+  'active',
+  'past_due',
+  'unpaid',
+  'paused',
+]
 
 export type Subscription = {
   id: string

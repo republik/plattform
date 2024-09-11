@@ -73,7 +73,7 @@ export class Queue {
     const workers: Promise<string>[] = []
 
     for (const worker of this.workers.values()) {
-      workers.push(this.pgBoss.work(worker.queue, worker.perform))
+      workers.push(this.pgBoss.work(worker.queue, worker.perform.bind(worker)))
     }
 
     return Promise.all(workers)

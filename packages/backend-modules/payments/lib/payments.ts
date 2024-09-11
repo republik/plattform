@@ -47,16 +47,45 @@ export class Payments implements PaymentService {
     this.repo = new PgPaymentRepo(pgdb)
   }
 
-  async sendSetupSubscriptionTransactionalMail({externalId, userId, order}): Promise<void> {
-    const subscription = await this.repo.getSubscription(externalId)
+  async sendSetupSubscriptionTransactionalMail({
+    subscriptionExternalId,
+    userId,
+    orderId,
+  }: {
+    subscriptionExternalId: string
+    userId: string
+    orderId: string
+  }): Promise<void> {
+    const subscription = await this.repo.getSubscription({
+      externalId: subscriptionExternalId,
+    })
+
+    if (!subscription) {
+      throw new Error(
+        `Subscription [${subscriptionExternalId}] does not exist in the Database`,
+      )
+    }
+
     if (!ACTIVE_STATUS_TYPES.includes(subscription.status)) {
-      console.log('not sending transactional for subscription %s with status %s', externalId, status)
+      console.log(
+        'not sending transactional for subscription %s with status %s',
+        subscriptionExternalId,
+        subscription.status,
+      )
     }
     const userRow = await this.repo.getUser(userId)
 
+    const order = await this.repo.getOrder(orderId)
+    if (!order) {
+      throw new Error(`order with id ${orderId} does not exist`)
+    }
     // send mail
-    await sendSetupSubscriptionMail(subscription, order, userRow.email, this.pgdb)
-    
+    await sendSetupSubscriptionMail(
+      subscription,
+      order,
+      userRow.email,
+      this.pgdb,
+    )
   }
 
   getSubscriptionInvoices(subscriptionId: string): Promise<Invoice> {
@@ -442,7 +471,13 @@ export interface PaymentService {
     firstName: string,
     lastName: string,
   ): Promise<UserRow>
-  sendSetupSubscriptionTransactionalMail(
-    {externalId, userId, order}
-  ): Promise<void>
+  sendSetupSubscriptionTransactionalMail({
+    subscriptionExternalId,
+    userId,
+    orderId,
+  }: {
+    subscriptionExternalId: string
+    userId: string
+    orderId: string
+  }): Promise<void>
 }
