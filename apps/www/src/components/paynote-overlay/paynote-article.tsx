@@ -6,7 +6,7 @@ import { css } from '@republik/theme/css'
 import { useEffect, useState } from 'react'
 import { StructuredText } from 'react-datocms'
 
-const usePaynote = () => {
+export const usePaynote = () => {
   const [paynote, setPaynote] = useState<Paynote | undefined>()
 
   useEffect(() => {
