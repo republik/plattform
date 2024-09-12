@@ -1,7 +1,7 @@
 import Stripe from 'stripe'
 import { PaymentService } from '../../payments'
 import { Company } from '../../types'
-import { PaymentSetupTransactionalWorker } from '../../workers/PaymentSetupTransactionalWorker'
+import { ConfirmSetupTransactionalWorker } from '../../workers/ConfirmSetupTransactionalWorker'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { SyncMailchimpWorker } from '../../workers/SyncMailchimpWorker'
 import { PaymentProvider } from '../../providers/provider'
@@ -80,8 +80,8 @@ export async function processCheckoutCompleted(
   const queue = Queue.getInstance()
 
   await Promise.all([
-    queue.send<PaymentSetupTransactionalWorker>(
-      'payments:transactional:mail:setup',
+    queue.send<ConfirmSetupTransactionalWorker>(
+      'payments:transactional:confirm:setup',
       {
         $version: 'v1',
         eventSourceId: event.id,

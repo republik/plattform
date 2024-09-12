@@ -69,12 +69,9 @@ export class Payments implements PaymentService {
     }
 
     if (!ACTIVE_STATUS_TYPES.includes(subscription.status)) {
-      console.log(
-        'not sending transactional for subscription %s with status %s',
-        subscriptionExternalId,
-        subscription.status,
+      throw new Error(
+        `not sending transactional for subscription ${subscriptionExternalId} with status ${subscription.status}`
       )
-      // TODO set job to retry?
     }
     const userRow = await this.repo.getUser(userId)
 
@@ -89,6 +86,10 @@ export class Payments implements PaymentService {
       userRow.email,
       this.pgdb,
     )
+  }
+
+  async sendCancelConfirmationTransactionalMail(): Promise<void> {
+    // TODO
   }
 
   async syncMailchimp({
@@ -557,6 +558,7 @@ export interface PaymentService {
     userId: string
     orderId: string
   }): Promise<void>
+  sendCancelConfirmationTransactionalMail(): Promise<void>
   syncMailchimp({
     userId,
     subscriptionExternalId,

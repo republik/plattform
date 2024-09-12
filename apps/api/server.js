@@ -44,7 +44,8 @@ const {
   Payments: PaymentsService,
   StripeWebhookWorker,
   StripeCustomerCreateWorker,
-  PaymentSetupTransactionalWorker,
+  ConfirmSetupTransactionalWorker,
+  ConfirmCancelTransactionalWorker,
   SyncMailchimpWorker,
 } = require('@orbiting/backend-modules-payments')
 
@@ -79,7 +80,8 @@ const { Queue } = require('@orbiting/backend-modules-job-queue')
 const queue = Queue.getInstance()
 queue.registerWorker(StripeWebhookWorker)
 queue.registerWorker(StripeCustomerCreateWorker)
-queue.registerWorker(PaymentSetupTransactionalWorker)
+queue.registerWorker(ConfirmSetupTransactionalWorker)
+queue.registerWorker(ConfirmCancelTransactionalWorker)
 queue.registerWorker(SyncMailchimpWorker)
 
 const {

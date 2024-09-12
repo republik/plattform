@@ -10,8 +10,8 @@ type Args = {
   eventSourceId: string
 }
 
-export class PaymentSetupTransactionalWorker extends BaseWorker<Args> {
-  readonly queue = 'payments:transactional:mail:setup'
+export class ConfirmSetupTransactionalWorker extends BaseWorker<Args> {
+  readonly queue = 'payments:transactional:confirm:setup'
   readonly options: SendOptions = {
     retryLimit: 3,
     retryDelay: 120, // retry every 2 minutes

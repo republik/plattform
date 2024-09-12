@@ -1,6 +1,9 @@
 import Stripe from 'stripe'
 import { PaymentService } from '../../payments'
 import { Company } from '../../types'
+import { Queue } from '@orbiting/backend-modules-job-queue'
+import { SyncMailchimpWorker } from '../../workers/SyncMailchimpWorker'
+import { ConfirmCancelTransactionalWorker } from '../../workers/ConfirmCancelTransactionalWorker'
 
 export async function processSubscriptionUpdate(
   paymentService: PaymentService,
@@ -27,4 +30,33 @@ export async function processSubscriptionUpdate(
         : (cancelAt as null | undefined),
     cancelAtPeriodEnd: event.data.object.cancel_at_period_end,
   })
+
+  if (cancelAt) {
+    const customerId = event.data.object.customer as string
+
+    const userId = await paymentService.getUserIdForCompanyCustomer(
+      company,
+      customerId,
+    )
+    if (!userId) {
+      throw Error(`User for ${customerId} does not exists`)
+    }
+    const queue = Queue.getInstance()
+
+    await Promise.all([
+      queue.send<ConfirmCancelTransactionalWorker>(
+        'payments:transactional:confirm:cancel',
+        {
+          $version: 'v1',
+          eventSourceId: event.id,
+          userId: userId,
+        },
+      ),
+      queue.send<SyncMailchimpWorker>('payments:mailchimp:sync', {
+        $version: 'v1',
+        eventSourceId: event.id,
+        userId: userId,
+      }),
+    ])
+  }
 }
