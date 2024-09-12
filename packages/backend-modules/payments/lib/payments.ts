@@ -73,6 +73,7 @@ export class Payments implements PaymentService {
         subscriptionExternalId,
         subscription.status,
       )
+      // TODO set job to retry?
     }
     const userRow = await this.repo.getUser(userId)
 
@@ -94,7 +95,6 @@ export class Payments implements PaymentService {
     const subscribeToOnboardingMails = await this.repo.isUserFirstTimeSubscriber(userId, subscriptionExternalId)
 
     // sync to mailchimp
-    // TODO take subscriptions into account when updating audience and segment data
     await enforceSubscriptions({
       userId: userId,
       subscribeToOnboardingMails: subscribeToOnboardingMails,
