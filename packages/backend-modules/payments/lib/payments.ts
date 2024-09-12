@@ -90,9 +90,15 @@ export class Payments implements PaymentService {
     )
   }
 
-  async syncMailchimp({ userId, subscriptionExternalId }: { userId: string, subscriptionExternalId: string }): Promise<void> {
-
-    const subscribeToOnboardingMails = await this.repo.isUserFirstTimeSubscriber(userId, subscriptionExternalId)
+  async syncMailchimp({
+    userId,
+    subscriptionExternalId,
+  }: {
+    userId: string
+    subscriptionExternalId: string
+  }): Promise<void> {
+    const subscribeToOnboardingMails =
+      await this.repo.isUserFirstTimeSubscriber(userId, subscriptionExternalId)
 
     // sync to mailchimp
     await enforceSubscriptions({
@@ -114,9 +120,9 @@ export class Payments implements PaymentService {
     const txRepo = new PgPaymentRepo(tx)
     try {
       let subId: string | undefined = undefined
-      if (args.subscriptionId) {
+      if (args.externalSubscriptionId) {
         const sub = await txRepo.getSubscription({
-          externalId: args.subscriptionId,
+          externalId: args.externalSubscriptionId,
         })
 
         if (!sub) {
@@ -148,6 +154,10 @@ export class Payments implements PaymentService {
 
       throw e
     }
+  }
+
+  async getInvoice(by: PaymentItemLocator): Promise<Invoice | null> {
+    return await this.repo.getInvoice(by)
   }
 
   async updateInvoice(
@@ -237,6 +247,10 @@ export class Payments implements PaymentService {
 
   listSubscriptions(userId: string): Promise<Subscription[]> {
     return this.repo.getUserSubscriptions(userId)
+  }
+
+  getSubscription(by: PaymentItemLocator): Promise<Subscription | null> {
+    return this.repo.getSubscription(by)
   }
 
   fetchActiveSubscription(userId: string): Promise<Subscription | null> {
@@ -489,6 +503,7 @@ export interface PaymentService {
     userId: string,
     args: SubscriptionArgs,
   ): Promise<Subscription>
+  getSubscription(by: PaymentItemLocator): Promise<Subscription | null>
   updateSubscription(args: SubscriptionArgs): Promise<Subscription>
   disableSubscription(
     by: PaymentItemLocator,
@@ -511,6 +526,7 @@ export interface PaymentService {
   getOrder(id: string): Promise<Order>
   saveOrder(userId: string, order: OrderArgs): Promise<Order>
   getSubscriptionInvoices(subscriptionId: string): Promise<Invoice>
+  getInvoice(by: PaymentItemLocator): Promise<Invoice | null>
   saveInvoice(userId: string, args: InvoiceArgs): Promise<Invoice>
   updateInvoice(
     by: PaymentItemLocator,
@@ -534,5 +550,11 @@ export interface PaymentService {
     userId: string
     orderId: string
   }): Promise<void>
-  syncMailchimp({ userId, subscriptionExternalId }: { userId: string, subscriptionExternalId: string }): Promise<void>
+  syncMailchimp({
+    userId,
+    subscriptionExternalId,
+  }: {
+    userId: string
+    subscriptionExternalId: string
+  }): Promise<void>
 }

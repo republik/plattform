@@ -1,10 +1,18 @@
-import { Company, SubscriptionType } from '../../types'
+import { getConfig } from '../../config'
+import { SubscriptionType } from '../../types'
 
-export function getSubscriptionType(company: Company): SubscriptionType {
-  switch (company) {
-    case 'REPUBLIK':
+const {
+  YEARLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
+  MONTLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
+} = getConfig()
+
+export function getSubscriptionType(productId: string): SubscriptionType {
+  switch (productId) {
+    case MONTLY_SUBSCRIPTION_STRIPE_PRODUCT_ID:
       return 'MONTHLY_SUBSCRIPTION'
-    case 'PROJECT_R':
+    case YEARLY_SUBSCRIPTION_STRIPE_PRODUCT_ID:
       return 'YEARLY_SUBSCRIPTION'
+    default:
+      throw new Error('Unknown product')
   }
 }

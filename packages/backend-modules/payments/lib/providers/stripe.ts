@@ -24,6 +24,29 @@ export class StripeProvider implements PaymentProviderActions {
     this.#company = company
     this.#stripe = stripe
   }
+
+  async getSubscription(
+    subscriptionId: string,
+  ): Promise<Stripe.Subscription | null> {
+    const sub = await this.#stripe.subscriptions.retrieve(subscriptionId)
+
+    if (!sub) {
+      return null
+    }
+
+    return sub
+  }
+
+  async getInvoice(invoiceId: string): Promise<Stripe.Invoice | null> {
+    const invoice = await this.#stripe.invoices.retrieve(invoiceId)
+
+    if (!invoice) {
+      return null
+    }
+
+    return invoice
+  }
+
   async createCustomer(email: string, userId: string): Promise<string> {
     const customer = await this.#stripe.customers.create({
       name: email,
@@ -36,7 +59,9 @@ export class StripeProvider implements PaymentProviderActions {
     return customer.id
   }
 
-  async getCustomerSubscriptions(customerId: string): Promise<Subscription[]> {
+  async getCustomerSubscriptions(
+    customerId: string,
+  ): Promise<Stripe.Subscription[]> {
     const stripeSubs = this.#stripe.subscriptions.list({
       customer: customerId,
     })

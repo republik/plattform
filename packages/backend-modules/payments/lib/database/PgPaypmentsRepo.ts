@@ -13,10 +13,10 @@ import {
   SubscriptionUpdateArgs,
   PaymentItemLocator,
   Webhook,
-  InvoiceArgs,
   Invoice,
   ACTIVE_STATUS_TYPES,
   NOT_STARTED_STATUS_TYPES,
+  InvoiceRepoArgs,
 } from '../types'
 import { UserRow } from '@orbiting/backend-modules-types'
 
@@ -152,7 +152,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     return this.#pgdb.payments.invoices.findOne(by)
   }
 
-  saveInvoice(userId: string, args: InvoiceArgs): Promise<Invoice> {
+  saveInvoice(userId: string, args: InvoiceRepoArgs): Promise<Invoice> {
     return this.#pgdb.payments.invoices.insertAndGet({
       userId,
       ...args,
@@ -169,9 +169,17 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     return this.#pgdb.public.users.findOne({ id: userId })
   }
 
-  async isUserFirstTimeSubscriber(userId: string, subscriptionExternalId: string): Promise<boolean> {
-    const memberships = await this.#pgdb.public.memberships.find({userId: userId})
-    const subscriptions = await this.#pgdb.payments.subscriptions.find({'externalId !=': subscriptionExternalId, status: NOT_STARTED_STATUS_TYPES})
+  async isUserFirstTimeSubscriber(
+    userId: string,
+    subscriptionExternalId: string,
+  ): Promise<boolean> {
+    const memberships = await this.#pgdb.public.memberships.find({
+      userId: userId,
+    })
+    const subscriptions = await this.#pgdb.payments.subscriptions.find({
+      'externalId !=': subscriptionExternalId,
+      status: NOT_STARTED_STATUS_TYPES,
+    })
     return !(memberships?.length > 0 || subscriptions?.length > 0)
   }
 }

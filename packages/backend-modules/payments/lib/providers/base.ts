@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { Company, Subscription } from '../types'
+import { Company } from '../types'
 
 export class PaymentProviderRecord {
   #providers: Record<Company, PaymentProviderActions>
@@ -14,8 +14,10 @@ export class PaymentProviderRecord {
 }
 
 export interface PaymentProviderActions {
-  getCustomerSubscriptions(customerId: string): Promise<Subscription[]>
   getCustomer(customerId: string): Promise<Stripe.Customer | null>
+  getCustomerSubscriptions(customerId: string): Promise<Stripe.Subscription[]>
+  getSubscription(subscriptionId: string): Promise<Stripe.Subscription | null>
+  getInvoice(invoiceId: string): Promise<Stripe.Invoice | null>
   createCustomer(email: string, userId: string): Promise<string>
   verifyWebhook<T>(req: any, secret: string): T
   createCustomerPortalSession(
