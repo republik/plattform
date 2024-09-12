@@ -8,7 +8,7 @@ import { useState } from 'react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { useMe } from 'lib/context/MeContext'
 
-import { Offers } from '@app/components/paynote-overlay/paynote-components'
+import { Offers } from '@app/components/paynote-overlay/paynote-offers'
 
 export function PaynoteOverlay() {
   const [expanded, setExpanded] = useState<boolean>(true)
