@@ -26,6 +26,10 @@ const AccountBox = ({ children }) => {
   return <Box style={{ padding: 14, marginBottom: 20 }}>{children}</Box>
 }
 
+const SubscriptionItem = ({ subscription }) => {
+  return <p>{subscription.type}</p>
+}
+
 const Memberships = ({
   loading,
   error,
@@ -34,16 +38,11 @@ const Memberships = ({
   hasActiveMemberships,
   hasAccessGrants,
   paymentMethodCompany,
+  magazineSubscriptions,
+  activeMagazineSubscription,
 }) => {
   const { query } = useRouter()
   const { inNativeIOSApp } = useInNativeApp()
-
-  console.log({
-    hasActiveMemberships,
-    hasMemberships,
-    hasAccessGrants,
-    paymentMethodCompany,
-  })
 
   useEffect(() => {
     if (window.location.hash.substr(1).length > 0) {
@@ -78,17 +77,36 @@ const Memberships = ({
               </AccountBox>
             )}
 
-            {!inNativeIOSApp && <MembershipList highlightId={query.id} />}
-
-            {!inNativeIOSApp && paymentMethodCompany && (
-              <AccountSection
-                id='payment'
-                title={t('memberships/title/payment')}
-              >
-                PAYMENT METHOD COMPANY {paymentMethodCompany}
-                <PaymentSources company={paymentMethodCompany} query={query} />
-              </AccountSection>
-            )}
+            {/* Account Section, hide in iOS */}
+            {!inNativeIOSApp &&
+              (magazineSubscriptions.length > 0 ? (
+                <AccountSection id='abos' title={t('memberships/title/1')}>
+                  {activeMagazineSubscription ? (
+                    <SubscriptionItem
+                      subscription={activeMagazineSubscription}
+                    />
+                  ) : (
+                    <>
+                      <p>go buy an abo</p>
+                    </>
+                  )}
+                </AccountSection>
+              ) : (
+                <>
+                  <MembershipList highlightId={query.id} />
+                  {paymentMethodCompany && (
+                    <AccountSection
+                      id='payment'
+                      title={t('memberships/title/payment')}
+                    >
+                      <PaymentSources
+                        company={paymentMethodCompany}
+                        query={query}
+                      />
+                    </AccountSection>
+                  )}
+                </>
+              ))}
           </>
         )
       }}
@@ -134,6 +152,9 @@ export default compose(
       const paymentMethodCompany =
         (autoPayMembership && autoPayMembership.pledge.package.company) ||
         data.me?.activeMagazineSubscription?.company
+
+      const magazineSubscriptions = data?.me?.magazineSubscriptions
+      const activeMagazineSubscription = data?.me?.activeMagazineSubscription
       return {
         loading: data.loading,
         error: data.error,
@@ -141,6 +162,8 @@ export default compose(
         hasActiveMemberships,
         hasAccessGrants,
         paymentMethodCompany,
+        magazineSubscriptions,
+        activeMagazineSubscription,
       }
     },
   }),
