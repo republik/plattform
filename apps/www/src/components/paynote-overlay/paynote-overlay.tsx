@@ -1,7 +1,6 @@
 'use client'
 
 import { css } from '@republik/theme/css'
-import { token } from '@republik/theme/tokens'
 import { useState } from 'react'
 
 import * as Dialog from '@radix-ui/react-dialog'
@@ -45,11 +44,16 @@ export function PaynoteOverlay() {
             flexDir: 'column',
             gap: '4',
             textAlign: 'center',
+            // '&:has([data-state="open"])': {
+            //   opacity: 0,
+            // },
+            // '&:has([data-state="closed"])': {},
           })}
         >
           <p>
-            Sichern Sie sich das Willkommensangebot!<br></br>Ab{' '}
-            <del>CHF 22.–</del> CHF 11.– im Monat.
+            Sichern Sie sich das Willkommensangebot!
+            <br />
+            Ab <del>CHF 22.–</del> CHF 11.– im Monat.
           </p>
           <Dialog.Trigger
             className={css({
@@ -77,6 +81,11 @@ export function PaynoteOverlay() {
               placeItems: 'end stretch',
               overflowY: 'auto',
               zIndex: 9999,
+
+              _stateOpen: { animation: 'fadeIn' },
+              _stateClosed: {
+                animation: 'fadeOut',
+              },
             })}
           >
             <Dialog.Content
@@ -89,20 +98,13 @@ export function PaynoteOverlay() {
                 p: '8',
                 boxShadow: 'sm',
                 mt: '25dvh',
+                _stateOpen: {
+                  animation: 'slideUp',
+                },
+                _stateClosed: {
+                  animation: 'slideDown',
+                },
               })}
-              style={{
-                backgroundColor: !expanded
-                  ? token('colors.text')
-                  : token('colors.text.inverted'),
-                color: !expanded
-                  ? token('colors.text.inverted')
-                  : token('colors.text'),
-              }}
-              onClick={() => {
-                if (!expanded) {
-                  setExpanded(true)
-                }
-              }}
             >
               <div
                 className={css({

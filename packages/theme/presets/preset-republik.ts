@@ -5,6 +5,8 @@ export const presetRepublik = definePreset({
     extend: {
       light: '[data-theme="light"] &',
       dark: '[data-theme="dark"] &',
+      stateOpen: '&[data-state="open"]',
+      stateClosed: '&[data-state="closed"]',
     },
   },
   globalCss: {
@@ -101,6 +103,10 @@ export const presetRepublik = definePreset({
         },
         animations: {
           spin: { value: 'spin 1s linear infinite' },
+          slideUp: { value: 'slideUp 300ms ease-in-out' },
+          slideDown: { value: 'slideDown 300ms ease-in-out' },
+          fadeIn: { value: 'fadeIn 300ms ease-in-out' },
+          fadeOut: { value: 'fadeOut 300ms ease-in-out' },
         },
       },
       semanticTokens: {
@@ -430,6 +436,7 @@ export const presetRepublik = definePreset({
         },
       },
     },
+
     keyframes: {
       radixCollapsibleSlideDown: {
         from: { height: 0 },
@@ -446,6 +453,22 @@ export const presetRepublik = definePreset({
       spin: {
         from: { transform: 'rotate(0deg)' },
         to: { transform: 'rotate(360deg)' },
+      },
+      fadeIn: {
+        from: { opacity: 0 },
+        to: { opacity: 1 },
+      },
+      fadeOut: {
+        from: { opacity: 1 },
+        to: { opacity: 0 },
+      },
+      slideUp: {
+        from: { transform: 'translateY(100%)' },
+        to: { transform: 'translateY(0%)' },
+      },
+      slideDown: {
+        from: { transform: 'translateY(0%)' },
+        to: { transform: 'translateY(100%)' },
       },
     },
   },
