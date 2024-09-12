@@ -22,14 +22,14 @@ export async function sendSetupSubscriptionMail(
   const globalMergeVars: MergeVariable[] = [
     {
       name: 'total_before_discount',
-      content: order.totalBeforeDiscount.toString(),
+      content: (order.totalBeforeDiscount / 100).toString(),
     },
-    { name: 'total', content: order.total.toString() },
+    { name: 'total', content: (order.total / 100).toString() },
   ]
   if (order.discountCode && order.discountTotal) {
     globalMergeVars.push(
       { name: 'discount_code', content: order.discountCode },
-      { name: 'discount_total', content: order.discountTotal.toString() },
+      { name: 'discount_total', content: (order.discountTotal / 100).toString() },
     )
   }
 
