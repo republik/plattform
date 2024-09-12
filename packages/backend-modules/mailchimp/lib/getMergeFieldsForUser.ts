@@ -1,5 +1,11 @@
 import { getConsentLink } from '@orbiting/backend-modules-republik/lib/Newsletter'
-import { MergeFieldName, SegmentData, UserInterests } from '../types'
+import {
+  MembershipType,
+  MergeFieldName,
+  SegmentData,
+  SubscriptionType,
+  UserInterests,
+} from '../types'
 import { getConfig } from '../config'
 
 type User = { firstName: string; lastName: string; email: string }
@@ -44,47 +50,46 @@ export async function getMergeFieldsForUser({
 }: GetMergeFieldsForUserParams): Promise<UserMergeFields> {
   const latestMembershipPledgeAmount =
     getLatestMembershipPledgeAmount(segmentData)
+  const subscriptionEndDate = getSubscriptionEndDate(segmentData)
+  const subscriptionType = getSubscriptionType(segmentData)
   const subscriptionState = getSubscriptionState(segmentData)
   const linkCa = user?.email && getConsentLink(user.email, 'CLIMATE')
   const linkWdwww = user?.email && getConsentLink(user.email, 'WDWWW')
   const trialState = getTrialState(segmentData)
 
-  const { activeMembershipPeriod, activeMembership, mailchimpMember } =
-    segmentData
-
-  const newsletterInterests = mailchimpMember?.interests
+  const newsletterInterests = segmentData.mailchimpMember?.interests
 
   return {
     [mergeFieldNames.firstName]: user?.firstName,
     [mergeFieldNames.lastName]: user?.lastName,
     [mergeFieldNames.latestPledgeAmount]: latestMembershipPledgeAmount,
-    [mergeFieldNames.subscriptionEndDate]: activeMembershipPeriod?.endDate,
-    [mergeFieldNames.subscriptionType]: activeMembership?.membershipTypeName,
+    [mergeFieldNames.subscriptionEndDate]: subscriptionEndDate,
+    [mergeFieldNames.subscriptionType]: subscriptionType,
     [mergeFieldNames.subscriptionState]: subscriptionState,
     [mergeFieldNames.newsletterOptInCa]: linkCa,
     [mergeFieldNames.newsletterOptInWb]: linkWdwww,
     [mergeFieldNames.trialState]: trialState,
-    'NL_DAILY': hasInterest(
+    NL_DAILY: hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
     ),
-    'NL_WEEKLY': hasInterest(
+    NL_WEEKLY: hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
     ),
-    'NL_PROJ_R': hasInterest(
+    NL_PROJ_R: hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
     ),
-    'NL_CLIMATE': hasInterest(
+    NL_CLIMATE: hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
     ),
-    'NL_WDWWW': hasInterest(
+    NL_WDWWW: hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
     ),
-    'NL_ACCOMPL': hasInterest(
+    NL_ACCOMPL: hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
     ),
@@ -101,42 +106,83 @@ function hasInterest(
 }
 
 function getLatestMembershipPledgeAmount(segmentData: SegmentData): number {
-  // no pledges
-  if (!segmentData.pledges?.length) {
-    return 0
+  if (segmentData.invoices?.length) {
+    const latestInvoice = segmentData.invoices.sort(
+      (a, b) => b.createdAt.valueOf() - a.createdAt.valueOf(),
+    )[0]
+    return latestInvoice.total / 100
   }
-  // latest pledge of active membership
-  const latestMembershipPledgeId = segmentData.activeMembershipPeriod?.pledgeId
-  const filteredPledges = segmentData.pledges.filter(
-    (pledge) => pledge.id === latestMembershipPledgeId,
-  )
-  if (filteredPledges?.length === 1) {
-    return filteredPledges[0].total / 100
+
+  // only take pledges into account if there are no invoices with the new subscriptions
+  if (segmentData.pledges?.length) {
+    // latest pledge of active membership
+    const latestMembershipPledgeId =
+      segmentData.activeMembershipPeriod?.pledgeId
+    const filteredPledges = segmentData.pledges.filter(
+      (pledge) => pledge.id === latestMembershipPledgeId,
+    )
+    if (filteredPledges?.length === 1) {
+      return filteredPledges[0].total / 100
+    }
+    // amount of any latest pledge
+    const latestPledge = segmentData.pledges.sort(
+      (a, b) => b.createdAt.valueOf() - a.createdAt.valueOf(),
+    )[0]
+    return latestPledge.total / 100
   }
-  // amount of any latest pledge
-  const latestPledge = segmentData.pledges.sort(
-    (a, b) => b.createdAt.valueOf() - a.createdAt.valueOf(),
-  )[0]
-  return latestPledge.total / 100
+
+  // no pledges or invoices
+  return 0
+}
+
+function getSubscriptionEndDate(segmentData: SegmentData): Date | undefined {
+  if (segmentData.activeSubscription) {
+    return segmentData.activeSubscription.currentPeriodEnd
+  }
+  if (segmentData.activeMembershipPeriod) {
+    return segmentData.activeMembershipPeriod.endDate
+  }
+}
+
+function getSubscriptionType(
+  segmentData: SegmentData,
+): MembershipType | SubscriptionType | undefined {
+  if (segmentData.activeSubscription) {
+    return segmentData.activeSubscription.type
+  }
+  if (segmentData.activeMembership) {
+    return segmentData.activeMembership.membershipTypeName
+  }
 }
 
 function getSubscriptionState(segmentData: SegmentData): SubscriptionState {
-  if (!segmentData.activeMembership) {
-    return undefined
-  }
-  const { activeMembership } = segmentData
- 
-  if (!activeMembership.renew) {
-    // Monatsabos, die auf ein Jahresabo gewechselt haben, haben auch ein gecancelltes Abo, werden hier aber künstlich auf State 'Active' gesetzt
-    if (activeMembership.membershipTypeName === 'MONTHLY_ABO' && activeMembership.cancellationReason === 'Auto Cancellation (generateMemberships)') {
-      return 'Autopay'
+  if (segmentData.activeSubscription) {
+    const { activeSubscription } = segmentData
+    if (activeSubscription.cancelAt) {
+      return 'Cancelled'
     }
-    return 'Cancelled'
-  }
-  if (activeMembership.autoPay) {
     return 'Autopay'
   }
-  return 'Active'
+
+  if (segmentData.activeMembership) {
+    const { activeMembership } = segmentData
+
+    if (!activeMembership.renew) {
+      // Monatsabos, die auf ein Jahresabo gewechselt haben, haben auch ein gecancelltes Abo, werden hier aber künstlich auf State 'Active' gesetzt
+      if (
+        activeMembership.membershipTypeName === 'MONTHLY_ABO' &&
+        activeMembership.cancellationReason ===
+          'Auto Cancellation (generateMemberships)'
+      ) {
+        return 'Autopay'
+      }
+      return 'Cancelled'
+    }
+    if (activeMembership.autoPay) {
+      return 'Autopay'
+    }
+    return 'Active'
+  }
 }
 
 function getTrialState(segmentData: SegmentData): TrialState {

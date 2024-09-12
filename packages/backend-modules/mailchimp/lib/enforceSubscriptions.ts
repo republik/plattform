@@ -18,7 +18,6 @@ import { getMailchimpMember } from './getMailchimpMember'
 
 const {
   MAILCHIMP_INTEREST_MEMBER,
-  MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
   MAILCHIMP_MAIN_LIST_ID,
   MAILCHIMP_ONBOARDING_AUDIENCE_ID,
   MAILCHIMP_MARKETING_AUDIENCE_ID,
@@ -70,9 +69,7 @@ export async function enforceSubscriptions({
     segmentData,
   })
 
-  const hasActiveMembership =
-    interests[MAILCHIMP_INTEREST_MEMBER] ||
-    interests[MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]
+  const hasMagazineAccess = interests[MAILCHIMP_INTEREST_MEMBER]
 
   const hasActiveTrial = interests[MAILCHIMP_INTEREST_GRANTED_ACCESS]
 
@@ -92,8 +89,8 @@ export async function enforceSubscriptions({
     status: mailchimpMember?.status,
   }, newsletterSubscription)
 
-  // always add to marketing audience when newsletter settings are updated, except if MEMBER or BENEFACTOR are true
-  if (hasActiveMembership) {
+  // always add to marketing audience when newsletter settings are updated, except if MEMBER
+  if (hasMagazineAccess) {
     await archiveMemberInAudience({
       user: user || { email },
       audienceId: MAILCHIMP_MARKETING_AUDIENCE_ID,
