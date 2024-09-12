@@ -63,13 +63,18 @@ export class StripeProvider implements PaymentProviderActions {
 
   async createCustomerPortalSession(
     customerId: string,
-    opts: { returnUrl: string; locale: 'auto' | 'de' | 'en' | 'fr' },
+    opts: {
+      returnUrl: string
+      locale: 'auto' | 'de' | 'en' | 'fr'
+    },
   ): Promise<string> {
-    const sess = await this.#stripe.billingPortal.sessions.create({
+    const args: Stripe.BillingPortal.SessionCreateParams = {
       customer: customerId,
       return_url: opts.returnUrl,
       locale: opts.locale,
-    })
+    }
+
+    const sess = await this.#stripe.billingPortal.sessions.create(args)
 
     return sess.url
   }

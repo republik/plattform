@@ -1,6 +1,6 @@
 import { PgDb } from 'pogi'
 import {
-  OrderArgs,
+  OrderRepoArgs,
   PaymentServiceRepo,
   WebhookArgs,
   WebhookUpdateArgs,
@@ -106,27 +106,12 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     })
   }
 
-  saveOrder(userId: string, order: OrderArgs): Promise<Order> {
-    return this.#pgdb.payments.orders.insertAndGet({
-      userId,
-      externalId: order.externalId,
-      company: order.company,
-      items: order.items,
-      paymentStatus: order.paymentStatus,
-      total: order.total,
-      totalBeforeDiscount: order.totalBeforeDiscount,
-    })
+  saveOrder(order: OrderRepoArgs): Promise<Order> {
+    return this.#pgdb.payments.orders.insertAndGet(order)
   }
 
-  getSubscription(by: PaymentItemLocator): Promise<Subscription> {
+  getSubscription(by: PaymentItemLocator): Promise<Subscription | null> {
     return this.#pgdb.payments.subscriptions.findOne(by)
-  }
-
-  getActiveUserSubscriptions(userId: string): Promise<Subscription[]> {
-    return this.#pgdb.payments.subscriptions.find({
-      userId,
-      'status !=': 'ended',
-    })
   }
 
   getActiveUserSubscription(userId: string): Promise<Subscription | null> {
@@ -162,8 +147,12 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     return this.#pgdb.payments.subscriptions.updateAndGetOne(by, args)
   }
 
-  saveInvoice(userId: string, args: InvoiceArgs): Promise<any> {
-    return this.#pgdb.payments.invoices.insert({
+  getInvoice(by: PaymentItemLocator): Promise<Invoice | null> {
+    return this.#pgdb.payments.invoices.findOne(by)
+  }
+
+  saveInvoice(userId: string, args: InvoiceArgs): Promise<Invoice> {
+    return this.#pgdb.payments.invoices.insertAndGet({
       userId,
       ...args,
     })

@@ -24,7 +24,6 @@ export type SubscriptionStatus =
   | 'canceled'
   | 'unpaid'
   | 'past_due'
-  | 'ended'
 
 export const ACTIVE_STATUS_TYPES: SubscriptionStatus[] = [
   'active',

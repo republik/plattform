@@ -8,6 +8,7 @@ import type {
   SubscriptionUpdateArgs,
   Webhook,
   WebhookSource,
+  Invoice,
 } from '../types'
 
 export type WebhookArgs<T> = {
@@ -50,7 +51,7 @@ export interface CustomerRepo {
 }
 
 export interface SubscriptionRepo {
-  getSubscription(by: PaymentItemLocator): Promise<Subscription>
+  getSubscription(by: PaymentItemLocator): Promise<Subscription | null>
   getUserSubscriptions(userId: string): Promise<Subscription[]>
   addUserSubscriptions(
     userId: string,
@@ -69,16 +70,29 @@ export type OrderArgs = {
   paymentStatus: 'paid' | 'unpaid'
   items: any
   externalId: string
-  invocieExternalId?: string
+  invoiceExternalId?: string
   subscriptionExternalId?: string
+}
+
+export type OrderRepoArgs = {
+  userId: string
+  total: number
+  totalBeforeDiscount: number
+  company: Company
+  paymentStatus: 'paid' | 'unpaid'
+  items: any
+  externalId: string
+  invoiceId?: string
+  subscriptionId?: string
 }
 
 export interface OrderRepo {
   getUserOrders(userId: string): Promise<Order[]>
-  getOrder(orderId: string): Promise<Order>
-  saveOrder(userId: string, order: OrderArgs): Promise<Order>
-  saveInvoice(userId: string, args: any): Promise<any>
-  updateInvoice(by: PaymentItemLocator, args: any): Promise<any>
+  getOrder(orderId: string): Promise<Order | null>
+  saveOrder(order: OrderRepoArgs): Promise<Order>
+  getInvoice(by: PaymentItemLocator): Promise<Invoice | null>
+  saveInvoice(userId: string, args: any): Promise<Invoice>
+  updateInvoice(by: PaymentItemLocator, args: any): Promise<Invoice>
 }
 
 export interface TransactionalRepo {

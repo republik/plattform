@@ -1,5 +1,5 @@
 import { PgDb } from 'pogi'
-import { OrderArgs, WebhookArgs } from './database/repo'
+import { OrderArgs, OrderRepoArgs, WebhookArgs } from './database/repo'
 import { PaymentProvider } from './providers/provider'
 import {
   Company,
@@ -98,13 +98,17 @@ export class Payments implements PaymentService {
     const tx = await this.pgdb.transactionBegin()
     const txRepo = new PgPaymentRepo(tx)
     try {
-      let dbSubId: string | undefined = undefined
+      let subId: string | undefined = undefined
       if (args.subscriptionId) {
         const sub = await txRepo.getSubscription({
           externalId: args.subscriptionId,
         })
 
-        dbSubId = sub.id
+        if (!sub) {
+          throw Error('Subscription not found')
+        }
+
+        subId = sub.id
       }
 
       const sub = await txRepo.saveInvoice(userId, {
@@ -118,7 +122,7 @@ export class Payments implements PaymentService {
         total: args.total,
         totalBeforeDiscount: args.totalBeforeDiscount,
         discounts: args.discounts,
-        subscriptionId: dbSubId,
+        subscriptionId: subId,
       })
 
       await tx.transactionCommit()
@@ -224,10 +228,6 @@ export class Payments implements PaymentService {
     return this.repo.getActiveUserSubscription(userId)
   }
 
-  listActiveSubscriptions(userId: string): Promise<Subscription[]> {
-    return this.repo.getActiveUserSubscriptions(userId)
-  }
-
   async updateSubscription(args: SubscriptionArgs): Promise<Subscription> {
     const sub = await this.repo.updateSubscription(
       { externalId: args.externalId },
@@ -258,8 +258,6 @@ export class Payments implements PaymentService {
         endedAt: args.endedAt,
         canceledAt: args.canceledAt,
       })
-
-      console.log(sub)
 
       if (!sub) {
         throw new Error(
@@ -367,7 +365,31 @@ export class Payments implements PaymentService {
       throw Error('unable to find customer')
     }
 
-    return this.repo.saveOrder(userId, order)
+    const args: OrderRepoArgs = {
+      userId: userId,
+      company: order.company,
+      externalId: order.externalId,
+      items: order.items,
+      paymentStatus: order.paymentStatus,
+      total: order.total,
+      totalBeforeDiscount: order.totalBeforeDiscount,
+    }
+
+    if (order.invoiceExternalId) {
+      const invoice = await this.repo.getInvoice({
+        externalId: order.invoiceExternalId,
+      })
+      args.invoiceId = invoice?.id
+    }
+
+    if (order.subscriptionExternalId) {
+      const sub = await this.repo.getSubscription({
+        externalId: order.subscriptionExternalId,
+      })
+      args.subscriptionId = sub?.id
+    }
+
+    return await this.repo.saveOrder(args)
   }
 
   async updateUserName(
@@ -448,7 +470,6 @@ export class Payments implements PaymentService {
 export interface PaymentService {
   listSubscriptions(userId: string): Promise<Subscription[]>
   fetchActiveSubscription(userId: string): Promise<Subscription | null>
-  listActiveSubscriptions(userId: string): Promise<Subscription[]>
   setupSubscription(
     userId: string,
     args: SubscriptionArgs,
