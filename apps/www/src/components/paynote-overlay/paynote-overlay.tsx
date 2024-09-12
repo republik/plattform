@@ -1,6 +1,5 @@
 'use client'
 
-import { IconExpandLess, IconExpandMore } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import { token } from '@republik/theme/tokens'
 import { useState } from 'react'
@@ -8,129 +7,169 @@ import { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useMe } from 'lib/context/MeContext'
 
-import { Offers } from '@app/components/paynote-overlay/paynote-components'
-import { usePaynote } from '@app/components/paynote-overlay/paynote-article'
+import { Offers } from '@app/components/paynote-overlay/paynote-offers'
+import { usePaynote } from '@app/components/paynote-overlay/use-paynote'
+import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { StructuredText } from 'react-datocms'
+
+type ContentVariant = 'paynote' | 'offers-only'
 
 export function PaynoteOverlay() {
   const [expanded, setExpanded] = useState<boolean>(true)
+  const [variant, setVariant] = useState<ContentVariant>('paynote')
   const { hasActiveMembership, meLoading } = useMe()
+  const { isIOSApp } = usePlatformInformation()
   const paynote = usePaynote()
 
-  if (meLoading || hasActiveMembership || !paynote) {
+  const ready = paynote && !meLoading && !hasActiveMembership && !isIOSApp
+
+  if (!ready) {
     return null
   }
 
   return (
-    <Dialog.Root open={expanded} onOpenChange={setExpanded}>
-      {/* <Dialog.Trigger asChild>
-        <button
+    <>
+      <Dialog.Root open={expanded} onOpenChange={setExpanded}>
+        <div
           className={css({
-            position: 'absolute',
-            top: '4',
-            right: '4',
-          })}
-        >
-          {!expanded ? (
-            <IconExpandLess size={24} />
-          ) : (
-            <IconExpandMore size={24} />
-          )}
-        </button>
-      </Dialog.Trigger> */}
-      <Dialog.Portal>
-        <Dialog.Overlay
-          className={css({
-            backgroundColor: 'overlay',
+            backgroundColor: 'text',
+            color: 'text.inverted',
             position: 'fixed',
-            inset: 0,
-            display: 'grid',
-            placeItems: 'end stretch',
-            overflowY: 'auto',
-            zIndex: 9999,
+            inset: 'auto 0 0 0',
+
+            zIndex: 9998,
+
+            p: '6',
+
+            display: 'flex',
+            flexDir: 'column',
+            gap: '4',
+            textAlign: 'center',
           })}
         >
-          <Dialog.Content
-            onEscapeKeyDown={(e) => e.preventDefault()}
-            onPointerDownOutside={(e) => e.preventDefault()}
-            onInteractOutside={(e) => e.preventDefault()}
+          <p>
+            Sichern Sie sich das Willkommensangebot!<br></br>Ab{' '}
+            <del>CHF 22.–</del> CHF 11.– im Monat.
+          </p>
+          <Dialog.Trigger
             className={css({
-              background: 'pageBackground',
-              p: '8',
-              boxShadow: 'sm',
-              mt: '25dvh',
+              textStyle: 'sansSerifRegular',
+              textDecoration: 'underline',
+              fontSize: 'base',
+              cursor: 'pointer',
+              mx: 'auto',
             })}
-            style={{
-              backgroundColor: !expanded
-                ? token('colors.text')
-                : token('colors.text.inverted'),
-              color: !expanded
-                ? token('colors.text.inverted')
-                : token('colors.text'),
-            }}
             onClick={() => {
-              if (!expanded) {
-                setExpanded(true)
-              }
+              setVariant('offers-only')
             }}
           >
-            <div
-              className={css({
-                margin: '0 auto',
-                maxW: '34rem',
-                textStyle: 'serifRegular',
-                lineHeight: 1.5,
-                fontSize: 'l',
-                display: 'flex',
-                flexDir: 'column',
-                gap: '6',
-              })}
-            >
-              <h2
-                className={css({
-                  textStyle: { base: 'h3Serif', sm: 'h2Serif' },
-                  lineHeight: 1.5,
-                })}
-              >
-                <span
-                  className={css({
-                    boxDecorationBreak: 'clone',
-                    px: '1.5',
-                    backgroundColor: '#FDE047',
-                  })}
-                >
-                  {paynote.title}
-                </span>
-              </h2>
+            Mehr erfahren
+          </Dialog.Trigger>
+        </div>
 
+        <Dialog.Portal>
+          <Dialog.Overlay
+            className={css({
+              backgroundColor: 'overlay',
+              position: 'fixed',
+              inset: 0,
+              display: 'grid',
+              placeItems: 'end stretch',
+              overflowY: 'auto',
+              zIndex: 9999,
+            })}
+          >
+            <Dialog.Content
+              onEscapeKeyDown={(e) => e.preventDefault()}
+              onPointerDownOutside={(e) => e.preventDefault()}
+              onInteractOutside={(e) => e.preventDefault()}
+              aria-describedby={undefined}
+              className={css({
+                background: 'pageBackground',
+                p: '8',
+                boxShadow: 'sm',
+                mt: '25dvh',
+              })}
+              style={{
+                backgroundColor: !expanded
+                  ? token('colors.text')
+                  : token('colors.text.inverted'),
+                color: !expanded
+                  ? token('colors.text.inverted')
+                  : token('colors.text'),
+              }}
+              onClick={() => {
+                if (!expanded) {
+                  setExpanded(true)
+                }
+              }}
+            >
               <div
                 className={css({
+                  margin: '0 auto',
+                  maxW: '34rem',
+                  textStyle: 'serifRegular',
+                  lineHeight: 1.5,
+                  fontSize: 'l',
                   display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4',
-                  pb: '6',
+                  flexDir: 'column',
+                  gap: '6',
                 })}
               >
-                <StructuredText data={paynote.message.value}></StructuredText>
+                <Dialog.Title asChild>
+                  <h2
+                    className={css({
+                      textStyle: { base: 'h3Serif', sm: 'h2Serif' },
+                      lineHeight: 1.5,
+                    })}
+                  >
+                    <span
+                      className={css({
+                        boxDecorationBreak: 'clone',
+                        px: '1.5',
+                        backgroundColor: '#FDE047',
+                      })}
+                    >
+                      {variant === 'paynote'
+                        ? paynote.title
+                        : 'Unterstützen Sie unabhängigen Journalismus'}
+                    </span>
+                  </h2>
+                </Dialog.Title>
+
+                {variant === 'paynote' ? (
+                  <div
+                    className={css({
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '4',
+                      pb: '6',
+                    })}
+                  >
+                    <StructuredText
+                      data={paynote.message.value}
+                    ></StructuredText>
+                  </div>
+                ) : null}
+
+                <Offers />
+
+                <Dialog.Close
+                  className={css({
+                    textStyle: 'sansSerifRegular',
+                    textDecoration: 'underline',
+                    fontSize: 'base',
+                    cursor: 'pointer',
+                    mx: 'auto',
+                  })}
+                >
+                  Jetzt nicht
+                </Dialog.Close>
               </div>
-
-              <Offers />
-
-              <Dialog.Close
-                className={css({
-                  textStyle: 'sansSerifRegular',
-                  textDecoration: 'underline',
-                  fontSize: 'base',
-                  cursor: 'pointer',
-                  mx: 'auto',
-                })}
-              >
-                Jetzt nicht
-              </Dialog.Close>
-            </div>
-          </Dialog.Content>
-        </Dialog.Overlay>
-      </Dialog.Portal>
-    </Dialog.Root>
+            </Dialog.Content>
+          </Dialog.Overlay>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </>
   )
 }
