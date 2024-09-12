@@ -3,12 +3,17 @@ import { Paynote } from '@app/app/api/paynote/types'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { NextResponse } from 'next/server'
 
+export const revalidate = 5
+
 export async function GET(): Promise<NextResponse<Paynote>> {
   const client = getCMSClient()
 
   const {
     data: { paynotes },
-  } = await client.query({ query: PaynotesDocument })
+  } = await client.query({
+    query: PaynotesDocument,
+    fetchPolicy: 'network-only',
+  })
 
   const randomPaynote =
     paynotes[Math.round(Math.random() * (paynotes.length - 1))]
