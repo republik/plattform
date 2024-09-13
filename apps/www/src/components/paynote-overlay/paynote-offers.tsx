@@ -22,7 +22,7 @@ export function Offers() {
         <Option
           value='MONTHLY'
           selected={option === 'MONTHLY'}
-          onChange={(e) => setOption('MONTHLY')}
+          onChange={() => setOption('MONTHLY')}
         >
           <span className={css({ display: 'block' })}>
             <del
@@ -42,7 +42,7 @@ export function Offers() {
         <Option
           value='YEARLY'
           selected={option === 'YEARLY'}
-          onChange={(e) => setOption('YEARLY')}
+          onChange={() => setOption('YEARLY')}
         >
           <span
             className={css({ display: 'flex', gap: '2', flexDir: 'column' })}

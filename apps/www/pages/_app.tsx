@@ -1,27 +1,26 @@
-import '../lib/polyfill'
-import '@republik/theme/styles.css'
 import '@republik/theme/fonts.css'
+import '@republik/theme/styles.css'
 import '../globals.css'
+import '../lib/polyfill'
 
-import Head from 'next/head'
 import { ColorContextProvider, RootColorVariables } from '@project-r/styleguide'
 import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
+import Head from 'next/head'
 
+import { AnalyticsProvider } from '@app/lib/analytics/provider'
+import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { AppProps } from 'next/app'
 import AppVariableContext from '../components/Article/AppVariableContext'
 import AudioPlayerOrchestrator from '../components/Audio/AudioPlayerOrchestrator'
 import AudioProvider from '../components/Audio/AudioProvider'
 import MediaProgressContext from '../components/Audio/MediaProgress'
+import { ThemeProvider } from '../components/ColorScheme/ThemeProvider'
 import MessageSync from '../components/NativeApp/MessageSync'
 import { withApollo } from '../lib/apollo'
 import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { reportError } from '../lib/errors/reportError'
-import { ThemeProvider } from '../components/ColorScheme/ThemeProvider'
-import { AnalyticsProvider } from '@app/lib/analytics/provider'
-import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
-import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -87,7 +86,6 @@ const WebApp = ({
                         serverContext={serverContext}
                         {...otherPageProps}
                       />
-                      <PaynoteOverlay />
                       <AudioPlayerOrchestrator />
                       <SyncUTMToSessionStorage />
                     </ColorContextProvider>

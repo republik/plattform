@@ -33,6 +33,7 @@ import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import * as withData from './withData'
 import { IconCheckCircle } from '@republik/icons'
+import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
 
 const styles = {
   prepublicationNotice: css({
@@ -215,6 +216,7 @@ const Front = ({
   return (
     <Frame hasOverviewNav={hasOverviewNav} raw meta={meta}>
       {renderBefore && renderBefore(meta)}
+      <PaynoteOverlay />
       <Loader
         loading={loading || isRefetching}
         error={error}
