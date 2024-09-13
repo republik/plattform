@@ -2833,6 +2833,32 @@ input OrientationFilter {
   neq: UploadOrientation
 }
 
+"""Block of type 🙋 Störer-Absender (paynote_author)"""
+type PaynoteAuthorRecord implements RecordInterface {
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  description: String!
+  id: ItemId!
+  name: String!
+  portrait: FileField!
+}
+
 input PaynoteModelFilter {
   AND: [PaynoteModelFilter]
   OR: [PaynoteModelFilter]
@@ -2844,6 +2870,7 @@ input PaynoteModelFilter {
   _status: StatusFilter
   _unpublishingScheduledAt: PublishedAtFilter
   _updatedAt: UpdatedAtFilter
+  analyticsId: SlugFilter
   id: ItemIdFilter
   message: StructuredTextFilter
   title: StringFilter
@@ -2898,6 +2925,8 @@ type PaynoteRecord implements RecordInterface {
   _status: ItemStatus!
   _unpublishingScheduledAt: DateTime
   _updatedAt: DateTime!
+  analyticsId: String!
+  author: PaynoteAuthorRecord
   id: ItemId!
   message: PaynoteModelMessageField!
   title: String!

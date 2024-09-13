@@ -10,6 +10,7 @@ import { Offers } from '@app/components/paynote-overlay/paynote-offers'
 import { usePaynote } from '@app/components/paynote-overlay/use-paynote'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { StructuredText } from 'react-datocms'
+import Image from 'next/image'
 
 type ContentVariant = 'paynote' | 'offers-only'
 
@@ -118,6 +119,37 @@ export function PaynoteOverlay() {
                   gap: '6',
                 })}
               >
+                {paynote.author && (
+                  <div
+                    className={css({
+                      display: 'grid',
+                      gridTemplateColumns: '80px 1fr',
+                      placeItems: 'center start',
+                      gap: '4',
+
+                      textStyle: 'sansSerifRegular',
+                    })}
+                  >
+                    <Image
+                      src={paynote.author.portrait.url}
+                      unoptimized
+                      alt='Portraitbild'
+                      width={160}
+                      height={160}
+                      className={css({
+                        borderRadius: 'full',
+                      })}
+                    />
+
+                    <div>
+                      <div className={css({ fontWeight: 'medium' })}>
+                        {paynote.author.name}
+                      </div>
+                      <div>{paynote.author.description}</div>
+                    </div>
+                  </div>
+                )}
+
                 <Dialog.Title asChild>
                   <h2
                     className={css({
