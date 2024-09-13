@@ -2,7 +2,7 @@ import MailchimpInterface from '../MailchimpInterface'
 import { EmailRequiredMailError } from './errors'
 const logger = console
 
-export async function deleteEmail({ email }) {
+export async function deleteEmail({ email }: { email: string }) {
   if (!email) {
     throw new EmailRequiredMailError()
   }

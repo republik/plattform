@@ -78,16 +78,21 @@ export async function enforceSubscriptions({
     interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ||
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]
 
-  const newsletterSubscription = createNewsletterSubscription(NewsletterSubscriptionConfig)
+  const newsletterSubscription = createNewsletterSubscription(
+    NewsletterSubscriptionConfig,
+  )
 
-  await updateNewsletterSubscriptions({
-    user: user || { email },
-    interests,
-    mergeFields,
-    name,
-    subscribed,
-    status: mailchimpMember?.status,
-  }, newsletterSubscription)
+  await updateNewsletterSubscriptions(
+    {
+      user: user || { email },
+      interests,
+      mergeFields,
+      name,
+      subscribed,
+      status: mailchimpMember?.status,
+    },
+    newsletterSubscription,
+  )
 
   // always add to marketing audience when newsletter settings are updated, except if MEMBER
   if (hasMagazineAccess) {
