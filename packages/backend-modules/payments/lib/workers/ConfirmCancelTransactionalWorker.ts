@@ -31,7 +31,7 @@ export class ConfirmCancelTransactionalWorker extends BaseWorker<Args> {
       )
 
     if (!wh) {
-      console.error('Webhook dose not exist')
+      console.error('Webhook does not exist')
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
@@ -40,11 +40,14 @@ export class ConfirmCancelTransactionalWorker extends BaseWorker<Args> {
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
-    // const event = wh.payload
+    const event = wh.payload
 
     try {
       // send transactional
-      await PaymentService.sendCancelConfirmationTransactionalMail()
+      await PaymentService.sendCancelConfirmationTransactionalMail({
+        subscriptionExternalId: event.data.object.id,
+        userId: job.data.userId,
+      })
     } catch (e) {
       console.error(`[${this.queue}] error`)
       console.error(e)

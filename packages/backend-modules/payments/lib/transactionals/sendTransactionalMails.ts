@@ -48,3 +48,28 @@ export async function sendSetupSubscriptionMail(
 
   return sendMailResult
 }
+
+
+export async function sendCancelConfirmationMail(endDate: Date, email: string, pgdb: PgDb) {
+  const globalMergeVars: MergeVariable[] = [
+    {
+      name: 'end_date',
+      content: endDate.toLocaleDateString(),
+    }
+  ]
+
+  const templateName = 'subscription_cancel_notice'
+  const sendMailResult = await sendMailTemplate(
+    {
+      to: email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
+      subject: t(`api/email/${templateName}/subject`),
+      templateName,
+      mergeLanguage: 'handlebars',
+      globalMergeVars,
+    },
+    { pgdb }
+  )
+
+  return sendMailResult
+}

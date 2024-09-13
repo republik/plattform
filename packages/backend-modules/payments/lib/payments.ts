@@ -19,7 +19,10 @@ import assert from 'node:assert'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { StripeCustomerCreateWorker } from './workers/StripeCustomerCreateWorker'
 import { UserRow } from '@orbiting/backend-modules-types'
-import { sendSetupSubscriptionMail } from './transactionals/sendTransactionalMails'
+import {
+  sendCancelConfirmationMail,
+  sendSetupSubscriptionMail,
+} from './transactionals/sendTransactionalMails'
 import { enforceSubscriptions } from '@orbiting/backend-modules-mailchimp'
 
 export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
@@ -70,7 +73,7 @@ export class Payments implements PaymentService {
 
     if (!ACTIVE_STATUS_TYPES.includes(subscription.status)) {
       throw new Error(
-        `not sending transactional for subscription ${subscriptionExternalId} with status ${subscription.status}`
+        `not sending transactional for subscription ${subscriptionExternalId} with status ${subscription.status}`,
       )
     }
     const userRow = await this.repo.getUser(userId)
@@ -88,8 +91,48 @@ export class Payments implements PaymentService {
     )
   }
 
-  async sendCancelConfirmationTransactionalMail(): Promise<void> {
-    // TODO
+  async sendCancelConfirmationTransactionalMail({
+    subscriptionExternalId,
+    userId,
+  }: {
+    subscriptionExternalId: string
+    userId: string
+  }): Promise<void> {
+    const subscription = await this.repo.getSubscription({
+      externalId: subscriptionExternalId,
+    })
+
+    const userRow = await this.repo.getUser(userId)
+
+    if (!subscription) {
+      throw new Error(
+        `Subscription [${subscriptionExternalId}] does not exist in the Database`,
+      )
+    }
+
+    if (!ACTIVE_STATUS_TYPES.includes(subscription.status)) {
+      throw new Error(
+        `not sending cancellation confirmation transactional for subscription ${subscriptionExternalId} with status ${subscription.status}`,
+      )
+    }
+
+    if (!subscription.cancelAt) {
+      throw new Error(
+        `Subscription ${subscriptionExternalId} is not cancelled, not sending cancellation confirmation transactional`,
+      )
+    }
+
+    if (!userRow.email) {
+      throw new Error(
+        `Could not find email for user with id ${userId}, not sending cancellation confirmation transactional`,
+      )
+    }
+
+    await sendCancelConfirmationMail(
+      subscription.cancelAt,
+      userRow.email,
+      this.pgdb,
+    )
   }
 
   async syncMailchimp({
@@ -558,7 +601,13 @@ export interface PaymentService {
     userId: string
     orderId: string
   }): Promise<void>
-  sendCancelConfirmationTransactionalMail(): Promise<void>
+  sendCancelConfirmationTransactionalMail({
+    subscriptionExternalId,
+    userId,
+  }: {
+    subscriptionExternalId: string
+    userId: string
+  }): Promise<void>
   syncMailchimp({
     userId,
     subscriptionExternalId,
