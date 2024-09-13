@@ -6,7 +6,7 @@ type SendMailTemplateArgs = {
   fromName?: string
   subject: string
   templateName: string
-  globalMergeVars: { name: string; content: string }[]
+  globalMergeVars: { name: string; content: string | boolean }[]
   attachments?: { type: string; name: string; content: string }[]
   mergeLanguage: string
 }

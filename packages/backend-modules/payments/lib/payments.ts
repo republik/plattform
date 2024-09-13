@@ -21,6 +21,7 @@ import { StripeCustomerCreateWorker } from './workers/StripeCustomerCreateWorker
 import { UserRow } from '@orbiting/backend-modules-types'
 import {
   sendCancelConfirmationMail,
+  sendEndedNoticeMail,
   sendSetupSubscriptionMail,
 } from './transactionals/sendTransactionalMails'
 import { enforceSubscriptions } from '@orbiting/backend-modules-mailchimp'
@@ -135,6 +136,62 @@ export class Payments implements PaymentService {
     )
   }
 
+  async sendSubscriptionEndedNoticeTransactionalMail({
+    userId,
+    subscriptionExternalId,
+    latestInvoiceId,
+    cancellationReason,
+  }: {
+    userId: string
+    subscriptionExternalId: string
+    latestInvoiceId: string
+    cancellationReason?: string
+  }): Promise<void> {
+    const subscription = await this.repo.getSubscription({
+      externalId: subscriptionExternalId,
+    })
+
+    const latestInvoice = await this.repo.getInvoice({ externalId: latestInvoiceId })
+
+    const userRow = await this.repo.getUser(userId)
+
+    if (!subscription) {
+      throw new Error(
+        `Subscription [${subscriptionExternalId}] does not exist in the Database`,
+      )
+    }
+
+    if (ACTIVE_STATUS_TYPES.includes(subscription.status)) {
+      throw new Error(
+        `not sending ended notice transactional for subscription ${subscriptionExternalId} with status ${subscription.status}`,
+      )
+    }
+
+    if (!subscription.endedAt) {
+      throw new Error(
+        `Subscription ${subscriptionExternalId} has not ended, not sending ended notice transactional`,
+      )
+    }
+
+    if (!userRow.email) {
+      throw new Error(
+        `Could not find email for user with id ${userId}, not sending ended notice transactional`,
+      )
+    }
+
+    if (!latestInvoice) {
+      throw new Error(`Could not find an invoice for id ${latestInvoiceId}`)
+    }
+
+    await sendEndedNoticeMail(
+      subscription,
+      latestInvoice.status,
+      cancellationReason,
+      userRow.email,
+      this.pgdb,
+    )
+  }
+
   async syncMailchimpSetupSubscription({
     userId,
     subscriptionExternalId,
@@ -154,7 +211,7 @@ export class Payments implements PaymentService {
     })
   }
 
-  async syncMailchimpCancelSubscription({
+  async syncMailchimpCancelOrEndSubscription({
     userId,
   }: {
     userId: string
@@ -630,9 +687,20 @@ export interface PaymentService {
     userId: string
     subscriptionExternalId: string
   }): Promise<void>
-  syncMailchimpCancelSubscription({
+  syncMailchimpCancelOrEndSubscription({
     userId,
   }: {
     userId: string
+  }): Promise<void>
+  sendSubscriptionEndedNoticeTransactionalMail({
+    userId,
+    subscriptionExternalId,
+    latestInvoiceId,
+    cancellationReason,
+  }: {
+    userId: string
+    subscriptionExternalId: string
+    latestInvoiceId: string
+    cancellationReason?: string
   }): Promise<void>
 }

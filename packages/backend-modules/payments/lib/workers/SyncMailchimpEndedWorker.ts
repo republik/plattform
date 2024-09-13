@@ -9,8 +9,8 @@ type Args = {
   userId: string
 }
 
-export class SyncMailchimpCancelWorker extends BaseWorker<Args> {
-  readonly queue = 'payments:mailchimp:sync:cancel'
+export class SyncMailchimpEndedWorker extends BaseWorker<Args> {
+  readonly queue = 'payments:mailchimp:sync:ended'
   readonly options: SendOptions = {
     retryLimit: 3,
     retryDelay: 120, // retry every 2 minutes
@@ -26,7 +26,7 @@ export class SyncMailchimpCancelWorker extends BaseWorker<Args> {
     const PaymentService = Payments.getInstance()
 
     const wh =
-      await PaymentService.findWebhookEventBySourceId<Stripe.CustomerSubscriptionUpdatedEvent>(
+      await PaymentService.findWebhookEventBySourceId<Stripe.CustomerSubscriptionDeletedEvent>(
         job.data.eventSourceId,
       )
 
@@ -35,8 +35,8 @@ export class SyncMailchimpCancelWorker extends BaseWorker<Args> {
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
-    if (wh.payload.type !== 'customer.subscription.updated') {
-      console.error('Webhook is not of type customer.subscription.updated')
+    if (wh.payload.type !== 'customer.subscription.deleted') {
+      console.error('Webhook is not of type customer.subscription.deleted')
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
