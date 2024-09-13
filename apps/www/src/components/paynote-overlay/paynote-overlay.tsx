@@ -1,7 +1,7 @@
 'use client'
 
 import { css } from '@republik/theme/css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import * as Dialog from '@radix-ui/react-dialog'
 import { useMe } from 'lib/context/MeContext'
@@ -15,13 +15,25 @@ import Image from 'next/image'
 type ContentVariant = 'paynote' | 'offers-only'
 
 export function PaynoteOverlay() {
-  const [expanded, setExpanded] = useState<boolean>(true)
+  const [expanded, setExpanded] = useState<boolean>(false)
+  const [initialized, setInitialized] = useState<boolean>(false)
   const [variant, setVariant] = useState<ContentVariant>('paynote')
   const { hasActiveMembership, meLoading } = useMe()
   const { isIOSApp } = usePlatformInformation()
   const paynote = usePaynote()
 
   const ready = paynote && !meLoading && !hasActiveMembership && !isIOSApp
+
+  useEffect(() => {
+    if (ready && !initialized) {
+      const timeout = setTimeout(() => {
+        setInitialized(true)
+        setExpanded(true)
+      }, 5000)
+
+      return () => clearTimeout(timeout)
+    }
+  }, [ready, initialized])
 
   if (!ready) {
     return null
@@ -45,11 +57,13 @@ export function PaynoteOverlay() {
             flexDir: 'column',
             gap: '4',
             textAlign: 'center',
-            // '&:has([data-state="open"])': {
-            //   opacity: 0,
-            // },
-            // '&:has([data-state="closed"])': {},
+            '&:has([data-state="open"])': {
+              opacity: 0,
+            },
           })}
+          style={{
+            display: initialized ? null : 'none',
+          }}
         >
           <p>
             Sichern Sie sich das Willkommensangebot!
