@@ -53,10 +53,10 @@ export function PaynoteOverlay() {
 
             p: '6',
 
-            display: 'flex',
-            flexDir: 'column',
-            gap: '4',
             textAlign: 'center',
+            textStyle: 'sans',
+            boxShadow: 'sm',
+
             '&:has([data-state="open"])': {
               opacity: 0,
             },
@@ -65,11 +65,12 @@ export function PaynoteOverlay() {
             display: initialized ? null : 'none',
           }}
         >
-          <p>
-            Sichern Sie sich das Willkommensangebot!
-            <br />
-            Ab <del>CHF 22.–</del> CHF 11.– im Monat.
-          </p>
+          <span>
+            Sichern Sie sich das Willkommensangebot!{' '}
+            <span className={css({ whiteSpace: 'nowrap' })}>
+              Ab <del>CHF 22.–</del> CHF 11.– im Monat.
+            </span>
+          </span>{' '}
           <Dialog.Trigger
             className={css({
               textStyle: 'sansSerifRegular',
@@ -77,6 +78,14 @@ export function PaynoteOverlay() {
               fontSize: 'base',
               cursor: 'pointer',
               mx: 'auto',
+              display: 'block',
+              boxShadow: 'sm',
+
+              mt: '4',
+              md: {
+                display: 'inline-block',
+                mt: 0,
+              },
             })}
             onClick={() => {
               setVariant('offers-only')

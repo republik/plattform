@@ -9,7 +9,10 @@ export function Offers() {
   const [option, setOption] = useState<OfferOptions>('YEARLY')
 
   return (
-    <form method='GET' action='https://shop.republik.love/angebot'>
+    <form
+      method='GET'
+      action={`${process.env.NEXT_PUBLIC_SHOPE_BASE_URL}/angebot`}
+    >
       <div
         className={css({
           display: 'flex',
@@ -27,7 +30,7 @@ export function Offers() {
           <span className={css({ display: 'block' })}>
             <del
               className={css({
-                color: 'disabled',
+                color: 'textSoft',
                 fontWeight: 'medium',
                 mr: '1',
               })}
@@ -50,7 +53,7 @@ export function Offers() {
             <span>
               <del
                 className={css({
-                  color: 'disabled',
+                  color: 'textSoft',
                   fontWeight: 'medium',
                   mr: '1',
                 })}
@@ -77,7 +80,7 @@ export function Offers() {
 
         <div
           className={css({
-            fontSize: 'xs',
+            fontSize: 's',
           })}
         >
           {option === 'YEARLY'
