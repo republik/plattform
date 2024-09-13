@@ -16,6 +16,7 @@ export function Offers() {
           gap: '4',
           flexDir: 'column',
           textStyle: 'body',
+          alignItems: 'center',
         })}
       >
         <Option
@@ -27,12 +28,13 @@ export function Offers() {
             <del
               className={css({
                 color: 'disabled',
+                fontWeight: 'medium',
                 mr: '1',
               })}
             >
               24.–
             </del>
-            <span className={css({ fontWeight: 'medium' })}>
+            <span className={css({ fontWeight: 'bold' })}>
               11.– für einen Monat
             </span>
           </span>
@@ -49,12 +51,13 @@ export function Offers() {
               <del
                 className={css({
                   color: 'disabled',
+                  fontWeight: 'medium',
                   mr: '1',
                 })}
               >
                 240.–
               </del>
-              <span className={css({ fontWeight: 'medium' })}>
+              <span className={css({ fontWeight: 'bold' })}>
                 222.– für ein Jahr
               </span>
             </span>
@@ -63,7 +66,6 @@ export function Offers() {
                 backgroundColor: '#FDE047',
                 color: 'text.black',
                 px: '1',
-                py: '0.5',
                 borderRadius: '2px',
                 fontSize: 's',
               })}
@@ -92,12 +94,13 @@ export function Offers() {
             borderRadius: '5px',
             fontSize: 'base',
             lineHeight: '1',
-            fontWeight: 'bold',
+            fontWeight: 'medium',
             whiteSpace: 'nowrap',
             px: '6',
             py: '3',
             background: 'text',
             color: 'text.inverted',
+            mt: '2',
           })}
         >
           Jetzt abonnieren
@@ -126,6 +129,7 @@ function Option({
         borderStyle: 'solid',
         borderRadius: '5px',
         borderColor: 'disabled',
+        w: 'full',
         p: '4',
         display: 'flex',
         gap: '4',

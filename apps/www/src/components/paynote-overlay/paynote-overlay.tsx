@@ -119,7 +119,7 @@ export function PaynoteOverlay() {
                   gap: '6',
                 })}
               >
-                {paynote.author && (
+                {variant === 'paynote' && paynote.author && (
                   <div
                     className={css({
                       display: 'grid',
@@ -154,20 +154,24 @@ export function PaynoteOverlay() {
                   <h2
                     className={css({
                       textStyle: { base: 'h3Serif', sm: 'h2Serif' },
-                      lineHeight: 1.5,
+                      lineHeight: 1.4,
                     })}
                   >
-                    <span
-                      className={css({
-                        boxDecorationBreak: 'clone',
-                        px: '1.5',
-                        backgroundColor: '#FDE047',
-                      })}
-                    >
-                      {variant === 'paynote'
-                        ? paynote.title
-                        : 'Unterstützen Sie unabhängigen Journalismus'}
-                    </span>
+                    {variant === 'paynote' ? (
+                      <span
+                        className={css({
+                          boxDecorationBreak: 'clone',
+                          px: '1',
+                          backgroundColor: '#FDE047',
+                          ml: '-0.5',
+                          position: 'relative',
+                        })}
+                      >
+                        {paynote.title}
+                      </span>
+                    ) : (
+                      'Unterstützen Sie unabhängigen Journalismus'
+                    )}
                   </h2>
                 </Dialog.Title>
 
