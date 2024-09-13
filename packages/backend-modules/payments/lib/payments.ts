@@ -12,6 +12,7 @@ import {
   InvoiceUpdateArgs,
   Webhook,
   ACTIVE_STATUS_TYPES,
+  SubscriptionStatus,
 } from './types'
 import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
@@ -245,8 +246,11 @@ export class Payments implements PaymentService {
     return this.repo.getOrder(id)
   }
 
-  listSubscriptions(userId: string): Promise<Subscription[]> {
-    return this.repo.getUserSubscriptions(userId)
+  listSubscriptions(
+    userId: string,
+    only?: SubscriptionStatus[],
+  ): Promise<Subscription[]> {
+    return this.repo.getUserSubscriptions(userId, only)
   }
 
   getSubscription(by: PaymentItemLocator): Promise<Subscription | null> {
@@ -497,7 +501,10 @@ export class Payments implements PaymentService {
  * Payment Service public Interface
  */
 export interface PaymentService {
-  listSubscriptions(userId: string): Promise<Subscription[]>
+  listSubscriptions(
+    userId: string,
+    only?: SubscriptionStatus[],
+  ): Promise<Subscription[]>
   fetchActiveSubscription(userId: string): Promise<Subscription | null>
   setupSubscription(
     userId: string,

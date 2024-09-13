@@ -9,6 +9,7 @@ import type {
   Webhook,
   WebhookSource,
   Invoice,
+  SubscriptionStatus,
 } from '../types'
 
 export type WebhookArgs<T> = {
@@ -52,7 +53,10 @@ export interface CustomerRepo {
 
 export interface SubscriptionRepo {
   getSubscription(by: PaymentItemLocator): Promise<Subscription | null>
-  getUserSubscriptions(userId: string): Promise<Subscription[]>
+  getUserSubscriptions(
+    userId: string,
+    onlyStatus?: SubscriptionStatus[],
+  ): Promise<Subscription[]>
   addUserSubscriptions(
     userId: string,
     args: SubscriptionArgs,
@@ -97,7 +101,10 @@ export interface OrderRepo {
 
 export interface MailingsRepo {
   getUser(userId: string): Promise<UserRow>
-  isUserFirstTimeSubscriber(userId: string, subscriptionId: string): Promise<boolean>
+  isUserFirstTimeSubscriber(
+    userId: string,
+    subscriptionId: string,
+  ): Promise<boolean>
 }
 
 export interface PaymentServiceRepo

@@ -25,6 +25,17 @@ export type SubscriptionStatus =
   | 'unpaid'
   | 'past_due'
 
+export const STATUS_TYPES: SubscriptionStatus[] = [
+  'trialing',
+  'incomplete',
+  'incomplete_expired',
+  'paused',
+  'active',
+  'canceled',
+  'unpaid',
+  'past_due',
+]
+
 export const ACTIVE_STATUS_TYPES: SubscriptionStatus[] = [
   'active',
   'past_due',
@@ -32,10 +43,19 @@ export const ACTIVE_STATUS_TYPES: SubscriptionStatus[] = [
   'paused',
 ]
 
+export const USER_VISIBLE_STATUS_TYPES: SubscriptionStatus[] = [
+  'active',
+  'past_due',
+  'trialing',
+  'unpaid',
+  'paused',
+  'canceled',
+]
+
 export const NOT_STARTED_STATUS_TYPES: SubscriptionStatus[] = [
   'trialing',
   'incomplete',
-  'incomplete_expired'
+  'incomplete_expired',
 ]
 
 export type Subscription = {

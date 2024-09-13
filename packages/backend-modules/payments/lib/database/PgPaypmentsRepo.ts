@@ -17,6 +17,8 @@ import {
   ACTIVE_STATUS_TYPES,
   NOT_STARTED_STATUS_TYPES,
   InvoiceRepoArgs,
+  SubscriptionStatus,
+  STATUS_TYPES,
 } from '../types'
 import { UserRow } from '@orbiting/backend-modules-types'
 
@@ -125,9 +127,13 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     )
   }
 
-  getUserSubscriptions(userId: string): Promise<Subscription[]> {
+  getUserSubscriptions(
+    userId: string,
+    onlyStatus: SubscriptionStatus[] = STATUS_TYPES,
+  ): Promise<Subscription[]> {
     return this.#pgdb.payments.subscriptions.find({
       userId,
+      status: onlyStatus,
     })
   }
 
