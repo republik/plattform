@@ -97,7 +97,7 @@ export function PaynoteOverlay() {
                 background: 'pageBackground',
                 p: '8',
                 boxShadow: 'sm',
-                mt: '25dvh',
+                mt: '15dvh',
                 _stateOpen: {
                   animation: 'slideUp',
                 },
