@@ -9,8 +9,8 @@ type Args = {
   userId: string
 }
 
-export class SyncMailchimpWorker extends BaseWorker<Args> {
-  readonly queue = 'payments:mailchimp:sync'
+export class SyncMailchimpSetupWorker extends BaseWorker<Args> {
+  readonly queue = 'payments:mailchimp:sync:setup'
   readonly options: SendOptions = {
     retryLimit: 3,
     retryDelay: 120, // retry every 2 minutes
@@ -42,7 +42,7 @@ export class SyncMailchimpWorker extends BaseWorker<Args> {
 
     const event = wh.payload
 
-    await PaymentService.syncMailchimp({ userId: job.data.userId, subscriptionExternalId: event.data.object.subscription as string })
+    await PaymentService.syncMailchimpSetupSubscription({ userId: job.data.userId, subscriptionExternalId: event.data.object.subscription as string })
 
     console.log(`[${this.queue}] done`)
   }

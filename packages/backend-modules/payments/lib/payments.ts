@@ -135,7 +135,7 @@ export class Payments implements PaymentService {
     )
   }
 
-  async syncMailchimp({
+  async syncMailchimpSetupSubscription({
     userId,
     subscriptionExternalId,
   }: {
@@ -150,6 +150,21 @@ export class Payments implements PaymentService {
       userId: userId,
       subscribeToOnboardingMails: subscribeToOnboardingMails,
       subscribeToEditorialNewsletters: true,
+      pgdb: this.pgdb,
+    })
+  }
+
+  async syncMailchimpCancelSubscription({
+    userId,
+  }: {
+    userId: string
+    subscriptionExternalId: string
+  }): Promise<void> {
+    // sync to mailchimp
+    await enforceSubscriptions({
+      userId: userId,
+      subscribeToOnboardingMails: false,
+      subscribeToEditorialNewsletters: false,
       pgdb: this.pgdb,
     })
   }
@@ -608,11 +623,16 @@ export interface PaymentService {
     subscriptionExternalId: string
     userId: string
   }): Promise<void>
-  syncMailchimp({
+  syncMailchimpSetupSubscription({
     userId,
     subscriptionExternalId,
   }: {
     userId: string
     subscriptionExternalId: string
+  }): Promise<void>
+  syncMailchimpCancelSubscription({
+    userId,
+  }: {
+    userId: string
   }): Promise<void>
 }

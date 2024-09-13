@@ -2,8 +2,9 @@ import Stripe from 'stripe'
 import { PaymentService } from '../../payments'
 import { Company } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
-import { SyncMailchimpWorker } from '../../workers/SyncMailchimpWorker'
 import { ConfirmCancelTransactionalWorker } from '../../workers/ConfirmCancelTransactionalWorker'
+import { SyncMailchimpCancelWorker } from '../../workers/SyncMailchimpCancelWorker'
+
 
 export async function processSubscriptionUpdate(
   paymentService: PaymentService,
@@ -52,7 +53,7 @@ export async function processSubscriptionUpdate(
           userId: userId,
         },
       ),
-      queue.send<SyncMailchimpWorker>('payments:mailchimp:sync', {
+      queue.send<SyncMailchimpCancelWorker>('payments:mailchimp:sync:cancel', {
         $version: 'v1',
         eventSourceId: event.id,
         userId: userId,

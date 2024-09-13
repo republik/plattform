@@ -3,7 +3,7 @@ import { PaymentService } from '../../payments'
 import { Company } from '../../types'
 import { ConfirmSetupTransactionalWorker } from '../../workers/ConfirmSetupTransactionalWorker'
 import { Queue } from '@orbiting/backend-modules-job-queue'
-import { SyncMailchimpWorker } from '../../workers/SyncMailchimpWorker'
+import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker'
 import { PaymentProvider } from '../../providers/provider'
 import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
@@ -89,7 +89,7 @@ export async function processCheckoutCompleted(
         userId: userId,
       },
     ),
-    queue.send<SyncMailchimpWorker>('payments:mailchimp:sync', {
+    queue.send<SyncMailchimpSetupWorker>('payments:mailchimp:sync:setup', {
       $version: 'v1',
       eventSourceId: event.id,
       userId: userId,
