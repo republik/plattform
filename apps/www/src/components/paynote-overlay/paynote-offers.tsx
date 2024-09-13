@@ -26,7 +26,7 @@ export function Offers() {
           <span className={css({ display: 'block' })}>
             <del
               className={css({
-                color: '#ccc',
+                color: 'disabled',
                 mr: '1',
               })}
             >
@@ -48,7 +48,7 @@ export function Offers() {
             <span>
               <del
                 className={css({
-                  color: '#ccc',
+                  color: 'disabled',
                   mr: '1',
                 })}
               >
@@ -125,10 +125,14 @@ function Option({
         borderWidth: 2,
         borderStyle: 'solid',
         borderRadius: '5px',
+        borderColor: 'disabled',
         p: '4',
         display: 'flex',
         gap: '4',
         alignItems: 'center',
+        '&:has(:checked)': {
+          borderColor: 'text',
+        },
       })}
     >
       <input
@@ -147,7 +151,9 @@ function Option({
           color: 'currentColor',
           width: '1.15em',
           height: '1.15em',
-          border: '2px solid currentColor',
+          borderWidth: 2,
+          borderStyle: 'solid',
+          borderColor: 'disabled',
           borderRadius: 'full',
           display: 'grid',
           placeContent: 'center',
@@ -160,6 +166,7 @@ function Option({
           },
           _checked: {
             backgroundColor: 'text',
+            borderColor: 'text',
           },
         })}
       />

@@ -177,7 +177,7 @@ export function PaynoteOverlay() {
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '4',
-                      pb: '6',
+                      pb: '4',
                     })}
                   >
                     <StructuredText
