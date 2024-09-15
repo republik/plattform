@@ -6,14 +6,19 @@
   "scripts": {
     "dev": "concurrently \"panda --watch\" next",
     "build": "panda && next build",
+    "styleguide:dev": "vite dev legacy-styleguide",
+    "styleguide:build": "vite build legacy-styleguide --outDir ../public/legacy-styleguide --emptyOutDir --base=/legacy-styleguide",
     "start": "next start",
     "prepare": "panda codegen"
   },
   "dependencies": {
+    "@babel/standalone": "^7.25.6",
+    "@catalog/core": "4.0.1-canary.2",
     "@project-r/styleguide": "*",
     "@republik/icons": "*",
     "@republik/theme": "*",
     "@republik/ui-docs-demo": "*",
+    "glamor": "^2.20.40",
     "next": "^14.2.3",
     "nextra": "^2.13.2",
     "nextra-theme-docs": "^2.13.2",
@@ -25,10 +30,13 @@
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
+    "@mdx-js/rollup": "^3.0.1",
     "@pandacss/dev": "^0.40.1",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
     "@types/node": "20",
-    "concurrently": "^8.2.1"
+    "@vitejs/plugin-react": "^4.3.1",
+    "concurrently": "^8.2.1",
+    "vite": "^5.4.1"
   }
 }

@@ -3,19 +3,19 @@
   "private": true,
   "version": "0.0.0",
   "main": "dist/lib.js",
-  "module": "src/lib.ts",
+  "module": "dist/esm/lib.js",
   "types": "dist/lib.d.ts",
   "exports": {
     ".": {
-      "import": "./src/lib.ts",
+      "import": "./dist/esm/lib.js",
       "require": "./dist/lib.js"
     },
     "./chart": {
-      "import": "./src/chart.ts",
+      "import": "./dist/esm/chart.js",
       "require": "./dist/chart.js"
     },
     "./editor": {
-      "import": "./src/editor.ts",
+      "import": "./dist/esm/editor.js",
       "require": "./dist/editor.js"
     }
   },
@@ -33,7 +33,7 @@
     "url": "https://github.com/republik/plattform.git"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.dist.json",
+    "build": "tsc --project tsconfig.dist.json && tsc --project tsconfig.dist.esm.json",
     "start": "serve -s build",
     "dev": "tsc -w --project tsconfig.dist.json",
     "test": "jest",
