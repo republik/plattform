@@ -5,7 +5,7 @@
   "main": "./lib/index.ts",
   "scripts": {
     "dev": "concurrently \"panda --watch\" next",
-    "build": "panda && next build",
+    "build": "panda && yarn styleguide:build && next build",
     "styleguide:dev": "vite dev legacy-styleguide",
     "styleguide:build": "vite build legacy-styleguide --outDir ../public/legacy-styleguide --emptyOutDir --base=/legacy-styleguide",
     "start": "next start",
