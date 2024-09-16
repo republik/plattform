@@ -1,17 +1,23 @@
 query Paynotes {
-  paynotes: allPaynotes {
+  paynoteConfig {
     id
-    title
-    message {
-      value
-    }
-    analyticsId
-    author {
-      name
-      description
-      portrait {
-        url(imgixParams: { ar: "1:1", fit: crop, w: 160, h: 160 })
+    paynotes {
+      id
+      title
+      message {
+        value
       }
+      author {
+        name
+        description
+        portrait {
+          url(imgixParams: { ar: "1:1", fit: crop, w: 160, h: 160 })
+        }
+      }
+    }
+    miniPaynotes {
+      id
+      message
     }
   }
 }

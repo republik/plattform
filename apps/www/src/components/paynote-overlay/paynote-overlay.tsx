@@ -7,7 +7,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { useMe } from 'lib/context/MeContext'
 
 import { Offers } from '@app/components/paynote-overlay/paynote-offers'
-import { usePaynote } from '@app/components/paynote-overlay/use-paynote'
+import { usePaynotes } from '@app/components/paynote-overlay/use-paynotes'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { StructuredText } from 'react-datocms'
 import Image from 'next/image'
@@ -17,6 +17,26 @@ const ARTICLE_SCROLL_THRESHOLD = 0.2 // how much of page has scrolled
 
 type ContentVariant = 'paynote' | 'offers-only'
 
+function MiniPaynoteMessage({ message }: { message: string }) {
+  const words = message.split(' ')
+
+  return (
+    <>
+      {words.map((word) => {
+        return word === '{PRICE_MONTHLY}' ? (
+          <>
+            <span className={css({ whiteSpace: 'nowrap' })}>
+              <del>CHF 22.–</del> CHF 11.–
+            </span>{' '}
+          </>
+        ) : (
+          word + ' '
+        )
+      })}
+    </>
+  )
+}
+
 export function PaynoteOverlay() {
   const [expanded, setExpanded] = useState<boolean>(false)
   const [scrollThresholdReached, setScrollThresholdReached] =
@@ -24,7 +44,7 @@ export function PaynoteOverlay() {
   const [variant, setVariant] = useState<ContentVariant>('offers-only')
   const { hasActiveMembership, meLoading } = useMe()
   const { isIOSApp } = usePlatformInformation()
-  const paynote = usePaynote()
+  const paynotes = usePaynotes()
 
   const { scrollYProgress } = useScroll()
   useMotionValueEvent(scrollYProgress, 'change', (progress) => {
@@ -33,7 +53,7 @@ export function PaynoteOverlay() {
     }
   })
 
-  const ready = !meLoading && !hasActiveMembership && !isIOSApp
+  const ready = paynotes && !meLoading && !hasActiveMembership && !isIOSApp
 
   useEffect(() => {
     if (scrollThresholdReached) {
@@ -49,6 +69,8 @@ export function PaynoteOverlay() {
   if (!ready) {
     return null
   }
+
+  const { paynote, miniPaynote } = paynotes
 
   return (
     <>
@@ -77,11 +99,8 @@ export function PaynoteOverlay() {
           })}
         >
           <span>
-            Sichern Sie sich das Willkommensangebot!{' '}
-            <span className={css({ whiteSpace: 'nowrap' })}>
-              Ab <del>CHF 22.–</del> CHF 11.– im Monat.
-            </span>
-          </span>{' '}
+            <MiniPaynoteMessage message={miniPaynote.message} />
+          </span>
           <Dialog.Trigger
             className={css({
               textStyle: 'sansSerifRegular',
