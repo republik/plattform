@@ -47,7 +47,6 @@ export class NoticeEndedTransactionalWorker extends BaseWorker<Args> {
       await PaymentService.sendSubscriptionEndedNoticeTransactionalMail({
         subscriptionExternalId: event.data.object.id,
         userId: job.data.userId,
-        latestInvoiceId: event.data.object.latest_invoice as string,
         cancellationReason: event.data.object.cancellation_details?.reason as string | undefined
       })
     } catch (e) {

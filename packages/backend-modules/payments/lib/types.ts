@@ -107,7 +107,7 @@ export type Invoice = {
   externalId: string
   metadata: Record<string, any>
   status: 'paid' | 'void' | 'refunded'
-  price: number
+  total: number
   periodStart: Date
   periodEnd: Date
   createdAt: Date

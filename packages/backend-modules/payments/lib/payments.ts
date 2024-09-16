@@ -22,6 +22,7 @@ import { UserRow } from '@orbiting/backend-modules-types'
 import {
   sendCancelConfirmationMail,
   sendEndedNoticeMail,
+  sendPaymentFailedNoticeMail,
   sendSetupSubscriptionMail,
 } from './transactionals/sendTransactionalMails'
 import { enforceSubscriptions } from '@orbiting/backend-modules-mailchimp'
@@ -139,19 +140,15 @@ export class Payments implements PaymentService {
   async sendSubscriptionEndedNoticeTransactionalMail({
     userId,
     subscriptionExternalId,
-    latestInvoiceId,
     cancellationReason,
   }: {
     userId: string
     subscriptionExternalId: string
-    latestInvoiceId: string
     cancellationReason?: string
   }): Promise<void> {
     const subscription = await this.repo.getSubscription({
       externalId: subscriptionExternalId,
     })
-
-    const latestInvoice = await this.repo.getInvoice({ externalId: latestInvoiceId })
 
     const userRow = await this.repo.getUser(userId)
 
@@ -179,17 +176,61 @@ export class Payments implements PaymentService {
       )
     }
 
-    if (!latestInvoice) {
-      throw new Error(`Could not find an invoice for id ${latestInvoiceId}`)
-    }
-
     await sendEndedNoticeMail(
       subscription,
-      latestInvoice.status,
       cancellationReason,
       userRow.email,
       this.pgdb,
     )
+  }
+
+  async sendNoticePaymentFailedTransactionalMail({
+    userId,
+    subscriptionExternalId,
+    invoiceExternalId,
+  }: {
+    userId: string
+    subscriptionExternalId: string
+    invoiceExternalId: string
+  }): Promise<void> {
+    const subscription = await this.repo.getSubscription({
+      externalId: subscriptionExternalId,
+    })
+
+    const invoice = await this.repo.getInvoice({ externalId: invoiceExternalId })
+
+    const userRow = await this.repo.getUser(userId)
+
+    if (!subscription) {
+      throw new Error(
+        `Subscription [${subscriptionExternalId}] does not exist in the Database`,
+      )
+    }
+
+    if (!invoice) {
+      throw new Error(`Ìnvoice ${invoiceExternalId} does not exist in the Database`,)
+    }
+
+    if (!ACTIVE_STATUS_TYPES.includes(subscription.status)) {
+      throw new Error(
+        `not sending payment failed notice transactional for subscription ${subscriptionExternalId} with status ${subscription.status}`,
+      )
+    }
+
+    if (subscription.endedAt) {
+      throw new Error(
+        `Subscription ${subscriptionExternalId} has ended, not sending failed payment notice transactional`,
+      )
+    }
+
+    if (!userRow.email) {
+      throw new Error(
+        `Could not find email for user with id ${userId}, not sending failed payment notice transactional`,
+      )
+    }
+
+    await sendPaymentFailedNoticeMail(subscription, invoice, userRow.email, this.pgdb)
+
   }
 
   async syncMailchimpSetupSubscription({
@@ -695,12 +736,19 @@ export interface PaymentService {
   sendSubscriptionEndedNoticeTransactionalMail({
     userId,
     subscriptionExternalId,
-    latestInvoiceId,
     cancellationReason,
   }: {
     userId: string
     subscriptionExternalId: string
-    latestInvoiceId: string
     cancellationReason?: string
+  }): Promise<void>
+  sendNoticePaymentFailedTransactionalMail({
+    userId,
+    subscriptionExternalId,
+    invoiceExternalId,
+  }: {
+    userId: string
+    subscriptionExternalId: string
+    invoiceExternalId: string
   }): Promise<void>
 }

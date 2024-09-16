@@ -47,6 +47,7 @@ const {
   ConfirmSetupTransactionalWorker,
   ConfirmCancelTransactionalWorker,
   NoticeEndedTransactionalWorker,
+  NoticePaymentFailedTransactionalWorker,
   SyncMailchimpSetupWorker,
   SyncMailchimpCancelWorker,
   SyncMailchimpEndedWorker,
@@ -86,6 +87,7 @@ queue.registerWorker(StripeCustomerCreateWorker)
 queue.registerWorker(ConfirmSetupTransactionalWorker)
 queue.registerWorker(ConfirmCancelTransactionalWorker)
 queue.registerWorker(NoticeEndedTransactionalWorker)
+queue.registerWorker(NoticePaymentFailedTransactionalWorker)
 queue.registerWorker(SyncMailchimpSetupWorker)
 queue.registerWorker(SyncMailchimpCancelWorker)
 queue.registerWorker(SyncMailchimpEndedWorker)

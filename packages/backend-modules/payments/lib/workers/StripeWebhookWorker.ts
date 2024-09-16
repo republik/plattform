@@ -9,6 +9,7 @@ import { processSubscriptionDeleted } from '../handlers/stripe/subscriptionDelet
 import { processSubscriptionUpdate } from '../handlers/stripe/subscriptionUpdate'
 import { processSubscriptionCreated } from '../handlers/stripe/subscriptionCreated'
 import { processCheckoutCompleted } from '../handlers/stripe/checkoutCompleted'
+import { processPaymentFailed } from '../handlers/stripe/paymentFailed'
 
 type WorkerArgsV1 = {
   $version: 'v1'
@@ -81,7 +82,9 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
         case 'invoice.voided':
           await processInvoiceUpdated(PaymentService, job.data.company, event)
           break
-          // case 'invoice.payment_failed':
+        case 'invoice.payment_failed':
+          await processPaymentFailed(PaymentService, job.data.company, event)
+          break
           //   console.log(event)
           //   await new Promise((v) => v)
           // case 'invoice.payment_action_required':
