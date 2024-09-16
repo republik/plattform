@@ -108,7 +108,7 @@ export type Invoice = {
   company: Company
   externalId: string
   metadata: Record<string, any>
-  status: 'paid' | 'void' | 'refunded'
+  status: 'paid' | 'void' | 'refunded' | 'open'
   total: number
   totalBeforeDiscount: number
   totalDiscountAmount: number
@@ -131,7 +131,7 @@ export type InvoiceArgs = {
   externalSubscriptionId?: string
   periodStart?: Date
   periodEnd?: Date
-  status: 'draft' | 'paid' | 'void' | 'refunded'
+  status: 'draft' | 'paid' | 'void' | 'refunded' | 'open'
   total: number
   totalBeforeDiscount: number
   totalDiscountAmount: number

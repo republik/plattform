@@ -224,6 +224,12 @@ export class Payments implements PaymentService {
       )
     }
 
+    if (invoice.status !== 'open') {
+      throw new Error(
+        `not sending payment failed notice transactional for subscription ${subscriptionExternalId}, invoice ${invoiceExternalId} is not in state open but ${invoice.status}`,
+      )
+    }
+
     if (subscription.endedAt) {
       throw new Error(
         `Subscription ${subscriptionExternalId} has ended, not sending failed payment notice transactional`,
