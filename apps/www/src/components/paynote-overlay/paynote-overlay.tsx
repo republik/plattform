@@ -72,6 +72,9 @@ export function PaynoteOverlay() {
 
   const { paynote, miniPaynote } = paynotes
 
+  const paynoteVariantForAnalytics =
+    variant === 'paynote' ? paynote.title : miniPaynote.message
+
   return (
     <>
       <Dialog.Root open={expanded} onOpenChange={setExpanded}>
@@ -243,7 +246,11 @@ export function PaynoteOverlay() {
                   </div>
                 ) : null}
 
-                <Offers />
+                <Offers
+                  additionalShopParams={{
+                    rep_paynote_title: paynoteVariantForAnalytics,
+                  }}
+                />
 
                 <Dialog.Close
                   className={css({

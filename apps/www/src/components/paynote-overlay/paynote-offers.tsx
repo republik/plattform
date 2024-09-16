@@ -1,18 +1,31 @@
 'use client'
 
+import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { css } from '@republik/theme/css'
 import { ChangeEventHandler, ReactNode, useId, useState } from 'react'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
 
-export function Offers() {
+export function Offers({
+  additionalShopParams = {},
+}: {
+  additionalShopParams?: Record<string, string>
+}) {
   const [option, setOption] = useState<OfferOptions>('YEARLY')
+
+  const utmParams = getUTMSessionStorage()
 
   return (
     <form
       method='GET'
-      action={`${process.env.NEXT_PUBLIC_SHOPE_BASE_URL}/angebot`}
+      action={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot`}
     >
+      {Object.entries(utmParams).map(([k, v]) => {
+        return <input type='hidden' hidden key={k} name={k} value={v} />
+      })}
+      {Object.entries(additionalShopParams).map(([k, v]) => {
+        return <input type='hidden' hidden key={k} name={k} value={v} />
+      })}
       <div
         className={css({
           display: 'flex',
