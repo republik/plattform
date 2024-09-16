@@ -35,7 +35,7 @@ export function Offers() {
                 mr: '1',
               })}
             >
-              24.–
+              22.–
             </del>
             <span className={css({ fontWeight: 'bold' })}>
               11.– für einen Monat
@@ -85,7 +85,7 @@ export function Offers() {
         >
           {option === 'YEARLY'
             ? 'Unlimitierter Zugang. 240.– jährlich nach dem ersten Jahr. Jederzeit kündbar.'
-            : 'Unlimitierter Zugang. 24.– monatlich nach dem ersten Monat. Jederzeit kündbar.'}
+            : 'Unlimitierter Zugang. 22.– monatlich nach dem ersten Monat. Jederzeit kündbar.'}
         </div>
 
         <button

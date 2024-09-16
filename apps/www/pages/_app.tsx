@@ -21,6 +21,7 @@ import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { reportError } from '../lib/errors/reportError'
+import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -88,6 +89,7 @@ const WebApp = ({
                       />
                       <AudioPlayerOrchestrator />
                       <SyncUTMToSessionStorage />
+                      <PaynoteOverlay />
                     </ColorContextProvider>
                   </ThemeProvider>
                 </AppVariableContext>

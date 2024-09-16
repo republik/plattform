@@ -85,7 +85,6 @@ import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
 import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 import { reportError } from 'lib/errors/reportError'
-import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
 
 // CAMPAIGN MODE
 // import { TrialPaynote } from '@app/app/(campaign)/components/trial-paynote'
@@ -652,7 +651,6 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
-      location={meta?.template === 'article' ? 'article' : undefined}
     >
       <PageLoader
         loading={articleLoading && !articleData}
@@ -749,7 +747,6 @@ const ArticlePage = ({
 
           return (
             <>
-              {!isPage && <PaynoteOverlay />}
               <FontSizeSync />
               {meta.prepublication && (
                 <div {...styles.prepublicationNotice}>

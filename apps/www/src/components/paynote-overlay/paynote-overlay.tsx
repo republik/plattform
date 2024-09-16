@@ -11,29 +11,40 @@ import { usePaynote } from '@app/components/paynote-overlay/use-paynote'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { StructuredText } from 'react-datocms'
 import Image from 'next/image'
+import { useMotionValueEvent, useScroll } from 'framer-motion'
+
+const ARTICLE_SCROLL_THRESHOLD = 0.2 // how much of page has scrolled
 
 type ContentVariant = 'paynote' | 'offers-only'
 
 export function PaynoteOverlay() {
   const [expanded, setExpanded] = useState<boolean>(false)
-  const [initialized, setInitialized] = useState<boolean>(false)
-  const [variant, setVariant] = useState<ContentVariant>('paynote')
+  const [scrollThresholdReached, setScrollThresholdReached] =
+    useState<boolean>(false)
+  const [variant, setVariant] = useState<ContentVariant>('offers-only')
   const { hasActiveMembership, meLoading } = useMe()
   const { isIOSApp } = usePlatformInformation()
   const paynote = usePaynote()
 
-  const ready = paynote && !meLoading && !hasActiveMembership && !isIOSApp
+  const { scrollYProgress } = useScroll()
+  useMotionValueEvent(scrollYProgress, 'change', (progress) => {
+    if (progress > ARTICLE_SCROLL_THRESHOLD) {
+      setScrollThresholdReached(true)
+    }
+  })
+
+  const ready = !meLoading && !hasActiveMembership && !isIOSApp
 
   useEffect(() => {
-    if (ready && !initialized) {
-      const timeout = setTimeout(() => {
-        setInitialized(true)
+    if (scrollThresholdReached) {
+      const isArticle =
+        document.querySelector('[data-template="article"]') != null
+      if (isArticle) {
+        setVariant('paynote')
         setExpanded(true)
-      }, 5000)
-
-      return () => clearTimeout(timeout)
+      }
     }
-  }, [ready, initialized])
+  }, [scrollThresholdReached])
 
   if (!ready) {
     return null
@@ -58,12 +69,12 @@ export function PaynoteOverlay() {
             boxShadow: 'sm',
 
             '&:has([data-state="open"])': {
-              opacity: 0,
+              animation: 'fadeOut',
+            },
+            '&:has([data-state="closed"])': {
+              animation: 'fadeIn',
             },
           })}
-          style={{
-            display: initialized ? null : 'none',
-          }}
         >
           <span>
             Sichern Sie sich das Willkommensangebot!{' '}
@@ -142,7 +153,7 @@ export function PaynoteOverlay() {
                   gap: '6',
                 })}
               >
-                {variant === 'paynote' && paynote.author && (
+                {variant === 'paynote' && paynote?.author && (
                   <div
                     className={css({
                       display: 'grid',
@@ -190,7 +201,7 @@ export function PaynoteOverlay() {
                           position: 'relative',
                         })}
                       >
-                        {paynote.title}
+                        {paynote?.title}
                       </span>
                     ) : (
                       'Unterstützen Sie unabhängigen Journalismus'
@@ -208,7 +219,7 @@ export function PaynoteOverlay() {
                     })}
                   >
                     <StructuredText
-                      data={paynote.message.value}
+                      data={paynote?.message.value}
                     ></StructuredText>
                   </div>
                 ) : null}

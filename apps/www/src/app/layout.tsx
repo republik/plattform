@@ -10,6 +10,7 @@ import { css } from '@republik/theme/css'
 import { PUBLIC_BASE_URL } from 'lib/constants'
 import { Metadata } from 'next'
 import { ReactNode } from 'react'
+import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
 
 export const metadata: Metadata = {
   metadataBase: new URL(PUBLIC_BASE_URL),
@@ -50,6 +51,7 @@ export default async function RootLayout({
             {children}
             <NativeAppMessageSync />
             <SyncUTMToSessionStorage />
+            <PaynoteOverlay />
           </ApolloWrapper>
         </ThemeProvider>
       </body>
