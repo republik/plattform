@@ -978,7 +978,7 @@
     },
     {
       "key": "account/authSettings/firstfactor/APP/disabled",
-      "value": "Sie müssen sich zuerst im App anmelden um neue Anmeldungen im App bestätigen zu können."
+      "value": "Sie müssen sich zuerst in der App anmelden um neue Anmeldungen in der App bestätigen zu können."
     },
     {
       "key": "account/notificationOptions/dialog",
