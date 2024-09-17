@@ -68,23 +68,17 @@ export interface SubscriptionRepo {
 }
 
 export type OrderArgs = {
-  total: number
-  totalBeforeDiscount: number
   company: Company
-  paymentStatus: 'paid' | 'unpaid'
-  items: any
+  status: 'paid' | 'unpaid'
   externalId: string
-  invoiceExternalId?: string
-  subscriptionExternalId?: string
+  invoiceId: string
+  subscriptionId?: string
 }
 
 export type OrderRepoArgs = {
   userId: string
-  total: number
-  totalBeforeDiscount: number
   company: Company
-  paymentStatus: 'paid' | 'unpaid'
-  items: any
+  status: 'paid' | 'unpaid'
   externalId: string
   invoiceId?: string
   subscriptionId?: string

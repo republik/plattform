@@ -42,26 +42,36 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-                    <p>Wir freuen uns, dass Sie sich für ein Republik Monats-Abo 
-                      entschieden haben.</p>
-                      <p>
-                        Das Monats-Abo verlängert sich automatisch jeweils um einen weiteren Monat.
-                        Die von Ihnen angegebene Zahlungsmethode belasten wir dementsprechend ab Beginn der
-                        ersten Verlängerungsperiode monatlich mit CHF {{total_before_discount}}.-.
-                      </p>
-                      <p>
-                        Unter
-                        <a href="{{link_account_goto}}">Konto</a> finden Sie Ihre
-                        <a href="{{link_account_abos_goto}}">persönliche Übersicht zu Ihrem Abonnement</a>. Am gleichen Ort können Sie alle Einstellungen vornehmen
-                        (z. B. die Zahlungsmethode ändern) oder das Abo
-                        jederzeit kündigen.
-                      </p>
+                    <p>
+                      Wir freuen uns, dass Sie sich für ein Republik Monats-Abo
+                      entschieden haben.
+                    </p>
+                    <p>
+                      Das Monats-Abo verlängert sich automatisch jeweils um
+                      einen weiteren Monat. Die von Ihnen angegebene
+                      Zahlungsmethode belasten wir dementsprechend ab Beginn der
+                      ersten Verlängerungsperiode monatlich mit CHF
+                      {{total_before_discount}}.-.
+                    </p>
+                    <p>
+                      Unter
+                      <a href="{{link_account_goto}}">Konto</a> finden Sie Ihre
+                      <a href="{{link_account_abos_goto}}"
+                        >persönliche Übersicht zu Ihrem Abonnement</a
+                      >. Am gleichen Ort können Sie alle Einstellungen vornehmen
+                      (z. B. die Zahlungsmethode ändern) oder das Abo jederzeit
+                      kündigen.
+                    </p>
                     <p>
                       Sie können ab sofort
                       <a href="{{link_signin}}">das Magazin lesen</a>, an
-                      <a href="{{link_dialog}}">sämtlichen Debatten teilnehmen</a>
+                      <a href="{{link_dialog}}"
+                        >sämtlichen Debatten teilnehmen</a
+                      >
                       und die Republik
-                      <a href="{{link_account_share}}">mit Ihren Freunden oder Feinden teilen</a>.
+                      <a href="{{link_account_share}}"
+                        >mit Ihren Freunden oder Feinden teilen</a
+                      >.
                     </p>
 
                     <p>Details zum Kauf:</p>
@@ -69,11 +79,9 @@
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                    <li>Monatlicher Preis: {{total_before_discount}} CHF</li>
+                      <li>Monatlicher Preis: {{total_before_discount}} CHF</li>
                       {{#if discount_code}}
-                      <li>
-                        Einstiegsangebot {{discount_total}} CHF: –{{discount_total}} CHF
-                      </li>
+                      <li>{{discount_code}}: –{{discount_total}} CHF</li>
                       {{/if}}
                       <li>
                         <strong>Total: {{total}} CHF</strong>
@@ -105,7 +113,9 @@
                       Republik AG<br />
                       Sihlhallenstrasse 1, CH-8004 Zürich<br />
                       <a href="{{frontend_base_url}}">www.republik.ch</a><br />
-                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                      <a href="mailto:kontakt@republik.ch"
+                        >kontakt@republik.ch</a
+                      >
                     </p>
                   </td>
                 </tr>

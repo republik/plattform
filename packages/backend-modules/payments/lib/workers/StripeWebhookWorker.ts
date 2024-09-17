@@ -85,11 +85,6 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
         case 'invoice.payment_failed':
           await processPaymentFailed(PaymentService, job.data.company, event)
           break
-          //   console.log(event)
-          //   await new Promise((v) => v)
-          // case 'invoice.payment_action_required':
-          // 3d Secure or failed paypal payment
-          break
         default:
           console.log('skipping %s no handler for this event', event.type)
       }

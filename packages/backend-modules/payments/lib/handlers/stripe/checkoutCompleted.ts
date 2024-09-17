@@ -25,9 +25,10 @@ export async function processCheckoutCompleted(
 
   const customFields = event.data.object.custom_fields
   await syncUserNameData(paymentService, userId, customFields)
-  // const adressData = event.data.object.invoice
-
-  // await syncAddressData(paymentService, userId)
+  const addressData = event.data.object.customer_details?.address
+  if (addressData) {
+    await syncAddressData(paymentService, userId, addressData)
+  }
 
   let paymentStatus = event.data.object.payment_status
   if (paymentStatus === 'no_payment_required') {
@@ -35,46 +36,48 @@ export async function processCheckoutCompleted(
     paymentStatus = 'paid'
   }
 
-  const subId = event.data.object.subscription
-  if (typeof subId === 'string') {
+  let subId: string | undefined
+  const extSubId = event.data.object.subscription
+  if (typeof extSubId === 'string') {
     // if checkout contains a subscription that is not in the database try to save it
-    if (!paymentService.getSubscription({ externalId: subId })) {
+    const s = await paymentService.getSubscription({ externalId: extSubId })
+    if (!s) {
       const subscription = await PaymentProvider.forCompany(
         company,
-      ).getSubscription(subId as string)
+      ).getSubscription(extSubId as string)
       if (subscription) {
         const args = mapSubscriptionArgs(company, subscription)
-        await paymentService.setupSubscription(userId, args)
+        subId = (await paymentService.setupSubscription(userId, args)).id
       }
+    } else {
+      subId = s.id
     }
   }
 
-  const invoiceId = event.data.object.invoice
-  if (typeof invoiceId === 'string') {
-    if (!paymentService.getInvoice({ externalId: invoiceId })) {
+  let invoiceId: string | undefined
+  const extInvoiceId = event.data.object.invoice
+  if (typeof extInvoiceId === 'string') {
+    const i = await paymentService.getInvoice({ externalId: extInvoiceId })
+    if (!i) {
       // if checkout contains a invoice that is not in the database try to save it
-      const invoice = await PaymentProvider.forCompany(company).getInvoice(
-        invoiceId as string,
+      const invoiceData = await PaymentProvider.forCompany(company).getInvoice(
+        extInvoiceId as string,
       )
-      if (invoice) {
-        const args = mapInvoiceArgs(company, invoice)
-        await paymentService.saveInvoice(userId, args)
+      if (invoiceData) {
+        const args = mapInvoiceArgs(company, invoiceData)
+        invoiceId = (await paymentService.saveInvoice(userId, args)).id
       }
+    } else {
+      invoiceId = i.id
     }
   }
-
-  const total = event.data.object.amount_total || 0
-  const totalBeforeDiscount = event.data.object.amount_subtotal || 0
 
   const order = await paymentService.saveOrder(userId, {
     company: company,
-    total: total,
-    totalBeforeDiscount: totalBeforeDiscount,
     externalId: event.data.object.id,
-    items: event.data.object.line_items || [],
-    invoiceExternalId: invoiceId as string | undefined,
-    subscriptionExternalId: subId as string | undefined,
-    paymentStatus: paymentStatus as 'paid' | 'unpaid',
+    invoiceId: invoiceId as string,
+    subscriptionId: subId as string,
+    status: paymentStatus as 'paid' | 'unpaid',
   })
 
   const queue = Queue.getInstance()
@@ -117,4 +120,12 @@ async function syncUserNameData(
       return await paymentService.updateUserName(userId, firstName, lastName)
     }
   }
+}
+
+export async function syncAddressData(
+  paymentService: PaymentService,
+  userId: string,
+  addressData: Stripe.Address,
+) {
+  paymentService.updateUserAddress(userId, addressData)
 }

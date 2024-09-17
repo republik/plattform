@@ -45,6 +45,18 @@ export function mapInvoiceArgs(
   return {
     total: invoice.total,
     totalBeforeDiscount: invoice.subtotal,
+    totalDiscountAmount:
+      invoice.total_discount_amounts?.reduce(
+        (acc, value) => acc + value.amount,
+        0,
+      ) || 0,
+    totalDiscountAmounts: invoice.total_discount_amounts,
+    totalExcludingTax: invoice.total_excluding_tax || 0,
+    totalTaxAmounts: invoice.total_tax_amounts,
+    totalTaxAmount: invoice.total_tax_amounts.reduce(
+      (acc, value) => acc + value.amount,
+      0,
+    ),
     company: company,
     items: invoice.lines.data,
     discounts: invoice.discounts,

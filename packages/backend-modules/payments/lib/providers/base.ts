@@ -19,6 +19,9 @@ export interface PaymentProviderActions {
   getSubscription(subscriptionId: string): Promise<Stripe.Subscription | null>
   getInvoice(invoiceId: string): Promise<Stripe.Invoice | null>
   createCustomer(email: string, userId: string): Promise<string>
+  getPaymentMethod(
+    paymentMethodId: string,
+  ): Promise<Stripe.PaymentMethod | null>
   verifyWebhook<T>(req: any, secret: string): T
   createCustomerPortalSession(
     customerId: string,

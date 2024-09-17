@@ -35,6 +35,7 @@ type StripeCustomer {
   company: CompanyName!
 }
 
+
 type MagazineSubscription {
   id: ID!
   company: CompanyName!
@@ -42,6 +43,8 @@ type MagazineSubscription {
   status: MagazineSubscriptionStatus!
   stripeId: String!
   invoices: [Invoice!]!
+  renewsAtPrice: Int
+  paymentMethod: String
   currentPeriodStart: DateTime
   currentPeriodEnd: DateTime
   endedAt: DateTime

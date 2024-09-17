@@ -38,7 +38,9 @@ export class StripeProvider implements PaymentProviderActions {
   }
 
   async getInvoice(invoiceId: string): Promise<Stripe.Invoice | null> {
-    const invoice = await this.#stripe.invoices.retrieve(invoiceId)
+    const invoice = await this.#stripe.invoices.retrieve(invoiceId, {
+      expand: ['discounts'],
+    })
 
     if (!invoice) {
       return null
@@ -57,6 +59,14 @@ export class StripeProvider implements PaymentProviderActions {
     })
 
     return customer.id
+  }
+
+  async getPaymentMethod(
+    paymentMethodId: string,
+  ): Promise<Stripe.PaymentMethod | null> {
+    const pm = await this.#stripe.paymentMethods.retrieve(paymentMethodId)
+
+    return pm
   }
 
   async getCustomerSubscriptions(

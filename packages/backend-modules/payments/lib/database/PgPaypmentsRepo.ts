@@ -141,7 +141,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     userId: string,
     args: SubscriptionArgs,
   ): Promise<Subscription> {
-    return this.#pgdb.payments.subscriptions.insert({
+    return this.#pgdb.payments.subscriptions.insertAndGet({
       userId: userId,
       ...args,
     })

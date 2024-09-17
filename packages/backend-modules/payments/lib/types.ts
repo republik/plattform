@@ -2,13 +2,12 @@ export type Company = 'PROJECT_R' | 'REPUBLIK'
 
 export type Order = {
   id: string
+  company: Company
   userId: string
-  items: any
-  total: number
-  totalBeforeDiscount: number
-  discountTotal?: number
-  discountCode?: string
-  paymentStatus: 'paid' | 'unpaid'
+  externalId: string
+  subscriptionId: string
+  invoiceId: string
+  status: 'paid' | 'unpaid'
   createdAt: Date
   updatedAt: Date
 }
@@ -85,6 +84,9 @@ export type SubscriptionArgs = {
   cancelAtPeriodEnd?: boolean
   currentPeriodStart: Date
   currentPeriodEnd: Date
+  cancellationComment?: string | null
+  cancellationFeedback?: string | null
+  cancellationReason?: string | null
   cancelAt?: Date | null
   canceledAt?: Date | null
   endedAt?: Date | null
@@ -108,6 +110,13 @@ export type Invoice = {
   metadata: Record<string, any>
   status: 'paid' | 'void' | 'refunded'
   total: number
+  totalBeforeDiscount: number
+  totalDiscountAmount: number
+  totalDiscountAmounts: any
+  totalExcludingTax: number
+  totalTaxAmounts: any
+  totalTaxAmount: number
+  discounts: string[]
   periodStart: Date
   periodEnd: Date
   createdAt: Date
@@ -125,6 +134,11 @@ export type InvoiceArgs = {
   status: 'draft' | 'paid' | 'void' | 'refunded'
   total: number
   totalBeforeDiscount: number
+  totalDiscountAmount: number
+  totalDiscountAmounts: any
+  totalExcludingTax: number
+  totalTaxAmounts: any
+  totalTaxAmount: number
   items: any
 }
 
@@ -139,6 +153,11 @@ export type InvoiceRepoArgs = {
   status: 'draft' | 'paid' | 'void' | 'refunded'
   total: number
   totalBeforeDiscount: number
+  totalDiscountAmount: number
+  totalDiscountAmounts: any
+  totalExcludingTax: number
+  totalTaxAmounts: any
+  totalTaxAmount: number
   items: any
 }
 
@@ -172,7 +191,19 @@ export type SubscriptionUpdateArgs = {
   cancelAtPeriodEnd?: boolean
   currentPeriodStart?: Date
   currentPeriodEnd?: Date
+  cancellationComment?: string | null
+  cancellationFeedback?: string | null
+  cancellationReason?: string | null
   endedAt?: Date | null
   canceledAt?: Date | null
   cancelAt?: Date | null
+}
+
+export type Address = {
+  city: string | null
+  country: string | null
+  line1: string | null
+  line2: string | null
+  postal_code: string | null
+  state: string | null
 }

@@ -13,6 +13,7 @@ import {
   Webhook,
   ACTIVE_STATUS_TYPES,
   SubscriptionStatus,
+  Address,
 } from './types'
 import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
@@ -28,6 +29,8 @@ import {
 import { enforceSubscriptions } from '@orbiting/backend-modules-mailchimp'
 
 export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
+
+const RegionNames = new Intl.DisplayNames(['de-CH'], { type: 'region' })
 
 export class Payments implements PaymentService {
   static #instance: PaymentService
@@ -197,7 +200,9 @@ export class Payments implements PaymentService {
       externalId: subscriptionExternalId,
     })
 
-    const invoice = await this.repo.getInvoice({ externalId: invoiceExternalId })
+    const invoice = await this.repo.getInvoice({
+      externalId: invoiceExternalId,
+    })
 
     const userRow = await this.repo.getUser(userId)
 
@@ -208,7 +213,9 @@ export class Payments implements PaymentService {
     }
 
     if (!invoice) {
-      throw new Error(`Ìnvoice ${invoiceExternalId} does not exist in the Database`,)
+      throw new Error(
+        `Ìnvoice ${invoiceExternalId} does not exist in the Database`,
+      )
     }
 
     if (!ACTIVE_STATUS_TYPES.includes(subscription.status)) {
@@ -229,8 +236,12 @@ export class Payments implements PaymentService {
       )
     }
 
-    await sendPaymentFailedNoticeMail(subscription, invoice, userRow.email, this.pgdb)
-
+    await sendPaymentFailedNoticeMail(
+      subscription,
+      invoice,
+      userRow.email,
+      this.pgdb,
+    )
   }
 
   async syncMailchimpSetupSubscription({
@@ -299,7 +310,12 @@ export class Payments implements PaymentService {
         periodStart: args.periodStart,
         periodEnd: args.periodEnd,
         total: args.total,
+        totalDiscountAmount: args.totalDiscountAmount,
         totalBeforeDiscount: args.totalBeforeDiscount,
+        totalDiscountAmounts: args.totalDiscountAmounts,
+        totalExcludingTax: args.totalExcludingTax,
+        totalTaxAmount: args.totalTaxAmount,
+        totalTaxAmounts: args.totalTaxAmounts,
         discounts: args.discounts,
         subscriptionId: subId,
       })
@@ -426,6 +442,9 @@ export class Payments implements PaymentService {
         cancelAt: args.cancelAt,
         canceledAt: args.canceledAt,
         cancelAtPeriodEnd: args.cancelAtPeriodEnd,
+        cancellationReason: args.cancellationReason,
+        cancellationFeedback: args.cancellationFeedback,
+        cancellationComment: args.cancellationComment,
         endedAt: args.endedAt,
         currentPeriodStart: args.currentPeriodStart,
         currentPeriodEnd: args.currentPeriodEnd,
@@ -551,34 +570,14 @@ export class Payments implements PaymentService {
   }
 
   async saveOrder(userId: string, order: OrderArgs): Promise<Order> {
-    if (!userId) {
-      throw Error('unable to find customer')
-    }
-
     const args: OrderRepoArgs = {
       userId: userId,
       company: order.company,
       externalId: order.externalId,
-      items: order.items,
-      paymentStatus: order.paymentStatus,
-      total: order.total,
-      totalBeforeDiscount: order.totalBeforeDiscount,
+      status: order.status,
+      invoiceId: order.invoiceId,
+      subscriptionId: order.subscriptionId,
     }
-
-    if (order.invoiceExternalId) {
-      const invoice = await this.repo.getInvoice({
-        externalId: order.invoiceExternalId,
-      })
-      args.invoiceId = invoice?.id
-    }
-
-    if (order.subscriptionExternalId) {
-      const sub = await this.repo.getSubscription({
-        externalId: order.subscriptionExternalId,
-      })
-      args.subscriptionId = sub?.id
-    }
-
     return await this.repo.saveOrder(args)
   }
 
@@ -587,12 +586,6 @@ export class Payments implements PaymentService {
     firstName: string,
     lastName: string,
   ): Promise<UserRow> {
-    console.table({
-      userId,
-      firstName,
-      lastName,
-    })
-
     const tx = await this.pgdb.transactionBegin()
     try {
       const user = await tx.public.users.updateAndGet(
@@ -600,6 +593,39 @@ export class Payments implements PaymentService {
         {
           firstName,
           lastName,
+        },
+      )
+
+      tx.transactionCommit()
+      return user
+    } catch (e) {
+      console.log(e)
+      await tx.transactionRollback()
+      throw e
+    }
+  }
+
+  async updateUserAddress(
+    userId: string,
+    addressData: Address,
+  ): Promise<UserRow> {
+    const tx = await this.pgdb.transactionBegin()
+    try {
+      const user = await tx.public.users.findOne({ id: userId })
+
+      const address = await tx.public.addresses.insertAndGet({
+        name: `${user.firstName} ${user.lastName}`,
+        city: addressData.city,
+        line1: addressData.line1,
+        line2: addressData.line2,
+        postalCode: addressData.postal_code,
+        country: RegionNames.of(addressData.country!),
+      })
+
+      await tx.public.users.update(
+        { id: user.id },
+        {
+          addressId: address.id,
         },
       )
 
@@ -705,6 +731,7 @@ export interface PaymentService {
     firstName: string,
     lastName: string,
   ): Promise<UserRow>
+  updateUserAddress(userId: string, addressData: Address): Promise<UserRow>
   sendSetupSubscriptionTransactionalMail({
     subscriptionExternalId,
     userId,

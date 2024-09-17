@@ -26,6 +26,12 @@ CREATE TYPE payments.subscription_status as ENUM (
     'past_due'
 );
 
+CREATE TYPE payments.cancellation_reason as ENUM (
+    'cancellation_requested',
+    'payment_disputed',
+    'payment_failed'
+);
+
 CREATE TYPE payments.order_status as ENUM (
     'paid',
     'unpaid'
@@ -67,6 +73,9 @@ CREATE TABLE IF NOT EXISTS payments.subscriptions (
     "cancelAtPeriodEnd" boolean,
     "cancelAt" timestamptz,
     "canceledAt" timestamptz,
+    "cancellationComment" text,
+    "cancellationFeedback" text,
+    "cancellationReason" payments.cancellation_reason,
     "endedAt" timestamptz,
     "createdAt" timestamptz DEFAULT now(),
     "updatedAt" timestamptz DEFAULT now(),
@@ -88,6 +97,11 @@ CREATE TABLE IF NOT EXISTS payments.invoices (
   "hrId" text NOT NULL default public.make_hrid('payments.invoices'::regclass, 'hrId'::text, (6)::bigint),
   "total" integer NOT NULL,
   "totalBeforeDiscount" integer NOT NULL,
+  "totalDiscountAmount" integer NOT NULL,
+  "totalDiscountAmounts" jsonb,
+  "totalExcludingTax" integer NOT NULL,
+  "totalTaxAmount" integer NOT NULL,
+  "totalTaxAmounts" jsonb,
   "status" payments.invoice_status NOT NULL,
   "items" jsonb NOT NULL,
   "discounts" jsonb,
@@ -107,18 +121,13 @@ CREATE UNIQUE INDEX invoices_hr_id_idx ON payments.invoices ("hrId");
 
 CREATE TABLE IF NOT EXISTS payments.orders (
    "id" uuid default uuid_generate_v4() PRIMARY KEY,
+   "userId" uuid NOT NULL,
    "provider" payments.payment_provider default 'STRIPE',
    "externalId" text NOT NULL,
-   "company" payments.company NOT NULL,
-   "userId" uuid NOT NULL,
-   "total" integer NOT NULL,
-   "totalBeforeDiscount" integer NOT NULL,
-   "paymentStatus" payments.order_status NOT NULL,
-   "discountAmount" integer,
-   "discounts" jsonb,
-   "invoiceId"  uuid,
    "subscriptionId" uuid,
-   "items" jsonb NOT NULL,
+   "invoiceId" uuid NOT NULL,
+   "company" payments.company NOT NULL,
+   "status" payments.order_status NOT NULL,
    "createdAt" timestamptz DEFAULT now(),
    "updatedAt" timestamptz DEFAULT now(),
    CONSTRAINT fk_order_user FOREIGN KEY("userId")
@@ -131,6 +140,7 @@ CREATE TABLE IF NOT EXISTS payments.orders (
 
 CREATE UNIQUE INDEX order_external_id_idx ON payments.orders ("externalId");
 CREATE UNIQUE INDEX order_subscription_id_idx ON payments.orders ("subscriptionId");
+CREATE UNIQUE INDEX order_invoice_id_idx ON payments.orders ("invoiceId");
 
 CREATE TABLE IF NOT EXISTS payments.webhooks (
   "id" uuid default uuid_generate_v4() PRIMARY KEY,
