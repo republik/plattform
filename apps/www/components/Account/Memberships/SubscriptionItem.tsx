@@ -34,6 +34,20 @@ const SubscriptionItem = ({
           <Interaction.H3 style={{ marginBottom: 8 }}>
             {t('magazineSubscription/noActiveSubscription')}
           </Interaction.H3>
+          <Interaction.P>
+            <A
+              href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/MONTHLY`}
+            >
+              {t('magazineSubscription/shoplink/MONTHLY')}
+            </A>
+            {" oder "}
+            <A
+              href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/YEARLY`}
+            >
+              {t('magazineSubscription/shoplink/YEARLY')}
+            </A>
+            {" kaufen."}
+          </Interaction.P>
         </>
       ) : (
         <>

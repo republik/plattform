@@ -7878,6 +7878,14 @@
     {
       "key": "magazineSubscription/customerPortalLink/MONTHLY_SUBSCRIPTION",
       "value": "Abo Verwalten"
+    },
+    {
+      "key": "magazineSubscription/shoplink/MONTHLY",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "magazineSubscription/shoplink/YEARLY",
+      "value": "Jahresmitgliedschaft"
     }
   ]
 }
