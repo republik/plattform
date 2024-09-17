@@ -19,15 +19,12 @@ import belongingsQuery from '../belongingsQuery'
 import MembershipList from '../Memberships/List'
 import PaymentSources from '../PaymentSources'
 import AccountSection from '../AccountSection'
+import SubscriptionItem from './SubscriptionItem'
 
 const { P } = Interaction
 
 const AccountBox = ({ children }) => {
   return <Box style={{ padding: 14, marginBottom: 20 }}>{children}</Box>
-}
-
-const SubscriptionItem = ({ subscription }) => {
-  return <p>{subscription.type}</p>
 }
 
 const Memberships = ({

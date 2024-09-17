@@ -58,6 +58,9 @@ export default gql`
         id
         type
         company
+        currentPeriodEnd
+        cancelAt
+        status
       }
       accessGrants {
         endAt

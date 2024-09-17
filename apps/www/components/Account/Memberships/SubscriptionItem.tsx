@@ -1,0 +1,128 @@
+import { useState } from 'react'
+import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
+import { gql } from '@apollo/client'
+import { useRouter } from 'next/router'
+
+import { Interaction, Button, InlineSpinner, A } from '@project-r/styleguide'
+import withT from '../../../lib/withT'
+import { formatDate } from '../../../lib/utils/format'
+import { errorToString } from '../../../lib/utils/errors'
+import { EditButton } from '../Elements'
+
+type MagazineSubscription = {
+  type: 'YEARLY_SUBSCRIPTION' | 'MONTHLY_SUBSCRIPTION'
+  renewsAtPrice: number
+  currentPeriodEnd?: Date
+  cancelAt?: Date
+  status: 'active' | 'canceled' | 'past_due' | 'unpaid' | 'paused'
+  paymentMethod: string
+  company: 'PROJECT_R' | 'REPUBLIK'
+}
+
+const SubscriptionItem = ({
+  subscription,
+  t,
+}: {
+  subscription: MagazineSubscription
+  t: (arg1: any, arg2?: any) => string
+}) => {
+  // We don't display expired subscriptions: A user cancelled their
+  // subscription and it has expired (cancelAt is in the past)
+  const noActiveSubscription =
+    subscription.cancelAt && new Date(subscription.cancelAt) < new Date()
+  return (
+    <>
+      {noActiveSubscription ? (
+        <>
+          <Interaction.H3 style={{ marginBottom: 8 }}>
+            {t('magazineSubscription/noActiveSubscription')}
+          </Interaction.H3>
+        </>
+      ) : (
+        <>
+          <Interaction.H3 style={{ marginBottom: 8 }}>
+            {`${t(`magazineSubscription/title/${subscription.type}`)} ${
+              subscription.status === 'canceled'
+                ? `${t('magazineSubscription/title/canceled')}`
+                : ''
+            }`}
+          </Interaction.H3>
+          {subscription.cancelAt ? (
+            <>
+              <Interaction.P>
+                {t(`magazineSubscription/canceled/${subscription.type}`, {
+                  cancelAt: formatDate(subscription.cancelAt),
+                })}
+              </Interaction.P>
+            </>
+          ) : (
+            <>
+              <Interaction.P>
+                {t('magazineSubscription/description', {
+                  currentPeriodEnd: formatDate(subscription.currentPeriodEnd),
+                  renewsAtPrice: subscription.renewsAtPrice / 100,
+                })}
+              </Interaction.P>
+              <Interaction.P>
+                {t('magazineSubscription/paymentMethod', {
+                  paymentMethod: subscription.paymentMethod,
+                })}
+              </Interaction.P>
+            </>
+          )}
+          <CustomerPortalLink subscription={subscription} t={t} />
+        </>
+      )}
+    </>
+  )
+}
+
+const createStripeCustomerPortalSessionMutation = gql`
+  mutation createStripeCustomerPortalSession($companyName: CompanyName!) {
+    createStripeCustomerPortalSession(companyName: $companyName) {
+      sessionUrl
+    }
+  }
+`
+
+const CustomerPortalLink = compose(
+  graphql(createStripeCustomerPortalSessionMutation, {
+    props: ({ mutate }) => ({
+      createStripeCustomerPortalSession: (companyName) => {
+        return mutate({
+          variables: {
+            companyName,
+          },
+        })
+      },
+    }),
+  }),
+)(({ createStripeCustomerPortalSession, subscription, t }) => {
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+
+  return (
+    <EditButton
+      onClick={(e) => {
+        e.preventDefault()
+        setLoading(true)
+        createStripeCustomerPortalSession(subscription.company)
+          .then(({ data }) => {
+            router.push(data.createStripeCustomerPortalSession.sessionUrl)
+            setLoading(false)
+          })
+          .catch(errorToString)
+      }}
+    >
+      <span
+        style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 8 }}
+      >
+        {t(`magazineSubscription/customerPortalLink/${subscription.type}`)}
+        {loading ? <InlineSpinner size={16} /> : null}
+      </span>
+    </EditButton>
+  )
+})
+
+export default compose(withT)(SubscriptionItem)
