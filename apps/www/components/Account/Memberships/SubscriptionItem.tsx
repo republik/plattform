@@ -27,6 +27,14 @@ const SubscriptionItem = ({
   subscription: MagazineSubscription
   t: (arg1: any, arg2?: any) => string
 }) => {
+  const {
+    type,
+    status,
+    cancelAt,
+    currentPeriodEnd,
+    renewsAtPrice,
+    paymentMethod,
+  } = subscription
   return (
     <>
       {!subscription ? (
@@ -40,29 +48,31 @@ const SubscriptionItem = ({
             >
               {t('magazineSubscription/shoplink/MONTHLY')}
             </A>
-            {" oder "}
-            <A
-              href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/YEARLY`}
-            >
+            {' oder '}
+            <A href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/YEARLY`}>
               {t('magazineSubscription/shoplink/YEARLY')}
             </A>
-            {" kaufen."}
+            {' kaufen.'}
           </Interaction.P>
         </>
       ) : (
         <>
           <Interaction.H3 style={{ marginBottom: 8 }}>
-            {`${t(`magazineSubscription/title/${subscription.type}`)} ${
-              subscription.status === 'canceled'
+            {`${t(`magazineSubscription/title/${type}`)} ${
+              status === 'canceled'
                 ? `${t('magazineSubscription/title/canceled')}`
                 : ''
             }`}
           </Interaction.H3>
-          {subscription.cancelAt ? (
+          {cancelAt ? (
             <>
               <Interaction.P>
-                {t(`magazineSubscription/canceled/${subscription.type}`, {
-                  cancelAt: formatDate(subscription.cancelAt),
+                {t(`magazineSubscription/canceled/${type}`, {
+                  cancelAt: new Date(cancelAt).toLocaleDateString('de-CH', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  }),
                 })}
               </Interaction.P>
             </>
@@ -70,13 +80,19 @@ const SubscriptionItem = ({
             <>
               <Interaction.P>
                 {t('magazineSubscription/description', {
-                  currentPeriodEnd: formatDate(subscription.currentPeriodEnd),
-                  renewsAtPrice: subscription.renewsAtPrice / 100,
+                  currentPeriodEnd: new Date(
+                    currentPeriodEnd,
+                  ).toLocaleDateString('de-CH', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  }),
+                  renewsAtPrice: renewsAtPrice / 100,
                 })}
               </Interaction.P>
               <Interaction.P>
                 {t('magazineSubscription/paymentMethod', {
-                  paymentMethod: subscription.paymentMethod,
+                  paymentMethod: paymentMethod,
                 })}
               </Interaction.P>
             </>
