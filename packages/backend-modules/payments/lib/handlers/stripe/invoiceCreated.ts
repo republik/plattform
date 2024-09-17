@@ -62,8 +62,8 @@ export function mapInvoiceArgs(
     discounts: invoice.discounts,
     metadata: invoice.metadata,
     externalId: invoice.id,
-    periodStart: new Date(invoice.period_start * 1000),
-    periodEnd: new Date(invoice.period_end * 1000),
+    periodStart: new Date(invoice.lines.data[0].period.start * 1000),
+    periodEnd: new Date(invoice.lines.data[0].period.end * 1000),
     status: invoice.status as any,
     externalSubscriptionId: invoice.subscription as string,
   }
