@@ -27,13 +27,9 @@ const SubscriptionItem = ({
   subscription: MagazineSubscription
   t: (arg1: any, arg2?: any) => string
 }) => {
-  // We don't display expired subscriptions: A user cancelled their
-  // subscription and it has expired (cancelAt is in the past)
-  const noActiveSubscription =
-    subscription.cancelAt && new Date(subscription.cancelAt) < new Date()
   return (
     <>
-      {noActiveSubscription ? (
+      {!subscription ? (
         <>
           <Interaction.H3 style={{ marginBottom: 8 }}>
             {t('magazineSubscription/noActiveSubscription')}

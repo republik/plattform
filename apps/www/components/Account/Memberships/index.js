@@ -78,15 +78,7 @@ const Memberships = ({
             {!inNativeIOSApp &&
               (magazineSubscriptions.length > 0 ? (
                 <AccountSection id='abos' title={t('memberships/title/1')}>
-                  {activeMagazineSubscription ? (
-                    <SubscriptionItem
-                      subscription={activeMagazineSubscription}
-                    />
-                  ) : (
-                    <>
-                      <p>go buy an abo</p>
-                    </>
-                  )}
+                  <SubscriptionItem subscription={activeMagazineSubscription} />
                 </AccountSection>
               ) : (
                 <>
