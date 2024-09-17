@@ -36,7 +36,9 @@ export = {
     }
 
     if (paymentMethod.card) {
-      return `${paymentMethod.card.brand} ${paymentMethod.card.last4}`
+      return `${capitalize(paymentMethod.card.brand)} *${
+        paymentMethod.card.last4
+      }`
     }
 
     if (paymentMethod.paypal) {
@@ -49,4 +51,8 @@ export = {
 
     return null
   },
+}
+
+function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
