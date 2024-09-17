@@ -7853,7 +7853,7 @@
     },
     {
       "key": "magazineSubscription/description",
-      "value": "Nächste Zahlung am {currentPeriodEnd} für {renewsAtPrice} CHF"
+      "value": "Nächste Zahlung am {currentPeriodEnd} für CHF {renewsAtPrice}"
     },
     {
       "key": "magazineSubscription/paymentMethod",

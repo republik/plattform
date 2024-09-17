@@ -61,6 +61,8 @@ export default gql`
         currentPeriodEnd
         cancelAt
         status
+        paymentMethod
+        renewsAtPrice
       }
       accessGrants {
         endAt
