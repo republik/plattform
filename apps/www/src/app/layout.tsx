@@ -10,6 +10,7 @@ import { Metadata } from 'next'
 import { ReactNode } from 'react'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
+import MeContextProvider from 'lib/context/MeContext'
 
 export const metadata: Metadata = {
   metadataBase: new URL(PUBLIC_BASE_URL),
@@ -47,9 +48,11 @@ export default async function RootLayout({
       >
         <ThemeProvider>
           <ApolloWrapper>
-            {children}
-            <NativeAppMessageSync />
-            <SyncUTMToSessionStorage />
+            <MeContextProvider>
+              {children}
+              <NativeAppMessageSync />
+              <SyncUTMToSessionStorage />
+            </MeContextProvider>
           </ApolloWrapper>
         </ThemeProvider>
       </body>

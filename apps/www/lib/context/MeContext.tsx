@@ -1,3 +1,4 @@
+'use client'
 import { createContext, ReactNode, useContext, useEffect } from 'react'
 import NextHead from 'next/head'
 import { ApolloError, useQuery } from '@apollo/client'
