@@ -15,6 +15,10 @@ export class PaymentProviderRecord {
 
 export interface PaymentProviderActions {
   getCustomer(customerId: string): Promise<Stripe.Customer | null>
+  updateCustomerEmail(
+    customerId: string,
+    email: string,
+  ): Promise<Stripe.Customer | null>
   getCustomerSubscriptions(customerId: string): Promise<Stripe.Subscription[]>
   getSubscription(subscriptionId: string): Promise<Stripe.Subscription | null>
   getInvoice(invoiceId: string): Promise<Stripe.Invoice | null>

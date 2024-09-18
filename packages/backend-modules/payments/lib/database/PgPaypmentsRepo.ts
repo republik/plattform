@@ -61,7 +61,7 @@ export class PgPaymentRepo implements PaymentServiceRepo {
   getCustomerIdForCompany(
     userId: string,
     company: Company,
-  ): Promise<{ companyId: string; company: Company } | null> {
+  ): Promise<{ customerId: string; company: Company } | null> {
     return this.#pgdb.payments.stripeCustomers.findOne(
       {
         userId,

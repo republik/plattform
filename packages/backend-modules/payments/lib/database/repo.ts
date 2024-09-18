@@ -39,7 +39,7 @@ export interface CustomerRepo {
   getCustomerIdForCompany(
     userId: string,
     company: Company,
-  ): Promise<{ companyId: string; company: Company } | null>
+  ): Promise<{ customerId: string; company: Company } | null>
   saveCustomerIdForCompany(
     userId: string,
     company: Company,

@@ -27,6 +27,7 @@ import {
   sendSetupSubscriptionMail,
 } from './transactionals/sendTransactionalMails'
 import { enforceSubscriptions } from '@orbiting/backend-modules-mailchimp'
+const { UserEvents } = require('@orbiting/backend-modules-auth')
 
 export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
 
@@ -55,6 +56,16 @@ export class Payments implements PaymentService {
   constructor(pgdb: PgDb) {
     this.pgdb = pgdb
     this.repo = new PgPaymentRepo(pgdb)
+
+    UserEvents.onEmailUpdated(
+      async (args: { userId: string; newEmail: string }) => {
+        await Promise.all(
+          Companies.map((c) =>
+            this.updateCustomerEmail(c, args.userId, args.newEmail),
+          ),
+        )
+      },
+    )
   }
 
   async sendSetupSubscriptionTransactionalMail({
@@ -577,6 +588,18 @@ export class Payments implements PaymentService {
     return customerId
   }
 
+  async updateCustomerEmail(company: Company, userId: string, email: string) {
+    const customer = await this.repo.getCustomerIdForCompany(userId, company)
+    if (!customer) {
+      return null
+    }
+
+    PaymentProvider.forCompany(company).updateCustomerEmail(
+      customer.customerId,
+      email,
+    )
+  }
+
   async saveOrder(userId: string, order: OrderArgs): Promise<Order> {
     const args: OrderRepoArgs = {
       userId: userId,
@@ -726,6 +749,7 @@ export interface PaymentService {
   ): Promise<string | null>
   ensureUserHasCustomerIds(userId: string): Promise<void>
   createCustomer(company: Company, userId: string): any
+  updateCustomerEmail(company: Company, userId: string, email: string): any
   listUserOrders(userId: string): Promise<Order[]>
   getOrder(id: string): Promise<Order>
   saveOrder(userId: string, order: OrderArgs): Promise<Order>

@@ -61,6 +61,21 @@ export class StripeProvider implements PaymentProviderActions {
     return customer.id
   }
 
+  async updateCustomerEmail(
+    customerId: string,
+    email: string,
+  ): Promise<Stripe.Customer | null> {
+    const customer = await this.#stripe.customers.update(customerId, {
+      email: email,
+    })
+
+    if (!customer) {
+      return null
+    }
+
+    return customer
+  }
+
   async getPaymentMethod(
     paymentMethodId: string,
   ): Promise<Stripe.PaymentMethod | null> {

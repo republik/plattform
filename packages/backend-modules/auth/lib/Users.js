@@ -4,16 +4,17 @@ const { parse, format } = require('libphonenumber-js')
 const isUUID = require('is-uuid')
 const Promise = require('bluebird')
 const debug = require('debug')('auth:lib:Users')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const {
-  sendMailTemplate,
-} = require('@orbiting/backend-modules-mail')
-const { changeEmailOnMailchimp } = require('@orbiting/backend-modules-mailchimp')
+  changeEmailOnMailchimp,
+} = require('@orbiting/backend-modules-mailchimp')
 const t = require('./t')
 const useragent = require('./useragent')
 const AuthError = require('./AuthError')
 const { ensureAllRequiredConsents, saveConsents } = require('./Consents')
 const { ensureRequiredFields } = require('./Fields')
 const { TranslatedError } = require('@orbiting/backend-modules-translate')
+const UserEvents = require('./UserEvents')
 
 const {
   initiateSession,
@@ -832,6 +833,12 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
     console.error(e)
   }
 
+  UserEvents.emitEmailUpdated({
+    userId: user.id,
+    previousEmail: user.email,
+    newEmail: email,
+  })
+
   // now refresh the user object and return that
   return pgdb.public.users.findOne({ email })
 }
@@ -886,4 +893,5 @@ module.exports = {
   TwoFactorAlreadyEnabledError,
   SecondFactorNotReadyError,
   AuthorizationRateLimitError,
+  UserEvents,
 }

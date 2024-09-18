@@ -16,4 +16,5 @@ export = {
   transformUser: transfromUser,
   useragent: require('./useragent'),
   Users: require('./Users'),
+  UserEvents: require('./UserEvents'),
 }
