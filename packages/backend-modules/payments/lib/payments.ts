@@ -27,6 +27,7 @@ import {
   sendSetupSubscriptionMail,
 } from './transactionals/sendTransactionalMails'
 import { enforceSubscriptions } from '@orbiting/backend-modules-mailchimp'
+import { getConfig } from './config'
 const { UserEvents } = require('@orbiting/backend-modules-auth')
 
 export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
@@ -684,10 +685,10 @@ export class Payments implements PaymentService {
     let whsec
     switch (company) {
       case 'PROJECT_R':
-        whsec = process.env.STRIPE_PLATFORM_ENDPOINT_SECRET
+        whsec = getConfig().PAYMENTS_PROJECT_R_STRIPE_ENDPOINT_SECRET
         break
       case 'REPUBLIK':
-        whsec = process.env.STRIPE_CONNECTED_ENDPOINT_SECRET
+        whsec = getConfig().PAYMENTS_PROJECT_R_STRIPE_ENDPOINT_SECRET
         break
       default:
         throw Error(`Unsupported company ${company}`)
