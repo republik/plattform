@@ -283,7 +283,7 @@ export class Payments implements PaymentService {
     })
   }
 
-  async syncMailchimpCancelOrEndSubscription({
+  async syncMailchimpUpdateSubscription({
     userId,
   }: {
     userId: string
@@ -794,7 +794,7 @@ export interface PaymentService {
     userId: string
     subscriptionExternalId: string
   }): Promise<void>
-  syncMailchimpCancelOrEndSubscription({
+  syncMailchimpUpdateSubscription({
     userId,
   }: {
     userId: string

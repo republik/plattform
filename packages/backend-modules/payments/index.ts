@@ -8,6 +8,6 @@ export { ConfirmCancelTransactionalWorker } from './lib/workers/ConfirmCancelTra
 export { NoticeEndedTransactionalWorker } from './lib/workers/NoticeEndedTransactionalWorker'
 export { NoticePaymentFailedTransactionalWorker } from './lib/workers/NoticePaymentFailedTransactionalWorker'
 export { SyncMailchimpSetupWorker } from './lib/workers/SyncMailchimpSetupWorker'
-export { SyncMailchimpCancelWorker } from './lib/workers/SyncMailchimpCancelWorker'
+export { SyncMailchimpUpdateWorker } from './lib/workers/SyncMailchimpUpdateWorker'
 export { SyncMailchimpEndedWorker } from './lib/workers/SyncMailchimpEndedWorker'
 export * from './lib/payments'

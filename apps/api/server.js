@@ -50,7 +50,7 @@ const {
   NoticeEndedTransactionalWorker,
   NoticePaymentFailedTransactionalWorker,
   SyncMailchimpSetupWorker,
-  SyncMailchimpCancelWorker,
+  SyncMailchimpUpdateWorker,
   SyncMailchimpEndedWorker,
 } = require('@orbiting/backend-modules-payments')
 
@@ -91,7 +91,7 @@ queue.registerWorker(ConfirmCancelTransactionalWorker)
 queue.registerWorker(NoticeEndedTransactionalWorker)
 queue.registerWorker(NoticePaymentFailedTransactionalWorker)
 queue.registerWorker(SyncMailchimpSetupWorker)
-queue.registerWorker(SyncMailchimpCancelWorker)
+queue.registerWorker(SyncMailchimpUpdateWorker)
 queue.registerWorker(SyncMailchimpEndedWorker)
 
 const {

@@ -3,7 +3,7 @@ import { PaymentService } from '../../payments'
 import { Company } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { ConfirmCancelTransactionalWorker } from '../../workers/ConfirmCancelTransactionalWorker'
-import { SyncMailchimpCancelWorker } from '../../workers/SyncMailchimpCancelWorker'
+import { SyncMailchimpUpdateWorker } from '../../workers/SyncMailchimpUpdateWorker'
 
 export async function processSubscriptionUpdate(
   paymentService: PaymentService,
@@ -40,6 +40,28 @@ export async function processSubscriptionUpdate(
     cancelAtPeriodEnd: event.data.object.cancel_at_period_end,
   })
 
+  const hasPeriodChanged = !!event.data.previous_attributes?.current_period_end
+
+  if (hasPeriodChanged) {
+    const customerId = event.data.object.customer as string
+
+    const userId = await paymentService.getUserIdForCompanyCustomer(
+      company,
+      customerId,
+    )
+    if (!userId) {
+      throw Error(`User for ${customerId} does not exists`)
+    }
+    const queue = Queue.getInstance()
+    await Promise.all([
+      queue.send<SyncMailchimpUpdateWorker>('payments:mailchimp:sync:update', {
+        $version: 'v1',
+        eventSourceId: event.id,
+        userId: userId,
+      }),
+    ])
+  }
+
   if (cancelAt) {
     const customerId = event.data.object.customer as string
 
@@ -61,7 +83,7 @@ export async function processSubscriptionUpdate(
           userId: userId,
         },
       ),
-      queue.send<SyncMailchimpCancelWorker>('payments:mailchimp:sync:cancel', {
+      queue.send<SyncMailchimpUpdateWorker>('payments:mailchimp:sync:update', {
         $version: 'v1',
         eventSourceId: event.id,
         userId: userId,

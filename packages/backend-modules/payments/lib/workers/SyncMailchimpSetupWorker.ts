@@ -42,6 +42,14 @@ export class SyncMailchimpSetupWorker extends BaseWorker<Args> {
 
     const event = wh.payload
 
+    const invoice = await PaymentService.getInvoice({ externalId: event.data.object.invoice as string })
+    const subscription = await PaymentService.getSubscription({ externalId: event.data.object.subscription as string })
+
+    if (!invoice || !subscription) {
+      console.error('Invoice or subscription could not be found in the database')
+      return await this.pgBoss.fail(this.queue, job.id)
+    }
+
     await PaymentService.syncMailchimpSetupSubscription({ userId: job.data.userId, subscriptionExternalId: event.data.object.subscription as string })
 
     console.log(`[${this.queue}] done`)

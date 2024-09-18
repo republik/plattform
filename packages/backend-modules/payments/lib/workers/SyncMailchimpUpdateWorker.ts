@@ -9,8 +9,8 @@ type Args = {
   userId: string
 }
 
-export class SyncMailchimpCancelWorker extends BaseWorker<Args> {
-  readonly queue = 'payments:mailchimp:sync:cancel'
+export class SyncMailchimpUpdateWorker extends BaseWorker<Args> {
+  readonly queue = 'payments:mailchimp:sync:update'
   readonly options: SendOptions = {
     retryLimit: 3,
     retryDelay: 120, // retry every 2 minutes
@@ -40,7 +40,17 @@ export class SyncMailchimpCancelWorker extends BaseWorker<Args> {
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
-    await PaymentService.syncMailchimpCancelOrEndSubscription({ userId: job.data.userId })
+    const event = wh.payload
+
+    const invoice = await PaymentService.getInvoice({ externalId: event.data.object.latest_invoice as string })
+    const subscription = await PaymentService.getSubscription({ externalId: event.data.object.id as string })
+
+    if (!invoice || !subscription) {
+      console.error('Latest invoice or subscription could not be found in the database')
+      return await this.pgBoss.fail(this.queue, job.id)
+    }
+
+    await PaymentService.syncMailchimpUpdateSubscription({ userId: job.data.userId })
 
     console.log(`[${this.queue}] done`)
   }
