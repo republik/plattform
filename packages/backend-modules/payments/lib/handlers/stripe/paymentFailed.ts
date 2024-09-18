@@ -19,9 +19,19 @@ export async function processPaymentFailed(
     throw Error(`User for ${customerId} does not exists`)
   }
 
+  const externalSubId = event.data.object.subscription
+
   const subscription = await paymentService.getSubscription({
-    externalId: event.data.object.subscription as string,
+    externalId: externalSubId as string,
   })
+
+  if (!subscription) {
+    console.error(
+      'subscription %s not present in subscription table; skipping',
+      externalSubId,
+    )
+    return
+  }
 
   if (subscription?.status !== 'past_due') {
     throw new Error(

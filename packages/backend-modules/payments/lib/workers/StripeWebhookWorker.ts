@@ -42,9 +42,6 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
       console.log('processing stripe event %s [%s]', event.id, event.type)
 
       switch (event.type) {
-        // case 'customer.updated':
-        //   // await processCustomerUpdated(PaymentService, job.data.company, event)
-        //   break
         case 'checkout.session.completed':
           await processCheckoutCompleted(
             PaymentService,
@@ -53,6 +50,10 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
           )
           break
         case 'customer.subscription.created':
+          if (isPledgeBased(event.data.object.metadata)) {
+            console.log('pledge based event [%s]; skipping', event.id)
+            break
+          }
           await processSubscriptionCreated(
             PaymentService,
             job.data.company,
@@ -60,6 +61,10 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
           )
           break
         case 'customer.subscription.updated':
+          if (isPledgeBased(event.data.object.metadata)) {
+            console.log('pledge based event [%s]; skipping', event.id)
+            break
+          }
           await processSubscriptionUpdate(
             PaymentService,
             job.data.company,
@@ -67,6 +72,10 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
           )
           break
         case 'customer.subscription.deleted':
+          if (isPledgeBased(event.data.object.metadata)) {
+            console.log('pledge based event [%s]; skipping', event.id)
+            break
+          }
           await processSubscriptionDeleted(
             PaymentService,
             job.data.company,
@@ -105,4 +114,8 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
     )
     await PaymentService.markWebhookAsProcessed(event.id)
   }
+}
+
+function isPledgeBased(metadata: any) {
+  return 'pledgeId' in metadata
 }

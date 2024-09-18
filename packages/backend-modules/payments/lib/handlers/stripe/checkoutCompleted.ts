@@ -7,6 +7,7 @@ import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker
 import { PaymentProvider } from '../../providers/provider'
 import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
+import { SyncAddressDataWorker } from '../../workers/SyncAddressDataWorker'
 
 export async function processCheckoutCompleted(
   paymentService: PaymentService,
@@ -25,10 +26,6 @@ export async function processCheckoutCompleted(
 
   const customFields = event.data.object.custom_fields
   await syncUserNameData(paymentService, userId, customFields)
-  const addressData = event.data.object.customer_details?.address
-  if (addressData) {
-    await syncAddressData(paymentService, userId, addressData)
-  }
 
   let paymentStatus = event.data.object.payment_status
   if (paymentStatus === 'no_payment_required') {
@@ -82,6 +79,8 @@ export async function processCheckoutCompleted(
 
   const queue = Queue.getInstance()
 
+  const addressData = event.data.object.customer_details?.address
+
   await Promise.all([
     queue.send<ConfirmSetupTransactionalWorker>(
       'payments:transactional:confirm:setup',
@@ -97,6 +96,13 @@ export async function processCheckoutCompleted(
       eventSourceId: event.id,
       userId: userId,
     }),
+    addressData
+      ? queue.send<SyncAddressDataWorker>('checkout:customer:address:sync', {
+          $version: 'v1',
+          userId: userId,
+          address: addressData,
+        })
+      : undefined,
   ])
 
   return
@@ -119,13 +125,7 @@ async function syncUserNameData(
     if (firstName && lastName) {
       return await paymentService.updateUserName(userId, firstName, lastName)
     }
-  }
-}
 
-export async function syncAddressData(
-  paymentService: PaymentService,
-  userId: string,
-  addressData: Stripe.Address,
-) {
-  paymentService.updateUserAddress(userId, addressData)
+    return null
+  }
 }

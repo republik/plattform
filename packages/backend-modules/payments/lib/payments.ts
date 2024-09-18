@@ -83,9 +83,11 @@ export class Payments implements PaymentService {
     }
     const userRow = await this.repo.getUser(userId)
 
-    const invoice = await this.repo.getInvoice({id: invoiceId})
+    const invoice = await this.repo.getInvoice({ id: invoiceId })
     if (!invoice) {
-      throw new Error(`Invoice ${invoiceId} does not exist in the database, not able to send subscription setup confirmation transactional mail.`)
+      throw new Error(
+        `Invoice ${invoiceId} does not exist in the database, not able to send subscription setup confirmation transactional mail.`,
+      )
     }
     // send mail
     await sendSetupSubscriptionMail(
@@ -619,21 +621,27 @@ export class Payments implements PaymentService {
     try {
       const user = await tx.public.users.findOne({ id: userId })
 
-      const address = await tx.public.addresses.insertAndGet({
+      const args = {
         name: `${user.firstName} ${user.lastName}`,
         city: addressData.city,
         line1: addressData.line1,
         line2: addressData.line2,
         postalCode: addressData.postal_code,
         country: RegionNames.of(addressData.country!),
-      })
+      }
 
-      await tx.public.users.update(
-        { id: user.id },
-        {
-          addressId: address.id,
-        },
-      )
+      if (user.addressId) {
+        await tx.public.addresses.update({ id: user.addressId }, args)
+      } else {
+        const address = await tx.public.addresses.insertAndGet(args)
+
+        await tx.public.users.update(
+          { id: user.id },
+          {
+            addressId: address.id,
+          },
+        )
+      }
 
       tx.transactionCommit()
       return user
