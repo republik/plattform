@@ -1043,6 +1043,8 @@ type MagazineSubscription {
   endedAt: DateTime
   id: ID!
   invoices: [Invoice!]!
+  paymentMethod: String
+  renewsAtPrice: Int
   status: MagazineSubscriptionStatus!
   stripeId: String!
   type: MagazineSubscriptionType!
