@@ -688,7 +688,7 @@ export class Payments implements PaymentService {
         whsec = getConfig().PAYMENTS_PROJECT_R_STRIPE_ENDPOINT_SECRET
         break
       case 'REPUBLIK':
-        whsec = getConfig().PAYMENTS_PROJECT_R_STRIPE_ENDPOINT_SECRET
+        whsec = getConfig().PAYMENTS_REPUBLIK_STRIPE_ENDPOINT_SECRET
         break
       default:
         throw Error(`Unsupported company ${company}`)
