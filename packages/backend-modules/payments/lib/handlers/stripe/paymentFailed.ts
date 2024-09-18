@@ -19,19 +19,31 @@ export async function processPaymentFailed(
     throw Error(`User for ${customerId} does not exists`)
   }
 
-  const queue = Queue.getInstance()
+  const subscription = await paymentService.getSubscription({
+    externalId: event.data.object.subscription as string,
+  })
 
-  await Promise.all([
-    queue.send<NoticePaymentFailedTransactionalWorker>(
-      'payments:transactional:notice:payment_failed',
-      {
-        $version: 'v1',
-        eventSourceId: event.id,
-        userId: userId,
-        invoiceExternalId: event.data.object.id,
-      },
-    ),
-  ])
+  if (subscription?.status !== 'past_due') {
+    throw new Error(
+      `subscription of failed invoice ${event.data.object.id} is not past_due but ${subscription?.status}, retrying`,
+    )
+  }
+
+  if (subscription?.status === 'past_due') {
+    const queue = Queue.getInstance()
+
+    await Promise.all([
+      queue.send<NoticePaymentFailedTransactionalWorker>(
+        'payments:transactional:notice:payment_failed',
+        {
+          $version: 'v1',
+          eventSourceId: event.id,
+          userId: userId,
+          invoiceExternalId: event.data.object.id,
+        },
+      ),
+    ])
+  }
 
   return
 }

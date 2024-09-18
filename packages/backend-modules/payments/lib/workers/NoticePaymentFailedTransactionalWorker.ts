@@ -43,30 +43,18 @@ export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
 
     const event = wh.payload
 
-    const subscription = await PaymentService.getSubscription({
-      externalId: event.data.object.subscription as string,
-    })
-
-    if (subscription?.status !== 'past_due') {
-      throw new Error(
-        `subscription of failed invoice ${event.data.object.id} is not past_due but ${subscription?.status}, retrying`,
-      )
+    try {
+      // send transactional
+      await PaymentService.sendNoticePaymentFailedTransactionalMail({
+        subscriptionExternalId: event.data.object.subscription as string,
+        userId: job.data.userId,
+        invoiceExternalId: job.data.invoiceExternalId,
+      })
+    } catch (e) {
+      console.error(`[${this.queue}] error`)
+      console.error(e)
+      throw e
     }
-
-    if (subscription?.status === 'past_due') {
-      try {
-        // send transactional
-        await PaymentService.sendNoticePaymentFailedTransactionalMail({
-          subscriptionExternalId: event.data.object.subscription as string,
-          userId: job.data.userId,
-          invoiceExternalId: job.data.invoiceExternalId,
-        })
-      } catch (e) {
-        console.error(`[${this.queue}] error`)
-        console.error(e)
-        throw e
-      }
-    } 
 
     console.log(`[${this.queue}] done`)
   }
