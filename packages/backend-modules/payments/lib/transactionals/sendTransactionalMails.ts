@@ -52,10 +52,17 @@ export async function sendCancelConfirmationMail(
   email: string,
   pgdb: PgDb,
 ) {
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }
+
   const globalMergeVars: MergeVariable[] = [
     {
       name: 'end_date',
-      content: endDate.toLocaleDateString(),
+      content: endDate.toLocaleDateString('de-CH', dateOptions),
     },
   ]
 
