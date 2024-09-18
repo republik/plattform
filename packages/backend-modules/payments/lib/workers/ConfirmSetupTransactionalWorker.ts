@@ -6,7 +6,7 @@ import Stripe from 'stripe'
 type Args = {
   $version: 'v1'
   userId: string
-  orderId: string
+  externalInvoiceId: string
   eventSourceId: string
 }
 
@@ -48,7 +48,7 @@ export class ConfirmSetupTransactionalWorker extends BaseWorker<Args> {
       await PaymentService.sendSetupSubscriptionTransactionalMail({
         subscriptionExternalId: event.data.object.subscription as string,
         userId: job.data.userId,
-        orderId: job.data.orderId,
+        externalInvoiceId: job.data.externalInvoiceId,
       })
     } catch (e) {
       console.error(`[${this.queue}] error`)

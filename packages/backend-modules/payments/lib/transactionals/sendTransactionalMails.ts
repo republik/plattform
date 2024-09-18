@@ -2,27 +2,16 @@ import { sendMailTemplate } from '@orbiting/backend-modules-mail'
 import { t } from '@orbiting/backend-modules-translate'
 
 import { PgDb } from 'pogi'
-import { Invoice, Order, Subscription } from '../types'
-import { Payments } from '../payments'
+import { Invoice, Subscription } from '../types'
 
 type MergeVariable = { name: string; content: string | boolean }
 
 export async function sendSetupSubscriptionMail(
   subscription: Subscription,
-  order: Order,
+  invoice: Invoice,
   email: string,
   pgdb: PgDb,
 ) {
-  if (!subscription || !order) {
-    console.log(
-      'No subscription or order found, not sending transactional mail',
-    )
-    return
-  }
-
-  const invoice = (await Payments.getInstance().getInvoice({
-    id: order.invoiceId,
-  }))!
 
   const globalMergeVars: MergeVariable[] = [
     {

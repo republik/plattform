@@ -60,11 +60,11 @@ export class Payments implements PaymentService {
   async sendSetupSubscriptionTransactionalMail({
     subscriptionExternalId,
     userId,
-    orderId,
+    externalInvoiceId,
   }: {
     subscriptionExternalId: string
     userId: string
-    orderId: string
+    externalInvoiceId: string
   }): Promise<void> {
     const subscription = await this.repo.getSubscription({
       externalId: subscriptionExternalId,
@@ -83,14 +83,14 @@ export class Payments implements PaymentService {
     }
     const userRow = await this.repo.getUser(userId)
 
-    const order = await this.repo.getOrder(orderId)
-    if (!order) {
-      throw new Error(`order with id ${orderId} does not exist`)
+    const invoice = await this.repo.getInvoice({externalId: externalInvoiceId})
+    if (!invoice) {
+      throw new Error(`Invoice ${externalInvoiceId} does not exist in the database, not able to send subscription setup confirmation transactional mail.`)
     }
     // send mail
     await sendSetupSubscriptionMail(
       subscription,
-      order,
+      invoice,
       userRow.email,
       this.pgdb,
     )
@@ -741,11 +741,11 @@ export interface PaymentService {
   sendSetupSubscriptionTransactionalMail({
     subscriptionExternalId,
     userId,
-    orderId,
+    externalInvoiceId,
   }: {
     subscriptionExternalId: string
     userId: string
-    orderId: string
+    externalInvoiceId: string
   }): Promise<void>
   sendCancelConfirmationTransactionalMail({
     subscriptionExternalId,

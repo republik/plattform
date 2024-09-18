@@ -102,13 +102,15 @@ export type ProjectRYearlySubscription = Subscription & {
   company: 'PROJECT_R'
 }
 
+export type InvoiceStatus = 'draft' | 'paid' | 'void' | 'refunded' | 'open'
+
 export type Invoice = {
   id: string
   subscriptionId: string
   company: Company
   externalId: string
   metadata: Record<string, any>
-  status: 'paid' | 'void' | 'refunded' | 'open'
+  status: InvoiceStatus
   total: number
   totalBeforeDiscount: number
   totalDiscountAmount: number
@@ -131,7 +133,7 @@ export type InvoiceArgs = {
   externalSubscriptionId?: string
   periodStart?: Date
   periodEnd?: Date
-  status: 'draft' | 'paid' | 'void' | 'refunded' | 'open'
+  status: InvoiceStatus
   total: number
   totalBeforeDiscount: number
   totalDiscountAmount: number
@@ -150,7 +152,7 @@ export type InvoiceRepoArgs = {
   subscriptionId?: string
   periodStart?: Date
   periodEnd?: Date
-  status: 'draft' | 'paid' | 'void' | 'refunded'
+  status: InvoiceStatus
   total: number
   totalBeforeDiscount: number
   totalDiscountAmount: number
@@ -163,7 +165,7 @@ export type InvoiceRepoArgs = {
 
 export type InvoiceUpdateArgs = {
   discounts?: any
-  status: 'draft' | 'paid' | 'void' | 'refunded'
+  status: InvoiceStatus
   metadata?: Record<string, any>
   total?: number
   totalBeforeDiscount?: number

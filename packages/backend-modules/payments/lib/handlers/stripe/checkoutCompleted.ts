@@ -72,7 +72,7 @@ export async function processCheckoutCompleted(
     }
   }
 
-  const order = await paymentService.saveOrder(userId, {
+  await paymentService.saveOrder(userId, {
     company: company,
     externalId: event.data.object.id,
     invoiceId: invoiceId as string,
@@ -88,7 +88,7 @@ export async function processCheckoutCompleted(
       {
         $version: 'v1',
         eventSourceId: event.id,
-        orderId: order.id,
+        externalInvoiceId: invoiceId as string,
         userId: userId,
       },
     ),
