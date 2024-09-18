@@ -405,6 +405,34 @@
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
+      "key": "api/email/subscription_created_monthly_subscription/subject",
+      "value": "Republik: Ihr Monats-Abo"
+    },
+    {
+      "key": "api/email/subscription_created_yearly_subscription/subject",
+      "value": "Republik: Ihre Mitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_cancel_notice/subject",
+      "value": "Bestätigung Ihrer Kündigung"
+    },
+    {
+      "key": "api/email/subscription_ended_monthly_subscription/subject",
+      "value": "Ihr letzter Tag an Bord der Republik"
+    },
+    {
+      "key": "api/email/subscription_ended_yearly_subscription/subject",
+      "value": "Ihr letzter Tag an Bord der Republik"
+    },
+    {
+      "key": "api/email/subscription_payment_failed_monthly_subscription/subject",
+      "value": "Zahlung fehlgeschlagen - Republik Monats-Abo"
+    },
+    {
+      "key": "api/email/subscription_payment_failed_yearly_subscription/subject",
+      "value": "Zahlung fehlgeschlagen - Republik Mitgliedschaft"
+    },
+    {
       "key": "api/email/option/goodie/notebook/1",
       "value": "Notizbuch"
     },
