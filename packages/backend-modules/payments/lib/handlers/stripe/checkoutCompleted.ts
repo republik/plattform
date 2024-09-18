@@ -88,7 +88,7 @@ export async function processCheckoutCompleted(
       {
         $version: 'v1',
         eventSourceId: event.id,
-        externalInvoiceId: invoiceId as string,
+        invoiceId: invoiceId as string,
         userId: userId,
       },
     ),
