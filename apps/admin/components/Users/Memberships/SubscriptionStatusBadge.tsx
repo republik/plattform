@@ -1,8 +1,5 @@
 import { MagazineSubscriptionStatus } from '#graphql/republik-api/__generated__/gql/graphql'
 
-const startWithCapitalLetter = (str: string) =>
-  str.charAt(0).toUpperCase() + str.slice(1)
-
 interface Color {
   light: string
   dark: string
@@ -37,7 +34,7 @@ const colorMapping: Record<MagazineSubscriptionStatus, Color> = {
   ended: infoColoring,
   paused: infoColoring,
   active: successColoring,
-  trailing: successColoring,
+  trialing: successColoring,
   incomplete: warningColoring,
   incomplete_expired: warningColoring,
   overdue: errorColoring,
@@ -63,7 +60,7 @@ export default function SubscriptionStatusBadge(
         fontWeight: 600,
       }}
     >
-      {startWithCapitalLetter(props.status.replaceAll('_', ' '))}
+      {props.status.replaceAll('_', ' ')}
     </span>
   )
 }

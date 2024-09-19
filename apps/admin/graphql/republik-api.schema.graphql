@@ -571,6 +571,10 @@ type CrowdfundingStatus {
   people: Int!
 }
 
+type CustomerPortalSession {
+  sessionUrl: String
+}
+
 """Date (format %d.%m.%Y)"""
 scalar Date
 
@@ -1039,11 +1043,12 @@ type MagazineSubscription {
   endedAt: DateTime
   id: ID!
   invoices: [Invoice!]!
+  paymentMethod: String
+  renewsAtPrice: Int
   status: MagazineSubscriptionStatus!
   stripeId: String!
   type: MagazineSubscriptionType!
   updatedAt: DateTime!
-  renewsAtPrice: Int!
 }
 
 enum MagazineSubscriptionStatus {
@@ -1055,7 +1060,7 @@ enum MagazineSubscriptionStatus {
   overdue
   past_due
   paused
-  trailing
+  trialing
   unpaid
 }
 
@@ -2918,6 +2923,7 @@ type mutations {
   bookCalendarSlot(id: ID!, userId: ID): CalendarSlot!
   cancelCalendarSlot(id: ID!, userId: ID): CalendarSlot!
   cancelCandidacy(slug: String!): Election!
+  cancelMagazineSubscription(subscriptionId: String!): Boolean
   cancelMembership(details: CancellationInput!, id: ID!, immediately: Boolean): Membership!
   cancelPledge(pledgeId: ID!): Pledge
 
@@ -2934,6 +2940,7 @@ type mutations {
   commit(document: DocumentInput!, isTemplate: Boolean, message: String!, parentId: ID, repoId: ID!): Commit!
   createDiscussion(anonymity: Permission!, maxLength: Int, minInterval: Int, tagRequired: Boolean!, tags: [String!], title: String): ID!
   createElection(electionInput: ElectionInput!): Election!
+  createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
   createVoting(votingInput: VotingInput!): Voting!
   deleteRedirection(id: ID!): Boolean!
   deleteUser(unpublishComments: Boolean, userId: ID!): User
