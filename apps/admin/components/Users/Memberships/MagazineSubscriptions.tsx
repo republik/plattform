@@ -13,6 +13,8 @@ export const displayDateTime = (rawDate) => {
 }
 
 const STRIPE_DOMAIN = 'https://dashboard.stripe.com'
+const PROJECT_R_STRIPE_ID = 'acct_18rDG8FHX910KaTH'
+const REPUBLIK_STRIPE_ID = 'acct_1BUH9rD5iIOpR5wN'
 
 interface MagazineSubscriptionsProps {
   userId: string
@@ -83,7 +85,13 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                       })}
                     >
                       <Link
-                        href={`${STRIPE_DOMAIN}/subscriptions/${subscription.stripeId}`}
+                        href={`${STRIPE_DOMAIN}/subscriptions/${
+                          subscription.stripeId
+                        }?merchant_id=${
+                          subscription.company === 'REPUBLIK'
+                            ? REPUBLIK_STRIPE_ID
+                            : PROJECT_R_STRIPE_ID
+                        }`}
                         target='_blank'
                       >
                         Stripe Subscription <IconLink />
