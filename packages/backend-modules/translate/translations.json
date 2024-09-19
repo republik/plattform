@@ -425,11 +425,11 @@
       "value": "Ihr letzter Tag an Bord der Republik"
     },
     {
-      "key": "api/email/subscription_payment_failed_monthly_subscription/subject",
+      "key": "api/email/subscription_payment_failed_notice_monthly_subscription/subject",
       "value": "Zahlung fehlgeschlagen - Republik Monats-Abo"
     },
     {
-      "key": "api/email/subscription_payment_failed_yearly_subscription/subject",
+      "key": "api/email/subscription_payment_failed_notice_yearly_subscription/subject",
       "value": "Zahlung fehlgeschlagen - Republik Mitgliedschaft"
     },
     {
