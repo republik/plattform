@@ -26,14 +26,6 @@ const SubscriptionItem = ({
   subscription: MagazineSubscription
   t: (arg1: any, arg2?: any) => string
 }) => {
-  const {
-    type,
-    status,
-    cancelAt,
-    currentPeriodEnd,
-    renewsAtPrice,
-    paymentMethod,
-  } = subscription
   return (
     <>
       {!subscription ? (
@@ -57,15 +49,15 @@ const SubscriptionItem = ({
       ) : (
         <>
           <Interaction.H3 style={{ marginBottom: 8 }}>
-            {`${t(`magazineSubscription/title/${type}`)} ${
-              cancelAt ? `${t('magazineSubscription/title/canceled')}` : ''
+            {`${t(`magazineSubscription/title/${subscription.type}`)} ${
+              subscription.cancelAt ? `${t('magazineSubscription/title/canceled')}` : ''
             }`}
           </Interaction.H3>
-          {cancelAt ? (
+          {subscription.cancelAt ? (
             <>
               <Interaction.P>
-                {t(`magazineSubscription/canceled/${type}`, {
-                  cancelAt: new Date(cancelAt).toLocaleDateString('de-CH', {
+                {t(`magazineSubscription/canceled/${subscription.type}`, {
+                  cancelAt: new Date(subscription.cancelAt).toLocaleDateString('de-CH', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
@@ -78,18 +70,18 @@ const SubscriptionItem = ({
               <Interaction.P>
                 {t('magazineSubscription/description', {
                   currentPeriodEnd: new Date(
-                    currentPeriodEnd,
+                    subscription.currentPeriodEnd,
                   ).toLocaleDateString('de-CH', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
                   }),
-                  renewsAtPrice: renewsAtPrice / 100,
+                  renewsAtPrice: subscription.renewsAtPrice / 100,
                 })}
               </Interaction.P>
               <Interaction.P>
                 {t('magazineSubscription/paymentMethod', {
-                  paymentMethod: paymentMethod,
+                  paymentMethod: subscription.paymentMethod,
                 })}
               </Interaction.P>
             </>
