@@ -4,9 +4,8 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { useRouter } from 'next/router'
 
-import { Interaction, Button, InlineSpinner, A } from '@project-r/styleguide'
+import { Interaction, InlineSpinner, A } from '@project-r/styleguide'
 import withT from '../../../lib/withT'
-import { formatDate } from '../../../lib/utils/format'
 import { errorToString } from '../../../lib/utils/errors'
 import { EditButton } from '../Elements'
 
@@ -59,9 +58,7 @@ const SubscriptionItem = ({
         <>
           <Interaction.H3 style={{ marginBottom: 8 }}>
             {`${t(`magazineSubscription/title/${type}`)} ${
-              status === 'canceled'
-                ? `${t('magazineSubscription/title/canceled')}`
-                : ''
+              cancelAt ? `${t('magazineSubscription/title/canceled')}` : ''
             }`}
           </Interaction.H3>
           {cancelAt ? (
