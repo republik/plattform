@@ -1385,6 +1385,10 @@
       "value": "Sie benötigen ein bestimmtes Abonnement oder Mitgliedschaft um den Zugriff zu teilen."
     },
     {
+      "key": "api/access/constraint/requireActiveMembershipOrSubscription/error",
+      "value": "Sie benötigen ein aktives Abonnement oder eine Mitgliedschaft um den Zugriff zu teilen."
+    },
+    {
       "key": "api/access/constraint/requireRole/error",
       "value": "Sie benötigen die Rolle «{role}» um den Zugriff zu teilen."
     },
