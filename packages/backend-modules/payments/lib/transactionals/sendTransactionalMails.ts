@@ -52,11 +52,12 @@ export async function sendSetupSubscriptionMail(
 
 type SendCancelConfirmationMailArgs = {
   endDate: Date
+  userId: string
   email: string
 }
 
 export async function sendCancelConfirmationMail(
-  { endDate, email }: SendCancelConfirmationMailArgs,
+  { endDate, userId, email }: SendCancelConfirmationMailArgs,
   pgdb: PgDb,
 ) {
   const dateOptions: Intl.DateTimeFormatOptions = {
@@ -83,6 +84,11 @@ export async function sendCancelConfirmationMail(
       globalMergeVars,
     },
     { pgdb },
+    { onceFor: {
+      type: templateName,
+      userId,
+      keys: `endDate:${endDate.valueOf()}`
+    }}
   )
 
   return sendMailResult

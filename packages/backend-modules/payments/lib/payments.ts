@@ -149,7 +149,7 @@ export class Payments implements PaymentService {
     }
 
     await sendCancelConfirmationMail(
-      { endDate: subscription.cancelAt, email: userRow.email },
+      { endDate: subscription.cancelAt, userId: userId, email: userRow.email },
       this.pgdb,
     )
   }
