@@ -27,9 +27,16 @@ export = {
       return null
     }
 
+    const customer = await PaymentProvider.forCompany(
+      subscription.company,
+    ).getCustomer(sub.customer as string)
+
     const paymentMethod = await PaymentProvider.forCompany(
       subscription.company,
-    ).getPaymentMethod(sub.default_payment_method as string)
+    ).getPaymentMethod(
+      (sub.default_payment_method as string) ||
+        (customer?.invoice_settings.default_payment_method as string),
+    )
 
     if (!paymentMethod) {
       return null
