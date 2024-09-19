@@ -6,13 +6,16 @@ import { Invoice, Subscription } from '../types'
 
 type MergeVariable = { name: string; content: string | boolean }
 
+type SendSetupSubscriptionMailArgs = {
+  subscription: Subscription
+  invoice: Invoice
+  email: string
+}
+
 export async function sendSetupSubscriptionMail(
-  subscription: Subscription,
-  invoice: Invoice,
-  email: string,
+  { subscription, invoice, email }: SendSetupSubscriptionMailArgs,
   pgdb: PgDb,
 ) {
-
   const globalMergeVars: MergeVariable[] = [
     {
       name: 'total_before_discount',
@@ -47,12 +50,15 @@ export async function sendSetupSubscriptionMail(
   return sendMailResult
 }
 
+type SendCancelConfirmationMailArgs = {
+  endDate: Date
+  email: string
+}
+
 export async function sendCancelConfirmationMail(
-  endDate: Date,
-  email: string,
+  { endDate, email }: SendCancelConfirmationMailArgs,
   pgdb: PgDb,
 ) {
-
   const dateOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'long',
@@ -82,10 +88,14 @@ export async function sendCancelConfirmationMail(
   return sendMailResult
 }
 
+type SendEndedNoticeMailArgs = {
+  subscription: Subscription
+  cancellationReason: string | undefined
+  email: string
+}
+
 export async function sendEndedNoticeMail(
-  subscription: Subscription,
-  cancellationReason: string | undefined,
-  email: string,
+  { subscription, cancellationReason, email }: SendEndedNoticeMailArgs,
   pgdb: PgDb,
 ) {
   if (!subscription) {
@@ -118,10 +128,14 @@ export async function sendEndedNoticeMail(
   return sendMailResult
 }
 
+type SendPaymentFailedNoticeMailArgs = {
+  subscription: Subscription
+  invoice: Invoice
+  email: string
+}
+
 export async function sendPaymentFailedNoticeMail(
-  subscription: Subscription,
-  invoice: Invoice,
-  email: string,
+  { subscription, invoice, email }: SendPaymentFailedNoticeMailArgs,
   pgdb: PgDb,
 ) {
   const globalMergeVars: MergeVariable[] = [

@@ -103,9 +103,7 @@ export class Payments implements PaymentService {
     }
     // send mail
     await sendSetupSubscriptionMail(
-      subscription,
-      invoice,
-      userRow.email,
+      { subscription, invoice, email: userRow.email },
       this.pgdb,
     )
   }
@@ -148,8 +146,7 @@ export class Payments implements PaymentService {
     }
 
     await sendCancelConfirmationMail(
-      subscription.cancelAt,
-      userRow.email,
+      { endDate: subscription.cancelAt, email: userRow.email },
       this.pgdb,
     )
   }
@@ -194,9 +191,7 @@ export class Payments implements PaymentService {
     }
 
     await sendEndedNoticeMail(
-      subscription,
-      cancellationReason,
-      userRow.email,
+      { subscription, cancellationReason, email: userRow.email },
       this.pgdb,
     )
   }
@@ -257,9 +252,7 @@ export class Payments implements PaymentService {
     }
 
     await sendPaymentFailedNoticeMail(
-      subscription,
-      invoice,
-      userRow.email,
+      { subscription, invoice, email: userRow.email },
       this.pgdb,
     )
   }
@@ -794,11 +787,7 @@ export interface PaymentService {
     userId: string
     subscriptionExternalId: string
   }): Promise<void>
-  syncMailchimpUpdateSubscription({
-    userId,
-  }: {
-    userId: string
-  }): Promise<void>
+  syncMailchimpUpdateSubscription({ userId }: { userId: string }): Promise<void>
   sendSubscriptionEndedNoticeTransactionalMail({
     userId,
     subscriptionExternalId,
