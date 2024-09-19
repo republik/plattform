@@ -5,6 +5,7 @@ export { StripeCustomerCreateWorker } from './lib/workers/StripeCustomerCreateWo
 export { SyncAddressDataWorker } from './lib/workers/SyncAddressDataWorker'
 export { ConfirmSetupTransactionalWorker } from './lib/workers/ConfirmSetupTransactionalWorker'
 export { ConfirmCancelTransactionalWorker } from './lib/workers/ConfirmCancelTransactionalWorker'
+export { ConfirmRevokeCancellationTransactionalWorker } from './lib/workers/ConfirmRevokeCancellationTransactionalWorker'
 export { NoticeEndedTransactionalWorker } from './lib/workers/NoticeEndedTransactionalWorker'
 export { NoticePaymentFailedTransactionalWorker } from './lib/workers/NoticePaymentFailedTransactionalWorker'
 export { SyncMailchimpSetupWorker } from './lib/workers/SyncMailchimpSetupWorker'

@@ -433,6 +433,10 @@
       "value": "Zahlung fehlgeschlagen - Republik Mitgliedschaft"
     },
     {
+      "key": "api/email/subscription_revoke_cancellation_notice/subject",
+      "value": "Republik: Ihre Kündigung wurde rückgängig gemacht"
+    },
+    {
       "key": "api/email/option/goodie/notebook/1",
       "value": "Notizbuch"
     },

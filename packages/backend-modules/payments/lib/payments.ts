@@ -24,6 +24,7 @@ import {
   sendCancelConfirmationMail,
   sendEndedNoticeMail,
   sendPaymentFailedNoticeMail,
+  sendRevokeCancellationConfirmationMail,
   sendSetupSubscriptionMail,
 } from './transactionals/sendTransactionalMails'
 import { enforceSubscriptions } from '@orbiting/backend-modules-mailchimp'
@@ -136,7 +137,7 @@ export class Payments implements PaymentService {
       )
     }
 
-    if (!subscription.cancelAt) {
+    if (!subscription.cancelAt || !subscription.canceledAt) {
       throw new Error(
         `Subscription ${subscriptionExternalId} is not cancelled, not sending cancellation confirmation transactional`,
       )
@@ -149,9 +150,45 @@ export class Payments implements PaymentService {
     }
 
     await sendCancelConfirmationMail(
-      { endDate: subscription.cancelAt, userId: userId, email: userRow.email },
+      { endDate: subscription.cancelAt, cancellationDate: subscription.canceledAt, userId: userId, email: userRow.email },
       this.pgdb,
     )
+  }
+
+  async sendRevokeCancellationConfirmationTransactionalMail({
+    subscriptionExternalId,
+    userId,
+    revokedCancellationDate,
+  }: {
+    subscriptionExternalId: string
+    userId: string
+    revokedCancellationDate: Date
+  }): Promise<void> {
+    const subscription = await this.repo.getSubscription({
+      externalId: subscriptionExternalId,
+    })
+
+    const userRow = await this.repo.getUser(userId)
+
+    if (!subscription) {
+      throw new Error(
+        `Subscription [${subscriptionExternalId}] does not exist in the Database`,
+      )
+    }
+
+    if (subscription.cancelAt) {
+      throw new Error(
+        `Subscription ${subscriptionExternalId} is still cancelled, not sending revoke cancellation confirmation transactional`,
+      )
+    }
+
+    if (!userRow.email) {
+      throw new Error(
+        `Could not find email for user with id ${userId}, not sending revoke cancellation confirmation transactional`,
+      )
+    }
+
+    await sendRevokeCancellationConfirmationMail({currentEndDate: subscription.currentPeriodEnd, revokedCancellationDate, userId, email: userRow.email}, this.pgdb)
   }
 
   async sendSubscriptionEndedNoticeTransactionalMail({
@@ -809,5 +846,14 @@ export interface PaymentService {
     userId: string
     subscriptionExternalId: string
     invoiceExternalId: string
+  }): Promise<void>
+  sendRevokeCancellationConfirmationTransactionalMail({
+    subscriptionExternalId,
+    userId,
+    revokedCancellationDate,
+  }: {
+    subscriptionExternalId: string
+    userId: string
+    revokedCancellationDate: Date
   }): Promise<void>
 }

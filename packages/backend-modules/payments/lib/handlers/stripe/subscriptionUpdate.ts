@@ -4,6 +4,7 @@ import { Company } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { ConfirmCancelTransactionalWorker } from '../../workers/ConfirmCancelTransactionalWorker'
 import { SyncMailchimpUpdateWorker } from '../../workers/SyncMailchimpUpdateWorker'
+import { ConfirmRevokeCancellationTransactionalWorker } from '../../workers/ConfirmRevokeCancellationTransactionalWorker'
 
 export async function processSubscriptionUpdate(
   paymentService: PaymentService,
@@ -42,6 +43,13 @@ export async function processSubscriptionUpdate(
 
   const hasPeriodChanged = !!event.data.previous_attributes?.current_period_end
 
+  const previousCanceledAt = event.data.previous_attributes?.canceled_at
+  const revokedCancellationDate =
+    typeof previousCanceledAt === 'number'
+      ? new Date(previousCanceledAt * 1000)
+      : (previousCanceledAt as null | undefined)
+  const isCancellationRevoked = !cancelAt && !!revokedCancellationDate
+
   if (hasPeriodChanged) {
     const customerId = event.data.object.customer as string
 
@@ -54,6 +62,35 @@ export async function processSubscriptionUpdate(
     }
     const queue = Queue.getInstance()
     await Promise.all([
+      queue.send<SyncMailchimpUpdateWorker>('payments:mailchimp:sync:update', {
+        $version: 'v1',
+        eventSourceId: event.id,
+        userId: userId,
+      }),
+    ])
+  }
+
+  if (isCancellationRevoked) {
+    const customerId = event.data.object.customer as string
+
+    const userId = await paymentService.getUserIdForCompanyCustomer(
+      company,
+      customerId,
+    )
+    if (!userId) {
+      throw Error(`User for ${customerId} does not exists`)
+    }
+    const queue = Queue.getInstance()
+    await Promise.all([
+      queue.send<ConfirmRevokeCancellationTransactionalWorker>(
+        'payments:transactional:confirm:revoke_cancellation',
+        {
+          $version: 'v1',
+          eventSourceId: event.id,
+          userId: userId,
+          revokedCancellationDate: revokedCancellationDate,
+        },
+      ),
       queue.send<SyncMailchimpUpdateWorker>('payments:mailchimp:sync:update', {
         $version: 'v1',
         eventSourceId: event.id,

@@ -52,12 +52,13 @@ export async function sendSetupSubscriptionMail(
 
 type SendCancelConfirmationMailArgs = {
   endDate: Date
+  cancellationDate: Date
   userId: string
   email: string
 }
 
 export async function sendCancelConfirmationMail(
-  { endDate, userId, email }: SendCancelConfirmationMailArgs,
+  { endDate, cancellationDate, userId, email }: SendCancelConfirmationMailArgs,
   pgdb: PgDb,
 ) {
   const dateOptions: Intl.DateTimeFormatOptions = {
@@ -84,11 +85,60 @@ export async function sendCancelConfirmationMail(
       globalMergeVars,
     },
     { pgdb },
-    { onceFor: {
-      type: templateName,
-      userId,
-      keys: [`endDate:${endDate.valueOf()}`]
-    }}
+    {
+      onceFor: {
+        type: templateName,
+        userId,
+        keys: [`cancellationDate:${cancellationDate.valueOf()}`],
+      },
+    },
+  )
+
+  return sendMailResult
+}
+
+type SendRevokeCancellationConfirmationMailArgs = {
+  currentEndDate: Date
+  revokedCancellationDate: Date
+  userId: string
+  email: string
+}
+
+export async function sendRevokeCancellationConfirmationMail(
+  { currentEndDate, revokedCancellationDate, userId, email }: SendRevokeCancellationConfirmationMailArgs,
+  pgdb: PgDb,
+) {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }
+
+  const globalMergeVars: MergeVariable[] = [
+    {
+      name: 'renew_date',
+      content: currentEndDate.toLocaleDateString('de-CH', dateOptions),
+    },
+  ]
+
+  const templateName = 'subscription_revoke_cancellation_notice'
+  const sendMailResult = await sendMailTemplate(
+    {
+      to: email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
+      subject: t(`api/email/${templateName}/subject`),
+      templateName,
+      mergeLanguage: 'handlebars',
+      globalMergeVars,
+    },
+    { pgdb },
+    {
+      onceFor: {
+        type: templateName,
+        userId,
+        keys: [`revokedCancellationDate:${revokedCancellationDate.valueOf()}`],
+      },
+    },
   )
 
   return sendMailResult
