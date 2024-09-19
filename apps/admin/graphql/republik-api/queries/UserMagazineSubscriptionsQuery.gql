@@ -11,6 +11,7 @@ query UserMagazineSubscriptions($userId: ID!) {
       updatedAt
       endedAt
       canceledAt
+      renewsAtPrice
     }
   }
 }

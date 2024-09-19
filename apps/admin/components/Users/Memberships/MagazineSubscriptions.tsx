@@ -73,6 +73,7 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                         <span>{subscription.type}</span>
                         <span>
                           Erstellt am {displayDateTime(subscription.createdAt)},
+                          Preis: CHF {subscription.renewsAtPrice / 100}
                         </span>
                       </div>
 

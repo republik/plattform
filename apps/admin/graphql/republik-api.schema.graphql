@@ -1043,6 +1043,7 @@ type MagazineSubscription {
   stripeId: String!
   type: MagazineSubscriptionType!
   updatedAt: DateTime!
+  renewsAtPrice: Int!
 }
 
 enum MagazineSubscriptionStatus {
