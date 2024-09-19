@@ -87,7 +87,7 @@ export async function sendCancelConfirmationMail(
     { onceFor: {
       type: templateName,
       userId,
-      keys: `endDate:${endDate.valueOf()}`
+      keys: [`endDate:${endDate.valueOf()}`]
     }}
   )
 
