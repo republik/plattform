@@ -38,6 +38,7 @@ export async function processInvoiceCreated(
   )
   if (isPledgeBased(sub?.metadata)) {
     console.log('pledge invoice event [%s]; skipping', event.id)
+    return
   }
 
   const args = mapInvoiceArgs(company, invoice)

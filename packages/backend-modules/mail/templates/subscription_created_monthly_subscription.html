@@ -47,21 +47,6 @@
                       entschieden haben.
                     </p>
                     <p>
-                      Das Monats-Abo verlängert sich automatisch{{#if discount_code}} zum Normalpreis{{/if}}. Die von Ihnen angegebene
-                      Zahlungsmethode belasten wir dementsprechend ab Beginn der
-                      ersten Verlängerungsperiode monatlich mit CHF
-                      {{total_before_discount}}.-.
-                    </p>
-                    <p>
-                      Unter
-                      <a href="{{link_account_goto}}">Konto</a> finden Sie Ihre
-                      <a href="{{link_account_abos_goto}}"
-                        >persönliche Übersicht zu Ihrem Abonnement</a
-                      >. Am gleichen Ort können Sie alle Einstellungen vornehmen
-                      (z. B. die Zahlungsmethode ändern) oder das Abo jederzeit
-                      kündigen.
-                    </p>
-                    <p>
                       Sie können ab sofort
                       <a href="{{link_signin}}">das Magazin lesen</a>, an
                       <a href="{{link_dialog}}"
@@ -71,7 +56,7 @@
                       <a href="{{link_account_share}}"
                         >mit Ihren Freunden oder Feinden teilen</a
                       >.
-                    </p>
+                    </p>                    
 
                     <p>Details zum Kauf:</p>
 
@@ -86,6 +71,20 @@
                         <strong>Total: {{total}} CHF</strong>
                       </li>
                     </ul>
+
+                    <p>
+                      Das Monats-Abo verlängert sich automatisch{{#if discount_code}} zum Normalpreis{{/if}}. Die von Ihnen angegebene
+                      Zahlungsmethode belasten wir dementsprechend ab dem kommenden Monat mit CHF
+                      {{total_before_discount}}.- monatlich.
+                    </p>
+
+                    <p>
+                      In Ihrem 
+                      <a href="{{link_account_goto}}">Konto</a> finden Sie
+                      <a href="{{link_account_abos_goto}}">alle relevanten Informationen zu Ihrem Monats-Abo</a>. 
+                      Dort können Sie Ihre Einstellungen verwalten (z.B. die Zahlungsmethode ändern) 
+                      oder das Abo jederzeit kündigen (was wir nicht hoffen).
+                    </p>
 
                     <p>Viel Vergnügen beim Start mit der Republik.</p>
                     <p>Ihre Crew der Republik</p>
