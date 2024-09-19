@@ -42,8 +42,7 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-                    <p>Wir freuen uns, dass Sie sich für eine Mitgliedschaft 
-                      entschieden haben.</p>
+                    <p>Wir freuen uns, dass Sie sich für eine Mitgliedschaft entschieden haben.</p>
                     <p>
                       Sie können ab sofort
                       <a href="{{link_signin}}">das Magazin lesen</a>, an
@@ -56,11 +55,9 @@
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                    <li>Jährlicher Preis: {{total_before_discount}} CHF</li>
+                      <li>Monatlicher Preis: {{total_before_discount}} CHF</li>
                       {{#if discount_code}}
-                      <li>
-                        Einstiegsangebot {{discount_total}} CHF: –{{discount_total}} CHF
-                      </li>
+                      <li>{{discount_code}}: –{{discount_total}} CHF</li>
                       {{/if}}
                       <li>
                         <strong>Total: {{total}} CHF</strong>
@@ -70,15 +67,14 @@
                     <p>
                       Ihre Jahresmitgliedschaft verlängert sich automatisch{{#if discount_code}} zum Normalpreis{{/if}}. 
                       Die von Ihnen angegebene Zahlungsmethode belasten wir dementsprechend 
-                      in einem Jahr mit CHF {{total_before_discount}}.-. Wir senden Ihnen rechtzeitig 
-                      vor der Verlängerung eine Erinnerung. 
+                      in einem Jahr mit CHF {{total_before_discount}}.-.
                     </p>
                     <p>
-                      Unter
-                      <a href="{{link_account_goto}}">Konto</a> finden Sie Ihre
-                      <a href="{{link_account_abos_goto}}">persönliche Übersicht zu Ihrer Mitgliedschaft</a>. Am gleichen Ort können Sie alle Einstellungen vornehmen
-                      (z. B. die Zahlungsmethode ändern) oder die Mitgliedschaft
-                      jederzeit kündigen (was wir nicht hoffen).
+                      In Ihrem 
+                      <a href="{{link_account_goto}}">Konto</a> finden Sie
+                      <a href="{{link_account_abos_goto}}">alle relevanten Informationen zu Ihrer Mitgliedschaft</a>. 
+                      Dort können Sie Ihre Einstellungen verwalten (z.B. die Zahlungsmethode ändern) 
+                      oder die Mitgliedschaft jederzeit kündigen (was wir nicht hoffen).
                     </p>
 
                     <p>Wir wünschen Ihnen viel Vergnügen mit der Republik.</p>
