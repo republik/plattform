@@ -58,6 +58,9 @@ export class Payments implements PaymentService {
     this.pgdb = pgdb
     this.repo = new PgPaymentRepo(pgdb)
 
+    UserEvents.onSignedIn(async ({ userId }) => {
+      await this.ensureUserHasCustomerIds(userId)
+    })
     UserEvents.onEmailUpdated(
       async (args: { userId: string; newEmail: string }) => {
         await Promise.all(
@@ -520,6 +523,7 @@ export class Payments implements PaymentService {
             company,
           },
           {
+            priority: 1000,
             singletonKey: `stripe:customer:create:for:${userId}:${company}`,
           },
         )

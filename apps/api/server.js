@@ -189,8 +189,6 @@ const run = async (workerId, config) => {
   // signin hooks
   const signInHooks = [
     ({ userId, pgdb }) => mail.sendPledgeConfirmations({ userId, pgdb, t }),
-    ({ userId }) =>
-      PaymentsService.getInstance().ensureUserHasCustomerIds(userId),
   ]
 
   const applicationName = [

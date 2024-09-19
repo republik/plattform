@@ -644,6 +644,11 @@ const authorizeSession = async ({
       { fields: ['context'] },
     )
 
+    UserEvents.emitSignedIn({
+      userId: user.id,
+      isNew: isVerificationUpdated,
+      contexts: tokensUsed.map((context) => context.context),
+    })
     await Promise.all(
       signInHooks.map((hook) =>
         hook({
