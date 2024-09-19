@@ -21,7 +21,7 @@ export class SyncMailchimpUpdateWorker extends BaseWorker<Args> {
       throw Error('unable to perform this job version. Expected v1')
     }
 
-    console.log(`[${this.queue}] start with ${JSON.stringify(job.data)}`)
+    console.log(`[${this.queue}] start`)
 
     const PaymentService = Payments.getInstance()
 
