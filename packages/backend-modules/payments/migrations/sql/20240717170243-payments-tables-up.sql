@@ -19,6 +19,7 @@ CREATE TYPE payments.payment_provider as ENUM (
 CREATE TYPE payments.subscription_status as ENUM (
     'trialing',
     'incomplete',
+    'incomplete_expired',
     'paused',
     'active',
     'canceled',
