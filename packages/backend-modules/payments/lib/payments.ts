@@ -58,7 +58,7 @@ export class Payments implements PaymentService {
     this.pgdb = pgdb
     this.repo = new PgPaymentRepo(pgdb)
 
-    UserEvents.onSignedIn(async ({ userId }) => {
+    UserEvents.onSignedIn(async ({ userId }: { userId: string }) => {
       await this.ensureUserHasCustomerIds(userId)
     })
     UserEvents.onEmailUpdated(
