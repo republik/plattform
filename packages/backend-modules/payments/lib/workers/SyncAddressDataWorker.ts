@@ -10,7 +10,7 @@ type Args = {
 }
 
 export class SyncAddressDataWorker extends BaseWorker<Args> {
-  readonly queue = 'checkout:customer:address:sync'
+  readonly queue = 'payments:stripe:checkout:sync-address'
 
   async perform([job]: Job<Args>[]): Promise<void> {
     const PaymentService = Payments.getInstance()

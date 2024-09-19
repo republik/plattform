@@ -28,7 +28,7 @@ export class Queue {
       console.error('[JobQueue]: %s', error)
     })
     this.pgBoss.on('monitor-states', (stats) => {
-      console.log('[JobQueue]: %v', stats)
+      console.log('[JobQueue]: ', stats)
     })
   }
 

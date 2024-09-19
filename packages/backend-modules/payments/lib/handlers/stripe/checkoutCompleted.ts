@@ -97,11 +97,14 @@ export async function processCheckoutCompleted(
       userId: userId,
     }),
     addressData
-      ? queue.send<SyncAddressDataWorker>('checkout:customer:address:sync', {
-          $version: 'v1',
-          userId: userId,
-          address: addressData,
-        })
+      ? queue.send<SyncAddressDataWorker>(
+          'payments:stripe:checkout:sync-address',
+          {
+            $version: 'v1',
+            userId: userId,
+            address: addressData,
+          },
+        )
       : undefined,
   ])
 

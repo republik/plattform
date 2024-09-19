@@ -35,7 +35,7 @@ export async function handleStripeWebhook(req: Request, res: Response) {
     })
 
     await Queue.getInstance().send<StripeWebhookWorker>(
-      'payment:stripe:webhook',
+      'payments:stripe:webhook',
       {
         $version: 'v1',
         eventSourceId: e.sourceId,

@@ -20,7 +20,7 @@ type WorkerArgsV1 = {
 }
 
 export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
-  readonly queue = 'payment:stripe:webhook'
+  readonly queue = 'payments:stripe:webhook'
   readonly options: SendOptions = {
     retryLimit: 3,
     retryDelay: 120, // retry every 2 minutes
