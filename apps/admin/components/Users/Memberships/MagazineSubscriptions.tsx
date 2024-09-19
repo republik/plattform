@@ -61,6 +61,10 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
+                        cursor: 'pointer',
+                        ':hover': {
+                          background: '#eee',
+                        },
                       })}
                     >
                       <div
@@ -70,11 +74,31 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                           gap: '0.5rem',
                         })}
                       >
-                        <span>{subscription.type}</span>
-                        <span>
-                          Erstellt am {displayDateTime(subscription.createdAt)},
-                          Preis: CHF {subscription.renewsAtPrice / 100}
-                        </span>
+                        <h4
+                          {...css({
+                            fontWeight: '500',
+                            margin: 0,
+                          })}
+                        >
+                          {subscription.type}
+                        </h4>
+                        <div>
+                          Erstellt am {displayDateTime(subscription.createdAt)}
+                        </div>
+                        {subscription.canceledAt ? (
+                          <div>
+                            Gekündigt am{' '}
+                            {displayDateTime(subscription.canceledAt)}, läuft
+                            aus am{' '}
+                            {displayDateTime(subscription.currentPeriodEnd)}
+                          </div>
+                        ) : (
+                          <div>
+                            Erneuert sich am{' '}
+                            {displayDateTime(subscription.currentPeriodEnd)} für
+                            CHF {subscription.renewsAtPrice / 100}
+                          </div>
+                        )}
                       </div>
 
                       <SubscriptionStatusBadge status={subscription.status} />
@@ -82,7 +106,7 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                     <div
                       {...css({
                         display: 'flex',
-                        marginBottom: '1rem',
+                        marginBlock: '1rem',
                       })}
                     >
                       <Link
