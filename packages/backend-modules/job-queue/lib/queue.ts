@@ -14,6 +14,7 @@ export class Queue {
       this.instance = new Queue({
         application_name: config.queueApplicationName,
         connectionString: config.connectionString,
+        monitorStateIntervalSeconds: 60,
       })
     }
 
