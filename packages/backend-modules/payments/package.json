@@ -19,7 +19,6 @@
   },
   "scripts": {
     "dev": "tsc -w",
-    "build": "tsc",
-    "test": "jest"
+    "build": "tsc"
   }
 }
