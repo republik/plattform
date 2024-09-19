@@ -2,6 +2,7 @@ import Stripe from 'stripe'
 import { Company } from '../../types'
 import { PaymentService } from '../../payments'
 import { PaymentProvider } from '../../providers/provider'
+import { isPledgeBased } from './utils'
 
 export async function processInvoiceUpdated(
   paymentService: PaymentService,
@@ -19,6 +20,13 @@ export async function processInvoiceUpdated(
   if (!invoice) {
     console.error('unknown invoice %s', event.data.object.id)
     return
+  }
+
+  const sub = await PaymentProvider.forCompany(company).getSubscription(
+    invoice.subscription as string,
+  )
+  if (isPledgeBased(sub?.metadata)) {
+    console.log('pledge invoice event [%s]; skipping', event.id)
   }
 
   await paymentService.updateInvoice(

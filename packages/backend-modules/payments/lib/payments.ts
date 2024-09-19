@@ -150,7 +150,12 @@ export class Payments implements PaymentService {
     }
 
     await sendCancelConfirmationMail(
-      { endDate: subscription.cancelAt, cancellationDate: subscription.canceledAt, userId: userId, email: userRow.email },
+      {
+        endDate: subscription.cancelAt,
+        cancellationDate: subscription.canceledAt,
+        userId: userId,
+        email: userRow.email,
+      },
       this.pgdb,
     )
   }
@@ -188,7 +193,15 @@ export class Payments implements PaymentService {
       )
     }
 
-    await sendRevokeCancellationConfirmationMail({currentEndDate: subscription.currentPeriodEnd, revokedCancellationDate, userId, email: userRow.email}, this.pgdb)
+    await sendRevokeCancellationConfirmationMail(
+      {
+        currentEndDate: subscription.currentPeriodEnd,
+        revokedCancellationDate,
+        userId,
+        email: userRow.email,
+      },
+      this.pgdb,
+    )
   }
 
   async sendSubscriptionEndedNoticeTransactionalMail({
@@ -562,6 +575,8 @@ export class Payments implements PaymentService {
           {
             priority: 1000,
             singletonKey: `stripe:customer:create:for:${userId}:${company}`,
+            retryLimit: 5,
+            retryDelay: 500,
           },
         )
       }

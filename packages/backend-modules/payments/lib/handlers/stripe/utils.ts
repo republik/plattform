@@ -16,3 +16,7 @@ export function getSubscriptionType(productId: string): SubscriptionType {
       throw new Error('Unknown product')
   }
 }
+
+export function isPledgeBased(metadata: any) {
+  return 'pledgeId' in metadata
+}

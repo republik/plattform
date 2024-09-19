@@ -2,6 +2,7 @@ import Stripe from 'stripe'
 import { PaymentService } from '../../payments'
 import { Company, InvoiceArgs } from '../../types'
 import { PaymentProvider } from '../../providers/provider'
+import { isPledgeBased } from './utils'
 
 export async function processInvoiceCreated(
   paymentService: PaymentService,
@@ -30,6 +31,13 @@ export async function processInvoiceCreated(
   )
   if (!invoice) {
     throw new Error(`Unknown invoice ${event.data.object.id}`)
+  }
+
+  const sub = await PaymentProvider.forCompany(company).getSubscription(
+    invoice.subscription as string,
+  )
+  if (isPledgeBased(sub?.metadata)) {
+    console.log('pledge invoice event [%s]; skipping', event.id)
   }
 
   const args = mapInvoiceArgs(company, invoice)

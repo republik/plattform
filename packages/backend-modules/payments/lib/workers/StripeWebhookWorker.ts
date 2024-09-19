@@ -10,6 +10,7 @@ import { processSubscriptionUpdate } from '../handlers/stripe/subscriptionUpdate
 import { processSubscriptionCreated } from '../handlers/stripe/subscriptionCreated'
 import { processCheckoutCompleted } from '../handlers/stripe/checkoutCompleted'
 import { processPaymentFailed } from '../handlers/stripe/paymentFailed'
+import { isPledgeBased } from '../handlers/stripe/utils'
 
 type WorkerArgsV1 = {
   $version: 'v1'
@@ -114,8 +115,4 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
     )
     await PaymentService.markWebhookAsProcessed(event.id)
   }
-}
-
-function isPledgeBased(metadata: any) {
-  return 'pledgeId' in metadata
 }
