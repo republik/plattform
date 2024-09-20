@@ -48,6 +48,22 @@ export default gql`
           name
         }
       }
+      magazineSubscriptions {
+        id
+        type
+        company
+        status
+      }
+      activeMagazineSubscription {
+        id
+        type
+        company
+        currentPeriodEnd
+        cancelAt
+        status
+        paymentMethod
+        renewsAtPrice
+      }
       accessGrants {
         endAt
         campaign {

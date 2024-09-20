@@ -68,7 +68,7 @@ export default async function Page({ searchParams }) {
     },
   })
 
-  const [me, isNewsletterSubscribed] = await Promise.all([
+  const [{ me }, isNewsletterSubscribed] = await Promise.all([
     getMe(),
     getNewsletterSubscriptionStatus({
       newsletterName: NewsletterName.Climate,

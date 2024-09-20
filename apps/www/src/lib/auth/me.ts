@@ -4,7 +4,16 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { getClient } from '../apollo/client'
 
-export async function getMe(): Promise<MeQuery['me']> {
+export async function getMe(): Promise<{
+  me: MeQuery['me']
+  isMember: boolean
+  hasActiveMembership: boolean
+}> {
   const { data } = await getClient().query({ query: MeDocument })
-  return data.me
+  return {
+    me: data?.me,
+    isMember: data?.me?.roles.some((role) => role === 'member'),
+    hasActiveMembership:
+      !!data?.me?.activeMembership || !!data?.me?.activeMagazineSubscription,
+  }
 }

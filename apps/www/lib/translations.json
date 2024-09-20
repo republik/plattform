@@ -658,7 +658,7 @@
     },
     {
       "key": "Account/Update/email/edit",
-      "value": "ändern"
+      "value": "E-Mail ändern"
     },
     {
       "key": "Account/Update/cancel",
@@ -7838,6 +7838,54 @@
     {
       "key": "CallToActions/customComponents/FutureCampaignBanner/button/0",
       "value": "Noch heute Verstärkung holen und Gratismonate sichern"
+    },
+    {
+      "key": "magazineSubscription/title/YEARLY_SUBSCRIPTION",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "magazineSubscription/title/MONTHLY_SUBSCRIPTION",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "magazineSubscription/title/canceled",
+      "value": "(gekündigt)"
+    },
+    {
+      "key": "magazineSubscription/description",
+      "value": "Nächste Zahlung am {currentPeriodEnd} für CHF {renewsAtPrice}"
+    },
+    {
+      "key": "magazineSubscription/paymentMethod",
+      "value": "Zahlungsmethode: {paymentMethod}"
+    },
+    {
+      "key": "magazineSubscription/noActiveSubscription",
+      "value": "Sie haben kein gültiges Abonnement"
+    },
+    {
+      "key": "magazineSubscription/canceled/YEARLY_SUBSCRIPTION",
+      "value": "Ihre Mitgliedschaft läuft am {cancelAt} aus."
+    },
+    {
+      "key": "magazineSubscription/canceled/MONTHLY_SUBSCRIPTION",
+      "value": "Ihr Abo läuft am {cancelAt} aus."
+    },
+    {
+      "key": "magazineSubscription/customerPortalLink/YEARLY_SUBSCRIPTION",
+      "value": "Mitgliedschaft Verwalten"
+    },
+    {
+      "key": "magazineSubscription/customerPortalLink/MONTHLY_SUBSCRIPTION",
+      "value": "Abo Verwalten"
+    },
+    {
+      "key": "magazineSubscription/shoplink/MONTHLY",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "magazineSubscription/shoplink/YEARLY",
+      "value": "Jahresmitgliedschaft"
     }
   ]
 }

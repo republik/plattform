@@ -19,6 +19,7 @@ import belongingsQuery from '../belongingsQuery'
 import MembershipList from '../Memberships/List'
 import PaymentSources from '../PaymentSources'
 import AccountSection from '../AccountSection'
+import SubscriptionItem from './SubscriptionItem'
 
 const { P } = Interaction
 
@@ -34,6 +35,8 @@ const Memberships = ({
   hasActiveMemberships,
   hasAccessGrants,
   paymentMethodCompany,
+  magazineSubscriptions,
+  activeMagazineSubscription,
 }) => {
   const { query } = useRouter()
   const { inNativeIOSApp } = useInNativeApp()
@@ -71,16 +74,28 @@ const Memberships = ({
               </AccountBox>
             )}
 
-            {!inNativeIOSApp && <MembershipList highlightId={query.id} />}
-
-            {!inNativeIOSApp && paymentMethodCompany && (
-              <AccountSection
-                id='payment'
-                title={t('memberships/title/payment')}
-              >
-                <PaymentSources company={paymentMethodCompany} query={query} />
-              </AccountSection>
-            )}
+            {/* Account Section, hide in iOS */}
+            {!inNativeIOSApp &&
+              (magazineSubscriptions.length > 0 ? (
+                <AccountSection id='abos' title={t('memberships/title/1')}>
+                  <SubscriptionItem subscription={activeMagazineSubscription} />
+                </AccountSection>
+              ) : (
+                <>
+                  <MembershipList highlightId={query.id} />
+                  {paymentMethodCompany && (
+                    <AccountSection
+                      id='payment'
+                      title={t('memberships/title/payment')}
+                    >
+                      <PaymentSources
+                        company={paymentMethodCompany}
+                        query={query}
+                      />
+                    </AccountSection>
+                  )}
+                </>
+              ))}
           </>
         )
       }}
@@ -94,14 +109,23 @@ export default compose(
   graphql(belongingsQuery, {
     props: ({ data }) => {
       const isReady = !data.loading && !data.error && data.me
+
+      console.log(data.me)
+
       const hasMemberships =
-        isReady && data.me.memberships && !!data.me.memberships.length
+        isReady &&
+        (!!data.me.memberships?.length ||
+          !!data.me.magazineSubscriptions?.length)
       const hasActiveMemberships =
-        isReady && hasMemberships && data.me.memberships.some((m) => m.active)
+        isReady &&
+        hasMemberships &&
+        (data.me.memberships.some((m) => m.active) ||
+          !!data.me.activeMagazineSubscription)
       const monthlyMembership =
         isReady &&
         hasMemberships &&
-        data.me.memberships.find((m) => m.type.name === 'MONTHLY_ABO')
+        (data.me.memberships.find((m) => m.type.name === 'MONTHLY_ABO') ||
+          data.me.activeMagazineSubscription?.type === 'MONTHLY_SUBSCRIPTION')
       const hasAccessGrants =
         isReady && data.me.accessGrants && !!data.me.accessGrants.length
       const autoPayMembership =
@@ -115,7 +139,11 @@ export default compose(
         (!hasActiveMemberships && monthlyMembership)
 
       const paymentMethodCompany =
-        autoPayMembership && autoPayMembership.pledge.package.company
+        (autoPayMembership && autoPayMembership.pledge.package.company) ||
+        data.me?.activeMagazineSubscription?.company
+
+      const magazineSubscriptions = data?.me?.magazineSubscriptions
+      const activeMagazineSubscription = data?.me?.activeMagazineSubscription
       return {
         loading: data.loading,
         error: data.error,
@@ -123,6 +151,8 @@ export default compose(
         hasActiveMemberships,
         hasAccessGrants,
         paymentMethodCompany,
+        magazineSubscriptions,
+        activeMagazineSubscription,
       }
     },
   }),

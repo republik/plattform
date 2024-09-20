@@ -5,9 +5,9 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import withT from '../../lib/withT'
 import { errorToString } from '../../lib/utils/errors'
-import { meQuery } from '../../lib/apollo/withMe'
 
 import { A, InlineSpinner } from '@project-r/styleguide'
+import { MeDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 class SignOut extends Component {
   constructor(props) {
@@ -84,7 +84,7 @@ export const withSignOut = compose(
         mutate({
           refetchQueries: [
             {
-              query: meQuery,
+              query: MeDocument,
             },
           ],
         }),

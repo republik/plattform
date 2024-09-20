@@ -28,5 +28,10 @@ query Me {
       graceEndDate
       canProlong
     }
+    activeMagazineSubscription {
+      id
+    }
+    prolitterisOptOut: hasConsentedTo(name: "PROLITTERIS_OPT_OUT")
+    progressConsent: hasConsentedTo(name: "PROGRESS")
   }
 }
