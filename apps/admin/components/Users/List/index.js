@@ -72,6 +72,9 @@ const usersQuery = gql`
             name
           }
         }
+        activeMagazineSubscription {
+          type
+        }
       }
     }
   }
