@@ -1,7 +1,11 @@
-import { User } from "@orbiting/backend-modules-types"
-import MailchimpInterface from "../MailchimpInterface"
+import { GraphqlContext, User } from '@orbiting/backend-modules-types'
+import MailchimpInterface from '../MailchimpInterface'
 
-export async function resubscribeEmail(user: User, createResubscribeEmailCacheFn, context) {
+export async function resubscribeEmail(
+  user: User,
+  createResubscribeEmailCacheFn: (userId: string, ctx: GraphqlContext) => any,
+  context: GraphqlContext,
+) {
   const { userId, email, firstName, lastName } = user
 
   const mailchimp = MailchimpInterface({ console })
@@ -20,7 +24,7 @@ export async function resubscribeEmail(user: User, createResubscribeEmailCacheFn
     }
     await mailchimp.updateMember(email, body)
   } else {
-    // to resend a confirmation email and hence resubscribe a contact through the API, 
+    // to resend a confirmation email and hence resubscribe a contact through the API,
     // we need to set the contact's status to unsubscribed and then to pending again
     const cacheLock = createResubscribeEmailCacheFn(userId, context)
 

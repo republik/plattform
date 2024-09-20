@@ -23,12 +23,18 @@ export async function archiveUnsubscribed(dryRun: boolean) {
     MAILCHIMP_PROBELESEN_AUDIENCE_ID,
   ]
 
-  bluebird.each(audiencesToArchiveUnsubscribed, async (audienceId) =>
+  bluebird.each(audiencesToArchiveUnsubscribed, async (audienceId: string) =>
     archiveUnsubscribedInAudience({ dryRun, audienceId }),
   )
 }
 
-const archiveUnsubscribedInAudience = async ({ dryRun, audienceId }) => {
+const archiveUnsubscribedInAudience = async ({
+  dryRun,
+  audienceId,
+}: {
+  dryRun: boolean
+  audienceId: string
+}) => {
   const mailchimp = MailchimpInterface({ console })
   const unsubscribedMembers = await mailchimp.getMembersFromAudienceWithStatus(
     MailchimpInterface.MemberStatus.Unsubscribed,
@@ -40,7 +46,7 @@ const archiveUnsubscribedInAudience = async ({ dryRun, audienceId }) => {
     )
   }
   const emailsToArchive = unsubscribedMembers.members.map(
-    (member) => member.email_address,
+    (member: any) => member.email_address,
   )
   debug(emailsToArchive)
 
@@ -54,7 +60,7 @@ const archiveUnsubscribedInAudience = async ({ dryRun, audienceId }) => {
     )
   }
 
-  bluebird.each(emailsToArchive, async (email) => {
+  bluebird.each(emailsToArchive, async (email: string) => {
     if (dryRun) {
       results.push(true)
     } else {

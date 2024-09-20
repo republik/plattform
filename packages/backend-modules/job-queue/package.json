@@ -6,8 +6,13 @@
   "main": "build/index.js",
   "types": "build/@types",
   "dependencies": {
-    "pg-boss": "^9.0.3",
+    "pg-boss": "^10.1.1",
     "debug": "^4.3.5"
+  },
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
+    "test": "jest"
   },
   "devDependencies": {
     "@testcontainers/postgresql": "^10.9.0",

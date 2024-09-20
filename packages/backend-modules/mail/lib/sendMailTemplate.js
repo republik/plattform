@@ -23,6 +23,7 @@ checkEnv([
   'DEFAULT_MAIL_FROM_NAME',
   'ASSETS_SERVER_BASE_URL',
   'FRONTEND_BASE_URL',
+  'SHOP_BASE_URL',
 ])
 
 const {
@@ -32,6 +33,7 @@ const {
   SEND_MAILS_SUBJECT_PREFIX,
   FRONTEND_BASE_URL,
   ASSETS_SERVER_BASE_URL,
+  SHOP_BASE_URL,
 } = process.env
 
 const getTemplate = async (filehandler) => {
@@ -61,6 +63,10 @@ const envMergeVars = [
   {
     name: 'frontend_base_url',
     content: FRONTEND_BASE_URL,
+  },
+  {
+    name: 'shop_base_url',
+    content: SHOP_BASE_URL,
   },
   {
     name: 'link_faq',
@@ -169,6 +175,14 @@ const envMergeVars = [
   {
     name: 'link_offer_reduced_ausbildung',
     content: `${FRONTEND_BASE_URL}/angebote?package=ABO&userPrice=1&price=14000&reason=Ausbildung%3A%20`,
+  },
+  {
+    name: 'link_shop_monthly_subscription',
+    content: `${SHOP_BASE_URL}/angebot/MONTHLY`, // TODO might still change
+  },
+  {
+    name: 'link_shop_yearly_subscription',
+    content: `${SHOP_BASE_URL}/angebot/YEARLY`, // TODO might still change
   },
   {
     name: 'link_dialog',
