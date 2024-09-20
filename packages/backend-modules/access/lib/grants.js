@@ -58,7 +58,10 @@ const grantPerks = (grant, recipient, campaign, t, pgdb, redis, mail) =>
     const name = Object.keys(perk).shift()
 
     if (!perks[name]) {
-      throw new Error(`Unable to find perk "${name}"`)
+      console.error(
+        `Unable to find perk "${name}" for ${campaign.id}; skipping`,
+      )
+      return null
     }
 
     const settings = perk[name]
@@ -87,7 +90,10 @@ const revokePerks = (grant, recipient, campaign, pgdb) =>
     const name = Object.keys(perk).shift()
 
     if (!perks[name]) {
-      throw new Error(`Unable to find perk "${name}"`)
+      console.error(
+        `Unable to find perk "${name} for ${campaign.id}"; skipping revocation`,
+      )
+      return null
     }
 
     const settings = perk[name]
@@ -209,10 +215,12 @@ const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
     grant.perks = {}
 
     await Promise.map(perks, (perk) => {
-      const { name, ...other } = perk
-      grant.perks[perk.name] = other
+      if (perk) {
+        const { name, ...other } = perk
+        grant.perks[perk.name] = other
 
-      eventsLib.log(grant, `perk.${name}`, pgdb)
+        eventsLib.log(grant, `perk.${name}`, pgdb)
+      }
     })
   }
 
@@ -337,12 +345,14 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
     grant.perks = {}
 
     await Promise.map(perks, (perk) => {
-      const { name, eventLogExtend, ...other } = perk
-      grant.perks[perk.name] = other
+      if (perk) {
+        const { name, eventLogExtend, ...other } = perk
+        grant.perks[perk.name] = other
 
-      const event = `perk.${name}${eventLogExtend || ''}`
+        const event = `perk.${name}${eventLogExtend || ''}`
 
-      eventsLib.log(grant, event, pgdb)
+        eventsLib.log(grant, event, pgdb)
+      }
     })
   }
 
@@ -471,7 +481,9 @@ const invalidate = async (grant, reason, t, pgdb, mail, requestUserId) => {
         grant.perks = {}
 
         await Promise.map(perks, (perk) => {
-          eventsLib.log(grant, `perk.${perk.name}.revoked`, pgdb)
+          if (perk) {
+            eventsLib.log(grant, `perk.${perk.name}.revoked`, pgdb)
+          }
         })
       }
 

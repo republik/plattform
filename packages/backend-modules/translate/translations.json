@@ -1421,11 +1421,7 @@
       "value": "Kampagne «{campaignId}» ist ungültig."
     },
     {
-      "key": "api/election/email/election_candidacy_confirmation_gen21m/subject",
-      "value": "Vielen Dank für Ihre Kandidatur"
-    },
-    {
-      "key": "api/election/email/election_candidacy_confirmation_gen18m/subject",
+      "key": "api/election/email/election_candidacy_confirmation_gen24m/subject",
       "value": "Vielen Dank für Ihre Kandidatur"
     },
     {
