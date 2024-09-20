@@ -16,7 +16,12 @@ export async function processCheckoutCompleted(
 ) {
   const customerId = event.data.object.customer as string
 
-  if (event.data.object.subscription) {
+  if (!customerId) {
+    console.log('No stripe customer provided; skipping')
+    return
+  }
+
+  if (!event.data.object.subscription) {
     console.log('Non subscription checkouts currently not supported')
     return
   }
