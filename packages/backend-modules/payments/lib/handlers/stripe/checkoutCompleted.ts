@@ -16,6 +16,11 @@ export async function processCheckoutCompleted(
 ) {
   const customerId = event.data.object.customer as string
 
+  if (event.data.object.subscription) {
+    console.log('Non subscription checkouts currently not supported')
+    return
+  }
+
   const userId = await paymentService.getUserIdForCompanyCustomer(
     company,
     customerId,

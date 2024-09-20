@@ -33,9 +33,18 @@ export async function processInvoiceCreated(
     throw new Error(`Unknown invoice ${event.data.object.id}`)
   }
 
+  if (!invoice.subscription) {
+    console.log(
+      'Only subscription invoices currently not supported [%s]',
+      event.id,
+    )
+    return
+  }
+
   const sub = await PaymentProvider.forCompany(company).getSubscription(
     invoice.subscription as string,
   )
+
   if (isPledgeBased(sub?.metadata)) {
     console.log('pledge invoice event [%s]; skipping', event.id)
     return

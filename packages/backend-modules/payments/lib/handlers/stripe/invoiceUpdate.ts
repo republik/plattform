@@ -22,6 +22,14 @@ export async function processInvoiceUpdated(
     return
   }
 
+  if (!invoice.subscription) {
+    console.error(
+      'Only subscription invocies are suppored invoice %s',
+      event.data.object.id,
+    )
+    return
+  }
+
   const sub = await PaymentProvider.forCompany(company).getSubscription(
     invoice.subscription as string,
   )
