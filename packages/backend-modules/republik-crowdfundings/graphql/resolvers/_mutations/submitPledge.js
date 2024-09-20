@@ -395,10 +395,7 @@ module.exports = async (_, args, context) => {
         ) {
           if (userHasActiveMembership) {
             throw new Error(t('api/membership/monthly/hasActive'))
-          } else if (userHasMonthlyMembership) {
-            // TODO: throw error again after starter price test
-            // throw new Error(t('api/membership/monthly/reactivate'))
-          }
+          } 
         }
       }
     }
