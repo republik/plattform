@@ -23,6 +23,7 @@ import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { reportError } from '../lib/errors/reportError'
 import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
 import { OPEN_ACCESS } from 'lib/constants'
+import { useRouter } from 'next/router'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -62,6 +63,8 @@ const WebApp = ({
     ...otherPageProps
   } = pageProps
 
+  const router = useRouter()
+
   return (
     <PageErrorBoundary>
       <AnalyticsProvider>
@@ -86,7 +89,7 @@ const WebApp = ({
                       />
                       <AudioPlayerOrchestrator />
                       <SyncUTMToSessionStorage />
-                      <PaynoteOverlay />
+                      <PaynoteOverlay key={router.pathname} />
                     </ColorContextProvider>
                   </ThemeProvider>
                 </AppVariableContext>

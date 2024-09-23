@@ -1,5 +1,6 @@
 'use client'
 
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { css } from '@republik/theme/css'
 import { ChangeEventHandler, ReactNode, useId, useState } from 'react'
@@ -15,10 +16,17 @@ export function Offers({
 
   const utmParams = getUTMSessionStorage()
 
+  const trackEvent = useTrackEvent()
+
   return (
     <form
       method='GET'
       action={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot`}
+      onSubmit={() => {
+        trackEvent({
+          action: `Go to ${option} shop`,
+        })
+      }}
     >
       {Object.entries(utmParams).map(([k, v]) => {
         return <input type='hidden' hidden key={k} name={k} value={v} />
