@@ -244,9 +244,10 @@ const Header = ({
                   )}
                   closeOverlay={closeHandler}
                 />
-              ) : (
-                <CallToAction formatColor={formatColor} />
-              )}
+              ) : // TODO: decide what to do with this abonnieren CTA
+              null
+              // <CallToAction formatColor={formatColor} />
+              }
             </div>
           </div>
         </div>
