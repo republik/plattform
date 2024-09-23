@@ -1,7 +1,7 @@
 import type { PgDb } from 'pogi'
 import moment from 'moment'
 import { UserRow } from '@orbiting/backend-modules-types'
-import { SegmentData, Membership, MailchimpContact } from '../types'
+import { SegmentData, Membership, MailchimpContact, ACTIVE_STATUS_TYPES } from '../types'
 
 type GetSegmentDataForUserParams = {
   user: UserRow
@@ -19,6 +19,10 @@ export async function getSegmentDataForUser({
     (await pgdb.public.pledges.find({
       userId: user.id,
     }))
+
+  const invoices = await pgdb.payments.invoices.find({userId: user.id})
+
+  const activeSubscription = await pgdb.payments.subscriptions.findFirst({userId: user.id, status: ACTIVE_STATUS_TYPES})
 
   const activeMembership: Membership = await pgdb.public.memberships.findFirst({
     userId: user.id,
@@ -65,6 +69,8 @@ export async function getSegmentDataForUser({
 
   return {
     pledges,
+    invoices,
+    activeSubscription,
     activeMembership,
     activeMembershipPeriod,
     benefactorMembership,

@@ -434,10 +434,13 @@ const Page = ({
         error={data.error}
         style={{ minHeight: `calc(90vh)` }}
         render={() => {
+          if (!data.membershipStats) {
+            return 'Die Cockpit-Daten konnten nicht geladen werden :('
+          }
+
           const {
             evolution: { buckets, updatedAt },
           } = data.membershipStats
-
           const labels = [
             { key: 'preactive', color: '#256900', label: 'Crowdfunder' },
             {
@@ -826,6 +829,7 @@ export const getStaticProps = createGetStaticProps(
           max: formatYearMonthKey(timeMonth.offset(currentMonth, 3)),
           accessToken: params?.token,
         },
+        errorPolicy: 'all',
       }),
       getCMSClientBase({ draftMode }).query({
         query: CockpitDocument,

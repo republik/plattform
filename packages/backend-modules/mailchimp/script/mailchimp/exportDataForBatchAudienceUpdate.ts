@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import env from '@orbiting/backend-modules-env'
+import type { Readable } from 'stream'
 env.config()
 import yargs from 'yargs'
 import csvParser from 'csv-parser'
@@ -31,7 +32,7 @@ type CsvImport = {
 type Audience = 'newsletter' | 'produktinfos' | 'marketing'
 type MailchimpData = { user: UserRow; newsletterData: string[] }
 
-async function main(argv) {
+async function main(argv: any) {
   const audience: Audience = argv['audience']
 
   if (
@@ -82,7 +83,7 @@ async function main(argv) {
   }
 
   const users: UserRow[] = await pgdb.public.users.find({ email: emails })
-  
+
   const mailchimpData: MailchimpData[] = []
   for (let i = 0; i < users.length; i++) {
     const user = users[i]
@@ -108,7 +109,7 @@ async function main(argv) {
     const interests = await getInterestsForUser({ user, segmentData })
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
 
-    const record = {
+    const record: Record<string, any> = {
       id: user.id,
       EMAIL: user.email,
       FNAME: `"${user.firstName ?? ''}"`,
@@ -172,7 +173,7 @@ async function main(argv) {
 }
 
 async function getMailchimpMember(
-  email,
+  email: string,
   data: string[],
 ): Promise<MailchimpContact | undefined> {
   const mailchimpMember: MailchimpContact = {
@@ -223,7 +224,7 @@ async function getMailchimpMember(
  * @param {import('stream').Readable} readStream
  * @returns
  */
-async function parse(readStream) {
+async function parse(readStream: Readable) {
   const results: CsvImport[] = []
   const stream = readStream.pipe(
     csvParser({

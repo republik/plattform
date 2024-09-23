@@ -43,14 +43,15 @@ const Table = ({ items, ...props }) => {
             <td>{user.firstName}</td>
             <td>{user.lastName}</td>
             <td {...styles.center}>
-              {user.activeMembership && user.activeMembership.type.name}
+              {user.activeMembership?.type?.name ??
+                user.activeMagazineSubscription?.type}
             </td>
             <td {...styles.center}>{displayDate(user.createdAt)}</td>
           </tr>
         ))}
       </tbody>
     </table>
-  );
+  )
 }
 
 export default Table

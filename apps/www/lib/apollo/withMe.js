@@ -1,18 +1,5 @@
 import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
-import { PROLITTERIS_OPT_OUT_CONSENT } from '../constants'
-
-export const userProgressConsentFragment = `
-  fragment ProgressConsent on User {
-    progressConsent: hasConsentedTo(name: "PROGRESS")
-  }
-`
-
-export const userProlitterisConsentFragment = `
-  fragment ProlitterisConsent on User {
-    prolitterisOptOut: hasConsentedTo(name: "${PROLITTERIS_OPT_OUT_CONSENT}")
-  }
-`
+import { MeDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 export const checkRoles = (me, roles) => {
   return !!(
@@ -22,50 +9,12 @@ export const checkRoles = (me, roles) => {
   )
 }
 
-export const meQuery = gql`
-  query me {
-    me {
-      id
-      username
-      slug
-      portrait
-      name
-      firstName
-      lastName
-      email
-      initials
-      roles
-      isListed
-      hasPublicProfile
-      discussionNotificationChannels
-      accessCampaigns {
-        id
-      }
-      hasDormantMembership
-      prolongBeforeDate
-      activeMembership {
-        id
-        type {
-          name
-        }
-        renew
-        endDate
-        graceEndDate
-        canProlong
-      }
-      ...ProgressConsent
-      ...ProlitterisConsent
-    }
-  }
-  ${userProgressConsentFragment}
-  ${userProlitterisConsentFragment}
-`
-
-export default graphql(meQuery, {
+export default graphql(MeDocument, {
   props: ({ data: { me, refetch } }) => ({
     me,
     meRefetch: refetch,
-    hasActiveMembership: !!me?.activeMembership,
+    hasActiveMembership:
+      !!me?.activeMembership || !!me?.activeMagazineSubscription,
     /**
      * OPEN ACCESS
      */

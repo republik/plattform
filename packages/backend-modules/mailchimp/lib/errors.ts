@@ -5,7 +5,7 @@ const SUBSCRIPTION_HANDLER_MISSING_ERROR = 'SUBSCRIPTION_HANDLER_MISSING_ERROR'
 class MailError extends Error {
   type: string
   meta?: any
-  constructor(type, meta?) {
+  constructor(type: string, meta?: any) {
     const message = `mail error: ${type} ${JSON.stringify(meta)}`
     super(message)
     this.type = type
@@ -14,26 +14,25 @@ class MailError extends Error {
 }
 
 class NewsletterMemberMailError extends MailError {
-  constructor(meta?) {
+  constructor(meta?: any) {
     super(NEWSLETTER_MEMBER_ERROR, meta)
   }
 }
 
 class EmailRequiredMailError extends MailError {
-  constructor(meta?) {
+  constructor(meta?: any) {
     super(EMAIL_REQUIRED_ERROR, meta)
   }
 }
 
 class SubscriptionHandlerMissingMailError extends MailError {
-  constructor(meta?) {
+  constructor(meta?: any) {
     super(SUBSCRIPTION_HANDLER_MISSING_ERROR, meta)
   }
 }
 
-
 export {
   NewsletterMemberMailError,
   EmailRequiredMailError,
-  SubscriptionHandlerMissingMailError
+  SubscriptionHandlerMissingMailError,
 }

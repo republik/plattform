@@ -6,9 +6,8 @@ import { useMe } from '../lib/context/MeContext'
 import { useEffect } from 'react'
 
 function MeineRepublikPage() {
-  const { me } = useMe()
+  const { me, hasActiveMembership } = useMe()
   const router = useRouter()
-
   useEffect(() => {
     if (!me) {
       router.push('/anmelden')
@@ -19,9 +18,10 @@ function MeineRepublikPage() {
     <Frame raw pullable={false} hideCTA>
       {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
       {/* @ts-ignore */}
-      <UserNav me={me} />
+      <UserNav me={me} hasActiveMembership={hasActiveMembership} />
     </Frame>
   )
 }
 
 export default withDefaultSSR(MeineRepublikPage)
+

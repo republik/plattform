@@ -14,7 +14,7 @@ type DemoWorkerArgs = { recipientEmail: string }
 class DemoWorker extends BaseWorker<DemoWorkerArgs> {
   readonly queue = 'queue:demo'
 
-  async perform(job: Job<DemoWorkerArgs>): Promise<void> {
+  async perform([job]: Job<DemoWorkerArgs>[]): Promise<void> {
     // do some processing of the job data
     console.log(job.data)
   }
@@ -26,7 +26,7 @@ class DemoErrorWorker extends BaseWorker<DemoWorkerArgs> {
     retryLimit: 0,
   }
 
-  async perform(job: Job<DemoWorkerArgs>): Promise<void> {
+  async perform([job]: Job<DemoWorkerArgs>[]): Promise<void> {
     // if an error courses it gets stored into the output column
     console.log(job.data)
     throw new Error('Processing error')
@@ -44,19 +44,19 @@ describe('pg-boss worker test', () => {
       application_name: 'job-queue',
       connectionString: postgresContainer.getConnectionUri(),
     })
-    queue.registerWorker(DemoWorker)
-    queue.registerWorker(DemoErrorWorker)
+    queue.registerWorker(DemoWorker).registerWorker(DemoErrorWorker)
+
     await queue.start()
     await queue.startWorkers()
   }, 60000)
 
   beforeEach(async () => {
-    // await queue.clearStorage()
+    // console.log(await queue.getQueues())
   })
 
   afterAll(async () => {
     await queue.stop()
-  }, 20000)
+  }, 30000)
 
   it('processes send jobs', async () => {
     const jobID = await queue.send<DemoWorker>('queue:demo', {
@@ -67,10 +67,12 @@ describe('pg-boss worker test', () => {
       throw Error('Job no queued')
     }
 
-    const size = await queue.getQueueSize<DemoWorker>('queue:demo')
+    const size = await queue.getQueueSize<DemoWorker>('queue:demo', {
+      before: 'completed',
+    })
     expect(size).toBe(1)
 
-    let job = await queue.getJobById(jobID)
+    let job = await queue.getJobById('queue:demo', jobID)
 
     expect(job?.data).toStrictEqual<DemoWorkerArgs>({
       recipientEmail: 'example@republik.ch',
@@ -79,7 +81,7 @@ describe('pg-boss worker test', () => {
 
     await wait(3000)
 
-    job = await queue.getJobById(jobID)
+    job = await queue.getJobById('queue:demo', jobID)
     expect(job?.state).toBe<JobState>('completed')
   }, 60000)
 
@@ -92,10 +94,12 @@ describe('pg-boss worker test', () => {
       throw Error('Job no queued')
     }
 
-    const size = await queue.getQueueSize<DemoErrorWorker>('queue:demo:error')
+    const size = await queue.getQueueSize<DemoErrorWorker>('queue:demo:error', {
+      before: 'failed',
+    })
     expect(size).toBe(1)
 
-    let job = await queue.getJobById(jobID)
+    let job = await queue.getJobById('queue:demo:error', jobID)
 
     expect(job?.data).toStrictEqual<DemoWorkerArgs>({
       recipientEmail: 'example@republik.ch',
@@ -104,7 +108,7 @@ describe('pg-boss worker test', () => {
 
     await wait(3000)
 
-    job = await queue.getJobById(jobID)
+    job = await queue.getJobById('queue:demo:error', jobID)
     expect(job?.state).toBe<JobState>('failed')
     expect((job?.output as any).name).toBe('Error')
     expect((job?.output as any).message).toBe('Processing error')

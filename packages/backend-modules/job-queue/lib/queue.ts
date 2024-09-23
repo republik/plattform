@@ -1,15 +1,34 @@
 import PgBoss from 'pg-boss'
 import { Worker, WorkerJobArgs, WorkerQueueName } from './types'
+import { getConfig } from './config'
 
 export class Queue {
+  static instance: Queue
+
   protected readonly pgBoss: PgBoss
   protected workers = new Map<WorkerQueueName<Worker<any>>, Worker<any>>()
+
+  static getInstance(): Queue {
+    if (!this.instance) {
+      const config = getConfig()
+      this.instance = new Queue({
+        application_name: config.queueApplicationName,
+        connectionString: config.connectionString,
+        monitorStateIntervalSeconds: 120,
+      })
+    }
+
+    return this.instance
+  }
 
   constructor(options: PgBoss.ConstructorOptions) {
     this.pgBoss = new PgBoss(options)
 
     this.pgBoss.on('error', (error) => {
       console.error('[JobQueue]: %s', error)
+    })
+    this.pgBoss.on('monitor-states', (stats) => {
+      console.log('[JobQueue]: ', stats)
     })
   }
 
@@ -21,44 +40,59 @@ export class Queue {
 
   async start() {
     await this.pgBoss.start()
+
+    for (const queue of this.workers.keys()) {
+      await this.pgBoss.createQueue(queue)
+    }
+
+    return
   }
 
-  async stop() {
-    await this.pgBoss.stop({
+  stop() {
+    return this.pgBoss.stop({
+      wait: true,
       timeout: 20000,
     })
+  }
 
-    await new Promise((resolve) => {
-      this.pgBoss.once('stopped', () => resolve(null))
+  createQueue(queueName: string) {
+    return this.pgBoss.createQueue(queueName)
+  }
+
+  getJobById(name: string, id: string) {
+    return this.pgBoss.getJobById(name, id, {
+      includeArchive: true,
     })
   }
 
-  async getJobById(id: string) {
-    return this.pgBoss.getJobById(id)
+  getQueues() {
+    return this.pgBoss.getQueues()
   }
 
-  async clearStorage() {
+  clearStorage() {
     return this.pgBoss.clearStorage()
   }
 
-  async startWorkers() {
+  startWorkers() {
     const workers: Promise<string>[] = []
 
     for (const worker of this.workers.values()) {
-      workers.push(this.pgBoss.work(worker.queue, worker.perform))
+      workers.push(this.pgBoss.work(worker.queue, worker.perform.bind(worker)))
     }
 
     return Promise.all(workers)
   }
 
-  async getQueueSize<K extends Worker<any>>(
+  getQueueSize<K extends Worker<any>>(
     queue: WorkerQueueName<K>,
-    options?: object,
+    options?: {
+      before: 'retry' | 'active' | 'completed' | 'cancelled' | 'failed'
+    },
   ) {
     return this.pgBoss.getQueueSize(queue, options)
   }
 
-  async send<T extends Worker<any>>(
+  send<T extends Worker<any>>(
     queue: WorkerQueueName<T>,
     data: WorkerJobArgs<T>,
     options?: PgBoss.SendOptions,
@@ -72,7 +106,7 @@ export class Queue {
     return this.pgBoss.send(worker.queue, data, opts)
   }
 
-  async schedule<T extends Worker<any>>(
+  schedule<T extends Worker<any>>(
     queue: WorkerQueueName<T>,
     cron: string,
     data?: WorkerJobArgs<T>,
@@ -85,11 +119,11 @@ export class Queue {
     return this.pgBoss.schedule(queue, cron, data, options)
   }
 
-  async unschedule<T extends WorkerQueueName<Worker<any>>>(queue: T) {
+  unschedule<T extends WorkerQueueName<Worker<any>>>(queue: T) {
     return this.pgBoss.unschedule(queue)
   }
 
-  async getSchedules() {
+  getSchedules() {
     return this.pgBoss.getSchedules()
   }
 }

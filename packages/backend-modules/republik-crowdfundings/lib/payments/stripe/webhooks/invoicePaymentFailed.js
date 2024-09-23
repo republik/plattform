@@ -14,6 +14,11 @@ module.exports = {
     const subscription = _.get(event, 'data.object.lines.data[0]')
     if (subscription.type === 'subscription') {
       const pledgeId = subscription.metadata.pledgeId
+      if (!pledgeId) {
+        // new subscriptions do not contain pledgeIds skip this handler
+        return 204
+      }
+
       const user = await pgdb
         .query(
           `
