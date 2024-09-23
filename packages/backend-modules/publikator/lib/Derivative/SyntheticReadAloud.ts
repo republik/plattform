@@ -88,6 +88,7 @@ export const processMeta = async (
 }
 
 export const applyAssetsAudioUrl = (derivative: DerivativeRow) => {
+  console.log('applyAssetsAudioUrl')
   const { type, result } = derivative
   if (type !== 'SyntheticReadAloud') {
     return derivative
@@ -237,32 +238,12 @@ export const derive = async (
     }),
   })
 
-  const syntheticReadAloudSubstitution =
-    await pgdb.public.gsheets.findOneFieldOnly(
-      { name: 'syntheticReadAloudSubstitution' },
-      'data',
-    )
-
-  const substitutionUrl = syntheticReadAloudSubstitution
-    ? `${PUBLIC_URL}/publikator/syntheticReadAloud/substitution`
-    : ''
-
-  const syntheticReadAloudLexicon = await pgdb.public.gsheets.findOneFieldOnly(
-    { name: 'syntheticReadAloudLexicon' },
-    'data',
-  )
-
-  const lexiconUrl = syntheticReadAloudLexicon
-    ? `${PUBLIC_URL}/publikator/syntheticReadAloud/lexicon`
-    : ''
   const webhookUrl = `${PUBLIC_URL}/publikator/webhook/syntheticReadAloud`
   const expireAt = moment().add(15, 'minutes')
 
   const body = {
     document,
     derivativeId: derivative.id,
-    substitutionUrl,
-    lexiconUrl,
     webhookUrl,
     expireAt,
   }
