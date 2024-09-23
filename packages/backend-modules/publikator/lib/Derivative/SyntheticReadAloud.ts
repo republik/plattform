@@ -162,10 +162,7 @@ export const derive = async (
 
   const { commitId } = getParsedDocumentId(document.id)
 
-  if (!document.meta?.syntheticVoice) {
-    handlerDebug('Synthetic Voice not set. Skipping synthesizing.')
-    return
-  }
+  console.log(JSON.stringify(document.content.meta))
 
   if (user) {
     const pendingCount = await pgdb.publikator.derivatives.count({
@@ -175,6 +172,8 @@ export const derive = async (
       userId: user.id,
     })
 
+    // TODO: review if this restriction still makes any sense
+    //  (probably remove altogether when we delete the 'audio generieren' button)
     if (pendingCount > 1) {
       handlerDebug('too many pending derivatives. skipping synthesizing.', {
         userId: user.id,
@@ -182,6 +181,35 @@ export const derive = async (
 
       const error = {
         message: 'too many pending derivatives',
+      }
+
+      const derivative = await pgdb.publikator.derivatives.insertAndGet({
+        commitId,
+        type: 'SyntheticReadAloud',
+        status: 'Failure',
+        result: { error },
+        userId: user?.id,
+        ...(user && {
+          author: {
+            name: user.name,
+            email: user.email,
+          },
+        }),
+        updatedAt: new Date(),
+        failedAt: new Date(),
+      })
+
+      return derivative
+    }
+
+    // TODO: display error in publikator
+    if (!document.content?.meta?.syntheticVoice) {
+      handlerDebug('Synthetic Voice not set. Skipping synthesizing.', {
+        userId: user.id,
+      })
+
+      const error = {
+        message: 'Please select a voice to read the text.',
       }
 
       const derivative = await pgdb.publikator.derivatives.insertAndGet({

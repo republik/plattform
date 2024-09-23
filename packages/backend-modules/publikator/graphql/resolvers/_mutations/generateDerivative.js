@@ -16,8 +16,6 @@ module.exports = async (_, { commitId }, context) => {
 
   const commit = await loaders.Commit.byId.load(commitId)
 
-  console.log('--1--', commit)
-
   if (!commit) {
     throw new Error(t('api/publikator/generateDerivative/commit/404'))
   }
@@ -25,8 +23,6 @@ module.exports = async (_, { commitId }, context) => {
   if (!canDeriveSyntheticReadAloud(commit.meta)) {
     throw new Error(t('api/publikator/generateDerivative/canNot'))
   }
-
-  console.log('--2--')
 
   const doc = await getDocument(commit, {}, context)
   const derivative = await deriveSyntheticReadAloud(
@@ -36,13 +32,9 @@ module.exports = async (_, { commitId }, context) => {
     user,
   )
 
-  console.log('--3--')
-
   if (!derivative) {
     throw new Error(t('api/publikator/generateDerivative/unable'))
   }
-
-  console.log('--4--')
 
   await pubsub.publish('repoChange', {
     repoChange: {
@@ -51,8 +43,6 @@ module.exports = async (_, { commitId }, context) => {
       commit,
     },
   })
-
-  console.log('--5--')
 
   return applyAssetsAudioUrl(derivative)
 }
