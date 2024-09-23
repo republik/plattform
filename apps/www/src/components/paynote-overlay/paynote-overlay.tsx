@@ -164,10 +164,10 @@ function PaynoteOverlayDialog() {
               boxShadow: 'sm',
               mt: '15dvh',
               _stateOpen: {
-                animation: 'slideUp',
+                animation: 'fadeIn',
               },
               _stateClosed: {
-                animation: 'slideDown',
+                animation: 'fadeOut',
               },
             })}
           >
