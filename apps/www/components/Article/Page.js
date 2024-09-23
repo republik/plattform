@@ -306,7 +306,7 @@ const ArticlePage = ({
   const router = useRouter()
   const { share, extract, showAll } = router.query
 
-  const { me, meLoading, hasAccess, hasActiveMembership, isEditor } = useMe()
+  const { me, meLoading, hasAccess, isEditor } = useMe()
 
   const { isAudioQueueAvailable } = useAudioQueue()
 
@@ -651,7 +651,6 @@ const ArticlePage = ({
       hasOverviewNav={hasOverviewNav}
       stickySecondaryNav={hasStickySecondaryNav}
       pageColorSchemeKey={colorSchemeKey}
-      location={meta?.template === 'article' ? 'article' : undefined}
     >
       <PageLoader
         loading={articleLoading && !articleData}
@@ -686,35 +685,32 @@ const ArticlePage = ({
           let payNote
           let payNoteAfter
 
-          // if (!isPage) {
-          //   // CAMPAIGN MODE
-          //   payNote = meta.paynoteMode === 'noPaynote' ? null : <TrialPaynote />
-          //   payNoteAfter =
-          //     meta.paynoteMode === 'noPaynote' ? null : <TrialPaynote />
-          // } else {
-
-          // For this proof of concept I chose to show the climate paynote
-          // only at the bottom. This could/should be evaluated.
-          // We could also suppress the second paynote. (Code commented below.)
-          // I wouldn't show both, since it's a very big paynote,
-          // and the text would be the same twice.
-          // const suppressSecondPayNote = climatePaynote
-          payNote = (
-            <PayNote
-              seed={payNoteSeed}
-              tryOrBuy={payNoteTryOrBuy}
-              documentId={documentId}
-              repoId={repoId}
-              customPayNotes={meta.paynotes ?? []}
-              customMode={meta.paynoteMode}
-              customOnly={isPage || isFormat}
-              position='before'
-            />
-          )
-          payNoteAfter =
-            // !suppressSecondPayNote &&
-            payNote && cloneElement(payNote, { position: 'after' })
-          // }
+          if (!isPage) {
+            payNote = null
+            payNoteAfter = null
+          } else {
+            // For this proof of concept I chose to show the climate paynote
+            // only at the bottom. This could/should be evaluated.
+            // We could also suppress the second paynote. (Code commented below.)
+            // I wouldn't show both, since it's a very big paynote,
+            // and the text would be the same twice.
+            // const suppressSecondPayNote = climatePaynote
+            payNote = (
+              <PayNote
+                seed={payNoteSeed}
+                tryOrBuy={payNoteTryOrBuy}
+                documentId={documentId}
+                repoId={repoId}
+                customPayNotes={meta.paynotes ?? []}
+                customMode={meta.paynoteMode}
+                customOnly={isPage || isFormat}
+                position='before'
+              />
+            )
+            payNoteAfter =
+              // !suppressSecondPayNote &&
+              payNote && cloneElement(payNote, { position: 'after' })
+          }
           const ownDiscussion = meta.ownDiscussion
 
           const ProgressComponent =
@@ -952,10 +948,8 @@ const ArticlePage = ({
                 />
               )}
 
-              {me && hasActiveMembership && (
-                <ArticleRecommendationsFeed path={cleanedPath} />
-              )}
-              {hasActiveMembership &&
+              {hasAccess && <ArticleRecommendationsFeed path={cleanedPath} />}
+              {hasAccess &&
                 (isEditorialNewsletter ||
                   meta.template === 'article' ||
                   meta.template === 'page') && <div style={{ height: 60 }} />}

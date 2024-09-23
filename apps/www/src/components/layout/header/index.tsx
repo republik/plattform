@@ -149,61 +149,64 @@ export function PageHeader({
             justifyContent: 'flex-end',
           })}
         >
-          {hasActiveMembership ? (
-            <div
-              className={css({
-                width: 'header.avatar',
-                height: 'header.avatar',
-                m: 'header.avatarMargin',
-                display: 'flex',
-                placeContent: 'center center',
-              })}
-            >
-              <button disabled className={css({ p: '0' })}>
-                <IconMic size={28} />
-              </button>
-            </div>
-          ) : (
-            <Link
-              href='/angebote'
-              className={css({
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-                alignSelf: 'stretch',
-                background: 'text',
-                color: 'text.inverted',
-                padding: '10px 20px',
-                fontSize: '16px',
-                height: '100%',
-                md: {
-                  padding: '10px 30px',
-                  fontSize: '22px',
-                },
-              })}
-            >
-              <span
+          {
+            hasActiveMembership ? (
+              <div
                 className={css({
-                  display: 'none',
-                  md: { display: 'inline-block' },
+                  width: 'header.avatar',
+                  height: 'header.avatar',
+                  m: 'header.avatarMargin',
+                  display: 'flex',
+                  placeContent: 'center center',
                 })}
               >
-                Jetzt abonnieren
-              </span>
-              <span
-                className={css({
-                  display: 'inline-block',
-                  md: {
-                    display: 'none',
-                  },
-                })}
-              >
-                Abo
-              </span>
-            </Link>
-          )}
+                <button disabled className={css({ p: '0' })}>
+                  <IconMic size={28} />
+                </button>
+              </div>
+            ) : null
+            // TODO: decide what to do with this abonnieren CTA
+
+            // <Link
+            //   href='/angebote'
+            //   className={css({
+            //     textDecoration: 'none',
+            //     display: 'flex',
+            //     alignItems: 'center',
+            //     justifyContent: 'center',
+            //     flexDirection: 'row',
+            //     alignSelf: 'stretch',
+            //     background: 'text',
+            //     color: 'text.inverted',
+            //     padding: '10px 20px',
+            //     fontSize: '16px',
+            //     height: '100%',
+            //     md: {
+            //       padding: '10px 30px',
+            //       fontSize: '22px',
+            //     },
+            //   })}
+            // >
+            //   <span
+            //     className={css({
+            //       display: 'none',
+            //       md: { display: 'inline-block' },
+            //     })}
+            //   >
+            //     Jetzt abonnieren
+            //   </span>
+            //   <span
+            //     className={css({
+            //       display: 'inline-block',
+            //       md: {
+            //         display: 'none',
+            //       },
+            //     })}
+            //   >
+            //     Abo
+            //   </span>
+            // </Link>
+          }
         </div>
       </div>
 

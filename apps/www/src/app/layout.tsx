@@ -1,16 +1,17 @@
 import { NativeAppMessageSync } from '@app/components/native-app'
-import '@republik/theme/styles.css'
 import '@republik/theme/fonts.css'
+import '@republik/theme/styles.css'
 
+import { PaynoteOverlayWithKey } from '@app/app/paynote-overlay-with-key'
 import { ThemeProvider } from '@app/components/theme-provider'
+import { AnalyticsProvider } from '@app/lib/analytics/provider'
+import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { ApolloWrapper } from '@app/lib/apollo/provider'
 import { css } from '@republik/theme/css'
 import { PUBLIC_BASE_URL } from 'lib/constants'
+import MeContextProvider from 'lib/context/MeContext'
 import { Metadata } from 'next'
 import { ReactNode } from 'react'
-import { AnalyticsProvider } from '@app/lib/analytics/provider'
-import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
-import MeContextProvider from 'lib/context/MeContext'
 
 export const metadata: Metadata = {
   metadataBase: new URL(PUBLIC_BASE_URL),
@@ -52,6 +53,7 @@ export default async function RootLayout({
               {children}
               <NativeAppMessageSync />
               <SyncUTMToSessionStorage />
+              <PaynoteOverlayWithKey />
             </MeContextProvider>
           </ApolloWrapper>
         </ThemeProvider>

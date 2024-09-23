@@ -1,5 +1,6 @@
 import { graphql } from '@apollo/client/react/hoc'
 import { MeDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import { OPEN_ACCESS } from 'lib/constants'
 
 export const checkRoles = (me, roles) => {
   return !!(
@@ -15,6 +16,6 @@ export default graphql(MeDocument, {
     meRefetch: refetch,
     hasActiveMembership:
       !!me?.activeMembership || !!me?.activeMagazineSubscription,
-    hasAccess: checkRoles(me, ['member']),
+    hasAccess: OPEN_ACCESS ? true : checkRoles(me, ['member']),
   }),
 })

@@ -36,6 +36,8 @@ export const CURTAIN_MESSAGE = process.env.NEXT_PUBLIC_CURTAIN_MESSAGE
 export const CURTAIN_META = process.env.NEXT_PUBLIC_CURTAIN_META
 export const CURTAIN_COLORS = process.env.NEXT_PUBLIC_CURTAIN_COLORS
 
+export const OPEN_ACCESS = process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true'
+
 export const DISCUSSION_POLL_INTERVAL_MS =
   +process.env.NEXT_PUBLIC_DISCUSSION_POLL_INTERVAL_MS || 0
 export const STATS_POLL_INTERVAL_MS =

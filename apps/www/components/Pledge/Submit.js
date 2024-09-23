@@ -1074,9 +1074,13 @@ class Submit extends Component {
                 }}
               >
                 {t('pledge/submit/button/pay', {
-                  formattedChf: this.props.total
-                    ? chfFormat(this.props.total / 100)
-                    : '',
+                  formattedChf:
+                    // EINSTIEGSMONAT-TEST (remove after test)
+                    this.props.coupon === 'EINSTIEG24'
+                      ? chfFormat(11)
+                      : this.props.total
+                      ? chfFormat(this.props.total / 100)
+                      : '',
                 })}
               </Button>
             </div>

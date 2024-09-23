@@ -40,6 +40,10 @@ const { P } = Interaction
 
 const absolutMinPrice = 100
 const calculateMinPrice = (pkg, values, userPrice, router) => {
+  // EINSTIEGSMONAT-TEST (remove after test)
+  if (pkg.name === 'MONTHLY_ABO' && router.query.coupon === 'EINSTIEG24') {
+    return 1100
+  }
   const minPrice = pkg.options.reduce((price, option) => {
     const amountValue = values[getOptionFieldKey(option)]
     const amount =
@@ -80,6 +84,10 @@ const calculateMinPrice = (pkg, values, userPrice, router) => {
 }
 
 const getPrice = ({ values, pkg, userPrice, router }) => {
+  // EINSTIEGSMONAT-TEST (remove after test)
+  if (pkg.name === 'MONTHLY_ABO' && router.query.coupon === 'EINSTIEG24') {
+    return 1100
+  }
   if (values.price !== undefined) {
     return values.price
   } else {
@@ -515,6 +523,9 @@ class CustomizePackage extends Component {
         `package/LAUNCH/${pkg.name}/${ownMembership.type.name}/description`,
       ownMembership &&
         `package/${pkg.name}/${ownMembership.type.name}/description`,
+      // EINSTIEGSMONAT-TEST (remove after test)
+      router.query.coupon === 'EINSTIEG24' &&
+        `package/${pkg.name}/einstiegsmonat/description`,
       `package/LAUNCH/${pkg.name}/description`,
       `package/${pkg.name}/description`,
     ].filter(Boolean)
@@ -531,6 +542,9 @@ class CustomizePackage extends Component {
                 ownMembership &&
                   new Date(ownMembership.graceEndDate) < new Date() &&
                   `package/${pkg.name}/reactivate/pageTitle`,
+                // EINSTIEGSMONAT-TEST (remove after test)
+                router.query.coupon === 'EINSTIEG24' &&
+                  `package/${pkg.name}/einstiegsmonat/title`,
                 `package/${pkg.name}/pageTitle`,
                 `package/${pkg.name}/title`,
               ].filter(Boolean),
