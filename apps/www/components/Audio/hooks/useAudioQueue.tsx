@@ -63,14 +63,14 @@ const useAudioQueue = (): {
   getAudioQueueItemIndex: (documentId: string) => number
 } => {
   const { inNativeApp, inNativeAppVersion } = useInNativeApp()
-  const { meLoading, hasAccess } = useMe()
+  const { meLoading, me } = useMe()
   const {
     data: meWithAudioQueue,
     loading: audioQueueIsLoading,
     error: audioQueueHasError,
     refetch: refetchAudioQueue,
   } = useQuery(AudioQueueQueryDocument, {
-    skip: meLoading || !hasAccess,
+    skip: meLoading || !me,
     errorPolicy: 'all',
   })
   const audioQueueItems = getFragmentData(
@@ -131,7 +131,7 @@ const useAudioQueue = (): {
     item: AudioPlayerItem,
     position?: number,
   ): Promise<FetchResult<AddAudioQueueItemsMutation>> => {
-    if (hasAccess) {
+    if (me) {
       return addAudioQueueItem({
         variables: {
           entity: {
@@ -163,7 +163,7 @@ const useAudioQueue = (): {
   const handleRemoveQueueItem = async (
     audioItemId: string,
   ): Promise<FetchResult<RemoveAudioQueueItemMutation>> => {
-    if (hasAccess) {
+    if (me) {
       return removeAudioQueueItem({
         variables: {
           id: audioItemId,
@@ -188,7 +188,7 @@ const useAudioQueue = (): {
     audioItemId: string,
     position: number,
   ): Promise<FetchResult<MoveAudioQueueItemMutation>> => {
-    if (hasAccess) {
+    if (me) {
       return moveAudioQueueItem({
         variables: {
           id: audioItemId,
@@ -213,7 +213,7 @@ const useAudioQueue = (): {
   const handleClearQueue = async (): Promise<
     FetchResult<ClearAudioQueueMutation>
   > => {
-    if (hasAccess) {
+    if (me) {
       return clearAudioQueue({
         optimisticResponse: {
           audioQueueItems: [],
@@ -232,7 +232,7 @@ const useAudioQueue = (): {
   const handleQueueReorder = async (
     reorderedQueue: AudioQueueItem[],
   ): Promise<FetchResult<ReorderAudioQueueMutation>> => {
-    if (hasAccess) {
+    if (me) {
       return reorderAudioQueue({
         variables: {
           ids: reorderedQueue.map(({ id }) => id),
@@ -254,7 +254,7 @@ const useAudioQueue = (): {
   }
 
   function checkIfHeadOfQueue(documentId: string): AudioQueueItem {
-    if (!hasAccess && localAudioItem?.document?.id === documentId) {
+    if (!me && localAudioItem?.document?.id === documentId) {
       return localAudioItem
     }
     if (audioQueueItems[0]?.document?.id === documentId) {
@@ -263,7 +263,7 @@ const useAudioQueue = (): {
   }
 
   function checkIfInQueue(documentId: string): AudioQueueItem {
-    if (!hasAccess && localAudioItem?.document?.id === documentId) {
+    if (!me && localAudioItem?.document?.id === documentId) {
       return localAudioItem
     }
     return audioQueueItems.find(
@@ -272,13 +272,13 @@ const useAudioQueue = (): {
   }
 
   function getAudioQueueItemIndex(documentId: string): number {
-    if (!hasAccess && localAudioItem?.document?.id === documentId) {
+    if (!me && localAudioItem?.document?.id === documentId) {
       return 0
     }
     return audioQueueItems.findIndex((item) => item.document?.id === documentId)
   }
 
-  const resolvedQueue = !hasAccess
+  const resolvedQueue = !me
     ? [localAudioItem].filter(Boolean)
     : meWithAudioQueue
     ? audioQueueItems ?? []
@@ -294,8 +294,8 @@ const useAudioQueue = (): {
       (item) => item.document?.meta?.audioSource,
     ),
     audioQueueIsLoading: isLoading,
-    audioQueueHasError: !hasAccess ? null : audioQueueHasError,
-    refetchAudioQueue: !hasAccess ? () => null : refetchAudioQueue,
+    audioQueueHasError: !me ? null : audioQueueHasError,
+    refetchAudioQueue: !me ? () => null : refetchAudioQueue,
     addAudioQueueItem: handleAddQueueItem,
     removeAudioQueueItem: handleRemoveQueueItem,
     moveAudioQueueItem: handleMoveQueueItem,
