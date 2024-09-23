@@ -125,6 +125,7 @@ export function Offers({
             background: 'text',
             color: 'text.inverted',
             mt: '2',
+            cursor: 'pointer',
           })}
         >
           Jetzt abonnieren
@@ -185,6 +186,7 @@ function Option({
           borderRadius: 'full',
           display: 'grid',
           placeContent: 'center',
+          outline: 'none',
           _before: {
             content: '""',
             width: '0.35em',
