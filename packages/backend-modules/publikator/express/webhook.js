@@ -9,7 +9,10 @@ module.exports = (server, pgdb, t, redis, context) => {
     async (req, res) => {
       const { pgdb, loaders } = context
       const { body } = req
-      const { derivativeId, error, audioDuration, s3 } = body
+      const { derivativeId, error, s3 } = body
+      // TODO: use
+      //  https://github.com/republik/plattform/blob/b786c01da5385718af50f09807950208aff50c2c/packages/backend-modules/publikator/lib/audioSource.ts#L31
+      const audioDuration = 400
 
       res.status(200).json({ ok: true })
 
