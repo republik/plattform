@@ -2,7 +2,7 @@ import { sendMailTemplate } from '@orbiting/backend-modules-mail'
 import { t } from '@orbiting/backend-modules-translate'
 
 import { PgDb } from 'pogi'
-import { Invoice, Subscription } from '../types'
+import { Invoice, Subscription, SubscriptionType } from '../types'
 
 type MergeVariable = { name: string; content: string | boolean }
 
@@ -53,12 +53,13 @@ export async function sendSetupSubscriptionMail(
 type SendCancelConfirmationMailArgs = {
   endDate: Date
   cancellationDate: Date
+  type: SubscriptionType
   userId: string
   email: string
 }
 
 export async function sendCancelConfirmationMail(
-  { endDate, cancellationDate, userId, email }: SendCancelConfirmationMailArgs,
+  { endDate, cancellationDate, type, userId, email }: SendCancelConfirmationMailArgs,
   pgdb: PgDb,
 ) {
   const dateOptions: Intl.DateTimeFormatOptions = {
@@ -72,6 +73,14 @@ export async function sendCancelConfirmationMail(
       name: 'end_date',
       content: endDate.toLocaleDateString('de-CH', dateOptions),
     },
+    {
+      name: 'is_yearly',
+      content: type === 'YEARLY_SUBSCRIPTION'
+    },
+    {
+      name: 'is_monthly',
+      content: type === 'MONTHLY_SUBSCRIPTION'
+    }
   ]
 
   const templateName = 'subscription_cancel_notice'
@@ -100,12 +109,13 @@ export async function sendCancelConfirmationMail(
 type SendRevokeCancellationConfirmationMailArgs = {
   currentEndDate: Date
   revokedCancellationDate: Date
+  type: SubscriptionType
   userId: string
   email: string
 }
 
 export async function sendRevokeCancellationConfirmationMail(
-  { currentEndDate, revokedCancellationDate, userId, email }: SendRevokeCancellationConfirmationMailArgs,
+  { currentEndDate, revokedCancellationDate, type, userId, email }: SendRevokeCancellationConfirmationMailArgs,
   pgdb: PgDb,
 ) {
   const dateOptions: Intl.DateTimeFormatOptions = {
@@ -119,6 +129,14 @@ export async function sendRevokeCancellationConfirmationMail(
       name: 'renew_date',
       content: currentEndDate.toLocaleDateString('de-CH', dateOptions),
     },
+    {
+      name: 'is_yearly',
+      content: type === 'YEARLY_SUBSCRIPTION'
+    },
+    {
+      name: 'is_monthly',
+      content: type === 'MONTHLY_SUBSCRIPTION'
+    }
   ]
 
   const templateName = 'subscription_revoke_cancellation_notice'
