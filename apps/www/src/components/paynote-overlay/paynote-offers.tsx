@@ -94,7 +94,7 @@ export function Offers({
                 fontSize: 's',
               })}
             >
-              14% günstiger als ein Monatsabo
+              12&thinsp;% günstiger als ein Monats-Abo
             </span>
           </span>
         </Option>
