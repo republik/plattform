@@ -22,6 +22,7 @@ import UserAgentProvider from '../lib/context/UserAgentContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { reportError } from '../lib/errors/reportError'
 import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
+import { OPEN_ACCESS } from 'lib/constants'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -57,11 +58,7 @@ const WebApp = ({
     // SSR only props
     providedUserAgent = undefined,
     serverContext = undefined,
-    /**
-     * OPEN ACCESS
-     */
-    // assumeAccess = false,
-    assumeAccess = true,
+    assumeAccess = OPEN_ACCESS ? true : false,
     ...otherPageProps
   } = pageProps
 

@@ -17,9 +17,5 @@ const FeedPage = ({ t }) => {
 }
 
 export default withDefaultSSR(
-  /**
-   * OPEN ACCESS
-   */
-  // compose(enforceMembership(), withMe, withT)(FeedPage),
-  compose(withMe, withT)(FeedPage),
+  compose(enforceMembership(), withMe, withT)(FeedPage),
 )

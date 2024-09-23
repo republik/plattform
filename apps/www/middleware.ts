@@ -166,15 +166,17 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
    * @returns NextResponse
    */
   function rewriteBasedOnRoles(roles: string[] = []): NextResponse {
-    /**
-     * OPEN ACCESS
-     *
-     * Always rewrite to /front instead of checking for member role
-     */
-    // if (roles?.includes('member')) {
-    //   resUrl.pathname = '/front'
-    //   return NextResponse.rewrite(resUrl)
-    // }
+    const openAccess = process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true'
+
+    if (openAccess) {
+      return NextResponse.next()
+    }
+
+    if (!roles?.includes('member')) {
+      resUrl.pathname = '/marketing'
+      return NextResponse.rewrite(resUrl)
+    }
+
     return NextResponse.next()
   }
 
