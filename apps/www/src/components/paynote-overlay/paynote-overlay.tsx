@@ -13,7 +13,7 @@ import { StructuredText } from 'react-datocms'
 import Image from 'next/image'
 import { useMotionValueEvent, useScroll } from 'framer-motion'
 
-const ARTICLE_SCROLL_THRESHOLD = 0.2 // how much of page has scrolled
+const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
 type ContentVariant = 'paynote' | 'offers-only'
 
