@@ -162,6 +162,11 @@ export const derive = async (
 
   const { commitId } = getParsedDocumentId(document.id)
 
+  if (!document.meta?.syntheticVoice) {
+    handlerDebug('Synthetic Voice not set. Skipping synthesizing.')
+    return
+  }
+
   if (user) {
     const pendingCount = await pgdb.publikator.derivatives.count({
       status: 'Pending',
