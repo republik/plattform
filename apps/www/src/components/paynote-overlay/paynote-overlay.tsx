@@ -112,7 +112,6 @@ export function PaynoteOverlay() {
               cursor: 'pointer',
               mx: 'auto',
               display: 'block',
-              boxShadow: 'sm',
 
               mt: '4',
               md: {
