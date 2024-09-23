@@ -176,7 +176,7 @@ function PaynoteOverlayDialog() {
                 margin: '0 auto',
                 maxW: '34rem',
                 textStyle: 'serifRegular',
-                lineHeight: 1.5,
+                lineHeight: 1.6,
                 fontSize: 'l',
                 display: 'flex',
                 flexDir: 'column',
@@ -227,6 +227,7 @@ function PaynoteOverlayDialog() {
                         boxDecorationBreak: 'clone',
                         px: '1',
                         backgroundColor: '#FDE047',
+                        color: 'text.black',
                         ml: '-0.5',
                         position: 'relative',
                       })}
