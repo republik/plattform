@@ -8,10 +8,10 @@ import {
 import withT from '../../../../lib/withT'
 
 const VOICES = [
-  { value: 'huebsch-62964', text: 'Clémentine' },
-  { value: 'huebsch-01150', text: 'Kevin' },
-  { value: 'huebsch-66468', text: 'Renate' },
-  { value: 'huebsch-01670', text: 'Hyazinth' },
+  { value: 'huebsch-62964', text: 'Politik' },
+  { value: 'huebsch-08316', text: 'Wirtschaft' },
+  { value: 'huebsch-01150', text: 'Gesellschaft' },
+  { value: 'huebsch-01670', text: 'Kultur' },
 ]
 
 export default withT(({ t, editor, node, onInputChange }) => {
