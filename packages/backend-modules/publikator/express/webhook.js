@@ -9,7 +9,10 @@ module.exports = (server, pgdb, t, redis, context) => {
     async (req, res) => {
       const { pgdb, loaders } = context
       const { body } = req
-      const { derivativeId, error, s3, audioDuration } = body
+      const { derivativeId, error, s3, duration: audioDuration, id: huebschId } = body
+
+      // TODO: store huebschId
+      console.log({ huebschId })
 
       res.status(200).json({ ok: true })
 
