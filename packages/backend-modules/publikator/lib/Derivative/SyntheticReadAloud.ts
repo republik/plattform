@@ -271,13 +271,11 @@ export const derive = async (
     }),
   })
 
-  const webhookUrl = `${PUBLIC_URL}/publikator/webhook/syntheticReadAloud`
   const expireAt = moment().add(15, 'minutes')
 
   const body = {
     document,
     derivativeId: derivative.id,
-    webhookUrl,
     expireAt,
   }
 
