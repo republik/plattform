@@ -153,6 +153,7 @@ export class Payments implements PaymentService {
       {
         endDate: subscription.cancelAt,
         cancellationDate: subscription.canceledAt,
+        type: subscription.type,
         userId: userId,
         email: userRow.email,
       },
@@ -197,6 +198,7 @@ export class Payments implements PaymentService {
       {
         currentEndDate: subscription.currentPeriodEnd,
         revokedCancellationDate,
+        type: subscription.type,
         userId,
         email: userRow.email,
       },

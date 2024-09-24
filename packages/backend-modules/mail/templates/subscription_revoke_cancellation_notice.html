@@ -44,11 +44,11 @@
                     <p>Guten Tag</p>
                     <p>
                       Wir freuen uns, haben Sie Ihre Kündigung
-                      zurückgenommen. Ihr Abonnement wurde wieder aktiviert und wird am {{renew_date}} automatisch erneuert. 
+                      zurückgenommen. {{#if is_yearly}}Ihre Jahresmitgliedschaft{{else if is_monthly}}Ihr Monats-Abo{{else}}Ihr Abonnement{{/if}} läuft noch bis zum {{renew_date}} und wird dann automatisch erneuert. 
+                      Alle Informationen dazu können Sie jederzeit in Ihrem <a href="{{link_account_goto}}">Konto</a> abrufen. {{#if is_yearly}}Vor der automatischen Erneuerung erhalten Sie von uns nochmal eine Nachricht.{{/if}}
                     </p>
-                    <p>Weitere Informationen finden Sie in Ihrem <a href="{{link_account_goto}}">Konto</a>.</p>
                     <p>
-                      Haben Sie Fragen? Unter
+                      Haben Sie zusätzliche Fragen? Unter
                       <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
                       helfen wir Ihnen gerne weiter.
                     </p>
