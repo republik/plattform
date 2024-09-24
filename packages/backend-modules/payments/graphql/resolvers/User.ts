@@ -10,6 +10,7 @@ export = {
     ctx: GraphqlContext,
   ) {
     Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
+    await Payments.getInstance().ensureUserHasCustomerIds(user.id)
 
     return await Payments.getInstance().getCustomerIdForCompany(
       user.id,
