@@ -1,6 +1,7 @@
 import { definePreset } from '@pandacss/dev'
 
 export const presetRepublik = definePreset({
+  name: 'republik',
   conditions: {
     extend: {
       light: '[data-theme="light"] &',

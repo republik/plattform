@@ -179,6 +179,7 @@ export async function generateMetadata(
   const parentMetadata = await parent
 
   if (!res.data.person) {
+    // @ts-expect-error https://github.com/vercel/next.js/issues/59950
     return parentMetadata
   }
 

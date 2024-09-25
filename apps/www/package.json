@@ -39,7 +39,7 @@
     "@graphql-codegen/schema-ast": "^4.0.0",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@next/env": "^14.2.3",
-    "@pandacss/dev": "^0.40.1",
+    "@pandacss/dev": "^0.46.1",
     "@parcel/watcher": "^2.3.0",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
