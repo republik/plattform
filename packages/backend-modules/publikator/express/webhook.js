@@ -19,7 +19,6 @@ module.exports = (server, pgdb, t, redis, context) => {
       const derivative = await pgdb.publikator.derivatives.updateAndGetOne(
         {
           id: derivativeId,
-          status: 'Pending',
         },
         {
           status: error ? 'Failure' : 'Ready',
