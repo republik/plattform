@@ -28,13 +28,12 @@ import {
 import { tableStyles } from '../../Tables/utils'
 import Link from 'next/link'
 
-import { REPUBLIK_FRONTEND_URL } from '../../../server/constants'
-
 import MoveMembership from './MoveMembership'
 import CancelMembership from './CancelMembership'
 import ReactivateMembership from './ReactivateMembership'
 import ResetMembership from './ResetMembership'
 import AppendPeriod from './AppendPeriod'
+import { MagazineSubscriptions } from './MagazineSubscriptions'
 
 import { intersperse } from '../../../lib/helpers'
 
@@ -448,6 +447,7 @@ const Index = ({ userId }) => {
               return (
                 <Section>
                   <SectionTitle>Memberships</SectionTitle>
+                  <MagazineSubscriptions userId={userId} />
                   <table {...tableStyles.table}>
                     <colgroup>
                       <col style={{ width: '50%' }} />

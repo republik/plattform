@@ -2,3 +2,4 @@
 lib/index.js
 lib/transformUser.js
 loaders/User.js
+lib/UserEvents.js

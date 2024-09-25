@@ -26,8 +26,10 @@ export async function getInterestsForUser({
   const userId = user.id
 
   const hasPledge = !!segmentData.pledges?.length
+  const hasInvoice = !!segmentData.invoices?.length
 
   const hasMembership = !!userId && !!segmentData.activeMembership
+  const hasSubscription = !!userId && !!segmentData.activeSubscription
 
   const isBenefactor = !!userId && !!segmentData.benefactorMembership
 
@@ -42,14 +44,14 @@ export async function getInterestsForUser({
   const interests = { ...segmentData.mailchimpMember?.interests }
 
   // Update the membership type interests on mailchimp
-  interests[MAILCHIMP_INTEREST_PLEDGE] = hasPledge
-  interests[MAILCHIMP_INTEREST_MEMBER] = hasMembership
+  interests[MAILCHIMP_INTEREST_PLEDGE] = hasPledge || hasInvoice
+  interests[MAILCHIMP_INTEREST_MEMBER] = hasMembership || hasSubscription
   interests[MAILCHIMP_INTEREST_MEMBER_BENEFACTOR] = isBenefactor
   interests[MAILCHIMP_INTEREST_GRANTED_ACCESS] = hasActiveGrantedAccess
 
   if (
     subscribeToEditorialNewsletters &&
-    (hasMembership || hasActiveGrantedAccess)
+    (hasMembership || hasSubscription || hasActiveGrantedAccess)
   ) {
     // Autosubscribe all newsletters when new user just paid the membersh.
     interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true

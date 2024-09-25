@@ -136,6 +136,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
 
   // Rewrite if someone tries to directly access the front or the front-preview url
   if (
+    req.nextUrl.pathname === '/marketing' ||
     req.nextUrl.pathname === '/front' ||
     req.nextUrl.pathname.startsWith('/_front/')
   ) {
@@ -165,10 +166,17 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
    * @returns NextResponse
    */
   function rewriteBasedOnRoles(roles: string[] = []): NextResponse {
-    if (roles?.includes('member')) {
-      resUrl.pathname = '/front'
+    const openAccess = process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true'
+
+    if (openAccess) {
+      return NextResponse.next()
+    }
+
+    if (!roles?.includes('member')) {
+      resUrl.pathname = '/marketing'
       return NextResponse.rewrite(resUrl)
     }
+
     return NextResponse.next()
   }
 

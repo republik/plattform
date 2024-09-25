@@ -28,7 +28,7 @@ const SignoutLink = ({ children, ...props }) => (
   </div>
 )
 
-const UserNav = ({ me }) => {
+const UserNav = ({ me, hasActiveMembership }) => {
   const { t } = useTranslation()
   const { inNativeApp, inNativeIOSApp } = useInNativeApp()
   const router = useRouter()
@@ -65,7 +65,7 @@ const UserNav = ({ me }) => {
                 </div>
               </>
             )}
-            {!me?.activeMembership && !inNativeIOSApp && (
+            {!hasActiveMembership && !inNativeIOSApp && (
               <Link href='/angebote' passHref legacyBehavior>
                 <Button style={{ marginTop: 24, marginBottom: 24 }} block>
                   {t('nav/becomemember')}

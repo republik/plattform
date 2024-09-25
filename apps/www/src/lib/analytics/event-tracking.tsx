@@ -1,6 +1,12 @@
 'use client'
 import { usePlausible } from 'next-plausible'
-import { ReactNode, createContext, useContext, useMemo } from 'react'
+import {
+  ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+} from 'react'
 
 declare global {
   interface Window {
@@ -52,28 +58,40 @@ export const useTrackEvent = () => {
 
   if (!ctxValue) {
     if (process.env.NODE_ENV === 'development') {
-      console.warn(
+      console.error(
         `useTrackEvent: context missing. Please wrap this component in a <TrackingContext> `,
       )
     }
   }
 
-  return (params: { action?: string; name?: string; value?: number }) => {
-    const { category, action, name, value } = {
-      ...ctxValue,
-      ...params,
-    }
-
-    if (!action) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn(
-          `useTrackEvent: action undefined. Set one on the TrackingContext or function argument`,
-        )
+  return useCallback(
+    (
+      params: { action?: string; name?: string; value?: number } & Record<
+        string,
+        string | number
+      >,
+    ) => {
+      const { category, ...props } = {
+        ...ctxValue,
+        ...params,
       }
-    } else {
-      trackPlausibleEvent(category, { props: { action, name, value } })
-    }
-  }
+
+      if (!props.action) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn(
+            `useTrackEvent: action undefined. Set one on the TrackingContext or function argument`,
+          )
+        }
+      } else {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Track Event', category, props)
+        }
+
+        trackPlausibleEvent(category, { props })
+      }
+    },
+    [ctxValue, trackPlausibleEvent],
+  )
 }
 import { shouldIgnoreClick } from '@project-r/styleguide'
 

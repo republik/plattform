@@ -519,6 +519,11 @@ type Company {
   name: String!
 }
 
+enum CompanyName {
+  PROJECT_R
+  REPUBLIK
+}
+
 type Contributor {
   kind: String
   name: String!
@@ -564,6 +569,10 @@ type CrowdfundingStatus {
   memberships: Int!
   money: Int!
   people: Int!
+}
+
+type CustomerPortalSession {
+  sessionUrl: String
 }
 
 """Date (format %d.%m.%Y)"""
@@ -1001,6 +1010,15 @@ input ImageProperties {
   width: Int
 }
 
+type Invoice {
+  createdAt: DateTime!
+  hrId: String!
+  id: ID!
+  items: JSON!
+  total: Int!
+  totalBeforeDiscount: Int!
+}
+
 scalar JSON
 
 type LinkPreview {
@@ -1013,6 +1031,42 @@ type LinkPreview {
   title: String!
   updatedAt: DateTime!
   url: String!
+}
+
+type MagazineSubscription {
+  cancelAt: DateTime
+  canceledAt: DateTime
+  company: CompanyName!
+  createdAt: DateTime!
+  currentPeriodEnd: DateTime
+  currentPeriodStart: DateTime
+  endedAt: DateTime
+  id: ID!
+  invoices: [Invoice!]!
+  paymentMethod: String
+  renewsAtPrice: Int
+  status: MagazineSubscriptionStatus!
+  stripeId: String!
+  type: MagazineSubscriptionType!
+  updatedAt: DateTime!
+}
+
+enum MagazineSubscriptionStatus {
+  active
+  canceled
+  ended
+  incomplete
+  incomplete_expired
+  overdue
+  past_due
+  paused
+  trialing
+  unpaid
+}
+
+enum MagazineSubscriptionType {
+  MONTHLY_SUBSCRIPTION
+  YEARLY_SUBSCRIPTION
 }
 
 type MailboxAddress {
@@ -2412,6 +2466,11 @@ input StringArrayFilter {
 """String or number (input is casted to string)"""
 scalar StringOrNumber
 
+type StripeCustomer {
+  company: CompanyName!
+  customerId: String!
+}
+
 type Submission {
   answers: AnswerConnection!
   createdAt: DateTime!
@@ -2562,6 +2621,7 @@ type User {
   """List of memberships a User was granted"""
   accessGrants(withPast: Boolean): [AccessGrant!]
   accessToken(scope: AccessTokenScope!): ID
+  activeMagazineSubscription: MagazineSubscription
   activeMembership: Membership
   address: Address
   adminNotes: String
@@ -2622,6 +2682,7 @@ type User {
   isSuspended: Boolean
   isUserOfCurrentSession: Boolean!
   lastName: String
+  magazineSubscriptions: [MagazineSubscription!]!
   mailbox(after: String, before: String, filters: MailboxFiltersInput, first: Int, last: Int): MailboxConnection
   memberships: [Membership!]!
   name: String
@@ -2645,6 +2706,7 @@ type User {
   sessions: [Session!]
   slug: String
   statement: String
+  stripeCustomer(company: CompanyName): StripeCustomer
   subscribedBy(after: String, before: String, first: Int, last: Int, onlyMe: Boolean): SubscriptionConnection!
   subscribedByMe: Subscription
   subscribedTo(after: String, before: String, first: Int, last: Int, objectType: SubscriptionObjectType): SubscriptionConnection!
@@ -2862,6 +2924,7 @@ type mutations {
   bookCalendarSlot(id: ID!, userId: ID): CalendarSlot!
   cancelCalendarSlot(id: ID!, userId: ID): CalendarSlot!
   cancelCandidacy(slug: String!): Election!
+  cancelMagazineSubscription(subscriptionId: String!): Boolean
   cancelMembership(details: CancellationInput!, id: ID!, immediately: Boolean): Membership!
   cancelPledge(pledgeId: ID!): Pledge
 
@@ -2878,6 +2941,7 @@ type mutations {
   commit(document: DocumentInput!, isTemplate: Boolean, message: String!, parentId: ID, repoId: ID!): Commit!
   createDiscussion(anonymity: Permission!, maxLength: Int, minInterval: Int, tagRequired: Boolean!, tags: [String!], title: String): ID!
   createElection(electionInput: ElectionInput!): Election!
+  createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
   createVoting(votingInput: VotingInput!): Voting!
   deleteRedirection(id: ID!): Boolean!
   deleteUser(unpublishComments: Boolean, userId: ID!): User
@@ -3097,6 +3161,7 @@ type queries {
   notifications(after: String, before: String, filter: EventObjectType, first: Int, last: Int, lastDays: Int, onlyUnread: Boolean): NotificationConnection
   payments(booleanFilter: BooleanFilter, dateRangeFilter: DateRangeFilter, limit: Int!, offset: Int, orderBy: OrderBy, search: String, stringArrayFilter: StringArrayFilter): PledgePayments!
   paymentsCSV(companyName: String!, paymentIds: [ID!]): String!
+  paymentsIsRunning: Boolean
   pendingAppSignIn: SignInNotification
   pledge(id: ID!): Pledge
   pledges: [Pledge!]!

@@ -37,6 +37,8 @@ describe('test that merge fields are generated correctly from user data with mis
     const user = undefined as any
     const segmentData: SegmentData = {
       pledges: [],
+      activeSubscription: undefined,
+      invoices: undefined,
       activeMembership: undefined,
       activeMembershipPeriod: undefined,
       benefactorMembership: undefined,
@@ -73,6 +75,8 @@ describe('test that merge fields are generated correctly from user data with mis
     }
     const segmentData: SegmentData = {
       pledges: [],
+      activeSubscription: undefined,
+      invoices: [],
       activeMembership: undefined,
       activeMembershipPeriod: undefined,
       benefactorMembership: undefined,
@@ -113,6 +117,8 @@ describe('latest pledge amount', () => {
   test('no pledges, but active membership', async () => {
     const segmentData: SegmentData = {
       pledges: undefined,
+      invoices: undefined,
+      activeSubscription: undefined,
       activeMembership: { id: '123-456' } as any,
       activeMembershipPeriod: { id: '234-456', pledgeId: '345-678' } as any,
       benefactorMembership: undefined,
@@ -171,6 +177,8 @@ describe('latest pledge amount', () => {
       benefactorMembership: undefined,
       accessGrants: [],
       mailchimpMember: undefined,
+      invoices: [],
+      activeSubscription: undefined,
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.PL_AMOUNT).toBe(270)
@@ -223,9 +231,141 @@ describe('latest pledge amount', () => {
       benefactorMembership: undefined,
       accessGrants: [],
       mailchimpMember: undefined,
+      activeSubscription: undefined,
+      invoices: [],
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.PL_AMOUNT).toBe(300)
+  })
+
+  test('invoice, no pledges, no active subscription', async () => {
+    const segmentData: SegmentData = {
+      activeSubscription: undefined,
+      invoices: [
+        {
+          id: '123-456',
+          userId: userId,
+          subscriptionId: 'sub_123-345',
+          total: 700,
+          createdAt: new Date('2024-02-01'),
+          periodStart: new Date('2024-02-01'),
+          periodEnd: new Date('2024-03-01'),
+        },
+      ],
+      pledges: undefined,
+      activeMembership: undefined,
+      activeMembershipPeriod: undefined,
+      benefactorMembership: undefined,
+      accessGrants: [],
+      mailchimpMember: undefined,
+    }
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.PL_AMOUNT).toBe(7)
+  })
+
+  test('several invoices, no pledges, active subscription', async () => {
+    const segmentData: SegmentData = {
+      activeSubscription: { 
+        id: 'sub_123-345', 
+        userId: userId, 
+        type: 'MONTHLY_SUBSCRIPTION', 
+        status: 'active', 
+        cancelAt: undefined, 
+        currentPeriodStart: new Date('2023-02-01'),
+        currentPeriodEnd: new Date('2035-01-01')
+      },
+      invoices: [
+        {
+          id: '123-456',
+          userId: userId,
+          subscriptionId: 'sub_123-345',
+          total: 700,
+          createdAt: new Date('2024-02-01'),
+          periodStart: new Date('2024-02-01'),
+          periodEnd: new Date('2024-03-01'),
+        },
+        {
+          id: '234-567',
+          userId: userId,
+          subscriptionId: 'sub_123-345',
+          total: 2200,
+          createdAt: new Date('2024-03-01'),
+          periodStart: new Date('2024-03-01'),
+          periodEnd: new Date('2024-04-01'),
+        },
+      ],
+      pledges: undefined,
+      activeMembership: undefined,
+      activeMembershipPeriod: undefined,
+      benefactorMembership: undefined,
+      accessGrants: [],
+      mailchimpMember: undefined,
+    }
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.PL_AMOUNT).toBe(22)
+  })
+
+  test('several invoices, a pledge, active subscription', async () => {
+    const segmentData: SegmentData = {
+      activeSubscription: { 
+        id: 'sub_123-345', 
+        userId: userId, 
+        type: 'MONTHLY_SUBSCRIPTION', 
+        status: 'active', 
+        cancelAt: undefined, 
+        currentPeriodStart: new Date('2023-02-01'),
+        currentPeriodEnd: new Date('2035-01-01')
+      },
+      invoices: [
+        {
+          id: 'invoice-123-456',
+          userId: userId,
+          subscriptionId: 'sub_123-345',
+          total: 700,
+          createdAt: new Date('2024-02-01'),
+          periodStart: new Date('2024-02-01'),
+          periodEnd: new Date('2024-03-01'),
+        },
+        {
+          id: 'invoice-234-567',
+          userId: userId,
+          subscriptionId: 'sub_123-345',
+          total: 2200,
+          createdAt: new Date('2024-03-01'),
+          periodStart: new Date('2024-03-01'),
+          periodEnd: new Date('2024-04-01'),
+        },
+      ],
+      pledges: [
+        {
+          id: 'pledge-3456',
+          packageId: 'package-1234',
+          userId: userId,
+          status: 'SUCCESSFUL',
+          total: 27000,
+          donation: 0,
+          createdAt: new Date('2019-01-01'),
+          payload: {},
+        },
+        {
+          id: 'pledge-0987',
+          packageId: 'package-1234',
+          userId: userId,
+          status: 'SUCCESSFUL',
+          total: 12000,
+          donation: 0,
+          createdAt: new Date(),
+          payload: {},
+        },
+      ],
+      activeMembership: undefined,
+      activeMembershipPeriod: undefined,
+      benefactorMembership: undefined,
+      accessGrants: [],
+      mailchimpMember: undefined,
+    }
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.PL_AMOUNT).toBe(22)
   })
 })
 
@@ -265,17 +405,20 @@ describe('subscription end date', () => {
       initialInterval: 'year',
     },
     activeMembershipPeriod: undefined,
+    activeSubscription: undefined,
     benefactorMembership: undefined,
     accessGrants: [],
     mailchimpMember: undefined,
+    invoices: [],
   }
-  test('no active membership period', async () => {
+  test('no active membership period or subscription', async () => {
     segmentData.activeMembershipPeriod = undefined
+    segmentData.activeSubscription = undefined
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.END_DATE).toBeUndefined()
   })
 
-  test('active membership period with missing endDate', async () => {
+  test('active membership period with missing endDate, no subscription', async () => {
     segmentData.activeMembershipPeriod = {
       id: 'mp-123',
       pledgeId: pledgeId,
@@ -287,7 +430,7 @@ describe('subscription end date', () => {
     expect(mergeFields.END_DATE).toBeUndefined()
   })
 
-  test('active membership period with end date', async () => {
+  test('active membership period with end date, no subscription', async () => {
     segmentData.activeMembershipPeriod = {
       id: 'mp-123',
       pledgeId: pledgeId,
@@ -298,6 +441,64 @@ describe('subscription end date', () => {
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.END_DATE).toStrictEqual(new Date('2035-01-01'))
   })
+
+  test('active subscription, active membership period with end date, subscription takes precedence', async () => {
+    segmentData.activeMembershipPeriod = {
+      id: 'mp-123',
+      pledgeId: pledgeId,
+      membershipId: membershipId,
+      beginDate: new Date('2019-01-01'),
+      endDate: new Date('2035-01-01'),
+    }
+    segmentData.activeSubscription = {
+      id: 'sub-123-567',
+      userId: userId,
+      type: 'MONTHLY_SUBSCRIPTION',
+      status: 'active',
+      cancelAt: undefined,
+      currentPeriodStart: new Date('2019-01-01'),
+      currentPeriodEnd: new Date('2040-01-01')
+    }
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.END_DATE).toStrictEqual(new Date('2040-01-01'))
+  })
+
+  test('active subscription, missing end date, active membership period with end date, subscription takes precedence', async () => {
+    segmentData.activeMembershipPeriod = {
+      id: 'mp-123',
+      pledgeId: pledgeId,
+      membershipId: membershipId,
+      beginDate: new Date('2019-01-01'),
+      endDate: new Date('2035-01-01'),
+    }
+    segmentData.activeSubscription = {
+      id: 'sub-123-567',
+      userId: userId,
+      type: 'MONTHLY_SUBSCRIPTION',
+      status: 'active',
+      cancelAt: undefined,
+      currentPeriodStart: new Date('2019-01-01'),
+      currentPeriodEnd: undefined as any
+    }
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.END_DATE).toBeUndefined()
+  })
+
+  test('active subscription, no active membership period', async () => {
+    segmentData.activeMembershipPeriod = undefined
+    segmentData.activeSubscription = {
+      id: 'sub-123-567',
+      userId: userId,
+      type: 'MONTHLY_SUBSCRIPTION',
+      status: 'active',
+      cancelAt: undefined,
+      currentPeriodStart: new Date('2019-01-01'),
+      currentPeriodEnd: new Date('2041-01-01')
+    }
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.END_DATE).toStrictEqual(new Date('2041-01-01'))
+  })
+
 })
 
 describe('subscription state', () => {
@@ -328,13 +529,15 @@ describe('subscription state', () => {
     benefactorMembership: undefined,
     accessGrants: [],
     mailchimpMember: undefined,
+    activeSubscription: undefined,
+    invoices: [],
   }
-  test('no active membership defined', async () => {
+  test('no active membership or subscription defined', async () => {
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.SUB_STATE).toBeUndefined()
   })
 
-  test('active membership with autopay', async () => {
+  test('active membership with autopay, no subscription', async () => {
     segmentData.activeMembership = {
       id: membershipId,
       userId: userId,
@@ -351,7 +554,7 @@ describe('subscription state', () => {
     expect(mergeFields.SUB_STATE).toBe('Autopay')
   })
 
-  test('active membership, cancelled and autopay', async () => {
+  test('active membership, cancelled and autopay, no subscription', async () => {
     segmentData.activeMembership = {
       id: membershipId,
       userId: userId,
@@ -369,7 +572,7 @@ describe('subscription state', () => {
     expect(mergeFields.SUB_STATE).toBe('Cancelled')
   })
 
-  test('active membership, no autopay, not cancelled', async () => {
+  test('active membership, no autopay, not cancelled, no subscrciption', async () => {
     segmentData.activeMembership = {
       id: membershipId,
       userId: userId,
@@ -386,7 +589,7 @@ describe('subscription state', () => {
     expect(mergeFields.SUB_STATE).toBe('Active')
   })
 
-  test('cancelled monthly abo, manual cancellation', async () => {
+  test('cancelled monthly abo, manual cancellation, no subscription', async () => {
     segmentData.activeMembership = {
       id: membershipId,
       userId: userId,
@@ -404,7 +607,7 @@ describe('subscription state', () => {
     expect(mergeFields.SUB_STATE).toBe('Cancelled')
   })
 
-  test('cancelled monthly abo, cancellation due to change to membership', async () => {
+  test('cancelled monthly abo, cancellation due to change to membership, no subscription', async () => {
     segmentData.activeMembership = {
       id: membershipId,
       userId: userId,
@@ -420,6 +623,58 @@ describe('subscription state', () => {
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.SUB_STATE).toBe('Autopay')
+  })
+
+  test('active subscription, active membership, subscription takes precedence', async () => {
+    segmentData.activeMembership = {
+      id: membershipId,
+      userId: userId,
+      pledgeId: pledgeId,
+      membershipTypeId: 'mt-1',
+      membershipTypeName: 'ABO',
+      createdAt: new Date('2019-01-01'),
+      active: true,
+      renew: true,
+      autoPay: false,
+      initialInterval: 'year',
+    }
+    segmentData.activeSubscription = {
+      id: 'sub-123-456',
+      userId: userId,
+      type: 'MONTHLY_SUBSCRIPTION',
+      status: 'active',
+      cancelAt: undefined,
+      currentPeriodStart: new Date('2023-05-01'),
+      currentPeriodEnd: new Date('2045-01-01')
+    }
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.SUB_STATE).toBe('Autopay')
+  })
+
+  test('cancelled subscription', async () => {
+    segmentData.activeMembership = {
+      id: membershipId,
+      userId: userId,
+      pledgeId: pledgeId,
+      membershipTypeId: 'mt-1',
+      membershipTypeName: 'ABO',
+      createdAt: new Date('2019-01-01'),
+      active: true,
+      renew: true,
+      autoPay: false,
+      initialInterval: 'year',
+    }
+    segmentData.activeSubscription = {
+      id: 'sub-123-456',
+      userId: userId,
+      type: 'MONTHLY_SUBSCRIPTION',
+      status: 'active',
+      cancelAt: new Date('2026-01-01'),
+      currentPeriodStart: new Date('2023-05-01'),
+      currentPeriodEnd: new Date('2045-01-01')
+    }
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.SUB_STATE).toBe('Cancelled')
   })
 })
 
@@ -439,51 +694,58 @@ describe('trial state', () => {
     benefactorMembership: undefined,
     accessGrants: undefined,
     mailchimpMember: undefined,
+    activeSubscription: undefined,
+    invoices: [],
   }
   test('trial state undefined', async () => {
-    const mergeFields = await getMergeFieldsForUser({user, segmentData})
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.TRIAL).toBeUndefined()
   })
 
   test('active trial', async () => {
-    segmentData.accessGrants = [{
-      id: 'ag-123',
-      granterUserId: userId,
-      email: email,
-      recipientUserId: userId,
-      beginAt: new Date('2024-07-01'),
-      endAt: new Date('2035-01-01'),
-      revokedAt: null,
-      invalidatedAt: null,
-      payload: {},
-    }, {
-      id: 'ag-1234',
-      granterUserId: userId,
-      email: email,
-      recipientUserId: userId,
-      beginAt: new Date('2020-07-01'),
-      endAt: new Date('2020-08-01'),
-      revokedAt: null,
-      invalidatedAt: new Date('2020-07-05'),
-      payload: {},
-    }]
-    const mergeFields = await getMergeFieldsForUser({user, segmentData})
+    segmentData.accessGrants = [
+      {
+        id: 'ag-123',
+        granterUserId: userId,
+        email: email,
+        recipientUserId: userId,
+        beginAt: new Date('2024-07-01'),
+        endAt: new Date('2035-01-01'),
+        revokedAt: null,
+        invalidatedAt: null,
+        payload: {},
+      },
+      {
+        id: 'ag-1234',
+        granterUserId: userId,
+        email: email,
+        recipientUserId: userId,
+        beginAt: new Date('2020-07-01'),
+        endAt: new Date('2020-08-01'),
+        revokedAt: null,
+        invalidatedAt: new Date('2020-07-05'),
+        payload: {},
+      },
+    ]
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.TRIAL).toBe('Active')
   })
 
   test('past trial', async () => {
-    segmentData.accessGrants = [{
-      id: 'ag-1234',
-      granterUserId: userId,
-      email: email,
-      recipientUserId: userId,
-      beginAt: new Date('2020-07-01'),
-      endAt: new Date('2020-08-01'),
-      revokedAt: new Date('2020-07-05'),
-      invalidatedAt: new Date('2020-07-05'),
-      payload: {},
-    }]
-    const mergeFields = await getMergeFieldsForUser({user, segmentData})
+    segmentData.accessGrants = [
+      {
+        id: 'ag-1234',
+        granterUserId: userId,
+        email: email,
+        recipientUserId: userId,
+        beginAt: new Date('2020-07-01'),
+        endAt: new Date('2020-08-01'),
+        revokedAt: new Date('2020-07-05'),
+        invalidatedAt: new Date('2020-07-05'),
+        payload: {},
+      },
+    ]
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.TRIAL).toBe('Past')
   })
 })

@@ -1,11 +1,12 @@
 const debug = require('debug')('mail:lib:scheduler')
 const { timeScheduler } = require('@orbiting/backend-modules-schedulers')
+import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { archiveUnsubscribed } from './archiveUnsubscribed'
 import bluebird from 'bluebird'
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
-const init = async (context) => {
+const init = async (context: GraphqlContext) => {
   debug('init')
 
   const schedulers: any[] = []
@@ -14,8 +15,8 @@ const init = async (context) => {
     timeScheduler.init({
       name: 'archive-unsubscribed',
       context,
-      runFunc: async (_args) => {
-        const { dryRun } = _args
+      runFunc: async (args: { dryRun: boolean }) => {
+        const { dryRun } = args
         debug(
           `starting job to archive unsubscribed users in audiences on mailchimp`,
         )
@@ -37,6 +38,4 @@ const init = async (context) => {
   }
 }
 
-export {
-  init,
-}
+export { init }

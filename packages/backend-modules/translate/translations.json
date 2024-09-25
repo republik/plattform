@@ -405,6 +405,38 @@
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
+      "key": "api/email/subscription_created_monthly_subscription/subject",
+      "value": "Republik: Ihr Monats-Abo"
+    },
+    {
+      "key": "api/email/subscription_created_yearly_subscription/subject",
+      "value": "Republik: Ihre Mitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_cancel_notice/subject",
+      "value": "Bestätigung Ihrer Kündigung"
+    },
+    {
+      "key": "api/email/subscription_ended_monthly_subscription/subject",
+      "value": "Ihr letzter Tag an Bord der Republik"
+    },
+    {
+      "key": "api/email/subscription_ended_yearly_subscription/subject",
+      "value": "Ihr letzter Tag an Bord der Republik"
+    },
+    {
+      "key": "api/email/subscription_payment_failed_notice_monthly_subscription/subject",
+      "value": "Zahlung fehlgeschlagen - Republik Monats-Abo"
+    },
+    {
+      "key": "api/email/subscription_payment_failed_notice_yearly_subscription/subject",
+      "value": "Zahlung fehlgeschlagen - Republik Mitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_revoke_cancellation_notice/subject",
+      "value": "Republik: Ihre Kündigung wurde rückgängig gemacht"
+    },
+    {
       "key": "api/email/option/goodie/notebook/1",
       "value": "Notizbuch"
     },
@@ -1353,6 +1385,10 @@
       "value": "Sie benötigen ein bestimmtes Abonnement oder Mitgliedschaft um den Zugriff zu teilen."
     },
     {
+      "key": "api/access/constraint/requireActiveMembershipOrSubscription/error",
+      "value": "Sie benötigen ein aktives Abonnement oder eine Mitgliedschaft um den Zugriff zu teilen."
+    },
+    {
       "key": "api/access/constraint/requireRole/error",
       "value": "Sie benötigen die Rolle «{role}» um den Zugriff zu teilen."
     },
@@ -1421,11 +1457,7 @@
       "value": "Kampagne «{campaignId}» ist ungültig."
     },
     {
-      "key": "api/election/email/election_candidacy_confirmation_gen21m/subject",
-      "value": "Vielen Dank für Ihre Kandidatur"
-    },
-    {
-      "key": "api/election/email/election_candidacy_confirmation_gen18m/subject",
+      "key": "api/election/email/election_candidacy_confirmation_gen24m/subject",
       "value": "Vielen Dank für Ihre Kandidatur"
     },
     {
@@ -1794,7 +1826,11 @@
     },
     {
       "key": "api/signin/EMAIL_CODE/mail/subject",
-      "value": "Bestätigungsziffern für Zugriff: {code}"
+      "value": "Bestätigungs-Code für Zugriff: {code}"
+    },
+    {
+      "key": "api/register/EMAIL_CODE/mail/subject",
+      "value": "Bestätigungs-Code für Registrierung: {code}"
     },
     {
       "key": "api/signin/app/title",

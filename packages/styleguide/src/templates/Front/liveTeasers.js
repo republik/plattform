@@ -75,7 +75,7 @@ const createLiveTeasers = ({
     }) => {
       return (
         <Loader
-          error={data.error}
+          error={null /* ignore error */}
           loading={data.loading}
           style={{ minHeight: LAZYLOADER_MYMAGAZINE_HEIGHT }}
           render={() => {

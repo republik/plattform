@@ -188,7 +188,7 @@ const Frame = ({
             <OptionalLocalColorContext
               localColorVariables={customContentColorContext}
             >
-              <div {...styles.page}>
+              <div {...styles.page} data-template={meta?.template}>
                 {!hideCTA && <CallToActionBanner />}
 
                 {draftMode && <DraftModeIndicator />}

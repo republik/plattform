@@ -1,5 +1,22 @@
-const createNewsletterSubscription = (interestConfigurationMap) => ({
-  buildSubscription(userId, interestId, subscribed, roles) {
+export interface NewsletterSubscriptionInterface {
+  buildSubscription(
+    userId: string,
+    interestId: string,
+    subscribed: any,
+    roles: any,
+  ): any
+  allInterestConfigurations(): any
+  interestIdByName(name: any): any
+  interestConfiguration(interestId: any): any
+}
+
+const createNewsletterSubscription = (interestConfigurationMap: any) => ({
+  buildSubscription(
+    userId: string,
+    interestId: string,
+    subscribed: any,
+    roles: any,
+  ) {
     const interestConfig = this.interestConfiguration(interestId)
     if (!interestConfig) {
       return
@@ -13,9 +30,12 @@ const createNewsletterSubscription = (interestConfigurationMap) => ({
     return interestConfigurationMap || []
   },
 
-  interestIdByName(name) {
+  interestIdByName(name: string) {
     return interestConfigurationMap.reduce(
-      (oldResult, { name: currentName, interestId }) => {
+      (
+        oldResult: any,
+        { name: currentName, interestId }: { name: string; interestId: string },
+      ) => {
         if (currentName === name) return interestId
         return oldResult
       },
@@ -23,23 +43,24 @@ const createNewsletterSubscription = (interestConfigurationMap) => ({
     )
   },
 
-  interestConfiguration(interestId) {
+  interestConfiguration(interestId: string) {
     const interests = interestConfigurationMap.filter(
-      ({ interestId: currentInterestId }) => currentInterestId === interestId,
+      ({ interestId: currentInterestId }: { interestId: string }) =>
+        currentInterestId === interestId,
     )
     return interests.length !== 0 ? interests[0] : null
   },
 })
 
 /* fn is of signature: (data, NewsletterSubscription) => any */
-const withConfiguration = (interestConfiguration, fn) => {
+const withConfiguration = (
+  interestConfiguration: any,
+  fn: (data: any, n: NewsletterSubscriptionInterface) => any,
+) => {
   const NewsletterSubscription = createNewsletterSubscription(
     interestConfiguration,
   )
-  return (data) => fn(data, NewsletterSubscription)
+  return (data: any) => fn(data, NewsletterSubscription)
 }
 
-export {
-  withConfiguration,
-  createNewsletterSubscription,
-}
+export { withConfiguration, createNewsletterSubscription }

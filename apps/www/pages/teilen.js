@@ -21,7 +21,7 @@ const meta = {
 const Page = () => {
   const { inNativeIOSApp } = useInNativeApp()
   const { t } = useTranslation()
-  const { me } = useMe()
+  const { me, hasActiveMembership } = useMe()
   const [hover, setHover] = useState()
 
   return (
@@ -35,7 +35,7 @@ const Page = () => {
           <SignIn />
         </div>
       )}
-      {me && !me.activeMembership && !inNativeIOSApp && (
+      {me && !hasActiveMembership && !inNativeIOSApp && (
         <div style={{ marginTop: 36 }}>
           <Interaction.H2 style={{ marginBottom: 10 }}>
             {t('Account/Access/Campaigns/becomeMamber/title')}

@@ -1,8 +1,6 @@
 import { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { meQuery } from '../../lib/apollo/withMe'
 import { css } from 'glamor'
 
 import withT from '../../lib/withT'
@@ -13,11 +11,13 @@ import { SUPPORTED_TOKEN_TYPES } from '../constants'
 
 import { Interaction, Label, A, RawHtml } from '@project-r/styleguide'
 import { IconDevices, IconMailOutline } from '@republik/icons'
+import { MeDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import { graphql } from '@apollo/client/react/hoc'
 
 const { H3, P } = Interaction
 
 const Icons = {
-  EMAIL_TOKEN:IconMailOutline,
+  EMAIL_TOKEN: IconMailOutline,
   APP: IconDevices,
 }
 
@@ -71,16 +71,9 @@ class Poller extends Component {
     clearTimeout(this.tickTimeout)
   }
   render() {
-    const {
-      data: { error, me },
-      t,
-    } = this.props
+    const { me, t } = this.props
     if (me) {
       return null
-    }
-
-    if (error) {
-      return <ErrorMessage error={error} />
     }
 
     if (this.state.cookiesDisabled) {
@@ -214,4 +207,4 @@ Poller.defaultProps = {
   alternativeFirstFactors: [],
 }
 
-export default compose(graphql(meQuery), withT)(Poller)
+export default compose(graphql(MeDocument), withT)(Poller)

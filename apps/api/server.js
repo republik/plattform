@@ -38,6 +38,23 @@ const {
   graphql: referralCampaigns,
 } = require('@orbiting/backend-modules-referral-campaigns')
 
+const {
+  graphql: paymentsGraphql,
+  express: paymentsWebhook,
+  Payments: PaymentsService,
+  StripeWebhookWorker,
+  StripeCustomerCreateWorker,
+  SyncAddressDataWorker,
+  ConfirmSetupTransactionalWorker,
+  ConfirmCancelTransactionalWorker,
+  ConfirmRevokeCancellationTransactionalWorker,
+  NoticeEndedTransactionalWorker,
+  NoticePaymentFailedTransactionalWorker,
+  SyncMailchimpSetupWorker,
+  SyncMailchimpUpdateWorker,
+  SyncMailchimpEndedWorker,
+} = require('@orbiting/backend-modules-payments')
+
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-voting/loaders'),
   ...require('@orbiting/backend-modules-discussions/loaders'),
@@ -63,6 +80,21 @@ const MailchimpScheduler = require('@orbiting/backend-modules-mailchimp')
 const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
 
 const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
+
+const { Queue } = require('@orbiting/backend-modules-job-queue')
+
+const queue = Queue.getInstance()
+queue.registerWorker(StripeWebhookWorker)
+queue.registerWorker(StripeCustomerCreateWorker)
+queue.registerWorker(SyncAddressDataWorker)
+queue.registerWorker(ConfirmSetupTransactionalWorker)
+queue.registerWorker(ConfirmCancelTransactionalWorker)
+queue.registerWorker(ConfirmRevokeCancellationTransactionalWorker)
+queue.registerWorker(NoticeEndedTransactionalWorker)
+queue.registerWorker(NoticePaymentFailedTransactionalWorker)
+queue.registerWorker(SyncMailchimpSetupWorker)
+queue.registerWorker(SyncMailchimpUpdateWorker)
+queue.registerWorker(SyncMailchimpEndedWorker)
 
 const {
   LOCAL_ASSETS_SERVER,
@@ -124,10 +156,12 @@ const run = async (workerId, config) => {
     slots,
     callToActions,
     referralCampaigns,
+    paymentsGraphql,
   ])
 
   // middlewares
   const middlewares = [
+    paymentsWebhook,
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-mail/express/mandrill'),
@@ -170,6 +204,8 @@ const run = async (workerId, config) => {
 
   const connectionContext = await ConnectionContext.create(applicationName)
 
+  await queue.start()
+
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
     const context = {
@@ -185,6 +221,8 @@ const run = async (workerId, config) => {
     })
     return context
   }
+
+  PaymentsService.start(connectionContext.pgdb)
 
   const server = await Server.start(
     graphqlSchema,
@@ -310,11 +348,19 @@ const runOnce = async () => {
       console.log(error)
       throw new Error(error)
     })
-    mailchimpScheduler = await MailchimpScheduler.init(context).catch((error) => {
-      console.log(error)
-      throw new Error(error)
-    })
+    mailchimpScheduler = await MailchimpScheduler.init(context).catch(
+      (error) => {
+        console.log(error)
+        throw new Error(error)
+      },
+    )
   }
+
+  await queue.start()
+
+  PaymentsService.start(context.pgdb)
+
+  await queue.startWorkers()
 
   const close = async () => {
     await Promise.all(
@@ -327,6 +373,7 @@ const runOnce = async () => {
         databroomScheduler && databroomScheduler.close(),
         mailScheduler && mailScheduler.close(),
         mailchimpScheduler && mailchimpScheduler.close(),
+        queue && queue.stop(),
       ].filter(Boolean),
     )
     await ConnectionContext.close(context)
