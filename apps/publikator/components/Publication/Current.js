@@ -121,7 +121,7 @@ class CurrentPublications extends Component {
                       }}
                     >
                       <PublicationLink publication={publication} />
-                      <Derivatives commit={publication.commit} />
+                      <Derivatives repoId={repo.id} commit={publication.commit} />
                     </div>
                   </Item>
                 ))}

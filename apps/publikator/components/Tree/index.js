@@ -381,7 +381,7 @@ class Tree extends Component {
                       }}
                     >
                       <Diff repoId={repoId} commit={commit} />
-                      <Derivatives commit={commit} />
+                      <Derivatives repoId={repoId} commit={commit} />
                     </div>
                   </div>
                 </li>
