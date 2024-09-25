@@ -88,7 +88,6 @@ export const processMeta = async (
 }
 
 export const applyAssetsAudioUrl = (derivative: DerivativeRow) => {
-  console.log('applyAssetsAudioUrl')
   const { type, result } = derivative
   if (type !== 'SyntheticReadAloud') {
     return derivative
