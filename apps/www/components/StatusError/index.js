@@ -33,9 +33,9 @@ const getRedirect = gql`
 
 const getURLLabel = (url) => {
   try {
-    return new URL(url).hostname?.replace(/^www\./, '');
+    return new URL(url).hostname?.replace(/^www\./, '')
   } catch (e) {
-    return url?.replace(/^https?:\/\/www\./, '');
+    return url?.replace(/^https?:\/\/www\./, '')
   }
 }
 const appendQueryString = (target, queryString) => {
@@ -74,8 +74,8 @@ const StatusError = ({
         window.location = clientRedirectionTarget
         setTimeout(() => {
           if (inNativeApp) {
-            // window.location will open in a browser, reset app to last location
-            window.history.back()
+            // window.location will open in a browser, reset app to home page (previously was history.back(), which doesn't always work!)
+            window.location.href = '/'
           } else {
             // e.g. on iOS a Apple apps link will open the App Store App, reset to a more useful page afterwards
             window.location = appendQueryString(
