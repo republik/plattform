@@ -86,7 +86,7 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
         ? [
             !meta.title && t('publish/validation/title/empty'),
             !meta.description && t('publish/validation/description/empty'),
-            !meta.syntheticVoice && t('publish/validation/syntheticVoice/empty'),
+            !content.meta.suppressSyntheticReadAloud && !content.meta.syntheticVoice && t('publish/validation/syntheticVoice/empty'),
           ]
             .concat(socialWarnings)
             .filter(Boolean)
