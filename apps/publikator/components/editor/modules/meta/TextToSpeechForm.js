@@ -1,9 +1,9 @@
-import { Checkbox, Radio } from "@project-r/styleguide";
+import { Checkbox, Label, Radio } from "@project-r/styleguide";
 
 import {
   MetaSection,
   MetaSectionTitle,
-  MetaOption, MetaOptionGroupTitle
+  MetaOption, MetaOptionGroupTitle, MetaOptionGroup
 } from "../../../MetaDataForm/components/Layout";
 import withT from '../../../../lib/withT'
 import { useState } from "react";
@@ -18,14 +18,6 @@ const VOICES = [
 export default withT(({ t, editor, node, onInputChange }) => {
   const voice = node.data.get('syntheticVoice')
   const suppressed = node.data.get('suppressSyntheticReadAloud')
-  const [error, setError] = useState(undefined)
-
-  const checkVoice = () => {
-    if (voice) {
-      setError(t('metaData/tts/voice/warning'))
-    }
-  }
-
   return (
     <MetaSection>
       <MetaSectionTitle>{t('metaData/tts')}</MetaSectionTitle>
@@ -38,14 +30,14 @@ export default withT(({ t, editor, node, onInputChange }) => {
           {t('metaData/tts/suppress')}
         </Checkbox>
       </MetaOption>
-      <MetaOption>
-        <MetaOptionGroupTitle>{t('metaData/tts/voice/dropdown')}</MetaOptionGroupTitle>
+
+      <MetaOptionGroupTitle>{t('metaData/tts/voice/dropdown')}</MetaOptionGroupTitle>
+      <MetaOptionGroup>
         {VOICES.map((option, i) => (
           <Radio
             key={i}
             checked={voice === option.value}
             onChange={() => {
-              checkVoice(option.value)
               editor.change((change) => {
                 change.setNodeByKey(node.key, {
                   data: node.data.set('syntheticVoice', option.value),
@@ -57,10 +49,10 @@ export default withT(({ t, editor, node, onInputChange }) => {
             {option.text}
           </Radio>
         ))}
-        { error && <p><small>
-          {error}
-        </small></p>}
-      </MetaOption>
+        <div style={{ marginTop: 5 }}>
+          <Label>{t('metaData/tts/voice/warning')}</Label>
+        </div>
+      </MetaOptionGroup>
     </MetaSection>
   )
 })
