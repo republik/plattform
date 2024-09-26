@@ -34,11 +34,6 @@ const createPageSchema = ({
         key: 'disableActionBar',
         ref: 'bool',
       },
-      {
-        label: 'Kein synthetisches Vorlesen',
-        key: 'suppressSyntheticReadAloud',
-        ref: 'bool',
-      },
       ...customMetaFields,
     ],
     series,

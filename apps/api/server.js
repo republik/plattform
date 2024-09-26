@@ -165,7 +165,6 @@ const run = async (workerId, config) => {
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
     require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-mail/express/mandrill'),
-    require('@orbiting/backend-modules-publikator/express/syntheticReadAloud'),
     require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
     require('@orbiting/backend-modules-publikator/express/webhook'),
     require('@orbiting/backend-modules-invoices/express'),

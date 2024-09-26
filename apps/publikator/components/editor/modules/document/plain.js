@@ -143,7 +143,6 @@ ${safeDump({
   title,
   auto: true,
   autoSlug: true,
-  willBeReadAloud: schema === 'article',
   feed: true,
   gallery: true,
 })}

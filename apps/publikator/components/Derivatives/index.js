@@ -16,6 +16,8 @@ import { IconHearing, IconPlay } from '@republik/icons'
 
 import * as fragments from '../../lib/graphql/fragments'
 import withT from '../../lib/withT'
+import { COMMIT_LIMIT, getRepoHistory } from "../../pages/repo/[owner]/[repo]/tree";
+import { getRepoWithPublications } from "../Publication/Current";
 
 const { P } = Interaction
 
@@ -150,7 +152,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
   )
 })
 
-const Derivatives = ({ commit, generateDerivative }) => {
+const Derivatives = ({ commit, repoId, generateDerivative }) => {
   if (!commit.derivatives) {
     return null
   }
@@ -184,6 +186,22 @@ export default compose(
         generateDerivative: () =>
           mutate({
             variables: { commitId: ownProps.commit.id },
+            refetchQueries: [
+              {
+                query: getRepoHistory,
+                variables: {
+                  repoId: ownProps.repoId,
+                  first: COMMIT_LIMIT,
+                },
+              },
+              {
+                query: getRepoWithPublications,
+                variables: {
+                  repoId: ownProps.repoId,
+                },
+              },
+            ],
+
           }),
       }
     },
