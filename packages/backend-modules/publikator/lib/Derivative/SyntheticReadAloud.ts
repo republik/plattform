@@ -169,6 +169,8 @@ export const derive = async (
       userId: user.id,
     })
 
+    // TODO: review if this restriction still makes any sense
+    //  (probably remove altogether when we delete the 'audio generieren' button)
     if (pendingCount > 1) {
       handlerDebug('too many pending derivatives. skipping synthesizing.', {
         userId: user.id,
@@ -176,6 +178,34 @@ export const derive = async (
 
       const error = {
         message: 'too many pending derivatives',
+      }
+
+      const derivative = await pgdb.publikator.derivatives.insertAndGet({
+        commitId,
+        type: 'SyntheticReadAloud',
+        status: 'Failure',
+        result: { error },
+        userId: user?.id,
+        ...(user && {
+          author: {
+            name: user.name,
+            email: user.email,
+          },
+        }),
+        updatedAt: new Date(),
+        failedAt: new Date(),
+      })
+
+      return derivative
+    }
+
+    if (!document.content?.meta?.syntheticVoice) {
+      handlerDebug('Synthetic Voice not set. Skipping synthesizing.', {
+        userId: user.id,
+      })
+
+      const error = {
+        message: 'Please select a voice to read the text.',
       }
 
       const derivative = await pgdb.publikator.derivatives.insertAndGet({
@@ -237,33 +267,11 @@ export const derive = async (
     }),
   })
 
-  const syntheticReadAloudSubstitution =
-    await pgdb.public.gsheets.findOneFieldOnly(
-      { name: 'syntheticReadAloudSubstitution' },
-      'data',
-    )
-
-  const substitutionUrl = syntheticReadAloudSubstitution
-    ? `${PUBLIC_URL}/publikator/syntheticReadAloud/substitution`
-    : ''
-
-  const syntheticReadAloudLexicon = await pgdb.public.gsheets.findOneFieldOnly(
-    { name: 'syntheticReadAloudLexicon' },
-    'data',
-  )
-
-  const lexiconUrl = syntheticReadAloudLexicon
-    ? `${PUBLIC_URL}/publikator/syntheticReadAloud/lexicon`
-    : ''
-  const webhookUrl = `${PUBLIC_URL}/publikator/webhook/syntheticReadAloud`
   const expireAt = moment().add(15, 'minutes')
 
   const body = {
     document,
     derivativeId: derivative.id,
-    substitutionUrl,
-    lexiconUrl,
-    webhookUrl,
     expireAt,
   }
 

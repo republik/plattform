@@ -657,6 +657,26 @@
       "value": "dieser Beitrag wird vorgelesen"
     },
     {
+      "key": "metaData/tts",
+      "value": "Text-To-Speech"
+    },
+    {
+      "key": "metaData/tts/suppress",
+      "value": "Kein synthetisches Vorlesen"
+    },
+    {
+      "key": "metaData/tts/voice",
+      "value": "Synthetische Stimme auswählen"
+    },
+    {
+      "key": "metaData/tts/voice/dropdown",
+      "value": "Synthetische Stimme auswählen"
+    },
+    {
+      "key": "metaData/tts/voice/warning",
+      "value": "⚠️ Achtung, Budget-Warnung! Falls schon eine Audio-Version erzeugt wurde, führt das Ändern der ausgewählten synthetischen Stimme dazu, dass eine ganz neue Audio-Version generiert wird (die dann auch nochmal voll berechnet wird)."
+    },
+    {
       "key": "metaData/series/label",
       "value": "Serie"
     },
@@ -745,8 +765,12 @@
       "value": "Schriftgrösse"
     },
     {
-      "key": "metaData/paynotes/dropdown",
+      "key": "metaData/paynotes",
       "value": "Störer"
+    },
+    {
+      "key": "metaData/paynotes/dropdown",
+      "value": "Störertyp"
     },
     {
       "key": "metaData/paynotes/mode/auto",

@@ -16,6 +16,7 @@ import {
 } from '@project-r/styleguide'
 import ImageInput from '../../utils/ImageInput'
 import withT from '../../../../lib/withT'
+import { MetaOptionGroup, MetaOptionGroupTitle } from "../../../MetaDataForm/components/Layout";
 
 export const SOCIAL_MEDIA = ['facebook', 'twitter']
 
@@ -148,7 +149,6 @@ const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
 
   return (
     <div>
-      <Label style={{ display: 'block', paddingBottom: 5 }}>Social Media</Label>
       <div>
         <Radio
           checked={!generated}
@@ -173,39 +173,41 @@ const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
       )}
       {SOCIAL_MEDIA.map((socialKey) => (
         <Fragment key={socialKey}>
-          <BaseForm
-            socialKey={socialKey}
-            data={data}
-            onInputChange={onInputChange}
-          />
-          {generated ? (
-            <>
-              <Label>
-                {t(`metaData/field/${socialKey}Preview`)}
-                {/* linebreak necessary because shareimage applies additional error label below */}
-                <br />
-              </Label>
-              <ShareImagePreview
-                fontSize={data.get('shareFontSize')}
-                inverted={data.get('shareInverted')}
-                text={data.get('shareText')}
-                textPosition={data.get('shareTextPosition')}
-                format={format}
-                preview={socialKey}
-              />
-            </>
-          ) : (
-            <UploadImage
+          <MetaOptionGroupTitle>{socialKey}</MetaOptionGroupTitle>
+          <MetaOptionGroup>
+            <BaseForm
               socialKey={socialKey}
               data={data}
               onInputChange={onInputChange}
             />
-          )}
-          <PreviewText data={data} socialKey={socialKey} />
-          <div style={{ marginTop: 5 }}>
-            <Label>{t(`metaData/field/${socialKey}Preview/note`)}</Label>
-          </div>
-          <br />
+            {generated ? (
+              <>
+                <Label>
+                  {t(`metaData/field/${socialKey}Preview`)}
+                  {/* linebreak necessary because shareimage applies additional error label below */}
+                  <br />
+                </Label>
+                <ShareImagePreview
+                  fontSize={data.get('shareFontSize')}
+                  inverted={data.get('shareInverted')}
+                  text={data.get('shareText')}
+                  textPosition={data.get('shareTextPosition')}
+                  format={format}
+                  preview={socialKey}
+                />
+              </>
+            ) : (
+              <UploadImage
+                socialKey={socialKey}
+                data={data}
+                onInputChange={onInputChange}
+              />
+            )}
+            <PreviewText data={data} socialKey={socialKey} />
+            <div style={{ marginTop: 5 }}>
+              <Label>{t(`metaData/field/${socialKey}Preview/note`)}</Label>
+            </div>
+          </MetaOptionGroup>
         </Fragment>
       ))}
     </div>
