@@ -10,6 +10,8 @@ import NewsletterSettings, {
 } from './User/NewsletterSettings'
 import Sessions, { fragments as UserSessions } from './User/Sessions'
 
+import { MagazineSubscriptions } from '../Users/Memberships/MagazineSubscriptions'
+
 import { styles } from './utils'
 
 export const fragments = gql`
@@ -79,6 +81,7 @@ const Users = ({ email, name, users, t }) => {
               </A>
               {!matchingUser?.length && !!name && <div>{email}</div>}
             </div>
+            <MagazineSubscriptions userId={id} />
             <Memberships
               activeMembership={activeMembership}
               memberships={memberships}
