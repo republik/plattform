@@ -674,7 +674,7 @@
     },
     {
       "key": "metaData/tts/voice/warning",
-      "value": "⚠️ Budget warning! Falls eine Audio-Version schon erzeugt wurde, wird das Ändern der ausgewählte synthetischen Stimme forcieren, eine ganz neue Audio-Version zu generieren."
+      "value": "⚠️ Achtung, Budget-Warnung! Falls schon eine Audio-Version erzeugt wurde, führt das Ändern der ausgewählten synthetischen Stimme dazu, dass eine ganz neue Audio-Version generiert wird (die dann auch nochmal voll berechnet wird)."
     },
     {
       "key": "metaData/series/label",
