@@ -65,6 +65,9 @@ const WebApp = ({
 
   const router = useRouter()
 
+  const hidePaynoteOverlay =
+    router.pathname === '/angebote' && router.query.package !== undefined
+
   return (
     <PageErrorBoundary>
       <AnalyticsProvider>
@@ -89,7 +92,9 @@ const WebApp = ({
                       />
                       <AudioPlayerOrchestrator />
                       <SyncUTMToSessionStorage />
-                      <PaynoteOverlay key={router.pathname} />
+                      {hidePaynoteOverlay ? null : (
+                        <PaynoteOverlay key={router.pathname} />
+                      )}
                     </ColorContextProvider>
                   </ThemeProvider>
                 </AppVariableContext>
