@@ -12,11 +12,8 @@ const FAKE_BASE_URL = `http://${uuid()}.local`
 
 const useValidation = ({ meta, content, t, updateMailchimp }) => {
   const links = useMemo(() => {
-    const isFlyer = meta.template === 'flyer'
-    const toText = isFlyer
-      ? (node) => renderSlateAsText(node.children)
-      : mdastToString
-    const urlKey = isFlyer ? 'href' : 'url'
+    const toText = mdastToString
+    const urlKey = 'url'
     const all = []
     visit(content, 'link', (node) => {
       const warnings = []
@@ -89,6 +86,7 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
         ? [
             !meta.title && t('publish/validation/title/empty'),
             !meta.description && t('publish/validation/description/empty'),
+            !content.meta.suppressSyntheticReadAloud && !content.meta.syntheticVoice && t('publish/validation/syntheticVoice/empty'),
           ]
             .concat(socialWarnings)
             .filter(Boolean)
