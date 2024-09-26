@@ -66,7 +66,10 @@ const WebApp = ({
   const router = useRouter()
 
   const hidePaynoteOverlay =
-    router.pathname === '/angebote' && router.query.package !== undefined
+    (router.pathname === '/angebote' && router.query.package !== undefined) ||
+    router.pathname === '/mitteilung' ||
+    router.query.extract !== undefined ||
+    router.query.extractId !== undefined
 
   return (
     <PageErrorBoundary>
