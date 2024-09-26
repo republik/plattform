@@ -1297,6 +1297,10 @@
       "value": "Metadaten-Lead fehlt"
     },
     {
+      "key": "publish/validation/syntheticVoice/empty",
+      "value": "Synthetische Stimme fehlt"
+    },
+    {
       "key": "publish/validation/facebookImage/empty",
       "value": "Bild für Facebook fehlt"
     },
