@@ -673,6 +673,10 @@
       "value": "Synthetische Stimme auswählen"
     },
     {
+      "key": "metaData/tts/voice/warning",
+      "value": "⚠️ Budget! Falls eine Audio-Version schon erzeugt wurde, wird die Ändern der ausgewählte synthetischen Stimme forcieren, eine ganz neue Audio-Version zu generieren."
+    },
+    {
       "key": "metaData/series/label",
       "value": "Serie"
     },
