@@ -30,7 +30,9 @@ export const canDerive = (meta: any) => {
   const hasNoAudioSource =
     !meta.audioSourceMp3 && !meta.audioSourceAac && !meta.audioSourceOgg
 
-  return isEnabledTemplate && hasNoAudioSource
+  const shouldDeriveAudio = !meta.suppressSyntheticReadAloud
+
+  return isEnabledTemplate && hasNoAudioSource && shouldDeriveAudio
 }
 
 export const processMeta = async (
