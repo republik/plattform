@@ -19,6 +19,7 @@ const NativeDropdown = (props: DropdownProps) => {
         value={value}
         onChange={
           onChange &&
+          // @ts-expect-error the typing of this event handler is no good
           ((e) => onChange(items.find((item) => item.value === e.target.value)))
         }
         onFocus={() => {

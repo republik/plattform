@@ -82,7 +82,7 @@
     "lint-staged": "^12.3.3",
     "prettier": "^2.5.1",
     "turbo": "^1.13.0",
-    "typescript": "^5.2.2",
+    "typescript": "^5.6.2",
     "yaproxy": "^1.0.2"
   },
   "config": {
@@ -104,6 +104,6 @@
     "@types/react-dom": "^18.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.6.2"
   }
 }

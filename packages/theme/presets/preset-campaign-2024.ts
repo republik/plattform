@@ -1,6 +1,7 @@
 import { definePreset } from '@pandacss/dev'
 
 export const presetCampaign2024 = definePreset({
+  name: 'campaign-2024',
   conditions: {
     extend: {
       campaign2024: '[data-page-theme="campaign-2024"] &',

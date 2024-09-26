@@ -39,7 +39,7 @@ const getOriginalImageDimensions = (url) => {
   const sizeString = imgURL.searchParams.get('size')
   const [width, height] = sizeString ? sizeString.split('x') : [1, 1]
 
-  return { width: +width ?? 1, height: +height ?? 1 }
+  return { width: +width || 1, height: +height || 1 }
 }
 
 // Start: Copied from styleguide TeaserFeed component with slight adaptations

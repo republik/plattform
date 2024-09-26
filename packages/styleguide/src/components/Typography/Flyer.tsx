@@ -10,9 +10,9 @@ import colors from '../../theme/colors'
 
 type BaseProps = {
   children?: ReactNode
-  attributes?: any
-  [x: string]: unknown
-}
+  attributes?: Record<string, unknown>
+} & Record<string, any>
+
 type Typography = React.FC<BaseProps>
 
 export const Layout: Typography = ({ children, attributes }) => {

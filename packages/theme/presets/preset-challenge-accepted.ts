@@ -1,6 +1,7 @@
 import { definePreset } from '@pandacss/dev'
 
 export const presetChallengeAccepted = definePreset({
+  name: 'challenge-accepted',
   conditions: {
     extend: {
       challengeAccepted: '[data-page-theme="challenge-accepted"] &',
