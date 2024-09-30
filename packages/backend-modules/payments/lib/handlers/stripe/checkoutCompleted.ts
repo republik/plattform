@@ -8,6 +8,7 @@ import { PaymentProvider } from '../../providers/provider'
 import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
 import { SyncAddressDataWorker } from '../../workers/SyncAddressDataWorker'
+import { mapChargeArgs } from './invoicePaymentSucceded'
 
 export async function processCheckoutCompleted(
   paymentService: PaymentService,
@@ -73,6 +74,18 @@ export async function processCheckoutCompleted(
       if (invoiceData) {
         const args = mapInvoiceArgs(company, invoiceData)
         invoiceId = (await paymentService.saveInvoice(userId, args)).id
+        const chargeArgs = mapChargeArgs(
+          company,
+          invoiceId,
+          invoiceData.charge as Stripe.Charge,
+        )
+        try {
+          await paymentService.saveCharge(chargeArgs)
+        } catch (e) {
+          if (e instanceof Error) {
+            console.log('Error recording charge: %s', e.message)
+          }
+        }
       }
     } else {
       invoiceId = i.id

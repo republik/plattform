@@ -107,6 +107,7 @@ export type InvoiceStatus = 'draft' | 'paid' | 'void' | 'refunded' | 'open'
 export type Invoice = {
   id: string
   subscriptionId: string
+  userId: string
   company: Company
   externalId: string
   metadata: Record<string, any>

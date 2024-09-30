@@ -11,6 +11,8 @@ import { processSubscriptionCreated } from '../handlers/stripe/subscriptionCreat
 import { processCheckoutCompleted } from '../handlers/stripe/checkoutCompleted'
 import { processPaymentFailed } from '../handlers/stripe/paymentFailed'
 import { isPledgeBased } from '../handlers/stripe/utils'
+import { processChargeRefunded } from '../handlers/stripe/chargeRefunded'
+import { processInvociePaymentSucceded } from '../handlers/stripe/invoicePaymentSucceded'
 
 type WorkerArgsV1 = {
   $version: 'v1'
@@ -94,6 +96,16 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
           break
         case 'invoice.payment_failed':
           await processPaymentFailed(PaymentService, job.data.company, event)
+          break
+        case 'invoice.payment_succeeded':
+          await processInvociePaymentSucceded(
+            PaymentService,
+            job.data.company,
+            event,
+          )
+          break
+        case 'charge.refunded':
+          await processChargeRefunded(PaymentService, job.data.company, event)
           break
         default:
           console.log('skipping %s no handler for this event', event.type)

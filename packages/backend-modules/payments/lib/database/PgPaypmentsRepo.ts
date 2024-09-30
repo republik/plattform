@@ -171,6 +171,18 @@ export class PgPaymentRepo implements PaymentServiceRepo {
     })
   }
 
+  getCharge(by: PaymentItemLocator) {
+    return this.#pgdb.payments.charges.findOne(by)
+  }
+
+  saveCharge(args: any): Promise<any> {
+    return this.#pgdb.payments.charges.insert(args)
+  }
+
+  updateCharge(charge: PaymentItemLocator, args: any): Promise<any | null> {
+    return this.#pgdb.payments.charges.update(charge, args)
+  }
+
   async getUser(userId: string): Promise<UserRow> {
     return this.#pgdb.public.users.findOne({ id: userId })
   }
