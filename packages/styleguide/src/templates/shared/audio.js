@@ -1,4 +1,3 @@
 export const shouldRenderPlayButton = ({ urlMeta }) =>
-  urlMeta?.hasAudio && urlMeta?.audioSourceKind !== 'syntheticReadAloud'
-    ? true
-    : undefined
+  // if I remember correctly we need "undefined", not "false" here
+  urlMeta?.hasAudio ? true : undefined
