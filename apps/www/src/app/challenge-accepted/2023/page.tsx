@@ -8,15 +8,17 @@ import { NewsletterName } from '#graphql/republik-api/__generated__/gql/graphql'
 import { EmailSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up/email-signup'
 import { CollectionFilter } from '@app/app/challenge-accepted/components/collection-filter'
 import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
+import { PersonBubble } from '@app/app/challenge-accepted/person/[slug]/components/person-bubble'
+import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
 import Container from '@app/components/container'
 import { Share } from '@app/components/share/share'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { getNewsletterSubscriptionStatus } from '@app/lib/newsletters'
 import { IconShare } from '@republik/icons'
 import { css } from '@republik/theme/css'
-import { hstack } from '@republik/theme/patterns'
+import { hstack, vstack } from '@republik/theme/patterns'
 import { PUBLIC_BASE_URL } from 'lib/constants'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms'
@@ -84,7 +86,7 @@ export default async function Page({ searchParams }) {
           gap: '2',
           color: 'text',
           textStyle: 'sansSerifBold',
-          fontSize: 'base',
+          fontSize: 'm',
           cursor: 'pointer',
           _hover: {
             color: 'contrast',
@@ -98,14 +100,64 @@ export default async function Page({ searchParams }) {
 
   return (
     <EventTrackingContext category='ChallengeAcceptedLandingPage'>
+      {!isNewsletterSubscribed && (
+        <Container>
+          <div
+            className={css({
+              width: { base: 100, md: 156 },
+              mx: 'auto',
+              mt: { base: '4', md: '8' },
+              mb: { base: '8', md: '12' },
+
+              _dark: {
+                filter: 'invert(1)',
+              },
+            })}
+          >
+            <Image
+              src={hub.logo?.url}
+              priority
+              width={156}
+              height={100}
+              className={css({ objectFit: 'contain' })}
+              alt='Challenge Accepted Logo'
+            />
+          </div>
+          <div
+            className={css({
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8',
+              fontSize: '2xl',
+            })}
+          >
+            <p>{hub.newsletterSignupIntro}</p>
+            <h2 className={css({ fontWeight: 'bold', fontSize: 'xl' })}>
+              {hub.newsletterSignupTagline}
+            </h2>
+            <EmailSignUp me={me} newsletterName={NewsletterName.Climate} />
+            <div
+              className={css({
+                fontSize: 'l',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '2',
+              })}
+            >
+              <StructuredText data={hub.newsletterSignupBenefits?.value} />
+            </div>
+          </div>
+        </Container>
+      )}
+
       <h1
         className={css({
           mt: '8',
           mb: '8',
-          position: 'relative',
+          position: 'absolute',
           width: 'full',
           height: 'min(63vw, 1000px)',
-          // left: 0,
+          left: 0,
           _dark: {
             filter: 'invert(1)',
           },
@@ -119,40 +171,35 @@ export default async function Page({ searchParams }) {
           alt='Challenge Accepted Logo'
         />
       </h1>
-
+      <section
+        className={css({
+          pt: 'min(40vw, 500px)',
+          // mx: '-4',
+          overflow: 'hidden',
+        })}
+      >
+        <PersonBubble />
+      </section>
       <Container>
-        <div
-          className={css({
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8-16',
-            fontSize: '2xl',
-          })}
-        >
-          <p className={css({ textStyle: 'pageIntro' })}>
-            {hub.newsletterSignupIntro}
-          </p>
-          <p className={css({ fontWeight: 'bold', fontSize: '2xl' })}>
-            {hub.newsletterSignupTagline}
-          </p>
-
-          {!isNewsletterSubscribed && (
-            <>
-              <EmailSignUp me={me} newsletterName={NewsletterName.Climate} />
-              <div
-                className={css({
-                  fontSize: '2xl',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '2',
-                })}
-              >
-                <StructuredText data={hub.newsletterSignupBenefits?.value} />
-              </div>
-            </>
-          )}
-
+        <div className={vstack({ gap: '16-32', alignItems: 'stretch' })}>
           <div className={css({ margin: '0 auto' })}>{share}</div>
+
+          <section className={css({ textStyle: 'pageIntro' })}>
+            <StructuredText data={hub.introduction.value} />
+          </section>
+
+          <section>
+            <h2
+              className={css({
+                textStyle: 'h1Sans',
+                fontWeight: 'bold',
+                mb: '6',
+              })}
+            >
+              Mehr erfahren zu …
+            </h2>
+            <PersonList />
+          </section>
 
           <section>
             <div
