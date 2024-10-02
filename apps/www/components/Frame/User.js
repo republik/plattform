@@ -28,7 +28,7 @@ export const SignInLink = ({ isOnMarketingPage }) => {
         <IconAccountBox {...colorScheme.set('fill', 'text')} />
       </span>
       <span
-        {...(isOnMarketingPage ? styles.labelMarketing : styles.labelDefault)}
+        {...styles.label}
         {...colorScheme.set('color', 'text')}
       >
         {t('header/signin')}
@@ -166,7 +166,7 @@ const styles = {
     },
   }),
   anonymous: css({
-    display: 'inline-block',
+    display: 'none',
     '& svg': {
       display: 'inline',
       width: BUTTON_SIZE_MOBILE,
@@ -176,18 +176,17 @@ const styles = {
         height: BUTTON_SIZE,
       },
     },
+    [mediaQueries.mUp]: {
+      display: 'inline-block',
+    },
   }),
-  labelMarketing: css({
+  label: css({
     display: 'inline-block',
     verticalAlign: 'middle',
     marginLeft: 5,
-  }),
-  labelDefault: css({
-    display: 'none',
-    verticalAlign: 'middle',
-    marginLeft: 5,
+    ...fontStyles.sansSerifRegular12,
     [mediaQueries.mUp]: {
-      display: 'inline-block',
+      ...fontStyles.sansSerifRegular16,
     },
   }),
   stack: css({
