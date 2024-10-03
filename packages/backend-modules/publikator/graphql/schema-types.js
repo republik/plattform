@@ -106,14 +106,14 @@ interface MilestoneInterface {
 
 input PublishSettings {
   prepublication: Boolean!
-
   # on all channels
   scheduledAt: DateTime
   # this API never triggers sending
   # not immediately, not scheduled
   updateMailchimp: Boolean!
-
   ignoreUnresolvedRepoIds: Boolean
+  # skip generating new synth voice audio derivative and use latest instead
+  skipSynthAudioGeneration: Boolean
 }
 
 type PublishResponse {

@@ -59,6 +59,7 @@ module.exports = async (_, args, context) => {
     updateMailchimp = false,
     ignoreUnresolvedRepoIds = false,
     notifyFilters = [],
+    skipSynthAudioGeneration = false,
   } = settings
   const { user, t, redis, elastic, pgdb, pubsub, loaders } = context
   ensureUserHasRole(user, 'editor')
@@ -233,7 +234,7 @@ module.exports = async (_, args, context) => {
     await handleRedirection(repoId, doc.content.meta, context)
   }
 
-  await onPublishSyntheticReadAloud(resolvedDoc, context.pgdb, context.user)
+  await onPublishSyntheticReadAloud(resolvedDoc, commit, skipSynthAudioGeneration, context.pgdb, context.user)
 
   // get/create campaign on mailchimp
   // fail early if mailchimp not available

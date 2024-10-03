@@ -8,7 +8,8 @@ const {
   getParsedDocumentId,
 } = require('@orbiting/backend-modules-search/lib/Documents')
 
-import { DerivativeRow } from '../../loaders/Derivative'
+import { Commit, DerivativeRow } from '../types'
+import { associateReadAloudDerivativeWithCommit } from './associateReadAloudDerivativeWithCommit'
 
 const {
   ASSETS_SERVER_BASE_URL,
@@ -53,11 +54,13 @@ export const processMeta = async (
     return preprocessedMeta
   }
 
-  const derivatives: DerivativeRow[] =
-    await context.loaders.Derivative.byCommitId.load(commitId)
-
-  const synthesizedAudio = derivatives.find(
-    (d) => d.type === 'SyntheticReadAloud' && d.status === 'Ready',
+  const commitWithSynthReadAloud =
+    await context.pgdb.publikator.commitsWithSynthReadAloud.findOne({
+      commitId: commitId,
+    })
+  
+  const synthesizedAudio = !!commitWithSynthReadAloud && await context.loaders.Derivative.byId.load(
+    commitWithSynthReadAloud.derivativeId,
   )
 
   if (synthesizedAudio) {
@@ -118,7 +121,13 @@ export const applyAssetsAudioUrl = (derivative: DerivativeRow) => {
   }
 }
 
-export const onPublish = async (document: any, pgdb: any, user?: any) => {
+export const onPublish = async (
+  document: any,
+  commit: Commit,
+  skipSynthAudioGeneration: boolean,
+  pgdb: any,
+  user?: any,
+) => {
   const handlerDebug = debug.extend('onPublish')
 
   if (document.content?.meta?.audioSource) {
@@ -128,6 +137,32 @@ export const onPublish = async (document: any, pgdb: any, user?: any) => {
 
   if (!canDerive(document.content?.meta)) {
     handlerDebug('can not derive synthetic read aloud. skipping synthesizing.')
+    return
+  }
+
+  if (skipSynthAudioGeneration) {
+    // do not derive new audio for this publication, but take existing audio from commit published before
+    handlerDebug(
+      'should not derive synthetic read aloud for this publication, but instead use an existing version. skipping synthesizing.',
+    )
+    const repoId = document.repoId
+    const latestPublishedDerivative: DerivativeRow = await pgdb.queryFirst(
+      `SELECT d.*
+        FROM publikator.derivatives d
+        JOIN publikator.commits commits ON d."commitId" = commits.id
+        JOIN publikator.repos repos ON repos.id = commits."repoId"
+        JOIN publikator.milestones milestones ON commits.id = milestones."commitId"
+        WHERE repos."currentPhase" in ('scheduled', 'published')
+        AND milestones.scope = 'publication'
+        AND d.status = 'Ready'
+        AND d.type = 'SyntheticReadAloud'
+        AND repos.id = :repoId
+        ORDER BY milestones."publishedAt" DESC;`,
+      { repoId: repoId },
+    )
+
+    await associateReadAloudDerivativeWithCommit(latestPublishedDerivative, commit, pgdb)
+
     return
   }
 
