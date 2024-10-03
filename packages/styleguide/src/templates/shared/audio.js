@@ -1,3 +1,4 @@
-export const shouldRenderPlayButton = ({ urlMeta }) =>
-  // if I remember correctly we need "undefined", not "false" here
-  urlMeta?.hasAudio ? true : undefined
+export const shouldRenderPlayButton = ({ urlMeta }) => {
+  // because React, we need "undefined" rather than "false" here
+  return urlMeta?.hasAudio ? true : undefined
+}

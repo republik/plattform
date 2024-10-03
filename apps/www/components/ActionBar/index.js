@@ -501,8 +501,7 @@ const ActionBar = ({
         : toggleAudioPlayback,
       modes: ['feed', 'seriesEpisode'],
       show:
-        meta.audioSource?.mp3 &&
-        meta.audioSource?.kind !== 'syntheticReadAloud',
+        meta.audioSource?.mp3,
       group: 'audio',
     },
     {
@@ -536,8 +535,7 @@ const ActionBar = ({
       modes: ['feed', 'seriesEpisode'],
       show:
         isAudioQueueAvailable &&
-        meta.audioSource?.mp3 &&
-        meta.audioSource?.kind !== 'syntheticReadAloud',
+        meta.audioSource?.mp3,
       group: 'audio',
     },
     {
