@@ -171,7 +171,10 @@ export function PersonDetail({ person, isMember = false }: PersonDetailProps) {
               >
                 Von und mit {person.name}
               </h2>
-              <CollectionRenderer items={person.items} isMember={isMember} />
+              <CollectionRenderer
+                highlights={person.items}
+                isMember={isMember}
+              />
             </section>
           ) : null}
         </div>

@@ -7,16 +7,16 @@ import { ChallengeAcceptedHubQuery } from '#graphql/cms/__generated__/gql/graphq
 
 type CollectionRendererProps = {
   highlights: ChallengeAcceptedHubQuery['hub']['items']
-  newsletters: ChallengeAcceptedHubQuery['allNewsletters']
-  events: ChallengeAcceptedHubQuery['challengeAcceptedTag']['events']
+  newsletters?: ChallengeAcceptedHubQuery['allNewsletters']
+  events?: ChallengeAcceptedHubQuery['challengeAcceptedTag']['events']
   isMember?: boolean
   filter?: string
 }
 
 export default function CollectionRenderer({
   highlights,
-  newsletters,
-  events,
+  newsletters = [],
+  events = [],
   isMember = false,
   filter,
 }: CollectionRendererProps) {
