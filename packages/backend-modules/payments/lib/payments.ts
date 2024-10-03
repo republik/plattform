@@ -14,8 +14,8 @@ import {
   ACTIVE_STATUS_TYPES,
   SubscriptionStatus,
   Address,
-  ChargeRefundUpdate,
-  ChargeRefundInsert,
+  ChargeUpdate,
+  ChargeInsert,
 } from './types'
 import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
@@ -405,14 +405,11 @@ export class Payments implements PaymentService {
     return await this.repo.getCharge(by)
   }
 
-  async saveCharge(args: ChargeRefundInsert): Promise<any> {
+  async saveCharge(args: ChargeInsert): Promise<any> {
     return await this.repo.saveCharge(args)
   }
 
-  async updateCharge(
-    by: PaymentItemLocator,
-    args: ChargeRefundUpdate,
-  ): Promise<any> {
+  async updateCharge(by: PaymentItemLocator, args: ChargeUpdate): Promise<any> {
     return this.repo.updateCharge(by, args)
   }
 
@@ -828,8 +825,8 @@ export interface PaymentService {
   getInvoice(by: PaymentItemLocator): Promise<Invoice | null>
   saveInvoice(userId: string, args: InvoiceArgs): Promise<Invoice>
   getCharge(by: PaymentItemLocator): Promise<any>
-  saveCharge(args: any): Promise<any>
-  updateCharge(by: PaymentItemLocator, args: any): Promise<any>
+  saveCharge(args: ChargeInsert): Promise<any>
+  updateCharge(by: PaymentItemLocator, args: ChargeUpdate): Promise<any>
   updateInvoice(
     by: PaymentItemLocator,
     args: InvoiceUpdateArgs,

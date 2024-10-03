@@ -44,7 +44,7 @@ export function mapChargeArgs(
   invoiceId: string,
   charge: Stripe.Charge,
 ) {
-  let paymentMethodType: string | null = null
+  let paymentMethodType: 'CARD' | 'TWINT' | 'PAYPAL' | null = null
   if (charge?.payment_method_details?.card) {
     paymentMethodType = 'CARD'
   }

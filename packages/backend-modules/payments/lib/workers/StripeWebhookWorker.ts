@@ -16,7 +16,6 @@ import { processInvociePaymentSucceded } from '../handlers/stripe/invoicePayment
 
 type WorkerArgsV1 = {
   $version: 'v1'
-  // TODO! Use webhook event id stead of entire webhook body
   eventSourceId: string
   company: Company
 }
