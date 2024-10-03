@@ -6,15 +6,13 @@ import {
 } from '#graphql/cms/__generated__/gql/graphql'
 import { NewsletterName } from '#graphql/republik-api/__generated__/gql/graphql'
 import { EmailSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up/email-signup'
-import { CollectionFilter } from '@app/app/challenge-accepted/components/collection-filter'
-import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
 import { PersonBubble } from '@app/app/challenge-accepted/person/[slug]/components/person-bubble'
 import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
 import Container from '@app/components/container'
 import { Share } from '@app/components/share/share'
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { getMe } from '@app/lib/auth/me'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { getNewsletterSubscriptionStatus } from '@app/lib/newsletters'
 import { IconShare } from '@republik/icons'
 import { css } from '@republik/theme/css'
@@ -199,23 +197,6 @@ export default async function Page({ searchParams }) {
               Mehr erfahren zu …
             </h2>
             <PersonList />
-          </section>
-
-          <section>
-            <div
-              className={css({ mb: '6', overflowY: 'auto', maxWidth: 'full' })}
-            >
-              <CollectionFilter filter={searchParams.filter} />
-            </div>
-            <CollectionRenderer
-              items={hub.items}
-              filter={searchParams.filter}
-              isMember={
-                me?.roles &&
-                Array.isArray(me.roles) &&
-                me.roles.includes('member')
-              }
-            />
           </section>
 
           {!isNewsletterSubscribed && (
