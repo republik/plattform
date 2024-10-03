@@ -4,5 +4,6 @@ lib/cache/**/*.js
 lib/Derivative/**/*.js
 lib/audioSource.js
 lib/phases.js
+lib/types.js
 loaders/**/*.js
 script/*.js
