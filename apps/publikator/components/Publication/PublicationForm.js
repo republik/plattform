@@ -85,6 +85,7 @@ const Form = ({
 
   const [state, setCompleteState] = useState({
     prepublication: true,
+    skipSynthAudioGeneration: true,
     scheduled: false,
     updateMailchimp: false,
     notifyFilters: [!hasBeenPublished && 'Document'].filter(Boolean),
@@ -99,6 +100,7 @@ const Form = ({
     scheduled,
     scheduledAt,
     publishing,
+    skipSynthAudioGeneration,
   } = state
 
   const schema = getSchema(meta.template)
@@ -262,10 +264,24 @@ const Form = ({
         onChange={(_, value) => {
           setState({
             prepublication: value,
+            skipSynthAudioGeneration: meta.template === 'front' || value,
           })
         }}
       >
         {t('publish/label/prepublication')}
+      </Checkbox>
+      <br />
+      <br />
+      <Checkbox
+        disabled={meta.template === 'front'}
+        checked={!skipSynthAudioGeneration}
+        onChange={(_, value) => {
+          setState({
+            skipSynthAudioGeneration: !value,
+          })
+        }}
+      >
+        {t('publish/label/generateAudio')}
       </Checkbox>
       <br />
       <br />
@@ -431,6 +447,7 @@ const Form = ({
                 commitId: commit.id,
                 settings: {
                   prepublication,
+                  skipSynthAudioGeneration,
                   updateMailchimp,
                   notifyFilters,
                   scheduledAt: scheduled ? scheduledAtDate : undefined,

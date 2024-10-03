@@ -1193,6 +1193,10 @@
       "value": "Interne Publikation (Vorschau für Editoren)"
     },
     {
+      "key": "publish/label/generateAudio",
+      "value": "Audio-Version erstellen"
+    },
+    {
       "key": "publish/label/updateMailchimp",
       "value": "Mailchimp aktualisieren"
     },
