@@ -14,6 +14,8 @@ import {
   ACTIVE_STATUS_TYPES,
   SubscriptionStatus,
   Address,
+  ChargeUpdate,
+  ChargeInsert,
 } from './types'
 import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
@@ -29,6 +31,7 @@ import {
 } from './transactionals/sendTransactionalMails'
 import { enforceSubscriptions } from '@orbiting/backend-modules-mailchimp'
 import { getConfig } from './config'
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { UserEvents } = require('@orbiting/backend-modules-auth')
 
 export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
@@ -398,6 +401,18 @@ export class Payments implements PaymentService {
     }
   }
 
+  async getCharge(by: PaymentItemLocator) {
+    return await this.repo.getCharge(by)
+  }
+
+  async saveCharge(args: ChargeInsert): Promise<any> {
+    return await this.repo.saveCharge(args)
+  }
+
+  async updateCharge(by: PaymentItemLocator, args: ChargeUpdate): Promise<any> {
+    return this.repo.updateCharge(by, args)
+  }
+
   async getInvoice(by: PaymentItemLocator): Promise<Invoice | null> {
     return await this.repo.getInvoice(by)
   }
@@ -577,6 +592,7 @@ export class Payments implements PaymentService {
           {
             priority: 1000,
             singletonKey: `stripe:customer:create:for:${userId}:${company}`,
+            singletonHours: 1,
             retryLimit: 5,
             retryDelay: 500,
           },
@@ -808,6 +824,9 @@ export interface PaymentService {
   getSubscriptionInvoices(subscriptionId: string): Promise<Invoice>
   getInvoice(by: PaymentItemLocator): Promise<Invoice | null>
   saveInvoice(userId: string, args: InvoiceArgs): Promise<Invoice>
+  getCharge(by: PaymentItemLocator): Promise<any>
+  saveCharge(args: ChargeInsert): Promise<any>
+  updateCharge(by: PaymentItemLocator, args: ChargeUpdate): Promise<any>
   updateInvoice(
     by: PaymentItemLocator,
     args: InvoiceUpdateArgs,

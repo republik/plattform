@@ -19,6 +19,8 @@ import {
   InvoiceRepoArgs,
   SubscriptionStatus,
   STATUS_TYPES,
+  ChargeUpdate,
+  ChargeInsert,
 } from '../types'
 import { UserRow } from '@orbiting/backend-modules-types'
 
@@ -166,9 +168,24 @@ export class PgPaymentRepo implements PaymentServiceRepo {
   }
 
   updateInvoice(by: PaymentItemLocator, args: any): Promise<Invoice> {
-    return this.#pgdb.payments.invoices.update(by, {
+    return this.#pgdb.payments.invoices.updateAndGet(by, {
       ...args,
     })
+  }
+
+  getCharge(by: PaymentItemLocator) {
+    return this.#pgdb.payments.charges.findOne(by)
+  }
+
+  saveCharge(args: ChargeInsert): Promise<any> {
+    return this.#pgdb.payments.charges.insert(args)
+  }
+
+  updateCharge(
+    charge: PaymentItemLocator,
+    args: ChargeUpdate,
+  ): Promise<any | null> {
+    return this.#pgdb.payments.charges.updateAndGet(charge, args)
   }
 
   async getUser(userId: string): Promise<UserRow> {

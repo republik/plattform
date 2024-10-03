@@ -22,6 +22,7 @@ export interface PaymentProviderActions {
   getCustomerSubscriptions(customerId: string): Promise<Stripe.Subscription[]>
   getSubscription(subscriptionId: string): Promise<Stripe.Subscription | null>
   getInvoice(invoiceId: string): Promise<Stripe.Invoice | null>
+  getCharge(chargeId: string): Promise<Stripe.Charge | null>
   createCustomer(email: string, userId: string): Promise<string>
   getPaymentMethod(
     paymentMethodId: string,
