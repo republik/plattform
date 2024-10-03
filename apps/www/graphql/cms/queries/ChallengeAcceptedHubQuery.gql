@@ -62,4 +62,33 @@ query ChallengeAcceptedHub {
       width
     }
   }
+  challengeAcceptedTag: tag(filter: { slug: { eq: "challenge-accepted" } }) {
+    events: _allReferencingEvents(orderBy: startAt_DESC, first: 100) {
+      __typename
+      id
+      title
+      slug
+      description {
+        value
+      }
+      membersOnly
+      nonMemberCta {
+        value
+      }
+      fullyBooked
+      signUpLink
+      location
+      locationLink
+      startAt
+      endAt
+      _updatedAt
+      _status
+    }
+  }
+
+  allNewsletters: allChallengeAcceptedNewsletters(first: 100) {
+    __typename
+    id
+    path
+  }
 }

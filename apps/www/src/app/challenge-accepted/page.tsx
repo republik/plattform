@@ -54,7 +54,7 @@ export async function generateMetadata(
 
 export default async function Page({ searchParams }) {
   const {
-    data: { hub },
+    data: { hub, challengeAcceptedTag, allNewsletters },
   } = await getCMSClient().query({
     query: ChallengeAcceptedHubDocument,
     context: {
@@ -65,6 +65,8 @@ export default async function Page({ searchParams }) {
       },
     },
   })
+
+  const allEvents = challengeAcceptedTag?.events ?? []
 
   const [{ me }, isNewsletterSubscribed] = await Promise.all([
     getMe(),
@@ -154,14 +156,16 @@ export default async function Page({ searchParams }) {
 
           <div className={css({ margin: '0 auto' })}>{share}</div>
 
-          <section>
+          <section className={css({ fontSize: 'base' })}>
             <div
               className={css({ mb: '6', overflowY: 'auto', maxWidth: 'full' })}
             >
               <CollectionFilter filter={searchParams.filter} />
             </div>
             <CollectionRenderer
-              items={hub.items}
+              highlights={hub.items}
+              events={allEvents}
+              newsletters={allNewsletters}
               filter={searchParams.filter}
               isMember={
                 me?.roles &&
