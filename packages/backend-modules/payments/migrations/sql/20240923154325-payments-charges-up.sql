@@ -27,8 +27,6 @@ CREATE TABLE IF NOT EXISTS payments."charges" (
     "fullyRefunded" boolean NOT NULL default false,
     "createdAt" timestamptz DEFAULT now(),
     "updatedAt" timestamptz DEFAULT now(),
-    -- "paidAt" timestamptz,
-    -- "refundedAt" timestamptz,
     CONSTRAINT fk_charge_invoice_id FOREIGN KEY("invoiceId")
        REFERENCES payments.invoices("id")
 );

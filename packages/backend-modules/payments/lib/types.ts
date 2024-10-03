@@ -210,3 +210,26 @@ export type Address = {
   postal_code: string | null
   state: string | null
 }
+
+export type ChargeRefundInsert = {
+  company: Company
+  externalId: string
+  invoiceId: string
+  paid: boolean
+  status: string
+  amount: number
+  amountCaptured: number
+  amountRefunded: number
+  paymentMethodType?: 'CARD' | 'TWINT' | 'PAYPAL'
+  fullyRefunded: boolean
+  createdAt: Date
+}
+
+export type ChargeRefundUpdate = {
+  paid: boolean
+  status: string
+  amount: number
+  amountCaptured: number
+  amountRefunded: number
+  fullyRefunded: boolean
+}

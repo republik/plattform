@@ -21,7 +21,16 @@ export async function processChargeRefunded(
   await paymentService.updateCharge({ externalId: charge.id }, args)
 }
 
-export function mapChargeUpdateArgs(charge: Stripe.Charge) {
+type ChargRefundArgs = {
+  paid: boolean
+  status: string
+  amount: number
+  amountCaptured: number
+  amountRefunded: number
+  fullyRefunded: boolean
+}
+
+export function mapChargeUpdateArgs(charge: Stripe.Charge): ChargRefundArgs {
   return {
     paid: charge.paid,
     status: charge.status,
