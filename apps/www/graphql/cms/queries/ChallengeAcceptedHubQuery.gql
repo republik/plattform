@@ -86,7 +86,10 @@ query ChallengeAcceptedHub {
     }
   }
 
-  allNewsletters: allChallengeAcceptedNewsletters(first: 100) {
+  allNewsletters: allChallengeAcceptedNewsletters(
+    orderBy: path_DESC
+    first: 100
+  ) {
     __typename
     id
     path
