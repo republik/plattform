@@ -57,7 +57,7 @@ const styles = {
   }),
 }
 
-const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
+const SynthesizedAudio = withT(({ t, derivative, associatedDerivative, onClickGenerate }) => {
   const [showAudioPlayer, setShowAudioPlayer] = useState(false)
   const [showErrorMessage, setShowErrorMessage] = useState(false)
 
@@ -134,7 +134,7 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
         />
       )}
       {showAudioPlayer && (
-        <diy {...styles.audioPlayerContainer}>
+        <div {...styles.audioPlayerContainer}>
           <div {...styles.audioPlayer}>
             <AudioPlayer
               src={{
@@ -146,20 +146,20 @@ const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
               t={t}
             />
           </div>
-        </diy>
+        </div>
       )}
     </>
   )
 })
 
-const Derivatives = ({ commit, repoId, generateDerivative }) => {
+const Derivatives = ({ commit, repoId, showAssociated, generateDerivative }) => {
   if (!commit.derivatives) {
     return null
   }
 
-  const { derivatives, canDeriveSyntheticReadAloud } = commit
+  const { derivatives, associatedDerivative, canDeriveSyntheticReadAloud } = commit
 
-  const synthesizedAudio = derivatives.find(
+  const synthesizedAudio = showAssociated ? associatedDerivative : derivatives.find(
     (d) => d.type === 'SyntheticReadAloud',
   )
 
