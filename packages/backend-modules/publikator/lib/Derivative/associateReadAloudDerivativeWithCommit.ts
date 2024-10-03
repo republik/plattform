@@ -17,6 +17,7 @@ export async function associateReadAloudDerivativeWithCommit(
         derivativeId: derivative.id,
         updatedAt: new Date(),
       })
+      await tx.transactionCommit()
     } else {
       await tx.publikator.commitsWithSynthReadAloud.insertAndGet({
         derivativeId: derivative.id,
