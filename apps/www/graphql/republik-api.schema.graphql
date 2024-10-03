@@ -1437,7 +1437,6 @@ type Meta {
   audioCover(properties: ImageProperties): String
   audioCoverCrop: Crop
   audioSource: AudioSource
-  syntheticVoice: String
   color: String
   contributors: [Contributor!]!
   credits: JSON
@@ -1487,6 +1486,7 @@ type Meta {
   slug: String
   subject: String @deprecated(reason: "parse `Document.content` instead")
   suggestSubscription: Boolean
+  syntheticVoice: String
   template: String
   title: String
   twitterDescription: String
@@ -1876,6 +1876,7 @@ input PublishSettings {
   notifyFilters: [EventObjectType!]
   prepublication: Boolean!
   scheduledAt: DateTime
+  skipSynthAudioGeneration: Boolean
   updateMailchimp: Boolean!
 }
 
