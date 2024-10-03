@@ -157,6 +157,7 @@ type Commit {
   markdown: String!
   document: Document!
   derivatives: [Derivative!]
+  associatedDerivative: Derivative
   canDerive(type: DerivativeType!): Boolean!
   repo: Repo!
 }
