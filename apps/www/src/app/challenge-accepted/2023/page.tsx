@@ -52,7 +52,7 @@ export async function generateMetadata(
   }
 }
 
-export default async function Page({ searchParams }) {
+export default async function Page() {
   const {
     data: { hub },
   } = await getCMSClient().query({
