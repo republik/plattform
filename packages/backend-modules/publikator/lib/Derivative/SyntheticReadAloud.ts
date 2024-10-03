@@ -171,7 +171,11 @@ export const onPublish = async (
     return
   }
 
-  return derive(document, { force: false }, pgdb, user)
+  const newDerivative = await derive(document, { force: false }, pgdb, user)
+
+  await associateReadAloudDerivativeWithCommit(newDerivative, commit, pgdb)
+  
+  return newDerivative
 }
 
 interface DeriveOptions {
