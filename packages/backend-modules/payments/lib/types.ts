@@ -107,6 +107,7 @@ export type InvoiceStatus = 'draft' | 'paid' | 'void' | 'refunded' | 'open'
 export type Invoice = {
   id: string
   subscriptionId: string
+  userId: string
   company: Company
   externalId: string
   metadata: Record<string, any>
@@ -208,4 +209,27 @@ export type Address = {
   line2: string | null
   postal_code: string | null
   state: string | null
+}
+
+export type ChargeInsert = {
+  company: Company
+  externalId: string
+  invoiceId: string
+  paid: boolean
+  status: string
+  amount: number
+  amountCaptured: number
+  amountRefunded: number
+  paymentMethodType: 'CARD' | 'TWINT' | 'PAYPAL' | null
+  fullyRefunded: boolean
+  createdAt: Date
+}
+
+export type ChargeUpdate = {
+  paid: boolean
+  status: string
+  amount: number
+  amountCaptured: number
+  amountRefunded: number
+  fullyRefunded: boolean
 }
