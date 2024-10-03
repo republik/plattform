@@ -70,6 +70,7 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
     updateMailchimp &&
       !meta.emailSubject &&
       t('publish/validation/emailSubject/empty'),
+    meta.template !== 'front' && !content.meta.suppressSyntheticReadAloud && !content.meta.syntheticVoice && t('publish/validation/syntheticVoice/empty'),
   ].filter(Boolean)
 
   const socialWarnings = SOCIAL_MEDIA.map(
@@ -86,7 +87,6 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
         ? [
             !meta.title && t('publish/validation/title/empty'),
             !meta.description && t('publish/validation/description/empty'),
-            !content.meta.suppressSyntheticReadAloud && !content.meta.syntheticVoice && t('publish/validation/syntheticVoice/empty'),
           ]
             .concat(socialWarnings)
             .filter(Boolean)
