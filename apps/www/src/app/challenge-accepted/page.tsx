@@ -104,9 +104,11 @@ export default async function Page({ searchParams }) {
         className={css({
           mt: '8',
           mb: '8',
-          position: 'relative',
+          ml: '4',
           width: 'full',
-          height: 'min(63vw, 1000px)',
+          maxWidth: 'calc(100% - token(spacing.8))',
+          position: 'relative',
+          height: 'min(63vw, 640px)',
           // left: 0,
           _dark: {
             filter: 'invert(1)',
