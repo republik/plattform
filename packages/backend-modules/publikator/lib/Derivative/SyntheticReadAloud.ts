@@ -161,6 +161,11 @@ export const onPublish = async (
       { repoId: repoId },
     )
 
+    if (!latestPublishedDerivative) {
+      console.error('No previously published successful derivative available, not associating derivative with commit.')
+      return
+    }
+
     await associateReadAloudDerivativeWithCommit(latestPublishedDerivative, commit, pgdb)
 
     return
