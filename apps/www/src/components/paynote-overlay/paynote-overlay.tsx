@@ -16,6 +16,7 @@ import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { IconExpandMore } from '@republik/icons'
 import { useMotionValueEvent, useScroll } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 import { StructuredText } from 'react-datocms'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
@@ -291,6 +292,30 @@ function PaynoteOverlayDialog() {
               >
                 Jetzt nicht
               </Dialog.Close>
+            </div>
+
+            <div
+              className={css({
+                py: '6',
+                mt: '6',
+                mx: '-8',
+                textAlign: 'center',
+                borderTopWidth: 1,
+                borderTopStyle: 'solid',
+                borderTopColor: 'divider',
+                fontSize: 's',
+              })}
+            >
+              Haben Sie bereits ein Abonnement?{' '}
+              <Link
+                className={css({
+                  textDecoration: 'underline',
+                  // fontWeight: 'medium',
+                })}
+                href='/anmelden'
+              >
+                Anmelden
+              </Link>
             </div>
 
             <Dialog.Close
