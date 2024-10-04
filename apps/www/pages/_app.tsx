@@ -68,6 +68,7 @@ const WebApp = ({
   const hidePaynoteOverlay =
     (router.pathname === '/angebote' && router.query.package !== undefined) ||
     router.pathname === '/mitteilung' ||
+    router.pathname === '/anmelden' ||
     router.query.extract !== undefined ||
     router.query.extractId !== undefined
 
