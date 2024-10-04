@@ -193,7 +193,7 @@ function PaynoteOverlayDialog() {
                 fontSize: 'l',
                 display: 'flex',
                 flexDir: 'column',
-                gap: '6',
+                gap: '4',
               })}
             >
               {variant === 'paynote' && paynote?.author && (
@@ -248,7 +248,7 @@ function PaynoteOverlayDialog() {
                       {paynote?.title}
                     </span>
                   ) : (
-                    'Unterstützen Sie unabhängigen Journalismus'
+                    <>Unterstützen Sie unab&shy;hängigen Journalismus</>
                   )}
                 </h2>
               </Dialog.Title>
@@ -278,7 +278,7 @@ function PaynoteOverlayDialog() {
                 className={css({
                   textStyle: 'sansSerifRegular',
                   textDecoration: 'underline',
-                  fontSize: 'base',
+                  fontSize: 's',
                   cursor: 'pointer',
                   mx: 'auto',
                 })}
@@ -290,7 +290,7 @@ function PaynoteOverlayDialog() {
                   })
                 }}
               >
-                Jetzt nicht
+                Nicht jetzt
               </Dialog.Close>
             </div>
 
@@ -306,7 +306,7 @@ function PaynoteOverlayDialog() {
                 fontSize: 's',
               })}
             >
-              Haben Sie bereits ein Abonnement?{' '}
+              Sie haben schon ein Abonnement?{' '}
               <Link
                 className={css({
                   textDecoration: 'underline',
