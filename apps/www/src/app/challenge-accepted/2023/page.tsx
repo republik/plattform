@@ -76,7 +76,7 @@ export default async function Page() {
   const share = (
     <Share
       title='Challenge Accepted'
-      url={`${PUBLIC_BASE_URL}/challenge-accepted`}
+      url={`${PUBLIC_BASE_URL}/challenge-accepted/2023`}
       emailSubject='Republik: Challenge Accepted'
     >
       <div
@@ -97,57 +97,7 @@ export default async function Page() {
   )
 
   return (
-    <EventTrackingContext category='ChallengeAcceptedLandingPage'>
-      {!isNewsletterSubscribed && (
-        <Container>
-          <div
-            className={css({
-              width: { base: 100, md: 156 },
-              mx: 'auto',
-              mt: { base: '4', md: '8' },
-              mb: { base: '8', md: '12' },
-
-              _dark: {
-                filter: 'invert(1)',
-              },
-            })}
-          >
-            <Image
-              src={hub.logo?.url}
-              priority
-              width={156}
-              height={100}
-              className={css({ objectFit: 'contain' })}
-              alt='Challenge Accepted Logo'
-            />
-          </div>
-          <div
-            className={css({
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8',
-              fontSize: '2xl',
-            })}
-          >
-            <p>{hub.newsletterSignupIntro}</p>
-            <h2 className={css({ fontWeight: 'bold', fontSize: 'xl' })}>
-              {hub.newsletterSignupTagline}
-            </h2>
-            <EmailSignUp me={me} newsletterName={NewsletterName.Climate} />
-            <div
-              className={css({
-                fontSize: 'l',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '2',
-              })}
-            >
-              <StructuredText data={hub.newsletterSignupBenefits?.value} />
-            </div>
-          </div>
-        </Container>
-      )}
-
+    <EventTrackingContext category='ChallengeAcceptedLandingPage2023'>
       <h1
         className={css({
           mt: '8',

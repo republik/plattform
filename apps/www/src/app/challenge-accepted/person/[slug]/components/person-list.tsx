@@ -91,7 +91,7 @@ export async function PersonList({
         })}
       >
         <Link
-          href={`/challenge-accepted`}
+          href={`/challenge-accepted/2023`}
           className={hstack({
             gap: '4',
             color: 'text',
