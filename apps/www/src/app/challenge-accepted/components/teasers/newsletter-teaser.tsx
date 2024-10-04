@@ -21,7 +21,10 @@ export const NewsletterTeaser = async ({ path }: NewsletterProps) => {
 
     // Show warning to editors
     if (
-      me?.roles.some((role) => ['editor', 'moderator', 'admin'].includes(role))
+      me?.roles.some((role) =>
+        ['editor', 'moderator', 'admin'].includes(role),
+      ) ||
+      process.env.NODE_ENV === 'development'
     ) {
       return (
         <div

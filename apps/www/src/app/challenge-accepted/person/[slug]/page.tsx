@@ -72,7 +72,7 @@ export default async function Page({ params: { slug } }: PageProps) {
         })}
       >
         <Link
-          href='/challenge-accepted'
+          href='/challenge-accepted/2023'
           className={css({
             position: 'relative',
             display: 'flex',
