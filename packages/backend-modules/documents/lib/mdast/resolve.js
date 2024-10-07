@@ -55,7 +55,7 @@ const contentUrlResolver = (
           audioSourceAac,
           audioSourceOgg,
         } = linkedDoc.meta
-        const hasAudio = audioSourceMp3 || audioSourceAac || audioSourceOgg
+        const hasAudio = audioSourceMp3 || audioSourceAac || audioSourceOgg || !linkedDoc.meta.suppressSyntheticReadAloud
         node.data.urlMeta = {
           documentId: linkedDoc.id,
           hasAudio,

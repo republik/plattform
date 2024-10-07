@@ -91,6 +91,9 @@ export interface OrderRepo {
   getInvoice(by: PaymentItemLocator): Promise<Invoice | null>
   saveInvoice(userId: string, args: any): Promise<Invoice>
   updateInvoice(by: PaymentItemLocator, args: any): Promise<Invoice>
+  getCharge(by: PaymentItemLocator): Promise<any | null>
+  saveCharge(args: any): Promise<any>
+  updateCharge(by: PaymentItemLocator, args: any): Promise<any | null>
 }
 
 export interface MailingsRepo {

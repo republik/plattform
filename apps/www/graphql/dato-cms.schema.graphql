@@ -46,7 +46,7 @@ enum ChallengeAcceptedArticleModelOrderBy {
   path_DESC
 }
 
-"""Record of type Artikel (challenge_accepted_article)"""
+"""Record of type 📰 Artikel (challenge_accepted_article)"""
 type ChallengeAcceptedArticleRecord implements RecordInterface {
   _createdAt: DateTime!
 
@@ -91,7 +91,9 @@ type ChallengeAcceptedHubModelOutroField {
   value: JsonField!
 }
 
-"""Record of type Challenge Accepted Startseite (challenge_accepted_hub)"""
+"""
+Record of type 🍋 Challenge Accepted Startseite (challenge_accepted_hub)
+"""
 type ChallengeAcceptedHubRecord implements RecordInterface {
   _createdAt: DateTime!
 
@@ -160,7 +162,7 @@ enum ChallengeAcceptedNewsletterModelOrderBy {
   path_DESC
 }
 
-"""Record of type Newsletter (challenge_accepted_newsletter)"""
+"""Record of type 💌 Newsletter (challenge_accepted_newsletter)"""
 type ChallengeAcceptedNewsletterRecord implements RecordInterface {
   _createdAt: DateTime!
 
@@ -241,7 +243,7 @@ enum ChallengeAcceptedPersonModelOrderBy {
   size_DESC
 }
 
-"""Record of type Person (challenge_accepted_person)"""
+"""Record of type 🤵 Person (challenge_accepted_person)"""
 type ChallengeAcceptedPersonRecord implements RecordInterface {
   _createdAt: DateTime!
 
@@ -302,7 +304,7 @@ type CockpitModelOurCommunityField {
   value: JsonField!
 }
 
-"""Record of type Cockpit (cockpit)"""
+"""Record of type 🧑‍✈️ Cockpit (cockpit)"""
 type CockpitRecord implements RecordInterface {
   _createdAt: DateTime!
 
@@ -356,6 +358,14 @@ type ColorField {
   green: IntType!
   hex: String!
   red: IntType!
+}
+
+"""Specifies how to filter Color fields"""
+input ColorFilter {
+  """
+  Filter records with the specified field defined (i.e. with any value) or not
+  """
+  exists: BooleanType
 }
 
 """Specifies how to filter by creation datetime"""
@@ -445,6 +455,11 @@ type EventModelDescriptionField {
   value: JsonField!
 }
 
+"""Linking fields"""
+enum EventModelFieldsReferencingTagModel {
+  event_tags
+}
+
 input EventModelFilter {
   AND: [EventModelFilter]
   OR: [EventModelFilter]
@@ -468,6 +483,7 @@ input EventModelFilter {
   signUpLink: StringFilter
   slug: SlugFilter
   startAt: DateTimeFilter
+  tags: LinksFilter
   title: StringFilter
   unlisted: BooleanFilter
 }
@@ -517,7 +533,7 @@ enum EventModelOrderBy {
   unlisted_DESC
 }
 
-"""Record of type Veranstaltung (event)"""
+"""Record of type 🎭 Veranstaltung (event)"""
 type EventRecord implements RecordInterface {
   _createdAt: DateTime!
 
@@ -549,6 +565,7 @@ type EventRecord implements RecordInterface {
   signUpLink: String
   slug: String!
   startAt: DateTime!
+  tags: [TagRecord!]!
   title: String!
   unlisted: BooleanType
 }
@@ -594,7 +611,7 @@ type FaqModelIntroductionField {
   value: JsonField!
 }
 
-"""Record of type FAQ (faq)"""
+"""Record of type 💁 FAQ (faq)"""
 type FaqRecord implements RecordInterface {
   _createdAt: DateTime!
 
@@ -2664,6 +2681,28 @@ Represents non-fractional signed whole numeric values. Int can represent values 
 """
 scalar IntType
 
+"""Specifies how to filter by linking fields"""
+input InverseRelationshipFieldFilterBetweenEventAndTag {
+  """
+  Filter linking records that reference current record in at least one of the specified fields
+  """
+  anyIn: [EventModelFieldsReferencingTagModel!]
+
+  """
+  Filter linking records that do not reference current record in any of the specified fields
+  """
+  notIn: [EventModelFieldsReferencingTagModel!]
+}
+
+"""Specifies how to filter linking records"""
+input InverseRelationshipFilterBetweenEventAndTag {
+  """Specifies how to filter by linking fields"""
+  fields: InverseRelationshipFieldFilterBetweenEventAndTag
+
+  """Specifies how to filter by linking locales"""
+  locales: LinkingLocalesFilter
+}
+
 scalar ItemId
 
 """Specifies how to filter by ID"""
@@ -2688,6 +2727,25 @@ enum ItemStatus {
 }
 
 scalar JsonField
+
+"""Linking locales"""
+enum LinkingLocale {
+  _nonLocalized
+  de_CH
+}
+
+"""Specifies how to filter by linking locales"""
+input LinkingLocalesFilter {
+  """
+  Filter linking records that link to current record in at least one of the specified locales
+  """
+  anyIn: [LinkingLocale!]
+
+  """
+  Filter linking records that do not link to current record in any of the specified locales
+  """
+  notIn: [LinkingLocale!]
+}
 
 """Specifies how to filter Multiple-links fields"""
 input LinksFilter {
@@ -2748,7 +2806,7 @@ type MarketingFormatRecord implements RecordInterface {
   title: String!
 }
 
-"""Record of type Marketing Startseite (marketing_landing_page)"""
+"""Record of type 💈 Marketing Startseite (marketing_landing_page)"""
 type MarketingLandingPageRecord implements RecordInterface {
   _createdAt: DateTime!
 
@@ -3020,6 +3078,14 @@ type Query {
     locale: SiteLocale
   ): CollectionMetadata!
 
+  """Returns meta information regarding a record collection"""
+  _allTagsMeta(
+    filter: TagModelFilter
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): CollectionMetadata!
+
   """Returns meta information regarding an assets collection"""
   _allUploadsMeta(
     filter: UploadFilter
@@ -3133,6 +3199,25 @@ type Query {
     """Skip the first results"""
     skip: IntType
   ): [SchemaMigrationRecord!]!
+
+  """Returns a collection of records"""
+  allTags(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+    filter: TagModelFilter
+
+    """Limit the number of results"""
+    first: IntType = 20
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    orderBy: [TagModelOrderBy] = [_updatedAt_DESC]
+
+    """Skip the first results"""
+    skip: IntType
+  ): [TagRecord!]!
 
   """Returns a collection of assets"""
   allUploads(
@@ -3273,6 +3358,19 @@ type Query {
     orderBy: [SchemaMigrationModelOrderBy] = [_updatedAt_DESC]
   ): SchemaMigrationRecord
 
+  """Returns a specific record"""
+  tag(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+    filter: TagModelFilter
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    orderBy: [TagModelOrderBy] = [_updatedAt_DESC]
+  ): TagRecord
+
   """Returns a specific asset"""
   upload(
     """
@@ -3383,7 +3481,7 @@ enum SchemaMigrationModelOrderBy {
   name_DESC
 }
 
-"""Record of type Schema migration (schema_migration)"""
+"""Record of type ⚙️ Schema migration (schema_migration)"""
 type SchemaMigrationRecord implements RecordInterface {
   _createdAt: DateTime!
 
@@ -3546,6 +3644,103 @@ type Tag {
   attributes: MetaTagAttributes
   content: String
   tag: String!
+}
+
+input TagModelFilter {
+  AND: [TagModelFilter]
+  OR: [TagModelFilter]
+  _createdAt: CreatedAtFilter
+  _firstPublishedAt: PublishedAtFilter
+  _isValid: BooleanFilter
+  _publicationScheduledAt: PublishedAtFilter
+  _publishedAt: PublishedAtFilter
+  _status: StatusFilter
+  _unpublishingScheduledAt: PublishedAtFilter
+  _updatedAt: UpdatedAtFilter
+  color: ColorFilter
+  id: ItemIdFilter
+  label: StringFilter
+  slug: SlugFilter
+}
+
+enum TagModelOrderBy {
+  _createdAt_ASC
+  _createdAt_DESC
+  _firstPublishedAt_ASC
+  _firstPublishedAt_DESC
+  _isValid_ASC
+  _isValid_DESC
+  _publicationScheduledAt_ASC
+  _publicationScheduledAt_DESC
+  _publishedAt_ASC
+  _publishedAt_DESC
+  _status_ASC
+  _status_DESC
+  _unpublishingScheduledAt_ASC
+  _unpublishingScheduledAt_DESC
+  _updatedAt_ASC
+  _updatedAt_DESC
+  id_ASC
+  id_DESC
+  label_ASC
+  label_DESC
+}
+
+"""Record of type 🏷️ Tag (tag)"""
+type TagRecord implements RecordInterface {
+  _allReferencingEvents(
+    """
+    If you want to fallback to a default translation when a translation has not been found
+    """
+    fallbackLocales: [SiteLocale!]
+    filter: EventModelFilter
+
+    """Limit the number of results"""
+    first: IntType = 20
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+    orderBy: [EventModelOrderBy] = [_updatedAt_DESC]
+
+    """Skip the first results"""
+    skip: IntType
+
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenEventAndTag
+  ): [EventRecord!]!
+
+  """Returns meta information regarding a record collection"""
+  _allReferencingEventsMeta(
+    filter: EventModelFilter
+
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+
+    """Specifies how to filter linking records"""
+    through: InverseRelationshipFilterBetweenEventAndTag
+  ): CollectionMetadata!
+  _createdAt: DateTime!
+
+  """Editing URL"""
+  _editingUrl: String
+  _firstPublishedAt: DateTime
+  _isValid: BooleanType!
+  _modelApiKey: String!
+  _publicationScheduledAt: DateTime
+  _publishedAt: DateTime
+
+  """Generates SEO and Social card meta tags to be used in your frontend"""
+  _seoMetaTags(
+    """The locale to use to fetch the field's content"""
+    locale: SiteLocale
+  ): [Tag!]!
+  _status: ItemStatus!
+  _unpublishingScheduledAt: DateTime
+  _updatedAt: DateTime!
+  color: ColorField
+  id: ItemId!
+  label: String!
+  slug: String!
 }
 
 """Specifies how to filter by upload type"""

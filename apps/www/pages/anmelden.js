@@ -9,6 +9,7 @@ import { PageCenter } from '../components/Auth/withAuthorization'
 import { useTranslation } from '../lib/withT'
 import { withDefaultSSR } from '../lib/apollo/helpers'
 import { useMe } from '../lib/context/MeContext'
+import { Interaction } from '@project-r/styleguide'
 
 const allowedSignInRedirectOrigins =
   process.env.NEXT_PUBLIC_ALLOWED_SIGNIN_REDIRECT_ORIGINS?.split(',') || []
@@ -56,7 +57,23 @@ const SigninPage = () => {
   return (
     <Frame meta={meta}>
       <PageCenter>
-        {me ? <Loader loading /> : <SignIn email={query.email} />}
+        {me ? (
+          <Loader loading />
+        ) : (
+          <SignIn
+            beforeForm={
+              <>
+                <Interaction.H1 style={{ marginBottom: 10 }}>
+                  {t('pages/signin/title')}
+                </Interaction.H1>
+                <Interaction.P style={{ marginBottom: 20 }}>
+                  {t('pages/signin/message')}
+                </Interaction.P>
+              </>
+            }
+            email={query.email}
+          />
+        )}
       </PageCenter>
     </Frame>
   )

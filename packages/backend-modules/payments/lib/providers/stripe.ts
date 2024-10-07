@@ -39,7 +39,7 @@ export class StripeProvider implements PaymentProviderActions {
 
   async getInvoice(invoiceId: string): Promise<Stripe.Invoice | null> {
     const invoice = await this.#stripe.invoices.retrieve(invoiceId, {
-      expand: ['discounts'],
+      expand: ['discounts', 'charge'],
     })
 
     if (!invoice) {
@@ -47,6 +47,16 @@ export class StripeProvider implements PaymentProviderActions {
     }
 
     return invoice
+  }
+
+  async getCharge(chargeId: string): Promise<Stripe.Charge | null> {
+    const charge = await this.#stripe.charges.retrieve(chargeId)
+
+    if (!charge) {
+      return null
+    }
+
+    return charge
   }
 
   async createCustomer(email: string, userId: string): Promise<string> {

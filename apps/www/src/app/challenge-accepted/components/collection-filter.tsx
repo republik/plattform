@@ -47,10 +47,7 @@ export const CollectionFilter = ({
       className={wrap({ gap: '2' })}
     >
       <ToggleGroup.Item className={itemStyle} value='all'>
-        Alle Inhalte
-      </ToggleGroup.Item>
-      <ToggleGroup.Item className={itemStyle} value='article'>
-        Artikel
+        Highlights
       </ToggleGroup.Item>
       <ToggleGroup.Item className={itemStyle} value='newsletter'>
         Newsletter

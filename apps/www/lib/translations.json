@@ -121,6 +121,10 @@
       "value": "Anmelden"
     },
     {
+      "key": "pages/signin/message",
+      "value": "Melden Sie sich mit der E-Mail-Adresse an, die zu Ihrem Abonnement gehört."
+    },
+    {
       "key": "pages/profile/pageTitle",
       "value": "Profil von {name} – Republik"
     },

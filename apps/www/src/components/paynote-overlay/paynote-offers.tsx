@@ -116,7 +116,7 @@ export function Offers({
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: '5px',
-            fontSize: 'base',
+            fontSize: 'l',
             lineHeight: '1',
             fontWeight: 'medium',
             whiteSpace: 'nowrap',
