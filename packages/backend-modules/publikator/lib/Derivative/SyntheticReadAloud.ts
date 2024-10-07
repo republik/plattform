@@ -58,10 +58,12 @@ export const processMeta = async (
     await context.pgdb.publikator.commitsWithSynthReadAloud.findOne({
       commitId: commitId,
     })
-  
-  const synthesizedAudio = !!commitWithSynthReadAloud && await context.loaders.Derivative.byId.load(
-    commitWithSynthReadAloud.derivativeId,
-  )
+
+  const synthesizedAudio =
+    !!commitWithSynthReadAloud &&
+    (await context.loaders.Derivative.byId.load(
+      commitWithSynthReadAloud.derivativeId,
+    ))
 
   if (synthesizedAudio) {
     const { result } = synthesizedAudio
@@ -140,6 +142,17 @@ export const onPublish = async (
     return
   }
 
+  // if a successful derivative already exists for that commit, prioritise it
+  const existingDerivative = await getExistingDerivativeForCommit(commit, pgdb)
+  if (existingDerivative) {
+    await associateReadAloudDerivativeWithCommit(
+      existingDerivative,
+      commit,
+      pgdb,
+    )
+    return existingDerivative
+  }
+
   if (skipSynthAudioGeneration) {
     // do not derive new audio for this publication, but take existing audio from commit published before
     handlerDebug(
@@ -162,11 +175,17 @@ export const onPublish = async (
     )
 
     if (!latestPublishedDerivative) {
-      console.error('No previously published successful derivative available, not associating derivative with commit.')
+      console.error(
+        'No previously published successful derivative available, not associating derivative with commit.',
+      )
       return
     }
 
-    await associateReadAloudDerivativeWithCommit(latestPublishedDerivative, commit, pgdb)
+    await associateReadAloudDerivativeWithCommit(
+      latestPublishedDerivative,
+      commit,
+      pgdb,
+    )
 
     return
   }
@@ -174,8 +193,17 @@ export const onPublish = async (
   const newDerivative = await derive(document, { force: false }, pgdb, user)
 
   await associateReadAloudDerivativeWithCommit(newDerivative, commit, pgdb)
-  
+
   return newDerivative
+}
+
+const getExistingDerivativeForCommit = async (commit: Commit, pgdb: any) => {
+  const derivative = await pgdb.publikator.derivatives.findOne({
+    commitId: commit.id,
+    status: 'Ready',
+    type: 'SyntheticReadAloud',
+  })
+  return derivative
 }
 
 interface DeriveOptions {
@@ -208,22 +236,20 @@ export const derive = async (
   const { commitId } = getParsedDocumentId(document.id)
 
   if (user) {
-    const pendingCount = await pgdb.publikator.derivatives.count({
-      status: 'Pending',
-      readyAt: null,
-      'createdAt >=': moment().subtract(15, 'minutes'),
-      userId: user.id,
-    })
-
-    // TODO: review if this restriction still makes any sense
-    //  (probably remove altogether when we delete the 'audio generieren' button)
-    if (pendingCount > 1) {
-      handlerDebug('too many pending derivatives. skipping synthesizing.', {
+    const pendingCount = await pgdb.queryOneField(`SELECT COUNT(d.id)
+      FROM publikator.derivatives d
+      JOIN publikator.commits c ON c.id = d."commitId"
+      WHERE status = 'Pending'
+      AND c."repoId" = :repoId;`, {repoId: document.repoId})
+      
+      console.log('pending count: %s', pendingCount)
+    if (pendingCount > 0) {
+      handlerDebug('more than one pending derivatives for this repo. skipping synthesizing.', {
         userId: user.id,
       })
 
       const error = {
-        message: 'too many pending derivatives',
+        message: 'more than one pending derivatives for this repo',
       }
 
       const derivative = await pgdb.publikator.derivatives.insertAndGet({
