@@ -242,7 +242,6 @@ export const derive = async (
       WHERE status = 'Pending'
       AND c."repoId" = :repoId;`, {repoId: document.repoId})
       
-      console.log('pending count: %s', pendingCount)
     if (pendingCount > 0) {
       handlerDebug('more than one pending derivatives for this repo. skipping synthesizing.', {
         userId: user.id,
