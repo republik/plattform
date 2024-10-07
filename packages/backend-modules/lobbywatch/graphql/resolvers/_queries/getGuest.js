@@ -5,9 +5,14 @@ const {
   mapFormatterWithLocale,
 } = require('../../../lib/mappers')
 
-module.exports = (_, { locale, id }, { loaders: { translations } }) => {
+module.exports = async (_, { locale, id }, { loaders: { translations } }) => {
   const rawId = id.replace(guestIdPrefix, '')
-  return Promise.all([
+  const [
+    t,
+    {
+      json: { data: guest },
+    },
+  ] = await Promise.all([
     translations.load(locale).then(mapFormatterWithLocale),
     api.data(
       locale,
@@ -15,14 +20,20 @@ module.exports = (_, { locale, id }, { loaders: { translations } }) => {
         rawId,
       )}`,
     ),
-  ]).then(
-    ([
-      t,
-      {
-        json: { data: guest },
-      },
-    ]) => {
-      return guest && mapGuest(guest, t)
-    },
-  )
+  ])
+
+  if (!guest.parlamentarier) {
+    const {
+      json: { data: parlamentarier },
+    } = await api.data(
+      locale,
+      `data/interface/v1/json/table/parlamentarier/flat/id/${encodeURIComponent(
+        guest.parlamentarier_id,
+      )}`,
+    )
+
+    guest.parlamentarier = parlamentarier
+  }
+
+  return guest && mapGuest(guest, t)
 }
