@@ -28,7 +28,7 @@ const {
 import { ConnectionContext } from '@orbiting/backend-modules-types'
 
 import { Repo } from '../loaders/Repo'
-import { Commit } from '../loaders/Commit'
+import { Commit } from '../lib/types'
 
 const debug = _debug('publikator:script:copyImages')
 
@@ -62,6 +62,7 @@ const createAdd = (imagePaths: Set<string>) => {
 }
 
 const createMaybeUpload = (repoId: string, origin: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, name] = repoId.split('/')
 
   return async function maybeUpload(path: string) {
