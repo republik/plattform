@@ -219,6 +219,8 @@ type Derivative {
   readyAt: DateTime
   failedAt: DateTime
   destroyedAt: DateTime
+  # commit the derivative was generated from
+  commit: Commit!
 }
 
 enum DerivativeType {
