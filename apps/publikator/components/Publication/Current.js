@@ -46,6 +46,10 @@ export const getRepoWithPublications = gql`
           canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
           associatedDerivative {
             ...SimpleDerivative
+            commit {
+              id
+              message
+            }
           }
         }
         document {

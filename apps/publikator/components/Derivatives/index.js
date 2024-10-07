@@ -11,6 +11,7 @@ import {
   OverlayBody,
   OverlayToolbar,
   Interaction,
+  inQuotes,
 } from '@project-r/styleguide'
 import { IconHearing, IconPlay } from '@republik/icons'
 
@@ -57,9 +58,10 @@ const styles = {
   }),
 }
 
-const SynthesizedAudio = withT(({ t, derivative, associatedDerivative, onClickGenerate }) => {
+const SynthesizedAudio = withT(({ t, derivative, onClickGenerate }) => {
   const [showAudioPlayer, setShowAudioPlayer] = useState(false)
   const [showErrorMessage, setShowErrorMessage] = useState(false)
+  const associatedCommit = derivative?.commit
 
   return (
     <>
@@ -123,15 +125,17 @@ const SynthesizedAudio = withT(({ t, derivative, associatedDerivative, onClickGe
           )}
         </>
       ) : (
-        <IconButton
-          invert
-          style={{ marginRight: 0 }}
-                Icon={IconPlay}
-          label='Audio-Version anhören'
-          labelShort='anhören'
-          size={24}
-          onClick={() => setShowAudioPlayer(true)}
-        />
+        <>
+          <IconButton
+            invert
+            style={{ marginRight: 0 }}
+                  Icon={IconPlay}
+            label={associatedCommit ? `Audio-Version: ${inQuotes(associatedCommit.message)}` : 'Audio-Version anhören'}
+            labelShort='anhören'
+            size={24}
+            onClick={() => setShowAudioPlayer(true)}
+          />
+        </>
       )}
       {showAudioPlayer && (
         <div {...styles.audioPlayerContainer}>
