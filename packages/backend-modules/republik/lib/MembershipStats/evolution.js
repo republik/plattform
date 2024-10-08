@@ -12,28 +12,61 @@ const LOYALIST_THRESHOLD_DATE = '2018-01-16 00:00:00+02'
 
 const query = `
 WITH "minMaxDates" AS (
-  SELECT
-    m.id,
-    m.active,
-    m.renew,
-    m."autoPay",
-    mt.name "membershipTypeName",
-    MIN(mp."beginDate") "minBeginDate",
-    MAX(mp."endDate") "maxEndDate",
-
-    m."userId",
-    MIN(um."createdAt") "minCreatedAt"
-
-  FROM "memberships" m
-  JOIN "membershipPeriods" mp ON mp."membershipId" = m.id
-  JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
-
-  -- all memberships belonging to user with periods
-  JOIN "memberships" um ON um."userId" = m."userId"
-  JOIN "membershipPeriods" ump ON ump."membershipId" = um.id
-
-  WHERE m."userId" != 'f0512927-7e03-4ecc-b14f-601386a2a249' -- Jefferson
-  GROUP BY m.id, mt.id
+  WITH "periods" AS (
+	SELECT
+		m.id,
+		m.active,
+		m.renew,
+		m."autoPay",
+		mt.name "membershipTypeName",
+		mp."beginDate",
+		mp."endDate",
+		m."userId",
+		m."createdAt"
+	FROM
+		"memberships" m
+		JOIN "membershipPeriods" mp ON mp."membershipId" = m.id
+		JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
+		-- all memberships belonging to user with periods
+		JOIN "memberships" um ON um."userId" = m."userId"
+		JOIN "membershipPeriods" ump ON ump."membershipId" = um.id
+	WHERE
+		m."userId" != 'f0512927-7e03-4ecc-b14f-601386a2a249'
+	UNION ALL
+	SELECT
+		s.id,
+		s.status IN ('active', 'past_due', 'unpaid', 'paused') "active",
+		s."canceledAt" IS NULL "renew",
+		TRUE "autoPay",
+		s.type::text "membershipTypeName",
+		i."periodStart" "beginDate",
+		i."periodEnd" "endDate",
+		s."userId",
+		us."createdAt"
+	FROM
+		payments.subscriptions s
+		JOIN payments.invoices i ON i."subscriptionId" = s.id
+		-- all subscriptions belonging to user with periods
+		JOIN payments.subscriptions us ON us."userId" = s."userId"
+		JOIN payments.invoices ui ON ui."subscriptionId" = us.id
+	WHERE
+		s."userId" != 'f0512927-7e03-4ecc-b14f-601386a2a249'
+)
+SELECT
+	id,
+	every("active") "active",
+	every("renew") "renew",
+	every("autoPay") "autoPay",
+	"membershipTypeName",
+	min("beginDate") "minBeginDate",
+	max("endDate") "maxEndDate",
+	min("userId"::text) "userId",
+	MIN("createdAt") "minCreatedAt"
+FROM
+	periods
+GROUP BY
+	id,
+	"membershipTypeName"
 ), "membershipDonation" AS (
   WITH "pledgeMembership" AS (
     SELECT p."createdAt", p.donation, COALESCE(pom.id, pm.id) "membershipId"
