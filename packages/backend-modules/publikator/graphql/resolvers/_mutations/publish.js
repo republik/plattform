@@ -234,7 +234,13 @@ module.exports = async (_, args, context) => {
     await handleRedirection(repoId, doc.content.meta, context)
   }
 
-  await onPublishSyntheticReadAloud(resolvedDoc, commit, skipSynthAudioGeneration, context.pgdb, context.user)
+  await onPublishSyntheticReadAloud({
+    document: resolvedDoc,
+    commit: commit,
+    skipSynthAudioGeneration: skipSynthAudioGeneration,
+    pgdb: context.pgdb,
+    user: context.user,
+  })
 
   // get/create campaign on mailchimp
   // fail early if mailchimp not available
