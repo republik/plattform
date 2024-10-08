@@ -123,13 +123,19 @@ export const applyAssetsAudioUrl = (derivative: DerivativeRow) => {
   }
 }
 
-export const onPublish = async (
-  document: any,
-  commit: Commit,
-  skipSynthAudioGeneration: boolean,
-  pgdb: any,
-  user?: any,
-) => {
+export const onPublish = async ({
+  document,
+  commit,
+  skipSynthAudioGeneration,
+  pgdb,
+  user,
+}: {
+  document: any
+  commit: Commit
+  skipSynthAudioGeneration: boolean
+  pgdb: any
+  user?: any
+}) => {
   const handlerDebug = debug.extend('onPublish')
 
   if (document.content?.meta?.audioSource) {
@@ -198,12 +204,16 @@ export const onPublish = async (
 }
 
 const getExistingDerivativeForCommit = async (commit: Commit, pgdb: any) => {
-  const derivative = await pgdb.publikator.derivatives.findOne({
-    commitId: commit.id,
-    status: 'Ready',
-    type: 'SyntheticReadAloud',
-  })
-  return derivative
+  try {
+    const derivative = await pgdb.publikator.derivatives.findOne({
+      commitId: commit.id,
+      status: 'Ready',
+      type: 'SyntheticReadAloud',
+    })
+    return derivative
+  } catch (e) {
+    console.error('Error while checking for existing derivative for commit: %s', e)
+  }
 }
 
 interface DeriveOptions {
