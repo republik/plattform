@@ -179,7 +179,7 @@ module.exports = async (_, args, context) => {
     // Authors always have the option to make their profile public,
     // we can skip the DB check if the user has the role 'author'.
     const check =
-      Roles.userHasRole(me, 'author') || (await isEligible(me.id, pgdb))
+      Roles.userHasRole(me, 'author') || (await isEligible(me, pgdb))
     if (!check) {
       throw new Error(t('profile/notEligible'))
     }
