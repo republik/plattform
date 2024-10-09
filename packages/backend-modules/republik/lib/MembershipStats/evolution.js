@@ -22,7 +22,7 @@ WITH "minMaxDates" AS (
 		mp."beginDate",
 		mp."endDate",
 		m."userId",
-		m."createdAt"
+		um."createdAt"
 	FROM
 		"memberships" m
 		JOIN "membershipPeriods" mp ON mp."membershipId" = m.id
@@ -275,14 +275,8 @@ const populate = async (context, resultFn) => {
 
   const { pgdb } = context
 
-  // Determine range we've to generate data for
-  const [{ minBeginDate, maxEndDate }] = await pgdb.query(`
-    SELECT
-      LEAST(MIN("beginDate"), now()) "minBeginDate",
-      LEAST(MAX("endDate"), now() + '2 years'::interval) "maxEndDate"
-
-    FROM "membershipPeriods"
-  `)
+  const minBeginDate = moment('2018-01-12 22:42:57+00') // smallest beginDate of a membershipPeriod
+  const maxEndDate = moment().add(2, 'y')
 
   const min = moment(minBeginDate).startOf('month').format('YYYY-MM-DD')
   const max = moment(maxEndDate).startOf('month').format('YYYY-MM-DD')
