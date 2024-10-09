@@ -1,14 +1,12 @@
+const hasUserActiveMembership = require('@orbiting/backend-modules-utils/hasUserActiveMembership')
 const {
   hasUserCandidacies,
   hasUserCandidaciesInCandidacyPhase,
   hasUserCandidaciesInElectionPhase,
 } = require('@orbiting/backend-modules-voting/lib/Candidacy')
 
-exports.isEligible = async (userId, pgdb) => {
-  return !!(await pgdb.public.memberships.findFirst({
-    userId,
-    active: true,
-  }))
+exports.isEligible = async (user, pgdb) => {
+  return await hasUserActiveMembership(user, pgdb)
 }
 
 /**

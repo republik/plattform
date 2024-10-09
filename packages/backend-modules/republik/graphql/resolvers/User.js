@@ -92,7 +92,7 @@ module.exports = {
   },
   isEligibleForProfile(user, args, { user: me, pgdb }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'author'])) {
-      return Roles.userHasRole(user, 'author') || isEligible(user.id, pgdb)
+      return Roles.userHasRole(user, 'author') || isEligible(user, pgdb)
     }
     return null
   },
