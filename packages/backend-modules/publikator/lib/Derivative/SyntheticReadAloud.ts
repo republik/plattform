@@ -176,7 +176,7 @@ export const onPublish = async ({
         AND d.status = 'Ready'
         AND d.type = 'SyntheticReadAloud'
         AND repos.id = :repoId
-        ORDER BY milestones."publishedAt" DESC;`,
+        ORDER BY milestones."createdAt" DESC;`,
       { repoId: repoId },
     )
 
