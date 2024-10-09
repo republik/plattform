@@ -1,5 +1,4 @@
 import { css } from 'glamor'
-import PropTypes from 'prop-types'
 import React from 'react'
 import { breakoutUp } from '../Center'
 import { FigureByline, FigureImage } from '../Figure'
@@ -70,13 +69,37 @@ const styles = {
   }),
 }
 
+/**
+ * @typedef {object} TileProps
+ * @property {React.ReactNode} children
+ * @property {object} [attributes]
+ * @property {string} [image]
+ * @property {string} [imageDark]
+ * @property {string} [byline]
+ * @property {string} [alt]
+ * @property {() => void} [onClick]
+ * @property {string} [color]
+ * @property {string} [bgColor]
+ * @property {'top' | 'middle' | 'bottom'} [align]
+ * @property {boolean} [textLeft]
+ * @property {boolean} [aboveTheFold]
+ * @property {boolean} [onlyImage]
+ * @property {boolean} [singleColumn]
+ * @property {React.ReactNode} [audioPlayButton]
+ */
+
+/**
+ * Tile component
+ * @param {TileProps} props
+ * @returns {JSX.Element}
+ */
 const Tile = ({
   children,
   attributes,
   image,
   imageDark,
   byline,
-  alt,
+  alt = '',
   onClick,
   color,
   bgColor,
@@ -157,31 +180,6 @@ const Tile = ({
       )}
     </div>
   )
-}
-
-Tile.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.any),
-    PropTypes.any,
-  ]).isRequired,
-  attributes: PropTypes.object,
-  image: PropTypes.string,
-  imageDark: PropTypes.string,
-  byline: PropTypes.string,
-  alt: PropTypes.string,
-  onClick: PropTypes.func,
-  color: PropTypes.string,
-  bgColor: PropTypes.string,
-  align: PropTypes.oneOf(['top', 'middle', 'bottom']),
-  textLeft: PropTypes.bool,
-  aboveTheFold: PropTypes.bool,
-  onlyImage: PropTypes.bool,
-  singleColumn: PropTypes.bool,
-  audioPlayButton: PropTypes.node,
-}
-
-Tile.defaultProps = {
-  alt: '',
 }
 
 export default Tile

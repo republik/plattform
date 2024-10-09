@@ -115,6 +115,7 @@ export type BylineProps = {
   attributes?: React.ComponentPropsWithoutRef<'span'>
   style?: React.CSSProperties
   position?:
+    | 'aboveRight'
     | 'belowRight'
     | 'below'
     | 'belowFeuilleton'

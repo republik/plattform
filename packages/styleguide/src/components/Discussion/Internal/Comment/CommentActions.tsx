@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { ComponentPropsWithoutRef, useMemo } from 'react'
 import { css } from 'glamor'
 import { sansSerifMedium14 } from '../../../Typography/styles'
 import { formatTimeRelative } from '../../DiscussionContext'
@@ -6,10 +6,11 @@ import { useColorContext } from '../../../Colors/ColorContext'
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
 import IconButton from '../../../IconButton'
 import { VoteButtons } from './VoteButtons'
-import PropTypes from 'prop-types'
 import { useMediaQuery } from '../../../../lib/useMediaQuery'
 import { mUp } from '../../../../theme/mediaQueries'
 import { IconDiscussion, IconReply, IconShare } from '@republik/icons'
+import { Formatter } from '../../../../lib/translate'
+import { Comment } from './types'
 
 const styles = {
   root: css({
@@ -29,22 +30,21 @@ const styles = {
   }),
 }
 
-const propTypes = {
-  t: PropTypes.func.isRequired,
-  comment: PropTypes.object.isRequired,
-  actions: PropTypes.shape({
-    handleLoadReplies: PropTypes.func,
-    handleReply: PropTypes.func,
-    handleShare: PropTypes.func,
-  }),
-  voteActions: PropTypes.shape({
-    handleUpVote: PropTypes.func.isRequired,
-    handleDownVote: PropTypes.func.isRequired,
-    handleUnVote: PropTypes.func.isRequired,
-  }),
-  userCanComment: PropTypes.bool,
-  userWaitUntil: PropTypes.string,
-  isBoard: PropTypes.bool,
+type CommentActionsProps = {
+  t: Formatter
+  comment: Comment
+  actions: {
+    handleLoadReplies?: () => void
+    handleReply?: () => void
+    handleShare?: (comment: Comment) => void
+  }
+  voteActions: Pick<
+    ComponentPropsWithoutRef<typeof VoteButtons>,
+    'handleUpVote' | 'handleDownVote' | 'handleUnVote'
+  >
+  userCanComment: boolean
+  userWaitUntil: string
+  isBoard: boolean
 }
 
 export const CommentActions = ({
@@ -55,7 +55,7 @@ export const CommentActions = ({
   userCanComment,
   userWaitUntil,
   isBoard,
-}) => {
+}: CommentActionsProps) => {
   const isDesktop = useMediaQuery(mUp)
 
   const now = useCurrentMinute()
@@ -126,5 +126,3 @@ export const CommentActions = ({
     </div>
   )
 }
-
-CommentActions.propTypes = propTypes
