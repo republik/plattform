@@ -524,7 +524,7 @@ export class Payments implements PaymentService {
         },
       )
       if (!row) {
-        console.log(`No user customer for ${customerId} and ${company}`)
+        console.log(`No user for ${customerId} and ${company}`)
         return null
       }
 
