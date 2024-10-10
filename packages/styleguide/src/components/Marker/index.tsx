@@ -56,7 +56,7 @@ export const markerKeys = Object.keys(markersConfig) as MarkerType[]
 
 export const Marker: React.FC<{
   children?: ReactNode
-  marker: MarkerType
+  marker?: MarkerType
   isSelected?: boolean
   attributes?: React.ComponentPropsWithoutRef<'span'>
   [x: string]: unknown

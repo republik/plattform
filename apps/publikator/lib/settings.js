@@ -23,3 +23,5 @@ export const GHOST_PRODUCER = process.env.NEXT_PUBLIC_GHOST_PRODUCER
 
 export const MILESTONES_POLL_INTERVAL_MS =
   +process.env.NEXT_PUBLIC_MILESTONES_POLL_INTERVAL_MS || 0
+
+export const VOICES = JSON.parse(process.env.NEXT_PUBLIC_VOICES)

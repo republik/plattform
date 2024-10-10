@@ -2,33 +2,35 @@ import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import {
-  Editorial,
   Overlay,
   OverlayToolbar,
   OverlayBody,
-} from '@project-r/styleguide'
+  Label,
+  Radio,
+} from "@project-r/styleguide";
 
-import { MemoForm, Marker } from '@project-r/styleguide/editor'
+import { Marker } from '@project-r/styleguide/editor'
 
 import withT from '../../../../lib/withT'
 import { matchInline, createInlineButton, buttonStyles } from '../../utils'
-import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
 import { withRouter } from 'next/router'
-import { IconMemo } from '@republik/icons'
+import { IconHearing } from "@republik/icons";
+import { VOICES } from "../../../../lib/settings";
 
-const Memo = compose(
+const Voice = compose(
   withT,
   withRouter,
-)(({ t, editor, node, children, router }) => {
+)(({ editor, node, children }) => {
   const [showModal, setShowModal] = useState()
-  const [parentId, setParentId] = useState(node.data.get('parentId'))
-  const [marker, setMarker] = useState(node.data.get('marker'))
+  const [syntheticVoice, setSyntheticVoice] = useState(node.data.get('syntheticVoice'))
 
   // noOpen flag added when deserializing
   // only new memos trigger the modal automatically
   useEffect(() => {
-    !node.data.get('noOpen') && open()
+    if (!node.data.get('noOpen')) {
+      open()
+    }
   }, [])
 
   const open = (e) => {
@@ -41,8 +43,7 @@ const Memo = compose(
     editor.change((change) => {
       change.setNodeByKey(node.key, {
         data: node.data.merge({
-          parentId,
-          marker,
+          syntheticVoice: syntheticVoice,
         }),
       })
 
@@ -50,46 +51,48 @@ const Memo = compose(
     })
   }
 
-  const { commitId } = router.query
-  const repoId = getRepoIdFromQuery(router.query)
+  const voiceName = VOICES.find(v => syntheticVoice === v.value)?.text || syntheticVoice
 
   return (
     <>
       {showModal && (
         <Overlay mUpStyle={{ maxWidth: 720, minHeight: 0 }} onClose={close}>
-          <OverlayToolbar title='Memo' onClose={close} />
+          <OverlayToolbar title='Synthetische Stimme' onClose={close} />
           <OverlayBody>
-            <MemoForm
-              t={t}
-              repoId={repoId}
-              commitId={commitId}
-              parentId={parentId}
-              setParentId={setParentId}
-              marker={marker}
-              setMarker={setMarker}
-              deleteMemo={() =>
-                editor.change((change) => {
-                  change.unwrapInline(node.type)
-                })
-              }
-              MarkedSection={
-                <Editorial.P attributes={{ style: { marginBottom: 20 } }}>
-                  <Marker marker={marker}>{children}</Marker>
-                </Editorial.P>
-              }
-            />
+            <Radio
+              checked={!syntheticVoice}
+              onChange={() => setSyntheticVoice(undefined)}
+              style={{ marginRight: 30 }}
+            >
+              Keine
+            </Radio>
+            {VOICES.map((option, i) => (
+              <Radio
+                key={i}
+                checked={syntheticVoice === option.value}
+                onChange={() => setSyntheticVoice(option.value)}
+                style={{ marginRight: 30 }}
+              >
+                {option.text}
+              </Radio>
+            ))}
           </OverlayBody>
         </Overlay>
       )}
-      <Marker marker={marker} onDoubleClick={open}>
+      <Marker onDoubleClick={open}>
+        {!!syntheticVoice && <span contentEditable={false} style={{ position: 'absolute', left: -100, top: 0 }}>
+          <Marker>
+            <Label style={{ padding: '0 7px' }}>{voiceName}</Label>
+          </Marker>
+        </span>}
         {children}
       </Marker>
     </>
   )
 })
 
-const MemoModule = ({ rule, TYPE, context }) => {
-  const memo = {
+const VoiceModule = ({ rule, TYPE, context }) => {
+  const voice = {
     match: matchInline(TYPE),
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, { visitChildren }) => ({
@@ -105,15 +108,14 @@ const MemoModule = ({ rule, TYPE, context }) => {
       type: 'span',
       data: {
         type: TYPE,
-        parentId: object.data?.parentId,
-        marker: object.data?.marker,
+        syntheticVoice: object.data?.syntheticVoice,
       },
       children: visitChildren(object),
     }),
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [memo],
+    rules: [voice],
   })
 
   return {
@@ -138,7 +140,7 @@ const MemoModule = ({ rule, TYPE, context }) => {
               data-disabled={disabled}
               data-visible={visible}
             >
-              <IconMemo />
+              <IconHearing />
             </span>
           )
         }),
@@ -148,10 +150,10 @@ const MemoModule = ({ rule, TYPE, context }) => {
       {
         renderNode({ attributes, ...props }) {
           const { node } = props
-          if (!memo.match(node)) return
+          if (!voice.match(node)) return
           return (
             <span {...attributes}>
-              <Memo {...props} />
+              <Voice {...props} />
             </span>
           )
         },
@@ -160,4 +162,4 @@ const MemoModule = ({ rule, TYPE, context }) => {
   }
 }
 
-export default MemoModule
+export default VoiceModule

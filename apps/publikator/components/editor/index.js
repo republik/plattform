@@ -15,6 +15,7 @@ import createBlockTextModule from './modules/blocktext'
 import createLinkModule from './modules/link'
 import createMarkModule from './modules/mark'
 import createMemoModule from './modules/memo'
+import createVoiceModule from './modules/voice'
 import createListModule from './modules/list'
 import createListItemModule from './modules/list/item'
 import createFigureModule from './modules/figure'
@@ -66,6 +67,7 @@ const moduleCreators = {
   link: createLinkModule,
   mark: createMarkModule,
   memo: createMemoModule,
+  voice: createVoiceModule,
   blockquote: createBlockQuoteModule,
   blocktext: createBlockTextModule,
   list: createListModule,

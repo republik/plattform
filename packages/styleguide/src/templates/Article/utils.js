@@ -104,6 +104,14 @@ const nestedInlines = [
       type: 'MEMO',
     },
   },
+  {
+    matchMdast: matchSpanType('VOICE'),
+    component: ({ children }) => <>{children}</>,
+    editorModule: 'voice',
+    editorOptions: {
+      type: 'VOICE',
+    },
+  },
   variableRule,
 ]
 
