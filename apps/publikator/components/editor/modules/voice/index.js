@@ -9,8 +9,6 @@ import {
   Radio,
 } from "@project-r/styleguide";
 
-import { Marker } from '@project-r/styleguide/editor'
-
 import withT from '../../../../lib/withT'
 import { matchInline, createInlineButton, buttonStyles } from '../../utils'
 
@@ -79,14 +77,14 @@ const Voice = compose(
           </OverlayBody>
         </Overlay>
       )}
-      <Marker onDoubleClick={open}>
-        {!!syntheticVoice && <span contentEditable={false} style={{ position: 'absolute', left: -100, top: 0 }}>
-          <Marker>
-            <Label style={{ padding: '0 7px' }}>{voiceName}</Label>
-          </Marker>
+      <span onDoubleClick={open} style={{ backgroundColor: 'rgba(100,100,100,0.1)', position: 'relative' }}>
+        {!!syntheticVoice && <span contentEditable={false} style={{ position: 'absolute', left: -100, top: -4 }}>
+          <span style={{ backgroundColor: 'rgba(100,100,100,0.2)' }}>
+            <Label style={{ padding: '0 5px' }}>{voiceName}</Label>
+          </span>
         </span>}
         {children}
-      </Marker>
+      </span>
     </>
   )
 })
