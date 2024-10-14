@@ -8,7 +8,7 @@ function wildcardToRegex(pattern) {
 }
 
 const LOCALHOST_ORIGIN =
-  /https?:\/\/(?:localhost|127\.0\.0\.1|::1)(?::\d{1,5})?/
+  /https?:\/\/(?:localhost|127\.0\.0\.1|::1)(?::\d{1,5})?(?:\/|$)/
 
 function createCORSMatcher(allowedOrigins) {
   const regexPatterns = allowedOrigins.map(wildcardToRegex)
