@@ -23,6 +23,8 @@ function makeServerWithCorsList(corsList) {
 }
 
 const corsList = [
+  'http://www.republik.ch',
+  'http://www.republik.love',
   'http://republik.test',
   'http://www.republik.test',
   'http://api.republik.test',
@@ -34,6 +36,8 @@ const expectedToPass = [
   'http://localhost',
   'http://localhost:3010',
   'https://localhost:3010',
+  'http://www.republik.ch',
+  'http://www.republik.love',
   'http://republik.test',
   'http://www.republik.test',
   'http://api.republik.test',
@@ -50,6 +54,15 @@ const expectedPreviewDomainsToPass = [
 ]
 
 const expectedToFail = [
+  `http://localhost.republik.test`,
+  `http://localhost.example.com/`,
+  `http://localhost.republik.test/`,
+  `http://sub.localhost.republik.test`,
+  `http://sub.localhost.example.com/`,
+  `http://127.0.0.1.example.com/`,
+  `http://sub.127.0.0.1.example.com/`,
+  'http://localhostrepublik.test',
+  'http://localhostexample.com',
   `http://${faker.internet.domainWord()}.republik.test`,
   `http://${faker.internet.domainWord()}.republik.test`,
   `http://${faker.internet.domainWord()}.republik.test`,
