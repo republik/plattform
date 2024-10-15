@@ -5,10 +5,12 @@ const {
   publishMonitor,
 } = require('@orbiting/backend-modules-republik/lib/slack')
 const deleteStripeCustomer = require('../../../lib/payments/stripe/deleteCustomer')
+const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
 const deleteRelatedData = async (
   { id: userId },
   hasPledges,
+  hasInvoices,
   hasClaimedMemberships,
   unpublishComments,
   pgdb,
@@ -16,14 +18,19 @@ const deleteRelatedData = async (
   // get all related tables
   // https://stackoverflow.com/questions/5347050/sql-to-list-all-the-tables-that-reference-a-particular-column-in-a-table
   const keepRelations = [
-    'accessGrants',
-    'electionCandidacies',
-    'pledges',
-    'stripeCustomers',
-    'comments', // get nullified, see below
+    'public.accessGrants',
+    'public.electionCandidacies',
+    'public.pledges',
+    'payments.invoices',
+    'public.stripeCustomers',
+    'payments.stripeCustomers',
+    'public.comments', // get nullified, see below
   ]
   if (hasPledges || hasClaimedMemberships) {
-    keepRelations.push('memberships')
+    keepRelations.push('public.memberships')
+  }
+  if (hasInvoices) {
+    keepRelations.push('payments.subscriptions')
   }
   const relations = await pgdb
     .query(
@@ -46,7 +53,7 @@ const deleteRelatedData = async (
   `,
     )
     .then((rels) =>
-      rels.filter((rel) => keepRelations.indexOf(rel.table) === -1),
+      rels.filter((rel) => keepRelations.indexOf(rel.schema.concat('.', rel.table)) === -1),
     )
   relations.unshift({
     // needs to be first
@@ -154,6 +161,9 @@ module.exports = async (_, args, context) => {
     mail: { deleteEmail: deleteFromMailchimp },
   } = context
   Roles.ensureUserHasRole(req.user, 'admin')
+  if (req.user.id === userId) {
+    throw new Error(t('api/users/delete/deleteYourselfNotSupported'))
+  }
 
   const transaction = await pgdb.transactionBegin()
   try {
@@ -162,6 +172,11 @@ module.exports = async (_, args, context) => {
     })
     if (!user) {
       throw new Error(t('api/users/404'))
+    }
+
+    const hasActiveMembershipOrSubscription = await hasUserActiveMembership(user, transaction)
+    if (hasActiveMembershipOrSubscription) {
+      throw new Error(t('api/users/delete/deleteWithActiveMembershipNotSupported'))
     }
 
     const pledges = await transaction.public.pledges.find({
@@ -191,6 +206,9 @@ module.exports = async (_, args, context) => {
 
     const hasClaimedMemberships = claimedMemberships.length > 0
 
+    const invoices = await transaction.payments.invoices.find({userId})
+    const hasInvoices = invoices.length > 0
+
     const grants = await transaction.public.accessGrants.find({
       or: [{ granterUserId: userId }, { recipientUserId: userId }],
     })
@@ -214,6 +232,7 @@ module.exports = async (_, args, context) => {
     await deleteRelatedData(
       user,
       hasPledges,
+      hasInvoices,
       hasClaimedMemberships,
       unpublishComments,
       transaction,
@@ -223,6 +242,7 @@ module.exports = async (_, args, context) => {
     // otherwise we need to keep (firstName, lastName, address) for bookkeeping
     if (
       !hasPledges &&
+      !hasInvoices &&
       !hasGrants &&
       !hasCandidacies &&
       !hasClaimedMemberships
@@ -261,7 +281,7 @@ module.exports = async (_, args, context) => {
       `deleteUser *${user.firstName} ${user.lastName} - ${user.email}*`,
     )
 
-    return hasPledges || hasGrants || hasCandidacies || hasClaimedMemberships
+    return hasPledges || hasInvoices || hasGrants || hasCandidacies || hasClaimedMemberships
       ? transformUser(
           await pgdb.public.users.findOne({
             id: userId,
