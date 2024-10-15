@@ -88,7 +88,7 @@ const Marketing = ({ data }) => {
       />
       <Community featuredComments={data.featuredComments} />
       <Vision />
-      {inNativeApp ? <MarketingTrialForm /> : <MarketingProducts />}
+      {inNativeApp && <MarketingTrialForm />}
       <Logo />
     </>
   )
