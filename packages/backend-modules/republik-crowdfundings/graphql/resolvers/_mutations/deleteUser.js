@@ -11,6 +11,7 @@ const deleteRelatedData = async (
   { id: userId },
   hasPledges,
   hasInvoices,
+  hasOrders,
   hasClaimedMemberships,
   unpublishComments,
   pgdb,
@@ -22,6 +23,7 @@ const deleteRelatedData = async (
     'public.electionCandidacies',
     'public.pledges',
     'payments.invoices',
+    'payments.orders',
     'public.stripeCustomers',
     'payments.stripeCustomers',
     'public.comments', // get nullified, see below
@@ -29,7 +31,7 @@ const deleteRelatedData = async (
   if (hasPledges || hasClaimedMemberships) {
     keepRelations.push('public.memberships')
   }
-  if (hasInvoices) {
+  if (hasInvoices || hasOrders) {
     keepRelations.push('payments.subscriptions')
   }
   const relations = await pgdb
@@ -53,7 +55,10 @@ const deleteRelatedData = async (
   `,
     )
     .then((rels) =>
-      rels.filter((rel) => keepRelations.indexOf(rel.schema.concat('.', rel.table)) === -1),
+      rels.filter(
+        (rel) =>
+          keepRelations.indexOf(rel.schema.concat('.', rel.table)) === -1,
+      ),
     )
   relations.unshift({
     // needs to be first
@@ -174,9 +179,14 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/users/404'))
     }
 
-    const hasActiveMembershipOrSubscription = await hasUserActiveMembership(user, transaction)
+    const hasActiveMembershipOrSubscription = await hasUserActiveMembership(
+      user,
+      transaction,
+    )
     if (hasActiveMembershipOrSubscription) {
-      throw new Error(t('api/users/delete/deleteWithActiveMembershipNotSupported'))
+      throw new Error(
+        t('api/users/delete/deleteWithActiveMembershipNotSupported'),
+      )
     }
 
     const pledges = await transaction.public.pledges.find({
@@ -206,8 +216,11 @@ module.exports = async (_, args, context) => {
 
     const hasClaimedMemberships = claimedMemberships.length > 0
 
-    const invoices = await transaction.payments.invoices.find({userId})
+    const invoices = await transaction.payments.invoices.find({ userId })
     const hasInvoices = invoices.length > 0
+
+    const orders = await transaction.payments.orders.find({ userId })
+    const hasOrders = orders.length > 0
 
     const grants = await transaction.public.accessGrants.find({
       or: [{ granterUserId: userId }, { recipientUserId: userId }],
@@ -233,6 +246,7 @@ module.exports = async (_, args, context) => {
       user,
       hasPledges,
       hasInvoices,
+      hasOrders,
       hasClaimedMemberships,
       unpublishComments,
       transaction,
@@ -281,7 +295,11 @@ module.exports = async (_, args, context) => {
       `deleteUser *${user.firstName} ${user.lastName} - ${user.email}*`,
     )
 
-    return hasPledges || hasInvoices || hasGrants || hasCandidacies || hasClaimedMemberships
+    return hasPledges ||
+      hasInvoices ||
+      hasGrants ||
+      hasCandidacies ||
+      hasClaimedMemberships
       ? transformUser(
           await pgdb.public.users.findOne({
             id: userId,
