@@ -5,6 +5,14 @@ const { getDefaultPaymentMethod } = require('./paymentMethod')
 
 const createMoveStripeCustomers = (pgdb) => async (fromUserId, toUserId) => {
   await pgdb.public.stripeCustomers.delete({ userId: toUserId })
+  await pgdb.payments.stripeCustomers.delete({ userId: toUserId })
+  await pgdb.payments.stripeCustomers.update(
+    { userId: fromUserId },
+    {
+      userId: toUserId,
+      updatedAt: new Date(),
+    },
+  )
   return pgdb.public.stripeCustomers.update(
     { userId: fromUserId },
     {
@@ -63,14 +71,14 @@ module.exports = async ({
       (c) =>
         c.subscriptions.data.length &&
         c.subscriptions.data.filter((s) =>
-          ['active', 'past_due'].includes(s.status),
+          ['active', 'past_due', 'unpaid', 'paused'].includes(s.status),
         ).length,
     ) > -1
 
   if (hasSubscriptions(targetCustomers) && hasSubscriptions(sourceCustomers)) {
     debug('target and source have subscriptions, abort')
     throw new Error(
-      'stripe customers cannot be merged as both have subscriptions',
+      'stripe customers cannot be merged as both have active subscriptions',
     )
   }
 

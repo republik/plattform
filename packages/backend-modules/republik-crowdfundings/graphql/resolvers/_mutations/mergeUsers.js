@@ -141,6 +141,9 @@ module.exports = async (_, args, context) => {
     await transaction.public.paymentSources.update(from, to)
     await transaction.public.pledges.update(from, to)
     await transaction.public.memberships.update(from, to)
+    await transaction.payments.invoices.update(from, to)
+    await transaction.payments.orders.update(from, to)
+    await transaction.payments.subscriptions.update(from, to)
     await transaction.public.comments.update(from, to)
     await transaction.public.credentials.update(from, to)
     await transaction.public.consents.update(from, to)
@@ -157,6 +160,7 @@ module.exports = async (_, args, context) => {
       pgdb: transaction,
     })
     await transaction.public.stripeCustomers.delete({ userId: sourceUser.id })
+    await transaction.payments.stripeCustomers.delete({ userId: sourceUser.id })
 
     const sourceDPs = await transaction.public.discussionPreferences.find(from)
     if (sourceDPs.length) {
