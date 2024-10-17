@@ -39,6 +39,10 @@ const currency = new Intl.NumberFormat('de-CH', {
   useGrouping: false,
 })
 
+const isCancelledOrRefunded = (item) => {
+  return ['CANCELLED', 'REFUNDED', 'FAILED'].includes(item.status.toUpperCase())
+}
+
 const evaluateCompanyMonth = async (
   company,
   begin,
@@ -51,8 +55,8 @@ const evaluateCompanyMonth = async (
       pay.id,
       pay."createdAt" AT TIME ZONE 'Europe/Zurich' "createdAt",
       pay."updatedAt" AT TIME ZONE 'Europe/Zurich' "updatedAt",
-      pay.status,
-      pay.method,
+      pay.status::text,
+      pay.method::text,
       c.name AS "companyName",
       p.total,
       p.donation,
@@ -87,7 +91,38 @@ const evaluateCompanyMonth = async (
 
     GROUP BY pay.id, c.id, p.id, pkgs.id, r.id, po.id
 
-    ORDER BY pay.id, c.id, p.id, pkgs.id, r.id, po.id
+    UNION ALL
+	
+    SELECT c.id, 
+      c."createdAt", 
+      c."updatedAt", 
+      CASE 
+        WHEN (c."fullyRefunded" OR c."amountRefunded" > 0) THEN 'refunded' 
+        ELSE c."status"::text 
+        END "status", 
+      c.provider::text "method", -- might need to be changed to "paymentMethodType" depending on how the booking works between paypal and stripe
+      c.company::text "companyName",
+      i.total, 
+      0-i."totalDiscountAmount" "donation",
+      s.type::text "packageName",
+      'MembershipType' "type",
+      1 "amount", -- could be inferred from invoice items ->> quantity but it's not possible to buy multiple subscriptions or other goods at the moment
+      1 "periods", -- could be inferred from type and invoice period start and end but it's not possible to buy multiple periods at the moment
+      i."totalBeforeDiscount" "price"
+
+    FROM payments."charges" c
+    INNER JOIN payments."invoices" i ON c."invoiceId" = i.id 
+    INNER JOIN payments."subscriptions" s ON i."subscriptionId" = s.id 
+    
+    WHERE
+        (
+          c."createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+          'YYYY-MM-DD',
+        )}' AND '${end.format('YYYY-MM-DD')}'
+          OR c."updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+          'YYYY-MM-DD',
+        )}' AND '${end.format('YYYY-MM-DD')}'
+        )
     ;
   `
 
@@ -135,7 +170,7 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.companyName === company)
         .filter((i) => i.method === method)
         .filter((i) => i.type === 'MembershipType')
-        .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
+        .filter((i) => isCancelledOrRefunded(i))
 
       results.StornierteMitgliedschaften = {
         Anzahl: StornierteMitgliedschaften.map(
@@ -253,7 +288,7 @@ const evaluateCompanyMonth = async (
           (i) =>
             i.donation > 0 || ['DONATE', 'DONATE_POT'].includes(i.packageName),
         )
-        .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
+        .filter((i) => isCancelledOrRefunded(i))
 
       results.StornierteSpenden = {
         Betrag:
@@ -274,7 +309,7 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.createdAt >= begin && i.createdAt < end)
         .filter((i) => i.companyName === company)
         .filter((i) => i.method === method)
-        .filter((i) => ['MONTHLY_ABO'].includes(i.packageName))
+        .filter((i) => ['MONTHLY_ABO', 'MONTHLY_SUBSCRIPTION'].includes(i.packageName))
         .filter((i) => i.type === 'MembershipType')
 
       results.Abonnements = {
@@ -297,9 +332,9 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.updatedAt >= begin && i.updatedAt < end)
         .filter((i) => i.companyName === company)
         .filter((i) => i.method === method)
-        .filter((i) => ['MONTHLY_ABO'].includes(i.packageName))
+        .filter((i) => ['MONTHLY_ABO', 'MONTHLY_SUBSCRIPTION'].includes(i.packageName))
         .filter((i) => i.type === 'MembershipType')
-        .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
+        .filter((i) => isCancelledOrRefunded(i))
 
       results.StornierteAbonnements = {
         Anzahl: StornierteAbonnements.map(
@@ -310,6 +345,37 @@ const evaluateCompanyMonth = async (
             (m) => m.amount * (m.periods || 1) * m.price,
           ).reduce((p, c) => p - c, 0) / 100,
       }
+
+      /**
+       * Reduzierte Abonnements
+       */
+
+      const ReduzierteAbonnements = Abonnements.filter(
+        (m) => m.donation < 0,
+      )
+
+      results.ReduzierteAbonnements = {
+        Betrag:
+        ReduzierteAbonnements.map(
+            (m) => m.amount * (m.periods || 1) * m.donation,
+          ).reduce((p, c) => p + c, 0) / 100,
+      }
+
+      /**
+       * Stornierte, reduzierte Abonnements
+       */
+
+      const StornierteReduzierteAbonnements =
+        StornierteAbonnements.filter((m) => m.donation < 0)
+
+      results.StornierteReduzierteAbonnements = {
+        Betrag:
+        StornierteReduzierteAbonnements.map(
+            (m) => m.amount * (m.periods || 1) * m.donation,
+          ).reduce((p, c) => p - c, 0) / 100,
+      }
+
+      
 
       /**
        * Monats-Geschenkabos
@@ -342,7 +408,7 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.method === method)
         .filter((i) => i.packageName === 'ABO_GIVE_MONTHS')
         .filter((i) => i.type === 'MembershipType')
-        .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
+        .filter((i) => isCancelledOrRefunded(i))
 
       results.StornierteMonatsgeschenkabos = {
         Anzahl: StornierteMonatsgeschenkabos.map(
@@ -390,7 +456,7 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.method === method)
         .filter((i) => ['YEARLY_ABO'].includes(i.packageName))
         .filter((i) => i.type === 'MembershipType')
-        .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
+        .filter((i) => isCancelledOrRefunded(i))
 
       const StornierteJahresabonnementsWithPrecomputed = precomputeTransitoryLiabilities(StornierteJahresabonnements, endFiscalYear)
 
@@ -431,7 +497,7 @@ const evaluateCompanyMonth = async (
       .filter((i) => i.companyName === company)
       .filter((i) => i.method === method)
       .filter((i) => i.type === 'Goodie')
-      .filter((i) => ['CANCELLED', 'REFUNDED'].includes(i.status))
+      .filter((i) => isCancelledOrRefunded(i))
 
     results.StornierteHandelsware = {
       Betrag:
@@ -484,3 +550,5 @@ PgDb.connect()
   .catch((e) => {
     console.error(e)
   })
+
+
