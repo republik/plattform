@@ -49,7 +49,6 @@ const GET_MEMBERSHIPS = gql`
   query memberships($userId: String!) {
     user(slug: $userId) {
       id
-      accessToken(scope: CUSTOM_PLEDGE)
       memberships {
         id
         type {
@@ -444,6 +443,7 @@ const Index = ({ userId }) => {
             render={() => {
               const { user } = data
               const { memberships = [] } = user || {}
+
               return (
                 <Section>
                   <SectionTitle>Memberships</SectionTitle>

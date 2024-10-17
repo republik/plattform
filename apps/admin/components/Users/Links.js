@@ -9,7 +9,7 @@ const GET_ACCESS_TOKENS = gql`
   query getAccessTokens($userId: String) {
     user(slug: $userId) {
       id
-      customPledge: accessToken(scope: CUSTOM_PLEDGE)
+      submitPledge: accessToken(scope: SUBMIT_PLEDGE)
     }
   }
 `
@@ -19,17 +19,17 @@ const Links = ({ userId }) => {
     variables: { userId },
   })
 
-  const customPledge = data?.user?.customPledge
+  const submitPledge = data?.user?.submitPledge
 
   return (
     <Section>
       <SectionTitle>Links</SectionTitle>
       {!loading && (
         <DL>
-          {customPledge && (
+          {submitPledge && (
             <DD>
               <A
-                href={`${REPUBLIK_FRONTEND_URL}/angebote?package=PROLONG&token=${customPledge}`}
+                href={`${REPUBLIK_FRONTEND_URL}/angebote?package=PROLONG&token=${submitPledge}`}
                 target='_blank'
               >
                 Verlängerungs-Link
