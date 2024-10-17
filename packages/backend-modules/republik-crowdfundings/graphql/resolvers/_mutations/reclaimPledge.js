@@ -74,8 +74,8 @@ module.exports = async (
         },
       ),
       mergeCustomers({
-        targetUserId: newUser.id,
-        sourceUserId: pledgeUser.id,
+        targetUser: newUser,
+        sourceUser: pledgeUser,
         pgdb: transaction,
       }),
     ]
