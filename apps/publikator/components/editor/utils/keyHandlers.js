@@ -73,13 +73,14 @@ export const createStaticKeyHandler = ({ TYPE, rule }) => {
 
   return (event, change) => {
     const isBackspace = event.key === 'Backspace'
-    const isEnter = event.key === 'Enter'
+    const isEnter = (event.key === 'Enter')
     const isTab = event.key === 'Tab'
     const isDelete = event.key === 'Delete'
 
     if (!isBackspace && !isEnter && !isDelete && !isTab) {
       return
     }
+
     const { value } = change
     const inSelection = value.blocks.some(matchBlock(TYPE))
 
@@ -158,9 +159,12 @@ export const createSoftBreakKeyHandler =
     if (event.key !== 'Enter') return
     if (event.shiftKey === false) return
 
-    const { startBlock } = value
+    const { startBlock, startText, startOffset, endText, endOffset } = value
+
+    const isConsecutiveSoftBreak = startText?.text[startOffset - 1] === '\n' || endText?.text[endOffset] === '\n'
+
     const { type } = startBlock
-    if (type !== TYPE) {
+    if (isConsecutiveSoftBreak || type !== TYPE) {
       return
     }
     return change.insertText('\n')
