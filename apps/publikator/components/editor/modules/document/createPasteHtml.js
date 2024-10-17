@@ -18,12 +18,21 @@ const hasParent = (type, document, key) => {
 const normalise = (html) =>
   html.replace(/<b[^>]*font-weight\s*:\s*normal[^>]*>/g, '')
 
+const PARAGRAPH_TYPES = ['PARAGRAPH', 'INFOP', 'BLOCKQUOTEPARAGRAPH']
+
 export default (centerModule, figureModule) => (event, change, editor) => {
   const transfer = getEventTransfer(event)
-  if (transfer.type !== 'html') return
-
   const cursor = editor.value.selection.anchorKey
   const blockType = editor.value.document.getClosestBlock(cursor).type
+
+  if (transfer.type !== 'html') {
+    if (PARAGRAPH_TYPES.includes(blockType)) {
+      change.insertText(transfer.text.replace(/\n{2,}/g, '\n\n'))
+      return true
+    }
+    change.insertText(transfer.text.replace(/\n+/g, '\n'))
+    return true
+  }
 
   const isByline = blockType === 'CENTERBYLINE' || blockType === 'BYLINE'
   if (isByline) return
