@@ -39,6 +39,10 @@ const currency = new Intl.NumberFormat('de-CH', {
   useGrouping: false,
 })
 
+const isCancelledOrRefunded = (item) => {
+  return ['CANCELLED', 'REFUNDED', 'FAILED'].includes(item.status.toUpperCase())
+}
+
 const evaluateCompanyMonth = async (
   company,
   begin,
@@ -166,7 +170,7 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.companyName === company)
         .filter((i) => i.method === method)
         .filter((i) => i.type === 'MembershipType')
-        .filter((i) => ['CANCELLED', 'REFUNDED', 'failed', 'refunded'].includes(i.status))
+        .filter((i) => isCancelledOrRefunded(i))
 
       results.StornierteMitgliedschaften = {
         Anzahl: StornierteMitgliedschaften.map(
@@ -284,7 +288,7 @@ const evaluateCompanyMonth = async (
           (i) =>
             i.donation > 0 || ['DONATE', 'DONATE_POT'].includes(i.packageName),
         )
-        .filter((i) => ['CANCELLED', 'REFUNDED', 'failed', 'refunded'].includes(i.status))
+        .filter((i) => isCancelledOrRefunded(i))
 
       results.StornierteSpenden = {
         Betrag:
@@ -330,7 +334,7 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.method === method)
         .filter((i) => ['MONTHLY_ABO', 'MONTHLY_SUBSCRIPTION'].includes(i.packageName))
         .filter((i) => i.type === 'MembershipType')
-        .filter((i) => ['CANCELLED', 'REFUNDED', 'failed', 'refunded'].includes(i.status))
+        .filter((i) => isCancelledOrRefunded(i))
 
       results.StornierteAbonnements = {
         Anzahl: StornierteAbonnements.map(
@@ -404,7 +408,7 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.method === method)
         .filter((i) => i.packageName === 'ABO_GIVE_MONTHS')
         .filter((i) => i.type === 'MembershipType')
-        .filter((i) => ['CANCELLED', 'REFUNDED', 'failed', 'refunded'].includes(i.status))
+        .filter((i) => isCancelledOrRefunded(i))
 
       results.StornierteMonatsgeschenkabos = {
         Anzahl: StornierteMonatsgeschenkabos.map(
@@ -452,7 +456,7 @@ const evaluateCompanyMonth = async (
         .filter((i) => i.method === method)
         .filter((i) => ['YEARLY_ABO'].includes(i.packageName))
         .filter((i) => i.type === 'MembershipType')
-        .filter((i) => ['CANCELLED', 'REFUNDED', 'failed', 'refunded'].includes(i.status))
+        .filter((i) => isCancelledOrRefunded(i))
 
       const StornierteJahresabonnementsWithPrecomputed = precomputeTransitoryLiabilities(StornierteJahresabonnements, endFiscalYear)
 
@@ -493,7 +497,7 @@ const evaluateCompanyMonth = async (
       .filter((i) => i.companyName === company)
       .filter((i) => i.method === method)
       .filter((i) => i.type === 'Goodie')
-      .filter((i) => ['CANCELLED', 'REFUNDED', 'failed', 'refunded'].includes(i.status))
+      .filter((i) => isCancelledOrRefunded(i))
 
     results.StornierteHandelsware = {
       Betrag:
@@ -546,3 +550,5 @@ PgDb.connect()
   .catch((e) => {
     console.error(e)
   })
+
+
