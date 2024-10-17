@@ -159,9 +159,9 @@ export const createSoftBreakKeyHandler =
     if (event.key !== 'Enter') return
     if (event.shiftKey === false) return
 
-    const { startBlock, startText, endOffset } = value
+    const { startBlock, startText, startOffset, endText, endOffset } = value
 
-    const isConsecutiveSoftBreak = startText?.text[endOffset - 1] === '\n' || startText?.text[endOffset] === '\n'
+    const isConsecutiveSoftBreak = startText?.text[startOffset - 1] === '\n' || endText?.text[endOffset] === '\n'
 
     const { type } = startBlock
     if (isConsecutiveSoftBreak || type !== TYPE) {
