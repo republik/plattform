@@ -6,14 +6,9 @@ import {
   MetaOption, MetaOptionGroupTitle, MetaOptionGroup
 } from "../../../MetaDataForm/components/Layout";
 import withT from '../../../../lib/withT'
-import { useState } from "react";
+import { VOICES } from "../../../../lib/settings";
 
-const VOICES = [
-  { value: 'huebsch-62964', text: 'Frau 1' },
-  { value: 'huebsch-08316', text: 'Frau 2' },
-  { value: 'huebsch-01150', text: 'Mann 1' },
-  { value: 'huebsch-01670', text: 'Mann 2' },
-]
+console.log(VOICES)
 
 export default withT(({ t, editor, node, onInputChange }) => {
   const voice = node.data.get('syntheticVoice')
