@@ -100,8 +100,8 @@ describe('merge customers', () => {
     ).toBe(2)
 
     await mergeCustomers({
-      targetUserId: userTarget.id,
-      sourceUserId: userSource.id,
+      targetUser: userTarget,
+      sourceUser: userSource,
       pgdb,
     })
 
@@ -153,8 +153,8 @@ describe('merge customers', () => {
     ).toBe(0)
 
     await mergeCustomers({
-      targetUserId: userTarget.id,
-      sourceUserId: userSource.id,
+      targetUser: userTarget,
+      sourceUser: userSource,
       pgdb,
     })
 
@@ -219,8 +219,8 @@ describe('merge customers', () => {
 
     expect(
       mergeCustomers({
-        targetUserId: userTarget.id,
-        sourceUserId: userSource.id,
+        targetUser: userTarget,
+      sourceUser: userSource,
         pgdb,
       }),
     ).rejects.toThrow(/both have subscriptions/)
@@ -278,8 +278,8 @@ describe('merge customers', () => {
     ).toBe(2)
 
     await mergeCustomers({
-      targetUserId: userTarget.id,
-      sourceUserId: userSource.id,
+      targetUser: userTarget,
+      sourceUser: userSource,
       pgdb,
     })
 
@@ -352,8 +352,8 @@ describe('merge customers', () => {
     ).toBe(2)
 
     await mergeCustomers({
-      targetUserId: userTarget.id,
-      sourceUserId: userSource.id,
+      targetUser: userTarget,
+      sourceUser: userSource,
       pgdb,
     })
 
@@ -426,8 +426,8 @@ describe('merge customers', () => {
     ).toBe(2)
 
     await mergeCustomers({
-      targetUserId: userTarget.id,
-      sourceUserId: userSource.id,
+      targetUser: userTarget,
+      sourceUser: userSource,
       pgdb,
     })
 
@@ -490,8 +490,8 @@ describe('merge customers', () => {
     ).toBe(2)
 
     await mergeCustomers({
-      targetUserId: userTarget.id,
-      sourceUserId: userSource.id,
+      targetUser: userTarget,
+      sourceUser: userSource,
       pgdb,
     })
 
@@ -785,7 +785,7 @@ describe('payPledge (paymentMethod)', () => {
     expect(syncResult.data?.syncPaymentIntent?.pledgeStatus).toBe('DRAFT')
     expect(syncResult.data?.syncPaymentIntent?.updatedPledge).toBeFalsy()
 
-    //no way to do confirmCardPayment without a browser
+    // no way to do confirmCardPayment without a browser
   })
 
   test('MONTHLY_ABO pledge with STRIPE (no auth) and then refund', async () => {

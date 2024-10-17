@@ -155,8 +155,8 @@ module.exports = async (_, args, context) => {
     await transaction.public.userAttributes.update(from, to)
 
     await mergeCustomers({
-      targetUserId: targetUser.id,
-      sourceUserId: sourceUser.id,
+      targetUser: targetUser,
+      sourceUser: sourceUser,
       pgdb: transaction,
     })
     await transaction.public.stripeCustomers.delete({ userId: sourceUser.id })

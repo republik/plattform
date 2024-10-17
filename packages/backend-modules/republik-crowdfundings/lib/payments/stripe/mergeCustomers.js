@@ -3,40 +3,68 @@ const Promise = require('bluebird')
 const debug = require('debug')('crowdfundings:stripe:merge')
 const { getDefaultPaymentMethod } = require('./paymentMethod')
 
-const createMoveStripeCustomers = (pgdb) => async (fromUserId, toUserId) => {
-  await pgdb.public.stripeCustomers.delete({ userId: toUserId })
-  await pgdb.payments.stripeCustomers.delete({ userId: toUserId })
-  await pgdb.payments.stripeCustomers.update(
-    { userId: fromUserId },
-    {
-      userId: toUserId,
-      updatedAt: new Date(),
-    },
-  )
-  return pgdb.public.stripeCustomers.update(
-    { userId: fromUserId },
-    {
-      userId: toUserId,
-      updatedAt: new Date(),
-    },
-  )
-}
+const createMoveStripeCustomersInDb =
+  (pgdb) => async (fromUserId, toUserId) => {
+    await pgdb.public.stripeCustomers.delete({ userId: toUserId })
+    await pgdb.payments.stripeCustomers.delete({ userId: toUserId })
+    await pgdb.payments.stripeCustomers.update(
+      { userId: fromUserId },
+      {
+        userId: toUserId,
+        updatedAt: new Date(),
+      },
+    )
+    return pgdb.public.stripeCustomers.update(
+      { userId: fromUserId },
+      {
+        userId: toUserId,
+        updatedAt: new Date(),
+      },
+    )
+  }
+
+const createMoveStripeCustomersOnStripe =
+  (accounts) =>
+  async ({ targetUser, associatedCustomers, oldCustomers }) => {
+    // update email and userId on stripe customer that should be associated with the target user
+    await Promise.map(associatedCustomers, async (stripeCustomer) => {
+      const account = accounts.find(
+        (a) => a.company.id === stripeCustomer.companyId,
+      )
+      await account.stripe.customers.update(stripeCustomer.id, {
+        name: targetUser.email,
+        email: targetUser.email,
+        metadata: {
+          userId: targetUser.id,
+        },
+      })
+    })
+    // delete now unused stripe customer
+    return Promise.map(oldCustomers, async (stripeCustomer) => {
+      const account = accounts.find(
+        (a) => a.company.id === stripeCustomer.companyId,
+      )
+      return account.stripe.customers.del(stripeCustomer.id)
+    })
+  }
 
 module.exports = async ({
-  targetUserId,
-  sourceUserId,
+  targetUser,
+  sourceUser,
   pgdb,
   clients, // optional
 }) => {
   const { accounts } = clients || (await getClients(pgdb))
-  const moveStripeCustomers = createMoveStripeCustomers(pgdb)
+  const moveStripeCustomers = createMoveStripeCustomersInDb(pgdb)
+  const associateStripeCustomerWithTargetUser =
+    createMoveStripeCustomersOnStripe(accounts)
 
   const [targetStripeCustomers, sourceStripeCustomers] = await Promise.all([
     pgdb.public.stripeCustomers.find({
-      userId: targetUserId,
+      userId: targetUser.id,
     }),
     pgdb.public.stripeCustomers.find({
-      userId: sourceUserId,
+      userId: sourceUser.id,
     }),
   ])
 
@@ -47,7 +75,12 @@ module.exports = async ({
 
   if (!targetStripeCustomers.length) {
     debug('target has no stripe customers, move source to target')
-    return moveStripeCustomers(sourceUserId, targetUserId)
+    await associateStripeCustomerWithTargetUser({
+      targetUser: targetUser,
+      associatedCustomers: sourceStripeCustomers,
+      oldCustomers: targetStripeCustomers,
+    })
+    return moveStripeCustomers(sourceUser.id, targetUser.id)
   }
 
   const getCustomers = (stripeCustomers) =>
@@ -84,12 +117,22 @@ module.exports = async ({
 
   if (hasSubscriptions(targetCustomers)) {
     debug('only target has subscriptions, done')
+    await associateStripeCustomerWithTargetUser({
+      targetUser: targetUser,
+      associatedCustomers: targetStripeCustomers,
+      oldCustomers: sourceStripeCustomers,
+    })
     return
   }
 
   if (hasSubscriptions(sourceCustomers)) {
     debug('only source has subscriptions, move source to target')
-    return moveStripeCustomers(sourceUserId, targetUserId)
+    await associateStripeCustomerWithTargetUser({
+      targetUser: targetUser,
+      associatedCustomers: sourceStripeCustomers,
+      oldCustomers: targetStripeCustomers,
+    })
+    return moveStripeCustomers(sourceUser.id, targetUser.id)
   }
 
   // check paymentMethods
@@ -110,12 +153,22 @@ module.exports = async ({
   if (sourcePMs.length) {
     if (!targetPMs.length) {
       debug('source has paymentSources, target not, move source to target')
-      return moveStripeCustomers(sourceUserId, targetUserId)
+      await associateStripeCustomerWithTargetUser({
+        targetUser: targetUser,
+        associatedCustomers: sourceStripeCustomers,
+        oldCustomers: targetStripeCustomers,
+      })
+      return moveStripeCustomers(sourceUser.id, targetUser.id)
     }
     // both have paymentMethods
     if (getPaymentMethodExp(sourcePMs[0]) > getPaymentMethodExp(targetPMs[0])) {
       debug("source's PM card expires after target's, move source to target")
-      return moveStripeCustomers(sourceUserId, targetUserId)
+      await associateStripeCustomerWithTargetUser({
+        targetUser: targetUser,
+        associatedCustomers: sourceStripeCustomers,
+        oldCustomers: targetStripeCustomers,
+      })
+      return moveStripeCustomers(sourceUser.id, targetUser.id)
     }
   }
 
@@ -146,9 +199,21 @@ module.exports = async ({
     const sourceMaxExp = getMaxSourcesExp(sourceCustomers)
     if (sourceMaxExp > targetMaxExp) {
       debug("source's card expires after target's, move source to target")
-      return moveStripeCustomers(sourceUserId, targetUserId)
+      await associateStripeCustomerWithTargetUser({
+        targetUser: targetUser,
+        associatedCustomers: sourceStripeCustomers,
+        oldCustomers: targetStripeCustomers,
+      })
+      return moveStripeCustomers(sourceUser.id, targetUser.id)
     }
   }
 
-  debug('source is as good as target, doing nothing')
+  debug(
+    'source is as good as target, target stripe customer is already up to date',
+  )
+  await associateStripeCustomerWithTargetUser({
+    targetUser: targetUser,
+    associatedCustomers: targetStripeCustomers,
+    oldCustomers: sourceStripeCustomers,
+  })
 }
