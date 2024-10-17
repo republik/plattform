@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifRegular14, sansSerifRegular15 } from '../Typography/styles'
@@ -16,6 +15,16 @@ const styles = {
   }),
 }
 
+/**
+ * @typedef {object} CreditProps
+ * @property {React.ReactNode} children
+ */
+
+/**
+ * Credit component
+ * @param {CreditProps} props
+ * @returns {JSX.Element}
+ */
 const Credit = ({ children }) => {
   const [colorScheme] = useColorContext()
   return (
@@ -23,10 +32,6 @@ const Credit = ({ children }) => {
       {children}
     </p>
   )
-}
-
-Credit.propTypes = {
-  children: PropTypes.node.isRequired,
 }
 
 export default Credit

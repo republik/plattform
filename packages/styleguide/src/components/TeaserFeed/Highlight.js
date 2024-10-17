@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { convertStyleToRem } from '../Typography/utils'
@@ -27,6 +26,16 @@ const styles = {
   }),
 }
 
+/**
+ * @typedef {object} HighlightProps
+ * @property {React.ReactNode} children
+ */
+
+/**
+ * Highlight component
+ * @param {HighlightProps} props
+ * @returns {JSX.Element}
+ */
 const Highlight = ({ children, label }) => {
   const [colorScheme] = useColorContext()
   return (
@@ -39,10 +48,6 @@ const Highlight = ({ children, label }) => {
       {children}
     </p>
   )
-}
-
-Highlight.propTypes = {
-  children: PropTypes.node.isRequired,
 }
 
 export default Highlight

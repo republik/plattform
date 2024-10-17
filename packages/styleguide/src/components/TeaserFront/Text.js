@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, tUp } from './mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
@@ -94,6 +93,25 @@ const styles = {
   }),
 }
 
+/**
+ * @typedef {object} TextProps
+ * @property {React.ReactNode} children
+ * @property {object} [attributes]
+ * @property {'topleft' | 'topright' | 'bottomleft' | 'bottomright' | 'top' | 'middle' | 'bottom'} [position]
+ * @property {boolean} [center]
+ * @property {string} [color]
+ * @property {string} [collapsedColor]
+ * @property {string} [maxWidth]
+ * @property {string} [margin]
+ * @property {boolean} [feuilleton]
+ * @property {React.ReactNode} [audioPlayButton]
+ */
+
+/**
+ * Text component
+ * @param {TextProps} props
+ * @returns {JSX.Element}
+ */
 const Text = ({
   children,
   attributes,
@@ -147,27 +165,6 @@ const Text = ({
       </div>
     </div>
   )
-}
-
-Text.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  position: PropTypes.oneOf([
-    'topleft',
-    'topright',
-    'bottomleft',
-    'bottomright',
-    'top',
-    'middle',
-    'bottom',
-  ]),
-  center: PropTypes.bool,
-  color: PropTypes.string,
-  collapsedColor: PropTypes.string,
-  maxWidth: PropTypes.string,
-  margin: PropTypes.string,
-  feuilleton: PropTypes.bool,
-  audioPlayButton: PropTypes.node,
 }
 
 export default Text
