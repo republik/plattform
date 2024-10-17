@@ -291,6 +291,7 @@ export type CustomAncestor = CustomElement | CustomEditor
 export type CustomNode = CustomEditor | CustomDescendant
 
 export type CustomElementsType =
+  | 'container'
   | 'headline'
   | 'paragraph'
   | 'break'
@@ -333,7 +334,7 @@ export type CustomElementsType =
   | 'quizAnswerInfo'
   | 'quizAnswerInfoP'
 
-interface ButtonI {
+export interface ButtonI {
   icon: IconType
   small?: boolean
 }
@@ -360,16 +361,16 @@ export type EditorAttr = keyof EditorAttrsI
 export type NormalizeFn<E> = (entry: [E, Path], editor: CustomEditor) => boolean
 export type DecorateFn<E> = (entry: [E, Path]) => BaseRange[]
 
-type SchemaComponent =
-  | React.FC<{
-      attributes: any
-      [x: string]: unknown
-    }>
-  | ForwardRefExoticComponent
+type SchemaComponent<P = Record<string, any>> =
+  | React.FC<P>
+  | ForwardRefExoticComponent<P>
 
-type SchemaConfig = {
-  [K in CustomMarksType | ExtendedElementType]?: SchemaComponent
-}
+type SchemaConfigKeys = CustomMarksType | CustomElementsType
+
+export type SchemaConfig = Partial<Record<SchemaConfigKeys, SchemaComponent>>
+// {
+// [K in SchemaConfigKeys]?: SchemaComponent
+// }
 
 export interface MarkConfigI {
   remove?: MarkType[]
@@ -398,7 +399,7 @@ export type NodeTemplate = {
 
 export interface ElementConfigI {
   attrs?: ElementAttrsI
-  normalizations?: NormalizeFn[]
+  normalizations?: NormalizeFn<unknown>[]
   structure?: NodeTemplate[]
   Form?: React.FC<ElementFormProps<CustomElement>>
   button?: ButtonI
@@ -479,5 +480,3 @@ declare module 'slate' {
     Text: CustomText
   }
 }
-
-declare module '@project-r/styleguide'
