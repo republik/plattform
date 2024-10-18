@@ -42,6 +42,7 @@ const createNewsletterSchema = ({
   Sub,
   Sup,
   Memo = ({ children }) => <>{children}</>,
+  Voice = ({ children }) => <>{children}</>,
   Button,
   List,
   ListItem,
@@ -78,6 +79,14 @@ const createNewsletterSchema = ({
       editorModule: 'memo',
       editorOptions: {
         type: 'MEMO',
+      },
+    },
+    {
+      matchMdast: matchSpanType('VOICE'),
+      component: Voice,
+      editorModule: 'voice',
+      editorOptions: {
+        type: 'VOICE',
       },
     },
     {
