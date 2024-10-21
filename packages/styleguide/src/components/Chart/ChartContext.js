@@ -281,6 +281,7 @@ export const defaultProps = {
   },
   Table: {
     numberFormat: 's',
+    sortable: true,
     tableColumns: [],
   },
 }
