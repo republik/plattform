@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { serifRegular17, serifRegular19 } from '../Typography/styles'
@@ -15,12 +14,18 @@ const styles = {
   }),
 }
 
+/**
+ * @typedef LeadProps
+ * @property {React.ReactNode} children
+ */
+
+/**
+ * Lead component
+ * @param {LeadProps} props
+ * @returns {JSX.Element}
+ */
 const Lead = ({ children }) => {
   return <p {...styles.main}>{children}</p>
-}
-
-Lead.propTypes = {
-  children: PropTypes.node.isRequired,
 }
 
 export default Lead

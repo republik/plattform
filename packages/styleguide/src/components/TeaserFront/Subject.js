@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { lab } from 'd3-color'
 import { mUp, tUp } from './mediaQueries'
@@ -29,6 +28,19 @@ const subjectSmall = css({
   },
 })
 
+/**
+ * @typedef {object} SubjectProps
+ * @property {React.ReactNode} children
+ * @property {string} color
+ * @property {string} collapsedColor
+ * @property {number} columns
+ */
+
+/**
+ * Subject component
+ * @param {SubjectProps} props
+ * @returns {JSX.Element}
+ */
 const Subject = ({ children, color, collapsedColor, columns }) => {
   const labColor = lab(color)
   const labCompactColor = lab(collapsedColor || color)
@@ -39,9 +51,9 @@ const Subject = ({ children, color, collapsedColor, columns }) => {
         ? labCompactColor.darker(2)
         : labCompactColor.brighter(3),
     '&::after': {
-      content: !!children.length ? ' ' : undefined,
+      content: children.length ? ' ' : undefined,
     },
-    paddingRight: !!children.length ? '.2em' : 0,
+    paddingRight: children.length ? '.2em' : 0,
     [tUp]: {
       color: labColor.l > 50 ? labColor.darker(2) : labColor.brighter(3),
     },
@@ -51,13 +63,6 @@ const Subject = ({ children, color, collapsedColor, columns }) => {
       {children}
     </span>
   )
-}
-
-Subject.propTypes = {
-  children: PropTypes.node.isRequired,
-  color: PropTypes.string,
-  collapsedColor: PropTypes.string,
-  columns: PropTypes.number,
 }
 
 export default Subject

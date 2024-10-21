@@ -1,5 +1,4 @@
 import { css } from 'glamor'
-import PropTypes from 'prop-types'
 import React from 'react'
 import { mUp } from '../../theme/mediaQueries'
 import { serifBold28, serifBold32, serifRegular15 } from '../Typography/styles'
@@ -23,6 +22,21 @@ const styles = {
   }),
 }
 
+/**
+ * @typedef {object} DebateCommentPreview
+ * @property {string} string
+ * @property {boolean} [more]
+ *
+ * @typedef {object} DebateCommentProps
+ * @property {string} [highlight]
+ * @property {DebateCommentPreview} [preview]
+ */
+
+/**
+ * DebateComment component
+ * @param {DebateCommentProps} props
+ * @returns {JSX.Element}
+ */
 const DebateComment = React.forwardRef(
   ({ highlight, preview, href, onClick }, ref) => {
     const [colorScheme] = useColorContext()
@@ -49,11 +63,3 @@ const DebateComment = React.forwardRef(
 )
 
 export default DebateComment
-
-DebateComment.propTypes = {
-  highlight: PropTypes.string,
-  preview: PropTypes.shape({
-    string: PropTypes.string,
-    more: PropTypes.bool,
-  }),
-}
