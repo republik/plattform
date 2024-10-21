@@ -62,8 +62,11 @@ const Table = (props) => {
     thresholds,
     tableColumns,
     collapsable,
+    sortable,
+    cellVerticalAlign,
     t,
   } = props
+
   const columns = values.columns || Object.keys(values[0] || {})
   const numberFormatter = getFormat(numberFormat, props.tLabel)
   const dateParser = timeParse(props.timeParse)
@@ -108,7 +111,7 @@ const Table = (props) => {
       : [].concat(values)
 
   const barChartData = []
-  barColumns.length &&
+  if (barColumns.length) {
     values.map((row) => {
       barColumns.forEach((key) => {
         if (row[key] !== undefined) {
@@ -117,6 +120,7 @@ const Table = (props) => {
         barChartData.push(row[key])
       })
     })
+  }
 
   const barChartExtent = extent(barChartData)
 
@@ -186,20 +190,25 @@ const Table = (props) => {
                   textAlign: numericColumns.includes(tableHead)
                     ? 'right'
                     : 'left',
-                  cursor: 'pointer',
+                  cursor: sortable ? 'pointer' : undefined,
                   whiteSpace: sortBy.key === tableHead ? 'nowrap' : undefined,
                   width: tableColumns.find((d) => d.column === tableHead)
                     ? tableColumns.find((d) => d.column === tableHead).width
                     : undefined,
+                  verticalAlign: cellVerticalAlign,
                 }}
                 key={index}
-                onClick={() => setSort(columns[index])}
+                onClick={() => {
+                  if (sortable) {
+                    setSort(columns[index])
+                  }
+                }}
               >
                 {tableHead}
                 {sortBy.key &&
                   sortBy.key === tableHead &&
                   (sortBy.order === 'desc' ? (
-                  <IconExpandMore style={{ paddingLeft: '2px' }} />
+                    <IconExpandMore style={{ paddingLeft: '2px' }} />
                   ) : (
                     <IconExpandLess style={{ paddingLeft: '2px' }} />
                   ))}
@@ -225,6 +234,7 @@ const Table = (props) => {
                   columnName={cellKey}
                   isBarColumn={barColumns.includes(cellKey)}
                   numberFormatter={numberFormatter}
+                  verticalAlign={cellVerticalAlign}
                 >
                   {numberColumns.includes(cellKey)
                     ? numberFormatter(row[cellKey])
@@ -266,6 +276,8 @@ export const propTypes = {
     }),
   ),
   numberFormat: PropTypes.string.isRequired,
+  sortable: PropTypes.bool,
+  cellVerticalAlign: PropTypes.string,
   defaultSortColumn: PropTypes.string,
   colorMap: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
@@ -295,6 +307,7 @@ const Cell = (props) => {
     isBarColumn,
     barChartExtent,
     numberFormatter,
+    verticalAlign,
   } = props
 
   const maxWidth = isBarColumn && (width || 100)
@@ -313,6 +326,7 @@ const Cell = (props) => {
           !isBarColumn && color ? colorScale(value) : 'transparent',
         color: !isBarColumn && color && getTextColor(colorScale(value)),
         whiteSpace: isBarColumn && 'nowrap',
+        verticalAlign,
       }}
     >
       {isBarColumn ? (
