@@ -162,6 +162,26 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
     ],
   })
 
+  const interviewAnswer = {
+    matchMdast: matchZone('INTERVIEWANSWER'),
+    props: (node) => {
+      return {
+        isEmpty:
+          node.children &&
+          node.children.length === 1 &&
+          !node.children[0].children,
+      }
+    },
+    component: ({ isEmpty, children }) =>
+      isEmpty ? null : <div className='interview-answer' stylemarginTop='-1.85rem'>{children}</div>,
+    editorModule: 'interviewAnswer',
+    editorOptions: {
+      insertButtonText: 'Interview-Antwort',
+      insertTypes: ['PARAGRAPH'],
+    },
+    rules: [base.paragraph]
+  }
+
   const blockQuote = {
     matchMdast: matchZone('BLOCKQUOTE'),
     props: (node) => {
@@ -400,6 +420,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
     logbook,
     blockQuote,
     pullQuote,
+    interviewAnswer,
   }
 }
 
