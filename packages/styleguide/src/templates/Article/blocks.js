@@ -44,6 +44,7 @@ import {
 } from './utils'
 
 import { slug } from '../../lib/slug'
+import { NoTopMargin } from "../../components/Typography/Editorial";
 
 const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
   const createInfoBox = ({ t }) => ({
@@ -173,7 +174,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
       }
     },
     component: ({ isEmpty, children }) =>
-      isEmpty ? null : <div className='interview-answer' stylemarginTop='-1.85rem'>{children}</div>,
+      isEmpty ? null : <NoTopMargin>{children}</NoTopMargin>,
     editorModule: 'interviewAnswer',
     editorOptions: {
       insertButtonText: 'Interview-Antwort',
