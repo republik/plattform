@@ -317,6 +317,14 @@
       "value": "User, welche eine Membership eingelöst habe können zurzeit nicht gelöscht werden. Bitte wenden Sie sich an die IT."
     },
     {
+      "key": "api/users/delete/deleteYourselfNotSupported",
+      "value": "Der eigene User-Account kann nicht gelöscht werden. Bitte wenden Sie sich an die IT."
+    },
+    {
+      "key": "api/users/delete/deleteWithActiveMembershipNotSupported",
+      "value": "Der zu löschende Account hat noch ein aktives Abonnement, der User kann erst gelöscht werden wenn das Abonnement beendet ist."
+    },
+    {
       "key": "api/payment/paymentMethod/404",
       "value": "Die PaymentMethod konnte nicht gefunden werden."
     },
