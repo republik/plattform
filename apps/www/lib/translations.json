@@ -5448,10 +5448,6 @@
       "value": "Alle"
     },
     {
-      "key": "AudioPlayer/Latest/NoAccess",
-      "value": "Die neusten Beiträge sind für Mitglieder und Abonnentinnen der Republik zugänglich."
-    },
-    {
       "key": "AudioPlayer/Latest/NoItems",
       "value": "Keine Beiträge verfügbar."
     },
@@ -5506,14 +5502,6 @@
     {
       "key": "AudioPlayer/Queue/EmptyQueue/progressLink",
       "value": "Aufzeichnen der Hörposition aktivieren"
-    },
-    {
-      "key": "AudioPlayer/Queue/NoAcces",
-      "value": "Die Wiedergabeliste ist nur für Mitglieder und Abonnentinnen der Republik zugänglich."
-    },
-    {
-      "key": "AudioPlayer/shared/NoAccess/heading",
-      "value": "Einloggen und Weiterhören"
     },
     {
       "key": "AudioPlayer/error",

@@ -1,12 +1,10 @@
 import { useMemo, useState } from 'react'
 import { css } from 'glamor'
 import { A, Spinner } from '@project-r/styleguide'
-import NoAccess from '../shared/NoAccess'
 import { useLatestArticlesQuery } from '../../../../graphql/LatestArticlesHook'
 import { useTranslation } from '../../../../../../lib/withT'
 import LoadingPlaceholder from '../shared/LoadingPlaceholder'
 import FilterButton from './FilterButton'
-import { useMe } from '../../../../../../lib/context/MeContext'
 import LatestArticleItem from './LatestArticleItem'
 import { AudioQueueItem } from 'components/Audio/types/AudioPlayerItem'
 
@@ -40,7 +38,6 @@ const LatestArticlesTab = ({
 }: LatestArticlesProps) => {
   const [filter, setFilter] = useState<'all' | 'read-aloud'>('read-aloud')
   const { t } = useTranslation()
-  const { hasAccess } = useMe()
   const { data, loading, error, fetchMore } = useLatestArticlesQuery({
     variables: {
       count: 20,
@@ -98,15 +95,6 @@ const LatestArticlesTab = ({
       )
     })
   }, [data, filter])
-
-  if (!hasAccess) {
-    return (
-      <NoAccess
-        text={t('AudioPlayer/Latest/NoAccess')}
-        heading={t('AudioPlayer/shared/NoAccess/heading')}
-      />
-    )
-  }
 
   if (loading) {
     return <LoadingPlaceholder />
