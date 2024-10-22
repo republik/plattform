@@ -6,16 +6,16 @@ const Datawrapper = ({ datawrapperId, alt }) => {
     return <p>No Datawrapper ID</p>
   }
 
-  const html = `<div style="min-height:496px" id="datawrapper-vis-dKxYE">
+  const html = `<div style="min-height:496px" id="datawrapper-vis-${datawrapperId}">
       <script 
         type="text/javascript" 
         defer 
-        src="https://datawrapper.dwcdn.net/dKxYE/embed.js" 
+        src="https://datawrapper.dwcdn.net/${datawrapperId}/embed.js" 
         charset="utf-8"
-        data-target="#datawrapper-vis-dKxYE">
+        data-target="#datawrapper-vis-${datawrapperId}">
       </script>
       <noscript>
-        <img src="https://datawrapper.dwcdn.net/dKxYE/full.png" alt="" />
+        <img src="https://datawrapper.dwcdn.net/${datawrapperId}/full.png" alt="${alt}" />
       </noscript>
     </div>`
 
