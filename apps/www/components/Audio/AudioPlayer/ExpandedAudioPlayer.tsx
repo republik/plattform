@@ -49,6 +49,9 @@ const styles = {
     },
     overflow: 'hidden',
   }),
+  rootNoAccess: css({
+    paddingBottom: 'calc(24px + env(safe-area-inset-bottom))',
+  }),
   queueWrapper: css({
     flex: 1,
     minHeight: 0,
@@ -198,7 +201,7 @@ const ExpandedAudioPlayer = ({
   )
 
   return (
-    <div {...styles.root}>
+    <div {...styles.root} {...(!hasAccess && styles.rootNoAccess)}>
       <div {...styles.header}>
         <p {...styles.heading} {...colorScheme.set('color', 'text')}>
           {t('AudioPlayer/Queue/ActiveHeading')}

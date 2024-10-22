@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { mediaQueries, useMediaQuery } from '@project-r/styleguide'
-import { AUDIO_PLAYER_HEIGHT } from '../constants'
 
 import BottomPanel from '../Frame/BottomPanel'
-import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { useAudioContext } from '../Audio/AudioProvider'
 import { MINI_AUDIO_PLAYER_HEIGHT } from '../Audio/AudioPlayer/MiniAudioPlayer'
 
@@ -14,13 +12,10 @@ const FOOTER_FADE_AREA_MOBILE = 1200
 const ActionBarOverlay = ({ children }) => {
   const [overlayVisible, setOverlayVisible] = useState(false)
   const isDesktop = useMediaQuery(mediaQueries.mUp)
-  const { isAudioQueueAvailable } = useAudioQueue()
   const { audioPlayerVisible } = useAudioContext()
 
   const audioPlayerOffset = audioPlayerVisible
-    ? isAudioQueueAvailable
-      ? MINI_AUDIO_PLAYER_HEIGHT + 16
-      : AUDIO_PLAYER_HEIGHT + 20
+    ? MINI_AUDIO_PLAYER_HEIGHT + 20
     : 0
   const lastY = useRef()
   const diff = useRef(0)
