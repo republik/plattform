@@ -41,9 +41,8 @@ import createDynamicComponent from './dynamicComponent'
 import TeaserEmbedComment from '../../components/TeaserEmbedComment'
 import ifRule from '../shared/email/rules/ifRule'
 import elseRule from '../shared/email/rules/elseRule'
-import { If } from '../../components/Variables'
-import { FlyerAuthor } from '../../components/Flyer/Author'
 import authorRule from '../shared/email/rules/authorRule'
+import { DatawrapperViewer } from "../../components/Datawrapper"
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -630,7 +629,8 @@ const createSchema = ({
                 }),
                 editorModule: 'chart',
                 editorOptions: {
-                  insertButtonText: 'Chart',
+                  // should not appear in the sidebar anymore
+                  // insertButtonText: 'Chart',
                   insertTypes: ['PARAGRAPH'],
                 },
                 rules: [
@@ -695,6 +695,20 @@ const createSchema = ({
                     rules: base.paragraphRules,
                   },
                 ],
+              },
+              {
+                matchMdast: matchZone('EMBEDDATAWRAPPER'),
+                component: DatawrapperViewer,
+                editorModule: 'embedDatawrapper',
+                editorOptions: {
+                  insertButtonText: 'Datawrapper',
+                  insertTypes: ['PARAGRAPH'],
+                },
+                props: (node) => ({
+                  datawrapperId: node.data.datawrapperId,
+                  alt: node.data.alt,
+                }),
+                isVoid: true,
               },
               base.centerFigure,
               teasers.articleCollection,
