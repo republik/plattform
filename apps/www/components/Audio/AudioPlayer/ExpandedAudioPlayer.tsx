@@ -50,7 +50,7 @@ const styles = {
     overflow: 'hidden',
   }),
   rootNoAccess: css({
-    paddingBottom: 'calc(24px + env(safe-area-inset-bottom))',
+    paddingBottom: 'calc(15px + env(safe-area-inset-bottom))',
   }),
   queueWrapper: css({
     flex: 1,

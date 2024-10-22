@@ -14,9 +14,7 @@ const ActionBarOverlay = ({ children }) => {
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const { audioPlayerVisible } = useAudioContext()
 
-  const audioPlayerOffset = audioPlayerVisible
-    ? MINI_AUDIO_PLAYER_HEIGHT + 20
-    : 0
+  const audioPlayerOffset = audioPlayerVisible ? MINI_AUDIO_PLAYER_HEIGHT + 15 : 0
   const lastY = useRef()
   const diff = useRef(0)
 

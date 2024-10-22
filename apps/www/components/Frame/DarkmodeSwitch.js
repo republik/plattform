@@ -30,12 +30,8 @@ const DarkmodeSwitch = ({ t }) => {
     />
   ))
 
-  const calloutPaddingNativeApp = inNativeApp
-    ? '15px 15px 25px'
-    : '15px 15px 50px'
-
   return (
-    <CalloutMenu contentPaddingMobile={calloutPaddingNativeApp} Element={Icon}>
+    <CalloutMenu Element={Icon}>
       <div style={{ width: 180, lineHeight: '2.5rem' }}>
         {
           <>
