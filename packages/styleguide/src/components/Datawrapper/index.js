@@ -1,7 +1,7 @@
 import React from 'react'
 
 
-export const Datawrapper = ({ datawrapperId, alt }) => {
+const Datawrapper = ({ datawrapperId, alt }) => {
   if (!datawrapperId) {
     return <p>No Datawrapper ID</p>
   }
@@ -28,3 +28,4 @@ export const Datawrapper = ({ datawrapperId, alt }) => {
   )
 }
 
+export default Datawrapper
