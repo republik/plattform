@@ -19,7 +19,7 @@ module.exports = async ({ userId, pgdb }) => {
         id: customer.id,
       })
       await pgdb.payments.stripeCustomers.deleteOne({
-        id: customer.id,
+        customerId: customer.id,
       })
     } else {
       console.warn(
