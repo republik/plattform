@@ -35,7 +35,6 @@ const AudioCalloutMenu = ({ actions }: { actions: AudioListItemAction[] }) => {
 
   return (
     <CalloutMenu
-      contentPaddingMobile={'30px'}
       Element={MoreIconButton}
       align='right'
       elementProps={{

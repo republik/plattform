@@ -28,7 +28,6 @@ type Props<ElementProps = any> = {
   elementProps: ElementProps
   align?: 'left' | 'right'
   initiallyOpen?: boolean
-  contentPaddingMobile?: string
   padded?: boolean
   attributes?: any
   inline?: boolean
@@ -40,7 +39,6 @@ const CalloutMenu = ({
   elementProps,
   align,
   initiallyOpen,
-  contentPaddingMobile,
   padded,
   attributes,
   inline = false,
@@ -77,7 +75,6 @@ const CalloutMenu = ({
         <Callout
           onClose={() => setMenu(false)}
           align={align}
-          contentPaddingMobile={contentPaddingMobile}
         >
           {children}
         </Callout>

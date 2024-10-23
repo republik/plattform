@@ -42,7 +42,6 @@ const ActionsMenu = ({ items = [] }: Props) => {
 
   return (
     <CalloutMenu
-      contentPaddingMobile={'30px'}
       Element={MoreIconWithProps}
       align='right'
       elementProps={{
