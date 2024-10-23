@@ -97,8 +97,11 @@ const Collapsable = ({
   const isDesktop = useMediaQuery(mUp)
   const { desktop, mobile } = height
   useEffect(() => {
+    /* In print view the body should always be visible. */
+    if (window.matchMedia('print').matches) {
+      setBodyVisibility('full')
+    } else if (bodyVisibility === 'auto' && bodySize?.height !== undefined) {
     /* Collapse the body (switch to 'preview' visibility) when allowed and the size exceeds the threshold. */
-    if (bodyVisibility === 'auto' && bodySize?.height !== undefined) {
       const maxBodyHeight = isDesktop ? desktop : mobile
       if (bodySize.height > maxBodyHeight + threshold) {
         setBodyVisibility('preview')
@@ -226,6 +229,9 @@ const styles = {
       top: -60,
       height: 60,
     },
+    '@media print': {
+      display: 'none',
+    },
   }),
   buttonContainerDivider: css({
     borderTopWidth: 1,
@@ -245,6 +251,9 @@ const styles = {
     cursor: 'pointer',
     height: pxToRem('32px'),
     lineHeight: pxToRem('32px'),
+    '@media print': {
+      display: 'none',
+    },
   }),
 }
 
