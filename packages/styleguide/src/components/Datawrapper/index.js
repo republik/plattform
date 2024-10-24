@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Script from 'next/script'
+import { Figure } from '../Figure'
 
-function Datawrapper({ datawrapperId, alt }) {
+function Datawrapper({ datawrapperId, alt, size }) {
   const chartRef = useRef()
   const [embedData, setEmbedData] = useState()
 
@@ -23,17 +24,17 @@ function Datawrapper({ datawrapperId, alt }) {
         target: chartRef.current,
         // optionally include flags (e.g dark, fitchart) here
         // see https://developer.datawrapper.de/docs/render-flags
-        flags: {},
+        flags: { dark: 'auto' },
       })
     }
   }, [embedData])
 
   return (
-    <div style={{ marginBottom: 30 }}>
+    <Figure size={size}>
       {datawrapperId ? null : 'Chart-ID fehlt'}
-      <div ref={chartRef}></div>
+      <div data-dw-id={datawrapperId} ref={chartRef}></div>
       <Script src={`https://datawrapper.dwcdn.net/lib/datawrapper.js`} />
-    </div>
+    </Figure>
   )
 }
 

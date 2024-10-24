@@ -42,7 +42,7 @@ import TeaserEmbedComment from '../../components/TeaserEmbedComment'
 import ifRule from '../shared/email/rules/ifRule'
 import elseRule from '../shared/email/rules/elseRule'
 import authorRule from '../shared/email/rules/authorRule'
-import Datawrapper from "../../components/Datawrapper"
+import Datawrapper from '../../components/Datawrapper'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -702,12 +702,13 @@ const createSchema = ({
                 editorModule: 'embedDatawrapper',
                 editorOptions: {
                   type: 'EMBEDDATAWRAPPER',
-                  insertButtonText: 'Datawrapper',
+                  insertButtonText: 'Datawrapper (Beta)',
                   insertTypes: ['PARAGRAPH'],
                 },
                 props: (node) => ({
                   datawrapperId: node.data.datawrapperId,
                   alt: node.data.alt,
+                  size: node.data.size,
                 }),
                 isVoid: true,
               },
