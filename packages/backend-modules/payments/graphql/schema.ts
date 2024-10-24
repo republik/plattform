@@ -6,11 +6,13 @@ schema {
 }
 
 type queries {
-  paymentsIsRunning: Boolean
+  getOffers(promoCode: String): [Offer!]!
+  getOffer(offerId: ID!, promoCode: String): Offer
 }
 
 type mutations {
-  cancelMagazineSubscription(subscriptionId: String!): Boolean
+  createCheckoutSession(args: CheckoutSessionArgs!): String
+  cancelMagazineSubscription(args: CancelSubscription): Boolean
   createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
 }
 `
