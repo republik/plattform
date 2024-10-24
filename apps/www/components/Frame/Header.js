@@ -76,10 +76,9 @@ const Header = ({
     topLevelPaths.includes(router.asPath) || router.asPath.endsWith('/journal')
   const backButton = inNativeIOSApp && me && !isOnTopLevelPage
 
-  const closeHandler = () => {
-    // check if we can pop the navigation stack
+  // check if we can pop the navigation stack
+  const closeHandler = () =>
     window.history.length > 1 ? router.back() : router.push('/')
-  }
 
   useEffect(() => {
     router.prefetch(me ? '/meine-republik' : '/anmelden')
@@ -234,19 +233,20 @@ const Header = ({
                   />
                 </div>
               )}
-              {showToggle ? (
-                <Toggle
-                  expanded={showClose}
-                  title={t(
-                    `header/nav/${
-                      expandedNav === 'main' ? 'close' : 'open'
-                    }/aria`,
-                  )}
-                  closeOverlay={closeHandler}
-                />
-              ) : // TODO: decide what to do with this abonnieren CTA
-              null
-              // <CallToAction formatColor={formatColor} />
+              {
+                showToggle ? (
+                  <Toggle
+                    expanded={showClose}
+                    title={t(
+                      `header/nav/${
+                        expandedNav === 'main' ? 'close' : 'open'
+                      }/aria`,
+                    )}
+                    closeOverlay={closeHandler}
+                  />
+                ) : // TODO: decide what to do with this abonnieren CTA
+                null
+                // <CallToAction formatColor={formatColor} />
               }
             </div>
           </div>
@@ -342,9 +342,6 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    '@media print': {
-      display: 'none',
-    },
   }),
   primary: css({
     display: 'flex',
@@ -360,6 +357,9 @@ const styles = {
     display: 'flex',
     justifyContent: 'flex-start',
     width: '100%',
+    '@media print': {
+      display: 'none',
+    },
   }),
   rightBarItem: css({
     marginLeft: 'auto',

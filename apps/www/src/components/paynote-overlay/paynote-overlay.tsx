@@ -94,15 +94,14 @@ function PaynoteOverlayDialog() {
           color: 'text.inverted',
           position: 'fixed',
           inset: 'auto 0 0 0',
-
           zIndex: 9998,
-
           p: '6',
-
           textAlign: 'center',
           textStyle: 'sans',
           boxShadow: 'sm',
-
+          '@media print': {
+            display: 'none',
+          },
           '&:has([data-state="open"])': {
             animation: 'fadeOut',
           },
