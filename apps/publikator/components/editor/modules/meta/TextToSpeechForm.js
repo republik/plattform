@@ -17,6 +17,7 @@ const VOICES = [
 
 export default withT(({ t, editor, node, onInputChange }) => {
   const voice = node.data.get('syntheticVoice')
+  const voice2 = node.data.get('syntheticVoice2')
   const suppressed = node.data.get('suppressSyntheticReadAloud')
   return (
     <MetaSection>
@@ -49,10 +50,29 @@ export default withT(({ t, editor, node, onInputChange }) => {
             {option.text}
           </Radio>
         ))}
-        <div style={{ marginTop: 5 }}>
-          <Label>{t('metaData/tts/voice/warning')}</Label>
-        </div>
       </MetaOptionGroup>
+      <MetaOptionGroupTitle>{t('metaData/tts/voice2/dropdown')}</MetaOptionGroupTitle>
+      <MetaOptionGroup>
+        {VOICES.map((option, i) => (
+          <Radio
+            key={i}
+            checked={voice2 === option.value}
+            onChange={() => {
+              editor.change((change) => {
+                change.setNodeByKey(node.key, {
+                  data: node.data.set('syntheticVoice2', option.value),
+                })
+              })
+            }}
+            style={{ marginRight: 30 }}
+          >
+            {option.text}
+          </Radio>
+        ))}
+      </MetaOptionGroup>
+      <div style={{ marginTop: 20 }}>
+        <Label>{t('metaData/tts/voice/warning')}</Label>
+      </div>
     </MetaSection>
   )
 })

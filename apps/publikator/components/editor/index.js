@@ -52,6 +52,7 @@ import createVariableModule from './modules/variable'
 import createVariableConditionModule from './modules/variable/condition'
 import createSeriesNavModule from './modules/seriesnav'
 import createAuthorModule from './modules/author'
+import createInterviewAnswerModule from './modules/interviewanswer'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -76,6 +77,7 @@ const moduleCreators = {
   figuregroup: createFigureGroupModule,
   special: createSpecialModule,
   logbook: createLogbookModule,
+  interviewAnswer: createInterviewAnswerModule,
   meta: createMetaModule,
   specialchars: createSpecialCharsModule,
   title: createTitleModule,

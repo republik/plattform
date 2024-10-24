@@ -595,6 +595,7 @@ const createSchema = ({
               },
               blocks.infoBox,
               blocks.pullQuote,
+              blocks.interviewAnswer,
               base.paragraph,
               {
                 matchMdast: matchZone('NOTE'),

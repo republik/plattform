@@ -218,6 +218,25 @@ export const Format = ({
   )
 }
 
+const noTopMargin = css({
+  marginTop: -22,
+  [mUp]: {
+    marginTop: `-${pxToRem(30)}`,
+  },
+})
+
+export const NoTopMargin = ({ children, attributes, ...props }) => {
+  return (
+    <div
+      {...attributes}
+      {...props}
+      {...noTopMargin}
+    >
+      {children}
+    </div>
+  )
+}
+
 const paragraph = css({
   margin: '22px 0 22px 0',
   ...convertStyleToRem(styles.serifRegular17),

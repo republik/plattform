@@ -44,6 +44,7 @@ import {
 } from './utils'
 
 import { slug } from '../../lib/slug'
+import { NoTopMargin } from "../../components/Typography/Editorial";
 
 const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
   const createInfoBox = ({ t }) => ({
@@ -161,6 +162,26 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
       },
     ],
   })
+
+  const interviewAnswer = {
+    matchMdast: matchZone('INTERVIEWANSWER'),
+    props: (node) => {
+      return {
+        isEmpty:
+          node.children &&
+          node.children.length === 1 &&
+          !node.children[0].children,
+      }
+    },
+    component: ({ isEmpty, children }) =>
+      isEmpty ? null : <NoTopMargin>{children}</NoTopMargin>,
+    editorModule: 'interviewAnswer',
+    editorOptions: {
+      insertButtonText: 'Interview-Antwort',
+      insertTypes: ['PARAGRAPH'],
+    },
+    rules: [base.paragraph]
+  }
 
   const blockQuote = {
     matchMdast: matchZone('BLOCKQUOTE'),
@@ -400,6 +421,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
     logbook,
     blockQuote,
     pullQuote,
+    interviewAnswer,
   }
 }
 

@@ -1438,6 +1438,7 @@ type Meta {
   audioCoverCrop: Crop
   audioSource: AudioSource
   syntheticVoice: String
+  syntheticVoice2: String
   color: String
   contributors: [Contributor!]!
   credits: JSON
