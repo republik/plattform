@@ -26,7 +26,7 @@ export async function processInvociePaymentSucceded(
   const incoiceCharge = i.charge as Stripe.Charge
 
   if (!incoiceCharge) {
-    console.error('no charge assoicated with with the invoice not found')
+    console.error('no charge assoicated with the invoice not found')
     return
   }
   const args = mapChargeArgs(company, invoice.id, incoiceCharge)

@@ -3,8 +3,8 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 // const { Roles } = require('@orbiting/backend-modules-auth')
 
 export = async function cancelMagazineSubscription(
-  _subscriptionId: string, // eslint-disable-line @typescript-eslint/no-unused-vars
-  _args: never, // eslint-disable-line @typescript-eslint/no-unused-vars
+  _root: never, // eslint-disable-line @typescript-eslint/no-unused-vars
+  _args: { subscriptionId: string }, // eslint-disable-line @typescript-eslint/no-unused-vars
   _ctx: GraphqlContext, // eslint-disable-line @typescript-eslint/no-unused-vars
 ) {
   // TODO: Allow subscription cancelation
