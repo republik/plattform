@@ -709,6 +709,7 @@ const createSchema = ({
                   datawrapperId: node.data.datawrapperId,
                   alt: node.data.alt,
                   size: node.data.size,
+                  plain: node.data.plain,
                 }),
                 isVoid: true,
               },

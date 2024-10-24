@@ -1,11 +1,12 @@
 import OverlayFormManager from '../../utils/OverlayFormManager'
 
-import { Label, Radio, Field } from '@project-r/styleguide'
+import { Label, Radio, Field, Checkbox } from '@project-r/styleguide'
 
 const Form = ({ data, onChange, editor, node }) => {
   const parent = editor.value.document.getParent(node.key)
   const datawrapperId = node.data.get('datawrapperId')
   const alt = node.data.get('alt')
+  const plain = node.data.get('plain')
 
   return (
     <>
@@ -109,17 +110,21 @@ const Form = ({ data, onChange, editor, node }) => {
         <Field
           label='Datawrapper ID'
           value={datawrapperId}
-          onChange={(e, value) =>
-            onChange(data.set('datawrapperId', value))
-          }
+          onChange={(e, value) => onChange(data.set('datawrapperId', value))}
         />
         <Field
           label='Alt Text'
           value={alt}
-          onChange={(e, value) =>
-            onChange(data.set('alt', value))
-          }
+          onChange={(e, value) => onChange(data.set('alt', value))}
         />
+        <Label>
+          <Checkbox
+            name='plain'
+            checked={plain}
+            onChange={(e, value) => onChange(data.set('plain', value))}
+          />{' '}
+          Header und Footer ausblenden
+        </Label>
       </div>
     </>
   )
