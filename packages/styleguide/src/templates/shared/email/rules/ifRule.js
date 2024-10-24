@@ -18,7 +18,7 @@ const ifRule = {
         items: [
           { value: 'firstName', text: 'Vorname' },
           { value: 'lastName', text: 'Nachname' },
-          { value: 'hasAccess', text: 'Magazin-Zugriff' },
+          { value: 'hasAccess', text: 'Aktives Abo oder Mitgliedschaft' },
         ],
       },
     ],
