@@ -629,8 +629,7 @@ const createSchema = ({
                 }),
                 editorModule: 'chart',
                 editorOptions: {
-                  // should not appear in the sidebar anymore
-                  // insertButtonText: 'Chart',
+                  insertButtonText: 'Chart',
                   insertTypes: ['PARAGRAPH'],
                 },
                 rules: [
