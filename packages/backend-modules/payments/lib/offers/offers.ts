@@ -148,11 +148,23 @@ const store: Record<Company, { stripe: Stripe; lookupKeys: string[] }> = {
   },
 }
 
-export async function fetchOffers(company: Company) {
+export async function fetchOffers({
+  company,
+  offers,
+  promoCode,
+}: {
+  company: Company
+  offers?: string[]
+  promoCode?: string
+}) {
   const prices = await loadPrices(
     store[company].stripe,
-    store[company].lookupKeys,
+    offers ?? store[company].lookupKeys,
   )
+
+  const promotion = promoCode
+    ? await getPromotion(store[company].stripe, promoCode)
+    : null
 
   return OffersByCompany[company].map((offer) => {
     const price = prices.find(
@@ -166,6 +178,24 @@ export async function fetchOffers(company: Company) {
         amount: price.unit_amount!,
         currency: price.currency,
       },
+      discount: promotion && {
+        name: promotion.coupon.name!,
+        amountOff: promotion.coupon.amount_off!,
+        currency: promotion.coupon.currency!,
+      },
     }
   })
+}
+async function getPromotion(stripe: Stripe, promoCode: string) {
+  const promition = await stripe.promotionCodes.list({
+    active: true,
+    code: promoCode,
+    limit: 1,
+  })
+
+  if (promition.data.length !== 1) {
+    return null
+  }
+
+  return promition.data[0]
 }

@@ -70,6 +70,7 @@ type Offer {
   product: Product
   price: Price
   customPrice: CustomPrice
+  discount: Discount
 }
 
 type Price {
