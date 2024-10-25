@@ -5,6 +5,7 @@ import { Figure } from '../Figure'
 function Datawrapper({ datawrapperId, alt, size, plain = false }) {
   const chartRef = useRef()
   const [embedData, setEmbedData] = useState()
+  const [scriptReady, setScriptReady] = useState(false)
 
   useEffect(() => {
     if (datawrapperId) {
@@ -18,9 +19,8 @@ function Datawrapper({ datawrapperId, alt, size, plain = false }) {
   }, [datawrapperId])
 
   useEffect(() => {
-    if (embedData && chartRef.current) {
-      const target = chartRef.current
-
+    const target = chartRef.current
+    if (embedData && target && scriptReady) {
       // Remove all children of the target because datawrapper.render() will just append more
       while (target.firstChild) {
         target.removeChild(target.firstChild)
@@ -34,13 +34,23 @@ function Datawrapper({ datawrapperId, alt, size, plain = false }) {
         flags: { dark: 'auto', plain },
       })
     }
-  }, [embedData, plain])
+  }, [embedData, plain, scriptReady])
 
   return (
     <Figure size={size}>
       {datawrapperId ? null : 'Chart-ID fehlt'}
-      <div data-dw-id={datawrapperId} ref={chartRef}></div>
-      <Script src={`https://datawrapper.dwcdn.net/lib/datawrapper.js`} />
+      <div ref={chartRef} style={{ minHeight: 10 }}></div>
+      <Script
+        id='datawrapper-lib'
+        src='https://datawrapper.dwcdn.net/lib/datawrapper.js'
+        onReady={() => {
+          setScriptReady(true)
+        }}
+        // Not sure why but onReady isn't always called, so we also use onLoad
+        onLoad={() => {
+          setScriptReady(true)
+        }}
+      />
     </Figure>
   )
 }
