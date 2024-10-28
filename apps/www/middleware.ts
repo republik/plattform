@@ -161,14 +161,23 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   /* ------------ Logic to handle SSG front- & marketing-page ------------ */
 
   /**
-   * Rewrite to the front if the user is a member
+   * Rewrite to the front if the user is a member or the request comes from
+   * a whitelisted IP Address
    * @param roles Roles of the user
    * @returns NextResponse
    */
   function rewriteBasedOnRoles(roles: string[] = []): NextResponse {
     const openAccess = process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true'
+    const userIP = req.headers.get('x-forwarded-for')
 
-    if (openAccess) {
+    const isAllowedIP =
+      userIP &&
+      process.env.CURTAIN_IP_ALLOW_LIST &&
+      (process.env.CURTAIN_UA_ALLOW_LIST || '')
+        .split(',')
+        .some((ip) => userIP.includes(ip))
+
+    if (openAccess || isAllowedIP) {
       return NextResponse.next()
     }
 
