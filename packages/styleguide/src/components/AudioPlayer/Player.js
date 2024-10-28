@@ -474,7 +474,6 @@ class AudioPlayer extends Component {
         {...styles.audio}
         {...attributes}
         ref={this.ref}
-        crossOrigin='anonymous'
         playsInline
         webkit-playsinline=''
       >
@@ -495,7 +494,6 @@ class AudioPlayer extends Component {
         {...styles.audio}
         {...attributes}
         ref={this.ref}
-        crossOrigin='anonymous'
       >
         {src.mp3 && (
           <source
