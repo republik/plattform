@@ -14,16 +14,15 @@ const Form = ({ data, onChange, editor, node }) => {
         <Label>Size</Label>
         <br />
         {[
-          // FIXME: this doesn't work (it removes the chart completely). Not sure we want it?
-          // {
-          //   label: 'Edge to Edge',
-          //   props: { size: undefined },
-          //   parent: {
-          //     kinds: ['document', 'block'],
-          //     types: ['CENTER'],
-          //   },
-          //   unwrap: true,
-          // },
+          {
+             label: 'Edge to Edge',
+             props: { size: undefined },
+             parent: {
+               kinds: ['document', 'block'],
+               types: ['CENTER'],
+             },
+             unwrap: true,
+           },
           {
             label: 'Gross',
             props: { size: 'breakout' },
