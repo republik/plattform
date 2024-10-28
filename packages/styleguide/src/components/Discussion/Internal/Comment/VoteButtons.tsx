@@ -4,7 +4,7 @@ import IconButton from '../../../IconButton'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { fontStyles } from '../../../Typography'
 import comment from '../../../../templates/Comment'
-import { IconThumbsUp, IconThumbsDown } from '@republik/icons'
+import { IconBigArrowUp, IconBigArrowDown } from '@republik/icons'
 
 const styles = {
   votes: css({
@@ -12,6 +12,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     marginLeft: 'auto',
+    gap: 12,
   }),
   vote: css({
     display: 'flex',
@@ -21,9 +22,6 @@ const styles = {
   voteNumber: css({
     ...fontStyles.sansSerifMedium14,
     fontFeatureSettings: '"tnum" 1',
-  }),
-  voteDivider: css({
-    padding: '0 6px',
   }),
   voteButton: css({
     margin: 0,
@@ -57,12 +55,13 @@ export const VoteButtons = ({
     <div {...styles.votes}>
       <div {...styles.vote}>
         <IconButton
-          size={16}
+          size={18}
           fill={
             comment.userVote === 'UP' ? colorScheme.getCSSColor('text') : 'none'
           }
-          Icon={IconThumbsUp}
+          Icon={IconBigArrowUp}
           disabled={disabled}
+          disabledFill={'none'}
           onClick={() => upVoteHandler(comment.id)}
           title={t('styleguide/CommentActions/upvote')}
         >
@@ -76,23 +75,20 @@ export const VoteButtons = ({
           </span>
         </IconButton>
       </div>
-      <div {...styles.voteDivider} {...colorScheme.set('color', 'text')}>
-        |
-      </div>
       <div {...styles.vote}>
         <IconButton
-          size={16}
+          size={18}
           fill={
             comment.userVote === 'DOWN'
               ? colorScheme.getCSSColor('text')
               : 'none'
           }
-          Icon={IconThumbsDown}
+          Icon={IconBigArrowDown}
           disabled={disabled}
+          disabledFill={'none'}
           onClick={() => downVoteHandler(comment.id)}
           title={t('styleguide/CommentActions/downvote')}
           style={{ margin: 0 }}
-          invert
         >
           <span
             {...styles.voteNumber}
