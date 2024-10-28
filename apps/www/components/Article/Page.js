@@ -831,7 +831,10 @@ const ArticlePage = ({
                           showNewsletterSignupTop ||
                           isSyntheticReadAloud ||
                           isReadAloud ? (
-                            <Center breakout={breakout}>
+                            <Center
+                              breakout={breakout}
+                              {...styles.actionsAndInfosBlock}
+                            >
                               {showNewsletterSignupTop && (
                                 <div style={{ marginTop: 10 }}>
                                   <NewsletterSignUp
@@ -963,6 +966,11 @@ const ArticlePage = ({
 }
 
 const styles = {
+  actionsAndInfosBlock: css({
+    '@media print': {
+      display: 'none',
+    },
+  }),
   prepublicationNotice: css({
     backgroundColor: colors.social,
   }),

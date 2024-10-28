@@ -87,9 +87,9 @@ const getProfileLink = (user) =>
 exports.reportUser = async (user, reportedUser, reason) => {
   try {
     const content = `
-    :bomb: *${user ? getProfileLink(user) : 'Gast'}* reported *${getProfileLink(
-      reportedUser,
-    )}*: \n
+    :triangular_flag_on_post: *${
+      user ? getProfileLink(user) : 'Gast'
+    }* reported *${getProfileLink(reportedUser)}*: \n
     Reason: \n
     ${reason}
     `
