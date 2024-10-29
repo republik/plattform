@@ -429,6 +429,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
     logbook,
     blockQuote,
     pullQuote,
+    bigNumber,
   }
 }
 
