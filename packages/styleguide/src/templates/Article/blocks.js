@@ -207,6 +207,34 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
     ],
   }
 
+  const bigNumber = {
+    matchMdast: matchZone('BIGNUMBER'),
+    component: BigNumber,
+    editorModule: 'bignumber',
+    editorOptions: {
+      insertButtonText: 'Big Number',
+      insertTypes: ['PARAGRAPH'],
+    },
+    rules: [
+      {
+        matchMdast: (node, index) =>
+          matchParagraph(node) && index === 0,
+        component: BigNumberText,
+        editorModule: 'paragraph',
+        editorOptions: {
+          type: 'BIGNUMBERPARAGRAPH',
+          placeholder: 'Zahle',
+          isStatic: true,
+        }
+      },
+      {
+        ...base.figureCaption,
+        matchMdast: (node, index) =>
+          matchLast(node, index, parent)
+      },
+    ],
+  }
+
   const pullQuote = {
     matchMdast: matchQuote,
     component: PullQuote,
