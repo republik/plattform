@@ -25,6 +25,8 @@ export default (centerModule, figureModule) => (event, change, editor) => {
   const cursor = editor.value.selection.anchorKey
   const blockType = editor.value.document.getClosestBlock(cursor).type
 
+  if (!transfer?.text) return
+
   if (transfer.type !== 'html') {
     if (PARAGRAPH_TYPES.includes(blockType)) {
       change.insertText(transfer.text.replace(/\n{2,}/g, '\n\n'))
