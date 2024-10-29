@@ -8,24 +8,13 @@ import InlineUI from '../../utils/InlineUI'
 export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
 
-  const paragrapQuoteModule = subModules.find((m) => m.name === 'paragraph')
-  if (!paragrapQuoteModule) {
-    throw new Error('Missing paragraph submodule (quote)')
-  }
-  const paragraphSourceModule = subModules.find(
-    (m) => m.name === 'paragraph' && m !== paragrapQuoteModule,
-  )
-  if (!paragraphSourceModule) {
-    throw new Error('Missing a second paragraph submodule (source)')
-  }
-
-  const figureModule = subModules.find((m) => m.name === 'figure')
+  const paragraphModule = subModules.find((m) => m.name === 'paragraph')
+  const captionModule = subModules.find((m) => m.name === 'figureCaption')
 
   const orderedSubModules = [
-    figureModule,
-    paragrapQuoteModule,
-    paragraphSourceModule,
-  ].filter(Boolean)
+    paragraphModule,
+    captionModule,
+  ]
 
   const childSerializer = new MarkdownSerializer({
     rules: orderedSubModules
@@ -76,22 +65,14 @@ export default ({ rule, subModules, TYPE }) => {
       TYPE,
       subModules: orderedSubModules,
       editorOptions,
-      paragrapQuoteModule,
-      paragraphSourceModule,
-      figureModule,
     }),
     plugins: [
       {
         renderNode({ node, children, attributes, editor }) {
           if (!serializerRule.match(node)) return
 
-          const hasFigure =
-            figureModule &&
-            !!node.nodes.find((n) => n.type === figureModule.TYPE)
           return (
             <Container
-              {...node.data.toJS()}
-              hasFigure={hasFigure}
               attributes={attributes}
             >
               <InlineUI
@@ -103,89 +84,23 @@ export default ({ rule, subModules, TYPE }) => {
             </Container>
           )
         },
-        onKeyDown(event, change) {
-          const isBackspace = event.key === 'Backspace'
-          if (event.key !== 'Enter' && !isBackspace) return
-
-          const { value } = change
-          const inBlock = value.document.getClosest(
-            value.startBlock.key,
-            serializerRule.match,
-          )
-          if (!inBlock) return
-
-          const isEmpty = !inBlock.text
-          if (isEmpty && isBackspace) {
-            event.preventDefault()
-            return change.removeNodeByKey(inBlock.key)
-          }
-        },
         schema: {
           blocks: {
             [TYPE]: {
               nodes: [
-                figureModule && {
-                  kinds: ['block'],
-                  types: [figureModule.TYPE],
-                  min: 0,
-                  max: 1,
-                },
                 {
                   kinds: ['block'],
-                  types: [paragrapQuoteModule.TYPE],
+                  types: [paragraphModule.TYPE],
                   min: 1,
                   max: 1,
                 },
                 {
                   kinds: ['block'],
-                  types: [paragraphSourceModule.TYPE],
+                  types: [captionModule.TYPE],
                   min: 1,
                   max: 1,
                 },
-              ].filter(Boolean),
-              normalize: (change, reason, { node, index, child }) => {
-                let orderedTypes = orderedSubModules.map(
-                  (subModule) => subModule.TYPE,
-                )
-                if (figureModule) {
-                  const hasFigure = !!node.nodes.find(
-                    (n) => n.type === figureModule.TYPE,
-                  )
-                  if (!hasFigure) {
-                    orderedTypes = orderedTypes.filter(
-                      (type) => type !== figureModule.TYPE,
-                    )
-                  }
-                }
-
-                if (node.nodes.first().kind !== 'block') {
-                  child = node.nodes.first()
-                  reason = 'child_kind_invalid'
-                  index = 0
-                }
-
-                if (reason === 'child_required') {
-                  change.insertNodeByKey(node.key, index, {
-                    kind: 'block',
-                    type: orderedTypes[index],
-                  })
-                }
-                if (reason === 'child_kind_invalid') {
-                  change.wrapBlockByKey(child.key, {
-                    type: orderedTypes[index],
-                  })
-                }
-                if (reason === 'child_type_invalid') {
-                  change.setNodeByKey(child.key, {
-                    type: orderedTypes[index],
-                  })
-                }
-                if (reason === 'child_unknown') {
-                  if (index >= orderedTypes.length) {
-                    change.unwrapNodeByKey(child.key)
-                  }
-                }
-              },
+              ],
             },
           },
         },

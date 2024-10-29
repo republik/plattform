@@ -1,6 +1,6 @@
 import { Block } from 'slate'
 
-import { Radio, Label, A } from '@project-r/styleguide'
+import { Radio, Label } from '@project-r/styleguide'
 
 import { createPropertyForm, buttonStyles } from '../../utils'
 
@@ -11,11 +11,9 @@ export default ({
   TYPE,
   subModules,
   editorOptions = {},
-  paragrapQuoteModule,
-  paragraphSourceModule,
-  figureModule,
 }) => {
   const { insertButtonText } = editorOptions
+  const [paragraphModule, figureCaptionModule] = subModules
 
   const isBlock = (block) => matchSubmodules(TYPE, subModules)
   const Form = createPropertyForm({
@@ -37,9 +35,6 @@ export default ({
               all.indexOf(block) === index && block.type === TYPE,
           )
           .map((block, i) => {
-            const figureNode =
-              figureModule &&
-              block.nodes.find((n) => n.type === figureModule.TYPE)
             return (
               <div key={`infobox-${i}`}>
                 <Label>Zitat</Label>
@@ -76,38 +71,6 @@ export default ({
                     ]
                   })}
                 </p>
-                {figureModule && (
-                  <p style={{ margin: '10px 0' }}>
-                    {figureNode ? (
-                      <A
-                        href='#'
-                        onClick={(e) => {
-                          e.preventDefault()
-                          onChange(
-                            value.change().removeNodeByKey(figureNode.key),
-                          )
-                        }}
-                      >
-                        Bild entfernen
-                      </A>
-                    ) : (
-                      <A
-                        href='#'
-                        onClick={(e) => {
-                          e.preventDefault()
-                          onChange(
-                            value.change().insertNodeByKey(block.key, 0, {
-                              kind: 'block',
-                              type: figureModule.TYPE,
-                            }),
-                          )
-                        }}
-                      >
-                        Bild hinzufügen
-                      </A>
-                    )}
-                  </p>
-                )}
               </div>
             )
           })}
@@ -124,8 +87,8 @@ export default ({
         Block.create({
           type: TYPE,
           nodes: [
-            Block.create(paragrapQuoteModule.TYPE),
-            Block.create(paragraphSourceModule.TYPE),
+            Block.create(paragraphModule.TYPE),
+            Block.create(figureCaptionModule.TYPE),
           ],
         }),
       ),
