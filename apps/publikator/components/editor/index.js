@@ -37,6 +37,7 @@ import createSpecialCharsModule from './modules/specialchars'
 import createTitleModule from './modules/title'
 import createInfoBoxModule from './modules/infobox'
 import createQuoteModule from './modules/quote'
+import createBigNumberModule from './modules/bignumber'
 import createHtmlModule from './modules/html'
 import createLineModule from './modules/line'
 import createFrontDossier from './modules/dossier/front'
@@ -81,6 +82,7 @@ const moduleCreators = {
   title: createTitleModule,
   infobox: createInfoBoxModule,
   quote: createQuoteModule,
+  bignumber: createBigNumberModule,
   front: createFrontModule,
   teaser: createTeaserModule,
   teasergroup: createTeaserGroupModule,
