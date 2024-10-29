@@ -55,7 +55,7 @@ export const VoteButtons = ({
     <div {...styles.votes}>
       <div {...styles.vote}>
         <IconButton
-          size={18}
+          size={24}
           fill={
             comment.userVote === 'UP' ? colorScheme.getCSSColor('text') : 'none'
           }
@@ -77,7 +77,7 @@ export const VoteButtons = ({
       </div>
       <div {...styles.vote}>
         <IconButton
-          size={18}
+          size={24}
           fill={
             comment.userVote === 'DOWN'
               ? colorScheme.getCSSColor('text')
