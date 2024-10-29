@@ -6,6 +6,7 @@ import * as Interaction from '../../components/Typography/Interaction'
 import { FigureCover, FigureImage } from '../../components/Figure'
 
 import { BlockQuote, BlockQuoteParagraph } from '../../components/BlockQuote'
+import { BigNumber, BigNumberText } from '../../components/BigNumber'
 
 import {
   PullQuote,
