@@ -8,11 +8,13 @@ import InlineUI from '../../utils/InlineUI'
 export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
 
-  const paragraphModule = subModules.find((m) => m.name === 'paragraph')
-  const captionModule = subModules.find((m) => m.name === 'figureCaption')
+  const numberModule = subModules.find((m) => m.name === 'paragraph')
+  const captionModule = subModules.find(
+    (m) => m.name === 'paragraph' && m !== numberModule,
+  )
 
   const orderedSubModules = [
-    paragraphModule,
+    numberModule,
     captionModule,
   ]
 
@@ -90,7 +92,7 @@ export default ({ rule, subModules, TYPE }) => {
               nodes: [
                 {
                   kinds: ['block'],
-                  types: [paragraphModule.TYPE],
+                  types: [numberModule.TYPE],
                   min: 1,
                   max: 1,
                 },

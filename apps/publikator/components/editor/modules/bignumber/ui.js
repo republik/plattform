@@ -13,7 +13,7 @@ export default ({
   editorOptions = {},
 }) => {
   const { insertButtonText } = editorOptions
-  const [paragraphModule, figureCaptionModule] = subModules
+  const [numberModule, figureCaptionModule] = subModules
 
   const isBlock = (block) => matchSubmodules(TYPE, subModules)
   const Form = createPropertyForm({
@@ -87,7 +87,7 @@ export default ({
         Block.create({
           type: TYPE,
           nodes: [
-            Block.create(paragraphModule.TYPE),
+            Block.create(numberModule.TYPE),
             Block.create(figureCaptionModule.TYPE),
           ],
         }),

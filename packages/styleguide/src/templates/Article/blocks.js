@@ -6,7 +6,7 @@ import * as Interaction from '../../components/Typography/Interaction'
 import { FigureCover, FigureImage } from '../../components/Figure'
 
 import { BlockQuote, BlockQuoteParagraph } from '../../components/BlockQuote'
-import { BigNumber, BigNumberText } from '../../components/BigNumber'
+import { BigNumber, BigNumberText, BigNumberCaption } from '../../components/BigNumber'
 
 import {
   PullQuote,
@@ -229,9 +229,18 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
         }
       },
       {
-        ...base.figureCaption,
         matchMdast: (node, index, parent) =>
-          matchLast(node, index, parent)
+          matchParagraph(node) && matchLast(node, index, parent),
+        component: BigNumberCaption,
+        editorModule: 'paragraph',
+        editorOptions: {
+          type: 'BIGNUMBERCAPTION',
+          placeholder: 'Legende',
+          isStatic: true,
+          afterType: 'PARAGRAPH',
+          insertAfterType: 'CENTER',
+        },
+        rules: [...globalInlines, base.link],
       },
     ],
   }
