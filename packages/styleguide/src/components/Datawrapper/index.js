@@ -10,7 +10,7 @@ function Datawrapper({ datawrapperId, alt, size, plain = false }) {
   const { theme } = useTheme()
 
   // Datawrapper supports true/false/"auto"
-  const dark = theme === 'system' ? 'auto' : theme === 'dark' ? true : false
+  const dark = theme === 'dark' ? true : theme === 'light' ? false : 'auto'
 
   useEffect(() => {
     if (datawrapperId) {
