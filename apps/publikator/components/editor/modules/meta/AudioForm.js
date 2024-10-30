@@ -1,6 +1,6 @@
 import { Set, Map } from 'immutable'
 
-import { Field, Dropdown, Checkbox } from '@project-r/styleguide'
+import { Field, Dropdown } from '@project-r/styleguide'
 
 import {
   MetaSection,
@@ -12,22 +12,11 @@ import {
 import MetaForm from '../../utils/MetaForm'
 import ImageCrop from '../../utils/ImageCrop'
 import withT from '../../../../lib/withT'
-import AudioContributors from './AudioContributors'
 
-// @see GraphQL schema-types enum AudioSourceKind
-const AUDIO_SOURCE_KINDS = [
-  // 'podcast', // not in use (yet)
-  'readAloud',
-  // 'syntheticReadAloud', // not in use (yet)
-]
 export default withT(({ t, editor, node, onInputChange, format }) => {
   const audioCoverAnchors = [null, 'middle'].map((value) => ({
     value,
     text: t(`metaData/audio/cover/anchor/${value}`),
-  }))
-  const audioSourceKinds = [null, ...AUDIO_SOURCE_KINDS].map((value) => ({
-    value,
-    text: t(`metaData/audio/source/kind/${value}`),
   }))
 
   const onChange = (key) => (newValue) => {
@@ -42,8 +31,6 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
   }
 
   const audioCover = node.data.get('audioCover')
-  const audioSourceKind = node.data.get('audioSourceKind')
-  const contributors = node.data.get('contributors')
 
   const audioSourceKeys = Set(['audioSourceMp3', 'audioSourceAac'])
   const audioDefaultValues = Map(audioSourceKeys.map((key) => [key, '']))
@@ -62,59 +49,6 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
           black
         />
       </MetaOption>
-      <MetaOptionGroupTitle>Audiotyp</MetaOptionGroupTitle>
-      <MetaOptionGroup>
-        <MetaOption>
-          <Dropdown
-            black
-            label={t('metaData/audio/source/kind')}
-            items={audioSourceKinds}
-            value={audioSourceKind || ''}
-            onChange={({ value }) => {
-              editor.change((change) => {
-                if (!value) {
-                  // we delete voice contributors if audio kind isn't read-aloud
-                  const updatedContributors = contributors?.filter(
-                    (c) => c.kind !== 'voice',
-                  )
-                  if (!updatedContributors?.length) {
-                    change.setNodeByKey(node.key, {
-                      data: node.data
-                        .remove('audioSourceKind')
-                        .remove('contributors'),
-                    })
-                  } else {
-                    change.setNodeByKey(node.key, {
-                      data: node.data
-                        .remove('audioSourceKind')
-                        .set('contributors', updatedContributors),
-                    })
-                  }
-                } else {
-                  change.setNodeByKey(node.key, {
-                    data: node.data.set('audioSourceKind', value),
-                  })
-                }
-              })
-            }}
-          />
-        </MetaOption>
-        {audioSourceKind !== 'readAloud' && (
-          <Checkbox
-            checked={node.data.get('willBeReadAloud')}
-            onChange={onInputChange('willBeReadAloud')}
-            black
-          >
-            {t('metaData/audio/willBeReadAloud')}
-          </Checkbox>
-        )}
-        {audioSourceKind === 'readAloud' && (
-          <AudioContributors
-            contributors={contributors}
-            onChange={onChange('contributors')}
-          />
-        )}
-      </MetaOptionGroup>
       <MetaOptionGroupTitle>Play-Button auf Artikel-Bild</MetaOptionGroupTitle>
       <MetaOptionGroup>
         <MetaOption>
