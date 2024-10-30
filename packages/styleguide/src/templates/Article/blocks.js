@@ -230,7 +230,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
       },
       {
         ...base.figureCaption,
-        matchMdast: (node, index) =>
+        matchMdast: (node, index, parent) =>
           matchLast(node, index, parent)
       },
     ],
