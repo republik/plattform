@@ -1,11 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useTheme } from 'next-themes'
 import Script from 'next/script'
+import { useEffect, useRef, useState } from 'react'
 import { Figure } from '../Figure'
 
 function Datawrapper({ datawrapperId, alt, size, plain = false }) {
   const chartRef = useRef()
   const [embedData, setEmbedData] = useState()
   const [scriptReady, setScriptReady] = useState(false)
+  const { theme } = useTheme()
+
+  // Datawrapper supports true/false/"auto"
+  const dark = theme === 'system' ? 'auto' : theme === 'dark' ? true : false
 
   useEffect(() => {
     if (datawrapperId) {
@@ -31,10 +36,10 @@ function Datawrapper({ datawrapperId, alt, size, plain = false }) {
         target,
         // optionally include flags (e.g dark, fitchart) here
         // see https://developer.datawrapper.de/docs/render-flags
-        flags: { dark: 'auto', plain },
+        flags: { dark, plain },
       })
     }
-  }, [embedData, plain, scriptReady])
+  }, [embedData, plain, scriptReady, dark])
 
   return (
     <Figure size={size}>
