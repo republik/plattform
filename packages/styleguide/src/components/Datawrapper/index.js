@@ -7,7 +7,9 @@ function Datawrapper({ datawrapperId, alt, size, plain = false }) {
   const chartRef = useRef()
   const [embedData, setEmbedData] = useState()
   const [scriptReady, setScriptReady] = useState(false)
-  const { theme } = useTheme()
+  const { theme: themeSetting, forcedTheme } = useTheme()
+
+  const theme = forcedTheme ?? themeSetting
 
   // Datawrapper supports true/false/"auto"
   const dark = theme === 'dark' ? true : theme === 'light' ? false : 'auto'
