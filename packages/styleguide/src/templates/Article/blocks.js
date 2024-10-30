@@ -210,6 +210,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
 
   const bigNumber = {
     matchMdast: matchZone('BIGNUMBER'),
+    props: (node) => ({ color: node.data.color }),
     component: BigNumber,
     editorModule: 'bignumber',
     editorOptions: {

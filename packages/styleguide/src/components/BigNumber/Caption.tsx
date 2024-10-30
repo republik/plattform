@@ -8,10 +8,8 @@ const styles = {
   caption: css({
     display: 'block',
     ...convertStyleToRem(sansSerifRegular14),
-    marginTop: '18px',
     [mUp]: {
       ...convertStyleToRem(sansSerifRegular15),
-      marginTop: '21px',
     },
     fontStyle: 'normal',
   }),

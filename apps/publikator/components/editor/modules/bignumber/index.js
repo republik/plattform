@@ -76,6 +76,7 @@ export default ({ rule, subModules, TYPE }) => {
           return (
             <Container
               attributes={attributes}
+              {...node.data.toJS()}
             >
               <InlineUI
                 node={node}
