@@ -226,7 +226,6 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
         editorOptions: {
           type: 'BIGNUMBERPARAGRAPH',
           placeholder: 'Zahle',
-          isStatic: true,
         }
       },
       {
