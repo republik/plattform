@@ -37,18 +37,17 @@ export default ({
           .map((block, i) => {
             return (
               <div key={`infobox-${i}`}>
-                <Label>Zitat</Label>
+                <Label>Grosse Zahle</Label>
                 <br />
                 <p style={{ margin: '10px 0' }}>
-                  <Label>Ausrichtung</Label>
+                  <Label>Farbe</Label>
                   <br />
                   {[
-                    { label: 'Normal', size: undefined },
-                    { label: 'Klein', size: 'narrow' },
-                    { label: 'Gross', size: 'breakout' },
-                    { label: 'Links', size: 'float' },
-                  ].map((size, i) => {
-                    const checked = block.data.get('size') === size.size
+                    { label: 'normal', color: undefined },
+                    { label: 'Rot', color: 'red' },
+                    { label: 'Blau', color: 'blue' },
+                  ].map((option, i) => {
+                    const checked = block.data.get('color') === option.color
 
                     return [
                       <Radio
@@ -59,13 +58,13 @@ export default ({
                           if (checked) return
 
                           let change = value.change().setNodeByKey(block.key, {
-                            data: block.data.set('size', size.size),
+                            data: block.data.set('color', option.color),
                           })
 
                           onChange(change)
                         }}
                       >
-                        {size.label}
+                        {option.label}
                       </Radio>,
                       <br key={`br${i}`} />,
                     ]
