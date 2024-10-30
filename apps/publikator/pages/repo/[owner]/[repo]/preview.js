@@ -13,6 +13,7 @@ import withT from '../../../../lib/withT'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 import { withCommitData } from '../../../../components/Edit/enhancers'
+import { ThemeProvider } from '../../../../components/theme-provider'
 
 const PreviewPage = ({ t, router, data = {} }) => {
   const { loading, error, repo: { commit: { document } = {} } = {} } = data
@@ -48,39 +49,41 @@ const PreviewPage = ({ t, router, data = {} }) => {
       <ColorContextProvider
         colorSchemeKey={darkmode === 'true' ? 'dark' : 'light'}
       >
-        <VariableContext.Provider value={variableContextValue}>
-          <Loader
-            loading={loading}
-            error={error || notFound}
-            render={() => {
-              if (!schema) {
-                return null
-              }
-              return (
-                <>
-                  {renderMdast(
-                    localState
-                      ? {
-                          ...localState,
-                          format: localState.meta?.format,
-                          section: localState.meta?.section,
-                          series: localState.meta?.series,
-                          repoId,
-                        }
-                      : {
-                          ...document.content,
-                          format: document.meta.format,
-                          section: document.meta.section,
-                          series: document.meta.series,
-                          repoId,
-                        },
-                    schema,
-                  )}
-                </>
-              )
-            }}
-          />
-        </VariableContext.Provider>
+        <ThemeProvider forcedTheme={darkmode === 'true' ? 'dark' : 'light'}>
+          <VariableContext.Provider value={variableContextValue}>
+            <Loader
+              loading={loading}
+              error={error || notFound}
+              render={() => {
+                if (!schema) {
+                  return null
+                }
+                return (
+                  <>
+                    {renderMdast(
+                      localState
+                        ? {
+                            ...localState,
+                            format: localState.meta?.format,
+                            section: localState.meta?.section,
+                            series: localState.meta?.series,
+                            repoId,
+                          }
+                        : {
+                            ...document.content,
+                            format: document.meta.format,
+                            section: document.meta.section,
+                            series: document.meta.series,
+                            repoId,
+                          },
+                      schema,
+                    )}
+                  </>
+                )
+              }}
+            />
+          </VariableContext.Provider>
+        </ThemeProvider>
       </ColorContextProvider>
     </Frame.Body>
   )
