@@ -1,28 +1,34 @@
 import OverlayFormManager from '../../utils/OverlayFormManager'
 
-import { Label, Radio, Field, Checkbox } from '@project-r/styleguide'
+import {
+  Label,
+  Radio,
+  Field,
+  Checkbox,
+  Interaction,
+} from '@project-r/styleguide'
 
 const Form = ({ data, onChange, editor, node }) => {
   const parent = editor.value.document.getParent(node.key)
   const datawrapperId = node.data.get('datawrapperId')
-  const alt = node.data.get('alt')
   const plain = node.data.get('plain')
+  const forceDark = node.data.get('forceDark')
 
   return (
     <>
-      <div>
+      <Interaction.P>
         <Label>Size</Label>
         <br />
         {[
           {
-             label: 'Edge to Edge',
-             props: { size: undefined },
-             parent: {
-               kinds: ['document', 'block'],
-               types: ['CENTER'],
-             },
-             unwrap: true,
-           },
+            label: 'Edge to Edge',
+            props: { size: undefined },
+            parent: {
+              kinds: ['document', 'block'],
+              types: ['CENTER'],
+            },
+            unwrap: true,
+          },
           {
             label: 'Gross',
             props: { size: 'breakout' },
@@ -105,18 +111,16 @@ const Form = ({ data, onChange, editor, node }) => {
             </Radio>
           )
         })}
-      </div>
-      <div>
+      </Interaction.P>
+      <Interaction.P>
         <Field
-          label='Datawrapper ID'
+          label='Datawrapper Chart-ID'
           value={datawrapperId}
           onChange={(e, value) => onChange(data.set('datawrapperId', value))}
+          required
         />
-        <Field
-          label='Alt Text'
-          value={alt}
-          onChange={(e, value) => onChange(data.set('alt', value))}
-        />
+      </Interaction.P>
+      <Interaction.P>
         <Label>
           <Checkbox
             name='plain'
@@ -125,7 +129,17 @@ const Form = ({ data, onChange, editor, node }) => {
           />{' '}
           Header und Footer ausblenden
         </Label>
-      </div>
+      </Interaction.P>
+      <Interaction.P>
+        <Label>
+          <Checkbox
+            name='forceDark'
+            checked={forceDark}
+            onChange={(e, value) => onChange(data.set('forceDark', value))}
+          />{' '}
+          Dunkles Farbschema forcieren
+        </Label>
+      </Interaction.P>
     </>
   )
 }
