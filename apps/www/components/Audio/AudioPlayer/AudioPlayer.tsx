@@ -18,6 +18,7 @@ import AudioPlaybackElement from './AudioPlaybackElement'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
 import { ZINDEX_POPOVER } from '../../constants'
 import { AUDIO_PLAYER_WRAPPER_ID } from './constants'
+
 const MARGIN = 15
 
 // TODO: handle previously stored audio-player state
@@ -43,9 +44,9 @@ const styles = {
     },
   }),
   wrapperMini: css({
-    marginRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
-    marginLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
-    marginBottom: ['24px', 'max(24px, env(safe-area-inset-bottom))'],
+    marginRight: 'calc(15px + env(safe-area-inset-right))',
+    marginLeft: 'calc(15px + env(safe-area-inset-left))',
+    marginBottom: 'calc(15px + env(safe-area-inset-bottom))',
     width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
     maxHeight: '100vh',
   }),
@@ -58,16 +59,15 @@ const styles = {
       'fill-available',
     ],
     margin: 0,
-    paddingLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
-    paddingRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
+    paddingLeft: 'calc(15px + env(safe-area-inset-right))',
+    paddingRight: 'calc(15px + env(safe-area-inset-left))',
     paddingBottom: 0,
     width: '100%',
     [mediaQueries.mUp]: {
       height: 'auto',
-      //paddingTop: ['15px', 'max(15px, env(safe-area-inset-top))'],
-      marginRight: ['15px', 'max(15px, env(safe-area-inset-right))'],
-      marginLeft: ['15px', 'max(15px, env(safe-area-inset-left))'],
-      marginBottom: ['24px', 'max(24px, env(safe-area-inset-bottom))'],
+      marginRight: 'calc(15px + env(safe-area-inset-right))',
+      marginLeft: 'calc(15px + env(safe-area-inset-left))',
+      marginBottom: 'calc(15px + env(safe-area-inset-bottom))',
       padding: 9,
     },
   }),

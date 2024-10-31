@@ -49,11 +49,16 @@ const styles = {
     right: 0,
     animation: `0.3s ${slideUp} 0.2s forwards`,
     textAlign: 'left',
+    paddingTop: '24px',
+    paddingLeft: 'calc(24px + env(safe-area-inset-left))',
+    paddingRight: 'calc(24px + env(safe-area-inset-right))',
+    paddingBottom: 'calc(24px + env(safe-area-inset-bottom))',
     [mUp]: {
       bottom: 'auto',
       top: 20,
       left: 'auto',
       animation: 'none',
+      padding: 12,
     },
   }),
   right: {
@@ -84,15 +89,9 @@ type Props = {
   children?: React.ReactNode
   align?: 'left' | 'right'
   onClose: () => void
-  contentPaddingMobile?: string
 }
 
-const Callout = ({
-  children,
-  align = 'left',
-  onClose,
-  contentPaddingMobile = '15px 15px 50px',
-}: Props) => {
+const Callout = ({ children, align = 'left', onClose }: Props) => {
   const [colorScheme] = useColorContext()
   const calloutRule = useMemo(
     () =>
@@ -107,7 +106,6 @@ const Callout = ({
   return (
     <span {...styles.calloutContainer} onClick={onClose}>
       <span
-        {...css({ padding: contentPaddingMobile, [mUp]: { padding: 10 } })}
         {...styles.callout}
         {...styles[align].callout}
         {...calloutRule}
@@ -127,7 +125,6 @@ const Callout = ({
 Callout.propTypes = {
   align: PropTypes.oneOf(['left', 'right']),
   onClose: PropTypes.func,
-  contentPaddingMobile: PropTypes.string,
 }
 
 export default Callout

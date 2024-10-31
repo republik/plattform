@@ -53,11 +53,13 @@ import createVariableConditionModule from './modules/variable/condition'
 import createSeriesNavModule from './modules/seriesnav'
 import createAuthorModule from './modules/author'
 import createInterviewAnswerModule from './modules/interviewanswer'
+import createEmbedDatawrapperModule from './modules/embeddatawrapper'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
   embedTwitter: createEmbedTwitterModule,
   embedComment: createEmbedCommentModule,
+  embedDatawrapper: createEmbedDatawrapperModule,
   document: createDocumentModule,
   documentPlain: createDocumentPlainModule,
   cover: createCoverModule,

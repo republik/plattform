@@ -11,12 +11,15 @@ module.exports = async ({ userId, pgdb }) => {
     return
   }
 
-  for (let customer of customers) {
+  for (const customer of customers) {
     const account = accounts.find((a) => a.company.id === customer.companyId)
     if (account) {
       await account.stripe.customers.del(customer.id)
       await pgdb.public.stripeCustomers.deleteOne({
         id: customer.id,
+      })
+      await pgdb.payments.stripeCustomers.deleteOne({
+        customerId: customer.id,
       })
     } else {
       console.warn(
