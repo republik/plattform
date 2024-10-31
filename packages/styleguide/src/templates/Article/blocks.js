@@ -177,10 +177,24 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
       isEmpty ? null : <NoTopMargin>{children}</NoTopMargin>,
     editorModule: 'interviewAnswer',
     editorOptions: {
-      insertButtonText: 'Interview-Antwort',
-      insertTypes: ['PARAGRAPH'],
+      type: 'INTERVIEWANSWER',
+      formatButtonText: 'Interview-Antwort',
+      formatTypes: ['PARAGRAPH'],
     },
-    rules: [base.paragraph]
+    rules: [
+      {
+        ...base.paragraph,
+        editorOptions: {
+          ...base.paragraph.editorOptions,
+          type: 'INTERVIEWANSWERP',
+          isStatic: true,
+          placeholder: 'Antwort',
+          afterType: 'PARAGRAPH',
+          insertAfterType: 'CENTER',
+
+        }
+      }
+    ]
   }
 
   const blockQuote = {

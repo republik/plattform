@@ -3,8 +3,8 @@ import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import {
   Label,
 } from '@project-r/styleguide'
-import { Block } from "slate";
-import injectBlock from "../../utils/injectBlock";
+import { matchSubmodules } from "../../utils/matchers";
+import { createRemoveEmptyKeyHandler } from "../../utils/keyHandlers";
 
 export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
@@ -26,7 +26,7 @@ export default ({ rule, subModules, TYPE }) => {
       .filter(Boolean),
   })
 
-  const center = {
+  const interviewRule = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, rest) => ({
@@ -42,30 +42,21 @@ export default ({ rule, subModules, TYPE }) => {
   }
 
   const serializer = new MarkdownSerializer({
-    rules: [center],
+    rules: [interviewRule],
   })
 
   const buttonClickHandler = (value, onChange) => (event) => {
     event.preventDefault()
+    const isBlock = value.blocks.some(matchSubmodules(TYPE, subModules))
 
-    return onChange(
-      value.change().call(
-        injectBlock,
-        Block.create({
-          type: TYPE,
-          nodes: [
-            Block.create(paragraphModule.TYPE),
-          ],
-        }),
-      ),
-    )
+    return onChange(isBlock ?
+      value.change().unwrapBlock({ normalize: false}).setBlock('PARAGRAPH') :
+      value.change().setBlock('INTERVIEWANSWERP', { normalize: false }).wrapBlock(TYPE))
   }
 
-  const { insertButtonText, insertTypes = [] } = editorOptions || {}
+  const { formatButtonText } = editorOptions || {}
   const Button = ({ value, onChange }) => {
-    const disabled =
-      value.isBlurred ||
-      !value.blocks.every((n) => insertTypes.includes(n.type))
+    const disabled = value.isBlurred
     return (
       <span
         {...buttonStyles.insert}
@@ -73,7 +64,7 @@ export default ({ rule, subModules, TYPE }) => {
         data-visible
         onMouseDown={buttonClickHandler(value, onChange)}
       >
-        {insertButtonText}
+        {formatButtonText}
       </span>
     )
   }
@@ -85,8 +76,9 @@ export default ({ rule, subModules, TYPE }) => {
       childSerializer,
     },
     changes: {},
+    rule: interviewRule,
     ui: {
-      insertButtons: [Button],
+      blockFormatButtons: [Button],
     },
     plugins: [
       {
@@ -116,6 +108,7 @@ export default ({ rule, subModules, TYPE }) => {
             {children}
           </div>
         },
+        onKeyDown: createRemoveEmptyKeyHandler({ TYPE, isEmpty: (node) => !node.text.trim(), }),
         schema: {
           blocks: {
             [TYPE]: {
@@ -123,6 +116,7 @@ export default ({ rule, subModules, TYPE }) => {
                 {
                   types: [paragraphModule.TYPE],
                   min: 1,
+                  max: 1,
                 },
               ],
             },
