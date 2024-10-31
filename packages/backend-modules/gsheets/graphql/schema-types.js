@@ -11,7 +11,7 @@ type Event {
   title: String
   description: String
   link: String
-  date: Date
+  date: DateTime
   time: String
   where: String
   locationLink: String
