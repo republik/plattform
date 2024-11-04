@@ -4,6 +4,8 @@ import { css } from 'glamor'
 import { useColorContext, mediaQueries, zIndex } from '@project-r/styleguide'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 
+import Portal from 'components/Portal'
+
 const MARGIN = 15
 
 const styles = {
@@ -44,20 +46,22 @@ const BottomPanel = ({
   )
 
   return (
-    <div
-      style={{
-        opacity: visible ? 1 : 0,
-        pointerEvents: visible ? undefined : 'none',
-        zIndex: foreground ? zIndex.foreground : zIndex.callout,
-      }}
-      {...bottomRule}
-      {...colorScheme.set('backgroundColor', 'overlay')}
-      {...colorScheme.set('boxShadow', 'overlayShadow')}
-      {...styles.container}
-      {...(wide && styles.wide)}
-    >
-      {children}
-    </div>
+    <Portal selector='bottomPortal' show>
+      <div
+        style={{
+          opacity: visible ? 1 : 0,
+          pointerEvents: visible ? undefined : 'none',
+          zIndex: foreground ? zIndex.foreground : zIndex.callout,
+        }}
+        {...bottomRule}
+        {...colorScheme.set('backgroundColor', 'overlay')}
+        {...colorScheme.set('boxShadow', 'overlayShadow')}
+        {...styles.container}
+        {...(wide && styles.wide)}
+      >
+        {children}
+      </div>
+    </Portal>
   )
 }
 

@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { mediaQueries, useMediaQuery } from '@project-r/styleguide'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import BottomPanel from '../Frame/BottomPanel'
+import Portal from 'components/Portal'
 import { useAudioContext } from '../Audio/AudioProvider'
 import { MINI_AUDIO_PLAYER_HEIGHT } from '../Audio/AudioPlayer/MiniAudioPlayer'
 
@@ -14,7 +16,9 @@ const ActionBarOverlay = ({ children }) => {
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const { audioPlayerVisible } = useAudioContext()
 
-  const audioPlayerOffset = audioPlayerVisible ? MINI_AUDIO_PLAYER_HEIGHT + 15 : 0
+  const audioPlayerOffset = audioPlayerVisible
+    ? MINI_AUDIO_PLAYER_HEIGHT + 15
+    : 0
   const lastY = useRef()
   const diff = useRef(0)
 
@@ -53,9 +57,23 @@ const ActionBarOverlay = ({ children }) => {
     }
   }, [isDesktop])
   return (
-    <BottomPanel offset={audioPlayerOffset} visible={overlayVisible}>
-      {children}
-    </BottomPanel>
+    <Portal selector='bottomPortal' show>
+      <AnimatePresence>
+        {overlayVisible && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              pointerEvents: overlayVisible ? undefined : 'none',
+              order: 1
+            }}
+          >
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </Portal>
   )
 }
 

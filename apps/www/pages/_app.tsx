@@ -16,6 +16,7 @@ import AudioProvider from '../components/Audio/AudioProvider'
 import MediaProgressContext from '../components/Audio/MediaProgress'
 import { ThemeProvider } from '../components/ColorScheme/ThemeProvider'
 import MessageSync from '../components/NativeApp/MessageSync'
+import BottomPortal from 'components/Portal/BottomPortal'
 import { withApollo } from '../lib/apollo'
 import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
@@ -99,6 +100,8 @@ const WebApp = ({
                       {hidePaynoteOverlay ? null : (
                         <PaynoteOverlay key={router.pathname} />
                       )}
+                      <BottomPortal />
+                      <div id="modalPortal" />
                     </ColorContextProvider>
                   </ThemeProvider>
                 </AppVariableContext>
