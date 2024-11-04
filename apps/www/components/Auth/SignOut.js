@@ -17,12 +17,13 @@ class SignOut extends Component {
     }
   }
   render() {
-    const { t, Link = A } = this.props
+    const { t, Link = A, children, style } = this.props
     const { loading, error } = this.state
 
     return (
       <span>
         <Link
+          style={style}
           href='#'
           onClick={(e) => {
             e.preventDefault()
@@ -58,7 +59,7 @@ class SignOut extends Component {
               })
           }}
         >
-          {t('signOut/label')}
+          {children || t('signOut/label')}
         </Link>
         {loading && <InlineSpinner size={25} />}
         {!!error && ` – ${error}`}
