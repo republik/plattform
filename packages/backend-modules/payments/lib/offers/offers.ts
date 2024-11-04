@@ -18,6 +18,7 @@ export type Offer = {
   defaultPriceLookupKey: string
   taxRateId?: string
   promoCode?: string
+  isEntryDiscountable?: boolean
   price?: {
     id: string
     amount: number
@@ -69,6 +70,7 @@ export const Offers: Offer[] = [
     id: 'YEARLY',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'ABO',
+    isEntryDiscountable: true,
     productId: 'prod_G7dVG5BtM4wDxl',
   },
   {
@@ -108,6 +110,7 @@ export const Offers: Offer[] = [
     id: 'MONTHLY',
     company: 'REPUBLIK',
     productId: 'prod_Ccmy87SuPqF5OM',
+    isEntryDiscountable: true,
     defaultPriceLookupKey: 'MONTHLY_ABO',
     taxRateId: 'txr_1PqUouD5iIOpR5wNiT5EiKld',
   },
@@ -178,11 +181,12 @@ export async function fetchOffers({
         amount: price.unit_amount!,
         currency: price.currency,
       },
-      discount: promotion && {
-        name: promotion.coupon.name!,
-        amountOff: promotion.coupon.amount_off!,
-        currency: promotion.coupon.currency!,
-      },
+      discount: offer.isEntryDiscountable &&
+        promotion && {
+          name: promotion.coupon.name!,
+          amountOff: promotion.coupon.amount_off!,
+          currency: promotion.coupon.currency!,
+        },
     }
   })
 }
