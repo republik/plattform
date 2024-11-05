@@ -4,7 +4,6 @@ const {
   sendNotification,
 } = require('@orbiting/backend-modules-subscriptions')
 
-const { inQuotes } = require('@orbiting/backend-modules-styleguide')
 const Promise = require('bluebird')
 
 const { FRONTEND_BASE_URL } = process.env
@@ -115,9 +114,7 @@ const notifyPublish = async (
 
     const title =
       subscribedDoc.meta.notificationTitle ||
-      t('api/notifications/doc/title', {
-        title: inQuotes(subscribedDoc.meta.title),
-      })
+      t('api/notifications/doc/title', {title: `«${subscribedDoc.meta.title}»`})
 
     const subscribers = docSubscribersByDocId[docId]
 
@@ -149,7 +146,7 @@ const notifyPublish = async (
     const subscribedDoc = await loaders.Document.byRepoId.load(docId)
 
     const title = t('api/notifications/doc/readAloud/title', {
-      title: inQuotes(subscribedDoc.meta.title),
+      title: `«${subscribedDoc.meta.title}»`,
     })
 
     const subscribers = readAloudSubscribersByDoc[docId]

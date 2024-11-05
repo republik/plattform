@@ -1,7 +1,7 @@
 const {
   createNewsletterEmailSchema,
   articleEmailSchema,
-} = require('@orbiting/backend-modules-styleguide')
+} = require('@orbiting/backend-modules-mail-templates')
 const { renderEmail } = require('@republik/mdast-react-render/email')
 
 const MissingNode = () => null
