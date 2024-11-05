@@ -1487,6 +1487,7 @@ type Meta {
   subject: String @deprecated(reason: "parse `Document.content` instead")
   suggestSubscription: Boolean
   syntheticVoice: String
+  syntheticVoice2: String
   template: String
   title: String
   twitterDescription: String

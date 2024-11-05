@@ -114,6 +114,7 @@ type Meta {
   podcast: Podcast
   willBeReadAloud: Boolean
   syntheticVoice: String
+  syntheticVoice2: String
 
   newsletter: Newsletter
 
