@@ -1,10 +1,10 @@
 import { matchType, matchZone } from '@republik/mdast-react-render'
-import { FigureImage } from '../../../../components/Figure'
 import { Figure, Image } from '../components/Figure'
 import legendRule from './legendRules'
 import { getImageSize, isRelativeSize } from '../util/ImageSizingUtil'
 import { getNodeDepth } from '../util/NodeDepthUtil'
-import { extractImages, matchImagesParagraph } from "../util/matchers";
+import { extractImages, matchImagesParagraph } from '../util/matchers'
+import { getResizedSrcs } from '../../styleguide-clone/components/Figure/utils'
 
 const matchCover = (node, index) => {
   return matchZone('FIGURE') && index === 0
@@ -40,7 +40,7 @@ export const getImageRules = ({ forceWidth, isCover } = {}) => [
         width = getImageSize({ fill: true })
 
       return {
-        ...FigureImage.utils.getResizedSrcs(src, undefined, displayWidth),
+        ...getResizedSrcs(src, undefined, displayWidth),
         alt: altText,
         plain,
         width: width,
