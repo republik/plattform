@@ -1,3 +1,5 @@
+import { fontFamilies } from '../../styleguide-clone/theme/fonts'
+
 type Credential = {
   description: string
   verified: boolean
@@ -55,8 +57,7 @@ export const Author = ({
               />
               <p
                 style={{
-                  fontFamily:
-                    'GT-America-Standard-Regular, "Helvetica Neue", Helvetica, sans-serif',
+                  fontFamily: fontFamilies.sansSerifRegular,
                 }}
               >
                 {greeting}
@@ -64,8 +65,7 @@ export const Author = ({
                 <br />
                 <strong
                   style={{
-                    fontFamily:
-                      'GT-America-Standard-Medium, "Helvetica Neue", Helvetica, sans-serif',
+                    fontFamily: fontFamilies.sansSerifMedium,
                     fontWeight: 500,
                   }}
                 >
@@ -104,14 +104,12 @@ export const Author = ({
               style={{
                 paddingLeft: 16,
                 lineHeight: '160%',
-                fontFamily:
-                  'GT-America-Standard-Regular, "Helvetica Neue", Helvetica, sans-serif',
+                fontFamily: fontFamilies.sansSerifRegular,
               }}
             >
               <strong
                 style={{
-                  fontFamily:
-                    'GT-America-Standard-Medium, "Helvetica Neue", Helvetica, sans-serif',
+                  fontFamily: fontFamilies.sansSerifMedium,
                   fontWeight: 500,
                 }}
               >
