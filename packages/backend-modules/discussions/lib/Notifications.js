@@ -1,8 +1,8 @@
 const htmlToText = require('html-to-text')
 const { renderEmail } = require('@republik/mdast-react-render/email')
+const{ createCommentEmailSchema } = require('@republik/mdast-mail-templates')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
-const{ createCommentEmailSchema } = require('@orbiting/backend-modules-mail-templates')
 const {
   Subscriptions: {
     getSubscriptionsForUserAndObjects,

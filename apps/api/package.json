@@ -27,7 +27,6 @@
     "@orbiting/backend-modules-keyCDN": "*",
     "@orbiting/backend-modules-lead-tracking": "*",
     "@orbiting/backend-modules-mail": "*",
-    "@orbiting/backend-modules-mail-templates": "*",
     "@orbiting/backend-modules-mailchimp": "*",
     "@orbiting/backend-modules-mailbox": "*",
     "@orbiting/backend-modules-maillog": "*",
