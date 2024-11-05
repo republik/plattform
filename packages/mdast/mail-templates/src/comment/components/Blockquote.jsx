@@ -26,7 +26,7 @@ export const BlockQuoteNested = ({ children }) => (
   </div>
 )
 
-const BlockQuote = ({ children }) => (
+const Blockquote = ({ children }) => (
   <div
     style={{
       backgroundColor: '#f7f7f7',
@@ -38,4 +38,4 @@ const BlockQuote = ({ children }) => (
   </div>
 )
 
-export default BlockQuote
+export default Blockquote

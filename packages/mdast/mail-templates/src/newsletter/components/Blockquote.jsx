@@ -19,7 +19,7 @@ const sourceStyle = {
   fontStyle: 'normal',
 }
 
-const BlockQuote = ({ children }) => (
+const Blockquote = ({ children }) => (
   <blockquote style={blockquoteStyle}>{children}</blockquote>
 )
 
@@ -31,4 +31,4 @@ export const BlockquoteSource = ({ children }) => (
   <cite style={sourceStyle}>{children}</cite>
 )
 
-export default BlockQuote
+export default Blockquote
