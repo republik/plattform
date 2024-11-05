@@ -21,7 +21,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist",
     "dev": "tsup src/index.ts --format cjs,esm --dts --minify --clean --out-dir dist --sourcemap --watch",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:dev": "jest --watch"
   },
   "devDependencies": {
