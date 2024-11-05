@@ -1,10 +1,15 @@
 import * as jose from 'jose'
 import { NextRequest } from 'next/server'
-import { COOKIE_NAME, JWT_COOKIE_NAME } from './constants'
+import {
+  COOKIE_NAME,
+  JWT_COOKIE_NAME,
+  IP_WHITELIST_COOKIE_NAME,
+} from './constants'
 
 // Extend jose JWTPayload with our expected payload properties
 export type JWTPayload = jose.JWTPayload & {
   roles?: string[]
+  ip?: string
 }
 
 export function getSessionCookieValue(req: NextRequest): string {
@@ -14,6 +19,11 @@ export function getSessionCookieValue(req: NextRequest): string {
 
 export function getJWTCookieValue(req: NextRequest) {
   const cookie = req.cookies.get(JWT_COOKIE_NAME)
+  return cookie?.value
+}
+
+export function getWhitelistCookieValue(req: NextRequest) {
+  const cookie = req.cookies.get(IP_WHITELIST_COOKIE_NAME)
   return cookie?.value
 }
 

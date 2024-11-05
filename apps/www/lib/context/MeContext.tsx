@@ -102,6 +102,9 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
   const isClimateLabMember = checkRoles(me, ['climate'])
   const hasActiveMembership =
     !!me?.activeMembership || !!me?.activeMagazineSubscription
+  
+  // TODO: get the JWT cookie and check if the ip that is in the JWT body is part of the env.WHITELIST
+  const hasWhitelistAccess = ''
 
   const portraitOrInitials = me ? me.portrait ?? getInitials(me) : false
 

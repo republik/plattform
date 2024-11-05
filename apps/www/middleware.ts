@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {
   getJWTCookieValue,
+  getWhitelistCookieValue,
   getSessionCookieValue,
   verifyJWT,
 } from './lib/auth/JWTHelper'
@@ -122,6 +123,12 @@ function redirectToHTTPS(req: NextRequest): NextResponse | null {
 }
 
 /**
+ * Function that sets a cookie
+ * @param req to check if the request is not already on https
+ * @returns possible NextResponse to redirect to https or null
+ */
+
+/**
  * Middleware used to conditionally redirect between the marketing and front page
  * depending on the user authentication status and roles.
  * @param req
@@ -168,16 +175,8 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
    */
   function rewriteBasedOnRoles(roles: string[] = []): NextResponse {
     const openAccess = process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true'
-    const userIP = req.headers.get('x-forwarded-for')
 
-    const isAllowedIP =
-      userIP &&
-      process.env.CURTAIN_IP_ALLOW_LIST &&
-      (process.env.CURTAIN_UA_ALLOW_LIST || '')
-        .split(',')
-        .some((ip) => userIP.includes(ip))
-
-    if (openAccess || isAllowedIP) {
+    if (openAccess) {
       return NextResponse.next()
     }
 
@@ -228,10 +227,45 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
     }
   }
 
+  /**
+   * Redirect based on the IP jwt-token after it was successfully validated
+   * @param token JWT found in the cookie header
+   * @returns NextResponse
+   */
+  async function rewriteBasedOnWhitelistToken(
+    token: string,
+  ): Promise<NextResponse> {
+    try {
+      // Parse and verify JWT to decide about redirection
+      const jwtBody = await verifyJWT(token)
+      const userIP = jwtBody?.ip
+      const isAllowedIP =
+        userIP &&
+        process.env.IP_WHITELIST &&
+        (process.env.IP_WHITELIST || '')
+          .split(',')
+          .some((ip) => userIP.includes(ip))
+      if (!isAllowedIP) {
+        resUrl.pathname = '/marketing'
+        return NextResponse.rewrite(resUrl)
+      }
+      // empty jwt-payload -> expired session-cookie
+      return rewriteBasedOnRoles()
+    } catch (err) {
+      // Rewrite to gateway to fetch a new valid JWT
+      console.error('JWT Whitelist Verification Error', err)
+      // Rewrite based on fetched me object
+      return rewriteBasedOnMe(req)
+    }
+  }
+
   const sessionCookie = getSessionCookieValue(req)
   const tokenCookie = getJWTCookieValue(req)
+  const whitelistCookie = getWhitelistCookieValue(req)
 
-  if (sessionCookie && tokenCookie) {
+  if (whitelistCookie) {
+    return await rewriteBasedOnWhitelistToken(whitelistCookie)
+  } else if (sessionCookie && tokenCookie) {
     // Rewrite based on token
     return await rewriteBasedOnToken(tokenCookie)
   } else {

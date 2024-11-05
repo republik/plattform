@@ -33,4 +33,25 @@ const getJWTForUser = (user, sessionId) => {
   return { webTokenString, payload: { roles, expiresIn, issuer, jwtid } }
 }
 
+const getJWTForIP = (ip) => {
+  if (!privateKey) {
+    throw new Error('env variable JWT_PRIVATE_KEY is missing')
+  }
+  if (!ip) {
+    throw new Error ('IP address missing')
+  }
+  const issuer = process.env.JWT_ISSUER
+  const expiresIn = CookieExpirationTimeInMS.DEFAULT_MAX_AGE
+
+  const webTokenString = jwt.sign(ip, privateKey, {
+    algorithm: 'ES256',
+    expiresIn: `${expiresIn}ms`,
+    issuer,
+  })
+
+  return { webTokenString, payload: { ip, expiresIn, issuer } }
+
+}
+
 exports.getJWTForUser = getJWTForUser
+exports.getJWTForIP = getJWTForIP
