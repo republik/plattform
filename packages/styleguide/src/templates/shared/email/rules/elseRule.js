@@ -1,5 +1,5 @@
 import { matchZone } from '@republik/mdast-react-render'
-import { Else } from '../../styleguide-clone/components/Variables'
+import { Else } from '../../../../components/Variables'
 
 const elseRule = {
   matchMdast: matchZone('ELSE'),

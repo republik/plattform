@@ -1,4 +1,4 @@
-import { If } from '../../styleguide-clone/components/Variables'
+import { If } from '../../../../components/Variables'
 import { matchZone } from '@republik/mdast-react-render'
 
 const ifRule = {
