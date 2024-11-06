@@ -1,11 +1,8 @@
 const htmlToText = require('html-to-text')
 const { renderEmail } = require('@republik/mdast-react-render/email')
+const{ createCommentEmailSchema } = require('@republik/mdast-mail-templates')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
-const {
-  createCommentEmailSchema,
-  inQuotes,
-} = require('@orbiting/backend-modules-styleguide')
 const {
   Subscriptions: {
     getSubscriptionsForUserAndObjects,
@@ -75,7 +72,7 @@ const getCommentInfo = async (comment, displayAuthor, discussion, context) => {
     }mute=1`,
     subjectParams: {
       authorName: displayAuthor.name,
-      discussionName: inQuotes(discussion.title),
+      discussionName: `«${discussion.title}»`,
     },
     isTopLevelComment: !parentIds || parentIds.length === 0,
     icon:

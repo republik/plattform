@@ -12,7 +12,7 @@ import {
   CommentBodyList,
   CommentBodyListItem,
   CommentBodyParagraph,
-} from '../../components/CommentBody/web'
+} from '../../components/CommentBody'
 import { Editorial } from '../../components/Typography'
 
 const createCommentWebSchema = ({ ...args } = {}) => {
