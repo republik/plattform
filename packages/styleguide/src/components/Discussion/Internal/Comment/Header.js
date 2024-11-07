@@ -27,7 +27,6 @@ const styles = {
     width: pxToRem(40),
     flex: `0 0 ${pxToRem(40)}`,
     height: pxToRem(40),
-    marginRight: pxToRem(8),
   }),
   indentIndicators: css({
     flexShrink: 0,
@@ -60,6 +59,8 @@ const styles = {
   link: css({
     color: 'inherit',
     textDecoration: 'none',
+    marginRight: pxToRem(8),
+    flexShrink: 0,
   }),
   linkUnderline: css({
     color: 'inherit',
