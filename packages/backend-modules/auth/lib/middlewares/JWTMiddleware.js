@@ -32,6 +32,7 @@ function JWTMiddleware() {
       res.cookie(IP_WHITELIST_COOKIE_NAME, webTokenString, {
         maxAge,
         ...cookieOptions,
+        httpOnly: false,
       })
     } else if (user || checkIfCookieIsPresent(req, COOKIE_NAME)) {
       const { webTokenString, payload } = getJWTForUser(user, sessionID)
