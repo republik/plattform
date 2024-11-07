@@ -245,12 +245,11 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
         (process.env.IP_WHITELIST || '')
           .split(',')
           .some((ip) => userIP.includes(ip))
+
       if (!isAllowedIP) {
         resUrl.pathname = '/marketing'
         return NextResponse.rewrite(resUrl)
       }
-      // empty jwt-payload -> expired session-cookie
-      return rewriteBasedOnRoles()
     } catch (err) {
       // Rewrite to gateway to fetch a new valid JWT
       console.error('JWT Whitelist Verification Error', err)
