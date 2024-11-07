@@ -9,10 +9,8 @@ import { useColorContext } from '../Colors/useColorContext'
 const styles = {
   text: css({
     ...convertStyleToRem(sansSerifMedium15),
-    marginBottom: '-12px',
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium18),
-      marginBottom: '-14px',
     },
   }),
 }
