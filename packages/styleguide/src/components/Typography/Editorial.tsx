@@ -219,19 +219,18 @@ export const Format = ({
 }
 
 const noTopMargin = css({
-  marginTop: -22,
+  margin: '-22px 0 22px 0',
   [mUp]: {
-    marginTop: `-${pxToRem(30)}`,
+    margin: `-${pxToRem(30)} 0 ${pxToRem(30)} 0`,
+  },
+  ':last-child': {
+    marginBottom: 0,
   },
 })
 
 export const NoTopMargin = ({ children, attributes, ...props }) => {
   return (
-    <div
-      {...attributes}
-      {...props}
-      {...noTopMargin}
-    >
+    <div {...attributes} {...props} {...noTopMargin}>
       {children}
     </div>
   )
