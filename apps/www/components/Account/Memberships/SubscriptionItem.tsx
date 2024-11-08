@@ -23,72 +23,55 @@ const SubscriptionItem = ({
   subscription,
   t,
 }: {
-  subscription: MagazineSubscription
+  subscription: MagazineSubscription | undefined
   t: (arg1: any, arg2?: any) => string
 }) => {
   return (
     <>
-      {!subscription ? (
+      <Interaction.H3 style={{ marginBottom: 8 }}>
+        {`${t(`magazineSubscription/title/${subscription.type}`)} ${
+          subscription.cancelAt
+            ? `${t('magazineSubscription/title/canceled')}`
+            : ''
+        }`}
+      </Interaction.H3>
+      {subscription.cancelAt ? (
         <>
-          <Interaction.H3 style={{ marginBottom: 8 }}>
-            {t('magazineSubscription/noActiveSubscription')}
-          </Interaction.H3>
           <Interaction.P>
-            <A
-              href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/MONTHLY`}
-            >
-              {t('magazineSubscription/shoplink/MONTHLY')}
-            </A>
-            {' oder '}
-            <A href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/YEARLY`}>
-              {t('magazineSubscription/shoplink/YEARLY')}
-            </A>
-            {' kaufen.'}
+            {t(`magazineSubscription/canceled/${subscription.type}`, {
+              cancelAt: new Date(subscription.cancelAt).toLocaleDateString(
+                'de-CH',
+                {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                },
+              ),
+            })}
           </Interaction.P>
         </>
       ) : (
         <>
-          <Interaction.H3 style={{ marginBottom: 8 }}>
-            {`${t(`magazineSubscription/title/${subscription.type}`)} ${
-              subscription.cancelAt ? `${t('magazineSubscription/title/canceled')}` : ''
-            }`}
-          </Interaction.H3>
-          {subscription.cancelAt ? (
-            <>
-              <Interaction.P>
-                {t(`magazineSubscription/canceled/${subscription.type}`, {
-                  cancelAt: new Date(subscription.cancelAt).toLocaleDateString('de-CH', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  }),
-                })}
-              </Interaction.P>
-            </>
-          ) : (
-            <>
-              <Interaction.P>
-                {t('magazineSubscription/description', {
-                  currentPeriodEnd: new Date(
-                    subscription.currentPeriodEnd,
-                  ).toLocaleDateString('de-CH', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  }),
-                  renewsAtPrice: subscription.renewsAtPrice / 100,
-                })}
-              </Interaction.P>
-              <Interaction.P>
-                {t('magazineSubscription/paymentMethod', {
-                  paymentMethod: subscription.paymentMethod,
-                })}
-              </Interaction.P>
-            </>
-          )}
-          <CustomerPortalLink subscription={subscription} t={t} />
+          <Interaction.P>
+            {t('magazineSubscription/description', {
+              currentPeriodEnd: new Date(
+                subscription.currentPeriodEnd,
+              ).toLocaleDateString('de-CH', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              }),
+              renewsAtPrice: subscription.renewsAtPrice / 100,
+            })}
+          </Interaction.P>
+          <Interaction.P>
+            {t('magazineSubscription/paymentMethod', {
+              paymentMethod: subscription.paymentMethod,
+            })}
+          </Interaction.P>
         </>
       )}
+      <CustomerPortalLink subscription={subscription} t={t} />
     </>
   )
 }
