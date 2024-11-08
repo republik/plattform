@@ -3,19 +3,19 @@ import { Offers } from '../../../lib/offers/offers'
 import { PgDb } from 'pogi'
 import { Store } from '../../../lib/offers/Store'
 
-export = async function getOffers(
+export = async function getOffer(
   _root: never,
-  _args: any,
+  args: { offerId: string },
   ctx: GraphqlContext,
 ) {
-  const entryOffer = ctx.user
-    ? (await hasHadMembership(ctx?.user.id, ctx.pgdb)) === false
+  const withEntryOffer = ctx.user
+    ? (await hasHadMembership(ctx.user.id, ctx.pgdb)) === false
     : true // if there is no user we show the entry offers
 
   const store = new Store(Offers)
 
-  return store.getOffers({
-    withDiscount: entryOffer,
+  return store.getOfferById(args.offerId, {
+    withDiscount: withEntryOffer,
   })
 }
 

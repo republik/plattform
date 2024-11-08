@@ -6,8 +6,8 @@ schema {
 }
 
 type queries {
-  getOffers(promoCode: String): [Offer!]!
-  getOffer(offerId: ID!, promoCode: String): Offer
+  getOffers: [Offer!]!
+  getOffer(offerId: ID!): Offer
 }
 
 type mutations {
