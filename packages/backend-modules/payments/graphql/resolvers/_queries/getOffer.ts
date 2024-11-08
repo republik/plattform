@@ -1,7 +1,7 @@
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { Offers } from '../../../lib/offers/offers'
 import { PgDb } from 'pogi'
-import { Store } from '../../../lib/offers/Store'
+import { Shop } from '../../../lib/offers/Shop'
 
 export = async function getOffer(
   _root: never,
@@ -12,9 +12,9 @@ export = async function getOffer(
     ? (await hasHadMembership(ctx.user.id, ctx.pgdb)) === false
     : true // if there is no user we show the entry offers
 
-  const store = new Store(Offers)
+  const shop = new Shop(Offers)
 
-  return store.getOfferById(args.offerId, {
+  return shop.getOfferById(args.offerId, {
     withDiscount: withEntryOffer,
   })
 }

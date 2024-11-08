@@ -2,8 +2,9 @@ import Stripe from 'stripe'
 import { Company } from '../types'
 import { Offer } from './offers'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
+import { getConfig } from '../config'
 
-export class Store {
+export class Shop {
   #offers: Offer[]
   #stripeAdapters: Record<Company, Stripe> = {
     PROJECT_R: ProjectRStripe,
@@ -12,6 +13,53 @@ export class Store {
 
   constructor(offers: Offer[]) {
     this.#offers = offers
+  }
+
+  async generateCheckoutSession({
+    offer,
+    customerId,
+    customPrice,
+    discounts,
+    analytics,
+  }: {
+    offer: Offer
+    customerId: string
+    discounts?: string[]
+    customPrice?: {
+      unitAmount: number
+      recurring: {
+        interval: 'year'
+        interval_count: 1
+      }
+    }
+    analytics?: Record<string, string>
+  }) {
+    const lineItem = this.genLineItem(offer, customPrice)
+
+    return this.#stripeAdapters[offer.company].checkout.sessions.create({
+      mode: 'subscription',
+      ui_mode: 'embedded',
+      customer: customerId,
+      line_items: [lineItem],
+      currency: offer.price?.currency,
+      discounts: discounts?.map((id) => ({ coupon: id })),
+      // '{CHECKOUT_SESSION_ID}' is prefilled by stripe
+      return_url: `${getConfig().SHOP_BASE_URL}/angebot/${
+        offer.id
+      }?session_id={CHECKOUT_SESSION_ID}`,
+      locale: 'de',
+      redirect_on_completion: 'if_required',
+      billing_address_collection: 'required',
+      subscription_data: {
+        metadata: {
+          ...analytics,
+          ...offer.metaData,
+        },
+      },
+      consent_collection: {
+        terms_of_service: 'required',
+      },
+    })
   }
 
   async getOfferById(
@@ -77,20 +125,22 @@ export class Store {
     price: Stripe.Price,
     options?: { withDiscount: boolean },
   ): Promise<Offer> {
-    let discount = null
+    let discount: Offer['discount'] | undefined = undefined
     if (options?.withDiscount && base.entryCode) {
       const promotion = await this.getPromotion(base.company, base.entryCode)
       discount = promotion
         ? {
             name: promotion.coupon.name!,
+            couponId: promotion.coupon.id!,
             amountOff: promotion.coupon.amount_off!,
             currency: promotion.coupon.currency!,
           }
-        : null
+        : undefined
     }
 
     return {
       ...base,
+      productId: (price.product as Stripe.Product).id,
       price: {
         id: price.id,
         amount: price.unit_amount!,
@@ -115,5 +165,35 @@ export class Store {
     }
 
     return promition.data[0]
+  }
+
+  private paymentConfiguration(company: Company) {
+    switch (company) {
+      case 'PROJECT_R':
+        return getConfig().STRIPE_PAYMENT_CONFIGURATION_PROJECT_R
+      case 'REPUBLIK':
+        return getConfig().STRIPE_PAYMENT_CONFIGURATION_REPUBLIK
+    }
+  }
+
+  private genLineItem(offer: Offer, customPrice?: any) {
+    if (offer.customPrice && customPrice) {
+      return {
+        price_data: {
+          product: offer.productId,
+          unit_amount: customPrice.unitAmount,
+          currency: offer.price?.currency,
+          recurring: offer.customPrice?.recurring,
+        },
+        tax_rates: offer.taxRateId ? [offer.taxRateId] : undefined,
+        quantity: 1,
+      }
+    }
+
+    return {
+      price: offer.price?.id,
+      tax_rates: offer.taxRateId ? [offer.taxRateId] : undefined,
+      quantity: 1,
+    }
   }
 }

@@ -65,6 +65,11 @@ type CustomerPortalSession {
   sessionUrl: String
 }
 
+type CheckoutSession {
+  company: CompanyName!
+  clientSecret: String!
+}
+
 type Offer {
   id: ID!
   product: Product
@@ -102,12 +107,6 @@ type Product {
 
 input CheckoutSessionOptions {
   customPrice: Int
-}
-
-input CheckoutSessionArgs {
-  offerId: ID!
-  promoCode: String
-  options: CheckoutSessionOptions
 }
 
 input CancelSubscriptionOptions {

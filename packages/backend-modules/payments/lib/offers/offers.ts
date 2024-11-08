@@ -12,7 +12,7 @@ const RAPPEN = 1
 export type Offer = {
   id: string
   company: Company
-  productId: string
+  productId?: string
   defaultPriceLookupKey: string
   taxRateId?: string
   promoCode?: string
@@ -26,6 +26,16 @@ export type Offer = {
     min: number
     max: number
     step: number
+    recurring: {
+      interval: 'year'
+      interval_count: 1
+    }
+  }
+  discount?: {
+    name: string
+    couponId: string
+    amountOff: number
+    currency: string
   }
   // Data to be appended to the subscription's metadata.
   metaData?: {
@@ -39,45 +49,52 @@ export const Offers: Offer[] = [
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'ABO',
     entryCode: 'EINSTIEG',
-    productId: 'prod_G7dVG5BtM4wDxl',
   },
   {
     id: 'BENEFACTOR',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'BENEFACTOR_ABO',
-    productId: 'prod_G7dVG5BtM4wDxl',
     customPrice: {
       min: 1000 * CHF,
       max: 4000 * CHF,
       step: 100 * RAPPEN,
+      recurring: {
+        interval: 'year',
+        interval_count: 1,
+      },
     },
   },
   {
     id: 'STUDENT',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'STUDENT_ABO',
-    productId: 'prod_G7dVG5BtM4wDxl',
     customPrice: {
       min: 120 * CHF,
       max: 239 * CHF,
       step: 50 * RAPPEN,
+      recurring: {
+        interval: 'year',
+        interval_count: 1,
+      },
     },
   },
   {
     id: 'CUSTOM',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'ABO',
-    productId: 'prod_G7dVG5BtM4wDxl',
     customPrice: {
       max: 2000 * CHF,
       min: 240 * CHF,
       step: 50 * RAPPEN,
+      recurring: {
+        interval: 'year',
+        interval_count: 1,
+      },
     },
   },
   {
     id: 'MONTHLY',
     company: 'REPUBLIK',
-    productId: 'prod_Ccmy87SuPqF5OM',
     entryCode: 'EINSTIEG',
     defaultPriceLookupKey: 'MONTHLY_ABO',
     taxRateId: 'txr_1PqUouD5iIOpR5wNiT5EiKld',
