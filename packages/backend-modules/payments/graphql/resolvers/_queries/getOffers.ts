@@ -15,7 +15,7 @@ export = async function getOffers(
   const shop = new Shop(Offers)
 
   return shop.getOffers({
-    withDiscount: entryOffer,
+    withIntroductoryOffer: entryOffer,
   })
 }
 

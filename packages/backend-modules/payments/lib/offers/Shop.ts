@@ -69,7 +69,7 @@ export class Shop {
 
   async getOfferById(
     id: string,
-    options?: { withDiscount: boolean },
+    options?: { withIntroductoryOffer: boolean },
   ): Promise<Offer | null> {
     const offer = this.#offers.find((offer) => id === offer.id)
 
@@ -89,7 +89,7 @@ export class Shop {
     return this.mergeOfferData(offer, price, options)
   }
 
-  async getOffers(options?: { withDiscount: boolean }): Promise<Offer[]> {
+  async getOffers(options?: { withIntroductoryOffer: boolean }): Promise<Offer[]> {
     return (
       await Promise.all([
         this.getOffersByCompany('REPUBLIK', options),
@@ -100,7 +100,7 @@ export class Shop {
 
   async getOffersByCompany(
     company: Company,
-    options?: { withDiscount: boolean },
+    options?: { withIntroductoryOffer: boolean },
   ) {
     const offers = this.#offers.filter((offer) => company === offer.company)
     const lookupKeys = offers.map((o) => o.defaultPriceLookupKey)
@@ -128,10 +128,10 @@ export class Shop {
   private async mergeOfferData(
     base: Offer,
     price: Stripe.Price,
-    options?: { withDiscount: boolean },
+    options?: { withIntroductoryOffer: boolean },
   ): Promise<Offer> {
     let discount: Offer['discount'] | undefined = undefined
-    if (options?.withDiscount && base.entryCode) {
+    if (options?.withIntroductoryOffer && base.entryCode) {
       const promotion = await this.getPromotion(base.company, base.entryCode)
       discount = promotion
         ? {

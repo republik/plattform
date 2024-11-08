@@ -25,7 +25,7 @@ export = async function createCheckoutSession(
   const entryOffer = (await hasHadMembership(ctx.user.id, ctx.pgdb)) === false
 
   const offer = await shop.getOfferById(args.offerId, {
-    withDiscount: entryOffer,
+    withIntroductoryOffer: entryOffer,
   })
 
   if (!offer) {
