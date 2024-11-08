@@ -7,8 +7,9 @@ import { default as Auth } from '@orbiting/backend-modules-auth'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
-  promocode?: string
   options?: {
+    uiMode?: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
+    promocode?: string
     customPrice: number
   }
 }
@@ -20,11 +21,8 @@ export = async function createCheckoutSession(
 ) {
   Auth.ensureUser(ctx.user)
 
-  console.log(args)
-
-  const entryOffer = (await hasHadMembership(ctx.user.id, ctx.pgdb)) === false
-
   const shop = new Shop(Offers)
+  const entryOffer = (await hasHadMembership(ctx.user.id, ctx.pgdb)) === false
 
   const offer = await shop.getOfferById(args.offerId, {
     withDiscount: entryOffer,
@@ -41,7 +39,9 @@ export = async function createCheckoutSession(
 
   const sess = await shop.generateCheckoutSession({
     offer: offer,
+    uiMode: args.options?.uiMode ?? 'EMBEDDED',
     customerId: customer.customerId,
+    customPrice: args.options?.customPrice,
     discounts: offer.discount?.couponId
       ? [offer.discount?.couponId]
       : undefined,
@@ -49,7 +49,9 @@ export = async function createCheckoutSession(
 
   return {
     company: offer.company,
-    clientSecret: sess.client_secret,
+    sessionId: sess.id,
+    clientSecret: sess.client_secret || '',
+    url: sess.url,
   }
 }
 

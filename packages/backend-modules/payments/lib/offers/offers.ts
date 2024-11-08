@@ -84,8 +84,8 @@ export const Offers: Offer[] = [
     defaultPriceLookupKey: 'ABO',
     customPrice: {
       max: 2000 * CHF,
-      min: 240 * CHF,
-      step: 50 * RAPPEN,
+      min: 10 * CHF,
+      step: 100 * RAPPEN,
       recurring: {
         interval: 'year',
         interval_count: 1,

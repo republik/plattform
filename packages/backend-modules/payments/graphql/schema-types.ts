@@ -29,6 +29,12 @@ enum CompanyName {
   REPUBLIK
 }
 
+enum CheckoutUIMode {
+ HOSTED
+ CUSTOM
+ EMBEDDED
+}
+
 type StripeCustomer {
   customerId: String!
   company: CompanyName!
@@ -67,7 +73,9 @@ type CustomerPortalSession {
 
 type CheckoutSession {
   company: CompanyName!
+  sessionId: String!
   clientSecret: String!
+  url: String
 }
 
 type Offer {
@@ -107,6 +115,7 @@ type Product {
 
 input CheckoutSessionOptions {
   customPrice: Int
+  uiMode: CheckoutUIMode
 }
 
 input CancelSubscriptionOptions {

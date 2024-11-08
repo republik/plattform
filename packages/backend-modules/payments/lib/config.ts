@@ -45,16 +45,6 @@ export function getConfig(): Config {
     typeof process.env.MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID !== 'undefined',
     'MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID not set',
   )
-  assert(
-    typeof process.env.PAYMENTS_STRIPE_PAYMENT_CONFIGURATION_PROJECT_R !==
-      'undefined',
-    'PAYMENTS_STRIPE_PAYMENT_CONFIGURATION_PROJECT_R not set',
-  )
-  assert(
-    typeof process.env.PAYMENTS_STRIPE_PAYMENT_CONFIGURATION_REPUBLIK !==
-      'undefined',
-    'PAYMENTS_STRIPE_PAYMENT_CONFIGURATION_REPUBLIK not set',
-  )
 
   return {
     SCHEMA_NAME: DEFAULT_SCHEMA_NAME,

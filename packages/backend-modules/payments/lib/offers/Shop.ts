@@ -18,37 +18,42 @@ export class Shop {
   async generateCheckoutSession({
     offer,
     customerId,
+    uiMode = 'embedded',
     customPrice,
     discounts,
     analytics,
   }: {
     offer: Offer
+    uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
     customerId: string
     discounts?: string[]
-    customPrice?: {
-      unitAmount: number
-      recurring: {
-        interval: 'year'
-        interval_count: 1
-      }
-    }
+    customPrice?: number
     analytics?: Record<string, string>
   }) {
     const lineItem = this.genLineItem(offer, customPrice)
 
     return this.#stripeAdapters[offer.company].checkout.sessions.create({
       mode: 'subscription',
-      ui_mode: 'embedded',
+      ui_mode: uiMode.toLowerCase(),
       customer: customerId,
       line_items: [lineItem],
       currency: offer.price?.currency,
       discounts: discounts?.map((id) => ({ coupon: id })),
       // '{CHECKOUT_SESSION_ID}' is prefilled by stripe
-      return_url: `${getConfig().SHOP_BASE_URL}/angebot/${
-        offer.id
-      }?session_id={CHECKOUT_SESSION_ID}`,
+      return_url:
+        uiMode !== 'HOSTED'
+          ? `${getConfig().SHOP_BASE_URL}/angebot/${
+              offer.id
+            }?session_id={CHECKOUT_SESSION_ID}`
+          : undefined,
+      success_url:
+        uiMode === 'HOSTED'
+          ? `${getConfig().SHOP_BASE_URL}/angebot/${
+              offer.id
+            }?session_id={CHECKOUT_SESSION_ID}`
+          : undefined,
       locale: 'de',
-      redirect_on_completion: 'if_required',
+      redirect_on_completion: uiMode !== 'HOSTED' ? 'if_required' : undefined,
       billing_address_collection: 'required',
       subscription_data: {
         metadata: {
@@ -167,23 +172,14 @@ export class Shop {
     return promition.data[0]
   }
 
-  private paymentConfiguration(company: Company) {
-    switch (company) {
-      case 'PROJECT_R':
-        return getConfig().STRIPE_PAYMENT_CONFIGURATION_PROJECT_R
-      case 'REPUBLIK':
-        return getConfig().STRIPE_PAYMENT_CONFIGURATION_REPUBLIK
-    }
-  }
-
-  private genLineItem(offer: Offer, customPrice?: any) {
-    if (offer.customPrice && customPrice) {
+  private genLineItem(offer: Offer, customPrice?: number) {
+    if (offer.customPrice && typeof customPrice !== 'undefined') {
       return {
         price_data: {
           product: offer.productId,
-          unit_amount: customPrice.unitAmount,
-          currency: offer.price?.currency,
-          recurring: offer.customPrice?.recurring,
+          unit_amount: Math.max(offer.customPrice.min, customPrice),
+          currency: offer.price!.currency,
+          recurring: offer.customPrice!.recurring,
         },
         tax_rates: offer.taxRateId ? [offer.taxRateId] : undefined,
         quantity: 1,
