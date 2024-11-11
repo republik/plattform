@@ -1,7 +1,5 @@
 import { GraphqlContext } from '@orbiting/backend-modules-types'
-import { Offers } from '../../../lib/offers/offers'
-import { PgDb } from 'pogi'
-import { Shop } from '../../../lib/offers/Shop'
+import { Offers, Shop, utils } from '../../../lib/shop'
 
 export = async function getOffer(
   _root: never,
@@ -9,7 +7,7 @@ export = async function getOffer(
   ctx: GraphqlContext,
 ) {
   const withEntryOffer = ctx.user
-    ? (await hasHadMembership(ctx.user.id, ctx.pgdb)) === false
+    ? (await utils.hasHadMembership(ctx.user.id, ctx.pgdb)) === false
     : true // if there is no user we show the entry offers
 
   const shop = new Shop(Offers)
@@ -17,24 +15,4 @@ export = async function getOffer(
   return shop.getOfferById(args.offerId, {
     withIntroductoryOffer: withEntryOffer,
   })
-}
-
-async function hasHadMembership(userId: string, pgdb: PgDb) {
-  const res = await pgdb.queryOne(
-    `SELECT
-        (
-          (
-            SELECT COUNT(*) FROM payments.subscriptions s
-            WHERE s."userId" = :userId and s.status not in ('incomplete')
-          )
-          +
-          (
-            SELECT COUNT(*) FROM public.memberships m
-            WHERE m."userId" = :userId
-          )
-        ) AS count`,
-    { userId: userId },
-  )
-
-  return res?.count > 0
 }

@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GraphqlContext } from '@orbiting/backend-modules-types'
-import { Offers } from '../../../lib/offers/offers'
-import { Shop } from '../../../lib/offers/Shop'
+import { Shop, Offers, utils } from '../../../lib/shop'
 import { Payments } from '../../../lib/payments'
 import { default as Auth } from '@orbiting/backend-modules-auth'
-import { PgDb } from 'pogi'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
@@ -23,7 +21,8 @@ export = async function createCheckoutSession(
   Auth.ensureUser(ctx.user)
 
   const shop = new Shop(Offers)
-  const entryOffer = (await hasHadMembership(ctx.user.id, ctx.pgdb)) === false
+  const entryOffer =
+    (await utils.hasHadMembership(ctx.user.id, ctx.pgdb)) === false
 
   const offer = await shop.getOfferById(args.offerId, {
     withIntroductoryOffer: entryOffer,
@@ -60,27 +59,7 @@ export = async function createCheckoutSession(
   return {
     company: offer.company,
     sessionId: sess.id,
-    clientSecret: sess.client_secret || '',
+    clientSecret: sess.client_secret,
     url: sess.url,
   }
-}
-
-async function hasHadMembership(userId: string, pgdb: PgDb) {
-  const res = await pgdb.queryOne(
-    `SELECT
-        (
-          (
-            SELECT COUNT(*) FROM payments.subscriptions s
-            WHERE s."userId" = :userId and s.status not in ('incomplete')
-          )
-          +
-          (
-            SELECT COUNT(*) FROM public.memberships m
-            WHERE m."userId" = :userId
-          )
-        ) AS count`,
-    { userId: userId },
-  )
-
-  return res?.count > 0
 }
