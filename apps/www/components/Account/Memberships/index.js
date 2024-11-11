@@ -31,11 +31,9 @@ const Memberships = ({
   loading,
   error,
   t,
-  hasMemberships,
   hasActiveMemberships,
   hasAccessGrants,
   paymentMethodCompany,
-  magazineSubscriptions,
   activeMagazineSubscription,
 }) => {
   const { query } = useRouter()
@@ -64,7 +62,7 @@ const Memberships = ({
                 <AccessGrants />
               </AccountBox>
             )}
-            {!hasAccessGrants && !hasMemberships && (
+            {!hasAccessGrants && !hasActiveMemberships && (
               <div
                 {...colorScheme.set('backgroundColor', 'hover')}
                 style={{
@@ -82,27 +80,34 @@ const Memberships = ({
             )}
 
             {/* Account Section, hide in iOS */}
-            {!inNativeIOSApp &&
-              (magazineSubscriptions.length > 0 ? (
-                <AccountSection id='abos' title={t('memberships/title/1')}>
-                  <SubscriptionItem subscription={activeMagazineSubscription} />
-                </AccountSection>
-              ) : (
-                <>
-                  <MembershipList highlightId={query.id} />
-                  {paymentMethodCompany && (
-                    <AccountSection
-                      id='payment'
-                      title={t('memberships/title/payment')}
-                    >
-                      <PaymentSources
-                        company={paymentMethodCompany}
-                        query={query}
-                      />
-                    </AccountSection>
-                  )}
-                </>
-              ))}
+            {!inNativeIOSApp && (
+              <>
+                {activeMagazineSubscription ? (
+                  // If user has active magazine subscription, we need to show the info.
+                  <AccountSection id='abos' title={t('memberships/title/1')}>
+                    <SubscriptionItem
+                      subscription={activeMagazineSubscription}
+                    />
+                  </AccountSection>
+                ) : hasActiveMemberships ? (
+                  // If user has *other* active memberships
+                  <>
+                    <MembershipList highlightId={query.id} />
+                    {paymentMethodCompany && (
+                      <AccountSection
+                        id='payment'
+                        title={t('memberships/title/payment')}
+                      >
+                        <PaymentSources
+                          company={paymentMethodCompany}
+                          query={query}
+                        />
+                      </AccountSection>
+                    )}
+                  </>
+                ) : null}
+              </>
+            )}
           </>
         )
       }}

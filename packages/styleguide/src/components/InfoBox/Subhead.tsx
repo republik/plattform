@@ -8,8 +8,9 @@ import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   text: css({
-    ...convertStyleToRem(sansSerifMedium15),
+    marginTop: '1em',
     marginBottom: '-12px',
+    ...convertStyleToRem(sansSerifMedium15),
     [mUp]: {
       ...convertStyleToRem(sansSerifMedium18),
       marginBottom: '-14px',

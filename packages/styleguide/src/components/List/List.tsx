@@ -15,7 +15,7 @@ const MARGIN = 8
 
 const styles = {
   unorderedList: css({
-    marginLeft: 0,
+    margin: '1em 0',
     paddingLeft: 0,
     listStyle: 'none',
     '& > li:before': {
