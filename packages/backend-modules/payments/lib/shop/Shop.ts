@@ -18,7 +18,7 @@ export class Shop {
   async generateCheckoutSession({
     offer,
     customerId,
-    uiMode = 'embedded',
+    uiMode = 'EMBEDDED',
     customPrice,
     discounts,
     analytics,
@@ -32,28 +32,19 @@ export class Shop {
   }) {
     const lineItem = this.genLineItem(offer, customPrice)
 
+    const uiConfig = checkoutUIConfig(uiMode, offer)
+
+    const checkoutMode =
+      offer.type === 'SUBSCRIPTION' ? 'subscription' : 'payment'
+
     return this.#stripeAdapters[offer.company].checkout.sessions.create({
-      mode: 'subscription',
-      ui_mode: uiMode.toLowerCase(),
+      ...uiConfig,
+      mode: checkoutMode,
       customer: customerId,
       line_items: [lineItem],
       currency: offer.price?.currency,
       discounts: discounts?.map((id) => ({ coupon: id })),
-      // '{CHECKOUT_SESSION_ID}' is prefilled by stripe
-      return_url:
-        uiMode !== 'HOSTED'
-          ? `${getConfig().SHOP_BASE_URL}/angebot/${
-              offer.id
-            }?session_id={CHECKOUT_SESSION_ID}`
-          : undefined,
-      success_url:
-        uiMode === 'HOSTED'
-          ? `${getConfig().SHOP_BASE_URL}/angebot/${
-              offer.id
-            }?session_id={CHECKOUT_SESSION_ID}`
-          : undefined,
       locale: 'de',
-      redirect_on_completion: uiMode !== 'HOSTED' ? 'if_required' : undefined,
       billing_address_collection: 'required',
       subscription_data: {
         metadata: {
@@ -89,7 +80,9 @@ export class Shop {
     return this.mergeOfferData(offer, price, options)
   }
 
-  async getOffers(options?: { withIntroductoryOffer: boolean }): Promise<Offer[]> {
+  async getOffers(options?: {
+    withIntroductoryOffer: boolean
+  }): Promise<Offer[]> {
     return (
       await Promise.all([
         this.getOffersByCompany('REPUBLIK', options),
@@ -191,5 +184,39 @@ export class Shop {
       tax_rates: offer.taxRateId ? [offer.taxRateId] : undefined,
       quantity: 1,
     }
+  }
+}
+
+function checkoutUIConfig(
+  uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED',
+  offer: Offer,
+) {
+  switch (uiMode) {
+    case 'EMBEDDED':
+      return {
+        ui_mode: 'embedded' as Stripe.Checkout.SessionCreateParams.UiMode,
+        return_url: `${getConfig().SHOP_BASE_URL}/angebot/${
+          offer.id
+        }?session_id={CHECKOUT_SESSION_ID}`,
+        redirect_on_completion:
+          'if_required' as Stripe.Checkout.SessionCreateParams.RedirectOnCompletion,
+      }
+    case 'CUSTOM':
+      return {
+        ui_mode: 'custom' as Stripe.Checkout.SessionCreateParams.UiMode,
+        return_url: `${getConfig().SHOP_BASE_URL}/angebot/${
+          offer.id
+        }?session_id={CHECKOUT_SESSION_ID}`,
+        redirect_on_completion:
+          'if_required' as Stripe.Checkout.SessionCreateParams.RedirectOnCompletion,
+      }
+    case 'HOSTED':
+      return {
+        ui_mode: 'hosted' as Stripe.Checkout.SessionCreateParams.UiMode,
+        success_url: `${getConfig().SHOP_BASE_URL}/angebot/${
+          offer.id
+        }?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${getConfig().SHOP_BASE_URL}/angebot/${offer.id}`,
+      }
   }
 }

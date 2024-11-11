@@ -9,9 +9,12 @@ const CHF = 100
 */
 const RAPPEN = 1
 
+export type OfferType = 'SUBSCRIPTION'
+
 export type Offer = {
   id: string
   company: Company
+  type: OfferType
   productId?: string
   defaultPriceLookupKey: string
   taxRateId?: string
@@ -46,12 +49,14 @@ export type Offer = {
 export const Offers: Offer[] = [
   {
     id: 'YEARLY',
+    type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'ABO',
     entryCode: 'EINSTIEG',
   },
   {
     id: 'BENEFACTOR',
+    type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'BENEFACTOR_ABO',
     customPrice: {
@@ -66,6 +71,7 @@ export const Offers: Offer[] = [
   },
   {
     id: 'STUDENT',
+    type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'STUDENT_ABO',
     customPrice: {
@@ -80,6 +86,7 @@ export const Offers: Offer[] = [
   },
   {
     id: 'CUSTOM',
+    type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'ABO',
     customPrice: {
@@ -94,6 +101,7 @@ export const Offers: Offer[] = [
   },
   {
     id: 'MONTHLY',
+    type: 'SUBSCRIPTION',
     company: 'REPUBLIK',
     entryCode: 'EINSTIEG',
     defaultPriceLookupKey: 'MONTHLY_ABO',
