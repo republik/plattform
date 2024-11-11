@@ -80,9 +80,9 @@ export class Payments implements PaymentService {
     this.billing = new BillingRepo(pgdb)
     this.users = new UserDataRepo(pgdb)
 
-    UserEvents.onSignedIn(async ({ userId }: { userId: string }) => {
-      await this.ensureUserHasCustomerIds(userId)
-    })
+    // UserEvents.onSignedIn(async ({ userId }: { userId: string }) => {
+    //   await this.ensureUserHasCustomerIds(userId)
+    // })
     UserEvents.onEmailUpdated(
       async (args: { userId: string; newEmail: string }) => {
         await Promise.all(
@@ -470,7 +470,7 @@ export class Payments implements PaymentService {
   async getCustomerIdForCompany(
     userId: string,
     company: Company,
-  ): Promise<any> {
+  ): Promise<{ company: Company; customerId: string } | null> {
     const customerInfo = await this.customers.getCustomerIdForCompany(
       userId,
       company,
@@ -642,7 +642,7 @@ export class Payments implements PaymentService {
     await Promise.all(tasks)
   }
 
-  async createCustomer(company: Company, userId: string) {
+  async createCustomer(company: Company, userId: string): Promise<string> {
     const user = await this.users.findUserById(userId)
 
     if (!user) {
@@ -794,10 +794,10 @@ export class Payments implements PaymentService {
     let whsec
     switch (company) {
       case 'PROJECT_R':
-        whsec = getConfig().PAYMENTS_PROJECT_R_STRIPE_ENDPOINT_SECRET
+        whsec = getConfig().PROJECT_R_STRIPE_ENDPOINT_SECRET
         break
       case 'REPUBLIK':
-        whsec = getConfig().PAYMENTS_REPUBLIK_STRIPE_ENDPOINT_SECRET
+        whsec = getConfig().REPUBLIK_STRIPE_ENDPOINT_SECRET
         break
       default:
         throw Error(`Unsupported company ${company}`)
@@ -870,13 +870,13 @@ export interface PaymentService {
   getCustomerIdForCompany(
     userId: string,
     company: Company,
-  ): Promise<{ customerId: string; company: string }>
+  ): Promise<{ customerId: string; company: Company } | null>
   getUserIdForCompanyCustomer(
-    comany: Company,
+    copmany: Company,
     customerId: string,
   ): Promise<string | null>
   ensureUserHasCustomerIds(userId: string): Promise<void>
-  createCustomer(company: Company, userId: string): any
+  createCustomer(company: Company, userId: string): Promise<string>
   updateCustomerEmail(company: Company, userId: string, email: string): any
   listUserOrders(userId: string): Promise<Order[]>
   getOrder(id: string): Promise<Order | null>

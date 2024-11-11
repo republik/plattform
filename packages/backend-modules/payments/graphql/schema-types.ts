@@ -74,7 +74,7 @@ type CustomerPortalSession {
 type CheckoutSession {
   company: CompanyName!
   sessionId: String!
-  clientSecret: String!
+  clientSecret: String
   url: String
 }
 

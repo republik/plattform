@@ -4,6 +4,7 @@ import { Offers } from '../../../lib/offers/offers'
 import { Shop } from '../../../lib/offers/Shop'
 import { Payments } from '../../../lib/payments'
 import { default as Auth } from '@orbiting/backend-modules-auth'
+import { PgDb } from 'pogi'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
@@ -32,15 +33,24 @@ export = async function createCheckoutSession(
     throw new Error('Unknown offer')
   }
 
-  const customer = await Payments.getInstance().getCustomerIdForCompany(
-    ctx.user.id,
-    offer.company,
-  )
+  let customerId = (
+    await Payments.getInstance().getCustomerIdForCompany(
+      ctx.user.id,
+      offer.company,
+    )
+  )?.customerId
+
+  if (!customerId) {
+    customerId = await Payments.getInstance().createCustomer(
+      offer.company,
+      ctx.user.id,
+    )
+  }
 
   const sess = await shop.generateCheckoutSession({
     offer: offer,
     uiMode: args.options?.uiMode ?? 'EMBEDDED',
-    customerId: customer.customerId,
+    customerId: customerId,
     customPrice: args.options?.customPrice,
     discounts: offer.discount?.couponId
       ? [offer.discount?.couponId]
