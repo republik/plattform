@@ -123,12 +123,6 @@ function redirectToHTTPS(req: NextRequest): NextResponse | null {
 }
 
 /**
- * Function that sets a cookie
- * @param req to check if the request is not already on https
- * @returns possible NextResponse to redirect to https or null
- */
-
-/**
  * Middleware used to conditionally redirect between the marketing and front page
  * depending on the user authentication status and roles.
  * @param req
@@ -168,8 +162,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   /* ------------ Logic to handle SSG front- & marketing-page ------------ */
 
   /**
-   * Rewrite to the front if the user is a member or the request comes from
-   * a whitelisted IP Address
+   * Rewrite to the front if the user is a member.
    * @param roles Roles of the user
    * @returns NextResponse
    */
