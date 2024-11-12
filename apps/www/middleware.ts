@@ -135,9 +135,8 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   const resUrl = req.nextUrl.clone()
 
   // Block if request is coming from IP_BLOCKLIST
-  const clientIp = req.headers['x-forwarded-for']
-    ? req.headers['x-forwarded-for'].split(',')[0]
-    : ''
+  const fwdIp = req.headers.get('X-Forwarded-For')
+  const clientIp = fwdIp ? fwdIp.split(',')[0] : ''
 
   const isBlacklistedIP =
     clientIp &&
