@@ -138,12 +138,12 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   const fwdIp = req.headers.get('X-Forwarded-For')
   const clientIp = fwdIp ? fwdIp.split(',')[0] : ''
 
-  const isBlacklistedIP =
+  const isBlocklistedIP =
     clientIp &&
     process.env.IP_BLOCKLIST &&
     process.env.IP_BLOCKLIST.includes(clientIp)
 
-  if (isBlacklistedIP) {
+  if (isBlocklistedIP) {
     console.info(`request with black listed IP denied. IP: ${clientIp}.`)
     return NextResponse.json({ message: 'Nope' }, { status: 401 })
   }
