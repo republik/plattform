@@ -127,6 +127,7 @@ function redirectToHTTPS(req: NextRequest): NextResponse | null {
  * @param req
  */
 async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
+  console.log('middlewareFunc')
   const httpsRedirect = redirectToHTTPS(req)
   if (httpsRedirect) {
     return httpsRedirect
