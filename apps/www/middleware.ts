@@ -251,10 +251,14 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
         process.env.IP_ALLOWLIST &&
         process.env.IP_ALLOWLIST.includes(clientIP)
 
+      // If a allow list cookie is set but its value is not on the allow list
+      // redirect to marketing
       if (!isAllowedIP) {
         resUrl.pathname = '/marketing'
         return NextResponse.rewrite(resUrl)
       }
+      // If there is a valid allow list cookie let the request through.
+      return NextResponse.next()
     } catch (err) {
       // Rewrite to gateway to fetch a new valid JWT
       console.error('JWT allowlist verification error', err)
