@@ -144,7 +144,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
     process.env.IP_BLOCKLIST.includes(clientIp)
 
   if (isBlocklistedIP) {
-    console.info(`request with black listed IP denied. IP: ${clientIp}.`)
+    console.warn(`request with blocklisted IP denied. IP: ${clientIp}.`)
     return NextResponse.json({ message: 'Nope' }, { status: 401 })
   }
 
