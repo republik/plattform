@@ -13,7 +13,7 @@ import AccessGrants from '../../Access/Grants'
 import withMembership from '../../Auth/withMembership'
 import Box from '../../Frame/Box'
 
-import { Interaction } from '@project-r/styleguide'
+import { Interaction, useColorContext } from '@project-r/styleguide'
 
 import belongingsQuery from '../belongingsQuery'
 import MembershipList from '../Memberships/List'
@@ -31,15 +31,14 @@ const Memberships = ({
   loading,
   error,
   t,
-  hasMemberships,
   hasActiveMemberships,
   hasAccessGrants,
   paymentMethodCompany,
-  magazineSubscriptions,
   activeMagazineSubscription,
 }) => {
   const { query } = useRouter()
   const { inNativeIOSApp } = useInNativeApp()
+  const [colorScheme] = useColorContext()
 
   useEffect(() => {
     if (window.location.hash.substr(1).length > 0) {
@@ -63,10 +62,16 @@ const Memberships = ({
                 <AccessGrants />
               </AccountBox>
             )}
-            {!hasAccessGrants && !hasMemberships && (
-              <AccountBox>
+            {!hasAccessGrants && !hasActiveMemberships && (
+              <div
+                {...colorScheme.set('backgroundColor', 'hover')}
+                style={{
+                  padding: 14,
+                  marginBottom: 20,
+                }}
+              >
                 <UserGuidance />
-              </AccountBox>
+              </div>
             )}
             {inNativeIOSApp && (
               <AccountBox>
@@ -75,27 +80,34 @@ const Memberships = ({
             )}
 
             {/* Account Section, hide in iOS */}
-            {!inNativeIOSApp &&
-              (magazineSubscriptions.length > 0 ? (
-                <AccountSection id='abos' title={t('memberships/title/1')}>
-                  <SubscriptionItem subscription={activeMagazineSubscription} />
-                </AccountSection>
-              ) : (
-                <>
-                  <MembershipList highlightId={query.id} />
-                  {paymentMethodCompany && (
-                    <AccountSection
-                      id='payment'
-                      title={t('memberships/title/payment')}
-                    >
-                      <PaymentSources
-                        company={paymentMethodCompany}
-                        query={query}
-                      />
-                    </AccountSection>
-                  )}
-                </>
-              ))}
+            {!inNativeIOSApp && (
+              <>
+                {activeMagazineSubscription ? (
+                  // If user has active magazine subscription, we need to show the info.
+                  <AccountSection id='abos' title={t('memberships/title/1')}>
+                    <SubscriptionItem
+                      subscription={activeMagazineSubscription}
+                    />
+                  </AccountSection>
+                ) : hasActiveMemberships ? (
+                  // If user has *other* active memberships
+                  <>
+                    <MembershipList highlightId={query.id} />
+                    {paymentMethodCompany && (
+                      <AccountSection
+                        id='payment'
+                        title={t('memberships/title/payment')}
+                      >
+                        <PaymentSources
+                          company={paymentMethodCompany}
+                          query={query}
+                        />
+                      </AccountSection>
+                    )}
+                  </>
+                ) : null}
+              </>
+            )}
           </>
         )
       }}

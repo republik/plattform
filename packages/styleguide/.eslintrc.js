@@ -2,7 +2,7 @@ module.exports = {
   plugins: ['jsx-a11y'],
   extends: ['@republik/eslint-config-frontend'],
   rules: {
-    'react/react-in-jsx-scope': 'error',
+    'react/react-in-jsx-scope': 'off',
 
     // Next-specific rules
     '@next/next/google-font-display': 'off',
