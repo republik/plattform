@@ -140,7 +140,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
     : ''
 
   if (clientIp === '129.80.232.132') {
-    console.log(`request with IP: ${clientIp} denied.`)
+    console.info(`request with IP: ${clientIp} denied.`)
     return NextResponse.json({ message: 'Nope' }, { status: 401 })
   }
 
