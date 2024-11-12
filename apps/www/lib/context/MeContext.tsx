@@ -102,7 +102,6 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
   const isClimateLabMember = checkRoles(me, ['climate'])
   const hasActiveMembership =
     !!me?.activeMembership || !!me?.activeMagazineSubscription
-  
   const portraitOrInitials = me ? me.portrait ?? getInitials(me) : false
 
   useEffect(() => {

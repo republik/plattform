@@ -24,7 +24,7 @@ import { reportError } from '../lib/errors/reportError'
 import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
 import { OPEN_ACCESS } from 'lib/constants'
 import { useRouter } from 'next/router'
-import { IP_WHITELIST_COOKIE_NAME } from '../lib/auth/constants'
+import { IP_ALLOWLIST_COOKIE_NAME } from '../lib/auth/constants'
 import { verifyJWT } from '../lib/auth/JWTHelper'
 import { useEffect, useState } from 'react'
 
@@ -67,31 +67,29 @@ const WebApp = ({
   } = pageProps
 
   const router = useRouter()
-  const [whiteListAccess, setWhiteListAccess] = useState(false)
+  const [allowlistAccess, setAllowlistAccess] = useState(false)
 
   useEffect(() => {
-    const whitelistToken = document.cookie
+    const allowlistToken = document.cookie
       .split('; ')
-      .find((row) => row.startsWith(`${IP_WHITELIST_COOKIE_NAME}=`))
+      .find((row) => row.startsWith(`${IP_ALLOWLIST_COOKIE_NAME}=`))
       ?.split('=')[1]
-    async function getToken(token) {
+    async function setAllowListAccessFromToken(token) {
       const jwtBody = await verifyJWT(token)
-      const userIP = jwtBody?.ip
-      const isWhitelistedIP =
-        userIP &&
-        process.env.IP_WHITELIST &&
-        (process.env.IP_WHITELIST || '')
-          .split(',')
-          .some((ip) => userIP.includes(ip))
-      setWhiteListAccess(isWhitelistedIP)
+      const clientIP = jwtBody?.ip
+      const isAllowedIP =
+        clientIP &&
+        process.env.IP_ALLOWLIST &&
+        process.env.IP_ALLOWLIST.includes(clientIP)
+      setAllowlistAccess(isAllowedIP)
     }
-    if (whitelistToken) {
-      getToken(whitelistToken)
+    if (allowlistToken) {
+      setAllowListAccessFromToken(allowlistToken)
     }
   }, [])
 
   const hidePaynoteOverlay =
-    whiteListAccess ||
+    allowlistAccess ||
     (router.pathname === '/angebote' && router.query.package !== undefined) ||
     router.pathname === '/mitteilung' ||
     router.pathname === '/anmelden' ||

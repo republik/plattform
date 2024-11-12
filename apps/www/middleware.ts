@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {
   getJWTCookieValue,
-  getWhitelistCookieValue,
+  getIPAllowlistCookieValue,
   getSessionCookieValue,
   verifyJWT,
 } from './lib/auth/JWTHelper'
@@ -239,19 +239,17 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
    * @param token JWT found in the cookie header
    * @returns NextResponse
    */
-  async function rewriteBasedOnWhitelistToken(
+  async function rewriteBasedOnIPAllowlistToken(
     token: string,
   ): Promise<NextResponse> {
     try {
       // Parse and verify JWT to decide about redirection
       const jwtBody = await verifyJWT(token)
-      const userIP = jwtBody?.ip
+      const clientIP = jwtBody?.ip
       const isAllowedIP =
-        userIP &&
-        process.env.IP_WHITELIST &&
-        (process.env.IP_WHITELIST || '')
-          .split(',')
-          .some((ip) => userIP.includes(ip))
+        clientIP &&
+        process.env.IP_ALLOWLIST &&
+        process.env.IP_ALLOWLIST.includes(clientIP)
 
       if (!isAllowedIP) {
         resUrl.pathname = '/marketing'
@@ -259,7 +257,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
       }
     } catch (err) {
       // Rewrite to gateway to fetch a new valid JWT
-      console.error('JWT Whitelist Verification Error', err)
+      console.error('JWT allowlist verification error', err)
       // Rewrite based on fetched me object
       return rewriteBasedOnMe(req)
     }
@@ -267,10 +265,10 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
 
   const sessionCookie = getSessionCookieValue(req)
   const tokenCookie = getJWTCookieValue(req)
-  const whitelistCookie = getWhitelistCookieValue(req)
+  const ipAllowlistCookie = getIPAllowlistCookieValue(req)
 
-  if (whitelistCookie) {
-    return await rewriteBasedOnWhitelistToken(whitelistCookie)
+  if (ipAllowlistCookie) {
+    return await rewriteBasedOnIPAllowlistToken(ipAllowlistCookie)
   } else if (sessionCookie && tokenCookie) {
     // Rewrite based on token
     return await rewriteBasedOnToken(tokenCookie)

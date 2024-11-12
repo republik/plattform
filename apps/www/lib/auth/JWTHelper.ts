@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server'
 import {
   COOKIE_NAME,
   JWT_COOKIE_NAME,
-  IP_WHITELIST_COOKIE_NAME,
+  IP_ALLOWLIST_COOKIE_NAME,
 } from './constants'
 
 // Extend jose JWTPayload with our expected payload properties
@@ -22,8 +22,8 @@ export function getJWTCookieValue(req: NextRequest) {
   return cookie?.value
 }
 
-export function getWhitelistCookieValue(req: NextRequest) {
-  const cookie = req.cookies.get(IP_WHITELIST_COOKIE_NAME)
+export function getIPAllowlistCookieValue(req: NextRequest) {
+  const cookie = req.cookies.get(IP_ALLOWLIST_COOKIE_NAME)
   return cookie?.value
 }
 
