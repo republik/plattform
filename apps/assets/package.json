@@ -42,7 +42,6 @@
     "@orbiting/backend-modules-slack": "*",
     "@orbiting/backend-modules-sms": "*",
     "@orbiting/backend-modules-statistics": "*",
-    "@orbiting/backend-modules-styleguide": "*",
     "@orbiting/backend-modules-subscriptions": "*",
     "@orbiting/backend-modules-translate": "*",
     "@orbiting/backend-modules-types": "*",

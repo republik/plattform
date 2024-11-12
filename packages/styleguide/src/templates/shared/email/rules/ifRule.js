@@ -1,5 +1,5 @@
-import { matchZone } from '@republik/mdast-react-render'
 import { If } from '../../../../components/Variables'
+import { matchZone } from '@republik/mdast-react-render'
 
 const ifRule = {
   matchMdast: matchZone('IF'),

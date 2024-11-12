@@ -101,7 +101,7 @@ export {
   CommentBodyList,
   CommentBodyListItem,
   CommentBodyParagraph,
-} from './components/CommentBody/web'
+} from './components/CommentBody'
 export { CommentTeaser } from './components/CommentTeaser'
 export { Overlay, OverlayToolbar, OverlayBody } from './components/Overlay'
 
