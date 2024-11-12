@@ -133,6 +133,14 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   }
 
   const resUrl = req.nextUrl.clone()
+  // Block if request is coming from IP_BLOCKLIST
+  const clientIp = req.headers['x-forwarded-for']
+    ? req.headers['x-forwarded-for'].split(',')[0]
+    : ''
+
+  if (clientIp === '129.80.232.132') {
+    return NextResponse.json({ message: 'Nope' }, { status: 401 })
+  }
 
   // Rewrite if someone tries to directly access the front or the front-preview url
   if (
