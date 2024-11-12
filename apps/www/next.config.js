@@ -67,7 +67,12 @@ const nextConfig = {
     domains: ['www.datocms-assets.com', 'cdn.republik.pink', 'cdn.repub.ch'],
   },
   compiler: {
-    removeConsole: false,
+    removeConsole:
+      process.env.NODE_ENV === 'production'
+        ? {
+            exclude: ['error', 'warn', 'info'],
+          }
+        : false,
   },
   async headers() {
     return [
