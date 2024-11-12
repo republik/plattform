@@ -133,12 +133,18 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   }
 
   const resUrl = req.nextUrl.clone()
+
   // Block if request is coming from IP_BLOCKLIST
   const fwdIp = req.headers.get('X-Forwarded-For')
   const clientIp = fwdIp ? fwdIp.split(',')[0] : ''
 
-  if (clientIp === '129.80.232.132') {
-    console.warn(`request with IP: ${clientIp} denied.`)
+  const isBlocklistedIP =
+    clientIp &&
+    process.env.IP_BLOCKLIST &&
+    process.env.IP_BLOCKLIST.includes(clientIp)
+
+  if (isBlocklistedIP) {
+    console.warn(`request with blocklisted IP denied. IP: ${clientIp}.`)
     return NextResponse.json({ message: 'Nope' }, { status: 401 })
   }
 
