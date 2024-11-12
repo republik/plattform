@@ -127,7 +127,7 @@ function redirectToHTTPS(req: NextRequest): NextResponse | null {
  * @param req
  */
 async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
-  console.log('middlewareFunc')
+  console.warn('middlewareFunc')
   const httpsRedirect = redirectToHTTPS(req)
   if (httpsRedirect) {
     return httpsRedirect
@@ -140,7 +140,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
     : ''
 
   if (clientIp === '129.80.232.132') {
-    console.info(`request with IP: ${clientIp} denied.`)
+    console.warn(`request with IP: ${clientIp} denied.`)
     return NextResponse.json({ message: 'Nope' }, { status: 401 })
   }
 
