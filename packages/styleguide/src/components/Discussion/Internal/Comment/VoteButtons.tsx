@@ -22,6 +22,7 @@ const styles = {
   voteNumber: css({
     ...fontStyles.sansSerifMedium14,
     fontFeatureSettings: '"tnum" 1',
+    marginLeft: -4,
   }),
   voteButton: css({
     margin: 0,
@@ -55,7 +56,7 @@ export const VoteButtons = ({
     <div {...styles.votes}>
       <div {...styles.vote}>
         <IconButton
-          size={24}
+          size={22}
           fill={
             comment.userVote === 'UP' ? colorScheme.getCSSColor('text') : 'none'
           }
@@ -77,7 +78,7 @@ export const VoteButtons = ({
       </div>
       <div {...styles.vote}>
         <IconButton
-          size={24}
+          size={22}
           fill={
             comment.userVote === 'DOWN'
               ? colorScheme.getCSSColor('text')
