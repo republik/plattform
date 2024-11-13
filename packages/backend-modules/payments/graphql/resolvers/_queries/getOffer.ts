@@ -10,9 +10,7 @@ export = async function getOffer(
     ? (await utils.hasHadMembership(ctx.user.id, ctx.pgdb)) === false
     : true // if there is no user we show the entry offers
 
-  const shop = new Shop(Offers)
-
-  return shop.getOfferById(args.offerId, {
+  return new Shop(Offers).getOfferById(args.offerId, {
     promoCode: args.promoCode,
     withIntroductoryOffer: withEntryOffer,
   })
