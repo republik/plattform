@@ -4,12 +4,15 @@ import { Offer } from './offers'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { getConfig } from '../config'
 
+const INTRODUCTERY_OFFER_PROMO_CODE = 'EINSTIEG'
+
 export class Shop {
   #offers: Offer[]
   #stripeAdapters: Record<Company, Stripe> = {
     PROJECT_R: ProjectRStripe,
     REPUBLIK: RepublikAGStripe,
   }
+  #promoCodeBlocklist: string[] = [INTRODUCTERY_OFFER_PROMO_CODE]
 
   constructor(offers: Offer[]) {
     this.#offers = offers
@@ -60,7 +63,7 @@ export class Shop {
 
   async getOfferById(
     id: string,
-    options?: { withIntroductoryOffer: boolean },
+    options?: { promoCode?: string; withIntroductoryOffer?: boolean },
   ): Promise<Offer | null> {
     const offer = this.#offers.find((offer) => id === offer.id)
 
@@ -81,7 +84,8 @@ export class Shop {
   }
 
   async getOffers(options?: {
-    withIntroductoryOffer: boolean
+    promoCode?: string
+    withIntroductoryOffer?: boolean
   }): Promise<Offer[]> {
     return (
       await Promise.all([
@@ -93,7 +97,7 @@ export class Shop {
 
   async getOffersByCompany(
     company: Company,
-    options?: { withIntroductoryOffer: boolean },
+    options?: { promoCode?: string; withIntroductoryOffer?: boolean },
   ) {
     const offers = this.#offers.filter((offer) => company === offer.company)
     const lookupKeys = offers.map((o) => o.defaultPriceLookupKey)
@@ -121,20 +125,9 @@ export class Shop {
   private async mergeOfferData(
     base: Offer,
     price: Stripe.Price,
-    options?: { withIntroductoryOffer: boolean },
+    options?: { promoCode?: string; withIntroductoryOffer?: boolean },
   ): Promise<Offer> {
-    let discount: Offer['discount'] | undefined = undefined
-    if (options?.withIntroductoryOffer && base.entryCode) {
-      const promotion = await this.getPromotion(base.company, base.entryCode)
-      discount = promotion
-        ? {
-            name: promotion.coupon.name!,
-            couponId: promotion.coupon.id!,
-            amountOff: promotion.coupon.amount_off!,
-            currency: promotion.coupon.currency!,
-          }
-        : undefined
-    }
+    const discount = await this.getIndrodcuturyOfferOrPromotion(base, options)
 
     return {
       ...base,
@@ -144,8 +137,60 @@ export class Shop {
         amount: price.unit_amount!,
         currency: price.currency,
       },
-      discount: discount,
+      discount: discount ?? undefined,
     }
+  }
+
+  private async getIndrodcuturyOfferOrPromotion(
+    offer: Offer,
+    options:
+      | { promoCode?: string; withIntroductoryOffer?: boolean }
+      | undefined,
+  ): Promise<{
+    name: string
+    couponId: string
+    amountOff: number
+    currency: string
+  } | null> {
+    if (!offer.allowPromotions) {
+      return null
+    }
+
+    if (options?.promoCode && !this.inPromoCodeBlocklist(options.promoCode)) {
+      const promotion = await this.getPromotion(
+        offer.company,
+        options.promoCode,
+      )
+      return promotion
+        ? {
+            name: promotion.coupon.name!,
+            couponId: promotion.coupon.id!,
+            amountOff: promotion.coupon.amount_off!,
+            currency: promotion.coupon.currency!,
+          }
+        : null
+    }
+
+    if (options?.withIntroductoryOffer) {
+      const promotion = await this.getPromotion(
+        offer.company,
+        INTRODUCTERY_OFFER_PROMO_CODE,
+      )
+      return promotion
+        ? {
+            name: promotion.coupon.name!,
+            couponId: promotion.coupon.id!,
+            amountOff: promotion.coupon.amount_off!,
+            currency: promotion.coupon.currency!,
+          }
+        : null
+    }
+
+    return null
+  }
+
+  private inPromoCodeBlocklist(promoCode: string) {
+    return this.#promoCodeBlocklist.includes(promoCode.toUpperCase())
   }
 
   async getPromotion(

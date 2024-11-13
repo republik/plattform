@@ -3,7 +3,7 @@ import { Offers, Shop, utils } from '../../../lib/shop'
 
 export = async function getOffers(
   _root: never,
-  _args: any,
+  args: { promoCode?: string },
   ctx: GraphqlContext,
 ) {
   const entryOffer = ctx.user
@@ -13,6 +13,7 @@ export = async function getOffers(
   const shop = new Shop(Offers)
 
   return shop.getOffers({
+    promoCode: args.promoCode,
     withIntroductoryOffer: entryOffer,
   })
 }

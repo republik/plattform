@@ -6,6 +6,7 @@ import { default as Auth } from '@orbiting/backend-modules-auth'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
+  promoCode?: string
   options?: {
     uiMode?: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
     promocode?: string
@@ -25,6 +26,7 @@ export = async function createCheckoutSession(
     (await utils.hasHadMembership(ctx.user.id, ctx.pgdb)) === false
 
   const offer = await shop.getOfferById(args.offerId, {
+    promoCode: args.promoCode,
     withIntroductoryOffer: entryOffer,
   })
 

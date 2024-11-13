@@ -15,11 +15,9 @@ export type Offer = {
   id: string
   company: Company
   type: OfferType
-  productId?: string
   defaultPriceLookupKey: string
   taxRateId?: string
-  promoCode?: string
-  entryCode?: string
+  allowPromotions: boolean
   price?: {
     id: string
     amount: number
@@ -52,13 +50,14 @@ export const Offers: Offer[] = [
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'ABO',
-    entryCode: 'EINSTIEG',
+    allowPromotions: true,
   },
   {
     id: 'BENEFACTOR',
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'BENEFACTOR_ABO',
+    allowPromotions: false,
     customPrice: {
       min: 1000 * CHF,
       max: 4000 * CHF,
@@ -74,6 +73,7 @@ export const Offers: Offer[] = [
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'STUDENT_ABO',
+    allowPromotions: false,
     customPrice: {
       min: 120 * CHF,
       max: 239 * CHF,
@@ -89,6 +89,7 @@ export const Offers: Offer[] = [
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'ABO',
+    allowPromotions: false,
     customPrice: {
       max: 2000 * CHF,
       min: 10 * CHF,
@@ -103,7 +104,7 @@ export const Offers: Offer[] = [
     id: 'MONTHLY',
     type: 'SUBSCRIPTION',
     company: 'REPUBLIK',
-    entryCode: 'EINSTIEG',
+    allowPromotions: true,
     defaultPriceLookupKey: 'MONTHLY_ABO',
     taxRateId: 'txr_1PqUouD5iIOpR5wNiT5EiKld',
   },
