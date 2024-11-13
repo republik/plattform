@@ -14,7 +14,6 @@ import { DEFAULT_VALUES } from './Page'
 import {
   IconLanguage,
   IconLogoFacebook,
-  IconLogoTwitter,
   IconMailOutline,
   IconNoteAdd,
   IconVpnKey,
@@ -27,10 +26,6 @@ const fields = (t) => [
   {
     label: t('profile/contact/facebook/label'),
     name: 'facebookId',
-  },
-  {
-    label: t('profile/contact/twitter/label'),
-    name: 'twitterHandle',
   },
   {
     label: t('profile/contact/publicUrl/label'),
@@ -182,13 +177,6 @@ const Contact = ({
             Icon={IconLogoFacebook}
             style={customStyle}
             href={`https://www.facebook.com/${user.facebookId}`}
-          />
-        )}
-        {user.twitterHandle && (
-          <IconButton
-            Icon={IconLogoTwitter}
-            style={customStyle}
-            href={`https://twitter.com/${user.twitterHandle}`}
           />
         )}
         {user.email && (

@@ -5,7 +5,6 @@ import {
   IconInstagram,
   IconLogoFacebook,
   IconLogoMastodon,
-  IconLogoTwitter,
 } from '@republik/icons'
 
 const styles = {
@@ -24,11 +23,6 @@ const SocialLinks = () => (
     <IconButton
       Icon={IconLogoFacebook}
       href='https://www.facebook.com/RepublikMagazin'
-      target='_blank'
-    />
-    <IconButton
-      Icon={IconLogoTwitter}
-      href='https://twitter.com/RepublikMagazin'
       target='_blank'
     />
     <IconButton
