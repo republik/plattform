@@ -24,7 +24,7 @@ export class Shop {
     uiMode = 'EMBEDDED',
     customPrice,
     discounts,
-    analytics,
+    metadata,
     customFields,
   }: {
     offer: Offer
@@ -32,7 +32,7 @@ export class Shop {
     customerId: string
     discounts?: string[]
     customPrice?: number
-    analytics?: Record<string, string>
+    metadata?: Record<string, string>
     customFields?: Stripe.Checkout.SessionCreateParams.CustomField[]
   }) {
     const lineItem = this.genLineItem(offer, customPrice)
@@ -54,7 +54,7 @@ export class Shop {
       custom_fields: customFields,
       subscription_data: {
         metadata: {
-          ...analytics,
+          ...metadata,
           ...offer.metaData,
         },
       },

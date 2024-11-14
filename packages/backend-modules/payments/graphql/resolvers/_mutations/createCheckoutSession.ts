@@ -11,7 +11,8 @@ type CreateCheckoutSessionArgs = {
   options?: {
     uiMode?: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
     promocode?: string
-    customPrice: number
+    customPrice?: number
+    metadata?: Record<string, string>
   }
 }
 
@@ -58,6 +59,7 @@ export = async function createCheckoutSession(
       ? [offer.discount?.couponId]
       : undefined,
     customFields: requiredCustomFields(ctx.user),
+    metadata: args?.options?.metadata,
   })
 
   return {

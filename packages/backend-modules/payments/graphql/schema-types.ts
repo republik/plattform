@@ -116,6 +116,7 @@ type Product {
 input CheckoutSessionOptions {
   customPrice: Int
   uiMode: CheckoutUIMode
+  metadata: JSON # String key value object
 }
 
 input CancelSubscriptionOptions {
