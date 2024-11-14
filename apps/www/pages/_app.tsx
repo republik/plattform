@@ -68,6 +68,7 @@ const WebApp = ({
   const hidePaynoteOverlay =
     (router.pathname === '/angebote' && router.query.package !== undefined) ||
     router.pathname === '/mitteilung' ||
+    router.pathname === '/anmelden' ||
     router.query.extract !== undefined ||
     router.query.extractId !== undefined
 
@@ -86,7 +87,7 @@ const WebApp = ({
                       <Head>
                         <meta
                           name='viewport'
-                          content='width=device-width, initial-scale=1'
+                          content='width=device-width, initial-scale=1, viewport-fit=cover'
                         />
                       </Head>
                       <Component

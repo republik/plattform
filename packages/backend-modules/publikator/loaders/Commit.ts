@@ -4,30 +4,12 @@ import { v4 } from 'is-uuid'
 
 import createDataLoader from '@orbiting/backend-modules-dataloader'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
+import { Commit } from '../lib/types'
 
 const { parse: mdastParse } = require('@republik/remark-preset')
 const {
   cache: { create: createCache },
 } = require('@orbiting/backend-modules-utils')
-
-export interface Commit {
-  id: string
-  repoId: string
-  parentIds: string[]
-  message: string
-  type: null | 'mdast' | 'slate'
-  content: string
-  content__markdown: string
-  meta: any
-  userId?: string
-  author: CommitAuthor
-  createdAt: Date
-}
-
-interface CommitAuthor {
-  name: string
-  email: string
-}
 
 const fields = [
   'id',

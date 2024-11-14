@@ -19,7 +19,7 @@ import {
   INFOBOX_IMAGE_SIZES,
   INFOBOX_DEFAULT_IMAGE_SIZE,
 } from '../../components/InfoBox'
-import variableRule from '../shared/email/rules/variableRule'
+import { Variable } from '../../components/Variables'
 
 export const matchSpan = matchType('span')
 export const matchSpanType = (type) => (node) =>
@@ -78,6 +78,30 @@ export const getDisplayWidth = (ancestors) => {
   }
   return FIGURE_SIZES.center
 }
+
+const variableRule = {
+  matchMdast: (node) => matchSpan(node) && node.data?.variable,
+  props: (node) => node.data,
+  component: Variable,
+  editorModule: 'variable',
+  editorOptions: {
+    insertVar: true,
+    insertTypes: ['PARAGRAPH'],
+    fields: [
+      {
+        key: 'variable',
+        items: [
+          { value: 'firstName', text: 'Vorname' },
+          { value: 'lastName', text: 'Nachname' },
+        ],
+      },
+      {
+        key: 'fallback',
+      },
+    ],
+  },
+}
+
 
 const nestedInlines = [
   {

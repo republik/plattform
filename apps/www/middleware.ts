@@ -225,7 +225,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   if (sessionCookie && tokenCookie) {
     // Rewrite based on token
     return await rewriteBasedOnToken(tokenCookie)
-  } else if (sessionCookie) {
+  } else {
     // Rewrite if no JWT is present
     return await rewriteBasedOnMe(req)
   }

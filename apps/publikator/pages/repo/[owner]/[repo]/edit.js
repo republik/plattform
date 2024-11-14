@@ -12,6 +12,7 @@ import {
   withLatestCommit,
 } from '../../../../components/Edit/enhancers'
 import { withRouter } from 'next/router'
+import { ThemeProvider } from '../../../../components/theme-provider'
 
 const EditPageSwitch = ({ data, router: { query } }) => {
   if (data?.loading) {
@@ -27,7 +28,11 @@ const EditPageSwitch = ({ data, router: { query } }) => {
       </WarningContextProvider>
     )
   }
-  return <MdastEditPage />
+  return (
+    <ThemeProvider forcedTheme='light'>
+      <MdastEditPage />
+    </ThemeProvider>
+  )
 }
 
 export default withDefaultSSR(

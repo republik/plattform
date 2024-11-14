@@ -2,6 +2,11 @@
 
 The platform that powers republik.ch. A tailored solution for a membership based online magazine.
 
+## Contributions and issues
+
+If you are a Republik reader (thank you!) and you have any issues or feature requests, please do kindly direct them to [our support team](mailto:kontakt@republik.ch). 
+Unfortunately we can also not currently accept external contributions to our codebase, as we are a small team and want to keep our focus on improving and maintaining the product for all of our readers. Thank you for your interest in case you were considering it, we are impressed. 
+
 ## What's inside?
 
 This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following apps and packages:

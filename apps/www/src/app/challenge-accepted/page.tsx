@@ -136,12 +136,12 @@ export default async function Page({ searchParams }) {
           <p className={css({ textStyle: 'pageIntro' })}>
             {hub.newsletterSignupIntro}
           </p>
-          <p className={css({ fontWeight: 'bold', fontSize: '2xl' })}>
-            {hub.newsletterSignupTagline}
-          </p>
 
           {!isNewsletterSubscribed && (
             <>
+              <p className={css({ fontWeight: 'bold', fontSize: '2xl' })}>
+                {hub.newsletterSignupTagline}
+              </p>
               <EmailSignUp me={me} newsletterName={NewsletterName.Climate} />
               <div
                 className={css({

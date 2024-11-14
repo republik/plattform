@@ -1,10 +1,9 @@
 import React from 'react'
-import { Br } from './email/Paragraph'
-import HR from './email/HR'
+import HR from './components/HR'
 import Blockquote, {
   BlockquoteText,
   BlockquoteSource,
-} from './email/Blockquote'
+} from './components/Blockquote'
 
 import {
   matchType,
@@ -53,7 +52,7 @@ const createNewsletterSchema = ({
   const globalInlines = [
     {
       matchMdast: matchType('break'),
-      component: Br,
+      component: () => <br />,
       isVoid: true,
     },
     {

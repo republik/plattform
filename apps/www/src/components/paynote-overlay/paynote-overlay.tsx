@@ -8,14 +8,16 @@ import { useMe } from 'lib/context/MeContext'
 
 import { Offers } from '@app/components/paynote-overlay/paynote-offers'
 import { usePaynotes } from '@app/components/paynote-overlay/use-paynotes'
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
-import { StructuredText } from 'react-datocms'
-import Image from 'next/image'
-import { useMotionValueEvent, useScroll } from 'framer-motion'
 import {
   EventTrackingContext,
   useTrackEvent,
 } from '@app/lib/analytics/event-tracking'
+import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { IconExpandMore } from '@republik/icons'
+import { useMotionValueEvent, useScroll } from 'framer-motion'
+import Image from 'next/image'
+import Link from 'next/link'
+import { StructuredText } from 'react-datocms'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
@@ -92,15 +94,14 @@ function PaynoteOverlayDialog() {
           color: 'text.inverted',
           position: 'fixed',
           inset: 'auto 0 0 0',
-
           zIndex: 9998,
-
           p: '6',
-
           textAlign: 'center',
           textStyle: 'sans',
           boxShadow: 'sm',
-
+          '@media print': {
+            display: 'none',
+          },
           '&:has([data-state="open"])': {
             animation: 'fadeOut',
           },
@@ -154,13 +155,24 @@ function PaynoteOverlayDialog() {
           })}
         >
           <Dialog.Content
-            onEscapeKeyDown={(e) => e.preventDefault()}
-            onPointerDownOutside={(e) => e.preventDefault()}
-            onInteractOutside={(e) => e.preventDefault()}
+            onEscapeKeyDown={() =>
+              trackEvent({
+                action: 'Closed via escape key',
+                paynoteTitle: variant === 'paynote' ? paynote.title : undefined,
+              })
+            }
+            onPointerDownOutside={() =>
+              trackEvent({
+                action: 'Closed via click outside',
+                paynoteTitle: variant === 'paynote' ? paynote.title : undefined,
+              })
+            }
             aria-describedby={undefined}
             className={css({
+              position: 'relative',
               background: 'pageBackground',
-              p: '8',
+              px: '8',
+              pt: '12',
               boxShadow: 'sm',
               mt: '15dvh',
               _stateOpen: {
@@ -180,7 +192,7 @@ function PaynoteOverlayDialog() {
                 fontSize: 'l',
                 display: 'flex',
                 flexDir: 'column',
-                gap: '6',
+                gap: '4',
               })}
             >
               {variant === 'paynote' && paynote?.author && (
@@ -235,7 +247,7 @@ function PaynoteOverlayDialog() {
                       {paynote?.title}
                     </span>
                   ) : (
-                    'Unterstützen Sie unabhängigen Journalismus'
+                    <>Unterstützen Sie unab&shy;hängigen Journalismus</>
                   )}
                 </h2>
               </Dialog.Title>
@@ -265,21 +277,63 @@ function PaynoteOverlayDialog() {
                 className={css({
                   textStyle: 'sansSerifRegular',
                   textDecoration: 'underline',
-                  fontSize: 'base',
+                  fontSize: 's',
                   cursor: 'pointer',
                   mx: 'auto',
                 })}
                 onClick={() => {
                   trackEvent({
-                    action: 'Closed',
+                    action: 'Closed via "Not now"',
                     paynoteTitle:
                       variant === 'paynote' ? paynote.title : undefined,
                   })
                 }}
               >
-                Jetzt nicht
+                Nicht jetzt
               </Dialog.Close>
             </div>
+
+            <div
+              className={css({
+                py: '6',
+                mt: '6',
+                mx: '-8',
+                textAlign: 'center',
+                borderTopWidth: 1,
+                borderTopStyle: 'solid',
+                borderTopColor: 'divider',
+                fontSize: 's',
+              })}
+            >
+              Sie haben schon ein Abonnement?{' '}
+              <Link
+                className={css({
+                  textDecoration: 'underline',
+                  // fontWeight: 'medium',
+                })}
+                href='/anmelden'
+              >
+                Anmelden
+              </Link>
+            </div>
+
+            <Dialog.Close
+              aria-label='Schliessen'
+              className={css({
+                position: 'absolute',
+                top: '4',
+                right: '4',
+              })}
+              onClick={() => {
+                trackEvent({
+                  action: 'Closed via icon',
+                  paynoteTitle:
+                    variant === 'paynote' ? paynote.title : undefined,
+                })
+              }}
+            >
+              <IconExpandMore size={32} />
+            </Dialog.Close>
           </Dialog.Content>
         </Dialog.Overlay>
       </Dialog.Portal>

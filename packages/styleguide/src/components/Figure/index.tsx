@@ -134,9 +134,11 @@ export const FIGURE_SIZES = {
   center: MAX_WIDTH,
 }
 
+export type FigureSize = keyof typeof FIGURE_SIZES
+
 export type FigureProps = {
   children: React.ReactNode
-  size?: keyof typeof FIGURE_SIZES
+  size?: FigureSize
   attributes?: React.ComponentPropsWithoutRef<'figure'>
 }
 

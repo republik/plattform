@@ -522,7 +522,6 @@ class VideoPlayer extends Component {
           controls={isFull && !fullWindow}
           controlsList={isFull ? 'nodownload' : undefined}
           onLoadedMetadata={this.onLoadedMetaData}
-          crossOrigin='anonymous'
           poster={src.thumbnail}
           tabIndex='0'
           onKeyDown={this.handleKeyDown}

@@ -16,10 +16,10 @@ export async function GET(): Promise<NextResponse<Paynotes>> {
     query: PaynotesDocument,
   })
 
-  const paynote = paynotes[Math.round(Math.random() * (paynotes.length - 1))]
+  const paynote = paynotes[Math.floor(Math.random() * paynotes.length)]
 
   const miniPaynote =
-    miniPaynotes[Math.round(Math.random() * (miniPaynotes.length - 1))]
+    miniPaynotes[Math.floor(Math.random() * miniPaynotes.length)]
 
   return NextResponse.json({ paynote, miniPaynote })
 }

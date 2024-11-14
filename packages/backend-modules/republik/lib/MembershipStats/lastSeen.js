@@ -9,30 +9,30 @@ const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 * 8 // A week and a day
 
 const query = `
 WITH "sessionsLastSeen" AS (
-  SELECT
-    ("sess"->'passport'->>'user')::uuid "userId",
-    
-    GREATEST(
-      -- Default max-age on a session (7 days)
-      CASE
-        WHEN "expire" - '365 days'::interval <= now()::timestamp(0) + '10 seconds'::interval
-        THEN "expire" - '365 days'::interval
-        ELSE NULL
-      END,
-      
-      -- Short max-age on a session (7 days)
-      CASE
-        WHEN "expire" - '7 days'::interval <= now()::timestamp(0) + '10 seconds'::interval
-        THEN "expire" - '7 days'::interval
-        ELSE NULL
-      END
-    ) "lastSeenAt"  
-
-  FROM "sessions"
-  
-  INNER JOIN "memberships"
-    ON "memberships"."userId" = ("sess"->'passport'->>'user')::uuid
-    AND "memberships"."active" = TRUE
+    WITH "members" AS (
+	    SELECT "userId"
+	    FROM "memberships"
+	    WHERE "active" = TRUE
+        UNION
+	    SELECT "userId"
+	    FROM "payments"."subscriptions"
+	    WHERE "status" IN ('active', 'past_due', 'unpaid', 'paused'))
+    SELECT ("sess" -> 'passport' ->> 'user')::uuid "userId",
+	    GREATEST (
+        -- Default max-age on a session (7 days)
+        CASE WHEN "expire" - '365 days'::interval <= now()::timestamp(0) + '10 seconds'::interval THEN
+          "expire" - '365 days'::interval
+        ELSE
+          NULL
+        END,
+        -- Short max-age on a session (7 days)
+        CASE WHEN "expire" - '7 days'::interval <= now()::timestamp(0) + '10 seconds'::interval THEN
+          "expire" - '7 days'::interval
+        ELSE
+          NULL
+        END) "lastSeenAt"
+      FROM "sessions"
+	    INNER JOIN "members" ON "members"."userId" = ("sess" -> 'passport' ->> 'user')::uuid
 )
 
 SELECT to_char(now(), 'YYYY-MM') "key", COUNT(DISTINCT "userId") "users"

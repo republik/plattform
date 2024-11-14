@@ -39,7 +39,7 @@ const roundPlaybackRate = (playbackRate: number) => {
 const PlaybackRateControl = ({
   playbackRate,
   setPlaybackRate,
-  availablePlaybackRates = [0.75, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.25, 2.5],
+  availablePlaybackRates = [0.7, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.25, 2.5],
 }: PlaybackRateControl) => {
   const [currentIndex, setCurrentIndex] = useState(
     availablePlaybackRates.indexOf(roundPlaybackRate(playbackRate)),

@@ -106,14 +106,14 @@ interface MilestoneInterface {
 
 input PublishSettings {
   prepublication: Boolean!
-
   # on all channels
   scheduledAt: DateTime
   # this API never triggers sending
   # not immediately, not scheduled
   updateMailchimp: Boolean!
-
   ignoreUnresolvedRepoIds: Boolean
+  # skip generating new synth voice audio derivative and use latest instead
+  skipSynthAudioGeneration: Boolean
 }
 
 type PublishResponse {
@@ -157,6 +157,7 @@ type Commit {
   markdown: String!
   document: Document!
   derivatives: [Derivative!]
+  associatedDerivative: Derivative
   canDerive(type: DerivativeType!): Boolean!
   repo: Repo!
 }
@@ -218,6 +219,8 @@ type Derivative {
   readyAt: DateTime
   failedAt: DateTime
   destroyedAt: DateTime
+  # commit the derivative was generated from
+  commit: Commit!
 }
 
 enum DerivativeType {

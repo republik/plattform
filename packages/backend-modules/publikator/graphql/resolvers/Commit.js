@@ -78,6 +78,26 @@ module.exports = {
 
     return derivatives.map(applyAssetsAudioUrl)
   },
+  associatedDerivative: async (commit, args, context) => {
+    const commitWithSynthReadAloud =
+      await context.pgdb.publikator.commitsWithSynthReadAloud.findOne({
+        commitId: commit.id,
+      })
+
+    if (!commitWithSynthReadAloud) {
+      return null
+    }
+
+    const associatedDerivative = await context.loaders.Derivative.byId.load(
+      commitWithSynthReadAloud.derivativeId,
+    )
+
+    if (!associatedDerivative) {
+      return null
+    }
+    
+    return applyAssetsAudioUrl(associatedDerivative)
+  },
   canDerive: async (commit, args) => {
     const { type } = args
 

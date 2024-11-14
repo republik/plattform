@@ -673,6 +673,10 @@
       "value": "Synthetische Stimme auswählen"
     },
     {
+      "key": "metaData/tts/voice2/dropdown",
+      "value": "Secondäre synthetische Stimme auswählen (optional)"
+    },
+    {
       "key": "metaData/tts/voice/warning",
       "value": "⚠️ Achtung, Budget-Warnung! Falls schon eine Audio-Version erzeugt wurde, führt das Ändern der ausgewählten synthetischen Stimme dazu, dass eine ganz neue Audio-Version generiert wird (die dann auch nochmal voll berechnet wird)."
     },
@@ -1191,6 +1195,10 @@
     {
       "key": "publish/label/prepublication",
       "value": "Interne Publikation (Vorschau für Editoren)"
+    },
+    {
+      "key": "publish/label/generateAudio",
+      "value": "Audio-Version erstellen"
     },
     {
       "key": "publish/label/updateMailchimp",

@@ -48,6 +48,9 @@ export const getRepoHistory = gql`
           derivatives {
             ...SimpleDerivative
           }
+          associatedDerivative {
+            ...SimpleDerivative
+          }
           canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)
         }
       }
@@ -56,6 +59,9 @@ export const getRepoHistory = gql`
         commit {
           ...SimpleCommit
           derivatives {
+            ...SimpleDerivative
+          }
+          associatedDerivative {
             ...SimpleDerivative
           }
           canDeriveSyntheticReadAloud: canDerive(type: SyntheticReadAloud)

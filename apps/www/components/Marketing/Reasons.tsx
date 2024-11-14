@@ -1,4 +1,5 @@
 import { css } from 'glamor'
+import { Offers } from '@app/components/paynote-overlay/paynote-offers'
 
 import {
   TeaserFrontTileRow,
@@ -31,21 +32,13 @@ const Reasons = ({ inNativeApp, reasons }: ReasonsProps) => {
       </TeaserFrontTileRow>
 
       {!inNativeApp && (
-        <div {...styles.buttons}>
-          <Link
-            href={{ pathname: '/angebote', query: { package: 'ABO' } }}
-            passHref
-            legacyBehavior
-          >
-            <Button primary>{t('marketing/join/ABO/button/label')}</Button>
-          </Link>
-          <Link
-            href={{ pathname: '/angebote', query: { package: 'MONTHLY_ABO' } }}
-            passHref
-            legacyBehavior
-          >
-            <Button>{t('marketing/join/MONTHLY_ABO/button/label')}</Button>
-          </Link>
+        <div
+          style={{
+            margin: '0 auto',
+            maxWidth: '34rem',
+          }}
+        >
+          <Offers />
         </div>
       )}
     </div>

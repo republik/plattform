@@ -14,7 +14,6 @@ const styles = {
     margin: `0 ${MARGIN}px`,
     [mediaQueries.mUp]: {
       right: MARGIN,
-      marginBottom: MARGIN,
     },
   }),
   wide: css({
@@ -33,21 +32,15 @@ const BottomPanel = ({
   const [colorScheme] = useColorContext()
   const { inIOSVersion, inNativeApp } = useInNativeApp()
 
-  const bottomOffset =
-    !inNativeApp && inIOSVersion < 15
-      ? 44 // tap safety distance for iOS below 15
-      : MARGIN + 5 // 5px away from the bottom looks better
-  const bottomPosition = offset + bottomOffset
-
   const bottomRule = useMemo(
     () =>
       css({
         bottom: [
-          bottomPosition,
-          `calc(${bottomPosition}px + env(safe-area-inset-bottom))`,
+          offset,
+          `calc(${offset}px + env(safe-area-inset-bottom) + 15px)`,
         ],
       }),
-    [bottomPosition],
+    [offset],
   )
 
   return (

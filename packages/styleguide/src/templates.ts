@@ -1,11 +1,9 @@
 // Export article-schema
 export { default as createArticleSchema } from './templates/Article'
-export { default as articleEmailSchema } from './templates/Article/email'
 export { extractImages, matchImagesParagraph } from './templates/Article/utils'
 
 // Export comment-schema
-export { default as createCommentWebSchema } from './templates/Comment/web'
-export { default as createCommentEmailSchema } from './templates/Comment/email'
+export { default as createCommentWebSchema } from './templates/Comment'
 
 // Export dossier-schema
 export { default as createDossierSchema } from './templates/Dossier'
@@ -14,8 +12,7 @@ export { default as createDossierSchema } from './templates/Dossier'
 export { default as createDiscussionSchema } from './templates/Discussion'
 
 // Export editorial-newsletter-schema
-export { default as createNewsletterWebSchema } from './templates/EditorialNewsletter/web'
-export { default as createNewsletterEmailSchema } from './templates/EditorialNewsletter/email'
+export { default as createNewsletterWebSchema } from './components/EditorialNewsletter'
 
 // Export format-schema
 export { default as createFormatSchema } from './templates/Format'

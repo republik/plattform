@@ -10,7 +10,7 @@ import { serifRegular14 } from '../Typography/styles'
 import {
   CommentBodyParagraph,
   CommentBodyFeaturedText,
-} from '../CommentBody/web'
+} from '../CommentBody'
 import { Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
 import { useColorContext } from '../Colors/ColorContext'

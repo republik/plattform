@@ -13,7 +13,7 @@ import AccessGrants from '../../Access/Grants'
 import withMembership from '../../Auth/withMembership'
 import Box from '../../Frame/Box'
 
-import { Interaction } from '@project-r/styleguide'
+import { Interaction, useColorContext } from '@project-r/styleguide'
 
 import belongingsQuery from '../belongingsQuery'
 import MembershipList from '../Memberships/List'
@@ -40,6 +40,7 @@ const Memberships = ({
 }) => {
   const { query } = useRouter()
   const { inNativeIOSApp } = useInNativeApp()
+  const [colorScheme] = useColorContext()
 
   useEffect(() => {
     if (window.location.hash.substr(1).length > 0) {
@@ -64,9 +65,15 @@ const Memberships = ({
               </AccountBox>
             )}
             {!hasAccessGrants && !hasMemberships && (
-              <AccountBox>
+              <div
+                {...colorScheme.set('backgroundColor', 'hover')}
+                style={{
+                  padding: 14,
+                  marginBottom: 20,
+                }}
+              >
                 <UserGuidance />
-              </AccountBox>
+              </div>
             )}
             {inNativeIOSApp && (
               <AccountBox>

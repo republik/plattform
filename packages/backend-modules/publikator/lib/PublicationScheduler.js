@@ -6,9 +6,6 @@ const index = indices.dict.documents
 const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
 const { handleRedirection } = require('./Document')
 const {
-  onPublish: onPublishSyntheticReadAloud,
-} = require('./Derivative/SyntheticReadAloud')
-const {
   maybeDelcareMilestonePublished,
   updateCurrentPhase,
 } = require('./postgres')
@@ -82,7 +79,8 @@ const init = async (context) => {
             })
           }
 
-          await onPublishSyntheticReadAloud(doc, tx)
+          // do not try to generate audio on scheduled publications (for now)
+          // await onPublishSyntheticReadAloud({ document: doc, pgdb: tx })
 
           await tx.transactionCommit()
         } catch (e) {

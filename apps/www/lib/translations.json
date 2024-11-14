@@ -121,6 +121,10 @@
       "value": "Anmelden"
     },
     {
+      "key": "pages/signin/message",
+      "value": "Melden Sie sich mit der E-Mail-Adresse an, die zu Ihrem Abonnement gehört."
+    },
+    {
       "key": "pages/profile/pageTitle",
       "value": "Profil von {name} – Republik"
     },
@@ -700,73 +704,18 @@
       "key": "Account/Update/details/title",
       "value": "Bitte überprüfen Sie Ihre Angaben und korrigieren beziehungsweise ergänzen Sie sie."
     },
+    { "key": "UserGuidance/title", "value": "Kein laufendes Abonnement" },
     {
-      "key": "Account/noActiveMembership/before",
-      "value": "Leider existiert unter Ihrer E-Mail-Adresse kein laufendes Abonnement. Das kann mehrere Ursachen haben:"
+      "key": "UserGuidance/p1",
+      "value": "Das Konto mit der E-Mail {email} hat kein gültiges Abonnement."
     },
     {
-      "key": "Account/noActiveMembership/solution",
-      "value": "Lösung:"
+      "key": "UserGuidance/p2",
+      "value": "Falsches Konto? {signout} oder wenden Sie sich ans {support}."
     },
     {
-      "key": "Account/noActiveMembership/issue1",
-      "value": "Sie haben ein gültiges Abonnement. Aber Sie haben die falsche E-Mail-Adresse eingegeben. Der Computer erkennt nur die E-Mail-Adresse, die Sie uns beim ersten Mal gegeben haben."
-    },
-    {
-      "key": "Account/noActiveMembership/solution1",
-      "value": "{solution} Melden Sie sich mit einer {signOutLink} (Tipp: mit grosser Wahrscheinlichkeit ist es dieselbe Adresse, auf der Sie auch unseren Newsletter erhalten.)"
-    },
-    {
-      "key": "Account/noActiveMembership/signOutLink",
-      "value": "anderen E-Mail-Adresse neu an"
-    },
-    {
-      "key": "Account/noActiveMembership/issue2",
-      "value": "Ihr Abonnement ist ausgelaufen. Wir freuen uns, Sie nach einer kurzen Pause wieder an Bord zu haben."
-    },
-    {
-      "key": "Account/noActiveMembership/solution2",
-      "value": "{solution} Sie können das problemlos {membershipsLink}. (Dort finden Sie auch alle Details zu Ihren früheren Abonnements.)"
-    },
-    {
-      "key": "Account/noActiveMembership/membershipsLink",
-      "value": "in Ihrem Konto reaktivieren"
-    },
-    {
-      "key": "Account/noActiveMembership/issue3",
-      "value": "Sie haben noch kein Abonnement. "
-    },
-    {
-      "key": "Account/noActiveMembership/solution3",
-      "value": "{solution} Sie können in wenigen Minuten eines haben. {pledgeLink}"
-    },
-    {
-      "key": "Account/noActiveMembership/pledgeLink",
-      "value": "Folgen Sie diesem Link"
-    },
-    {
-      "key": "Account/noActiveMembership/issue4",
-      "value": "Sie sind bei uns dabei. Aber ausschliesslich als Spenderin oder Spender – das freut uns. Aber um uns zu lesen, brauchen Sie zusätzlich noch ein reguläres Abonnement."
-    },
-    {
-      "key": "Account/noActiveMembership/solution4",
-      "value": "{solution} {pledgeLink}"
-    },
-    {
-      "key": "Account/noActiveMembership/issue5",
-      "value": "Sie haben einen Gutschein, diesen aber noch nicht eingelöst."
-    },
-    {
-      "key": "Account/noActiveMembership/solution5",
-      "value": "{solution} Sie können {claimLink}."
-    },
-    {
-      "key": "Account/noActiveMembership/claimLink",
-      "value": "den Gutschein jetzt einlösen"
-    },
-    {
-      "key": "Account/noActiveMembership/after",
-      "value": "Danke für Ihre Mühe!"
+      "key": "UserGuidance/signput",
+      "value": "Loggen Sie sich aus"
     },
     {
       "key": "Account/AddressForm/title",
@@ -5444,10 +5393,6 @@
       "value": "Alle"
     },
     {
-      "key": "AudioPlayer/Latest/NoAccess",
-      "value": "Die neusten Beiträge sind für Mitglieder und Abonnentinnen der Republik zugänglich."
-    },
-    {
       "key": "AudioPlayer/Latest/NoItems",
       "value": "Keine Beiträge verfügbar."
     },
@@ -5502,14 +5447,6 @@
     {
       "key": "AudioPlayer/Queue/EmptyQueue/progressLink",
       "value": "Aufzeichnen der Hörposition aktivieren"
-    },
-    {
-      "key": "AudioPlayer/Queue/NoAcces",
-      "value": "Die Wiedergabeliste ist nur für Mitglieder und Abonnentinnen der Republik zugänglich."
-    },
-    {
-      "key": "AudioPlayer/shared/NoAccess/heading",
-      "value": "Einloggen und Weiterhören"
     },
     {
       "key": "AudioPlayer/error",
@@ -6901,7 +6838,7 @@
     },
     {
       "key": "package/BENEFACTOR/description",
-      "value": "Sie wollen nicht nur ein unabhängiges Magazin lesen, sondern Sie wollen sich auch energisch dafür einsetzen, dass dieses existiert. Mit Ihrer Gönner-Mitgliedschaft werden Sie automatisch Mitglied der Project R Genossenschaft. Und damit Verleger oder Verlegerin der Republik. Um uns für Ihre Unterstützung zu revanchieren, schicken wir Ihnen das Start-up-Verleger-Paket zu."
+      "value": "Sie wollen nicht nur ein unabhängiges Magazin lesen, sondern Sie wollen sich auch energisch dafür einsetzen, dass dieses existiert. Mit Ihrer Gönner-Mitgliedschaft werden Sie automatisch Mitglied der Project R Genossenschaft. Und damit Verleger oder Verlegerin der Republik. Um uns für Ihre Unterstützung zu revanchieren, schicken wir Ihnen ein kleines Dankeschön zu."
     },
     {
       "key": "package/PROLONG/description",
