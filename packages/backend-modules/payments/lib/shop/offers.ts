@@ -15,6 +15,7 @@ export type Offer = {
   id: string
   company: Company
   type: OfferType
+  productId?: string
   defaultPriceLookupKey: string
   taxRateId?: string
   allowPromotions: boolean
