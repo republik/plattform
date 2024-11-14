@@ -3,6 +3,7 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { Shop, Offers, utils } from '../../../lib/shop'
 import { Payments } from '../../../lib/payments'
 import { default as Auth } from '@orbiting/backend-modules-auth'
+import { requiredCustomFields } from '../../../lib/shop/utils'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
@@ -56,6 +57,7 @@ export = async function createCheckoutSession(
     discounts: offer.discount?.couponId
       ? [offer.discount?.couponId]
       : undefined,
+    customFields: requiredCustomFields(ctx.user),
   })
 
   return {
