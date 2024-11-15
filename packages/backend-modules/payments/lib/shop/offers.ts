@@ -14,6 +14,7 @@ export type OfferType = 'SUBSCRIPTION'
 export type Offer = {
   id: string
   company: Company
+  name: string
   type: OfferType
   productId?: string
   defaultPriceLookupKey: string
@@ -23,6 +24,10 @@ export type Offer = {
     id: string
     amount: number
     currency: string
+    recurring?: {
+      interval: 'year' | 'month'
+      interval_count: number
+    }
   }
   customPrice?: {
     min: number
@@ -48,6 +53,7 @@ export type Offer = {
 export const Offers: Offer[] = [
   {
     id: 'YEARLY',
+    name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'ABO',
@@ -55,6 +61,7 @@ export const Offers: Offer[] = [
   },
   {
     id: 'BENEFACTOR',
+    name: 'Gönnermitgliedschaft',
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'BENEFACTOR_ABO',
@@ -71,6 +78,7 @@ export const Offers: Offer[] = [
   },
   {
     id: 'STUDENT',
+    name: 'Ausbildungs-Mitgliedschaft',
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'STUDENT_ABO',
@@ -88,6 +96,7 @@ export const Offers: Offer[] = [
   {
     id: 'CUSTOM',
     type: 'SUBSCRIPTION',
+    name: 'Jahresmitgliedschaft',
     company: 'PROJECT_R',
     defaultPriceLookupKey: 'ABO',
     allowPromotions: false,
@@ -103,6 +112,7 @@ export const Offers: Offer[] = [
   },
   {
     id: 'MONTHLY',
+    name: 'Monats-Abo',
     type: 'SUBSCRIPTION',
     company: 'REPUBLIK',
     allowPromotions: true,

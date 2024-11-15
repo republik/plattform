@@ -139,6 +139,12 @@ export class Shop {
         id: price.id,
         amount: price.unit_amount!,
         currency: price.currency,
+        recurring: price.recurring
+          ? {
+              interval: price.recurring.interval as 'year' | 'month',
+              interval_count: price.recurring.interval_count,
+            }
+          : undefined,
       },
       discount: discount ?? undefined,
     }

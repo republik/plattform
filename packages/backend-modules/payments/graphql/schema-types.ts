@@ -80,6 +80,8 @@ type CheckoutSession {
 
 type Offer {
   id: ID!
+  company: CompanyName!
+  name: String!
   product: Product
   price: Price
   customPrice: CustomPrice
