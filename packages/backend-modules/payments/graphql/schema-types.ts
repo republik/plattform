@@ -82,8 +82,7 @@ type Offer {
   id: ID!
   company: CompanyName!
   name: String!
-  product: Product
-  price: Price
+  price: Price!
   customPrice: CustomPrice
   discount: Discount
 }
