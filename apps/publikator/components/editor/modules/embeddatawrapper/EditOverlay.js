@@ -6,6 +6,7 @@ import {
   Field,
   Checkbox,
   Interaction,
+  A,
 } from '@project-r/styleguide'
 
 const Form = ({ data, onChange, editor, node }) => {
@@ -144,6 +145,20 @@ const Form = ({ data, onChange, editor, node }) => {
   )
 }
 
+const DatawrapperEdit = ({ datawrapperId }) => {
+  return datawrapperId ? (
+    <Interaction.P>
+      <A
+        href={`/datawrapper/chart/${datawrapperId}/edit`}
+        target='_blank'
+        rel='noreferrer'
+      >
+        📊 Grafik in Datawrapper bearbeiten
+      </A>
+    </Interaction.P>
+  ) : null
+}
+
 const EditOverlay = (props) => {
   const onChange = (data) => {
     props.editor.change((change) => {
@@ -152,15 +167,19 @@ const EditOverlay = (props) => {
       })
     })
   }
+
   return (
     <OverlayFormManager {...props} showPreview={false} onChange={onChange}>
       {({ data, onChange }) => (
-        <Form
-          data={data}
-          onChange={onChange}
-          editor={props.editor}
-          node={props.node}
-        />
+        <>
+          <Form
+            data={data}
+            onChange={onChange}
+            editor={props.editor}
+            node={props.node}
+          />
+          <DatawrapperEdit datawrapperId={data.get('datawrapperId')} />
+        </>
       )}
     </OverlayFormManager>
   )
