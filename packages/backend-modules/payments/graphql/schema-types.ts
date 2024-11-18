@@ -94,7 +94,8 @@ type Price {
 }
 
 type Recurring {
-  interval: String
+  interval: String!
+  interval_count: Int!
 }
 
 type CustomPrice {
