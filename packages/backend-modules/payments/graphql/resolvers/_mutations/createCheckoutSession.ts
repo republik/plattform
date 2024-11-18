@@ -13,6 +13,7 @@ type CreateCheckoutSessionArgs = {
     promocode?: string
     customPrice?: number
     metadata?: Record<string, string>
+    returnURL?: string
   }
 }
 
@@ -60,6 +61,7 @@ export = async function createCheckoutSession(
       : undefined,
     customFields: requiredCustomFields(ctx.user),
     metadata: args?.options?.metadata,
+    returnURL: args?.options?.returnURL,
   })
 
   return {

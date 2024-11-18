@@ -26,6 +26,7 @@ export class Shop {
     discounts,
     metadata,
     customFields,
+    returnURL,
   }: {
     offer: Offer
     uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
@@ -33,11 +34,19 @@ export class Shop {
     discounts?: string[]
     customPrice?: number
     metadata?: Record<string, string>
+    returnURL?: string
     customFields?: Stripe.Checkout.SessionCreateParams.CustomField[]
   }) {
     const lineItem = this.genLineItem(offer, customPrice)
 
-    const uiConfig = checkoutUIConfig(uiMode, offer)
+    const uiConfig = checkoutUIConfig(
+      uiMode,
+      offer,
+      returnURL ??
+        `${getConfig().SHOP_BASE_URL}/angebot/${
+          offer.id
+        }?session_id={CHECKOUT_SESSION_ID}`,
+    )
 
     const checkoutMode =
       offer.type === 'SUBSCRIPTION' ? 'subscription' : 'payment'
@@ -244,32 +253,27 @@ export class Shop {
 function checkoutUIConfig(
   uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED',
   offer: Offer,
+  returnURL: string,
 ) {
   switch (uiMode) {
     case 'EMBEDDED':
       return {
         ui_mode: 'embedded' as Stripe.Checkout.SessionCreateParams.UiMode,
-        return_url: `${getConfig().SHOP_BASE_URL}/angebot/${
-          offer.id
-        }?session_id={CHECKOUT_SESSION_ID}`,
+        return_url: returnURL,
         redirect_on_completion:
           'if_required' as Stripe.Checkout.SessionCreateParams.RedirectOnCompletion,
       }
     case 'CUSTOM':
       return {
         ui_mode: 'custom' as Stripe.Checkout.SessionCreateParams.UiMode,
-        return_url: `${getConfig().SHOP_BASE_URL}/angebot/${
-          offer.id
-        }?session_id={CHECKOUT_SESSION_ID}`,
+        return_url: returnURL,
         redirect_on_completion:
           'if_required' as Stripe.Checkout.SessionCreateParams.RedirectOnCompletion,
       }
     case 'HOSTED':
       return {
         ui_mode: 'hosted' as Stripe.Checkout.SessionCreateParams.UiMode,
-        success_url: `${getConfig().SHOP_BASE_URL}/angebot/${
-          offer.id
-        }?session_id={CHECKOUT_SESSION_ID}`,
+        success_url: returnURL,
         cancel_url: `${getConfig().SHOP_BASE_URL}/angebot/${offer.id}`,
       }
   }

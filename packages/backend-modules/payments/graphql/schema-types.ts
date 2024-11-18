@@ -118,6 +118,7 @@ input CheckoutSessionOptions {
   customPrice: Int
   uiMode: CheckoutUIMode
   metadata: JSON # String key value object
+  returnURL: String
 }
 
 input CancelSubscriptionOptions {
