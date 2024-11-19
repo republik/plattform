@@ -7,7 +7,7 @@ const props = (node) => ({
   plain: node.data.plain,
 })
 
-export const datawrapperRule = {
+const datawrapperRule = {
   matchMdast: matchZone('EMBEDDATAWRAPPER'),
   component: Datawrapper,
   props
@@ -18,3 +18,5 @@ export const edgeToEdgeDatawrapperRule = {
   component: EdgeToEdgeDatawrapper,
   props
 }
+
+export default datawrapperRule
