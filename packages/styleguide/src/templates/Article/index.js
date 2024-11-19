@@ -43,6 +43,7 @@ import ifRule from '../shared/email/rules/ifRule'
 import elseRule from '../shared/email/rules/elseRule'
 import authorRule from '../shared/email/rules/authorRule'
 import Datawrapper from '../../components/Datawrapper'
+import { embedDataWrapperRule } from '../shared/rules/embedDatawrapperRule'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -207,24 +208,6 @@ const createSchema = ({
     type: DYNAMICCOMPONENT_TYPE,
   })
 
-  const embedDataWrapper = {
-    matchMdast: matchZone('EMBEDDATAWRAPPER'),
-    component: Datawrapper,
-    editorModule: 'embedDatawrapper',
-    editorOptions: {
-      type: 'EMBEDDATAWRAPPER',
-      insertButtonText: 'Datawrapper (Beta)',
-      insertTypes: ['PARAGRAPH'],
-    },
-    props: (node) => ({
-      datawrapperId: node.data.datawrapperId,
-      alt: node.data.alt,
-      size: node.data.size,
-      plain: node.data.plain,
-    }),
-    isVoid: true,
-  }
-
   const TeaserEmbedCommentWithLiveData = withCommentData(TeaserEmbedComment)
   const TeaserEmbedCommentSwitch = (props) => {
     const [isMounted, setIsMounted] = useState()
@@ -277,7 +260,7 @@ const createSchema = ({
           },
           blocks.cover,
           addProgressProps(dynamicComponent),
-          addProgressProps(embedDataWrapper),
+          addProgressProps(embedDataWrapperRule()),
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
             component: ({
@@ -715,7 +698,7 @@ const createSchema = ({
                   },
                 ],
               },
-              embedDataWrapper,
+              embedDataWrapperRule(),
               base.centerFigure,
               teasers.articleCollection,
               blocks.blockQuote,

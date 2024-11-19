@@ -31,7 +31,7 @@ const CustomUi = ({ editor, node, TYPE }) => {
 }
 
 const EmbedDatawrapper = ({ rule, TYPE }) => {
-  const { identifier = 'EMBEDDATAWRAPPER' } = rule.editorOptions || {}
+  const { identifier = 'EMBEDDATAWRAPPER', resizable } = rule.editorOptions || {}
 
   const mdastRule = {
     match: matchBlock(TYPE),
@@ -62,7 +62,10 @@ const EmbedDatawrapper = ({ rule, TYPE }) => {
   const newItem = () =>
     Block.create({
       type: TYPE,
-      isVoid: true
+      isVoid: true,
+      data: {
+        plain: !resizable,
+      }
     })
 
   return {
@@ -93,6 +96,7 @@ const EmbedDatawrapper = ({ rule, TYPE }) => {
                 <EditOverlay
                   {...props}
                   component={component}
+                  resizable={resizable}
                 />
               </div>
             </OverlayFormContextProvider>

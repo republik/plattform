@@ -24,6 +24,7 @@ import {
 } from '../Article/utils'
 import ifRule from '../shared/email/rules/ifRule'
 import elseRule from '../shared/email/rules/elseRule'
+import { embedDataWrapperRule } from "../shared/rules/embedDatawrapperRule";
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
@@ -291,6 +292,7 @@ const createNewsletterSchema = ({
             rules: [
               paragraph,
               figure,
+              embedDataWrapperRule(false),
               {
                 matchMdast: matchHeading(2),
                 component: H2,
