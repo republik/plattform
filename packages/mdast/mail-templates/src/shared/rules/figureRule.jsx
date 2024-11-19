@@ -1,5 +1,5 @@
 import { matchType, matchZone } from '@republik/mdast-react-render'
-import { Figure, Image } from '../components/Figure'
+import { CoverFigure, EdgeToEdgeFigure, Figure, Image } from "../components/Figure";
 import legendRule from './legendRules'
 import { getImageSize, isRelativeSize } from '../util/ImageSizingUtil'
 import { getNodeDepth } from '../util/NodeDepthUtil'
@@ -9,6 +9,9 @@ import { getResizedSrcs } from '../../styleguide-clone/components/Figure/utils'
 const matchCover = (node, index) => {
   return matchZone('FIGURE') && index === 0
 }
+
+// Check if the figure is a direct child of the root-node
+const isRootLevel = (ancestors) => getNodeDepth(ancestors, matchType('root')) === 1
 
 /**
  * Get Image rules
@@ -25,9 +28,8 @@ export const getImageRules = ({ forceWidth, isCover } = {}) => [
       const altText = node.children[0].alt
       const { plain, size } = parent.data
 
-      // Check if the figure is a direct child of the root-node
-      const displayWidth =
-        getNodeDepth(ancestors, matchType('root')) === 1 ? '1280px' : '600px'
+
+      const displayWidth = isRootLevel(ancestors) ? '1280px' : '600px'
 
       let width = forceWidth ? forceWidth : getImageSize({ displayWidth, size })
 
@@ -35,9 +37,8 @@ export const getImageRules = ({ forceWidth, isCover } = {}) => [
         // If it's the cover image without a given sizing
         (!size && isCover) ||
         // If the image is not the cover and directly inside root
-        (!isCover && getNodeDepth(ancestors, matchType('root')) === 1)
-      )
-        width = getImageSize({ fill: true })
+        (!isCover && isRootLevel(ancestors))
+      ) { width = getImageSize({ fill: true })}
 
       return {
         ...getResizedSrcs(src, undefined, displayWidth),
@@ -61,24 +62,12 @@ export const figureRule = {
 
 export const coverRule = {
   matchMdast: matchCover,
-  component: ({ children }) => (
-    <tr>
-      <td align='center'>
-        <Figure>{children}</Figure>
-      </td>
-    </tr>
-  ),
+  component: CoverFigure,
   rules: getImageRules({ isCover: true }),
 }
 
 export const edgeToEdgeFigureRule = {
   matchMdast: matchZone('FIGURE'),
-  component: ({ children }) => (
-    <tr>
-      <td>
-        <Figure>{children}</Figure>
-      </td>
-    </tr>
-  ),
+  component: EdgeToEdgeFigure,
   rules: getImageRules(),
 }
