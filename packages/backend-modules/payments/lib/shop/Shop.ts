@@ -256,7 +256,7 @@ function getPaymentConfigId(company: Company) {
     case 'PROJECT_R':
       return getConfig().PROJECT_R_STRIPE_PAYMENTS_CONFIG_ID
     case 'REPUBLIK':
-      return getConfig().PROJECT_R_STRIPE_PAYMENTS_CONFIG_ID
+      return getConfig().REPUBLIK_STRIPE_PAYMENTS_CONFIG_ID
   }
 }
 

@@ -1,3 +1,4 @@
+import { getConfig } from '../config'
 import { Company } from '../types'
 
 /**
@@ -117,6 +118,6 @@ export const Offers: Offer[] = [
     company: 'REPUBLIK',
     allowPromotions: true,
     defaultPriceLookupKey: 'MONTHLY_ABO',
-    taxRateId: 'txr_1PqUouD5iIOpR5wNiT5EiKld',
+    taxRateId: getConfig().REPUBLIK_STRIPE_SUBSCRIPTION_TAX_ID,
   },
 ]
