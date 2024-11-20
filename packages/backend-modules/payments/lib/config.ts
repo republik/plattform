@@ -13,6 +13,7 @@ export type Config = {
   REPUBLIK_STRIPE_ENDPOINT_SECRET: string
   MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID: string
   YEARLY_SUBSCRIPTION_STRIPE_PRODUCT_ID: string
+  REPUBLIK_STRIPE_SUBSCRIPTION_TAX_ID: string
 }
 
 export function getConfig(): Config {
@@ -45,6 +46,11 @@ export function getConfig(): Config {
     typeof process.env.MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID !== 'undefined',
     'MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID not set',
   )
+  assert(
+    typeof process.env.PAYMENTS_REPUBLIK_STRIPE_SUBSCRIPTION_TAX_ID !==
+      'undefined',
+    'PAYMENTS_REPUBLIK_STRIPE_SUBSCRIPTION_TAX_ID not set',
+  )
 
   return {
     SCHEMA_NAME: DEFAULT_SCHEMA_NAME,
@@ -60,5 +66,7 @@ export function getConfig(): Config {
       process.env.YEARLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
     MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID:
       process.env.MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
+    REPUBLIK_STRIPE_SUBSCRIPTION_TAX_ID:
+      process.env.PAYMENTS_REPUBLIK_STRIPE_SUBSCRIPTION_TAX_ID,
   }
 }
