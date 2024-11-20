@@ -53,3 +53,29 @@ export const generateAuthorsLine = (me) =>
   `Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'}, ${pubDateFormat(
     new Date(),
   )}`
+
+export const generateAuthorsMdast = (me) => ({
+  type: 'paragraph',
+  children: [
+    {
+      type: 'text',
+      value: 'Von '
+    },
+    {
+      type: 'link',
+      title: null,
+      url: me.id ? `/~${me.id}` : null,
+      children: [
+        {
+          type: 'text',
+          value: me?.name || 'Author'
+        }
+      ]
+    },
+    {
+      type: 'text',
+      value: `, ${pubDateFormat(new Date())}`
+    }
+  ]
+})
+
