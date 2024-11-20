@@ -1,4 +1,3 @@
-const { stringify } = require('@republik/remark-preset')
 const {
   lib: { createRepoUrlPrefixer, createProxyUrlPrefixer },
 } = require('@orbiting/backend-modules-assets')
@@ -34,16 +33,6 @@ module.exports = {
       name: commit.author.name,
       email: commit.author.email,
     }
-  },
-  markdown: async (commit, args, context) => {
-    const { id } = commit
-    const { type, content } = await context.loaders.Commit.byIdContent.load(id)
-
-    if (type !== 'mdast') {
-      return '(keine Markdown-Version verfügbar)'
-    }
-
-    return stringify(content)
   },
   document: async (commit, { publicAssets = false }, context) => {
     const { id, repoId, document } = commit

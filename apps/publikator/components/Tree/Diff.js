@@ -16,25 +16,7 @@ import {
   IconButton,
 } from '@project-r/styleguide'
 
-export const TREE_DIFF_QUERY = gql`
-  query TreeDiff($repoId: ID!, $commitId: ID!, $parentCommitId: ID!) {
-    repo(id: $repoId) {
-      id
-
-      commit: commit(id: $commitId) {
-        id
-        markdown
-      }
-
-      parentCommit: commit(id: $parentCommitId) {
-        id
-        markdown
-      }
-    }
-  }
-`
-
-export const SLATE_DIFF_QUERY = gql`
+const DIFF_QUERY = gql`
   query TreeDiff($repoId: ID!, $commitId: ID!, $parentCommitId: ID!) {
     repo(id: $repoId) {
       id
@@ -97,77 +79,45 @@ export default function TreeDiff(props) {
         style={{ marginRight: 0 }}
       />
       {isVisible &&
-        (props.commit.document.type === 'mdast' ? (
-          <Query query={TREE_DIFF_QUERY} variables={variables}>
-            {({ loading, error, data }) => (
-              <Overlay
-                onClose={handleOnClose}
-                mUpStyle={{ maxWidth: '95vw', minHeight: 'none' }}
-              >
-                <OverlayToolbar
-                  title={props.commit.message}
-                  onClose={handleOnClose}
-                />
-                <OverlayBody style={{ fontSize: 13 }}>
-                  <Loader
-                    loading={loading}
-                    error={error}
-                    render={() => (
-                      <ReactDiffViewer
-                        newValue={data.repo.commit.markdown}
-                        styles={newStyles}
-                        splitView={false}
-                        oldValue={data.repo.parentCommit.markdown}
-                        compareMethod={DiffMethod.WORDS_WITH_SPACE}
-                        extraLinesSurroundingDiff={1}
-                        codeFoldMessageRenderer={() => <MdMoreHoriz />}
-                      />
+        <Query query={DIFF_QUERY} variables={variables}>
+        {({ loading, error, data }) => (
+          <Overlay
+            onClose={handleOnClose}
+            mUpStyle={{ maxWidth: '95vw', minHeight: 'none' }}
+          >
+            <OverlayToolbar
+              title={props.commit.message}
+              onClose={handleOnClose}
+            />
+            <OverlayBody style={{ fontSize: 13 }}>
+              <Loader
+                loading={loading}
+                error={error}
+                render={() => (
+                  <ReactDiffViewer
+                    newValue={JSON.stringify(
+                      data.repo.commit.document.content,
+                      null,
+                      2,
                     )}
-                  />
-                </OverlayBody>
-              </Overlay>
-            )}
-          </Query>
-        ) : (
-          <Query query={SLATE_DIFF_QUERY} variables={variables}>
-            {({ loading, error, data }) => (
-              <Overlay
-                onClose={handleOnClose}
-                mUpStyle={{ maxWidth: '95vw', minHeight: 'none' }}
-              >
-                <OverlayToolbar
-                  title={props.commit.message}
-                  onClose={handleOnClose}
-                />
-                <OverlayBody style={{ fontSize: 13 }}>
-                  <Loader
-                    loading={loading}
-                    error={error}
-                    render={() => (
-                      <ReactDiffViewer
-                        newValue={JSON.stringify(
-                          data.repo.commit.document.content,
-                          null,
-                          2,
-                        )}
-                        styles={newStyles}
-                        splitView={false}
-                        oldValue={JSON.stringify(
-                          data.repo.parentCommit.document.content,
-                          null,
-                          2,
-                        )}
-                        compareMethod={DiffMethod.LINES}
-                        extraLinesSurroundingDiff={1}
-                        codeFoldMessageRenderer={() => <MdMoreHoriz />}
-                      />
+                    styles={newStyles}
+                    splitView={false}
+                    oldValue={JSON.stringify(
+                      data.repo.parentCommit.document.content,
+                      null,
+                      2,
                     )}
+                    compareMethod={DiffMethod.LINES}
+                    extraLinesSurroundingDiff={1}
+                    codeFoldMessageRenderer={() => <MdMoreHoriz />}
                   />
-                </OverlayBody>
-              </Overlay>
-            )}
-          </Query>
-        ))}
+                )}
+              />
+            </OverlayBody>
+          </Overlay>
+        )}
+      </Query>
+      }
     </>
   )
 }
