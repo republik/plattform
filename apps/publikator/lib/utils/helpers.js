@@ -64,7 +64,7 @@ export const generateAuthorsMdast = (me) => ({
     {
       type: 'link',
       title: null,
-      url: me.id ? `/~${me.id}` : null,
+      url: me ? `/~${me.id}` : null,
       children: [
         {
           type: 'text',

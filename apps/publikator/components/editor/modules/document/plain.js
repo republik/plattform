@@ -1,15 +1,11 @@
 import { Document as SlateDocument } from 'slate'
-import { parse } from '@republik/remark-preset'
 
 import { slug } from '@project-r/styleguide'
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
 
 import createPasteHtml from './createPasteHtml'
-import { safeDump } from 'js-yaml'
 
-import {
-  generateAuthorsLine,
-  mdastToString,
+import { generateAuthorsMdast, mdastToString
 } from '../../../../lib/utils/helpers'
 
 export default ({ rule, subModules, TYPE }) => {
@@ -82,10 +78,6 @@ export default ({ rule, subModules, TYPE }) => {
     match: (object) => object.kind === 'document',
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, rest) => {
-      node.children.forEach((child, index) => {
-        // ToDo: match against rule.rules.matchMdast and wrap in center if no match
-      })
-
       const documentNode = {
         data: node.meta,
         kind: 'document',
@@ -134,58 +126,63 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [documentRule],
   })
 
-  const newDocument = ({ title = '', schema = '', repoId }, me) =>
-    serializer.deserialize({
-      repoId,
-      ...parse(`---
-${safeDump({
-  template: schema,
-  title,
-  auto: true,
-  autoSlug: true,
-  feed: true,
-  gallery: true,
-})}
----
-${
-  titleModule
-    ? `
-<section><h6>${titleModule.TYPE}</h6>
-
-${
-  rule.editorOptions?.titleCenter
-    ? `\`\`\`
-{
-  "center": true
-}
-\`\`\``
-    : ''
-}
-
-# ${title}
-
-Lead
-${
-  rule.editorOptions?.skipCredits
-    ? ''
-    : `
-    
-${generateAuthorsLine(me)}
-
-`
-}
-<hr/></section>
-
-`
-    : ''
-}
-<section><h6>${centerModule.TYPE}</h6>
-
-${titleModule ? 'Text' : title}
-
-<hr/></section>
-`),
-    })
+  const newDocument = ({ title = '', schema = '', repoId }, me) => serializer.deserialize({
+    repoId,
+    meta: {
+      template: schema,
+      title,
+      auto: true,
+      autoSlug: true,
+      feed: true,
+      gallery: true
+    },
+    type: 'root',
+    children: [
+      {
+        type: 'zone',
+        identifier: 'TITLE',
+        data: {},
+        children: [
+          {
+            type: 'heading',
+            depth: 1,
+            children: [
+              {
+                type: 'text',
+                value: title
+              }
+            ]
+          },
+          {
+            type: 'paragraph',
+            children: [
+              {
+                type: 'text',
+                value: 'Lead'
+              }
+            ]
+          },
+          generateAuthorsMdast(me)
+        ]
+      },
+      {
+        type: 'zone',
+        identifier: 'CENTER',
+        data: {},
+        children: [
+          {
+            type: 'paragraph',
+            children: [
+              {
+                type: 'text',
+                value: 'Text'
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  })
 
   const Container = rule.component
 
@@ -199,7 +196,7 @@ ${titleModule ? 'Text' : title}
     plugins: [
       {
         onPaste: createPasteHtml(centerModule, figureModule),
-        renderEditor: ({ children, value }) => (
+        renderEditor: ({ children }) => (
           <Container>{children}</Container>
         ),
         validateNode: (node) => {
