@@ -61,6 +61,7 @@ export class Shop {
       locale: 'de',
       billing_address_collection: 'required',
       custom_fields: customFields,
+      payment_method_configuration: getPaymentConfigId(offer.company),
       subscription_data: {
         metadata: {
           ...metadata,
@@ -247,6 +248,15 @@ export class Shop {
       tax_rates: offer.taxRateId ? [offer.taxRateId] : undefined,
       quantity: 1,
     }
+  }
+}
+
+function getPaymentConfigId(company: Company) {
+  switch (company) {
+    case 'PROJECT_R':
+      return getConfig().PROJECT_R_STRIPE_PAYMENTS_CONFIG_ID
+    case 'REPUBLIK':
+      return getConfig().PROJECT_R_STRIPE_PAYMENTS_CONFIG_ID
   }
 }
 
