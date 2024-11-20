@@ -71,6 +71,14 @@ if (process.browser) {
 
 const stringify = (json) => (json ? JSON.stringify(json, null, 2) : '')
 
+const safeParse = (string) => {
+  let json
+  try {
+    json = JSON.parse(string)
+  } catch (e) {}
+  return json
+}
+
 export default withDefaultSSR(
   compose(
     withRouter,
@@ -87,7 +95,7 @@ export default withDefaultSSR(
     const repoId = getRepoIdFromQuery(router.query)
     const { commitId, schema, template, isTemplate } = router.query
     const [store, setStore] = useState(undefined)
-    const [mdast, setMdast] = useState({})
+    const [stringifiedMdast, setStringifiedMdast] = useState('')
     const [foldCode, setFoldCode] = useState(false)
 
     const goToEditor = (e) => {
@@ -106,7 +114,7 @@ export default withDefaultSSR(
 
     const onSave = (e) => {
       if (e) e.preventDefault()
-      store.set('editorState', mdast)
+      store.set('editorState', safeParse(stringifiedMdast))
       goToEditor()
     }
 
@@ -119,7 +127,7 @@ export default withDefaultSSR(
       if (!store) return
       const documentSchema = store.get('editorState').meta?.template || schema
       setFoldCode(documentSchema !== 'front')
-      setMdast(store.get('editorState'))
+      setStringifiedMdast(stringify(store.get('editorState')))
     }, [store])
 
     return (
@@ -177,7 +185,7 @@ export default withDefaultSSR(
         <Frame.Body raw>
           <div {...styles}>
             <CodeMirror
-              value={stringify(mdast)}
+              value={stringifiedMdast}
               options={{
                 theme: 'neo',
                 mode: 'application/json',
@@ -187,7 +195,7 @@ export default withDefaultSSR(
                 autofocus: true,
                 lineNumbers: true,
                 lineWrapping: true,
-                smartIndent: false,
+                smartIndent: true,
                 viewportMargin: Infinity,
                 foldGutter: foldCode,
                 gutters: [
@@ -200,7 +208,7 @@ export default withDefaultSSR(
                   },
               }}
               onBeforeChange={(editor, data, value) => {
-                setMdast(value)
+                setStringifiedMdast(value)
               }}
             />
 
