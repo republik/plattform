@@ -514,7 +514,7 @@ export class Payments implements PaymentService {
       // lookup strip customerIds in the old stripeCustomer table
       const row = await this.pgdb.queryOne(
         `SELECT
-        s.userId as "userId"
+        s."userId" as "userId"
         from "stripeCustomers" s
         JOIN companies c ON s."companyId" = c.id
         WHERE
