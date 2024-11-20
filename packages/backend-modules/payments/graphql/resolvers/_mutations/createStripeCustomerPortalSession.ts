@@ -11,10 +11,16 @@ export = async function createStripeCustomerPortalSession(
   args: { companyName: Company }, // eslint-disable-line @typescript-eslint/no-unused-vars
   ctx: GraphqlContext, // eslint-disable-line @typescript-eslint/no-unused-vars
 ) {
-  const { customerId } = await Payments.getInstance().getCustomerIdForCompany(
-    ctx.user.id,
-    args.companyName,
-  )
+  const customerId = (
+    await Payments.getInstance().getCustomerIdForCompany(
+      ctx.user.id,
+      args.companyName,
+    )
+  )?.customerId
+
+  if (!customerId) {
+    return null
+  }
 
   const sessUrl = await PaymentProvider.forCompany(
     args.companyName,

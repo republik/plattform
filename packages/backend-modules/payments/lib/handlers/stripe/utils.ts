@@ -3,12 +3,12 @@ import { SubscriptionType } from '../../types'
 
 const {
   YEARLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
-  MONTLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
+  MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
 } = getConfig()
 
 export function getSubscriptionType(productId: string): SubscriptionType {
   switch (productId) {
-    case MONTLY_SUBSCRIPTION_STRIPE_PRODUCT_ID:
+    case MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID:
       return 'MONTHLY_SUBSCRIPTION'
     case YEARLY_SUBSCRIPTION_STRIPE_PRODUCT_ID:
       return 'YEARLY_SUBSCRIPTION'
