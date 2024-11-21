@@ -59,7 +59,8 @@ export class Shop {
       currency: offer.price?.currency,
       discounts: discounts?.map((id) => ({ coupon: id })),
       locale: 'de',
-      billing_address_collection: 'required',
+      billing_address_collection:
+        offer.company === 'PROJECT_R' ? 'required' : 'auto',
       custom_fields: customFields,
       payment_method_configuration: getPaymentConfigId(offer.company),
       subscription_data: {
