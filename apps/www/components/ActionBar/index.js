@@ -7,7 +7,9 @@ import {
   shouldIgnoreClick,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
-import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
+
+import { postMessage } from '../../lib/withInNativeApp'
+import { reportError } from '../../lib/errors/reportError'
 
 import { splitByTitle } from '../../lib/utils/mdast'
 import { trackEvent } from '@app/lib/analytics/event-tracking'
@@ -26,6 +28,7 @@ import UserProgress from './UserProgress'
 import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 
 import {
   AudioPlayerLocations,
@@ -63,7 +66,6 @@ const ActionBar = ({
   document,
   documentLoading,
   t,
-  inNativeApp,
   share,
   download,
   discussion,
@@ -85,6 +87,35 @@ const ActionBar = ({
     isPlaying,
   } = useAudioContext()
   const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
+  const { isNativeApp, isIOS, isAndroid } = usePlatformInformation()
+
+  const handleShareClick = async (e) => {
+    e.preventDefault()
+    trackEvent(['ActionBar', 'share', share.url])
+    // in the native app we use postMessage to open the native share UI
+    if (isNativeApp) {
+      postMessage({
+        type: 'share',
+        payload: {
+          title: share.title,
+          url: share.url,
+          subject: share.emailSubject || '',
+          dialogTitle: t('article/share/title'),
+        },
+      })
+      e.target.blur()
+      // on mobile devices we use Web Share API if supported
+    } else if (navigator?.share && (isAndroid || isIOS)) {
+      try {
+        await navigator.share(share)
+      } catch (err) {
+        reportError(err)
+      }
+    // on all other devices we use our share overlay
+    } else {
+      setShareOverlayVisible(!shareOverlayVisible)
+    }
+  }
 
   if (!document) {
     return (
@@ -121,24 +152,7 @@ const ActionBar = ({
             label={share.label || ''}
             Icon={IconShare}
             href={share.url}
-            onClick={(e) => {
-              e.preventDefault()
-              trackEvent(['ActionBar', 'share', share.url])
-              if (inNativeApp) {
-                postMessage({
-                  type: 'share',
-                  payload: {
-                    title: share.title,
-                    url: share.url,
-                    subject: share.emailSubject || '',
-                    dialogTitle: t('article/share/title'),
-                  },
-                })
-                e.target.blur()
-              } else {
-                setShareOverlayVisible(!shareOverlayVisible)
-              }
-            }}
+            onClick={(e) => handleShareClick(e)}
           />
         )}
         {shareOverlayVisible && (
@@ -380,24 +394,7 @@ const ActionBar = ({
       title: t('article/actionbar/share'),
       Icon: IconShare,
       href: shareUrl,
-      onClick: (e) => {
-        e.preventDefault()
-        trackEvent(['ActionBar', 'share', shareUrl])
-        if (inNativeApp) {
-          postMessage({
-            type: 'share',
-            payload: {
-              title: document.title,
-              url: shareUrl,
-              subject: emailSubject,
-              dialogTitle: t('article/share/title'),
-            },
-          })
-          e.target.blur()
-        } else {
-          setShareOverlayVisible(!shareOverlayVisible)
-        }
-      },
+      onClick: (e) => handleShareClick(e),
       label: !forceShortLabel
         ? t(
             `article/actionbar/${mode}/share`,
@@ -500,8 +497,7 @@ const ActionBar = ({
           : play
         : toggleAudioPlayback,
       modes: ['feed', 'seriesEpisode'],
-      show:
-        meta.audioSource?.mp3,
+      show: meta.audioSource?.mp3,
       group: 'audio',
     },
     {
@@ -533,9 +529,7 @@ const ActionBar = ({
         }
       },
       modes: ['feed', 'seriesEpisode'],
-      show:
-        isAudioQueueAvailable &&
-        meta.audioSource?.mp3,
+      show: isAudioQueueAvailable && meta.audioSource?.mp3,
       group: 'audio',
     },
     {
@@ -614,7 +608,7 @@ const ActionBar = ({
 
         {mode === 'seriesOverviewBottom' && (
           <>
-            {!inNativeApp ? (
+            {!isNativeApp ? (
               <Interaction.P style={{ marginTop: 24 }}>
                 <strong>{t('article/actionbar/share')}</strong>
               </Interaction.P>
@@ -701,4 +695,4 @@ const styles = {
   }),
 }
 
-export default compose(withT, withInNativeApp)(ActionBar)
+export default compose(withT)(ActionBar)
