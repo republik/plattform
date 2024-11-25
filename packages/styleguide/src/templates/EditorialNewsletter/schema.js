@@ -292,7 +292,7 @@ const createNewsletterSchema = ({
             rules: [
               paragraph,
               figure,
-              embedDataWrapperRule(false),
+              embedDataWrapperRule({ emailFirst: true }),
               {
                 matchMdast: matchHeading(2),
                 component: H2,

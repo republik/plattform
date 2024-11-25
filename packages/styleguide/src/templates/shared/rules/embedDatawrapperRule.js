@@ -1,7 +1,10 @@
 import { matchZone } from '@republik/mdast-react-render'
 import Datawrapper from '../../../components/Datawrapper'
 
-export const embedDataWrapperRule = (resizable = true) => ({
+// email first embeds are:
+//  1. not resizable
+//  2. plain by default (no header/footer)
+export const embedDataWrapperRule = ({ emailFirst } = {}) => ({
   matchMdast: matchZone('EMBEDDATAWRAPPER'),
   component: Datawrapper,
   editorModule: 'embedDatawrapper',
@@ -9,7 +12,7 @@ export const embedDataWrapperRule = (resizable = true) => ({
     type: 'EMBEDDATAWRAPPER',
     insertButtonText: 'Datawrapper (Beta)',
     insertTypes: ['PARAGRAPH'],
-    resizable,
+    emailFirst,
   },
   props: (node) => ({
     datawrapperId: node.data.datawrapperId,
