@@ -7,7 +7,7 @@ import { EdgeToEdgeFigure, Figure } from './Figure'
 //  3. https://datawrapper.dwcdn.net/DW123ID/edgetoedge.png -> 1280px wide
 //  4. https://datawrapper.dwcdn.net/DW123ID/edgetoedgeplain.png -> 1280px wide, no header or footer
 
-const Chart = ({ src, alt, width }) => (
+const Chart = ({ src, width }) => (
   <img
     key='image'
     style={{
@@ -19,26 +19,23 @@ const Chart = ({ src, alt, width }) => (
     }}
     width={width}
     src={src}
-    alt={alt}
   />
 )
 
-export const Datawrapper = ({ datawrapperId, alt, plain }) => (
+export const Datawrapper = ({ datawrapperId, plain }) => (
   <Figure>
     <Chart
       src={`https://datawrapper.dwcdn.net/${datawrapperId}/mail${plain ? 'plain' : ''}.png`}
       width={450}
-      alt={alt}
     />
   </Figure>
 )
 
-export const EdgeToEdgeDatawrapper = ({ datawrapperId, alt, plain }) => (
+export const EdgeToEdgeDatawrapper = ({ datawrapperId, plain }) => (
   <EdgeToEdgeFigure>
     <Chart
       src={`https://datawrapper.dwcdn.net/${datawrapperId}/edgetoedge${plain ? 'plain' : ''}.png`}
       width={1280}
-      alt={alt}
     />
   </EdgeToEdgeFigure>
 )

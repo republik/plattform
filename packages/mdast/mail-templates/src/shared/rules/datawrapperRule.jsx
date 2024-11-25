@@ -3,7 +3,6 @@ import { Datawrapper, EdgeToEdgeDatawrapper } from '../components/Datawrapper'
 
 const props = (node) => ({
   datawrapperId: node.data.datawrapperId,
-  alt: node.data.alt,
   plain: node.data.plain,
 })
 
