@@ -230,11 +230,11 @@ export class Shop {
     return promition.data[0]
   }
 
-  private genLineItem(offer: Offer, customPrice?: number) {
+  public genLineItem(offer: Offer, customPrice?: number) {
     if (offer.customPrice && typeof customPrice !== 'undefined') {
       return {
         price_data: {
-          product: offer.productId,
+          product: offer.productId!,
           unit_amount: Math.max(offer.customPrice.min, customPrice),
           currency: offer.price!.currency,
           recurring: offer.customPrice!.recurring,
@@ -245,7 +245,7 @@ export class Shop {
     }
 
     return {
-      price: offer.price?.id,
+      price: offer.price!.id,
       tax_rates: offer.taxRateId ? [offer.taxRateId] : undefined,
       quantity: 1,
     }

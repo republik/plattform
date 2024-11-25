@@ -11,6 +11,7 @@ type queries {
 }
 
 type mutations {
+  redeemGiftVoucher(voucherCode: String): Boolean
   createCheckoutSession(offerId: ID!, promoCode: String options: CheckoutSessionOptions): CheckoutSession
   cancelMagazineSubscription(args: CancelSubscription): Boolean
   createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession

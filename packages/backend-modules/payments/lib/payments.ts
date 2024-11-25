@@ -678,17 +678,17 @@ export class Payments implements PaymentService {
     await this.customers.saveCustomerIdForCompany(user.id, company, customerId)
 
     if (!oldCustomerData || oldCustomerData?.customerId === null) {
-      // backfill into lagacy table to prevent new customers from beeing created if the old checkout is used
-      // get rid of this as soon as posible...
+      // backfill into legacy table to prevent new customers from being created if the old checkout is used
+      // get rid of this as soon as possible...
       try {
-        const { id: lagacyCompanyId } =
+        const { id: legacyCompanyId } =
           await this.pgdb.public.companies.findOne({
             name: company,
           })
         await this.pgdb.public.stripeCustomers.insert({
           id: customerId,
           userId: userId,
-          companyId: lagacyCompanyId,
+          companyId: legacyCompanyId,
         })
       } catch (e) {
         console.error(e)
