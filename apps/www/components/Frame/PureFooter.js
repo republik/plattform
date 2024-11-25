@@ -7,10 +7,7 @@ import {
   IconButton,
 } from '@project-r/styleguide'
 import { EMAIL_CONTACT } from '../../lib/constants'
-import {
-  IconLogoFacebook,
-  IconLogoMastodon,
-} from '@republik/icons'
+import { IconLogoFacebook, IconLogoTwitter } from '@republik/icons'
 
 css.global('html', { boxSizing: 'border-box' })
 css.global('*, *:before, *:after', { boxSizing: 'inherit' })
@@ -106,8 +103,8 @@ const Footer = ({ en }) => (
         target='_blank'
       />
       <IconButton
-        Icon={IconLogoMastodon}
-        href='https://republik.social/@republik_magazin'
+        Icon={IconLogoTwitter}
+        href='https://twitter.com/RepublikMagazin'
         target='_blank'
       />
     </div>
