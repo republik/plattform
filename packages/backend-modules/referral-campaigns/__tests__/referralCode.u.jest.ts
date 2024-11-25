@@ -75,7 +75,7 @@ function mockUserRow(): User {
   const firstName = faker.person.firstName()
   const lastName = faker.person.firstName()
 
-  const userRow: UserRow = {
+  const userRow: Partial<UserRow> = {
     id: faker.string.uuid(),
     name: '',
     firstName: firstName,
@@ -90,18 +90,18 @@ function mockUserRow(): User {
   }
 
   return {
-    id: userRow.id,
+    id: userRow.id!,
     name: '',
-    firstName: userRow.firstName,
-    lastName: userRow.lastName,
-    email: userRow.email,
+    firstName: userRow.firstName!,
+    lastName: userRow.lastName!,
+    email: userRow.email!,
     roles: [],
-    username: userRow.username,
-    initials: userRow.initials,
-    hasPublicProfile: userRow.hasPublicProfile,
+    username: userRow.username!,
+    initials: userRow.initials!,
+    hasPublicProfile: userRow.hasPublicProfile!,
     referralCode: null,
     portraitUrl: '',
     slug: '',
-    _raw: userRow,
+    _raw: userRow as UserRow,
   }
 }

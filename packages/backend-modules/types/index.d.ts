@@ -37,6 +37,41 @@ export interface UserRow {
   roles: string[]
   email: string
   referralCode: string | null
+  verified: boolean
+  birthday: Date | null
+  phoneNumber: string
+  addressId: string | null
+  portraitUrl: string | null
+  statement: string | null
+  isListed: boolean
+  isAdminUnlisted: boolean
+  testimonialId: string | null
+  facebookId: string | null
+  twitterHandle: string | null
+  publicUrl: string | null
+  badges: string[] | null
+  biography: string | null
+  pgpPublicKey: string | null
+  phoneNumberNote: string | null
+  phoneNumberAccessRole: string
+  emailAccessRole: string
+  ageAccessRole: string
+  previewsSentAt: any | null
+  adminNotes: string | null
+  defaultDiscussionNotificationOption: string
+  discussionNotificationChannels: string[]
+  TOTPChallengeSecret: null
+  isTOTPChallengeSecretVerified: null
+  phoneNumberVerificationCode: string | null
+  isPhoneNumberVerified: boolean
+  enabledSecondFactors: string[] | null
+  deletedAt: Date | null
+  preferredFirstFactor: string | null
+  hadDevice: boolean
+  disclosures: string
+  accessKey: string
+  gender: string | null
+  prolitterisId: string | null
 }
 
 export interface User {
