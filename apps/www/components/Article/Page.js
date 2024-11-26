@@ -523,11 +523,12 @@ const ArticlePage = ({
       shareParam={share}
     />
   )
-  const actionBarEnd = actionBar
-    ? cloneElement(actionBar, {
-        mode: isSeriesOverview ? 'seriesOverviewBottom' : 'articleBottom',
-      })
-    : undefined
+  const actionBarEnd =
+    actionBar && !isSeriesOverview
+      ? cloneElement(actionBar, {
+          mode: 'articleBottom',
+        })
+      : undefined
 
   const actionBarOverlay = actionBar
     ? cloneElement(actionBar, {
