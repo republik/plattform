@@ -255,12 +255,6 @@ const ActionBar = ({
   }
 
   const handleShareClick = async (shareData = {}) => {
-    console.log(
-      "navigator.share", navigator?.share,
-      "isAndroid", isAndroid,
-      "isOS", isIOS,
-      navigator?.share && (isAndroid || isIOS),
-    )
     // shareData is only present on certain pages with no document
     trackEvent(['ActionBar', 'share', shareData.url || shareUrl])
     // in the native app we use postMessage to open the native share UI
