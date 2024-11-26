@@ -21,7 +21,6 @@ import {
 const ShareButtons = ({
   t,
   url,
-  tweet,
   title,
   emailSubject,
   emailBody,

@@ -132,7 +132,6 @@ const ActionBar = ({
             onClose={() => setShareOverlayVisible(false)}
             url={share.url}
             title={share.overlayTitle || t('article/actionbar/share')}
-            tweet={share.tweet || ''}
             emailSubject={share.emailSubject || ''}
             emailBody={share.emailBody || ''}
             emailAttachUrl={share.emailAttachUrl}
@@ -626,7 +625,6 @@ const ActionBar = ({
           onClose={() => setShareOverlayVisible(false)}
           url={shareUrl}
           title={t('article/actionbar/share')}
-          tweet={''}
           emailSubject={emailSubject}
           emailBody={''}
           emailAttachUrl
