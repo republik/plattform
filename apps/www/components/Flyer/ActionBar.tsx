@@ -56,7 +56,6 @@ const ShareButton: React.FC<{
           onClose={() => showOverlay(false)}
           url={url}
           title={t('article/actionbar/share')}
-          tweet=''
           emailSubject={t('article/share/emailSubject', {
             title: meta.title,
           })}

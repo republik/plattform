@@ -46,7 +46,6 @@ export const HeaderShare = ({ meta, noLabel }) => {
           onClose={() => showOverlay(false)}
           url={url}
           title={t('article/actionbar/share')}
-          tweet=''
           emailSubject={t('article/share/emailSubject', {
             title: title,
           })}
