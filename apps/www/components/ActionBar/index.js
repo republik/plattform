@@ -124,13 +124,7 @@ const ActionBar = ({
             label={share.label || ''}
             Icon={IconShare}
             href={share.url}
-            onClick={(e) => {
-              e.preventDefault()
-              handleShareClick(share)
-              if (isNativeApp) {
-                e.target.blur()
-              }
-            }}
+            onClick={(e) => handleShareClick(e, share)}
           />
         )}
         {shareOverlayVisible && (
@@ -254,7 +248,7 @@ const ActionBar = ({
     )
   }
 
-  const handleShareClick = async (shareData = {}) => {
+  const handleShareClick = async (e, shareData = {}) => {
     // shareData is only present on certain pages with no document
     trackEvent(['ActionBar', 'share', shareData.url || shareUrl])
     // in the native app we use postMessage to open the native share UI
@@ -268,6 +262,7 @@ const ActionBar = ({
           dialogTitle: t('article/share/title'),
         },
       })
+      e.target.blur()
       // on mobile devices we use Web Share API if supported
     } else if (navigator?.share && (isAndroid || isIOS)) {
       try {
@@ -402,13 +397,7 @@ const ActionBar = ({
       title: t('article/actionbar/share'),
       Icon: IconShare,
       href: shareUrl,
-      onClick: (e) => {
-        e.preventDefault()
-        handleShareClick()
-        if (isNativeApp) {
-          e.target.blur()
-        }
-      },
+      onClick: (e) => handleShareClick(e),
       label: !forceShortLabel
         ? t(
             `article/actionbar/${mode}/share`,
