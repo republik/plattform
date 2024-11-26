@@ -625,24 +625,6 @@ const ActionBar = ({
             <RenderItems items={audioItems} />
           </div>
         )}
-
-        {mode === 'seriesOverviewBottom' && (
-          <>
-            {!isNativeApp ? (
-              <Interaction.P style={{ marginTop: 24 }}>
-                <strong>{t('article/actionbar/share')}</strong>
-              </Interaction.P>
-            ) : null}
-            <ShareButtons
-              url={shareUrl}
-              title={document.title}
-              tweet=''
-              emailSubject={emailSubject}
-              emailBody=''
-              emailAttachUrl
-            />
-          </>
-        )}
       </div>
 
       {/* OVERLAYS */}

@@ -525,7 +525,7 @@ const ArticlePage = ({
   )
   const actionBarEnd = actionBar
     ? cloneElement(actionBar, {
-        mode: isSeriesOverview ? 'seriesOverviewBottom' : 'articleBottom',
+        mode: 'articleBottom',
       })
     : undefined
 

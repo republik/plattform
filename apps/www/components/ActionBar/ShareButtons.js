@@ -5,7 +5,7 @@ import { IconButton } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 import { reportError } from '../../lib/errors/reportError'
-import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
+import { postMessage } from '../../lib/withInNativeApp'
 import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 
@@ -45,55 +45,6 @@ const ShareButtons = ({
       return () => clearTimeout(timeout)
     }
   }, [copyLinkSuffix])
-
-  // share via postMessage in native apps
-  if (isNativeApp) {
-    return (
-      <IconButton
-        style={{ marginTop: 24 }}
-        title={t('article/actionbar/share')}
-        Icon={IconShare}
-        href={url}
-        onClick={(e) => {
-          e.preventDefault()
-          trackEvent(['ActionBar', 'share', url])
-          postMessage({
-            type: 'share',
-            payload: {
-              title: title,
-              url: url,
-              subject: emailSubject,
-              dialogTitle: t('article/share/title'),
-            },
-          })
-          e.target.blur()
-        }}
-        label={t('article/actionbar/share')}
-        labelShort={t('article/actionbar/share')}
-      />
-    )
-  }
-
-  // share via Web Share API on iOS and Android devices
-  if (navigator?.share && (isAndroid || isIOS)) {
-    return (
-      <IconButton
-        style={{ marginTop: 24 }}
-        title={t('article/actionbar/share')}
-        Icon={IconShare}
-        href={url}
-        onClick={async (e) => {
-          try {
-            await navigator.share({ url: url, title: title })
-          } catch (err) {
-            reportError(err)
-          }
-        }}
-        label={t('article/actionbar/share')}
-        labelShort={t('article/actionbar/share')}
-      />
-    )
-  }
 
   const emailAttache = emailAttachUrl ? `\n\n${url}` : ''
 
@@ -234,4 +185,4 @@ const styles = {
   }),
 }
 
-export default compose(withInNativeApp, withT)(ShareButtons)
+export default compose(withT)(ShareButtons)
