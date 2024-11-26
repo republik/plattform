@@ -249,6 +249,7 @@ const ActionBar = ({
   }
 
   const handleShareClick = async (e, shareData = {}) => {
+    e.preventDefault()
     // shareData is only present on certain pages with no document
     trackEvent(['ActionBar', 'share', shareData.url || shareUrl])
     // in the native app we use postMessage to open the native share UI
