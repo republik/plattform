@@ -4,8 +4,6 @@ import { css } from 'glamor'
 import { IconButton } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
-import { reportError } from '../../lib/errors/reportError'
-import { postMessage } from '../../lib/withInNativeApp'
 import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 
@@ -13,10 +11,9 @@ import copyToClipboard from 'clipboard-copy'
 import {
   IconLink,
   IconLogoFacebook,
-  IconLogoTwitter,
+  IconLogoBluesky,
   IconLogoWhatsApp,
   IconMail,
-  IconShare,
   IconLogoTelegram,
   IconLogoThreema,
 } from '@republik/icons'
@@ -60,14 +57,12 @@ const ShareButtons = ({
       label: t('article/actionbar/facebook/label'),
     },
     {
-      name: 'twitter',
+      name: 'bluesky',
       target: '_blank',
-      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        tweet,
-      )}&url=${encodeURIComponent(url)}`,
-      icon: IconLogoTwitter,
-      title: t('article/actionbar/twitter/title'),
-      label: t('article/actionbar/twitter/label'),
+      href: `https://bsky.app/intent/compose?text=${encodeURIComponent(url)}`,
+      icon: IconLogoBluesky,
+      title: t('article/actionbar/bluesky/title'),
+      label: t('article/actionbar/bluesky/label'),
     },
     {
       name: 'whatsapp',
