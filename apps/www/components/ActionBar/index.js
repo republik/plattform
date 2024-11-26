@@ -89,6 +89,38 @@ const ActionBar = ({
   const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
   const { isNativeApp, isIOS, isAndroid } = usePlatformInformation()
 
+  const handleShareClick = async (e, shareData = {}) => {
+    e.preventDefault()
+    // shareData is only present on certain pages with no document
+    trackEvent(['ActionBar', 'share', shareData.url || shareUrl])
+    // in the native app we use postMessage to open the native share UI
+    if (isNativeApp) {
+      postMessage({
+        type: 'share',
+        payload: {
+          title: shareData.title || document.title,
+          url: shareData.url || shareUrl,
+          subject: shareData.emailSubject || emailSubject || '',
+          dialogTitle: t('article/share/title'),
+        },
+      })
+      e.target.blur()
+      // on mobile devices we use Web Share API if supported
+    } else if (navigator?.share && (isAndroid || isIOS)) {
+      try {
+        await navigator.share({
+          title: shareData.title || document.title,
+          url: shareData.url || shareUrl,
+        })
+      } catch (err) {
+        reportError(err)
+      }
+      // on all other devices we use our share overlay
+    } else {
+      setShareOverlayVisible(!shareOverlayVisible)
+    }
+  }
+
   if (!document) {
     return (
       <div {...styles.topRow} {...(isCentered && { ...styles.centered })}>
@@ -245,38 +277,6 @@ const ActionBar = ({
       },
       AudioPlayerLocations.ACTION_BAR,
     )
-  }
-
-  const handleShareClick = async (e, shareData = {}) => {
-    e.preventDefault()
-    // shareData is only present on certain pages with no document
-    trackEvent(['ActionBar', 'share', shareData.url || shareUrl])
-    // in the native app we use postMessage to open the native share UI
-    if (isNativeApp) {
-      postMessage({
-        type: 'share',
-        payload: {
-          title: shareData.title || document.title,
-          url: shareData.url || shareUrl,
-          subject: shareData.emailSubject || emailSubject || '',
-          dialogTitle: t('article/share/title'),
-        },
-      })
-      e.target.blur()
-      // on mobile devices we use Web Share API if supported
-    } else if (navigator?.share && (isAndroid || isIOS)) {
-      try {
-        await navigator.share({
-          title: shareData.title || document.title,
-          url: shareData.url || shareUrl,
-        })
-      } catch (err) {
-        reportError(err)
-      }
-      // on all other devices we use our share overlay
-    } else {
-      setShareOverlayVisible(!shareOverlayVisible)
-    }
   }
 
   const ActionItems = [
