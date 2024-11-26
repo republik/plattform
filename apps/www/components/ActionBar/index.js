@@ -89,34 +89,6 @@ const ActionBar = ({
   const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
   const { isNativeApp, isIOS, isAndroid } = usePlatformInformation()
 
-  const handleShareClick = async (e) => {
-    e.preventDefault()
-    trackEvent(['ActionBar', 'share', share.url])
-    // in the native app we use postMessage to open the native share UI
-    if (isNativeApp) {
-      postMessage({
-        type: 'share',
-        payload: {
-          title: share.title,
-          url: share.url,
-          subject: share.emailSubject || '',
-          dialogTitle: t('article/share/title'),
-        },
-      })
-      e.target.blur()
-      // on mobile devices we use Web Share API if supported
-    } else if (navigator?.share && (isAndroid || isIOS)) {
-      try {
-        await navigator.share(share)
-      } catch (err) {
-        reportError(err)
-      }
-    // on all other devices we use our share overlay
-    } else {
-      setShareOverlayVisible(!shareOverlayVisible)
-    }
-  }
-
   if (!document) {
     return (
       <div {...styles.topRow} {...(isCentered && { ...styles.centered })}>
@@ -152,7 +124,13 @@ const ActionBar = ({
             label={share.label || ''}
             Icon={IconShare}
             href={share.url}
-            onClick={(e) => handleShareClick(e)}
+            onClick={(e) => {
+              e.preventDefault()
+              handleShareClick(share)
+              if (isNativeApp) {
+                e.target.blur()
+              }
+            }}
           />
         )}
         {shareOverlayVisible && (
@@ -276,6 +254,42 @@ const ActionBar = ({
     )
   }
 
+  const handleShareClick = async (shareData = {}) => {
+    console.log(
+      "navigator.share", navigator?.share,
+      "isAndroid", isAndroid,
+      "isOS", isIOS,
+      navigator?.share && (isAndroid || isIOS),
+    )
+    // shareData is only present on certain pages with no document
+    trackEvent(['ActionBar', 'share', shareData.url || shareUrl])
+    // in the native app we use postMessage to open the native share UI
+    if (isNativeApp) {
+      postMessage({
+        type: 'share',
+        payload: {
+          title: shareData.title || document.title,
+          url: shareData.url || shareUrl,
+          subject: shareData.emailSubject || emailSubject || '',
+          dialogTitle: t('article/share/title'),
+        },
+      })
+      // on mobile devices we use Web Share API if supported
+    } else if (navigator?.share && (isAndroid || isIOS)) {
+      try {
+        await navigator.share({
+          title: shareData.title || document.title,
+          url: shareData.url || shareUrl,
+        })
+      } catch (err) {
+        reportError(err)
+      }
+      // on all other devices we use our share overlay
+    } else {
+      setShareOverlayVisible(!shareOverlayVisible)
+    }
+  }
+
   const ActionItems = [
     {
       title: readingTimeTitle,
@@ -394,7 +408,13 @@ const ActionBar = ({
       title: t('article/actionbar/share'),
       Icon: IconShare,
       href: shareUrl,
-      onClick: (e) => handleShareClick(e),
+      onClick: (e) => {
+        e.preventDefault()
+        handleShareClick()
+        if (isNativeApp) {
+          e.target.blur()
+        }
+      },
       label: !forceShortLabel
         ? t(
             `article/actionbar/${mode}/share`,
