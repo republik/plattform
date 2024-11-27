@@ -120,17 +120,17 @@ export class GiftShop {
           case undefined:
             return this.applyGiftToNewSubscription(userId, gift)
           case 'ABO':
-            return this.applyGiftToMembershipAbo(current.id, gift)
+            return this.applyGiftToMembershipAbo(userId, current.id, gift)
           case 'MONTHLY_ABO':
-            return this.applyGiftToMonthlyAbo(current.id, gift)
+            return this.applyGiftToMonthlyAbo(userId, current.id, gift)
           case 'YEARLY_ABO':
-            return this.applyGiftToYearlyAbo(current.id, gift)
+            return this.applyGiftToYearlyAbo(userId, current.id, gift)
           case 'BENEFACTOR_ABO':
-            return this.applyGiftToBenefactor(current.id, gift)
+            return this.applyGiftToBenefactor(userId, current.id, gift)
           case 'YEARLY_SUBSCRIPTION':
-            return this.applyGiftToYearlySubscription(current.id, gift)
+            return this.applyGiftToYearlySubscription(userId, current.id, gift)
           case 'MONTHLY_SUBSCRIPTION':
-            return this.applyGiftToMonthlySubscription(current.id, gift)
+            return this.applyGiftToMonthlySubscription(userId, current.id, gift)
           default:
             throw Error('Match error')
         }
@@ -148,7 +148,7 @@ export class GiftShop {
     return GIFTS.find((gift) => (gift.id = id)) || null
   }
 
-  private async markGiftAsRedeemed(gift: Gift) {
+  private async markGiftAsRedeemed(_gift: Gift) {
     throw new Error('Not implemented')
   }
 
@@ -201,7 +201,7 @@ export class GiftShop {
     ].subscriptions.create({
       customer: customerId,
       metadata: {
-        'republik.payments.gift': 'true',
+        'republik.payments.started-as': 'gift',
       },
       items: [shop.genLineItem(offer)],
       coupon: gift.coupon,
@@ -214,35 +214,47 @@ export class GiftShop {
         subscription.latest_invoice.toString(),
       )
     }
-
-    // const args = mapSubscriptionArgs(gift.company, subscription)
-    // return (await paymentService.setupSubscription(userId, args)).id
     return
   }
 
-  private async applyGiftToMembershipAbo(_id: string, _gift: Gift) {
+  private async applyGiftToMembershipAbo(
+    _userId: string,
+    _membershipId: string,
+    _gift: Gift,
+  ) {
     throw new Error('Not implemented')
     return
   }
-  private async applyGiftToMonthlyAbo(_id: string, _gift: Gift) {
+  private async applyGiftToMonthlyAbo(
+    _userId: string,
+    _membershipId: string,
+    _gift: Gift,
+  ) {
     throw new Error('Not implemented')
     return
   }
-  private async applyGiftToYearlyAbo(_id: string, _gift: Gift) {
+  private async applyGiftToYearlyAbo(
+    _userId: string,
+    _id: string,
+    _gift: Gift,
+  ) {
     throw new Error('Not implemented')
     return
   }
-  private async applyGiftToBenefactor(_id: string, _gift: Gift) {
+  private async applyGiftToBenefactor(
+    _userId: string,
+    _id: string,
+    _gift: Gift,
+  ) {
     throw new Error('Not implemented')
     return
   }
-  private async applyGiftToYearlySubscription(id: string, gift: Gift) {
-    const stripeId = (
-      await this.#pgdb.queryOne(
-        `SELECT "externalId" from payments.subscriptions WHERE id = :id`,
-        { id: id },
-      )
-    ).externalId
+  private async applyGiftToYearlySubscription(
+    _userId: string,
+    id: string,
+    gift: Gift,
+  ) {
+    const stripeId = await this.getStripeSubscriptionId(id)
 
     if (!stripeId) {
       throw new Error(`yearly subscription ${id} does not exist`)
@@ -253,8 +265,91 @@ export class GiftShop {
     })
     return
   }
-  private async applyGiftToMonthlySubscription(_id: string, _gift: Gift) {
+
+  private async applyGiftToMonthlySubscription(
+    userId: string,
+    subScriptionId: string,
+    gift: Gift,
+  ) {
+    const stripeId = await this.getStripeSubscriptionId(subScriptionId)
+
+    if (!stripeId) {
+      throw new Error(`monthly subscription ${subScriptionId} does not exist`)
+    }
+
+    switch (gift.company) {
+      case 'REPUBLIK': {
+        await this.#stripeAdapters.REPUBLIK.subscriptions.update(stripeId, {
+          coupon: gift.coupon,
+        })
+        return
+      }
+      case 'PROJECT_R': {
+        const cRepo = new CustomerRepo(this.#pgdb)
+        const paymentService = Payments.getInstance()
+
+        let customerId = (
+          await cRepo.getCustomerIdForCompany(userId, gift.company)
+        )?.customerId
+        if (!customerId) {
+          customerId = await paymentService.createCustomer(gift.company, userId)
+        }
+
+        const shop = new Shop(Offers)
+
+        const offer = (await shop.getOfferById(gift.offer))!
+
+        const oldSub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
+          stripeId,
+          {
+            cancellation_details: {
+              comment: 'system cancelation because of update',
+            },
+            proration_behavior: 'none',
+            metadata: {
+              'republik.payments.mailing': 'no-cancel',
+              'republik.payments.member': 'keep-on-cancel',
+            },
+            cancel_at_period_end: true,
+          },
+        )
+
+        await this.#stripeAdapters.PROJECT_R.subscriptionSchedules.create({
+          customer: customerId,
+          start_date: oldSub.current_period_end,
+          phases: [
+            {
+              items: [shop.genLineItem(offer)],
+              iterations: 1,
+              collection_method: 'send_invoice',
+              coupon: gift.coupon,
+              invoice_settings: {
+                days_until_due: 14,
+              },
+              metadata: {
+                'republik.payments.started-as': 'gift',
+              },
+            },
+          ],
+        })
+        return
+      }
+    }
+
     throw new Error('Not implemented')
     return
+  }
+
+  private async getStripeSubscriptionId(
+    internalId: string,
+  ): Promise<string | null> {
+    const res = await this.#pgdb.queryOne(
+      `SELECT "externalId" from payments.subscriptions WHERE id = :id`,
+      { id: internalId },
+    )
+
+    console.log(res)
+
+    return res.externalId
   }
 }
