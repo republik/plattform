@@ -1,5 +1,5 @@
 import { matchZone } from '@republik/mdast-react-render'
-import { Datawrapper, EdgeToEdgeDatawrapper } from '../components/Datawrapper'
+import { Datawrapper } from '../components/Datawrapper'
 
 const props = (node) => ({
   datawrapperId: node.data.datawrapperId,
@@ -9,12 +9,6 @@ const props = (node) => ({
 const datawrapperRule = {
   matchMdast: matchZone('EMBEDDATAWRAPPER'),
   component: Datawrapper,
-  props
-}
-
-export const edgeToEdgeDatawrapperRule = {
-  matchMdast: matchZone('EMBEDDATAWRAPPER'),
-  component: EdgeToEdgeDatawrapper,
   props
 }
 

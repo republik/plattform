@@ -1,11 +1,9 @@
 import React from 'react'
-import { EdgeToEdgeFigure, Figure } from './Figure'
+import { Figure } from './Figure'
 
 // We generate the following images in Datawrapper upon publishing:
 //  1. https://datawrapper.dwcdn.net/DW123ID/mail.png -> 450px wide
 //  2. https://datawrapper.dwcdn.net/DW123ID/mailplain.png -> 450px wide, no header or footer
-//  3. https://datawrapper.dwcdn.net/DW123ID/edgetoedge.png -> 1280px wide
-//  4. https://datawrapper.dwcdn.net/DW123ID/edgetoedgeplain.png -> 1280px wide, no header or footer
 
 const Chart = ({ src, width }) => (
   <img
@@ -29,13 +27,4 @@ export const Datawrapper = ({ datawrapperId, plain }) => (
       width={450}
     />
   </Figure>
-)
-
-export const EdgeToEdgeDatawrapper = ({ datawrapperId, plain }) => (
-  <EdgeToEdgeFigure>
-    <Chart
-      src={`https://datawrapper.dwcdn.net/${datawrapperId}/edgetoedge${plain ? 'plain' : ''}.png`}
-      width={1280}
-    />
-  </EdgeToEdgeFigure>
 )
