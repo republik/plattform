@@ -6,7 +6,6 @@ import ShareButtons from './ShareButtons'
 const ShareOverlay = ({
   title,
   url,
-  tweet,
   emailSubject,
   emailBody,
   emailAttachUrl,
@@ -20,7 +19,6 @@ const ShareOverlay = ({
         <ShareButtons
           onClose={onClose}
           url={url}
-          tweet={tweet}
           grid
           emailSubject={emailSubject}
           emailBody={emailBody}

@@ -91,7 +91,6 @@ const Event = withT(
       title: title,
       url: `${PUBLIC_BASE_URL}/veranstaltung/${slug}`,
       emailSubject: title,
-      tweet: title,
       shareOverlayTitle: t('events/share/title'),
       label: t('events/share/title'),
     }

@@ -3218,6 +3218,14 @@
       "value": "WhatsApp"
     },
     {
+      "key": "article/actionbar/bluesky/label",
+      "value": "Bluesky"
+    },
+    {
+      "key": "article/actionbar/bluesky/title",
+      "value": "Auf Bluesky teilen"
+    },
+    {
       "key": "article/actionbar/threema/title",
       "value": "Auf Threema teilen"
     },
