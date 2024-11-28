@@ -264,7 +264,7 @@ function getPaymentConfigId(company: Company) {
   }
 }
 
-export async function checkIntroductoryOfferEligeblity(
+export async function checkIntroductoryOfferEligieblity(
   pgdb: PgDb,
   user?: User,
 ): Promise<boolean> {

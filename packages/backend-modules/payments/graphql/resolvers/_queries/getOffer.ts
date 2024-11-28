@@ -1,6 +1,6 @@
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 import {
-  checkIntroductoryOfferEligeblity,
+  checkIntroductoryOfferEligieblity,
   Offers,
   Shop,
 } from '../../../lib/shop'
@@ -10,7 +10,7 @@ export = async function getOffer(
   args: { offerId: string; promoCode?: string },
   ctx: GraphqlContext,
 ) {
-  const withEntryOffer = await checkIntroductoryOfferEligeblity(
+  const withEntryOffer = await checkIntroductoryOfferEligieblity(
     ctx.pgdb,
     ctx.user,
   )
