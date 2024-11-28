@@ -269,7 +269,7 @@ export async function checkIntroductoryOfferEligeblity(
   user?: User,
 ): Promise<boolean> {
   if (
-    process.env.PAYMENTS_INTRODUCTORY_OFFER_ELIGEBLITY_FOR_EVERYONE === 'true'
+    process.env.PAYMENTS_INTRODUCTORY_OFFER_ELIGIBILITY_FOR_EVERYONE === 'true'
   ) {
     return true
   }
