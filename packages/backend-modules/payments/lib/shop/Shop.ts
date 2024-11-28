@@ -3,6 +3,9 @@ import { Company } from '../types'
 import { Offer } from './offers'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { getConfig } from '../config'
+import { User } from '@orbiting/backend-modules-types'
+import { PgDb } from 'pogi'
+import { utils } from '.'
 
 const INTRODUCTERY_OFFER_PROMO_CODE = 'EINSTIEG'
 
@@ -259,6 +262,28 @@ function getPaymentConfigId(company: Company) {
     case 'REPUBLIK':
       return getConfig().REPUBLIK_STRIPE_PAYMENTS_CONFIG_ID
   }
+}
+
+export async function checkIntroductoryOfferEligeblity(
+  pgdb: PgDb,
+  user?: User,
+): Promise<boolean> {
+  if (
+    process.env.PAYMENTS_INTRODUCTORY_OFFER_ELIGEBLITY_FOR_EVERYONE === 'true'
+  ) {
+    return true
+  }
+
+  if (!user) {
+    // if there is no user we show the entry offers
+    return true
+  }
+
+  if ((await utils.hasHadMembership(user?.id, pgdb)) === false) {
+    return true
+  }
+
+  return false
 }
 
 function checkoutUIConfig(
