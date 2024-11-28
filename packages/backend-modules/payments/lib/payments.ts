@@ -46,7 +46,7 @@ import { UserDataRepo } from './database/UserRepo'
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { UserEvents } = require('@orbiting/backend-modules-auth')
 
-export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
+export const Companies: readonly Company[] = ['PROJECT_R', 'REPUBLIK'] as const
 
 const RegionNames = new Intl.DisplayNames(['de-CH'], { type: 'region' })
 

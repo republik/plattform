@@ -2,6 +2,7 @@
 import { PgDb } from 'pogi'
 import { Company } from '../types'
 import Stripe from 'stripe'
+import { CrockfordBase32 } from 'crockford-base32'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { CustomerRepo } from '../database/CutomerRepo'
 import { Payments } from '../payments'
@@ -33,6 +34,24 @@ type PLEDGE_ABOS = 'ABO' | 'MONTHLY_ABO' | 'YEARLY_ABO' | 'BENEFACTOR_ABO'
 type SUBSCRIPTIONS = 'YEARLY_SUBSCRIPTION' | 'MONTHLY_SUBSCRIPTION'
 type PRODUCT_TYPE = PLEDGE_ABOS | SUBSCRIPTIONS
 
+const arr = new Uint8Array(5)
+crypto.getRandomValues(arr)
+const code1 = CrockfordBase32.encode(Buffer.from(arr))
+crypto.getRandomValues(arr)
+const code2 = CrockfordBase32.encode(Buffer.from(arr))
+
+console.log('gift code 1 %s', code1)
+console.log('gift code 2 %s', code2)
+
+function normalizeVoucher(voucherCode: string): string | null {
+  try {
+    const code = CrockfordBase32.decode(voucherCode)
+    return CrockfordBase32.encode(code)
+  } catch {
+    return null
+  }
+}
+
 const GIFTS: Gift[] = [
   {
     id: 'YEARLY_SUBSCRPTION_GIFT',
@@ -60,7 +79,7 @@ export class GiftRepo {
   #store: Voucher[] = [
     {
       id: '1',
-      code: 'AAABBBCCC',
+      code: code1,
       giftId: 'YEARLY_SUBSCRPTION_GIFT',
       issuedBy: 'PROJECT_R',
       state: 'unredeemed',
@@ -69,7 +88,7 @@ export class GiftRepo {
     },
     {
       id: '1',
-      code: 'XXXYYYZZZ',
+      code: code1,
       giftId: 'MONTHLY_SUBSCRPTION_GIFT_3',
       issuedBy: 'REPUBLIK',
       state: 'unredeemed',
@@ -96,10 +115,14 @@ export class GiftShop {
   }
 
   async redeemVoucher(voucherCode: string, userId: string) {
-    const voucher = await this.#giftRepo.getVoucher(voucherCode)
-
-    if (!voucher) {
+    const code = normalizeVoucher(voucherCode)
+    if (!code) {
       throw new Error('voucher is invalid')
+    }
+
+    const voucher = await this.#giftRepo.getVoucher(code)
+    if (!voucher) {
+      throw new Error('Unknown voucher')
     }
 
     if (voucher.state === 'redeemed') {
@@ -289,21 +312,21 @@ export class GiftShop {
         const paymentService = Payments.getInstance()
 
         let customerId = (
-          await cRepo.getCustomerIdForCompany(userId, gift.company)
+          await cRepo.getCustomerIdForCompany(userId, 'PROJECT_R')
         )?.customerId
         if (!customerId) {
-          customerId = await paymentService.createCustomer(gift.company, userId)
+          customerId = await paymentService.createCustomer('PROJECT_R', userId)
         }
 
         const shop = new Shop(Offers)
-
         const offer = (await shop.getOfferById(gift.offer))!
 
+        //cancel old monthly subscription on Republik AG
         const oldSub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
           stripeId,
           {
             cancellation_details: {
-              comment: 'system cancelation because of update',
+              comment: 'system cancelation because of upgrade',
             },
             proration_behavior: 'none',
             metadata: {
@@ -314,6 +337,7 @@ export class GiftShop {
           },
         )
 
+        // create new subscription starting at the end period of the old one
         await this.#stripeAdapters.PROJECT_R.subscriptionSchedules.create({
           customer: customerId,
           start_date: oldSub.current_period_end,
@@ -335,9 +359,6 @@ export class GiftShop {
         return
       }
     }
-
-    throw new Error('Not implemented')
-    return
   }
 
   private async getStripeSubscriptionId(
