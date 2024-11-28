@@ -3,7 +3,6 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 import {
   Shop,
   Offers,
-  utils,
   checkIntroductoryOfferEligeblity,
 } from '../../../lib/shop'
 import { Payments } from '../../../lib/payments'
