@@ -2723,6 +2723,21 @@
       "fr": "L'offre"
     },
     {
+      "key": "pledge/popup/text",
+      "de": "Lobyywatch wirkt – seit 10 Jahren. Damit es nochmals 10 werden, brauchen wir Ihre Unterstützung!",
+      "fr": "Lobyywatch fonctionne – depuis 10 ans. Pour qu’il y en ait 10 autres, nous avons besoin de votre soutien !"
+    },
+    {
+      "key": "pledge/popup/close",
+      "de": "Nein, vielleicht später",
+      "fr": "Non, peut-être plus tard"
+    },
+    {
+      "key": "pledge/popup/ok",
+      "de": "Ja, gerne",
+      "fr": "Oui, volontiers"
+    },
+    {
       "key": "signIn/button",
       "de": "Anmelden",
       "fr": "S'inscrire"
