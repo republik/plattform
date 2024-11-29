@@ -3,7 +3,7 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 import {
   Shop,
   Offers,
-  checkIntroductoryOfferEligieblity,
+  checkIntroductoryOfferEligibility,
 } from '../../../lib/shop'
 import { Payments } from '../../../lib/payments'
 import { default as Auth } from '@orbiting/backend-modules-auth'
@@ -29,11 +29,13 @@ export = async function createCheckoutSession(
   Auth.ensureUser(ctx.user)
 
   const shop = new Shop(Offers)
-  const entryOffer = await checkIntroductoryOfferEligieblity(ctx.pgdb, ctx.user)
 
   const offer = await shop.getOfferById(args.offerId, {
     promoCode: args.promoCode,
-    withIntroductoryOffer: entryOffer,
+    withIntroductoryOffer: await checkIntroductoryOfferEligibility(
+      ctx.pgdb,
+      ctx.user,
+    ),
   })
 
   if (!offer) {
