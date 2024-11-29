@@ -8,6 +8,7 @@ import { CustomerRepo } from '../database/CutomerRepo'
 import { Payments } from '../payments'
 import { Offers } from './offers'
 import { Shop } from './Shop'
+import dayjs from 'dayjs'
 
 export type Gift = {
   id: string
@@ -138,10 +139,12 @@ export class GiftShop {
     console.log(current?.type)
     try {
       await (async () => {
-        switch (current?.type) {
-          case null:
-          case undefined:
-            return this.applyGiftToNewSubscription(userId, gift)
+        if (!current) {
+          // create new subscription with the gift if the user has none
+          return this.applyGiftToNewSubscription(userId, gift)
+        }
+
+        switch (current.type) {
           case 'ABO':
             return this.applyGiftToMembershipAbo(userId, current.id, gift)
           case 'MONTHLY_ABO':
@@ -155,7 +158,7 @@ export class GiftShop {
           case 'MONTHLY_SUBSCRIPTION':
             return this.applyGiftToMonthlySubscription(userId, current.id, gift)
           default:
-            throw Error('Match error')
+            throw Error('Gifts not supported for this mabo')
         }
       })()
 
@@ -242,10 +245,43 @@ export class GiftShop {
 
   private async applyGiftToMembershipAbo(
     _userId: string,
-    _membershipId: string,
-    _gift: Gift,
+    membershipId: string,
+    gift: Gift,
   ) {
-    throw new Error('Not implemented')
+    const tx = await this.#pgdb.transactionBegin()
+    try {
+      const latestMembershipPeriod = await tx.queryOne(
+        `SELECT
+            id,
+            "endDate"
+          FROM
+            public."membershipPeriods"
+          WHERE
+            "membershipId" =
+          ORDER BY
+            "endDate" DESC NULLS LAST
+          LIMIT 1;`,
+        { membershipId: membershipId },
+      )
+
+      const endDate = dayjs(latestMembershipPeriod.endDate)
+
+      const newMembershipPeriod =
+        await tx.public.membershipPeriods.insertAndGet({
+          membershipId: membershipId,
+          beginDate: endDate,
+          endDate: endDate.add(gift.duration, gift.durationUnit),
+          kind: 'GIFT',
+        })
+
+      console.log('new membership period created %s', newMembershipPeriod.id)
+
+      await tx.transactionCommit()
+    } catch (e) {
+      await tx.transactionRollback()
+      throw e
+    }
+
     return
   }
   private async applyGiftToMonthlyAbo(
