@@ -85,6 +85,8 @@ type Offer {
   price: Price!
   customPrice: CustomPrice
   discount: Discount
+  allowPromotions: Boolean
+  promotionItems: [PromotionItems!]
 }
 
 type Price {
@@ -113,6 +115,18 @@ type Discount {
 type Product {
   name: String
   defaultPrice: Price
+}
+
+type PromotionItems {
+  id: String!
+  name: String!
+  description: String!
+  maxQuantity: Int!
+}
+
+input PromotionItemOrder {
+  id: String!
+  quantity: Int!
 }
 
 input CheckoutSessionOptions {

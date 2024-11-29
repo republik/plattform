@@ -1,8 +1,11 @@
 import Stripe from 'stripe'
 import { Company } from '../types'
-import { Offer } from './offers'
+import { Offer, PromotionItems } from './offers'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { getConfig } from '../config'
+import { User } from '@orbiting/backend-modules-types'
+import { PgDb } from 'pogi'
+import { utils } from '.'
 
 const INTRODUCTERY_OFFER_PROMO_CODE = 'EINSTIEG'
 
@@ -27,12 +30,14 @@ export class Shop {
     metadata,
     customFields,
     returnURL,
+    promotionItems,
   }: {
     offer: Offer
     uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
-    customerId: string
+    customerId?: string
     discounts?: string[]
     customPrice?: number
+    promotionItems?: PromotionItemOrder[]
     metadata?: Record<string, string>
     returnURL?: string
     customFields?: Stripe.Checkout.SessionCreateParams.CustomField[]
@@ -55,20 +60,35 @@ export class Shop {
       ...uiConfig,
       mode: checkoutMode,
       customer: customerId,
-      line_items: [lineItem],
+      line_items: [
+        lineItem,
+        ...(promotionItems?.map(promoItemToLineItem) || []),
+      ],
       currency: offer.price?.currency,
       discounts: discounts?.map((id) => ({ coupon: id })),
       locale: 'de',
       billing_address_collection:
         offer.company === 'PROJECT_R' ? 'required' : 'auto',
-      custom_fields: customFields,
+      shipping_address_collection: promotionItems?.length
+        ? {
+            allowed_countries: ['CH'],
+          }
+        : undefined,
+      custom_fields: offer.requiresLogin ? customFields : undefined,
       payment_method_configuration: getPaymentConfigId(offer.company),
-      subscription_data: {
-        metadata: {
-          ...metadata,
-          ...offer.metaData,
-        },
+      metadata: {
+        ...metadata,
+        ...offer.metaData,
       },
+      subscription_data:
+        offer.type === 'SUBSCRIPTION'
+          ? {
+              metadata: {
+                ...metadata,
+                ...offer.metaData,
+              },
+            }
+          : undefined,
       consent_collection: {
         terms_of_service: 'required',
       },
@@ -88,7 +108,6 @@ export class Shop {
     const price = (
       await this.#stripeAdapters[offer.company].prices.list({
         active: true,
-        type: 'recurring',
         lookup_keys: [offer.defaultPriceLookupKey],
         expand: ['data.product'],
       })
@@ -231,7 +250,11 @@ export class Shop {
   }
 
   public genLineItem(offer: Offer, customPrice?: number) {
-    if (offer.customPrice && typeof customPrice !== 'undefined') {
+    if (
+      offer.type === 'SUBSCRIPTION' &&
+      offer.customPrice &&
+      typeof customPrice !== 'undefined'
+    ) {
       return {
         price_data: {
           product: offer.productId!,
@@ -258,6 +281,36 @@ function getPaymentConfigId(company: Company) {
       return getConfig().PROJECT_R_STRIPE_PAYMENTS_CONFIG_ID
     case 'REPUBLIK':
       return getConfig().REPUBLIK_STRIPE_PAYMENTS_CONFIG_ID
+  }
+}
+
+export async function checkIntroductoryOfferEligibility(
+  pgdb: PgDb,
+  user?: User,
+): Promise<boolean> {
+  if (
+    process.env.PAYMENTS_INTRODUCTORY_OFFER_ELIGIBILITY_FOR_EVERYONE === 'true'
+  ) {
+    return true
+  }
+
+  if (!user) {
+    // if there is no user we show the entry offers
+    return true
+  }
+
+  if ((await utils.hasHadMembership(user?.id, pgdb)) === false) {
+    return true
+  }
+
+  return false
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function promoItemToLineItem(_item: PromotionItems) {
+  return {
+    price: 'price_1QQUCcFHX910KaTH9SKJhFZI',
+    quantity: 1,
   }
 }
 

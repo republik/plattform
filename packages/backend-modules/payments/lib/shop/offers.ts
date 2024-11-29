@@ -10,7 +10,20 @@ const CHF = 100
 */
 const RAPPEN = 1
 
-export type OfferType = 'SUBSCRIPTION'
+export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
+
+export type PromotionItems = {
+  id: string
+  name: string
+  description: string
+  maxQuantity: number
+  lookupKey: string
+}
+
+export type PromotionItemOrder = {
+  id: string
+  quantity: number
+}
 
 export type Offer = {
   id: string
@@ -20,6 +33,8 @@ export type Offer = {
   productId?: string
   defaultPriceLookupKey: string
   taxRateId?: string
+  requiresLogin: boolean
+  promotionItems?: PromotionItems[]
   allowPromotions: boolean
   price?: {
     id: string
@@ -51,12 +66,21 @@ export type Offer = {
   }
 }
 
+const PROMO_ITEM_REPUBLIK_BIBLIOTEK_1 = {
+  id: 'REPUBLIK_BILIOTHEK_1',
+  name: 'Hier bitte einen namen einfügen',
+  description: 'foo bar baz',
+  maxQuantity: 1,
+  lookupKey: 'REPUBLIK_BILIOTHEK_1',
+}
+
 export const Offers: Offer[] = [
   {
     id: 'YEARLY',
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
+    requiresLogin: true,
     defaultPriceLookupKey: 'ABO',
     allowPromotions: true,
   },
@@ -65,6 +89,7 @@ export const Offers: Offer[] = [
     name: 'Gönnermitgliedschaft',
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
+    requiresLogin: true,
     defaultPriceLookupKey: 'BENEFACTOR_ABO',
     allowPromotions: false,
     customPrice: {
@@ -82,6 +107,7 @@ export const Offers: Offer[] = [
     name: 'Ausbildungs-Mitgliedschaft',
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
+    requiresLogin: true,
     defaultPriceLookupKey: 'STUDENT_ABO',
     allowPromotions: false,
     customPrice: {
@@ -99,6 +125,7 @@ export const Offers: Offer[] = [
     type: 'SUBSCRIPTION',
     name: 'Jahresmitgliedschaft',
     company: 'PROJECT_R',
+    requiresLogin: true,
     defaultPriceLookupKey: 'ABO',
     allowPromotions: false,
     customPrice: {
@@ -116,8 +143,19 @@ export const Offers: Offer[] = [
     name: 'Monats-Abo',
     type: 'SUBSCRIPTION',
     company: 'REPUBLIK',
+    requiresLogin: true,
     allowPromotions: true,
     defaultPriceLookupKey: 'MONTHLY_ABO',
     taxRateId: getConfig().REPUBLIK_STRIPE_SUBSCRIPTION_TAX_ID,
+  },
+  {
+    id: 'GIFT_YEARLY',
+    name: 'Jahresmitgliedschafts Geschenk',
+    type: 'ONETIME_PAYMENT',
+    company: 'PROJECT_R',
+    requiresLogin: false,
+    allowPromotions: false,
+    promotionItems: [PROMO_ITEM_REPUBLIK_BIBLIOTEK_1],
+    defaultPriceLookupKey: 'GIFT_YEARLY',
   },
 ]
