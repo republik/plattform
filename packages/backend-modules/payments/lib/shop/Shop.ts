@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 import { Company } from '../types'
-import { Offer, PromotionItems } from './offers'
+import { Offer, PromotionItemOrder, PromotionItems } from './offers'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { getConfig } from '../config'
 import { User } from '@orbiting/backend-modules-types'
