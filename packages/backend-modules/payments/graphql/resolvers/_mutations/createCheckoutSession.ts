@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GraphqlContext } from '@orbiting/backend-modules-types'
-import { Shop, Offers, utils } from '../../../lib/shop'
+import {
+  Shop,
+  Offers,
+  checkIntroductoryOfferEligibility,
+} from '../../../lib/shop'
 import { Payments } from '../../../lib/payments'
 import { default as Auth } from '@orbiting/backend-modules-auth'
 import { requiredCustomFields } from '../../../lib/shop/utils'
@@ -25,12 +29,13 @@ export = async function createCheckoutSession(
   Auth.ensureUser(ctx.user)
 
   const shop = new Shop(Offers)
-  const entryOffer =
-    (await utils.hasHadMembership(ctx.user.id, ctx.pgdb)) === false
 
   const offer = await shop.getOfferById(args.offerId, {
     promoCode: args.promoCode,
-    withIntroductoryOffer: entryOffer,
+    withIntroductoryOffer: await checkIntroductoryOfferEligibility(
+      ctx.pgdb,
+      ctx.user,
+    ),
   })
 
   if (!offer) {
