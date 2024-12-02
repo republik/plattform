@@ -35,15 +35,6 @@ type PLEDGE_ABOS = 'ABO' | 'MONTHLY_ABO' | 'YEARLY_ABO' | 'BENEFACTOR_ABO'
 type SUBSCRIPTIONS = 'YEARLY_SUBSCRIPTION' | 'MONTHLY_SUBSCRIPTION'
 type PRODUCT_TYPE = PLEDGE_ABOS | SUBSCRIPTIONS
 
-const arr = new Uint8Array(5)
-crypto.getRandomValues(arr)
-const code1 = CrockfordBase32.encode(Buffer.from(arr))
-crypto.getRandomValues(arr)
-const code2 = CrockfordBase32.encode(Buffer.from(arr))
-
-console.log('gift code 1 %s', code1)
-console.log('gift code 2 %s', code2)
-
 function normalizeVoucher(voucherCode: string): string | null {
   try {
     const code = CrockfordBase32.decode(voucherCode)
@@ -80,7 +71,7 @@ export class GiftRepo {
   #store: Voucher[] = [
     {
       id: '1',
-      code: code1,
+      code: 'V4QPS1W5',
       giftId: 'YEARLY_SUBSCRPTION_GIFT',
       issuedBy: 'PROJECT_R',
       state: 'unredeemed',
@@ -89,7 +80,7 @@ export class GiftRepo {
     },
     {
       id: '1',
-      code: code1,
+      code: 'NM13P325',
       giftId: 'MONTHLY_SUBSCRPTION_GIFT_3',
       issuedBy: 'REPUBLIK',
       state: 'unredeemed',
