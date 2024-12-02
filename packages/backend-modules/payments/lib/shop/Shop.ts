@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 import { Company } from '../types'
-import { Offer, PromotionItemOrder, PromotionItems } from './offers'
+import { Offer, PromotionItemOrder } from './offers'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { getConfig } from '../config'
 import { User } from '@orbiting/backend-modules-types'
@@ -307,7 +307,7 @@ export async function checkIntroductoryOfferEligibility(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function promoItemToLineItem(_item: PromotionItems) {
+function promoItemToLineItem(_item: PromotionItemOrder) {
   return {
     price: 'price_1QQUCcFHX910KaTH9SKJhFZI',
     quantity: 1,
