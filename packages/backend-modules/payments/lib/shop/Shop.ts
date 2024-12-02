@@ -138,21 +138,27 @@ export class Shop {
     const priceData = (
       await this.#stripeAdapters[company].prices.list({
         active: true,
-        type: 'recurring',
         lookup_keys: lookupKeys,
         expand: ['data.product'],
       })
     ).data
 
-    return Promise.all(
-      offers.map(async (offer) => {
-        const price = priceData.find(
-          (p) => p.lookup_key === offer.defaultPriceLookupKey,
-        )!
+    return (
+      await Promise.allSettled(
+        offers.map(async (offer) => {
+          const price = priceData.find(
+            (p) => p.lookup_key === offer.defaultPriceLookupKey,
+          )!
 
-        return this.mergeOfferData(offer, price, options)
-      }),
-    )
+          return this.mergeOfferData(offer, price, options)
+        }),
+      )
+    ).reduce((acc: Offer[], res) => {
+      if (res.status === 'fulfilled') {
+        acc.push(res.value)
+      }
+      return acc
+    }, [])
   }
 
   private async mergeOfferData(
@@ -161,7 +167,6 @@ export class Shop {
     options?: { promoCode?: string; withIntroductoryOffer?: boolean },
   ): Promise<Offer> {
     const discount = await this.getIndrodcuturyOfferOrPromotion(base, options)
-
     return {
       ...base,
       productId: (price.product as Stripe.Product).id,
