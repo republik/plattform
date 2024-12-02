@@ -44,7 +44,6 @@ import {
 } from './utils'
 
 import { slug } from '../../lib/slug'
-import { NoTopMargin } from "../../components/Typography/Editorial";
 
 const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
   const createInfoBox = ({ t }) => ({
@@ -174,7 +173,7 @@ const createBlocks = ({ base, COVER_TYPE, t, onAudioCoverClick }) => {
       }
     },
     component: ({ isEmpty, children }) =>
-      isEmpty ? null : <NoTopMargin>{children}</NoTopMargin>,
+      isEmpty ? null : children,
     editorModule: 'interviewAnswer',
     editorOptions: {
       type: 'INTERVIEWANSWER',
