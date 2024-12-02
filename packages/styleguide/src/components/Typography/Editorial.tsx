@@ -218,24 +218,6 @@ export const Format = ({
   )
 }
 
-const noTopMargin = css({
-  margin: '-22px 0 22px 0',
-  [mUp]: {
-    margin: `-${pxToRem(30)} 0 ${pxToRem(30)} 0`,
-  },
-  ':last-child': {
-    marginBottom: 0,
-  },
-})
-
-export const NoTopMargin = ({ children, attributes, ...props }) => {
-  return (
-    <div {...attributes} {...props} {...noTopMargin}>
-      {children}
-    </div>
-  )
-}
-
 const paragraph = css({
   margin: '22px 0 22px 0',
   ...convertStyleToRem(styles.serifRegular17),
@@ -245,6 +227,12 @@ const paragraph = css({
   },
   ':first-child': {
     marginTop: 0,
+  },
+  '&.no-margin-top': {
+    marginTop: -22,
+    [mUp]: {
+      marginTop: `-${pxToRem(30)}`,
+    },
   },
   ':last-child': {
     marginBottom: 0,
@@ -257,13 +245,19 @@ const paragraph = css({
 type ParagraphProps = {
   children: React.ReactNode
   attributes?: React.ComponentPropsWithoutRef<'p'>
+  noMarginTop?: boolean
 } & React.ComponentPropsWithoutRef<'p'>
 
-export const P = ({ children, attributes, ...props }: ParagraphProps) => {
+export const P = ({ children, attributes, noMarginTop, ...props }: ParagraphProps) => {
   const [colorScheme] = useColorContext()
+  const className = [
+    attributes?.className,
+    noMarginTop && 'no-margin-top'
+  ].filter(Boolean).join(' ')
   return (
     <p
       {...attributes}
+      className={className}
       {...props}
       {...paragraph}
       {...colorScheme.set('color', 'text')}
