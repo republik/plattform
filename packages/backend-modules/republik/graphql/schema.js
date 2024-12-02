@@ -41,7 +41,7 @@ type mutations {
 
     portrait: String
 
-    birthday: Date
+    birthday: DateTime
     ageAccessRole: AccessRole
 
     phoneNumber: String
@@ -68,7 +68,7 @@ type mutations {
     
     address: AddressInput
 
-    birthday: Date
+    birthday: DateTime
     phoneNumber: String
     
     userId: ID!

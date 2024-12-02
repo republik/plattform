@@ -206,7 +206,7 @@ input UserInput {
   email: String!
   firstName: String
   lastName: String
-  birthday: Date
+  birthday: DateTime
   phoneNumber: String
 }
 #input AddressInput {
@@ -461,8 +461,8 @@ type Users {
 
 type PostfinancePayment {
   id: ID!
-  buchungsdatum: Date!
-  valuta: Date!
+  buchungsdatum: DateTime!
+  valuta: DateTime!
   konto: String!
   iban: String!
   avisierungstext: String!

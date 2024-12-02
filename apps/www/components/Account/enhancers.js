@@ -26,7 +26,7 @@ export const userDetailsFragment = `
 
 const mutation = gql`
   mutation updateMe(
-    $birthday: Date
+    $birthday: DateTime
     $firstName: String
     $lastName: String
     $phoneNumber: String

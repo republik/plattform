@@ -50,7 +50,7 @@ export const GET_USER = gql`
 export const UPDATE_USER = gql`
   mutation updateUser(
     $id: ID!
-    $birthday: Date
+    $birthday: DateTime
     $firstName: String!
     $lastName: String!
     $phoneNumber: String

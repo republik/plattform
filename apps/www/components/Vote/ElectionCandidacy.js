@@ -587,7 +587,7 @@ const cancelCandidacy = gql`
 const updateCandidacy = gql`
   mutation updateCandidacy(
     $slug: String!
-    $birthday: Date
+    $birthday: DateTime
     $statement: String
     $disclosures: String
     $address: AddressInput
