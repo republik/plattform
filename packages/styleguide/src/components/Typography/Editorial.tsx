@@ -245,6 +245,7 @@ const paragraph = css({
 type ParagraphProps = {
   children: React.ReactNode
   attributes?: React.ComponentPropsWithoutRef<'p'>
+  noMarginTop?: boolean
 } & React.ComponentPropsWithoutRef<'p'>
 
 export const P = ({ children, attributes, noMarginTop, ...props }: ParagraphProps) => {
