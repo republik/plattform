@@ -86,7 +86,7 @@ type Offer {
   customPrice: CustomPrice
   discount: Discount
   allowPromotions: Boolean
-  promotionItems: [PromotionItems!]
+  promotionItems: [PromotionItem!]
 }
 
 type Price {
@@ -117,7 +117,7 @@ type Product {
   defaultPrice: Price
 }
 
-type PromotionItems {
+type PromotionItem {
   id: String!
   name: String!
   description: String!

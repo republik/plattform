@@ -12,7 +12,7 @@ const RAPPEN = 1
 
 export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
 
-export type PromotionItems = {
+export type PromotionItem = {
   id: string
   name: string
   description: string
@@ -34,7 +34,7 @@ export type Offer = {
   defaultPriceLookupKey: string
   taxRateId?: string
   requiresLogin: boolean
-  promotionItems?: PromotionItems[]
+  promotionItems?: PromotionItem[]
   allowPromotions: boolean
   price?: {
     id: string
