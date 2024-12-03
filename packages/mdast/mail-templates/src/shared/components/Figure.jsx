@@ -5,6 +5,22 @@ export const Figure = ({ children }) => (
   <span style={{ marginBottom: '15px' }}>{children}</span>
 )
 
+export const EdgeToEdgeFigure = ({ children }) => (
+  <tr>
+    <td>
+      <Figure>{children}</Figure>
+    </td>
+  </tr>
+)
+
+export const CoverFigure = ({ children }) => (
+  <tr>
+    <td align='center'>
+      <Figure>{children}</Figure>
+    </td>
+  </tr>
+)
+
 export const Image = ({ src, alt, width, resize }) => (
   <img
     key='image'

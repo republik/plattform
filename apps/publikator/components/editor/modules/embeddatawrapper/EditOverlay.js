@@ -8,7 +8,7 @@ import {
   Interaction,
 } from '@project-r/styleguide'
 
-const Form = ({ data, onChange, editor, node }) => {
+const Form = ({ data, onChange, editor, node, resizable }) => {
   const parent = editor.value.document.getParent(node.key)
   const datawrapperId = node.data.get('datawrapperId')
   const plain = node.data.get('plain')
@@ -16,7 +16,7 @@ const Form = ({ data, onChange, editor, node }) => {
 
   return (
     <>
-      <Interaction.P>
+      { !!resizable && <Interaction.P>
         <Label>Size</Label>
         <br />
         {[
@@ -111,7 +111,7 @@ const Form = ({ data, onChange, editor, node }) => {
             </Radio>
           )
         })}
-      </Interaction.P>
+      </Interaction.P> }
       <Interaction.P>
         <Field
           label='Datawrapper Chart-ID'
@@ -153,13 +153,14 @@ const EditOverlay = (props) => {
     })
   }
   return (
-    <OverlayFormManager {...props} showPreview={false} onChange={onChange}>
+    <OverlayFormManager {...props} showPreview={false} onChange={onChange} title='Datawrapper (Beta)'>
       {({ data, onChange }) => (
         <Form
           data={data}
           onChange={onChange}
           editor={props.editor}
           node={props.node}
+          resizable={props.resizable}
         />
       )}
     </OverlayFormManager>

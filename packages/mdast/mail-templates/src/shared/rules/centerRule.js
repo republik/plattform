@@ -15,6 +15,7 @@ import ifRule from './ifRule'
 import elseRule from './elseRule'
 import authorRule from './authorRule'
 import buttonRule from './buttonRule'
+import datawrapperRule from './datawrapperRule'
 
 const centerRule = {
   matchMdast: matchZone('CENTER'),
@@ -35,6 +36,7 @@ const centerRule = {
     elseRule,
     authorRule,
     buttonRule,
+    datawrapperRule,
   ],
 }
 
