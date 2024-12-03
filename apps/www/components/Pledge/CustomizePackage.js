@@ -980,6 +980,7 @@ class CustomizePackage extends Component {
         <GoodieOptions
           t={t}
           values={values}
+          packageName={pkg.name}
           onChange={(fields) => {
             onChange(this.calculateNextPrice(fields))
           }}
