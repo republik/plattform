@@ -1,11 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { withSentryConfig } = require('@sentry/nextjs')
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { withPlausibleProxy } = require('next-plausible')
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -174,6 +174,18 @@ const nextConfig = {
         source: '/merci',
         destination: '/konto',
         permanent: true,
+      },
+      // Redirect /angebote to shop if no query params are set
+      // {value: undefined} matchaes any value provided to that query param
+      process.env.NEXT_PUBLIC_SHOP_BASE_URL && {
+        source: '/angebote',
+        missing: [
+          { type: 'query', key: 'package', value: undefined },
+          { type: 'query', key: 'group', value: undefined },
+          { type: 'query', key: 'goto', value: undefined },
+        ],
+        destination: process.env.NEXT_PUBLIC_SHOP_BASE_URL,
+        permanent: false,
       },
       // Redirect 5-years campaign token URLs to static page
       {
