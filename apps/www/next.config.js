@@ -181,6 +181,15 @@ const nextConfig = {
         destination: '/5-jahre-republik',
         permanent: true,
       },
+      // Klimakurs
+      // We can't use our redirection system because
+      // - the page must exist and be published (to include it on the Challenge Accepted overview)
+      // - this redirection must take precedence (which normal redirections don't if a page/article exists already)
+      {
+        source: '/klimakurs',
+        destination: 'https://mailchi.mp/republik.ch/klimakurs',
+        permanent: false,
+      },
       /**
        * Migrated from custom express server
        * WebFinger
