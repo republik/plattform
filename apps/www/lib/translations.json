@@ -2491,11 +2491,11 @@
     },
     {
       "key": "package/ABO_GIVE_MONTHS/title",
-      "value": "Monats-Abo als Geschenk"
+      "value": "3-Monats-Abo als Geschenk"
     },
     {
       "key": "package/ABO_GIVE_MONTHS/description",
-      "value": "Vielleicht das einzige Geschenk, das Sie Freunden und Feinden gleich herzlich machen können: einige Monate Republik."
+      "value": "Das Geschenk-Abo können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Wenn Sie bis zum 19. Dezember bestellen, erhalten Sie rechtzeitig vor Weihnachten die physische Geschenkkarte sowie das Republik-Taschenbuch nach Hause zugeschickt."
     },
     {
       "key": "package/YEARLY_ABO/price",
@@ -6861,6 +6861,10 @@
       "value": "Noch etwas Handfestes?"
     },
     {
+      "key": "Goodies/title/free",
+      "value": "Gratis zum Kauf"
+    },
+    {
       "key": "Goodies/note/delivery",
       "value": "Versand nur in die Schweiz und Liechtenstein möglich"
     },
@@ -6883,6 +6887,14 @@
     {
       "key": "Goodie/description/NOTEBOOK",
       "value": "Ein Moleskine-Notizbuch mit Republik-Gravierung. Lieferung innerhalb von 7 Werktagen."
+    },
+    {
+      "key": "Goodie/label/LIBRARYBOOK",
+      "value": "Republik-Bibliothek Taschenbuch"
+    },
+    {
+      "key": "Goodie/description/LIBRARYBOOK",
+      "value": "Ein zufällig ausgewähltes Exemplar aus aus der neuen Republik-Bibliothek-Sonderedition."
     },
     {
       "key": "Goodie/label/TOTEBAG",
@@ -7250,7 +7262,7 @@
     },
     {
       "key": "package/ABO_GIVE/description",
-      "value": "Vielleicht das einzige Geschenk, das Sie Freunden und Feinden gleichermassen herzlich machen können: ein Jahr Mitgliedschaft bei der Project R Genossenschaft. Und damit Zugang zur Republik."
+      "value": "Die Geschenkmitgliedschaft können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Wenn Sie bis zum 19. Dezember bestellen, erhalten Sie rechtzeitig vor Weihnachten die physische Geschenkkarte sowie das Republik-Taschenbuch nach Hause zugeschickt."
     },
     {
       "key": "package/customize/price/payMore/threemonth",
