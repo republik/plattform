@@ -987,7 +987,7 @@ class CustomizePackage extends Component {
           fields={configurableGoodieFields}
           showGoodiesTitle={!goodiesOnly}
         />
-        {!!userPrice && !fixedPrice (
+        {!!userPrice && !fixedPrice && (
           <div>
             <P>
               {t.first([
