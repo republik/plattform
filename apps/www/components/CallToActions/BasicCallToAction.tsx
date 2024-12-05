@@ -18,7 +18,6 @@ const BasicCallToAction = ({
     linkHref,
     linkLabel,
     text,
-    fullLinkMode = false,
     backgroundColor,
     textColor,
     illustration,
@@ -30,7 +29,6 @@ const BasicCallToAction = ({
     text: string
     linkHref: string
     linkLabel: string
-    fullLinkMode: boolean
     backgroundColor?: string
     textColor?: string
     illustration?: string
@@ -42,29 +40,25 @@ const BasicCallToAction = ({
   return (
     <CTAAnimatedBase
       ctaId={id}
-      href={fullLinkMode && linkHref}
       {...colorScheme.set('backgroundColor', backgroundColor || 'default')}
       {...colorScheme.set('color', textColor || 'text')}
     >
-      <div {...styles.banner} style={{ alignItems: fullLinkMode && 'center' }}>
+      <div {...styles.banner}>
         {illustration && (
           <img
             {...styles.illustration}
-            style={{ alignSelf: fullLinkMode ? 'center' : 'start' }}
             src={`${CDN_FRONTEND_BASE_URL}/static/cta/${illustration}`}
           />
         )}
         <div {...styles.text}>
           <p>{text}</p>
-          {!fullLinkMode && (
             <Link href={linkHref} onClick={() => handleAcknowledge()}>
               {linkLabel}
             </Link>
-          )}
         </div>
         <IconButton
           Icon={IconClose}
-          style={{ alignSelf: fullLinkMode ? 'center' : 'start' }}
+          style={{ alignSelf: 'start' }}
           onClick={() => handleAcknowledge()}
           fillColorName={textColor || 'text'}
         />
@@ -84,8 +78,10 @@ const styles = {
     margin: '0 auto',
     maxWidth: '64ch',
     padding: '2rem 1rem',
+    alignItems: 'center'
   }),
   illustration: css({
+    alignSelf: 'start', 
     width: 56,
     [mediaQueries.mUp]: {
       width: 80,

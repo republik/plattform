@@ -6,7 +6,6 @@ import { motion } from 'framer-motion'
 type CTABaseProps = {
   children: ReactNode
   ctaId: string
-  href: string
 } & Record<string, unknown>
 
 const getStorageKey = (id: string) => `cta-${id}-rendered`
@@ -17,7 +16,7 @@ const getStorageKey = (id: string) => `cta-${id}-rendered`
  * the client-bundle will be rather large. load components using this wrapper only when needed.
  * And in best case behind a dynamic import or suspense-boundary.
  */
-const CTAAnimatedBase = ({ children, ctaId, href, ...props }: CTABaseProps) => {
+const CTAAnimatedBase = ({ children, ctaId, ...props }: CTABaseProps) => {
   const ref = useRef<HTMLDivElement>(null)
   const [renderedCta, setRenderedCTA] = useState<boolean>(
     () =>
@@ -59,11 +58,7 @@ const CTAAnimatedBase = ({ children, ctaId, href, ...props }: CTABaseProps) => {
       }}
       {...props}
     >
-      {href ? (
-        <a href={href}>
-          {children}
-        </a>
-      ): children}
+      {children}
     </motion.div>
   )
 }
