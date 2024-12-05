@@ -11,9 +11,6 @@ query MyCallToActions {
           text
           linkHref
           linkLabel
-          backgroundColor
-          textColor
-          illustration
         }
 
         ... on CallToActionComponentPayload {

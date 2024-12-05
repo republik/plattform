@@ -274,9 +274,6 @@ type CallToActionBasicPayload {
   linkHref: String!
   linkLabel: String!
   text: String!
-  backgroundColor: String
-  textColor: String
-  illustration: String
 }
 
 type CallToActionComponentPayload {
@@ -299,6 +296,15 @@ type Campaign {
   name: String!
   referrals: Referrals!
   slug: String!
+}
+
+input CancelSubscription {
+  options: CancelSubscriptionOptions
+  subscriptionId: ID!
+}
+
+input CancelSubscriptionOptions {
+  feedback: String
 }
 
 type Cancellation {
@@ -356,6 +362,26 @@ type Candidacy {
   recommendation: String
   user: User!
   yearOfBirth: Int
+}
+
+type CheckoutSession {
+  clientSecret: String
+  company: CompanyName!
+  sessionId: String!
+  url: String
+}
+
+input CheckoutSessionOptions {
+  customPrice: Int
+  metadata: JSON
+  returnURL: String
+  uiMode: CheckoutUIMode
+}
+
+enum CheckoutUIMode {
+  CUSTOM
+  EMBEDDED
+  HOSTED
 }
 
 type Collection {
@@ -499,6 +525,7 @@ enum CommentVote {
 }
 
 type Commit {
+  associatedDerivative: Derivative
   author: Author!
   canDerive(type: DerivativeType!): Boolean!
   date: DateTime!
@@ -574,6 +601,12 @@ type CrowdfundingStatus {
   people: Int!
 }
 
+type CustomPrice {
+  max: Int!
+  min: Int!
+  step: Float!
+}
+
 type CustomerPortalSession {
   sessionUrl: String
 }
@@ -596,6 +629,7 @@ input DateRangeInput {
 scalar DateTime
 
 type Derivative {
+  commit: Commit!
   createdAt: DateTime!
   destroyedAt: DateTime
   failedAt: DateTime
@@ -639,6 +673,12 @@ input DeviceInformationInput {
   os: OSType!
   osVersion: StringOrNumber!
   userAgent: String
+}
+
+type Discount {
+  amountOff: Int!
+  currency: String!
+  name: String
 }
 
 type Discussion {
@@ -1585,6 +1625,15 @@ enum OSType {
   ios
 }
 
+type Offer {
+  company: CompanyName!
+  customPrice: CustomPrice
+  discount: Discount
+  id: ID!
+  name: String!
+  price: Price!
+}
+
 input OrderBy {
   direction: OrderDirection!
   field: Field!
@@ -1845,6 +1894,17 @@ type Preview {
   string: String!
 }
 
+type Price {
+  amount: Int!
+  currency: String!
+  recurring: Recurring
+}
+
+type Product {
+  defaultPrice: Price
+  name: String
+}
+
 enum ProgressState {
   FINISHED
   UNFINISHED
@@ -2078,6 +2138,11 @@ type Questionnaire {
 type QuestionnaireTurnout {
   eligible: Int!
   submitted: Int!
+}
+
+type Recurring {
+  interval: String!
+  interval_count: Int!
 }
 
 type Redirection {
@@ -2929,7 +2994,7 @@ type mutations {
   bookCalendarSlot(id: ID!, userId: ID): CalendarSlot!
   cancelCalendarSlot(id: ID!, userId: ID): CalendarSlot!
   cancelCandidacy(slug: String!): Election!
-  cancelMagazineSubscription(subscriptionId: String!): Boolean
+  cancelMagazineSubscription(args: CancelSubscription): Boolean
   cancelMembership(details: CancellationInput!, id: ID!, immediately: Boolean): Membership!
   cancelPledge(pledgeId: ID!): Pledge
 
@@ -2944,6 +3009,7 @@ type mutations {
   clearSession(sessionId: ID!, userId: ID): Boolean!
   clearSessions(userId: ID): Boolean!
   commit(document: DocumentInput!, isTemplate: Boolean, message: String!, parentId: ID, repoId: ID!): Commit!
+  createCheckoutSession(offerId: ID!, options: CheckoutSessionOptions, promoCode: String): CheckoutSession
   createDiscussion(anonymity: Permission!, maxLength: Int, minInterval: Int, tagRequired: Boolean!, tags: [String!], title: String): ID!
   createElection(electionInput: ElectionInput!): Election!
   createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
@@ -3154,6 +3220,8 @@ type queries {
   ): [Employee!]!
   events: [Event!]!
   faqs: [Faq!]!
+  getOffer(offerId: ID!, promoCode: String): Offer
+  getOffers(promoCode: String): [Offer!]!
   greeting: Greeting
   mailbox(after: String, before: String, filters: MailboxFiltersInput, first: Int, last: Int): MailboxConnection
   me(accessToken: ID): User
@@ -3166,7 +3234,6 @@ type queries {
   notifications(after: String, before: String, filter: EventObjectType, first: Int, last: Int, lastDays: Int, onlyUnread: Boolean): NotificationConnection
   payments(booleanFilter: BooleanFilter, dateRangeFilter: DateRangeFilter, limit: Int!, offset: Int, orderBy: OrderBy, search: String, stringArrayFilter: StringArrayFilter): PledgePayments!
   paymentsCSV(companyName: String!, paymentIds: [ID!]): String!
-  paymentsIsRunning: Boolean
   pendingAppSignIn: SignInNotification
   pledge(id: ID!): Pledge
   pledges: [Pledge!]!
