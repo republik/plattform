@@ -50,6 +50,7 @@ const BasicCallToAction = ({
         {illustration && (
           <img
             {...styles.illustration}
+            style={{ alignSelf: fullLinkMode ? 'center' : 'start' }}
             src={`${CDN_FRONTEND_BASE_URL}/static/cta/${illustration}`}
           />
         )}
@@ -81,11 +82,11 @@ const styles = {
     flexDirection: 'row',
     gap: '1rem',
     margin: '0 auto',
-    maxWidth: '60ch',
+    maxWidth: '64ch',
     padding: '2rem 1rem',
   }),
   illustration: css({
-    width: 64,
+    width: 56,
     [mediaQueries.mUp]: {
       width: 80,
     },
@@ -96,11 +97,17 @@ const styles = {
       ...fontStyles.sansSerifRegular16,
       margin: 0,
       marginBottom: '0.5em',
+      [mediaQueries.mUp]: {
+        ...fontStyles.sansSerifRegular18,
+      },
     },
     '> a': {
       ...fontStyles.sansSerifMedium16,
       color: 'inherit',
       textDecoration: 'underline',
+      [mediaQueries.mUp]: {
+        ...fontStyles.sansSerifMedium18,
+      },
     },
   }),
 }
