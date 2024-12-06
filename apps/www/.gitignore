@@ -30,5 +30,10 @@ styled-system
 !graphql/*/__generated__/gql/README.md
 graphql/*/__generated__
 
+# Playwright
+
+playwright-report/
+test-results/
+
 # Vercel
 .vercel
