@@ -44,9 +44,15 @@ function normalizeVoucher(voucherCode: string): string | null {
   }
 }
 
+function newVoucherCode() {
+  const bytes = new Uint8Array(6)
+  crypto.getRandomValues(bytes)
+  return CrockfordBase32.encode(Buffer.from(bytes))
+}
+
 const GIFTS: Gift[] = [
   {
-    id: 'YEARLY_SUBSCRPTION_GIFT',
+    id: 'GIFT_YEARLY',
     duration: 1,
     durationUnit: 'year',
     offer: 'YEARLY',
@@ -72,7 +78,7 @@ export class GiftRepo {
     {
       id: '1',
       code: 'V4QPS1W5',
-      giftId: 'YEARLY_SUBSCRPTION_GIFT',
+      giftId: 'GIFT_YEARLY',
       issuedBy: 'PROJECT_R',
       state: 'unredeemed',
       redeemedBy: null,
@@ -92,6 +98,9 @@ export class GiftRepo {
   async getVoucher(code: string) {
     return this.#store.find((g) => g.code === code && g.state === 'unredeemed')
   }
+  async insertVoucher(voucher: Voucher) {
+    return this.#store.push(voucher)
+  }
 }
 
 export class GiftShop {
@@ -104,6 +113,22 @@ export class GiftShop {
 
   constructor(pgdb: PgDb) {
     this.#pgdb = pgdb
+  }
+
+  async handleVoucherPurches(company: Company, lookupKey: string) {
+    const voucher: Voucher = {
+      id: crypto.randomUUID(),
+      issuedBy: company,
+      code: newVoucherCode(),
+      giftId: lookupKey,
+      state: 'unredeemed',
+      redeemedBy: null,
+      redeemedForCompany: null,
+    }
+
+    this.#giftRepo.insertVoucher(voucher)
+
+    return voucher.code
   }
 
   async redeemVoucher(voucherCode: string, userId: string) {

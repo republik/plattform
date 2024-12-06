@@ -78,7 +78,7 @@ type CheckoutSession {
   url: String
 }
 
-type Offer {
+interface Offer {
   id: ID!
   company: CompanyName!
   name: String!
@@ -86,7 +86,29 @@ type Offer {
   customPrice: CustomPrice
   discount: Discount
   allowPromotions: Boolean
-  promotionItems: [PromotionItem!]
+  complimentaryItems: [ComplimentaryItem!]
+}
+
+type SubscriptionOffer implements Offer {
+  id: ID!
+  company: CompanyName!
+  name: String!
+  price: Price!
+  customPrice: CustomPrice
+  discount: Discount
+  allowPromotions: Boolean
+  complimentaryItems: [ComplimentaryItem!]
+}
+
+type GiftOffer implements Offer {
+  id: ID!
+  company: CompanyName!
+  name: String!
+  price: Price!
+  customPrice: CustomPrice
+  discount: Discount
+  allowPromotions: Boolean
+  complimentaryItems: [ComplimentaryItem!]
 }
 
 type Price {
@@ -117,14 +139,14 @@ type Product {
   defaultPrice: Price
 }
 
-type PromotionItem {
+type ComplimentaryItem {
   id: String!
   name: String!
   description: String!
   maxQuantity: Int!
 }
 
-input PromotionItemOrder {
+input ComplimentaryItemOrder {
   id: String!
   quantity: Int!
 }

@@ -7,7 +7,7 @@ import {
   Order,
   Subscription,
   SubscriptionArgs,
-  PaymentItemLocator,
+  SelectCriteria,
   InvoiceUpdateArgs,
   Webhook,
   ACTIVE_STATUS_TYPES,
@@ -423,7 +423,7 @@ export class Payments implements PaymentService {
     }
   }
 
-  async getCharge(by: PaymentItemLocator) {
+  async getCharge(by: SelectCriteria) {
     return await this.billing.getCharge(by)
   }
 
@@ -431,16 +431,16 @@ export class Payments implements PaymentService {
     return await this.billing.saveCharge(args)
   }
 
-  async updateCharge(by: PaymentItemLocator, args: ChargeUpdate): Promise<any> {
+  async updateCharge(by: SelectCriteria, args: ChargeUpdate): Promise<any> {
     return this.billing.updateCharge(by, args)
   }
 
-  async getInvoice(by: PaymentItemLocator): Promise<Invoice | null> {
+  async getInvoice(by: SelectCriteria): Promise<Invoice | null> {
     return await this.billing.getInvoice(by)
   }
 
   async updateInvoice(
-    by: PaymentItemLocator,
+    by: SelectCriteria,
     args: InvoiceUpdateArgs,
   ): Promise<Invoice> {
     return await this.billing.updateInvoice(by, args)
@@ -550,7 +550,7 @@ export class Payments implements PaymentService {
     return this.billing.getUserSubscriptions(userId, only)
   }
 
-  getSubscription(by: PaymentItemLocator): Promise<Subscription | null> {
+  getSubscription(by: SelectCriteria): Promise<Subscription | null> {
     return this.billing.getSubscription(by)
   }
 
@@ -579,7 +579,7 @@ export class Payments implements PaymentService {
   }
 
   async disableSubscription(
-    locator: PaymentItemLocator,
+    locator: SelectCriteria,
     args: any,
   ): Promise<Subscription> {
     const tx = await this.pgdb.transactionBegin()
@@ -860,10 +860,10 @@ export interface PaymentService {
     userId: string,
     args: SubscriptionArgs,
   ): Promise<Subscription>
-  getSubscription(by: PaymentItemLocator): Promise<Subscription | null>
+  getSubscription(by: SelectCriteria): Promise<Subscription | null>
   updateSubscription(args: SubscriptionArgs): Promise<Subscription>
   disableSubscription(
-    by: PaymentItemLocator,
+    by: SelectCriteria,
     args: {
       endedAt: Date
       canceledAt: Date
@@ -884,15 +884,12 @@ export interface PaymentService {
   getOrder(id: string): Promise<Order | null>
   saveOrder(userId: string, order: OrderArgs): Promise<Order>
   getSubscriptionInvoices(subscriptionId: string): Promise<Invoice>
-  getInvoice(by: PaymentItemLocator): Promise<Invoice | null>
+  getInvoice(by: SelectCriteria): Promise<Invoice | null>
   saveInvoice(userId: string, args: InvoiceArgs): Promise<Invoice>
-  getCharge(by: PaymentItemLocator): Promise<any>
+  getCharge(by: SelectCriteria): Promise<any>
   saveCharge(args: ChargeInsert): Promise<any>
-  updateCharge(by: PaymentItemLocator, args: ChargeUpdate): Promise<any>
-  updateInvoice(
-    by: PaymentItemLocator,
-    args: InvoiceUpdateArgs,
-  ): Promise<Invoice>
+  updateCharge(by: SelectCriteria, args: ChargeUpdate): Promise<any>
+  updateInvoice(by: SelectCriteria, args: InvoiceUpdateArgs): Promise<Invoice>
   verifyWebhookForCompany<T>(company: string, req: any): T
   logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>>
   findWebhookEventBySourceId<T>(sourceId: string): Promise<Webhook<T> | null>

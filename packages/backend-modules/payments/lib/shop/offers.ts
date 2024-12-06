@@ -111,7 +111,7 @@ export const Offers: Offer[] = [
     defaultPriceLookupKey: 'STUDENT_ABO',
     allowPromotions: false,
     customPrice: {
-      min: 120 * CHF,
+      min: 140 * CHF,
       max: 239 * CHF,
       step: 50 * RAPPEN,
       recurring: {

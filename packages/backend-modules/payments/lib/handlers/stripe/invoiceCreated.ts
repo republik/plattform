@@ -10,7 +10,7 @@ export async function processInvoiceCreated(
   event: Stripe.InvoiceCreatedEvent,
 ) {
   const customerId = event.data.object.customer as string
-  const externalInvocieId = event.data.object.id as string
+  const externalInvoiceId = event.data.object.id as string
 
   const userId = await paymentService.getUserIdForCompanyCustomer(
     company,
@@ -21,13 +21,13 @@ export async function processInvoiceCreated(
     throw new Error(`Unknown customer ${customerId}`)
   }
 
-  if (await paymentService.getInvoice({ externalId: externalInvocieId })) {
-    console.log('invoice has already saved; skipping [%s]', externalInvocieId)
+  if (await paymentService.getInvoice({ externalId: externalInvoiceId })) {
+    console.log('invoice has already saved; skipping [%s]', externalInvoiceId)
     return
   }
 
   const invoice = await PaymentProvider.forCompany(company).getInvoice(
-    externalInvocieId,
+    externalInvoiceId,
   )
   if (!invoice) {
     throw new Error(`Unknown invoice ${event.data.object.id}`)
