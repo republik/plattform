@@ -271,9 +271,12 @@ type CallToAction {
 }
 
 type CallToActionBasicPayload {
+  backgroundColor: String
+  illustration: String
   linkHref: String!
   linkLabel: String!
   text: String!
+  textColor: String
 }
 
 type CallToActionComponentPayload {
