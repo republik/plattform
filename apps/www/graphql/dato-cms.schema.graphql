@@ -408,41 +408,6 @@ input CreatedAtFilter {
 
 scalar CustomData
 
-"""A ISO 8601 compliant date value"""
-scalar Date
-
-"""Specifies how to filter Date fields"""
-input DateFilter {
-  """Search for records with an exact match"""
-  eq: Date
-
-  """
-  Filter records with the specified field defined (i.e. with any value) or not
-  """
-  exists: BooleanType
-
-  """
-  Filter records with a value that's strictly greater than the one specified
-  """
-  gt: Date
-
-  """
-  Filter records with a value that's greater than or equal to the one specified
-  """
-  gte: Date
-
-  """Filter records with a value that's less than the one specified"""
-  lt: Date
-
-  """
-  Filter records with a value that's less or equal than the one specified
-  """
-  lte: Date
-
-  """Exclude records with an exact match"""
-  neq: Date
-}
-
 """A ISO 8601 compliant datetime value"""
 scalar DateTime
 
