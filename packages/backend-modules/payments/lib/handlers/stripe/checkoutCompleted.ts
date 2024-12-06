@@ -9,14 +9,27 @@ import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
 import { SyncAddressDataWorker } from '../../workers/SyncAddressDataWorker'
 import { mapChargeArgs } from './invoicePaymentSucceded'
+// import { GiftShop } from '../../shop/gifts'
 
 export async function processCheckoutCompleted(
   paymentService: PaymentService,
   company: Company,
   event: Stripe.CheckoutSessionCompletedEvent,
 ) {
-  const customerId = event.data.object.customer as string
+  switch (event.data.object.mode) {
+    case 'subscription':
+      return handleSubscription(paymentService, company, event)
+    case 'payment':
+      return handlePayment(paymentService, company, event)
+  }
+}
 
+async function handleSubscription(
+  paymentService: PaymentService,
+  company: Company,
+  event: Stripe.CheckoutSessionCompletedEvent,
+) {
+  const customerId = event.data.object.customer as string
   if (!customerId) {
     console.log('No stripe customer provided; skipping')
     return
@@ -130,8 +143,30 @@ export async function processCheckoutCompleted(
         )
       : undefined,
   ])
-
   return
+}
+
+async function handlePayment(
+  _paymentService: PaymentService,
+  company: Company,
+  event: Stripe.CheckoutSessionCompletedEvent,
+) {
+  const sess = await PaymentProvider.forCompany(company).getCheckoutSession(
+    event.data.object.id,
+  )
+
+  const lookupKey = sess?.line_items?.data.map(async (line) => {
+    const lookupKey = line.price?.lookup_key
+
+    if (lookupKey?.startsWith('GIFT_')) {
+      // const handler = Payments.getCheckoutHandler('purchesVoucher')
+      // await handler()
+    }
+  })
+
+  // GiftShop.findGiftByLookupKey()
+
+  console.log(lookupKey)
 }
 
 async function syncUserNameData(
