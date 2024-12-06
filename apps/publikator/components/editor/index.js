@@ -5,7 +5,6 @@ import { css } from 'glamor'
 
 import Loader from '../Loader'
 
-import createDocumentModule from './modules/document'
 import createDocumentPlainModule from './modules/document/plain'
 import createCoverModule from './modules/cover'
 import createCenterModule from './modules/center'
@@ -60,7 +59,6 @@ const moduleCreators = {
   embedTwitter: createEmbedTwitterModule,
   embedComment: createEmbedCommentModule,
   embedDatawrapper: createEmbedDatawrapperModule,
-  document: createDocumentModule,
   documentPlain: createDocumentPlainModule,
   cover: createCoverModule,
   center: createCenterModule,
@@ -116,18 +114,18 @@ const initModule = (rule, context = {}) => {
     const subModules = (rule.rules || [])
       .map((r) => initModule(r, context))
       .filter(Boolean)
-    const module = create({
+    const ruleModule = create({
       TYPE,
       rule,
       subModules: subModules,
       context,
     })
 
-    module.TYPE = TYPE
-    module.name = editorModule
-    module.subModules = subModules
+    ruleModule.TYPE = TYPE
+    ruleModule.name = editorModule
+    ruleModule.subModules = subModules
 
-    return module
+    return ruleModule
   }
 }
 const getAllModules = (module) =>
