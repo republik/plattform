@@ -13,7 +13,7 @@ import { Company } from '../../../lib/types'
 type CreateCheckoutSessionArgs = {
   offerId: string
   promoCode?: string
-  promotionItems: {
+  complimentaryItems: {
     id: string
     quantity: number
   }[]
@@ -60,7 +60,7 @@ export = async function createCheckoutSession(
     customFields: requiredCustomFields(ctx.user),
     metadata: args?.options?.metadata,
     returnURL: args?.options?.returnURL,
-    promotionItems: args.promotionItems,
+    complimentaryItems: args.complimentaryItems,
   })
 
   return {

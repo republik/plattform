@@ -12,7 +12,7 @@ const RAPPEN = 1
 
 export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
 
-export type PromotionItem = {
+export type ComplimentaryItem = {
   id: string
   name: string
   description: string
@@ -20,7 +20,7 @@ export type PromotionItem = {
   lookupKey: string
 }
 
-export type PromotionItemOrder = {
+export type ComplimentaryItemOrder = {
   id: string
   quantity: number
 }
@@ -34,7 +34,7 @@ export type Offer = {
   defaultPriceLookupKey: string
   taxRateId?: string
   requiresLogin: boolean
-  promotionItems?: PromotionItem[]
+  complimentaryItems?: ComplimentaryItem[]
   allowPromotions: boolean
   price?: {
     id: string
@@ -155,7 +155,7 @@ export const Offers: Offer[] = [
     company: 'PROJECT_R',
     requiresLogin: false,
     allowPromotions: false,
-    promotionItems: [PROMO_ITEM_REPUBLIK_BIBLIOTEK_1],
+    complimentaryItems: [PROMO_ITEM_REPUBLIK_BIBLIOTEK_1],
     defaultPriceLookupKey: 'GIFT_YEARLY',
   },
 ]

@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 import { Company } from '../types'
-import { Offer, PromotionItemOrder } from './offers'
+import { Offer, ComplimentaryItemOrder } from './offers'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { getConfig } from '../config'
 import { User } from '@orbiting/backend-modules-types'
@@ -30,14 +30,14 @@ export class Shop {
     metadata,
     customFields,
     returnURL,
-    promotionItems,
+    complimentaryItems,
   }: {
     offer: Offer
     uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
     customerId?: string
     discounts?: string[]
     customPrice?: number
-    promotionItems?: PromotionItemOrder[]
+    complimentaryItems?: ComplimentaryItemOrder[]
     metadata?: Record<string, string>
     returnURL?: string
     customFields?: Stripe.Checkout.SessionCreateParams.CustomField[]
@@ -62,14 +62,14 @@ export class Shop {
       customer: customerId,
       line_items: [
         lineItem,
-        ...(promotionItems?.map(promoItemToLineItem) || []),
+        ...(complimentaryItems?.map(promoItemToLineItem) || []),
       ],
       currency: offer.price?.currency,
       discounts: discounts?.map((id) => ({ coupon: id })),
       locale: 'de',
       billing_address_collection:
         offer.company === 'PROJECT_R' ? 'required' : 'auto',
-      shipping_address_collection: promotionItems?.length
+      shipping_address_collection: complimentaryItems?.length
         ? {
             allowed_countries: ['CH'],
           }
@@ -312,7 +312,7 @@ export async function checkIntroductoryOfferEligibility(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function promoItemToLineItem(_item: PromotionItemOrder) {
+function promoItemToLineItem(_item: ComplimentaryItemOrder) {
   return {
     price: 'price_1QQUCcFHX910KaTH9SKJhFZI',
     quantity: 1,
