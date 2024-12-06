@@ -6,8 +6,8 @@
     "node": "^20.0.0"
   },
   "scripts": {
-    "dev": "yarn gql:schema && concurrently \"PORT=3006 next dev\" \"yarn gql:types --watch\"",
-    "build": "yarn gql:schema && yarn gql:types && next build",
+    "dev": "concurrently \"PORT=3006 next dev\" \"yarn gql:types --watch\"",
+    "build": "yarn gql:types && next build",
     "start": "next start",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -15,7 +15,6 @@
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "eslint --fix .",
     "gql:types": "graphql-codegen --config graphql/configs/codegen-dev.ts",
-    "gql:schema": "graphql-codegen --config graphql/configs/codegen-schema.ts",
     "zat:setup": "docker compose build",
     "zat:dev": "docker compose up zat-server",
     "zat:package": "docker compose run --rm zat-package"

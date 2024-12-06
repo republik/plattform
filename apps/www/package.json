@@ -8,9 +8,9 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "yarn gql:schema && concurrently \"PORT=3010 next dev\" \"yarn gql:types --watch\" \"panda --watch\"",
+    "dev": "concurrently \"PORT=3010 next dev\" \"yarn gql:types --watch\" \"panda --watch\"",
     "start": "next start",
-    "build": "panda && yarn gql:schema && yarn gql:types && next build",
+    "build": "panda && yarn gql:types && next build",
     "heroku-postbuild": "npm run build",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -18,8 +18,7 @@
     "lint": "next lint",
     "analyze": "ANALYZE=true next build",
     "prepare": "panda codegen",
-    "gql:types": "graphql-codegen --config graphql/configs/codegen-dev.ts",
-    "gql:schema": "graphql-codegen --config graphql/configs/codegen-schema.ts"
+    "gql:types": "graphql-codegen --config graphql/configs/codegen-dev.ts"
   },
   "repository": {
     "type": "git",
