@@ -6,8 +6,8 @@
     "node": "^20.0.0"
   },
   "scripts": {
-    "dev": "concurrently \"PORT=3006 next dev\" \"yarn gql:types --watch\"",
-    "build": "yarn gql:types && next build",
+    "dev": "yarn gql:schema && concurrently \"PORT=3006 next dev\" \"yarn gql:types --watch\"",
+    "build": "yarn gql:schema && yarn gql:types && next build",
     "start": "next start",
     "test": "jest",
     "test:watch": "jest --watch",

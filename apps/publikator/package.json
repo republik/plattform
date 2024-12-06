@@ -8,9 +8,9 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "concurrently \"PORT=3005 next dev\" \"yarn gql:types --watch\"",
+    "dev": "yarn gql:schema && concurrently \"PORT=3005 next dev\" \"yarn gql:types --watch\"",
     "start": "next start",
-    "build": "yarn gql:types && next build",
+    "build": "yarn gql:schema && yarn gql:types && next build",
     "test": "jest",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "eslint --fix .",

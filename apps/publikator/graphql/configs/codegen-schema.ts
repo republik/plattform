@@ -12,7 +12,7 @@ const republikAPIConfig = {
 const config: CodegenConfig = {
   overwrite: true,
   generates: {
-    './graphql/republik-api.schema.graphql': {
+    './graphql/republik-api/__generated__/schema.graphql': {
       ...republikAPIConfig,
       plugins: ['schema-ast'],
     },
