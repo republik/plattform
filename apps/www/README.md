@@ -54,10 +54,6 @@ NEXT_PUBLIC_PLAUSIBLE_DOMAIN=republik.ch
 ### GraphQL code generation
 
 When working in the Next.js app-dir located in `src/app`, the type for the queries written in `src/app/*` are automatically generated.
-The generation is done based on the persisted schema files located in `./graphql/*.schema.graphql`.
-
-In order to update the schema files run `yarn gql:schema`, which then refetches the schema from the backend and DatoCMS and persists it in the schema files.
-This will be run on each build or dev server start.
 
 #### Using gql-codegen
 
