@@ -8,7 +8,7 @@ const config: CodegenConfig = {
   overwrite: true,
   generates: {
     './graphql/cms/__generated__/gql/': {
-      schema: './graphql/dato-cms.schema.graphql',
+      schema: './graphql/cms/__generated__/schema.graphql',
       documents: ['./graphql/cms/**/*.{ts,tsx,gql,graphql}'],
       preset: 'client',
       presetConfig: {
@@ -26,7 +26,7 @@ const config: CodegenConfig = {
       plugins: [],
     },
     './graphql/republik-api/__generated__/gql/': {
-      schema: './graphql/republik-api.schema.graphql',
+      schema: './graphql/republik-api/__generated__/schema.graphql',
       documents: ['./graphql/republik-api/**/*.{ts,tsx,gql,graphql}'],
       preset: 'client',
       presetConfig: {

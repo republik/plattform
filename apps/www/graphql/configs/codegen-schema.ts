@@ -39,11 +39,11 @@ const republikAPIConfig = {
 const config: CodegenConfig = {
   overwrite: true,
   generates: {
-    './graphql/dato-cms.schema.graphql': {
+    './graphql/cms/__generated__/schema.graphql': {
       ...datoCMSConfig,
       plugins: ['schema-ast'],
     },
-    './graphql/republik-api.schema.graphql': {
+    './graphql/republik-api/__generated__/schema.graphql': {
       ...republikAPIConfig,
       plugins: ['schema-ast'],
     },
