@@ -32,15 +32,20 @@ const {
 } = require('@orbiting/backend-modules-documents')
 
 const generateImageData = async (blob) => {
-  const meta = await sharp(blob).metadata()
-  const suffix = meta.format
-  const hash = hashObject(blob)
-  const path = `images/${hash}.${suffix}`
-  return {
-    blob,
-    hash,
-    path,
-    meta,
+  try {
+    const meta = await sharp(blob).metadata()
+    const suffix = meta.format
+    const hash = hashObject(blob)
+    const path = `images/${hash}.${suffix}`
+    return {
+      blob,
+      hash,
+      path,
+      meta,
+    }
+  } catch (e) {
+    console.error(e)
+    throw new Error(e)
   }
 }
 

@@ -43,7 +43,7 @@ const processRepoImageUrlsInContent = async (content, fn) => {
     }
   })
 
-  return Promise.all(fns.map((fn) => fn()))
+  return Promise.each(fns, fn => fn())
 }
 
 const processEmbedImageUrlsInContent = async (mdast, fn) => {
@@ -64,7 +64,7 @@ const processEmbedImageUrlsInContent = async (mdast, fn) => {
     }
   })
 
-  return Promise.all(fns.map((fn) => fn()))
+  return Promise.each(fns, fn => fn())
 }
 
 const processEmbedsInContent = async (mdast, fn, context) => {
