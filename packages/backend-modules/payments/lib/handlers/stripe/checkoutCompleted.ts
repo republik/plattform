@@ -8,7 +8,7 @@ import { PaymentProvider } from '../../providers/provider'
 import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
 import { SyncAddressDataWorker } from '../../workers/SyncAddressDataWorker'
-import { mapChargeArgs } from './invoicePaymentSucceded'
+import { mapChargeArgs } from './invoicePaymentSucceeded'
 // import { GiftShop } from '../../shop/gifts'
 
 export async function processCheckoutCompleted(
