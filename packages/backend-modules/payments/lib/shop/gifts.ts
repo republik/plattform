@@ -9,6 +9,7 @@ import { Payments } from '../payments'
 import { Offers } from './offers'
 import { Shop } from './Shop'
 import dayjs from 'dayjs'
+import { GiftVoucherRepo } from '../database/GiftVoucherRepo'
 
 export type Gift = {
   id: string
@@ -21,14 +22,14 @@ export type Gift = {
   durationUnit: 'year' | 'month'
 }
 
-type Voucher = {
-  id: string
+export type Voucher = {
+  id?: string
   code: string
   giftId: string
   issuedBy: Company
   redeemedBy: string | null
   redeemedForCompany: Company | null
-  state: 'unredeemed' | 'redeemed'
+  redeemedAt: Date | null
 }
 
 type PLEDGE_ABOS = 'ABO' | 'MONTHLY_ABO' | 'YEARLY_ABO' | 'BENEFACTOR_ABO'
@@ -73,39 +74,39 @@ const GIFTS: Gift[] = [
   },
 ]
 
-export class GiftRepo {
-  #store: Voucher[] = [
-    {
-      id: '1',
-      code: 'V4QPS1W5',
-      giftId: 'GIFT_YEARLY',
-      issuedBy: 'PROJECT_R',
-      state: 'unredeemed',
-      redeemedBy: null,
-      redeemedForCompany: null,
-    },
-    {
-      id: '1',
-      code: 'NM13P325',
-      giftId: 'MONTHLY_SUBSCRPTION_GIFT_3',
-      issuedBy: 'REPUBLIK',
-      state: 'unredeemed',
-      redeemedBy: null,
-      redeemedForCompany: null,
-    },
-  ]
+// export class GiftRepo {
+//   #store: Voucher[] = [
+//     {
+//       id: '1',
+//       code: 'V4QPS1W5',
+//       giftId: 'GIFT_YEARLY',
+//       issuedBy: 'PROJECT_R',
+//       state: 'unredeemed',
+//       redeemedBy: null,
+//       redeemedForCompany: null,
+//     },
+//     {
+//       id: '1',
+//       code: 'NM13P325',
+//       giftId: 'MONTHLY_SUBSCRPTION_GIFT_3',
+//       issuedBy: 'REPUBLIK',
+//       state: 'unredeemed',
+//       redeemedBy: null,
+//       redeemedForCompany: null,
+//     },
+//   ]
 
-  async getVoucher(code: string) {
-    return this.#store.find((g) => g.code === code && g.state === 'unredeemed')
-  }
-  async insertVoucher(voucher: Voucher) {
-    return this.#store.push(voucher)
-  }
-}
+//   async getVoucher(code: string) {
+//     return this.#store.find((g) => g.code === code && g.state === 'unredeemed')
+//   }
+//   async saveVoucher(voucher: Voucher) {
+//     return this.#store.push(voucher)
+//   }
+// }
 
 export class GiftShop {
   #pgdb: PgDb
-  #giftRepo = new GiftRepo()
+  #giftRepo: GiftVoucherRepo
   #stripeAdapters: Record<Company, Stripe> = {
     PROJECT_R: ProjectRStripe,
     REPUBLIK: RepublikAGStripe,
@@ -113,22 +114,24 @@ export class GiftShop {
 
   constructor(pgdb: PgDb) {
     this.#pgdb = pgdb
+    this.#giftRepo = new GiftVoucherRepo(pgdb)
   }
 
-  async handleVoucherPurches(company: Company, lookupKey: string) {
+  async generateNewVoucher(company: Company, giftId: string) {
     const voucher: Voucher = {
-      id: crypto.randomUUID(),
       issuedBy: company,
       code: newVoucherCode(),
-      giftId: lookupKey,
-      state: 'unredeemed',
+      giftId: giftId,
+      redeemedAt: null,
       redeemedBy: null,
       redeemedForCompany: null,
     }
 
-    this.#giftRepo.insertVoucher(voucher)
+    console.log(voucher)
 
-    return voucher.code
+    this.#giftRepo.saveVoucher(voucher)
+
+    return voucher
   }
 
   async redeemVoucher(voucherCode: string, userId: string) {
@@ -137,12 +140,12 @@ export class GiftShop {
       throw new Error('voucher is invalid')
     }
 
-    const voucher = await this.#giftRepo.getVoucher(code)
+    const voucher = await this.#giftRepo.getVoucherByCode(code)
     if (!voucher) {
       throw new Error('Unknown voucher')
     }
 
-    if (voucher.state === 'redeemed') {
+    if (voucher.redeemedAt !== null) {
       throw new Error('gift has already been redeemed')
     }
 

@@ -25,7 +25,7 @@ export async function handleStripeWebhook(
     const alreadySeen = await webhookService.getEvent<Stripe.Event>(event.id)
 
     if (alreadySeen) {
-      // if we have already logged the webhook we can retrun
+      // if we have already logged the webhook we can return
       const status = alreadySeen.processed ? 200 : 204
       return res.sendStatus(status)
     }

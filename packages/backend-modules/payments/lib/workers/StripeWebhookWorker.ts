@@ -52,7 +52,7 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
       switch (event.type) {
         case 'checkout.session.completed':
           await processCheckoutCompleted(
-            PaymentService,
+            { paymentService: PaymentService, ...this.context },
             job.data.company,
             event,
           )

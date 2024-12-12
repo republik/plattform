@@ -12,7 +12,7 @@ export class WebhookService {
     this.#repo = new WebhookRepo(pgdb)
   }
 
-  getEvent<T>(id: string) {
+  getEvent<T>(id: string): Promise<Webhook<T> | null> {
     return this.#repo.findWebhookEventBySourceId<T>(id)
   }
 

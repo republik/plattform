@@ -9,26 +9,35 @@ import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
 import { SyncAddressDataWorker } from '../../workers/SyncAddressDataWorker'
 import { mapChargeArgs } from './invoicePaymentSucceeded'
-// import { GiftShop } from '../../shop/gifts'
+import { ConnectionContext } from '@orbiting/backend-modules-types'
+import { GiftShop } from '../../shop/gifts'
+
+type PaymentWebhookContext = {
+  paymentService: PaymentService
+} & ConnectionContext
 
 export async function processCheckoutCompleted(
-  paymentService: PaymentService,
+  ctx: PaymentWebhookContext,
   company: Company,
   event: Stripe.CheckoutSessionCompletedEvent,
 ) {
   switch (event.data.object.mode) {
-    case 'subscription':
-      return handleSubscription(paymentService, company, event)
-    case 'payment':
-      return handlePayment(paymentService, company, event)
+    case 'subscription': {
+      return handleSubscription(ctx, company, event)
+    }
+    case 'payment': {
+      return handlePayment(ctx, company, event)
+    }
   }
 }
 
 async function handleSubscription(
-  paymentService: PaymentService,
+  ctx: PaymentWebhookContext,
   company: Company,
   event: Stripe.CheckoutSessionCompletedEvent,
 ) {
+  const paymentService = ctx.paymentService
+
   const customerId = event.data.object.customer as string
   if (!customerId) {
     console.log('No stripe customer provided; skipping')
@@ -105,7 +114,8 @@ async function handleSubscription(
     }
   }
 
-  await paymentService.saveOrder(userId, {
+  await paymentService.saveOrder({
+    userId: userId,
     company: company,
     externalId: event.data.object.id,
     invoiceId: invoiceId as string,
@@ -147,26 +157,90 @@ async function handleSubscription(
 }
 
 async function handlePayment(
-  _paymentService: PaymentService,
+  ctx: PaymentWebhookContext,
   company: Company,
   event: Stripe.CheckoutSessionCompletedEvent,
 ) {
+  const giftShop = new GiftShop(ctx.pgdb)
+
   const sess = await PaymentProvider.forCompany(company).getCheckoutSession(
     event.data.object.id,
   )
 
-  const lookupKey = sess?.line_items?.data.map(async (line) => {
-    const lookupKey = line.price?.lookup_key
+  if (!sess) {
+    throw new Error('checkout session does not exist')
+  }
 
-    if (lookupKey?.startsWith('GIFT_')) {
-      // const handler = Payments.getCheckoutHandler('purchesVoucher')
-      // await handler()
+  if (!sess.line_items) {
+    throw new Error(
+      'checkout session has no line items unable to process checkout',
+    )
+  }
+
+  let userId = undefined
+  if (typeof sess.customer !== 'undefined') {
+    userId =
+      (await ctx.paymentService.getUserIdForCompanyCustomer(
+        company,
+        sess.customer as string,
+      )) ?? undefined
+  }
+
+  let paymentStatus = event.data.object.payment_status
+  if (paymentStatus === 'no_payment_required') {
+    // no payments required are treated as paid
+    paymentStatus = 'paid'
+  }
+
+  console.log(sess.line_items.data)
+  console.log(sess.total_details)
+
+  const lineItems = sess.line_items.data.map((line) => {
+    return {
+      lineItemId: line.id,
+      externalPriceId: line.price!.id,
+      priceLookupKey: line.price!.lookup_key,
+      description: line.description,
+      quantity: line.quantity,
+      price: line.amount_total,
+      priceSubtotal: line.amount_subtotal,
+      taxAmount: line.amount_tax,
+      discountAmount: line.amount_discount,
     }
   })
 
-  // GiftShop.findGiftByLookupKey()
+  const giftCodes = []
+  for (const item of lineItems) {
+    if (item.priceLookupKey?.startsWith('GIFT')) {
+      const code = await giftShop.generateNewVoucher(
+        company,
+        item.priceLookupKey,
+      )
+      giftCodes.push(code)
+    }
+  }
 
-  console.log(lookupKey)
+  const orderDraft = {
+    userId: userId,
+    customerEmail:
+      typeof userId === 'undefined' ? sess.customer_details!.email! : undefined,
+    company: company,
+    metadata: sess.metadata,
+    externalId: event.data.object.id,
+    status: paymentStatus as 'paid' | 'unpaid',
+  }
+
+  const order = await ctx.paymentService.saveOrder(orderDraft)
+
+  const orderLineItems = lineItems.map((i) => {
+    return { orderId: order.id, ...i }
+  })
+
+  await ctx.pgdb.payments.orderLineItems.insert(orderLineItems)
+  // TODO!: Insert shipping address
+
+  console.log(orderLineItems)
+  console.log(giftCodes)
 }
 
 async function syncUserNameData(

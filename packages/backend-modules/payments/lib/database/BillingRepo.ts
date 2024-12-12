@@ -16,20 +16,27 @@ import {
 import { ACTIVE_STATUS_TYPES } from '../types'
 
 export type OrderArgs = {
-  company: Company
-  status: 'paid' | 'unpaid'
-  externalId: string
-  invoiceId: string
-  subscriptionId?: string
-}
-
-export type OrderRepoArgs = {
-  userId: string
+  userId?: string
+  customerEmail?: string
+  metadata?: any
   company: Company
   status: 'paid' | 'unpaid'
   externalId: string
   invoiceId?: string
   subscriptionId?: string
+  shippingAddressId?: string
+}
+
+export type OrderRepoArgs = {
+  userId?: string
+  customerEmail?: string
+  metadata?: any
+  company: Company
+  status: 'paid' | 'unpaid'
+  externalId: string
+  invoiceId?: string
+  subscriptionId?: string
+  shippingAddressId?: string
 }
 
 export interface PaymentBillingRepo {

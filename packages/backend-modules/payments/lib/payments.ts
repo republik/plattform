@@ -19,7 +19,6 @@ import { CustomerRepo, PaymentCustomerRepo } from './database/CutomerRepo'
 import {
   BillingRepo,
   OrderArgs,
-  OrderRepoArgs,
   PaymentBillingRepo,
 } from './database/BillingRepo'
 import { UserDataRepo } from './database/UserRepo'
@@ -376,16 +375,8 @@ export class Payments implements PaymentService {
     return customerId
   }
 
-  async saveOrder(userId: string, order: OrderArgs): Promise<Order> {
-    const args: OrderRepoArgs = {
-      userId: userId,
-      company: order.company,
-      externalId: order.externalId,
-      status: order.status,
-      invoiceId: order.invoiceId,
-      subscriptionId: order.subscriptionId,
-    }
-    return await this.billing.saveOrder(args)
+  async saveOrder(order: OrderArgs): Promise<Order> {
+    return await this.billing.saveOrder(order)
   }
 
   async updateUserName(
@@ -449,7 +440,7 @@ export interface PaymentService {
   createCustomer(company: Company, userId: string): Promise<string>
   listUserOrders(userId: string): Promise<Order[]>
   getOrder(id: string): Promise<Order | null>
-  saveOrder(userId: string, order: OrderArgs): Promise<Order>
+  saveOrder(order: OrderArgs): Promise<Order>
   getSubscriptionInvoices(subscriptionId: string): Promise<Invoice>
   getInvoice(by: SelectCriteria): Promise<Invoice | null>
   saveInvoice(userId: string, args: InvoiceArgs): Promise<Invoice>
