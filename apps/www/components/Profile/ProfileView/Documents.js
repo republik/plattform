@@ -1,8 +1,8 @@
 import { Interaction, TeaserFeed } from '@project-r/styleguide'
-import withT from '../../lib/withT'
-import HrefLink from '../Link/Href'
-import ActionBar from '../ActionBar'
-import InfiniteScroll from '../Frame/InfiniteScroll'
+import withT from '../../../lib/withT'
+import HrefLink from '../../Link/Href'
+import ActionBar from '../../ActionBar'
+import InfiniteScroll from '../../Frame/InfiniteScroll'
 import { css, merge } from 'glamor'
 
 const styles = {

@@ -8,7 +8,7 @@ import ErrorMessage from '../../ErrorMessage'
 import Portrait from '../../Profile/Portrait'
 import Statement from '../../Profile/Statement'
 import { ListedCheckbox, PublicCheckbox } from '../../Profile/Settings'
-import { mutation } from '../../Profile/Edit'
+import { updateMe } from '../../Profile/graphql/updatedMe'
 import UsernameField from '../../Profile/UsernameField'
 import Section from '../Section'
 import withT from '../../../lib/withT'
@@ -187,7 +187,7 @@ class Profile extends Component {
           />
         </div>
         <Mutation
-          mutation={mutation}
+          mutation={updateMe}
           variables={values}
           onCompleted={this.onCompleted}
         >

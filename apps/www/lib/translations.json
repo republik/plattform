@@ -1379,7 +1379,7 @@
     },
     {
       "key": "profile/contact/email/access/label",
-      "value": "E-Mail freigeben für"
+      "value": "E-Mail sichtbar für"
     },
     {
       "key": "profile/contact/pgpPublicKey/label",
@@ -1427,11 +1427,11 @@
     },
     {
       "key": "profile/settings/hasPublicProfile/true/note",
-      "value": "Alle (auch Suchmaschinen) können Ihr Profil sehen. Ihre Dialogbeiträge erscheinen für alle unter Ihrem vollen Namen."
+      "value": "Sowohl andere Verlegerinnen, als auch die Öffentlichkeit können Ihr Republik Profil sehen. Ihre Dialogbeiträge erscheinen öffentlich und unter Ihrem vollen Namen."
     },
     {
       "key": "profile/settings/hasPublicProfile/false/note",
-      "value": "Nur andere Verlegerinnen können Ihr Profil sehen. Ihre Dialogbeiträge erscheinen nur für Verleger unter Ihrem vollen Namen."
+      "value": "Nur andere Verlegerinnen können Ihr Republik Profil sehen. Ihre Dialogbeiträge erscheinen öffentlich, aber nur für Verleger können Ihrem vollen Namen sehen."
     },
     {
       "key": "profile/settings/isEligibleForProfile/notEligible",
@@ -1600,22 +1600,6 @@
     {
       "key": "testimonial/infinite/endless",
       "value": "Das waren {count} Verleger und Verlegerinnen. Weitere {remaining} anschauen?"
-    },
-    {
-      "key": "badge/crowdfunder",
-      "value": "Crowdfunder"
-    },
-    {
-      "key": "badge/patron",
-      "value": "Gönner"
-    },
-    {
-      "key": "badge/staff",
-      "value": "Fester Autor der Republik"
-    },
-    {
-      "key": "badge/freelancer",
-      "value": "Freier Autor der Republik"
     },
     {
       "key": "header/title",
