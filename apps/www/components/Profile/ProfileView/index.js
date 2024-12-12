@@ -5,8 +5,8 @@ import Credential from '../../Credential'
 
 import Box from '../../Frame/Box'
 import SubscribeMenu from '../../Notifications/SubscribeMenu'
-import Comments from './Comments'
-import Documents from './Documents'
+import ProfileCommentsFeed from './ProfileCommentsFeed'
+import ProifleDocumentsFeed from './ProifleDocumentsFeed'
 import ProfileUrls from './ProfileUrls'
 import { IconVpnKey } from '@republik/icons'
 
@@ -263,7 +263,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
               </div>
             )}
           </div>
-          <Documents
+          <ProifleDocumentsFeed
             documents={user.documents}
             loadMore={makeLoadMore(fetchMore, 'documents', {
               firstComments: 0,
@@ -272,7 +272,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
                 user.documents.pageInfo && user.documents.pageInfo.endCursor,
             })}
           />
-          <Comments
+          <ProfileCommentsFeed
             comments={user.comments}
             loadMore={makeLoadMore(fetchMore, 'comments', {
               firstDocuments: 0,

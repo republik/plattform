@@ -1,5 +1,5 @@
 import { Interaction, TeaserFeed } from '@project-r/styleguide'
-import withT from '../../../lib/withT'
+import { useTranslation } from '../../../lib/withT'
 import HrefLink from '../../Link/Href'
 import ActionBar from '../../ActionBar'
 import InfiniteScroll from '../../Frame/InfiniteScroll'
@@ -12,7 +12,9 @@ const styles = {
   }),
 }
 
-const Documents = ({ t, documents, loadMore, customStyles }) => {
+const ProifleDocumentFeed = ({ documents, loadMore, customStyles }) => {
+  const { t } = useTranslation()
+
   if (!documents || !documents.totalCount) {
     return null
   }
@@ -48,4 +50,4 @@ const Documents = ({ t, documents, loadMore, customStyles }) => {
   )
 }
 
-export default withT(Documents)
+export default ProifleDocumentFeed
