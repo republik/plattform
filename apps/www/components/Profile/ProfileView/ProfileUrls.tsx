@@ -1,7 +1,7 @@
-import ProfileLinkIcon from '../ProfileLinkIcon'
+import ProfileUrlIcon from '../Common/ProfileUrlIcon'
 import { IconButton } from '@project-r/styleguide'
 
-const ProfileLinkLabel = (url: string) => {
+const ProfileUrlLabel = (url: string) => {
   if (/bsky/.test(url)) {
     const bskyUsername = url.match(/\/profile\/([^/\s]+)/)[1]
     return bskyUsername || 'Bluesky'
@@ -21,7 +21,7 @@ const ProfileLinkLabel = (url: string) => {
   }
 }
 
-export default function ProfileLinks({ user }) {
+export default function ProfileUrls({ user }) {
   if (!user.profileUrls) {
     return
   }
@@ -31,9 +31,9 @@ export default function ProfileLinks({ user }) {
         return (
           <IconButton
             key={url}
-            Icon={() => <ProfileLinkIcon url={url} />}
-            label={ProfileLinkLabel(url)}
-            labelShort={ProfileLinkLabel(url)}
+            Icon={() => <ProfileUrlIcon url={url} />}
+            label={ProfileUrlLabel(url)}
+            labelShort={ProfileUrlLabel(url)}
             href={url}
           />
         )

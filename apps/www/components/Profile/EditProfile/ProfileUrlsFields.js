@@ -3,10 +3,9 @@ import { isURL } from 'validator'
 import { css } from 'glamor'
 import { mediaQueries, Field } from '@project-r/styleguide'
 
-import FieldSet from '../../FieldSet'
 import { useTranslation } from '../../../lib/withT'
 
-import ProfileLinkIcon from '../ProfileLinkIcon'
+import ProfileUrlIcon from '../Common/ProfileUrlIcon'
 
 const isHTTPUrl = (url) =>
   isURL(url, { require_protocol: true, protocols: ['http', 'https'] })
@@ -62,7 +61,7 @@ const ProfileUrlFields = ({ onChange, values, errors, dirty }) => {
   return (
     <Fragment>
       <div {...styles.linkRow}>
-        <ProfileLinkIcon url={profileUrl1} />
+        <ProfileUrlIcon url={profileUrl1} />
         <Field
           value={profileUrl1}
           label='URL'
@@ -74,7 +73,7 @@ const ProfileUrlFields = ({ onChange, values, errors, dirty }) => {
         />
       </div>
       <div {...styles.linkRow}>
-        <ProfileLinkIcon url={profileUrl2} />
+        <ProfileUrlIcon url={profileUrl2} />
         <Field
           value={profileUrl2}
           label='URL'
@@ -86,7 +85,7 @@ const ProfileUrlFields = ({ onChange, values, errors, dirty }) => {
         />
       </div>
       <div {...styles.linkRow}>
-        <ProfileLinkIcon url={profileUrl3} />
+        <ProfileUrlIcon url={profileUrl3} />
         <Field
           value={profileUrl3}
           label='URL'
