@@ -30,7 +30,7 @@ const styles = {
   }),
 }
 
-const ProfilePage = ({ data, fetchMore, metaData }) => {
+const ProfilePage = ({ data, fetchMore }) => {
   const router = useRouter()
   const { me } = useMe()
   const {

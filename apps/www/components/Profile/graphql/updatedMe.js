@@ -6,6 +6,7 @@ export const updateMe = gql`
     $hasPublicProfile: Boolean
     $facebookId: String
     $twitterHandle: String
+    $profileUrls: JSON
     $emailAccessRole: AccessRole
     $publicUrl: String
     $biography: String
@@ -23,6 +24,7 @@ export const updateMe = gql`
       hasPublicProfile: $hasPublicProfile
       facebookId: $facebookId
       twitterHandle: $twitterHandle
+      profileUrls: $profileUrls
       emailAccessRole: $emailAccessRole
       publicUrl: $publicUrl
       biography: $biography
@@ -40,6 +42,7 @@ export const updateMe = gql`
       hasPublicProfile
       facebookId
       twitterHandle
+      profileUrls
       emailAccessRole
       publicUrl
       biography
