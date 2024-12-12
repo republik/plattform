@@ -17,36 +17,27 @@ const ProfileLinkLabel = (url: string) => {
     return 'Mastodon'
   } else {
     const urlObject = new URL(url)
-    return urlObject.origin
+    return urlObject.host
   }
 }
 
 export default function ProfileLinks({ user }) {
-  const links: string[] = [
-    'https://bsky.app/profile/iovi.io',
-    'https://www.iovi.io',
-    'https://mastodon.social/@iovi@mastodon.social',
-  ]
+  if (!user.profileUrls) {
+    return
+  }
   return (
     <>
-      <IconButton
-        Icon={() => <ProfileLinkIcon url={links[0]} />}
-        label={ProfileLinkLabel(links[0])}
-        labelShort={ProfileLinkLabel(links[0])}
-        href={links[0]}
-      />
-      <IconButton
-        Icon={() => <ProfileLinkIcon url={links[1]} />}
-        label={ProfileLinkLabel(links[1])}
-        labelShort={ProfileLinkLabel(links[1])}
-        href={links[1]}
-      />
-      <IconButton
-        Icon={() => <ProfileLinkIcon url={links[2]} />}
-        label={ProfileLinkLabel(links[2])}
-        labelShort={ProfileLinkLabel(links[2])}
-        href={links[2]}
-      />
+      {user.profileUrls.map((url) => {
+        return (
+          <IconButton
+            key={url}
+            Icon={() => <ProfileLinkIcon url={url} />}
+            label={ProfileLinkLabel(url)}
+            labelShort={ProfileLinkLabel(url)}
+            href={url}
+          />
+        )
+      })}
     </>
   )
 }
