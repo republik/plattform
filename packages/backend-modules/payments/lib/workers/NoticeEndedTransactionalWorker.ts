@@ -1,7 +1,8 @@
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
-import { Payments } from '../payments'
 import Stripe from 'stripe'
+import { WebhookService } from '../services/WebhookService'
+import { MailNotificationService } from '../services/MailNotificationService'
 
 type Args = {
   $version: 'v1'
@@ -23,10 +24,11 @@ export class NoticeEndedTransactionalWorker extends BaseWorker<Args> {
 
     console.log(`[${this.queue}] start`)
 
-    const PaymentService = Payments.getInstance()
+    const webhookService = new WebhookService(this.context.pgdb)
+    const mailService = new MailNotificationService(this.context.pgdb)
 
     const wh =
-      await PaymentService.findWebhookEventBySourceId<Stripe.CustomerSubscriptionDeletedEvent>(
+      await webhookService.getEvent<Stripe.CustomerSubscriptionDeletedEvent>(
         job.data.eventSourceId,
       )
 
@@ -44,10 +46,12 @@ export class NoticeEndedTransactionalWorker extends BaseWorker<Args> {
 
     try {
       // send transactional
-      await PaymentService.sendSubscriptionEndedNoticeTransactionalMail({
+      await mailService.sendSubscriptionEndedNoticeTransactionalMail({
         subscriptionExternalId: event.data.object.id,
         userId: job.data.userId,
-        cancellationReason: event.data.object.cancellation_details?.reason as string | undefined
+        cancellationReason: event.data.object.cancellation_details?.reason as
+          | string
+          | undefined,
       })
     } catch (e) {
       console.error(`[${this.queue}] error`)
