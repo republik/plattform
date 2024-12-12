@@ -5,7 +5,7 @@ import Portrait from './Portrait'
 import Submit from './Submit'
 import Credentials from './Credentials'
 import PrivacySettings from './PrivacySettings'
-import ProfileLinks from './ProfileLinksForm'
+import ProfileUrlFields from './ProfileUrlsFields'
 import UsernameField from './UsernameField'
 import {
   Interaction,
@@ -165,7 +165,7 @@ const EditProfile = ({ data: { user } }) => {
         Media Accounts hinzufügen.
       </Interaction.P>
       <div {...styles.section}>
-        <ProfileLinks
+        <ProfileUrlFields
           user={user}
           onChange={onChange}
           values={values}

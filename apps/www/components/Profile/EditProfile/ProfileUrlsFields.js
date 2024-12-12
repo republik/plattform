@@ -23,7 +23,7 @@ const styles = {
 }
 
 
-const ProfileUrls = ({ onChange, values, errors, dirty }) => {
+const ProfileUrlFields = ({ onChange, values, errors, dirty }) => {
   const [profileUrl1, setProfileUrl1] = useState(values.profileUrls?.[0] ?? '')
   const [profileUrl2, setProfileUrl2] = useState(values.profileUrls?.[1] ?? '')
   const [profileUrl3, setProfileUrl3] = useState(values.profileUrls?.[2] ?? '')
@@ -101,4 +101,4 @@ const ProfileUrls = ({ onChange, values, errors, dirty }) => {
   )
 }
 
-export default ProfileUrls
+export default ProfileUrlFields

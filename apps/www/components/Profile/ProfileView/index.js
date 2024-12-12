@@ -7,7 +7,7 @@ import Box from '../../Frame/Box'
 import SubscribeMenu from '../../Notifications/SubscribeMenu'
 import Comments from './Comments'
 import Documents from './Documents'
-import ProfileLinks from './ProfileLinks'
+import ProfileUrls from './ProfileUrls'
 import { IconVpnKey } from '@republik/icons'
 
 import {
@@ -80,15 +80,15 @@ const styles = {
   hiddenMobile: css({
     display: 'none',
     [mediaQueries.mUp]: {
-      display: 'flex'
-    }
+      display: 'flex',
+    },
   }),
   hiddenDesktop: css({
     display: 'flex',
     [mediaQueries.mUp]: {
-      display: 'none'
-    }
-  })
+      display: 'none',
+    },
+  }),
 }
 
 const makeLoadMore = (fetchMore, dataType, variables) => () =>
@@ -198,13 +198,13 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
             )}
           </div>
           <div {...styles.contactLinks} {...styles.hiddenMobile}>
-            <ProfileLinks user={user} />
+            <ProfileUrls user={user} />
             {user.email && user.emailAccessRole === 'PUBLIC' && (
               <IconButton
                 Icon={IconMailOutline}
                 href={`mailto:${user.email}`}
-                label="Email"
-                labelShort="Email"
+                label='Email'
+                labelShort='Email'
               />
             )}
             {user.pgpPublicKeyId && (
@@ -243,7 +243,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
           </div>
           {!!user.biography && <p {...styles.biography}>{user.biography}</p>}
           <div {...styles.contactLinks} {...styles.hiddenDesktop}>
-            <ProfileLinks user={user} />
+            <ProfileUrls user={user} />
             {user.email && user.emailAccessRole === 'PUBLIC' && (
               <IconButton
                 Icon={IconMailOutline}
