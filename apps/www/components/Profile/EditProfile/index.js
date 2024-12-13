@@ -12,20 +12,32 @@ import {
   mediaQueries,
   Dropdown,
   useColorContext,
+  fontStyles,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useMe } from '../../../lib/context/MeContext'
 import { useTranslation } from '../../../lib/withT'
 import FieldSet, { styles as fieldSetStyles } from '../../FieldSet'
-
-const PORTRAIT_SIZE = 210
+import { PORTRAIT_SIZE } from '../ProfileView'
 
 const styles = {
   portrait: css({
     width: PORTRAIT_SIZE,
     height: PORTRAIT_SIZE,
   }),
-  section: css({
+  editSection: css({
+    marginBottom: 48,
+    '& h2': {
+      ...fontStyles.sansSerifMedium22,
+      [mediaQueries.mUp]: {
+        ...fontStyles.sansSerifMedium24,
+      },
+    },
+    '& p': {
+      ...fontStyles.sansSerifRegular16,
+    },
+  }),
+  fields: css({
     display: 'flex',
     flexDirection: 'column',
     gap: 24,
@@ -81,174 +93,194 @@ const EditProfile = ({ data: { user } }) => {
   return (
     <>
       <Link
+        style={{
+          display: 'flex',
+          textDecoration: 'underline',
+          marginBottom: 16,
+        }}
         href={{
           pathname: `/~${user.slug}`,
         }}
       >
         Zurück zum Profil
       </Link>
-      <Interaction.H2 {...styles.h2}>Profilbild</Interaction.H2>
-      <div {...styles.portrait}>
-        <Portrait
-          user={user}
-          isEditing={true}
-          isMe={isMe}
-          onChange={onChange}
-          values={values}
-          errors={errors}
-          dirty={dirty}
-        />
-      </div>
-      <Interaction.H2 {...styles.h2}>Profilnamen</Interaction.H2>
-      <Interaction.P>
-        Wählen Sie einen Profilnamen. Dieser bestimmt den Link unter dem ihr
-        Profil erreichbar ist
-      </Interaction.P>
-      <div {...styles.section}>
-        <UsernameField
-          user={user}
-          values={values}
-          errors={errors}
-          onChange={onChange}
-        />
-      </div>
-      <Interaction.H2 {...styles.h2}>Rollen</Interaction.H2>
-      <Interaction.P>Wählen Sie ihre Rolle</Interaction.P>
-      <div {...styles.section}>
-        <Credentials
-          user={user}
-          isEditing={true}
-          onChange={onChange}
-          values={values}
-          errors={errors}
-          dirty={dirty}
-        />
-      </div>
-      <Interaction.H2 {...styles.h2}>Steckbrief und Statement</Interaction.H2>
-      <div {...styles.section}>
-        <FieldSet
-          values={values}
-          errors={errors}
-          dirty={dirty}
-          onChange={onChange}
-          fields={[
-            {
-              label: t('profile/biography/label'),
-              name: 'biography',
-              autoSize: true,
-              validator: (value) =>
-                value &&
-                value.trim().length >= 2000 &&
-                t('profile/biography/label/tooLong'),
-            },
-          ]}
-        />
-        <FieldSet
-          values={values}
-          errors={errors}
-          dirty={dirty}
-          onChange={onChange}
-          fields={[
-            {
-              label: t('profile/statement/label'),
-              name: 'statement',
-              autoSize: true,
-              validator: (value) =>
-                value.trim().length >= 140 && t('profile/statement/tooLong'),
-            },
-          ]}
-        />
-      </div>
-      <Interaction.H2 {...styles.h2}>Ihre Links</Interaction.H2>
-      <Interaction.P>
-        Sie können ihrem Profil drei beliebige Links zu Webseiten oder Social
-        Media Accounts hinzufügen.
-      </Interaction.P>
-      <div {...styles.section}>
-        <ProfileUrlFields
-          user={user}
-          onChange={onChange}
-          values={values}
-          errors={errors}
-          dirty={dirty}
-        />
-      </div>
-      <Interaction.H2 {...styles.h2}>Privatsphäreeinstellungen</Interaction.H2>
-      <Interaction.P>
-        Sie können ihrem Profil drei beliebige Links zu Webseiten oder Social
-        Media Accounts hinzufügen.
-      </Interaction.P>
-      <div {...styles.section}>
-        <Dropdown
-          t={t}
-          label={t('profile/contact/email/access/label')}
-          value={values.emailAccessRole}
-          onChange={(item) => {
-            onChange({
-              values: {
-                emailAccessRole: item.value,
+      <section {...styles.editSection}>
+        <div {...styles.portrait}>
+          <Portrait
+            user={user}
+            isEditing={true}
+            isMe={isMe}
+            onChange={onChange}
+            values={values}
+            errors={errors}
+            dirty={dirty}
+          />
+        </div>
+      </section>
+      <section {...styles.editSection}>
+        <h2>{t('profile/username/title')}</h2>
+        <p>{t('profile/username/description')}</p>
+        <div {...styles.fields}>
+          <UsernameField
+            user={user}
+            values={values}
+            errors={errors}
+            onChange={onChange}
+          />
+        </div>
+      </section>
+      <section {...styles.editSection}>
+        <h2>{t('profile/credentials/title')}</h2>
+        <p>{t('profile/credentials/description')}</p>
+        <div {...styles.fields}>
+          <Credentials
+            user={user}
+            isEditing={true}
+            onChange={onChange}
+            values={values}
+            errors={errors}
+            dirty={dirty}
+          />
+        </div>
+      </section>
+      <section {...styles.editSection}>
+        <h2>Steckbrief und Statement</h2>
+        <p>
+          Im Steckbrief können Sie eine kurze Biographie erfassen, welche in
+          Ihrem Profil angezeigt wird. Ein Statement erscheint als grosser
+          Leitsatz über ihrem Profil - es darf höchstens 140 Zeichen lang sein.
+        </p>
+        <div {...styles.fields}>
+          <FieldSet
+            values={values}
+            errors={errors}
+            dirty={dirty}
+            onChange={onChange}
+            fields={[
+              {
+                label: t('profile/biography/label'),
+                name: 'biography',
+                autoSize: true,
+                validator: (value) =>
+                  value &&
+                  value.trim().length >= 2000 &&
+                  t('profile/biography/label/tooLong'),
               },
-            })
-          }}
-          items={['ADMIN', 'EDITOR', 'MEMBER', 'PUBLIC'].map((value) => ({
-            value: value,
-            text: t(`profile/contact/access/${value}`),
-          }))}
-        />
-        <PrivacySettings
-          user={user}
-          onChange={onChange}
-          values={values}
-          errors={errors}
-          dirty={dirty}
-        />
-      </div>
-      <Interaction.H2 {...styles.h2}>Andere Informationen</Interaction.H2>
-      <div {...styles.section}>
-        <FieldSet
-          values={values}
-          errors={errors}
-          dirty={dirty}
-          onChange={(fields) => {
-            const { pgpPublicKey } = fields.values
-            if (pgpPublicKey && pgpPublicKey.match(/PGP PRIVATE KEY/)) {
+            ]}
+          />
+          <FieldSet
+            values={values}
+            errors={errors}
+            dirty={dirty}
+            onChange={onChange}
+            fields={[
+              {
+                label: t('profile/statement/label'),
+                name: 'statement',
+                autoSize: true,
+                validator: (value) =>
+                  value.trim().length >= 140 && t('profile/statement/tooLong'),
+              },
+            ]}
+          />
+        </div>
+      </section>
+      <section {...styles.editSection}>
+        <h2>Ihre Links</h2>
+        <p>
+          Sie können ihrem Profil drei beliebige Links zu Webseiten oder Social
+          Media Accounts hinzufügen.
+        </p>
+        <div {...styles.fields}>
+          <ProfileUrlFields
+            user={user}
+            onChange={onChange}
+            values={values}
+            errors={errors}
+            dirty={dirty}
+          />
+        </div>
+      </section>
+      <section {...styles.editSection}>
+        <h2>Privatsphäre</h2>
+        <p>
+          Sie können ihrem Profil drei beliebige Links zu Webseiten oder Social
+          Media Accounts hinzufügen.
+        </p>
+        <div {...styles.fields}>
+          <PrivacySettings
+            user={user}
+            onChange={onChange}
+            values={values}
+            errors={errors}
+            dirty={dirty}
+          />
+          <Dropdown
+            t={t}
+            label={t('profile/contact/email/access/label')}
+            value={values.emailAccessRole}
+            onChange={(item) => {
               onChange({
                 values: {
-                  pgpPublicKey: '',
+                  emailAccessRole: item.value,
                 },
               })
-              window.alert(t('profile/contact/pgpPublicKey/error/private'))
-              return
-            }
-            onChange(fields)
-          }}
-          additionalFieldProps={() => {
-            return {
-              renderInput: (props) => (
-                <textarea rows={1} {...fieldSetStyles.autoSize} {...props} />
-              ),
-            }
-          }}
-          fields={[
-            {
-              label: t('profile/contact/pgpPublicKey/label'),
-              name: 'pgpPublicKey',
-            },
-          ]}
-        />
-        <FieldSet
-          values={values}
-          errors={errors}
-          dirty={dirty}
-          onChange={onChange}
-          fields={[
-            {
-              label: t('profile/contact/prolitterisId/label'),
-              name: 'prolitterisId',
-            },
-          ]}
-        />
-      </div>
+            }}
+            items={['ADMIN', 'EDITOR', 'MEMBER', 'PUBLIC'].map((value) => ({
+              value: value,
+              text: t(`profile/contact/access/${value}`),
+            }))}
+          />
+        </div>
+      </section>
+      <section {...styles.editSection}>
+        <h2>Weiteres</h2>
+        <div {...styles.fields}>
+          <FieldSet
+            values={values}
+            errors={errors}
+            dirty={dirty}
+            onChange={(fields) => {
+              const { pgpPublicKey } = fields.values
+              if (pgpPublicKey && pgpPublicKey.match(/PGP PRIVATE KEY/)) {
+                onChange({
+                  values: {
+                    pgpPublicKey: '',
+                  },
+                })
+                window.alert(t('profile/contact/pgpPublicKey/error/private'))
+                return
+              }
+              onChange(fields)
+            }}
+            additionalFieldProps={() => {
+              return {
+                renderInput: (props) => (
+                  <textarea rows={1} {...fieldSetStyles.autoSize} {...props} />
+                ),
+              }
+            }}
+            fields={[
+              {
+                label: t('profile/contact/pgpPublicKey/label'),
+                name: 'pgpPublicKey',
+              },
+            ]}
+          />
+          <FieldSet
+            values={values}
+            errors={errors}
+            dirty={dirty}
+            onChange={onChange}
+            fields={[
+              {
+                label: t('profile/contact/prolitterisId/label'),
+                name: 'prolitterisId',
+              },
+            ]}
+          />
+        </div>
+      </section>
       <div
         {...colorScheme.set('backgroundColor', 'default')}
         style={{ position: 'sticky', bottom: 0, padding: '0 0 8px 0' }}

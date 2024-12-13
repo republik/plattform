@@ -1314,6 +1314,14 @@
       "value": "Rolle"
     },
     {
+      "key": "profile/credentials/title",
+      "value": "Rollen"
+    },
+    {
+      "key": "profile/credentials/description",
+      "value": "Wählen Sie eine «Rolle». welche unter Ihrem Namen angezeigt word. Sie können Beruf, Interessensbidungen, Vereins- oder Verbandsmitgliedschaften oder andere Informationen zu Ihrer Person erfassen."
+    },
+    {
       "key": "profile/credentials/errors/tooLong",
       "value": "Rolle, maximal 40 Zeichen"
     },
@@ -1491,11 +1499,19 @@
     },
     {
       "key": "profile/username/label",
-      "value": "Profil URL"
+      "value": "Benutzername"
     },
     {
       "key": "profile/username/note",
-      "value": "a-z, 0-9 und . erlaubt"
+      "value": "Erlaubte Zeichen: Kleinbuchstaben (a-z), Zahlen (0-9) und Punkt (.)"
+    },
+    {
+      "key": "profile/username/title",
+      "value": "Benutzername"
+    },
+    {
+      "key": "profile/username/description",
+      "value": "Ihr Benutzername bestimmt, unter welchem Link ihr Profil auffindbar ist, wenn Sie ein öffentliches Profil haben."
     },
     {
       "key": "profile/portrait/choose",

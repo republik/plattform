@@ -34,7 +34,7 @@ const Credentials = ({ user, onChange, values, errors, dirty }) => {
   const publicOnes = credentials.filter((c) => c.isListed)
   const privateCreds = credentials.filter((c) => !c.isListed)
   return (
-    <Fragment>
+    <div>
       <FieldSet
         values={values}
         errors={errors}
@@ -67,7 +67,7 @@ const Credentials = ({ user, onChange, values, errors, dirty }) => {
             <Credential {...c} />
           </A>
         ))}
-    </Fragment>
+    </div>
   )
 }
 

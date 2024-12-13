@@ -1,35 +1,35 @@
 import { css } from 'glamor'
-import { useTranslation } from '../../../lib/withT'
 import Image from 'next/image'
-import Credential from '../../Credential'
-
-import Box from '../../Frame/Box'
-import SubscribeMenu from '../../Notifications/SubscribeMenu'
-import ProfileCommentsFeed from './ProfileCommentsFeed'
-import ProifleDocumentsFeed from './ProifleDocumentsFeed'
-import ProfileUrls from './ProfileUrls'
-
+import Link from 'next/link'
+import { IconMailOutline, IconVpnKey } from '@republik/icons'
 import {
   fontStyles,
   Interaction,
   mediaQueries,
   IconButton,
 } from '@project-r/styleguide'
-import Link from 'next/link'
-import { IconReport, IconMailOutline, IconVpnKey } from '@republik/icons'
-import { useMe } from '../../../lib/context/MeContext'
 
-const PORTRAIT_SIZE = 210
+import { useMe } from '../../../lib/context/MeContext'
+import { useTranslation } from '../../../lib/withT'
+
+import Credential from '../../Credential'
+import Box from '../../Frame/Box'
+import SubscribeMenu from '../../Notifications/SubscribeMenu'
+
+import ProfileCommentsFeed from './ProfileCommentsFeed'
+import ProifleDocumentsFeed from './ProifleDocumentsFeed'
+import ProfileUrls from './ProfileUrls'
+
+export const PORTRAIT_SIZE = 210
 
 const styles = {
   statement: css({
     ...fontStyles.serifTitle,
     fontSize: 27,
     lineHeight: 1.4,
-    margin: '24px 0 16px 0',
+    marginBottom: 16,
     [mediaQueries.mUp]: {
       fontSize: 32,
-      margin: '24px 0 16px 0',
     },
   }),
   profileContainer: css({
@@ -131,7 +131,11 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
       )}
       {isMe && (
         <Link
-          style={{ textDecoration: 'underline' }}
+          style={{
+            display: 'flex',
+            textDecoration: 'underline',
+            marginBottom: 16,
+          }}
           href={{
             pathname: `/~${user.slug}`,
             query: { edit: 'true' },
