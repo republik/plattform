@@ -8,7 +8,6 @@ import PrivacySettings from './PrivacySettings'
 import ProfileUrlFields from './ProfileUrlsFields'
 import UsernameField from './UsernameField'
 import {
-  Interaction,
   mediaQueries,
   Dropdown,
   useColorContext,

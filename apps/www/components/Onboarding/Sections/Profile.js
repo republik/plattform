@@ -10,7 +10,7 @@ import Portrait from '../../Profile/EditProfile/Portrait'
 import {
   ListedCheckbox,
   PublicCheckbox,
-} from '../../Profile/EditProfile/ProfileSettings'
+} from '../../Profile/EditProfile/PrivacySettings'
 import UsernameField from '../../Profile/EditProfile/UsernameField'
 import Section from '../Section'
 import withT from '../../../lib/withT'
