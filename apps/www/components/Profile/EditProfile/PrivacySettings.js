@@ -15,6 +15,7 @@ const styles = {
 }
 
 const PrivacySettings = ({ user, onChange, values, errors, t }) => {
+  console.log(values.hasPublicProfile)
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       {!user.isEligibleForProfile && (
@@ -69,12 +70,11 @@ export const PublicCheckbox = withT(({ user, values, onChange, t }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
     <div {...styles.radio}>
       <Radio
-        value='true'
         checked={values.hasPublicProfile}
-        onChange={(e) => {
+        onChange={() => {
           onChange({
             values: {
-              hasPublicProfile: e.target.value,
+              hasPublicProfile: true,
             },
           })
         }}
@@ -85,12 +85,11 @@ export const PublicCheckbox = withT(({ user, values, onChange, t }) => (
     </div>
     <div {...styles.radio}>
       <Radio
-        value='false'
         checked={!values.hasPublicProfile}
-        onChange={(e) => {
+        onChange={() => {
           onChange({
             values: {
-              hasPublicProfile: e.target.value,
+              hasPublicProfile: false,
             },
           })
         }}

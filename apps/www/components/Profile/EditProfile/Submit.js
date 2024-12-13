@@ -3,6 +3,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { css } from 'glamor'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
 import {
   InlineSpinner,
@@ -29,18 +30,10 @@ const styles = {
 
 const Submit = ({ me, user, t, state, setState, update }) => {
   const [colorScheme] = useColorContext()
+  const router = useRouter()
 
   if (!me || me.id !== user.id) {
     return null
-  }
-  if (state.updating) {
-    return (
-      <div {...styles.container}>
-        <InlineSpinner />
-        <br />
-        {t('profile/edit/updating')}
-      </div>
-    )
   }
 
   const errorMessages = Object.keys(state.errors)
@@ -74,7 +67,7 @@ const Submit = ({ me, user, t, state, setState, update }) => {
       <div
         style={{
           opacity: errorMessages.length ? 0.5 : 1,
-          marginBottom: 8
+          marginBottom: 8,
         }}
       >
         <Button
@@ -102,14 +95,10 @@ const Submit = ({ me, user, t, state, setState, update }) => {
                 state.values.publicUrl === DEFAULT_VALUES.publicUrl
                   ? ''
                   : state.values.publicUrl,
-            })
+            }).then(() => router.push(`/~${user.slug}`))
           }}
         >
-          {t(
-            state.values.hasPublicProfile && !user.hasPublicProfile
-              ? 'profile/edit/publish'
-              : 'profile/edit/save',
-          )}
+          {state.updating ? <InlineSpinner /> : <>{t('profile/edit/save')}</>}
         </Button>
       </div>
       <Link
@@ -182,7 +171,6 @@ export default compose(
           .then(() => {
             setState(() => ({
               updating: false,
-              isEditing: false,
               error: undefined,
               values: {},
             }))

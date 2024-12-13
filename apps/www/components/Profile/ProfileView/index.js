@@ -7,6 +7,7 @@ import {
   Interaction,
   mediaQueries,
   IconButton,
+  useColorContext,
 } from '@project-r/styleguide'
 
 import { useMe } from '../../../lib/context/MeContext'
@@ -118,17 +119,13 @@ const makeLoadMore = (fetchMore, dataType, variables) => () =>
 const ProfileView = ({ data: { user }, fetchMore }) => {
   const { me } = useMe()
   const { t } = useTranslation()
+  const [colorScheme] = useColorContext()
 
   const isMe = me && me.id === user.id
 
   const listedCredential = user.credentials?.filter((c) => c.isListed)[0]
   return (
     <>
-      {!user.hasPublicProfile && (
-        <Box>
-          <Interaction.P>{t('profile/private')}</Interaction.P>
-        </Box>
-      )}
       {isMe && (
         <Link
           style={{
@@ -143,6 +140,14 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
         >
           {t('profile/edit/start')}
         </Link>
+      )}
+      {!user.hasPublicProfile && (
+        <p
+          {...colorScheme.set('backgroundColor', 'alert')}
+          style={{ padding: 24, marginBottom: 16 }}
+        >
+          {t('profile/private')}
+        </p>
       )}
       {!!user.statement && <p {...styles.statement}>{`«${user.statement}»`}</p>}
       <div {...styles.profileContainer}>
