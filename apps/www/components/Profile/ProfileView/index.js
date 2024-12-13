@@ -14,7 +14,6 @@ import { useMe } from '../../../lib/context/MeContext'
 import { useTranslation } from '../../../lib/withT'
 
 import Credential from '../../Credential'
-import Box from '../../Frame/Box'
 import SubscribeMenu from '../../Notifications/SubscribeMenu'
 
 import ProfileCommentsFeed from './ProfileCommentsFeed'

@@ -9,7 +9,7 @@ import Portrait from '../../Profile/Portrait'
 import Statement from '../../Profile/Statement'
 import { ListedCheckbox, PublicCheckbox } from '../../Profile/Settings'
 import { updateMe } from '../../Profile/graphql/updatedMe'
-import UsernameField from '../../Profile/UsernameField'
+import UsernameField from '../../Profile/EditProfile/UsernameField'
 import Section from '../Section'
 import withT from '../../../lib/withT'
 
