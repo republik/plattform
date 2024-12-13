@@ -1,27 +1,34 @@
 
 import {
   IconLogoFacebook,
-  IconLogoTwitter,
+  IconLogoX,
   IconLogoMastodon,
   IconLogoThreema,
   IconLogoSignal,
-  IconLogoWhatsApp,
+  IconLogoLinkedIn,
   IconLogoYouTube,
   IconLink,
   IconLogoBluesky,
+  IconLogoTelegram
 } from '@republik/icons'
 
 const ProfileLinkIcon = ({ url }) => {
-  if (/bsky/.test(url)) {
+  if (/bsky\.com/.test(url)) {
     return <IconLogoBluesky size={24} />
-  } else if (/facebook/.test(url)) {
+  } else if (/facebook\.com/.test(url)) {
     return <IconLogoFacebook size={24} />
-  } else if (/x\.com/.test(url)) {
-    return <IconLogoTwitter size={24} />
+  } else if (/x\.com/.test(url) || /twitter\.com/.test(url)) {
+    return <IconLogoX size={24} />
   } else if (/threema\.id/.test(url)) {
     return <IconLogoThreema size={24} />
   } else if (/signal\.me/.test(url)) {
     return <IconLogoSignal size={24} />
+  } else if (/linkedin\.com/.test(url)) {
+    return <IconLogoLinkedIn size={24} />
+  } else if (/t\.me/.test(url)) {
+    return <IconLogoTelegram size={24} />
+  } else if (/youtube\.com/.test(url) || /youtu\.be/.test(url)  ) {
+    return <IconLogoYouTube size={24} />
   } else if (/\/@.+@/.test(url) || /mastodon/.test(url)) {
     return <IconLogoMastodon size={24} />
   }

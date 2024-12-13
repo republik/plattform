@@ -91,6 +91,13 @@ const Submit = ({ me, user, t, state, setState, update }) => {
             }
             update({
               ...state.values,
+              // prepend https:// if profileUrls don't have protocol
+              profileUrls: state.values.profileUrls?.map((url) => {
+                return url.indexOf('https://') === -1 ||
+                  url.indexOf('http://') === -1
+                  ? 'https://' + url
+                  : url
+              }),
               publicUrl:
                 state.values.publicUrl === DEFAULT_VALUES.publicUrl
                   ? ''

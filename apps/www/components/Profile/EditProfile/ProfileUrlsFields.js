@@ -8,7 +8,7 @@ import { useTranslation } from '../../../lib/withT'
 import ProfileUrlIcon from '../Common/ProfileUrlIcon'
 
 const isHTTPUrl = (url) =>
-  isURL(url, { require_protocol: true, protocols: ['http', 'https'] })
+  isURL(url, { require_host: true, require_tld: true, allow_fragments: false })
 
 const styles = {
   linkRow: css({
@@ -21,39 +21,40 @@ const styles = {
   }),
 }
 
-
 const ProfileUrlFields = ({ onChange, values, errors, dirty }) => {
   const [profileUrl1, setProfileUrl1] = useState(values.profileUrls?.[0] ?? '')
   const [profileUrl2, setProfileUrl2] = useState(values.profileUrls?.[1] ?? '')
   const [profileUrl3, setProfileUrl3] = useState(values.profileUrls?.[2] ?? '')
 
   const validator = (value) =>
-    !!value &&
-    !isHTTPUrl(value) &&
-    value !== 'https://' &&
-    t('profile/contact/publicUrl/error')
+    !!value && !isHTTPUrl(value) && t('profile/contact/publicUrl/error')
 
   useEffect(() => {
     onChange({
       values: {
-        profileUrls: [profileUrl1, profileUrl2, profileUrl3].filter((v) => v !== ""),
+        profileUrls: [profileUrl1, profileUrl2, profileUrl3].filter(
+          (v) => v !== '',
+        ),
       },
       errors: {
-            profileUrls: validator(profileUrl1) || validator(profileUrl2) || validator(profileUrl3) ?
-            [
-              validator(profileUrl1),
-              validator(profileUrl2),
-              validator(profileUrl3)
-            ] : false,
-          },
+        profileUrls:
+          validator(profileUrl1) ||
+          validator(profileUrl2) ||
+          validator(profileUrl3)
+            ? [
+                validator(profileUrl1),
+                validator(profileUrl2),
+                validator(profileUrl3),
+              ]
+            : false,
+      },
       dirty: {
         profileUrls: [
           profileUrl1 !== values.profileUrls?.[0],
           profileUrl2 !== values.profileUrls?.[1],
           profileUrl3 !== values.profileUrls?.[2],
-        ]
-      }
-
+        ],
+      },
     })
   }, [profileUrl1, profileUrl2, profileUrl3])
 
