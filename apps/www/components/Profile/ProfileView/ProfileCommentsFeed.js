@@ -1,10 +1,13 @@
-import { CommentTeaser, Interaction } from '@project-r/styleguide'
+import { CommentTeaser, Interaction, IconButton } from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
 import CommentLink from '../../Discussion/shared/CommentLink'
 import InfiniteScroll from '../../Frame/InfiniteScroll'
+import { IconReport } from '@republik/icons'
+import { useReportUserMutation } from '../graphql/useReportUserMutation'
 
-const ProfileCommentsFeed = ({ comments, loadMore }) => {
+const ProfileCommentsFeed = ({ comments, loadMore, user, isMe }) => {
   const { t } = useTranslation()
+  const [reportUserMutation] = useReportUserMutation()
 
   if (!comments || !comments.totalCount) {
     return null
@@ -14,6 +17,41 @@ const ProfileCommentsFeed = ({ comments, loadMore }) => {
   const totalCount = comments.totalCount
   const currentCount = comments.nodes.length
 
+  const reportUser = async () => {
+    const reportReason = window.prompt(t('profile/report/confirm'))
+    if (reportReason === null) {
+      return
+    }
+    if (reportReason.length === 0) {
+      alert(t('profile/report/provideReason'))
+      return
+    }
+    const maxLength = 500
+    if (reportReason.length > maxLength) {
+      alert(
+        t('profile/report/tooLong', {
+          max: maxLength,
+          input: reportReason.slice(0, maxLength) + '…',
+          br: '\n',
+        }),
+      )
+      return
+    }
+
+    try {
+      await reportUserMutation({
+        variables: {
+          userId: user.id,
+          reason: reportReason,
+        },
+      })
+      alert(t('profile/report/success'))
+    } catch (e) {
+      console.warn(e)
+      alert(t('profile/report/error'))
+    }
+  }
+
   return (
     <InfiniteScroll
       hasMore={hasMore}
@@ -22,11 +60,26 @@ const ProfileCommentsFeed = ({ comments, loadMore }) => {
       currentCount={currentCount}
       loadMoreKey={'feed/loadMore/comments'}
     >
-      <Interaction.H3 style={{ marginBottom: 20 }}>
-        {t.pluralize('profile/comments/title', {
-          count: comments.totalCount,
-        })}
-      </Interaction.H3>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Interaction.H3 style={{ marginBottom: 20 }}>
+          {t.pluralize('profile/comments/title', {
+            count: comments.totalCount,
+          })}
+        </Interaction.H3>
+        {!!user.hasPublicProfile && !isMe && (
+          <IconButton
+            Icon={IconReport}
+            title={t('profile/report/label')}
+            onClick={() => reportUser(user.id)}
+          />
+        )}
+      </div>
       {comments.nodes
         .filter((comment) => comment.preview)
         .map((comment) => {

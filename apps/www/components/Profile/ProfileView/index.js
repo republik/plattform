@@ -14,10 +14,8 @@ import {
   Interaction,
   mediaQueries,
   IconButton,
-  renderCommentMdast,
 } from '@project-r/styleguide'
 import Link from 'next/link'
-import { useReportUserMutation } from '../graphql/useReportUserMutation'
 import { IconReport, IconMailOutline, IconVpnKey } from '@republik/icons'
 import { useMe } from '../../../lib/context/MeContext'
 
@@ -28,25 +26,27 @@ const styles = {
     ...fontStyles.serifTitle,
     fontSize: 27,
     lineHeight: 1.4,
-    marginBottom: 24,
+    margin: '24px 0 16px 0',
     [mediaQueries.mUp]: {
       fontSize: 32,
-      marginBottom: 36,
+      margin: '24px 0 16px 0',
     },
   }),
   profileContainer: css({
     display: 'flex',
     flexDirection: 'column',
-    gap: 32,
+    gap: 36,
     [mediaQueries.mUp]: {
       flexDirection: 'row',
-      gap: 36,
     },
   }),
   column: css({
     display: 'flex',
     flexDirection: 'column',
-    gap: 32,
+    gap: 36,
+    [mediaQueries.mUp]: {
+      gap: 48,
+    },
   }),
   portrait: css({
     width: PORTRAIT_SIZE,
@@ -119,43 +119,6 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
   const { me } = useMe()
   const { t } = useTranslation()
 
-  const [reportUserMutation] = useReportUserMutation()
-
-  const reportUser = async () => {
-    const reportReason = window.prompt(t('profile/report/confirm'))
-    if (reportReason === null) {
-      return
-    }
-    if (reportReason.length === 0) {
-      alert(t('profile/report/provideReason'))
-      return
-    }
-    const maxLength = 500
-    if (reportReason.length > maxLength) {
-      alert(
-        t('profile/report/tooLong', {
-          max: maxLength,
-          input: reportReason.slice(0, maxLength) + '…',
-          br: '\n',
-        }),
-      )
-      return
-    }
-
-    try {
-      await reportUserMutation({
-        variables: {
-          userId: user.id,
-          reason: reportReason,
-        },
-      })
-      alert(t('profile/report/success'))
-    } catch (e) {
-      console.warn(e)
-      alert(t('profile/report/error'))
-    }
-  }
-
   const isMe = me && me.id === user.id
 
   const listedCredential = user.credentials?.filter((c) => c.isListed)[0]
@@ -168,12 +131,13 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
       )}
       {isMe && (
         <Link
+          style={{ textDecoration: 'underline' }}
           href={{
             pathname: `/~${user.slug}`,
             query: { edit: 'true' },
           }}
         >
-          Profil bearbeiten
+          {t('profile/edit/start')}
         </Link>
       )}
       {!!user.statement && <p {...styles.statement}>{`«${user.statement}»`}</p>}
@@ -241,11 +205,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
               />
             )}
           </div>
-          {!!user.biographyContent && (
-            <p {...styles.biography}>
-              {renderCommentMdast(user.biographyContent)}
-            </p>
-          )}
+          {!!user.biography && <p {...styles.biography}>{user.biography}</p>}
           <div {...styles.contactLinks} {...styles.hiddenDesktop}>
             <ProfileUrls user={user} />
             {user.email && user.emailAccessRole === 'PUBLIC' && (
@@ -267,35 +227,30 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
               </div>
             )}
           </div>
-          <ProifleDocumentsFeed
-            documents={user.documents}
-            loadMore={makeLoadMore(fetchMore, 'documents', {
-              firstComments: 0,
-              firstDocuments: 20,
-              afterDocument:
-                user.documents.pageInfo && user.documents.pageInfo.endCursor,
-            })}
-          />
-          <ProfileCommentsFeed
-            comments={user.comments}
-            loadMore={makeLoadMore(fetchMore, 'comments', {
-              firstDocuments: 0,
-              firstComments: 40,
-              afterComment:
-                user.comments.pageInfo && user.comments.pageInfo.endCursor,
-            })}
-          />
+          <div>
+            <ProifleDocumentsFeed
+              documents={user.documents}
+              loadMore={makeLoadMore(fetchMore, 'documents', {
+                firstComments: 0,
+                firstDocuments: 20,
+                afterDocument:
+                  user.documents.pageInfo && user.documents.pageInfo.endCursor,
+              })}
+            />
+            <ProfileCommentsFeed
+              isMe={isMe}
+              user={user}
+              comments={user.comments}
+              loadMore={makeLoadMore(fetchMore, 'comments', {
+                firstDocuments: 0,
+                firstComments: 40,
+                afterComment:
+                  user.comments.pageInfo && user.comments.pageInfo.endCursor,
+              })}
+            />
+          </div>
         </div>
       </div>
-
-      {!!user.hasPublicProfile && !isMe && (
-        <IconButton
-          Icon={IconReport}
-          title={t('profile/report/label')}
-          onClick={() => reportUser(user.id)}
-          style={{ margin: 0 }}
-        />
-      )}
     </>
   )
 }
