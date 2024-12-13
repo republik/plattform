@@ -5,10 +5,12 @@ import { css, merge } from 'glamor'
 
 import { TESTIMONIAL_IMAGE_SIZE } from '../../constants'
 import ErrorMessage from '../../ErrorMessage'
-import Portrait from '../../Profile/Portrait'
-import Statement from '../../Profile/Statement'
-import { ListedCheckbox, PublicCheckbox } from '../../Profile/Settings'
 import { updateMe } from '../../Profile/graphql/updatedMe'
+import Portrait from '../../Profile/EditProfile/Portrait'
+import {
+  ListedCheckbox,
+  PublicCheckbox,
+} from '../../Profile/EditProfile/ProfileSettings'
 import UsernameField from '../../Profile/EditProfile/UsernameField'
 import Section from '../Section'
 import withT from '../../../lib/withT'
@@ -143,14 +145,20 @@ class Profile extends Component {
           />
         </div>
         <div {...styles.field}>
-          <Statement
-            user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
-            values={mergedValues}
+          <FieldSet
+            values={values}
             errors={errors}
             dirty={dirty}
+            onChange={this.onChange}
+            fields={[
+              {
+                label: t('profile/statement/label'),
+                name: 'statement',
+                autoSize: true,
+                validator: (value) =>
+                  value.trim().length >= 140 && t('profile/statement/tooLong'),
+              },
+            ]}
           />
         </div>
         <div {...styles.field}>
