@@ -8,17 +8,17 @@ import SubscribeMenu from '../../Notifications/SubscribeMenu'
 import ProfileCommentsFeed from './ProfileCommentsFeed'
 import ProifleDocumentsFeed from './ProifleDocumentsFeed'
 import ProfileUrls from './ProfileUrls'
-import { IconVpnKey } from '@republik/icons'
 
 import {
   fontStyles,
   Interaction,
   mediaQueries,
   IconButton,
+  renderCommentMdast,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useReportUserMutation } from '../graphql/useReportUserMutation'
-import { IconReport, IconMailOutline } from '@republik/icons'
+import { IconReport, IconMailOutline, IconVpnKey } from '@republik/icons'
 import { useMe } from '../../../lib/context/MeContext'
 
 const PORTRAIT_SIZE = 210
@@ -241,7 +241,11 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
               />
             )}
           </div>
-          {!!user.biography && <p {...styles.biography}>{user.biography}</p>}
+          {!!user.biographyContent && (
+            <p {...styles.biography}>
+              {renderCommentMdast(user.biographyContent)}
+            </p>
+          )}
           <div {...styles.contactLinks} {...styles.hiddenDesktop}>
             <ProfileUrls user={user} />
             {user.email && user.emailAccessRole === 'PUBLIC' && (

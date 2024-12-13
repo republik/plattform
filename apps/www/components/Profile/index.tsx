@@ -11,14 +11,11 @@ import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
 import { useMe } from '../../lib/context/MeContext'
 import getPublicUser from './graphql/getPublicUser'
 import { useRouter } from 'next/router'
+import type { User } from '#graphql/republik-api/__generated__/gql/graphql'
 
 import ProfileView from './ProfileView'
 import EditProfile from './EditProfile'
-import {
-  mediaQueries,
-  Container,
-} from '@project-r/styleguide'
-
+import { mediaQueries, Container } from '@project-r/styleguide'
 
 const styles = {
   container: css({
@@ -48,7 +45,7 @@ const ProfilePage = ({ data, fetchMore }) => {
   )
 }
 
-const Profile = ({ user: foundUser }) => {
+const Profile = ({ user: foundUser }: { user: User }) => {
   const { t } = useTranslation()
 
   const { loading, error, data, fetchMore } = useQuery(getPublicUser, {
@@ -58,7 +55,7 @@ const Profile = ({ user: foundUser }) => {
       firstComments: 10,
     },
   })
-  const user = data?.user
+  const user: User = data?.user 
 
   const metaData = {
     url: user ? `${PUBLIC_BASE_URL}/~${user.slug}` : undefined,
@@ -84,7 +81,7 @@ const Profile = ({ user: foundUser }) => {
         loading={loading}
         error={error}
         render={() => {
-          return <ProfilePage t={t} data={data} fetchMore={fetchMore} />
+          return <ProfilePage data={data} fetchMore={fetchMore} />
         }}
       />
     </Frame>
