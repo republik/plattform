@@ -1434,11 +1434,11 @@
       "value": "Sie können ihrem Profil drei beliebige Links zu Webseiten oder Social Media Accounts hinzufügen."
     },
     {
-      "key": "profile/section/profileLinks/title",
+      "key": "profile/section/privacy/title",
       "value": "Privatsphäre"
     },
     {
-      "key": "profile/section/profileLinks/description",
+      "key": "profile/section/privacy/description",
       "value": "Mit den folgenden Einstellungen steuern Sie, wer ihr Profil aufrufen kann."
     },
     {
