@@ -1403,11 +1403,11 @@
     },
     {
       "key": "profile/settings/hasPublicProfile/true/note",
-      "value": "Sowohl andere Verlegerinnen, als auch die Öffentlichkeit können Ihr Republik Profil sehen. Ihre Dialogbeiträge erscheinen öffentlich und unter Ihrem vollen Namen."
+      "value": "Ihre Profilseite ist öffentlich. Die Dialogbeiträge auf Ihrer Profilseite sind jedoch nur für Verlegerinnen sichtbar. Im Dialog erscheinen Ihre Beiträge standardmässig unter Ihrem vollen Namen, ausser Sie wählen die Option einen Beitrag anonym abzugeben."
     },
     {
       "key": "profile/settings/hasPublicProfile/false/note",
-      "value": "Nur andere Verlegerinnen können Ihr Republik Profil sehen. Ihre Dialogbeiträge erscheinen öffentlich, aber nur für Verleger können Ihrem vollen Namen sehen."
+      "value": "Ihre Profilseite ist nur für andere Verleger sichtbar. Im Dialog sehen nur Verlegerinnen Ihren vollen Namen."
     },
     {
       "key": "profile/settings/isEligibleForProfile/notEligible",

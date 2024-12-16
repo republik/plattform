@@ -13,7 +13,7 @@ export default function ProfileCommentsAndDocuments({
   const [activeChildIndex, setActiveChildIndex] = useState(0)
   const { t } = useTranslation()
 
-  // only show tabs if user has documents (articles)
+  // only show documents and tabs if user has documents (articles)
   if (!user.documents || !user.documents.totalCount) {
     return (
       <ProfileCommentsFeed
