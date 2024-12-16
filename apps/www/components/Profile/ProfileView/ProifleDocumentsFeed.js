@@ -1,5 +1,4 @@
-import { Interaction, TeaserFeed } from '@project-r/styleguide'
-import { useTranslation } from '../../../lib/withT'
+import { TeaserFeed } from '@project-r/styleguide'
 import HrefLink from '../../Link/Href'
 import ActionBar from '../../ActionBar'
 import InfiniteScroll from '../../Frame/InfiniteScroll'
@@ -10,11 +9,18 @@ const styles = {
     marginTop: -30,
     marginBottom: 40,
   }),
+  noBorder: css({
+    '& div:first-child': {
+      border: 'none'
+    }
+  })
 }
 
-const ProifleDocumentFeed = ({ documents, loadMore, customStyles }) => {
-  const { t } = useTranslation()
-
+const ProifleDocumentFeed = ({
+  documents,
+  loadMore,
+  customStyles = undefined,
+}) => {
   if (!documents || !documents.totalCount) {
     return null
   }
@@ -30,12 +36,8 @@ const ProifleDocumentFeed = ({ documents, loadMore, customStyles }) => {
       totalCount={totalCount}
       currentCount={currentCount}
       loadMoreStyles={merge(styles.loadMore, customStyles)}
+      customStyles={styles.noBorder}
     >
-      <Interaction.H3 style={{ marginBottom: 20 }}>
-        {t.pluralize('profile/documents/title', {
-          count: documents.totalCount,
-        })}
-      </Interaction.H3>
       {documents.nodes.map((doc) => (
         <TeaserFeed
           {...doc.meta}
@@ -44,6 +46,7 @@ const ProifleDocumentFeed = ({ documents, loadMore, customStyles }) => {
           Link={HrefLink}
           key={doc.meta.path}
           bar={<ActionBar mode='feed' document={doc} />}
+          style={{ backgroundColor: 'red' }}
         />
       ))}
     </InfiniteScroll>

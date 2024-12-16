@@ -12,12 +12,9 @@ import {
 
 import { useMe } from '../../../lib/context/MeContext'
 import { useTranslation } from '../../../lib/withT'
-
 import Credential from '../../Credential'
 import SubscribeMenu from '../../Notifications/SubscribeMenu'
-
-import ProfileCommentsFeed from './ProfileCommentsFeed'
-import ProifleDocumentsFeed from './ProifleDocumentsFeed'
+import ProfileCommentsAndDocuments from './ProfileCommentsAndDocuments'
 import ProfileUrls from './ProfileUrls'
 
 export const PORTRAIT_SIZE = 210
@@ -235,28 +232,24 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
               </div>
             )}
           </div>
-          <div>
-            <ProifleDocumentsFeed
-              documents={user.documents}
-              loadMore={makeLoadMore(fetchMore, 'documents', {
-                firstComments: 0,
-                firstDocuments: 20,
-                afterDocument:
-                  user.documents.pageInfo && user.documents.pageInfo.endCursor,
-              })}
-            />
-            <ProfileCommentsFeed
-              isMe={isMe}
-              user={user}
-              comments={user.comments}
-              loadMore={makeLoadMore(fetchMore, 'comments', {
-                firstDocuments: 0,
-                firstComments: 40,
-                afterComment:
-                  user.comments.pageInfo && user.comments.pageInfo.endCursor,
-              })}
-            />
-          </div>
+          <ProfileCommentsAndDocuments
+            isMe={isMe}
+            user={user}
+            documents={user.documents}
+            loadMoreDocuments={makeLoadMore(fetchMore, 'documents', {
+              firstComments: 0,
+              firstDocuments: 20,
+              afterDocument:
+                user.documents.pageInfo && user.documents.pageInfo.endCursor,
+            })}
+            comments={user.comments}
+            loadMoreComments={makeLoadMore(fetchMore, 'comments', {
+              firstDocuments: 0,
+              firstComments: 40,
+              afterComment:
+                user.comments.pageInfo && user.comments.pageInfo.endCursor,
+            })}
+          />
         </div>
       </div>
     </>

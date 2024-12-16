@@ -4,8 +4,23 @@ import CommentLink from '../../Discussion/shared/CommentLink'
 import InfiniteScroll from '../../Frame/InfiniteScroll'
 import { IconReport } from '@republik/icons'
 import { useReportUserMutation } from '../graphql/useReportUserMutation'
+import { css } from 'glamor'
 
-const ProfileCommentsFeed = ({ comments, loadMore, user, isMe }) => {
+const styles = {
+  noBorder: css({
+    '& div:nth-child(2)': {
+      border: 'none',
+    },
+  }),
+}
+
+const ProfileCommentsFeed = ({
+  comments,
+  loadMore,
+  user,
+  isMe,
+  showTitle = false,
+}) => {
   const { t } = useTranslation()
   const [reportUserMutation] = useReportUserMutation()
 
@@ -59,19 +74,23 @@ const ProfileCommentsFeed = ({ comments, loadMore, user, isMe }) => {
       totalCount={totalCount}
       currentCount={currentCount}
       loadMoreKey={'feed/loadMore/comments'}
+      customStyles={styles.noBorder}
     >
       <div
         style={{
           display: 'flex',
           alignItems: 'flex-start',
-          justifyContent: 'space-between',
+          justifyContent: showTitle ? 'space-between' : 'flex-end',
+          marginBottom: !showTitle && 16,
         }}
       >
-        <Interaction.H3 style={{ marginBottom: 20 }}>
-          {t.pluralize('profile/comments/title', {
-            count: comments.totalCount,
-          })}
-        </Interaction.H3>
+        {showTitle && (
+          <Interaction.H3 style={{ marginBottom: 20 }}>
+            {t.pluralize('profile/comments/title', {
+              count: comments.totalCount,
+            })}
+          </Interaction.H3>
+        )}
         {!!user.hasPublicProfile && !isMe && (
           <IconButton
             Icon={IconReport}
