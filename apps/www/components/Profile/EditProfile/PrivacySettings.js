@@ -79,7 +79,7 @@ export const PublicCheckbox = withT(({ user, values, onChange, t }) => (
           })
         }}
       >
-        Öffentliches Profil
+       {t('profile/settings/hasPublicProfile/true/label')}
       </Radio>
       <Label>{t('profile/settings/hasPublicProfile/true/note')}</Label>
     </div>
@@ -94,7 +94,7 @@ export const PublicCheckbox = withT(({ user, values, onChange, t }) => (
           })
         }}
       >
-        Privates Profil
+        {t('profile/settings/hasPublicProfile/false/label')}
       </Radio>
       <Label>{t('profile/settings/hasPublicProfile/false/note')}</Label>
     </div>

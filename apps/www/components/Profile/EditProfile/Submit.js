@@ -113,7 +113,7 @@ const Submit = ({ me, user, t, state, setState, update }) => {
           pathname: `/~${user.slug}`,
         }}
       >
-        abbrechen
+        {t('profile/edit/cancel')}
       </Link>
     </div>
   )

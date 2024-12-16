@@ -101,7 +101,7 @@ const EditProfile = ({ data: { user } }) => {
           pathname: `/~${user.slug}`,
         }}
       >
-        Zurück zum Profil
+        {t('profile/edit/return')}
       </Link>
       <section {...styles.editSection}>
         <div {...styles.portrait}>
@@ -143,12 +143,8 @@ const EditProfile = ({ data: { user } }) => {
         </div>
       </section>
       <section {...styles.editSection}>
-        <h2>Steckbrief und Statement</h2>
-        <p>
-          Im Steckbrief können Sie eine kurze Biographie erfassen, welche in
-          Ihrem Profil angezeigt wird. Ein Statement erscheint als grosser
-          Leitsatz über ihrem Profil - es darf höchstens 140 Zeichen lang sein.
-        </p>
+        <h2>{t('profile/section/bio/title')}</h2>
+        <p>{t('profile/section/bio/description')}</p>
         <div {...styles.fields}>
           <FieldSet
             values={values}
@@ -185,11 +181,8 @@ const EditProfile = ({ data: { user } }) => {
         </div>
       </section>
       <section {...styles.editSection}>
-        <h2>Ihre Links</h2>
-        <p>
-          Sie können ihrem Profil drei beliebige Links zu Webseiten oder Social
-          Media Accounts hinzufügen.
-        </p>
+        <h2>{t('profile/section/profileLinks/title')}</h2>
+        <p>{t('profile/section/profileLinks/description')}</p>
         <div {...styles.fields}>
           <ProfileUrlFields
             user={user}
@@ -201,11 +194,8 @@ const EditProfile = ({ data: { user } }) => {
         </div>
       </section>
       <section {...styles.editSection}>
-        <h2>Privatsphäre</h2>
-        <p>
-          Sie können ihrem Profil drei beliebige Links zu Webseiten oder Social
-          Media Accounts hinzufügen.
-        </p>
+        <h2>{t('profile/section/privacy/title')}</h2>
+        <p>{t('profile/section/privacy/title')}</p>
         <div {...styles.fields}>
           <PrivacySettings
             user={user}
@@ -233,7 +223,7 @@ const EditProfile = ({ data: { user } }) => {
         </div>
       </section>
       <section {...styles.editSection}>
-        <h2>Weiteres</h2>
+        <h2>{t('profile/section/other/title')}</h2>
         <div {...styles.fields}>
           <FieldSet
             values={values}

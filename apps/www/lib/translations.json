@@ -141,14 +141,6 @@
       "value": "Dieses Profil wurde nicht gefunden, weil es nicht existiert oder Sie es nicht sehen dürfen."
     },
     {
-      "key": "pages/profile/empty/content",
-      "value": "Meine eigene {link}"
-    },
-    {
-      "key": "pages/profile/empty/content/linktext",
-      "value": "Profilseite aktivieren oder bearbeiten"
-    },
-    {
       "key": "pages/claim/meta/title",
       "value": "Gutschein einlösen"
     },
@@ -1294,16 +1286,12 @@
       "value": "abbrechen"
     },
     {
+      "key": "profile/edit/return",
+      "value": "Zurück zum Profil"
+    },
+    {
       "key": "profile/edit/save",
       "value": "speichern"
-    },
-    {
-      "key": "profile/edit/publish",
-      "value": "veröffentlichen"
-    },
-    {
-      "key": "profile/edit/updating",
-      "value": "speichert"
     },
     {
       "key": "profile/edit/errors",
@@ -1347,7 +1335,7 @@
     },
     {
       "key": "profile/contact/publicUrl/error",
-      "value": "Webseite, ungültig"
+      "value": "Webseite ungültig"
     },
     {
       "key": "Account/ProfileForm/isEmailPublic/label",
@@ -1358,24 +1346,12 @@
       "value": "Nur Administration"
     },
     {
-      "key": "profile/contact/access/ADMIN/note",
-      "value": "{field} ist nur für die Administration einsehbar"
-    },
-    {
       "key": "profile/contact/access/EDITOR",
       "value": "Redaktion"
     },
     {
-      "key": "profile/contact/access/EDITOR/note",
-      "value": "{field} ist für die Redaktion einsehbar"
-    },
-    {
       "key": "profile/contact/access/MEMBER",
       "value": "Mitglieder"
-    },
-    {
-      "key": "profile/contact/access/MEMBER/note",
-      "value": "{field} ist für Mitglieder einsehbar"
     },
     {
       "key": "profile/contact/access/PUBLIC",
@@ -1398,18 +1374,6 @@
       "value": "Dies ist ein privater PGP-Key, diesen sollten Sie nie auf eine Webseite hochladen. Bitte geben Sie Ihren Public-Key an."
     },
     {
-      "key": "profile/contact/phoneNumber/label",
-      "value": "Telefonnummer"
-    },
-    {
-      "key": "profile/contact/phoneNumberNote/label",
-      "value": "Verfügbarkeit"
-    },
-    {
-      "key": "profile/contact/phoneNumber/access/label",
-      "value": "Telefonnummer freigeben für"
-    },
-    {
       "key": "profile/settings/isListed/label",
       "value": "Auf Community-Seite anzeigen"
     },
@@ -1430,8 +1394,12 @@
       "value": "Leider können wir Sie auf der Community-Seite nicht anzeigen. Schreiben Sie an kontakt@republik.ch für weitere Informationen."
     },
     {
-      "key": "profile/settings/hasPublicProfile/label",
+      "key": "profile/settings/hasPublicProfile/true/label",
       "value": "Öffentliches Profil"
+    },
+    {
+      "key": "profile/settings/hasPublicProfile/false/label",
+      "value": "Privates Profil"
     },
     {
       "key": "profile/settings/hasPublicProfile/true/note",
@@ -1448,6 +1416,34 @@
     {
       "key": "profile/settings/privacy/communityLink",
       "value": "der Community-Seite"
+    },
+    {
+      "key": "profile/section/bio/title",
+      "value": "Steckbrief und Statement"
+    },
+    {
+      "key": "profile/section/bio/description",
+      "value": "Im Steckbrief können Sie eine kurze Biographie erfassen, welche in Ihrem Profil angezeigt wird. Ein Statement erscheint als grosser Leitsatz über ihrem Profil - es darf höchstens 140 Zeichen lang sein."
+    },
+    {
+      "key": "profile/section/profileLinks/title",
+      "value": "Ihre Links"
+    },
+    {
+      "key": "profile/section/profileLinks/description",
+      "value": "Sie können ihrem Profil drei beliebige Links zu Webseiten oder Social Media Accounts hinzufügen."
+    },
+    {
+      "key": "profile/section/profileLinks/title",
+      "value": "Privatsphäre"
+    },
+    {
+      "key": "profile/section/profileLinks/description",
+      "value": "Mit den folgenden Einstellungen steuern Sie, wer ihr Profil aufrufen kann."
+    },
+    {
+      "key": "profile/section/other/title",
+      "value": "Weiteres"
     },
     {
       "key": "profile/biography/label",
@@ -1480,18 +1476,6 @@
     {
       "key": "profile/statement/tooLong",
       "value": "Statement, maximal 140 Zeichen"
-    },
-    {
-      "key": "profile/share/overlayTitle",
-      "value": "Profil teilen"
-    },
-    {
-      "key": "profile/share/title",
-      "value": "Profil von {name}"
-    },
-    {
-      "key": "profile/share/emailSubject",
-      "value": "Profil von {name}"
     },
     {
       "key": "profile/private",
