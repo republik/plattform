@@ -62,6 +62,7 @@ const styles = {
   }),
   biography: css({
     ...fontStyles.serifRegular19,
+    whiteSpace: 'pre-wrap',
   }),
   contactLinks: css({
     display: 'flex',
