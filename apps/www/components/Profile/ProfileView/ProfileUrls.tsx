@@ -8,13 +8,13 @@ const ProfileUrlLabel = (url: string) => {
   } else if (/facebook\.com/.test(url)) {
     return 'Facebook'
   } else if (/x\.com/.test(url)) {
-    return 'X'
+    const xId = url.match(/x\.com\/([^/\s]+)/)[1]
+    return xId || 'X'
   } else if (/threema\.id/.test(url)) {
     const threemaID = url.match(/\/threema\.id\/([^/\s]+)/)[1]
     return threemaID || 'Threema'
   } else if (/signal\.me/.test(url)) {
-    const signalId = url.match(/\/signal\.me\/([^/\s]+)/)[1]
-    return signalId || 'Signal'
+    return 'Signal'
   } else if (/\/@.+@/.test(url) || /mastodon/.test(url)) {
     return 'Mastodon'
   } else {
