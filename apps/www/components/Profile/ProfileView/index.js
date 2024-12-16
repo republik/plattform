@@ -16,6 +16,7 @@ import Credential from '../../Credential'
 import SubscribeMenu from '../../Notifications/SubscribeMenu'
 import ProfileCommentsAndDocuments from './ProfileCommentsAndDocuments'
 import ProfileUrls from './ProfileUrls'
+import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
 
 export const PORTRAIT_SIZE = 210
 
@@ -150,15 +151,19 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
       <div {...styles.profileContainer}>
         <div {...styles.column}>
           <div {...styles.portrait}>
-            <Image
-              className={css({
-                width: '100%',
-              })}
-              width={PORTRAIT_SIZE}
-              height={PORTRAIT_SIZE}
-              alt='Profilbild'
-              src={user.portrait}
-            />
+            {user.portrait ? (
+              <Image
+                className={css({
+                  width: '100%',
+                })}
+                width={PORTRAIT_SIZE}
+                height={PORTRAIT_SIZE}
+                alt='Profilbild'
+                src={user.portrait}
+              />
+            ) : (
+              <img src={CDN_FRONTEND_BASE_URL + '/static/profiledefault.png'} />
+            )}
             {!!user.sequenceNumber && (
               <p {...styles.sequenceNumber}>
                 {t('memberships/sequenceNumber/label', {
