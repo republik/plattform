@@ -44,7 +44,8 @@ const InfiniteScroll = ({
           <A
             href='#'
             onClick={(event) => {
-              event.preventDefault()
+              // eslint-disable-next-line
+              event && event.preventDefault()
               setInfiniteScroll(true)
             }}
           >
