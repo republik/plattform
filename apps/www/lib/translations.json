@@ -1307,7 +1307,7 @@
     },
     {
       "key": "profile/credentials/description",
-      "value": "Wählen Sie eine «Rolle». welche unter Ihrem Namen angezeigt word. Sie können Beruf, Interessensbidungen, Vereins- oder Verbandsmitgliedschaften oder andere Informationen zu Ihrer Person erfassen."
+      "value": "Wählen Sie eine «Rolle». welche unter Ihrem Namen angezeigt wird. Sie können Beruf, Interessensbidungen, Vereins- oder Verbandsmitgliedschaften oder andere Informationen zu Ihrer Person erfassen."
     },
     {
       "key": "profile/credentials/errors/tooLong",

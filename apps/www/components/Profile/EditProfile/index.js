@@ -195,7 +195,7 @@ const EditProfile = ({ data: { user } }) => {
       </section>
       <section {...styles.editSection}>
         <h2>{t('profile/section/privacy/title')}</h2>
-        <p>{t('profile/section/privacy/title')}</p>
+        <p>{t('profile/section/privacy/description')}</p>
         <div {...styles.fields}>
           <PrivacySettings
             user={user}
