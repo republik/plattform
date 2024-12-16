@@ -46,6 +46,9 @@ const styles = {
       gap: 48,
     },
   }),
+  columnRight: css({
+    flexGrow: 1,
+  }),
   portrait: css({
     width: PORTRAIT_SIZE,
   }),
@@ -194,7 +197,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
             )}
           </div>
         </div>
-        <div {...styles.column}>
+        <div {...styles.column} {...styles.columnRight}>
           <div {...styles.userInfo}>
             <Interaction.H1>{user.name}</Interaction.H1>
             <div {...styles.credentials}>
