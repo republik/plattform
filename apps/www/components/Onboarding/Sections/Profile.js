@@ -9,7 +9,7 @@ import { updateMe } from '../../Profile/graphql/updatedMe'
 import Portrait from '../../Profile/EditProfile/Portrait'
 import {
   ListedCheckbox,
-  PublicCheckbox,
+  PublicSelection,
 } from '../../Profile/EditProfile/PrivacySettings'
 import UsernameField from '../../Profile/EditProfile/UsernameField'
 import Section from '../Section'
@@ -164,34 +164,25 @@ class Profile extends Component {
         <div {...styles.field}>
           <UsernameField
             user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
-            values={mergedValues}
+            values={values}
             errors={errors}
-            dirty={dirty}
+            onChange={this.onChange}
           />
         </div>
         <div {...styles.checkbox}>
           <ListedCheckbox
             user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
             values={mergedValues}
-            errors={errors}
-            dirty={dirty}
+            onChange={this.onChange}
+            t={t}
           />
         </div>
         <div {...styles.checkbox}>
-          <PublicCheckbox
+          <PublicSelection
             user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
             values={mergedValues}
-            errors={errors}
-            dirty={dirty}
+            onChange={this.onChange}
+            t={t}
           />
         </div>
         <Mutation
