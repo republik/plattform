@@ -27,6 +27,7 @@ const styles = {
     lineHeight: 1.4,
     marginBottom: 16,
     [mediaQueries.mUp]: {
+      marginBottom: 48,
       fontSize: 32,
     },
   }),
