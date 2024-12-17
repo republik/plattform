@@ -13,7 +13,7 @@ import {
 } from '@republik/icons'
 
 const ProfileLinkIcon = ({ url }) => {
-  if (/bsky\.com/.test(url)) {
+  if (/bsky\.app/.test(url)) {
     return <IconLogoBluesky size={24} />
   } else if (/facebook\.com/.test(url)) {
     return <IconLogoFacebook size={24} />
