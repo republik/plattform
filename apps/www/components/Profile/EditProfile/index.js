@@ -6,12 +6,15 @@ import Submit from './Submit'
 import Credentials from './Credentials'
 import PrivacySettings from './PrivacySettings'
 import ProfileUrlFields from './ProfileUrlsFields'
+import ProlitterisIdField from './ProlitterisIdField'
+import PgpPublicKeyField from './PgpPublicKeyField'
 import UsernameField from './UsernameField'
 import {
   mediaQueries,
   Dropdown,
   useColorContext,
   fontStyles,
+  Field,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useMe } from '../../../lib/context/MeContext'
@@ -225,48 +228,19 @@ const EditProfile = ({ data: { user } }) => {
       <section {...styles.editSection}>
         <h2>{t('profile/section/other/title')}</h2>
         <div {...styles.fields}>
-          <FieldSet
-            values={values}
-            errors={errors}
-            dirty={dirty}
-            onChange={(fields) => {
-              const { pgpPublicKey } = fields.values
-              if (pgpPublicKey && pgpPublicKey.match(/PGP PRIVATE KEY/)) {
-                onChange({
-                  values: {
-                    pgpPublicKey: '',
-                  },
-                })
-                window.alert(t('profile/contact/pgpPublicKey/error/private'))
-                return
-              }
-              onChange(fields)
-            }}
-            additionalFieldProps={() => {
-              return {
-                renderInput: (props) => (
-                  <textarea rows={1} {...fieldSetStyles.autoSize} {...props} />
-                ),
-              }
-            }}
-            fields={[
-              {
-                label: t('profile/contact/pgpPublicKey/label'),
-                name: 'pgpPublicKey',
-              },
-            ]}
-          />
-          <FieldSet
+          <PgpPublicKeyField
             values={values}
             errors={errors}
             dirty={dirty}
             onChange={onChange}
-            fields={[
-              {
-                label: t('profile/contact/prolitterisId/label'),
-                name: 'prolitterisId',
-              },
-            ]}
+            t={t}
+          />
+          <ProlitterisIdField
+            values={values}
+            errors={errors}
+            dirty={dirty}
+            onChange={onChange}
+            t={t}
           />
         </div>
       </section>

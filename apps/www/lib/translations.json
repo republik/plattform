@@ -1326,6 +1326,10 @@
       "value": "Prolitteris ID"
     },
     {
+      "key": "profile/contact/prolitterisId/error",
+      "value": "Eine Prolitteris ID ist eine sechsstellige Zahl."
+    },
+    {
       "key": "profile/contact/twitter/label",
       "value": "Twitter"
     },
@@ -1372,6 +1376,10 @@
     {
       "key": "profile/contact/pgpPublicKey/error/private",
       "value": "Dies ist ein privater PGP-Key, diesen sollten Sie nie auf eine Webseite hochladen. Bitte geben Sie Ihren Public-Key an."
+    },
+    {
+      "key": "profile/contact/pgpPublicKey/error/noKey",
+      "value": "Dies ist kein gültiger PGP-Key."
     },
     {
       "key": "profile/settings/isListed/label",
