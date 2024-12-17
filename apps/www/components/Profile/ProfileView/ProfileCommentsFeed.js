@@ -1,9 +1,7 @@
-import { CommentTeaser, Interaction, IconButton } from '@project-r/styleguide'
+import { CommentTeaser, Interaction } from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
 import CommentLink from '../../Discussion/shared/CommentLink'
 import InfiniteScroll from '../../Frame/InfiniteScroll'
-import { IconReport } from '@republik/icons'
-import { useReportUserMutation } from '../graphql/useReportUserMutation'
 import { css } from 'glamor'
 
 const styles = {
@@ -14,15 +12,8 @@ const styles = {
   }),
 }
 
-const ProfileCommentsFeed = ({
-  comments,
-  loadMore,
-  user,
-  isMe,
-  showTitle = false,
-}) => {
+const ProfileCommentsFeed = ({ comments, loadMore, showTitle = false }) => {
   const { t } = useTranslation()
-  const [reportUserMutation] = useReportUserMutation()
 
   if (!comments || !comments.totalCount) {
     return null
@@ -31,41 +22,6 @@ const ProfileCommentsFeed = ({
   const hasMore = comments.pageInfo && comments.pageInfo.hasNextPage
   const totalCount = comments.totalCount
   const currentCount = comments.nodes.length
-
-  const reportUser = async () => {
-    const reportReason = window.prompt(t('profile/report/confirm'))
-    if (reportReason === null) {
-      return
-    }
-    if (reportReason.length === 0) {
-      alert(t('profile/report/provideReason'))
-      return
-    }
-    const maxLength = 500
-    if (reportReason.length > maxLength) {
-      alert(
-        t('profile/report/tooLong', {
-          max: maxLength,
-          input: reportReason.slice(0, maxLength) + '…',
-          br: '\n',
-        }),
-      )
-      return
-    }
-
-    try {
-      await reportUserMutation({
-        variables: {
-          userId: user.id,
-          reason: reportReason,
-        },
-      })
-      alert(t('profile/report/success'))
-    } catch (e) {
-      console.warn(e)
-      alert(t('profile/report/error'))
-    }
-  }
 
   return (
     <InfiniteScroll
@@ -90,13 +46,6 @@ const ProfileCommentsFeed = ({
               count: comments.totalCount,
             })}
           </Interaction.H3>
-        )}
-        {!!user.hasPublicProfile && !isMe && (
-          <IconButton
-            Icon={IconReport}
-            title={t('profile/report/label')}
-            onClick={() => reportUser(user.id)}
-          />
         )}
       </div>
       {comments.nodes
