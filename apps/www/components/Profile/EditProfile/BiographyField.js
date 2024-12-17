@@ -4,7 +4,7 @@ export default function Biographyfield({ values, dirty, errors, onChange, t }) {
   return (
     <Field
       value={values.biography}
-      label={t('profile/contact/biography/label')}
+      label={t('profile/biography/label')}
       dirty={dirty.biography}
       error={errors.biography}
       onChange={(_, value, shouldValidate) => {
