@@ -15,7 +15,7 @@ export default function PgpPublicKeyField({
       dirty={dirty.pgpPublicKey}
       error={errors.pgpPublicKey}
       renderInput={(props) => (
-        <textarea rows={1} {...fieldSetStyles.autoSize} {...props} />
+        <textarea rows={4} {...props} />
       )}
       onChange={(_, value, shouldValidate) => {
         if (!!value && value.match(/PGP PRIVATE KEY/)) {

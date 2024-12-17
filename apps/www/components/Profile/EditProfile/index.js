@@ -8,6 +8,8 @@ import PrivacySettings from './PrivacySettings'
 import ProfileUrlFields from './ProfileUrlsFields'
 import ProlitterisIdField from './ProlitterisIdField'
 import PgpPublicKeyField from './PgpPublicKeyField'
+import BiographyField from './BiographyField'
+import StatementField from './StatementField'
 import UsernameField from './UsernameField'
 import {
   mediaQueries,
@@ -149,37 +151,19 @@ const EditProfile = ({ data: { user } }) => {
         <h2>{t('profile/section/bio/title')}</h2>
         <p>{t('profile/section/bio/description')}</p>
         <div {...styles.fields}>
-          <FieldSet
+          <BiographyField
             values={values}
             errors={errors}
             dirty={dirty}
             onChange={onChange}
-            fields={[
-              {
-                label: t('profile/biography/label'),
-                name: 'biography',
-                autoSize: true,
-                validator: (value) =>
-                  value &&
-                  value.trim().length >= 2000 &&
-                  t('profile/biography/label/tooLong'),
-              },
-            ]}
+            t={t}
           />
-          <FieldSet
+          <StatementField
             values={values}
             errors={errors}
             dirty={dirty}
             onChange={onChange}
-            fields={[
-              {
-                label: t('profile/statement/label'),
-                name: 'statement',
-                autoSize: true,
-                validator: (value) =>
-                  value.trim().length >= 140 && t('profile/statement/tooLong'),
-              },
-            ]}
+            t={t}
           />
         </div>
       </section>
