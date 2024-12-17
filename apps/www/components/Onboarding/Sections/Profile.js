@@ -146,7 +146,7 @@ class Profile extends Component {
         </div>
         <div {...styles.field}>
           <FieldSet
-            values={values}
+            values={mergedValues}
             errors={errors}
             dirty={dirty}
             onChange={this.onChange}
@@ -164,9 +164,10 @@ class Profile extends Component {
         <div {...styles.field}>
           <UsernameField
             user={user}
-            values={values}
+            values={mergedValues}
             errors={errors}
             onChange={this.onChange}
+            t={t}
           />
         </div>
         <div {...styles.checkbox}>
