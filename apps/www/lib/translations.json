@@ -1378,16 +1378,12 @@
       "value": "Auf Community-Seite anzeigen"
     },
     {
-      "key": "profile/settings/isListed/true/note",
-      "value": "Ihr Name, Ihr Profilbild und Ihr Statement erscheinen auf {communityLink} und sind für alle sichtbar."
+      "key": "profile/settings/isListed/note",
+      "value": "Ihr Name, Ihr Profilbild und Ihr Statement erscheinen auf {communityLink}."
     },
     {
       "key": "climate/profile/settings/isListed/true/note",
       "value": "Ihr Name und Ihr Profilbild erscheinen auf {communityLink} und sind für alle sichtbar."
-    },
-    {
-      "key": "profile/settings/isListed/false/note",
-      "value": "Ihr Name, Ihr Profilbild und Ihr Statement erscheinen nicht auf {communityLink}."
     },
     {
       "key": "profile/settings/isAdminUnlisted/note",

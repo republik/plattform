@@ -1,4 +1,10 @@
-import { Label, Checkbox, A, Radio } from '@project-r/styleguide'
+import {
+  Label,
+  Checkbox,
+  A,
+  Radio,
+  useColorContext,
+} from '@project-r/styleguide'
 import { css } from 'glamor'
 import withT from '../../../lib/withT'
 import Link from 'next/link'
@@ -15,13 +21,15 @@ const styles = {
 }
 
 const PrivacySettings = ({ user, onChange, values, errors, t }) => {
-  console.log(values.hasPublicProfile)
+  const [colorScheme] = useColorContext()
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       {!user.isEligibleForProfile && (
         <Label>{t('profile/settings/isEligibleForProfile/notEligible')}</Label>
       )}
-      <PublicCheckbox user={user} values={values} onChange={onChange} />
+      <PublicSelection user={user} values={values} onChange={onChange} />
+      <hr {...colorScheme.set('color', 'divider')} />
       <ListedCheckbox user={user} values={values} onChange={onChange} />
     </div>
   )
@@ -55,7 +63,7 @@ export const ListedCheckbox = withT(({ user, values, onChange, t }) => (
       {t('profile/settings/isListed/label')}
     </Checkbox>
     <Label>
-      {t.elements(`profile/settings/isListed/${!!values.isListed}/note`, {
+      {t.elements(`profile/settings/isListed/note`, {
         communityLink: (
           <Link key='communityLink' href='/community' passHref legacyBehavior>
             <A target='_blank'>{t('profile/settings/privacy/communityLink')}</A>
@@ -66,7 +74,7 @@ export const ListedCheckbox = withT(({ user, values, onChange, t }) => (
   </div>
 ))
 
-export const PublicCheckbox = withT(({ user, values, onChange, t }) => (
+export const PublicSelection = withT(({ user, values, onChange, t }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
     <div {...styles.radio}>
       <Radio
@@ -79,7 +87,7 @@ export const PublicCheckbox = withT(({ user, values, onChange, t }) => (
           })
         }}
       >
-       {t('profile/settings/hasPublicProfile/true/label')}
+        {t('profile/settings/hasPublicProfile/true/label')}
       </Radio>
       <Label>{t('profile/settings/hasPublicProfile/true/note')}</Label>
     </div>
