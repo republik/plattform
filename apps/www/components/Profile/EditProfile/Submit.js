@@ -102,7 +102,10 @@ const Submit = ({ me, user, t, state, setState, update }) => {
                 state.values.publicUrl === DEFAULT_VALUES.publicUrl
                   ? ''
                   : state.values.publicUrl,
-            }).then(() => router.push(`/~${user.slug}`))
+            }).then((maybeError) => {
+              if (maybeError) return
+              router.push(`/~${user.slug}`)
+            })
           }}
         >
           {state.updating ? <InlineSpinner /> : <>{t('profile/edit/save')}</>}
@@ -187,6 +190,7 @@ export default compose(
               updating: false,
               error: errorToString(error),
             }))
+            return error
           })
       },
     }),
