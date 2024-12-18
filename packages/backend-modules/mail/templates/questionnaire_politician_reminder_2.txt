@@ -1,0 +1,27 @@
+Guten Tag, {{firstname}} {{lastname}}
+
+Wir haben Ihnen kürzlich den Republik-Sommerfragen für Politikerinnen und
+Politiker geschickt. Mittlerweile hat sich unser Postfach bereits mit diversen
+Antworten gefüllt und die Produktionsmaschine läuft auf Hochtouren. In den
+nächsten Wochen werden die ersten Fragebogen in unserem Magazin publiziert.
+
+Wir würden uns freuen, wenn auch Sie den Sommerfragebogen ausfüllen. Sie müssen
+dabei nicht jede Frage beantworten, wenn Sie nicht wollen. Alle eingegangenen
+Antworten werden wir ab Mitte Juli in der Republik veröffentlichen.
+
+Zum Fragebogen {{link}}
+
+
+Sollte dieser Button nicht funktionieren, kopieren Sie bitte den folgenden Link
+in Ihren Browser: {{link}} .
+
+Haben Sie noch Fragen? Wir stehen Ihnen gerne unter
+fragebogen-wahlen@republik.ch zur Verfügung.
+
+Ihre Crew der Republik
+
+
+Republik AG
+Sihlhallenstrasse 1, CH-8004 Zürich
+www.republik.ch https://republik.ch
+fragebogen-wahlen@republik.ch
