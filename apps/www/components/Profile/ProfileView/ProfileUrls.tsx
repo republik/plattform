@@ -13,7 +13,7 @@ const ProfileUrlLabel = (url: string) => {
   } else if (/signal\.me/.test(url)) {
     return 'Signal'
   } else if (/\/@.+@/.test(url) || /mastodon/.test(url)) {
-    return 'Mastodon'
+    return url?.match(/@[A-Za-z0-9]+/)[0] ?? 'Mastodon'
   } else {
     const urlObject = new URL(url)
     return urlObject.host ?? url

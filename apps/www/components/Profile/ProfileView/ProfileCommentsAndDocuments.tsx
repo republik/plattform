@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { css } from 'glamor'
-import { Scroller, TabButton, IconButton } from '@project-r/styleguide'
+import {
+  Scroller,
+  TabButton,
+  IconButton,
+  useColorContext,
+} from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
 import { useMe } from '../../../lib/context/MeContext'
 import ProfileCommentsFeed from './ProfileCommentsFeed'
@@ -14,6 +19,14 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
   }),
+  tabFiller: css({
+    flex: 1,
+    borderBottomStyle: 'solid',
+    borderBottomWidth: 1,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  }),
 }
 
 export default function ProfileCommentsAndDocuments({
@@ -22,6 +35,7 @@ export default function ProfileCommentsAndDocuments({
   loadMoreDocuments,
   loadMoreComments,
 }) {
+  const [colorScheme] = useColorContext()
   const [activeChildIndex, setActiveChildIndex] = useState(0)
   const [reportUserMutation] = useReportUserMutation()
   const { t } = useTranslation()
@@ -102,13 +116,18 @@ export default function ProfileCommentsAndDocuments({
             }}
           />
         </Scroller>
-        {!!user.hasPublicProfile && !isMe && (
-          <IconButton
-            Icon={IconReport}
-            title={t('profile/report/label')}
-            onClick={() => reportUser()}
-          />
-        )}
+        <div
+          {...colorScheme.set('borderColor', 'divider')}
+          {...styles.tabFiller}
+        >
+          {!!user.hasPublicProfile && !isMe && (
+            <IconButton
+              Icon={IconReport}
+              title={t('profile/report/label')}
+              onClick={() => reportUser()}
+            />
+          )}
+        </div>
       </div>
       {activeChildIndex === 0 ? (
         <ProifleDocumentsFeed
