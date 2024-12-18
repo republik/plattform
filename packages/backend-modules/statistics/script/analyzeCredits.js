@@ -13,16 +13,10 @@ require('@orbiting/backend-modules-env').config()
 
 const yargs = require('yargs')
 const moment = require('moment')
-const Promise = require('bluebird')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const utils = require('@orbiting/backend-modules-search/lib/utils')
-const {
-  stringifyNode,
-} = require('@orbiting/backend-modules-documents/lib/resolve')
-
-const { Analyzer } = require('../lib/credits/analyzer')
 
 const argv = yargs
   .option('begin', {
@@ -35,37 +29,28 @@ const argv = yargs
     coerce: moment,
     default: moment().startOf('month'),
   })
+  .option('debug', {
+    alias: 'v',
+    type: 'boolean',
+    default: false,
+  })
   .help()
   .version().argv
-
-const unclassifiedAuthors = []
-const articles = []
 
 const elastic = Elasticsearch.connect()
 const days = argv.end.diff(argv.begin, 'days')
 
-const normalize = (string) =>
-  string
-    .replace(/\u00AD/g, '') // 0x00AD = Soft Hyphen (SHY)
-    .replace(/\u00A0/g, ' ') // 0x00AD = NO-BREAK SPACE
-    .toLowerCase()
-    .trim()
-
 PgDb.connect()
   .then(async (pgdb) => {
-    const classifiedAuthors = await pgdb.public.gsheets
-      .findOneFieldOnly({ name: 'authors' }, 'data')
-      .then((rows) =>
-        rows.map((r) => ({
-          ...r,
-          normalizedName: normalize(r.name),
-        })),
-      )
-
     const { body } = await elastic
       .search({
         index: utils.getIndexAlias('document', 'read'),
-        _source: ['meta.path', 'meta.credits', 'meta.publishDate'],
+        _source: [
+          'meta.path',
+          'meta.credits',
+          'meta.publishDate',
+          'meta.contributors',
+        ],
         size: days * 8, // sane maximum amount of articles per day
         body: {
           query: {
@@ -101,90 +86,98 @@ PgDb.connect()
 
     const hits = body.hits.hits
 
-    await Promise.each(
-      hits
-        .map(({ _source: { meta } }) => meta)
-        .filter(({ credits }) => credits.children.length > 0),
-      async (meta) => {
-        const credits = await stringifyNode(meta.credits?.type, meta.credits)
+    const authorsWithUUID = new Map()
+    const authorsWithoutUUID = new Map()
 
-        const analysis = new Analyzer().getAnalysis(credits)
-        // console.log(analysis)
+    const knownAuthorTypes = [
+      'Text',
+      'Text und Bilder',
+      'Übersetzung und Bildredaktion',
+      'Gespräch',
+      'Redaktion',
+    ]
 
-        const { contributors } = analysis
+    for (const hit of hits) {
+      for (const author of hit._source.meta.contributors) {
+        // skip non text contributors
+        if (!knownAuthorTypes.includes(author.kind)) continue
 
-        // Unable to determine an author
-        if (!contributors.length) {
-          articles.push({ path: meta.path, gender: 'n' })
-          return
+        if ('userId' in author && !authorsWithUUID.has(author.userId)) {
+          authorsWithUUID.set(author.userId, null)
         }
 
-        // n = unknown, neutral
-        // b = both
-        // f = female
-        // m = male
-        const gender = contributors
-          .map(({ name: authorName }) => {
-            const classifiedAuthor = classifiedAuthors.find(
-              (ca) => ca.normalizedName === normalize(authorName),
-            )
-            if (!classifiedAuthor) {
-              unclassifiedAuthors.push({ author: authorName, path: meta.path })
-            }
+        if (typeof author.userId === 'undefined') {
+          authorsWithoutUUID.set(author.name, author)
+        }
+      }
+    }
 
-            return (classifiedAuthor && classifiedAuthor.gender) || 'n'
-          })
-          .reduce((previousValue, currentValue = 'n') => {
-            if (previousValue === 'n') {
-              return currentValue
-            }
-
-            if (
-              (previousValue === 'f' && currentValue === 'm') ||
-              (previousValue === 'm' && currentValue === 'f')
-            ) {
-              return 'b'
-            }
-
-            return previousValue
-          })
-
-        articles.push({ path: meta.path, gender })
-
-        // Use these checks to find flaws in analysis:
-
-        /* if (credits.match(/De\b/)) {
-          console.log(analysis)
-        } */
-
-        /* if (analysis.contributors?.length === 0) {
-          console.log(meta.path, analysis)
-        } */
-
-        // names
-        // console.log(analysis.contributors?.map(contributor => console.log(contributor.name)) // flat)
-
-        // kinds
-        // console.log(analysis.contributors?.map(contributor => console.log(contributor.kind)) // flat)
-
-        /* if (analysis.contributors?.some(contributor => contributor.name.split(' ').length === 3)) {
-          console.log(analysis)
-        } */
-
-        /* if (analysis.contributors?.some(contributor => contributor.name.match(/Update/))) {
-          console.log(analysis)
-        } */
-      },
-    )
-
-    unclassifiedAuthors.map(({ author, path }) => {
-      console.warn(author, path)
+    const knownAuthors = await pgdb.public.users.find({
+      id: Array.from(authorsWithUUID.keys()),
     })
 
-    const unclassifiedAuthorNames = [
-      ...new Set(unclassifiedAuthors.map(({ author }) => author)),
-    ].sort()
-    unclassifiedAuthorNames.map((authorName) => console.warn(authorName))
+    for (const row of knownAuthors) {
+      authorsWithUUID.set(row.id, {
+        name: `${row.firstName} ${row.lastName}`,
+        gender: row.gender,
+      })
+    }
+
+    if (argv.debug) {
+      console.log('known Genders', authorsWithUUID)
+      console.log('authors without uuid', authorsWithoutUUID.keys())
+    }
+
+    const articles = []
+    for (const article of hits) {
+      if (article._source.meta.contributors.length === 0) {
+        continue // skip articles with no contributors like newsletter
+      }
+
+      const textAuthors = article._source.meta.contributors.filter((c) =>
+        knownAuthorTypes.includes(c.kind),
+      )
+
+      const contributorGenders = textAuthors.map((a) => {
+        if ('userId' in a) {
+          const author = authorsWithUUID.get(a.userId)
+          switch (author?.gender?.toLowerCase()) {
+            case 'männlich':
+            case 'male':
+              return 'm'
+            case 'weiblich':
+            case 'female':
+              return 'f'
+            default:
+              return 'n'
+          }
+        }
+        return 'n'
+      })
+
+      const gender = contributorGenders.reduce(
+        (previousValue, currentValue) => {
+          if (previousValue === 'n') {
+            return currentValue
+          }
+
+          if (
+            (previousValue === 'f' && currentValue === 'm') ||
+            (previousValue === 'm' && currentValue === 'f')
+          ) {
+            return 'b'
+          }
+
+          return previousValue
+        },
+        'n',
+      )
+
+      articles.push({
+        path: article._source.meta.path,
+        gender: gender,
+      })
+    }
 
     const stats = {
       begin: argv.begin.toISOString(),
