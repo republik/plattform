@@ -145,6 +145,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             'facebookId',
             'twitterHandle',
             'publicUrl',
+            'profileUrls',
             'biography',
             'pgpPublicKey',
             'prolitterisId',

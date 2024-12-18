@@ -61,6 +61,7 @@ module.exports = {
   facebookId: exposeProfileField('facebookId'),
   twitterHandle: exposeProfileField('twitterHandle'),
   publicUrl: exposeProfileField('publicUrl'),
+  profileUrls: exposeProfileField('profileUrls'),
   disclosures: exposeProfileField('disclosures'),
   statement: exposeProfileField('statement'),
   gender(user, args, { user: me }) {

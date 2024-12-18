@@ -86,6 +86,7 @@ module.exports = async (_, args, context) => {
           .filter(Boolean)[0],
         facebookId: users.map((u) => u.facebookId).filter(Boolean)[0],
         twitterHandle: users.map((u) => u.twitterHandle).filter(Boolean)[0],
+        profileUrls: users.map((u) => u.profileUrls).filter(Boolean)[0],
         publicUrl: users.map((u) => u.publicUrl).filter(Boolean)[0],
         biography: users.map((u) => u.biography).filter(Boolean)[0],
         pgpPublicKey: users.map((u) => u.pgpPublicKey).filter(Boolean)[0],

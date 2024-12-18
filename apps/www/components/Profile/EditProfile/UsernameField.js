@@ -2,8 +2,8 @@ import { Component, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
-import withT from '../../lib/withT'
-import { errorToString } from '../../lib/utils/errors'
+import withT from '../../../lib/withT'
+import { errorToString } from '../../../lib/utils/errors'
 
 import { Field, Label } from '@project-r/styleguide'
 

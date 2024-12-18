@@ -12,7 +12,6 @@ import {
 import { Strong } from './text'
 import voteT from './voteT'
 import withT from '../../lib/withT'
-import Contact from '../Profile/Contact'
 
 const styles = {
   statement: css({
@@ -96,7 +95,7 @@ const CandidateCard = compose(
           {role && <div {...styles.roleMobile}>{role}</div>}
           {d.username && (
             <>
-              <Contact user={d} electionBallot />
+              {/* TODO: Add ProfileLinks */}
               <div style={{ marginTop: 8 }}>
                 <Link href={`/~${d.username}`} passHref legacyBehavior>
                   <A>Profil</A>
