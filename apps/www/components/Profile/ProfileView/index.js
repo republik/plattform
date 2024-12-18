@@ -34,6 +34,7 @@ const styles = {
   profileContainer: css({
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'flex-start',
     gap: 36,
     [mediaQueries.mUp]: {
       flexDirection: 'row',
@@ -157,7 +158,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
           <div {...styles.portrait}>
             {user.portrait ? (
               <Image
-                className={css({
+                {...css({
                   width: '100%',
                 })}
                 width={PORTRAIT_SIZE}
@@ -187,14 +188,12 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
               />
             )}
             {user.pgpPublicKeyId && (
-              <div {...styles.contactRow}>
-                <IconButton
-                  href={`/pgp/${user.username || user.id}.asc`}
-                  Icon={IconVpnKey}
-                  label={user.pgpPublicKeyId.toUpperCase()}
-                  labelShort={user.pgpPublicKeyId.toUpperCase()}
-                />
-              </div>
+              <IconButton
+                href={`/pgp/${user.username || user.id}.asc`}
+                Icon={IconVpnKey}
+                label={user.pgpPublicKeyId.toUpperCase()}
+                labelShort={user.pgpPublicKeyId.toUpperCase()}
+              />
             )}
           </div>
         </div>
@@ -232,14 +231,12 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
               />
             )}
             {user.pgpPublicKeyId && (
-              <div {...styles.contactRow}>
-                <IconButton
-                  href={`/pgp/${user.username || user.id}.asc`}
-                  Icon={IconVpnKey}
-                  label={user.pgpPublicKeyId.toUpperCase()}
-                  labelShort={user.pgpPublicKeyId.toUpperCase()}
-                />
-              </div>
+              <IconButton
+                href={`/pgp/${user.username || user.id}.asc`}
+                Icon={IconVpnKey}
+                label={user.pgpPublicKeyId.toUpperCase()}
+                labelShort={user.pgpPublicKeyId.toUpperCase()}
+              />
             )}
           </div>
           {/* only show articles and comments for logged in users */}
@@ -247,14 +244,12 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
             <ProfileCommentsAndDocuments
               isMe={isMe}
               user={user}
-              documents={user.documents}
               loadMoreDocuments={makeLoadMore(fetchMore, 'documents', {
                 firstComments: 0,
                 firstDocuments: 20,
                 afterDocument:
                   user.documents.pageInfo && user.documents.pageInfo.endCursor,
               })}
-              comments={user.comments}
               loadMoreComments={makeLoadMore(fetchMore, 'comments', {
                 firstDocuments: 0,
                 firstComments: 40,

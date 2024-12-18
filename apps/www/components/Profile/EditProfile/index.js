@@ -130,6 +130,7 @@ const EditProfile = ({ data: { user } }) => {
             values={values}
             errors={errors}
             onChange={onChange}
+            t={t}
           />
         </div>
       </section>

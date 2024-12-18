@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { css } from 'glamor'
 import { Scroller, TabButton, IconButton } from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
+import { useMe } from '../../../lib/context/MeContext'
 import ProfileCommentsFeed from './ProfileCommentsFeed'
 import ProifleDocumentsFeed from './ProifleDocumentsFeed'
 import { IconReport } from '@republik/icons'
@@ -24,6 +25,12 @@ export default function ProfileCommentsAndDocuments({
   const [activeChildIndex, setActiveChildIndex] = useState(0)
   const [reportUserMutation] = useReportUserMutation()
   const { t } = useTranslation()
+  const { hasAccess } = useMe()
+
+  // users with no Access will not see documents or comments
+  if (!hasAccess) {
+    return null
+  }
 
   const reportUser = async () => {
     const reportReason = window.prompt(t('profile/report/confirm'))
@@ -61,6 +68,7 @@ export default function ProfileCommentsAndDocuments({
   }
 
   // only show documents and tabs if user has documents (articles)
+  // else only show comments feed
   if (!user.documents || !user.documents.totalCount) {
     return (
       <ProfileCommentsFeed
