@@ -1307,7 +1307,7 @@
     },
     {
       "key": "profile/credentials/description",
-      "value": "Wählen Sie eine «Rolle». welche unter Ihrem Namen angezeigt wird. Sie können Beruf, Interessensbidungen, Vereins- oder Verbandsmitgliedschaften oder andere Informationen zu Ihrer Person erfassen."
+      "value": "Geben Sie mit der «Rolle» Auskunft darüber, aus welcher Position Sie sich beteiligen. Das kann ein Beruf, eine Interessenbindung, Verbandsmitgliedschaft oder sonstige Angaben zu Ihrer Lebenssituation sein."
     },
     {
       "key": "profile/credentials/errors/tooLong",
@@ -1391,7 +1391,7 @@
     },
     {
       "key": "climate/profile/settings/isListed/true/note",
-      "value": "Ihr Name und Ihr Profilbild erscheinen auf {communityLink} und sind für alle sichtbar."
+      "value": "Ihr Name, Ihr Profilbild und Ihr Statement erscheinen auf {communityLink}. Sie zeigen damit nach innen und nach aussen, dass Sie die Republik unterstützen."
     },
     {
       "key": "profile/settings/isAdminUnlisted/note",
@@ -1407,11 +1407,11 @@
     },
     {
       "key": "profile/settings/hasPublicProfile/true/note",
-      "value": "Ihre Profilseite ist öffentlich. Die Dialogbeiträge auf Ihrer Profilseite sind jedoch nur für Verlegerinnen sichtbar. Im Dialog erscheinen Ihre Beiträge standardmässig unter Ihrem vollen Namen, ausser Sie wählen die Option einen Beitrag anonym abzugeben."
+      "value": "Alle (auch Suchmaschinen) können Ihr Profil sehen. Die Dialogbeiträge auf Ihrer Profilseite sind jedoch nur für Verlegerinnen sichtbar. Im Dialog erscheinen Ihre Beiträge unter Ihrem vollen Namen. Ausser Sie wählen die Option, einen Beitrag anonym zu veröffentlichen."
     },
     {
       "key": "profile/settings/hasPublicProfile/false/note",
-      "value": "Ihre Profilseite ist nur für andere Verleger sichtbar. Im Dialog sehen nur Verlegerinnen Ihren vollen Namen."
+      "value": "Ihre Profilseite ist nur für andere Verleger sichtbar. Im Dialog sehen nur Verlegerinnen Ihren vollen Namen, Externe sehen bloss Ihre Initialen. Ausser Sie wählen die Option, einen Beitrag anonym zu veröffentlichen."
     },
     {
       "key": "profile/settings/isEligibleForProfile/notEligible",
@@ -1427,7 +1427,7 @@
     },
     {
       "key": "profile/section/bio/description",
-      "value": "Im Steckbrief können Sie eine kurze Biographie erfassen, welche in Ihrem Profil angezeigt wird. Ein Statement erscheint als grosser Leitsatz über ihrem Profil - es darf höchstens 140 Zeichen lang sein."
+      "value": "Erfassen Sie eine kurze Biografie von sich oder erzählen Sie, was Ihnen wichtig ist. Im Steckbrief haben Sie Platz dafür. Das Statement ist kürzer (höchstens 140 Zeichen). Als Leitsatz erscheint es über Ihrem Profil."
     },
     {
       "key": "profile/section/profileLinks/title",
@@ -1435,7 +1435,7 @@
     },
     {
       "key": "profile/section/profileLinks/description",
-      "value": "Sie können ihrem Profil drei beliebige Links zu Webseiten oder Social Media Accounts hinzufügen."
+      "value": "Verweisen Sie in Ihrem Profil auf bis zu drei Webseiten, die etwas über Sie aussagen (Social-Media-Konten, Blogs, Vereinshomepage etc.)."
     },
     {
       "key": "profile/section/privacy/title",
@@ -1443,7 +1443,7 @@
     },
     {
       "key": "profile/section/privacy/description",
-      "value": "Mit den folgenden Einstellungen steuern Sie, wer ihr Profil aufrufen kann."
+      "value": "Mit den folgenden Einstellungen steuern Sie, wer Ihr Profil aufrufen kann."
     },
     {
       "key": "profile/section/other/title",
@@ -1487,7 +1487,7 @@
     },
     {
       "key": "profile/username/label",
-      "value": "Benutzername"
+      "value": "Profil-URL"
     },
     {
       "key": "profile/username/note",
@@ -1495,11 +1495,11 @@
     },
     {
       "key": "profile/username/title",
-      "value": "Benutzername"
+      "value": "Profil-URL"
     },
     {
       "key": "profile/username/description",
-      "value": "Ihr Benutzername bestimmt, unter welchem Link ihr Profil auffindbar ist, wenn Sie ein öffentliches Profil haben."
+      "value": "Über diesen Link ist Ihr Profil auffindbar, wenn Sie ein öffentliches Profil haben. Entscheiden Sie selbst, wie der Link zu Ihrer Profilseite lauten soll."
     },
     {
       "key": "profile/portrait/choose",
