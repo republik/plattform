@@ -76,9 +76,12 @@ const styles = {
     flexDirection: 'row',
     gap: '1rem',
     margin: '0 auto',
-    maxWidth: '64ch',
+    maxWidth: 840,
     padding: '2rem 1rem',
-    alignItems: 'center'
+    alignItems: 'center',
+    [mediaQueries.mUp]: {
+      gap: '2rem',
+    },
   }),
   illustration: css({
     alignSelf: 'start', 

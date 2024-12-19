@@ -33,7 +33,6 @@ export interface UserRow {
   name: string
   initials: string
   hasPublicProfile: boolean
-  portraitUrl: string
   roles: string[]
   email: string
   referralCode: string | null
@@ -49,6 +48,7 @@ export interface UserRow {
   facebookId: string | null
   twitterHandle: string | null
   publicUrl: string | null
+  profileUrls: JSON
   badges: string[] | null
   biography: string | null
   pgpPublicKey: string | null

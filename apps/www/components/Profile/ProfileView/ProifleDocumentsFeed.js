@@ -1,8 +1,7 @@
-import { Interaction, TeaserFeed } from '@project-r/styleguide'
-import withT from '../../lib/withT'
-import HrefLink from '../Link/Href'
-import ActionBar from '../ActionBar'
-import InfiniteScroll from '../Frame/InfiniteScroll'
+import { TeaserFeed } from '@project-r/styleguide'
+import HrefLink from '../../Link/Href'
+import ActionBar from '../../ActionBar'
+import InfiniteScroll from '../../Frame/InfiniteScroll'
 import { css, merge } from 'glamor'
 
 const styles = {
@@ -10,9 +9,18 @@ const styles = {
     marginTop: -30,
     marginBottom: 40,
   }),
+  noBorder: css({
+    '& div:first-child': {
+      border: 'none'
+    }
+  })
 }
 
-const Documents = ({ t, documents, loadMore, customStyles }) => {
+const ProifleDocumentFeed = ({
+  documents,
+  loadMore,
+  customStyles = undefined,
+}) => {
   if (!documents || !documents.totalCount) {
     return null
   }
@@ -28,12 +36,8 @@ const Documents = ({ t, documents, loadMore, customStyles }) => {
       totalCount={totalCount}
       currentCount={currentCount}
       loadMoreStyles={merge(styles.loadMore, customStyles)}
+      customStyles={styles.noBorder}
     >
-      <Interaction.H3 style={{ marginBottom: 20 }}>
-        {t.pluralize('profile/documents/title', {
-          count: documents.totalCount,
-        })}
-      </Interaction.H3>
       {documents.nodes.map((doc) => (
         <TeaserFeed
           {...doc.meta}
@@ -42,10 +46,11 @@ const Documents = ({ t, documents, loadMore, customStyles }) => {
           Link={HrefLink}
           key={doc.meta.path}
           bar={<ActionBar mode='feed' document={doc} />}
+          style={{ backgroundColor: 'red' }}
         />
       ))}
     </InfiniteScroll>
   )
 }
 
-export default withT(Documents)
+export default ProifleDocumentFeed

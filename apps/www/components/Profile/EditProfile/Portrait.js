@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { css, merge } from 'glamor'
 import Dropzone from 'react-dropzone'
 
-import withT from '../../lib/withT'
+import withT from '../../../lib/withT'
 
 import { useColorContext } from '@project-r/styleguide'
 import { IconClose } from '@republik/icons'

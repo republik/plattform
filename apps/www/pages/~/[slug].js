@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import Profile from '../../components/Profile/Page'
+import Profile from '../../components/Profile'
 import { createGetServerSideProps } from '../../lib/apollo/helpers'
 
 export default Profile

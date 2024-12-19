@@ -61,6 +61,7 @@ extend type User {
   facebookId: String
   twitterHandle: String
   publicUrl: String
+  profileUrls: JSON
   disclosures: String
   gender: String
 
