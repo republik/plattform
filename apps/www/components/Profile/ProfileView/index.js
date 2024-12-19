@@ -152,7 +152,12 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
           {t('profile/private')}
         </p>
       )}
-      {!!user.statement && <p {...styles.statement}>{`«${user.statement}»`}</p>}
+      {!!user.statement && (
+        <p
+          {...styles.statement}
+          {...styles.hiddenMobile}
+        >{`«${user.statement}»`}</p>
+      )}
       <div {...styles.profileContainer}>
         <div {...styles.column}>
           <div {...styles.portrait}>
@@ -199,6 +204,12 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
         </div>
         <div {...styles.column} {...styles.columnRight}>
           <div {...styles.userInfo}>
+            {!!user.statement && (
+              <p
+                {...styles.statement}
+                {...styles.hiddenDesktop}
+              >{`«${user.statement}»`}</p>
+            )}
             <Interaction.H1>{user.name}</Interaction.H1>
             <div {...styles.credentials}>
               {listedCredential && (
