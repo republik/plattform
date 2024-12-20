@@ -46,7 +46,6 @@ const ProifleDocumentFeed = ({
           Link={HrefLink}
           key={doc.meta.path}
           bar={<ActionBar mode='feed' document={doc} />}
-          style={{ backgroundColor: 'red' }}
         />
       ))}
     </InfiniteScroll>
