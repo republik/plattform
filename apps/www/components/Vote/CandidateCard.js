@@ -95,7 +95,6 @@ const CandidateCard = compose(
           {role && <div {...styles.roleMobile}>{role}</div>}
           {d.username && (
             <>
-              {/* TODO: Add ProfileLinks */}
               <div style={{ marginTop: 8 }}>
                 <Link href={`/~${d.username}`} passHref legacyBehavior>
                   <A>Profil</A>
