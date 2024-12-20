@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import {
   getJWTCookieValue,
+  getIPAllowlistCookieValue,
   getSessionCookieValue,
   verifyJWT,
 } from './lib/auth/JWTHelper'
@@ -175,7 +176,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   /* ------------ Logic to handle SSG front- & marketing-page ------------ */
 
   /**
-   * Rewrite to the front if the user is a member
+   * Rewrite to the front if the user is a member.
    * @param roles Roles of the user
    * @returns NextResponse
    */
@@ -233,10 +234,46 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
     }
   }
 
+  /**
+   * Redirect based on the IP jwt-token after it was successfully validated
+   * @param token JWT found in the cookie header
+   * @returns NextResponse
+   */
+  async function rewriteBasedOnIPAllowlistToken(
+    token: string,
+  ): Promise<NextResponse> {
+    try {
+      // Parse and verify JWT to decide about redirection
+      const jwtBody = await verifyJWT(token)
+      const clientIP = jwtBody?.ip
+      const isAllowedIP =
+        clientIP &&
+        process.env.IP_ALLOWLIST &&
+        process.env.IP_ALLOWLIST.includes(clientIP)
+
+      // If a allow list cookie is set but its value is not on the allow list
+      // redirect to marketing
+      if (!isAllowedIP) {
+        resUrl.pathname = '/marketing'
+        return NextResponse.rewrite(resUrl)
+      }
+      // If there is a valid allow list cookie let the request through.
+      return NextResponse.next()
+    } catch (err) {
+      // Rewrite to gateway to fetch a new valid JWT
+      console.error('JWT allowlist verification error', err)
+      // Rewrite based on fetched me object
+      return rewriteBasedOnMe(req)
+    }
+  }
+
   const sessionCookie = getSessionCookieValue(req)
   const tokenCookie = getJWTCookieValue(req)
+  const ipAllowlistCookie = getIPAllowlistCookieValue(req)
 
-  if (sessionCookie && tokenCookie) {
+  if (ipAllowlistCookie) {
+    return await rewriteBasedOnIPAllowlistToken(ipAllowlistCookie)
+  } else if (sessionCookie && tokenCookie) {
     // Rewrite based on token
     return await rewriteBasedOnToken(tokenCookie)
   } else {

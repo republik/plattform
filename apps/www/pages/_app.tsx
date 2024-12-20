@@ -24,6 +24,9 @@ import { reportError } from '../lib/errors/reportError'
 import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
 import { OPEN_ACCESS } from 'lib/constants'
 import { useRouter } from 'next/router'
+import { IP_ALLOWLIST_COOKIE_NAME } from '../lib/auth/constants'
+import { verifyJWT } from '../lib/auth/JWTHelper'
+import { useEffect, useState } from 'react'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -64,8 +67,29 @@ const WebApp = ({
   } = pageProps
 
   const router = useRouter()
+  const [allowlistAccess, setAllowlistAccess] = useState(false)
+
+  useEffect(() => {
+    const allowlistToken = document.cookie
+      .split('; ')
+      .find((row) => row.startsWith(`${IP_ALLOWLIST_COOKIE_NAME}=`))
+      ?.split('=')[1]
+    async function setAllowListAccessFromToken(token) {
+      const jwtBody = await verifyJWT(token)
+      const clientIP = jwtBody?.ip
+      const isAllowedIP =
+        clientIP &&
+        process.env.IP_ALLOWLIST &&
+        process.env.IP_ALLOWLIST.includes(clientIP)
+      setAllowlistAccess(isAllowedIP)
+    }
+    if (allowlistToken) {
+      setAllowListAccessFromToken(allowlistToken)
+    }
+  }, [])
 
   const hidePaynoteOverlay =
+    allowlistAccess ||
     (router.pathname === '/angebote' && router.query.package !== undefined) ||
     router.pathname === '/mitteilung' ||
     router.pathname === '/anmelden' ||
