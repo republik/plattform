@@ -1,7 +1,7 @@
 import { css } from 'glamor'
 import Image from 'next/image'
 import Link from 'next/link'
-import { IconMailOutline, IconVpnKey } from '@republik/icons'
+import { IconMailOutline, IconVpnKey, IconNoteAdd } from '@republik/icons'
 import {
   fontStyles,
   Interaction,
@@ -12,11 +12,12 @@ import {
 
 import { useMe } from '../../../lib/context/MeContext'
 import { useTranslation } from '../../../lib/withT'
+import { checkRoles } from '../../../lib/apollo/withMe'
 import Credential from '../../Credential'
 import SubscribeMenu from '../../Notifications/SubscribeMenu'
 import ProfileCommentsAndDocuments from './ProfileCommentsAndDocuments'
 import ProfileUrls from './ProfileUrls'
-import { CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
+import { CDN_FRONTEND_BASE_URL, ADMIN_BASE_URL } from '../../../lib/constants'
 
 export const PORTRAIT_SIZE = 210
 
@@ -125,7 +126,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
   const [colorScheme] = useColorContext()
 
   const isMe = me && me.id === user.id
-
+  const isSupporter = checkRoles(me, ['supporter'])
   const listedCredential = user.credentials?.filter((c) => c.isListed)[0]
   return (
     <>
@@ -198,6 +199,15 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
                 Icon={IconVpnKey}
                 label={user.pgpPublicKeyId.toUpperCase()}
                 labelShort={user.pgpPublicKeyId.toUpperCase()}
+              />
+            )}
+            {isSupporter && (
+              <IconButton
+                Icon={IconNoteAdd}
+                fill='#FF10D9'
+                size={22}
+                href={`${ADMIN_BASE_URL}/users/${user.id}`}
+                target='_blank'
               />
             )}
           </div>
