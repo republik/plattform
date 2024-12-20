@@ -6,6 +6,7 @@ import {
   coverRule,
   edgeToEdgeFigureRule,
 } from '../shared/rules/figureRule'
+import datawrapperRule from '../shared/rules/datawrapperRule'
 
 const articleEmailSchema = {
   rules: [
@@ -35,6 +36,7 @@ const articleEmailSchema = {
           component: () => null,
         },
         edgeToEdgeFigureRule,
+        datawrapperRule,
       ],
     },
   ],

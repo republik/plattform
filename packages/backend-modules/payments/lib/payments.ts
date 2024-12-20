@@ -1,5 +1,4 @@
 import { PgDb } from 'pogi'
-import { OrderArgs, OrderRepoArgs, WebhookArgs } from './database/repo'
 import { PaymentProvider } from './providers/provider'
 import {
   Company,
@@ -16,8 +15,8 @@ import {
   Address,
   ChargeUpdate,
   ChargeInsert,
+  NOT_STARTED_STATUS_TYPES,
 } from './types'
-import { PgPaymentRepo } from './database/PgPaypmentsRepo'
 import assert from 'node:assert'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { StripeCustomerCreateWorker } from './workers/StripeCustomerCreateWorker'
@@ -31,17 +30,33 @@ import {
 } from './transactionals/sendTransactionalMails'
 import { enforceSubscriptions } from '@orbiting/backend-modules-mailchimp'
 import { getConfig } from './config'
+import {
+  PaymentWebhookRepo,
+  WebhookArgs,
+  WebhookRepo,
+} from './database/WebhookRepo'
+import { CustomerRepo, PaymentCustomerRepo } from './database/CutomerRepo'
+import {
+  BillingRepo,
+  OrderArgs,
+  OrderRepoArgs,
+  PaymentBillingRepo,
+} from './database/BillingRepo'
+import { UserDataRepo } from './database/UserRepo'
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { UserEvents } = require('@orbiting/backend-modules-auth')
 
-export const Companies: Company[] = ['PROJECT_R', 'REPUBLIK'] as const
+export const Companies: readonly Company[] = ['PROJECT_R', 'REPUBLIK'] as const
 
 const RegionNames = new Intl.DisplayNames(['de-CH'], { type: 'region' })
 
 export class Payments implements PaymentService {
   static #instance: PaymentService
   protected pgdb: PgDb
-  protected repo: PgPaymentRepo
+  protected webhooks: PaymentWebhookRepo
+  protected customers: PaymentCustomerRepo
+  protected billing: PaymentBillingRepo
+  protected users: UserDataRepo
 
   static start(pgdb: PgDb) {
     if (this.#instance) {
@@ -60,10 +75,15 @@ export class Payments implements PaymentService {
 
   constructor(pgdb: PgDb) {
     this.pgdb = pgdb
-    this.repo = new PgPaymentRepo(pgdb)
+    this.webhooks = new WebhookRepo(pgdb)
+    this.customers = new CustomerRepo(pgdb)
+    this.billing = new BillingRepo(pgdb)
+    this.users = new UserDataRepo(pgdb)
 
     UserEvents.onSignedIn(async ({ userId }: { userId: string }) => {
-      await this.ensureUserHasCustomerIds(userId)
+      if (process.env.PAYMENTS_CREATE_CUSTOMERS_ON_LOGIN === 'true') {
+        await this.ensureUserHasCustomerIds(userId)
+      }
     })
     UserEvents.onEmailUpdated(
       async (args: { userId: string; newEmail: string }) => {
@@ -85,7 +105,7 @@ export class Payments implements PaymentService {
     userId: string
     invoiceId: string
   }): Promise<void> {
-    const subscription = await this.repo.getSubscription({
+    const subscription = await this.billing.getSubscription({
       externalId: subscriptionExternalId,
     })
 
@@ -100,9 +120,9 @@ export class Payments implements PaymentService {
         `not sending transactional for subscription ${subscriptionExternalId} with status ${subscription.status}`,
       )
     }
-    const userRow = await this.repo.getUser(userId)
+    const userRow = await this.getUser(userId)
 
-    const invoice = await this.repo.getInvoice({ id: invoiceId })
+    const invoice = await this.billing.getInvoice({ id: invoiceId })
     if (!invoice) {
       throw new Error(
         `Invoice ${invoiceId} does not exist in the database, not able to send subscription setup confirmation transactional mail.`,
@@ -122,11 +142,11 @@ export class Payments implements PaymentService {
     subscriptionExternalId: string
     userId: string
   }): Promise<void> {
-    const subscription = await this.repo.getSubscription({
+    const subscription = await this.billing.getSubscription({
       externalId: subscriptionExternalId,
     })
 
-    const userRow = await this.repo.getUser(userId)
+    const userRow = await this.users.findUserById(userId)
 
     if (!subscription) {
       throw new Error(
@@ -146,7 +166,7 @@ export class Payments implements PaymentService {
       )
     }
 
-    if (!userRow.email) {
+    if (!userRow?.email) {
       throw new Error(
         `Could not find email for user with id ${userId}, not sending cancellation confirmation transactional`,
       )
@@ -173,11 +193,11 @@ export class Payments implements PaymentService {
     userId: string
     revokedCancellationDate: Date
   }): Promise<void> {
-    const subscription = await this.repo.getSubscription({
+    const subscription = await this.billing.getSubscription({
       externalId: subscriptionExternalId,
     })
 
-    const userRow = await this.repo.getUser(userId)
+    const userRow = await this.getUser(userId)
 
     if (!subscription) {
       throw new Error(
@@ -218,11 +238,11 @@ export class Payments implements PaymentService {
     subscriptionExternalId: string
     cancellationReason?: string
   }): Promise<void> {
-    const subscription = await this.repo.getSubscription({
+    const subscription = await this.billing.getSubscription({
       externalId: subscriptionExternalId,
     })
 
-    const userRow = await this.repo.getUser(userId)
+    const userRow = await this.users.findUserById(userId)
 
     if (!subscription) {
       throw new Error(
@@ -242,7 +262,7 @@ export class Payments implements PaymentService {
       )
     }
 
-    if (!userRow.email) {
+    if (!userRow?.email) {
       throw new Error(
         `Could not find email for user with id ${userId}, not sending ended notice transactional`,
       )
@@ -263,15 +283,15 @@ export class Payments implements PaymentService {
     subscriptionExternalId: string
     invoiceExternalId: string
   }): Promise<void> {
-    const subscription = await this.repo.getSubscription({
+    const subscription = await this.billing.getSubscription({
       externalId: subscriptionExternalId,
     })
 
-    const invoice = await this.repo.getInvoice({
+    const invoice = await this.billing.getInvoice({
       externalId: invoiceExternalId,
     })
 
-    const userRow = await this.repo.getUser(userId)
+    const userRow = await this.users.findUserById(userId)
 
     if (!subscription) {
       throw new Error(
@@ -281,7 +301,7 @@ export class Payments implements PaymentService {
 
     if (!invoice) {
       throw new Error(
-        `Ìnvoice ${invoiceExternalId} does not exist in the Database`,
+        `Invoice ${invoiceExternalId} does not exist in the Database`,
       )
     }
 
@@ -303,7 +323,7 @@ export class Payments implements PaymentService {
       )
     }
 
-    if (!userRow.email) {
+    if (!userRow?.email) {
       throw new Error(
         `Could not find email for user with id ${userId}, not sending failed payment notice transactional`,
       )
@@ -322,8 +342,10 @@ export class Payments implements PaymentService {
     userId: string
     subscriptionExternalId: string
   }): Promise<void> {
-    const subscribeToOnboardingMails =
-      await this.repo.isUserFirstTimeSubscriber(userId, subscriptionExternalId)
+    const subscribeToOnboardingMails = await this.isUserFirstTimeSubscriber(
+      userId,
+      subscriptionExternalId,
+    )
 
     // sync to mailchimp
     await enforceSubscriptions({
@@ -357,7 +379,7 @@ export class Payments implements PaymentService {
 
   async saveInvoice(userId: string, args: InvoiceArgs): Promise<Invoice> {
     const tx = await this.pgdb.transactionBegin()
-    const txRepo = new PgPaymentRepo(tx)
+    const txRepo = new BillingRepo(tx)
     try {
       let subId: string | undefined = undefined
       if (args.externalSubscriptionId) {
@@ -402,26 +424,26 @@ export class Payments implements PaymentService {
   }
 
   async getCharge(by: PaymentItemLocator) {
-    return await this.repo.getCharge(by)
+    return await this.billing.getCharge(by)
   }
 
   async saveCharge(args: ChargeInsert): Promise<any> {
-    return await this.repo.saveCharge(args)
+    return await this.billing.saveCharge(args)
   }
 
   async updateCharge(by: PaymentItemLocator, args: ChargeUpdate): Promise<any> {
-    return this.repo.updateCharge(by, args)
+    return this.billing.updateCharge(by, args)
   }
 
   async getInvoice(by: PaymentItemLocator): Promise<Invoice | null> {
-    return await this.repo.getInvoice(by)
+    return await this.billing.getInvoice(by)
   }
 
   async updateInvoice(
     by: PaymentItemLocator,
     args: InvoiceUpdateArgs,
   ): Promise<Invoice> {
-    return await this.repo.updateInvoice(by, args)
+    return await this.billing.updateInvoice(by, args)
   }
 
   async setupSubscription(
@@ -429,10 +451,10 @@ export class Payments implements PaymentService {
     args: SubscriptionArgs,
   ): Promise<Subscription> {
     const tx = await this.pgdb.transactionBegin()
-    const txRepo = new PgPaymentRepo(tx)
+    const txRepo = new BillingRepo(tx)
 
     try {
-      const sub = await txRepo.addUserSubscriptions(userId, args)
+      const sub = await txRepo.saveSubscriptions(userId, args)
       await tx.query(`SELECT public.add_user_to_role(:userId, 'member');`, {
         userId: userId,
       })
@@ -450,8 +472,8 @@ export class Payments implements PaymentService {
   async getCustomerIdForCompany(
     userId: string,
     company: Company,
-  ): Promise<any> {
-    const customerInfo = await this.repo.getCustomerIdForCompany(
+  ): Promise<{ company: Company; customerId: string } | null> {
+    const customerInfo = await this.customers.getCustomerIdForCompany(
       userId,
       company,
     )
@@ -484,41 +506,60 @@ export class Payments implements PaymentService {
     company: Company,
     customerId: string,
   ): Promise<string | null> {
-    const cus = await PaymentProvider.forCompany(company).getCustomer(
+    const customerInfo = await this.customers.getUserIdForCompanyCustomer(
+      company,
       customerId,
     )
-    if (!cus) {
-      return null
-    }
+    if (!customerInfo) {
+      // lookup strip customerIds in the old stripeCustomer table
+      const row = await this.pgdb.queryOne(
+        `SELECT
+        s."userId" as "userId"
+        from "stripeCustomers" s
+        JOIN companies c ON s."companyId" = c.id
+        WHERE
+        s."id" = :customerId AND
+        c.name = :company`,
+        {
+          customerId,
+          company: company,
+        },
+      )
+      if (!row) {
+        console.log(`No user for ${customerId} and ${company}`)
+        return null
+      }
 
-    return cus.metadata?.userId
+      return row.userId
+    }
+    return customerInfo.userId
   }
 
   listUserOrders(userId: string): Promise<Order[]> {
-    return this.repo.getUserOrders(userId)
+    return this.billing.getUserOrders(userId)
   }
 
-  getOrder(id: string): Promise<Order> {
-    return this.repo.getOrder(id)
+  getOrder(id: string): Promise<Order | null> {
+    return this.billing.getOrder(id)
   }
 
   listSubscriptions(
     userId: string,
     only?: SubscriptionStatus[],
   ): Promise<Subscription[]> {
-    return this.repo.getUserSubscriptions(userId, only)
+    return this.billing.getUserSubscriptions(userId, only)
   }
 
   getSubscription(by: PaymentItemLocator): Promise<Subscription | null> {
-    return this.repo.getSubscription(by)
+    return this.billing.getSubscription(by)
   }
 
   fetchActiveSubscription(userId: string): Promise<Subscription | null> {
-    return this.repo.getActiveUserSubscription(userId)
+    return this.billing.getActiveUserSubscription(userId)
   }
 
   async updateSubscription(args: SubscriptionArgs): Promise<Subscription> {
-    const sub = await this.repo.updateSubscription(
+    const sub = await this.billing.updateSubscription(
       { externalId: args.externalId },
       {
         status: args.status,
@@ -542,7 +583,7 @@ export class Payments implements PaymentService {
     args: any,
   ): Promise<Subscription> {
     const tx = await this.pgdb.transactionBegin()
-    const txRepo = new PgPaymentRepo(tx)
+    const txRepo = new BillingRepo(tx)
 
     try {
       const sub = await txRepo.updateSubscription(locator, {
@@ -603,11 +644,12 @@ export class Payments implements PaymentService {
     await Promise.all(tasks)
   }
 
-  async createCustomer(company: Company, userId: string) {
-    const user = await this.pgdb.public.users.findOne(
-      { id: userId },
-      { fields: ['email', 'id'] },
-    )
+  async createCustomer(company: Company, userId: string): Promise<string> {
+    const user = await this.users.findUserById(userId)
+
+    if (!user) {
+      throw Error(`User ${userId} does not exist`)
+    }
 
     const oldCustomerData = await this.pgdb.queryOne(
       `SELECT
@@ -633,7 +675,7 @@ export class Payments implements PaymentService {
       customerId = oldCustomerData.customerId
     }
 
-    await this.repo.saveCustomerIdForCompany(user.id, company, customerId)
+    await this.customers.saveCustomerIdForCompany(user.id, company, customerId)
 
     if (!oldCustomerData || oldCustomerData?.customerId === null) {
       // backfill into lagacy table to prevent new customers from beeing created if the old checkout is used
@@ -657,7 +699,10 @@ export class Payments implements PaymentService {
   }
 
   async updateCustomerEmail(company: Company, userId: string, email: string) {
-    const customer = await this.repo.getCustomerIdForCompany(userId, company)
+    const customer = await this.customers.getCustomerIdForCompany(
+      userId,
+      company,
+    )
     if (!customer) {
       return null
     }
@@ -677,7 +722,7 @@ export class Payments implements PaymentService {
       invoiceId: order.invoiceId,
       subscriptionId: order.subscriptionId,
     }
-    return await this.repo.saveOrder(args)
+    return await this.billing.saveOrder(args)
   }
 
   async updateUserName(
@@ -686,14 +731,12 @@ export class Payments implements PaymentService {
     lastName: string,
   ): Promise<UserRow> {
     const tx = await this.pgdb.transactionBegin()
+    const txUserRepo = new UserDataRepo(tx)
     try {
-      const user = await tx.public.users.updateAndGet(
-        { id: userId },
-        {
-          firstName,
-          lastName,
-        },
-      )
+      const user = await txUserRepo.updateUser(userId, {
+        firstName,
+        lastName,
+      })
 
       tx.transactionCommit()
       return user
@@ -709,8 +752,12 @@ export class Payments implements PaymentService {
     addressData: Address,
   ): Promise<UserRow> {
     const tx = await this.pgdb.transactionBegin()
+    const txUserRepo = new UserDataRepo(tx)
     try {
-      const user = await tx.public.users.findOne({ id: userId })
+      const user = await txUserRepo.findUserById(userId)
+      if (!user) {
+        throw Error(`User ${userId} does not exist`)
+      }
 
       const args = {
         name: `${user.firstName} ${user.lastName}`,
@@ -724,14 +771,11 @@ export class Payments implements PaymentService {
       if (user.addressId) {
         await tx.public.addresses.update({ id: user.addressId }, args)
       } else {
-        const address = await tx.public.addresses.insertAndGet(args)
+        const address = await txUserRepo.insertAddress(args)
 
-        await tx.public.users.update(
-          { id: user.id },
-          {
-            addressId: address.id,
-          },
-        )
+        await txUserRepo.updateUser(user.id, {
+          addressId: address.id,
+        })
       }
 
       tx.transactionCommit()
@@ -752,10 +796,10 @@ export class Payments implements PaymentService {
     let whsec
     switch (company) {
       case 'PROJECT_R':
-        whsec = getConfig().PAYMENTS_PROJECT_R_STRIPE_ENDPOINT_SECRET
+        whsec = getConfig().PROJECT_R_STRIPE_ENDPOINT_SECRET
         break
       case 'REPUBLIK':
-        whsec = getConfig().PAYMENTS_REPUBLIK_STRIPE_ENDPOINT_SECRET
+        whsec = getConfig().REPUBLIK_STRIPE_ENDPOINT_SECRET
         break
       default:
         throw Error(`Unsupported company ${company}`)
@@ -775,13 +819,31 @@ export class Payments implements PaymentService {
   }
 
   logWebhookEvent<T>(webhook: WebhookArgs<T>): Promise<Webhook<T>> {
-    return this.repo.insertWebhookEvent(webhook)
+    return this.webhooks.insertWebhookEvent(webhook)
   }
   findWebhookEventBySourceId<T>(sourceId: string): Promise<Webhook<T> | null> {
-    return this.repo.findWebhookEventBySourceId(sourceId)
+    return this.webhooks.findWebhookEventBySourceId(sourceId)
   }
   markWebhookAsProcessed<T>(sourceId: string): Promise<Webhook<T>> {
-    return this.repo.updateWebhookEvent(sourceId, { processed: true })
+    return this.webhooks.updateWebhookEvent(sourceId, { processed: true })
+  }
+
+  private async getUser(userId: string): Promise<UserRow> {
+    return this.pgdb.public.users.findOne({ id: userId })
+  }
+
+  private async isUserFirstTimeSubscriber(
+    userId: string,
+    subscriptionExternalId: string,
+  ): Promise<boolean> {
+    const memberships = await this.pgdb.public.memberships.find({
+      userId: userId,
+    })
+    const subscriptions = await this.pgdb.payments.subscriptions.find({
+      'externalId !=': subscriptionExternalId,
+      status: NOT_STARTED_STATUS_TYPES,
+    })
+    return !(memberships?.length > 0 || subscriptions?.length > 0)
   }
 }
 
@@ -810,16 +872,16 @@ export interface PaymentService {
   getCustomerIdForCompany(
     userId: string,
     company: Company,
-  ): Promise<{ customerId: string; company: string }>
+  ): Promise<{ customerId: string; company: Company } | null>
   getUserIdForCompanyCustomer(
-    comany: Company,
+    copmany: Company,
     customerId: string,
   ): Promise<string | null>
   ensureUserHasCustomerIds(userId: string): Promise<void>
-  createCustomer(company: Company, userId: string): any
+  createCustomer(company: Company, userId: string): Promise<string>
   updateCustomerEmail(company: Company, userId: string, email: string): any
   listUserOrders(userId: string): Promise<Order[]>
-  getOrder(id: string): Promise<Order>
+  getOrder(id: string): Promise<Order | null>
   saveOrder(userId: string, order: OrderArgs): Promise<Order>
   getSubscriptionInvoices(subscriptionId: string): Promise<Invoice>
   getInvoice(by: PaymentItemLocator): Promise<Invoice | null>

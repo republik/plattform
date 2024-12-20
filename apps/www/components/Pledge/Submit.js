@@ -824,11 +824,14 @@ class Submit extends Component {
 
     const errorMessages = this.getErrorMessages()
 
-    const contactPreface = t.first(
-      [`pledge/contact/preface/${packageName}`, 'pledge/contact/preface'],
-      undefined,
-      '',
-    )
+    const contactPreface =
+      packageName !== 'ABO_GIVE' &&
+      packageName !== 'ABO_GIVE_MONTHS' &&
+      t.first(
+        [`pledge/contact/preface/${packageName}`, 'pledge/contact/preface'],
+        undefined,
+        '',
+      )
 
     const showSignIn = this.state.showSignIn && !me
 

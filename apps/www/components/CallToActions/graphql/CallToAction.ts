@@ -11,6 +11,9 @@ export type CallToAction = {
         text: string
         linkHref: string
         linkLabel: string
+        backgroundColor?: string
+        textColor?: string
+        illustration?: string
       }
     | {
         __typename: 'CallToActionComponentPayload'

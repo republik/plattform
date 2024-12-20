@@ -17,6 +17,7 @@ const ROLES = [
   'tester',
   'debater',
   'author',
+  'member',
 ]
 
 const GET_ROLES = gql`

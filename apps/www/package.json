@@ -18,8 +18,7 @@
     "lint": "next lint",
     "analyze": "ANALYZE=true next build",
     "prepare": "panda codegen",
-    "gql:types": "graphql-codegen --config graphql/configs/codegen-dev.ts",
-    "gql:schema": "graphql-codegen --config graphql/configs/codegen-schema.ts"
+    "gql:types": "graphql-codegen --config graphql/configs/codegen-dev.ts"
   },
   "repository": {
     "type": "git",

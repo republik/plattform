@@ -141,14 +141,6 @@
       "value": "Dieses Profil wurde nicht gefunden, weil es nicht existiert oder Sie es nicht sehen dürfen."
     },
     {
-      "key": "pages/profile/empty/content",
-      "value": "Meine eigene {link}"
-    },
-    {
-      "key": "pages/profile/empty/content/linktext",
-      "value": "Profilseite aktivieren oder bearbeiten"
-    },
-    {
       "key": "pages/claim/meta/title",
       "value": "Gutschein einlösen"
     },
@@ -1294,16 +1286,12 @@
       "value": "abbrechen"
     },
     {
+      "key": "profile/edit/return",
+      "value": "Zurück zum Profil"
+    },
+    {
       "key": "profile/edit/save",
       "value": "speichern"
-    },
-    {
-      "key": "profile/edit/publish",
-      "value": "veröffentlichen"
-    },
-    {
-      "key": "profile/edit/updating",
-      "value": "speichert"
     },
     {
       "key": "profile/edit/errors",
@@ -1312,6 +1300,14 @@
     {
       "key": "profile/credentials/label",
       "value": "Rolle"
+    },
+    {
+      "key": "profile/credentials/title",
+      "value": "Rollen"
+    },
+    {
+      "key": "profile/credentials/description",
+      "value": "Geben Sie mit der «Rolle» Auskunft darüber, aus welcher Position Sie sich beteiligen. Das kann ein Beruf, eine Interessenbindung, Verbandsmitgliedschaft oder sonstige Angaben zu Ihrer Lebenssituation sein."
     },
     {
       "key": "profile/credentials/errors/tooLong",
@@ -1330,6 +1326,10 @@
       "value": "Prolitteris ID"
     },
     {
+      "key": "profile/contact/prolitterisId/error",
+      "value": "Eine Prolitteris ID ist eine sechsstellige Zahl."
+    },
+    {
       "key": "profile/contact/twitter/label",
       "value": "Twitter"
     },
@@ -1339,7 +1339,7 @@
     },
     {
       "key": "profile/contact/publicUrl/error",
-      "value": "Webseite, ungültig"
+      "value": "Webseite ungültig"
     },
     {
       "key": "Account/ProfileForm/isEmailPublic/label",
@@ -1350,24 +1350,12 @@
       "value": "Nur Administration"
     },
     {
-      "key": "profile/contact/access/ADMIN/note",
-      "value": "{field} ist nur für die Administration einsehbar"
-    },
-    {
       "key": "profile/contact/access/EDITOR",
       "value": "Redaktion"
     },
     {
-      "key": "profile/contact/access/EDITOR/note",
-      "value": "{field} ist für die Redaktion einsehbar"
-    },
-    {
       "key": "profile/contact/access/MEMBER",
       "value": "Mitglieder"
-    },
-    {
-      "key": "profile/contact/access/MEMBER/note",
-      "value": "{field} ist für Mitglieder einsehbar"
     },
     {
       "key": "profile/contact/access/PUBLIC",
@@ -1379,7 +1367,7 @@
     },
     {
       "key": "profile/contact/email/access/label",
-      "value": "E-Mail freigeben für"
+      "value": "E-Mail sichtbar für"
     },
     {
       "key": "profile/contact/pgpPublicKey/label",
@@ -1390,48 +1378,40 @@
       "value": "Dies ist ein privater PGP-Key, diesen sollten Sie nie auf eine Webseite hochladen. Bitte geben Sie Ihren Public-Key an."
     },
     {
-      "key": "profile/contact/phoneNumber/label",
-      "value": "Telefonnummer"
-    },
-    {
-      "key": "profile/contact/phoneNumberNote/label",
-      "value": "Verfügbarkeit"
-    },
-    {
-      "key": "profile/contact/phoneNumber/access/label",
-      "value": "Telefonnummer freigeben für"
+      "key": "profile/contact/pgpPublicKey/error/noKey",
+      "value": "Dies ist kein gültiger PGP-Key."
     },
     {
       "key": "profile/settings/isListed/label",
       "value": "Auf Community-Seite anzeigen"
     },
     {
-      "key": "profile/settings/isListed/true/note",
-      "value": "Ihr Name, Ihr Profilbild und Ihr Statement erscheinen auf {communityLink} und sind für alle sichtbar."
+      "key": "profile/settings/isListed/note",
+      "value": "Ihr Name, Ihr Profilbild und Ihr Statement erscheinen auf {communityLink}."
     },
     {
       "key": "climate/profile/settings/isListed/true/note",
-      "value": "Ihr Name und Ihr Profilbild erscheinen auf {communityLink} und sind für alle sichtbar."
-    },
-    {
-      "key": "profile/settings/isListed/false/note",
-      "value": "Ihr Name, Ihr Profilbild und Ihr Statement erscheinen nicht auf {communityLink}."
+      "value": "Ihr Name, Ihr Profilbild und Ihr Statement erscheinen auf {communityLink}. Sie zeigen damit nach innen und nach aussen, dass Sie die Republik unterstützen."
     },
     {
       "key": "profile/settings/isAdminUnlisted/note",
       "value": "Leider können wir Sie auf der Community-Seite nicht anzeigen. Schreiben Sie an kontakt@republik.ch für weitere Informationen."
     },
     {
-      "key": "profile/settings/hasPublicProfile/label",
+      "key": "profile/settings/hasPublicProfile/true/label",
       "value": "Öffentliches Profil"
     },
     {
+      "key": "profile/settings/hasPublicProfile/false/label",
+      "value": "Privates Profil"
+    },
+    {
       "key": "profile/settings/hasPublicProfile/true/note",
-      "value": "Alle (auch Suchmaschinen) können Ihr Profil sehen. Ihre Dialogbeiträge erscheinen für alle unter Ihrem vollen Namen."
+      "value": "Alle (auch Suchmaschinen) können Ihr Profil sehen. Die Dialogbeiträge auf Ihrer Profilseite sind jedoch nur für Verlegerinnen sichtbar. Im Dialog erscheinen Ihre Beiträge unter Ihrem vollen Namen. Ausser Sie wählen die Option, einen Beitrag anonym zu veröffentlichen."
     },
     {
       "key": "profile/settings/hasPublicProfile/false/note",
-      "value": "Nur andere Verlegerinnen können Ihr Profil sehen. Ihre Dialogbeiträge erscheinen nur für Verleger unter Ihrem vollen Namen."
+      "value": "Ihre Profilseite ist nur für andere Verleger sichtbar. Im Dialog sehen nur Verlegerinnen Ihren vollen Namen, Externe sehen bloss Ihre Initialen. Ausser Sie wählen die Option, einen Beitrag anonym zu veröffentlichen."
     },
     {
       "key": "profile/settings/isEligibleForProfile/notEligible",
@@ -1440,6 +1420,34 @@
     {
       "key": "profile/settings/privacy/communityLink",
       "value": "der Community-Seite"
+    },
+    {
+      "key": "profile/section/bio/title",
+      "value": "Steckbrief und Statement"
+    },
+    {
+      "key": "profile/section/bio/description",
+      "value": "Erfassen Sie eine kurze Biografie von sich oder erzählen Sie, was Ihnen wichtig ist. Im Steckbrief haben Sie Platz dafür. Das Statement ist kürzer (höchstens 140 Zeichen). Als Leitsatz erscheint es über Ihrem Profil."
+    },
+    {
+      "key": "profile/section/profileLinks/title",
+      "value": "Ihre Links"
+    },
+    {
+      "key": "profile/section/profileLinks/description",
+      "value": "Verweisen Sie in Ihrem Profil auf bis zu drei Webseiten, die etwas über Sie aussagen (Social-Media-Konten, Blogs, Vereinshomepage etc.)."
+    },
+    {
+      "key": "profile/section/privacy/title",
+      "value": "Privatsphäre"
+    },
+    {
+      "key": "profile/section/privacy/description",
+      "value": "Mit den folgenden Einstellungen steuern Sie, wer Ihr Profil aufrufen kann."
+    },
+    {
+      "key": "profile/section/other/title",
+      "value": "Weiteres"
     },
     {
       "key": "profile/biography/label",
@@ -1474,28 +1482,24 @@
       "value": "Statement, maximal 140 Zeichen"
     },
     {
-      "key": "profile/share/overlayTitle",
-      "value": "Profil teilen"
-    },
-    {
-      "key": "profile/share/title",
-      "value": "Profil von {name}"
-    },
-    {
-      "key": "profile/share/emailSubject",
-      "value": "Profil von {name}"
-    },
-    {
       "key": "profile/private",
       "value": "Privates Profil: Nur für Sie und andere Mitglieder und Abonnentinnen sichtbar."
     },
     {
       "key": "profile/username/label",
-      "value": "Profil URL"
+      "value": "Profil-URL"
     },
     {
       "key": "profile/username/note",
-      "value": "a-z, 0-9 und . erlaubt"
+      "value": "Erlaubte Zeichen: Kleinbuchstaben (a-z), Zahlen (0-9) und Punkt (.)"
+    },
+    {
+      "key": "profile/username/title",
+      "value": "Profil-URL"
+    },
+    {
+      "key": "profile/username/description",
+      "value": "Über diesen Link ist Ihr Profil auffindbar, wenn Sie ein öffentliches Profil haben. Entscheiden Sie selbst, wie der Link zu Ihrer Profilseite lauten soll."
     },
     {
       "key": "profile/portrait/choose",
@@ -1600,22 +1604,6 @@
     {
       "key": "testimonial/infinite/endless",
       "value": "Das waren {count} Verleger und Verlegerinnen. Weitere {remaining} anschauen?"
-    },
-    {
-      "key": "badge/crowdfunder",
-      "value": "Crowdfunder"
-    },
-    {
-      "key": "badge/patron",
-      "value": "Gönner"
-    },
-    {
-      "key": "badge/staff",
-      "value": "Fester Autor der Republik"
-    },
-    {
-      "key": "badge/freelancer",
-      "value": "Freier Autor der Republik"
     },
     {
       "key": "header/title",
@@ -2491,11 +2479,11 @@
     },
     {
       "key": "package/ABO_GIVE_MONTHS/title",
-      "value": "Monats-Abo als Geschenk"
+      "value": "3-Monats-Abo als Geschenk"
     },
     {
       "key": "package/ABO_GIVE_MONTHS/description",
-      "value": "Vielleicht das einzige Geschenk, das Sie Freunden und Feinden gleich herzlich machen können: einige Monate Republik."
+      "value": "Das Geschenk-Abo können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Wenn Sie bis zum 19. Dezember bestellen, erhalten Sie rechtzeitig vor Weihnachten die physische Geschenkkarte sowie das Republik-Taschenbuch nach Hause zugeschickt."
     },
     {
       "key": "package/YEARLY_ABO/price",
@@ -3216,6 +3204,14 @@
     {
       "key": "article/actionbar/whatsapp/label",
       "value": "WhatsApp"
+    },
+    {
+      "key": "article/actionbar/bluesky/label",
+      "value": "Bluesky"
+    },
+    {
+      "key": "article/actionbar/bluesky/title",
+      "value": "Auf Bluesky teilen"
     },
     {
       "key": "article/actionbar/threema/title",
@@ -6853,6 +6849,10 @@
       "value": "Noch etwas Handfestes?"
     },
     {
+      "key": "Goodies/title/free",
+      "value": "Gratis zum Kauf"
+    },
+    {
       "key": "Goodies/note/delivery",
       "value": "Versand nur in die Schweiz und Liechtenstein möglich"
     },
@@ -6875,6 +6875,14 @@
     {
       "key": "Goodie/description/NOTEBOOK",
       "value": "Ein Moleskine-Notizbuch mit Republik-Gravierung. Lieferung innerhalb von 7 Werktagen."
+    },
+    {
+      "key": "Goodie/label/LIBRARYBOOK",
+      "value": "Republik-Bibliothek Taschenbuch"
+    },
+    {
+      "key": "Goodie/description/LIBRARYBOOK",
+      "value": "Ein zufällig ausgewähltes Exemplar aus aus der neuen Republik-Bibliothek-Sonderedition."
     },
     {
       "key": "Goodie/label/TOTEBAG",
@@ -7242,7 +7250,7 @@
     },
     {
       "key": "package/ABO_GIVE/description",
-      "value": "Vielleicht das einzige Geschenk, das Sie Freunden und Feinden gleichermassen herzlich machen können: ein Jahr Mitgliedschaft bei der Project R Genossenschaft. Und damit Zugang zur Republik."
+      "value": "Die Geschenkmitgliedschaft können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Wenn Sie bis zum 19. Dezember bestellen, erhalten Sie rechtzeitig vor Weihnachten die physische Geschenkkarte sowie das Republik-Taschenbuch nach Hause zugeschickt."
     },
     {
       "key": "package/customize/price/payMore/threemonth",
