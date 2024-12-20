@@ -162,6 +162,7 @@ module.exports = async (_, args, context) => {
     'twitterHandle',
     'prolitterisId',
     'publicUrl',
+    'profileUrls',
     'emailAccessRole',
     'pgpPublicKey',
     'hasPublicProfile',
