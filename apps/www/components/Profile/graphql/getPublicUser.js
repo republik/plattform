@@ -38,9 +38,6 @@ const getPublicUser = gql`
         description
         verified
       }
-      facebookId
-      twitterHandle
-      publicUrl
       profileUrls
       prolitterisId
       documents(first: $firstDocuments, after: $afterDocument) {
