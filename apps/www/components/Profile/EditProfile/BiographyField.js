@@ -15,7 +15,7 @@ export default function Biographyfield({ values, dirty, errors, onChange, t }) {
           errors: {
             biography:
               value &&
-              value.trim().length >= 200 &&
+              value.trim().length >= 1500 &&
               t('profile/biography/label/tooLong'),
           },
           dirty: {
