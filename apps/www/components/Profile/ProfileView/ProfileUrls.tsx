@@ -12,6 +12,8 @@ const ProfileUrlLabel = (url: string) => {
     return url?.match(/\/threema\.id\/([^/\s]+)/)[1] ?? 'Threema'
   } else if (/signal\.me/.test(url)) {
     return 'Signal'
+  } else if (/linkedin\.com/.test(url)) {
+    return url?.match(/\/in\/([^\s]+)\//)[1] ?? 'LinkedIn'
   } else if (/\/@.+@/.test(url) || /mastodon/.test(url)) {
     return url?.match(/@[A-Za-z0-9]+/)[0] ?? 'Mastodon'
   } else {
