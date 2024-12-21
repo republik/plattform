@@ -1053,14 +1053,6 @@
       "value": "PGP-Public-Key"
     },
     {
-      "key": "profile/contact/publicUrl/label",
-      "value": "Webseite"
-    },
-    {
-      "key": "profile/contact/publicUrl/error",
-      "value": "Webseite ungültig"
-    },
-    {
       "key": "profile/contact/facebook/label",
       "value": "Facebook"
     },

@@ -1334,11 +1334,7 @@
       "value": "Twitter"
     },
     {
-      "key": "profile/contact/publicUrl/label",
-      "value": "Webseite"
-    },
-    {
-      "key": "profile/contact/publicUrl/error",
+      "key": "profile/url/error",
       "value": "Webseite ungültig"
     },
     {
