@@ -283,7 +283,6 @@ class Pledge extends Component {
       isMember,
       t,
       customMe,
-      statement,
       query,
       packages,
     } = this.props
@@ -292,18 +291,9 @@ class Pledge extends Component {
     const queryPackage = query.package && query.package.toUpperCase()
     const pkg = this.getPkg()
 
-    const statementTitle =
-      statement &&
-      t(`pledge/form/statement/${queryPackage}/title`, statement, '')
     const packageInstruction = t.elements(
       `pledge/form/instruction/${queryPackage}/${
-        customMe
-          ? pkg
-            ? statementTitle
-              ? 'availableWithStatement'
-              : 'available'
-            : 'notAvailable'
-          : 'signIn'
+        customMe ? (pkg ? 'available' : 'notAvailable') : 'signIn'
       }`,
       {
         accountLink: (
@@ -315,34 +305,22 @@ class Pledge extends Component {
       '',
     )
 
-    const meta =
-      !preventMetaUpdate &&
-      (statementTitle
-        ? {
-            title: t('pledge/form/statement/share/title', statement),
-            description: t('pledge/form/statement/share/description'),
-            image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=628&updatedAt=${encodeURIComponent(
-              statement.updatedAt,
-            )}&url=${encodeURIComponent(
-              `${PUBLIC_BASE_URL}/community?share=${statement.id}&package=${queryPackage}`,
-            )}`,
-          }
-        : {
-            title: t.first([
-              pkg && `pledge/meta/package/${pkg.name}/title`,
-              queryGroup && `pledge/meta/group/${queryGroup}/title`,
-              'pledge/meta/title',
-            ]),
-            description: t.first([
-              pkg && `pledge/meta/package/${pkg.name}/description`,
-              queryGroup && `pledge/meta/group/${queryGroup}/description`,
-              'pledge/meta/description',
-            ]),
-            image:
-              pkg?.name === 'LESHA'
-                ? `${CDN_FRONTEND_BASE_URL}/static/social-media/we_stay.jpg`
-                : `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
-          })
+    const meta = !preventMetaUpdate && {
+      title: t.first([
+        pkg && `pledge/meta/package/${pkg.name}/title`,
+        queryGroup && `pledge/meta/group/${queryGroup}/title`,
+        'pledge/meta/title',
+      ]),
+      description: t.first([
+        pkg && `pledge/meta/package/${pkg.name}/description`,
+        queryGroup && `pledge/meta/group/${queryGroup}/description`,
+        'pledge/meta/description',
+      ]),
+      image:
+        pkg?.name === 'LESHA'
+          ? `${CDN_FRONTEND_BASE_URL}/static/social-media/we_stay.jpg`
+          : `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
+    }
 
     return (
       <Fragment>
@@ -398,20 +376,9 @@ class Pledge extends Component {
 
             return (
               <div>
-                {(statementTitle ||
-                  (packageInstruction && !!packageInstruction.length)) && (
+                {packageInstruction && !!packageInstruction.length && (
                   <div style={{ marginBottom: 40 }}>
-                    <P>
-                      {statementTitle && (
-                        <Fragment>
-                          <Interaction.Emphasis>
-                            {statementTitle}
-                          </Interaction.Emphasis>
-                          <br />
-                        </Fragment>
-                      )}
-                      {packageInstruction}
-                    </P>
+                    <P>{packageInstruction}</P>
                     {!customMe && (
                       <div style={{ marginTop: 20 }}>
                         <SignIn context='pledge' />
@@ -618,33 +585,7 @@ const query = gql`
   }
 `
 
-const shareRefQuery = gql`
-  query statementsShareRef($id: String!) {
-    statements(focus: $id, first: 1) {
-      nodes {
-        id
-        name
-        updatedAt
-      }
-    }
-  }
-`
-
 const PledgeWithQueries = compose(
-  graphql(shareRefQuery, {
-    options: ({ query }) => ({
-      variables: {
-        id: query.utm_content || query.ref,
-      },
-    }),
-    skip: (props) => !(props.query.utm_content || props.query.ref),
-    props: ({ data }) => {
-      return {
-        statement:
-          data.statements && data.statements.nodes && data.statements.nodes[0],
-      }
-    },
-  }),
   graphql(query, {
     options: ({ query }) => ({
       variables: {
