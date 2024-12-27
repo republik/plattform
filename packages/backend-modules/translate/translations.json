@@ -389,6 +389,10 @@
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
+      "key": "api/email/payment_successful_gift_voucher/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
       "key": "api/email/payment_successful_benefactor/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },

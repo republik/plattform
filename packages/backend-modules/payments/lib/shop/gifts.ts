@@ -46,7 +46,7 @@ function normalizeVoucher(voucherCode: string): string | null {
 }
 
 function newVoucherCode() {
-  const bytes = new Uint8Array(6)
+  const bytes = new Uint8Array(5)
   crypto.getRandomValues(bytes)
   return CrockfordBase32.encode(Buffer.from(bytes))
 }

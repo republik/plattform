@@ -11,6 +11,7 @@ import { SyncAddressDataWorker } from '../../workers/SyncAddressDataWorker'
 import { mapChargeArgs } from './invoicePaymentSucceeded'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
 import { GiftShop } from '../../shop/gifts'
+import { sendGiftPurchaseMail } from '../../transactionals/sendTransactionalMails'
 
 type PaymentWebhookContext = {
   paymentService: PaymentService
@@ -241,6 +242,14 @@ async function handlePayment(
 
   console.log(orderLineItems)
   console.log(giftCodes)
+
+  await sendGiftPurchaseMail(
+    {
+      email: sess.customer_details!.email!,
+      voucherCode: giftCodes[0].code.replace(/(\w{4})(\w{4})/, '$1-$2'),
+    },
+    ctx.pgdb,
+  )
 }
 
 async function syncUserNameData(
