@@ -5,9 +5,6 @@ schema {
 }
 
 type queries {
-  faqs: [Faq!]!
-  events: [Event!]!
-  updates: [Update!]!
   employees(
     "shuffle and limit the result to the specified count"
     shuffle: Int
@@ -20,6 +17,5 @@ type queries {
     "filter for promoted authors"
     onlyPromotedAuthors: Boolean
   ): [Employee!]!
-  mediaResponses: [MediaResponse!]!
 }
 `
