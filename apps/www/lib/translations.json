@@ -1682,10 +1682,6 @@
       "value": "Veranstaltungen"
     },
     {
-      "key": "footer/updates",
-      "value": "Blog Crowdfunding"
-    },
-    {
       "key": "footer/about/projecR",
       "value": "Project R"
     },
@@ -4135,22 +4131,6 @@
     {
       "key": "events/labels/location",
       "value": "Wo"
-    },
-    {
-      "key": "updates/pageTitle",
-      "value": "Neues – Republik"
-    },
-    {
-      "key": "updates/title",
-      "value": "Neuigkeiten zum Crowdfunding"
-    },
-    {
-      "key": "updates/metaDescription",
-      "value": "Das digitale Magazin von Project R – jetzt Mitglied werden."
-    },
-    {
-      "key": "updates/all",
-      "value": "Alle Meldungen"
     },
     {
       "key": "faq/pageTitle",

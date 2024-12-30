@@ -1323,10 +1323,6 @@
       "value": "Veranstaltungen"
     },
     {
-      "key": "footer/updates",
-      "value": "Blog Crowdfunding"
-    },
-    {
       "key": "footer/about/projecR",
       "value": "Project R"
     },
@@ -3086,22 +3082,7 @@
       "key": "events/labels/location",
       "value": "Wo"
     },
-    {
-      "key": "updates/pageTitle",
-      "value": "Neues – Republik"
-    },
-    {
-      "key": "updates/title",
-      "value": "Neuigkeiten zum Crowdfunding"
-    },
-    {
-      "key": "updates/metaDescription",
-      "value": "Das digitale Magazin von Project R – jetzt Mitglied werden."
-    },
-    {
-      "key": "updates/all",
-      "value": "Alle Meldungen"
-    },
+
     {
       "key": "faq/pageTitle",
       "value": "Fragen – Republik"
@@ -3759,14 +3740,6 @@
       "value": "Crew"
     },
     {
-      "key": "menu/updates",
-      "value": "Neues"
-    },
-    {
-      "key": "menu/updates/wer-sind-sie",
-      "value": "Neues"
-    },
-    {
       "key": "menu/events",
       "value": "Veranstaltungen"
     },
@@ -4345,10 +4318,6 @@
     {
       "key": "events/404",
       "value": "Ereignis nicht gefunden"
-    },
-    {
-      "key": "updates/404",
-      "value": "Update nicht gefunden"
     },
     {
       "key": "testimonial/title",
