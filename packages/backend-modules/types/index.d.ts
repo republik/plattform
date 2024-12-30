@@ -45,9 +45,6 @@ export interface UserRow {
   isListed: boolean
   isAdminUnlisted: boolean
   testimonialId: string | null
-  facebookId: string | null
-  twitterHandle: string | null
-  publicUrl: string | null
   profileUrls: JSON
   badges: string[] | null
   biography: string | null
