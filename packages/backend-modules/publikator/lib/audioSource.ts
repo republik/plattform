@@ -6,6 +6,7 @@ const debug = Debug('publikator:lib:audioSource')
 interface CommitMeta {
   audioSourceMp3?: string
   audioSourceDurationMs?: number
+  audioSourceByteSize?: number
 }
 
 const resToArrayBuffer = (res: Response) => {
@@ -28,7 +29,7 @@ const checkSeconds = (seconds: number) => {
 
 const toMiliseconds = (seconds: number) => Math.round(seconds * 1000)
 
-export const maybeApplyAudioSourceDuration = async (
+export const maybeApplyAudioSourceDurationAndByteSize = async (
   currentMeta: CommitMeta,
   previousMeta?: CommitMeta,
 ): Promise<void> => {
@@ -45,6 +46,10 @@ export const maybeApplyAudioSourceDuration = async (
     await fetch(currentMeta.audioSourceMp3)
       .then(resToArrayBuffer)
       .then(Buffer.from)
+      .then((buffer) => {
+        currentMeta.audioSourceByteSize = buffer.byteLength
+        return buffer
+      })
       .then(measureDuration)
       .then(checkSeconds)
       .then(toMiliseconds)
