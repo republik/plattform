@@ -4,6 +4,7 @@ import { Company } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { NoticeEndedTransactionalWorker } from '../../workers/NoticeEndedTransactionalWorker'
 import { SyncMailchimpEndedWorker } from '../../workers/SyncMailchimpEndedWorker'
+import { getMailSettings } from '../../mail-settings'
 
 export async function processSubscriptionDeleted(
   paymentService: PaymentService,
@@ -31,23 +32,29 @@ export async function processSubscriptionDeleted(
     throw Error(`User for ${customerId} does not exists`)
   }
 
-  const queue = Queue.getInstance()
+  const mailSettings = getMailSettings(
+    event.data.object.metadata['republik.payments.mail.settings'],
+  )
 
-  await Promise.all([
-    queue.send<NoticeEndedTransactionalWorker>(
-      'payments:transactional:notice:ended',
-      {
+  if (mailSettings['notice:ended']) {
+    const queue = Queue.getInstance()
+
+    await Promise.all([
+      queue.send<NoticeEndedTransactionalWorker>(
+        'payments:transactional:notice:ended',
+        {
+          $version: 'v1',
+          eventSourceId: event.id,
+          userId: userId,
+        },
+      ),
+      queue.send<SyncMailchimpEndedWorker>('payments:mailchimp:sync:ended', {
         $version: 'v1',
         eventSourceId: event.id,
         userId: userId,
-      },
-    ),
-    queue.send<SyncMailchimpEndedWorker>('payments:mailchimp:sync:ended', {
-      $version: 'v1',
-      eventSourceId: event.id,
-      userId: userId,
-    }),
-  ])
+      }),
+    ])
+  }
 
   return
 }

@@ -10,6 +10,10 @@ import { Offers } from './offers'
 import { Shop } from './Shop'
 import dayjs from 'dayjs'
 import { GiftVoucherRepo } from '../database/GiftVoucherRepo'
+import createLogger from 'debug'
+import { serializeMailSettings } from '../mail-settings'
+
+const logger = createLogger('payments:gifts')
 
 export type Gift = {
   id: string
@@ -234,9 +238,6 @@ export class GiftShop {
       gift.company
     ].subscriptions.create({
       customer: customerId,
-      metadata: {
-        'republik.payments.started-as': 'gift',
-      },
       items: [shop.genLineItem(offer)],
       coupon: gift.coupon,
       collection_method: 'send_invoice',
@@ -282,7 +283,7 @@ export class GiftShop {
           kind: 'GIFT',
         })
 
-      console.log('new membership period created %s', newMembershipPeriod.id)
+      logger('new membership period created %s', newMembershipPeriod.id)
 
       await tx.transactionCommit()
 
@@ -419,7 +420,9 @@ export class GiftShop {
             },
             proration_behavior: 'none',
             metadata: {
-              'republik.payments.mail.settings': 'no-cancel',
+              'republik.payments.mail.settings': serializeMailSettings({
+                'notice:ended': false,
+              }),
               'republik.payments.member': 'keep-on-cancel',
             },
             cancel_at_period_end: true,
@@ -440,7 +443,9 @@ export class GiftShop {
                 days_until_due: 14,
               },
               metadata: {
-                'republik.payments.mail.settings': 'no-signup',
+                'republik.payments.mail.settings': serializeMailSettings({
+                  'confirm:setup': true,
+                }),
                 'republik.payments.upgrade-from': `monthly:${subScriptionId}`,
               },
             },
