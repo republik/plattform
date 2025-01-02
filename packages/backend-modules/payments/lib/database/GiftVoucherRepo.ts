@@ -5,7 +5,7 @@ import { Company } from '../types'
 type UpdateableVoucher = {
   redeemedBy: string | null
   redeemedForCompany: Company | null
-  state: 'unredeemed' | 'redeemed'
+  redeemedAt: Date | null
 }
 
 export class GiftVoucherRepo {

@@ -74,36 +74,6 @@ const GIFTS: Gift[] = [
   },
 ]
 
-// export class GiftRepo {
-//   #store: Voucher[] = [
-//     {
-//       id: '1',
-//       code: 'V4QPS1W5',
-//       giftId: 'GIFT_YEARLY',
-//       issuedBy: 'PROJECT_R',
-//       state: 'unredeemed',
-//       redeemedBy: null,
-//       redeemedForCompany: null,
-//     },
-//     {
-//       id: '1',
-//       code: 'NM13P325',
-//       giftId: 'MONTHLY_SUBSCRPTION_GIFT_3',
-//       issuedBy: 'REPUBLIK',
-//       state: 'unredeemed',
-//       redeemedBy: null,
-//       redeemedForCompany: null,
-//     },
-//   ]
-
-//   async getVoucher(code: string) {
-//     return this.#store.find((g) => g.code === code && g.state === 'unredeemed')
-//   }
-//   async saveVoucher(voucher: Voucher) {
-//     return this.#store.push(voucher)
-//   }
-// }
-
 export class GiftShop {
   #pgdb: PgDb
   #giftRepo: GiftVoucherRepo
@@ -126,8 +96,6 @@ export class GiftShop {
       redeemedBy: null,
       redeemedForCompany: null,
     }
-
-    console.log(voucher)
 
     this.#giftRepo.saveVoucher(voucher)
 
@@ -157,31 +125,13 @@ export class GiftShop {
     const current = await this.getCurrentUserAbo(userId)
     console.log(current?.type)
     try {
-      await (async () => {
-        if (!current) {
-          // create new subscription with the gift if the user has none
-          return this.applyGiftToNewSubscription(userId, gift)
-        }
+      const abo = await this.applyGift(userId, current, gift)
 
-        switch (current.type) {
-          case 'ABO':
-            return this.applyGiftToMembershipAbo(userId, current.id, gift)
-          case 'MONTHLY_ABO':
-            return this.applyGiftToMonthlyAbo(userId, current.id, gift)
-          case 'YEARLY_ABO':
-            return this.applyGiftToYearlyAbo(userId, current.id, gift)
-          case 'BENEFACTOR_ABO':
-            return this.applyGiftToBenefactor(userId, current.id, gift)
-          case 'YEARLY_SUBSCRIPTION':
-            return this.applyGiftToYearlySubscription(userId, current.id, gift)
-          case 'MONTHLY_SUBSCRIPTION':
-            return this.applyGiftToMonthlySubscription(userId, current.id, gift)
-          default:
-            throw Error('Gifts not supported for this mabo')
-        }
-      })()
-
-      await this.markGiftAsRedeemed(gift)
+      await this.markVoucherAsRedeemed({
+        voucher,
+        userId,
+        company: abo.company,
+      })
     } catch (e) {
       if (e instanceof Error) {
         console.error(e)
@@ -189,12 +139,48 @@ export class GiftShop {
     }
   }
 
+  private async applyGift(
+    userId: string,
+    current: { type: string; id: string } | null,
+    gift: Gift,
+  ) {
+    if (!current) {
+      // create new subscription with the gift if the user has none
+      return this.applyGiftToNewSubscription(userId, gift)
+    }
+
+    switch (current.type) {
+      case 'ABO':
+        return this.applyGiftToMembershipAbo(userId, current.id, gift)
+      case 'MONTHLY_ABO':
+        return this.applyGiftToMonthlyAbo(userId, current.id, gift)
+      case 'YEARLY_ABO':
+        return this.applyGiftToYearlyAbo(userId, current.id, gift)
+      // case 'BENEFACTOR_ABO':
+      //   return this.applyGiftToBenefactor(userId, current.id, gift)
+      case 'YEARLY_SUBSCRIPTION':
+        return this.applyGiftToYearlySubscription(userId, current.id, gift)
+      case 'MONTHLY_SUBSCRIPTION':
+        return this.applyGiftToMonthlySubscription(userId, current.id, gift)
+      default:
+        throw Error('Gifts not supported for this mabo')
+    }
+  }
+
   private async getGift(id: string) {
     return GIFTS.find((gift) => (gift.id = id)) || null
   }
 
-  private async markGiftAsRedeemed(_gift: Gift) {
-    throw new Error('Not implemented')
+  private async markVoucherAsRedeemed(args: {
+    voucher: Voucher
+    userId: string
+    company: Company
+  }) {
+    this.#giftRepo.updateVoucher(args.voucher.id!, {
+      redeemedAt: new Date(),
+      redeemedBy: args.userId,
+      redeemedForCompany: args.company,
+    })
   }
 
   private async getCurrentUserAbo(
@@ -227,7 +213,10 @@ export class GiftShop {
     return result[0]
   }
 
-  private async applyGiftToNewSubscription(userId: string, gift: Gift) {
+  private async applyGiftToNewSubscription(
+    userId: string,
+    gift: Gift,
+  ): Promise<{ company: Company }> {
     const cRepo = new CustomerRepo(this.#pgdb)
     const paymentService = Payments.getInstance()
 
@@ -259,14 +248,14 @@ export class GiftShop {
         subscription.latest_invoice.toString(),
       )
     }
-    return
+    return { company: gift.company }
   }
 
   private async applyGiftToMembershipAbo(
     _userId: string,
     membershipId: string,
     gift: Gift,
-  ) {
+  ): Promise<{ id: string; company: Company }> {
     const tx = await this.#pgdb.transactionBegin()
     try {
       const latestMembershipPeriod = await tx.queryOne(
@@ -296,42 +285,86 @@ export class GiftShop {
       console.log('new membership period created %s', newMembershipPeriod.id)
 
       await tx.transactionCommit()
+
+      return { id: membershipId, company: 'PROJECT_R' }
     } catch (e) {
       await tx.transactionRollback()
       throw e
     }
-
-    return
   }
   private async applyGiftToMonthlyAbo(
     _userId: string,
-    _membershipId: string,
+    membershipId: string,
     _gift: Gift,
-  ) {
+  ): Promise<{ id: string; company: Company }> {
     throw new Error('Not implemented')
-    return
+    return { id: membershipId, company: 'REPUBLIK' }
   }
   private async applyGiftToYearlyAbo(
-    _userId: string,
-    _id: string,
-    _gift: Gift,
-  ) {
-    throw new Error('Not implemented')
-    return
+    userId: string,
+    id: string,
+    gift: Gift,
+  ): Promise<{ company: Company }> {
+    const cRepo = new CustomerRepo(this.#pgdb)
+    const paymentService = Payments.getInstance()
+
+    let customerId = (await cRepo.getCustomerIdForCompany(userId, gift.company))
+      ?.customerId
+    if (!customerId) {
+      customerId = await paymentService.createCustomer(gift.company, userId)
+    }
+
+    const latestMembershipPeriod = await this.#pgdb.queryOne(
+      `SELECT
+          id,
+          "endDate"
+        FROM
+          public."membershipPeriods"
+        WHERE
+          "membershipId" =
+        ORDER BY
+          "endDate" DESC NULLS LAST
+        LIMIT 1;`,
+      { membershipId: id },
+    )
+
+    const endDate = dayjs(latestMembershipPeriod.endDate)
+
+    const shop = new Shop(Offers)
+
+    const offer = (await shop.getOfferById(gift.offer))!
+
+    await this.#stripeAdapters[gift.company].subscriptionSchedules.create({
+      customer: customerId,
+      start_date: endDate.unix(),
+      phases: [
+        {
+          items: [shop.genLineItem(offer)],
+          iterations: 1,
+          collection_method: 'send_invoice',
+          coupon: gift.coupon,
+          invoice_settings: {
+            days_until_due: 14,
+          },
+        },
+      ],
+    })
+
+    return { company: gift.company }
   }
   private async applyGiftToBenefactor(
     _userId: string,
-    _id: string,
+    id: string,
     _gift: Gift,
-  ) {
+  ): Promise<{ id: string; company: Company }> {
     throw new Error('Not implemented')
-    return
+    return { id: id, company: 'PROJECT_R' }
   }
   private async applyGiftToYearlySubscription(
     _userId: string,
     id: string,
     gift: Gift,
-  ) {
+  ): Promise<{ id: string; company: Company }> {
     const stripeId = await this.getStripeSubscriptionId(id)
 
     if (!stripeId) {
@@ -341,14 +374,14 @@ export class GiftShop {
     await this.#stripeAdapters.PROJECT_R.subscriptions.update(stripeId, {
       coupon: gift.coupon,
     })
-    return
+    return { id: id, company: 'REPUBLIK' }
   }
 
   private async applyGiftToMonthlySubscription(
     userId: string,
     subScriptionId: string,
     gift: Gift,
-  ) {
+  ): Promise<{ id: string; company: Company } | { company: Company }> {
     const stripeId = await this.getStripeSubscriptionId(subScriptionId)
 
     if (!stripeId) {
@@ -360,7 +393,7 @@ export class GiftShop {
         await this.#stripeAdapters.REPUBLIK.subscriptions.update(stripeId, {
           coupon: gift.coupon,
         })
-        return
+        return { id: subScriptionId, company: 'REPUBLIK' }
       }
       case 'PROJECT_R': {
         const cRepo = new CustomerRepo(this.#pgdb)
@@ -381,11 +414,12 @@ export class GiftShop {
           stripeId,
           {
             cancellation_details: {
-              comment: 'system cancelation because of upgrade',
+              comment:
+                '[System]: cancelation because of upgrade to yearly subscription',
             },
             proration_behavior: 'none',
             metadata: {
-              'republik.payments.mailing': 'no-cancel',
+              'republik.payments.mail.settings': 'no-cancel',
               'republik.payments.member': 'keep-on-cancel',
             },
             cancel_at_period_end: true,
@@ -406,12 +440,13 @@ export class GiftShop {
                 days_until_due: 14,
               },
               metadata: {
-                'republik.payments.started-as': 'gift',
+                'republik.payments.mail.settings': 'no-signup',
+                'republik.payments.upgrade-from': `monthly:${subScriptionId}`,
               },
             },
           ],
         })
-        return
+        return { company: 'PROJECT_R' }
       }
     }
   }
@@ -423,8 +458,6 @@ export class GiftShop {
       `SELECT "externalId" from payments.subscriptions WHERE id = :id`,
       { id: internalId },
     )
-
-    console.log(res)
 
     return res.externalId
   }
