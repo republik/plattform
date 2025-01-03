@@ -127,6 +127,7 @@ export class GiftShop {
     }
 
     const current = await this.getCurrentUserAbo(userId)
+    console.log(current?.type)
     try {
       const abo = await this.applyGift(userId, current, gift)
 
@@ -258,21 +259,7 @@ export class GiftShop {
   ): Promise<{ id: string; company: Company }> {
     const tx = await this.#pgdb.transactionBegin()
     try {
-      const latestMembershipPeriod = await tx.queryOne(
-        `SELECT
-            id,
-            "endDate"
-          FROM
-            public."membershipPeriods"
-          WHERE
-            "membershipId" =
-          ORDER BY
-            "endDate" DESC NULLS LAST
-          LIMIT 1;`,
-        { membershipId: membershipId },
-      )
-
-      const endDate = dayjs(latestMembershipPeriod.endDate)
+      const endDate = await this.getMembershipEndDate(tx, membershipId)
 
       const newMembershipPeriod =
         await tx.public.membershipPeriods.insertAndGet({
@@ -292,6 +279,7 @@ export class GiftShop {
       throw e
     }
   }
+
   private async applyGiftToMonthlyAbo(
     userId: string,
     membershipId: string,
@@ -348,22 +336,9 @@ export class GiftShop {
         await tx.transactionCommit()
 
         //cancel old monthly subscription on Republik AG stripe
-        const oldSub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
+        const oldSub = await this.cancelSubscriptionForUpgrade(
+          this.#stripeAdapters.REPUBLIK,
           stripeId,
-          {
-            cancellation_details: {
-              comment:
-                '[System]: cancelation because of upgrade to yearly subscription',
-            },
-            proration_behavior: 'none',
-            metadata: {
-              'republik.payments.mail.settings': serializeMailSettings({
-                'notice:ended': false,
-              }),
-              'republik.payments.member': 'keep-on-cancel',
-            },
-            cancel_at_period_end: true,
-          },
         )
 
         // create new subscription starting at the end period of the old one
@@ -406,21 +381,7 @@ export class GiftShop {
       customerId = await paymentService.createCustomer(gift.company, userId)
     }
 
-    const latestMembershipPeriod = await this.#pgdb.queryOne(
-      `SELECT
-          id,
-          "endDate"
-        FROM
-          public."membershipPeriods"
-        WHERE
-          "membershipId" =
-        ORDER BY
-          "endDate" DESC NULLS LAST
-        LIMIT 1;`,
-      { membershipId: id },
-    )
-
-    const endDate = dayjs(latestMembershipPeriod.endDate)
+    const endDate = await this.getMembershipEndDate(this.#pgdb, id)
 
     const shop = new Shop(Offers)
 
@@ -502,22 +463,9 @@ export class GiftShop {
         const offer = (await shop.getOfferById(gift.offer))!
 
         //cancel old monthly subscription on Republik AG
-        const oldSub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
+        const oldSub = await this.cancelSubscriptionForUpgrade(
+          this.#stripeAdapters.REPUBLIK,
           stripeId,
-          {
-            cancellation_details: {
-              comment:
-                '[System]: cancelation because of upgrade to yearly subscription',
-            },
-            proration_behavior: 'none',
-            metadata: {
-              'republik.payments.mail.settings': serializeMailSettings({
-                'notice:ended': false,
-              }),
-              'republik.payments.member': 'keep-on-cancel',
-            },
-            cancel_at_period_end: true,
-          },
         )
 
         // create new subscription starting at the end period of the old one
@@ -567,5 +515,41 @@ export class GiftShop {
     )
 
     return res.subscriptionId
+  }
+
+  private async getMembershipEndDate(tx: PgDb, membershipId: string) {
+    const latestMembershipPeriod = await tx.queryOne(
+      `SELECT
+            id,
+            "endDate"
+          FROM
+            public."membershipPeriods"
+          WHERE
+            "membershipId" =
+          ORDER BY
+            "endDate" DESC NULLS LAST
+          LIMIT 1;`,
+      { membershipId: membershipId },
+    )
+
+    const endDate = dayjs(latestMembershipPeriod.endDate)
+    return endDate
+  }
+
+  private cancelSubscriptionForUpgrade(stripeClient: Stripe, stripeId: string) {
+    return stripeClient.subscriptions.update(stripeId, {
+      cancellation_details: {
+        comment:
+          '[System]: cancelation because of upgrade to yearly subscription',
+      },
+      proration_behavior: 'none',
+      metadata: {
+        'republik.payments.mail.settings': serializeMailSettings({
+          'notice:ended': false,
+        }),
+        'republik.payments.member': 'keep-on-cancel',
+      },
+      cancel_at_period_end: true,
+    })
   }
 }
