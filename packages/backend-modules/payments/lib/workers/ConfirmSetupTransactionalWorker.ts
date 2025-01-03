@@ -1,7 +1,8 @@
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
-import { Payments } from '../payments'
 import Stripe from 'stripe'
+import { MailNotificationService } from '../services/MailNotificationService'
+import { WebhookService } from '../services/WebhookService'
 
 type Args = {
   $version: 'v1'
@@ -24,10 +25,11 @@ export class ConfirmSetupTransactionalWorker extends BaseWorker<Args> {
 
     console.log(`[${this.queue}] start`)
 
-    const PaymentService = Payments.getInstance()
+    const webhookService = new WebhookService(this.context.pgdb)
+    const mailService = new MailNotificationService(this.context.pgdb)
 
     const wh =
-      await PaymentService.findWebhookEventBySourceId<Stripe.CheckoutSessionCompletedEvent>(
+      await webhookService.getEvent<Stripe.CheckoutSessionCompletedEvent>(
         job.data.eventSourceId,
       )
 
@@ -45,7 +47,7 @@ export class ConfirmSetupTransactionalWorker extends BaseWorker<Args> {
 
     try {
       // send transactional
-      await PaymentService.sendSetupSubscriptionTransactionalMail({
+      await mailService.sendSetupSubscriptionTransactionalMail({
         subscriptionExternalId: event.data.object.subscription as string,
         userId: job.data.userId,
         invoiceId: job.data.invoiceId,

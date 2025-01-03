@@ -185,7 +185,7 @@ export type Webhook<T> = {
   updatedAt: string
 }
 
-export type PaymentItemLocator =
+export type SelectCriteria =
   | { id: string; externalId?: never }
   | { externalId: string; id?: never }
 
