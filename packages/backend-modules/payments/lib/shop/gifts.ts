@@ -160,8 +160,8 @@ export class GiftShop {
         return this.applyGiftToMonthlyAbo(userId, current.id, gift)
       case 'YEARLY_ABO':
         return this.applyGiftToYearlyAbo(userId, current.id, gift)
-      // case 'BENEFACTOR_ABO':
-      //   return this.applyGiftToBenefactor(userId, current.id, gift)
+      case 'BENEFACTOR_ABO':
+        return this.applyGiftToBenefactor(userId, current.id, gift)
       case 'YEARLY_SUBSCRIPTION':
         return this.applyGiftToYearlySubscription(userId, current.id, gift)
       case 'MONTHLY_SUBSCRIPTION':
@@ -294,12 +294,104 @@ export class GiftShop {
     }
   }
   private async applyGiftToMonthlyAbo(
-    _userId: string,
+    userId: string,
     membershipId: string,
-    _gift: Gift,
+    gift: Gift,
   ): Promise<{ id: string; company: Company }> {
-    throw new Error('Not implemented')
-    return { id: membershipId, company: 'REPUBLIK' }
+    const stripeId = await this.getStripeIdForMonthlyAbo(membershipId)
+
+    if (!stripeId) {
+      throw new Error(`membership ${membershipId} does not exist`)
+    }
+
+    switch (gift.company) {
+      case 'REPUBLIK': {
+        await this.#stripeAdapters.REPUBLIK.subscriptions.update(stripeId, {
+          coupon: gift.coupon,
+        })
+        return { id: membershipId, company: 'REPUBLIK' }
+      }
+      case 'PROJECT_R': {
+        const cRepo = new CustomerRepo(this.#pgdb)
+        const paymentService = Payments.getInstance()
+
+        let customerId = (
+          await cRepo.getCustomerIdForCompany(userId, 'PROJECT_R')
+        )?.customerId
+        if (!customerId) {
+          customerId = await paymentService.createCustomer('PROJECT_R', userId)
+        }
+
+        const shop = new Shop(Offers)
+        const offer = (await shop.getOfferById(gift.offer))!
+
+        const tx = await this.#pgdb.transactionBegin()
+
+        const updatedMembership = await tx.public.memberships.updateAndGetOne(
+          {
+            id: membershipId,
+          },
+          {
+            renew: false,
+            updatedAt: new Date(),
+          },
+        )
+
+        await tx.membershipCancellations.insert({
+          membershipId: updatedMembership.id,
+          reason: 'gift upgrade to yearly_subscription',
+          category: 'SYSTEM',
+          suppressConfirmation: true,
+          suppressWinback: true,
+          cancelledViaSupport: true,
+        })
+
+        await tx.transactionCommit()
+
+        //cancel old monthly subscription on Republik AG stripe
+        const oldSub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
+          stripeId,
+          {
+            cancellation_details: {
+              comment:
+                '[System]: cancelation because of upgrade to yearly subscription',
+            },
+            proration_behavior: 'none',
+            metadata: {
+              'republik.payments.mail.settings': serializeMailSettings({
+                'notice:ended': false,
+              }),
+              'republik.payments.member': 'keep-on-cancel',
+            },
+            cancel_at_period_end: true,
+          },
+        )
+
+        // create new subscription starting at the end period of the old one
+        await this.#stripeAdapters.PROJECT_R.subscriptionSchedules.create({
+          customer: customerId,
+          start_date: oldSub.current_period_end,
+          phases: [
+            {
+              items: [shop.genLineItem(offer)],
+              iterations: 1,
+              collection_method: 'send_invoice',
+              coupon: gift.coupon,
+              invoice_settings: {
+                days_until_due: 14,
+              },
+              metadata: {
+                'republik.payments.mail.settings': serializeMailSettings({
+                  'confirm:setup': true,
+                }),
+                'republik.payments.upgrade-from': `monthly_abo:${membershipId}`,
+              },
+            },
+          ],
+        })
+        return { id: membershipId, company: 'PROJECT_R' }
+      }
+    }
   }
   private async applyGiftToYearlyAbo(
     userId: string,
@@ -465,5 +557,16 @@ export class GiftShop {
     )
 
     return res.externalId
+  }
+
+  private async getStripeIdForMonthlyAbo(
+    internalId: string,
+  ): Promise<string | null> {
+    const res = await this.#pgdb.queryOne(
+      `SELECT "subscriptionId" from memberships WHERE id = :id`,
+      { id: internalId },
+    )
+
+    return res.subscriptionId
   }
 }
