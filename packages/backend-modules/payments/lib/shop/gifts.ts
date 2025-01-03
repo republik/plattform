@@ -127,7 +127,6 @@ export class GiftShop {
     }
 
     const current = await this.getCurrentUserAbo(userId)
-    console.log(current?.type)
     try {
       const abo = await this.applyGift(userId, current, gift)
 
