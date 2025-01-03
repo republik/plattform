@@ -549,6 +549,7 @@ export class GiftShop {
       metadata: {
         [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
           'notice:ended': false,
+          'confirm:cancel': false,
         }),
         'republik.payments.member': 'keep-on-cancel',
       },
