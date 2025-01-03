@@ -5,12 +5,19 @@ import { Queue } from '@orbiting/backend-modules-job-queue'
 import { ConfirmCancelTransactionalWorker } from '../../workers/ConfirmCancelTransactionalWorker'
 import { SyncMailchimpUpdateWorker } from '../../workers/SyncMailchimpUpdateWorker'
 import { ConfirmRevokeCancellationTransactionalWorker } from '../../workers/ConfirmRevokeCancellationTransactionalWorker'
+import {
+  getMailSettings,
+  REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
+} from '../../mail-settings'
 
 export async function processSubscriptionUpdate(
   paymentService: PaymentService,
   company: Company,
   event: Stripe.CustomerSubscriptionUpdatedEvent,
 ) {
+  const mailSettings = getMailSettings(
+    event.data.object.metadata[REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY],
+  )
   const cancelAt = event.data.object.cancel_at
   const canceledAt = event.data.object.canceled_at
   const cancellationComment = event.data.object.cancellation_details?.comment
@@ -99,7 +106,7 @@ export async function processSubscriptionUpdate(
     ])
   }
 
-  if (cancelAt) {
+  if (cancelAt && mailSettings['confirm:cancel']) {
     const customerId = event.data.object.customer as string
 
     const userId = await paymentService.getUserIdForCompanyCustomer(

@@ -11,7 +11,10 @@ import { Shop } from './Shop'
 import dayjs from 'dayjs'
 import { GiftVoucherRepo } from '../database/GiftVoucherRepo'
 import createLogger from 'debug'
-import { serializeMailSettings } from '../mail-settings'
+import {
+  REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
+  serializeMailSettings,
+} from '../mail-settings'
 
 const logger = createLogger('payments:gifts')
 
@@ -355,7 +358,7 @@ export class GiftShop {
                 days_until_due: 14,
               },
               metadata: {
-                'republik.payments.mail.settings': serializeMailSettings({
+                [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                   'confirm:setup': true,
                 }),
                 'republik.payments.upgrade-from': `monthly_abo:${membershipId}`,
@@ -482,7 +485,7 @@ export class GiftShop {
                 days_until_due: 14,
               },
               metadata: {
-                'republik.payments.mail.settings': serializeMailSettings({
+                [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                   'confirm:setup': true,
                 }),
                 'republik.payments.upgrade-from': `monthly:${subScriptionId}`,
@@ -544,7 +547,7 @@ export class GiftShop {
       },
       proration_behavior: 'none',
       metadata: {
-        'republik.payments.mail.settings': serializeMailSettings({
+        [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
           'notice:ended': false,
         }),
         'republik.payments.member': 'keep-on-cancel',

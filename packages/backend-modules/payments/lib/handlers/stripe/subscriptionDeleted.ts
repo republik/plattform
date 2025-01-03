@@ -4,7 +4,10 @@ import { Company } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { NoticeEndedTransactionalWorker } from '../../workers/NoticeEndedTransactionalWorker'
 import { SyncMailchimpEndedWorker } from '../../workers/SyncMailchimpEndedWorker'
-import { getMailSettings } from '../../mail-settings'
+import {
+  getMailSettings,
+  REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
+} from '../../mail-settings'
 
 export async function processSubscriptionDeleted(
   paymentService: PaymentService,
@@ -33,7 +36,7 @@ export async function processSubscriptionDeleted(
   }
 
   const mailSettings = getMailSettings(
-    event.data.object.metadata['republik.payments.mail.settings'],
+    event.data.object.metadata[REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY],
   )
 
   if (mailSettings['notice:ended']) {

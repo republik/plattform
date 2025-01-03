@@ -5,6 +5,9 @@ type MailSettingKey =
   | 'notice:ended'
 type MailSettings = Record<MailSettingKey, boolean>
 
+export const REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY =
+  'republik.payments.mail.settings'
+
 const settings: MailSettings = {
   'notice:ended': true,
   'confirm:revoke_cancellation': true,
