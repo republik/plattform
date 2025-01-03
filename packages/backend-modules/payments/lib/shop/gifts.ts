@@ -130,7 +130,6 @@ export class GiftShop {
     }
 
     const current = await this.getCurrentUserAbo(userId)
-    console.log(current?.type)
     try {
       const abo = await this.applyGift(userId, current, gift)
 
@@ -225,16 +224,10 @@ export class GiftShop {
     gift: Gift,
   ): Promise<{ company: Company }> {
     const cRepo = new CustomerRepo(this.#pgdb)
-    const paymentService = Payments.getInstance()
 
-    let customerId = (await cRepo.getCustomerIdForCompany(userId, gift.company))
-      ?.customerId
-    if (!customerId) {
-      customerId = await paymentService.createCustomer(gift.company, userId)
-    }
+    const customerId = await this.getCustomerId(cRepo, gift.company, userId)
 
     const shop = new Shop(Offers)
-
     const offer = (await shop.getOfferById(gift.offer))!
 
     const subscription = await this.#stripeAdapters[
@@ -303,14 +296,7 @@ export class GiftShop {
       }
       case 'PROJECT_R': {
         const cRepo = new CustomerRepo(this.#pgdb)
-        const paymentService = Payments.getInstance()
-
-        let customerId = (
-          await cRepo.getCustomerIdForCompany(userId, 'PROJECT_R')
-        )?.customerId
-        if (!customerId) {
-          customerId = await paymentService.createCustomer('PROJECT_R', userId)
-        }
+        const customerId = await this.getCustomerId(cRepo, 'PROJECT_R', userId)
 
         const shop = new Shop(Offers)
         const offer = (await shop.getOfferById(gift.offer))!
@@ -376,14 +362,7 @@ export class GiftShop {
     gift: Gift,
   ): Promise<{ company: Company }> {
     const cRepo = new CustomerRepo(this.#pgdb)
-    const paymentService = Payments.getInstance()
-
-    let customerId = (await cRepo.getCustomerIdForCompany(userId, gift.company))
-      ?.customerId
-    if (!customerId) {
-      customerId = await paymentService.createCustomer(gift.company, userId)
-    }
-
+    const customerId = await this.getCustomerId(cRepo, gift.company, userId)
     const endDate = await this.getMembershipEndDate(this.#pgdb, id)
 
     const shop = new Shop(Offers)
@@ -453,14 +432,8 @@ export class GiftShop {
       }
       case 'PROJECT_R': {
         const cRepo = new CustomerRepo(this.#pgdb)
-        const paymentService = Payments.getInstance()
 
-        let customerId = (
-          await cRepo.getCustomerIdForCompany(userId, 'PROJECT_R')
-        )?.customerId
-        if (!customerId) {
-          customerId = await paymentService.createCustomer('PROJECT_R', userId)
-        }
+        const customerId = await this.getCustomerId(cRepo, 'PROJECT_R', userId)
 
         const shop = new Shop(Offers)
         const offer = (await shop.getOfferById(gift.offer))!
@@ -496,6 +469,19 @@ export class GiftShop {
         return { company: 'PROJECT_R' }
       }
     }
+  }
+
+  private async getCustomerId(
+    cRepo: CustomerRepo,
+    company: Company,
+    userId: string,
+  ) {
+    let customerId = (await cRepo.getCustomerIdForCompany(userId, company))
+      ?.customerId
+    if (!customerId) {
+      customerId = await Payments.getInstance().createCustomer(company, userId)
+    }
+    return customerId
   }
 
   private async getStripeSubscriptionId(
