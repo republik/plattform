@@ -37,12 +37,10 @@ async function transform(row) {
       credentials.find((c) => c.isListed)
 
     row.resolved.user = {
-      facebookId: user.facebookId,
       firstName: user.firstName,
       lastName: user.lastName,
       name: [user.firstName, user.lastName].join(' ').trim(),
       credential: credential?.description || undefined,
-      twitterHandle: user.twitterHandle,
       username: user.username,
     }
   }
@@ -69,8 +67,6 @@ const getDefaultResource = async ({ pgdb }) => {
               'firstName',
               'lastName',
               'username',
-              'twitterHandle',
-              'facebookId',
             ],
           },
         )

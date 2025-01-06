@@ -20,6 +20,7 @@ export const runMetaFromQuery = (code, query) => {
     fn = new Function('query', code)
     return fn(query)
   } catch (e) {
+    /* eslint-disable-next-line */
     typeof console !== 'undefined' &&
       console.warn &&
       console.warn('meta.fromQuery exploded', e)
@@ -31,13 +32,7 @@ const mapContributor = ({ user, name }) => ({
   '@type': 'Person',
   name,
   url: user?.username ? `${PUBLIC_BASE_URL}/~${user.username}` : undefined,
-  sameAs: user
-    ? [
-        user.publicUrl,
-        user.twitterHandle && `https://twitter.com/${user.twitterHandle}`,
-        user.facebookId && `https://www.facebook.com/${user.facebookId}`,
-      ].filter(Boolean)
-    : undefined,
+  sameAs: user?.profileUrls?.length ? user.profileUrls : undefined,
 })
 
 const getJSONLDs = (meta) => {
