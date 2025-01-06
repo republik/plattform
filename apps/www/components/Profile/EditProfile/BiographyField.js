@@ -1,4 +1,5 @@
 import { Field } from '@project-r/styleguide'
+import AutosizeInput from 'react-textarea-autosize'
 
 export default function Biographyfield({ values, dirty, errors, onChange, t }) {
   return (
@@ -7,6 +8,9 @@ export default function Biographyfield({ values, dirty, errors, onChange, t }) {
       label={t('profile/biography/label')}
       dirty={dirty.biography}
       error={errors.biography}
+      renderInput={({ ref, ...inputProps }) => (
+        <AutosizeInput {...inputProps} ref={ref} />
+      )}
       onChange={(_, value, shouldValidate) => {
         onChange({
           values: {
