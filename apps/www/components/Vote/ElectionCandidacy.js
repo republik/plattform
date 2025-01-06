@@ -2,7 +2,6 @@ import { Component, Fragment } from 'react'
 import { withRouter } from 'next/router'
 import ErrorMessage from '../ErrorMessage'
 import voteT from './voteT'
-import { isURL } from 'validator'
 
 import {
   A,
@@ -37,7 +36,6 @@ const birthdayFormat = '%d.%m.%Y'
 const birthdayParse = swissTime.parse(birthdayFormat)
 
 const DEFAULT_COUNTRY = COUNTRIES[0]
-const PUBLIC_URL_PREFIX = 'https://'
 
 const addressFields = (t) => [
   {
@@ -124,23 +122,6 @@ const fields = (t, vt) => [
     validator: (value) =>
       !!value && value.trim().length >= 140 && t('profile/statement/tooLong'),
   },
-  {
-    label: t('profile/contact/facebook/label'),
-    name: 'facebookId',
-  },
-  {
-    label: t('profile/contact/twitter/label'),
-    name: 'twitterHandle',
-  },
-  {
-    label: t('profile/contact/publicUrl/label'),
-    name: 'publicUrl',
-    validator: (value) =>
-      !!value &&
-      !isURL(value, { require_protocol: true, protocols: ['http', 'https'] }) &&
-      value !== PUBLIC_URL_PREFIX &&
-      t('profile/contact/publicUrl/error'),
-  },
 ]
 
 const styles = {
@@ -208,10 +189,6 @@ class ElectionCandidacy extends Component {
           city: values.city,
           country: values.country,
         },
-        publicUrl:
-          values.publicUrl === PUBLIC_URL_PREFIX ? '' : values.publicUrl,
-        twitterHandle: values.twitterHandle,
-        facebookId: values.facebookId,
       })
         .then(() => {
           return new Promise((resolve) => setTimeout(resolve, 200)) // insert delay to slow down UI
@@ -265,9 +242,6 @@ class ElectionCandidacy extends Component {
       gender,
       biography,
       biographyContent,
-      publicUrl,
-      twitterHandle,
-      facebookId,
     } = data.me || {}
     const {
       line1,
@@ -291,9 +265,6 @@ class ElectionCandidacy extends Component {
         statement,
         birthday,
         disclosures,
-        publicUrl: publicUrl || PUBLIC_URL_PREFIX,
-        twitterHandle,
-        facebookId,
         line1,
         line2,
         city,
@@ -368,9 +339,6 @@ class ElectionCandidacy extends Component {
             biography,
             biographyContent,
             gender,
-            publicUrl,
-            twitterHandle,
-            facebookId,
           } = values
           const parsedBirthday = birthdayParse(birthday)
 
@@ -387,9 +355,6 @@ class ElectionCandidacy extends Component {
               biography,
               biographyContent,
               gender,
-              publicUrl,
-              twitterHandle,
-              facebookId,
             },
             city,
             yearOfBirth: parsedBirthday
@@ -596,9 +561,6 @@ const updateCandidacy = gql`
     $credential: String!
     $gender: String
     $biography: String
-    $publicUrl: String
-    $twitterHandle: String
-    $facebookId: String
   ) {
     updateMe(
       birthday: $birthday
@@ -609,9 +571,6 @@ const updateCandidacy = gql`
       username: $username
       gender: $gender
       biography: $biography
-      publicUrl: $publicUrl
-      twitterHandle: $twitterHandle
-      facebookId: $facebookId
       hasPublicProfile: true
     ) {
       id
@@ -636,9 +595,6 @@ const updateCandidacy = gql`
       gender
       biography
       biographyContent
-      publicUrl
-      twitterHandle
-      facebookId
     }
     submitCandidacy(slug: $slug, credential: $credential) {
       id
@@ -710,9 +666,6 @@ const query = gql`
         isListed
         description
       }
-      publicUrl
-      twitterHandle
-      facebookId
     }
   }
 `

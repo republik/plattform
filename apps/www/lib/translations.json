@@ -1334,11 +1334,7 @@
       "value": "Twitter"
     },
     {
-      "key": "profile/contact/publicUrl/label",
-      "value": "Webseite"
-    },
-    {
-      "key": "profile/contact/publicUrl/error",
+      "key": "profile/url/error",
       "value": "Webseite ungültig"
     },
     {
@@ -2479,7 +2475,7 @@
     },
     {
       "key": "package/ABO_GIVE_MONTHS/description",
-      "value": "Das Geschenk-Abo können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Wenn Sie bis zum 19. Dezember bestellen, erhalten Sie rechtzeitig vor Weihnachten die physische Geschenkkarte sowie das Republik-Taschenbuch nach Hause zugeschickt."
+      "value": "Das Geschenk-Abo können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu. Postbestellungen werden innerhalb von 7 Tagen versendet"
     },
     {
       "key": "package/YEARLY_ABO/price",
@@ -6862,7 +6858,7 @@
     },
     {
       "key": "Goodie/description/LIBRARYBOOK",
-      "value": "Ein zufällig ausgewähltes Exemplar aus aus der neuen Republik-Bibliothek-Sonderedition."
+      "value": "Ein zufällig ausgewähltes Exemplar aus der neuen Republik-Bibliothek-Sonderedition."
     },
     {
       "key": "Goodie/label/TOTEBAG",
@@ -7230,7 +7226,7 @@
     },
     {
       "key": "package/ABO_GIVE/description",
-      "value": "Die Geschenkmitgliedschaft können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Wenn Sie bis zum 19. Dezember bestellen, erhalten Sie rechtzeitig vor Weihnachten die physische Geschenkkarte sowie das Republik-Taschenbuch nach Hause zugeschickt."
+      "value": "Die Geschenkmitgliedschaft können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu. Postbestellungen werden innerhalb von 7 Tagen versendet"
     },
     {
       "key": "package/customize/price/payMore/threemonth",

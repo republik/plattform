@@ -74,7 +74,6 @@ const EditProfile = ({ data: { user } }) => {
     showErrors: false,
     values: {
       ...user,
-      publicUrl: user.publicUrl || 'https://',
       credential: credential && credential.description,
       portrait: undefined,
     },
