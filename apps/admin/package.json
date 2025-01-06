@@ -15,7 +15,6 @@
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "eslint --fix .",
     "gql:types": "graphql-codegen --config graphql/configs/codegen-dev.ts",
-    "gql:schema": "graphql-codegen --config graphql/configs/codegen-schema.ts",
     "zat:setup": "docker compose build",
     "zat:dev": "docker compose up zat-server",
     "zat:package": "docker compose run --rm zat-package"

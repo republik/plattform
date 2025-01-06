@@ -175,7 +175,7 @@ const data = [
   },
   {
     Kategorie: 'Geldgeber',
-    Aktionärin: 'Sebastian C. Schröder',
+    Aktionärin: 'Ursula Klar',
     Typ: 'B',
     'Nominal CHF': '0.40',
     Anzahl: '2223',

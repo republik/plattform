@@ -16,8 +16,10 @@ const CALL_TO_ACTIONS_QUERY = gql`
             text
             linkHref
             linkLabel
+            backgroundColor
+            textColor
+            illustration
           }
-
           ... on CallToActionComponentPayload {
             customComponent {
               key

@@ -5,11 +5,13 @@ import { css, merge } from 'glamor'
 
 import { TESTIMONIAL_IMAGE_SIZE } from '../../constants'
 import ErrorMessage from '../../ErrorMessage'
-import Portrait from '../../Profile/Portrait'
-import Statement from '../../Profile/Statement'
-import { ListedCheckbox, PublicCheckbox } from '../../Profile/Settings'
-import { mutation } from '../../Profile/Edit'
-import UsernameField from '../../Profile/UsernameField'
+import { updateMe } from '../../Profile/graphql/updatedMe'
+import Portrait from '../../Profile/EditProfile/Portrait'
+import {
+  ListedCheckbox,
+  PublicSelection,
+} from '../../Profile/EditProfile/PrivacySettings'
+import UsernameField from '../../Profile/EditProfile/UsernameField'
 import Section from '../Section'
 import withT from '../../../lib/withT'
 
@@ -143,51 +145,49 @@ class Profile extends Component {
           />
         </div>
         <div {...styles.field}>
-          <Statement
-            user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
+          <FieldSet
             values={mergedValues}
             errors={errors}
             dirty={dirty}
+            onChange={this.onChange}
+            fields={[
+              {
+                label: t('profile/statement/label'),
+                name: 'statement',
+                autoSize: true,
+                validator: (value) =>
+                  value.trim().length >= 140 && t('profile/statement/tooLong'),
+              },
+            ]}
           />
         </div>
         <div {...styles.field}>
           <UsernameField
             user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
             values={mergedValues}
             errors={errors}
-            dirty={dirty}
+            onChange={this.onChange}
+            t={t}
           />
         </div>
         <div {...styles.checkbox}>
           <ListedCheckbox
             user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
             values={mergedValues}
-            errors={errors}
-            dirty={dirty}
+            onChange={this.onChange}
+            t={t}
           />
         </div>
         <div {...styles.checkbox}>
-          <PublicCheckbox
+          <PublicSelection
             user={user}
-            isEditing
-            isMe
-            onChange={this.onChange}
             values={mergedValues}
-            errors={errors}
-            dirty={dirty}
+            onChange={this.onChange}
+            t={t}
           />
         </div>
         <Mutation
-          mutation={mutation}
+          mutation={updateMe}
           variables={values}
           onCompleted={this.onCompleted}
         >

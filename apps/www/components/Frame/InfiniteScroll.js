@@ -19,6 +19,7 @@ const InfiniteScroll = ({
   loadMore,
   totalCount,
   currentCount,
+  customStyles,
   loadMoreStyles,
   loadMoreKey,
   children,
@@ -33,7 +34,9 @@ const InfiniteScroll = ({
 
   return (
     <>
-      <div ref={containerRef}>{children}</div>
+      <div {...customStyles} ref={containerRef}>
+        {children}
+      </div>
       <div {...merge(styles.more, loadMoreStyles)}>
         {loadingMoreError && <ErrorMessage error={loadingMoreError} />}
         {loadingMore && <Spinner />}
@@ -41,6 +44,7 @@ const InfiniteScroll = ({
           <A
             href='#'
             onClick={(event) => {
+              // eslint-disable-next-line
               event && event.preventDefault()
               setInfiniteScroll(true)
             }}

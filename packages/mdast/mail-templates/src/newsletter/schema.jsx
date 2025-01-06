@@ -24,6 +24,7 @@ import {
 } from '../shared/util/matchers'
 import ifRule from '../shared/rules/ifRule'
 import elseRule from '../shared/rules/elseRule'
+import datawrapperRule, { edgeToEdgeDatawrapperRule } from "../shared/rules/datawrapperRule";
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
@@ -53,53 +54,23 @@ const createNewsletterSchema = ({
     {
       matchMdast: matchType('break'),
       component: Br,
-      isVoid: true,
     },
     {
       matchMdast: matchType('sub'),
       component: Sub,
-      editorModule: 'mark',
-      editorOptions: {
-        type: 'sub',
-      },
     },
     {
       matchMdast: matchType('sup'),
       component: Sup,
-      editorModule: 'mark',
-      editorOptions: {
-        type: 'sup',
-      },
     },
     {
       matchMdast: matchSpanType('MEMO'),
       component: Memo,
-      editorModule: 'memo',
-      editorOptions: {
-        type: 'MEMO',
-      },
     },
     {
       matchMdast: (node) => matchSpan(node) && node.data?.variable,
       props: (node) => node.data,
       component: Variable,
-      editorModule: 'variable',
-      editorOptions: {
-        insertVar: true,
-        insertTypes: ['PARAGRAPH'],
-        fields: [
-          {
-            key: 'variable',
-            items: [
-              { value: 'firstName', text: 'Vorname' },
-              { value: 'lastName', text: 'Nachname' },
-            ],
-          },
-          {
-            key: 'fallback',
-          },
-        ],
-      },
     },
   ]
 
@@ -110,18 +81,12 @@ const createNewsletterSchema = ({
       title: node.title,
       href: node.url,
     }),
-    editorModule: 'link',
   }
 
   const createParagraphRule = (customComponent) => {
     return {
       matchMdast: matchParagraph,
       component: customComponent || Paragraph,
-      editorModule: 'paragraph',
-      editorOptions: {
-        formatButtonText: 'Paragraph',
-        type: customComponent ? 'LISTP' : undefined,
-      },
       rules: [
         ...globalInlines,
         link,
@@ -130,22 +95,12 @@ const createNewsletterSchema = ({
           component: ({ attributes, children }) => (
             <strong {...attributes}>{children}</strong>
           ),
-          editorModule: 'mark',
-          editorOptions: {
-            type: 'STRONG',
-            mdastType: 'strong',
-          },
         },
         {
           matchMdast: matchType('emphasis'),
           component: ({ attributes, children }) => (
             <em {...attributes}>{children}</em>
           ),
-          editorModule: 'mark',
-          editorOptions: {
-            type: 'EMPHASIS',
-            mdastType: 'emphasis',
-          },
         },
       ],
     }
@@ -157,22 +112,10 @@ const createNewsletterSchema = ({
   const figureCaption = {
     matchMdast: matchParagraph,
     component: Caption,
-    editorModule: 'figureCaption',
-    editorOptions: {
-      isStatic: true,
-      afterType: 'PARAGRAPH',
-      insertAfterType: 'CENTER',
-      placeholder: 'Legende',
-    },
     rules: [
       {
         matchMdast: matchType('emphasis'),
         component: Byline,
-        editorModule: 'paragraph',
-        editorOptions: {
-          type: 'BYLINE',
-          placeholder: 'Credit',
-        },
       },
       link,
       ...globalInlines,
@@ -182,14 +125,6 @@ const createNewsletterSchema = ({
   const figure = {
     matchMdast: matchFigure,
     component: Figure,
-    editorModule: 'figure',
-    editorOptions: {
-      pixelNote: 'Auflösung: min. 1200x (proportionaler Schnitt)',
-      insertButtonText: 'Bild',
-      insertTypes: ['PARAGRAPH'],
-      type: 'CENTERFIGURE',
-      plainOption: true,
-    },
     props: (node) => {
       return node.data
     },
@@ -208,8 +143,6 @@ const createNewsletterSchema = ({
             plain,
           }
         },
-        editorModule: 'figureImage',
-        isVoid: true,
       },
       figureCaption,
     ],
@@ -220,12 +153,6 @@ const createNewsletterSchema = ({
       return matchFigure(node) && index === 0
     },
     component: Cover,
-    editorModule: 'figure',
-    editorOptions: {
-      type: 'COVERFIGURE',
-      afterType: 'PARAGRAPH',
-      pixelNote: 'Auflösung: min. 2000x (proportionaler Schnitt)',
-    },
     rules: [
       {
         matchMdast: matchImagesParagraph,
@@ -245,11 +172,6 @@ const createNewsletterSchema = ({
             alt: node.children[0].alt,
           }
         },
-        editorModule: 'figureImage',
-        editorOptions: {
-          type: 'COVERFIGUREIMAGE',
-        },
-        isVoid: true,
       },
       figureCaption,
     ],
@@ -263,7 +185,6 @@ const createNewsletterSchema = ({
       {
         matchMdast: matchType('root'),
         component: Container,
-        editorModule: 'documentPlain',
         props: (node) => ({
           meta: node.meta || {},
           variableContext,
@@ -271,35 +192,18 @@ const createNewsletterSchema = ({
         rules: [
           {
             matchMdast: () => false,
-            editorModule: 'meta',
-            editorOptions: {
-              customFields: [
-                {
-                  label: 'Format',
-                  key: 'format',
-                  ref: 'repo',
-                },
-              ],
-              additionalFields: ['emailSubject'],
-            },
           },
           cover,
           {
             matchMdast: matchZone('CENTER'),
             component: Center,
-            editorModule: 'center',
             rules: [
               paragraph,
               figure,
+              datawrapperRule,
               {
                 matchMdast: matchHeading(2),
                 component: H2,
-                editorModule: 'headline',
-                editorOptions: {
-                  type: 'h2',
-                  depth: 2,
-                  formatButtonText: 'Zwischentitel',
-                },
               },
               ifRule,
               elseRule,
@@ -327,37 +231,22 @@ const createNewsletterSchema = ({
                     },
                   ],
                 }),
-                editorModule: 'button',
               },
               {
                 matchMdast: matchZone('QUOTE'),
                 component: Blockquote,
-                editorModule: 'quote',
-                editorOptions: {
-                  insertButtonText: 'Zitat',
-                },
                 rules: [
                   {
                     matchMdast: (node, index, parent) =>
                       matchParagraph(node) &&
                       (index === 0 || !matchLast(node, index, parent)),
                     component: BlockquoteText,
-                    editorModule: 'paragraph',
-                    editorOptions: {
-                      type: 'QUOTEP',
-                      placeholder: 'Zitat',
-                    },
                     rules: [paragraph],
                   },
                   {
                     matchMdast: (node, index, parent) =>
                       matchParagraph(node) && matchLast(node, index, parent),
                     component: BlockquoteSource,
-                    editorModule: 'paragraph',
-                    editorOptions: {
-                      type: 'QUOTECITE',
-                      placeholder: 'Quellenangabe / Autor',
-                    },
                     rules: [paragraph],
                   },
                 ],
@@ -371,12 +260,10 @@ const createNewsletterSchema = ({
                     start: node.start,
                   },
                 }),
-                editorModule: 'list',
                 rules: [
                   {
                     matchMdast: matchType('listItem'),
                     component: ListItem,
-                    editorModule: 'listItem',
                     rules: [listParagraph],
                   },
                 ],
@@ -384,18 +271,11 @@ const createNewsletterSchema = ({
               {
                 matchMdast: matchType('thematicBreak'),
                 component: HR,
-                editorModule: 'line',
-                editorOptions: {
-                  insertButtonText: 'Trennlinie',
-                  insertTypes: ['PARAGRAPH'],
-                },
-                isVoid: true,
               },
             ],
           },
           {
             matchMdast: () => false,
-            editorModule: 'specialchars',
           },
         ],
       },

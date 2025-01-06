@@ -140,6 +140,11 @@ const createBase = ({ metaBody, metaHeadlines, Link = DefaultLink }) => {
 
   const paragraph = {
     matchMdast: matchParagraph,
+    props: (node, index, parent) => {
+      return {
+        noMarginTop: matchZone('INTERVIEWANSWER')(parent),
+      }
+    },
     component: Typography.P,
     editorModule: 'paragraph',
     editorOptions: {
