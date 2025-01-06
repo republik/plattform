@@ -82,9 +82,7 @@ export const getDocument = gql`
             id
             username
             slug
-            publicUrl
-            twitterHandle
-            facebookId
+            profileUrls
           }
         }
         format {

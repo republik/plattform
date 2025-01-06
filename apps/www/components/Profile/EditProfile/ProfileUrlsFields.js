@@ -21,13 +21,13 @@ const styles = {
   }),
 }
 
-const ProfileUrlFields = ({ onChange, values, errors, dirty }) => {
+const ProfileUrlFields = ({ onChange, values, errors }) => {
   const [profileUrl1, setProfileUrl1] = useState(values.profileUrls?.[0] ?? '')
   const [profileUrl2, setProfileUrl2] = useState(values.profileUrls?.[1] ?? '')
   const [profileUrl3, setProfileUrl3] = useState(values.profileUrls?.[2] ?? '')
 
   const validator = (value) =>
-    !!value && !isHTTPUrl(value) && t('profile/contact/publicUrl/error')
+    !!value && !isHTTPUrl(value) && t('profile/url/error')
 
   useEffect(() => {
     onChange({

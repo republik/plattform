@@ -5,16 +5,7 @@ import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import PropTypes from 'prop-types'
-import {
-  InlineSpinner,
-  Button,
-  useColorContext,
-  A,
-} from '@project-r/styleguide'
-
-const DEFAULT_VALUES = {
-  publicUrl: 'https://',
-}
+import { InlineSpinner, Button, useColorContext } from '@project-r/styleguide'
 
 import { updateMe } from '../graphql/updatedMe'
 import withT from '../../../lib/withT'
@@ -98,10 +89,6 @@ const Submit = ({ me, user, t, state, setState, update }) => {
                   ? 'https://' + url
                   : url
               }),
-              publicUrl:
-                state.values.publicUrl === DEFAULT_VALUES.publicUrl
-                  ? ''
-                  : state.values.publicUrl,
             }).then((maybeError) => {
               if (maybeError) return
               router.push(`/~${user.slug}`)

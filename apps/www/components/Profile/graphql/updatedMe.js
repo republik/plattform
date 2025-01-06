@@ -4,11 +4,8 @@ export const updateMe = gql`
   mutation updateMe(
     $username: String
     $hasPublicProfile: Boolean
-    $facebookId: String
-    $twitterHandle: String
     $profileUrls: JSON
     $emailAccessRole: AccessRole
-    $publicUrl: String
     $biography: String
     $statement: String
     $portrait: String
@@ -22,11 +19,8 @@ export const updateMe = gql`
     updateMe(
       username: $username
       hasPublicProfile: $hasPublicProfile
-      facebookId: $facebookId
-      twitterHandle: $twitterHandle
       profileUrls: $profileUrls
       emailAccessRole: $emailAccessRole
-      publicUrl: $publicUrl
       biography: $biography
       statement: $statement
       portrait: $portrait
@@ -40,11 +34,8 @@ export const updateMe = gql`
       id
       username
       hasPublicProfile
-      facebookId
-      twitterHandle
       profileUrls
       emailAccessRole
-      publicUrl
       biography
       biographyContent
       statement
