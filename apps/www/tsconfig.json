@@ -17,7 +17,7 @@
         "./graphql/*"
       ]
     },
-    "jsx": "react"
+    "jsx": "preserve"
   },
   "include": [
     "next-env.d.ts",

@@ -103,7 +103,7 @@ const Questionnaire = (props) => {
   })
 
   const onSubmitSuccess = () => {
-    onQuestionnaireChange && onQuestionnaireChange()
+    if (onQuestionnaireChange) { onQuestionnaireChange() }
     return setState({
       updating: false,
     })

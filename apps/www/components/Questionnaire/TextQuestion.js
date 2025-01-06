@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid'
 import { Interaction } from '@project-r/styleguide'
 import TextInput from './TextInput/TextInput'
 import withT from '../../lib/withT'
-const { H2, P } = Interaction
+const { P } = Interaction
 
 class TextQuestion extends Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class TextQuestion extends Component {
     const { value } = this.state
     return (
       <div>
-        {text && <H2 {...questionStyles.label}>{text}</H2>}
+        {text && <P {...questionStyles.label}>{text}</P>}
         {explanation && <P {...questionStyles.help}>{explanation}</P>}
         <TextInput
           label={t('questionnaire/text/label')}

@@ -1,4 +1,4 @@
-import { scaleOrdinal } from 'd3-scale0'
+import { scaleOrdinal } from 'd3-scale'
 
 export const replaceText = (text, { name, answerText, questionText }) => {
   return (

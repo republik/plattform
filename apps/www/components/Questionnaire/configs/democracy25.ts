@@ -4,21 +4,30 @@ import { QuestionnaireConfig } from '../types/QuestionnaireConfig'
 //  (although it feels easier/cleaner in the editor, since our
 //  questionnaires require a bit of handiwork anyway)
 const democracyConfig: QuestionnaireConfig = {
-  dbSlug: 'klima-fragebogen-v2',
+  dbSlug: 'democracy-25',
   questionsStruct: [
-    { ids: [0] },
-    { ids: [1], valueLength: { min: 5, max: 200 } },
-    { ids: [2], valueLength: { min: 5, max: 150 } },
-    { ids: [3], valueLength: { min: 5, max: 50 } },
-    { ids: [4], valueLength: { min: 50, max: 150 } },
-    { ids: [5], valueLength: { min: 80, max: 200 } },
-    { ids: [6], valueLength: { min: 5, max: 100 } },
-    { ids: [7], valueLength: { min: 5, max: 200 } },
-    { ids: [8], valueLength: { min: 5, max: 50 } },
+    { ids: [0, 1] },
+    { ids: [3] },
+    { ids: [4] },
+    { ids: [5] },
+    { ids: [6,7], valueLength: { min: 5 }, hint: 'Tippen Sie eine Antwort an, um den ganzen Fragebogen dieser Person zu sehen.', },
+    { ids: [8,9], valueLength: { min: 5 } },
+    { ids: [10] },
+    { ids: [11] },
+    { ids: [12], valueLength: { min: 5 } },
+    { ids: [13] },
+    { ids: [14, 15], valueLength: { min: 5 } },
+    { ids: [16] },
+    { ids: [17] },
+    { ids: [18] },
+    { ids: [19] },
+    { ids: [20] },
+    { ids: [21], valueLength: { min: 5 } },
+    { ids: [22], valueLength: { min: 5 } }
   ],
   paths: {
     overviewPage: '/2023/11/07/so-blicken-sie-auf-die-klimakrise',
-    personPage: 'fragebogen-klimakrise',
+    personPage: 'fragebogen-klimakrise', // TODO: generate 'fragebogen/demokratie'
     formPage: '/2023/11/07/wie-blicken-sie-zurzeit-auf-die-klimakrise'
   },
   overviewPage: {
