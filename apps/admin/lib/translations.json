@@ -1039,22 +1039,6 @@
       "value": "Funktionen aus den Diskussionen:"
     },
     {
-      "key": "profile/contact/facebook/label",
-      "value": "Facebook"
-    },
-    {
-      "key": "profile/contact/twitter/label",
-      "value": "Twitter"
-    },
-    {
-      "key": "profile/contact/publicUrl/label",
-      "value": "Webseite"
-    },
-    {
-      "key": "profile/contact/publicUrl/error",
-      "value": "Webseite, ungültig"
-    },
-    {
       "key": "Account/ProfileForm/isEmailPublic/label",
       "value": "E-Mail im Profil anzeigen"
     },
@@ -1261,22 +1245,6 @@
     {
       "key": "api/testimonial/mail/subject",
       "value": "Vielen Dank für das Testimonial"
-    },
-    {
-      "key": "badge/crowdfunder",
-      "value": "Crowdfunder"
-    },
-    {
-      "key": "badge/patron",
-      "value": "Gönner"
-    },
-    {
-      "key": "badge/staff",
-      "value": "Fester Autor der Republik"
-    },
-    {
-      "key": "badge/freelancer",
-      "value": "Freier Autor der Republik"
     },
     {
       "key": "header/title",

@@ -17,7 +17,6 @@ import Community from './Community'
 import SectionContainer from './Common/SectionContainer'
 import ChallengeAcceptedMarketingTeaser from '../ChallengeAccepted/ChallengeAcceptedMarketingTeaser'
 import { useMe } from '../../lib/context/MeContext'
-import GiftCallToAction from './Common/GiftCallToAction'
 // CAMPAIGN MODE
 // import { TrialPaynote } from '@app/app/(campaign)/components/trial-paynote'
 
@@ -27,7 +26,6 @@ const Marketing = ({ data }) => {
 
   return (
     <>
-      <GiftCallToAction />
       {me && !meLoading && !hasActiveMembership && !inNativeIOSApp && (
         <div
           style={{
