@@ -3,7 +3,7 @@ import questionStyles from './questionStyles'
 import debounce from 'lodash/debounce'
 import { v4 as uuid } from 'uuid'
 
-import { Interaction } from '@project-r/styleguide'
+import { Interaction, Editorial } from '@project-r/styleguide'
 import TextInput from './TextInput/TextInput'
 import withT from '../../lib/withT'
 const { P } = Interaction
@@ -54,7 +54,7 @@ class TextQuestion extends Component {
     const beforeP = metadata && metadata.beforeP
     return (
       <div>
-        {beforeP && <P style={{ marginTop: 50, marginBottom: 0 }}>{beforeP}</P>}
+        {beforeP && <Editorial.P style={{ marginTop: 50, marginBottom: 0 }}>{beforeP}</Editorial.P>}
         {text && <P {...questionStyles.label}><b>{order + 1}. {text}</b></P>}
         {explanation && <P {...questionStyles.help}>{explanation}</P>}
         <TextInput
