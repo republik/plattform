@@ -88,18 +88,16 @@ const SubmissionsOverview = ({
       ? query.share.split(QUESTION_SEPARATOR)
       : undefined
   const CONFIG: QuestionnaireConfig = configs[configKey]
-  const questionColor = useMemo(
-    () => getOrdinalColors(CONFIG.design.colors),
-    [CONFIG],
-  )
+  const questionColor = getOrdinalColors(CONFIG.design.colors)
   // we moved all share props which are unrelated to Publikator to the config file
   const shareData = {
     title: '{questionText}',
     description: t('questionnaire/submissions/shareText'),
     ...share,
   }
+  console.log({ configKey, CONFIG })
 
-  return (
+  return CONFIG ? (
     <>
       <ColorContextProvider colorSchemeKey='light'>
         {questionIds ? (
@@ -132,7 +130,7 @@ const SubmissionsOverview = ({
         </Center>
       )}
     </>
-  )
+  ) : null
 }
 
 export default SubmissionsOverview

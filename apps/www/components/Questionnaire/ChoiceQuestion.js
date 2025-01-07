@@ -93,7 +93,7 @@ class ChoiceQuestion extends Component {
 
     return (
       <div>
-        {beforeP && <Editorial.P style={{ marginTop:  50, marginBottom: 0 }}>{beforeP}</Editorial.P>}
+        {beforeP && <Editorial.Subhead>{beforeP}</Editorial.Subhead>}
         <div {...questionStyles.label}>
           {text && <P><b>{order + 1}. {text}</b></P>}
           {(multipleAllowed || explanation) && (

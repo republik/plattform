@@ -54,7 +54,7 @@ class TextQuestion extends Component {
     const beforeP = metadata && metadata.beforeP
     return (
       <div>
-        {beforeP && <Editorial.P style={{ marginTop: 50, marginBottom: 0 }}>{beforeP}</Editorial.P>}
+        {beforeP && <Editorial.Subhead>{beforeP}</Editorial.Subhead>}
         {text && <P {...questionStyles.label}><b>{order + 1}. {text}</b></P>}
         {explanation && <P {...questionStyles.help}>{explanation}</P>}
         <TextInput

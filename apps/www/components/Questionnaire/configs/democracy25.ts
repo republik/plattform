@@ -26,16 +26,16 @@ const democracyConfig: QuestionnaireConfig = {
     { ids: [22], valueLength: { min: 5 } }
   ],
   paths: {
-    overviewPage: '/2023/11/07/so-blicken-sie-auf-die-klimakrise',
+    overviewPage: '/2025/01/07/22-fragen-zur-demokratie-ihr-votum',
     formPage: '/2025/01/06/stellen-sie-sich-vor-22-fragen-zur-demokratie',
-    personPage: 'fragebogen/demokratie',
+    personPage: 'fragebogen/demokratie-25',
   },
   personPage: {
     title: 'Euer Votum über Demokratie'
   },
   design: {
-    bgColor: '#EBEA2B',
-    colors: ['#EBEA2B', '#E595D9', '#5AC5E1', '#FF9273', '#6CC485'],
+    bgColor: '#feeafa',
+    colors: ['#feeafa', '#dee2ff'],
     img: {
       url: 'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-klimafragebogen-uebersicht/files/034a0eca-8aaf-4511-90aa-504cca584981/final-art_questionnaire.png',
       urlSquare: 'https://cdn.repub.ch/s3/republik-assets/repos/republik/article-klimafragebogen-version-2-uebersichtsseite/images/df9fec323575229d1578831affe5c79c02275cd3.png?resize=800x',
