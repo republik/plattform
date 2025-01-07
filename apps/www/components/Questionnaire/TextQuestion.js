@@ -47,13 +47,15 @@ class TextQuestion extends Component {
 
   render() {
     const {
-      question: { text, explanation, maxLength },
+      question: { text, explanation, maxLength, order, metadata },
       t,
     } = this.props
     const { value } = this.state
+    const beforeP = metadata && metadata.beforeP
     return (
       <div>
-        {text && <P {...questionStyles.label}>{text}</P>}
+        {beforeP && <P style={{ marginTop: 50, marginBottom: 0 }}>{beforeP}</P>}
+        {text && <P {...questionStyles.label}><b>{order + 1}. {text}</b></P>}
         {explanation && <P {...questionStyles.help}>{explanation}</P>}
         <TextInput
           label={t('questionnaire/text/label')}

@@ -10,6 +10,7 @@ import {
   useHeaderHeight,
   FieldSet,
   useColorContext,
+  colors,
 } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
@@ -46,7 +47,7 @@ const styles = {
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     display: 'flex',
-    minHeight: 55,
+    minHeight: 55
   }),
   progressIcon: css({
     marginLeft: 5,
@@ -363,7 +364,7 @@ const Questionnaire = (props) => {
                 ) : (
                   <>
                     <P>
-                      <strong>
+                      <strong {...colorScheme.set('color', 'textSoft')}>
                         {t('questionnaire/header', {
                           questionCount,
                           userAnswerCount,
