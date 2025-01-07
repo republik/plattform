@@ -131,7 +131,7 @@ export const AnswersChart = ({ question, skipTitle }) => {
 
   return (
     <NarrowContainer>
-      <div style={{ marginTop: 20 }}>
+      <div style={{ marginTop: 20, marginBottom: 40 }}>
         {!skipTitle && (
           <Editorial.Subhead style={{ textAlign: 'center' }}>
             {question.text}

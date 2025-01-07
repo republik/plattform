@@ -93,9 +93,9 @@ const SubmissionsOverview = ({
   const shareData = {
     title: '{questionText}',
     description: t('questionnaire/submissions/shareText'),
+    img: CONFIG.design.img.urlSquare,
     ...share,
   }
-  console.log({ configKey, CONFIG })
 
   return CONFIG ? (
     <>
