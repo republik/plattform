@@ -24,28 +24,28 @@ import { useMe } from '../../../lib/context/MeContext'
 import Frame from '../../Frame'
 import Meta from '../../Frame/Meta'
 
-import { QUESTIONNAIRE_USER_QUERY, QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY } from './graphql'
+import {
+  QUESTIONNAIRE_USER_QUERY,
+  QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
+} from './graphql'
 import { LinkToEditQuestionnaire } from './QuestionFeatured'
 import { ShareImageSplit } from './ShareImageSplit'
 import PersonViewHeaderShare from './PersonViewHeaderShare'
-import {
-  SubmissionQa,
-  styles as submissionStyles,
-} from './Submission'
-import { QuestionnaireConfig } from '../types/QuestionnaireConfig'
+import { SubmissionQa, styles as submissionStyles } from './Submission'
+import { configs } from '../configs'
+import { t, useTranslation } from 'lib/withT'
 
-type PageProps = {
-  CONFIG: QuestionnaireConfig
-}
-
-const Page = ({ CONFIG }: PageProps) => {
+const Page = () => {
   const [headerHeight] = useHeaderHeight()
   const [colorScheme] = useColorContext()
+  const { t } = useTranslation()
 
   const router = useRouter()
   const {
-    query: { id, image },
+    query: { slug: configId, id, image },
   } = router
+
+  const CONFIG = configs[configId as string]
 
   const { me } = useMe()
 
@@ -77,13 +77,27 @@ const Page = ({ CONFIG }: PageProps) => {
     },
   })
 
+  const meta = {
+    url,
+    title: CONFIG.personPage.title,
+    description: t('questionnaire/submission/description').replace(
+      '{name}',
+      author?.name,
+    ),
+    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
+      shareImageUrl,
+    )}`,
+  }
+
   if (image) {
     return (
       <ShareImageSplit
-        user={!loading && author}
+        user={{}}
         img={CONFIG.design.img.urlSquare}
         bgColor={CONFIG.design.bgColor}
-        personShareText={CONFIG.personPage.shareText}
+        personShareText={`${meta.title}: ${meta.description}`}
+        question={undefined}
+        fgColor={undefined}
       />
     )
   }
@@ -110,18 +124,6 @@ const Page = ({ CONFIG }: PageProps) => {
               router.replace({ pathname: CONFIG.paths.overviewPage })
             }
             return null
-          }
-
-          const meta = {
-            url,
-            title: CONFIG.personPage.metaTitle,
-            description: CONFIG.personPage.metaDescription.replace(
-              '{name}',
-              author?.name,
-            ),
-            image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-              shareImageUrl,
-            )}`,
           }
 
           // noinspection TypeScriptUnresolvedVariable
@@ -151,19 +153,28 @@ const Page = ({ CONFIG }: PageProps) => {
                       </FigureCaption>
                     </Figure>
                     <NarrowContainer style={{ padding: '20px 0' }}>
-                      <Interaction.Headline>
-                        {CONFIG.personPage.title.replace('{name}', author?.name)}
-                      </Interaction.Headline>
-                      {author?.profilePicture && (
-                        <img
-                          src={author.profilePicture}
-                          style={{
-                            marginTop: 30,
-                            width: 120,
-                            borderRadius: 80,
-                          }}
-                        />
-                      )}
+                      <Interaction.Headline>{meta.title}</Interaction.Headline>
+                      <div
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 20,
+                          marginTop: 30,
+                          textAlign: 'left',
+                        }}
+                      >
+                        {author?.profilePicture && (
+                          <img
+                            src={author.profilePicture}
+                            style={{
+                              width: 80,
+                              borderRadius: 80,
+                            }}
+                            alt='profile picture'
+                          />
+                        )}
+                        <Interaction.H2>{meta.description}</Interaction.H2>
+                      </div>
                     </NarrowContainer>
                   </div>
                 </ColorContextProvider>
@@ -172,7 +183,7 @@ const Page = ({ CONFIG }: PageProps) => {
                 <div
                   {...submissionStyles.header}
                   style={{
-                    top: headerHeight,
+                    top: headerHeight as number,
                     padding: '10px 0',
                     margin: '10px 0 0',
                   }}
@@ -192,7 +203,7 @@ const Page = ({ CONFIG }: PageProps) => {
                       />
                     </NextLink>
                   </div>
-                  <PersonViewHeaderShare meta={meta} />
+                  <PersonViewHeaderShare meta={meta} noLabel={false} />
                   {isOwnQuestionnaire && (
                     <IconButton
                       size={24}

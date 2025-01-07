@@ -15,6 +15,7 @@ import { getOrdinalColors } from './utils'
 
 import { QuestionnaireConfig } from '../types/QuestionnaireConfig'
 import { configs } from '../configs'
+import { useTranslation } from 'lib/withT'
 
 type AllQuestionsViewProps = {
   CONFIG: QuestionnaireConfig
@@ -22,7 +23,11 @@ type AllQuestionsViewProps = {
   extract?: boolean
 }
 
-const AllQuestionsView = ({ CONFIG, extract, questionColor }: AllQuestionsViewProps)  => {
+const AllQuestionsView = ({
+  CONFIG,
+  extract,
+  questionColor,
+}: AllQuestionsViewProps) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_QUERY, {
     variables: { slug: CONFIG.dbSlug },
   })
@@ -70,14 +75,29 @@ type SubmissionsOverviewProps = {
   }
 }
 
-const SubmissionsOverview = ({ configKey, extract, share }: SubmissionsOverviewProps) => {
+const SubmissionsOverview = ({
+  configKey,
+  extract,
+  share,
+}: SubmissionsOverviewProps) => {
   const router = useRouter()
   const { query } = router
-  const questionIds: (string[] | undefined) = (typeof query.share === 'string') ? query.share.split(QUESTION_SEPARATOR) : undefined
+  const { t } = useTranslation()
+  const questionIds: string[] | undefined =
+    typeof query.share === 'string'
+      ? query.share.split(QUESTION_SEPARATOR)
+      : undefined
   const CONFIG: QuestionnaireConfig = configs[configKey]
-  const questionColor = useMemo(() => getOrdinalColors(CONFIG.design.colors), [CONFIG])
+  const questionColor = useMemo(
+    () => getOrdinalColors(CONFIG.design.colors),
+    [CONFIG],
+  )
   // we moved all share props which are unrelated to Publikator to the config file
-  const shareData = {title: '{questionText}', description: CONFIG.overviewPage.shareText, ...share}
+  const shareData = {
+    title: '{questionText}',
+    description: t('questionnaire/submissions/shareText'),
+    ...share,
+  }
 
   return (
     <>
@@ -94,7 +114,11 @@ const SubmissionsOverview = ({ configKey, extract, share }: SubmissionsOverviewP
             questionnaireBgColor={CONFIG.design.bgColor}
           />
         ) : (
-          <AllQuestionsView CONFIG={CONFIG} questionColor={questionColor} extract={extract} />
+          <AllQuestionsView
+            CONFIG={CONFIG}
+            questionColor={questionColor}
+            extract={extract}
+          />
         )}
       </ColorContextProvider>
       {!extract && (

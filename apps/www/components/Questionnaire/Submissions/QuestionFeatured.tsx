@@ -70,13 +70,21 @@ export const QuestionLink = ({ questions, children }) => {
   )
 }
 
+type LinkToEditQuestionnaireProps = {
+  slug: string
+  questionnairePath: string
+  personPagePath: string
+  children?: React.ReactNode
+  newOnly?: boolean
+}
+
 export const LinkToEditQuestionnaire = ({
   slug,
   children,
   newOnly,
   questionnairePath,
   personPagePath,
-}) => {
+}: LinkToEditQuestionnaireProps) => {
   const { me } = useMe()
   const { loading, data } = useQuery(QUESTIONNAIRE_SUBMISSION_BOOL_QUERY, {
     skip: !me,
@@ -184,10 +192,7 @@ const AnswerGridOverview = ({
                 </Interaction.P>
               )}
             </NarrowContainer>
-            <ColorContextProvider
-              localColorVariables={colors}
-              colorSchemeKey='light'
-            >
+            <ColorContextProvider colorSchemeKey='light'>
               <AnswersGrid>
                 {targetedAnswers.map(({ answers, displayAuthor, id }) => (
                   <AnswersGridCard key={id}>
@@ -269,7 +274,7 @@ export const QuestionFeatured = ({
               personPagePath={personPagePath}
             />
           ) : q.__typename === 'QuestionTypeChoice' ? (
-            <AnswersChart key={q.id} question={q} />
+            <AnswersChart key={q.id} question={q} skipTitle={false} />
           ) : null
         })}
 

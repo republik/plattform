@@ -174,12 +174,12 @@ const ChoiceAnswerOption = ({ option, checked }) => {
     <span
       style={{
         marginRight: '2em',
-        display: 'inline-flex',
+        display: 'flex',
         alignItems: 'center',
       }}
       {...colorScheme.set('color', checked ? 'text' : 'textSoft')}
     >
-      {!!Icon && <Icon style={{ marginRight: 7 }} />}
+      {!!Icon && <Icon style={{ marginRight: 7, flexShrink: 0 }} />}
       {option?.label}
     </span>
   )

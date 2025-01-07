@@ -27,17 +27,11 @@ const democracyConfig: QuestionnaireConfig = {
   ],
   paths: {
     overviewPage: '/2023/11/07/so-blicken-sie-auf-die-klimakrise',
-    personPage: 'fragebogen-klimakrise', // TODO: generate 'fragebogen/demokratie'
-    formPage: '/2023/11/07/wie-blicken-sie-zurzeit-auf-die-klimakrise'
-  },
-  overviewPage: {
-    shareText: 'Stöbern Sie durch die Antworten der Republik-Leserinnen, und fügen Sie Ihre eigene Antwort hinzu.'
+    formPage: '/2025/01/06/stellen-sie-sich-vor-22-fragen-zur-demokratie',
+    personPage: 'fragebogen/demokratie',
   },
   personPage: {
-    title: 'Wie blicken Sie zurzeit auf die Klimakrise? Die Antworten von {name}',
-    metaTitle: 'Wie blicken Sie zurzeit auf die Klimakrise?',
-    metaDescription: 'Das sind die Antworten von {name}. Was sind Ihre?',
-    shareText: 'Wie blicken Sie zurzeit auf die Klimakrise? Die Antworten von '
+    title: 'Euer Votum über Demokratie'
   },
   design: {
     bgColor: '#EBEA2B',

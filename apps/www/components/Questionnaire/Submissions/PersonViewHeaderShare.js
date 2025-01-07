@@ -25,7 +25,7 @@ export const HeaderShare = ({ meta, noLabel }) => {
         href={url}
         onClick={(e) => {
           e.preventDefault()
-          trackEvent(['ActionBar', 'shareJournalLink', url])
+          trackEvent(['ActionBar', 'shareQuestionnaireLink', url])
           if (inNativeApp) {
             postMessage({
               type: 'share',

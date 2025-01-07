@@ -24,7 +24,7 @@ export const ShareImageSplit = ({
   const text = question
     ? question.text
     : user
-    ? personShareText + user?.name
+    ? personShareText + (user?.name || '')
     : undefined
 
   if (!text) return null

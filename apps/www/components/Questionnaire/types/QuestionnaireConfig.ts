@@ -26,10 +26,7 @@ type QuestionnaireDesign = {
 }
 
 type PageData = {
-  title?: string
-  metaTitle?: string
-  metaDescription?: string
-  shareText?: string
+  title: string
 }
 
 export type QuestionnaireConfig = {
@@ -37,6 +34,5 @@ export type QuestionnaireConfig = {
   questionsStruct: QuestionConfigType[]
   paths: QuestionnairePaths
   design: QuestionnaireDesign
-  overviewPage?: PageData
-  personPage?: PageData
+  personPage: PageData
 }
