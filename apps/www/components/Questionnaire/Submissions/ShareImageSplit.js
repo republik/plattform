@@ -24,7 +24,7 @@ export const ShareImageSplit = ({
   const text = question
     ? question.text
     : user
-    ? personShareText + user?.name
+    ? personShareText + (user?.name || '')
     : undefined
 
   if (!text) return null
@@ -57,7 +57,7 @@ export const ShareImageSplit = ({
         <div
           style={{
             ...fontStyles.serifTitle,
-            fontSize: text.length < 80 ? 56 : 48,
+            fontSize: text.length < 80 ? 48 : 42,
             lineHeight: 1.3,
             paddingRight: text.length > 100 ? 100 : 150,
             display: 'flex',

@@ -4593,6 +4593,14 @@
       "value": "Einen weiteren Fragebogen laden"
     },
     {
+      "key": "questionnaire/submissions/shareText",
+      "value": "Stöbern Sie durch die Antworten der Republik-Leserinnen, und fügen Sie Ihre eigene Antwort hinzu."
+    },
+    {
+      "key": "questionnaire/submission/description",
+      "value": "Die Antworten von {name}"
+    },
+    {
       "key": "pages/meta/questionnaire/unauthorized",
       "value": "Vielen Dank für Ihr Interesse an unserer Umfrage. Unsere Mitglieder und Abonnentinnen können daran teilnehmen – {buyLink}"
     },

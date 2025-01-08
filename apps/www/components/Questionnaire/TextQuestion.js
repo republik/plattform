@@ -3,10 +3,10 @@ import questionStyles from './questionStyles'
 import debounce from 'lodash/debounce'
 import { v4 as uuid } from 'uuid'
 
-import { Interaction } from '@project-r/styleguide'
+import { Interaction, Editorial } from '@project-r/styleguide'
 import TextInput from './TextInput/TextInput'
 import withT from '../../lib/withT'
-const { H2, P } = Interaction
+const { P } = Interaction
 
 class TextQuestion extends Component {
   constructor(props) {
@@ -47,13 +47,23 @@ class TextQuestion extends Component {
 
   render() {
     const {
-      question: { text, explanation, maxLength },
+      question: { text, explanation, maxLength, order, metadata },
       t,
     } = this.props
     const { value } = this.state
+    const beforeP = metadata && metadata.beforeP
     return (
-      <div>
-        {text && <H2 {...questionStyles.label}>{text}</H2>}
+      <div {...questionStyles.question}>
+        {beforeP && (
+          <div {...questionStyles.before}>
+            <Editorial.Subhead>{beforeP}</Editorial.Subhead>
+          </div>
+        )}
+        {text && (
+          <P {...questionStyles.text}>
+            {order + 1}. {text}
+          </P>
+        )}
         {explanation && <P {...questionStyles.help}>{explanation}</P>}
         <TextInput
           label={t('questionnaire/text/label')}

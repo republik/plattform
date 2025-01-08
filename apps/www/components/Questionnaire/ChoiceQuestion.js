@@ -6,19 +6,20 @@ import { v4 as uuid } from 'uuid'
 
 import {
   Interaction,
+  Editorial,
   mediaQueries,
   Checkbox,
   Radio,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
-const { H2, H3, P } = Interaction
+const { H3, P } = Interaction
 
 const styles = {
   options: css({
     display: 'flex',
     width: '100%',
     flexWrap: 'wrap',
-    marginTop: 20,
+    marginTop: 10,
   }),
   optionGroup: css({
     width: '100%',
@@ -78,7 +79,15 @@ class ChoiceQuestion extends Component {
 
   render() {
     const {
-      question: { text, explanation, userAnswer, cardinality, options },
+      question: {
+        text,
+        explanation,
+        userAnswer,
+        cardinality,
+        options,
+        order,
+        metadata,
+      },
       t,
     } = this.props
     const multipleAllowed = cardinality === 0 || cardinality > 1
@@ -88,16 +97,25 @@ class ChoiceQuestion extends Component {
       .entries(options)
     const userAnswerValues = userAnswer ? userAnswer.payload.value : []
 
+    const beforeP = metadata && metadata.beforeP
+
     return (
-      <div>
-        <div {...questionStyles.label}>
-          {text && <H2>{text}</H2>}
-          {(multipleAllowed || explanation) && (
-            <P {...questionStyles.help}>
-              {explanation || t('questionnaire/choice/helpMultiple')}
-            </P>
-          )}
-        </div>
+      <div {...questionStyles.question}>
+        {beforeP && (
+          <div {...questionStyles.before}>
+            <Editorial.Subhead>{beforeP}</Editorial.Subhead>
+          </div>
+        )}
+        {text && (
+          <P {...questionStyles.text}>
+            {order + 1}. {text}
+          </P>
+        )}
+        {(multipleAllowed || explanation) && (
+          <P {...questionStyles.help}>
+            {explanation || t('questionnaire/choice/helpMultiple')}
+          </P>
+        )}
         <div {...questionStyles.body} {...styles.options}>
           {optionGroups.map(({ key, values }) => (
             <div key={key} {...styles.optionGroup}>
@@ -109,7 +127,7 @@ class ChoiceQuestion extends Component {
                       onChange={() => this.handleChange(o.value)}
                       checked={userAnswerValues.some((v) => v === o.value)}
                     >
-                      {o.label}
+                      <span {...questionStyles.radio}>{o.label}</span>
                     </OptionComponent>
                   </div>
                 ))}

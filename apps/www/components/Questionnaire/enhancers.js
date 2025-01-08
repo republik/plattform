@@ -70,6 +70,7 @@ const getQuestionnaire = gql`
           text
           explanation
           private
+          metadata
           userAnswer {
             id
             payload

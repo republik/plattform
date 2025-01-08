@@ -4,6 +4,7 @@ import { Interaction } from '../Typography'
 import Spinner from '../Spinner'
 import { useColorContext } from '../Colors/ColorContext'
 import PropTypes from 'prop-types'
+import { ApolloError } from '@apollo/client'
 
 const { P } = Interaction
 
@@ -52,7 +53,7 @@ type LoaderProps = {
   style?: React.CSSProperties
   message?: React.ReactNode
   loading: boolean
-  error?: GraphQLError
+  error?: GraphQLError | ApolloError
   render?: () => React.ReactElement
   delay?: number
   ErrorContainer?: React.ComponentType<{ children: React.ReactNode }>
