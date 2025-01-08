@@ -230,7 +230,7 @@ const Page = () => {
                 <LinkToEditQuestionnaire
                   slug={CONFIG.dbSlug}
                   questionnairePath={CONFIG.paths.formPage}
-                  personPagePath={CONFIG.paths.personPage}
+                  personPagePath={`fragebogen/${configId}`}
                   newOnly
                 />
                 <br />

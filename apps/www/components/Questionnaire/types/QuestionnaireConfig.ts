@@ -15,8 +15,7 @@ type QuestionnaireImg = {
 
 type QuestionnairePaths = {
   overviewPage: string
-  personPage?: string
-  formPage?: string
+  formPage: string
 }
 
 type QuestionnaireDesign = {

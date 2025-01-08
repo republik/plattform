@@ -21,12 +21,14 @@ type AllQuestionsViewProps = {
   CONFIG: QuestionnaireConfig
   questionColor: (idx: number) => string
   extract?: boolean
+  personPagePath: string
 }
 
 const AllQuestionsView = ({
   CONFIG,
   extract,
   questionColor,
+  personPagePath,
 }: AllQuestionsViewProps) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_QUERY, {
     variables: { slug: CONFIG.dbSlug },
@@ -56,7 +58,7 @@ const AllQuestionsView = ({
                   slug={CONFIG.dbSlug}
                   bgColor={questionColor(idx)}
                   valueLength={question.valueLength}
-                  personPagePath={CONFIG.paths.personPage}
+                  personPagePath={personPagePath}
                 />
               )
             })}
@@ -96,6 +98,7 @@ const SubmissionsOverview = ({
     img: CONFIG.design.img.urlSquare,
     ...share,
   }
+  const personPagePath = `fragebogen/${configKey}`
 
   return CONFIG ? (
     <>
@@ -108,7 +111,7 @@ const SubmissionsOverview = ({
             questionIds={questionIds}
             questionColor={questionColor}
             questions={CONFIG.questionsStruct}
-            personPagePath={CONFIG.paths.personPage}
+            personPagePath={personPagePath}
             questionnaireBgColor={CONFIG.design.bgColor}
           />
         ) : (
@@ -116,6 +119,7 @@ const SubmissionsOverview = ({
             CONFIG={CONFIG}
             questionColor={questionColor}
             extract={extract}
+            personPagePath={personPagePath}
           />
         )}
       </ColorContextProvider>
@@ -124,7 +128,7 @@ const SubmissionsOverview = ({
           <LinkToEditQuestionnaire
             slug={CONFIG.dbSlug}
             questionnairePath={CONFIG.paths.formPage}
-            personPagePath={CONFIG.paths.personPage}
+            personPagePath={personPagePath}
           />
           <br />
         </Center>

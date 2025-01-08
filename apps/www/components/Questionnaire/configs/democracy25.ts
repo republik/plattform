@@ -27,8 +27,7 @@ const democracyConfig: QuestionnaireConfig = {
   ],
   paths: {
     overviewPage: '/2025/01/07/22-fragen-zur-demokratie-ihr-votum',
-    formPage: '/2025/01/06/stellen-sie-sich-vor-22-fragen-zur-demokratie',
-    personPage: 'fragebogen/demokratie-25',
+    formPage: '/2025/01/06/stellen-sie-sich-vor-22-fragen-zur-demokratie'
   },
   personPage: {
     title: 'Euer Votum über Demokratie'
