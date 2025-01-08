@@ -43,15 +43,23 @@ const styles = {
   count: css({
     zIndex: 10,
     position: 'sticky',
-    padding: '5px 0',
-    borderBottomWidth: 1,
-    borderBottomStyle: 'solid',
+    paddingTop: 5,
     display: 'flex',
+    flexWrap: 'wrap',
     minHeight: 40,
     alignItems: 'center',
   }),
   countIcon: css({
     marginLeft: 5,
+  }),
+  countBarContainer: css({
+    flex: '0 0 100%',
+    height: 2,
+    marginTop: 5,
+  }),
+  countBar: css({
+    height: 2,
+    transition: 'width 0.3s ease',
   }),
 }
 
@@ -103,7 +111,9 @@ const Questionnaire = (props) => {
   })
 
   const onSubmitSuccess = () => {
-    if (onQuestionnaireChange) { onQuestionnaireChange() }
+    if (onQuestionnaireChange) {
+      onQuestionnaireChange()
+    }
     return setState({
       updating: false,
     })
@@ -355,7 +365,6 @@ const Questionnaire = (props) => {
               <div
                 {...styles.count}
                 {...colorScheme.set('backgroundColor', 'default')}
-                {...colorScheme.set('borderBottomColor', 'divider')}
                 style={{ top: headerHeight }}
               >
                 {error ? (
@@ -370,20 +379,28 @@ const Questionnaire = (props) => {
                         })}
                       </small>
                     </P>
-                    {questionCount === userAnswerCount ? (
+                    {questionCount === userAnswerCount && (
                       <div {...styles.countIcon}>
                         <IconCheckCircle
                           size={16}
                           {...colorScheme.set('fill', 'primary')}
                         />
                       </div>
-                    ) : updating ? (
-                      <div {...styles.countIcon}>
-                        <InlineSpinner size={16} />
-                      </div>
-                    ) : null}
+                    )}
                   </>
                 )}
+                <div
+                  {...styles.countBarContainer}
+                  {...colorScheme.set('background', 'divider')}
+                >
+                  <div
+                    {...styles.countBar}
+                    {...colorScheme.set('background', 'primary')}
+                    style={{
+                      width: `${(userAnswerCount / questionCount) * 100}%`,
+                    }}
+                  />
+                </div>
               </div>
             )}
             <Questions
