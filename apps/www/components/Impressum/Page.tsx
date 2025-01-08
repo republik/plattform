@@ -2,29 +2,31 @@ import { Fragment } from 'react'
 
 import Employees from './Employees'
 import { A, Interaction } from '@project-r/styleguide'
-
-import withInNativeApp from '../../lib/withInNativeApp'
-
+import { useInNativeApp } from '../../lib/withInNativeApp'
 const { H1, H2, P } = Interaction
+import { EmployeeRecord } from '#graphql/cms/__generated__/gql/graphql'
 
-export default withInNativeApp(({ inNativeIOSApp }) => {
+export default function Impressum({ data }: { data: EmployeeRecord[] }) {
+  const { inNativeIOSApp } = useInNativeApp()
   const meta = {
     title: 'Impressum',
     description: '',
   }
 
   return (
-    <Fragment>
+    <>
       <H1>{meta.title}</H1>
 
       <br />
       <H2>Verlegerinnen und Verleger</H2>
       <P>
         <A href='/community'>Alle Mitglieder</A> der{' '}
-        <A href='https://project-r.construction/'>Project R Genossenschaft</A>
+        <A href='https://project-r.ch'>Project R Genossenschaft</A>
       </P>
-
       <br />
+      <br />
+      <Employees employees={data} />
+
       <H2>Herausgeberin</H2>
       <P>
         Republik AG
@@ -47,8 +49,6 @@ export default withInNativeApp(({ inNativeIOSApp }) => {
           Medienbilder und Logo herunterladen
         </A>
       </P>
-
-      <Employees />
 
       <H2>Aktionariat</H2>
       <P>
@@ -136,6 +136,6 @@ export default withInNativeApp(({ inNativeIOSApp }) => {
         vorliegt, der sich aus Datenverlust, Nutzungsausfall oder anderen
         Gründen aller Art ergeben könnte.
       </P>
-    </Fragment>
+    </>
   )
-})
+}

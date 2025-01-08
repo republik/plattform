@@ -60,7 +60,7 @@ const Marketing = ({ data }) => {
         description={data.sectionFormatsDescription}
       />
       <Team
-        employees={data.team}
+        employees={data.employees}
         title={data.sectionTeamTitle}
         description={data.sectionTeamDescription}
       />

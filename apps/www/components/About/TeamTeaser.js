@@ -1,4 +1,4 @@
-import Employees from '../Imprint/Employees'
+import Employees from '../Impressum/Employees'
 
 const EmployeesRow = (props) => <Employees filter={(e) => e.title} {...props} />
 
