@@ -2,8 +2,20 @@ import { mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
 
 const styles = {
+  question: css({
+    marginTop: 20,
+    marginBottom: 40,
+  }),
   label: css({
     marginTop: 20,
+  }),
+  text: css({
+    marginBottom: 20,
+    lineHeight: 1.4,
+    fontWeight: 500,
+  }),
+  before: css({
+    margin: '60px 0 20px',
   }),
   help: css({
     paddingTop: 15,

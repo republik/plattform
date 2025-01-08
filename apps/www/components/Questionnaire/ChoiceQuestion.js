@@ -79,7 +79,15 @@ class ChoiceQuestion extends Component {
 
   render() {
     const {
-      question: { text, explanation, userAnswer, cardinality, options, order, metadata },
+      question: {
+        text,
+        explanation,
+        userAnswer,
+        cardinality,
+        options,
+        order,
+        metadata,
+      },
       t,
     } = this.props
     const multipleAllowed = cardinality === 0 || cardinality > 1
@@ -92,16 +100,22 @@ class ChoiceQuestion extends Component {
     const beforeP = metadata && metadata.beforeP
 
     return (
-      <div>
-        {beforeP && <Editorial.Subhead>{beforeP}</Editorial.Subhead>}
-        <div {...questionStyles.label}>
-          {text && <P><b>{order + 1}. {text}</b></P>}
-          {(multipleAllowed || explanation) && (
-            <P {...questionStyles.help}>
-              {explanation || t('questionnaire/choice/helpMultiple')}
-            </P>
-          )}
-        </div>
+      <div {...questionStyles.question}>
+        {beforeP && (
+          <div {...questionStyles.before}>
+            <Editorial.Subhead>{beforeP}</Editorial.Subhead>
+          </div>
+        )}
+        {text && (
+          <P {...questionStyles.text}>
+            {order + 1}. {text}
+          </P>
+        )}
+        {(multipleAllowed || explanation) && (
+          <P {...questionStyles.help}>
+            {explanation || t('questionnaire/choice/helpMultiple')}
+          </P>
+        )}
         <div {...questionStyles.body} {...styles.options}>
           {optionGroups.map(({ key, values }) => (
             <div key={key} {...styles.optionGroup}>

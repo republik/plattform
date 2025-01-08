@@ -53,9 +53,17 @@ class TextQuestion extends Component {
     const { value } = this.state
     const beforeP = metadata && metadata.beforeP
     return (
-      <div>
-        {beforeP && <Editorial.Subhead>{beforeP}</Editorial.Subhead>}
-        {text && <P {...questionStyles.label}><b>{order + 1}. {text}</b></P>}
+      <div {...questionStyles.question}>
+        {beforeP && (
+          <div {...questionStyles.before}>
+            <Editorial.Subhead>{beforeP}</Editorial.Subhead>
+          </div>
+        )}
+        {text && (
+          <P {...questionStyles.text}>
+            {order + 1}. {text}
+          </P>
+        )}
         {explanation && <P {...questionStyles.help}>{explanation}</P>}
         <TextInput
           label={t('questionnaire/text/label')}

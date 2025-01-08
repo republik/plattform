@@ -43,16 +43,15 @@ const styles = {
   count: css({
     zIndex: 10,
     position: 'sticky',
-    padding: '10px 0',
+    padding: '5px 0',
     borderBottomWidth: 1,
     borderBottomStyle: 'solid',
     display: 'flex',
-    minHeight: 55
+    minHeight: 40,
+    alignItems: 'center',
   }),
-  progressIcon: css({
+  countIcon: css({
     marginLeft: 5,
-    marginTop: 3,
-    minHeight: 30,
   }),
 }
 
@@ -364,23 +363,23 @@ const Questionnaire = (props) => {
                 ) : (
                   <>
                     <P>
-                      <strong {...colorScheme.set('color', 'textSoft')}>
+                      <small>
                         {t('questionnaire/header', {
                           questionCount,
                           userAnswerCount,
                         })}
-                      </strong>
+                      </small>
                     </P>
                     {questionCount === userAnswerCount ? (
-                      <div {...styles.progressIcon}>
+                      <div {...styles.countIcon}>
                         <IconCheckCircle
-                          size={22}
+                          size={16}
                           {...colorScheme.set('fill', 'primary')}
                         />
                       </div>
                     ) : updating ? (
-                      <div style={{ marginLeft: 5, marginTop: 3 }}>
-                        <InlineSpinner size={24} />
+                      <div {...styles.countIcon}>
+                        <InlineSpinner size={16} />
                       </div>
                     ) : null}
                   </>
