@@ -43,7 +43,7 @@ type PLEDGE_ABOS = 'ABO' | 'MONTHLY_ABO' | 'YEARLY_ABO' | 'BENEFACTOR_ABO'
 type SUBSCRIPTIONS = 'YEARLY_SUBSCRIPTION' | 'MONTHLY_SUBSCRIPTION'
 type PRODUCT_TYPE = PLEDGE_ABOS | SUBSCRIPTIONS
 
-function normalizeVoucher(voucherCode: string): string | null {
+export function normalizeVoucher(voucherCode: string): string | null {
   try {
     const code = CrockfordBase32.decode(voucherCode)
     return CrockfordBase32.encode(code)

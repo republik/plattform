@@ -146,6 +146,11 @@ type ComplimentaryItem {
   maxQuantity: Int!
 }
 
+type GiftVoucherValidationResult {
+  valid: Boolean!
+  isLegacyVoucher: Boolean!
+}
+
 input ComplimentaryItemOrder {
   id: String!
   quantity: Int!
