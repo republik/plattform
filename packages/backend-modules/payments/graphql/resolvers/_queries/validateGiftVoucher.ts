@@ -23,7 +23,7 @@ export = async function (
       base32Voucher,
     )
 
-    if (isNewVoucher) {
+    if (isNewVoucher && isNewVoucher.redeemedAt === null) {
       return {
         valid: true,
         isLegacyVoucher: false,
