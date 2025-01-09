@@ -1,9 +1,20 @@
 import { CommentTeaser, Interaction } from '@project-r/styleguide'
-import withT from '../../lib/withT'
-import CommentLink from '../Discussion/shared/CommentLink'
-import InfiniteScroll from '../Frame/InfiniteScroll'
+import { useTranslation } from '../../../lib/withT'
+import CommentLink from '../../Discussion/shared/CommentLink'
+import InfiniteScroll from '../../Frame/InfiniteScroll'
+import { css } from 'glamor'
 
-const Comments = ({ t, comments, loadMore }) => {
+const styles = {
+  noBorder: css({
+    '& div:nth-child(2)': {
+      border: 'none',
+    },
+  }),
+}
+
+const ProfileCommentsFeed = ({ comments, loadMore, showTitle = false }) => {
+  const { t } = useTranslation()
+
   if (!comments || !comments.totalCount) {
     return null
   }
@@ -19,12 +30,24 @@ const Comments = ({ t, comments, loadMore }) => {
       totalCount={totalCount}
       currentCount={currentCount}
       loadMoreKey={'feed/loadMore/comments'}
+      customStyles={styles.noBorder}
     >
-      <Interaction.H3 style={{ marginBottom: 20 }}>
-        {t.pluralize('profile/comments/title', {
-          count: comments.totalCount,
-        })}
-      </Interaction.H3>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: showTitle ? 'space-between' : 'flex-end',
+          marginBottom: !showTitle && 16,
+        }}
+      >
+        {showTitle && (
+          <Interaction.H3 style={{ marginBottom: 20 }}>
+            {t.pluralize('profile/comments/title', {
+              count: comments.totalCount,
+            })}
+          </Interaction.H3>
+        )}
+      </div>
       {comments.nodes
         .filter((comment) => comment.preview)
         .map((comment) => {
@@ -62,4 +85,4 @@ const Comments = ({ t, comments, loadMore }) => {
   )
 }
 
-export default withT(Comments)
+export default ProfileCommentsFeed

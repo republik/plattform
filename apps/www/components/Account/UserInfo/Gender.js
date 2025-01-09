@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { Field, Radio, Label, useColorContext } from '@project-r/styleguide'
 
-import withT from '../../lib/withT'
+import withT from '../../../lib/withT'
 
 const SUGGESTIONS = ['weiblich', 'männlich']
 // https://de.wikipedia.org/wiki/Divers

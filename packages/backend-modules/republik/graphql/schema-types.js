@@ -58,9 +58,7 @@ extend type User {
   biography: String
   # biography as mdast
   biographyContent: JSON
-  facebookId: String
-  twitterHandle: String
-  publicUrl: String
+  profileUrls: JSON
   disclosures: String
   gender: String
 
