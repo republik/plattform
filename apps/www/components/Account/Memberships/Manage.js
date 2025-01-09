@@ -97,7 +97,6 @@ const Actions = ({
                     <Link
                       href={{
                         pathname: '/angebote',
-                        query: { package: 'ABO' },
                       }}
                       passHref
                       legacyBehavior>

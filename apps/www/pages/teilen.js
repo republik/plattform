@@ -43,7 +43,6 @@ const Page = () => {
           <Link
             href={{
               pathname: '/angebote',
-              query: { package: 'ABO' },
             }}
             passHref
             legacyBehavior
@@ -59,7 +58,6 @@ const Page = () => {
           <Link
             href={{
               pathname: '/angebote',
-              query: { package: 'MONTHLY_ABO' },
             }}
             passHref
             legacyBehavior
