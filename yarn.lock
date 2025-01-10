@@ -22554,6 +22554,26 @@ tsup@^7.2.0:
     sucrase "^3.20.3"
     tree-kill "^1.2.2"
 
+tsup@^8.0.2:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/tsup/-/tsup-8.0.2.tgz#c63192a08386515103e2c44ac5a23bdff75c5fa1"
+  integrity sha512-NY8xtQXdH7hDUAZwcQdY/Vzlw9johQsaqf7iwZ6g1DOUlFYQ5/AtVAjTvihhEyeRlGo4dLRVHtrRaL35M1daqQ==
+  dependencies:
+    bundle-require "^4.0.0"
+    cac "^6.7.12"
+    chokidar "^3.5.1"
+    debug "^4.3.1"
+    esbuild "^0.19.2"
+    execa "^5.0.0"
+    globby "^11.0.3"
+    joycon "^3.0.1"
+    postcss-load-config "^4.0.1"
+    resolve-from "^5.0.0"
+    rollup "^4.0.2"
+    source-map "0.8.0-beta.0"
+    sucrase "^3.20.3"
+    tree-kill "^1.2.2"
+
 tsutils@^3.21.0:
   version "3.21.0"
   resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.21.0.tgz#b48717d394cea6c1e096983eed58e9d61715b623"
