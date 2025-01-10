@@ -59,7 +59,13 @@ type SendCancelConfirmationMailArgs = {
 }
 
 export async function sendCancelConfirmationMail(
-  { endDate, cancellationDate, type, userId, email }: SendCancelConfirmationMailArgs,
+  {
+    endDate,
+    cancellationDate,
+    type,
+    userId,
+    email,
+  }: SendCancelConfirmationMailArgs,
   pgdb: PgDb,
 ) {
   const dateOptions: Intl.DateTimeFormatOptions = {
@@ -75,12 +81,12 @@ export async function sendCancelConfirmationMail(
     },
     {
       name: 'is_yearly',
-      content: type === 'YEARLY_SUBSCRIPTION'
+      content: type === 'YEARLY_SUBSCRIPTION',
     },
     {
       name: 'is_monthly',
-      content: type === 'MONTHLY_SUBSCRIPTION'
-    }
+      content: type === 'MONTHLY_SUBSCRIPTION',
+    },
   ]
 
   const templateName = 'subscription_cancel_notice'
@@ -115,7 +121,13 @@ type SendRevokeCancellationConfirmationMailArgs = {
 }
 
 export async function sendRevokeCancellationConfirmationMail(
-  { currentEndDate, revokedCancellationDate, type, userId, email }: SendRevokeCancellationConfirmationMailArgs,
+  {
+    currentEndDate,
+    revokedCancellationDate,
+    type,
+    userId,
+    email,
+  }: SendRevokeCancellationConfirmationMailArgs,
   pgdb: PgDb,
 ) {
   const dateOptions: Intl.DateTimeFormatOptions = {
@@ -131,12 +143,12 @@ export async function sendRevokeCancellationConfirmationMail(
     },
     {
       name: 'is_yearly',
-      content: type === 'YEARLY_SUBSCRIPTION'
+      content: type === 'YEARLY_SUBSCRIPTION',
     },
     {
       name: 'is_monthly',
-      content: type === 'MONTHLY_SUBSCRIPTION'
-    }
+      content: type === 'MONTHLY_SUBSCRIPTION',
+    },
   ]
 
   const templateName = 'subscription_revoke_cancellation_notice'
@@ -221,6 +233,33 @@ export async function sendPaymentFailedNoticeMail(
 
   const templateName =
     'subscription_payment_failed_notice_' + subscription.type.toLowerCase()
+  const sendMailResult = await sendMailTemplate(
+    {
+      to: email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
+      subject: t(`api/email/${templateName}/subject`),
+      templateName,
+      mergeLanguage: 'handlebars',
+      globalMergeVars,
+    },
+    { pgdb },
+  )
+
+  return sendMailResult
+}
+
+export async function sendGiftPurchaseMail(
+  { voucherCode, email }: { voucherCode: string; email: string },
+  pgdb: PgDb,
+) {
+  const globalMergeVars: MergeVariable[] = [
+    {
+      name: 'voucher_codes',
+      content: voucherCode,
+    },
+  ]
+
+  const templateName = 'payment_successful_gift_voucher'
   const sendMailResult = await sendMailTemplate(
     {
       to: email,
