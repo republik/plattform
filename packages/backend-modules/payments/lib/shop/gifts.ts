@@ -130,19 +130,14 @@ export class GiftShop {
     }
 
     const current = await this.getCurrentUserAbo(userId)
-    try {
-      const abo = await this.applyGift(userId, current, gift)
 
-      await this.markVoucherAsRedeemed({
-        voucher,
-        userId,
-        company: abo.company,
-      })
-    } catch (e) {
-      if (e instanceof Error) {
-        console.error(e)
-      }
-    }
+    const abo = await this.applyGift(userId, current, gift)
+
+    await this.markVoucherAsRedeemed({
+      voucher,
+      userId,
+      company: abo.company,
+    })
   }
 
   private async applyGift(
@@ -174,7 +169,7 @@ export class GiftShop {
   }
 
   private async getGift(id: string) {
-    return GIFTS.find((gift) => (gift.id = id)) || null
+    return GIFTS.find((gift) => gift.id === id) || null
   }
 
   private async markVoucherAsRedeemed(args: {
@@ -237,6 +232,7 @@ export class GiftShop {
       items: [shop.genLineItem(offer)],
       coupon: gift.coupon,
       collection_method: 'send_invoice',
+      cancel_at_period_end: true,
       days_until_due: 14,
     })
 
@@ -351,6 +347,7 @@ export class GiftShop {
               },
             },
           ],
+          end_behavior: 'cancel',
         })
         return { id: membershipId, company: 'PROJECT_R' }
       }
@@ -402,14 +399,100 @@ export class GiftShop {
   ): Promise<{ id: string; company: Company }> {
     const stripeId = await this.getStripeSubscriptionId(id)
 
+    console.log('trying to add gift to yearly sub')
+
     if (!stripeId) {
       throw new Error(`yearly subscription ${id} does not exist`)
     }
 
-    await this.#stripeAdapters.PROJECT_R.subscriptions.update(stripeId, {
-      coupon: gift.coupon,
-    })
-    return { id: id, company: 'REPUBLIK' }
+    console.log(gift)
+
+    switch (gift.company) {
+      case 'PROJECT_R': {
+        await this.#stripeAdapters.PROJECT_R.subscriptions.update(stripeId, {
+          coupon: gift.coupon,
+        })
+        return { id: id, company: 'PROJECT_R' }
+      }
+      case 'REPUBLIK': {
+        if (gift.id != 'MONTHLY_SUBSCRPTION_GIFT_3') {
+          throw Error('Not implemented')
+        }
+
+        console.log('trying to add three months to yearly subscription')
+
+        const sub = await this.#stripeAdapters.PROJECT_R.subscriptions.retrieve(
+          stripeId,
+          {
+            expand: ['schedule'],
+          },
+        )
+
+        let schedule: Stripe.SubscriptionSchedule | undefined
+        if (sub.schedule === null) {
+          schedule =
+            await this.#stripeAdapters.PROJECT_R.subscriptionSchedules.create({
+              from_subscription: sub.id,
+            })
+        } else {
+          schedule = sub.schedule as Stripe.SubscriptionSchedule
+        }
+
+        const nowInSeconds = Math.floor(Date.now() / 1000)
+        const currentPhase = schedule.phases.find(
+          (p) => nowInSeconds >= p.start_date && nowInSeconds <= p.end_date,
+        )
+
+        if (!currentPhase)
+          throw Error('unable to get current subscription schedule phase')
+
+        const currentPrice = currentPhase?.items[0].price as string | undefined
+
+        const prices = (
+          await this.#stripeAdapters.PROJECT_R.prices.list({
+            active: true,
+            lookup_keys: ['ABO', gift.id],
+          })
+        ).data
+
+        const ABO_PRICE = prices.find((p) => p.lookup_key === 'ABO')!
+        const GIFT_PRICE = prices.find((p) => p.lookup_key === gift.id)!
+
+        const newSchedule =
+          await this.#stripeAdapters.PROJECT_R.subscriptionSchedules.update(
+            schedule.id,
+            {
+              phases: [
+                {
+                  items: currentPhase.items.map((i) => ({
+                    price: i.price.toString(),
+                    quantity: i.quantity,
+                    discounts: i.discounts.map((d) => ({
+                      coupon: d.coupon?.toString(),
+                    })),
+                  })),
+                  start_date: currentPhase.start_date,
+                  end_date: currentPhase.end_date,
+                },
+                {
+                  items: [{ price: GIFT_PRICE.id, quantity: 1 }],
+                  iterations: 1,
+                },
+                {
+                  items: [{ price: currentPrice ?? ABO_PRICE.id, quantity: 1 }],
+                  iterations: 1,
+                  billing_cycle_anchor: 'phase_start',
+                },
+              ],
+              end_behavior: 'release',
+            },
+          )
+
+        console.log(newSchedule)
+
+        return { id: id, company: 'PROJECT_R' }
+      }
+    }
   }
 
   private async applyGiftToMonthlySubscription(
