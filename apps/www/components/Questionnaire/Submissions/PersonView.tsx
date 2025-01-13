@@ -33,7 +33,7 @@ import { ShareImageSplit } from './ShareImageSplit'
 import PersonViewHeaderShare from './PersonViewHeaderShare'
 import { SubmissionQa, styles as submissionStyles } from './Submission'
 import { configs } from '../configs'
-import { t, useTranslation } from 'lib/withT'
+import { useTranslation } from 'lib/withT'
 
 const Page = () => {
   const [headerHeight] = useHeaderHeight()

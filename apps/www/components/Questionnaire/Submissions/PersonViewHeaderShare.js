@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { IconButton } from '@project-r/styleguide'
-import { trackEvent } from '@app/lib/analytics/event-tracking'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 
 import { postMessage, useInNativeApp } from '../../../lib/withInNativeApp'
 import { useTranslation } from '../../../lib/withT'
@@ -14,6 +14,7 @@ export const HeaderShare = ({ meta, noLabel }) => {
   const { t } = useTranslation()
   const { inNativeApp } = useInNativeApp()
   const [overlay, showOverlay] = useState(false)
+  const trackEvent = useTrackEvent()
   const { url, title } = meta
 
   return (
@@ -25,7 +26,7 @@ export const HeaderShare = ({ meta, noLabel }) => {
         href={url}
         onClick={(e) => {
           e.preventDefault()
-          trackEvent(['ActionBar', 'shareQuestionnaireLink', url])
+          trackEvent({ action: 'sharePersonalQuestionnaire' })
           if (inNativeApp) {
             postMessage({
               type: 'share',
