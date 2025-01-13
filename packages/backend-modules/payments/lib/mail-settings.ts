@@ -8,7 +8,7 @@ type MailSettings = Record<MailSettingKey, boolean>
 export const REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY =
   'republik.payments.mail.settings'
 
-const settings: MailSettings = {
+const baseSettings: MailSettings = {
   'notice:ended': true,
   'confirm:revoke_cancellation': true,
   'confirm:cancel': true,
@@ -16,6 +16,8 @@ const settings: MailSettings = {
 }
 
 export function getMailSettings(overwriteString?: string) {
+  const settings = { ...baseSettings }
+
   if (!overwriteString) {
     return settings
   }
