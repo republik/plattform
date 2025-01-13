@@ -837,7 +837,7 @@ const ArticlePage = ({
                               {...styles.actionsAndInfosBlock}
                             >
                               {showNewsletterSignupTop && (
-                                <div style={{ marginTop: 10 }}>
+                                <div {...styles.newsletterSignUpTop}>
                                   <NewsletterSignUp
                                     {...newsletterMeta}
                                     smallButton
@@ -902,7 +902,7 @@ const ArticlePage = ({
                 </Center>
               )}
               {showNewsletterSignupBottom && (
-                <Center breakout={breakout}>
+                <Center breakout={breakout} {...styles.newsletterSignUpBottom}>
                   <NewsletterSignUp
                     showTitle
                     showDescription
@@ -967,11 +967,6 @@ const ArticlePage = ({
 }
 
 const styles = {
-  actionsAndInfosBlock: css({
-    '@media print': {
-      display: 'none',
-    },
-  }),
   prepublicationNotice: css({
     backgroundColor: colors.social,
   }),
@@ -984,6 +979,22 @@ const styles = {
   flexCenter: css({
     display: 'flex',
     justifyContent: 'center',
+  }),
+  actionsAndInfosBlock: css({
+    '@media print': {
+      display: 'none',
+    },
+  }),
+  newsletterSignUpTop: css({
+    marginTop: 10,
+    '@media print': {
+      display: 'none',
+    },
+  }),
+  newsletterSignUpBottom: css({
+    '@media print': {
+      display: 'none',
+    },
   }),
 }
 
