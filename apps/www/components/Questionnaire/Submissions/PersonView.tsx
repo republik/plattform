@@ -42,10 +42,10 @@ const Page = () => {
 
   const router = useRouter()
   const {
-    query: { slug: configId, id, image },
+    query: { slug, authorId, image },
   } = router
 
-  const CONFIG = configs[configId as string]
+  const CONFIG = configs[slug as string]
 
   const { me } = useMe()
 
@@ -61,19 +61,19 @@ const Page = () => {
     {
       variables: {
         slug: CONFIG.dbSlug,
-        id,
+        id: authorId,
         sortBy: 'random',
       },
     },
   )
 
   const author = data?.questionnaire?.results?.nodes[0]?.displayAuthor
-  const slug = author?.slug
+  const authorSlug = author?.slug
 
   const { data: authorData } = useQuery(QUESTIONNAIRE_USER_QUERY, {
-    skip: !slug,
+    skip: !authorSlug,
     variables: {
-      slug,
+      slug: authorSlug,
     },
   })
 
@@ -230,7 +230,7 @@ const Page = () => {
                 <LinkToEditQuestionnaire
                   slug={CONFIG.dbSlug}
                   questionnairePath={CONFIG.paths.formPage}
-                  personPagePath={`fragebogen/${configId}`}
+                  personPagePath={`fragebogen/${slug}`}
                   newOnly
                 />
                 <br />
