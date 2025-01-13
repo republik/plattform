@@ -14,8 +14,19 @@ const styles = {
     lineHeight: 1.4,
     fontWeight: 500,
   }),
-  before: css({
+  subheadOuter: css({
     margin: '60px 0 20px',
+  }),
+  subhead: css({
+    lineHeight: 1.4,
+  }),
+  subheadInner: css({
+    boxDecorationBreak: 'clone',
+    paddingLeft: '0.5rem',
+    paddingRight: '0.5rem',
+    backgroundColor: '#FDE047',
+    marginLeft: '-0.25rem',
+    position: 'relative',
   }),
   help: css({
     paddingTop: 15,
@@ -32,8 +43,8 @@ const styles = {
     [mediaQueries.mUp]: {
       fontSize: 21,
       marginTop: -1,
-    },  
-  })
+    },
+  }),
 }
 
 export default styles

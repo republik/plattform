@@ -1,12 +1,12 @@
 import { Component } from 'react'
 import { css } from 'glamor'
 import questionStyles from './questionStyles'
+import QuestionHeader from './QuestionHeader'
 import { nest } from 'd3-collection'
 import { v4 as uuid } from 'uuid'
 
 import {
   Interaction,
-  Editorial,
   mediaQueries,
   Checkbox,
   Radio,
@@ -97,15 +97,9 @@ class ChoiceQuestion extends Component {
       .entries(options)
     const userAnswerValues = userAnswer ? userAnswer.payload.value : []
 
-    const beforeP = metadata && metadata.beforeP
-
     return (
       <div {...questionStyles.question}>
-        {beforeP && (
-          <div {...questionStyles.before}>
-            <Editorial.Subhead>{beforeP}</Editorial.Subhead>
-          </div>
-        )}
+        <QuestionHeader metadata={metadata} />
         {text && (
           <P {...questionStyles.text}>
             {order + 1}. {text}

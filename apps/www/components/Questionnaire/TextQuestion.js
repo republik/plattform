@@ -1,9 +1,10 @@
 import { Component } from 'react'
 import questionStyles from './questionStyles'
+import QuestionHeader from './QuestionHeader'
 import debounce from 'lodash/debounce'
 import { v4 as uuid } from 'uuid'
 
-import { Interaction, Editorial } from '@project-r/styleguide'
+import { Interaction } from '@project-r/styleguide'
 import TextInput from './TextInput/TextInput'
 import withT from '../../lib/withT'
 const { P } = Interaction
@@ -51,14 +52,9 @@ class TextQuestion extends Component {
       t,
     } = this.props
     const { value } = this.state
-    const beforeP = metadata && metadata.beforeP
     return (
       <div {...questionStyles.question}>
-        {beforeP && (
-          <div {...questionStyles.before}>
-            <Editorial.Subhead>{beforeP}</Editorial.Subhead>
-          </div>
-        )}
+        <QuestionHeader metadata={metadata} />
         {text && (
           <P {...questionStyles.text}>
             {order + 1}. {text}
