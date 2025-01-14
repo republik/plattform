@@ -151,7 +151,7 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
           {buttonText && !membership.canProlong && (
             <Link
               key='link'
-              href={{ pathname: `/angebote`, query: { package: 'ABO' } }}
+              href={{ pathname: `/angebote`}}
               passHref
               prefetch={false}
               legacyBehavior
