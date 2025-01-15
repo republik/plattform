@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react'
-import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 
 import { sansSerifRegular14 } from '../Typography/styles'
@@ -22,6 +21,10 @@ const collapsedBodyStyle = (mobile, desktop) =>
     maxHeight: mobile,
     [mUp]: {
       maxHeight: desktop,
+    },
+    '@media print': {
+      overflow: 'visible',
+      maxHeight: 'none',
     },
   })
 
@@ -101,7 +104,7 @@ const Collapsable = ({
     if (window.matchMedia('print').matches) {
       setBodyVisibility('full')
     } else if (bodyVisibility === 'auto' && bodySize?.height !== undefined) {
-    /* Collapse the body (switch to 'preview' visibility) when allowed and the size exceeds the threshold. */
+      /* Collapse the body (switch to 'preview' visibility) when allowed and the size exceeds the threshold. */
       const maxBodyHeight = isDesktop ? desktop : mobile
       if (bodySize.height > maxBodyHeight + threshold) {
         setBodyVisibility('preview')
@@ -190,24 +193,26 @@ const Collapsable = ({
       </div>
 
       {bodyVisibility !== 'auto' && !editorPreview && (
-        <div
-          {...merge(
-            collapsed ? styles.buttonContainer : {},
-            collapsed ? buttonContainerBefore : {},
-            !alwaysCollapsed && styles.buttonContainerDivider,
-            !alwaysCollapsed && colorScheme.set('borderColor', 'divider'),
-          )}
-        >
-          {!alwaysCollapsed && (
-            <button
-              {...styles.button}
-              {...buttonRules}
-              onClick={onToggleCollapsed}
-              title={collapseLabel}
-            >
-              {collapseLabel}
-            </button>
-          )}
+        <div>
+          <div
+            {...merge(
+              collapsed ? styles.buttonContainer : {},
+              collapsed ? buttonContainerBefore : {},
+              !alwaysCollapsed && styles.buttonContainerDivider,
+              !alwaysCollapsed && colorScheme.set('borderColor', 'divider'),
+            )}
+          >
+            {!alwaysCollapsed && (
+              <button
+                {...styles.button}
+                {...buttonRules}
+                onClick={onToggleCollapsed}
+                title={collapseLabel}
+              >
+                {collapseLabel}
+              </button>
+            )}
+          </div>
         </div>
       )}
     </div>
