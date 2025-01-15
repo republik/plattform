@@ -1,12 +1,22 @@
 const { Client } = require('@elastic/elasticsearch')
+const debug = require('debug')('base:lib:elastic')
 
-const connect = (node) =>
-  new Client({
+const connect = (node) => {
+  const client = new Client({
     node:
       node ||
       process.env.ELASTIC_URL ||
       'http://elastic:elastic@localhost:9200',
   })
+  client.on('response', (err, result) => {
+    if (err) {
+      console.error(JSON.stringify(err))
+    } else {
+      debug(result)
+    }
+  })
+  return client
+}
 
 const disconnect = (client) => client.close()
 
