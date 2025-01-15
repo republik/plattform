@@ -15,6 +15,7 @@ import {
   REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
   serializeMailSettings,
 } from '../mail-settings'
+import { getConfig } from '../config'
 
 const logger = createLogger('payments:gifts')
 
@@ -64,7 +65,7 @@ const GIFTS: Gift[] = [
     duration: 1,
     durationUnit: 'year',
     offer: 'YEARLY',
-    coupon: process.env.PAYMENTS_PROJECT_R_YEARLY_GIFT_COUPON!,
+    coupon: getConfig().PROJECT_R_YEARLY_GIFT_COUPON,
     company: 'PROJECT_R',
     value: 100,
     valueType: 'PERCENTAGE',
@@ -74,7 +75,7 @@ const GIFTS: Gift[] = [
     duration: 3,
     durationUnit: 'month',
     offer: 'MONTHLY',
-    coupon: process.env.PAYMENTS_REPUBLIK_MONTHLY_GIFT_3_COUPON!,
+    coupon: getConfig().REPUBLIK_3_MONTH_GIFT_COUPON,
     company: 'REPUBLIK',
     value: 100,
     valueType: 'PERCENTAGE',
@@ -405,8 +406,6 @@ export class GiftShop {
       throw new Error(`yearly subscription ${id} does not exist`)
     }
 
-    console.log(gift)
-
     switch (gift.company) {
       case 'PROJECT_R': {
         await this.#stripeAdapters.PROJECT_R.subscriptions.update(stripeId, {
@@ -419,76 +418,11 @@ export class GiftShop {
           throw Error('Not implemented')
         }
 
-        console.log('trying to add three months to yearly subscription')
+        const coupon = getConfig().PROJECT_R_3_MONTH_GIFT_COUPON
 
-        const sub = await this.#stripeAdapters.PROJECT_R.subscriptions.retrieve(
-          stripeId,
-          {
-            expand: ['schedule'],
-          },
-        )
-
-        let schedule: Stripe.SubscriptionSchedule | undefined
-        if (sub.schedule === null) {
-          schedule =
-            await this.#stripeAdapters.PROJECT_R.subscriptionSchedules.create({
-              from_subscription: sub.id,
-            })
-        } else {
-          schedule = sub.schedule as Stripe.SubscriptionSchedule
-        }
-
-        const nowInSeconds = Math.floor(Date.now() / 1000)
-        const currentPhase = schedule.phases.find(
-          (p) => nowInSeconds >= p.start_date && nowInSeconds <= p.end_date,
-        )
-
-        if (!currentPhase)
-          throw Error('unable to get current subscription schedule phase')
-
-        const currentPrice = currentPhase?.items[0].price as string | undefined
-
-        const prices = (
-          await this.#stripeAdapters.PROJECT_R.prices.list({
-            active: true,
-            lookup_keys: ['ABO', gift.id],
-          })
-        ).data
-
-        const ABO_PRICE = prices.find((p) => p.lookup_key === 'ABO')!
-        const GIFT_PRICE = prices.find((p) => p.lookup_key === gift.id)!
-
-        const newSchedule =
-          await this.#stripeAdapters.PROJECT_R.subscriptionSchedules.update(
-            schedule.id,
-            {
-              phases: [
-                {
-                  items: currentPhase.items.map((i) => ({
-                    price: i.price.toString(),
-                    quantity: i.quantity,
-                    discounts: i.discounts.map((d) => ({
-                      coupon: d.coupon?.toString(),
-                    })),
-                  })),
-                  start_date: currentPhase.start_date,
-                  end_date: currentPhase.end_date,
-                },
-                {
-                  items: [{ price: GIFT_PRICE.id, quantity: 1 }],
-                  iterations: 1,
-                },
-                {
-                  items: [{ price: currentPrice ?? ABO_PRICE.id, quantity: 1 }],
-                  iterations: 1,
-                  billing_cycle_anchor: 'phase_start',
-                },
-              ],
-              end_behavior: 'release',
-            },
-          )
-
-        console.log(newSchedule)
+        await this.#stripeAdapters.PROJECT_R.subscriptions.update(stripeId, {
+          coupon: coupon,
+        })
 
         return { id: id, company: 'PROJECT_R' }
       }

@@ -16,6 +16,9 @@ export type Config = {
   REPUBLIK_STRIPE_SUBSCRIPTION_TAX_ID: string
   REPUBLIK_STRIPE_PAYMENTS_CONFIG_ID: string
   PROJECT_R_STRIPE_PAYMENTS_CONFIG_ID: string
+  REPUBLIK_3_MONTH_GIFT_COUPON: string
+  PROJECT_R_3_MONTH_GIFT_COUPON: string
+  PROJECT_R_YEARLY_GIFT_COUPON: string
 }
 
 export function getConfig(): Config {
@@ -64,6 +67,21 @@ export function getConfig(): Config {
     'PAYMENTS_REPUBLIK_STRIPE_PAYMENTS_CONFIG_ID not set',
   )
 
+  assert(
+    typeof process.env.PAYMENTS_PROJECT_R_3_MONTH_GIFT_COUPON !== 'undefined',
+    'PAYMENTS_PROJECT_R_3_MONTH_GIFT_COUPON not set',
+  )
+
+  assert(
+    typeof process.env.PAYMENTS_REPUBLIK_3_MONTH_GIFT_COUPON !== 'undefined',
+    'PAYMENTS_REPUBLIK_3_MONTH_GIFT_COUPON not set',
+  )
+
+  assert(
+    typeof process.env.PAYMENTS_PROJECT_R_YEARLY_GIFT_COUPON !== 'undefined',
+    'PAYMENTS_PROJECT_R_YEARLY_GIFT_COUPON not set',
+  )
+
   return {
     SCHEMA_NAME: DEFAULT_SCHEMA_NAME,
     SHOP_BASE_URL: process.env.SHOP_BASE_URL,
@@ -84,5 +102,11 @@ export function getConfig(): Config {
       process.env.PAYMENTS_PROJECT_R_STRIPE_PAYMENTS_CONFIG_ID,
     REPUBLIK_STRIPE_PAYMENTS_CONFIG_ID:
       process.env.PAYMENTS_REPUBLIK_STRIPE_PAYMENTS_CONFIG_ID,
+    PROJECT_R_3_MONTH_GIFT_COUPON:
+      process.env.PAYMENTS_PROJECT_R_3_MONTH_GIFT_COUPON,
+    PROJECT_R_YEARLY_GIFT_COUPON:
+      process.env.PAYMENTS_PROJECT_R_YEARLY_GIFT_COUPON,
+    REPUBLIK_3_MONTH_GIFT_COUPON:
+      process.env.PAYMENTS_PROJECT_R_3_MONTH_GIFT_COUPON,
   }
 }
