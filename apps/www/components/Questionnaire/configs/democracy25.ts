@@ -38,7 +38,7 @@ const democracyConfig: QuestionnaireConfig = {
   },
   design: {
     bgColor: '#D9F0EF',
-    colors: ['#FFBCDB', '#B4DBF9'],
+    colors: ['#FFBCDB', '#B4DBF9', '#AECFC3'],
     img: {
       url: 'https://cdn.repub.ch/s3/republik-assets/repos/republik/page-klimafragebogen-uebersicht/files/034a0eca-8aaf-4511-90aa-504cca584981/final-art_questionnaire.png',
       urlSquare:
