@@ -9,7 +9,12 @@ const QuestionHeader = ({ metadata }) => {
   return (
     <div {...questionStyles.subheadOuter}>
       <Editorial.Subhead {...questionStyles.subhead}>
-        <span {...questionStyles.subheadInner}>{questionHeader}</span>
+        <span
+          {...questionStyles.subheadInner}
+          style={{ backgroundColor: '#D9F0EF' }}
+        >
+          {questionHeader}
+        </span>
       </Editorial.Subhead>
     </div>
   )

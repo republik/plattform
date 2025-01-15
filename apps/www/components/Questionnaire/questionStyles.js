@@ -24,9 +24,9 @@ const styles = {
     boxDecorationBreak: 'clone',
     paddingLeft: '0.5rem',
     paddingRight: '0.5rem',
-    backgroundColor: '#FDE047',
     marginLeft: '-0.25rem',
     position: 'relative',
+    color: 'black',
   }),
   help: css({
     paddingTop: 15,
