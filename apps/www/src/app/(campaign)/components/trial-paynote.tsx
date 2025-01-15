@@ -1,7 +1,9 @@
 'use client'
 import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
-import { EventTrackingContext } from '@app/lib/matomo/event-tracking'
+import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
+import { token } from '@republik/theme/tokens'
 import { useEffect, useState } from 'react'
 
 type Variant = {
@@ -75,8 +77,9 @@ const Button = ({ utm }: { utm: string }) => {
 export function TrialPaynote({
   variant = 'regular',
 }: {
-  variant?: 'mini' | 'regular'
+  variant?: 'mini' | 'regular' | 'marketing'
 }) {
+  const { isIOSApp } = usePlatformInformation()
   // Choose random variant
   const [textVariant, setTextVariant] = useState<Variant | undefined>(undefined)
   useEffect(() => {
@@ -87,7 +90,7 @@ export function TrialPaynote({
     }
   }, [textVariant])
 
-  if (!textVariant) {
+  if (isIOSApp || !textVariant) {
     return
   }
 
@@ -104,6 +107,12 @@ export function TrialPaynote({
             display: 'none',
           },
         })}
+        style={{
+          backgroundColor:
+            variant === 'marketing'
+              ? token.var(`colors.pageBackground`)
+              : undefined,
+        }}
       >
         <div
           className={css({
@@ -112,25 +121,29 @@ export function TrialPaynote({
             maxWidth: '100%',
             p: '15px',
           })}
+          style={{
+            width: variant === 'marketing' ? 595 : undefined,
+          }}
         >
           <div
             className={css({
               backgroundColor: 'pageBackground',
-
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8',
+              borderRadius: '4px',
               padding: '6',
+              display: 'grid',
+              gap: '4',
               alignItems: 'center',
-              borderWidth: 1,
-              borderColor: 'overlay',
-              borderRadius: 4,
-              my: '6',
+              justifyItems: 'center',
+              gridTemplateColumns: '1fr',
+              gridAutoRows: 'auto',
               md: {
-                padding: '12',
+                gap: '6',
+                gridTemplateColumns: '1fr 1fr',
               },
             })}
-            style={{ margin: variant === 'mini' ? 0 : undefined }}
+            style={{
+              gridTemplateColumns: variant !== 'marketing' ? '1fr' : undefined,
+            }}
           >
             <CampaignLogo
               className={css({
@@ -143,94 +156,122 @@ export function TrialPaynote({
               variant='black'
             />
 
-            <p
-              className={css({
-                textStyle: 'h2Sans',
-                fontWeight: 'bold',
-                fontSize: '2xl',
-              })}
-            >
-              2.– für 30 Tage
-            </p>
-
-            <Button utm={textVariant.utm} />
-
             <div
               className={css({
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
+                gap: 'inherit',
+                textAlign: 'center',
               })}
             >
-              <p
-                className={css({
-                  fontWeight: 'medium',
-                  fontSize: 'm',
-                  // mb: '2',
-                })}
-              >
-                danach 22.– pro Monat
-              </p>
-              <p>jederzeit kündbar</p>
-            </div>
-
-            {variant === 'regular' && (
-              <>
-                <hr
+              <div>
+                <p
                   className={css({
-                    width: 'full',
-                    borderTopWidth: '1px',
-                    borderTopColor: 'rgba(40,40,40,0.2)',
+                    fontWeight: 'medium',
+                    mb: '2',
                   })}
-                />
+                >
+                  Einstiegsangebot
+                </p>
 
-                <h2
+                <p
                   className={css({
                     textStyle: 'h2Sans',
                     fontWeight: 'bold',
-                    fontSize: 'xl',
-                    textAlign: 'center',
+                    fontSize: '2xl',
                   })}
                 >
-                  {textVariant.slogan}
-                </h2>
-
-                <ul
-                  className={css({
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '6',
-                    '& > li': {
-                      listStyleType: 'none',
-                      pl: '6',
-                      position: 'relative',
-                      '&::before': {
-                        content: '"–"',
-                        position: 'absolute',
-                        left: '0',
-                      },
-                    },
-                  })}
-                >
-                  {textVariant.benefits.map((benefit) => {
-                    return <li key={benefit}>{benefit}</li>
-                  })}
-                </ul>
-
-                <p className={css({ textAlign: 'center' })}>
-                  <a
-                    className={css({
-                      color: '#757575',
-                      fontSize: 's',
-                      textDecoration: 'underline',
-                    })}
-                    href={`/angebote?package=ABO&${textVariant.utm}`}
-                  >
-                    {textVariant.upsell}
-                  </a>
+                  11.– für 30 Tage
                 </p>
-              </>
-            )}
+              </div>
+
+              <Button
+                utm={
+                  variant === 'marketing'
+                    ? 'utm_medium=website&utm_source=direct&utm_campaign=einsteigertest&utm_content=homepage-stoerer'
+                    : textVariant.utm
+                }
+              />
+
+              <div
+                className={css({
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                })}
+              >
+                <p
+                  className={css({
+                    fontWeight: 'medium',
+                    // mb: '2',
+                  })}
+                >
+                  danach 22.– pro Monat
+                </p>
+                <p>jederzeit kündbar</p>
+              </div>
+
+              {variant === 'regular' && (
+                <>
+                  <hr
+                    className={css({
+                      width: 'full',
+                      borderTopWidth: '1px',
+                      borderTopColor: 'rgba(40,40,40,0.2)',
+                    })}
+                  />
+
+                  <h2
+                    className={css({
+                      textStyle: 'h2Sans',
+                      fontWeight: 'bold',
+                      fontSize: 'xl',
+                      textAlign: 'center',
+                    })}
+                  >
+                    {textVariant.slogan}
+                  </h2>
+
+                  <ul
+                    className={css({
+                      display: 'flex',
+                      flexDirection: 'column',
+                      textAlign: 'left',
+
+                      gap: '6',
+                      '& > li': {
+                        listStyleType: 'none',
+                        pl: '6',
+                        position: 'relative',
+                        '&::before': {
+                          content: '"–"',
+                          position: 'absolute',
+                          left: '0',
+                        },
+                      },
+                    })}
+                  >
+                    {textVariant.benefits.map((benefit) => {
+                      return <li key={benefit}>{benefit}</li>
+                    })}
+                  </ul>
+
+                  <p className={css({ textAlign: 'center' })}>
+                    <a
+                      className={css({
+                        color: '#757575',
+                        fontSize: 's',
+                        textDecoration: 'underline',
+                      })}
+                      href={`/angebote?package=ABO&${textVariant.utm}`}
+                    >
+                      {textVariant.upsell}
+                    </a>
+                  </p>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

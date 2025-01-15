@@ -193,26 +193,24 @@ const Collapsable = ({
       </div>
 
       {bodyVisibility !== 'auto' && !editorPreview && (
-        <div>
-          <div
-            {...merge(
-              collapsed ? styles.buttonContainer : {},
-              collapsed ? buttonContainerBefore : {},
-              !alwaysCollapsed && styles.buttonContainerDivider,
-              !alwaysCollapsed && colorScheme.set('borderColor', 'divider'),
-            )}
-          >
-            {!alwaysCollapsed && (
-              <button
-                {...styles.button}
-                {...buttonRules}
-                onClick={onToggleCollapsed}
-                title={collapseLabel}
-              >
-                {collapseLabel}
-              </button>
-            )}
-          </div>
+        <div
+          {...merge(
+            collapsed ? styles.buttonContainer : {},
+            collapsed ? buttonContainerBefore : {},
+            !alwaysCollapsed && styles.buttonContainerDivider,
+            !alwaysCollapsed && colorScheme.set('borderColor', 'divider'),
+          )}
+        >
+          {!alwaysCollapsed && (
+            <button
+              {...styles.button}
+              {...buttonRules}
+              onClick={onToggleCollapsed}
+              title={collapseLabel}
+            >
+              {collapseLabel}
+            </button>
+          )}
         </div>
       )}
     </div>
