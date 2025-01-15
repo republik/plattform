@@ -26,6 +26,9 @@ const styles = {
     margin: '0 auto',
     padding: 0,
     width: '100%',
+    '@media print': {
+      display: 'none',
+    },
   }),
   description: css({
     padding: '0px 15px',
@@ -33,11 +36,6 @@ const styles = {
   plainlink: css({
     textDecoration: 'none',
     color: 'inherit',
-  }),
-  hidePrint: css({
-    '@media print': {
-      display: 'none',
-    },
   }),
 }
 
@@ -137,40 +135,38 @@ function SeriesNav({
         </Editorial.P>
       ) : null}
 
-      <div {...styles.hidePrint}>
-        <TeaserCarousel grid={!inline} isSeriesNav>
-          <TeaserCarouselTileContainer
-            initialScrollTileIndex={currentTileIndex}
-            isSeriesNav
-          >
-            {episodes.map((episode, i) => {
-              return (
-                <SeriesNavTile
-                  key={i}
-                  index={i}
-                  repoId={repoId}
-                  context={context}
-                  PayNote={episode.isPayNote && PayNote}
-                  current={repoId && repoId === episode?.document?.repoId}
-                  episode={episode}
-                  inline={inline}
-                  ActionBar={ActionBar}
-                  Link={Link}
-                  onEpisodeClick={onEpisodeClick}
-                  aboveTheFold={aboveTheFold}
-                  t={t}
-                />
-              )
-            })}
-          </TeaserCarouselTileContainer>
-        </TeaserCarousel>
+      <TeaserCarousel grid={!inline} isSeriesNav>
+        <TeaserCarouselTileContainer
+          initialScrollTileIndex={currentTileIndex}
+          isSeriesNav
+        >
+          {episodes.map((episode, i) => {
+            return (
+              <SeriesNavTile
+                key={i}
+                index={i}
+                repoId={repoId}
+                context={context}
+                PayNote={episode.isPayNote && PayNote}
+                current={repoId && repoId === episode?.document?.repoId}
+                episode={episode}
+                inline={inline}
+                ActionBar={ActionBar}
+                Link={Link}
+                onEpisodeClick={onEpisodeClick}
+                aboveTheFold={aboveTheFold}
+                t={t}
+              />
+            )
+          })}
+        </TeaserCarouselTileContainer>
+      </TeaserCarousel>
 
-        {inline && PayNote && (
-          <InvertedColorScheme>
-            <PayNote context={context} repoId={repoId} inline />
-          </InvertedColorScheme>
-        )}
-      </div>
+      {inline && PayNote && (
+        <InvertedColorScheme>
+          <PayNote context={context} repoId={repoId} inline />
+        </InvertedColorScheme>
+      )}
     </div>
   )
 }
