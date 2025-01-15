@@ -15,84 +15,57 @@ import { IconDownload } from '@republik/icons'
 
 export const getPdfUrl = (
   meta,
-  { images = true, download = false, pageSize } = {},
+  { images = true, download = false, format } = {},
 ) => {
-  const query = [
-    pageSize && pageSize !== 'A4' && `size=${pageSize}`,
-    !images && 'images=0',
-    download && 'download=1',
-  ].filter(Boolean)
-  return `${ASSETS_SERVER_BASE_URL}/pdf${meta.path}.pdf${
-    query.length ? `?${query.join('&')}` : ''
-  }`
-}
-
-const matchFigure = (node) =>
-  node.type === 'zone' && node.identifier === 'FIGURE'
-const matchVideo = (node) =>
-  node.type === 'zone' &&
-  node.identifier === 'EMBEDVIDEO' &&
-  node.data.forceAudio
-
-export const countImages = (element) => {
-  if (matchFigure(element) || matchVideo(element)) {
-    return 1
-  }
-  return (element.children || []).reduce(
-    (count, node) => count + countImages(node),
-    0,
-  )
+  const url = new URL(`${ASSETS_SERVER_BASE_URL}/pdf${meta.path}.pdf`)
+  url.searchParams.set('format', format)
+  url.searchParams.set('images', images)
+  url.searchParams.set('download', download)
+  url.searchParams.set('version', meta.lastPublishedAt)
+  return url.toString()
 }
 
 const PdfOverlay = ({ onClose, article, t }) => {
   const [images, setImages] = useState(true)
-  const [pageSize, setPageSize] = useState('A4')
-  const imageCount = countImages(article.content)
+  const [pageFormat, setPageFormat] = useState('A4')
 
   return (
     <Overlay onClose={onClose} mUpStyle={{ maxWidth: 300, minHeight: 0 }}>
       <OverlayToolbar title={t('article/pdf/title')} onClose={onClose} />
       <OverlayBody>
-        <div style={{ marginBottom: 10 }}>
-          {['A4', 'A5'].map((size) => (
-            <Radio
-              key={size}
-              value={size}
-              checked={pageSize === size}
-              onChange={() => setPageSize(size)}
-              style={{
-                marginRight: 10,
-                marginBottom: 10,
-              }}
-            >
-              {t(`article/pdf/size/${size}`)}{' '}
-            </Radio>
-          ))}
+        {['A4', 'A5'].map((format) => (
+          <Radio
+            key={format}
+            value={format}
+            checked={pageFormat === format}
+            onChange={() => setPageFormat(format)}
+            style={{
+              marginRight: 10,
+              marginBottom: 10,
+            }}
+          >
+            {format}
+          </Radio>
+        ))}
+        <div style={{ marginTop: 20, marginBottom: 20 }}>
+          <Checkbox
+            checked={images}
+            onChange={(_, checked) => {
+              setImages(checked)
+            }}
+          >
+            {t('article/pdf/images')}
+          </Checkbox>
         </div>
-        {!!imageCount && (
-          <>
-            <Checkbox
-              checked={images}
-              onChange={(_, checked) => {
-                setImages(checked)
-              }}
-            >
-              {t.pluralize('article/pdf/images', {
-                count: imageCount,
-              })}
-            </Checkbox>
-            <br />
-            <br />
-          </>
-        )}
-        <Button block href={getPdfUrl(article.meta, { pageSize, images })}>
+
+        <Button block href={getPdfUrl(article.meta, { pageFormat, images })}>
           {t('article/pdf/open')}
         </Button>
         <div style={{ textAlign: 'center', marginTop: 10 }}>
           <A
             target='_blank'
             href={getPdfUrl(article.meta, {
-              pageSize,
+              pageFormat,
               images,
               download: true,
             })}

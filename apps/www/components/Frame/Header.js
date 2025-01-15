@@ -77,7 +77,8 @@ const Header = ({
   const backButton = inNativeIOSApp && me && !isOnTopLevelPage
 
   // check if we can pop the navigation stack
-  const closeHandler = () => window.history.length > 1 ? router.back() : router.push('/')
+  const closeHandler = () =>
+    window.history.length > 1 ? router.back() : router.push('/')
 
   useEffect(() => {
     router.prefetch(me ? '/meine-republik' : '/anmelden')

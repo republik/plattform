@@ -1,5 +1,5 @@
 const { returnImage } = require('../lib')
-const { PDF_BASE_URL } = process.env
+const { PDF_BASE_URL, FRONTEND_BASE_URL } = process.env
 
 if (!PDF_BASE_URL) {
   console.warn('missing env PDF_BASE_URL, the /pdf endpoint will not work')
@@ -17,15 +17,17 @@ module.exports = (server) => {
 
     // pick query parameters intended for PDF endpoint
     // (pass along rest as options, later)
-    const { images, download, size, ...options } = req.query
+    const { images, download, format, ...options } = req.query
 
     // build URL to fetch PDF from
+    // TODO: PDF_BASE_URL = https://screenshot.republik.ch/api/pdf
     const fetchUrl = new URL(`${PDF_BASE_URL}/${path}`)
 
     // add params
+    fetchUrl.searchParams.set('url', `${FRONTEND_BASE_URL}/${path}`)
     images && fetchUrl.searchParams.set('images', images)
     download && fetchUrl.searchParams.set('download', download)
-    size && fetchUrl.searchParams.set('size', size)
+    format && fetchUrl.searchParams.set('format', format)
 
     const result = await fetch(fetchUrl, { method: 'GET' }).catch((error) => {
       console.error('pdf fetch failed', fetchUrl.toString(), { error })
