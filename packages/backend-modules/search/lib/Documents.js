@@ -37,7 +37,7 @@ const MIDDLE_DURATION_MINS = 15
 const LONG_DURATION_MINS = 30
 
 // Seconds to wait for ElasticSearch to reindex update data
-const REINDEX_AWAIT_SECS = 2
+const REINDEX_AWAIT_SECS = 5
 
 const { GITHUB_LOGIN, GITHUB_ORGS } = process.env
 
