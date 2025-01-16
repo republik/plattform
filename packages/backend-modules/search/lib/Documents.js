@@ -448,6 +448,7 @@ const switchState = async function (elastic, state, repoId, docId) {
   return elastic.updateByQuery({
     ...indexRef,
     refresh: true,
+    conflicts: 'proceed',
     body: {
       query: {
         bool: {
@@ -481,6 +482,7 @@ const resetScheduledAt = async function (
   return elastic.updateByQuery({
     ...indexRef,
     refresh: true,
+    conflicts: 'proceed',
     body: {
       query: {
         bool: {
@@ -639,6 +641,7 @@ const publishScheduled = (elastic, redis, elasticDoc) => {
         ...indexRef,
         id: elasticDoc.id,
         refresh: true,
+        conflicts: 'proceed',
         body: {
           doc: {
             meta: { scheduledAt: null },
@@ -701,6 +704,7 @@ const prepublishScheduled = (elastic, redis, elasticDoc) => {
         ...indexRef,
         id: elasticDoc.id,
         refresh: true,
+        conflicts: 'proceed',
         body: {
           doc: {
             meta: { scheduledAt: null },
