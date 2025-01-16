@@ -641,7 +641,6 @@ const publishScheduled = (elastic, redis, elasticDoc) => {
         ...indexRef,
         id: elasticDoc.id,
         refresh: true,
-        conflicts: 'proceed',
         body: {
           doc: {
             meta: { scheduledAt: null },
@@ -704,7 +703,6 @@ const prepublishScheduled = (elastic, redis, elasticDoc) => {
         ...indexRef,
         id: elasticDoc.id,
         refresh: true,
-        conflicts: 'proceed',
         body: {
           doc: {
             meta: { scheduledAt: null },
