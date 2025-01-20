@@ -32,6 +32,7 @@ export type Gift = {
 
 export type Voucher = {
   id?: string
+  orderId: string | null
   code: string
   giftId: string
   issuedBy: Company
@@ -95,8 +96,17 @@ export class GiftShop {
     this.#giftRepo = new GiftVoucherRepo(pgdb)
   }
 
-  async generateNewVoucher(company: Company, giftId: string) {
+  async generateNewVoucher({
+    company,
+    orderId,
+    giftId,
+  }: {
+    company: Company
+    orderId?: string
+    giftId: string
+  }) {
     const voucher: Voucher = {
+      orderId: orderId || null,
       issuedBy: company,
       code: newVoucherCode(),
       giftId: giftId,

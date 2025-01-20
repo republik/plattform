@@ -193,9 +193,6 @@ async function handlePayment(
     paymentStatus = 'paid'
   }
 
-  console.log(sess.line_items.data)
-  console.log(sess.total_details)
-
   const lineItems = sess.line_items.data.map((line) => {
     return {
       lineItemId: line.id,
@@ -209,17 +206,6 @@ async function handlePayment(
       discountAmount: line.amount_discount,
     }
   })
-
-  const giftCodes = []
-  for (const item of lineItems) {
-    if (item.priceLookupKey?.startsWith('GIFT')) {
-      const code = await giftShop.generateNewVoucher(
-        company,
-        item.priceLookupKey,
-      )
-      giftCodes.push(code)
-    }
-  }
 
   const orderDraft = {
     userId: userId,
@@ -238,11 +224,20 @@ async function handlePayment(
   })
 
   await ctx.pgdb.payments.orderLineItems.insert(orderLineItems)
+
+  const giftCodes = []
+  for (const item of lineItems) {
+    if (item.priceLookupKey?.startsWith('GIFT')) {
+      const code = await giftShop.generateNewVoucher({
+        company: company,
+        orderId: order.id,
+        giftId: item.priceLookupKey,
+      })
+      giftCodes.push(code)
+    }
+  }
+
   // TODO!: Insert shipping address
-
-  console.log(orderLineItems)
-  console.log(giftCodes)
-
   await sendGiftPurchaseMail(
     {
       email: sess.customer_details!.email!,
