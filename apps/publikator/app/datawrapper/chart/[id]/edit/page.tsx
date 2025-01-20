@@ -2,7 +2,7 @@ import { meHasRole } from 'lib/graphql/me-has-role'
 import { notFound, redirect } from 'next/navigation'
 
 async function fetchLoginUrl(chartId: string) {
-  const userHasNecessaryPermissions = await meHasRole('publisher')
+  const userHasNecessaryPermissions = await meHasRole('producer')
 
   if (!userHasNecessaryPermissions) {
     return undefined

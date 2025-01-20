@@ -1,3 +1,4 @@
+import { IconEdit, IconEditCircle } from '@republik/icons'
 import OverlayFormManager from '../../utils/OverlayFormManager'
 
 import {
@@ -149,14 +150,15 @@ const Form = ({ data, onChange, editor, node, resizable }) => {
 
 const DatawrapperEdit = ({ datawrapperId }) => {
   return datawrapperId ? (
-    <Interaction.P>
+    <Interaction.P style={{ fontSize: 14 }}>
       <A
         href={`/datawrapper/chart/${datawrapperId}/edit`}
         target='_blank'
         rel='noreferrer'
       >
-        📊 Grafik in Datawrapper bearbeiten
-      </A>
+        <IconEdit size={18} /> Grafik in Datawrapper bearbeiten
+      </A>{' '}
+      (nur Produktion)
     </Interaction.P>
   ) : null
 }
