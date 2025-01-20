@@ -1,19 +1,19 @@
 module.exports = async (user, pgdb) => {
-  // handle pledge based memberships
-  const hasActiveMembership = !!(await pgdb.public.memberships.count({
-    userId: user.id,
-    active: true,
-  }))
+  const res = await pgdb.queryOne(
+    `SELECT
+        (
+          (
+            SELECT COUNT(*) FROM payments.subscriptions s
+            WHERE s."userId" = :userId and s.status not in ('paused', 'canceled', 'incomplete')
+          )
+          +
+          (
+            SELECT COUNT(*) FROM public.memberships m
+            WHERE m."userId" = :userId and m.active = true
+          )
+        ) AS count`,
+    { userId: user.id },
+  )
 
-  if (hasActiveMembership) {
-    return true
-  }
-
-  // stripe subscriptions
-  const hasActiveSubscription = !!(await pgdb.payments.subscriptions.count({
-    userId: user.id,
-    and: [{ 'status !=': 'paused' }, { 'status !=': 'canceled' }],
-  }))
-
-  return hasActiveSubscription
+  return res?.count > 0
 }

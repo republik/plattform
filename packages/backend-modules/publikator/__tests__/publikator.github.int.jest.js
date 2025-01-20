@@ -454,7 +454,7 @@ describe('publish', () => {
         }
         const diff = moment(variables.scheduledAt).diff(moment())
         const waitMs = Math.max(
-          diff + 1000 * 10, // 10s for publicationScheduler
+          diff + 1000 * 30, // 30s for publicationScheduler
           1000,
         )
         // console.log('waitMs:', waitMs, waitMs / 1000)

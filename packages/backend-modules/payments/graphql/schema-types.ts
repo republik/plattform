@@ -6,7 +6,6 @@ extend type User {
   activeMagazineSubscription: MagazineSubscription
 }
 
-
 enum MagazineSubscriptionStatus {
   trialing
   active
@@ -30,11 +29,16 @@ enum CompanyName {
   REPUBLIK
 }
 
+enum CheckoutUIMode {
+ HOSTED
+ CUSTOM
+ EMBEDDED
+}
+
 type StripeCustomer {
   customerId: String!
   company: CompanyName!
 }
-
 
 type MagazineSubscription {
   id: ID!
@@ -65,5 +69,65 @@ type Invoice {
 
 type CustomerPortalSession {
   sessionUrl: String
+}
+
+type CheckoutSession {
+  company: CompanyName!
+  sessionId: String!
+  clientSecret: String
+  url: String
+}
+
+type Offer {
+  id: ID!
+  company: CompanyName!
+  name: String!
+  price: Price!
+  customPrice: CustomPrice
+  discount: Discount
+}
+
+type Price {
+  amount: Int!
+  currency: String!
+  recurring: Recurring
+}
+
+type Recurring {
+  interval: String!
+  interval_count: Int!
+}
+
+type CustomPrice {
+  min: Int!
+  max: Int!
+  step: Float!
+}
+
+type Discount {
+  name: String
+  amountOff: Int!
+  currency: String!
+}
+
+type Product {
+  name: String
+  defaultPrice: Price
+}
+
+input CheckoutSessionOptions {
+  customPrice: Int
+  uiMode: CheckoutUIMode
+  metadata: JSON # String key value object
+  returnURL: String
+}
+
+input CancelSubscriptionOptions {
+  feedback: String
+}
+
+input CancelSubscription {
+  subscriptionId: ID!
+  options: CancelSubscriptionOptions
 }
 `

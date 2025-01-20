@@ -453,6 +453,14 @@
       "value": "Notizbücher"
     },
     {
+      "key": "api/email/option/goodie/librarybook/1",
+      "value": "Republik-Bibliothek Taschenbuch"
+    },
+    {
+      "key": "api/email/option/goodie/librarybook/other",
+      "value": "Republik-Bibliothek Taschenbücher"
+    },
+    {
       "key": "api/email/option/goodie/totebag/1",
       "value": "Tasche"
     },
@@ -1043,14 +1051,6 @@
     {
       "key": "profile/contact/pgpPublicKey/label",
       "value": "PGP-Public-Key"
-    },
-    {
-      "key": "profile/contact/publicUrl/label",
-      "value": "Webseite"
-    },
-    {
-      "key": "profile/contact/publicUrl/error",
-      "value": "Webseite ungültig"
     },
     {
       "key": "profile/contact/facebook/label",
@@ -2343,6 +2343,14 @@
     {
       "key": "api/invoices/option/Goodie/NOTEBOOK/other",
       "value": "Notizbücher"
+    },
+    {
+      "key": "api/invoices/option/Goodie/LIBRARYBOOK/1",
+      "value": "Republik-Bibliothek Taschenbuch"
+    },
+    {
+      "key": "api/invoices/option/Goodie/LIBRARYBOOK/other",
+      "value": "Republik-Bibliothek Taschenbücher"
     },
     {
       "key": "api/invoices/option/Goodie/TOTEBAG_BLACK/1",

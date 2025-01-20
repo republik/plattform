@@ -7,7 +7,7 @@ import {
   IconInstagram,
   IconLogoFacebook,
   IconLogoMastodon,
-  IconLogoTwitter,
+  IconLogoBluesky,
   IconOpensource,
 } from '@republik/icons'
 import { PUBLIC_BASE_URL } from 'lib/constants'
@@ -169,6 +169,7 @@ export default async function Footer() {
               display: 'flex',
               flexDirection: 'row',
               gap: '8px',
+              height: '36px',
             })}
           >
             <div>
@@ -212,8 +213,8 @@ export default async function Footer() {
               Icon={IconLogoFacebook}
             />
             <IconButton
-              href='https://twitter.com/RepublikMagazin'
-              Icon={IconLogoTwitter}
+              href='https://bsky.app/profile/republik.ch'
+              Icon={IconLogoBluesky}
             />
             <IconButton
               href='https://republik.social/@republik_magazin'

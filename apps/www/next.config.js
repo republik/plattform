@@ -1,11 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { withSentryConfig } = require('@sentry/nextjs')
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 })
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { withPlausibleProxy } = require('next-plausible')
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -64,7 +64,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['www.datocms-assets.com', 'cdn.republik.pink', 'cdn.repub.ch'],
+    domains: ['www.datocms-assets.com', 'cdn.republik.pink', 'cdn.repub.ch', 'localhost'],
   },
   compiler: {
     removeConsole:
@@ -175,11 +175,32 @@ const nextConfig = {
         destination: '/konto',
         permanent: true,
       },
+      // Redirect /angebote to shop if no query params are set
+      // {value: undefined} matchaes any value provided to that query param
+      process.env.NEXT_PUBLIC_SHOP_BASE_URL && {
+        source: '/angebote',
+        missing: [
+          { type: 'query', key: 'package', value: undefined },
+          { type: 'query', key: 'group', value: undefined },
+          { type: 'query', key: 'goto', value: undefined },
+        ],
+        destination: process.env.NEXT_PUBLIC_SHOP_BASE_URL,
+        permanent: false,
+      },
       // Redirect 5-years campaign token URLs to static page
       {
         source: '/5-jahre-republik/:token',
         destination: '/5-jahre-republik',
         permanent: true,
+      },
+      // Klimakurs
+      // We can't use our redirection system because
+      // - the page must exist and be published (to include it on the Challenge Accepted overview)
+      // - this redirection must take precedence (which normal redirections don't if a page/article exists already)
+      {
+        source: '/klimakurs',
+        destination: 'https://mailchi.mp/republik.ch/klimakurs',
+        permanent: false,
       },
       /**
        * Migrated from custom express server

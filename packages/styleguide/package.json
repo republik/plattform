@@ -41,6 +41,8 @@
   },
   "dependencies": {
     "body-scroll-lock": "^3.1.5",
+    "next": "^14.2.3",
+    "next-themes": "^0.2.1",
     "serve": "^13.0.2",
     "slate": "^0.88.1",
     "slate-history": "^0.86.0",
@@ -114,8 +116,6 @@
     "glamor": "^2.20.40",
     "lodash": "4.x",
     "mdast-react-render": ">=1.1",
-    "next": "^14.2.3",
-    "next-themes": "^0.2.1",
     "prop-types": ">=15.5",
     "react": "^18.3.1",
     "react-color": "^2.18.1",

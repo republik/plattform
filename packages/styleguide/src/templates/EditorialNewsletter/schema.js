@@ -1,10 +1,9 @@
 import React from 'react'
-import { Br } from './email/Paragraph'
-import HR from './email/HR'
+import HR from './components/HR'
 import Blockquote, {
   BlockquoteText,
   BlockquoteSource,
-} from './email/Blockquote'
+} from './components/Blockquote'
 
 import {
   matchType,
@@ -25,6 +24,7 @@ import {
 } from '../Article/utils'
 import ifRule from '../shared/email/rules/ifRule'
 import elseRule from '../shared/email/rules/elseRule'
+import { embedDataWrapperRule } from "../shared/rules/embedDatawrapperRule";
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
@@ -53,7 +53,7 @@ const createNewsletterSchema = ({
   const globalInlines = [
     {
       matchMdast: matchType('break'),
-      component: Br,
+      component: () => <br />,
       isVoid: true,
     },
     {
@@ -292,6 +292,7 @@ const createNewsletterSchema = ({
             rules: [
               paragraph,
               figure,
+              embedDataWrapperRule({ emailFirst: true }),
               {
                 matchMdast: matchHeading(2),
                 component: H2,

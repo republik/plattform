@@ -1,7 +1,7 @@
 import { GraphqlContext, User } from '@orbiting/backend-modules-types'
 import { Company, USER_VISIBLE_STATUS_TYPES } from '../../lib/types'
 import { Payments } from '../../lib/payments'
-const { Roles } = require('@orbiting/backend-modules-auth')
+import { default as Auth } from '@orbiting/backend-modules-auth'
 
 export = {
   async stripeCustomer(
@@ -9,7 +9,7 @@ export = {
     { company }: { company: Company },
     ctx: GraphqlContext,
   ) {
-    Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
+    Auth.Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
 
     return await Payments.getInstance().getCustomerIdForCompany(
       user.id,
@@ -22,7 +22,7 @@ export = {
     _args: never,
     ctx: GraphqlContext,
   ) {
-    Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
+    Auth.Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
 
     try {
       const res = await Payments.getInstance().fetchActiveSubscription(user.id)
@@ -34,7 +34,7 @@ export = {
   },
 
   async magazineSubscriptions(user: User, _args: never, ctx: GraphqlContext) {
-    Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
+    Auth.Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
     try {
       const res = await Payments.getInstance().listSubscriptions(
         user.id,

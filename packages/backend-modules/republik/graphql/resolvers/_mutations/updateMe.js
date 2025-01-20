@@ -22,8 +22,6 @@ const {
 } = require('@orbiting/backend-modules-assets')
 const { ensureStringLength } = require('@orbiting/backend-modules-utils')
 
-const validator = require('validator')
-
 const MAX_STATEMENT_LENGTH = 140
 const MAX_BIOGRAPHY_LENGTH = 2000
 const MAX_DISCLOSURES_LENGTH = 140
@@ -35,9 +33,6 @@ const MAX_DISCLOSURES_LENGTH = 140
 // therefore lets use a way too high limit
 const MAX_PUBLIC_KEY_LENGTH = 524288 // 0.5mb
 
-const MAX_PUBLIC_URL_LENGTH = 2048
-const MAX_TWITTER_HANDLE_LENGTH = 15
-const MAX_FACEBOOK_ID_LENGTH = 64 // (can also be something like profile.php?id=xxxxxxxxxxxxxxx)
 const MAX_PHONE_NUMBER_NOTE_LENGTH = 140
 const MAX_PHONE_NUMBER_LENGTH = 20 // 20 (15 digits but let's give 5 spaces for formatting, e.g. 0049 XXX XX XX XX XX)
 const MAX_FIRSTNAME_LENGTH = 32
@@ -69,7 +64,6 @@ module.exports = async (_, args, context) => {
     portrait,
     statement,
     isListed,
-    publicUrl,
   } = args
 
   const ensureStringLengthForProfile = createEnsureStringLengthForProfile(
@@ -90,32 +84,6 @@ module.exports = async (_, args, context) => {
     'pgpPublicKey',
     'profile/contact/pgpPublicKey/label',
     MAX_PUBLIC_KEY_LENGTH,
-  )
-  ensureStringLengthForProfile(
-    'publicUrl',
-    'profile/contact/publicUrl/label',
-    MAX_PUBLIC_URL_LENGTH,
-  )
-
-  if (
-    publicUrl &&
-    !validator.isURL(publicUrl, {
-      require_protocol: true,
-      protocols: ['http', 'https'],
-    })
-  ) {
-    throw new Error(t('profile/contact/publicUrl/error'))
-  }
-
-  ensureStringLengthForProfile(
-    'twitterHandle',
-    'profile/contact/twitter/label',
-    MAX_TWITTER_HANDLE_LENGTH,
-  )
-  ensureStringLengthForProfile(
-    'facebookId',
-    'profile/contact/facebook/label',
-    MAX_FACEBOOK_ID_LENGTH,
   )
   ensureStringLengthForProfile(
     'phoneNumberNote',
@@ -158,10 +126,8 @@ module.exports = async (_, args, context) => {
     'ageAccessRole',
     'phoneNumberNote',
     'phoneNumberAccessRole',
-    'facebookId',
-    'twitterHandle',
     'prolitterisId',
-    'publicUrl',
+    'profileUrls',
     'emailAccessRole',
     'pgpPublicKey',
     'hasPublicProfile',

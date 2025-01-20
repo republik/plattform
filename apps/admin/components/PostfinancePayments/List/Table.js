@@ -28,10 +28,12 @@ const Table = ({
         <col style={{ width: '120px' }} />
         <col style={{ width: '100px' }} />
         <col style={{ width: '180px' }} />
-        <col style={{ width: '40%' }} />
+        <col style={{ width: '30%' }} />
         <col style={{ width: '100px' }} />
         <col style={{ width: '100px' }} />
         <col style={{ width: '100px' }} />
+        <col style={{ width: '120px' }} />
+        <col style={{ width: '360px' }} />
         <col style={{ maxWidth: '150px' }} />
       </colgroup>
       <thead>
@@ -84,6 +86,9 @@ const Table = ({
           >
             <Label>Buchungsdatum {indicator('buchungsdatum')}</Label>
           </th>
+          <th {...styles.interactive} {...styles.left}>
+            <Label>Zahlungs-ID</Label>
+          </th>
           <th />
         </tr>
       </thead>
@@ -123,6 +128,7 @@ const Table = ({
               </td>
               <td>{postfinancePayment.matched ? 'Yes' : 'No'}</td>
               <td>{postfinancePayment.buchungsdatum}</td>
+              <td>{postfinancePayment.id}</td>
               <td>
                 {!postfinancePayment.matched && (
                   <span>

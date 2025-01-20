@@ -71,7 +71,7 @@ const MailchimpInterface = ({ logger }: any) => {
       const url = this.buildMembersApiUrl(email, audienceId)
       try {
         const response = await this.fetchAuthenticated('GET', url)
-        const json = await response.json()
+        const json = (await response.json()) as any
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
           debug(`could not get member: ${email} ${json.detail}`)
           return null
@@ -103,7 +103,7 @@ const MailchimpInterface = ({ logger }: any) => {
         const response = await this.fetchAuthenticated('PUT', url, {
           body: JSON.stringify(body),
         })
-        const json = await response.json()
+        const json = (await response.json()) as any
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
           debug(`could not update member: ${email} ${json.detail}`)
           return null
@@ -125,7 +125,7 @@ const MailchimpInterface = ({ logger }: any) => {
       )
       try {
         const response = await this.fetchAuthenticated('GET', url)
-        const json = await response.json()
+        const json = (await response.json()) as any
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
           debug(
             `could not get members in audience: ${audienceId} ${json.detail}`,

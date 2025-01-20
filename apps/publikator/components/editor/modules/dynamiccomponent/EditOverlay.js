@@ -193,7 +193,7 @@ const EditOverlay = (props) => {
     })
   }
   return (
-    <OverlayFormManager {...props} onChange={onChange}>
+    <OverlayFormManager {...props} onChange={onChange} title='Dynamic Component'>
       {({ data, onChange }) => (
         <Form
           data={data}

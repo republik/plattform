@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@orbiting/graphql-list-fields": "^2.0.2",
+    "@republik/remark-preset": "*",
     "apollo-modules-node": "*",
     "bluebird": "^3.7.2",
     "check-env": "^1.3.0",

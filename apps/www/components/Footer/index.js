@@ -73,10 +73,16 @@ const styles = {
   addressColumn: css({
     marginRight: 70,
   }),
+  logo: css({
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '8px',
+    height: '36px',
+  }),
   since: css({
     ...fontStyles.sansSerifRegular14,
     display: 'none',
-    marginLeft: 8,
+    alignSelf: 'flex-end',
     [mediaQueries.mUp]: {
       display: 'inline-block',
     },
@@ -166,13 +172,15 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
           {!isOnMarketingPage ? (
             <FooterNavLink href='/'>
               <a>
-                <Logo {...colorScheme.set('fill', 'text')} height={20} />
-                <span
-                  {...colorScheme.set('color', 'textSoft')}
-                  {...styles.since}
-                >
-                  {t('footer/since')}
-                </span>
+                <div {...styles.logo}>
+                  <Logo {...colorScheme.set('fill', 'text')} height={20} />
+                  <span
+                    {...colorScheme.set('color', 'textSoft')}
+                    {...styles.since}
+                  >
+                    {t('footer/since')}
+                  </span>
+                </div>
               </a>
             </FooterNavLink>
           ) : null}

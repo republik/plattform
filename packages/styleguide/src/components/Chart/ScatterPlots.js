@@ -139,13 +139,13 @@ const ScatterPlot = ({
       ticks: xLines ? xLines.map(tickAccessor) : xTicks,
     },
   ) // xUnit is rendered separately
-  const plotXLines =
+  let plotXLines =
     xLines ||
     (
       xTicks || (xScale === 'log' ? get3EqualDistTicks(plotX) : xAxis.ticks)
     ).map((tick) => ({ tick }))
   // ensure highest value is last: the last value is labelled with the unit
-  plotXLines.sort((a, b) => ascending(a.tick, b.tick))
+  plotXLines = plotXLines.slice().sort((a, b) => ascending(a.tick, b.tick))
 
   // setup y axis
   const yValues = aggregateValues(data, yAccessor, yTicks, yLines)
