@@ -1,13 +1,13 @@
-import { IconEdit, IconEditCircle } from '@republik/icons'
+import { IconEdit } from '@republik/icons'
 import OverlayFormManager from '../../utils/OverlayFormManager'
 
 import {
+  A,
+  Checkbox,
+  Field,
+  Interaction,
   Label,
   Radio,
-  Field,
-  Checkbox,
-  Interaction,
-  A,
 } from '@project-r/styleguide'
 
 const Form = ({ data, onChange, editor, node, resizable }) => {
