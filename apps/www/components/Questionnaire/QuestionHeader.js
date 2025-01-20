@@ -3,7 +3,7 @@ import { Editorial } from '@project-r/styleguide'
 
 const QuestionHeader = ({ metadata }) => {
   const questionHeader = metadata && metadata.questionHeader
-  if (!questionHeader) {
+  if (!questionHeader || !questionHeader.text) {
     return null
   }
   return (
@@ -11,9 +11,9 @@ const QuestionHeader = ({ metadata }) => {
       <Editorial.Subhead {...questionStyles.subhead}>
         <span
           {...questionStyles.subheadInner}
-          style={{ backgroundColor: '#D9F0EF' }}
+          style={{ backgroundColor: questionHeader.backgroundColor }}
         >
-          {questionHeader}
+          {questionHeader.text}
         </span>
       </Editorial.Subhead>
     </div>
