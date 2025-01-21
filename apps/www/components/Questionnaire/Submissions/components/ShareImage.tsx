@@ -7,25 +7,24 @@ import {
   SHARE_IMAGE_HEIGHT,
 } from '@project-r/styleguide'
 
-export const ShareImageSplit = ({
-  question,
-  user,
+type ShareImageProps = {
+  text?: string
+  img: string
+  bgColor?: string
+  fgColor?: string
+}
+
+export const ShareImage = ({
+  text,
   img,
   bgColor,
   fgColor,
-  personShareText,
-}) => {
+}: ShareImageProps) => {
   const router = useRouter()
   const { query } = router
-  if (!query.image && !query.extract) {
+  if (!query.extract) {
     return null
   }
-
-  const text = question
-    ? question.text
-    : user
-    ? personShareText + (user?.name || '')
-    : undefined
 
   if (!text) return null
 

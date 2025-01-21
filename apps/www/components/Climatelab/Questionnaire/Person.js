@@ -32,7 +32,7 @@ import { ShareImageSplit } from '../../Questionnaire/Submissions/ShareImageSplit
 import {
   SubmissionQa,
   styles as submissionStyles,
-} from '../../Questionnaire/Submissions/Submission'
+} from '../../Questionnaire/Submissions/legacy/Submission'
 
 import HeaderShare from '../shared/HeaderShare'
 

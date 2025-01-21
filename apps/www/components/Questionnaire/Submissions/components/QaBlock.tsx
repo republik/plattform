@@ -1,5 +1,3 @@
-import { css } from 'glamor'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useRef } from 'react'
 import scrollIntoView from 'scroll-into-view'
@@ -8,27 +6,17 @@ import { useQuery } from '@apollo/client'
 
 import {
   ColorContextProvider,
-  colors,
   Container,
   Editorial,
-  inQuotes,
   Interaction,
   Loader,
   NarrowContainer,
 } from '@project-r/styleguide'
 
-import { useMe } from '../../../lib/context/MeContext'
-
-import {
-  QUESTIONNAIRE_SUBMISSION_BOOL_QUERY,
-  QUESTIONNAIRE_ONLY_SUBMISSIONS_QUERY,
-} from './graphql'
-import { AnswersGrid, AnswersGridCard } from './AnswersGrid'
+import { QUESTIONNAIRE_ONLY_SUBMISSIONS_QUERY } from '../graphql'
 import { QuestionSummaryChart } from './QuestionChart'
-
-// re-introduced since actionbar/article only expect a single share param
-// (otherwise share for multiple questions fails)
-export const QUESTION_SEPARATOR = ','
+import { QuestionLink, SubmissionLink } from './Links'
+import { Answer, AnswersGrid, AnswersGridCard } from './AnswersGrid'
 
 export const getTargetedAnswers = (questionIds, results) => {
   return results?.nodes.map((submission) => {
@@ -40,83 +28,6 @@ export const getTargetedAnswers = (questionIds, results) => {
       displayAuthor: submission.displayAuthor,
     }
   })
-}
-
-export const SubmissionLink = ({ id, children, personPagePath }) => {
-  return (
-    <Link href={`/${personPagePath}/${id}`} passHref legacyBehavior>
-      {children}
-    </Link>
-  )
-}
-
-export const QuestionLink = ({ questions, children }) => {
-  const router = useRouter()
-  const pathname = router.asPath.split('?')[0].split('#')[0]
-
-  return (
-    <Link
-      href={{
-        pathname,
-        query: {
-          share: questions.map((q) => q.id).join(QUESTION_SEPARATOR),
-        },
-      }}
-      passHref
-      legacyBehavior
-    >
-      {children}
-    </Link>
-  )
-}
-
-type LinkToEditQuestionnaireProps = {
-  slug: string
-  questionnairePath: string
-  personPagePath: string
-  children?: React.ReactNode
-  newOnly?: boolean
-}
-
-export const LinkToEditQuestionnaire = ({
-  slug,
-  children,
-  newOnly,
-  questionnairePath,
-  personPagePath,
-}: LinkToEditQuestionnaireProps) => {
-  const { me } = useMe()
-  const { loading, data } = useQuery(QUESTIONNAIRE_SUBMISSION_BOOL_QUERY, {
-    skip: !me,
-    variables: { slug, userIds: [me?.id] },
-  })
-
-  const hasFilledQuestionnaire = data?.questionnaire?.results?.totalCount > 0
-  if (hasFilledQuestionnaire && newOnly) return null
-  return (
-    <Editorial.P>
-      {loading || !hasFilledQuestionnaire ? (
-        <span>
-          Wie lauten Ihre Antworten? Füllen Sie unseren Fragebogen{' '}
-          <Link href={questionnairePath} legacyBehavior>
-            <Editorial.A>hier</Editorial.A>
-          </Link>{' '}
-          aus.
-        </span>
-      ) : (
-        <span>
-          Sie möchten Ihre eigenen Antworten teilen oder nochmals bearbeiten?{' '}
-          <Link
-            href={`/${personPagePath}/${data.questionnaire.results.nodes[0].id}`}
-            legacyBehavior
-          >
-            <Editorial.A> Hierlang.</Editorial.A>
-          </Link>
-        </span>
-      )}
-      {children}
-    </Editorial.P>
-  )
 }
 
 export const AnswersChart = ({ question, skipTitle }) => {
@@ -145,13 +56,7 @@ export const AnswersChart = ({ question, skipTitle }) => {
   )
 }
 
-const AnswerGridOverview = ({
-  slug,
-  question,
-  valueLength,
-  hint,
-  personPagePath,
-}) => {
+const AnswerGridOverview = ({ slug, question, valueLength, hint }) => {
   const { loading, error, data } = useQuery(
     QUESTIONNAIRE_ONLY_SUBMISSIONS_QUERY,
     {
@@ -196,26 +101,9 @@ const AnswerGridOverview = ({
               <AnswersGrid>
                 {targetedAnswers.map(({ answers, displayAuthor, id }) => (
                   <AnswersGridCard key={id}>
-                    <SubmissionLink id={id} personPagePath={personPagePath}>
+                    <SubmissionLink submissionId={id}>
                       <a style={{ textDecoration: 'none' }}>
-                        <div {...styles.answerCard}>
-                          <div>
-                            <Editorial.Question style={{ marginTop: 0 }}>
-                              {inQuotes(answers[0]?.payload?.value ?? '')}
-                            </Editorial.Question>
-                            <Editorial.Credit
-                              style={{
-                                marginTop: '0',
-                                paddingTop: '20px',
-                              }}
-                            >
-                              Von{' '}
-                              <span style={{ textDecoration: 'underline' }}>
-                                {displayAuthor.name}
-                              </span>
-                            </Editorial.Credit>
-                          </div>
-                        </div>
+                        <Answer answer={answers[0]} author={displayAuthor} />
                       </a>
                     </SubmissionLink>
                   </AnswersGridCard>
@@ -229,14 +117,7 @@ const AnswerGridOverview = ({
   )
 }
 
-export const QuestionFeatured = ({
-  slug,
-  questions,
-  bgColor,
-  valueLength,
-  hint,
-  personPagePath,
-}) => {
+export const QaBlock = ({ slug, questions, bgColor, valueLength, hint }) => {
   const router = useRouter()
   const { query } = router
 
@@ -271,7 +152,6 @@ export const QuestionFeatured = ({
               question={q}
               valueLength={valueLength}
               hint={hint}
-              personPagePath={personPagePath}
             />
           ) : q.__typename === 'QuestionTypeChoice' ? (
             <AnswersChart key={q.id} question={q} skipTitle={false} />
@@ -290,18 +170,4 @@ export const QuestionFeatured = ({
       </Container>
     </div>
   )
-}
-
-const styles = {
-  answerCard: css({
-    background: 'rgba(255,255,255,0.5)',
-    borderRadius: 10,
-    padding: 24,
-    color: 'black',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-  }),
 }

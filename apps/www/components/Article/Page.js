@@ -180,7 +180,7 @@ const ChallengeAcceptedInlineTeaser = dynamic(
 )
 
 const QuestionnaireSubmissions = dynamic(
-  () => import('../Questionnaire/Submissions'),
+  () => import('../Questionnaire/Submissions/legacy'),
   {
     loading: LoadingComponent,
   },
@@ -212,7 +212,7 @@ const PoliticsCommunityQuestionnaire = dynamic(
 )
 
 const QuestionnaireOverview = dynamic(
-  () => import('../Questionnaire/Submissions/Overview'),
+  () => import('../Questionnaire/Submissions'),
   {
     loading: LoadingComponent,
   },

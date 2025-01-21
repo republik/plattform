@@ -7,31 +7,16 @@ type QuestionConfigType = {
   hint?: string
 }
 
-type QuestionnaireImg = {
-  credit: string
-  url: string
-  urlSquare: string // share image
-}
-
-type QuestionnairePaths = {
-  overviewPage: string
-  formPage: string
-}
-
 type QuestionnaireDesign = {
   bgColor: string
   colors: string[]
-  img: QuestionnaireImg
-}
-
-type PageData = {
-  title: string
+  shareImg: string
 }
 
 export type QuestionnaireConfig = {
   dbSlug: string
   questionsStruct: QuestionConfigType[]
-  paths: QuestionnairePaths
+  formPage: string
   design: QuestionnaireDesign
-  personPage: PageData
+  title: string
 }

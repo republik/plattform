@@ -9,8 +9,8 @@ import {
   QUESTION_SEPARATOR,
   LinkToEditQuestionnaire,
   QuestionFeatured,
-} from '../Questionnaire/Submissions/QuestionFeatured'
-import QuestionView from '../Questionnaire/Submissions/QuestionView'
+} from '../Questionnaire/Submissions/components/QaBlock'
+import QuestionView from '../Questionnaire/Submissions/views/QuestionView'
 
 import {
   questionColor,
