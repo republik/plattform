@@ -32,7 +32,7 @@ const Page = ({ CONFIG, extract, share }: SubmissionsOverviewProps) => {
   if (!CONFIG) return null
 
   // we avoid SSG for share urls
-  // (with "share" query param – see next.config l.129)
+  // (see next.config l.129)
   let questionIds: string[] | undefined
   let submissionId: string | undefined
   if (
