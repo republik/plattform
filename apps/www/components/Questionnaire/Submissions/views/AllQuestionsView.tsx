@@ -4,21 +4,21 @@ import { Loader } from '@project-r/styleguide'
 import { QUESTIONNAIRE_QUERY } from '../graphql'
 import { QaBlock } from '../components/QaBlock'
 
-import { QuestionnaireConfig } from '../../types/QuestionnaireConfig'
+import { QuestionnaireConfigType } from '../../types/QuestionnaireConfig'
 
 type AllQuestionsViewProps = {
-  CONFIG: QuestionnaireConfig
+  questionnaireConfig: QuestionnaireConfigType
   questionColor: (idx: number) => string
   extract?: boolean
 }
 
 const AllQuestionsView = ({
-  CONFIG,
+  questionnaireConfig,
   extract,
   questionColor,
 }: AllQuestionsViewProps) => {
   const { loading, error, data } = useQuery(QUESTIONNAIRE_QUERY, {
-    variables: { slug: CONFIG.dbSlug },
+    variables: { slug: questionnaireConfig.dbSlug },
   })
 
   // the extract flag is only used for custom share for in the QuestionView and the PersonView
@@ -35,14 +35,14 @@ const AllQuestionsView = ({
 
         return (
           <div style={{ margin: '48px auto 0' }}>
-            {CONFIG.questionsStruct.map((question, idx) => {
+            {questionnaireConfig.questionsStruct.map((question, idx) => {
               const groupQuestions = question.ids.map((id) => questions[id])
               return (
                 <QaBlock
                   key={question.ids.join('+')}
                   questions={groupQuestions}
                   hint={question.hint}
-                  slug={CONFIG.dbSlug}
+                  slug={questionnaireConfig.dbSlug}
                   bgColor={questionColor(idx)}
                   valueLength={question.valueLength}
                 />

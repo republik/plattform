@@ -54,8 +54,6 @@ export const FormLink = ({ slug, formPath, submissionId }: FormLinkProps) => {
   })
 
   const hasFilledQuestionnaire = data?.questionnaire?.results?.totalCount > 0
-  const ownSubmissionId = data?.questionnaire?.results?.nodes[0]?.id
-  const isOwnQuestionnaire = ownSubmissionId === submissionId
 
   if (!hasFilledQuestionnaire)
     return (
@@ -67,6 +65,9 @@ export const FormLink = ({ slug, formPath, submissionId }: FormLinkProps) => {
         aus.
       </Editorial.P>
     )
+
+  const ownSubmissionId = data?.questionnaire?.results?.nodes[0]?.id
+  const isOwnQuestionnaire = ownSubmissionId === submissionId
 
   if (isOwnQuestionnaire)
     return (

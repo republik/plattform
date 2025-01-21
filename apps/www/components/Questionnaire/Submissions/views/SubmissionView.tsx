@@ -20,7 +20,13 @@ import QuestionnaireMeta from '../components/QuestionnaireMeta'
 import { ShareImage } from '../components/ShareImage'
 import { QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY } from '../graphql'
 
-const SubmissionView = ({ CONFIG, submissionId, extract, share, title }) => {
+const SubmissionView = ({
+  questionnaireConfig,
+  submissionId,
+  extract,
+  share,
+  title,
+}) => {
   const { t } = useTranslation()
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
@@ -36,7 +42,7 @@ const SubmissionView = ({ CONFIG, submissionId, extract, share, title }) => {
     QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
     {
       variables: {
-        slug: CONFIG.dbSlug,
+        slug: questionnaireConfig.dbSlug,
         id: submissionId,
         sortBy: 'random',
       },
@@ -55,8 +61,8 @@ const SubmissionView = ({ CONFIG, submissionId, extract, share, title }) => {
     return (
       <ShareImage
         text={shareText}
-        img={CONFIG.design.shareImg}
-        bgColor={CONFIG.design.bgColor}
+        img={questionnaireConfig.design.shareImg}
+        bgColor={questionnaireConfig.design.bgColor}
       />
     )
   }
@@ -89,7 +95,7 @@ const SubmissionView = ({ CONFIG, submissionId, extract, share, title }) => {
               <div
                 ref={submissionRef}
                 style={{
-                  backgroundColor: CONFIG.design.bgColor,
+                  backgroundColor: questionnaireConfig.design.bgColor,
                   padding: '20px 0',
                 }}
               >

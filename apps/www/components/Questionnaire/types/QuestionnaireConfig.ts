@@ -13,7 +13,7 @@ type QuestionnaireDesign = {
   shareImg: string
 }
 
-export type QuestionnaireConfig = {
+export type QuestionnaireConfigType = {
   dbSlug: string
   questionsStruct: QuestionConfigType[]
   formPage: string

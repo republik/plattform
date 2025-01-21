@@ -5,7 +5,7 @@ import QuestionView from './views/QuestionView'
 import AllQuestionsView from './views/AllQuestionsView'
 import { getOrdinalColors } from './utils'
 
-import { QuestionnaireConfig } from '../types/QuestionnaireConfig'
+import { QuestionnaireConfigType } from '../types/QuestionnaireConfig'
 import SubmissionView from './views/SubmissionView'
 import {
   FormLink,
@@ -14,7 +14,7 @@ import {
 } from './components/Links'
 
 type SubmissionsOverviewProps = {
-  CONFIG: QuestionnaireConfig
+  questionnaireConfig: QuestionnaireConfigType
   extract?: boolean
   share?: {
     extract: number
@@ -25,11 +25,15 @@ type SubmissionsOverviewProps = {
 // - all questions
 // - a single question
 // - a single person's answers
-const Page = ({ CONFIG, extract, share }: SubmissionsOverviewProps) => {
+const Page = ({
+  questionnaireConfig,
+  extract,
+  share,
+}: SubmissionsOverviewProps) => {
   const router = useRouter()
   const { query } = router
 
-  if (!CONFIG) return null
+  if (!questionnaireConfig) return null
 
   // we avoid SSG for share urls
   // (see next.config l.129)
@@ -46,33 +50,33 @@ const Page = ({ CONFIG, extract, share }: SubmissionsOverviewProps) => {
     questionIds = query.share.split(QUESTION_SEPARATOR)
   }
 
-  const questionColor = getOrdinalColors(CONFIG.design.colors)
+  const questionColor = getOrdinalColors(questionnaireConfig.design.colors)
 
   return (
     <>
       <ColorContextProvider colorSchemeKey='light'>
         {questionIds ? (
           <QuestionView
-            slug={CONFIG.dbSlug}
+            slug={questionnaireConfig.dbSlug}
             extract={extract}
             questionIds={questionIds}
             questionColor={questionColor}
-            questions={CONFIG.questionsStruct}
-            questionnaireBgColor={CONFIG.design.bgColor}
+            questions={questionnaireConfig.questionsStruct}
+            questionnaireBgColor={questionnaireConfig.design.bgColor}
             share={share}
-            shareImg={CONFIG.design.shareImg}
+            shareImg={questionnaireConfig.design.shareImg}
           />
         ) : submissionId ? (
           <SubmissionView
-            CONFIG={CONFIG}
+            questionnaireConfig={questionnaireConfig}
             submissionId={submissionId}
             extract={extract}
             share={share}
-            title={CONFIG.title}
+            title={questionnaireConfig.title}
           />
         ) : (
           <AllQuestionsView
-            CONFIG={CONFIG}
+            questionnaireConfig={questionnaireConfig}
             questionColor={questionColor}
             extract={extract}
           />
@@ -81,9 +85,9 @@ const Page = ({ CONFIG, extract, share }: SubmissionsOverviewProps) => {
       {!extract && (
         <Center attributes={{ style: { marginBottom: -48, marginTop: 20 } }}>
           <FormLink
-            slug={CONFIG.dbSlug}
+            slug={questionnaireConfig.dbSlug}
             submissionId={submissionId}
-            formPath={CONFIG.formPage}
+            formPath={questionnaireConfig.formPage}
           />
           <br />
         </Center>
