@@ -45,10 +45,11 @@ const SubmissionView = ({ CONFIG, submissionId, extract, share, title }) => {
 
   const author = data?.questionnaire?.results?.nodes[0]?.displayAuthor
 
-  // TODO: title
-  const shareText = `${title}: ${t(
-    'questionnaire/submission/description',
-  ).replace('{name}', author?.name)}`
+  const subheadText = t('questionnaire/submission/description').replace(
+    '{name}',
+    author?.name,
+  )
+  const shareText = `${title}: ${subheadText}`
 
   if (extract) {
     return (
@@ -116,7 +117,7 @@ const SubmissionView = ({ CONFIG, submissionId, extract, share, title }) => {
                       />
                     )}
                     <Editorial.Subhead style={{ marginTop: 0 }}>
-                      {author?.name}
+                      {subheadText}
                     </Editorial.Subhead>
                   </div>
 
