@@ -15,7 +15,7 @@
       ],
       "#graphql/*": [
         "./graphql/*"
-      ]
+      ],
     }
   },
   "include": [
@@ -23,7 +23,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "components/Questionnaire/Submissions/views/QuestionView.jsx"  ],
+  ],
   "exclude": [
     "node_modules"
   ]
