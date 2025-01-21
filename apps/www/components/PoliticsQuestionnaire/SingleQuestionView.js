@@ -49,8 +49,6 @@ const Page = ({
   shareImageUrlObj.searchParams.set('image', true)
   const shareImageUrl = shareImageUrlObj.toString()
 
-  console.log(question)
-
   if (image) {
     return (
       <ShareImage
