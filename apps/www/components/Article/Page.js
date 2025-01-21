@@ -190,13 +190,6 @@ const EdgeQuestion = dynamic(() => import('../Climatelab/EdgeQuestion/index'), {
   loading: LoadingComponent,
 })
 
-const ClimateLabQuestionnaireV2 = dynamic(
-  () => import('../Climatelab/QuestionnaireChallengeAccepted/Overview'),
-  {
-    loading: LoadingComponent,
-  },
-)
-
 const PoliticsCommunityQuestionnaire = dynamic(
   () => import('../PoliticsCommunityQuestionnaire/Overview'),
   {
@@ -471,7 +464,6 @@ const ArticlePage = ({
           CLIMATE_LAB_COUNTER: ClimateLabCounter,
           CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
           POLITICS_COMMUNITY_QUESTIONNAIRE: PoliticsCommunityQuestionnaire,
-          CLIMATE_LAB_QUESTIONNAIRE_V2: ClimateLabQuestionnaireV2,
           POSTCARD: Postcard,
           POSTCARD_GALLERY: PostcardGallery,
           CHALLENGE_ACCEPTED_INLINE_TEASER: ChallengeAcceptedInlineTeaser,
