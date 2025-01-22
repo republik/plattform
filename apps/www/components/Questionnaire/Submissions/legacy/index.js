@@ -14,12 +14,12 @@ import {
   usePrevious,
 } from '@project-r/styleguide'
 
-import { useInfiniteScroll } from '../../../lib/hooks/useInfiniteScroll'
-import { useTranslation } from '../../../lib/withT'
-import ErrorMessage from '../../ErrorMessage'
+import { useInfiniteScroll } from '../../../../lib/hooks/useInfiniteScroll'
+import { useTranslation } from '../../../../lib/withT'
+import ErrorMessage from '../../../ErrorMessage'
 import Submission from './Submission'
 import PlainButton from './PlainButton'
-import { SortToggle } from '../../Search/Sort'
+import { SortToggle } from '../../../Search/Sort'
 import ShareSubmission from './Share'
 import {
   hasMoreData,
@@ -30,7 +30,7 @@ import {
   SORT_DIRECTION_PARAM,
   SORT_KEY_PARAM,
   SUPPORTED_SORT,
-} from './graphql'
+} from '../graphql'
 import { IconClose, IconSearch } from '@republik/icons'
 
 const getTotalCount = (data) => data?.questionnaire?.submissions?.totalCount
