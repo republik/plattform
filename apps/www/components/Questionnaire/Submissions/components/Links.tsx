@@ -12,7 +12,7 @@ export const SUBMISSION_PREFIX = 'submission-'
 
 const QuestionnaireLink = ({ share, children }) => {
   const router = useRouter()
-  const pathname = router.asPath.split('?')[0].split('#')[0]
+  const pathname = router.asPath.split('?')[0]
 
   return (
     <Link
