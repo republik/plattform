@@ -9,6 +9,7 @@ import {
   Loader,
   Editorial,
   Center,
+  useHeaderHeight,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 
@@ -40,6 +41,7 @@ const QuestionView = ({
   questionnaireBgColor,
 }) => {
   const { t } = useTranslation()
+  const [headerHeight] = useHeaderHeight()
   const { loading, error, data, fetchMore } = useQuery(
     QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
     {
@@ -64,7 +66,10 @@ const QuestionView = ({
   const answerGridRef = useRef()
   useEffect(() => {
     if (extract) return
-    scrollIntoView(answerGridRef.current)
+    scrollIntoView(answerGridRef.current, {
+      time: 0,
+      align: { topOffset: headerHeight, top: 0 },
+    })
   }, [])
 
   const allQuestions = data?.questionnaire?.questions

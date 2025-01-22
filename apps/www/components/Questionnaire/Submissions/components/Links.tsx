@@ -10,9 +10,29 @@ import { Editorial, Interaction } from '@project-r/styleguide'
 export const QUESTION_SEPARATOR = ','
 export const SUBMISSION_PREFIX = 'submission-'
 
+export const MAIN_VIEWPORT_FOCUS = 'answers'
+
+// We exclude anything that has a query param name "share"
+// from the SSG rendering (next.config l.129). This is necessary
+// for the shares to work properly. It's also the reason why we
+// are doing this weird parsing with the share param and separator and prefix.
+// Like: '?share=submission-5463 param, instead of just '?submission=6543'
+export const mapShareParam = (
+  share,
+): { questionIds?: string[]; submissionId?: string } => {
+  if (typeof share === 'string' && share.startsWith(SUBMISSION_PREFIX)) {
+    return { submissionId: share.replace(SUBMISSION_PREFIX, '') }
+  } else if (typeof share === 'string') {
+    return { questionIds: share.split(QUESTION_SEPARATOR) }
+  }
+  return {}
+}
+
+const getPathname = (router) => router.asPath.split('?')[0].split('#')[0]
+
 const QuestionnaireLink = ({ share, children }) => {
   const router = useRouter()
-  const pathname = router.asPath.split('?')[0]
+  const pathname = getPathname(router)
 
   return (
     <Link
@@ -48,7 +68,7 @@ type FormLinkProps = {
 
 export const FormLink = ({ slug, formPath, submissionId }: FormLinkProps) => {
   const { me } = useMe()
-  const { loading, data } = useQuery(QUESTIONNAIRE_SUBMISSION_BOOL_QUERY, {
+  const { data } = useQuery(QUESTIONNAIRE_SUBMISSION_BOOL_QUERY, {
     skip: !me,
     variables: { slug, userIds: [me?.id] },
   })
@@ -93,9 +113,9 @@ export const FormLink = ({ slug, formPath, submissionId }: FormLinkProps) => {
 type OverviewLinkProps = {
   focus?: string
 }
-export const OverviewLink = ({ focus = null }: OverviewLinkProps) => {
+export const OverviewLink = ({ focus }: OverviewLinkProps) => {
   const router = useRouter()
-  const pathname = router.asPath.split('?')[0]
+  const pathname = getPathname(router)
 
   return (
     <Interaction.P>
@@ -103,10 +123,9 @@ export const OverviewLink = ({ focus = null }: OverviewLinkProps) => {
         href={{
           pathname,
           query: {
-            focus,
+            focus: focus || MAIN_VIEWPORT_FOCUS,
           },
         }}
-        shallow
         passHref
         legacyBehavior
       >

@@ -1,5 +1,11 @@
 import { useRouter } from 'next/router'
-import { ColorContextProvider, Center } from '@project-r/styleguide'
+import scrollIntoView from 'scroll-into-view'
+
+import {
+  ColorContextProvider,
+  Center,
+  useHeaderHeight,
+} from '@project-r/styleguide'
 
 import QuestionView from './views/QuestionView'
 import AllQuestionsView from './views/AllQuestionsView'
@@ -9,9 +15,10 @@ import { QuestionnaireConfigType } from '../types/QuestionnaireConfig'
 import SubmissionView from './views/SubmissionView'
 import {
   FormLink,
-  QUESTION_SEPARATOR,
-  SUBMISSION_PREFIX,
+  MAIN_VIEWPORT_FOCUS,
+  mapShareParam,
 } from './components/Links'
+import { useEffect, useRef } from 'react'
 
 type SubmissionsOverviewProps = {
   questionnaireConfig: QuestionnaireConfigType
@@ -30,33 +37,25 @@ const Page = ({
   extract,
   share,
 }: SubmissionsOverviewProps) => {
+  const [headerHeight] = useHeaderHeight()
   const router = useRouter()
   const { query } = router
-
-  if (!questionnaireConfig) return null
-
-  // We exclude anything that has a query param name "share"
-  // from the SSG rendering (next.config l.129). This is necessary
-  // for the shares to work properly. It's also the reason why we
-  // are doing this weird parsing with the share param and separator and prefix.
-  // Like: '?share=submission-5463 param, instead of just '?submission=6543'
-  let questionIds: string[] | undefined
-  let submissionId: string | undefined
-  if (
-    typeof query.share === 'string' &&
-    query.share.startsWith(SUBMISSION_PREFIX)
-  ) {
-    // assign share param to authorId
-    submissionId = query.share.replace(SUBMISSION_PREFIX, '')
-  } else if (typeof query.share === 'string') {
-    // assign share param to questionIds
-    questionIds = query.share.split(QUESTION_SEPARATOR)
-  }
-
+  const { questionIds, submissionId } = mapShareParam(query.share)
   const questionColor = getOrdinalColors(questionnaireConfig.design.colors)
 
+  const answersRef = useRef()
+  useEffect(() => {
+    if (extract) return
+    if (query?.focus === MAIN_VIEWPORT_FOCUS) {
+      scrollIntoView(answersRef.current, {
+        time: 0,
+        align: { topOffset: headerHeight, top: 0 },
+      })
+    }
+  }, [])
+
   return (
-    <>
+    <div ref={answersRef}>
       <ColorContextProvider colorSchemeKey='light'>
         {questionIds ? (
           <QuestionView
@@ -95,7 +94,7 @@ const Page = ({
           <br />
         </Center>
       )}
-    </>
+    </div>
   )
 }
 
