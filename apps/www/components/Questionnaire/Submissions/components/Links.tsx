@@ -10,21 +10,32 @@ import { Editorial, Interaction } from '@project-r/styleguide'
 export const QUESTION_SEPARATOR = ','
 export const SUBMISSION_PREFIX = 'submission-'
 
+// We exclude anything that has a query param name "share"
+// from the SSG rendering (next.config l.129). This is necessary
+// for the shares to work properly. It's also the reason why we
+// are doing this weird parsing with the share param and separator and prefix.
+// Like: '?share=submission-5463 param, instead of just '?submission=6543'
+export const mapShareParam = (
+  share,
+): { questionIds?: string[]; submissionId?: string } => {
+  if (typeof share === 'string' && share.startsWith(SUBMISSION_PREFIX)) {
+    return { submissionId: share.replace(SUBMISSION_PREFIX, '') }
+  } else if (typeof share === 'string') {
+    return { questionIds: share.split(QUESTION_SEPARATOR) }
+  }
+  return {}
+}
+
+const getPathname = (router) => router.asPath.split('?')[0].split('#')[0]
+
 const QuestionnaireLink = ({ share, children }) => {
   const router = useRouter()
-  const pathname = router.asPath.split('?')[0]
+  const pathname = getPathname(router)
+
+  const href = `${pathname}?share=${share}#answers`
 
   return (
-    <Link
-      href={{
-        pathname,
-        query: {
-          share,
-        },
-      }}
-      passHref
-      legacyBehavior
-    >
+    <Link href={href} passHref legacyBehavior>
       {children}
     </Link>
   )
@@ -48,7 +59,7 @@ type FormLinkProps = {
 
 export const FormLink = ({ slug, formPath, submissionId }: FormLinkProps) => {
   const { me } = useMe()
-  const { loading, data } = useQuery(QUESTIONNAIRE_SUBMISSION_BOOL_QUERY, {
+  const { data } = useQuery(QUESTIONNAIRE_SUBMISSION_BOOL_QUERY, {
     skip: !me,
     variables: { slug, userIds: [me?.id] },
   })
@@ -74,7 +85,7 @@ export const FormLink = ({ slug, formPath, submissionId }: FormLinkProps) => {
       <Editorial.P>
         Sie können Ihre Antworten jederzeit{' '}
         <Link href={formPath} legacyBehavior>
-          <Editorial.A> löschen oder bearbeiten</Editorial.A>
+          <Editorial.A>löschen oder bearbeiten</Editorial.A>
         </Link>
         .
       </Editorial.P>
@@ -84,7 +95,7 @@ export const FormLink = ({ slug, formPath, submissionId }: FormLinkProps) => {
     <Editorial.P>
       Sie möchten Ihre eigenen Antworten teilen oder nochmals bearbeiten?{' '}
       <SubmissionLink submissionId={ownSubmissionId}>
-        <Editorial.A> Hierlang.</Editorial.A>
+        <Editorial.A>Hierlang.</Editorial.A>
       </SubmissionLink>
     </Editorial.P>
   )
@@ -93,23 +104,15 @@ export const FormLink = ({ slug, formPath, submissionId }: FormLinkProps) => {
 type OverviewLinkProps = {
   focus?: string
 }
-export const OverviewLink = ({ focus = null }: OverviewLinkProps) => {
+export const OverviewLink = ({ focus }: OverviewLinkProps) => {
   const router = useRouter()
-  const pathname = router.asPath.split('?')[0]
+  const pathname = getPathname(router)
+
+  const href = `${pathname}#${focus || 'answers'}`
 
   return (
     <Interaction.P>
-      <Link
-        href={{
-          pathname,
-          query: {
-            focus,
-          },
-        }}
-        shallow
-        passHref
-        legacyBehavior
-      >
+      <Link href={href} passHref legacyBehavior>
         <Editorial.A>Zurück zur Übersicht</Editorial.A>
       </Link>
     </Interaction.P>

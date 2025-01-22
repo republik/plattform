@@ -7,11 +7,7 @@ import { getOrdinalColors } from './utils'
 
 import { QuestionnaireConfigType } from '../types/QuestionnaireConfig'
 import SubmissionView from './views/SubmissionView'
-import {
-  FormLink,
-  QUESTION_SEPARATOR,
-  SUBMISSION_PREFIX,
-} from './components/Links'
+import { FormLink, mapShareParam } from './components/Links'
 
 type SubmissionsOverviewProps = {
   questionnaireConfig: QuestionnaireConfigType
@@ -35,24 +31,7 @@ const Page = ({
 
   if (!questionnaireConfig) return null
 
-  // We exclude anything that has a query param name "share"
-  // from the SSG rendering (next.config l.129). This is necessary
-  // for the shares to work properly. It's also the reason why we
-  // are doing this weird parsing with the share param and separator and prefix.
-  // Like: '?share=submission-5463 param, instead of just '?submission=6543'
-  let questionIds: string[] | undefined
-  let submissionId: string | undefined
-  if (
-    typeof query.share === 'string' &&
-    query.share.startsWith(SUBMISSION_PREFIX)
-  ) {
-    // assign share param to authorId
-    submissionId = query.share.replace(SUBMISSION_PREFIX, '')
-  } else if (typeof query.share === 'string') {
-    // assign share param to questionIds
-    questionIds = query.share.split(QUESTION_SEPARATOR)
-  }
-
+  const { questionIds, submissionId } = mapShareParam(query.share)
   const questionColor = getOrdinalColors(questionnaireConfig.design.colors)
 
   return (

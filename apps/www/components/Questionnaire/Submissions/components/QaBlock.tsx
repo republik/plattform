@@ -1,6 +1,4 @@
 import { useRouter } from 'next/router'
-import { useEffect, useRef } from 'react'
-import scrollIntoView from 'scroll-into-view'
 
 import { useQuery } from '@apollo/client'
 
@@ -119,26 +117,18 @@ const AnswerGridOverview = ({ slug, question, valueLength, hint }) => {
 
 export const QaBlock = ({ slug, questions, bgColor, valueLength, hint }) => {
   const router = useRouter()
-  const { query } = router
+  const { asPath } = router
+  const focus = asPath.split('#')?.[1]
 
   const hasTextAnswer = questions.some(
     (q) => q.__typename === 'QuestionTypeText',
   )
 
-  const questionRef = useRef()
-  useEffect(() => {
-    if (query?.focus === questions[0].id) {
-      scrollIntoView(questionRef.current)
-    }
-  }, [])
-
   return (
     <div
-      ref={questionRef}
       id={questions[0].id}
       style={{
         padding: '46px 0',
-        // flexBasis: '50%',
         backgroundColor: bgColor,
         display: 'flex',
       }}

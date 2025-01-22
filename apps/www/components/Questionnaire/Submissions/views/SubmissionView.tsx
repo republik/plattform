@@ -1,8 +1,4 @@
-import { useEffect, useRef } from 'react'
-
 import { useRouter } from 'next/router'
-
-import scrollIntoView from 'scroll-into-view'
 
 import { useTranslation } from 'lib/withT'
 
@@ -30,13 +26,6 @@ const SubmissionView = ({
   const { t } = useTranslation()
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
-
-  const submissionRef = useRef()
-
-  useEffect(() => {
-    if (extract) return
-    scrollIntoView(submissionRef.current)
-  }, [])
 
   const { loading, error, data } = useQuery(
     QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
@@ -89,11 +78,10 @@ const SubmissionView = ({
         }
 
         return (
-          <>
+          <div id='answers'>
             <QuestionnaireMeta share={share} shareText={shareText} />
             <ColorContextProvider colorSchemeKey='light'>
               <div
-                ref={submissionRef}
                 style={{
                   backgroundColor: questionnaireConfig.design.bgColor,
                   padding: '20px 0',
@@ -142,7 +130,7 @@ const SubmissionView = ({
                 </Center>
               </div>
             </ColorContextProvider>
-          </>
+          </div>
         )
       }}
     />
