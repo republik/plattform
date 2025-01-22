@@ -55,16 +55,26 @@ const Header = ({
   const { inNativeIOSApp, inNativeApp } = useInNativeApp()
   const [colorScheme] = useColorContext()
   const [isMobile, setIsMobile] = useState()
+  const [isHidden, setIsHidden] = useState(false)
   const [scrollableHeaderHeight, setScrollableHeaderHeight] =
     useState(HEADER_HEIGHT_MOBILE)
   const [expandedNav, setExpandedNav] = useState(null)
   const router = useRouter()
 
   useEffect(() => {
+    console.log('router.pathname', router.pathname)
     if (router.pathname === USER_MENU_URL) {
       setExpandedNav('user')
     }
   }, [router.pathname, setExpandedNav])
+
+  useEffect(() => {
+    // we hide the header on anchor links
+    if (router.asPath.split('#').length > 1) {
+      console.log('set hidden true')
+      setIsHidden(true)
+    }
+  }, [])
 
   const fixedRef = useRef()
   const diff = useRef(0)
@@ -92,6 +102,9 @@ const Header = ({
 
       if (isAnyNavExpanded) {
         diff.current = 0
+      } else if (isHidden) {
+        diff.current = -scrollableHeaderHeight
+        setIsHidden(false)
       } else {
         const newDiff = lastY.current ? lastY.current - y : 0
         diff.current += newDiff
@@ -125,7 +138,7 @@ const Header = ({
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', measure)
     }
-  }, [isAnyNavExpanded, scrollableHeaderHeight, isMobile])
+  }, [isAnyNavExpanded, scrollableHeaderHeight, isMobile, isHidden])
 
   const hasStickySecondary = hasSecondaryNav && stickySecondaryNav
   useEffect(() => {
@@ -135,7 +148,14 @@ const Header = ({
         // scroll away thin HLine
         (formatColor || hasStickySecondary ? 0 : 1),
     )
-  }, [isMobile, hasSecondaryNav, hasStickySecondary, formatColor])
+  }, [
+    isMobile,
+    hasSecondaryNav,
+    hasStickySecondary,
+    formatColor,
+    isHidden,
+    setIsHidden,
+  ])
 
   const showToggle = me || inNativeApp || router.pathname === '/angebote'
   const showClose = router.pathname === USER_MENU_URL
