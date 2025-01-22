@@ -35,8 +35,11 @@ const Page = ({
 
   if (!questionnaireConfig) return null
 
-  // we avoid SSG for share urls
-  // (see next.config l.129)
+  // We exclude anything that has a query param name "share"
+  // from the SSG rendering (next.config l.129). This is necessary
+  // for the shares to work properly. It's also the reason why we
+  // are doing this weird parsing with the share param and separator and prefix.
+  // Like: '?share=submission-5463 param, instead of just '?submission=6543'
   let questionIds: string[] | undefined
   let submissionId: string | undefined
   if (
