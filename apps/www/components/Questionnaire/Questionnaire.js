@@ -10,6 +10,7 @@ import {
   useHeaderHeight,
   FieldSet,
   useColorContext,
+  colors,
 } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
@@ -42,16 +43,23 @@ const styles = {
   count: css({
     zIndex: 10,
     position: 'sticky',
-    padding: '10px 0',
-    borderBottomWidth: 1,
-    borderBottomStyle: 'solid',
+    paddingTop: 5,
     display: 'flex',
-    minHeight: 55,
+    flexWrap: 'wrap',
+    minHeight: 40,
+    alignItems: 'center',
   }),
-  progressIcon: css({
+  countIcon: css({
     marginLeft: 5,
-    marginTop: 3,
-    minHeight: 30,
+  }),
+  countBarContainer: css({
+    flex: '0 0 100%',
+    height: 2,
+    marginTop: 5,
+  }),
+  countBar: css({
+    height: 2,
+    transition: 'width 0.3s ease',
   }),
 }
 
@@ -103,7 +111,9 @@ const Questionnaire = (props) => {
   })
 
   const onSubmitSuccess = () => {
-    onQuestionnaireChange && onQuestionnaireChange()
+    if (onQuestionnaireChange) {
+      onQuestionnaireChange()
+    }
     return setState({
       updating: false,
     })
@@ -355,7 +365,6 @@ const Questionnaire = (props) => {
               <div
                 {...styles.count}
                 {...colorScheme.set('backgroundColor', 'default')}
-                {...colorScheme.set('borderBottomColor', 'divider')}
                 style={{ top: headerHeight }}
               >
                 {error ? (
@@ -363,27 +372,35 @@ const Questionnaire = (props) => {
                 ) : (
                   <>
                     <P>
-                      <strong>
+                      <small>
                         {t('questionnaire/header', {
                           questionCount,
                           userAnswerCount,
                         })}
-                      </strong>
+                      </small>
                     </P>
-                    {questionCount === userAnswerCount ? (
-                      <div {...styles.progressIcon}>
+                    {questionCount === userAnswerCount && (
+                      <div {...styles.countIcon}>
                         <IconCheckCircle
-                          size={22}
+                          size={16}
                           {...colorScheme.set('fill', 'primary')}
                         />
                       </div>
-                    ) : updating ? (
-                      <div style={{ marginLeft: 5, marginTop: 3 }}>
-                        <InlineSpinner size={24} />
-                      </div>
-                    ) : null}
+                    )}
                   </>
                 )}
+                <div
+                  {...styles.countBarContainer}
+                  {...colorScheme.set('background', 'divider')}
+                >
+                  <div
+                    {...styles.countBar}
+                    {...colorScheme.set('background', 'primary')}
+                    style={{
+                      width: `${(userAnswerCount / questionCount) * 100}%`,
+                    }}
+                  />
+                </div>
               </div>
             )}
             <Questions

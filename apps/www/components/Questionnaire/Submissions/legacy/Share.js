@@ -4,11 +4,11 @@ import { css } from 'glamor'
 
 import { fontStyles } from '@project-r/styleguide'
 
-import Meta from '../../Frame/Meta'
-import AnswerText from './AnswerText'
-import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
-import { useTranslation } from '../../../lib/withT'
-import { replaceText } from './utils'
+import Meta from '../../../Frame/Meta'
+import { AnswerText } from '../components/AnswerText'
+import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../../lib/constants'
+import { useTranslation } from '../../../../lib/withT'
+import { replaceText } from '../utils'
 
 export const SHARE_IMAGE_WIDTH = 1200
 export const SHARE_IMAGE_HEIGHT = 628

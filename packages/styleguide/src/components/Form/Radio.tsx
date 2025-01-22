@@ -7,6 +7,7 @@ import { useColorContext } from '../Colors/useColorContext'
 const styles = {
   label: css({
     cursor: 'pointer',
+    display: 'inline-flex',
   }),
   withText: css({
     ...fontStyles.sansSerifRegular,

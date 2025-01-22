@@ -17,16 +17,16 @@ import { max, shuffle } from 'd3-array'
 import { css } from 'glamor'
 import Link from 'next/link'
 
-import AnswerText from './AnswerText'
+import { AnswerText } from '../components/AnswerText'
 import PlainButton from './PlainButton'
 
-import { swissTime } from '../../../lib/utils/format'
-import { HEADER_HEIGHT } from '../../constants'
-import { useInNativeApp, postMessage } from '../../../lib/withInNativeApp'
-import ShareOverlay from '../../ActionBar/ShareOverlay'
+import { swissTime } from '../../../../lib/utils/format'
+import { HEADER_HEIGHT } from '../../../constants'
+import { useInNativeApp, postMessage } from '../../../../lib/withInNativeApp'
+import ShareOverlay from '../../../ActionBar/ShareOverlay'
 import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { getSubmissionUrl } from './Share'
-import { useTranslation } from '../../../lib/withT'
+import { useTranslation } from '../../../../lib/withT'
 import {
   IconAdd,
   IconRadioChecked,
@@ -213,7 +213,7 @@ export const SubmissionQa = ({ question, payload }) => (
   </Editorial.P>
 )
 
-const Submission = ({
+const SubmissionView = ({
   t,
   id,
   pathname,
@@ -420,4 +420,4 @@ const Submission = ({
   )
 }
 
-export default Submission
+export default SubmissionView
