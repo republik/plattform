@@ -96,30 +96,30 @@ const createJobs = (now) => [
     },
     handleFn: mailings,
   },
-  {
-    name: 'membership_owner_prolong_yearly_abo_notice',
-    prolongBefore: {
-      minDate: getMinEndDate(now, 13),
-      maxDate: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
-    },
-    payload: {
-      templateName: 'membership_owner_prolong_yearly_abo_notice',
-    },
-    predicateFn: ({
-      id: userId,
-      membershipType,
-      membershipAutoPay,
-      autoPay,
-    }) => {
-      return (
-        membershipType === 'YEARLY_ABO' &&
-        (membershipAutoPay === false ||
-          (membershipAutoPay === true &&
-            (!autoPay || (autoPay && userId !== autoPay.userId))))
-      )
-    },
-    handleFn: mailings,
-  },
+  // {
+  //   name: 'membership_owner_prolong_yearly_abo_notice',
+  //   prolongBefore: {
+  //     minDate: getMinEndDate(now, 13),
+  //     maxDate: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
+  //   },
+  //   payload: {
+  //     templateName: 'membership_owner_prolong_yearly_abo_notice',
+  //   },
+  //   predicateFn: ({
+  //     id: userId,
+  //     membershipType,
+  //     membershipAutoPay,
+  //     autoPay,
+  //   }) => {
+  //     return (
+  //       membershipType === 'YEARLY_ABO' &&
+  //       (membershipAutoPay === false ||
+  //         (membershipAutoPay === true &&
+  //           (!autoPay || (autoPay && userId !== autoPay.userId))))
+  //     )
+  //   },
+  //   handleFn: mailings,
+  // },
   {
     name: 'membership_owner_prolong_notice_7',
     prolongBefore: {
