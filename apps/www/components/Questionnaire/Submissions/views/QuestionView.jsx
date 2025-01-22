@@ -93,7 +93,7 @@ const QuestionView = ({
   const questionsType =
     mainQuestion?.__typename === 'QuestionTypeChoice'
       ? 'choice-text'
-      : currentQuestions.length === '2'
+      : currentQuestions.length === 2
       ? 'text-text'
       : 'text'
 
