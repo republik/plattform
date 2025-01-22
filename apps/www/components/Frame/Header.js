@@ -62,7 +62,6 @@ const Header = ({
   const router = useRouter()
 
   useEffect(() => {
-    console.log('router.pathname', router.pathname)
     if (router.pathname === USER_MENU_URL) {
       setExpandedNav('user')
     }
@@ -70,8 +69,8 @@ const Header = ({
 
   useEffect(() => {
     // we hide the header on anchor links
-    if (router.asPath.split('#').length > 1) {
-      console.log('set hidden true')
+    const anchorFragment = router.asPath.split('#')?.[1]
+    if (anchorFragment) {
       setIsHidden(true)
     }
   }, [])
