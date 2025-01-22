@@ -102,7 +102,10 @@ const Header = ({
       if (isAnyNavExpanded) {
         diff.current = 0
       } else if (isHidden) {
-        diff.current = -scrollableHeaderHeight
+        // not at the top of the page
+        if (y > 0) {
+          diff.current = -scrollableHeaderHeight
+        }
         setIsHidden(false)
       } else {
         const newDiff = lastY.current ? lastY.current - y : 0
