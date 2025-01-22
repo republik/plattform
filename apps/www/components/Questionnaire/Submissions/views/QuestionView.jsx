@@ -63,10 +63,10 @@ const QuestionView = ({
     loadMore: loadMoreSubmissions(fetchMore, data),
   })
 
-  const answerGridRef = useRef()
+  const questionRef = useRef()
   useEffect(() => {
     if (extract) return
-    scrollIntoView(answerGridRef.current, {
+    scrollIntoView(questionRef.current, {
       time: 0,
       align: { topOffset: headerHeight, top: 0 },
     })
@@ -102,7 +102,7 @@ const QuestionView = ({
   )
 
   return (
-    <div ref={answerGridRef}>
+    <div ref={questionRef}>
       <Loader
         loading={loading}
         error={error}
