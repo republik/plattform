@@ -1,3 +1,6 @@
+import { useEffect, useRef } from 'react'
+
+import scrollIntoView from 'scroll-into-view'
 import { useQuery } from '@apollo/client'
 
 import {
@@ -21,6 +24,7 @@ import {
 import { AnswersChart, getTargetedAnswers } from '../components/QaBlock'
 import { ShareImage } from '../components/ShareImage'
 import QuestionnaireMeta from '../components/QuestionnaireMeta'
+import { replaceText } from '../utils'
 
 import { OverviewLink, SubmissionLink } from '../components/Links'
 import { AnswersCombo } from '../components/AnswersCombo'
@@ -57,6 +61,12 @@ const QuestionView = ({
     loadMore: loadMoreSubmissions(fetchMore, data),
   })
 
+  const answerGridRef = useRef()
+  useEffect(() => {
+    if (extract) return
+    scrollIntoView(answerGridRef.current)
+  }, [])
+
   const allQuestions = data?.questionnaire?.questions
 
   const currentQuestions =
@@ -87,7 +97,7 @@ const QuestionView = ({
   )
 
   return (
-    <div id='answers'>
+    <div ref={answerGridRef}>
       <Loader
         loading={loading}
         error={error}

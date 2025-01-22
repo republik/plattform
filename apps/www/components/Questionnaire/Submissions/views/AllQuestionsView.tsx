@@ -34,7 +34,7 @@ const AllQuestionsView = ({
         } = data
 
         return (
-          <div style={{ margin: '48px auto 0' }} id='answers'>
+          <div style={{ margin: '48px auto 0' }}>
             {questionnaireConfig.questionsStruct.map((question, idx) => {
               const groupQuestions = question.ids.map((id) => questions[id])
               return (
