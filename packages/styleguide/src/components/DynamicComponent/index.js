@@ -9,6 +9,7 @@ import Loader from '../Loader'
 
 const DEFAULT_ALLOW_LIST = [
   'https://cdn.repub.ch/',
+  'https://cdn.republik.space/',
   'https://assets.republik.space/',
 ]
 
