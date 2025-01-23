@@ -61,7 +61,7 @@ const deactivate = async (
     await enforceSubscriptions({ userId: membership.userId, pgdb })
 
     const user = {id: membership.userId }
-    const hasActiveMagazineAccess = hasUserActiveMembership(user, pgdb)
+    const hasActiveMagazineAccess = await hasUserActiveMembership(user, pgdb)
 
     if (membership.renew && !hasActiveMagazineAccess) {
       await sendMembershipDeactivated({ membership, pgdb, t })
