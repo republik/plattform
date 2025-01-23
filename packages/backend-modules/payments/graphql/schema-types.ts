@@ -141,8 +141,6 @@ type Product {
 
 type ComplimentaryItem {
   id: String!
-  name: String!
-  description: String!
   maxQuantity: Int!
 }
 

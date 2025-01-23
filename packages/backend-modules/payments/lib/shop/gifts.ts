@@ -157,7 +157,7 @@ export class GiftShop {
     gift: Gift,
   ) {
     if (!current) {
-      // create new subscription with the gift if the user has none
+      // create new subscription with the gift if the user has no active subscription
       return this.applyGiftToNewSubscription(userId, gift)
     }
 
@@ -409,8 +409,6 @@ export class GiftShop {
     gift: Gift,
   ): Promise<{ id: string; company: Company }> {
     const stripeId = await this.getStripeSubscriptionId(id)
-
-    console.log('trying to add gift to yearly sub')
 
     if (!stripeId) {
       throw new Error(`yearly subscription ${id} does not exist`)

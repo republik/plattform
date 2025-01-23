@@ -5,10 +5,6 @@ import { Company } from '../types'
 @var base currency amount to equal 1 Swiss Frank use this value to muliplie
 */
 const CHF = 100
-/**
-@var base currency amount to equal 1 Swiss Rappen use this value to muliplie
-*/
-const RAPPEN = 1
 
 export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
 
@@ -66,13 +62,11 @@ export type Offer = {
   }
 }
 
-const PROMO_ITEM_REPUBLIK_BIBLIOTEK_1 = {
-  id: 'REPUBLIK_BILIOTHEK_1',
-  name: 'Hier bitte einen namen einfügen',
-  description: 'foo bar baz',
-  maxQuantity: 1,
-  lookupKey: 'REPUBLIK_BILIOTHEK_1',
-}
+// const PROMO_ITEM_REPUBLIK_BIBLIOTEK_1 = {
+//   id: 'REPUBLIK_BILIOTHEK_1',
+//   maxQuantity: 1,
+//   lookupKey: 'REPUBLIK_BILIOTHEK_1',
+// }
 
 export const Offers: Offer[] = [
   {
@@ -95,7 +89,7 @@ export const Offers: Offer[] = [
     customPrice: {
       min: 1000 * CHF,
       max: 4000 * CHF,
-      step: 100 * RAPPEN,
+      step: 10 * CHF,
       recurring: {
         interval: 'year',
         interval_count: 1,
@@ -113,7 +107,7 @@ export const Offers: Offer[] = [
     customPrice: {
       min: 140 * CHF,
       max: 239 * CHF,
-      step: 50 * RAPPEN,
+      step: 1 * CHF,
       recurring: {
         interval: 'year',
         interval_count: 1,
@@ -131,7 +125,7 @@ export const Offers: Offer[] = [
     customPrice: {
       max: 2000 * CHF,
       min: 10 * CHF,
-      step: 100 * RAPPEN,
+      step: 1 * CHF,
       recurring: {
         interval: 'year',
         interval_count: 1,
@@ -148,14 +142,14 @@ export const Offers: Offer[] = [
     defaultPriceLookupKey: 'MONTHLY_ABO',
     taxRateId: getConfig().REPUBLIK_STRIPE_SUBSCRIPTION_TAX_ID,
   },
-  {
-    id: 'GIFT_YEARLY',
-    name: 'Jahresmitgliedschafts Geschenk',
-    type: 'ONETIME_PAYMENT',
-    company: 'PROJECT_R',
-    requiresLogin: false,
-    allowPromotions: false,
-    complimentaryItems: [PROMO_ITEM_REPUBLIK_BIBLIOTEK_1],
-    defaultPriceLookupKey: 'GIFT_YEARLY',
-  },
+  // {
+  //   id: 'GIFT_YEARLY',
+  //   name: 'Jahresmitgliedschafts Geschenk',
+  //   type: 'ONETIME_PAYMENT',
+  //   company: 'PROJECT_R',
+  //   requiresLogin: false,
+  //   allowPromotions: false,
+  //   complimentaryItems: [PROMO_ITEM_REPUBLIK_BIBLIOTEK_1],
+  //   defaultPriceLookupKey: 'GIFT_YEARLY',
+  // },
 ]
