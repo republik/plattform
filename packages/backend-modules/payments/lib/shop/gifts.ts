@@ -83,6 +83,8 @@ const GIFTS: Gift[] = [
   },
 ]
 
+const IS_GIFT = { initial_type: 'gift' }
+
 export class GiftShop {
   #pgdb: PgDb
   #giftRepo: GiftVoucherRepo
@@ -245,6 +247,7 @@ export class GiftShop {
       collection_method: 'send_invoice',
       cancel_at_period_end: true,
       days_until_due: 14,
+      metadata: IS_GIFT,
     })
 
     if (subscription.latest_invoice) {
@@ -355,6 +358,7 @@ export class GiftShop {
                   'confirm:setup': true,
                 }),
                 'republik.payments.upgrade-from': `monthly_abo:${membershipId}`,
+                ...IS_GIFT
               },
             },
           ],
@@ -389,12 +393,14 @@ export class GiftShop {
           invoice_settings: {
             days_until_due: 14,
           },
+          metadata: IS_GIFT,
         },
       ],
     })
 
     return { company: gift.company }
   }
+
   private async applyGiftToBenefactor(
     _userId: string,
     id: string,
@@ -403,6 +409,7 @@ export class GiftShop {
     throw new Error('Not implemented')
     return { id: id, company: 'PROJECT_R' }
   }
+
   private async applyGiftToYearlySubscription(
     _userId: string,
     id: string,
@@ -487,6 +494,7 @@ export class GiftShop {
                   'confirm:setup': true,
                 }),
                 'republik.payments.upgrade-from': `monthly:${subScriptionId}`,
+                ...IS_GIFT,
               },
             },
           ],
