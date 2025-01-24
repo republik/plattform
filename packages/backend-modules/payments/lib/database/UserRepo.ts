@@ -10,6 +10,16 @@ export type Address = {
   country: string | undefined
 }
 
+export type AddressRow = {
+  id: string
+  name: string
+  city: string | null
+  line1: string | null
+  line2: string | null
+  postalCode: string | null
+  country: string | undefined
+}
+
 type UserUpdateArgs = {
   firstName?: string | null
   lastName?: string | null
@@ -31,11 +41,11 @@ export class UserDataRepo {
     return this.#pgdb.public.users.updateAndGet({ id: userId }, args)
   }
 
-  insertAddress(args: Address) {
+  insertAddress(args: Address): Promise<AddressRow> {
     return this.#pgdb.public.addresses.insertAndGet(args)
   }
 
-  updateAddress(addressId: string, args: Address) {
+  updateAddress(addressId: string, args: Address): Promise<AddressRow> {
     return this.#pgdb.public.addresses.updateAndGet({ id: addressId }, args)
   }
 }

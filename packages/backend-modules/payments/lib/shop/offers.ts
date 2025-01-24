@@ -10,8 +10,6 @@ export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
 
 export type ComplimentaryItem = {
   id: string
-  name: string
-  description: string
   maxQuantity: number
   lookupKey: string
 }

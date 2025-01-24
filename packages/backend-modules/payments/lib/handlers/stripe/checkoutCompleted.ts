@@ -12,6 +12,7 @@ import { mapChargeArgs } from './invoicePaymentSucceeded'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
 import { GiftShop } from '../../shop/gifts'
 import { sendGiftPurchaseMail } from '../../transactionals/sendTransactionalMails'
+import { UserDataRepo } from '../../database/UserRepo'
 
 type PaymentWebhookContext = {
   paymentService: PaymentService
@@ -207,6 +208,24 @@ async function handlePayment(
     }
   })
 
+  console.log(sess.shipping_details)
+
+  let addressId: string | undefined = undefined
+  if (sess.shipping_details) {
+    const shippingAddress = sess.shipping_details.address!
+    const data = {
+      name: sess.shipping_details.name!,
+      city: shippingAddress.city,
+      line1: shippingAddress.line1,
+      line2: shippingAddress.line2,
+      postalCode: shippingAddress.postal_code,
+      country: new Intl.DisplayNames(['de-CH'], { type: 'region' }).of(
+        shippingAddress.country!,
+      ),
+    }
+    addressId = (await new UserDataRepo(ctx.pgdb).insertAddress(data)).id
+  }
+
   const orderDraft = {
     userId: userId,
     customerEmail:
@@ -215,6 +234,7 @@ async function handlePayment(
     metadata: sess.metadata,
     externalId: event.data.object.id,
     status: paymentStatus as 'paid' | 'unpaid',
+    shippingAddressId: addressId,
   }
 
   const order = await ctx.paymentService.saveOrder(orderDraft)
@@ -237,7 +257,6 @@ async function handlePayment(
     }
   }
 
-  // TODO!: Insert shipping address
   await sendGiftPurchaseMail(
     {
       email: sess.customer_details!.email!,
