@@ -6,6 +6,7 @@ import { PgDb } from 'pogi'
 import { normalizeVoucher } from '../../../lib/shop/gifts'
 
 type GiftVoucherValidationResult = {
+  type?: string
   valid: boolean
   isLegacyVoucher: boolean
 }
@@ -19,12 +20,13 @@ export = async function (
 
   const base32Voucher = normalizeVoucher(args.voucher)
   if (base32Voucher) {
-    const isNewVoucher = await new GiftVoucherRepo(ctx.pgdb).getVoucherByCode(
+    const voucher = await new GiftVoucherRepo(ctx.pgdb).getVoucherByCode(
       base32Voucher,
     )
 
-    if (isNewVoucher && isNewVoucher.redeemedAt === null) {
+    if (voucher && voucher.redeemedAt === null) {
       return {
+        type: voucher.giftId,
         valid: true,
         isLegacyVoucher: false,
       }
@@ -33,6 +35,7 @@ export = async function (
 
   if (await isfLegacyVoucher(ctx.pgdb, args.voucher)) {
     return {
+      type: 'MEMBERSHIP',
       valid: true,
       isLegacyVoucher: true,
     }

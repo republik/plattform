@@ -145,8 +145,15 @@ type ComplimentaryItem {
 }
 
 type GiftVoucherValidationResult {
+  type: String!
   valid: Boolean!
   isLegacyVoucher: Boolean!
+}
+
+type RedeemGiftResult {
+  status: String!
+  aboType: String
+  starting: Date
 }
 
 input ComplimentaryItemOrder {

@@ -19,6 +19,13 @@ import { getConfig } from '../config'
 
 const logger = createLogger('payments:gifts')
 
+export type ApplyGiftResult = {
+  id?: string
+  aboType: string
+  company: Company
+  starting: Date
+}
+
 export type Gift = {
   id: string
   company: Company
@@ -122,7 +129,10 @@ export class GiftShop {
     return voucher
   }
 
-  async redeemVoucher(voucherCode: string, userId: string) {
+  async redeemVoucher(
+    voucherCode: string,
+    userId: string,
+  ): Promise<ApplyGiftResult> {
     const code = normalizeVoucher(voucherCode)
     if (!code) {
       throw new Error('voucher is invalid')
@@ -151,13 +161,15 @@ export class GiftShop {
       userId,
       company: abo.company,
     })
+
+    return abo
   }
 
   private async applyGift(
     userId: string,
     current: { type: string; id: string } | null,
     gift: Gift,
-  ) {
+  ): Promise<ApplyGiftResult> {
     if (!current) {
       // create new subscription with the gift if the user has no active subscription
       return this.applyGiftToNewSubscription(userId, gift)
@@ -230,7 +242,7 @@ export class GiftShop {
   private async applyGiftToNewSubscription(
     userId: string,
     gift: Gift,
-  ): Promise<{ company: Company }> {
+  ): Promise<ApplyGiftResult> {
     const cRepo = new CustomerRepo(this.#pgdb)
 
     const customerId = await this.getCustomerId(cRepo, gift.company, userId)
@@ -255,14 +267,14 @@ export class GiftShop {
         subscription.latest_invoice.toString(),
       )
     }
-    return { company: gift.company }
+    return { aboType: offer.name, company: gift.company, starting: new Date() }
   }
 
   private async applyGiftToMembershipAbo(
     _userId: string,
     membershipId: string,
     gift: Gift,
-  ): Promise<{ id: string; company: Company }> {
+  ): Promise<ApplyGiftResult> {
     const tx = await this.#pgdb.transactionBegin()
     try {
       const endDate = await this.getMembershipEndDate(tx, membershipId)
@@ -270,8 +282,8 @@ export class GiftShop {
       const newMembershipPeriod =
         await tx.public.membershipPeriods.insertAndGet({
           membershipId: membershipId,
-          beginDate: endDate,
-          endDate: endDate.add(gift.duration, gift.durationUnit),
+          beginDate: endDate.toDate(),
+          endDate: endDate.add(gift.duration, gift.durationUnit).toDate(),
           kind: 'GIFT',
         })
 
@@ -279,7 +291,12 @@ export class GiftShop {
 
       await tx.transactionCommit()
 
-      return { id: membershipId, company: 'PROJECT_R' }
+      return {
+        id: membershipId,
+        aboType: 'MEMBERSHIP',
+        company: 'PROJECT_R',
+        starting: endDate.toDate(),
+      }
     } catch (e) {
       await tx.transactionRollback()
       throw e
@@ -290,7 +307,7 @@ export class GiftShop {
     userId: string,
     membershipId: string,
     gift: Gift,
-  ): Promise<{ id: string; company: Company }> {
+  ): Promise<ApplyGiftResult> {
     const stripeId = await this.getStripeIdForMonthlyAbo(membershipId)
 
     if (!stripeId) {
@@ -302,7 +319,12 @@ export class GiftShop {
         await this.#stripeAdapters.REPUBLIK.subscriptions.update(stripeId, {
           coupon: gift.coupon,
         })
-        return { id: membershipId, company: 'REPUBLIK' }
+        return {
+          id: membershipId,
+          aboType: 'MONLTY_ABO',
+          company: 'REPUBLIK',
+          starting: new Date(),
+        }
       }
       case 'PROJECT_R': {
         const cRepo = new CustomerRepo(this.#pgdb)
@@ -358,13 +380,18 @@ export class GiftShop {
                   'confirm:setup': true,
                 }),
                 'republik.payments.upgrade-from': `monthly_abo:${membershipId}`,
-                ...IS_GIFT
+                ...IS_GIFT,
               },
             },
           ],
           end_behavior: 'cancel',
         })
-        return { id: membershipId, company: 'PROJECT_R' }
+        return {
+          id: membershipId,
+          aboType: 'YEARLY_SUBSCRIPION',
+          company: 'PROJECT_R',
+          starting: new Date(oldSub.current_period_end * 1000),
+        }
       }
     }
   }
@@ -372,7 +399,7 @@ export class GiftShop {
     userId: string,
     id: string,
     gift: Gift,
-  ): Promise<{ company: Company }> {
+  ): Promise<ApplyGiftResult> {
     const cRepo = new CustomerRepo(this.#pgdb)
     const customerId = await this.getCustomerId(cRepo, gift.company, userId)
     const endDate = await this.getMembershipEndDate(this.#pgdb, id)
@@ -398,23 +425,26 @@ export class GiftShop {
       ],
     })
 
-    return { company: gift.company }
+    return {
+      aboType: gift.offer,
+      company: gift.company,
+      starting: endDate.toDate(),
+    }
   }
 
   private async applyGiftToBenefactor(
     _userId: string,
-    id: string,
+    _id: string,
     _gift: Gift,
-  ): Promise<{ id: string; company: Company }> {
+  ): Promise<ApplyGiftResult> {
     throw new Error('Not implemented')
-    return { id: id, company: 'PROJECT_R' }
   }
 
   private async applyGiftToYearlySubscription(
     _userId: string,
     id: string,
     gift: Gift,
-  ): Promise<{ id: string; company: Company }> {
+  ): Promise<ApplyGiftResult> {
     const stripeId = await this.getStripeSubscriptionId(id)
 
     if (!stripeId) {
@@ -426,7 +456,12 @@ export class GiftShop {
         await this.#stripeAdapters.PROJECT_R.subscriptions.update(stripeId, {
           coupon: gift.coupon,
         })
-        return { id: id, company: 'PROJECT_R' }
+        return {
+          id: id,
+          aboType: 'YEARLY_SUBSCRIPTION',
+          company: 'PROJECT_R',
+          starting: new Date(),
+        }
       }
       case 'REPUBLIK': {
         if (gift.id != 'MONTHLY_SUBSCRPTION_GIFT_3') {
@@ -439,7 +474,12 @@ export class GiftShop {
           coupon: coupon,
         })
 
-        return { id: id, company: 'PROJECT_R' }
+        return {
+          id: id,
+          aboType: 'YEARLY_SUBSCRIPTION',
+          company: 'PROJECT_R',
+          starting: new Date(),
+        }
       }
     }
   }
@@ -448,7 +488,7 @@ export class GiftShop {
     userId: string,
     subScriptionId: string,
     gift: Gift,
-  ): Promise<{ id: string; company: Company } | { company: Company }> {
+  ): Promise<ApplyGiftResult> {
     const stripeId = await this.getStripeSubscriptionId(subScriptionId)
 
     if (!stripeId) {
@@ -460,7 +500,12 @@ export class GiftShop {
         await this.#stripeAdapters.REPUBLIK.subscriptions.update(stripeId, {
           coupon: gift.coupon,
         })
-        return { id: subScriptionId, company: 'REPUBLIK' }
+        return {
+          id: subScriptionId,
+          aboType: 'MONLTY_SUBSCRIPTION',
+          company: 'REPUBLIK',
+          starting: new Date(),
+        }
       }
       case 'PROJECT_R': {
         const cRepo = new CustomerRepo(this.#pgdb)
@@ -499,7 +544,11 @@ export class GiftShop {
             },
           ],
         })
-        return { company: 'PROJECT_R' }
+        return {
+          company: 'PROJECT_R',
+          aboType: 'YEARLY_SUBSCRIPION',
+          starting: new Date(oldSub.current_period_end * 1000),
+        }
       }
     }
   }
