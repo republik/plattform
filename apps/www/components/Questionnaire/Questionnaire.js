@@ -75,6 +75,7 @@ const Questionnaire = (props) => {
     submittedMessage,
     SubmittedComponent,
     context,
+    slug,
     publicSubmission = true,
     hideCount = false,
     hideInvalid = false,
@@ -303,6 +304,7 @@ const Questionnaire = (props) => {
               </div>
             )}
             <Questions
+              slug={slug}
               questions={questions}
               questionCount={questionCount}
               disabled={userHasSubmitted}

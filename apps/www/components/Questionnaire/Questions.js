@@ -18,7 +18,14 @@ const QUESTION_TYPES = {
 }
 
 const Questions = compose(withAnswerMutation)(
-  ({ questions, questionCount, submitAnswer, processSubmit, disabled }) => {
+  ({
+    slug,
+    questions,
+    questionCount,
+    submitAnswer,
+    processSubmit,
+    disabled,
+  }) => {
     const createHandleChange = (questionId) => (answerId, value) => {
       const payload = value !== null ? { value } : null
       processSubmit(submitAnswer, questionId, payload, answerId)
