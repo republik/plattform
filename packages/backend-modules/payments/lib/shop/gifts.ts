@@ -6,7 +6,7 @@ import { CrockfordBase32 } from 'crockford-base32'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { CustomerRepo } from '../database/CutomerRepo'
 import { Payments } from '../payments'
-import { Offers } from './offers'
+import { activeOffers } from './offers'
 import { Shop } from './Shop'
 import dayjs from 'dayjs'
 import { GiftVoucherRepo } from '../database/GiftVoucherRepo'
@@ -247,7 +247,7 @@ export class GiftShop {
 
     const customerId = await this.getCustomerId(cRepo, gift.company, userId)
 
-    const shop = new Shop(Offers)
+    const shop = new Shop(activeOffers())
     const offer = (await shop.getOfferById(gift.offer))!
 
     const subscription = await this.#stripeAdapters[
@@ -330,7 +330,7 @@ export class GiftShop {
         const cRepo = new CustomerRepo(this.#pgdb)
         const customerId = await this.getCustomerId(cRepo, 'PROJECT_R', userId)
 
-        const shop = new Shop(Offers)
+        const shop = new Shop(activeOffers())
         const offer = (await shop.getOfferById(gift.offer))!
 
         const tx = await this.#pgdb.transactionBegin()
@@ -404,7 +404,7 @@ export class GiftShop {
     const customerId = await this.getCustomerId(cRepo, gift.company, userId)
     const endDate = await this.getMembershipEndDate(this.#pgdb, id)
 
-    const shop = new Shop(Offers)
+    const shop = new Shop(activeOffers())
 
     const offer = (await shop.getOfferById(gift.offer))!
 
@@ -512,7 +512,7 @@ export class GiftShop {
 
         const customerId = await this.getCustomerId(cRepo, 'PROJECT_R', userId)
 
-        const shop = new Shop(Offers)
+        const shop = new Shop(activeOffers())
         const offer = (await shop.getOfferById(gift.offer))!
 
         //cancel old monthly subscription on Republik AG

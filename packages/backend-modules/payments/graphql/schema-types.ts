@@ -153,7 +153,7 @@ type GiftVoucherValidationResult {
 type RedeemGiftResult {
   status: String!
   aboType: String
-  starting: Date
+  starting: DateTime
 }
 
 input ComplimentaryItemOrder {

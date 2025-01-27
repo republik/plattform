@@ -2,8 +2,8 @@
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 import {
   Shop,
-  Offers,
   checkIntroductoryOfferEligibility,
+  activeOffers,
 } from '../../../lib/shop'
 import { Payments } from '../../../lib/payments'
 import { default as Auth } from '@orbiting/backend-modules-auth'
@@ -31,7 +31,7 @@ export = async function createCheckoutSession(
   args: CreateCheckoutSessionArgs,
   ctx: GraphqlContext,
 ) {
-  const shop = new Shop(Offers)
+  const shop = new Shop(activeOffers())
 
   const offer = await shop.getOfferById(args.offerId, {
     promoCode: args.promoCode,

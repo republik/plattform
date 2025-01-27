@@ -1,6 +1,9 @@
 import { getConfig } from '../config'
 import { Company } from '../types'
 
+export const GIFTS_ENABLED = () =>
+  process.env.PAYMENTS_SHOP_GIFTS_ENABLED === 'true'
+
 /**
 @var base currency amount to equal 1 Swiss Frank use this value to muliplie
 */
@@ -60,11 +63,11 @@ export type Offer = {
   }
 }
 
-// const PROMO_ITEM_REPUBLIK_BIBLIOTEK_1 = {
-//   id: 'REPUBLIK_BILIOTHEK_1',
-//   maxQuantity: 1,
-//   lookupKey: 'REPUBLIK_BILIOTHEK_1',
-// }
+const PROMO_ITEM_REPUBLIK_BIBLIOTEK_1 = {
+  id: 'REPUBLIK_BILIOTHEK_1',
+  maxQuantity: 1,
+  lookupKey: 'REPUBLIK_BILIOTHEK_1',
+}
 
 export const Offers: Offer[] = [
   {
@@ -140,14 +143,21 @@ export const Offers: Offer[] = [
     defaultPriceLookupKey: 'MONTHLY_ABO',
     taxRateId: getConfig().REPUBLIK_STRIPE_SUBSCRIPTION_TAX_ID,
   },
-  // {
-  //   id: 'GIFT_YEARLY',
-  //   name: 'Jahresmitgliedschafts Geschenk',
-  //   type: 'ONETIME_PAYMENT',
-  //   company: 'PROJECT_R',
-  //   requiresLogin: false,
-  //   allowPromotions: false,
-  //   complimentaryItems: [PROMO_ITEM_REPUBLIK_BIBLIOTEK_1],
-  //   defaultPriceLookupKey: 'GIFT_YEARLY',
-  // },
 ]
+
+export const GIFTS_OFFERS: Offer[] = [
+  {
+    id: 'GIFT_YEARLY',
+    name: 'Jahresmitgliedschafts Geschenk',
+    type: 'ONETIME_PAYMENT',
+    company: 'PROJECT_R',
+    requiresLogin: false,
+    allowPromotions: false,
+    complimentaryItems: [PROMO_ITEM_REPUBLIK_BIBLIOTEK_1],
+    defaultPriceLookupKey: 'GIFT_YEARLY',
+  },
+]
+
+export function activeOffers(): Offer[] {
+  return [...Offers, ...(GIFTS_ENABLED() ? GIFTS_OFFERS : [])]
+}
