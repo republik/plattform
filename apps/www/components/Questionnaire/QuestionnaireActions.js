@@ -1,12 +1,7 @@
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 
-import {
-  Label,
-  Button,
-  Interaction,
-  InlineSpinner,
-} from '@project-r/styleguide'
+import { Label, Button, InlineSpinner } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 import { useMe } from '../../lib/context/MeContext'
@@ -20,6 +15,25 @@ const styles = {
   }),
 }
 
+const PublicSubmissionInfo = ({ publicSubmission, context, t }) => {
+  const { me } = useMe()
+  if (!publicSubmission) return null
+  return (
+    <div style={{ marginTop: 10 }}>
+      <Label>
+        {t.first.elements([
+          `questionnaire/${context}/privacy/${
+            me?.hasPublicProfile ? 'public' : 'private'
+          }`,
+          `questionnaire/privacy/${
+            me?.hasPublicProfile ? 'public' : 'private'
+          }`,
+        ])}
+      </Label>
+    </div>
+  )
+}
+
 export default compose(withT)(
   ({
     t,
@@ -29,29 +43,14 @@ export default compose(withT)(
     isResubmitAnswers,
     updating,
     invalid,
-    hideInvalid = false,
     publicSubmission,
     context,
     showAnonymize,
   }) => {
-    const { me } = useMe()
+    const actionsDisabled = updating || invalid
     return (
       <div {...styles.actions}>
-        {publicSubmission && (
-          <div style={{ marginBottom: 10 }}>
-            <Label>
-              {t.first.elements([
-                `questionnaire/${context}/privacy/${
-                  me?.hasPublicProfile ? 'public' : 'private'
-                }`,
-                `questionnaire/privacy/${
-                  me?.hasPublicProfile ? 'public' : 'private'
-                }`,
-              ])}
-            </Label>
-          </div>
-        )}
-        <Button primary onClick={onSubmit} disabled={updating || invalid}>
+        <Button primary onClick={onSubmit} disabled={actionsDisabled}>
           {updating ? (
             <InlineSpinner size={15} />
           ) : (
@@ -74,28 +73,30 @@ export default compose(withT)(
           )}
         </Button>
         {showAnonymize && onSubmitAnonymized && (
-          <Button onClick={onSubmitAnonymized} disabled={updating || invalid}>
+          <Button onClick={onSubmitAnonymized} disabled={actionsDisabled}>
             {t('questionnaire/submitanonym')}
           </Button>
         )}
-        {invalid && !hideInvalid ? (
-          <Interaction.P>{t('questionnaire/invalid')}</Interaction.P>
-        ) : (
-          !!onReset && (
-            <Button
-              onClick={() => {
-                if (window.confirm(t('questionnaire/reset/confirm'))) {
-                  onReset()
-                }
-              }}
-              style={{ padding: 0 }}
-              small
-              naked
-            >
-              {t('questionnaire/reset')}
-            </Button>
-          )
+        {!!onReset && (
+          <Button
+            onClick={() => {
+              if (window.confirm(t('questionnaire/reset/confirm'))) {
+                onReset()
+              }
+            }}
+            disabled={actionsDisabled}
+            style={{ padding: 0 }}
+            naked
+            primary
+          >
+            {t('questionnaire/reset')}
+          </Button>
         )}
+        <PublicSubmissionInfo
+          publicSubmission={publicSubmission}
+          context={context}
+          t={t}
+        />
       </div>
     )
   },

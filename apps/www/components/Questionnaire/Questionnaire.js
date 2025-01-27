@@ -3,17 +3,9 @@ import compose from 'lodash/flowRight'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 
-import {
-  Interaction,
-  RawHtml,
-  useHeaderHeight,
-  useColorContext,
-} from '@project-r/styleguide'
-
-import { useTranslation } from '../../lib/withT'
+import { Interaction, RawHtml } from '@project-r/styleguide'
 
 import { withMyDetails, withMyDetailsMutation } from '../Account/enhancers'
-import ErrorMessage from '../ErrorMessage'
 import Box from '../Frame/Box'
 import Loader from '../Loader'
 import StatusError from '../StatusError'
@@ -28,36 +20,7 @@ import {
 import Questions from './Questions'
 import QuestionnaireClosed from './QuestionnaireClosed'
 import QuestionnaireActions from './QuestionnaireActions'
-import { IconCheckCircle } from '@republik/icons'
-
-const { P } = Interaction
-
-const styles = {
-  intro: css({
-    marginTop: 35,
-  }),
-  count: css({
-    zIndex: 10,
-    position: 'sticky',
-    paddingTop: 5,
-    display: 'flex',
-    flexWrap: 'wrap',
-    minHeight: 40,
-    alignItems: 'center',
-  }),
-  countIcon: css({
-    marginLeft: 5,
-  }),
-  countBarContainer: css({
-    flex: '0 0 100%',
-    height: 2,
-    marginTop: 5,
-  }),
-  countBar: css({
-    height: 2,
-    transition: 'width 0.3s ease',
-  }),
-}
+import QuestionnaireFooter from './QuestionnaireFooter'
 
 export const actionStyles = css({
   textAlign: 'center',
@@ -88,9 +51,6 @@ const Questionnaire = (props) => {
   const [state, setState] = useState({})
   const router = useRouter()
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
-  const [headerHeight] = useHeaderHeight()
-  const { t } = useTranslation()
-  const [colorScheme] = useColorContext()
   const id = questionnaireData?.questionnaire?.id
 
   const onSubmitSuccess = () => {
@@ -261,48 +221,6 @@ const Questionnaire = (props) => {
 
         return (
           <div>
-            {(!hideCount || error) && (
-              <div
-                {...styles.count}
-                {...colorScheme.set('backgroundColor', 'default')}
-                style={{ top: headerHeight }}
-              >
-                {error ? (
-                  <ErrorMessage style={{ margin: 0 }} error={error} />
-                ) : (
-                  <>
-                    <P>
-                      <small>
-                        {t('questionnaire/header', {
-                          questionCount,
-                          userAnswerCount,
-                        })}
-                      </small>
-                    </P>
-                    {questionCount === userAnswerCount && (
-                      <div {...styles.countIcon}>
-                        <IconCheckCircle
-                          size={16}
-                          {...colorScheme.set('fill', 'primary')}
-                        />
-                      </div>
-                    )}
-                  </>
-                )}
-                <div
-                  {...styles.countBarContainer}
-                  {...colorScheme.set('background', 'divider')}
-                >
-                  <div
-                    {...styles.countBar}
-                    {...colorScheme.set('background', 'primary')}
-                    style={{
-                      width: `${(userAnswerCount / questionCount) * 100}%`,
-                    }}
-                  />
-                </div>
-              </div>
-            )}
             <Questions
               slug={slug}
               questions={questions}
@@ -310,18 +228,25 @@ const Questionnaire = (props) => {
               disabled={userHasSubmitted}
               processSubmit={processSubmit}
             />
-            <QuestionnaireActions
-              isResubmitAnswers={isResubmitAnswers}
-              onSubmit={onSubmit}
-              onSubmitAnonymized={onSubmitAnonymized}
-              showAnonymize={showAnonymize}
-              onReset={!hideReset && onReset}
-              updating={updating}
-              invalid={userAnswerCount < 1}
-              publicSubmission={publicSubmission}
-              hideInvalid={hideInvalid}
-              context={context}
-            />
+            <QuestionnaireFooter
+              error={error}
+              hideCount={hideCount}
+              questionCount={questionCount}
+              userAnswerCount={userAnswerCount}
+            >
+              <QuestionnaireActions
+                isResubmitAnswers={isResubmitAnswers}
+                onSubmit={onSubmit}
+                onSubmitAnonymized={onSubmitAnonymized}
+                showAnonymize={showAnonymize}
+                onReset={!hideReset && onReset}
+                updating={updating}
+                invalid={userAnswerCount < 1}
+                publicSubmission={publicSubmission}
+                hideInvalid={hideInvalid}
+                context={context}
+              />
+            </QuestionnaireFooter>
           </div>
         )
       }}

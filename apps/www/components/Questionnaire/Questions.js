@@ -19,7 +19,7 @@ const QUESTION_TYPES = {
 
 const Questions = compose(withAnswerMutation)(
   ({
-    slug,
+    slug, // needed by enhancers
     questions,
     questionCount,
     submitAnswer,
