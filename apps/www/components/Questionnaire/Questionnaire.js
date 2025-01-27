@@ -20,7 +20,9 @@ import {
 } from './enhancers'
 import Questions from './Questions'
 import QuestionnaireClosed from './QuestionnaireClosed'
-import QuestionnaireActions from './QuestionnaireActions'
+import QuestionnaireActions, {
+  PublicSubmissionInfo,
+} from './QuestionnaireActions'
 import QuestionnaireFooter from './QuestionnaireFooter'
 
 export const actionStyles = css({
@@ -228,6 +230,10 @@ const Questionnaire = (props) => {
 
         return (
           <div>
+            <PublicSubmissionInfo
+              publicSubmission={publicSubmission}
+              context={context}
+            />
             <Questions
               slug={slug}
               questions={questions}

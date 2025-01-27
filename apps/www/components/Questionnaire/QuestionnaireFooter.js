@@ -1,6 +1,10 @@
 import { css } from 'glamor'
 
-import { Interaction, useColorContext } from '@project-r/styleguide'
+import {
+  Interaction,
+  useColorContext,
+  mediaQueries,
+} from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
 import ErrorMessage from '../ErrorMessage'
@@ -13,8 +17,14 @@ const styles = {
     bottom: 0,
     borderTopWidth: 1,
     borderTopStyle: 'solid',
-    padding: '15px 0',
+    padding: '10px 15px',
     zIndex: 20,
+    marginRight: -15,
+    marginLeft: -15,
+    [mediaQueries.mUp]: {
+      padding: '10px 0',
+      margin: 0,
+    },
   }),
 }
 
