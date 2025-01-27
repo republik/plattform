@@ -5,6 +5,7 @@ import { useState } from 'react'
 
 import { Interaction, RawHtml } from '@project-r/styleguide'
 
+import { useTranslation } from '../../lib/withT'
 import { withMyDetails, withMyDetailsMutation } from '../Account/enhancers'
 import Box from '../Frame/Box'
 import Loader from '../Loader'
@@ -27,6 +28,20 @@ export const actionStyles = css({
   margin: '20px auto 20px auto',
 })
 
+const NotEligible = ({ notEligibleCopy }) => {
+  const { t } = useTranslation()
+  return (
+    <Box style={{ padding: 15 }}>
+      <RawHtml
+        type={Interaction.P}
+        dangerouslySetInnerHTML={{
+          __html: notEligibleCopy || t('questionnaire/notEligible'),
+        }}
+      />
+    </Box>
+  )
+}
+
 const Questionnaire = (props) => {
   const {
     questionnaireData,
@@ -45,10 +60,11 @@ const Questionnaire = (props) => {
     hideReset = false,
     showAnonymize = false,
     redirectPath,
-    notEligibleCopy = 'Not elligible', // TODO
+    notEligibleCopy,
   } = props
 
   const [state, setState] = useState({})
+
   const router = useRouter()
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
   const id = questionnaireData?.questionnaire?.id
@@ -123,16 +139,7 @@ const Questionnaire = (props) => {
         const hasUserAnswers = questions.some(({ userAnswer }) => !!userAnswer)
 
         if (!userIsEligible) {
-          return (
-            <Box style={{ padding: 15 }}>
-              <RawHtml
-                type={Interaction.P}
-                dangerouslySetInnerHTML={{
-                  __html: notEligibleCopy || 'TODO',
-                }}
-              />
-            </Box>
-          )
+          return <NotEligible notEligibleCopy={notEligibleCopy} />
         }
         if (!updating && userHasSubmitted && submittedMessage) {
           return submittedMessage
