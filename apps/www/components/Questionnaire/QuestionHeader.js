@@ -1,5 +1,4 @@
-import questionStyles from './questionStyles'
-import { Editorial } from '@project-r/styleguide'
+import { BlockQuote, BlockQuoteParagraph } from '@project-r/styleguide'
 
 const QuestionHeader = ({ metadata }) => {
   const questionHeader = metadata && metadata.questionHeader
@@ -7,16 +6,9 @@ const QuestionHeader = ({ metadata }) => {
     return null
   }
   return (
-    <div {...questionStyles.subheadOuter}>
-      <Editorial.Subhead {...questionStyles.subhead}>
-        <span
-          {...questionStyles.subheadInner}
-          style={{ backgroundColor: questionHeader.backgroundColor }}
-        >
-          {questionHeader.text}
-        </span>
-      </Editorial.Subhead>
-    </div>
+    <BlockQuote>
+      <BlockQuoteParagraph>{questionHeader.text}</BlockQuoteParagraph>
+    </BlockQuote>
   )
 }
 
