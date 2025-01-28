@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge, keyframes } from 'glamor'
 
-import { mUp } from '../../theme/mediaQueries'
+import { mUp, mUpAndPrint } from '../../theme/mediaQueries'
 import {
   breakoutStyles,
   PADDED_MAX_WIDTH,
@@ -33,7 +33,7 @@ const styles = {
       display: 'block',
       width: '100%',
     },
-    [mUp]: {
+    [mUpAndPrint]: {
       display: 'flex',
       flexWrap: 'wrap',
       justifyContent: 'space-between',
@@ -96,21 +96,21 @@ const styles = {
     },
   }),
   col2: css({
-    [mUp]: {
+    [mUpAndPrint]: {
       '& figure': {
         maxWidth: `calc(${100 / 2}% - 8px)`,
       },
     },
   }),
   col3: css({
-    [mUp]: {
+    [mUpAndPrint]: {
       '& figure': {
         maxWidth: `calc(${100 / 3}% - 10px)`,
       },
     },
   }),
   col4: css({
-    [mUp]: {
+    [mUpAndPrint]: {
       '& figure': {
         maxWidth: `calc(${100 / 4}% - 12px)`,
       },
@@ -276,6 +276,7 @@ export const FigureGroup = ({
   size,
   data,
 }: FigureGroupProps) => {
+  console.log({ columns })
   return (
     <figure
       role='group'
