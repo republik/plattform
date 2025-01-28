@@ -5,7 +5,7 @@ import { Editorial, inQuotes, mediaQueries } from '@project-r/styleguide'
 const styles = {
   grid: css({
     columnCount: 1,
-    columnGap: '1em',
+    columnGap: 0,
     margin: '30px 0 40px',
     [mediaQueries.mUp]: {
       columnCount: 2,
@@ -17,7 +17,7 @@ const styles = {
   card: css({
     display: 'table',
     width: '100%',
-    padding: '0.5em 5px',
+    padding: '0.5em',
     breakInside: 'avoid',
   }),
   answer: css({
