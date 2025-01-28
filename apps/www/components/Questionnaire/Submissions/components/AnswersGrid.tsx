@@ -17,15 +17,8 @@ const styles = {
   card: css({
     display: 'table',
     width: '100%',
-    padding: '0.5em 0',
+    padding: '0.5em 5px',
     breakInside: 'avoid',
-    transition: 'all .3s ease-in-out',
-    ':hover': {
-      transform: 'scale(1.03) !important',
-      '& span': {
-        color: '#757575',
-      },
-    },
   }),
   answer: css({
     background: 'rgba(255,255,255,0.5)',
@@ -37,6 +30,13 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
+    transition: 'all .3s ease-in-out',
+    ':hover': {
+      transform: 'scale(1.03) !important',
+      '& span': {
+        color: '#757575',
+      },
+    },
   }),
 }
 
