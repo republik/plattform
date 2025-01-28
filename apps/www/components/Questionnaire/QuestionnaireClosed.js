@@ -1,8 +1,7 @@
 import { css } from 'glamor'
 
-import { Interaction, A, useColorContext } from '@project-r/styleguide'
+import { Interaction, useColorContext } from '@project-r/styleguide'
 
-import Results from './Results'
 import { useTranslation } from '../../lib/withT'
 import PlainButton from './Submissions/legacy/PlainButton'
 
