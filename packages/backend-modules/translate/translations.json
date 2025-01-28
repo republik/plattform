@@ -810,7 +810,7 @@
     },
     {
       "key": "api/email/membership_deactivated_yearly_abo_uncancelled/subject",
-      "value": "Ihr Abonnement wurde deaktiviert"
+      "value": "Republik-Abo verlängern und 2 Monate gratis lesen"
     },
     {
       "key": "api/email/membership_deactivated/subject",
