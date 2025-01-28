@@ -1,14 +1,16 @@
 const { returnImage } = require('../lib')
-const { PDF_BASE_URL, FRONTEND_BASE_URL } = process.env
+const { SCREENSHOT_BASE_URL, FRONTEND_BASE_URL } = process.env
 
-if (!PDF_BASE_URL) {
-  console.warn('missing env PDF_BASE_URL, the /pdf endpoint will not work')
+if (!SCREENSHOT_BASE_URL) {
+  console.warn(
+    'missing env SCREENSHOT_BASE_URL, the /pdf endpoint will not work',
+  )
 }
 
 module.exports = (server) => {
   server.get('/pdf/:path(*)', async (req, res) => {
-    if (!PDF_BASE_URL) {
-      console.warn('PDF_BASE_URL not set unable to handle request')
+    if (!SCREENSHOT_BASE_URL) {
+      console.warn('SCREENSHOT_BASE_URL not set unable to handle request')
       return res.status(403).end()
     }
 
@@ -17,17 +19,18 @@ module.exports = (server) => {
 
     // pick query parameters intended for PDF endpoint
     // (pass along rest as options, later)
-    const { images, download, format, ...options } = req.query
+    const { images, download, format, version, ...options } = req.query
 
     // build URL to fetch PDF from
-    // TODO: PDF_BASE_URL = https://screenshot.republik.ch/api/pdf
-    const fetchUrl = new URL(`${PDF_BASE_URL}/${path}`)
+    const fetchUrl = new URL(`${SCREENSHOT_BASE_URL}/api/pdf`)
 
     // add params
     fetchUrl.searchParams.set('url', `${FRONTEND_BASE_URL}/${path}`)
     images && fetchUrl.searchParams.set('images', images)
     download && fetchUrl.searchParams.set('download', download)
     format && fetchUrl.searchParams.set('format', format)
+    // we regenerate the PDF if the version changes
+    version && fetchUrl.searchParams.set('version', version)
 
     const result = await fetch(fetchUrl, { method: 'GET' }).catch((error) => {
       console.error('pdf fetch failed', fetchUrl.toString(), { error })
