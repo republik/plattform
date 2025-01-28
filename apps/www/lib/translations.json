@@ -4442,7 +4442,7 @@
     },
     {
       "key": "questionnaire/notEligible",
-      "value": "Bitte melden Sie sich an, um an der Umfrage teilzunehmen."
+      "value": "Nur Mitglieder können den Fragebogen beantworten.<br/><b>Haben Sie ein Abonnement? <a href='/anmelden'>Anmelden</a></b>"
     },
     {
       "key": "questionnaire/privacy/private",
