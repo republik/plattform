@@ -24,6 +24,11 @@ const styles = {
     marginBottom: 15,
     padding: 0,
     width: '100%',
+    '@media print': {
+      maxWidth: MAX_WIDTH / 2,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
   }),
   figureGroup: css({
     margin: 0,
@@ -50,6 +55,10 @@ const styles = {
     margin: '30px auto 20px auto',
     maxWidth: PADDED_MAX_WIDTH,
     padding: PADDING,
+    '@media print': {
+      width: '50%',
+      margin: '0 auto 20px auto',
+    },
   }),
   coverText: css({
     position: 'absolute',
