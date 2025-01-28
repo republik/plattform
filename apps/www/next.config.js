@@ -180,6 +180,11 @@ const nextConfig = {
         destination: '/konto',
         permanent: true,
       },
+      {
+        source: '/umfrage/1-minute',
+        destination: '/komplizin',
+        permanent: true,
+      },
       // Redirect /angebote to shop if no query params are set
       // {value: undefined} matchaes any value provided to that query param
       process.env.NEXT_PUBLIC_SHOP_BASE_URL && {
