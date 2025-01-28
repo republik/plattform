@@ -11,7 +11,7 @@ import { useTranslation } from '../../../lib/withT'
 
 import Meta from '../../Frame/Meta'
 import HrefLink from '../../Link/Href'
-import { SubmissionAuthor } from '../../Questionnaire/Submissions/Submission'
+import { SubmissionAuthor } from '../../Questionnaire/Submissions/legacy/Submission'
 
 import HeaderShare from '../shared/HeaderShare'
 

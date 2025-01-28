@@ -1,11 +1,11 @@
 import { inQuotes } from '@project-r/styleguide'
 import { ascending } from 'd3-array'
-import { intersperse } from '../../../lib/utils/helpers'
+import { intersperse } from 'lib/utils/helpers'
 
 const insetBr = (text) =>
   intersperse(text.split('\n'), (_, i) => <br key={i} />)
 
-const AnswerText = ({ text, value, question, isQuote }) => {
+export const AnswerText = ({ text, value, question, isQuote }) => {
   if (text) {
     return insetBr(isQuote ? inQuotes(text) : text)
   }
@@ -32,5 +32,3 @@ const AnswerText = ({ text, value, question, isQuote }) => {
 
   return insetBr(isQuote ? inQuotes(value) : value)
 }
-
-export default AnswerText

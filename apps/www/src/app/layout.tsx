@@ -34,9 +34,6 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={css({ scrollPaddingTop: '16-32' })}
     >
-      <head>
-        <AnalyticsProvider />
-      </head>
       <body
         className={css({
           color: 'text',
@@ -50,10 +47,12 @@ export default async function RootLayout({
         <ThemeProvider>
           <ApolloWrapper>
             <MeContextProvider>
-              {children}
-              <NativeAppMessageSync />
-              <SyncUTMToSessionStorage />
-              <PaynoteOverlayWithKey />
+              <AnalyticsProvider>
+                {children}
+                <NativeAppMessageSync />
+                <SyncUTMToSessionStorage />
+                <PaynoteOverlayWithKey />
+              </AnalyticsProvider>
             </MeContextProvider>
           </ApolloWrapper>
         </ThemeProvider>
