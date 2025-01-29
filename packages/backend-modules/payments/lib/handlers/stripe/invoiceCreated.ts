@@ -22,7 +22,7 @@ export async function processInvoiceCreated(
   }
 
   if (await paymentService.getInvoice({ externalId: externalInvoiceId })) {
-    console.log('invoice has already saved; skipping [%s]', externalInvoiceId)
+    console.log(`invoice has already saved; skipping [${externalInvoiceId}]`)
     return
   }
 
@@ -35,8 +35,7 @@ export async function processInvoiceCreated(
 
   if (!invoice.subscription) {
     console.log(
-      'Only subscription invoices currently not supported [%s]',
-      event.id,
+      `Only subscription invoices currently not supported [${event.id}]`,
     )
     return
   }
@@ -46,7 +45,7 @@ export async function processInvoiceCreated(
   )
 
   if (isPledgeBased(sub?.metadata)) {
-    console.log('pledge invoice event [%s]; skipping', event.id)
+    console.log(`pledge invoice event [${event.id}]; skipping`)
     return
   }
 

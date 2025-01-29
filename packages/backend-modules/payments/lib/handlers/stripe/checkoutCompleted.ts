@@ -107,7 +107,7 @@ async function handleSubscription(
           await paymentService.saveCharge(chargeArgs)
         } catch (e) {
           if (e instanceof Error) {
-            console.log('Error recording charge: %s', e.message)
+            console.log(`Error recording charge: ${e.message}`)
           }
         }
       }

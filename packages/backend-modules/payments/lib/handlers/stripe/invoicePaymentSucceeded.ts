@@ -13,7 +13,7 @@ export async function processInvoicePaymentSucceeded(
   )
 
   if (!i) {
-    console.error('not processing event: stripe invoice not found')
+    console.log('not processing event: stripe invoice not found')
     return
   }
 

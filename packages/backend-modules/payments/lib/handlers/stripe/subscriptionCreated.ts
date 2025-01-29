@@ -25,8 +25,7 @@ export async function processSubscriptionCreated(
     await paymentService.getSubscription({ externalId: externalSubscriptionId })
   ) {
     console.log(
-      'subscription has already saved; skipping [%s]',
-      externalSubscriptionId,
+      `subscription has already saved; skipping [${externalSubscriptionId}]`,
     )
     return
   }
