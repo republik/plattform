@@ -8,14 +8,17 @@ import {
   getMailSettings,
   REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
 } from '../../mail-settings'
+import { secondsToMilliseconds } from './utils'
 
 export async function processSubscriptionDeleted(
   paymentService: PaymentService,
   _company: Company,
   event: Stripe.CustomerSubscriptionDeletedEvent,
 ) {
-  const endTimestamp = (event.data.object.ended_at || 0) * 1000
-  const canceledAtTimestamp = (event.data.object.canceled_at || 0) * 1000
+  const endTimestamp = secondsToMilliseconds(event.data.object.ended_at || 0)
+  const canceledAtTimestamp = secondsToMilliseconds(
+    event.data.object.canceled_at || 0,
+  )
 
   await paymentService.disableSubscription(
     { externalId: event.data.object.id },

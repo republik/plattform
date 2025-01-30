@@ -2,6 +2,7 @@ import Stripe from 'stripe'
 import { PaymentService } from '../../payments'
 import { Company } from '../../types'
 import { PaymentProvider } from '../../providers/provider'
+import { secondsToMilliseconds } from './utils'
 
 export async function processInvoicePaymentSucceeded(
   paymentService: PaymentService,
@@ -65,6 +66,6 @@ export function mapChargeArgs(
     amountRefunded: charge.amount_refunded,
     paymentMethodType: paymentMethodType,
     fullyRefunded: charge.refunded,
-    createdAt: new Date(charge.created * 1000),
+    createdAt: new Date(secondsToMilliseconds(charge.created)),
   }
 }

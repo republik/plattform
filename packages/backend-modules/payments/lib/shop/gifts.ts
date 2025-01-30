@@ -16,6 +16,7 @@ import {
   serializeMailSettings,
 } from '../mail-settings'
 import { getConfig } from '../config'
+import { secondsToMilliseconds } from '../handlers/stripe/utils'
 
 const logger = createLogger('payments:gifts')
 
@@ -390,7 +391,7 @@ export class GiftShop {
           id: membershipId,
           aboType: 'YEARLY_SUBSCRIPION',
           company: 'PROJECT_R',
-          starting: new Date(oldSub.current_period_end * 1000),
+          starting: new Date(secondsToMilliseconds(oldSub.current_period_end)),
         }
       }
     }
@@ -547,7 +548,7 @@ export class GiftShop {
         return {
           company: 'PROJECT_R',
           aboType: 'YEARLY_SUBSCRIPION',
-          starting: new Date(oldSub.current_period_end * 1000),
+          starting: new Date(secondsToMilliseconds(oldSub.current_period_end)),
         }
       }
     }

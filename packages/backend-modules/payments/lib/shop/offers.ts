@@ -4,10 +4,7 @@ import { Company } from '../types'
 export const GIFTS_ENABLED = () =>
   process.env.PAYMENTS_SHOP_GIFTS_ENABLED === 'true'
 
-/**
-@var base currency amount to equal 1 Swiss Frank use this value to muliplie
-*/
-const CHF = 100
+const in_chf = (n: number) => n * 100
 
 export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
 
@@ -88,9 +85,9 @@ export const Offers: Offer[] = [
     defaultPriceLookupKey: 'BENEFACTOR_ABO',
     allowPromotions: false,
     customPrice: {
-      min: 1000 * CHF,
-      max: 4000 * CHF,
-      step: 10 * CHF,
+      min: in_chf(1000),
+      max: in_chf(4000),
+      step: in_chf(10),
       recurring: {
         interval: 'year',
         interval_count: 1,
@@ -106,9 +103,9 @@ export const Offers: Offer[] = [
     defaultPriceLookupKey: 'STUDENT_ABO',
     allowPromotions: false,
     customPrice: {
-      min: 140 * CHF,
-      max: 239 * CHF,
-      step: 1 * CHF,
+      min: in_chf(140),
+      max: in_chf(239),
+      step: in_chf(1),
       recurring: {
         interval: 'year',
         interval_count: 1,
@@ -124,9 +121,9 @@ export const Offers: Offer[] = [
     defaultPriceLookupKey: 'ABO',
     allowPromotions: false,
     customPrice: {
-      max: 2000 * CHF,
-      min: 10 * CHF,
-      step: 1 * CHF,
+      max: in_chf(2000),
+      min: in_chf(10),
+      step: in_chf(1),
       recurring: {
         interval: 'year',
         interval_count: 1,

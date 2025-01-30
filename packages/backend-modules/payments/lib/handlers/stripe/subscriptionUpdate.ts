@@ -9,6 +9,7 @@ import {
   getMailSettings,
   REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
 } from '../../mail-settings'
+import { secondsToMilliseconds } from './utils'
 
 export async function processSubscriptionUpdate(
   paymentService: PaymentService,
@@ -27,17 +28,21 @@ export async function processSubscriptionUpdate(
   await paymentService.updateSubscription({
     company: company,
     externalId: event.data.object.id,
-    currentPeriodStart: new Date(event.data.object.current_period_start * 1000),
-    currentPeriodEnd: new Date(event.data.object.current_period_end * 1000),
+    currentPeriodStart: new Date(
+      secondsToMilliseconds(event.data.object.current_period_start),
+    ),
+    currentPeriodEnd: new Date(
+      secondsToMilliseconds(event.data.object.current_period_end),
+    ),
     status: event.data.object.status,
     metadata: event.data.object.metadata,
     cancelAt:
       typeof cancelAt === 'number'
-        ? new Date(cancelAt * 1000)
+        ? new Date(secondsToMilliseconds(cancelAt))
         : (cancelAt as null | undefined),
     canceledAt:
       typeof canceledAt === 'number'
-        ? new Date(canceledAt * 1000)
+        ? new Date(secondsToMilliseconds(canceledAt))
         : (cancelAt as null | undefined),
     cancellationComment:
       typeof cancellationComment === 'string' ? cancellationComment : null,
@@ -53,7 +58,7 @@ export async function processSubscriptionUpdate(
   const previousCanceledAt = event.data.previous_attributes?.canceled_at
   const revokedCancellationDate =
     typeof previousCanceledAt === 'number'
-      ? new Date(previousCanceledAt * 1000)
+      ? new Date(secondsToMilliseconds(previousCanceledAt))
       : (previousCanceledAt as null | undefined)
   const isCancellationRevoked = !cancelAt && !!revokedCancellationDate
 

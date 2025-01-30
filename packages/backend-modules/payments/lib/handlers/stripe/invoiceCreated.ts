@@ -2,7 +2,7 @@ import Stripe from 'stripe'
 import { PaymentService } from '../../payments'
 import { Company, InvoiceArgs } from '../../types'
 import { PaymentProvider } from '../../providers/provider'
-import { isPledgeBased } from './utils'
+import { isPledgeBased, secondsToMilliseconds } from './utils'
 
 export async function processInvoiceCreated(
   paymentService: PaymentService,
@@ -79,8 +79,12 @@ export function mapInvoiceArgs(
     discounts: invoice.discounts,
     metadata: invoice.metadata,
     externalId: invoice.id,
-    periodStart: new Date(invoice.lines.data[0].period.start * 1000),
-    periodEnd: new Date(invoice.lines.data[0].period.end * 1000),
+    periodStart: new Date(
+      secondsToMilliseconds(invoice.lines.data[0].period.start),
+    ),
+    periodEnd: new Date(
+      secondsToMilliseconds(invoice.lines.data[0].period.end),
+    ),
     status: invoice.status as any,
     externalSubscriptionId: invoice.subscription as string,
   }

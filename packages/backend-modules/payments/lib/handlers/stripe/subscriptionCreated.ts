@@ -1,7 +1,7 @@
 import Stripe from 'stripe'
 import { PaymentService } from '../../payments'
 import { Company, SubscriptionArgs } from '../../types'
-import { getSubscriptionType } from './utils'
+import { getSubscriptionType, secondsToMilliseconds } from './utils'
 import { PaymentProvider } from '../../providers/provider'
 
 export async function processSubscriptionCreated(
@@ -52,8 +52,10 @@ export function mapSubscriptionArgs(
     company: company,
     type: getSubscriptionType(sub?.items.data[0].price.product as string),
     externalId: sub.id,
-    currentPeriodStart: new Date(sub.current_period_start * 1000),
-    currentPeriodEnd: new Date(sub.current_period_end * 1000),
+    currentPeriodStart: new Date(
+      secondsToMilliseconds(sub.current_period_start),
+    ),
+    currentPeriodEnd: new Date(secondsToMilliseconds(sub.current_period_end)),
     status: sub.status,
     metadata: sub.metadata,
   }
