@@ -3627,76 +3627,12 @@
       "value": "Ich habe mein Abo verlängert"
     },
     {
-      "key": "pledge/form/statement/PROLONG/title",
-      "value": "{name} hat das Abo bereits verlängert"
-    },
-    {
-      "key": "pledge/form/statement/PROLONG/lead/signIn",
-      "value": "Melden Sie sich an, um Ihr Abo zu verlängern. Oder, falls Sie noch nicht Mitglied sind: Jetzt ist ein guter Zeitpunkt dafür, die Republik zu unterstützen."
-    },
-    {
-      "key": "pledge/form/statement/PROLONG/lead/available",
-      "value": "Jetzt sind Sie dran!"
-    },
-    {
-      "key": "pledge/form/statement/PROLONG/lead/notAvailable",
-      "value": "Zurzeit ist für Sie keine Verlängerung verfügbar. Entweder haben Sie bereits verlängert oder Sie sind noch nicht Mitglied. Alle Informationen finden Sie in Ihrem {accountLink}."
-    },
-    {
-      "key": "pledge/form/statement/PROLONG/lead/accountText",
-      "value": "Konto"
-    },
-    {
       "key": "pledge/meta/title",
       "value": "Jetzt Mitglied und Abonnentin werden"
     },
     {
       "key": "pledge/meta/description",
       "value": "Lasst uns gemeinsam ein neues Fundament für unabhängigen Journalismus bauen!"
-    },
-    {
-      "key": "pledge/form/statement/share/title",
-      "value": "{name} unterstützt die Republik auch im zweiten Jahr."
-    },
-    {
-      "key": "pledge/form/statement/share/description",
-      "value": "Verlängern auch Sie jetzt Ihr Abo."
-    },
-    {
-      "key": "statement/title",
-      "value": "Jetzt ein Statement abgeben"
-    },
-    {
-      "key": "statement/title/update",
-      "value": "Jetzt Ihr Statement aktualisieren"
-    },
-    {
-      "key": "statement/description",
-      "value": "Sie können ein Statement abgeben und es zusammen mit einem Porträtbild auf unserer Community-Seite veröffentlichen."
-    },
-    {
-      "key": "statement/description/update",
-      "value": "Ihr Statement erscheint auf unserer Community-Seite."
-    },
-    {
-      "key": "statement/adminUnpublished",
-      "value": "Wir können leider ihr Statement nicht publizieren. Schreiben Sie an kontakt@republik.ch für weitere Informationen."
-    },
-    {
-      "key": "statement/submit/update",
-      "value": "aktualisieren"
-    },
-    {
-      "key": "statement/submit",
-      "value": "veröffentlichen"
-    },
-    {
-      "key": "statement/unpublish",
-      "value": "Statement zurücknehmen"
-    },
-    {
-      "key": "statement/unpublished",
-      "value": "Ihr Statement ist zur Zeit nicht publik."
     },
     {
       "key": "statement/viewLive",

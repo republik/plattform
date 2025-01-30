@@ -17,8 +17,15 @@ const QUESTION_TYPES = {
   QuestionTypeImageChoice: ImageChoiceQuestion,
 }
 
-const QuestionList = compose(withAnswerMutation)(
-  ({ submitAnswer, processSubmit, questions, disabled }) => {
+const Questions = compose(withAnswerMutation)(
+  ({
+    slug, // needed by enhancers
+    questions,
+    questionCount,
+    submitAnswer,
+    processSubmit,
+    disabled,
+  }) => {
     const createHandleChange = (questionId) => (answerId, value) => {
       const payload = value !== null ? { value } : null
       processSubmit(submitAnswer, questionId, payload, answerId)
@@ -30,6 +37,7 @@ const QuestionList = compose(withAnswerMutation)(
           createElement(QUESTION_TYPES[q.__typename], {
             onChange: createHandleChange(q.id),
             question: q,
+            questionCount,
             key: q.id,
             disabled,
           }),
@@ -39,35 +47,4 @@ const QuestionList = compose(withAnswerMutation)(
   },
 )
 
-export default ({
-  processSubmit,
-  questions,
-  disabled,
-  sliceAt,
-  showSlice2,
-  slug,
-}) => {
-  const questions1 = sliceAt ? questions.slice(0, sliceAt) : questions
-  const questions2 = sliceAt && questions.slice(sliceAt)
-
-  return (
-    <>
-      <QuestionList
-        questions={questions1}
-        disabled={disabled}
-        processSubmit={processSubmit}
-        slug={slug}
-      />
-      {showSlice2 && (
-        <>
-          <QuestionList
-            questions={questions2}
-            disabled={disabled}
-            processSubmit={processSubmit}
-            slug={slug}
-          />
-        </>
-      )}
-    </>
-  )
-}
+export default Questions

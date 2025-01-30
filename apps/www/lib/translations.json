@@ -4441,6 +4441,10 @@
       "value": "Bitte beantworten Sie mindestens eine Frage."
     },
     {
+      "key": "questionnaire/notEligible",
+      "value": "Nur Mitglieder können den Fragebogen beantworten.<br/><b>Haben Sie ein Abonnement? <a href='/anmelden'>Anmelden</a></b>"
+    },
+    {
       "key": "questionnaire/privacy/private",
       "value": "Antworten sind öffentlich einsehbar. Für Probeleser und Mitverlegerinnen erscheint der ausgefüllte Fragebogen unter Ihrem Namen. Gäste sehen lediglich Ihre Initialen."
     },
@@ -4591,6 +4595,14 @@
     {
       "key": "questionnaire/submissions/loadMore/1",
       "value": "Einen weiteren Fragebogen laden"
+    },
+    {
+      "key": "questionnaire/submissions/shareText",
+      "value": "Stöbern Sie durch die Antworten der Republik-Leserinnen, und fügen Sie Ihre eigene Antwort hinzu."
+    },
+    {
+      "key": "questionnaire/submission/description",
+      "value": "Die Antworten von {name}"
     },
     {
       "key": "pages/meta/questionnaire/unauthorized",

@@ -4,6 +4,7 @@ const Promise = require('bluebird')
 
 const createCache = require('../cache')
 const { activeMembershipsQuery } = require('./changeover')
+const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
 const deactivate = async (
   { dryRun },
@@ -59,7 +60,10 @@ const deactivate = async (
 
     await enforceSubscriptions({ userId: membership.userId, pgdb })
 
-    if (membership.renew) {
+    const user = {id: membership.userId }
+    const hasActiveMagazineAccess = await hasUserActiveMembership(user, pgdb)
+
+    if (membership.renew && !hasActiveMagazineAccess) {
       await sendMembershipDeactivated({ membership, pgdb, t })
     }
   })

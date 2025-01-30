@@ -20,7 +20,7 @@ import { SubmissionLink, AnswersChart } from './shared'
 
 import Frame from '../Frame'
 import Meta from '../Frame/Meta'
-import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
+import { ShareImage } from '../Questionnaire/Submissions/components/ShareImage'
 
 import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
 import {
@@ -49,12 +49,10 @@ const Page = ({
   shareImageUrlObj.searchParams.set('image', true)
   const shareImageUrl = shareImageUrlObj.toString()
 
-  console.log(questionColor(18))
-
   if (image) {
     return (
-      <ShareImageSplit
-        question={{ text: question }}
+      <ShareImage
+        text={question}
         img={ILLU_SHARE}
         bgColor={questionColor(questionIndex)}
         fgColor={QUESTIONNAIRE_FG_COLOR}

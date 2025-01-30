@@ -180,7 +180,7 @@ const ChallengeAcceptedInlineTeaser = dynamic(
 )
 
 const QuestionnaireSubmissions = dynamic(
-  () => import('../Questionnaire/Submissions'),
+  () => import('../Questionnaire/Submissions/legacy'),
   {
     loading: LoadingComponent,
   },
@@ -190,22 +190,8 @@ const EdgeQuestion = dynamic(() => import('../Climatelab/EdgeQuestion/index'), {
   loading: LoadingComponent,
 })
 
-const ClimateLabQuestionnaire = dynamic(
-  () => import('../Climatelab/Questionnaire/Overview'),
-  {
-    loading: LoadingComponent,
-  },
-)
-
-const ClimateLabQuestionnaireV2 = dynamic(
-  () => import('../Climatelab/QuestionnaireChallengeAccepted/Overview'),
-  {
-    loading: LoadingComponent,
-  },
-)
-
-const PoliticsCommunityQuestionnaire = dynamic(
-  () => import('../PoliticsCommunityQuestionnaire/Overview'),
+const QuestionnaireOverview = dynamic(
+  () => import('../Questionnaire/Submissions'),
   {
     loading: LoadingComponent,
   },
@@ -465,13 +451,11 @@ const ArticlePage = ({
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
+          QUESTIONNAIRE_OVERVIEW: QuestionnaireOverview,
           EDGE_QUESTION: EdgeQuestion,
           NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
           CLIMATE_LAB_COUNTER: ClimateLabCounter,
           CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
-          CLIMATE_LAB_QUESTIONNAIRE: ClimateLabQuestionnaire,
-          POLITICS_COMMUNITY_QUESTIONNAIRE: PoliticsCommunityQuestionnaire,
-          CLIMATE_LAB_QUESTIONNAIRE_V2: ClimateLabQuestionnaireV2,
           POSTCARD: Postcard,
           POSTCARD_GALLERY: PostcardGallery,
           CHALLENGE_ACCEPTED_INLINE_TEASER: ChallengeAcceptedInlineTeaser,
