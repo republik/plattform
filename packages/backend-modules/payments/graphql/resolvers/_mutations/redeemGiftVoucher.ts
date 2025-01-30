@@ -1,11 +1,11 @@
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { GiftShop } from '../../../lib/shop/gifts'
 import { default as Auth } from '@orbiting/backend-modules-auth'
+import { t } from '@orbiting/backend-modules-translate'
 
 type RedeemGiftResult = {
-  status: 'success' | 'error'
-  aboType?: string
-  starting?: Date
+  aboType: string
+  starting: Date
 }
 
 export = async function redeemGiftVoucher(
@@ -20,14 +20,12 @@ export = async function redeemGiftVoucher(
     const res = await giftShop.redeemVoucher(args.voucherCode, ctx.user.id)
 
     return {
-      status: 'success',
       aboType: res.aboType,
       starting: res.starting,
     }
   } catch (e) {
     console.error(e)
-    return {
-      status: 'error',
-    }
+
+    throw new Error(t('api/unexpected'))
   }
 }

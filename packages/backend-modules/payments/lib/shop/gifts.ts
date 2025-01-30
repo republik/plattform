@@ -91,7 +91,14 @@ const GIFTS: Gift[] = [
   },
 ]
 
-const IS_GIFT = { initial_type: 'gift' }
+export const REPUBLIK_PAYMENTS_SUBSCRIPTION_UPGRADED_FROM =
+  'republik.payments.subscription.upgraded-from'
+
+export const REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN =
+  'republik.payments.subscription.origin'
+
+export const REPUBLIK_PAYMENTS_CANCEL_REASON =
+  'republik.payments.system.cancel.reason'
 
 export class GiftShop {
   #pgdb: PgDb
@@ -260,7 +267,9 @@ export class GiftShop {
       collection_method: 'send_invoice',
       cancel_at_period_end: true,
       days_until_due: 14,
-      metadata: IS_GIFT,
+      metadata: {
+        [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
+      },
     })
 
     if (subscription.latest_invoice) {
@@ -380,8 +389,8 @@ export class GiftShop {
                 [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                   'confirm:setup': true,
                 }),
-                'republik.payments.upgrade-from': `monthly_abo:${membershipId}`,
-                ...IS_GIFT,
+                [REPUBLIK_PAYMENTS_SUBSCRIPTION_UPGRADED_FROM]: `monthly_abo:${membershipId}`,
+                [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
               },
             },
           ],
@@ -421,7 +430,9 @@ export class GiftShop {
           invoice_settings: {
             days_until_due: 14,
           },
-          metadata: IS_GIFT,
+          metadata: {
+            [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
+          },
         },
       ],
     })
@@ -539,8 +550,8 @@ export class GiftShop {
                 [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                   'confirm:setup': true,
                 }),
-                'republik.payments.upgrade-from': `monthly:${subScriptionId}`,
-                ...IS_GIFT,
+                [REPUBLIK_PAYMENTS_SUBSCRIPTION_UPGRADED_FROM]: `monthly:${subScriptionId}`,
+                [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
               },
             },
           ],
@@ -620,7 +631,7 @@ export class GiftShop {
           'notice:ended': false,
           'confirm:cancel': false,
         }),
-        'republik.payments.member': 'keep-on-cancel',
+        [REPUBLIK_PAYMENTS_CANCEL_REASON]: 'UPGRADE',
       },
       cancel_at_period_end: true,
     })

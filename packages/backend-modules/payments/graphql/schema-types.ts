@@ -151,9 +151,8 @@ type GiftVoucherValidationResult {
 }
 
 type RedeemGiftResult {
-  status: String!
-  aboType: String
-  starting: DateTime
+  aboType!: String
+  starting!: DateTime
 }
 
 input ComplimentaryItemOrder {

@@ -60,11 +60,11 @@ export type Offer = {
   }
 }
 
-const PROMO_ITEM_REPUBLIK_BIBLIOTEK_1 = {
-  id: 'REPUBLIK_BILIOTHEK_1',
-  maxQuantity: 1,
-  lookupKey: 'REPUBLIK_BILIOTHEK_1',
-}
+// const PROMO_ITEM_REPUBLIK_BIBLIOTEK_1 = {
+//   id: 'REPUBLIK_BILIOTHEK_1',
+//   maxQuantity: 1,
+//   lookupKey: 'REPUBLIK_BILIOTHEK_1',
+// }
 
 export const Offers: Offer[] = [
   {
@@ -150,7 +150,7 @@ export const GIFTS_OFFERS: Offer[] = [
     company: 'PROJECT_R',
     requiresLogin: false,
     allowPromotions: false,
-    complimentaryItems: [PROMO_ITEM_REPUBLIK_BIBLIOTEK_1],
+    complimentaryItems: [],
     defaultPriceLookupKey: 'GIFT_YEARLY',
   },
 ]
