@@ -5,6 +5,7 @@ import {
   sendEndedNoticeMail,
   sendPaymentFailedNoticeMail,
   sendRevokeCancellationConfirmationMail,
+  sendSetupGiftMail,
   sendSetupSubscriptionMail,
 } from '../transactionals/sendTransactionalMails'
 import { UserDataRepo } from '../database/UserRepo'
@@ -267,6 +268,36 @@ export class MailNotificationService {
     )
   }
 
+  async sendSetupGiftSubscriptionTransactionalMail({
+    subscriptionExternalId,
+    userId,
+  }: {
+    subscriptionExternalId: string
+    userId: string
+  }): Promise<void> {
+    const subscription = await this.#billing.getSubscription({
+      externalId: subscriptionExternalId,
+    })
+
+    if (!subscription) {
+      throw new Error(
+        `Subscription [${subscriptionExternalId}] does not exist in the Database`,
+      )
+    }
+
+    if (!ACTIVE_STATUS_TYPES.includes(subscription.status)) {
+      throw new Error(
+        `not sending transactional for subscription ${subscriptionExternalId} with status ${subscription.status}`,
+      )
+    }
+    const userRow = await this.#users.findUserById(userId)
+    if (!userRow) {
+      throw new Error('unknown user')
+    }
+
+    await sendSetupGiftMail({ email: userRow.email }, this.#pgdb)
+  }
+
   async syncMailchimpSetupSubscription({
     userId,
     subscriptionExternalId,
@@ -316,3 +347,5 @@ export class MailNotificationService {
     return !(memberships?.length > 0 || subscriptions?.length > 0)
   }
 }
+
+

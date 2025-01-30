@@ -274,3 +274,22 @@ export async function sendGiftPurchaseMail(
 
   return sendMailResult
 }
+
+export async function sendSetupGiftMail({ email }: { email: string }, pgdb: PgDb) {
+  const globalMergeVars: MergeVariable[] = []
+
+  const templateName = 'subscription_created_gift_subscription'
+  const sendMailResult = await sendMailTemplate(
+    {
+      to: email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
+      subject: t(`api/email/${templateName}/subject`),
+      templateName,
+      mergeLanguage: 'handlebars',
+      globalMergeVars,
+    },
+    { pgdb },
+  )
+
+  return sendMailResult
+}
