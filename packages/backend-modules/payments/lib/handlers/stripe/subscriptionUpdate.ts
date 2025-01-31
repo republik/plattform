@@ -82,7 +82,7 @@ export async function processSubscriptionUpdate(
     ])
   }
 
-  if (isCancellationRevoked) {
+  if (isCancellationRevoked && mailSettings['confirm:revoke_cancellation']) {
     const customerId = event.data.object.customer as string
 
     const userId = await paymentService.getUserIdForCompanyCustomer(

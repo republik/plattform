@@ -269,6 +269,9 @@ export class GiftShop {
       days_until_due: 14,
       metadata: {
         [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
+        [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
+          'confirm:cancel': false,
+        }),
       },
     })
 
@@ -330,6 +333,12 @@ export class GiftShop {
           stripeId,
           {
             coupon: gift.coupon,
+            cancel_at_period_end: false,
+            metadata: {
+              [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
+                'confirm:revoke_cancellation': false,
+              }),
+            },
           },
         )
         return {
@@ -391,6 +400,7 @@ export class GiftShop {
               metadata: {
                 [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                   'confirm:setup': true,
+                  'confirm:cancel': false,
                 }),
                 [REPUBLIK_PAYMENTS_SUBSCRIPTION_UPGRADED_FROM]: `monthly_abo:${membershipId}`,
                 [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
@@ -472,11 +482,17 @@ export class GiftShop {
           stripeId,
           {
             coupon: gift.coupon,
+            cancel_at_period_end: false,
+            metadata: {
+              [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
+                'confirm:revoke_cancellation': false,
+              }),
+            },
           },
         )
         return {
           id: id,
-          aboType: 'YEARLY_SUBSCRIPTION',
+          aboType: 'YEARLY',
           company: 'PROJECT_R',
           starting: new Date(secondsToMilliseconds(sub.current_period_end)),
         }
@@ -492,12 +508,18 @@ export class GiftShop {
           stripeId,
           {
             coupon: coupon,
+            cancel_at_period_end: false,
+            metadata: {
+              [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
+                'confirm:revoke_cancellation': false,
+              }),
+            },
           },
         )
 
         return {
           id: id,
-          aboType: 'YEARLY_SUBSCRIPTION',
+          aboType: 'YEARLY',
           company: 'PROJECT_R',
           starting: new Date(secondsToMilliseconds(sub.current_period_end)),
         }
@@ -518,14 +540,23 @@ export class GiftShop {
 
     switch (gift.company) {
       case 'REPUBLIK': {
-        await this.#stripeAdapters.REPUBLIK.subscriptions.update(stripeId, {
-          coupon: gift.coupon,
-        })
+        const sub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
+          stripeId,
+          {
+            coupon: gift.coupon,
+            cancel_at_period_end: false,
+            metadata: {
+              [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
+                'confirm:revoke_cancellation': false,
+              }),
+            },
+          },
+        )
         return {
           id: subScriptionId,
-          aboType: 'MONLTY_SUBSCRIPTION',
+          aboType: 'MONLTY',
           company: 'REPUBLIK',
-          starting: new Date(),
+          starting: new Date(secondsToMilliseconds(sub.current_period_end)),
         }
       }
       case 'PROJECT_R': {
