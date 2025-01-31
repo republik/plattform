@@ -45,30 +45,29 @@ export async function processSubscriptionCreated(
   const args = mapSubscriptionArgs(company, subscription)
   await paymentService.setupSubscription(userId, args)
 
-  const isGiftSubscription = subscription.metadata[REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN] === 'GIFT'
-
-  if (!isGiftSubscription) {
-    // only start mail and mailchimp sync jobs if subscription is created from gift and not checkout
-    return
-  }
+  const isGiftSubscription =
+    subscription.metadata[REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN] === 'GIFT'
 
   const queue = Queue.getInstance()
 
-  await Promise.all([
-    queue.send<ConfirmGiftSubscriptionTransactionalWorker>(
-          'payments:transactional:confirm:gift:subscription',
-          {
-            $version: 'v1',
-            eventSourceId: event.id,
-            userId: userId,
-          },
-        ),
-    queue.send<SyncMailchimpSetupWorker>('payments:mailchimp:sync:setup', {
+  // only start mail and mailchimp sync jobs if subscription is created from gift and not checkout
+  if (isGiftSubscription) {
+    await Promise.all([
+      queue.send<ConfirmGiftSubscriptionTransactionalWorker>(
+        'payments:transactional:confirm:gift:subscription',
+        {
           $version: 'v1',
           eventSourceId: event.id,
           userId: userId,
-        }),
-  ])
+        },
+      ),
+      queue.send<SyncMailchimpSetupWorker>('payments:mailchimp:sync:setup', {
+        $version: 'v1',
+        eventSourceId: event.id,
+        userId: userId,
+      }),
+    ])
+  }
 
   return
 }
