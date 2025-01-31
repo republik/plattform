@@ -13,12 +13,12 @@ type GiftVoucherValidationResult = {
 
 export = async function (
   _root: never,
-  args: { voucher: string },
+  args: { voucherCode: string },
   ctx: GraphqlContext,
 ): Promise<GiftVoucherValidationResult> {
   Auth.ensureUser(ctx.user)
 
-  const base32Voucher = normalizeVoucher(args.voucher)
+  const base32Voucher = normalizeVoucher(args.voucherCode)
   if (base32Voucher) {
     const voucher = await new GiftVoucherRepo(ctx.pgdb).getVoucherByCode(
       base32Voucher,
@@ -33,7 +33,7 @@ export = async function (
     }
   }
 
-  if (await isfLegacyVoucher(ctx.pgdb, args.voucher)) {
+  if (await isfLegacyVoucher(ctx.pgdb, args.voucherCode)) {
     return {
       type: 'MEMBERSHIP',
       valid: true,

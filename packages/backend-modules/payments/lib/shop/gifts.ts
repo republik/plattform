@@ -277,7 +277,7 @@ export class GiftShop {
         subscription.latest_invoice.toString(),
       )
     }
-    return { aboType: offer.name, company: gift.company, starting: new Date() }
+    return { aboType: offer.id, company: gift.company, starting: new Date() }
   }
 
   private async applyGiftToMembershipAbo(
@@ -303,7 +303,7 @@ export class GiftShop {
 
       return {
         id: membershipId,
-        aboType: 'MEMBERSHIP',
+        aboType: 'ABO',
         company: 'PROJECT_R',
         starting: endDate.toDate(),
       }
@@ -326,14 +326,17 @@ export class GiftShop {
 
     switch (gift.company) {
       case 'REPUBLIK': {
-        await this.#stripeAdapters.REPUBLIK.subscriptions.update(stripeId, {
-          coupon: gift.coupon,
-        })
+        const sub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
+          stripeId,
+          {
+            coupon: gift.coupon,
+          },
+        )
         return {
           id: membershipId,
           aboType: 'MONLTY_ABO',
           company: 'REPUBLIK',
-          starting: new Date(),
+          starting: new Date(secondsToMilliseconds(sub.current_period_end)),
         }
       }
       case 'PROJECT_R': {
@@ -465,14 +468,17 @@ export class GiftShop {
 
     switch (gift.company) {
       case 'PROJECT_R': {
-        await this.#stripeAdapters.PROJECT_R.subscriptions.update(stripeId, {
-          coupon: gift.coupon,
-        })
+        const sub = await this.#stripeAdapters.PROJECT_R.subscriptions.update(
+          stripeId,
+          {
+            coupon: gift.coupon,
+          },
+        )
         return {
           id: id,
           aboType: 'YEARLY_SUBSCRIPTION',
           company: 'PROJECT_R',
-          starting: new Date(),
+          starting: new Date(secondsToMilliseconds(sub.current_period_end)),
         }
       }
       case 'REPUBLIK': {
@@ -482,15 +488,18 @@ export class GiftShop {
 
         const coupon = getConfig().PROJECT_R_3_MONTH_GIFT_COUPON
 
-        await this.#stripeAdapters.PROJECT_R.subscriptions.update(stripeId, {
-          coupon: coupon,
-        })
+        const sub = await this.#stripeAdapters.PROJECT_R.subscriptions.update(
+          stripeId,
+          {
+            coupon: coupon,
+          },
+        )
 
         return {
           id: id,
           aboType: 'YEARLY_SUBSCRIPTION',
           company: 'PROJECT_R',
-          starting: new Date(),
+          starting: new Date(secondsToMilliseconds(sub.current_period_end)),
         }
       }
     }
