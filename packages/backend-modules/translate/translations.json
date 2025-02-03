@@ -449,6 +449,10 @@
       "value": "Republik: Ihre Kündigung wurde rückgängig gemacht"
     },
     {
+      "key": "api/email/subscription_created_gift_subscription/subject",
+      "value": "Willkommen bei der Republik"
+    },
+    {
       "key": "api/email/option/goodie/notebook/1",
       "value": "Notizbuch"
     },
