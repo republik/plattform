@@ -754,7 +754,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_notice_0/subject",
-      "value": "Ihr Republik-Jubiläum! Und der Beginn von etwas Neuem?"
+      "value": "Heute ist Ihr Republik-Jubiläum! Und der Beginn von etwas Neuem?"
     },
     {
       "key": "api/email/membership_owner_prolong_winback_7/subject",
@@ -762,15 +762,15 @@
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_winback_7/subject",
-      "value": "Da war doch noch etwas: Ihr Mitstreiter-Abonnement"
+      "value": "Republik-Abo jetzt mit Rabatt verlängern"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_winback_16/subject",
-      "value": "Ein Zurück-zur-Republik-Angebot für Sie"
+      "value": "Kommen Sie zurück zur Republik für 160 statt 240 Franken"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_winback_24/subject",
-      "value": "Jetzt zurück zur Republik"
+      "value": "Kommen Sie zurück zur Republik für 160 statt 240 Franken"
     },
     {
       "key": "api/email/membership_owner_autopay_notice/subject",
@@ -810,7 +810,7 @@
     },
     {
       "key": "api/email/membership_deactivated_yearly_abo_uncancelled/subject",
-      "value": "Ihr Abonnement wurde deaktiviert"
+      "value": "Republik-Abo verlängern und 2 Monate gratis lesen"
     },
     {
       "key": "api/email/membership_deactivated/subject",
