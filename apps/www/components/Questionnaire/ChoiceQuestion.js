@@ -2,6 +2,7 @@ import { Component } from 'react'
 import { css } from 'glamor'
 import questionStyles from './questionStyles'
 import QuestionHeader from './QuestionHeader'
+import QuestionIndex from './QuestionIndex'
 import { nest } from 'd3-collection'
 import { v4 as uuid } from 'uuid'
 
@@ -79,6 +80,7 @@ class ChoiceQuestion extends Component {
 
   render() {
     const {
+      questionCount,
       question: {
         text,
         explanation,
@@ -100,11 +102,8 @@ class ChoiceQuestion extends Component {
     return (
       <div {...questionStyles.question}>
         <QuestionHeader metadata={metadata} />
-        {text && (
-          <P {...questionStyles.text}>
-            {order + 1}. {text}
-          </P>
-        )}
+        <QuestionIndex order={order} questionCount={questionCount} />
+        {text && <P {...questionStyles.text}>{text}</P>}
         {(multipleAllowed || explanation) && (
           <P {...questionStyles.help}>
             {explanation || t('questionnaire/choice/helpMultiple')}

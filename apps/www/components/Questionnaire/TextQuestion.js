@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import questionStyles from './questionStyles'
 import QuestionHeader from './QuestionHeader'
+import QuestionIndex from './QuestionIndex'
 import debounce from 'lodash/debounce'
 import { v4 as uuid } from 'uuid'
 
@@ -48,6 +49,7 @@ class TextQuestion extends Component {
 
   render() {
     const {
+      questionCount,
       question: { text, explanation, maxLength, order, metadata },
       t,
     } = this.props
@@ -55,11 +57,8 @@ class TextQuestion extends Component {
     return (
       <div {...questionStyles.question}>
         <QuestionHeader metadata={metadata} />
-        {text && (
-          <P {...questionStyles.text}>
-            {order + 1}. {text}
-          </P>
-        )}
+        <QuestionIndex order={order} questionCount={questionCount} />
+        {text && <P {...questionStyles.text}>{text}</P>}
         {explanation && <P {...questionStyles.help}>{explanation}</P>}
         <TextInput
           label={t('questionnaire/text/label')}

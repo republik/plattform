@@ -59,7 +59,7 @@ export {
   PullQuoteSource,
   PullQuoteText,
 } from './components/PullQuote'
-export { BlockQuote } from './components/BlockQuote'
+export { BlockQuote, BlockQuoteParagraph } from './components/BlockQuote'
 export {
   Figure,
   FigureCover,
