@@ -15,7 +15,7 @@ const styles = {
     },
   }),
   card: css({
-    display: 'table',
+    display: 'block',
     width: '100%',
     padding: '0.5em',
     breakInside: 'avoid',
@@ -51,7 +51,7 @@ export const AnswersGridCard = ({ children }: { children: ReactNode }) => {
 export const Answer = ({ answer, author }) => {
   return (
     <div {...styles.answer}>
-      <div>
+      <div style={{ width: '100%' }}>
         <Editorial.Question style={{ marginTop: 0 }}>
           {inQuotes(answer?.payload?.value ?? '')}
         </Editorial.Question>
