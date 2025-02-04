@@ -24,9 +24,11 @@ const styles = {
     padding: 0,
     width: '100%',
     '@media print': {
-      maxWidth: MAX_WIDTH / 2,
-      marginLeft: 'auto',
-      marginRight: 'auto',
+      '& img': {
+        maxWidth: MAX_WIDTH / 2,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      },
     },
   }),
   figureGroup: css({
