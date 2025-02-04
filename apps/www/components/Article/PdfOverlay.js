@@ -4,25 +4,33 @@ import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  A,
   Button,
   Checkbox,
   Radio,
 } from '@project-r/styleguide'
+
 import withT from '../../lib/withT'
-import { ASSETS_SERVER_BASE_URL } from '../../lib/constants'
-import { IconDownload } from '@republik/icons'
+
+import {
+  PUBLIC_BASE_URL,
+  SCREENSHOT_SERVER_BASE_URL,
+} from '../../lib/constants'
 
 export const getPdfUrl = (
-  meta,
-  { images = true, download = false, format } = {},
+  { path, lastPublishedAt },
+  { images, pageFormat } = {},
 ) => {
-  const url = new URL(`${ASSETS_SERVER_BASE_URL}/pdf${meta.path}.pdf`)
-  url.searchParams.set('format', format)
-  url.searchParams.set('images', images)
-  url.searchParams.set('download', download)
-  url.searchParams.set('version', meta.lastPublishedAt)
-  return url.toString()
+  const pdfUrl = new URL(`${SCREENSHOT_SERVER_BASE_URL}/api/pdf`)
+
+  const articleUrl = `${PUBLIC_BASE_URL}/${path}`
+
+  pdfUrl.searchParams.set('url', articleUrl)
+  pdfUrl.searchParams.set('version', lastPublishedAt)
+  pdfUrl.searchParams.set('images', images ? 'true' : 'false')
+
+  if (pageFormat) pdfUrl.searchParams.set('format', pageFormat)
+
+  return pdfUrl.toString()
 }
 
 const PdfOverlay = ({ onClose, article, t }) => {
@@ -58,22 +66,13 @@ const PdfOverlay = ({ onClose, article, t }) => {
           </Checkbox>
         </div>
 
-        <Button block href={getPdfUrl(article.meta, { pageFormat, images })}>
+        <Button
+          block
+          target='_blank'
+          href={getPdfUrl(article.meta, { pageFormat, images })}
+        >
           {t('article/pdf/open')}
         </Button>
-        <div style={{ textAlign: 'center', marginTop: 10 }}>
-          <A
-            target='_blank'
-            href={getPdfUrl(article.meta, {
-              pageFormat,
-              images,
-              download: true,
-            })}
-            download
-          >
-            <IconDownload /> {t('article/pdf/download')}
-          </A>
-        </div>
       </OverlayBody>
     </Overlay>
   )

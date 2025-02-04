@@ -285,7 +285,6 @@ export const FigureGroup = ({
   size,
   data,
 }: FigureGroupProps) => {
-  console.log({ columns })
   return (
     <figure
       role='group'
