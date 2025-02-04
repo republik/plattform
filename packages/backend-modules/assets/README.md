@@ -42,12 +42,6 @@ See [apps/assets/.env.example](apps/assets/.env.example) for the required envs.
 
   ENVs: `FRONTEND_BASE_URL`, `FRONTEND_BASIC_AUTH_USER`, `FRONTEND_BASIC_AUTH_PASS`
 
-- `/pdf/:path*`
-
-  fetches :path from `PDF_BASE_URL`
-
-  ENVs: `PDF_BASE_URL`
-
 - `/purgeTags?psk=psk&tags=tag1,tag2`
 
   purges tags on keyCDN :path from `PDF_BASE_URL`

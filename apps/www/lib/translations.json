@@ -3447,27 +3447,15 @@
     },
     {
       "key": "article/pdf/open",
-      "value": "öffnen"
+      "value": "PDF öffnen"
     },
     {
       "key": "article/pdf/download",
       "value": "herunterladen"
     },
     {
-      "key": "article/pdf/images/1",
-      "value": "mit einem Bild"
-    },
-    {
-      "key": "article/pdf/images/other",
-      "value": "mit {count} Bildern"
-    },
-    {
-      "key": "article/pdf/size/A4",
-      "value": "A4"
-    },
-    {
-      "key": "article/pdf/size/A5",
-      "value": "A5 (Beta)"
+      "key": "article/pdf/images",
+      "value": "mit Bildern"
     },
     {
       "key": "article/autodiscussionteaser/title",

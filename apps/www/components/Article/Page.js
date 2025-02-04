@@ -816,12 +816,9 @@ const ArticlePage = ({
                           showNewsletterSignupTop ||
                           isSyntheticReadAloud ||
                           isReadAloud ? (
-                            <Center
-                              breakout={breakout}
-                              {...styles.actionsAndInfosBlock}
-                            >
+                            <Center breakout={breakout} {...styles.hidePrint}>
                               {showNewsletterSignupTop && (
-                                <div style={{ marginTop: 10 }}>
+                                <div {...styles.newsletterSignUpTop}>
                                   <NewsletterSignUp
                                     {...newsletterMeta}
                                     smallButton
@@ -875,73 +872,78 @@ const ArticlePage = ({
                   </ProgressComponent>
                 </ArticleGallery>
               )}
-              {meta.template === 'discussion' && ownDiscussion && (
-                <Center breakout={breakout}>
-                  <DiscussionContextProvider
-                    discussionId={ownDiscussion.id}
-                    isBoardRoot={ownDiscussion.isBoard}
+              <div {...styles.hidePrint}>
+                {meta.template === 'discussion' && ownDiscussion && (
+                  <Center breakout={breakout}>
+                    <DiscussionContextProvider
+                      discussionId={ownDiscussion.id}
+                      isBoardRoot={ownDiscussion.isBoard}
+                    >
+                      <Discussion documentMeta={rawContentMeta} showPayNotes />
+                    </DiscussionContextProvider>
+                  </Center>
+                )}
+                {showNewsletterSignupBottom && (
+                  <Center
+                    breakout={breakout}
+                    {...styles.newsletterSignUpBottom}
                   >
-                    <Discussion documentMeta={rawContentMeta} showPayNotes />
-                  </DiscussionContextProvider>
-                </Center>
-              )}
-              {showNewsletterSignupBottom && (
-                <Center breakout={breakout}>
-                  <NewsletterSignUp
-                    showTitle
-                    showDescription
-                    {...newsletterMeta}
+                    <NewsletterSignUp
+                      showTitle
+                      showDescription
+                      {...newsletterMeta}
+                    />
+                  </Center>
+                )}
+                {((hasAccess && meta.template === 'article') ||
+                  (isEditorialNewsletter &&
+                    newsletterMeta &&
+                    newsletterMeta.free)) && (
+                  <Center breakout={breakout}>
+                    <div ref={bottomActionBarRef}>{actionBarEnd}</div>
+                  </Center>
+                )}
+                {!!podcast && meta.template !== 'article' && (
+                  <Center breakout={breakout}>
+                    <Interaction.H3>{t(`PodcastButtons/title`)}</Interaction.H3>
+                    <PodcastButtons {...podcast} />
+                  </Center>
+                )}
+                {episodes && !isSeriesOverview && (
+                  <SeriesNav
+                    inline
+                    repoId={repoId}
+                    series={series}
+                    context='after'
+                    PayNote={showInlinePaynote ? TrialPayNoteMini : undefined}
+                    ActionBar={me && ActionBar}
+                    Link={Link}
+                    t={t}
+                    seriesDescription={false}
                   />
-                </Center>
-              )}
-              {((hasAccess && meta.template === 'article') ||
-                (isEditorialNewsletter &&
-                  newsletterMeta &&
-                  newsletterMeta.free)) && (
-                <Center breakout={breakout}>
-                  <div ref={bottomActionBarRef}>{actionBarEnd}</div>
-                </Center>
-              )}
-              {!!podcast && meta.template !== 'article' && (
-                <Center breakout={breakout}>
-                  <Interaction.H3>{t(`PodcastButtons/title`)}</Interaction.H3>
-                  <PodcastButtons {...podcast} />
-                </Center>
-              )}
-              {episodes && !isSeriesOverview && (
-                <SeriesNav
-                  inline
-                  repoId={repoId}
-                  series={series}
-                  context='after'
-                  PayNote={showInlinePaynote ? TrialPayNoteMini : undefined}
-                  ActionBar={me && ActionBar}
-                  Link={Link}
-                  t={t}
-                  seriesDescription={false}
-                />
-              )}
-              {isSection && !hideFeed && (
-                <SectionFeed
-                  key={`sectionFeed${article?.issuedForUserId}`}
-                  formats={article.linkedDocuments.nodes.map((n) => n.id)}
-                  variables={feedQueryVariables}
-                />
-              )}
-              {isFormat && !hideFeed && (
-                <FormatFeed
-                  key={`formatFeed${article?.issuedForUserId}`}
-                  formatId={article.repoId}
-                  variables={feedQueryVariables}
-                />
-              )}
+                )}
+                {isSection && !hideFeed && (
+                  <SectionFeed
+                    key={`sectionFeed${article?.issuedForUserId}`}
+                    formats={article.linkedDocuments.nodes.map((n) => n.id)}
+                    variables={feedQueryVariables}
+                  />
+                )}
+                {isFormat && !hideFeed && (
+                  <FormatFeed
+                    key={`formatFeed${article?.issuedForUserId}`}
+                    formatId={article.repoId}
+                    variables={feedQueryVariables}
+                  />
+                )}
 
-              {hasAccess && <ArticleRecommendationsFeed path={cleanedPath} />}
-              {hasAccess &&
-                (isEditorialNewsletter ||
-                  meta.template === 'article' ||
-                  meta.template === 'page') && <div style={{ height: 60 }} />}
-              {!suppressPayNotes && payNoteAfter}
+                {hasAccess && <ArticleRecommendationsFeed path={cleanedPath} />}
+                {hasAccess &&
+                  (isEditorialNewsletter ||
+                    meta.template === 'article' ||
+                    meta.template === 'page') && <div style={{ height: 60 }} />}
+                {!suppressPayNotes && payNoteAfter}
+              </div>
             </>
           )
         }}
@@ -951,11 +953,6 @@ const ArticlePage = ({
 }
 
 const styles = {
-  actionsAndInfosBlock: css({
-    '@media print': {
-      display: 'none',
-    },
-  }),
   prepublicationNotice: css({
     backgroundColor: colors.social,
   }),
@@ -968,6 +965,14 @@ const styles = {
   flexCenter: css({
     display: 'flex',
     justifyContent: 'center',
+  }),
+  newsletterSignUpTop: css({
+    marginTop: 10,
+  }),
+  hidePrint: css({
+    '@media print': {
+      display: 'none',
+    },
   }),
 }
 
