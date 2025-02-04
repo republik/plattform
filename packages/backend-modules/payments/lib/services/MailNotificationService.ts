@@ -2,6 +2,7 @@ import { PgDb } from 'pogi'
 import { NOT_STARTED_STATUS_TYPES, ACTIVE_STATUS_TYPES } from '../types'
 import {
   sendCancelConfirmationMail,
+  sendConfirmGiftAppliedMail,
   sendEndedNoticeMail,
   sendPaymentFailedNoticeMail,
   sendRevokeCancellationConfirmationMail,
@@ -275,6 +276,8 @@ export class MailNotificationService {
     subscriptionExternalId: string
     userId: string
   }): Promise<void> {
+    // TODO: we could probably use the same transactional flow for switching between monthly/yearly 
+    // due to gifts, if we check the subscription metadata here
     const subscription = await this.#billing.getSubscription({
       externalId: subscriptionExternalId,
     })
@@ -296,6 +299,36 @@ export class MailNotificationService {
     }
 
     await sendSetupGiftMail({ email: userRow.email }, this.#pgdb)
+  }
+
+  async sendGiftVoucherAppliedToExistingSubscriptionMail({
+    subscriptionExternalId,
+    userId,
+  }: {
+    subscriptionExternalId: string
+    userId: string
+  }): Promise<void> {
+    const subscription = await this.#billing.getSubscription({
+      externalId: subscriptionExternalId,
+    })
+
+    if (!subscription) {
+      throw new Error(
+        `Subscription [${subscriptionExternalId}] does not exist in the Database`,
+      )
+    }
+
+    if (!ACTIVE_STATUS_TYPES.includes(subscription.status)) {
+      throw new Error(
+        `not sending transactional for subscription ${subscriptionExternalId} with status ${subscription.status}`,
+      )
+    }
+    const userRow = await this.#users.findUserById(userId)
+    if (!userRow) {
+      throw new Error('unknown user')
+    }
+
+    await sendConfirmGiftAppliedMail({email: userRow.email, subscriptionType: subscription.type }, this.#pgdb)
   }
 
   async syncMailchimpSetupSubscription({

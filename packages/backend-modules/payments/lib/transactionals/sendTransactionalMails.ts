@@ -293,3 +293,31 @@ export async function sendSetupGiftMail({ email }: { email: string }, pgdb: PgDb
 
   return sendMailResult
 }
+
+export async function sendConfirmGiftAppliedMail({ email, subscriptionType }: { email: string, subscriptionType: SubscriptionType }, pgdb: PgDb) {
+  const globalMergeVars: MergeVariable[] = [
+    {
+      name: 'is_monthly',
+      content: subscriptionType === 'MONTHLY_SUBSCRIPTION',
+    },
+    {
+      name: 'is_yearly',
+      content: subscriptionType === 'YEARLY_SUBSCRIPTION',
+    },
+  ]
+
+  const templateName = 'subscription_updated_gift_voucher_subscription'
+  const sendMailResult = await sendMailTemplate(
+    {
+      to: email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
+      subject: t(`api/email/${templateName}/subject`),
+      templateName,
+      mergeLanguage: 'handlebars',
+      globalMergeVars,
+    },
+    { pgdb },
+  )
+
+  return sendMailResult
+}

@@ -7,6 +7,7 @@ export { ConfirmSetupTransactionalWorker } from './lib/workers/ConfirmSetupTrans
 export { ConfirmCancelTransactionalWorker } from './lib/workers/ConfirmCancelTransactionalWorker'
 export { ConfirmRevokeCancellationTransactionalWorker } from './lib/workers/ConfirmRevokeCancellationTransactionalWorker'
 export { ConfirmGiftSubscriptionTransactionalWorker } from './lib/workers/ConfirmGiftSubscriptionTransactionalWorker'
+export { ConfirmGiftAppliedTransactionalWorker } from './lib/workers/ConfirmGiftAppliedTransactionalWorker'
 export { NoticeEndedTransactionalWorker } from './lib/workers/NoticeEndedTransactionalWorker'
 export { NoticePaymentFailedTransactionalWorker } from './lib/workers/NoticePaymentFailedTransactionalWorker'
 export { SyncMailchimpSetupWorker } from './lib/workers/SyncMailchimpSetupWorker'

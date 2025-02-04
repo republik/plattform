@@ -10,6 +10,8 @@ import {
   REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
 } from '../../mail-settings'
 import { secondsToMilliseconds } from './utils'
+import { ConfirmGiftAppliedTransactionalWorker } from '../../workers/ConfirmGiftAppliedTransactionalWorker'
+import { getConfig } from '../../config'
 
 export async function processSubscriptionUpdate(
   paymentService: PaymentService,
@@ -24,6 +26,10 @@ export async function processSubscriptionUpdate(
   const cancellationComment = event.data.object.cancellation_details?.comment
   const cancellationFeedback = event.data.object.cancellation_details?.feedback
   const cancellationReason = event.data.object.cancellation_details?.reason
+
+  const appliedVouchers = event.data.object.discounts
+  const previousVouchers = event.data.previous_attributes?.discounts
+  const discountCode = event.data.object.discount?.coupon?.id
 
   await paymentService.updateSubscription({
     company: company,
@@ -139,4 +145,55 @@ export async function processSubscriptionUpdate(
       }),
     ])
   }
+
+  const isGiftUpdate = hasGiftVoucherBeenApplied(
+    previousVouchers,
+    appliedVouchers,
+    discountCode,
+  )
+  if (isGiftUpdate) {
+    const customerId = event.data.object.customer as string
+    const userId = await paymentService.getUserIdForCompanyCustomer(
+      company,
+      customerId,
+    )
+    if (!userId) {
+      throw Error(`User for ${customerId} does not exists`)
+    }
+
+    const queue = Queue.getInstance()
+    await Promise.all([
+      queue.send<ConfirmGiftAppliedTransactionalWorker>(
+        'payments:transactional:confirm:gift:applied',
+        {
+          $version: 'v1',
+          eventSourceId: event.id,
+          userId: userId,
+        },
+      ),
+      queue.send<SyncMailchimpUpdateWorker>('payments:mailchimp:sync:update', {
+        $version: 'v1',
+        eventSourceId: event.id,
+        userId: userId,
+      }),
+    ])
+  }
+}
+
+function hasGiftVoucherBeenApplied(
+  previousDiscounts: (string | Stripe.Discount)[] | undefined,
+  currentDiscounts: (string | Stripe.Discount)[],
+  discountCode: string | undefined,
+): boolean {
+  const hasNewVoucher =
+    !!previousDiscounts &&
+    !!currentDiscounts &&
+    previousDiscounts.length < currentDiscounts.length
+  const isGiftVoucher =
+    !!discountCode &&
+    [
+      getConfig().REPUBLIK_3_MONTH_GIFT_COUPON,
+      getConfig().PROJECT_R_YEARLY_GIFT_COUPON,
+    ].includes(discountCode)
+  return hasNewVoucher && isGiftVoucher
 }

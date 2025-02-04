@@ -54,6 +54,7 @@ const {
   SyncMailchimpUpdateWorker,
   SyncMailchimpEndedWorker,
   ConfirmGiftSubscriptionTransactionalWorker,
+  ConfirmGiftAppliedTransactionalWorker,
   setupPaymentUserEventHooks,
 } = require('@orbiting/backend-modules-payments')
 
@@ -100,6 +101,7 @@ function setupQueue(context, monitorQueueState = undefined) {
     ConfirmCancelTransactionalWorker,
     ConfirmRevokeCancellationTransactionalWorker,
     ConfirmGiftSubscriptionTransactionalWorker,
+    ConfirmGiftAppliedTransactionalWorker,
     NoticeEndedTransactionalWorker,
     NoticePaymentFailedTransactionalWorker,
     SyncMailchimpSetupWorker,

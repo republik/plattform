@@ -453,6 +453,10 @@
       "value": "Willkommen bei der Republik"
     },
     {
+      "key": "api/email/subscription_updated_gift_voucher_subscription/subject",
+      "value": "Republik: Sie haben ein Geschenk eingelöst"
+    },
+    {
       "key": "api/email/option/goodie/notebook/1",
       "value": "Notizbuch"
     },
