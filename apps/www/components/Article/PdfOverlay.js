@@ -24,7 +24,7 @@ export const getPdfUrl = (
 
   const articleUrl = `${PUBLIC_BASE_URL}/${path}`
 
-  pdfUrl.searchParams.set('url', articleUrl)
+  pdfUrl.searchParams.set('url', encodeURIComponent(articleUrl))
   pdfUrl.searchParams.set('version', lastPublishedAt)
   pdfUrl.searchParams.set('images', images ? 'true' : 'false')
 
