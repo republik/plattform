@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css, merge, keyframes } from 'glamor'
 
 import { mUp, mUpAndPrint } from '../../theme/mediaQueries'
@@ -283,7 +282,6 @@ export const FigureGroup = ({
   attributes,
   columns = 2,
   size,
-  data,
 }: FigureGroupProps) => {
   return (
     <figure

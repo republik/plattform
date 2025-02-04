@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Figure, FigureSize } from '../Figure'
 import FigureImage from '../Figure/Image'
 import { css } from 'glamor'
+import { MAX_WIDTH } from '../Center'
 
 declare global {
   interface Window {
@@ -134,11 +135,12 @@ function DatawrapperInteractive({
 // https://datawrapper.dwcdn.net/DW123ID/full.png -> 600px wide
 function DatawrapperPrint({ datawrapperId }: { datawrapperId: string }) {
   return (
-    <Figure>
-      <FigureImage
+    <figure>
+      <img
+        width={600}
         src={`https://datawrapper.dwcdn.net/${datawrapperId}/full.png`}
       />
-    </Figure>
+    </figure>
   )
 }
 
