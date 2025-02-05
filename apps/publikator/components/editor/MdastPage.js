@@ -104,15 +104,15 @@ const rmWarning = (message) => (state) => ({
 
 const SIDEBAR_ICON_SIZE = 30
 
-const PrintButton = () => (
+const PrintButton = withT(({ t }) => (
   <button
     {...plainButtonRule}
     style={{ color: colors.primary, marginTop: 10, display: 'block' }}
     onClick={window.print}
   >
-    Beitrag drucken
+    {t('editor/print')}
   </button>
-)
+))
 
 export class EditorPage extends Component {
   constructor(...args) {
