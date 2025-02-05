@@ -1826,7 +1826,7 @@
     },
     {
       "key": "api/signin/mail/subject",
-      "value": "Zugriff bestätigen: {phrase}"
+      "value": "Zugriff bestätigen"
     },
     {
       "key": "api/signin/mail/appNotice/subject",
