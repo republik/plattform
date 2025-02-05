@@ -2001,6 +2001,10 @@
       "value": "Committen oder verwerfen Sie Ihre Änderungen, um die Phase anzupassen."
     },
     {
+      "key": "editor/print",
+      "value": "Suchen und Ersetzen"
+    },
+    {
       "key": "editor/replace/title",
       "value": "Suchen und Ersetzen"
     },

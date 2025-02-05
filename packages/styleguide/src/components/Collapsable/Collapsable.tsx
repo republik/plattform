@@ -49,6 +49,9 @@ const collapsedEditorPreviewStyle = (mobile, desktop) =>
       [mUp]: {
         top: desktop,
       },
+      '@media print': {
+        display: 'none',
+      },
     },
   })
 
