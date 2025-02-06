@@ -265,13 +265,9 @@ export class GiftShop {
       items: [shop.genLineItem(offer)],
       coupon: gift.coupon,
       collection_method: 'send_invoice',
-      cancel_at_period_end: true,
       days_until_due: 14,
       metadata: {
         [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
-        [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
-          'confirm:cancel': false,
-        }),
       },
     })
 
@@ -333,7 +329,7 @@ export class GiftShop {
           stripeId,
           {
             coupon: gift.coupon,
-            cancel_at_period_end: false,
+            cancel_at_period_end: false, // if a subscription is canceled we need to uncancel it.
             metadata: {
               [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                 'confirm:revoke_cancellation': false,
@@ -400,14 +396,12 @@ export class GiftShop {
               metadata: {
                 [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                   'confirm:setup': true,
-                  'confirm:cancel': false,
                 }),
                 [REPUBLIK_PAYMENTS_SUBSCRIPTION_UPGRADED_FROM]: `monthly_abo:${membershipId}`,
                 [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
               },
             },
           ],
-          end_behavior: 'cancel',
         })
         return {
           id: membershipId,
@@ -482,7 +476,7 @@ export class GiftShop {
           stripeId,
           {
             coupon: gift.coupon,
-            cancel_at_period_end: false,
+            cancel_at_period_end: false, // if a subscription is canceled we need to uncancel it.
             metadata: {
               [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                 'confirm:revoke_cancellation': false,
@@ -544,7 +538,7 @@ export class GiftShop {
           stripeId,
           {
             coupon: gift.coupon,
-            cancel_at_period_end: false,
+            cancel_at_period_end: false, // if a subscription is canceled we need to uncancel it.
             metadata: {
               [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                 'confirm:revoke_cancellation': false,
