@@ -1,0 +1,3 @@
+-- migrate up here: CREATE TABLE...
+ALTER TABLE payments."giftVouchers" ADD "orderId" uuid;
+ALTER TABLE payments."giftVouchers" ADD CONSTRAINT fk_gift_voucher_order_id FOREIGN KEY("orderId") REFERENCES payments.orders("id");

@@ -53,6 +53,9 @@ const {
   SyncMailchimpSetupWorker,
   SyncMailchimpUpdateWorker,
   SyncMailchimpEndedWorker,
+  ConfirmGiftSubscriptionTransactionalWorker,
+  ConfirmGiftAppliedTransactionalWorker,
+  setupPaymentUserEventHooks,
 } = require('@orbiting/backend-modules-payments')
 
 const loaderBuilders = {
@@ -81,20 +84,33 @@ const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
 
 const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 
-const { Queue } = require('@orbiting/backend-modules-job-queue')
+const { Queue, GlobalQueue } = require('@orbiting/backend-modules-job-queue')
 
-const queue = Queue.getInstance()
-queue.registerWorker(StripeWebhookWorker)
-queue.registerWorker(StripeCustomerCreateWorker)
-queue.registerWorker(SyncAddressDataWorker)
-queue.registerWorker(ConfirmSetupTransactionalWorker)
-queue.registerWorker(ConfirmCancelTransactionalWorker)
-queue.registerWorker(ConfirmRevokeCancellationTransactionalWorker)
-queue.registerWorker(NoticeEndedTransactionalWorker)
-queue.registerWorker(NoticePaymentFailedTransactionalWorker)
-queue.registerWorker(SyncMailchimpSetupWorker)
-queue.registerWorker(SyncMailchimpUpdateWorker)
-queue.registerWorker(SyncMailchimpEndedWorker)
+function setupQueue(context, monitorQueueState = undefined) {
+  const queue = Queue.createInstance(GlobalQueue, {
+    context,
+    connectionString: process.env.DATABASE_URL,
+    monitorStateIntervalSeconds: monitorQueueState,
+  })
+
+  queue.registerWorkers([
+    StripeWebhookWorker,
+    StripeCustomerCreateWorker,
+    SyncAddressDataWorker,
+    ConfirmSetupTransactionalWorker,
+    ConfirmCancelTransactionalWorker,
+    ConfirmRevokeCancellationTransactionalWorker,
+    ConfirmGiftSubscriptionTransactionalWorker,
+    ConfirmGiftAppliedTransactionalWorker,
+    NoticeEndedTransactionalWorker,
+    NoticePaymentFailedTransactionalWorker,
+    SyncMailchimpSetupWorker,
+    SyncMailchimpUpdateWorker,
+    SyncMailchimpEndedWorker,
+  ])
+
+  return queue
+}
 
 const {
   LOCAL_ASSETS_SERVER,
@@ -204,7 +220,9 @@ const run = async (workerId, config) => {
 
   const connectionContext = await ConnectionContext.create(applicationName)
 
+  const queue = setupQueue(connectionContext)
   await queue.start()
+  setupPaymentUserEventHooks(connectionContext)
 
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
@@ -356,6 +374,7 @@ const runOnce = async () => {
     )
   }
 
+  const queue = setupQueue(connectionContext, 120)
   await queue.start()
 
   PaymentsService.start(context.pgdb)

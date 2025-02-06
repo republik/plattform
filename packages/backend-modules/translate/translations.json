@@ -389,6 +389,10 @@
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
+      "key": "api/email/payment_successful_gift_voucher/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
       "key": "api/email/payment_successful_benefactor/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
@@ -443,6 +447,14 @@
     {
       "key": "api/email/subscription_revoke_cancellation_notice/subject",
       "value": "Republik: Ihre Kündigung wurde rückgängig gemacht"
+    },
+    {
+      "key": "api/email/subscription_created_gift_subscription/subject",
+      "value": "Willkommen bei der Republik"
+    },
+    {
+      "key": "api/email/subscription_updated_gift_voucher_subscription/subject",
+      "value": "Republik: Sie haben ein Geschenk eingelöst"
     },
     {
       "key": "api/email/option/goodie/notebook/1",
