@@ -2,6 +2,9 @@ import { useTheme } from 'next-themes'
 import Script from 'next/script'
 import { useEffect, useRef, useState } from 'react'
 import { Figure, FigureSize } from '../Figure'
+import FigureImage from '../Figure/Image'
+import { css } from 'glamor'
+import { MAX_WIDTH } from '../Center'
 
 declare global {
   interface Window {
@@ -9,7 +12,21 @@ declare global {
   }
 }
 
-function Datawrapper({
+const styles = {
+  hidePrint: css({
+    '@media print': {
+      display: 'none',
+    },
+  }),
+  showPrint: css({
+    display: 'none',
+    '@media print': {
+      display: 'block',
+    },
+  }),
+}
+
+function DatawrapperInteractive({
   datawrapperId,
   forceDark = false,
   size,
@@ -111,6 +128,47 @@ function Datawrapper({
         }}
       />
     </Figure>
+  )
+}
+
+// We use the image instead of the interactive chart for the pdf version
+// https://datawrapper.dwcdn.net/DW123ID/full.png -> 600px wide
+function DatawrapperPrint({ datawrapperId }: { datawrapperId: string }) {
+  return (
+    <figure>
+      <img
+        width={600}
+        src={`https://datawrapper.dwcdn.net/${datawrapperId}/full.png`}
+      />
+    </figure>
+  )
+}
+
+function Datawrapper({
+  datawrapperId,
+  forceDark = false,
+  size,
+  plain = false,
+}: {
+  datawrapperId: string
+  size: FigureSize
+  forceDark?: boolean
+  plain?: boolean
+}) {
+  return (
+    <>
+      <div {...styles.hidePrint}>
+        <DatawrapperInteractive
+          datawrapperId={datawrapperId}
+          forceDark={forceDark}
+          size={size}
+          plain={plain}
+        />
+      </div>
+      <div {...styles.showPrint}>
+        <DatawrapperPrint datawrapperId={datawrapperId} />
+      </div>
+    </>
   )
 }
 

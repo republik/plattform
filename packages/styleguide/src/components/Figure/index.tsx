@@ -1,8 +1,7 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css, merge, keyframes } from 'glamor'
 
-import { mUp } from '../../theme/mediaQueries'
+import { mUp, mUpAndPrint } from '../../theme/mediaQueries'
 import {
   breakoutStyles,
   PADDED_MAX_WIDTH,
@@ -24,6 +23,13 @@ const styles = {
     marginBottom: 15,
     padding: 0,
     width: '100%',
+    '@media print': {
+      '& img': {
+        maxWidth: MAX_WIDTH / 2,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      },
+    },
   }),
   figureGroup: css({
     margin: 0,
@@ -33,7 +39,7 @@ const styles = {
       display: 'block',
       width: '100%',
     },
-    [mUp]: {
+    [mUpAndPrint]: {
       display: 'flex',
       flexWrap: 'wrap',
       justifyContent: 'space-between',
@@ -50,6 +56,10 @@ const styles = {
     margin: '30px auto 20px auto',
     maxWidth: PADDED_MAX_WIDTH,
     padding: PADDING,
+    '@media print': {
+      width: '50%',
+      margin: '0 auto 20px auto',
+    },
   }),
   coverText: css({
     position: 'absolute',
@@ -96,21 +106,21 @@ const styles = {
     },
   }),
   col2: css({
-    [mUp]: {
+    [mUpAndPrint]: {
       '& figure': {
         maxWidth: `calc(${100 / 2}% - 8px)`,
       },
     },
   }),
   col3: css({
-    [mUp]: {
+    [mUpAndPrint]: {
       '& figure': {
         maxWidth: `calc(${100 / 3}% - 10px)`,
       },
     },
   }),
   col4: css({
-    [mUp]: {
+    [mUpAndPrint]: {
       '& figure': {
         maxWidth: `calc(${100 / 4}% - 12px)`,
       },
@@ -274,7 +284,6 @@ export const FigureGroup = ({
   attributes,
   columns = 2,
   size,
-  data,
 }: FigureGroupProps) => {
   return (
     <figure

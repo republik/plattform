@@ -26,6 +26,9 @@ const styles = {
     margin: '0 auto',
     padding: 0,
     width: '100%',
+    '@media print': {
+      display: 'none',
+    },
   }),
   description: css({
     padding: '0px 15px',

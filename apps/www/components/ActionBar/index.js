@@ -568,7 +568,10 @@ const ActionBar = ({
   const audioItems = currentActionItems.filter(getGroup('audio'))
 
   return (
-    <div {...(!hasAccess && mode !== 'articleOverlay' && styles.bottomMargin)}>
+    <div
+      {...(!hasAccess && mode !== 'articleOverlay' && styles.bottomMargin)}
+      {...styles.hidePrint}
+    >
       <div
         {...((mode === 'feed' || mode === 'seriesEpisode') && styles.flexWrap)}
         {...((mode === 'seriesEpisode' || mode === 'feed') &&
@@ -676,6 +679,11 @@ const styles = {
   }),
   shareTitle: css({
     margin: '16px 0 0 0',
+  }),
+  hidePrint: css({
+    '@media print': {
+      display: 'none',
+    },
   }),
 }
 

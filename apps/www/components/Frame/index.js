@@ -71,6 +71,9 @@ const styles = {
     [mediaQueries.mUp]: {
       paddingTop: HEADER_HEIGHT - 1,
     },
+    '@media print': {
+      paddingTop: 0,
+    },
   }),
   bodyGrower: css({
     flexGrow: 1,
@@ -139,6 +142,9 @@ const Frame = ({
         paddingTop: hasSecondaryNav
           ? HEADER_HEIGHT + SUBHEADER_HEIGHT
           : HEADER_HEIGHT - 1,
+      },
+      '@media print': {
+        paddingTop: 0,
       },
     })
   }, [hasSecondaryNav])
