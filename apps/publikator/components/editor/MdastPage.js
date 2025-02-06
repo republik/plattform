@@ -104,6 +104,16 @@ const rmWarning = (message) => (state) => ({
 
 const SIDEBAR_ICON_SIZE = 30
 
+const PrintButton = withT(({ t }) => (
+  <button
+    {...plainButtonRule}
+    style={{ color: colors.primary, marginTop: 10, display: 'block' }}
+    onClick={window.print}
+  >
+    {t('editor/print')}
+  </button>
+))
+
 export class EditorPage extends Component {
   constructor(...args) {
     super(...args)
@@ -973,6 +983,7 @@ export class EditorPage extends Component {
             >
               {!readOnly && !showPreview && (
                 <Sidebar.Tab tabId='edit' label='Editieren'>
+                  <PrintButton />
                   <Replace
                     value={this.editor?.serializer.serialize(editorState)}
                     onSave={this.persistChanges.bind(this)}

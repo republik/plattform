@@ -20,14 +20,11 @@ import { IconRadioChecked, IconRadioUnchecked } from '@republik/icons'
 
 import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
 
-// import { useMe } from '../../../lib/context/MeContext'
-import { useTranslation } from '../../lib/withT'
-
 import Frame from '../Frame'
 import Meta from '../Frame/Meta'
 
-import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
-import { styles as submissionStyles } from '../Questionnaire/Submissions/Submission'
+import { ShareImage } from '../Questionnaire/Submissions/components/ShareImage'
+import { styles as submissionStyles } from '../Questionnaire/Submissions/legacy/Submission'
 
 import HeaderShare from './HeaderShare'
 
@@ -62,7 +59,7 @@ const Page = ({ responses, authorData }) => {
 
   if (image) {
     return (
-      <ShareImageSplit
+      <ShareImage
         user={authorData}
         img={ILLU_SHARE}
         fgColor={QUESTIONNAIRE_FG_COLOR}

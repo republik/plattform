@@ -26,15 +26,18 @@ import {
   MetaOptionGroup,
   MetaOptionGroupTitle,
   MetaSection,
-  MetaSectionTitle
+  MetaSectionTitle,
 } from '../../../MetaDataForm/components/Layout'
-import TextToSpeechForm from "./TextToSpeechForm";
+import TextToSpeechForm from './TextToSpeechForm'
 
 const styles = {
   container: css({
     marginTop: 100,
     backgroundColor: colors.secondaryBg,
     padding: 30,
+    '@media print': {
+      display: 'none',
+    },
   }),
   center: css({
     maxWidth: 640,
@@ -334,7 +337,8 @@ const MetaData = ({
         <TextToSpeechForm
           editor={editor}
           node={node}
-          onInputChange={onInputChange} />
+          onInputChange={onInputChange}
+        />
         <AudioForm
           editor={editor}
           node={node}

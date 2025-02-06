@@ -389,6 +389,10 @@
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
+      "key": "api/email/payment_successful_gift_voucher/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
       "key": "api/email/payment_successful_benefactor/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
@@ -443,6 +447,14 @@
     {
       "key": "api/email/subscription_revoke_cancellation_notice/subject",
       "value": "Republik: Ihre Kündigung wurde rückgängig gemacht"
+    },
+    {
+      "key": "api/email/subscription_created_gift_subscription/subject",
+      "value": "Willkommen bei der Republik"
+    },
+    {
+      "key": "api/email/subscription_updated_gift_voucher_subscription/subject",
+      "value": "Republik: Sie haben ein Geschenk eingelöst"
     },
     {
       "key": "api/email/option/goodie/notebook/1",
@@ -754,7 +766,7 @@
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_notice_0/subject",
-      "value": "Ihr Republik-Jubiläum! Und der Beginn von etwas Neuem?"
+      "value": "Heute ist Ihr Republik-Jubiläum! Und der Beginn von etwas Neuem?"
     },
     {
       "key": "api/email/membership_owner_prolong_winback_7/subject",
@@ -762,15 +774,15 @@
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_winback_7/subject",
-      "value": "Da war doch noch etwas: Ihr Mitstreiter-Abonnement"
+      "value": "Republik-Abo jetzt mit Rabatt verlängern"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_winback_16/subject",
-      "value": "Ein Zurück-zur-Republik-Angebot für Sie"
+      "value": "Kommen Sie zurück zur Republik für 160 statt 240 Franken"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_winback_24/subject",
-      "value": "Jetzt zurück zur Republik"
+      "value": "Kommen Sie zurück zur Republik für 160 statt 240 Franken"
     },
     {
       "key": "api/email/membership_owner_autopay_notice/subject",
@@ -810,7 +822,7 @@
     },
     {
       "key": "api/email/membership_deactivated_yearly_abo_uncancelled/subject",
-      "value": "Ihr Abonnement wurde deaktiviert"
+      "value": "Republik-Abo verlängern und 2 Monate gratis lesen"
     },
     {
       "key": "api/email/membership_deactivated/subject",
@@ -1826,7 +1838,7 @@
     },
     {
       "key": "api/signin/mail/subject",
-      "value": "Zugriff bestätigen: {phrase}"
+      "value": "Zugriff bestätigen"
     },
     {
       "key": "api/signin/mail/appNotice/subject",

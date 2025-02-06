@@ -1,8 +1,12 @@
 import Stripe from 'stripe'
 import { PaymentService } from '../../payments'
 import { Company, SubscriptionArgs } from '../../types'
-import { getSubscriptionType } from './utils'
+import { getSubscriptionType, secondsToMilliseconds } from './utils'
 import { PaymentProvider } from '../../providers/provider'
+import { Queue } from '@orbiting/backend-modules-job-queue'
+import { ConfirmGiftSubscriptionTransactionalWorker } from '../../workers/ConfirmGiftSubscriptionTransactionalWorker'
+import { REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN } from '../../shop/gifts'
+import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker'
 
 export async function processSubscriptionCreated(
   paymentService: PaymentService,
@@ -25,8 +29,7 @@ export async function processSubscriptionCreated(
     await paymentService.getSubscription({ externalId: externalSubscriptionId })
   ) {
     console.log(
-      'subscription has already saved; skipping [%s]',
-      externalSubscriptionId,
+      `subscription has already saved; skipping [${externalSubscriptionId}]`,
     )
     return
   }
@@ -42,6 +45,30 @@ export async function processSubscriptionCreated(
   const args = mapSubscriptionArgs(company, subscription)
   await paymentService.setupSubscription(userId, args)
 
+  const isGiftSubscription =
+    subscription.metadata[REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN] === 'GIFT'
+
+  const queue = Queue.getInstance()
+
+  // only start mail and mailchimp sync jobs if subscription is created from gift and not checkout
+  if (isGiftSubscription) {
+    await Promise.all([
+      queue.send<ConfirmGiftSubscriptionTransactionalWorker>(
+        'payments:transactional:confirm:gift:subscription',
+        {
+          $version: 'v1',
+          eventSourceId: event.id,
+          userId: userId,
+        },
+      ),
+      queue.send<SyncMailchimpSetupWorker>('payments:mailchimp:sync:setup', {
+        $version: 'v1',
+        eventSourceId: event.id,
+        userId: userId,
+      }),
+    ])
+  }
+
   return
 }
 
@@ -53,8 +80,10 @@ export function mapSubscriptionArgs(
     company: company,
     type: getSubscriptionType(sub?.items.data[0].price.product as string),
     externalId: sub.id,
-    currentPeriodStart: new Date(sub.current_period_start * 1000),
-    currentPeriodEnd: new Date(sub.current_period_end * 1000),
+    currentPeriodStart: new Date(
+      secondsToMilliseconds(sub.current_period_start),
+    ),
+    currentPeriodEnd: new Date(secondsToMilliseconds(sub.current_period_end)),
     status: sub.status,
     metadata: sub.metadata,
   }

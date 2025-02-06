@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react'
-import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 
 import { sansSerifRegular14 } from '../Typography/styles'
@@ -23,6 +22,10 @@ const collapsedBodyStyle = (mobile, desktop) =>
     [mUp]: {
       maxHeight: desktop,
     },
+    '@media print': {
+      overflow: 'visible',
+      maxHeight: 'none',
+    },
   })
 
 const collapsedEditorPreviewStyle = (mobile, desktop) =>
@@ -45,6 +48,9 @@ const collapsedEditorPreviewStyle = (mobile, desktop) =>
       top: mobile,
       [mUp]: {
         top: desktop,
+      },
+      '@media print': {
+        display: 'none',
       },
     },
   })
@@ -101,7 +107,7 @@ const Collapsable = ({
     if (window.matchMedia('print').matches) {
       setBodyVisibility('full')
     } else if (bodyVisibility === 'auto' && bodySize?.height !== undefined) {
-    /* Collapse the body (switch to 'preview' visibility) when allowed and the size exceeds the threshold. */
+      /* Collapse the body (switch to 'preview' visibility) when allowed and the size exceeds the threshold. */
       const maxBodyHeight = isDesktop ? desktop : mobile
       if (bodySize.height > maxBodyHeight + threshold) {
         setBodyVisibility('preview')

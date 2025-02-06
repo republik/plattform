@@ -1,7 +1,8 @@
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
-import { Payments } from '../payments'
 import Stripe from 'stripe'
+import { MailNotificationService } from '../services/MailNotificationService'
+import { WebhookService } from '../services/WebhookService'
 
 type Args = {
   $version: 'v1'
@@ -21,12 +22,13 @@ export class ConfirmCancelTransactionalWorker extends BaseWorker<Args> {
       throw Error('unable to perform this job version. Expected v1')
     }
 
+    const webhookService = new WebhookService(this.context.pgdb)
+    const mailService = new MailNotificationService(this.context.pgdb)
+
     console.log(`[${this.queue}] start`)
 
-    const PaymentService = Payments.getInstance()
-
     const wh =
-      await PaymentService.findWebhookEventBySourceId<Stripe.CustomerSubscriptionUpdatedEvent>(
+      await webhookService.getEvent<Stripe.CustomerSubscriptionUpdatedEvent>(
         job.data.eventSourceId,
       )
 
@@ -44,7 +46,7 @@ export class ConfirmCancelTransactionalWorker extends BaseWorker<Args> {
 
     try {
       // send transactional
-      await PaymentService.sendCancelConfirmationTransactionalMail({
+      await mailService.sendCancelConfirmationTransactionalMail({
         subscriptionExternalId: event.data.object.id,
         userId: job.data.userId,
       })
