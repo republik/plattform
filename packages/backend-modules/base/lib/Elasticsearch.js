@@ -6,7 +6,7 @@ const connect = (node) =>
       node ||
       process.env.ELASTIC_URL ||
       'http://elastic:elastic@localhost:9200',
-    requestTimeout: 180000,
+    requestTimeout: 600000,
   })
 
 const disconnect = (client) => client.close()
