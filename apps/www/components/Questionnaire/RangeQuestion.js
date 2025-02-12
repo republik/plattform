@@ -133,23 +133,24 @@ class RangeQuestion extends Component {
 
   renderInput = () => {
     const {
-      question: { ticks, kind },
+      question: { ticks, kind, metadata },
     } = this.props
     const { value } = this.state
     const tickValues = ticks.map((t) => t.value)
     const max = Math.max(...tickValues)
     const min = Math.min(...tickValues)
 
-    const step =
-      kind === 'continous'
-        ? ticks.length / 100
-        : Math.abs(max - min) /
-          (ticks.length % 2 === 0 ? ticks.length : ticks.length + 1)
-
-    const defaultValue =
-      (min < 0 || max < 0) && !(min < 0 && max < 0)
-        ? 0
-        : Math.abs(min - max) / 2
+    let defaultValue
+    let step
+    if (kind === 'continous') {
+      step = ticks.length / 100
+      const spansZero = (min < 0 || max < 0) && !(min < 0 && max < 0)
+      defaultValue = spansZero ? 0 : Math.abs(min - max) / 2
+    } else {
+      step = tickValues[1] - tickValues[0] // we assume a regular interval between ticks
+      const middleTickIndex = Math.floor(tickValues.length / 2)
+      defaultValue = metadata?.initialValue || tickValues[middleTickIndex]
+    }
 
     return (
       <div {...styles.sliderWrapper}>
@@ -177,7 +178,7 @@ class RangeQuestion extends Component {
       <div {...styles.ticks}>
         {ticks.map((t) => (
           <div key={t.label} style={{ width: `${100 / ticks.length}%` }}>
-            {t.label}
+            <span>{t.label}</span>
           </div>
         ))}
       </div>
