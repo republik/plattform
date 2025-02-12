@@ -8,6 +8,10 @@ import { v4 as uuid } from 'uuid'
 import { colors, Interaction } from '@project-r/styleguide'
 
 import questionStyles from './questionStyles'
+import QuestionHeader from './QuestionHeader'
+import QuestionIndex from './QuestionIndex'
+
+const { P } = Interaction
 
 const thumbSize = 24
 
@@ -190,16 +194,15 @@ class RangeQuestion extends Component {
 
   render() {
     const {
-      question: { text, explanation },
+      questionCount,
+      question: { text, explanation, order, metadata },
     } = this.props
     return (
       <div>
-        {text && (
-          <Interaction.H2 {...questionStyles.label}>{text}</Interaction.H2>
-        )}
-        {explanation && (
-          <Interaction.P {...questionStyles.help}>{explanation}</Interaction.P>
-        )}
+        <QuestionHeader metadata={metadata} />
+        <QuestionIndex order={order} questionCount={questionCount} />
+        {text && <P {...questionStyles.text}>{text}</P>}
+        {explanation && <P {...questionStyles.help}>{explanation}</P>}
         <div {...questionStyles.body}>
           {this.renderInput()}
           {this.renderLabels()}
