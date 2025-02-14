@@ -4,6 +4,7 @@ import {
   Shop,
   checkIntroductoryOfferEligibility,
   activeOffers,
+  INTRODUCTERY_OFFER_PROMO_CODE,
 } from '../../../lib/shop'
 import { Payments } from '../../../lib/payments'
 import { default as Auth } from '@orbiting/backend-modules-auth'
@@ -33,19 +34,15 @@ export = async function createCheckoutSession(
 ) {
   const shop = new Shop(activeOffers())
 
-  const offer = await shop.getOfferById(args.offerId, {
-    promoCode: args.promoCode,
-    withIntroductoryOffer: await checkIntroductoryOfferEligibility(
-      ctx.pgdb,
-      ctx.user,
-    ),
-  })
-
-  if (!offer) {
-    throw new Error('Unknown offer')
-  }
+  const offer = shop.isValidOffer(args.offerId)
 
   if (offer?.requiresLogin) Auth.ensureUser(ctx.user)
+
+  const promoCode =
+    (await checkIntroductoryOfferEligibility(ctx.pgdb, ctx.user)) &&
+    typeof args.promoCode === 'undefined'
+      ? INTRODUCTERY_OFFER_PROMO_CODE
+      : args.promoCode
 
   const customerId = await getCustomer(offer.company, ctx.user?.id)
 
@@ -54,9 +51,7 @@ export = async function createCheckoutSession(
     uiMode: args.options?.uiMode ?? 'EMBEDDED',
     customerId: customerId,
     customPrice: args.options?.customPrice,
-    discounts: offer.discount?.couponId
-      ? [offer.discount?.couponId]
-      : undefined,
+    promoCode: promoCode,
     customFields: requiredCustomFields(ctx.user),
     metadata: args?.options?.metadata,
     returnURL: args?.options?.returnURL,
