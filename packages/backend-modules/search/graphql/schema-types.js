@@ -2,8 +2,6 @@ const { getProcessorsList } = require('../lib/options')
 
 module.exports = `
 
-scalar Date
-
 enum OrderDirection {
   ASC
   DESC

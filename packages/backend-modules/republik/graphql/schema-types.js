@@ -42,7 +42,7 @@ extend type User {
     properties: ImageProperties
   ): String
 
-  birthday: Date
+  birthday: DateTime
   ageAccessRole: AccessRole
   age: Int
 
@@ -152,8 +152,8 @@ type MembershipStats {
   count: Int!
   monthlys: [MonthlyMembershipStat!]!
   periods(
-    minEndDate: Date!
-    maxEndDate: Date!
+    minEndDate: DateTime!
+    maxEndDate: DateTime!
     # filter by membershipTypes
     # default: [ABO]
     membershipTypes: [String!]
@@ -206,7 +206,7 @@ type RoleStats {
 }
 
 type MonthlyMembershipStat {
-  day: Date!
+  day: DateTime!
   newCount: Int!
   renewableCount: Int!
   renewedCount: Int!
@@ -224,7 +224,7 @@ type MembershipPeriodStats {
 type MembershipPeriodStatsDay {
   # combination: dayDate-membershipTypes
   id: ID!
-  date: Date!
+  date: DateTime!
   cancelCount: Int!
   prolongCount: Int!
 }

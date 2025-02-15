@@ -171,8 +171,8 @@ type DiscussionTagBucket {
 }
 
 type CommentAggregation {
-  beginDate: Date
-  endDate: Date
+  beginDate: DateTime
+  endDate: DateTime
   count: Int!
   discussion: Discussion!
 }
