@@ -1,7 +1,13 @@
 import { useState } from 'react'
 import compose from 'lodash/flowRight'
 
-import { Button, colors, Loader, InlineSpinner } from '@project-r/styleguide'
+import {
+  Button,
+  colors,
+  Loader,
+  InlineSpinner,
+  Interaction,
+} from '@project-r/styleguide'
 
 import { errorToString } from '../../../lib/utils/errors'
 import { useTranslation } from '../../../lib/withT'
@@ -10,7 +16,7 @@ import { withMyDetails, withMyDetailsMutation } from '../enhancers'
 
 import GenderForm from './Gender'
 
-const Form = ({ me, updateMe }) => {
+const Form = ({ me, updateMe, title }) => {
   const { t } = useTranslation()
 
   const [meValues, setMeValues] = useState(me)
@@ -19,6 +25,7 @@ const Form = ({ me, updateMe }) => {
 
   return (
     <>
+      {!!title && <Interaction.H3>{title}</Interaction.H3>}
       <GenderForm
         values={meValues}
         onChange={({ values }) => {
@@ -63,14 +70,14 @@ const Form = ({ me, updateMe }) => {
   )
 }
 
-const CompactDetailsForm = ({ detailsData, updateDetails }) => {
+const CompactDetailsForm = ({ detailsData, updateDetails, title }) => {
   const { loading, error, me } = detailsData
 
   return (
     <Loader
       loading={loading}
       error={error}
-      render={() => <Form me={me} updateMe={updateDetails} />}
+      render={() => <Form me={me} updateMe={updateDetails} title={title} />}
     />
   )
 }

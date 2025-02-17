@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { Field, Radio, Label, useColorContext } from '@project-r/styleguide'
 
 import withT from '../../../lib/withT'
-import { MAX_WIDTH } from '../../../../../packages/styleguide/src/components/Center'
+import questionStyles from '../../Questionnaire/questionStyles'
 
 const GENDER_SUGGESTIONS = ['weiblich', 'männlich']
 // https://de.wikipedia.org/wiki/Divers
@@ -58,7 +58,7 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
                 })
               }}
             >
-              {gender}
+              <span {...questionStyles.radio}>{gender}</span>
             </Radio>
           </span>
         </>
@@ -78,7 +78,7 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
           })
         }}
       >
-        {X_GENDER}
+        <span {...questionStyles.radio}>{X_GENDER}</span>
       </Radio>
       <Field
         disabled={!isX}
