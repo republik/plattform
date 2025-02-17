@@ -30,6 +30,7 @@ const mutation = gql`
     $firstName: String
     $lastName: String
     $phoneNumber: String
+    $gender: String
     $address: AddressInput
   ) {
     updateMe(
@@ -37,10 +38,12 @@ const mutation = gql`
       firstName: $firstName
       lastName: $lastName
       phoneNumber: $phoneNumber
+      gender: $gender
       address: $address
     ) {
       id
       birthday
+      gender
       name
       firstName
       lastName
@@ -76,6 +79,7 @@ export const query = gql`
       lastName
       email
       birthday
+      gender
       ...PhoneAndAddressOnUser
     }
   }

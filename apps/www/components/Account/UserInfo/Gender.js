@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { Field, Radio, Label, useColorContext } from '@project-r/styleguide'
 
 import withT from '../../../lib/withT'
+import { MAX_WIDTH } from '../../../../../packages/styleguide/src/components/Center'
 
-const SUGGESTIONS = ['weiblich', 'männlich']
+const GENDER_SUGGESTIONS = ['weiblich', 'männlich']
 // https://de.wikipedia.org/wiki/Divers
 const X_GENDER = 'divers'
 
@@ -18,12 +19,10 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
         },
       })
     }
-  }, [isMandadory])
-  const [shouldAutoFocus, setShouldAutoFocus] = useState()
+  }, [isMandadory, onChange, values, t])
 
-  const value = values.gender
-  const isX =
-    value?.trim() && !SUGGESTIONS.some((suggestion) => suggestion === value)
+  const currentGender = values.gender
+  const isX = !GENDER_SUGGESTIONS.some((gender) => gender === currentGender)
 
   return (
     <>
@@ -34,23 +33,23 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
           </span>
         </Label>
       </div>
-      {SUGGESTIONS.map((suggestion) => (
+      {GENDER_SUGGESTIONS.map((gender) => (
         <>
           <span
             style={{
               display: 'inline-block',
               whiteSpace: 'nowrap',
               marginBottom: 10,
-              marginRight: 10,
+              marginRight: 15,
             }}
           >
             <Radio
-              value={value}
-              checked={value === suggestion}
+              value={currentGender}
+              checked={currentGender === gender}
               onChange={() => {
                 onChange({
                   values: {
-                    gender: suggestion,
+                    gender,
                     genderCustom: undefined,
                   },
                   errors: {
@@ -59,19 +58,19 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
                 })
               }}
             >
-              {suggestion}
+              {gender}
             </Radio>
-          </span>{' '}
+          </span>
         </>
       ))}
       <Radio
         value={X_GENDER}
         checked={isX}
         onChange={() => {
-          setShouldAutoFocus(true)
           onChange({
             values: {
               gender: X_GENDER,
+              genderCustom: X_GENDER,
             },
             errors: {
               gender: undefined,
@@ -81,28 +80,23 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
       >
         {X_GENDER}
       </Radio>
-      {isX && (
-        <>
-          <br />
-          <Field
-            renderInput={(props) => (
-              <input autoFocus={shouldAutoFocus} {...props} />
-            )}
-            label={t('profile/gender/custom')}
-            value={
-              values.genderCustom ||
-              (values.gender !== X_GENDER ? values.gender : '')
-            }
-            onChange={(_, newValue) => {
-              onChange({
-                values: {
-                  genderCustom: newValue,
-                },
-              })
-            }}
-          />
-        </>
-      )}
+      <div style={{ maxWidth: 300 }}>
+        <Field
+          disabled={!isX}
+          label={t('profile/gender/custom')}
+          value={
+            values.genderCustom ||
+            (values.gender !== X_GENDER ? values.gender : '')
+          }
+          onChange={(_, newValue) => {
+            onChange({
+              values: {
+                genderCustom: newValue,
+              },
+            })
+          }}
+        />
+      </div>
     </>
   )
 }

@@ -213,6 +213,14 @@ const PostcardGallery = dynamic(
   },
 )
 
+const CompactDetailsForm = dynamic(
+  () => import('../Account/UserInfo/CompactDetailsForm'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
 const schemaCreators = {
   editorial: createArticleSchema,
   meta: createArticleSchema,
@@ -459,6 +467,7 @@ const ArticlePage = ({
           POSTCARD: Postcard,
           POSTCARD_GALLERY: PostcardGallery,
           CHALLENGE_ACCEPTED_INLINE_TEASER: ChallengeAcceptedInlineTeaser,
+          COMPACT_DETAILS_FORM: CompactDetailsForm,
         },
         titleMargin: false,
         titleBreakout,
