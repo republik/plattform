@@ -18,7 +18,9 @@ const {
 
 const { hashObject } = require('../../../lib/git')
 const { updateCurrentPhase, toCommit } = require('../../../lib/postgres')
-const { maybeApplyAudioSourceDuration } = require('../../../lib/audioSource')
+const {
+  maybeApplyAudioSourceDurationAndByteSize,
+} = require('../../../lib/audioSource')
 
 const {
   lib: {
@@ -167,7 +169,7 @@ module.exports = async (_, args, context) => {
         { fields: ['id', 'meta'] },
       ))
 
-    await maybeApplyAudioSourceDuration(meta, parentCommit?.meta)
+    await maybeApplyAudioSourceDurationAndByteSize(meta, parentCommit?.meta)
 
     const author = {
       name: user.name,
