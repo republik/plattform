@@ -80,23 +80,21 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
       >
         {X_GENDER}
       </Radio>
-      <div style={{ maxWidth: 300 }}>
-        <Field
-          disabled={!isX}
-          label={t('profile/gender/custom')}
-          value={
-            values.genderCustom ||
-            (values.gender !== X_GENDER ? values.gender : '')
-          }
-          onChange={(_, newValue) => {
-            onChange({
-              values: {
-                genderCustom: newValue,
-              },
-            })
-          }}
-        />
-      </div>
+      <Field
+        disabled={!isX}
+        label={t('profile/gender/custom')}
+        value={
+          values.genderCustom ||
+          (values.gender !== X_GENDER ? values.gender : '')
+        }
+        onChange={(_, newValue) => {
+          onChange({
+            values: {
+              genderCustom: newValue,
+            },
+          })
+        }}
+      />
     </>
   )
 }

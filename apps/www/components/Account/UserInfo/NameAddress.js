@@ -25,6 +25,7 @@ import FieldSet from '../../FieldSet'
 import { withMyDetails, withMyDetailsMutation } from '../enhancers'
 import { Hint, EditButton } from '../Elements'
 import withMe from '../../../lib/apollo/withMe'
+import GenderForm from './Gender'
 
 const { P, Emphasis } = Interaction
 
@@ -94,6 +95,7 @@ const getValues = (me) => {
     lastName: me.lastName || '',
     phoneNumber: me.phoneNumber || '',
     birthday: me.birthday || '',
+    gender: me.gender || '',
     ...addressState,
   }
 }
@@ -119,6 +121,12 @@ const UserNameAddress = compose(
             <>
               <Label>{t('Account/Update/birthday/label')}</Label>
               <P style={{ marginBottom: 8 }}>{me.birthday}</P>
+            </>
+          )}
+          {!!me.gender && (
+            <>
+              <Label>{t('profile/gender')}</Label>
+              <P style={{ marginBottom: 8 }}>{me.gender}</P>
             </>
           )}
           {!!me.address && (
@@ -254,6 +262,14 @@ class UpdateMe extends Component {
                       fields={meFields}
                     />
                     <Hint t={t} tKey={'Account/Update/birthday/hint/plain'} />
+                    <div style={{ marginTop: 36 }}>
+                      <GenderForm
+                        values={values}
+                        onChange={(fields) => {
+                          this.setState(FieldSet.utils.mergeFields(fields))
+                        }}
+                      />
+                    </div>
                   </div>
                   <Label>
                     <Emphasis>{t('Account/Update/address/label')}</Emphasis>
@@ -298,6 +314,7 @@ class UpdateMe extends Component {
                       >
                         <Button
                           primary
+                          small
                           onClick={() => {
                             if (errorMessages.length) {
                               this.setState((state) =>
@@ -325,6 +342,7 @@ class UpdateMe extends Component {
                                   values.birthday && values.birthday.length
                                     ? values.birthday.trim()
                                     : null,
+                                gender: values.genderCustom || values.gender,
                                 address: isEmptyAddress(values, me)
                                   ? undefined
                                   : {
@@ -353,6 +371,7 @@ class UpdateMe extends Component {
                           {t('Account/Update/submit')}
                         </Button>
                         <Button
+                          small
                           onClick={(e) => {
                             e.preventDefault()
                             this.stopEditing()
