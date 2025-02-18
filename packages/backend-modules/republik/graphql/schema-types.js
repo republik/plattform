@@ -43,6 +43,7 @@ extend type User {
   ): String
 
   birthday: Date
+  birthyear: Int
   ageAccessRole: AccessRole
   age: Int
 

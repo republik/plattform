@@ -181,6 +181,12 @@ module.exports = {
     }
     return null
   },
+  birthyear(user, args, {user: me}) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.birthyear
+    }
+    return null
+  },
   age: exposeAccessField('ageAccessRole', 'birthday', (dob) =>
     dob ? age(dob) : null,
   ),

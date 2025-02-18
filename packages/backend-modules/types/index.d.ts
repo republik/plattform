@@ -69,6 +69,7 @@ export interface UserRow {
   accessKey: string
   gender: string | null
   prolitterisId: string | null
+  birthyear: number | null
 }
 
 export interface User {

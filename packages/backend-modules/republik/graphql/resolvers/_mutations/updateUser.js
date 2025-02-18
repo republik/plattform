@@ -13,16 +13,17 @@ module.exports = async (_, args, { pgdb, req, t, mail }) => {
     throw new Error(t('api/users/404'))
   }
 
-  const { firstName, lastName, birthday, address, phoneNumber } = args
+  const { firstName, lastName, birthday, birthyear, address, phoneNumber } = args
   const transaction = await pgdb.transactionBegin()
   try {
-    if (firstName || lastName || birthday || phoneNumber) {
+    if (firstName || lastName || birthday || birthyear || phoneNumber) {
       await transaction.public.users.update(
         { id: user.id },
         {
           firstName,
           lastName,
           birthday,
+          birthyear,
           phoneNumber,
         },
         { skipUndefined: true },

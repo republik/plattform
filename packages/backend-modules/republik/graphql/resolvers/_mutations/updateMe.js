@@ -136,6 +136,7 @@ module.exports = async (_, args, context) => {
     'statement',
     'disclosures',
     'gender',
+    'birthyear',
   ]
 
   if (
