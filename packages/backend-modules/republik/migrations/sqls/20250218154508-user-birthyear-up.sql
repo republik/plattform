@@ -1,0 +1,3 @@
+-- migrate up here: CREATE TABLE...
+ALTER TABLE "public"."users" ADD COLUMN "birthYear" integer;
+
