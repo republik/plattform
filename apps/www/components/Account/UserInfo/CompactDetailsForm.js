@@ -4,9 +4,9 @@ import compose from 'lodash/flowRight'
 import {
   Button,
   colors,
-  Loader,
   InlineSpinner,
   Interaction,
+  RawHtml,
 } from '@project-r/styleguide'
 
 import { errorToString } from '../../../lib/utils/errors'
@@ -14,7 +14,24 @@ import { useTranslation } from '../../../lib/withT'
 
 import { withMyDetails, withMyDetailsMutation } from '../enhancers'
 
+import Box from '../../Frame/Box'
+import Loader from '../../Loader'
+
 import GenderForm from './Gender'
+
+const NotEligible = () => {
+  const { t } = useTranslation()
+  return (
+    <Box style={{ padding: 15 }}>
+      <RawHtml
+        type={Interaction.P}
+        dangerouslySetInnerHTML={{
+          __html: t('Account/Update/notEligible'),
+        }}
+      />
+    </Box>
+  )
+}
 
 const Form = ({ me, updateMe, title }) => {
   const { t } = useTranslation()
@@ -26,15 +43,17 @@ const Form = ({ me, updateMe, title }) => {
   return (
     <>
       {!!title && <Interaction.H3>{title}</Interaction.H3>}
-      <GenderForm
-        values={meValues}
-        onChange={({ values }) => {
-          setMeValues({
-            ...meValues,
-            ...values,
-          })
-        }}
-      />
+      <div style={{ marginTop: 5 }}>
+        <GenderForm
+          values={meValues}
+          onChange={({ values }) => {
+            setMeValues({
+              ...meValues,
+              ...values,
+            })
+          }}
+        />
+      </div>
       {!!error && (
         <div style={{ color: colors.error, marginBottom: 40 }}>{error}</div>
       )}
@@ -77,7 +96,13 @@ const CompactDetailsForm = ({ detailsData, updateDetails, title }) => {
     <Loader
       loading={loading}
       error={error}
-      render={() => <Form me={me} updateMe={updateDetails} title={title} />}
+      render={() =>
+        me ? (
+          <Form me={me} updateMe={updateDetails} title={title} />
+        ) : (
+          <NotEligible />
+        )
+      }
     />
   )
 }

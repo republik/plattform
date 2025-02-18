@@ -641,6 +641,10 @@
       "value": "Geburtsdatum ungültig"
     },
     {
+      "key": "Account/Update/notEligible",
+      "value": "Mitgliederbereich. <b>Haben Sie ein Abonnement? <a href='/anmelden'>Anmelden</a></b>"
+    },
+    {
       "key": "Account/Update/submit",
       "value": "speichern"
     },
@@ -1555,7 +1559,7 @@
     },
     {
       "key": "profile/gender/custom",
-      "value": "Ihre Bezeichnung (optional)"
+      "value": "Ihre Bezeichnung"
     },
     {
       "key": "testimonial/meta/pageTitle",
@@ -4442,15 +4446,15 @@
     },
     {
       "key": "questionnaire/submit",
-      "value": "Abschicken"
+      "value": "abschicken"
     },
     {
       "key": "questionnaire/publish",
-      "value": "Publizieren"
+      "value": "publizieren"
     },
     {
       "key": "questionnaire/update",
-      "value": "Aktualisieren"
+      "value": "aktualisieren"
     },
     {
       "key": "questionnaire/reset",
