@@ -6,8 +6,7 @@ import withT from '../../../lib/withT'
 import questionStyles from '../../Questionnaire/questionStyles'
 
 const GENDER_SUGGESTIONS = ['weiblich', 'männlich']
-// https://de.wikipedia.org/wiki/Divers
-const X_GENDER = 'divers'
+const X_GENDER = 'weiteres'
 
 const GenderField = ({ values, onChange, isMandadory, t }) => {
   const [colorScheme] = useColorContext()
