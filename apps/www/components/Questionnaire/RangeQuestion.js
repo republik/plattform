@@ -147,7 +147,7 @@ class RangeQuestion extends Component {
       const spansZero = (min < 0 || max < 0) && !(min < 0 && max < 0)
       defaultValue = spansZero ? 0 : Math.abs(min - max) / 2
     } else {
-      step = tickValues[1] - tickValues[0] // we assume a regular interval between ticks
+      step = metadata?.step || tickValues[1] - tickValues[0] // we assume a regular interval between ticks
       const middleTickIndex = Math.floor(tickValues.length / 2)
       defaultValue = metadata?.initialValue || tickValues[middleTickIndex]
     }
@@ -174,11 +174,20 @@ class RangeQuestion extends Component {
     const {
       question: { ticks },
     } = this.props
+    const total = ticks.length
     return (
       <div {...styles.ticks}>
-        {ticks.map((t) => (
-          <div key={t.label} style={{ width: `${100 / ticks.length}%` }}>
-            <span>{t.label}</span>
+        {ticks.map((t, i) => (
+          <div
+            key={t.label}
+            style={{
+              width: `${100 / total}%`,
+              textWrap: 'nowrap',
+            }}
+          >
+            <span style={i === total - 1 ? { float: 'right' } : {}}>
+              {t.label}
+            </span>
           </div>
         ))}
       </div>
