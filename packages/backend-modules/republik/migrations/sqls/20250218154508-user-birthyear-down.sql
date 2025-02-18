@@ -1,2 +1,2 @@
 -- migrate down here: DROP TABLE...
-ALTER TABLE "public"."users" DROP COLUMN "birthYear";
+ALTER TABLE "public"."users" DROP COLUMN "birthyear";
