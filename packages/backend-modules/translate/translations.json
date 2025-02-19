@@ -1093,6 +1093,10 @@
       "value": "Ort, maximal {maxLength} Zeichen"
     },
     {
+      "key": "api/user/birthyearInvalid",
+      "value": "Geburtsjahr muss zwischen 1900 und dem aktuellen Jahr liegen"
+    },
+    {
       "key": "pledge/contact/firstName/label",
       "value": "Ihr Vorname"
     },

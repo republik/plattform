@@ -14,6 +14,11 @@ module.exports = async (_, args, { pgdb, req, t, mail }) => {
   }
 
   const { firstName, lastName, birthday, birthyear, address, phoneNumber } = args
+  if (birthyear) {
+    if (birthyear < 1900 || birthyear > new Date().getFullYear()) {
+      throw new Error(t('api/user/birthyearInvalid'))
+    }
+  }
   const transaction = await pgdb.transactionBegin()
   try {
     if (firstName || lastName || birthday || birthyear || phoneNumber) {

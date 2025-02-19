@@ -236,6 +236,11 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/pgpPublicKey/invalid'))
     }
   }
+  if (args.birthyear) {
+    if (args.birthyear < 1900 || args.birthyear > new Date().getFullYear()) {
+      throw new Error(t('api/user/birthyearInvalid'))
+    }
+  }
 
   // {portrait} is an argument, which can either contain a a b64 encoded image,
   // be null or undefined.
