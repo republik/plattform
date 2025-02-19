@@ -187,8 +187,8 @@ module.exports = {
     }
     return null
   },
-  age: exposeAccessField('ageAccessRole', 'birthday', (dob) =>
-    dob ? age(dob) : null,
+  age: exposeAccessField('ageAccessRole', 'birthyear', (birthyear) =>
+    birthyear ? age(birthyear) : null,
   ),
   async address(user, args, { loaders, user: me }) {
     if (
