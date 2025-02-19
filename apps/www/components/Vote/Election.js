@@ -45,7 +45,6 @@ const query = gql`
       candidacies {
         id
         isIncumbent
-        yearOfBirth
         city
         recommendation
         comment {
@@ -70,7 +69,7 @@ const query = gql`
           portrait
           disclosures
           gender
-          birthday
+          birthyear
           biographyContent
           credentials {
             isListed

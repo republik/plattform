@@ -355,11 +355,9 @@ class ElectionCandidacy extends Component {
               biography,
               biographyContent,
               gender,
+              birthyear,
             },
             city,
-            yearOfBirth: parsedBirthday
-              ? parsedBirthday.getFullYear()
-              : undefined,
             credential,
             recommendation: candidate ? candidate.recommendation : undefined,
           }
@@ -598,7 +596,6 @@ const updateCandidacy = gql`
     }
     submitCandidacy(slug: $slug, credential: $credential) {
       id
-      yearOfBirth
       city
       recommendation
       user {
@@ -635,7 +632,7 @@ const query = gql`
       portrait
       statement
       disclosures
-      birthday
+      birthyear
       username
       gender
       biography
@@ -645,7 +642,6 @@ const query = gql`
           slug
         }
         id
-        yearOfBirth
         city
         recommendation
         credential {
