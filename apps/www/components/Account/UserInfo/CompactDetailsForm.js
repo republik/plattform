@@ -61,12 +61,6 @@ const Form = ({ me, updateMe, title }) => {
     <>
       {!!title && <Interaction.H3>{title}</Interaction.H3>}
       <div style={{ marginTop: 5 }}>
-        <GenderForm
-          values={genderValues}
-          onChange={({ values }) => {
-            setGenderValues(values)
-          }}
-        />
         <Field
           label={t('Account/Update/birthyear/label/optional')}
           value={birthyear}
@@ -81,6 +75,12 @@ const Form = ({ me, updateMe, title }) => {
               mask='1111'
             />
           )}
+        />
+        <GenderForm
+          values={genderValues}
+          onChange={({ values }) => {
+            setGenderValues(values)
+          }}
         />
       </div>
       {!!error && (
