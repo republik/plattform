@@ -1013,8 +1013,8 @@
       "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir eine Funktion zwingend benötigen."
     },
     {
-      "key": "profile/candidacy/birthday/needed",
-      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir das Geburtsdatum zwingend benötigen."
+      "key": "profile/candidacy/birthyear/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir das Geburtsjahr zwingend benötigen."
     },
     {
       "key": "profile/candidacy/biography/needed",

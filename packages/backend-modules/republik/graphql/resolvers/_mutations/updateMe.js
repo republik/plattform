@@ -122,7 +122,6 @@ module.exports = async (_, args, context) => {
     'username',
     'firstName',
     'lastName',
-    'birthday',
     'ageAccessRole',
     'phoneNumberNote',
     'phoneNumberAccessRole',
@@ -159,10 +158,10 @@ module.exports = async (_, args, context) => {
       }
 
       if (
-        'birthday' in args &&
-        (args.birthday === null || args.birthday.length < 10)
+        'birthyear' in args &&
+        (args.birthyear === null)
       ) {
-        throw new Error(t('profile/candidacy/birthday/needed'))
+        throw new Error(t('profile/candidacy/birthyear/needed'))
       }
 
       if ('statement' in args && args.statement.length < 1) {
@@ -184,7 +183,7 @@ module.exports = async (_, args, context) => {
     if (await isInCandidacyInElectionPhase(me._raw, pgdb)) {
       if (
         'hasPublicProfile' in args ||
-        'birthday' in args ||
+        'birthyear' in args ||
         'statement' in args ||
         'biography' in args ||
         'gender' in args
