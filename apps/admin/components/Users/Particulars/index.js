@@ -33,7 +33,7 @@ export const GET_USER = gql`
       phoneNumber
       firstName
       lastName
-      birthday
+      birthyear
       address {
         id
         name
@@ -50,7 +50,7 @@ export const GET_USER = gql`
 export const UPDATE_USER = gql`
   mutation updateUser(
     $id: ID!
-    $birthday: Date
+    $birthyear: Int
     $firstName: String!
     $lastName: String!
     $phoneNumber: String
@@ -58,7 +58,7 @@ export const UPDATE_USER = gql`
   ) {
     updateUser(
       userId: $id
-      birthday: $birthday
+      birthyear: $birthyear
       firstName: $firstName
       lastName: $lastName
       phoneNumber: $phoneNumber
@@ -69,6 +69,7 @@ export const UPDATE_USER = gql`
       firstName
       lastName
       phoneNumber
+      birthyear
       address {
         id
         name
@@ -136,10 +137,10 @@ const UserCard = ({ user }) => {
             'Unbekannt'}
         </DD>
       </DL>
-      {user.birthday && (
+      {user.birthyear && (
         <DL>
-          <DT>Geburtsdatum</DT>
-          <DD>{user.birthday}</DD>
+          <DT>Geburtsjahr</DT>
+          <DD>{user.birthyear}</DD>
         </DL>
       )}
       <DL>

@@ -61,7 +61,7 @@ const fields = (t) => [
     validator: (value) => {
       return (
         !!value.trim().length &&
-        (value === null || value > new Date().getFullYear() || value < 1789) &&
+        (value === null || value > new Date().getFullYear() || value < 1900) &&
         t('Account/Update/birthyear/error/invalid')
       )
     },
