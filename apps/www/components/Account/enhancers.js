@@ -26,7 +26,7 @@ export const userDetailsFragment = `
 
 const mutation = gql`
   mutation updateMe(
-    $birthday: Date
+    $birthyear: Int
     $firstName: String
     $lastName: String
     $phoneNumber: String
@@ -34,7 +34,7 @@ const mutation = gql`
     $address: AddressInput
   ) {
     updateMe(
-      birthday: $birthday
+      birthyear: $birthyear
       firstName: $firstName
       lastName: $lastName
       phoneNumber: $phoneNumber
@@ -42,7 +42,7 @@ const mutation = gql`
       address: $address
     ) {
       id
-      birthday
+      birthyear
       gender
       name
       firstName
@@ -78,7 +78,7 @@ export const query = gql`
       firstName
       lastName
       email
-      birthday
+      birthyear
       gender
       ...PhoneAndAddressOnUser
     }

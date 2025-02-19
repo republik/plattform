@@ -3,7 +3,6 @@ import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import { intersperse } from '../../../lib/utils/helpers'
 import { errorToString } from '../../../lib/utils/errors'
-import { swissTime } from '../../../lib/utils/format'
 
 import withT from '../../../lib/withT'
 import AddressForm, {
@@ -23,14 +22,11 @@ import {
 
 import FieldSet from '../../FieldSet'
 import { withMyDetails, withMyDetailsMutation } from '../enhancers'
-import { Hint, EditButton } from '../Elements'
+import { EditButton } from '../Elements'
 import withMe from '../../../lib/apollo/withMe'
 import GenderForm from './Gender'
 
 const { P, Emphasis } = Interaction
-
-const birthdayFormat = '%d.%m.%Y'
-const birthdayParse = swissTime.parse(birthdayFormat)
 
 const styles = {
   buttonsContainer: css({
@@ -54,22 +50,19 @@ const fields = (t) => [
       value.trim().length <= 0 && t('pledge/contact/lastName/error/empty'),
   },
   {
-    label: t('Account/Update/phone/label'),
+    label: t('Account/Update/phone/label/optional'),
     name: 'phoneNumber',
   },
   {
-    label: t('Account/Update/birthday/label/optional'),
-    name: 'birthday',
-    mask: '11.11.1111',
+    label: t('Account/Update/birthyear/label/optional'),
+    name: 'birthyear',
+    mask: '1111',
     maskChar: '_',
     validator: (value) => {
-      const parsedDate = birthdayParse(value)
       return (
         !!value.trim().length &&
-        (parsedDate === null ||
-          parsedDate > new Date() ||
-          parsedDate < new Date(1798, 3, 12)) &&
-        t('Account/Update/birthday/error/invalid')
+        (value === null || value > new Date().getFullYear() || value < 1789) &&
+        t('Account/Update/birthyear/error/invalid')
       )
     },
   },
@@ -94,7 +87,7 @@ const getValues = (me) => {
     firstName: me.firstName || '',
     lastName: me.lastName || '',
     phoneNumber: me.phoneNumber || '',
-    birthday: me.birthday || '',
+    birthyear: me.birthyear?.toString() || '',
     gender: me.gender || '',
     ...addressState,
   }
@@ -112,20 +105,22 @@ const UserNameAddress = compose(
       render={() => (
         <div>
           <Label>{t('Account/Update/name/label')}</Label>
-          <P style={{ marginBottom: 8 }}>
-            {intersperse([me.name, me.phoneNumber].filter(Boolean), (_, i) => (
-              <br key={i} />
-            ))}
-          </P>
-          {!!me.birthday && (
+          <P style={{ marginBottom: 8 }}>{me.name}</P>
+          {!!me.phoneNumber && (
             <>
-              <Label>{t('Account/Update/birthday/label')}</Label>
-              <P style={{ marginBottom: 8 }}>{me.birthday}</P>
+              <Label>{t('Account/Update/phone/label')}</Label>
+              <P style={{ marginBottom: 8 }}>{me.phoneNumber}</P>
+            </>
+          )}
+          {!!me.birthyear && (
+            <>
+              <Label>{t('Account/Update/birthyear/label')}</Label>
+              <P style={{ marginBottom: 8 }}>{me.birthyear}</P>
             </>
           )}
           {!!me.gender && (
             <>
-              <Label>{t('profile/gender')}</Label>
+              <Label>{t('Account/Update/gender/label')}</Label>
               <P style={{ marginBottom: 8 }}>{me.gender}</P>
             </>
           )}
@@ -261,7 +256,6 @@ class UpdateMe extends Component {
                       }}
                       fields={meFields}
                     />
-                    <Hint t={t} tKey={'Account/Update/birthday/hint/plain'} />
                     <div style={{ marginTop: 36 }}>
                       <GenderForm
                         values={values}
@@ -333,14 +327,16 @@ class UpdateMe extends Component {
                             }
                             this.setState(() => ({ updating: true }))
 
+                            console.log({ values })
+
                             this.props
                               .updateDetails({
                                 firstName: values.firstName,
                                 lastName: values.lastName,
                                 phoneNumber: values.phoneNumber,
-                                birthday:
-                                  values.birthday && values.birthday.length
-                                    ? values.birthday.trim()
+                                birthyear:
+                                  values.birthyear && values.birthyear.length
+                                    ? parseInt(values.birthyear)
                                     : null,
                                 gender: values.genderCustom || values.gender,
                                 address: isEmptyAddress(values, me)
