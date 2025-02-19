@@ -153,6 +153,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             'preferredFirstFactor',
             'disclosures',
             'referralCode',
+            'birthyear',
           ]),
           ...(address && {
             address_name: address.name,
