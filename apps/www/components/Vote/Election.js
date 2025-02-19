@@ -1,3 +1,10 @@
+//
+// IMPORTANT NOTE:
+// The birthday/yearOfBirth combo was refactored to birthyear.
+// We cleaned up the code but didn't test all the paths.
+// Please test & review before the next election!
+//
+
 import { useEffect, useMemo, useState } from 'react'
 import {
   A,
