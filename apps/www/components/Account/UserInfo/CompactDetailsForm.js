@@ -49,13 +49,11 @@ const NotEligible = () => {
   )
 }
 
-const Form = ({ me, updateMe, title }) => {
+const Form = withMyDetailsMutation(({ me, updateDetails, title }) => {
   const { t } = useTranslation()
 
   const [birthyear, setBirthyear] = useState(me?.birthyear?.toString() || '')
   const [genderValues, setGenderValues] = useState({ gender: me.gender })
-  const [updating, setUpdating] = useState(false)
-  const [error, setError] = useState()
 
   return (
     <>
@@ -64,6 +62,10 @@ const Form = ({ me, updateMe, title }) => {
         <Field
           label={t('Account/Update/birthyear/label/optional')}
           value={birthyear}
+          onBlur={() => updateDetails({
+            birthyear:
+              birthyear && birthyear.length ? parseInt(birthyear) : null,
+          })}
           onChange={(_, value) => {
             setBirthyear(value)
           }}
@@ -81,49 +83,15 @@ const Form = ({ me, updateMe, title }) => {
           onChange={({ values }) => {
             setGenderValues(values)
           }}
+          autosubmit
         />
-      </div>
-      {!!error && (
-        <div style={{ color: colors.error, marginBottom: 40 }}>{error}</div>
-      )}
-      <div>
-        <Button
-          primary
-          style={{ width: 100 }}
-          disabled={updating}
-          small
-          onClick={() => {
-            setError(undefined)
-            setUpdating(true)
-            updateMe({
-              gender: genderValues.genderCustom || genderValues.gender,
-              birthyear:
-                birthyear && birthyear.length ? parseInt(birthyear) : null,
-            })
-              .then(() => {
-                setUpdating(false)
-              })
-              .catch((error) => {
-                setUpdating(false)
-                setError(errorToString(error))
-              })
-          }}
-        >
-          {updating ? (
-            <InlineSpinner size={24} color='white' />
-          ) : (
-            t('Account/Update/submit')
-          )}
-        </Button>
       </div>
     </>
   )
-}
+})
 
-const CompactDetailsForm = ({ detailsData, updateDetails, title }) => {
+const CompactDetailsForm = ({ detailsData, title }) => {
   const { loading, error, me } = detailsData
-
-  console.log('CompactDetailsForm', { loading, error, me })
 
   return (
     <Loader
@@ -131,7 +99,7 @@ const CompactDetailsForm = ({ detailsData, updateDetails, title }) => {
       error={error}
       render={() =>
         me ? (
-          <Form me={me} updateMe={updateDetails} title={title} />
+          <Form me={me} title={title} />
         ) : (
           <NotEligible />
         )

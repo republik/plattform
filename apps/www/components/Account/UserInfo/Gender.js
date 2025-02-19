@@ -4,12 +4,15 @@ import { Field, Radio, Label, useColorContext } from '@project-r/styleguide'
 
 import withT from '../../../lib/withT'
 import questionStyles from '../../Questionnaire/questionStyles'
+import compose from "lodash/flowRight";
+import { withMyDetailsMutation } from "../enhancers";
 
 const GENDER_SUGGESTIONS = ['weiblich', 'männlich']
 const X_GENDER = 'weiteres'
 
-const GenderField = ({ values, onChange, isMandadory, t }) => {
+const GenderField = ({ values, autosubmit, updateDetails, onChange, isMandadory, t }) => {
   const [colorScheme] = useColorContext()
+
   useEffect(() => {
     if (isMandadory && !values.gender) {
       onChange({
@@ -22,6 +25,8 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
 
   const currentGender = values.gender
   const isX = !GENDER_SUGGESTIONS.some((gender) => gender === currentGender)
+
+  const save = (gender) => autosubmit && updateDetails({ gender })
 
   return (
     <>
@@ -55,6 +60,7 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
                     gender: undefined,
                   },
                 })
+                save(gender)
               }}
             >
               <span {...questionStyles.radio}>{gender}</span>
@@ -75,6 +81,7 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
               gender: undefined,
             },
           })
+          save(X_GENDER)
         }}
       >
         <span {...questionStyles.radio}>{X_GENDER}</span>
@@ -93,9 +100,10 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
             },
           })
         }}
+        onBlur={() => values.genderCustom && save(values.genderCustom)}
       />
     </>
   )
 }
 
-export default withT(GenderField)
+export default compose(withT, withMyDetailsMutation)(GenderField)
