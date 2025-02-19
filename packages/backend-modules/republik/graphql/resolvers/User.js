@@ -175,12 +175,6 @@ module.exports = {
     }
     return null
   },
-  birthday(user, args, { user: me }) {
-    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      return user._raw.birthday
-    }
-    return null
-  },
   birthyear(user, args, {user: me}) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.birthyear
