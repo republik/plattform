@@ -63,7 +63,7 @@ module.exports = {
   statement: exposeProfileField('statement'),
   gender(user, args, { user: me }) {
     if (
-      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'associate'])
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])
     ) {
       return user._raw.gender || user.gender
     }
