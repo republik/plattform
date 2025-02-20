@@ -7,11 +7,11 @@ module.exports = {
       return
     }
 
-    if (!candidacy.user.birthday) {
+    if (!candidacy.user.birthyear) {
       return
     }
 
-    return new Date(candidacy.user.birthday).getFullYear()
+    return candidacy.user.birthyear
   },
   city: (candidacy, args, { user: me }) => {
     if (!Roles.userIsInRoles(me, ['admin', 'supporter', 'associate'])) {

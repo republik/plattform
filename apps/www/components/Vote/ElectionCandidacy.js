@@ -32,9 +32,6 @@ import SignIn from '../Auth/SignIn'
 
 const { H2, P } = Interaction
 
-const birthdayFormat = '%d.%m.%Y'
-const birthdayParse = swissTime.parse(birthdayFormat)
-
 const DEFAULT_COUNTRY = COUNTRIES[0]
 
 const addressFields = (t) => [
@@ -74,17 +71,15 @@ const addressFields = (t) => [
 
 const fields = (t, vt) => [
   {
-    label: t('Account/Update/birthday/label'),
-    name: 'birthday',
-    mask: '11.11.1111',
+    label: t('Account/Update/birthyear/label/optional'),
+    name: 'birthyear',
+    mask: '1111',
     maskChar: '_',
     validator: (value) => {
-      const parsedDate = birthdayParse(value)
       return (
-        (parsedDate === null ||
-          parsedDate > new Date() ||
-          parsedDate < new Date(1798, 3, 12)) &&
-        t('Account/Update/birthday/error/invalid')
+        !!value.trim().length &&
+        (value === null || value > new Date().getFullYear() || value < 1900) &&
+        t('Account/Update/birthyear/error/invalid')
       )
     },
   },
@@ -174,9 +169,9 @@ class ElectionCandidacy extends Component {
         statement: values.statement,
         credential: values.credential,
         disclosures: values.disclosures,
-        birthday:
-          values.birthday && values.birthday.length
-            ? values.birthday.trim()
+        birthyear:
+          values.birthyear && values.birthyear.length
+            ? parseInt(values.birthyear)
             : null,
         gender: values.genderCustom || values.gender,
         biography: values.biography,
@@ -235,7 +230,7 @@ class ElectionCandidacy extends Component {
   deriveStateFromProps({ data, slug }) {
     const {
       statement,
-      birthday,
+      birthyear,
       disclosures,
       credentials,
       address,
@@ -263,7 +258,7 @@ class ElectionCandidacy extends Component {
         biography,
         biographyContent,
         statement,
-        birthday,
+        birthyear,
         disclosures,
         line1,
         line2,
@@ -330,7 +325,7 @@ class ElectionCandidacy extends Component {
           const { name } = me
           const {
             statement,
-            birthday,
+            birthyear,
             disclosures,
             credential,
             city,
@@ -340,7 +335,6 @@ class ElectionCandidacy extends Component {
             biographyContent,
             gender,
           } = values
-          const parsedBirthday = birthdayParse(birthday)
 
           const candidacyPreview = me && {
             user: {
@@ -355,11 +349,9 @@ class ElectionCandidacy extends Component {
               biography,
               biographyContent,
               gender,
+              birthyear,
             },
             city,
-            yearOfBirth: parsedBirthday
-              ? parsedBirthday.getFullYear()
-              : undefined,
             credential,
             recommendation: candidate ? candidate.recommendation : undefined,
           }
@@ -552,7 +544,7 @@ const cancelCandidacy = gql`
 const updateCandidacy = gql`
   mutation updateCandidacy(
     $slug: String!
-    $birthday: Date
+    $birthyear: Int
     $statement: String
     $disclosures: String
     $address: AddressInput
@@ -563,7 +555,7 @@ const updateCandidacy = gql`
     $biography: String
   ) {
     updateMe(
-      birthday: $birthday
+      birthyear: $birthyear
       statement: $statement
       disclosures: $disclosures
       address: $address
@@ -579,7 +571,7 @@ const updateCandidacy = gql`
       portrait
       statement
       disclosures
-      birthday
+      birthyear
       address {
         name
         line1
@@ -598,7 +590,6 @@ const updateCandidacy = gql`
     }
     submitCandidacy(slug: $slug, credential: $credential) {
       id
-      yearOfBirth
       city
       recommendation
       user {
@@ -635,7 +626,7 @@ const query = gql`
       portrait
       statement
       disclosures
-      birthday
+      birthyear
       username
       gender
       biography
@@ -645,7 +636,6 @@ const query = gql`
           slug
         }
         id
-        yearOfBirth
         city
         recommendation
         credential {

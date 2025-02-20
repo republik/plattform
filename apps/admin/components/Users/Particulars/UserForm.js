@@ -28,7 +28,7 @@ const cleanUser = ({
   firstName,
   lastName,
   phoneNumber,
-  birthday,
+  birthyear,
   address,
 }) => ({
   id,
@@ -36,7 +36,7 @@ const cleanUser = ({
   firstName,
   lastName,
   phoneNumber,
-  birthday,
+  birthyear: parseInt(birthyear),
   address,
 })
 

@@ -85,7 +85,7 @@ const ElectionBallotRow = (props) => {
   const SelectionComponent = maxVotes > 1 ? Checkbox : Radio
 
   const { user: d } = candidate
-  const summary = [candidate.yearOfBirth, d.gender, candidate.city].filter(
+  const summary = [d.birthyear, d.gender, candidate.city].filter(
     Boolean,
   )
   const showSummary = !!summary.length

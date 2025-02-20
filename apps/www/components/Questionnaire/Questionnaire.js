@@ -229,7 +229,7 @@ const Questionnaire = (props) => {
           .filter(Boolean).length
 
         return (
-          <div>
+          <div style={{ marginTop: 40 }}>
             <PublicSubmissionInfo
               publicSubmission={publicSubmission}
               context={context}

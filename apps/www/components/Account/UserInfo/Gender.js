@@ -1,15 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { Field, Radio, Label, useColorContext } from '@project-r/styleguide'
 
 import withT from '../../../lib/withT'
+import questionStyles from '../../Questionnaire/questionStyles'
+import compose from "lodash/flowRight";
+import { withMyDetailsMutation } from "../enhancers";
 
-const SUGGESTIONS = ['weiblich', 'männlich']
-// https://de.wikipedia.org/wiki/Divers
-const X_GENDER = 'divers'
+const GENDER_SUGGESTIONS = ['weiblich', 'männlich']
+const X_GENDER = 'weiteres'
 
-const GenderField = ({ values, onChange, isMandadory, t }) => {
+const GenderField = ({ values, autosubmit, updateDetails, onChange, isMandadory, t }) => {
   const [colorScheme] = useColorContext()
+
   useEffect(() => {
     if (isMandadory && !values.gender) {
       onChange({
@@ -18,12 +21,12 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
         },
       })
     }
-  }, [isMandadory])
-  const [shouldAutoFocus, setShouldAutoFocus] = useState()
+  }, [isMandadory, onChange, values, t])
 
-  const value = values.gender
-  const isX =
-    value?.trim() && !SUGGESTIONS.some((suggestion) => suggestion === value)
+  const currentGender = values.gender
+  const isX = !GENDER_SUGGESTIONS.some((gender) => gender === currentGender)
+
+  const save = (gender) => autosubmit && updateDetails({ gender })
 
   return (
     <>
@@ -34,77 +37,73 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
           </span>
         </Label>
       </div>
-      {SUGGESTIONS.map((suggestion) => (
+      {GENDER_SUGGESTIONS.map((gender) => (
         <>
           <span
             style={{
               display: 'inline-block',
               whiteSpace: 'nowrap',
               marginBottom: 10,
-              marginRight: 10,
+              marginRight: 15,
             }}
           >
             <Radio
-              value={value}
-              checked={value === suggestion}
+              value={currentGender}
+              checked={currentGender === gender}
               onChange={() => {
                 onChange({
                   values: {
-                    gender: suggestion,
+                    gender,
                     genderCustom: undefined,
                   },
                   errors: {
                     gender: undefined,
                   },
                 })
+                save(gender)
               }}
             >
-              {suggestion}
+              <span {...questionStyles.radio}>{gender}</span>
             </Radio>
-          </span>{' '}
+          </span>
         </>
       ))}
       <Radio
         value={X_GENDER}
         checked={isX}
         onChange={() => {
-          setShouldAutoFocus(true)
           onChange({
             values: {
               gender: X_GENDER,
+              genderCustom: X_GENDER,
             },
             errors: {
               gender: undefined,
             },
           })
+          save(X_GENDER)
         }}
       >
-        {X_GENDER}
+        <span {...questionStyles.radio}>{X_GENDER}</span>
       </Radio>
-      {isX && (
-        <>
-          <br />
-          <Field
-            renderInput={(props) => (
-              <input autoFocus={shouldAutoFocus} {...props} />
-            )}
-            label={t('profile/gender/custom')}
-            value={
-              values.genderCustom ||
-              (values.gender !== X_GENDER ? values.gender : '')
-            }
-            onChange={(_, newValue) => {
-              onChange({
-                values: {
-                  genderCustom: newValue,
-                },
-              })
-            }}
-          />
-        </>
-      )}
+      <Field
+        disabled={!isX}
+        label={t('profile/gender/custom')}
+        value={
+          values.genderCustom ||
+          (values.gender !== X_GENDER ? values.gender : '')
+        }
+        onChange={(_, newValue) => {
+          onChange({
+            values: {
+              genderCustom: newValue,
+            },
+          })
+        }}
+        onBlur={() => values.genderCustom && save(values.genderCustom)}
+      />
     </>
   )
 }
 
-export default withT(GenderField)
+export default compose(withT, withMyDetailsMutation)(GenderField)

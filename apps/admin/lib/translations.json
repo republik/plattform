@@ -491,32 +491,32 @@
       "value": "Persönliche Angaben"
     },
     {
-      "key": "Account/Update/birthday/label",
-      "value": "Geburtsdatum"
+      "key": "Account/Update/birthyear/label",
+      "value": "Geburtsjahr"
     },
     {
-      "key": "Account/Update/birthday/label/optional",
-      "value": "Geburtsdatum (Optional)"
+      "key": "Account/Update/birthyear/label/optional",
+      "value": "Geburtsjahr (Optional)"
     },
     {
       "key": "Account/Update/phone/label",
       "value": "Telefonnummer (Optional)"
     },
     {
-      "key": "Account/Update/birthday/hint/statute",
-      "value": "TT.MM.JJJJ, notwendig für Ihre Mitgliedschaft bei Project R"
+      "key": "Account/Update/birthyear/hint/statute",
+      "value": "JJJJ, notwendig für Ihre Mitgliedschaft bei Project R"
     },
     {
-      "key": "Account/Update/birthday/hint/plain",
-      "value": "TT.MM.JJJJ"
+      "key": "Account/Update/birthyear/hint/plain",
+      "value": "JJJJ"
     },
     {
-      "key": "Account/Update/birthday/error/empty",
-      "value": "Geburtsdatum fehlt"
+      "key": "Account/Update/birthyear/error/empty",
+      "value": "Geburtsjahr fehlt"
     },
     {
-      "key": "Account/Update/birthday/error/invalid",
-      "value": "Geburtsdatum ungültig"
+      "key": "Account/Update/birthyear/error/invalid",
+      "value": "Geburtsjahr ungültig"
     },
     {
       "key": "Account/Update/submit",
@@ -3799,24 +3799,24 @@
       "value": "Persönliche Angaben"
     },
     {
-      "key": "merci/updateMe/birthday/label",
-      "value": "Geburtsdatum"
+      "key": "merci/updateMe/birthyear/label",
+      "value": "Geburtsjahr"
     },
     {
       "key": "merci/updateMe/phone/label",
       "value": "Telefonnummer (Optional)"
     },
     {
-      "key": "merci/updateMe/birthday/hint",
+      "key": "merci/updateMe/birthyear/hint",
       "value": "TT.MM.JJJJ, notwendig für Ihre Mitgliedschaft bei Project R"
     },
     {
-      "key": "merci/updateMe/birthday/error/empty",
-      "value": "Geburtsdatum fehlt"
+      "key": "merci/updateMe/birthyear/error/empty",
+      "value": "Geburtsjahr fehlt"
     },
     {
-      "key": "merci/updateMe/birthday/error/invalid",
-      "value": "Geburtsdatum ungültig"
+      "key": "merci/updateMe/birthyear/error/invalid",
+      "value": "Geburtsjahr ungültig"
     },
     {
       "key": "merci/updateMe/submit",

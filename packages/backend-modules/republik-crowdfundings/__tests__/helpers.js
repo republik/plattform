@@ -47,7 +47,7 @@ const submitPledge = ({
   apolloFetch = global.instance.apolloFetch,
   ...variables
 }) => {
-  const { email, firstName, lastName, birthday, phoneNumber } =
+  const { email, firstName, lastName, phoneNumber } =
     userObject || Users.Unverified
   return apolloFetch({
     query: SUBMIT_PLEDGE_MUTATION,
@@ -56,7 +56,6 @@ const submitPledge = ({
         email,
         firstName,
         lastName,
-        birthday,
         phoneNumber,
       },
       ...variables,
