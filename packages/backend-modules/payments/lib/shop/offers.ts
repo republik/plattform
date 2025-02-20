@@ -13,8 +13,6 @@ export type PriceDefinition = {
 }
 export type DiscountDefinition = { type: 'DISCOUNT'; promoCode: string }
 
-export type OfferItem = PriceDefinition | DiscountDefinition
-
 export type ComplimentaryItem = {
   id: string
   maxQuantity: number
@@ -48,30 +46,35 @@ export type OfferAPIResult = {
   company: Company
   name: string
   requiresLogin: boolean
-  price?: {
-    id: string
+  price: {
     amount: number
     currency: string
     recurring?: {
       interval: 'year' | 'month'
-      interval_count: number
+      intervalCount: number
     }
   }
-  customPrice?: {
-    min: number
-    max: number
-    step: number
-    recurring: {
-      interval: 'year'
-      interval_count: 1
+  donationOptions?: {
+    id: string
+    price: {
+      amount: number
+      currency: string
+      recurring?: {
+        interval: 'year' | 'month'
+        intervalCount: number
+      }
     }
-  }
-  discount?: {
-    name: string
-    couponId: string
-    amountOff: number
-    currency: string
-  }
+  }[]
+  discount?: Discount
+}
+
+export type Discount = {
+  name: string
+  couponId: string
+  amountOff: number
+  duration: 'forever' | 'once' | 'repeating'
+  durationInMonths: number | null
+  currency: string
 }
 
 // const PROMO_ITEM_REPUBLIK_BIBLIOTEK_1 = {
@@ -89,9 +92,9 @@ export const Offers: Offer[] = [
     requiresLogin: true,
     items: [{ type: 'PRICE', lookupKey: 'ABO' }],
     donationOptions: [
-      { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_1' },
-      { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_2' },
-      { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_3' },
+      { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_20' },
+      { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_120' },
+      { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_240' },
     ],
     allowPromotions: true,
   },
@@ -113,6 +116,9 @@ export const Offers: Offer[] = [
     items: [{ type: 'PRICE', lookupKey: 'ABO' }],
     fixedDiscount: 'AUSBILDUNG',
     allowPromotions: false,
+    metaData: {
+      'republik.reduced-price-reason': 'Ausbildung',
+    },
   },
   {
     id: 'MONTHLY',

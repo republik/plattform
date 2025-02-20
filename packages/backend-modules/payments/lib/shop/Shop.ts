@@ -5,6 +5,7 @@ import {
   ComplimentaryItemOrder,
   OfferAPIResult,
   PriceDefinition,
+  Discount,
 } from './offers'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { getConfig } from '../config'
@@ -14,13 +15,16 @@ import { utils } from '.'
 
 export const INTRODUCTERY_OFFER_PROMO_CODE = 'EINSTIEG'
 
+export function isPromoCodeInBlocklist(promoCode: string) {
+  return [INTRODUCTERY_OFFER_PROMO_CODE].includes(promoCode)
+}
+
 export class Shop {
   #offers: Offer[]
   #stripeAdapters: Record<Company, Stripe> = {
     PROJECT_R: ProjectRStripe,
     REPUBLIK: RepublikAGStripe,
   }
-  #promoCodeBlocklist: string[] = [INTRODUCTERY_OFFER_PROMO_CODE]
 
   constructor(offers: Offer[]) {
     this.#offers = offers
@@ -33,6 +37,7 @@ export class Shop {
     promoCode,
     metadata,
     customFields,
+    selectedDonation,
     returnURL,
     complimentaryItems,
   }: {
@@ -41,13 +46,26 @@ export class Shop {
     customerId?: string
     promoCode?: string
     customPrice?: number
+    selectedDonation?: string
     complimentaryItems?: ComplimentaryItemOrder[]
     metadata?: Record<string, string>
     returnURL?: string
     customFields?: Stripe.Checkout.SessionCreateParams.CustomField[]
   }) {
     const lineItems = await this.genLineItems(offer)
+    if (typeof offer.donationOptions !== 'undefined' && selectedDonation) {
+      const res = await this.#stripeAdapters[offer.company].prices.list({
+        lookup_keys: [selectedDonation],
+      })
 
+      const donation = res.data[0]
+      if (donation.lookup_key === selectedDonation) {
+        lineItems.push({
+          price: donation.id,
+          quantity: 1,
+        })
+      }
+    }
     const discount = await this.resolveDiscount(offer, promoCode)
 
     const uiConfig = checkoutUIConfig(
@@ -140,19 +158,31 @@ export class Shop {
       return null
     }
 
-    const pricesLK = offer.items.map((i) => i.lookupKey)
+    const pricesLK = offer.items
+      .map((i) => i.lookupKey)
+      .concat(offer.donationOptions?.map((d) => d.lookupKey) || [])
 
-    const price = (
-      await this.#stripeAdapters[offer.company].prices.list({
-        active: true,
-        lookup_keys: pricesLK,
-        expand: ['data.product'],
-      })
-    ).data[0]
+    const prices = await this.#stripeAdapters[offer.company].prices.list({
+      active: true,
+      lookup_keys: pricesLK,
+      expand: ['data.product'],
+    })
+
+    const price = prices.data.find(
+      (p) => p.lookup_key === offer.items[0].lookupKey,
+    )!
+
+    const donations = prices.data.filter((p) =>
+      (offer.donationOptions?.map((d) => d.lookupKey) || []).includes(
+        p.lookup_key!,
+      ),
+    )!
+
+    console.log(donations)
 
     const discount = await this.resolveDiscount(offer, promoCode)
 
-    return this.mergeOfferData(offer, price, discount)
+    return this.mergeOfferData(offer, price, donations, discount)
   }
 
   async getOffers(promoCode?: string): Promise<OfferAPIResult[]> {
@@ -166,7 +196,11 @@ export class Shop {
 
   async getOffersByCompany(company: Company, promoCode?: string) {
     const offers = this.#offers.filter((offer) => company === offer.company)
-    const lookupKeys = offers.flatMap((o) => o.items.map((i) => i.lookupKey))
+    const lookupKeys = offers.flatMap((o) =>
+      o.items
+        .map((i) => i.lookupKey)
+        .concat(o.donationOptions?.map((d) => d.lookupKey) || []),
+    )
 
     const priceData = (
       await this.#stripeAdapters[company].prices.list({
@@ -184,9 +218,17 @@ export class Shop {
               p.lookup_key === (offer.items[0] as PriceDefinition).lookupKey,
           )!
 
+          const donations = priceData.filter((p) =>
+            (offer.donationOptions?.map((d) => d.lookupKey) || []).includes(
+              p.lookup_key!,
+            ),
+          )!
+
+          console.log(donations)
+
           const discount = await this.resolveDiscount(offer, promoCode)
 
-          return this.mergeOfferData(offer, price, discount)
+          return this.mergeOfferData(offer, price, donations, discount)
         }),
       )
     ).reduce((acc: OfferAPIResult[], res) => {
@@ -200,27 +242,39 @@ export class Shop {
   private async mergeOfferData(
     base: Offer,
     price: Stripe.Price,
+    donations: Stripe.Price[],
     discount?: OfferAPIResult['discount'] | null,
   ): Promise<OfferAPIResult> {
     return {
       ...base,
       price: {
-        id: price.id,
         amount: price.unit_amount!,
         currency: price.currency,
         recurring: price.recurring
           ? {
               interval: price.recurring.interval as 'year' | 'month',
-              interval_count: price.recurring.interval_count,
+              intervalCount: price.recurring.interval_count,
             }
           : undefined,
       },
+      donationOptions:
+        donations.length > 0
+          ? donations.map((d) => ({
+              id: d.lookup_key!,
+              price: {
+                amount: d.unit_amount!,
+                currency: d.currency,
+                recurring: d.recurring
+                  ? {
+                      interval: d.recurring.interval as 'year' | 'month',
+                      intervalCount: d.recurring.interval_count,
+                    }
+                  : undefined,
+              },
+            }))
+          : undefined,
       discount: discount ?? undefined,
     }
-  }
-
-  public inPromoCodeBlocklist(promoCode: string) {
-    return this.#promoCodeBlocklist.includes(promoCode.toUpperCase())
   }
 
   async getPromotion(
@@ -258,16 +312,15 @@ export class Shop {
   }
 }
 
-function promotionToDiscount(promotion: Stripe.PromotionCode | null): {
-  name: string
-  couponId: string
-  amountOff: number
-  currency: string
-} | null {
+function promotionToDiscount(
+  promotion: Stripe.PromotionCode | null,
+): Discount | null {
   return promotion
     ? {
         name: promotion.coupon.name!,
         couponId: promotion.coupon.id!,
+        duration: promotion.coupon.duration,
+        durationInMonths: promotion.coupon.duration_in_months,
         amountOff: promotion.coupon.amount_off!,
         currency: promotion.coupon.currency!,
       }

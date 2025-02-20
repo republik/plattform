@@ -14,6 +14,7 @@ import { Company } from '../../../lib/types'
 type CreateCheckoutSessionArgs = {
   offerId: string
   promoCode?: string
+  withDonation?: string
   complimentaryItems: {
     id: string
     quantity: number
@@ -52,6 +53,7 @@ export = async function createCheckoutSession(
     customerId: customerId,
     customPrice: args.options?.customPrice,
     promoCode: promoCode,
+    selectedDonation: args.withDonation,
     customFields: requiredCustomFields(ctx.user),
     metadata: args?.options?.metadata,
     returnURL: args?.options?.returnURL,

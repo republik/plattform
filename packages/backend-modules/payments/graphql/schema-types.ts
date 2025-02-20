@@ -84,9 +84,15 @@ interface Offer {
   name: String!
   price: Price!
   customPrice: CustomPrice
+  donationOptions: [Donation!]
   discount: Discount
   allowPromotions: Boolean
   complimentaryItems: [ComplimentaryItem!]
+}
+
+type Donation {
+  id: ID!
+  price: Price!
 }
 
 type SubscriptionOffer implements Offer {
@@ -95,6 +101,7 @@ type SubscriptionOffer implements Offer {
   name: String!
   price: Price!
   customPrice: CustomPrice
+  donationOptions: [Donation!]
   discount: Discount
   allowPromotions: Boolean
   complimentaryItems: [ComplimentaryItem!]
@@ -106,6 +113,7 @@ type GiftOffer implements Offer {
   name: String!
   price: Price!
   customPrice: CustomPrice
+  donationOptions: [Donation!]
   discount: Discount
   allowPromotions: Boolean
   complimentaryItems: [ComplimentaryItem!]
@@ -119,7 +127,7 @@ type Price {
 
 type Recurring {
   interval: String!
-  interval_count: Int!
+  intervalCount: Int!
 }
 
 type CustomPrice {
@@ -131,6 +139,8 @@ type CustomPrice {
 type Discount {
   name: String
   amountOff: Int!
+  duration: String!,
+  durationInMonths: Int
   currency: String!
 }
 
