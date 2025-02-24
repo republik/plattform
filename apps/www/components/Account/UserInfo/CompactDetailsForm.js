@@ -3,11 +3,7 @@ import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import MaskedInput from 'react-maskedinput'
 
-import {
-  Interaction,
-  RawHtml,
-  Field,
-} from '@project-r/styleguide'
+import { Interaction, RawHtml, Field, colors } from '@project-r/styleguide'
 
 import { useTranslation } from '../../../lib/withT'
 
@@ -50,6 +46,7 @@ const Form = withMyDetailsMutation(({ me, updateDetails, title }) => {
 
   const [birthyear, setBirthyear] = useState(me?.birthyear?.toString() || '')
   const [genderValues, setGenderValues] = useState({ gender: me.gender })
+  const [error, setError] = useState()
 
   return (
     <>
@@ -58,10 +55,14 @@ const Form = withMyDetailsMutation(({ me, updateDetails, title }) => {
         <Field
           label={t('Account/Update/birthyear/label/optional')}
           value={birthyear}
-          onBlur={() => updateDetails({
-            birthyear:
-              birthyear && birthyear.length ? parseInt(birthyear) : null,
-          })}
+          onBlur={() => {
+            updateDetails({
+              birthyear:
+                birthyear && birthyear.length ? parseInt(birthyear) : null,
+            }).catch((e) => {
+              setError(e)
+            })
+          }}
           onChange={(_, value) => {
             setBirthyear(value)
           }}
@@ -74,6 +75,9 @@ const Form = withMyDetailsMutation(({ me, updateDetails, title }) => {
             />
           )}
         />
+        {!!error && (
+          <div style={{ color: colors.error, marginBottom: 40 }}>{error}</div>
+        )}
         <GenderForm
           values={genderValues}
           onChange={({ values }) => {
@@ -93,13 +97,7 @@ const CompactDetailsForm = ({ detailsData, title }) => {
     <Loader
       loading={loading}
       error={error}
-      render={() =>
-        me ? (
-          <Form me={me} title={title} />
-        ) : (
-          <NotEligible />
-        )
-      }
+      render={() => (me ? <Form me={me} title={title} /> : <NotEligible />)}
     />
   )
 }

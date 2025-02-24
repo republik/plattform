@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Field, Radio, Label, useColorContext } from '@project-r/styleguide'
 
@@ -33,6 +33,7 @@ const GenderField = ({
   t,
 }) => {
   const [colorScheme] = useColorContext()
+  const [error, setError] = useState('test')
 
   useEffect(() => {
     if (isMandadory && !values.gender) {
@@ -47,7 +48,11 @@ const GenderField = ({
   const currentGender = values.gender
   const isX = !GENDER_SUGGESTIONS.some((gender) => gender === currentGender)
 
-  const save = (gender) => autosubmit && updateDetails({ gender })
+  const save = (gender) =>
+    autosubmit &&
+    updateDetails({ gender }).catch((e) => {
+      setError(e)
+    })
 
   return (
     <>
@@ -120,6 +125,11 @@ const GenderField = ({
         }}
         onBlur={() => values.genderCustom && save(values.genderCustom)}
       />
+      {!!error && (
+        <div style={{ color: colorScheme.get('error'), marginBottom: 40 }}>
+          {error}
+        </div>
+      )}
     </>
   )
 }
