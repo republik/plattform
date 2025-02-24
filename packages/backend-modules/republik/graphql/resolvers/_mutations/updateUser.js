@@ -13,7 +13,7 @@ module.exports = async (_, args, { pgdb, req, t, mail }) => {
     throw new Error(t('api/users/404'))
   }
 
-  const { firstName, lastName, birthyear, address, phoneNumber } = args
+  const { firstName, lastName, birthyear, gender, address, phoneNumber } = args
   if (birthyear) {
     if (birthyear < 1900 || birthyear > new Date().getFullYear()) {
       throw new Error(t('api/user/birthyearInvalid'))
@@ -21,13 +21,14 @@ module.exports = async (_, args, { pgdb, req, t, mail }) => {
   }
   const transaction = await pgdb.transactionBegin()
   try {
-    if (firstName || lastName || birthyear || phoneNumber) {
+    if (firstName || lastName || birthyear || gender || phoneNumber) {
       await transaction.public.users.update(
         { id: user.id },
         {
           firstName,
           lastName,
           birthyear,
+          gender,
           phoneNumber,
         },
         { skipUndefined: true },

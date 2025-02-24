@@ -67,6 +67,7 @@ type mutations {
     address: AddressInput
 
     birthyear: Int
+    gender: String
     phoneNumber: String
     
     userId: ID!
