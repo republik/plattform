@@ -1,6 +1,68 @@
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
 
+const submitSurveyAnswerMutation = gql`
+  mutation submitAnswer($answerId: ID!, $questionId: ID!, $payload: JSON) {
+    submitAnswer(
+      answer: { id: $answerId, questionId: $questionId, payload: $payload }
+    ) {
+      ... on QuestionInterface {
+        id
+        userAnswer {
+          id
+          payload
+        }
+        turnout {
+          skipped
+          submitted
+        }
+      }
+      ... on QuestionTypeChoice {
+        choiceResults: result {
+          count
+          option {
+            label
+            value
+            category
+          }
+        }
+      }
+    }
+  }
+`
+
+const getOptimisticSurveyResponse = (
+  mutationName,
+  question,
+  payload,
+  answerId,
+) => ({
+  __typename: 'Mutation',
+  [mutationName]: {
+    ...question,
+    userAnswer: {
+      __typename: 'Answer',
+      id: answerId,
+      payload,
+    },
+
+    /* Update results of choice question type */
+    ...(question.choiceResults && {
+      choiceResults: question.choiceResults.map((r) => {
+        return {
+          ...r,
+          count: r.count + (payload.value.includes(r.option.value) ? 1 : 0),
+        }
+      }),
+    }),
+
+    turnout: {
+      ...question.turnout,
+      submitted: question.turnout.submitted + 1,
+    },
+  },
+})
+
 const submitAnswerMutation = gql`
   mutation submitAnswer($answerId: ID!, $questionId: ID!, $payload: JSON) {
     submitAnswer(
@@ -112,12 +174,70 @@ const getQuestionnaire = gql`
   }
 `
 
+const getQuestionnaireAndResults = gql`
+  query getQuestionnaire($slug: String!) {
+    questionnaire(slug: $slug) {
+      id
+      slug
+      beginDate
+      userIsEligible
+      userHasSubmitted
+      unattributedAnswers
+      turnout {
+        eligible
+        submitted
+      }
+      questions {
+        __typename
+        ... on QuestionInterface {
+          id
+          text
+          order
+          metadata
+          userAnswer {
+            id
+            payload
+          }
+          turnout {
+            skipped
+            submitted
+          }
+        }
+        ... on QuestionTypeChoice {
+          cardinality
+          options {
+            label
+            value
+            category
+          }
+          choiceResults: result {
+            count
+            option {
+              label
+              value
+              category
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export const withQuestionnaire = graphql(getQuestionnaire, {
   name: 'questionnaireData',
   options: ({ slug }) => ({
     variables: {
       slug,
     },
+  }),
+})
+
+export const withQuestionnaireAndResults = graphql(getQuestionnaireAndResults, {
+  name: 'questionnaireData',
+  options: ({ slug, pollInterval = 0, histogramTicks, client }) => ({
+    pollInterval,
+    variables: { slug, histogramTicks },
   }),
 })
 
@@ -241,6 +361,26 @@ export const withAnswerMutation = graphql(submitAnswerMutation, {
             data: newData,
           })
         },
+      })
+    },
+  }),
+})
+
+export const withSurveyAnswerMutation = graphql(submitSurveyAnswerMutation, {
+  props: ({ mutate }) => ({
+    submitAnswer: (question, payload, answerId) => {
+      return mutate({
+        variables: {
+          answerId,
+          questionId: question.id,
+          payload,
+        },
+        optimisticResponse: getOptimisticSurveyResponse(
+          'submitAnswer',
+          question,
+          payload,
+          answerId,
+        ),
       })
     },
   }),
