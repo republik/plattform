@@ -1,5 +1,4 @@
 import withT from '../../../lib/withT'
-import { swissTime } from '../../../lib/utils/formats'
 import { FieldSet } from '@project-r/styleguide'
 
 const fields = (t) => [
@@ -36,7 +35,7 @@ const fields = (t) => [
 
 const Form = ({ t, values, errors, dirty, onChange }) => (
   <FieldSet
-    values={{ ...values, birthyear: values?.birthyear?.toString() || ''}}
+    values={{ ...values, birthyear: values?.birthyear?.toString() || '' }}
     errors={errors}
     dirty={dirty}
     fields={fields(t)}

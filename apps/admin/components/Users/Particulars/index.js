@@ -34,6 +34,7 @@ export const GET_USER = gql`
       firstName
       lastName
       birthyear
+      gender
       address {
         id
         name
@@ -54,6 +55,7 @@ export const UPDATE_USER = gql`
     $firstName: String!
     $lastName: String!
     $phoneNumber: String
+    $gender: String
     $address: AddressInput!
   ) {
     updateUser(
@@ -62,6 +64,7 @@ export const UPDATE_USER = gql`
       firstName: $firstName
       lastName: $lastName
       phoneNumber: $phoneNumber
+      gender: $gender
       address: $address
     ) {
       id
@@ -70,6 +73,7 @@ export const UPDATE_USER = gql`
       lastName
       phoneNumber
       birthyear
+      gender
       address {
         id
         name
@@ -141,6 +145,12 @@ const UserCard = ({ user }) => {
         <DL>
           <DT>Geburtsjahr</DT>
           <DD>{user.birthyear}</DD>
+        </DL>
+      )}
+      {user.gender && (
+        <DL>
+          <DT>Gender</DT>
+          <DD>{user.gender}</DD>
         </DL>
       )}
       <DL>

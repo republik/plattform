@@ -499,8 +499,20 @@
       "value": "Geburtsjahr (Optional)"
     },
     {
+      "key": "Account/Update/gender/label",
+      "value": "Geschlecht"
+    },
+    {
+      "key": "Account/Update/gender/label/optional",
+      "value": "Geschlecht (optional)"
+    },
+    {
+      "key": "Account/Update/gender/label/custom",
+      "value": "Geschlecht – Bezeichnung"
+    },
+    {
       "key": "Account/Update/phone/label",
-      "value": "Telefonnummer (Optional)"
+      "value": "Telefonnummer (optional)"
     },
     {
       "key": "Account/Update/birthyear/hint/statute",
