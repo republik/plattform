@@ -4,13 +4,21 @@ import { Field, Radio, Label, useColorContext } from '@project-r/styleguide'
 
 import withT from '../../../lib/withT'
 import questionStyles from '../../Questionnaire/questionStyles'
-import compose from "lodash/flowRight";
-import { withMyDetailsMutation } from "../enhancers";
+import compose from 'lodash/flowRight'
+import { withMyDetailsMutation } from '../enhancers'
 
+// https://nibi.space/geschlechtsabfragen
 const GENDER_SUGGESTIONS = ['weiblich', 'männlich']
 const X_GENDER = 'weiteres'
 
-const GenderField = ({ values, autosubmit, updateDetails, onChange, isMandadory, t }) => {
+const GenderField = ({
+  values,
+  autosubmit,
+  updateDetails,
+  onChange,
+  isMandadory,
+  t,
+}) => {
   const [colorScheme] = useColorContext()
 
   useEffect(() => {

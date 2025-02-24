@@ -4,15 +4,11 @@ import { css } from 'glamor'
 import MaskedInput from 'react-maskedinput'
 
 import {
-  Button,
-  colors,
-  InlineSpinner,
   Interaction,
   RawHtml,
   Field,
 } from '@project-r/styleguide'
 
-import { errorToString } from '../../../lib/utils/errors'
 import { useTranslation } from '../../../lib/withT'
 
 import { withMyDetails, withMyDetailsMutation } from '../enhancers'

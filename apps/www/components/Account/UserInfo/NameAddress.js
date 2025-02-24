@@ -327,8 +327,6 @@ class UpdateMe extends Component {
                             }
                             this.setState(() => ({ updating: true }))
 
-                            console.log({ values })
-
                             this.props
                               .updateDetails({
                                 firstName: values.firstName,
