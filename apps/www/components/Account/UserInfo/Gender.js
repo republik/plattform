@@ -46,7 +46,9 @@ const GenderField = ({
   }, [isMandadory, onChange, values, t])
 
   const currentGender = values.gender
-  const isX = !GENDER_SUGGESTIONS.some((gender) => gender === currentGender)
+  const isX =
+    !!currentGender &&
+    !GENDER_SUGGESTIONS.some((gender) => gender === currentGender)
 
   const save = (gender) =>
     autosubmit &&
