@@ -74,10 +74,7 @@ const GenderField = ({ values, onChange, t }) => {
       <Field
         disabled={!isX}
         label={t('Account/Update/gender/label/custom')}
-        value={
-          values.genderCustom ||
-          (values.gender !== X_GENDER ? values.gender : '')
-        }
+        value={values.genderCustom || values.gender}
         onChange={(_, newValue) => {
           onChange({
             values: {

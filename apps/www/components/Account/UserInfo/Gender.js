@@ -110,10 +110,7 @@ const GenderField = ({
       <Field
         disabled={!isX}
         label={t('profile/gender/custom')}
-        value={
-          values.genderCustom ||
-          (values.gender !== X_GENDER ? values.gender : '')
-        }
+        value={values.genderCustom || values.gender}
         onChange={(_, newValue) => {
           onChange({
             values: {
