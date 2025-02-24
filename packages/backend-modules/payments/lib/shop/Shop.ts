@@ -375,8 +375,6 @@ function checkoutUIConfig(
       return {
         ui_mode: 'custom' as Stripe.Checkout.SessionCreateParams.UiMode,
         return_url: returnURL,
-        redirect_on_completion:
-          'if_required' as Stripe.Checkout.SessionCreateParams.RedirectOnCompletion,
       }
     case 'HOSTED':
       return {
