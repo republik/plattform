@@ -95,7 +95,11 @@ export class Shop {
             allowed_countries: ['CH'],
           }
         : undefined,
-      custom_fields: offer.requiresLogin ? customFields : undefined,
+      custom_fields:
+        // !TODO clean up custom fields setting
+        ['HOSTED', 'EMBEDDED'].includes(uiMode) && offer.requiresLogin
+          ? customFields
+          : undefined,
       payment_method_configuration: getPaymentConfigId(offer.company),
       metadata: {
         ...metadata,
