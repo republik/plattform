@@ -6,6 +6,7 @@ import MaskedInput from 'react-maskedinput'
 import { Interaction, RawHtml, Field, colors } from '@project-r/styleguide'
 
 import { useTranslation } from '../../../lib/withT'
+import { errorToString } from '../../../lib/utils/errors'
 
 import { withMyDetails, withMyDetailsMutation } from '../enhancers'
 
@@ -56,12 +57,16 @@ const Form = withMyDetailsMutation(({ me, updateDetails, title }) => {
           label={t('Account/Update/birthyear/label/optional')}
           value={birthyear}
           onBlur={() => {
+            console.log('onBlur')
+            setError()
             updateDetails({
               birthyear:
                 birthyear && birthyear.length ? parseInt(birthyear) : null,
-            }).catch((e) => {
-              setError(e)
             })
+              .then(() => {})
+              .catch((e) => {
+                setError(errorToString(e))
+              })
           }}
           onChange={(_, value) => {
             setBirthyear(value)

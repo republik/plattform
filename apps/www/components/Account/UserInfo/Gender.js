@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 
-import { Field, Radio, Label, useColorContext } from '@project-r/styleguide'
+import {
+  Field,
+  Radio,
+  Label,
+  useColorContext,
+  colors,
+} from '@project-r/styleguide'
+
+import { errorToString } from '../../../lib/utils/errors'
 
 import withT from '../../../lib/withT'
 import compose from 'lodash/flowRight'
@@ -33,7 +41,7 @@ const GenderField = ({
   t,
 }) => {
   const [colorScheme] = useColorContext()
-  const [error, setError] = useState('test')
+  const [error, setError] = useState()
 
   useEffect(() => {
     if (isMandadory && !values.gender) {
@@ -46,15 +54,18 @@ const GenderField = ({
   }, [isMandadory, onChange, values, t])
 
   const currentGender = values.gender
-  const isX =
-    !!currentGender &&
-    !GENDER_SUGGESTIONS.some((gender) => gender === currentGender)
+  const isX = !GENDER_SUGGESTIONS.some((gender) => gender === currentGender)
 
-  const save = (gender) =>
-    autosubmit &&
-    updateDetails({ gender }).catch((e) => {
-      setError(e)
-    })
+  const save = (gender) => {
+    if (autosubmit) {
+      setError()
+      updateDetails({ gender })
+        .then(() => {})
+        .catch((e) => {
+          setError(errorToString(e))
+        })
+    }
+  }
 
   return (
     <>
@@ -128,9 +139,7 @@ const GenderField = ({
         onBlur={() => values.genderCustom && save(values.genderCustom)}
       />
       {!!error && (
-        <div style={{ color: colorScheme.get('error'), marginBottom: 40 }}>
-          {error}
-        </div>
+        <div style={{ color: colors.error, marginBottom: 40 }}>{error}</div>
       )}
     </>
   )

@@ -11,9 +11,7 @@ const GenderField = ({ values, onChange, t }) => {
   const [colorScheme] = useColorContext()
 
   const currentGender = values.gender
-  const isX =
-    !!currentGender &&
-    !GENDER_SUGGESTIONS.some((gender) => gender === currentGender)
+  const isX = !GENDER_SUGGESTIONS.some((gender) => gender === currentGender)
 
   return (
     <>

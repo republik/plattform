@@ -139,10 +139,7 @@ const Field = React.forwardRef<
       value: string | number | Date,
       shouldValidate: boolean,
     ) => void
-    onBlur?: (
-      event: InputEvent,
-      value: string | number | Date,
-    ) => void
+    onBlur?: (event: InputEvent, value: string | number | Date) => void
     name?: string
     autoComplete?: boolean
     type?: string
@@ -251,7 +248,7 @@ const Field = React.forwardRef<
           onFocus: () => setIsFocused(true),
           onBlur: (event) => {
             const v = event.target.value
-            if (!isValidating && onBlur && isDirty) {
+            if (onBlur && isDirty) {
               onBlur(event, v)
             } else if (!isValidating && onChange && isDirty) {
               onChange(event, v, true)
@@ -314,9 +311,7 @@ const Field = React.forwardRef<
                 inputRef.current.focus()
               }
             }}
-            onBlur={(e => {
-
-            })}
+            onBlur={(e) => {}}
             type='button'
           >
             <IconClose
