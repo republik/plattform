@@ -1,9 +1,5 @@
 import withT from '../../../lib/withT'
-import { swissTime } from '../../../lib/utils/formats'
 import { FieldSet } from '@project-r/styleguide'
-
-const birthdayFormat = '%d.%m.%Y'
-const birthdayParse = swissTime.parse(birthdayFormat)
 
 const fields = (t) => [
   {
@@ -23,19 +19,15 @@ const fields = (t) => [
     name: 'phoneNumber',
   },
   {
-    label: t('merci/updateMe/birthday/label'),
-    name: 'birthday',
-    mask: '11.11.1111',
+    label: t('Account/Update/birthyear/label/optional'),
+    name: 'birthyear',
+    mask: '1111',
     maskChar: '_',
     validator: (value) => {
-      const parsedDate = birthdayParse(value)
-
       return (
-        (value.trim().length && parsedDate === null) ||
-        (parsedDate > new Date() &&
-          t('merci/updateMe/birthday/error/invalid')) ||
-        (parsedDate < new Date(1798, 3, 12) &&
-          t('merci/updateMe/birthday/error/invalid'))
+        !!value.trim().length &&
+        (value === null || value > new Date().getFullYear() || value < 1900) &&
+        t('Account/Update/birthyear/error/invalid')
       )
     },
   },
@@ -43,7 +35,7 @@ const fields = (t) => [
 
 const Form = ({ t, values, errors, dirty, onChange }) => (
   <FieldSet
-    values={values}
+    values={{ ...values, birthyear: values?.birthyear?.toString() || '' }}
     errors={errors}
     dirty={dirty}
     fields={fields(t)}

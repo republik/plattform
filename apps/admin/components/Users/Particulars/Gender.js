@@ -1,78 +1,24 @@
-import { useEffect, useState } from 'react'
-
-import {
-  Field,
-  Radio,
-  Label,
-  useColorContext,
-  colors,
-} from '@project-r/styleguide'
-
-import { errorToString } from '../../../lib/utils/errors'
+import { Field, Radio, Label, useColorContext } from '@project-r/styleguide'
 
 import withT from '../../../lib/withT'
 import compose from 'lodash/flowRight'
-import { withMyDetailsMutation } from '../enhancers'
-import { mediaQueries } from '@project-r/styleguide'
-import { css } from 'glamor'
-
-const styles = {
-  radio: css({
-    fontSize: 17,
-    lineHeight: 1.1,
-    marginTop: -1,
-    [mediaQueries.mUp]: {
-      fontSize: 21,
-      marginTop: -1,
-    },
-  }),
-}
 
 // https://nibi.space/geschlechtsabfragen
 const GENDER_SUGGESTIONS = ['weiblich', 'männlich']
 const X_GENDER = 'weiteres'
 
-const GenderField = ({
-  values,
-  autosubmit,
-  updateDetails,
-  onChange,
-  isMandadory,
-  t,
-}) => {
+const GenderField = ({ values, onChange, t }) => {
   const [colorScheme] = useColorContext()
-  const [error, setError] = useState()
-
-  useEffect(() => {
-    if (isMandadory && !values.gender) {
-      onChange({
-        errors: {
-          gender: t('profile/gender/empty'),
-        },
-      })
-    }
-  }, [isMandadory, onChange, values, t])
 
   const currentGender = values.gender
   const isX = !GENDER_SUGGESTIONS.some((gender) => gender === currentGender)
-
-  const save = (gender) => {
-    if (autosubmit) {
-      setError()
-      updateDetails({ gender })
-        .then(() => {})
-        .catch((e) => {
-          setError(errorToString(e))
-        })
-    }
-  }
 
   return (
     <>
       <div style={{ marginBottom: 10 }}>
         <Label>
           <span {...colorScheme.set('color', 'disabled')}>
-            {t('profile/gender')}
+            {t('Account/Update/gender/label/optional')}
           </span>
         </Label>
       </div>
@@ -98,11 +44,11 @@ const GenderField = ({
                   errors: {
                     gender: undefined,
                   },
+                  dirty: { gender: true },
                 })
-                save(gender)
               }}
             >
-              <span {...styles.radio}>{gender}</span>
+              {gender}
             </Radio>
           </span>
         </>
@@ -119,30 +65,30 @@ const GenderField = ({
             errors: {
               gender: undefined,
             },
+            dirty: { gender: true },
           })
-          save(X_GENDER)
         }}
       >
-        <span {...styles.radio}>{X_GENDER}</span>
+        {X_GENDER}
       </Radio>
       <Field
         disabled={!isX}
-        label={t('profile/gender/custom')}
+        label={t('Account/Update/gender/label/custom')}
         value={values.genderCustom || values.gender}
         onChange={(_, newValue) => {
           onChange({
             values: {
               genderCustom: newValue,
             },
+            errors: {
+              genderCustom: undefined,
+            },
+            dirty: { genderCustom: true },
           })
         }}
-        onBlur={() => values.genderCustom && save(values.genderCustom)}
       />
-      {!!error && (
-        <div style={{ color: colors.error, marginBottom: 40 }}>{error}</div>
-      )}
     </>
   )
 }
 
-export default compose(withT, withMyDetailsMutation)(GenderField)
+export default compose(withT)(GenderField)

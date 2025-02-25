@@ -113,18 +113,16 @@ class ChoiceQuestion extends Component {
           {optionGroups.map(({ key, values }) => (
             <div key={key} {...styles.optionGroup}>
               {key !== 'null' && <H3 {...styles.optionGroupHeader}>{key}</H3>}
-              <div {...(multipleAllowed && styles.optionList)}>
-                {values.map((o, i) => (
-                  <div key={i} {...styles.option}>
-                    <OptionComponent
-                      onChange={() => this.handleChange(o.value)}
-                      checked={userAnswerValues.some((v) => v === o.value)}
-                    >
-                      <span {...questionStyles.radio}>{o.label}</span>
-                    </OptionComponent>
-                  </div>
-                ))}
-              </div>
+              {values.map((o, i) => (
+                <div key={i} {...styles.option}>
+                  <OptionComponent
+                    onChange={() => this.handleChange(o.value)}
+                    checked={userAnswerValues.some((v) => v === o.value)}
+                  >
+                    <span {...questionStyles.radio}>{o.label}</span>
+                  </OptionComponent>
+                </div>
+              ))}
             </div>
           ))}
         </div>
