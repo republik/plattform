@@ -10,6 +10,7 @@ import {
   RawHtml,
   mediaQueries,
   useMediaQuery,
+  InlineSpinner,
 } from '@project-r/styleguide'
 
 import Loader from '../Loader'
@@ -71,9 +72,16 @@ const styles = {
   }),
   voteCount: css({
     textAlign: 'center',
-    paddingTop: 5,
+    paddingTop: 10,
     [mediaQueries.mUp]: {
-      paddingTop: 10,
+      paddingTop: 20,
+    },
+  }),
+  spinnerContainer: css({
+    textAlign: 'center',
+    padding: 10,
+    [mediaQueries.mUp]: {
+      padding: 20,
     },
   }),
 }
@@ -171,19 +179,23 @@ const Answers = ({ question }) => {
 
 const InstantSurvey = ({
   questionnaireData,
-  submitSurveyAnswer,
+  submitAnswer,
   serverContext,
-  slug,
+  slug, // needed for query
   questionIndex,
 }) => {
   const [showResults, setShowResults] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const { t } = useTranslation()
 
   const toggleResults = () => setShowResults(!showResults)
 
   const createSubmitHandler = (question) => (answerId, value) => {
+    setSubmitting(true)
     const payload = value !== null ? { value: [value] } : null
-    submitSurveyAnswer(question, payload, answerId)
+    submitAnswer(question, payload, answerId).then(() => {
+      setSubmitting(false)
+    })
   }
 
   return (
@@ -200,8 +212,6 @@ const InstantSurvey = ({
           return <StatusError statusCode={404} serverContext={serverContext} />
         }
 
-        console.log({ questionnaireData })
-
         const {
           questionnaire: { questions, userIsEligible },
         } = questionnaireData
@@ -217,7 +227,11 @@ const InstantSurvey = ({
               <b>{text}</b>
             </Interaction.P>
             <div {...styles.innerContainer}>
-              {showResults || hasSubmitted || !userIsEligible ? (
+              {submitting ? (
+                <div {...styles.spinnerContainer}>
+                  <InlineSpinner />
+                </div>
+              ) : showResults || hasSubmitted || !userIsEligible ? (
                 <Answers question={question} />
               ) : (
                 <Question onSubmit={onSubmit} question={question} />

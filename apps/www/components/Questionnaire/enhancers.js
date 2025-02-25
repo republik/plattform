@@ -1,67 +1,6 @@
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
 
-const submitSurveyAnswerMutation = gql`
-  mutation submitAnswer($answerId: ID!, $questionId: ID!, $payload: JSON) {
-    submitAnswer(
-      answer: { id: $answerId, questionId: $questionId, payload: $payload }
-    ) {
-      ... on QuestionInterface {
-        id
-        userAnswer {
-          id
-          payload
-        }
-        turnout {
-          skipped
-          submitted
-        }
-      }
-      ... on QuestionTypeChoice {
-        choiceResults: result {
-          count
-          option {
-            label
-            value
-            category
-          }
-        }
-      }
-    }
-  }
-`
-
-const getOptimisticSurveyResponse = (
-  mutationName,
-  question,
-  payload,
-  answerId,
-) => ({
-  __typename: 'Mutation',
-  [mutationName]: {
-    ...question,
-    userAnswer: {
-      __typename: 'Answer',
-      id: answerId,
-      payload,
-    },
-
-    ...(question.choiceResults && {
-      choiceResults: question.choiceResults.map((r) => {
-        return {
-          ...r,
-          count: r.count + (payload.value.includes(r.option.value) ? 1 : 0),
-        }
-      }),
-    }),
-
-    turnout: {
-      ...question.turnout,
-      submitted: question.turnout.submitted + 1,
-    },
-  },
-})
-
 const submitAnswerMutation = gql`
   mutation submitAnswer($answerId: ID!, $questionId: ID!, $payload: JSON) {
     submitAnswer(
@@ -365,8 +304,8 @@ export const withAnswerMutation = graphql(submitAnswerMutation, {
   }),
 })
 
-export const withSurveyAnswerMutation = graphql(submitSurveyAnswerMutation, {
-  props: ({ mutate }) => ({
+export const withSurveyAnswerMutation = graphql(submitAnswerMutation, {
+  props: ({ mutate, ownProps: { slug } }) => ({
     submitAnswer: (question, payload, answerId) => {
       return mutate({
         variables: {
@@ -374,12 +313,13 @@ export const withSurveyAnswerMutation = graphql(submitSurveyAnswerMutation, {
           questionId: question.id,
           payload,
         },
-        optimisticResponse: getOptimisticSurveyResponse(
-          'submitAnswer',
-          question,
-          payload,
-          answerId,
-        ),
+        refetchQueries: [
+          {
+            query: getQuestionnaireAndResults,
+            variables: { slug },
+          },
+        ],
+        awaitRefetchQueries: true,
       })
     },
   }),
