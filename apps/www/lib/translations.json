@@ -4601,6 +4601,22 @@
       "value": "Frage beantworten"
     },
     {
+      "key": "instantSurvey/toggle/question",
+      "value": "Frage beantworten"
+    },
+    {
+      "key": "instantSurvey/toggle/votes/0",
+      "value": "Keine Stimme ist noch eingegangen."
+    },
+    {
+      "key": "instantSurvey/toggle/votes/1",
+      "value": "{count} Stimme"
+    },
+    {
+      "key": "instantSurvey/toggle/votes/other",
+      "value": "{count} Stimmen"
+    },
+    {
       "key": "instantSurvey/login",
       "value": "<a href='/anmelden'>Melden Sie sich an</a>, um die Frage zu beantworten."
     },

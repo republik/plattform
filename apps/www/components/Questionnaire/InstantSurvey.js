@@ -45,12 +45,8 @@ const styles = {
   }),
   chartContainer: css({
     gap: 5,
-    paddingTop: 10,
     display: 'flex',
     alignItems: 'center',
-    [mediaQueries.mUp]: {
-      paddingTop: 20,
-    },
   }),
   chartLabel: css({
     flex: '0 0 auto',
@@ -72,6 +68,13 @@ const styles = {
     paddingTop: 20,
     [mediaQueries.mUp]: {
       paddingTop: 40,
+    },
+  }),
+  voteCount: css({
+    textAlign: 'center',
+    paddingTop: 10,
+    [mediaQueries.mUp]: {
+      paddingTop: 20,
     },
   }),
 }
@@ -96,7 +99,7 @@ const Question = ({ question, onSubmit }) => {
   )
 }
 
-const Answers = ({ question }) => {
+const AnswersChart = ({ question }) => {
   const {
     turnout: { submitted },
     choiceResults: results,
@@ -104,7 +107,7 @@ const Answers = ({ question }) => {
   } = question
 
   if (!results || submitted === 0) {
-    return <Interaction.P>No one voted yet. (TBD)</Interaction.P>
+    return null
   }
 
   const trueResult = results.find((r) => r.option.value == 'true')
@@ -117,37 +120,51 @@ const Answers = ({ question }) => {
 
   const truePercent = getPercentage(trueResult)
   const falsePercent = getPercentage(falseResult)
+  return (
+    <div {...styles.chartContainer}>
+      <span
+        {...styles.chartLabel}
+        style={{
+          fontWeight: userAnswerTrue ? 500 : 300,
+        }}
+      >
+        Ja {truePercent}&#8202;%
+      </span>
+      <span {...styles.chartBarContainer}>
+        <span
+          {...styles.chartBar}
+          style={{ width: `${truePercent}%`, background: '#54FF7E' }}
+        />
+        <span
+          {...styles.chartBar}
+          style={{ width: `${falsePercent}%`, background: '#615E5C' }}
+        />
+      </span>
+      <span
+        {...styles.chartLabel}
+        style={{
+          fontWeight: userAnswerFalse ? 500 : 300,
+        }}
+      >
+        Nein {falsePercent}&#8202;%
+      </span>
+    </div>
+  )
+}
+
+const Answers = ({ question }) => {
+  const { t } = useTranslation()
+  const {
+    turnout: { submitted },
+  } = question
 
   return (
     <div>
-      <div style={{ opacity: 0.5 }}>{submitted} Stimmen</div>
-      <div {...styles.chartContainer}>
-        <span
-          {...styles.chartLabel}
-          style={{
-            fontWeight: userAnswerTrue ? 500 : 300,
-          }}
-        >
-          Ja {truePercent}%
-        </span>
-        <span {...styles.chartBarContainer}>
-          <span
-            {...styles.chartBar}
-            style={{ width: `${truePercent}%`, background: '#54FF7E' }}
-          />
-          <span
-            {...styles.chartBar}
-            style={{ width: `${falsePercent}%`, background: '#615E5C' }}
-          />
-        </span>
-        <span
-          {...styles.chartLabel}
-          style={{
-            fontWeight: userAnswerFalse ? 500 : 300,
-          }}
-        >
-          Nein {falsePercent}%
-        </span>
+      <AnswersChart question={question} />
+      <div style={{ opacity: 0.5 }} {...styles.voteCount}>
+        {t.pluralize('instantSurvey/toggle/votes', {
+          count: submitted,
+        })}
       </div>
     </div>
   )
