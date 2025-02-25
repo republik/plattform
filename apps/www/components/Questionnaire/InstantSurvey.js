@@ -10,6 +10,7 @@ import {
   RawHtml,
   mediaQueries,
   useMediaQuery,
+  fontFamilies,
 } from '@project-r/styleguide'
 
 import Loader from '../Loader'
@@ -40,6 +41,31 @@ const styles = {
     gap: 10,
     [mediaQueries.mUp]: {
       gap: 20,
+    },
+  }),
+  chartContainer: css({
+    gap: 5,
+    paddingTop: 10,
+    display: 'flex',
+    alignItems: 'center',
+    [mediaQueries.mUp]: {
+      paddingTop: 20,
+    },
+  }),
+  chartLabel: css({
+    flex: '0 0 auto',
+  }),
+  chartBarContainer: css({
+    flex: '1 1 auto',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 5,
+  }),
+  chartBar: css({
+    display: 'inline-block',
+    height: 25,
+    [mediaQueries.mUp]: {
+      height: 30,
     },
   }),
   footerContainer: css({
@@ -77,8 +103,8 @@ const Answers = ({ question }) => {
     userAnswer,
   } = question
 
-  if (!results) {
-    return null
+  if (!results || submitted === 0) {
+    return <Interaction.P>No one voted yet. (TBD)</Interaction.P>
   }
 
   const trueResult = results.find((r) => r.option.value == 'true')
@@ -94,13 +120,35 @@ const Answers = ({ question }) => {
 
   return (
     <div>
-      <Interaction.P>
-        Ja: {truePercent}%{userAnswerTrue ? ' (like you)' : ''}
-      </Interaction.P>
-      <Interaction.P>
-        Nein: {falsePercent}%{userAnswerFalse ? ' (like you)' : ''}
-      </Interaction.P>
-      <Interaction.P>Turnout: {submitted}</Interaction.P>
+      <div style={{ opacity: 0.5 }}>{submitted} Stimmen</div>
+      <div {...styles.chartContainer}>
+        <span
+          {...styles.chartLabel}
+          style={{
+            fontWeight: userAnswerTrue ? 500 : 300,
+          }}
+        >
+          Ja {truePercent}%
+        </span>
+        <span {...styles.chartBarContainer}>
+          <span
+            {...styles.chartBar}
+            style={{ width: `${truePercent}%`, background: '#54FF7E' }}
+          />
+          <span
+            {...styles.chartBar}
+            style={{ width: `${falsePercent}%`, background: '#615E5C' }}
+          />
+        </span>
+        <span
+          {...styles.chartLabel}
+          style={{
+            fontWeight: userAnswerFalse ? 500 : 300,
+          }}
+        >
+          Nein {falsePercent}%
+        </span>
+      </div>
     </div>
   )
 }
