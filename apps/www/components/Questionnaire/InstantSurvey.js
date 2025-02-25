@@ -13,6 +13,7 @@ import {
   InlineSpinner,
   ColorContextLocalExtension,
   useColorContext,
+  inQuotes,
 } from '@project-r/styleguide'
 
 import Loader from '../Loader'
@@ -61,7 +62,19 @@ const styles = {
     flex: '1 1 auto',
     display: 'flex',
     alignItems: 'center',
-    gap: 5,
+    position: 'relative',
+    '&::before': {
+      content: '""',
+      display: 'block',
+      width: 1,
+      height: 37,
+      position: 'absolute',
+      left: 'calc(50% - 1px)',
+      borderRight: '1px dashed black',
+      [mediaQueries.mUp]: {
+        height: 44,
+      },
+    },
   }),
   chartBar: css({
     display: 'inline-block',
@@ -77,10 +90,10 @@ const styles = {
     },
   }),
   voteCount: css({
-    textAlign: 'center',
-    paddingTop: 10,
+    opacity: 0.6,
+    paddingTop: 20,
     [mediaQueries.mUp]: {
-      paddingTop: 20,
+      paddingTop: 30,
     },
   }),
   spinnerContainer: css({
@@ -117,7 +130,6 @@ const AnswersChart = ({ question }) => {
   const {
     turnout: { submitted },
     choiceResults: results,
-    userAnswer,
   } = question
 
   if (!results || submitted === 0) {
@@ -126,8 +138,8 @@ const AnswersChart = ({ question }) => {
 
   const trueResult = results.find((r) => r.option.value == 'true')
   const falseResult = results.find((r) => r.option.value == 'false')
-  const userAnswerTrue = userAnswer && userAnswer.payload.value[0] == 'true'
-  const userAnswerFalse = userAnswer && userAnswer.payload.value[0] == 'false'
+  const trueLabel = trueResult.option.label
+  const falseLabel = falseResult.option.label
 
   const getPercentage = (result) =>
     submitted > 0 ? Math.round((100 / submitted) * result.count) : 0
@@ -139,30 +151,30 @@ const AnswersChart = ({ question }) => {
       <span
         {...styles.chartLabel}
         style={{
-          fontWeight: userAnswerTrue ? 500 : 300,
+          fontWeight: truePercent > falsePercent ? 500 : 300,
         }}
       >
-        Ja {truePercent}&#8202;%
+        {trueLabel} {truePercent}&#8202;%
       </span>
-      <span {...styles.chartBarContainer}>
-        <span
+      <div {...styles.chartBarContainer}>
+        <div
           {...styles.chartBar}
           {...colorScheme.set('background', 'data1')}
           style={{ width: `${truePercent}%` }}
         />
-        <span
+        <div
           {...styles.chartBar}
           {...colorScheme.set('background', 'data2')}
           style={{ width: `${falsePercent}%` }}
         />
-      </span>
+      </div>
       <span
         {...styles.chartLabel}
         style={{
-          fontWeight: userAnswerFalse ? 500 : 300,
+          fontWeight: falsePercent > truePercent ? 500 : 300,
         }}
       >
-        Nein {falsePercent}&#8202;%
+        {falseLabel} {falsePercent}&#8202;%
       </span>
     </div>
   )
@@ -172,15 +184,22 @@ const Answers = ({ question }) => {
   const { t } = useTranslation()
   const {
     turnout: { submitted },
+    userAnswer,
+    options,
   } = question
+
+  const answerLabel = options.find(
+    (o) => o.value === userAnswer?.payload?.value[0],
+  )?.label
 
   return (
     <div>
       <AnswersChart question={question} />
-      <div style={{ opacity: 0.5 }} {...styles.voteCount}>
+      <div {...styles.voteCount}>
         {t.pluralize('instantSurvey/toggle/votes', {
           count: submitted,
         })}
+        {answerLabel && <span> – Ihre Stimme: {inQuotes(answerLabel)}</span>}
       </div>
     </div>
   )
