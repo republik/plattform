@@ -46,7 +46,6 @@ const getOptimisticSurveyResponse = (
       payload,
     },
 
-    /* Update results of choice question type */
     ...(question.choiceResults && {
       choiceResults: question.choiceResults.map((r) => {
         return {
@@ -235,9 +234,9 @@ export const withQuestionnaire = graphql(getQuestionnaire, {
 
 export const withQuestionnaireAndResults = graphql(getQuestionnaireAndResults, {
   name: 'questionnaireData',
-  options: ({ slug, pollInterval = 0, histogramTicks, client }) => ({
+  options: ({ slug, pollInterval = 0 }) => ({
     pollInterval,
-    variables: { slug, histogramTicks },
+    variables: { slug },
   }),
 })
 

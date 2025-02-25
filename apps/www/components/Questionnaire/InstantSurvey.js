@@ -10,7 +10,6 @@ import {
   RawHtml,
   mediaQueries,
   useMediaQuery,
-  fontFamilies,
 } from '@project-r/styleguide'
 
 import Loader from '../Loader'
@@ -72,9 +71,9 @@ const styles = {
   }),
   voteCount: css({
     textAlign: 'center',
-    paddingTop: 10,
+    paddingTop: 5,
     [mediaQueries.mUp]: {
-      paddingTop: 20,
+      paddingTop: 10,
     },
   }),
 }
@@ -172,7 +171,7 @@ const Answers = ({ question }) => {
 
 const InstantSurvey = ({
   questionnaireData,
-  submitAnswer,
+  submitSurveyAnswer,
   serverContext,
   slug,
   questionIndex,
@@ -183,9 +182,8 @@ const InstantSurvey = ({
   const toggleResults = () => setShowResults(!showResults)
 
   const createSubmitHandler = (question) => (answerId, value) => {
-    console.log(Array.from(value))
     const payload = value !== null ? { value: [value] } : null
-    submitAnswer(question, payload, answerId)
+    submitSurveyAnswer(question, payload, answerId)
   }
 
   return (
@@ -201,6 +199,8 @@ const InstantSurvey = ({
         ) {
           return <StatusError statusCode={404} serverContext={serverContext} />
         }
+
+        console.log({ questionnaireData })
 
         const {
           questionnaire: { questions, userIsEligible },
@@ -255,8 +255,8 @@ const InstantSurvey = ({
 }
 
 const InstantSurveyWithData = compose(
-  withQuestionnaireAndResults,
   withSurveyAnswerMutation,
+  withQuestionnaireAndResults,
 )(InstantSurvey)
 
 export default InstantSurveyWithData
