@@ -90,7 +90,6 @@ const styles = {
     },
   }),
   voteCount: css({
-    opacity: 0.6,
     paddingTop: 20,
     [mediaQueries.mUp]: {
       paddingTop: 30,
@@ -182,6 +181,7 @@ const AnswersChart = ({ question }) => {
 
 const Answers = ({ question }) => {
   const { t } = useTranslation()
+  const [colorScheme] = useColorContext()
   const {
     turnout: { submitted },
     userAnswer,
@@ -195,7 +195,7 @@ const Answers = ({ question }) => {
   return (
     <div>
       <AnswersChart question={question} />
-      <div {...styles.voteCount}>
+      <div {...styles.voteCount} {...colorScheme.set('color', 'textSoft')}>
         {t.pluralize('instantSurvey/toggle/votes', {
           count: submitted,
         })}
