@@ -8,6 +8,8 @@ import {
   Interaction,
   plainButtonRule,
   RawHtml,
+  mediaQueries,
+  useMediaQuery,
 } from '@project-r/styleguide'
 
 import Loader from '../Loader'
@@ -22,26 +24,44 @@ import { useTranslation } from 'lib/withT'
 const styles = {
   outerContainer: css({
     background: '#F2ECE6',
-    padding: '40px 60px',
+    padding: '20px 30px',
+    [mediaQueries.mUp]: {
+      padding: '40px 60px',
+    },
   }),
   innerContainer: css({
-    paddingTop: 40,
+    paddingTop: 20,
+    [mediaQueries.mUp]: {
+      paddingTop: 40,
+    },
+  }),
+  buttonContainer: css({
+    display: 'flex',
+    gap: 10,
+    [mediaQueries.mUp]: {
+      gap: 20,
+    },
   }),
   footerContainer: css({
-    paddingTop: 40,
+    paddingTop: 20,
+    [mediaQueries.mUp]: {
+      paddingTop: 40,
+    },
   }),
 }
 
 const Question = ({ question, onSubmit }) => {
+  const isDesktop = useMediaQuery(mediaQueries.mUp)
   const { id, userAnswer, options } = question
   const answerId = (userAnswer && userAnswer.id) || uuid()
   return (
-    <div>
+    <div {...styles.buttonContainer}>
       {options.map((option) => (
         <Button
           key={`${id}-${option.value}`}
           onClick={() => onSubmit(answerId, option.value)}
-          style={{ marginRight: 20 }}
+          small={!isDesktop}
+          style={{ flex: '0 0 33%' }}
         >
           {option.label}
         </Button>
