@@ -163,6 +163,11 @@ const Questionnaire = dynamic(
   },
 )
 
+const InstantSurvey = dynamic(() => import('../Questionnaire/InstantSurvey'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
+
 const ClimateLabInlineTeaser = dynamic(
   () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
   {
@@ -457,6 +462,7 @@ const ArticlePage = ({
           ELECTION: Election,
           ELECTION_RESULT: ElectionResult,
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
+          INSTANT_SURVEY: InstantSurvey,
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
           QUESTIONNAIRE_OVERVIEW: QuestionnaireOverview,
