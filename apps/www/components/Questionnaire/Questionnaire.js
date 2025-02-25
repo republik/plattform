@@ -30,7 +30,7 @@ export const actionStyles = css({
   margin: '20px auto 20px auto',
 })
 
-export const NotEligible = ({ notEligibleCopy }) => {
+const NotEligible = ({ notEligibleCopy }) => {
   const { t } = useTranslation()
   return (
     <Box style={{ padding: 15 }}>

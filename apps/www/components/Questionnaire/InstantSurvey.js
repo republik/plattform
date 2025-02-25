@@ -3,7 +3,12 @@ import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import { v4 as uuid } from 'uuid'
 
-import { Button, Interaction } from '@project-r/styleguide'
+import {
+  Button,
+  Interaction,
+  plainButtonRule,
+  RawHtml,
+} from '@project-r/styleguide'
 
 import Loader from '../Loader'
 import StatusError from '../StatusError'
@@ -12,28 +17,35 @@ import {
   withQuestionnaireAndResults,
   withSurveyAnswerMutation,
 } from './enhancers'
-import { NotEligible } from './Questionnaire'
+import { useTranslation } from 'lib/withT'
 
-export const actionStyles = css({
-  textAlign: 'center',
-  margin: '20px auto 20px auto',
-})
+const styles = {
+  outerContainer: css({
+    background: '#F2ECE6',
+    padding: '40px 60px',
+  }),
+  innerContainer: css({
+    paddingTop: 40,
+  }),
+  footerContainer: css({
+    paddingTop: 40,
+  }),
+}
 
 const Question = ({ question, onSubmit }) => {
-  const { id, text, userAnswer, options } = question
+  const { id, userAnswer, options } = question
   const answerId = (userAnswer && userAnswer.id) || uuid()
   return (
     <div>
-      <Interaction.P>{text}</Interaction.P>
-      <div>
-        {options.map((option) => (
-          <div key={`${id}-${option.value}`}>
-            <Button onClick={() => onSubmit(answerId, option.value)}>
-              {option.label}
-            </Button>
-          </div>
-        ))}
-      </div>
+      {options.map((option) => (
+        <Button
+          key={`${id}-${option.value}`}
+          onClick={() => onSubmit(answerId, option.value)}
+          style={{ marginRight: 20 }}
+        >
+          {option.label}
+        </Button>
+      ))}
     </div>
   )
 }
@@ -79,9 +91,9 @@ const InstantSurvey = ({
   serverContext,
   slug,
   questionIndex,
-  notEligibleCopy,
 }) => {
   const [showResults, setShowResults] = useState(false)
+  const { t } = useTranslation()
 
   const toggleResults = () => setShowResults(!showResults)
 
@@ -109,28 +121,46 @@ const InstantSurvey = ({
           questionnaire: { questions, userIsEligible },
         } = questionnaireData
 
-        console.log(questionnaireData)
-
-        if (!userIsEligible) {
-          return <NotEligible notEligibleCopy={notEligibleCopy} />
-        }
-
         const question = questions.find((q) => q.order === questionIndex)
-        const hasSubmitted = question.userAnswer
+        const { userAnswer: hasSubmitted, text } = question
 
         const onSubmit = createSubmitHandler(question)
 
         return (
-          <div>
-            {showResults || hasSubmitted ? (
-              <Answers question={question} />
-            ) : (
-              <Question onSubmit={onSubmit} question={question} />
+          <div {...styles.outerContainer}>
+            <Interaction.P style={{ lineHeight: 1.3 }}>
+              <b>{text}</b>
+            </Interaction.P>
+            <div {...styles.innerContainer}>
+              {showResults || hasSubmitted || !userIsEligible ? (
+                <Answers question={question} />
+              ) : (
+                <Question onSubmit={onSubmit} question={question} />
+              )}
+            </div>
+            {userIsEligible && !hasSubmitted && (
+              <div {...styles.footerContainer}>
+                <button
+                  {...plainButtonRule}
+                  style={{ textDecoration: 'underline' }}
+                  onClick={toggleResults}
+                >
+                  {t(
+                    `instantSurvey/toggle/${
+                      showResults ? 'question' : 'answers'
+                    }`,
+                  )}
+                </button>
+              </div>
             )}
-            {!hasSubmitted && (
-              <Button onClick={toggleResults}>
-                {showResults ? 'Frage beantworten' : 'Antworten anzeigen'}
-              </Button>
+            {!userIsEligible && (
+              <div {...styles.footerContainer}>
+                <RawHtml
+                  dangerouslySetInnerHTML={{
+                    __html: t('instantSurvey/login'),
+                  }}
+                />
+              </div>
             )}
           </div>
         )
