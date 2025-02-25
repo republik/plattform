@@ -526,6 +526,7 @@ class VideoPlayer extends Component {
           poster={src.thumbnail}
           tabIndex='0'
           onKeyDown={this.handleKeyDown}
+          crossOrigin=''
         >
           <source src={src.hls} type='application/x-mpegURL' />
           <source src={src.mp4} type='video/mp4' />
