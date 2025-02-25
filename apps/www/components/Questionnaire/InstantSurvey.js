@@ -11,6 +11,8 @@ import {
   mediaQueries,
   useMediaQuery,
   InlineSpinner,
+  ColorContextLocalExtension,
+  useColorContext,
 } from '@project-r/styleguide'
 
 import Loader from '../Loader'
@@ -22,9 +24,13 @@ import {
 } from './enhancers'
 import { useTranslation } from 'lib/withT'
 
+const localColors = {
+  light: { background: '#F2ECE6', data1: '#54FF7E', data2: '#615E5C' },
+  dark: { background: '#444546', data1: '#54FF7E', data2: '#DBDBDB' },
+}
+
 const styles = {
   outerContainer: css({
-    background: '#F2ECE6',
     padding: '20px 30px',
     [mediaQueries.mUp]: {
       padding: '40px 60px',
@@ -107,6 +113,7 @@ const Question = ({ question, onSubmit }) => {
 }
 
 const AnswersChart = ({ question }) => {
+  const [colorScheme] = useColorContext()
   const {
     turnout: { submitted },
     choiceResults: results,
@@ -140,11 +147,13 @@ const AnswersChart = ({ question }) => {
       <span {...styles.chartBarContainer}>
         <span
           {...styles.chartBar}
-          style={{ width: `${truePercent}%`, background: '#54FF7E' }}
+          {...colorScheme.set('background', 'data1')}
+          style={{ width: `${truePercent}%` }}
         />
         <span
           {...styles.chartBar}
-          style={{ width: `${falsePercent}%`, background: '#615E5C' }}
+          {...colorScheme.set('background', 'data2')}
+          style={{ width: `${falsePercent}%` }}
         />
       </span>
       <span
@@ -175,6 +184,12 @@ const Answers = ({ question }) => {
       </div>
     </div>
   )
+}
+
+const GetColorScheme = ({ children }) => {
+  const [colorScheme] = useColorContext()
+
+  return children(colorScheme)
 }
 
 const InstantSurvey = ({
@@ -222,46 +237,55 @@ const InstantSurvey = ({
         const onSubmit = createSubmitHandler(question)
 
         return (
-          <div {...styles.outerContainer}>
-            <Interaction.P style={{ lineHeight: 1.3 }}>
-              <b>{text}</b>
-            </Interaction.P>
-            <div {...styles.innerContainer}>
-              {submitting ? (
-                <div {...styles.spinnerContainer}>
-                  <InlineSpinner />
-                </div>
-              ) : showResults || hasSubmitted || !userIsEligible ? (
-                <Answers question={question} />
-              ) : (
-                <Question onSubmit={onSubmit} question={question} />
-              )}
-            </div>
-            {userIsEligible && !hasSubmitted && (
-              <div {...styles.footerContainer}>
-                <button
-                  {...plainButtonRule}
-                  style={{ textDecoration: 'underline' }}
-                  onClick={toggleResults}
+          <ColorContextLocalExtension localColors={localColors}>
+            <GetColorScheme>
+              {(colorScheme) => (
+                <div
+                  {...styles.outerContainer}
+                  {...colorScheme.set('background', 'background')}
                 >
-                  {t(
-                    `instantSurvey/toggle/${
-                      showResults ? 'question' : 'answers'
-                    }`,
+                  <Interaction.P style={{ lineHeight: 1.3 }}>
+                    <b>{text}</b>
+                  </Interaction.P>
+                  <div {...styles.innerContainer}>
+                    {submitting ? (
+                      <div {...styles.spinnerContainer}>
+                        <InlineSpinner />
+                      </div>
+                    ) : showResults || hasSubmitted || !userIsEligible ? (
+                      <Answers question={question} />
+                    ) : (
+                      <Question onSubmit={onSubmit} question={question} />
+                    )}
+                  </div>
+                  {userIsEligible && !hasSubmitted && (
+                    <div {...styles.footerContainer}>
+                      <button
+                        {...plainButtonRule}
+                        style={{ textDecoration: 'underline' }}
+                        onClick={toggleResults}
+                      >
+                        {t(
+                          `instantSurvey/toggle/${
+                            showResults ? 'question' : 'answers'
+                          }`,
+                        )}
+                      </button>
+                    </div>
                   )}
-                </button>
-              </div>
-            )}
-            {!userIsEligible && (
-              <div {...styles.footerContainer}>
-                <RawHtml
-                  dangerouslySetInnerHTML={{
-                    __html: t('instantSurvey/login'),
-                  }}
-                />
-              </div>
-            )}
-          </div>
+                  {!userIsEligible && (
+                    <div {...styles.footerContainer}>
+                      <RawHtml
+                        dangerouslySetInnerHTML={{
+                          __html: t('instantSurvey/login'),
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+            </GetColorScheme>
+          </ColorContextLocalExtension>
         )
       }}
     />
