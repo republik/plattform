@@ -95,7 +95,10 @@ const Actions = ({
                 {
                   buyLink: (
                     <Link
-                      href={{ pathname: '/angebote' }}
+                      href={{
+                        pathname: '/angebote',
+                        query: { package: 'ABO' },
+                      }}
                       passHref
                       legacyBehavior>
                       <A>
