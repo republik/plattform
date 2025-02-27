@@ -95,7 +95,6 @@ const enabledFirstFactors = async (email, pgdb) => {
       ON u.id = d."userId"
     WHERE
       u.email = :email
-    AND d.information->>'os' = 'ios'
     GROUP BY
       u.id
   `,
