@@ -87,6 +87,7 @@ interface Offer {
   donationOptions: [Donation!]
   discount: Discount
   allowPromotions: Boolean
+  requiresLogin: Boolean
   complimentaryItems: [ComplimentaryItem!]
 }
 
@@ -104,6 +105,7 @@ type SubscriptionOffer implements Offer {
   donationOptions: [Donation!]
   discount: Discount
   allowPromotions: Boolean
+  requiresLogin: Boolean
   complimentaryItems: [ComplimentaryItem!]
 }
 
@@ -116,6 +118,7 @@ type GiftOffer implements Offer {
   donationOptions: [Donation!]
   discount: Discount
   allowPromotions: Boolean
+  requiresLogin: Boolean
   complimentaryItems: [ComplimentaryItem!]
 }
 
