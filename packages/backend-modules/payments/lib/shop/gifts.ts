@@ -92,7 +92,7 @@ const GIFTS: Gift[] = [
 ]
 
 export const REPUBLIK_PAYMENTS_SUBSCRIPTION_UPGRADED_FROM =
-  'republik.payments.subscription.upgraded-from'
+  'republik.payments.subscription.upgraded'
 
 export const REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN =
   'republik.payments.subscription.origin'

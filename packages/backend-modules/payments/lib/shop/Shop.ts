@@ -88,18 +88,11 @@ export class Shop {
       currency: 'CHF',
       discounts: discount ? [{ coupon: discount.couponId }] : undefined,
       locale: 'de',
-      billing_address_collection:
-        offer.company === 'PROJECT_R' ? 'required' : 'auto',
       shipping_address_collection: complimentaryItems?.length
         ? {
             allowed_countries: ['CH'],
           }
         : undefined,
-      custom_fields:
-        // !TODO clean up custom fields setting
-        ['HOSTED', 'EMBEDDED'].includes(uiMode) && offer.requiresLogin
-          ? customFields
-          : undefined,
       payment_method_configuration: getPaymentConfigId(offer.company),
       metadata: {
         ...metadata,
