@@ -8,7 +8,6 @@ import {
 } from '../../../lib/shop'
 import { Payments } from '../../../lib/payments'
 import { default as Auth } from '@orbiting/backend-modules-auth'
-import { requiredCustomFields } from '../../../lib/shop/utils'
 import { Company } from '../../../lib/types'
 
 type CreateCheckoutSessionArgs = {
@@ -54,7 +53,6 @@ export = async function createCheckoutSession(
     customPrice: args.options?.customPrice,
     promoCode: promoCode,
     selectedDonation: args.withDonation,
-    customFields: requiredCustomFields(ctx.user),
     metadata: args?.options?.metadata,
     returnURL: args?.options?.returnURL,
     complimentaryItems: args.complimentaryItems,

@@ -36,7 +36,6 @@ export class Shop {
     uiMode = 'EMBEDDED',
     promoCode,
     metadata,
-    customFields,
     selectedDonation,
     returnURL,
     complimentaryItems,
