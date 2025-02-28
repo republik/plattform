@@ -34,6 +34,7 @@ export type Offer = {
   donationOptions?: PriceDefinition[]
   fixedDiscount?: string
   requiresLogin: boolean
+  requiresAddress: boolean
   allowPromotions: boolean
   metaData?: {
     [name: string]: string | number | null
@@ -90,6 +91,7 @@ export const Offers: Offer[] = [
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
+    requiresAddress: true,
     items: [{ type: 'PRICE', lookupKey: 'ABO' }],
     donationOptions: [
       { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_20' },
@@ -104,6 +106,7 @@ export const Offers: Offer[] = [
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
+    requiresAddress: true,
     items: [{ type: 'PRICE', lookupKey: 'BENEFACTOR_ABO' }],
     allowPromotions: false,
   },
@@ -113,6 +116,7 @@ export const Offers: Offer[] = [
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
+    requiresAddress: true,
     items: [{ type: 'PRICE', lookupKey: 'ABO' }],
     fixedDiscount: 'AUSBILDUNG',
     allowPromotions: false,
@@ -126,6 +130,7 @@ export const Offers: Offer[] = [
     type: 'SUBSCRIPTION',
     company: 'REPUBLIK',
     requiresLogin: true,
+    requiresAddress: false,
     allowPromotions: true,
     items: [
       {
@@ -145,6 +150,7 @@ export const GIFTS_OFFERS: Offer[] = [
     company: 'PROJECT_R',
     requiresLogin: false,
     allowPromotions: false,
+    requiresAddress: false,
     complimentaryItems: [],
     items: [{ type: 'PRICE', lookupKey: 'GIFT_YEARLY' }],
   },
@@ -155,6 +161,7 @@ export const GIFTS_OFFERS: Offer[] = [
     company: 'REPUBLIK',
     requiresLogin: false,
     allowPromotions: false,
+    requiresAddress: false,
     complimentaryItems: [],
     items: [{ type: 'PRICE', lookupKey: 'GIFT_MONTHLY' }],
   },

@@ -88,6 +88,7 @@ interface Offer {
   discount: Discount
   allowPromotions: Boolean
   requiresLogin: Boolean
+  requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
 }
 
@@ -106,6 +107,7 @@ type SubscriptionOffer implements Offer {
   discount: Discount
   allowPromotions: Boolean
   requiresLogin: Boolean
+  requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
 }
 
@@ -119,6 +121,7 @@ type GiftOffer implements Offer {
   discount: Discount
   allowPromotions: Boolean
   requiresLogin: Boolean
+  requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
 }
 

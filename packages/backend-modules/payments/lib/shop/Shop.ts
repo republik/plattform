@@ -58,7 +58,7 @@ export class Shop {
       })
 
       const donation = res.data[0]
-      if (donation.lookup_key === selectedDonation) {
+      if (donation?.lookup_key === selectedDonation) {
         lineItems.push({
           price: donation.id,
           quantity: 1,
