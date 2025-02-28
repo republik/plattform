@@ -156,13 +156,14 @@ type Product {
 }
 
 type ComplimentaryItem {
-  id: String!
+  id: ID!
   maxQuantity: Int!
 }
 
 type GiftVoucherValidationResult {
   type: String!
   valid: Boolean!
+  company: CompanyName
   isLegacyVoucher: Boolean!
 }
 
