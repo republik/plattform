@@ -52,6 +52,7 @@ export default (centerModule, figureModule) => (event, change, editor) => {
     const isCenter = hasParent(centerModule.TYPE, editor.value.document, cursor)
     const isCaption = blockType === 'CAPTION_TEXT'
 
+    // TODO: get rid of the markdown step
     const toMd = unified()
       .use(htmlParse, {
         emitParseErrors: true,

@@ -1,6 +1,6 @@
 import { Map } from 'immutable'
 import { parse } from '@republik/remark-preset'
-import { Block, Inline } from 'slate'
+import { Inline } from 'slate'
 
 import { Label } from '@project-r/styleguide'
 import { IconTag as InsertVarIcon } from '@republik/icons'
@@ -11,7 +11,6 @@ import withT from '../../../../lib/withT'
 import injectBlock from '../../utils/injectBlock'
 
 import {
-  createPropertyForm,
   createInlineButton,
   buttonStyles,
   matchBlock,
