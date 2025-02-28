@@ -7,7 +7,6 @@ import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker
 import { PaymentProvider } from '../../providers/provider'
 import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
-import { SyncAddressDataWorker } from '../../workers/SyncAddressDataWorker'
 import { mapChargeArgs } from './invoicePaymentSucceeded'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
 import { GiftShop } from '../../shop/gifts'
@@ -119,8 +118,6 @@ async function handleSubscription(
 
   const queue = Queue.getInstance()
 
-  const addressData = event.data.object.customer_details?.address
-
   await Promise.all([
     queue.send<ConfirmSetupTransactionalWorker>(
       'payments:transactional:confirm:setup',
@@ -136,16 +133,6 @@ async function handleSubscription(
       eventSourceId: event.id,
       userId: userId,
     }),
-    addressData
-      ? queue.send<SyncAddressDataWorker>(
-          'payments:stripe:checkout:sync-address',
-          {
-            $version: 'v1',
-            userId: userId,
-            address: addressData,
-          },
-        )
-      : undefined,
   ])
   return
 }
