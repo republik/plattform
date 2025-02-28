@@ -13,7 +13,13 @@ type queries {
 
 type mutations {
   redeemGiftVoucher(voucherCode: String): RedeemGiftResult
-  createCheckoutSession(offerId: ID!, promoCode: String, complimentaryItems: [ComplimentaryItemOrder] options: CheckoutSessionOptions): CheckoutSession
+  createCheckoutSession(
+    offerId: ID!,
+    promoCode: String,
+    withDonation: ID
+    complimentaryItems: [ComplimentaryItemOrder]
+    options: CheckoutSessionOptions
+  ): CheckoutSession
   cancelMagazineSubscription(args: CancelSubscription): Boolean
   createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
 }
