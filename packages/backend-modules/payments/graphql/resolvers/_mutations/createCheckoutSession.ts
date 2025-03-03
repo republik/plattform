@@ -4,7 +4,7 @@ import {
   Shop,
   checkIntroductoryOfferEligibility,
   activeOffers,
-  INTRODUCTERY_OFFER_PROMO_CODE,
+  isPromoCodeInBlocklist,
 } from '../../../lib/shop'
 import { Payments } from '../../../lib/payments'
 import { default as Auth } from '@orbiting/backend-modules-auth'
@@ -39,10 +39,9 @@ export = async function createCheckoutSession(
   if (offer?.requiresLogin) Auth.ensureUser(ctx.user)
 
   const promoCode =
-    (await checkIntroductoryOfferEligibility(ctx.pgdb, ctx.user)) &&
-    typeof args.promoCode === 'undefined'
-      ? INTRODUCTERY_OFFER_PROMO_CODE
-      : args.promoCode
+    args.promoCode && !isPromoCodeInBlocklist(args.promoCode)
+      ? args.promoCode
+      : undefined
 
   const customerId = await getCustomer(offer.company, ctx.user?.id)
 
@@ -52,6 +51,10 @@ export = async function createCheckoutSession(
     customerId: customerId,
     customPrice: args.options?.customPrice,
     promoCode: promoCode,
+    applyEntryOffer: await checkIntroductoryOfferEligibility(
+      ctx.pgdb,
+      ctx.user,
+    ),
     selectedDonation: args.withDonation,
     metadata: args?.options?.metadata,
     returnURL: args?.options?.returnURL,

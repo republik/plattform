@@ -35,6 +35,7 @@ export class Shop {
     customerId,
     uiMode = 'EMBEDDED',
     promoCode,
+    applyEntryOffer,
     metadata,
     selectedDonation,
     returnURL,
@@ -44,6 +45,7 @@ export class Shop {
     uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
     customerId?: string
     promoCode?: string
+    applyEntryOffer?: boolean
     customPrice?: number
     selectedDonation?: string
     complimentaryItems?: ComplimentaryItemOrder[]
@@ -65,7 +67,11 @@ export class Shop {
         })
       }
     }
-    const discount = await this.resolveDiscount(offer, promoCode)
+    const discount = await this.resolveDiscount(
+      offer,
+      promoCode,
+      applyEntryOffer,
+    )
 
     const uiConfig = checkoutUIConfig(
       uiMode,
@@ -86,7 +92,11 @@ export class Shop {
       line_items: lineItems,
       currency: 'CHF',
       discounts: discount
-        ? [{ promotion_code: discount.promoCodeId }]
+        ? [
+            discount.type === 'DISCOUNT'
+              ? { coupon: discount.value.couponId }
+              : { promotion_code: discount.value.promoCodeId },
+          ]
         : undefined,
       locale: 'de',
       shipping_address_collection: complimentaryItems?.length
@@ -178,7 +188,7 @@ export class Shop {
 
     const discount = await this.resolveDiscount(offer, promoCode)
 
-    return this.mergeOfferData(offer, price, donations, discount)
+    return this.mergeOfferData(offer, price, donations, discount?.value)
   }
 
   async getOffers(promoCode?: string): Promise<OfferAPIResult[]> {
@@ -222,7 +232,7 @@ export class Shop {
 
           const discount = await this.resolveDiscount(offer, promoCode)
 
-          return this.mergeOfferData(offer, price, donations, discount)
+          return this.mergeOfferData(offer, price, donations, discount?.value)
         }),
       )
     )
@@ -290,10 +300,28 @@ export class Shop {
     return promition.data[0]
   }
 
-  async resolveDiscount(offer: Offer, promoCode: string | undefined) {
+  async resolveDiscount(
+    offer: Offer,
+    promoCode: string | undefined,
+    applyEntryOffer?: boolean,
+  ): Promise<{ type: 'PROMO' | 'DISCOUNT'; value: Discount } | null> {
+    if (typeof promoCode === 'undefined' && applyEntryOffer) {
+      const promotion = await this.getPromotion(
+        offer.company,
+        INTRODUCTERY_OFFER_PROMO_CODE,
+      )
+      const discount = promotionToDiscount(promotion)
+      if (discount != null) {
+        return { type: 'DISCOUNT', value: discount }
+      }
+    }
+
     if (promoCode && offer.allowPromotions) {
       const promotion = await this.getPromotion(offer.company, promoCode)
-      return promotionToDiscount(promotion)
+      const discount = promotionToDiscount(promotion)
+      if (discount != null) {
+        return { type: 'PROMO', value: discount }
+      }
     }
 
     if (offer.fixedDiscount) {
@@ -301,7 +329,10 @@ export class Shop {
         offer.company,
         offer.fixedDiscount,
       )
-      return promotionToDiscount(promotion)
+      const discount = promotionToDiscount(promotion)
+      if (discount != null) {
+        return { type: 'DISCOUNT', value: discount }
+      }
     }
 
     return null
