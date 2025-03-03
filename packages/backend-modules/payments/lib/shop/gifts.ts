@@ -80,7 +80,7 @@ const GIFTS: Gift[] = [
     valueType: 'PERCENTAGE',
   },
   {
-    id: 'MONTHLY_SUBSCRPTION_GIFT_3',
+    id: 'GIFT_MONTHLY',
     duration: 3,
     durationUnit: 'month',
     offer: 'MONTHLY',
@@ -91,14 +91,13 @@ const GIFTS: Gift[] = [
   },
 ]
 
-export const REPUBLIK_PAYMENTS_SUBSCRIPTION_UPGRADED_FROM =
-  'republik.payments.subscription.upgraded-from'
+export const REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES =
+  'republik.subscription.replaces'
 
 export const REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN =
-  'republik.payments.subscription.origin'
+  'republik.subscription.origin'
 
-export const REPUBLIK_PAYMENTS_CANCEL_REASON =
-  'republik.payments.system.cancel.reason'
+export const REPUBLIK_PAYMENTS_CANCEL_REASON = 'republik.system.cancel-reason'
 
 export class GiftShop {
   #pgdb: PgDb
@@ -256,13 +255,14 @@ export class GiftShop {
     const customerId = await this.getCustomerId(cRepo, gift.company, userId)
 
     const shop = new Shop(activeOffers())
-    const offer = (await shop.getOfferById(gift.offer))!
+    const offer = shop.isValidOffer(gift.offer)
+    const lineItems = await shop.genLineItems(offer)
 
     const subscription = await this.#stripeAdapters[
       gift.company
     ].subscriptions.create({
       customer: customerId,
-      items: [shop.genLineItem(offer)],
+      items: lineItems,
       coupon: gift.coupon,
       collection_method: 'send_invoice',
       days_until_due: 14,
@@ -349,7 +349,7 @@ export class GiftShop {
         const customerId = await this.getCustomerId(cRepo, 'PROJECT_R', userId)
 
         const shop = new Shop(activeOffers())
-        const offer = (await shop.getOfferById(gift.offer))!
+        const offer = shop.isValidOffer(gift.offer)
 
         const tx = await this.#pgdb.transactionBegin()
 
@@ -380,13 +380,14 @@ export class GiftShop {
           stripeId,
         )
 
+        const lineItems = await shop.genLineItems(offer)
         // create new subscription starting at the end period of the old one
         await this.#stripeAdapters.PROJECT_R.subscriptionSchedules.create({
           customer: customerId,
           start_date: oldSub.current_period_end,
           phases: [
             {
-              items: [shop.genLineItem(offer)],
+              items: lineItems,
               iterations: 1,
               collection_method: 'send_invoice',
               coupon: gift.coupon,
@@ -397,7 +398,7 @@ export class GiftShop {
                 [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                   'confirm:setup': true,
                 }),
-                [REPUBLIK_PAYMENTS_SUBSCRIPTION_UPGRADED_FROM]: `monthly_abo:${membershipId}`,
+                [REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES]: `monthly_abo:${membershipId}`,
                 [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
               },
             },
@@ -423,14 +424,15 @@ export class GiftShop {
 
     const shop = new Shop(activeOffers())
 
-    const offer = (await shop.getOfferById(gift.offer))!
+    const offer = shop.isValidOffer(gift.offer)
+    const lineItems = await shop.genLineItems(offer)
 
     await this.#stripeAdapters[gift.company].subscriptionSchedules.create({
       customer: customerId,
       start_date: endDate.unix(),
       phases: [
         {
-          items: [shop.genLineItem(offer)],
+          items: lineItems,
           iterations: 1,
           collection_method: 'send_invoice',
           coupon: gift.coupon,
@@ -492,7 +494,7 @@ export class GiftShop {
         }
       }
       case 'REPUBLIK': {
-        if (gift.id != 'MONTHLY_SUBSCRPTION_GIFT_3') {
+        if (gift.id != 'GIFT_MONTHLY') {
           throw Error('Not implemented')
         }
 
@@ -559,7 +561,8 @@ export class GiftShop {
         const customerId = await this.getCustomerId(cRepo, 'PROJECT_R', userId)
 
         const shop = new Shop(activeOffers())
-        const offer = (await shop.getOfferById(gift.offer))!
+        const offer = shop.isValidOffer(gift.offer)
+        const lineItems = await shop.genLineItems(offer)
 
         //cancel old monthly subscription on Republik AG
         const oldSub = await this.cancelSubscriptionForUpgrade(
@@ -573,7 +576,7 @@ export class GiftShop {
           start_date: oldSub.current_period_end,
           phases: [
             {
-              items: [shop.genLineItem(offer)],
+              items: lineItems,
               iterations: 1,
               collection_method: 'send_invoice',
               coupon: gift.coupon,
@@ -584,7 +587,7 @@ export class GiftShop {
                 [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                   'confirm:setup': true,
                 }),
-                [REPUBLIK_PAYMENTS_SUBSCRIPTION_UPGRADED_FROM]: `monthly:${subScriptionId}`,
+                [REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES]: `monthly:${subScriptionId}`,
                 [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
               },
             },

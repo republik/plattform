@@ -4,9 +4,11 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { GiftVoucherRepo } from '../../../lib/database/GiftVoucherRepo'
 import { PgDb } from 'pogi'
 import { normalizeVoucher } from '../../../lib/shop/gifts'
+import { Company } from '../../../lib/types'
 
 type GiftVoucherValidationResult = {
   type?: string
+  company?: Company
   valid: boolean
   isLegacyVoucher: boolean
 }
@@ -27,6 +29,7 @@ export = async function (
     if (voucher && voucher.redeemedAt === null) {
       return {
         type: voucher.giftId,
+        company: voucher.issuedBy,
         valid: true,
         isLegacyVoucher: false,
       }
