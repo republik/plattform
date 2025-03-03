@@ -65,7 +65,7 @@ export class Shop {
         })
       }
     }
-    const discount = await this.resolveDiscount(offer, promoCode)
+    // const discount = await this.getDiscountOrPromo(offer, promoCode)
 
     const uiConfig = checkoutUIConfig(
       uiMode,
@@ -85,7 +85,7 @@ export class Shop {
       customer: customerId,
       line_items: lineItems,
       currency: 'CHF',
-      discounts: discount ? [{ coupon: discount.couponId }] : undefined,
+      discounts: promoCode ? [{ promotion_code: promoCode }] : undefined,
       locale: 'de',
       shipping_address_collection: complimentaryItems?.length
         ? {
@@ -174,8 +174,6 @@ export class Shop {
       ),
     )!
 
-    console.log(donations)
-
     const discount = await this.resolveDiscount(offer, promoCode)
 
     return this.mergeOfferData(offer, price, donations, discount)
@@ -220,19 +218,19 @@ export class Shop {
             ),
           )!
 
-          console.log(donations)
-
           const discount = await this.resolveDiscount(offer, promoCode)
 
           return this.mergeOfferData(offer, price, donations, discount)
         }),
       )
-    ).reduce((acc: OfferAPIResult[], res) => {
-      if (res.status === 'fulfilled') {
-        acc.push(res.value)
-      }
-      return acc
-    }, [])
+    )
+      .reduce((acc: OfferAPIResult[], res) => {
+        if (res.status === 'fulfilled') {
+          acc.push(res.value)
+        }™
+        return acc
+      }, [])
+      .sort((a, b) => a.price.amount - b.price.amount)
   }
 
   private async mergeOfferData(

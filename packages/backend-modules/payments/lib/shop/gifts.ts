@@ -91,14 +91,13 @@ const GIFTS: Gift[] = [
   },
 ]
 
-export const REPUBLIK_PAYMENTS_SUBSCRIPTION_UPGRADED_FROM =
-  'republik.payments.subscription.upgraded'
+export const REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES =
+  'republik.subscription.replaces'
 
 export const REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN =
-  'republik.payments.subscription.origin'
+  'republik.subscription.origin'
 
-export const REPUBLIK_PAYMENTS_CANCEL_REASON =
-  'republik.payments.system.cancel.reason'
+export const REPUBLIK_PAYMENTS_CANCEL_REASON = 'republik.system.cancel-reason'
 
 export class GiftShop {
   #pgdb: PgDb
@@ -399,7 +398,7 @@ export class GiftShop {
                 [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                   'confirm:setup': true,
                 }),
-                [REPUBLIK_PAYMENTS_SUBSCRIPTION_UPGRADED_FROM]: `monthly_abo:${membershipId}`,
+                [REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES]: `monthly_abo:${membershipId}`,
                 [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
               },
             },
@@ -588,7 +587,7 @@ export class GiftShop {
                 [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
                   'confirm:setup': true,
                 }),
-                [REPUBLIK_PAYMENTS_SUBSCRIPTION_UPGRADED_FROM]: `monthly:${subScriptionId}`,
+                [REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES]: `monthly:${subScriptionId}`,
                 [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
               },
             },

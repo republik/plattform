@@ -94,7 +94,7 @@ export const Offers: Offer[] = [
     requiresAddress: true,
     items: [{ type: 'PRICE', lookupKey: 'ABO' }],
     donationOptions: [
-      { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_20' },
+      { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_020' },
       { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_120' },
       { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_240' },
     ],
