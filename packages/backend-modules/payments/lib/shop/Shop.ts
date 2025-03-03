@@ -227,7 +227,7 @@ export class Shop {
       .reduce((acc: OfferAPIResult[], res) => {
         if (res.status === 'fulfilled') {
           acc.push(res.value)
-        }™
+        }
         return acc
       }, [])
       .sort((a, b) => a.price.amount - b.price.amount)
