@@ -71,6 +71,7 @@ export type OfferAPIResult = {
 
 export type Discount = {
   name: string
+  promoCodeId: string
   couponId: string
   amountOff: number
   duration: 'forever' | 'once' | 'repeating'

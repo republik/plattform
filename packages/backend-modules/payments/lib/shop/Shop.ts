@@ -65,7 +65,7 @@ export class Shop {
         })
       }
     }
-    // const discount = await this.getDiscountOrPromo(offer, promoCode)
+    const discount = await this.resolveDiscount(offer, promoCode)
 
     const uiConfig = checkoutUIConfig(
       uiMode,
@@ -85,7 +85,9 @@ export class Shop {
       customer: customerId,
       line_items: lineItems,
       currency: 'CHF',
-      discounts: promoCode ? [{ promotion_code: promoCode }] : undefined,
+      discounts: discount
+        ? [{ promotion_code: discount.promoCodeId }]
+        : undefined,
       locale: 'de',
       shipping_address_collection: complimentaryItems?.length
         ? {
@@ -312,6 +314,7 @@ function promotionToDiscount(
   return promotion
     ? {
         name: promotion.coupon.name!,
+        promoCodeId: promotion.id!,
         couponId: promotion.coupon.id!,
         duration: promotion.coupon.duration,
         durationInMonths: promotion.coupon.duration_in_months,
