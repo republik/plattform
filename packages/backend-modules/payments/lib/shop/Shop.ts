@@ -305,7 +305,11 @@ export class Shop {
     promoCode: string | undefined,
     applyEntryOffer?: boolean,
   ): Promise<{ type: 'PROMO' | 'DISCOUNT'; value: Discount } | null> {
-    if (typeof promoCode === 'undefined' && applyEntryOffer) {
+    if (
+      typeof promoCode === 'undefined' &&
+      offer.allowIntroductoryOffer &&
+      applyEntryOffer
+    ) {
       const promotion = await this.getPromotion(
         offer.company,
         INTRODUCTERY_OFFER_PROMO_CODE,

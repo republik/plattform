@@ -36,6 +36,7 @@ export type Offer = {
   requiresLogin: boolean
   requiresAddress: boolean
   allowPromotions: boolean
+  allowIntroductoryOffer?: boolean
   metaData?: {
     [name: string]: string | number | null
   }
@@ -85,7 +86,7 @@ export type Discount = {
 //   lookupKey: 'REPUBLIK_BILIOTHEK_1',
 // }
 
-export const Offers: Offer[] = [
+export const Offers: Readonly<Offer>[] = [
   {
     id: 'YEARLY',
     name: 'Jahresmitgliedschaft',
@@ -93,6 +94,7 @@ export const Offers: Offer[] = [
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
+    allowIntroductoryOffer: true,
     items: [{ type: 'PRICE', lookupKey: 'ABO' }],
     donationOptions: [
       { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_020' },
@@ -132,6 +134,7 @@ export const Offers: Offer[] = [
     company: 'REPUBLIK',
     requiresLogin: true,
     requiresAddress: false,
+    allowIntroductoryOffer: true,
     allowPromotions: true,
     items: [
       {
