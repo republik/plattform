@@ -27,6 +27,24 @@ const Submit = ({ me, user, t, state, setState, update }) => {
     return null
   }
 
+  // Function to ensure URL has protocol and strip parameters
+  const normalizeUrl = (url) => {
+    // Add protocol if missing
+    const urlWithProtocol = url.indexOf('https://') === -1 && 
+      url.indexOf('http://') === -1
+      ? 'https://' + url
+      : url
+    
+    // Strip parameters
+    try {
+      const urlObj = new URL(urlWithProtocol)
+      return `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`
+    } catch (e) {
+      // If URL parsing fails, return the URL with protocol
+      return urlWithProtocol
+    }
+  }
+
   const errorMessages = Object.keys(state.errors)
     .map((key) => state.errors[key])
     .filter(Boolean)
@@ -82,13 +100,8 @@ const Submit = ({ me, user, t, state, setState, update }) => {
             }
             update({
               ...state.values,
-              // prepend https:// if profileUrls don't have protocol
-              profileUrls: state.values.profileUrls?.map((url) => {
-                return url.indexOf('https://') === -1 &&
-                  url.indexOf('http://') === -1
-                  ? 'https://' + url
-                  : url
-              }),
+              // Normalize URLs: add protocol if needed and strip parameters
+              profileUrls: state.values.profileUrls?.map(normalizeUrl),
             }).then((maybeError) => {
               if (maybeError) return
               router.push(`/~${user.slug}`)
