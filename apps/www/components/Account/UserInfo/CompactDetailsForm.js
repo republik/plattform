@@ -28,8 +28,11 @@ export const styles = {
   }),
 }
 
-const NotEligible = () => {
+const NotEligible = ({ hide }) => {
   const { t } = useTranslation()
+  if (hide) {
+    return null
+  }
   return (
     <Box style={{ padding: 15 }}>
       <RawHtml
@@ -95,14 +98,20 @@ const Form = withMyDetailsMutation(({ me, updateDetails, title }) => {
   )
 })
 
-const CompactDetailsForm = ({ detailsData, title }) => {
+const CompactDetailsForm = ({ detailsData, title, hideIfNotEligible }) => {
   const { loading, error, me } = detailsData
 
   return (
     <Loader
       loading={loading}
       error={error}
-      render={() => (me ? <Form me={me} title={title} /> : <NotEligible />)}
+      render={() =>
+        me ? (
+          <Form me={me} title={title} />
+        ) : (
+          <NotEligible hide={hideIfNotEligible} />
+        )
+      }
     />
   )
 }
