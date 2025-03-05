@@ -2,7 +2,6 @@ import { cloneElement, useRef, useEffect, useMemo, useContext } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import dynamic from 'next/dynamic'
 import { renderMdast } from '@republik/mdast-react-render'
 import compose from 'lodash/flowRight'
 import {
@@ -26,7 +25,6 @@ import {
   TeaserEmbedComment,
   IconButton,
   SeriesNav,
-  Loader as SmallLoader,
   createArticleSchema,
   createFormatSchema,
   createDossierSchema,
@@ -67,6 +65,7 @@ import HrefLink from '../Link/Href'
 import { withMarkAsReadMutation } from '../Notifications/enhancers'
 import ShareImageFlyer from '../Flyer/ShareImage'
 import Flyer from '../Flyer'
+import { dynamicComponentIdentifiers } from './DynamicComponents'
 
 import { getMetaData, runMetaFromQuery } from './metadata'
 import ActionBarOverlay from './ActionBarOverlay'
@@ -85,146 +84,6 @@ import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { IconEdit } from '@republik/icons'
 import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 import { reportError } from 'lib/errors/reportError'
-
-// CAMPAIGN MODE
-// import { TrialPaynote } from '@app/app/(campaign)/components/trial-paynote'
-
-const LoadingComponent = () => <SmallLoader loading />
-
-// Identifier-based dynamic components mapping
-
-const Manifest = dynamic(() => import('../About/Manifest'), {
-  ssr: true,
-})
-const TeamTeaser = dynamic(() => import('../About/TeamTeaser'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
-const TestimonialList = dynamic(
-  () => import('../Testimonial/List').then((m) => m.ListWithQuery),
-  {
-    loading: LoadingComponent,
-    ssr: false,
-  },
-)
-const ReasonsVideo = dynamic(() => import('../About/ReasonsVideo'), {
-  ssr: true,
-})
-const NewsletterSignUpDynamic = dynamic(
-  () => import('../Auth/NewsletterSignUp'),
-  {
-    loading: LoadingComponent,
-    ssr: false,
-  },
-)
-const Votebox = dynamic(() => import('../Vote/Voting'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
-const VoteCounter = dynamic(() => import('../Vote/VoteCounter'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
-const VoteResult = dynamic(() => import('../Vote/VoteResult'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
-const ElectionCandidacy = dynamic(() => import('../Vote/ElectionCandidacy'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
-const Election = dynamic(() => import('../Vote/Election'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
-const ElectionResult = dynamic(() => import('../Vote/ElectionResult'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
-const ElectionResultDiversity = dynamic(
-  () => import('../Vote/ElectionDiversity'),
-  {
-    loading: LoadingComponent,
-    ssr: false,
-  },
-)
-const ClimateLabCounter = dynamic(() => import('../Climatelab/Counter'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
-const Questionnaire = dynamic(
-  () =>
-    import('../Questionnaire/Questionnaire').then(
-      (m) => m.QuestionnaireWithData,
-    ),
-  {
-    loading: LoadingComponent,
-    ssr: false,
-  },
-)
-
-const InstantSurvey = dynamic(() => import('../Questionnaire/InstantSurvey'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
-
-const ClimateLabInlineTeaser = dynamic(
-  () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
-  {
-    loading: LoadingComponent,
-    ssr: false,
-  },
-)
-
-const ChallengeAcceptedInlineTeaser = dynamic(
-  () => import('../ChallengeAccepted/ChallengeAcceptedInlineTeaser'),
-  {
-    loading: LoadingComponent,
-    ssr: false,
-  },
-)
-
-const QuestionnaireSubmissions = dynamic(
-  () => import('../Questionnaire/Submissions/legacy'),
-  {
-    loading: LoadingComponent,
-  },
-)
-
-const EdgeQuestion = dynamic(() => import('../Climatelab/EdgeQuestion/index'), {
-  loading: LoadingComponent,
-})
-
-const QuestionnaireOverview = dynamic(
-  () => import('../Questionnaire/Submissions'),
-  {
-    loading: LoadingComponent,
-  },
-)
-
-const Postcard = dynamic(
-  () => import('../Climatelab/Postcard/PostcardDynamicComponent'),
-  {
-    loading: LoadingComponent,
-    ssr: false,
-  },
-)
-
-const PostcardGallery = dynamic(
-  () => import('../Climatelab/Postcard/Gallery/PostcardGallery'),
-  {
-    loading: LoadingComponent,
-    ssr: false,
-  },
-)
-
-const CompactDetailsForm = dynamic(
-  () => import('../Account/UserInfo/CompactDetailsForm'),
-  {
-    loading: LoadingComponent,
-    ssr: false,
-  },
-)
 
 const schemaCreators = {
   editorial: createArticleSchema,
@@ -450,31 +309,7 @@ const ArticlePage = ({
           ? t('plattformUnauthorizedZoneText/ios')
           : undefined,
         dynamicComponentRequire,
-        dynamicComponentIdentifiers: {
-          MANIFEST: Manifest,
-          TEAM_TEASER: TeamTeaser,
-          REASONS_VIDEO: ReasonsVideo,
-          VOTEBOX: Votebox,
-          VOTE_COUNTER: VoteCounter,
-          VOTE_RESULT: VoteResult,
-          TESTIMONIAL_LIST: TestimonialList,
-          ELECTION_CANDIDACY: ElectionCandidacy,
-          ELECTION: Election,
-          ELECTION_RESULT: ElectionResult,
-          ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
-          INSTANT_SURVEY: InstantSurvey,
-          QUESTIONNAIRE: Questionnaire,
-          QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
-          QUESTIONNAIRE_OVERVIEW: QuestionnaireOverview,
-          EDGE_QUESTION: EdgeQuestion,
-          NEWSLETTER_SIGNUP: NewsletterSignUpDynamic,
-          CLIMATE_LAB_COUNTER: ClimateLabCounter,
-          CLIMATE_LAB_INLINE_TEASER: ClimateLabInlineTeaser,
-          POSTCARD: Postcard,
-          POSTCARD_GALLERY: PostcardGallery,
-          CHALLENGE_ACCEPTED_INLINE_TEASER: ChallengeAcceptedInlineTeaser,
-          COMPACT_DETAILS_FORM: CompactDetailsForm,
-        },
+        dynamicComponentIdentifiers,
         titleMargin: false,
         titleBreakout,
         onAudioCoverClick: () =>
