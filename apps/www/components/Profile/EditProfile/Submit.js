@@ -30,15 +30,17 @@ const Submit = ({ me, user, t, state, setState, update }) => {
   // Function to ensure URL has protocol and strip parameters
   const normalizeUrl = (url) => {
     // Add protocol if missing
-    const urlWithProtocol = url.indexOf('https://') === -1 && 
-      url.indexOf('http://') === -1
-      ? 'https://' + url
-      : url
-    
+    const urlWithProtocol =
+      url.startsWith('https://') || url.startsWith('http://')
+        ? url
+        : 'https://' + url
+
     // Strip parameters
     try {
       const urlObj = new URL(urlWithProtocol)
-      return `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}`
+      urlObj.search = '' // Clear query parameters
+      urlObj.hash = ''   // Clear hash/fragment
+      return urlObj.toString()
     } catch (e) {
       // If URL parsing fails, return the URL with protocol
       return urlWithProtocol
