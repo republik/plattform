@@ -1,157 +1,62 @@
-import { cloneElement, useRef, useEffect, useMemo, useContext } from 'react'
+import { cloneElement, useRef, useEffect, useMemo } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { renderMdast } from '@republik/mdast-react-render'
 import compose from 'lodash/flowRight'
-import {
-  graphql,
-  withApollo,
-  withMutation,
-  withQuery,
-  withSubscription,
-} from '@apollo/client/react/hoc'
-import { ApolloConsumer, ApolloProvider, gql, useQuery } from '@apollo/client'
-import { Mutation, Query, Subscription } from '@apollo/client/react/components'
+import { useQuery } from '@apollo/client'
 
 import {
   Center,
   Breakout,
   colors,
-  plainLinkRule,
   Interaction,
-  TitleBlock,
-  Editorial,
-  TeaserEmbedComment,
-  IconButton,
   SeriesNav,
-  createArticleSchema,
-  createFormatSchema,
-  createDossierSchema,
-  createDiscussionSchema,
-  createNewsletterWebSchema,
-  createSectionSchema,
-  createPageSchema,
-  flyerSchema,
-  createRequire,
 } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 import { parseJSONObject } from '../../lib/safeJSON'
-import { formatDate } from '../../lib/utils/format'
-import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
+import withInNativeApp from '../../lib/withInNativeApp'
 import { splitByTitle } from '../../lib/utils/mdast'
-import { PUBLIKATOR_BASE_URL } from '../../lib/constants'
 import { useMe } from '../../lib/context/MeContext'
 import { cleanAsPath } from '../../lib/utils/link'
 import useProlitterisTracking from '../../lib/hooks/useProlitterisTracking'
 
-import CommentLink from '../Discussion/shared/CommentLink'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
-import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
 import FontSizeSync from '../FontSize/Sync'
 import PageLoader from '../Loader'
 import Frame from '../Frame'
 import ActionBar from '../ActionBar'
-import { AudioContext } from '../Audio/AudioProvider'
 import FormatFeed from '../Feed/Format'
 import StatusError from '../StatusError'
 import NewsletterSignUp from '../Auth/NewsletterSignUp'
 import ArticleGallery from '../Gallery/ArticleGallery'
 import SectionNav from '../Sections/SinglePageNav'
 import SectionFeed from '../Sections/SinglePageFeed'
-import HrefLink from '../Link/Href'
 import { withMarkAsReadMutation } from '../Notifications/enhancers'
 import ShareImageFlyer from '../Flyer/ShareImage'
 import Flyer from '../Flyer'
-import { dynamicComponentIdentifiers } from './DynamicComponents'
-
 import { getMetaData, runMetaFromQuery } from './metadata'
 import ActionBarOverlay from './ActionBarOverlay'
 import SeriesNavBar from './SeriesNavBar'
-import TrialPayNoteMini from './TrialPayNoteMini'
 import Extract from './Extract'
-import { PayNote } from './PayNote'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
 import { getDocument } from './graphql/getDocument'
 import ShareImage from './ShareImage'
-import { BrowserOnlyActionBar } from './BrowserOnly'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
-import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { IconEdit } from '@republik/icons'
 import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 import { reportError } from 'lib/errors/reportError'
-
-const schemaCreators = {
-  editorial: createArticleSchema,
-  meta: createArticleSchema,
-  article: createArticleSchema,
-  format: createFormatSchema,
-  dossier: createDossierSchema,
-  discussion: createDiscussionSchema,
-  editorialNewsletter: createNewsletterWebSchema,
-  section: createSectionSchema,
-  page: createPageSchema,
-  flyer: () => {
-    return flyerSchema
-  },
-}
-
-export const withCommentData = graphql(
-  gql`
-    ${TeaserEmbedComment.data.query}
-  `,
-  TeaserEmbedComment.data.config,
-)
-
-const dynamicComponentRequire = createRequire().alias({
-  'react-apollo': {
-    // Reexport react-apollo
-    // (work around until all dynamic components are updated)
-    // ApolloContext is no longer available but is exported in old versions of react-apollo
-    ApolloConsumer,
-    ApolloProvider,
-    Query,
-    Mutation,
-    Subscription,
-    graphql,
-    withQuery,
-    withMutation,
-    withSubscription,
-    withApollo,
-    compose,
-  },
-  // Reexport graphql-tag to be used by dynamic-components
-  'graphql-tag': gql,
-})
-
-const getSchemaCreator = (template) => {
-  const key = template || Object.keys(schemaCreators)[0]
-  const schema = schemaCreators[key]
-
-  if (!schema) {
-    try {
-      console.error(`Unkown Schema ${key}`)
-    } catch (e) {}
-
-    return () => {
-      return
-    }
-  }
-  return schema
-}
+import NewsletterTitleBlock from './components/NewsletterTitleBlock'
+import PublikatorLinkBlock from './components/PublikatorLinkBlock'
+import useSchema from './components/useSchema'
 
 const EmptyComponent = ({ children }) => children
 
 const ArticlePage = ({
   t,
   inNativeApp,
-  inNativeIOSApp,
-  payNoteSeed,
-  payNoteTryOrBuy,
   isPreview,
   markAsReadMutation,
   serverContext,
@@ -167,6 +72,8 @@ const ArticlePage = ({
   const { me, meLoading, hasAccess, isEditor } = useMe()
 
   const { isAudioQueueAvailable } = useAudioQueue()
+
+  const showPlayButton = !extract && hasAccess && isAudioQueueAvailable
 
   const cleanedPath = cleanAsPath(router.asPath)
 
@@ -233,8 +140,6 @@ const ArticlePage = ({
     throw new Error('redirect')
   }
 
-  const { toggleAudioPlayer } = useContext(AudioContext)
-
   const markNotificationsAsRead = () => {
     const unreadNotifications = articleUnreadNotifications?.nodes?.filter(
       (n) => !n.readAt,
@@ -269,6 +174,13 @@ const ArticlePage = ({
     [articleMeta, articleContent, metaJSONStringFromQuery],
   )
 
+  const { renderSchema, schema } = useSchema({
+    meta,
+    repoId: article.repoId,
+    documentId: article.id,
+    showPlayButton,
+  })
+
   const hasMeta = !!meta
   const podcast =
     hasMeta &&
@@ -289,64 +201,13 @@ const ArticlePage = ({
   const titleBreakout = isSeriesOverview
 
   const { trialSignup } = routerQuery
-  const showInlinePaynote = !hasAccess || !!trialSignup
   useEffect(() => {
     if (trialSignup === 'success') {
       articleRefetch()
     }
   }, [trialSignup])
 
-  const showPlayButton = !extract && hasAccess && isAudioQueueAvailable
-
   const template = meta?.template
-  const schema = useMemo(
-    () =>
-      template &&
-      getSchemaCreator(template)({
-        t,
-        Link: HrefLink,
-        plattformUnauthorizedZoneText: inNativeIOSApp
-          ? t('plattformUnauthorizedZoneText/ios')
-          : undefined,
-        dynamicComponentRequire,
-        dynamicComponentIdentifiers,
-        titleMargin: false,
-        titleBreakout,
-        onAudioCoverClick: () =>
-          toggleAudioPlayer(
-            {
-              id: documentId,
-              meta: {
-                title: meta.title,
-                path: meta.path,
-                publishDate: meta.publishDate,
-                image: meta.image,
-                audioSource: meta.audioSource,
-              },
-            },
-            AudioPlayerLocations.ARTICLE,
-          ),
-        getVideoPlayerProps:
-          inNativeApp && !inNativeIOSApp
-            ? (props) => ({
-                ...props,
-                fullWindow: true,
-                onFull: (isFull) => {
-                  postMessage({
-                    type: isFull ? 'fullscreen-enter' : 'fullscreen-exit',
-                  })
-                },
-              })
-            : undefined,
-        withCommentData,
-        CommentLink,
-        ActionBar: BrowserOnlyActionBar,
-        PayNote: showInlinePaynote ? TrialPayNoteMini : undefined,
-        AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
-      }),
-    [template, inNativeIOSApp, inNativeApp, showInlinePaynote, titleBreakout],
-  )
-
   const isEditorialNewsletter = template === 'editorialNewsletter'
   const disableActionBar = meta?.disableActionBar
   const actionBar = article && !disableActionBar && (
@@ -382,12 +243,7 @@ const ArticlePage = ({
   const darkMode = article?.content?.meta?.darkMode
 
   const seriesSecondaryNav = showSeriesNav && (
-    <SeriesNavBar
-      showInlinePaynote={showInlinePaynote}
-      me={me}
-      series={series}
-      repoId={repoId}
-    />
+    <SeriesNavBar me={me} series={series} repoId={repoId} />
   )
 
   const colorMeta =
@@ -397,9 +253,9 @@ const ArticlePage = ({
       : meta.format && meta.format.meta)
   const formatColor = colorMeta && (colorMeta.color || colors[colorMeta.kind])
   const sectionColor = meta && meta.template === 'section' && meta.color
-  const MissingNode = isEditor ? undefined : ({ children }) => children
 
   const isFlyer = treeType === 'slate'
+
   if (extract) {
     return (
       <PageLoader
@@ -451,18 +307,6 @@ const ArticlePage = ({
   }
 
   const splitContent = article && splitByTitle(article.content)
-  const renderSchema = (content) =>
-    renderMdast(
-      {
-        ...content,
-        format: meta.format,
-        section: meta.section,
-        series: meta.series,
-        repoId: article.repoId,
-      },
-      schema,
-      { MissingNode },
-    )
 
   const hasStickySecondaryNav = meta
     ? meta.template === 'section' || meta.template === 'flyer'
@@ -517,35 +361,6 @@ const ArticlePage = ({
             hasNewsletterUtms ||
             (router.query.utm_source && router.query.utm_source === 'flyer-v1')
 
-          let payNote
-          let payNoteAfter
-
-          if (!isPage) {
-            payNote = null
-            payNoteAfter = null
-          } else {
-            // For this proof of concept I chose to show the climate paynote
-            // only at the bottom. This could/should be evaluated.
-            // We could also suppress the second paynote. (Code commented below.)
-            // I wouldn't show both, since it's a very big paynote,
-            // and the text would be the same twice.
-            // const suppressSecondPayNote = climatePaynote
-            payNote = (
-              <PayNote
-                seed={payNoteSeed}
-                tryOrBuy={payNoteTryOrBuy}
-                documentId={documentId}
-                repoId={repoId}
-                customPayNotes={meta.paynotes ?? []}
-                customMode={meta.paynoteMode}
-                customOnly={isPage || isFormat}
-                position='before'
-              />
-            )
-            payNoteAfter =
-              // !suppressSecondPayNote &&
-              payNote && cloneElement(payNote, { position: 'after' })
-          }
           const ownDiscussion = meta.ownDiscussion
 
           const ProgressComponent =
@@ -566,8 +381,6 @@ const ArticlePage = ({
               : undefined
 
           const breakout = titleNode?.data?.breakout || titleBreakout
-
-          const format = meta.format
 
           const isFreeNewsletter = !!newsletterMeta && newsletterMeta.free
           const showNewsletterSignupTop = isFormat && isFreeNewsletter
@@ -613,107 +426,61 @@ const ArticlePage = ({
                       {splitContent.title && (
                         <div {...styles.titleBlock}>
                           {renderSchema(splitContent.title)}
-                          {isEditorialNewsletter && (
-                            <TitleBlock margin={false}>
-                              {format && format.meta && (
-                                <Editorial.Format
-                                  color={
-                                    format.meta.color ||
-                                    colors[format.meta.kind]
-                                  }
-                                >
-                                  <Link
-                                    href={format.meta.path}
-                                    passHref
-                                    {...plainLinkRule}
-                                  >
-                                    {format.meta.title}
-                                  </Link>
-                                </Editorial.Format>
-                              )}
-                              <Interaction.Headline>
-                                {meta.title}
-                              </Interaction.Headline>
-                              <Editorial.Credit>
-                                {formatDate(new Date(meta.publishDate))}
-                              </Editorial.Credit>
-                            </TitleBlock>
-                          )}
-                          {isEditor && repoId && disableActionBar ? (
-                            <Center
+                          <NewsletterTitleBlock meta={meta} />
+                          {isEditor && repoId && disableActionBar && (
+                            <PublikatorLinkBlock
                               breakout={breakout}
-                              style={{ paddingBottom: 0, paddingTop: 30 }}
-                            >
-                              <div
-                                {...(titleAlign === 'center'
-                                  ? styles.flexCenter
-                                  : {})}
-                              >
-                                <IconButton
-                                  Icon={IconEdit}
-                                  href={`${PUBLIKATOR_BASE_URL}/repo/${repoId}/tree`}
-                                  target='_blank'
-                                  title={t('feed/actionbar/edit')}
-                                  label={t('feed/actionbar/edit')}
-                                  labelShort={t('feed/actionbar/edit')}
-                                  fill={'#E9A733'}
-                                />
-                              </div>
-                            </Center>
-                          ) : null}
-                          {actionBar ||
-                          isSection ||
-                          showNewsletterSignupTop ||
-                          isSyntheticReadAloud ||
-                          isReadAloud ? (
-                            <Center breakout={breakout} {...styles.hidePrint}>
-                              {showNewsletterSignupTop && (
-                                <div {...styles.newsletterSignUpTop}>
-                                  <NewsletterSignUp
-                                    {...newsletterMeta}
-                                    smallButton
-                                    showDescription
-                                  />
-                                </div>
-                              )}
-                              {actionBar && (
-                                <div
-                                  ref={actionBarRef}
-                                  {...styles.actionBarContainer}
-                                  style={{
-                                    textAlign: titleAlign,
-                                    marginBottom: isEditorialNewsletter
-                                      ? 0
-                                      : undefined,
-                                  }}
-                                >
-                                  {actionBar}
-                                </div>
-                              )}
-
-                              {(hasAudioSource ||
-                                article?.meta?.willBeReadAloud) && (
-                                <div style={{ marginTop: 32 }}>
-                                  <ArticleAudioPlayer document={article} />
-                                </div>
-                              )}
-
-                              {isSection && !hideSectionNav && (
-                                <Breakout size='breakout'>
-                                  <SectionNav
-                                    color={sectionColor}
-                                    linkedDocuments={article.linkedDocuments}
-                                  />
-                                </Breakout>
-                              )}
-                            </Center>
-                          ) : (
-                            <div {...styles.actionBarContainer}>
-                              {/* space before paynote */}
-                            </div>
+                              center={titleAlign === 'center'}
+                              repoId={repoId}
+                            />
                           )}
+                          {actionBar ||
+                            isSection ||
+                            showNewsletterSignupTop ||
+                            isSyntheticReadAloud ||
+                            (isReadAloud && (
+                              <Center breakout={breakout} {...styles.hidePrint}>
+                                {showNewsletterSignupTop && (
+                                  <div {...styles.newsletterSignUpTop}>
+                                    <NewsletterSignUp
+                                      {...newsletterMeta}
+                                      smallButton
+                                      showDescription
+                                    />
+                                  </div>
+                                )}
+                                {actionBar && (
+                                  <div
+                                    ref={actionBarRef}
+                                    {...styles.actionBarContainer}
+                                    style={{
+                                      textAlign: titleAlign,
+                                      marginBottom: isEditorialNewsletter
+                                        ? 0
+                                        : undefined,
+                                    }}
+                                  >
+                                    {actionBar}
+                                  </div>
+                                )}
 
-                          {!suppressFirstPayNote && payNote}
+                                {(hasAudioSource ||
+                                  article?.meta?.willBeReadAloud) && (
+                                  <div style={{ marginTop: 32 }}>
+                                    <ArticleAudioPlayer document={article} />
+                                  </div>
+                                )}
+
+                                {isSection && !hideSectionNav && (
+                                  <Breakout size='breakout'>
+                                    <SectionNav
+                                      color={sectionColor}
+                                      linkedDocuments={article.linkedDocuments}
+                                    />
+                                  </Breakout>
+                                )}
+                              </Center>
+                            ))}
                         </div>
                       )}
                       {renderSchema(splitContent.main)}
@@ -722,7 +489,7 @@ const ArticlePage = ({
                   </ProgressComponent>
                 </ArticleGallery>
               )}
-              <div {...styles.hidePrint}>
+              <div {...styles.hidePrint} style={{ marginBottom: 60 }}>
                 {meta.template === 'discussion' && ownDiscussion && (
                   <Center breakout={breakout}>
                     <DiscussionContextProvider
@@ -745,14 +512,9 @@ const ArticlePage = ({
                     />
                   </Center>
                 )}
-                {((hasAccess && meta.template === 'article') ||
-                  (isEditorialNewsletter &&
-                    newsletterMeta &&
-                    newsletterMeta.free)) && (
-                  <Center breakout={breakout}>
-                    <div ref={bottomActionBarRef}>{actionBarEnd}</div>
-                  </Center>
-                )}
+                <Center breakout={breakout}>
+                  <div ref={bottomActionBarRef}>{actionBarEnd}</div>
+                </Center>
                 {!!podcast && meta.template !== 'article' && (
                   <Center breakout={breakout}>
                     <Interaction.H3>{t(`PodcastButtons/title`)}</Interaction.H3>
@@ -764,8 +526,6 @@ const ArticlePage = ({
                     inline
                     repoId={repoId}
                     series={series}
-                    context='after'
-                    PayNote={showInlinePaynote ? TrialPayNoteMini : undefined}
                     ActionBar={me && ActionBar}
                     Link={Link}
                     t={t}
@@ -787,12 +547,7 @@ const ArticlePage = ({
                   />
                 )}
 
-                {hasAccess && <ArticleRecommendationsFeed path={cleanedPath} />}
-                {hasAccess &&
-                  (isEditorialNewsletter ||
-                    meta.template === 'article' ||
-                    meta.template === 'page') && <div style={{ height: 60 }} />}
-                {!suppressPayNotes && payNoteAfter}
+                <ArticleRecommendationsFeed path={cleanedPath} />
               </div>
             </>
           )

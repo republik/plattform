@@ -7169,54 +7169,6 @@
       "value": "Google"
     },
     {
-      "key": "article/payNote/default/button",
-      "value": "Jahresmitgliedschaft"
-    },
-    {
-      "key": "article/payNote/default/secondary/label",
-      "value": "Einen Monat für 22.–"
-    },
-    {
-      "key": "article/payNote/default/secondary/link",
-      "value": "/angebote?package=MONTHLY_ABO"
-    },
-    {
-      "key": "article/payNote/default/note",
-      "value": "<a href=\"/\">Mehr Informationen zur Republik.</a>"
-    },
-    {
-      "key": "article/payNote/220404-v1/before",
-      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den rund 27’000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
-    },
-    {
-      "key": "article/payNote/220404-v1/after",
-      "value": "Wenn Sie weiterhin unabhängigen Journalismus wie diesen lesen wollen, handeln Sie jetzt: Kommen Sie an Bord!"
-    },
-    {
-      "key": "article/payNote/220404-v2/before",
-      "value": "Die Republik ist ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur – finanziert von seinen Leserinnen. Es ist komplett werbefrei und unabhängig. Lösen Sie jetzt ein Abo oder eine Mitgliedschaft!"
-    },
-    {
-      "key": "article/payNote/220404-v2/after",
-      "value": "Unterstützen Sie unabhängigen Journalismus mit einem Monatsabonnement oder einer Jahresmitgliedschaft!"
-    },
-    {
-      "key": "article/tryNote/220404-v1/before",
-      "value": "Journalismus, der Ihnen hilft, Entscheidungen zu treffen. Und der das Gemeinsame stärkt: die Freiheit, den Rechtsstaat, die Demokratie. Lernen Sie uns jetzt 21 Tage lang kostenlos und unverbindlich kennen:"
-    },
-    {
-      "key": "article/tryNote/220404-v1/after",
-      "value": "Rund 27’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
-    },
-    {
-      "key": "article/tryNote/220404-v2/before",
-      "value": "Die Republik ist ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur – finanziert von seinen Leserinnen. Es ist komplett werbefrei und unabhängig. Überzeugen Sie sich selber: Lesen Sie 21 Tage lang kostenlos und unverbindlich Probe:"
-    },
-    {
-      "key": "article/tryNote/220404-v2/after",
-      "value": "Sie sind sich immer noch nicht sicher, ob die Republik etwas für Sie ist? Dann testen Sie uns! Für 21 Tage, kostenlos und unverbindlich:"
-    },
-    {
       "key": "flyer/paynote/buy/221206-v1/title",
       "value": "Ihnen gefällt, was Sie lesen?"
     },
