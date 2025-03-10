@@ -131,13 +131,6 @@ const Frame = ({
   const { me, hasAccess } = useMe()
   const isClimateLabOnlyUser = checkRoles(me, ['climate'])
 
-  console.log(
-    me,
-    me.prolongBeforeDate,
-    me.activeMembership?.endDate,
-    new Date(me.activeMembership?.endDate).getTime() < Date.now(),
-  )
-
   const hasOverviewNav = (hasAccess || isClimateLabOnlyUser) && wantOverviewNav
   const hasSecondaryNav = !!(secondaryNav || hasOverviewNav)
   const padHeaderRule = useMemo(() => {
