@@ -17,6 +17,8 @@ import { css } from 'glamor'
 import DocumentNotification from './DocumentNotification'
 import withT from '../../lib/withT'
 import Link from 'next/link'
+import compose from 'lodash/flowRight'
+import { withMarkAllAsReadMutation } from './enhancers'
 
 const dateFormat = timeFormat('%A,\n%d.%m.%Y')
 
@@ -86,7 +88,10 @@ const ReloadBanner = withT(({ t, futureNotifications, onReload }) => {
   )
 })
 
-export default withT(
+export default compose(
+  withT,
+  withMarkAllAsReadMutation,
+)(
   ({
     t,
     notifications,
@@ -95,6 +100,7 @@ export default withT(
     fetchMore,
     futureNotifications,
     onReload,
+    markAllAsReadMutation,
   }) => {
     const { nodes, totalCount, unreadCount, pageInfo } = notifications
     const hasNextPage = pageInfo && pageInfo.hasNextPage
@@ -149,6 +155,8 @@ export default withT(
             <Link href='/konto/benachrichtigungen' passHref legacyBehavior>
               <A>{t('Notifications/settings')}</A>
             </Link>
+
+            <button onClick={markAllAsReadMutation}>Mark all as read</button>
 
             {isEmpty && (
               <Interaction.P style={{ marginTop: 40 }}>
