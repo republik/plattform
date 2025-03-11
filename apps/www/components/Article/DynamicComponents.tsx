@@ -144,6 +144,11 @@ const CompactDetailsForm = dynamic(
   },
 )
 
+const TrialForm = dynamic(() => import('../Trial/Form'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
+
 export const dynamicComponentIdentifiers = {
   MANIFEST: Manifest,
   TEAM_TEASER: TeamTeaser,
@@ -168,4 +173,5 @@ export const dynamicComponentIdentifiers = {
   POSTCARD_GALLERY: PostcardGallery,
   CHALLENGE_ACCEPTED_INLINE_TEASER: ChallengeAcceptedInlineTeaser,
   COMPACT_DETAILS_FORM: CompactDetailsForm,
+  TRIAL_FORM: TrialForm,
 }
