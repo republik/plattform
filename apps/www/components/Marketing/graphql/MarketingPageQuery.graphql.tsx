@@ -15,18 +15,6 @@ export const MARKETING_PAGE_QUERY = gql`
         }
       }
     }
-    team: employees(withBoosted: true, shuffle: 3, withPitch: true) {
-      title
-      name
-      group
-      subgroup
-      pitch
-      user {
-        id
-        portrait
-        slug
-      }
-    }
     featuredComments: comments(
       orderBy: FEATURED_AT
       orderDirection: DESC
