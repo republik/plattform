@@ -375,6 +375,12 @@ const ArticlePage = ({
           const hideSectionNav = !!rawContentMeta.hideSectionNav
           const showSectionNav = isSection && !hideSectionNav
 
+          const showBottomActionBar =
+            (hasAccess && meta.template === 'article') ||
+            (isEditorialNewsletter && newsletterMeta && newsletterMeta.free)
+
+          const showPodcastButtons = !!podcast && meta.template !== 'article'
+
           return (
             <>
               <FontSizeSync />
@@ -492,10 +498,12 @@ const ArticlePage = ({
                     />
                   </Center>
                 )}
-                <Center breakout={breakout}>
-                  <div ref={bottomActionBarRef}>{actionBarEnd}</div>
-                </Center>
-                {!!podcast && meta.template !== 'article' && (
+                {showBottomActionBar && (
+                  <Center breakout={breakout}>
+                    <div ref={bottomActionBarRef}>{actionBarEnd}</div>
+                  </Center>
+                )}
+                {showPodcastButtons && (
                   <Center breakout={breakout}>
                     <Interaction.H3>{t(`PodcastButtons/title`)}</Interaction.H3>
                     <PodcastButtons {...podcast} />
@@ -527,7 +535,7 @@ const ArticlePage = ({
                   />
                 )}
 
-                <ArticleRecommendationsFeed path={cleanedPath} />
+                {hasAccess && <ArticleRecommendationsFeed path={cleanedPath} />}
               </div>
             </>
           )
