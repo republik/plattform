@@ -163,6 +163,11 @@ const Questionnaire = dynamic(
   },
 )
 
+const InstantSurvey = dynamic(() => import('../Questionnaire/InstantSurvey'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
+
 const ClimateLabInlineTeaser = dynamic(
   () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
   {
@@ -207,6 +212,14 @@ const Postcard = dynamic(
 
 const PostcardGallery = dynamic(
   () => import('../Climatelab/Postcard/Gallery/PostcardGallery'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
+const CompactDetailsForm = dynamic(
+  () => import('../Account/UserInfo/CompactDetailsForm'),
   {
     loading: LoadingComponent,
     ssr: false,
@@ -449,6 +462,7 @@ const ArticlePage = ({
           ELECTION: Election,
           ELECTION_RESULT: ElectionResult,
           ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
+          INSTANT_SURVEY: InstantSurvey,
           QUESTIONNAIRE: Questionnaire,
           QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
           QUESTIONNAIRE_OVERVIEW: QuestionnaireOverview,
@@ -459,6 +473,7 @@ const ArticlePage = ({
           POSTCARD: Postcard,
           POSTCARD_GALLERY: PostcardGallery,
           CHALLENGE_ACCEPTED_INLINE_TEASER: ChallengeAcceptedInlineTeaser,
+          COMPACT_DETAILS_FORM: CompactDetailsForm,
         },
         titleMargin: false,
         titleBreakout,
