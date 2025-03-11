@@ -176,8 +176,7 @@ const ArticlePage = ({
 
   const { renderSchema, schema } = useSchema({
     meta,
-    repoId: article.repoId,
-    documentId: article.id,
+    article,
     showPlayButton,
   })
 
@@ -347,20 +346,6 @@ const ArticlePage = ({
           const isFormat = meta.template === 'format'
           const isSection = meta.template === 'section'
           const isPage = meta.template === 'page'
-
-          const hasNewsletterUtms =
-            router.query.utm_source && router.query.utm_source === 'newsletter'
-
-          const suppressPayNotes =
-            isSection || (!!episodes && showInlinePaynote) || isFlyer
-          const suppressFirstPayNote =
-            suppressPayNotes ||
-            podcast ||
-            isEditorialNewsletter ||
-            meta.path === '/top-storys' ||
-            hasNewsletterUtms ||
-            (router.query.utm_source && router.query.utm_source === 'flyer-v1')
-
           const ownDiscussion = meta.ownDiscussion
 
           const ProgressComponent =
@@ -392,6 +377,9 @@ const ArticlePage = ({
             : undefined
           const hideFeed = !!rawContentMeta.hideFeed
           const hideSectionNav = !!rawContentMeta.hideSectionNav
+          const showAudioPlayer =
+            hasAudioSource || article?.meta?.willBeReadAloud
+          const showSectionNav = isSection && !hideSectionNav
 
           return (
             <>
@@ -434,53 +422,51 @@ const ArticlePage = ({
                               repoId={repoId}
                             />
                           )}
-                          {actionBar ||
-                            isSection ||
-                            showNewsletterSignupTop ||
-                            isSyntheticReadAloud ||
-                            (isReadAloud && (
-                              <Center breakout={breakout} {...styles.hidePrint}>
-                                {showNewsletterSignupTop && (
-                                  <div {...styles.newsletterSignUpTop}>
-                                    <NewsletterSignUp
-                                      {...newsletterMeta}
-                                      smallButton
-                                      showDescription
-                                    />
-                                  </div>
-                                )}
-                                {actionBar && (
-                                  <div
-                                    ref={actionBarRef}
-                                    {...styles.actionBarContainer}
-                                    style={{
-                                      textAlign: titleAlign,
-                                      marginBottom: isEditorialNewsletter
-                                        ? 0
-                                        : undefined,
-                                    }}
-                                  >
-                                    {actionBar}
-                                  </div>
-                                )}
+                          {(showNewsletterSignupTop ||
+                            actionBar ||
+                            showAudioPlayer ||
+                            showSectionNav) && (
+                            <Center breakout={breakout} {...styles.hidePrint}>
+                              {showNewsletterSignupTop && (
+                                <div {...styles.newsletterSignUpTop}>
+                                  <NewsletterSignUp
+                                    {...newsletterMeta}
+                                    smallButton
+                                    showDescription
+                                  />
+                                </div>
+                              )}
+                              {actionBar && (
+                                <div
+                                  ref={actionBarRef}
+                                  {...styles.actionBarContainer}
+                                  style={{
+                                    textAlign: titleAlign,
+                                    marginBottom: isEditorialNewsletter
+                                      ? 0
+                                      : undefined,
+                                  }}
+                                >
+                                  {actionBar}
+                                </div>
+                              )}
 
-                                {(hasAudioSource ||
-                                  article?.meta?.willBeReadAloud) && (
-                                  <div style={{ marginTop: 32 }}>
-                                    <ArticleAudioPlayer document={article} />
-                                  </div>
-                                )}
+                              {showAudioPlayer && (
+                                <div style={{ marginTop: 32 }}>
+                                  <ArticleAudioPlayer document={article} />
+                                </div>
+                              )}
 
-                                {isSection && !hideSectionNav && (
-                                  <Breakout size='breakout'>
-                                    <SectionNav
-                                      color={sectionColor}
-                                      linkedDocuments={article.linkedDocuments}
-                                    />
-                                  </Breakout>
-                                )}
-                              </Center>
-                            ))}
+                              {showSectionNav && (
+                                <Breakout size='breakout'>
+                                  <SectionNav
+                                    color={sectionColor}
+                                    linkedDocuments={article.linkedDocuments}
+                                  />
+                                </Breakout>
+                              )}
+                            </Center>
+                          )}
                         </div>
                       )}
                       {renderSchema(splitContent.main)}

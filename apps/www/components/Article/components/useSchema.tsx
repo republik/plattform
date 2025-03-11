@@ -100,8 +100,7 @@ export const withCommentData = graphql(
 
 const useSchema = ({
   meta,
-  repoId,
-  documentId,
+  article,
   showPlayButton,
 }): {
   schema: object
@@ -112,16 +111,17 @@ const useSchema = ({
   const { inNativeApp, inNativeIOSApp } = useInNativeApp()
   const { toggleAudioPlayer } = useContext(AudioContext)
 
-  const isSeriesOverview = meta?.series?.overview?.id === documentId
-  const titleBreakout = isSeriesOverview
+  const titleBreakout = meta?.series?.overview?.id === article?.id
 
   const MissingNode = isEditor ? undefined : ({ children }) => children
 
-  const template = meta.template
+  const template = meta?.template
 
   const schema = useMemo(
     () =>
       template &&
+      meta &&
+      article &&
       getSchemaCreator(template)({
         t,
         Link: HrefLink,
@@ -135,7 +135,7 @@ const useSchema = ({
         onAudioCoverClick: () =>
           toggleAudioPlayer(
             {
-              id: documentId,
+              id: article.id,
               meta: {
                 title: meta.title,
                 path: meta.path,
@@ -163,7 +163,7 @@ const useSchema = ({
         ActionBar: BrowserOnlyActionBar,
         AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
       }),
-    [template, inNativeIOSApp, inNativeApp, titleBreakout],
+    [template, inNativeIOSApp, inNativeApp, titleBreakout, article, meta],
   )
 
   const renderSchema = (content) =>
@@ -173,7 +173,7 @@ const useSchema = ({
         format: meta.format,
         section: meta.section,
         series: meta.series,
-        repoId,
+        repoId: article.repoId,
       },
       schema,
       { MissingNode },
