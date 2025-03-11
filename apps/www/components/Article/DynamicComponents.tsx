@@ -2,9 +2,6 @@ import { Loader } from '@project-r/styleguide'
 
 import dynamic from 'next/dynamic'
 
-// CAMPAIGN MODE
-// import { TrialPaynote } from '@app/app/(campaign)/components/trial-paynote'
-
 const LoadingComponent = () => {
   return <Loader loading={true} />
 }
