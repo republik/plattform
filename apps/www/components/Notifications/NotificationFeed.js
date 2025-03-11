@@ -7,6 +7,7 @@ import {
   fontStyles,
   useColorContext,
   A,
+  plainButtonRule,
 } from '@project-r/styleguide'
 import StickySection from '../Feed/StickySection'
 import CommentNotification from './CommentNotification'
@@ -156,7 +157,12 @@ export default compose(
               <A>{t('Notifications/settings')}</A>
             </Link>
 
-            <button onClick={markAllAsReadMutation}>Mark all as read</button>
+            <button
+              {...plainButtonRule}
+              onClick={() => markAllAsReadMutation().then(onReload)}
+            >
+              Mark all as read
+            </button>
 
             {isEmpty && (
               <Interaction.P style={{ marginTop: 40 }}>
