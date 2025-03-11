@@ -50,7 +50,7 @@ import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 import { reportError } from 'lib/errors/reportError'
 import NewsletterTitleBlock from './components/NewsletterTitleBlock'
 import PublikatorLinkBlock from './components/PublikatorLinkBlock'
-import useSchema from './components/useSchema'
+import useSchema from './useSchema'
 
 const EmptyComponent = ({ children }) => children
 
@@ -95,7 +95,7 @@ const ArticlePage = ({
     if (articleError) {
       reportError('Article Page getDocument Query', articleError)
     }
-  }, [reportError, articleError])
+  }, [articleError])
 
   const article = articleData?.article
   const documentId = article?.id
@@ -130,6 +130,7 @@ const ArticlePage = ({
     }
   }, [
     needsRefetch,
+    articleRefetch,
     // ensure effect is run when article or me changes
     me?.id,
     documentId,
@@ -140,18 +141,14 @@ const ArticlePage = ({
     throw new Error('redirect')
   }
 
-  const markNotificationsAsRead = () => {
+  useEffect(() => {
     const unreadNotifications = articleUnreadNotifications?.nodes?.filter(
       (n) => !n.readAt,
     )
-    if (unreadNotifications && unreadNotifications.length) {
+    if (unreadNotifications?.length) {
       unreadNotifications.forEach((n) => markAsReadMutation(n.id))
     }
-  }
-
-  useEffect(() => {
-    markNotificationsAsRead()
-  }, [articleUnreadNotifications])
+  }, [articleUnreadNotifications, markAsReadMutation])
 
   const metaJSONStringFromQuery = useMemo(() => {
     return (
@@ -171,7 +168,7 @@ const ArticlePage = ({
           ? JSON.parse(metaJSONStringFromQuery)
           : undefined),
       },
-    [articleMeta, articleContent, metaJSONStringFromQuery],
+    [articleMeta, articleContent, metaJSONStringFromQuery, documentId],
   )
 
   const { renderSchema, schema } = useSchema({
@@ -184,12 +181,6 @@ const ArticlePage = ({
   const podcast =
     hasMeta &&
     (meta.podcast || (meta.audioSource && meta.format?.meta?.podcast))
-  const isSyntheticReadAloud =
-    hasMeta &&
-    meta.audioSource &&
-    meta.audioSource.kind === 'syntheticReadAloud'
-  const isReadAloud =
-    hasMeta && meta.audioSource && meta.audioSource.kind === 'readAloud'
 
   const hasAudioSource = !!meta?.audioSource
   const newsletterMeta =
@@ -204,7 +195,7 @@ const ArticlePage = ({
     if (trialSignup === 'success') {
       articleRefetch()
     }
-  }, [trialSignup])
+  }, [trialSignup, articleRefetch])
 
   const template = meta?.template
   const isEditorialNewsletter = template === 'editorialNewsletter'
@@ -372,13 +363,16 @@ const ArticlePage = ({
           const showNewsletterSignupBottom = isFreeNewsletter && !isFormat
 
           const rawContentMeta = articleContent.meta
+
           const feedQueryVariables = rawContentMeta.feedQueryVariables
             ? parseJSONObject(rawContentMeta.feedQueryVariables)
             : undefined
           const hideFeed = !!rawContentMeta.hideFeed
-          const hideSectionNav = !!rawContentMeta.hideSectionNav
+
           const showAudioPlayer =
             hasAudioSource || article?.meta?.willBeReadAloud
+
+          const hideSectionNav = !!rawContentMeta.hideSectionNav
           const showSectionNav = isSection && !hideSectionNav
 
           return (

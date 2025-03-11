@@ -30,14 +30,14 @@ import { useMe } from 'lib/context/MeContext'
 import { useInNativeApp } from 'lib/withInNativeApp'
 import { useTranslation } from 'lib/withT'
 
-import { AudioContext } from '../../Audio/AudioProvider'
-import TeaserAudioPlayButton from '../../Audio/shared/TeaserAudioPlayButton'
-import { AudioPlayerLocations } from '../../Audio/types/AudioActionTracking'
-import CommentLink from '../../Discussion/shared/CommentLink'
-import HrefLink from '../../Link/Href'
+import { AudioContext } from '../Audio/AudioProvider'
+import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
+import { AudioPlayerLocations } from '../Audio/types/AudioActionTracking'
+import CommentLink from '../Discussion/shared/CommentLink'
+import HrefLink from '../Link/Href'
 
-import { BrowserOnlyActionBar } from '../BrowserOnly'
-import { dynamicComponentIdentifiers } from '../DynamicComponents'
+import { BrowserOnlyActionBar } from './BrowserOnly'
+import { dynamicComponentIdentifiers } from './DynamicComponents'
 
 const schemaCreators = {
   editorial: createArticleSchema,
@@ -61,7 +61,9 @@ const getSchemaCreator = (template) => {
   if (!schema) {
     try {
       console.error(`Unkown Schema ${key}`)
-    } catch (e) {}
+    } catch (e) {
+      console.error(e)
+    }
 
     return () => {
       return
@@ -163,7 +165,17 @@ const useSchema = ({
         ActionBar: BrowserOnlyActionBar,
         AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
       }),
-    [template, inNativeIOSApp, inNativeApp, titleBreakout, article, meta],
+    [
+      template,
+      inNativeIOSApp,
+      inNativeApp,
+      titleBreakout,
+      article,
+      meta,
+      showPlayButton,
+      t,
+      toggleAudioPlayer,
+    ],
   )
 
   const renderSchema = (content) =>
