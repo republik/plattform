@@ -475,7 +475,7 @@ const ArticlePage = ({
                   </ProgressComponent>
                 </ArticleGallery>
               )}
-              <div {...styles.hidePrint} style={{ marginBottom: 60 }}>
+              <div {...styles.hidePrint}>
                 {meta.template === 'discussion' && ownDiscussion && (
                   <Center breakout={breakout}>
                     <DiscussionContextProvider
