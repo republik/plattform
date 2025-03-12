@@ -11,7 +11,7 @@ import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { getConfig } from '../config'
 import { User } from '@orbiting/backend-modules-types'
 import { PgDb } from 'pogi'
-import { utils } from '.'
+import { hasHadMembership } from './utils'
 
 export const INTRODUCTERY_OFFER_PROMO_CODE = 'EINSTIEG'
 
@@ -383,7 +383,7 @@ export async function checkIntroductoryOfferEligibility(
     return true
   }
 
-  if ((await utils.hasHadMembership(user?.id, pgdb)) === false) {
+  if ((await hasHadMembership(user?.id, pgdb)) === false) {
     return true
   }
 

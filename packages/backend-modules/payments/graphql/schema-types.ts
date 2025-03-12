@@ -161,7 +161,7 @@ type ComplimentaryItem {
 }
 
 type GiftVoucherValidationResult {
-  type: String!
+  type: String
   valid: Boolean!
   company: CompanyName
   isLegacyVoucher: Boolean!

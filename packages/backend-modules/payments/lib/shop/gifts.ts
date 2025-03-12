@@ -20,6 +20,20 @@ import { secondsToMilliseconds } from '../handlers/stripe/utils'
 
 const logger = createLogger('payments:gifts')
 
+export class GiftNotApplicableError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'api/gifts/error/gift_not_applicable'
+  }
+}
+
+export class GiftAlreadyAppliedError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'api/gifts/error/gift_already_applied'
+  }
+}
+
 export type ApplyGiftResult = {
   id?: string
   aboType: string
@@ -161,15 +175,20 @@ export class GiftShop {
 
     const current = await this.getCurrentUserAbo(userId)
 
-    const abo = await this.applyGift(userId, current, gift)
+    try {
+      const abo = await this.applyGift(userId, current, gift)
 
-    await this.markVoucherAsRedeemed({
-      voucher,
-      userId,
-      company: abo.company,
-    })
+      await this.markVoucherAsRedeemed({
+        voucher,
+        userId,
+        company: abo.company,
+      })
 
-    return abo
+      return abo
+    } catch (e) {
+      console.log(e)
+      throw e
+    }
   }
 
   private async applyGift(
@@ -196,7 +215,9 @@ export class GiftShop {
       case 'MONTHLY_SUBSCRIPTION':
         return this.applyGiftToMonthlySubscription(userId, current.id, gift)
       default:
-        throw Error('Gifts not supported for this mabo')
+        throw new GiftNotApplicableError(
+          `unsuppored abo type combination ${current.type}`,
+        )
     }
   }
 
@@ -325,6 +346,17 @@ export class GiftShop {
 
     switch (gift.company) {
       case 'REPUBLIK': {
+        const currentSub =
+          await this.#stripeAdapters.REPUBLIK.subscriptions.retrieve(stripeId, {
+            expand: ['discounts'],
+          })
+
+        if (currentSub === null) {
+          throw new Error('Subscription retival error')
+        }
+
+        ensureCouponCanBeApplied(currentSub, gift)
+
         const sub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
           stripeId,
           {
@@ -494,31 +526,7 @@ export class GiftShop {
         }
       }
       case 'REPUBLIK': {
-        if (gift.id != 'GIFT_MONTHLY') {
-          throw Error('Not implemented')
-        }
-
-        const coupon = getConfig().PROJECT_R_3_MONTH_GIFT_COUPON
-
-        const sub = await this.#stripeAdapters.PROJECT_R.subscriptions.update(
-          stripeId,
-          {
-            coupon: coupon,
-            cancel_at_period_end: false,
-            metadata: {
-              [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
-                'confirm:revoke_cancellation': false,
-              }),
-            },
-          },
-        )
-
-        return {
-          id: id,
-          aboType: 'YEARLY',
-          company: 'PROJECT_R',
-          starting: new Date(secondsToMilliseconds(sub.current_period_end)),
-        }
+        throw new GiftNotApplicableError(`${gift.id}:yearly_subscriptions`)
       }
     }
   }
@@ -536,6 +544,17 @@ export class GiftShop {
 
     switch (gift.company) {
       case 'REPUBLIK': {
+        const currentSub =
+          await this.#stripeAdapters.REPUBLIK.subscriptions.retrieve(stripeId, {
+            expand: ['discounts'],
+          })
+
+        if (currentSub === null) {
+          throw new Error('Subscription retival error')
+        }
+
+        ensureCouponCanBeApplied(currentSub, gift)
+
         const sub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
           stripeId,
           {
@@ -673,4 +692,20 @@ export class GiftShop {
       cancel_at_period_end: true,
     })
   }
+}
+function ensureCouponCanBeApplied(
+  currentSub: Stripe.Response<Stripe.Subscription>,
+  gift: Gift,
+) {
+  const coupons = currentSub.discounts.reduce<string[]>((acc, d) => {
+    if (typeof d !== 'string') {
+      return [d.coupon.id, ...acc]
+    }
+    return acc
+  }, [])
+  if (coupons.includes(gift.coupon)) {
+    throw new GiftAlreadyAppliedError(gift.offer)
+  }
+
+  return true
 }
