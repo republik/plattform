@@ -3134,50 +3134,6 @@
       "value": "{count} Beiträge"
     },
     {
-      "key": "article/payNote/ios/before",
-      "value": "<b>Danke für Ihre Neugier!</b> Dieser Beitrag wurde grosszügigerweise für Sie von einer unserer Verlegerinnen und Verleger freigeschaltet."
-    },
-    {
-      "key": "article/payNote/before/buyText",
-      "value": "Kommen Sie ebenfalls an Bord!"
-    },
-    {
-      "key": "article/payNote/ios/after",
-      "value": "<b>Schön, Sie hier unten wieder zu sehen!</b> Wir hoffen, es hat Ihnen gefallen."
-    },
-    {
-      "key": "article/payNote/after/buyText",
-      "value": "Erfahren Sie mehr."
-    },
-    {
-      "key": "article/payNote/after/series",
-      "value": "Dieser Beitrag ist Teil einer Serie. Werden Sie Verleger, um alle Episoden zu lesen."
-    },
-    {
-      "key": "article/payNote/secondaryAction/text",
-      "value": "Noch nicht überzeugt? {link}"
-    },
-    {
-      "key": "article/payNote/secondaryAction/linkText",
-      "value": "Jetzt probelesen"
-    },
-    {
-      "key": "article/payNote/series/before",
-      "value": "<b>Wir sind die Republik – ein neues Modell im Schweizer Journalismus.</b> Unser digitales Magazin arbeitet unabhängig: keine Werbung, keine Klick-Wirtschaft, keine Kompromisse in der Qualität. Wollen Sie unabhängigen Journalismus unterstützen, freuen wir uns, Sie an Bord zu sehen."
-    },
-    {
-      "key": "article/payNote/series/before/buy/button",
-      "value": "Ja, ich will!"
-    },
-    {
-      "key": "article/payNote/series/after",
-      "value": "<b>Wollen Sie mehr lesen?</b> Dieser Beitrag ist Teil einer Serie. Wollen Sie die ganze Geschichte? Dann kommen Sie an Bord! Wir sind die Republik – ein neues Modell im Schweizer Journalismus. Unser digitales Magazin arbeitet unabhängig: keine Werbung, keine Klick-Wirtschaft, keine Kompromisse in der Qualität."
-    },
-    {
-      "key": "article/payNote/series/after/buy/button",
-      "value": "An Bord kommen!"
-    },
-    {
       "key": "article/share/title",
       "value": "Beitrag teilen"
     },
@@ -7167,46 +7123,6 @@
     {
       "key": "PodcastButtons/google",
       "value": "Google"
-    },
-    {
-      "key": "flyer/paynote/buy/221206-v1/title",
-      "value": "Ihnen gefällt, was Sie lesen?"
-    },
-    {
-      "key": "flyer/paynote/buy/221206-v1/body",
-      "value": "Dann bleiben Sie dabei. Unterstützen Sie den unabhängigen Journalismus der Republik mit einem Monatsabonnement oder einer Jahresmitgliedschaft."
-    },
-    {
-      "key": "flyer/paynote/buy/221206-v2/title",
-      "value": "Ihnen ist Journalismus wichtig?"
-    },
-    {
-      "key": "flyer/paynote/buy/221206-v2/body",
-      "value": "Die Republik wird finanziert von ihren Leserinnen, ist komplett werbefrei und unabhängig. Wenn Ihnen das gefällt: Kommen Sie an Bord mit einem Monatsabonnement oder einer Jahresmitgliedschaft."
-    },
-    {
-      "key": "flyer/paynote/trial/221206-v1/title",
-      "value": "Ihnen gefällt, was Sie lesen?"
-    },
-    {
-      "key": "flyer/paynote/trial/221206-v1/body",
-      "value": "Dann möchten Sie die Republik vielleicht besser kennenlernen. Das Angebot: Testen Sie uns. Für 21 Tage, kostenlos und unverbindlich."
-    },
-    {
-      "key": "flyer/paynote/trial/221206-v2/title",
-      "value": "Ihnen ist unabhängiger Journalismus wichtig?"
-    },
-    {
-      "key": "flyer/paynote/trial/221206-v2/body",
-      "value": "Ohne Journalismus keine Demokratie. Wenn Sie das auch so sehen: Die Republik ist werbefrei und wird finanziert von ihren Leserinnen. Testen Sie uns. Für 21 Tage, kostenlos und unverbindlich."
-    },
-    {
-      "key": "flyer/paynote/ios/221212-v1/title",
-      "value": "Danke für Ihre Neugier!"
-    },
-    {
-      "key": "flyer/paynote/ios/221212-v1/body",
-      "value": "Dieser Beitrag wurde grosszügigerweise für Sie von einer unserer Verlegerinnen und Verleger freigeschaltet."
     },
     {
       "key": "profile/tryNote/content",

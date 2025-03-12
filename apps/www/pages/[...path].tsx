@@ -11,8 +11,6 @@ type Params = {
 } & ParsedUrlQuery
 
 type Props = {
-  payNoteTryOrBuy?: number
-  payNoteSeed?: number
   clientRedirection?: any
 }
 
@@ -42,10 +40,6 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
 
     if (article && !article.meta.format?.meta.externalBaseUrl) {
       return {
-        props: {
-          payNoteTryOrBuy: Math.random(),
-          payNoteSeed: Math.random(),
-        },
         revalidate: REVALIDATE_SECONDS,
       }
     }

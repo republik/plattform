@@ -71,7 +71,7 @@ const styles = {
   }),
 }
 
-const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
+const SeriesNavBar = ({ t, me, series, router, repoId }) => {
   const [colorScheme] = useColorContext()
   const [expanded, setExpanded] = useState(false)
   const [ref] = useBodyScrollLock(expanded)
