@@ -84,7 +84,6 @@ const SeriesNavPlugin = ({ rule, subModules, TYPE }) => {
                   repoId={titleNode.data.get('repoId')}
                   series={titleNode.data.get('series')}
                   inline={!node.data.get('grid')}
-                  PayNote={undefined}
                   Link={DefaultLink}
                 />
               ) : (

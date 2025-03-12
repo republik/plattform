@@ -13,7 +13,11 @@ import { useTranslation } from '../../lib/withT'
 import TrialForm from '../Trial/Form'
 import SignIn from '../Auth/SignIn'
 
-import { TrackingProps } from './Paynote'
+type TrackingProps = {
+  repoId: string
+  documentId: string
+  variation: string
+}
 
 const Tab = ({ isActive, onClick, label }) =>
   isActive ? (

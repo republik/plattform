@@ -22,7 +22,6 @@ const createFormatSchema = ({
   customMetaFields = [],
   series = false,
   darkMode = true,
-  paynotes = true,
   titleBlockPrepend = null,
   titleMargin = true,
   titleBlockRule,
@@ -96,7 +95,6 @@ const createFormatSchema = ({
     ],
     series,
     darkMode,
-    paynotes,
     metaBody,
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),

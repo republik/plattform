@@ -66,7 +66,6 @@ const createTeasers = ({
   t,
   Link,
   ActionBar,
-  PayNote,
   plattformUnauthorizedZoneText,
   AudioPlayButton,
 }) => {
@@ -557,7 +556,6 @@ const createTeasers = ({
         series: root.series,
         inline: !node.data.grid,
         ActionBar: ActionBar,
-        PayNote: PayNote,
         Link: Link,
       }
     },
