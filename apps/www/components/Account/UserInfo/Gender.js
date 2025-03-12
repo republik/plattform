@@ -21,6 +21,10 @@ const styles = {
     fontSize: 17,
     lineHeight: 1.1,
     marginTop: -1,
+    display: 'inline-block',
+    whiteSpace: 'nowrap',
+    marginBottom: 10,
+    marginRight: 15,
     [mediaQueries.mUp]: {
       fontSize: 21,
       marginTop: -1,
@@ -31,6 +35,7 @@ const styles = {
 // https://nibi.space/geschlechtsabfragen
 const GENDER_SUGGESTIONS = ['weiblich', 'männlich']
 const X_GENDER = 'weiteres'
+const NO_GENDER = 'keine Angabe'
 
 const GenderField = ({
   values,
@@ -41,7 +46,14 @@ const GenderField = ({
   t,
 }) => {
   const [colorScheme] = useColorContext()
+  const [gender, setGender] = useState(values.gender)
+  const [customGender, setCustomGender] = useState(
+    !GENDER_SUGGESTIONS.some((suggestion) => values.gender === suggestion) &&
+      values.gender,
+  )
   const [error, setError] = useState()
+
+  const isX = customGender || gender === X_GENDER
 
   useEffect(() => {
     if (isMandadory && !values.gender) {
@@ -53,18 +65,26 @@ const GenderField = ({
     }
   }, [isMandadory, onChange, values, t])
 
-  const currentGender = values.gender
-  const isX = !GENDER_SUGGESTIONS.some((gender) => gender === currentGender)
-
   const save = (gender) => {
-    if (autosubmit) {
-      setError()
-      updateDetails({ gender })
-        .then(() => {})
-        .catch((e) => {
-          setError(errorToString(e))
-        })
-    }
+    if (!autosubmit) return
+    setError()
+    updateDetails({ gender })
+      .then(() => {})
+      .catch((e) => {
+        setError(errorToString(e))
+      })
+  }
+
+  const onChangeHandler = (newGenderValue) => {
+    onChange({
+      values: {
+        gender: newGenderValue,
+      },
+      errors: {
+        gender: undefined,
+      },
+    })
+    save(newGenderValue)
   }
 
   return (
@@ -76,68 +96,57 @@ const GenderField = ({
           </span>
         </Label>
       </div>
-      {GENDER_SUGGESTIONS.map((gender) => (
-        <>
-          <span
-            style={{
-              display: 'inline-block',
-              whiteSpace: 'nowrap',
-              marginBottom: 10,
-              marginRight: 15,
-            }}
-          >
-            <Radio
-              value={currentGender}
-              checked={currentGender === gender}
-              onChange={() => {
-                onChange({
-                  values: {
-                    gender,
-                    genderCustom: undefined,
-                  },
-                  errors: {
-                    gender: undefined,
-                  },
-                })
-                save(gender)
-              }}
-            >
-              <span {...styles.radio}>{gender}</span>
-            </Radio>
-          </span>
-        </>
+      {GENDER_SUGGESTIONS.map((suggestion) => (
+        <Radio
+          value={suggestion}
+          key={suggestion}
+          checked={gender === suggestion}
+          onChange={() => {
+            setGender(suggestion)
+            setCustomGender(undefined)
+            onChangeHandler(suggestion)
+          }}
+        >
+          <span {...styles.radio}>{suggestion}</span>
+        </Radio>
       ))}
       <Radio
         value={X_GENDER}
         checked={isX}
         onChange={() => {
-          onChange({
-            values: {
-              gender: X_GENDER,
-              genderCustom: X_GENDER,
-            },
-            errors: {
-              gender: undefined,
-            },
-          })
-          save(X_GENDER)
+          setGender(X_GENDER)
+          setCustomGender(X_GENDER)
+          onChangeHandler(X_GENDER)
         }}
       >
         <span {...styles.radio}>{X_GENDER}</span>
       </Radio>
+      <Radio
+        value={NO_GENDER}
+        checked={!gender}
+        onChange={() => {
+          setGender(undefined)
+          setCustomGender(undefined)
+          onChangeHandler(null)
+        }}
+      >
+        <span {...styles.radio}>{NO_GENDER}</span>
+      </Radio>
       <Field
-        disabled={!isX}
         label={t('profile/gender/custom')}
-        value={values.genderCustom || values.gender}
+        disabled={!isX}
+        value={isX ? customGender || '' : gender || NO_GENDER}
         onChange={(_, newValue) => {
+          setCustomGender(newValue)
           onChange({
             values: {
-              genderCustom: newValue,
+              gender: newValue || gender,
             },
           })
         }}
-        onBlur={() => values.genderCustom && save(values.genderCustom)}
+        onBlur={() => save(customGender || gender)}
       />
+
       {!!error && (
         <div style={{ color: colors.error, marginBottom: 40 }}>{error}</div>
       )}
