@@ -133,14 +133,14 @@ const GenderField = ({
         <span {...styles.radio}>{NO_GENDER}</span>
       </Radio>
       <Field
-        disabled={!isX}
         label={t('profile/gender/custom')}
-        value={customGender || ''}
+        disabled={!isX}
+        value={isX ? customGender || '' : gender || NO_GENDER}
         onChange={(_, newValue) => {
           setCustomGender(newValue)
           onChange({
             values: {
-              gender: newValue,
+              gender: newValue || gender,
             },
           })
         }}
