@@ -4,15 +4,16 @@ import {
   Shop,
   checkIntroductoryOfferEligibility,
   activeOffers,
+  isPromoCodeInBlocklist,
 } from '../../../lib/shop'
 import { Payments } from '../../../lib/payments'
 import { default as Auth } from '@orbiting/backend-modules-auth'
-import { requiredCustomFields } from '../../../lib/shop/utils'
 import { Company } from '../../../lib/types'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
   promoCode?: string
+  withDonation?: string
   complimentaryItems: {
     id: string
     quantity: number
@@ -33,19 +34,14 @@ export = async function createCheckoutSession(
 ) {
   const shop = new Shop(activeOffers())
 
-  const offer = await shop.getOfferById(args.offerId, {
-    promoCode: args.promoCode,
-    withIntroductoryOffer: await checkIntroductoryOfferEligibility(
-      ctx.pgdb,
-      ctx.user,
-    ),
-  })
-
-  if (!offer) {
-    throw new Error('Unknown offer')
-  }
+  const offer = shop.isValidOffer(args.offerId)
 
   if (offer?.requiresLogin) Auth.ensureUser(ctx.user)
+
+  const promoCode =
+    args.promoCode && !isPromoCodeInBlocklist(args.promoCode)
+      ? args.promoCode
+      : undefined
 
   const customerId = await getCustomer(offer.company, ctx.user?.id)
 
@@ -54,10 +50,12 @@ export = async function createCheckoutSession(
     uiMode: args.options?.uiMode ?? 'EMBEDDED',
     customerId: customerId,
     customPrice: args.options?.customPrice,
-    discounts: offer.discount?.couponId
-      ? [offer.discount?.couponId]
-      : undefined,
-    customFields: requiredCustomFields(ctx.user),
+    promoCode: promoCode,
+    applyEntryOffer: await checkIntroductoryOfferEligibility(
+      ctx.pgdb,
+      ctx.user,
+    ),
+    selectedDonation: args.withDonation,
     metadata: args?.options?.metadata,
     returnURL: args?.options?.returnURL,
     complimentaryItems: args.complimentaryItems,
