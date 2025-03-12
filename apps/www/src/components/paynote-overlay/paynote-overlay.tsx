@@ -18,6 +18,7 @@ import { useMotionValueEvent, useScroll } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { StructuredText } from 'react-datocms'
+import { usePathname } from 'next/navigation'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
@@ -50,6 +51,7 @@ function PaynoteOverlayDialog() {
   const { isIOSApp } = usePlatformInformation()
   const paynotes = usePaynotes()
   const trackEvent = useTrackEvent()
+  const pathname = usePathname()
 
   const { scrollYProgress } = useScroll()
 
@@ -311,7 +313,7 @@ function PaynoteOverlayDialog() {
                   textDecoration: 'underline',
                   // fontWeight: 'medium',
                 })}
-                href='/anmelden'
+                href={`/anmelden?redirect=${encodeURIComponent(pathname)}`}
               >
                 Anmelden
               </Link>
