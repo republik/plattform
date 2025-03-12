@@ -41,6 +41,7 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
     if (article && !article.meta.format?.meta.externalBaseUrl) {
       return {
         revalidate: REVALIDATE_SECONDS,
+        props: {},
       }
     }
 
