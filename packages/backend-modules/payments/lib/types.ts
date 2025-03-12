@@ -120,6 +120,7 @@ export type Invoice = {
   totalTaxAmounts: any
   totalTaxAmount: number
   discounts: string[]
+  items: any
   periodStart: Date
   periodEnd: Date
   createdAt: Date

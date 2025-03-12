@@ -3,6 +3,7 @@ import { t } from '@orbiting/backend-modules-translate'
 
 import { PgDb } from 'pogi'
 import { Invoice, Subscription, SubscriptionType } from '../types'
+import type Stripe from 'stripe'
 
 type MergeVariable = { name: string; content: string | boolean }
 
@@ -22,6 +23,17 @@ export async function sendSetupSubscriptionMail(
       content: (invoice.totalBeforeDiscount / 100).toString(),
     },
     { name: 'total', content: (invoice.total / 100).toString() },
+    {
+      name: 'order_items',
+      content: invoice.items?.map((item: Stripe.InvoiceItem) => {
+        return {
+          description: item.price?.lookup_key
+            ? t(`api/payments/price/${item.price.lookup_key}`, null, 'Spende')
+            : null,
+          amount: (item.amount / 100).toString(),
+        }
+      }),
+    },
   ]
   if (invoice.discounts.length > 0 && invoice.totalDiscountAmount) {
     const discount = invoice.discounts[0] as any
@@ -275,7 +287,10 @@ export async function sendGiftPurchaseMail(
   return sendMailResult
 }
 
-export async function sendSetupGiftMail({ email }: { email: string }, pgdb: PgDb) {
+export async function sendSetupGiftMail(
+  { email }: { email: string },
+  pgdb: PgDb,
+) {
   const globalMergeVars: MergeVariable[] = []
 
   const templateName = 'subscription_created_gift_subscription'
@@ -294,7 +309,13 @@ export async function sendSetupGiftMail({ email }: { email: string }, pgdb: PgDb
   return sendMailResult
 }
 
-export async function sendConfirmGiftAppliedMail({ email, subscriptionType }: { email: string, subscriptionType: SubscriptionType }, pgdb: PgDb) {
+export async function sendConfirmGiftAppliedMail(
+  {
+    email,
+    subscriptionType,
+  }: { email: string; subscriptionType: SubscriptionType },
+  pgdb: PgDb,
+) {
   const globalMergeVars: MergeVariable[] = [
     {
       name: 'is_monthly',

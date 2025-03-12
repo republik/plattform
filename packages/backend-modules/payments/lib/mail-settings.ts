@@ -3,6 +3,7 @@ type MailSettingKey =
   | 'confirm:setup'
   | 'confirm:cancel'
   | 'notice:ended'
+
 type MailSettings = Record<MailSettingKey, boolean>
 
 export const REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY =
