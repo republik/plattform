@@ -17,8 +17,8 @@ import { IconExpandMore } from '@republik/icons'
 import { useMotionValueEvent, useScroll } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { StructuredText } from 'react-datocms'
-import { usePathname } from 'next/navigation'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
@@ -343,10 +343,31 @@ function PaynoteOverlayDialog() {
   )
 }
 
-export function PaynoteOverlay() {
+function isPaynoteOverlayHidden(
+  pathname: string,
+  searchParams: URLSearchParams,
+): boolean {
   return (
+    (pathname === '/angebote' && searchParams.has('package')) ||
+    pathname === '/mitteilung' ||
+    pathname === '/anmelden' ||
+    pathname.startsWith('/konto') ||
+    pathname === '/meine-republik' ||
+    pathname === '/community' ||
+    searchParams.has('extract') ||
+    searchParams.has('extractId')
+  )
+}
+
+export function PaynoteOverlay() {
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const isHidden = isPaynoteOverlayHidden(pathname, searchParams)
+
+  return isHidden ? null : (
     <EventTrackingContext category='PaynoteOverlay'>
-      <PaynoteOverlayDialog />
+      <PaynoteOverlayDialog key={pathname} />
     </EventTrackingContext>
   )
 }
