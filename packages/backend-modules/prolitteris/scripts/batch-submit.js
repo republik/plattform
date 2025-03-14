@@ -33,7 +33,6 @@ const fs = require('fs')
 const fsp = require('fs/promises')
 const path = require('path')
 const readline = require('readline/promises')
-require('@orbiting/backend-modules-env').config()
 const { string, object, array, parse, optional } = require('valibot')
 
 const { Client } = require('@elastic/elasticsearch')
@@ -94,33 +93,38 @@ async function prepareHandler(args) {
     articles.push(line)
   }
 
-  const results = await esClient.search({
-    size: articles.length,
-    _source: [
-      'contentString',
-      'meta.contributors',
-      'meta.repoId',
-      'meta.title',
-    ],
-    query: {
-      bool: {
-        must: [
-          {
-            terms: {
-              'meta.repoId': articles,
-            },
-          },
-          {
-            term: {
-              '__state.published': {
-                value: true,
+  const results = await esClient
+    .search({
+      size: articles.length,
+      _source: [
+        'contentString',
+        'meta.contributors',
+        'meta.repoId',
+        'meta.title',
+      ],
+      query: {
+        bool: {
+          must: [
+            {
+              terms: {
+                'meta.repoId': articles,
               },
             },
-          },
-        ],
+            {
+              term: {
+                '__state.published': {
+                  value: true,
+                },
+              },
+            },
+          ],
+        },
       },
-    },
-  })
+    })
+    .catch((e) => {
+      console.error(e, { depth: null })
+      process.exit(1)
+    })
 
   const outputFileStream = fs.createWriteStream('prolitteris_input.jsonl')
   for (const hit of results.hits.hits) {
@@ -175,7 +179,7 @@ async function prepareHandler(args) {
 
           if (!participant.firstName || !participant.surName) {
             console.error(
-              'Skipping participant: first name or sur name is missing; %s',
+              'Skipping participant: first name or surname is missing; %s',
               JSON.stringify(participant),
             )
             continue
@@ -205,7 +209,7 @@ async function runBatchSubmission(args) {
   const BLOCK_FILE = 'blocked.prolitteris'
   const PROLITTERIS_USER_NAME = process.env?.PROLITTERIS_USER_NAME
   if (!PROLITTERIS_USER_NAME) {
-    console.error('ProLitteris Username not provied')
+    console.error('ProLitteris Username not provided')
     process.exit(1)
   }
   const PROLITTERIS_PW = process.env?.PROLITTERIS_PW
