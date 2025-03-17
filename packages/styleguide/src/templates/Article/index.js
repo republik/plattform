@@ -42,7 +42,6 @@ import TeaserEmbedComment from '../../components/TeaserEmbedComment'
 import ifRule from '../shared/email/rules/ifRule'
 import elseRule from '../shared/email/rules/elseRule'
 import authorRule from '../shared/email/rules/authorRule'
-import Datawrapper from '../../components/Datawrapper'
 import { embedDataWrapperRule } from '../shared/rules/embedDatawrapperRule'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
@@ -163,7 +162,6 @@ const createSchema = ({
   repoPrefix = 'article-',
   series = true,
   darkMode = true,
-  paynotes = true,
   Link = DefaultLink,
   getPath = getDatePath,
   t = () => '',
@@ -180,7 +178,6 @@ const createSchema = ({
   withCommentData = withData,
   CommentLink = DefaultLink,
   ActionBar = DefaultActionBar,
-  PayNote,
   noEmpty = true,
   AudioPlayButton,
 } = {}) => {
@@ -195,7 +192,6 @@ const createSchema = ({
     t,
     Link,
     ActionBar,
-    PayNote,
     plattformUnauthorizedZoneText,
     AudioPlayButton,
   })
@@ -242,7 +238,6 @@ const createSchema = ({
             editorOptions: {
               series,
               darkMode,
-              paynotes,
               customFields: customMetaFields,
               teaser:
                 previewTeaser ||
