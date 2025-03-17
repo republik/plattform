@@ -470,7 +470,11 @@ const ArticlePage = ({
                           )}
                         </div>
                       )}
-                      {renderSchema(splitContent.main)}
+                      {renderSchema(
+                        hasAccess
+                          ? splitContent.main
+                          : splitContent.mainTruncated,
+                      )}
                     </article>
                     <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
                   </ProgressComponent>
