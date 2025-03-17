@@ -86,7 +86,7 @@ const WebApp = ({
                       />
                       <AudioPlayerOrchestrator />
                       <SyncUTMToSessionStorage />
-                      <PaynoteOverlay />
+                      {/* <PaynoteOverlay /> */}
                     </ColorContextProvider>
                   </ThemeProvider>
                 </AppVariableContext>
