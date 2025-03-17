@@ -7461,6 +7461,10 @@
       "value": "Ihre Einstellungen"
     },
     {
+      "key": "Notifications/markAsRead",
+      "value": "Alle als gelesen markieren"
+    },
+    {
       "key": "Notifications/refresh/1",
       "value": "Sie haben eine neue Benachrichtigung bekommen."
     },

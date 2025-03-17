@@ -179,7 +179,7 @@ export default compose(
                 style={{ marginLeft: 15 }}
                 onClick={() => markAllAsReadMutation().then(onReload)}
               >
-                Alle als gelesen markieren
+                {t('Notifications/markAsRead')}
               </button>
             )}
 
