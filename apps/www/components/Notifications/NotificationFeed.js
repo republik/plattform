@@ -172,14 +172,16 @@ export default compose(
               <A>{t('Notifications/settings')}</A>
             </Link>
 
-            <button
-              {...linkStyleRule}
-              {...plainButtonRule}
-              style={{ marginLeft: 15 }}
-              onClick={() => markAllAsReadMutation().then(onReload)}
-            >
-              Alle als gelesen markieren
-            </button>
+            {!isEmpty && (
+              <button
+                {...linkStyleRule}
+                {...plainButtonRule}
+                style={{ marginLeft: 15 }}
+                onClick={() => markAllAsReadMutation().then(onReload)}
+              >
+                Alle als gelesen markieren
+              </button>
+            )}
 
             {isEmpty && (
               <Interaction.P style={{ marginTop: 40 }}>
