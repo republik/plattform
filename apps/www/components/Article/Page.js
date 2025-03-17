@@ -297,6 +297,7 @@ const ArticlePage = ({
   }
 
   const splitContent = article && splitByTitle(article.content)
+  console.log({ splitContent })
 
   const hasStickySecondaryNav = meta
     ? meta.template === 'section' || meta.template === 'flyer'
