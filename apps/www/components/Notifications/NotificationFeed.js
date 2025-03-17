@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import {
   Interaction,
   Center,
@@ -107,6 +108,20 @@ export default compose(
     const hasNextPage = pageInfo && pageInfo.hasNextPage
     const [colorScheme] = useColorContext()
 
+    const linkStyleRule = useMemo(
+      () =>
+        css({
+          textDecoration: 'none',
+          color: colorScheme.getCSSColor('primary'),
+          '@media (hover)': {
+            ':hover': {
+              color: colorScheme.getCSSColor('primaryHover'),
+            },
+          },
+        }),
+      [colorScheme],
+    )
+
     const loadMore = () =>
       fetchMore({
         updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -158,10 +173,12 @@ export default compose(
             </Link>
 
             <button
+              {...linkStyleRule}
               {...plainButtonRule}
+              style={{ marginLeft: 15 }}
               onClick={() => markAllAsReadMutation().then(onReload)}
             >
-              Mark all as read
+              Alle als gelesen markieren
             </button>
 
             {isEmpty && (
