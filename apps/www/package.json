@@ -117,6 +117,7 @@
     "graphql": "^15.3.0",
     "ical-generator": "^6.0.0",
     "immer": "^9.0.12",
+    "isbot": "^5.1.25",
     "isomorphic-dompurify": "^2.3.0",
     "jose": "^4.8.3",
     "jotai": "^2.2.0",
