@@ -51,6 +51,10 @@ import { reportError } from 'lib/errors/reportError'
 import NewsletterTitleBlock from './components/NewsletterTitleBlock'
 import PublikatorLinkBlock from './components/PublikatorLinkBlock'
 import useSchema from './useSchema'
+import { useUserAgent } from 'lib/context/UserAgentContext'
+import PrepubNotice from './components/PrepubNotice'
+import { Paywall } from '@app/components/paynote-overlay/paywall'
+import { Regwall } from '@app/components/paynote-overlay/regwall'
 
 const EmptyComponent = ({ children }) => children
 
@@ -70,6 +74,7 @@ const ArticlePage = ({
   const { share, extract, showAll } = router.query
 
   const { me, meLoading, hasAccess, isEditor } = useMe()
+  const { isSearchBot } = useUserAgent()
 
   const { isAudioQueueAvailable } = useAudioQueue()
 
@@ -381,18 +386,14 @@ const ArticlePage = ({
 
           const showPodcastButtons = !!podcast && meta.template !== 'article'
 
+          // TODO: include metadata opt-out check and include not in-trial
+          const truncateContent =
+            meta.template === 'article' && !hasAccess && !isSearchBot
+
           return (
             <>
               <FontSizeSync />
-              {meta.prepublication && (
-                <div {...styles.prepublicationNotice}>
-                  <Center breakout={breakout}>
-                    <Interaction.P>
-                      {t('article/prepublication/notice')}
-                    </Interaction.P>
-                  </Center>
-                </div>
-              )}
+              <PrepubNotice meta={meta} breakout={breakout} />
               {isFlyer ? (
                 <Flyer
                   meta={meta}
@@ -469,7 +470,19 @@ const ArticlePage = ({
                           )}
                         </div>
                       )}
-                      {renderSchema(splitContent.main)}
+                      <div className='regwall'>
+                        {truncateContent ? (
+                          <>
+                            {renderSchema(splitContent.mainTruncated)}
+                            <Center>
+                              {/* TODO: add condition hasAcess  */}
+                              {hasAccess ? <Paywall /> : <Regwall />}
+                            </Center>
+                          </>
+                        ) : (
+                          <>{renderSchema(splitContent.main)}</>
+                        )}
+                      </div>
                     </article>
                     <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
                   </ProgressComponent>
@@ -535,7 +548,7 @@ const ArticlePage = ({
                   />
                 )}
 
-                {hasAccess && <ArticleRecommendationsFeed path={cleanedPath} />}
+                <ArticleRecommendationsFeed path={cleanedPath} />
               </div>
             </>
           )

@@ -40,13 +40,6 @@ export const findAuthorsP = (document) => {
   return titleNode.children[3]
 }
 
-export const mdastToString = (node) =>
-  node
-    ? node.value ||
-      (node.children && node.children.map(mdastToString).join('')) ||
-      ''
-    : ''
-
 const pubDateFormat = swissTime.format('%d.%m.%Y')
 
 export const generateAuthorsLine = (me) =>
