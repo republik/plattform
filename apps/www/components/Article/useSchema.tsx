@@ -149,7 +149,7 @@ const useSchema = ({
         titleMargin: false,
         titleBreakout,
         onAudioCoverClick: () =>
-          toggleAudioPlayer(
+          toggleAudioPlayerRef.current(
             {
               id: articleId,
               meta: audioMeta,
