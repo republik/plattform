@@ -52,6 +52,9 @@ import NewsletterTitleBlock from './components/NewsletterTitleBlock'
 import PublikatorLinkBlock from './components/PublikatorLinkBlock'
 import useSchema from './useSchema'
 import { useUserAgent } from 'lib/context/UserAgentContext'
+import PrepubNotice from './components/PrepubNotice'
+import { Paywall } from '@app/components/paynote-overlay/paywall'
+import { Regwall } from '@app/components/paynote-overlay/regwall'
 
 const EmptyComponent = ({ children }) => children
 
@@ -299,7 +302,6 @@ const ArticlePage = ({
   }
 
   const splitContent = article && splitByTitle(article.content)
-  console.log({ splitContent })
 
   const hasStickySecondaryNav = meta
     ? meta.template === 'section' || meta.template === 'flyer'
@@ -384,21 +386,14 @@ const ArticlePage = ({
 
           const showPodcastButtons = !!podcast && meta.template !== 'article'
 
+          // TODO: include metadata opt-out check and include not in-trial
           const truncateContent =
             meta.template === 'article' && !hasAccess && !isSearchBot
 
           return (
             <>
               <FontSizeSync />
-              {meta.prepublication && (
-                <div {...styles.prepublicationNotice}>
-                  <Center breakout={breakout}>
-                    <Interaction.P>
-                      {t('article/prepublication/notice')}
-                    </Interaction.P>
-                  </Center>
-                </div>
-              )}
+              <PrepubNotice meta={meta} breakout={breakout} />
               {isFlyer ? (
                 <Flyer
                   meta={meta}
@@ -479,9 +474,10 @@ const ArticlePage = ({
                         {truncateContent ? (
                           <>
                             {renderSchema(splitContent.mainTruncated)}
-                            <div>
-                              REGWALLREGWALLREGWALLREGWALLREGWALLREGWALLREGWALLREGWALLREGWALL
-                            </div>
+                            <Center>
+                              {/* TODO: add condition hasAcess  */}
+                              {hasAccess ? <Paywall /> : <Regwall />}
+                            </Center>
                           </>
                         ) : (
                           <>{renderSchema(splitContent.main)}</>
@@ -552,7 +548,7 @@ const ArticlePage = ({
                   />
                 )}
 
-                {hasAccess && <ArticleRecommendationsFeed path={cleanedPath} />}
+                <ArticleRecommendationsFeed path={cleanedPath} />
               </div>
             </>
           )
