@@ -1,4 +1,4 @@
-import { useContext, useMemo } from 'react'
+import { useContext, useMemo, useRef } from 'react'
 
 // legacy imports for old-style dynamic components
 import compose from 'lodash/flowRight'
@@ -112,18 +112,32 @@ const useSchema = ({
   const { t } = useTranslation()
   const { inNativeApp, inNativeIOSApp } = useInNativeApp()
   const { toggleAudioPlayer } = useContext(AudioContext)
+  const toggleAudioPlayerRef = useRef(toggleAudioPlayer)
+  toggleAudioPlayerRef.current = toggleAudioPlayer
 
   const titleBreakout = meta?.series?.overview?.id === article?.id
 
   const MissingNode = isEditor ? undefined : ({ children }) => children
 
   const template = meta?.template
+  const audioMeta = useMemo(
+    () =>
+      meta && {
+        title: meta?.title,
+        path: meta?.path,
+        publishDate: meta?.publishDate,
+        image: meta?.image,
+        audioSource: meta?.audioSource,
+      },
+    [meta],
+  )
+  const articleId = article?.id
 
   const schema = useMemo(
     () =>
       template &&
-      meta &&
-      article &&
+      audioMeta &&
+      articleId &&
       getSchemaCreator(template)({
         t,
         Link: HrefLink,
@@ -137,14 +151,8 @@ const useSchema = ({
         onAudioCoverClick: () =>
           toggleAudioPlayer(
             {
-              id: article.id,
-              meta: {
-                title: meta.title,
-                path: meta.path,
-                publishDate: meta.publishDate,
-                image: meta.image,
-                audioSource: meta.audioSource,
-              },
+              id: articleId,
+              meta: audioMeta,
             },
             AudioPlayerLocations.ARTICLE,
           ),
@@ -167,14 +175,13 @@ const useSchema = ({
       }),
     [
       template,
-      inNativeIOSApp,
+      articleId,
+      audioMeta,
       inNativeApp,
-      titleBreakout,
-      article,
-      meta,
+      inNativeIOSApp,
       showPlayButton,
+      titleBreakout,
       t,
-      toggleAudioPlayer,
     ],
   )
 
