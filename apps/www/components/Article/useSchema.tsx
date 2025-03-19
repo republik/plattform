@@ -167,14 +167,12 @@ const useSchema = ({
       }),
     [
       template,
-      inNativeIOSApp,
-      inNativeApp,
-      titleBreakout,
-      article,
-      meta,
-      showPlayButton,
-      t,
-      toggleAudioPlayer,
+      article?.id,
+      meta?.title,
+      meta?.path,
+      meta?.publishDate,
+      meta?.image,
+      meta?.audioSource,
     ],
   )
 
