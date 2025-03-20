@@ -7,8 +7,10 @@ import { ColorContextProvider, RootColorVariables } from '@project-r/styleguide'
 import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
 import Head from 'next/head'
 
+import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
+import { OPEN_ACCESS } from 'lib/constants'
 import { AppProps } from 'next/app'
 import AppVariableContext from '../components/Article/AppVariableContext'
 import AudioPlayerOrchestrator from '../components/Audio/AudioPlayerOrchestrator'
@@ -21,9 +23,6 @@ import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { reportError } from '../lib/errors/reportError'
-import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
-import { OPEN_ACCESS } from 'lib/constants'
-import { useRouter } from 'next/router'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -63,15 +62,6 @@ const WebApp = ({
     ...otherPageProps
   } = pageProps
 
-  const router = useRouter()
-
-  const hidePaynoteOverlay =
-    (router.pathname === '/angebote' && router.query.package !== undefined) ||
-    router.pathname === '/mitteilung' ||
-    router.pathname === '/anmelden' ||
-    router.query.extract !== undefined ||
-    router.query.extractId !== undefined
-
   return (
     <PageErrorBoundary>
       <MeContextProvider assumeAccess={assumeAccess}>
@@ -96,9 +86,7 @@ const WebApp = ({
                       />
                       <AudioPlayerOrchestrator />
                       <SyncUTMToSessionStorage />
-                      {hidePaynoteOverlay ? null : (
-                        <PaynoteOverlay key={router.pathname} />
-                      )}
+                      <PaynoteOverlay />
                     </ColorContextProvider>
                   </ThemeProvider>
                 </AppVariableContext>

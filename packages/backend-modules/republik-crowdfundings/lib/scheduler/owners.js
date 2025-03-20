@@ -220,7 +220,7 @@ const createJobs = (now) => [
     name: 'membership_owner_prolong_yearly_abo_notice_0',
     prolongBefore: {
       minDate: getMinEndDate(now, -3),
-      maxDate: getMaxEndDate(now, 0),
+      maxDate: moment(now),
     },
     payload: {
       templateName: 'membership_owner_prolong_yearly_abo_notice_0',
@@ -233,6 +233,32 @@ const createJobs = (now) => [
     }) => {
       return (
         membershipType === 'YEARLY_ABO' &&
+        (membershipAutoPay === false ||
+          (membershipAutoPay === true &&
+            (!autoPay || (autoPay && userId !== autoPay.userId))))
+      )
+    },
+    handleFn: mailings,
+  },
+  {
+    name: 'membership_owner_prolong_yearly_abo_winback_5',
+    prolongBefore: {
+      minDate: getMinEndDate(now, -6),
+      maxDate: getMaxEndDate(now, -5),
+    },
+    payload: {
+      templateName: 'membership_owner_prolong_yearly_abo_winback_5',
+      fromName: 'Daniel Binswanger, Co-Chefredaktor'
+    },
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+      hasOtherActiveMagazineAccess,
+    }) => {
+      return (
+        !hasOtherActiveMagazineAccess && membershipType === 'YEARLY_ABO' &&
         (membershipAutoPay === false ||
           (membershipAutoPay === true &&
             (!autoPay || (autoPay && userId !== autoPay.userId))))
@@ -273,6 +299,32 @@ const createJobs = (now) => [
     },
     payload: {
       templateName: 'membership_owner_prolong_yearly_abo_winback_7',
+    },
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+      hasOtherActiveMagazineAccess,
+    }) => {
+      return (
+        !hasOtherActiveMagazineAccess && membershipType === 'YEARLY_ABO' &&
+        (membershipAutoPay === false ||
+          (membershipAutoPay === true &&
+            (!autoPay || (autoPay && userId !== autoPay.userId))))
+      )
+    },
+    handleFn: mailings,
+  },
+  {
+    name: 'membership_owner_prolong_yearly_abo_winback_12',
+    prolongBefore: {
+      minDate: getMinEndDate(now, -13),
+      maxDate: getMaxEndDate(now, -12),
+    },
+    payload: {
+      templateName: 'membership_owner_prolong_yearly_abo_winback_12',
+      fromName: 'Dennis Bühler, Bundeshaus- und Medienredaktor'
     },
     predicateFn: ({
       id: userId,

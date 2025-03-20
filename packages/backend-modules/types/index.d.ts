@@ -37,7 +37,6 @@ export interface UserRow {
   email: string
   referralCode: string | null
   verified: boolean
-  birthday: Date | null
   phoneNumber: string
   addressId: string | null
   portraitUrl: string | null
@@ -69,6 +68,7 @@ export interface UserRow {
   accessKey: string
   gender: string | null
   prolitterisId: string | null
+  birthyear: number | null
 }
 
 export interface User {
