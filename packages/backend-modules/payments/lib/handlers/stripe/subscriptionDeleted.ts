@@ -9,7 +9,6 @@ import {
   REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
 } from '../../mail-settings'
 import { secondsToMilliseconds } from './utils'
-import { REPUBLIK_PAYMENTS_CANCEL_REASON } from '../../shop/gifts'
 
 export async function processSubscriptionDeleted(
   paymentService: PaymentService,
@@ -27,9 +26,6 @@ export async function processSubscriptionDeleted(
       endedAt: new Date(endTimestamp),
       canceledAt: new Date(canceledAtTimestamp),
     },
-    event.data.object.metadata[REPUBLIK_PAYMENTS_CANCEL_REASON] === 'UPGRADE'
-      ? { keepMembership: true }
-      : undefined,
   )
 
   const customerId = event.data.object.customer as string
