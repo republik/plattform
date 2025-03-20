@@ -367,4 +367,8 @@ ScatterPlot.defaultProps = defaultProps.ScatterPlot
 
 ScatterPlot.propTypes = propTypes
 
-export default ScatterPlot
+const ScatterPlotWithDefaultProps = (props) => (
+  <ScatterPlot {...defaultProps.ScatterPlot} {...props} />
+)
+
+export default ScatterPlotWithDefaultProps
