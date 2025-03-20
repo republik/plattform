@@ -1,3 +1,0 @@
-export = {
-  graphql: require('./graphql'),
-}
