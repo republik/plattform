@@ -41,7 +41,7 @@ const styles = {
 
 const Detail = ({
   t,
-  share,
+  share = true,
   data: {
     id,
     slug,
@@ -121,11 +121,7 @@ const Detail = ({
         {share && <ActionBar share={shareObject} />}
       </div>
     </div>
-  );
-}
-
-Detail.defaultProps = {
-  share: true,
+  )
 }
 
 export default Detail

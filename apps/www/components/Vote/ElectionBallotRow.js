@@ -60,34 +60,32 @@ const styles = {
   }),
 }
 
-const ElectionBallotRow = (props) => {
+const ElectionBallotRow = ({
+  selected = false,
+  disabled = false,
+  maxVotes = 1,
+  expanded = false,
+  showMeta = true,
+  candidate,
+  onChange,
+  mandatory,
+  discussionPath,
+  discussionTag,
+  odd,
+}) => {
   const [colorScheme] = useColorContext()
-  const [expanded, setExpanded] = useState(props.expanded || false)
-  const {
-    candidate,
-    maxVotes,
-    selected,
-    onChange,
-    disabled,
-    mandatory,
-    showMeta,
-    discussionPath,
-    discussionTag,
-    odd,
-  } = props
+  const [isExpanded, setExpanded] = useState(expanded || false)
 
   const toggleExpanded = (e) => {
     e.preventDefault()
     e.stopPropagation()
-    setExpanded((expanded) => !expanded)
+    setExpanded((isExpanded) => !isExpanded)
   }
 
   const SelectionComponent = maxVotes > 1 ? Checkbox : Radio
 
   const { user: d } = candidate
-  const summary = [d.birthyear, d.gender, candidate.city].filter(
-    Boolean,
-  )
+  const summary = [d.birthyear, d.gender, candidate.city].filter(Boolean)
   const showSummary = !!summary.length
 
   const isDisabled = maxVotes > 1 && !selected && disabled
@@ -96,13 +94,13 @@ const ElectionBallotRow = (props) => {
     <div
       {...styles.row}
       {...colorScheme.set('backgroundColor', odd ? 'hover' : 'default')}
-      style={{ paddingBottom: expanded ? 0 : undefined }}
+      style={{ paddingBottom: isExpanded ? 0 : undefined }}
     >
       <div {...styles.summary}>
         <div {...styles.summaryInfo} onClick={toggleExpanded}>
           <div
             {...styles.icon}
-            style={{ transform: expanded && 'rotate(90deg)' }}
+            style={{ transform: isExpanded && 'rotate(90deg)' }}
           >
             <IconChevronRight />
           </div>
@@ -133,7 +131,7 @@ const ElectionBallotRow = (props) => {
           </div>
         )}
       </div>
-      {expanded && (
+      {isExpanded && (
         <CandidateCard
           candidate={candidate}
           discussionPath={discussionPath}
@@ -154,14 +152,6 @@ ElectionBallotRow.propTypes = {
   showMeta: PropTypes.bool,
   discussionPath: PropTypes.string,
   discussionTag: PropTypes.string,
-}
-
-ElectionBallotRow.defaultProps = {
-  selected: false,
-  disabled: false,
-  maxVotes: 1,
-  expanded: false,
-  showMeta: true,
 }
 
 export default ElectionBallotRow
