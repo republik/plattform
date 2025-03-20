@@ -38,7 +38,7 @@ const TextInput = (props) => {
   const [colorScheme] = useColorContext()
   const { t } = useTranslation()
 
-  const { label, onChange } = props
+  const { label = '', onChange } = props
   return (
     <div>
       <Field
@@ -87,11 +87,6 @@ TextInput.propTypes = {
   maxLength: PropTypes.number,
   onChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
-}
-
-TextInput.defaultProps = {
-  label: '',
-  text: '',
 }
 
 export default TextInput

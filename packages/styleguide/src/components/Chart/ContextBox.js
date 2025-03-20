@@ -121,7 +121,7 @@ ContextBoxValue.propTypes = {
 }
 
 const ContextBox = ({
-  orientation: yOrientation,
+  orientation: yOrientation = 'top',
   x,
   y,
   contextWidth,
@@ -159,14 +159,11 @@ const ContextBox = ({
   )
 }
 
-ContextBox.defaultProps = {
-  orientation: 'top',
-}
 ContextBox.propTypes = {
   x: PropTypes.number.isRequired,
   y: PropTypes.number.isRequired,
   contextWidth: PropTypes.number.isRequired,
-  orientation: PropTypes.oneOf(['top', 'below']).isRequired,
+  orientation: PropTypes.oneOf(['top', 'below']),
   children: PropTypes.node,
 }
 

@@ -52,7 +52,7 @@ const Progress = ({
   children,
   me,
   article,
-  isArticle,
+  isArticle = true,
   router,
   upsertDocumentProgress,
 }) => {
@@ -244,10 +244,6 @@ Progress.propTypes = {
   revokeConsent: PropTypes.func,
   submitConsent: PropTypes.func,
   isArticle: PropTypes.bool,
-}
-
-Progress.defaultProps = {
-  isArticle: true,
 }
 
 export default compose(

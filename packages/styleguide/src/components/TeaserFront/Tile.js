@@ -180,8 +180,4 @@ Tile.propTypes = {
   audioPlayButton: PropTypes.node,
 }
 
-Tile.defaultProps = {
-  alt: '',
-}
-
 export default Tile

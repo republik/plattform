@@ -97,8 +97,4 @@ TeaserIntro.propTypes = {
   onClick: PropTypes.func,
 }
 
-TeaserIntro.defaultProps = {
-  alt: '',
-}
-
 export default TeaserIntro

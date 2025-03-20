@@ -37,6 +37,4 @@ Teaser.propTypes = {
   onClick: PropTypes.func,
 }
 
-Teaser.defaultProps = {}
-
 export default Teaser

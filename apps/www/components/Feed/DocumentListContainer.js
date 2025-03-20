@@ -69,11 +69,11 @@ export const makeLoadMore =
 
 const DocumentListContainer = ({
   query,
-  variables,
-  getConnection,
-  mergeConnection,
-  mapNodes,
-  placeholder,
+  variables = defaultProps.variables,
+  getConnection = defaultProps.getConnection,
+  mergeConnection = defaultProps.mergeConnection,
+  mapNodes = defaultProps.mapNodes,
+  placeholder = defaultProps.placeholder,
   help,
   feedProps,
   refetchOnUnmount,
@@ -126,8 +126,6 @@ const DocumentListContainer = ({
     />
   )
 }
-
-DocumentListContainer.defaultProps = defaultProps
 
 DocumentListContainer.propTypes = {
   query: PropTypes.object.isRequired,

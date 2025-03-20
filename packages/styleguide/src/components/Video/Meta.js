@@ -95,7 +95,7 @@ const Link = ({ href, children }) => (
 
 export const Meta = ({
   url,
-  platform,
+  platform = 'youtube',
   title,
   userName,
   userUrl,
@@ -135,10 +135,6 @@ Meta.propTypes = {
   userUrl: PropTypes.string.isRequired,
   userProfileImageUrl: PropTypes.string.isRequired,
   date: PropTypes.object.isRequired,
-}
-
-Meta.defaultProps = {
-  platform: 'youtube',
 }
 
 export default Meta

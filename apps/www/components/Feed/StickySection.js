@@ -15,7 +15,7 @@ const SIDEBAR_WIDTH = 120
 const MARGIN_WIDTH = 20
 const STICKY_HEADER_HEIGHT = 27
 
-const StickySection = ({ children, label, hasSpaceAfter }) => {
+const StickySection = ({ children, label, hasSpaceAfter = true }) => {
   const [colorScheme] = useColorContext()
   const [sticky, setSticky] = useState(false)
   const [isMedium, setIsMedium] = useState(false)
@@ -120,10 +120,6 @@ const style = {
 StickySection.propTypes = {
   hasSpaceAfter: PropTypes.bool,
   label: PropTypes.string.isRequired,
-}
-
-StickySection.defaultProps = {
-  hasSpaceAfter: true,
 }
 
 export default compose(withTester)(StickySection)

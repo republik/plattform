@@ -19,7 +19,7 @@ const Autocomplete = ({
   filter,
   onFilterChange,
   icon,
-  autoComplete,
+  autoComplete = 'off',
   autoFocus = false,
 }) => {
   return (
@@ -110,10 +110,6 @@ Autocomplete.propTypes = {
   onFilterChange: PropTypes.func.isRequired,
   icon: PropTypes.object,
   autoComplete: PropTypes.string,
-}
-
-Autocomplete.defaultProps = {
-  autoComplete: 'off',
 }
 
 export default Autocomplete

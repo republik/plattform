@@ -67,22 +67,13 @@ Editorial.propTypes = {
   children: PropTypes.node,
   bigger: PropTypes.bool,
 }
-Editorial.defaultProps = {
-  bigger: false,
-}
 
 Interaction.propTypes = {
   children: PropTypes.node,
   bigger: PropTypes.bool,
 }
-Interaction.defaultProps = {
-  bigger: false,
-}
 
 Scribble.propTypes = {
   children: PropTypes.node,
   bigger: PropTypes.bool,
-}
-Scribble.defaultProps = {
-  bigger: false,
 }
