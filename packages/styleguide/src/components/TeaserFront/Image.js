@@ -1,10 +1,9 @@
-import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { mUp, tUp } from './mediaQueries'
+import PropTypes from 'prop-types'
 import colors from '../../theme/colors'
 import zIndex from '../../theme/zIndex'
-import { FigureImage, FigureByline } from '../Figure'
+import { FigureByline, FigureImage } from '../Figure'
+import { mUp, tUp } from './mediaQueries'
 import Text from './Text'
 
 const containerStyle = {
@@ -56,11 +55,11 @@ const ImageBlock = ({
   image,
   maxWidth,
   byline,
-  alt,
+  alt = '',
   onClick,
   color,
   bgColor,
-  textPosition,
+  textPosition = 'topleft',
   center,
   aboveTheFold,
   onlyImage,
@@ -154,12 +153,6 @@ ImageBlock.propTypes = {
   onlyImage: PropTypes.bool,
   feuilleton: PropTypes.bool,
   shouldRenderPlayButton: PropTypes.node,
-}
-
-ImageBlock.defaultProps = {
-  textPosition: 'topleft',
-  alt: '',
-  onlyImage: false,
 }
 
 export default ImageBlock

@@ -32,6 +32,7 @@ const TypoBlock = ({
   audioPlayButton,
 }) => {
   const background = bgColor || ''
+  console.log(attributes)
   return (
     <div
       {...attributes}
