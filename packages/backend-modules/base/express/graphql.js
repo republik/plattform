@@ -9,7 +9,7 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
   COOKIE_NAME,
 } = require('@orbiting/backend-modules-auth/lib/CookieOptions')
-
+const util = require('util')
 const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
 
 const documentApiKeyScheme = 'DocumentApiKey'
@@ -124,10 +124,16 @@ module.exports = async (
         async requestDidStart() {
           return {
             async didEncounterErrors({ context, errors }) {
-              console.error('GRAPHQL REQUEST ERROR', {
-                req: context.req._log(),
-                graphQLErrors: errors,
-              })
+              console.error(
+                'GRAPHQL REQUEST ERROR',
+                util.inspect(
+                  {
+                    req: context.req._log(),
+                    graphQLErrors: errors,
+                  },
+                  { depth: null, colors: true, breakLength: 300 },
+                ),
+              )
             },
           }
         },
