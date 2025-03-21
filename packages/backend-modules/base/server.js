@@ -104,7 +104,7 @@ const start = async (
   if (REQ_TIMEOUT) {
     server.use(timeout(REQ_TIMEOUT, { respond: false }), (req, res, next) => {
       req.on('timeout', () => {
-        console.log('request timedout:', req._log())
+        console.error('REQUEST TIMEOUT ERROR', { req: req._log() })
       })
       next()
     })
