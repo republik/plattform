@@ -1,13 +1,43 @@
 import Stripe from 'stripe'
 import { Company } from '../types'
-import { Offer, ComplimentaryItemOrder } from './offers'
+import {
+  Offer,
+  ComplimentaryItemOrder,
+  OfferAPIResult,
+  PriceDefinition,
+  Discount,
+} from './offers'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { getConfig } from '../config'
 import { User } from '@orbiting/backend-modules-types'
 import { PgDb } from 'pogi'
-import { utils } from '.'
+import { hasHadMembership } from './utils'
 
-const INTRODUCTERY_OFFER_PROMO_CODE = 'EINSTIEG'
+export const INTRODUCTERY_OFFER_PROMO_CODE = 'EINSTIEG'
+
+export function isPromoCodeInBlocklist(promoCode: string) {
+  return [INTRODUCTERY_OFFER_PROMO_CODE].includes(promoCode)
+}
+
+type PriceInfo =
+  | {
+      price: string
+      quantity: number
+      tax_rates?: string[]
+    }
+  | {
+      price_data: {
+        unit_amount: number
+        product: string
+        currency: 'CHF'
+        recurring: {
+          interval: 'year'
+          interval_count: 1
+        }
+      }
+      quantity: number
+      tax_rates?: string[]
+    }
 
 export class Shop {
   #offers: Offer[]
@@ -15,7 +45,6 @@ export class Shop {
     PROJECT_R: ProjectRStripe,
     REPUBLIK: RepublikAGStripe,
   }
-  #promoCodeBlocklist: string[] = [INTRODUCTERY_OFFER_PROMO_CODE]
 
   constructor(offers: Offer[]) {
     this.#offers = offers
@@ -25,24 +54,60 @@ export class Shop {
     offer,
     customerId,
     uiMode = 'EMBEDDED',
-    customPrice,
-    discounts,
+    promoCode,
+    applyEntryOffer,
     metadata,
-    customFields,
+    selectedDonation,
     returnURL,
     complimentaryItems,
   }: {
     offer: Offer
     uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
     customerId?: string
-    discounts?: string[]
+    promoCode?: string
+    applyEntryOffer?: boolean
     customPrice?: number
+    selectedDonation?: string | { amount: number }
     complimentaryItems?: ComplimentaryItemOrder[]
     metadata?: Record<string, string>
     returnURL?: string
     customFields?: Stripe.Checkout.SessionCreateParams.CustomField[]
   }) {
-    const lineItem = this.genLineItem(offer, customPrice)
+    const lineItems = await this.genLineItems(offer)
+    if (typeof offer.donationOptions !== 'undefined' && selectedDonation) {
+      if (typeof selectedDonation === 'string') {
+        const res = await this.#stripeAdapters[offer.company].prices.list({
+          lookup_keys: [selectedDonation],
+        })
+
+        const donation = res.data[0]
+        if (donation?.lookup_key === selectedDonation) {
+          lineItems.push({
+            price: donation.id,
+            quantity: 1,
+          })
+        }
+      }
+      if (typeof selectedDonation === 'object') {
+        lineItems.push({
+          price_data: {
+            unit_amount: selectedDonation.amount,
+            currency: 'CHF',
+            product: 'prod_RlF5BclupFNlhi',
+            recurring: {
+              interval: 'year',
+              interval_count: 1,
+            },
+          },
+          quantity: 1,
+        })
+      }
+    }
+    const discount = await this.resolveDiscount(
+      offer,
+      promoCode,
+      applyEntryOffer,
+    )
 
     const uiConfig = checkoutUIConfig(
       uiMode,
@@ -60,21 +125,21 @@ export class Shop {
       ...uiConfig,
       mode: checkoutMode,
       customer: customerId,
-      line_items: [
-        lineItem,
-        ...(complimentaryItems?.map(promoItemToLineItem) || []),
-      ],
-      currency: offer.price?.currency,
-      discounts: discounts?.map((id) => ({ coupon: id })),
+      line_items: lineItems,
+      currency: 'CHF',
+      discounts: discount
+        ? [
+            discount.type === 'DISCOUNT'
+              ? { coupon: discount.value.couponId }
+              : { promotion_code: discount.value.promoCodeId },
+          ]
+        : undefined,
       locale: 'de',
-      billing_address_collection:
-        offer.company === 'PROJECT_R' ? 'required' : 'auto',
       shipping_address_collection: complimentaryItems?.length
         ? {
             allowed_countries: ['CH'],
           }
         : undefined,
-      custom_fields: offer.requiresLogin ? customFields : undefined,
       payment_method_configuration: getPaymentConfigId(offer.company),
       metadata: {
         ...metadata,
@@ -95,45 +160,87 @@ export class Shop {
     })
   }
 
+  public async genLineItems(offer: Offer): Promise<PriceInfo[]> {
+    const pricesLKs = offer.items.map((i) => i.lookupKey)
+
+    const prices = await this.#stripeAdapters[offer.company].prices.list({
+      lookup_keys: pricesLKs,
+    })
+
+    return prices.data.map((p) => {
+      const priceConfig = offer.items.find((i) => i.lookupKey === p.lookup_key)
+
+      return {
+        price: p.id,
+        quantity: 1,
+        tax_rates: priceConfig?.taxRateId
+          ? [priceConfig?.taxRateId]
+          : undefined,
+      }
+    })
+  }
+
+  isValidOffer(id: string) {
+    const offer = this.#offers.find((offer) => id === offer.id)
+
+    if (!offer) {
+      throw new Error('Invalid Offer')
+    }
+
+    return offer
+  }
+
   async getOfferById(
     id: string,
-    options?: { promoCode?: string; withIntroductoryOffer?: boolean },
-  ): Promise<Offer | null> {
+    promoCode?: string,
+  ): Promise<OfferAPIResult | null> {
     const offer = this.#offers.find((offer) => id === offer.id)
 
     if (!offer) {
       return null
     }
 
-    const price = (
-      await this.#stripeAdapters[offer.company].prices.list({
-        active: true,
-        lookup_keys: [offer.defaultPriceLookupKey],
-        expand: ['data.product'],
-      })
-    ).data[0]
+    const pricesLK = offer.items
+      .map((i) => i.lookupKey)
+      .concat(offer.donationOptions?.map((d) => d.lookupKey) || [])
 
-    return this.mergeOfferData(offer, price, options)
+    const prices = await this.#stripeAdapters[offer.company].prices.list({
+      active: true,
+      lookup_keys: pricesLK,
+      expand: ['data.product'],
+    })
+
+    const price = prices.data.find(
+      (p) => p.lookup_key === offer.items[0].lookupKey,
+    )!
+
+    const donations = prices.data.filter((p) =>
+      (offer.donationOptions?.map((d) => d.lookupKey) || []).includes(
+        p.lookup_key!,
+      ),
+    )!
+
+    const discount = await this.resolveDiscount(offer, promoCode)
+
+    return this.mergeOfferData(offer, price, donations, discount?.value)
   }
 
-  async getOffers(options?: {
-    promoCode?: string
-    withIntroductoryOffer?: boolean
-  }): Promise<Offer[]> {
+  async getOffers(promoCode?: string): Promise<OfferAPIResult[]> {
     return (
       await Promise.all([
-        this.getOffersByCompany('REPUBLIK', options),
-        this.getOffersByCompany('PROJECT_R', options),
+        this.getOffersByCompany('REPUBLIK', promoCode),
+        this.getOffersByCompany('PROJECT_R', promoCode),
       ])
     ).flat()
   }
 
-  async getOffersByCompany(
-    company: Company,
-    options?: { promoCode?: string; withIntroductoryOffer?: boolean },
-  ) {
+  async getOffersByCompany(company: Company, promoCode?: string) {
     const offers = this.#offers.filter((offer) => company === offer.company)
-    const lookupKeys = offers.map((o) => o.defaultPriceLookupKey)
+    const lookupKeys = offers.flatMap((o) =>
+      o.items
+        .map((i) => i.lookupKey)
+        .concat(o.donationOptions?.map((d) => d.lookupKey) || []),
+    )
 
     const priceData = (
       await this.#stripeAdapters[company].prices.list({
@@ -147,94 +254,67 @@ export class Shop {
       await Promise.allSettled(
         offers.map(async (offer) => {
           const price = priceData.find(
-            (p) => p.lookup_key === offer.defaultPriceLookupKey,
+            (p) =>
+              p.lookup_key === (offer.items[0] as PriceDefinition).lookupKey,
           )!
 
-          return this.mergeOfferData(offer, price, options)
+          const donations = priceData.filter((p) =>
+            (offer.donationOptions?.map((d) => d.lookupKey) || []).includes(
+              p.lookup_key!,
+            ),
+          )!
+
+          const discount = await this.resolveDiscount(offer, promoCode)
+
+          return this.mergeOfferData(offer, price, donations, discount?.value)
         }),
       )
-    ).reduce((acc: Offer[], res) => {
-      if (res.status === 'fulfilled') {
-        acc.push(res.value)
-      }
-      return acc
-    }, [])
+    )
+      .reduce((acc: OfferAPIResult[], res) => {
+        if (res.status === 'fulfilled') {
+          acc.push(res.value)
+        }
+        return acc
+      }, [])
+      .sort((a, b) => a.price.amount - b.price.amount)
   }
 
   private async mergeOfferData(
     base: Offer,
     price: Stripe.Price,
-    options?: { promoCode?: string; withIntroductoryOffer?: boolean },
-  ): Promise<Offer> {
-    const discount = await this.getIndrodcuturyOfferOrPromotion(base, options)
+    donations: Stripe.Price[],
+    discount?: OfferAPIResult['discount'] | null,
+  ): Promise<OfferAPIResult> {
     return {
       ...base,
-      productId: (price.product as Stripe.Product).id,
       price: {
-        id: price.id,
         amount: price.unit_amount!,
         currency: price.currency,
         recurring: price.recurring
           ? {
               interval: price.recurring.interval as 'year' | 'month',
-              interval_count: price.recurring.interval_count,
+              intervalCount: price.recurring.interval_count,
             }
           : undefined,
       },
+      donationOptions:
+        donations.length > 0
+          ? donations.map((d) => ({
+              id: d.lookup_key!,
+              price: {
+                amount: d.unit_amount!,
+                currency: d.currency,
+                recurring: d.recurring
+                  ? {
+                      interval: d.recurring.interval as 'year' | 'month',
+                      intervalCount: d.recurring.interval_count,
+                    }
+                  : undefined,
+              },
+            }))
+          : undefined,
       discount: discount ?? undefined,
     }
-  }
-
-  private async getIndrodcuturyOfferOrPromotion(
-    offer: Offer,
-    options:
-      | { promoCode?: string; withIntroductoryOffer?: boolean }
-      | undefined,
-  ): Promise<{
-    name: string
-    couponId: string
-    amountOff: number
-    currency: string
-  } | null> {
-    if (!offer.allowPromotions) {
-      return null
-    }
-
-    if (options?.promoCode && !this.inPromoCodeBlocklist(options.promoCode)) {
-      const promotion = await this.getPromotion(
-        offer.company,
-        options.promoCode,
-      )
-      return promotion
-        ? {
-            name: promotion.coupon.name!,
-            couponId: promotion.coupon.id!,
-            amountOff: promotion.coupon.amount_off!,
-            currency: promotion.coupon.currency!,
-          }
-        : null
-    }
-
-    if (options?.withIntroductoryOffer) {
-      const promotion = await this.getPromotion(
-        offer.company,
-        INTRODUCTERY_OFFER_PROMO_CODE,
-      )
-      return promotion
-        ? {
-            name: promotion.coupon.name!,
-            couponId: promotion.coupon.id!,
-            amountOff: promotion.coupon.amount_off!,
-            currency: promotion.coupon.currency!,
-          }
-        : null
-    }
-
-    return null
-  }
-
-  private inPromoCodeBlocklist(promoCode: string) {
-    return this.#promoCodeBlocklist.includes(promoCode.toUpperCase())
   }
 
   async getPromotion(
@@ -254,30 +334,63 @@ export class Shop {
     return promition.data[0]
   }
 
-  public genLineItem(offer: Offer, customPrice?: number) {
+  async resolveDiscount(
+    offer: Offer,
+    promoCode: string | undefined,
+    applyEntryOffer?: boolean,
+  ): Promise<{ type: 'PROMO' | 'DISCOUNT'; value: Discount } | null> {
     if (
-      offer.type === 'SUBSCRIPTION' &&
-      offer.customPrice &&
-      typeof customPrice !== 'undefined'
+      typeof promoCode === 'undefined' &&
+      offer.allowIntroductoryOffer &&
+      applyEntryOffer
     ) {
-      return {
-        price_data: {
-          product: offer.productId!,
-          unit_amount: Math.max(offer.customPrice.min, customPrice),
-          currency: offer.price!.currency,
-          recurring: offer.customPrice!.recurring,
-        },
-        tax_rates: offer.taxRateId ? [offer.taxRateId] : undefined,
-        quantity: 1,
+      const promotion = await this.getPromotion(
+        offer.company,
+        INTRODUCTERY_OFFER_PROMO_CODE,
+      )
+      const discount = promotionToDiscount(promotion)
+      if (discount != null) {
+        return { type: 'DISCOUNT', value: discount }
       }
     }
 
-    return {
-      price: offer.price!.id,
-      tax_rates: offer.taxRateId ? [offer.taxRateId] : undefined,
-      quantity: 1,
+    if (promoCode && offer.allowPromotions) {
+      const promotion = await this.getPromotion(offer.company, promoCode)
+      const discount = promotionToDiscount(promotion)
+      if (discount != null) {
+        return { type: 'PROMO', value: discount }
+      }
     }
+
+    if (offer.fixedDiscount) {
+      const promotion = await this.getPromotion(
+        offer.company,
+        offer.fixedDiscount,
+      )
+      const discount = promotionToDiscount(promotion)
+      if (discount != null) {
+        return { type: 'DISCOUNT', value: discount }
+      }
+    }
+
+    return null
   }
+}
+
+function promotionToDiscount(
+  promotion: Stripe.PromotionCode | null,
+): Discount | null {
+  return promotion
+    ? {
+        name: promotion.coupon.name!,
+        promoCodeId: promotion.id!,
+        couponId: promotion.coupon.id!,
+        duration: promotion.coupon.duration,
+        durationInMonths: promotion.coupon.duration_in_months,
+        amountOff: promotion.coupon.amount_off!,
+        currency: promotion.coupon.currency!,
+      }
+    : null
 }
 
 function getPaymentConfigId(company: Company) {
@@ -304,19 +417,11 @@ export async function checkIntroductoryOfferEligibility(
     return true
   }
 
-  if ((await utils.hasHadMembership(user?.id, pgdb)) === false) {
+  if ((await hasHadMembership(user?.id, pgdb)) === false) {
     return true
   }
 
   return false
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function promoItemToLineItem(_item: ComplimentaryItemOrder) {
-  return {
-    price: 'price_1QQUCcFHX910KaTH9SKJhFZI',
-    quantity: 1,
-  }
 }
 
 function checkoutUIConfig(
@@ -336,8 +441,6 @@ function checkoutUIConfig(
       return {
         ui_mode: 'custom' as Stripe.Checkout.SessionCreateParams.UiMode,
         return_url: returnURL,
-        redirect_on_completion:
-          'if_required' as Stripe.Checkout.SessionCreateParams.RedirectOnCompletion,
       }
     case 'HOSTED':
       return {
