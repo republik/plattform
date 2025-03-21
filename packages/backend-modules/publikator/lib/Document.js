@@ -104,6 +104,7 @@ const prepareMetaForPublish = async ({
     audioSourceAac,
     audioSourceOgg,
     audioSourceDurationMs,
+    audioSourceByteSize,
   } = doc.content.meta
 
   const audioSource =
@@ -115,6 +116,7 @@ const prepareMetaForPublish = async ({
           aac: audioSourceAac,
           ogg: audioSourceOgg,
           durationMs: audioSourceDurationMs,
+          byteSize: audioSourceByteSize,
         }
       : null
 
