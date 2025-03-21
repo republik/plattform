@@ -85,6 +85,7 @@ interface Offer {
   price: Price!
   customPrice: CustomPrice
   donationOptions: [Donation!]
+  discountOptions: [Discount!]
   discount: Discount
   allowPromotions: Boolean
   requiresLogin: Boolean
@@ -97,6 +98,10 @@ type Donation {
   price: Price!
 }
 
+input CustomDonation {
+  amount: Int!
+}
+
 type SubscriptionOffer implements Offer {
   id: ID!
   company: CompanyName!
@@ -104,6 +109,7 @@ type SubscriptionOffer implements Offer {
   price: Price!
   customPrice: CustomPrice
   donationOptions: [Donation!]
+  discountOptions: [Discount!]
   discount: Discount
   allowPromotions: Boolean
   requiresLogin: Boolean
@@ -118,6 +124,7 @@ type GiftOffer implements Offer {
   price: Price!
   customPrice: CustomPrice
   donationOptions: [Donation!]
+  discountOptions: [Discount!]
   discount: Discount
   allowPromotions: Boolean
   requiresLogin: Boolean

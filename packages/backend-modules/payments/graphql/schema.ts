@@ -17,6 +17,7 @@ type mutations {
     offerId: ID!,
     promoCode: String,
     withDonation: ID
+    withCustomDonation: CustomDonation
     complimentaryItems: [ComplimentaryItemOrder]
     options: CheckoutSessionOptions
   ): CheckoutSession

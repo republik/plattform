@@ -32,6 +32,7 @@ export type Offer = {
   items: PriceDefinition[]
   complimentaryItems?: ComplimentaryItem[]
   donationOptions?: PriceDefinition[]
+  discountOpitions?: string[]
   fixedDiscount?: string
   requiresLogin: boolean
   requiresAddress: boolean
@@ -101,6 +102,7 @@ export const Offers: Readonly<Offer>[] = [
       { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_120' },
       { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_240' },
     ],
+    discountOpitions: ['DISCOUNTYEARLYSUBSCRIPTION1'],
     allowPromotions: true,
   },
   {

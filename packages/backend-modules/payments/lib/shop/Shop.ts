@@ -19,6 +19,26 @@ export function isPromoCodeInBlocklist(promoCode: string) {
   return [INTRODUCTERY_OFFER_PROMO_CODE].includes(promoCode)
 }
 
+type PriceInfo =
+  | {
+      price: string
+      quantity: number
+      tax_rates?: string[]
+    }
+  | {
+      price_data: {
+        unit_amount: number
+        product: string
+        currency: 'CHF'
+        recurring: {
+          interval: 'year'
+          interval_count: 1
+        }
+      }
+      quantity: number
+      tax_rates?: string[]
+    }
+
 export class Shop {
   #offers: Offer[]
   #stripeAdapters: Record<Company, Stripe> = {
@@ -47,7 +67,7 @@ export class Shop {
     promoCode?: string
     applyEntryOffer?: boolean
     customPrice?: number
-    selectedDonation?: string
+    selectedDonation?: string | { amount: number }
     complimentaryItems?: ComplimentaryItemOrder[]
     metadata?: Record<string, string>
     returnURL?: string
@@ -55,14 +75,30 @@ export class Shop {
   }) {
     const lineItems = await this.genLineItems(offer)
     if (typeof offer.donationOptions !== 'undefined' && selectedDonation) {
-      const res = await this.#stripeAdapters[offer.company].prices.list({
-        lookup_keys: [selectedDonation],
-      })
+      if (typeof selectedDonation === 'string') {
+        const res = await this.#stripeAdapters[offer.company].prices.list({
+          lookup_keys: [selectedDonation],
+        })
 
-      const donation = res.data[0]
-      if (donation?.lookup_key === selectedDonation) {
+        const donation = res.data[0]
+        if (donation?.lookup_key === selectedDonation) {
+          lineItems.push({
+            price: donation.id,
+            quantity: 1,
+          })
+        }
+      }
+      if (typeof selectedDonation === 'object') {
         lineItems.push({
-          price: donation.id,
+          price_data: {
+            unit_amount: selectedDonation.amount,
+            currency: 'CHF',
+            product: 'prod_RlF5BclupFNlhi',
+            recurring: {
+              interval: 'year',
+              interval_count: 1,
+            },
+          },
           quantity: 1,
         })
       }
@@ -124,9 +160,7 @@ export class Shop {
     })
   }
 
-  public async genLineItems(
-    offer: Offer,
-  ): Promise<{ price: string; quantity: number; tax_rates?: string[] }[]> {
+  public async genLineItems(offer: Offer): Promise<PriceInfo[]> {
     const pricesLKs = offer.items.map((i) => i.lookupKey)
 
     const prices = await this.#stripeAdapters[offer.company].prices.list({

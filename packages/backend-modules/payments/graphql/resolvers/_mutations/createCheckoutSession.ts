@@ -14,6 +14,7 @@ type CreateCheckoutSessionArgs = {
   offerId: string
   promoCode?: string
   withDonation?: string
+  withCustomDonation?: { amount: number }
   complimentaryItems: {
     id: string
     quantity: number
@@ -55,7 +56,7 @@ export = async function createCheckoutSession(
       ctx.pgdb,
       ctx.user,
     ),
-    selectedDonation: args.withDonation,
+    selectedDonation: args.withDonation || args.withCustomDonation,
     metadata: args?.options?.metadata,
     returnURL: args?.options?.returnURL,
     complimentaryItems: args.complimentaryItems,
