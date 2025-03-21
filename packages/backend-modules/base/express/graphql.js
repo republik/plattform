@@ -125,7 +125,7 @@ module.exports = async (
           return {
             async didEncounterErrors({ context, errors }) {
               console.error('GRAPHQL REQUEST ERROR', {
-                ...context.req._log(),
+                req: context.req._log(),
                 graphQLErrors: errors,
               })
             },
