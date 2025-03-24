@@ -114,30 +114,36 @@ const useSchema = ({
   const { toggleAudioPlayer } = useContext(AudioContext)
   const toggleAudioPlayerRef = useRef(toggleAudioPlayer)
   toggleAudioPlayerRef.current = toggleAudioPlayer
+  const showPlayButtonRef = useRef(showPlayButton)
+  showPlayButtonRef.current = showPlayButton
 
   const titleBreakout = meta?.series?.overview?.id === article?.id
 
   const MissingNode = isEditor ? undefined : ({ children }) => children
 
   const template = meta?.template
-  const audioMeta = useMemo(
-    () =>
-      meta && {
-        title: meta?.title,
-        path: meta?.path,
-        publishDate: meta?.publishDate,
-        image: meta?.image,
-        audioSource: meta?.audioSource,
-      },
-    [meta],
-  )
-  const articleId = article?.id
+  const audioProps = {
+    id: article?.id,
+    meta: {
+      title: meta?.title,
+      path: meta?.path,
+      publishDate: meta?.publishDate,
+      image: meta?.image,
+      audioSource: meta?.audioSource,
+    },
+  }
+  const audioPropsRef = useRef(audioProps)
+  audioPropsRef.current = audioProps
 
-  const schema = useMemo(
-    () =>
+  const schema = useMemo(() => {
+    console.log('generate schema', {
+      template,
+      inNativeApp,
+      inNativeIOSApp,
+      titleBreakout,
+    })
+    return (
       template &&
-      audioMeta &&
-      articleId &&
       getSchemaCreator(template)({
         t,
         Link: HrefLink,
@@ -150,10 +156,7 @@ const useSchema = ({
         titleBreakout,
         onAudioCoverClick: () =>
           toggleAudioPlayerRef.current(
-            {
-              id: articleId,
-              meta: audioMeta,
-            },
+            audioPropsRef.current,
             AudioPlayerLocations.ARTICLE,
           ),
         getVideoPlayerProps:
@@ -171,19 +174,12 @@ const useSchema = ({
         withCommentData,
         CommentLink,
         ActionBar: BrowserOnlyActionBar,
-        AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
-      }),
-    [
-      template,
-      articleId,
-      audioMeta,
-      inNativeApp,
-      inNativeIOSApp,
-      showPlayButton,
-      titleBreakout,
-      t,
-    ],
-  )
+        AudioPlayButton: showPlayButtonRef.current
+          ? TeaserAudioPlayButton
+          : undefined,
+      })
+    )
+  }, [template, inNativeApp, inNativeIOSApp, titleBreakout, t])
 
   const renderSchema = (content) =>
     renderMdast(
