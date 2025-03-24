@@ -260,7 +260,7 @@ export const derive = async (
         type: 'SyntheticReadAloud',
         status: 'Failure',
         result: { error },
-        userId: user?.id,
+        userId: user.id,
         ...({
           author: {
             name: user.name,
