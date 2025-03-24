@@ -4,11 +4,8 @@ import {
   Shop,
   checkIntroductoryOfferEligibility,
   activeOffers,
-  isPromoCodeInBlocklist,
 } from '../../../lib/shop'
-import { Payments } from '../../../lib/payments'
-import { default as Auth } from '@orbiting/backend-modules-auth'
-import { Company } from '../../../lib/types'
+import { CheckoutSessionOptionBuilder } from '../../../lib/shop/CheckoutSessionOptionBuilder'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
@@ -35,53 +32,17 @@ export = async function createCheckoutSession(
 ) {
   const shop = new Shop(activeOffers())
 
-  const offer = shop.isValidOffer(args.offerId)
+  const sessionOptions = await new CheckoutSessionOptionBuilder(
+    args.offerId,
+    args.options?.uiMode,
+  ).withCustomer(ctx.user)
 
-  if (offer?.requiresLogin) Auth.ensureUser(ctx.user)
+  sessionOptions
+    .withMetadata(args.options?.metadata)
+    .withEntryOffer(await checkIntroductoryOfferEligibility(ctx.pgdb, ctx.user))
+    .withPromoCode(args.promoCode)
+    .withDonation(args.withDonation || args.withCustomDonation)
+    .withReturnURL(args.options?.returnURL)
 
-  const promoCode =
-    args.promoCode && !isPromoCodeInBlocklist(args.promoCode)
-      ? args.promoCode
-      : undefined
-
-  const customerId = await getCustomer(offer.company, ctx.user?.id)
-
-  const sess = await shop.generateCheckoutSession({
-    offer: offer,
-    uiMode: args.options?.uiMode ?? 'EMBEDDED',
-    customerId: customerId,
-    customPrice: args.options?.customPrice,
-    promoCode: promoCode,
-    applyEntryOffer: await checkIntroductoryOfferEligibility(
-      ctx.pgdb,
-      ctx.user,
-    ),
-    selectedDonation: args.withDonation || args.withCustomDonation,
-    metadata: args?.options?.metadata,
-    returnURL: args?.options?.returnURL,
-    complimentaryItems: args.complimentaryItems,
-  })
-
-  return {
-    company: offer.company,
-    sessionId: sess.id,
-    clientSecret: sess.client_secret,
-    url: sess.url,
-  }
-}
-
-async function getCustomer(company: Company, userId?: string) {
-  if (!userId) {
-    return undefined
-  }
-
-  const customerId = (
-    await Payments.getInstance().getCustomerIdForCompany(userId, company)
-  )?.customerId
-
-  if (customerId) {
-    return customerId
-  }
-
-  return await Payments.getInstance().createCustomer(company, userId)
+  return await shop.generateCheckoutSession(sessionOptions.build())
 }

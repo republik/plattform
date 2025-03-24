@@ -121,7 +121,9 @@ export class Shop {
     const checkoutMode =
       offer.type === 'SUBSCRIPTION' ? 'subscription' : 'payment'
 
-    return this.#stripeAdapters[offer.company].checkout.sessions.create({
+    const sess = await this.#stripeAdapters[
+      offer.company
+    ].checkout.sessions.create({
       ...uiConfig,
       mode: checkoutMode,
       customer: customerId,
@@ -158,6 +160,13 @@ export class Shop {
         terms_of_service: 'required',
       },
     })
+
+    return {
+      company: offer.company,
+      sessionId: sess.id,
+      clientSecret: sess.client_secret,
+      url: sess.url,
+    }
   }
 
   public async genLineItems(offer: Offer): Promise<PriceInfo[]> {
