@@ -1,0 +1,12 @@
+query ArticleRecommendations($path: String!) {
+  article: document(path: $path) {
+    id
+    meta {
+      recommendations {
+        nodes {
+          ...FeedDocument
+        }
+      }
+    }
+  }
+}

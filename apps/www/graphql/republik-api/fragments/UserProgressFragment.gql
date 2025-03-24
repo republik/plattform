@@ -1,0 +1,13 @@
+fragment UserProgress on Document {
+  userProgress {
+    id
+    percentage
+    nodeId
+    updatedAt
+    max {
+      id
+      percentage
+      updatedAt
+    }
+  }
+}

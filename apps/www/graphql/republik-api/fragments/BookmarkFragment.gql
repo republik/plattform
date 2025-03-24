@@ -1,0 +1,6 @@
+fragment Bookmark on Document {
+  userBookmark: userCollectionItem(collectionName: "bookmarks") {
+    id
+    createdAt
+  }
+}

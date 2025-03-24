@@ -1,10 +1,11 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { Center, Interaction, fontStyles } from '@project-r/styleguide'
-import { useArticleRecommendationsQuery } from './graphql/getArticleRecommendations.graphql'
 import { css } from 'glamor'
 import Loader from '../Loader'
 import DocumentList from '../Feed/DocumentList'
 import { useTranslation } from '../../lib/withT'
+import { useQuery } from '@apollo/client'
+import { ArticleRecommendationsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const styles = {
   heading: css({
@@ -22,7 +23,7 @@ type ArticleSuggestionsFeedProps = {
 
 const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
   const { t } = useTranslation()
-  const { data, loading } = useArticleRecommendationsQuery({
+  const { data, loading } = useQuery(ArticleRecommendationsDocument, {
     variables: {
       path,
     },
@@ -31,25 +32,28 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
   return (
     <Loader
       loading={loading}
-      render={() => (
-        <>
-          {data?.article?.meta?.recommendations?.nodes.length > 0 && (
-            <Center>
-              <section {...styles.wrapper}>
-                <Interaction.P {...styles.heading}>
-                  {t('articleRecommendations/heading')}
-                </Interaction.P>
-                <DocumentList
-                  documents={data.article.meta.recommendations.nodes}
-                  feedProps={{
-                    showHeader: false,
-                  }}
-                />
-              </section>
-            </Center>
-          )}
-        </>
-      )}
+      render={() => {
+        const documents = data?.article?.meta?.recommendations?.nodes
+        return (
+          <>
+            {documents.length > 0 && (
+              <Center>
+                <section {...styles.wrapper}>
+                  <Interaction.P {...styles.heading}>
+                    {t('articleRecommendations/heading')}
+                  </Interaction.P>
+                  <DocumentList
+                    documents={documents}
+                    feedProps={{
+                      showHeader: false,
+                    }}
+                  />
+                </section>
+              </Center>
+            )}
+          </>
+        )
+      }}
     />
   )
 }
