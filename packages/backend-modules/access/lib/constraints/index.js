@@ -1,6 +1,7 @@
 module.exports = {
   granterDenylist: require('./granterDenylist'),
   limitGrants: require('./limitGrants'),
+  limitClaims: require('./limitClaims'),
   limitRevokedSlots: require('./limitRevokedSlots'),
   limitSlots: require('./limitSlots'),
   notGrantable: require('./notGrantable'),
