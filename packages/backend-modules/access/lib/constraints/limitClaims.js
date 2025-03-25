@@ -9,7 +9,6 @@ const debug = require('debug')('access:lib:constraints:limitClaims')
  */
 
 const isGrantable = async (args, context) => {
-  console.log('---- limit claims')
   const { settings, granter, campaign } = args
   const { pgdb } = context
 
