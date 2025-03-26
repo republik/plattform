@@ -1,12 +1,17 @@
 import { forwardRef } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import compose from 'lodash/flowRight'
 
-import withT from '../../lib/withT'
+import { useMutation } from '@apollo/client'
+import {
+  SubmitUserProgressConsentDocument,
+  RevokeUserProgressConsentDocument,
+  UpsertDocumentProgressDocument,
+  RemoveDocumentProgressDocument,
+} from '#graphql/republik-api/__generated__/gql/graphql'
+import { useTranslation } from '../../lib/withT'
 import datetime from '../Article/Progress/datetime'
 
-import { withProgressApi } from '../Article/Progress/api'
 import {
   ProgressCircle,
   IconButton,
@@ -24,13 +29,8 @@ const styles = {
 
 const UserProgress = (
   {
-    t,
     documentId,
     userProgress,
-    upsertDocumentProgress,
-    removeDocumentProgress,
-    revokeProgressConsent,
-    submitProgressConsent,
     forceShortLabel,
     noCallout,
     noScroll,
@@ -38,6 +38,12 @@ const UserProgress = (
   },
   { restoreArticleProgress, showConsentPrompt },
 ) => {
+  const { t } = useTranslation()
+  const [submitProgressConsent] = useMutation(SubmitUserProgressConsentDocument)
+  const [revokeProgressConsent] = useMutation(RevokeUserProgressConsentDocument)
+  const [upsertDocumentProgress] = useMutation(UpsertDocumentProgressDocument)
+  const [removeDocumentProgress] = useMutation(RemoveDocumentProgressDocument)
+
   // Renders the Progress Consent Form as a Callout in the Article Top Actionbar
   if (showConsentPrompt && !noCallout) {
     const ProgressConsentIcon = forwardRef((props, ref) => (
@@ -89,7 +95,9 @@ const UserProgress = (
       label={!forceShortLabel && t('article/actionbar/progress/read')}
       title={t('article/actionbar/progress/read')}
       onClick={() => {
-        removeDocumentProgress(documentId)
+        removeDocumentProgress({
+          variables: { documentId },
+        })
       }}
       ref={ref}
       {...props}
@@ -101,7 +109,9 @@ const UserProgress = (
       Icon={IconCheckSmall}
       title={t('article/actionbar/progress/markasread')}
       onClick={() => {
-        upsertDocumentProgress(documentId, 1, '')
+        upsertDocumentProgress({
+          variables: { documentId, percentage: 1, nodeId: '' },
+        })
       }}
       ref={ref}
       {...props}
@@ -130,7 +140,9 @@ const UserProgress = (
             label={t('article/actionbar/progress/unread')}
             labelShort={t('article/actionbar/progress/unread')}
             onClick={() => {
-              removeDocumentProgress(documentId)
+              removeDocumentProgress({
+                variables: { documentId },
+              })
             }}
           />
         </CalloutMenu>
@@ -171,7 +183,9 @@ const UserProgress = (
             label={t('article/actionbar/progress/markasread')}
             labelShort={t('article/actionbar/progress/markasread')}
             onClick={() => {
-              upsertDocumentProgress(documentId, 1, '')
+              upsertDocumentProgress({
+                variables: { documentId, percentage: 1, nodeId: '' },
+              })
             }}
           />
         </CalloutMenu>
@@ -185,4 +199,4 @@ UserProgress.contextTypes = {
   showConsentPrompt: PropTypes.bool,
 }
 
-export default compose(withT, withProgressApi)(UserProgress)
+export default UserProgress

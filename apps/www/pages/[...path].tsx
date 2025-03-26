@@ -2,9 +2,9 @@ import Article from '../components/Article/Page'
 import { GetStaticPaths } from 'next'
 import { ParsedUrlQuery } from 'querystring'
 import { gql } from '@apollo/client'
-import { getDocument } from '../components/Article/graphql/getDocument'
 import { createGetStaticProps } from '../lib/apollo/helpers'
 import { isExternal } from '../components/StatusError'
+import { ArticleDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 type Params = {
   path: string[]
@@ -30,7 +30,7 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
     const {
       data: { article },
     } = await client.query({
-      query: getDocument,
+      query: ArticleDocument,
       variables: {
         path,
       },

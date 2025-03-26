@@ -1,0 +1,17 @@
+mutation UpsertDocumentProgress(
+  $documentId: ID!
+  $percentage: Float!
+  $nodeId: String!
+) {
+  upsertDocumentProgress(
+    documentId: $documentId
+    percentage: $percentage
+    nodeId: $nodeId
+  ) {
+    id
+    document {
+      id
+      ...UserProgress
+    }
+  }
+}

@@ -1,21 +1,17 @@
-import dynamic from 'next/dynamic'
-
 import {
   Overlay,
   OverlayBody,
   OverlayToolbar,
-  OverlayToolbarClose,
   Interaction,
   A,
 } from '@project-r/styleguide'
 
 import Loader from '../Loader'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { getDocument } from '../Article/graphql/getDocument'
 import { splitByTitle } from '../../lib/utils/mdast'
 import { renderMdast } from '@republik/mdast-react-render'
 import { createPageSchema } from '@project-r/styleguide'
+import { useQuery } from '@apollo/client'
+import { ArticleDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const pages = [
   {
@@ -66,8 +62,16 @@ const RenderArticle = ({ data }) => (
   />
 )
 
-const LegalOverlay = ({ onClose, href, title, data }) => {
+const LegalOverlay = ({ onClose, href, title }) => {
   const page = pages.find((p) => p.href === href)
+  const { data } = useQuery(ArticleDocument, {
+    skip: (props) => pages.find((p) => p.href === props.href && p.content),
+    options: (props) => ({
+      variables: {
+        path: props.href,
+      },
+    }),
+  })
 
   return (
     <Overlay mUpStyle={{ maxWidth: 720, minHeight: 0 }} onClose={onClose}>
@@ -89,13 +93,4 @@ const LegalOverlay = ({ onClose, href, title, data }) => {
   )
 }
 
-export default compose(
-  graphql(getDocument, {
-    skip: (props) => pages.find((p) => p.href === props.href && p.content),
-    options: (props) => ({
-      variables: {
-        path: props.href,
-      },
-    }),
-  }),
-)(LegalOverlay)
+export default LegalOverlay
