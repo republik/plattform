@@ -46,7 +46,7 @@ module.exports = {
     )
   },
   status: (grant, args, { user: me, t }) => {
-    if (!Roles.userIsInRoles(me, PRIVILEDGED_ROLES)) {
+    if (!Roles.userIsMeOrInRoles(me, PRIVILEDGED_ROLES)) {
       return null
     }
 
