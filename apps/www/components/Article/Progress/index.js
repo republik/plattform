@@ -50,7 +50,9 @@ ProgressContextProvider.childContextTypes = {
 const Progress = ({ children, article, isArticle }) => {
   const { me } = useMe()
   const { query } = useRouter()
-  const [upsertDocumentProgress] = useMutation(UpsertDocumentProgressDocument)
+  const [upsertDocumentProgress] = useMutation(UpsertDocumentProgressDocument, {
+    //ignoreResults: true,
+  })
 
   const refContainer = useRef()
   const lastClosestIndex = useRef()

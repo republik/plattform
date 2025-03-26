@@ -31,7 +31,7 @@ const LegacyAudioPlayer = () => {
           <>
             {!meLoading && legacyPlayerItem && (
               <BottomPanel wide foreground={true} visible={audioPlayerVisible}>
-                <ProgressComponent isArticle={false}>
+                <ProgressComponent article={undefined} isArticle={false}>
                   <LegacyAudioPlayerUI
                     // when the audio src changes we need to remount the component
                     key={
