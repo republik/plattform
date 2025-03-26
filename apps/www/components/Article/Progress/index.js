@@ -157,7 +157,13 @@ const Progress = ({ children, article, isArticle }) => {
         Math.floor(article.userProgress.percentage * 100) !==
           Math.floor(percentage * 100))
     ) {
-      upsertDocumentProgress(article.id, percentage, element.nodeId)
+      upsertDocumentProgress({
+        variables: {
+          documentId: article.id,
+          percentage,
+          nodeId: element.nodeId,
+        },
+      })
     }
   }, 300)
 
