@@ -246,40 +246,6 @@ export const derive = async (
   const { commitId } = getParsedDocumentId(document.id)
 
   if (user) {
-    const pendingCount = await pgdb.queryOneField(`SELECT COUNT(d.id)
-      FROM publikator.derivatives d
-      JOIN publikator.commits c ON c.id = d."commitId"
-      WHERE status = 'Pending'
-      AND c."repoId" = :repoId;`, {repoId: document.repoId})
-      
-    if (pendingCount > 0) {
-      handlerDebug('more than one pending derivatives for this repo. skipping synthesizing.', {
-        userId: user.id,
-      })
-
-      const error = {
-        message: 'more than one pending derivatives for this repo',
-      }
-
-      const derivative = await pgdb.publikator.derivatives.insertAndGet({
-        commitId,
-        type: 'SyntheticReadAloud',
-        status: 'Failure',
-        result: { error },
-        userId: user?.id,
-        ...(user && {
-          author: {
-            name: user.name,
-            email: user.email,
-          },
-        }),
-        updatedAt: new Date(),
-        failedAt: new Date(),
-      })
-
-      return derivative
-    }
-
     if (!document.content?.meta?.syntheticVoice) {
       handlerDebug('Synthetic Voice not set. Skipping synthesizing.', {
         userId: user.id,
@@ -294,8 +260,8 @@ export const derive = async (
         type: 'SyntheticReadAloud',
         status: 'Failure',
         result: { error },
-        userId: user?.id,
-        ...(user && {
+        userId: user.id,
+        ...({
           author: {
             name: user.name,
             email: user.email,

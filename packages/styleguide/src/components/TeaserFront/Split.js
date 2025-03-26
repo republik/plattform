@@ -178,8 +178,4 @@ Split.propTypes = {
   audioPlayButton: PropTypes.node,
 }
 
-Split.defaultProps = {
-  alt: '',
-}
-
 export default Split

@@ -773,8 +773,16 @@
       "value": "Ihr Mitgliedschaftsbeitrag ist überfällig"
     },
     {
+      "key": "api/email/membership_owner_prolong_yearly_abo_winback_5/subject",
+      "value": "Wie behalten Sie die Übersicht?"
+    },
+    {
       "key": "api/email/membership_owner_prolong_yearly_abo_winback_7/subject",
       "value": "Republik-Abo jetzt mit Rabatt verlängern"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_yearly_abo_winback_12/subject",
+      "value": "Der Medienkrise etwas entgegensetzen"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_winback_16/subject",

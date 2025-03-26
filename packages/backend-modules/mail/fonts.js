@@ -8,54 +8,54 @@
 module.exports = {
   FONT_FACES: `@font-face {
   font-family: 'Rubis';
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot?#iefix)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.eot);
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.eot?#iefix)
       format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff2)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.woff2)
       format('woff2'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.woff)
       format('woff'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.ttf)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regular.ttf)
       format('truetype');
 }
 @font-face {
   font-family: 'Rubis';
   font-style: italic;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot?#iefix)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.eot);
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.eot?#iefix)
       format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff2)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.woff2)
       format('woff2'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.woff)
       format('woff'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.ttf)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-regularitalic.ttf)
       format('truetype');
 }
 @font-face {
   font-family: 'Rubis';
   font-weight: 700;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot?#iefix)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.eot);
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.eot?#iefix)
       format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff2)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.woff2)
       format('woff2'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.woff)
       format('woff'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.ttf)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bold.ttf)
       format('truetype');
 }
 @font-face {
   font-family: 'Rubis';
   font-weight: 700;
   font-style: italic;
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot);
-  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.eot?#iefix)
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.eot);
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.eot?#iefix)
       format('embedded-opentype'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff2)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.woff2)
       format('woff2'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.woff)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.woff)
       format('woff'),
-    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis.ttf)
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.ttf)
       format('truetype');
 }
 @font-face {
