@@ -42,7 +42,6 @@ import SeriesNavBar from './SeriesNavBar'
 import Extract from './Extract'
 import Progress from './Progress'
 import PodcastButtons from './PodcastButtons'
-import { getDocument } from './graphql/getDocument'
 import ShareImage from './ShareImage'
 import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
@@ -51,6 +50,7 @@ import { reportError } from 'lib/errors/reportError'
 import NewsletterTitleBlock from './components/NewsletterTitleBlock'
 import PublikatorLinkBlock from './components/PublikatorLinkBlock'
 import useSchema from './useSchema'
+import { ArticleDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const EmptyComponent = ({ children }) => children
 
@@ -82,7 +82,7 @@ const ArticlePage = ({
     loading: articleLoading,
     error: articleError,
     refetch: articleRefetch,
-  } = useQuery(getDocument, {
+  } = useQuery(ArticleDocument, {
     variables: {
       path: cleanedPath,
     },
@@ -93,7 +93,7 @@ const ArticlePage = ({
 
   useEffect(() => {
     if (articleError) {
-      reportError('Article Page getDocument Query', articleError)
+      reportError('Article Page: ArticleDocument Query', articleError)
     }
   }, [articleError])
 

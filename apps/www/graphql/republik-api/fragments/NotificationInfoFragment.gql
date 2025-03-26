@@ -1,0 +1,5 @@
+fragment NotificationInfo on Notification {
+  id
+  readAt
+  createdAt
+}

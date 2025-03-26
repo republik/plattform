@@ -36,7 +36,7 @@ const ArticleRecommendationsFeed = ({ path }: ArticleSuggestionsFeedProps) => {
         const documents = data?.article?.meta?.recommendations?.nodes
         return (
           <>
-            {documents.length > 0 && (
+            {documents?.length > 0 && (
               <Center>
                 <section {...styles.wrapper}>
                   <Interaction.P {...styles.heading}>
