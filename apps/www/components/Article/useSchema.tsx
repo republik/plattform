@@ -136,12 +136,6 @@ const useSchema = ({
   audioPropsRef.current = audioProps
 
   const schema = useMemo(() => {
-    console.log('generate schema', {
-      template,
-      inNativeApp,
-      inNativeIOSApp,
-      titleBreakout,
-    })
     return (
       template &&
       getSchemaCreator(template)({
