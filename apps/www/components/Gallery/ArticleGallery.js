@@ -4,14 +4,7 @@ import Gallery from './Gallery'
 import { imageSizeInfo } from '@republik/mdast-react-render'
 import { postMessage } from '../../lib/withInNativeApp'
 import { removeQuery } from '../../lib/utils/link'
-import { MIN_GALLERY_IMG_WIDTH } from '@project-r/styleguide'
-
-export const mdastToString = (node) =>
-  node
-    ? node.value ||
-      (node.children && node.children.map(mdastToString).join('')) ||
-      ''
-    : ''
+import { mdastToString, MIN_GALLERY_IMG_WIDTH } from '@project-r/styleguide'
 
 const getGroupFigures = (group) => {
   const nodes = group.children

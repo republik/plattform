@@ -51,7 +51,7 @@ export default async function RootLayout({
                 {children}
                 <NativeAppMessageSync />
                 <SyncUTMToSessionStorage />
-                <PaynoteOverlay />
+                {/* <PaynoteOverlay /> */}
               </AnalyticsProvider>
             </MeContextProvider>
           </ApolloWrapper>
