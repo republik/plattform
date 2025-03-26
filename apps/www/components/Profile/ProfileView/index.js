@@ -196,6 +196,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
             {user.pgpPublicKeyId && (
               <IconButton
                 href={`/pgp/${user.username || user.id}.asc`}
+                download
                 Icon={IconVpnKey}
                 label={user.pgpPublicKeyId.toUpperCase()}
                 labelShort={user.pgpPublicKeyId.toUpperCase()}

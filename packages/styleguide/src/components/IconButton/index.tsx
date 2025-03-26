@@ -32,6 +32,7 @@ const IconButton = React.forwardRef<
     disabled?: boolean
     attributes?: Attributes
     invert?: boolean
+    download?: boolean
   }
 >(
   (
@@ -52,6 +53,7 @@ const IconButton = React.forwardRef<
       disabled,
       attributes,
       invert,
+      download,
     },
     ref,
   ) => {
@@ -79,6 +81,7 @@ const IconButton = React.forwardRef<
         ref={ref}
         title={title}
         disabled={disabled}
+        download={download}
       >
         <Icon
           size={size || ICON_SIZE}
