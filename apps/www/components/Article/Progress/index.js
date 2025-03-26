@@ -1,19 +1,18 @@
 import { Component, Fragment, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import compose from 'lodash/flowRight'
-import { withApollo } from '@apollo/client/react/hoc'
+import { useMutation } from '@apollo/client'
+import { UpsertDocumentProgressDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import debounce from 'lodash/debounce'
 
 import { mediaQueries, A } from '@project-r/styleguide'
 
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
 import { scrollIt } from '../../../lib/utils/scroll'
-import withMe from '../../../lib/apollo/withMe'
 import { PROGRESS_EXPLAINER_PATH } from '../../../lib/constants'
+import { useMe } from '../../../lib/context/MeContext'
+import { useRouter } from 'next/router'
 
-import { withProgressApi } from './api'
 import { useMediaProgress } from '../../Audio/MediaProgress'
-import { withRouter } from 'next/router'
 import Link from 'next/link'
 
 const MIN_INDEX = 2
@@ -48,14 +47,11 @@ ProgressContextProvider.childContextTypes = {
   showConsentPrompt: PropTypes.bool,
 }
 
-const Progress = ({
-  children,
-  me,
-  article,
-  isArticle,
-  router,
-  upsertDocumentProgress,
-}) => {
+const Progress = ({ children, article, isArticle }) => {
+  const { me } = useMe()
+  const { query } = useRouter()
+  const [upsertDocumentProgress] = useMutation(UpsertDocumentProgressDocument)
+
   const refContainer = useRef()
   const lastClosestIndex = useRef()
   const refSaveProgress = useRef()
@@ -216,11 +212,9 @@ const Progress = ({
   const showConsentPrompt =
     isArticle &&
     me &&
-    !router.query.trialSignup &&
+    !query.trialSignup &&
     me.progressConsent === null &&
-    article &&
-    article.meta &&
-    article.meta.path !== PROGRESS_EXPLAINER_PATH
+    article?.meta?.path !== PROGRESS_EXPLAINER_PATH
 
   return (
     <ProgressContextProvider
@@ -250,9 +244,4 @@ Progress.defaultProps = {
   isArticle: true,
 }
 
-export default compose(
-  withApollo,
-  withProgressApi,
-  withMe,
-  withRouter,
-)(Progress)
+export default Progress

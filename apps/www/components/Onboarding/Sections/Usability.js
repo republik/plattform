@@ -1,5 +1,9 @@
 import { Fragment } from 'react'
-import { Mutation } from '@apollo/client/react/components'
+import { useMutation } from '@apollo/client'
+import {
+  SubmitUserProgressConsentDocument,
+  RevokeUserProgressConsentDocument,
+} from '#graphql/republik-api/__generated__/gql/graphql'
 import { gql } from '@apollo/client'
 import { css } from 'glamor'
 
@@ -7,10 +11,6 @@ import { Interaction, mediaQueries, Button, A } from '@project-r/styleguide'
 
 import Section from '../Section'
 import ProgressSettings from '../../Account/ProgressSettings'
-import {
-  submitConsentMutation,
-  revokeConsentMutation,
-} from '../../Article/Progress/api'
 import { PROGRESS_EXPLAINER_PATH } from '../../../lib/constants'
 import withT from '../../../lib/withT'
 import Link from 'next/link'
@@ -50,6 +50,14 @@ export const fragments = {
 
 const Usability = (props) => {
   const { user, onContinue, t } = props
+  const [submitProgressConsent, { loading: submitting }] = useMutation(
+    SubmitUserProgressConsentDocument,
+    { onCompleted: () => onContinue(props) },
+  )
+  const [revokeProgressConsent, { loading: revoking }] = useMutation(
+    RevokeUserProgressConsentDocument,
+    { onCompleted: () => onContinue(props) },
+  )
 
   // Is ticked when either REVOKE or GRANT consent was submitted.
   const hasConsented = user && user.PROGRESS !== null
@@ -93,30 +101,15 @@ const Usability = (props) => {
             )}
           </P>
           <div {...styles.actions}>
-            <Mutation
-              mutation={submitConsentMutation}
-              onCompleted={() => onContinue(props)}
+            <Button
+              onClick={() => submitProgressConsent()}
+              disabled={submitting}
             >
-              {(submit, { loading }) => {
-                return (
-                  <Button onClick={submit} disabled={loading}>
-                    {t('Onboarding/Sections/Usability/button/submitConsent')}
-                  </Button>
-                )
-              }}
-            </Mutation>
-            <Mutation
-              mutation={revokeConsentMutation}
-              onCompleted={() => onContinue(props)}
-            >
-              {(revoke, { loading }) => {
-                return (
-                  <Button onClick={revoke} disabled={loading}>
-                    {t('Onboarding/Sections/Usability/button/revokeConsent')}
-                  </Button>
-                )
-              }}
-            </Mutation>
+              {t('Onboarding/Sections/Usability/button/submitConsent')}
+            </Button>
+            <Button onClick={() => revokeProgressConsent()} disabled={revoking}>
+              {t('Onboarding/Sections/Usability/button/revokeConsent')}
+            </Button>
           </div>
         </Fragment>
       )}

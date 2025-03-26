@@ -1,0 +1,9 @@
+mutation RemoveDocumentProgress($documentId: ID!) {
+  removeDocumentProgress(documentId: $documentId) {
+    id
+    document {
+      id
+      ...UserProgress
+    }
+  }
+}

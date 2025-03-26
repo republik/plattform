@@ -1,0 +1,3 @@
+fragment UserProgressConsent on User {
+  progressConsent: hasConsentedTo(name: "PROGRESS")
+}

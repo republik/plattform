@@ -1,0 +1,6 @@
+mutation RevokeUserProgressConsent {
+  revokeConsent(name: "PROGRESS") {
+    id
+    ...UserProgressConsent
+  }
+}

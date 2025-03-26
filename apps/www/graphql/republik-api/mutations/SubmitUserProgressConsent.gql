@@ -1,0 +1,6 @@
+mutation SubmitUserProgressConsent {
+  submitConsent(name: "PROGRESS") {
+    id
+    ...UserProgressConsent
+  }
+}
