@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 
 import {
   Flyer,
@@ -10,13 +10,11 @@ import {
 } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
-import { useMe } from '../../lib/context/MeContext'
 
 import HrefLink from '../Link/Href'
 
 import { getTileActionBar } from './ActionBar'
 import Footer from './Footer'
-import getLinkBlocker, { TrialOverlay } from './LinkBlocker'
 import Meta from './Meta'
 import Nav from './Nav'
 
@@ -53,12 +51,10 @@ const Page: React.FC<{
   actionBar: JSX.Element
 }> = ({ meta, repoId, documentId, inNativeApp, tileId, value, actionBar }) => {
   const { t } = useTranslation()
-  const { hasAccess } = useMe()
-  const [overlay, showOverlay] = useState<boolean>()
 
   const contextProps = {
     t,
-    Link: hasAccess ? HrefLink : getLinkBlocker(() => showOverlay(true)),
+    Link: HrefLink,
     nav: <Nav repoId={repoId} publishDate={meta.publishDate} />,
     ShareTile: getTileActionBar(documentId, meta, inNativeApp),
   }
@@ -67,7 +63,7 @@ const Page: React.FC<{
     <>
       <Flyer.Layout>
         <RenderContextProvider {...contextProps}>
-            <RenderValue value={value} />
+          <RenderValue value={value} />
         </RenderContextProvider>
         <Footer>{actionBar}</Footer>
         <Meta
@@ -77,13 +73,6 @@ const Page: React.FC<{
           value={value}
         />
       </Flyer.Layout>
-      {overlay && (
-        <TrialOverlay
-          documentId={documentId}
-          repoId={repoId}
-          onClose={() => showOverlay(false)}
-        />
-      )}
     </>
   )
 }
