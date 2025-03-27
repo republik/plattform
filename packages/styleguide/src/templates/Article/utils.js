@@ -102,7 +102,6 @@ const variableRule = {
   },
 }
 
-
 const nestedInlines = [
   {
     matchMdast: matchType('sub'),
@@ -150,6 +149,16 @@ export const styles = {
   link: css({
     color: 'inherit',
     textDecoration: 'none',
+  }),
+  linkOverlay: css({
+    ':before': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      zIndex: 0,
+      // backgroundColor: 'hotpink',
+      // mixBlendMode: 'multiply',
+    },
   }),
   anchor: css({
     display: 'block',
