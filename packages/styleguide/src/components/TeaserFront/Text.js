@@ -121,7 +121,9 @@ const Text = ({
       >
         {children}
         {audioPlayButton && (
-          <div style={{ marginTop: 20 }}>{audioPlayButton}</div>
+          <div style={{ marginTop: 20, position: 'relative' }}>
+            {audioPlayButton}
+          </div>
         )}
       </div>
     </div>

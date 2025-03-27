@@ -156,6 +156,8 @@ export const styles = {
       position: 'absolute',
       inset: 0,
       zIndex: 0,
+      // uncomment below to debug overlay
+      // border: '3px dashed hotpink',
       // backgroundColor: 'hotpink',
       // mixBlendMode: 'multiply',
     },
