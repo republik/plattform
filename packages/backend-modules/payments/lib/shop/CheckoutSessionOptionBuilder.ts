@@ -4,9 +4,17 @@ import {
   activeOffers,
   isPromoCodeInBlocklist,
   ComplimentaryItem,
+  Discount,
+  INTRODUCTERY_OFFER_PROMO_CODE,
+  couponToDiscount,
+  promotionToDiscount,
+  DiscountOption,
 } from '.'
 import { Payments } from '../payments'
 import { Company } from '../types'
+import Stripe from 'stripe'
+import { getConfig } from '../config'
+import { PaymentService } from '../services/PaymentService'
 
 export async function getCustomer(company: Company, userId?: string) {
   if (!userId) {
@@ -24,9 +32,30 @@ export async function getCustomer(company: Company, userId?: string) {
   return await Payments.getInstance().createCustomer(company, userId)
 }
 
-export class CheckoutSessionOptionBuilder {
+export type LineItem =
+  | {
+      price: string
+      quantity: number
+      tax_rates?: string[]
+    }
+  | {
+      price_data: {
+        unit_amount: number
+        product: string
+        currency: 'CHF'
+        recurring: {
+          interval: 'year'
+          interval_count: 1
+        }
+      }
+      quantity: number
+      tax_rates?: string[]
+    }
+
+export class CheckoutSessionBuilder {
   private offer: Offer
-  uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
+  private paymentService: PaymentService
+  private uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
   private optionalSessionVars: {
     complimentaryItems?: any[]
     promoCode?: string
@@ -34,21 +63,40 @@ export class CheckoutSessionOptionBuilder {
     metadata?: any
     returnURL?: string
     applyEntryOffer?: boolean
+    selectedDiscount?: { type: 'DISCOUNT'; value: Discount }
     selectedDonation?: string | { amount: number }
   }
 
-  constructor(offerId: string, uiMode?: 'HOSTED' | 'CUSTOM' | 'EMBEDDED') {
+  constructor(offerId: string, paymentService: PaymentService) {
     const offer = activeOffers().find((o) => o.id === offerId)
     if (!offer) throw new Error('api/shop/unknown/offer')
 
     this.offer = offer
-    this.uiMode = uiMode || 'EMBEDDED'
+    this.paymentService = paymentService
+    this.uiMode = 'EMBEDDED'
     this.optionalSessionVars = {}
   }
 
   public withPromoCode(code?: string): this {
     if (code && !isPromoCodeInBlocklist(code)) {
       this.optionalSessionVars.promoCode = code
+    }
+    return this
+  }
+
+  public async withSelectedDiscount(id?: string): Promise<this> {
+    if (id && this.offer.discountOpitions?.find((d) => d.coupon === id)) {
+      const coupon = await this.paymentService.getCoupon(this.offer.company, id)
+      this.optionalSessionVars.selectedDiscount = coupon
+        ? { type: 'DISCOUNT', value: couponToDiscount(coupon) }
+        : undefined
+    }
+    return this
+  }
+
+  public withUIMode(uiMode?: 'HOSTED' | 'CUSTOM' | 'EMBEDDED') {
+    if (uiMode) {
+      this.uiMode = uiMode
     }
     return this
   }
@@ -72,17 +120,15 @@ export class CheckoutSessionOptionBuilder {
     return this
   }
 
-  public withMetadata(metadata?: Record<string, any> | any) {
+  public withMetadata(metadata?: Record<string, any> | any): this {
     if (metadata) {
       this.optionalSessionVars.metadata = metadata
     }
-
     return this
   }
 
-  public withComplementaryItems(items: ComplimentaryItem[]) {
+  public withComplementaryItems(items: ComplimentaryItem[]): this {
     this.optionalSessionVars.complimentaryItems = items
-
     return this
   }
 
@@ -90,7 +136,6 @@ export class CheckoutSessionOptionBuilder {
     if (this.offer.allowIntroductoryOffer) {
       this.optionalSessionVars.applyEntryOffer = bool
     }
-
     return this
   }
 
@@ -99,11 +144,191 @@ export class CheckoutSessionOptionBuilder {
     return this
   }
 
-  public build() {
+  async build(): Promise<{
+    company: Company
+    sessionId: string | null
+    clientSecret: string | null
+    url: string | null
+  }> {
+    const { customerId, metadata } = this.optionalSessionVars
+
+    const [lineItems, discount] = await Promise.all([
+      this.genLineItems(),
+      this.resolveDiscount(),
+    ])
+
+    const config: Stripe.Checkout.SessionCreateParams = {
+      ...this.checkoutUIConfig(),
+      mode: this.getCheckoutMode(),
+      customer: customerId,
+      line_items: lineItems,
+      currency: 'CHF',
+      discounts: discount ? [this.formatDiscount(discount)] : undefined,
+      locale: 'de',
+      shipping_address_collection: this.getShippingAddressCollection(),
+      payment_method_configuration: this.getPaymentConfigId(),
+      metadata: { ...metadata, ...this.offer.metaData },
+      subscription_data: this.getSubscriptionData(),
+      consent_collection: { terms_of_service: 'required' },
+    }
+
+    const sess = await this.paymentService.createCheckoutSession(
+      this.offer.company,
+      config,
+    )
+
     return {
-      offer: this.offer,
-      uiMode: this.uiMode,
-      ...this.optionalSessionVars,
+      company: this.offer.company,
+      sessionId: sess.id,
+      clientSecret: sess.client_secret,
+      url: sess.url,
+    }
+  }
+
+  private getCheckoutMode(): 'payment' | 'subscription' {
+    return this.offer.type === 'SUBSCRIPTION' ? 'subscription' : 'payment'
+  }
+
+  async resolveDiscount(): Promise<DiscountOption | null> {
+    const { promoCode, applyEntryOffer, selectedDiscount } =
+      this.optionalSessionVars
+
+    if (selectedDiscount) {
+      return selectedDiscount
+    }
+
+    if (!promoCode && this.offer.allowIntroductoryOffer && applyEntryOffer) {
+      const promotion = await this.paymentService.getPromotion(
+        this.offer.company,
+        INTRODUCTERY_OFFER_PROMO_CODE,
+      )
+      if (promotion)
+        return {
+          type: 'DISCOUNT',
+          value: couponToDiscount(promotion.coupon),
+        }
+    }
+
+    if (promoCode && this.offer.allowPromotions) {
+      const promotion = await this.paymentService.getPromotion(
+        this.offer.company,
+        promoCode,
+      )
+      if (promotion)
+        return { type: 'PROMO', value: promotionToDiscount(promotion) }
+    }
+
+    if (this.offer.fixedDiscount) {
+      const promotion = await this.paymentService.getPromotion(
+        this.offer.company,
+        this.offer.fixedDiscount,
+      )
+      if (promotion)
+        return { type: 'DISCOUNT', value: couponToDiscount(promotion?.coupon) }
+    }
+
+    return null
+  }
+
+  private async genLineItems(): Promise<LineItem[]> {
+    const prices = await this.paymentService.getPrices(
+      this.offer.company,
+      this.offer.items.map((i) => i.lookupKey),
+    )
+
+    return prices.map((p): LineItem => {
+      const item = this.offer.items.find((i) => i.lookupKey === p.lookup_key)
+      const taxRates = item?.taxRateId ? [item.taxRateId] : undefined
+
+      if (p.id) {
+        return {
+          price: p.id,
+          quantity: 1,
+          tax_rates: taxRates,
+        }
+      }
+
+      return {
+        price_data: {
+          unit_amount: p.unit_amount ?? 0,
+          product: p.product.toString(),
+          currency: 'CHF',
+          recurring: {
+            interval: 'year',
+            interval_count: 1,
+          },
+        },
+        quantity: 1,
+        tax_rates: taxRates,
+      }
+    })
+  }
+
+  private formatDiscount(
+    discount: DiscountOption,
+  ): { coupon: string } | { promotion_code: string } {
+    if (discount.type === 'DISCOUNT') {
+      return { coupon: discount.value.id }
+    }
+    if (discount.type === 'PROMO') {
+      return { promotion_code: discount.value.promoId }
+    }
+    throw new Error('api/shop/unexpectedDiscount')
+  }
+
+  private getShippingAddressCollection():
+    | { allowed_countries: ['CH'] }
+    | undefined {
+    return this.optionalSessionVars.complimentaryItems?.length
+      ? { allowed_countries: ['CH'] }
+      : undefined
+  }
+
+  private getSubscriptionData(): { metadata: Record<string, any> } | undefined {
+    if (this.offer.type !== 'SUBSCRIPTION') return undefined
+
+    return {
+      metadata: {
+        ...this.optionalSessionVars.metadata,
+        ...this.offer.metaData,
+      },
+    }
+  }
+
+  private checkoutUIConfig() {
+    const returnURL =
+      this.optionalSessionVars.returnURL ||
+      `${getConfig().SHOP_BASE_URL}/angebot/${
+        this.offer.id
+      }?session_id={CHECKOUT_SESSION_ID}`
+
+    switch (this.uiMode) {
+      case 'EMBEDDED':
+        return {
+          ui_mode: 'embedded' as Stripe.Checkout.SessionCreateParams.UiMode,
+          return_url: returnURL,
+          redirect_on_completion:
+            'if_required' as Stripe.Checkout.SessionCreateParams.RedirectOnCompletion,
+        }
+      case 'CUSTOM':
+        return {
+          ui_mode: 'custom' as Stripe.Checkout.SessionCreateParams.UiMode,
+          return_url: returnURL,
+        }
+      case 'HOSTED':
+        return {
+          ui_mode: 'hosted' as Stripe.Checkout.SessionCreateParams.UiMode,
+          success_url: returnURL,
+          cancel_url: `${getConfig().SHOP_BASE_URL}/angebot/${this.offer.id}`,
+        }
+    }
+  }
+  private getPaymentConfigId() {
+    switch (this.offer.company) {
+      case 'PROJECT_R':
+        return getConfig().PROJECT_R_STRIPE_PAYMENTS_CONFIG_ID
+      case 'REPUBLIK':
+        return getConfig().REPUBLIK_STRIPE_PAYMENTS_CONFIG_ID
     }
   }
 }

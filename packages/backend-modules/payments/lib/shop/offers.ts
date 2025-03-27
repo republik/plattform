@@ -11,12 +11,21 @@ export type PriceDefinition = {
   lookupKey: string
   taxRateId?: string
 }
-export type DiscountDefinition = { type: 'DISCOUNT'; promoCode: string }
+export type DiscountDefinition = { type: 'DISCOUNT'; coupon: string }
 
 export type ComplimentaryItem = {
   id: string
   maxQuantity: number
   lookupKey: string
+}
+
+export type PriceInfo = {
+  amount: number
+  currency: string
+  recurring?: {
+    interval: 'year' | 'month'
+    intervalCount: number
+  }
 }
 
 export type ComplimentaryItemOrder = {
@@ -32,7 +41,7 @@ export type Offer = {
   items: PriceDefinition[]
   complimentaryItems?: ComplimentaryItem[]
   donationOptions?: PriceDefinition[]
-  discountOpitions?: string[]
+  discountOpitions?: DiscountDefinition[]
   fixedDiscount?: string
   requiresLogin: boolean
   requiresAddress: boolean
@@ -68,18 +77,39 @@ export type OfferAPIResult = {
       }
     }
   }[]
-  discount?: Discount
+  discount?: APIDiscountResult
 }
 
-export type Discount = {
+export interface APIDiscountResult {
+  id?: string
   name: string
-  promoCodeId: string
-  couponId: string
   amountOff: number
   duration: 'forever' | 'once' | 'repeating'
   durationInMonths: number | null
   currency: string
 }
+
+export type Discount = {
+  id: string
+  name: string
+  amountOff: number
+  duration: 'forever' | 'once' | 'repeating'
+  durationInMonths: number | null
+  currency: string
+}
+
+export type Promotion = {
+  promoId: string
+  name: string
+  amountOff: number
+  duration: 'forever' | 'once' | 'repeating'
+  durationInMonths: number | null
+  currency: string
+}
+
+export type DiscountOption =
+  | { type: 'DISCOUNT'; value: Discount }
+  | { type: 'PROMO'; value: Promotion }
 
 // const PROMO_ITEM_REPUBLIK_BIBLIOTEK_1 = {
 //   id: 'REPUBLIK_BILIOTHEK_1',
@@ -102,7 +132,9 @@ export const Offers: Readonly<Offer>[] = [
       { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_120' },
       { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_240' },
     ],
-    discountOpitions: ['DISCOUNTYEARLYSUBSCRIPTION1'],
+    discountOpitions: getConfig().PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS.map(
+      (couponId) => ({ type: 'DISCOUNT', coupon: couponId }),
+    ),
     allowPromotions: true,
   },
   {
@@ -173,6 +205,6 @@ export const GIFTS_OFFERS: Offer[] = [
   },
 ]
 
-export function activeOffers(): Offer[] {
+export function activeOffers(): Readonly<Offer>[] {
   return [...Offers, ...(GIFTS_ENABLED() ? GIFTS_OFFERS : [])]
 }

@@ -1,17 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GraphqlContext } from '@orbiting/backend-modules-types'
-import {
-  Shop,
-  checkIntroductoryOfferEligibility,
-  activeOffers,
-} from '../../../lib/shop'
-import { CheckoutSessionOptionBuilder } from '../../../lib/shop/CheckoutSessionOptionBuilder'
+import { checkIntroductoryOfferEligibility } from '../../../lib/shop'
+import { CheckoutSessionBuilder } from '../../../lib/shop/CheckoutSessionOptionBuilder'
+import { PaymentService } from '../../../lib/services/PaymentService'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
   promoCode?: string
   withDonation?: string
   withCustomDonation?: { amount: number }
+  withSelectedDiscount?: string
   complimentaryItems: {
     id: string
     quantity: number
@@ -30,19 +28,24 @@ export = async function createCheckoutSession(
   args: CreateCheckoutSessionArgs,
   ctx: GraphqlContext,
 ) {
-  const shop = new Shop(activeOffers())
+  const paymentService = new PaymentService()
 
-  const sessionOptions = await new CheckoutSessionOptionBuilder(
+  const session = await new CheckoutSessionBuilder(
     args.offerId,
-    args.options?.uiMode,
+    paymentService,
   ).withCustomer(ctx.user)
 
-  sessionOptions
+  session
     .withMetadata(args.options?.metadata)
     .withEntryOffer(await checkIntroductoryOfferEligibility(ctx.pgdb, ctx.user))
     .withPromoCode(args.promoCode)
     .withDonation(args.withDonation || args.withCustomDonation)
     .withReturnURL(args.options?.returnURL)
+    .withUIMode(args.options?.uiMode)
 
-  return await shop.generateCheckoutSession(sessionOptions.build())
+  if (args.withSelectedDiscount) {
+    await session.withSelectedDiscount(args.withSelectedDiscount)
+  }
+
+  return session.build()
 }
