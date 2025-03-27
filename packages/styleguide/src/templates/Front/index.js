@@ -22,7 +22,6 @@ import {
   TeaserFrontFormat,
   TeaserFrontLead,
   TeaserFrontCredit,
-  TeaserFrontCreditLink,
   TeaserFrontSubject,
   TeaserFrontLogo,
 } from '../../components/TeaserFront'
@@ -103,19 +102,19 @@ const createFrontSchema = ({
       ...globalInlines,
       {
         matchMdast: matchType('link'),
-        props: (node, index, parent, { ancestors }) => {
-          const teaser = ancestors.find(matchTeaser)
+        props: (node) => {
           return {
             title: node.title,
             href: node.url,
-            color: teaser ? teaser.data.color : colors.primary,
-            collapsedColor:
-              teaser && teaser.data.feuilleton ? '#000' : undefined,
           }
         },
-        component: ({ children, data, ...props }) => (
-          <Link href={props.href} passHref legacyBehavior>
-            <TeaserFrontCreditLink {...props}>{children}</TeaserFrontCreditLink>
+        component: ({ children, ...props }) => (
+          <Link
+            {...props}
+            legacyBehavior={false}
+            style={{ color: 'inherit', textDecoration: 'underline' }}
+          >
+            {children}
           </Link>
         ),
         editorModule: 'link',
