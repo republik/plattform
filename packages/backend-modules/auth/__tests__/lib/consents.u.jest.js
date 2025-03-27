@@ -339,7 +339,7 @@ describe('revoke consents', () => {
     }
     const t = jest.fn((args) => `Translated with ${args}`)
     const context = { req: req, pgdb: pgdb, t: t }
-    const revoke = revokeConsent({ userId, consent: 'PROGRESS' }, context)
+    const revoke = revokeConsent({ userId, consent: 'PROGRESS_OPT_OUT' }, context)
     expect(revoke).rejects.toEqual({
       userId,
       policy: 'PROGRESS_OPT_OUT',

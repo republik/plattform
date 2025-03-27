@@ -134,9 +134,6 @@ const revokeConsent = async ({ userId, consent }, context) => {
     ip: req.ip,
     record: 'REVOKE',
   })
-  for (const hook of revokeHooks) {
-    await hook({ userId, consent }, context)
-  }
 }
 
 module.exports = {
