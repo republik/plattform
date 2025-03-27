@@ -9,21 +9,12 @@ const styles = {
   container: css({
     margin: 0,
     overflow: 'hidden',
+    position: 'relative',
     [mUp]: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       padding: '70px 5%',
-    },
-  }),
-  containerFeuilleton: css({
-    margin: 0,
-    overflow: 'hidden',
-    [mUp]: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '50px 5%',
     },
   }),
   containerPortrait: css({
@@ -114,12 +105,10 @@ const Split = ({
   return (
     <div
       {...attributes}
-      {...css(
-        feuilleton ? styles.containerFeuilleton : styles.container,
-        portrait ? styles.containerPortrait : {},
-      )}
+      {...css(styles.container, portrait ? styles.containerPortrait : {})}
       onClick={onClick}
       style={{
+        position: 'relative',
         background,
         flexDirection,
         cursor: onClick ? 'pointer' : 'default',
@@ -127,7 +116,7 @@ const Split = ({
     >
       <div
         {...css(
-          feuilleton ? styles.imageContainerFeuilleton : styles.imageContainer,
+          styles.imageContainer,
           portrait ? styles.imageContainerPortrait : {},
         )}
       >

@@ -6,26 +6,15 @@ import { FigureByline, FigureImage } from '../Figure'
 import { mUp, tUp } from './mediaQueries'
 import Text from './Text'
 
-const containerStyle = {
-  position: 'relative',
-  lineHeight: 0,
-  margin: 0,
-  zIndex: zIndex.frontImage,
-  [tUp]: {
-    background: 'none',
-  },
-}
-
 const styles = {
   container: css({
-    ...containerStyle,
-  }),
-  containerFeuilleton: css({
-    ...containerStyle,
-    margin: '15px',
-    [mUp]: {
+    position: 'relative',
+    lineHeight: 0,
+    margin: 0,
+    zIndex: zIndex.frontImage,
+    display: 'grid',
+    [tUp]: {
       background: 'none',
-      margin: '50px 5%',
     },
   }),
   textContainer: css({
@@ -33,13 +22,6 @@ const styles = {
     padding: '15px 15px 40px 15px',
     [mUp]: {
       padding: '40px 15% 70px 15%',
-    },
-  }),
-  textContainerFeuilleton: css({
-    overflow: 'hidden', // Hides unpositioned content on mobile.
-    padding: '15px 0 40px 0',
-    [mUp]: {
-      padding: '40px 0 70px 0',
     },
   }),
   textContainerOnTop: css({
