@@ -6,26 +6,15 @@ import { useColorContext } from '../Colors/useColorContext'
 
 const TEXT_PADDING = 50
 
-const positionHalfWidth = {
-  position: 'absolute',
-  width: `calc(50% - ${TEXT_PADDING}px)`,
-}
-
-const positionFullWidth = {
-  position: 'absolute',
-  left: `${TEXT_PADDING}px`,
-  right: `${TEXT_PADDING}px`,
-}
-
 const styles = {
   rootPosition: css({
     [tUp]: {
       position: 'absolute',
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
+      inset: 0,
       overflow: 'hidden',
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      padding: `${TEXT_PADDING}px`,
     },
   }),
   rootMiddle: css({
@@ -35,52 +24,44 @@ const styles = {
       justifyContent: 'center',
     },
   }),
-  positioned: css({
-    position: 'relative',
-  }),
   topleft: css({
     [tUp]: {
-      ...positionHalfWidth,
-      left: `${TEXT_PADDING}px`,
-      top: `${TEXT_PADDING}px`,
+      placeSelf: 'start start',
     },
   }),
   topright: css({
     [tUp]: {
-      ...positionHalfWidth,
-      left: '50%',
-      top: `${TEXT_PADDING}px`,
+      gridColumn: '2',
+      placeSelf: 'start end',
     },
   }),
   bottomleft: css({
     [tUp]: {
-      ...positionHalfWidth,
-      bottom: `${TEXT_PADDING}px`,
-      left: `${TEXT_PADDING}px`,
+      placeSelf: 'end start',
     },
   }),
   bottomright: css({
     [tUp]: {
-      ...positionHalfWidth,
-      bottom: `${TEXT_PADDING}px`,
-      left: '50%',
+      gridColumn: '2',
+      placeSelf: 'end end',
     },
   }),
   top: css({
     [tUp]: {
-      ...positionFullWidth,
-      top: `${TEXT_PADDING}px`,
+      gridColumn: '1 / -1',
+      placeSelf: 'start center',
     },
   }),
   middle: css({
     [tUp]: {
-      ...positionFullWidth,
+      gridColumn: '1 / -1',
+      placeSelf: 'center center',
     },
   }),
   bottom: css({
     [tUp]: {
-      ...positionFullWidth,
-      bottom: `${TEXT_PADDING}px`,
+      gridColumn: '1 / -1',
+      placeSelf: 'end center',
     },
   }),
   center: css({
@@ -114,7 +95,6 @@ const Text = ({
       ? styles.center
       : undefined
   const rootStyles = position ? styles.rootPosition : {}
-  const middleStyles = position === 'middle' ? styles.rootMiddle : {}
 
   const colorRule = useMemo(
     () =>
@@ -132,17 +112,19 @@ const Text = ({
   )
 
   return (
-    <div {...rootStyles} {...middleStyles}>
+    <div {...rootStyles} data-component='Text'>
       <div
         {...attributes}
         {...colorRule}
         {...textAlignStyle}
-        {...css(styles.positioned, position ? styles[position] : {})}
+        {...css(position ? styles[position] : {})}
         style={{ maxWidth, margin }}
       >
         {children}
         {audioPlayButton && (
-          <div style={{ marginTop: 20 }}>{audioPlayButton}</div>
+          <div style={{ marginTop: 20, position: 'relative' }}>
+            {audioPlayButton}
+          </div>
         )}
       </div>
     </div>

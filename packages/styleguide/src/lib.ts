@@ -84,7 +84,6 @@ export {
   TeaserFrontTileRow,
   TeaserFrontLead,
   TeaserFrontCredit,
-  TeaserFrontCreditLink,
 } from './components/TeaserFront'
 export { FormatTag } from './components/Format'
 
