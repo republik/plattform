@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { mUp, dUp } from './mediaQueries'
+import { mUp } from './mediaQueries'
 import { FigureImage, FigureByline } from '../Figure'
 import Text from './Text'
 
@@ -10,70 +10,48 @@ const styles = {
     margin: 0,
     overflow: 'hidden',
     position: 'relative',
+    gridTemplateAreas: '"image content"',
+    gridTemplateColumns: '50% 1fr',
+    gap: '5%',
+    alignItems: 'center',
+    justifyContent: 'center',
     [mUp]: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      display: 'grid',
       padding: '70px 5%',
     },
   }),
+  containerReverse: css({
+    gridTemplateAreas: '"content image"',
+    gridTemplateColumns: '1fr 50%',
+  }),
   containerPortrait: css({
-    [mUp]: {
-      padding: 0,
-      alignItems: 'flex-start',
-    },
-  }),
-  content: css({
-    padding: '15px 15px 40px 15px',
-    [mUp]: {
-      padding: '0 0 0 5%',
-      width: '50%',
-    },
-  }),
-  contentReverse: css({
+    gridTemplateColumns: '42% 1fr',
+    alignItems: 'start',
     [mUp]: {
       padding: '0 5% 0 0',
     },
   }),
-  contentPortrait: css({
+  containerPortraitReverse: css({
+    gridTemplateColumns: '1fr 42%',
+    [mUp]: {
+      padding: '0 0 0 5%',
+    },
+  }),
+  content: css({
+    gridArea: 'content',
     padding: '15px 15px 40px 15px',
     [mUp]: {
-      padding: '40px 5%',
-      width: '60%',
+      padding: 0,
     },
-    [dUp]: {
-      padding: '40px 5%',
+  }),
+  contentPortrait: css({
+    [mUp]: {
+      padding: '40px 0',
     },
   }),
   imageContainer: css({
+    gridArea: 'image',
     position: 'relative',
-    [mUp]: {
-      flexShrink: 0,
-      fontSize: 0, // Removes the small flexbox space.
-      height: 'auto',
-      width: '50%',
-    },
-  }),
-  imageContainerFeuilleton: css({
-    padding: '15px 15px 0 15px',
-    position: 'relative',
-    [mUp]: {
-      padding: 0,
-      flexShrink: 0,
-      fontSize: 0, // Removes the small flexbox space.
-      height: 'auto',
-      width: '50%',
-    },
-  }),
-  imageContainerPortrait: css({
-    [mUp]: {
-      width: '40%',
-      padding: 0,
-    },
-  }),
-  image: css({
-    height: 'auto',
-    maxWidth: '100%',
   }),
 }
 
@@ -94,7 +72,6 @@ const Split = ({
   audioPlayButton,
 }) => {
   const background = bgColor
-  const flexDirection = reverse ? 'row-reverse' : undefined
   const bylinePosition = feuilleton
     ? 'belowFeuilleton'
     : portrait
@@ -105,21 +82,19 @@ const Split = ({
   return (
     <div
       {...attributes}
-      {...css(styles.container, portrait ? styles.containerPortrait : {})}
+      {...css(
+        styles.container,
+        reverse && styles.containerReverse,
+        portrait && styles.containerPortrait,
+        reverse && portrait && styles.containerPortraitReverse,
+      )}
       onClick={onClick}
       style={{
-        position: 'relative',
         background,
-        flexDirection,
         cursor: onClick ? 'pointer' : 'default',
       }}
     >
-      <div
-        {...css(
-          styles.imageContainer,
-          portrait ? styles.imageContainerPortrait : {},
-        )}
-      >
+      <div {...styles.imageContainer}>
         <FigureImage
           aboveTheFold={aboveTheFold}
           {...FigureImage.utils.getResizedSrcs(image, undefined, 750)}
@@ -131,16 +106,7 @@ const Split = ({
           </FigureByline>
         )}
       </div>
-      <div
-        {...css(
-          styles.content,
-          portrait
-            ? styles.contentPortrait
-            : reverse
-            ? styles.contentReverse
-            : {},
-        )}
-      >
+      <div {...css(styles.content, portrait && styles.contentPortrait)}>
         <Text
           color={color}
           center={center}
