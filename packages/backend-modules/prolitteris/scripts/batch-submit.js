@@ -369,7 +369,7 @@ async function processData(client, data) {
  * @returns {PixelUid}
  */
 function repoIdToPixelUid(repoId, memberId) {
-  return `vzm.${memberId}-${repoId.replace('/', '-')}`
+  return `vzm.${memberId}-${repoId.replace('/', '-')}`.substring(0, 100)
 }
 
 function getProLitterisId(dbData) {

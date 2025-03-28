@@ -191,6 +191,7 @@ export function assertValidMessageText(
 function isBase64(str: string): boolean {
   try {
     return Buffer.from(str, 'base64').toString('base64') === str
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (err) {
     return false
   }
