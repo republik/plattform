@@ -224,7 +224,7 @@ export class CheckoutSessionBuilder {
         this.offer.fixedDiscount,
       )
       if (promotion)
-        return { type: 'DISCOUNT', value: couponToDiscount(promotion?.coupon) }
+        return { type: 'DISCOUNT', value: couponToDiscount(promotion.coupon) }
     }
 
     return null
@@ -321,6 +321,8 @@ export class CheckoutSessionBuilder {
           success_url: returnURL,
           cancel_url: `${getConfig().SHOP_BASE_URL}/angebot/${this.offer.id}`,
         }
+      default:
+        this.uiMode satisfies never
     }
   }
   private getPaymentConfigId() {

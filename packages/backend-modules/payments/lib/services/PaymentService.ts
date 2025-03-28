@@ -8,6 +8,12 @@ export class PaymentService {
     REPUBLIK: RepublikAGStripe,
   }
 
+  async getSubscription(company: Company, id: string) {
+    const sub = await this.#stripeAdapters[company].subscriptions.retrieve(id)
+
+    return sub ? sub : null
+  }
+
   async getPromotion(
     company: Company,
     promoCode: string,
@@ -43,6 +49,20 @@ export class PaymentService {
     })
 
     return prices.data
+  }
+
+  async getInvoice(company: Company, id: string) {
+    const invoice = await this.#stripeAdapters[company].invoices.retrieve(id, {
+      expand: ['discounts', 'charge'],
+    })
+
+    return invoice ? invoice : null
+  }
+
+  async getCharge(company: Company, id: string) {
+    const charge = await this.#stripeAdapters[company].charges.retrieve(id)
+
+    return charge ? charge : null
   }
 
   async createCheckoutSession(
