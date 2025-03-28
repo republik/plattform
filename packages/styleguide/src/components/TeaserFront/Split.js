@@ -25,17 +25,16 @@ const styles = {
     gridTemplateColumns: '1fr 50%',
   }),
   containerPortrait: css({
-    gridTemplateColumns: '42% 1fr',
+    gridTemplateAreas: '"image content empty"',
+    gridTemplateColumns: '40% 1fr 0',
     alignItems: 'start',
     [mUp]: {
-      padding: '0 5% 0 0',
+      padding: 0,
     },
   }),
   containerPortraitReverse: css({
-    gridTemplateColumns: '1fr 42%',
-    [mUp]: {
-      padding: '0 0 0 5%',
-    },
+    gridTemplateAreas: '"empty content image"',
+    gridTemplateColumns: '0 1fr 40%',
   }),
   content: css({
     gridArea: 'content',

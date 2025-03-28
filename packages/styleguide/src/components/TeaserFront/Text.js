@@ -14,7 +14,6 @@ const styles = {
       overflow: 'hidden',
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
-      gap: `${TEXT_PADDING}px`,
       padding: `${TEXT_PADDING}px`,
     },
   }),
@@ -32,6 +31,7 @@ const styles = {
   }),
   topright: css({
     [tUp]: {
+      gridColumn: '2',
       placeSelf: 'start end',
     },
   }),
@@ -42,6 +42,7 @@ const styles = {
   }),
   bottomright: css({
     [tUp]: {
+      gridColumn: '2',
       placeSelf: 'end end',
     },
   }),
