@@ -45,13 +45,13 @@ class ProgressSettings extends Component {
   }
 
   render() {
-    const { t, me, revokeProgressConsent, submitProgressConsent } = this.props
+    const { t, me, revokeProgressOptOut, submitProgressOptOut } = this.props
 
     return (
       <Loader
         loading={!me}
         render={() => {
-          const hasAccepted = me && me.progressConsent === true
+          const hasAccepted = me && me.progressOptOut === false
           const { mutating, serverError } = this.state
 
           return (
@@ -78,8 +78,8 @@ class ProgressSettings extends Component {
                     })
                   }
                   const consentMutation = hasAccepted
-                    ? revokeProgressConsent
-                    : submitProgressConsent
+                    ? revokeProgressOptOut
+                    : submitProgressOptOut
                   consentMutation().then(finish).catch(this.catchServerError)
                 }}
               >

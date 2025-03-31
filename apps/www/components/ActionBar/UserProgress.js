@@ -28,8 +28,8 @@ const UserProgress = (
     userProgress,
     upsertDocumentProgress,
     removeDocumentProgress,
-    revokeProgressConsent,
-    submitProgressConsent,
+    revokeProgressOptOut,
+    submitProgressOptOut,
     forceShortLabel,
     noCallout,
     noScroll,
@@ -55,13 +55,13 @@ const UserProgress = (
           <IconButton
             style={{ marginBottom: 16 }}
             Icon={IconRead}
-            onClick={submitProgressConsent}
+            onClick={submitProgressOptOut}
             label={t('article/progressprompt/button/confirm')}
             labelShort={t('article/progressprompt/button/confirm')}
           />
           <IconButton
             Icon={IconHighlightOff}
-            onClick={revokeProgressConsent}
+            onClick={revokeProgressOptOut}
             label={t('article/progressprompt/button/reject')}
             labelShort={t('article/progressprompt/button/reject')}
           />

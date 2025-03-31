@@ -2,9 +2,11 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 
+const PROGRESS_OPT_OUT_CONSENT = 'PROGRESS_OPT_OUT'
+
 const userProgressConsentFragment = `
   fragment ProgressConsent on User {
-    progressConsent: hasConsentedTo(name: "PROGRESS")
+    progressOptOut: hasConsentedTo(name: "${PROGRESS_OPT_OUT_CONSENT}")
   }
 `
 
@@ -60,7 +62,7 @@ const removeDocumentProgress = gql`
 
 export const submitConsentMutation = gql`
   mutation submitConsent {
-    submitConsent(name: "PROGRESS") {
+    submitConsent(name: "${PROGRESS_OPT_OUT_CONSENT}") {
       id
       ...ProgressConsent
     }
@@ -70,7 +72,7 @@ export const submitConsentMutation = gql`
 
 export const revokeConsentMutation = gql`
   mutation revokeConsent {
-    revokeConsent(name: "PROGRESS") {
+    revokeConsent(name: "${PROGRESS_OPT_OUT_CONSENT}") {
       id
       ...ProgressConsent
     }
@@ -81,12 +83,12 @@ export const revokeConsentMutation = gql`
 export const withProgressApi = compose(
   graphql(submitConsentMutation, {
     props: ({ mutate }) => ({
-      submitProgressConsent: mutate,
+      submitProgressOptOut: mutate,
     }),
   }),
   graphql(revokeConsentMutation, {
     props: ({ mutate }) => ({
-      revokeProgressConsent: mutate,
+      revokeProgressOptOut: mutate,
     }),
   }),
   graphql(upsertDocumentProgressMutation, {

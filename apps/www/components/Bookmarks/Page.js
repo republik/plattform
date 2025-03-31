@@ -35,7 +35,7 @@ const mergeConnection = (data, connection) => {
 const bookmarkIcon = <IconBookmarkBorder size={22} key='icon' />
 
 const Page = ({ t, me }) => {
-  const showProgressTabs = !!me?.progressConsent
+  const showProgressTabs = !me?.progressOptOut
 
   const [filter, setFilter] = useState('continue')
   const variables = useMemo(() => {

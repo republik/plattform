@@ -53,7 +53,7 @@ const Progress = ({
 
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
-  const isTrackingAllowed = me && me.progressConsent === true
+  const isTrackingAllowed = me && me.progressOptOut === false
   const mobile = () => window.innerWidth < mediaQueries.mBreakPoint
   const headerHeight = () => (mobile() ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT)
 
@@ -207,7 +207,7 @@ const Progress = ({
     isArticle &&
     me &&
     !router.query.trialSignup &&
-    me.progressConsent === null &&
+    me.progressOptOut === null &&
     article &&
     article.meta &&
     article.meta.path !== PROGRESS_EXPLAINER_PATH
@@ -229,7 +229,7 @@ const Progress = ({
 Progress.propTypes = {
   children: PropTypes.node,
   me: PropTypes.shape({
-    progressConsent: PropTypes.bool,
+    progressOptOut: PropTypes.bool,
   }),
   revokeConsent: PropTypes.func,
   submitConsent: PropTypes.func,
