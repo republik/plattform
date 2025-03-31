@@ -141,7 +141,7 @@ const CompactDetailsForm = dynamic(
   },
 )
 
-const TrialForm = dynamic(() => import('../Trial/Form-dev'), {
+const TrialForm = dynamic(() => import('@app/components/auth/trial'), {
   loading: LoadingComponent,
   ssr: false,
 })

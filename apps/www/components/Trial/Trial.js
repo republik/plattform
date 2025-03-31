@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql, withApollo } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -14,6 +14,27 @@ import { useRouter } from 'next/router'
 import withAuthorizeSession from '../Auth/withAuthorizeSession'
 
 const CODE_LENGTH = 6
+
+const REQUEST_ACCESS = gql`
+  mutation requestAccess($campaignId: ID!, $payload: JSON) {
+    requestAccess(campaignId: $campaignId, payload: $payload) {
+      id
+      endAt
+    }
+  }
+`
+
+const withRequestAccess = graphql(REQUEST_ACCESS, {
+  props: ({ mutate, ownProps: { accessCampaignId } }) => ({
+    requestAccess: ({ payload }) =>
+      mutate({
+        variables: {
+          campaignId: accessCampaignId || TRIAL_CAMPAIGN,
+          payload,
+        },
+      }),
+  }),
+})
 
 const addStatusParamToRouter = (router) => (status) =>
   router.replace(
@@ -52,10 +73,13 @@ const EmailForm = withSignIn(({ signIn, onSuccess, onError }) => {
   const submitEmail = (e) => {
     e?.preventDefault()
 
+    console.log('submitting email', email)
+
     handleEmail(email.value, true)
     if (!email.value || email.error) return
 
     setStatus('pending')
+    console.log('submitting')
 
     return signIn(
       email.value,
@@ -65,6 +89,7 @@ const EmailForm = withSignIn(({ signIn, onSuccess, onError }) => {
       router.query.token,
     )
       .then(() => {
+        console.log('success')
         setStatus('success')
         onSuccess(email.value)
       })
@@ -73,6 +98,7 @@ const EmailForm = withSignIn(({ signIn, onSuccess, onError }) => {
 
   return (
     <form onSubmit={submitEmail}>
+      <p>Email form</p>
       <input
         name='email'
         type='email'
@@ -84,6 +110,7 @@ const EmailForm = withSignIn(({ signIn, onSuccess, onError }) => {
           handleEmail(value, shouldValidate)
         }
       />
+      <button type='submit'>Submit</button>
     </form>
   )
 })
@@ -223,8 +250,16 @@ const StarterPack = ({ context }) => {
 //  - Users who see this form are eligible for trial access
 //  - Some users may already by authenticated
 const Form = ({ payload, context = 'trial' }) => {
-  const { me } = useMe()
+  const { me, hasActiveMembership } = useMe()
+  console.log({ me, hasActiveMembership })
   const [step, setStep] = useState('REQUEST') // REQUEST, SUCCESS
+
+  useEffect(() => {
+    if (hasActiveMembership) {
+      // or inTrial
+      setStep('SUCCESS')
+    }
+  }, [hasActiveMembership])
 
   const onSuccess = () => {
     setStep('SUCCESS')
@@ -242,26 +277,5 @@ const Form = ({ payload, context = 'trial' }) => {
     </>
   )
 }
-
-const REQUEST_ACCESS = gql`
-  mutation requestAccess($campaignId: ID!, $payload: JSON) {
-    requestAccess(campaignId: $campaignId, payload: $payload) {
-      id
-      endAt
-    }
-  }
-`
-
-const withRequestAccess = graphql(REQUEST_ACCESS, {
-  props: ({ mutate, ownProps: { accessCampaignId } }) => ({
-    requestAccess: ({ payload }) =>
-      mutate({
-        variables: {
-          campaignId: accessCampaignId || TRIAL_CAMPAIGN,
-          payload,
-        },
-      }),
-  }),
-})
 
 export default Form
