@@ -15,55 +15,27 @@ import withAuthorizeSession from '../Auth/withAuthorizeSession'
 
 const CODE_LENGTH = 6
 
-const AuthenticateAndRequestTrialForm = compose(
-  withSignIn,
-  withAuthorizeSession,
-)(({ signIn, authorizeSession, onSuccess }) => {
+const addStatusParamToRouter = (router) => (status) =>
+  router.replace(
+    {
+      pathname: router.pathname,
+      query: { ...router.query, trialSignup: status },
+    },
+    router.asPath,
+    { shallow: true },
+  )
+
+const EmailForm = withSignIn(({ signIn, onSuccess, onError }) => {
   const { t } = useTranslation()
   const router = useRouter()
-  const { query } = router
+
   const [email, setEmail] = useState({
     value: '',
     error: null,
     dirty: false,
   })
-  const [code, setCode] = useState({
-    value: '',
-    error: null,
-    dirty: false,
-  })
-  const [step, setStep] = useState('EMAIL') // EMAIL, CODE
-  const [payload, setPayload] = useState('')
 
-  const submitCode = (e) => {
-    e?.preventDefault()
-
-    authorizeSession({
-      email,
-      tokens: [{ type: 'EMAIL_CODE', payload: payload }],
-    })
-      .then(onSuccess)
-      .catch(() => {
-        setStep('EMAIL')
-      })
-  }
-
-  const handleCode = ({ value = '', shouldValidate, t }) => {
-    const payload = value.replace(/[^0-9]/g, '').slice(0, CODE_LENGTH)
-    setPayload(payload)
-
-    setCode({
-      value: value.replace(/[^0-9\s]/g, ''),
-      error:
-        (payload.length === 0 && t('Auth/CodeAuthorization/code/missing')) ||
-        (payload.length < CODE_LENGTH &&
-          t('Auth/CodeAuthorization/code/tooShort')),
-      dirty: shouldValidate,
-    })
-    if (payload && payload.length === CODE_LENGTH) {
-      submitCode()
-    }
-  }
+  const setStatus = addStatusParamToRouter(router)
 
   const handleEmail = (value, shouldValidate) => {
     setEmail({
@@ -83,60 +55,118 @@ const AuthenticateAndRequestTrialForm = compose(
     handleEmail(email.value, true)
     if (!email.value || email.error) return
 
-    router.replace(
-      {
-        pathname: router.pathname,
-        query: { ...router.query, trialSignup: 'pending' },
-      },
-      router.asPath,
-      { shallow: true },
-    )
+    setStatus('pending')
 
-    return signIn(email.value, 'trial', ['PRIVACY'], 'EMAIL_CODE', query.token)
+    return signIn(
+      email.value,
+      'trial',
+      ['PRIVACY'],
+      'EMAIL_CODE',
+      router.query.token,
+    )
       .then(() => {
-        setStep('CODE')
+        setStatus('success')
+        onSuccess(email.value)
       })
-      .catch(() => {
-        setStep('EMAIL')
-      })
+      .catch(onError)
   }
+
+  return (
+    <form onSubmit={submitEmail}>
+      <input
+        name='email'
+        type='email'
+        label={t('Trial/Form/email/label')}
+        value={email.value}
+        error={email.dirty && email.error}
+        dirty={email.dirty}
+        onChange={(_, value, shouldValidate) =>
+          handleEmail(value, shouldValidate)
+        }
+      />
+    </form>
+  )
+})
+
+const CodeForm = withAuthorizeSession(
+  ({ authorizeSession, email, onSuccess, onError }) => {
+    const { t } = useTranslation()
+    const [code, setCode] = useState({
+      value: '',
+      error: null,
+      dirty: false,
+    })
+
+    const submitCode = (e) => {
+      e?.preventDefault()
+
+      authorizeSession({
+        email,
+        tokens: [{ type: 'EMAIL_CODE', payload: code.value }],
+      })
+        .then(onSuccess)
+        .catch(onError)
+    }
+
+    const handleCode = ({ value = '', shouldValidate, t }) => {
+      const newValue = value.replace(/[^0-9\s]/g, '').slice(0, CODE_LENGTH)
+      setCode({
+        value: newValue,
+        error:
+          (newValue.length === 0 && t('Auth/CodeAuthorization/code/missing')) ||
+          (newValue.length < CODE_LENGTH &&
+            t('Auth/CodeAuthorization/code/tooShort')),
+        dirty: shouldValidate,
+      })
+      if (code.value && !code.value.error) {
+        submitCode()
+      }
+    }
+
+    return (
+      <form onSubmit={submitCode}>
+        <input
+          pattern={'[0-9]*'}
+          autoComplete='false'
+          label={t('Auth/CodeAuthorization/code/label')}
+          value={code.value}
+          error={code.dirty && code.error}
+          dirty={code.dirty}
+          onChange={(_, value, shouldValidate) => {
+            handleCode({ value, shouldValidate, t })
+          }}
+        />
+      </form>
+    )
+  },
+)
+
+const AuthenticateAndRequestTrialForm = ({ onSuccess }) => {
+  const [email, setEmail] = useState('')
+  const [step, setStep] = useState('EMAIL') // EMAIL, CODE
 
   return (
     <>
       {step === 'EMAIL' && (
-        <form onSubmit={submitEmail}>
-          <input
-            name='email'
-            type='email'
-            label={t('Trial/Form/email/label')}
-            value={email.value}
-            error={email.dirty && email.error}
-            dirty={email.dirty}
-            onChange={(_, value, shouldValidate) =>
-              handleEmail(value, shouldValidate)
-            }
-          />
-        </form>
+        <EmailForm
+          onSuccess={(_email) => {
+            setEmail(_email)
+            setStep('CODE')
+          }}
+          onError={() => setStep('EMAIL')}
+        />
       )}
 
       {step === 'CODE' && (
-        <form onSubmit={submitCode}>
-          <input
-            pattern={'[0-9]*'}
-            autoComplete='false'
-            label={t('Auth/CodeAuthorization/code/label')}
-            value={code.value}
-            error={code.dirty && code.error}
-            dirty={code.dirty}
-            onChange={(_, value, shouldValidate) => {
-              handleCode({ value, shouldValidate, t })
-            }}
-          />
-        </form>
+        <CodeForm
+          email={email}
+          onSuccess={onSuccess}
+          onError={() => setStep('EMAIL')}
+        />
       )}
     </>
   )
-})
+}
 
 const RequestTrialForm = compose(
   withRequestAccess,
@@ -145,20 +175,15 @@ const RequestTrialForm = compose(
   const router = useRouter()
   const { query } = router
 
+  const setStatus = addStatusParamToRouter(router)
+
   const requestTrialAccess = (e) => {
     e?.preventDefault()
 
     requestAccess({
       payload: { ...getConversionPayload(query), ...payload },
     }).then(() => {
-      router.replace(
-        {
-          pathname: router.pathname,
-          query: { ...router.query, trialSignup: 'success' },
-        },
-        router.asPath,
-        { shallow: true },
-      )
+      setStatus('success')
       client.resetStore()
       onSuccess()
     })
@@ -201,17 +226,17 @@ const Form = ({ payload, context = 'trial' }) => {
   const { me } = useMe()
   const [step, setStep] = useState('REQUEST') // REQUEST, SUCCESS
 
-  const handleSuccess = () => {
+  const onSuccess = () => {
     setStep('SUCCESS')
   }
 
   return (
     <>
       {step === 'REQUEST' && !me && (
-        <AuthenticateAndRequestTrialForm onSuccess={handleSuccess} />
+        <AuthenticateAndRequestTrialForm onSuccess={onSuccess} />
       )}
       {step === 'REQUEST' && me && (
-        <RequestTrialForm onSuccess={handleSuccess} payload={payload} />
+        <RequestTrialForm onSuccess={onSuccess} payload={payload} />
       )}
       {step === 'SUCCESS' && <StarterPack context={context} />}
     </>
