@@ -13,7 +13,6 @@ import {
   CalloutMenu,
   Label,
 } from '@project-r/styleguide'
-import { getFeatureDescription } from '../Article/Progress'
 import { IconCheckSmall, IconHighlightOff, IconRead } from '@republik/icons'
 
 const styles = {
@@ -51,7 +50,7 @@ const UserProgress = (
     ))
     return (
       <CalloutMenu Element={ProgressConsentIcon} padded>
-        <Label>{getFeatureDescription(t)}</Label>
+        <Label>{t('article/progressprompt/description/feature')}</Label>
         <div {...styles.consent}>
           <IconButton
             style={{ marginBottom: 16 }}

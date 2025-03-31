@@ -8,7 +8,6 @@ import ErrorMessage from '../ErrorMessage'
 import { P } from './Elements'
 import { Loader, InlineSpinner, Checkbox } from '@project-r/styleguide'
 
-import { getFeatureDescription } from '../Article/Progress'
 import { withProgressApi } from '../Article/Progress/api'
 
 const styles = {
@@ -57,7 +56,9 @@ class ProgressSettings extends Component {
 
           return (
             <Fragment>
-              <P style={{ margin: '20px 0' }}>{getFeatureDescription(t)}</P>
+              <P style={{ margin: '20px 0' }}>
+                {t('article/progressprompt/description/feature')}
+              </P>
               <Checkbox
                 checked={hasAccepted}
                 disabled={mutating}

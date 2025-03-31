@@ -14,18 +14,8 @@ import { PROGRESS_EXPLAINER_PATH } from '../../../lib/constants'
 import { withProgressApi } from './api'
 import { useMediaProgress } from '../../Audio/MediaProgress'
 import { withRouter } from 'next/router'
-import Link from 'next/link'
 
 const MIN_INDEX = 2
-
-export const getFeatureDescription = (t) =>
-  t.elements('article/progressprompt/description/feature', {
-    link: PROGRESS_EXPLAINER_PATH ? (
-      <Link href={PROGRESS_EXPLAINER_PATH} key='link' passHref legacyBehavior>
-        <A>{t('article/progressprompt/description/feature/link')}</A>
-      </Link>
-    ) : null,
-  })
 
 class ProgressContextProvider extends Component {
   getChildContext() {
