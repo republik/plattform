@@ -11,7 +11,8 @@ import { ChartContext } from './ChartContext'
 import { PADDING_TOP } from './Layout.constants'
 import { defaultProps } from './ChartContext'
 
-const TimeBarChart = (props) => {
+const TimeBarChart = (_props) => {
+  const props = { ...defaultProps.TimeBar, ..._props }
   const {
     width,
     tLabel,
@@ -181,7 +182,5 @@ export const propTypes = {
 }
 
 TimeBarChart.propTypes = propTypes
-
-TimeBarChart.defaultProps = defaultProps.TimeBar
 
 export default TimeBarChart

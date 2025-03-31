@@ -11,11 +11,11 @@ const styles = {
 
 const ElectionBallot = ({
   candidates,
-  vote,
-  mandatory,
-  maxVotes,
+  vote = [],
+  mandatory = [],
+  maxVotes = 1,
   onChange,
-  showMeta,
+  showMeta = true,
   disabled,
   discussionPath,
   discussionTag,
@@ -49,13 +49,6 @@ ElectionBallot.propTypes = {
   disabled: PropTypes.bool,
   discussionPath: PropTypes.string,
   discussionTag: PropTypes.string,
-}
-
-ElectionBallot.defaultProps = {
-  vote: [],
-  mandatory: [],
-  maxVotes: 1,
-  showMeta: true,
 }
 
 export default ElectionBallot
