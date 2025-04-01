@@ -7,7 +7,6 @@ const {
   ensureAllRequiredConsents,
   saveConsents,
   revokeConsent,
-  registerRevokeHook,
 } = require('../../lib/Consents')
 
 describe('statusForPolicyForUser:', () => {
@@ -265,7 +264,7 @@ describe('save consents', () => {
     }
     const saved = await saveConsents({
       userId,
-      consents: ['PRIVACY', 'TOS', 'PROGRESS', 'STATUTE'],
+      consents: ['PRIVACY', 'TOS', 'PROGRESS_OPT_OUT', 'STATUTE'],
       req,
       pgdb,
     })
@@ -277,7 +276,7 @@ describe('save consents', () => {
     })
     expect(saved).toContainEqual({
       userId: userId,
-      policy: 'PROGRESS',
+      policy: 'PROGRESS_OPT_OUT',
       ip: req.ip,
     })
   })
@@ -318,17 +317,14 @@ describe('revoke consents', () => {
       },
     }
     const context = { req: req, pgdb: pgdb }
-    const hook = jest.fn((args) => Promise.resolve(args))
-    registerRevokeHook(hook)
-    const revoke = await revokeConsent({ userId, consent: 'PROGRESS' }, context)
+    const revoke = await revokeConsent({ userId, consent: 'PROGRESS_OPT_OUT' }, context)
     expect(revoke).toBeUndefined()
     expect(pgdb.public.consents.insert).toHaveBeenCalledWith({
       userId,
-      policy: 'PROGRESS',
+      policy: 'PROGRESS_OPT_OUT',
       ip: req.ip,
       record: 'REVOKE',
     })
-    expect(hook).toHaveBeenCalled()
   })
 
   test('revoking consent fails', async () => {
@@ -343,21 +339,18 @@ describe('revoke consents', () => {
     }
     const t = jest.fn((args) => `Translated with ${args}`)
     const context = { req: req, pgdb: pgdb, t: t }
-    const hook = jest.fn((args) => Promise.resolve(args))
-    registerRevokeHook(hook)
-    const revoke = revokeConsent({ userId, consent: 'PROGRESS' }, context)
+    const revoke = revokeConsent({ userId, consent: 'PROGRESS_OPT_OUT' }, context)
     expect(revoke).rejects.toEqual({
       userId,
-      policy: 'PROGRESS',
+      policy: 'PROGRESS_OPT_OUT',
       ip: req.ip,
       record: 'REVOKE',
     })
     expect(pgdb.public.consents.insert).toHaveBeenCalledWith({
       userId,
-      policy: 'PROGRESS',
+      policy: 'PROGRESS_OPT_OUT',
       ip: req.ip,
       record: 'REVOKE',
     })
-    expect(hook).not.toHaveBeenCalled()
   })
 })
