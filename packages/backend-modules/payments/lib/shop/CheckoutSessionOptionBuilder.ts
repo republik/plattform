@@ -160,8 +160,6 @@ export class CheckoutSessionBuilder {
 
     const allLineItems = [...lineItems, ...donationLineItems]
 
-    console.log('LINE ITEMS', allLineItems)
-
     const config: Stripe.Checkout.SessionCreateParams = {
       ...this.checkoutUIConfig(),
       mode: this.getCheckoutMode(),
