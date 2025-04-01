@@ -152,16 +152,21 @@ export class CheckoutSessionBuilder {
   }> {
     const { customerId, metadata } = this.optionalSessionVars
 
-    const [lineItems, discount] = await Promise.all([
+    const [lineItems, donationLineItems, discount] = await Promise.all([
       this.genLineItems(),
+      this.genDonationLineItems(),
       this.resolveDiscount(),
     ])
+
+    const allLineItems = [...lineItems, ...donationLineItems]
+
+    console.log('LINE ITEMS', allLineItems)
 
     const config: Stripe.Checkout.SessionCreateParams = {
       ...this.checkoutUIConfig(),
       mode: this.getCheckoutMode(),
       customer: customerId,
-      line_items: lineItems,
+      line_items: allLineItems,
       currency: 'CHF',
       discounts: discount ? [this.formatDiscount(discount)] : undefined,
       locale: 'de',
@@ -262,6 +267,44 @@ export class CheckoutSessionBuilder {
         tax_rates: taxRates,
       }
     })
+  }
+
+  private async genDonationLineItems(): Promise<LineItem[]> {
+    const { selectedDonation } = this.optionalSessionVars
+
+    const lineItems: LineItem[] = []
+
+    if (typeof this.offer.donationOptions !== 'undefined' && selectedDonation) {
+      if (typeof selectedDonation === 'string') {
+        const prices = await this.paymentService.getPrices(this.offer.company, [
+          selectedDonation,
+        ])
+
+        const donation = prices[0]
+        if (donation?.lookup_key === selectedDonation) {
+          lineItems.push({
+            price: donation.id,
+            quantity: 1,
+          })
+        }
+      }
+      if (typeof selectedDonation === 'object') {
+        lineItems.push({
+          price_data: {
+            unit_amount: selectedDonation.amount,
+            currency: 'CHF',
+            product: 'prod_RlF5BclupFNlhi',
+            recurring: {
+              interval: 'year',
+              interval_count: 1,
+            },
+          },
+          quantity: 1,
+        })
+      }
+    }
+
+    return lineItems
   }
 
   private formatDiscount(
