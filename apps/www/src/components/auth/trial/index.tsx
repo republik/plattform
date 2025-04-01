@@ -1,31 +1,51 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
+import { useApolloClient } from '@apollo/client'
 
 import { useMe } from 'lib/context/MeContext'
 
-import LoggedInForm from './TrialLoggedInForm'
-import LoggedOutForm from './TrialLoggedOutForm'
+import RequestTrial from './RequestTrial'
+import RegisterForTrial from './RegisterForTrial'
 import Success from './TrialSuccess'
+import { addStatusParamToRouter } from './utils'
+
+type StepType = 'FORM' | 'SUCCESS'
+
+interface TrialFormProps {
+  onSuccess: () => void
+}
+
+const TrialForm = ({ onSuccess }: TrialFormProps) => {
+  const { me } = useMe()
+  return me ? (
+    <RequestTrial onSuccess={onSuccess} />
+  ) : (
+    <RegisterForTrial onSuccess={onSuccess} />
+  )
+}
 
 // Assumptions:
 //  - Users who see this form are eligible for trial access
 //  - Some users may already by authenticated
-const Form = ({ payload, context = 'trial' }) => {
-  const { me, hasActiveMembership } = useMe()
-  const [step, setStep] = useState(hasActiveMembership ? 'SUCCESS' : 'REQUEST') // REQUEST, SUCCESS
+const Trial = () => {
+  const router = useRouter()
+  const apolloClient = useApolloClient()
+
+  const [step, setStep] = useState<StepType>('FORM')
 
   const onSuccess = () => {
+    apolloClient.resetStore()
+    // we use the status param in the route to …… (TODO: add explanation)
+    addStatusParamToRouter(router)('success')
     setStep('SUCCESS')
   }
 
-  return (
-    <>
-      {step === 'REQUEST' && !me && <LoggedOutForm onSuccess={onSuccess} />}
-      {step === 'REQUEST' && me && (
-        <LoggedInForm onSuccess={onSuccess} payload={payload} />
-      )}
-      {step === 'SUCCESS' && <Success context={context} />}
-    </>
-  )
+  const STEPS = {
+    FORM: <TrialForm onSuccess={onSuccess} />,
+    SUCCESS: <Success />,
+  }
+
+  return STEPS[step]
 }
 
-export default Form
+export default Trial

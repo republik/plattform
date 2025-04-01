@@ -1,4 +1,5 @@
 import { definePreset } from '@pandacss/dev'
+import { buttonRecipe } from 'src/recipes/button'
 
 export const presetRepublik = definePreset({
   name: 'republik',
@@ -436,6 +437,10 @@ export const presetRepublik = definePreset({
           },
         },
       },
+    },
+
+    recipes: {
+      button: buttonRecipe,
     },
 
     keyframes: {

@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client'
 
 import {
-  MeDocument,
   AuthorizeSessionDocument,
   SignInTokenType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
@@ -10,21 +9,28 @@ import { useTranslation } from 'lib/withT'
 
 const CODE_LENGTH = 6
 
-const TrialCodeForm = ({ email, onSuccess, onError }) => {
-  const { t } = useTranslation()
-  const [authorizeSession] = useMutation(AuthorizeSessionDocument, {
-    refetchQueries: [{ query: MeDocument }],
-    awaitRefetchQueries: true,
-  })
+type AuthorizeWithCodeProps = {
+  email: string
+  onSuccess: () => void
+  onError: (error?: Error) => void
+}
 
-  const submitCode = (e) => {
+const AuthorizeWithCode = ({
+  email,
+  onSuccess,
+  onError,
+}: AuthorizeWithCodeProps) => {
+  const { t } = useTranslation()
+  const [authorizeSession] = useMutation(AuthorizeSessionDocument)
+
+  const submitCode = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const form = e.target
+    const form = e.target as HTMLFormElement
     const formData = new FormData(form)
     const code = formData.get('code')?.toString().trim()
 
-    if (!code || code.length === 0) {
+    if (!code.length) {
       console.log(t('Auth/CodeAuthorization/code/missing'))
       return
     }
@@ -47,9 +53,15 @@ const TrialCodeForm = ({ email, onSuccess, onError }) => {
   return (
     <form action='POST' onSubmit={submitCode}>
       <label htmlFor='code'>{t('Auth/CodeAuthorization/code/label')}</label>
-      <input type='text' pattern={'[0-9]*'} name='code' autoComplete='false' />
+      <input
+        type='text'
+        pattern={'[0-9]*'}
+        name='code'
+        autoComplete='false'
+        onChange={(e) => e.target.form.submit()}
+      />
     </form>
   )
 }
 
-export default TrialCodeForm
+export default AuthorizeWithCode

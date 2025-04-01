@@ -1,7 +1,9 @@
 import { useRouter } from 'next/router'
 import { useTranslation } from 'lib/withT'
 
-const SuccessPack = ({ context }) => {
+// This component is displayed after a successful trial signup.
+// It provides the user with options to start using the product.
+const SuccessPack = () => {
   const { t } = useTranslation()
   const router = useRouter()
 
@@ -11,7 +13,7 @@ const SuccessPack = ({ context }) => {
         onClick={() =>
           router.push({
             pathname: '/einrichten',
-            query: { context },
+            query: { context: 'trial' },
           })
         }
       >

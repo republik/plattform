@@ -1,34 +1,30 @@
 import { useRouter } from 'next/router'
-import { useMutation, useApolloClient } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 
 import { RequestAccessDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 import { REGWALL_CAMPAIGN } from 'lib/constants'
 import { getConversionPayload } from 'lib/utils/conversion-payload'
 
-import { addStatusParamToRouter } from './utils'
+type RequestTrialProps = {
+  onSuccess: () => void
+}
 
-const TrialLoggedInForm = ({ onSuccess, payload }) => {
+// This component is used in the trial flow when the user is already authenticated.
+const RequestTrial = ({ onSuccess }: RequestTrialProps) => {
   const router = useRouter()
-  const apolloClient = useApolloClient()
   const [requestAccess] = useMutation(RequestAccessDocument)
   const { query } = router
 
-  const setStatus = addStatusParamToRouter(router)
-
-  const requestTrialAccess = (e) => {
+  const requestTrialAccess = (e: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault()
 
     requestAccess({
       variables: {
         campaignId: REGWALL_CAMPAIGN,
-        payload: { ...getConversionPayload(query), ...payload },
+        payload: getConversionPayload(query),
       },
-    }).then(() => {
-      setStatus('success')
-      apolloClient.resetStore()
-      onSuccess()
-    })
+    }).then(onSuccess)
   }
 
   return (
@@ -38,4 +34,4 @@ const TrialLoggedInForm = ({ onSuccess, payload }) => {
   )
 }
 
-export default TrialLoggedInForm
+export default RequestTrial

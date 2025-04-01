@@ -2,7 +2,7 @@ mutation signIn(
   $email: String!
   $context: String
   $consents: [String!]
-  $tokenType: String
+  $tokenType: SignInTokenType
   $accessToken: ID
 ) {
   signIn(

@@ -54,7 +54,7 @@ import useSchema from './useSchema'
 import { useUserAgent } from 'lib/context/UserAgentContext'
 import PrepubNotice from './components/PrepubNotice'
 import { Paywall } from '@app/components/paynote-overlay/paywall'
-import { Regwall } from '@app/components/paynote-overlay/regwall'
+import Regwall from '@app/components/regwall'
 
 const EmptyComponent = ({ children }) => children
 

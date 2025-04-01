@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router'
 import { useMutation } from '@apollo/client'
 
 import {
@@ -9,17 +8,18 @@ import {
 import isEmail from 'validator/lib/isEmail'
 import { useTranslation } from 'lib/withT'
 
-import { addStatusParamToRouter } from './utils'
 import { css } from '@republik/theme/css'
 
-const TrialEmailForm = ({ onSuccess, onError }) => {
+type SubmitEmailProps = {
+  onSuccess: (email: string) => void
+  onError: (error?: Error) => void
+}
+
+const SubmitEmail = ({ onSuccess, onError }: SubmitEmailProps) => {
   const { t } = useTranslation()
-  const router = useRouter()
-
   const [signIn] = useMutation(SignInDocument)
-  const setStatus = addStatusParamToRouter(router)
 
-  const signInWithEmail = (email) =>
+  const signInWithEmail = (email: string) =>
     signIn({
       variables: {
         email,
@@ -29,15 +29,14 @@ const TrialEmailForm = ({ onSuccess, onError }) => {
       },
     })
       .then(() => {
-        setStatus('success')
         onSuccess(email)
       })
       .catch(onError)
 
-  const submitEmail = (e) => {
+  const submitEmail = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    const form = e.target
+    const form = e.target as HTMLFormElement
     const formData = new FormData(form)
     const email = formData.get('email')?.toString().trim()
 
@@ -46,7 +45,6 @@ const TrialEmailForm = ({ onSuccess, onError }) => {
       return
     }
 
-    setStatus('pending') // TODO: move to a context?
     return signInWithEmail(email)
   }
 
@@ -67,4 +65,4 @@ const TrialEmailForm = ({ onSuccess, onError }) => {
   )
 }
 
-export default TrialEmailForm
+export default SubmitEmail
