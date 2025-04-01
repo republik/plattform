@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import {
   IconButton,
-  Interaction,
   shouldIgnoreClick,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
@@ -25,7 +24,6 @@ import SubscribeMenu from '../Notifications/SubscribeMenu'
 import BookmarkButton from './BookmarkButton'
 import DiscussionLinkButton from './DiscussionLinkButton'
 import UserProgress from './UserProgress'
-import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
