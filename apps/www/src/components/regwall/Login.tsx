@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 const Login = () => {
   return (
-    <p>
+    <p className={css({ textAlign: 'center' })}>
       Haben Sie ein Abonnement?{' '}
       <Link href='/anmelden'>
         <span

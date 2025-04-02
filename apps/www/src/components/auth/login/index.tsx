@@ -16,6 +16,7 @@ import { FormField } from '../../ui/form'
 
 import { CodeForm, CodeFormProps } from './CodeForm'
 import { ErrorMessage } from './ErrorMessage'
+import { render } from 'react-dom'
 
 type SubmitProps = {
   children?: ReactNode
@@ -42,6 +43,8 @@ interface LoginFormProps {
   submitButtonText?: string
   context?: string
   autoFocus?: boolean
+  renderBefore?: ReactNode
+  renderAfter?: ReactNode
 }
 
 export function LoginForm(props: LoginFormProps) {
@@ -83,6 +86,7 @@ export function LoginForm(props: LoginFormProps) {
 
   return (
     <form action='POST' onSubmit={submitEmail}>
+      {props.renderBefore}
       <div
         className={vstack({
           gap: '4',
@@ -103,6 +107,7 @@ export function LoginForm(props: LoginFormProps) {
         />
         <Submit pending={pending}>{props.submitButtonText}</Submit>
       </div>
+      {props.renderAfter}
     </form>
   )
 }

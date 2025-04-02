@@ -15,8 +15,10 @@ import { Spinner } from '../../ui/spinner'
 import { reloadPage } from '../login/utils'
 import { ErrorMessage } from '../login/ErrorMessage'
 
+import { TrialFormProps } from '.'
+
 // This component is used in the trial flow when the user is already authenticated.
-const RequestTrial = () => {
+const RequestTrial = (props: TrialFormProps) => {
   const gql = useApolloClient()
   const router = useRouter()
   const { query } = router
