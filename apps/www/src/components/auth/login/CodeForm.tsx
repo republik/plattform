@@ -1,120 +1,29 @@
 'use client'
+
 import { type ReactNode, useId, useRef, useState } from 'react'
-import { useFormStatus } from 'react-dom'
+
+import { ApolloError, useApolloClient } from '@apollo/client'
+
+import { visuallyHidden, vstack } from '@republik/theme/patterns'
+import { css } from '@republik/theme/css'
 
 import {
   AuthorizeSessionDocument,
-  SignInDocument,
   SignInTokenType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 
-import { css } from '@republik/theme/css'
-import { visuallyHidden, vstack } from '@republik/theme/patterns'
-
-import { Alert, AlertDescription, AlertTitle } from '../../ui/alert'
-import { Button } from '../../ui/button'
-import { FormField } from '../../ui/form'
 import { Spinner } from '../../ui/spinner'
 
-import { CodeInput } from './code-input'
-import { ApolloError, useApolloClient, useMutation } from '@apollo/client'
+import { CodeInput } from './CodeInput'
+import { ErrorMessage } from './ErrorMessage'
+import { reloadPage } from './utils'
 
-const ErrorMessage = ({
-  error,
-}: {
-  error: string | ApolloError | undefined
-}) => {
-  const message =
-    typeof error === 'string'
-      ? error
-      : error?.networkError
-      ? 'Network error'
-      : error?.graphQLErrors[0]?.message
-
-  return (
-    <Alert variant='error'>
-      <AlertTitle>Error</AlertTitle>
-      {message && <AlertDescription>{message}</AlertDescription>}
-    </Alert>
-  )
-}
-
-type SubmitProps = {
-  children?: ReactNode
-}
-
-export function Submit({ children }: SubmitProps) {
-  const { pending } = useFormStatus()
-  return (
-    <Button
-      type='submit'
-      disabled={pending}
-      loading={pending}
-      className={css({
-        w: 'full',
-      })}
-    >
-      {children ?? 'Submit'}
-    </Button>
-  )
-}
-
-interface LoginFormProps {
-  loginFormHeader?: ReactNode
-  loginFormInfo?: ReactNode
-  renderCodeFormHint?: CodeFormProps['renderHint']
-  submitButtonText?: string
-}
-
-export function LoginForm(props: LoginFormProps) {
-  const [signIn, { data, error }] = useMutation(SignInDocument)
-  const [email, setEmail] = useState<string | null>(null)
-
-  if (data?.signIn && email) {
-    return <CodeForm email={email} renderHint={props.renderCodeFormHint} />
-  }
-
-  return (
-    <form
-      action={async (formData) => {
-        const email = formData.get('email') as string
-        const result = await signIn({
-          variables: {
-            email: email,
-            tokenType: SignInTokenType.EmailCode,
-          },
-        })
-        if (result.data?.signIn) {
-          setEmail(email)
-        }
-      }}
-    >
-      <div
-        className={vstack({
-          gap: '4',
-          alignItems: 'stretch',
-          w: 'full',
-          maxW: 'lg',
-        })}
-      >
-        {props.loginFormHeader}
-        {error && <ErrorMessage error={error} />}
-
-        <FormField label='E-Mail' name='email' type='email' autoFocus />
-
-        {props.loginFormInfo}
-        <Submit>{props.submitButtonText}</Submit>
-      </div>
-    </form>
-  )
-}
-
-interface CodeFormProps {
+export interface CodeFormProps {
   email: string
   renderHint?: (email: string) => ReactNode
 }
 
-function CodeForm({ email, renderHint }: CodeFormProps) {
+export function CodeForm({ email, renderHint }: CodeFormProps) {
   const codeId = useId()
   const formRef = useRef<HTMLFormElement>(null)
   const [error, setError] = useState<ApolloError | undefined>()
@@ -122,11 +31,7 @@ function CodeForm({ email, renderHint }: CodeFormProps) {
 
   const gql = useApolloClient()
 
-  const handleSubmit = async (formData: FormData) => {
-    if (pending) {
-      return
-    }
-
+  const submitForm = async (formData: FormData) => {
     const email = formData.get('email') as string
     const code = (formData.get('code') as string)?.replace(/[^0-9]/g, '')
     const token = { type: SignInTokenType.EmailCode, payload: code }
@@ -138,7 +43,6 @@ function CodeForm({ email, renderHint }: CodeFormProps) {
       variables: {
         email,
         tokens: [token],
-        consents: ['PRIVACY'],
       },
     })
 
@@ -149,14 +53,24 @@ function CodeForm({ email, renderHint }: CodeFormProps) {
     }
 
     if (autorizedRes.data?.authorizeSession) {
-      setTimeout(() => {
-        window.location.reload()
-      }, 200)
+      reloadPage()
     }
   }
 
+  const submitCode = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    if (pending) {
+      return
+    }
+
+    const form = e.target as HTMLFormElement
+    const formData = new FormData(form)
+    submitForm(formData)
+  }
+
   return (
-    <form action={handleSubmit} ref={formRef}>
+    <form action='POST' onSubmit={submitCode} ref={formRef}>
       <div
         className={vstack({
           gap: '4',
@@ -167,6 +81,7 @@ function CodeForm({ email, renderHint }: CodeFormProps) {
       >
         {renderHint?.(email)}
         {error && <ErrorMessage error={error} />}
+
         <input name='email' type='hidden' value={email} readOnly></input>
 
         <div
@@ -192,7 +107,7 @@ function CodeForm({ email, renderHint }: CodeFormProps) {
               // Safari < 16 doesn't support requestSubmit(), so we submit manually
               // formRef.current?.requestSubmit?.();
               if (formRef.current && !pending) {
-                handleSubmit(new FormData(formRef.current))
+                submitForm(new FormData(formRef.current))
               }
             }}
           />

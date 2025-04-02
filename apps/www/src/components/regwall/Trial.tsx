@@ -2,7 +2,7 @@ import Image from 'next/image'
 import TrialForm from '../auth/trial'
 import { CDN_FRONTEND_BASE_URL } from 'lib/constants'
 import { css } from '@republik/theme/css'
-import { LoginForm } from '../auth/login/login-form'
+import { LoginForm } from '../auth/login'
 
 const Trial = () => {
   return (
