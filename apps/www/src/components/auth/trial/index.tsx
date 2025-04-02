@@ -9,7 +9,8 @@ import RegisterForTrial from './RegisterForTrial'
 const TrialForm = () => {
   const { me } = useMe()
 
-  return me ? <RequestTrial /> : <RegisterForTrial />
+  // return me ? <RequestTrial /> : <RegisterForTrial />
+  return <RegisterForTrial />
 }
 
 export default TrialForm

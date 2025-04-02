@@ -41,6 +41,7 @@ interface LoginFormProps {
   renderCodeFormHint?: CodeFormProps['renderHint']
   submitButtonText?: string
   context?: string
+  autoFocus?: boolean
 }
 
 export function LoginForm(props: LoginFormProps) {
@@ -92,7 +93,14 @@ export function LoginForm(props: LoginFormProps) {
       >
         {error && <ErrorMessage error={error} />}
 
-        <FormField label='E-Mail' name='email' type='email' autoFocus />
+        <FormField
+          label='E-Mail'
+          placeholder='E-mail'
+          name='email'
+          type='email'
+          autoFocus={props.autoFocus}
+          hideLabel
+        />
         <Submit pending={pending}>{props.submitButtonText}</Submit>
       </div>
     </form>

@@ -1,11 +1,17 @@
+import { css } from '@republik/theme/css'
+
 import Trial from './Trial'
-import Login from './Login'
 import Offers from './Offers'
 
 const Regwall = () => {
   return (
-    <div>
-      <Login />
+    <div
+      className={css({
+        borderTop: '2px solid',
+        borderColor: 'text.black',
+        mt: '4',
+      })}
+    >
       <Trial />
       <Offers />
     </div>

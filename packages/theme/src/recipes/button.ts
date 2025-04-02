@@ -1,87 +1,84 @@
-import { defineRecipe } from "@pandacss/dev";
+import { defineRecipe } from '@pandacss/dev'
 
 export const buttonRecipe = defineRecipe({
-  className: "button",
-  description: "Styles for the Button component",
+  className: 'button',
+  description: 'Styles for the Button component',
 
   base: {
-    display: "inline-flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: "md",
-    fontSize: "md",
-    lineHeight: "1",
-    fontWeight: "medium",
-    whiteSpace: "nowrap",
+    display: 'inline-flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '5px',
+    fontSize: 'md',
+    lineHeight: '1',
+    fontWeight: 'medium',
+    whiteSpace: 'nowrap',
     transitionProperty:
-      "color, background-color, border-color, text-decoration-color, fill, stroke",
-    transitionTimingFunction: "in-out",
-    transitionDuration: "fast",
-    cursor: "pointer",
+      'color, background-color, border-color, text-decoration-color, fill, stroke',
+    transitionTimingFunction: 'in-out',
+    transitionDuration: 'fast',
+    cursor: 'pointer',
     '&:disabled:not([data-loading], [aria-busy="true"])': {
-      opacity: "50%",
-      cursor: "default",
+      opacity: '50%',
+      cursor: 'default',
     },
     _loading: {
-      cursor: "default",
+      cursor: 'default',
     },
   },
   variants: {
     variant: {
       default: {
-        bg: "primary",
-        color: "text.primaryForeground",
-        _hover: {
-          bg: "primaryHover",
-        },
+        bg: 'contrast',
+        color: 'text.inverted',
       },
       link: {
-        bg: "transparent",
-        display: "inline",
-        color: "current",
-        fontWeight: "inherit",
-        fontSize: "inherit",
-        textDecoration: "underline",
+        bg: 'transparent',
+        display: 'inline',
+        color: 'current',
+        fontWeight: 'inherit',
+        fontSize: 'inherit',
+        textDecoration: 'underline',
       },
       outline: {
-        bg: "transparent",
-        borderColor: "current",
-        borderStyle: "solid",
-        borderWidth: "1px",
+        bg: 'transparent',
+        borderColor: 'current',
+        borderStyle: 'solid',
+        borderWidth: '1px',
       },
     },
     size: {
       default: {
-        px: "6",
-        py: "3",
+        px: '6',
+        py: '4',
       },
       large: {
-        px: "6",
-        py: "4",
-        width: "full",
+        px: '6',
+        py: '4',
+        width: 'full',
       },
     },
   },
   compoundVariants: [
     {
-      variant: "link",
-      size: "default",
+      variant: 'link',
+      size: 'default',
       css: {
-        p: "0",
+        p: '0',
       },
     },
     {
-      variant: "link",
-      size: "large",
+      variant: 'link',
+      size: 'large',
       css: {
-        p: "0",
-        width: "auto",
+        p: '0',
+        width: 'auto',
       },
     },
   ],
   defaultVariants: {
-    variant: "default",
-    size: "default",
+    variant: 'default',
+    size: 'default',
   },
-  staticCss: [{ variant: ["*"], size: ["*"] }],
-});
+  staticCss: [{ variant: ['*'], size: ['*'] }],
+})

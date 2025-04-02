@@ -4,7 +4,14 @@ import Link from 'next/link'
 const Login = () => {
   return (
     <p>
-      Haben Sie ein Abonnement? <Link href='/anmelden'>Anmelden.</Link>
+      Haben Sie ein Abonnement?{' '}
+      <Link href='/anmelden'>
+        <span
+          className={css({ textDecoration: 'underline', color: '#FF6969' })}
+        >
+          Anmelden.
+        </span>
+      </Link>
     </p>
   )
 }

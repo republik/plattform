@@ -474,10 +474,8 @@ const ArticlePage = ({
                         {truncateContent ? (
                           <>
                             {renderSchema(splitContent.mainTruncated)}
-                            <Center>
-                              {/* TODO: add condition hasAcess  */}
-                              {hasAccess ? <Paywall /> : <Regwall />}
-                            </Center>
+                            {/* TODO: add condition hasAcess  */}
+                            {hasAccess ? <Paywall /> : <Regwall />}
                           </>
                         ) : (
                           <>{renderSchema(splitContent.main)}</>

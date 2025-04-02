@@ -22,10 +22,6 @@ export function FormField({
 }: FormFieldProps) {
   const id = useId()
 
-  // TODO: handle other validity states than valueMissing
-  // https://developer.mozilla.org/en-US/docs/Web/API/ValidityState
-  const errorMessage = error ? 'value missing' : null
-
   return (
     <div
       className={css({
@@ -58,8 +54,8 @@ export function FormField({
           css({
             background: 'white',
             borderWidth: '1px',
-            borderColor: 'divider',
-            borderRadius: 'sm',
+            borderColor: 'black',
+            borderRadius: '5px',
             p: '2',
             _disabled: {
               color: 'text.secondary',
@@ -82,7 +78,7 @@ export function FormField({
             fontSize: 'sm',
           })}
         >
-          {errorMessage}
+          {error}
         </div>
       )}
       {description && (
