@@ -5,7 +5,6 @@ import { graphql } from '@apollo/client/react/hoc'
 import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash/debounce'
 import { timeFormat } from 'd3-time-format'
-import { parse, stringify } from '@republik/remark-preset'
 import { css } from 'glamor'
 
 import Frame from '../Frame'
@@ -54,7 +53,7 @@ import createDebug from 'debug'
 import {
   findAuthorsP,
   findTitleLeaf,
-  generateAuthorsLine,
+  generateAuthorsMdast
 } from '../../lib/utils/helpers'
 import { withEditRepoMeta } from '../Repo/EditMetaDate'
 import { getRepoIdFromQuery } from '../../lib/repoIdHelper'
@@ -197,7 +196,9 @@ export class EditorPage extends Component {
       }
     }
     this.lockHandler = (event) => {
-      event && event.preventDefault()
+      if (event) {
+        event.preventDefault()
+      }
       this.setState({
         didUnlock: false,
       })
@@ -211,7 +212,7 @@ export class EditorPage extends Component {
       this.setState(this.lock)
     }
     this.unlockHandler = (event) => {
-      event && event.preventDefault()
+      if (event) event.preventDefault()
       const { t } = this.props
 
       const { activeUsers } = this.state
@@ -506,8 +507,7 @@ export class EditorPage extends Component {
         }
         let authorsP = findAuthorsP(json)
         if (authorsP) {
-          const authorsMdast = parse(generateAuthorsLine(this.props.me))
-            .children[0]
+          const authorsMdast = generateAuthorsMdast(this.props.me)
           authorsP.children = authorsMdast.children
           authorsP.type = authorsMdast.type
           delete authorsP.value
@@ -642,6 +642,7 @@ export class EditorPage extends Component {
           'loadState',
           'documentChangeHandler',
           'diff',
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
           require('diff').createPatch(
             'string',
             JSON.stringify(JSON.parse(committedRawDocString), null, 2),
@@ -710,12 +711,8 @@ export class EditorPage extends Component {
       isTemplate: isNew ? isTemplate === 'true' : data?.repo?.isTemplate,
       message: message,
       document: {
-        content: parse(
-          stringify(
-            JSON.parse(
-              JSON.stringify(this.editor.serializer.serialize(editorState)),
-            ),
-          ),
+        content: JSON.parse(
+          JSON.stringify(this.editor.serializer.serialize(editorState)),
         ),
       },
     })
