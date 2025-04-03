@@ -1,4 +1,5 @@
 import { definePreset } from '@pandacss/dev'
+import { buttonRecipe } from 'src/recipes/button'
 
 export const presetRepublik = definePreset({
   name: 'republik',
@@ -41,6 +42,7 @@ export const presetRepublik = definePreset({
           full: { value: '100%' },
           viewportWidth: { value: '100vw' },
           24: { value: '6rem' },
+          center: { value: '695px' },
         },
         spacing: {
           0: { value: '0rem' },
@@ -231,6 +233,14 @@ export const presetRepublik = definePreset({
           description: 'Body text',
           value: {
             fontFamily: 'gtAmericaStandard',
+          },
+        },
+        airy: {
+          description: 'Airy body text',
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontSize: 'l',
+            lineHeight: 1.4,
           },
         },
         title: {
@@ -436,6 +446,10 @@ export const presetRepublik = definePreset({
           },
         },
       },
+    },
+
+    recipes: {
+      button: buttonRecipe,
     },
 
     keyframes: {

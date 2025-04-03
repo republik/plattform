@@ -74,7 +74,7 @@ type AccessGrant {
   """
   invalidatedAt: DateTime
   followupAt: DateTime
-  "Status (Admin only)"
+  "Status"
   status: String
   "Events (Admin only)"
   events: [AccessEvent]
