@@ -6,13 +6,13 @@ import { PaymentProviderActions } from './base'
 const config = getConfig()
 
 export const ProjectRStripe = new Stripe(config.PROJECT_R_STRIPE_API_KEY, {
-  // @ts-expect-error stripe-version-2020-08-27
-  apiVersion: config.stripe_api_version,
+  // @ts-expect-error stripe-version-2020-08-27 custom_checkout_beta=v1
+  apiVersion: config.STRIPE_API_VERSION,
 })
 
 export const RepublikAGStripe = new Stripe(config.REPUBLIK_STRIPE_API_KEY, {
-  // @ts-expect-error stripe-version-2020-08-27
-  apiVersion: config.stripe_api_version,
+  // @ts-expect-error stripe-version-2020-08-27 custom_checkout_beta=v1
+  apiVersion: config.STRIPE_API_VERSION,
 })
 
 export class StripeProvider implements PaymentProviderActions {

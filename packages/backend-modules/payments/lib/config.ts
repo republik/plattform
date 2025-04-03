@@ -19,6 +19,7 @@ export type Config = {
   REPUBLIK_3_MONTH_GIFT_COUPON: string
   PROJECT_R_3_MONTH_GIFT_COUPON: string
   PROJECT_R_YEARLY_GIFT_COUPON: string
+  PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS: string[]
 }
 
 export function getConfig(): Config {
@@ -108,5 +109,8 @@ export function getConfig(): Config {
       process.env.PAYMENTS_PROJECT_R_YEARLY_GIFT_COUPON,
     REPUBLIK_3_MONTH_GIFT_COUPON:
       process.env.PAYMENTS_REPUBLIK_3_MONTH_GIFT_COUPON,
+    PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS:
+      process.env.PAYMENTS_PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS?.split(';') ||
+      [],
   }
 }

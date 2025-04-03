@@ -7,7 +7,6 @@ import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker
 import { PaymentProvider } from '../../providers/provider'
 import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
-import { SyncAddressDataWorker } from '../../workers/SyncAddressDataWorker'
 import { mapChargeArgs } from './invoicePaymentSucceeded'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
 import { GiftShop } from '../../shop/gifts'
@@ -46,11 +45,6 @@ async function handleSubscription(
     return
   }
 
-  if (!event.data.object.subscription) {
-    console.log('Non subscription checkouts currently not supported')
-    return
-  }
-
   const userId = await paymentService.getUserIdForCompanyCustomer(
     company,
     customerId,
@@ -58,9 +52,6 @@ async function handleSubscription(
   if (!userId) {
     throw Error(`User for ${customerId} does not exists`)
   }
-
-  const customFields = event.data.object.custom_fields
-  await syncUserNameData(paymentService, userId, customFields)
 
   let paymentStatus = event.data.object.payment_status
   if (paymentStatus === 'no_payment_required') {
@@ -127,8 +118,6 @@ async function handleSubscription(
 
   const queue = Queue.getInstance()
 
-  const addressData = event.data.object.customer_details?.address
-
   await Promise.all([
     queue.send<ConfirmSetupTransactionalWorker>(
       'payments:transactional:confirm:setup',
@@ -144,16 +133,6 @@ async function handleSubscription(
       eventSourceId: event.id,
       userId: userId,
     }),
-    addressData
-      ? queue.send<SyncAddressDataWorker>(
-          'payments:stripe:checkout:sync-address',
-          {
-            $version: 'v1',
-            userId: userId,
-            address: addressData,
-          },
-        )
-      : undefined,
   ])
   return
 }
@@ -264,26 +243,4 @@ async function handlePayment(
     },
     ctx.pgdb,
   )
-}
-
-async function syncUserNameData(
-  paymentService: PaymentService,
-  userId: string,
-  customFields: Stripe.Checkout.Session.CustomField[],
-) {
-  if (customFields.length > 0) {
-    const firstNameField = customFields.find(
-      (field) => field.key === 'firstName',
-    )
-    const lastNameField = customFields.find((field) => field.key === 'lastName')
-
-    const firstName = firstNameField?.text?.value
-    const lastName = lastNameField?.text?.value
-
-    if (firstName && lastName) {
-      return await paymentService.updateUserName(userId, firstName, lastName)
-    }
-
-    return null
-  }
 }

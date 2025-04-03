@@ -2699,6 +2699,26 @@
     {
       "key": "api/reportUser/reasonTooLong",
       "value": "Die Begründung ist zu lange. (Maximal {max} Zeichen)"
+    },
+    {
+      "key": "api/payments/price/ABO",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/payments/price/MONTHLY_ABO",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "api/payments/price/ABO_DONATE_OPTION_YEARLY_020",
+      "value": "Jährliche Spende"
+    },
+    {
+      "key": "api/payments/price/ABO_DONATE_OPTION_YEARLY_120",
+      "value": "Jährliche Spende"
+    },
+    {
+      "key": "api/payments/price/ABO_DONATE_OPTION_YEARLY_240",
+      "value": "Jährliche Spende"
     }
   ]
 }
