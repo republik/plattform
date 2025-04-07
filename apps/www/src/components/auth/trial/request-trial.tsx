@@ -1,6 +1,6 @@
 'use client'
 
-import { use, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 
 import { ApolloError, useApolloClient } from '@apollo/client'
@@ -10,8 +10,6 @@ import { RequestAccessDocument } from '#graphql/republik-api/__generated__/gql/g
 import { REGWALL_CAMPAIGN } from 'lib/constants'
 import { getConversionPayload } from 'lib/utils/conversion-payload'
 import { useTranslation } from 'lib/withT'
-
-import { Spinner } from '../../ui/spinner'
 
 import { reloadPage } from '../login/utils'
 import { ErrorMessage } from '../login/error-message'

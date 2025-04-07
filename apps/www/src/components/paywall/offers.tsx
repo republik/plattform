@@ -11,6 +11,7 @@ import { Button } from '../ui/button'
 import { RadioOption } from '../ui/form'
 
 import { RegwallSection } from '../regwall/containers'
+import { ArrowLink } from '../ui/links'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
 
@@ -64,8 +65,26 @@ export function Offers({
               width: 'full',
               py: '4',
               mt: '6',
+              position: 'relative',
             })}
           >
+            <span
+              className={css({
+                position: 'absolute',
+                top: '-12px',
+                right: '2',
+                backgroundColor: '#C398D5',
+                color: 'white',
+                textTransform: 'uppercase',
+                fontSize: 'xs',
+                fontWeight: 500,
+                px: '4',
+                py: '1',
+                borderRadius: 16,
+              })}
+            >
+              Sie sparen 14&thinsp;%
+            </span>
             <RadioOption
               name='YEARLY'
               value='YEARLY'
@@ -76,6 +95,7 @@ export function Offers({
                 className={css({
                   display: 'flex',
                   flexDir: 'column',
+                  gap: '1',
                 })}
               >
                 <span className={css({ fontSize: 'xl' })}>
@@ -109,7 +129,13 @@ export function Offers({
               checked={option === 'MONTHLY'}
               onChange={() => setOption('MONTHLY')}
             >
-              <span className={css({ display: 'flex', flexDir: 'column' })}>
+              <span
+                className={css({
+                  display: 'flex',
+                  flexDir: 'column',
+                  gap: '1',
+                })}
+              >
                 <span className={css({ fontSize: 'xl' })}>
                   <del
                     className={css({
@@ -138,6 +164,7 @@ export function Offers({
           >
             Nein Danke, weil…
           </Button>
+          <ArrowLink href='/'>Alle Mitgliedschafte ansehen</ArrowLink>
         </div>
       </form>
     </RegwallSection>

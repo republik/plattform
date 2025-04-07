@@ -14,7 +14,7 @@ import {
 import { Button } from '../../ui/button'
 import { FormField } from '../../ui/form'
 
-import { CodeForm, CodeFormProps } from './code-form'
+import { CodeForm } from './code-form'
 import { ErrorMessage } from './error-message'
 import { Tos } from './tos'
 import isEmail from 'validator/lib/isEmail'

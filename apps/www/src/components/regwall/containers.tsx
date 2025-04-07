@@ -21,7 +21,15 @@ export const RegwallSection = ({
   backgroundColor: string
   children: ReactNode
 }) => (
-  <div className={css({ backgroundColor })}>
+  <div
+    style={{
+      // @ts-expect-error css vars
+      '--bg': backgroundColor,
+    }}
+    className={css({
+      background: 'var(--bg)',
+    })}
+  >
     <div
       className={css({
         margin: '0 auto',
