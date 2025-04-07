@@ -14,8 +14,8 @@ import {
 
 import { Spinner } from '../../ui/spinner'
 
-import { CodeInput } from './CodeInput'
-import { ErrorMessage } from './ErrorMessage'
+import { CodeInput } from './code-input'
+import { ErrorMessage } from './error-message'
 import { reloadPage } from './utils'
 import { useTranslation } from 'lib/withT'
 
@@ -87,13 +87,11 @@ export function CodeForm({ email }: CodeFormProps) {
           textAlign: 'center',
         })}
       >
-        <h2 className={css({ textStyle: 'h2Sans' })}>
-          {t('auth/login/code/title')}
-        </h2>
+        <h2>{t('auth/login/code/title')}</h2>
         <div className={css({ textStyle: 'airy' })}>
           <p>
             {t.elements('auth/login/code/description', {
-              email: <b className={css({ fontWeight: 500 })}>{email}</b>,
+              email: <b>{email}</b>,
             })}
           </p>
         </div>
@@ -140,7 +138,7 @@ export function CodeForm({ email }: CodeFormProps) {
             {pending ? (
               <>
                 <Spinner />
-                <b className={css({ fontWeight: 500, pl: '4' })}>
+                <b className={css({ pl: '4' })}>
                   {t('auth/login/code/pending')}
                 </b>
               </>

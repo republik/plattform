@@ -2,8 +2,8 @@ import { ReactNode } from 'react'
 
 import { useMe } from 'lib/context/MeContext'
 
-import RequestTrial from './RequestTrial'
-import RegisterForTrial from './RegisterForTrial'
+import RequestTrial from './request-trial'
+import RegisterForTrial from './register-for-trial'
 
 export interface TrialFormProps {
   renderBefore?: ReactNode

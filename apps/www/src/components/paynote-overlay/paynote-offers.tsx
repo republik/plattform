@@ -3,7 +3,9 @@
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { css } from '@republik/theme/css'
-import { ChangeEventHandler, ReactNode, useId, useState } from 'react'
+import { useState } from 'react'
+
+import { RadioOption } from '../ui/form'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
 
@@ -43,9 +45,10 @@ export function Offers({
           alignItems: 'center',
         })}
       >
-        <Option
+        <RadioOption
+          name='MONTHLY'
           value='MONTHLY'
-          selected={option === 'MONTHLY'}
+          checked={option === 'MONTHLY'}
           onChange={() => setOption('MONTHLY')}
         >
           <span className={css({ display: 'block' })}>
@@ -62,10 +65,11 @@ export function Offers({
               11.– für einen Monat
             </span>
           </span>
-        </Option>
-        <Option
+        </RadioOption>
+        <RadioOption
+          name='YEARLY'
           value='YEARLY'
-          selected={option === 'YEARLY'}
+          checked={option === 'YEARLY'}
           onChange={() => setOption('YEARLY')}
         >
           <span
@@ -97,7 +101,7 @@ export function Offers({
               12&thinsp;% günstiger als ein Monats-Abo
             </span>
           </span>
-        </Option>
+        </RadioOption>
 
         <div
           className={css({
@@ -132,76 +136,5 @@ export function Offers({
         </button>
       </div>
     </form>
-  )
-}
-
-function Option({
-  value,
-  selected,
-  children,
-  onChange,
-}: {
-  value: string
-  selected: boolean
-  children: ReactNode
-  onChange: ChangeEventHandler<HTMLInputElement>
-}) {
-  const id = useId()
-  return (
-    <label
-      className={css({
-        borderWidth: 2,
-        borderStyle: 'solid',
-        borderRadius: '5px',
-        borderColor: 'disabled',
-        w: 'full',
-        p: '4',
-        display: 'flex',
-        gap: '4',
-        alignItems: 'center',
-        '&:has(:checked)': {
-          borderColor: 'text',
-        },
-      })}
-    >
-      <input
-        id={id}
-        value={value}
-        name='product'
-        type='radio'
-        checked={selected}
-        onChange={onChange}
-        className={css({
-          flexShrink: 0,
-          // Custom checkbox style, see https://moderncss.dev/pure-css-custom-styled-radio-buttons/
-          appearance: 'none',
-          backgroundColor: 'text.inverted',
-          margin: 0,
-          color: 'currentColor',
-          width: '1.15em',
-          height: '1.15em',
-          borderWidth: 2,
-          borderStyle: 'solid',
-          borderColor: 'disabled',
-          borderRadius: 'full',
-          display: 'grid',
-          placeContent: 'center',
-          outline: 'none',
-          _before: {
-            content: '""',
-            width: '0.35em',
-            height: '0.35em',
-            borderRadius: 'full',
-            backgroundColor: 'text.inverted',
-          },
-          _checked: {
-            backgroundColor: 'text',
-            borderColor: 'text',
-          },
-        })}
-      />
-
-      {children}
-    </label>
   )
 }

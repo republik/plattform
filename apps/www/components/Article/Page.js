@@ -53,7 +53,7 @@ import PublikatorLinkBlock from './components/PublikatorLinkBlock'
 import useSchema from './useSchema'
 import { useUserAgent } from 'lib/context/UserAgentContext'
 import PrepubNotice from './components/PrepubNotice'
-import { Paywall } from '@app/components/paynote-overlay/paywall'
+import Paywall from '@app/components/paywall'
 import Regwall from '@app/components/regwall'
 
 const EmptyComponent = ({ children }) => children
@@ -477,7 +477,7 @@ const ArticlePage = ({
                               {renderSchema(splitContent.mainTruncated)}
                             </div>
                             {/* TODO: add condition hasAcess  */}
-                            {hasAccess ? <Paywall /> : <Regwall />}
+                            <Paywall />
                           </>
                         ) : (
                           <>{renderSchema(splitContent.main)}</>

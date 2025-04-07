@@ -14,7 +14,7 @@ import { useTranslation } from 'lib/withT'
 import { Spinner } from '../../ui/spinner'
 
 import { reloadPage } from '../login/utils'
-import { ErrorMessage } from '../login/ErrorMessage'
+import { ErrorMessage } from '../login/error-message'
 
 import { TrialFormProps } from '.'
 import { Submit } from '../login'

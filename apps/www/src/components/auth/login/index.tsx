@@ -14,9 +14,9 @@ import {
 import { Button } from '../../ui/button'
 import { FormField } from '../../ui/form'
 
-import { CodeForm, CodeFormProps } from './CodeForm'
-import { ErrorMessage } from './ErrorMessage'
-import { Tos } from './Tos'
+import { CodeForm, CodeFormProps } from './code-form'
+import { ErrorMessage } from './error-message'
+import { Tos } from './tos'
 import isEmail from 'validator/lib/isEmail'
 
 type SubmitProps = {

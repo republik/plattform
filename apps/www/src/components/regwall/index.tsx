@@ -1,20 +1,15 @@
 import { css } from '@republik/theme/css'
 
-import Trial from './Trial'
-import Offers from './Offers'
+import Trial from './trial'
+import Offers from './offers'
+import { RegwallContainer } from './containers'
 
 const Regwall = () => {
   return (
-    <div
-      className={css({
-        borderTop: '2px solid',
-        borderColor: 'text.black',
-        mt: '4',
-      })}
-    >
+    <RegwallContainer>
       <Trial />
       <Offers />
-    </div>
+    </RegwallContainer>
   )
 }
 

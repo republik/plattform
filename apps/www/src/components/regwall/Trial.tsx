@@ -9,8 +9,9 @@ import { CDN_FRONTEND_BASE_URL } from 'lib/constants'
 import TrialForm from '../auth/trial'
 import { Button } from '../ui/button'
 
-import Login from './Login'
+import Login from './login'
 import { useTranslation } from 'lib/withT'
+import { RegwallSection } from './containers'
 
 // TODO: make css for container and css for b tag reusable
 
@@ -36,9 +37,7 @@ const TrialHeader = () => {
           height={240}
         />
       </div>
-      <h2 className={css({ textStyle: 'h2Sans' })}>
-        {t('regwall/header/title')}
-      </h2>
+      <h2>{t('regwall/header/title')}</h2>
       <div className={css({ textStyle: 'airy' })}>
         <p
           dangerouslySetInnerHTML={{ __html: t('regwall/header/description') }}
@@ -64,9 +63,7 @@ const WhyRegister = () => {
       {expanded ? (
         <div>
           <p>
-            <b className={css({ fontWeight: 500 })}>
-              {t('regwall/whyRegister/title')}
-            </b>
+            <b>{t('regwall/whyRegister/title')}</b>
             <br />
             {t('regwall/whyRegister/description')}
           </p>
@@ -82,23 +79,9 @@ const WhyRegister = () => {
 
 const Trial = () => {
   return (
-    <div className={css({ backgroundColor: '#F2ECE6' })}>
-      <div
-        className={css({
-          margin: '0 auto',
-          maxW: 'narrow',
-          padding: '4-6',
-          display: 'flex',
-          flexDir: 'column',
-          gap: '4',
-        })}
-      >
-        <TrialForm
-          renderBefore={<TrialHeader />}
-          renderAfter={<WhyRegister />}
-        />
-      </div>
-    </div>
+    <RegwallSection backgroundColor='#F2ECE6'>
+      <TrialForm renderBefore={<TrialHeader />} renderAfter={<WhyRegister />} />
+    </RegwallSection>
   )
 }
 

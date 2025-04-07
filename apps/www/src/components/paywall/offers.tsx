@@ -1,0 +1,145 @@
+'use client'
+
+import { useState } from 'react'
+
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
+
+import { css } from '@republik/theme/css'
+
+import { Button } from '../ui/button'
+import { RadioOption } from '../ui/form'
+
+import { RegwallSection } from '../regwall/containers'
+
+type OfferOptions = 'MONTHLY' | 'YEARLY'
+
+export function Offers({
+  additionalShopParams = {},
+}: {
+  additionalShopParams?: Record<string, string>
+}) {
+  const [option, setOption] = useState<OfferOptions>('YEARLY')
+
+  const utmParams = getUTMSessionStorage()
+
+  const trackEvent = useTrackEvent()
+
+  return (
+    <RegwallSection backgroundColor='#DAFF8D'>
+      <h3>Einstiegsangebot</h3>
+      <h2>
+        <span className={css({ fontWeight: 'normal' })}>
+          Ihre kostenlose Gastwoche ist zu Ende.
+        </span>{' '}
+        Doch unsere gemeinsame Reise muss hier nicht enden.
+      </h2>
+      <form
+        method='GET'
+        action={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot`}
+        onSubmit={() => {
+          trackEvent({
+            action: `Go to ${option} shop`,
+          })
+        }}
+      >
+        {Object.entries(utmParams).map(([k, v]) => {
+          return <input type='hidden' hidden key={k} name={k} value={v} />
+        })}
+        {Object.entries(additionalShopParams).map(([k, v]) => {
+          return <input type='hidden' hidden key={k} name={k} value={v} />
+        })}
+        <div
+          className={css({
+            display: 'flex',
+            gap: '4',
+            flexDir: 'column',
+            textStyle: 'body',
+            alignItems: 'center',
+          })}
+        >
+          <div
+            className={css({
+              borderTop: '1px solid',
+              width: 'full',
+              py: '4',
+              mt: '6',
+            })}
+          >
+            <RadioOption
+              name='YEARLY'
+              value='YEARLY'
+              checked={option === 'YEARLY'}
+              onChange={() => setOption('YEARLY')}
+            >
+              <span
+                className={css({
+                  display: 'flex',
+                  flexDir: 'column',
+                })}
+              >
+                <span className={css({ fontSize: 'xl' })}>
+                  <del
+                    className={css({
+                      color: 'textSoft',
+                      mr: '2',
+                    })}
+                  >
+                    <span className={css({ fontSize: 'l' })}>CHF </span>
+                    240
+                  </del>
+                  222.–&thinsp;/&thinsp;erste Jahr
+                </span>
+                <span>Danach 240.- jährlich. Jederzeit kündbar.</span>
+              </span>
+            </RadioOption>
+          </div>
+
+          <div
+            className={css({
+              borderTop: '1px solid',
+              width: 'full',
+              py: '4',
+              mb: '6',
+            })}
+          >
+            <RadioOption
+              name='MONTHLY'
+              value='MONTHLY'
+              checked={option === 'MONTHLY'}
+              onChange={() => setOption('MONTHLY')}
+            >
+              <span className={css({ display: 'flex', flexDir: 'column' })}>
+                <span className={css({ fontSize: 'xl' })}>
+                  <del
+                    className={css({
+                      color: 'textSoft',
+                      mr: '2',
+                    })}
+                  >
+                    <span className={css({ fontSize: 'l' })}>CHF </span>
+                    22
+                  </del>
+                  11.–&thinsp;/&thinsp;erste Monat
+                </span>
+                <span>Danach 22.- monatlich. Jederzeit kündbar.</span>
+              </span>
+            </RadioOption>
+          </div>
+
+          <Button type='submit' size='large'>
+            Jetzt abonnieren
+          </Button>
+          <Button
+            type='button'
+            variant='outline'
+            size='large'
+            onClick={() => window.location.reload()}
+          >
+            Nein Danke, weil…
+          </Button>
+        </div>
+      </form>
+    </RegwallSection>
+  )
+}
