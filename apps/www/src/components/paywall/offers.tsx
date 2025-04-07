@@ -14,6 +14,7 @@ import { ArrowLink } from '../ui/links'
 import { RegwallSection } from '../regwall/containers'
 
 import { ExitSurvey } from './exit-survey'
+import { useTranslation } from 'lib/withT'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
 
@@ -25,6 +26,8 @@ export function Offers({
   const [option, setOption] = useState<OfferOptions>('YEARLY')
   const [survey, showSurvey] = useState(false)
 
+  const { t } = useTranslation()
+
   const utmParams = getUTMSessionStorage()
 
   const trackEvent = useTrackEvent()
@@ -32,12 +35,12 @@ export function Offers({
   return (
     <>
       <RegwallSection backgroundColor='#DAFF8D'>
-        <h3>Einstiegsangebot</h3>
+        <h3>{t('paywall/offers/caption')}</h3>
         <h2>
           <span className={css({ fontWeight: 'normal' })}>
-            Ihre kostenlose Gastwoche ist zu Ende.
+            {t('paywall/offers/title/1')}
           </span>{' '}
-          Doch unsere gemeinsame Reise muss hier nicht enden.
+          {t('paywall/offers/title/2')}
         </h2>
         <form
           method='GET'
@@ -112,9 +115,9 @@ export function Offers({
                       <span className={css({ fontSize: 'l' })}>CHF </span>
                       240
                     </del>
-                    222.–&thinsp;/&thinsp;erste Jahr
+                    222.–&thinsp;/&thinsp;{t('paywall/offers/yearly/duration')}
                   </span>
-                  <span>Danach 240.- jährlich. Jederzeit kündbar.</span>
+                  <span>{t('paywall/offers/yearly/description')}</span>
                 </span>
               </RadioOption>
             </div>
@@ -150,15 +153,15 @@ export function Offers({
                       <span className={css({ fontSize: 'l' })}>CHF </span>
                       22
                     </del>
-                    11.–&thinsp;/&thinsp;erste Monat
+                    11.–&thinsp;/&thinsp;{t('paywall/offers/monthly/duration')}
                   </span>
-                  <span>Danach 22.- monatlich. Jederzeit kündbar.</span>
+                  <span>{t('paywall/offers/monthly/description')}</span>
                 </span>
               </RadioOption>
             </div>
 
             <Button type='submit' size='large'>
-              Jetzt abonnieren
+              {t('paywall/offers/cta')}
             </Button>
             {!survey && (
               <Button
@@ -167,14 +170,14 @@ export function Offers({
                 size='large'
                 onClick={() => showSurvey(true)}
               >
-                Nein Danke, weil…
+                {t('paywall/offers/survey')}
               </Button>
             )}
             {!survey && (
               <ArrowLink
                 href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot`}
               >
-                Alle Mitgliedschafte ansehen
+                {t('paywall/offers/all')}
               </ArrowLink>
             )}
           </div>

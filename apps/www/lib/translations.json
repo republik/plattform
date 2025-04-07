@@ -7827,6 +7827,46 @@
     {
       "key": "regwall/offers/cancellable",
       "value": "Jederzeit kündbar" 
+    },
+    {
+      "key": "paywall/offers/caption",
+      "value": "Einstiegsangebot" 
+    },
+    {
+      "key": "paywall/offers/title/1",
+      "value": "Ihre kostenlose Gastwoche ist zu Ende." 
+    },
+    {
+      "key": "paywall/offers/title/2",
+      "value": "Doch unsere gemeinsame Reise muss hier nicht enden." 
+    },
+    {
+      "key": "paywall/offers/yearly/duration",
+      "value": "erste Jahr" 
+    },
+    {
+      "key": "paywall/offers/yearly/description",
+      "value": "Danach 240.- jährlich. Jederzeit kündbar." 
+    },
+    {
+      "key": "paywall/offers/monthly/duration",
+      "value": "erste Monat" 
+    },
+    {
+      "key": "paywall/offers/monthly/description",
+      "value": "Danach 22.- monatlich. Jederzeit kündbar." 
+    },
+    {
+      "key": "paywall/offers/cta",
+      "value": "Jetzt abonnieren" 
+    },
+    {
+      "key": "paywall/offers/survey",
+      "value": "Nein Danke, weil…" 
+    },
+    {
+      "key": "paywall/offers/all",
+      "value": "Alle Mitgliedschafte ansehen" 
     }
   ]
 }
