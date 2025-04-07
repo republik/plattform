@@ -16,7 +16,7 @@ import { FormField } from '../../ui/form'
 
 import { CodeForm, CodeFormProps } from './CodeForm'
 import { ErrorMessage } from './ErrorMessage'
-import { render } from 'react-dom'
+import { Tos } from './Tos'
 
 type SubmitProps = {
   children?: ReactNode
@@ -49,6 +49,7 @@ interface LoginFormProps {
 export function LoginForm(props: LoginFormProps) {
   const [signIn, { data, error }] = useMutation(SignInDocument)
   const [email, setEmail] = useState<string | null>(null)
+  const [focused, setFocused] = useState(props.autoFocus ?? false)
   const [pending, setPending] = useState(false)
 
   if (data?.signIn && email) {
@@ -92,18 +93,22 @@ export function LoginForm(props: LoginFormProps) {
           alignItems: 'stretch',
           w: 'full',
           maxW: 'lg',
+          '& a': {
+            textDecoration: 'underline',
+          },
         })}
       >
-        {error && <ErrorMessage error={error} />}
-
         <FormField
           label='E-Mail'
           placeholder='E-mail'
           name='email'
           type='email'
           autoFocus={props.autoFocus}
+          onFocus={() => setFocused(true)}
           hideLabel
         />
+        {focused && <Tos />}
+        {error && <ErrorMessage error={error} />}
         <Submit pending={pending}>{props.submitButtonText}</Submit>
       </div>
       {props.renderAfter}
