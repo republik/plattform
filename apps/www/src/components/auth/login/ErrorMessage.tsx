@@ -1,8 +1,8 @@
 'use client'
 
 import { ApolloError } from '@apollo/client'
-
-import { Alert, AlertDescription, AlertTitle } from '../../ui/alert'
+import { IconInfoOutline } from '@republik/icons'
+import { css } from '@republik/theme/css'
 
 export const ErrorMessage = ({
   error,
@@ -17,9 +17,17 @@ export const ErrorMessage = ({
       : error?.graphQLErrors[0]?.message
 
   return (
-    <Alert variant='error'>
-      <AlertTitle>Error</AlertTitle>
-      {message && <AlertDescription>{message}</AlertDescription>}
-    </Alert>
+    <div
+      className={css({
+        color: 'error',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+        gap: '1',
+      })}
+    >
+      <IconInfoOutline />
+      <p>{message || 'Error'}</p>
+    </div>
   )
 }

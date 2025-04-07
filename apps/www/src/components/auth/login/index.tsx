@@ -1,7 +1,7 @@
 'use client'
 import { type ReactNode, useState } from 'react'
 
-import { useMutation } from '@apollo/client'
+import { ApolloError, useMutation } from '@apollo/client'
 
 import { css } from '@republik/theme/css'
 import { vstack } from '@republik/theme/patterns'
@@ -17,6 +17,7 @@ import { FormField } from '../../ui/form'
 import { CodeForm, CodeFormProps } from './CodeForm'
 import { ErrorMessage } from './ErrorMessage'
 import { Tos } from './Tos'
+import isEmail from 'validator/lib/isEmail'
 
 type SubmitProps = {
   children?: ReactNode
@@ -47,12 +48,13 @@ interface LoginFormProps {
 }
 
 export function LoginForm(props: LoginFormProps) {
-  const [signIn, { data, error }] = useMutation(SignInDocument)
+  const [signIn, signInRes] = useMutation(SignInDocument)
   const [email, setEmail] = useState<string | null>(null)
-  const [focused, setFocused] = useState(props.autoFocus ?? false)
+  const [error, setError] = useState<ApolloError | string | undefined>()
+  const [showTos, setShowTos] = useState(props.autoFocus ?? false)
   const [pending, setPending] = useState(false)
 
-  if (data?.signIn && email) {
+  if (signInRes.data?.signIn && email) {
     return <CodeForm email={email} />
   }
 
@@ -62,11 +64,18 @@ export function LoginForm(props: LoginFormProps) {
     if (pending) {
       return
     }
+    setShowTos(true)
     setPending(true)
 
     const form = e.target as HTMLFormElement
     const formData = new FormData(form)
     const email = formData.get('email') as string
+
+    if (!email || !isEmail(email)) {
+      setPending(false)
+      setError('Invalid email address')
+      return
+    }
 
     const result = await signIn({
       variables: {
@@ -79,6 +88,10 @@ export function LoginForm(props: LoginFormProps) {
 
     if (result.data?.signIn) {
       setEmail(email)
+    }
+
+    if (result.errors && result.errors.length > 0) {
+      setError(new ApolloError({ graphQLErrors: result.errors }))
     }
 
     setPending(false)
@@ -104,11 +117,11 @@ export function LoginForm(props: LoginFormProps) {
           name='email'
           type='email'
           autoFocus={props.autoFocus}
-          onFocus={() => setFocused(true)}
+          onFocus={() => setShowTos(true)}
           hideLabel
         />
-        {focused && <Tos />}
         {error && <ErrorMessage error={error} />}
+        {showTos && <Tos />}
         <Submit pending={pending}>{props.submitButtonText}</Submit>
       </div>
       {props.renderAfter}

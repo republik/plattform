@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, useId, useRef, useState } from 'react'
+import { type ReactNode, useEffect, useId, useRef, useState } from 'react'
 
 import { ApolloError, useApolloClient } from '@apollo/client'
 
@@ -29,6 +29,12 @@ export function CodeForm({ email }: CodeFormProps) {
   const [pending, setPending] = useState(false)
 
   const gql = useApolloClient()
+
+  useEffect(() => {
+    if (formRef.current) {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [])
 
   const submitForm = async (formData: FormData) => {
     const email = formData.get('email') as string
@@ -88,7 +94,6 @@ export function CodeForm({ email }: CodeFormProps) {
             <b className={css({ fontWeight: 500 })}>{email}</b> erhalten haben.
           </p>
         </div>
-        {error && <ErrorMessage error={error} />}
 
         <input name='email' type='hidden' value={email} readOnly></input>
 
@@ -119,6 +124,7 @@ export function CodeForm({ email }: CodeFormProps) {
               }
             }}
           />
+          {error && <ErrorMessage error={error} />}
           <div
             // style={{ visibility: pending ? "visible" : "hidden" }}
             className={css({
