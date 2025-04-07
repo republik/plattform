@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { use, useState } from 'react'
 import { useRouter } from 'next/router'
 
 import { ApolloError, useApolloClient } from '@apollo/client'
@@ -9,6 +9,7 @@ import { RequestAccessDocument } from '#graphql/republik-api/__generated__/gql/g
 
 import { REGWALL_CAMPAIGN } from 'lib/constants'
 import { getConversionPayload } from 'lib/utils/conversion-payload'
+import { useTranslation } from 'lib/withT'
 
 import { Spinner } from '../../ui/spinner'
 
@@ -16,12 +17,14 @@ import { reloadPage } from '../login/utils'
 import { ErrorMessage } from '../login/ErrorMessage'
 
 import { TrialFormProps } from '.'
+import { Submit } from '../login'
 
 // This component is used in the trial flow when the user is already authenticated.
 const RequestTrial = (props: TrialFormProps) => {
   const gql = useApolloClient()
   const router = useRouter()
   const { query } = router
+  const { t } = useTranslation()
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<ApolloError | undefined>()
 
@@ -52,14 +55,7 @@ const RequestTrial = (props: TrialFormProps) => {
   return (
     <form action='POST' onSubmit={requestTrialAccess}>
       {error && <ErrorMessage error={error} />}
-
-      {pending ? (
-        <>
-          <span>starting trial</span> <Spinner />
-        </>
-      ) : (
-        <button type='submit'>Get access</button>
-      )}
+      <Submit pending={pending}>{t('auth/trial/request')}</Submit>
     </form>
   )
 }

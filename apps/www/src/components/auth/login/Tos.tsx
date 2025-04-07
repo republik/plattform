@@ -4,8 +4,11 @@ import Link from 'next/link'
 
 import { css } from '@republik/theme/css'
 
+import { useTranslation } from 'lib/withT'
+
 export function Tos() {
   const tosRef = useRef<HTMLParagraphElement>(null)
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (tosRef.current) {
@@ -25,11 +28,13 @@ export function Tos() {
           animationDelay: '200ms',
         })}
       >
-        Mit der Anmeldung akzeptieren Sie die{' '}
-        <Link href='/datenschutz' target='_blank'>
-          Datenschutz&shy;bestimmungen
-        </Link>{' '}
-        und sind einverstanden E-Mails zu Republik-Angeboten zu erhalten.
+        {t.elements('auth/login/tos', {
+          link: (
+            <Link href='/datenschutz' target='_blank'>
+              Datenschutz&shy;bestimmungen
+            </Link>
+          ),
+        })}
       </p>
     </div>
   )

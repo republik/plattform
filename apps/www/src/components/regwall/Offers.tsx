@@ -2,10 +2,13 @@ import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 
 import { css } from '@republik/theme/css'
 
+import { useTranslation } from 'lib/withT'
+
 import { Button } from '../ui/button'
 
 const Offers = () => {
   const trackEvent = useTrackEvent()
+  const { t } = useTranslation()
 
   return (
     <form
@@ -29,18 +32,18 @@ const Offers = () => {
           })}
         >
           <div className={css({ textStyle: 'airy' })}>
-            <p>
-              <b className={css({ fontWeight: 500 })}>
-                Und natürlich freuen wir uns auch über Geld:
-              </b>{' '}
-              Mit einem Abo unterstützen Sie unabhängigen und werbefreien
-              Journalismus.
-            </p>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: t('regwall/offers/description'),
+              }}
+            />
           </div>
           <Button variant='outline' type='submit'>
-            Abonnieren ab 22/Monat
+            {t('regwall/offers/cta')}
           </Button>
-          <p className={css({ textAlign: 'center' })}>Jederzeit kündbar</p>
+          <p className={css({ textAlign: 'center' })}>
+            {t('regwall/offers/cancellable')}
+          </p>
         </div>
       </div>
     </form>

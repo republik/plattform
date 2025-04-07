@@ -7743,6 +7743,90 @@
     {
       "key": "magazineSubscription/shoplink/YEARLY",
       "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "auth/login/email/info",
+      "value": "Geben Sie Ihre E-Mail-Adresse ein, um sich anzumelden."
+    },
+    {
+      "key": "auth/login/email/placeholder",
+      "value": "E-Mail-Adresse"
+    },
+    {
+      "key": "auth/login/email/submit",
+      "value": "Anmelden"
+    },
+    {
+      "key": "auth/login/code/placeholder",
+      "value": "Zugangscode"
+    },
+    {
+      "key": "auth/login/code/title",
+      "value": "Wir haben Ihnen einen Zugangscode geschickt"
+    },
+    {
+      "key": "auth/login/code/info",
+      "value": "Geben Sie den 6-stelligen Code ein, den Sie via {email} erhalten haben."
+    },
+    {
+      "key": "auth/login/code/pending",
+      "value": "Wir überprüfen Ihren Code…"
+    },
+    {
+      "key": "auth/login/code/help",
+      "value": "Sie können Ihren Code nicht finden? Überprüfen Sie Ihren Spam-Ordner oder {changeEmail}."
+    },
+    {
+      "key": "auth/login/code/help/changeEmail",
+      "value": "ändern Sie Ihre E-Mail-Adresse"
+    },
+    {
+      "key": "auth/login/tos",
+      "value": "Mit der Anmeldung akzeptieren Sie die {link} und sind einverstanden E-Mails zu Republik-Angeboten zu erhalten."
+    },
+    {
+      "key": "auth/trial/register",
+      "value": "Anmelden und weiterlesen"
+    },
+    {
+      "key": "auth/trial/request",
+      "value": "Weiterlesen"
+    },
+    {
+      "key": "regwall/login",
+      "value": "Haben Sie ein Abonnement? {link}"
+    },
+    {
+      "key": "regwall/login/link",
+      "value": "Anmelden."
+    },
+    {
+      "key": "regwall/header/title",
+      "value": "Sie müssen nichts bezahlen" 
+    },
+    {
+      "key": "regwall/header/description",
+      "value": "<b>Werden Sie unser Gast:</b> Eine Woche lang gratis die Republik lesen, keine automatische Verlängerung." 
+    },
+    {
+      "key": "regwall/whyRegister/title",
+      "value": "Warum eine E-Mail-Adresse?" 
+    },
+    {
+      "key": "regwall/whyRegister/description",
+      "value": "Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Wenn Sie keine Nachrichten mehr erhalten möchten, können Sie sich jederzeit abmelden." 
+    },
+    {
+      "key": "regwall/offers/description",
+      "value": "<b>Und natürlich freuen wir uns auch über Geld:</b> Mit einem Abo unterstützen Sie unabhängigen und werbefreien Journalismus." 
+    },
+    {
+      "key": "regwall/offers/cta",
+      "value": "Abonnieren ab 22/Monat" 
+    },
+    {
+      "key": "regwall/offers/cancellable",
+      "value": "Jederzeit kündbar" 
     }
   ]
 }

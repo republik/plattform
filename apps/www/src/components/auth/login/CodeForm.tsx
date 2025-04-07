@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 
 import { ApolloError, useApolloClient } from '@apollo/client'
 
@@ -17,6 +17,7 @@ import { Spinner } from '../../ui/spinner'
 import { CodeInput } from './CodeInput'
 import { ErrorMessage } from './ErrorMessage'
 import { reloadPage } from './utils'
+import { useTranslation } from 'lib/withT'
 
 export interface CodeFormProps {
   email: string
@@ -28,6 +29,7 @@ export function CodeForm({ email }: CodeFormProps) {
   const [error, setError] = useState<ApolloError | undefined>()
   const [pending, setPending] = useState(false)
 
+  const { t } = useTranslation()
   const gql = useApolloClient()
 
   useEffect(() => {
@@ -86,12 +88,13 @@ export function CodeForm({ email }: CodeFormProps) {
         })}
       >
         <h2 className={css({ textStyle: 'h2Sans' })}>
-          Wir haben Ihnen einen Zugangscode geschickt
+          {t('auth/login/code/title')}
         </h2>
         <div className={css({ textStyle: 'airy' })}>
           <p>
-            Geben Sie den 6-stelligen Code ein, den Sie via{' '}
-            <b className={css({ fontWeight: 500 })}>{email}</b> erhalten haben.
+            {t.elements('auth/login/code/description', {
+              email: <b className={css({ fontWeight: 500 })}>{email}</b>,
+            })}
           </p>
         </div>
 
@@ -138,7 +141,7 @@ export function CodeForm({ email }: CodeFormProps) {
               <>
                 <Spinner />
                 <b className={css({ fontWeight: 500, pl: '4' })}>
-                  Wir überprüfen Ihren Code…
+                  {t('auth/login/code/pending')}
                 </b>
               </>
             ) : (
@@ -149,19 +152,20 @@ export function CodeForm({ email }: CodeFormProps) {
                   lineHeight: 1.4,
                 })}
               >
-                Sie können Ihren Code nicht finden? Überprüfen Sie Ihren
-                Spam-Ordner oder{' '}
-                <button
-                  type='button' // Important, so this button isn't used to submit the form
-                  onClick={() => window.location.reload()}
-                  className={css({
-                    textDecoration: 'underline',
-                    display: 'inline-block',
-                  })}
-                >
-                  ändern Sie Ihre E-Mail-Adresse
-                </button>
-                .
+                {t.elements('auth/login/code/help', {
+                  changeEmail: (
+                    <button
+                      type='button' // Important, so this button isn't used to submit the form
+                      onClick={() => window.location.reload()}
+                      className={css({
+                        textDecoration: 'underline',
+                        display: 'inline-block',
+                      })}
+                    >
+                      {t('auth/login/code/changeEmail')}
+                    </button>
+                  ),
+                })}
               </span>
             )}
           </div>

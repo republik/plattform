@@ -243,6 +243,9 @@ export const presetRepublik = definePreset({
             fontFamily: 'gtAmericaStandard',
             fontSize: 'l',
             lineHeight: 1.4,
+            '& b': {
+              fontWeight: 500,
+            },
           },
         },
         title: {
