@@ -21,8 +21,8 @@ const Offers = () => {
         <div
           className={css({
             margin: '0 auto',
-            maxW: 'center',
-            padding: '4-8',
+            maxW: 'narrow',
+            padding: '4-6',
             display: 'flex',
             flexDir: 'column',
             gap: '4',

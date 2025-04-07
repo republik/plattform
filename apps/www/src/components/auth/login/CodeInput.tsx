@@ -34,11 +34,11 @@ export function CodeInput({
                   alignItems: 'center',
                   borderWidth: '1px',
                   borderColor: 'divider',
-                  borderRadius: 'md',
+                  borderRadius: '5px',
                   padding: '2',
-                  height: '12',
-                  width: '10',
-                  fontSize: 'md',
+                  width: '32px',
+                  height: '46px',
+                  fontSize: '2xl',
                 }),
 
                 !props.disabled &&
@@ -47,6 +47,11 @@ export function CodeInput({
                     outlineStyle: 'solid',
                     outlineColor: 'text',
                     outlineWidth: '2px',
+                  }),
+
+                slot.char &&
+                  css({
+                    backgroundColor: 'white',
                   }),
               )}
             >

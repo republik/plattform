@@ -20,10 +20,9 @@ import { reloadPage } from './utils'
 
 export interface CodeFormProps {
   email: string
-  renderHint?: (email: string) => ReactNode
 }
 
-export function CodeForm({ email, renderHint }: CodeFormProps) {
+export function CodeForm({ email }: CodeFormProps) {
   const codeId = useId()
   const formRef = useRef<HTMLFormElement>(null)
   const [error, setError] = useState<ApolloError | undefined>()
@@ -74,12 +73,21 @@ export function CodeForm({ email, renderHint }: CodeFormProps) {
       <div
         className={vstack({
           gap: '4',
-          alignItems: 'stretch',
+          alignItems: 'stretch ',
           w: 'full',
           maxW: 'lg',
+          textAlign: 'center',
         })}
       >
-        {renderHint?.(email)}
+        <h2 className={css({ textStyle: 'h2Sans' })}>
+          Wir haben Ihnen einen Zugangscode geschickt
+        </h2>
+        <div className={css({ textStyle: 'airy' })}>
+          <p>
+            Geben Sie den 6-stelligen Code ein, den Sie via{' '}
+            <b className={css({ fontWeight: 500 })}>{email}</b> erhalten haben.
+          </p>
+        </div>
         {error && <ErrorMessage error={error} />}
 
         <input name='email' type='hidden' value={email} readOnly></input>
@@ -114,32 +122,41 @@ export function CodeForm({ email, renderHint }: CodeFormProps) {
           <div
             // style={{ visibility: pending ? "visible" : "hidden" }}
             className={css({
+              mt: '4',
               display: 'flex',
               alignItems: 'center',
-              color: 'text.secondary',
-              fontSize: 'sm',
-              textAlign: 'center',
+              color: 'textSoft',
             })}
           >
             {pending ? (
               <>
-                <span>checking code</span> <Spinner />
+                <Spinner />
+                <b className={css({ fontWeight: 500, pl: '4' })}>
+                  Wir überprüfen Ihren Code…
+                </b>
               </>
             ) : (
-              <>
-                <span>
-                  <button
-                    type='button' // Important, so this button isn't used to submit the form
-                    onClick={() => window.location.reload()}
-                    className={css({
-                      textDecoration: 'underline',
-                      display: 'inline-block',
-                    })}
-                  >
-                    send to another email adress
-                  </button>
-                </span>
-              </>
+              <span
+                className={css({
+                  fontSize: 's',
+                  textAlign: 'center',
+                  lineHeight: 1.4,
+                })}
+              >
+                Sie können Ihren Code nicht finden? Überprüfen Sie Ihren
+                Spam-Ordner oder{' '}
+                <button
+                  type='button' // Important, so this button isn't used to submit the form
+                  onClick={() => window.location.reload()}
+                  className={css({
+                    textDecoration: 'underline',
+                    display: 'inline-block',
+                  })}
+                >
+                  ändern Sie Ihre E-Mail-Adresse
+                </button>
+                .
+              </span>
             )}
           </div>
         </div>

@@ -9,12 +9,12 @@ const spinnerVariants = cva({
   variants: {
     size: {
       default: {
-        h: '4',
-        w: '4',
+        h: '16px',
+        w: '16px',
       },
       large: {
-        h: '6',
-        w: '6',
+        h: '24px',
+        w: '24px',
       },
     },
   },
@@ -35,9 +35,9 @@ export function Spinner({ size }: {} & SpinnerVariants) {
         className={css({
           opacity: '0.25',
         })}
-        cx='12'
-        cy='12'
-        r='10'
+        cx='12px'
+        cy='12px'
+        r='10px'
         stroke='currentColor'
         strokeWidth='4'
       ></circle>

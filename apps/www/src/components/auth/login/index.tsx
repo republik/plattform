@@ -39,7 +39,6 @@ export function Submit({ children, pending }: SubmitProps) {
 }
 
 interface LoginFormProps {
-  renderCodeFormHint?: CodeFormProps['renderHint']
   submitButtonText?: string
   context?: string
   autoFocus?: boolean
@@ -53,7 +52,7 @@ export function LoginForm(props: LoginFormProps) {
   const [pending, setPending] = useState(false)
 
   if (data?.signIn && email) {
-    return <CodeForm email={email} renderHint={props.renderCodeFormHint} />
+    return <CodeForm email={email} />
   }
 
   const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {

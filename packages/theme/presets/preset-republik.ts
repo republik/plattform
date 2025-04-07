@@ -42,6 +42,7 @@ export const presetRepublik = definePreset({
           full: { value: '100%' },
           viewportWidth: { value: '100vw' },
           24: { value: '6rem' },
+          narrow: { value: '30rem' },
           center: { value: '695px' },
         },
         spacing: {
@@ -208,6 +209,7 @@ export const presetRepublik = definePreset({
           pageNav: { value: '2.5rem' },
         },
         spacing: {
+          '4-6': { value: { base: '1rem', md: '1.5rem' } },
           '4-8': { value: { base: '1rem', md: '2rem' } },
           '8-16': { value: { base: '2rem', md: '4rem' } },
           '16-32': { value: { base: '4rem', md: '8rem' } },
