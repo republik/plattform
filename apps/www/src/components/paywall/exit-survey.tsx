@@ -53,7 +53,7 @@ export function ExitSurvey() {
       ) : (
         <RegwallSection backgroundColor='#F2ECE6'>
           <p className={css({ textStyle: 'airy', fontWeight: 'medium' })}>
-            {t('paywall/exit-survey/title')}
+            {t('paywall/survey/title')}
           </p>
           <p
             className={css({
@@ -62,7 +62,7 @@ export function ExitSurvey() {
               fontWeight: 'medium',
             })}
           >
-            {t('paywall/exit-survey/description')}
+            {t('paywall/survey/description')}
           </p>
           <form
             method='POST'

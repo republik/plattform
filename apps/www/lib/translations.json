@@ -7765,7 +7765,7 @@
       "value": "Wir haben Ihnen einen Zugangscode geschickt"
     },
     {
-      "key": "auth/login/code/info",
+      "key": "auth/login/code/description",
       "value": "Geben Sie den 6-stelligen Code ein, den Sie via {email} erhalten haben."
     },
     {

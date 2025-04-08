@@ -7,6 +7,7 @@ export const RegwallContainer = ({ children }: { children: ReactNode }) => (
     className={css({
       borderTop: '2px solid',
       borderColor: 'text.black',
+      //color: 'text.black',
       mt: '4',
     })}
   >
@@ -22,12 +23,14 @@ export const RegwallSection = ({
   children: ReactNode
 }) => (
   <div
+    data-theme='light'
     style={{
       // @ts-expect-error css vars
       '--bg': backgroundColor,
     }}
     className={css({
       background: 'var(--bg)',
+      color: 'text',
     })}
   >
     <div

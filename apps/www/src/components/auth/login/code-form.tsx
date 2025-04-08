@@ -160,7 +160,7 @@ export function CodeForm({ email }: CodeFormProps) {
                         display: 'inline-block',
                       })}
                     >
-                      {t('auth/login/code/changeEmail')}
+                      {t('auth/login/code/help/changeEmail')}
                     </button>
                   ),
                 })}

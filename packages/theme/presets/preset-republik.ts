@@ -119,12 +119,14 @@ export const presetRepublik = definePreset({
             DEFAULT: {
               value: {
                 base: '{colors.neutral.950}',
+                _light: '{colors.neutral.950}',
                 _dark: '{colors.neutral.50}',
               },
             },
             inverted: {
               value: {
                 base: '{colors.neutral.50}',
+                _light: '{colors.neutral.50}',
                 _dark: '{colors.neutral.950}',
               },
             },
@@ -138,60 +140,73 @@ export const presetRepublik = definePreset({
           contrast: {
             value: {
               base: 'black',
+              _light: 'black',
               _dark: 'white',
             },
           },
           background: {
             value: {
               base: 'white',
+              _light: 'white',
               _dark: '#191919',
             },
           },
           pageBackground: {
             value: {
               base: 'white',
+              _light: 'white',
               _dark: '#191919',
             },
           },
           link: {
             value: {
               base: '#00AA00',
+              _light: '#00AA00',
               _dark: '#00AA00',
             },
           },
           primary: {
             value: {
               base: '#00AA00',
+              _light: '#00AA00',
               _dark: '#00AA00',
             },
           },
           primaryHover: {
             value: {
               base: '#008800',
+              _light: '#008800',
               _dark: '#008800',
             },
           },
           overlay: {
-            value: { base: 'rgba(0,0,0,0.2)', _dark: 'rgba(0,0,0,0.4)' },
+            value: {
+              base: 'rgba(0,0,0,0.2)',
+              _light: 'rgba(0,0,0,0.2)',
+              _dark: 'rgba(0,0,0,0.4)',
+            },
           },
           error: {
-            value: { base: '#dc2626', _dark: '#dc2626' },
+            value: { base: '#dc2626', _light: '#dc2626', _dark: '#dc2626' },
           },
           divider: {
             value: {
               base: '#DBDCDD',
+              _light: '#DBDCDD',
               _dark: '#4C4C4C',
             },
           },
           disabled: {
             value: {
               base: '#B8BDC1',
+              _light: '#B8BDC1',
               _dark: '#949494',
             },
           },
           textSoft: {
             value: {
               base: '#757575',
+              _light: '#757575',
               _dark: '#A9A9A9',
             },
           },
