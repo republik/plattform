@@ -123,16 +123,13 @@ module.exports = async (
       {
         async requestDidStart() {
           return {
-            async didEncounterErrors({ context, errors }) {
+            async didEncounterErrors({ context }) {
               console.error(
-                'GRAPHQL REQUEST ERROR',
-                util.inspect(
-                  {
-                    req: context.req._log(),
-                    graphQLErrors: errors,
-                  },
-                  { depth: null, colors: true, breakLength: 300 },
-                ),
+                JSON.stringify({
+                  req: context.req._log(),
+                  message: `GraphQL Request Error`,
+                  level: 'ERROR',
+                }),
               )
             },
           }
