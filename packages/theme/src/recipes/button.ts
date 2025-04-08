@@ -52,6 +52,11 @@ export const buttonRecipe = defineRecipe({
         px: '6',
         py: '4',
       },
+      small: {
+        fontSize: 's',
+        px: '4',
+        py: '2',
+      },
       large: {
         px: '6',
         py: '4',

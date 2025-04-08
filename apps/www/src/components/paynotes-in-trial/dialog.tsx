@@ -5,30 +5,69 @@ import { useTranslation } from 'lib/withT'
 
 import { PaynoteSection } from '../ui/containers'
 import { Button } from '../ui/button'
+import { css } from '@republik/theme/css'
 
-export function PaynoteDialog() {
+export function DialogPaynote() {
   const { t } = useTranslation()
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
 
   return (
-    <PaynoteSection backgroundColor='#FAD5FB'>
-      <p>{t('paynotes/dialog/title')}</p>
-      <p>{t('paynotes/dialog/description')}</p>
-      <form
-        method='GET'
-        action={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot`}
-        onSubmit={() => {
-          trackEvent({
-            action: `Go to shop`,
-          })
-        }}
-      >
-        {Object.entries(utmParams).map(([k, v]) => {
-          return <input type='hidden' hidden key={k} name={k} value={v} />
+    <div
+      data-theme='light'
+      style={{
+        // @ts-expect-error css vars
+        '--bg': '#FAD5FB',
+      }}
+      className={css({
+        background: 'var(--bg)',
+        color: 'text',
+        textAlign: 'center',
+        margin: '0 auto',
+        maxW: 'narrow',
+      })}
+    >
+      <div
+        className={css({
+          padding: '4',
+          display: 'flex',
+          flexDir: 'column',
+          gap: '4',
+          '& h2': {
+            textStyle: 'h2Sans',
+          },
+          '& h3': {
+            textTransform: 'uppercase',
+            fontWeight: 500,
+          },
+          '& b': {
+            fontWeight: 500,
+          },
         })}
-        <Button type='submit'>{t('paynotes/dialog/cta')}</Button>
-      </form>
-    </PaynoteSection>
+      >
+        <p className={css({ textStyle: 'airy', fontWeight: 500 })}>
+          {t('paynotes/dialog/title')}
+        </p>
+        <p className={css({ lineHeight: 1.4, textStyle: 'body' })}>
+          {t('paynotes/dialog/description')}
+        </p>
+        <form
+          method='GET'
+          action={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot`}
+          onSubmit={() => {
+            trackEvent({
+              action: `Go to shop`,
+            })
+          }}
+        >
+          {Object.entries(utmParams).map(([k, v]) => {
+            return <input type='hidden' hidden key={k} name={k} value={v} />
+          })}
+          <Button type='submit' size='small'>
+            {t('paynotes/dialog/cta')}
+          </Button>
+        </form>
+      </div>
+    </div>
   )
 }
