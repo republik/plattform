@@ -7867,6 +7867,30 @@
     {
       "key": "paywall/offers/all",
       "value": "Alle Mitgliedschafte ansehen" 
+    },
+    {
+      "key": "paywall/survey/title",
+      "value": "Warum kommt ein Republik-Abo für Sie derzeit nicht in Frage?" 
+    },
+    {
+      "key": "paywall/survey/description",
+      "value": "Pick the answer that describe your situation:" 
+    },
+    {
+      "key": "paywall/survey/all",
+      "value": "Alle Mitgliedschafte ansehen" 
+    },
+    {
+      "key": "paywall/survey/thanks/title",
+      "value": "Vielen Dank für Ihr Feedback, wir hoffen, Sie bald wiederzusehen! 👋" 
+    },
+    {
+      "key": "paywall/survey/thanks/description",
+      "value": "PS: Wussten Sie, dass Sie unser wöchentliches Nachrichtenbriefing auch ohne Abo als Newsletter erhalten können?" 
+    },
+    {
+      "key": "paywall/survey/thanks/link",
+      "value": "Schauen Sie es Ihnen an" 
     }
   ]
 }

@@ -4,7 +4,10 @@ import { ReactNode, useState } from 'react'
 
 import { css } from '@republik/theme/css'
 
+import { useTranslation } from 'lib/withT'
+
 import { RegwallSection } from '../regwall/containers'
+
 import { Button } from '../ui/button'
 import { ArrowLink } from '../ui/links'
 
@@ -17,17 +20,17 @@ function SurveyButton({ children }: { children: ReactNode }) {
 }
 
 function ThankYou() {
+  const { t } = useTranslation()
   return (
     <RegwallSection backgroundColor='#F2ECE6'>
       <p className={css({ textStyle: 'airy', fontWeight: 'medium' })}>
-        Vielen Dank für Ihr Feedback, wir hoffen, Sie bald wiederzusehen! 👋
+        {t('paywall/survey/thanks/title')}
       </p>
       <p className={css({ textStyle: 'body' })}>
-        PS: Wussten Sie, dass Sie unser wöchentliches Nachrichtenbriefing auch
-        ohne Abo als Newsletter erhalten können?
+        {t('paywall/survey/thanks/description')}
       </p>
       <ArrowLink href='/format/was-diese-woche-wichtig-war'>
-        Schauen Sie es Ihnen an
+        {t('paywall/survey/thanks/link')}
       </ArrowLink>
     </RegwallSection>
   )
@@ -35,6 +38,7 @@ function ThankYou() {
 
 export function ExitSurvey() {
   const [thankYou, showThankYou] = useState(false)
+  const { t } = useTranslation()
 
   return (
     <div
@@ -49,7 +53,7 @@ export function ExitSurvey() {
       ) : (
         <RegwallSection backgroundColor='#F2ECE6'>
           <p className={css({ textStyle: 'airy', fontWeight: 'medium' })}>
-            Warum kommt ein Republik-Abo für Sie derzeit nicht in Frage?
+            {t('paywall/exit-survey/title')}
           </p>
           <p
             className={css({
@@ -58,7 +62,7 @@ export function ExitSurvey() {
               fontWeight: 'medium',
             })}
           >
-            Pick the answer that describe your situation:
+            {t('paywall/exit-survey/description')}
           </p>
           <form
             method='POST'
