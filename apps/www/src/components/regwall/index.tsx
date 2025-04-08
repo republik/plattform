@@ -2,14 +2,14 @@ import { css } from '@republik/theme/css'
 
 import Trial from './trial'
 import Offers from './offers'
-import { RegwallContainer } from './containers'
+import { PaynoteContainer } from '../ui/containers'
 
 const Regwall = () => {
   return (
-    <RegwallContainer>
+    <PaynoteContainer>
       <Trial />
       <Offers />
-    </RegwallContainer>
+    </PaynoteContainer>
   )
 }
 

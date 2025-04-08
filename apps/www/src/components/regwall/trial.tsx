@@ -6,12 +6,13 @@ import { css } from '@republik/theme/css'
 
 import { CDN_FRONTEND_BASE_URL } from 'lib/constants'
 
-import TrialForm from '../auth/trial'
+import { PaynoteSection } from '../ui/containers'
 import { Button } from '../ui/button'
+
+import TrialForm from '../auth/trial'
 
 import Login from './login'
 import { useTranslation } from 'lib/withT'
-import { RegwallSection } from './containers'
 
 // TODO: make css for container and css for b tag reusable
 
@@ -79,9 +80,9 @@ const WhyRegister = () => {
 
 const Trial = () => {
   return (
-    <RegwallSection backgroundColor='#F2ECE6'>
+    <PaynoteSection backgroundColor='#F2ECE6'>
       <TrialForm renderBefore={<TrialHeader />} renderAfter={<WhyRegister />} />
-    </RegwallSection>
+    </PaynoteSection>
   )
 }
 

@@ -5,7 +5,7 @@ import { css } from '@republik/theme/css'
 import { useTranslation } from 'lib/withT'
 
 import { Button } from '../ui/button'
-import { RegwallSection } from './containers'
+import { PaynoteSection } from '../ui/containers'
 
 const Offers = () => {
   const trackEvent = useTrackEvent()
@@ -22,7 +22,7 @@ const Offers = () => {
       }}
     >
       {/* TODO: add utms */}
-      <RegwallSection backgroundColor='#DAFF8D'>
+      <PaynoteSection backgroundColor='#DAFF8D'>
         <div className={css({ textStyle: 'airy' })}>
           <p
             dangerouslySetInnerHTML={{
@@ -36,7 +36,7 @@ const Offers = () => {
         <p className={css({ textAlign: 'center' })}>
           {t('regwall/offers/cancellable')}
         </p>
-      </RegwallSection>
+      </PaynoteSection>
     </form>
   )
 }

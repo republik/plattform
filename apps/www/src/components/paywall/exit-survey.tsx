@@ -6,7 +6,7 @@ import { css } from '@republik/theme/css'
 
 import { useTranslation } from 'lib/withT'
 
-import { RegwallSection } from '../regwall/containers'
+import { PaynoteSection } from '../ui/containers'
 
 import { Button } from '../ui/button'
 import { ArrowLink } from '../ui/links'
@@ -22,7 +22,7 @@ function SurveyButton({ children }: { children: ReactNode }) {
 function ThankYou() {
   const { t } = useTranslation()
   return (
-    <RegwallSection backgroundColor='#F2ECE6'>
+    <PaynoteSection backgroundColor='#F2ECE6'>
       <p className={css({ textStyle: 'airy', fontWeight: 'medium' })}>
         {t('paywall/survey/thanks/title')}
       </p>
@@ -32,7 +32,7 @@ function ThankYou() {
       <ArrowLink href='/format/was-diese-woche-wichtig-war'>
         {t('paywall/survey/thanks/link')}
       </ArrowLink>
-    </RegwallSection>
+    </PaynoteSection>
   )
 }
 
@@ -51,7 +51,7 @@ export function ExitSurvey() {
       {thankYou ? (
         <ThankYou />
       ) : (
-        <RegwallSection backgroundColor='#F2ECE6'>
+        <PaynoteSection backgroundColor='#F2ECE6'>
           <p className={css({ textStyle: 'airy', fontWeight: 'medium' })}>
             {t('paywall/survey/title')}
           </p>
@@ -83,7 +83,7 @@ export function ExitSurvey() {
               <SurveyButton>Andere Gründe</SurveyButton>
             </div>
           </form>
-        </RegwallSection>
+        </PaynoteSection>
       )}
     </div>
   )

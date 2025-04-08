@@ -7891,6 +7891,18 @@
     {
       "key": "paywall/survey/thanks/link",
       "value": "Schauen Sie es Ihnen an" 
+    },
+    {
+      "key": "paynotes/dialog/title",
+      "value": "Willkommen im Dialog" 
+    },
+    {
+      "key": "paynotes/dialog/description",
+      "value": "Als Gast sehen Sie, was zu reden gibt. Mit einem Abo nehmen Sie direkt am Gespräch teil. Fragen Sie bei Autorinnen und anderen Lesern nach und bringen Sie sich ein. " 
+    },
+    {
+      "key": "paynotes/dialog/cta",
+      "value": "Abonnieren und Mitreden" 
     }
   ]
 }

@@ -6,6 +6,7 @@ import { css } from '@republik/theme/css'
 import { useState } from 'react'
 
 import { RadioOption } from '../ui/form'
+import { Button } from '../ui/button'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
 
@@ -113,27 +114,7 @@ export function Offers({
             : 'Unlimitierter Zugang. 22.– monatlich nach dem ersten Monat. Jederzeit kündbar.'}
         </div>
 
-        <button
-          type='submit'
-          className={css({
-            display: 'inline-flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '5px',
-            fontSize: 'l',
-            lineHeight: '1',
-            fontWeight: 'medium',
-            whiteSpace: 'nowrap',
-            px: '6',
-            py: '3',
-            background: 'text',
-            color: 'text.inverted',
-            mt: '2',
-            cursor: 'pointer',
-          })}
-        >
-          Jetzt abonnieren
-        </button>
+        <Button type='submit'>Jetzt abonnieren</Button>
       </div>
     </form>
   )

@@ -2,12 +2,11 @@ import { ReactNode } from 'react'
 
 import { css } from '@republik/theme/css'
 
-export const RegwallContainer = ({ children }: { children: ReactNode }) => (
+export const PaynoteContainer = ({ children }: { children: ReactNode }) => (
   <div
     className={css({
       borderTop: '2px solid',
       borderColor: 'text.black',
-      //color: 'text.black',
       mt: '4',
     })}
   >
@@ -15,7 +14,7 @@ export const RegwallContainer = ({ children }: { children: ReactNode }) => (
   </div>
 )
 
-export const RegwallSection = ({
+export const PaynoteSection = ({
   backgroundColor,
   children,
 }: {

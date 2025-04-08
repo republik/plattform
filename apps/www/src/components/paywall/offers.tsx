@@ -10,8 +10,7 @@ import { css } from '@republik/theme/css'
 import { Button } from '../ui/button'
 import { RadioOption } from '../ui/form'
 import { ArrowLink } from '../ui/links'
-
-import { RegwallSection } from '../regwall/containers'
+import { PaynoteSection } from '../ui/containers'
 
 import { ExitSurvey } from './exit-survey'
 import { useTranslation } from 'lib/withT'
@@ -34,7 +33,7 @@ export function Offers({
 
   return (
     <>
-      <RegwallSection backgroundColor='#DAFF8D'>
+      <PaynoteSection backgroundColor='#DAFF8D'>
         <h3>{t('paywall/offers/caption')}</h3>
         <h2>
           <span className={css({ fontWeight: 'normal' })}>
@@ -182,7 +181,7 @@ export function Offers({
             )}
           </div>
         </form>
-      </RegwallSection>
+      </PaynoteSection>
       {survey && <ExitSurvey />}
     </>
   )
