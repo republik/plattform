@@ -123,11 +123,11 @@ module.exports = async (
       {
         async requestDidStart() {
           return {
-            async didEncounterErrors({ context }) {
+            async didEncounterErrors({ context, request }) {
               console.error(
                 JSON.stringify({
                   req: context.req._log(),
-                  message: `GraphQL Request Error`,
+                  message: `GraphQL error for operation '${request.operationName}'`,
                   level: 'ERROR',
                 }),
               )
