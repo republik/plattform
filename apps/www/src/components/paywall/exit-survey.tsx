@@ -13,7 +13,7 @@ import { ArrowLink } from '../ui/links'
 
 function SurveyButton({ children }: { children: ReactNode }) {
   return (
-    <Button variant='outline' size='large' className={css({ fontWeight: 400 })}>
+    <Button variant='outline' size='full' className={css({ fontWeight: 400 })}>
       {children}
     </Button>
   )

@@ -26,14 +26,7 @@ type SubmitProps = {
 
 export function Submit({ children, pending }: SubmitProps) {
   return (
-    <Button
-      type='submit'
-      disabled={pending}
-      loading={pending}
-      className={css({
-        w: 'full',
-      })}
-    >
+    <Button type='submit' size='full' disabled={pending} loading={pending}>
       {children ?? 'Submit'}
     </Button>
   )

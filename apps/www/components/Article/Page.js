@@ -55,6 +55,7 @@ import { useUserAgent } from 'lib/context/UserAgentContext'
 import PrepubNotice from './components/PrepubNotice'
 import Paywall from '@app/components/paywall'
 import Regwall from '@app/components/regwall'
+import { BannerPaynote } from '@app/components/paynotes-in-trial/banner'
 
 const EmptyComponent = ({ children }) => children
 
@@ -393,7 +394,9 @@ const ArticlePage = ({
           return (
             <>
               <FontSizeSync />
+              <BannerPaynote />
               <PrepubNotice meta={meta} breakout={breakout} />
+
               {isFlyer ? (
                 <Flyer
                   meta={meta}

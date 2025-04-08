@@ -50,7 +50,7 @@ export const buttonRecipe = defineRecipe({
     size: {
       default: {
         px: '6',
-        py: '4',
+        py: '3',
       },
       small: {
         fontSize: 's',
@@ -58,6 +58,10 @@ export const buttonRecipe = defineRecipe({
         py: '2',
       },
       large: {
+        px: '6',
+        py: '4',
+      },
+      full: {
         px: '6',
         py: '4',
         width: 'full',
@@ -74,7 +78,7 @@ export const buttonRecipe = defineRecipe({
     },
     {
       variant: 'link',
-      size: 'large',
+      size: 'full',
       css: {
         p: '0',
         width: 'auto',

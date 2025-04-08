@@ -159,14 +159,14 @@ export function Offers({
               </RadioOption>
             </div>
 
-            <Button type='submit' size='large'>
+            <Button type='submit' size='full'>
               {t('paywall/offers/cta')}
             </Button>
             {!survey && (
               <Button
                 type='button'
                 variant='outline'
-                size='large'
+                size='full'
                 onClick={() => showSurvey(true)}
               >
                 {t('paywall/offers/survey')}

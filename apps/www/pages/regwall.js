@@ -3,7 +3,7 @@ import Paywall from '@app/components/paywall'
 import Regwall from '@app/components/regwall'
 
 const Page = () => {
-  return <Regwall />
+  return <Paywall />
 }
 
 export default withDefaultSSR(Page)

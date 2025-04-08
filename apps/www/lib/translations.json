@@ -7903,6 +7903,10 @@
     {
       "key": "paynotes/dialog/cta",
       "value": "Abonnieren und mitreden" 
+    },
+    {
+      "key": "paynotes/banner/cta",
+      "value": "Ab 22 CHF/Monat Abonnent werden" 
     }
   ]
 }

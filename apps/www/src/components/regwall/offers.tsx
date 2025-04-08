@@ -30,7 +30,7 @@ const Offers = () => {
             }}
           />
         </div>
-        <Button variant='outline' type='submit'>
+        <Button variant='outline' size='full' type='submit'>
           {t('regwall/offers/cta')}
         </Button>
         <p className={css({ textAlign: 'center' })}>

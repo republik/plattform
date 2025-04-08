@@ -1,11 +1,11 @@
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 
+import { css } from '@republik/theme/css'
+
 import { useTranslation } from 'lib/withT'
 
-import { PaynoteSection } from '../ui/containers'
 import { Button } from '../ui/button'
-import { css } from '@republik/theme/css'
 
 export function DialogPaynote() {
   const { t } = useTranslation()
