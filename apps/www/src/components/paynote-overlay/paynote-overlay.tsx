@@ -61,6 +61,11 @@ function PaynoteOverlayDialog() {
     }
   })
 
+  // replace with:
+  //
+  // const paynoteType = usePaynoteType()
+  // const showPaynote = paynoteType === 'paynoteOverlayClosed' || paynoteType === 'paynoteOverlayOpen'
+  // setExpanded()
   const ready = paynotes && !meLoading && !hasActiveMembership && !isIOSApp
 
   useEffect(() => {
