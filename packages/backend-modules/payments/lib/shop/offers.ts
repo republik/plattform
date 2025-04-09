@@ -111,12 +111,6 @@ export type DiscountOption =
   | { type: 'DISCOUNT'; value: Discount }
   | { type: 'PROMO'; value: Promotion }
 
-// const PROMO_ITEM_REPUBLIK_BIBLIOTEK_1 = {
-//   id: 'REPUBLIK_BILIOTHEK_1',
-//   maxQuantity: 1,
-//   lookupKey: 'REPUBLIK_BILIOTHEK_1',
-// }
-
 export const Offers: Readonly<Offer>[] = [
   {
     id: 'YEARLY',
@@ -132,10 +126,26 @@ export const Offers: Readonly<Offer>[] = [
       { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_120' },
       { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_240' },
     ],
+    allowPromotions: true,
+  },
+  {
+    id: 'YEARLY_REDUCED',
+    name: 'Reduzierte Jahresmitgliedschaft',
+    type: 'SUBSCRIPTION',
+    company: 'PROJECT_R',
+    requiresLogin: true,
+    requiresAddress: true,
+    allowIntroductoryOffer: false,
+    items: [
+      {
+        type: 'PRICE',
+        lookupKey: 'ABO',
+      },
+    ],
     discountOpitions: getConfig().PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS.map(
       (couponId) => ({ type: 'DISCOUNT', coupon: couponId }),
     ),
-    allowPromotions: true,
+    allowPromotions: false,
   },
   {
     id: 'BENEFACTOR',
