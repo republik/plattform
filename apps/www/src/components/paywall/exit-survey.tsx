@@ -1,8 +1,17 @@
 'use client'
 
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
+import { v4 as uuid } from 'uuid'
+
+import { useMutation, useQuery } from '@apollo/client'
 
 import { css } from '@republik/theme/css'
+
+import {
+  QuestionnaireDocument,
+  QuestionTypeChoice,
+  SubmitQuestionnaireAnswerDocument,
+} from '#graphql/republik-api/__generated__/gql/graphql'
 
 import { useTranslation } from 'lib/withT'
 
@@ -10,10 +19,24 @@ import { PaynoteSection } from '../ui/containers'
 
 import { Button } from '../ui/button'
 import { ArrowLink } from '../ui/links'
+import { Spinner } from '../ui/spinner'
 
-function SurveyButton({ children }: { children: ReactNode }) {
+const SURVEY_SLUG = 'paywall'
+
+function SurveyButton({
+  children,
+  onClick,
+}: {
+  children: ReactNode
+  onClick: (e: React.MouseEvent) => void
+}) {
   return (
-    <Button variant='outline' size='full' className={css({ fontWeight: 400 })}>
+    <Button
+      variant='outline'
+      size='full'
+      className={css({ fontWeight: 400 })}
+      onClick={onClick}
+    >
       {children}
     </Button>
   )
@@ -36,9 +59,74 @@ function ThankYou() {
   )
 }
 
+function SurveyQuestion({
+  question,
+  afterSubmit,
+}: {
+  question: QuestionTypeChoice
+  afterSubmit: () => void
+}) {
+  const { options, text } = question
+  const { t } = useTranslation()
+  const [submitAnswer] = useMutation(SubmitQuestionnaireAnswerDocument)
+
+  const onSubmit = (value: string) => async (e: React.MouseEvent) => {
+    e.preventDefault()
+    await submitAnswer({
+      variables: {
+        questionId: question.id,
+        answerId: uuid(),
+        payload: { value: [value] },
+      },
+    })
+    afterSubmit()
+  }
+
+  return (
+    <div className={css({ display: 'flex', flexDir: 'column', gap: '4' })}>
+      <p className={css({ textStyle: 'airy', fontWeight: 'medium' })}>{text}</p>
+      <p
+        className={css({
+          textStyle: 'body',
+          color: 'textSoft',
+          fontWeight: 'medium',
+        })}
+      >
+        {t('paywall/survey/hint')}
+      </p>
+      <div
+        className={css({
+          display: 'flex',
+          flexDir: 'column',
+          gap: '2',
+        })}
+      >
+        {options?.map(({ label, value }, idx) => (
+          <SurveyButton key={idx} onClick={onSubmit(value)}>
+            {label}
+          </SurveyButton>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export function ExitSurvey() {
   const [thankYou, showThankYou] = useState(false)
-  const { t } = useTranslation()
+
+  const { data } = useQuery(QuestionnaireDocument, {
+    variables: {
+      slug: SURVEY_SLUG,
+    },
+  })
+
+  const question = data?.questionnaire.questions[0] as QuestionTypeChoice
+
+  useEffect(() => {
+    if (question?.userAnswer) {
+      showThankYou(true)
+    }
+  }, [question])
 
   return (
     <div
@@ -47,42 +135,20 @@ export function ExitSurvey() {
         borderColor: 'text.black',
       })}
     >
-      {' '}
       {thankYou ? (
         <ThankYou />
       ) : (
         <PaynoteSection backgroundColor='#F2ECE6'>
-          <p className={css({ textStyle: 'airy', fontWeight: 'medium' })}>
-            {t('paywall/survey/title')}
-          </p>
-          <p
-            className={css({
-              textStyle: 'body',
-              color: 'textSoft',
-              fontWeight: 'medium',
-            })}
-          >
-            {t('paywall/survey/description')}
-          </p>
-          <form
-            method='POST'
-            action={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot`}
-            onSubmit={() => {
-              showThankYou(true)
-            }}
-          >
-            <div
-              className={css({
-                display: 'flex',
-                flexDir: 'column',
-                gap: '2',
-              })}
-            >
-              <SurveyButton>Es ist mir zu teuer</SurveyButton>
-              <SurveyButton>Ich sehe den Nutzen nicht</SurveyButton>
-              <SurveyButton>Andere Gründe</SurveyButton>
+          {!question ? (
+            <div className={css({ display: 'flex', justifyContent: 'center' })}>
+              <Spinner size='large' />
             </div>
-          </form>
+          ) : (
+            <SurveyQuestion
+              question={question}
+              afterSubmit={() => showThankYou(true)}
+            />
+          )}
         </PaynoteSection>
       )}
     </div>

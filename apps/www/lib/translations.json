@@ -7869,11 +7869,7 @@
       "value": "Alle Mitgliedschafte ansehen" 
     },
     {
-      "key": "paywall/survey/title",
-      "value": "Warum kommt ein Republik-Abo für Sie derzeit nicht in Frage?" 
-    },
-    {
-      "key": "paywall/survey/description",
+      "key": "paywall/survey/hint",
       "value": "Pick the answer that describe your situation:" 
     },
     {

@@ -1,4 +1,8 @@
-mutation submitAnswer($answerId: ID!, $questionId: ID!, $payload: JSON) {
+mutation SubmitQuestionnaireAnswer(
+  $answerId: ID!
+  $questionId: ID!
+  $payload: JSON
+) {
   submitAnswer(
     answer: { id: $answerId, questionId: $questionId, payload: $payload }
   ) {
