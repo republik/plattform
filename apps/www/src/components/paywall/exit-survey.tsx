@@ -1,5 +1,3 @@
-'use client'
-
 import { ReactNode, useEffect, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 
@@ -23,8 +21,9 @@ import { Spinner } from '../ui/spinner'
 
 const SURVEY_SLUG = 'paywall'
 
-// We don't want to show the button to open the survey
-// if the user already answered the survey.
+// This button triggers the exit survey to open.
+// We don't want to show this button if the users
+// have previously answered the survey.
 export function OpenSurveyButton({ onClick }: { onClick: () => void }) {
   const { t } = useTranslation()
   const { data, loading } = useQuery(QuestionnaireDocument, {
@@ -135,6 +134,7 @@ export function ExitSurvey() {
     variables: {
       slug: SURVEY_SLUG,
     },
+    fetchPolicy: 'cache-only', // we already fetched the data in the button
   })
 
   const question = data?.questionnaire.questions[0] as QuestionTypeChoice

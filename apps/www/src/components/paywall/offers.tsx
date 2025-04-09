@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
@@ -23,7 +21,7 @@ export function Offers({
   additionalShopParams?: Record<string, string>
 }) {
   const [option, setOption] = useState<OfferOptions>('YEARLY')
-  const [survey, showSurvey] = useState(false)
+  const [showSurvey, setShowSurvey] = useState(false)
 
   const { t } = useTranslation()
 
@@ -162,8 +160,10 @@ export function Offers({
             <Button type='submit' size='full'>
               {t('paywall/offers/cta')}
             </Button>
-            {!survey && <OpenSurveyButton onClick={() => showSurvey(true)} />}
-            {!survey && (
+            {!showSurvey && (
+              <OpenSurveyButton onClick={() => setShowSurvey(true)} />
+            )}
+            {!showSurvey && (
               <ArrowLink
                 href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot`}
               >
@@ -173,7 +173,7 @@ export function Offers({
           </div>
         </form>
       </PaynoteSection>
-      {survey && <ExitSurvey />}
+      {showSurvey && <ExitSurvey />}
     </>
   )
 }
