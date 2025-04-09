@@ -12,7 +12,7 @@ import { RadioOption } from '../ui/form'
 import { ArrowLink } from '../ui/links'
 import { PaynoteSection } from '../ui/containers'
 
-import { ExitSurvey } from './exit-survey'
+import { ExitSurvey, OpenSurveyButton } from './exit-survey'
 import { useTranslation } from 'lib/withT'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
@@ -162,16 +162,7 @@ export function Offers({
             <Button type='submit' size='full'>
               {t('paywall/offers/cta')}
             </Button>
-            {!survey && (
-              <Button
-                type='button'
-                variant='outline'
-                size='full'
-                onClick={() => showSurvey(true)}
-              >
-                {t('paywall/offers/survey')}
-              </Button>
-            )}
+            {!survey && <OpenSurveyButton onClick={() => showSurvey(true)} />}
             {!survey && (
               <ArrowLink
                 href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot`}

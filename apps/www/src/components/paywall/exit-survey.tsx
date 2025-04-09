@@ -23,7 +23,24 @@ import { Spinner } from '../ui/spinner'
 
 const SURVEY_SLUG = 'paywall'
 
-function SurveyButton({
+// We don't want to show the button to open the survey
+// if the user already answered the survey.
+export function OpenSurveyButton({ onClick }: { onClick: () => void }) {
+  const { t } = useTranslation()
+  const { data, loading } = useQuery(QuestionnaireDocument, {
+    variables: {
+      slug: SURVEY_SLUG,
+    },
+  })
+  if (loading || data?.questionnaire.questions[0]?.userAnswer) return null
+  return (
+    <Button type='button' variant='outline' size='full' onClick={onClick}>
+      {t('paywall/offers/survey')}
+    </Button>
+  )
+}
+
+function AnswerButton({
   children,
   onClick,
 }: {
@@ -102,9 +119,9 @@ function SurveyQuestion({
         })}
       >
         {options?.map(({ label, value }, idx) => (
-          <SurveyButton key={idx} onClick={onSubmit(value)}>
+          <AnswerButton key={idx} onClick={onSubmit(value)}>
             {label}
-          </SurveyButton>
+          </AnswerButton>
         ))}
       </div>
     </div>
@@ -123,6 +140,7 @@ export function ExitSurvey() {
   const question = data?.questionnaire.questions[0] as QuestionTypeChoice
 
   useEffect(() => {
+    // a user can only vote once
     if (question?.userAnswer) {
       showThankYou(true)
     }
