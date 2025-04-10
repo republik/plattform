@@ -2,6 +2,7 @@ import { Component } from 'react'
 import { Button } from '@project-r/styleguide'
 import AddressFieldSet from './AddressFieldSet'
 import ParticularsFieldSet from './ParticularsFieldSet'
+import GenderForm from './Gender'
 
 const hasErrors = (state) =>
   Object.keys(state.errors).some((fieldName) =>
@@ -28,15 +29,18 @@ const cleanUser = ({
   firstName,
   lastName,
   phoneNumber,
-  birthday,
+  birthyear,
   address,
+  gender,
+  genderCustom,
 }) => ({
   id,
   name,
   firstName,
   lastName,
   phoneNumber,
-  birthday,
+  birthyear: parseInt(birthyear),
+  gender: genderCustom || gender,
   address,
 })
 
@@ -93,6 +97,12 @@ export default class UserForm extends Component {
     this.submitHandler = (event) => {
       event.preventDefault()
       if (this.props.onSubmit) {
+        console.log({
+          ...cleanUser(this.state.user.values),
+          ...{
+            address: cleanAddress(this.state.address.values),
+          },
+        })
         this.props.onSubmit({
           ...cleanUser(this.state.user.values),
           ...{
@@ -114,6 +124,7 @@ export default class UserForm extends Component {
           onChange={this.userChangeHandler}
           {...this.state.user}
         />
+        <GenderForm onChange={this.userChangeHandler} {...this.state.user} />
         <AddressFieldSet
           onChange={this.addressChangeHandler}
           {...this.state.address}

@@ -2,7 +2,7 @@ import { NativeAppMessageSync } from '@app/components/native-app'
 import '@republik/theme/fonts.css'
 import '@republik/theme/styles.css'
 
-import { PaynoteOverlayWithKey } from '@app/app/paynote-overlay-with-key'
+import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
 import { ThemeProvider } from '@app/components/theme-provider'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
@@ -51,7 +51,7 @@ export default async function RootLayout({
                 {children}
                 <NativeAppMessageSync />
                 <SyncUTMToSessionStorage />
-                <PaynoteOverlayWithKey />
+                <PaynoteOverlay />
               </AnalyticsProvider>
             </MeContextProvider>
           </ApolloWrapper>

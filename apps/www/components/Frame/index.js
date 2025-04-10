@@ -183,6 +183,7 @@ const Frame = ({
           >
             {inNativeAppLegacy && <LegacyAppNoticeBox t={t} />}
             {me &&
+              !me.activeMagazineSubscription &&
               me.prolongBeforeDate !== null &&
               me.activeMembership !== null && (
                 <ProlongBox

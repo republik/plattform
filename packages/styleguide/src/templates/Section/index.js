@@ -19,7 +19,6 @@ const createSectionSchema = ({
   customMetaFields = [],
   series = false,
   darkMode = true,
-  paynotes = false,
   titleBlockPrepend = null,
   titleMargin = true,
   titleBlockRule,
@@ -57,7 +56,6 @@ const createSectionSchema = ({
     ],
     series,
     darkMode,
-    paynotes,
     metaBody,
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),

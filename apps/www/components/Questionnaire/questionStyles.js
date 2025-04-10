@@ -15,7 +15,9 @@ const styles = {
     fontWeight: 500,
   }),
   help: css({
-    paddingTop: 15,
+    fontSize: 14,
+    marginTop: -20,
+    marginBottom: 20,
   }),
   body: css({
     margin: '5px 0 10px 0',

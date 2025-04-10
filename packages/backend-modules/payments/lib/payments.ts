@@ -287,9 +287,6 @@ export class Payments implements PaymentService {
   async disableSubscription(
     locator: SelectCriteria,
     args: any,
-    options?: {
-      keepMembership: boolean
-    },
   ): Promise<Subscription> {
     const tx = await this.pgdb.transactionBegin()
     const txRepo = new BillingRepo(tx)
@@ -307,14 +304,9 @@ export class Payments implements PaymentService {
         )
       }
 
-      if (options?.keepMembership !== true) {
-        await tx.query(
-          `SELECT public.remove_user_from_role(:userId, 'member');`,
-          {
-            userId: sub.userId,
-          },
-        )
-      }
+      await tx.query(`SELECT public.refresh_member_role(:userId);`, {
+        userId: sub.userId,
+      })
 
       await tx.transactionCommit()
 
@@ -433,7 +425,6 @@ export interface PaymentService {
       endedAt: Date
       canceledAt: Date
     },
-    options?: { keepMembership: boolean },
   ): Promise<Subscription>
   getCustomerIdForCompany(
     userId: string,

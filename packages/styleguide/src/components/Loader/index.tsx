@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import { Interaction } from '../Typography'
 import Spinner from '../Spinner'
 import { useColorContext } from '../Colors/ColorContext'
-import PropTypes from 'prop-types'
 import { ApolloError } from '@apollo/client'
 
 const { P } = Interaction
@@ -35,16 +34,6 @@ const Spacer = ({ style, children }: SpacerProps) => (
   </div>
 )
 
-const LoaderPropTypes = {
-  style: PropTypes.object,
-  message: PropTypes.node,
-  loading: PropTypes.bool.isRequired,
-  error: PropTypes.object,
-  render: PropTypes.func,
-  delay: PropTypes.number,
-  ErrorContainer: PropTypes.elementType,
-}
-
 interface GraphQLError extends Error {
   graphQLErrors?: Error[]
 }
@@ -64,9 +53,9 @@ const Loader = ({
   message,
   loading,
   error,
-  render,
-  delay,
-  ErrorContainer,
+  render = () => null,
+  delay = 500,
+  ErrorContainer = ({ children }) => children,
 }: LoaderProps) => {
   const [visible, setVisible] = useState(false)
   const [colorScheme] = useColorContext()
@@ -101,14 +90,6 @@ const Loader = ({
     )
   }
   return render()
-}
-
-Loader.propTypes = LoaderPropTypes
-
-Loader.defaultProps = {
-  delay: 500,
-  render: () => null,
-  ErrorContainer: ({ children }) => children,
 }
 
 export default Loader

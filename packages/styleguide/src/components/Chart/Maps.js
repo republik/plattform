@@ -650,15 +650,14 @@ GenericMap.propTypes = propTypes
 
 GenericMap.defaultProps = defaultProps.GenericMap
 
-export const ProjectedMap = (props) => <GenericMap {...props} />
+export const ProjectedMap = (props) => (
+  <GenericMap {...defaultProps.ProjectedMap} {...props} />
+)
 
-GenericMap.defaultProps = defaultProps.GenericMap
-
-ProjectedMap.defaultProps = defaultProps.ProjectedMap
 ProjectedMap.base = 'GenericMap'
 
-export const SwissMap = (props) => <GenericMap {...props} />
-
-SwissMap.defaultProps = defaultProps.SwissMap
+export const SwissMap = (props) => (
+  <GenericMap {...defaultProps.SwissMap} {...props} />
+)
 
 SwissMap.base = 'GenericMap'

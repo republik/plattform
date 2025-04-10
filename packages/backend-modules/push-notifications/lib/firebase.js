@@ -13,18 +13,12 @@ const {
   FIREBASE_PROJECT_ID,
   FIREBASE_CLIENT_EMAIL,
   FIREBASE_PRIVATE_KEY,
-  FIREBASE_DATABASE_URL,
 } = process.env
 
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 let initialized
-if (
-  !FIREBASE_PROJECT_ID ||
-  !FIREBASE_CLIENT_EMAIL ||
-  !FIREBASE_PRIVATE_KEY ||
-  !FIREBASE_DATABASE_URL
-) {
+if (!FIREBASE_PROJECT_ID || !FIREBASE_CLIENT_EMAIL || !FIREBASE_PRIVATE_KEY) {
   console.warn(
     'missing env FIREBASE_*, sending push notifications via firebase will not work',
   )
@@ -39,7 +33,6 @@ if (
         ' ',
       ),
     }),
-    databaseURL: FIREBASE_DATABASE_URL,
   })
   initialized = true
 }
@@ -56,78 +49,66 @@ const publish = async (args, pgdb) => {
     return
   }
   if (!initialized) {
-    throw new Error("mssing env FIREBASE_*, can't publish")
+    throw new Error("missing env FIREBASE_*, can't publish")
   }
 
   const { tokens, title, body, url, icon, type, ttl, priority } = args
 
-  if (tokens.length > 0) {
-    const message = {
-      notification: {
-        title,
-        body,
-      },
-      data: {
-        url,
-        type,
-        ...(icon ? { icon } : {}),
-      },
-    }
-    const options = {
-      ...(ttl ? { timeToLive: parseInt(ttl / 1000) } : {}),
-      ...(priority ? { priority } : {}),
-    }
+  if (tokens.length === 0) {
+    debug('No recipients found for publish: %O', args)
+    return
+  }
 
-    const result = await Promise.mapSeries(
-      chunk(tokens, 1000),
-      async (tokensChunk) => {
-        /*
-          response = { @see https://firebase.google.com/docs/reference/admin/node/firebase-admin.messaging.messagingdevicesresponse
-            results: [ @see https://firebase.google.com/docs/reference/admin/node/firebase-admin.messaging.messagingdeviceresult
-              { messageId: '123' },
-              { messageId: '456' },
-              ...
-            ],
-            canonicalRegistrationTokenCount: 0,
-            failureCount: 0,
-            successCount: 123,
-            multicastId: 123123
-          }
-        */
-        const response = await firebase
-          .messaging()
-          .sendToDevice(tokensChunk, message, options)
+  const message = {
+    notification: {
+      title,
+      body,
+    },
+    data: {
+      url,
+      type,
+    },
+    android: {
+      icon: icon || undefined,
+      ttl: ttl ? Math.floor(ttl / 1000) : undefined,
+      priority: priority || undefined,
+    },
+  }
 
-        debug(
-          'Firebase: #recipients %d, message: %O, response: %O',
-          tokensChunk.length,
-          message,
-          response,
-        )
+  const result = await Promise.mapSeries(
+    chunk(tokens, 500),
+    async (tokensChunk) => {
+      const response = await firebase
+        .messaging()
+        .sendEachForMulticast({ tokens: tokensChunk, ...message })
 
-        return response.results
-      },
-    ).then((chunkResults) => chunkResults.flat())
+      debug(
+        'Firebase: #recipients %d, message: %O, response: %O',
+        tokensChunk.length,
+        message,
+        response,
+      )
 
-    const staleTokens = result.reduce((acc, cur, idx) => {
-      if (
-        cur.error &&
-        cur.error.code === 'messaging/registration-token-not-registered'
-      ) {
-        acc.push(tokens[idx])
-      }
-      return acc
-    }, [])
-    if (staleTokens.length > 0) {
-      await deleteSessionForDevices(staleTokens, pgdb)
-      debug('deleted sessions for stale firebase device tokens', staleTokens)
+      return response.responses
+    },
+  ).then((chunkResults) => chunkResults.flat())
+
+  const staleTokens = result.reduce((acc, cur, idx) => {
+    if (
+      cur.error &&
+      cur.error.code === 'messaging/registration-token-not-registered'
+    ) {
+      acc.push(tokens[idx])
     }
-    return {
-      staleTokens,
-      goodTokens: tokens.filter((t) => staleTokens.indexOf(t) === -1),
-    }
-  } else {
-    debug('no receipients found for publish: %O', args)
+    return acc
+  }, [])
+  if (staleTokens.length > 0) {
+    await deleteSessionForDevices(staleTokens, pgdb)
+    debug('deleted sessions for stale firebase device tokens', staleTokens)
+  }
+  return {
+    staleTokens,
+    goodTokens: tokens.filter((t) => staleTokens.indexOf(t) === -1),
   }
 }
 
