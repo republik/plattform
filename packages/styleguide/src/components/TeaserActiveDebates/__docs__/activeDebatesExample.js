@@ -14,7 +14,7 @@ export const oneComment = {
     slug: null,
     credential: null,
     profilePicture:
-      'https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg?size=900x854&resize=384x384&bw=true',
+      'https://cdn.repub.ch/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg?size=900x854&resize=384x384&bw=true',
     __typename: 'DisplayUser',
   },
   __typename: 'Comment',
@@ -273,7 +273,7 @@ export const activeDebates = {
               slug: null,
               credential: null,
               profilePicture:
-                'https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg?size=900x854&resize=384x384&bw=true',
+                'https://cdn.repub.ch/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg?size=900x854&resize=384x384&bw=true',
               __typename: 'DisplayUser',
             },
             __typename: 'Comment',
@@ -473,7 +473,7 @@ export const activeDebatesWithoutHighlight = {
               slug: null,
               credential: null,
               profilePicture:
-                'https://cdn.republik.space/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg?size=900x854&resize=384x384&bw=true',
+                'https://cdn.repub.ch/s3/republik-assets/portraits/e7b5fec7809718a9f7b8c038c2747fd6.jpeg?size=900x854&resize=384x384&bw=true',
               __typename: 'DisplayUser',
             },
             __typename: 'Comment',
