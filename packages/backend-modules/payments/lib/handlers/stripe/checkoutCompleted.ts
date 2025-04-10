@@ -17,6 +17,13 @@ type PaymentWebhookContext = {
   paymentService: PaymentService
 } & ConnectionContext
 
+class CheckoutProcessingError extends Error {
+  constructor(msg: string) {
+    super(msg)
+    this.name = 'CheckoutProcessingError'
+  }
+}
+
 export async function processCheckoutCompleted(
   ctx: PaymentWebhookContext,
   company: Company,
@@ -39,10 +46,9 @@ async function handleSubscription(
 ) {
   const paymentService = ctx.paymentService
 
-  const customerId = event.data.object.customer as string
+  const customerId = event.data.object.customer?.toString()
   if (!customerId) {
-    console.log('No stripe customer provided; skipping')
-    return
+    throw new CheckoutProcessingError('No stripe customer')
   }
 
   const userId = await paymentService.getUserIdForCompanyCustomer(
@@ -149,13 +155,11 @@ async function handlePayment(
   )
 
   if (!sess) {
-    throw new Error('checkout session does not exist')
+    throw new CheckoutProcessingError('checkout session does not exist')
   }
 
   if (!sess.line_items) {
-    throw new Error(
-      'checkout session has no line items unable to process checkout',
-    )
+    throw new CheckoutProcessingError('checkout session has no line items')
   }
 
   let userId = undefined
@@ -186,8 +190,6 @@ async function handlePayment(
       discountAmount: line.amount_discount,
     }
   })
-
-  console.log(sess.shipping_details)
 
   let addressId: string | undefined = undefined
   if (sess.shipping_details) {

@@ -37,7 +37,6 @@ export = async function createCheckoutSession(
 
   session
     .withMetadata(args.options?.metadata)
-    .withEntryOffer(await checkIntroductoryOfferEligibility(ctx.pgdb, ctx.user))
     .withPromoCode(args.promoCode)
     .withDonation(args.withDonation || args.withCustomDonation)
     .withReturnURL(args.options?.returnURL)

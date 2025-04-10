@@ -2,10 +2,8 @@ import { User } from '@orbiting/backend-modules-types'
 import {
   Offer,
   activeOffers,
-  isPromoCodeInBlocklist,
   ComplimentaryItem,
   Discount,
-  INTRODUCTERY_OFFER_PROMO_CODE,
   couponToDiscount,
   promotionToDiscount,
   DiscountOption,
@@ -62,7 +60,6 @@ export class CheckoutSessionBuilder {
     customerId?: string
     metadata?: any
     returnURL?: string
-    applyEntryOffer?: boolean
     selectedDiscount?: { type: 'DISCOUNT'; value: Discount }
     selectedDonation?: string | { amount: number }
   }
@@ -78,7 +75,7 @@ export class CheckoutSessionBuilder {
   }
 
   public withPromoCode(code?: string): this {
-    if (code && !isPromoCodeInBlocklist(code)) {
+    if (code) {
       this.optionalSessionVars.promoCode = code
     }
     return this
@@ -129,13 +126,6 @@ export class CheckoutSessionBuilder {
 
   public withComplementaryItems(items: ComplimentaryItem[]): this {
     this.optionalSessionVars.complimentaryItems = items
-    return this
-  }
-
-  public withEntryOffer(bool: boolean): this {
-    if (this.offer.allowIntroductoryOffer) {
-      this.optionalSessionVars.applyEntryOffer = bool
-    }
     return this
   }
 
@@ -193,23 +183,10 @@ export class CheckoutSessionBuilder {
   }
 
   async resolveDiscount(): Promise<DiscountOption | null> {
-    const { promoCode, applyEntryOffer, selectedDiscount } =
-      this.optionalSessionVars
+    const { promoCode, selectedDiscount } = this.optionalSessionVars
 
     if (selectedDiscount) {
       return selectedDiscount
-    }
-
-    if (!promoCode && this.offer.allowIntroductoryOffer && applyEntryOffer) {
-      const promotion = await this.paymentService.getPromotion(
-        this.offer.company,
-        INTRODUCTERY_OFFER_PROMO_CODE,
-      )
-      if (promotion)
-        return {
-          type: 'DISCOUNT',
-          value: couponToDiscount(promotion.coupon),
-        }
     }
 
     if (promoCode && this.offer.allowPromotions) {

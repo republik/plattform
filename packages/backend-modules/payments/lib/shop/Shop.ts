@@ -1,18 +1,10 @@
 import Stripe from 'stripe'
 import { Company } from '../types'
 import { Offer, OfferAPIResult, Discount, Promotion } from './offers'
-import { User } from '@orbiting/backend-modules-types'
-import { PgDb } from 'pogi'
-import { hasHadMembership } from './utils'
 import { PaymentService } from '../services/PaymentService'
 import { LineItem } from './CheckoutSessionOptionBuilder'
 import { OfferBuilder } from './OfferBuilder'
 
-export const INTRODUCTERY_OFFER_PROMO_CODE = 'EINSTIEG'
-
-export function isPromoCodeInBlocklist(promoCode: string) {
-  return [INTRODUCTERY_OFFER_PROMO_CODE].includes(promoCode)
-}
 export class Shop {
   #offers: Offer[]
   #paymentServices: PaymentService
@@ -102,26 +94,4 @@ export function couponToDiscount(coupon: Stripe.Coupon): Discount {
     amountOff: coupon.amount_off!,
     currency: coupon.currency!,
   }
-}
-
-export async function checkIntroductoryOfferEligibility(
-  pgdb: PgDb,
-  user?: User,
-): Promise<boolean> {
-  if (
-    process.env.PAYMENTS_INTRODUCTORY_OFFER_ELIGIBILITY_FOR_EVERYONE === 'true'
-  ) {
-    return true
-  }
-
-  if (!user) {
-    // if there is no user we show the entry offers
-    return true
-  }
-
-  if ((await hasHadMembership(user?.id, pgdb)) === false) {
-    return true
-  }
-
-  return false
 }
