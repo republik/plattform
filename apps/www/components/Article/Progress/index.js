@@ -9,23 +9,12 @@ import { mediaQueries, A } from '@project-r/styleguide'
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
 import { scrollIt } from '../../../lib/utils/scroll'
 import withMe from '../../../lib/apollo/withMe'
-import { PROGRESS_EXPLAINER_PATH } from '../../../lib/constants'
 
 import { withProgressApi } from './api'
 import { useMediaProgress } from '../../Audio/MediaProgress'
 import { withRouter } from 'next/router'
-import Link from 'next/link'
 
 const MIN_INDEX = 2
-
-export const getFeatureDescription = (t) =>
-  t.elements('article/progressprompt/description/feature', {
-    link: PROGRESS_EXPLAINER_PATH ? (
-      <Link href={PROGRESS_EXPLAINER_PATH} key='link' passHref legacyBehavior>
-        <A>{t('article/progressprompt/description/feature/link')}</A>
-      </Link>
-    ) : null,
-  })
 
 class ProgressContextProvider extends Component {
   getChildContext() {
@@ -33,7 +22,6 @@ class ProgressContextProvider extends Component {
       getMediaProgress: this.props.value.getMediaProgress,
       saveMediaProgress: this.props.value.saveMediaProgress,
       restoreArticleProgress: this.props.value.restoreArticleProgress,
-      showConsentPrompt: this.props.value.showConsentPrompt,
     }
   }
   render() {
@@ -45,15 +33,12 @@ ProgressContextProvider.childContextTypes = {
   getMediaProgress: PropTypes.func,
   saveMediaProgress: PropTypes.func,
   restoreArticleProgress: PropTypes.func,
-  showConsentPrompt: PropTypes.bool,
 }
 
 const Progress = ({
   children,
   me,
   article,
-  isArticle = true,
-  router,
   upsertDocumentProgress,
 }) => {
   const refContainer = useRef()
@@ -63,7 +48,7 @@ const Progress = ({
 
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
-  const isTrackingAllowed = me && me.progressConsent === true
+  const isTrackingAllowed = me && me.progressOptOut === false
   const mobile = () => window.innerWidth < mediaQueries.mBreakPoint
   const headerHeight = () => (mobile() ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT)
 
@@ -213,14 +198,6 @@ const Progress = ({
     }
   }, [])
 
-  const showConsentPrompt =
-    isArticle &&
-    me &&
-    !router.query.trialSignup &&
-    me.progressConsent === null &&
-    article &&
-    article.meta &&
-    article.meta.path !== PROGRESS_EXPLAINER_PATH
 
   return (
     <ProgressContextProvider
@@ -228,7 +205,6 @@ const Progress = ({
         getMediaProgress,
         saveMediaProgress,
         restoreArticleProgress,
-        showConsentPrompt,
       }}
     >
       <div ref={refContainer}>{children}</div>
@@ -239,11 +215,10 @@ const Progress = ({
 Progress.propTypes = {
   children: PropTypes.node,
   me: PropTypes.shape({
-    progressConsent: PropTypes.bool,
+    progressOptOut: PropTypes.bool,
   }),
   revokeConsent: PropTypes.func,
   submitConsent: PropTypes.func,
-  isArticle: PropTypes.bool,
 }
 
 export default compose(

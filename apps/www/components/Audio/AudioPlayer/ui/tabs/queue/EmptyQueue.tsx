@@ -29,7 +29,7 @@ const EmptyQueue = ({ t }: { t: any }) => {
           icon: <IconPlaylistAdd key='add-icon' size={24} />,
         })}
       </p>
-      {me && !me.progressConsent && (
+      {me && me.progressOptOut && (
         <p {...styles.text}>
           {t('AudioPlayer/Queue/EmptyQueue/progressInfo')}{' '}
           <Link href='/konto/einstellungen' legacyBehavior>
