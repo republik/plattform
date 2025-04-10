@@ -20,6 +20,7 @@ export type Config = {
   PROJECT_R_3_MONTH_GIFT_COUPON: string
   PROJECT_R_YEARLY_GIFT_COUPON: string
   PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS: string[]
+  PROJECT_R_DONATION_PRODUCT_ID: string
 }
 
 export function getConfig(): Config {
@@ -83,6 +84,11 @@ export function getConfig(): Config {
     'PAYMENTS_PROJECT_R_YEARLY_GIFT_COUPON not set',
   )
 
+  assert(
+    typeof process.env.PAYMENTS_PROJECT_R_DONATION_PRODUCT_ID !== 'undefined',
+    'PAYMENTS_PROJECT_R_DONATION_PRODUCT_ID not set',
+  )
+
   return {
     SCHEMA_NAME: DEFAULT_SCHEMA_NAME,
     SHOP_BASE_URL: process.env.SHOP_BASE_URL,
@@ -112,5 +118,7 @@ export function getConfig(): Config {
     PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS:
       process.env.PAYMENTS_PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS?.split(';') ||
       [],
+    PROJECT_R_DONATION_PRODUCT_ID:
+      process.env.PAYMENTS_PROJECT_R_DONATION_PRODUCT_ID,
   }
 }

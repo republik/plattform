@@ -291,7 +291,7 @@ export class CheckoutSessionBuilder {
           price_data: {
             unit_amount: selectedDonation.amount,
             currency: 'CHF',
-            product: 'prod_RlF5BclupFNlhi',
+            product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
             recurring: {
               interval: 'year',
               interval_count: 1,
