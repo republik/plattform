@@ -1357,6 +1357,10 @@
       "value": "Ihre Reise ist beendet"
     },
     {
+      "key": "api/access/email/recipient/expired_regwall_trial/subject",
+      "value": "Ihre Reise ist beendet"
+    },
+    {
       "key": "api/access/email/recipient/followup/subject",
       "value": "Zeit für eine Entscheidung"
     },
@@ -1391,6 +1395,10 @@
     {
       "key": "api/access/constraint/limitGrants/error",
       "value": "Sie können keinen weiteren Zugriff vergeben."
+    },
+    {
+      "key": "api/access/constraint/limitClaims/error",
+      "value": "Sie können keinen weiteren Zugriff einlösen."
     },
     {
       "key": "api/access/constraint/limitSlots/error",

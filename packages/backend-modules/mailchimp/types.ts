@@ -94,6 +94,7 @@ type MembershipPeriod = {
 
 type AccessGrant = {
   id: string,
+  accessCampaignId: string,
   granterUserId: string,
   email: string,
   recipientUserId: string | null,
