@@ -157,6 +157,11 @@ export const Offers: Readonly<Offer>[] = [
     requiresLogin: true,
     requiresAddress: true,
     items: [{ type: 'PRICE', lookupKey: 'BENEFACTOR_ABO' }],
+    donationOptions: [
+      { type: 'PRICE', lookupKey: 'BENEFACTOR_DONATE_OPTION_YEARLY_A' },
+      { type: 'PRICE', lookupKey: 'BENEFACTOR_DONATE_OPTION_YEARLY_B' },
+      { type: 'PRICE', lookupKey: 'BENEFACTOR_DONATE_OPTION_YEARLY_C' },
+    ],
     allowPromotions: false,
   },
   {
