@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GraphqlContext } from '@orbiting/backend-modules-types'
-import { checkIntroductoryOfferEligibility } from '../../../lib/shop'
 import { CheckoutSessionBuilder } from '../../../lib/shop/CheckoutSessionOptionBuilder'
 import { PaymentService } from '../../../lib/services/PaymentService'
 
