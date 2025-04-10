@@ -312,7 +312,7 @@ export class CheckoutSessionBuilder {
       return { coupon: discount.value.id }
     }
     if (discount.type === 'PROMO') {
-      return { promotion_code: discount.value.promoId }
+      return { promotion_code: discount.value.id }
     }
     throw new Error('api/shop/unexpectedDiscount')
   }

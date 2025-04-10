@@ -150,7 +150,7 @@ type CustomPrice {
 }
 
 type Discount {
-  id: ID
+  id: ID!
   name: String
   amountOff: Int!
   duration: String!,

@@ -82,7 +82,8 @@ export function promotionToDiscount(
   promotion: Stripe.PromotionCode,
 ): Promotion {
   return {
-    promoId: promotion.id!,
+    id: promotion.id!,
+    type: 'PROMO',
     name: promotion.coupon.name!,
     duration: promotion.coupon.duration,
     durationInMonths: promotion.coupon.duration_in_months,
@@ -94,6 +95,7 @@ export function promotionToDiscount(
 export function couponToDiscount(coupon: Stripe.Coupon): Discount {
   return {
     id: coupon.id!,
+    type: 'DISCOUNT',
     name: coupon.name!,
     duration: coupon.duration,
     durationInMonths: coupon.duration_in_months,

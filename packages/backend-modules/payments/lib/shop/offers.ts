@@ -91,6 +91,7 @@ export interface APIDiscountResult {
 
 export type Discount = {
   id: string
+  type: 'DISCOUNT'
   name: string
   amountOff: number
   duration: 'forever' | 'once' | 'repeating'
@@ -99,7 +100,8 @@ export type Discount = {
 }
 
 export type Promotion = {
-  promoId: string
+  id: string
+  type: 'PROMO'
   name: string
   amountOff: number
   duration: 'forever' | 'once' | 'repeating'
