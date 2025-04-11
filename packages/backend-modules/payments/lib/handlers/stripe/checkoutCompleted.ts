@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
+import { PaymentInterface } from '../../payments'
 import { Company } from '../../types'
 import { ConfirmSetupTransactionalWorker } from '../../workers/ConfirmSetupTransactionalWorker'
 import { Queue } from '@orbiting/backend-modules-job-queue'
@@ -14,7 +14,7 @@ import { sendGiftPurchaseMail } from '../../transactionals/sendTransactionalMail
 import { UserDataRepo } from '../../database/UserRepo'
 
 type PaymentWebhookContext = {
-  paymentService: PaymentService
+  payments: PaymentInterface
 } & ConnectionContext
 
 class CheckoutProcessingError extends Error {
@@ -44,17 +44,14 @@ async function handleSubscription(
   company: Company,
   event: Stripe.CheckoutSessionCompletedEvent,
 ) {
-  const paymentService = ctx.paymentService
+  const payments = ctx.payments
 
   const customerId = event.data.object.customer?.toString()
   if (!customerId) {
     throw new CheckoutProcessingError('No stripe customer')
   }
 
-  const userId = await paymentService.getUserIdForCompanyCustomer(
-    company,
-    customerId,
-  )
+  const userId = await payments.getUserIdForCompanyCustomer(company, customerId)
   if (!userId) {
     throw Error(`User for ${customerId} does not exists`)
   }
@@ -69,14 +66,14 @@ async function handleSubscription(
   const extSubId = event.data.object.subscription
   if (typeof extSubId === 'string') {
     // if checkout contains a subscription that is not in the database try to save it
-    const s = await paymentService.getSubscription({ externalId: extSubId })
+    const s = await payments.getSubscription({ externalId: extSubId })
     if (!s) {
       const subscription = await PaymentProvider.forCompany(
         company,
       ).getSubscription(extSubId as string)
       if (subscription) {
         const args = mapSubscriptionArgs(company, subscription)
-        subId = (await paymentService.setupSubscription(userId, args)).id
+        subId = (await payments.setupSubscription(userId, args)).id
       }
     } else {
       subId = s.id
@@ -86,7 +83,7 @@ async function handleSubscription(
   let invoiceId: string | undefined
   const extInvoiceId = event.data.object.invoice
   if (typeof extInvoiceId === 'string') {
-    const i = await paymentService.getInvoice({ externalId: extInvoiceId })
+    const i = await payments.getInvoice({ externalId: extInvoiceId })
     if (!i) {
       // if checkout contains a invoice that is not in the database try to save it
       const invoiceData = await PaymentProvider.forCompany(company).getInvoice(
@@ -94,14 +91,14 @@ async function handleSubscription(
       )
       if (invoiceData) {
         const args = mapInvoiceArgs(company, invoiceData)
-        invoiceId = (await paymentService.saveInvoice(userId, args)).id
+        invoiceId = (await payments.saveInvoice(userId, args)).id
         const chargeArgs = mapChargeArgs(
           company,
           invoiceId,
           invoiceData.charge as Stripe.Charge,
         )
         try {
-          await paymentService.saveCharge(chargeArgs)
+          await payments.saveCharge(chargeArgs)
         } catch (e) {
           if (e instanceof Error) {
             console.log(`Error recording charge: ${e.message}`)
@@ -113,7 +110,7 @@ async function handleSubscription(
     }
   }
 
-  await paymentService.saveOrder({
+  await payments.saveOrder({
     userId: userId,
     company: company,
     externalId: event.data.object.id,
@@ -165,7 +162,7 @@ async function handlePayment(
   let userId = undefined
   if (typeof sess.customer !== 'undefined') {
     userId =
-      (await ctx.paymentService.getUserIdForCompanyCustomer(
+      (await ctx.payments.getUserIdForCompanyCustomer(
         company,
         sess.customer as string,
       )) ?? undefined
@@ -218,7 +215,7 @@ async function handlePayment(
     shippingAddressId: addressId,
   }
 
-  const order = await ctx.paymentService.saveOrder(orderDraft)
+  const order = await ctx.payments.saveOrder(orderDraft)
 
   const orderLineItems = lineItems.map((i) => {
     return { orderId: order.id, ...i }
