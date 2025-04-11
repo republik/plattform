@@ -1,0 +1,3 @@
+-- migrate down here: DROP TABLE...
+
+-- Dropping values from ENUMs not possible, nothing to do here
