@@ -1,0 +1,3 @@
+-- migrate up here: CREATE TABLE...
+
+ALTER TYPE payments.subscription_type ADD VALUE 'BENEFACTOR_SUBSCRIPTION';

@@ -34,7 +34,7 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
 
     const webhookService = new WebhookService(this.context.pgdb)
 
-    const PaymentService = Payments.getInstance()
+    const payments = Payments.getInstance()
 
     const wh = await webhookService.getEvent<Stripe.Event>(
       job.data.eventSourceId,
@@ -52,7 +52,7 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
       switch (event.type) {
         case 'checkout.session.completed':
           await processCheckoutCompleted(
-            { paymentService: PaymentService, ...this.context },
+            { payments: payments, ...this.context },
             job.data.company,
             event,
           )
@@ -62,55 +62,43 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
             console.log('pledge based event [%s]; skipping', event.id)
             break
           }
-          await processSubscriptionCreated(
-            PaymentService,
-            job.data.company,
-            event,
-          )
+          await processSubscriptionCreated(payments, job.data.company, event)
           break
         case 'customer.subscription.updated':
           if (isPledgeBased(event.data.object.metadata)) {
             console.log('pledge based event [%s]; skipping', event.id)
             break
           }
-          await processSubscriptionUpdate(
-            PaymentService,
-            job.data.company,
-            event,
-          )
+          await processSubscriptionUpdate(payments, job.data.company, event)
           break
         case 'customer.subscription.deleted':
           if (isPledgeBased(event.data.object.metadata)) {
             console.log('pledge based event [%s]; skipping', event.id)
             break
           }
-          await processSubscriptionDeleted(
-            PaymentService,
-            job.data.company,
-            event,
-          )
+          await processSubscriptionDeleted(payments, job.data.company, event)
           break
         case 'invoice.created':
-          await processInvoiceCreated(PaymentService, job.data.company, event)
+          await processInvoiceCreated(payments, job.data.company, event)
           break
         case 'invoice.updated':
         case 'invoice.finalized':
         case 'invoice.paid':
         case 'invoice.voided':
-          await processInvoiceUpdated(PaymentService, job.data.company, event)
+          await processInvoiceUpdated(payments, job.data.company, event)
           break
         case 'invoice.payment_failed':
-          await processPaymentFailed(PaymentService, job.data.company, event)
+          await processPaymentFailed(payments, job.data.company, event)
           break
         case 'invoice.payment_succeeded':
           await processInvoicePaymentSucceeded(
-            PaymentService,
+            payments,
             job.data.company,
             event,
           )
           break
         case 'charge.refunded':
-          await processChargeRefunded(PaymentService, job.data.company, event)
+          await processChargeRefunded(payments, job.data.company, event)
           break
         default:
           console.log('skipping %s no handler for this event', event.type)

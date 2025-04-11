@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
+import { PaymentInterface } from '../../payments'
 import { Company } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { NoticeEndedTransactionalWorker } from '../../workers/NoticeEndedTransactionalWorker'
@@ -11,7 +11,7 @@ import {
 import { secondsToMilliseconds } from './utils'
 
 export async function processSubscriptionDeleted(
-  paymentService: PaymentService,
+  payments: PaymentInterface,
   _company: Company,
   event: Stripe.CustomerSubscriptionDeletedEvent,
 ) {
@@ -20,7 +20,7 @@ export async function processSubscriptionDeleted(
     event.data.object.canceled_at || 0,
   )
 
-  await paymentService.disableSubscription(
+  await payments.disableSubscription(
     { externalId: event.data.object.id },
     {
       endedAt: new Date(endTimestamp),
@@ -30,7 +30,7 @@ export async function processSubscriptionDeleted(
 
   const customerId = event.data.object.customer as string
 
-  const userId = await paymentService.getUserIdForCompanyCustomer(
+  const userId = await payments.getUserIdForCompanyCustomer(
     _company,
     customerId,
   )

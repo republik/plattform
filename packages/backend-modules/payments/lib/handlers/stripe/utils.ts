@@ -3,6 +3,7 @@ import { SubscriptionType } from '../../types'
 
 const {
   YEARLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
+  BENEFACTOR_SUBSCRIPTION_STRIPE_PRODUCT_ID,
   MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
 } = getConfig()
 
@@ -12,6 +13,8 @@ export function getSubscriptionType(productId: string): SubscriptionType {
       return 'MONTHLY_SUBSCRIPTION'
     case YEARLY_SUBSCRIPTION_STRIPE_PRODUCT_ID:
       return 'YEARLY_SUBSCRIPTION'
+    case BENEFACTOR_SUBSCRIPTION_STRIPE_PRODUCT_ID:
+      return 'BENEFACTOR_SUBSCRIPTION'
     default:
       throw new Error('Unknown product')
   }

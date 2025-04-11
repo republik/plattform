@@ -1,11 +1,11 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
+import { PaymentInterface } from '../../payments'
 import { Company } from '../../types'
 import { PaymentProvider } from '../../providers/provider'
 import { secondsToMilliseconds } from './utils'
 
 export async function processInvoicePaymentSucceeded(
-  paymentService: PaymentService,
+  payments: PaymentInterface,
   company: Company,
   event: Stripe.InvoicePaymentSucceededEvent,
 ) {
@@ -18,7 +18,7 @@ export async function processInvoicePaymentSucceeded(
     return
   }
 
-  const invoice = await paymentService.getInvoice({ externalId: i.id })
+  const invoice = await payments.getInvoice({ externalId: i.id })
   if (!invoice) {
     throw Error('invoice not saved locally')
   }
@@ -31,11 +31,11 @@ export async function processInvoicePaymentSucceeded(
   }
   const args = mapChargeArgs(company, invoice.id, incoiceCharge)
 
-  const ch = await paymentService.getCharge({ externalId: incoiceCharge.id })
+  const ch = await payments.getCharge({ externalId: incoiceCharge.id })
   if (ch) {
-    paymentService.updateCharge({ id: ch.id }, args)
+    payments.updateCharge({ id: ch.id }, args)
   } else {
-    paymentService.saveCharge(args)
+    payments.saveCharge(args)
   }
 }
 

@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
+import { PaymentInterface } from '../../payments'
 import { Company } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { ConfirmCancelTransactionalWorker } from '../../workers/ConfirmCancelTransactionalWorker'
@@ -14,7 +14,7 @@ import { ConfirmGiftAppliedTransactionalWorker } from '../../workers/ConfirmGift
 import { getConfig } from '../../config'
 
 export async function processSubscriptionUpdate(
-  paymentService: PaymentService,
+  payments: PaymentInterface,
   company: Company,
   event: Stripe.CustomerSubscriptionUpdatedEvent,
 ) {
@@ -31,7 +31,7 @@ export async function processSubscriptionUpdate(
   const previousVouchers = event.data.previous_attributes?.discounts
   const discountCode = event.data.object.discount?.coupon?.id
 
-  await paymentService.updateSubscription({
+  await payments.updateSubscription({
     company: company,
     externalId: event.data.object.id,
     currentPeriodStart: new Date(
@@ -71,7 +71,7 @@ export async function processSubscriptionUpdate(
   if (hasPeriodChanged) {
     const customerId = event.data.object.customer as string
 
-    const userId = await paymentService.getUserIdForCompanyCustomer(
+    const userId = await payments.getUserIdForCompanyCustomer(
       company,
       customerId,
     )
@@ -91,7 +91,7 @@ export async function processSubscriptionUpdate(
   if (isCancellationRevoked && mailSettings['confirm:revoke_cancellation']) {
     const customerId = event.data.object.customer as string
 
-    const userId = await paymentService.getUserIdForCompanyCustomer(
+    const userId = await payments.getUserIdForCompanyCustomer(
       company,
       customerId,
     )
@@ -120,7 +120,7 @@ export async function processSubscriptionUpdate(
   if (cancelAt && mailSettings['confirm:cancel']) {
     const customerId = event.data.object.customer as string
 
-    const userId = await paymentService.getUserIdForCompanyCustomer(
+    const userId = await payments.getUserIdForCompanyCustomer(
       company,
       customerId,
     )
@@ -153,7 +153,7 @@ export async function processSubscriptionUpdate(
   )
   if (isGiftUpdate) {
     const customerId = event.data.object.customer as string
-    const userId = await paymentService.getUserIdForCompanyCustomer(
+    const userId = await payments.getUserIdForCompanyCustomer(
       company,
       customerId,
     )

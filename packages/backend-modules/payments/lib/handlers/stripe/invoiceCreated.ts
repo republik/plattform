@@ -1,27 +1,24 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
+import { PaymentInterface } from '../../payments'
 import { Company, InvoiceArgs } from '../../types'
 import { PaymentProvider } from '../../providers/provider'
 import { isPledgeBased, secondsToMilliseconds } from './utils'
 
 export async function processInvoiceCreated(
-  paymentService: PaymentService,
+  payments: PaymentInterface,
   company: Company,
   event: Stripe.InvoiceCreatedEvent,
 ) {
   const customerId = event.data.object.customer as string
   const externalInvoiceId = event.data.object.id as string
 
-  const userId = await paymentService.getUserIdForCompanyCustomer(
-    company,
-    customerId,
-  )
+  const userId = await payments.getUserIdForCompanyCustomer(company, customerId)
 
   if (!userId) {
     throw new Error(`Unknown customer ${customerId}`)
   }
 
-  if (await paymentService.getInvoice({ externalId: externalInvoiceId })) {
+  if (await payments.getInvoice({ externalId: externalInvoiceId })) {
     console.log(`invoice has already saved; skipping [${externalInvoiceId}]`)
     return
   }
@@ -50,7 +47,7 @@ export async function processInvoiceCreated(
   }
 
   const args = mapInvoiceArgs(company, invoice)
-  await paymentService.saveInvoice(userId, args)
+  await payments.saveInvoice(userId, args)
 
   return
 }

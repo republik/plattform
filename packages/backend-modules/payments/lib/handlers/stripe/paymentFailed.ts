@@ -1,22 +1,19 @@
 import Stripe from 'stripe'
 import { Company } from '../../types'
-import { PaymentService } from '../../payments'
+import { PaymentInterface } from '../../payments'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { NoticePaymentFailedTransactionalWorker } from '../../workers/NoticePaymentFailedTransactionalWorker'
 import { PaymentProvider } from '../../providers/provider'
 import { isPledgeBased } from './utils'
 
 export async function processPaymentFailed(
-  paymentService: PaymentService,
+  payments: PaymentInterface,
   company: Company,
   event: Stripe.InvoicePaymentFailedEvent,
 ) {
   const customerId = event.data.object.customer as string
 
-  const userId = await paymentService.getUserIdForCompanyCustomer(
-    company,
-    customerId,
-  )
+  const userId = await payments.getUserIdForCompanyCustomer(company, customerId)
   if (!userId) {
     throw Error(`User for ${customerId} does not exists`)
   }
@@ -37,7 +34,7 @@ export async function processPaymentFailed(
     return
   }
 
-  const subscription = await paymentService.getSubscription({
+  const subscription = await payments.getSubscription({
     externalId: externalSubId as string,
   })
 

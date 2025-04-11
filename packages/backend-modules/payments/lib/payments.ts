@@ -48,8 +48,8 @@ export function setupPaymentUserEventHooks(context: ConnectionContext) {
   )
 }
 
-export class Payments implements PaymentService {
-  static #instance: PaymentService
+export class Payments implements PaymentInterface {
+  static #instance: PaymentInterface
   protected pgdb: PgDb
   protected customers: PaymentCustomerRepo
   protected billing: PaymentBillingRepo
@@ -168,7 +168,6 @@ export class Payments implements PaymentService {
       await tx.transactionCommit()
       return sub
     } catch (e) {
-      console.log(e)
       await tx.transactionRollback()
 
       throw e
@@ -398,7 +397,7 @@ export class Payments implements PaymentService {
     }
   }
 
-  static getInstance(): PaymentService {
+  static getInstance(): PaymentInterface {
     this.assertRunning()
     return this.#instance
   }
@@ -407,7 +406,7 @@ export class Payments implements PaymentService {
 /*
  * Payment Service public Interface
  */
-export interface PaymentService {
+export interface PaymentInterface {
   listSubscriptions(
     userId: string,
     only?: SubscriptionStatus[],
