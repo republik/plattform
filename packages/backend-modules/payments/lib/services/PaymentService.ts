@@ -14,6 +14,14 @@ export class PaymentService {
     return sub ? sub : null
   }
 
+  async updateSubscription(
+    company: Company,
+    id: string,
+    opts: Stripe.SubscriptionUpdateParams,
+  ) {
+    return this.#stripeAdapters[company].subscriptions.update(id, opts)
+  }
+
   async getPromotion(
     company: Company,
     promoCode: string,

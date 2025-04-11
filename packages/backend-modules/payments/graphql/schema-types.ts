@@ -192,12 +192,4 @@ input CheckoutSessionOptions {
   returnURL: String
 }
 
-input CancelSubscriptionOptions {
-  feedback: String
-}
-
-input CancelSubscription {
-  subscriptionId: ID!
-  options: CancelSubscriptionOptions
-}
 `

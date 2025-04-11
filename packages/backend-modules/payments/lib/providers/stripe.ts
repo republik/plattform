@@ -133,6 +133,9 @@ export class StripeProvider implements PaymentProviderActions {
       customer: customerId,
       return_url: opts.returnUrl,
       locale: opts.locale,
+      flow_data: {
+        type: 'payment_method_update',
+      },
     }
 
     const sess = await this.#stripe.billingPortal.sessions.create(args)

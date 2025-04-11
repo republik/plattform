@@ -22,7 +22,7 @@ type mutations {
     complimentaryItems: [ComplimentaryItemOrder]
     options: CheckoutSessionOptions
   ): CheckoutSession
-  cancelMagazineSubscription(args: CancelSubscription): Boolean
+  cancelMagazineSubscription(subscriptionId: String!, cancelimmediately: Boolean, feedback: String): Boolean
   createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
 }
 `
