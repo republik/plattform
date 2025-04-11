@@ -12,7 +12,10 @@ export type Order = {
   updatedAt: Date
 }
 
-export type SubscriptionType = 'YEARLY_SUBSCRIPTION' | 'MONTHLY_SUBSCRIPTION'
+export type SubscriptionType =
+  | 'YEARLY_SUBSCRIPTION'
+  | 'BENEFACTOR_SUBSCRIPTION'
+  | 'MONTHLY_SUBSCRIPTION'
 
 export type SubscriptionStatus =
   | 'trialing'
