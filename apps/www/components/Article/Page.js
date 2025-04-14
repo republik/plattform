@@ -51,7 +51,6 @@ import { reportError } from 'lib/errors/reportError'
 import NewsletterTitleBlock from './components/NewsletterTitleBlock'
 import PublikatorLinkBlock from './components/PublikatorLinkBlock'
 import useSchema from './useSchema'
-import { useUserAgent } from 'lib/context/UserAgentContext'
 import PrepubNotice from './components/PrepubNotice'
 import Paywall from '@app/components/paynotes/paywall'
 import Regwall from '@app/components/paynotes/regwall'
@@ -76,7 +75,6 @@ const ArticlePage = ({
   const { share, extract, showAll } = router.query
 
   const { me, meLoading, hasAccess, isEditor } = useMe()
-  const { isSearchBot } = useUserAgent()
   const paynoteKind = usePaynoteKind()
 
   const { isAudioQueueAvailable } = useAudioQueue()
@@ -390,8 +388,7 @@ const ArticlePage = ({
           const showPodcastButtons = !!podcast && meta.template !== 'article'
 
           const hasPaywall =
-            (paynoteKind === 'PAYWALL' || paynoteKind === 'REGWALL') &&
-            !isSearchBot
+            paynoteKind === 'PAYWALL' || paynoteKind === 'REGWALL'
 
           return (
             <>
