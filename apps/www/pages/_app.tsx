@@ -7,7 +7,7 @@ import { ColorContextProvider, RootColorVariables } from '@project-r/styleguide'
 import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
 import Head from 'next/head'
 
-import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
+import { PaynoteOverlay } from '@app/components/paynotes/paynote-overlay/paynote-overlay'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { OPEN_ACCESS } from 'lib/constants'

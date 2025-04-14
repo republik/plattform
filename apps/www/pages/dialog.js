@@ -32,7 +32,7 @@ import Meta from '../components/Frame/Meta'
 import { getFocusUrl } from '../components/Discussion/shared/CommentLink'
 import StatusError from '../components/StatusError'
 import { IconDiscussion } from '@republik/icons'
-import { DialogPaynote } from '@app/components/paynotes-in-trial/dialog'
+import { DialogPaynote } from '@app/components/paynotes/paynotes-in-trial/dialog'
 
 const styles = {
   container: css({

@@ -4,8 +4,8 @@ import { css } from '@republik/theme/css'
 
 import { useTranslation } from 'lib/withT'
 
-import { Button } from '../ui/button'
-import { PaynoteSection } from '../ui/containers'
+import { Button } from '../../ui/button'
+import { PaynoteSection } from '../../ui/containers'
 
 const Offers = () => {
   const trackEvent = useTrackEvent()

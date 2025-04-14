@@ -1,6 +1,6 @@
 import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
 
-import { PaynoteContainer } from '../ui/containers'
+import { PaynoteContainer } from '../../ui/containers'
 
 import { Offers } from './offers'
 

@@ -5,8 +5,8 @@ import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
 
-import { RadioOption } from '../ui/form'
-import { Button } from '../ui/button'
+import { RadioOption } from '../../ui/form'
+import { Button } from '../../ui/button'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
 

@@ -5,8 +5,8 @@ import { Fragment, useEffect, useState } from 'react'
 
 import * as Dialog from '@radix-ui/react-dialog'
 
-import { Offers } from '@app/components/paynote-overlay/paynote-offers'
-import { usePaynotes } from '@app/components/paynote-overlay/use-paynotes'
+import { Offers } from '@app/components/paynotes/paynote-overlay/paynote-offers'
+import { usePaynotes } from '@app/components/paynotes/paynote-overlay/use-paynotes'
 import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
 import {
   EventTrackingContext,

@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import { Offers } from '@app/components/paynote-overlay/paynote-offers'
+import { Offers } from '@app/components/paynotes/paynote-overlay/paynote-offers'
 
 import {
   TeaserFrontTileRow,

@@ -6,7 +6,7 @@ import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
 
 import { useTranslation } from 'lib/withT'
 
-import { Button } from '../ui/button'
+import { Button } from '../../ui/button'
 
 // TODO: embed in dialog
 export function DialogPaynote() {

@@ -7,7 +7,7 @@ import { useInNativeApp } from '../../lib/withInNativeApp'
 import { useTranslation } from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
 
-import { Offers } from '@app/components/paynote-overlay/paynote-offers'
+import { Offers } from '@app/components/paynotes/paynote-overlay/paynote-offers'
 import { fontStyles, useColorContext } from '@project-r/styleguide'
 import SignOut from '../Auth/SignOut'
 

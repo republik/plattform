@@ -13,11 +13,11 @@ import {
 
 import { useTranslation } from 'lib/withT'
 
-import { PaynoteSection } from '../ui/containers'
+import { PaynoteSection } from '../../ui/containers'
 
-import { Button } from '../ui/button'
-import { ArrowLink } from '../ui/links'
-import { Spinner } from '../ui/spinner'
+import { Button } from '../../ui/button'
+import { ArrowLink } from '../../ui/links'
+import { Spinner } from '../../ui/spinner'
 
 const SURVEY_SLUG = 'paywall'
 

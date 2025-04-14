@@ -53,9 +53,9 @@ import PublikatorLinkBlock from './components/PublikatorLinkBlock'
 import useSchema from './useSchema'
 import { useUserAgent } from 'lib/context/UserAgentContext'
 import PrepubNotice from './components/PrepubNotice'
-import Paywall from '@app/components/paywall'
-import Regwall from '@app/components/regwall'
-import { BannerPaynote } from '@app/components/paynotes-in-trial/banner'
+import Paywall from '@app/components/paynotes/paywall'
+import Regwall from '@app/components/paynotes/regwall'
+import { BannerPaynote } from '@app/components/paynotes/paynotes-in-trial/banner'
 import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
 
 const EmptyComponent = ({ children }) => children

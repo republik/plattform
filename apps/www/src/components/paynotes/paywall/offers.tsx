@@ -5,10 +5,10 @@ import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 
 import { css } from '@republik/theme/css'
 
-import { Button } from '../ui/button'
-import { RadioOption } from '../ui/form'
-import { ArrowLink } from '../ui/links'
-import { PaynoteSection } from '../ui/containers'
+import { Button } from '../../ui/button'
+import { RadioOption } from '../../ui/form'
+import { ArrowLink } from '../../ui/links'
+import { PaynoteSection } from '../../ui/containers'
 
 import { ExitSurvey, OpenSurveyButton } from './exit-survey'
 import { useTranslation } from 'lib/withT'

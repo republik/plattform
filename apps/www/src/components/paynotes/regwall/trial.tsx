@@ -6,10 +6,10 @@ import { css } from '@republik/theme/css'
 
 import { CDN_FRONTEND_BASE_URL } from 'lib/constants'
 
-import { PaynoteSection } from '../ui/containers'
-import { Button } from '../ui/button'
+import { PaynoteSection } from '../../ui/containers'
+import { Button } from '../../ui/button'
 
-import TrialForm from '../auth/trial'
+import TrialForm from '../../auth/trial'
 
 import Login from './login'
 import { useTranslation } from 'lib/withT'
