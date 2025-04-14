@@ -71,10 +71,11 @@ css.global(`:root [${CLIMATELAB_ONLY_ITEM_ATTRIBUTE}="true"]`, {
 export type MeObjectType = MeQuery['me']
 
 export type TrialStatusType =
-  | 'trialEligible'
-  | 'trialGroupA'
-  | 'trialGroupB'
-  | 'notTrialEligible'
+  | 'MEMBER'
+  | 'TRIAL_ELIGIBLE'
+  | 'TRIAL_GROUP_A'
+  | 'TRIAL_GROUP_B'
+  | 'NOT_TRIAL_ELIGIBLE'
 
 type MeContextValues = {
   me?: MeObjectType
@@ -90,16 +91,16 @@ type MeContextValues = {
 
 const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
   // anonymous user: de facto eligible for trial
-  if (!me) return 'trialEligible'
+  if (!me) return 'TRIAL_ELIGIBLE'
 
   // has membership: not relevant for trial
-  if (me.activeMembership || me.activeMagazineSubscription) return
+  if (me.activeMembership || me.activeMagazineSubscription) return 'MEMBER'
 
   // logged-in user, hasn't done a "regwall" trial yet: eligible for trial
   const trialGrant = me?.accessGrants?.find((g) => g.id === REGWALL_CAMPAIGN)
-  if (!trialGrant) return 'trialEligible'
+  if (!trialGrant) return 'TRIAL_ELIGIBLE'
   // logged-in user, has already done a "regwall" trial: not eligible for trial
-  else if (trialGrant.status !== 'gültig') return 'notTrialEligible'
+  else if (trialGrant.status !== 'gültig') return 'NOT_TRIAL_ELIGIBLE'
 
   // In trial user:
   // We use the first character of the user id to assign a trial group.
@@ -107,8 +108,8 @@ const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
   // [0-7] -> group A, [8-f] -> group B
   const firstChar = me.id[0]
   return ['0', '1', '2', '3', '4', '5', '6', '7'].includes(firstChar)
-    ? 'trialGroupA' // in trial user, AB-test group A
-    : 'trialGroupB' // in trial user, AB-test group B
+    ? 'TRIAL_GROUP_A' // in trial user, AB-test group A
+    : 'TRIAL_GROUP_B' // in trial user, AB-test group B
 }
 
 const MeContext = createContext<MeContextValues>({} as MeContextValues)

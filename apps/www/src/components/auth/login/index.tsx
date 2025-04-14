@@ -3,7 +3,6 @@ import { type ReactNode, useState } from 'react'
 
 import { ApolloError, useMutation } from '@apollo/client'
 
-import { css } from '@republik/theme/css'
 import { vstack } from '@republik/theme/patterns'
 
 import {
