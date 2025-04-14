@@ -10,6 +10,11 @@ extend type User {
   List of granted memberships by User
   """
   accessCampaigns(withPast: Boolean): [AccessCampaign!]
+
+  """
+  User is eligible for regwall-trial
+  """
+  regwallTrialEligible: Boolean
 }
 
 """

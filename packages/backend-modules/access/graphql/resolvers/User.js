@@ -41,4 +41,11 @@ module.exports = {
 
     return campaigns.map((campaign) => ({ ...campaign, _user: user }))
   },
+  regwallTrialEligible: async (user, args, { user: me, pgdb }) => {
+    if (!Roles.userIsMeOrInRoles(user, me, PRIVILEDGED_ROLES)) {
+      return null
+    }
+    const trialStatus = await grantsLib.regwallTrialStatus(user, {pgdb})
+    return !trialStatus
+  },
 }
