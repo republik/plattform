@@ -22,6 +22,7 @@ enum MagazineSubscriptionStatus {
 enum MagazineSubscriptionType {
   YEARLY_SUBSCRIPTION
   MONTHLY_SUBSCRIPTION
+  BENEFACTOR_SUBSCRIPTION
 }
 
 enum CompanyName {
