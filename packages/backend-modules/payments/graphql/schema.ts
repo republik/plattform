@@ -23,6 +23,12 @@ type mutations {
     options: CheckoutSessionOptions
   ): CheckoutSession
   cancelMagazineSubscription(subscriptionId: String!, cancelimmediately: Boolean, feedback: String): Boolean
+  reactivateMagazineSubscription(subscriptionId: String!): Boolean
+  updateMagazineSubscriptionDonation(
+    subscriptionId: String!
+    selectedDonation: ID
+    customDonation: CustomDonation
+  ): Boolean
   createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
 }
 `

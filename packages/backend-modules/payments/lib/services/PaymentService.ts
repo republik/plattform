@@ -22,6 +22,38 @@ export class PaymentService {
     return this.#stripeAdapters[company].subscriptions.update(id, opts)
   }
 
+  async listSubscriptionItems(company: Company, id: string) {
+    return (
+      await this.#stripeAdapters[company].subscriptionItems.list({
+        subscription: id,
+      })
+    ).data
+  }
+
+  async createSubscriptionItem(
+    company: Company,
+    params: Stripe.SubscriptionItemCreateParams,
+  ) {
+    return this.#stripeAdapters[company].subscriptionItems.create(params)
+  }
+
+  async updateSubscriptionItem(
+    company: Company,
+    itemId: string,
+    params: Stripe.SubscriptionItemUpdateParams,
+  ) {
+    return this.#stripeAdapters[company].subscriptionItems.update(
+      itemId,
+      params,
+    )
+  }
+
+  async deleteSubscriptionItem(company: Company, itemId: string) {
+    return this.#stripeAdapters[company].subscriptionItems.del(itemId, {
+      proration_behavior: 'none',
+    })
+  }
+
   async getPromotion(
     company: Company,
     promoCode: string,
