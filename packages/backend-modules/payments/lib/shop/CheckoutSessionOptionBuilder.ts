@@ -185,6 +185,17 @@ export class CheckoutSessionBuilder {
   async resolveDiscount(): Promise<DiscountOption | null> {
     const { promoCode, selectedDiscount } = this.optionalSessionVars
 
+    if (this.offer.fixedDiscount) {
+      const promotion = await this.paymentService.getPromotion(
+        this.offer.company,
+        this.offer.fixedDiscount,
+      )
+
+      if (promotion) {
+        return { type: 'DISCOUNT', value: couponToDiscount(promotion.coupon) }
+      }
+    }
+
     if (selectedDiscount) {
       return selectedDiscount
     }
@@ -196,15 +207,6 @@ export class CheckoutSessionBuilder {
       )
       if (promotion)
         return { type: 'PROMO', value: promotionToDiscount(promotion) }
-    }
-
-    if (this.offer.fixedDiscount) {
-      const promotion = await this.paymentService.getPromotion(
-        this.offer.company,
-        this.offer.fixedDiscount,
-      )
-      if (promotion)
-        return { type: 'DISCOUNT', value: couponToDiscount(promotion.coupon) }
     }
 
     return null

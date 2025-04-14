@@ -70,14 +70,24 @@ export class OfferBuilder {
   private async resolveDiscount(
     offer: Offer,
   ): Promise<APIDiscountResult | null> {
-    if (!this.#promoCode) return null
-    if (!offer.allowPromotions) return null
+    if (offer.fixedDiscount) {
+      const promotion = await this.#paymentService.getPromotion(
+        offer.company,
+        offer.fixedDiscount,
+      )
 
-    const promotion = await this.#paymentService.getPromotion(
-      offer.company,
-      this.#promoCode,
-    )
-    return promotion ? promotionToDiscount(promotion) : null
+      return promotion ? promotionToDiscount(promotion) : null
+    }
+
+    if (this.#promoCode && offer.allowPromotions) {
+      const promotion = await this.#paymentService.getPromotion(
+        offer.company,
+        this.#promoCode,
+      )
+      return promotion ? promotionToDiscount(promotion) : null
+    }
+
+    return null
   }
 
   private formatPrice(price: Stripe.Price) {
