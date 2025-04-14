@@ -93,8 +93,8 @@ const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
   // anonymous user: de facto eligible for trial
   if (!me) return 'TRIAL_ELIGIBLE'
 
-  // has membership: not relevant for trial
-  if (me.activeMembership || me.activeMagazineSubscription) return 'MEMBER'
+  // has membership or active trial/Abo teilen/etc: not relevant for trial
+  if (me.activeMembership || me.activeMagazineSubscription || me.roles?.includes('member'))  return 'MEMBER'
 
   // logged-in user, hasn't done a "regwall" trial yet: eligible for trial
   if (me.regwallTrialEligible) return 'TRIAL_ELIGIBLE'
