@@ -90,6 +90,7 @@ type MeContextValues = {
 }
 
 const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
+  console.log(me)
   // anonymous user: de facto eligible for trial
   if (!me) return 'TRIAL_ELIGIBLE'
 

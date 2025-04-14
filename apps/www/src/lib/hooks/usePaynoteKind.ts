@@ -75,6 +75,8 @@ export const usePaynoteKind = (): PaynoteKindType => {
     }
   }, [])
 
+  console.log({ trialStatus, pathname, template })
+
   if (meLoading) return
 
   // Active membership: no paynote
