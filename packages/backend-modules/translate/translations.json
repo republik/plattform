@@ -1357,6 +1357,10 @@
       "value": "Ihre Reise ist beendet"
     },
     {
+      "key": "api/access/email/recipient/expired_regwall_trial/subject",
+      "value": "Gastzugang deaktiviert"
+    },
+    {
       "key": "api/access/email/recipient/followup/subject",
       "value": "Zeit für eine Entscheidung"
     },
