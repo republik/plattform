@@ -16,8 +16,12 @@ export interface TrialFormProps {
 const TrialForm = (props: TrialFormProps) => {
   const { me } = useMe()
 
-  // return me ? <RequestTrial /> : <RegisterForTrial />
-  return (
+  return me ? (
+    <RequestTrial
+      renderBefore={props.renderBefore}
+      renderAfter={props.renderAfter}
+    />
+  ) : (
     <RegisterForTrial
       renderBefore={props.renderBefore}
       renderAfter={props.renderAfter}

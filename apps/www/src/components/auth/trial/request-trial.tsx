@@ -26,34 +26,32 @@ const RequestTrial = (props: TrialFormProps) => {
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<ApolloError | undefined>()
 
-  const requestTrialAccess = async (e: React.FormEvent<HTMLFormElement>) => {
+  const requestTrialAccess = (e: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault()
 
     setPending(true)
 
-    const autorizedRes = await gql.mutate({
-      mutation: RequestAccessDocument,
-      variables: {
-        campaignId: REGWALL_CAMPAIGN,
-        payload: getConversionPayload(query),
-      },
-    })
-
-    if (autorizedRes.errors && autorizedRes.errors.length > 0) {
-      setError(new ApolloError({ graphQLErrors: autorizedRes.errors }))
-      setPending(false)
-      return
-    }
-
-    if (autorizedRes.data?.requestAccess.id) {
-      reloadPage()
-    }
+    gql
+      .mutate({
+        mutation: RequestAccessDocument,
+        variables: {
+          campaignId: REGWALL_CAMPAIGN,
+          payload: getConversionPayload(query),
+        },
+      })
+      .then(reloadPage)
+      .catch((err) => {
+        setError(err)
+        setPending(false)
+      })
   }
 
   return (
     <form action='POST' onSubmit={requestTrialAccess}>
+      {props.renderBefore}
       {error && <ErrorMessage error={error} />}
       <Submit pending={pending}>{t('auth/trial/request')}</Submit>
+      {props.renderAfter}
     </form>
   )
 }

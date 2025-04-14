@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useId, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
 
 import { ApolloError, useApolloClient } from '@apollo/client'
 
@@ -9,22 +10,29 @@ import { css } from '@republik/theme/css'
 
 import {
   AuthorizeSessionDocument,
+  RequestAccessDocument,
   SignInTokenType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
+
+import { useTranslation } from 'lib/withT'
+import { REGWALL_CAMPAIGN } from 'lib/constants'
+import { getConversionPayload } from 'lib/utils/conversion-payload'
 
 import { Spinner } from '../../ui/spinner'
 
 import { CodeInput } from './code-input'
 import { ErrorMessage } from './error-message'
 import { reloadPage } from './utils'
-import { useTranslation } from 'lib/withT'
 
 export interface CodeFormProps {
   email: string
+  context?: 'trial'
 }
 
-export function CodeForm({ email }: CodeFormProps) {
+export function CodeForm({ email, context }: CodeFormProps) {
   const codeId = useId()
+  const router = useRouter()
+  const { query } = router
   const formRef = useRef<HTMLFormElement>(null)
   const [error, setError] = useState<ApolloError | undefined>()
   const [pending, setPending] = useState(false)
@@ -37,6 +45,31 @@ export function CodeForm({ email }: CodeFormProps) {
       formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
     }
   }, [])
+
+  const handleErr = (err) => {
+    setError(err)
+    setPending(false)
+    formRef.current?.reset()
+  }
+
+  const registerForTrial = () =>
+    gql
+      .mutate({
+        mutation: RequestAccessDocument,
+        variables: {
+          campaignId: REGWALL_CAMPAIGN,
+          payload: getConversionPayload(query),
+        },
+      })
+      .then(reloadPage)
+      .catch(handleErr)
+
+  const handleLoginSuccess = () => {
+    if (context === 'trial') {
+      registerForTrial()
+    }
+    reloadPage()
+  }
 
   const submitForm = (formData: FormData) => {
     const email = formData.get('email') as string
@@ -53,14 +86,8 @@ export function CodeForm({ email }: CodeFormProps) {
           tokens: [token],
         },
       })
-      .then(reloadPage)
-      .catch((err) => {
-        console.log(err)
-        setError(err)
-        setPending(false)
-        formData.set('code', '')
-        formRef.current?.reset()
-      })
+      .then(handleLoginSuccess)
+      .catch(handleErr)
   }
 
   const submitCode = async (e: React.FormEvent<HTMLFormElement>) => {

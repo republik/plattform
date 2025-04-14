@@ -47,7 +47,7 @@ export function LoginForm(props: LoginFormProps) {
   const [pending, setPending] = useState(false)
 
   if (signInRes.data?.signIn && email) {
-    return <CodeForm email={email} />
+    return <CodeForm email={email} context='trial' />
   }
 
   const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
