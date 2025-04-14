@@ -1398,7 +1398,7 @@
     },
     {
       "key": "api/access/constraint/limitClaims/error",
-      "value": "Sie können keinen weiteren Zugriff einlösen."
+      "value": "Es sieht so aus, als hätten Sie bereits eine kostenlose Gastwoche durchlaufen. Mit einem Abo lesen Sie weiter."
     },
     {
       "key": "api/access/constraint/limitSlots/error",
