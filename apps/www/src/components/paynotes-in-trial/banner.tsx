@@ -5,9 +5,16 @@ import { IconArrowRight } from '@republik/icons'
 import { css } from '@republik/theme/css'
 
 import { useTranslation } from 'lib/withT'
+import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
 
+// TODO: embed in article
 export function BannerPaynote() {
   const { t } = useTranslation()
+  const paynoteKind = usePaynoteKind()
+
+  if (paynoteKind !== 'BANNER') {
+    return null
+  }
 
   return (
     <div

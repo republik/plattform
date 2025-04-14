@@ -56,6 +56,7 @@ import PrepubNotice from './components/PrepubNotice'
 import Paywall from '@app/components/paywall'
 import Regwall from '@app/components/regwall'
 import { BannerPaynote } from '@app/components/paynotes-in-trial/banner'
+import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
 
 const EmptyComponent = ({ children }) => children
 
@@ -76,6 +77,7 @@ const ArticlePage = ({
 
   const { me, meLoading, hasAccess, isEditor } = useMe()
   const { isSearchBot } = useUserAgent()
+  const paynoteKind = usePaynoteKind()
 
   const { isAudioQueueAvailable } = useAudioQueue()
 
@@ -387,9 +389,9 @@ const ArticlePage = ({
 
           const showPodcastButtons = !!podcast && meta.template !== 'article'
 
-          // TODO: include metadata opt-out check and include not in-trial
-          const truncateContent =
-            meta.template === 'article' && !hasAccess && !isSearchBot
+          const hasPaywall =
+            (paynoteKind === 'PAYWALL' || paynoteKind === 'REGWALL') &&
+            !isSearchBot
 
           return (
             <>
@@ -474,18 +476,16 @@ const ArticlePage = ({
                         </div>
                       )}
                       <div className='regwall'>
-                        {truncateContent ? (
-                          <>
-                            <div {...styles.regwallFade}>
-                              {renderSchema(splitContent.mainTruncated)}
-                            </div>
-                            {/* TODO: add condition hasAcess  */}
-                            <Paywall />
-                          </>
+                        {hasPaywall ? (
+                          <div {...styles.regwallFade}>
+                            {renderSchema(splitContent.mainTruncated)}
+                          </div>
                         ) : (
                           <>{renderSchema(splitContent.main)}</>
                         )}
                       </div>
+                      <Regwall />
+                      <Paywall />
                     </article>
                     <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
                   </ProgressComponent>

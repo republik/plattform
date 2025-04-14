@@ -1,10 +1,15 @@
-import { css } from '@republik/theme/css'
+import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
+
+import { PaynoteContainer } from '../ui/containers'
 
 import Trial from './trial'
 import Offers from './offers'
-import { PaynoteContainer } from '../ui/containers'
 
 const Regwall = () => {
+  const paynoteKind = usePaynoteKind()
+
+  if (paynoteKind !== 'REGWALL') return null
+
   return (
     <PaynoteContainer>
       <Trial />

@@ -1,16 +1,23 @@
+import { css } from '@republik/theme/css'
+
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
-
-import { css } from '@republik/theme/css'
+import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
 
 import { useTranslation } from 'lib/withT'
 
 import { Button } from '../ui/button'
 
+// TODO: embed in dialog
 export function DialogPaynote() {
   const { t } = useTranslation()
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
+  const paynoteKind = usePaynoteKind()
+
+  if (paynoteKind !== 'DIALOG') {
+    return null
+  }
 
   return (
     <div

@@ -4,10 +4,10 @@ import { css } from '@republik/theme/css'
 import { Fragment, useEffect, useState } from 'react'
 
 import * as Dialog from '@radix-ui/react-dialog'
-import { useMe } from 'lib/context/MeContext'
 
 import { Offers } from '@app/components/paynote-overlay/paynote-offers'
 import { usePaynotes } from '@app/components/paynote-overlay/use-paynotes'
+import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
 import {
   EventTrackingContext,
   useTrackEvent,
@@ -17,7 +17,7 @@ import { IconExpandMore } from '@republik/icons'
 import { useMotionValueEvent, useScroll } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { StructuredText } from 'react-datocms'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
@@ -42,12 +42,11 @@ function MiniPaynoteMessage({ message }: { message: string }) {
   )
 }
 
-function PaynoteOverlayDialog() {
+function PaynoteOverlayDialog({ isExpanded = false }) {
   const [expanded, setExpanded] = useState<boolean>(false)
   const [scrollThresholdReached, setScrollThresholdReached] =
     useState<boolean>(false)
   const [variant, setVariant] = useState<ContentVariant>('offers-only')
-  const { hasActiveMembership, meLoading } = useMe()
   const { isIOSApp } = usePlatformInformation()
   const paynotes = usePaynotes()
   const trackEvent = useTrackEvent()
@@ -61,19 +60,12 @@ function PaynoteOverlayDialog() {
     }
   })
 
-  // replace with:
-  //
-  // const paynoteType = usePaynoteType()
-  // const showPaynote = paynoteType === 'paynoteOverlayClosed' || paynoteType === 'paynoteOverlayOpen'
-  // setExpanded()
-  const ready = paynotes && !meLoading && !hasActiveMembership && !isIOSApp
+  // TODO: iOS?
+  const ready = paynotes && !isIOSApp
 
   useEffect(() => {
     if (ready && scrollThresholdReached) {
-      const isArticle =
-        document.querySelector('[data-template="article"]') != null
-
-      if (isArticle) {
+      if (isExpanded) {
         setVariant('paynote')
         setExpanded(true)
         trackEvent({
@@ -82,7 +74,7 @@ function PaynoteOverlayDialog() {
         })
       }
     }
-  }, [ready, scrollThresholdReached, trackEvent, paynotes])
+  }, [ready, isExpanded, scrollThresholdReached, trackEvent, paynotes])
 
   if (!ready) {
     return null
@@ -348,31 +340,17 @@ function PaynoteOverlayDialog() {
   )
 }
 
-function isPaynoteOverlayHidden(
-  pathname: string,
-  searchParams: URLSearchParams,
-): boolean {
-  return (
-    (pathname === '/angebote' && searchParams.has('package')) ||
-    pathname === '/mitteilung' ||
-    pathname === '/anmelden' ||
-    pathname.startsWith('/konto') ||
-    pathname === '/meine-republik' ||
-    pathname === '/community' ||
-    searchParams.has('extract') ||
-    searchParams.has('extractId')
-  )
-}
-
 export function PaynoteOverlay() {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const paynoteKind = usePaynoteKind()
 
-  const isHidden = isPaynoteOverlayHidden(pathname, searchParams)
+  if (paynoteKind !== 'OVERLAY_OPEN' && paynoteKind !== 'OVERLAY_CLOSED')
+    return null
 
-  return isHidden ? null : (
+  const isExpanded = paynoteKind === 'OVERLAY_OPEN'
+
+  return (
     <EventTrackingContext category='PaynoteOverlay'>
-      <PaynoteOverlayDialog key={pathname} />
+      <PaynoteOverlayDialog isExpanded={isExpanded} />
     </EventTrackingContext>
   )
 }
