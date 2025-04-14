@@ -1358,7 +1358,7 @@
     },
     {
       "key": "api/access/email/recipient/expired_regwall_trial/subject",
-      "value": "Ihre Reise ist beendet"
+      "value": "Gastzugang deaktiviert"
     },
     {
       "key": "api/access/email/recipient/followup/subject",
