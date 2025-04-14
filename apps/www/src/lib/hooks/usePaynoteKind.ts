@@ -4,6 +4,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 
 import { useMe } from 'lib/context/MeContext'
 import { useUserAgent } from 'lib/context/UserAgentContext'
+import { is } from 'useragent'
 
 type PaynoteKindType =
   | null
@@ -65,61 +66,61 @@ export const usePaynoteKind = (): PaynoteKindType => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { isSearchBot } = useUserAgent()
-  const [template, setTemplate] = useState<TemplateType | null>()
+  const [paynoteKind, setPaynoteKind] = useState<PaynoteKindType>(null)
 
   useEffect(() => {
+    let template: TemplateType = null
     if (document.querySelector('[data-template="article"]') != null) {
-      setTemplate('ARTICLE')
+      template = 'ARTICLE'
     } else if (document.querySelector('[data-template="discussion"]') != null) {
-      setTemplate('DISCUSSION')
+      template = 'DISCUSSION'
     }
-  }, [])
 
-  console.log({ trialStatus, pathname, template })
+    // Active membership: no paynote
+    if (trialStatus === 'MEMBER') return setPaynoteKind(null)
 
-  if (meLoading) return
+    // ANYTHING THAT'S NOT AN ARTICLE:
+    //
+    // "special" pages: no paynote
+    if (isPaynoteOverlayHidden(pathname, searchParams))
+      return setPaynoteKind(null)
 
-  // Active membership: no paynote
-  if (trialStatus === 'MEMBER') return
+    // dialog page: we show a special paynote
+    if (isDialogPage(pathname, searchParams) || template === 'DISCUSSION')
+      return setPaynoteKind('DIALOG')
 
-  // ANYTHING THAT'S NOT AN ARTICLE:
-  //
-  // "special" pages: no paynote
-  if (isPaynoteOverlayHidden(pathname, searchParams)) return
+    // anything that's not an article: minimized paynote overlay
+    if (template !== 'ARTICLE') return setPaynoteKind('OVERLAY_CLOSED')
 
-  // dialog page: we show a special paynote
-  if (isDialogPage(pathname, searchParams) || template === 'DISCUSSION')
-    return 'DIALOG'
+    // ARTICLES:
+    //
+    // search bots: no paywall (we want texts to be indexed)
+    // but we show the overlay (in case someone is
+    // spoofing the user agent to read our content, we still
+    // want to show those clever fish the paywall)
+    if (isSearchBot) return setPaynoteKind('OVERLAY_OPEN')
 
-  // anything that's not an article: minimized paynote overlay
-  if (template !== 'ARTICLE') return 'OVERLAY_CLOSED'
+    // one trial group (group A) is shown a discrete banner
+    if (trialStatus === 'TRIAL_GROUP_A') return setPaynoteKind('BANNER')
 
-  // ARTICLES:
-  //
-  // search bots: no paywall (we want texts to be indexed)
-  // but we show the overlay (in case someone is
-  // spoofing the user agent to read our content, we still
-  // want to show those clever fish the paywall)
-  if (isSearchBot) return 'OVERLAY_OPEN'
+    // the other group (group B) is shown the more prominent overlay
+    if (trialStatus === 'TRIAL_GROUP_B') return setPaynoteKind('OVERLAY_OPEN')
 
-  // one trial group (group A) is shown a discrete banner
-  if (trialStatus === 'TRIAL_GROUP_A') return 'BANNER'
+    // TODO: add exception for marked articles
+    // if (isExcludedArticle()) return 'OVERLAY_OPEN'
 
-  // the other group (group B) is shown the more prominent overlay
-  if (trialStatus === 'TRIAL_GROUP_B') return 'OVERLAY_OPEN'
+    const { hasAccess } = updateArticleReads()
+    if (hasAccess) return setPaynoteKind('OVERLAY_OPEN')
 
-  // TODO: add exception for marked articles
-  // if (isExcludedArticle()) return 'OVERLAY_OPEN'
+    // trial expired: show paywall
+    if (trialStatus === 'NOT_TRIAL_ELIGIBLE') return setPaynoteKind('PAYWALL')
 
-  const { hasAccess } = updateArticleReads()
-  if (hasAccess) return 'OVERLAY_OPEN'
+    // trial eligible users see the regwall
+    if (trialStatus === 'TRIAL_ELIGIBLE') return setPaynoteKind('REGWALL')
 
-  // trial expired: show paywall
-  if (trialStatus === 'NOT_TRIAL_ELIGIBLE') return 'PAYWALL'
+    // catch-all: do nothing
+    return setPaynoteKind(null)
+  }, [meLoading, trialStatus, pathname, searchParams, isSearchBot, paynoteKind])
 
-  // trial eligible users see the regwall
-  if (trialStatus === 'TRIAL_ELIGIBLE') return 'REGWALL'
-
-  // catch-all: do nothing
-  return
+  return paynoteKind
 }
