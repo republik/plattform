@@ -38,30 +38,29 @@ export function CodeForm({ email }: CodeFormProps) {
     }
   }, [])
 
-  const submitForm = async (formData: FormData) => {
+  const submitForm = (formData: FormData) => {
     const email = formData.get('email') as string
     const code = (formData.get('code') as string)?.replace(/[^0-9]/g, '')
     const token = { type: SignInTokenType.EmailCode, payload: code }
 
     setPending(true)
 
-    const autorizedRes = await gql.mutate({
-      mutation: AuthorizeSessionDocument,
-      variables: {
-        email,
-        tokens: [token],
-      },
-    })
-
-    if (autorizedRes.errors && autorizedRes.errors.length > 0) {
-      setError(new ApolloError({ graphQLErrors: autorizedRes.errors }))
-      setPending(false)
-      return
-    }
-
-    if (autorizedRes.data?.authorizeSession) {
-      reloadPage()
-    }
+    gql
+      .mutate({
+        mutation: AuthorizeSessionDocument,
+        variables: {
+          email,
+          tokens: [token],
+        },
+      })
+      .then(reloadPage)
+      .catch((err) => {
+        console.log(err)
+        setError(err)
+        setPending(false)
+        formData.set('code', '')
+        formRef.current?.reset()
+      })
   }
 
   const submitCode = async (e: React.FormEvent<HTMLFormElement>) => {

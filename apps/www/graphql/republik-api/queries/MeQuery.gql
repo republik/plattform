@@ -13,6 +13,7 @@ query Me {
     isListed
     hasPublicProfile
     discussionNotificationChannels
+    regwallTrialStatus
     accessCampaigns {
       id
     }

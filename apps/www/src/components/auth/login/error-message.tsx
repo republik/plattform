@@ -22,12 +22,12 @@ export const ErrorMessage = ({
         color: 'error',
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'flex-end',
+        alignItems: 'center',
         gap: '1',
       })}
     >
       <IconInfoOutline />
-      <p>{message || 'Error'}</p>
+      <p className={css({ textAlign: 'left' })}>{message || 'Error'}</p>
     </div>
   )
 }

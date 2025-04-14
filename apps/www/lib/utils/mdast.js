@@ -1,6 +1,6 @@
 import { mdastToString } from '@project-r/styleguide'
 
-const TRUNCATE_AFTER_CHARS = 500
+const TRUNCATE_AFTER_CHARS = 700
 
 const splitChildren = (content, start, end) => {
   return {

@@ -9,7 +9,7 @@ import {
   MeDocument,
   MeQuery,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { OPEN_ACCESS, REGWALL_CAMPAIGN } from 'lib/constants'
+import { OPEN_ACCESS } from 'lib/constants'
 
 const HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE = 'data-has-active-membership'
 const HAS_ACTIVE_MEMBERSHIP_STORAGE_KEY = 'me.hasActiveMembership'
@@ -97,7 +97,7 @@ const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
   // We use the first character of the user id to assign a trial group.
   // The character is either a number [0-9] or a letter [a-f].
   // [0-7] -> group A, [8-f] -> group B
-  if(me.regwallTrialStatus === 'Active') {
+  if (me.regwallTrialStatus === 'Active') {
     const firstChar = me.id[0]
     return ['0', '1', '2', '3', '4', '5', '6', '7'].includes(firstChar)
       ? 'TRIAL_GROUP_A' // in trial user, AB-test group A
@@ -105,11 +105,15 @@ const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
   }
 
   // has membership or active Abo teilen etc: not relevant for trial
-  if (me.activeMembership || me.activeMagazineSubscription || me.roles?.includes('member'))  return 'MEMBER'
+  if (
+    me.activeMembership ||
+    me.activeMagazineSubscription ||
+    me.roles?.includes('member')
+  )
+    return 'MEMBER'
 
   // logged-in user, hasn't done a "regwall" trial yet: eligible for trial
   if (!me.regwallTrialStatus) return 'TRIAL_ELIGIBLE'
-  
 }
 
 const MeContext = createContext<MeContextValues>({} as MeContextValues)
