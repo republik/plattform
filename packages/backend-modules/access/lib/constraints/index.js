@@ -7,6 +7,7 @@ module.exports = {
   notGrantable: require('./notGrantable'),
   notVisible: require('./notVisible'),
   recipientDenylist: require('./recipientDenylist'),
+  recipientHasNoActiveMembershipOrSubscription: require('./recipientHasNoActiveMembershipOrSubscription'),
   recipientInNoSlot: require('./recipientInNoSlot'),
   recipientIsGranter: require('./recipientIsGranter'),
   recipientNotGranter: require('./recipientNotGranter'),
