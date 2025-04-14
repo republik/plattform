@@ -93,22 +93,22 @@ const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
   // anonymous user: de facto eligible for trial
   if (!me) return 'TRIAL_ELIGIBLE'
 
-  // has membership or active trial/Abo teilen/etc: not relevant for trial
-  if (me.activeMembership || me.activeMagazineSubscription || me.roles?.includes('member'))  return 'MEMBER'
-
-  // logged-in user, hasn't done a "regwall" trial yet: eligible for trial
-  if (me.regwallTrialEligible) return 'TRIAL_ELIGIBLE'
-
   // In trial user:
   // We use the first character of the user id to assign a trial group.
   // The character is either a number [0-9] or a letter [a-f].
   // [0-7] -> group A, [8-f] -> group B
-  if (!me.regwallTrialEligible) {
+  if(me.regwallTrialStatus === 'Active') {
     const firstChar = me.id[0]
     return ['0', '1', '2', '3', '4', '5', '6', '7'].includes(firstChar)
       ? 'TRIAL_GROUP_A' // in trial user, AB-test group A
       : 'TRIAL_GROUP_B' // in trial user, AB-test group B
   }
+
+  // has membership or active Abo teilen etc: not relevant for trial
+  if (me.activeMembership || me.activeMagazineSubscription || me.roles?.includes('member'))  return 'MEMBER'
+
+  // logged-in user, hasn't done a "regwall" trial yet: eligible for trial
+  if (!me.regwallTrialStatus) return 'TRIAL_ELIGIBLE'
   
 }
 

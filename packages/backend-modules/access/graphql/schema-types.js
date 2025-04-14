@@ -14,7 +14,7 @@ extend type User {
   """
   User is eligible for regwall-trial
   """
-  regwallTrialEligible: Boolean
+  regwallTrialStatus: String
 }
 
 """
