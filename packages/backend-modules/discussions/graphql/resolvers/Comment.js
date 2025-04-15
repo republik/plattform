@@ -1,4 +1,5 @@
 const crypto = require('crypto')
+const Promise = require('bluebird')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
 const {
@@ -198,27 +199,26 @@ module.exports = {
   },
 
   displayAuthor: async (comment, args, context) => {
+    const { adminUnpublished, published, discussionId, userId } = comment
+    const { portrait } = args || {}
     const { user: me, t, loaders } = context
 
-    const user =
-      !!comment.userId && (await loaders.User.byId.load(comment.userId))
+    const commenter = !!userId && (await loaders.User.byId.load(userId))
 
-    if (
-      (!comment.published && !Roles.userIsMe(user, me)) ||
-      comment.adminUnpublished
-    ) {
+    if (adminUnpublished || (!published && !Roles.userIsMe(commenter, me))) {
       return {
         id: 'hidden',
         name: t('api/comment/hidden/displayName'),
         profilePicture: null,
         anonymity: true,
         username: null,
+        slug: null,
       }
     }
 
     const id = crypto
       .createHmac('sha256', DISPLAY_AUTHOR_SECRET)
-      .update(`${comment.discussionId}${comment.userId ? comment.userId : ''}`)
+      .update(`${discussionId}${userId || ''}`)
       .digest('hex')
 
     const anonymousComment = {
@@ -227,67 +227,51 @@ module.exports = {
       profilePicture: null,
       anonymity: true,
       username: null,
+      slug: null,
     }
 
-    if (!comment.userId) {
+    if (!commenter) {
       return anonymousComment
     }
 
-    const [discussion, commenter, commenterPreferences] = await Promise.all([
-      loaders.Discussion.byId.load(comment.discussionId),
-      loaders.User.byId.load(comment.userId),
-      loaders.Discussion.Commenter.discussionPreferences.load({
-        userId: comment.userId,
-        discussionId: comment.discussionId,
-      }),
-    ])
+    const { discussion, commenterPreferences } = await Promise.props({
+      discussion: loaders.Discussion.byId.load(discussionId),
+      commenterPreferences:
+        loaders.Discussion.Commenter.discussionPreferences.load({
+          userId,
+          discussionId,
+        }),
+    })
 
-    const credential = commenterPreferences && commenterPreferences.credential
+    const credential = commenterPreferences?.credential
+    const anonymous =
+      discussion.anonymity === 'ENFORCED' || !!commenterPreferences?.anonymous
 
-    let anonymous
-    if (discussion.anonymity === 'ENFORCED') {
-      anonymous = true
-    } else {
-      // FORBIDDEN or ALLOWED
-      if (commenterPreferences && commenterPreferences.anonymous != null) {
-        anonymous = commenterPreferences.anonymous
-      } else {
-        anonymous = false
+    if (anonymous) {
+      if (commenterPreferences?.anonymousDifferentiator !== null) {
+        anonymousComment.name = t(
+          'api/comment/anonymous/displayName/withDifferentiator',
+          { differentiator: commenterPreferences.anonymousDifferentiator },
+        )
+      }
+
+      return {
+        ...anonymousComment,
+        credential,
       }
     }
 
-    if (
-      anonymous &&
-      commenterPreferences &&
-      commenterPreferences.anonymousDifferentiator !== null
-    ) {
-      anonymousComment.name = `${t('api/comment/anonymous/displayName')} ${
-        commenterPreferences.anonymousDifferentiator
-      }`
-    }
-
-    const profilePicture = getPortrait(
-      commenter,
-      args && args.portrait,
-      context,
-    )
-    const name = getName(commenter, null, context)
     const slug = getSlug(commenter, null, context)
 
-    return anonymous
-      ? {
-          ...anonymousComment,
-          credential,
-        }
-      : {
-          id,
-          name: name || t('api/noname'),
-          profilePicture: profilePicture,
-          credential,
-          anonymity: false,
-          username: slug,
-          slug,
-        }
+    return {
+      id,
+      name: getName(commenter, null, context) || t('api/noname'),
+      profilePicture: getPortrait(commenter, portrait, context),
+      credential,
+      anonymity: false,
+      username: slug,
+      slug,
+    }
   },
 
   comments: async (comment, args, { loaders, t }) => {
