@@ -7,7 +7,7 @@ export const PaynoteContainer = ({ children }: { children: ReactNode }) => (
     className={css({
       borderTop: '2px solid',
       borderColor: 'text.black',
-      mt: '4',
+      my: '8',
     })}
   >
     {children}

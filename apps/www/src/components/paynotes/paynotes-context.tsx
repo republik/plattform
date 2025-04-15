@@ -25,6 +25,7 @@ type TemplateType =
   | 'dossie'
   | 'page'
   | 'flyer'
+  | 'seriesOverview' // technically an article, but we want to handle this differently
   | null
 
 type PaynotesContextValues = {
@@ -139,8 +140,6 @@ export const PaynotesProvider = ({ children }) => {
     // catch-all: do nothing
     return setPaynoteKind(null)
   }, [meLoading, trialStatus, pathname, searchParams, isSearchBot, template])
-
-  console.log({ template, trialStatus, paynoteKind })
 
   return (
     <PaynotesContext.Provider

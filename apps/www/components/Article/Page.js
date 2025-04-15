@@ -56,7 +56,6 @@ import Paywall from '@app/components/paynotes/paywall'
 import Regwall from '@app/components/paynotes/regwall'
 import { BannerPaynote } from '@app/components/paynotes/paynotes-in-trial/banner'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
-import { set } from 'lodash'
 
 const EmptyComponent = ({ children }) => children
 
@@ -179,12 +178,6 @@ const ArticlePage = ({
     [articleMeta, articleContent, metaJSONStringFromQuery, documentId],
   )
 
-  const template = meta?.template
-  useEffect(() => {
-    setTemplate(template)
-    return () => setTemplate(null)
-  }, [template])
-
   const { renderSchema, schema } = useSchema({
     meta,
     article,
@@ -192,6 +185,8 @@ const ArticlePage = ({
   })
 
   const hasMeta = !!meta
+  const template = meta?.template
+
   const podcast =
     hasMeta &&
     (meta.podcast || (meta.audioSource && meta.format?.meta?.podcast))
@@ -204,15 +199,13 @@ const ArticlePage = ({
   const showSeriesNav = hasMeta && !!meta.series && !isSeriesOverview
   const titleBreakout = isSeriesOverview
 
-  const { trialSignup } = routerQuery
   useEffect(() => {
-    if (trialSignup === 'success') {
-      articleRefetch()
-    }
-  }, [trialSignup, articleRefetch])
+    setTemplate(isSeriesOverview ? 'seriesOverview' : template)
+    return () => setTemplate(null)
+  }, [template, isSeriesOverview])
 
   const isEditorialNewsletter = template === 'editorialNewsletter'
-  const disableActionBar = hasPaywall || meta?.disableActionBar
+  const disableActionBar = meta?.disableActionBar
   const actionBar = article && !disableActionBar && (
     <ActionBar
       mode='articleTop'
@@ -389,7 +382,7 @@ const ArticlePage = ({
           const showSectionNav = isSection && !hideSectionNav
 
           const showBottomActionBar =
-            meta.template === 'article' ||
+            (!hasPaywall && meta.template === 'article') ||
             (isEditorialNewsletter && newsletterMeta && newsletterMeta.free)
 
           const showPodcastButtons = !!podcast && meta.template !== 'article'
@@ -482,18 +475,14 @@ const ArticlePage = ({
                             {renderSchema(splitContent.mainTruncated)}
                           </div>
                         ) : (
-                          <>
-                            {renderSchema(splitContent.main)}
-                            <ActionBarOverlay>
-                              {actionBarOverlay}
-                            </ActionBarOverlay>
-                          </>
+                          <>{renderSchema(splitContent.main)}</>
                         )}
                       </div>
                       <Regwall />
                       <Paywall />
                     </article>
                   </ProgressComponent>
+                  <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
                 </ArticleGallery>
               )}
               <div {...styles.hidePrint}>
@@ -538,7 +527,7 @@ const ArticlePage = ({
                     ActionBar={me && ActionBar}
                     Link={Link}
                     t={t}
-                    seriesDescription={false}
+                    seriesDescription={hasPaywall}
                   />
                 )}
                 {isSection && !hideFeed && (
