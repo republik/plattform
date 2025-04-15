@@ -38,7 +38,7 @@ const createFormatSchema = ({
     customMetaFields: [
       {
         label: 'Regwall ausschalten',
-        key: 'regwallOptOut',
+        key: 'isPaywallExcluded',
         ref: 'bool',
       },
       {
