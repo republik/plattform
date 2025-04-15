@@ -56,6 +56,7 @@ import Paywall from '@app/components/paynotes/paywall'
 import Regwall from '@app/components/paynotes/regwall'
 import { BannerPaynote } from '@app/components/paynotes/paynotes-in-trial/banner'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
+import { set } from 'lodash'
 
 const EmptyComponent = ({ children }) => children
 
@@ -75,7 +76,8 @@ const ArticlePage = ({
   const { share, extract, showAll } = router.query
 
   const { me, meLoading, isEditor } = useMe()
-  const { paynoteKind, setTemplate } = usePaynotes()
+  const { paynoteKind, setTemplateForPaynotes, setIsPaywallExcluded } =
+    usePaynotes()
   const hasPaywall = paynoteKind === 'PAYWALL' || paynoteKind === 'REGWALL'
 
   const { isAudioQueueAvailable } = useAudioQueue()
@@ -185,7 +187,6 @@ const ArticlePage = ({
   })
 
   const hasMeta = !!meta
-  const template = meta?.template
 
   const podcast =
     hasMeta &&
@@ -199,10 +200,17 @@ const ArticlePage = ({
   const showSeriesNav = hasMeta && !!meta.series && !isSeriesOverview
   const titleBreakout = isSeriesOverview
 
+  const template = meta?.template
+  // TODO: replace with a proper meta field
+  const isPaywallExcluded = articleContent?.meta?.isPaywallExcluded
   useEffect(() => {
-    setTemplate(isSeriesOverview ? 'seriesOverview' : template)
-    return () => setTemplate(null)
-  }, [template, isSeriesOverview])
+    setTemplateForPaynotes(isSeriesOverview ? 'seriesOverview' : template)
+    setIsPaywallExcluded(isPaywallExcluded)
+    return () => {
+      setTemplateForPaynotes(null)
+      setIsPaywallExcluded(false)
+    }
+  }, [template, isSeriesOverview, isPaywallExcluded])
 
   const isEditorialNewsletter = template === 'editorialNewsletter'
   const disableActionBar = meta?.disableActionBar

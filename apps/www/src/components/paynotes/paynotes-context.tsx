@@ -4,6 +4,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 
 import { useMe } from 'lib/context/MeContext'
 import { useUserAgent } from 'lib/context/UserAgentContext'
+import { is } from 'useragent'
 
 type PaynoteKindType =
   | null
@@ -30,7 +31,8 @@ type TemplateType =
 
 type PaynotesContextValues = {
   paynoteKind: PaynoteKindType
-  setTemplate: (template: TemplateType) => void
+  setTemplateForPaynotes: (template: TemplateType) => void
+  setIsPaywallExcluded: (isExcluded: boolean) => void
 }
 
 const PaynotesContext = createContext<PaynotesContextValues>(
@@ -67,8 +69,8 @@ function updateArticleReads(): { hasAccess: boolean } {
   }
 }
 
-// This hook combines the trial status & location
-// to decide which paynote to show.
+// This hook combines the trial status, pathname
+// and template type to decide which paynote to show.
 // Instead of having bits of logic in multiple places,
 // we centralize the logic here.
 //
@@ -90,7 +92,8 @@ export const PaynotesProvider = ({ children }) => {
   const searchParams = useSearchParams()
   const { isSearchBot } = useUserAgent()
   const [paynoteKind, setPaynoteKind] = useState<PaynoteKindType>(null)
-  const [template, setTemplate] = useState<TemplateType>(null)
+  const [template, setTemplateForPaynotes] = useState<TemplateType>(null)
+  const [isPaywallExcluded, setIsPaywallExcluded] = useState<boolean>(false)
 
   useEffect(() => {
     if (meLoading) return setPaynoteKind(null)
@@ -125,8 +128,8 @@ export const PaynotesProvider = ({ children }) => {
     // the other group (group B) is shown the more prominent overlay
     if (trialStatus === 'TRIAL_GROUP_B') return setPaynoteKind('OVERLAY_OPEN')
 
-    // TODO: add exception for marked articles
-    // if (isExcludedArticle()) return 'OVERLAY_OPEN'
+    // exception for marked articles (via metadata)
+    if (isPaywallExcluded) return setPaynoteKind('OVERLAY_OPEN')
 
     const { hasAccess } = updateArticleReads()
     if (hasAccess) return setPaynoteKind('OVERLAY_OPEN')
@@ -139,13 +142,22 @@ export const PaynotesProvider = ({ children }) => {
 
     // catch-all: do nothing
     return setPaynoteKind(null)
-  }, [meLoading, trialStatus, pathname, searchParams, isSearchBot, template])
+  }, [
+    meLoading,
+    trialStatus,
+    pathname,
+    searchParams,
+    isSearchBot,
+    template,
+    isPaywallExcluded,
+  ])
 
   return (
     <PaynotesContext.Provider
       value={{
         paynoteKind,
-        setTemplate,
+        setTemplateForPaynotes,
+        setIsPaywallExcluded,
       }}
     >
       {children}
