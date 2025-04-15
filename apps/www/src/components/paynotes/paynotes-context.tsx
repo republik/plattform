@@ -127,6 +127,9 @@ export const PaynotesProvider = ({ children }) => {
     // exception for marked articles (via metadata)
     if (isPaywallExcluded) return setPaynoteKind('OVERLAY_OPEN')
 
+    // CAVEAT: we don't ever want the "template" to be set to something wrong
+    // (eg "article") after the pathname has changed. Otherwise some weird
+    // pages (eg "/feed") might be added to the metering reads array.
     const { meteringStatus } = updateArticleMetering(pathname)
     if (meteringStatus === 'READING_GRANTED')
       return setPaynoteKind('OVERLAY_OPEN')
