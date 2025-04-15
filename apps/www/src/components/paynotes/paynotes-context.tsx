@@ -4,7 +4,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 
 import { useMe } from 'lib/context/MeContext'
 import { useUserAgent } from 'lib/context/UserAgentContext'
-import { is } from 'useragent'
+import { updateArticleMetering } from './article-metering'
 
 type PaynoteKindType =
   | null
@@ -58,17 +58,6 @@ function isPaynoteOverlayHidden(
   )
 }
 
-// Metering
-// 1. remove stale articles from reads array
-// 2. check if the user has the article in reads array
-// 3. check if the user has any avilable reads left
-// 4. add the article to the reads array
-function updateArticleReads(): { hasAccess: boolean } {
-  return {
-    hasAccess: false,
-  }
-}
-
 // This hook combines the trial status, pathname
 // and template type to decide which paynote to show.
 // Instead of having bits of logic in multiple places,
@@ -78,7 +67,6 @@ function updateArticleReads(): { hasAccess: boolean } {
 // visual overview of the paynote flow.
 //
 // TODO: add metering for TRIAL_ELIGIBLE users
-// TODO: add exception for marked articles
 function isDialogPage(
   pathname: string,
   searchParams: URLSearchParams,
@@ -103,7 +91,7 @@ export const PaynotesProvider = ({ children }) => {
 
     // ANYTHING THAT'S NOT AN ARTICLE:
     //
-    // "special" pages: no paynote
+    // special pages without any paynote
     if (isPaynoteOverlayHidden(pathname, searchParams))
       return setPaynoteKind(null)
 
@@ -111,7 +99,7 @@ export const PaynotesProvider = ({ children }) => {
     if (isDialogPage(pathname, searchParams) || template === 'discussion')
       return setPaynoteKind('DIALOG')
 
-    // anything that's not an article: minimized paynote overlay
+    // anything else that's not an article: minimized paynote overlay
     if (template !== 'article') return setPaynoteKind('OVERLAY_CLOSED')
 
     // ARTICLES:
@@ -131,8 +119,9 @@ export const PaynotesProvider = ({ children }) => {
     // exception for marked articles (via metadata)
     if (isPaywallExcluded) return setPaynoteKind('OVERLAY_OPEN')
 
-    const { hasAccess } = updateArticleReads()
-    if (hasAccess) return setPaynoteKind('OVERLAY_OPEN')
+    const { meteringStatus } = updateArticleMetering(pathname)
+    if (meteringStatus === 'READING_GRANTED')
+      return setPaynoteKind('OVERLAY_OPEN')
 
     // trial expired: show paywall
     if (trialStatus === 'NOT_TRIAL_ELIGIBLE') return setPaynoteKind('PAYWALL')
@@ -151,6 +140,8 @@ export const PaynotesProvider = ({ children }) => {
     template,
     isPaywallExcluded,
   ])
+
+  // console.log({ template, pathname, trialStatus, paynoteKind })
 
   return (
     <PaynotesContext.Provider
