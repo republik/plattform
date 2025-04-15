@@ -132,7 +132,7 @@ export const Offers: Readonly<Offer>[] = [
   },
   {
     id: 'YEARLY_REDUCED',
-    name: 'Reduzierte Jahresmitgliedschaft',
+    name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
@@ -166,7 +166,7 @@ export const Offers: Readonly<Offer>[] = [
   },
   {
     id: 'STUDENT',
-    name: 'Ausbildungs-Mitgliedschaft',
+    name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
@@ -200,7 +200,7 @@ export const Offers: Readonly<Offer>[] = [
 export const GIFTS_OFFERS: Offer[] = [
   {
     id: 'GIFT_YEARLY',
-    name: 'Jahresmitgliedschafts Geschenk',
+    name: 'Jahresmitgliedschaft als Geschenk',
     type: 'ONETIME_PAYMENT',
     company: 'PROJECT_R',
     requiresLogin: false,
@@ -211,7 +211,7 @@ export const GIFTS_OFFERS: Offer[] = [
   },
   {
     id: 'GIFT_MONTHLY',
-    name: '3 Monats Abo Geschenk',
+    name: '3-Monats-Abo als Geschenk',
     type: 'ONETIME_PAYMENT',
     company: 'REPUBLIK',
     requiresLogin: false,
