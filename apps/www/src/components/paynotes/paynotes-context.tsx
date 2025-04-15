@@ -16,6 +16,7 @@ type PaynoteKindType =
   | 'BANNER'
 
 type TemplateType =
+  | null
   | 'article'
   | 'discussion'
   | 'editorialNewsletter'
@@ -27,7 +28,6 @@ type TemplateType =
   | 'page'
   | 'flyer'
   | 'seriesOverview' // technically an article, but we want to handle this differently
-  | null
 
 type PaynotesContextValues = {
   paynoteKind: PaynoteKindType
@@ -119,7 +119,7 @@ export const PaynotesProvider = ({ children }) => {
     // exception for marked articles (via metadata)
     if (isPaywallExcluded) return setPaynoteKind('OVERLAY_OPEN')
 
-    const { meteringStatus } = updateArticleMetering(pathname)
+    const meteringStatus = updateArticleMetering(pathname)
     if (meteringStatus === 'READING_GRANTED')
       return setPaynoteKind('OVERLAY_OPEN')
 

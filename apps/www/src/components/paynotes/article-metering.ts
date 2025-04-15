@@ -13,10 +13,14 @@ type ArticleMetering = {
   config: MeteringConfig
 }
 
+type MeteringStatus = 'READING_GRANTED' | 'READING_DENIED'
+
 const AB_CONFIGS: MeteringConfig[] = [
   { maxArticles: 1 },
   { maxArticles: 3, daysToExpire: 30 },
 ]
+
+const LOCALSTORAGE_KEY = 'metering'
 
 function isNotExpiredDate(readAt: Date, daysToExpire: number) {
   const readDate = new Date(readAt)
@@ -43,24 +47,26 @@ function generateMeteringObject(): ArticleMetering {
   }
 }
 
-// TODO: read and write metering object from/to local storage
-// in the updateArticleMetering function
-let metering = generateMeteringObject()
+// try and retrieve the metering object from local storage
+// if it doesn't exist, create a new one
+function getMetering(): ArticleMetering {
+  const metering = localStorage.getItem(LOCALSTORAGE_KEY)
+  if (!metering) return generateMeteringObject()
+  return JSON.parse(metering)
+}
+
+function setMetering(metering: ArticleMetering) {
+  localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(metering))
+}
 
 // TODO: write unit tests
-export function updateArticleMetering(articlePath: string): {
-  metering: ArticleMetering
-  meteringStatus: 'READING_GRANTED' | 'READING_DENIED'
-} {
+export function updateArticleMetering(articlePath: string): MeteringStatus {
+  const metering = getMetering()
   const { config, reads } = metering
   const { daysToExpire, maxArticles } = config
 
-  // 1. check if the user has the article in reads array
-  if (reads.find((read) => read.path === articlePath))
-    return {
-      metering,
-      meteringStatus: 'READING_GRANTED',
-    }
+  // 1. check if the user already has the article in reads array
+  if (reads.find((read) => read.path === articlePath)) return 'READING_GRANTED'
 
   // 2. clean-up stale articles from reads array
   const currentReads = reads.filter(isNotExpiredRead(daysToExpire))
@@ -68,13 +74,11 @@ export function updateArticleMetering(articlePath: string): {
   // 3. check if the user has any available reads left
   const hasAvailableReads = currentReads.length < maxArticles
   if (!hasAvailableReads) {
-    return {
-      metering: {
-        ...metering,
-        reads: currentReads,
-      },
-      meteringStatus: 'READING_DENIED',
-    }
+    setMetering({
+      ...metering,
+      reads: currentReads,
+    })
+    return 'READING_DENIED'
   }
 
   // 4. add the article to an updated reads array with the current date
@@ -85,11 +89,9 @@ export function updateArticleMetering(articlePath: string): {
       readAt: new Date(),
     },
   ]
-  return {
-    metering: {
-      ...metering,
-      reads: updatedReads,
-    },
-    meteringStatus: 'READING_GRANTED',
-  }
+  setMetering({
+    ...metering,
+    reads: updatedReads,
+  })
+  return 'READING_GRANTED'
 }
