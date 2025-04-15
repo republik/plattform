@@ -8,7 +8,7 @@ import Frame from '../components/Frame'
 import SignIn from '../components/Auth/SignIn'
 import { useInNativeApp } from '../lib/withInNativeApp'
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
-import { Offers } from '@app/components/paynote-overlay/paynote-offers'
+import { Offers } from '@app/components/paynotes/paynote-overlay/paynote-offers'
 
 const meta = {
   title: t('pages/access/title'),
