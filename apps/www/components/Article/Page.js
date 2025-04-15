@@ -201,16 +201,25 @@ const ArticlePage = ({
   const titleBreakout = isSeriesOverview
 
   const template = meta?.template
-  // TODO: replace with a proper meta field
+
+  // TODO: replace with a proper meta field that also set isPaywallExcluded
+  // to true if the article belongs to isPaywallExcuded-format (@luciana is informed)
   const isPaywallExcluded = articleContent?.meta?.isPaywallExcluded
   useEffect(() => {
-    setTemplateForPaynotes(isSeriesOverview ? 'seriesOverview' : template)
-    setIsPaywallExcluded(isPaywallExcluded)
-    return () => {
+    const resetPaynotes = () => {
       setTemplateForPaynotes(null)
       setIsPaywallExcluded(false)
     }
-  }, [template, isSeriesOverview, isPaywallExcluded])
+    if (hasMeta) {
+      setTemplateForPaynotes(isSeriesOverview ? 'seriesOverview' : template)
+      setIsPaywallExcluded(isPaywallExcluded)
+      // we use router events so that the reset happens before the pathname changes
+      router.events.on('routeChangeStart', resetPaynotes)
+    }
+    return () => {
+      router.events.off('routeChangeStart', resetPaynotes)
+    }
+  }, [template, isSeriesOverview, isPaywallExcluded, hasMeta])
 
   const isEditorialNewsletter = template === 'editorialNewsletter'
   const disableActionBar = meta?.disableActionBar

@@ -76,15 +76,23 @@ function isDialogPage(
 
 export const PaynotesProvider = ({ children }) => {
   const { meLoading, trialStatus } = useMe()
+
   const pathname = usePathname()
   const searchParams = useSearchParams()
+
   const { isSearchBot } = useUserAgent()
+
   const [paynoteKind, setPaynoteKind] = useState<PaynoteKindType>(null)
+
+  // In an ideal world we would know based on the pathname what template
+  // we are dealing with, but we don't live in an ideal world.
   const [template, setTemplateForPaynotes] = useState<TemplateType>(null)
+
   const [isPaywallExcluded, setIsPaywallExcluded] = useState<boolean>(false)
 
   useEffect(() => {
-    if (meLoading) return setPaynoteKind(null)
+    if (meLoading) return
+    // console.log({ template, pathname, trialStatus })
 
     // Active membership: no paynote
     if (trialStatus === 'MEMBER') return setPaynoteKind(null)
@@ -119,7 +127,7 @@ export const PaynotesProvider = ({ children }) => {
     // exception for marked articles (via metadata)
     if (isPaywallExcluded) return setPaynoteKind('OVERLAY_OPEN')
 
-    const meteringStatus = updateArticleMetering(pathname)
+    const { meteringStatus } = updateArticleMetering(pathname)
     if (meteringStatus === 'READING_GRANTED')
       return setPaynoteKind('OVERLAY_OPEN')
 
@@ -141,7 +149,7 @@ export const PaynotesProvider = ({ children }) => {
     isPaywallExcluded,
   ])
 
-  // console.log({ template, pathname, trialStatus, paynoteKind })
+  // console.log({ paynoteKind })
 
   return (
     <PaynotesContext.Provider

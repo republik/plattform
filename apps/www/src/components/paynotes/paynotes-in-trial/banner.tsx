@@ -7,7 +7,6 @@ import { css } from '@republik/theme/css'
 import { useTranslation } from 'lib/withT'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 
-// TODO: embed in article
 export function BannerPaynote() {
   const { t } = useTranslation()
   const { paynoteKind } = usePaynotes()

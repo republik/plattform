@@ -16,8 +16,8 @@ type ArticleMetering = {
 type MeteringStatus = 'READING_GRANTED' | 'READING_DENIED'
 
 const AB_CONFIGS: MeteringConfig[] = [
-  { maxArticles: 1 },
-  { maxArticles: 3, daysToExpire: 30 },
+  { maxArticles: 2 },
+  { maxArticles: 2, daysToExpire: 7 },
 ]
 
 const LOCALSTORAGE_KEY = 'metering'
@@ -60,13 +60,17 @@ function setMetering(metering: ArticleMetering) {
 }
 
 // TODO: write unit tests
-export function updateArticleMetering(articlePath: string): MeteringStatus {
+export function updateArticleMetering(articlePath: string): {
+  meteringStatus: MeteringStatus
+} {
   const metering = getMetering()
+  //console.log('***METERING***', { metering })
   const { config, reads } = metering
   const { daysToExpire, maxArticles } = config
 
   // 1. check if the user already has the article in reads array
-  if (reads.find((read) => read.path === articlePath)) return 'READING_GRANTED'
+  if (reads.find((read) => read.path === articlePath))
+    return { meteringStatus: 'READING_GRANTED' }
 
   // 2. clean-up stale articles from reads array
   const currentReads = reads.filter(isNotExpiredRead(daysToExpire))
@@ -78,7 +82,7 @@ export function updateArticleMetering(articlePath: string): MeteringStatus {
       ...metering,
       reads: currentReads,
     })
-    return 'READING_DENIED'
+    return { meteringStatus: 'READING_DENIED' }
   }
 
   // 4. add the article to an updated reads array with the current date
@@ -93,5 +97,5 @@ export function updateArticleMetering(articlePath: string): MeteringStatus {
     ...metering,
     reads: updatedReads,
   })
-  return 'READING_GRANTED'
+  return { meteringStatus: 'READING_GRANTED' }
 }

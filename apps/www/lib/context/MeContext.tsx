@@ -74,7 +74,7 @@ export const canReadFreely = (trialStatus?: TrialStatusType): boolean =>
   ['MEMBER', 'TRIAL_GROUP_A', 'TRIAL_GROUP_B'].includes(trialStatus)
 
 export type TrialStatusType =
-  | 'MEMBER'
+  | 'MEMBER' // could also be null
   | 'TRIAL_ELIGIBLE'
   | 'TRIAL_GROUP_A'
   | 'TRIAL_GROUP_B'
