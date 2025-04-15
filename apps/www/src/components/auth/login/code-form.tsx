@@ -62,9 +62,17 @@ export function CodeForm({ email, context }: CodeFormProps) {
         },
       })
       .then(reloadPage)
-      .catch(handleErr)
+      .catch((err) => {
+        // TODO: maybe handle with an error code?
+        if (
+          err.message.includes('Sie haben bereits eine aktive Mitgliedschaft.')
+        ) {
+          return reloadPage()
+        }
+        handleErr(err)
+      })
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = (res) => {
     if (context === 'trial') {
       registerForTrial()
     }

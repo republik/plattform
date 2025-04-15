@@ -115,7 +115,7 @@ export const PaynotesProvider = ({ children }) => {
     // search bots: no paywall (we want texts to be indexed)
     // but we show the overlay (in case someone is
     // spoofing the user agent to read our content, we still
-    // want to show those clever fish the paywall)
+    // want to show these clever foxes the paywall)
     if (isSearchBot) return setPaynoteKind('OVERLAY_OPEN')
 
     // one trial group (group A) is shown a discrete banner
@@ -127,9 +127,9 @@ export const PaynotesProvider = ({ children }) => {
     // exception for marked articles (via metadata)
     if (isPaywallExcluded) return setPaynoteKind('OVERLAY_OPEN')
 
-    // CAVEAT: we don't ever want the "template" to be set to something wrong
-    // (eg "article") after the pathname has changed. Otherwise some weird
-    // pages (eg "/feed") might be added to the metering reads array.
+    // CAVEAT: we don't ever want the "template" state to be set to something
+    // wrong (notably: "article") after the pathname has changed. Otherwise some funny
+    // pages (eg "/feed") may count towards the metering.
     const { meteringStatus } = updateArticleMetering(pathname)
     if (meteringStatus === 'READING_GRANTED')
       return setPaynoteKind('OVERLAY_OPEN')
