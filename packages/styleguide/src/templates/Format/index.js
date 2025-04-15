@@ -37,6 +37,11 @@ const createFormatSchema = ({
     hasEmailTemplate,
     customMetaFields: [
       {
+        label: 'Regwall ausschalten',
+        key: 'regwallOptOut',
+        ref: 'bool',
+      },
+      {
         label: 'Als Email verschickbar',
         key: 'sendAsEmail',
         ref: 'bool',
