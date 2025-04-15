@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 import { usePathname, useSearchParams } from 'next/navigation'
 
 import { useMe } from 'lib/context/MeContext'
 import { useUserAgent } from 'lib/context/UserAgentContext'
-import { is } from 'useragent'
 
 type PaynoteKindType =
   | null
@@ -15,7 +14,30 @@ type PaynoteKindType =
   | 'PAYWALL'
   | 'BANNER'
 
-type TemplateType = 'ARTICLE' | 'DISCUSSION'
+type TemplateType =
+  | 'article'
+  | 'discussion'
+  | 'editorialNewsletter'
+  | 'editorial'
+  | 'meta'
+  | 'format'
+  | 'section'
+  | 'dossie'
+  | 'page'
+  | 'flyer'
+  | null
+
+type PaynotesContextValues = {
+  paynoteKind: PaynoteKindType
+  setTemplate: (template: TemplateType) => void
+}
+
+const PaynotesContext = createContext<PaynotesContextValues>(
+  {} as PaynotesContextValues,
+)
+
+export const usePaynotes = (): PaynotesContextValues =>
+  useContext(PaynotesContext)
 
 function isPaynoteOverlayHidden(
   pathname: string,
@@ -61,20 +83,16 @@ function isDialogPage(
   return pathname === '/dialog' && searchParams.has('t')
 }
 
-export const usePaynoteKind = (): PaynoteKindType => {
+export const PaynotesProvider = ({ children }) => {
   const { meLoading, trialStatus } = useMe()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const { isSearchBot } = useUserAgent()
   const [paynoteKind, setPaynoteKind] = useState<PaynoteKindType>(null)
+  const [template, setTemplate] = useState<TemplateType>(null)
 
   useEffect(() => {
-    let template: TemplateType = null
-    if (document.querySelector('[data-template="article"]') != null) {
-      template = 'ARTICLE'
-    } else if (document.querySelector('[data-template="discussion"]') != null) {
-      template = 'DISCUSSION'
-    }
+    if (meLoading) return setPaynoteKind(null)
 
     // Active membership: no paynote
     if (trialStatus === 'MEMBER') return setPaynoteKind(null)
@@ -86,11 +104,11 @@ export const usePaynoteKind = (): PaynoteKindType => {
       return setPaynoteKind(null)
 
     // dialog page: we show a special paynote
-    if (isDialogPage(pathname, searchParams) || template === 'DISCUSSION')
+    if (isDialogPage(pathname, searchParams) || template === 'discussion')
       return setPaynoteKind('DIALOG')
 
     // anything that's not an article: minimized paynote overlay
-    if (template !== 'ARTICLE') return setPaynoteKind('OVERLAY_CLOSED')
+    if (template !== 'article') return setPaynoteKind('OVERLAY_CLOSED')
 
     // ARTICLES:
     //
@@ -120,7 +138,18 @@ export const usePaynoteKind = (): PaynoteKindType => {
 
     // catch-all: do nothing
     return setPaynoteKind(null)
-  }, [meLoading, trialStatus, pathname, searchParams, isSearchBot, paynoteKind])
+  }, [meLoading, trialStatus, pathname, searchParams, isSearchBot, template])
 
-  return paynoteKind
+  console.log({ template, trialStatus, paynoteKind })
+
+  return (
+    <PaynotesContext.Provider
+      value={{
+        paynoteKind,
+        setTemplate,
+      }}
+    >
+      {children}
+    </PaynotesContext.Provider>
+  )
 }

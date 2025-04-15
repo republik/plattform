@@ -55,7 +55,8 @@ import PrepubNotice from './components/PrepubNotice'
 import Paywall from '@app/components/paynotes/paywall'
 import Regwall from '@app/components/paynotes/regwall'
 import { BannerPaynote } from '@app/components/paynotes/paynotes-in-trial/banner'
-import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
+import { usePaynotes } from '@app/components/paynotes/paynotes-context'
+import { set } from 'lodash'
 
 const EmptyComponent = ({ children }) => children
 
@@ -74,12 +75,13 @@ const ArticlePage = ({
   const router = useRouter()
   const { share, extract, showAll } = router.query
 
-  const { me, meLoading, hasAccess, isEditor } = useMe()
-  const paynoteKind = usePaynoteKind()
+  const { me, meLoading, isEditor } = useMe()
+  const { paynoteKind, setTemplate } = usePaynotes()
+  const hasPaywall = paynoteKind === 'PAYWALL' || paynoteKind === 'REGWALL'
 
   const { isAudioQueueAvailable } = useAudioQueue()
 
-  const showPlayButton = !extract && hasAccess && isAudioQueueAvailable
+  const showPlayButton = !extract && !hasPaywall && isAudioQueueAvailable
 
   const cleanedPath = cleanAsPath(router.asPath)
 
@@ -177,6 +179,12 @@ const ArticlePage = ({
     [articleMeta, articleContent, metaJSONStringFromQuery, documentId],
   )
 
+  const template = meta?.template
+  useEffect(() => {
+    setTemplate(template)
+    return () => setTemplate(null)
+  }, [template])
+
   const { renderSchema, schema } = useSchema({
     meta,
     article,
@@ -203,9 +211,8 @@ const ArticlePage = ({
     }
   }, [trialSignup, articleRefetch])
 
-  const template = meta?.template
   const isEditorialNewsletter = template === 'editorialNewsletter'
-  const disableActionBar = meta?.disableActionBar
+  const disableActionBar = hasPaywall || meta?.disableActionBar
   const actionBar = article && !disableActionBar && (
     <ActionBar
       mode='articleTop'
@@ -376,19 +383,16 @@ const ArticlePage = ({
           const hideFeed = !!rawContentMeta.hideFeed
 
           const showAudioPlayer =
-            hasAudioSource || article?.meta?.willBeReadAloud
+            !hasPaywall && (hasAudioSource || article?.meta?.willBeReadAloud)
 
           const hideSectionNav = !!rawContentMeta.hideSectionNav
           const showSectionNav = isSection && !hideSectionNav
 
           const showBottomActionBar =
-            (hasAccess && meta.template === 'article') ||
+            meta.template === 'article' ||
             (isEditorialNewsletter && newsletterMeta && newsletterMeta.free)
 
           const showPodcastButtons = !!podcast && meta.template !== 'article'
-
-          const hasPaywall =
-            paynoteKind === 'PAYWALL' || paynoteKind === 'REGWALL'
 
           return (
             <>
@@ -478,13 +482,17 @@ const ArticlePage = ({
                             {renderSchema(splitContent.mainTruncated)}
                           </div>
                         ) : (
-                          <>{renderSchema(splitContent.main)}</>
+                          <>
+                            {renderSchema(splitContent.main)}
+                            <ActionBarOverlay>
+                              {actionBarOverlay}
+                            </ActionBarOverlay>
+                          </>
                         )}
                       </div>
                       <Regwall />
                       <Paywall />
                     </article>
-                    <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
                   </ProgressComponent>
                 </ArticleGallery>
               )}

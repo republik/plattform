@@ -2,7 +2,7 @@ import { css } from '@republik/theme/css'
 
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
-import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
+import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 
 import { useTranslation } from 'lib/withT'
 
@@ -13,7 +13,7 @@ export function DialogPaynote() {
   const { t } = useTranslation()
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
-  const paynoteKind = usePaynoteKind()
+  const { paynoteKind } = usePaynotes()
 
   if (paynoteKind !== 'DIALOG') {
     return null

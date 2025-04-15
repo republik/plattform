@@ -1,4 +1,4 @@
-import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
+import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 
 import { PaynoteContainer } from '../../ui/containers'
 
@@ -6,7 +6,7 @@ import Trial from './trial'
 import Offers from './offers'
 
 const Regwall = () => {
-  const paynoteKind = usePaynoteKind()
+  const { paynoteKind } = usePaynotes()
 
   if (paynoteKind !== 'REGWALL') return null
 

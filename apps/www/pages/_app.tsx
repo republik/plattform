@@ -23,6 +23,7 @@ import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { reportError } from '../lib/errors/reportError'
+import { PaynotesProvider } from '@app/components/paynotes/paynotes-context'
 
 if (typeof window !== 'undefined') {
   window.addEventListener('error', (event: ErrorEvent) => {
@@ -73,20 +74,22 @@ const WebApp = ({
                   <ThemeProvider>
                     <RootColorVariables />
                     <ColorContextProvider colorSchemeKey='auto'>
-                      <MessageSync />
-                      <Head>
-                        <meta
-                          name='viewport'
-                          content='width=device-width, initial-scale=1, viewport-fit=cover'
+                      <PaynotesProvider>
+                        <MessageSync />
+                        <Head>
+                          <meta
+                            name='viewport'
+                            content='width=device-width, initial-scale=1, viewport-fit=cover'
+                          />
+                        </Head>
+                        <Component
+                          serverContext={serverContext}
+                          {...otherPageProps}
                         />
-                      </Head>
-                      <Component
-                        serverContext={serverContext}
-                        {...otherPageProps}
-                      />
-                      <AudioPlayerOrchestrator />
-                      <SyncUTMToSessionStorage />
-                      <PaynoteOverlay />
+                        <AudioPlayerOrchestrator />
+                        <SyncUTMToSessionStorage />
+                        <PaynoteOverlay />
+                      </PaynotesProvider>
                     </ColorContextProvider>
                   </ThemeProvider>
                 </AppVariableContext>

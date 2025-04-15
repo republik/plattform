@@ -5,12 +5,12 @@ import { IconArrowRight } from '@republik/icons'
 import { css } from '@republik/theme/css'
 
 import { useTranslation } from 'lib/withT'
-import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
+import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 
 // TODO: embed in article
 export function BannerPaynote() {
   const { t } = useTranslation()
-  const paynoteKind = usePaynoteKind()
+  const { paynoteKind } = usePaynotes()
 
   if (paynoteKind !== 'BANNER') {
     return null

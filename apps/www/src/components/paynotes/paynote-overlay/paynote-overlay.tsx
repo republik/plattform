@@ -6,8 +6,7 @@ import { Fragment, useEffect, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 
 import { Offers } from '@app/components/paynotes/paynote-overlay/paynote-offers'
-import { usePaynotes } from '@app/components/paynotes/paynote-overlay/use-paynotes'
-import { usePaynoteKind } from '@app/lib/hooks/usePaynoteKind'
+import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
   useTrackEvent,
@@ -19,6 +18,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { StructuredText } from 'react-datocms'
+import { usePaynoteVariants } from './use-paynotes'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
@@ -48,7 +48,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
     useState<boolean>(false)
   const [variant, setVariant] = useState<ContentVariant>('offers-only')
   const { isIOSApp } = usePlatformInformation()
-  const paynotes = usePaynotes()
+  const paynotes = usePaynoteVariants()
   const trackEvent = useTrackEvent()
   const pathname = usePathname()
 
@@ -341,16 +341,11 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
 }
 
 export function PaynoteOverlay() {
-  const paynoteKind = usePaynoteKind()
+  const { paynoteKind } = usePaynotes()
 
-  if (paynoteKind !== 'OVERLAY_OPEN' && paynoteKind !== 'OVERLAY_CLOSED')
-    return null
-
-  const isExpanded = paynoteKind === 'OVERLAY_OPEN'
-
-  return (
+  return paynoteKind === 'OVERLAY_OPEN' || paynoteKind === 'OVERLAY_CLOSED' ? (
     <EventTrackingContext category='PaynoteOverlay'>
-      <PaynoteOverlayDialog isExpanded={isExpanded} />
+      <PaynoteOverlayDialog isExpanded={paynoteKind === 'OVERLAY_OPEN'} />
     </EventTrackingContext>
-  )
+  ) : null
 }

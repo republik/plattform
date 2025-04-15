@@ -90,7 +90,6 @@ type MeContextValues = {
 }
 
 const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
-  console.log(me)
   // anonymous user: de facto eligible for trial
   if (!me) return 'TRIAL_ELIGIBLE'
 
@@ -112,6 +111,9 @@ const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
     me.roles?.includes('member')
   )
     return 'MEMBER'
+
+  // logged-in user, has done a "regwall" trial: not eligible for trial
+  if (me.regwallTrialStatus === 'Past') return 'NOT_TRIAL_ELIGIBLE'
 
   // logged-in user, hasn't done a "regwall" trial yet: eligible for trial
   if (!me.regwallTrialStatus) return 'TRIAL_ELIGIBLE'
