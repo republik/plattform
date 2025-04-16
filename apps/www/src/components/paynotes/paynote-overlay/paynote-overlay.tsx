@@ -281,6 +281,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                   fontSize: 's',
                   cursor: 'pointer',
                   mx: 'auto',
+                  pb: '4',
                 })}
                 onClick={() => {
                   trackEvent({
@@ -298,7 +299,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
               <div
                 className={css({
                   py: '6',
-                  mt: '6',
+                  mt: '2',
                   mx: '-8',
                   textAlign: 'center',
                   borderTopWidth: 1,
