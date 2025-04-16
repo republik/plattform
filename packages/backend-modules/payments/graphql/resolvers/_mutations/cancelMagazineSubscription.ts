@@ -6,7 +6,7 @@ import { PaymentService } from '../../../lib/services/PaymentService'
 
 export = async function cancelMagazineSubscription(
   _root: never, // eslint-disable-line @typescript-eslint/no-unused-vars
-  args: { subscriptionId: string }, // eslint-disable-line @typescript-eslint/no-unused-vars
+  args: { subscriptionId: string; comment?: string }, // eslint-disable-line @typescript-eslint/no-unused-vars
   ctx: GraphqlContext, // eslint-disable-line @typescript-eslint/no-unused-vars
 ) {
   Auth.ensureUser(ctx.user)
@@ -28,6 +28,11 @@ export = async function cancelMagazineSubscription(
 
   await new PaymentService().updateSubscription(sub.company, sub.externalId, {
     cancel_at_period_end: true,
+    cancellation_details: args.comment
+      ? {
+          comment: args.comment,
+        }
+      : undefined,
   })
 
   return true
