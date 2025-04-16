@@ -44,7 +44,7 @@ export class OfferBuilder {
 
   private async buildOfferData(offer: Offer): Promise<OfferAPIResult> {
     const price = this.#priceData!.find(
-      (p) => p.lookup_key === offer.items[0].lookupKey,
+      (p) => p.lookup_key === offer.items[0]?.lookupKey,
     )!
     const donations = this.#priceData!.filter((p) =>
       (offer.donationOptions?.map((d) => d.lookupKey) || []).includes(
@@ -90,7 +90,14 @@ export class OfferBuilder {
     return null
   }
 
-  private formatPrice(price: Stripe.Price) {
+  private formatPrice(price: Stripe.Price | null) {
+    if (!price) {
+      return {
+        amount: 0,
+        currency: 'chf',
+      }
+    }
+
     return {
       amount: price.unit_amount!,
       currency: price.currency,

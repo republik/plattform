@@ -41,7 +41,7 @@ export type LineItem =
         unit_amount: number
         product: string
         currency: 'CHF'
-        recurring: {
+        recurring?: {
           interval: 'year'
           interval_count: 1
         }
@@ -213,6 +213,10 @@ export class CheckoutSessionBuilder {
   }
 
   private async genLineItems(): Promise<LineItem[]> {
+    if (this.offer.items.length === 0) {
+      return []
+    }
+
     const prices = await this.paymentService.getPrices(
       this.offer.company,
       this.offer.items.map((i) => i.lookupKey),
@@ -266,18 +270,23 @@ export class CheckoutSessionBuilder {
         }
       }
       if (typeof selectedDonation === 'object') {
-        lineItems.push({
+        const data: LineItem = {
           price_data: {
             unit_amount: selectedDonation.amount,
             currency: 'CHF',
             product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
-            recurring: {
-              interval: 'year',
-              interval_count: 1,
-            },
           },
           quantity: 1,
-        })
+        }
+
+        if (this.offer.type === 'SUBSCRIPTION') {
+          data.price_data.recurring = {
+            interval: 'year',
+            interval_count: 1,
+          }
+        }
+
+        lineItems.push(data)
       }
     }
 

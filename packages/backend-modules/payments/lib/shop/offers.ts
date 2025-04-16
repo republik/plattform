@@ -168,6 +168,21 @@ export const Offers: Readonly<Offer>[] = [
     allowPromotions: false,
   },
   {
+    id: 'DONATION',
+    name: 'Einmalige Spende',
+    type: 'ONETIME_PAYMENT',
+    company: 'PROJECT_R',
+    requiresLogin: true,
+    requiresAddress: false,
+    items: [],
+    donationOptions: [
+      { type: 'PRICE', lookupKey: 'ONE_TIME_DONATE_OPTION_A' },
+      { type: 'PRICE', lookupKey: 'ONE_TIME_DONATE_OPTION_B' },
+      { type: 'PRICE', lookupKey: 'ONE_TIME_DONATE_OPTION_C' },
+    ],
+    allowPromotions: false,
+  },
+  {
     id: 'STUDENT',
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
