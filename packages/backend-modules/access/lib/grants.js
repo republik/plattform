@@ -18,6 +18,8 @@ const membershipsLib = require('./memberships')
 
 const VOUCHER_CODE_LENGTH = 5
 
+const { REGWALL_TRIAL_CAMPAIGN_ID } = process.env
+
 const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
   const errors = []
 
@@ -646,6 +648,26 @@ const findByVoucherCode = async (voucherCode, { pgdb }) => {
   })
 }
 
+const regwallTrialStatus = async (user, { pgdb }) => {
+  const trialGrant = await pgdb.public.accessGrants.findFirst({
+    recipientUserId: user.id,
+    accessCampaignId: REGWALL_TRIAL_CAMPAIGN_ID,
+  }, {orderBy: {createdAt: 'desc'}})
+  if (!trialGrant) {
+    return null
+  }
+  if (isGrantActive(trialGrant)) {
+    return 'Active'
+  } else {
+    return 'Past'
+  }
+}
+
+const isGrantActive = (grant) => {
+  const now = new Date()
+  return !grant.invalidatedAt && !grant.revokedAt && grant.beginAt <= now && grant.endAt > now
+}
+
 const findUnassignedByEmail = async (email, pgdb) => {
   debug('findUnassignedByEmail', { email })
   return pgdb.public.accessGrants.find({
@@ -761,6 +783,7 @@ module.exports = {
   findByGranter,
   findByRecipient,
   findByVoucherCode,
+  regwallTrialStatus,
 
   findUnassignedByEmail,
   findInvalid,

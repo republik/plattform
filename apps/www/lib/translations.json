@@ -7743,6 +7743,166 @@
     {
       "key": "magazineSubscription/shoplink/YEARLY",
       "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "auth/login/email/info",
+      "value": "Geben Sie Ihre E-Mail-Adresse ein, um sich anzumelden."
+    },
+    {
+      "key": "auth/login/email/placeholder",
+      "value": "E-Mail-Adresse"
+    },
+    {
+      "key": "auth/login/email/submit",
+      "value": "Anmelden"
+    },
+    {
+      "key": "auth/login/code/placeholder",
+      "value": "Zugangscode"
+    },
+    {
+      "key": "auth/login/code/title",
+      "value": "Wir haben Ihnen einen Zugangscode geschickt"
+    },
+    {
+      "key": "auth/login/code/description",
+      "value": "Geben Sie den 6-stelligen Code ein, den Sie via {email} erhalten haben."
+    },
+    {
+      "key": "auth/login/code/pending",
+      "value": "Wir überprüfen Ihren Code…"
+    },
+    {
+      "key": "auth/login/code/help",
+      "value": "Sie können Ihren Code nicht finden? Überprüfen Sie Ihren Spam-Ordner oder {changeEmail}."
+    },
+    {
+      "key": "auth/login/code/help/changeEmail",
+      "value": "ändern Sie Ihre E-Mail-Adresse"
+    },
+    {
+      "key": "auth/login/tos",
+      "value": "Mit der Anmeldung akzeptieren Sie die {link} und sind einverstanden E-Mails zu Republik-Angeboten zu erhalten."
+    },
+    {
+      "key": "auth/trial/register",
+      "value": "Anmelden und weiterlesen"
+    },
+    {
+      "key": "auth/trial/request",
+      "value": "Weiterlesen"
+    },
+    {
+      "key": "regwall/login",
+      "value": "Haben Sie ein Abonnement? {link}"
+    },
+    {
+      "key": "regwall/login/link",
+      "value": "Anmelden."
+    },
+    {
+      "key": "regwall/header/title",
+      "value": "Sie müssen nichts bezahlen" 
+    },
+    {
+      "key": "regwall/header/description",
+      "value": "<b>Werden Sie unser Gast:</b> Eine Woche lang gratis die Republik lesen, keine automatische Verlängerung." 
+    },
+    {
+      "key": "regwall/whyRegister/title",
+      "value": "Warum eine E-Mail-Adresse?" 
+    },
+    {
+      "key": "regwall/whyRegister/description",
+      "value": "Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Wenn Sie keine Nachrichten mehr erhalten möchten, können Sie sich jederzeit abmelden." 
+    },
+    {
+      "key": "regwall/offers/description",
+      "value": "<b>Und natürlich freuen wir uns auch über Geld:</b> Mit einem Abo unterstützen Sie unabhängigen und werbefreien Journalismus." 
+    },
+    {
+      "key": "regwall/offers/cta",
+      "value": "Abonnieren ab 22/Monat" 
+    },
+    {
+      "key": "regwall/offers/cancellable",
+      "value": "Jederzeit kündbar" 
+    },
+    {
+      "key": "paywall/offers/caption",
+      "value": "Einstiegsangebot" 
+    },
+    {
+      "key": "paywall/offers/title/1",
+      "value": "Ihre kostenlose Gastwoche ist zu Ende." 
+    },
+    {
+      "key": "paywall/offers/title/2",
+      "value": "Doch unsere gemeinsame Reise muss hier nicht enden." 
+    },
+    {
+      "key": "paywall/offers/yearly/duration",
+      "value": "erste Jahr" 
+    },
+    {
+      "key": "paywall/offers/yearly/description",
+      "value": "Danach 240.- jährlich. Jederzeit kündbar." 
+    },
+    {
+      "key": "paywall/offers/monthly/duration",
+      "value": "erste Monat" 
+    },
+    {
+      "key": "paywall/offers/monthly/description",
+      "value": "Danach 22.- monatlich. Jederzeit kündbar." 
+    },
+    {
+      "key": "paywall/offers/cta",
+      "value": "Jetzt abonnieren" 
+    },
+    {
+      "key": "paywall/offers/survey",
+      "value": "Nein Danke, weil…" 
+    },
+    {
+      "key": "paywall/offers/all",
+      "value": "Alle Mitgliedschafte ansehen" 
+    },
+    {
+      "key": "paywall/survey/hint",
+      "value": "Pick the answer that describe your situation:" 
+    },
+    {
+      "key": "paywall/survey/all",
+      "value": "Alle Mitgliedschafte ansehen" 
+    },
+    {
+      "key": "paywall/survey/thanks/title",
+      "value": "Vielen Dank für Ihr Feedback, wir hoffen, Sie bald wiederzusehen! 👋" 
+    },
+    {
+      "key": "paywall/survey/thanks/description",
+      "value": "PS: Wussten Sie, dass Sie unser wöchentliches Nachrichtenbriefing auch ohne Abo als Newsletter erhalten können?" 
+    },
+    {
+      "key": "paywall/survey/thanks/link",
+      "value": "Schauen Sie es Ihnen an" 
+    },
+    {
+      "key": "paynotes/dialog/title",
+      "value": "Willkommen im Dialog" 
+    },
+    {
+      "key": "paynotes/dialog/description",
+      "value": "Als Gast sehen Sie, was zu reden gibt. Mit einem Abo nehmen Sie direkt am Gespräch teil. Fragen Sie bei Autorinnen und anderen Lesern nach und bringen Sie sich ein. " 
+    },
+    {
+      "key": "paynotes/dialog/cta",
+      "value": "Abonnieren und mitreden" 
+    },
+    {
+      "key": "paynotes/banner/cta",
+      "value": "Ab 22 CHF/Monat Abonnent werden" 
     }
   ]
 }

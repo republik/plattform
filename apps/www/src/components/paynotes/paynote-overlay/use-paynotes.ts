@@ -1,7 +1,7 @@
 import { Paynotes } from '@app/app/api/paynote/types'
 import { useEffect, useState } from 'react'
 
-export const usePaynotes = () => {
+export const usePaynoteVariants = () => {
   const [paynote, setPaynote] = useState<Paynotes | undefined>()
 
   useEffect(() => {

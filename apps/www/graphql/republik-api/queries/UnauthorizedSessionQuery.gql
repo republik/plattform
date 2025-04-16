@@ -1,0 +1,22 @@
+query UnauthorizedSession($email: String!, $token: SignInToken!) {
+  echo {
+    ipAddress
+    userAgent
+    country
+    city
+  }
+  unauthorizedSession(email: $email, token: $token) {
+    newUser
+    enabledSecondFactors
+    requiredConsents
+    requiredFields
+    session {
+      ipAddress
+      userAgent
+      country
+      city
+      phrase
+      isCurrent
+    }
+  }
+}

@@ -25,8 +25,7 @@ import SubscribeMenu from '../Notifications/SubscribeMenu'
 import BookmarkButton from './BookmarkButton'
 import DiscussionLinkButton from './DiscussionLinkButton'
 import UserProgress from './UserProgress'
-import ShareButtons from './ShareButtons'
-import { useMe } from '../../lib/context/MeContext'
+import { canReadFreely, useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 
@@ -73,7 +72,8 @@ const ActionBar = ({
   isCentered,
   shareParam,
 }) => {
-  const { me, meLoading, hasAccess, isEditor } = useMe()
+  const { me, meLoading, isEditor, trialStatus } = useMe()
+  const hasAccess = canReadFreely(trialStatus)
   const [pdfOverlayVisible, setPdfOverlayVisible] = useState(false)
   const [fontSizeOverlayVisible, setFontSizeOverlayVisible] = useState(false)
   const [shareOverlayVisible, setShareOverlayVisible] = useState(false)
@@ -319,7 +319,7 @@ const ActionBar = ({
         setPdfOverlayVisible(!pdfOverlayVisible)
       },
       modes: ['articleTop', 'articleBottom'],
-      show: hasPdf,
+      show: hasPdf && hasAccess,
     },
     {
       title: t('article/actionbar/fontSize/title'),

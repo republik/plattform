@@ -4,10 +4,9 @@ import { css } from '@republik/theme/css'
 import { Fragment, useEffect, useState } from 'react'
 
 import * as Dialog from '@radix-ui/react-dialog'
-import { useMe } from 'lib/context/MeContext'
 
-import { Offers } from '@app/components/paynote-overlay/paynote-offers'
-import { usePaynotes } from '@app/components/paynote-overlay/use-paynotes'
+import { Offers } from '@app/components/paynotes/paynote-overlay/paynote-offers'
+import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
   useTrackEvent,
@@ -17,8 +16,10 @@ import { IconExpandMore } from '@republik/icons'
 import { useMotionValueEvent, useScroll } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { StructuredText } from 'react-datocms'
+import { usePaynoteVariants } from './use-paynotes'
+import { useMe } from 'lib/context/MeContext'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
@@ -42,16 +43,16 @@ function MiniPaynoteMessage({ message }: { message: string }) {
   )
 }
 
-function PaynoteOverlayDialog() {
+function PaynoteOverlayDialog({ isExpanded = false }) {
   const [expanded, setExpanded] = useState<boolean>(false)
   const [scrollThresholdReached, setScrollThresholdReached] =
     useState<boolean>(false)
   const [variant, setVariant] = useState<ContentVariant>('offers-only')
-  const { hasActiveMembership, meLoading } = useMe()
   const { isIOSApp } = usePlatformInformation()
-  const paynotes = usePaynotes()
+  const paynotes = usePaynoteVariants()
   const trackEvent = useTrackEvent()
   const pathname = usePathname()
+  const { me } = useMe()
 
   const { scrollYProgress } = useScroll()
 
@@ -61,14 +62,12 @@ function PaynoteOverlayDialog() {
     }
   })
 
-  const ready = paynotes && !meLoading && !hasActiveMembership && !isIOSApp
+  // TODO: iOS?
+  const ready = paynotes && !isIOSApp
 
   useEffect(() => {
     if (ready && scrollThresholdReached) {
-      const isArticle =
-        document.querySelector('[data-template="article"]') != null
-
-      if (isArticle) {
+      if (isExpanded) {
         setVariant('paynote')
         setExpanded(true)
         trackEvent({
@@ -77,7 +76,7 @@ function PaynoteOverlayDialog() {
         })
       }
     }
-  }, [ready, scrollThresholdReached, trackEvent, paynotes])
+  }, [ready, isExpanded, scrollThresholdReached, trackEvent, paynotes])
 
   if (!ready) {
     return null
@@ -282,6 +281,7 @@ function PaynoteOverlayDialog() {
                   fontSize: 's',
                   cursor: 'pointer',
                   mx: 'auto',
+                  pb: '4',
                 })}
                 onClick={() => {
                   trackEvent({
@@ -295,29 +295,31 @@ function PaynoteOverlayDialog() {
               </Dialog.Close>
             </div>
 
-            <div
-              className={css({
-                py: '6',
-                mt: '6',
-                mx: '-8',
-                textAlign: 'center',
-                borderTopWidth: 1,
-                borderTopStyle: 'solid',
-                borderTopColor: 'divider',
-                fontSize: 's',
-              })}
-            >
-              Sie haben schon ein Abonnement?{' '}
-              <Link
+            {!me && (
+              <div
                 className={css({
-                  textDecoration: 'underline',
-                  // fontWeight: 'medium',
+                  py: '6',
+                  mt: '2',
+                  mx: '-8',
+                  textAlign: 'center',
+                  borderTopWidth: 1,
+                  borderTopStyle: 'solid',
+                  borderTopColor: 'divider',
+                  fontSize: 's',
                 })}
-                href={`/anmelden?redirect=${encodeURIComponent(pathname)}`}
               >
-                Anmelden
-              </Link>
-            </div>
+                Sie haben schon ein Abonnement?{' '}
+                <Link
+                  className={css({
+                    textDecoration: 'underline',
+                    // fontWeight: 'medium',
+                  })}
+                  href={`/anmelden?redirect=${encodeURIComponent(pathname)}`}
+                >
+                  Anmelden
+                </Link>
+              </div>
+            )}
 
             <Dialog.Close
               aria-label='Schliessen'
@@ -343,31 +345,12 @@ function PaynoteOverlayDialog() {
   )
 }
 
-function isPaynoteOverlayHidden(
-  pathname: string,
-  searchParams: URLSearchParams,
-): boolean {
-  return (
-    (pathname === '/angebote' && searchParams.has('package')) ||
-    pathname === '/mitteilung' ||
-    pathname === '/anmelden' ||
-    pathname.startsWith('/konto') ||
-    pathname === '/meine-republik' ||
-    pathname === '/community' ||
-    searchParams.has('extract') ||
-    searchParams.has('extractId')
-  )
-}
-
 export function PaynoteOverlay() {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const { paynoteKind } = usePaynotes()
 
-  const isHidden = isPaynoteOverlayHidden(pathname, searchParams)
-
-  return isHidden ? null : (
+  return paynoteKind === 'OVERLAY_OPEN' || paynoteKind === 'OVERLAY_CLOSED' ? (
     <EventTrackingContext category='PaynoteOverlay'>
-      <PaynoteOverlayDialog key={pathname} />
+      <PaynoteOverlayDialog isExpanded={paynoteKind === 'OVERLAY_OPEN'} />
     </EventTrackingContext>
-  )
+  ) : null
 }

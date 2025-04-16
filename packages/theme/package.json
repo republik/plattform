@@ -5,7 +5,7 @@
   "devDependencies": {
     "@pandacss/dev": "^0.46.1"
   },
-  "exports": {
+  "exports": {  
     "./presets": {
       "import": "./presets.ts"
     },
@@ -28,6 +28,11 @@
       "types": "./__generated__/patterns/index.d.ts",
       "require": "./__generated__/patterns/index.mjs",
       "import": "./__generated__/patterns/index.mjs"
+    },
+    "./recipes": {
+      "types": "./__generated__/recipes/index.d.ts",
+      "require": "./__generated__/recipes/index.mjs",
+      "import": "./__generated__/recipes/index.mjs"
     },
     "./jsx": {
       "types": "./__generated__/jsx/index.d.ts",

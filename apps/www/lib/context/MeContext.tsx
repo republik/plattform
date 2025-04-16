@@ -70,6 +70,16 @@ css.global(`:root [${CLIMATELAB_ONLY_ITEM_ATTRIBUTE}="true"]`, {
 
 export type MeObjectType = MeQuery['me']
 
+export const canReadFreely = (trialStatus?: TrialStatusType): boolean =>
+  ['MEMBER', 'TRIAL_GROUP_A', 'TRIAL_GROUP_B'].includes(trialStatus)
+
+export type TrialStatusType =
+  | 'MEMBER' // could also be null
+  | 'TRIAL_ELIGIBLE'
+  | 'TRIAL_GROUP_A'
+  | 'TRIAL_GROUP_B'
+  | 'NOT_TRIAL_ELIGIBLE'
+
 type MeContextValues = {
   me?: MeObjectType
   meLoading: boolean
@@ -79,6 +89,37 @@ type MeContextValues = {
   hasAccess: boolean
   isEditor: boolean
   isClimateLabMember: boolean
+  trialStatus?: TrialStatusType
+}
+
+const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
+  // anonymous user: de facto eligible for trial
+  if (!me) return 'TRIAL_ELIGIBLE'
+
+  // In trial user:
+  // We use the first character of the user id to assign a trial group.
+  // The character is either a number [0-9] or a letter [a-f].
+  // [0-7] -> group A, [8-f] -> group B
+  if (me.regwallTrialStatus === 'Active') {
+    const firstChar = me.id[0]
+    return ['0', '1', '2', '3', '4', '5', '6', '7'].includes(firstChar)
+      ? 'TRIAL_GROUP_A' // in trial user, AB-test group A
+      : 'TRIAL_GROUP_B' // in trial user, AB-test group B
+  }
+
+  // has membership or active Abo teilen etc: not relevant for trial
+  if (
+    me.activeMembership ||
+    me.activeMagazineSubscription ||
+    me.roles?.includes('member')
+  )
+    return 'MEMBER'
+
+  // logged-in user, has done a "regwall" trial: not eligible for trial
+  if (me.regwallTrialStatus === 'Past') return 'NOT_TRIAL_ELIGIBLE'
+
+  // logged-in user, hasn't done a "regwall" trial yet: eligible for trial
+  if (!me.regwallTrialStatus) return 'TRIAL_ELIGIBLE'
 }
 
 const MeContext = createContext<MeContextValues>({} as MeContextValues)
@@ -104,6 +145,7 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
     !!me?.activeMembership || !!me?.activeMagazineSubscription
 
   const portraitOrInitials = me ? me.portrait ?? getInitials(me) : false
+  const trialStatus = getTrialStatus(me)
 
   useEffect(() => {
     if (loading) return
@@ -173,6 +215,7 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
           : isMember,
         isEditor: checkRoles(me, ['editor']),
         isClimateLabMember,
+        trialStatus,
       }}
     >
       <NextHead>
