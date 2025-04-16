@@ -2,7 +2,7 @@ import Stripe from 'stripe'
 import { Company } from '../types'
 import { Offer, OfferAPIResult, Discount, Promotion } from './offers'
 import { PaymentService } from '../services/PaymentService'
-import { LineItem } from './CheckoutSessionOptionBuilder'
+import { Price } from './CheckoutSessionOptionBuilder'
 import { OfferBuilder } from './OfferBuilder'
 
 export class Shop {
@@ -14,7 +14,7 @@ export class Shop {
     this.#paymentServices = new PaymentService()
   }
 
-  public async genLineItems(offer: Offer): Promise<LineItem[]> {
+  public async genLineItems(offer: Offer): Promise<Price[]> {
     const lookupKeys = offer.items.map((i) => i.lookupKey)
     const prices = await this.#paymentServices.getPrices(
       offer.company,

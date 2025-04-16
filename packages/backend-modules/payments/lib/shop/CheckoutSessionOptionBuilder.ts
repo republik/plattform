@@ -7,6 +7,7 @@ import {
   couponToDiscount,
   promotionToDiscount,
   DiscountOption,
+  OfferType,
 } from '.'
 import { Payments } from '../payments'
 import { Company } from '../types'
@@ -30,25 +31,34 @@ export async function getCustomer(company: Company, userId?: string) {
   return await Payments.getInstance().createCustomer(company, userId)
 }
 
-export type LineItem =
-  | {
-      price: string
-      quantity: number
-      tax_rates?: string[]
-    }
-  | {
-      price_data: {
-        unit_amount: number
-        product: string
-        currency: 'CHF'
-        recurring?: {
-          interval: 'year'
-          interval_count: 1
-        }
-      }
-      quantity: number
-      tax_rates?: string[]
-    }
+export type Price = {
+  price: string
+  quantity: number
+  tax_rates?: string[]
+}
+
+export type PriceData = {
+  price_data: {
+    unit_amount: number
+    product: string
+    currency: 'CHF'
+  }
+  quantity: number
+  tax_rates?: string[]
+}
+
+export type RecurringPriceData = {
+  price_data: {
+    unit_amount: number
+    product: string
+    currency: 'CHF'
+    recurring: Stripe.PriceCreateParams.Recurring
+  }
+  quantity: number
+  tax_rates?: string[]
+}
+
+export type LineItem = Price | PriceData | RecurringPriceData
 
 export class CheckoutSessionBuilder {
   private offer: Offer
@@ -270,23 +280,9 @@ export class CheckoutSessionBuilder {
         }
       }
       if (typeof selectedDonation === 'object') {
-        const data: LineItem = {
-          price_data: {
-            unit_amount: selectedDonation.amount,
-            currency: 'CHF',
-            product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
-          },
-          quantity: 1,
-        }
+        const donation = makeDonation(this.offer.type, selectedDonation.amount)
 
-        if (this.offer.type === 'SUBSCRIPTION') {
-          data.price_data.recurring = {
-            interval: 'year',
-            interval_count: 1,
-          }
-        }
-
-        lineItems.push(data)
+        lineItems.push(donation)
       }
     }
 
@@ -361,5 +357,47 @@ export class CheckoutSessionBuilder {
       case 'REPUBLIK':
         return getConfig().REPUBLIK_STRIPE_PAYMENTS_CONFIG_ID
     }
+  }
+}
+
+function makeDonation(
+  offerType: 'SUBSCRIPTION',
+  amount: number,
+): RecurringPriceData
+function makeDonation(offerType: 'ONETIME_PAYMENT', amount: number): PriceData
+function makeDonation(
+  offerType: OfferType,
+  amount: number,
+): RecurringPriceData | PriceData
+function makeDonation(
+  offerType: OfferType,
+  amount: number,
+): RecurringPriceData | PriceData {
+  switch (offerType) {
+    case 'SUBSCRIPTION':
+      return {
+        price_data: {
+          unit_amount: amount,
+          currency: 'CHF',
+          product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
+          recurring: {
+            interval: 'year',
+            interval_count: 1,
+          },
+        },
+        quantity: 1,
+      }
+    case 'ONETIME_PAYMENT':
+      return {
+        price_data: {
+          unit_amount: amount,
+          currency: 'CHF',
+          product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
+        },
+        quantity: 1,
+      }
+    default:
+      offerType satisfies never
+      throw new Error('invalid offer type')
   }
 }
