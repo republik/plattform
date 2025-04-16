@@ -206,11 +206,14 @@ const ArticlePage = ({
   // to true if the article belongs to isPaywallExcuded-format (@luciana is informed)
   const isPaywallExcluded = articleContent?.meta?.isPaywallExcluded
   useEffect(() => {
+    console.log('flop')
     const resetPaynotes = () => {
+      console.log('resetPaynotes')
       setTemplateForPaynotes(null)
       setIsPaywallExcluded(false)
     }
     if (hasMeta) {
+      console.log('set template for paynotes', template)
       setTemplateForPaynotes(isSeriesOverview ? 'seriesOverview' : template)
       setIsPaywallExcluded(isPaywallExcluded)
       // we use router events so that the reset happens before the pathname changes
@@ -219,7 +222,7 @@ const ArticlePage = ({
     return () => {
       router.events.off('routeChangeStart', resetPaynotes)
     }
-  }, [template, isSeriesOverview, isPaywallExcluded, hasMeta])
+  }, [template, isSeriesOverview, isPaywallExcluded, hasMeta, cleanedPath])
 
   const isEditorialNewsletter = template === 'editorialNewsletter'
   const disableActionBar = meta?.disableActionBar

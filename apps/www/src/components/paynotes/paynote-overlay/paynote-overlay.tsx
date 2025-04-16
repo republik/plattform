@@ -19,6 +19,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { StructuredText } from 'react-datocms'
 import { usePaynoteVariants } from './use-paynotes'
+import { useMe } from 'lib/context/MeContext'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
@@ -51,6 +52,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
   const paynotes = usePaynoteVariants()
   const trackEvent = useTrackEvent()
   const pathname = usePathname()
+  const { me } = useMe()
 
   const { scrollYProgress } = useScroll()
 
@@ -292,29 +294,31 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
               </Dialog.Close>
             </div>
 
-            <div
-              className={css({
-                py: '6',
-                mt: '6',
-                mx: '-8',
-                textAlign: 'center',
-                borderTopWidth: 1,
-                borderTopStyle: 'solid',
-                borderTopColor: 'divider',
-                fontSize: 's',
-              })}
-            >
-              Sie haben schon ein Abonnement?{' '}
-              <Link
+            {!me && (
+              <div
                 className={css({
-                  textDecoration: 'underline',
-                  // fontWeight: 'medium',
+                  py: '6',
+                  mt: '6',
+                  mx: '-8',
+                  textAlign: 'center',
+                  borderTopWidth: 1,
+                  borderTopStyle: 'solid',
+                  borderTopColor: 'divider',
+                  fontSize: 's',
                 })}
-                href={`/anmelden?redirect=${encodeURIComponent(pathname)}`}
               >
-                Anmelden
-              </Link>
-            </div>
+                Sie haben schon ein Abonnement?{' '}
+                <Link
+                  className={css({
+                    textDecoration: 'underline',
+                    // fontWeight: 'medium',
+                  })}
+                  href={`/anmelden?redirect=${encodeURIComponent(pathname)}`}
+                >
+                  Anmelden
+                </Link>
+              </div>
+            )}
 
             <Dialog.Close
               aria-label='Schliessen'

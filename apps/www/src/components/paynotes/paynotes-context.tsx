@@ -52,6 +52,7 @@ function isPaynoteOverlayHidden(
     pathname === '/anmelden' ||
     pathname.startsWith('/konto') ||
     pathname === '/meine-republik' ||
+    pathname === '/probelesen' ||
     pathname === '/community' ||
     searchParams.has('extract') ||
     searchParams.has('extractId')
@@ -92,7 +93,7 @@ export const PaynotesProvider = ({ children }) => {
 
   useEffect(() => {
     if (meLoading) return
-    // console.log({ template, pathname, trialStatus })
+    console.log({ template, pathname, trialStatus })
 
     // Active membership: no paynote
     if (trialStatus === 'MEMBER') return setPaynoteKind(null)
@@ -152,7 +153,7 @@ export const PaynotesProvider = ({ children }) => {
     isPaywallExcluded,
   ])
 
-  // console.log({ paynoteKind })
+  console.log({ paynoteKind })
 
   return (
     <PaynotesContext.Provider
