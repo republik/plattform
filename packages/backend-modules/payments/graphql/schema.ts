@@ -27,7 +27,7 @@ type mutations {
   updateMagazineSubscriptionDonation(
     subscriptionId: String!
     selectedDonation: ID
-    customDonation: CustomDonation
+    donationAmount: Int
   ): Boolean
   createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
 }

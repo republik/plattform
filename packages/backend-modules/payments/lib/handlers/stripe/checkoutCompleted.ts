@@ -63,14 +63,14 @@ async function handleSubscription(
   }
 
   let subId: string | undefined
-  const extSubId = event.data.object.subscription
-  if (typeof extSubId === 'string') {
+  const externalSubId = event.data.object.subscription
+  if (typeof externalSubId === 'string') {
     // if checkout contains a subscription that is not in the database try to save it
-    const s = await payments.getSubscription({ externalId: extSubId })
+    const s = await payments.getSubscription({ externalId: externalSubId })
     if (!s) {
       const subscription = await PaymentProvider.forCompany(
         company,
-      ).getSubscription(extSubId as string)
+      ).getSubscription(externalSubId)
       if (subscription) {
         const args = mapSubscriptionArgs(company, subscription)
         subId = (await payments.setupSubscription(userId, args)).id

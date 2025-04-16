@@ -13,12 +13,12 @@ export = async function updateMagazineSubscriptionDonation(
   args: {
     subscriptionId: string
     selectedDonation?: string
-    customDonation?: { amount: number }
+    donationAmount?: number
   }, // eslint-disable-line @typescript-eslint/no-unused-vars
   ctx: GraphqlContext, // eslint-disable-line @typescript-eslint/no-unused-vars
 ) {
   Auth.ensureUser(ctx.user)
-  if (args.selectedDonation && args.customDonation) {
+  if (args.selectedDonation && args.donationAmount) {
     throw new Error(
       'api/payments/error/exclusiveOptions/selectedDonationANDcustomDonation',
     )
@@ -46,6 +46,7 @@ export = async function updateMagazineSubscriptionDonation(
 
   const items = await ps.listSubscriptionItems(sub.company, sub.externalId)
 
+  let action: 'update' | 'delete' = 'update'
   let price: string | undefined = undefined
   let priceData: PriceData | undefined = undefined
   if (args.selectedDonation) {
@@ -53,29 +54,37 @@ export = async function updateMagazineSubscriptionDonation(
 
     price = isPriceOfProduct(res, DONATION_PRODUCT_ID) ? res.id : undefined
   }
-  if (args.customDonation) {
-    priceData = makeYearlyRecurringPrice(
-      DONATION_PRODUCT_ID,
-      args.customDonation.amount,
-    )
+
+  console.log(typeof args.donationAmount)
+  if (typeof args.donationAmount === 'number') {
+    if (args.donationAmount === 0) {
+      action = 'delete'
+    } else {
+      priceData = makeYearlyRecurringPrice(
+        DONATION_PRODUCT_ID,
+        args.donationAmount,
+      )
+    }
   }
 
-  if (!price && !priceData) throw new Error('api/unexpected/invalidPrice')
-
   const existingDonation = findExistingProduct(items, DONATION_PRODUCT_ID)
-  if (existingDonation) {
+  if (action === 'update' && existingDonation) {
     await ps.updateSubscriptionItem(sub.company, existingDonation.id, {
       price: price,
       price_data: priceData,
       proration_behavior: 'none',
     })
-  } else {
+  } else if (action === 'update') {
     await ps.createSubscriptionItem(sub.company, {
       subscription: sub.externalId,
       price: price,
       price_data: priceData,
       proration_behavior: 'none',
     })
+  }
+
+  if (action === 'delete' && existingDonation) {
+    await ps.deleteSubscriptionItem(sub.company, existingDonation.id)
   }
 
   return true

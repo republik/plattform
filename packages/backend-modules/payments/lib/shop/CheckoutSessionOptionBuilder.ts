@@ -58,6 +58,8 @@ export type RecurringPriceData = {
   tax_rates?: string[]
 }
 
+export type CustomDonation = { amount: number; recurring?: boolean }
+
 export type LineItem = Price | PriceData | RecurringPriceData
 
 export class CheckoutSessionBuilder {
@@ -71,7 +73,7 @@ export class CheckoutSessionBuilder {
     metadata?: any
     returnURL?: string
     selectedDiscount?: { type: 'DISCOUNT'; value: Discount }
-    selectedDonation?: string | { amount: number }
+    selectedDonation?: string | CustomDonation
   }
 
   constructor(offerId: string, paymentService: PaymentService) {
@@ -280,7 +282,7 @@ export class CheckoutSessionBuilder {
         }
       }
       if (typeof selectedDonation === 'object') {
-        const donation = makeDonation(this.offer.type, selectedDonation.amount)
+        const donation = makeDonation(this.offer.type, selectedDonation)
 
         lineItems.push(donation)
       }
@@ -362,35 +364,40 @@ export class CheckoutSessionBuilder {
 
 function makeDonation(
   offerType: 'SUBSCRIPTION',
-  amount: number,
-): RecurringPriceData
-function makeDonation(offerType: 'ONETIME_PAYMENT', amount: number): PriceData
+  donation: CustomDonation,
+): RecurringPriceData | PriceData
+function makeDonation(
+  offerType: 'ONETIME_PAYMENT',
+  donation: CustomDonation,
+): PriceData
 function makeDonation(
   offerType: OfferType,
-  amount: number,
+  donation: CustomDonation,
 ): RecurringPriceData | PriceData
 function makeDonation(
   offerType: OfferType,
-  amount: number,
+  donation: CustomDonation,
 ): RecurringPriceData | PriceData {
   switch (offerType) {
     case 'SUBSCRIPTION':
       return {
         price_data: {
-          unit_amount: amount,
+          unit_amount: donation.amount,
           currency: 'CHF',
           product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
-          recurring: {
-            interval: 'year',
-            interval_count: 1,
-          },
+          recurring: donation.recurring
+            ? {
+                interval: 'year',
+                interval_count: 1,
+              }
+            : undefined,
         },
         quantity: 1,
       }
     case 'ONETIME_PAYMENT':
       return {
         price_data: {
-          unit_amount: amount,
+          unit_amount: donation.amount,
           currency: 'CHF',
           product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
         },

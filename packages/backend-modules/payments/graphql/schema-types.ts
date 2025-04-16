@@ -101,6 +101,7 @@ type Donation {
 
 input CustomDonation {
   amount: Int!
+  recurring: Boolean
 }
 
 type SubscriptionOffer implements Offer {
