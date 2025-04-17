@@ -1,0 +1,3 @@
+-- migrate down here: DROP TABLE...
+
+DROP TABLE IF EXISTS payments."subscriptionCancellation";

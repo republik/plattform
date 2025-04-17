@@ -3,6 +3,7 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { Payments } from '../../../lib/payments'
 import { PaymentService } from '../../../lib/services/PaymentService'
 import { Subscription } from '../../../lib/types'
+import { CancelationService } from '../../../lib/services/CancelationService'
 
 export = async function cancelMagazineSubscription(
   _root: never, // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -24,9 +25,9 @@ export = async function cancelMagazineSubscription(
     ['admin', 'supporter'],
   )
 
-  await new PaymentService().updateSubscription(sub.company, sub.externalId, {
-    cancel_at_period_end: false,
-  })
+  const cs = new CancelationService(new PaymentService(), ctx.pgdb)
+
+  cs.revokeCancelation(sub)
 
   return true
 }
