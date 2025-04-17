@@ -9,9 +9,9 @@ import {
   getMailSettings,
   REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
 } from '../../mail-settings'
-import { secondsToMilliseconds } from './utils'
 import { ConfirmGiftAppliedTransactionalWorker } from '../../workers/ConfirmGiftAppliedTransactionalWorker'
 import { getConfig } from '../../config'
+import { parseStripeDate } from './utils'
 
 export async function processSubscriptionUpdate(
   payments: PaymentInterface,
@@ -23,9 +23,6 @@ export async function processSubscriptionUpdate(
   )
   const cancelAt = event.data.object.cancel_at
   const canceledAt = event.data.object.canceled_at
-  const cancellationComment = event.data.object.cancellation_details?.comment
-  const cancellationFeedback = event.data.object.cancellation_details?.feedback
-  const cancellationReason = event.data.object.cancellation_details?.reason
 
   const appliedVouchers = event.data.object.discounts
   const previousVouchers = event.data.previous_attributes?.discounts
@@ -34,38 +31,19 @@ export async function processSubscriptionUpdate(
   await payments.updateSubscription({
     company: company,
     externalId: event.data.object.id,
-    currentPeriodStart: new Date(
-      secondsToMilliseconds(event.data.object.current_period_start),
-    ),
-    currentPeriodEnd: new Date(
-      secondsToMilliseconds(event.data.object.current_period_end),
-    ),
+    currentPeriodStart: parseStripeDate(event.data.object.current_period_start),
+    currentPeriodEnd: parseStripeDate(event.data.object.current_period_end),
     status: event.data.object.status,
     metadata: event.data.object.metadata,
-    cancelAt:
-      typeof cancelAt === 'number'
-        ? new Date(secondsToMilliseconds(cancelAt))
-        : (cancelAt as null | undefined),
-    canceledAt:
-      typeof canceledAt === 'number'
-        ? new Date(secondsToMilliseconds(canceledAt))
-        : (cancelAt as null | undefined),
-    cancellationComment:
-      typeof cancellationComment === 'string' ? cancellationComment : null,
-    cancellationFeedback:
-      typeof cancellationFeedback === 'string' ? cancellationFeedback : null,
-    cancellationReason:
-      typeof cancellationReason === 'string' ? cancellationReason : null,
+    cancelAt: parseStripeDate(cancelAt),
+    canceledAt: parseStripeDate(canceledAt),
     cancelAtPeriodEnd: event.data.object.cancel_at_period_end,
   })
 
   const hasPeriodChanged = !!event.data.previous_attributes?.current_period_end
 
   const previousCanceledAt = event.data.previous_attributes?.canceled_at
-  const revokedCancellationDate =
-    typeof previousCanceledAt === 'number'
-      ? new Date(secondsToMilliseconds(previousCanceledAt))
-      : (previousCanceledAt as null | undefined)
+  const revokedCancellationDate = parseStripeDate(previousCanceledAt)
   const isCancellationRevoked = !cancelAt && !!revokedCancellationDate
 
   if (hasPeriodChanged) {

@@ -19,6 +19,13 @@ export class CancelationService {
     this.db = db
   }
 
+  async getCancellationDetails(sub: Subscription): Promise<CancalationDetails> {
+    const cancelation = await this.db.payments.subscriptionCancellations.find({
+      subscriptionId: sub.id,
+    })
+    return cancelation
+  }
+
   async cancelSubscription(
     sub: Subscription,
     details: CancalationDetails,

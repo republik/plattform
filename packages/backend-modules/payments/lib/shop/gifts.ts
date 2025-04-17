@@ -16,7 +16,7 @@ import {
   serializeMailSettings,
 } from '../mail-settings'
 import { getConfig } from '../config'
-import { secondsToMilliseconds } from '../handlers/stripe/utils'
+import { parseStripeDate } from '../handlers/stripe/utils'
 
 const logger = createLogger('payments:gifts')
 
@@ -373,7 +373,7 @@ export class GiftShop {
           id: membershipId,
           aboType: 'MONLTY_ABO',
           company: 'REPUBLIK',
-          starting: new Date(secondsToMilliseconds(sub.current_period_end)),
+          starting: parseStripeDate(sub.current_period_end),
         }
       }
       case 'PROJECT_R': {
@@ -440,7 +440,7 @@ export class GiftShop {
           id: membershipId,
           aboType: 'YEARLY_SUBSCRIPION',
           company: 'PROJECT_R',
-          starting: new Date(secondsToMilliseconds(oldSub.current_period_end)),
+          starting: parseStripeDate(oldSub.current_period_end),
         }
       }
     }
@@ -522,7 +522,7 @@ export class GiftShop {
           id: id,
           aboType: 'YEARLY',
           company: 'PROJECT_R',
-          starting: new Date(secondsToMilliseconds(sub.current_period_end)),
+          starting: parseStripeDate(sub.current_period_end),
         }
       }
       case 'REPUBLIK': {
@@ -571,7 +571,7 @@ export class GiftShop {
           id: subScriptionId,
           aboType: 'MONLTY',
           company: 'REPUBLIK',
-          starting: new Date(secondsToMilliseconds(sub.current_period_end)),
+          starting: parseStripeDate(sub.current_period_end),
         }
       }
       case 'PROJECT_R': {
@@ -615,7 +615,7 @@ export class GiftShop {
         return {
           company: 'PROJECT_R',
           aboType: 'YEARLY_SUBSCRIPION',
-          starting: new Date(secondsToMilliseconds(oldSub.current_period_end)),
+          starting: parseStripeDate(oldSub.current_period_end),
         }
       }
     }

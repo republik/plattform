@@ -24,6 +24,16 @@ export function isPledgeBased(metadata: any) {
   return 'pledgeId' in metadata
 }
 
-export function secondsToMilliseconds(seconds: number): number {
-  return seconds * 1000
+export function parseStripeDate(value: number): Date
+export function parseStripeDate(value: null | undefined): undefined
+export function parseStripeDate(
+  value: number | null | undefined,
+): Date | undefined
+export function parseStripeDate(
+  value: number | null | undefined,
+): Date | undefined {
+  if (typeof value === 'number') {
+    return new Date(value * 1000)
+  }
+  return undefined
 }
