@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
+import { PaymentInterface } from '../../payments'
 import { Company } from '../../types'
 import { ConfirmSetupTransactionalWorker } from '../../workers/ConfirmSetupTransactionalWorker'
 import { Queue } from '@orbiting/backend-modules-job-queue'
@@ -7,7 +7,6 @@ import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker
 import { PaymentProvider } from '../../providers/provider'
 import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
-import { SyncAddressDataWorker } from '../../workers/SyncAddressDataWorker'
 import { mapChargeArgs } from './invoicePaymentSucceeded'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
 import { GiftShop } from '../../shop/gifts'
@@ -15,8 +14,15 @@ import { sendGiftPurchaseMail } from '../../transactionals/sendTransactionalMail
 import { UserDataRepo } from '../../database/UserRepo'
 
 type PaymentWebhookContext = {
-  paymentService: PaymentService
+  payments: PaymentInterface
 } & ConnectionContext
+
+class CheckoutProcessingError extends Error {
+  constructor(msg: string) {
+    super(msg)
+    this.name = 'CheckoutProcessingError'
+  }
+}
 
 export async function processCheckoutCompleted(
   ctx: PaymentWebhookContext,
@@ -38,29 +44,17 @@ async function handleSubscription(
   company: Company,
   event: Stripe.CheckoutSessionCompletedEvent,
 ) {
-  const paymentService = ctx.paymentService
+  const payments = ctx.payments
 
-  const customerId = event.data.object.customer as string
+  const customerId = event.data.object.customer?.toString()
   if (!customerId) {
-    console.log('No stripe customer provided; skipping')
-    return
+    throw new CheckoutProcessingError('No stripe customer')
   }
 
-  if (!event.data.object.subscription) {
-    console.log('Non subscription checkouts currently not supported')
-    return
-  }
-
-  const userId = await paymentService.getUserIdForCompanyCustomer(
-    company,
-    customerId,
-  )
+  const userId = await payments.getUserIdForCompanyCustomer(company, customerId)
   if (!userId) {
     throw Error(`User for ${customerId} does not exists`)
   }
-
-  const customFields = event.data.object.custom_fields
-  await syncUserNameData(paymentService, userId, customFields)
 
   let paymentStatus = event.data.object.payment_status
   if (paymentStatus === 'no_payment_required') {
@@ -69,17 +63,17 @@ async function handleSubscription(
   }
 
   let subId: string | undefined
-  const extSubId = event.data.object.subscription
-  if (typeof extSubId === 'string') {
+  const externalSubId = event.data.object.subscription
+  if (typeof externalSubId === 'string') {
     // if checkout contains a subscription that is not in the database try to save it
-    const s = await paymentService.getSubscription({ externalId: extSubId })
+    const s = await payments.getSubscription({ externalId: externalSubId })
     if (!s) {
       const subscription = await PaymentProvider.forCompany(
         company,
-      ).getSubscription(extSubId as string)
+      ).getSubscription(externalSubId)
       if (subscription) {
         const args = mapSubscriptionArgs(company, subscription)
-        subId = (await paymentService.setupSubscription(userId, args)).id
+        subId = (await payments.setupSubscription(userId, args)).id
       }
     } else {
       subId = s.id
@@ -89,7 +83,7 @@ async function handleSubscription(
   let invoiceId: string | undefined
   const extInvoiceId = event.data.object.invoice
   if (typeof extInvoiceId === 'string') {
-    const i = await paymentService.getInvoice({ externalId: extInvoiceId })
+    const i = await payments.getInvoice({ externalId: extInvoiceId })
     if (!i) {
       // if checkout contains a invoice that is not in the database try to save it
       const invoiceData = await PaymentProvider.forCompany(company).getInvoice(
@@ -97,14 +91,14 @@ async function handleSubscription(
       )
       if (invoiceData) {
         const args = mapInvoiceArgs(company, invoiceData)
-        invoiceId = (await paymentService.saveInvoice(userId, args)).id
+        invoiceId = (await payments.saveInvoice(userId, args)).id
         const chargeArgs = mapChargeArgs(
           company,
           invoiceId,
           invoiceData.charge as Stripe.Charge,
         )
         try {
-          await paymentService.saveCharge(chargeArgs)
+          await payments.saveCharge(chargeArgs)
         } catch (e) {
           if (e instanceof Error) {
             console.log(`Error recording charge: ${e.message}`)
@@ -116,7 +110,7 @@ async function handleSubscription(
     }
   }
 
-  await paymentService.saveOrder({
+  await payments.saveOrder({
     userId: userId,
     company: company,
     externalId: event.data.object.id,
@@ -126,8 +120,6 @@ async function handleSubscription(
   })
 
   const queue = Queue.getInstance()
-
-  const addressData = event.data.object.customer_details?.address
 
   await Promise.all([
     queue.send<ConfirmSetupTransactionalWorker>(
@@ -144,16 +136,6 @@ async function handleSubscription(
       eventSourceId: event.id,
       userId: userId,
     }),
-    addressData
-      ? queue.send<SyncAddressDataWorker>(
-          'payments:stripe:checkout:sync-address',
-          {
-            $version: 'v1',
-            userId: userId,
-            address: addressData,
-          },
-        )
-      : undefined,
   ])
   return
 }
@@ -170,19 +152,17 @@ async function handlePayment(
   )
 
   if (!sess) {
-    throw new Error('checkout session does not exist')
+    throw new CheckoutProcessingError('checkout session does not exist')
   }
 
   if (!sess.line_items) {
-    throw new Error(
-      'checkout session has no line items unable to process checkout',
-    )
+    throw new CheckoutProcessingError('checkout session has no line items')
   }
 
   let userId = undefined
   if (typeof sess.customer !== 'undefined') {
     userId =
-      (await ctx.paymentService.getUserIdForCompanyCustomer(
+      (await ctx.payments.getUserIdForCompanyCustomer(
         company,
         sess.customer as string,
       )) ?? undefined
@@ -207,8 +187,6 @@ async function handlePayment(
       discountAmount: line.amount_discount,
     }
   })
-
-  console.log(sess.shipping_details)
 
   let addressId: string | undefined = undefined
   if (sess.shipping_details) {
@@ -237,7 +215,7 @@ async function handlePayment(
     shippingAddressId: addressId,
   }
 
-  const order = await ctx.paymentService.saveOrder(orderDraft)
+  const order = await ctx.payments.saveOrder(orderDraft)
 
   const orderLineItems = lineItems.map((i) => {
     return { orderId: order.id, ...i }
@@ -264,26 +242,4 @@ async function handlePayment(
     },
     ctx.pgdb,
   )
-}
-
-async function syncUserNameData(
-  paymentService: PaymentService,
-  userId: string,
-  customFields: Stripe.Checkout.Session.CustomField[],
-) {
-  if (customFields.length > 0) {
-    const firstNameField = customFields.find(
-      (field) => field.key === 'firstName',
-    )
-    const lastNameField = customFields.find((field) => field.key === 'lastName')
-
-    const firstName = firstNameField?.text?.value
-    const lastName = lastNameField?.text?.value
-
-    if (firstName && lastName) {
-      return await paymentService.updateUserName(userId, firstName, lastName)
-    }
-
-    return null
-  }
 }

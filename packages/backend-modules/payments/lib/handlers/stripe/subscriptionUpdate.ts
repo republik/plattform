@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
+import { PaymentInterface } from '../../payments'
 import { Company } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { ConfirmCancelTransactionalWorker } from '../../workers/ConfirmCancelTransactionalWorker'
@@ -9,12 +9,12 @@ import {
   getMailSettings,
   REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
 } from '../../mail-settings'
-import { secondsToMilliseconds } from './utils'
 import { ConfirmGiftAppliedTransactionalWorker } from '../../workers/ConfirmGiftAppliedTransactionalWorker'
 import { getConfig } from '../../config'
+import { parseStripeDate } from './utils'
 
 export async function processSubscriptionUpdate(
-  paymentService: PaymentService,
+  payments: PaymentInterface,
   company: Company,
   event: Stripe.CustomerSubscriptionUpdatedEvent,
 ) {
@@ -23,55 +23,33 @@ export async function processSubscriptionUpdate(
   )
   const cancelAt = event.data.object.cancel_at
   const canceledAt = event.data.object.canceled_at
-  const cancellationComment = event.data.object.cancellation_details?.comment
-  const cancellationFeedback = event.data.object.cancellation_details?.feedback
-  const cancellationReason = event.data.object.cancellation_details?.reason
 
   const appliedVouchers = event.data.object.discounts
   const previousVouchers = event.data.previous_attributes?.discounts
   const discountCode = event.data.object.discount?.coupon?.id
 
-  await paymentService.updateSubscription({
+  await payments.updateSubscription({
     company: company,
     externalId: event.data.object.id,
-    currentPeriodStart: new Date(
-      secondsToMilliseconds(event.data.object.current_period_start),
-    ),
-    currentPeriodEnd: new Date(
-      secondsToMilliseconds(event.data.object.current_period_end),
-    ),
+    currentPeriodStart: parseStripeDate(event.data.object.current_period_start),
+    currentPeriodEnd: parseStripeDate(event.data.object.current_period_end),
     status: event.data.object.status,
     metadata: event.data.object.metadata,
-    cancelAt:
-      typeof cancelAt === 'number'
-        ? new Date(secondsToMilliseconds(cancelAt))
-        : (cancelAt as null | undefined),
-    canceledAt:
-      typeof canceledAt === 'number'
-        ? new Date(secondsToMilliseconds(canceledAt))
-        : (cancelAt as null | undefined),
-    cancellationComment:
-      typeof cancellationComment === 'string' ? cancellationComment : null,
-    cancellationFeedback:
-      typeof cancellationFeedback === 'string' ? cancellationFeedback : null,
-    cancellationReason:
-      typeof cancellationReason === 'string' ? cancellationReason : null,
+    cancelAt: parseStripeDate(cancelAt),
+    canceledAt: parseStripeDate(canceledAt),
     cancelAtPeriodEnd: event.data.object.cancel_at_period_end,
   })
 
   const hasPeriodChanged = !!event.data.previous_attributes?.current_period_end
 
   const previousCanceledAt = event.data.previous_attributes?.canceled_at
-  const revokedCancellationDate =
-    typeof previousCanceledAt === 'number'
-      ? new Date(secondsToMilliseconds(previousCanceledAt))
-      : (previousCanceledAt as null | undefined)
+  const revokedCancellationDate = parseStripeDate(previousCanceledAt)
   const isCancellationRevoked = !cancelAt && !!revokedCancellationDate
 
   if (hasPeriodChanged) {
     const customerId = event.data.object.customer as string
 
-    const userId = await paymentService.getUserIdForCompanyCustomer(
+    const userId = await payments.getUserIdForCompanyCustomer(
       company,
       customerId,
     )
@@ -91,7 +69,7 @@ export async function processSubscriptionUpdate(
   if (isCancellationRevoked && mailSettings['confirm:revoke_cancellation']) {
     const customerId = event.data.object.customer as string
 
-    const userId = await paymentService.getUserIdForCompanyCustomer(
+    const userId = await payments.getUserIdForCompanyCustomer(
       company,
       customerId,
     )
@@ -120,7 +98,7 @@ export async function processSubscriptionUpdate(
   if (cancelAt && mailSettings['confirm:cancel']) {
     const customerId = event.data.object.customer as string
 
-    const userId = await paymentService.getUserIdForCompanyCustomer(
+    const userId = await payments.getUserIdForCompanyCustomer(
       company,
       customerId,
     )
@@ -153,7 +131,7 @@ export async function processSubscriptionUpdate(
   )
   if (isGiftUpdate) {
     const customerId = event.data.object.customer as string
-    const userId = await paymentService.getUserIdForCompanyCustomer(
+    const userId = await payments.getUserIdForCompanyCustomer(
       company,
       customerId,
     )

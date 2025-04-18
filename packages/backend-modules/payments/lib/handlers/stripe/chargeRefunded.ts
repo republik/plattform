@@ -1,10 +1,10 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
+import { PaymentInterface } from '../../payments'
 import { Company } from '../../types'
 import { PaymentProvider } from '../../providers/provider'
 
 export async function processChargeRefunded(
-  paymentService: PaymentService,
+  payments: PaymentInterface,
   company: Company,
   event: Stripe.ChargeRefundedEvent,
 ) {
@@ -18,7 +18,7 @@ export async function processChargeRefunded(
   }
 
   const args = mapChargeUpdateArgs(charge)
-  await paymentService.updateCharge({ externalId: charge.id }, args)
+  await payments.updateCharge({ externalId: charge.id }, args)
 }
 
 type ChargRefundArgs = {

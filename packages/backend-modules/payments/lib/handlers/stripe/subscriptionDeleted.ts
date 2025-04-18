@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
+import { PaymentInterface } from '../../payments'
 import { Company } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { NoticeEndedTransactionalWorker } from '../../workers/NoticeEndedTransactionalWorker'
@@ -8,29 +8,24 @@ import {
   getMailSettings,
   REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
 } from '../../mail-settings'
-import { secondsToMilliseconds } from './utils'
+import { parseStripeDate } from './utils'
 
 export async function processSubscriptionDeleted(
-  paymentService: PaymentService,
+  payments: PaymentInterface,
   _company: Company,
   event: Stripe.CustomerSubscriptionDeletedEvent,
 ) {
-  const endTimestamp = secondsToMilliseconds(event.data.object.ended_at || 0)
-  const canceledAtTimestamp = secondsToMilliseconds(
-    event.data.object.canceled_at || 0,
-  )
-
-  await paymentService.disableSubscription(
+  await payments.disableSubscription(
     { externalId: event.data.object.id },
     {
-      endedAt: new Date(endTimestamp),
-      canceledAt: new Date(canceledAtTimestamp),
+      endedAt: parseStripeDate(event.data.object.ended_at || 0),
+      canceledAt: parseStripeDate(event.data.object.canceled_at || 0),
     },
   )
 
   const customerId = event.data.object.customer as string
 
-  const userId = await paymentService.getUserIdForCompanyCustomer(
+  const userId = await payments.getUserIdForCompanyCustomer(
     _company,
     customerId,
   )

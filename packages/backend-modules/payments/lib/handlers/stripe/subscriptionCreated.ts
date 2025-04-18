@@ -1,7 +1,7 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
+import { PaymentInterface } from '../../payments'
 import { Company, SubscriptionArgs } from '../../types'
-import { getSubscriptionType, secondsToMilliseconds } from './utils'
+import { getSubscriptionType, parseStripeDate } from './utils'
 import { PaymentProvider } from '../../providers/provider'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { ConfirmGiftSubscriptionTransactionalWorker } from '../../workers/ConfirmGiftSubscriptionTransactionalWorker'
@@ -9,25 +9,20 @@ import { REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN } from '../../shop/gifts'
 import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker'
 
 export async function processSubscriptionCreated(
-  paymentService: PaymentService,
+  payments: PaymentInterface,
   company: Company,
   event: Stripe.CustomerSubscriptionCreatedEvent,
 ) {
   const customerId = event.data.object.customer as string
   const externalSubscriptionId = event.data.object.id as string
 
-  const userId = await paymentService.getUserIdForCompanyCustomer(
-    company,
-    customerId,
-  )
+  const userId = await payments.getUserIdForCompanyCustomer(company, customerId)
 
   if (!userId) {
     throw new Error(`Unknown customer ${customerId}`)
   }
 
-  if (
-    await paymentService.getSubscription({ externalId: externalSubscriptionId })
-  ) {
+  if (await payments.getSubscription({ externalId: externalSubscriptionId })) {
     console.log(
       `subscription has already saved; skipping [${externalSubscriptionId}]`,
     )
@@ -43,7 +38,7 @@ export async function processSubscriptionCreated(
   }
 
   const args = mapSubscriptionArgs(company, subscription)
-  await paymentService.setupSubscription(userId, args)
+  await payments.setupSubscription(userId, args)
 
   const isGiftSubscription =
     subscription.metadata[REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN] === 'GIFT'
@@ -80,10 +75,8 @@ export function mapSubscriptionArgs(
     company: company,
     type: getSubscriptionType(sub?.items.data[0].price.product as string),
     externalId: sub.id,
-    currentPeriodStart: new Date(
-      secondsToMilliseconds(sub.current_period_start),
-    ),
-    currentPeriodEnd: new Date(secondsToMilliseconds(sub.current_period_end)),
+    currentPeriodStart: parseStripeDate(sub.current_period_start),
+    currentPeriodEnd: parseStripeDate(sub.current_period_end),
     status: sub.status,
     metadata: sub.metadata,
   }

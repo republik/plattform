@@ -22,6 +22,7 @@ enum MagazineSubscriptionStatus {
 enum MagazineSubscriptionType {
   YEARLY_SUBSCRIPTION
   MONTHLY_SUBSCRIPTION
+  BENEFACTOR_SUBSCRIPTION
 }
 
 enum CompanyName {
@@ -84,9 +85,23 @@ interface Offer {
   name: String!
   price: Price!
   customPrice: CustomPrice
+  donationOptions: [Donation!]
+  discountOptions: [Discount!]
   discount: Discount
   allowPromotions: Boolean
+  requiresLogin: Boolean
+  requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
+}
+
+type Donation {
+  id: ID!
+  price: Price!
+}
+
+input CustomDonation {
+  amount: Int!
+  recurring: Boolean
 }
 
 type SubscriptionOffer implements Offer {
@@ -95,8 +110,12 @@ type SubscriptionOffer implements Offer {
   name: String!
   price: Price!
   customPrice: CustomPrice
+  donationOptions: [Donation!]
+  discountOptions: [Discount!]
   discount: Discount
   allowPromotions: Boolean
+  requiresLogin: Boolean
+  requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
 }
 
@@ -106,8 +125,12 @@ type GiftOffer implements Offer {
   name: String!
   price: Price!
   customPrice: CustomPrice
+  donationOptions: [Donation!]
+  discountOptions: [Discount!]
   discount: Discount
   allowPromotions: Boolean
+  requiresLogin: Boolean
+  requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
 }
 
@@ -119,7 +142,7 @@ type Price {
 
 type Recurring {
   interval: String!
-  interval_count: Int!
+  intervalCount: Int!
 }
 
 type CustomPrice {
@@ -129,8 +152,11 @@ type CustomPrice {
 }
 
 type Discount {
+  id: ID!
   name: String
   amountOff: Int!
+  duration: String!,
+  durationInMonths: Int
   currency: String!
 }
 
@@ -140,13 +166,14 @@ type Product {
 }
 
 type ComplimentaryItem {
-  id: String!
+  id: ID!
   maxQuantity: Int!
 }
 
 type GiftVoucherValidationResult {
-  type: String!
+  type: String
   valid: Boolean!
+  company: CompanyName
   isLegacyVoucher: Boolean!
 }
 
@@ -167,12 +194,4 @@ input CheckoutSessionOptions {
   returnURL: String
 }
 
-input CancelSubscriptionOptions {
-  feedback: String
-}
-
-input CancelSubscription {
-  subscriptionId: ID!
-  options: CancelSubscriptionOptions
-}
 `

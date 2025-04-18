@@ -55,7 +55,15 @@
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                      <li>Jährlicher Preis: CHF {{total_before_discount}}</li>
+                      <li>Jährlicher Preis: CHF {{total_before_discount}}
+                        {{#if order_items.length }}
+                        <ul>
+                          {{#each order_items}}
+                          <li>{{this.description}}: CHF {{this.amount}}</li>
+                          {{/each}}
+                        </ul>
+                        {{/if}}
+                      </li>
                       {{#if discount_code}}
                       <li>{{discount_code}}: CHF –{{discount_total}}</li>
                       {{/if}}
@@ -65,15 +73,15 @@
                     </ul>
 
                     <p>
-                      Ihre Jahresmitgliedschaft verlängert sich automatisch{{#if discount_code}} zum Normalpreis{{/if}}. 
-                      Die von Ihnen angegebene Zahlungsmethode belasten wir dementsprechend 
+                      Ihre Jahresmitgliedschaft verlängert sich automatisch{{#if discount_code}} zum Normalpreis{{/if}}.
+                      Die von Ihnen angegebene Zahlungsmethode belasten wir dementsprechend
                       in einem Jahr mit CHF {{total_before_discount}}.
                     </p>
                     <p>
-                      In Ihrem 
+                      In Ihrem
                       <a href="{{link_account_goto}}">Konto</a> finden Sie
-                      <a href="{{link_account_abos_goto}}">alle relevanten Informationen zu Ihrer Mitgliedschaft</a>. 
-                      Dort können Sie Ihre Einstellungen verwalten (z.B. die Zahlungsmethode ändern) 
+                      <a href="{{link_account_abos_goto}}">alle relevanten Informationen zu Ihrer Mitgliedschaft</a>.
+                      Dort können Sie Ihre Einstellungen verwalten (z.B. die Zahlungsmethode ändern)
                       oder die Mitgliedschaft jederzeit kündigen (was wir nicht hoffen).
                     </p>
 
