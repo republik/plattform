@@ -1,7 +1,7 @@
 import Stripe from 'stripe'
 import { PaymentInterface } from '../../payments'
 import { Company, SubscriptionArgs } from '../../types'
-import { getSubscriptionType, secondsToMilliseconds } from './utils'
+import { getSubscriptionType, parseStripeDate } from './utils'
 import { PaymentProvider } from '../../providers/provider'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { ConfirmGiftSubscriptionTransactionalWorker } from '../../workers/ConfirmGiftSubscriptionTransactionalWorker'
@@ -75,10 +75,8 @@ export function mapSubscriptionArgs(
     company: company,
     type: getSubscriptionType(sub?.items.data[0].price.product as string),
     externalId: sub.id,
-    currentPeriodStart: new Date(
-      secondsToMilliseconds(sub.current_period_start),
-    ),
-    currentPeriodEnd: new Date(secondsToMilliseconds(sub.current_period_end)),
+    currentPeriodStart: parseStripeDate(sub.current_period_start),
+    currentPeriodEnd: parseStripeDate(sub.current_period_end),
     status: sub.status,
     metadata: sub.metadata,
   }
