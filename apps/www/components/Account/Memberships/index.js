@@ -73,7 +73,7 @@ const Memberships = ({
                 <UserGuidance />
               </div>
             )}
-            {inNativeIOSApp(
+            {inNativeIOSApp && (
               <AccountBox>
                 {isMinimalNativeAppVersion('2.3.0') ? (
                   <P>
@@ -94,7 +94,7 @@ const Memberships = ({
                 ) : (
                   <P>{t('account/ios/box')}</P>
                 )}
-              </AccountBox>,
+              </AccountBox>
             )}
 
             {/* Account Section, hide in iOS */}
