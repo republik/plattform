@@ -4,6 +4,7 @@ extend type User {
   stripeCustomer(company: CompanyName): StripeCustomer
   magazineSubscriptions: [MagazineSubscription!]!
   activeMagazineSubscription: MagazineSubscription
+  transactions: [Transaction!]!
 }
 
 enum MagazineSubscriptionStatus {
@@ -180,6 +181,44 @@ type GiftVoucherValidationResult {
 type RedeemGiftResult {
   aboType: String!
   starting: DateTime!
+}
+
+interface Transaction {
+  id: ID!
+  amount: Int!
+  currency: String!
+  company: CompanyName!
+  status: String!
+  createdAt: DateTime!
+}
+
+type SubscriptionTransaction implements Transaction {
+  id: ID!
+  amount: Int!
+  currency: String!
+  company: CompanyName!
+  status: String!
+  createdAt: DateTime!
+  subscription: Subscription!
+}
+
+type PledgeTransaction implements Transaction {
+  id: ID!
+  amount: Int!
+  currency: String!
+  company: CompanyName!
+  status: String!
+  createdAt: DateTime!
+  pledge: Pledge!
+}
+
+type GiftTransaction implements Transaction {
+  id: ID!
+  amount: Int!
+  currency: String!
+  company: CompanyName!
+  status: String!
+  createdAt: DateTime!
 }
 
 input ComplimentaryItemOrder {

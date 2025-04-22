@@ -237,3 +237,12 @@ export type ChargeUpdate = {
   amountRefunded: number
   fullyRefunded: boolean
 }
+
+export type Transaction = {
+  id: string
+  amount: number
+  currency: string
+  status: string
+  subscriptionId?: string
+  pledgeId?: string
+}

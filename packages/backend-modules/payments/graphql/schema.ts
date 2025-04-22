@@ -22,10 +22,10 @@ type mutations {
     complimentaryItems: [ComplimentaryItemOrder]
     options: CheckoutSessionOptions
   ): CheckoutSession
-  cancelMagazineSubscription(subscriptionId: String!, details: CancellationInput, cancelImmediately: Boolean): Boolean
-  reactivateMagazineSubscription(subscriptionId: String!): Boolean
+  cancelMagazineSubscription(subscriptionId: ID!, details: CancellationInput!, cancelImmediately: Boolean): Boolean
+  reactivateMagazineSubscription(subscriptionId: ID!): Boolean
   updateMagazineSubscriptionDonation(
-    subscriptionId: String!
+    subscriptionId: ID!
     selectedDonation: ID
     donationAmount: Int
   ): Boolean
