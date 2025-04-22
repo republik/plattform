@@ -263,11 +263,13 @@ async function handlePayment(
     }
   }
 
-  await sendGiftPurchaseMail(
-    {
-      email: sess.customer_details!.email!,
-      voucherCode: giftCodes[0].code.replace(/(\w{4})(\w{4})/, '$1-$2'),
-    },
-    ctx.pgdb,
-  )
+  if (giftCodes.length) {
+    await sendGiftPurchaseMail(
+      {
+        email: sess.customer_details!.email!,
+        voucherCode: giftCodes[0].code.replace(/(\w{4})(\w{4})/, '$1-$2'),
+      },
+      ctx.pgdb,
+    )
+  }
 }

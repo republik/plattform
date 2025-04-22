@@ -7,14 +7,18 @@ import { CancelationService } from '../../../lib/services/CancelationService'
 
 type CancellationInput = {
   type: string
-  reason: string
-  suppressConfirmation: boolean
-  suppressWinback: boolean
+  reason?: string
+  suppressConfirmation?: boolean
+  suppressWinback?: boolean
 }
 
 export = async function cancelMagazineSubscription(
   _root: never, // eslint-disable-line @typescript-eslint/no-unused-vars
-  args: { subscriptionId: string; details: CancellationInput },
+  args: {
+    subscriptionId: string
+    cancelImmediately: boolean
+    details: CancellationInput
+  },
   ctx: GraphqlContext, // eslint-disable-line @typescript-eslint/no-unused-vars
 ) {
   Auth.ensureUser(ctx.user)

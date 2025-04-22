@@ -4,9 +4,9 @@ import { Subscription } from '../types'
 
 export type CancalationDetails = {
   category: string
-  reason: string
-  suppressConfirmation: boolean
-  suppressWinback: boolean
+  reason?: string
+  suppressConfirmation?: boolean
+  suppressWinback?: boolean
   cancelledViaSupport?: boolean
 }
 
@@ -32,7 +32,7 @@ export class CancelationService {
   ): Promise<string> {
     const id = await this.db.payments.subscriptionCancellations.insert({
       subscriptionId: sub.id,
-      ...details,
+      ...filterUndefined(details),
     })
 
     await this.paymentService.updateSubscription(sub.company, sub.externalId, {
@@ -63,4 +63,10 @@ export class CancelationService {
 
     return
   }
+}
+
+function filterUndefined<T extends Record<string, any>>(obj: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => value !== undefined),
+  ) as Partial<T>
 }
