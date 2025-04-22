@@ -689,6 +689,10 @@
       "value": "Unsichere Zukunft der Republik"
     },
     {
+      "key": "api/membership/cancel/category/NO_AUTO_PAY",
+      "value": "Ich möchte keine automatische Verlängerung."
+    },
+    {
       "key": "api/email/membership_cancel_notice/subject",
       "value": "Bestätigung Ihrer Kündigung"
     },
