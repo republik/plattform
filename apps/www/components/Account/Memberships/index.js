@@ -15,7 +15,7 @@ import AccessGrants from '../../Access/Grants'
 import withMembership from '../../Auth/withMembership'
 import Box from '../../Frame/Box'
 
-import { Interaction, useColorContext } from '@project-r/styleguide'
+import { Interaction, useColorContext, A } from '@project-r/styleguide'
 
 import MembershipList from '../Memberships/List'
 import PaymentSources from '../PaymentSources'
@@ -38,7 +38,7 @@ const Memberships = ({
   activeMagazineSubscription,
 }) => {
   const { query } = useRouter()
-  const { inNativeIOSApp } = useInNativeApp()
+  const { inNativeIOSApp, isMinimalNativeAppVersion } = useInNativeApp()
   const [colorScheme] = useColorContext()
 
   useEffect(() => {
@@ -74,10 +74,28 @@ const Memberships = ({
                 <UserGuidance />
               </div>
             )}
-            {inNativeIOSApp && (
+            {inNativeIOSApp(
               <AccountBox>
-                <P>{t('account/ios/box')}</P>
-              </AccountBox>
+                {isMinimalNativeAppVersion('2.3.0') ? (
+                  <P>
+                    Verwalten Sie Ihr Konto im Web.
+                    <br />
+                    <A
+                      href='#'
+                      onClick={(e) => {
+                        e.preventDefault()
+                        postMessage({
+                          type: 'external-link',
+                        })
+                      }}
+                    >
+                      shop.republik.ch
+                    </A>
+                  </P>
+                ) : (
+                  <P>{t('account/ios/box')}</P>
+                )}
+              </AccountBox>,
             )}
 
             {/* Account Section, hide in iOS */}
