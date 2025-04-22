@@ -17,7 +17,9 @@ export = {
       return null
     }
 
-    return sub.items.data[0].price.unit_amount
+    return sub.items.data.reduce((acc, item) => {
+      return acc + (item.price.unit_amount ?? 0)
+    }, 0)
   },
   async paymentMethod(subscription: Subscription) {
     const sub = await PaymentProvider.forCompany(
