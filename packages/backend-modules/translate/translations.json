@@ -425,6 +425,10 @@
       "value": "Republik: Ihre Mitgliedschaft"
     },
     {
+      "key": "api/email/subscription_created_benefactor_subscription/subject",
+      "value": "Republik: Ihre Mitgliedschaft"
+    },
+    {
       "key": "api/email/subscription_cancel_notice/subject",
       "value": "Bestätigung Ihrer Kündigung"
     },

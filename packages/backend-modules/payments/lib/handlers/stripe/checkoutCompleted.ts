@@ -110,7 +110,7 @@ async function handleSubscription(
     }
   }
 
-  await payments.saveOrder({
+  const order = await payments.saveOrder({
     userId: userId,
     company: company,
     externalId: event.data.object.id,
@@ -118,6 +118,34 @@ async function handleSubscription(
     subscriptionId: subId as string,
     status: paymentStatus as 'paid' | 'unpaid',
   })
+
+  const sess = await PaymentProvider.forCompany(company).getCheckoutSession(
+    event.data.object.id,
+  )
+
+  if (!sess) {
+    throw new CheckoutProcessingError('checkout session does not exist')
+  }
+
+  const lineItems = sess.line_items?.data.map((line) => {
+    return {
+      lineItemId: line.id,
+      externalPriceId: line.price!.id,
+      priceLookupKey: line.price!.lookup_key,
+      description: line.description,
+      quantity: line.quantity,
+      price: line.amount_total,
+      priceSubtotal: line.amount_subtotal,
+      taxAmount: line.amount_tax,
+      discountAmount: line.amount_discount,
+    }
+  })
+
+  const orderLineItems = lineItems?.map((i) => {
+    return { orderId: order.id, ...i }
+  })
+
+  await ctx.pgdb.payments.orderLineItems.insert(orderLineItems)
 
   const queue = Queue.getInstance()
 
