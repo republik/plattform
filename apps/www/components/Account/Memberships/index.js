@@ -4,7 +4,7 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 
 import withT from '../../../lib/withT'
-import { useInNativeApp } from '../../../lib/withInNativeApp'
+import { useInNativeApp, postMessage } from '../../../lib/withInNativeApp'
 
 import Loader from '../../Loader'
 import UserGuidance from '../UserGuidance'
