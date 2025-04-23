@@ -1,11 +1,11 @@
 import Stripe from 'stripe'
-import { PaymentInterface } from '../../payments'
 import { Company } from '../../types'
 import { PaymentProvider } from '../../providers/provider'
 import { parseStripeDate } from './utils'
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 
 export async function processInvoicePaymentSucceeded(
-  payments: PaymentInterface,
+  ctx: PaymentWebhookContext,
   company: Company,
   event: Stripe.InvoicePaymentSucceededEvent,
 ) {
@@ -18,7 +18,7 @@ export async function processInvoicePaymentSucceeded(
     return
   }
 
-  const invoice = await payments.getInvoice({ externalId: i.id })
+  const invoice = await ctx.payments.getInvoice({ externalId: i.id })
   if (!invoice) {
     throw Error('invoice not saved locally')
   }
@@ -31,11 +31,11 @@ export async function processInvoicePaymentSucceeded(
   }
   const args = mapChargeArgs(company, invoice.id, incoiceCharge)
 
-  const ch = await payments.getCharge({ externalId: incoiceCharge.id })
+  const ch = await ctx.payments.getCharge({ externalId: incoiceCharge.id })
   if (ch) {
-    payments.updateCharge({ id: ch.id }, args)
+    ctx.payments.updateCharge({ id: ch.id }, args)
   } else {
-    payments.saveCharge(args)
+    ctx.payments.saveCharge(args)
   }
 }
 

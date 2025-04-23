@@ -1,21 +1,17 @@
 import Stripe from 'stripe'
-import { PaymentInterface } from '../../payments'
 import { Company } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { NoticeEndedTransactionalWorker } from '../../workers/NoticeEndedTransactionalWorker'
 import { SyncMailchimpEndedWorker } from '../../workers/SyncMailchimpEndedWorker'
-import {
-  getMailSettings,
-  REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
-} from '../../mail-settings'
 import { parseStripeDate } from './utils'
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 
 export async function processSubscriptionDeleted(
-  payments: PaymentInterface,
+  ctx: PaymentWebhookContext,
   _company: Company,
   event: Stripe.CustomerSubscriptionDeletedEvent,
 ) {
-  await payments.disableSubscription(
+  await ctx.payments.disableSubscription(
     { externalId: event.data.object.id },
     {
       endedAt: parseStripeDate(event.data.object.ended_at || 0),
@@ -25,7 +21,7 @@ export async function processSubscriptionDeleted(
 
   const customerId = event.data.object.customer as string
 
-  const userId = await payments.getUserIdForCompanyCustomer(
+  const userId = await ctx.payments.getUserIdForCompanyCustomer(
     _company,
     customerId,
   )
@@ -33,29 +29,23 @@ export async function processSubscriptionDeleted(
     throw Error(`User for ${customerId} does not exists`)
   }
 
-  const mailSettings = getMailSettings(
-    event.data.object.metadata[REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY],
-  )
+  const queue = Queue.getInstance()
 
-  if (mailSettings['notice:ended']) {
-    const queue = Queue.getInstance()
-
-    await Promise.all([
-      queue.send<NoticeEndedTransactionalWorker>(
-        'payments:transactional:notice:ended',
-        {
-          $version: 'v1',
-          eventSourceId: event.id,
-          userId: userId,
-        },
-      ),
-      queue.send<SyncMailchimpEndedWorker>('payments:mailchimp:sync:ended', {
+  await Promise.all([
+    queue.send<NoticeEndedTransactionalWorker>(
+      'payments:transactional:notice:ended',
+      {
         $version: 'v1',
         eventSourceId: event.id,
         userId: userId,
-      }),
-    ])
-  }
+      },
+    ),
+    queue.send<SyncMailchimpEndedWorker>('payments:mailchimp:sync:ended', {
+      $version: 'v1',
+      eventSourceId: event.id,
+      userId: userId,
+    }),
+  ])
 
   return
 }

@@ -1,11 +1,11 @@
 import Stripe from 'stripe'
 import { Company } from '../../types'
-import { PaymentInterface } from '../../payments'
 import { PaymentProvider } from '../../providers/provider'
 import { isPledgeBased } from './utils'
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 
 export async function processInvoiceUpdated(
-  payments: PaymentInterface,
+  ctx: PaymentWebhookContext,
   company: Company,
   event:
     | Stripe.InvoiceUpdatedEvent
@@ -37,7 +37,7 @@ export async function processInvoiceUpdated(
     console.log(`pledge invoice event [${event.id}]; skipping`)
   }
 
-  await payments.updateInvoice(
+  await ctx.payments.updateInvoice(
     {
       externalId: invoice.id,
     },

@@ -1,24 +1,27 @@
 import Stripe from 'stripe'
-import { PaymentInterface } from '../../payments'
 import { Company, InvoiceArgs } from '../../types'
 import { PaymentProvider } from '../../providers/provider'
 import { isPledgeBased, parseStripeDate } from './utils'
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 
 export async function processInvoiceCreated(
-  payments: PaymentInterface,
+  ctx: PaymentWebhookContext,
   company: Company,
   event: Stripe.InvoiceCreatedEvent,
 ) {
   const customerId = event.data.object.customer as string
   const externalInvoiceId = event.data.object.id as string
 
-  const userId = await payments.getUserIdForCompanyCustomer(company, customerId)
+  const userId = await ctx.payments.getUserIdForCompanyCustomer(
+    company,
+    customerId,
+  )
 
   if (!userId) {
     throw new Error(`Unknown customer ${customerId}`)
   }
 
-  if (await payments.getInvoice({ externalId: externalInvoiceId })) {
+  if (await ctx.payments.getInvoice({ externalId: externalInvoiceId })) {
     console.log(`invoice has already saved; skipping [${externalInvoiceId}]`)
     return
   }
@@ -47,7 +50,7 @@ export async function processInvoiceCreated(
   }
 
   const args = mapInvoiceArgs(company, invoice)
-  await payments.saveInvoice(userId, args)
+  await ctx.payments.saveInvoice(userId, args)
 
   return
 }

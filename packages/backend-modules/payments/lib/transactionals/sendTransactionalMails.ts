@@ -4,6 +4,7 @@ import { t } from '@orbiting/backend-modules-translate'
 import { PgDb } from 'pogi'
 import { Invoice, Subscription, SubscriptionType } from '../types'
 import type Stripe from 'stripe'
+import { getConfig } from '../config'
 
 type MergeVariable = { name: string; content: string | boolean }
 
@@ -13,33 +14,36 @@ type SendSetupSubscriptionMailArgs = {
   email: string
 }
 
-const ItemSortKey: Record<string, number> = {
-  ABO: 1,
-  MONTHLY_ABO: 1,
-  BENEFACTOR_SUBSCRIPTION: 1,
-}
+const CONFIG = getConfig()
+
+const SUBSCRIPTION_PRODUCTS = [
+  CONFIG.BENEFACTOR_SUBSCRIPTION_STRIPE_PRODUCT_ID,
+  CONFIG.YEARLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
+  CONFIG.MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
+]
+
+const DONATION_PRODUCTS = [CONFIG.PROJECT_R_DONATION_PRODUCT_ID]
 
 export async function sendSetupSubscriptionMail(
   { subscription, invoice, email }: SendSetupSubscriptionMailArgs,
   pgdb: PgDb,
 ) {
-  const items = invoice.items
-    ?.map((item: Stripe.InvoiceItem) => {
-      return {
-        sortKey: item.price?.lookup_key
-          ? ItemSortKey[item.price.lookup_key]
-          : 100,
-        description: item.price?.lookup_key
-          ? t(`api/payments/price/${item.price.lookup_key}`, null, 'Spende')
-          : 'Spende',
-        amount: (item.amount / 100).toFixed(2),
+  const subscriptionItem: Stripe.InvoiceItem = invoice.items.find(
+    (i: Stripe.InvoiceItem) => {
+      if (i.price?.product && typeof i.price.product === 'string') {
+        return SUBSCRIPTION_PRODUCTS.includes(i.price?.product)
       }
-    })
-    .sort((a: { sortKey: number }, b: { sortKey: number }) => {
-      return a.sortKey - b.sortKey
-    })
-
-  console.log(items)
+      return false
+    },
+  )
+  const donationItem: Stripe.InvoiceItem = invoice.items.find(
+    (i: Stripe.InvoiceItem) => {
+      if (i.price?.product && typeof i.price.product === 'string') {
+        return DONATION_PRODUCTS.includes(i.price?.product)
+      }
+      return false
+    },
+  )
 
   const globalMergeVars: MergeVariable[] = [
     {
@@ -48,10 +52,47 @@ export async function sendSetupSubscriptionMail(
     },
     { name: 'total', content: (invoice.total / 100).toFixed(2) },
     {
-      name: 'order_items',
-      content: items,
+      name: 'subscription_total_before_discount',
+      content: (subscriptionItem.amount / 100).toFixed(2),
     },
   ]
+
+  if (subscriptionItem) {
+    globalMergeVars.push({
+      name: 'subscription_total_before_discount',
+      content: (subscriptionItem.amount / 100).toFixed(2),
+    })
+  }
+
+  if (donationItem) {
+    if (donationItem.price?.recurring) {
+      globalMergeVars.push({
+        name: 'recurring_donation',
+        content: (donationItem.amount / 100).toFixed(2),
+      })
+    } else {
+      globalMergeVars.push({
+        name: 'onetime_donation',
+        content: (donationItem.amount / 100).toFixed(2),
+      })
+    }
+  }
+
+  if (donationItem.price?.recurring === null) {
+    globalMergeVars.push({
+      name: 'next_total',
+      content: (
+        (invoice.totalBeforeDiscount - donationItem.amount) /
+        100
+      ).toFixed(2),
+    })
+  } else {
+    globalMergeVars.push({
+      name: 'next_total',
+      content: (invoice.totalBeforeDiscount / 100).toFixed(2),
+    })
+  }
+
   if (invoice.discounts.length > 0 && invoice.totalDiscountAmount) {
     const discount = invoice.discounts[0] as any
     globalMergeVars.push(

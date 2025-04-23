@@ -1,19 +1,22 @@
 import Stripe from 'stripe'
 import { Company } from '../../types'
-import { PaymentInterface } from '../../payments'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { NoticePaymentFailedTransactionalWorker } from '../../workers/NoticePaymentFailedTransactionalWorker'
 import { PaymentProvider } from '../../providers/provider'
 import { isPledgeBased } from './utils'
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 
 export async function processPaymentFailed(
-  payments: PaymentInterface,
+  ctx: PaymentWebhookContext,
   company: Company,
   event: Stripe.InvoicePaymentFailedEvent,
 ) {
   const customerId = event.data.object.customer as string
 
-  const userId = await payments.getUserIdForCompanyCustomer(company, customerId)
+  const userId = await ctx.payments.getUserIdForCompanyCustomer(
+    company,
+    customerId,
+  )
   if (!userId) {
     throw Error(`User for ${customerId} does not exists`)
   }
@@ -34,7 +37,7 @@ export async function processPaymentFailed(
     return
   }
 
-  const subscription = await payments.getSubscription({
+  const subscription = await ctx.payments.getSubscription({
     externalId: externalSubId as string,
   })
 

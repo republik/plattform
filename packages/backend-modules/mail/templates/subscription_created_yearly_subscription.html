@@ -55,17 +55,15 @@
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                      <li>Jährlicher Preis: CHF {{total_before_discount}}
-                        {{#if order_items.length }}
-                        <ul>
-                          {{#each order_items}}
-                          <li>{{this.description}}: CHF {{this.amount}}</li>
-                          {{/each}}
-                        </ul>
-                        {{/if}}
-                      </li>
+                      <li>Jahresmitgliedschaft: CHF {{subscription_total_before_discount}}</li>
                       {{#if discount_code}}
                       <li>{{discount_code}}: CHF –{{discount_total}}</li>
+                      {{/if}}
+                      {{#if recurring_donation}}
+                      <li>Jährliche Spende: CHF {{recurring_donation}}</li>
+                      {{/if}}
+                      {{#if onetime_donation}}
+                      <li>Einmalige Spende: CHF {{onetime_donation}}</li>
                       {{/if}}
                       <li>
                         <strong>Total: CHF {{total}}</strong>
@@ -75,7 +73,7 @@
                     <p>
                       Ihre Jahresmitgliedschaft verlängert sich automatisch{{#if discount_code}} zum Normalpreis{{/if}}.
                       Die von Ihnen angegebene Zahlungsmethode belasten wir dementsprechend
-                      in einem Jahr mit CHF {{total_before_discount}}.
+                      in einem Jahr mit CHF {{next_total}}.
                     </p>
                     <p>
                       In Ihrem

@@ -1,26 +1,21 @@
 import Stripe from 'stripe'
-import { PaymentInterface } from '../../payments'
 import { Company } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { ConfirmCancelTransactionalWorker } from '../../workers/ConfirmCancelTransactionalWorker'
 import { SyncMailchimpUpdateWorker } from '../../workers/SyncMailchimpUpdateWorker'
 import { ConfirmRevokeCancellationTransactionalWorker } from '../../workers/ConfirmRevokeCancellationTransactionalWorker'
-import {
-  getMailSettings,
-  REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
-} from '../../mail-settings'
 import { ConfirmGiftAppliedTransactionalWorker } from '../../workers/ConfirmGiftAppliedTransactionalWorker'
 import { getConfig } from '../../config'
 import { parseStripeDate } from './utils'
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
+import { CancelationService } from '../../services/CancelationService'
+import { PaymentService } from '../../services/PaymentService'
 
 export async function processSubscriptionUpdate(
-  payments: PaymentInterface,
+  ctx: PaymentWebhookContext,
   company: Company,
   event: Stripe.CustomerSubscriptionUpdatedEvent,
 ) {
-  const mailSettings = getMailSettings(
-    event.data.object.metadata[REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY],
-  )
   const cancelAt = event.data.object.cancel_at
   const canceledAt = event.data.object.canceled_at
 
@@ -28,7 +23,19 @@ export async function processSubscriptionUpdate(
   const previousVouchers = event.data.previous_attributes?.discounts
   const discountCode = event.data.object.discount?.coupon?.id
 
-  await payments.updateSubscription({
+  const sub = await ctx.payments.getSubscription({
+    externalId: event.data.object.id,
+  })
+  if (!sub) {
+    throw Error('Unknown subscription')
+  }
+
+  const cancelationReason = await new CancelationService(
+    new PaymentService(),
+    ctx.pgdb,
+  ).getCancellationDetails(sub)
+
+  await ctx.payments.updateSubscription({
     company: company,
     externalId: event.data.object.id,
     currentPeriodStart: parseStripeDate(event.data.object.current_period_start),
@@ -49,7 +56,7 @@ export async function processSubscriptionUpdate(
   if (hasPeriodChanged) {
     const customerId = event.data.object.customer as string
 
-    const userId = await payments.getUserIdForCompanyCustomer(
+    const userId = await ctx.payments.getUserIdForCompanyCustomer(
       company,
       customerId,
     )
@@ -66,10 +73,10 @@ export async function processSubscriptionUpdate(
     ])
   }
 
-  if (isCancellationRevoked && mailSettings['confirm:revoke_cancellation']) {
+  if (isCancellationRevoked) {
     const customerId = event.data.object.customer as string
 
-    const userId = await payments.getUserIdForCompanyCustomer(
+    const userId = await ctx.payments.getUserIdForCompanyCustomer(
       company,
       customerId,
     )
@@ -95,10 +102,10 @@ export async function processSubscriptionUpdate(
     ])
   }
 
-  if (cancelAt && mailSettings['confirm:cancel']) {
+  if (cancelAt && !cancelationReason.suppressConfirmation) {
     const customerId = event.data.object.customer as string
 
-    const userId = await payments.getUserIdForCompanyCustomer(
+    const userId = await ctx.payments.getUserIdForCompanyCustomer(
       company,
       customerId,
     )
@@ -131,7 +138,7 @@ export async function processSubscriptionUpdate(
   )
   if (isGiftUpdate) {
     const customerId = event.data.object.customer as string
-    const userId = await payments.getUserIdForCompanyCustomer(
+    const userId = await ctx.payments.getUserIdForCompanyCustomer(
       company,
       customerId,
     )

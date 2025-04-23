@@ -1,10 +1,10 @@
 import Stripe from 'stripe'
-import { PaymentInterface } from '../../payments'
 import { Company } from '../../types'
 import { PaymentProvider } from '../../providers/provider'
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 
 export async function processChargeRefunded(
-  payments: PaymentInterface,
+  ctx: PaymentWebhookContext,
   company: Company,
   event: Stripe.ChargeRefundedEvent,
 ) {
@@ -18,7 +18,7 @@ export async function processChargeRefunded(
   }
 
   const args = mapChargeUpdateArgs(charge)
-  await payments.updateCharge({ externalId: charge.id }, args)
+  await ctx.payments.updateCharge({ externalId: charge.id }, args)
 }
 
 type ChargRefundArgs = {

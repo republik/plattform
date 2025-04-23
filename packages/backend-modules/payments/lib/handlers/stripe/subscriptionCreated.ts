@@ -1,5 +1,4 @@
 import Stripe from 'stripe'
-import { PaymentInterface } from '../../payments'
 import { Company, SubscriptionArgs } from '../../types'
 import { getSubscriptionType, parseStripeDate } from './utils'
 import { PaymentProvider } from '../../providers/provider'
@@ -7,22 +6,28 @@ import { Queue } from '@orbiting/backend-modules-job-queue'
 import { ConfirmGiftSubscriptionTransactionalWorker } from '../../workers/ConfirmGiftSubscriptionTransactionalWorker'
 import { REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN } from '../../shop/gifts'
 import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker'
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 
 export async function processSubscriptionCreated(
-  payments: PaymentInterface,
+  ctx: PaymentWebhookContext,
   company: Company,
   event: Stripe.CustomerSubscriptionCreatedEvent,
 ) {
   const customerId = event.data.object.customer as string
   const externalSubscriptionId = event.data.object.id as string
 
-  const userId = await payments.getUserIdForCompanyCustomer(company, customerId)
+  const userId = await ctx.payments.getUserIdForCompanyCustomer(
+    company,
+    customerId,
+  )
 
   if (!userId) {
     throw new Error(`Unknown customer ${customerId}`)
   }
 
-  if (await payments.getSubscription({ externalId: externalSubscriptionId })) {
+  if (
+    await ctx.payments.getSubscription({ externalId: externalSubscriptionId })
+  ) {
     console.log(
       `subscription has already saved; skipping [${externalSubscriptionId}]`,
     )
@@ -38,7 +43,7 @@ export async function processSubscriptionCreated(
   }
 
   const args = mapSubscriptionArgs(company, subscription)
-  await payments.setupSubscription(userId, args)
+  await ctx.payments.setupSubscription(userId, args)
 
   const isGiftSubscription =
     subscription.metadata[REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN] === 'GIFT'

@@ -43,9 +43,8 @@
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
                     <p>
-                      <strong>Ihre Zahlung ist erfolgreich bei uns eingegangen.<br />
-                        Herzlichen Dank!</strong
-                      >
+                      Herzlichen Dank für Ihr aussergewöhnliches Investment in
+                      unser Magazin und die Republik-Idee.
                     </p>
 
                     <p>
@@ -55,17 +54,6 @@
                       und die Republik
                       <a href="{{link_account_share}}">mit Ihren Freunden oder Feinden teilen</a>.
                     </p>
-                    <p>
-                      Falls Sie Fragen zur Inbetriebnahme des Magazins haben:<br /><a href="{{link_manual}}">Hier finden Sie die Gebrauchsanleitung</a>, die die wichtigsten davon klärt.
-                    </p>
-                    <p>
-                      Wir schicken Ihnen, unserer neusten Verlegerin, unserem
-                      neusten Verleger, auch regelmässig Neuigkeiten aus
-                      Redaktion und Verlag: zu Vorhaben, Hintergründen,
-                      Entscheidungen und Fehlern. Sie können Kritik üben und
-                      Vorschläge machen. Und sich mit Ihren Kolleginnen und
-                      Kollegen in der Verlagsetage austauschen.
-                    </p>
 
                     <p>
                       Um uns für Ihre besonders grosse Unterstützung ein kleines
@@ -73,48 +61,23 @@
                       das Gönner-Willkommens-Paket zu.
                     </p>
 
-                    {{#if goodies_count}}
-                    <p>
-                      {{#if hasOneGoodie}} Sie haben sich zu Ihrer
-                      Gönner-Mitgliedschaft noch ein Republik-Objekt gegönnt.
-                      {{else if hasMultipleGoodies}} Sie haben sich zu Ihrer
-                      Gönner-Mitgliedschaft noch mehrere Republik-Objekte
-                      gegönnt. {{/if}}{{#if goodies_has_notebook}}Notizbücher
-                      liefern wir Ihnen innerhalb von 7 Werktagen. {{/if}}{{#if
-                      goodies_has_tablebook}}«Republik bei Stromausfall» liefern
-                      wir Ihnen innerhalb von 7 Werktagen. {{/if}}{{#if
-                      goodies_has_totebag}}Taschen liefern wir Ihnen innerhalb
-                      von 7 Werktagen. {{/if}}{{#if
-                      goodies_has_mask}}Republik-Masken liefern wir Ihnen
-                      innerhalb von 7 Werktagen. {{/if}}{{#if
-                      goodies_has_fondue}}Republik-Fondues werden am 26. Januar
-                      2022 verschickt. {{/if}}{{#if goodies_has_mug}}Republik-Tassen
-                      liefern wir Ihnen innerhalb von 10 Werktagen. {{/if}}
-                      {{#if goodies_has_cookie}} Der Versand der Republik-Guetsliformen
-                      erfolgt bis 22. Dezember. {{/if}}{{#if goodies_has_totebag_black}}Schwarze Taschen liefern wir im April. {{/if}}
-                    </p>
-
+                    <p>Details zum Kauf:</p>
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                      {{#options}} {{#if this.isOTypeGoodie}}
-                      <li>{{this.oamount}} {{this.olabel}}</li>
-                      {{/if}} {{/options}}
+                      <li>Gönnermitgliedschaft: CHF {{subscription_total_before_discount}}</li>
+                      {{#if discount_code}}
+                      <li>{{discount_code}}: CHF –{{discount_total}}</li>
+                      {{/if}}
+                      {{#if donation}}
+                      <li>Spende: CHF {{donation}}</li>
+                      {{/if}}
+                      <li>
+                        <strong>Total: CHF {{total}}</strong>
+                      </li>
                     </ul>
-                    {{/if}} {{#if totalPledgeAbove1000}}
-                    <p>
-                      Vielen Dank!<br />
-                      Und viel Vergnügen beim Start mit der Republik.
-                    </p>
-                    {{/if}} {{#if totalPledgeBelow1000}}
-                    <p>
-                      Falls Sie Fragen zur Inbetriebnahme des Magazins haben:<br /><a href="{{link_manual}}">Hier finden Sie die Gebrauchsanleitung</a>, die die wichtigsten davon klärt.
-                    </p>
-                    <p>
-                      Wir wünschen weiterhin viel Vergnügen mit der Republik.
-                    </p>
-                    {{/if}}
 
+                    <p>Wir wünschen Ihnen viel Vergnügen mit der Republik.</p>
                     <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>

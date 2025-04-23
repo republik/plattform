@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { PaymentInterface } from '../../payments'
+
 import { Company } from '../../types'
 import { ConfirmSetupTransactionalWorker } from '../../workers/ConfirmSetupTransactionalWorker'
 import { Queue } from '@orbiting/backend-modules-job-queue'
@@ -8,14 +8,10 @@ import { PaymentProvider } from '../../providers/provider'
 import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
 import { mapChargeArgs } from './invoicePaymentSucceeded'
-import { ConnectionContext } from '@orbiting/backend-modules-types'
 import { GiftShop } from '../../shop/gifts'
 import { sendGiftPurchaseMail } from '../../transactionals/sendTransactionalMails'
 import { UserDataRepo } from '../../database/UserRepo'
-
-type PaymentWebhookContext = {
-  payments: PaymentInterface
-} & ConnectionContext
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 
 class CheckoutProcessingError extends Error {
   constructor(msg: string) {
