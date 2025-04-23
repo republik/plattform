@@ -1,11 +1,17 @@
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { Loader } from '@project-r/styleguide'
-import { UserMagazineSubscriptionsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import {
+  CancellationCategoryType,
+  CancelMagazineSubscriptionDocument,
+  ReactivateMagazineSubscriptionDocument,
+  UserMagazineSubscriptionsDocument,
+} from '#graphql/republik-api/__generated__/gql/graphql'
 import SubscriptionStatusBadge from './SubscriptionStatusBadge'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { IconLink } from '@republik/icons'
 import { swissTime } from 'lib/utils/formats'
+import { MagazineSubscriptionActions } from 'components/Users/Memberships/MagazineSubscriptionActions'
 
 const dateTimeFormat = swissTime.format('%d.%m.%Y, %H:%M Uhr')
 export const displayDateTime = (rawDate) => {
@@ -21,11 +27,21 @@ interface MagazineSubscriptionsProps {
 }
 
 export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
-  const { data, loading, error } = useQuery(UserMagazineSubscriptionsDocument, {
+  const {
+    data,
+    loading,
+    error,
+    refetch: refetchSubscriptions,
+  } = useQuery(UserMagazineSubscriptionsDocument, {
     variables: {
       userId: props.userId,
     },
   })
+
+  const [cancelSubscription] = useMutation(CancelMagazineSubscriptionDocument)
+  const [reactivateSubscription] = useMutation(
+    ReactivateMagazineSubscriptionDocument,
+  )
 
   if (loading || (!error && data.user.magazineSubscriptions.length === 0)) {
     return null
@@ -118,6 +134,11 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                         marginBlock: '1rem',
                       })}
                     >
+                      <MagazineSubscriptionActions
+                        subscription={subscription}
+                        refetchSubscriptions={refetchSubscriptions}
+                      />
+
                       <Link
                         href={`${STRIPE_DOMAIN}/subscriptions/${
                           subscription.stripeId
