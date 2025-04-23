@@ -25,15 +25,19 @@ export function isPledgeBased(metadata: any) {
 }
 
 export function parseStripeDate(value: number): Date
-export function parseStripeDate(value: null | undefined): undefined
+export function parseStripeDate(value: null): null
+export function parseStripeDate(value: undefined): undefined
 export function parseStripeDate(
   value: number | null | undefined,
-): Date | undefined
+): Date | null | undefined
 export function parseStripeDate(
   value: number | null | undefined,
-): Date | undefined {
+): Date | null | undefined {
   if (typeof value === 'number') {
     return new Date(value * 1000)
+  }
+  if (value === null) {
+    return null
   }
   return undefined
 }
