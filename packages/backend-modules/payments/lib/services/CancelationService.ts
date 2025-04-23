@@ -29,15 +29,24 @@ export class CancelationService {
   async cancelSubscription(
     sub: Subscription,
     details: CancalationDetails,
+    immediately: boolean = false,
   ): Promise<string> {
     const id = await this.db.payments.subscriptionCancellations.insert({
       subscriptionId: sub.id,
       ...filterUndefined(details),
     })
 
-    await this.paymentService.updateSubscription(sub.company, sub.externalId, {
-      cancel_at_period_end: true,
-    })
+    if (immediately) {
+      this.paymentService.deleteSubscription(sub.company, sub.externalId)
+    } else {
+      await this.paymentService.updateSubscription(
+        sub.company,
+        sub.externalId,
+        {
+          cancel_at_period_end: true,
+        },
+      )
+    }
 
     return id
   }

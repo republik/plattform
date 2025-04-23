@@ -22,6 +22,10 @@ export class PaymentService {
     return this.#stripeAdapters[company].subscriptions.update(id, opts)
   }
 
+  async deleteSubscription(company: Company, id: string) {
+    return this.#stripeAdapters[company].subscriptions.cancel(id)
+  }
+
   async listSubscriptionItems(company: Company, id: string) {
     return (
       await this.#stripeAdapters[company].subscriptionItems.list({

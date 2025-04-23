@@ -40,13 +40,20 @@ export = async function cancelMagazineSubscription(
 
   const details = args.details
 
-  await cs.cancelSubscription(sub, {
-    category: details.type,
-    reason: details.reason,
-    suppressConfirmation: details.suppressConfirmation,
-    suppressWinback: details.suppressWinback,
-    cancelledViaSupport: isSupportActor(sub.userId, ctx.user),
-  })
+  const actorIsSupport = isSupportActor(sub.userId, ctx.user)
+
+  await cs.cancelSubscription(
+    sub,
+    {
+      category: details.type,
+      reason: details.reason,
+      suppressConfirmation: details.suppressConfirmation,
+      suppressWinback: details.suppressWinback,
+      cancelledViaSupport: actorIsSupport,
+    },
+    // only support or admin can cancel immediately
+    args.cancelImmediately && actorIsSupport,
+  )
 
   return true
 }
