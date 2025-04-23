@@ -16,8 +16,6 @@ enum MagazineSubscriptionStatus {
   past_due
   paused
   canceled
-  overdue
-  ended
 }
 
 enum MagazineSubscriptionType {

@@ -2717,6 +2717,10 @@
       "value": "Monats-Abo"
     },
     {
+      "key": "api/payments/price/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
       "key": "api/payments/price/ABO_DONATE_OPTION_YEARLY_020",
       "value": "Jährliche Spende"
     },

@@ -13,26 +13,43 @@ type SendSetupSubscriptionMailArgs = {
   email: string
 }
 
+const ItemSortKey: Record<string, number> = {
+  ABO: 1,
+  MONTHLY_ABO: 1,
+  BENEFACTOR_SUBSCRIPTION: 1,
+}
+
 export async function sendSetupSubscriptionMail(
   { subscription, invoice, email }: SendSetupSubscriptionMailArgs,
   pgdb: PgDb,
 ) {
+  const items = invoice.items
+    ?.map((item: Stripe.InvoiceItem) => {
+      return {
+        sortKey: item.price?.lookup_key
+          ? ItemSortKey[item.price.lookup_key]
+          : 100,
+        description: item.price?.lookup_key
+          ? t(`api/payments/price/${item.price.lookup_key}`, null, 'Spende')
+          : 'Spende',
+        amount: (item.amount / 100).toFixed(2),
+      }
+    })
+    .sort((a: { sortKey: number }, b: { sortKey: number }) => {
+      return a.sortKey - b.sortKey
+    })
+
+  console.log(items)
+
   const globalMergeVars: MergeVariable[] = [
     {
       name: 'total_before_discount',
-      content: (invoice.totalBeforeDiscount / 100).toString(),
+      content: (invoice.totalBeforeDiscount / 100).toFixed(2),
     },
-    { name: 'total', content: (invoice.total / 100).toString() },
+    { name: 'total', content: (invoice.total / 100).toFixed(2) },
     {
       name: 'order_items',
-      content: invoice.items?.map((item: Stripe.InvoiceItem) => {
-        return {
-          description: item.price?.lookup_key
-            ? t(`api/payments/price/${item.price.lookup_key}`, null, 'Spende')
-            : null,
-          amount: (item.amount / 100).toString(),
-        }
-      }),
+      content: items,
     },
   ]
   if (invoice.discounts.length > 0 && invoice.totalDiscountAmount) {
@@ -41,7 +58,7 @@ export async function sendSetupSubscriptionMail(
       { name: 'discount_code', content: discount.coupon.name },
       {
         name: 'discount_total',
-        content: (invoice.totalDiscountAmount / 100).toString(),
+        content: (invoice.totalDiscountAmount / 100).toFixed(2),
       },
     )
   }
