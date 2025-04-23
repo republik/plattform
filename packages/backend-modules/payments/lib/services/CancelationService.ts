@@ -58,7 +58,10 @@ export class CancelationService {
       const cancelation = await tx.payments.subscriptionCancellations.find({
         subscriptionId: sub.id,
       })
-      await tx.payments.subscriptionCancellations.delete(cancelation.id)
+
+      if (cancelation) {
+        await tx.payments.subscriptionCancellations.delete(cancelation.id)
+      }
 
       await tx.transactionCommit()
     } catch (e) {
