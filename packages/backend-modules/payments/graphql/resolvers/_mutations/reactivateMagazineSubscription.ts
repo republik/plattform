@@ -27,7 +27,7 @@ export = async function cancelMagazineSubscription(
 
   const cs = new CancelationService(new PaymentService(), ctx.pgdb)
 
-  cs.revokeCancelation(sub)
+  await cs.revokeCancelation(sub)
 
   return true
 }

@@ -37,7 +37,7 @@ export class CancelationService {
     })
 
     if (immediately) {
-      this.paymentService.deleteSubscription(sub.company, sub.externalId)
+      await this.paymentService.deleteSubscription(sub.company, sub.externalId)
     } else {
       await this.paymentService.updateSubscription(
         sub.company,

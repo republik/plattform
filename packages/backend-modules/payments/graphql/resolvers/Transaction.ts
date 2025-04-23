@@ -10,8 +10,6 @@ export = {
       return 'PledgeTransaction'
     }
 
-    console.log(transaction)
-
     throw new Error('api/unknown')
   },
 }

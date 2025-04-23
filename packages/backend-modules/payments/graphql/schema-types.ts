@@ -199,7 +199,7 @@ type SubscriptionTransaction implements Transaction {
   company: CompanyName!
   status: String!
   createdAt: DateTime!
-  subscription: Subscription!
+  subscription: MagazineSubscription!
 }
 
 type PledgeTransaction implements Transaction {

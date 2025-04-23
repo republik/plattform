@@ -1,8 +1,9 @@
+import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { Transaction } from '../../lib/types'
 
 export = {
   // !TODO: Implement pledge resolver
-  pledge(_transaction: Transaction, _args: never, _context: never) {
-    throw new Error('api/backend-todo')
+  pledge(transaction: Transaction, _args: never, ctx: GraphqlContext) {
+    return ctx.loaders.PledgeLoader.byId.load(transaction.pledgeId)
   },
 }

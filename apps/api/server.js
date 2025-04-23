@@ -70,6 +70,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-republik/loaders'),
   ...require('@orbiting/backend-modules-publikator/loaders'),
   ...require('@orbiting/backend-modules-calendar/loaders'),
+  ...require('@orbiting/backend-modules-payments').loaders,
 }
 
 const {
