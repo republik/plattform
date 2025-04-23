@@ -2,7 +2,6 @@ import { PaymentService } from '../../lib/services/PaymentService'
 import { activeOffers, couponToDiscount, Offer } from '../../lib/shop'
 
 export = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   __resolveType: (offer: Offer, _args: never, _context: never) => {
     if (offer.id.startsWith('GIFT_')) {
       return 'GiftOffer'
@@ -10,7 +9,6 @@ export = {
 
     return 'SubscriptionOffer'
   },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   discountOptions: async (offer: Offer, _args: never, _context: never) => {
     const paymentService = new PaymentService()
     const offerDefinition = activeOffers().find((o) => o.id === offer.id)

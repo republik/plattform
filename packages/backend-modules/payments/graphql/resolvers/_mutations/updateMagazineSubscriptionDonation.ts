@@ -9,13 +9,13 @@ import Stripe from 'stripe'
 type PriceData = Stripe.SubscriptionItemUpdateParams.PriceData
 
 export = async function updateMagazineSubscriptionDonation(
-  _root: never, // eslint-disable-line @typescript-eslint/no-unused-vars
+  _root: never,
   args: {
     subscriptionId: string
     selectedDonation?: string
     donationAmount?: number
-  }, // eslint-disable-line @typescript-eslint/no-unused-vars
-  ctx: GraphqlContext, // eslint-disable-line @typescript-eslint/no-unused-vars
+  },
+  ctx: GraphqlContext,
 ) {
   Auth.ensureUser(ctx.user)
   if (args.selectedDonation && args.donationAmount) {

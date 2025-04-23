@@ -1,7 +1,6 @@
 import { Transaction } from '../../lib/types'
 
 export = {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   __resolveType: (transaction: Transaction, _args: never, _context: never) => {
     if (transaction.subscriptionId) {
       return 'SubscriptionTransaction'

@@ -13,7 +13,7 @@ type RedeemGiftResult = {
 }
 
 export = async function redeemGiftVoucher(
-  _root: never, // eslint-disable-line @typescript-eslint/no-unused-vars
+  _root: never,
   args: { voucherCode: string },
   ctx: GraphqlContext,
 ): Promise<RedeemGiftResult> {

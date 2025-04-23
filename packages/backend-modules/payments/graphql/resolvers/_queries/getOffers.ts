@@ -4,7 +4,6 @@ import { activeOffers, Shop } from '../../../lib/shop'
 export = async function getOffers(
   _root: never,
   args: { promoCode?: string },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _ctx: GraphqlContext,
 ) {
   return new Shop(activeOffers()).getOffers(args.promoCode)

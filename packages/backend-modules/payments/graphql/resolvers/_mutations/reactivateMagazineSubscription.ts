@@ -6,9 +6,9 @@ import { Subscription } from '../../../lib/types'
 import { CancelationService } from '../../../lib/services/CancelationService'
 
 export = async function cancelMagazineSubscription(
-  _root: never, // eslint-disable-line @typescript-eslint/no-unused-vars
-  args: { subscriptionId: string }, // eslint-disable-line @typescript-eslint/no-unused-vars
-  ctx: GraphqlContext, // eslint-disable-line @typescript-eslint/no-unused-vars
+  _root: never,
+  args: { subscriptionId: string },
+  ctx: GraphqlContext,
 ) {
   Auth.ensureUser(ctx.user)
 

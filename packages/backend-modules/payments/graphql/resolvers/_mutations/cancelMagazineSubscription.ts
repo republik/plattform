@@ -13,13 +13,13 @@ type CancellationInput = {
 }
 
 export = async function cancelMagazineSubscription(
-  _root: never, // eslint-disable-line @typescript-eslint/no-unused-vars
+  _root: never,
   args: {
     subscriptionId: string
     cancelImmediately: boolean
     details: CancellationInput
   },
-  ctx: GraphqlContext, // eslint-disable-line @typescript-eslint/no-unused-vars
+  ctx: GraphqlContext,
 ) {
   Auth.ensureUser(ctx.user)
 

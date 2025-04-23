@@ -8,8 +8,8 @@ const RETURN_URL = `${process.env.FRONTEND_BASE_URL}/konto`
 
 export = async function createStripeCustomerPortalSession(
   _root: never,
-  args: { companyName: Company }, // eslint-disable-line @typescript-eslint/no-unused-vars
-  ctx: GraphqlContext, // eslint-disable-line @typescript-eslint/no-unused-vars
+  args: { companyName: Company },
+  ctx: GraphqlContext,
 ) {
   Auth.ensureUser(ctx.user)
 
