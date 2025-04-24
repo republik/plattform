@@ -6,6 +6,7 @@ import { MagazineSubscriptionActions } from 'components/Users/Memberships/Magazi
 import { css } from 'glamor'
 import { useTranslation } from 'lib/useT'
 import { swissTime } from 'lib/utils/formats'
+import { useEffect } from 'react'
 import SubscriptionStatusBadge from './SubscriptionStatusBadge'
 
 const dateTimeFormat = swissTime.format('%d.%m.%Y, %H:%M Uhr')
@@ -22,27 +23,43 @@ interface MagazineSubscriptionsProps {
 }
 
 export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
-  const {
-    data,
-    loading,
-    error,
-    refetch: refetchSubscriptions,
-  } = useQuery(UserMagazineSubscriptionsDocument, {
-    variables: {
-      userId: props.userId,
+  const { data, loading, error, startPolling, stopPolling } = useQuery(
+    UserMagazineSubscriptionsDocument,
+    {
+      variables: {
+        userId: props.userId,
+      },
     },
-  })
+  )
 
   const { t } = useTranslation()
 
-  if (loading || (!error && data.user.magazineSubscriptions.length === 0)) {
-    return null
+  // Subscriptions don't update immediately after being canceled/reactivated, so we start polling instead of refetching immediately
+  const refetchSubscriptions = () => {
+    console.log('start polling subscriptions')
+    startPolling(1000)
   }
+
+  // ... and stop when changed data comes in (if the data hasn't changed yet, it's still
+  // in the Apollo Client cache and will not trigger the effect)
+  useEffect(() => {
+    console.log('stop polling subscriptions')
+    if (data) {
+      stopPolling()
+    }
+  }, [data, stopPolling])
 
   return (
     <Loader
       loading={!data || loading}
+      error={error}
       render={() => {
+        const magazineSubscriptions = data?.user?.magazineSubscriptions ?? []
+
+        if (magazineSubscriptions.length === 0) {
+          return null
+        }
+
         return (
           <ul
             {...css({
@@ -56,7 +73,7 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
               '& b': { fontWeight: '500' },
             })}
           >
-            {data?.user?.magazineSubscriptions.map((subscription) => {
+            {magazineSubscriptions.map((subscription) => {
               return (
                 <li
                   key={subscription.stripeId}
