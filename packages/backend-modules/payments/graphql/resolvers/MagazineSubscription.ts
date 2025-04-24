@@ -1,6 +1,8 @@
 import { Subscription } from '../../lib/types'
 import { Payments } from '../../lib/payments'
 import { PaymentProvider } from '../../lib/providers/provider'
+import { PaymentService } from '../../lib/services/PaymentService'
+import { GraphqlContext } from '@orbiting/backend-modules-types'
 
 export = {
   async stripeId(subscription: Subscription) {
@@ -21,6 +23,22 @@ export = {
       return acc + (item.price.unit_amount ?? 0)
     }, 0)
   },
+
+  async items(subscription: Subscription, _args: never, ctx: GraphqlContext) {
+    const items = await new PaymentService().listSubscriptionItems(
+      subscription.company,
+      subscription.externalId,
+    )
+
+    return items.map((item) => ({
+      id: item.id,
+      label: item.price.lookup_key
+        ? ctx.t(`api/payments/price/${item.price.lookup_key}`)
+        : 'Spende',
+      price: item.price.unit_amount ?? 0,
+    }))
+  },
+
   async paymentMethod(subscription: Subscription) {
     const sub = await PaymentProvider.forCompany(
       subscription.company,
