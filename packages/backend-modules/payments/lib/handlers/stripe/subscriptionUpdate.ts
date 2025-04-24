@@ -102,7 +102,7 @@ export async function processSubscriptionUpdate(
     ])
   }
 
-  if (cancelAt && !cancelationReason.suppressConfirmation) {
+  if (cancelAt && cancelationReason.suppressConfirmation !== true) {
     const customerId = event.data.object.customer as string
 
     const userId = await ctx.payments.getUserIdForCompanyCustomer(

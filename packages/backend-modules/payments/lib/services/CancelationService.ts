@@ -20,9 +20,10 @@ export class CancelationService {
   }
 
   async getCancellationDetails(sub: Subscription): Promise<CancalationDetails> {
-    const cancelation = await this.db.payments.subscriptionCancellations.find({
-      subscriptionId: sub.id,
-    })
+    const cancelation =
+      await this.db.payments.subscriptionCancellations.findFirst({
+        subscriptionId: sub.id,
+      })
     return cancelation
   }
 
