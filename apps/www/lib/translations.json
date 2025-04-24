@@ -7701,6 +7701,10 @@
       "value": "Jahresmitgliedschaft"
     },
     {
+      "key": "magazineSubscription/title/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
       "key": "magazineSubscription/title/MONTHLY_SUBSCRIPTION",
       "value": "Monats-Abo"
     },
@@ -7710,11 +7714,15 @@
     },
     {
       "key": "magazineSubscription/description",
-      "value": "Nächste Zahlung am {currentPeriodEnd} für CHF {renewsAtPrice}"
+      "value": "Erneuert sich am {currentPeriodEnd} für CHF {renewsAtPrice}"
     },
     {
       "key": "magazineSubscription/paymentMethod",
       "value": "Zahlungsmethode: {paymentMethod}"
+    },
+    {
+      "key": "magazineSubscription/paymentMethod/change",
+      "value": "Zahlungsmethode ändern"
     },
     {
       "key": "magazineSubscription/noActiveSubscription",
@@ -7725,16 +7733,36 @@
       "value": "Ihre Mitgliedschaft läuft am {cancelAt} aus."
     },
     {
+      "key": "magazineSubscription/canceled/BENEFACTOR_SUBSCRIPTION",
+      "value": "Ihre Gönner-Mitgliedschaft läuft am {cancelAt} aus."
+    },
+    {
       "key": "magazineSubscription/canceled/MONTHLY_SUBSCRIPTION",
       "value": "Ihr Abo läuft am {cancelAt} aus."
     },
     {
-      "key": "magazineSubscription/customerPortalLink/YEARLY_SUBSCRIPTION",
-      "value": "Mitgliedschaft Verwalten"
+      "key": "magazineSubscription/cancel/YEARLY_SUBSCRIPTION",
+      "value": "Mitgliedschaft kündigen"
     },
     {
-      "key": "magazineSubscription/customerPortalLink/MONTHLY_SUBSCRIPTION",
-      "value": "Abo Verwalten"
+      "key": "magazineSubscription/cancel/BENEFACTOR_SUBSCRIPTION",
+      "value": "Mitgliedschaft kündigen"
+    },
+    {
+      "key": "magazineSubscription/cancel/MONTHLY_SUBSCRIPTION",
+      "value": "Abo kündigen"
+    },
+    {
+      "key": "magazineSubscription/reactivate/YEARLY_SUBSCRIPTION",
+      "value": "Mitgliedschaft reaktivieren"
+    },
+    {
+      "key": "magazineSubscription/reactivate/BENEFACTOR_SUBSCRIPTION",
+      "value": "Mitgliedschaft reaktivieren"
+    },
+    {
+      "key": "magazineSubscription/reactivate/MONTHLY_SUBSCRIPTION",
+      "value": "Abo reaktivieren"
     },
     {
       "key": "magazineSubscription/shoplink/MONTHLY",

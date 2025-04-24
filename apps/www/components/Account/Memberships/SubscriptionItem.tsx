@@ -1,33 +1,51 @@
-import { useState } from 'react'
-import compose from 'lodash/flowRight'
+import { gql, useMutation } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
+import compose from 'lodash/flowRight'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 
-import { Interaction, InlineSpinner, A } from '@project-r/styleguide'
-import withT from '../../../lib/withT'
+import {
+  CancellationCategoryType,
+  CancelMagazineSubscriptionDocument,
+  MyBelongingsQuery,
+  ReactivateMagazineSubscriptionDocument,
+} from '#graphql/republik-api/__generated__/gql/graphql'
+import { InlineSpinner, Interaction, mediaQueries } from '@project-r/styleguide'
 import { errorToString } from '../../../lib/utils/errors'
+import { useTranslation } from '../../../lib/withT'
 import { EditButton } from '../Elements'
+import { css } from 'glamor'
 
-type MagazineSubscription = {
-  type: 'YEARLY_SUBSCRIPTION' | 'MONTHLY_SUBSCRIPTION'
-  renewsAtPrice: number
-  currentPeriodEnd?: Date
-  cancelAt?: Date
-  status: 'active' | 'canceled' | 'past_due' | 'unpaid' | 'paused'
-  paymentMethod: string
-  company: 'PROJECT_R' | 'REPUBLIK'
-}
+type MagazineSubscription = NonNullable<
+  MyBelongingsQuery['me']['activeMagazineSubscription']
+>
 
-const SubscriptionItem = ({
+export function SubscriptionItem({
   subscription,
-  t,
 }: {
   subscription: MagazineSubscription | undefined
-  t: (arg1: any, arg2?: any) => string
-}) => {
+}) {
+  const [reactivateSubscription] = useMutation(
+    ReactivateMagazineSubscriptionDocument,
+  )
+
+  const [cancelSubscription] = useMutation(CancelMagazineSubscriptionDocument)
+
+  const { t } = useTranslation()
+
   return (
-    <>
+    <div
+      {...css({
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 4,
+
+        marginBottom: 36,
+        [mediaQueries.mUp]: {
+          marginBottom: 48,
+        },
+      })}
+    >
       <Interaction.H3 style={{ marginBottom: 8 }}>
         {`${t(`magazineSubscription/title/${subscription.type}`)} ${
           subscription.cancelAt
@@ -67,12 +85,58 @@ const SubscriptionItem = ({
           <Interaction.P>
             {t('magazineSubscription/paymentMethod', {
               paymentMethod: subscription.paymentMethod,
-            })}
+            })}{' '}
           </Interaction.P>
         </>
       )}
-      <CustomerPortalLink subscription={subscription} t={t} />
-    </>
+
+      <div>
+        <CustomerPortalLink subscription={subscription} t={t} />
+      </div>
+
+      <div>
+        {subscription.canceledAt ? (
+          !subscription.endedAt && (
+            <EditButton
+              onClick={() => {
+                reactivateSubscription({
+                  variables: { subscriptionId: subscription.id },
+                })
+                  .then((res) => {
+                    console.log(res)
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                  })
+              }}
+            >
+              {t(`magazineSubscription/reactivate/${subscription.type}`)}
+            </EditButton>
+          )
+        ) : (
+          <EditButton
+            onClick={() => {
+              cancelSubscription({
+                variables: {
+                  subscriptionId: subscription.id,
+                  details: {
+                    type: CancellationCategoryType.Other,
+                  },
+                },
+              })
+                .then((res) => {
+                  console.log(res)
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }}
+          >
+            {t(`magazineSubscription/cancel/${subscription.type}`)}
+          </EditButton>
+        )}
+      </div>
+    </div>
   )
 }
 
@@ -116,11 +180,9 @@ const CustomerPortalLink = compose(
       <span
         style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 8 }}
       >
-        {t(`magazineSubscription/customerPortalLink/${subscription.type}`)}
+        {t(`magazineSubscription/paymentMethod/change`)}
         {loading ? <InlineSpinner size={16} /> : null}
       </span>
     </EditButton>
   )
 })
-
-export default compose(withT)(SubscriptionItem)
