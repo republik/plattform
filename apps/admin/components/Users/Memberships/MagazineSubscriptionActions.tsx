@@ -10,13 +10,17 @@ import {
 import { useMutation, useQuery } from '@apollo/client'
 import {
   Button,
+  colors,
   Field,
   Interaction,
   Overlay,
   OverlayBody,
   OverlayToolbar,
 } from '@project-r/styleguide'
-import { useState } from 'react'
+import { TextButton } from 'components/Display/utils'
+import { css } from 'glamor'
+import { useTranslation } from 'lib/useT'
+import { ReactNode, useState } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 
 type MagazineSubscription = NonNullable<
@@ -35,15 +39,30 @@ export function MagazineSubscriptionActions({
     ReactivateMagazineSubscriptionDocument,
   )
 
+  const { t } = useTranslation()
+
   const [confirmAction, setConfirmAction] = useState<
     'cancel' | 'reactivate' | undefined
   >()
+
+  const [submissionError, setSubssionError] = useState<Error | undefined>()
+
+  const reset = () => {
+    setConfirmAction(undefined)
+    setSubssionError(undefined)
+    refetchSubscriptions()
+  }
 
   return (
     <>
       {confirmAction === 'cancel' ? (
         <CancelOverlay
-          close={() => setConfirmAction(undefined)}
+          title={`${t(
+            `account/MagazineSubscription/type/${subscription.type}`,
+          )} kündigen`}
+          buttonLabel='Kündigen'
+          error={submissionError}
+          close={reset}
           action={(data: FormData) => {
             const type = (
               data.get('cancellationType') ?? CancellationCategoryType.System
@@ -66,69 +85,94 @@ export function MagazineSubscriptionActions({
                   suppressWinback,
                 },
               },
-            }).then((res) => {
-              console.log(res)
-              refetchSubscriptions()
-              setConfirmAction(undefined)
             })
+              .then(reset)
+              .catch((err) => {
+                setSubssionError(err)
+              })
           }}
         />
       ) : confirmAction === 'reactivate' ? (
         <ConfirmOverlay
-          title='Subscription reaktivieren?'
-          close={() => setConfirmAction(undefined)}
+          title={`${t(
+            `account/MagazineSubscription/type/${subscription.type}`,
+          )} reaktivieren`}
+          buttonLabel='Reaktivieren'
+          error={submissionError}
+          close={reset}
           action={() => {
             reactivateSubscription({
               variables: {
                 subscriptionId: subscription.id,
               },
-            }).then((res) => {
-              console.log(res)
-              refetchSubscriptions()
-              setConfirmAction(undefined)
             })
+              .then(reset)
+              .catch((err) => {
+                setSubssionError(err)
+              })
           }}
-        />
+        ></ConfirmOverlay>
       ) : null}
       {subscription.canceledAt ? (
         !subscription.endedAt && (
-          <Button
-            small
+          <TextButton
             onClick={() => {
               setConfirmAction('reactivate')
             }}
           >
             Reaktivieren
-          </Button>
+          </TextButton>
         )
       ) : (
-        <Button
+        <TextButton
           small
           onClick={() => {
             setConfirmAction('cancel')
           }}
         >
           Kündigen
-        </Button>
+        </TextButton>
       )}
     </>
   )
 }
 
-function ConfirmOverlay({
-  title,
-  action,
-  close,
-}: {
+type ConfirmOverlayProps = {
   title: string
+  buttonLabel?: string
+  error?: Error
   action: (data: FormData) => void
   close: () => void
-}) {
+  children?: ReactNode
+}
+
+function ConfirmOverlay({
+  title,
+  buttonLabel = 'OK',
+  error,
+  action,
+  close,
+  children,
+}: ConfirmOverlayProps) {
   return (
     <Overlay onClose={() => close()}>
       <OverlayToolbar onClose={() => close()} />
       <OverlayBody>
-        <Interaction.H2>{title}</Interaction.H2>
+        <Interaction.H2 style={{ marginBottom: '1rem' }}>
+          {title}
+        </Interaction.H2>
+
+        {error && (
+          <div
+            {...css({
+              background: colors.error,
+              color: 'white',
+              padding: '1rem',
+            })}
+          >
+            {error.message}
+          </div>
+        )}
 
         <form
           onSubmit={(e) => {
@@ -136,8 +180,10 @@ function ConfirmOverlay({
             action(new FormData(e.currentTarget))
           }}
         >
+          {children}
+
           <Button primary type='submit'>
-            OK
+            {buttonLabel}
           </Button>
         </form>
       </OverlayBody>
@@ -145,18 +191,12 @@ function ConfirmOverlay({
   )
 }
 
-function CancelOverlay({
-  action,
-  close,
-}: {
-  action: (data: FormData) => void
-  close: () => void
-}) {
-  const { data, loading, error } = useQuery(CancellationCategoriesDocument)
-
-  if (error) {
-    return 'Upsi, Kündigungsgründe konnten nicht geladen werden'
-  }
+function CancelOverlay(props: Omit<ConfirmOverlayProps, 'children'>) {
+  const {
+    data,
+    loading,
+    error: categoriesError,
+  } = useQuery(CancellationCategoriesDocument)
 
   if (loading || !data.cancellationCategories) {
     return null
@@ -165,75 +205,59 @@ function CancelOverlay({
   const { cancellationCategories } = data
 
   return (
-    <Overlay onClose={() => close()}>
-      <OverlayToolbar onClose={() => close()} />
-      <OverlayBody>
-        <Interaction.H2>Kündigen</Interaction.H2>
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            action(new FormData(e.currentTarget))
-          }}
-        >
-          {cancellationCategories &&
-            cancellationCategories.map(({ type, label }) => (
-              <p key={type}>
-                <label htmlFor={type}>
-                  <input
-                    type='radio'
-                    name='cancellationType'
-                    id={type}
-                    value={type}
-                    required
-                  ></input>{' '}
-                  {label}
-                </label>
-              </p>
-            ))}
-          <Field
-            name='reason'
-            label={'Erläuterungen'}
-            required
-            renderInput={(props) => (
-              <TextareaAutosize {...props} style={{ lineHeight: '30px' }} />
-            )}
-          />
-          <p>
-            <label htmlFor='cancelImmediately'>
+    <ConfirmOverlay {...props} error={props.error ?? categoriesError}>
+      {cancellationCategories &&
+        cancellationCategories.map(({ type, label }) => (
+          <p key={type}>
+            <label htmlFor={type}>
               <input
-                type='checkbox'
-                name='cancelImmediately'
-                id='cancelImmediately'
+                type='radio'
+                name='cancellationType'
+                id={type}
+                value={type}
+                required
               ></input>{' '}
-              Sofort kündigen
+              {label}
             </label>
           </p>
-          <p>
-            <label htmlFor='suppressConfirmation'>
-              <input
-                type='checkbox'
-                name='suppressConfirmation'
-                id='suppressConfirmation'
-              ></input>{' '}
-              Kündigungsbestätigung unterdrücken
-            </label>
-          </p>
-          <p>
-            <label htmlFor='suppressWinback'>
-              <input
-                type='checkbox'
-                name='suppressWinback'
-                id='suppressWinback'
-              ></input>{' '}
-              Winback unterdrücken
-            </label>
-          </p>
-          <Button primary type='submit'>
-            Speichern
-          </Button>
-        </form>
-      </OverlayBody>
-    </Overlay>
+        ))}
+      <Field
+        name='reason'
+        label={'Erläuterungen'}
+        renderInput={(props) => (
+          <TextareaAutosize {...props} style={{ lineHeight: '30px' }} />
+        )}
+      />
+      <p>
+        <label htmlFor='cancelImmediately'>
+          <input
+            type='checkbox'
+            name='cancelImmediately'
+            id='cancelImmediately'
+          ></input>{' '}
+          Sofort kündigen (kann nicht reaktiviert werden)
+        </label>
+      </p>
+      <p>
+        <label htmlFor='suppressConfirmation'>
+          <input
+            type='checkbox'
+            name='suppressConfirmation'
+            id='suppressConfirmation'
+          ></input>{' '}
+          Kündigungsbestätigung unterdrücken
+        </label>
+      </p>
+      <p>
+        <label htmlFor='suppressWinback'>
+          <input
+            type='checkbox'
+            name='suppressWinback'
+            id='suppressWinback'
+          ></input>{' '}
+          Winback unterdrücken
+        </label>
+      </p>
+    </ConfirmOverlay>
   )
 }
