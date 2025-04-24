@@ -25,3 +25,9 @@ mutation UpdateMagazineSubscriptionDonation(
     donationAmount: $donationAmount
   )
 }
+
+mutation createStripeCustomerPortalSession($companyName: CompanyName!) {
+  createStripeCustomerPortalSession(companyName: $companyName) {
+    sessionUrl
+  }
+}

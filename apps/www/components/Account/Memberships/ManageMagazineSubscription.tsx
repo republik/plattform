@@ -1,26 +1,28 @@
-import { gql, useMutation } from '@apollo/client'
-import { graphql } from '@apollo/client/react/hoc'
-import compose from 'lodash/flowRight'
-import { useRouter } from 'next/router'
-import { useState } from 'react'
-
 import {
-  CancellationCategoryType,
-  CancelMagazineSubscriptionDocument,
+  CreateStripeCustomerPortalSessionDocument,
   MyBelongingsQuery,
   ReactivateMagazineSubscriptionDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { InlineSpinner, Interaction, mediaQueries } from '@project-r/styleguide'
+import { useMutation } from '@apollo/client'
+import {
+  InlineSpinner,
+  Interaction,
+  linkRule,
+  mediaQueries,
+} from '@project-r/styleguide'
+import { css } from 'glamor'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 import { errorToString } from '../../../lib/utils/errors'
 import { useTranslation } from '../../../lib/withT'
 import { EditButton } from '../Elements'
-import { css } from 'glamor'
 
 type MagazineSubscription = NonNullable<
   MyBelongingsQuery['me']['activeMagazineSubscription']
 >
 
-export function SubscriptionItem({
+export function ManageMagazineSubscription({
   subscription,
 }: {
   subscription: MagazineSubscription | undefined
@@ -28,8 +30,6 @@ export function SubscriptionItem({
   const [reactivateSubscription] = useMutation(
     ReactivateMagazineSubscriptionDocument,
   )
-
-  const [cancelSubscription] = useMutation(CancelMagazineSubscriptionDocument)
 
   const { t } = useTranslation()
 
@@ -79,7 +79,7 @@ export function SubscriptionItem({
                 month: 'long',
                 day: 'numeric',
               }),
-              renewsAtPrice: subscription.renewsAtPrice / 100,
+              renewsAtPrice: (subscription.renewsAtPrice / 100).toFixed(2),
             })}
           </Interaction.P>
           <Interaction.P>
@@ -90,13 +90,9 @@ export function SubscriptionItem({
         </>
       )}
 
-      <div>
-        <CustomerPortalLink subscription={subscription} t={t} />
-      </div>
-
-      <div>
-        {subscription.canceledAt ? (
-          !subscription.endedAt && (
+      {subscription.canceledAt ? (
+        !subscription.endedAt && (
+          <div>
             <EditButton
               onClick={() => {
                 reactivateSubscription({
@@ -112,57 +108,32 @@ export function SubscriptionItem({
             >
               {t(`magazineSubscription/reactivate/${subscription.type}`)}
             </EditButton>
-          )
-        ) : (
-          <EditButton
-            onClick={() => {
-              cancelSubscription({
-                variables: {
-                  subscriptionId: subscription.id,
-                  details: {
-                    type: CancellationCategoryType.Other,
-                  },
-                },
-              })
-                .then((res) => {
-                  console.log(res)
-                })
-                .catch((err) => {
-                  console.log(err)
-                })
-            }}
-          >
-            {t(`magazineSubscription/cancel/${subscription.type}`)}
-          </EditButton>
-        )}
-      </div>
+          </div>
+        )
+      ) : (
+        <>
+          <div>
+            <CustomerPortalLink subscription={subscription} />
+          </div>
+          <div>
+            <Link {...css({ ...linkRule })} href='/abgang'>
+              {t(`magazineSubscription/cancel/${subscription.type}`)}
+            </Link>
+          </div>
+        </>
+      )}
     </div>
   )
 }
 
-const createStripeCustomerPortalSessionMutation = gql`
-  mutation createStripeCustomerPortalSession($companyName: CompanyName!) {
-    createStripeCustomerPortalSession(companyName: $companyName) {
-      sessionUrl
-    }
-  }
-`
-
-const CustomerPortalLink = compose(
-  graphql(createStripeCustomerPortalSessionMutation, {
-    props: ({ mutate }) => ({
-      createStripeCustomerPortalSession: (companyName) => {
-        return mutate({
-          variables: {
-            companyName,
-          },
-        })
-      },
-    }),
-  }),
-)(({ createStripeCustomerPortalSession, subscription, t }) => {
+const CustomerPortalLink = ({ subscription }) => {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const { t } = useTranslation()
+
+  const [createStripeCustomerPortalSession] = useMutation(
+    CreateStripeCustomerPortalSessionDocument,
+  )
 
   return (
     <EditButton
@@ -185,4 +156,4 @@ const CustomerPortalLink = compose(
       </span>
     </EditButton>
   )
-})
+}

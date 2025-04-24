@@ -16,10 +16,3 @@ query UserMagazineSubscriptions($userId: ID!) {
     }
   }
 }
-
-query CancellationCategories {
-  cancellationCategories(showMore: true) {
-    type
-    label
-  }
-}

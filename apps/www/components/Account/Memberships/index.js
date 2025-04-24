@@ -20,7 +20,7 @@ import { Interaction, useColorContext } from '@project-r/styleguide'
 import MembershipList from '../Memberships/List'
 import PaymentSources from '../PaymentSources'
 import AccountSection from '../AccountSection'
-import { SubscriptionItem } from './SubscriptionItem'
+import { ManageMagazineSubscription } from './ManageMagazineSubscription'
 
 const { P } = Interaction
 
@@ -85,7 +85,9 @@ const Memberships = ({
               <>
                 {activeMagazineSubscription ? (
                   // If user has active magazine subscription, we need to show the info.
-                  <SubscriptionItem subscription={activeMagazineSubscription} />
+                  <ManageMagazineSubscription
+                    subscription={activeMagazineSubscription}
+                  />
                 ) : hasActiveMemberships ? (
                   // If user has *other* active memberships
                   <>
