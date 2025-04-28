@@ -119,6 +119,9 @@ export const PaynotesProvider = ({ children }) => {
     // want to show these clever foxes the paywall)
     if (isSearchBot) return setPaynoteKind('OVERLAY_OPEN')
 
+    // just signed up for a trial: no paynote
+    if (searchParams.has('trialSignup')) return setPaynoteKind(null)
+
     // one trial group (group A) is shown a discrete banner
     if (trialStatus === 'TRIAL_GROUP_A') return setPaynoteKind('BANNER')
 

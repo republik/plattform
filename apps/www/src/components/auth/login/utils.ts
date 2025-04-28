@@ -11,7 +11,13 @@ export const addStatusParamToRouter =
       { shallow: true },
     )
 
-export const reloadPage = () => {
+export const reloadPage = (context?: string) => () => {
+  const url = new URL(window.location.href)
+  if (context === 'trial') {
+    // when this query param is present, we don't show the expanded paynote
+    url.searchParams.set('trialSignup', 'true')
+  }
+  window.history.replaceState({}, '', url.toString())
   setTimeout(() => {
     window.location.reload()
   }, 200)

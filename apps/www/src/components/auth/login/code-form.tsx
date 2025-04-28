@@ -61,13 +61,13 @@ export function CodeForm({ email, context }: CodeFormProps) {
           payload: getConversionPayload(query),
         },
       })
-      .then(reloadPage)
+      .then(reloadPage(context))
       .catch((err) => {
         // TODO: maybe handle with an error code?
         if (
           err.message.includes('Sie haben bereits eine aktive Mitgliedschaft.')
         ) {
-          return reloadPage()
+          return reloadPage(context)()
         }
         handleErr(err)
       })
