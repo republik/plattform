@@ -83,14 +83,6 @@ async function getSubscriptionOwner(ctx: GraphqlContext, sub: Subscription) {
   return await ctx.pgdb.public.users.findOne({ id: sub.userId })
 }
 
-function isPriceOfProduct(res: Stripe.Price, productId: string) {
-  if (typeof res.product === 'string') {
-    return res.product === productId
-  } else {
-    return res.product.id === productId
-  }
-}
-
 function makeYearlyRecurringPrice(product: string, amount: number): PriceData {
   if (amount <= 0) throw new Error('api/payments/error/invalidPriceAmount')
 
