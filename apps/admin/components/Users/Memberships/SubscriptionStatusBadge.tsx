@@ -32,13 +32,11 @@ interface SubscriptionStatusBadgeProps {
 
 const colorMapping: Record<MagazineSubscriptionStatus, Color> = {
   canceled: infoColoring,
-  ended: infoColoring,
   paused: infoColoring,
   active: successColoring,
   trialing: successColoring,
   incomplete: warningColoring,
   incomplete_expired: warningColoring,
-  overdue: errorColoring,
   past_due: errorColoring,
   unpaid: errorColoring,
 }
