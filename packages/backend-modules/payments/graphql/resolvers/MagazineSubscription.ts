@@ -35,7 +35,7 @@ export = {
       label: item.price.lookup_key
         ? ctx.t(`api/payments/price/${item.price.lookup_key}`)
         : 'Spende',
-      price: item.price.unit_amount ?? 0,
+      amount: item.price.unit_amount ?? 0,
     }))
   },
 

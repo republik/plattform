@@ -12,17 +12,11 @@ export = async function updateMagazineSubscriptionDonation(
   _root: never,
   args: {
     subscriptionId: string
-    selectedDonation?: string
-    donationAmount?: number
+    donationAmount: number
   },
   ctx: GraphqlContext,
 ) {
   Auth.ensureUser(ctx.user)
-  if (args.selectedDonation && args.donationAmount) {
-    throw new Error(
-      'api/payments/error/exclusiveOptions/selectedDonationANDcustomDonation',
-    )
-  }
 
   const DONATION_PRODUCT_ID = getConfig().PROJECT_R_DONATION_PRODUCT_ID
 
@@ -46,38 +40,26 @@ export = async function updateMagazineSubscriptionDonation(
 
   const items = await ps.listSubscriptionItems(sub.company, sub.externalId)
 
-  let action: 'update' | 'delete' = 'update'
-  let price: string | undefined = undefined
-  let priceData: PriceData | undefined = undefined
-  if (args.selectedDonation) {
-    const [res] = await ps.getPrices(sub.company, [args.selectedDonation])
-
-    price = isPriceOfProduct(res, DONATION_PRODUCT_ID) ? res.id : undefined
-  }
-
-  console.log(typeof args.donationAmount)
-  if (typeof args.donationAmount === 'number') {
-    if (args.donationAmount === 0) {
-      action = 'delete'
-    } else {
-      priceData = makeYearlyRecurringPrice(
-        DONATION_PRODUCT_ID,
-        args.donationAmount,
-      )
-    }
-  }
+  const action: 'update' | 'delete' =
+    args.donationAmount === 0 ? 'delete' : 'update'
 
   const existingDonation = findExistingProduct(items, DONATION_PRODUCT_ID)
   if (action === 'update' && existingDonation) {
+    const priceData = makeYearlyRecurringPrice(
+      DONATION_PRODUCT_ID,
+      args.donationAmount,
+    )
     await ps.updateSubscriptionItem(sub.company, existingDonation.id, {
-      price: price,
       price_data: priceData,
       proration_behavior: 'none',
     })
   } else if (action === 'update') {
+    const priceData = makeYearlyRecurringPrice(
+      DONATION_PRODUCT_ID,
+      args.donationAmount,
+    )
     await ps.createSubscriptionItem(sub.company, {
       subscription: sub.externalId,
-      price: price,
       price_data: priceData,
       proration_behavior: 'none',
     })
@@ -87,7 +69,7 @@ export = async function updateMagazineSubscriptionDonation(
     await ps.deleteSubscriptionItem(sub.company, existingDonation.id)
   }
 
-  return true
+  return sub
 }
 
 function findExistingProduct(

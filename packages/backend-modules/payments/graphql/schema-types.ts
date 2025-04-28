@@ -62,7 +62,7 @@ type MagazineSubscription {
 type MagazineSubscriptionItem {
   id: ID!
   label: String!
-  price: Int!
+  amount: Int!
 }
 
 type Invoice {

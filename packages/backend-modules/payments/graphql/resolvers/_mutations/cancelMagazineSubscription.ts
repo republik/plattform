@@ -42,7 +42,7 @@ export = async function cancelMagazineSubscription(
 
   const actorIsSupport = isSupportActor(sub.userId, ctx.user)
 
-  await cs.cancelSubscription(
+  return cs.cancelSubscription(
     sub,
     {
       category: details.type,
@@ -54,8 +54,6 @@ export = async function cancelMagazineSubscription(
     // only support or admin can cancel immediately
     args.cancelImmediately && actorIsSupport,
   )
-
-  return true
 }
 
 async function getSubscriptionOwner(ctx: GraphqlContext, sub: Subscription) {

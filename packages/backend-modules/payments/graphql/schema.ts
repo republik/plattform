@@ -21,13 +21,12 @@ type mutations {
     complimentaryItems: [ComplimentaryItemOrder]
     options: CheckoutSessionOptions
   ): CheckoutSession
-  cancelMagazineSubscription(subscriptionId: ID!, details: CancellationInput!, cancelImmediately: Boolean): Boolean
-  reactivateMagazineSubscription(subscriptionId: ID!): Boolean
+  cancelMagazineSubscription(subscriptionId: ID!, details: CancellationInput!, cancelImmediately: Boolean): MagazineSubscription!
+  reactivateMagazineSubscription(subscriptionId: ID!): MagazineSubscription!
   updateMagazineSubscriptionDonation(
     subscriptionId: ID!
-    selectedDonation: ID
-    donationAmount: Int
-  ): Boolean
+    donationAmount: Int!
+  ): MagazineSubscription!
   createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
 }
 `

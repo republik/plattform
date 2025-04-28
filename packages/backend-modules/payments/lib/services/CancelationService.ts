@@ -1,6 +1,8 @@
 import { PgDb } from 'pogi'
 import { PaymentService } from './PaymentService'
 import { Subscription } from '../types'
+import { BillingRepo } from '../database/BillingRepo'
+import { parseStripeDate } from '../handlers/stripe/utils'
 
 export type CancalationDetails = {
   category: string
@@ -12,10 +14,12 @@ export type CancalationDetails = {
 
 export class CancelationService {
   private readonly paymentService: PaymentService
+  private billingRepo: BillingRepo
   private readonly db: PgDb
 
   constructor(paymentService: PaymentService, db: PgDb) {
     this.paymentService = paymentService
+    this.billingRepo = new BillingRepo(db)
     this.db = db
   }
 
@@ -31,28 +35,40 @@ export class CancelationService {
     sub: Subscription,
     details: CancalationDetails,
     immediately: boolean = false,
-  ): Promise<string> {
-    const id = await this.db.payments.subscriptionCancellations.insert({
+  ): Promise<Subscription> {
+    await this.db.payments.subscriptionCancellations.insert({
       subscriptionId: sub.id,
       ...filterUndefined(details),
     })
 
-    if (immediately) {
-      await this.paymentService.deleteSubscription(sub.company, sub.externalId)
-    } else {
-      await this.paymentService.updateSubscription(
-        sub.company,
-        sub.externalId,
-        {
-          cancel_at_period_end: true,
-        },
-      )
-    }
+    const newSub = immediately
+      ? await this.paymentService.deleteSubscription(
+          sub.company,
+          sub.externalId,
+        )
+      : await this.paymentService.updateSubscription(
+          sub.company,
+          sub.externalId,
+          {
+            cancel_at_period_end: true,
+          },
+        )
 
-    return id
+    return await this.billingRepo.updateSubscription(
+      { id: sub.id },
+      {
+        currentPeriodStart: parseStripeDate(newSub.current_period_start),
+        currentPeriodEnd: parseStripeDate(newSub.current_period_end),
+        status: newSub.status,
+        cancelAt: parseStripeDate(newSub.cancel_at),
+        canceledAt: parseStripeDate(newSub.canceled_at),
+        cancelAtPeriodEnd: newSub.cancel_at_period_end,
+        endedAt: parseStripeDate(newSub.ended_at),
+      },
+    )
   }
 
-  async revokeCancelation(sub: Subscription): Promise<void> {
+  async revokeCancelation(sub: Subscription): Promise<Subscription> {
     const tx = await this.db.transactionBegin()
 
     try {
@@ -70,11 +86,26 @@ export class CancelationService {
       throw e
     }
 
-    await this.paymentService.updateSubscription(sub.company, sub.externalId, {
-      cancel_at_period_end: false,
-    })
+    const newSub = await this.paymentService.updateSubscription(
+      sub.company,
+      sub.externalId,
+      {
+        cancel_at_period_end: false,
+      },
+    )
 
-    return
+    return this.billingRepo.updateSubscription(
+      { id: sub.id },
+      {
+        currentPeriodStart: parseStripeDate(newSub.current_period_start),
+        currentPeriodEnd: parseStripeDate(newSub.current_period_end),
+        status: newSub.status,
+        cancelAt: parseStripeDate(newSub.cancel_at),
+        canceledAt: parseStripeDate(newSub.canceled_at),
+        cancelAtPeriodEnd: newSub.cancel_at_period_end,
+        endedAt: parseStripeDate(newSub.ended_at),
+      },
+    )
   }
 }
 
