@@ -4,7 +4,9 @@ import { Editorial } from '../Typography'
 
 const Credit = ({ children }) => {
   return (
-    <Editorial.Credit style={{ color: 'inherit' }}>{children}</Editorial.Credit>
+    <Editorial.Credit style={{ color: 'inherit', position: 'relative' }}>
+      {children}
+    </Editorial.Credit>
   )
 }
 

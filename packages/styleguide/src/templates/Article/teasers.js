@@ -22,7 +22,6 @@ import {
 
 import {
   TeaserFrontCredit,
-  TeaserFrontCreditLink,
   TeaserFrontLead,
   TeaserFrontTile,
   TeaserFrontTileRow,
@@ -72,10 +71,13 @@ const createTeasers = ({
   const teaserTitle = (type, Headline) => ({
     matchMdast: matchHeading(1),
     component: ({ children, href, ...props }) => (
-      <Link href={href} passHref>
-        <a {...styles.link} href={href}>
-          <Headline {...props}>{children}</Headline>
-        </a>
+      <Link
+        href={href}
+        {...styles.link}
+        {...styles.linkOverlay}
+        legacyBehavior={false}
+      >
+        <Headline {...props}>{children}</Headline>
       </Link>
     ),
     props(node, index, parent, { ancestors }) {
@@ -123,10 +125,8 @@ const createTeasers = ({
       }
       return (
         <Editorial.Format attributes={attributes} color={formatColor}>
-          <Link href={href} passHref>
-            <a href={href} {...styles.link}>
-              {children}
-            </a>
+          <Link href={href} {...styles.link} legacyBehavior={false}>
+            {children}
           </Link>
         </Editorial.Format>
       )
@@ -178,9 +178,13 @@ const createTeasers = ({
             href: node.url,
           }
         },
-        component: ({ children, data, ...props }) => (
-          <Link href={props.href} passHref>
-            <TeaserFrontCreditLink {...props}>{children}</TeaserFrontCreditLink>
+        component: ({ children, ...props }) => (
+          <Link
+            {...props}
+            legacyBehavior={false}
+            style={{ color: 'inherit', textDecoration: 'underline' }}
+          >
+            {children}
           </Link>
         ),
         editorModule: 'link',
@@ -200,23 +204,21 @@ const createTeasers = ({
   const articleTile = {
     matchMdast: matchTeaserType('articleTile'),
     component: ({ children, attributes, singleColumn, ...props }) => (
-      <Link href={props.url}>
-        <TeaserFrontTile
-          singleColumn={singleColumn}
-          attributes={attributes}
-          {...props}
-          // darkmode support in article "read more" teaser
-          color={undefined}
-          bgColor={undefined}
-          audioPlayButton={
-            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
-              <AudioPlayButton documentId={props?.urlMeta.documentId} />
-            ) : undefined
-          }
-        >
-          {children}
-        </TeaserFrontTile>
-      </Link>
+      <TeaserFrontTile
+        singleColumn={singleColumn}
+        attributes={attributes}
+        {...props}
+        // darkmode support in article "read more" teaser
+        color={undefined}
+        bgColor={undefined}
+        audioPlayButton={
+          !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+            <AudioPlayButton documentId={props?.urlMeta.documentId} />
+          ) : undefined
+        }
+      >
+        {children}
+      </TeaserFrontTile>
     ),
     props: (node, index, parent, { ancestors }) => ({
       singleColumn: getSingleColumn(ancestors),
@@ -296,19 +298,19 @@ const createTeasers = ({
       ...globalInlines,
       {
         matchMdast: matchType('link'),
-        props: (node, index, parent, { ancestors }) => {
-          const teaser = ancestors.find(matchTeaser)
+        props: (node) => {
           return {
             title: node.title,
             href: node.url,
-            color: teaser ? teaser.data.color : colors.primary,
-            collapsedColor:
-              teaser && teaser.data.feuilleton ? '#000' : undefined,
           }
         },
-        component: ({ children, data, ...props }) => (
-          <Link href={props.href} passHref>
-            <TeaserFrontCreditLink {...props}>{children}</TeaserFrontCreditLink>
+        component: ({ children, ...props }) => (
+          <Link
+            {...props}
+            legacyBehavior={false}
+            style={{ color: 'inherit', textDecoration: 'underline' }}
+          >
+            {children}
           </Link>
         ),
         editorModule: 'link',
@@ -321,10 +323,13 @@ const createTeasers = ({
   const title = (type, Headline) => ({
     matchMdast: matchHeading(1),
     component: ({ children, href, ...props }) => (
-      <Link href={href} passHref>
-        <a {...styles.link} href={href}>
-          <Headline {...props}>{children}</Headline>
-        </a>
+      <Link
+        href={href}
+        {...styles.link}
+        {...styles.linkOverlay}
+        legacyBehavior={false}
+      >
+        <Headline {...props}>{children}</Headline>
       </Link>
     ),
     props(node, index, parent, { ancestors }) {
@@ -391,10 +396,8 @@ const createTeasers = ({
     matchMdast: matchHeading(6),
     component: ({ children, attributes, href, formatColor }) => (
       <TeaserCarouselFormat color={formatColor}>
-        <Link href={href} passHref>
-          <a href={href} {...styles.link}>
-            {children}
-          </a>
+        <Link href={href} {...styles.link} legacyBehavior={false}>
+          {children}
         </Link>
       </TeaserCarouselFormat>
     ),
@@ -418,19 +421,17 @@ const createTeasers = ({
     matchMdast: matchTeaserType('articleTile'),
     component: ({ children, attributes, ...props }) => {
       return (
-        <Link href={props.url}>
-          <TeaserCarouselTile
-            attributes={attributes}
-            audioPlayButton={
-              !!AudioPlayButton && shouldRenderPlayButton(props) ? (
-                <AudioPlayButton documentId={props?.urlMeta.documentId} />
-              ) : undefined
-            }
-            {...props}
-          >
-            {children}
-          </TeaserCarouselTile>
-        </Link>
+        <TeaserCarouselTile
+          attributes={attributes}
+          audioPlayButton={
+            !!AudioPlayButton && shouldRenderPlayButton(props) ? (
+              <AudioPlayButton documentId={props?.urlMeta.documentId} />
+            ) : undefined
+          }
+          {...props}
+        >
+          {children}
+        </TeaserCarouselTile>
       )
     },
     props: (node) => ({
