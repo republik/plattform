@@ -93,7 +93,7 @@ export const PaynotesProvider = ({ children }) => {
 
   useEffect(() => {
     if (meLoading) return
-    console.log({ template, pathname, trialStatus })
+    console.log({ template, trialStatus, pathname, searchParams })
 
     // Active membership: no paynote
     if (trialStatus === 'MEMBER') return setPaynoteKind(null)
