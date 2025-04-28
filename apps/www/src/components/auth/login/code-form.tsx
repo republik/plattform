@@ -85,10 +85,12 @@ export function CodeForm({ email, context, analyticsProps }: CodeFormProps) {
       })
 
   const handleLoginSuccess = (res) => {
+    console.log({ context })
     if (context === 'trial') {
       registerForTrial()
+    } else {
+      reloadPage()
     }
-    reloadPage()
   }
 
   const submitForm = (formData: FormData) => {
