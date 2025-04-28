@@ -64,18 +64,16 @@ export async function sendSetupSubscriptionMail(
     })
   }
 
-  if (donationItem) {
-    if (donationItem.price?.recurring) {
-      globalMergeVars.push({
-        name: 'recurring_donation',
-        content: (donationItem.amount / 100).toFixed(2),
-      })
-    } else {
-      globalMergeVars.push({
-        name: 'onetime_donation',
-        content: (donationItem.amount / 100).toFixed(2),
-      })
-    }
+  if (donationItem && donationItem.price?.recurring) {
+    globalMergeVars.push({
+      name: 'recurring_donation',
+      content: (donationItem.amount / 100).toFixed(2),
+    })
+  } else if (donationItem) {
+    globalMergeVars.push({
+      name: 'onetime_donation',
+      content: (donationItem.amount / 100).toFixed(2),
+    })
   }
 
   if (donationItem.price?.recurring === null) {
