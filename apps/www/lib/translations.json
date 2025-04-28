@@ -712,6 +712,18 @@
       "key": "Account/Update/details/title",
       "value": "Bitte überprüfen Sie Ihre Angaben und korrigieren beziehungsweise ergänzen Sie sie."
     },
+    {
+      "key": "Account/Delete/title",
+      "value": "Konto löschen"
+    },
+    {
+      "key": "Account/Delete/text",
+      "value": "Beantragen Sie die Löschung Ihres Kontos und der bei uns gespeicherten personenbezogenen Daten mit einer {link}."
+    },
+    {
+      "key": "Account/Delete/link",
+      "value": "Löschungsanfrage"
+    },
     { "key": "UserGuidance/title", "value": "Kein laufendes Abonnement" },
     {
       "key": "UserGuidance/p1",
