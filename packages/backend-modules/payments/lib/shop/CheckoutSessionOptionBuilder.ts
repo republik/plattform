@@ -73,7 +73,7 @@ export class CheckoutSessionBuilder {
     metadata?: any
     returnURL?: string
     selectedDiscount?: { type: 'DISCOUNT'; value: Discount }
-    selectedDonation?: string | CustomDonation
+    selectedDonation?: CustomDonation
   }
 
   constructor(offerId: string, paymentService: PaymentService) {
@@ -122,7 +122,7 @@ export class CheckoutSessionBuilder {
     return this
   }
 
-  public withDonation(donation: string | { amount: number } | undefined): this {
+  public withDonation(donation: { amount: number } | undefined): this {
     if (this.offer.company === 'PROJECT_R') {
       this.optionalSessionVars.selectedDonation = donation
     }
@@ -267,25 +267,13 @@ export class CheckoutSessionBuilder {
 
     const lineItems: LineItem[] = []
 
-    if (typeof this.offer.donationOptions !== 'undefined' && selectedDonation) {
-      if (typeof selectedDonation === 'string') {
-        const prices = await this.paymentService.getPrices(this.offer.company, [
-          selectedDonation,
-        ])
+    if (
+      typeof this.offer.suggestedDonations !== 'undefined' &&
+      selectedDonation
+    ) {
+      const donation = makeDonation(this.offer.type, selectedDonation)
 
-        const donation = prices[0]
-        if (donation?.lookup_key === selectedDonation) {
-          lineItems.push({
-            price: donation.id,
-            quantity: 1,
-          })
-        }
-      }
-      if (typeof selectedDonation === 'object') {
-        const donation = makeDonation(this.offer.type, selectedDonation)
-
-        lineItems.push(donation)
-      }
+      lineItems.push(donation)
     }
 
     return lineItems

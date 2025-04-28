@@ -40,13 +40,12 @@ export type Offer = {
   type: OfferType
   items: PriceDefinition[]
   complimentaryItems?: ComplimentaryItem[]
-  donationOptions?: PriceDefinition[]
   discountOpitions?: DiscountDefinition[]
+  suggestedDonations?: number[]
   fixedDiscount?: string
   requiresLogin: boolean
   requiresAddress: boolean
   allowPromotions: boolean
-  allowIntroductoryOffer?: boolean
   metaData?: {
     [name: string]: string | number | null
   }
@@ -66,17 +65,7 @@ export type OfferAPIResult = {
       intervalCount: number
     }
   }
-  donationOptions?: {
-    id: string
-    price: {
-      amount: number
-      currency: string
-      recurring?: {
-        interval: 'year' | 'month'
-        intervalCount: number
-      }
-    }
-  }[]
+  suggestedDonations?: number[]
   discount?: APIDiscountResult
 }
 
@@ -121,16 +110,8 @@ export const Offers: Readonly<Offer>[] = [
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
-    allowIntroductoryOffer: true,
     items: [{ type: 'PRICE', lookupKey: 'ABO' }],
-    donationOptions: [
-      { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_020' },
-      { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_120' },
-      { type: 'PRICE', lookupKey: 'ABO_DONATE_OPTION_YEARLY_240' },
-      { type: 'PRICE', lookupKey: 'ONE_TIME_DONATE_OPTION_B' },
-      { type: 'PRICE', lookupKey: 'ONE_TIME_DONATE_OPTION_A' },
-      { type: 'PRICE', lookupKey: 'ONE_TIME_DONATE_OPTION_C' },
-    ],
+    suggestedDonations: [1000, 50000, 10000, 12000, 24000],
     allowPromotions: true,
   },
   {
@@ -140,7 +121,6 @@ export const Offers: Readonly<Offer>[] = [
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
-    allowIntroductoryOffer: false,
     items: [
       {
         type: 'PRICE',
@@ -160,11 +140,7 @@ export const Offers: Readonly<Offer>[] = [
     requiresLogin: true,
     requiresAddress: true,
     items: [{ type: 'PRICE', lookupKey: 'BENEFACTOR_ABO' }],
-    donationOptions: [
-      { type: 'PRICE', lookupKey: 'BENEFACTOR_DONATE_OPTION_YEARLY_A' },
-      { type: 'PRICE', lookupKey: 'BENEFACTOR_DONATE_OPTION_YEARLY_B' },
-      { type: 'PRICE', lookupKey: 'BENEFACTOR_DONATE_OPTION_YEARLY_C' },
-    ],
+    suggestedDonations: [10000, 500000, 100000, 120000, 240000],
     allowPromotions: false,
   },
   {
@@ -175,11 +151,7 @@ export const Offers: Readonly<Offer>[] = [
     requiresLogin: true,
     requiresAddress: false,
     items: [],
-    donationOptions: [
-      { type: 'PRICE', lookupKey: 'ONE_TIME_DONATE_OPTION_A' },
-      { type: 'PRICE', lookupKey: 'ONE_TIME_DONATE_OPTION_B' },
-      { type: 'PRICE', lookupKey: 'ONE_TIME_DONATE_OPTION_C' },
-    ],
+    suggestedDonations: [1000, 50000, 10000, 12000, 24000],
     allowPromotions: false,
   },
   {
@@ -203,7 +175,6 @@ export const Offers: Readonly<Offer>[] = [
     company: 'REPUBLIK',
     requiresLogin: true,
     requiresAddress: false,
-    allowIntroductoryOffer: true,
     allowPromotions: true,
     items: [
       {

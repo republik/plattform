@@ -91,7 +91,7 @@ interface Offer {
   name: String!
   price: Price!
   customPrice: CustomPrice
-  donationOptions: [Donation!]
+  suggestedDonations: [Int!]
   discountOptions: [Discount!]
   discount: Discount
   allowPromotions: Boolean
@@ -116,7 +116,7 @@ type SubscriptionOffer implements Offer {
   name: String!
   price: Price!
   customPrice: CustomPrice
-  donationOptions: [Donation!]
+  suggestedDonations: [Int!]
   discountOptions: [Discount!]
   discount: Discount
   allowPromotions: Boolean
@@ -131,7 +131,7 @@ type GiftOffer implements Offer {
   name: String!
   price: Price!
   customPrice: CustomPrice
-  donationOptions: [Donation!]
+  suggestedDonations: [Int!]
   discountOptions: [Discount!]
   discount: Discount
   allowPromotions: Boolean

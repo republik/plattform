@@ -7,7 +7,6 @@ type CreateCheckoutSessionArgs = {
   promoCode?: string
   withDonation?: string
   withCustomDonation?: { amount: number }
-  withSelectedDiscount?: string
   complimentaryItems: {
     id: string
     quantity: number
@@ -36,13 +35,9 @@ export = async function createCheckoutSession(
   session
     .withMetadata(args.options?.metadata)
     .withPromoCode(args.promoCode)
-    .withDonation(args.withDonation || args.withCustomDonation)
+    .withDonation(args.withCustomDonation)
     .withReturnURL(args.options?.returnURL)
     .withUIMode(args.options?.uiMode)
-
-  if (args.withSelectedDiscount) {
-    await session.withSelectedDiscount(args.withSelectedDiscount)
-  }
 
   return session.build()
 }

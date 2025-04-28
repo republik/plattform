@@ -31,9 +31,7 @@ export class OfferBuilder {
 
   private async fetchPrices() {
     const lookupKeys = this.#offers.flatMap((o) =>
-      o.items
-        .map((i) => i.lookupKey)
-        .concat(o.donationOptions?.map((d) => d.lookupKey) || []),
+      o.items.map((i) => i.lookupKey),
     )
 
     this.#priceData = await this.#paymentService.getPrices(
@@ -46,23 +44,12 @@ export class OfferBuilder {
     const price = this.#priceData!.find(
       (p) => p.lookup_key === offer.items[0]?.lookupKey,
     )!
-    const donations = this.#priceData!.filter((p) =>
-      (offer.donationOptions?.map((d) => d.lookupKey) || []).includes(
-        p.lookup_key!,
-      ),
-    )
 
     const discount = await this.resolveDiscount(offer)
 
     return {
       ...offer,
       price: this.formatPrice(price),
-      donationOptions: donations.length
-        ? donations.map((d) => ({
-            id: d.lookup_key!,
-            price: this.formatPrice(d),
-          }))
-        : undefined,
       discount: discount ?? undefined,
     }
   }
