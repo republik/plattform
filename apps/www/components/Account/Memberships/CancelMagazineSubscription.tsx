@@ -123,7 +123,7 @@ export function CancelMagazineSubscription({
                       id={type}
                       value={type}
                       required
-                      onChange={(e) => {
+                      onChange={() => {
                         setCancellationType(type)
                       }}
                     ></input>{' '}

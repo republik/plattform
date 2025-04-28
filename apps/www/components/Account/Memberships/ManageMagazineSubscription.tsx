@@ -1,11 +1,11 @@
 import {
+  ActiveMagazineSubscriptionDocument,
   CreateStripeCustomerPortalSessionDocument,
-  MyBelongingsQuery,
   ReactivateMagazineSubscriptionDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import {
-  InlineSpinner,
+  BabySpinner,
   Interaction,
   linkRule,
   mediaQueries,
@@ -13,25 +13,48 @@ import {
 import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { errorToString } from '../../../lib/utils/errors'
 import { useTranslation } from '../../../lib/withT'
 import { EditButton } from '../Elements'
 
-type MagazineSubscription = NonNullable<
-  MyBelongingsQuery['me']['activeMagazineSubscription']
->
+export function ManageMagazineSubscription() {
+  const { data, startPolling, stopPolling } = useQuery(
+    ActiveMagazineSubscriptionDocument,
+    { fetchPolicy: 'cache-and-network' },
+  )
 
-export function ManageMagazineSubscription({
-  subscription,
-}: {
-  subscription: MagazineSubscription | undefined
-}) {
   const [reactivateSubscription] = useMutation(
     ReactivateMagazineSubscriptionDocument,
   )
 
+  const [isPolling, setIsPolling] = useState(false)
+
+  const subscription = data?.me?.activeMagazineSubscription
+
   const { t } = useTranslation()
+
+  // Subscriptions don't update immediately after being canceled/reactivated, so we start polling instead of refetching immediately
+  const refetchSubscriptions = () => {
+    // console.log('start polling subscriptions')
+    startPolling(1000)
+    setIsPolling(true)
+  }
+
+  // ... and stop when changed data comes in (if the data hasn't changed yet, it's still
+  // in the Apollo Client cache and will not trigger the effect)
+  useEffect(() => {
+    // console.log('stop polling subscriptions')
+    if (data) {
+      console.log(data)
+      stopPolling()
+      setIsPolling(false)
+    }
+  }, [data, stopPolling])
+
+  if (!subscription) {
+    return null
+  }
 
   return (
     <div
@@ -95,18 +118,15 @@ export function ManageMagazineSubscription({
           <div>
             <EditButton
               onClick={() => {
-                reactivateSubscription({
-                  variables: { subscriptionId: subscription.id },
-                })
-                  .then((res) => {
-                    console.log(res)
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  })
+                if (!isPolling) {
+                  reactivateSubscription({
+                    variables: { subscriptionId: subscription.id },
+                  }).then(refetchSubscriptions)
+                }
               }}
             >
-              {t(`magazineSubscription/reactivate/${subscription.type}`)}
+              {t(`magazineSubscription/reactivate/${subscription.type}`)}{' '}
+              {isPolling && <BabySpinner />}
             </EditButton>
           </div>
         )
@@ -127,11 +147,10 @@ export function ManageMagazineSubscription({
 }
 
 const CustomerPortalLink = ({ subscription }) => {
-  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { t } = useTranslation()
 
-  const [createStripeCustomerPortalSession] = useMutation(
+  const [createStripeCustomerPortalSession, { loading }] = useMutation(
     CreateStripeCustomerPortalSessionDocument,
   )
 
@@ -139,11 +158,11 @@ const CustomerPortalLink = ({ subscription }) => {
     <EditButton
       onClick={(e) => {
         e.preventDefault()
-        setLoading(true)
-        createStripeCustomerPortalSession(subscription.company)
+        createStripeCustomerPortalSession({
+          variables: { companyName: subscription.company },
+        })
           .then(({ data }) => {
             router.push(data.createStripeCustomerPortalSession.sessionUrl)
-            setLoading(false)
           })
           .catch(errorToString)
       }}
@@ -152,7 +171,7 @@ const CustomerPortalLink = ({ subscription }) => {
         style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 8 }}
       >
         {t(`magazineSubscription/paymentMethod/change`)}
-        {loading ? <InlineSpinner size={16} /> : null}
+        {loading && <BabySpinner />}
       </span>
     </EditButton>
   )
