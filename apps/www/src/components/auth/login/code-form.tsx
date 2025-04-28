@@ -5,6 +5,8 @@ import { useRouter } from 'next/router'
 
 import { ApolloError, useApolloClient } from '@apollo/client'
 
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+
 import { visuallyHidden, vstack } from '@republik/theme/patterns'
 import { css } from '@republik/theme/css'
 
@@ -22,17 +24,19 @@ import { Spinner } from '../../ui/spinner'
 
 import { CodeInput } from './code-input'
 import { ErrorMessage } from './error-message'
-import { reloadPage } from './utils'
+import { reloadPage, SignupContextType } from './utils'
 
 export interface CodeFormProps {
   email: string
-  context?: 'trial'
+  context?: SignupContextType
+  analyticsProps: Record<string, string>
 }
 
-export function CodeForm({ email, context }: CodeFormProps) {
+export function CodeForm({ email, context, analyticsProps }: CodeFormProps) {
   const codeId = useId()
   const router = useRouter()
   const { query } = router
+  const trackEvent = useTrackEvent()
   const formRef = useRef<HTMLFormElement>(null)
   const [error, setError] = useState<ApolloError | undefined>()
   const [pending, setPending] = useState(false)
@@ -61,13 +65,19 @@ export function CodeForm({ email, context }: CodeFormProps) {
           payload: getConversionPayload(query),
         },
       })
-      .then(reloadPage(context))
+      .then(() => {
+        trackEvent({
+          action: 'Completely trial registration',
+          ...analyticsProps,
+        })
+        reloadPage(context)
+      })
       .catch((err) => {
         // TODO: maybe handle with an error code?
         if (
           err.message.includes('Sie haben bereits eine aktive Mitgliedschaft.')
         ) {
-          return reloadPage(context)()
+          return reloadPage()
         }
         handleErr(err)
       })

@@ -20,7 +20,7 @@ const AB_CONFIGS: MeteringConfig[] = [
   { maxArticles: 2, daysToExpire: 7 },
 ]
 
-const LOCALSTORAGE_KEY = 'metering'
+const METERING_KEY = 'metering'
 
 function isNotExpiredDate(readAt: Date, daysToExpire: number) {
   const readDate = new Date(readAt)
@@ -50,13 +50,29 @@ function generateMeteringObject(): ArticleMetering {
 // try and retrieve the metering object from local storage
 // if it doesn't exist, create a new one
 function getMetering(): ArticleMetering {
-  const metering = localStorage.getItem(LOCALSTORAGE_KEY)
+  const metering = localStorage.getItem(METERING_KEY)
   if (!metering) return generateMeteringObject()
   return JSON.parse(metering)
 }
 
+// for analytics purposes
+export function getMeteringData(prefix = ''): {
+  [key: string]: string
+} {
+  const metering = localStorage.getItem(METERING_KEY)
+  if (!metering) return {}
+
+  const config = (JSON.parse(metering) as ArticleMetering).config
+  if (!config) return {}
+
+  return {
+    [prefix + 'metering_max_articles']: config.maxArticles.toString(),
+    [prefix + 'metering_days_to_expire']: config.daysToExpire.toString(),
+  }
+}
+
 function setMetering(metering: ArticleMetering) {
-  localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(metering))
+  localStorage.setItem(METERING_KEY, JSON.stringify(metering))
 }
 
 // TODO: write unit tests

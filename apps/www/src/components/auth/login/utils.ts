@@ -11,7 +11,9 @@ export const addStatusParamToRouter =
       { shallow: true },
     )
 
-export const reloadPage = (context?: string) => () => {
+export type SignupContextType = 'trial'
+
+export const reloadPage = (context?: SignupContextType) => {
   const url = new URL(window.location.href)
   if (context === 'trial') {
     // when this query param is present, we don't show the expanded paynote

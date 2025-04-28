@@ -1,4 +1,5 @@
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 
 import { css } from '@republik/theme/css'
 
@@ -7,9 +8,17 @@ import { useTranslation } from 'lib/withT'
 import { Button } from '../../ui/button'
 import { PaynoteSection } from '../../ui/containers'
 
-const Offers = () => {
+function Offers({
+  additionalShopParams = {},
+  analyticsProps = {},
+}: {
+  additionalShopParams?: Record<string, string>
+  analyticsProps?: Record<string, string>
+}) {
   const trackEvent = useTrackEvent()
   const { t } = useTranslation()
+
+  const utmParams = getUTMSessionStorage()
 
   return (
     <form
@@ -18,10 +27,16 @@ const Offers = () => {
       onSubmit={() => {
         trackEvent({
           action: 'Regwall: Go to shop',
+          ...analyticsProps,
         })
       }}
     >
-      {/* TODO: add utms */}
+      {Object.entries(utmParams).map(([k, v]) => {
+        return <input type='hidden' hidden key={k} name={k} value={v} />
+      })}
+      {Object.entries(additionalShopParams).map(([k, v]) => {
+        return <input type='hidden' hidden key={k} name={k} value={v} />
+      })}
       <PaynoteSection backgroundColor='#DAFF8D'>
         <div className={css({ textStyle: 'airy' })}>
           <p

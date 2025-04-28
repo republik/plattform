@@ -20,6 +20,7 @@ import { usePathname } from 'next/navigation'
 import { StructuredText } from 'react-datocms'
 import { usePaynoteVariants } from './use-paynotes'
 import { useMe } from 'lib/context/MeContext'
+import { getMeteringData } from '../article-metering'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
@@ -52,7 +53,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
   const paynotes = usePaynoteVariants()
   const trackEvent = useTrackEvent()
   const pathname = usePathname()
-  const { me } = useMe()
+  const { me, trialStatus } = useMe()
 
   const { scrollYProgress } = useScroll()
 
@@ -270,7 +271,10 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
 
               <Offers
                 additionalShopParams={{
+                  rep_ui_component: 'paynote-overlay',
                   rep_paynote_title: paynoteVariantForAnalytics,
+                  rep_trial_status: trialStatus,
+                  ...getMeteringData('rep_'),
                 }}
               />
 

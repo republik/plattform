@@ -5,6 +5,8 @@ import { ApolloError, useMutation } from '@apollo/client'
 
 import { vstack } from '@republik/theme/patterns'
 
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+
 import {
   SignInDocument,
   SignInTokenType,
@@ -17,6 +19,7 @@ import { CodeForm } from './code-form'
 import { ErrorMessage } from './error-message'
 import { Tos } from './tos'
 import isEmail from 'validator/lib/isEmail'
+import { SignupContextType } from './utils'
 
 type SubmitProps = {
   children?: ReactNode
@@ -33,7 +36,8 @@ export function Submit({ children, pending }: SubmitProps) {
 
 interface LoginFormProps {
   submitButtonText?: string
-  context?: string
+  context?: SignupContextType
+  analyticsProps: Record<string, string>
   autoFocus?: boolean
   renderBefore?: ReactNode
   renderAfter?: ReactNode
@@ -41,13 +45,20 @@ interface LoginFormProps {
 
 export function LoginForm(props: LoginFormProps) {
   const [signIn, signInRes] = useMutation(SignInDocument)
+  const trackEvent = useTrackEvent()
   const [email, setEmail] = useState<string | null>(null)
   const [error, setError] = useState<ApolloError | string | undefined>()
   const [showTos, setShowTos] = useState(props.autoFocus ?? false)
   const [pending, setPending] = useState(false)
 
   if (signInRes.data?.signIn && email) {
-    return <CodeForm email={email} context='trial' />
+    return (
+      <CodeForm
+        email={email}
+        context={props.context}
+        analyticsProps={props.analyticsProps}
+      />
+    )
   }
 
   const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -80,6 +91,10 @@ export function LoginForm(props: LoginFormProps) {
 
     if (result.data?.signIn) {
       setEmail(email)
+      trackEvent({
+        action: 'Initiated trial registration',
+        ...props.analyticsProps,
+      })
     }
 
     if (result.errors && result.errors.length > 0) {

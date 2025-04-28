@@ -5,6 +5,8 @@ import { useRouter } from 'next/router'
 
 import { ApolloError, useApolloClient } from '@apollo/client'
 
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+
 import { RequestAccessDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 import { REGWALL_CAMPAIGN } from 'lib/constants'
@@ -13,9 +15,9 @@ import { useTranslation } from 'lib/withT'
 
 import { reloadPage } from '../login/utils'
 import { ErrorMessage } from '../login/error-message'
+import { Submit } from '../login'
 
 import { TrialFormProps } from '.'
-import { Submit } from '../login'
 
 // This component is used in the trial flow when the user is already authenticated.
 const RequestTrial = (props: TrialFormProps) => {
@@ -23,6 +25,7 @@ const RequestTrial = (props: TrialFormProps) => {
   const router = useRouter()
   const { query } = router
   const { t } = useTranslation()
+  const trackEvent = useTrackEvent()
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<ApolloError | undefined>()
 
@@ -39,7 +42,10 @@ const RequestTrial = (props: TrialFormProps) => {
           payload: getConversionPayload(query),
         },
       })
-      .then(reloadPage)
+      .then(() => {
+        trackEvent({ action: 'Requested a trial', ...props.analyticsProps })
+        reloadPage('trial')
+      })
       .catch((err) => {
         setError(err)
         setPending(false)

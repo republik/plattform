@@ -8,6 +8,7 @@ import RegisterForTrial from './register-for-trial'
 export interface TrialFormProps {
   renderBefore?: ReactNode
   renderAfter?: ReactNode
+  analyticsProps: Record<string, string>
 }
 
 // Assumptions:
@@ -16,17 +17,7 @@ export interface TrialFormProps {
 const TrialForm = (props: TrialFormProps) => {
   const { me } = useMe()
 
-  return me ? (
-    <RequestTrial
-      renderBefore={props.renderBefore}
-      renderAfter={props.renderAfter}
-    />
-  ) : (
-    <RegisterForTrial
-      renderBefore={props.renderBefore}
-      renderAfter={props.renderAfter}
-    />
-  )
+  return me ? <RequestTrial {...props} /> : <RegisterForTrial {...props} />
 }
 
 export default TrialForm

@@ -5,6 +5,8 @@ import { useMutation, useQuery } from '@apollo/client'
 
 import { css } from '@republik/theme/css'
 
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+
 import {
   QuestionnaireDocument,
   QuestionTypeChoice,
@@ -60,6 +62,7 @@ function AnswerButton({
 
 function ThankYou() {
   const { t } = useTranslation()
+  const trackEvent = useTrackEvent()
   return (
     <PaynoteSection backgroundColor='#F2ECE6'>
       <p className={css({ textStyle: 'airy', fontWeight: 'medium' })}>
@@ -68,7 +71,12 @@ function ThankYou() {
       <p className={css({ textStyle: 'body' })}>
         {t('paywall/survey/thanks/description')}
       </p>
-      <ArrowLink href='/format/was-diese-woche-wichtig-war'>
+      <ArrowLink
+        href='/format/was-diese-woche-wichtig-war'
+        onClick={() =>
+          trackEvent({ action: 'Visited free wdwww newsletter page' })
+        }
+      >
         {t('paywall/survey/thanks/link')}
       </ArrowLink>
     </PaynoteSection>
@@ -85,6 +93,7 @@ function SurveyQuestion({
   const { options, text } = question
   const { t } = useTranslation()
   const [submitAnswer] = useMutation(SubmitQuestionnaireAnswerDocument)
+  const trackEvent = useTrackEvent()
 
   const onSubmit = (value: string) => async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -95,6 +104,7 @@ function SurveyQuestion({
         payload: { value: [value] },
       },
     })
+    trackEvent({ action: 'Answered exit survey' })
     afterSubmit()
   }
 

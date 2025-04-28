@@ -4,6 +4,8 @@ import Image from 'next/image'
 
 import { css } from '@republik/theme/css'
 
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+
 import { CDN_FRONTEND_BASE_URL } from 'lib/constants'
 
 import { PaynoteSection } from '../../ui/containers'
@@ -48,10 +50,16 @@ const TrialHeader = () => {
   )
 }
 
-const WhyRegister = () => {
-  // TODO: animate?
+const WhyRegister = ({
+  analyticsProps,
+}: {
+  analyticsProps: Record<string, string>
+}) => {
   const { t } = useTranslation()
+  const trackEvent = useTrackEvent()
+
   const [expanded, setExpanded] = useState(false)
+
   return (
     <div
       className={css({
@@ -70,7 +78,17 @@ const WhyRegister = () => {
           </p>
         </div>
       ) : (
-        <Button variant='link' type='button' onClick={() => setExpanded(true)}>
+        <Button
+          variant='link'
+          type='button'
+          onClick={() => {
+            setExpanded(true)
+            trackEvent({
+              action: 'expand "why register" infobox',
+              ...analyticsProps,
+            })
+          }}
+        >
           {t('regwall/whyRegister/title')}
         </Button>
       )}
@@ -78,10 +96,18 @@ const WhyRegister = () => {
   )
 }
 
-const Trial = () => {
+const Trial = ({
+  analyticsProps = {},
+}: {
+  analyticsProps?: Record<string, string>
+}) => {
   return (
     <PaynoteSection backgroundColor='#F2ECE6'>
-      <TrialForm renderBefore={<TrialHeader />} renderAfter={<WhyRegister />} />
+      <TrialForm
+        renderBefore={<TrialHeader />}
+        renderAfter={<WhyRegister analyticsProps={analyticsProps} />}
+        analyticsProps={analyticsProps}
+      />
     </PaynoteSection>
   )
 }

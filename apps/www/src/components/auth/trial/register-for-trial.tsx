@@ -14,8 +14,7 @@ const RegisterForTrial = (props: TrialFormProps) => {
     <LoginForm
       context='trial'
       submitButtonText={t('auth/trial/register')}
-      renderBefore={props.renderBefore}
-      renderAfter={props.renderAfter}
+      {...props}
     />
   )
 }
