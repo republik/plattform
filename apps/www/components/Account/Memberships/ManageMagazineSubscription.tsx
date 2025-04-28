@@ -21,6 +21,7 @@ import { EditButton } from '../Elements'
 export function ManageMagazineSubscription() {
   const { data, startPolling, stopPolling } = useQuery(
     ActiveMagazineSubscriptionDocument,
+    // make sure that up-to-date information is shown when user navigates back from /abgang
     { fetchPolicy: 'cache-and-network' },
   )
 
