@@ -5,6 +5,7 @@ import { PgDb } from 'pogi'
 import { Invoice, Subscription, SubscriptionType } from '../types'
 import type Stripe from 'stripe'
 import { getConfig } from '../config'
+import { PaymentService } from '../services/PaymentService'
 
 type MergeVariable = { name: string; content: string | boolean }
 
@@ -76,21 +77,6 @@ export async function sendSetupSubscriptionMail(
     })
   }
 
-  if (donationItem.price?.recurring === null) {
-    globalMergeVars.push({
-      name: 'next_total',
-      content: (
-        (invoice.totalBeforeDiscount - donationItem.amount) /
-        100
-      ).toFixed(2),
-    })
-  } else {
-    globalMergeVars.push({
-      name: 'next_total',
-      content: (invoice.totalBeforeDiscount / 100).toFixed(2),
-    })
-  }
-
   if (invoice.discounts.length > 0 && invoice.totalDiscountAmount) {
     const discount = invoice.discounts[0] as any
     globalMergeVars.push(
@@ -101,6 +87,20 @@ export async function sendSetupSubscriptionMail(
       },
     )
   }
+
+  const nextInvoice = await new PaymentService().getInvoicePreview(
+    subscription.company,
+    subscription.externalId,
+  )
+
+  if (!nextInvoice) {
+    throw Error('Next invoice not found')
+  }
+
+  globalMergeVars.push({
+    name: 'next_total',
+    content: (nextInvoice.total / 100).toFixed(2),
+  })
 
   const templateName = 'subscription_created_' + subscription.type.toLowerCase()
   const sendMailResult = await sendMailTemplate(

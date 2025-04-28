@@ -12,16 +12,16 @@ export = {
     return Payments.getInstance().getSubscriptionInvoices(subscription.id)
   },
   async renewsAtPrice(subscription: Subscription) {
-    const sub = await PaymentProvider.forCompany(
-      subscription.company,
-    ).getSubscription(subscription.externalId)
-    if (!sub) {
+    try {
+      const nextInvoice = await new PaymentService().getInvoicePreview(
+        subscription.company,
+        subscription.externalId,
+      )
+
+      return nextInvoice?.total
+    } catch {
       return null
     }
-
-    return sub.items.data.reduce((acc, item) => {
-      return acc + (item.price.unit_amount ?? 0)
-    }, 0)
   },
 
   async items(subscription: Subscription, _args: never, ctx: GraphqlContext) {

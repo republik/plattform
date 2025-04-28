@@ -103,6 +103,14 @@ export class PaymentService {
     return invoice ? invoice : null
   }
 
+  async getInvoicePreview(company: Company, subId: string) {
+    const invoice = await this.#stripeAdapters[company].invoices.createPreview({
+      subscription: subId,
+    })
+
+    return invoice ? invoice : null
+  }
+
   async getCharge(company: Company, id: string) {
     const charge = await this.#stripeAdapters[company].charges.retrieve(id)
 
