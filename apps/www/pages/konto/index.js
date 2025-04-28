@@ -108,6 +108,26 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
         </div>
         <NameAddress />
       </AccountSection>
+      <div {...styles.column}>
+        <AccountSection id='delete' title={t('Account/Delete/title')}>
+          <HintArea>
+            {t.elements('Account/Delete/text', {
+              link: (
+                <Link
+                  key='link'
+                  href='/datenschutz-loeschungsanfrage'
+                  passHref
+                  legacyBehavior
+                >
+                  <A>
+                    <Emphasis>{t('Account/Delete/link')}</Emphasis>
+                  </A>
+                </Link>
+              ),
+            })}
+          </HintArea>
+        </AccountSection>
+      </div>
     </AccountEnforceMe>
   )
 
