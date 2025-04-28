@@ -59,6 +59,9 @@ function getMetering(): ArticleMetering {
 export function getMeteringData(prefix = ''): {
   [key: string]: string
 } {
+  if (typeof window === 'undefined') return {}
+  if (!window.localStorage) return {}
+
   const metering = localStorage.getItem(METERING_KEY)
   if (!metering) return {}
 
@@ -67,7 +70,7 @@ export function getMeteringData(prefix = ''): {
 
   return {
     [prefix + 'metering_max_articles']: config.maxArticles.toString(),
-    [prefix + 'metering_days_to_expire']: config.daysToExpire.toString(),
+    [prefix + 'metering_days_to_expire']: config.daysToExpire?.toString(),
   }
 }
 

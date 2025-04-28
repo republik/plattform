@@ -11,6 +11,7 @@ type AnalyticsProviderProps = Omit<
 export const AnalyticsProvider = (props: AnalyticsProviderProps) => {
   const { me, hasActiveMembership, trialStatus, meLoading } = useMe()
   const meteringData = getMeteringData()
+  // console.log('provider', { meteringData })
 
   return (
     <PlausibleProvider
