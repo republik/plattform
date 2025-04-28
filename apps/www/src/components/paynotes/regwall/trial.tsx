@@ -16,9 +16,7 @@ import TrialForm from '../../auth/trial'
 import Login from './login'
 import { useTranslation } from 'lib/withT'
 
-// TODO: make css for container and css for b tag reusable
-
-const TrialHeader = () => {
+const TrialHeader = ({ variation }: { variation: string }) => {
   const { t } = useTranslation()
   return (
     <div
@@ -40,10 +38,12 @@ const TrialHeader = () => {
           height={240}
         />
       </div>
-      <h2>{t('regwall/header/title')}</h2>
+      <h2>{t(`regwall/${variation}/header/title`)}</h2>
       <div className={css({ textStyle: 'airy' })}>
         <p
-          dangerouslySetInnerHTML={{ __html: t('regwall/header/description') }}
+          dangerouslySetInnerHTML={{
+            __html: t(`regwall/${variation}/header/description`),
+          }}
         />
       </div>
     </div>
@@ -71,11 +71,12 @@ const WhyRegister = ({
     >
       {expanded ? (
         <div>
-          <p>
-            <b>{t('regwall/whyRegister/title')}</b>
-            <br />
-            {t('regwall/whyRegister/description')}
-          </p>
+          <p className={css({ mb: '4' })}>{t('regwall/whyRegister/title')}</p>
+          <p
+            dangerouslySetInnerHTML={{
+              __html: t('regwall/whyRegister/description'),
+            }}
+          />
         </div>
       ) : (
         <Button
@@ -97,14 +98,14 @@ const WhyRegister = ({
 }
 
 const Trial = ({
-  analyticsProps = {},
+  analyticsProps,
 }: {
-  analyticsProps?: Record<string, string>
+  analyticsProps: { variation: string }
 }) => {
   return (
     <PaynoteSection backgroundColor='#F2ECE6'>
       <TrialForm
-        renderBefore={<TrialHeader />}
+        renderBefore={<TrialHeader variation={analyticsProps.variation} />}
         renderAfter={<WhyRegister analyticsProps={analyticsProps} />}
         analyticsProps={analyticsProps}
       />

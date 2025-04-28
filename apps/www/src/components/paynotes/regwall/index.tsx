@@ -16,23 +16,24 @@ import { useMe } from 'lib/context/MeContext'
 
 const Regwall = () => {
   const trackEvent = useTrackEvent()
-  const regwallTitle = 'Version A' // TODO
+  const variation = Math.random() < 0.5 ? 'a' : 'b'
   const { trialStatus } = useMe()
 
   useEffect(() => {
     trackEvent({
       action: 'is showing',
-      regwallTitle,
+      variation,
     })
   }, [trackEvent])
 
   return (
     <PaynoteContainer>
-      <Trial analyticsProps={{ regwallTitle }} />
+      <Trial analyticsProps={{ variation }} />
       <Offers
+        analyticsProps={{ variation }}
         additionalShopParams={{
           rep_ui_component: 'regwall',
-          rep_regwall_title: regwallTitle,
+          rep_regwall_variation: variation,
           rep_trial_status: trialStatus,
           ...getMeteringData('rep_'),
         }}

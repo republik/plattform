@@ -8,7 +8,9 @@ import RegisterForTrial from './register-for-trial'
 export interface TrialFormProps {
   renderBefore?: ReactNode
   renderAfter?: ReactNode
-  analyticsProps: Record<string, string>
+  analyticsProps: {
+    variation: string
+  }
 }
 
 // Assumptions:

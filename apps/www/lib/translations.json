@@ -7797,10 +7797,6 @@
       "value": "Mit der Anmeldung akzeptieren Sie die {link} und sind einverstanden E-Mails zu Republik-Angeboten zu erhalten."
     },
     {
-      "key": "auth/trial/register",
-      "value": "Anmelden und weiterlesen"
-    },
-    {
       "key": "auth/trial/request",
       "value": "Weiterlesen"
     },
@@ -7810,15 +7806,31 @@
     },
     {
       "key": "regwall/login/link",
-      "value": "Anmelden."
+      "value": "Anmelden"
     },
     {
-      "key": "regwall/header/title",
-      "value": "Sie müssen nichts bezahlen" 
+      "key": "regwall/a/header/title",
+      "value": "Weiterlesen, ohne zu bezahlen" 
     },
     {
-      "key": "regwall/header/description",
-      "value": "<b>Werden Sie unser Gast:</b> Eine Woche lang gratis die Republik lesen, keine automatische Verlängerung." 
+      "key": "regwall/a/header/description",
+      "value": "<b>Werden Sie unser Gast:</b> Eine Woche lang gratis alle Republik-Beiträge lesen, keine automatische Verlängerung." 
+    },
+    {
+      "key": "regwall/a/cta",
+      "value": "Als Gast anmelden und weiterlesen"
+    },
+    {
+      "key": "regwall/b/header/title",
+      "value": "Weiterlesen geht ganz einfach:" 
+    },
+    {
+      "key": "regwall/b/header/description",
+      "value": "<b>Als Gast</b> 7 Tage lang kostenlos Zugang zu allen Republik-Beiträgen, keine Zahlungsangaben erforderlich." 
+    },
+    {
+      "key": "regwall/b/cta",
+      "value": "Als Gast registrieren"
     },
     {
       "key": "regwall/whyRegister/title",
@@ -7826,15 +7838,23 @@
     },
     {
       "key": "regwall/whyRegister/description",
-      "value": "Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Wenn Sie keine Nachrichten mehr erhalten möchten, können Sie sich jederzeit abmelden." 
+      "value": "Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Wenn Sie keine Nachrichten mehr erhalten möchten, können Sie sich <b>jederzeit abmelden</b>." 
     },
     {
-      "key": "regwall/offers/description",
-      "value": "<b>Und natürlich freuen wir uns auch über Geld:</b> Mit einem Abo unterstützen Sie unabhängigen und werbefreien Journalismus." 
+      "key": "regwall/a/offers/description",
+      "value": "<b>Für Grosszügige und Unerschrockene:</b>" 
     },
     {
-      "key": "regwall/offers/cta",
-      "value": "Abonnieren ab 22/Monat" 
+      "key": "regwall/a/offers/cta",
+      "value": "Abo ab CHF 22.– / Monat" 
+    },
+    {
+      "key": "regwall/b/offers/description",
+      "value": "<b>Als Abonnent*in:</b> Unterstützen Sie unabhängigen und werbefreien Journalismus." 
+    },
+    {
+      "key": "regwall/b/offers/cta",
+      "value": "Abonnieren ab CHF 22.– / Monat" 
     },
     {
       "key": "regwall/offers/cancellable",
@@ -7854,7 +7874,7 @@
     },
     {
       "key": "paywall/offers/yearly/duration",
-      "value": "erste Jahr" 
+      "value": "erstes Jahr" 
     },
     {
       "key": "paywall/offers/yearly/description",
@@ -7862,7 +7882,7 @@
     },
     {
       "key": "paywall/offers/monthly/duration",
-      "value": "erste Monat" 
+      "value": "erster Monat" 
     },
     {
       "key": "paywall/offers/monthly/description",
@@ -7878,15 +7898,15 @@
     },
     {
       "key": "paywall/offers/all",
-      "value": "Alle Mitgliedschafte ansehen" 
+      "value": "Weitere Angebote anzeigen" 
     },
     {
       "key": "paywall/survey/hint",
-      "value": "Pick the answer that describe your situation:" 
+      "value": "Wählen Sie aus, was am ehesten zutrifft." 
     },
     {
       "key": "paywall/survey/all",
-      "value": "Alle Mitgliedschafte ansehen" 
+      "value": "Weitere Angebote anzeigen" 
     },
     {
       "key": "paywall/survey/thanks/title",
@@ -7898,7 +7918,7 @@
     },
     {
       "key": "paywall/survey/thanks/link",
-      "value": "Schauen Sie es Ihnen an" 
+      "value": "Das interessiert mich" 
     },
     {
       "key": "paynotes/dialog/title",
@@ -7906,7 +7926,7 @@
     },
     {
       "key": "paynotes/dialog/description",
-      "value": "Als Gast sehen Sie, was zu reden gibt. Mit einem Abo nehmen Sie direkt am Gespräch teil. Fragen Sie bei Autorinnen und anderen Lesern nach und bringen Sie sich ein. " 
+      "value": "Als Gast sehen Sie, was zu reden gibt. Mit einem Abo nehmen Sie direkt am Gespräch mit Autorinnen und anderen Lesern teil." 
     },
     {
       "key": "paynotes/dialog/cta",

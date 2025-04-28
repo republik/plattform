@@ -13,7 +13,7 @@ const RegisterForTrial = (props: TrialFormProps) => {
   return (
     <LoginForm
       context='trial'
-      submitButtonText={t('auth/trial/register')}
+      submitButtonText={t(`regwall/${props.analyticsProps.variation}/cta`)}
       {...props}
     />
   )

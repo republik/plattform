@@ -10,15 +10,18 @@ import { PaynoteSection } from '../../ui/containers'
 
 function Offers({
   additionalShopParams = {},
-  analyticsProps = {},
+  analyticsProps,
 }: {
   additionalShopParams?: Record<string, string>
-  analyticsProps?: Record<string, string>
+  analyticsProps: {
+    variation: string
+  }
 }) {
   const trackEvent = useTrackEvent()
   const { t } = useTranslation()
 
   const utmParams = getUTMSessionStorage()
+  const variation = analyticsProps.variation
 
   return (
     <form
@@ -41,12 +44,12 @@ function Offers({
         <div className={css({ textStyle: 'airy' })}>
           <p
             dangerouslySetInnerHTML={{
-              __html: t('regwall/offers/description'),
+              __html: t(`regwall/${variation}/offers/description`),
             }}
           />
         </div>
         <Button variant='outline' size='full' type='submit'>
-          {t('regwall/offers/cta')}
+          {t(`regwall/${variation}/offers/cta`)}
         </Button>
         <p className={css({ textAlign: 'center' })}>
           {t('regwall/offers/cancellable')}

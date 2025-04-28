@@ -66,6 +66,7 @@ export function CodeForm({ email, context, analyticsProps }: CodeFormProps) {
         },
       })
       .then(() => {
+        console.log('trial registration success')
         trackEvent({
           action: 'Completely trial registration',
           ...analyticsProps,
@@ -73,6 +74,7 @@ export function CodeForm({ email, context, analyticsProps }: CodeFormProps) {
         reloadPage(context)
       })
       .catch((err) => {
+        console.error('trial registration error', err)
         // TODO: maybe handle with an error code?
         if (
           err.message.includes('Sie haben bereits eine aktive Mitgliedschaft.')
