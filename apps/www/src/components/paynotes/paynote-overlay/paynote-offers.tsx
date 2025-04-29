@@ -46,37 +46,23 @@ export function Offers({
           alignItems: 'center',
         })}
       >
-        <RadioOption
-          name='MONTHLY'
-          value='MONTHLY'
-          checked={option === 'MONTHLY'}
-          onChange={() => setOption('MONTHLY')}
+        <div
+          className={css({
+            textAlign: 'left',
+            padding: '4',
+            border: '1px solid',
+            borderColor: 'rgba(0,0,0,0.3)',
+            borderRadius: '6',
+            width: 'full',
+          })}
         >
-          <span className={css({ display: 'block' })}>
-            <del
-              className={css({
-                color: 'textSoft',
-                fontWeight: 'medium',
-                mr: '1',
-              })}
-            >
-              22.–
-            </del>
-            <span className={css({ fontWeight: 'bold' })}>
-              11.– für einen Monat
-            </span>
-          </span>
-        </RadioOption>
-        <RadioOption
-          name='YEARLY'
-          value='YEARLY'
-          checked={option === 'YEARLY'}
-          onChange={() => setOption('YEARLY')}
-        >
-          <span
-            className={css({ display: 'flex', gap: '2', flexDir: 'column' })}
+          <RadioOption
+            name='MONTHLY'
+            value='MONTHLY'
+            checked={option === 'MONTHLY'}
+            onChange={() => setOption('MONTHLY')}
           >
-            <span>
+            <span className={css({ display: 'block' })}>
               <del
                 className={css({
                   color: 'textSoft',
@@ -84,29 +70,69 @@ export function Offers({
                   mr: '1',
                 })}
               >
-                240.–
+                22.–
               </del>
               <span className={css({ fontWeight: 'bold' })}>
-                222.– für ein Jahr
+                11.– für einen Monat
               </span>
             </span>
+          </RadioOption>
+        </div>
+        <div
+          className={css({
+            textAlign: 'left',
+            padding: '4',
+            border: '2px solid',
+            borderColor: 'rgba(0,0,0,0.3)',
+            borderRadius: '6',
+            width: 'full',
+            background: 'background',
+          })}
+        >
+          <RadioOption
+            name='YEARLY'
+            value='YEARLY'
+            checked={option === 'YEARLY'}
+            onChange={() => setOption('YEARLY')}
+          >
             <span
-              className={css({
-                backgroundColor: '#FDE047',
-                color: 'text.black',
-                px: '1',
-                borderRadius: '2px',
-                fontSize: 's',
-              })}
+              className={css({ display: 'flex', gap: '2', flexDir: 'column' })}
             >
-              12&thinsp;% günstiger als ein Monats-Abo
+              <span>
+                <del
+                  className={css({
+                    color: 'textSoft',
+                    fontWeight: 'medium',
+                    mr: '1',
+                  })}
+                >
+                  240.–
+                </del>
+                <span className={css({ fontWeight: 'bold' })}>
+                  222.– für ein Jahr
+                </span>
+              </span>
+              <span
+                className={css({
+                  backgroundColor: 'text.marketingAccent',
+                  color: 'text.white',
+                  fontWeight: 'medium',
+                  px: '2',
+                  borderRadius: '4px',
+                  fontSize: 's',
+                })}
+              >
+                12&thinsp;% günstiger als ein Monats-Abo
+              </span>
             </span>
-          </span>
-        </RadioOption>
+          </RadioOption>
+        </div>
 
         <div
           className={css({
             fontSize: 's',
+            textAlign: 'left',
+            width: 'full',
           })}
         >
           {option === 'YEARLY'

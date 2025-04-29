@@ -172,7 +172,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
             aria-describedby={undefined}
             className={css({
               position: 'relative',
-              background: 'pageBackground',
+              background: 'background.marketing',
               px: '8',
               pt: '12',
               boxShadow: 'sm',
@@ -240,7 +240,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                       className={css({
                         boxDecorationBreak: 'clone',
                         px: '1',
-                        backgroundColor: '#FDE047',
+                        backgroundColor: 'background.marketingAccent',
                         color: 'text.black',
                         ml: '-0.5',
                         position: 'relative',
@@ -261,6 +261,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                     flexDirection: 'column',
                     gap: '4',
                     pb: '4',
+                    fontSize: 18,
                   })}
                 >
                   <StructuredText
@@ -308,7 +309,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                   textAlign: 'center',
                   borderTopWidth: 1,
                   borderTopStyle: 'solid',
-                  borderTopColor: 'divider',
+                  borderTopColor: 'default',
                   fontSize: 's',
                 })}
               >
@@ -316,7 +317,8 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                 <Link
                   className={css({
                     textDecoration: 'underline',
-                    // fontWeight: 'medium',
+                    color: 'text.marketingAccent',
+                    fontWeight: 'medium',
                   })}
                   href={`/anmelden?redirect=${encodeURIComponent(pathname)}`}
                 >

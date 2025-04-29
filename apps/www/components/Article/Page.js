@@ -56,7 +56,6 @@ import Paywall from '@app/components/paynotes/paywall'
 import Regwall from '@app/components/paynotes/regwall'
 import { BannerPaynote } from '@app/components/paynotes/paynotes-in-trial/banner'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
-import { set } from 'lodash'
 
 const EmptyComponent = ({ children }) => children
 

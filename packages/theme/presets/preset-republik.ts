@@ -136,6 +136,9 @@ export const presetRepublik = definePreset({
             black: {
               value: '{colors.neutral.950}',
             },
+            marketingAccent: {
+              value: '#FF6969',
+            },
           },
           contrast: {
             value: {
@@ -145,10 +148,24 @@ export const presetRepublik = definePreset({
             },
           },
           background: {
-            value: {
-              base: 'white',
-              _light: 'white',
-              _dark: '#191919',
+            DEFAULT: {
+              value: {
+                base: 'white',
+                _light: 'white',
+                _dark: '#191919',
+              },
+            },
+            marketing: {
+              value: '#F2ECE6',
+            },
+            marketingAlt: {
+              value: '#E2FBA6',
+            },
+            marketingAccent: {
+              value: '#FF9A82',
+            },
+            marketingAccentAlt: {
+              value: '#FFA4DD',
             },
           },
           pageBackground: {
