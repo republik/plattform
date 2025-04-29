@@ -41,6 +41,7 @@ interface LoginFormProps {
   autoFocus?: boolean
   renderBefore?: ReactNode
   renderAfter?: ReactNode
+  redirectUrl?: string
 }
 
 export function LoginForm(props: LoginFormProps) {
@@ -57,6 +58,7 @@ export function LoginForm(props: LoginFormProps) {
         email={email}
         context={props.context}
         analyticsProps={props.analyticsProps}
+        redirectUrl={props.redirectUrl}
       />
     )
   }

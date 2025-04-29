@@ -36,7 +36,7 @@ export function DialogPaynote() {
     >
       <div
         className={css({
-          padding: '4',
+          padding: '6',
           display: 'flex',
           flexDir: 'column',
           gap: '4',

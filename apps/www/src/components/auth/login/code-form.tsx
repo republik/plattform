@@ -30,9 +30,15 @@ export interface CodeFormProps {
   email: string
   context?: SignupContextType
   analyticsProps: Record<string, string>
+  redirectUrl?: string
 }
 
-export function CodeForm({ email, context, analyticsProps }: CodeFormProps) {
+export function CodeForm({
+  email,
+  context,
+  analyticsProps,
+  redirectUrl,
+}: CodeFormProps) {
   const codeId = useId()
   const router = useRouter()
   const { query } = router
@@ -66,30 +72,29 @@ export function CodeForm({ email, context, analyticsProps }: CodeFormProps) {
         },
       })
       .then(() => {
-        console.log('trial registration success')
+        // console.log('trial registration success')
         trackEvent({
           action: 'Completely trial registration',
           ...analyticsProps,
         })
-        reloadPage(context)
+        reloadPage(context, redirectUrl)
       })
       .catch((err) => {
-        console.error('trial registration error', err)
-        // TODO: maybe handle with an error code?
+        // console.error('trial registration error', err)
         if (
           err.message.includes('Sie haben bereits eine aktive Mitgliedschaft.')
         ) {
-          return reloadPage()
+          return reloadPage(undefined, redirectUrl)
         }
         handleErr(err)
       })
 
   const handleLoginSuccess = (res) => {
-    console.log({ context })
+    // console.log({ context })
     if (context === 'trial') {
       registerForTrial()
     } else {
-      reloadPage()
+      reloadPage(undefined, redirectUrl)
     }
   }
 

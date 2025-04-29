@@ -142,7 +142,10 @@ const CompactDetailsForm = dynamic(
 )
 
 const TrialForm = dynamic(
-  () => import('@app/components/paynotes/regwall/trial'),
+  () =>
+    import('@app/components/auth/trial/register-for-trial').then(
+      (m) => m.RegisterForTrialMinimal,
+    ),
   {
     loading: LoadingComponent,
     ssr: false,
