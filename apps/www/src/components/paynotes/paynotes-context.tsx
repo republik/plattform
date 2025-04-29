@@ -142,7 +142,7 @@ export const PaynotesProvider = ({ children }) => {
     if (trialStatus === 'NOT_TRIAL_ELIGIBLE') return setPaynoteKind('PAYWALL')
 
     // trial eligible users see the regwall
-    if (trialStatus === 'TRIAL_ELIGIBLE') return setPaynoteKind('PAYWALL')
+    if (trialStatus === 'TRIAL_ELIGIBLE') return setPaynoteKind('REGWALL')
 
     // catch-all: do nothing
     return setPaynoteKind(null)
