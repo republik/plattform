@@ -103,7 +103,7 @@ const Trial = ({
   analyticsProps: { variation: string }
 }) => {
   return (
-    <PaynoteSection backgroundColor='#F2ECE6'>
+    <PaynoteSection background='background.marketing'>
       <TrialForm
         renderBefore={<TrialHeader variation={analyticsProps.variation} />}
         renderAfter={<WhyRegister analyticsProps={analyticsProps} />}

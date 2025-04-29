@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 
 import { css } from '@republik/theme/css'
+import { ColorToken } from '@republik/theme/tokens'
 
 export const PaynoteContainer = ({ children }: { children: ReactNode }) => (
   <div
@@ -15,20 +16,16 @@ export const PaynoteContainer = ({ children }: { children: ReactNode }) => (
 )
 
 export const PaynoteSection = ({
-  backgroundColor,
+  background,
   children,
 }: {
-  backgroundColor: string
+  background: ColorToken
   children: ReactNode
 }) => (
   <div
     data-theme='light'
-    style={{
-      // @ts-expect-error css vars
-      '--bg': backgroundColor,
-    }}
     className={css({
-      background: 'var(--bg)',
+      background,
       color: 'text',
     })}
   >

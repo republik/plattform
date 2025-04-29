@@ -40,7 +40,7 @@ function Offers({
       {Object.entries(additionalShopParams).map(([k, v]) => {
         return <input type='hidden' hidden key={k} name={k} value={v} />
       })}
-      <PaynoteSection backgroundColor='#DAFF8D'>
+      <PaynoteSection background='background.marketingAlt'>
         <div className={css({ textStyle: 'airy' })}>
           <p
             dangerouslySetInnerHTML={{

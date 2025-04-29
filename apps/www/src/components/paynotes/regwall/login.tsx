@@ -30,7 +30,10 @@ const Login = () => {
             }}
           >
             <span
-              className={css({ textDecoration: 'underline', color: '#FF6969' })}
+              className={css({
+                textDecoration: 'underline',
+                color: 'text.marketingAccent',
+              })}
             >
               {t('regwall/login/link')}
             </span>

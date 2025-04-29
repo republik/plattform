@@ -64,7 +64,7 @@ function ThankYou() {
   const { t } = useTranslation()
   const trackEvent = useTrackEvent()
   return (
-    <PaynoteSection backgroundColor='#F2ECE6'>
+    <PaynoteSection background='background.marketing'>
       <p className={css({ textStyle: 'airy', fontWeight: 'medium' })}>
         {t('paywall/survey/thanks/title')}
       </p>
@@ -166,7 +166,7 @@ export function ExitSurvey() {
       {thankYou ? (
         <ThankYou />
       ) : (
-        <PaynoteSection backgroundColor='#F2ECE6'>
+        <PaynoteSection background='colors.background.marketing'>
           {!question ? (
             <div className={css({ display: 'flex', justifyContent: 'center' })}>
               <Spinner size='large' />

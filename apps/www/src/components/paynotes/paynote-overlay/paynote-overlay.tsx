@@ -92,8 +92,8 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
     <Dialog.Root open={expanded} onOpenChange={setExpanded}>
       <div
         className={css({
-          backgroundColor: 'text',
-          color: 'text.inverted',
+          backgroundColor: 'background.marketingAccent',
+          color: 'text',
           position: 'fixed',
           inset: 'auto 0 0 0',
           zIndex: 9998,
