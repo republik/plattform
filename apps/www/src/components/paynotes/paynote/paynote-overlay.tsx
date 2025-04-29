@@ -5,7 +5,7 @@ import { Fragment, useEffect, useState } from 'react'
 
 import * as Dialog from '@radix-ui/react-dialog'
 
-import { Offers } from '@app/components/paynotes/paynote-overlay/paynote-offers'
+import { Offers } from '@app/components/paynotes/paynote/paynote-offers'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
@@ -14,13 +14,13 @@ import {
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { IconExpandMore } from '@republik/icons'
 import { useMotionValueEvent, useScroll } from 'framer-motion'
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { StructuredText } from 'react-datocms'
 import { usePaynoteVariants } from './use-paynotes'
 import { useMe } from 'lib/context/MeContext'
 import { getMeteringData } from '../article-metering'
+import PaynoteAuthor from './paynote-author'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
@@ -200,35 +200,8 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                 gap: '4',
               })}
             >
-              {variant === 'paynote' && paynote?.author && (
-                <div
-                  className={css({
-                    display: 'grid',
-                    gridTemplateColumns: '80px 1fr',
-                    placeItems: 'center start',
-                    gap: '4',
-
-                    textStyle: 'sansSerifRegular',
-                  })}
-                >
-                  <Image
-                    src={paynote.author.portrait.url}
-                    unoptimized
-                    alt='Portraitbild'
-                    width={160}
-                    height={160}
-                    className={css({
-                      borderRadius: 'full',
-                    })}
-                  />
-
-                  <div>
-                    <div className={css({ fontWeight: 'medium' })}>
-                      {paynote.author.name}
-                    </div>
-                    <div>{paynote.author.description}</div>
-                  </div>
-                </div>
+              {variant === 'paynote' && (
+                <PaynoteAuthor author={paynote.author} />
               )}
 
               <Dialog.Title asChild>

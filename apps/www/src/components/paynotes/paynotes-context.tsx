@@ -14,6 +14,7 @@ type PaynoteKindType =
   | 'REGWALL'
   | 'PAYWALL'
   | 'BANNER'
+  | 'PAYNOTE_INLINE'
 
 type TemplateType =
   | null
@@ -122,8 +123,8 @@ export const PaynotesProvider = ({ children }) => {
     // just signed up for a trial: no paynote
     if (searchParams.has('trialSignup')) return setPaynoteKind(null)
 
-    // one trial group (group A) is shown a discrete banner
-    if (trialStatus === 'TRIAL_GROUP_A') return setPaynoteKind('BANNER')
+    // one trial group (group A) is shown an inline paynote
+    if (trialStatus === 'TRIAL_GROUP_A') return setPaynoteKind('PAYNOTE_INLINE')
 
     // the other group (group B) is shown the more prominent overlay
     if (trialStatus === 'TRIAL_GROUP_B') return setPaynoteKind('OVERLAY_OPEN')

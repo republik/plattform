@@ -54,7 +54,7 @@ import useSchema from './useSchema'
 import PrepubNotice from './components/PrepubNotice'
 import Paywall from '@app/components/paynotes/paywall'
 import Regwall from '@app/components/paynotes/regwall'
-import { BannerPaynote } from '@app/components/paynotes/paynotes-in-trial/banner'
+import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 
 const EmptyComponent = ({ children }) => children
@@ -408,7 +408,6 @@ const ArticlePage = ({
           return (
             <>
               <FontSizeSync />
-              <BannerPaynote />
               <PrepubNotice meta={meta} breakout={breakout} />
 
               {isFlyer ? (
@@ -537,6 +536,7 @@ const ArticlePage = ({
                     <PodcastButtons {...podcast} />
                   </Center>
                 )}
+                <PaynoteInline />
                 {episodes && !isSeriesOverview && (
                   <SeriesNav
                     inline
