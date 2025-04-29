@@ -355,10 +355,14 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
 
 export function PaynoteOverlay() {
   const { paynoteKind } = usePaynotes()
+  const pathname = usePathname()
 
   return paynoteKind === 'OVERLAY_OPEN' || paynoteKind === 'OVERLAY_CLOSED' ? (
     <EventTrackingContext category='PaynoteOverlay'>
-      <PaynoteOverlayDialog isExpanded={paynoteKind === 'OVERLAY_OPEN'} />
+      <PaynoteOverlayDialog
+        key={pathname}
+        isExpanded={paynoteKind === 'OVERLAY_OPEN'}
+      />
     </EventTrackingContext>
   ) : null
 }
