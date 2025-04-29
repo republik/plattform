@@ -1,12 +1,16 @@
 'use client'
 
+import { css } from '@republik/theme/css'
+
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
-import { css } from '@republik/theme/css'
+import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { useState } from 'react'
 
 import { RadioOption } from '../../ui/form'
 import { Button } from '../../ui/button'
+
+import IosCTA from '../ios-cta'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
 
@@ -16,10 +20,13 @@ export function Offers({
   additionalShopParams?: Record<string, string>
 }) {
   const [option, setOption] = useState<OfferOptions>('YEARLY')
-
   const utmParams = getUTMSessionStorage()
-
   const trackEvent = useTrackEvent()
+
+  const { isIOSApp } = usePlatformInformation()
+  if (isIOSApp) {
+    return <IosCTA />
+  }
 
   return (
     <form
@@ -31,6 +38,7 @@ export function Offers({
         })
       }}
     >
+      <input type='hidden' hidden name='promo_code' value='EINSTIEG' />
       {Object.entries(utmParams).map(([k, v]) => {
         return <input type='hidden' hidden key={k} name={k} value={v} />
       })}
@@ -57,7 +65,7 @@ export function Offers({
           })}
         >
           <RadioOption
-            name='MONTHLY'
+            name='product'
             value='MONTHLY'
             checked={option === 'MONTHLY'}
             onChange={() => setOption('MONTHLY')}
@@ -90,7 +98,7 @@ export function Offers({
           })}
         >
           <RadioOption
-            name='YEARLY'
+            name='product'
             value='YEARLY'
             checked={option === 'YEARLY'}
             onChange={() => setOption('YEARLY')}

@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
+import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 
 import { css } from '@republik/theme/css'
 
@@ -12,6 +13,7 @@ import { PaynoteSection } from '../../ui/containers'
 
 import { ExitSurvey, OpenSurveyButton } from './exit-survey'
 import { useTranslation } from 'lib/withT'
+import IosCTA from '../ios-cta'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
 
@@ -28,6 +30,11 @@ export function Offers({
   const utmParams = getUTMSessionStorage()
 
   const trackEvent = useTrackEvent()
+
+  const { isIOSApp } = usePlatformInformation()
+  if (isIOSApp) {
+    return <IosCTA />
+  }
 
   return (
     <>
@@ -48,6 +55,7 @@ export function Offers({
             })
           }}
         >
+          <input type='hidden' hidden name='promo_code' value='EINSTIEG' />
           {Object.entries(utmParams).map(([k, v]) => {
             return <input type='hidden' hidden key={k} name={k} value={v} />
           })}
@@ -90,7 +98,7 @@ export function Offers({
                 Sie sparen 14&thinsp;%
               </span>
               <RadioOption
-                name='YEARLY'
+                name='product'
                 value='YEARLY'
                 checked={option === 'YEARLY'}
                 onChange={() => setOption('YEARLY')}
@@ -128,7 +136,7 @@ export function Offers({
               })}
             >
               <RadioOption
-                name='MONTHLY'
+                name='product'
                 value='MONTHLY'
                 checked={option === 'MONTHLY'}
                 onChange={() => setOption('MONTHLY')}

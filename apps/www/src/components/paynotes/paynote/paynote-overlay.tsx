@@ -49,7 +49,6 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
   const [scrollThresholdReached, setScrollThresholdReached] =
     useState<boolean>(false)
   const [variant, setVariant] = useState<ContentVariant>('offers-only')
-  const { isIOSApp } = usePlatformInformation()
   const paynotes = usePaynoteVariants()
   const trackEvent = useTrackEvent()
   const pathname = usePathname()
@@ -63,8 +62,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
     }
   })
 
-  // TODO: iOS?
-  const ready = paynotes && !isIOSApp
+  const ready = paynotes
 
   useEffect(() => {
     if (ready && scrollThresholdReached) {
