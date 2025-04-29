@@ -166,7 +166,7 @@ export function ExitSurvey() {
       {thankYou ? (
         <ThankYou />
       ) : (
-        <PaynoteSection background='colors.background.marketing'>
+        <PaynoteSection background='background.marketing'>
           {!question ? (
             <div className={css({ display: 'flex', justifyContent: 'center' })}>
               <Spinner size='large' />
