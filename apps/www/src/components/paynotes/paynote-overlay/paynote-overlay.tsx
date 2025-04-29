@@ -91,6 +91,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
   return (
     <Dialog.Root open={expanded} onOpenChange={setExpanded}>
       <div
+        data-theme='light'
         className={css({
           backgroundColor: 'background.marketingAccent',
           color: 'text',
@@ -141,9 +142,11 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
 
       <Dialog.Portal>
         <Dialog.Overlay
+          data-theme='light'
           className={css({
             backgroundColor: 'overlay',
             position: 'fixed',
+            color: 'text',
             inset: 0,
             display: 'grid',
             placeItems: 'end stretch',
@@ -241,7 +244,6 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                         boxDecorationBreak: 'clone',
                         px: '1',
                         backgroundColor: 'background.marketingAccent',
-                        color: 'text.black',
                         ml: '-0.5',
                         position: 'relative',
                       })}
