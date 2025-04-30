@@ -8,7 +8,6 @@ import { useTranslation } from 'lib/withT'
 
 import { Button } from '../../ui/button'
 
-// TODO: embed in dialog
 export function DialogPaynote() {
   const { t } = useTranslation()
   const utmParams = getUTMSessionStorage()

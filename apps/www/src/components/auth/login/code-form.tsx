@@ -82,7 +82,12 @@ export function CodeForm({
       .catch((err) => {
         // console.error('trial registration error', err)
         if (
-          err.message.includes('Sie haben bereits eine aktive Mitgliedschaft.')
+          err.message.includes(
+            'Sie haben bereits eine aktive Mitgliedschaft.',
+          ) ||
+          err.message.includes(
+            'Es sieht so aus, als hätten Sie bereits eine kostenlose Gastwoche angefangen.',
+          )
         ) {
           return reloadPage(undefined, redirectUrl)
         }

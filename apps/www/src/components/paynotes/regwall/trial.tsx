@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import Image from 'next/image'
 
+import { IconArrowDropDown } from '@republik/icons'
 import { css } from '@republik/theme/css'
 
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
@@ -70,18 +71,27 @@ const WhyRegister = ({
       })}
     >
       {expanded ? (
-        <div>
-          <p className={css({ mb: '4' })}>{t('regwall/whyRegister/title')}</p>
-          <p
-            dangerouslySetInnerHTML={{
-              __html: t('regwall/whyRegister/description'),
-            }}
-          />
-        </div>
+        <div
+          className={css({
+            display: 'flex',
+            flexDir: 'column',
+            gap: '4',
+          })}
+          dangerouslySetInnerHTML={{
+            __html: t('regwall/whyRegister/expanded'),
+          }}
+        />
       ) : (
         <Button
           variant='link'
           type='button'
+          className={css({
+            width: 'full',
+            textDecoration: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          })}
           onClick={() => {
             setExpanded(true)
             trackEvent({
@@ -91,6 +101,7 @@ const WhyRegister = ({
           }}
         >
           {t('regwall/whyRegister/title')}
+          <IconArrowDropDown size='24' />
         </Button>
       )}
     </div>
