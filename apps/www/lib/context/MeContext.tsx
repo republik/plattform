@@ -78,6 +78,7 @@ export type TrialStatusType =
   | 'TRIAL_ELIGIBLE'
   | 'TRIAL_GROUP_A'
   | 'TRIAL_GROUP_B'
+  | 'TRIAL_GROUP_TEILEN'
   | 'NOT_TRIAL_ELIGIBLE'
 
 type MeContextValues = {
@@ -97,12 +98,8 @@ const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
   if (!me) return 'TRIAL_ELIGIBLE'
 
   // has membership or active Abo teilen etc: not relevant for trial
-  if (
-    me.activeMembership ||
-    me.activeMagazineSubscription ||
-    me.roles?.includes('member')
-  )
-    return 'MEMBER'
+  // important: trial users have the member role, too, but they don't have a subscription
+  if (me.activeMembership || me.activeMagazineSubscription) return 'MEMBER'
 
   // In trial user:
   // We use the first character of the user id to assign a trial group.
@@ -114,6 +111,9 @@ const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
       ? 'TRIAL_GROUP_A' // in trial user, AB-test group A
       : 'TRIAL_GROUP_B' // in trial user, AB-test group B
   }
+
+  // abo teilen user: have the member role and should see the magazine
+  if (me.roles?.includes('member')) return 'TRIAL_GROUP_TEILEN'
 
   // logged-in user, has done a "regwall" trial: not eligible for trial
   if (me.regwallTrialStatus === 'Past') return 'NOT_TRIAL_ELIGIBLE'

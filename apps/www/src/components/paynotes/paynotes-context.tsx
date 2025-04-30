@@ -92,6 +92,8 @@ export const PaynotesProvider = ({ children }) => {
 
   const [isPaywallExcluded, setIsPaywallExcluded] = useState<boolean>(false)
 
+  useEffect(() => {})
+
   useEffect(() => {
     if (meLoading) return
     console.log({ template, trialStatus, pathname, searchParams })
@@ -128,6 +130,10 @@ export const PaynotesProvider = ({ children }) => {
 
     // the other group (group B) is shown the more prominent overlay
     if (trialStatus === 'TRIAL_GROUP_B') return setPaynoteKind('OVERLAY_OPEN')
+
+    // abo teilen users are shown the inline paynote
+    if (trialStatus === 'TRIAL_GROUP_TEILEN')
+      return setPaynoteKind('PAYNOTE_INLINE')
 
     // exception for marked articles (via metadata)
     if (isPaywallExcluded) return setPaynoteKind('OVERLAY_OPEN')
