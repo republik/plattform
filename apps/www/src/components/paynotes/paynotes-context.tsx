@@ -136,7 +136,7 @@ export const PaynotesProvider = ({ children }) => {
       return setPaynoteKind('PAYNOTE_INLINE')
 
     // exception for marked articles (via metadata)
-    if (isPaywallExcluded) return setPaynoteKind('OVERLAY_OPEN')
+    if (isPaywallExcluded) return setPaynoteKind('OVERLAY_CLOSED')
 
     // CAVEAT: we don't ever want the "template" state to be set to something
     // wrong (notably: "article") after the pathname has changed. Otherwise some funny
