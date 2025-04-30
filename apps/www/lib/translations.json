@@ -7945,6 +7945,10 @@
     {
       "key": "paynotes/ios/text",
       "value": "Alle Angebote auf shop.republik.ch" 
+    },
+    {
+      "key": "paynotes/welcomeBanner",
+      "value": "Ab sofort läuft Ihre siebentägige Gastwoche bei der Republik: Herzlich willkommen!" 
     }
   ]
 }

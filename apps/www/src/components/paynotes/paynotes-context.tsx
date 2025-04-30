@@ -15,6 +15,7 @@ type PaynoteKindType =
   | 'PAYWALL'
   | 'BANNER'
   | 'PAYNOTE_INLINE'
+  | 'WELCOME_BANNER'
 
 type TemplateType =
   | null
@@ -122,9 +123,9 @@ export const PaynotesProvider = ({ children }) => {
     // want to show these clever foxes the paywall)
     if (isSearchBot) return setPaynoteKind('OVERLAY_OPEN')
 
-    // just signed up for a trial: no paynote
+    // just signed up for a trial: welcome banner
     if (trialStatus.includes('TRIAL_GROUP') && searchParams.has('trialSignup'))
-      return setPaynoteKind(null)
+      return setPaynoteKind('WELCOME_BANNER')
 
     // one trial group (group A) is shown an inline paynote
     if (trialStatus === 'TRIAL_GROUP_A') return setPaynoteKind('PAYNOTE_INLINE')

@@ -56,6 +56,7 @@ import Paywall from '@app/components/paynotes/paywall'
 import Regwall from '@app/components/paynotes/regwall'
 import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
+import { WelcomeBanner } from '@app/components/paynotes/paynotes-in-trial/welcome'
 
 const EmptyComponent = ({ children }) => children
 
@@ -408,6 +409,7 @@ const ArticlePage = ({
             <>
               <FontSizeSync />
               <PrepubNotice meta={meta} breakout={breakout} />
+              <WelcomeBanner />
 
               {isFlyer ? (
                 <Flyer
