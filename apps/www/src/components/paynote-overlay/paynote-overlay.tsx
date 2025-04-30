@@ -350,6 +350,7 @@ function isPaynoteOverlayHidden(
   return (
     (pathname === '/angebote' && searchParams.has('package')) ||
     pathname === '/mitteilung' ||
+    pathname === '/2025/04/30/stellenausschreibung-trainee-unternehmensmanagement' ||
     pathname === '/anmelden' ||
     pathname.startsWith('/konto') ||
     pathname === '/meine-republik' ||
