@@ -12,13 +12,15 @@ import {
   SignInTokenType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 
+import { useTranslation } from 'lib/withT'
+import isEmail from 'validator/lib/isEmail'
+
 import { Button } from '../../ui/button'
 import { FormField } from '../../ui/form'
 
 import { CodeForm } from './code-form'
 import { ErrorMessage } from './error-message'
 import { Tos } from './tos'
-import isEmail from 'validator/lib/isEmail'
 import { SignupContextType } from './utils'
 
 type SubmitProps = {
@@ -51,6 +53,7 @@ export function LoginForm(props: LoginFormProps) {
   const [error, setError] = useState<ApolloError | string | undefined>()
   const [showTos, setShowTos] = useState(props.autoFocus ?? false)
   const [pending, setPending] = useState(false)
+  const { t } = useTranslation()
 
   if (signInRes.data?.signIn && email) {
     return (
@@ -78,7 +81,7 @@ export function LoginForm(props: LoginFormProps) {
 
     if (!email || !isEmail(email)) {
       setPending(false)
-      setError('Invalid email address')
+      setError(t('auth/login/email/missing'))
       return
     }
 

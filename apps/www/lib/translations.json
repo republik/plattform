@@ -7765,6 +7765,10 @@
       "value": "E-Mail-Adresse"
     },
     {
+      "key": "auth/login/email/missing",
+      "value": "Bitte geben Sie Ihre E-Mail-Adresse ein."
+    },
+    {
       "key": "auth/login/email/submit",
       "value": "Anmelden"
     },

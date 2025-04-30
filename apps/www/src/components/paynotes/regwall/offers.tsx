@@ -46,7 +46,7 @@ function OffersForm({
       <Button variant='outline' size='full' type='submit'>
         {t(`regwall/${variation}/offers/cta`)}
       </Button>
-      <p className={css({ textAlign: 'center' })}>
+      <p className={css({ textAlign: 'center', pt: '4' })}>
         {t('regwall/offers/cancellable')}
       </p>
     </form>
