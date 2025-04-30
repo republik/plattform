@@ -1401,6 +1401,10 @@
       "value": "Es sieht so aus, als hätten Sie bereits eine kostenlose Gastwoche durchlaufen. Mit einem Abo lesen Sie weiter."
     },
     {
+      "key": "api/access/constraint/notInActiveTrial/error",
+      "value": "Es sieht so aus, als hätten Sie bereits eine kostenlose Gastwoche angefangen. Oben links können Sie sich anmelden."
+    },
+    {
       "key": "api/access/constraint/recipientHasNoActiveMembershipOrSubscription/error",
       "value": "Sie haben bereits eine aktive Mitgliedschaft. Oben links können Sie sich anmelden."
     },

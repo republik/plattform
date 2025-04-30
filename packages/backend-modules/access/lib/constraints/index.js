@@ -5,6 +5,7 @@ module.exports = {
   limitRevokedSlots: require('./limitRevokedSlots'),
   limitSlots: require('./limitSlots'),
   notGrantable: require('./notGrantable'),
+  notInActiveTrial: require('./notInActiveTrial'),
   notVisible: require('./notVisible'),
   recipientDenylist: require('./recipientDenylist'),
   recipientHasNoActiveMembershipOrSubscription: require('./recipientHasNoActiveMembershipOrSubscription'),
