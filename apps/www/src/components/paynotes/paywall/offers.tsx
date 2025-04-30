@@ -17,35 +17,36 @@ import IosCTA from '../ios-cta'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
 
-export function Offers({
+function OffersHeader() {
+  const { t } = useTranslation()
+  return (
+    <>
+      <h3>{t('paywall/offers/caption')}</h3>
+      <h2>
+        <span className={css({ fontWeight: 'normal' })}>
+          {t('paywall/offers/title/1')}
+        </span>{' '}
+        {t('paywall/offers/title/2')}
+      </h2>
+    </>
+  )
+}
+
+function OffersForm({
   additionalShopParams = {},
 }: {
   additionalShopParams?: Record<string, string>
 }) {
   const [option, setOption] = useState<OfferOptions>('YEARLY')
   const [showSurvey, setShowSurvey] = useState(false)
-
   const { t } = useTranslation()
-
   const utmParams = getUTMSessionStorage()
-
   const trackEvent = useTrackEvent()
-
-  const { isIOSApp } = usePlatformInformation()
-  if (isIOSApp) {
-    return <IosCTA />
-  }
 
   return (
     <>
       <PaynoteSection background='colors.background.marketingAlt'>
-        <h3>{t('paywall/offers/caption')}</h3>
-        <h2>
-          <span className={css({ fontWeight: 'normal' })}>
-            {t('paywall/offers/title/1')}
-          </span>{' '}
-          {t('paywall/offers/title/2')}
-        </h2>
+        <OffersHeader />
         <form
           method='GET'
           action={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot`}
@@ -184,4 +185,21 @@ export function Offers({
       {showSurvey && <ExitSurvey />}
     </>
   )
+}
+
+export function Offers({
+  additionalShopParams = {},
+}: {
+  additionalShopParams?: Record<string, string>
+}) {
+  const { isIOSApp } = usePlatformInformation()
+  if (isIOSApp) {
+    return (
+      <PaynoteSection background='colors.background.marketingAlt'>
+        <OffersHeader />
+        <IosCTA />
+      </PaynoteSection>
+    )
+  }
+  return <OffersForm additionalShopParams={additionalShopParams} />
 }

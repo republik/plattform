@@ -21,26 +21,66 @@ import { usePaynoteVariants } from './use-paynotes'
 import { useMe } from 'lib/context/MeContext'
 import { getMeteringData } from '../article-metering'
 import PaynoteAuthor from './paynote-author'
+import { useTranslation } from 'lib/withT'
+import IosCTA from '../ios-cta'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
 type ContentVariant = 'paynote' | 'offers-only'
 
-function MiniPaynoteMessage({ message }: { message: string }) {
+function MiniPaynoteMessage({
+  message,
+  onClick,
+}: {
+  message: string
+  onClick: () => void
+}) {
+  const { isIOSApp } = usePlatformInformation()
+  const { t } = useTranslation()
+
+  if (isIOSApp) {
+    return (
+      <div>
+        <span>{t('paynotes/ios/caption')}</span>
+        <IosCTA />
+      </div>
+    )
+  }
+
   const words = message.split(' ')
 
   return (
-    <>
-      {words.map((word) => {
-        return word === '{PRICE_MONTHLY}' ? (
-          <span key={word} className={css({ whiteSpace: 'nowrap' })}>
-            <del>CHF 22.–</del> CHF 11.–{' '}
-          </span>
-        ) : (
-          <Fragment key={word}>{word} </Fragment>
-        )
-      })}
-    </>
+    <Dialog.Trigger onClick={onClick}>
+      <span>
+        {words.map((word) => {
+          return word === '{PRICE_MONTHLY}' ? (
+            <span key={word} className={css({ whiteSpace: 'nowrap' })}>
+              <del>CHF 22.–</del> CHF 11.–{' '}
+            </span>
+          ) : (
+            <Fragment key={word}>{word} </Fragment>
+          )
+        })}
+      </span>
+      <span
+        className={css({
+          textStyle: 'sansSerifRegular',
+          textDecoration: 'underline',
+          fontSize: 'base',
+          cursor: 'pointer',
+          mx: 'auto',
+          display: 'block',
+
+          mt: '4',
+          md: {
+            display: 'inline-block',
+            mt: 0,
+          },
+        })}
+      >
+        Mehr erfahren
+      </span>
+    </Dialog.Trigger>
   )
 }
 
@@ -62,10 +102,8 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
     }
   })
 
-  const ready = paynotes
-
   useEffect(() => {
-    if (ready && scrollThresholdReached) {
+    if (paynotes && scrollThresholdReached) {
       if (isExpanded) {
         setVariant('paynote')
         setExpanded(true)
@@ -75,9 +113,9 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
         })
       }
     }
-  }, [ready, isExpanded, scrollThresholdReached, trackEvent, paynotes])
+  }, [isExpanded, scrollThresholdReached, trackEvent, paynotes])
 
-  if (!ready) {
+  if (!paynotes) {
     return null
   }
 
@@ -111,31 +149,13 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
           },
         })}
       >
-        <span>
-          <MiniPaynoteMessage message={miniPaynote.message} />
-        </span>
-        <Dialog.Trigger
-          className={css({
-            textStyle: 'sansSerifRegular',
-            textDecoration: 'underline',
-            fontSize: 'base',
-            cursor: 'pointer',
-            mx: 'auto',
-            display: 'block',
-
-            mt: '4',
-            md: {
-              display: 'inline-block',
-              mt: 0,
-            },
-          })}
+        <MiniPaynoteMessage
+          message={miniPaynote.message}
           onClick={() => {
             setVariant('offers-only')
             trackEvent({ action: 'Opened on click' })
           }}
-        >
-          Mehr erfahren
-        </Dialog.Trigger>
+        />
       </div>
 
       <Dialog.Portal>

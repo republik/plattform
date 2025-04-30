@@ -123,7 +123,8 @@ export const PaynotesProvider = ({ children }) => {
     if (isSearchBot) return setPaynoteKind('OVERLAY_OPEN')
 
     // just signed up for a trial: no paynote
-    if (searchParams.has('trialSignup')) return setPaynoteKind(null)
+    if (trialStatus.includes('TRIAL_GROUP') && searchParams.has('trialSignup'))
+      return setPaynoteKind(null)
 
     // one trial group (group A) is shown an inline paynote
     if (trialStatus === 'TRIAL_GROUP_A') return setPaynoteKind('PAYNOTE_INLINE')

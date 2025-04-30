@@ -11,7 +11,7 @@ import { PaynoteSection } from '../../ui/containers'
 
 import IosCTA from '../ios-cta'
 
-function Offers({
+function OffersForm({
   additionalShopParams = {},
   analyticsProps,
 }: {
@@ -25,11 +25,6 @@ function Offers({
 
   const utmParams = getUTMSessionStorage()
   const variation = analyticsProps.variation
-
-  const { isIOSApp } = usePlatformInformation()
-  if (isIOSApp) {
-    return <IosCTA />
-  }
 
   return (
     <form
@@ -48,22 +43,47 @@ function Offers({
       {Object.entries(additionalShopParams).map(([k, v]) => {
         return <input type='hidden' hidden key={k} name={k} value={v} />
       })}
-      <PaynoteSection background='colors.background.marketingAlt'>
-        <div className={css({ textStyle: 'airy' })}>
-          <p
-            dangerouslySetInnerHTML={{
-              __html: t(`regwall/${variation}/offers/description`),
-            }}
-          />
-        </div>
-        <Button variant='outline' size='full' type='submit'>
-          {t(`regwall/${variation}/offers/cta`)}
-        </Button>
-        <p className={css({ textAlign: 'center' })}>
-          {t('regwall/offers/cancellable')}
-        </p>
-      </PaynoteSection>
+      <Button variant='outline' size='full' type='submit'>
+        {t(`regwall/${variation}/offers/cta`)}
+      </Button>
+      <p className={css({ textAlign: 'center' })}>
+        {t('regwall/offers/cancellable')}
+      </p>
     </form>
+  )
+}
+
+function Offers({
+  additionalShopParams = {},
+  analyticsProps,
+}: {
+  additionalShopParams?: Record<string, string>
+  analyticsProps: {
+    variation: string
+  }
+}) {
+  const { t } = useTranslation()
+  const { isIOSApp } = usePlatformInformation()
+  const variation = analyticsProps.variation
+
+  return (
+    <PaynoteSection background='colors.background.marketingAlt'>
+      <div className={css({ textStyle: 'airy' })}>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: t(`regwall/${variation}/offers/description`),
+          }}
+        />
+      </div>
+      {isIOSApp ? (
+        <IosCTA />
+      ) : (
+        <OffersForm
+          additionalShopParams={additionalShopParams}
+          analyticsProps={analyticsProps}
+        />
+      )}
+    </PaynoteSection>
   )
 }
 

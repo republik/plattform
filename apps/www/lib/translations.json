@@ -7931,6 +7931,16 @@
     {
       "key": "paynotes/dialog/cta",
       "value": "Abonnieren und mitreden" 
+    },
+    {"key": "paynotes/ios/caption",
+      "value": "Unterstützen Sie unabhängigen Journalismus." },
+    {
+      "key": "paynotes/ios/cta",
+      "value": "Alle Angebote auf {link}" 
+    },
+    {
+      "key": "paynotes/ios/text",
+      "value": "Alle Angebote auf shop.republik.ch" 
     }
   ]
 }

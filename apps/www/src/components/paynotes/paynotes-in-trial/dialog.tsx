@@ -60,7 +60,7 @@ export function DialogPaynote() {
         </p>
         <form
           method='GET'
-          action={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot`}
+          action={process.env.NEXT_PUBLIC_SHOP_BASE_URL}
           onSubmit={() => {
             trackEvent({
               action: `Go to shop`,
@@ -70,6 +70,8 @@ export function DialogPaynote() {
           {Object.entries(utmParams).map(([k, v]) => {
             return <input type='hidden' hidden key={k} name={k} value={v} />
           })}
+          <input type='hidden' hidden name='promo_code' value='EINSTIEG' />
+
           <Button type='submit' size='small'>
             {t('paynotes/dialog/cta')}
           </Button>
