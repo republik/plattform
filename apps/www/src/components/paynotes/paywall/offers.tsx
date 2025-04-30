@@ -38,7 +38,7 @@ export function Offers({
 
   return (
     <>
-      <PaynoteSection background='background.marketingAlt'>
+      <PaynoteSection background='colors.background.marketingAlt'>
         <h3>{t('paywall/offers/caption')}</h3>
         <h2>
           <span className={css({ fontWeight: 'normal' })}>

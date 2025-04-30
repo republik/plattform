@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 
 import { css } from '@republik/theme/css'
-import { ColorToken } from '@republik/theme/tokens'
+import { ColorToken, Token, token } from '@republik/theme/tokens'
 
 export const PaynoteContainer = ({ children }: { children: ReactNode }) => (
   <div
@@ -16,40 +16,44 @@ export const PaynoteContainer = ({ children }: { children: ReactNode }) => (
 )
 
 export const PaynoteSection = ({
-  background,
+  background = 'colors.background.marketing',
   children,
 }: {
-  background: ColorToken
+  background?: Token
   children: ReactNode
-}) => (
-  <div
-    data-theme='light'
-    className={css({
-      background,
-      color: 'text',
-    })}
-  >
+}) => {
+  return (
     <div
+      data-theme='light'
+      style={{
+        background: token(background),
+      }}
       className={css({
-        margin: '0 auto',
-        maxW: 'narrow',
-        padding: '4-6',
-        display: 'flex',
-        flexDir: 'column',
-        gap: '4',
-        '& h2': {
-          textStyle: 'h2Sans',
-        },
-        '& h3': {
-          textTransform: 'uppercase',
-          fontWeight: 500,
-        },
-        '& b': {
-          fontWeight: 500,
-        },
+        color: 'text',
       })}
     >
-      {children}
+      <div
+        className={css({
+          margin: '0 auto',
+          maxW: 'narrow',
+          padding: '4-6',
+          display: 'flex',
+          flexDir: 'column',
+          gap: '4',
+          '& h2': {
+            textStyle: 'h2Sans',
+          },
+          '& h3': {
+            textTransform: 'uppercase',
+            fontWeight: 500,
+          },
+          '& b': {
+            fontWeight: 500,
+          },
+        })}
+      >
+        {children}
+      </div>
     </div>
-  </div>
-)
+  )
+}
