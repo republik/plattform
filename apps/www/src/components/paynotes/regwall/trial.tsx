@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import Image from 'next/image'
 
-import { IconArrowDropDown } from '@republik/icons'
+import { IconExpandMore } from '@republik/icons'
 import { css } from '@republik/theme/css'
 
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
@@ -101,7 +101,7 @@ const WhyRegister = ({
           }}
         >
           {t('regwall/whyRegister/title')}
-          <IconArrowDropDown size='24' />
+          <IconExpandMore size='24' />
         </Button>
       )}
     </div>
