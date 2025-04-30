@@ -1,2 +1,2 @@
 -- migrate up here: CREATE TABLE...
-ALTER TABLE "public"."users" DROP COLUMN "birthday";
+ALTER TABLE "public"."users" DROP COLUMN IF EXISTS "birthday";
