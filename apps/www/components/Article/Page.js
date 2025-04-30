@@ -201,9 +201,8 @@ const ArticlePage = ({
 
   const template = meta?.template
 
-  // TODO: replace with a proper meta field that also set isPaywallExcluded
-  // to true if the article belongs to isPaywallExcuded-format (@luciana is informed)
-  const isPaywallExcluded = articleContent?.meta?.isPaywallExcluded
+  // is true if the article or the format are paywall excluded
+  const isPaywallExcluded = meta?.isPaywallExcluded
   useEffect(() => {
     const resetPaynotes = () => {
       // console.log('resetPaynotes')
