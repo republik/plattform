@@ -37,6 +37,7 @@ function PaynoteInline() {
       data-theme='light'
       className={css({
         background: 'background.marketing',
+        color: 'text',
         padding: '8',
       })}
     >
