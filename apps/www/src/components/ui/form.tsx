@@ -136,6 +136,7 @@ export function RadioOption({
             color: 'current',
             width: '[1.25em]',
             height: '[1.25em]',
+            boxSizing: 'border-box',
             borderWidth: 2,
             borderStyle: 'solid',
             borderColor: 'black',
