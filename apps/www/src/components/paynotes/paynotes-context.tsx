@@ -26,7 +26,7 @@ type TemplateType =
   | 'meta'
   | 'format'
   | 'section'
-  | 'dossie'
+  | 'dossier'
   | 'page'
   | 'flyer'
   | 'seriesOverview' // technically an article, but we want to handle this differently
