@@ -20,6 +20,7 @@ query Me {
     accessGrants {
       id
       status
+      endAt
     }
     hasDormantMembership
     prolongBeforeDate

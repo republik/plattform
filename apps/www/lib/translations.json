@@ -1110,14 +1110,6 @@
       "value": "Sie haben die Zahlungsanweisungen per E-Mail erhalten. Und hier schon ein Überblick:"
     },
     {
-      "key": "account/trial/info",
-      "value": "Willkommen bei der Republik! Bis zum {maxEndAt} sind Sie unser Gast und haben kostenlosen Zugang zum gesamten Magazin. Sie wollen länger bleiben? Dann haben wir ein paar Vorschläge für Sie."
-    },
-    {
-      "key": "account/trial/info/cta",
-      "value": "Alle Angebote anzeigen"
-    },
-    {
       "key": "Account/Access/Grants/explanation",
       "value": "Sie können die Republik lesen, weil Verlegerinnen Ihnen den Zugriff ermöglichen:"
     },
@@ -7953,6 +7945,18 @@
     {
       "key": "paynotes/welcomeBanner",
       "value": "Ab sofort läuft Ihre siebentägige Gastwoche bei der Republik: Herzlich willkommen!" 
+    },
+    {
+      "key": "paynotes/account/title",
+      "value": "Willkommen bei der Republik!"
+    },
+    {
+      "key": "paynotes/account/description",
+      "value": "<b>Bis zum {maxEndAt} sind Sie unser Gast und haben kostenlosen Zugang zum gesamten Magazin.</b><br/>Sie wollen länger bleiben? Dann haben wir ein paar Vorschläge für Sie."
+    },
+    {
+      "key": "paynotes/account/cta",
+      "value": "Alle Angebote anzeigen"
     }
   ]
 }
