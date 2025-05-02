@@ -1,7 +1,5 @@
 import { useState } from 'react'
 
-import Image from 'next/image'
-
 import { IconExpandMore } from '@republik/icons'
 import { css } from '@republik/theme/css'
 
@@ -30,13 +28,11 @@ const TrialHeader = ({ variation }: { variation: string }) => {
     >
       <Login />
       <div
-        className={css({ display: 'flex', justifyContent: 'center', py: '4' })}
+        className={css({ display: 'flex', justifyContent: 'center', py: '6' })}
       >
-        <Image
-          src={`${CDN_FRONTEND_BASE_URL}/static/regwall/cover.svg`}
+        <img
+          src={`${CDN_FRONTEND_BASE_URL}/static/regwall/illustration.png`}
           alt='Illustration registration wall'
-          width={240}
-          height={240}
         />
       </div>
       <h2>{t(`regwall/${variation}/header/title`)}</h2>
