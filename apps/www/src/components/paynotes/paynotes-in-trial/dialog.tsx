@@ -3,15 +3,47 @@ import { css } from '@republik/theme/css'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
+import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 
 import { useTranslation } from 'lib/withT'
 
 import { Button } from '../../ui/button'
 
-export function DialogPaynote() {
-  const { t } = useTranslation()
+import IosCTA from '../ios-cta'
+
+function DialogCta() {
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
+  const { isIOSApp } = usePlatformInformation()
+  const { t } = useTranslation()
+
+  if (isIOSApp) return <IosCTA />
+
+  return (
+    <form
+      method='GET'
+      action={process.env.NEXT_PUBLIC_SHOP_BASE_URL}
+      onSubmit={() => {
+        trackEvent({
+          action: `Go to shop`,
+        })
+      }}
+    >
+      {Object.entries(utmParams).map(([k, v]) => {
+        return <input type='hidden' hidden key={k} name={k} value={v} />
+      })}
+      <input type='hidden' hidden name='promo_code' value='EINSTIEG' />
+
+      <Button type='submit' size='small'>
+        {t('paynotes/dialog/cta')}
+      </Button>
+    </form>
+  )
+}
+
+export function DialogPaynote() {
+  const { t } = useTranslation()
+
   const { paynoteKind } = usePaynotes()
 
   if (paynoteKind !== 'DIALOG') {
@@ -57,24 +89,7 @@ export function DialogPaynote() {
         <p className={css({ lineHeight: 1.4, textStyle: 'body' })}>
           {t('paynotes/dialog/description')}
         </p>
-        <form
-          method='GET'
-          action={process.env.NEXT_PUBLIC_SHOP_BASE_URL}
-          onSubmit={() => {
-            trackEvent({
-              action: `Go to shop`,
-            })
-          }}
-        >
-          {Object.entries(utmParams).map(([k, v]) => {
-            return <input type='hidden' hidden key={k} name={k} value={v} />
-          })}
-          <input type='hidden' hidden name='promo_code' value='EINSTIEG' />
-
-          <Button type='submit' size='small'>
-            {t('paynotes/dialog/cta')}
-          </Button>
-        </form>
+        <DialogCta />
       </div>
     </div>
   )
