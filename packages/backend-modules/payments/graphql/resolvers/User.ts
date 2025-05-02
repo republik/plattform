@@ -1,8 +1,9 @@
 import { GraphqlContext, User } from '@orbiting/backend-modules-types'
 import { Company, USER_VISIBLE_STATUS_TYPES } from '../../lib/types'
-import { Payments } from '../../lib/payments'
 import { default as Auth } from '@orbiting/backend-modules-auth'
 import { PgDb } from 'pogi'
+import { CustomerInfoService } from '../../lib/services/CustomerInfoService'
+import { SubscriptionService } from '../../lib/services/SubscriptionService'
 
 export = {
   async stripeCustomer(
@@ -12,7 +13,7 @@ export = {
   ) {
     Auth.Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
 
-    return await Payments.getInstance().getCustomerIdForCompany(
+    return await new CustomerInfoService(ctx.pgdb).getCustomerIdForCompany(
       user.id,
       company,
     )
@@ -26,7 +27,9 @@ export = {
     Auth.Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
 
     try {
-      const res = await Payments.getInstance().fetchActiveSubscription(user.id)
+      const res = await new SubscriptionService(
+        ctx.pgdb,
+      ).fetchActiveSubscription(user.id)
       return res
     } catch (e) {
       console.log(e)
@@ -37,7 +40,7 @@ export = {
   async magazineSubscriptions(user: User, _args: never, ctx: GraphqlContext) {
     Auth.Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
     try {
-      const res = await Payments.getInstance().listSubscriptions(
+      const res = await new SubscriptionService(ctx.pgdb).listSubscriptions(
         user.id,
         USER_VISIBLE_STATUS_TYPES,
       )

@@ -1,7 +1,7 @@
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job } from 'pg-boss'
-import { Payments } from '../payments'
 import { Company } from '../types'
+import { CustomerInfoService } from '../services/CustomerInfoService'
 
 type Args = {
   $version: 'v1'
@@ -17,7 +17,7 @@ export class StripeCustomerCreateWorker extends BaseWorker<Args> {
       throw Error('unable to perform this job version. Expected v1')
     }
 
-    const id = await Payments.getInstance().createCustomer(
+    const id = await new CustomerInfoService(this.context.pgdb).createCustomer(
       job.data.company,
       job.data.userId,
     )

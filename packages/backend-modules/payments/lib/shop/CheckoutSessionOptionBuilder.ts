@@ -9,27 +9,11 @@ import {
   DiscountOption,
   OfferType,
 } from '.'
-import { Payments } from '../payments'
 import { Company } from '../types'
 import Stripe from 'stripe'
 import { getConfig } from '../config'
 import { PaymentService } from '../services/PaymentService'
-
-export async function getCustomer(company: Company, userId?: string) {
-  if (!userId) {
-    return undefined
-  }
-
-  const customerId = (
-    await Payments.getInstance().getCustomerIdForCompany(userId, company)
-  )?.customerId
-
-  if (customerId) {
-    return customerId
-  }
-
-  return await Payments.getInstance().createCustomer(company, userId)
-}
+import { CustomerInfoService } from '../services/CustomerInfoService'
 
 export type Price = {
   price: string
@@ -65,6 +49,7 @@ export type LineItem = Price | PriceData | RecurringPriceData
 export class CheckoutSessionBuilder {
   private offer: Offer
   private paymentService: PaymentService
+  private customerInfoService: CustomerInfoService
   private uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
   private optionalSessionVars: {
     complimentaryItems?: any[]
@@ -76,12 +61,17 @@ export class CheckoutSessionBuilder {
     selectedDonation?: CustomDonation
   }
 
-  constructor(offerId: string, paymentService: PaymentService) {
+  constructor(
+    offerId: string,
+    paymentService: PaymentService,
+    CustomerInfoService: CustomerInfoService,
+  ) {
     const offer = activeOffers().find((o) => o.id === offerId)
     if (!offer) throw new Error('api/shop/unknown/offer')
 
     this.offer = offer
     this.paymentService = paymentService
+    this.customerInfoService = CustomerInfoService
     this.uiMode = 'EMBEDDED'
     this.optionalSessionVars = {}
   }
@@ -115,7 +105,7 @@ export class CheckoutSessionBuilder {
       throw new Error('api/signIn')
     }
 
-    this.optionalSessionVars.customerId = await getCustomer(
+    this.optionalSessionVars.customerId = await this.getCustomer(
       this.offer.company,
       user?.id,
     )
@@ -222,6 +212,22 @@ export class CheckoutSessionBuilder {
     }
 
     return null
+  }
+
+  private async getCustomer(company: Company, userId?: string) {
+    if (!userId) {
+      return undefined
+    }
+
+    const customerId = (
+      await this.customerInfoService.getCustomerIdForCompany(userId, company)
+    )?.customerId
+
+    if (customerId) {
+      return customerId
+    }
+
+    return await this.customerInfoService.createCustomer(company, userId)
   }
 
   private async genLineItems(): Promise<LineItem[]> {

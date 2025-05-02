@@ -1,10 +1,10 @@
 import Auth from '@orbiting/backend-modules-auth'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
-import { Payments } from '../../../lib/payments'
 import { getConfig } from '../../../lib/config'
 import { PaymentService } from '../../../lib/services/PaymentService'
 import { Subscription } from '../../../lib/types'
 import Stripe from 'stripe'
+import { SubscriptionService } from '../../../lib/services/SubscriptionService'
 
 type PriceData = Stripe.SubscriptionItemUpdateParams.PriceData
 
@@ -20,7 +20,7 @@ export = async function updateMagazineSubscriptionDonation(
 
   const DONATION_PRODUCT_ID = getConfig().PROJECT_R_DONATION_PRODUCT_ID
 
-  const sub = await Payments.getInstance().getSubscription({
+  const sub = await new SubscriptionService(ctx.pgdb).getSubscription({
     id: args.subscriptionId,
   })
   if (!sub) {

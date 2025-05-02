@@ -69,8 +69,11 @@
                       {{#if discount_code}}
                       <li>{{discount_code}}: CHF –{{discount_total}}</li>
                       {{/if}}
-                      {{#if donation}}
-                      <li>Spende: CHF {{donation}}</li>
+                      {{#if recurring_donation}}
+                      <li>Jährliche Spende: CHF {{recurring_donation}}</li>
+                      {{/if}}
+                      {{#if onetime_donation}}
+                      <li>Einmalige Spende: CHF {{onetime_donation}}</li>
                       {{/if}}
                       <li>
                         <strong>Total: CHF {{total}}</strong>

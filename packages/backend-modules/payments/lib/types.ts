@@ -1,3 +1,5 @@
+import Stripe from 'stripe'
+
 export type Company = 'PROJECT_R' | 'REPUBLIK'
 
 export type Order = {
@@ -245,4 +247,8 @@ export type Transaction = {
   status: string
   subscriptionId?: string
   pledgeId?: string
+}
+
+export interface PaymentWorkflow<T extends Stripe.Event> {
+  run(company: Company, event: T): Promise<any>
 }

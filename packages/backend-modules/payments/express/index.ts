@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import { PgDb } from 'pogi'
 
 export default async (server: Router, pgdb: PgDb) => {
+  console.log("payment webhook endpoint registered")
   server.post(
     '/webhooks/:company/stripe',
     bodyParser.raw({ type: '*/*' }),

@@ -2,7 +2,6 @@ import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
 import { Company } from '../types'
 import Stripe from 'stripe'
-import { PaymentInterface, Payments } from '../payments'
 import { processInvoiceUpdated } from '../handlers/stripe/invoiceUpdate'
 import { processInvoiceCreated } from '../handlers/stripe/invoiceCreated'
 import { processSubscriptionDeleted } from '../handlers/stripe/subscriptionDeleted'
@@ -22,9 +21,7 @@ type WorkerArgsV1 = {
   company: Company
 }
 
-export type PaymentWebhookContext = {
-  payments: PaymentInterface
-} & ConnectionContext
+export type PaymentWebhookContext = ConnectionContext
 
 export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
   readonly queue = 'payments:stripe:webhook'
@@ -39,8 +36,6 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
 
     const webhookService = new WebhookService(this.context.pgdb)
 
-    const payments = Payments.getInstance()
-
     const wh = await webhookService.getEvent<Stripe.Event>(
       job.data.eventSourceId,
     )
@@ -54,7 +49,7 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
     try {
       console.log('processing stripe event %s [%s]', event.id, event.type)
 
-      const ctx = { payments, ...this.context }
+      const ctx = this.context
 
       switch (event.type) {
         case 'checkout.session.completed':

@@ -15,7 +15,7 @@ export async function handleStripeWebhook(
     const webhookService = new WebhookService(ctx.pgdb)
 
     const company = getCompanyName(req.params['company'])
-    const event = webhookService.verifyWebhook<Stripe.Event>(company, req)
+    const event = webhookService.verifyWebhook(company, req)
 
     if (!event.livemode && !isInStripeTestMode()) {
       console.log('skipping test event in live mode')

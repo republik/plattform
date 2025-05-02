@@ -1,15 +1,18 @@
 import { Subscription } from '../../lib/types'
-import { Payments } from '../../lib/payments'
-import { PaymentProvider } from '../../lib/providers/provider'
 import { PaymentService } from '../../lib/services/PaymentService'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
+import { InvoiceService } from '../../lib/services/InvoiceService'
 
 export = {
   async stripeId(subscription: Subscription) {
     return subscription.externalId
   },
-  async invoices(subscription: Subscription) {
-    return Payments.getInstance().getSubscriptionInvoices(subscription.id)
+  async invoices(
+    subscription: Subscription,
+    _args: never,
+    ctx: GraphqlContext,
+  ) {
+    return new InvoiceService(ctx.pgdb).getSubscriptionInvoices(subscription.id)
   },
   async renewsAtPrice(subscription: Subscription) {
     try {
@@ -40,18 +43,22 @@ export = {
   },
 
   async paymentMethod(subscription: Subscription) {
-    const sub = await PaymentProvider.forCompany(
+    const paymentService = new PaymentService()
+
+    const sub = await paymentService.getSubscription(
       subscription.company,
-    ).getSubscription(subscription.externalId)
+      subscription.externalId,
+    )
     if (!sub) {
       return null
     }
 
-    const customer = await PaymentProvider.forCompany(
+    const customer = await paymentService.getCustomer(
       subscription.company,
-    ).getCustomer(sub.customer as string)
+      sub.customer as string,
+    )
 
-    if (!customer) {
+    if (!customer || customer.deleted) {
       return null
     }
 
@@ -63,9 +70,10 @@ export = {
       return null
     }
 
-    const paymentMethod = await PaymentProvider.forCompany(
+    const paymentMethod = await paymentService.getPaymentMethod(
       subscription.company,
-    ).getPaymentMethod(paymentMethodId)
+      paymentMethodId,
+    )
 
     if (!paymentMethod) {
       return null

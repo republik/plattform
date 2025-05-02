@@ -5,7 +5,6 @@ import Stripe from 'stripe'
 import { CrockfordBase32 } from 'crockford-base32'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { CustomerRepo } from '../database/CutomerRepo'
-import { Payments } from '../payments'
 import { activeOffers } from './offers'
 import { Shop } from './Shop'
 import dayjs from 'dayjs'
@@ -17,6 +16,7 @@ import {
 } from '../mail-settings'
 import { getConfig } from '../config'
 import { parseStripeDate } from '../handlers/stripe/utils'
+import { CustomerInfoService } from '../services/CustomerInfoService'
 
 const logger = createLogger('payments:gifts')
 
@@ -120,10 +120,12 @@ export class GiftShop {
     PROJECT_R: ProjectRStripe,
     REPUBLIK: RepublikAGStripe,
   }
+  #customerInfoService: CustomerInfoService
 
   constructor(pgdb: PgDb) {
     this.#pgdb = pgdb
     this.#giftRepo = new GiftVoucherRepo(pgdb)
+    this.#customerInfoService = new CustomerInfoService(this.#pgdb)
   }
 
   async generateNewVoucher({
@@ -629,7 +631,10 @@ export class GiftShop {
     let customerId = (await cRepo.getCustomerIdForCompany(userId, company))
       ?.customerId
     if (!customerId) {
-      customerId = await Payments.getInstance().createCustomer(company, userId)
+      customerId = await this.#customerInfoService.createCustomer(
+        company,
+        userId,
+      )
     }
     return customerId
   }

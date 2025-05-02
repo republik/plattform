@@ -8,6 +8,41 @@ export class PaymentService {
     REPUBLIK: RepublikAGStripe,
   }
 
+  async createCustomer(company: Company, email: string, userId: string) {
+    const customer = await this.#stripeAdapters[company].customers.create({
+      email,
+      metadata: {
+        userId,
+      },
+    })
+
+    return customer ? customer : null
+  }
+
+  async getCustomer(company: Company, id: string) {
+    const customer = await this.#stripeAdapters[company].customers.retrieve(id)
+
+    return customer ? customer : null
+  }
+
+  async updateCustomerEmail(
+    company: Company,
+    customerId: string,
+    email: string,
+  ) {
+    return this.#stripeAdapters[company].customers.update(customerId, {
+      email,
+    })
+  }
+
+  async getPaymentMethod(company: Company, id: string) {
+    const paymentMethod = await this.#stripeAdapters[
+      company
+    ].paymentMethods.retrieve(id)
+
+    return paymentMethod ? paymentMethod : null
+  }
+
   async getSubscription(company: Company, id: string) {
     const sub = await this.#stripeAdapters[company].subscriptions.retrieve(id)
 
@@ -122,5 +157,49 @@ export class PaymentService {
     config: Stripe.Checkout.SessionCreateParams,
   ) {
     return this.#stripeAdapters[company].checkout.sessions.create(config)
+  }
+
+  async getCheckoutSession(company: Company, id: string) {
+    const session = await this.#stripeAdapters[
+      company
+    ].checkout.sessions.retrieve(id, {
+      expand: ['line_items', 'line_items.data.price.product'],
+    })
+
+    return session ? session : null
+  }
+
+  async createCustomerPortalSession(
+    company: Company,
+    customerId: string,
+    opts: {
+      returnUrl: string
+      locale: 'auto' | 'de' | 'en' | 'fr'
+    },
+  ): Promise<string> {
+    const args: Stripe.BillingPortal.SessionCreateParams = {
+      customer: customerId,
+      return_url: opts.returnUrl,
+      locale: opts.locale,
+      flow_data: {
+        type: 'payment_method_update',
+      },
+    }
+
+    const sess = await this.#stripeAdapters[
+      company
+    ].billingPortal.sessions.create(args)
+
+    return sess.url
+  }
+
+  verifyWebhook(company: Company, req: any, secret: string): Stripe.Event {
+    const signature = req.headers['stripe-signature']
+
+    return this.#stripeAdapters[company].webhooks.constructEvent(
+      req.body,
+      signature,
+      secret,
+    )
   }
 }
