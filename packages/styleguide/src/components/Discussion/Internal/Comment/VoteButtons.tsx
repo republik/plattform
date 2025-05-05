@@ -4,7 +4,7 @@ import IconButton from '../../../IconButton'
 import { useColorContext } from '../../../Colors/ColorContext'
 import { fontStyles } from '../../../Typography'
 import comment from '../../../../templates/Comment'
-import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
+import { IconBigArrowUp, IconBigArrowDown } from '@republik/icons'
 
 const styles = {
   votes: css({
@@ -12,6 +12,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     marginLeft: 'auto',
+    gap: 12,
   }),
   vote: css({
     display: 'flex',
@@ -21,9 +22,7 @@ const styles = {
   voteNumber: css({
     ...fontStyles.sansSerifMedium14,
     fontFeatureSettings: '"tnum" 1',
-  }),
-  voteDivider: css({
-    padding: '0 2px',
+    marginLeft: -4,
   }),
   voteButton: css({
     margin: 0,
@@ -57,46 +56,50 @@ export const VoteButtons = ({
     <div {...styles.votes}>
       <div {...styles.vote}>
         <IconButton
-          size={24}
-          fill={comment.userVote === 'UP' && colorScheme.getCSSColor('primary')}
-          Icon={IconKeyboardArrowUp}
+          size={22}
+          fill={
+            comment.userVote === 'UP' ? colorScheme.getCSSColor('text') : 'none'
+          }
+          Icon={IconBigArrowUp}
           disabled={disabled}
+          disabledFill={'none'}
           onClick={() => upVoteHandler(comment.id)}
           title={t('styleguide/CommentActions/upvote')}
-          style={{ margin: 0 }}
-        />
-        <span
-          {...styles.voteNumber}
-          title={t.pluralize('styleguide/CommentActions/upvote/count', {
-            count: comment.upVotes,
-          })}
         >
-          {comment.upVotes}
-        </span>
-      </div>
-      <div {...styles.voteDivider} {...colorScheme.set('color', 'text')}>
-        /
+          <span
+            {...styles.voteNumber}
+            title={t.pluralize('styleguide/CommentActions/upvote/count', {
+              count: comment.upVotes,
+            })}
+          >
+            {comment.upVotes}
+          </span>
+        </IconButton>
       </div>
       <div {...styles.vote}>
-        <span
-          {...styles.voteNumber}
-          title={t.pluralize('styleguide/CommentActions/downvote/count', {
-            count: comment.downVotes,
-          })}
-        >
-          {comment.downVotes}
-        </span>
         <IconButton
-          size={24}
+          size={22}
           fill={
-            comment.userVote === 'DOWN' && colorScheme.getCSSColor('primary')
+            comment.userVote === 'DOWN'
+              ? colorScheme.getCSSColor('text')
+              : 'none'
           }
-          Icon={IconKeyboardArrowDown}
+          Icon={IconBigArrowDown}
           disabled={disabled}
+          disabledFill={'none'}
           onClick={() => downVoteHandler(comment.id)}
           title={t('styleguide/CommentActions/downvote')}
           style={{ margin: 0 }}
-        />
+        >
+          <span
+            {...styles.voteNumber}
+            title={t.pluralize('styleguide/CommentActions/downvote/count', {
+              count: comment.downVotes,
+            })}
+          >
+            {comment.downVotes}
+          </span>
+        </IconButton>
       </div>
     </div>
   )
