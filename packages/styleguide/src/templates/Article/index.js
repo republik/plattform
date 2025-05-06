@@ -110,6 +110,11 @@ const createSchema = ({
   documentEditorOptions = { skipCredits: false },
   customMetaFields = [
     {
+      label: 'Regwall ausschalten',
+      key: 'isPaywallExcluded',
+      ref: 'bool',
+    },
+    {
       label: 'Bildergalerie aktiv',
       key: 'gallery',
       ref: 'bool',

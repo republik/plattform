@@ -1,4 +1,5 @@
 'use client'
+import { getMeteringData } from '@app/components/paynotes/article-metering'
 import { useMe } from 'lib/context/MeContext'
 import PlausibleProvider from 'next-plausible'
 
@@ -8,7 +9,9 @@ type AnalyticsProviderProps = Omit<
 >
 
 export const AnalyticsProvider = (props: AnalyticsProviderProps) => {
-  const { me, hasActiveMembership, meLoading } = useMe()
+  const { me, hasActiveMembership, trialStatus, meLoading } = useMe()
+  const meteringData = getMeteringData()
+  // console.log('provider', { meteringData })
 
   return (
     <PlausibleProvider
@@ -21,6 +24,8 @@ export const AnalyticsProvider = (props: AnalyticsProviderProps) => {
           : me
           ? 'logged in'
           : 'anonymous',
+        trial_status: trialStatus, // keeping the user_type too, as not to break compatibilty by deleting  the "user_type" prop.
+        ...meteringData,
       }}
       // Defer enabling analytics until me query has been loaded. This should still reliably track the 1st page view, just a bit later.
       enabled={!meLoading}
