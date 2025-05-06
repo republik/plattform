@@ -51,7 +51,7 @@ const ProifleDocumentFeed = ({
       >
         {showTitle && (
           <Interaction.H3 style={{ marginBottom: 20 }}>
-            {t.pluralize('profile/comments/title', {
+            {t.pluralize('profile/documents/title', {
               count: totalCount,
             })}
           </Interaction.H3>
