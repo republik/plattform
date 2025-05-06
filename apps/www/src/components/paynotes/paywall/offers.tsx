@@ -173,9 +173,7 @@ function OffersForm({
               <OpenSurveyButton onClick={() => setShowSurvey(true)} />
             )}
             {!showSurvey && (
-              <ArrowLink
-                href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot`}
-              >
+              <ArrowLink href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}`}>
                 {t('paywall/offers/all')}
               </ArrowLink>
             )}
