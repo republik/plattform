@@ -111,7 +111,7 @@ export const Offers: Readonly<Offer>[] = [
     requiresLogin: true,
     requiresAddress: true,
     items: [{ type: 'PRICE', lookupKey: 'ABO' }],
-    suggestedDonations: [1000, 50000, 10000, 12000, 24000],
+    suggestedDonations: [60_00, 120_00, 240_00],
     allowPromotions: true,
   },
   {
@@ -140,7 +140,7 @@ export const Offers: Readonly<Offer>[] = [
     requiresLogin: true,
     requiresAddress: true,
     items: [{ type: 'PRICE', lookupKey: 'BENEFACTOR_ABO' }],
-    suggestedDonations: [10000, 500000, 100000, 120000, 240000],
+    suggestedDonations: [250_00, 500_00, 1000_00],
     allowPromotions: false,
   },
   {
@@ -151,7 +151,7 @@ export const Offers: Readonly<Offer>[] = [
     requiresLogin: true,
     requiresAddress: false,
     items: [],
-    suggestedDonations: [1000, 50000, 10000, 12000, 24000],
+    suggestedDonations: [20_00, 50_00, 100_00],
     allowPromotions: false,
   },
   {
