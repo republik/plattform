@@ -125,7 +125,7 @@ export function LoginForm(props: LoginFormProps) {
       >
         <FormField
           label='E-Mail'
-          placeholder='E-mail'
+          placeholder='E-Mail-Adresse'
           name='email'
           type='email'
           autoFocus={props.autoFocus}
