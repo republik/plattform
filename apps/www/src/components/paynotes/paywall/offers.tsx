@@ -86,7 +86,7 @@ function OffersForm({
                   position: 'absolute',
                   top: '-12px',
                   right: '2',
-                  backgroundColor: '#C398D5',
+                  backgroundColor: '#688A7C',
                   color: 'white',
                   textTransform: 'uppercase',
                   fontSize: 'xs',
