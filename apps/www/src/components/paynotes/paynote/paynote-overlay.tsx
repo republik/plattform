@@ -2,6 +2,7 @@
 
 import { css } from '@republik/theme/css'
 import { Fragment, useEffect, useState } from 'react'
+import useResizeObserver from 'use-resize-observer'
 
 import * as Dialog from '@radix-ui/react-dialog'
 
@@ -93,13 +94,20 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
   const trackEvent = useTrackEvent()
   const pathname = usePathname()
   const { me, trialStatus } = useMe()
-
+  const { setPaynoteInlineHeight } = usePaynotes()
   const { scrollYProgress } = useScroll()
 
   useMotionValueEvent(scrollYProgress, 'change', (progress) => {
     if (progress > ARTICLE_SCROLL_THRESHOLD) {
       setScrollThresholdReached(true)
     }
+  })
+
+  const { ref } = useResizeObserver<HTMLDivElement>({
+    box: "border-box",
+    onResize: ({ height }) => {
+      setPaynoteInlineHeight(height)
+    },
   })
 
   useEffect(() => {
@@ -123,10 +131,11 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
 
   const paynoteVariantForAnalytics =
     variant === 'paynote' ? paynote.title : miniPaynote.message
-
+  
   return (
     <Dialog.Root open={expanded} onOpenChange={setExpanded}>
       <div
+        ref={ref}
         data-theme='light'
         className={css({
           backgroundColor: 'background.marketingAccent',
