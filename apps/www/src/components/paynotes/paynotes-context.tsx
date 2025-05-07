@@ -35,6 +35,8 @@ type PaynotesContextValues = {
   paynoteKind: PaynoteKindType
   setTemplateForPaynotes: (template: TemplateType) => void
   setIsPaywallExcluded: (isExcluded: boolean) => void
+  paynoteInlineHeight: number
+  setPaynoteInlineHeight: (height: number) => void
 }
 
 const PaynotesContext = createContext<PaynotesContextValues>(
@@ -88,6 +90,7 @@ export const PaynotesProvider = ({ children }) => {
   const { isSearchBot } = useUserAgent()
 
   const [paynoteKind, setPaynoteKind] = useState<PaynoteKindType>(null)
+  const [paynoteInlineHeight, setPaynoteInlineHeight] = useState<number>(0)
 
   // In an ideal world we would know based on the pathname what template
   // we are dealing with, but we don't live in an ideal world.
@@ -175,6 +178,8 @@ export const PaynotesProvider = ({ children }) => {
         paynoteKind,
         setTemplateForPaynotes,
         setIsPaywallExcluded,
+        paynoteInlineHeight,
+        setPaynoteInlineHeight,
       }}
     >
       {children}
