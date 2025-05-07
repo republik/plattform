@@ -13,7 +13,6 @@ import withAuthorization, { PageCenter } from './withAuthorization'
 import { withMembership } from './checkRoles'
 import Link from 'next/link'
 import { useMe } from '../../lib/context/MeContext'
-import { OPEN_ACCESS } from 'lib/constants'
 
 export const UnauthorizedMessage = ({
   unauthorizedTexts: { title, description } = {},
@@ -128,7 +127,7 @@ export const WithoutAccess = ({ render }) => {
 export const enforceRoles =
   (roles, meta, unauthorizedTexts) => (WrappedComponent) =>
     withAuthorization(roles)(({ isAuthorized, ...props }) => {
-      if (OPEN_ACCESS || isAuthorized) {
+      if (isAuthorized) {
         return <WrappedComponent meta={meta} {...props} />
       }
       return (

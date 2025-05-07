@@ -10,7 +10,6 @@ import Head from 'next/head'
 import { PaynoteOverlay } from '@app/components/paynotes/paynote/paynote-overlay'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
-import { OPEN_ACCESS } from 'lib/constants'
 import { AppProps } from 'next/app'
 import AppVariableContext from '../components/Article/AppVariableContext'
 import AudioPlayerOrchestrator from '../components/Audio/AudioPlayerOrchestrator'
@@ -59,7 +58,7 @@ const WebApp = ({
     // SSR only props
     providedUserAgent = undefined,
     serverContext = undefined,
-    assumeAccess = OPEN_ACCESS ? true : false,
+    assumeAccess = false,
     ...otherPageProps
   } = pageProps
 
