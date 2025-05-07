@@ -15,15 +15,6 @@ const FRONT_PATH = '/'
 
 const FrontPage = () => {
   const router = useRouter()
-  const { meLoading, hasAccess } = useMe()
-
-  useEffect(() => {
-    if (meLoading) return
-    // reload to re-trigger the middleware to rewrite to the marketing-page
-    if (!hasAccess) {
-      window.location.reload()
-    }
-  }, [meLoading, hasAccess])
 
   return (
     <Front

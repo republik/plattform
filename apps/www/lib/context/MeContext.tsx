@@ -9,7 +9,6 @@ import {
   MeDocument,
   MeQuery,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { OPEN_ACCESS } from 'lib/constants'
 
 const HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE = 'data-has-active-membership'
 const HAS_ACTIVE_MEMBERSHIP_STORAGE_KEY = 'me.hasActiveMembership'
@@ -71,7 +70,9 @@ css.global(`:root [${CLIMATELAB_ONLY_ITEM_ATTRIBUTE}="true"]`, {
 export type MeObjectType = MeQuery['me']
 
 export const canReadFreely = (trialStatus?: TrialStatusType): boolean =>
-  ['MEMBER', 'TRIAL_GROUP_A', 'TRIAL_GROUP_B'].includes(trialStatus)
+  ['MEMBER', 'TRIAL_GROUP_A', 'TRIAL_GROUP_B', 'TRIAL_GROUP_TEILEN'].includes(
+    trialStatus,
+  )
 
 export type TrialStatusType =
   | 'MEMBER' // could also be null
@@ -208,11 +209,7 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
         meError: error,
         meRefetch: refetch,
         hasActiveMembership,
-        hasAccess: OPEN_ACCESS
-          ? true
-          : !data && assumeAccess
-          ? assumeAccess
-          : isMember,
+        hasAccess: !data && assumeAccess ? assumeAccess : isMember,
         isEditor: checkRoles(me, ['editor']),
         isClimateLabMember,
         trialStatus,

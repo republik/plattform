@@ -128,11 +128,9 @@ const Frame = ({
 }) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
-  const { me, hasAccess } = useMe()
-  const isClimateLabOnlyUser = checkRoles(me, ['climate'])
+  const { me } = useMe()
 
-  const hasOverviewNav = (hasAccess || isClimateLabOnlyUser) && wantOverviewNav
-  const hasSecondaryNav = !!(secondaryNav || hasOverviewNav)
+  const hasSecondaryNav = !!secondaryNav
   const padHeaderRule = useMemo(() => {
     return css({
       paddingTop: hasSecondaryNav
@@ -176,7 +174,7 @@ const Frame = ({
             secondaryNav={secondaryNav}
             formatColor={formatColor}
             pullable={pullable}
-            hasOverviewNav={hasOverviewNav}
+            hasOverviewNav
             stickySecondaryNav={stickySecondaryNav}
             isOnMarketingPage={isOnMarketingPage}
             pageColorSchemeKey={pageColorSchemeKey}
