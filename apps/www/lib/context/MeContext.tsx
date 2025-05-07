@@ -88,6 +88,7 @@ type MeContextValues = {
   meRefetch: any
   hasActiveMembership: boolean
   hasAccess: boolean
+  isMember: boolean
   isEditor: boolean
   isClimateLabMember: boolean
   trialStatus?: TrialStatusType
@@ -213,6 +214,7 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
           : !data && assumeAccess
           ? assumeAccess
           : isMember,
+        isMember: isMember,
         isEditor: checkRoles(me, ['editor']),
         isClimateLabMember,
         trialStatus,
