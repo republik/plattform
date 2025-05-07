@@ -26,11 +26,16 @@ const Regwall = () => {
     })
   }, [trackEvent])
 
+  const analyticsProps = {
+    variation,
+    ...getMeteringData(),
+  }
+
   return (
     <PaynoteContainer>
-      <Trial analyticsProps={{ variation }} />
+      <Trial analyticsProps={analyticsProps} />
       <Offers
-        analyticsProps={{ variation }}
+        analyticsProps={analyticsProps}
         additionalShopParams={{
           rep_ui_component: 'regwall',
           rep_regwall_variation: variation,
