@@ -8,7 +8,7 @@ type AnalyticsProviderProps = Omit<
 >
 
 export const AnalyticsProvider = (props: AnalyticsProviderProps) => {
-  const { me, hasActiveMembership, meLoading } = useMe()
+  const { me, hasActiveMembership, trialStatus, meLoading } = useMe()
 
   return (
     <PlausibleProvider
@@ -21,6 +21,7 @@ export const AnalyticsProvider = (props: AnalyticsProviderProps) => {
           : me
           ? 'logged in'
           : 'anonymous',
+        trial_status: trialStatus, // keeping the user_type too, as not to break compatibilty by deleting  the "user_type" prop.
       }}
       // Defer enabling analytics until me query has been loaded. This should still reliably track the 1st page view, just a bit later.
       enabled={!meLoading}

@@ -55,10 +55,10 @@ const archivedYears = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]
 
 export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   const { t } = useTranslation()
-  const { isEditor, hasAccess } = useMe()
+  const { isEditor, isMember } = useMe()
   const { isAudioQueueAvailable } = useAudioQueue()
 
-  const showPlayButton = !isFrontExtract && hasAccess && isAudioQueueAvailable
+  const showPlayButton = !isFrontExtract && isMember && isAudioQueueAvailable
 
   const schema = useMemo(
     () =>

@@ -21,16 +21,10 @@ const styles = {
 }
 
 type Props = {
-  showPayNotes?: boolean
-  inRootCommentOverlay?: boolean
   documentMeta?: any
 }
 
-const Discussion = ({
-  documentMeta,
-  inRootCommentOverlay,
-  showPayNotes,
-}: Props) => {
+const Discussion = ({ documentMeta }: Props) => {
   const { t } = useTranslation()
 
   const {
@@ -78,24 +72,17 @@ const Discussion = ({
       }
       render={() => (
         <>
-          {!inRootCommentOverlay && (
-            <>
-              <TagFilter discussion={discussion} />
-              <DiscussionComposer
-                isRoot
-                placeholder={
-                  documentMeta?.discussionType === 'statements'
-                    ? t('components/Discussion/Statement/Placeholder')
-                    : undefined
-                }
-                showPayNotes={showPayNotes}
-              />
-            </>
-          )}
+          <TagFilter discussion={discussion} />
+          <DiscussionComposer
+            isRoot
+            placeholder={
+              documentMeta?.discussionType === 'statements'
+                ? t('components/Discussion/Statement/Placeholder')
+                : undefined
+            }
+          />
           <div {...styles.commentsWrapper}>
-            {!inRootCommentOverlay && (
-              <DiscussionOptions documentMeta={documentMeta} />
-            )}
+            <DiscussionOptions documentMeta={documentMeta} />
             <DiscussionCommentsWrapper
               t={t}
               loadMore={loadMore}
@@ -108,7 +95,6 @@ const Discussion = ({
               <DiscussionCommentTreeRenderer
                 comments={comments.nodes}
                 discussion={discussion}
-                inRootCommentOverlay={inRootCommentOverlay}
                 documentMeta={documentMeta}
               />
             </DiscussionCommentsWrapper>

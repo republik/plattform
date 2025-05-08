@@ -5,6 +5,8 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { mediaQueries, A, Interaction } from '@project-r/styleguide'
 
+import { AccountPaynote } from '@app/components/paynotes/paynotes-in-trial/account'
+
 import Frame from '../../components/Frame'
 import Merci from '../../components/Pledge/Merci'
 import withT from '../../lib/withT'
@@ -57,6 +59,7 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
   const account = (
     <AccountEnforceMe>
       <AccountTabs />
+
       <div {...styles.container}>
         {hasAccess && (
           <div {...styles.column}>
@@ -64,6 +67,11 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
               id='onboarding'
               title={t('Account/Onboarding/title')}
             >
+              {!hasActiveMembership && (
+                <div style={{ margin: '24px 0' }}>
+                  <AccountPaynote />
+                </div>
+              )}
               <HintArea>
                 {t.elements('Account/Onboarding/text', {
                   link: (
@@ -108,6 +116,26 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
         </div>
         <NameAddress />
       </AccountSection>
+      <div {...styles.column}>
+        <AccountSection id='delete' title={t('Account/Delete/title')}>
+          <HintArea>
+            {t.elements('Account/Delete/text', {
+              link: (
+                <Link
+                  key='link'
+                  href='/datenschutz-loeschungsanfrage'
+                  passHref
+                  legacyBehavior
+                >
+                  <A>
+                    <Emphasis>{t('Account/Delete/link')}</Emphasis>
+                  </A>
+                </Link>
+              ),
+            })}
+          </HintArea>
+        </AccountSection>
+      </div>
     </AccountEnforceMe>
   )
 
