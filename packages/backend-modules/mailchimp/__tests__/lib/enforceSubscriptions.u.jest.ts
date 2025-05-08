@@ -4,6 +4,7 @@ const config = {
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR: 'MAILCHIMP_INTEREST_MEMBER_BENEFACTOR',
   MAILCHIMP_INTEREST_PLEDGE: 'MAILCHIMP_INTEREST_PLEDGE',
   MAILCHIMP_INTEREST_GRANTED_ACCESS: 'MAILCHIMP_INTEREST_GRANTED_ACCESS',
+  MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL: 'MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL',
   MAILCHIMP_MAIN_LIST_ID: 'MAILCHIMP_MAIN_LIST_ID',
   MAILCHIMP_ONBOARDING_AUDIENCE_ID: 'MAILCHIMP_ONBOARDING_AUDIENCE_ID',
   MAILCHIMP_MARKETING_AUDIENCE_ID: 'MAILCHIMP_MARKETING_AUDIENCE_ID',
@@ -16,6 +17,7 @@ const config = {
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW: 'MAILCHIMP_INTEREST_NEWSLETTER_WDWWW',
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY: 'MAILCHIMP_INTEREST_NEWSLETTER_DAILY',
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY: 'MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY',
+  REGWALL_TRIAL_CAMPAIGN_ID: 'REGWALL_TRIAL_CAMPAIGN_ID'
 }
 jest.mock('../../config', () => ({
   getConfig() {
@@ -34,6 +36,7 @@ jest.mock('../../lib/getInterestsForUser', () => ({
       [config.MAILCHIMP_INTEREST_MEMBER]: true,
       [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
       [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: false,
+      [config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]: false,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true,
@@ -44,6 +47,7 @@ jest.mock('../../lib/getInterestsForUser', () => ({
       [config.MAILCHIMP_INTEREST_MEMBER]: false,
       [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
       [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: false,
+      [config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]: false,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true,
@@ -54,6 +58,7 @@ jest.mock('../../lib/getInterestsForUser', () => ({
       [config.MAILCHIMP_INTEREST_MEMBER]: false,
       [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
       [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: false,
+      [config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]: false,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
@@ -64,6 +69,29 @@ jest.mock('../../lib/getInterestsForUser', () => ({
       [config.MAILCHIMP_INTEREST_MEMBER]: false,
       [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
       [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: true,
+      [config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]: false,
+      [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
+      [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
+      [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
+    }))
+    // no active membership, active regwall trial
+    .mockImplementationOnce(() => ({
+      [config.MAILCHIMP_INTEREST_PLEDGE]: false,
+      [config.MAILCHIMP_INTEREST_MEMBER]: false,
+      [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
+      [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: true,
+      [config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]: true,
+      [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
+      [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
+      [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
+    }))
+    // no active membership, no active trial, no free newsletters, past regwall trial
+    .mockImplementationOnce(() => ({
+      [config.MAILCHIMP_INTEREST_PLEDGE]: true,
+      [config.MAILCHIMP_INTEREST_MEMBER]: false,
+      [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
+      [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: false,
+      [config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
       [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
@@ -78,6 +106,7 @@ jest.mock('../../lib/addUserToAudience', () => ({
   addUserToMarketingAudience: jest.fn(() => 'addUserToMarketingAudience mocked')
 }))
 const addUserToAudienceMock = addUserToAudience as unknown as jest.Mock<typeof addUserToAudience>
+const addUserToMarketingAudienceMock = addUserToMarketingAudience as unknown as jest.Mock<typeof addUserToMarketingAudience>
 
 import { getSegmentDataForUser } from '../../lib/getSegmentDataForUser'
 jest.mock('../../lib/getSegmentDataForUser', () => ({
@@ -108,6 +137,7 @@ import { enforceSubscriptions } from '../../lib/enforceSubscriptions'
 afterEach(() => {
   archiveMemberInAudienceMock.mockClear()
   addUserToAudienceMock.mockClear()
+  addUserToMarketingAudienceMock.mockClear()
 })
 
 describe('test enforceSubscriptions', () => {
@@ -273,6 +303,76 @@ describe('test enforceSubscriptions', () => {
       email: 'user@example.com',
       subscribeToOnboardingMails: false,
       subscribeToEditorialNewsletters: true,
+      pgdb: pgdb as any,
+      name: '',
+      subscribed: true,
+    })
+
+    expect(addUserToAudience).not.toHaveBeenCalled()
+    expect(addUserToMarketingAudience).not.toHaveBeenCalled()
+
+    expect(archiveMemberInAudience).toHaveBeenCalledWith({
+      user: user,
+      audienceId: config.MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
+    })
+    expect(archiveMemberInAudience).not.toHaveBeenCalledWith({
+      user: user,
+      audienceId: config.MAILCHIMP_MAIN_LIST_ID,
+    })
+  })
+
+  test('user has no memberships, active regwall trial', async () => {
+    const userId = 'regwalluser'
+    const membershipTypeId = 'mt12345678'
+    const user = { id: userId }
+    const membershipType = { id: membershipTypeId }
+    const pgdb = {
+      public: {
+        users: { findOne: jest.fn(() => user) },
+        membershipTypes: { findOne: jest.fn(() => membershipType) },
+      },
+    }
+
+    await enforceSubscriptions({
+      userId: userId,
+      email: 'user@example.com',
+      subscribeToOnboardingMails: false,
+      subscribeToEditorialNewsletters: false,
+      pgdb: pgdb as any,
+      name: '',
+      subscribed: true,
+    })
+
+    expect(addUserToAudience).not.toHaveBeenCalled()
+    expect(addUserToMarketingAudience).not.toHaveBeenCalled()
+
+    expect(archiveMemberInAudience).toHaveBeenCalledWith({
+      user: user,
+      audienceId: config.MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
+    })
+    expect(archiveMemberInAudience).not.toHaveBeenCalledWith({
+      user: user,
+      audienceId: config.MAILCHIMP_MAIN_LIST_ID,
+    })
+  })
+
+  test('user has active or past regwall trial and hence should still get newsletters', async () => {
+    const userId = 'u12345678'
+    const membershipTypeId = 'mt12345678'
+    const user = { id: userId }
+    const membershipType = { id: membershipTypeId }
+    const pgdb = {
+      public: {
+        users: { findOne: jest.fn(() => user) },
+        membershipTypes: { findOne: jest.fn(() => membershipType) },
+      },
+    }
+
+    await enforceSubscriptions({
+      userId: userId,
+      email: 'user@example.com',
+      subscribeToOnboardingMails: false,
+      subscribeToEditorialNewsletters: false,
       pgdb: pgdb as any,
       name: '',
       subscribed: true,
