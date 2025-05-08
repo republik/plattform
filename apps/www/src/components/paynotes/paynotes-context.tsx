@@ -145,15 +145,15 @@ export const PaynotesProvider = ({ children }) => {
     // exception for marked articles (via metadata)
     if (isPaywallExcluded) return setPaynoteKind('OVERLAY_CLOSED')
 
+    // trial expired: show paywall
+    if (trialStatus === 'NOT_TRIAL_ELIGIBLE') return setPaynoteKind('PAYWALL')
+
     // CAVEAT: we don't ever want the "template" state to be set to something
     // wrong (notably: "article") after the pathname has changed. Otherwise some funny
     // pages (eg "/feed") may count towards the metering.
     const { meteringStatus } = updateArticleMetering(pathname)
     if (meteringStatus === 'READING_GRANTED')
       return setPaynoteKind('OVERLAY_OPEN')
-
-    // trial expired: show paywall
-    if (trialStatus === 'NOT_TRIAL_ELIGIBLE') return setPaynoteKind('PAYWALL')
 
     // trial eligible users see the regwall
     if (trialStatus === 'TRIAL_ELIGIBLE') return setPaynoteKind('REGWALL')
