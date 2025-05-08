@@ -1,4 +1,5 @@
 import { definePreset } from '@pandacss/dev'
+import { buttonRecipe } from '../src/recipes/button'
 
 export const presetRepublik = definePreset({
   name: 'republik',
@@ -41,6 +42,8 @@ export const presetRepublik = definePreset({
           full: { value: '100%' },
           viewportWidth: { value: '100vw' },
           24: { value: '6rem' },
+          narrow: { value: '30rem' },
+          center: { value: '695px' },
         },
         spacing: {
           0: { value: '0rem' },
@@ -116,12 +119,14 @@ export const presetRepublik = definePreset({
             DEFAULT: {
               value: {
                 base: '{colors.neutral.950}',
+                _light: '{colors.neutral.950}',
                 _dark: '{colors.neutral.50}',
               },
             },
             inverted: {
               value: {
                 base: '{colors.neutral.50}',
+                _light: '{colors.neutral.50}',
                 _dark: '{colors.neutral.950}',
               },
             },
@@ -131,64 +136,94 @@ export const presetRepublik = definePreset({
             black: {
               value: '{colors.neutral.950}',
             },
+            marketingAccent: {
+              value: '#FF6969',
+            },
           },
           contrast: {
             value: {
               base: 'black',
+              _light: 'black',
               _dark: 'white',
             },
           },
           background: {
-            value: {
-              base: 'white',
-              _dark: '#191919',
+            DEFAULT: {
+              value: {
+                base: 'white',
+                _light: 'white',
+                _dark: '#191919',
+              },
+            },
+            marketing: {
+              value: '#F2ECE6',
+            },
+            marketingAlt: {
+              value: '#E2FBA6',
+            },
+            marketingAccent: {
+              value: '#FF9A82',
+            },
+            marketingAccentAlt: {
+              value: '#FFA4DD',
             },
           },
           pageBackground: {
             value: {
               base: 'white',
+              _light: 'white',
               _dark: '#191919',
             },
           },
           link: {
             value: {
               base: '#00AA00',
+              _light: '#00AA00',
               _dark: '#00AA00',
             },
           },
           primary: {
             value: {
               base: '#00AA00',
+              _light: '#00AA00',
               _dark: '#00AA00',
             },
           },
           primaryHover: {
             value: {
               base: '#008800',
+              _light: '#008800',
               _dark: '#008800',
             },
           },
           overlay: {
-            value: { base: 'rgba(0,0,0,0.2)', _dark: 'rgba(0,0,0,0.4)' },
+            value: {
+              base: 'rgba(0,0,0,0.2)',
+              _light: 'rgba(0,0,0,0.2)',
+              _dark: 'rgba(0,0,0,0.4)',
+            },
           },
           error: {
-            value: { base: '#dc2626', _dark: '#dc2626' },
+            value: { base: '#dc2626', _light: '#dc2626', _dark: '#dc2626' },
           },
           divider: {
             value: {
               base: '#DBDCDD',
+              _light: '#DBDCDD',
               _dark: '#4C4C4C',
             },
           },
           disabled: {
             value: {
               base: '#B8BDC1',
+              _light: '#B8BDC1',
               _dark: '#949494',
             },
           },
           textSoft: {
             value: {
               base: '#757575',
+              _light: '#757575',
               _dark: '#A9A9A9',
             },
           },
@@ -206,6 +241,7 @@ export const presetRepublik = definePreset({
           pageNav: { value: '2.5rem' },
         },
         spacing: {
+          '4-6': { value: { base: '1rem', md: '1.5rem' } },
           '4-8': { value: { base: '1rem', md: '2rem' } },
           '8-16': { value: { base: '2rem', md: '4rem' } },
           '16-32': { value: { base: '4rem', md: '8rem' } },
@@ -231,6 +267,17 @@ export const presetRepublik = definePreset({
           description: 'Body text',
           value: {
             fontFamily: 'gtAmericaStandard',
+          },
+        },
+        airy: {
+          description: 'Airy body text',
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontSize: 'l',
+            lineHeight: 1.4,
+            '& b': {
+              fontWeight: 500,
+            },
           },
         },
         title: {
@@ -436,6 +483,10 @@ export const presetRepublik = definePreset({
           },
         },
       },
+    },
+
+    recipes: {
+      button: buttonRecipe,
     },
 
     keyframes: {

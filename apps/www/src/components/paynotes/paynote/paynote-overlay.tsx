@@ -2,12 +2,12 @@
 
 import { css } from '@republik/theme/css'
 import { Fragment, useEffect, useState } from 'react'
+import useResizeObserver from 'use-resize-observer'
 
 import * as Dialog from '@radix-ui/react-dialog'
-import { useMe } from 'lib/context/MeContext'
 
-import { Offers } from '@app/components/paynote-overlay/paynote-offers'
-import { usePaynotes } from '@app/components/paynote-overlay/use-paynotes'
+import { Offers } from '@app/components/paynotes/paynote/paynote-offers'
+import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
   useTrackEvent,
@@ -15,44 +15,86 @@ import {
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { IconExpandMore } from '@republik/icons'
 import { useMotionValueEvent, useScroll } from 'framer-motion'
-import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { StructuredText } from 'react-datocms'
+import { usePaynoteVariants } from './use-paynotes'
+import { useMe } from 'lib/context/MeContext'
+import { getMeteringData } from '../article-metering'
+import PaynoteAuthor from './paynote-author'
+import { useTranslation } from 'lib/withT'
+import IosCTA from '../ios-cta'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
 type ContentVariant = 'paynote' | 'offers-only'
 
-function MiniPaynoteMessage({ message }: { message: string }) {
+function MiniPaynoteMessage({
+  message,
+  onClick,
+}: {
+  message: string
+  onClick: () => void
+}) {
+  const { isIOSApp } = usePlatformInformation()
+  const { t } = useTranslation()
+
+  if (isIOSApp) {
+    return (
+      <div>
+        <span>{t('paynotes/ios/caption')}</span>
+        <IosCTA />
+      </div>
+    )
+  }
+
   const words = message.split(' ')
 
   return (
-    <>
-      {words.map((word) => {
-        return word === '{PRICE_MONTHLY}' ? (
-          <span key={word} className={css({ whiteSpace: 'nowrap' })}>
-            <del>CHF 22.–</del> CHF 11.–{' '}
-          </span>
-        ) : (
-          <Fragment key={word}>{word} </Fragment>
-        )
-      })}
-    </>
+    <Dialog.Trigger onClick={onClick}>
+      <span>
+        {words.map((word) => {
+          return word === '{PRICE_MONTHLY}' ? (
+            <span key={word} className={css({ whiteSpace: 'nowrap' })}>
+              <del>CHF 22.–</del> CHF 11.–{' '}
+            </span>
+          ) : (
+            <Fragment key={word}>{word} </Fragment>
+          )
+        })}
+      </span>
+      <span
+        className={css({
+          textStyle: 'sansSerifRegular',
+          textDecoration: 'underline',
+          fontSize: 'base',
+          cursor: 'pointer',
+          mx: 'auto',
+          display: 'block',
+
+          mt: '4',
+          md: {
+            display: 'inline-block',
+            mt: 0,
+          },
+        })}
+      >
+        Mehr erfahren
+      </span>
+    </Dialog.Trigger>
   )
 }
 
-function PaynoteOverlayDialog() {
+function PaynoteOverlayDialog({ isExpanded = false }) {
   const [expanded, setExpanded] = useState<boolean>(false)
   const [scrollThresholdReached, setScrollThresholdReached] =
     useState<boolean>(false)
   const [variant, setVariant] = useState<ContentVariant>('offers-only')
-  const { hasActiveMembership, meLoading } = useMe()
-  const { isIOSApp } = usePlatformInformation()
-  const paynotes = usePaynotes()
+  const paynotes = usePaynoteVariants()
   const trackEvent = useTrackEvent()
   const pathname = usePathname()
-
+  const { me, trialStatus } = useMe()
+  const { setPaynoteInlineHeight } = usePaynotes()
   const { scrollYProgress } = useScroll()
 
   useMotionValueEvent(scrollYProgress, 'change', (progress) => {
@@ -61,14 +103,16 @@ function PaynoteOverlayDialog() {
     }
   })
 
-  const ready = paynotes && !meLoading && !hasActiveMembership && !isIOSApp
+  const { ref } = useResizeObserver<HTMLDivElement>({
+    box: "border-box",
+    onResize: ({ height }) => {
+      setPaynoteInlineHeight(height)
+    },
+  })
 
   useEffect(() => {
-    if (ready && scrollThresholdReached) {
-      const isArticle =
-        document.querySelector('[data-template="article"]') != null
-
-      if (isArticle) {
+    if (paynotes && scrollThresholdReached) {
+      if (isExpanded) {
         setVariant('paynote')
         setExpanded(true)
         trackEvent({
@@ -77,9 +121,9 @@ function PaynoteOverlayDialog() {
         })
       }
     }
-  }, [ready, scrollThresholdReached, trackEvent, paynotes])
+  }, [isExpanded, scrollThresholdReached, trackEvent, paynotes])
 
-  if (!ready) {
+  if (!paynotes) {
     return null
   }
 
@@ -87,13 +131,15 @@ function PaynoteOverlayDialog() {
 
   const paynoteVariantForAnalytics =
     variant === 'paynote' ? paynote.title : miniPaynote.message
-
+  
   return (
     <Dialog.Root open={expanded} onOpenChange={setExpanded}>
       <div
+        ref={ref}
+        data-theme='light'
         className={css({
-          backgroundColor: 'text',
-          color: 'text.inverted',
+          backgroundColor: 'background.marketingAccent',
+          color: 'text',
           position: 'fixed',
           inset: 'auto 0 0 0',
           zIndex: 9998,
@@ -112,38 +158,22 @@ function PaynoteOverlayDialog() {
           },
         })}
       >
-        <span>
-          <MiniPaynoteMessage message={miniPaynote.message} />
-        </span>
-        <Dialog.Trigger
-          className={css({
-            textStyle: 'sansSerifRegular',
-            textDecoration: 'underline',
-            fontSize: 'base',
-            cursor: 'pointer',
-            mx: 'auto',
-            display: 'block',
-
-            mt: '4',
-            md: {
-              display: 'inline-block',
-              mt: 0,
-            },
-          })}
+        <MiniPaynoteMessage
+          message={miniPaynote.message}
           onClick={() => {
             setVariant('offers-only')
             trackEvent({ action: 'Opened on click' })
           }}
-        >
-          Mehr erfahren
-        </Dialog.Trigger>
+        />
       </div>
 
       <Dialog.Portal>
         <Dialog.Overlay
+          data-theme='light'
           className={css({
             backgroundColor: 'overlay',
             position: 'fixed',
+            color: 'text',
             inset: 0,
             display: 'grid',
             placeItems: 'end stretch',
@@ -172,7 +202,7 @@ function PaynoteOverlayDialog() {
             aria-describedby={undefined}
             className={css({
               position: 'relative',
-              background: 'pageBackground',
+              background: 'background.marketing',
               px: '8',
               pt: '12',
               boxShadow: 'sm',
@@ -197,35 +227,8 @@ function PaynoteOverlayDialog() {
                 gap: '4',
               })}
             >
-              {variant === 'paynote' && paynote?.author && (
-                <div
-                  className={css({
-                    display: 'grid',
-                    gridTemplateColumns: '80px 1fr',
-                    placeItems: 'center start',
-                    gap: '4',
-
-                    textStyle: 'sansSerifRegular',
-                  })}
-                >
-                  <Image
-                    src={paynote.author.portrait.url}
-                    unoptimized
-                    alt='Portraitbild'
-                    width={160}
-                    height={160}
-                    className={css({
-                      borderRadius: 'full',
-                    })}
-                  />
-
-                  <div>
-                    <div className={css({ fontWeight: 'medium' })}>
-                      {paynote.author.name}
-                    </div>
-                    <div>{paynote.author.description}</div>
-                  </div>
-                </div>
+              {variant === 'paynote' && (
+                <PaynoteAuthor author={paynote.author} />
               )}
 
               <Dialog.Title asChild>
@@ -240,8 +243,7 @@ function PaynoteOverlayDialog() {
                       className={css({
                         boxDecorationBreak: 'clone',
                         px: '1',
-                        backgroundColor: '#FDE047',
-                        color: 'text.black',
+                        backgroundColor: 'background.marketingAccent',
                         ml: '-0.5',
                         position: 'relative',
                       })}
@@ -261,6 +263,7 @@ function PaynoteOverlayDialog() {
                     flexDirection: 'column',
                     gap: '4',
                     pb: '4',
+                    fontSize: 18,
                   })}
                 >
                   <StructuredText
@@ -271,7 +274,10 @@ function PaynoteOverlayDialog() {
 
               <Offers
                 additionalShopParams={{
+                  rep_ui_component: 'paynote-overlay',
                   rep_paynote_title: paynoteVariantForAnalytics,
+                  rep_trial_status: trialStatus,
+                  ...getMeteringData('rep_'),
                 }}
               />
 
@@ -282,6 +288,7 @@ function PaynoteOverlayDialog() {
                   fontSize: 's',
                   cursor: 'pointer',
                   mx: 'auto',
+                  pb: '4',
                 })}
                 onClick={() => {
                   trackEvent({
@@ -295,29 +302,32 @@ function PaynoteOverlayDialog() {
               </Dialog.Close>
             </div>
 
-            <div
-              className={css({
-                py: '6',
-                mt: '6',
-                mx: '-8',
-                textAlign: 'center',
-                borderTopWidth: 1,
-                borderTopStyle: 'solid',
-                borderTopColor: 'divider',
-                fontSize: 's',
-              })}
-            >
-              Sie haben schon ein Abonnement?{' '}
-              <Link
+            {!me && (
+              <div
                 className={css({
-                  textDecoration: 'underline',
-                  // fontWeight: 'medium',
+                  py: '6',
+                  mt: '2',
+                  mx: '-8',
+                  textAlign: 'center',
+                  borderTopWidth: 1,
+                  borderTopStyle: 'solid',
+                  borderTopColor: 'default',
+                  fontSize: 's',
                 })}
-                href={`/anmelden?redirect=${encodeURIComponent(pathname)}`}
               >
-                Anmelden
-              </Link>
-            </div>
+                Sie haben schon ein Abonnement?{' '}
+                <Link
+                  className={css({
+                    textDecoration: 'underline',
+                    color: 'text.marketingAccent',
+                    fontWeight: 'medium',
+                  })}
+                  href={`/anmelden?redirect=${encodeURIComponent(pathname)}`}
+                >
+                  Anmelden
+                </Link>
+              </div>
+            )}
 
             <Dialog.Close
               aria-label='Schliessen'
@@ -343,31 +353,16 @@ function PaynoteOverlayDialog() {
   )
 }
 
-function isPaynoteOverlayHidden(
-  pathname: string,
-  searchParams: URLSearchParams,
-): boolean {
-  return (
-    (pathname === '/angebote' && searchParams.has('package')) ||
-    pathname === '/mitteilung' ||
-    pathname === '/anmelden' ||
-    pathname.startsWith('/konto') ||
-    pathname === '/meine-republik' ||
-    pathname === '/community' ||
-    searchParams.has('extract') ||
-    searchParams.has('extractId')
-  )
-}
-
 export function PaynoteOverlay() {
+  const { paynoteKind } = usePaynotes()
   const pathname = usePathname()
-  const searchParams = useSearchParams()
 
-  const isHidden = isPaynoteOverlayHidden(pathname, searchParams)
-
-  return isHidden ? null : (
+  return paynoteKind === 'OVERLAY_OPEN' || paynoteKind === 'OVERLAY_CLOSED' ? (
     <EventTrackingContext category='PaynoteOverlay'>
-      <PaynoteOverlayDialog key={pathname} />
+      <PaynoteOverlayDialog
+        key={pathname}
+        isExpanded={paynoteKind === 'OVERLAY_OPEN'}
+      />
     </EventTrackingContext>
-  )
+  ) : null
 }

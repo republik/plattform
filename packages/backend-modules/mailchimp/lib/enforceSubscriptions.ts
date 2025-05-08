@@ -23,10 +23,12 @@ const {
   MAILCHIMP_MARKETING_AUDIENCE_ID,
   MAILCHIMP_PROBELESEN_AUDIENCE_ID,
   MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
+  MAILCHIMP_REGWALL_TRIAL_AUDIENCE_ID,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
   MAILCHIMP_INTEREST_GRANTED_ACCESS,
+
 } = getConfig()
 
 export type EnforceSubscriptionsParams = {
@@ -110,9 +112,16 @@ export async function enforceSubscriptions({
       defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
     })
 
+    // archive in Probelesen Journey
     await archiveMemberInAudience({
       user: user || { email },
       audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+    })
+
+    // archive in Regwall Trial Journey
+    await archiveMemberInAudience({
+      user: user || { email },
+      audienceId: MAILCHIMP_REGWALL_TRIAL_AUDIENCE_ID,
     })
   } else {
     // no active membership
