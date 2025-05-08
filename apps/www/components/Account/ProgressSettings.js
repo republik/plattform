@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react'
+import { useState } from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
 import { useMe } from '../../lib/context/MeContext'
@@ -30,7 +30,7 @@ const styles = {
 }
 
 const ProgressSettings = (props) => {
-  // Since progress is an opt out, "revokeProgressOptOut" actually is 
+  // Since progress is an opt out, "revokeProgressOptOut" actually is
   // an opt in for the Progress feature
   // while submitProgressOptOut revokes consent to the Progress feature
   // this is consistent with how other consent settings work
@@ -51,20 +51,20 @@ const ProgressSettings = (props) => {
     submitProgressOptOut().then(clearProgress).catch(catchServerError)
   }
 
-  const hasAccepted = me.progressOptOut === false
+  const hasAccepted = me && me.progressOptOut === false
 
   return (
     <Loader
       loading={meLoading}
       render={() => (
-        <Fragment>
+        <>
           <P style={{ margin: '20px 0' }}>
             {t('article/progressprompt/description/feature')}
           </P>
           <Checkbox
             checked={hasAccepted}
             disabled={mutating}
-            onChange={(_, checked) => {
+            onChange={() => {
               if (
                 hasAccepted &&
                 !window.confirm(t('account/progress/consent/confirmRevoke'))
@@ -72,13 +72,12 @@ const ProgressSettings = (props) => {
                 return
               }
               setMutating(true)
-              const finish = () => {
-                setMutating(false)
-              }
               const consentMutation = hasAccepted
                 ? submitProgressOptOutAndClearProgress
                 : revokeProgressOptOut
-              consentMutation().then(finish).catch(catchServerError)
+              consentMutation()
+                .then(() => setMutating(false))
+                .catch(catchServerError)
             }}
           >
             <span {...styles.label}>
@@ -91,7 +90,7 @@ const ProgressSettings = (props) => {
             </span>
           </Checkbox>
           {serverError && <ErrorMessage error={serverError} />}
-        </Fragment>
+        </>
       )}
     />
   )
