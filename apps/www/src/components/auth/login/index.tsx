@@ -124,13 +124,11 @@ export function LoginForm(props: LoginFormProps) {
         })}
       >
         <FormField
-          label='E-Mail'
-          placeholder='E-Mail-Adresse'
+          label='E-Mail-Adresse'
           name='email'
           type='email'
           autoFocus={props.autoFocus}
           onFocus={() => setShowTos(true)}
-          hideLabel
         />
         {error && <ErrorMessage error={error} />}
         {showTos && <Tos />}
