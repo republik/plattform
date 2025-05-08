@@ -51,6 +51,12 @@ import { reportError } from 'lib/errors/reportError'
 import NewsletterTitleBlock from './components/NewsletterTitleBlock'
 import PublikatorLinkBlock from './components/PublikatorLinkBlock'
 import useSchema from './useSchema'
+import PrepubNotice from './components/PrepubNotice'
+import Paywall from '@app/components/paynotes/paywall'
+import Regwall from '@app/components/paynotes/regwall'
+import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
+import { usePaynotes } from '@app/components/paynotes/paynotes-context'
+import { WelcomeBanner } from '@app/components/paynotes/paynotes-in-trial/welcome'
 
 const EmptyComponent = ({ children }) => children
 
@@ -69,11 +75,14 @@ const ArticlePage = ({
   const router = useRouter()
   const { share, extract, showAll } = router.query
 
-  const { me, meLoading, hasAccess, isEditor } = useMe()
+  const { me, meLoading, isEditor } = useMe()
+  const { paynoteKind, setTemplateForPaynotes, setIsPaywallExcluded } =
+    usePaynotes()
+  const hasPaywall = paynoteKind === 'PAYWALL' || paynoteKind === 'REGWALL'
 
   const { isAudioQueueAvailable } = useAudioQueue()
 
-  const showPlayButton = !extract && hasAccess && isAudioQueueAvailable
+  const showPlayButton = !extract && !hasPaywall && isAudioQueueAvailable
 
   const cleanedPath = cleanAsPath(router.asPath)
 
@@ -178,6 +187,7 @@ const ArticlePage = ({
   })
 
   const hasMeta = !!meta
+
   const podcast =
     hasMeta &&
     (meta.podcast || (meta.audioSource && meta.format?.meta?.podcast))
@@ -190,14 +200,28 @@ const ArticlePage = ({
   const showSeriesNav = hasMeta && !!meta.series && !isSeriesOverview
   const titleBreakout = isSeriesOverview
 
-  const { trialSignup } = routerQuery
-  useEffect(() => {
-    if (trialSignup === 'success') {
-      articleRefetch()
-    }
-  }, [trialSignup, articleRefetch])
-
   const template = meta?.template
+
+  // is true if the article or the format are paywall excluded
+  const isPaywallExcluded = meta?.isPaywallExcluded
+  useEffect(() => {
+    const resetPaynotes = () => {
+      // console.log('resetPaynotes')
+      setTemplateForPaynotes(null)
+      setIsPaywallExcluded(false)
+    }
+    if (hasMeta) {
+      // console.log('set template for paynotes', template)
+      setTemplateForPaynotes(isSeriesOverview ? 'seriesOverview' : template)
+      setIsPaywallExcluded(isPaywallExcluded)
+      // we use router events so that the reset happens before the pathname changes
+      router.events.on('routeChangeStart', resetPaynotes)
+    }
+    return () => {
+      router.events.off('routeChangeStart', resetPaynotes)
+    }
+  }, [template, isSeriesOverview, isPaywallExcluded, hasMeta, cleanedPath])
+
   const isEditorialNewsletter = template === 'editorialNewsletter'
   const disableActionBar = meta?.disableActionBar
   const actionBar = article && !disableActionBar && (
@@ -370,13 +394,13 @@ const ArticlePage = ({
           const hideFeed = !!rawContentMeta.hideFeed
 
           const showAudioPlayer =
-            hasAudioSource || article?.meta?.willBeReadAloud
+            !hasPaywall && (hasAudioSource || article?.meta?.willBeReadAloud)
 
           const hideSectionNav = !!rawContentMeta.hideSectionNav
           const showSectionNav = isSection && !hideSectionNav
 
           const showBottomActionBar =
-            (hasAccess && meta.template === 'article') ||
+            (!hasPaywall && meta.template === 'article') ||
             (isEditorialNewsletter && newsletterMeta && newsletterMeta.free)
 
           const showPodcastButtons = !!podcast && meta.template !== 'article'
@@ -384,15 +408,9 @@ const ArticlePage = ({
           return (
             <>
               <FontSizeSync />
-              {meta.prepublication && (
-                <div {...styles.prepublicationNotice}>
-                  <Center breakout={breakout}>
-                    <Interaction.P>
-                      {t('article/prepublication/notice')}
-                    </Interaction.P>
-                  </Center>
-                </div>
-              )}
+              <PrepubNotice meta={meta} breakout={breakout} />
+              <WelcomeBanner />
+
               {isFlyer ? (
                 <Flyer
                   meta={meta}
@@ -469,10 +487,20 @@ const ArticlePage = ({
                           )}
                         </div>
                       )}
-                      {renderSchema(splitContent.main)}
+                      <div className='regwall'>
+                        {hasPaywall ? (
+                          <div {...styles.regwallFade}>
+                            {renderSchema(splitContent.mainTruncated)}
+                          </div>
+                        ) : (
+                          <>{renderSchema(splitContent.main)}</>
+                        )}
+                      </div>
+                      <Regwall />
+                      <Paywall />
                     </article>
-                    <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
                   </ProgressComponent>
+                  <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
                 </ArticleGallery>
               )}
               <div {...styles.hidePrint}>
@@ -509,6 +537,7 @@ const ArticlePage = ({
                     <PodcastButtons {...podcast} />
                   </Center>
                 )}
+                <PaynoteInline />
                 {episodes && !isSeriesOverview && (
                   <SeriesNav
                     inline
@@ -517,7 +546,7 @@ const ArticlePage = ({
                     ActionBar={me && ActionBar}
                     Link={Link}
                     t={t}
-                    seriesDescription={false}
+                    seriesDescription={hasPaywall}
                   />
                 )}
                 {isSection && !hideFeed && (
@@ -535,7 +564,7 @@ const ArticlePage = ({
                   />
                 )}
 
-                {hasAccess && <ArticleRecommendationsFeed path={cleanedPath} />}
+                <ArticleRecommendationsFeed path={cleanedPath} />
               </div>
             </>
           )
@@ -565,6 +594,19 @@ const styles = {
   hidePrint: css({
     '@media print': {
       display: 'none',
+    },
+  }),
+  regwallFade: css({
+    position: 'relative',
+    '&:before': {
+      content: ' ',
+      display: 'block',
+      position: 'absolute',
+      left: 0,
+      bottom: 0,
+      right: 0,
+      top: 120,
+      background: 'var(--color-fadeOutGradientDefault)',
     },
   }),
 }

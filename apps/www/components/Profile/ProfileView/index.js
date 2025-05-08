@@ -260,25 +260,22 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
               />
             )}
           </div>
-          {/* only show articles and comments for logged in users */}
-          {me && (
-            <ProfileCommentsAndDocuments
-              isMe={isMe}
-              user={user}
-              loadMoreDocuments={makeLoadMore(fetchMore, 'documents', {
-                firstComments: 0,
-                firstDocuments: 20,
-                afterDocument:
-                  user.documents.pageInfo && user.documents.pageInfo.endCursor,
-              })}
-              loadMoreComments={makeLoadMore(fetchMore, 'comments', {
-                firstDocuments: 0,
-                firstComments: 40,
-                afterComment:
-                  user.comments.pageInfo && user.comments.pageInfo.endCursor,
-              })}
-            />
-          )}
+          <ProfileCommentsAndDocuments
+            isMe={isMe}
+            user={user}
+            loadMoreDocuments={makeLoadMore(fetchMore, 'documents', {
+              firstComments: 0,
+              firstDocuments: 20,
+              afterDocument:
+                user.documents.pageInfo && user.documents.pageInfo.endCursor,
+            })}
+            loadMoreComments={makeLoadMore(fetchMore, 'comments', {
+              firstDocuments: 0,
+              firstComments: 40,
+              afterComment:
+                user.comments.pageInfo && user.comments.pageInfo.endCursor,
+            })}
+          />
         </div>
       </div>
     </>

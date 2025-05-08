@@ -141,10 +141,16 @@ const CompactDetailsForm = dynamic(
   },
 )
 
-const TrialForm = dynamic(() => import('../Trial/Form'), {
-  loading: LoadingComponent,
-  ssr: false,
-})
+const TrialForm = dynamic(
+  () =>
+    import('@app/components/auth/trial/register-for-trial').then(
+      (m) => m.RegisterForTrialMinimal,
+    ),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
 
 export const dynamicComponentIdentifiers = {
   MANIFEST: Manifest,

@@ -2,6 +2,7 @@ import {
   matchIOSUserAgent,
   matchAndroidUserAgent,
   matchFirefoxUserAgent,
+  matchSearchBotUserAgent,
 } from '../parse-useragent'
 import {
   createContext,
@@ -16,6 +17,7 @@ type UserAgentValues = {
   isIOS: boolean
   isAndroid: boolean
   isFirefox: boolean
+  isSearchBot: boolean
 }
 
 export { matchIOSUserAgent, matchAndroidUserAgent, matchFirefoxUserAgent }
@@ -43,6 +45,7 @@ const UserAgentProvider = ({ children, providedValue }: Props) => {
         isIOS: matchIOSUserAgent(userAgent),
         isAndroid: matchAndroidUserAgent(userAgent),
         isFirefox: matchFirefoxUserAgent(userAgent),
+        isSearchBot: matchSearchBotUserAgent(userAgent),
       }}
     >
       {children}

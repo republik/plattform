@@ -712,6 +712,18 @@
       "key": "Account/Update/details/title",
       "value": "Bitte überprüfen Sie Ihre Angaben und korrigieren beziehungsweise ergänzen Sie sie."
     },
+    {
+      "key": "Account/Delete/title",
+      "value": "Konto löschen"
+    },
+    {
+      "key": "Account/Delete/text",
+      "value": "Beantragen Sie die Löschung Ihres Kontos und der bei uns gespeicherten personenbezogenen Daten mit einer {link}."
+    },
+    {
+      "key": "Account/Delete/link",
+      "value": "Löschungsanfrage"
+    },
     { "key": "UserGuidance/title", "value": "Kein laufendes Abonnement" },
     {
       "key": "UserGuidance/p1",
@@ -1096,10 +1108,6 @@
     {
       "key": "account/pledges/payment/PAYMENTSLIP/paperInvoice/0",
       "value": "Sie haben die Zahlungsanweisungen per E-Mail erhalten. Und hier schon ein Überblick:"
-    },
-    {
-      "key": "Account/Access/Grants/message/claimed",
-      "value": "Sie können die Republik lesen, weil Verlegerinnen und Verleger Ihnen bis zum {maxEndAt} ihren Zugriff teilen."
     },
     {
       "key": "Account/Access/Grants/explanation",
@@ -7389,10 +7397,6 @@
       "value": "Sie haben {count} Rubriken abonniert:"
     },
     {
-      "key": "Notifications/settings/noMembership",
-      "value": "Journalismus kostet. Deshalb erhalten Sie Benachrichtigung zu Beiträgen aus dem Magazin und den Rubriken erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
-    },
-    {
       "key": "Notifications/settings/discussion",
       "value": "Debattenbeiträge"
     },
@@ -7739,6 +7743,212 @@
     {
       "key": "magazineSubscription/shoplink/YEARLY",
       "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "auth/login/email/info",
+      "value": "Geben Sie Ihre E-Mail-Adresse ein, um sich anzumelden."
+    },
+    {
+      "key": "auth/login/email/placeholder",
+      "value": "E-Mail-Adresse"
+    },
+    {
+      "key": "auth/login/email/missing",
+      "value": "Bitte geben Sie Ihre E-Mail-Adresse ein."
+    },
+    {
+      "key": "auth/login/email/submit",
+      "value": "Anmelden"
+    },
+    {
+      "key": "auth/login/code/placeholder",
+      "value": "Zugangscode"
+    },
+    {
+      "key": "auth/login/code/title",
+      "value": "Wir haben Ihnen einen Zugangscode geschickt"
+    },
+    {
+      "key": "auth/login/code/description",
+      "value": "Geben Sie den 6-stelligen Code ein, den Sie via {email} erhalten haben."
+    },
+    {
+      "key": "auth/login/code/pending",
+      "value": "Wir überprüfen Ihren Code…"
+    },
+    {
+      "key": "auth/login/code/help",
+      "value": "Sie können Ihren Code nicht finden? Überprüfen Sie Ihren Spam-Ordner oder {changeEmail}."
+    },
+    {
+      "key": "auth/login/code/help/changeEmail",
+      "value": "ändern Sie Ihre E-Mail-Adresse"
+    },
+    {
+      "key": "auth/login/tos",
+      "value": "Mit der Anmeldung akzeptieren Sie die {link} und sind einverstanden E-Mails zu Republik-Angeboten zu erhalten."
+    },
+    {
+      "key": "auth/trial/request",
+      "value": "Weiterlesen"
+    },
+    {
+      "key": "regwall/login",
+      "value": "Haben Sie ein Abonnement? {link}"
+    },
+    {
+      "key": "regwall/login/link",
+      "value": "Anmelden"
+    },
+    {
+      "key": "regwall/a/header/title",
+      "value": "Weiterlesen, ohne zu bezahlen" 
+    },
+    {
+      "key": "regwall/a/header/description",
+      "value": "<b>Werden Sie unser Gast:</b> Eine Woche lang gratis alle Republik-Beiträge lesen, keine automatische Verlängerung." 
+    },
+    {
+      "key": "regwall/a/cta",
+      "value": "Als Gast anmelden und weiterlesen"
+    },
+    {
+      "key": "regwall/b/header/title",
+      "value": "Weiterlesen geht ganz einfach:" 
+    },
+    {
+      "key": "regwall/b/header/description",
+      "value": "<b>Als Gast:</b> 7 Tage lang kostenlos Zugang zu allen Republik-Beiträgen, keine Zahlungsangaben erforderlich." 
+    },
+    {
+      "key": "regwall/b/cta",
+      "value": "Als Gast registrieren"
+    },
+    {
+      "key": "regwall/whyRegister/title",
+      "value": "Warum eine E-Mail-Adresse?" 
+    },
+    {
+      "key": "regwall/whyRegister/expanded",
+      "value": "<p>Warum eine E-Mail-Adresse?</p><p>Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Über Ihre E-Mail-Adresse können wir direkt mit Ihnen in Kontakt treten, ohne dass externe Suchmaschinen oder Social-Media-Plattformen zwischengeschaltet sind. <b>Wir geben Ihre E-Mail-Adresse niemals ausserhalb der Republik weiter</b>.</p><p>Wenn Sie keine Nachrichten mehr von der Republik erhalten möchten, können Sie sich <b>jederzeit abmelden</b>.</p>" 
+    },
+    {
+      "key": "regwall/a/offers/description",
+      "value": "<b>Für Grosszügige und Unerschrockene:</b>" 
+    },
+    {
+      "key": "regwall/a/offers/cta",
+      "value": "Abo ab CHF 22.– / Monat" 
+    },
+    {
+      "key": "regwall/b/offers/description",
+      "value": "<b>Als Abonnent*in:</b> Unterstützen Sie unabhängigen und werbefreien Journalismus." 
+    },
+    {
+      "key": "regwall/b/offers/cta",
+      "value": "Abonnieren ab CHF 22.– / Monat" 
+    },
+    {
+      "key": "regwall/offers/cancellable",
+      "value": "Jederzeit kündbar" 
+    },
+    {
+      "key": "paywall/offers/caption",
+      "value": "Einstiegsangebot" 
+    },
+    {
+      "key": "paywall/offers/title/1",
+      "value": "Ihre kostenlose Gastwoche ist zu Ende." 
+    },
+    {
+      "key": "paywall/offers/title/2",
+      "value": "Doch unsere gemeinsame Reise muss hier nicht enden." 
+    },
+    {
+      "key": "paywall/offers/yearly/duration",
+      "value": "erstes Jahr" 
+    },
+    {
+      "key": "paywall/offers/yearly/description",
+      "value": "Danach 240.- jährlich. Jederzeit kündbar." 
+    },
+    {
+      "key": "paywall/offers/monthly/duration",
+      "value": "erster Monat" 
+    },
+    {
+      "key": "paywall/offers/monthly/description",
+      "value": "Danach 22.- monatlich. Jederzeit kündbar." 
+    },
+    {
+      "key": "paywall/offers/cta",
+      "value": "Jetzt abonnieren" 
+    },
+    {
+      "key": "paywall/offers/survey",
+      "value": "Nein Danke, weil…" 
+    },
+    {
+      "key": "paywall/offers/all",
+      "value": "Weitere Angebote anzeigen" 
+    },
+    {
+      "key": "paywall/survey/hint",
+      "value": "Wählen Sie aus, was am ehesten zutrifft." 
+    },
+    {
+      "key": "paywall/survey/all",
+      "value": "Weitere Angebote anzeigen" 
+    },
+    {
+      "key": "paywall/survey/thanks/title",
+      "value": "Vielen Dank für Ihr Feedback, wir hoffen, Sie bald wiederzusehen! 👋" 
+    },
+    {
+      "key": "paywall/survey/thanks/description",
+      "value": "PS: Wussten Sie, dass Sie unser wöchentliches Nachrichtenbriefing auch ohne Abo als Newsletter erhalten können?" 
+    },
+    {
+      "key": "paywall/survey/thanks/link",
+      "value": "Das interessiert mich" 
+    },
+    {
+      "key": "paynotes/dialog/title",
+      "value": "Willkommen im Dialog" 
+    },
+    {
+      "key": "paynotes/dialog/description",
+      "value": "Als Gast sehen Sie, was zu reden gibt. Mit einem Abo nehmen Sie direkt am Gespräch mit Autorinnen und anderen Lesern teil." 
+    },
+    {
+      "key": "paynotes/dialog/cta",
+      "value": "Abonnieren und mitreden" 
+    },
+    {"key": "paynotes/ios/caption",
+      "value": "Unterstützen Sie unabhängigen Journalismus." },
+    {
+      "key": "paynotes/ios/cta",
+      "value": "Alle Angebote auf {link}" 
+    },
+    {
+      "key": "paynotes/ios/text",
+      "value": "Alle Angebote auf shop.republik.ch" 
+    },
+    {
+      "key": "paynotes/welcomeBanner",
+      "value": "Ab sofort läuft Ihre siebentägige Gastwoche bei der Republik: Herzlich willkommen!" 
+    },
+    {
+      "key": "paynotes/account/title",
+      "value": "Willkommen bei der Republik!"
+    },
+    {
+      "key": "paynotes/account/description",
+      "value": "<b>Bis zum {maxEndAt} sind Sie unser Gast und haben kostenlosen Zugang zum gesamten Magazin.</b><br/>Sie wollen länger bleiben? Dann haben wir ein paar Vorschläge für Sie."
+    },
+    {
+      "key": "paynotes/account/cta",
+      "value": "Alle Angebote anzeigen"
     }
   ]
 }
