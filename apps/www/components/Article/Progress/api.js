@@ -80,10 +80,23 @@ export const revokeConsentMutation = gql`
   ${userProgressConsentFragment}
 `
 
+const clearProgressMutation = gql`
+  mutation clearProgress {
+    clearProgress {
+      id
+    }
+  }
+`
+
 export const withProgressApi = compose(
   graphql(submitConsentMutation, {
     props: ({ mutate }) => ({
       submitProgressOptOut: mutate,
+    }),
+  }),
+  graphql(clearProgressMutation, {
+    props: ({ mutate }) => ({
+      clearProgress: mutate,
     }),
   }),
   graphql(revokeConsentMutation, {

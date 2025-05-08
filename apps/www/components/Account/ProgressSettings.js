@@ -1,8 +1,8 @@
-import { Component, Fragment } from 'react'
+import { useState, Fragment } from 'react'
 import compose from 'lodash/flowRight'
 import { css } from 'glamor'
-import withT from '../../lib/withT'
-import withMe from '../../lib/apollo/withMe'
+import { useMe } from '../../lib/context/MeContext'
+import { useTranslation } from '../../lib/withT'
 
 import ErrorMessage from '../ErrorMessage'
 import { P } from './Elements'
@@ -29,76 +29,67 @@ const styles = {
   }),
 }
 
-class ProgressSettings extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      mutating: false,
-    }
+const ProgressSettings = (props) => {
+  const { revokeProgressOptOut, submitProgressOptOut, clearProgress } = props
+  const { me, meLoading } = useMe()
+  const { t } = useTranslation()
 
-    this.catchServerError = (error) => {
-      this.setState(() => ({
-        mutating: false,
-        serverError: error,
-      }))
-    }
+  const [mutating, setMutating] = useState(false)
+  const [serverError, setServerError] = useState(null)
+
+  const catchServerError = (error) => {
+    setMutating(false)
+    setServerError(error)
   }
 
-  render() {
-    const { t, me, revokeProgressOptOut, submitProgressOptOut } = this.props
+  const revokeAndClearProgress = () => {
+    revokeProgressOptOut().then(clearProgress).catch(catchServerError)
+  }
 
-    return (
-      <Loader
-        loading={!me}
-        render={() => {
-          const hasAccepted = me && me.progressOptOut === false
-          const { mutating, serverError } = this.state
+  const hasAccepted = me.progressOptOut === false
 
-          return (
-            <Fragment>
-              <P style={{ margin: '20px 0' }}>
-                {t('article/progressprompt/description/feature')}
-              </P>
-              <Checkbox
-                checked={hasAccepted}
-                disabled={mutating}
-                onChange={(_, checked) => {
-                  if (
-                    hasAccepted &&
-                    !window.confirm(t('account/progress/consent/confirmRevoke'))
-                  ) {
-                    return
-                  }
-                  this.setState({
-                    mutating: true,
-                  })
-                  const finish = () => {
-                    this.setState({
-                      mutating: false,
-                    })
-                  }
-                  const consentMutation = hasAccepted
-                    ? revokeProgressOptOut
-                    : submitProgressOptOut
-                  consentMutation().then(finish).catch(this.catchServerError)
-                }}
-              >
-                <span {...styles.label}>
-                  {t('account/progress/consent/label')}
-                  {mutating['consent'] && (
-                    <span {...styles.spinnerWrapper}>
-                      <InlineSpinner size={24} />
-                    </span>
-                  )}
+  return (
+    <Loader
+      loading={meLoading}
+      render={() => (
+        <Fragment>
+          <P style={{ margin: '20px 0' }}>
+            {t('article/progressprompt/description/feature')}
+          </P>
+          <Checkbox
+            checked={hasAccepted}
+            disabled={mutating}
+            onChange={(_, checked) => {
+              if (
+                hasAccepted &&
+                !window.confirm(t('account/progress/consent/confirmRevoke'))
+              ) {
+                return
+              }
+              setMutating(true)
+              const finish = () => {
+                setMutating(false)
+              }
+              const consentMutation = hasAccepted
+                ? revokeAndClearProgress
+                : submitProgressOptOut
+              consentMutation().then(finish).catch(catchServerError)
+            }}
+          >
+            <span {...styles.label}>
+              {t('account/progress/consent/label')}
+              {mutating && (
+                <span {...styles.spinnerWrapper}>
+                  <InlineSpinner size={24} />
                 </span>
-              </Checkbox>
-              {serverError && <ErrorMessage error={serverError} />}
-            </Fragment>
-          )
-        }}
-      />
-    )
-  }
+              )}
+            </span>
+          </Checkbox>
+          {serverError && <ErrorMessage error={serverError} />}
+        </Fragment>
+      )}
+    />
+  )
 }
 
-export default compose(withProgressApi, withT, withMe)(ProgressSettings)
+export default compose(withProgressApi)(ProgressSettings)
