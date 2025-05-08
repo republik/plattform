@@ -30,6 +30,10 @@ const styles = {
 }
 
 const ProgressSettings = (props) => {
+  // Since progress is an opt out, "revokeProgressOptOut" actually is 
+  // an opt in for the Progress feature
+  // while submitProgressOptOut revokes consent to the Progress feature
+  // this is consistent with how other consent settings work
   const { revokeProgressOptOut, submitProgressOptOut, clearProgress } = props
   const { me, meLoading } = useMe()
   const { t } = useTranslation()
@@ -42,8 +46,9 @@ const ProgressSettings = (props) => {
     setServerError(error)
   }
 
-  const revokeAndClearProgress = () => {
-    revokeProgressOptOut().then(clearProgress).catch(catchServerError)
+  // when the user opts out of progress, we also clear their progress
+  const submitProgressOptOutAndClearProgress = () => {
+    submitProgressOptOut().then(clearProgress).catch(catchServerError)
   }
 
   const hasAccepted = me.progressOptOut === false
@@ -71,8 +76,8 @@ const ProgressSettings = (props) => {
                 setMutating(false)
               }
               const consentMutation = hasAccepted
-                ? revokeAndClearProgress
-                : submitProgressOptOut
+                ? submitProgressOptOutAndClearProgress
+                : revokeProgressOptOut
               consentMutation().then(finish).catch(catchServerError)
             }}
           >
