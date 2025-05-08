@@ -11,7 +11,6 @@ import { useInNativeApp, postMessage } from '../../../lib/withInNativeApp'
 import Loader from '../../Loader'
 import UserGuidance from '../UserGuidance'
 
-import AccessGrants from '../../Access/Grants'
 import withMembership from '../../Auth/withMembership'
 import Box from '../../Frame/Box'
 
@@ -58,11 +57,6 @@ const Memberships = ({
       render={() => {
         return (
           <>
-            {hasAccessGrants && !hasActiveMemberships && (
-              <AccountBox>
-                <AccessGrants />
-              </AccountBox>
-            )}
             {!hasAccessGrants && !hasActiveMemberships && (
               <div
                 {...colorScheme.set('backgroundColor', 'hover')}
