@@ -24,7 +24,7 @@ const Regwall = () => {
       action: 'is showing',
       variation,
     })
-  }, [trackEvent])
+  }, [trackEvent, variation])
 
   const analyticsProps = {
     variation,

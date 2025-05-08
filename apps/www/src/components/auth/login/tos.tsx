@@ -26,6 +26,7 @@ export function Tos() {
           animationDuration: '500ms',
           animationFillMode: 'forwards',
           animationDelay: '200ms',
+          lineHeight: 1.4,
         })}
       >
         {t.elements('auth/login/tos', {

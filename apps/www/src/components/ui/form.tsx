@@ -35,10 +35,11 @@ export function FormField({
         htmlFor={id}
         className={cx(
           css({
-            fontSize: 'sm',
+            fontSize: 's',
             display: 'block',
             color: 'text.secondary',
             textAlign: 'left',
+            fontWeight: 'medium',
           }),
           hideLabel && visuallyHidden(),
         )}
@@ -56,6 +57,7 @@ export function FormField({
             borderWidth: '1px',
             borderColor: 'black',
             borderRadius: '5px',
+            lineHeight: 1.5,
             p: '2',
             _disabled: {
               color: 'text.secondary',
