@@ -47,9 +47,8 @@ const ProgressSettings = (props) => {
   }
 
   // when the user opts out of progress, we also clear their progress
-  const submitProgressOptOutAndClearProgress = () => {
+  const submitProgressOptOutAndClearProgress = () =>
     submitProgressOptOut().then(clearProgress).catch(catchServerError)
-  }
 
   const hasAccepted = me && me.progressOptOut === false
 
