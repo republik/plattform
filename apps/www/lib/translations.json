@@ -7401,10 +7401,6 @@
       "value": "Sie haben {count} Rubriken abonniert:"
     },
     {
-      "key": "Notifications/settings/noMembership",
-      "value": "Journalismus kostet. Deshalb erhalten Sie Benachrichtigung zu Beiträgen aus dem Magazin und den Rubriken erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
-    },
-    {
       "key": "Notifications/settings/discussion",
       "value": "Debattenbeiträge"
     },
