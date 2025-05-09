@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { Company, PaymentWorkflow } from '../../types'
+import { Company, MailNotifier, PaymentWorkflow } from '../../types'
 import { ConfirmSetupTransactionalWorker } from '../../workers/ConfirmSetupTransactionalWorker'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker'
@@ -15,6 +15,11 @@ import { InvoiceService } from '../../services/InvoiceService'
 import { PaymentService } from '../../services/PaymentService'
 import { UserService } from '../../services/UserService'
 import { PgDb } from 'pogi'
+import { sendMailTemplate } from '@orbiting/backend-modules-mail'
+import { t } from '@orbiting/backend-modules-translate'
+import { getConfig } from '../../config'
+
+const { PROJECT_R_DONATION_PRODUCT_ID } = getConfig()
 
 class CheckoutProcessingError extends Error {
   constructor(msg: string) {
@@ -211,7 +216,10 @@ class OneTimePaymentCheckoutCompletedWorkflow
     protected readonly userService: UserService,
     protected readonly customerInfoService: CustomerInfoService,
     protected readonly invoiceService: InvoiceService,
-    protected readonly giftCodeNotifier: GiftCodeNotifier,
+    protected readonly notifiers: Record<
+      'donation' | 'gift',
+      MailNotifier<any>
+    >,
   ) {}
 
   async run(
@@ -297,6 +305,41 @@ class OneTimePaymentCheckoutCompletedWorkflow
 
     await this.invoiceService.saveOrderItems(orderLineItems)
 
+    const donation = sess.line_items.data.find((i) => {
+      if (
+        typeof i.price?.product === 'object' &&
+        i.price?.product.id === PROJECT_R_DONATION_PRODUCT_ID
+      ) {
+        return i
+      } else if (
+        typeof i.price?.product === 'string' &&
+        i.price?.product === PROJECT_R_DONATION_PRODUCT_ID
+      ) {
+        return i
+      }
+      return null
+    })
+
+    if (donation && sess.customer_details?.email) {
+      if (this.notifiers['donation']) {
+        await this.notifiers['donation'].sendEmail(
+          sess.customer_details.email,
+          {
+            total_amount: donation.amount_total,
+          },
+        )
+      } else {
+        console.log(`
+          No mailer configured
+
+          Thanks for the donation
+
+          to: ${sess.customer_details.email}
+          dontaion-total: ${donation.amount_total}
+        `)
+      }
+    }
+
     const giftCodes = []
     for (const item of lineItems) {
       if (item.priceLookupKey?.startsWith('GIFT')) {
@@ -310,25 +353,65 @@ class OneTimePaymentCheckoutCompletedWorkflow
     }
 
     if (giftCodes.length && sess.customer_details?.email) {
-      await this.giftCodeNotifier.sendEmail(
-        sess.customer_details.email,
-        giftCodes,
-      )
+      if (this.notifiers['gift']) {
+        await this.notifiers['gift'].sendEmail(
+          sess.customer_details.email,
+          giftCodes[0],
+        )
+      } else {
+        console.log(`
+        No mailer configured
+
+        Thanks for the gift purchase
+
+        to: ${sess.customer_details.email}
+        gift-code: ${giftCodes[0]}
+        `)
+      }
     }
   }
 }
 
-class GiftCodeNotifier {
+class GiftCodeNotifier implements MailNotifier<{ code: string }> {
   constructor(protected readonly pgdb: PgDb) {}
 
-  async sendEmail(email: string, giftCodes: { code: string }[]) {
+  async sendEmail(email: string, args: { code: string }) {
     return sendGiftPurchaseMail(
       {
         email: email,
-        voucherCode: giftCodes[0].code.replace(/(\w{4})(\w{4})/, '$1-$2'),
+        voucherCode: args.code.replace(/(\w{4})(\w{4})/, '$1-$2'),
       },
       this.pgdb,
     )
+  }
+}
+
+class DonateNotifier implements MailNotifier<{ total_amount: number }> {
+  readonly templateName = 'payment_successful_donate'
+
+  constructor(protected readonly pgdb: PgDb) {}
+
+  async sendEmail(email: string, args: { total_amount: number }) {
+    const globalMergeVars = [
+      {
+        name: 'total_formatted',
+        content: (args.total_amount / 100).toFixed(2),
+      },
+    ]
+
+    const sendMailResult = await sendMailTemplate(
+      {
+        to: email,
+        fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
+        subject: t(`api/email/${this.templateName}/subject`),
+        templateName: this.templateName,
+        mergeLanguage: 'handlebars',
+        globalMergeVars,
+      },
+      { pgdb: this.pgdb },
+    )
+
+    return sendMailResult
   }
 }
 
@@ -343,6 +426,9 @@ async function handlePayment(
     new UserService(ctx.pgdb),
     new CustomerInfoService(ctx.pgdb),
     new InvoiceService(ctx.pgdb),
-    new GiftCodeNotifier(ctx.pgdb),
+    {
+      gift: new GiftCodeNotifier(ctx.pgdb),
+      donation: new DonateNotifier(ctx.pgdb),
+    },
   ).run(company, event)
 }

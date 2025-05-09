@@ -252,3 +252,7 @@ export type Transaction = {
 export interface PaymentWorkflow<T extends Stripe.Event> {
   run(company: Company, event: T): Promise<any>
 }
+
+export interface MailNotifier<T extends object> {
+  sendEmail(recipient: string, args: T): Promise<any>
+}
