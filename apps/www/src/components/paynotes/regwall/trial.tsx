@@ -80,7 +80,7 @@ const Trial = ({
     <PaynoteSection>
       <TrialForm
         renderBefore={<TrialHeader variation={analyticsProps.variation} />}
-        renderAfter={<WhyRegister analyticsProps={analyticsProps} />}
+        renderAfter={<WhyRegister />}
         analyticsProps={analyticsProps}
       />
     </PaynoteSection>
