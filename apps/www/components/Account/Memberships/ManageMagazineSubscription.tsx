@@ -6,9 +6,15 @@ import {
 import { useMutation, useQuery } from '@apollo/client'
 import {
   BabySpinner,
+  Button,
+  Field,
+  fontStyles,
   Interaction,
   linkRule,
   mediaQueries,
+  Overlay,
+  OverlayBody,
+  OverlayToolbar,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 import Link from 'next/link'
@@ -17,6 +23,25 @@ import { useEffect, useState } from 'react'
 import { errorToString } from '../../../lib/utils/errors'
 import { useTranslation } from '../../../lib/withT'
 import { EditButton } from '../Elements'
+import { FormField } from '@app/components/ui/form'
+
+const styles = {
+  tableCell: css({
+    ...fontStyles.sansSerifRegular16,
+    textAlign: 'left',
+    paddingBlock: 4,
+    paddingInline: 16,
+
+    '&:first-child': {
+      paddingInlineStart: 0,
+    },
+
+    '&:last-child': {
+      paddingInlineEnd: 0,
+      textAlign: 'right',
+    },
+  }),
+}
 
 export function ManageMagazineSubscription() {
   const { data, startPolling, stopPolling } = useQuery(
@@ -106,11 +131,49 @@ export function ManageMagazineSubscription() {
               renewsAtPrice: (subscription.renewsAtPrice / 100).toFixed(2),
             })}
           </Interaction.P>
-          <Interaction.P>
+
+          {subscription.items.length > 1 && (
+            <table
+              {...css({
+                width: '100%',
+                maxWidth: 'max-content',
+              })}
+            >
+              <tbody>
+                {subscription.items.map(({ id, amount, label }) => {
+                  return (
+                    <tr key={id}>
+                      <th scope='row' {...styles.tableCell}>
+                        {label}
+                      </th>
+                      <td {...styles.tableCell}>
+                        CHF {(amount / 100).toFixed(2)}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          )}
+
+          <div>
+            <Link {...css({ ...linkRule })} href='/abgang'>
+              {t(`magazineSubscription/cancel/${subscription.type}`)}
+            </Link>
+          </div>
+          <div>
+            <UpdateDonationLink subscription={subscription} />
+          </div>
+
+          <Interaction.H3 {...css({ marginTop: 20 })}>
             {t('magazineSubscription/paymentMethod', {
               paymentMethod: subscription.paymentMethod,
-            })}{' '}
-          </Interaction.P>
+            })}
+          </Interaction.H3>
+
+          <div>
+            <CustomerPortalLink subscription={subscription} />
+          </div>
         </>
       )}
 
@@ -132,16 +195,7 @@ export function ManageMagazineSubscription() {
           </div>
         )
       ) : (
-        <>
-          <div>
-            <CustomerPortalLink subscription={subscription} />
-          </div>
-          <div>
-            <Link {...css({ ...linkRule })} href='/abgang'>
-              {t(`magazineSubscription/cancel/${subscription.type}`)}
-            </Link>
-          </div>
-        </>
+        <></>
       )}
     </div>
   )
@@ -168,12 +222,78 @@ const CustomerPortalLink = ({ subscription }) => {
           .catch(errorToString)
       }}
     >
-      <span
-        style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 8 }}
-      >
+      <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
         {t(`magazineSubscription/paymentMethod/change`)}
         {loading && <BabySpinner />}
       </span>
     </EditButton>
+  )
+}
+
+const UpdateDonationLink = ({ subscription }) => {
+  const router = useRouter()
+  const { t } = useTranslation()
+
+  const [showOverlay, setShowOverlay] = useState(false)
+
+  // const [createStripeCustomerPortalSession, { loading }] = useMutation(
+  //   CreateStripeCustomerPortalSessionDocument,
+  // )
+
+  return (
+    <>
+      <EditButton
+        onClick={(e) => {
+          e.preventDefault()
+          setShowOverlay(true)
+          // createStripeCustomerPortalSession({
+          //   variables: { companyName: subscription.company },
+          // })
+          //   .then(({ data }) => {
+          //     router.push(data.createStripeCustomerPortalSession.sessionUrl)
+          //   })
+          //   .catch(errorToString)
+        }}
+      >
+        <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+          {t(`magazineSubscription/updateDonation`)}
+        </span>
+      </EditButton>
+      {showOverlay && (
+        <Overlay onClose={() => setShowOverlay(false)}>
+          <OverlayToolbar
+            onClose={() => setShowOverlay(false)}
+            title={t(`magazineSubscription/updateDonation`)}
+          />
+
+          <OverlayBody>
+            <form
+              onSubmit={(e) => {
+                const data = Object.fromEntries(
+                  new FormData(
+                    e.currentTarget,
+                    // Pass the submitter (= the button that was used to submit the form), so its value is available in the FormData
+                    (e.nativeEvent as SubmitEvent).submitter,
+                  ),
+                )
+
+                console.log(data)
+
+                e.preventDefault()
+              }}
+            >
+              <Field label='Betrag' name='donationAmount' />
+
+              <Button type='submit' primary>
+                Ändern
+              </Button>
+              <button type='submit' name='donationAmount' value='0' naked small>
+                Spende kündigen
+              </button>
+            </form>
+          </OverlayBody>
+        </Overlay>
+      )}
+    </>
   )
 }

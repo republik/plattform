@@ -7,23 +7,27 @@ mutation CancelMagazineSubscription(
     subscriptionId: $subscriptionId
     details: $details
     cancelImmediately: $cancelImmediately
-  )
+  ) {
+    id
+  }
 }
 
 mutation ReactivateMagazineSubscription($subscriptionId: ID!) {
-  reactivateMagazineSubscription(subscriptionId: $subscriptionId)
+  reactivateMagazineSubscription(subscriptionId: $subscriptionId) {
+    id
+  }
 }
 
 mutation UpdateMagazineSubscriptionDonation(
   $subscriptionId: ID!
-  $selectedDonation: ID
-  $donationAmount: Int
+  $donationAmount: Int!
 ) {
   updateMagazineSubscriptionDonation(
     subscriptionId: $subscriptionId
-    selectedDonation: $selectedDonation
     donationAmount: $donationAmount
-  )
+  ) {
+    id
+  }
 }
 
 mutation createStripeCustomerPortalSession($companyName: CompanyName!) {

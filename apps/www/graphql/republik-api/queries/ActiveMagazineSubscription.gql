@@ -11,6 +11,12 @@ query ActiveMagazineSubscription {
       status
       paymentMethod
       renewsAtPrice
+
+      items {
+        id
+        label
+        amount
+      }
     }
   }
 }
