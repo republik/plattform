@@ -15,7 +15,7 @@ import {
   Loader,
   RawHtml,
 } from '@project-r/styleguide'
-import Greeting, { fragments as fragmentsGreeting } from './Greeting'
+import { fragments as fragmentsGreeting } from './Greeting'
 import Newsletter, {
   fragments as fragmentsNewsletter,
 } from './Sections/Newsletter'
