@@ -47,7 +47,7 @@ type MagazineSubscription {
   status: MagazineSubscriptionStatus!
   stripeId: String!
   invoices: [Invoice!]!
-  items: [MagazineSubscriptionItem!]!
+  donation: DonationInfo
   renewsAtPrice: Int
   paymentMethod: String
   currentPeriodStart: DateTime
@@ -59,9 +59,7 @@ type MagazineSubscription {
   updatedAt: DateTime!
 }
 
-type MagazineSubscriptionItem {
-  id: ID!
-  label: String!
+type DonationInfo {
   amount: Int!
 }
 

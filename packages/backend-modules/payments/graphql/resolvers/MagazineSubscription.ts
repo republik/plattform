@@ -2,6 +2,9 @@ import { Subscription } from '../../lib/types'
 import { PaymentService } from '../../lib/services/PaymentService'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { InvoiceService } from '../../lib/services/InvoiceService'
+import { getConfig } from '../../lib/config'
+
+const { PROJECT_R_DONATION_PRODUCT_ID } = getConfig()
 
 export = {
   async stripeId(subscription: Subscription) {
@@ -27,19 +30,26 @@ export = {
     }
   },
 
-  async items(subscription: Subscription, _args: never, ctx: GraphqlContext) {
+  async donation(
+    subscription: Subscription,
+    _args: never,
+    _ctx: GraphqlContext,
+  ) {
     const items = await new PaymentService().listSubscriptionItems(
       subscription.company,
       subscription.externalId,
     )
 
-    return items.map((item) => ({
-      id: item.id,
-      label: item.price.lookup_key
-        ? ctx.t(`api/payments/price/${item.price.lookup_key}`)
-        : 'Spende',
-      amount: item.price.unit_amount ?? 0,
-    }))
+    const donation = items.find(
+      (item) => item.price.product === PROJECT_R_DONATION_PRODUCT_ID,
+    )
+    if (!donation) {
+      return
+    }
+
+    return {
+      amount: donation.price.unit_amount,
+    }
   },
 
   async paymentMethod(subscription: Subscription) {
