@@ -1,5 +1,4 @@
 import { forwardRef } from 'react'
-import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 
@@ -11,16 +10,9 @@ import {
   ProgressCircle,
   IconButton,
   CalloutMenu,
-  Label,
 } from '@project-r/styleguide'
-import { getFeatureDescription } from '../Article/Progress'
 import { IconCheckSmall, IconHighlightOff, IconRead } from '@republik/icons'
 
-const styles = {
-  consent: css({
-    marginTop: 16,
-  }),
-}
 
 const UserProgress = (
   {
@@ -29,47 +21,14 @@ const UserProgress = (
     userProgress,
     upsertDocumentProgress,
     removeDocumentProgress,
-    revokeProgressConsent,
-    submitProgressConsent,
     forceShortLabel,
     noCallout,
     noScroll,
     displayMinutes,
   },
-  { restoreArticleProgress, showConsentPrompt },
+  { restoreArticleProgress },
 ) => {
-  // Renders the Progress Consent Form as a Callout in the Article Top Actionbar
-  if (showConsentPrompt && !noCallout) {
-    const ProgressConsentIcon = forwardRef((props, ref) => (
-      <IconButton
-        Icon={() => <ProgressCircle progress={66} />}
-        label={t('article/progressprompt/headline')}
-        labelShort={t('article/progressprompt/headline')}
-        ref={ref}
-        {...props}
-      />
-    ))
-    return (
-      <CalloutMenu Element={ProgressConsentIcon} padded>
-        <Label>{getFeatureDescription(t)}</Label>
-        <div {...styles.consent}>
-          <IconButton
-            style={{ marginBottom: 16 }}
-            Icon={IconRead}
-            onClick={submitProgressConsent}
-            label={t('article/progressprompt/button/confirm')}
-            labelShort={t('article/progressprompt/button/confirm')}
-          />
-          <IconButton
-            Icon={IconHighlightOff}
-            onClick={revokeProgressConsent}
-            label={t('article/progressprompt/button/reject')}
-            labelShort={t('article/progressprompt/button/reject')}
-          />
-        </div>
-      </CalloutMenu>
-    )
-  }
+
 
   // Once consent has been given or not return null if there is no user progress object
   // or displayminutes are below 1min

@@ -3,7 +3,6 @@ import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import {
   IconButton,
-  Interaction,
   shouldIgnoreClick,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
