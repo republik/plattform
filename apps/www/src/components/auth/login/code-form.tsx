@@ -68,7 +68,7 @@ export function CodeForm({
         mutation: RequestAccessDocument,
         variables: {
           campaignId: REGWALL_CAMPAIGN,
-          payload: getConversionPayload(query),
+          payload: getConversionPayload(query, analyticsProps),
         },
       })
       .then(() => {
