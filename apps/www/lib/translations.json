@@ -1431,7 +1431,7 @@
     },
     {
       "key": "profile/settings/hasPublicProfile/false/note",
-      "value": "Ihre Profilseite ist nur für andere Verleger sichtbar. Im Dialog sehen nur Verlegerinnen Ihren vollen Namen, Externe sehen bloss Ihre Initialen. Ausser Sie wählen die Option, einen Beitrag anonym zu veröffentlichen."
+      "value": "Ihre Profilseite ist nicht öffentlich und über die Republik-Suchfunktion nicht auffindbar. Im Dialog ist Ihr voller Name nur für andere Verlegerinnen und angemeldete Gäste sichtbar. Alle anderen sehen über Ihren Dialog-Beiträgen bloss Ihre Initialen. Ausser Sie wählen die Option, einen Dialog-Beitrag anonym zu veröffentlichen."
     },
     {
       "key": "profile/settings/isEligibleForProfile/notEligible",
