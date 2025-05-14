@@ -74,9 +74,9 @@ export = async function updateMagazineSubscriptionDonation(
 
 function findExistingProduct(
   items: import('stripe').Stripe.SubscriptionItem[],
-  DONATION_PRODUCT_ID: string,
+  productId: string,
 ) {
-  return items.find((i) => i.price.product === DONATION_PRODUCT_ID)
+  return items.find((i) => i.price.product === productId)
 }
 
 async function getSubscriptionOwner(ctx: GraphqlContext, sub: Subscription) {

@@ -4,7 +4,7 @@ import { Subscription } from '../types'
 import { BillingRepo } from '../database/BillingRepo'
 import { parseStripeDate } from '../handlers/stripe/utils'
 
-export type CancalationDetails = {
+export type CancallationDetails = {
   category: string
   reason?: string
   suppressConfirmation?: boolean
@@ -12,7 +12,7 @@ export type CancalationDetails = {
   cancelledViaSupport?: boolean
 }
 
-export class CancelationService {
+export class CancellationService {
   private readonly paymentService: PaymentService
   private billingRepo: BillingRepo
   private readonly db: PgDb
@@ -23,17 +23,26 @@ export class CancelationService {
     this.db = db
   }
 
-  async getCancellationDetails(sub: Subscription): Promise<CancalationDetails> {
+  async getCancellationDetails(
+    sub: Subscription,
+  ): Promise<CancallationDetails> {
     const cancelation =
-      await this.db.payments.subscriptionCancellations.findFirst({
-        subscriptionId: sub.id,
-      })
+      await this.db.payments.subscriptionCancellations.findFirst(
+        {
+          subscriptionId: sub.id,
+        },
+        {
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
+      )
     return cancelation
   }
 
   async cancelSubscription(
     sub: Subscription,
-    details: CancalationDetails,
+    details: CancallationDetails,
     immediately: boolean = false,
   ): Promise<Subscription> {
     await this.db.payments.subscriptionCancellations.insert({
@@ -68,16 +77,24 @@ export class CancelationService {
     )
   }
 
-  async revokeCancelation(sub: Subscription): Promise<Subscription> {
+  async revokeCancellation(sub: Subscription): Promise<Subscription> {
     const tx = await this.db.transactionBegin()
 
     try {
-      const cancelation = await tx.payments.subscriptionCancellations.find({
-        subscriptionId: sub.id,
-      })
+      const cancelation = await tx.payments.subscriptionCancellations.findFirst(
+        {
+          subscriptionId: sub.id,
+          revokedAt: null,
+        },
+      )
 
       if (cancelation) {
-        await tx.payments.subscriptionCancellations.delete(cancelation.id)
+        await tx.payments.subscriptionCancellations.update(
+          { id: cancelation.id },
+          {
+            revokedAt: new Date(),
+          },
+        )
       }
 
       await tx.transactionCommit()

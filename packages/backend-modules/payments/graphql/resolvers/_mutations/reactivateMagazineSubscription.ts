@@ -2,7 +2,7 @@ import Auth from '@orbiting/backend-modules-auth'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { PaymentService } from '../../../lib/services/PaymentService'
 import { Subscription } from '../../../lib/types'
-import { CancelationService } from '../../../lib/services/CancelationService'
+import { CancellationService } from '../../../lib/services/CancellationService'
 import { SubscriptionService } from '../../../lib/services/SubscriptionService'
 
 export = async function cancelMagazineSubscription(
@@ -25,11 +25,9 @@ export = async function cancelMagazineSubscription(
     ['admin', 'supporter'],
   )
 
-  const cs = new CancelationService(new PaymentService(), ctx.pgdb)
+  const cs = new CancellationService(new PaymentService(), ctx.pgdb)
 
-  await cs.revokeCancelation(sub)
-
-  return true
+  return cs.revokeCancellation(sub)
 }
 
 async function getSubscriptionOwner(ctx: GraphqlContext, sub: Subscription) {

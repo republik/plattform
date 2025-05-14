@@ -2,7 +2,7 @@ import { GraphqlContext, User } from '@orbiting/backend-modules-types'
 import { default as Auth } from '@orbiting/backend-modules-auth'
 import { Subscription } from '../../../lib/types'
 import { PaymentService } from '../../../lib/services/PaymentService'
-import { CancelationService } from '../../../lib/services/CancelationService'
+import { CancellationService } from '../../../lib/services/CancellationService'
 import { SubscriptionService } from '../../../lib/services/SubscriptionService'
 
 type CancellationInput = {
@@ -36,7 +36,7 @@ export = async function cancelMagazineSubscription(
     ['admin', 'supporter'],
   )
 
-  const cs = new CancelationService(new PaymentService(), ctx.pgdb)
+  const cs = new CancellationService(new PaymentService(), ctx.pgdb)
 
   const details = args.details
 

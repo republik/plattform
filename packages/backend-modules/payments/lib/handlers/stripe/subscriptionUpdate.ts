@@ -8,7 +8,7 @@ import { ConfirmGiftAppliedTransactionalWorker } from '../../workers/ConfirmGift
 import { getConfig } from '../../config'
 import { parseStripeDate } from './utils'
 import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
-import { CancelationService } from '../../services/CancelationService'
+import { CancellationService } from '../../services/CancellationService'
 import { PaymentService } from '../../services/PaymentService'
 import { SubscriptionService } from '../../services/SubscriptionService'
 import { CustomerInfoService } from '../../services/CustomerInfoService'
@@ -21,7 +21,7 @@ class SubscriptionUpdatedWorkflow
     protected readonly subscriptionService: SubscriptionService,
     protected readonly customerInfoService: CustomerInfoService,
     protected readonly paymentService: PaymentService,
-    protected readonly cancelationService: CancelationService,
+    protected readonly cancellationService: CancellationService,
   ) {}
 
   async run(
@@ -42,8 +42,8 @@ class SubscriptionUpdatedWorkflow
       throw Error('Unknown subscription')
     }
 
-    const cancelationReason =
-      await this.cancelationService.getCancellationDetails(sub)
+    const cancellationReason =
+      await this.cancellationService.getCancellationDetails(sub)
 
     await this.subscriptionService.updateSubscription({
       company: company,
@@ -89,7 +89,10 @@ class SubscriptionUpdatedWorkflow
       ])
     }
 
-    if (isCancellationRevoked) {
+    if (
+      isCancellationRevoked &&
+      cancellationReason.suppressConfirmation === false
+    ) {
       const customerId = event.data.object.customer as string
 
       const userId = await this.customerInfoService.getUserIdForCompanyCustomer(
@@ -121,7 +124,7 @@ class SubscriptionUpdatedWorkflow
       ])
     }
 
-    if (cancelAt && cancelationReason.suppressConfirmation !== true) {
+    if (cancelAt && cancellationReason.suppressConfirmation === false) {
       const customerId = event.data.object.customer as string
 
       const userId = await this.customerInfoService.getUserIdForCompanyCustomer(
@@ -131,10 +134,9 @@ class SubscriptionUpdatedWorkflow
       if (!userId) {
         throw Error(`User for ${customerId} does not exists`)
       }
-      const queue = this.queue
 
       await Promise.all([
-        queue.send<ConfirmCancelTransactionalWorker>(
+        this.queue.send<ConfirmCancelTransactionalWorker>(
           'payments:transactional:confirm:cancel',
           {
             $version: 'v1',
@@ -142,7 +144,7 @@ class SubscriptionUpdatedWorkflow
             userId: userId,
           },
         ),
-        queue.send<SyncMailchimpUpdateWorker>(
+        this.queue.send<SyncMailchimpUpdateWorker>(
           'payments:mailchimp:sync:update',
           {
             $version: 'v1',
@@ -203,7 +205,7 @@ export async function processSubscriptionUpdate(
     new SubscriptionService(ctx.pgdb),
     new CustomerInfoService(ctx.pgdb),
     paymentService,
-    new CancelationService(paymentService, ctx.pgdb),
+    new CancellationService(paymentService, ctx.pgdb),
   ).run(company, event)
 }
 

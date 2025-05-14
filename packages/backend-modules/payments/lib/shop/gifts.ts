@@ -10,10 +10,6 @@ import { Shop } from './Shop'
 import dayjs from 'dayjs'
 import { GiftVoucherRepo } from '../database/GiftVoucherRepo'
 import createLogger from 'debug'
-import {
-  REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
-  serializeMailSettings,
-} from '../mail-settings'
 import { getConfig } from '../config'
 import { parseStripeDate } from '../handlers/stripe/utils'
 import { CustomerInfoService } from '../services/CustomerInfoService'
@@ -69,17 +65,16 @@ type PRODUCT_TYPE = PLEDGE_ABOS | SUBSCRIPTIONS
 
 export function normalizeVoucher(voucherCode: string): string | null {
   try {
-    const code = CrockfordBase32.decode(voucherCode)
-    return CrockfordBase32.encode(code)
+    return CrockfordBase32.encode(CrockfordBase32.decode(voucherCode))
   } catch {
     return null
   }
 }
 
 function newVoucherCode() {
-  const bytes = new Uint8Array(5)
-  crypto.getRandomValues(bytes)
-  return CrockfordBase32.encode(Buffer.from(bytes))
+  return CrockfordBase32.encode(
+    Buffer.from(crypto.getRandomValues(new Uint8Array(5))),
+  )
 }
 
 const GIFTS: Gift[] = [
@@ -364,11 +359,6 @@ export class GiftShop {
           {
             coupon: gift.coupon,
             cancel_at_period_end: false, // if a subscription is canceled we need to uncancel it.
-            metadata: {
-              [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
-                'confirm:revoke_cancellation': false,
-              }),
-            },
           },
         )
         return {
@@ -429,9 +419,6 @@ export class GiftShop {
                 days_until_due: 14,
               },
               metadata: {
-                [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
-                  'confirm:setup': true,
-                }),
                 [REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES]: `monthly_abo:${membershipId}`,
                 [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
               },
@@ -513,11 +500,6 @@ export class GiftShop {
           {
             coupon: gift.coupon,
             cancel_at_period_end: false, // if a subscription is canceled we need to uncancel it.
-            metadata: {
-              [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
-                'confirm:revoke_cancellation': false,
-              }),
-            },
           },
         )
         return {
@@ -562,11 +544,6 @@ export class GiftShop {
           {
             coupon: gift.coupon,
             cancel_at_period_end: false, // if a subscription is canceled we need to uncancel it.
-            metadata: {
-              [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
-                'confirm:revoke_cancellation': false,
-              }),
-            },
           },
         )
         return {
@@ -605,9 +582,6 @@ export class GiftShop {
                 days_until_due: 14,
               },
               metadata: {
-                [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
-                  'confirm:setup': true,
-                }),
                 [REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES]: `monthly:${subScriptionId}`,
                 [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'GIFT',
               },
@@ -688,10 +662,6 @@ export class GiftShop {
       },
       proration_behavior: 'none',
       metadata: {
-        [REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY]: serializeMailSettings({
-          'notice:ended': false,
-          'confirm:cancel': false,
-        }),
         [REPUBLIK_PAYMENTS_CANCEL_REASON]: 'UPGRADE',
       },
       cancel_at_period_end: true,
