@@ -251,7 +251,7 @@ const Front = ({
                     href='#'
                     style={{ color: colors.negative.text }}
                     onClick={(event) => {
-                      event && event.preventDefault()
+                      event?.preventDefault()
                       setInfiniteScroll(true)
                     }}
                   >
