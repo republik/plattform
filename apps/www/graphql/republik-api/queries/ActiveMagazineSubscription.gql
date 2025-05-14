@@ -12,9 +12,7 @@ query ActiveMagazineSubscription {
       paymentMethod
       renewsAtPrice
 
-      items {
-        id
-        label
+      donation {
         amount
       }
     }

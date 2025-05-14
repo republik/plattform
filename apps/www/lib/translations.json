@@ -7761,8 +7761,36 @@
       "value": "Abo kündigen"
     },
     {
-      "key": "magazineSubscription/updateDonation",
-      "value": "Spende anpassen"
+      "key": "magazineSubscription/donation/update",
+      "value": "Ändern"
+    },
+    {
+      "key": "magazineSubscription/donation/choose",
+      "value": "Beitrag erhöhen"
+    },
+    {
+      "key": "magazineSubscription/donation/chooseCustom",
+      "value": "Wählen"
+    },
+    {
+      "key": "magazineSubscription/donation/remove",
+      "value": "Freiwilligen Beitrag entfernen"
+    },
+    {
+      "key": "magazineSubscription/donation/note",
+      "value": "Wählen Sie einen Betrag, um den Sie ihren Beitrag erhöhen möchten. Der freiwillige Beitrag wird erst fällig, wenn sich Ihre Mitgliedschaft erneuert. Sie können ihn jederzeit anpassen oder entfernen."
+    },
+    {
+      "key": "magazineSubscription/donation/wannaGiveMore",
+      "value": "Die Republik ist Ihnen mehr wert?"
+    },
+    {
+      "key": "magazineSubscription/donation/add",
+      "value": "Erhöhen Sie Ihren Beitrag"
+    },
+    {
+      "key": "magazineSubscription/donation/label",
+      "value": "Beinhaltet einen freiwilligen Beitrag von CHF {amount}."
     },
     {
       "key": "magazineSubscription/reactivate/YEARLY_SUBSCRIPTION",
