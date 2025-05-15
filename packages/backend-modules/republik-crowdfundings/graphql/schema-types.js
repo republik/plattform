@@ -381,6 +381,7 @@ enum CancellationCategoryType {
   CROWFUNDING_ONLY
   SEVERAL_REASONS
   SYSTEM
+  NO_AUTO_PAY
 }
 
 type CancellationCategory {

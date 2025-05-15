@@ -4,7 +4,7 @@ export interface StringObject {
   [key: string]: string
 }
 
-type KeyConstraint = StringObject | string
+export type KeyConstraint = StringObject | string
 
 const getCacheKey = (key: KeyConstraint) => {
   if (typeof key === 'string') {
@@ -18,7 +18,7 @@ const getCacheKey = (key: KeyConstraint) => {
   throw new Error('invalid key')
 }
 
-interface ValueConstraint {
+export interface ValueConstraint {
   id?: string
   [key: string]: any
 }

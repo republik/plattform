@@ -41,7 +41,6 @@ const {
 const {
   graphql: paymentsGraphql,
   express: paymentsWebhook,
-  Payments: PaymentsService,
   StripeWebhookWorker,
   StripeCustomerCreateWorker,
   SyncAddressDataWorker,
@@ -70,6 +69,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-republik/loaders'),
   ...require('@orbiting/backend-modules-publikator/loaders'),
   ...require('@orbiting/backend-modules-calendar/loaders'),
+  ...require('@orbiting/backend-modules-payments').loaders,
 }
 
 const {
@@ -240,8 +240,6 @@ const run = async (workerId, config) => {
     return context
   }
 
-  PaymentsService.start(connectionContext.pgdb)
-
   const server = await Server.start(
     graphqlSchema,
     middlewares,
@@ -376,9 +374,6 @@ const runOnce = async () => {
 
   const queue = setupQueue(connectionContext, 120)
   await queue.start()
-
-  PaymentsService.start(context.pgdb)
-
   await queue.startWorkers()
 
   const close = async () => {
