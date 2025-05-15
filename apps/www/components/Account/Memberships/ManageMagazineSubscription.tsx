@@ -60,7 +60,6 @@ export function ManageMagazineSubscription() {
   useEffect(() => {
     // console.log('stop polling subscriptions')
     if (data) {
-      console.log(data)
       stopPolling()
       setIsPolling(false)
     }
@@ -218,10 +217,7 @@ const UpdateDonationLink = ({
   const { t } = useTranslation()
 
   const [showOverlay, setShowOverlay] = useState(false)
-
-  // const [createStripeCustomerPortalSession, { loading }] = useMutation(
-  //   CreateStripeCustomerPortalSessionDocument,
-  // )
+  const [customAmount, setCustomAmount] = useState('')
 
   const [updateDonation, { loading, error, reset }] = useMutation(
     UpdateMagazineSubscriptionDonationDocument,
@@ -234,13 +230,6 @@ const UpdateDonationLink = ({
         onClick={(e) => {
           e.preventDefault()
           setShowOverlay(true)
-          // createStripeCustomerPortalSession({
-          //   variables: { companyName: subscription.company },
-          // })
-          //   .then(({ data }) => {
-          //     router.push(data.createStripeCustomerPortalSession.sessionUrl)
-          //   })
-          //   .catch(errorToString)
         }}
       >
         {subscription.donation
@@ -285,8 +274,6 @@ const UpdateDonationLink = ({
                         ? parseInt(customAmount, 10) * 100
                         : parseInt(amount, 10) ?? undefined
 
-                      console.log({ donationAmount })
-
                       if (Number.isInteger(donationAmount)) {
                         updateDonation({
                           variables: {
@@ -330,9 +317,14 @@ const UpdateDonationLink = ({
                       <Field
                         label='Eigener Betrag'
                         name='customDonationAmount'
-                        required
+                        value={customAmount}
+                        onChange={(e) => {
+                          setCustomAmount(
+                            (e.currentTarget as HTMLInputElement).value,
+                          )
+                        }}
                       />
-                      <Button type='submit'>
+                      <Button type='submit' disabled={customAmount === ''}>
                         {t('magazineSubscription/donation/chooseCustom')}
                       </Button>
                       {subscription.donation && (

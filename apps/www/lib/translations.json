@@ -7774,11 +7774,11 @@
     },
     {
       "key": "magazineSubscription/donation/remove",
-      "value": "Freiwilligen Beitrag entfernen"
+      "value": "Ich möchte meinen Beitrag nicht mehr erhöhen"
     },
     {
       "key": "magazineSubscription/donation/note",
-      "value": "Wählen Sie einen Betrag, um den Sie ihren Beitrag erhöhen möchten. Der freiwillige Beitrag wird erst fällig, wenn sich Ihre Mitgliedschaft erneuert. Sie können ihn jederzeit anpassen oder entfernen."
+      "value": "Wählen Sie einen Betrag, um den Sie ihren Beitrag erhöhen möchten. Der angepasste Beitrag wird erst fällig, wenn sich Ihre Mitgliedschaft erneuert. Sie können ihn jederzeit anpassen oder zurücksetzen."
     },
     {
       "key": "magazineSubscription/donation/wannaGiveMore",
