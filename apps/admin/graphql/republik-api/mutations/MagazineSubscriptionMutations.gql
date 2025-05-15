@@ -20,12 +20,10 @@ mutation ReactivateMagazineSubscription($subscriptionId: ID!) {
 
 mutation UpdateMagazineSubscriptionDonation(
   $subscriptionId: ID!
-  $selectedDonation: ID
-  $donationAmount: Int
+  $donationAmount: Int!
 ) {
   updateMagazineSubscriptionDonation(
     subscriptionId: $subscriptionId
-    selectedDonation: $selectedDonation
     donationAmount: $donationAmount
   ) {
     id
