@@ -6,6 +6,7 @@ import { AudioPlayerLocations } from '../types/AudioActionTracking'
 import { IconPauseCircle, IconPlayCircleOutline } from '@republik/icons'
 import { getFragmentData } from '#graphql/cms/__generated__/gql'
 import { AudioQueueItemFragmentDoc } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useMe } from 'lib/context/MeContext'
 
 type FrontAudioPlayButtonProps = {
   documentId?: string
@@ -23,9 +24,10 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
     toggleAudioPlayer,
     checkIfActivePlayerItem,
   } = useAudioContext()
-  const { addAudioQueueItem } = useAudioQueue()
+  const { isAudioQueueAvailable, addAudioQueueItem } = useAudioQueue()
+  const { isMember } = useMe()
 
-  if (!documentId) {
+  if (!documentId || !isMember || !isAudioQueueAvailable) {
     return null
   }
 
