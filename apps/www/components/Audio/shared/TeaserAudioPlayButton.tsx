@@ -27,18 +27,22 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
   const { isAudioQueueAvailable, addAudioQueueItem } = useAudioQueue()
   const { isMember } = useMe()
 
-  if (!documentId || !isMember || !isAudioQueueAvailable) {
+  if (!documentId) {
     return null
   }
 
   const isActivePlayerItem = checkIfActivePlayerItem(documentId)
 
+  const isVisible = isAudioQueueAvailable && isMember
+
   return (
     <button
+      style={{ visibility: isVisible ? 'visible' : 'hidden' }}
       {...plainButtonRule}
       title='Beitrag hören'
       onClick={(e) => {
         e.stopPropagation()
+        if (!isVisible) return
 
         if (isActivePlayerItem) {
           toggleAudioPlayback()
