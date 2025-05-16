@@ -184,7 +184,7 @@ const AudioPlayer = ({
 
     return
   }, [isDesktop, inNativeApp, isAndroid, isFirefox, isExpanded])
-  console.log('paynoteInlineHeight', paynoteInlineHeight)
+  // console.log('paynoteInlineHeight', paynoteInlineHeight)
   return (
     <>
       <AnimatePresence>
