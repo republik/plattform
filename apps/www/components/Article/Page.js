@@ -57,6 +57,7 @@ import Regwall from '@app/components/paynotes/regwall'
 import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import { WelcomeBanner } from '@app/components/paynotes/paynotes-in-trial/welcome'
+import ExtendedByline from '@app/components/article/extendedByline'
 
 const EmptyComponent = ({ children }) => children
 
@@ -563,7 +564,7 @@ const ArticlePage = ({
                     variables={feedQueryVariables}
                   />
                 )}
-
+                <ExtendedByline />
                 <ArticleRecommendationsFeed path={cleanedPath} />
               </div>
             </>
