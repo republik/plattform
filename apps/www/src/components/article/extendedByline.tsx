@@ -9,16 +9,16 @@ type Contributor = {
 
 const roleStrings = {
   writing: 'Text',
-  editing: 'editing',
-  'fact-checking': 'fact-checking',
-  proofreading: 'proofreading',
-  translation: 'translation',
-  pictures: 'pictures',
-  illustration: 'illustration',
-  'visual editing': 'visual editing',
-  'data visulalization': 'data visulalization',
-  'voice over': 'voice over',
-  'audio editing': 'audio editing',
+  editing: 'Redigatur',
+  'fact-checking': 'Faktencheck',
+  proofreading: 'Korrektur',
+  translation: 'Übersetzung',
+  pictures: 'Bilder',
+  illustration: 'Illustrationen',
+  'visual editing': 'Visuelles Editing',
+  'data visulalization': 'Datenvisualizierung',
+  'voice over': 'Gelesen von',
+  'audio editing': 'Audioediting',
 }
 
 const formatNames = (names: string[]): React.ReactElement => {
