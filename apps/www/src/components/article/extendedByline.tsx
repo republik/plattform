@@ -38,32 +38,7 @@ const formatNames = (names: string[]): React.ReactElement => {
 }
 
 const ExtendedByline = ({
-  bylineContributors = [
-    {
-      author: 'Olivier Baumann',
-      role: 'writing',
-    },
-    {
-      author: 'Anna Trausnig',
-      role: 'writing',
-    },
-    {
-      author: 'Siliva Schiaulini',
-      role: 'editing',
-    },
-    {
-      author: 'Luciana Kolbeck',
-      role: 'fact-checking',
-    },
-    {
-      author: 'Jeremy Stucki',
-      role: 'proofreading',
-    },
-    {
-      author: 'Henning Dahlheim',
-      role: 'data visulalization',
-    },
-  ],
+  bylineContributors,
 }: {
   bylineContributors?: Contributor[]
 }) => {
