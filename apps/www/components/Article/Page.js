@@ -206,7 +206,7 @@ const ArticlePage = ({
   // is true if the article or the format are paywall excluded
   const isPaywallExcluded = meta?.isPaywallExcluded
 
-  const contributors = articleContent?.meta?.bylineContributors
+  const bylineContributors = articleContent?.meta?.bylineContributors
 
   useEffect(() => {
     const resetPaynotes = () => {
@@ -500,6 +500,7 @@ const ArticlePage = ({
                           <>{renderSchema(splitContent.main)}</>
                         )}
                       </div>
+                      <ExtendedByline bylineContributors={bylineContributors} />
                       <Regwall />
                       <Paywall />
                     </article>
@@ -567,7 +568,7 @@ const ArticlePage = ({
                     variables={feedQueryVariables}
                   />
                 )}
-                <ExtendedByline contributors={contributors} />
+
                 <ArticleRecommendationsFeed path={cleanedPath} />
               </div>
             </>

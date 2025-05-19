@@ -21,17 +21,31 @@ const roleStrings = {
 }
 
 const formatNames = (names: string[]): string => {
-  if (names.length === 1) return names[0]
-  if (names.length === 2) return `${names[0]} und ${names[1]}`
-  return `${names.slice(0, -1).join(', ')} und ${names[names.length - 1]}`
+  if (names.length === 1) return <b>{names[0]}</b>
+  if (names.length === 2)
+    return (
+      <>
+        <b>{`${names[0]}`}</b> und <b>{`${names[1]}`}</b>
+      </>
+    )
+  return (
+    <>
+      <b>{`${names.slice(0, -1).join(', ')}`}</b> und{' '}
+      <b>{`${names[names.length - 1]}`}</b>
+    </>
+  )
 }
 
-const ExtendedByline = ({ contributors }: { contributors?: Contributor[] }) => {
-  if (!contributors || contributors.length === 0) {
+const ExtendedByline = ({
+  bylineContributors,
+}: {
+  bylineContributors?: Contributor[]
+}) => {
+  if (!bylineContributors || bylineContributors.length === 0) {
     return null
   }
   // restructure the byline to be grouped by role
-  const extendedBylineByRoles = contributors.reduce((acc, item) => {
+  const extendedBylineByRoles = bylineContributors.reduce((acc, item) => {
     if (!acc[item.role]) {
       acc[item.role] = []
     }
@@ -41,12 +55,13 @@ const ExtendedByline = ({ contributors }: { contributors?: Contributor[] }) => {
 
   return (
     <Center>
-      <h3>Diese Beitrag wurde</h3>
+      <Editorial.Credit>Mitwirkende</Editorial.Credit>
       {Object.entries(extendedBylineByRoles).map(([role, names]) => (
         <div key={role}>
           <Editorial.Credit>
-            <b>{roleStrings[role as keyof typeof roleStrings]}</b>
-            {': '}
+            <span style={{ marginRight: '0.5rem' }}>
+              {roleStrings[role as keyof typeof roleStrings]}
+            </span>
             <span>{formatNames(names)}</span>
           </Editorial.Credit>
         </div>
