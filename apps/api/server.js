@@ -37,6 +37,9 @@ const {
 const {
   graphql: referralCampaigns,
 } = require('@orbiting/backend-modules-referral-campaigns')
+const {
+  graphql: authors,
+} = require('@orbiting/backend-modules-authors')
 
 const {
   graphql: paymentsGraphql,
@@ -173,6 +176,7 @@ const run = async (workerId, config) => {
     callToActions,
     referralCampaigns,
     paymentsGraphql,
+    authors,
   ])
 
   // middlewares
