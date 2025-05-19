@@ -16,7 +16,10 @@ export async function GET() {
 
   if (data) {
     data.feed.nodes.forEach((n) => {
-      if (n.entity.__typename === 'Document') {
+      if (
+        n.entity.__typename === 'Document' &&
+        n.entity.meta.template === 'article'
+      ) {
         feed.addItem({
           id: btoa(n.entity.repoId),
           title: n.entity.meta.title,
@@ -26,6 +29,7 @@ export async function GET() {
             name: a.name,
           })),
           date: new Date(n.entity.meta.publishDate),
+          image: n.entity.meta.image,
         })
       }
     })
