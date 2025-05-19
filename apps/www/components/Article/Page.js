@@ -205,6 +205,9 @@ const ArticlePage = ({
 
   // is true if the article or the format are paywall excluded
   const isPaywallExcluded = meta?.isPaywallExcluded
+
+  const contributors = articleContent?.meta?.bylineContributors
+
   useEffect(() => {
     const resetPaynotes = () => {
       // console.log('resetPaynotes')
@@ -564,7 +567,7 @@ const ArticlePage = ({
                     variables={feedQueryVariables}
                   />
                 )}
-                <ExtendedByline />
+                <ExtendedByline contributors={contributors} />
                 <ArticleRecommendationsFeed path={cleanedPath} />
               </div>
             </>

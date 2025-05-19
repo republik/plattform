@@ -1,38 +1,23 @@
 import { Center, Editorial } from '@project-r/styleguide'
 
-const defaultByline = [
-  {
-    name: 'Olivier Baumann',
-    role: 'text',
-  },
-  {
-    name: 'Anna Trausnig',
-    role: 'text',
-  },
-  {
-    name: 'Siliva Schiaulini',
-    role: 'illustration',
-  },
-  {
-    name: 'Luciana Kolbeck',
-    role: 'factChecking',
-  },
-  {
-    name: 'Jeremy Stucki',
-    role: 'korrektorat',
-  },
-  {
-    name: 'Henning Dahlheim',
-    role: 'production',
-  },
-]
+type Contributor = {
+  author: string
+  role: string
+  main?: boolean
+}
 
 const roleStrings = {
-  text: 'Text',
-  illustration: 'Illustration',
-  factChecking: 'Fact-Checking',
-  korrektorat: 'Korrektorat',
-  production: 'Produktion',
+  writing: 'Text',
+  editing: 'editing',
+  'fact-checking': 'fact-checking',
+  proofreading: 'proofreading',
+  translation: 'translation',
+  pictures: 'pictures',
+  illustration: 'illustration',
+  'visual editing': 'visual editing',
+  'data visulalization': 'data visulalization',
+  'voice over': 'voice over',
+  'audio editing': 'audio editing',
 }
 
 const formatNames = (names: string[]): string => {
@@ -41,31 +26,31 @@ const formatNames = (names: string[]): string => {
   return `${names.slice(0, -1).join(', ')} und ${names[names.length - 1]}`
 }
 
-const ExtendedByline = ({
-  extendedByline = defaultByline,
-}: {
-  extendedByline: typeof defaultByline
-}) => {
+const ExtendedByline = ({ contributors }: { contributors?: Contributor[] }) => {
+  if (!contributors || contributors.length === 0) {
+    return null
+  }
   // restructure the byline to be grouped by role
-  const extendedBylineByRoles = extendedByline.reduce((acc, item) => {
+  const extendedBylineByRoles = contributors.reduce((acc, item) => {
     if (!acc[item.role]) {
       acc[item.role] = []
     }
-    acc[item.role].push(item.name)
+    acc[item.role].push(item.author)
     return acc
   }, {} as Record<string, string[]>)
 
   return (
     <Center>
-        <h3>Diese Beitrag wurde</h3>
-        {Object.entries(extendedBylineByRoles).map(([role, names]) => (
-          <div key={role}>
-            <Editorial.Credit>
-              <b>{roleStrings[role as keyof typeof roleStrings]}</b>{': '}
-              <span>{formatNames(names)}</span>
-            </Editorial.Credit>
-          </div>
-        ))}
+      <h3>Diese Beitrag wurde</h3>
+      {Object.entries(extendedBylineByRoles).map(([role, names]) => (
+        <div key={role}>
+          <Editorial.Credit>
+            <b>{roleStrings[role as keyof typeof roleStrings]}</b>
+            {': '}
+            <span>{formatNames(names)}</span>
+          </Editorial.Credit>
+        </div>
+      ))}
     </Center>
   )
 }

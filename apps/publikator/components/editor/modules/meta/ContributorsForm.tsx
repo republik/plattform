@@ -2,8 +2,6 @@ import { useState } from 'react'
 import {
   MetaSection,
   MetaSectionTitle,
-  MetaOptionGroup,
-  MetaOptionGroupTitle,
 } from '../../../MetaDataForm/components/Layout'
 import withT from '../../../../lib/withT'
 import {
@@ -15,9 +13,10 @@ import {
   IconButton,
   Label,
 } from '@project-r/styleguide'
-import { IconClose, IconAdd } from '@republik/icons'
+import { IconClose } from '@republik/icons'
 
-const CONTRIBUTORS_KEY = 'contributors'
+// unfortunately, "contributors" is already used for speakers processing
+const CONTRIBUTORS_KEY = 'bylineContributors'
 
 // NOTE: ultimately, the author will be an id referencing a backend or DatoCms entry
 type Contributor = {
@@ -57,7 +56,6 @@ const ContributorForm = ({
 
   const resetForm = () => {
     setAuthor('')
-    setRole('')
     setMain(false)
   }
 
