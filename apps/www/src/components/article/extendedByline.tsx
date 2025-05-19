@@ -1,5 +1,5 @@
-import React from 'react'
-import { Center, Editorial } from '@project-r/styleguide'
+import React, { useState } from 'react'
+import { Center, Editorial, plainButtonRule } from '@project-r/styleguide'
 
 type Contributor = {
   author: string
@@ -38,10 +38,37 @@ const formatNames = (names: string[]): React.ReactElement => {
 }
 
 const ExtendedByline = ({
-  bylineContributors,
+  bylineContributors = [
+    {
+      author: 'Olivier Baumann',
+      role: 'writing',
+    },
+    {
+      author: 'Anna Trausnig',
+      role: 'writing',
+    },
+    {
+      author: 'Siliva Schiaulini',
+      role: 'editing',
+    },
+    {
+      author: 'Luciana Kolbeck',
+      role: 'fact-checking',
+    },
+    {
+      author: 'Jeremy Stucki',
+      role: 'proofreading',
+    },
+    {
+      author: 'Henning Dahlheim',
+      role: 'data visulalization',
+    },
+  ],
 }: {
   bylineContributors?: Contributor[]
 }) => {
+  const [showAll, setShowAll] = useState(false)
+
   if (!bylineContributors || bylineContributors.length === 0) {
     return null
   }
@@ -54,10 +81,14 @@ const ExtendedByline = ({
     return acc
   }, {} as Record<string, string[]>)
 
+  const entries = Object.entries(extendedBylineByRoles)
+  const hasMoreThanThree = entries.length > 3
+  const displayEntries = showAll ? entries : entries.slice(0, 3)
+
   return (
     <Center>
       <Editorial.Credit>Mitwirkende</Editorial.Credit>
-      {Object.entries(extendedBylineByRoles).map(([role, names]) => (
+      {displayEntries.map(([role, names]) => (
         <div key={role}>
           <Editorial.Credit>
             <span style={{ marginRight: '0.5rem' }}>
@@ -67,6 +98,15 @@ const ExtendedByline = ({
           </Editorial.Credit>
         </div>
       ))}
+      {hasMoreThanThree && !showAll && (
+        <button
+          {...plainButtonRule}
+          style={{ textDecoration: 'underline' }}
+          onClick={() => setShowAll(true)}
+        >
+          <Editorial.Credit>Alle anzeigen</Editorial.Credit>
+        </button>
+      )}
     </Center>
   )
 }
