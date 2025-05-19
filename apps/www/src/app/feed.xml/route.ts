@@ -17,10 +17,8 @@ export async function GET() {
   if (data) {
     data.feed.nodes.forEach((n) => {
       if (n.entity.__typename === 'Document') {
-        const [base, repo] = atob(n.entity.id).split('/')
-
         feed.addItem({
-          id: btoa(`${base}/${repo}`),
+          id: btoa(n.entity.repoId),
           title: n.entity.meta.title,
           link: `${process.env.NEXT_PUBLIC_BASE_URL}${n.entity.meta.path}`,
           description: n.entity.meta.description,
