@@ -1,3 +1,5 @@
+import { RssFeedDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import { getClient } from '@app/lib/apollo/client'
 import { Feed } from 'feed'
 
 export async function GET() {
@@ -8,86 +10,26 @@ export async function GET() {
     copyright: 'Republik AG',
   })
 
-  const republikFeed = await fetch('https://api.republik.ch/graphql/', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      query: `
-        query getFrontFeed {
-          feed: search(
-            filter: {
-              feed: true
-            }
-            sort: { key: publishedAt, direction: DESC }
-          ) {
-            totalCount
-            pageInfo {
-              endCursor
-              hasNextPage
-            }
-            nodes {
-              entity {
-                ... on Document {
-                  id
-                  meta {
-                    credits
-                    contributors {
-                      name
-                      kind
-                      user {
-                        id
-                        username
-                        slug
-                        profileUrls
-                      }
-                    }
-                    shortTitle
-                    title
-                    description
-                    publishDate
-                    prepublication
-                    path
-                    kind
-                    template
-                    color
-                    format {
-                      id
-                      meta {
-                        path
-                        externalBaseUrl
-                        title
-                        color
-                        kind
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      `,
-    }),
-  })
+  const gql = getClient()
 
-  if (republikFeed.ok) {
-    const articles = await republikFeed.json()
+  const { data } = await gql.query({ query: RssFeedDocument })
 
-    articles.data.feed.nodes.forEach((n) => {
-      const [base, repo] = atob(n.entity.id).split('/')
+  if (data) {
+    data.feed.nodes.forEach((n) => {
+      if (n.entity.__typename === 'Document') {
+        const [base, repo] = atob(n.entity.id).split('/')
 
-      feed.addItem({
-        id: btoa(`${base}/${repo}`),
-        title: n.entity.meta.title,
-        link: `https://www.republik.ch${n.entity.meta.path}`,
-        description: n.entity.meta.description,
-        author: n.entity.meta.contributors.map((a) => ({
-          name: a.name,
-        })),
-        date: new Date(n.entity.meta.publishDate),
-      })
+        feed.addItem({
+          id: btoa(`${base}/${repo}`),
+          title: n.entity.meta.title,
+          link: `https://www.republik.ch${n.entity.meta.path}`,
+          description: n.entity.meta.description,
+          author: n.entity.meta.contributors.map((a) => ({
+            name: a.name,
+          })),
+          date: new Date(n.entity.meta.publishDate),
+        })
+      }
     })
   }
 

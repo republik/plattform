@@ -1,0 +1,51 @@
+query RSSFeed {
+  feed: search(
+    filter: { feed: true }
+    sort: { key: publishedAt, direction: DESC }
+  ) {
+    totalCount
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    nodes {
+      entity {
+        ... on Document {
+          id
+          meta {
+            credits
+            contributors {
+              name
+              kind
+              user {
+                id
+                username
+                slug
+                profileUrls
+              }
+            }
+            shortTitle
+            title
+            description
+            publishDate
+            prepublication
+            path
+            kind
+            template
+            color
+            format {
+              id
+              meta {
+                path
+                externalBaseUrl
+                title
+                color
+                kind
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
