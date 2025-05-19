@@ -1,50 +1,20 @@
 query RSSFeed {
   feed: search(
-    filter: { feed: true }
+    first: 100
+    filter: { feed: true, template: "article" }
     sort: { key: publishedAt, direction: DESC }
   ) {
-    totalCount
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
     nodes {
       entity {
         ... on Document {
           id
           repoId
           meta {
-            credits
-            contributors {
-              name
-              kind
-              user {
-                id
-                username
-                slug
-                profileUrls
-              }
-            }
-            shortTitle
             title
             description
             publishDate
-            prepublication
             path
-            kind
-            template
-            color
             image
-            format {
-              id
-              meta {
-                path
-                externalBaseUrl
-                title
-                color
-                kind
-              }
-            }
           }
         }
       }

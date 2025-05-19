@@ -19,10 +19,7 @@ export async function GET() {
 
   if (data) {
     data.feed.nodes.forEach((n) => {
-      if (
-        n.entity.__typename === 'Document' &&
-        n.entity.meta.template === 'article'
-      ) {
+      if (n.entity.__typename === 'Document') {
         feed.addItem({
           id: crypto.createHash('sha256').update(n.entity.repoId).digest('hex'),
           title: n.entity.meta.title,
