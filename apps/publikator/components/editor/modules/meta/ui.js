@@ -20,6 +20,7 @@ import UIForm from '../../UIForm'
 import ShareImageForm from './ShareImageForm'
 import GooglePreview from './GooglePreview'
 import ArticleRecommendations from './ArticleRecommendations/ArticleRecommendations'
+import Contributors from './ContributorsForm'
 import PublishPathNotice from './PublishPathNotice'
 import {
   MetaOptionGroup,
@@ -303,6 +304,8 @@ const MetaData = ({
             />
           </div>
         )}
+
+        <Contributors editor={editor} node={node} />
 
         <MetaSection>
           <MetaSectionTitle>Social</MetaSectionTitle>
