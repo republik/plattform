@@ -6,7 +6,7 @@ export async function GET() {
   const feed = new Feed({
     id: process.env.NEXT_PUBLIC_BASE_URL,
     link: process.env.NEXT_PUBLIC_BASE_URL,
-    title: 'Republik Feed',
+    title: 'Republik Magazin',
     copyright: 'Republik AG',
   })
 
