@@ -36,9 +36,19 @@ const roleStrings = {
 }
 
 const formatNames = (names: string[]): string => {
-  if (names.length === 1) return names[0]
-  if (names.length === 2) return `${names[0]} und ${names[1]}`
-  return `${names.slice(0, -1).join(', ')} und ${names[names.length - 1]}`
+  if (names.length === 1) return <b>{names[0]}</b>
+  if (names.length === 2)
+    return (
+      <>
+        <b>{`${names[0]}`}</b> und <b>{`${names[1]}`}</b>
+      </>
+    )
+  return (
+    <>
+      <b>{`${names.slice(0, -1).join(', ')}`}</b> und{' '}
+      <b>{`${names[names.length - 1]}`}</b>
+    </>
+  )
 }
 
 const ExtendedByline = ({
@@ -57,15 +67,17 @@ const ExtendedByline = ({
 
   return (
     <Center>
-        <h3>Diese Beitrag wurde</h3>
-        {Object.entries(extendedBylineByRoles).map(([role, names]) => (
-          <div key={role}>
-            <Editorial.Credit>
-              <b>{roleStrings[role as keyof typeof roleStrings]}</b>{': '}
-              <span>{formatNames(names)}</span>
-            </Editorial.Credit>
-          </div>
-        ))}
+      <Editorial.Credit>Mitwirkende</Editorial.Credit>
+      {Object.entries(extendedBylineByRoles).map(([role, names]) => (
+        <div key={role}>
+          <Editorial.Credit>
+            <span style={{ marginRight: '0.5rem' }}>
+              {roleStrings[role as keyof typeof roleStrings]}
+            </span>
+            <span>{formatNames(names)}</span>
+          </Editorial.Credit>
+        </div>
+      ))}
     </Center>
   )
 }

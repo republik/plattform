@@ -497,6 +497,7 @@ const ArticlePage = ({
                           <>{renderSchema(splitContent.main)}</>
                         )}
                       </div>
+                      <ExtendedByline />
                       <Regwall />
                       <Paywall />
                     </article>
@@ -564,7 +565,7 @@ const ArticlePage = ({
                     variables={feedQueryVariables}
                   />
                 )}
-                <ExtendedByline />
+
                 <ArticleRecommendationsFeed path={cleanedPath} />
               </div>
             </>
