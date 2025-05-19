@@ -40,6 +40,20 @@ const ROLES = [
   'audio editing',
 ]
 
+const roleStrings = {
+  writing: 'Text',
+  editing: 'Redigatur',
+  'fact-checking': 'Faktencheck',
+  proofreading: 'Korrektur',
+  translation: 'Übersetzung',
+  pictures: 'Bilder',
+  illustration: 'Illustrationen',
+  'visual editing': 'Visuelles Editing',
+  'data visulalization': 'Datenvisualizierung',
+  'voice over': 'Gelesen von',
+  'audio editing': 'Audioediting',
+}
+
 const ContributorForm = ({
   handleAddContributor,
 }: {
@@ -51,7 +65,7 @@ const ContributorForm = ({
 
   const roleKinds = ROLES.map((role) => ({
     value: role,
-    text: role,
+    text: roleStrings[role],
   }))
 
   const resetForm = () => {
@@ -135,7 +149,7 @@ const ContributorsList = ({
           style={{ display: 'flex', justifyContent: 'space-between' }}
         >
           <Interaction.P>
-            {contributor.author} ({contributor.role})
+            {contributor.author} ({roleStrings[contributor.role]})
           </Interaction.P>
           <IconButton
             Icon={IconClose}
