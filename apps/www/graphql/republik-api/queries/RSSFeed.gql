@@ -14,7 +14,6 @@ query RSSFeed {
             description
             publishDate
             path
-            image
           }
         }
       }
