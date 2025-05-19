@@ -112,6 +112,7 @@
     "dayjs": "^1.11.10",
     "downshift": "^2.2.3",
     "events": "^3.3.0",
+    "feed": "^5.0.1",
     "framer-motion": "^11.0.3",
     "glamor": "^2.20.40",
     "graphql": "^15.3.0",
