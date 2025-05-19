@@ -1,3 +1,4 @@
+import React from 'react'
 import { Center, Editorial } from '@project-r/styleguide'
 
 type Contributor = {
@@ -20,7 +21,7 @@ const roleStrings = {
   'audio editing': 'audio editing',
 }
 
-const formatNames = (names: string[]): string => {
+const formatNames = (names: string[]): React.ReactElement => {
   if (names.length === 1) return <b>{names[0]}</b>
   if (names.length === 2)
     return (
