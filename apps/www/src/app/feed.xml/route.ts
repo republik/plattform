@@ -1,13 +1,16 @@
 import { RssFeedDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { getClient } from '@app/lib/apollo/client'
 import { Feed } from 'feed'
+import crypto from 'node:crypto'
 
 export async function GET() {
   const feed = new Feed({
     id: process.env.NEXT_PUBLIC_BASE_URL,
     link: process.env.NEXT_PUBLIC_BASE_URL,
     title: 'Republik Magazin',
-    copyright: 'Republik AG',
+    language: 'de',
+    generator: 'Republik-Feed',
+    copyright: `© 2017-${new Date().getFullYear()} Republik AG`,
   })
 
   const gql = getClient()
@@ -21,13 +24,10 @@ export async function GET() {
         n.entity.meta.template === 'article'
       ) {
         feed.addItem({
-          id: btoa(n.entity.repoId),
+          id: crypto.createHash('sha256').update(n.entity.repoId).digest('hex'),
           title: n.entity.meta.title,
-          link: `${process.env.NEXT_PUBLIC_BASE_URL}${n.entity.meta.path}`,
+          link: `${process.env.NEXT_PUBLIC_BASE_URL}${n.entity.meta.path}?utm_medium=rss`,
           description: n.entity.meta.description,
-          author: n.entity.meta.contributors.map((a) => ({
-            name: a.name,
-          })),
           date: new Date(n.entity.meta.publishDate),
           image: n.entity.meta.image,
         })
@@ -37,7 +37,7 @@ export async function GET() {
 
   return new Response(feed.rss2(), {
     headers: {
-      'Content-Type': 'application/xml; charset=utf-8',
+      'Content-Type': 'application/rss+xml; charset=utf-8',
     },
   })
 }
