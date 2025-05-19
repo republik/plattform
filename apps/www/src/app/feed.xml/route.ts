@@ -26,6 +26,7 @@ export async function GET() {
           link: `${process.env.NEXT_PUBLIC_BASE_URL}${n.entity.meta.path}?utm_medium=rss`,
           description: n.entity.meta.description,
           date: new Date(n.entity.meta.publishDate),
+          content: `<p>${n.entity.meta.description}</p><p><a href="${process.env.NEXT_PUBLIC_BASE_URL}${n.entity.meta.path}?utm_medium=rss">Beitrag öffnen</a></p>`,
         })
       }
     })
