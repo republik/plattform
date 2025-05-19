@@ -497,7 +497,7 @@ const ArticlePage = ({
                           <>{renderSchema(splitContent.main)}</>
                         )}
                       </div>
-                      <ExtendedByline />
+                      <ExtendedByline bylineContributors={meta.bylineContributors} />
                       <Regwall />
                       <Paywall />
                     </article>

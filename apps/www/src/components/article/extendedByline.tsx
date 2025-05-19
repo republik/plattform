@@ -1,6 +1,6 @@
 import { Center, Editorial } from '@project-r/styleguide'
 
-const defaultByline = [
+const defaultBylineContributors = [
   {
     name: 'Olivier Baumann',
     role: 'text',
@@ -52,12 +52,12 @@ const formatNames = (names: string[]): string => {
 }
 
 const ExtendedByline = ({
-  extendedByline = defaultByline,
+  bylineContributors = defaultBylineContributors,
 }: {
-  extendedByline: typeof defaultByline
+  bylineContributors: typeof defaultBylineContributors
 }) => {
   // restructure the byline to be grouped by role
-  const extendedBylineByRoles = extendedByline.reduce((acc, item) => {
+  const extendedBylineByRoles = bylineContributors.reduce((acc, item) => {
     if (!acc[item.role]) {
       acc[item.role] = []
     }
