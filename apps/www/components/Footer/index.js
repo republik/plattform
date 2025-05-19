@@ -270,6 +270,11 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
                 </FooterNavLink>
               </li>
               <li>
+                <FooterNavLink href='/vertraulich'>
+                  <a {...navLinkStyle}>{t('footer/vertraulich')}</a>
+                </FooterNavLink>
+              </li>
+              <li>
                 <FooterNavLink href='/format/jobs'>
                   <a {...navLinkStyle}>{t('footer/jobs')}</a>
                 </FooterNavLink>

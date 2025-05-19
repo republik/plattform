@@ -1786,6 +1786,10 @@
       "value": "FAQ"
     },
     {
+      "key": "footer/vertraulich",
+      "value": "Vertraulich kontaktieren"
+    },
+    {
       "key": "footer/since",
       "value": "seit 2018"
     },
