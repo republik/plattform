@@ -2,10 +2,12 @@ import { useState } from 'react'
 import {
   MetaSection,
   MetaSectionTitle,
+  MetaOptionGroup,
+  MetaOptionGroupTitle,
 } from '../../../MetaDataForm/components/Layout'
 import withT from '../../../../lib/withT'
 import {
-  A,
+  Button,
   Field,
   Dropdown,
   Checkbox,
@@ -66,7 +68,7 @@ const ContributorForm = ({
   }
 
   return (
-    <div>
+    <div style={{ marginTop: '2rem' }}>
       <div
         style={{
           display: 'grid',
@@ -101,11 +103,11 @@ const ContributorForm = ({
         </div>
       </div>
       <div style={{ marginTop: '1rem' }}>
-        <A href='#add' onClick={addContributor}>
-          <IconAdd /> Add this contributor
-        </A>
+        <Button small onClick={addContributor}>
+          Add this contributor
+        </Button>
       </div>
-      <p style={{ marginBottom: '0' }}>
+      <p>
         <b>Add an article contributor:</b> Specify the name, the role and if
         this contributor should appear in the main byline, inside the title
         block.
