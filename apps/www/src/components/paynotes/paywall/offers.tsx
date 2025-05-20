@@ -24,7 +24,7 @@ type OfferOptions = 'MONTHLY' | 'YEARLY'
 const getOffersCopyVersion = (accessGrants: AccessGrant[]): 'a' | 'b' => {
   const trialAccessGrant = accessGrants.find(
     (grant) =>
-      grant.campaign.id === process.env.NEXT_PUBLIC_TRIAL_ACCESS_GRANT_ID,
+      grant.campaign.id === process.env.NEXT_PUBLIC_REGWALL_TRIAL_CAMPAIGN_ID,
   )
   if (!trialAccessGrant) return 'b'
   const finishedMoreThanThreeDaysAgo =
