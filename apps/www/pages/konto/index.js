@@ -1,23 +1,23 @@
-import { useEffect } from 'react'
+import { AccountPaynote } from '@app/components/paynotes/paynotes-in-trial/account'
+import { A, Interaction, mediaQueries } from '@project-r/styleguide'
+
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
-import { mediaQueries, A, Interaction } from '@project-r/styleguide'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
-import { AccountPaynote } from '@app/components/paynotes/paynotes-in-trial/account'
-
+import AccountSection from '../../components/Account/AccountSection'
+import AccountTabs from '../../components/Account/AccountTabs'
+import { AccountEnforceMe, HintArea } from '../../components/Account/Elements'
+import Memberships from '../../components/Account/Memberships'
+import UpdateEmail, { UserEmail } from '../../components/Account/UserInfo/Email'
+import NameAddress from '../../components/Account/UserInfo/NameAddress'
 import Frame from '../../components/Frame'
 import Merci from '../../components/Pledge/Merci'
-import withT from '../../lib/withT'
 import { withDefaultSSR } from '../../lib/apollo/helpers'
-import AccountTabs from '../../components/Account/AccountTabs'
-import AccountSection from '../../components/Account/AccountSection'
-import Memberships from '../../components/Account/Memberships'
-import { HintArea, AccountEnforceMe } from '../../components/Account/Elements'
-import NameAddress from '../../components/Account/UserInfo/NameAddress'
-import UpdateEmail, { UserEmail } from '../../components/Account/UserInfo/Email'
 import withMe from '../../lib/apollo/withMe'
+import withT from '../../lib/withT'
 
 const { Emphasis } = Interaction
 
@@ -33,7 +33,7 @@ const styles = {
   column: css({ flex: 1 }),
 }
 
-const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
+const AccountPage = ({ t, hasActiveMembership }) => {
   const meta = {
     title: t('pages/account/title'),
   }
@@ -60,18 +60,19 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
     <AccountEnforceMe>
       <AccountTabs />
 
-      <div {...styles.container}>
-        {hasAccess && (
+      {!hasActiveMembership && (
+        <div style={{ margin: '24px 0' }}>
+          <AccountPaynote />
+        </div>
+      )}
+
+      {hasActiveMembership && (
+        <div {...styles.container}>
           <div {...styles.column}>
             <AccountSection
               id='onboarding'
               title={t('Account/Onboarding/title')}
             >
-              {!hasActiveMembership && (
-                <div style={{ margin: '24px 0' }}>
-                  <AccountPaynote />
-                </div>
-              )}
               <HintArea>
                 {t.elements('Account/Onboarding/text', {
                   link: (
@@ -85,9 +86,7 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
               </HintArea>
             </AccountSection>
           </div>
-        )}
 
-        {hasActiveMembership && (
           <div {...styles.column}>
             <AccountSection
               id='teilen'
@@ -106,8 +105,8 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
               </HintArea>
             </AccountSection>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <Memberships />
       <AccountSection id='account' title={t('Account/Update/title')}>
         <div style={{ marginBottom: 24 }}>
