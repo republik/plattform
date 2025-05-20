@@ -37,7 +37,7 @@ const getOffersCopyVersion = (accessGrants: AccessGrant[]): 'a' | 'b' => {
 function OffersHeader() {
   const { t } = useTranslation()
   const { data, loading } = useQuery(PastAccessGrantsDocument)
-  if (loading || data?.me.accessGrants) return null
+  if (loading || !data?.me.accessGrants) return null
 
   const copyVersion = getOffersCopyVersion(
     data?.me.accessGrants as AccessGrant[],
