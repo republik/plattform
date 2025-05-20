@@ -4,7 +4,7 @@ import { AuthorService } from '../../../lib/AuthorService'
 
 export = async function authors(
   _: any,
-  args: any,
+  _args: any,
   ctx: GraphqlContext,
 ): Promise<Author[] | null> {
   const authorService = new AuthorService(ctx.pgdb)
