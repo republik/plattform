@@ -2,7 +2,6 @@ import { AccountPaynote } from '@app/components/paynotes/paynotes-in-trial/accou
 import { A, Interaction, mediaQueries } from '@project-r/styleguide'
 
 import { css } from 'glamor'
-import compose from 'lodash/flowRight'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
@@ -16,8 +15,8 @@ import NameAddress from '../../components/Account/UserInfo/NameAddress'
 import Frame from '../../components/Frame'
 import Merci from '../../components/Pledge/Merci'
 import { withDefaultSSR } from '../../lib/apollo/helpers'
-import withMe from '../../lib/apollo/withMe'
-import withT from '../../lib/withT'
+import { useMe } from '../../lib/context/MeContext'
+import { useTranslation } from '../../lib/withT'
 
 const { Emphasis } = Interaction
 
@@ -33,7 +32,9 @@ const styles = {
   column: css({ flex: 1 }),
 }
 
-const AccountPage = ({ t, hasActiveMembership }) => {
+const AccountPage = () => {
+  const { t } = useTranslation()
+  const { trialStatus, hasActiveMembership } = useMe()
   const meta = {
     title: t('pages/account/title'),
   }
@@ -60,7 +61,7 @@ const AccountPage = ({ t, hasActiveMembership }) => {
     <AccountEnforceMe>
       <AccountTabs />
 
-      {!hasActiveMembership && (
+      {trialStatus.includes('TRIAL_GROUP') && (
         <div style={{ margin: '24px 0' }}>
           <AccountPaynote />
         </div>
@@ -145,4 +146,4 @@ const AccountPage = ({ t, hasActiveMembership }) => {
   )
 }
 
-export default withDefaultSSR(compose(withT, withMe)(AccountPage))
+export default withDefaultSSR(AccountPage)
