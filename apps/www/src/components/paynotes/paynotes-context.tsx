@@ -59,9 +59,7 @@ function isPaynoteOverlayHidden(
     pathname === '/probelesen' ||
     pathname === '/community' ||
     searchParams.has('extract') ||
-    searchParams.has('extractId') ||
-    pathname ===
-      '/2025/04/30/stellenausschreibung-trainee-unternehmensmanagement'
+    searchParams.has('extractId')
   )
 }
 
