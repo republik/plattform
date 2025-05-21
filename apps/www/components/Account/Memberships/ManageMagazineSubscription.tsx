@@ -115,21 +115,23 @@ export function ManageMagazineSubscription() {
                 month: 'long',
                 day: 'numeric',
               }),
-              renewsAtPrice: (subscription.renewsAtPrice / 100).toFixed(2),
+              renewsAtPrice: (subscription.renewsAtPrice / 100).toFixed(0),
             })}
           </Interaction.P>
 
-          <Interaction.P {...css(fontStyles.sansSerifRegular16)}>
-            {subscription.donation
-              ? t('magazineSubscription/donation/label', {
-                  amount: (subscription.donation.amount / 100).toFixed(2),
-                })
-              : t('magazineSubscription/donation/wannaGiveMore')}{' '}
-            <UpdateDonationLink
-              subscription={subscription}
-              onUpdate={refetch}
-            />
-          </Interaction.P>
+          {subscription.company === 'PROJECT_R' && (
+            <Interaction.P {...css(fontStyles.sansSerifRegular16)}>
+              {subscription.donation
+                ? t('magazineSubscription/donation/label', {
+                    amount: (subscription.donation.amount / 100).toFixed(0),
+                  })
+                : t('magazineSubscription/donation/wannaGiveMore')}{' '}
+              <UpdateDonationLink
+                subscription={subscription}
+                onUpdate={refetch}
+              />
+            </Interaction.P>
+          )}
 
           <div>
             <Link {...css({ ...linkRule })} href='/abgang'>
@@ -240,12 +242,14 @@ const UpdateDonationLink = ({
         <Overlay
           onClose={() => {
             setShowOverlay(false)
+            setCustomAmount('')
             reset()
           }}
         >
           <OverlayToolbar
             onClose={() => {
               setShowOverlay(false)
+              setCustomAmount('')
               reset()
             }}
             title={t(`magazineSubscription/donation/choose`)}
@@ -270,9 +274,11 @@ const UpdateDonationLink = ({
                         ?.toString()
                       const amount = formData.get('donationAmount')?.toString()
 
-                      const donationAmount = customAmount
+                      const donationAmount = amount
+                        ? parseInt(amount, 10)
+                        : customAmount
                         ? parseInt(customAmount, 10) * 100
-                        : parseInt(amount, 10) ?? undefined
+                        : undefined
 
                       if (Number.isInteger(donationAmount)) {
                         updateDonation({
@@ -306,13 +312,13 @@ const UpdateDonationLink = ({
                       </Interaction.P>
 
                       <Button type='submit' name='donationAmount' value='2000'>
-                        CHF +20.00
+                        CHF 20
                       </Button>
                       <Button type='submit' name='donationAmount' value='12000'>
-                        CHF +120.00
+                        CHF 120
                       </Button>
                       <Button type='submit' name='donationAmount' value='24000'>
-                        CHF +240.00
+                        CHF 240
                       </Button>
                       <Field
                         label='Eigener Betrag'
