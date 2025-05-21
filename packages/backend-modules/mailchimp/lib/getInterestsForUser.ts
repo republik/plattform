@@ -1,19 +1,21 @@
 import { SegmentData, UserInterests } from '../types'
 import { getConfig } from '../config'
-import { UserRow } from '@orbiting/backend-modules-types'
 
 const {
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
   MAILCHIMP_INTEREST_GRANTED_ACCESS,
+  MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL,
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
+  REGWALL_TRIAL_CAMPAIGN_ID,
 } = getConfig()
 
+type User = { id: string, firstName?: string; lastName?: string; email: string }
 type GetInterestsForUserParams = {
-  user: UserRow
+  user: User
   subscribeToEditorialNewsletters?: boolean
   segmentData: SegmentData
 }
@@ -41,6 +43,8 @@ export async function getInterestsForUser({
   const hasActiveGrantedAccess =
     !!user && !!activeAccessGrants?.length
 
+  const hasActiveOrPastRegwallTrial = !!user && !!segmentData.accessGrants?.filter((ag) => ag.accessCampaignId === REGWALL_TRIAL_CAMPAIGN_ID).length
+
   const interests = { ...segmentData.mailchimpMember?.interests }
 
   // Update the membership type interests on mailchimp
@@ -48,10 +52,11 @@ export async function getInterestsForUser({
   interests[MAILCHIMP_INTEREST_MEMBER] = hasMembership || hasSubscription
   interests[MAILCHIMP_INTEREST_MEMBER_BENEFACTOR] = isBenefactor
   interests[MAILCHIMP_INTEREST_GRANTED_ACCESS] = hasActiveGrantedAccess
+  interests[MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL] = hasActiveOrPastRegwallTrial
 
   if (
     subscribeToEditorialNewsletters &&
-    (hasMembership || hasSubscription || hasActiveGrantedAccess)
+    (hasMembership || hasSubscription || hasActiveGrantedAccess || hasActiveOrPastRegwallTrial)
   ) {
     // Autosubscribe all newsletters when new user just paid the membersh.
     interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true

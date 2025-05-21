@@ -39,6 +39,7 @@ export function CodeInput({
                   width: '32px',
                   height: '46px',
                   fontSize: '2xl',
+                  backgroundColor: 'white',
                 }),
 
                 !props.disabled &&
@@ -47,11 +48,6 @@ export function CodeInput({
                     outlineStyle: 'solid',
                     outlineColor: 'text',
                     outlineWidth: '2px',
-                  }),
-
-                slot.char &&
-                  css({
-                    backgroundColor: 'white',
                   }),
               )}
             >

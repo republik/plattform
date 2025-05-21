@@ -724,7 +724,10 @@
       "key": "Account/Delete/link",
       "value": "Löschungsanfrage"
     },
-    { "key": "UserGuidance/title", "value": "Kein laufendes Abonnement" },
+    {
+      "key": "UserGuidance/title",
+      "value": "Kein laufendes Abonnement"
+    },
     {
       "key": "UserGuidance/p1",
       "value": "Das Konto mit der E-Mail {email} hat kein gültiges Abonnement."
@@ -1431,7 +1434,7 @@
     },
     {
       "key": "profile/settings/hasPublicProfile/false/note",
-      "value": "Ihre Profilseite ist nur für andere Verleger sichtbar. Im Dialog sehen nur Verlegerinnen Ihren vollen Namen, Externe sehen bloss Ihre Initialen. Ausser Sie wählen die Option, einen Beitrag anonym zu veröffentlichen."
+      "value": "Ihre Profilseite ist nicht öffentlich und über die Republik-Suchfunktion nicht auffindbar. Im Dialog ist Ihr voller Name nur für andere Verlegerinnen und angemeldete Gäste sichtbar. Alle anderen sehen über Ihren Dialog-Beiträgen bloss Ihre Initialen. Ausser Sie wählen die Option, einen Dialog-Beitrag anonym zu veröffentlichen."
     },
     {
       "key": "profile/settings/isEligibleForProfile/notEligible",
@@ -7401,10 +7404,6 @@
       "value": "Sie haben {count} Rubriken abonniert:"
     },
     {
-      "key": "Notifications/settings/noMembership",
-      "value": "Journalismus kostet. Deshalb erhalten Sie Benachrichtigung zu Beiträgen aus dem Magazin und den Rubriken erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
-    },
-    {
       "key": "Notifications/settings/discussion",
       "value": "Debattenbeiträge"
     },
@@ -7898,7 +7897,7 @@
     },
     {
       "key": "regwall/whyRegister/expanded",
-      "value": "<p>Warum eine E-Mail-Adresse?</p><p>Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Über Ihre E-Mail-Adresse können wir direkt mit Ihnen in Kontakt treten, ohne dass externe Suchmaschinen oder Social-Media-Plattformen zwischengeschaltet sind. <b>Wir geben Ihre E-Mail-Adresse niemals ausserhalb der Republik weiter</b>.</p><p>Wenn Sie keine Nachrichten mehr von der Republik erhalten möchten, können Sie sich <b>jederzeit abmelden</b>.</p>"
+      "value": "<p>Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Über Ihre E-Mail-Adresse können wir direkt mit Ihnen in Kontakt treten, ohne dass externe Suchmaschinen oder Social-Media-Plattformen zwischengeschaltet sind. <b>Wir geben Ihre E-Mail-Adresse niemals ausserhalb der Republik weiter</b>.</p><p>Wenn Sie keine Nachrichten mehr von der Republik erhalten möchten, können Sie sich <b>jederzeit abmelden</b>.</p>"
     },
     {
       "key": "regwall/a/offers/description",
@@ -7925,12 +7924,20 @@
       "value": "Einstiegsangebot"
     },
     {
-      "key": "paywall/offers/title/1",
+      "key": "paywall/a/offers/title/1",
       "value": "Ihre kostenlose Gastwoche ist zu Ende."
     },
     {
-      "key": "paywall/offers/title/2",
+      "key": "paywall/a/offers/title/2",
       "value": "Doch unsere gemeinsame Reise muss hier nicht enden."
+    },
+    {
+      "key": "paywall/b/offers/title/1",
+      "value": "Wie schön, Sie sind zurück!"
+    },
+    {
+      "key": "paywall/b/offers/title/2",
+      "value": "Wenn Sie schon da sind, dann bleiben Sie doch gleich?"
     },
     {
       "key": "paywall/offers/yearly/duration",

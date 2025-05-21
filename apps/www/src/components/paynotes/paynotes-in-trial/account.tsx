@@ -48,7 +48,7 @@ export function AccountPaynote() {
   const { t } = useTranslation()
   const { me } = useMe()
 
-  if (!me?.accessGrants) return null
+  if (!me?.accessGrants?.length) return null
 
   const maxEndAt =
     me.accessGrants.length > 0 &&
@@ -57,6 +57,7 @@ export function AccountPaynote() {
         new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
       new Date(),
     )
+    console.log(me.accessGrants)
   const maxEndAtString = dayFormat(new Date(maxEndAt))
   const description = (
     t.elements('paynotes/account/description', {
