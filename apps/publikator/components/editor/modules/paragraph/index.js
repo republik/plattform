@@ -5,6 +5,7 @@ import {
   createStaticKeyHandler,
 } from '../../utils/keyHandlers'
 import Placeholder from '../../Placeholder'
+import { IconParagraph } from '@republik/icons'
 
 const removeMarksFromSpace = (node) => {
   return !node.leaves
@@ -123,15 +124,16 @@ export default ({ rule, subModules, TYPE }) => {
           createBlockButton({
             type: TYPE,
           })(({ active, disabled, visible, ...props }) => (
-            <span
+            <div
               {...buttonStyles.block}
               {...props}
               data-active={active}
               data-disabled={disabled}
               data-visible={visible}
             >
-              {formatButtonText}
-            </span>
+              <IconParagraph width={28} height={28} />
+              <span style={{ lineHeight: '1.25' }}>{formatButtonText}</span>
+            </div>
           )),
       ],
     },

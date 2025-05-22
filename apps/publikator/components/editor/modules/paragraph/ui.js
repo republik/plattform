@@ -1,4 +1,5 @@
 import { Block } from 'slate'
+import { QuoteIcon } from '@radix-ui/react-icons'
 
 import { Radio, Label, A } from '@project-r/styleguide'
 
@@ -144,7 +145,9 @@ export default ({
         data-disabled={disabled}
         data-visible
         onMouseDown={quoteButtonClickHandler(value, onChange)}
+        style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
       >
+        <QuoteIcon width={16} height={16} />
         {insertButtonText}
       </span>
     )

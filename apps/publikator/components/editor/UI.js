@@ -20,25 +20,45 @@ const Sidebar = ({
     }}
   >
     <div style={{ flex: 1, overflowY: 'auto' }}>
-      <Interaction.P>
-        <Label>Text</Label>
-        <br />
+      <Label>Text</Label>
+      <div
+        style={{
+          display: 'flex',
+          gap: '10px',
+          marginBottom: '24px',
+        }}
+      >
         {textFormatButtons.map((Button, i) => (
           <Button key={`text-fmt-${i}`} value={value} onChange={onChange} />
         ))}
-      </Interaction.P>
-      <Interaction.P>
-        <Label>Block</Label>
+      </div>
+      <Label>Block</Label>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
+          gap: '10px',
+        }}
+      >
+        {' '}
         {blockFormatButtons.map((Button, i) => (
           <Button key={`block-fmt-${i}`} value={value} onChange={onChange} />
         ))}
-      </Interaction.P>
-      <Interaction.P>
+      </div>
+      <Label>Einfügen</Label>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
+          gap: '10px',
+        }}
+      >
+        {' '}
         <Label>Einfügen</Label>
         {insertButtons.map((Button, i) => (
           <Button key={`insert-${i}`} value={value} onChange={onChange} />
         ))}
-      </Interaction.P>
+      </div>
     </div>
     <div
       style={{

@@ -46,11 +46,31 @@ export default {
     ...format,
   }),
   block: css({
-    display: 'block',
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: '4px',
+    fontSize: '14px',
+    width: '81px',
+    height: '81px',
+    alignItems: 'center',
+    justifyContent: 'center',
     ...format,
+    '&:hover': {
+      backgroundColor: '#CCCCCC',
+    },
   }),
   insert: css({
-    display: 'block',
+    display: 'flex',
+    flexDirection: 'column',
+    borderRadius: '4px',
+    fontSize: '14px',
+    width: '81px',
+    height: '81px',
+    alignItems: 'center',
+    justifyContent: 'center',
     ...action,
+    '&:hover': {
+      backgroundColor: '#CCCCCC',
+    },
   }),
 }
