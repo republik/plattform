@@ -1,17 +1,20 @@
 import {
-  Loader,
   CommentTeaser,
+  Loader,
   mediaQueries,
-  SHARE_IMAGE_WIDTH,
   SHARE_IMAGE_HEIGHT,
+  SHARE_IMAGE_WIDTH,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 
-import SectionTitle from './Common/SectionTitle'
-import SectionContainer from './Common/SectionContainer'
-import CommentLink from '../Discussion/shared/CommentLink'
-import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
+import {
+  PUBLIC_BASE_URL,
+  SCREENSHOT_SERVER_BASE_URL,
+} from '../../lib/constants'
 import { useTranslation } from '../../lib/withT'
+import CommentLink from '../Discussion/shared/CommentLink'
+import SectionContainer from './Common/SectionContainer'
+import SectionTitle from './Common/SectionTitle'
 
 const Community = ({ loading, error, featuredComments }) => {
   const { t } = useTranslation()
@@ -31,7 +34,7 @@ const Community = ({ loading, error, featuredComments }) => {
               const image =
                 comment.discussion?.document?.meta?.image ||
                 (comment.discussion?.document?.meta?.shareText
-                  ? `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
+                  ? `${SCREENSHOT_SERVER_BASE_URL}/api/screenshot?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&version=${encodeURIComponent(
                       `${comment.discussion.document.id}${
                         comment.discussion.document.meta.format
                           ? `-${comment.discussion.document.meta.format.id}`

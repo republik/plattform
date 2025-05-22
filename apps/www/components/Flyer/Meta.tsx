@@ -2,7 +2,10 @@ import React from 'react'
 
 import { CustomElement, renderSlateAsText } from '@project-r/styleguide'
 
-import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
+import {
+  PUBLIC_BASE_URL,
+  SCREENSHOT_SERVER_BASE_URL,
+} from '../../lib/constants'
 import { useTranslation } from '../../lib/withT'
 
 import { getCacheKey } from '../Article/metadata'
@@ -28,7 +31,7 @@ export const getShareImageUrls = (
 
   const dimensions = showAll ? [760, 1] : [600, 314]
 
-  const shareImageUrl = new URL('/render', ASSETS_SERVER_BASE_URL)
+  const shareImageUrl = new URL('/api/screenshot', SCREENSHOT_SERVER_BASE_URL)
   shareImageUrl.searchParams.set('viewport', dimensions.join('x'))
   shareImageUrl.searchParams.set('zoomFactor', '2')
   shareImageUrl.searchParams.set('updatedAt', getCacheKey(documentId, meta))

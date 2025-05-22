@@ -1,11 +1,14 @@
 import { renderMdast } from '@republik/mdast-react-render'
 import { useRouter } from 'next/router'
-import React, { useMemo, useEffect, useRef, ReactNode } from 'react'
+import React, { ReactNode, useEffect, useMemo, useRef } from 'react'
 import scrollIntoView from 'scroll-into-view'
 
-import { createArticleSchema, slug, pxToRem } from '@project-r/styleguide'
+import { createArticleSchema, pxToRem, slug } from '@project-r/styleguide'
 
-import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
+import {
+  PUBLIC_BASE_URL,
+  SCREENSHOT_SERVER_BASE_URL,
+} from '../../../lib/constants'
 import { cleanAsPath } from '../../../lib/utils/link'
 import { useTranslation } from '../../../lib/withT'
 
@@ -116,7 +119,7 @@ const QuestionScroll: React.FC<{
       '{name}',
       sharedAnswer ? sharedAnswer.author.name : '',
     ),
-    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
+    image: `${SCREENSHOT_SERVER_BASE_URL}/api/screenshot?width=1200&height=1&url=${encodeURIComponent(
       shareImageUrl,
     )}`,
   }

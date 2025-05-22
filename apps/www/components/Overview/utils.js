@@ -1,13 +1,13 @@
 import {
-  ASSETS_SERVER_BASE_URL,
-  RENDER_FRONTEND_BASE_URL,
+  PUBLIC_BASE_URL,
+  SCREENSHOT_SERVER_BASE_URL,
 } from '../../lib/constants'
 
 export const renderWidth = 1200
 export const getImgSrc = (teaser, path = '/', size = 240) =>
-  `${ASSETS_SERVER_BASE_URL}/render?viewport=${renderWidth}x1&url=${encodeURIComponent(
-    `${RENDER_FRONTEND_BASE_URL}${path}?extractId=${teaser.id}`,
-  )}${size ? `&resize=${size}` : ''}&format=auto`
+  `${SCREENSHOT_SERVER_BASE_URL}/api/screenshot?width=${renderWidth}&url=${encodeURIComponent(
+    `${PUBLIC_BASE_URL}${path}?extractId=${teaser.id}`,
+  )}${size ? `&resize=${size}` : ''}`
 
 export const getTeasersFromDocument = (doc) => {
   if (!doc) {

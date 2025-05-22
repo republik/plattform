@@ -1,9 +1,9 @@
 import { SHARE_IMAGE_HEIGHT, SHARE_IMAGE_WIDTH } from '@project-r/styleguide'
 
 import {
-  ASSETS_SERVER_BASE_URL,
   PUBLIC_BASE_URL,
   SCHEMA_PUBLISHER,
+  SCREENSHOT_SERVER_BASE_URL,
 } from '../../lib/constants'
 import { parseJSONObject } from '../../lib/safeJSON'
 import { deduplicate } from '../../lib/utils/helpers'
@@ -96,7 +96,7 @@ export const getMetaData = (documentId, meta) => {
   const cacheKey = getCacheKey(documentId, meta)
   const shareImage =
     meta.shareText &&
-    `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
+    `${SCREENSHOT_SERVER_BASE_URL}/api/screenshot?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&version=${encodeURIComponent(
       cacheKey,
     )}&url=${encodeURIComponent(
       `${PUBLIC_BASE_URL}${meta.path}?extract=share`,
