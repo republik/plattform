@@ -7,10 +7,8 @@ import {
 } from '@project-r/styleguide'
 import { css } from 'glamor'
 
-import {
-  PUBLIC_BASE_URL,
-  SCREENSHOT_SERVER_BASE_URL,
-} from '../../lib/constants'
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 import { useTranslation } from '../../lib/withT'
 import CommentLink from '../Discussion/shared/CommentLink'
 import SectionContainer from './Common/SectionContainer'
@@ -34,15 +32,16 @@ const Community = ({ loading, error, featuredComments }) => {
               const image =
                 comment.discussion?.document?.meta?.image ||
                 (comment.discussion?.document?.meta?.shareText
-                  ? `${SCREENSHOT_SERVER_BASE_URL}/api/screenshot?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&version=${encodeURIComponent(
-                      `${comment.discussion.document.id}${
+                  ? screenshotUrl({
+                      url: `${PUBLIC_BASE_URL}${comment.discussion.document.meta.path}?extract=share`,
+                      width: SHARE_IMAGE_WIDTH,
+                      height: SHARE_IMAGE_HEIGHT,
+                      version: `${comment.discussion.document.id}${
                         comment.discussion.document.meta.format
                           ? `-${comment.discussion.document.meta.format.id}`
                           : ''
                       }`,
-                    )}&url=${encodeURIComponent(
-                      `${PUBLIC_BASE_URL}${comment.discussion.document.meta.path}?extract=share`,
-                    )}`
+                    })
                   : undefined)
 
               return (

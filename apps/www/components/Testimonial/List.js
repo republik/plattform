@@ -11,12 +11,9 @@ import Loader from '../Loader'
 
 import Detail from './Detail'
 
-import {
-  CDN_FRONTEND_BASE_URL,
-  PUBLIC_BASE_URL,
-  SCREENSHOT_SERVER_BASE_URL,
-} from '../../lib/constants'
+import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
 
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import {
   A,
   Field,
@@ -442,11 +439,12 @@ export class List extends Component {
                   focusItem,
                 ),
                 url: `${PUBLIC_BASE_URL}/community?id=${focusItem.id}`,
-                image: `${SCREENSHOT_SERVER_BASE_URL}/api/screenshot?width=1200&height=628&version=${encodeURIComponent(
-                  focusItem.updatedAt,
-                )}&url=${encodeURIComponent(
-                  `${PUBLIC_BASE_URL}/community?share=${focusItem.id}`,
-                )}`,
+                image: screenshotUrl({
+                  url: `${PUBLIC_BASE_URL}/community?share=${focusItem.id}`,
+                  width: 1200,
+                  height: 628,
+                  version: focusItem.updatedAt,
+                }),
               }
             : {
                 pageTitle: t('testimonial/meta/pageTitle'),

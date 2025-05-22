@@ -1,13 +1,12 @@
-import {
-  PUBLIC_BASE_URL,
-  SCREENSHOT_SERVER_BASE_URL,
-} from '../../lib/constants'
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 
 export const renderWidth = 1200
 export const getImgSrc = (teaser, path = '/', size = 240) =>
-  `${SCREENSHOT_SERVER_BASE_URL}/api/screenshot?width=${renderWidth}&url=${encodeURIComponent(
-    `${PUBLIC_BASE_URL}${path}?extractId=${teaser.id}`,
-  )}${size ? `&resize=${size}` : ''}`
+  screenshotUrl({
+    url: `${PUBLIC_BASE_URL}${path}?extractId=${teaser.id}`,
+    width: renderWidth,
+  })
 
 export const getTeasersFromDocument = (doc) => {
   if (!doc) {

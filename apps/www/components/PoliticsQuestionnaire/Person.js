@@ -1,3 +1,4 @@
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 
@@ -18,10 +19,7 @@ import {
 
 import { IconRadioChecked, IconRadioUnchecked } from '@republik/icons'
 
-import {
-  PUBLIC_BASE_URL,
-  SCREENSHOT_SERVER_BASE_URL,
-} from '../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 
 import Frame from '../Frame'
 import Meta from '../Frame/Meta'
@@ -76,9 +74,7 @@ const Page = ({ responses, authorData }) => {
     url,
     title: '1 von 71 ausgefüllten Fragebogen aus dem Bundeshaus',
     description: '',
-    image: `${SCREENSHOT_SERVER_BASE_URL}/api/screenshot?width=1200&url=${encodeURIComponent(
-      shareImageUrl,
-    )}`,
+    image: screenshotUrl({ url: shareImageUrl, width: 1200 }),
   }
 
   return (

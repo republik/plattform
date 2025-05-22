@@ -1,8 +1,6 @@
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import { useRouter } from 'next/router'
-import {
-  PUBLIC_BASE_URL,
-  SCREENSHOT_SERVER_BASE_URL,
-} from '../../../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../../../lib/constants'
 import Meta from '../../../Frame/Meta'
 
 const QuestionnaireMeta = ({ share, shareText }) => {
@@ -20,9 +18,7 @@ const QuestionnaireMeta = ({ share, shareText }) => {
         url,
         title: shareText,
         description: share.description,
-        image: `${SCREENSHOT_SERVER_BASE_URL}/api/screenshot?width=1200&url=${encodeURIComponent(
-          shareImageUrl,
-        )}`,
+        image: screenshotUrl({ url: shareImageUrl, width: 1200 }),
       }}
     />
   )

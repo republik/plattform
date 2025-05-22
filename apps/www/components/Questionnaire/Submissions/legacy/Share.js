@@ -4,10 +4,8 @@ import { format } from 'url'
 
 import { fontStyles } from '@project-r/styleguide'
 
-import {
-  PUBLIC_BASE_URL,
-  SCREENSHOT_SERVER_BASE_URL,
-} from '../../../../lib/constants'
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { PUBLIC_BASE_URL } from '../../../../lib/constants'
 import { useTranslation } from '../../../../lib/withT'
 import Meta from '../../../Frame/Meta'
 import { AnswerText } from '../components/AnswerText'
@@ -64,12 +62,13 @@ const ShareSubmission = ({
           ),
           description: replaceText(share.description, replacements),
           image: share.extract
-            ? `${SCREENSHOT_SERVER_BASE_URL}/api/screenshot?width=1200&url=${encodeURIComponent(
-                getSubmissionUrl(pathname, submission.id, {
+            ? screenshotUrl({
+                url: getSubmissionUrl(pathname, submission.id, {
                   qid,
                   extract: share.extract,
                 }),
-              )}`
+                width: 1200,
+              })
             : '',
         }}
       />

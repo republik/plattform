@@ -6,16 +6,14 @@ import { useTranslation } from '../../lib/withT'
 import Frame from '../Frame'
 import Loader from '../Loader'
 
-import {
-  PUBLIC_BASE_URL,
-  SCREENSHOT_SERVER_BASE_URL,
-} from '../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 
 import type { User } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
 import getPublicUser from './graphql/getPublicUser'
 
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import { Container, mediaQueries } from '@project-r/styleguide'
 import EditProfile from './EditProfile'
 import ProfileView from './ProfileView'
@@ -64,11 +62,12 @@ const Profile = ({ user: foundUser }: { user: User }) => {
     url: user ? `${PUBLIC_BASE_URL}/~${user.slug}` : undefined,
     image:
       user && user.portrait
-        ? `${SCREENSHOT_SERVER_BASE_URL}/api/screenshot?width=1200&height=628&version=${encodeURIComponent(
-            user.updatedAt,
-          )}b2&url=${encodeURIComponent(
-            `${PUBLIC_BASE_URL}/community?share=${user.id}`,
-          )}`
+        ? screenshotUrl({
+            url: `${PUBLIC_BASE_URL}/community?share=${user.id}`,
+            width: 1200,
+            height: 628,
+            version: user.updatedAt,
+          })
         : '',
     pageTitle: user
       ? t('pages/profile/pageTitle', { name: user.name })

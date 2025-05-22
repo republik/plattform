@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 
 import NextLink from 'next/link'
 
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import {
   Center,
   ColorContextProvider,
@@ -22,10 +23,7 @@ import Frame from '../Frame'
 import Meta from '../Frame/Meta'
 import { ShareImage } from '../Questionnaire/Submissions/components/ShareImage'
 
-import {
-  PUBLIC_BASE_URL,
-  SCREENSHOT_SERVER_BASE_URL,
-} from '../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 import {
   ILLU_SHARE,
   OVERVIEW_QUESTIONNAIRE_PATH,
@@ -70,9 +68,7 @@ const Page = ({
     url,
     title: question,
     description: 'Politikfragebogen für Politiker',
-    image: `${SCREENSHOT_SERVER_BASE_URL}/api/screenshot?width=1200&url=${encodeURIComponent(
-      shareImageUrl,
-    )}`,
+    image: screenshotUrl({ url: shareImageUrl, width: 1200 }),
   }
 
   return (
