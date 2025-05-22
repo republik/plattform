@@ -25,8 +25,6 @@ export default function Impressum({ data }: { data: EmployeeRecord[] }) {
       </P>
       <br />
       <br />
-      <Employees employees={data} />
-
       <H2>Herausgeberin</H2>
       <P>
         Republik AG
@@ -45,10 +43,20 @@ export default function Impressum({ data }: { data: EmployeeRecord[] }) {
 
       <br />
       <P>
+        Anonyme oder vertrauliche Kontaktaufnahme: {' '}
+        <A href='/vertraulich'>republik.ch/vertraulich</A>
+      </P>
+
+      <br />
+      <P>
         <A href='https://drive.google.com/open?id=14YQ_IR6HRoXUwrfjc_KJQ_lGjMXjaFO1'>
           Medienbilder und Logo herunterladen
         </A>
       </P>
+      <br />
+      <br />
+
+      <Employees employees={data} />
 
       <H2>Aktionariat</H2>
       <P>
