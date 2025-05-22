@@ -206,6 +206,10 @@
 			padding-bottom: 18px;
 		}
 
+    #footerContent strong {
+			font-family: Rubis-Bold;
+		}
+
 		#templateHeader,
 		#templateBody,
 		#templateFooter {
@@ -556,7 +560,7 @@
 			border-top: 0;
 			border-bottom: 0;
 			/*@editable*/
-			padding-top: 36px;
+			padding-top: 9px;
 			/*@editable*/
 			padding-bottom: 9px;
 		}
@@ -692,6 +696,10 @@
 			text-decoration: none !important;
 			font-weight: normal;
 			font-size: '20px';
+		}
+
+    .custom_button strong {
+			font-family: GT-America-Standard-Bold;
 		}
 
 		@media only screen and (max-width: 480px) {
@@ -947,7 +955,7 @@
 												<tr>
 													<td valign="top">
 														<div>
-															<p>Ein Zurück-zur-Republik-Angebot für Sie</p>
+															<p>Kommen Sie zurück zur Republik für 160 statt 240 Franken</p>
 														</div>
 													</td>
 												</tr>
@@ -964,54 +972,21 @@
 							</td>
 						</tr>
 						<!-- // END PREHEADER -->
-						<!-- BEGIN HEADER // -->
-						<tr>
-							<td valign="top" id="templateHeader">
-
-								<!-- BEGIN MODULE: HEADER IMAGE // -->
-								<img width="178" height="79" src="https://www.republik.ch/static/logo_republik_newsletter.png"
-									style="border:0;width:178px !important;height:79px !important;margin:0;max-width:100% !important"
-									alt="REPUBLIK">
-								<!-- // END MODULE: HEADER IMAGE -->
-								<table id="sender" style="margin-top: 48px; margin-bottom: 24px;">
-									<tr>
-										<td>
-											<img
-												src="https://mcusercontent.com/650c1ec9003c7d8567eef4c5e/images/d3ed83e8-5839-3998-8810-4b609547c0c3.jpeg"
-												alt="" border="0"
-												style="height: 72px; width: 72px; margin: 0; padding: 0;border:0;width:72px !important;height:72px !important;margin:0;max-width:100% !important"
-												width="72" height="72">
-										</td>
-										<td>
-											<img
-												src="https://mcusercontent.com/650c1ec9003c7d8567eef4c5e/images/97ca55f6-d4d1-1990-b610-d1c539cbf117.jpeg"
-												alt="" border="0"
-												style="height: 72px; width: 72px; margin: 0; padding: 0;border:0;width:72px !important;height:72px !important;margin:0;max-width:100% !important"
-												width="72" height="72">
-										</td>
-										<td id="sender" style="padding-left: 12px;"><strong>Olivier Baumann und <br>
-												Lucia Herrmann</strong><br>
-											Für die Republik-Crew</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-						<!-- // END HEADER -->
 						<!-- BEGIN BODY // -->
 						<tr>
 							<td valign="top" id="templateBody"><!-- BEGIN MODULE: BODY CONTENT // -->
 								<p dir="ltr">Guten Tag<br>
 									<br>
-									Seit einem Monat sind Sie nicht mehr bei der Republik. Vielleicht mussten Sie umziehen, haben den Job
-									gewechselt, einen Freund mit Liebeskummer getröstet, sich ein neues Haustier zugetan oder ein
-									Kind bekommen.<br>
+									Seit über zwei Wochen sind Sie nicht mehr bei der Republik. 
+                  Vielleicht mussten Sie umziehen, haben den Job gewechselt, 
+                  ein Kind bekommen oder versucht, eine Baumnuss zu knacken.<br>
 									<br>
-									Was auch immer der Grund für Ihre Abwesenheit ist: Sie fehlen bei der Republik!<br>
+									Was auch immer der Grund für Ihre Abwesenheit ist: Sie fehlen uns!<br>
 									<br>
-									Wir würden uns freuen, Sie wieder regelmässig im und durch den Alltag begleiten zu
-									dürfen. Denn egal, was Sie gerade tun, vernünftige Informationen brauchen Sie bestimmt. Und
-									weil das keine Floskel ist und wir es ernst meinen, machen wir Ihnen heute ein
-									Zurück-zur-Republik-Angebot:
+									Wir würden uns freuen, Sie wieder regelmässig im und durch den Alltag begleiten zu dürfen. 
+                  Denn egal, was Sie gerade tun, vernünftige Informationen brauchen Sie bestimmt. 
+                  Und weil das keine Floskel ist und wir es ernst meinen, 
+                  machen wir Ihnen heute ein Zurück-zur-Republik-Angebot:
 								</p>
 								<br>
 								<!-- Button-->
@@ -1023,7 +998,7 @@
 													<tbody>
 														<tr>
 															<td align="center" width="100%">
-																<a href="https://www.republik.ch/angebote?package=ABO&userPrice=1&price=12000&reason=Zurueck-zur-Republik-Angebot&utm_campaign=mitstreiter"><strong>Ein Jahr Republik für CHF 120</strong></a>
+																<a href="{{link_shop_yearly_subscription}}?promo_code=YEARLY160&utm_medium=email&utm_source=transactional&utm_campaign=yearly24&utm_content=yearly_abo_winback_16_yearly"><strong>Ein Jahr Republik für 160 statt 240 Franken</strong></a>
 															</td>
 														</tr>
 													</tbody>
@@ -1035,6 +1010,9 @@
 
 								<p dir="ltr">Bei Fragen oder wenn wir Ihnen bei einem Anliegen weiterhelfen können, melden Sie sich
 									gerne via <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>.</p>
+
+                <p>Herzlich</p>
+                <p>Ihre Crew der Republik</p>
 								<!-- END MODULE: BODY CONTENT-->
 							</td>
 						</tr>
@@ -1045,39 +1023,17 @@
 
 								<!-- BEGIN MODULE: STANDARD FOOTER // -->
 								<table border="0" cellpadding="0" cellspacing="0" width="100%">
-									<!-- BEGIN PREFOOTER //-->
-									<tr align="center">
-										<td>
-											<img
-												src="https://mcusercontent.com/650c1ec9003c7d8567eef4c5e/images/d3ed83e8-5839-3998-8810-4b609547c0c3.jpeg"
-												alt="" border="0"
-												style="height: 72px; width: 72px; margin: 0; padding: 0;border:0;width:80px !important;height:80px !important;margin:0;"
-												width="72" height="72">
-											<img
-												src="https://mcusercontent.com/650c1ec9003c7d8567eef4c5e/images/97ca55f6-d4d1-1990-b610-d1c539cbf117.jpeg"
-												alt="" border="0"
-												style="height: 72px; width: 72px; margin: 0; padding: 0;border:0;width:80px !important;height:80px !important;margin:0;"
-												width="72" height="72">
-										</td>
-									</tr>
-									<tr align="center">
-										<td>
-											<div id="sender_bottom">Herzlich<br>
-												<br>
-												<strong>Olivier Baumann und Lucia Herrmann</strong><br>
-												<br>
-												Für die Republik-Crew
-											</div>
-										</td>
-									</tr>
-									<!-- // END PREFOOTER-->
 									<tr style="border-bottom: 1px solid #DADDDC">
 										<td valign="top" id="footerContent">
-											<div><strong>PS: Falls einer der oben
-													genannten Gründe zutreffen sollte, sind hier ein paar nützliche
-													Republik-Beiträge: <a href="https://www.republik.ch/2020/09/28/sollten-sie-vater-werden-lesen-sie-diesen-beitrag">ein Survival-Guide für den Vaterschaftsurlaub</a>, 
-                          <a href="https://www.republik.ch/2024/01/16/die-politik-der-freundschaft">Freundschaft ist politisch</a> und 
-                          <a href="https://www.republik.ch/format/sommerfragebogen">unpassende Namen für Haustiere</a>.</strong><br>
+											<div><strong>PS: Falls einer der oben genannten Gründe zutreffen sollte, 
+                        sind hier ein paar nützliche Republik-Beiträge: 
+                        eine 
+                        <a href="https://republik.ch/2024/07/11/wohnkrise-der-kampf-ums-zuhause">Recherche zur Immobilienkrise in der Schweiz</a>
+                        , 
+                        <a href="https://www.republik.ch/2020/09/28/sollten-sie-vater-werden-lesen-sie-diesen-beitrag">ein Survival-Guide für den Vaterschaftsurlaub</a>
+                         und eine Anleitung zum 
+                         <a href="https://www.republik.ch/2024/12/02/kann-man-essen-wie-ich-an-der-baumnuss-verzweifelte">Nüsseknacken</a>
+                         .</strong><br>
 												<br>
 												<a href="https://www.republik.ch/" target="_blank" title="Im Web lesen"><img alt="REPUBLIK"	height="79" src="https://www.republik.ch/static/logo_republik_newsletter.png"	style="border:0;width:178px !important;height:79px !important;margin:0;max-width:100% !important" width="178"></a>
 

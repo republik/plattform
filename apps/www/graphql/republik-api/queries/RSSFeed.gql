@@ -1,0 +1,22 @@
+query RSSFeed {
+  feed: search(
+    first: 100
+    filter: { feed: true, template: "article" }
+    sort: { key: publishedAt, direction: DESC }
+  ) {
+    nodes {
+      entity {
+        ... on Document {
+          id
+          repoId
+          meta {
+            title
+            description
+            publishDate
+            path
+          }
+        }
+      }
+    }
+  }
+}

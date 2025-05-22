@@ -64,7 +64,12 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['www.datocms-assets.com', 'cdn.republik.pink', 'cdn.repub.ch', 'localhost'],
+    domains: [
+      'www.datocms-assets.com',
+      'cdn.republik.pink',
+      'cdn.repub.ch',
+      'localhost',
+    ],
   },
   compiler: {
     removeConsole:
@@ -175,6 +180,11 @@ const nextConfig = {
         destination: '/konto',
         permanent: true,
       },
+      {
+        source: '/umfrage/1-minute',
+        destination: '/komplizin',
+        permanent: true,
+      },
       // Redirect /angebote to shop if no query params are set
       // {value: undefined} matchaes any value provided to that query param
       process.env.NEXT_PUBLIC_SHOP_BASE_URL && {
@@ -226,6 +236,24 @@ const nextConfig = {
       {
         source: '/updates',
         destination: '/crowdfunding-updates',
+        permanent: true,
+      },
+      // Migrated from static questionnaire pages
+      {
+        source: '/klimafragebogen/:id',
+        destination: '/15-fragen-zum-klima-ihre-antworten?share=submission-:id',
+        permanent: true,
+      },
+      {
+        source: '/fragebogen-klimakrise/:id',
+        destination:
+          '/2023/11/07/so-blicken-sie-auf-die-klimakrise?share=submission-:id',
+        permanent: true,
+      },
+      {
+        source: '/politikfragebogen-community/:id',
+        destination:
+          '/politik-in-26-fragen-ihre-antworten?share=submission-:id',
         permanent: true,
       },
     ].filter(Boolean)

@@ -4,16 +4,15 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 
 import withT from '../../../lib/withT'
-import { useInNativeApp } from '../../../lib/withInNativeApp'
+import { useInNativeApp, postMessage } from '../../../lib/withInNativeApp'
 
 import Loader from '../../Loader'
 import UserGuidance from '../UserGuidance'
 
-import AccessGrants from '../../Access/Grants'
 import withMembership from '../../Auth/withMembership'
 import Box from '../../Frame/Box'
 
-import { Interaction, useColorContext } from '@project-r/styleguide'
+import { Interaction, useColorContext, A } from '@project-r/styleguide'
 
 import belongingsQuery from '../belongingsQuery'
 import MembershipList from '../Memberships/List'
@@ -37,7 +36,7 @@ const Memberships = ({
   activeMagazineSubscription,
 }) => {
   const { query } = useRouter()
-  const { inNativeIOSApp } = useInNativeApp()
+  const { inNativeIOSApp, isMinimalNativeAppVersion } = useInNativeApp()
   const [colorScheme] = useColorContext()
 
   useEffect(() => {
@@ -57,11 +56,6 @@ const Memberships = ({
       render={() => {
         return (
           <>
-            {hasAccessGrants && !hasActiveMemberships && (
-              <AccountBox>
-                <AccessGrants />
-              </AccountBox>
-            )}
             {!hasAccessGrants && !hasActiveMemberships && (
               <div
                 {...colorScheme.set('backgroundColor', 'hover')}
@@ -75,7 +69,25 @@ const Memberships = ({
             )}
             {inNativeIOSApp && (
               <AccountBox>
-                <P>{t('account/ios/box')}</P>
+                {isMinimalNativeAppVersion('2.3.0') ? (
+                  <P>
+                    Verwalten Sie Ihr Konto im Web.
+                    <br />
+                    <A
+                      href='#'
+                      onClick={(e) => {
+                        e.preventDefault()
+                        postMessage({
+                          type: 'external-link',
+                        })
+                      }}
+                    >
+                      shop.republik.ch
+                    </A>
+                  </P>
+                ) : (
+                  <P>{t('account/ios/box')}</P>
+                )}
               </AccountBox>
             )}
 

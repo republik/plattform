@@ -2,32 +2,33 @@ import { useRouter } from 'next/router'
 
 import NextLink from 'next/link'
 
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import {
-  Interaction,
-  inQuotes,
-  Editorial,
-  fontStyles,
-  ColorContextProvider,
-  colors,
-  mediaQueries,
-  convertStyleToRem,
   Center,
+  ColorContextProvider,
+  Editorial,
+  Interaction,
+  colors,
+  convertStyleToRem,
+  fontStyles,
+  inQuotes,
+  mediaQueries,
 } from '@project-r/styleguide'
 
 import { css } from 'glamor'
 
-import { SubmissionLink, AnswersChart } from './shared'
+import { AnswersChart, SubmissionLink } from './shared'
 
 import Frame from '../Frame'
 import Meta from '../Frame/Meta'
-import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
+import { ShareImage } from '../Questionnaire/Submissions/components/ShareImage'
 
-import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 import {
-  questionColor,
-  OVERVIEW_QUESTIONNAIRE_PATH,
   ILLU_SHARE,
+  OVERVIEW_QUESTIONNAIRE_PATH,
   QUESTIONNAIRE_FG_COLOR,
+  questionColor,
 } from './config'
 
 const Page = ({
@@ -49,12 +50,10 @@ const Page = ({
   shareImageUrlObj.searchParams.set('image', true)
   const shareImageUrl = shareImageUrlObj.toString()
 
-  console.log(questionColor(18))
-
   if (image) {
     return (
-      <ShareImageSplit
-        question={{ text: question }}
+      <ShareImage
+        text={question}
         img={ILLU_SHARE}
         bgColor={questionColor(questionIndex)}
         fgColor={QUESTIONNAIRE_FG_COLOR}
@@ -69,9 +68,7 @@ const Page = ({
     url,
     title: question,
     description: 'Politikfragebogen für Politiker',
-    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-      shareImageUrl,
-    )}`,
+    image: screenshotUrl({ url: shareImageUrl, width: 1200 }),
   }
 
   return (

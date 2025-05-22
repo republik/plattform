@@ -21,12 +21,12 @@
   "homepage": "https://github.com/republik/plattform#readme",
   "devDependencies": {},
   "dependencies": {
-    "@firebase/app-types": "0.6.1",
-    "@firebase/auth-interop-types": "0.1.5",
-    "@firebase/util": "0.3.4",
+    "@firebase/app-types": "^0.9.3",
+    "@firebase/auth-interop-types": "^0.2.4",
+    "@firebase/util": "^1.10.3",
     "apn": "^2.2.0",
     "bluebird": "^3.7.2",
-    "firebase-admin": "^8.12.1",
+    "firebase-admin": "^13.1.0",
     "lodash": "^4.17.19"
   }
 }

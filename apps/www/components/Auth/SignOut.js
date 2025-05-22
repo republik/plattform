@@ -43,7 +43,7 @@ class SignOut extends Component {
                   // re-load after sign in
                   // - clear apollo cache
                   // - clears potentially authenticated ws conntection
-                  window.location.reload()
+                  return window.location.replace('/')
                 } else {
                   this.setState(() => ({
                     error: t('signOut/error'),

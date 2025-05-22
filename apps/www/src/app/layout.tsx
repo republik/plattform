@@ -2,7 +2,7 @@ import { NativeAppMessageSync } from '@app/components/native-app'
 import '@republik/theme/fonts.css'
 import '@republik/theme/styles.css'
 
-import { PaynoteOverlayWithKey } from '@app/app/paynote-overlay-with-key'
+import { PaynoteOverlay } from '@app/components/paynotes/paynote/paynote-overlay'
 import { ThemeProvider } from '@app/components/theme-provider'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
@@ -19,6 +19,16 @@ export const metadata: Metadata = {
     default: 'Republik',
     template: '%s – Republik',
   },
+  alternates: {
+    types: {
+      'application/rss+xml': [
+        {
+          url: '/feed.xml',
+          title: 'RSS Feed',
+        },
+      ],
+    },
+  },
 }
 
 export default async function RootLayout({
@@ -34,9 +44,6 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={css({ scrollPaddingTop: '16-32' })}
     >
-      <head>
-        <AnalyticsProvider />
-      </head>
       <body
         className={css({
           color: 'text',
@@ -50,10 +57,12 @@ export default async function RootLayout({
         <ThemeProvider>
           <ApolloWrapper>
             <MeContextProvider>
-              {children}
-              <NativeAppMessageSync />
-              <SyncUTMToSessionStorage />
-              <PaynoteOverlayWithKey />
+              <AnalyticsProvider>
+                {children}
+                <NativeAppMessageSync />
+                <SyncUTMToSessionStorage />
+                {/* <PaynoteOverlay /> */}
+              </AnalyticsProvider>
             </MeContextProvider>
           </ApolloWrapper>
         </ThemeProvider>

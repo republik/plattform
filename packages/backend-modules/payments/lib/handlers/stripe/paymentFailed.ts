@@ -28,12 +28,12 @@ export async function processPaymentFailed(
   )
 
   if (!sub) {
-    console.log('Unknown stripe subscription %s', sub)
+    console.log(`Unknown stripe subscription ${sub}`)
     return
   }
 
   if (isPledgeBased(sub?.metadata)) {
-    console.log('pledge based subscription [%s]; skipping', sub.id)
+    console.log(`pledge based subscription [${sub.id}]; skipping`)
     return
   }
 
@@ -43,18 +43,14 @@ export async function processPaymentFailed(
 
   if (!subscription) {
     console.log(
-      'subscription %s not present in subscription table; skipping event %s',
-      externalSubId,
-      event.id,
+      `subscription ${externalSubId} not present in subscription table; skipping event ${event.id}`,
     )
     return
   }
 
   if (sub.status !== 'past_due') {
     console.log(
-      'stripe subscription %s for subscription %s is not in past_due state, nothing to do',
-      sub.id,
-      subscription.id,
+      `stripe subscription ${sub.id} for subscription ${subscription.id} is not in past_due state, nothing to do`,
     )
     return
   }

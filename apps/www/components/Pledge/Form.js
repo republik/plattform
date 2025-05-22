@@ -1,33 +1,29 @@
-import { Component, Fragment } from 'react'
-import PropTypes from 'prop-types'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
+import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
+import PropTypes from 'prop-types'
+import { Component, Fragment } from 'react'
 
-import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
-import {
-  CDN_FRONTEND_BASE_URL,
-  ASSETS_SERVER_BASE_URL,
-  PUBLIC_BASE_URL,
-} from '../../lib/constants'
+import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
+import withT from '../../lib/withT'
 
-import Meta from '../Frame/Meta'
-import Loader from '../Loader'
-import FieldSet from '../FieldSet'
 import SignIn from '../Auth/SignIn'
 import withMembership from '../Auth/withMembership'
+import FieldSet from '../FieldSet'
+import Meta from '../Frame/Meta'
+import Loader from '../Loader'
 
-import { Interaction, A, RawHtml } from '@project-r/styleguide'
+import { A, Interaction, RawHtml } from '@project-r/styleguide'
 
+import Link from 'next/link'
 import Accordion from './Accordion'
-import Submit from './Submit'
 import CustomizePackage, {
   getOptionFieldKey,
   getOptionPeriodsFieldKey,
 } from './CustomizePackage'
-import Link from 'next/link'
+import Submit from './Submit'
 
 import ErrorMessage from '../ErrorMessage'
 
@@ -283,7 +279,6 @@ class Pledge extends Component {
       isMember,
       t,
       customMe,
-      statement,
       query,
       packages,
     } = this.props
@@ -292,18 +287,9 @@ class Pledge extends Component {
     const queryPackage = query.package && query.package.toUpperCase()
     const pkg = this.getPkg()
 
-    const statementTitle =
-      statement &&
-      t(`pledge/form/statement/${queryPackage}/title`, statement, '')
     const packageInstruction = t.elements(
       `pledge/form/instruction/${queryPackage}/${
-        customMe
-          ? pkg
-            ? statementTitle
-              ? 'availableWithStatement'
-              : 'available'
-            : 'notAvailable'
-          : 'signIn'
+        customMe ? (pkg ? 'available' : 'notAvailable') : 'signIn'
       }`,
       {
         accountLink: (
@@ -315,34 +301,22 @@ class Pledge extends Component {
       '',
     )
 
-    const meta =
-      !preventMetaUpdate &&
-      (statementTitle
-        ? {
-            title: t('pledge/form/statement/share/title', statement),
-            description: t('pledge/form/statement/share/description'),
-            image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=628&updatedAt=${encodeURIComponent(
-              statement.updatedAt,
-            )}&url=${encodeURIComponent(
-              `${PUBLIC_BASE_URL}/community?share=${statement.id}&package=${queryPackage}`,
-            )}`,
-          }
-        : {
-            title: t.first([
-              pkg && `pledge/meta/package/${pkg.name}/title`,
-              queryGroup && `pledge/meta/group/${queryGroup}/title`,
-              'pledge/meta/title',
-            ]),
-            description: t.first([
-              pkg && `pledge/meta/package/${pkg.name}/description`,
-              queryGroup && `pledge/meta/group/${queryGroup}/description`,
-              'pledge/meta/description',
-            ]),
-            image:
-              pkg?.name === 'LESHA'
-                ? `${CDN_FRONTEND_BASE_URL}/static/social-media/we_stay.jpg`
-                : `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
-          })
+    const meta = !preventMetaUpdate && {
+      title: t.first([
+        pkg && `pledge/meta/package/${pkg.name}/title`,
+        queryGroup && `pledge/meta/group/${queryGroup}/title`,
+        'pledge/meta/title',
+      ]),
+      description: t.first([
+        pkg && `pledge/meta/package/${pkg.name}/description`,
+        queryGroup && `pledge/meta/group/${queryGroup}/description`,
+        'pledge/meta/description',
+      ]),
+      image:
+        pkg?.name === 'LESHA'
+          ? `${CDN_FRONTEND_BASE_URL}/static/social-media/we_stay.jpg`
+          : `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
+    }
 
     return (
       <Fragment>
@@ -398,20 +372,9 @@ class Pledge extends Component {
 
             return (
               <div>
-                {(statementTitle ||
-                  (packageInstruction && !!packageInstruction.length)) && (
+                {packageInstruction && !!packageInstruction.length && (
                   <div style={{ marginBottom: 40 }}>
-                    <P>
-                      {statementTitle && (
-                        <Fragment>
-                          <Interaction.Emphasis>
-                            {statementTitle}
-                          </Interaction.Emphasis>
-                          <br />
-                        </Fragment>
-                      )}
-                      {packageInstruction}
-                    </P>
+                    <P>{packageInstruction}</P>
                     {!customMe && (
                       <div style={{ marginTop: 20 }}>
                         <SignIn context='pledge' />
@@ -618,33 +581,7 @@ const query = gql`
   }
 `
 
-const shareRefQuery = gql`
-  query statementsShareRef($id: String!) {
-    statements(focus: $id, first: 1) {
-      nodes {
-        id
-        name
-        updatedAt
-      }
-    }
-  }
-`
-
 const PledgeWithQueries = compose(
-  graphql(shareRefQuery, {
-    options: ({ query }) => ({
-      variables: {
-        id: query.utm_content || query.ref,
-      },
-    }),
-    skip: (props) => !(props.query.utm_content || props.query.ref),
-    props: ({ data }) => {
-      return {
-        statement:
-          data.statements && data.statements.nodes && data.statements.nodes[0],
-      }
-    },
-  }),
   graphql(query, {
     options: ({ query }) => ({
       variables: {

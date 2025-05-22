@@ -12,6 +12,7 @@ export const inNativeAppBrowserAppVersion = process.browser
 const isLegacyApp = (version) => parseFloat(version) < 2
 
 const isNewerVersion = (oldVer, newVer) => {
+  if (!oldVer || !newVer) return true
   const oldParts = oldVer.split('.')
   const newParts = newVer.split('.')
   for (var i = 0; i < newParts.length; i++) {

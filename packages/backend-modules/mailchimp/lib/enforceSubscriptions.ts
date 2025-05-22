@@ -23,10 +23,12 @@ const {
   MAILCHIMP_MARKETING_AUDIENCE_ID,
   MAILCHIMP_PROBELESEN_AUDIENCE_ID,
   MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
+  MAILCHIMP_REGWALL_TRIAL_AUDIENCE_ID,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
   MAILCHIMP_INTEREST_GRANTED_ACCESS,
+  MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL,
 } = getConfig()
 
 export type EnforceSubscriptionsParams = {
@@ -78,6 +80,10 @@ export async function enforceSubscriptions({
     interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ||
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]
 
+  const activeOrPastRegwallTrial = interests[MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]
+
+  const receivesEditorialNewsletters = activeOrPastRegwallTrial || subscribedToFreeNewsletters
+
   const newsletterSubscription = createNewsletterSubscription(
     NewsletterSubscriptionConfig,
   )
@@ -95,6 +101,7 @@ export async function enforceSubscriptions({
   )
 
   // always add to marketing audience when newsletter settings are updated, except if MEMBER
+  // or if in active trial
   if (hasMagazineAccess) {
     await archiveMemberInAudience({
       user: user || { email },
@@ -110,20 +117,29 @@ export async function enforceSubscriptions({
       defaultStatus: MailchimpInterface.MemberStatus.Subscribed,
     })
 
+    // archive in Probelesen Journey
     await archiveMemberInAudience({
       user: user || { email },
       audienceId: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
     })
+
+    // archive in Regwall Trial Journey
+    await archiveMemberInAudience({
+      user: user || { email },
+      audienceId: MAILCHIMP_REGWALL_TRIAL_AUDIENCE_ID,
+    })
   } else {
-    // no active membership
-    await addUserToMarketingAudience(user || { email }, mergeFields)
+    // no active membership and no active trial
+    if (!hasActiveTrial) {
+      await addUserToMarketingAudience(user || { email }, mergeFields)
+    }
 
     await archiveMemberInAudience({
       user: user || { email },
       audienceId: MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
     })
 
-    if (!subscribedToFreeNewsletters && !hasActiveTrial) {
+    if (!receivesEditorialNewsletters && !hasActiveTrial) {
       await archiveMemberInAudience({
         user: user || { email },
         audienceId: MAILCHIMP_MAIN_LIST_ID,

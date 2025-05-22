@@ -1,12 +1,14 @@
 import { Component } from 'react'
 import questionStyles from './questionStyles'
+import QuestionHeader from './QuestionHeader'
+import QuestionIndex from './QuestionIndex'
 import debounce from 'lodash/debounce'
 import { v4 as uuid } from 'uuid'
 
 import { Interaction } from '@project-r/styleguide'
 import TextInput from './TextInput/TextInput'
 import withT from '../../lib/withT'
-const { H2, P } = Interaction
+const { P } = Interaction
 
 class TextQuestion extends Component {
   constructor(props) {
@@ -47,13 +49,16 @@ class TextQuestion extends Component {
 
   render() {
     const {
-      question: { text, explanation, maxLength },
+      questionCount,
+      question: { text, explanation, maxLength, order, metadata },
       t,
     } = this.props
     const { value } = this.state
     return (
-      <div>
-        {text && <H2 {...questionStyles.label}>{text}</H2>}
+      <div {...questionStyles.question}>
+        <QuestionHeader metadata={metadata} />
+        <QuestionIndex order={order} questionCount={questionCount} />
+        {text && <P {...questionStyles.text}>{text}</P>}
         {explanation && <P {...questionStyles.help}>{explanation}</P>}
         <TextInput
           label={t('questionnaire/text/label')}

@@ -78,13 +78,37 @@ type CheckoutSession {
   url: String
 }
 
-type Offer {
+interface Offer {
   id: ID!
   company: CompanyName!
   name: String!
   price: Price!
   customPrice: CustomPrice
   discount: Discount
+  allowPromotions: Boolean
+  complimentaryItems: [ComplimentaryItem!]
+}
+
+type SubscriptionOffer implements Offer {
+  id: ID!
+  company: CompanyName!
+  name: String!
+  price: Price!
+  customPrice: CustomPrice
+  discount: Discount
+  allowPromotions: Boolean
+  complimentaryItems: [ComplimentaryItem!]
+}
+
+type GiftOffer implements Offer {
+  id: ID!
+  company: CompanyName!
+  name: String!
+  price: Price!
+  customPrice: CustomPrice
+  discount: Discount
+  allowPromotions: Boolean
+  complimentaryItems: [ComplimentaryItem!]
 }
 
 type Price {
@@ -113,6 +137,27 @@ type Discount {
 type Product {
   name: String
   defaultPrice: Price
+}
+
+type ComplimentaryItem {
+  id: String!
+  maxQuantity: Int!
+}
+
+type GiftVoucherValidationResult {
+  type: String!
+  valid: Boolean!
+  isLegacyVoucher: Boolean!
+}
+
+type RedeemGiftResult {
+  aboType: String!
+  starting: DateTime!
+}
+
+input ComplimentaryItemOrder {
+  id: String!
+  quantity: Int!
 }
 
 input CheckoutSessionOptions {

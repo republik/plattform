@@ -342,6 +342,9 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
+    '@media print': {
+      display: 'none',
+    },
   }),
   primary: css({
     display: 'flex',
@@ -357,9 +360,6 @@ const styles = {
     display: 'flex',
     justifyContent: 'flex-start',
     width: '100%',
-    '@media print': {
-      display: 'none',
-    },
   }),
   rightBarItem: css({
     marginLeft: 'auto',

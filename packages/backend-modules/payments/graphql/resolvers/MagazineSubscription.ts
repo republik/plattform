@@ -31,12 +31,21 @@ export = {
       subscription.company,
     ).getCustomer(sub.customer as string)
 
+    if (!customer) {
+      return null
+    }
+
+    const paymentMethodId =
+      sub.default_payment_method ||
+      customer.invoice_settings.default_payment_method
+
+    if (typeof paymentMethodId !== 'string') {
+      return null
+    }
+
     const paymentMethod = await PaymentProvider.forCompany(
       subscription.company,
-    ).getPaymentMethod(
-      (sub.default_payment_method as string) ||
-        (customer?.invoice_settings.default_payment_method as string),
-    )
+    ).getPaymentMethod(paymentMethodId)
 
     if (!paymentMethod) {
       return null

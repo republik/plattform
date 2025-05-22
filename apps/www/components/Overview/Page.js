@@ -24,13 +24,15 @@ import { P } from './Elements'
 import { getTeasersFromDocument } from './utils'
 import Link from 'next/link'
 
+// ATTENTION: only list years here where a split Front document exists, e.g. republik/magazine-2023
 const knownYears = {
   2018: { path: '/2018' },
   2019: { path: '/2019' },
   2020: { path: '/2020' },
   2021: { path: '/2021' },
   2022: { path: '/2022' },
-  // 2023: { path: '/2023' },
+  2023: { path: '/2023' },
+  2024: { path: '/2024' },
 }
 
 const getAll = gql`

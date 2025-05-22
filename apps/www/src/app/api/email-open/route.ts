@@ -29,6 +29,7 @@ export async function GET(request: NextRequest) {
           url,
           props: {
             type: 'email-open',
+            user_type: 'email',
           },
         }),
       })

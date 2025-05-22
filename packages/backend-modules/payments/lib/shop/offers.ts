@@ -1,16 +1,23 @@
 import { getConfig } from '../config'
 import { Company } from '../types'
 
-/**
-@var base currency amount to equal 1 Swiss Frank use this value to muliplie
-*/
-const CHF = 100
-/**
-@var base currency amount to equal 1 Swiss Rappen use this value to muliplie
-*/
-const RAPPEN = 1
+export const GIFTS_ENABLED = () =>
+  process.env.PAYMENTS_SHOP_GIFTS_ENABLED === 'true'
 
-export type OfferType = 'SUBSCRIPTION'
+const in_chf = (n: number) => n * 100
+
+export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
+
+export type ComplimentaryItem = {
+  id: string
+  maxQuantity: number
+  lookupKey: string
+}
+
+export type ComplimentaryItemOrder = {
+  id: string
+  quantity: number
+}
 
 export type Offer = {
   id: string
@@ -20,6 +27,8 @@ export type Offer = {
   productId?: string
   defaultPriceLookupKey: string
   taxRateId?: string
+  requiresLogin: boolean
+  complimentaryItems?: ComplimentaryItem[]
   allowPromotions: boolean
   price?: {
     id: string
@@ -51,12 +60,19 @@ export type Offer = {
   }
 }
 
+// const PROMO_ITEM_REPUBLIK_BIBLIOTEK_1 = {
+//   id: 'REPUBLIK_BILIOTHEK_1',
+//   maxQuantity: 1,
+//   lookupKey: 'REPUBLIK_BILIOTHEK_1',
+// }
+
 export const Offers: Offer[] = [
   {
     id: 'YEARLY',
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
+    requiresLogin: true,
     defaultPriceLookupKey: 'ABO',
     allowPromotions: true,
   },
@@ -65,12 +81,13 @@ export const Offers: Offer[] = [
     name: 'Gönnermitgliedschaft',
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
+    requiresLogin: true,
     defaultPriceLookupKey: 'BENEFACTOR_ABO',
     allowPromotions: false,
     customPrice: {
-      min: 1000 * CHF,
-      max: 4000 * CHF,
-      step: 100 * RAPPEN,
+      min: in_chf(1000),
+      max: in_chf(4000),
+      step: in_chf(10),
       recurring: {
         interval: 'year',
         interval_count: 1,
@@ -82,12 +99,13 @@ export const Offers: Offer[] = [
     name: 'Ausbildungs-Mitgliedschaft',
     type: 'SUBSCRIPTION',
     company: 'PROJECT_R',
+    requiresLogin: true,
     defaultPriceLookupKey: 'STUDENT_ABO',
     allowPromotions: false,
     customPrice: {
-      min: 140 * CHF,
-      max: 239 * CHF,
-      step: 50 * RAPPEN,
+      min: in_chf(140),
+      max: in_chf(239),
+      step: in_chf(1),
       recurring: {
         interval: 'year',
         interval_count: 1,
@@ -99,12 +117,13 @@ export const Offers: Offer[] = [
     type: 'SUBSCRIPTION',
     name: 'Jahresmitgliedschaft',
     company: 'PROJECT_R',
+    requiresLogin: true,
     defaultPriceLookupKey: 'ABO',
     allowPromotions: false,
     customPrice: {
-      max: 2000 * CHF,
-      min: 10 * CHF,
-      step: 100 * RAPPEN,
+      max: in_chf(2000),
+      min: in_chf(10),
+      step: in_chf(1),
       recurring: {
         interval: 'year',
         interval_count: 1,
@@ -116,8 +135,26 @@ export const Offers: Offer[] = [
     name: 'Monats-Abo',
     type: 'SUBSCRIPTION',
     company: 'REPUBLIK',
+    requiresLogin: true,
     allowPromotions: true,
     defaultPriceLookupKey: 'MONTHLY_ABO',
     taxRateId: getConfig().REPUBLIK_STRIPE_SUBSCRIPTION_TAX_ID,
   },
 ]
+
+export const GIFTS_OFFERS: Offer[] = [
+  {
+    id: 'GIFT_YEARLY',
+    name: 'Jahresmitgliedschafts Geschenk',
+    type: 'ONETIME_PAYMENT',
+    company: 'PROJECT_R',
+    requiresLogin: false,
+    allowPromotions: false,
+    complimentaryItems: [],
+    defaultPriceLookupKey: 'GIFT_YEARLY',
+  },
+]
+
+export function activeOffers(): Offer[] {
+  return [...Offers, ...(GIFTS_ENABLED() ? GIFTS_OFFERS : [])]
+}

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React from 'react'
 
 import {
   Flyer,
@@ -10,21 +10,13 @@ import {
 } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
-import { useMe } from '../../lib/context/MeContext'
 
 import HrefLink from '../Link/Href'
 
 import { getTileActionBar } from './ActionBar'
 import Footer from './Footer'
-import getLinkBlocker, { TrialOverlay } from './LinkBlocker'
 import Meta from './Meta'
 import Nav from './Nav'
-import Paynote from './Paynote'
-
-// If no particular tile is in focus (i.e. no share query param),
-// we place the paynote right after the first editorial tile.
-// Otherwise, we place it after the tile in focus.
-const DEFAULT_PAYNOTE_POSITION = 2
 
 export type MetaProps = {
   path: string
@@ -49,26 +41,6 @@ const RenderValue: React.FC<{
   />
 )
 
-const RenderWithPaynote: React.FC<{
-  value: CustomElement[]
-  tileId?: string
-  repoId: string
-  documentId: string
-}> = ({ value, tileId, repoId, documentId }) => {
-  const seed = useMemo(() => Math.random(), [])
-  let idx = DEFAULT_PAYNOTE_POSITION
-  if (tileId) {
-    idx = value.findIndex((node) => node.id === tileId) + 1
-  }
-  return (
-    <>
-      <RenderValue value={value.slice(0, idx)} />
-      <Paynote seed={seed} repoId={repoId} documentId={documentId} />
-      <RenderValue value={value.slice(idx)} />
-    </>
-  )
-}
-
 const Page: React.FC<{
   meta: MetaProps
   repoId: string
@@ -79,12 +51,10 @@ const Page: React.FC<{
   actionBar: JSX.Element
 }> = ({ meta, repoId, documentId, inNativeApp, tileId, value, actionBar }) => {
   const { t } = useTranslation()
-  const { hasAccess, hasActiveMembership, meLoading } = useMe()
-  const [overlay, showOverlay] = useState<boolean>()
 
   const contextProps = {
     t,
-    Link: hasAccess ? HrefLink : getLinkBlocker(() => showOverlay(true)),
+    Link: HrefLink,
     nav: <Nav repoId={repoId} publishDate={meta.publishDate} />,
     ShareTile: getTileActionBar(documentId, meta, inNativeApp),
   }
@@ -93,16 +63,7 @@ const Page: React.FC<{
     <>
       <Flyer.Layout>
         <RenderContextProvider {...contextProps}>
-          {meLoading || hasActiveMembership ? (
-            <RenderValue value={value} />
-          ) : (
-            <RenderWithPaynote
-              value={value}
-              tileId={tileId}
-              repoId={repoId}
-              documentId={documentId}
-            />
-          )}
+          <RenderValue value={value} />
         </RenderContextProvider>
         <Footer>{actionBar}</Footer>
         <Meta
@@ -112,13 +73,6 @@ const Page: React.FC<{
           value={value}
         />
       </Flyer.Layout>
-      {overlay && (
-        <TrialOverlay
-          documentId={documentId}
-          repoId={repoId}
-          onClose={() => showOverlay(false)}
-        />
-      )}
     </>
   )
 }

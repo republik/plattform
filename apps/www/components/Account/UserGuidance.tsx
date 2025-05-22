@@ -1,18 +1,14 @@
+import { Offers } from '@app/components/paynotes/paynote/paynote-offers'
+import { fontStyles, useColorContext } from '@project-r/styleguide'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 
 import Link from 'next/link'
-
-import { useInNativeApp } from '../../lib/withInNativeApp'
-import { useTranslation } from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
-
-import { Offers } from '@app/components/paynote-overlay/paynote-offers'
-import { fontStyles, useColorContext } from '@project-r/styleguide'
+import { useTranslation } from '../../lib/withT'
 import SignOut from '../Auth/SignOut'
 
 const UserGuidance = ({ me }) => {
-  const { inNativeIOSApp } = useInNativeApp()
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
 
@@ -22,7 +18,7 @@ const UserGuidance = ({ me }) => {
       <p {...styles.p}>
         {t.elements('UserGuidance/p1', { email: <strong>{me.email}</strong> })}
       </p>
-      {!inNativeIOSApp ? <Offers /> : <p>{t('account/ios/box')}</p>}
+      <Offers />
       <p {...styles.p} {...colorScheme.set('color', 'textSoft')}>
         {t.elements('UserGuidance/p2', {
           signout: (

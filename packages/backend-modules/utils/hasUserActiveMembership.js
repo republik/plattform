@@ -4,7 +4,7 @@ module.exports = async (user, pgdb) => {
         (
           (
             SELECT COUNT(*) FROM payments.subscriptions s
-            WHERE s."userId" = :userId and s.status not in ('paused', 'canceled', 'incomplete')
+            WHERE s."userId" = :userId and s.status not in ('paused', 'canceled', 'incomplete', 'incomplete_expired')
           )
           +
           (

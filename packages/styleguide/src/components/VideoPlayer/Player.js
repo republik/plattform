@@ -511,6 +511,7 @@ class VideoPlayer extends Component {
         onClick={this.captureFocus}
       >
         <video
+          key={src.mp4} // Re-mount video element when src changes
           {...(isFull ? styles.videoFullscreen : styles.video)}
           {...attributes}
           style={this.props.style}

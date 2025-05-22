@@ -95,6 +95,15 @@ const inform = async (args, context) => {
       cancelledAt,
       cancellationId,
     }) => {
+      const otherActiveMembership = await hasUserOtherActiveMagazineAccess({ userId, membershipId, pgdb: context.pgdb })
+
+      if (otherActiveMembership) {
+        // if user came back with a new membership or subscription, don't send winback mail
+        // this is very much an edge case, because winback mails are sent after the cancellation,
+        // mostly when the membership is still active
+        return
+      }
+
       const templatePayload = await context.mail.prepareMembershipWinback(
         {
           userId,
@@ -118,6 +127,26 @@ const inform = async (args, context) => {
     },
     { concurrency: 2 },
   )
+}
+
+const hasUserOtherActiveMagazineAccess = async ({ userId, membershipId, pgdb}) => {
+  const res = await pgdb.queryOne(
+    `SELECT
+        (
+          (
+            SELECT COUNT(*) FROM payments.subscriptions s
+            WHERE s."userId" = :userId and s.status not in ('paused', 'canceled', 'incomplete')
+          )
+          +
+          (
+            SELECT COUNT(*) FROM public.memberships m
+            WHERE m."userId" = :userId and m.active = true
+            and m.id != :membershipId
+          )
+        ) AS count`,
+    { userId: userId, membershipId: membershipId},
+  )
+  return res?.count > 0
 }
 
 module.exports = {

@@ -1,6 +1,8 @@
 import { Component } from 'react'
 import { css } from 'glamor'
 import questionStyles from './questionStyles'
+import QuestionHeader from './QuestionHeader'
+import QuestionIndex from './QuestionIndex'
 import { nest } from 'd3-collection'
 import { v4 as uuid } from 'uuid'
 
@@ -11,14 +13,14 @@ import {
   Radio,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
-const { H2, H3, P } = Interaction
+const { H3, P } = Interaction
 
 const styles = {
   options: css({
     display: 'flex',
     width: '100%',
     flexWrap: 'wrap',
-    marginTop: 20,
+    marginTop: 10,
   }),
   optionGroup: css({
     width: '100%',
@@ -78,7 +80,16 @@ class ChoiceQuestion extends Component {
 
   render() {
     const {
-      question: { text, explanation, userAnswer, cardinality, options },
+      questionCount,
+      question: {
+        text,
+        explanation,
+        userAnswer,
+        cardinality,
+        options,
+        order,
+        metadata,
+      },
       t,
     } = this.props
     const multipleAllowed = cardinality === 0 || cardinality > 1
@@ -89,31 +100,29 @@ class ChoiceQuestion extends Component {
     const userAnswerValues = userAnswer ? userAnswer.payload.value : []
 
     return (
-      <div>
-        <div {...questionStyles.label}>
-          {text && <H2>{text}</H2>}
-          {(multipleAllowed || explanation) && (
-            <P {...questionStyles.help}>
-              {explanation || t('questionnaire/choice/helpMultiple')}
-            </P>
-          )}
-        </div>
+      <div {...questionStyles.question}>
+        <QuestionHeader metadata={metadata} />
+        <QuestionIndex order={order} questionCount={questionCount} />
+        {text && <P {...questionStyles.text}>{text}</P>}
+        {(multipleAllowed || explanation) && (
+          <P {...questionStyles.help}>
+            {explanation || t('questionnaire/choice/helpMultiple')}
+          </P>
+        )}
         <div {...questionStyles.body} {...styles.options}>
           {optionGroups.map(({ key, values }) => (
             <div key={key} {...styles.optionGroup}>
               {key !== 'null' && <H3 {...styles.optionGroupHeader}>{key}</H3>}
-              <div {...(multipleAllowed && styles.optionList)}>
-                {values.map((o, i) => (
-                  <div key={i} {...styles.option}>
-                    <OptionComponent
-                      onChange={() => this.handleChange(o.value)}
-                      checked={userAnswerValues.some((v) => v === o.value)}
-                    >
-                      {o.label}
-                    </OptionComponent>
-                  </div>
-                ))}
-              </div>
+              {values.map((o, i) => (
+                <div key={i} {...styles.option}>
+                  <OptionComponent
+                    onChange={() => this.handleChange(o.value)}
+                    checked={userAnswerValues.some((v) => v === o.value)}
+                  >
+                    <span {...questionStyles.radio}>{o.label}</span>
+                  </OptionComponent>
+                </div>
+              ))}
             </div>
           ))}
         </div>

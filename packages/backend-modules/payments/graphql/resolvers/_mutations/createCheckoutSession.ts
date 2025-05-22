@@ -2,16 +2,21 @@
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 import {
   Shop,
-  Offers,
   checkIntroductoryOfferEligibility,
+  activeOffers,
 } from '../../../lib/shop'
 import { Payments } from '../../../lib/payments'
 import { default as Auth } from '@orbiting/backend-modules-auth'
 import { requiredCustomFields } from '../../../lib/shop/utils'
+import { Company } from '../../../lib/types'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
   promoCode?: string
+  complimentaryItems: {
+    id: string
+    quantity: number
+  }[]
   options?: {
     uiMode?: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
     promocode?: string
@@ -26,9 +31,7 @@ export = async function createCheckoutSession(
   args: CreateCheckoutSessionArgs,
   ctx: GraphqlContext,
 ) {
-  Auth.ensureUser(ctx.user)
-
-  const shop = new Shop(Offers)
+  const shop = new Shop(activeOffers())
 
   const offer = await shop.getOfferById(args.offerId, {
     promoCode: args.promoCode,
@@ -42,19 +45,9 @@ export = async function createCheckoutSession(
     throw new Error('Unknown offer')
   }
 
-  let customerId = (
-    await Payments.getInstance().getCustomerIdForCompany(
-      ctx.user.id,
-      offer.company,
-    )
-  )?.customerId
+  if (offer?.requiresLogin) Auth.ensureUser(ctx.user)
 
-  if (!customerId) {
-    customerId = await Payments.getInstance().createCustomer(
-      offer.company,
-      ctx.user.id,
-    )
-  }
+  const customerId = await getCustomer(offer.company, ctx.user?.id)
 
   const sess = await shop.generateCheckoutSession({
     offer: offer,
@@ -67,6 +60,7 @@ export = async function createCheckoutSession(
     customFields: requiredCustomFields(ctx.user),
     metadata: args?.options?.metadata,
     returnURL: args?.options?.returnURL,
+    complimentaryItems: args.complimentaryItems,
   })
 
   return {
@@ -75,4 +69,20 @@ export = async function createCheckoutSession(
     clientSecret: sess.client_secret,
     url: sess.url,
   }
+}
+
+async function getCustomer(company: Company, userId?: string) {
+  if (!userId) {
+    return undefined
+  }
+
+  const customerId = (
+    await Payments.getInstance().getCustomerIdForCompany(userId, company)
+  )?.customerId
+
+  if (customerId) {
+    return customerId
+  }
+
+  return await Payments.getInstance().createCustomer(company, userId)
 }

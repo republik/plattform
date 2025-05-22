@@ -70,6 +70,7 @@ const getQuestionnaire = gql`
           text
           explanation
           private
+          metadata
           userAnswer {
             id
             payload
@@ -111,12 +112,70 @@ const getQuestionnaire = gql`
   }
 `
 
+const getQuestionnaireAndResults = gql`
+  query getQuestionnaire($slug: String!) {
+    questionnaire(slug: $slug) {
+      id
+      slug
+      beginDate
+      userIsEligible
+      userHasSubmitted
+      unattributedAnswers
+      turnout {
+        eligible
+        submitted
+      }
+      questions {
+        __typename
+        ... on QuestionInterface {
+          id
+          text
+          order
+          metadata
+          userAnswer {
+            id
+            payload
+          }
+          turnout {
+            skipped
+            submitted
+          }
+        }
+        ... on QuestionTypeChoice {
+          cardinality
+          options {
+            label
+            value
+            category
+          }
+          choiceResults: result {
+            count
+            option {
+              label
+              value
+              category
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export const withQuestionnaire = graphql(getQuestionnaire, {
   name: 'questionnaireData',
   options: ({ slug }) => ({
     variables: {
       slug,
     },
+  }),
+})
+
+export const withQuestionnaireAndResults = graphql(getQuestionnaireAndResults, {
+  name: 'questionnaireData',
+  options: ({ slug, pollInterval = 0 }) => ({
+    pollInterval,
+    variables: { slug },
   }),
 })
 
@@ -240,6 +299,27 @@ export const withAnswerMutation = graphql(submitAnswerMutation, {
             data: newData,
           })
         },
+      })
+    },
+  }),
+})
+
+export const withSurveyAnswerMutation = graphql(submitAnswerMutation, {
+  props: ({ mutate, ownProps: { slug } }) => ({
+    submitAnswer: (question, payload, answerId) => {
+      return mutate({
+        variables: {
+          answerId,
+          questionId: question.id,
+          payload,
+        },
+        refetchQueries: [
+          {
+            query: getQuestionnaireAndResults,
+            variables: { slug },
+          },
+        ],
+        awaitRefetchQueries: true,
       })
     },
   }),
