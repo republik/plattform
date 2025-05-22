@@ -1,33 +1,29 @@
-import { Component, Fragment } from 'react'
-import PropTypes from 'prop-types'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
+import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
+import PropTypes from 'prop-types'
+import { Component, Fragment } from 'react'
 
-import withT from '../../lib/withT'
 import withMe from '../../lib/apollo/withMe'
-import {
-  CDN_FRONTEND_BASE_URL,
-  ASSETS_SERVER_BASE_URL,
-  PUBLIC_BASE_URL,
-} from '../../lib/constants'
+import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
+import withT from '../../lib/withT'
 
-import Meta from '../Frame/Meta'
-import Loader from '../Loader'
-import FieldSet from '../FieldSet'
 import SignIn from '../Auth/SignIn'
 import withMembership from '../Auth/withMembership'
+import FieldSet from '../FieldSet'
+import Meta from '../Frame/Meta'
+import Loader from '../Loader'
 
-import { Interaction, A, RawHtml } from '@project-r/styleguide'
+import { A, Interaction, RawHtml } from '@project-r/styleguide'
 
+import Link from 'next/link'
 import Accordion from './Accordion'
-import Submit from './Submit'
 import CustomizePackage, {
   getOptionFieldKey,
   getOptionPeriodsFieldKey,
 } from './CustomizePackage'
-import Link from 'next/link'
+import Submit from './Submit'
 
 import ErrorMessage from '../ErrorMessage'
 
