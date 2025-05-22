@@ -1,6 +1,5 @@
 const EmailTokenChallenge = require('./EmailTokenChallenge')
 const EmailCodeChallenge = require('./EmailCodeChallenge')
-const SMSCodeChallenge = require('./SMSCodeChallenge')
 const AppChallenge = require('./AppChallenge')
 const AccessTokenChallenge = require('./AccessTokenChallenge')
 
@@ -30,7 +29,6 @@ const TokenExpiredError = newAuthError(
 const TokenTypeMap = {
   [EmailTokenChallenge.Type]: EmailTokenChallenge,
   [EmailCodeChallenge.Type]: EmailCodeChallenge,
-  [SMSCodeChallenge.Type]: SMSCodeChallenge,
   [AppChallenge.Type]: AppChallenge,
   [AccessTokenChallenge.Type]: AccessTokenChallenge,
 }
