@@ -1,0 +1,16 @@
+fragment EmployeeRecordFields on EmployeeRecord {
+  employee
+  name
+  gender
+  greeting
+  group
+  pitch
+  promotedAuthor
+  subgroup
+  title
+  userId
+  famous
+  profile {
+    url(imgixParams: { sat: -100, w: 384, h: 384, fit: crop })
+  }
+}

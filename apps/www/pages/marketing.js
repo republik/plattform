@@ -69,6 +69,7 @@ export const getStaticProps = createGetStaticProps(
         data: {
           ...apiData.data,
           ...datoCMSData.data.marketingLandingPage,
+          employees: datoCMSData.data.employees
         },
         draftMode: draftMode ?? false,
       },
