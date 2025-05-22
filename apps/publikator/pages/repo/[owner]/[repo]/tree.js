@@ -196,47 +196,54 @@ const EditorPage = ({ router, commits, hasMore, fetchMore, t, data }) => {
 
   return (
     <Layout>
-      <EditorNav isTemplate={repo?.isTemplate} />
+      {({ isSidebarOpen }) => (
+        <>
+          <EditorNav
+            isTemplate={repo?.isTemplate}
+            isSidebarOpen={isSidebarOpen}
+          />
 
-      {!!repo && (
-        <div style={{ marginRight: 10 }}>
-          <UncommittedChanges repoId={repo.id} />
-        </div>
-      )}
+          {!!repo && (
+            <div style={{ marginRight: 10 }}>
+              <UncommittedChanges repoId={repo.id} />
+            </div>
+          )}
 
-      <Loader
-        loading={loading && !repo}
-        error={error}
-        render={() => (
-          <Fragment>
-            {repo.isArchived ? (
-              <RepoArchivedBanner isTemplate={repo.isTemplate} />
-            ) : (
-              <NarrowContainer {...styles.publishContainer}>
-                <CurrentPublications repoId={repoId} />
-                <RepoArchive repoId={repoId} isTemplate={repo.isTemplate} />
-              </NarrowContainer>
-            )}
-            <Tree
-              commits={commits}
-              localStorageCommitIds={localStorageCommitIds}
-              milestones={repo.milestones}
-              isTemplate={repo.isTemplate}
-              repoId={repoId}
-            />
-            {hasMore && (
-              <Interaction.P {...styles.loadMore}>
-                {loading && <InlineSpinner size={40} />}
-                {!loading && (
-                  <A {...styles.loadMoreButton} onClick={() => fetchMore()}>
-                    Ältere laden
-                  </A>
+          <Loader
+            loading={loading && !repo}
+            error={error}
+            render={() => (
+              <Fragment>
+                {repo.isArchived ? (
+                  <RepoArchivedBanner isTemplate={repo.isTemplate} />
+                ) : (
+                  <NarrowContainer {...styles.publishContainer}>
+                    <CurrentPublications repoId={repoId} />
+                    <RepoArchive repoId={repoId} isTemplate={repo.isTemplate} />
+                  </NarrowContainer>
                 )}
-              </Interaction.P>
+                <Tree
+                  commits={commits}
+                  localStorageCommitIds={localStorageCommitIds}
+                  milestones={repo.milestones}
+                  isTemplate={repo.isTemplate}
+                  repoId={repoId}
+                />
+                {hasMore && (
+                  <Interaction.P {...styles.loadMore}>
+                    {loading && <InlineSpinner size={40} />}
+                    {!loading && (
+                      <A {...styles.loadMoreButton} onClick={() => fetchMore()}>
+                        Ältere laden
+                      </A>
+                    )}
+                  </Interaction.P>
+                )}
+              </Fragment>
             )}
-          </Fragment>
-        )}
-      />
+          />
+        </>
+      )}
     </Layout>
   )
 }

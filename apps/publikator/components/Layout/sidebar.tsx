@@ -102,7 +102,7 @@ const styles = {
   menuToggle: css({
     position: 'absolute',
     right: -20,
-    top: 20,
+    bottom: 20,
     zIndex: 101,
     backgroundColor: '#fff',
     borderRadius: '50%',

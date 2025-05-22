@@ -367,9 +367,6 @@ export const ActiveInterruptionOverlay = withT(
 export const UncommittedChanges = ({ uncommittedChanges, t }) =>
   !!uncommittedChanges.users.length && (
     <Fragment>
-      <div style={{ textAlign: 'center', fontSize: '14px', marginTop: 7 }}>
-        <Label key='label'>{t('uncommittedChanges/title')}</Label>
-      </div>
       <Initials uncommittedChanges={uncommittedChanges} t={t} />
     </Fragment>
   )

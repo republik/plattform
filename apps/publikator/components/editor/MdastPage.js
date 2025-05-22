@@ -8,6 +8,7 @@ import { timeFormat } from 'd3-time-format'
 import { parse, stringify } from '@republik/remark-preset'
 import { css } from 'glamor'
 
+import Layout from '../Layout'
 import Frame from '../Frame'
 import { HEADER_HEIGHT } from '../Frame/constants'
 import RepoArchivedBanner from '../Repo/ArchivedBanner'
@@ -856,184 +857,149 @@ export class EditorPage extends Component {
     const sidebarDisabled = !!(showLoading || error)
 
     return (
-      <Frame raw>
-        <Frame.Header
-          isTemplate={isTemplate}
-          barStyle={{
-            borderBottom: activeUsers.length
-              ? `3px solid ${readOnly ? colors.error : warningColor}`
-              : undefined,
-          }}
-        >
-          <Frame.Header.Section align='left'>
-            <Nav isNew={isNew} isTemplate={isTemplate} />
-          </Frame.Header.Section>
-          <Frame.Header.Section align='right'>
+      <Layout>
+        {({ isSidebarOpen }) => (
+          <>
+            <Nav isNew={isNew} isTemplate={isTemplate} isSidebarOpen={isSidebarOpen}>
+              <CommitButton
+                isNew={isNew}
+                isTemplate={isTemplate}
+                readOnly={!showLoading && readOnly}
+                didUnlock={didUnlock}
+                hasUncommittedChanges={!showLoading && hasUncommittedChanges}
+                onUnlock={this.unlockHandler}
+                onLock={this.lockHandler}
+                onCommit={this.commitHandler}
+                onRevert={this.revertHandler}
+              />
+              {!showLoading && !!repo && showBranchingNotice && (
+                <BranchingNotice
+                  asIcon
+                  repoId={repo.id}
+                  commit={commit}
+                  hasUncommittedChanges={hasUncommittedChanges}
+                />
+              )}
+              {!!repo && (
+                <UncommittedChanges uncommittedChanges={uncommittedChanges} t={t} />
+              )}
+            </Nav>
             <div
-              style={{
-                padding: 25,
-                paddingTop: 30,
-                // 1 px header border
-                paddingBottom: HEADER_HEIGHT - SIDEBAR_ICON_SIZE - 30 - 1,
-                cursor: 'pointer',
-                color: showSidebar ? colors.primary : undefined,
-              }}
-              onMouseDown={this.toggleSidebarHandler}
+              {...css({
+                display: 'block',
+                paddingTop: '60px',
+                [mediaQueries.mUp]: {
+                  display: 'grid',
+                  transition: 'all 0.2s ease-in-out',
+                  gridTemplateColumns:
+                    !showPreview && showSidebar
+                      ? `1fr ${SIDEBAR_WIDTH}px`
+                      : '1fr 0px',
+                },
+              })}
             >
-              <SettingsIcon size={SIDEBAR_ICON_SIZE} />
-            </div>
-          </Frame.Header.Section>
-          <Frame.Header.Section align='right'>
-            <CommitButton
-              isNew={isNew}
-              isTemplate={isTemplate}
-              readOnly={!showLoading && readOnly}
-              didUnlock={didUnlock}
-              hasUncommittedChanges={!showLoading && hasUncommittedChanges}
-              onUnlock={this.unlockHandler}
-              onLock={this.lockHandler}
-              onCommit={this.commitHandler}
-              onRevert={this.revertHandler}
-            />
-          </Frame.Header.Section>
-          <Frame.Header.Section align='right'>
-            {!showLoading && !!repo && showBranchingNotice && (
-              <BranchingNotice
-                asIcon
-                repoId={repo.id}
-                commit={commit}
-                hasUncommittedChanges={hasUncommittedChanges}
-              />
-            )}
-          </Frame.Header.Section>
-          <Frame.Header.Section align='right'>
-            {!!repo && (
-              <UncommittedChanges
-                uncommittedChanges={uncommittedChanges}
-                t={t}
-              />
-            )}
-          </Frame.Header.Section>
-          <Frame.Header.Section align='right'>
-            <Frame.Me />
-          </Frame.Header.Section>
-        </Frame.Header>
-        <Frame.Body raw>
-          <div
-            {...css({
-              display: 'block',
-              [mediaQueries.mUp]: {
-                display: 'grid',
-                transition: 'all 0.2s ease-in-out',
-                gridTemplateColumns:
-                  !showPreview && showSidebar
-                    ? `1fr ${SIDEBAR_WIDTH}px`
-                    : '1fr 0px',
-              },
-            })}
-          >
-            <Loader
-              loading={showLoading}
-              error={error}
-              render={() => (
-                <div {...css({ minWidth: 0 })}>
-                  {interruptingUsers && (
-                    <ActiveInterruptionOverlay
-                      uncommittedChanges={uncommittedChanges}
-                      interruptingUsers={interruptingUsers}
-                      onRevert={this.revertHandler}
-                      onAcknowledged={() =>
-                        this.setState({
-                          acknowledgedUsers: this.state.activeUsers,
-                          interruptingUsers: undefined,
-                        })
+              <Loader
+                loading={showLoading}
+                error={error}
+                render={() => (
+                  <div {...css({ minWidth: 0 })}>
+                    {interruptingUsers && (
+                      <ActiveInterruptionOverlay
+                        uncommittedChanges={uncommittedChanges}
+                        interruptingUsers={interruptingUsers}
+                        onRevert={this.revertHandler}
+                        onAcknowledged={() =>
+                          this.setState({
+                            acknowledgedUsers: this.state.activeUsers,
+                            interruptingUsers: undefined,
+                          })
+                        }
+                      />
+                    )}
+                    <ColorContextProvider
+                      colorSchemeKey={
+                        dark
+                          ? 'dark'
+                          : (showPreview && this.state.previewDarkmode) || 'light'
                       }
-                    />
-                  )}
-                  <ColorContextProvider
-                    colorSchemeKey={
-                      dark
-                        ? 'dark'
-                        : (showPreview && this.state.previewDarkmode) || 'light'
-                    }
-                  >
-                    {showPreview ? (
-                      <Preview
-                        previewScreenSize={this.state.previewScreenSize}
-                        repoId={repoId}
-                        commitId={commitId}
-                        darkmode={this.state.previewDarkmode}
-                      />
-                    ) : null}
-                    <ErrorBoundary
-                      failureMessage='Ein Fehler trat im Editor auf. Bitte den Quellcode bearbeiten.'
-                      showException
                     >
-                      <Editor
-                        ref={this.editorRef}
-                        schema={schema}
-                        isTemplate={isTemplate}
-                        meta={meta}
-                        value={editorState}
-                        onChange={this.changeHandler}
-                        onDocumentChange={this.documentChangeHandler}
-                        readOnly={readOnly}
-                        hide={showPreview}
-                      />
-                    </ErrorBoundary>
-                  </ColorContextProvider>
-                </div>
-              )}
-            />
-            <Sidebar
-              prependChildren={sidebarPrependChildren}
-              isDisabled={sidebarDisabled}
-              selectedTabId={
-                showPreview ? 'view' : readOnly ? 'workflow' : 'edit'
-              }
-              isOpen={!showPreview && showSidebar}
-            >
-              {!readOnly && !showPreview && (
-                <Sidebar.Tab tabId='edit' label='Editieren'>
-                  <PrintButton />
-                  <Replace
-                    value={this.editor?.serializer.serialize(editorState)}
-                    onSave={this.persistChanges.bind(this)}
-                  />
-                  <CharCount value={editorState} />
-                  {!!this.editor && (
-                    <EditorUI
-                      editorRef={this.editor}
-                      onChange={this.uiChangeHandler}
-                      value={editorState}
-                    />
-                  )}
-                  <button
-                    onClick={() => this.goToRaw(isTemplate)}
-                    {...plainButtonRule}
-                    style={{ color: colors.primary }}
-                  >
-                    {t('pages/raw/title')}
-                  </button>
-                </Sidebar.Tab>
-              )}
-              {!showPreview && (
-                <Sidebar.Tab tabId='workflow' label='Workflow'>
-                  <div style={{ marginBottom: 10 }}>
-                    <CharCount value={editorState} />
+                      {showPreview ? (
+                        <Preview
+                          previewScreenSize={this.state.previewScreenSize}
+                          repoId={repoId}
+                          commitId={commitId}
+                          darkmode={this.state.previewDarkmode}
+                        />
+                      ) : null}
+                      <ErrorBoundary
+                        failureMessage='Ein Fehler trat im Editor auf. Bitte den Quellcode bearbeiten.'
+                        showException
+                      >
+                        <Editor
+                          ref={this.editorRef}
+                          schema={schema}
+                          isTemplate={isTemplate}
+                          meta={meta}
+                          value={editorState}
+                          onChange={this.changeHandler}
+                          onDocumentChange={this.documentChangeHandler}
+                          readOnly={readOnly}
+                          hide={showPreview}
+                        />
+                      </ErrorBoundary>
+                    </ColorContextProvider>
                   </div>
-                  <VersionControl
-                    repoId={repoId}
-                    commit={commit}
-                    isNew={isNew}
-                    hasUncommittedChanges={hasUncommittedChanges}
-                  />
-                </Sidebar.Tab>
-              )}
-            </Sidebar>
-          </div>
-        </Frame.Body>
-      </Frame>
+                )}
+              />
+              <Sidebar
+                prependChildren={sidebarPrependChildren}
+                isDisabled={sidebarDisabled}
+                selectedTabId={
+                  showPreview ? 'view' : readOnly ? 'workflow' : 'edit'
+                }
+                isOpen={!showPreview && showSidebar}
+              >
+                {!readOnly && !showPreview && (
+                  <Sidebar.Tab tabId='edit' label='Editieren'>
+                    {/* <Replace
+                      value={this.editor?.serializer.serialize(editorState)}
+                      onSave={this.persistChanges.bind(this)}
+                    />
+                    <CharCount value={editorState} /> */}
+                    {!!this.editor && (
+                      <EditorUI
+                        editorRef={this.editor}
+                        onChange={this.uiChangeHandler}
+                        value={editorState}
+                      />
+                    )}
+                    {/* <button
+                      onClick={() => this.goToRaw(isTemplate)}
+                      {...plainButtonRule}
+                      style={{ color: colors.primary }}
+                    >
+                      {t('pages/raw/title')}
+                    </button> */}
+                  </Sidebar.Tab>
+                )}
+                {!showPreview && (
+                  <Sidebar.Tab tabId='workflow' label='Workflow'>
+                    <div style={{ marginBottom: 10 }}>
+                      <CharCount value={editorState} />
+                    </div>
+                    <VersionControl
+                      repoId={repoId}
+                      commit={commit}
+                      isNew={isNew}
+                      hasUncommittedChanges={hasUncommittedChanges}
+                    />
+                  </Sidebar.Tab>
+                )}
+              </Sidebar>
+            </div>
+          </>
+        )}
+      </Layout>
     )
   }
 }

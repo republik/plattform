@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
 import { colors, Label } from '@project-r/styleguide'
 
-export const SIDEBAR_WIDTH = 300
+export const SIDEBAR_WIDTH = 420
 
 const styles = {
   container: css({

@@ -11,31 +11,41 @@ const Sidebar = ({
   value,
   onChange,
 }) => (
-  <div>
-    <Interaction.P>
-      <Label>Text</Label>
-      <br />
-      {textFormatButtons.map((Button, i) => (
-        <Button key={`text-fmt-${i}`} value={value} onChange={onChange} />
-      ))}
-    </Interaction.P>
-    <Interaction.P>
-      <Label>Block</Label>
-      {blockFormatButtons.map((Button, i) => (
-        <Button key={`block-fmt-${i}`} value={value} onChange={onChange} />
-      ))}
-    </Interaction.P>
-    <Interaction.P>
-      <Label>Einfügen</Label>
-      {insertButtons.map((Button, i) => (
-        <Button key={`insert-${i}`} value={value} onChange={onChange} />
-      ))}
-    </Interaction.P>
+  <div
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      maxHeight: 'calc(100vh - 110px)',
+      overflow: 'hidden',
+    }}
+  >
+    <div style={{ flex: 1, overflowY: 'auto' }}>
+      <Interaction.P>
+        <Label>Text</Label>
+        <br />
+        {textFormatButtons.map((Button, i) => (
+          <Button key={`text-fmt-${i}`} value={value} onChange={onChange} />
+        ))}
+      </Interaction.P>
+      <Interaction.P>
+        <Label>Block</Label>
+        {blockFormatButtons.map((Button, i) => (
+          <Button key={`block-fmt-${i}`} value={value} onChange={onChange} />
+        ))}
+      </Interaction.P>
+      <Interaction.P>
+        <Label>Einfügen</Label>
+        {insertButtons.map((Button, i) => (
+          <Button key={`insert-${i}`} value={value} onChange={onChange} />
+        ))}
+      </Interaction.P>
+    </div>
     <div
       style={{
-        marginTop: 10,
-        marginBottom: 250,
-        paddingTop: 20,
+        flex: 1,
+        padding: '20px 10px',
+        backgroundColor: 'white',
+        width: '100%',
         borderTop: `1px solid ${colors.divider}`,
       }}
     >

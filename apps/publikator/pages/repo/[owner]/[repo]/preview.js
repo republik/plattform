@@ -14,7 +14,7 @@ import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
 import { withCommitData } from '../../../../components/Edit/enhancers'
 import { ThemeProvider } from '../../../../components/theme-provider'
-
+import Layout from '../../../../components/Layout'
 const PreviewPage = ({ t, router, data = {} }) => {
   const { loading, error, repo: { commit: { document } = {} } = {} } = data
   const repoId = getRepoIdFromQuery(router.query)
@@ -45,7 +45,7 @@ const PreviewPage = ({ t, router, data = {} }) => {
       : {}
 
   return (
-    <Frame.Body raw>
+    <Layout>
       <ColorContextProvider
         colorSchemeKey={darkmode === 'true' ? 'dark' : 'light'}
       >
@@ -85,7 +85,7 @@ const PreviewPage = ({ t, router, data = {} }) => {
           </VariableContext.Provider>
         </ThemeProvider>
       </ColorContextProvider>
-    </Frame.Body>
+    </Layout>
   )
 }
 

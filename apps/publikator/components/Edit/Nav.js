@@ -3,35 +3,62 @@ import { getRepoIdFromQuery } from '../../lib/repoIdHelper'
 import compose from 'lodash/flowRight'
 import withT from '../../lib/withT'
 import Link from 'next/link'
-import { TabNav, Text } from '@radix-ui/themes'
+import { Text } from '@radix-ui/themes'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { css } from 'glamor'
 
 const styles = {
   container: css({
+    position: 'fixed',
+    top: 0,
+    left: 180,
+    right: 0,
     display: 'flex',
-    alignItems: 'space',
+    alignItems: 'center',
     justifyContent: 'space-between',
     gap: 16,
+    height: '60px',
+    padding: '0 20px',
+    backgroundColor: 'white',
+    borderBottom: '1px solid #e0e0e0',
+    zIndex: 100,
+    transition: 'left 0.3s ease',
+    '@media only screen and (max-width: 480px)': {
+      left: 0,
+    },
   }),
-  title: css({
-    flex: '0 1 300px',
-    minWidth: 0,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
+  containerCollapsed: css({
+    left: 60,
   }),
   link: css({
     textDecoration: 'none',
-    color: 'inherit',
+    color: 'black',
+    padding: '8px 16px',
     '&:hover': {
       textDecoration: 'none',
+      color: 'black',
     },
+  }),
+  activeLink: css({
+    fontWeight: 'bold',
+  }),
+  nav: css({
+    display: 'flex',
+    alignItems: 'center',
+    gap: 16,
   }),
 }
 
-const Nav = ({ router: { query, asPath }, t, isTemplate, isNew, data }) => {
+const Nav = ({
+  router: { query, asPath },
+  t,
+  isTemplate,
+  isNew,
+  data,
+  children,
+  isSidebarOpen,
+}) => {
   const repoId = getRepoIdFromQuery(query)
   const editPath = `/repo/${repoId}/edit`
   const treePath = `/repo/${repoId}/tree`
@@ -50,42 +77,60 @@ const Nav = ({ router: { query, asPath }, t, isTemplate, isNew, data }) => {
   const title = data?.repo?.latestCommit?.document?.meta?.title
 
   return (
-    <div {...styles.container}>
-      {title && (
-        <div {...styles.title}>
-          <Text>{title}</Text>
-        </div>
-      )}
-      <TabNav.Root>
-        <TabNav.Link active={currentPath === editPath && !query.preview}>
-          <Link href={{ pathname: editPath, query: editQuery }} replace>
-            <span {...styles.link}>
-              {t(`repo/nav/${isTemplate ? 'template' : 'document'}/edit`)}
-            </span>
+    <div
+      {...styles.container}
+      {...(!isSidebarOpen && styles.containerCollapsed)}
+    >
+      <div {...styles.nav}>
+        {title && (
+          <Text>
+            <i>{title}</i>
+          </Text>
+        )}
+        <Link
+          href={{ pathname: editPath, query: editQuery }}
+          replace
+          {...styles.link}
+          {...(currentPath === editPath && !query.preview
+            ? styles.activeLink
+            : {})}
+        >
+          {t(`repo/nav/${isTemplate ? 'template' : 'document'}/edit`)}
+        </Link>
+        {!isNew && (
+          <Link
+            href={previewPath}
+            replace
+            {...styles.link}
+            {...(currentPath === editPath && query.preview
+              ? styles.activeLink
+              : {})}
+          >
+            Vorschau
           </Link>
-        </TabNav.Link>
-        {!isNew && (
-          <TabNav.Link active={currentPath === editPath && query.preview}>
-            <Link href={previewPath} replace>
-              <span {...styles.link}>Vorschau</span>
-            </Link>
-          </TabNav.Link>
         )}
         {!isNew && (
-          <TabNav.Link active={currentPath === treePath}>
-            <Link href={treePath} replace>
-              <span {...styles.link}>Versionen</span>
-            </Link>
-          </TabNav.Link>
+          <Link
+            href={treePath}
+            replace
+            {...styles.link}
+            {...(currentPath === treePath ? styles.activeLink : {})}
+          >
+            Versionen
+          </Link>
         )}
         {!isNew && (
-          <TabNav.Link active={currentPath === filesPath}>
-            <Link href={filesPath} replace>
-              <span {...styles.link}>Dateien</span>
-            </Link>
-          </TabNav.Link>
+          <Link
+            href={filesPath}
+            replace
+            {...styles.link}
+            {...(currentPath === filesPath ? styles.activeLink : {})}
+          >
+            Dateien
+          </Link>
         )}
-      </TabNav.Root>
+      </div>
+      {children}
     </div>
   )
 }

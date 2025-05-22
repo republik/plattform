@@ -43,12 +43,6 @@ const CommitButton = (props) => {
     props
   return (
     <div {...css({ width: 100, [mediaQueries.mUp]: { width: 180 } })}>
-      <div
-        style={{ textAlign: 'center', marginTop: 7 }}
-        {...css({ fontSize: 10, [mediaQueries.mUp]: { fontSize: 14 } })}
-      >
-        <Text {...props} />
-      </div>
       <Button
         style={{
           margin: '4px 0 0',

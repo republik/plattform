@@ -37,13 +37,6 @@ const styles = {
       marginLeft: 0,
     },
   }),
-  content: css({
-    flex: 1,
-    padding: '20px',
-    [mobilePortrait]: {
-      padding: '10px',
-    },
-  }),
 }
 
 function Layout({ children, me }) {
@@ -59,7 +52,9 @@ function Layout({ children, me }) {
         />
 
         <main {...styles.main} {...(!isSidebarOpen && styles.mainCollapsed)}>
-          <div {...styles.content}>{children}</div>
+          {typeof children === 'function' 
+            ? children({ isSidebarOpen }) 
+            : children}
         </main>
       </div>
     </div>
