@@ -89,7 +89,7 @@ const Calendar = ({
 
   const changeDates = (dates) =>
     router.replace({
-      pathname: '/',
+      pathname: '/calendar',
       query: { ...query, ...dates },
     })
 

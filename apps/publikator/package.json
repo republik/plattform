@@ -54,6 +54,8 @@
     "@apollo/client": "^3.8.4",
     "@next/bundle-analyzer": "^14.2.26",
     "@project-r/styleguide": "*",
+    "@radix-ui/react-icons": "^1.3.2",
+    "@radix-ui/themes": "^3.2.1",
     "@republik/icons": "*",
     "@republik/mdast-react-render": "*",
     "@republik/nextjs-apollo-client": "*",

@@ -3,6 +3,8 @@ import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { withApollo } from '../lib/apollo'
 import { RootColorVariables } from '@project-r/styleguide'
+import { Theme } from "@radix-ui/themes"
+import "@radix-ui/themes/styles.css"
 
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/addon/lint/lint.css'
@@ -16,13 +18,13 @@ type WebAppProps = {
 const WebApp = ({ Component, pageProps }: AppProps<WebAppProps>) => {
   const { serverContext, ...otherPageProps } = pageProps
   return (
-    <>
+    <Theme>
       <Head>
         <meta name='viewport' content='width=device-width,initial-scale=1' />
       </Head>
       <RootColorVariables />
       <Component serverContext={serverContext} {...otherPageProps} />
-    </>
+    </Theme>
   )
 }
 

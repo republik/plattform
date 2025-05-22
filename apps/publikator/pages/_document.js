@@ -1,5 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 import { renderStatic } from 'glamor/server'
+
 export default class MyDocument extends Document {
   static async getInitialProps({ renderPage }) {
     const page = await renderPage()

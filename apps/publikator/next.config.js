@@ -20,6 +20,9 @@ module.exports = withBundleAnalyzer({
   ],
   generateBuildId: () => buildId,
   env: { BUILD_ID: buildId },
+  images: {
+    domains: ['cdn.repub.ch'],
+  },
   webpack: (config) => {
     const alias = Object.assign({}, config.resolve.alias)
     delete alias.url

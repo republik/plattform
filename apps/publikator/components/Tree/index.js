@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { css } from 'glamor'
 
 import {
@@ -99,45 +99,40 @@ const styles = {
   }),
 }
 
-class Tree extends Component {
-  constructor(props) {
-    super(props)
-    this.colors = new Map()
-    this.state = {
-      commits: null,
-      links: null,
-      parentNodes: null,
-    }
-    this.measure = this.measure.bind(this)
-  }
+const Tree = ({ repoId, isTemplate, t, localStorageCommitIds = [], commits: propCommits, milestones }) => {
+  const [state, setState] = useState({
+    commits: null,
+    links: null,
+    parentNodes: null,
+    width: null,
+    height: null,
+    slotWidth: null
+  })
+  const colors = useRef(new Map())
+  const containerRef = useRef(null)
 
-  UNSAFE_componentWillMount() {
-    this.setState(() => transformData(this.props))
-  }
+  useEffect(() => {
+    setState(transformData({ commits: propCommits, milestones }))
+  }, [propCommits, milestones])
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    this.setState(() => transformData(nextProps))
-  }
-
-  componentDidUpdate() {
-    if (!this.state.width) {
-      this.measure()
+  useEffect(() => {
+    if (!state.width) {
+      measure()
     } else {
-      this.measure()
-      this.layout()
+      measure()
+      layout()
     }
-  }
+  }, [state.commits, state.width])
 
-  componentDidMount() {
-    window.addEventListener('resize', this.measure)
-    this.measure()
-  }
+  useEffect(() => {
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [])
 
-  measure() {
-    const { commits, numSlots } = this.state
-
-    if (!commits || !this.containerRef) return
-    const containerRect = this.containerRef.getBoundingClientRect()
+  const measure = () => {
+    const { commits, numSlots } = state
+    if (!commits || !containerRef.current) return
+    const containerRect = containerRef.current.getBoundingClientRect()
 
     commits.forEach(({ data, listItemRef }) => {
       const rect = listItemRef.getBoundingClientRect()
@@ -151,11 +146,11 @@ class Tree extends Component {
 
     const width = containerRect.width
     const height = containerRect.height
-    if (width !== this.state.width) {
-      this.setState({ width: width })
+    if (width !== state.width) {
+      setState(prev => ({ ...prev, width }))
     }
-    if (height !== this.state.height) {
-      this.setState({ height: height })
+    if (height !== state.height) {
+      setState(prev => ({ ...prev, height }))
     }
 
     const slotWidth = Math.max(
@@ -165,17 +160,17 @@ class Tree extends Component {
         Math.floor((width - Math.max(width / 2, LIST_MIN_WIDTH)) / numSlots),
       ),
     )
-    if (slotWidth !== this.state.slotWidth) {
-      this.setState({ slotWidth })
+    if (slotWidth !== state.slotWidth) {
+      setState(prev => ({ ...prev, slotWidth }))
     }
   }
 
-  getColor(hash) {
-    if (this.colors.has(hash)) {
-      return this.colors.get(hash)
+  const getColor = (hash) => {
+    if (colors.current.has(hash)) {
+      return colors.current.get(hash)
     }
-    const { colors } = this.state
-    const color = colors(hash)
+    const { colors: colorFn } = state
+    const color = colorFn(hash)
     let backgroundColor = lab(color)
     backgroundColor.opacity = 0.2
     backgroundColor = backgroundColor.toString()
@@ -183,32 +178,26 @@ class Tree extends Component {
     highlightColor.opacity = 0.3
     highlightColor = highlightColor.toString()
     const res = { color, backgroundColor, highlightColor }
-    this.colors.set(hash, res)
+    colors.current.set(hash, res)
     return res
   }
 
-  layout() {
-    const { slotWidth } = this.state
+  const layout = () => {
+    const { slotWidth, commits, links } = state
+    if (!commits || !links) return
 
-    this.state.commits.forEach(({ data, author, nodeRef, milestones }, i) => {
+    commits.forEach(({ data, author, nodeRef, milestones }, i) => {
       nodeRef.style.left = `${data.slotIndex * slotWidth + slotWidth / 2}px`
       nodeRef.style.top = `${
         data.measurements.top + Math.floor(data.measurements.height / 2)
       }px`
     })
 
-    // Draw connections.
     const adjustment = NODE_SIZE / 2
-    this.state.links.forEach(({ sourceId, destinationId, ref }) => {
-      let source = this.state.commits.filter((o) => {
-        return o.id === sourceId
-      })[0]
-      let destination = this.state.commits.filter((o) => {
-        return o.id === destinationId
-      })[0]
-      if (!source || !destination) {
-        return
-      }
+    links.forEach(({ sourceId, destinationId, ref }) => {
+      let source = commits.find(o => o.id === sourceId)
+      let destination = commits.find(o => o.id === destinationId)
+      if (!source || !destination) return
 
       const sx = source.data.slotIndex * slotWidth + adjustment
       const sy =
@@ -233,190 +222,184 @@ class Tree extends Component {
     })
   }
 
-  render() {
-    const { repoId, isTemplate, t, localStorageCommitIds = [] } = this.props
-    const { width, height, slotWidth, commits, links, numSlots } = this.state
+  const { width, height, slotWidth, commits, links, numSlots } = state
+  const paddingLeft = slotWidth ? numSlots * slotWidth + NODE_SIZE : 0
 
-    const paddingLeft = slotWidth ? numSlots * slotWidth + NODE_SIZE : 0
+  return (
+    <div
+      {...styles.container}
+      style={{
+        maxWidth: Math.max(
+          CONTAINER_MAX_WIDTH,
+          CONTAINER_MAX_WIDTH / 2 + paddingLeft,
+        ),
+      }}
+      ref={containerRef}
+    >
+      {slotWidth && (
+        <svg
+          style={{
+            height,
+            width: numSlots * slotWidth,
+            left: slotWidth / 2,
+          }}
+          {...styles.svg}
+        >
+          {links &&
+            links.map((path, i) => (
+              <path key={i} strokeWidth='1' stroke='#000' ref={path.setRef} />
+            ))}
+        </svg>
+      )}
 
-    return (
-      <div
-        {...styles.container}
-        style={{
-          maxWidth: Math.max(
-            CONTAINER_MAX_WIDTH,
-            CONTAINER_MAX_WIDTH / 2 + paddingLeft,
-          ),
-        }}
-        ref={(ref) => {
-          this.containerRef = ref
-        }}
-      >
-        {slotWidth && (
-          <svg
-            style={{
-              height,
-              width: numSlots * slotWidth,
-              left: slotWidth / 2,
-            }}
-            {...styles.svg}
-          >
-            {links &&
-              links.map((path, i) => (
-                <path key={i} strokeWidth='1' stroke='#000' ref={path.setRef} />
-              ))}
-          </svg>
-        )}
-
-        {commits && (
-          <ul {...styles.list}>
-            {commits.map((commit) => {
-              const treeColors = this.getColor(commit.author.email)
-              const hasLocalVersion =
-                localStorageCommitIds.indexOf(commit.id) !== -1
-              const hightlight = hasLocalVersion || commit.milestones.length
-              return (
-                <li
-                  key={commit.id}
-                  ref={commit.setListItemRef}
+      {commits && (
+        <ul {...styles.list}>
+          {commits.map((commit) => {
+            const treeColors = getColor(commit.author.email)
+            const hasLocalVersion =
+              localStorageCommitIds.indexOf(commit.id) !== -1
+            const hightlight = hasLocalVersion || commit.milestones.length
+            return (
+              <li
+                key={commit.id}
+                ref={commit.setListItemRef}
+                style={{
+                  backgroundColor: hightlight
+                    ? treeColors.highlightColor
+                    : undefined,
+                  paddingLeft,
+                }}
+                {...styles.listItem}
+              >
+                <div
                   style={{
-                    backgroundColor: hightlight
-                      ? treeColors.highlightColor
+                    padding: 5,
+                    backgroundColor: !hightlight
+                      ? treeColors.backgroundColor
                       : undefined,
-                    paddingLeft,
                   }}
-                  {...styles.listItem}
+                  {...styles.listItemWrapper}
                 >
-                  <div
-                    style={{
-                      padding: 5,
-                      backgroundColor: !hightlight
-                        ? treeColors.backgroundColor
-                        : undefined,
-                    }}
-                    {...styles.listItemWrapper}
-                  >
-                    <div>
-                      <Interaction.P>
-                        <Link
-                          href={{
-                            pathname: `/repo/${repoId}/edit`,
-                            query: {
-                              commitId: commit.id,
-                            },
-                          }}
-                          {...styles.link}
-                        >
-                          {commit.message}
-                        </Link>
-                      </Interaction.P>
-                      <Label>
-                        {commit.author.name}
-                        <br />
-                        {timeFormat(new Date(commit.date))}
-                      </Label>
+                  <div>
+                    <Interaction.P>
+                      <Link
+                        href={{
+                          pathname: `/repo/${repoId}/edit`,
+                          query: {
+                            commitId: commit.id,
+                          },
+                        }}
+                        {...styles.link}
+                      >
+                        {commit.message}
+                      </Link>
+                    </Interaction.P>
+                    <Label>
+                      {commit.author.name}
                       <br />
-                      <br />
-                      {hasLocalVersion && (
-                        <span {...styles.milestone}>
-                          <LocalIcon
+                      {timeFormat(new Date(commit.date))}
+                    </Label>
+                    <br />
+                    <br />
+                    {hasLocalVersion && (
+                      <span {...styles.milestone}>
+                        <LocalIcon
+                          color='#000'
+                          size={MILESTONEICON_SIZE}
+                          style={styles.checkIcon}
+                        />
+                        <span {...styles.milestoneLabel}>
+                          {t('tree/commit/localVersion')}
+                        </span>
+                      </span>
+                    )}
+                    {commit.milestones.map((milestone, i) => (
+                      <span {...styles.milestone} key={i}>
+                        {milestone.immutable ? (
+                          <TagIcon
                             color='#000'
                             size={MILESTONEICON_SIZE}
                             style={styles.checkIcon}
                           />
-                          <span {...styles.milestoneLabel}>
-                            {t('tree/commit/localVersion')}
-                          </span>
+                        ) : (
+                          <IconCheck
+                            color='#000'
+                            size={MILESTONEICON_SIZE}
+                            style={styles.checkIcon}
+                          />
+                        )}
+                        <span {...styles.milestoneLabel}>
+                          {t(
+                            `checklist/labels/${milestone.name}`,
+                            undefined,
+                            milestone.name,
+                          )}{' '}
                         </span>
-                      )}
-                      {commit.milestones.map((milestone, i) => (
-                        <span {...styles.milestone} key={i}>
-                          {milestone.immutable ? (
-                            <TagIcon
-                              color='#000'
-                              size={MILESTONEICON_SIZE}
-                              style={styles.checkIcon}
-                            />
-                          ) : (
-                            <IconCheck
-                              color='#000'
-                              size={MILESTONEICON_SIZE}
-                              style={styles.checkIcon}
-                            />
-                          )}
-                          <span {...styles.milestoneLabel}>
-                            {t(
-                              `checklist/labels/${milestone.name}`,
-                              undefined,
-                              milestone.name,
-                            )}{' '}
-                          </span>
-                          {milestone.author.name}
-                        </span>
-                      ))}
-                      {!isTemplate && (
-                        <Interaction.P>
-                          <Label>
-                            <Link
-                              href={{
-                                pathname: `/repo/${repoId}/publish`,
-                                query: {
-                                  commitId: commit.id,
-                                },
-                              }}
-                              {...styles.link}
-                            >
-                              {t('tree/commit/publish')}
-                            </Link>
-                          </Label>
-                        </Interaction.P>
-                      )}
-                    </div>
-                    <div
-                      style={{
-                        margin: '8px 10px 0 0',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 8,
-                      }}
-                    >
-                      <Diff repoId={repoId} commit={commit} />
-                      <Derivatives repoId={repoId} commit={commit} />
-                    </div>
+                        {milestone.author.name}
+                      </span>
+                    ))}
+                    {!isTemplate && (
+                      <Interaction.P>
+                        <Label>
+                          <Link
+                            href={{
+                              pathname: `/repo/${repoId}/publish`,
+                              query: {
+                                commitId: commit.id,
+                              },
+                            }}
+                            {...styles.link}
+                          >
+                            {t('tree/commit/publish')}
+                          </Link>
+                        </Label>
+                      </Interaction.P>
+                    )}
                   </div>
-                </li>
-              )
-            })}
-          </ul>
-        )}
-
-        {width &&
-          commits &&
-          commits.map((commit) => {
-            return (
-              <span
-                key={commit.id}
-                ref={commit.setNodeRef}
-                style={{
-                  backgroundColor: this.getColor(commit.author.email).color,
-                }}
-                {...styles.commitNode}
-              >
-                <Link
-                  href={{
-                    pathname: `/repo/${repoId}/edit`,
-                    query: {
-                      commitId: commit.id,
-                    },
-                  }}
-                  {...css(styles.nodeLink)}
-                ></Link>
-              </span>
+                  <div
+                    style={{
+                      margin: '8px 10px 0 0',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: 8,
+                    }}
+                  >
+                    <Diff repoId={repoId} commit={commit} />
+                    <Derivatives repoId={repoId} commit={commit} />
+                  </div>
+                </div>
+              </li>
             )
           })}
-      </div>
-    )
-  }
+        </ul>
+      )}
+
+      {width &&
+        commits &&
+        commits.map((commit) => {
+          return (
+            <span
+              key={commit.id}
+              ref={commit.setNodeRef}
+              style={{
+                backgroundColor: getColor(commit.author.email).color,
+              }}
+              {...styles.commitNode}
+            >
+              <Link
+                href={{
+                  pathname: `/repo/${repoId}/edit`,
+                  query: {
+                    commitId: commit.id,
+                  },
+                }}
+                {...css(styles.nodeLink)}
+              ></Link>
+            </span>
+          )
+        })}
+    </div>
+  )
 }
 
 export default withT(Tree)
