@@ -113,7 +113,6 @@ function setupQueue(context, monitorQueueState = undefined) {
 }
 
 const {
-  LOCAL_ASSETS_SERVER,
   MAIL_EXPRESS_RENDER,
   MAIL_EXPRESS_MAILCHIMP,
   SEARCH_PG_LISTENER,
@@ -194,13 +193,6 @@ const run = async (workerId, config) => {
     middlewares.push(
       require('@orbiting/backend-modules-mail/express/mailchimp'),
     )
-  }
-
-  if (LOCAL_ASSETS_SERVER) {
-    const { express } = require('@orbiting/backend-modules-assets')
-    for (const key of Object.keys(express)) {
-      middlewares.push(express[key])
-    }
   }
 
   // signin hooks
