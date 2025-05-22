@@ -257,6 +257,19 @@ const nextConfig = {
           '/politik-in-26-fragen-ihre-antworten?share=submission-:id',
         permanent: true,
       },
+      // Redirect /s3/* to … S3
+      {
+        source: '/s3/republik-assets/:path*',
+        destination:
+          'https://republik-assets.s3-eu-central-1.amazonaws.com/:path*',
+        permanent: false,
+      },
+      {
+        source: '/s3/republik-assets-staging/:path*',
+        destination:
+          'https://republik-assets-staging.s3-eu-central-1.amazonaws.com/:path*',
+        permanent: false,
+      },
     ].filter(Boolean)
   },
   experimental: {
