@@ -1,6 +1,6 @@
 const nodePath = require('path')
 
-const { returnImage, s3 } = require('../lib')
+const { returnImage, s3 } = require('@orbiting/backend-modules-assets/lib')
 const { AWS_BUCKET_ALLOWLIST } = process.env
 
 let buckets = {}

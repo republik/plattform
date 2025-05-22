@@ -1,6 +1,9 @@
 const nodePath = require('path')
-const { returnImage, getWidthHeight } = require('../lib')
-const screenshot = require('../lib/screenshot/chromium')
+const {
+  returnImage,
+  getWidthHeight,
+} = require('@orbiting/backend-modules-assets/lib')
+const screenshot = require('@orbiting/backend-modules-assets/lib/screenshot/chromium')
 const debug = require('debug')('assets:render')
 
 module.exports = (server) => {

@@ -1,5 +1,8 @@
 const debug = require('debug')('assets:proxy')
-const { authenticate, returnImage } = require('../lib')
+const {
+  authenticate,
+  returnImage,
+} = require('@orbiting/backend-modules-assets/lib')
 
 module.exports = (server) => {
   server.get('/proxy(.:webp)?', async (req, res) => {

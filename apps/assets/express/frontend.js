@@ -1,4 +1,4 @@
-const { returnImage } = require('../lib')
+const { returnImage } = require('@orbiting/backend-modules-assets/lib')
 const {
   FRONTEND_BASE_URL,
   FRONTEND_BASIC_AUTH_USER,

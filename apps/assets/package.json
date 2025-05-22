@@ -8,6 +8,7 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@orbiting/backend-modules-assets": "*",
+    "@orbiting/backend-modules-keyCDN": "*",
     "@orbiting/backend-modules-auth": "*",
     "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-env": "*",
