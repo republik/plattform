@@ -4,6 +4,7 @@ import { entries, nest } from 'd3-collection'
 import { mediaQueries, fontStyles } from '@project-r/styleguide'
 import { EmployeeRecord } from '#graphql/cms/__generated__/gql/graphql'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const styles = {
   container: css({
@@ -74,20 +75,9 @@ const Employees = ({ employees }: EmployeesProps) => {
           <h2 {...styles.groupHeading}>{group.key}</h2>
           {group.value.group ? (
             <div {...styles.tiles}>
-              {group.value.group.map((employee) => {
-                return (
-                  <Link href={`/~${employee.userId}`} key={employee.userId}>
-                    <img
-                      {...styles.profile}
-                      src={employee.profile.url}
-                      alt={employee.name}
-                    />
-                    <span {...styles.name}>{employee.name}</span>
-                    <br />
-                    <span {...styles.title}>{employee.title}</span>
-                  </Link>
-                )
-              })}
+              {group.value.group.map((employee) => (
+                <Employee employee={employee} key={employee.userId} />
+              ))}
             </div>
           ) : (
             entries(group.value).map((subgroup) => (
@@ -107,10 +97,16 @@ const Employees = ({ employees }: EmployeesProps) => {
   )
 }
 
-const Employee = ({ employee }) => {
+const Employee = ({ employee, key }) => {
   return (
-    <Link href={`/~${employee.userId}`}>
-      <img {...styles.profile} src={employee.profile.url} />
+    <Link href={`/~${employee.userId}`} key={key}>
+      <Image
+        width={400}
+        height={400}
+        {...styles.profile}
+        src={employee.profile.url}
+        alt={employee.name}
+      />
       <span {...styles.name}>{employee.name}</span>
       <br />
       <span {...styles.title}>{employee.title}</span>
