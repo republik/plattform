@@ -1,15 +1,17 @@
 import { PgDb } from 'pogi'
 import { WebhookArgs, WebhookRepo } from '../database/WebhookRepo'
 import { getConfig } from '../config'
-import { PaymentProvider } from '../providers/provider'
 import { Webhook } from '../types'
 import assert from 'node:assert'
+import { PaymentService } from './PaymentService'
 
 export class WebhookService {
   #repo: WebhookRepo
+  #paymentService: PaymentService
 
   constructor(pgdb: PgDb) {
     this.#repo = new WebhookRepo(pgdb)
+    this.#paymentService = new PaymentService()
   }
 
   getEvent<T>(id: string): Promise<Webhook<T> | null> {
@@ -26,7 +28,7 @@ export class WebhookService {
     })
   }
 
-  verifyWebhook<T>(company: string, req: any): T {
+  verifyWebhook(company: string, req: any) {
     let whsec
     switch (company) {
       case 'PROJECT_R':
@@ -44,10 +46,7 @@ export class WebhookService {
       `Webhook secret for ${company} is not configured`,
     )
 
-    const event = PaymentProvider.forCompany(company).verifyWebhook<T>(
-      req,
-      whsec,
-    )
+    const event = this.#paymentService.verifyWebhook(company, req, whsec)
 
     return event
   }
