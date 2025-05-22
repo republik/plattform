@@ -1,0 +1,11 @@
+query Transactions {
+  me {
+    transactions {
+      id
+      amount
+      company
+      status
+      createdAt
+    }
+  }
+}
