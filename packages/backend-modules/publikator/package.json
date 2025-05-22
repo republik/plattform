@@ -20,7 +20,6 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@orbiting/backend-modules-keyCDN": "*",
     "@orbiting/backend-modules-assets": "*",
     "@orbiting/graphql-list-fields": "^2.0.2",
     "@republik/remark-preset": "*",
