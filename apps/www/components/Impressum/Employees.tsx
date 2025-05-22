@@ -83,6 +83,8 @@ const Employees = ({ employees }: EmployeesProps) => {
                       alt={employee.name}
                     />
                     <span {...styles.name}>{employee.name}</span>
+                    <br />
+                    <span {...styles.title}>{employee.title}</span>
                   </Link>
                 )
               })}
