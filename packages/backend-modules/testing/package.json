@@ -25,6 +25,7 @@
     "@orbiting/backend-modules-access": "*",
     "@orbiting/backend-modules-assets": "*",
     "@orbiting/backend-modules-auth": "*",
+    "@orbiting/backend-modules-authors": "*",
     "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-base64u": "*",
     "@orbiting/backend-modules-collections": "*",
