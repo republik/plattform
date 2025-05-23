@@ -1,11 +1,5 @@
 'use client'
 
-import { css } from '@republik/theme/css'
-import { Fragment, useEffect, useState } from 'react'
-import useResizeObserver from 'use-resize-observer'
-
-import * as Dialog from '@radix-ui/react-dialog'
-
 import { Offers } from '@app/components/paynotes/paynote/paynote-offers'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import {
@@ -13,17 +7,22 @@ import {
   useTrackEvent,
 } from '@app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+
+import * as Dialog from '@radix-ui/react-dialog'
 import { IconExpandMore } from '@republik/icons'
+import { css } from '@republik/theme/css'
 import { useMotionValueEvent, useScroll } from 'framer-motion'
+import { useMe } from 'lib/context/MeContext'
+import { useTranslation } from 'lib/withT'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { Fragment, useEffect, useState } from 'react'
 import { StructuredText } from 'react-datocms'
-import { usePaynoteVariants } from './use-paynotes'
-import { useMe } from 'lib/context/MeContext'
+import useResizeObserver from 'use-resize-observer'
 import { getMeteringData } from '../article-metering'
-import PaynoteAuthor from './paynote-author'
-import { useTranslation } from 'lib/withT'
 import IosCTA from '../ios-cta'
+import PaynoteAuthor from './paynote-author'
+import { usePaynoteVariants } from './use-paynotes'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
@@ -104,7 +103,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
   })
 
   const { ref } = useResizeObserver<HTMLDivElement>({
-    box: "border-box",
+    box: 'border-box',
     onResize: ({ height }) => {
       setPaynoteInlineHeight(height)
     },
@@ -131,7 +130,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
 
   const paynoteVariantForAnalytics =
     variant === 'paynote' ? paynote.title : miniPaynote.message
-  
+
   return (
     <Dialog.Root open={expanded} onOpenChange={setExpanded}>
       <div
@@ -216,6 +215,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
             })}
           >
             <div
+              data-testid='paynote-overlay'
               className={css({
                 margin: '0 auto',
                 maxW: '34rem',

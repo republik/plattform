@@ -1,18 +1,17 @@
-import { useEffect } from 'react'
-
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
   useTrackEvent,
 } from '@app/lib/analytics/event-tracking'
+import { useMe } from 'lib/context/MeContext'
+import { useEffect } from 'react'
 
 import { PaynoteContainer } from '../../ui/containers'
 
 import { getMeteringData } from '../article-metering'
+import Offers from './offers'
 
 import Trial from './trial'
-import Offers from './offers'
-import { useMe } from 'lib/context/MeContext'
 
 const Regwall = () => {
   const trackEvent = useTrackEvent()
@@ -32,18 +31,20 @@ const Regwall = () => {
   }
 
   return (
-    <PaynoteContainer>
-      <Trial analyticsProps={analyticsProps} />
-      <Offers
-        analyticsProps={analyticsProps}
-        additionalShopParams={{
-          rep_ui_component: 'regwall',
-          rep_regwall_variation: variation,
-          rep_trial_status: trialStatus,
-          ...getMeteringData('rep_'),
-        }}
-      />
-    </PaynoteContainer>
+    <div data-testid='regwall'>
+      <PaynoteContainer>
+        <Trial analyticsProps={analyticsProps} />
+        <Offers
+          analyticsProps={analyticsProps}
+          additionalShopParams={{
+            rep_ui_component: 'regwall',
+            rep_regwall_variation: variation,
+            rep_trial_status: trialStatus,
+            ...getMeteringData('rep_'),
+          }}
+        />
+      </PaynoteContainer>
+    </div>
   )
 }
 

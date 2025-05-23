@@ -18,7 +18,7 @@ type MeteringStatus = 'READING_GRANTED' | 'READING_DENIED'
 // TODO: move to env variables, maybe?
 const AB_CONFIGS: MeteringConfig[] = [
   { maxArticles: 1 },
-  { maxArticles: 3, daysToExpire: 30 },
+  { maxArticles: 1, daysToExpire: 30 },
 ]
 
 const METERING_KEY = 'metering'
