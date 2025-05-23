@@ -2,6 +2,7 @@ import { Component } from 'react'
 import { css } from 'glamor'
 import questionStyles from './questionStyles'
 import QuestionHeader from './QuestionHeader'
+import QuestionIndex from './QuestionIndex'
 import { nest } from 'd3-collection'
 import { v4 as uuid } from 'uuid'
 
@@ -79,6 +80,7 @@ class ChoiceQuestion extends Component {
 
   render() {
     const {
+      questionCount,
       question: {
         text,
         explanation,
@@ -100,11 +102,8 @@ class ChoiceQuestion extends Component {
     return (
       <div {...questionStyles.question}>
         <QuestionHeader metadata={metadata} />
-        {text && (
-          <P {...questionStyles.text}>
-            {order + 1}. {text}
-          </P>
-        )}
+        <QuestionIndex order={order} questionCount={questionCount} />
+        {text && <P {...questionStyles.text}>{text}</P>}
         {(multipleAllowed || explanation) && (
           <P {...questionStyles.help}>
             {explanation || t('questionnaire/choice/helpMultiple')}
@@ -114,18 +113,16 @@ class ChoiceQuestion extends Component {
           {optionGroups.map(({ key, values }) => (
             <div key={key} {...styles.optionGroup}>
               {key !== 'null' && <H3 {...styles.optionGroupHeader}>{key}</H3>}
-              <div {...(multipleAllowed && styles.optionList)}>
-                {values.map((o, i) => (
-                  <div key={i} {...styles.option}>
-                    <OptionComponent
-                      onChange={() => this.handleChange(o.value)}
-                      checked={userAnswerValues.some((v) => v === o.value)}
-                    >
-                      <span {...questionStyles.radio}>{o.label}</span>
-                    </OptionComponent>
-                  </div>
-                ))}
-              </div>
+              {values.map((o, i) => (
+                <div key={i} {...styles.option}>
+                  <OptionComponent
+                    onChange={() => this.handleChange(o.value)}
+                    checked={userAnswerValues.some((v) => v === o.value)}
+                  >
+                    <span {...questionStyles.radio}>{o.label}</span>
+                  </OptionComponent>
+                </div>
+              ))}
             </div>
           ))}
         </div>

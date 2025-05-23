@@ -1,7 +1,8 @@
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
-import { Payments } from '../payments'
 import Stripe from 'stripe'
+import { WebhookService } from '../services/WebhookService'
+import { MailNotificationService } from '../services/MailNotificationService'
 
 type Args = {
   $version: 'v1'
@@ -24,12 +25,12 @@ export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
 
     console.log(`[${this.queue}] start`)
 
-    const PaymentService = Payments.getInstance()
+    const webhookService = new WebhookService(this.context.pgdb)
+    const mailService = new MailNotificationService(this.context.pgdb)
 
-    const wh =
-      await PaymentService.findWebhookEventBySourceId<Stripe.InvoicePaymentFailedEvent>(
-        job.data.eventSourceId,
-      )
+    const wh = await webhookService.getEvent<Stripe.InvoicePaymentFailedEvent>(
+      job.data.eventSourceId,
+    )
 
     if (!wh) {
       console.error('Webhook does not exist')
@@ -45,7 +46,7 @@ export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
 
     try {
       // send transactional
-      await PaymentService.sendNoticePaymentFailedTransactionalMail({
+      await mailService.sendNoticePaymentFailedTransactionalMail({
         subscriptionExternalId: event.data.object.subscription as string,
         userId: job.data.userId,
         invoiceExternalId: job.data.invoiceExternalId,

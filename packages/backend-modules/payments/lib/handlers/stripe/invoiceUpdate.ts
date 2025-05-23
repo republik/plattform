@@ -18,13 +18,13 @@ export async function processInvoiceUpdated(
   )
 
   if (!invoice) {
-    console.error('unknown invoice %s', event.data.object.id)
+    console.error(`unknown invoice ${event.data.object.id}`)
     return
   }
 
   if (!invoice.subscription) {
     console.error(
-      'Only subscription invocies are suppored invoice %s',
+      'Only subscription invoices are supported invoice %s',
       event.data.object.id,
     )
     return
@@ -34,7 +34,7 @@ export async function processInvoiceUpdated(
     invoice.subscription as string,
   )
   if (isPledgeBased(sub?.metadata)) {
-    console.log('pledge invoice event [%s]; skipping', event.id)
+    console.log(`pledge invoice event [${event.id}]; skipping`)
   }
 
   await paymentService.updateInvoice(

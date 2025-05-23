@@ -8,15 +8,39 @@ import { PaymentProvider } from '../../providers/provider'
 import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
 import { SyncAddressDataWorker } from '../../workers/SyncAddressDataWorker'
-import { mapChargeArgs } from './invoicePaymentSucceded'
+import { mapChargeArgs } from './invoicePaymentSucceeded'
+import { ConnectionContext } from '@orbiting/backend-modules-types'
+import { GiftShop } from '../../shop/gifts'
+import { sendGiftPurchaseMail } from '../../transactionals/sendTransactionalMails'
+import { UserDataRepo } from '../../database/UserRepo'
+
+type PaymentWebhookContext = {
+  paymentService: PaymentService
+} & ConnectionContext
 
 export async function processCheckoutCompleted(
-  paymentService: PaymentService,
+  ctx: PaymentWebhookContext,
   company: Company,
   event: Stripe.CheckoutSessionCompletedEvent,
 ) {
-  const customerId = event.data.object.customer as string
+  switch (event.data.object.mode) {
+    case 'subscription': {
+      return handleSubscription(ctx, company, event)
+    }
+    case 'payment': {
+      return handlePayment(ctx, company, event)
+    }
+  }
+}
 
+async function handleSubscription(
+  ctx: PaymentWebhookContext,
+  company: Company,
+  event: Stripe.CheckoutSessionCompletedEvent,
+) {
+  const paymentService = ctx.paymentService
+
+  const customerId = event.data.object.customer as string
   if (!customerId) {
     console.log('No stripe customer provided; skipping')
     return
@@ -83,7 +107,7 @@ export async function processCheckoutCompleted(
           await paymentService.saveCharge(chargeArgs)
         } catch (e) {
           if (e instanceof Error) {
-            console.log('Error recording charge: %s', e.message)
+            console.log(`Error recording charge: ${e.message}`)
           }
         }
       }
@@ -92,7 +116,8 @@ export async function processCheckoutCompleted(
     }
   }
 
-  await paymentService.saveOrder(userId, {
+  await paymentService.saveOrder({
+    userId: userId,
     company: company,
     externalId: event.data.object.id,
     invoiceId: invoiceId as string,
@@ -130,8 +155,115 @@ export async function processCheckoutCompleted(
         )
       : undefined,
   ])
-
   return
+}
+
+async function handlePayment(
+  ctx: PaymentWebhookContext,
+  company: Company,
+  event: Stripe.CheckoutSessionCompletedEvent,
+) {
+  const giftShop = new GiftShop(ctx.pgdb)
+
+  const sess = await PaymentProvider.forCompany(company).getCheckoutSession(
+    event.data.object.id,
+  )
+
+  if (!sess) {
+    throw new Error('checkout session does not exist')
+  }
+
+  if (!sess.line_items) {
+    throw new Error(
+      'checkout session has no line items unable to process checkout',
+    )
+  }
+
+  let userId = undefined
+  if (typeof sess.customer !== 'undefined') {
+    userId =
+      (await ctx.paymentService.getUserIdForCompanyCustomer(
+        company,
+        sess.customer as string,
+      )) ?? undefined
+  }
+
+  let paymentStatus = event.data.object.payment_status
+  if (paymentStatus === 'no_payment_required') {
+    // no payments required are treated as paid
+    paymentStatus = 'paid'
+  }
+
+  const lineItems = sess.line_items.data.map((line) => {
+    return {
+      lineItemId: line.id,
+      externalPriceId: line.price!.id,
+      priceLookupKey: line.price!.lookup_key,
+      description: line.description,
+      quantity: line.quantity,
+      price: line.amount_total,
+      priceSubtotal: line.amount_subtotal,
+      taxAmount: line.amount_tax,
+      discountAmount: line.amount_discount,
+    }
+  })
+
+  console.log(sess.shipping_details)
+
+  let addressId: string | undefined = undefined
+  if (sess.shipping_details) {
+    const shippingAddress = sess.shipping_details.address!
+    const data = {
+      name: sess.shipping_details.name!,
+      city: shippingAddress.city,
+      line1: shippingAddress.line1,
+      line2: shippingAddress.line2,
+      postalCode: shippingAddress.postal_code,
+      country: new Intl.DisplayNames(['de-CH'], { type: 'region' }).of(
+        shippingAddress.country!,
+      ),
+    }
+    addressId = (await new UserDataRepo(ctx.pgdb).insertAddress(data)).id
+  }
+
+  const orderDraft = {
+    userId: userId,
+    customerEmail:
+      typeof userId === 'undefined' ? sess.customer_details!.email! : undefined,
+    company: company,
+    metadata: sess.metadata,
+    externalId: event.data.object.id,
+    status: paymentStatus as 'paid' | 'unpaid',
+    shippingAddressId: addressId,
+  }
+
+  const order = await ctx.paymentService.saveOrder(orderDraft)
+
+  const orderLineItems = lineItems.map((i) => {
+    return { orderId: order.id, ...i }
+  })
+
+  await ctx.pgdb.payments.orderLineItems.insert(orderLineItems)
+
+  const giftCodes = []
+  for (const item of lineItems) {
+    if (item.priceLookupKey?.startsWith('GIFT')) {
+      const code = await giftShop.generateNewVoucher({
+        company: company,
+        orderId: order.id,
+        giftId: item.priceLookupKey,
+      })
+      giftCodes.push(code)
+    }
+  }
+
+  await sendGiftPurchaseMail(
+    {
+      email: sess.customer_details!.email!,
+      voucherCode: giftCodes[0].code.replace(/(\w{4})(\w{4})/, '$1-$2'),
+    },
+    ctx.pgdb,
+  )
 }
 
 async function syncUserNameData(

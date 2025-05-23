@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 import { Company } from '../types'
-import { Offer } from './offers'
+import { Offer, ComplimentaryItemOrder } from './offers'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { getConfig } from '../config'
 import { User } from '@orbiting/backend-modules-types'
@@ -30,12 +30,14 @@ export class Shop {
     metadata,
     customFields,
     returnURL,
+    complimentaryItems,
   }: {
     offer: Offer
     uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
-    customerId: string
+    customerId?: string
     discounts?: string[]
     customPrice?: number
+    complimentaryItems?: ComplimentaryItemOrder[]
     metadata?: Record<string, string>
     returnURL?: string
     customFields?: Stripe.Checkout.SessionCreateParams.CustomField[]
@@ -58,20 +60,35 @@ export class Shop {
       ...uiConfig,
       mode: checkoutMode,
       customer: customerId,
-      line_items: [lineItem],
+      line_items: [
+        lineItem,
+        ...(complimentaryItems?.map(promoItemToLineItem) || []),
+      ],
       currency: offer.price?.currency,
       discounts: discounts?.map((id) => ({ coupon: id })),
       locale: 'de',
       billing_address_collection:
         offer.company === 'PROJECT_R' ? 'required' : 'auto',
-      custom_fields: customFields,
+      shipping_address_collection: complimentaryItems?.length
+        ? {
+            allowed_countries: ['CH'],
+          }
+        : undefined,
+      custom_fields: offer.requiresLogin ? customFields : undefined,
       payment_method_configuration: getPaymentConfigId(offer.company),
-      subscription_data: {
-        metadata: {
-          ...metadata,
-          ...offer.metaData,
-        },
+      metadata: {
+        ...metadata,
+        ...offer.metaData,
       },
+      subscription_data:
+        offer.type === 'SUBSCRIPTION'
+          ? {
+              metadata: {
+                ...metadata,
+                ...offer.metaData,
+              },
+            }
+          : undefined,
       consent_collection: {
         terms_of_service: 'required',
       },
@@ -91,7 +108,6 @@ export class Shop {
     const price = (
       await this.#stripeAdapters[offer.company].prices.list({
         active: true,
-        type: 'recurring',
         lookup_keys: [offer.defaultPriceLookupKey],
         expand: ['data.product'],
       })
@@ -122,21 +138,27 @@ export class Shop {
     const priceData = (
       await this.#stripeAdapters[company].prices.list({
         active: true,
-        type: 'recurring',
         lookup_keys: lookupKeys,
         expand: ['data.product'],
       })
     ).data
 
-    return Promise.all(
-      offers.map(async (offer) => {
-        const price = priceData.find(
-          (p) => p.lookup_key === offer.defaultPriceLookupKey,
-        )!
+    return (
+      await Promise.allSettled(
+        offers.map(async (offer) => {
+          const price = priceData.find(
+            (p) => p.lookup_key === offer.defaultPriceLookupKey,
+          )!
 
-        return this.mergeOfferData(offer, price, options)
-      }),
-    )
+          return this.mergeOfferData(offer, price, options)
+        }),
+      )
+    ).reduce((acc: Offer[], res) => {
+      if (res.status === 'fulfilled') {
+        acc.push(res.value)
+      }
+      return acc
+    }, [])
   }
 
   private async mergeOfferData(
@@ -145,7 +167,6 @@ export class Shop {
     options?: { promoCode?: string; withIntroductoryOffer?: boolean },
   ): Promise<Offer> {
     const discount = await this.getIndrodcuturyOfferOrPromotion(base, options)
-
     return {
       ...base,
       productId: (price.product as Stripe.Product).id,
@@ -233,11 +254,15 @@ export class Shop {
     return promition.data[0]
   }
 
-  private genLineItem(offer: Offer, customPrice?: number) {
-    if (offer.customPrice && typeof customPrice !== 'undefined') {
+  public genLineItem(offer: Offer, customPrice?: number) {
+    if (
+      offer.type === 'SUBSCRIPTION' &&
+      offer.customPrice &&
+      typeof customPrice !== 'undefined'
+    ) {
       return {
         price_data: {
-          product: offer.productId,
+          product: offer.productId!,
           unit_amount: Math.max(offer.customPrice.min, customPrice),
           currency: offer.price!.currency,
           recurring: offer.customPrice!.recurring,
@@ -248,7 +273,7 @@ export class Shop {
     }
 
     return {
-      price: offer.price?.id,
+      price: offer.price!.id,
       tax_rates: offer.taxRateId ? [offer.taxRateId] : undefined,
       quantity: 1,
     }
@@ -284,6 +309,14 @@ export async function checkIntroductoryOfferEligibility(
   }
 
   return false
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function promoItemToLineItem(_item: ComplimentaryItemOrder) {
+  return {
+    price: 'price_1QQUCcFHX910KaTH9SKJhFZI',
+    quantity: 1,
+  }
 }
 
 function checkoutUIConfig(

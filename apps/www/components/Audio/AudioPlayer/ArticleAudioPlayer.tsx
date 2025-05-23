@@ -100,7 +100,7 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
 
   const { currentTime } = useGlobalAudioState()
   const { checkIfInQueue } = useAudioQueue()
-  const { hasAccess } = useMe()
+  const { isMember } = useMe()
 
   const isActiveAudioItem = checkIfActivePlayerItem(document.id)
   const itemPlaying = isPlaying && isActiveAudioItem
@@ -199,7 +199,7 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
         )}
       </div>
 
-      {hasAccess && (
+      {isMember && (
         <IconButton
           Icon={itemInAudioQueue ? IconPlaylistRemove : IconPlaylistAdd}
           title={

@@ -13,10 +13,6 @@ module.exports = {
       return null
     }
 
-    if (!Roles.userIsInRoles(me, PRIVILEDGED_ROLES)) {
-      withPast = false
-    }
-
     const grants = await grantsLib.findByRecipient(user, { withPast, pgdb })
 
     debug('accessGrants', { user: user.id, grants: grants.length })
@@ -28,10 +24,6 @@ module.exports = {
       return null
     }
 
-    if (!Roles.userIsInRoles(me, PRIVILEDGED_ROLES)) {
-      withPast = false
-    }
-
     const campaigns = await campaignsLib.findForGranter(user, {
       withPast,
       pgdb,
@@ -40,5 +32,12 @@ module.exports = {
     debug('accessCampaigns', { user: user.id, campaigns: campaigns.length })
 
     return campaigns.map((campaign) => ({ ...campaign, _user: user }))
+  },
+  regwallTrialStatus: async (user, args, { user: me, pgdb }) => {
+    if (!Roles.userIsMeOrInRoles(user, me, PRIVILEDGED_ROLES)) {
+      return null
+    }
+    const trialStatus = await grantsLib.regwallTrialStatus(user, {pgdb})
+    return trialStatus
   },
 }

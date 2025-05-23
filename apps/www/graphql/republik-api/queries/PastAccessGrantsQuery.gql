@@ -1,0 +1,13 @@
+query PastAccessGrants {
+  me {
+    id
+    accessGrants(withPast: true) {
+      id
+      campaign {
+        id
+      }
+      status
+      endAt
+    }
+  }
+}

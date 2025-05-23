@@ -57,7 +57,7 @@ module.exports = {
       {
         to: email,
         fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
-        subject: t('api/signin/mail/subject', { phrase }),
+        subject: t('api/signin/mail/subject'),
         templateName: 'signin',
         globalMergeVars: [
           {

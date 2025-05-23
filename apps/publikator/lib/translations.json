@@ -769,130 +769,6 @@
       "value": "Schriftgrösse"
     },
     {
-      "key": "metaData/paynotes",
-      "value": "Störer"
-    },
-    {
-      "key": "metaData/paynotes/dropdown",
-      "value": "Störertyp"
-    },
-    {
-      "key": "metaData/paynotes/mode/auto",
-      "value": "auto"
-    },
-    {
-      "key": "metaData/paynotes/mode/button",
-      "value": "auto (nur Abo kaufen)"
-    },
-    {
-      "key": "metaData/paynotes/mode/trialForm",
-      "value": "auto (nur Probelesen)"
-    },
-    {
-      "key": "metaData/paynotes/mode/custom",
-      "value": "spezial"
-    },
-    {
-      "key": "metaData/paynotes/mode/noPaynote",
-      "value": "keine"
-    },
-    {
-      "key": "metaData/paynotes/mode/climate",
-      "value": "Klimalab"
-    },
-    {
-      "key": "metaData/paynotes/add",
-      "value": "Spezialangefertigte Störer hinzufügen"
-    },
-    {
-      "key": "metaData/paynotes/title",
-      "value": "Spezialangefertigte Störer"
-    },
-    {
-      "key": "metaData/paynotes/index",
-      "value": "Störer #{index}"
-    },
-    {
-      "key": "metaData/paynotes/before",
-      "value": "Am Anfang"
-    },
-    {
-      "key": "metaData/paynotes/after",
-      "value": "Am Ende"
-    },
-    {
-      "key": "metaData/paynotes/new",
-      "value": "Neuer Störer"
-    },
-    {
-      "key": "metaData/paynotes/help",
-      "value": "B-Tags für <b>&lt;b&gt;gefettet&lt;/b&gt;</b>. Für einen neuen Paragraf, eine leere Zeile – doppelter Umbruch."
-    },
-    {
-      "key": "metaData/paynote/form/target/title",
-      "value": "Ziel"
-    },
-    {
-      "key": "metaData/paynote/form/target/value/true",
-      "value": "Ja"
-    },
-    {
-      "key": "metaData/paynote/form/target/value/false",
-      "value": "Nein"
-    },
-    {
-      "key": "metaData/paynote/form/target/value/undefined",
-      "value": "Egal"
-    },
-    {
-      "key": "metaData/paynote/form/target/hasActiveMembership",
-      "value": "Aktive Mitglieder"
-    },
-    {
-      "key": "metaData/paynote/form/target/isEligibleForTrial",
-      "value": "Probelesen berechtigt"
-    },
-    {
-      "key": "metaData/paynote/form/cta/label",
-      "value": "Aktivierung"
-    },
-    {
-      "key": "metaData/paynote/form/cta/0",
-      "value": "Probelesen"
-    },
-    {
-      "key": "metaData/paynote/form/cta/1",
-      "value": "Button"
-    },
-    {
-      "key": "metaData/paynote/form/cta/2",
-      "value": "Keine"
-    },
-    {
-      "key": "metaData/paynote/form/content",
-      "value": "Inhalt"
-    },
-    {
-      "key": "metaData/paynote/form/button/label",
-      "value": "Label"
-    },
-    {
-      "key": "metaData/paynote/form/button/link",
-      "value": "Link"
-    },
-    {
-      "key": "metaData/paynote/form/secondary/prefix",
-      "value": "Sekundärer Präfix (optional)"
-    },
-    {
-      "key": "metaData/paynote/form/secondary/label",
-      "value": "Sekundäres Label (optional)"
-    },
-    {
-      "key": "metaData/paynote/form/secondary/link",
-      "value": "Sekundärer Link (optional)"
-    },
-    {
       "key": "metaData/field/url",
       "value": "URL"
     },
@@ -1999,6 +1875,10 @@
     {
       "key": "editor/workflow/uncommittedChanges",
       "value": "Committen oder verwerfen Sie Ihre Änderungen, um die Phase anzupassen."
+    },
+    {
+      "key": "editor/print",
+      "value": "PDF drucken"
     },
     {
       "key": "editor/replace/title",

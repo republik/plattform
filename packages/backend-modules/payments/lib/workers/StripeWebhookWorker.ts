@@ -12,7 +12,8 @@ import { processCheckoutCompleted } from '../handlers/stripe/checkoutCompleted'
 import { processPaymentFailed } from '../handlers/stripe/paymentFailed'
 import { isPledgeBased } from '../handlers/stripe/utils'
 import { processChargeRefunded } from '../handlers/stripe/chargeRefunded'
-import { processInvociePaymentSucceded } from '../handlers/stripe/invoicePaymentSucceded'
+import { processInvoicePaymentSucceeded } from '../handlers/stripe/invoicePaymentSucceeded'
+import { WebhookService } from '../services/WebhookService'
 
 type WorkerArgsV1 = {
   $version: 'v1'
@@ -28,9 +29,14 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
   }
 
   async perform([job]: Job<WorkerArgsV1>[]): Promise<void> {
+    if (typeof this.context === 'undefined')
+      throw Error('This jobs needs the connection context to run')
+
+    const webhookService = new WebhookService(this.context.pgdb)
+
     const PaymentService = Payments.getInstance()
 
-    const wh = await PaymentService.findWebhookEventBySourceId<Stripe.Event>(
+    const wh = await webhookService.getEvent<Stripe.Event>(
       job.data.eventSourceId,
     )
 
@@ -46,7 +52,7 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
       switch (event.type) {
         case 'checkout.session.completed':
           await processCheckoutCompleted(
-            PaymentService,
+            { paymentService: PaymentService, ...this.context },
             job.data.company,
             event,
           )
@@ -97,7 +103,7 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
           await processPaymentFailed(PaymentService, job.data.company, event)
           break
         case 'invoice.payment_succeeded':
-          await processInvociePaymentSucceded(
+          await processInvoicePaymentSucceeded(
             PaymentService,
             job.data.company,
             event,
@@ -124,6 +130,6 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
       event.id,
       event.type,
     )
-    await PaymentService.markWebhookAsProcessed(event.id)
+    await webhookService.markEventAsProcessed(event.id)
   }
 }

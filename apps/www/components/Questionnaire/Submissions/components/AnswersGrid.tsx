@@ -5,7 +5,7 @@ import { Editorial, inQuotes, mediaQueries } from '@project-r/styleguide'
 const styles = {
   grid: css({
     columnCount: 1,
-    columnGap: '1em',
+    columnGap: 0,
     margin: '30px 0 40px',
     [mediaQueries.mUp]: {
       columnCount: 2,
@@ -15,17 +15,10 @@ const styles = {
     },
   }),
   card: css({
-    display: 'table',
+    display: 'block',
     width: '100%',
-    padding: '0.5em 0',
+    padding: '0.5em',
     breakInside: 'avoid',
-    transition: 'all .3s ease-in-out',
-    ':hover': {
-      transform: 'scale(1.03) !important',
-      '& span': {
-        color: '#757575',
-      },
-    },
   }),
   answer: css({
     background: 'rgba(255,255,255,0.5)',
@@ -37,6 +30,13 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
+    transition: 'all .3s ease-in-out',
+    ':hover': {
+      transform: 'scale(1.03) !important',
+      '& span': {
+        color: '#757575',
+      },
+    },
   }),
 }
 
@@ -51,7 +51,7 @@ export const AnswersGridCard = ({ children }: { children: ReactNode }) => {
 export const Answer = ({ answer, author }) => {
   return (
     <div {...styles.answer}>
-      <div>
+      <div style={{ width: '100%' }}>
         <Editorial.Question style={{ marginTop: 0 }}>
           {inQuotes(answer?.payload?.value ?? '')}
         </Editorial.Question>

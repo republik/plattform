@@ -14,22 +14,10 @@ const styles = {
     lineHeight: 1.4,
     fontWeight: 500,
   }),
-  subheadOuter: css({
-    margin: '60px 0 20px',
-  }),
-  subhead: css({
-    lineHeight: 1.4,
-  }),
-  subheadInner: css({
-    boxDecorationBreak: 'clone',
-    paddingLeft: '0.5rem',
-    paddingRight: '0.5rem',
-    marginLeft: '-0.25rem',
-    position: 'relative',
-    color: 'black',
-  }),
   help: css({
-    paddingTop: 15,
+    fontSize: 14,
+    marginTop: -20,
+    marginBottom: 20,
   }),
   body: css({
     margin: '5px 0 10px 0',

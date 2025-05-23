@@ -20,3 +20,7 @@ export function getSubscriptionType(productId: string): SubscriptionType {
 export function isPledgeBased(metadata: any) {
   return 'pledgeId' in metadata
 }
+
+export function secondsToMilliseconds(seconds: number): number {
+  return seconds * 1000
+}

@@ -35,4 +35,5 @@ export interface PaymentProviderActions {
       locale: 'auto' | 'de' | 'en' | 'fr'
     },
   ): Promise<string>
+  getCheckoutSession(id: string): Promise<Stripe.Checkout.Session | null>
 }
