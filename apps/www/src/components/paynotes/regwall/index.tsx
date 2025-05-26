@@ -9,8 +9,8 @@ import { useEffect } from 'react'
 import { PaynoteContainer } from '../../ui/containers'
 
 import { getMeteringData } from '../article-metering'
-import Offers from './offers'
 
+import Offers from './offers'
 import Trial from './trial'
 
 const Regwall = () => {
