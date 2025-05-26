@@ -40,14 +40,6 @@ See [apps/assets/.env.example](apps/assets/.env.example) for the required envs.
 
   fetches :path from `FRONTEND_BASE_URL`
 
-  ENVs: `FRONTEND_BASE_URL`, `FRONTEND_BASIC_AUTH_USER`, `FRONTEND_BASIC_AUTH_PASS`
-
-- `/purgeTags?psk=psk&tags=tag1,tag2`
-
-  purges tags on keyCDN :path from `PDF_BASE_URL`
-
-  ENVs: `PURGE_PSK`
-
 ### Query params
 
 If not specified otherwise all endpoints honour the following query params:

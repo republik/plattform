@@ -233,11 +233,10 @@ const nextConfig = {
         destination: '/503',
         permanent: false,
       },
-      // Migrated from custom express server
       {
-        source: '/updates/wer-sind-sie',
-        destination: '/503',
-        permanent: false,
+        source: '/updates',
+        destination: '/crowdfunding-updates',
+        permanent: true,
       },
       // Migrated from static questionnaire pages
       {

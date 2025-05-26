@@ -11,9 +11,6 @@
     "PF_PSPID": "",
     "PUBLIC_BASE_URL": "",
     "STRIPE_PUBLISHABLE_KEY": "",
-    "ASSETS_SERVER_BASE_URL": {
-      "required": true
-    },
     "CDN_FRONTEND_BASE_URL": {
       "required": true
     },

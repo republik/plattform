@@ -8,7 +8,6 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@orbiting/backend-modules-access": "*",
-    "@orbiting/backend-modules-assets": "*",
     "@orbiting/backend-modules-auth": "*",
     "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-base64u": "*",
@@ -22,10 +21,8 @@
     "@orbiting/backend-modules-embeds": "*",
     "@orbiting/backend-modules-env": "*",
     "@orbiting/backend-modules-formats": "*",
-    "@orbiting/backend-modules-gsheets": "*",
     "@orbiting/backend-modules-invoices": "*",
     "@orbiting/backend-modules-job-queue": "*",
-    "@orbiting/backend-modules-keyCDN": "*",
     "@orbiting/backend-modules-lead-tracking": "*",
     "@orbiting/backend-modules-mail": "*",
     "@orbiting/backend-modules-mailbox": "*",

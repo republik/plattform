@@ -1,32 +1,56 @@
-import { useState } from 'react'
-
+import {
+  AccessGrant,
+  PastAccessGrantsDocument,
+} from '#graphql/republik-api/__generated__/gql/graphql'
+import { useQuery } from '@apollo/client'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 
 import { css } from '@republik/theme/css'
+import { useTranslation } from 'lib/withT'
+import { useState } from 'react'
 
 import { Button } from '../../ui/button'
+import { PaynoteSection } from '../../ui/containers'
 import { RadioOption } from '../../ui/form'
 import { ArrowLink } from '../../ui/links'
-import { PaynoteSection } from '../../ui/containers'
+import IosCTA from '../ios-cta'
 
 import { ExitSurvey, OpenSurveyButton } from './exit-survey'
-import { useTranslation } from 'lib/withT'
-import IosCTA from '../ios-cta'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
 
+const getOffersCopyVersion = (accessGrants: AccessGrant[]): 'a' | 'b' => {
+  const trialAccessGrant = accessGrants.find(
+    (grant) =>
+      grant.campaign.id === process.env.NEXT_PUBLIC_REGWALL_TRIAL_CAMPAIGN_ID,
+  )
+  if (!trialAccessGrant) return 'b'
+  const finishedMoreThanThreeDaysAgo =
+    new Date(trialAccessGrant.endAt) <
+    new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
+
+  return finishedMoreThanThreeDaysAgo ? 'b' : 'a'
+}
+
 function OffersHeader() {
   const { t } = useTranslation()
+  const { data, loading } = useQuery(PastAccessGrantsDocument)
+  if (loading || !data?.me.accessGrants) return null
+
+  const copyVersion = getOffersCopyVersion(
+    data?.me.accessGrants as AccessGrant[],
+  )
+
   return (
     <>
       <h3>{t('paywall/offers/caption')}</h3>
       <h2>
         <span className={css({ fontWeight: 'normal' })}>
-          {t('paywall/offers/title/1')}
+          {t(`paywall/${copyVersion}/offers/title/1`)}
         </span>{' '}
-        {t('paywall/offers/title/2')}
+        {t(`paywall/${copyVersion}/offers/title/2`)}
       </h2>
     </>
   )

@@ -724,7 +724,10 @@
       "key": "Account/Delete/link",
       "value": "Löschungsanfrage"
     },
-    { "key": "UserGuidance/title", "value": "Kein laufendes Abonnement" },
+    {
+      "key": "UserGuidance/title",
+      "value": "Kein laufendes Abonnement"
+    },
     {
       "key": "UserGuidance/p1",
       "value": "Das Konto mit der E-Mail {email} hat kein gültiges Abonnement."
@@ -1431,7 +1434,7 @@
     },
     {
       "key": "profile/settings/hasPublicProfile/false/note",
-      "value": "Ihre Profilseite ist nur für andere Verleger sichtbar. Im Dialog sehen nur Verlegerinnen Ihren vollen Namen, Externe sehen bloss Ihre Initialen. Ausser Sie wählen die Option, einen Beitrag anonym zu veröffentlichen."
+      "value": "Ihre Profilseite ist nicht öffentlich und über die Republik-Suchfunktion nicht auffindbar. Im Dialog ist Ihr voller Name nur für andere Verlegerinnen und angemeldete Gäste sichtbar. Alle anderen sehen über Ihren Dialog-Beiträgen bloss Ihre Initialen. Ausser Sie wählen die Option, einen Dialog-Beitrag anonym zu veröffentlichen."
     },
     {
       "key": "profile/settings/isEligibleForProfile/notEligible",
@@ -1700,10 +1703,6 @@
     {
       "key": "footer/events",
       "value": "Veranstaltungen"
-    },
-    {
-      "key": "footer/updates",
-      "value": "Blog Crowdfunding"
     },
     {
       "key": "footer/about/projecR",
@@ -4099,22 +4098,6 @@
     {
       "key": "events/labels/location",
       "value": "Wo"
-    },
-    {
-      "key": "updates/pageTitle",
-      "value": "Neues – Republik"
-    },
-    {
-      "key": "updates/title",
-      "value": "Neuigkeiten zum Crowdfunding"
-    },
-    {
-      "key": "updates/metaDescription",
-      "value": "Das digitale Magazin von Project R – jetzt Mitglied werden."
-    },
-    {
-      "key": "updates/all",
-      "value": "Alle Meldungen"
     },
     {
       "key": "faq/pageTitle",
@@ -7806,11 +7789,11 @@
     },
     {
       "key": "regwall/a/header/title",
-      "value": "Weiterlesen, ohne zu bezahlen" 
+      "value": "Weiterlesen, ohne zu bezahlen"
     },
     {
       "key": "regwall/a/header/description",
-      "value": "<b>Werden Sie unser Gast:</b> Eine Woche lang gratis alle Republik-Beiträge lesen, keine automatische Verlängerung." 
+      "value": "<b>Werden Sie unser Gast:</b> Eine Woche lang gratis alle Republik-Beiträge lesen, keine automatische Verlängerung."
     },
     {
       "key": "regwall/a/cta",
@@ -7818,11 +7801,11 @@
     },
     {
       "key": "regwall/b/header/title",
-      "value": "Weiterlesen geht ganz einfach:" 
+      "value": "Weiterlesen geht ganz einfach:"
     },
     {
       "key": "regwall/b/header/description",
-      "value": "<b>Als Gast:</b> 7 Tage lang kostenlos Zugang zu allen Republik-Beiträgen, keine Zahlungsangaben erforderlich." 
+      "value": "<b>Als Gast:</b> 7 Tage lang kostenlos Zugang zu allen Republik-Beiträgen, keine Zahlungsangaben erforderlich."
     },
     {
       "key": "regwall/b/cta",
@@ -7830,117 +7813,127 @@
     },
     {
       "key": "regwall/whyRegister/title",
-      "value": "Warum eine E-Mail-Adresse?" 
+      "value": "Warum eine E-Mail-Adresse?"
     },
     {
       "key": "regwall/whyRegister/expanded",
-      "value": "<p>Warum eine E-Mail-Adresse?</p><p>Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Über Ihre E-Mail-Adresse können wir direkt mit Ihnen in Kontakt treten, ohne dass externe Suchmaschinen oder Social-Media-Plattformen zwischengeschaltet sind. <b>Wir geben Ihre E-Mail-Adresse niemals ausserhalb der Republik weiter</b>.</p><p>Wenn Sie keine Nachrichten mehr von der Republik erhalten möchten, können Sie sich <b>jederzeit abmelden</b>.</p>" 
+      "value": "<p>Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Über Ihre E-Mail-Adresse können wir direkt mit Ihnen in Kontakt treten, ohne dass externe Suchmaschinen oder Social-Media-Plattformen zwischengeschaltet sind. <b>Wir geben Ihre E-Mail-Adresse niemals ausserhalb der Republik weiter</b>.</p><p>Wenn Sie keine Nachrichten mehr von der Republik erhalten möchten, können Sie sich <b>jederzeit abmelden</b>.</p>"
     },
     {
       "key": "regwall/a/offers/description",
-      "value": "<b>Für Grosszügige und Unerschrockene:</b>" 
+      "value": "<b>Für Grosszügige und Unerschrockene:</b>"
     },
     {
       "key": "regwall/a/offers/cta",
-      "value": "Abo ab CHF 22.– / Monat" 
+      "value": "Abo ab CHF 22.– / Monat"
     },
     {
       "key": "regwall/b/offers/description",
-      "value": "<b>Als Abonnent*in:</b> Unterstützen Sie unabhängigen und werbefreien Journalismus." 
+      "value": "<b>Als Abonnent*in:</b> Unterstützen Sie unabhängigen und werbefreien Journalismus."
     },
     {
       "key": "regwall/b/offers/cta",
-      "value": "Abonnieren ab CHF 22.– / Monat" 
+      "value": "Abonnieren ab CHF 22.– / Monat"
     },
     {
       "key": "regwall/offers/cancellable",
-      "value": "Jederzeit kündbar" 
+      "value": "Jederzeit kündbar"
     },
     {
       "key": "paywall/offers/caption",
-      "value": "Einstiegsangebot" 
+      "value": "Einstiegsangebot"
     },
     {
-      "key": "paywall/offers/title/1",
-      "value": "Ihre kostenlose Gastwoche ist zu Ende." 
+      "key": "paywall/a/offers/title/1",
+      "value": "Ihre kostenlose Gastwoche ist zu Ende."
     },
     {
-      "key": "paywall/offers/title/2",
-      "value": "Doch unsere gemeinsame Reise muss hier nicht enden." 
+      "key": "paywall/a/offers/title/2",
+      "value": "Doch unsere gemeinsame Reise muss hier nicht enden."
+    },
+    {
+      "key": "paywall/b/offers/title/1",
+      "value": "Wie schön, Sie sind zurück!"
+    },
+    {
+      "key": "paywall/b/offers/title/2",
+      "value": "Wenn Sie schon da sind, dann bleiben Sie doch gleich?"
     },
     {
       "key": "paywall/offers/yearly/duration",
-      "value": "erstes Jahr" 
+      "value": "erstes Jahr"
     },
     {
       "key": "paywall/offers/yearly/description",
-      "value": "Danach 240.- jährlich. Jederzeit kündbar." 
+      "value": "Danach 240.- jährlich. Jederzeit kündbar."
     },
     {
       "key": "paywall/offers/monthly/duration",
-      "value": "erster Monat" 
+      "value": "erster Monat"
     },
     {
       "key": "paywall/offers/monthly/description",
-      "value": "Danach 22.- monatlich. Jederzeit kündbar." 
+      "value": "Danach 22.- monatlich. Jederzeit kündbar."
     },
     {
       "key": "paywall/offers/cta",
-      "value": "Jetzt abonnieren" 
+      "value": "Jetzt abonnieren"
     },
     {
       "key": "paywall/offers/survey",
-      "value": "Nein Danke, weil…" 
+      "value": "Nein Danke, weil…"
     },
     {
       "key": "paywall/offers/all",
-      "value": "Weitere Angebote anzeigen" 
+      "value": "Weitere Angebote anzeigen"
     },
     {
       "key": "paywall/survey/hint",
-      "value": "Wählen Sie aus, was am ehesten zutrifft." 
+      "value": "Wählen Sie aus, was am ehesten zutrifft."
     },
     {
       "key": "paywall/survey/all",
-      "value": "Weitere Angebote anzeigen" 
+      "value": "Weitere Angebote anzeigen"
     },
     {
       "key": "paywall/survey/thanks/title",
-      "value": "Vielen Dank für Ihr Feedback, wir hoffen, Sie bald wiederzusehen! 👋" 
+      "value": "Vielen Dank für Ihr Feedback, wir hoffen, Sie bald wiederzusehen! 👋"
     },
     {
       "key": "paywall/survey/thanks/description",
-      "value": "PS: Wussten Sie, dass Sie unser wöchentliches Nachrichtenbriefing auch ohne Abo als Newsletter erhalten können?" 
+      "value": "PS: Wussten Sie, dass Sie unser wöchentliches Nachrichtenbriefing auch ohne Abo als Newsletter erhalten können?"
     },
     {
       "key": "paywall/survey/thanks/link",
-      "value": "Das interessiert mich" 
+      "value": "Das interessiert mich"
     },
     {
       "key": "paynotes/dialog/title",
-      "value": "Willkommen im Dialog" 
+      "value": "Willkommen im Dialog"
     },
     {
       "key": "paynotes/dialog/description",
-      "value": "Als Gast sehen Sie, was zu reden gibt. Mit einem Abo nehmen Sie direkt am Gespräch mit Autorinnen und anderen Lesern teil." 
+      "value": "Als Gast sehen Sie, was zu reden gibt. Mit einem Abo nehmen Sie direkt am Gespräch mit Autorinnen und anderen Lesern teil."
     },
     {
       "key": "paynotes/dialog/cta",
-      "value": "Abonnieren und mitreden" 
+      "value": "Abonnieren und mitreden"
     },
-    {"key": "paynotes/ios/caption",
-      "value": "Unterstützen Sie unabhängigen Journalismus." },
+    {
+      "key": "paynotes/ios/caption",
+      "value": "Unterstützen Sie unabhängigen Journalismus."
+    },
     {
       "key": "paynotes/ios/cta",
-      "value": "Alle Angebote auf {link}" 
+      "value": "Alle Angebote auf {link}"
     },
     {
       "key": "paynotes/ios/text",
-      "value": "Alle Angebote auf shop.republik.ch" 
+      "value": "Alle Angebote auf shop.republik.ch"
     },
     {
       "key": "paynotes/welcomeBanner",
-      "value": "Ab sofort läuft Ihre siebentägige Gastwoche bei der Republik: Herzlich willkommen!" 
+      "value": "Ab sofort läuft Ihre siebentägige Gastwoche bei der Republik: Herzlich willkommen!"
     },
     {
       "key": "paynotes/account/title",
