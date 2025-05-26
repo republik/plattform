@@ -31,20 +31,18 @@ const Regwall = () => {
   }
 
   return (
-    <div data-testid='regwall'>
-      <PaynoteContainer>
-        <Trial analyticsProps={analyticsProps} />
-        <Offers
-          analyticsProps={analyticsProps}
-          additionalShopParams={{
-            rep_ui_component: 'regwall',
-            rep_regwall_variation: variation,
-            rep_trial_status: trialStatus,
-            ...getMeteringData('rep_'),
-          }}
-        />
-      </PaynoteContainer>
-    </div>
+    <PaynoteContainer testId='regwall'>
+      <Trial analyticsProps={analyticsProps} />
+      <Offers
+        analyticsProps={analyticsProps}
+        additionalShopParams={{
+          rep_ui_component: 'regwall',
+          rep_regwall_variation: variation,
+          rep_trial_status: trialStatus,
+          ...getMeteringData('rep_'),
+        }}
+      />
+    </PaynoteContainer>
   )
 }
 
