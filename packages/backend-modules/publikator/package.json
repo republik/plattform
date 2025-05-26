@@ -20,6 +20,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@orbiting/backend-modules-assets": "*",
     "@orbiting/graphql-list-fields": "^2.0.2",
     "@republik/remark-preset": "*",
     "@rocka/mp3-duration": "^2.0.0",

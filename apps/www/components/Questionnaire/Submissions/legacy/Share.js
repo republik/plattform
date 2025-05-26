@@ -1,13 +1,14 @@
-import { format } from 'url'
-import Head from 'next/head'
 import { css } from 'glamor'
+import Head from 'next/head'
+import { format } from 'url'
 
 import { fontStyles } from '@project-r/styleguide'
 
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { PUBLIC_BASE_URL } from '../../../../lib/constants'
+import { useTranslation } from '../../../../lib/withT'
 import Meta from '../../../Frame/Meta'
 import { AnswerText } from '../components/AnswerText'
-import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../../lib/constants'
-import { useTranslation } from '../../../../lib/withT'
 import { replaceText } from '../utils'
 
 export const SHARE_IMAGE_WIDTH = 1200
@@ -61,12 +62,13 @@ const ShareSubmission = ({
           ),
           description: replaceText(share.description, replacements),
           image: share.extract
-            ? `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-                getSubmissionUrl(pathname, submission.id, {
+            ? screenshotUrl({
+                url: getSubmissionUrl(pathname, submission.id, {
                   qid,
                   extract: share.extract,
                 }),
-              )}`
+                width: 1200,
+              })
             : '',
         }}
       />

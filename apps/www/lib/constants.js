@@ -1,8 +1,6 @@
 export const API_URL = process.env.NEXT_PUBLIC_API_URL
 export const API_WS_URL = process.env.NEXT_PUBLIC_API_WS_URL
-export const API_ASSETS_BASE_URL = process.env.NEXT_PUBLIC_API_ASSETS_BASE_URL
-export const ASSETS_SERVER_BASE_URL =
-  process.env.NEXT_PUBLIC_ASSETS_SERVER_BASE_URL
+
 export const SCREENSHOT_SERVER_BASE_URL =
   process.env.NEXT_PUBLIC_SCREENSHOT_SERVER_BASE_URL
 export const API_AUTHORIZATION_HEADER =
