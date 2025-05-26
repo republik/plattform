@@ -174,13 +174,11 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
 
                         <a
                           {...css({ ...linkRule })}
-                          href={`${STRIPE_DOMAIN}/subscriptions/${
-                            subscription.stripeId
-                          }?merchant_id=${
+                          href={`${STRIPE_DOMAIN}/${
                             subscription.company === 'REPUBLIK'
                               ? REPUBLIK_STRIPE_ID
                               : PROJECT_R_STRIPE_ID
-                          }`}
+                          }/subscriptions/${subscription.stripeId}`}
                           target='_blank'
                         >
                           Stripe <IconLink />
