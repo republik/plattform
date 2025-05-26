@@ -9,7 +9,7 @@ export default function JobsPage() {
     description:
       'Löse mit einem motivierten, multidisziplinären Team die interessantesten Probleme der Branche.',
     image:
-      'https://cdn.republik.space/s3/republik-assets/assets/images/jobs.jpg?resize=2000x',
+      'https://cdn.repub.ch/s3/republik-assets/assets/images/jobs.jpg?resize=2000x',
   }
 
   return (
