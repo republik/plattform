@@ -35,7 +35,6 @@
     "@orbiting/backend-modules-embeds": "*",
     "@orbiting/backend-modules-env": "*",
     "@orbiting/backend-modules-formats": "*",
-    "@orbiting/backend-modules-gsheets": "*",
     "@orbiting/backend-modules-invoices": "*",
     "@orbiting/backend-modules-mail": "*",
     "@orbiting/backend-modules-mailchimp": "*",

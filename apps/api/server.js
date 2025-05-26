@@ -28,7 +28,6 @@ const {
   graphql: subscriptions,
 } = require('@orbiting/backend-modules-subscriptions')
 const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
-const { graphql: gsheets } = require('@orbiting/backend-modules-gsheets')
 const { graphql: mailbox } = require('@orbiting/backend-modules-mailbox')
 const { graphql: slots } = require('@orbiting/backend-modules-calendar')
 const {
@@ -166,7 +165,6 @@ const run = async (workerId, config) => {
     collections,
     subscriptions,
     embeds,
-    gsheets,
     mailbox,
     slots,
     callToActions,
@@ -178,7 +176,6 @@ const run = async (workerId, config) => {
   const middlewares = [
     paymentsWebhook,
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
-    require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-mail/express/mandrill'),
     require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
     require('@orbiting/backend-modules-publikator/express/webhook'),
