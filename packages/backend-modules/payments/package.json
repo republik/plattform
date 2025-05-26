@@ -10,6 +10,7 @@
     "@orbiting/backend-modules-scalars": "*",
     "@orbiting/backend-modules-types": "*",
     "@orbiting/backend-modules-utils": "*",
+    "@orbiting/backend-modules-dataloader": "*",
     "apollo-modules-node": "*",
     "body-parser": "^1.19.1",
     "crockford-base32": "^2.0.0",

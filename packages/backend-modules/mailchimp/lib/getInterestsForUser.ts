@@ -33,15 +33,17 @@ export async function getInterestsForUser({
   const hasMembership = !!userId && !!segmentData.activeMembership
   const hasSubscription = !!userId && !!segmentData.activeSubscription
 
-  const isBenefactor = !!userId && !!segmentData.benefactorMembership
+  const isBenefactor =
+    !!userId &&
+    (!!segmentData.benefactorMembership ||
+      segmentData.activeSubscription?.type === 'BENEFACTOR_SUBSCRIPTION')
 
   const now = new Date()
   const activeAccessGrants = segmentData.accessGrants?.filter(
     (ag) => ag.beginAt <= now && ag.endAt > now && !ag.invalidatedAt,
   )
 
-  const hasActiveGrantedAccess =
-    !!user && !!activeAccessGrants?.length
+  const hasActiveGrantedAccess = !!user && !!activeAccessGrants?.length
 
   const hasActiveOrPastRegwallTrial = !!user && !!segmentData.accessGrants?.filter((ag) => ag.accessCampaignId === REGWALL_TRIAL_CAMPAIGN_ID).length
 

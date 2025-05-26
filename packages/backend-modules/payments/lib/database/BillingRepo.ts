@@ -128,7 +128,10 @@ export class BillingRepo implements PaymentBillingRepo {
     by: SelectCriteria,
     args: SubscriptionUpdateArgs,
   ): Promise<Subscription> {
-    return this.#pgdb.payments.subscriptions.updateAndGetOne(by, args)
+    return this.#pgdb.payments.subscriptions.updateAndGetOne(by, {
+      ...args,
+      updatedAt: new Date(),
+    })
   }
 
   getInvoice(by: SelectCriteria): Promise<Invoice | null> {
@@ -145,6 +148,7 @@ export class BillingRepo implements PaymentBillingRepo {
   updateInvoice(by: SelectCriteria, args: any): Promise<Invoice> {
     return this.#pgdb.payments.invoices.updateAndGet(by, {
       ...args,
+      updatedAt: new Date(),
     })
   }
 
@@ -160,6 +164,9 @@ export class BillingRepo implements PaymentBillingRepo {
     charge: SelectCriteria,
     args: ChargeUpdate,
   ): Promise<any | null> {
-    return this.#pgdb.payments.charges.updateAndGet(charge, args)
+    return this.#pgdb.payments.charges.updateAndGet(charge, {
+      ...args,
+      updatedAt: new Date(),
+    })
   }
 }
