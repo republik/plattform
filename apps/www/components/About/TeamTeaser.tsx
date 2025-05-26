@@ -10,22 +10,25 @@ const TeamTeaser = () => {
       fetch('/api/employees')
         .then((res) => res.json())
         .then((data: { employees: EmployeeRecord[] }) =>
-          setEmployees(data.employees),
+          setEmployees(
+            // select twelve employees to show on about page
+            data.employees
+              .filter(
+                (e) =>
+                  e.subgroup === 'Rothaus-Redaktion' && e.group === 'Redaktion',
+              )
+              .slice(1)
+              .sort(() => 0.5 - Math.random())
+              .slice(0, 12),
+          ),
         )
     }
   }, [employees])
   if (!employees) {
     return
   }
-  // select twelve employees to show on about page
-  const selectedEmployees = employees
-    .filter(
-      (e) => e.subgroup === 'Rothaus-Redaktion' && e.group === 'Redaktion',
-    )
-    .slice(1)
-    .sort(() => 0.5 - Math.random())
-    .slice(0, 12)
-  return <EmployeeGrid employees={selectedEmployees} />
+
+  return <EmployeeGrid omitHeadings={true} employees={employees} />
 }
 
 export default TeamTeaser

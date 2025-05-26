@@ -20,7 +20,7 @@ const ImpressumPage = ({ data, draftMode }: ImpressumPageProps) => {
     description: 'Die Köpfe hinter der Republik.',
   }
   return (
-    <Frame meta={meta} draftMode={draftMode} containerMaxWidth="1140px">
+    <Frame meta={meta} draftMode={draftMode} containerMaxWidth='1140px'>
       <Page data={data} />
     </Frame>
   )
@@ -30,11 +30,9 @@ export default ImpressumPage
 
 export const getStaticProps = createGetStaticProps(
   async (client, { draftMode }) => {
-    const datoCMSData = await Promise.resolve(
-      getCMSClientBase({ draftMode }).query({
-        query: EmployeesDocument,
-      }),
-    )
+    const datoCMSData = await getCMSClientBase({ draftMode }).query({
+      query: EmployeesDocument,
+    })
     return {
       props: {
         data: [...datoCMSData.data.employees],

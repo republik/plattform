@@ -61,9 +61,10 @@ const styles = {
 
 type EmployeesProps = {
   employees: EmployeeRecord[]
+  omitHeadings?: boolean
 }
 
-const Employees = ({ employees }: EmployeesProps) => {
+const Employees = ({ employees, omitHeadings }: EmployeesProps) => {
   const employeeGroups = nest()
     .key((d) => d['group'])
     .key((d) => d['subgroup'] || 'group')
@@ -72,7 +73,7 @@ const Employees = ({ employees }: EmployeesProps) => {
     <div {...styles.container}>
       {entries(employeeGroups).map((group) => (
         <section key={group.key}>
-          <h2 {...styles.groupHeading}>{group.key}</h2>
+          {!omitHeadings && <h2 {...styles.groupHeading}>{group.key}</h2>}
           {group.value.group ? (
             <div {...styles.tiles}>
               {group.value.group.map((employee) => (
@@ -82,7 +83,9 @@ const Employees = ({ employees }: EmployeesProps) => {
           ) : (
             entries(group.value).map((subgroup) => (
               <section key={subgroup.key}>
-                <h3 {...styles.subgroupHeading}>{subgroup.key}</h3>
+                {!omitHeadings && (
+                  <h3 {...styles.subgroupHeading}>{subgroup.key}</h3>
+                )}
                 <div {...styles.tiles}>
                   {subgroup.value.map((employee) => (
                     <Employee employee={employee} key={employee.userId} />
