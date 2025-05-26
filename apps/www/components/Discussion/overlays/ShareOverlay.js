@@ -8,7 +8,6 @@ const DiscussionShareOverlay = ({ t, onClose, url, title }) => (
     onClose={onClose}
     url={url}
     title={t('discussion/share/title')}
-    tweet={''}
     emailSubject={t('discussion/share/emailSubject', {
       title,
     })}

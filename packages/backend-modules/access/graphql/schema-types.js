@@ -10,6 +10,11 @@ extend type User {
   List of granted memberships by User
   """
   accessCampaigns(withPast: Boolean): [AccessCampaign!]
+
+  """
+  User is eligible for regwall-trial
+  """
+  regwallTrialStatus: String
 }
 
 """
@@ -74,7 +79,7 @@ type AccessGrant {
   """
   invalidatedAt: DateTime
   followupAt: DateTime
-  "Status (Admin only)"
+  "Status"
   status: String
   "Events (Admin only)"
   events: [AccessEvent]

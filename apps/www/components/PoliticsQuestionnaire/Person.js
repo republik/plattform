@@ -1,48 +1,46 @@
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 
 import {
-  Interaction,
-  IconButton,
   Center,
-  Figure,
-  FigureImage,
-  useHeaderHeight,
-  useColorContext,
-  NarrowContainer,
-  FigureCaption,
   ColorContextProvider,
-  FigureByline,
   Editorial,
+  Figure,
+  FigureByline,
+  FigureCaption,
+  FigureImage,
+  IconButton,
+  Interaction,
+  NarrowContainer,
+  useColorContext,
+  useHeaderHeight,
 } from '@project-r/styleguide'
 
 import { IconRadioChecked, IconRadioUnchecked } from '@republik/icons'
 
-import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
-
-// import { useMe } from '../../../lib/context/MeContext'
-import { useTranslation } from '../../lib/withT'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 
 import Frame from '../Frame'
 import Meta from '../Frame/Meta'
 
-import { ShareImageSplit } from '../Questionnaire/Submissions/ShareImageSplit'
-import { styles as submissionStyles } from '../Questionnaire/Submissions/Submission'
+import { ShareImage } from '../Questionnaire/Submissions/components/ShareImage'
+import { styles as submissionStyles } from '../Questionnaire/Submissions/legacy/Submission'
 
 import HeaderShare from './HeaderShare'
 
-import {
-  OVERVIEW_QUESTIONNAIRE_PATH,
-  QUESTIONNAIRE_BG_COLOR,
-  QUESTIONNAIRE_SQUARE_IMG_URL,
-  PERSON_SHARE_TEXT,
-  ILLU_SHARE,
-  ILLU_CREDIT,
-  QUESTIONNAIRE_FG_COLOR,
-} from './config'
 import { IconChevronLeft } from '@republik/icons'
+import {
+  ILLU_CREDIT,
+  ILLU_SHARE,
+  OVERVIEW_QUESTIONNAIRE_PATH,
+  PERSON_SHARE_TEXT,
+  QUESTIONNAIRE_BG_COLOR,
+  QUESTIONNAIRE_FG_COLOR,
+  QUESTIONNAIRE_SQUARE_IMG_URL,
+} from './config'
 
-import { partyTranslation, cantonTranslation } from './utils'
+import { cantonTranslation, partyTranslation } from './utils'
 
 const Page = ({ responses, authorData }) => {
   const [headerHeight] = useHeaderHeight()
@@ -62,7 +60,7 @@ const Page = ({ responses, authorData }) => {
 
   if (image) {
     return (
-      <ShareImageSplit
+      <ShareImage
         user={authorData}
         img={ILLU_SHARE}
         fgColor={QUESTIONNAIRE_FG_COLOR}
@@ -76,9 +74,7 @@ const Page = ({ responses, authorData }) => {
     url,
     title: '1 von 71 ausgefüllten Fragebogen aus dem Bundeshaus',
     description: '',
-    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-      shareImageUrl,
-    )}`,
+    image: screenshotUrl({ url: shareImageUrl, width: 1200 }),
   }
 
   return (

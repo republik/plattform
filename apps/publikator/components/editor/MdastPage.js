@@ -104,6 +104,16 @@ const rmWarning = (message) => (state) => ({
 
 const SIDEBAR_ICON_SIZE = 30
 
+const PrintButton = withT(({ t }) => (
+  <button
+    {...plainButtonRule}
+    style={{ color: colors.primary, marginTop: 10, display: 'block' }}
+    onClick={window.print}
+  >
+    {t('editor/print')}
+  </button>
+))
+
 export class EditorPage extends Component {
   constructor(...args) {
     super(...args)
@@ -694,44 +704,56 @@ export class EditorPage extends Component {
 
     const isNew = commitId === 'new'
 
-    commitMutation({
-      repoId,
-      parentId: isNew ? null : commitId,
-      isTemplate: isNew ? isTemplate === 'true' : data?.repo?.isTemplate,
-      message: message,
-      document: {
-        content: parse(
-          stringify(
-            JSON.parse(
-              JSON.stringify(this.editor.serializer.serialize(editorState)),
+    try {
+      commitMutation({
+        repoId,
+        parentId: isNew ? null : commitId,
+        isTemplate: isNew ? isTemplate === 'true' : data?.repo?.isTemplate,
+        message: message,
+        document: {
+          content: parse(
+            stringify(
+              JSON.parse(
+                JSON.stringify(this.editor.serializer.serialize(editorState)),
+              ),
             ),
           ),
-        ),
-      },
-    })
-      .then(({ data }) => {
-        if (publishDate) {
-          editRepoMeta({
-            repoId,
-            publishDate,
-          }).then(() => {
+        },
+      })
+        .then(({ data }) => {
+          if (publishDate) {
+            editRepoMeta({
+              repoId,
+              publishDate,
+            }).then(() => {
+              this.commitCleanup(data)
+            })
+          } else {
             this.commitCleanup(data)
-          })
-        } else {
-          this.commitCleanup(data)
-        }
-      })
-      .catch((e) => {
-        console.error(e)
-        this.setState((state) => ({
-          committing: false,
-          ...addWarning(
-            t('commit/warn/failed', {
-              error: errorToString(e),
-            }),
-          )(state),
-        }))
-      })
+          }
+        })
+        .catch((e) => {
+          console.error(e)
+          this.setState((state) => ({
+            committing: false,
+            ...addWarning(
+              t('commit/warn/failed', {
+                error: errorToString(e),
+              }),
+            )(state),
+          }))
+        })
+    } catch (e) {
+      console.error(e)
+      this.setState((state) => ({
+        committing: false,
+        ...addWarning(
+          t('commit/warn/failed', {
+            error: errorToString(e),
+          }),
+        )(state),
+      }))
+    }
   }
 
   goToRaw(isTemplate) {
@@ -973,6 +995,7 @@ export class EditorPage extends Component {
             >
               {!readOnly && !showPreview && (
                 <Sidebar.Tab tabId='edit' label='Editieren'>
+                  <PrintButton />
                   <Replace
                     value={this.editor?.serializer.serialize(editorState)}
                     onSave={this.persistChanges.bind(this)}

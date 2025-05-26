@@ -35,6 +35,7 @@ type FieldsType = {
   onChange: (fields) => void
   t: (string: string) => string
   showGoodiesTitle?: boolean
+  packageName: string
 }
 
 const styles = {
@@ -46,6 +47,7 @@ function GoodieOptions({
   values,
   onChange,
   t,
+  packageName,
   showGoodiesTitle = true,
 }: FieldsType) {
   if (!fields.length) {
@@ -55,7 +57,15 @@ function GoodieOptions({
   return (
     <>
       {showGoodiesTitle && (
-        <Interaction.H3>{t('Goodies/title')}</Interaction.H3>
+        <Interaction.H3>
+          {t(
+            `Goodies/title${
+              packageName === 'ABO_GIVE' || packageName === 'ABO_GIVE_MONTHS'
+                ? '/free'
+                : ''
+            }`,
+          )}
+        </Interaction.H3>
       )}
       <div>{t('Goodies/note/delivery')}</div>
 

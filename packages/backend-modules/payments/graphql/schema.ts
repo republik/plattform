@@ -6,11 +6,15 @@ schema {
 }
 
 type queries {
-  paymentsIsRunning: Boolean
+  getOffers(promoCode: String): [Offer!]!
+  getOffer(offerId: ID!, promoCode: String): Offer
+  validateGiftVoucher(voucherCode: String!): GiftVoucherValidationResult
 }
 
 type mutations {
-  cancelMagazineSubscription(subscriptionId: String!): Boolean
+  redeemGiftVoucher(voucherCode: String): RedeemGiftResult
+  createCheckoutSession(offerId: ID!, promoCode: String, complimentaryItems: [ComplimentaryItemOrder] options: CheckoutSessionOptions): CheckoutSession
+  cancelMagazineSubscription(args: CancelSubscription): Boolean
   createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
 }
 `

@@ -1,10 +1,7 @@
 import { SHARE_IMAGE_HEIGHT, SHARE_IMAGE_WIDTH } from '@project-r/styleguide'
 
-import {
-  ASSETS_SERVER_BASE_URL,
-  PUBLIC_BASE_URL,
-  SCHEMA_PUBLISHER,
-} from '../../lib/constants'
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { PUBLIC_BASE_URL, SCHEMA_PUBLISHER } from '../../lib/constants'
 import { parseJSONObject } from '../../lib/safeJSON'
 import { deduplicate } from '../../lib/utils/helpers'
 
@@ -20,6 +17,7 @@ export const runMetaFromQuery = (code, query) => {
     fn = new Function('query', code)
     return fn(query)
   } catch (e) {
+    /* eslint-disable-next-line */
     typeof console !== 'undefined' &&
       console.warn &&
       console.warn('meta.fromQuery exploded', e)
@@ -31,13 +29,7 @@ const mapContributor = ({ user, name }) => ({
   '@type': 'Person',
   name,
   url: user?.username ? `${PUBLIC_BASE_URL}/~${user.username}` : undefined,
-  sameAs: user
-    ? [
-        user.publicUrl,
-        user.twitterHandle && `https://twitter.com/${user.twitterHandle}`,
-        user.facebookId && `https://www.facebook.com/${user.facebookId}`,
-      ].filter(Boolean)
-    : undefined,
+  sameAs: user?.profileUrls?.length ? user.profileUrls : undefined,
 })
 
 const getJSONLDs = (meta) => {
@@ -67,6 +59,12 @@ const getJSONLDs = (meta) => {
           .filter((c) => !c.kind?.includes('Text'))
           .map(mapContributor),
         publisher: publisher.name && publisher, // skip empty objects or if name is missing
+        isAccessibleForFree: false,
+        hasPart: {
+          '@type': 'WebPageElement',
+          isAccessibleForFree: false,
+          cssSecector: '.regwall',
+        },
       },
     ]
   }
@@ -95,11 +93,12 @@ export const getMetaData = (documentId, meta) => {
   const cacheKey = getCacheKey(documentId, meta)
   const shareImage =
     meta.shareText &&
-    `${ASSETS_SERVER_BASE_URL}/render?width=${SHARE_IMAGE_WIDTH}&height=${SHARE_IMAGE_HEIGHT}&updatedAt=${encodeURIComponent(
-      cacheKey,
-    )}&url=${encodeURIComponent(
-      `${PUBLIC_BASE_URL}${meta.path}?extract=share`,
-    )}`
+    screenshotUrl({
+      url: `${PUBLIC_BASE_URL}${meta.path}?extract=share`,
+      width: SHARE_IMAGE_WIDTH,
+      height: SHARE_IMAGE_HEIGHT,
+      version: cacheKey,
+    })
 
   const metaWithUrls = {
     ...meta,

@@ -4,7 +4,13 @@
     "details": [
       {
         "appID": "7MQXM58QM7.app.republik",
-        "paths": [ "NOT /", "NOT /angebote", "*" ]
+        "paths": [
+          "NOT /",
+          "NOT /angebote",
+          "NOT *.txt",
+          "NOT /.well-known/*",
+          "*"
+        ]
       }
     ]
   }

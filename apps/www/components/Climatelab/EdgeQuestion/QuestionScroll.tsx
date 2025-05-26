@@ -1,20 +1,21 @@
 import { renderMdast } from '@republik/mdast-react-render'
 import { useRouter } from 'next/router'
-import React, { useMemo, useEffect, useRef, ReactNode } from 'react'
+import React, { ReactNode, useEffect, useMemo, useRef } from 'react'
 import scrollIntoView from 'scroll-into-view'
 
-import { createArticleSchema, slug, pxToRem } from '@project-r/styleguide'
+import { createArticleSchema, pxToRem, slug } from '@project-r/styleguide'
 
-import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import { cleanAsPath } from '../../../lib/utils/link'
 import { useTranslation } from '../../../lib/withT'
 
 import Meta from '../../Frame/Meta'
 import HrefLink from '../../Link/Href'
-import { SubmissionAuthor } from '../../Questionnaire/Submissions/Submission'
+import { SubmissionAuthor } from '../../Questionnaire/Submissions/legacy/Submission'
 
 import HeaderShare from '../shared/HeaderShare'
 
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import { PORTRAITS } from './config'
 import { Author, QuestionAnswer, ShareProps } from './index'
 
@@ -116,9 +117,7 @@ const QuestionScroll: React.FC<{
       '{name}',
       sharedAnswer ? sharedAnswer.author.name : '',
     ),
-    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-      shareImageUrl,
-    )}`,
+    image: screenshotUrl({ url: shareImageUrl, width: 1200 }),
   }
 
   const schema = useMemo(

@@ -78,15 +78,13 @@ module.exports = async (_, args, context) => {
         firstName: users.map((u) => u.firstName).filter(Boolean)[0],
         lastName: users.map((u) => u.lastName).filter(Boolean)[0],
         username: users.map((u) => u.username).filter(Boolean)[0],
-        birthday: users.map((u) => u.birthday).filter(Boolean)[0],
+        birthyear: users.map((u) => u.birthyear).filter(Boolean)[0],
         phoneNumber: users.map((u) => u.phoneNumber).filter(Boolean)[0],
         addressId: users.map((u) => u.addressId).filter(Boolean)[0],
         hasPublicProfile: users
           .map((u) => u.hasPublicProfile)
           .filter(Boolean)[0],
-        facebookId: users.map((u) => u.facebookId).filter(Boolean)[0],
-        twitterHandle: users.map((u) => u.twitterHandle).filter(Boolean)[0],
-        publicUrl: users.map((u) => u.publicUrl).filter(Boolean)[0],
+        profileUrls: users.map((u) => u.profileUrls).filter(Boolean)[0],
         biography: users.map((u) => u.biography).filter(Boolean)[0],
         pgpPublicKey: users.map((u) => u.pgpPublicKey).filter(Boolean)[0],
         prolitterisId: users.map((u) => u.prolitterisId).filter(Boolean)[0],

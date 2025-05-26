@@ -20,6 +20,10 @@ type CallToActionBasicPayload {
   text: String!
   linkHref: String!
   linkLabel: String!
+  backgroundColor: String
+  textColor: String
+  illustration: String
+
 }
 
 type CallToActionComponentPayload {

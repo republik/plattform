@@ -206,7 +206,6 @@ input UserInput {
   email: String!
   firstName: String
   lastName: String
-  birthday: Date
   phoneNumber: String
 }
 #input AddressInput {

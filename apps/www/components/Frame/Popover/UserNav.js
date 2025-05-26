@@ -110,13 +110,20 @@ const UserNav = ({ me, hasActiveMembership }) => {
                 />
                 <div {...styles.navSection}>
                   <div {...styles.navLinks}>
-                    {me?.accessCampaigns?.length > 0 && (
-                      <NavLink href='/teilen' currentPath={currentPath} large>
-                        {t('nav/share')}
-                      </NavLink>
-                    )}
                     {!inNativeIOSApp && (
                       <>
+                        {me?.activeMembership?.canProlong && (
+                          <NavLink
+                            href={{
+                              pathname: '/angebote',
+                              query: { package: 'PROLONG' },
+                            }}
+                            currentPath={currentPath}
+                            large
+                          >
+                            {t('memberships/YEARLY_ABO/manage/prolong/link')}
+                          </NavLink>
+                        )}
                         <NavLink
                           href={{
                             pathname: '/angebote',

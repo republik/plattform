@@ -3,6 +3,7 @@ const config = {
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR: 'MAILCHIMP_INTEREST_MEMBER_BENEFACTOR',
   MAILCHIMP_INTEREST_PLEDGE: 'MAILCHIMP_INTEREST_PLEDGE',
   MAILCHIMP_INTEREST_GRANTED_ACCESS: 'MAILCHIMP_INTEREST_GRANTED_ACCESS',
+  MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL: 'MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL',
   MAILCHIMP_MAIN_LIST_ID: 'MAILCHIMP_MAIN_LIST_ID',
   MAILCHIMP_ONBOARDING_AUDIENCE_ID: 'MAILCHIMP_ONBOARDING_AUDIENCE_ID',
   MAILCHIMP_MARKETING_AUDIENCE_ID: 'MAILCHIMP_MARKETING_AUDIENCE_ID',
@@ -15,6 +16,7 @@ const config = {
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW: 'MAILCHIMP_INTEREST_NEWSLETTER_WDWWW',
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY: 'MAILCHIMP_INTEREST_NEWSLETTER_DAILY',
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY: 'MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY',
+  REGWALL_TRIAL_CAMPAIGN_ID: 'REGWALL_TRIAL_CAMPAIGN_ID'
 }
 jest.mock('../../config', () => ({
   getConfig() {
@@ -57,6 +59,7 @@ describe('test that merge fields are generated correctly from user data with mis
       NL_LINK_CA: undefined,
       NL_LINK_WD: undefined,
       TRIAL: undefined,
+      REG_TRIAL: undefined,
       NL_DAILY: undefined,
       NL_WEEKLY: undefined,
       NL_PROJ_R: undefined,
@@ -95,6 +98,7 @@ describe('test that merge fields are generated correctly from user data with mis
       NL_LINK_CA: 'getConsentLink mocked',
       NL_LINK_WD: 'getConsentLink mocked',
       TRIAL: undefined,
+      REG_TRIAL: undefined,
       NL_DAILY: undefined,
       NL_WEEKLY: undefined,
       NL_PROJ_R: undefined,
@@ -706,6 +710,7 @@ describe('trial state', () => {
     segmentData.accessGrants = [
       {
         id: 'ag-123',
+        accessCampaignId: 'ac-1',
         granterUserId: userId,
         email: email,
         recipientUserId: userId,
@@ -717,6 +722,7 @@ describe('trial state', () => {
       },
       {
         id: 'ag-1234',
+        accessCampaignId: 'ac-2',
         granterUserId: userId,
         email: email,
         recipientUserId: userId,
@@ -735,6 +741,96 @@ describe('trial state', () => {
     segmentData.accessGrants = [
       {
         id: 'ag-1234',
+        accessCampaignId: 'ac-1',
+        granterUserId: userId,
+        email: email,
+        recipientUserId: userId,
+        beginAt: new Date('2020-07-01'),
+        endAt: new Date('2020-08-01'),
+        revokedAt: new Date('2020-07-05'),
+        invalidatedAt: new Date('2020-07-05'),
+        payload: {},
+      },
+    ]
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.TRIAL).toBe('Past')
+  })
+})
+
+describe('regwall trial state', () => {
+  const userId = 'user-trial-1223'
+  const email = 'user@example.com'
+  const user = {
+    id: userId,
+    email: email,
+    firstName: 'Test',
+    lastName: 'Test',
+  }
+  const segmentData: SegmentData = {
+    pledges: [],
+    activeMembership: undefined,
+    activeMembershipPeriod: undefined,
+    benefactorMembership: undefined,
+    accessGrants: undefined,
+    mailchimpMember: undefined,
+    activeSubscription: undefined,
+    invoices: [],
+  }
+  segmentData.accessGrants = [
+    {
+      id: 'ag-1234',
+      accessCampaignId: 'ac-1',
+      granterUserId: userId,
+      email: email,
+      recipientUserId: userId,
+      beginAt: new Date('2020-07-01'),
+      endAt: new Date('2020-08-01'),
+      revokedAt: new Date('2020-07-05'),
+      invalidatedAt: new Date('2020-07-05'),
+      payload: {},
+    },
+  ]
+  test('no regwal trial, only other trials', async () => {
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.REG_TRIAL).toBeUndefined()
+  })
+
+  test('active regwall trial', async () => {
+    segmentData.accessGrants = [
+      {
+        id: 'ag-123',
+        accessCampaignId: config.REGWALL_TRIAL_CAMPAIGN_ID,
+        granterUserId: userId,
+        email: email,
+        recipientUserId: userId,
+        beginAt: new Date('2024-07-01'),
+        endAt: new Date('2035-01-01'),
+        revokedAt: null,
+        invalidatedAt: null,
+        payload: {},
+      },
+      {
+        id: 'ag-1234',
+        accessCampaignId: 'ac-2',
+        granterUserId: userId,
+        email: email,
+        recipientUserId: userId,
+        beginAt: new Date('2020-07-01'),
+        endAt: new Date('2020-08-01'),
+        revokedAt: null,
+        invalidatedAt: new Date('2020-07-05'),
+        payload: {},
+      },
+    ]
+    const mergeFields = await getMergeFieldsForUser({ user, segmentData })
+    expect(mergeFields.REG_TRIAL).toBe('Active')
+  })
+
+  test('past regwall trial', async () => {
+    segmentData.accessGrants = [
+      {
+        id: 'ag-1234',
+        accessCampaignId: config.REGWALL_TRIAL_CAMPAIGN_ID,
         granterUserId: userId,
         email: email,
         recipientUserId: userId,

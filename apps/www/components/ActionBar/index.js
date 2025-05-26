@@ -1,13 +1,11 @@
 import { useState, Fragment } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import {
-  IconButton,
-  Interaction,
-  shouldIgnoreClick,
-} from '@project-r/styleguide'
+import { IconButton, shouldIgnoreClick } from '@project-r/styleguide'
 import withT from '../../lib/withT'
-import withInNativeApp, { postMessage } from '../../lib/withInNativeApp'
+
+import { postMessage } from '../../lib/withInNativeApp'
+import { reportError } from '../../lib/errors/reportError'
 
 import { splitByTitle } from '../../lib/utils/mdast'
 import { trackEvent } from '@app/lib/analytics/event-tracking'
@@ -23,9 +21,9 @@ import SubscribeMenu from '../Notifications/SubscribeMenu'
 import BookmarkButton from './BookmarkButton'
 import DiscussionLinkButton from './DiscussionLinkButton'
 import UserProgress from './UserProgress'
-import ShareButtons from './ShareButtons'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 
 import {
   AudioPlayerLocations,
@@ -63,7 +61,6 @@ const ActionBar = ({
   document,
   documentLoading,
   t,
-  inNativeApp,
   share,
   download,
   discussion,
@@ -71,7 +68,7 @@ const ActionBar = ({
   isCentered,
   shareParam,
 }) => {
-  const { me, meLoading, hasAccess, isEditor } = useMe()
+  const { me, meLoading, isEditor, isMember } = useMe()
   const [pdfOverlayVisible, setPdfOverlayVisible] = useState(false)
   const [fontSizeOverlayVisible, setFontSizeOverlayVisible] = useState(false)
   const [shareOverlayVisible, setShareOverlayVisible] = useState(false)
@@ -85,6 +82,39 @@ const ActionBar = ({
     isPlaying,
   } = useAudioContext()
   const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
+  const { isNativeApp, isIOS, isAndroid } = usePlatformInformation()
+
+  const handleShareClick = async (e, shareData = {}) => {
+    e.preventDefault()
+    // shareData is only present on certain pages with no document
+    trackEvent(['ActionBar', 'share', shareData.url || shareUrl])
+    // in the native app we use postMessage to open the native share UI
+    if (isNativeApp) {
+      postMessage({
+        type: 'share',
+        payload: {
+          title: shareData.title || document.title,
+          url: shareData.url || shareUrl,
+          subject: shareData.emailSubject || emailSubject || '',
+          dialogTitle: t('article/share/title'),
+        },
+      })
+      e.target.blur()
+      // on mobile devices we use Web Share API if supported
+    } else if (navigator?.share && (isAndroid || isIOS)) {
+      try {
+        await navigator.share({
+          title: shareData.title || document.title,
+          url: shareData.url || shareUrl,
+        })
+      } catch (err) {
+        reportError(err)
+      }
+      // on all other devices we use our share overlay
+    } else {
+      setShareOverlayVisible(!shareOverlayVisible)
+    }
+  }
 
   if (!document) {
     return (
@@ -121,24 +151,7 @@ const ActionBar = ({
             label={share.label || ''}
             Icon={IconShare}
             href={share.url}
-            onClick={(e) => {
-              e.preventDefault()
-              trackEvent(['ActionBar', 'share', share.url])
-              if (inNativeApp) {
-                postMessage({
-                  type: 'share',
-                  payload: {
-                    title: share.title,
-                    url: share.url,
-                    subject: share.emailSubject || '',
-                    dialogTitle: t('article/share/title'),
-                  },
-                })
-                e.target.blur()
-              } else {
-                setShareOverlayVisible(!shareOverlayVisible)
-              }
-            }}
+            onClick={(e) => handleShareClick(e, share)}
           />
         )}
         {shareOverlayVisible && (
@@ -146,7 +159,6 @@ const ActionBar = ({
             onClose={() => setShareOverlayVisible(false)}
             url={share.url}
             title={share.overlayTitle || t('article/actionbar/share')}
-            tweet={share.tweet || ''}
             emailSubject={share.emailSubject || ''}
             emailBody={share.emailBody || ''}
             emailAttachUrl={share.emailAttachUrl}
@@ -302,7 +314,7 @@ const ActionBar = ({
         setPdfOverlayVisible(!pdfOverlayVisible)
       },
       modes: ['articleTop', 'articleBottom'],
-      show: hasPdf,
+      show: hasPdf && isMember,
     },
     {
       title: t('article/actionbar/fontSize/title'),
@@ -374,30 +386,13 @@ const ActionBar = ({
         'bookmark',
         'seriesEpisode',
       ],
-      show: !notBookmarkable && (meLoading || hasAccess),
+      show: !notBookmarkable && (meLoading || isMember),
     },
     {
       title: t('article/actionbar/share'),
       Icon: IconShare,
       href: shareUrl,
-      onClick: (e) => {
-        e.preventDefault()
-        trackEvent(['ActionBar', 'share', shareUrl])
-        if (inNativeApp) {
-          postMessage({
-            type: 'share',
-            payload: {
-              title: document.title,
-              url: shareUrl,
-              subject: emailSubject,
-              dialogTitle: t('article/share/title'),
-            },
-          })
-          e.target.blur()
-        } else {
-          setShareOverlayVisible(!shareOverlayVisible)
-        }
-      },
+      onClick: (e) => handleShareClick(e),
       label: !forceShortLabel
         ? t(
             `article/actionbar/${mode}/share`,
@@ -500,8 +495,7 @@ const ActionBar = ({
           : play
         : toggleAudioPlayback,
       modes: ['feed', 'seriesEpisode'],
-      show:
-        meta.audioSource?.mp3,
+      show: isMember && meta.audioSource?.mp3,
       group: 'audio',
     },
     {
@@ -533,9 +527,7 @@ const ActionBar = ({
         }
       },
       modes: ['feed', 'seriesEpisode'],
-      show:
-        isAudioQueueAvailable &&
-        meta.audioSource?.mp3,
+      show: isMember && isAudioQueueAvailable && meta.audioSource?.mp3,
       group: 'audio',
     },
     {
@@ -571,7 +563,10 @@ const ActionBar = ({
   const audioItems = currentActionItems.filter(getGroup('audio'))
 
   return (
-    <div {...(!hasAccess && mode !== 'articleOverlay' && styles.bottomMargin)}>
+    <div
+      {...(!isMember && mode !== 'articleOverlay' && styles.bottomMargin)}
+      {...styles.hidePrint}
+    >
       <div
         {...((mode === 'feed' || mode === 'seriesEpisode') && styles.flexWrap)}
         {...((mode === 'seriesEpisode' || mode === 'feed') &&
@@ -611,24 +606,6 @@ const ActionBar = ({
             <RenderItems items={audioItems} />
           </div>
         )}
-
-        {mode === 'seriesOverviewBottom' && (
-          <>
-            {!inNativeApp ? (
-              <Interaction.P style={{ marginTop: 24 }}>
-                <strong>{t('article/actionbar/share')}</strong>
-              </Interaction.P>
-            ) : null}
-            <ShareButtons
-              url={shareUrl}
-              title={document.title}
-              tweet=''
-              emailSubject={emailSubject}
-              emailBody=''
-              emailAttachUrl
-            />
-          </>
-        )}
       </div>
 
       {/* OVERLAYS */}
@@ -646,7 +623,6 @@ const ActionBar = ({
           onClose={() => setShareOverlayVisible(false)}
           url={shareUrl}
           title={t('article/actionbar/share')}
-          tweet={''}
           emailSubject={emailSubject}
           emailBody={''}
           emailAttachUrl
@@ -699,6 +675,11 @@ const styles = {
   shareTitle: css({
     margin: '16px 0 0 0',
   }),
+  hidePrint: css({
+    '@media print': {
+      display: 'none',
+    },
+  }),
 }
 
-export default compose(withT, withInNativeApp)(ActionBar)
+export default compose(withT)(ActionBar)

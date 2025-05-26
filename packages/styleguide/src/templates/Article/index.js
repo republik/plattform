@@ -42,7 +42,7 @@ import TeaserEmbedComment from '../../components/TeaserEmbedComment'
 import ifRule from '../shared/email/rules/ifRule'
 import elseRule from '../shared/email/rules/elseRule'
 import authorRule from '../shared/email/rules/authorRule'
-import Datawrapper from '../../components/Datawrapper'
+import { embedDataWrapperRule } from '../shared/rules/embedDatawrapperRule'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -110,6 +110,11 @@ const createSchema = ({
   documentEditorOptions = { skipCredits: false },
   customMetaFields = [
     {
+      label: 'Regwall ausschalten',
+      key: 'isPaywallExcluded',
+      ref: 'bool',
+    },
+    {
       label: 'Bildergalerie aktiv',
       key: 'gallery',
       ref: 'bool',
@@ -162,7 +167,6 @@ const createSchema = ({
   repoPrefix = 'article-',
   series = true,
   darkMode = true,
-  paynotes = true,
   Link = DefaultLink,
   getPath = getDatePath,
   t = () => '',
@@ -179,7 +183,6 @@ const createSchema = ({
   withCommentData = withData,
   CommentLink = DefaultLink,
   ActionBar = DefaultActionBar,
-  PayNote,
   noEmpty = true,
   AudioPlayButton,
 } = {}) => {
@@ -194,7 +197,6 @@ const createSchema = ({
     t,
     Link,
     ActionBar,
-    PayNote,
     plattformUnauthorizedZoneText,
     AudioPlayButton,
   })
@@ -206,24 +208,6 @@ const createSchema = ({
     insertButtonText: 'Dynamic Component',
     type: DYNAMICCOMPONENT_TYPE,
   })
-
-  const embedDataWrapper = {
-    matchMdast: matchZone('EMBEDDATAWRAPPER'),
-    component: Datawrapper,
-    editorModule: 'embedDatawrapper',
-    editorOptions: {
-      type: 'EMBEDDATAWRAPPER',
-      insertButtonText: 'Datawrapper (Beta)',
-      insertTypes: ['PARAGRAPH'],
-    },
-    props: (node) => ({
-      datawrapperId: node.data.datawrapperId,
-      alt: node.data.alt,
-      size: node.data.size,
-      plain: node.data.plain,
-    }),
-    isVoid: true,
-  }
 
   const TeaserEmbedCommentWithLiveData = withCommentData(TeaserEmbedComment)
   const TeaserEmbedCommentSwitch = (props) => {
@@ -259,7 +243,6 @@ const createSchema = ({
             editorOptions: {
               series,
               darkMode,
-              paynotes,
               customFields: customMetaFields,
               teaser:
                 previewTeaser ||
@@ -277,7 +260,7 @@ const createSchema = ({
           },
           blocks.cover,
           addProgressProps(dynamicComponent),
-          addProgressProps(embedDataWrapper),
+          addProgressProps(embedDataWrapperRule()),
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
             component: ({
@@ -715,7 +698,7 @@ const createSchema = ({
                   },
                 ],
               },
-              embedDataWrapper,
+              embedDataWrapperRule(),
               base.centerFigure,
               teasers.articleCollection,
               blocks.blockQuote,

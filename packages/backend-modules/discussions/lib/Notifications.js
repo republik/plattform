@@ -2,7 +2,7 @@ const htmlToText = require('html-to-text')
 const { renderEmail } = require('@republik/mdast-react-render/email')
 const{ createCommentEmailSchema } = require('@republik/mdast-mail-templates')
 
-const { transformUser } = require('@orbiting/backend-modules-auth')
+const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
 const {
   Subscriptions: {
     getSubscriptionsForUserAndObjects,
@@ -193,7 +193,10 @@ const submitComment = async (comment, discussion, context, testUsers) => {
       })
   }
 
-  if (subscribers.length > 0) {
+  // filter notifications so they are sent to active subscribers only
+  const activeSubscribers = subscribers.filter((user) => Roles.userHasRole(user, 'member'))
+
+  if (activeSubscribers.length > 0) {
     const {
       discussionUrl,
       contentHtml,
@@ -217,7 +220,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
           objectType: 'Comment',
           objectId: id,
         },
-        users: subscribers,
+        users: activeSubscribers,
         content: {
           app: {
             title: isTopLevelComment

@@ -48,8 +48,9 @@ const getCouponCodeParams = (query) => {
   return params
 }
 
-export const getConversionPayload = (query = {}) => {
+export const getConversionPayload = (query = {}, localContext = {}) => {
   return {
+    localContext,
     app: inNativeAppBrowserAppVersion
       ? {
           version: inNativeAppBrowserAppVersion,

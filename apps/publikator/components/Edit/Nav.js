@@ -39,8 +39,9 @@ const Nav = ({ router: { query, asPath }, t, isTemplate, isNew }) => {
     <Frame.Nav>
       <Head>
         <title>
-          {query.preview ? 'preview' : currentPath.split('/').slice(-1)}:{' '}
-          {repoId.split('/')[1]} – Publikator
+          {`${query.preview ? 'preview' : currentPath.split('/').slice(-1)}: ${
+            repoId.split('/')[1]
+          } – Publikator`}
         </title>
       </Head>
       <NavLink

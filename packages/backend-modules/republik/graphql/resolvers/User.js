@@ -58,14 +58,12 @@ module.exports = {
     'biography',
     (bio) => bio && remark.parse(bio),
   ),
-  facebookId: exposeProfileField('facebookId'),
-  twitterHandle: exposeProfileField('twitterHandle'),
-  publicUrl: exposeProfileField('publicUrl'),
+  profileUrls: exposeProfileField('profileUrls'),
   disclosures: exposeProfileField('disclosures'),
   statement: exposeProfileField('statement'),
   gender(user, args, { user: me }) {
     if (
-      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'associate'])
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])
     ) {
       return user._raw.gender || user.gender
     }
@@ -177,14 +175,14 @@ module.exports = {
     }
     return null
   },
-  birthday(user, args, { user: me }) {
+  birthyear(user, args, {user: me}) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      return user._raw.birthday
+      return user._raw.birthyear
     }
     return null
   },
-  age: exposeAccessField('ageAccessRole', 'birthday', (dob) =>
-    dob ? age(dob) : null,
+  age: exposeAccessField('ageAccessRole', 'birthyear', (birthyear) =>
+    birthyear ? age(birthyear) : null,
   ),
   async address(user, args, { loaders, user: me }) {
     if (

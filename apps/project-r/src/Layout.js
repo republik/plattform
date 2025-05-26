@@ -76,6 +76,7 @@ const Layout = ({ children, meta, cover, raw }) => {
           rel='shortcut icon'
           href='https://assets.project-r.construction/images/favicon.ico'
         />
+        <link rel='alternate' href='https://project-r.ch' />
         <meta name='author' content='Project R' />
       </Head>
 

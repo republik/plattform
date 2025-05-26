@@ -34,7 +34,7 @@ test/**/out
 
 # Generated GQL types
 !graphql/*/__generated__/gql/README.md
-graphql/*/__generated__/gql
+graphql/*/__generated__
 
 # Vercel
 .vercel

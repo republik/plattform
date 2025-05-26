@@ -140,6 +140,14 @@ export class StripeProvider implements PaymentProviderActions {
     return sess.url
   }
 
+  async getCheckoutSession(
+    id: string,
+  ): Promise<Stripe.Checkout.Session | null> {
+    return this.#stripe.checkout.sessions.retrieve(id, {
+      expand: ['line_items', 'line_items.data.price.product'],
+    })
+  }
+
   verifyWebhook(req: any, secret: string): any {
     const signature = req.headers['stripe-signature']
 

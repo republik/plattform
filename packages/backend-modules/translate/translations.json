@@ -389,6 +389,10 @@
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
+      "key": "api/email/payment_successful_gift_voucher/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
       "key": "api/email/payment_successful_benefactor/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
@@ -445,12 +449,28 @@
       "value": "Republik: Ihre Kündigung wurde rückgängig gemacht"
     },
     {
+      "key": "api/email/subscription_created_gift_subscription/subject",
+      "value": "Willkommen bei der Republik"
+    },
+    {
+      "key": "api/email/subscription_updated_gift_voucher_subscription/subject",
+      "value": "Republik: Sie haben ein Geschenk eingelöst"
+    },
+    {
       "key": "api/email/option/goodie/notebook/1",
       "value": "Notizbuch"
     },
     {
       "key": "api/email/option/goodie/notebook/other",
       "value": "Notizbücher"
+    },
+    {
+      "key": "api/email/option/goodie/librarybook/1",
+      "value": "Republik-Bibliothek Taschenbuch"
+    },
+    {
+      "key": "api/email/option/goodie/librarybook/other",
+      "value": "Republik-Bibliothek Taschenbücher"
     },
     {
       "key": "api/email/option/goodie/totebag/1",
@@ -746,23 +766,31 @@
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_notice_0/subject",
-      "value": "Ihr Republik-Jubiläum! Und der Beginn von etwas Neuem?"
+      "value": "Heute ist Ihr Republik-Jubiläum! Und der Beginn von etwas Neuem?"
     },
     {
       "key": "api/email/membership_owner_prolong_winback_7/subject",
       "value": "Ihr Mitgliedschaftsbeitrag ist überfällig"
     },
     {
+      "key": "api/email/membership_owner_prolong_yearly_abo_winback_5/subject",
+      "value": "Wie behalten Sie die Übersicht?"
+    },
+    {
       "key": "api/email/membership_owner_prolong_yearly_abo_winback_7/subject",
-      "value": "Da war doch noch etwas: Ihr Mitstreiter-Abonnement"
+      "value": "Republik-Abo jetzt mit Rabatt verlängern"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_yearly_abo_winback_12/subject",
+      "value": "Der Medienkrise etwas entgegensetzen"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_winback_16/subject",
-      "value": "Ein Zurück-zur-Republik-Angebot für Sie"
+      "value": "Kommen Sie zurück zur Republik für 160 statt 240 Franken"
     },
     {
       "key": "api/email/membership_owner_prolong_yearly_abo_winback_24/subject",
-      "value": "Jetzt zurück zur Republik"
+      "value": "Kommen Sie zurück zur Republik für 160 statt 240 Franken"
     },
     {
       "key": "api/email/membership_owner_autopay_notice/subject",
@@ -802,7 +830,7 @@
     },
     {
       "key": "api/email/membership_deactivated_yearly_abo_uncancelled/subject",
-      "value": "Ihr Abonnement wurde deaktiviert"
+      "value": "Republik-Abo verlängern und 2 Monate gratis lesen"
     },
     {
       "key": "api/email/membership_deactivated/subject",
@@ -993,8 +1021,8 @@
       "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir eine Funktion zwingend benötigen."
     },
     {
-      "key": "profile/candidacy/birthday/needed",
-      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir das Geburtsdatum zwingend benötigen."
+      "key": "profile/candidacy/birthyear/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir das Geburtsjahr zwingend benötigen."
     },
     {
       "key": "profile/candidacy/biography/needed",
@@ -1045,14 +1073,6 @@
       "value": "PGP-Public-Key"
     },
     {
-      "key": "profile/contact/publicUrl/label",
-      "value": "Webseite"
-    },
-    {
-      "key": "profile/contact/publicUrl/error",
-      "value": "Webseite ungültig"
-    },
-    {
       "key": "profile/contact/facebook/label",
       "value": "Facebook"
     },
@@ -1079,6 +1099,10 @@
     {
       "key": "address/city/tooLong",
       "value": "Ort, maximal {maxLength} Zeichen"
+    },
+    {
+      "key": "api/user/birthyearInvalid",
+      "value": "Geburtsjahr muss zwischen 1900 und dem aktuellen Jahr liegen"
     },
     {
       "key": "pledge/contact/firstName/label",
@@ -1333,6 +1357,10 @@
       "value": "Ihre Reise ist beendet"
     },
     {
+      "key": "api/access/email/recipient/expired_regwall_trial/subject",
+      "value": "Gastzugang deaktiviert"
+    },
+    {
       "key": "api/access/email/recipient/followup/subject",
       "value": "Zeit für eine Entscheidung"
     },
@@ -1367,6 +1395,18 @@
     {
       "key": "api/access/constraint/limitGrants/error",
       "value": "Sie können keinen weiteren Zugriff vergeben."
+    },
+    {
+      "key": "api/access/constraint/limitClaims/error",
+      "value": "Es sieht so aus, als hätten Sie bereits eine kostenlose Gastwoche durchlaufen. Mit einem Abo lesen Sie weiter."
+    },
+    {
+      "key": "api/access/constraint/notInActiveTrial/error",
+      "value": "ALREADY_IN_TRIAL_ERROR"
+    },
+    {
+      "key": "api/access/constraint/recipientHasNoActiveMembershipOrSubscription/error",
+      "value": "RECIEPIENT_HAS_MEMBERSHIP_ERROR"
     },
     {
       "key": "api/access/constraint/limitSlots/error",
@@ -1826,7 +1866,7 @@
     },
     {
       "key": "api/signin/mail/subject",
-      "value": "Zugriff bestätigen: {phrase}"
+      "value": "Zugriff bestätigen"
     },
     {
       "key": "api/signin/mail/appNotice/subject",
@@ -2343,6 +2383,14 @@
     {
       "key": "api/invoices/option/Goodie/NOTEBOOK/other",
       "value": "Notizbücher"
+    },
+    {
+      "key": "api/invoices/option/Goodie/LIBRARYBOOK/1",
+      "value": "Republik-Bibliothek Taschenbuch"
+    },
+    {
+      "key": "api/invoices/option/Goodie/LIBRARYBOOK/other",
+      "value": "Republik-Bibliothek Taschenbücher"
     },
     {
       "key": "api/invoices/option/Goodie/TOTEBAG_BLACK/1",

@@ -26,6 +26,7 @@ const GRID_MIN_WIDTH = 240
 
 const styles = {
   tile: css({
+    position: 'relative',
     marginRight: TILE_MARGIN_RIGHT,
     textAlign: 'center',
     width: '33%',
@@ -227,7 +228,9 @@ const Tile = ({
                   />
                 )}
                 {audioPlayButton && (
-                  <div style={{ margin: '0 10px' }}>{audioPlayButton}</div>
+                  <div style={{ margin: '0 10px', position: 'relative' }}>
+                    {audioPlayButton}
+                  </div>
                 )}
               </div>
             )}

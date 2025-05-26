@@ -94,6 +94,7 @@ const Tile = ({
     image &&
     FigureImage.utils.getResizedSrcs(image, imageDark, IMAGE_SIZE.large, false)
   let containerStyle = {
+    position: 'relative',
     backgroundColor: bgColor,
     cursor: onClick ? 'pointer' : 'default',
     justifyContent,
@@ -178,10 +179,6 @@ Tile.propTypes = {
   onlyImage: PropTypes.bool,
   singleColumn: PropTypes.bool,
   audioPlayButton: PropTypes.node,
-}
-
-Tile.defaultProps = {
-  alt: '',
 }
 
 export default Tile

@@ -44,6 +44,7 @@ export const Carousel = ({
   return (
     <CarouselContext.Provider
       value={{
+        ...defaultValue,
         bigger,
         outline,
         bgColor,
@@ -93,5 +94,3 @@ Carousel.propTypes = {
   bigger: PropTypes.bool,
   children: PropTypes.node,
 }
-
-Carousel.defaultProps = defaultValue

@@ -139,11 +139,11 @@ const styles = {
 export const TeaserFrontTileRow = ({
   children,
   attributes,
-  columns,
+  columns = 1,
   singleColumn,
   autoColumns,
   mobileReverse,
-  mobileColumns,
+  mobileColumns = 1,
 }) => {
   const [colorScheme] = useColorContext()
   const autoBorders = css({
@@ -210,14 +210,9 @@ TeaserFrontTileRow.propTypes = {
   attributes: PropTypes.object,
   mobileReverse: PropTypes.bool,
   autoColumns: PropTypes.bool,
-  columns: PropTypes.oneOf([1, 2, 3]).isRequired,
-  mobileColumns: PropTypes.oneOf([1, 2]).isRequired,
+  columns: PropTypes.oneOf([1, 2, 3]),
+  mobileColumns: PropTypes.oneOf([1, 2]),
   singleColumn: PropTypes.bool,
-}
-
-TeaserFrontTileRow.defaultProps = {
-  columns: 1,
-  mobileColumns: 1,
 }
 
 export default TeaserFrontTileRow

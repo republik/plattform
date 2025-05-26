@@ -113,6 +113,7 @@ const switchState = async function (
   await elastic.updateByQuery({
     ...indexRef,
     refresh: true,
+    conflicts: 'proceed',
     body: {
       query: {
         bool: {
@@ -138,6 +139,7 @@ const switchState = async function (
     await elastic.updateByQuery({
       ...indexRef,
       refresh: true,
+      conflicts: 'proceed',
       body: {
         query: {
           bool: {
@@ -215,6 +217,7 @@ const unpublish = async (elastic, repoId) => {
   await elastic.updateByQuery({
     ...indexRef,
     refresh: true,
+    conflicts: 'proceed',
     body: {
       query: {
         bool: {

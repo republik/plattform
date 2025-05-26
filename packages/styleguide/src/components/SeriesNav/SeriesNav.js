@@ -9,12 +9,9 @@ import {
   INFOBOX_IMAGE_SIZES,
 } from '../InfoBox'
 import { Figure, FigureImage } from '../Figure'
-import { InvertedColorScheme } from '../Colors/ColorContext'
 import Center, { PADDED_MAX_WIDTH_BREAKOUT } from '../Center'
 import SeriesNavTile from './SeriesNavTile'
 import { Editorial } from '../Typography'
-
-const DEFAULT_PAYNOTE_INDEX = 2
 
 const styles = {
   container: css({
@@ -26,6 +23,9 @@ const styles = {
     margin: '0 auto',
     padding: 0,
     width: '100%',
+    '@media print': {
+      display: 'none',
+    },
   }),
   description: css({
     padding: '0px 15px',
@@ -46,8 +46,6 @@ function SeriesNav({
   inlineAfterDescription,
   ActionBar,
   Link = DefaultLink,
-  context,
-  PayNote,
   onEpisodeClick,
   aboveTheFold,
   seriesDescription,
@@ -58,19 +56,6 @@ function SeriesNav({
     repoId &&
     series.episodes.find((episode) => episode.document?.repoId === repoId)
   const currentTileIndex = currentTile && series.episodes.indexOf(currentTile)
-
-  // add paynote after current episode or to third card if no current episode
-  const payNotePosition = currentTile
-    ? Math.max(currentTileIndex + 1, DEFAULT_PAYNOTE_INDEX)
-    : DEFAULT_PAYNOTE_INDEX
-  const episodes =
-    PayNote && !inline
-      ? [
-          ...series.episodes.slice(0, payNotePosition),
-          { isPayNote: true }, // placeholder object to trigger special tile
-          ...series.episodes.slice(payNotePosition),
-        ]
-      : [...series.episodes]
 
   const titlePath =
     series.overview?.meta?.path || series.episodes[0]?.meta?.path
@@ -137,14 +122,12 @@ function SeriesNav({
           initialScrollTileIndex={currentTileIndex}
           isSeriesNav
         >
-          {episodes.map((episode, i) => {
+          {series.episodes.map((episode, i) => {
             return (
               <SeriesNavTile
                 key={i}
                 index={i}
                 repoId={repoId}
-                context={context}
-                PayNote={episode.isPayNote && PayNote}
                 current={repoId && repoId === episode?.document?.repoId}
                 episode={episode}
                 inline={inline}
@@ -158,12 +141,6 @@ function SeriesNav({
           })}
         </TeaserCarouselTileContainer>
       </TeaserCarousel>
-
-      {inline && PayNote && (
-        <InvertedColorScheme>
-          <PayNote context={context} repoId={repoId} inline />
-        </InvertedColorScheme>
-      )}
     </div>
   )
 }
@@ -173,7 +150,6 @@ SeriesNav.propTypes = {
   series: PropTypes.object.isRequired,
   ActionBar: PropTypes.func,
   Link: PropTypes.elementType,
-  PayNote: PropTypes.func,
   inline: PropTypes.bool,
   height: PropTypes.number,
   onEpisodeClick: PropTypes.func,

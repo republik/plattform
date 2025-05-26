@@ -82,11 +82,10 @@ export const getDocument = gql`
             id
             username
             slug
-            publicUrl
-            twitterHandle
-            facebookId
+            profileUrls
           }
         }
+        isPaywallExcluded
         format {
           id
           meta {
@@ -115,6 +114,7 @@ export const getDocument = gql`
               name
               free
             }
+            isPaywallExcluded
           }
         }
         section {
@@ -217,8 +217,6 @@ export const getDocument = gql`
         indicateGallery
         indicateVideo
         prepublication
-        paynotes
-        paynoteMode
       }
     }
   }

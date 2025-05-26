@@ -37,7 +37,6 @@
     "@orbiting/backend-modules-formats": "*",
     "@orbiting/backend-modules-gsheets": "*",
     "@orbiting/backend-modules-invoices": "*",
-    "@orbiting/backend-modules-keyCDN": "*",
     "@orbiting/backend-modules-mail": "*",
     "@orbiting/backend-modules-mailchimp": "*",
     "@orbiting/backend-modules-mailbox": "*",

@@ -1,3 +1,10 @@
+//
+// IMPORTANT NOTE:
+// The birthday/yearOfBirth combo was refactored to birthyear.
+// We cleaned up the code but didn't test all the paths.
+// Please test & review before the next election!
+//
+
 import { useEffect, useMemo, useState } from 'react'
 import {
   A,
@@ -45,7 +52,6 @@ const query = gql`
       candidacies {
         id
         isIncumbent
-        yearOfBirth
         city
         recommendation
         comment {
@@ -66,14 +72,11 @@ const query = gql`
           id
           name
           username
-          publicUrl
-          twitterHandle
-          facebookId
           statement
           portrait
           disclosures
           gender
-          birthday
+          birthyear
           biographyContent
           credentials {
             isListed

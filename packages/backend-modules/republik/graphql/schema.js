@@ -41,7 +41,7 @@ type mutations {
 
     portrait: String
 
-    birthday: Date
+    birthyear: Int
     ageAccessRole: AccessRole
 
     phoneNumber: String
@@ -53,9 +53,7 @@ type mutations {
 
     statement: String
     biography: String
-    facebookId: String
-    twitterHandle: String
-    publicUrl: String
+    profileUrls: JSON
     disclosures: String
     gender: String
     prolitterisId: String
@@ -68,7 +66,8 @@ type mutations {
     
     address: AddressInput
 
-    birthday: Date
+    birthyear: Int
+    gender: String
     phoneNumber: String
     
     userId: ID!

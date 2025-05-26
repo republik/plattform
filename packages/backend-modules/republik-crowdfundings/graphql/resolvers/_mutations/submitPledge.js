@@ -315,7 +315,6 @@ module.exports = async (_, args, context) => {
       (pledge.user &&
         (user.firstName !== pledge.user.firstName ||
           user.lastName !== pledge.user.lastName ||
-          user.birthday !== pledge.user.birthday ||
           user.phoneNumber !== pledge.user.phoneNumber)) ||
       pledge.address
     ) {
@@ -333,7 +332,6 @@ module.exports = async (_, args, context) => {
           ...(pledge.user && {
             ...(pledge.user.firstName && { firstName: pledge.user.firstName }),
             ...(pledge.user.lastName && { lastName: pledge.user.lastName }),
-            ...(pledge.user.birthday && { birthday: pledge.user.birthday }),
             ...(pledge.user.phoneNumber && {
               phoneNumber: pledge.user.phoneNumber,
             }),
