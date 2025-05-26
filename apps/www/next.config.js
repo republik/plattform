@@ -190,8 +190,14 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_SHOP_BASE_URL && {
         source: '/angebote',
         missing: [
-          { type: 'query', key: 'package', value: undefined },
-          { type: 'query', key: 'group', value: undefined },
+          // Don't redirect these packages, since we use them for payment slips or gifts
+          { type: 'query', key: 'package', value: 'PROLONG' },
+          { type: 'query', key: 'package', value: 'ABO' },
+          { type: 'query', key: 'package', value: 'DONATE' },
+          { type: 'query', key: 'package', value: 'BENEFACTOR' },
+          { type: 'query', key: 'package', value: 'ABO_GIVE' },
+          { type: 'query', key: 'package', value: 'ABO_GIVE_MONTHS' },
+          // Not sure what this is
           { type: 'query', key: 'goto', value: undefined },
         ],
         destination: process.env.NEXT_PUBLIC_SHOP_BASE_URL,

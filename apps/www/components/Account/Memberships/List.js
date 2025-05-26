@@ -6,7 +6,7 @@ import { Interaction, Loader } from '@project-r/styleguide'
 import withT from '../../../lib/withT'
 import withMe from '../../../lib/apollo/withMe'
 
-import query from '../belongingsQuery'
+import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import Manage from './Manage'
 import Box from '../../Frame/Box'
 import AccountSection from '../AccountSection'
@@ -61,7 +61,7 @@ const MembershipsList = ({
 
 export default compose(
   withMe,
-  graphql(query, {
+  graphql(MyBelongingsDocument, {
     props: ({ data, ownProps: { me } }) => {
       const memberships =
         (!data.loading &&

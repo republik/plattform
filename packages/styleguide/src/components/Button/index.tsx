@@ -67,6 +67,8 @@ type ButtonProps = {
   attributes?: Attributes
   naked?: boolean
   small?: boolean
+  name?: string
+  value?: string | number
 }
 
 const Button = React.forwardRef<
@@ -90,6 +92,8 @@ const Button = React.forwardRef<
       attributes,
       naked,
       small,
+      name,
+      value,
     },
     ref,
   ) => {
@@ -175,6 +179,8 @@ const Button = React.forwardRef<
         style={style}
         disabled={disabled}
         target={target}
+        name={name}
+        value={value}
         {...attributes}
         {...buttonRule}
         {...simulations}

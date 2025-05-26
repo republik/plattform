@@ -1,0 +1,6 @@
+query CancellationCategories {
+  cancellationCategories(showMore: true) {
+    type
+    label
+  }
+}

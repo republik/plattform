@@ -1,6 +1,7 @@
 query UserMagazineSubscriptions($userId: ID!) {
   user(id: $userId) {
     magazineSubscriptions {
+      id
       company
       type
       status

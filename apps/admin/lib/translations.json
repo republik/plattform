@@ -4715,6 +4715,53 @@
     {
       "key": "account/access/Events/details/show",
       "value": "Events anzeigen"
+    },
+
+    {
+      "key": "account/MagazineSubscription/status/trialing",
+      "value": "trialing"
+    },
+    { "key": "account/MagazineSubscription/status/active", "value": "Aktiv" },
+    {
+      "key": "account/MagazineSubscription/status/incomplete",
+      "value": "Unvollständig"
+    },
+    {
+      "key": "account/MagazineSubscription/status/incomplete_expired",
+      "value": "Unvollständig, abgelaufen"
+    },
+    {
+      "key": "account/MagazineSubscription/status/unpaid",
+      "value": "Unbezahlt"
+    },
+    {
+      "key": "account/MagazineSubscription/status/past_due",
+      "value": "Überfällig"
+    },
+    {
+      "key": "account/MagazineSubscription/status/paused",
+      "value": "Pausiert"
+    },
+    {
+      "key": "account/MagazineSubscription/status/canceled",
+      "value": "Abgelaufen"
+    },
+    {
+      "key": "account/MagazineSubscription/status/overdue",
+      "value": "Überfällig"
+    },
+    { "key": "account/MagazineSubscription/status/ended", "value": "Geendet" },
+    {
+      "key": "account/MagazineSubscription/type/MONTHLY_SUBSCRIPTION",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "account/MagazineSubscription/type/YEARLY_SUBSCRIPTION",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "account/MagazineSubscription/type/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönnermitgliedschaft"
     }
   ]
 }

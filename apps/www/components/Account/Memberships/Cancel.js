@@ -1,3 +1,5 @@
+import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+
 import { Fragment, useEffect, useState, useRef } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
@@ -20,7 +22,6 @@ import {
   InlineSpinner,
 } from '@project-r/styleguide'
 
-import myBelongings from '../belongingsQuery'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
@@ -280,7 +281,7 @@ export default compose(
       error: error || data.error,
     }),
   }),
-  graphql(myBelongings, {
+  graphql(MyBelongingsDocument, {
     props: ({
       data,
       ownProps: { membershipId, error, loading: categoryLoading },
