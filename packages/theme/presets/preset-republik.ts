@@ -1,6 +1,6 @@
 import { definePreset } from '@pandacss/dev'
 import { buttonRecipe } from '../src/recipes/button'
-import { legacyButtonRecipe } from 'src/recipes/legacy/legacy-button'
+import { legacyButtonRecipe } from '../src/recipes/legacy/legacy-button'
 
 export const presetRepublik = definePreset({
   name: 'republik',
