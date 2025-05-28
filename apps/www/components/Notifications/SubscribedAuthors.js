@@ -71,11 +71,21 @@ const SubscribedAuthors = ({
       loading={loading}
       error={error}
       render={() => {
-        const subscribedUsers = myUserSubscriptions.subscribedTo.nodes
+        const allSubscribedUsers = myUserSubscriptions.subscribedTo.nodes
+        
+        const subscribedAuthors = allSubscribedUsers
+          .filter((user) => user.userDetails.documents.totalCount > 0)
+          .sort((a, b) => a.object.name.localeCompare(b.object.name))
+        
+          const subscribedUsers = allSubscribedUsers
+          .filter((user) => user.userDetails.documents.totalCount === 0)
+          .sort((a, b) => a.object.name.localeCompare(b.object.name))
+
+        const susbcribedAuthorsAndUsersSorted = subscribedAuthors.concat(subscribedUsers)
 
         const totalSubs =
-          subscribedUsers &&
-          subscribedUsers.filter((user) => user.active).length
+          allSubscribedUsers &&
+          allSubscribedUsers.filter((user) => user.active).length
 
         return (
           <>
@@ -85,7 +95,7 @@ const SubscribedAuthors = ({
               })}
             </Interaction.P>
             <div style={{ margin: '20px 0' }}>
-              {(subscribedUsers).map((user) => (
+              {susbcribedAuthorsAndUsersSorted.map((user) => (
                 <div
                   {...styles.authorContainer}
                   {...authorContainerRule}

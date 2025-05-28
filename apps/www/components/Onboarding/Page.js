@@ -276,7 +276,7 @@ class Page extends Component {
               return <Loader loading={loading} error={error} />
             }
 
-            const { employees, sections, roleStats } = data
+            const { sections } = data
 
             return (
               <Center>
