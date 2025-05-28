@@ -1,17 +1,14 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { myUserSubscriptions } from './enhancers'
 import {
   Editorial,
-  plainButtonRule,
-  A,
   Interaction,
   mediaQueries,
   useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { descending } from 'd3-array'
 import SubscribeCheckbox from './SubscribeCheckbox'
 import withT from '../../lib/withT'
 import Loader from '../Loader'
@@ -53,12 +50,9 @@ const styles = {
 
 const SubscribedAuthors = ({
   t,
-  data: { authors, myUserSubscriptions, loading, error },
+  data: { myUserSubscriptions, loading, error },
 }) => {
   const [colorScheme] = useColorContext()
-  const [showAll, setShowAll] = useState(false)
-  const [initiallySubscribedAuthorIds, setInitiallySubscribedAuthorIds] =
-    useState([])
 
   const authorContainerRule = useMemo(
     () =>
@@ -72,58 +66,16 @@ const SubscribedAuthors = ({
     [colorScheme],
   )
 
-  const initializeSubscribedAuthorIds = (
-    authors,
-    myUserSubscriptions,
-    setInitialySubscribedAuthorIds,
-  ) => {
-    if (!authors || !myUserSubscriptions) {
-      return
-    }
-
-    const subscribedOtherAuthors = myUserSubscriptions.subscribedTo.nodes
-    const subscribedPromotedAuthors = authors.map(
-      (author) => author.user.subscribedByMe,
-    )
-
-    const allSusbcribedAuthors = subscribedPromotedAuthors
-      .concat(subscribedOtherAuthors)
-      .filter((author) => author.active)
-      .map((author) => author.object.id)
-
-    setInitialySubscribedAuthorIds(allSusbcribedAuthors)
-  }
-
   return (
     <Loader
       loading={loading}
       error={error}
       render={() => {
-        const subscribedPromotedAuthors = authors.map(
-          (author) => author.user.subscribedByMe,
-        )
-        const subscribedOtherAuthors = myUserSubscriptions.subscribedTo.nodes
-        const allSusbcribedAuthors = subscribedPromotedAuthors.concat(
-          subscribedOtherAuthors,
-        )
-        const filteredAuthors = allSusbcribedAuthors
-          .filter(
-            (author, index, all) =>
-              all.findIndex((e) => e.id === author.id) === index,
-          )
-          .sort((a, b) =>
-            descending(
-              +initiallySubscribedAuthorIds.includes(a.object.id),
-              +initiallySubscribedAuthorIds.includes(b.object.id),
-            ),
-          )
-
-        const visibleAuthors =
-          filteredAuthors && filteredAuthors.filter((author) => author.active)
+        const subscribedUsers = myUserSubscriptions.subscribedTo.nodes
 
         const totalSubs =
-          filteredAuthors &&
-          filteredAuthors.filter((author) => author.active).length
+          subscribedUsers &&
+          subscribedUsers.filter((user) => user.active).length
 
         return (
           <>
@@ -133,30 +85,30 @@ const SubscribedAuthors = ({
               })}
             </Interaction.P>
             <div style={{ margin: '20px 0' }}>
-              {(showAll ? filteredAuthors : visibleAuthors).map((author) => (
+              {(subscribedUsers).map((user) => (
                 <div
                   {...styles.authorContainer}
                   {...authorContainerRule}
-                  key={author.object.id}
+                  key={user.object.id}
                 >
                   <div {...styles.author}>
                     <Link
-                      href={`/~${author.userDetails.slug}`}
+                      href={`/~${user.userDetails.slug}`}
                       passHref
                       legacyBehavior
                     >
-                      <Editorial.A>{author.object.name}</Editorial.A>
+                      <Editorial.A>{user.object.name}</Editorial.A>
                     </Link>
                   </div>
                   <div {...styles.checkbox}>
-                    {(author.userDetails.documents.totalCount ||
-                    (author.active && author.filters.includes('Document'))
+                    {(user.userDetails.documents.totalCount ||
+                    (user.active && user.filters.includes('Document'))
                       ? ['Document', 'Comment']
                       : ['Comment']
                     ).map((filter) => (
                       <SubscribeCheckbox
-                        key={`${author.object.id}-${filter}`}
-                        subscription={author}
+                        key={`${user.object.id}-${filter}`}
+                        subscription={user}
                         filterName={filter}
                         filterLabel
                         callout
@@ -166,27 +118,6 @@ const SubscribedAuthors = ({
                 </div>
               ))}
             </div>
-            {filteredAuthors.length !== visibleAuthors.length && (
-              <button
-                {...plainButtonRule}
-                onClick={() => {
-                  initializeSubscribedAuthorIds(
-                    authors,
-                    myUserSubscriptions,
-                    setInitiallySubscribedAuthorIds,
-                  )
-                  setShowAll(!showAll)
-                }}
-              >
-                <A>
-                  {t(
-                    `Notifications/settings/formats/${
-                      showAll ? 'hide' : 'show'
-                    }`,
-                  )}
-                </A>
-              </button>
-            )}
           </>
         )
       }}
