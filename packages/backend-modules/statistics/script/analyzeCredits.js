@@ -35,6 +35,12 @@ const argv = yargs
     coerce: moment,
     default: moment().startOf('month'),
   })
+  .option('text-only', {
+    alias: 't',
+    type: 'boolean',
+    default: false,
+    description: 'Only analyze author gender',
+  })
   .help()
   .version().argv
 
@@ -43,6 +49,7 @@ const articles = []
 
 const elastic = Elasticsearch.connect()
 const days = argv.end.diff(argv.begin, 'days')
+const textOnly = argv['text-only']
 
 const normalize = (string) =>
   string
@@ -109,9 +116,12 @@ PgDb.connect()
         const credits = await stringifyNode(meta.credits?.type, meta.credits)
 
         const analysis = new Analyzer().getAnalysis(credits)
-        // console.log(analysis)
 
-        const { contributors } = analysis
+        let { contributors } = analysis
+
+        if (textOnly) {
+          contributors = contributors.filter((c) => c.kind === 'Text')
+        }
 
         // Unable to determine an author
         if (!contributors.length) {
