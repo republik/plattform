@@ -119,9 +119,12 @@ PgDb.connect()
 
         let { contributors } = analysis
 
+        // console.log('----------CONTRIBUTORS----------')
+        // console.log(contributors)
         if (textOnly) {
-          contributors = contributors.filter((c) => c.kind === 'Text')
+          contributors = contributors.filter((c) => c.kind?.includes('Text'))
         }
+        // console.log(contributors)
 
         // Unable to determine an author
         if (!contributors.length) {
