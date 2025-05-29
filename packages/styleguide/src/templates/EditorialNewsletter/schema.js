@@ -1,16 +1,10 @@
-import React from 'react'
-import HR from './components/HR'
-import Blockquote, {
-  BlockquoteText,
-  BlockquoteSource,
-} from './components/Blockquote'
-
 import {
-  matchType,
-  matchZone,
   matchHeading,
   matchParagraph,
+  matchType,
+  matchZone,
 } from '@republik/mdast-react-render'
+import React from 'react'
 
 import { FigureImage } from '../../components/Figure'
 import { Variable } from '../../components/Variables'
@@ -22,9 +16,15 @@ import {
   matchImagesParagraph,
   matchSpanType,
 } from '../Article/utils'
-import ifRule from '../shared/email/rules/ifRule'
+import authorRule from '../shared/email/rules/authorRule'
 import elseRule from '../shared/email/rules/elseRule'
-import { embedDataWrapperRule } from "../shared/rules/embedDatawrapperRule";
+import ifRule from '../shared/email/rules/ifRule'
+import { embedDataWrapperRule } from '../shared/rules/embedDatawrapperRule'
+import Blockquote, {
+  BlockquoteSource,
+  BlockquoteText,
+} from './components/Blockquote'
+import HR from './components/HR'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
@@ -303,6 +303,7 @@ const createNewsletterSchema = ({
                   formatButtonText: 'Zwischentitel',
                 },
               },
+              authorRule,
               ifRule,
               elseRule,
               {
