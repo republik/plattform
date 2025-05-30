@@ -22,7 +22,19 @@ const barStyle = css({
   left: '-10%',
 })
 
-const Spinner = ({ size }) => {
+/**
+ * SpinnerProps
+ *
+ * @typedef {object} SpinnerProps
+ * @property {number | string} size
+ */
+
+/**
+ * Spinner component
+ * @param {SpinnerProps} props
+ * @returns {JSX.Element}
+ */
+const Spinner = ({ size = 50 }) => {
   const bars = []
   for (let i = 0; i < 12; i++) {
     const style = {}
@@ -45,14 +57,15 @@ const inlineBlock = css({
   display: 'inline-block',
 })
 
+/**
+ * Spinner component
+ * @param {SpinnerProps} props
+ * @returns {JSX.Element}
+ */
 export const InlineSpinner = ({ size }) => (
   <span {...inlineBlock} style={{ width: size, height: size }}>
     <Spinner size={size} />
   </span>
 )
-
-Spinner.defaultProps = InlineSpinner.defaultProps = {
-  size: 50,
-}
 
 export default Spinner
