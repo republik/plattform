@@ -1,7 +1,9 @@
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
-import { Payments } from '../payments'
 import Stripe from 'stripe'
+import { WebhookService } from '../services/WebhookService'
+import { MailNotificationService } from '../services/MailNotificationService'
+import { SubscriptionService } from '../services/SubscriptionService'
 
 type Args = {
   $version: 'v1'
@@ -23,10 +25,12 @@ export class SyncMailchimpSetupWorker extends BaseWorker<Args> {
 
     console.log(`[${this.queue}] start`)
 
-    const PaymentService = Payments.getInstance()
+    const webhookService = new WebhookService(this.context.pgdb)
+    const mailService = new MailNotificationService(this.context.pgdb)
+    const subscriptionService = new SubscriptionService(this.context.pgdb)
 
     const wh =
-      await PaymentService.findWebhookEventBySourceId<Stripe.CheckoutSessionCompletedEvent>(
+      await webhookService.getEvent<Stripe.CheckoutSessionCompletedEvent>(
         job.data.eventSourceId,
       )
 
@@ -42,15 +46,19 @@ export class SyncMailchimpSetupWorker extends BaseWorker<Args> {
 
     const event = wh.payload
 
-    const invoice = await PaymentService.getInvoice({ externalId: event.data.object.invoice as string })
-    const subscription = await PaymentService.getSubscription({ externalId: event.data.object.subscription as string })
+    const subscription = await subscriptionService.getSubscription({
+      externalId: event.data.object.subscription as string,
+    })
 
-    if (!invoice || !subscription) {
-      console.error('Invoice or subscription could not be found in the database')
+    if (!subscription) {
+      console.error('Subscription could not be found in the database')
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
-    await PaymentService.syncMailchimpSetupSubscription({ userId: job.data.userId, subscriptionExternalId: event.data.object.subscription as string })
+    await mailService.syncMailchimpSetupSubscription({
+      userId: job.data.userId,
+      subscriptionExternalId: event.data.object.subscription as string,
+    })
 
     console.log(`[${this.queue}] done`)
   }

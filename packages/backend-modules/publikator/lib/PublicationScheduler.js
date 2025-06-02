@@ -12,7 +12,7 @@ const {
 const { notifyPublish } = require('./Notifications')
 const { upsert: upsertDiscussion } = require('./Discussion')
 
-const lockTtlSecs = 10 // 10 seconds
+const lockTtlSecs = 30 // increased from 10 to 30 seconds because of front publishing issues and elastic version conflict errors
 
 const getScheduledDocuments = async (elastic) => {
   const { body } = await elastic.search({

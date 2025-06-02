@@ -6,7 +6,7 @@ import {
   Invoice,
   InvoiceRepoArgs,
   Order,
-  PaymentItemLocator,
+  SelectCriteria,
   STATUS_TYPES,
   Subscription,
   SubscriptionArgs,
@@ -16,24 +16,31 @@ import {
 import { ACTIVE_STATUS_TYPES } from '../types'
 
 export type OrderArgs = {
-  company: Company
-  status: 'paid' | 'unpaid'
-  externalId: string
-  invoiceId: string
-  subscriptionId?: string
-}
-
-export type OrderRepoArgs = {
-  userId: string
+  userId?: string
+  customerEmail?: string
+  metadata?: any
   company: Company
   status: 'paid' | 'unpaid'
   externalId: string
   invoiceId?: string
   subscriptionId?: string
+  shippingAddressId?: string
+}
+
+export type OrderRepoArgs = {
+  userId?: string
+  customerEmail?: string
+  metadata?: any
+  company: Company
+  status: 'paid' | 'unpaid'
+  externalId: string
+  invoiceId?: string
+  subscriptionId?: string
+  shippingAddressId?: string
 }
 
 export interface PaymentBillingRepo {
-  getSubscription(by: PaymentItemLocator): Promise<Subscription | null>
+  getSubscription(by: SelectCriteria): Promise<Subscription | null>
   getUserSubscriptions(
     userId: string,
     onlyStatus?: SubscriptionStatus[],
@@ -43,18 +50,18 @@ export interface PaymentBillingRepo {
     args: SubscriptionArgs,
   ): Promise<Subscription>
   updateSubscription(
-    by: PaymentItemLocator,
+    by: SelectCriteria,
     args: SubscriptionUpdateArgs,
   ): Promise<Subscription>
   getUserOrders(userId: string): Promise<Order[]>
   getOrder(orderId: string): Promise<Order | null>
   saveOrder(order: OrderRepoArgs): Promise<Order>
-  getInvoice(by: PaymentItemLocator): Promise<Invoice | null>
+  getInvoice(by: SelectCriteria): Promise<Invoice | null>
   saveInvoice(userId: string, args: any): Promise<Invoice>
-  updateInvoice(by: PaymentItemLocator, args: any): Promise<Invoice>
-  getCharge(by: PaymentItemLocator): Promise<any | null>
+  updateInvoice(by: SelectCriteria, args: any): Promise<Invoice>
+  getCharge(by: SelectCriteria): Promise<any | null>
   saveCharge(args: any): Promise<any>
-  updateCharge(by: PaymentItemLocator, args: any): Promise<any | null>
+  updateCharge(by: SelectCriteria, args: any): Promise<any | null>
   getActiveUserSubscription(userId: string): Promise<Subscription | null>
 }
 
@@ -80,7 +87,7 @@ export class BillingRepo implements PaymentBillingRepo {
     return this.#pgdb.payments.orders.insertAndGet(order)
   }
 
-  getSubscription(by: PaymentItemLocator): Promise<Subscription | null> {
+  getSubscription(by: SelectCriteria): Promise<Subscription | null> {
     return this.#pgdb.payments.subscriptions.findOne(by)
   }
 
@@ -118,13 +125,16 @@ export class BillingRepo implements PaymentBillingRepo {
   }
 
   updateSubscription(
-    by: PaymentItemLocator,
+    by: SelectCriteria,
     args: SubscriptionUpdateArgs,
   ): Promise<Subscription> {
-    return this.#pgdb.payments.subscriptions.updateAndGetOne(by, args)
+    return this.#pgdb.payments.subscriptions.updateAndGetOne(by, {
+      ...args,
+      updatedAt: new Date(),
+    })
   }
 
-  getInvoice(by: PaymentItemLocator): Promise<Invoice | null> {
+  getInvoice(by: SelectCriteria): Promise<Invoice | null> {
     return this.#pgdb.payments.invoices.findOne(by)
   }
 
@@ -135,13 +145,14 @@ export class BillingRepo implements PaymentBillingRepo {
     })
   }
 
-  updateInvoice(by: PaymentItemLocator, args: any): Promise<Invoice> {
+  updateInvoice(by: SelectCriteria, args: any): Promise<Invoice> {
     return this.#pgdb.payments.invoices.updateAndGet(by, {
       ...args,
+      updatedAt: new Date(),
     })
   }
 
-  getCharge(by: PaymentItemLocator) {
+  getCharge(by: SelectCriteria) {
     return this.#pgdb.payments.charges.findOne(by)
   }
 
@@ -150,9 +161,12 @@ export class BillingRepo implements PaymentBillingRepo {
   }
 
   updateCharge(
-    charge: PaymentItemLocator,
+    charge: SelectCriteria,
     args: ChargeUpdate,
   ): Promise<any | null> {
-    return this.#pgdb.payments.charges.updateAndGet(charge, args)
+    return this.#pgdb.payments.charges.updateAndGet(charge, {
+      ...args,
+      updatedAt: new Date(),
+    })
   }
 }

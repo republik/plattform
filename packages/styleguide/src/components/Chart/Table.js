@@ -51,7 +51,8 @@ const styles = {
   }),
 }
 
-const Table = (props) => {
+const Table = (_props) => {
+  const props = { ...defaultProps.Table, ..._props }
   const [colorScheme] = useColorContext()
   const {
     values,
@@ -288,8 +289,6 @@ export const propTypes = {
   }).isRequired,
   collapsable: PropTypes.bool,
 }
-
-Table.defaultProps = defaultProps.Table
 
 Table.propTypes = propTypes
 

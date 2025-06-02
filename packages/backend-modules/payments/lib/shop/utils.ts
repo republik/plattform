@@ -23,9 +23,9 @@ export async function hasHadMembership(userId: string, pgdb: PgDb) {
 }
 
 export function requiredCustomFields(
-  user: User,
+  user?: User,
 ): Stripe.Checkout.SessionCreateParams.CustomField[] {
-  if (!user.firstName && !user.lastName) {
+  if (!user?.firstName && !user?.lastName) {
     return [
       {
         key: 'firstName',

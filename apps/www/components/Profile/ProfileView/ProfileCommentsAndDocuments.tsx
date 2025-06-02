@@ -39,12 +39,7 @@ export default function ProfileCommentsAndDocuments({
   const [activeChildIndex, setActiveChildIndex] = useState(0)
   const [reportUserMutation] = useReportUserMutation()
   const { t } = useTranslation()
-  const { hasAccess } = useMe()
-
-  // users with no Access will not see documents or comments
-  if (!hasAccess) {
-    return null
-  }
+  const { me } = useMe()
 
   const reportUser = async () => {
     const reportReason = window.prompt(t('profile/report/confirm'))
@@ -81,6 +76,17 @@ export default function ProfileCommentsAndDocuments({
     }
   }
 
+  // if user is not logged in, show only documents, if applicable
+  if (!me) {
+    return (
+      <ProifleDocumentsFeed
+        documents={user.documents}
+        loadMore={loadMoreDocuments}
+        showTitle
+      />
+    )
+  }
+
   // only show documents and tabs if user has documents (articles)
   // else only show comments feed
   if (!user.documents || !user.documents.totalCount) {
@@ -106,15 +112,17 @@ export default function ProfileCommentsAndDocuments({
               setActiveChildIndex(0)
             }}
           />
-          <TabButton
-            text={t.pluralize('profile/comments/title', {
-              count: user.comments.totalCount,
-            })}
-            isActive={activeChildIndex === 1}
-            onClick={() => {
-              setActiveChildIndex(1)
-            }}
-          />
+          {me && (
+            <TabButton
+              text={t.pluralize('profile/comments/title', {
+                count: user.comments.totalCount,
+              })}
+              isActive={activeChildIndex === 1}
+              onClick={() => {
+                setActiveChildIndex(1)
+              }}
+            />
+          )}
         </Scroller>
         <div
           {...colorScheme.set('borderColor', 'divider')}

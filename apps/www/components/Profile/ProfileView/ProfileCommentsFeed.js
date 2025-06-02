@@ -43,7 +43,7 @@ const ProfileCommentsFeed = ({ comments, loadMore, showTitle = false }) => {
         {showTitle && (
           <Interaction.H3 style={{ marginBottom: 20 }}>
             {t.pluralize('profile/comments/title', {
-              count: comments.totalCount,
+              count: totalCount,
             })}
           </Interaction.H3>
         )}

@@ -155,7 +155,9 @@ export const QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY = gql`
   ${submissionData}
 `
 
-// The same query as above but excluding the QuestionnaireFragment, which should improve query performance significantly in case the data is not needed.
+// The same query as above but excluding the QuestionnaireFragment,
+// which should improve query performance significantly in
+// case the data is not needed.
 export const QUESTIONNAIRE_ONLY_SUBMISSIONS_QUERY = gql`
   query getQuestionnaireOnlySubmissions(
     $slug: String!
@@ -189,6 +191,17 @@ export const QUESTIONNAIRE_ONLY_SUBMISSIONS_QUERY = gql`
     }
   }
   ${submissionData}
+`
+
+export const QUESTIONNAIRE_USER_QUERY = gql`
+  query getUserId($slug: String!) {
+    user(slug: $slug) {
+      id
+      name
+      statement
+      portrait
+    }
+  }
 `
 
 export const loadMoreSubmissions = (fetchMore, data) => () => {

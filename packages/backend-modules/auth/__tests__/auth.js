@@ -184,55 +184,6 @@ const denySession = async ({
   return result && result.data && result.data.denySession
 }
 
-const updateTwoFactorAuthentication = async ({
-  enabled,
-  type,
-  apolloFetch = global.instance.apolloFetch,
-}) => {
-  const result = await apolloFetch({
-    query: `
-      mutation updateTwoFactorAuthentication($enabled: Boolean!, $type: SignInTokenType!) {
-        updateTwoFactorAuthentication(enabled: $enabled, type: $type)
-      }
-    `,
-    variables: {
-      enabled,
-      type,
-    },
-  })
-  return result && result.data && result.data.updateTwoFactorAuthentication
-}
-
-const sendPhoneNumberVerificationCode = async ({
-  apolloFetch = global.instance.apolloFetch,
-} = {}) => {
-  const result = await apolloFetch({
-    query: `
-      mutation sendPhoneNumberVerificationCode {
-        sendPhoneNumberVerificationCode
-      }
-    `,
-  })
-  return result && result.data && result.data.sendPhoneNumberVerificationCode
-}
-
-const verifyPhoneNumber = async ({
-  verificationCode,
-  apolloFetch = global.instance.apolloFetch,
-}) => {
-  const result = await apolloFetch({
-    query: `
-      mutation verifyPhoneNumber($verificationCode: String!) {
-        verifyPhoneNumber(verificationCode: $verificationCode)
-      }
-    `,
-    variables: {
-      verificationCode,
-    },
-  })
-  return result && result.data && result.data.verifyPhoneNumber
-}
-
 const signOut = async ({ apolloFetch = global.instance.apolloFetch } = {}) => {
   await apolloFetch({
     query: LOGOUT_USER_MUTATION,
@@ -241,38 +192,6 @@ const signOut = async ({ apolloFetch = global.instance.apolloFetch } = {}) => {
   expect(result).toBeTruthy()
   expect(result.data).toBeTruthy()
   expect(result.data.me).toBeFalsy()
-}
-
-const initTOTPSharedSecret = async ({
-  apolloFetch = global.instance.apolloFetch,
-} = {}) => {
-  const result = await apolloFetch({
-    query: `
-      mutation initTOTPSharedSecret {
-        initTOTPSharedSecret {
-          secret
-        }
-      }
-    `,
-  })
-  return (result && result.data && result.data.initTOTPSharedSecret) || {}
-}
-
-const validateTOTPSharedSecret = async ({
-  totp,
-  apolloFetch = global.instance.apolloFetch,
-}) => {
-  const result = await apolloFetch({
-    query: `
-      mutation validateTOTPSharedSecret($totp: String!) {
-        validateTOTPSharedSecret(totp: $totp)
-      }
-    `,
-    variables: {
-      totp,
-    },
-  })
-  return result && result.data && result.data.validateTOTPSharedSecret
 }
 
 const updateEmail = async ({
@@ -340,10 +259,6 @@ const Unverified = {
   email: 'willhelmtell@project-r.construction',
   roles: ['member'],
   phoneNumber: null,
-  phoneNumberVerificationCode: null,
-  isPhoneNumberVerified: false,
-  TOTPChallengeSecret: null,
-  isTOTPChallengeSecretVerified: false,
   enabledSecondFactors: [],
   verified: false,
 }
@@ -355,10 +270,6 @@ const Member = {
   email: 'willhelmtell_member@project-r.construction',
   roles: ['member'],
   phoneNumber: '+41770000000',
-  phoneNumberVerificationCode: null,
-  isPhoneNumberVerified: false,
-  TOTPChallengeSecret: null,
-  isTOTPChallengeSecretVerified: false,
   enabledSecondFactors: [],
   verified: true,
 }
@@ -370,10 +281,6 @@ const Supporter = {
   email: 'willhelmtell_supporter@project-r.construction',
   roles: ['supporter'],
   phoneNumber: '+41770000000',
-  phoneNumberVerificationCode: null,
-  isPhoneNumberVerified: false,
-  TOTPChallengeSecret: null,
-  isTOTPChallengeSecretVerified: false,
   enabledSecondFactors: [],
   verified: true,
 }
@@ -385,25 +292,6 @@ const Admin = {
   email: 'willhelmtell_admin@project-r.construction',
   roles: ['admin'],
   phoneNumber: '+41770000000',
-  phoneNumberVerificationCode: null,
-  isPhoneNumberVerified: false,
-  TOTPChallengeSecret: null,
-  isTOTPChallengeSecretVerified: false,
-  enabledSecondFactors: [],
-  verified: true,
-}
-
-const TwoFactorMember = {
-  id: 'a0000000-0000-4000-8001-000000000005',
-  firstName: 'willhelm tell with 2fa',
-  lastName: 'member',
-  email: 'willhelmtell_2fa_member@project-r.construction',
-  roles: ['member'],
-  phoneNumber: '+41770000000',
-  phoneNumberVerificationCode: 'GUGUS',
-  isPhoneNumberVerified: true,
-  TOTPChallengeSecret: 'JVJTCLCFOQTDMZBSHQSHQ3B2MESXOO2WPF2HCYJEJB5TCRRMII7A',
-  isTOTPChallengeSecretVerified: true,
   enabledSecondFactors: [],
   verified: true,
 }
@@ -429,11 +317,6 @@ module.exports = {
   unauthorizedSession,
   denySession,
   authorizeSession,
-  updateTwoFactorAuthentication,
-  sendPhoneNumberVerificationCode,
-  verifyPhoneNumber,
-  initTOTPSharedSecret,
-  validateTOTPSharedSecret,
   updateEmail,
   startChallenge,
   me,
@@ -443,7 +326,6 @@ module.exports = {
     Unverified,
     Anonymous,
     Member,
-    TwoFactorMember,
     Admin,
     Editor,
   },

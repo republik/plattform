@@ -17,8 +17,7 @@
     ]
   },
   "scripts": {
-    "commit": "cz",
-    "prepare": "husky install && turbo run prepare",
+    "prepare": "turbo run prepare",
     "test": "turbo run test",
     "start": "scripts/start.sh",
     "start:scheduler": "cd apps/api && yarn start:scheduler",
@@ -61,7 +60,7 @@
     "auth:role:users": "node packages/backend-modules/auth/script/roleUsers",
     "yaproxy": "CORS_ORIGIN=http://localhost:3010,http://localhost:3000,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api.republik.ch yaproxy",
     "yaproxy:staging": "CORS_ORIGIN=http://localhost:3010,http://localhost:3000,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api.republik.love yaproxy",
-    "yaproxy:staging-r25": "CORS_ORIGIN=http://localhost:3010,http://localhost:3000,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api-r25.republik.love yaproxy",
+    "yaproxy:staging-shop": "CORS_ORIGIN=http://localhost:3010,http://localhost:3000,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api-shop.republik.love yaproxy",
     "yaproxy:staging-kufo": "CORS_ORIGIN=http://localhost:3010,http://localhost:3000,http://localhost:3005,http://localhost:3006 PORT=5010 TARGET=https://api.kufo.republik.love yaproxy",
     "yaproxy:android": "COOKIE_DOMAIN_REWRITE=*:10.0.2.2 CORS_ORIGIN=http://10.0.2.2:3010 PORT=5010 TARGET=https://api.republik.ch yaproxy",
     "yaproxy:android-staging": "COOKIE_DOMAIN_REWRITE=*:10.0.2.2 CORS_ORIGIN=http://10.0.2.2:3010 PORT=5010 TARGET=https://api.republik.love yaproxy",
@@ -72,28 +71,12 @@
     "gen:module": "packages/backend-modules/gen-backend-module/index.js new backend-module"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^16.0.0",
-    "commitizen": "^4.2.4",
-    "commitlint": "^16.1.0",
-    "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
-    "husky": "^7.0.0",
-    "lint-staged": "^12.3.3",
     "prettier": "^2.5.1",
     "turbo": "^1.13.0",
     "typescript": "^5.6.2",
     "yaproxy": "^1.0.2"
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-conventional-changelog"
-    }
-  },
-  "lint-staged": {
-    "*.{js,ts,tsx}": [
-      "yarn eslint --fix"
-    ]
   },
   "engines": {
     "node": "^20.0.0"

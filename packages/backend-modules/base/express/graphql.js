@@ -9,8 +9,6 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
   COOKIE_NAME,
 } = require('@orbiting/backend-modules-auth/lib/CookieOptions')
-const util = require('util')
-
 const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
 
 const documentApiKeyScheme = 'DocumentApiKey'
@@ -98,7 +96,6 @@ module.exports = async (
       connection
         ? connection.context
         : createContext({ user: req.user, req, res, scope: 'request' }),
-    debug: true,
     cache: 'bounded',
     introspection: true,
     playground: false, // see ./graphiql.js
@@ -106,16 +103,6 @@ module.exports = async (
     subscriptions: {
       onConnect: webSocketOnConnect,
       keepAlive: WS_KEEPALIVE_INTERVAL || 40000,
-    },
-    formatError: (error) => {
-      console.log(
-        `graphql error in ${this.operationName} (${JSON.stringify(
-          this.variables,
-        )}):`,
-        util.inspect(error, { depth: null, colors: true, breakLength: 300 }),
-      )
-      delete error.extensions.exception
-      return error
     },
     formatResponse: (response, { context }) => {
       // strip problematic character (\u2028) for requests from our iOS app
@@ -131,6 +118,24 @@ module.exports = async (
       }
       return response
     },
+    plugins: [
+      {
+        async requestDidStart() {
+          return {
+            async didEncounterErrors({ context, request, errors }) {
+              console.error(
+                JSON.stringify({
+                  req: context.req._log(),
+                  message: `GraphQL error for operation '${request.operationName}'`,
+                  level: 'ERROR',
+                  graphQLErrors: errors,
+                }),
+              )
+            },
+          }
+        },
+      },
+    ],
   })
 
   // setup websocket server

@@ -1,0 +1,7 @@
+query Employees {
+  employees: allEmployees(
+    first: 100
+  ) {
+    ...EmployeeRecordFields
+  }
+}

@@ -1,11 +1,13 @@
+import { IconEdit } from '@republik/icons'
 import OverlayFormManager from '../../utils/OverlayFormManager'
 
 import {
+  A,
+  Checkbox,
+  Field,
+  Interaction,
   Label,
   Radio,
-  Field,
-  Checkbox,
-  Interaction,
 } from '@project-r/styleguide'
 
 const Form = ({ data, onChange, editor, node, resizable }) => {
@@ -16,102 +18,104 @@ const Form = ({ data, onChange, editor, node, resizable }) => {
 
   return (
     <>
-      { !!resizable && <Interaction.P>
-        <Label>Size</Label>
-        <br />
-        {[
-          {
-            label: 'Edge to Edge',
-            props: { size: undefined },
-            parent: {
-              kinds: ['document', 'block'],
-              types: ['CENTER'],
+      {!!resizable && (
+        <Interaction.P>
+          <Label>Size</Label>
+          <br />
+          {[
+            {
+              label: 'Edge to Edge',
+              props: { size: undefined },
+              parent: {
+                kinds: ['document', 'block'],
+                types: ['CENTER'],
+              },
+              unwrap: true,
             },
-            unwrap: true,
-          },
-          {
-            label: 'Gross',
-            props: { size: 'breakout' },
-            parent: {
-              kinds: ['document', 'block'],
-              types: ['CENTER'],
+            {
+              label: 'Gross',
+              props: { size: 'breakout' },
+              parent: {
+                kinds: ['document', 'block'],
+                types: ['CENTER'],
+              },
+              wrap: 'CENTER',
             },
-            wrap: 'CENTER',
-          },
-          {
-            label: 'Normal',
-            props: { size: undefined },
-            parent: {
-              kinds: ['document', 'block'],
-              types: ['CENTER'],
+            {
+              label: 'Normal',
+              props: { size: undefined },
+              parent: {
+                kinds: ['document', 'block'],
+                types: ['CENTER'],
+              },
+              wrap: 'CENTER',
             },
-            wrap: 'CENTER',
-          },
-          {
-            label: 'Klein',
-            props: { size: 'narrow' },
-            parent: {
-              kinds: ['document', 'block'],
-              types: ['CENTER'],
+            {
+              label: 'Klein',
+              props: { size: 'narrow' },
+              parent: {
+                kinds: ['document', 'block'],
+                types: ['CENTER'],
+              },
+              wrap: 'CENTER',
             },
-            wrap: 'CENTER',
-          },
-          {
-            label: 'Links',
-            props: { size: 'floatTiny' },
-            parent: {
-              kinds: ['document', 'block'],
-              types: ['CENTER'],
+            {
+              label: 'Links',
+              props: { size: 'floatTiny' },
+              parent: {
+                kinds: ['document', 'block'],
+                types: ['CENTER'],
+              },
+              wrap: 'CENTER',
             },
-            wrap: 'CENTER',
-          },
-        ].map((size) => {
-          let checked = Object.keys(size.props).every(
-            (key) => data.get(key) === size.props[key],
-          )
-          if (size.unwrap) {
-            checked = checked && parent.kind === 'document'
-          }
-          if (size.wrap) {
-            checked = checked && parent.type === size.wrap
-          }
+          ].map((size) => {
+            let checked = Object.keys(size.props).every(
+              (key) => data.get(key) === size.props[key],
+            )
+            if (size.unwrap) {
+              checked = checked && parent.kind === 'document'
+            }
+            if (size.wrap) {
+              checked = checked && parent.type === size.wrap
+            }
 
-          return (
-            <Radio
-              key={size.label}
-              checked={checked}
-              onChange={(event) => {
-                event.preventDefault()
-                if (checked) {
-                  return
-                }
-
-                editor.change((change) => {
-                  change.setNodeByKey(node.key, {
-                    data: data.merge(size.props),
-                  })
-                  if (size.unwrap) {
-                    for (
-                      let i = change.value.document.getDepth(node.key);
-                      i > 1;
-                      i--
-                    ) {
-                      change = change.unwrapNodeByKey(node.key)
-                    }
-                  } else if (size.wrap && parent.type !== size.wrap) {
-                    change = change.wrapBlockByKey(node.key, {
-                      type: size.wrap,
-                    })
+            return (
+              <Radio
+                key={size.label}
+                checked={checked}
+                onChange={(event) => {
+                  event.preventDefault()
+                  if (checked) {
+                    return
                   }
-                })
-              }}
-              style={{ marginRight: 15 }}
-            >
-              {size.label}
-            </Radio>
-          )
-        })}
-      </Interaction.P> }
+
+                  editor.change((change) => {
+                    change.setNodeByKey(node.key, {
+                      data: data.merge(size.props),
+                    })
+                    if (size.unwrap) {
+                      for (
+                        let i = change.value.document.getDepth(node.key);
+                        i > 1;
+                        i--
+                      ) {
+                        change = change.unwrapNodeByKey(node.key)
+                      }
+                    } else if (size.wrap && parent.type !== size.wrap) {
+                      change = change.wrapBlockByKey(node.key, {
+                        type: size.wrap,
+                      })
+                    }
+                  })
+                }}
+                style={{ marginRight: 15 }}
+              >
+                {size.label}
+              </Radio>
+            )
+          })}
+        </Interaction.P>
+      )}
       <Interaction.P>
         <Field
           label='Datawrapper Chart-ID'
@@ -144,6 +148,21 @@ const Form = ({ data, onChange, editor, node, resizable }) => {
   )
 }
 
+const DatawrapperEdit = ({ datawrapperId }) => {
+  return datawrapperId ? (
+    <Interaction.P style={{ fontSize: 14 }}>
+      <A
+        href={`/datawrapper/chart/${datawrapperId}/edit`}
+        target='_blank'
+        rel='noreferrer'
+      >
+        <IconEdit size={18} /> Grafik in Datawrapper bearbeiten
+      </A>{' '}
+      (nur Produktion)
+    </Interaction.P>
+  ) : null
+}
+
 const EditOverlay = (props) => {
   const onChange = (data) => {
     props.editor.change((change) => {
@@ -152,16 +171,25 @@ const EditOverlay = (props) => {
       })
     })
   }
+
   return (
-    <OverlayFormManager {...props} showPreview={false} onChange={onChange} title='Datawrapper (Beta)'>
+    <OverlayFormManager
+      {...props}
+      showPreview={false}
+      onChange={onChange}
+      title='Datawrapper (Beta)'
+    >
       {({ data, onChange }) => (
-        <Form
-          data={data}
-          onChange={onChange}
-          editor={props.editor}
-          node={props.node}
-          resizable={props.resizable}
-        />
+        <>
+          <Form
+            data={data}
+            onChange={onChange}
+            editor={props.editor}
+            node={props.node}
+            resizable={props.resizable}
+          />
+          <DatawrapperEdit datawrapperId={data.get('datawrapperId')} />
+        </>
       )}
     </OverlayFormManager>
   )

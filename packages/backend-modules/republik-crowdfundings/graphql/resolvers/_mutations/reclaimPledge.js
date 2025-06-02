@@ -69,7 +69,6 @@ module.exports = async (
         {
           firstName: newUser.firstName || pledgeUser.firstName,
           lastName: newUser.lastName || pledgeUser.lastName,
-          birthday: newUser.birthday || pledgeUser.birthday,
           addressId: newUser.addressId || pledgeUser.addressId,
         },
       ),

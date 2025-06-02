@@ -134,7 +134,6 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             'email',
             'firstName',
             'lastName',
-            'birthday',
             'phoneNumber',
             'createdAt',
             'username',
@@ -153,6 +152,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             'preferredFirstFactor',
             'disclosures',
             'referralCode',
+            'birthyear',
           ]),
           ...(address && {
             address_name: address.name,

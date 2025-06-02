@@ -1,33 +1,36 @@
+import Stripe from 'stripe'
+import { PgDb } from 'pogi'
+import type { Request, Response } from 'express'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { Company } from '../../lib/types'
 import { StripeWebhookWorker } from '../../lib/workers/StripeWebhookWorker'
-import type { Request, Response } from 'express'
-import Stripe from 'stripe'
-import { Payments } from '../../lib/payments'
+import { WebhookService } from '../../lib/services/WebhookService'
 
-export async function handleStripeWebhook(req: Request, res: Response) {
+export async function handleStripeWebhook(
+  req: Request,
+  res: Response,
+  ctx: { pgdb: PgDb },
+) {
   try {
-    const payments = Payments.getInstance()
+    const webhookService = new WebhookService(ctx.pgdb)
 
     const company = getCompanyName(req.params['company'])
-    const event = payments.verifyWebhookForCompany<Stripe.Event>(company, req)
+    const event = webhookService.verifyWebhook(company, req)
 
     if (!event.livemode && !isInStripeTestMode()) {
       console.log('skipping test event in live mode')
       return res.sendStatus(304)
     }
 
-    const alreadySeen = await payments.findWebhookEventBySourceId<Stripe.Event>(
-      event.id,
-    )
+    const alreadySeen = await webhookService.getEvent<Stripe.Event>(event.id)
 
     if (alreadySeen) {
-      // if we have already logged the webhook we can retrun
+      // if we have already logged the webhook we can return
       const status = alreadySeen.processed ? 200 : 204
       return res.sendStatus(status)
     }
 
-    const e = await payments.logWebhookEvent<Stripe.Event>({
+    const e = await webhookService.logEvent<Stripe.Event>({
       source: 'stripe',
       sourceId: event.id,
       company: company,

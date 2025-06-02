@@ -8,6 +8,8 @@ import { convertStyleToRem } from '../Typography/utils'
 
 const format = css({
   ...convertStyleToRem(sansSerifMedium16),
+  position: 'relative', // make sure Format link is on top of the teaser link overlay
+  zIndex: 1, // ditto
   margin: '0 0 18px 0',
   [mUp]: {
     ...convertStyleToRem(sansSerifMedium20),

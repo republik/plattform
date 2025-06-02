@@ -21,6 +21,11 @@ const styles = {
       paddingTop: 40,
       margin: '0 auto',
     },
+    '@media print': {
+      width: MAX_WIDTH,
+      paddingTop: 0,
+      paddingBottom: 40,
+    },
   }),
   containerMargin: css({
     marginBottom: 40,

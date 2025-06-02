@@ -1,21 +1,18 @@
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
-
-const { newAuthError } = require('../AuthError')
+const crypto = require('node:crypto')
 const t = require('../t')
 
-const TokensExceededError = newAuthError(
-  'email-code-challenge-tokens-exceeded',
-  'api/auth/emailCode/tokensExceeded',
-)
-const CollisionError = newAuthError(
-  'email-code-challenge-collision',
-  'api/auth/emailCode/collison',
-)
-
 const CODE_LENGTH = 6
-const MAX_VALID_TOKENS = 5
-const TTL = 1000 * 60 * 60 // 60 minutes
+const TTL_IN_MS = 1000 * 60 * 10 // 10 minutes
 const Type = 'EMAIL_CODE'
+
+function generateNumericToken(length) {
+  let token = ''
+  for (let i = 0; i < length; i++) {
+    token += crypto.randomInt(0, 10) // 0–9 inclusive
+  }
+  return token
+}
 
 const { DEFAULT_MAIL_FROM_ADDRESS } = process.env
 
@@ -23,45 +20,23 @@ module.exports = {
   Type,
   generateNewToken: async ({ email, pgdb }) => {
     // Find tokens matching Type and email, which have not expired yet.
-    const existingPayloads = (
-      await pgdb.public.tokens.find({
+
+    const now = new Date()
+    await pgdb.public.tokens.update(
+      {
         type: Type,
         email,
-        'expiresAt >=': new Date(),
-      })
-    ).map((token) => token.payload)
+        'expiresAt >=': now,
+      },
+      { expiresAt: now },
+    )
 
-    // Throw an error if there are {MAX_VALID_TOKENS} or more tokens returned,
-    // as having more than a certain number of unexpired tokens is an unwarrented
-    // auth behaviour.
-    if (existingPayloads.length >= MAX_VALID_TOKENS) {
-      console.error(
-        'Unable to generate a new token: Found too many valid tokens.',
-      )
-      throw new TokensExceededError({ email, MAX_VALID_TOKENS })
-    }
+    const payload = generateNumericToken(CODE_LENGTH)
 
-    let attempts = 10 ** CODE_LENGTH
-    let payload = null
-
-    do {
-      if (attempts-- < 0) {
-        console.error(
-          'Unable to generate a new token: Attempts to generate payload exceeded.',
-        )
-        throw new CollisionError({ email, attempts })
-      }
-
-      payload = `${Math.round(Math.random() * 10 ** CODE_LENGTH)}`
-        .slice(0, CODE_LENGTH)
-        .padStart(CODE_LENGTH, 0)
-    } while (existingPayloads.includes(payload))
-
-    const expiresAt = new Date(new Date().getTime() + TTL)
+    const expiresAt = new Date(new Date().getTime() + TTL_IN_MS)
     return { payload, expiresAt }
   },
   startChallenge: async ({ email, token, pgdb, user }) => {
-
     const isNewUser = typeof user === 'undefined'
 
     const template = isNewUser ? 'register_signin_code' : 'signin_code'

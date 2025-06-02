@@ -30,7 +30,7 @@ const styles = {
 }
 
 const TextInput = (props) => {
-  const { text = '', maxLength } = props
+  const { text = '', label = '', maxLength, onChange } = props
   const count = text.length
   const progress = (count / maxLength) * 100
   const remaining = maxLength - count
@@ -38,7 +38,6 @@ const TextInput = (props) => {
   const [colorScheme] = useColorContext()
   const { t } = useTranslation()
 
-  const { label, onChange } = props
   return (
     <div>
       <Field
@@ -87,11 +86,6 @@ TextInput.propTypes = {
   maxLength: PropTypes.number,
   onChange: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
-}
-
-TextInput.defaultProps = {
-  label: '',
-  text: '',
 }
 
 export default TextInput

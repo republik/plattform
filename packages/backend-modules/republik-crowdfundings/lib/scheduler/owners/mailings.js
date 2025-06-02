@@ -10,7 +10,7 @@ const formatDate = (date) => moment(date).format('YYYYMMDD')
 
 module.exports = async (user, payload, context) => {
   const { id: userId, membershipGraceInterval, prolongBeforeDate } = user
-  const { templateName } = payload
+  const { templateName, fromName } = payload
 
   debug('send mailing: %o', { templateName: payload.templateName, userId })
 
@@ -21,6 +21,7 @@ module.exports = async (user, payload, context) => {
       cancelUntilDate: moment(prolongBeforeDate).subtract(2, 'days'),
       graceEndDate: addInterval(prolongBeforeDate, membershipGraceInterval),
       templateName,
+      fromName,
     },
     context,
   )

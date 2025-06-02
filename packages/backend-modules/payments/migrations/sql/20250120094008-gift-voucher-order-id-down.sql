@@ -1,0 +1,3 @@
+-- migrate down here: DROP TABLE...
+ALTER TABLE payments."giftVouchers" DROP CONSTRAINT fk_gift_voucher_order_id;
+ALTER TABLE payments."giftVouchers" DROP COLUMN "orderId";

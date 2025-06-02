@@ -85,6 +85,7 @@ const IconButton = React.forwardRef<
           width={size || ICON_SIZE}
           height={size || ICON_SIZE}
           {...colorScheme.set('fill', fillValue)}
+          {...colorScheme.set('color', fillValue)}
         />
         {label && (
           <span

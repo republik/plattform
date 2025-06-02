@@ -7,7 +7,6 @@ import {
   withMarkAllAsReadMutation,
   withNotificationCount,
 } from './enhancers'
-import { css } from 'glamor'
 import NotificationFeed from './NotificationFeed'
 
 export const containsUnread = (notifications, after) =>

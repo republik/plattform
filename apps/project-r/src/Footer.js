@@ -44,8 +44,7 @@ const Footer = () => (
       <a href='https://www.republik.ch/~mhuissoud'>
         Michel&nbsp;Huissoud
       </a>, <a href='https://www.republik.ch/~klandolt'>Karin&nbsp;Landolt</a>,{' '}
-      <a href='https://www.republik.ch/~nscheu'>Nina&nbsp;Scheu</a>,{' '}
-      <a href='https://www.republik.ch/~roger.staub'>Roger&nbsp;Staub</a> und{' '}
+      <a href='https://www.republik.ch/~nscheu'>Nina&nbsp;Scheu</a> und{' '}
       <a href='https://www.republik.ch/~123456789'>Moritz Zumbuehl</a>
     </p>
 

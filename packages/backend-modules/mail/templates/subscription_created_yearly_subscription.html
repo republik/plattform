@@ -55,9 +55,15 @@
                     <ul
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                      <li>Jährlicher Preis: CHF {{total_before_discount}}</li>
+                      <li>Jahresmitgliedschaft: CHF {{subscription_total_before_discount}}</li>
                       {{#if discount_code}}
                       <li>{{discount_code}}: CHF –{{discount_total}}</li>
+                      {{/if}}
+                      {{#if recurring_donation}}
+                      <li>Jährlicher freiwilliger Beitrag: CHF {{recurring_donation}}</li>
+                      {{/if}}
+                      {{#if onetime_donation}}
+                      <li>Einmaliger freiwilliger Beitrag: CHF {{onetime_donation}}</li>
                       {{/if}}
                       <li>
                         <strong>Total: CHF {{total}}</strong>
@@ -65,15 +71,15 @@
                     </ul>
 
                     <p>
-                      Ihre Jahresmitgliedschaft verlängert sich automatisch{{#if discount_code}} zum Normalpreis{{/if}}. 
-                      Die von Ihnen angegebene Zahlungsmethode belasten wir dementsprechend 
-                      in einem Jahr mit CHF {{total_before_discount}}.
+                      Ihre Jahresmitgliedschaft verlängert sich automatisch{{#if discount_code}} zum Normalpreis{{/if}}.
+                      Die von Ihnen angegebene Zahlungsmethode belasten wir dementsprechend
+                      in einem Jahr mit CHF {{next_total}}.
                     </p>
                     <p>
-                      In Ihrem 
+                      In Ihrem
                       <a href="{{link_account_goto}}">Konto</a> finden Sie
-                      <a href="{{link_account_abos_goto}}">alle relevanten Informationen zu Ihrer Mitgliedschaft</a>. 
-                      Dort können Sie Ihre Einstellungen verwalten (z.B. die Zahlungsmethode ändern) 
+                      <a href="{{link_account_abos_goto}}">alle relevanten Informationen zu Ihrer Mitgliedschaft</a>.
+                      Dort können Sie Ihre Einstellungen verwalten (z.B. die Zahlungsmethode ändern)
                       oder die Mitgliedschaft jederzeit kündigen (was wir nicht hoffen).
                     </p>
 

@@ -4,10 +4,10 @@ import { graphql } from '@apollo/client/react/hoc'
 import { Interaction, A } from '@project-r/styleguide'
 
 import { timeFormat } from '../../lib/utils/format'
-import query from '../Account/belongingsQuery'
 import withInNativeApp from '../../lib/withInNativeApp'
 import withT from '../../lib/withT'
 import Link from 'next/link'
+import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const { P } = Interaction
 
@@ -42,7 +42,7 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
 }
 
 export default compose(
-  graphql(query, {
+  graphql(MyBelongingsDocument, {
     props: ({ data }) => ({
       accessGrants:
         (!data.loading && !data.error && data.me && data.me.accessGrants) || [],

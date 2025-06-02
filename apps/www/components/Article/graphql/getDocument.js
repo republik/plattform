@@ -85,6 +85,7 @@ export const getDocument = gql`
             profileUrls
           }
         }
+        isPaywallExcluded
         format {
           id
           meta {
@@ -113,6 +114,7 @@ export const getDocument = gql`
               name
               free
             }
+            isPaywallExcluded
           }
         }
         section {
@@ -215,8 +217,6 @@ export const getDocument = gql`
         indicateGallery
         indicateVideo
         prepublication
-        paynotes
-        paynoteMode
       }
     }
   }

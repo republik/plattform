@@ -1,59 +1,82 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
-import { Company, InvoiceArgs } from '../../types'
-import { PaymentProvider } from '../../providers/provider'
-import { isPledgeBased } from './utils'
+import { Company, InvoiceArgs, PaymentWorkflow } from '../../types'
+import { isPledgeBased, parseStripeDate } from './utils'
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
+import { InvoiceService } from '../../services/InvoiceService'
+import { PaymentService } from '../../services/PaymentService'
+import { CustomerInfoService } from '../../services/CustomerInfoService'
+
+class InvoiceCreatedWorkflow
+  implements PaymentWorkflow<Stripe.InvoiceCreatedEvent>
+{
+  constructor(
+    protected readonly paymentService: PaymentService,
+    protected readonly invoiceService: InvoiceService,
+    protected readonly customerInfoService: CustomerInfoService,
+  ) {}
+
+  async run(company: Company, event: Stripe.InvoiceCreatedEvent): Promise<any> {
+    const customerId = event.data.object.customer as string
+    const externalInvoiceId = event.data.object.id as string
+
+    const userId = await this.customerInfoService.getUserIdForCompanyCustomer(
+      company,
+      customerId,
+    )
+
+    if (!userId) {
+      throw new Error(`Unknown customer ${customerId}`)
+    }
+
+    if (
+      await this.invoiceService.getInvoice({ externalId: externalInvoiceId })
+    ) {
+      console.log(`invoice has already saved; skipping [${externalInvoiceId}]`)
+      return
+    }
+
+    const invoice = await this.paymentService.getInvoice(
+      company,
+      externalInvoiceId,
+    )
+    if (!invoice) {
+      throw new Error(`Unknown invoice ${externalInvoiceId}`)
+    }
+
+    if (!invoice.subscription) {
+      console.log(
+        `Only subscription invoices currently not supported [${event.id}]`,
+      )
+      return
+    }
+
+    const sub = await this.paymentService.getSubscription(
+      company,
+      invoice.subscription as string,
+    )
+
+    if (isPledgeBased(sub?.metadata)) {
+      console.log(`pledge invoice event [${event.id}]; skipping`)
+      return
+    }
+
+    const args = mapInvoiceArgs(company, invoice)
+    await this.invoiceService.saveInvoice(userId, args)
+
+    return
+  }
+}
 
 export async function processInvoiceCreated(
-  paymentService: PaymentService,
+  ctx: PaymentWebhookContext,
   company: Company,
   event: Stripe.InvoiceCreatedEvent,
 ) {
-  const customerId = event.data.object.customer as string
-  const externalInvocieId = event.data.object.id as string
-
-  const userId = await paymentService.getUserIdForCompanyCustomer(
-    company,
-    customerId,
-  )
-
-  if (!userId) {
-    throw new Error(`Unknown customer ${customerId}`)
-  }
-
-  if (await paymentService.getInvoice({ externalId: externalInvocieId })) {
-    console.log('invoice has already saved; skipping [%s]', externalInvocieId)
-    return
-  }
-
-  const invoice = await PaymentProvider.forCompany(company).getInvoice(
-    externalInvocieId,
-  )
-  if (!invoice) {
-    throw new Error(`Unknown invoice ${event.data.object.id}`)
-  }
-
-  if (!invoice.subscription) {
-    console.log(
-      'Only subscription invoices currently not supported [%s]',
-      event.id,
-    )
-    return
-  }
-
-  const sub = await PaymentProvider.forCompany(company).getSubscription(
-    invoice.subscription as string,
-  )
-
-  if (isPledgeBased(sub?.metadata)) {
-    console.log('pledge invoice event [%s]; skipping', event.id)
-    return
-  }
-
-  const args = mapInvoiceArgs(company, invoice)
-  await paymentService.saveInvoice(userId, args)
-
-  return
+  return new InvoiceCreatedWorkflow(
+    new PaymentService(),
+    new InvoiceService(ctx.pgdb),
+    new CustomerInfoService(ctx.pgdb),
+  ).run(company, event)
 }
 
 export function mapInvoiceArgs(
@@ -80,8 +103,8 @@ export function mapInvoiceArgs(
     discounts: invoice.discounts,
     metadata: invoice.metadata,
     externalId: invoice.id,
-    periodStart: new Date(invoice.lines.data[0].period.start * 1000),
-    periodEnd: new Date(invoice.lines.data[0].period.end * 1000),
+    periodStart: parseStripeDate(invoice.lines.data[0].period.start),
+    periodEnd: parseStripeDate(invoice.lines.data[0].period.end),
     status: invoice.status as any,
     externalSubscriptionId: invoice.subscription as string,
   }

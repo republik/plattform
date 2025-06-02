@@ -42,7 +42,7 @@ extend type User {
     properties: ImageProperties
   ): String
 
-  birthday: Date
+  birthyear: Int
   ageAccessRole: AccessRole
   age: Int
 

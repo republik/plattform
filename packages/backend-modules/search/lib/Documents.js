@@ -448,6 +448,7 @@ const switchState = async function (elastic, state, repoId, docId) {
   return elastic.updateByQuery({
     ...indexRef,
     refresh: true,
+    conflicts: 'proceed',
     body: {
       query: {
         bool: {
@@ -481,6 +482,7 @@ const resetScheduledAt = async function (
   return elastic.updateByQuery({
     ...indexRef,
     refresh: true,
+    conflicts: 'proceed',
     body: {
       query: {
         bool: {

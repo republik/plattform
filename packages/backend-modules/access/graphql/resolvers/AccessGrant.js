@@ -45,9 +45,19 @@ module.exports = {
       recipient.name || t('api/access/resolvers/AccessGrant/tallDarkStranger')
     )
   },
-  status: (grant, args, { user: me, t }) => {
-    if (!Roles.userIsInRoles(me, PRIVILEDGED_ROLES)) {
-      return null
+  status: async (grant, args, { user: me, pgdb, t }) => {
+    // status should be accessible if the user is the recipient OR for privileged roles
+    if (!grant.recipientUserId) {
+      if (!Roles.userIsInRoles(me, PRIVILEDGED_ROLES)) {
+        return null
+      }
+    } else {
+      const recipient = await pgdb.public.users.findOne({
+        id: grant.recipientUserId,
+      })
+      if (!Roles.userIsMeOrInRoles(recipient, me, PRIVILEDGED_ROLES)) {
+        return null
+      }
     }
 
     if (grant.invalidatedAt) {

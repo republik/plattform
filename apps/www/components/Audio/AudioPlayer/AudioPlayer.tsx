@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { AudioPlayerProps } from '../AudioPlayerController'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { useTranslation } from '../../../lib/withT'
+import { usePaynotes } from '../../../src/components/paynotes/paynotes-context'
 import ExpandedAudioPlayer from './ExpandedAudioPlayer'
 import MiniAudioPlayer from './MiniAudioPlayer'
 import Backdrop from './ui/Backdrop'
@@ -102,6 +103,7 @@ const AudioPlayer = ({
   const router = useRouter()
   const [colorScheme] = useColorContext()
   const [_, ...queuedItems] = queue || [] // filter active-item from queue
+  const { paynoteInlineHeight } = usePaynotes()
 
   const toggleAudioPlayer = () => {
     if (isPlaying) {
@@ -182,7 +184,7 @@ const AudioPlayer = ({
 
     return
   }, [isDesktop, inNativeApp, isAndroid, isFirefox, isExpanded])
-
+  
   return (
     <>
       <AnimatePresence>
@@ -205,6 +207,14 @@ const AudioPlayer = ({
                   ? colorScheme.set('backgroundColor', 'default')
                   : colorScheme.set('backgroundColor', 'overlay'))}
                 {...colorScheme.set('boxShadow', 'overlayShadow')}
+                style={{
+                  marginBottom: `calc(${
+                    paynoteInlineHeight + MARGIN
+                  }px + env(safe-area-inset-bottom))`,
+                  maxHeight:
+                    isExpanded &&
+                    `calc(100vh - ${paynoteInlineHeight + 2 * MARGIN}px)`,
+                }}
               >
                 {isExpanded ? (
                   <ExpandedAudioPlayer

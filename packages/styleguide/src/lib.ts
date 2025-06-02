@@ -59,7 +59,7 @@ export {
   PullQuoteSource,
   PullQuoteText,
 } from './components/PullQuote'
-export { BlockQuote } from './components/BlockQuote'
+export { BlockQuote, BlockQuoteParagraph } from './components/BlockQuote'
 export {
   Figure,
   FigureCover,
@@ -84,7 +84,6 @@ export {
   TeaserFrontTileRow,
   TeaserFrontLead,
   TeaserFrontCredit,
-  TeaserFrontCreditLink,
 } from './components/TeaserFront'
 export { FormatTag } from './components/Format'
 
@@ -193,6 +192,7 @@ export * from './chart'
 // export * from './components/Icons'
 
 export * from './templates'
+export { mdastToString } from './templates/Article/utils'
 
 export { default as SlateRender } from './components/Editor/Render'
 export { default as renderSlateAsText } from './components/Editor/Render/text'

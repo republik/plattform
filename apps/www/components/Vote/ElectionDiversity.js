@@ -176,14 +176,14 @@ const getLabel = (age) =>
     : AGE_KEYS[4]
 
 const MembersAge = voteT(({ members, vt }) => {
-  const membersWithBirthday = members.filter((member) => member.yearOfBirth)
+  const membersWithBirthday = members.filter((member) => member?.user?.birthyear)
   if (!membersWithBirthday.length) return null
 
   const values = membersWithBirthday
     .reduce(
       (acc, member) =>
         acc.map((item) =>
-          item.key === getLabel(getAge(member.yearOfBirth))
+          item.key === getLabel(getAge(member?.user?.birthyear))
             ? { ...item, value: item.value + 1 }
             : item,
         ),

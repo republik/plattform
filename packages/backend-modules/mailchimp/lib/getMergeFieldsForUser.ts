@@ -24,6 +24,7 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
   MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
+  REGWALL_TRIAL_CAMPAIGN_ID,
 } = getConfig()
 
 export const mergeFieldNames = {
@@ -36,6 +37,7 @@ export const mergeFieldNames = {
   newsletterOptInCa: 'NL_LINK_CA',
   newsletterOptInWb: 'NL_LINK_WD',
   trialState: 'TRIAL',
+  regwallTrialState: 'REG_TRIAL',
   [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: 'NL_DAILY',
   [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: 'NL_WEEKLY',
   [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: 'NL_PROJ_R',
@@ -56,6 +58,7 @@ export async function getMergeFieldsForUser({
   const linkCa = user?.email && getConsentLink(user.email, 'CLIMATE')
   const linkWdwww = user?.email && getConsentLink(user.email, 'WDWWW')
   const trialState = getTrialState(segmentData)
+  const regwallTrialState = getRegwallTrialState(segmentData)
 
   const newsletterInterests = segmentData.mailchimpMember?.interests
 
@@ -69,6 +72,7 @@ export async function getMergeFieldsForUser({
     [mergeFieldNames.newsletterOptInCa]: linkCa,
     [mergeFieldNames.newsletterOptInWb]: linkWdwww,
     [mergeFieldNames.trialState]: trialState,
+    [mergeFieldNames.regwallTrialState]: regwallTrialState,
     NL_DAILY: hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
@@ -197,6 +201,25 @@ function getTrialState(segmentData: SegmentData): TrialState {
     return 'Active'
   }
   if (segmentData.accessGrants?.length) {
+    return 'Past'
+  }
+}
+
+function getRegwallTrialState(segmentData: SegmentData): TrialState {
+  const now = new Date()
+  const regwallAccessGrants = segmentData.accessGrants?.filter(
+    (ag) => ag.accessCampaignId === REGWALL_TRIAL_CAMPAIGN_ID,
+  )
+  const activeRegwallAccessGrants = regwallAccessGrants?.filter(
+    (ag) =>
+      ag.beginAt <= now && ag.endAt > now && !ag.invalidatedAt && !ag.revokedAt,
+  )
+  const hasActiveRegwallTrial =
+    !!activeRegwallAccessGrants && activeRegwallAccessGrants.length > 0
+  if (hasActiveRegwallTrial) {
+    return 'Active'
+  }
+  if (regwallAccessGrants?.length) {
     return 'Past'
   }
 }

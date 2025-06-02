@@ -1,19 +1,15 @@
 import { handleStripeWebhook } from './webhook/stripe'
 import type { Request, Response, Router } from 'express'
 import bodyParser from 'body-parser'
+import { PgDb } from 'pogi'
 
-export default async (
-  server: Router,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _t: any,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _redis: any,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _connectionContext: any,
-) => {
+export default async (server: Router, pgdb: PgDb) => {
+  console.log("payment webhook endpoint registered")
   server.post(
     '/webhooks/:company/stripe',
     bodyParser.raw({ type: '*/*' }),
-    (req: Request, res: Response) => handleStripeWebhook(req, res),
+    (req: Request, res: Response) => {
+      return handleStripeWebhook(req, res, { pgdb })
+    },
   )
 }

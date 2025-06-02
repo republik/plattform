@@ -5,15 +5,18 @@
   "main": "build/index.js",
   "types": "build/@types",
   "dependencies": {
+    "@orbiting/backend-modules-auth": "*",
     "@orbiting/backend-modules-job-queue": "*",
     "@orbiting/backend-modules-scalars": "*",
     "@orbiting/backend-modules-types": "*",
-    "@orbiting/backend-modules-auth": "*",
     "@orbiting/backend-modules-utils": "*",
+    "@orbiting/backend-modules-dataloader": "*",
     "apollo-modules-node": "*",
     "body-parser": "^1.19.1",
-    "stripe": "^17.4.0",
-    "pogi": "^2.11.1"
+    "crockford-base32": "^2.0.0",
+    "dayjs": "^1.11.13",
+    "pogi": "^2.11.1",
+    "stripe": "^17.4.0"
   },
   "devDependencies": {
     "@types/express": "4.17.21"

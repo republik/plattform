@@ -23,7 +23,7 @@ const populate = async (context, resultFn) => {
 
   const result = await pgdb.query(`
     SELECT
-      EXTRACT(YEAR FROM AGE(birthday)) "key",
+      extract(year from now()) - u.birthyear "key",
       COUNT(DISTINCT u.id) "count"
     FROM users u
     JOIN

@@ -169,6 +169,7 @@ export default async function Footer() {
               display: 'flex',
               flexDirection: 'row',
               gap: '8px',
+              height: '36px',
             })}
           >
             <div>

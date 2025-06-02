@@ -131,7 +131,8 @@ const labelGauger = createTextGauger(LABEL_FONT, {
   html: true,
 })
 
-const BarChart = (props) => {
+const BarChart = (_props) => {
+  const props = { ...defaultProps.Bar, ..._props }
   const {
     values,
     width,
@@ -755,11 +756,9 @@ export const propTypes = {
 
 BarChart.propTypes = propTypes
 
-BarChart.defaultProps = defaultProps.Bar
-
-export const Lollipop = (props) => <BarChart {...props} />
-
-Lollipop.defaultProps = defaultProps.Lollipop
+export const Lollipop = (props) => (
+  <BarChart {...defaultProps.Lollipop} {...props} />
+)
 
 // Lollipop has additional default props
 Lollipop.wrap = 'Bar'

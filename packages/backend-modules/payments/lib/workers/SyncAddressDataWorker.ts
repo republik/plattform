@@ -1,7 +1,7 @@
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Address } from '../types'
 import { Job } from 'pg-boss'
-import { Payments } from '../payments'
+import { CustomerInfoService } from '../services/CustomerInfoService'
 
 type Args = {
   $version: 'v1'
@@ -13,10 +13,10 @@ export class SyncAddressDataWorker extends BaseWorker<Args> {
   readonly queue = 'payments:stripe:checkout:sync-address'
 
   async perform([job]: Job<Args>[]): Promise<void> {
-    const PaymentService = Payments.getInstance()
+    const customerService = new CustomerInfoService(this.context.pgdb)
     console.log(`start ${this.queue} worker`)
 
-    await PaymentService.updateUserAddress(job.data.userId, job.data.address)
+    await customerService.updateUserAddress(job.data.userId, job.data.address)
 
     console.log(`success ${this.queue} worker`)
 

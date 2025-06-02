@@ -206,7 +206,6 @@ input UserInput {
   email: String!
   firstName: String
   lastName: String
-  birthday: Date
   phoneNumber: String
 }
 #input AddressInput {
@@ -382,6 +381,7 @@ enum CancellationCategoryType {
   CROWFUNDING_ONLY
   SEVERAL_REASONS
   SYSTEM
+  NO_AUTO_PAY
 }
 
 type CancellationCategory {

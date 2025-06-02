@@ -15,7 +15,6 @@ import {
   shouldIgnoreClick,
 } from '@project-r/styleguide'
 import { cleanAsPath } from '../../lib/utils/link'
-import TrialPayNoteMini from './TrialPayNoteMini'
 import withT from '../../lib/withT'
 import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
 const styles = {
@@ -72,7 +71,7 @@ const styles = {
   }),
 }
 
-const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
+const SeriesNavBar = ({ t, me, series, router, repoId }) => {
   const [colorScheme] = useColorContext()
   const [expanded, setExpanded] = useState(false)
   const [ref] = useBodyScrollLock(expanded)
@@ -175,7 +174,6 @@ const SeriesNavBar = ({ t, me, showInlinePaynote, series, router, repoId }) => {
           repoId={repoId}
           series={series}
           context='navigation'
-          PayNote={showInlinePaynote ? TrialPayNoteMini : undefined}
           ActionBar={me && ActionBar}
           Link={Link}
           onEpisodeClick={() => setExpanded(false)}

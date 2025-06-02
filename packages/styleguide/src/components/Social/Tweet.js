@@ -112,8 +112,4 @@ Tweet.propTypes = {
   playable: PropTypes.bool,
 }
 
-Tweet.defaultProps = {
-  platform: 'twitter',
-}
-
 export default Tweet

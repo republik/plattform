@@ -13,18 +13,19 @@ import SectionContainer from './Common/SectionContainer'
 import Link from 'next/link'
 
 const EmployeeLink = ({ employee, children }) => (
-  <Link href={`/~${employee.user.slug || employee.user.id}`} {...styles.link}>
+  <Link href={`/~${employee.userId}`} {...styles.link}>
     {children}
   </Link>
 )
 
 const Team = ({ employees, title, description }) => {
   const [colorScheme] = useColorContext()
+  const threeMarketingEmployees = employees.slice(1).sort(() => 0.5 - Math.random()).slice(0, 3)
   return (
     <SectionContainer>
       <SectionTitle title={title} lead={description} />
       <TeaserFrontTileRow autoColumns>
-        {employees.map((employee) => {
+        {threeMarketingEmployees.map((employee) => {
           return (
             <TeaserFrontTile key={employee.name}>
               <h3 {...styles.pitch}>{`«${employee.pitch}»`}</h3>
@@ -32,7 +33,7 @@ const Team = ({ employees, title, description }) => {
                 <EmployeeLink employee={employee}>
                   <img
                     {...styles.profilePicture}
-                    src={employee.user.portrait}
+                    src={employee.profile.url}
                     alt=''
                   />
                 </EmployeeLink>

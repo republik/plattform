@@ -13,8 +13,14 @@ query Me {
     isListed
     hasPublicProfile
     discussionNotificationChannels
+    regwallTrialStatus
     accessCampaigns {
       id
+    }
+    accessGrants {
+      id
+      status
+      endAt
     }
     hasDormantMembership
     prolongBeforeDate

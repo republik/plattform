@@ -96,30 +96,30 @@ const createJobs = (now) => [
     },
     handleFn: mailings,
   },
-  {
-    name: 'membership_owner_prolong_yearly_abo_notice',
-    prolongBefore: {
-      minDate: getMinEndDate(now, 13),
-      maxDate: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
-    },
-    payload: {
-      templateName: 'membership_owner_prolong_yearly_abo_notice',
-    },
-    predicateFn: ({
-      id: userId,
-      membershipType,
-      membershipAutoPay,
-      autoPay,
-    }) => {
-      return (
-        membershipType === 'YEARLY_ABO' &&
-        (membershipAutoPay === false ||
-          (membershipAutoPay === true &&
-            (!autoPay || (autoPay && userId !== autoPay.userId))))
-      )
-    },
-    handleFn: mailings,
-  },
+  // {
+  //   name: 'membership_owner_prolong_yearly_abo_notice',
+  //   prolongBefore: {
+  //     minDate: getMinEndDate(now, 13),
+  //     maxDate: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
+  //   },
+  //   payload: {
+  //     templateName: 'membership_owner_prolong_yearly_abo_notice',
+  //   },
+  //   predicateFn: ({
+  //     id: userId,
+  //     membershipType,
+  //     membershipAutoPay,
+  //     autoPay,
+  //   }) => {
+  //     return (
+  //       membershipType === 'YEARLY_ABO' &&
+  //       (membershipAutoPay === false ||
+  //         (membershipAutoPay === true &&
+  //           (!autoPay || (autoPay && userId !== autoPay.userId))))
+  //     )
+  //   },
+  //   handleFn: mailings,
+  // },
   {
     name: 'membership_owner_prolong_notice_7',
     prolongBefore: {
@@ -144,30 +144,30 @@ const createJobs = (now) => [
     },
     handleFn: mailings,
   },
-  {
-    name: 'membership_owner_prolong_yearly_abo_notice_7',
-    prolongBefore: {
-      minDate: getMinEndDate(now, 3),
-      maxDate: getMaxEndDate(now, 7),
-    },
-    payload: {
-      templateName: 'membership_owner_prolong_yearly_abo_notice_7',
-    },
-    predicateFn: ({
-      id: userId,
-      membershipType,
-      membershipAutoPay,
-      autoPay,
-    }) => {
-      return (
-        membershipType === 'YEARLY_ABO' &&
-        (membershipAutoPay === false ||
-          (membershipAutoPay === true &&
-            (!autoPay || (autoPay && userId !== autoPay.userId))))
-      )
-    },
-    handleFn: mailings,
-  },
+  // {
+  //   name: 'membership_owner_prolong_yearly_abo_notice_7',
+  //   prolongBefore: {
+  //     minDate: getMinEndDate(now, 3),
+  //     maxDate: getMaxEndDate(now, 7),
+  //   },
+  //   payload: {
+  //     templateName: 'membership_owner_prolong_yearly_abo_notice_7',
+  //   },
+  //   predicateFn: ({
+  //     id: userId,
+  //     membershipType,
+  //     membershipAutoPay,
+  //     autoPay,
+  //   }) => {
+  //     return (
+  //       membershipType === 'YEARLY_ABO' &&
+  //       (membershipAutoPay === false ||
+  //         (membershipAutoPay === true &&
+  //           (!autoPay || (autoPay && userId !== autoPay.userId))))
+  //     )
+  //   },
+  //   handleFn: mailings,
+  // },
   {
     name: 'membership_owner_prolong_notice_0',
     prolongBefore: {
@@ -220,7 +220,7 @@ const createJobs = (now) => [
     name: 'membership_owner_prolong_yearly_abo_notice_0',
     prolongBefore: {
       minDate: getMinEndDate(now, -3),
-      maxDate: getMaxEndDate(now, 0),
+      maxDate: moment(now),
     },
     payload: {
       templateName: 'membership_owner_prolong_yearly_abo_notice_0',
@@ -233,6 +233,32 @@ const createJobs = (now) => [
     }) => {
       return (
         membershipType === 'YEARLY_ABO' &&
+        (membershipAutoPay === false ||
+          (membershipAutoPay === true &&
+            (!autoPay || (autoPay && userId !== autoPay.userId))))
+      )
+    },
+    handleFn: mailings,
+  },
+  {
+    name: 'membership_owner_prolong_yearly_abo_winback_5',
+    prolongBefore: {
+      minDate: getMinEndDate(now, -6),
+      maxDate: getMaxEndDate(now, -5),
+    },
+    payload: {
+      templateName: 'membership_owner_prolong_yearly_abo_winback_5',
+      fromName: 'Daniel Binswanger, Co-Chefredaktor'
+    },
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+      hasOtherActiveMagazineAccess,
+    }) => {
+      return (
+        !hasOtherActiveMagazineAccess && membershipType === 'YEARLY_ABO' &&
         (membershipAutoPay === false ||
           (membershipAutoPay === true &&
             (!autoPay || (autoPay && userId !== autoPay.userId))))
@@ -254,9 +280,10 @@ const createJobs = (now) => [
       membershipType,
       membershipAutoPay,
       autoPay,
+      hasOtherActiveMagazineAccess,
     }) => {
       return (
-        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
+        !hasOtherActiveMagazineAccess && ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
         (membershipAutoPay === false ||
           (membershipAutoPay === true &&
             (!autoPay || (autoPay && userId !== autoPay.userId))))
@@ -278,9 +305,36 @@ const createJobs = (now) => [
       membershipType,
       membershipAutoPay,
       autoPay,
+      hasOtherActiveMagazineAccess,
     }) => {
       return (
-        membershipType === 'YEARLY_ABO' &&
+        !hasOtherActiveMagazineAccess && membershipType === 'YEARLY_ABO' &&
+        (membershipAutoPay === false ||
+          (membershipAutoPay === true &&
+            (!autoPay || (autoPay && userId !== autoPay.userId))))
+      )
+    },
+    handleFn: mailings,
+  },
+  {
+    name: 'membership_owner_prolong_yearly_abo_winback_12',
+    prolongBefore: {
+      minDate: getMinEndDate(now, -13),
+      maxDate: getMaxEndDate(now, -12),
+    },
+    payload: {
+      templateName: 'membership_owner_prolong_yearly_abo_winback_12',
+      fromName: 'Dennis Bühler, Bundeshaus- und Medienredaktor'
+    },
+    predicateFn: ({
+      id: userId,
+      membershipType,
+      membershipAutoPay,
+      autoPay,
+      hasOtherActiveMagazineAccess,
+    }) => {
+      return (
+        !hasOtherActiveMagazineAccess && membershipType === 'YEARLY_ABO' &&
         (membershipAutoPay === false ||
           (membershipAutoPay === true &&
             (!autoPay || (autoPay && userId !== autoPay.userId))))
@@ -360,6 +414,9 @@ const createUserJobs = (jobs, context) => async (user) =>
     try {
       const { pgdb } = context
       const { prolongBefore, payload, predicateFn, handleFn } = job
+
+      const otherActiveMembership = await hasUserOtherActiveMagazineAccess({ userId: user.id, membershipId: user.membershipId, pgdb })
+      user.hasOtherActiveMagazineAccess = otherActiveMembership
 
       if (
         user.prolongBeforeDate.isBetween(
@@ -451,6 +508,26 @@ const run = async (args, context) => {
 module.exports = {
   DAYS_BEFORE_END_DATE,
   run,
+}
+
+async function hasUserOtherActiveMagazineAccess({ userId, membershipId, pgdb}) {
+  const res = await pgdb.queryOne(
+    `SELECT
+        (
+          (
+            SELECT COUNT(*) FROM payments.subscriptions s
+            WHERE s."userId" = :userId and s.status not in ('paused', 'canceled', 'incomplete')
+          )
+          +
+          (
+            SELECT COUNT(*) FROM public.memberships m
+            WHERE m."userId" = :userId and m.active = true
+            and m.id != :membershipId
+          )
+        ) AS count`,
+    { userId: userId, membershipId: membershipId},
+  )
+  return res?.count > 0
 }
 
 async function setAutoPayToFalse({ user, membershipId, pgdb }) {

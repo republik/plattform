@@ -23,7 +23,6 @@ const {
 const {
   Redirections: { get: getRedirections },
 } = require('@orbiting/backend-modules-redirections')
-const { purgeUrls } = require('@orbiting/backend-modules-keyCDN')
 
 const {
   maybeDelcareMilestonePublished,
@@ -48,8 +47,7 @@ const {
 const { notifyPublish } = require('../../../lib/Notifications')
 const { document: getDocument } = require('../Commit')
 
-const { FRONTEND_BASE_URL, MATOMO_URL_BASE, MATOMO_SITE_ID, DISABLE_PUBLISH } =
-  process.env
+const { FRONTEND_BASE_URL, DISABLE_PUBLISH } = process.env
 
 module.exports = async (_, args, context) => {
   const { repoId, commitId, settings } = args
@@ -378,21 +376,6 @@ module.exports = async (_, args, context) => {
     // Update campaign content (HTML)
     let html = getHTML(resolvedDoc)
 
-    if (MATOMO_URL_BASE && MATOMO_SITE_ID) {
-      const openBeacon = `${MATOMO_URL_BASE}/piwik.php?${querystring.stringify({
-        idsite: MATOMO_SITE_ID,
-        url: FRONTEND_BASE_URL + path,
-        rec: 1,
-        bots: 1,
-        action_name: `Email: ${emailSubject}`,
-        ...utmParams,
-      })}&_id=*|DATE:ymd|**|UNIQID|*`
-      html = html.replace(
-        '</body>',
-        `<img alt="" src="${openBeacon}" height="1" width="1"></body>`,
-      )
-    }
-
     // Plausible beacon
     const plausibleBeacon = new URL(`/api/email-open`, FRONTEND_BASE_URL)
     plausibleBeacon.searchParams.set('url', FRONTEND_BASE_URL + path)
@@ -418,16 +401,6 @@ module.exports = async (_, args, context) => {
       id: repoId,
     },
   })
-
-  // purge pdfs in CDN
-  const purgeQueries = [
-    '',
-    '?download=1',
-    '?images=0',
-    '?images=0&download=1',
-    '?download=1&images=0',
-  ]
-  await purgeUrls(purgeQueries.map((q) => `/pdf${newPath}.pdf${q}`))
 
   if (!prepublication && !scheduledAt && notifyFilters) {
     await notifyPublish(repoId, notifyFilters, context)

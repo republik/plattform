@@ -871,7 +871,6 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
     },
     {
       phoneNumber, // save un-normalized phone number
-      isPhoneNumberVerified: false,
     },
   )
 }

@@ -1,15 +1,60 @@
 import { useEffect, useState } from 'react'
 
-import { Field, Radio, Label, useColorContext } from '@project-r/styleguide'
+import {
+  Field,
+  Radio,
+  Label,
+  useColorContext,
+  colors,
+} from '@project-r/styleguide'
+
+import { errorToString } from '../../../lib/utils/errors'
 
 import withT from '../../../lib/withT'
+import compose from 'lodash/flowRight'
+import { withMyDetailsMutation } from '../enhancers'
+import { mediaQueries } from '@project-r/styleguide'
+import { css } from 'glamor'
 
-const SUGGESTIONS = ['weiblich', 'männlich']
-// https://de.wikipedia.org/wiki/Divers
-const X_GENDER = 'divers'
+const styles = {
+  radio: css({
+    fontSize: 17,
+    lineHeight: 1.1,
+    marginTop: -1,
+    display: 'inline-block',
+    whiteSpace: 'nowrap',
+    marginBottom: 10,
+    marginRight: 15,
+    [mediaQueries.mUp]: {
+      fontSize: 21,
+      marginTop: -1,
+    },
+  }),
+}
 
-const GenderField = ({ values, onChange, isMandadory, t }) => {
+// https://nibi.space/geschlechtsabfragen
+const GENDER_SUGGESTIONS = ['weiblich', 'männlich']
+const X_GENDER = 'weiteres'
+const NO_GENDER = 'keine Angabe'
+
+const GenderField = ({
+  values,
+  autosubmit,
+  updateDetails,
+  onChange,
+  isMandadory,
+  t,
+}) => {
   const [colorScheme] = useColorContext()
+  const [gender, setGender] = useState(values.gender)
+  const [customGender, setCustomGender] = useState(
+    !GENDER_SUGGESTIONS.some((suggestion) => values.gender === suggestion) &&
+      values.gender,
+  )
+  const [error, setError] = useState()
+
+  const isX = customGender || gender === X_GENDER
+
   useEffect(() => {
     if (isMandadory && !values.gender) {
       onChange({
@@ -18,12 +63,29 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
         },
       })
     }
-  }, [isMandadory])
-  const [shouldAutoFocus, setShouldAutoFocus] = useState()
+  }, [isMandadory, onChange, values, t])
 
-  const value = values.gender
-  const isX =
-    value?.trim() && !SUGGESTIONS.some((suggestion) => suggestion === value)
+  const save = (gender) => {
+    if (!autosubmit) return
+    setError()
+    updateDetails({ gender })
+      .then(() => {})
+      .catch((e) => {
+        setError(errorToString(e))
+      })
+  }
+
+  const onChangeHandler = (newGenderValue) => {
+    onChange({
+      values: {
+        gender: newGenderValue,
+      },
+      errors: {
+        gender: undefined,
+      },
+    })
+    save(newGenderValue)
+  }
 
   return (
     <>
@@ -34,77 +96,62 @@ const GenderField = ({ values, onChange, isMandadory, t }) => {
           </span>
         </Label>
       </div>
-      {SUGGESTIONS.map((suggestion) => (
-        <>
-          <span
-            style={{
-              display: 'inline-block',
-              whiteSpace: 'nowrap',
-              marginBottom: 10,
-              marginRight: 10,
-            }}
-          >
-            <Radio
-              value={value}
-              checked={value === suggestion}
-              onChange={() => {
-                onChange({
-                  values: {
-                    gender: suggestion,
-                    genderCustom: undefined,
-                  },
-                  errors: {
-                    gender: undefined,
-                  },
-                })
-              }}
-            >
-              {suggestion}
-            </Radio>
-          </span>{' '}
-        </>
+      {GENDER_SUGGESTIONS.map((suggestion) => (
+        <Radio
+          value={suggestion}
+          key={suggestion}
+          checked={gender === suggestion}
+          onChange={() => {
+            setGender(suggestion)
+            setCustomGender(undefined)
+            onChangeHandler(suggestion)
+          }}
+        >
+          <span {...styles.radio}>{suggestion}</span>
+        </Radio>
       ))}
       <Radio
         value={X_GENDER}
         checked={isX}
         onChange={() => {
-          setShouldAutoFocus(true)
+          setGender(X_GENDER)
+          setCustomGender(X_GENDER)
+          onChangeHandler(X_GENDER)
+        }}
+      >
+        <span {...styles.radio}>{X_GENDER}</span>
+      </Radio>
+      <Radio
+        value={NO_GENDER}
+        checked={!gender}
+        onChange={() => {
+          setGender(undefined)
+          setCustomGender(undefined)
+          onChangeHandler(null)
+        }}
+      >
+        <span {...styles.radio}>{NO_GENDER}</span>
+      </Radio>
+      <Field
+        label={t('profile/gender/custom')}
+        disabled={!isX}
+        value={isX ? customGender || '' : gender || NO_GENDER}
+        onChange={(_, newValue) => {
+          setCustomGender(newValue)
           onChange({
             values: {
-              gender: X_GENDER,
-            },
-            errors: {
-              gender: undefined,
+              gender: newValue || gender,
             },
           })
         }}
-      >
-        {X_GENDER}
-      </Radio>
-      {isX && (
-        <>
-          <br />
-          <Field
-            renderInput={(props) => (
-              <input autoFocus={shouldAutoFocus} {...props} />
-            )}
-            label={t('profile/gender/custom')}
-            value={
-              values.genderCustom ||
-              (values.gender !== X_GENDER ? values.gender : '')
-            }
-            onChange={(_, newValue) => {
-              onChange({
-                values: {
-                  genderCustom: newValue,
-                },
-              })
-            }}
-          />
-        </>
+        onBlur={() => save(customGender || gender)}
+      />
+
+      {!!error && (
+        <div style={{ color: colors.error, marginBottom: 40 }}>{error}</div>
       )}
     </>
   )
 }
 
-export default withT(GenderField)
+export default compose(withT, withMyDetailsMutation)(GenderField)

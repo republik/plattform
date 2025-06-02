@@ -121,12 +121,13 @@ const UpdateEmail = ({ t, me, loading, error, updateEmail }) => {
               <div {...styles.buttonsContainer}>
                 <Button
                   primary
+                  small
                   disabled={!!errorValue}
                   onClick={() => submit()}
                 >
                   {t('Account/Update/email/submit')}
                 </Button>
-                <Button onClick={() => setIsEditing(false)}>
+                <Button small onClick={() => setIsEditing(false)}>
                   {t('Account/Update/cancel')}
                 </Button>
               </div>

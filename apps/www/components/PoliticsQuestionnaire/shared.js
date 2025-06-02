@@ -4,7 +4,7 @@ import { Editorial, NarrowContainer } from '@project-r/styleguide'
 
 import { QUESTION_SEPARATOR } from './config'
 
-import { QuestionSummaryChart } from '../Questionnaire/Submissions/QuestionChart'
+import { QuestionSummaryChart } from '../Questionnaire/Submissions/components/QuestionChart'
 
 export const QuestionLink = ({ questions, children }) => {
   const link = questions.map((q) => q.key).join(QUESTION_SEPARATOR)

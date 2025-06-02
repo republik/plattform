@@ -22,7 +22,6 @@ const createFormatSchema = ({
   customMetaFields = [],
   series = false,
   darkMode = true,
-  paynotes = true,
   titleBlockPrepend = null,
   titleMargin = true,
   titleBlockRule,
@@ -37,6 +36,11 @@ const createFormatSchema = ({
     getPath,
     hasEmailTemplate,
     customMetaFields: [
+      {
+        label: 'Regwall ausschalten',
+        key: 'isPaywallExcluded',
+        ref: 'bool',
+      },
       {
         label: 'Als Email verschickbar',
         key: 'sendAsEmail',
@@ -96,7 +100,6 @@ const createFormatSchema = ({
     ],
     series,
     darkMode,
-    paynotes,
     metaBody,
     titleBlockRule: titleBlockRule || {
       matchMdast: matchZone('TITLE'),

@@ -3,19 +3,20 @@ import { css } from 'glamor'
 
 import { useTranslation } from '../../lib/withT'
 
-import Loader from '../Loader'
 import Frame from '../Frame'
+import Loader from '../Loader'
 
-import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 
+import type { User } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
 import getPublicUser from './graphql/getPublicUser'
-import { useRouter } from 'next/router'
-import type { User } from '#graphql/republik-api/__generated__/gql/graphql'
 
-import ProfileView from './ProfileView'
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { Container, mediaQueries } from '@project-r/styleguide'
 import EditProfile from './EditProfile'
-import { mediaQueries, Container } from '@project-r/styleguide'
+import ProfileView from './ProfileView'
 
 const styles = {
   container: css({
@@ -55,17 +56,18 @@ const Profile = ({ user: foundUser }: { user: User }) => {
       firstComments: 10,
     },
   })
-  const user: User = data?.user 
+  const user: User = data?.user
 
   const metaData = {
     url: user ? `${PUBLIC_BASE_URL}/~${user.slug}` : undefined,
     image:
       user && user.portrait
-        ? `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=628&updatedAt=${encodeURIComponent(
-            user.updatedAt,
-          )}b2&url=${encodeURIComponent(
-            `${PUBLIC_BASE_URL}/community?share=${user.id}`,
-          )}`
+        ? screenshotUrl({
+            url: `${PUBLIC_BASE_URL}/community?share=${user.id}`,
+            width: 1200,
+            height: 628,
+            version: user.updatedAt,
+          })
         : '',
     pageTitle: user
       ? t('pages/profile/pageTitle', { name: user.name })

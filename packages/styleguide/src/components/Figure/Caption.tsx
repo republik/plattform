@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
-import { PADDING } from '../Center'
+import { MAX_WIDTH, PADDING } from '../Center'
 import { convertStyleToRem, pxToRem } from '../Typography/utils'
 import { useColorContext } from '../Colors/useColorContext'
 
@@ -16,6 +16,11 @@ const styles = {
     [mUp]: {
       ...convertStyleToRem(sansSerifRegular15),
       lineHeight: pxToRem('18px'),
+    },
+    '@media print': {
+      maxWidth: MAX_WIDTH / 2,
+      marginLeft: 'auto',
+      marginRight: 'auto',
     },
   }),
   groupCaption: css({

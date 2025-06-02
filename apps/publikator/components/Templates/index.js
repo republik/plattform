@@ -19,12 +19,17 @@ import dynamicComponentIdentifiers from '../editor/modules/dynamiccomponent/iden
 import * as withArticleData from './withArticleData'
 import * as withFrontData from './withFrontData'
 
-const NoOpLink = ({ children }) =>
-  cloneElement(Children.only(children), {
-    onClick: (e) => {
-      e.preventDefault()
-    },
-  })
+const NoOpLink = (props) => {
+  try {
+    return cloneElement(Children.only(props.children), {
+      onClick: (e) => {
+        e.preventDefault()
+      },
+    })
+  } catch {
+    return <a {...props} onClick={(e) => e.preventDefault()} />
+  }
+}
 
 const articleSchemaParams = {
   t,

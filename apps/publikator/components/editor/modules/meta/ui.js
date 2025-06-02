@@ -15,7 +15,6 @@ import MetaForm from '../../utils/MetaForm'
 import SlugField from '../../utils/SlugField'
 import RepoSelect from './RepoSelect'
 import SeriesForm from './SeriesForm'
-import PaynotesForm from './PaynotesForm'
 import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 import ShareImageForm from './ShareImageForm'
@@ -26,15 +25,18 @@ import {
   MetaOptionGroup,
   MetaOptionGroupTitle,
   MetaSection,
-  MetaSectionTitle
+  MetaSectionTitle,
 } from '../../../MetaDataForm/components/Layout'
-import TextToSpeechForm from "./TextToSpeechForm";
+import TextToSpeechForm from './TextToSpeechForm'
 
 const styles = {
   container: css({
     marginTop: 100,
     backgroundColor: colors.secondaryBg,
     padding: 30,
+    '@media print': {
+      display: 'none',
+    },
   }),
   center: css({
     maxWidth: 640,
@@ -57,7 +59,6 @@ const MetaData = ({
   isTemplate,
   series,
   darkMode,
-  paynotes,
   additionalFields = [],
   customFields = [],
   teaser: Teaser,
@@ -334,7 +335,8 @@ const MetaData = ({
         <TextToSpeechForm
           editor={editor}
           node={node}
-          onInputChange={onInputChange} />
+          onInputChange={onInputChange}
+        />
         <AudioForm
           editor={editor}
           node={node}
@@ -342,13 +344,6 @@ const MetaData = ({
           format={titleData?.format?.meta}
         />
         <ArticleRecommendations editor={editor} node={node} />
-        {!!paynotes && (
-          <PaynotesForm
-            editor={editor}
-            node={node}
-            isFormat={titleData.meta.template === 'format'}
-          />
-        )}
       </div>
     </div>
   )

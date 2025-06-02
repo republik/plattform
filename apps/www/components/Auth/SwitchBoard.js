@@ -13,12 +13,22 @@ const SWITCH_BOARD_SUPPORTED_TOKEN_TYPES = SUPPORTED_TOKEN_TYPES.concat([
   'ACCESS_TOKEN',
 ])
 
-const SwitchBoard = (props) => {
+const SwitchBoard = ({ alternativeFirstFactors = [], ...props }) => {
   if (props.tokenType === 'EMAIL_CODE') {
-    return <CodeAuthorization {...props} />
+    return (
+      <CodeAuthorization
+        alternativeFirstFactors={alternativeFirstFactors}
+        {...props}
+      />
+    )
   }
   if (props.tokenType === 'ACCESS_TOKEN') {
-    return <AccessTokenAuthorization {...props} />
+    return (
+      <AccessTokenAuthorization
+        alternativeFirstFactors={alternativeFirstFactors}
+        {...props}
+      />
+    )
   }
 
   return <Poller {...props} />
@@ -34,10 +44,6 @@ SwitchBoard.propTypes = {
   onSuccess: PropTypes.func,
   onCancel: PropTypes.func,
   onTokenTypeChange: PropTypes.func,
-}
-
-SwitchBoard.defaultProps = {
-  alternativeFirstFactors: [],
 }
 
 export default withT(SwitchBoard)

@@ -280,8 +280,6 @@ module.exports = async (_, args, context) => {
           hasPublicProfile: false,
           isListed: false,
           isAdminUnlisted: true,
-          isPhoneNumberVerified: false,
-          isTOTPChallengeSecretVerified: false,
           deletedAt: new Date(),
           ...nulledColumns,
         },

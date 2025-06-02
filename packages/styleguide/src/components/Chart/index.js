@@ -135,7 +135,7 @@ export const Chart = (props) => {
   const {
     width: fixedWidth,
     config,
-    tLabel,
+    tLabel = (identity) => identity,
     t,
     // allowCanvasRendering might be set to false when exporting SVGs
     allowCanvasRendering = true,
@@ -243,9 +243,5 @@ Chart.propTypes = {
     maxWidth: PropTypes.number,
   }).isRequired,
   width: PropTypes.number,
-  tLabel: PropTypes.func.isRequired,
-}
-
-Chart.defaultProps = {
-  tLabel: (identity) => identity,
+  tLabel: PropTypes.func,
 }

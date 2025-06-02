@@ -3,20 +3,10 @@ import compose from 'lodash/flowRight'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 
-import {
-  Interaction,
-  InlineSpinner,
-  RawHtml,
-  useHeaderHeight,
-  FieldSet,
-  useColorContext,
-} from '@project-r/styleguide'
+import { Interaction, RawHtml } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
-
 import { withMyDetails, withMyDetailsMutation } from '../Account/enhancers'
-import DetailsForm from '../Account/DetailsForm'
-import ErrorMessage from '../ErrorMessage'
 import Box from '../Frame/Box'
 import Loader from '../Loader'
 import StatusError from '../StatusError'
@@ -30,35 +20,29 @@ import {
 } from './enhancers'
 import Questions from './Questions'
 import QuestionnaireClosed from './QuestionnaireClosed'
-import QuestionnaireActions from './QuestionnaireActions'
-import { IconCheckCircle } from '@republik/icons'
-
-const { Headline, P } = Interaction
-
-const styles = {
-  intro: css({
-    marginTop: 35,
-  }),
-  count: css({
-    zIndex: 10,
-    position: 'sticky',
-    padding: '10px 0',
-    borderBottomWidth: 1,
-    borderBottomStyle: 'solid',
-    display: 'flex',
-    minHeight: 55,
-  }),
-  progressIcon: css({
-    marginLeft: 5,
-    marginTop: 3,
-    minHeight: 30,
-  }),
-}
+import QuestionnaireActions, {
+  PublicSubmissionInfo,
+} from './QuestionnaireActions'
+import QuestionnaireFooter from './QuestionnaireFooter'
 
 export const actionStyles = css({
   textAlign: 'center',
   margin: '20px auto 20px auto',
 })
+
+const NotEligible = ({ notEligibleCopy }) => {
+  const { t } = useTranslation()
+  return (
+    <Box style={{ padding: 15 }}>
+      <RawHtml
+        type={Interaction.P}
+        dangerouslySetInnerHTML={{
+          __html: notEligibleCopy || t('questionnaire/notEligible'),
+        }}
+      />
+    </Box>
+  )
+}
 
 const Questionnaire = (props) => {
   const {
@@ -68,42 +52,29 @@ const Questionnaire = (props) => {
     revokeQuestionnaire,
     anonymizeQuestionnaire,
     onQuestionnaireChange,
-    detailsData,
     submittedMessage,
     SubmittedComponent,
-    questionnaireName,
     context,
-    sliceAt,
-    showSlice2,
     slug,
-    updateDetails,
-    externalSubmit = false,
     publicSubmission = true,
     hideCount = false,
     hideInvalid = false,
     hideReset = false,
-    requireName = true,
     showAnonymize = false,
     redirectPath,
     notEligibleCopy,
   } = props
 
   const [state, setState] = useState({})
+
   const router = useRouter()
   const [isResubmitAnswers, setIsResubmitAnswers] = useState(false)
-  const [headerHeight] = useHeaderHeight()
-  const { t } = useTranslation()
-  const [colorScheme] = useColorContext()
   const id = questionnaireData?.questionnaire?.id
-  const [detailsState, setDetailsState] = useState({
-    showErrors: false,
-    values: {},
-    errors: {},
-    dirty: {},
-  })
 
   const onSubmitSuccess = () => {
-    onQuestionnaireChange && onQuestionnaireChange()
+    if (onQuestionnaireChange) {
+      onQuestionnaireChange()
+    }
     return setState({
       updating: false,
     })
@@ -169,26 +140,12 @@ const Questionnaire = (props) => {
         const updating = state.updating || props.updating || props.submitting
         const hasUserAnswers = questions.some(({ userAnswer }) => !!userAnswer)
 
-        if (!userIsEligible && notEligibleCopy) {
-          return (
-            <Box style={{ padding: 15 }}>
-              <RawHtml
-                type={Interaction.P}
-                dangerouslySetInnerHTML={{
-                  __html: notEligibleCopy,
-                }}
-              />
-            </Box>
-          )
-        }
         if (!userIsEligible) {
-          return null
+          return <NotEligible notEligibleCopy={notEligibleCopy} />
         }
         if (!updating && userHasSubmitted && submittedMessage) {
           return submittedMessage
         }
-
-        // ToDo: expose & query questionnaire.submissionsAccessRole
 
         const onReset = async () => {
           setState({ updating: true })
@@ -249,79 +206,10 @@ const Questionnaire = (props) => {
             )
           }
         }
-        // handle questions
-        const questionCount = questions
-          .filter((q) => !q.private)
-          .filter(Boolean).length
-        const userAnswerCount = questions
-          .map((q) => !q.private && q.userAnswer)
-          .filter(Boolean).length
-        const askForAddress = questions.some((q) => {
-          const value = q.userAnswer?.payload?.value
-
-          return (
-            value &&
-            q.options?.some(
-              (option) => option.requireAddress && value.includes(option.value),
-            )
-          )
-        })
-        const askForName =
-          requireName &&
-          (!detailsData.me?.firstName || !detailsData.me?.lastName)
-        const needsMeUpdate = askForName || askForAddress
-
-        const detailsErrorMessages = Object.keys(detailsState.errors)
-          .map((key) => detailsState.errors[key])
-          .filter(Boolean)
 
         const onSubmit = async () => {
-          if (needsMeUpdate && detailsErrorMessages.length) {
-            setDetailsState((state) =>
-              Object.keys(state.errors).reduce(
-                (nextState, key) => {
-                  nextState.dirty[key] = true
-                  return nextState
-                },
-                {
-                  ...state,
-                  showErrors: true,
-                  dirty: {},
-                },
-              ),
-            )
-            return
-          }
           if (isResubmitAnswers) {
             setIsResubmitAnswers(false)
-          }
-          if (needsMeUpdate) {
-            setState({ updating: true })
-            try {
-              await updateDetails({
-                ...(askForName
-                  ? {
-                      firstName: detailsState.values.firstName,
-                      lastName: detailsState.values.lastName,
-                    }
-                  : {}),
-                address: askForAddress
-                  ? {
-                      name: detailsState.values.name,
-                      line1: detailsState.values.line1,
-                      line2: detailsState.values.line2,
-                      postalCode: detailsState.values.postalCode,
-                      city: detailsState.values.city,
-                      country: detailsState.values.country,
-                    }
-                  : undefined,
-              })
-            } catch (error) {
-              setState({
-                error,
-              })
-              return
-            }
           }
           if (redirectPath) {
             redirectToPath()
@@ -329,88 +217,36 @@ const Questionnaire = (props) => {
             processSubmit(submitQuestionnaire, id)
           }
         }
-
         const onSubmitAnonymized = () =>
           processSubmit(anonymizeQuestionnaire, id)
 
+        // handle questions
+        const questionCount = questions
+          .filter((q) => !q.private)
+          .filter(Boolean).length
+        const userAnswerCount = questions
+          .map((q) => !q.private && q.userAnswer)
+          .filter(Boolean).length
+
         return (
-          <div>
-            {questionnaireName && (
-              <>
-                <Headline>
-                  {t(`questionnaire/${questionnaireName}/title`)}
-                </Headline>
-                <div {...styles.intro}>
-                  <RawHtml
-                    type={P}
-                    dangerouslySetInnerHTML={{
-                      __html: t(`questionnaire/${questionnaireName}/intro`),
-                    }}
-                  />
-                  <br />
-                </div>
-              </>
-            )}
-            {(!hideCount || error) && (
-              <div
-                {...styles.count}
-                {...colorScheme.set('backgroundColor', 'default')}
-                {...colorScheme.set('borderBottomColor', 'divider')}
-                style={{ top: headerHeight }}
-              >
-                {error ? (
-                  <ErrorMessage style={{ margin: 0 }} error={error} />
-                ) : (
-                  <>
-                    <P>
-                      <strong>
-                        {t('questionnaire/header', {
-                          questionCount,
-                          userAnswerCount,
-                        })}
-                      </strong>
-                    </P>
-                    {questionCount === userAnswerCount ? (
-                      <div {...styles.progressIcon}>
-                        <IconCheckCircle
-                          size={22}
-                          {...colorScheme.set('fill', 'primary')}
-                        />
-                      </div>
-                    ) : updating ? (
-                      <div style={{ marginLeft: 5, marginTop: 3 }}>
-                        <InlineSpinner size={24} />
-                      </div>
-                    ) : null}
-                  </>
-                )}
-              </div>
-            )}
+          <div style={{ marginTop: 40 }}>
+            <PublicSubmissionInfo
+              publicSubmission={publicSubmission}
+              context={context}
+            />
             <Questions
+              slug={slug}
               questions={questions}
+              questionCount={questionCount}
               disabled={userHasSubmitted}
               processSubmit={processSubmit}
-              sliceAt={sliceAt}
-              showSlice2={showSlice2}
-              slug={slug}
             />
-            {needsMeUpdate && (
-              <DetailsForm
-                style={{ marginTop: 50 }}
-                data={detailsData}
-                values={detailsState.values}
-                errors={detailsState.errors}
-                dirty={detailsState.dirty}
-                onChange={(fields) => {
-                  setDetailsState(FieldSet.utils.mergeFields(fields))
-                }}
-                errorMessages={detailsErrorMessages}
-                showErrors={!updating && !!detailsState.showErrors}
-                askForName={askForName}
-                askForAddress={askForAddress}
-              />
-            )}
-            {!externalSubmit && (
+            <QuestionnaireFooter
+              error={error}
+              hideCount={hideCount}
+              questionCount={questionCount}
+              userAnswerCount={userAnswerCount}
+            >
               <QuestionnaireActions
                 isResubmitAnswers={isResubmitAnswers}
                 onSubmit={onSubmit}
@@ -423,7 +259,7 @@ const Questionnaire = (props) => {
                 hideInvalid={hideInvalid}
                 context={context}
               />
-            )}
+            </QuestionnaireFooter>
           </div>
         )
       }}

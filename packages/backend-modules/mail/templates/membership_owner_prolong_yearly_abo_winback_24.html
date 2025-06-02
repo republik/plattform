@@ -204,6 +204,10 @@
       padding-bottom: 18px;
     }
 
+    #footerContent strong {
+			font-family: Rubis-Bold;
+		}
+
     #templateHeader,
     #templateBody,
     #templateFooter {
@@ -554,7 +558,7 @@
       border-top: 0;
       border-bottom: 0;
       /*@editable*/
-      padding-top: 36px;
+      padding-top: 9px;
       /*@editable*/
       padding-bottom: 9px;
     }
@@ -691,6 +695,10 @@
       font-weight: normal;
       font-size: '20px';
     }
+
+    .custom_button strong {
+			font-family: GT-America-Standard-Bold;
+		}
 
     @media only screen and (max-width: 480px) {
 
@@ -945,7 +953,7 @@
                         <tr>
                           <td valign="top">
                             <div>
-                              <p>Jetzt zurück zur Republik</p>
+                              <p>Kommen Sie zurück zur Republik für 160 statt 240 Franken</p>
                             </div>
                           </td>
                         </tr>
@@ -962,40 +970,6 @@
               </td>
             </tr>
             <!-- // END PREHEADER -->
-            <!-- BEGIN HEADER // -->
-            <tr>
-              <td valign="top" id="templateHeader">
-
-                <!-- BEGIN MODULE: HEADER IMAGE // -->
-                <img width="178" height="79" src="https://www.republik.ch/static/logo_republik_newsletter.png"
-                  style="border:0;width:178px !important;height:79px !important;margin:0;max-width:100% !important"
-                  alt="REPUBLIK">
-                <!-- // END MODULE: HEADER IMAGE -->
-                <table id="sender" style="margin-top: 48px; margin-bottom: 24px;">
-                  <tr>
-                    <td>
-                      <img
-                        src="https://mcusercontent.com/650c1ec9003c7d8567eef4c5e/images/d3ed83e8-5839-3998-8810-4b609547c0c3.jpeg"
-                        alt="" border="0"
-                        style="height: 72px; width: 72px; margin: 0; padding: 0;border:0;width:72px !important;height:72px !important;margin:0;max-width:100% !important"
-                        width="72" height="72">
-                    </td>
-                    <td>
-                      <img
-                        src="https://mcusercontent.com/650c1ec9003c7d8567eef4c5e/images/97ca55f6-d4d1-1990-b610-d1c539cbf117.jpeg"
-                        alt="" border="0"
-                        style="height: 72px; width: 72px; margin: 0; padding: 0;border:0;width:72px !important;height:72px !important;margin:0;max-width:100% !important"
-                        width="72" height="72">
-                    </td>
-                    <td id="sender" style="padding-left: 12px;"><strong>Olivier Baumann &</strong><br>
-                      <strong>Lucia Herrmann</strong><br>
-                      Für die Republik-Crew
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <!-- // END HEADER -->
             <!-- BEGIN BODY // -->
             <tr>
               <td valign="top" id="templateBody"><!-- BEGIN MODULE: BODY CONTENT // -->
@@ -1005,9 +979,9 @@
                   Sicherheit.
                   <br>
                   <br>
-                  Weil Sie die Republik im letzten Jahr unterstützt haben und uns aktuell fehlen, machen wir Ihnen
-                  ein besonderes Angebot: Kommen Sie für nur CHF 120 zurück an Bord und lesen (oder
-                  hören) Sie die Republik für ein weiteres Jahr.
+                  Weil Sie die Republik im letzten Jahr unterstützt haben und Sie uns fehlen, 
+                  machen wir Ihnen ein besonderes Angebot: 
+                  <a href="{{link_shop_yearly_subscription}}?promo_code=YEARLY160&utm_medium=email&utm_source=newsletter&utm_campaign=yearlyabo24&utm_content=yearly_abo_winback_24">Kommen Sie für nur 160 statt 240 Franken für ein weiteres Jahr zurück an Bord.</a>
                 </p>
                 <br>
                 <!-- Button-->
@@ -1019,7 +993,7 @@
                           <tbody>
                             <tr>
                               <td align="center" width="100%">
-                                <a href="https://www.republik.ch/angebote?package=ABO&userPrice=1&price=12000&reason=Zurueck-zur-Republik-Angebot&utm_campaign=mitstreiter"><strong>Jetzt zurück zur Republik</strong></a>
+                                <a href="{{link_shop_yearly_subscription}}?promo_code=YEARLY160&utm_medium=email&utm_source=transactional&utm_campaign=yearly24&utm_content=yearly_abo_winback_24_yearly"><strong>Ein Jahr Republik für 160 Franken</strong></a>
                               </td>
                             </tr>
                           </tbody>
@@ -1029,11 +1003,9 @@
                   </tbody>
                 </table>
 
-                <p dir="ltr">Wie Sie wissen, ist für uns jede Art von Unterstützung wertvoll, denn
-                  wir sind werbefrei und unabhängig und finanzieren uns über die Beiträge unserer
-                  Leserinnen und Leser.</p>
-
-                <p dir="ltr">Danke für Ihre Unterstützung.</p>
+                <p dir="ltr">Danke für Ihre Unterstützung und bis bald!</p>
+                <p>Herzlich</p>
+                <p>Ihre Crew der Republik</p>
                 <!-- END MODULE: BODY CONTENT-->
               </td>
             </tr>
@@ -1044,39 +1016,14 @@
 
                 <!-- BEGIN MODULE: STANDARD FOOTER // -->
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                  <!-- BEGIN PREFOOTER //-->
-                  <tr align="center">
-                    <td>
-                      <img
-                        src="https://mcusercontent.com/650c1ec9003c7d8567eef4c5e/images/d3ed83e8-5839-3998-8810-4b609547c0c3.jpeg"
-                        alt="" border="0"
-                        style="height: 72px; width: 72px; margin: 0; padding: 0;border:0;width:80px !important;height:80px !important;margin:0;"
-                        width="72" height="72">
-                      <img
-                        src="https://mcusercontent.com/650c1ec9003c7d8567eef4c5e/images/97ca55f6-d4d1-1990-b610-d1c539cbf117.jpeg"
-                        alt="" border="0"
-                        style="height: 72px; width: 72px; margin: 0; padding: 0;border:0;width:80px !important;height:80px !important;margin:0;"
-                        width="72" height="72">
-                    </td>
-                  </tr>
-                  <tr align="center">
-                    <td>
-                      <div id="sender_bottom">Herzlich<br>
-                        <br>
-                        <strong>Olivier Baumann & Lucia Herrmann</strong><br>
-                        <br>
-                        Für die Republik-Crew
-                      </div>
-                    </td>
-                  </tr>
-                  <!-- // END PREFOOTER-->
+                  
                   <tr style="border-bottom: 1px solid #DADDDC">
                     <td valign="top" id="footerContent">
                       <div>PS: Falls ein längerfristig angelegter Einsatz für die
                         Republik im Moment einfach nicht das Richtige ist für Sie, dann erlauben Sie uns folgenden
-                        Hinweis zum Schluss: Sie können die Republik für CHF 22 auch monatlich abonnieren.
-                        Damit erhalten Sie Zugang zum vollen Magazin, also zu über 8000 Beiträgen. Das Abo ist
-                        jederzeit kündbar.<br>
+                        Hinweis zum Schluss: Sie können die Republik auch monatlich abonnieren – aktuell sogar für nur 
+                        <a href="{{link_shop_monthly_subscription}}?utm_medium=email&utm_source=transactional&utm_campaign=yearly24&utm_content=yearly_abo_winback_24_monthly">11 Franken im ersten Monat</a>
+                        . Damit erhalten Sie Zugang zum vollen Magazin, also zu über 9000 Beiträgen. Das Abo ist jederzeit kündbar.<br>
                         <br>
                         <a href="https://www.republik.ch/" target="_blank" title="Im Web lesen"><img alt="REPUBLIK" height="79" src="https://www.republik.ch/static/logo_republik_newsletter.png" style="border:0;width:178px !important;height:79px !important;margin:0;max-width:100% !important" width="178"></a>
 

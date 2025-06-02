@@ -1,24 +1,23 @@
+import { IconClose } from '@republik/icons'
+import { css, merge, simulate } from 'glamor'
 import React, {
-  useState,
-  useRef,
-  useMemo,
   MutableRefObject,
   ReactNode,
+  useMemo,
+  useRef,
+  useState,
 } from 'react'
-import { css, merge, simulate } from 'glamor'
 import { fontStyles } from '../../theme/fonts'
 import { mUp } from '../../theme/mediaQueries'
+import { plainButtonRule } from '../Button'
 import { useColorContext } from '../Colors/ColorContext'
-import PropTypes from 'prop-types'
 import {
+  BORDER_WIDTH,
+  FIELD_HEIGHT,
+  LINE_HEIGHT,
   X_PADDING,
   Y_PADDING,
-  BORDER_WIDTH,
-  LINE_HEIGHT,
-  FIELD_HEIGHT,
 } from './constants'
-import { plainButtonRule } from '../Button'
-import { IconClose } from '@republik/icons'
 
 const styles = {
   container: css({
@@ -139,6 +138,7 @@ const Field = React.forwardRef<
       value: string | number | Date,
       shouldValidate: boolean,
     ) => void
+    onBlur?: (event: InputEvent, value: string | number | Date) => void
     name?: string
     autoComplete?: boolean
     type?: string
@@ -157,6 +157,7 @@ const Field = React.forwardRef<
   (
     {
       onChange,
+      onBlur,
       name,
       autoComplete,
       type,
@@ -170,7 +171,7 @@ const Field = React.forwardRef<
       disabled,
       required,
       value,
-      renderInput,
+      renderInput = (props) => <input {...props} />,
     },
     forwardRef,
   ) => {
@@ -246,7 +247,9 @@ const Field = React.forwardRef<
           onFocus: () => setIsFocused(true),
           onBlur: (event) => {
             const v = event.target.value
-            if (!isValidating && onChange && isDirty) {
+            if (onBlur && isDirty) {
+              onBlur(event, v)
+            } else if (!isValidating && onChange && isDirty) {
               onChange(event, v, true)
             }
             setIsFocused(false)
@@ -307,6 +310,7 @@ const Field = React.forwardRef<
                 inputRef.current.focus()
               }
             }}
+            onBlur={(e) => {}}
             type='button'
           >
             <IconClose
@@ -322,16 +326,5 @@ const Field = React.forwardRef<
     )
   },
 )
-
-Field.propTypes = {
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  renderInput: PropTypes.func.isRequired,
-  icon: PropTypes.node,
-  disabled: PropTypes.bool,
-}
-
-Field.defaultProps = {
-  renderInput: (props) => <input {...props} />,
-}
 
 export default Field

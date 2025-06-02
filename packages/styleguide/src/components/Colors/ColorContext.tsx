@@ -178,6 +178,11 @@ export const RootColorVariables = () => {
           `[data-theme="dark"], [data-theme="light"] [data-theme-inverted] { ${generateCSSColorDefinitions(
             colors.dark,
           )} }`,
+          `@media print {
+            [data-theme="dark"], [data-theme="light"] [data-theme-inverted] { ${generateCSSColorDefinitions(
+              colors.light,
+            )} }
+          }`,
         ].join('\n'),
       }}
     />

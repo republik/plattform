@@ -9,6 +9,7 @@ export const MAX_WIDTH_PERCENT = 70
 const styles = {
   root: css({
     margin: 0,
+    position: 'relative',
   }),
   textContainer: css({
     margin: '0 auto',

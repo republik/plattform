@@ -88,7 +88,7 @@ const init = async ({
             .catch((e) => {
               console.warn('extending lock failed', e)
             }),
-        1000 * lockTtlSecs * 0.9,
+        1000 * lockTtlSecs * 0.6,
       )
 
       debug('run started')

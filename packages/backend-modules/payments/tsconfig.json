@@ -8,7 +8,8 @@
     "declaration": true,
     "declarationDir": "build/@types",
     "declarationMap": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "strict": true
   },
   "include": ["."],
   "exclude": ["node_modules", "__test__", "build"]

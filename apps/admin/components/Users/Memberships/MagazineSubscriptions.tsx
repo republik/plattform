@@ -1,11 +1,13 @@
-import { useQuery } from '@apollo/client'
-import { Loader } from '@project-r/styleguide'
 import { UserMagazineSubscriptionsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import SubscriptionStatusBadge from './SubscriptionStatusBadge'
-import { css } from 'glamor'
-import Link from 'next/link'
+import { useQuery } from '@apollo/client'
+import { colors, linkRule, Loader } from '@project-r/styleguide'
 import { IconLink } from '@republik/icons'
+import { MagazineSubscriptionActions } from 'components/Users/Memberships/MagazineSubscriptionActions'
+import { css } from 'glamor'
+import { useTranslation } from 'lib/useT'
 import { swissTime } from 'lib/utils/formats'
+import { useEffect } from 'react'
+import SubscriptionStatusBadge from './SubscriptionStatusBadge'
 
 const dateTimeFormat = swissTime.format('%d.%m.%Y, %H:%M Uhr')
 export const displayDateTime = (rawDate) => {
@@ -21,20 +23,43 @@ interface MagazineSubscriptionsProps {
 }
 
 export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
-  const { data, loading, error } = useQuery(UserMagazineSubscriptionsDocument, {
-    variables: {
-      userId: props.userId,
+  const { data, loading, error, startPolling, stopPolling } = useQuery(
+    UserMagazineSubscriptionsDocument,
+    {
+      variables: {
+        userId: props.userId,
+      },
     },
-  })
+  )
 
-  if (loading || (!error && data.user.magazineSubscriptions.length === 0)) {
-    return null
+  const { t } = useTranslation()
+
+  // Subscriptions don't update immediately after being canceled/reactivated, so we start polling instead of refetching immediately
+  const refetchSubscriptions = () => {
+    console.log('start polling subscriptions')
+    startPolling(1000)
   }
+
+  // ... and stop when changed data comes in (if the data hasn't changed yet, it's still
+  // in the Apollo Client cache and will not trigger the effect)
+  useEffect(() => {
+    console.log('stop polling subscriptions')
+    if (data) {
+      stopPolling()
+    }
+  }, [data, stopPolling])
 
   return (
     <Loader
       loading={!data || loading}
+      error={error}
       render={() => {
+        const magazineSubscriptions = data?.user?.magazineSubscriptions ?? []
+
+        if (magazineSubscriptions.length === 0) {
+          return null
+        }
+
         return (
           <ul
             {...css({
@@ -44,27 +69,29 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
               display: 'flex',
               flexDirection: 'column',
               gap: '1rem',
+
+              '& b': { fontWeight: '500' },
             })}
           >
-            {data?.user?.magazineSubscriptions.map((subscription) => {
+            {magazineSubscriptions.map((subscription) => {
               return (
                 <li
                   key={subscription.stripeId}
                   {...css({
-                    border: '1px solid #eaeaea',
                     padding: '1rem',
+                    '&:nth-child(odd)': {
+                      background: colors.secondaryBg,
+                    },
                   })}
                 >
                   <details>
                     <summary
                       {...css({
                         display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        gap: '1rem',
                         cursor: 'pointer',
-                        ':hover': {
-                          background: '#eee',
-                        },
                       })}
                     >
                       <div
@@ -78,50 +105,86 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                           {...css({
                             fontWeight: '500',
                             margin: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            fontSize: '1.2em',
+                            gap: 12,
                           })}
                         >
-                          {subscription.type}
+                          {t(
+                            `account/MagazineSubscription/type/${subscription.type}`,
+                          )}
+
+                          <SubscriptionStatusBadge
+                            status={subscription.status}
+                          />
                         </h4>
-                        <div>
+                        <div {...css({ fontSize: 'small' })}>
                           Erstellt am {displayDateTime(subscription.createdAt)}
+                          {subscription.canceledAt && (
+                            <>
+                              , gekündigt am{' '}
+                              {displayDateTime(subscription.canceledAt)}
+                            </>
+                          )}
                         </div>
                         {subscription.canceledAt ? (
                           <div>
-                            Gekündigt am{' '}
-                            {displayDateTime(subscription.canceledAt)}, läuft
-                            aus am{' '}
-                            {displayDateTime(subscription.currentPeriodEnd)}
+                            {subscription.endedAt ? (
+                              <>
+                                ⏹️ Abgelaufen am{' '}
+                                <b>{displayDateTime(subscription.endedAt)}</b>
+                              </>
+                            ) : (
+                              <>
+                                ⏯️ Läuft ab am{' '}
+                                <b>
+                                  {displayDateTime(
+                                    subscription.currentPeriodEnd,
+                                  )}
+                                </b>
+                              </>
+                            )}
                           </div>
                         ) : (
                           <div>
-                            Erneuert sich am{' '}
-                            {displayDateTime(subscription.currentPeriodEnd)} für
-                            CHF {subscription.renewsAtPrice / 100}
+                            🔄 Erneuert sich am{' '}
+                            <b>
+                              {displayDateTime(subscription.currentPeriodEnd)}
+                            </b>{' '}
+                            für{' '}
+                            <b>
+                              CHF{' '}
+                              {(subscription.renewsAtPrice / 100).toFixed(2)}
+                            </b>
                           </div>
                         )}
                       </div>
-
-                      <SubscriptionStatusBadge status={subscription.status} />
-                    </summary>
-                    <div
-                      {...css({
-                        display: 'flex',
-                        marginBlock: '1rem',
-                      })}
-                    >
-                      <Link
-                        href={`${STRIPE_DOMAIN}/subscriptions/${
-                          subscription.stripeId
-                        }?merchant_id=${
-                          subscription.company === 'REPUBLIK'
-                            ? REPUBLIK_STRIPE_ID
-                            : PROJECT_R_STRIPE_ID
-                        }`}
-                        target='_blank'
+                      <div
+                        {...css({
+                          display: 'flex',
+                          gap: '1rem',
+                          alignItems: 'center',
+                        })}
                       >
-                        Stripe Subscription <IconLink />
-                      </Link>
-                    </div>
+                        <MagazineSubscriptionActions
+                          subscription={subscription}
+                          refetchSubscriptions={refetchSubscriptions}
+                        />
+
+                        <a
+                          {...css({ ...linkRule })}
+                          href={`${STRIPE_DOMAIN}/${
+                            subscription.company === 'REPUBLIK'
+                              ? REPUBLIK_STRIPE_ID
+                              : PROJECT_R_STRIPE_ID
+                          }/subscriptions/${subscription.stripeId}`}
+                          target='_blank'
+                        >
+                          Stripe <IconLink />
+                        </a>
+                      </div>
+                    </summary>
 
                     <pre>{JSON.stringify(subscription, null, 2)}</pre>
                   </details>

@@ -15,11 +15,7 @@ import {
 } from '../lib/constants'
 import Frame from '../components/Frame'
 import FontSizeSync from '../components/FontSize/Sync'
-import {
-  UnauthorizedMessage,
-  WithAccess,
-  WithoutAccess,
-} from '../components/Auth/withMembership'
+import { WithAccess } from '../components/Auth/withMembership'
 import Link from 'next/link'
 import DiscussionTitle from '../components/Dialog/DiscussionTitle'
 import ActionBar from '../components/ActionBar'
@@ -36,6 +32,7 @@ import Meta from '../components/Frame/Meta'
 import { getFocusUrl } from '../components/Discussion/shared/CommentLink'
 import StatusError from '../components/StatusError'
 import { IconDiscussion } from '@republik/icons'
+import { DialogPaynote } from '@app/components/paynotes/paynotes-in-trial/dialog'
 
 const styles = {
   container: css({
@@ -158,29 +155,7 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
               <ActionBar discussion={activeDiscussionId} fontSize />
             </div>
           )}
-          {!discussionContext?.discussion?.userCanComment && (
-            <WithoutAccess
-              render={() => (
-                <>
-                  <UnauthorizedMessage
-                    unauthorizedTexts={{
-                      title: ' ',
-                      description: t.elements('feedback/unauthorized', {
-                        buyLink: (
-                          <Link href='/angebote' passHref legacyBehavior>
-                            <A>{t('feedback/unauthorized/buyText')}</A>
-                          </Link>
-                        ),
-                      }),
-                    }}
-                  />
-                  <br />
-                  <br />
-                  <br />
-                </>
-              )}
-            />
-          )}
+          {!discussionContext?.discussion?.userCanComment && <DialogPaynote />}
           {!tab && (
             <>
               <H3>{t('marketing/community/title/plain')}</H3>
@@ -218,7 +193,7 @@ const DialogContent = ({ tab, activeDiscussionId, serverContext }) => {
               />
             </>
           )}
-          {activeDiscussionId && <Discussion showPayNotes={false} />}
+          {activeDiscussionId && <Discussion />}
           {!tab && (
             <WithAccess
               render={() => (

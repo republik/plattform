@@ -6,6 +6,7 @@
   "main": "build/index.js",
   "types": "build/@types",
   "dependencies": {
+    "@orbiting/backend-modules-types": "*",
     "pg-boss": "^10.1.1",
     "debug": "^4.3.5"
   },

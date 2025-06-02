@@ -354,7 +354,7 @@ mail.prepareMembershipWinback = async (
 }
 
 mail.prepareMembershipOwnerNotice = async (
-  { user, endDate, graceEndDate, cancelUntilDate, templateName },
+  { user, endDate, graceEndDate, cancelUntilDate, templateName, fromName },
   { pgdb, t },
 ) => {
   const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
@@ -382,6 +382,7 @@ mail.prepareMembershipOwnerNotice = async (
         sequenceNumber,
       },
     ),
+    fromName,
     templateName,
     mergeLanguage: 'handlebars',
     globalMergeVars: [

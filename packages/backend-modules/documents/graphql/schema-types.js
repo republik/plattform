@@ -137,6 +137,9 @@ type Meta {
   isRestricted: Boolean
   
   sendAsEmail: Boolean
+
+  # article is excluded from paywall
+  isPaywallExcluded: Boolean
 }
 
 enum DocumenSchemaType {

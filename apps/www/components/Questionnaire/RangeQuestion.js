@@ -8,6 +8,10 @@ import { v4 as uuid } from 'uuid'
 import { colors, Interaction } from '@project-r/styleguide'
 
 import questionStyles from './questionStyles'
+import QuestionHeader from './QuestionHeader'
+import QuestionIndex from './QuestionIndex'
+
+const { P } = Interaction
 
 const thumbSize = 24
 
@@ -129,23 +133,24 @@ class RangeQuestion extends Component {
 
   renderInput = () => {
     const {
-      question: { ticks, kind },
+      question: { ticks, kind, metadata },
     } = this.props
     const { value } = this.state
     const tickValues = ticks.map((t) => t.value)
     const max = Math.max(...tickValues)
     const min = Math.min(...tickValues)
 
-    const step =
-      kind === 'continous'
-        ? ticks.length / 100
-        : Math.abs(max - min) /
-          (ticks.length % 2 === 0 ? ticks.length : ticks.length + 1)
-
-    const defaultValue =
-      (min < 0 || max < 0) && !(min < 0 && max < 0)
-        ? 0
-        : Math.abs(min - max) / 2
+    let defaultValue
+    let step
+    if (kind === 'continous') {
+      step = ticks.length / 100
+      const spansZero = (min < 0 || max < 0) && !(min < 0 && max < 0)
+      defaultValue = spansZero ? 0 : Math.abs(min - max) / 2
+    } else {
+      step = metadata?.step || tickValues[1] - tickValues[0] // we assume a regular interval between ticks
+      const middleTickIndex = Math.floor(tickValues.length / 2)
+      defaultValue = metadata?.initialValue || tickValues[middleTickIndex]
+    }
 
     return (
       <div {...styles.sliderWrapper}>
@@ -169,11 +174,20 @@ class RangeQuestion extends Component {
     const {
       question: { ticks },
     } = this.props
+    const total = ticks.length
     return (
       <div {...styles.ticks}>
-        {ticks.map((t) => (
-          <div key={t.label} style={{ width: `${100 / ticks.length}%` }}>
-            {t.label}
+        {ticks.map((t, i) => (
+          <div
+            key={t.label}
+            style={{
+              width: `${100 / total}%`,
+              textWrap: 'nowrap',
+            }}
+          >
+            <span style={i === total - 1 ? { float: 'right' } : {}}>
+              {t.label}
+            </span>
           </div>
         ))}
       </div>
@@ -190,16 +204,15 @@ class RangeQuestion extends Component {
 
   render() {
     const {
-      question: { text, explanation },
+      questionCount,
+      question: { text, explanation, order, metadata },
     } = this.props
     return (
       <div>
-        {text && (
-          <Interaction.H2 {...questionStyles.label}>{text}</Interaction.H2>
-        )}
-        {explanation && (
-          <Interaction.P {...questionStyles.help}>{explanation}</Interaction.P>
-        )}
+        <QuestionHeader metadata={metadata} />
+        <QuestionIndex order={order} questionCount={questionCount} />
+        {text && <P {...questionStyles.text}>{text}</P>}
+        {explanation && <P {...questionStyles.help}>{explanation}</P>}
         <div {...questionStyles.body}>
           {this.renderInput()}
           {this.renderLabels()}

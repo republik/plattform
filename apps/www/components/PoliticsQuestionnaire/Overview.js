@@ -32,7 +32,7 @@ import { QuestionLink, SubmissionLink, AnswersChart } from './shared'
 import {
   AnswersGrid,
   AnswersGridCard,
-} from '../Questionnaire/Submissions/AnswersGrid'
+} from '../Questionnaire/Submissions/components/AnswersGrid'
 
 import HeaderShare from './HeaderShare'
 

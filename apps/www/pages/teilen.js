@@ -1,16 +1,14 @@
-import { useState } from 'react'
-import Link from 'next/link'
 import { Interaction } from '@project-r/styleguide'
 
 import { t, useTranslation } from '../lib/withT'
 import { withDefaultSSR } from '../lib/apollo/helpers'
 import { useMe } from '../lib/context/MeContext'
-import { PackageBuffer, PackageItem } from '../components/Pledge/Accordion'
 import AccessCampaigns from '../components/Access/Campaigns'
 import Frame from '../components/Frame'
 import SignIn from '../components/Auth/SignIn'
 import { useInNativeApp } from '../lib/withInNativeApp'
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
+import { Offers } from '@app/components/paynotes/paynote/paynote-offers'
 
 const meta = {
   title: t('pages/access/title'),
@@ -22,7 +20,6 @@ const Page = () => {
   const { inNativeIOSApp } = useInNativeApp()
   const { t } = useTranslation()
   const { me, hasActiveMembership } = useMe()
-  const [hover, setHover] = useState()
 
   return (
     <Frame meta={meta}>
@@ -37,42 +34,10 @@ const Page = () => {
       )}
       {me && !hasActiveMembership && !inNativeIOSApp && (
         <div style={{ marginTop: 36 }}>
-          <Interaction.H2 style={{ marginBottom: 10 }}>
+          <Interaction.H2 style={{ marginBottom: 36 }}>
             {t('Account/Access/Campaigns/becomeMamber/title')}
           </Interaction.H2>
-          <Link
-            href={{
-              pathname: '/angebote',
-              query: { package: 'ABO' },
-            }}
-            passHref
-            legacyBehavior
-          >
-            <PackageItem
-              t={t}
-              name='ABO'
-              hover={hover}
-              setHover={setHover}
-              price={24000}
-            />
-          </Link>
-          <Link
-            href={{
-              pathname: '/angebote',
-              query: { package: 'MONTHLY_ABO' },
-            }}
-            passHref
-            legacyBehavior
-          >
-            <PackageItem
-              t={t}
-              name='MONTHLY_ABO'
-              hover={hover}
-              setHover={setHover}
-              price={2200}
-            />
-          </Link>
-          <PackageBuffer />
+          <Offers />
         </div>
       )}
     </Frame>

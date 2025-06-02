@@ -54,6 +54,18 @@
       "problemMatcher": []
     },
     {
+      "label": "dev:admin",
+      "type": "shell",
+      "command": "yarn turbo run dev --filter=@orbiting/admin-app...",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": false
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "dev:docs",
       "type": "shell",
       "command": "yarn turbo run dev --filter=@republik/docs...",
@@ -79,9 +91,9 @@
       "problemMatcher": []
     },
     {
-      "label": "proxy:staging-r25",
+      "label": "proxy:staging-shop",
       "type": "shell",
-      "command": "yarn yaproxy:staging-r25",
+      "command": "yarn yaproxy:staging-shop",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",

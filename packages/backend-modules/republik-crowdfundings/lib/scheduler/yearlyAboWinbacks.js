@@ -7,6 +7,7 @@ const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
 const mailings = require('./owners/mailings')
 
 const { getLastEndDate } = require('../utils')
+const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
 const {
   PARKING_USER_ID,
@@ -110,7 +111,7 @@ const getLastEndDateOfYearlyAboUserMemberships = async (user, context) => {
     userId: user.id,
   })
 
-  const hasActiveMembership = memberships.some((m) => m.active === true)
+  const hasActiveMembership = await hasUserActiveMembership(user, pgdb)
   if (hasActiveMembership) {
     debug('already has active membership, no winback')
     return null

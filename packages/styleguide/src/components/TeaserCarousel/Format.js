@@ -7,6 +7,8 @@ import CarouselContext, { defaultValue } from './Context'
 
 const styles = css({
   ...sansSerifMedium14,
+  position: 'relative', // make sure Format link is on top of the teaser link overlay
+  zIndex: 1, // ditto
   margin: '0 0 10px 0',
 })
 

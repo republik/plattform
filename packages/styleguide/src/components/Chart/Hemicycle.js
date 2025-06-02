@@ -43,7 +43,8 @@ const calcSectorAngles = (vals = []) => {
   }, [])
 }
 
-const Hemicycle = (props) => {
+const Hemicycle = (_props) => {
+  const props = { ...defaultProps.Hemicycle, ..._props }
   const {
     values,
     width,
@@ -274,7 +275,5 @@ export const propTypes = {
 }
 
 Hemicycle.propTypes = propTypes
-
-Hemicycle.defaultProps = defaultProps.Hemicycle
 
 export default Hemicycle

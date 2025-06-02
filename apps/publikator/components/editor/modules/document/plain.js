@@ -1,16 +1,13 @@
 import { Document as SlateDocument } from 'slate'
 import { parse } from '@republik/remark-preset'
 
-import { slug } from '@project-r/styleguide'
+import { slug, mdastToString } from '@project-r/styleguide'
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
 
 import createPasteHtml from './createPasteHtml'
 import { safeDump } from 'js-yaml'
 
-import {
-  generateAuthorsLine,
-  mdastToString,
-} from '../../../../lib/utils/helpers'
+import { generateAuthorsLine } from '../../../../lib/utils/helpers'
 
 export default ({ rule, subModules, TYPE }) => {
   const centerModule = subModules.find((m) => m.name === 'center')

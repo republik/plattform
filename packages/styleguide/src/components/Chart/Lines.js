@@ -240,13 +240,9 @@ export const propTypes = {
 
 LineChart.propTypes = propTypes
 
-export const Line = (props) => <LineChart {...props} />
+export const Line = (props) => <LineChart {...defaultProps.Line} {...props} />
 
-Line.defaultProps = defaultProps.Line
-
-export const Slope = (props) => <LineChart {...props} />
-
-Slope.defaultProps = defaultProps.Slope
+export const Slope = (props) => <LineChart {...defaultProps.Slope} {...props} />
 
 // Additional Info for Docs
 // - Slope just has different default props

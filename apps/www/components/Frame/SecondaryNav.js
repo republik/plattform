@@ -29,7 +29,7 @@ export const SecondaryNav = ({
   const [colorScheme] = useColorContext()
   const router = useRouter()
   const currentPath = router.asPath
-  const { hasAccess, isClimateLabMember } = useMe()
+  const { isClimateLabMember } = useMe()
 
   // Sine ClimateLab the elements are rendered in a Scroller.
   // To calculate the active index inside the scroller,

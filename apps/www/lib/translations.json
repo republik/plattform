@@ -609,36 +609,52 @@
       "value": "Persönliche Angaben"
     },
     {
-      "key": "Account/Update/birthday/label",
-      "value": "Geburtsdatum"
+      "key": "Account/Update/birthyear/label",
+      "value": "Geburtsjahr"
     },
     {
-      "key": "Account/Update/birthday/label/optional",
-      "value": "Geburtsdatum (Optional)"
+      "key": "Account/Update/birthyear/label/optional",
+      "value": "Geburtsjahr (optional)"
+    },
+    {
+      "key": "Account/Update/gender/label",
+      "value": "Geschlecht"
+    },
+    {
+      "key": "Account/Update/gender/label/optional",
+      "value": "Geschlecht (optional)"
     },
     {
       "key": "Account/Update/phone/label",
-      "value": "Telefonnummer (Optional)"
+      "value": "Telefonnummer"
+    },
+    {
+      "key": "Account/Update/phone/label/optional",
+      "value": "Telefonnummer (optional)"
     },
     {
       "key": "Account/Update/phone/label/alt",
       "value": "Telefonnummer"
     },
     {
-      "key": "Account/Update/birthday/hint/statute",
-      "value": "TT.MM.JJJJ, notwendig für Ihre Mitgliedschaft bei Project R"
+      "key": "Account/Update/birthyear/hint/statute",
+      "value": "JJJJ, notwendig für Ihre Mitgliedschaft bei Project R"
     },
     {
-      "key": "Account/Update/birthday/hint/plain",
-      "value": "TT.MM.JJJJ"
+      "key": "Account/Update/birthyear/hint/plain",
+      "value": "JJJJ"
     },
     {
-      "key": "Account/Update/birthday/error/empty",
-      "value": "Geburtsdatum fehlt"
+      "key": "Account/Update/birthyear/error/empty",
+      "value": "Geburtsjahr fehlt"
     },
     {
-      "key": "Account/Update/birthday/error/invalid",
-      "value": "Geburtsdatum ungültig"
+      "key": "Account/Update/birthyear/error/invalid",
+      "value": "Geburtsjahr ungültig"
+    },
+    {
+      "key": "Account/Update/notEligible",
+      "value": "Mitgliederbereich. <b>Haben Sie ein Abonnement? <a href='/anmelden'>Anmelden</a></b>"
     },
     {
       "key": "Account/Update/submit",
@@ -696,7 +712,22 @@
       "key": "Account/Update/details/title",
       "value": "Bitte überprüfen Sie Ihre Angaben und korrigieren beziehungsweise ergänzen Sie sie."
     },
-    { "key": "UserGuidance/title", "value": "Kein laufendes Abonnement" },
+    {
+      "key": "Account/Delete/title",
+      "value": "Konto löschen"
+    },
+    {
+      "key": "Account/Delete/text",
+      "value": "Beantragen Sie die Löschung Ihres Kontos und der bei uns gespeicherten personenbezogenen Daten mit einer {link}."
+    },
+    {
+      "key": "Account/Delete/link",
+      "value": "Löschungsanfrage"
+    },
+    {
+      "key": "UserGuidance/title",
+      "value": "Kein laufendes Abonnement"
+    },
     {
       "key": "UserGuidance/p1",
       "value": "Das Konto mit der E-Mail {email} hat kein gültiges Abonnement."
@@ -743,7 +774,7 @@
     },
     {
       "key": "Account/AddressForm/line2/label",
-      "value": "Zusatz (Optional)"
+      "value": "Zusatz (optional)"
     },
     {
       "key": "Account/AddressForm/postalCode/label",
@@ -1082,10 +1113,6 @@
       "value": "Sie haben die Zahlungsanweisungen per E-Mail erhalten. Und hier schon ein Überblick:"
     },
     {
-      "key": "Account/Access/Grants/message/claimed",
-      "value": "Sie können die Republik lesen, weil Verlegerinnen und Verleger Ihnen bis zum {maxEndAt} ihren Zugriff teilen."
-    },
-    {
       "key": "Account/Access/Grants/explanation",
       "value": "Sie können die Republik lesen, weil Verlegerinnen Ihnen den Zugriff ermöglichen:"
     },
@@ -1407,7 +1434,7 @@
     },
     {
       "key": "profile/settings/hasPublicProfile/false/note",
-      "value": "Ihre Profilseite ist nur für andere Verleger sichtbar. Im Dialog sehen nur Verlegerinnen Ihren vollen Namen, Externe sehen bloss Ihre Initialen. Ausser Sie wählen die Option, einen Beitrag anonym zu veröffentlichen."
+      "value": "Ihre Profilseite ist nicht öffentlich und über die Republik-Suchfunktion nicht auffindbar. Im Dialog ist Ihr voller Name nur für andere Verlegerinnen und angemeldete Gäste sichtbar. Alle anderen sehen über Ihren Dialog-Beiträgen bloss Ihre Initialen. Ausser Sie wählen die Option, einen Dialog-Beitrag anonym zu veröffentlichen."
     },
     {
       "key": "profile/settings/isEligibleForProfile/notEligible",
@@ -1547,7 +1574,7 @@
     },
     {
       "key": "profile/gender",
-      "value": "Geschlecht"
+      "value": "Geschlecht (optional)"
     },
     {
       "key": "profile/gender/empty",
@@ -1555,7 +1582,7 @@
     },
     {
       "key": "profile/gender/custom",
-      "value": "Ihre Bezeichnung (optional)"
+      "value": "Ihre Bezeichnung"
     },
     {
       "key": "testimonial/meta/pageTitle",
@@ -1676,10 +1703,6 @@
     {
       "key": "footer/events",
       "value": "Veranstaltungen"
-    },
-    {
-      "key": "footer/updates",
-      "value": "Blog Crowdfunding"
     },
     {
       "key": "footer/about/projecR",
@@ -3118,50 +3141,6 @@
       "value": "{count} Beiträge"
     },
     {
-      "key": "article/payNote/ios/before",
-      "value": "<b>Danke für Ihre Neugier!</b> Dieser Beitrag wurde grosszügigerweise für Sie von einer unserer Verlegerinnen und Verleger freigeschaltet."
-    },
-    {
-      "key": "article/payNote/before/buyText",
-      "value": "Kommen Sie ebenfalls an Bord!"
-    },
-    {
-      "key": "article/payNote/ios/after",
-      "value": "<b>Schön, Sie hier unten wieder zu sehen!</b> Wir hoffen, es hat Ihnen gefallen."
-    },
-    {
-      "key": "article/payNote/after/buyText",
-      "value": "Erfahren Sie mehr."
-    },
-    {
-      "key": "article/payNote/after/series",
-      "value": "Dieser Beitrag ist Teil einer Serie. Werden Sie Verleger, um alle Episoden zu lesen."
-    },
-    {
-      "key": "article/payNote/secondaryAction/text",
-      "value": "Noch nicht überzeugt? {link}"
-    },
-    {
-      "key": "article/payNote/secondaryAction/linkText",
-      "value": "Jetzt probelesen"
-    },
-    {
-      "key": "article/payNote/series/before",
-      "value": "<b>Wir sind die Republik – ein neues Modell im Schweizer Journalismus.</b> Unser digitales Magazin arbeitet unabhängig: keine Werbung, keine Klick-Wirtschaft, keine Kompromisse in der Qualität. Wollen Sie unabhängigen Journalismus unterstützen, freuen wir uns, Sie an Bord zu sehen."
-    },
-    {
-      "key": "article/payNote/series/before/buy/button",
-      "value": "Ja, ich will!"
-    },
-    {
-      "key": "article/payNote/series/after",
-      "value": "<b>Wollen Sie mehr lesen?</b> Dieser Beitrag ist Teil einer Serie. Wollen Sie die ganze Geschichte? Dann kommen Sie an Bord! Wir sind die Republik – ein neues Modell im Schweizer Journalismus. Unser digitales Magazin arbeitet unabhängig: keine Werbung, keine Klick-Wirtschaft, keine Kompromisse in der Qualität."
-    },
-    {
-      "key": "article/payNote/series/after/buy/button",
-      "value": "An Bord kommen!"
-    },
-    {
       "key": "article/share/title",
       "value": "Beitrag teilen"
     },
@@ -3447,27 +3426,15 @@
     },
     {
       "key": "article/pdf/open",
-      "value": "öffnen"
+      "value": "PDF öffnen"
     },
     {
       "key": "article/pdf/download",
       "value": "herunterladen"
     },
     {
-      "key": "article/pdf/images/1",
-      "value": "mit einem Bild"
-    },
-    {
-      "key": "article/pdf/images/other",
-      "value": "mit {count} Bildern"
-    },
-    {
-      "key": "article/pdf/size/A4",
-      "value": "A4"
-    },
-    {
-      "key": "article/pdf/size/A5",
-      "value": "A5 (Beta)"
+      "key": "article/pdf/images",
+      "value": "mit Bildern"
     },
     {
       "key": "article/autodiscussionteaser/title",
@@ -4133,22 +4100,6 @@
       "value": "Wo"
     },
     {
-      "key": "updates/pageTitle",
-      "value": "Neues – Republik"
-    },
-    {
-      "key": "updates/title",
-      "value": "Neuigkeiten zum Crowdfunding"
-    },
-    {
-      "key": "updates/metaDescription",
-      "value": "Das digitale Magazin von Project R – jetzt Mitglied werden."
-    },
-    {
-      "key": "updates/all",
-      "value": "Alle Meldungen"
-    },
-    {
       "key": "faq/pageTitle",
       "value": "Fragen – Republik"
     },
@@ -4441,6 +4392,10 @@
       "value": "Bitte beantworten Sie mindestens eine Frage."
     },
     {
+      "key": "questionnaire/notEligible",
+      "value": "Nur Mitglieder können den Fragebogen beantworten.<br/><b>Haben Sie ein Abonnement? <a href='/anmelden'>Anmelden</a></b>"
+    },
+    {
       "key": "questionnaire/privacy/private",
       "value": "Antworten sind öffentlich einsehbar. Für Probeleser und Mitverlegerinnen erscheint der ausgefüllte Fragebogen unter Ihrem Namen. Gäste sehen lediglich Ihre Initialen."
     },
@@ -4450,15 +4405,15 @@
     },
     {
       "key": "questionnaire/submit",
-      "value": "Abschicken"
+      "value": "abschicken"
     },
     {
       "key": "questionnaire/publish",
-      "value": "Publizieren"
+      "value": "publizieren"
     },
     {
       "key": "questionnaire/update",
-      "value": "Aktualisieren"
+      "value": "aktualisieren"
     },
     {
       "key": "questionnaire/reset",
@@ -4591,6 +4546,42 @@
     {
       "key": "questionnaire/submissions/loadMore/1",
       "value": "Einen weiteren Fragebogen laden"
+    },
+    {
+      "key": "questionnaire/submissions/shareText",
+      "value": "Stöbern Sie durch die Antworten der Republik-Leserinnen, und fügen Sie Ihre eigene Antwort hinzu."
+    },
+    {
+      "key": "questionnaire/submission/description",
+      "value": "Die Antworten von {name}"
+    },
+    {
+      "key": "instantSurvey/toggle/answers",
+      "value": "Antworten anzeigen"
+    },
+    {
+      "key": "instantSurvey/toggle/question",
+      "value": "Frage beantworten"
+    },
+    {
+      "key": "instantSurvey/toggle/question",
+      "value": "Frage beantworten"
+    },
+    {
+      "key": "instantSurvey/toggle/votes/0",
+      "value": "Bisher ist keine Stimme eingegangen."
+    },
+    {
+      "key": "instantSurvey/toggle/votes/1",
+      "value": "{count} Stimme"
+    },
+    {
+      "key": "instantSurvey/toggle/votes/other",
+      "value": "{count} Stimmen"
+    },
+    {
+      "key": "instantSurvey/login",
+      "value": "<a href='/anmelden'>Melden Sie sich an</a>, um die Frage zu beantworten."
     },
     {
       "key": "pages/meta/questionnaire/unauthorized",
@@ -7125,94 +7116,6 @@
       "value": "Google"
     },
     {
-      "key": "article/payNote/default/button",
-      "value": "Jahresmitgliedschaft"
-    },
-    {
-      "key": "article/payNote/default/secondary/label",
-      "value": "Einen Monat für 22.–"
-    },
-    {
-      "key": "article/payNote/default/secondary/link",
-      "value": "/angebote?package=MONTHLY_ABO"
-    },
-    {
-      "key": "article/payNote/default/note",
-      "value": "<a href=\"/\">Mehr Informationen zur Republik.</a>"
-    },
-    {
-      "key": "article/payNote/220404-v1/before",
-      "value": "Journalismus kostet. Dass Sie diesen Beitrag trotzdem lesen können, verdanken Sie den rund 27’000 Leserinnen, die die Republik schon finanzieren. Wenn auch Sie unabhängigen Journalismus möglich machen wollen: Kommen Sie an Bord!"
-    },
-    {
-      "key": "article/payNote/220404-v1/after",
-      "value": "Wenn Sie weiterhin unabhängigen Journalismus wie diesen lesen wollen, handeln Sie jetzt: Kommen Sie an Bord!"
-    },
-    {
-      "key": "article/payNote/220404-v2/before",
-      "value": "Die Republik ist ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur – finanziert von seinen Leserinnen. Es ist komplett werbefrei und unabhängig. Lösen Sie jetzt ein Abo oder eine Mitgliedschaft!"
-    },
-    {
-      "key": "article/payNote/220404-v2/after",
-      "value": "Unterstützen Sie unabhängigen Journalismus mit einem Monatsabonnement oder einer Jahresmitgliedschaft!"
-    },
-    {
-      "key": "article/tryNote/220404-v1/before",
-      "value": "Journalismus, der Ihnen hilft, Entscheidungen zu treffen. Und der das Gemeinsame stärkt: die Freiheit, den Rechtsstaat, die Demokratie. Lernen Sie uns jetzt 21 Tage lang kostenlos und unverbindlich kennen:"
-    },
-    {
-      "key": "article/tryNote/220404-v1/after",
-      "value": "Rund 27’000 Menschen machen die Republik heute schon möglich. Lernen Sie uns jetzt auch kennen – 21 Tage lang, kostenlos und unverbindlich:"
-    },
-    {
-      "key": "article/tryNote/220404-v2/before",
-      "value": "Die Republik ist ein digitales Magazin für Politik, Wirtschaft, Gesellschaft und Kultur – finanziert von seinen Leserinnen. Es ist komplett werbefrei und unabhängig. Überzeugen Sie sich selber: Lesen Sie 21 Tage lang kostenlos und unverbindlich Probe:"
-    },
-    {
-      "key": "article/tryNote/220404-v2/after",
-      "value": "Sie sind sich immer noch nicht sicher, ob die Republik etwas für Sie ist? Dann testen Sie uns! Für 21 Tage, kostenlos und unverbindlich:"
-    },
-    {
-      "key": "flyer/paynote/buy/221206-v1/title",
-      "value": "Ihnen gefällt, was Sie lesen?"
-    },
-    {
-      "key": "flyer/paynote/buy/221206-v1/body",
-      "value": "Dann bleiben Sie dabei. Unterstützen Sie den unabhängigen Journalismus der Republik mit einem Monatsabonnement oder einer Jahresmitgliedschaft."
-    },
-    {
-      "key": "flyer/paynote/buy/221206-v2/title",
-      "value": "Ihnen ist Journalismus wichtig?"
-    },
-    {
-      "key": "flyer/paynote/buy/221206-v2/body",
-      "value": "Die Republik wird finanziert von ihren Leserinnen, ist komplett werbefrei und unabhängig. Wenn Ihnen das gefällt: Kommen Sie an Bord mit einem Monatsabonnement oder einer Jahresmitgliedschaft."
-    },
-    {
-      "key": "flyer/paynote/trial/221206-v1/title",
-      "value": "Ihnen gefällt, was Sie lesen?"
-    },
-    {
-      "key": "flyer/paynote/trial/221206-v1/body",
-      "value": "Dann möchten Sie die Republik vielleicht besser kennenlernen. Das Angebot: Testen Sie uns. Für 21 Tage, kostenlos und unverbindlich."
-    },
-    {
-      "key": "flyer/paynote/trial/221206-v2/title",
-      "value": "Ihnen ist unabhängiger Journalismus wichtig?"
-    },
-    {
-      "key": "flyer/paynote/trial/221206-v2/body",
-      "value": "Ohne Journalismus keine Demokratie. Wenn Sie das auch so sehen: Die Republik ist werbefrei und wird finanziert von ihren Leserinnen. Testen Sie uns. Für 21 Tage, kostenlos und unverbindlich."
-    },
-    {
-      "key": "flyer/paynote/ios/221212-v1/title",
-      "value": "Danke für Ihre Neugier!"
-    },
-    {
-      "key": "flyer/paynote/ios/221212-v1/body",
-      "value": "Dieser Beitrag wurde grosszügigerweise für Sie von einer unserer Verlegerinnen und Verleger freigeschaltet."
-    },
-    {
       "key": "profile/tryNote/content",
       "value": "Um die Beiträge von {name} zu lesen, benötigen Sie eine Mitgliedschaft oder ein Monatsabonnement. Sie wollen uns erst kennenlernen? Dann lesen Sie die Republik jetzt unverbindlich und kostenlos 21 Tage Probe."
     },
@@ -7417,6 +7320,10 @@
       "value": "Ihre Einstellungen"
     },
     {
+      "key": "Notifications/markAsRead",
+      "value": "Alle als gelesen markieren"
+    },
+    {
       "key": "Notifications/refresh/1",
       "value": "Sie haben eine neue Benachrichtigung bekommen."
     },
@@ -7475,10 +7382,6 @@
     {
       "key": "Notifications/settings/formats/summary/other",
       "value": "Sie haben {count} Rubriken abonniert:"
-    },
-    {
-      "key": "Notifications/settings/noMembership",
-      "value": "Journalismus kostet. Deshalb erhalten Sie Benachrichtigung zu Beiträgen aus dem Magazin und den Rubriken erst wenn Sie eine aktive Mitgliedschaft oder ein aktives Abo haben."
     },
     {
       "key": "Notifications/settings/discussion",
@@ -7785,6 +7688,10 @@
       "value": "Jahresmitgliedschaft"
     },
     {
+      "key": "magazineSubscription/title/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
       "key": "magazineSubscription/title/MONTHLY_SUBSCRIPTION",
       "value": "Monats-Abo"
     },
@@ -7794,11 +7701,15 @@
     },
     {
       "key": "magazineSubscription/description",
-      "value": "Nächste Zahlung am {currentPeriodEnd} für CHF {renewsAtPrice}"
+      "value": "Erneuert sich am {currentPeriodEnd} für CHF {renewsAtPrice}"
     },
     {
       "key": "magazineSubscription/paymentMethod",
-      "value": "Zahlungsmethode: {paymentMethod}"
+      "value": "Zahlungsart: {paymentMethod}"
+    },
+    {
+      "key": "magazineSubscription/paymentMethod/change",
+      "value": "Zahlungsart ändern"
     },
     {
       "key": "magazineSubscription/noActiveSubscription",
@@ -7809,16 +7720,68 @@
       "value": "Ihre Mitgliedschaft läuft am {cancelAt} aus."
     },
     {
+      "key": "magazineSubscription/canceled/BENEFACTOR_SUBSCRIPTION",
+      "value": "Ihre Gönner-Mitgliedschaft läuft am {cancelAt} aus."
+    },
+    {
       "key": "magazineSubscription/canceled/MONTHLY_SUBSCRIPTION",
       "value": "Ihr Abo läuft am {cancelAt} aus."
     },
     {
-      "key": "magazineSubscription/customerPortalLink/YEARLY_SUBSCRIPTION",
-      "value": "Mitgliedschaft Verwalten"
+      "key": "magazineSubscription/cancel/YEARLY_SUBSCRIPTION",
+      "value": "Mitgliedschaft kündigen"
     },
     {
-      "key": "magazineSubscription/customerPortalLink/MONTHLY_SUBSCRIPTION",
-      "value": "Abo Verwalten"
+      "key": "magazineSubscription/cancel/BENEFACTOR_SUBSCRIPTION",
+      "value": "Mitgliedschaft kündigen"
+    },
+    {
+      "key": "magazineSubscription/cancel/MONTHLY_SUBSCRIPTION",
+      "value": "Abo kündigen"
+    },
+    {
+      "key": "magazineSubscription/donation/update",
+      "value": "Ändern"
+    },
+    {
+      "key": "magazineSubscription/donation/choose",
+      "value": "Beitrag erhöhen"
+    },
+    {
+      "key": "magazineSubscription/donation/chooseCustom",
+      "value": "Wählen"
+    },
+    {
+      "key": "magazineSubscription/donation/remove",
+      "value": "Ich möchte meinen Beitrag nicht mehr erhöhen"
+    },
+    {
+      "key": "magazineSubscription/donation/note",
+      "value": "Wählen Sie einen Betrag, um den Sie ihren Beitrag erhöhen möchten. Der angepasste Beitrag wird erst fällig, wenn sich Ihre Mitgliedschaft erneuert. Sie können ihn jederzeit anpassen oder zurücksetzen."
+    },
+    {
+      "key": "magazineSubscription/donation/wannaGiveMore",
+      "value": "Die Republik ist Ihnen mehr wert?"
+    },
+    {
+      "key": "magazineSubscription/donation/add",
+      "value": "Erhöhen Sie Ihren Beitrag"
+    },
+    {
+      "key": "magazineSubscription/donation/label",
+      "value": "Beinhaltet einen freiwilligen Beitrag von CHF {amount}."
+    },
+    {
+      "key": "magazineSubscription/reactivate/YEARLY_SUBSCRIPTION",
+      "value": "Mitgliedschaft reaktivieren"
+    },
+    {
+      "key": "magazineSubscription/reactivate/BENEFACTOR_SUBSCRIPTION",
+      "value": "Mitgliedschaft reaktivieren"
+    },
+    {
+      "key": "magazineSubscription/reactivate/MONTHLY_SUBSCRIPTION",
+      "value": "Abo reaktivieren"
     },
     {
       "key": "magazineSubscription/shoplink/MONTHLY",
@@ -7827,6 +7790,222 @@
     {
       "key": "magazineSubscription/shoplink/YEARLY",
       "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "auth/login/email/info",
+      "value": "Geben Sie Ihre E-Mail-Adresse ein, um sich anzumelden."
+    },
+    {
+      "key": "auth/login/email/placeholder",
+      "value": "E-Mail-Adresse"
+    },
+    {
+      "key": "auth/login/email/missing",
+      "value": "Bitte geben Sie Ihre E-Mail-Adresse ein."
+    },
+    {
+      "key": "auth/login/email/submit",
+      "value": "Anmelden"
+    },
+    {
+      "key": "auth/login/code/placeholder",
+      "value": "Zugangscode"
+    },
+    {
+      "key": "auth/login/code/title",
+      "value": "Wir haben Ihnen einen Zugangscode geschickt"
+    },
+    {
+      "key": "auth/login/code/description",
+      "value": "Geben Sie den 6-stelligen Code ein, den Sie via {email} erhalten haben."
+    },
+    {
+      "key": "auth/login/code/pending",
+      "value": "Wir überprüfen Ihren Code…"
+    },
+    {
+      "key": "auth/login/code/help",
+      "value": "Sie können Ihren Code nicht finden? Überprüfen Sie Ihren Spam-Ordner oder {changeEmail}."
+    },
+    {
+      "key": "auth/login/code/help/changeEmail",
+      "value": "ändern Sie Ihre E-Mail-Adresse"
+    },
+    {
+      "key": "auth/login/tos",
+      "value": "Mit der Anmeldung akzeptieren Sie die {link} und sind einverstanden E-Mails zu Republik-Angeboten zu erhalten."
+    },
+    {
+      "key": "auth/trial/request",
+      "value": "Weiterlesen"
+    },
+    {
+      "key": "regwall/login",
+      "value": "Haben Sie ein Abonnement? {link}"
+    },
+    {
+      "key": "regwall/login/link",
+      "value": "Anmelden"
+    },
+    {
+      "key": "regwall/a/header/title",
+      "value": "Weiterlesen, ohne zu bezahlen"
+    },
+    {
+      "key": "regwall/a/header/description",
+      "value": "<b>Werden Sie unser Gast:</b> Eine Woche lang gratis alle Republik-Beiträge lesen, keine automatische Verlängerung."
+    },
+    {
+      "key": "regwall/a/cta",
+      "value": "Als Gast anmelden und weiterlesen"
+    },
+    {
+      "key": "regwall/b/header/title",
+      "value": "Weiterlesen geht ganz einfach:"
+    },
+    {
+      "key": "regwall/b/header/description",
+      "value": "<b>Als Gast:</b> 7 Tage lang kostenlos Zugang zu allen Republik-Beiträgen, keine Zahlungsangaben erforderlich."
+    },
+    {
+      "key": "regwall/b/cta",
+      "value": "Als Gast registrieren"
+    },
+    {
+      "key": "regwall/whyRegister/title",
+      "value": "Warum eine E-Mail-Adresse?"
+    },
+    {
+      "key": "regwall/whyRegister/expanded",
+      "value": "<p>Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Über Ihre E-Mail-Adresse können wir direkt mit Ihnen in Kontakt treten, ohne dass externe Suchmaschinen oder Social-Media-Plattformen zwischengeschaltet sind. <b>Wir geben Ihre E-Mail-Adresse niemals ausserhalb der Republik weiter</b>.</p><p>Wenn Sie keine Nachrichten mehr von der Republik erhalten möchten, können Sie sich <b>jederzeit abmelden</b>.</p>"
+    },
+    {
+      "key": "regwall/a/offers/description",
+      "value": "<b>Für Grosszügige und Unerschrockene:</b>"
+    },
+    {
+      "key": "regwall/a/offers/cta",
+      "value": "Abo ab CHF 22.– / Monat"
+    },
+    {
+      "key": "regwall/b/offers/description",
+      "value": "<b>Als Abonnent*in:</b> Unterstützen Sie unabhängigen und werbefreien Journalismus."
+    },
+    {
+      "key": "regwall/b/offers/cta",
+      "value": "Abonnieren ab CHF 22.– / Monat"
+    },
+    {
+      "key": "regwall/offers/cancellable",
+      "value": "Jederzeit kündbar"
+    },
+    {
+      "key": "paywall/offers/caption",
+      "value": "Einstiegsangebot"
+    },
+    {
+      "key": "paywall/a/offers/title/1",
+      "value": "Ihre kostenlose Gastwoche ist zu Ende."
+    },
+    {
+      "key": "paywall/a/offers/title/2",
+      "value": "Doch unsere gemeinsame Reise muss hier nicht enden."
+    },
+    {
+      "key": "paywall/b/offers/title/1",
+      "value": "Wie schön, Sie sind zurück!"
+    },
+    {
+      "key": "paywall/b/offers/title/2",
+      "value": "Wenn Sie schon da sind, dann bleiben Sie doch gleich?"
+    },
+    {
+      "key": "paywall/offers/yearly/duration",
+      "value": "erstes Jahr"
+    },
+    {
+      "key": "paywall/offers/yearly/description",
+      "value": "Danach 240.- jährlich. Jederzeit kündbar."
+    },
+    {
+      "key": "paywall/offers/monthly/duration",
+      "value": "erster Monat"
+    },
+    {
+      "key": "paywall/offers/monthly/description",
+      "value": "Danach 22.- monatlich. Jederzeit kündbar."
+    },
+    {
+      "key": "paywall/offers/cta",
+      "value": "Jetzt abonnieren"
+    },
+    {
+      "key": "paywall/offers/survey",
+      "value": "Nein Danke, weil…"
+    },
+    {
+      "key": "paywall/offers/all",
+      "value": "Weitere Angebote anzeigen"
+    },
+    {
+      "key": "paywall/survey/hint",
+      "value": "Wählen Sie aus, was am ehesten zutrifft."
+    },
+    {
+      "key": "paywall/survey/all",
+      "value": "Weitere Angebote anzeigen"
+    },
+    {
+      "key": "paywall/survey/thanks/title",
+      "value": "Vielen Dank für Ihr Feedback, wir hoffen, Sie bald wiederzusehen! 👋"
+    },
+    {
+      "key": "paywall/survey/thanks/description",
+      "value": "PS: Wussten Sie, dass Sie unser wöchentliches Nachrichtenbriefing auch ohne Abo als Newsletter erhalten können?"
+    },
+    {
+      "key": "paywall/survey/thanks/link",
+      "value": "Das interessiert mich"
+    },
+    {
+      "key": "paynotes/dialog/title",
+      "value": "Willkommen im Dialog"
+    },
+    {
+      "key": "paynotes/dialog/description",
+      "value": "Als Gast sehen Sie, was zu reden gibt. Mit einem Abo nehmen Sie direkt am Gespräch mit Autorinnen und anderen Lesern teil."
+    },
+    {
+      "key": "paynotes/dialog/cta",
+      "value": "Abonnieren und mitreden"
+    },
+    {
+      "key": "paynotes/ios/caption",
+      "value": "Unterstützen Sie unabhängigen Journalismus."
+    },
+    {
+      "key": "paynotes/ios/cta",
+      "value": "Alle Angebote auf {link}"
+    },
+    {
+      "key": "paynotes/ios/text",
+      "value": "Alle Angebote auf shop.republik.ch"
+    },
+    {
+      "key": "paynotes/welcomeBanner",
+      "value": "Ab sofort läuft Ihre siebentägige Gastwoche bei der Republik: Herzlich willkommen!"
+    },
+    {
+      "key": "paynotes/account/title",
+      "value": "Willkommen bei der Republik!"
+    },
+    {
+      "key": "paynotes/account/description",
+      "value": "<b>Bis zum {maxEndAt} sind Sie unser Gast und haben kostenlosen Zugang zum gesamten Magazin.</b><br/>Sie wollen länger bleiben? Dann haben wir ein paar Vorschläge für Sie."
+    },
+    {
+      "key": "paynotes/account/cta",
+      "value": "Alle Angebote anzeigen"
     }
   ]
 }

@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import {
   Interaction,
   Center,
@@ -7,6 +8,7 @@ import {
   fontStyles,
   useColorContext,
   A,
+  plainButtonRule,
 } from '@project-r/styleguide'
 import StickySection from '../Feed/StickySection'
 import CommentNotification from './CommentNotification'
@@ -17,6 +19,8 @@ import { css } from 'glamor'
 import DocumentNotification from './DocumentNotification'
 import withT from '../../lib/withT'
 import Link from 'next/link'
+import compose from 'lodash/flowRight'
+import { withMarkAllAsReadMutation } from './enhancers'
 
 const dateFormat = timeFormat('%A,\n%d.%m.%Y')
 
@@ -86,7 +90,10 @@ const ReloadBanner = withT(({ t, futureNotifications, onReload }) => {
   )
 })
 
-export default withT(
+export default compose(
+  withT,
+  withMarkAllAsReadMutation,
+)(
   ({
     t,
     notifications,
@@ -95,10 +102,25 @@ export default withT(
     fetchMore,
     futureNotifications,
     onReload,
+    markAllAsReadMutation,
   }) => {
     const { nodes, totalCount, unreadCount, pageInfo } = notifications
     const hasNextPage = pageInfo && pageInfo.hasNextPage
     const [colorScheme] = useColorContext()
+
+    const linkStyleRule = useMemo(
+      () =>
+        css({
+          textDecoration: 'none',
+          color: colorScheme.getCSSColor('primary'),
+          '@media (hover)': {
+            ':hover': {
+              color: colorScheme.getCSSColor('primaryHover'),
+            },
+          },
+        }),
+      [colorScheme],
+    )
 
     const loadMore = () =>
       fetchMore({
@@ -149,6 +171,17 @@ export default withT(
             <Link href='/konto/benachrichtigungen' passHref legacyBehavior>
               <A>{t('Notifications/settings')}</A>
             </Link>
+
+            {!isEmpty && (
+              <button
+                {...linkStyleRule}
+                {...plainButtonRule}
+                style={{ marginLeft: 15 }}
+                onClick={() => markAllAsReadMutation().then(onReload)}
+              >
+                {t('Notifications/markAsRead')}
+              </button>
+            )}
 
             {isEmpty && (
               <Interaction.P style={{ marginTop: 40 }}>

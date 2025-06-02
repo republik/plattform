@@ -1,11 +1,10 @@
 import { useMemo } from 'react'
 import visit from 'unist-util-visit'
 import { v4 as uuid, validate as validateUUID } from 'uuid'
-import { mdastToString } from '../../lib/utils/helpers'
 
 import { SOCIAL_MEDIA } from '../editor/modules/meta/ShareImageForm'
 
-import { Editorial, renderSlateAsText } from '@project-r/styleguide'
+import { Editorial, mdastToString } from '@project-r/styleguide'
 
 // Used to check for relative urls
 const FAKE_BASE_URL = `http://${uuid()}.local`
@@ -70,7 +69,10 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
     updateMailchimp &&
       !meta.emailSubject &&
       t('publish/validation/emailSubject/empty'),
-    meta.template !== 'front' && !content.meta.suppressSyntheticReadAloud && !content.meta.syntheticVoice && t('publish/validation/syntheticVoice/empty'),
+    meta.template !== 'front' &&
+      !content.meta.suppressSyntheticReadAloud &&
+      !content.meta.syntheticVoice &&
+      t('publish/validation/syntheticVoice/empty'),
   ].filter(Boolean)
 
   const socialWarnings = SOCIAL_MEDIA.map(
