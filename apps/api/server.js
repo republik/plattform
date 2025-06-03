@@ -29,7 +29,6 @@ const {
 } = require('@orbiting/backend-modules-subscriptions')
 const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
 const { graphql: mailbox } = require('@orbiting/backend-modules-mailbox')
-const { graphql: slots } = require('@orbiting/backend-modules-calendar')
 const {
   graphql: callToActions,
 } = require('@orbiting/backend-modules-call-to-actions')
@@ -67,7 +66,6 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-republik-crowdfundings/loaders'),
   ...require('@orbiting/backend-modules-republik/loaders'),
   ...require('@orbiting/backend-modules-publikator/loaders'),
-  ...require('@orbiting/backend-modules-calendar/loaders'),
   ...require('@orbiting/backend-modules-payments').loaders,
 }
 
@@ -166,7 +164,6 @@ const run = async (workerId, config) => {
     subscriptions,
     embeds,
     mailbox,
-    slots,
     callToActions,
     referralCampaigns,
     paymentsGraphql,

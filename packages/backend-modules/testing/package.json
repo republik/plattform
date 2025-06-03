@@ -39,7 +39,6 @@
     "@orbiting/backend-modules-mail": "*",
     "@orbiting/backend-modules-mailchimp": "*",
     "@orbiting/backend-modules-mailbox": "*",
-    "@orbiting/backend-modules-matomo": "*",
     "@orbiting/backend-modules-migrations": "*",
     "@orbiting/backend-modules-publikator": "*",
     "@orbiting/backend-modules-push-notifications": "*",
