@@ -82,6 +82,7 @@ const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
 const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 
 const { Queue, GlobalQueue } = require('@orbiting/backend-modules-job-queue')
+const { CockpitWorker } = require('./workers/cockpit')
 
 function setupQueue(context, monitorQueueState = undefined) {
   const queue = Queue.createInstance(GlobalQueue, {
@@ -104,6 +105,7 @@ function setupQueue(context, monitorQueueState = undefined) {
     SyncMailchimpSetupWorker,
     SyncMailchimpUpdateWorker,
     SyncMailchimpEndedWorker,
+    CockpitWorker,
   ])
 
   return queue
@@ -361,6 +363,10 @@ const runOnce = async () => {
   const queue = setupQueue(connectionContext, 120)
   await queue.start()
   await queue.startWorkers()
+  await queue.schedule(
+    'cockpit:refresh',
+    '*/30 * * * *', // cron for every 30 minutes
+  )
 
   const close = async () => {
     await Promise.all(

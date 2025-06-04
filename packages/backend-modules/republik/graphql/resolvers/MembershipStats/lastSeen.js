@@ -1,20 +1,14 @@
 const moment = require('moment')
 
-const { createCache } = require('../../../lib/MembershipStats/lastSeen')
-
 module.exports = async (_, args, context) => {
   // Fetch pre-populated data
-  const data = await createCache(context).get()
+  const data = await context.pgdb.query(
+    'select * from cockpit_membership_last_seen;',
+  )
 
-  // In case pre-populated data is not available...
-  if (!data) {
-    throw new Error(
-      'Unable to retrieve pre-populated data for MembershipStats.lastSeen',
-    )
+  if (!data.length) {
+    throw new Error('membership stats last seen not loaded')
   }
-
-  // Retrieve pre-populated data.
-  const { result, updatedAt = new Date() } = data
 
   // A list of desired bucket keys to return
   const keys = []
@@ -29,7 +23,7 @@ module.exports = async (_, args, context) => {
   }
 
   return {
-    buckets: result.filter(({ key }) => keys.includes(key)),
-    updatedAt,
+    buckets: data.filter(({ key }) => keys.includes(key)),
+    updatedAt: data[0].updatedAt,
   }
 }
