@@ -1,25 +1,8 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
-import { Company } from '../../types'
-import { PaymentProvider } from '../../providers/provider'
-
-export async function processChargeRefunded(
-  paymentService: PaymentService,
-  company: Company,
-  event: Stripe.ChargeRefundedEvent,
-) {
-  const charge = await PaymentProvider.forCompany(company).getCharge(
-    event.data.object.id,
-  )
-
-  if (!charge) {
-    console.error('charge not found')
-    return
-  }
-
-  const args = mapChargeUpdateArgs(charge)
-  await paymentService.updateCharge({ externalId: charge.id }, args)
-}
+import { Company, PaymentWorkflow } from '../../types'
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
+import { PaymentService } from '../../services/PaymentService'
+import { InvoiceService } from '../../services/InvoiceService'
 
 type ChargRefundArgs = {
   paid: boolean
@@ -28,6 +11,42 @@ type ChargRefundArgs = {
   amountCaptured: number
   amountRefunded: number
   fullyRefunded: boolean
+}
+
+export class ChargeRefundedWorkflow
+  implements PaymentWorkflow<Stripe.ChargeRefundedEvent>
+{
+  constructor(
+    protected readonly paymentService: PaymentService,
+    protected readonly invoiceService: InvoiceService,
+  ) {}
+
+  async run(company: Company, event: Stripe.ChargeRefundedEvent): Promise<any> {
+    const chargeId = event.data.object.id
+
+    const charge = await this.paymentService.getCharge(company, chargeId)
+
+    if (!charge) {
+      console.error('charge not found')
+      return
+    }
+
+    const args = mapChargeUpdateArgs(charge)
+    await this.invoiceService.updateCharge({ externalId: charge.id }, args)
+
+    return
+  }
+}
+
+export async function processChargeRefunded(
+  ctx: PaymentWebhookContext,
+  company: Company,
+  event: Stripe.ChargeRefundedEvent,
+) {
+  return new ChargeRefundedWorkflow(
+    new PaymentService(),
+    new InvoiceService(ctx.pgdb),
+  ).run(company, event)
 }
 
 export function mapChargeUpdateArgs(charge: Stripe.Charge): ChargRefundArgs {

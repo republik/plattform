@@ -1705,10 +1705,6 @@
       "value": "Veranstaltungen"
     },
     {
-      "key": "footer/updates",
-      "value": "Blog Crowdfunding"
-    },
-    {
       "key": "footer/about/projecR",
       "value": "Project R"
     },
@@ -4102,22 +4098,6 @@
     {
       "key": "events/labels/location",
       "value": "Wo"
-    },
-    {
-      "key": "updates/pageTitle",
-      "value": "Neues – Republik"
-    },
-    {
-      "key": "updates/title",
-      "value": "Neuigkeiten zum Crowdfunding"
-    },
-    {
-      "key": "updates/metaDescription",
-      "value": "Das digitale Magazin von Project R – jetzt Mitglied werden."
-    },
-    {
-      "key": "updates/all",
-      "value": "Alle Meldungen"
     },
     {
       "key": "faq/pageTitle",
@@ -7708,6 +7688,10 @@
       "value": "Jahresmitgliedschaft"
     },
     {
+      "key": "magazineSubscription/title/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
       "key": "magazineSubscription/title/MONTHLY_SUBSCRIPTION",
       "value": "Monats-Abo"
     },
@@ -7717,11 +7701,15 @@
     },
     {
       "key": "magazineSubscription/description",
-      "value": "Nächste Zahlung am {currentPeriodEnd} für CHF {renewsAtPrice}"
+      "value": "Erneuert sich am {currentPeriodEnd} für CHF {renewsAtPrice}"
     },
     {
       "key": "magazineSubscription/paymentMethod",
-      "value": "Zahlungsmethode: {paymentMethod}"
+      "value": "Zahlungsart: {paymentMethod}"
+    },
+    {
+      "key": "magazineSubscription/paymentMethod/change",
+      "value": "Zahlungsart ändern"
     },
     {
       "key": "magazineSubscription/noActiveSubscription",
@@ -7732,16 +7720,68 @@
       "value": "Ihre Mitgliedschaft läuft am {cancelAt} aus."
     },
     {
+      "key": "magazineSubscription/canceled/BENEFACTOR_SUBSCRIPTION",
+      "value": "Ihre Gönner-Mitgliedschaft läuft am {cancelAt} aus."
+    },
+    {
       "key": "magazineSubscription/canceled/MONTHLY_SUBSCRIPTION",
       "value": "Ihr Abo läuft am {cancelAt} aus."
     },
     {
-      "key": "magazineSubscription/customerPortalLink/YEARLY_SUBSCRIPTION",
-      "value": "Mitgliedschaft Verwalten"
+      "key": "magazineSubscription/cancel/YEARLY_SUBSCRIPTION",
+      "value": "Mitgliedschaft kündigen"
     },
     {
-      "key": "magazineSubscription/customerPortalLink/MONTHLY_SUBSCRIPTION",
-      "value": "Abo Verwalten"
+      "key": "magazineSubscription/cancel/BENEFACTOR_SUBSCRIPTION",
+      "value": "Mitgliedschaft kündigen"
+    },
+    {
+      "key": "magazineSubscription/cancel/MONTHLY_SUBSCRIPTION",
+      "value": "Abo kündigen"
+    },
+    {
+      "key": "magazineSubscription/donation/update",
+      "value": "Ändern"
+    },
+    {
+      "key": "magazineSubscription/donation/choose",
+      "value": "Beitrag erhöhen"
+    },
+    {
+      "key": "magazineSubscription/donation/chooseCustom",
+      "value": "Wählen"
+    },
+    {
+      "key": "magazineSubscription/donation/remove",
+      "value": "Ich möchte meinen Beitrag nicht mehr erhöhen"
+    },
+    {
+      "key": "magazineSubscription/donation/note",
+      "value": "Wählen Sie einen Betrag, um den Sie ihren Beitrag erhöhen möchten. Der angepasste Beitrag wird erst fällig, wenn sich Ihre Mitgliedschaft erneuert. Sie können ihn jederzeit anpassen oder zurücksetzen."
+    },
+    {
+      "key": "magazineSubscription/donation/wannaGiveMore",
+      "value": "Die Republik ist Ihnen mehr wert?"
+    },
+    {
+      "key": "magazineSubscription/donation/add",
+      "value": "Erhöhen Sie Ihren Beitrag"
+    },
+    {
+      "key": "magazineSubscription/donation/label",
+      "value": "Beinhaltet einen freiwilligen Beitrag von CHF {amount}."
+    },
+    {
+      "key": "magazineSubscription/reactivate/YEARLY_SUBSCRIPTION",
+      "value": "Mitgliedschaft reaktivieren"
+    },
+    {
+      "key": "magazineSubscription/reactivate/BENEFACTOR_SUBSCRIPTION",
+      "value": "Mitgliedschaft reaktivieren"
+    },
+    {
+      "key": "magazineSubscription/reactivate/MONTHLY_SUBSCRIPTION",
+      "value": "Abo reaktivieren"
     },
     {
       "key": "magazineSubscription/shoplink/MONTHLY",

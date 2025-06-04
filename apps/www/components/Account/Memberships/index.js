@@ -1,3 +1,5 @@
+import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import compose from 'lodash/flowRight'
@@ -14,11 +16,10 @@ import Box from '../../Frame/Box'
 
 import { Interaction, useColorContext, A } from '@project-r/styleguide'
 
-import belongingsQuery from '../belongingsQuery'
 import MembershipList from '../Memberships/List'
 import PaymentSources from '../PaymentSources'
 import AccountSection from '../AccountSection'
-import SubscriptionItem from './SubscriptionItem'
+import { ManageMagazineSubscription } from './ManageMagazineSubscription'
 
 const { P } = Interaction
 
@@ -96,11 +97,9 @@ const Memberships = ({
               <>
                 {activeMagazineSubscription ? (
                   // If user has active magazine subscription, we need to show the info.
-                  <AccountSection id='abos' title={t('memberships/title/1')}>
-                    <SubscriptionItem
-                      subscription={activeMagazineSubscription}
-                    />
-                  </AccountSection>
+                  <ManageMagazineSubscription
+                    subscription={activeMagazineSubscription}
+                  />
                 ) : hasActiveMemberships ? (
                   // If user has *other* active memberships
                   <>
@@ -130,7 +129,7 @@ const Memberships = ({
 export default compose(
   withT,
   withMembership,
-  graphql(belongingsQuery, {
+  graphql(MyBelongingsDocument, {
     props: ({ data }) => {
       const isReady = !data.loading && !data.error && data.me
 

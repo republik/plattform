@@ -1319,10 +1319,6 @@
       "value": "Veranstaltungen"
     },
     {
-      "key": "footer/updates",
-      "value": "Blog Crowdfunding"
-    },
-    {
       "key": "footer/about/projecR",
       "value": "Project R"
     },
@@ -2838,22 +2834,7 @@
       "key": "events/labels/location",
       "value": "Wo"
     },
-    {
-      "key": "updates/pageTitle",
-      "value": "Neues – Republik"
-    },
-    {
-      "key": "updates/title",
-      "value": "Neuigkeiten zum Crowdfunding"
-    },
-    {
-      "key": "updates/metaDescription",
-      "value": "Das digitale Magazin von Project R – jetzt Mitglied werden."
-    },
-    {
-      "key": "updates/all",
-      "value": "Alle Meldungen"
-    },
+
     {
       "key": "faq/pageTitle",
       "value": "Fragen – Republik"
@@ -3447,14 +3428,6 @@
       "value": "Crew"
     },
     {
-      "key": "menu/updates",
-      "value": "Neues"
-    },
-    {
-      "key": "menu/updates/wer-sind-sie",
-      "value": "Neues"
-    },
-    {
       "key": "menu/events",
       "value": "Veranstaltungen"
     },
@@ -4033,10 +4006,6 @@
     {
       "key": "events/404",
       "value": "Ereignis nicht gefunden"
-    },
-    {
-      "key": "updates/404",
-      "value": "Update nicht gefunden"
     },
     {
       "key": "testimonial/title",
@@ -4746,6 +4715,53 @@
     {
       "key": "account/access/Events/details/show",
       "value": "Events anzeigen"
+    },
+
+    {
+      "key": "account/MagazineSubscription/status/trialing",
+      "value": "trialing"
+    },
+    { "key": "account/MagazineSubscription/status/active", "value": "Aktiv" },
+    {
+      "key": "account/MagazineSubscription/status/incomplete",
+      "value": "Unvollständig"
+    },
+    {
+      "key": "account/MagazineSubscription/status/incomplete_expired",
+      "value": "Unvollständig, abgelaufen"
+    },
+    {
+      "key": "account/MagazineSubscription/status/unpaid",
+      "value": "Unbezahlt"
+    },
+    {
+      "key": "account/MagazineSubscription/status/past_due",
+      "value": "Überfällig"
+    },
+    {
+      "key": "account/MagazineSubscription/status/paused",
+      "value": "Pausiert"
+    },
+    {
+      "key": "account/MagazineSubscription/status/canceled",
+      "value": "Abgelaufen"
+    },
+    {
+      "key": "account/MagazineSubscription/status/overdue",
+      "value": "Überfällig"
+    },
+    { "key": "account/MagazineSubscription/status/ended", "value": "Geendet" },
+    {
+      "key": "account/MagazineSubscription/type/MONTHLY_SUBSCRIPTION",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "account/MagazineSubscription/type/YEARLY_SUBSCRIPTION",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "account/MagazineSubscription/type/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönnermitgliedschaft"
     }
   ]
 }

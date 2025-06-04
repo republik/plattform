@@ -30,4 +30,10 @@ query MarketingLandingPageCMS {
     sectionFormatsTitle
     sectionFormatsDescription
   }
+  employees: allEmployees(
+    first: 15
+    filter: {AND: [{employee: {eq: true}}, {pitch: {isPresent: true}}]}
+  ) {
+    ...EmployeeRecordFields
+  }
 }

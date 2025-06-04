@@ -1,19 +1,14 @@
-import { Br } from './components/Paragraph'
-import HR from '../shared/components/HR'
-import Blockquote, {
-  BlockquoteText,
-  BlockquoteSource,
-} from './components/Blockquote'
-
 import {
-  matchType,
-  matchZone,
   matchHeading,
   matchParagraph,
+  matchType,
+  matchZone,
 } from '@republik/mdast-react-render'
-
-import { getResizedSrcs } from '../styleguide-clone/components/Figure/utils'
-import { Variable } from '../styleguide-clone/components/Variables'
+import HR from '../shared/components/HR'
+import authorRule from '../shared/rules/authorRule'
+import datawrapperRule from '../shared/rules/datawrapperRule'
+import elseRule from '../shared/rules/elseRule'
+import ifRule from '../shared/rules/ifRule'
 
 import {
   extractImages,
@@ -22,9 +17,14 @@ import {
   matchImagesParagraph,
   matchSpanType,
 } from '../shared/util/matchers'
-import ifRule from '../shared/rules/ifRule'
-import elseRule from '../shared/rules/elseRule'
-import datawrapperRule, { edgeToEdgeDatawrapperRule } from "../shared/rules/datawrapperRule";
+
+import { getResizedSrcs } from '../styleguide-clone/components/Figure/utils'
+import { Variable } from '../styleguide-clone/components/Variables'
+import Blockquote, {
+  BlockquoteSource,
+  BlockquoteText,
+} from './components/Blockquote'
+import { Br } from './components/Paragraph'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
@@ -163,12 +163,7 @@ const createNewsletterSchema = ({
           const setMaxWidth = parent.data.size !== undefined
 
           return {
-            ...getResizedSrcs(
-              src,
-              srcDark,
-              displayWidth,
-              setMaxWidth,
-            ),
+            ...getResizedSrcs(src, srcDark, displayWidth, setMaxWidth),
             alt: node.children[0].alt,
           }
         },
@@ -207,6 +202,7 @@ const createNewsletterSchema = ({
               },
               ifRule,
               elseRule,
+              authorRule,
               {
                 matchMdast: matchZone('BUTTON'),
                 component: Button,

@@ -32,14 +32,14 @@ graph TD;
   subgraph Services [Services]
     MAILCHIMP[Mailchimp];
     MANDRILL[Mandrill];
-    MATOMO[Matomo];
+    PLAUSIBLE[Plausible];
     ULTRA[Ultra dashboard];
     SENTRY[Sentry];
 
     BACKEND_MODULES --> MAILCHIMP;
     BACKEND_MODULES --> MANDRILL;
 
-    MAGAZIN --> MATOMO;
+    MAGAZIN --> PLAUSIBLE;
     PUBLIKATOR --> SENTRY;
     ADMIN --> SENTRY;
 
@@ -53,7 +53,7 @@ graph TD;
 | --- | --- | --- |
 | [Mailchimp](https://mailchimp.com/) | Newsletters |  |
 | [Mandrill](https://mandrillapp.com/) | Transactional emails |  |
-| [Matomo](https://matomo.org/) | analytics tool | ✅ |
+| [Plausible](https://plausible.io/) | analytics tool | ✅ |
 | [Ultra dashboard](https://ultra-dashboard.com/) | data analysis tool | ✅ |
 | [Sentry](https://sentry.io/) | Error tracking (only in internal tools) |  |
 | [DatoCMS](https://www.datocms.com/) | Headless CMS for the website |  |

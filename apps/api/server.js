@@ -28,9 +28,7 @@ const {
   graphql: subscriptions,
 } = require('@orbiting/backend-modules-subscriptions')
 const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
-const { graphql: gsheets } = require('@orbiting/backend-modules-gsheets')
 const { graphql: mailbox } = require('@orbiting/backend-modules-mailbox')
-const { graphql: slots } = require('@orbiting/backend-modules-calendar')
 const {
   graphql: callToActions,
 } = require('@orbiting/backend-modules-call-to-actions')
@@ -41,7 +39,6 @@ const {
 const {
   graphql: paymentsGraphql,
   express: paymentsWebhook,
-  Payments: PaymentsService,
   StripeWebhookWorker,
   StripeCustomerCreateWorker,
   SyncAddressDataWorker,
@@ -69,7 +66,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-republik-crowdfundings/loaders'),
   ...require('@orbiting/backend-modules-republik/loaders'),
   ...require('@orbiting/backend-modules-publikator/loaders'),
-  ...require('@orbiting/backend-modules-calendar/loaders'),
+  ...require('@orbiting/backend-modules-payments').loaders,
 }
 
 const {
@@ -166,9 +163,7 @@ const run = async (workerId, config) => {
     collections,
     subscriptions,
     embeds,
-    gsheets,
     mailbox,
-    slots,
     callToActions,
     referralCampaigns,
     paymentsGraphql,
@@ -178,7 +173,6 @@ const run = async (workerId, config) => {
   const middlewares = [
     paymentsWebhook,
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
-    require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-mail/express/mandrill'),
     require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
     require('@orbiting/backend-modules-publikator/express/webhook'),
@@ -231,8 +225,6 @@ const run = async (workerId, config) => {
     })
     return context
   }
-
-  PaymentsService.start(connectionContext.pgdb)
 
   const server = await Server.start(
     graphqlSchema,
@@ -368,9 +360,6 @@ const runOnce = async () => {
 
   const queue = setupQueue(connectionContext, 120)
   await queue.start()
-
-  PaymentsService.start(context.pgdb)
-
   await queue.startWorkers()
 
   const close = async () => {
