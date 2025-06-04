@@ -1,10 +1,10 @@
-import { useQuery } from '@apollo/client'
+import { useQuery, useApolloClient } from '@apollo/client'
 import { css } from 'glamor'
+import { useEffect, useState } from 'react'
 
 import { useTranslation } from '../../lib/withT'
 
 import Frame from '../Frame'
-import Loader from '../Loader'
 
 import { PUBLIC_BASE_URL } from '../../lib/constants'
 
@@ -46,17 +46,65 @@ const ProfilePage = ({ data, fetchMore }) => {
   )
 }
 
-const Profile = ({ user: foundUser }: { user: User }) => {
+const Profile = ({ publicUser }: { publicUser: User }) => {
   const { t } = useTranslation()
+  const client = useApolloClient()
+  const [cacheInitialized, setCacheInitialized] = useState(false)
 
-  const { loading, error, data, fetchMore } = useQuery(getPublicUser, {
+  // Initialize Apollo cache with server-side data
+  useEffect(() => {
+    client.writeQuery({
+      query: getPublicUser,
+      variables: {
+        slug: publicUser.slug,
+        firstDocuments: 10,
+        firstComments: 10,
+      },
+      data: {
+        user: publicUser,
+      },
+    })
+    setCacheInitialized(true)
+  }, [client, publicUser])
+
+  // Only run query after cache is initialized, and use cache-only to prevent network request
+  const { data, fetchMore } = useQuery(getPublicUser, {
     variables: {
-      slug: foundUser.slug,
+      slug: publicUser.slug,
       firstDocuments: 10,
       firstComments: 10,
     },
+    skip: !cacheInitialized, // Wait until cache is initialized
+    fetchPolicy: cacheInitialized ? 'cache-first' : 'cache-only', // Prefer cache when available
   })
-  const user: User = data?.user
+
+  const user = data?.user || publicUser
+
+  // Create structured person data for SEO
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    "dateModified": user.updatedAt,
+    "mainEntity": {
+      "@type": "Person",
+      "name": user.name,
+      "identifier": user.slug,
+      "description": user.biography || user.statement || '',
+      "image": user.portrait,
+      "interactionStatistic": [
+        ...(user.documents?.totalCount ? [{
+          "@type": "InteractionCounter",
+          "interactionType": "https://schema.org/WriteAction",
+          "userInteractionCount": user.documents.totalCount
+        }] : []),
+        ...(user.comments?.totalCount ? [{
+          "@type": "InteractionCounter", 
+          "interactionType": "https://schema.org/CommentAction",
+          "userInteractionCount": user.comments.totalCount
+        }] : [])
+      ]
+    }
+  }
 
   const metaData = {
     url: user ? `${PUBLIC_BASE_URL}/~${user.slug}` : undefined,
@@ -75,17 +123,12 @@ const Profile = ({ user: foundUser }: { user: User }) => {
     title: user
       ? t('pages/profile/title', { name: user.name })
       : t('pages/profile/empty/title'),
+    jsonLds: [structuredData],
   }
 
   return (
     <Frame meta={metaData} raw>
-      <Loader
-        loading={loading}
-        error={error}
-        render={() => {
-          return <ProfilePage data={data} fetchMore={fetchMore} />
-        }}
-      />
+      <ProfilePage data={{ user }} fetchMore={fetchMore} />
     </Frame>
   )
 }
