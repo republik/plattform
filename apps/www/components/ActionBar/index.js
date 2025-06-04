@@ -189,7 +189,6 @@ const ActionBar = ({
   const hasPdf = meta && meta.template === 'article' && !isSeriesOverview
   const notBookmarkable =
     meta?.template === 'page' ||
-    meta?.template === 'flyer' ||
     meta?.template === 'editorialNewsletter'
   const isDiscussion = meta && meta.template === 'discussion'
   const emailSubject = t('article/share/emailSubject', {
@@ -352,7 +351,7 @@ const ActionBar = ({
           attributes={{ ['data-show-if-me']: true }}
         />
       ),
-      modes: ['articleTop', 'articleBottom', 'flyer'],
+      modes: ['articleTop', 'articleBottom'],
       show:
         // only show if there is something to subscribe to
         (isDiscussion ||
@@ -408,7 +407,7 @@ const ActionBar = ({
               t('article/actionbar/share'),
             )
           : '',
-      modes: ['articleTop', 'articleOverlay', 'articleBottom', 'flyer'],
+      modes: ['articleTop', 'articleOverlay', 'articleBottom'],
       show: true,
     },
     {
@@ -468,7 +467,7 @@ const ActionBar = ({
           fill={'#E9A733'}
         />
       ),
-      modes: ['articleTop', 'flyer'],
+      modes: ['articleTop'],
       show: document?.repoId && isEditor,
     },
     {
@@ -482,7 +481,7 @@ const ActionBar = ({
           fill={'#E9A733'}
         />
       ),
-      modes: ['articleTop', 'flyer'],
+      modes: ['articleTop'],
       show: document?.repoId && isEditor && getAnalyticsDashboardUrl(meta.path),
     },
     {

@@ -72,8 +72,7 @@ const Header = ({
   const lastDiff = useRef()
 
   const topLevelPaths = ['/', '/feed', '/dialog', '/suche', USER_MENU_URL]
-  const isOnTopLevelPage =
-    topLevelPaths.includes(router.asPath) || router.asPath.endsWith('/journal')
+  const isOnTopLevelPage = topLevelPaths.includes(router.asPath)
   const backButton = inNativeIOSApp && me && !isOnTopLevelPage
 
   // check if we can pop the navigation stack

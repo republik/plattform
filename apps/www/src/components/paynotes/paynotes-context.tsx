@@ -28,7 +28,6 @@ type TemplateType =
   | 'section'
   | 'dossier'
   | 'page'
-  | 'flyer'
   | 'seriesOverview' // technically an article, but we want to handle this differently
 
 type PaynotesContextValues = {
