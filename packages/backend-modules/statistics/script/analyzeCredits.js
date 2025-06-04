@@ -221,6 +221,9 @@ PgDb.connect()
       // gender ratios over all w/o unkown, neutral including b (both)
       '(m-n)+b%': (1 / stats['a-n']) * (stats.m + stats.b),
       '(f-n)+b%': (1 / stats['a-n']) * (stats.f + stats.b),
+
+      // percentage überhang (gender ratio f - gender ratio m)
+      'überhang': (1 / stats['a-n']) * (stats.f + stats.b) - (1 / stats['a-n']) * (stats.m + stats.b),
     })
 
     console.warn('THIS SCRIPT IS FOR DEVELOPMENT PURPOSES ONLY.')
