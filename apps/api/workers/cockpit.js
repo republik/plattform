@@ -7,7 +7,7 @@ class CockpitWorker extends BaseWorker {
   }
 
   async perform(_) {
-    await this.context.pgdb.query(`
+    return this.context.pgdb.run(`
       REFRESH MATERIALIZED VIEW cockpit_membership_evolution;
       REFRESH MATERIALIZED VIEW cockpit_membership_last_seen;
       REFRESH MATERIALIZED VIEW cockpit_discussions_evolution;
