@@ -3,7 +3,6 @@ import { initializeApollo } from '../../../lib/apollo'
 import { parseJSONObject } from '../../../lib/safeJSON'
 
 const BASE_URL = process.env.PUBLIC_BASE_URL || 'https://www.republik.ch'
-const API_URL = process.env.NEXT_PUBLIC_API_URL
 const SCHEMA_PUBLISHER = process.env.NEXT_PUBLIC_SCHEMA_PUBLISHER
 
 const publisher = parseJSONObject(SCHEMA_PUBLISHER)
@@ -36,6 +35,7 @@ export default async function handler(req, res) {
   if (!year || isNaN(parseInt(year))) {
     return res.status(400).json({ error: 'Invalid year parameter' })
   }
+  const yearString = String(parseInt(year))
 
   if (!publisher.name || !publisher.knowsLanguage) {
     console.warn(
@@ -91,7 +91,7 @@ export default async function handler(req, res) {
     })
 
     if (errors) {
-      console.error(`[news-sitemap-${year}]`, errors)
+      console.error(`[news-sitemap-${yearString}]`, errors)
       return res.status(500).json({ error: 'GraphQL error' })
     }
 
@@ -109,7 +109,7 @@ export default async function handler(req, res) {
     res.write(sitemap)
     res.end()
   } catch (error) {
-    console.error(`[news-sitemap-${year}]`, 'Failed to fetch articles:', error)
+    console.error(`[news-sitemap-${yearString}]`, 'Failed to fetch articles:', error)
     return res.status(500).json({ error: 'Failed to generate sitemap' })
   }
 } 
