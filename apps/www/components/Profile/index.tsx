@@ -4,11 +4,9 @@ import { css } from 'glamor'
 import { useTranslation } from '../../lib/withT'
 
 import Frame from '../Frame'
-import Loader from '../Loader'
 
 import { PUBLIC_BASE_URL } from '../../lib/constants'
 
-import type { User } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useRouter } from 'next/router'
 import { useMe } from '../../lib/context/MeContext'
 import getPublicUser from './graphql/getPublicUser'
@@ -46,46 +44,77 @@ const ProfilePage = ({ data, fetchMore }) => {
   )
 }
 
-const Profile = ({ user: foundUser }: { user: User }) => {
+const Profile = ({ slug }: { slug: string }) => {
   const { t } = useTranslation()
 
-  const { loading, error, data, fetchMore } = useQuery(getPublicUser, {
+  // Only run query after cache is initialized, and use cache-only to prevent network request
+  const { data, fetchMore } = useQuery(getPublicUser, {
     variables: {
-      slug: foundUser.slug,
+      slug,
       firstDocuments: 10,
       firstComments: 10,
     },
   })
-  const user: User = data?.user
+
+  const user = data?.user
+
+  if (!user) {
+    // This should not happen, as the page should have returned a 404 already
+    return null
+  }
+
+  // Create structured person data for SEO
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    dateModified: user.updatedAt,
+    mainEntity: {
+      '@type': 'Person',
+      name: user.name,
+      identifier: user.slug,
+      description: user.biography || user.statement || '',
+      image: user.portrait,
+      interactionStatistic: [
+        ...(user.documents?.totalCount
+          ? [
+              {
+                '@type': 'InteractionCounter',
+                interactionType: 'https://schema.org/WriteAction',
+                userInteractionCount: user.documents.totalCount,
+              },
+            ]
+          : []),
+        ...(user.comments?.totalCount
+          ? [
+              {
+                '@type': 'InteractionCounter',
+                interactionType: 'https://schema.org/CommentAction',
+                userInteractionCount: user.comments.totalCount,
+              },
+            ]
+          : []),
+      ],
+    },
+  }
 
   const metaData = {
-    url: user ? `${PUBLIC_BASE_URL}/~${user.slug}` : undefined,
-    image:
-      user && user.portrait
-        ? screenshotUrl({
-            url: `${PUBLIC_BASE_URL}/community?share=${user.id}`,
-            width: 1200,
-            height: 628,
-            version: user.updatedAt,
-          })
-        : '',
-    pageTitle: user
-      ? t('pages/profile/pageTitle', { name: user.name })
-      : t('pages/profile/empty/pageTitle'),
-    title: user
-      ? t('pages/profile/title', { name: user.name })
-      : t('pages/profile/empty/title'),
+    url: `${PUBLIC_BASE_URL}/~${user.slug}`,
+    image: user.portrait
+      ? screenshotUrl({
+          url: `${PUBLIC_BASE_URL}/community?share=${user.id}`,
+          width: 1200,
+          height: 628,
+          version: user.updatedAt,
+        })
+      : '',
+    pageTitle: t('pages/profile/pageTitle', { name: user.name }),
+    title: t('pages/profile/title', { name: user.name }),
+    jsonLds: [structuredData],
   }
 
   return (
     <Frame meta={metaData} raw>
-      <Loader
-        loading={loading}
-        error={error}
-        render={() => {
-          return <ProfilePage data={data} fetchMore={fetchMore} />
-        }}
-      />
+      <ProfilePage data={{ user }} fetchMore={fetchMore} />
     </Frame>
   )
 }
