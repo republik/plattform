@@ -27,9 +27,9 @@ const footerLinkStyle = {
 
 const ProjectRFooter = () => (
   <>
-    <a href='https://project-r.construction/' style={linkStyle}>
+    <a href='https://project-r.ch/' style={linkStyle}>
       <img
-        src='https://assets.project-r.construction/images/project_r_logo_newsletter.png'
+        src='https://assets.project-r.ch/images/project_r_logo_newsletter.png'
         style={{
           border: 0,
           width: '50px !important',
@@ -52,7 +52,7 @@ const Footer = ({ meta }) => {
   const { slug, path, format } = meta
   const isProjectR = matchProjectR(format)
   const baseUrl = isProjectR
-    ? 'https://project-r.construction/newsletter'
+    ? 'https://project-r.ch/newsletter'
     : 'https://www.republik.ch'
   return (
     <Center>
