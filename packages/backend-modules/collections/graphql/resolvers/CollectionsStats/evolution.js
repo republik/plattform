@@ -17,13 +17,6 @@ module.exports = async (_, args, context) => {
     },
   )
 
-  // In case pre-populated data is not available...
-  if (!data) {
-    throw new Error(
-      'Unable to retrieve pre-populated data for Collection.CollectionsStats.evolution',
-    )
-  }
-
   // A list of desired bucket keys to return
   const keys = []
 

@@ -219,7 +219,7 @@ const Page = ({
         error={data.error}
         style={{ minHeight: `calc(90vh)` }}
         render={() => {
-          if (!data.membershipStats) {
+          if (!data.membershipStats?.bucket?.length) {
             return 'Die Cockpit-Daten konnten nicht geladen werden :('
           }
 

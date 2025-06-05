@@ -5,11 +5,6 @@ module.exports = async (_, args, context) => {
   const data = await context.pgdb.query(
     'select * from cockpit_membership_evolution;',
   )
-
-  if (!data.length) {
-    throw new Error('membership stats evolution not loaded')
-  }
-
   // A list of desired bucket keys to return
   const keys = []
 
@@ -24,6 +19,6 @@ module.exports = async (_, args, context) => {
 
   return {
     buckets: data.filter(({ key }) => keys.includes(key)),
-    updatedAt: data[0].updatedAt,
+    updatedAt: data[0]?.updatedAt || new Date(),
   }
 }

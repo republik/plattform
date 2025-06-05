@@ -6,10 +6,6 @@ module.exports = async (_, args, context) => {
     'select * from cockpit_membership_last_seen;',
   )
 
-  if (!data.length) {
-    throw new Error('membership stats last seen not loaded')
-  }
-
   // A list of desired bucket keys to return
   const keys = []
 
@@ -24,6 +20,6 @@ module.exports = async (_, args, context) => {
 
   return {
     buckets: data.filter(({ key }) => keys.includes(key)),
-    updatedAt: data[0].updatedAt,
+    updatedAt: data[0]?.updatedAt || new Date(),
   }
 }

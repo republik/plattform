@@ -336,10 +336,8 @@ const sumBucketProps = async (
     { key },
   )
 
-  if (!bucket) {
-    throw new Error(
-      `Unable to sum bucket: Bucket "${key}" not in pre-populated data available`,
-    )
+  if (!bucket.length) {
+    return 0
   }
 
   const { add = ['active', 'overdue'], subtract = [] } = props

@@ -20,6 +20,6 @@ module.exports = async (_, args, context) => {
 
   return {
     buckets: data.filter(({ key }) => keys.includes(key)),
-    updatedAt: data[0]?.updatedAt,
+    updatedAt: data[0]?.updatedAt || new Date(),
   }
 }
