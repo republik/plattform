@@ -331,24 +331,13 @@ const sumBucketProps = async (
   props,
 ) => {
   // Fetch pre-populated data
-  const data = await createCache(context).get()
+  const bucket = await context.pgdb.queryOne(
+    'select * from cockpit_membership_evolution where key = :key;',
+    { key },
+  )
 
-  if (!data) {
-    throw new Error(
-      'Unable to sum bucket: Pre-populated data is not available. Did you run `yarn populate`?',
-    )
-  }
-
-  // Retrieve pre-populated result from data.
-  const { result = [] } = data
-
-  // Find desired bucket
-  const bucket = result.find((bucket) => bucket.key === key)
-
-  if (!bucket) {
-    throw new Error(
-      `Unable to sum bucket: Bucket "${key}" not in pre-populated data available`,
-    )
+  if (!bucket.length) {
+    return 0
   }
 
   const { add = ['active', 'overdue'], subtract = [] } = props
