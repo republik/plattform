@@ -1,4 +1,5 @@
-import { createApolloFetch } from 'apollo-fetch'
+import { gql } from '@apollo/client'
+import { initializeApollo } from '../../../lib/apollo'
 
 const BASE_URL = process.env.PUBLIC_BASE_URL || 'https://www.republik.ch'
 const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -27,16 +28,16 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid year parameter' })
   }
 
-  const apolloFetch = createApolloFetch({
-    uri: API_URL,
+  const apolloClient = initializeApollo(null, {
+    headers: req.headers,
   })
 
   const fromDate = new Date(parseInt(year), 0, 1) // January 1st of the year
   const toDate = new Date(parseInt(year) + 1, 0, 1) // January 1st of the next year
 
   try {
-    const response = await apolloFetch({
-      query: `
+    const { data, errors } = await apolloClient.query({
+      query: gql`
         query sitemapByYear($from: DateTime!, $to: DateTime!) {
           search(
             filter: {
@@ -68,14 +69,14 @@ export default async function handler(req, res) {
       },
     })
 
-    if (response.errors) {
-      console.error(`[sitemap-${year}]`, response.errors)
+    if (errors) {
+      console.error(`[sitemap-${year}]`, errors)
       return res.status(500).json({ error: 'GraphQL error' })
     }
 
     const {
       search: { nodes },
-    } = response.data
+    } = data
 
     const articles = nodes.map(({ entity }) => entity)
 

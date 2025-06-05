@@ -1,4 +1,5 @@
-import { createApolloFetch } from 'apollo-fetch'
+import { gql } from '@apollo/client'
+import { initializeApollo } from '../../../lib/apollo'
 import { parseJSONObject } from '../../../lib/safeJSON'
 
 const BASE_URL = process.env.PUBLIC_BASE_URL || 'https://www.republik.ch'
@@ -46,16 +47,16 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Publisher configuration incomplete' })
   }
 
-  const apolloFetch = createApolloFetch({
-    uri: API_URL,
+  const apolloClient = initializeApollo(null, {
+    headers: req.headers,
   })
 
   const fromDate = new Date(parseInt(year), 0, 1) // January 1st of the year
   const toDate = new Date(parseInt(year) + 1, 0, 1) // January 1st of the next year
 
   try {
-    const response = await apolloFetch({
-      query: `
+    const { data, errors } = await apolloClient.query({
+      query: gql`
         query newsSitemapByYear($from: DateTime!, $to: DateTime!) {
           search(
             filter: {
@@ -89,14 +90,14 @@ export default async function handler(req, res) {
       },
     })
 
-    if (response.errors) {
-      console.error(`[news-sitemap-${year}]`, response.errors)
+    if (errors) {
+      console.error(`[news-sitemap-${year}]`, errors)
       return res.status(500).json({ error: 'GraphQL error' })
     }
 
     const {
       search: { nodes },
-    } = response.data
+    } = data
 
     const articles = nodes.map(({ entity }) => entity)
 
