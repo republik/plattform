@@ -910,7 +910,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/label",
-      "value": "Challenge-Accepted-Newsletter"
+      "value": "Challenge Accepted"
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/frequency",
@@ -918,7 +918,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/description",
-      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Challenge accepted. Ein frischer Blick auf die grossen Herausforderungen und auf Menschen, die sie anpacken. Und jede Menge Gelegenheiten, sich auszutauschen, voneinander zu lernen und sich gegenseitig zu inspirieren."
+      "value": "Der Newsletter für alle, die sich der Klimakrise stellen. Und gemeinsam Wege aus der Krise finden wollen. Neugierig, kritisch, konstruktiv."
     },
     {
       "key": "account/newsletterSubscriptions/onlyName/subscribe",
