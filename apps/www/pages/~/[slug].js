@@ -49,7 +49,7 @@ export const getServerSideProps = createGetServerSideProps(
         }
       }
 
-      return { props: { publicUser: user } }
+      return { props: { slug } }
     }
 
     // check if a redirect is registered for this path
