@@ -43,10 +43,7 @@ const ProjectRFooter = () => (
       />
     </a>
     <p style={{ ...paragraphStyle, marginTop: 0 }}>
-      Project R Genossenschaft
-      <br />
-      Sihlhallenstrasse 1<br />
-      8004 Zürich
+      Project R Genossenschaft, Sihlhallenstrasse 1, 8004 Zürich
     </p>
   </>
 )
@@ -59,29 +56,6 @@ const Footer = ({ meta }) => {
     : 'https://www.republik.ch'
   return (
     <Center>
-      <a href='https://www.republik.ch/' style={linkStyle}>
-        <img
-          height='79'
-          width='178'
-          src='https://www.republik.ch/static/logo_republik_newsletter.png'
-          style={{
-            border: 0,
-            width: '178px !important',
-            height: '79px !important',
-            margin: 0,
-            maxWidth: '100% !important',
-          }}
-          alt='REPUBLIK'
-        />
-      </a>
-      <p style={{ ...paragraphStyle, marginTop: 0 }}>
-        Republik AG
-        <br />
-        Sihlhallenstrasse 1<br />
-        8004 Zürich
-      </p>
-      {isProjectR && <ProjectRFooter />}
-      <HR />
       <p style={footerParagraphStyle}>
         <a
           href={`${baseUrl}${path ? path : `/${slug}`}`}
@@ -89,6 +63,14 @@ const Footer = ({ meta }) => {
         >
           Im Web lesen
         </a>
+      </p>
+      <p style={footerParagraphStyle}>
+        Alle unsere Newsletter:<b/>
+        <a href= 'https://www.republik.ch/format/7-uhr-newsletter' style={footerLinkStyle} >Republik heute</a> | 
+        <a href='https://www.republik.ch/format/was-diese-woche-wichtig-war' style={footerLinkStyle}>Was diese Woche wichtig war</a> | 
+        <a href='https://www.republik.ch/format/wochenend-newsletter' style={footerLinkStyle}>Republik am Wochenende</a> | 
+        <a href='https://www.republik.ch/challenge-accepted' style={footerLinkStyle}>Challenge Accepted</a> | 
+        <a href='https://www.republik.ch/format/project-r-newsletter' style={footerLinkStyle}>Project R</a>
       </p>
       <p style={footerParagraphStyle}>
         Um{' '}
@@ -110,6 +92,26 @@ const Footer = ({ meta }) => {
           Alle Newsletter sofort pausieren
         </a>
       </p>
+      <HR />
+      <a href='https://www.republik.ch/' style={linkStyle}>
+        <img
+          height='79'
+          width='178'
+          src='https://www.republik.ch/static/logo_republik_newsletter.png'
+          style={{
+            border: 0,
+            width: '178px !important',
+            height: '79px !important',
+            margin: 0,
+            maxWidth: '100% !important',
+          }}
+          alt='REPUBLIK'
+        />
+      </a>
+      <p style={{ ...paragraphStyle, marginTop: 0 }}>
+        Republik AG, Sihlhallenstrasse 1, 8004 Zürich
+      </p>
+      {isProjectR && <ProjectRFooter />}
     </Center>
   )
 }
