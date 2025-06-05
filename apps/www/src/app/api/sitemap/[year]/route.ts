@@ -61,6 +61,8 @@ export async function GET(
     } = data
 
     const articles = nodes.map(({ entity }) => entity)
+    const currentYear = new Date().getFullYear()
+    const changeFreq = year === currentYear ? 'daily' : 'monthly'
 
     // Generate XML sitemap
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
@@ -73,7 +75,7 @@ export async function GET(
                           article.meta.lastPublishedAt ||
                             article.meta.publishDate,
                         ).toISOString()}</lastmod>
-                        <changefreq>yearly</changefreq>
+                        <changefreq>${changeFreq}</changefreq>
                         <priority>0.8</priority>
                       </url>`,
                       )

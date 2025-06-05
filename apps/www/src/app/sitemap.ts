@@ -12,7 +12,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     sitemaps.push({
       url: `${BASE_URL}/api/sitemap/${year}`,
       lastModified: new Date(),
-      changeFrequency: 'yearly',
+      changeFrequency: year === currentYear ? 'daily' : 'monthly',
       priority: 0.8,
     })
   }
