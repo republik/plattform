@@ -1,13 +1,14 @@
+import { NextRequest, NextResponse } from 'next/server'
 import { gql } from '@apollo/client'
-import { initializeApollo } from '../../../lib/apollo'
-import { parseJSONObject } from '../../../lib/safeJSON'
+import { getClient } from '../../../../lib/apollo/client'
+import { parseJSONObject } from '../../../../../lib/safeJSON'
 
 const BASE_URL = process.env.PUBLIC_BASE_URL || 'https://www.republik.ch'
 const SCHEMA_PUBLISHER = process.env.NEXT_PUBLIC_SCHEMA_PUBLISHER
 
 const publisher = parseJSONObject(SCHEMA_PUBLISHER)
 
-function generateNewsSiteMap(articles) {
+function generateNewsSiteMap(articles: any[]) {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
 ${articles
@@ -29,11 +30,14 @@ ${articles
 </urlset>`
 }
 
-export default async function handler(req, res) {
-  const { year } = req.query
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { year: string } },
+) {
+  const { year } = params
   
   if (!year || isNaN(parseInt(year))) {
-    return res.status(400).json({ error: 'Invalid year parameter' })
+    return NextResponse.json({ error: 'Invalid year parameter' }, { status: 400 })
   }
   const yearString = String(parseInt(year))
 
@@ -44,18 +48,19 @@ export default async function handler(req, res) {
       `publisher.name=${publisher.name}`,
       `publisher.knowsLanguage=${publisher.knowsLanguage}`,
     )
-    return res.status(500).json({ error: 'Publisher configuration incomplete' })
+    return NextResponse.json(
+      { error: 'Publisher configuration incomplete' },
+      { status: 500 },
+    )
   }
 
-  const apolloClient = initializeApollo(null, {
-    headers: req.headers,
-  })
+  const client = getClient()
 
   const fromDate = new Date(parseInt(year), 0, 1) // January 1st of the year
   const toDate = new Date(parseInt(year) + 1, 0, 1) // January 1st of the next year
 
   try {
-    const { data, errors } = await apolloClient.query({
+    const { data, errors } = await client.query({
       query: gql`
         query newsSitemapByYear($from: DateTime!, $to: DateTime!) {
           search(
@@ -92,7 +97,7 @@ export default async function handler(req, res) {
 
     if (errors) {
       console.error(`[news-sitemap-${yearString}]`, errors)
-      return res.status(500).json({ error: 'GraphQL error' })
+      return NextResponse.json({ error: 'GraphQL error' }, { status: 500 })
     }
 
     const {
@@ -103,13 +108,17 @@ export default async function handler(req, res) {
 
     const sitemap = generateNewsSiteMap(articles)
 
-    res.setHeader('Content-Type', 'application/xml')
-    res.setHeader('Cache-Control', 'public, max-age=3600') // Cache for 1 hour
-    
-    res.write(sitemap)
-    res.end()
+    return new NextResponse(sitemap, {
+      headers: {
+        'Content-Type': 'application/xml',
+        'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
+      },
+    })
   } catch (error) {
     console.error(`[news-sitemap-${yearString}]`, 'Failed to fetch articles:', error)
-    return res.status(500).json({ error: 'Failed to generate sitemap' })
+    return NextResponse.json(
+      { error: 'Failed to generate sitemap' },
+      { status: 500 },
+    )
   }
 } 

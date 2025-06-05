@@ -1,7 +1,9 @@
+import { NextResponse } from 'next/server'
+
 const BASE_URL = process.env.PUBLIC_BASE_URL || 'https://www.republik.ch'
 const START_YEAR = 2017
 
-function generateNewsSiteMapIndex(years) {
+function generateNewsSiteMapIndex(years: number[]) {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${years
@@ -16,7 +18,7 @@ ${years
 </sitemapindex>`
 }
 
-export default async function handler(req, res) {
+export async function GET() {
   const currentYear = new Date().getFullYear()
   
   const years = []
@@ -26,9 +28,10 @@ export default async function handler(req, res) {
 
   const sitemap = generateNewsSiteMapIndex(years)
 
-  res.setHeader('Content-Type', 'application/xml')
-  res.setHeader('Cache-Control', 'public, max-age=86400') // Cache for 24 hours
-  
-  res.write(sitemap)
-  res.end()
+  return new NextResponse(sitemap, {
+    headers: {
+      'Content-Type': 'application/xml',
+      'Cache-Control': 'public, max-age=86400', // Cache for 24 hours
+    },
+  })
 } 
