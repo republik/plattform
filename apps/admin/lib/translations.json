@@ -728,19 +728,19 @@
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/label",
-      "value": "Täglicher Newsletter"
+      "value": "Republik heute"
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/frequency",
-      "value": "montags, dienstags, mittwochs und freitags"
+      "value": "Von Montag bis Freitag um 5 Uhr"
     },
     {
       "key": "account/newsletterSubscriptions/WEEKLY/label",
-      "value": "Wochenend-Newsletter"
+      "value": "Republik am Wochenende"
     },
     {
       "key": "account/newsletterSubscriptions/WEEKLY/frequency",
-      "value": "samstags"
+      "value": "Samstags um 5 Uhr"
     },
     {
       "key": "account/newsletterSubscriptions/FEUILLETON/label",
@@ -756,7 +756,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/PROJECTR/frequency",
-      "value": "unregelmässig"
+      "value": "8 bis 12 Mal pro Jahr\n"
     },
     {
       "key": "account/newsletterSubscriptions/COVID19/label",
@@ -772,7 +772,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/ACCOMPLICE/frequency",
-      "value": "unregelmässig"
+      "value": "4 bis 6 Mal pro Jahr"
     },
     {
       "key": "account/newsletterSubscriptions/WINTER/label",
@@ -783,8 +783,16 @@
       "value": "Challenge-Accepted-Newsletter"
     },
     {
+      "key": "account/newsletterSubscriptions/CLIMATE/frequency",
+      "value": "Alle 2–3 Wochen"
+    },
+    {
       "key": "account/newsletterSubscriptions/WDWWW/label",
       "value": "Was diese Woche wichtig war"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WDWWW/frequency",
+      "value": "Jeden Freitag"
     },
     {
       "key": "account/authSettings/title",
