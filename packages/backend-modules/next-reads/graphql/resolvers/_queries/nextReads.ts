@@ -1,21 +1,18 @@
 import { GraphqlContext } from '@orbiting/backend-modules-types'
-import { KNOWN_FEEDS, NextReadsResolverArgs } from '../../../lib'
+import { getFeed, NextReadsResolverArgs } from '../../../lib'
 
-export = function (
+export = async function nextReads(
   _root: never,
-  { repoId, feeds = KNOWN_FEEDS }: NextReadsResolverArgs,
-  _ctx: GraphqlContext,
+  _: NextReadsResolverArgs,
+  ctx: GraphqlContext,
 ) {
-  console.log(repoId, feeds)
-
-  // TODO!
+  const repoIds = await getFeed(ctx.pgdb, 'POPULAR_LAST_7_DAYS')
+  const documents = await ctx.loaders.Document.byRepoId.loadMany(repoIds)
 
   return [
     {
       id: 'popular_last_7_days',
-      documents: [
-        // TODO! fix document resolver
-      ],
+      documents: documents,
     },
   ]
 }
