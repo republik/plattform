@@ -8,14 +8,14 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/index.mjs"
     },
     "./email": {
+      "types": "./dist/email.d.ts",
       "require": "./dist/email.js",
-      "import": "./dist/email.mjs",
-      "types": "./dist/email.d.ts"
+      "import": "./dist/email.mjs"
     }
   },
   "scripts": {
