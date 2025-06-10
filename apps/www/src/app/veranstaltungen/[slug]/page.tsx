@@ -4,6 +4,7 @@ import { getMe } from '@app/lib/auth/me'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import Script from 'next/script'
 import { EventTeaser } from '../components/event-teaser'
 import { Metadata, ResolvingMetadata } from 'next'
 import {
@@ -46,60 +47,11 @@ export async function generateMetadata(
     description: data.event.seo?.description,
   }
 
-  // Create Event structured data for schema.org
-  const eventStructuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'Event',
-    name: data.event.title,
-    description: `Veranstaltung: ${data.event.title} - ${data.event.location}`,
-    startDate: data.event.startAt,
-    endDate: data.event.endAt || data.event.startAt,
-    location: data.event.location
-      ? {
-          '@type': 'Place',
-          name: data.event.location,
-          ...(data.event.locationLink && { url: data.event.locationLink }),
-        }
-      : undefined,
-    url: `${PUBLIC_BASE_URL}/veranstaltungen/${slug}`,
-    organizer: {
-      '@type': 'Organization',
-      name: 'Republik',
-      url: PUBLIC_BASE_URL,
-    },
-    ...(data.event.signUpLink && {
-      offers: {
-        '@type': 'Offer',
-        url: data.event.signUpLink,
-        ...(data.event.ticketPrice && {
-          price: data.event.ticketPrice,
-          priceCurrency: 'CHF',
-        }),
-        availability: data.event.fullyBooked
-          ? 'https://schema.org/SoldOut'
-          : 'https://schema.org/InStock',
-        ...(data.event.membersOnly && { eligibleCustomerType: 'Members' }),
-      },
-    }),
-    eventStatus: 'https://schema.org/EventScheduled',
-    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    // Add additional Event properties
-    ...(data.event.membersOnly && {
-      audience: {
-        '@type': 'Audience',
-        name: 'Republik Members',
-      },
-    }),
-  }
-
   return {
     ...metadata,
     openGraph: {
       title: metadata.title,
       images: [data.event.seo?.image?.url, ...previousImages].filter(Boolean),
-    },
-    other: {
-      'application/ld+json': JSON.stringify(eventStructuredData),
     },
   }
 }
@@ -124,8 +76,62 @@ export default async function Page({ params: { slug } }: PageProps) {
     return notFound()
   }
 
+  // Create Event structured data for schema.org
+  const eventStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.title,
+    description: `Veranstaltung: ${event.title} - ${event.location}`,
+    startDate: event.startAt,
+    endDate: event.endAt || event.startAt,
+    location: event.location
+      ? {
+          '@type': 'Place',
+          name: event.location,
+          ...(event.locationLink && { url: event.locationLink }),
+        }
+      : undefined,
+    url: `${PUBLIC_BASE_URL}/veranstaltungen/${slug}`,
+    organizer: {
+      '@type': 'Organization',
+      name: 'Republik',
+      url: PUBLIC_BASE_URL,
+    },
+    ...(event.signUpLink && {
+      offers: {
+        '@type': 'Offer',
+        url: event.signUpLink,
+        ...(event.ticketPrice && {
+          price: event.ticketPrice,
+          priceCurrency: 'CHF',
+        }),
+        availability: event.fullyBooked
+          ? 'https://schema.org/SoldOut'
+          : 'https://schema.org/InStock',
+        ...(event.membersOnly && { eligibleCustomerType: 'Members' }),
+      },
+    }),
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    // Add additional Event properties
+    ...(event.membersOnly && {
+      audience: {
+        '@type': 'Audience',
+        name: 'Republik Members',
+      },
+    }),
+  }
+
   return (
     <div>
+      <Script
+        id="event-structured-data"
+        type="application/ld+json"
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(eventStructuredData),
+        }}
+      />
       <EventTeaser key={event.id} event={event} isPage isMember={isMember} />
       <p className={css({ mt: '6' })}>
         <Link
