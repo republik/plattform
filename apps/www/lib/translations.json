@@ -1362,7 +1362,7 @@
     },
     {
       "key": "profile/url/error",
-      "value": "Webseite ungültig"
+      "value": "Die eingegebene URL ist ungültig. Webseiten müssen mit https:// beginnen."
     },
     {
       "key": "Account/ProfileForm/isEmailPublic/label",
