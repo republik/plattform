@@ -35,7 +35,7 @@ export const getDiscussionLinkProps = (
     (isDiscussionPage && path) ||
     undefined
   const discussionQuery = isArticleAutoDiscussion
-    ? { t: 'article', id: ownDiscussion.id }
+    ? { id: ownDiscussion.id }
     : undefined
 
   return {

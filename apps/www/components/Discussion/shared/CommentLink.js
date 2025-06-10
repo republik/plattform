@@ -16,19 +16,18 @@ export const getFocusHref = (discussion, comment) => {
     : {}
   if (discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID) {
     return {
-      pathname: '/dialog',
-      query: { t: 'general', ...focusParams },
+      pathname: '/feedback',
+      query: { ...focusParams },
     }
   } else if (
-    discussion.document &&
-    discussion.document.meta &&
-    discussion.document.meta.template === 'article' &&
-    discussion.document.meta.ownDiscussion &&
-    discussion.document.meta.ownDiscussion.id === discussion.id
+    discussion.document?.meta &&
+    discussion.document?.meta?.template === 'article' &&
+    discussion.document?.meta?.ownDiscussion &&
+    discussion.document?.meta?.ownDiscussion?.id === discussion.id
   ) {
     return {
       pathname: '/dialog',
-      query: { t: 'article', id: discussion.id, ...focusParams },
+      query: { id: discussion.id, ...focusParams },
     }
   } else if (discussion.path) {
     const { pathname, query } = parse(discussion.path, true)
