@@ -37,7 +37,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "ts-jest": "^29.1.0",
-    "tsup": "^7.2.0"
+    "tsup": "^8.5.0"
   },
   "peerDependencies": {
     "react": "^18.3.1",
