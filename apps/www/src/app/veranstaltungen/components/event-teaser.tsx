@@ -8,6 +8,7 @@ import { PUBLIC_BASE_URL } from 'lib/constants'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms'
+import { Button } from '@app/components/ui/button'
 
 type EventProps = {
   event: {
@@ -26,6 +27,7 @@ type EventProps = {
     endAt?: string
     signUpLink?: string
     fullyBooked?: boolean
+    ticketPrice?: number
     _updatedAt: string
     _status: string
   }
@@ -167,18 +169,11 @@ export const EventTeaser = ({ isPage, isMember, event }: EventProps) => {
               ) : (
                 <>
                   {event.signUpLink && (
-                    <Link
-                      className={css({
-                        // Ugh, use important here to circumvent specificity issues with the parent `& :where(a)` selector
-                        color: 'primary !important',
-                        textDecoration: 'underline',
-                        _hover: { color: 'primaryHover !important' },
-                      })}
-                      target='_blank'
-                      href={event.signUpLink}
-                    >
-                      Zur Anmeldung
-                    </Link>
+                    <Button asChild variant='outline'>
+                      <Link href={event.signUpLink}>
+                        {event.ticketPrice ? `Ticket kaufen` : 'Zur Anmeldung'}
+                      </Link>
+                    </Button>
                   )}
                 </>
               )}

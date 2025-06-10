@@ -11,6 +11,7 @@ import {
   EventDocument,
   EventRecordFieldsFragmentDoc,
 } from '#graphql/cms/__generated__/gql/graphql'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 
 type PageProps = {
   params: { slug: string }
@@ -38,11 +39,57 @@ export async function generateMetadata(
     return parentMetadata
   }
 
-  const previousImages = parentMetadata.openGraph.images || []
+  const previousImages = parentMetadata.openGraph?.images || []
 
   const metadata: Metadata = {
     title: `${data.event.seo?.title ?? data.event.title}`,
     description: data.event.seo?.description,
+  }
+
+  // Create Event structured data for schema.org
+  const eventStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: data.event.title,
+    description: `Veranstaltung: ${data.event.title} - ${data.event.location}`,
+    startDate: data.event.startAt,
+    endDate: data.event.endAt || data.event.startAt,
+    location: data.event.location
+      ? {
+          '@type': 'Place',
+          name: data.event.location,
+          ...(data.event.locationLink && { url: data.event.locationLink }),
+        }
+      : undefined,
+    url: `${PUBLIC_BASE_URL}/veranstaltungen/${slug}`,
+    organizer: {
+      '@type': 'Organization',
+      name: 'Republik',
+      url: PUBLIC_BASE_URL,
+    },
+    ...(data.event.signUpLink && {
+      offers: {
+        '@type': 'Offer',
+        url: data.event.signUpLink,
+        ...(data.event.ticketPrice && {
+          price: data.event.ticketPrice,
+          priceCurrency: 'CHF',
+        }),
+        availability: data.event.fullyBooked
+          ? 'https://schema.org/SoldOut'
+          : 'https://schema.org/InStock',
+        ...(data.event.membersOnly && { eligibleCustomerType: 'Members' }),
+      },
+    }),
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    // Add additional Event properties
+    ...(data.event.membersOnly && {
+      audience: {
+        '@type': 'Audience',
+        name: 'Republik Members',
+      },
+    }),
   }
 
   return {
@@ -50,6 +97,9 @@ export async function generateMetadata(
     openGraph: {
       title: metadata.title,
       images: [data.event.seo?.image?.url, ...previousImages].filter(Boolean),
+    },
+    other: {
+      'application/ld+json': JSON.stringify(eventStructuredData),
     },
   }
 }
