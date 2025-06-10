@@ -7,6 +7,7 @@ import { A } from '@project-r/styleguide'
 import { IconDiscussion } from '@republik/icons'
 import { ListWithQuery as TestimonialList } from '../Testimonial/List'
 import ActiveDiscussions from './ActiveDiscussions'
+import LatestComments from './LatestComments'
 
 const styles = {
   h3: css({
