@@ -8,6 +8,7 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "outDir": "dist",
+    "declarationMap": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",

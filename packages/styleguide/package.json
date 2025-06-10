@@ -35,9 +35,9 @@
     "url": "https://github.com/republik/plattform.git"
   },
   "scripts": {
-    "build": "tsup --clean --minify",
+    "build": "tsup --clean",
     "start": "serve -s build",
-    "dev": "tsup --watch",
+    "dev": "tsup --watch --sourcemap",
     "test": "jest",
     "test:dev": "jest --watch"
   },
@@ -55,7 +55,6 @@
   "devDependencies": {
     "@apollo/client": "^3.8.4",
     "@babel/standalone": "^7.15.8",
-    "@microsoft/api-extractor": "^7.52.8",
     "@republik/eslint-config-frontend": "*",
     "@republik/icons": "*",
     "@republik/mdast-react-render": "*",
