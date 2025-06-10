@@ -59,12 +59,7 @@ const getJSONLDs = (meta) => {
           .filter((c) => !c.kind?.includes('Text'))
           .map(mapContributor),
         publisher: publisher.name && publisher, // skip empty objects or if name is missing
-        isAccessibleForFree: false,
-        hasPart: {
-          '@type': 'WebPageElement',
-          isAccessibleForFree: false,
-          cssSecector: '.regwall',
-        },
+        isAccessibleForFree: true,
       },
     ]
   }
