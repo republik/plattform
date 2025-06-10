@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { gql } from '@apollo/client'
-import { getClient } from '../../../../lib/apollo/client'
-import { parseJSONObject } from '../../../../../lib/safeJSON'
+import { getClient } from '../../../../../lib/apollo/client'
+import { parseJSONObject } from '../../../../../../lib/safeJSON'
 
 const BASE_URL = process.env.PUBLIC_BASE_URL || 'https://www.republik.ch'
 const SCHEMA_PUBLISHER = process.env.NEXT_PUBLIC_SCHEMA_PUBLISHER

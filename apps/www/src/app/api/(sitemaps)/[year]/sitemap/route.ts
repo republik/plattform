@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { gql } from '@apollo/client'
-import { getClient } from '../../../../lib/apollo/client'
-
-const BASE_URL = process.env.PUBLIC_BASE_URL || 'https://www.republik.ch'
+import { getClient } from '../../../../../lib/apollo/client'
+  
+const BASE_URL = process.env.PUBLIC_BASE_URL
 
 export async function GET(
   request: NextRequest,
