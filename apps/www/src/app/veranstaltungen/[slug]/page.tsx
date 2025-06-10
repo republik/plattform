@@ -4,7 +4,6 @@ import { getMe } from '@app/lib/auth/me'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import Script from 'next/script'
 import { EventTeaser } from '../components/event-teaser'
 import { Metadata, ResolvingMetadata } from 'next'
 import {
@@ -124,12 +123,10 @@ export default async function Page({ params: { slug } }: PageProps) {
 
   return (
     <div>
-      <Script
-        id="event-structured-data"
-        type="application/ld+json"
-        strategy="beforeInteractive"
+      <script
+        type='application/ld+json'
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(eventStructuredData),
+          __html: JSON.stringify(eventStructuredData).replace(/</g, '\\u003c'),
         }}
       />
       <EventTeaser key={event.id} event={event} isPage isMember={isMember} />
