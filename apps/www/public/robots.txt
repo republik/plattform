@@ -60,4 +60,3 @@ User-agent: YouBot
 Disallow: /
 
 Sitemap: https://www.republik.ch/sitemap.xml
-Sitemap: https://www.republik.ch/api/news-sitemap

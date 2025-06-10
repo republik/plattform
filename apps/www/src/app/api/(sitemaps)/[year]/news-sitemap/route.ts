@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { gql } from '@apollo/client'
 import { getClient } from '../../../../../lib/apollo/client'
+import {
+  SitemapByYearDocument,
+  type SitemapByYearQuery,
+} from '#graphql/republik-api/__generated__/gql/graphql'
 import { parseJSONObject } from '../../../../../../lib/safeJSON'
 
-const BASE_URL = process.env.PUBLIC_BASE_URL || 'https://www.republik.ch'
+const BASE_URL = process.env.PUBLIC_BASE_URL
 const SCHEMA_PUBLISHER = process.env.NEXT_PUBLIC_SCHEMA_PUBLISHER
 
 const publisher = parseJSONObject(SCHEMA_PUBLISHER)
@@ -16,13 +19,16 @@ ${articles
     return `
   <url>
     <loc>${BASE_URL}${meta.path}</loc>
+    <lastmod>${new Date(
+      meta.lastPublishedAt || meta.publishDate,
+    ).toISOString()}</lastmod>
     <news:news>
       <news:publication>
         <news:name>${publisher.name}</news:name>
         <news:language>${publisher.knowsLanguage}</news:language>
       </news:publication>
       <news:publication_date>${meta.publishDate}</news:publication_date>
-      <news:title>${meta.seoTitle || meta.twitterTitle || meta.title}</news:title>
+      <news:title>${meta.title}</news:title>
     </news:news>
   </url>`
   })
@@ -35,60 +41,22 @@ export async function GET(
   { params }: { params: { year: string } },
 ) {
   const { year } = params
-  
+
   if (!year || isNaN(parseInt(year))) {
-    return NextResponse.json({ error: 'Invalid year parameter' }, { status: 400 })
+    return NextResponse.json(
+      { error: 'Invalid year parameter' },
+      { status: 400 },
+    )
   }
   const yearString = String(parseInt(year))
-
-  if (!publisher.name || !publisher.knowsLanguage) {
-    console.warn(
-      '[news-sitemap]',
-      'SCHEMA_PUBLISHER incomplete',
-      `publisher.name=${publisher.name}`,
-      `publisher.knowsLanguage=${publisher.knowsLanguage}`,
-    )
-    return NextResponse.json(
-      { error: 'Publisher configuration incomplete' },
-      { status: 500 },
-    )
-  }
-
   const client = getClient()
 
   const fromDate = new Date(parseInt(year), 0, 1) // January 1st of the year
   const toDate = new Date(parseInt(year) + 1, 0, 1) // January 1st of the next year
 
   try {
-    const { data, errors } = await client.query({
-      query: gql`
-        query newsSitemapByYear($from: DateTime!, $to: DateTime!) {
-          search(
-            filter: {
-              type: Document
-              template: "article"
-              publishedAt: { from: $from to: $to }
-            }
-            first: 50000
-            sort: { key: publishedAt, direction: DESC }
-          ) {
-            totalCount
-            nodes {
-              entity {
-                ... on Document {
-                  meta {
-                    path
-                    seoTitle
-                    twitterTitle
-                    title
-                    publishDate
-                  }
-                }
-              }
-            }
-          }
-        }
-      `,
+    const { data, errors } = await client.query<SitemapByYearQuery>({
+      query: SitemapByYearDocument,
       variables: {
         from: fromDate.toISOString(),
         to: toDate.toISOString(),
@@ -104,7 +72,14 @@ export async function GET(
       search: { nodes },
     } = data
 
-    const articles = nodes.map(({ entity }) => entity)
+    const articles = nodes
+      .map(({ entity }) => entity)
+      .filter(
+        (
+          entity,
+        ): entity is NonNullable<typeof entity> & { __typename: 'Document' } =>
+          entity?.__typename === 'Document',
+      )
 
     const sitemap = generateNewsSiteMap(articles)
 
@@ -115,10 +90,14 @@ export async function GET(
       },
     })
   } catch (error) {
-    console.error(`[news-sitemap-${yearString}]`, 'Failed to fetch articles:', error)
+    console.error(
+      `[news-sitemap-${yearString}]`,
+      'Failed to fetch articles:',
+      error,
+    )
     return NextResponse.json(
       { error: 'Failed to generate sitemap' },
       { status: 500 },
     )
   }
-} 
+}

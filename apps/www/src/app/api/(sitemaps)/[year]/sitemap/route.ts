@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { gql } from '@apollo/client'
 import { getClient } from '../../../../../lib/apollo/client'
+import { SitemapByYearDocument, type SitemapByYearQuery } from '#graphql/republik-api/__generated__/gql/graphql'
   
 const BASE_URL = process.env.PUBLIC_BASE_URL
 
@@ -15,33 +15,8 @@ export async function GET(
   const toDate = new Date(year + 1, 0, 1) // January 1st of the next year
 
   try {
-    const { data, error } = await client.query({
-      query: gql`
-        query sitemapByYear($from: DateTime!, $to: DateTime!) {
-          search(
-            filter: {
-              type: Document
-              template: "article"
-              publishedAt: { from: $from, to: $to }
-            }
-            first: 50000
-            sort: { key: publishedAt, direction: DESC }
-          ) {
-            totalCount
-            nodes {
-              entity {
-                ... on Document {
-                  meta {
-                    path
-                    publishDate
-                    lastPublishedAt
-                  }
-                }
-              }
-            }
-          }
-        }
-      `,
+    const { data, error } = await client.query<SitemapByYearQuery>({
+      query: SitemapByYearDocument,
       variables: {
         from: fromDate.toISOString(),
         to: toDate.toISOString(),
@@ -60,23 +35,27 @@ export async function GET(
       search: { nodes },
     } = data
 
-    const articles = nodes.map(({ entity }) => entity)
+    const articles = nodes
+      .map(({ entity }) => entity)
+      .filter((entity): entity is NonNullable<typeof entity> & { __typename: 'Document' } => 
+        entity?.__typename === 'Document'
+      )
 
     // Generate XML sitemap
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-                    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-                    ${articles
-                      .map(
-                        (article) => `  <url>
-                        <loc>${BASE_URL}${article.meta.path}</loc>
-                        <lastmod>${new Date(
-                          article.meta.lastPublishedAt ||
-                            article.meta.publishDate,
-                        ).toISOString()}</lastmod>
-                      </url>`,
-                      )
-                      .join('\n')}
-                    </urlset>`
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    ${articles
+      .map(
+        (article) => `  <url>
+        <loc>${BASE_URL}${article.meta.path}</loc>
+        <lastmod>${new Date(
+          article.meta.lastPublishedAt ||
+            article.meta.publishDate,
+        ).toISOString()}</lastmod>
+      </url>`,
+      )
+      .join('\n')}
+    </urlset>`
 
     return new NextResponse(sitemap, {
       headers: {
