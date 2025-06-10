@@ -22,6 +22,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   }
 
+  sitemaps.push({
+    url: `${BASE_URL}/api/profile-sitemap`,
+    lastModified: new Date(),
+  })
   
   return sitemaps
 }
