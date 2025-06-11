@@ -14,6 +14,7 @@ const getActiveDiscussions = gql`
           meta {
             title
             image
+            coverImage
             path
             template
             ownDiscussion {

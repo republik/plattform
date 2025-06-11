@@ -72,7 +72,10 @@ const ActiveDiscussionItem = ({ discussion, label, count }) => {
           title={label}
           iconSize={24}
           count={count}
-          image={discussion.document?.meta?.image}
+          image={
+            discussion.document?.meta?.image ||
+            discussion.document?.meta?.coverImage
+          }
         />
       </a>
     </DiscussionLink>
