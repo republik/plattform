@@ -40,8 +40,10 @@ function useDiscussionFocusHelper(): DiscussionFocusHelperType {
   function handleFocusError(errorMessage: string) {
     setFocusError(new Error(errorMessage))
     setFocusLoading(false)
-    const selector = `[data-discussion-id='${discussion.id}']`
-    navigateToSelector(selector)
+    if (discussion?.id) {
+      const selector = `[data-discussion-id='${discussion.id}']`
+      navigateToSelector(selector)
+    }
   }
 
   // Sync input-focusId with state
