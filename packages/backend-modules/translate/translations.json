@@ -1026,11 +1026,11 @@
     },
     {
       "key": "api/profile/toManyUrls",
-      "value": "Ihr Profile enthält zu viele externe URLs."
+      "value": "Ihr Profil enthält zu viele externe URLs."
     },
     {
       "key": "api/profile/invalidUrls",
-      "value": "Ihr Profile enthält zu nicht erlaubte URLs."
+      "value": "Ihr Profil enthält nicht erlaubte URLs."
     },
     {
       "key": "profile/candidacy/statement/needed",
