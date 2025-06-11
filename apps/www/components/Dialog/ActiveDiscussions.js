@@ -70,11 +70,10 @@ const ActiveDiscussionItem = ({ discussion, label, count }) => {
       <a {...styles.item} {...itemRule} {...colorScheme.set('color', 'text')}>
         <ArticleItem
           title={label}
-          iconSize={24}
           count={count}
           image={
             discussion.document?.meta?.image ||
-            discussion.document?.meta?.coverImage
+            discussion.document?.meta?.audioCover
           }
         />
       </a>
