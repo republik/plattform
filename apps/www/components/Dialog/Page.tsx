@@ -26,7 +26,7 @@ const DialogOverviewPage = () => {
       <Interaction.Headline>{t('feedback/title')}</Interaction.Headline>
       <Interaction.P>
         {t.elements('feedback/lead', {
-          a: <A href={'/etikette'}>Wie wir in der Republik debattieren.</A>,
+          a: <A href={'/etikette'}>{t('feedback/lead/etikette')}</A>,
         })}
       </Interaction.P>
       <Interaction.H3 {...styles.h3}>
