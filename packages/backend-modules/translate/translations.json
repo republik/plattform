@@ -1025,6 +1025,14 @@
       "value": "Sie benötigen ein Portrait, um auf der Community-Seite zu erscheinen"
     },
     {
+      "key": "api/profile/toManyUrls",
+      "value": "Ihr Profil enthält zu viele externe URLs."
+    },
+    {
+      "key": "api/profile/invalidUrls",
+      "value": "Ihr Profil enthält nicht erlaubte URLs."
+    },
+    {
       "key": "profile/candidacy/statement/needed",
       "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir ein Statement zwingend benötigen."
     },
