@@ -12,7 +12,7 @@ type PersonSchema = {
 }
 
 type CommentSchema = {
-  '@type': 'Comment' | 'DiscussionForumPosting'
+  '@type': 'Comment'
   author: PersonSchema
   datePublished: string
   dateModified?: string
@@ -55,16 +55,16 @@ function createPersonSchema(
  */
 function createCommentSchema(
   comment: CommentTreeNode,
-  isTopLevel = false,
+  discussionPath: string,
 ): CommentSchema {
   const commentSchema: CommentSchema = {
-    '@type': isTopLevel ? 'DiscussionForumPosting' : 'Comment',
+    '@type': 'Comment',
     author: createPersonSchema(comment.displayAuthor),
     datePublished: comment.createdAt,
     text: comment.text || '',
   }
 
-  commentSchema.url = `${PUBLIC_BASE_URL}#${comment.id}`
+  commentSchema.url = `${PUBLIC_BASE_URL}/${discussionPath}?focus=${comment.id}`
 
   // Add vote counts as interaction statistics
   const interactionStats: CommentSchema['interactionStatistic'] = []
@@ -92,7 +92,7 @@ function createCommentSchema(
   // Add nested comments if they exist
   if (comment.comments?.nodes && comment.comments.nodes.length > 0) {
     commentSchema.comment = comment.comments.nodes.map((childComment) =>
-      createCommentSchema(childComment, false),
+      createCommentSchema(childComment, discussionPath),
     )
   }
 
@@ -101,16 +101,28 @@ function createCommentSchema(
 
 export function createDiscussionForumPostingSchema(
   discussion: DiscussionQuery['discussion'],
-): { '@context': string; '@graph': CommentSchema[] } | null {
+): {
+  '@context': string
+  headline: string
+  '@type': string
+  url: string
+  comment: CommentSchema[]
+} | null {
   if (!discussion) {
     return null
   }
   const commentTree = makeCommentTree(discussion.comments)
   const comments = commentTree.nodes
+  const discussionPath = discussion.path || discussion.document?.meta?.path
 
   return {
     '@context': 'https://schema.org',
-    '@graph': comments.map((comment) => createCommentSchema(comment, true))
+    headline: discussion.title,
+    '@type': 'DiscussionForumPosting',
+    url: `${PUBLIC_BASE_URL}${discussionPath}`,
+    comment: comments.map((comment) =>
+      createCommentSchema(comment, discussionPath),
+    ),
   }
 }
 
