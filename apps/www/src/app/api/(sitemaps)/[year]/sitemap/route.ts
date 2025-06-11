@@ -45,12 +45,13 @@ export async function GET(
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     ${articles
+      .filter((article) => article.meta.path && article.meta.publishDate) // Filter out incomplete articles
       .map(
         (article) => `  <url>
         <loc>${BASE_URL}${article.meta.path}</loc>
         <lastmod>${new Date(
           article.meta.lastPublishedAt ||
-            article.meta.publishDate,
+            article.meta.publishDate!,
         ).toISOString()}</lastmod>
       </url>`,
       )

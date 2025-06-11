@@ -11,7 +11,11 @@ const SCHEMA_PUBLISHER = process.env.NEXT_PUBLIC_SCHEMA_PUBLISHER
 
 const publisher = parseJSONObject(SCHEMA_PUBLISHER)
 
-function generateNewsSiteMap(articles: any[]) {
+function generateNewsSiteMap(
+  articles: (NonNullable<SitemapByYearQuery['search']['nodes'][0]['entity']> & {
+    __typename: 'Document'
+  })[],
+) {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
 ${articles
@@ -20,7 +24,7 @@ ${articles
   <url>
     <loc>${BASE_URL}${meta.path}</loc>
     <lastmod>${new Date(
-      meta.lastPublishedAt || meta.publishDate,
+      meta.lastPublishedAt || meta.publishDate!,
     ).toISOString()}</lastmod>
     <news:news>
       <news:publication>
