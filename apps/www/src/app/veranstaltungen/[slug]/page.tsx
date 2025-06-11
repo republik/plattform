@@ -75,7 +75,6 @@ export default async function Page({ params: { slug } }: PageProps) {
     return notFound()
   }
 
-  // Create Event structured data for schema.org
   const eventStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'Event',
@@ -112,7 +111,6 @@ export default async function Page({ params: { slug } }: PageProps) {
     }),
     eventStatus: 'https://schema.org/EventScheduled',
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    // Add additional Event properties
     ...(event.membersOnly && {
       audience: {
         '@type': 'Audience',
