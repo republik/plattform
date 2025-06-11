@@ -10,22 +10,19 @@ export type NextReadsResolverArgs = {
   feeds: string[]
 }
 
-export const KNOWN_FEEDS = {
-  POPULAR_LAST_7_DAYS: '7_days',
-  POPULAR_LAST_20_DAYS_COMMENTS: '20_days',
+interface NextReadsFeedResolver {
+  resolve: () => Promise<string[]>
 }
 
-export async function getFeed(
-  pgdb: PgDb,
-  feed: 'POPULAR_LAST_7_DAYS' | 'POPULAR_LAST_20_DAYS_COMMENTS',
-) {
-  return pgdb.public.query(
-    // TODO use Materialized view for this
-    `
-    WITH
+export class PopularLast7DaysFeed implements NextReadsFeedResolver {
+  constructor(private pgdb: PgDb) {}
+
+  async resolve(): Promise<string[]> {
+    return this.pgdb.query(
+      `
+      WITH
 	positions AS (
 		SELECT
-			u.email,
 			"repoId",
 			round(
 				(
@@ -67,15 +64,26 @@ export async function getFeed(
 				ORDER BY
 					p.percentage
 			) AS percentile_90_reading_position,
-			AVG(p.percentage) AS avg_reading_position,
-			MIN(p.percentage) AS min_reading_position,
-			MAX(p.percentage) AS max_reading_position,
-			COUNT(*) AS total_readings,
+  			AVG(p.percentage) AS avg_reading_position,
+  			MIN(p.percentage) AS min_reading_position,
+  			MAX(p.percentage) AS max_reading_position,
+			COUNT(*) AS total_readings_in_last_3_months,
 			COUNT(
 				CASE
 					WHEN p.percentage > 85 THEN 1
 				END
-			) AS complete_readings,
+			) AS complete_readings_in_last_3_months,
+			-- Count readings in last 7 days specifically
+			COUNT(
+				CASE
+					WHEN p."createdAt" > now() - '7 days'::interval THEN 1
+				END
+			) AS readings_last_7_days,
+			COUNT(
+				CASE
+					WHEN p.percentage > 85 AND p."createdAt" > now() - '7 days'::interval THEN 1
+				END
+			) AS complete_readings_last_7_days,
 			c.meta ->> 'title' AS "article_title",
 			(r.meta ->> 'publishDate')::date AS publish_date
 		FROM
@@ -90,8 +98,6 @@ export async function getFeed(
 			p."repoId",
 			r.meta,
 			c.meta
-		HAVING
-			COUNT(*) >= 50 -- Only include repos with at least 50 readings
 	),
 	popular AS (
 		SELECT
@@ -104,59 +110,40 @@ export async function getFeed(
 			avg_reading_position,
 			min_reading_position,
 			max_reading_position,
-			total_readings,
-			complete_readings,
-			ROUND((complete_readings::numeric / total_readings::numeric) * 100, 1) AS completion_rate_percent,
-			-- Age-adjusted scoring system
-			(CURRENT_DATE - publish_date) AS days_since_publish,
-			(total_readings + complete_readings * 3) AS base_score,
-			ROUND(
-				(total_readings + complete_readings * 3) * CASE
-					WHEN (CURRENT_DATE - publish_date) <= 7 THEN 1.0
-					WHEN (CURRENT_DATE - publish_date) <= 30 THEN 0.9
-					WHEN (CURRENT_DATE - publish_date) <= 90 THEN 0.7
-					WHEN (CURRENT_DATE - publish_date) <= 180 THEN 0.5
-					WHEN (CURRENT_DATE - publish_date) <= 365 THEN 0.3
-					ELSE 0.1
-				END,
-				2
-			) AS age_adjusted_score,
-			-- Period classification for non-overlapping results
-			CASE
-				WHEN (
-					SELECT
-						COUNT(*)
-					FROM
-						positions p_recent
-					WHERE
-						p_recent."repoId" = repo_stats."repoId"
-						AND p_recent."createdAt" > now() - '7 days'::interval
-				) > total_readings / 2 THEN '7_days'
-				WHEN (
-					SELECT
-						COUNT(*)
-					FROM
-						positions p_medium
-					WHERE
-						p_medium."repoId" = repo_stats."repoId"
-						AND p_medium."createdAt" > now() - '20 days'::interval
-						AND p_medium."createdAt" <= now() - '7 days'::interval
-				) > total_readings / 2 THEN '20_days'
-				ELSE 'older'
-			END AS trending_period
+			total_readings_in_last_3_months,
+			complete_readings_in_last_3_months,
+			readings_last_7_days,
+			complete_readings_last_7_days,
+			-- Popularity score based heavily on recent activity
+			(readings_last_7_days + complete_readings_last_7_days * 3) AS popularity_score_7_days,
+			(total_readings_in_last_3_months + complete_readings_in_last_3_months * 3) AS popularity_score_3_months,
+			-- Age-adjusted scoring system (still useful for tie-breaking)
+			(CURRENT_DATE - publish_date) AS days_since_publish
 		FROM
 			repo_stats
 	)
-    SELECT
-    "repoId"
-    FROM
-	popular
-    WHERE
-	trending_period = :feed
-    ORDER BY base_score DESC
-    LIMIT
-	20;
-  `,
-    { feed: KNOWN_FEEDS[feed] },
-  )
+      SELECT
+        "repoId",
+       	readings_last_7_days as total_reading,
+       	complete_readings_last_7_days as completed_readings,
+       	popularity_score_7_days as popularity_score
+      FROM
+        popular
+      WHERE
+        "repoId" NOT IN (:exclude)
+      ORDER BY
+	popularity_score DESC
+      LIMIT 30;
+      `,
+      { exclude: [] },
+    )
+  }
+}
+
+export class PopularLast20DaysCommentsFeed implements NextReadsFeedResolver {
+  constructor(private pgdb: PgDb) {}
+
+  async resolve(): Promise<string[]> {
+    throw new Error('Not implemented')
+  }
 }
