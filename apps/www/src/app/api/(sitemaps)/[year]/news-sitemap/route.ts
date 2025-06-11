@@ -11,6 +11,16 @@ const SCHEMA_PUBLISHER = process.env.NEXT_PUBLIC_SCHEMA_PUBLISHER
 
 const publisher = parseJSONObject(SCHEMA_PUBLISHER)
 
+function escapeXml(unsafe: string): string {
+  if (typeof unsafe !== 'string') return ''
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+}
+
 function generateNewsSiteMap(
   articles: (NonNullable<SitemapByYearQuery['search']['nodes'][0]['entity']> & {
     __typename: 'Document'
@@ -32,7 +42,7 @@ ${articles
         <news:language>${publisher.knowsLanguage}</news:language>
       </news:publication>
       <news:publication_date>${meta.publishDate}</news:publication_date>
-      <news:title>${meta.title}</news:title>
+      <news:title>${escapeXml(meta.title)}</news:title>
     </news:news>
   </url>`
   })

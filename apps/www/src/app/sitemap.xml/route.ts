@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 
 const BASE_URL = process.env.PUBLIC_BASE_URL
-const START_YEAR = 2017
+const START_YEAR = 2018
 
 export async function GET(request: NextRequest) {
   const currentYear = new Date().getFullYear()
