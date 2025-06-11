@@ -13,6 +13,7 @@ const getActiveDiscussions = gql`
           id
           meta {
             title
+            image
             path
             template
             ownDiscussion {

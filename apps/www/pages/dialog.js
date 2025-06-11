@@ -25,7 +25,6 @@ import DialogOverviewPage from '../components/Dialog/Page'
 
 const styles = {
   container: css({
-    // aligned with article view
     paddingTop: 15,
     paddingBottom: 120,
     [mediaQueries.mUp]: {
@@ -78,7 +77,7 @@ const DialogContent = ({ activeDiscussionId, serverContext }) => {
       <Center>
         <div {...styles.container}>
           {activeDiscussionId ? (
-            // Discussion page
+            // Show Discussion page if there is a active discussion ID
             <>
               <div style={{ marginBottom: 30 }}>
                 <Editorial.Format color='primary'>
@@ -102,7 +101,7 @@ const DialogContent = ({ activeDiscussionId, serverContext }) => {
               <Discussion />
             </>
           ) : (
-            // Overview page
+            // Show Overview page if there is no active discussion ID
             <DialogOverviewPage />
           )}
         </div>

@@ -22,7 +22,7 @@ const styles = {
       alignItems: 'center',
       width: '100%',
       textAlign: 'left',
-      padding: '10px 0',
+      padding: '16px 0',
       cursor: 'pointer',
       '& ~ &': {
         borderTopWidth: 1,
@@ -31,7 +31,7 @@ const styles = {
       '@media(hover)': {
         '&:hover': {
           margin: '0 -15px',
-          padding: '10px 15px',
+          padding: '16px 15px',
           width: 'calc(100% + 30px)',
         },
         '&:hover + &': {
@@ -68,7 +68,12 @@ const ActiveDiscussionItem = ({ discussion, label, count }) => {
   return (
     <DiscussionLink discussion={discussion} passHref>
       <a {...styles.item} {...itemRule} {...colorScheme.set('color', 'text')}>
-        <ArticleItem title={label} iconSize={24} count={count} />
+        <ArticleItem
+          title={label}
+          iconSize={24}
+          count={count}
+          image={discussion.document?.meta?.image}
+        />
       </a>
     </DiscussionLink>
   )
