@@ -2,6 +2,17 @@ query EventMeta($slug: String) {
   event(filter: { slug: { eq: $slug } }) {
     id
     title
+    location
+    locationLink
+    startAt
+    endAt
+    description {
+      value
+    }
+    signUpLink
+    membersOnly
+    fullyBooked
+    ticketPrice
     seo {
       title
       description
