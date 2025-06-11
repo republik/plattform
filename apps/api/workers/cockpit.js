@@ -8,10 +8,10 @@ class CockpitWorker extends BaseWorker {
 
   async perform(_) {
     return this.context.pgdb.run(`
-      REFRESH MATERIALIZED VIEW cockpit_membership_evolution;
-      REFRESH MATERIALIZED VIEW cockpit_membership_last_seen;
-      REFRESH MATERIALIZED VIEW cockpit_discussions_evolution;
-      REFRESH MATERIALIZED VIEW cockpit_collections_evolution;
+      REFRESH MATERIALIZED VIEW CONCURRENTLY cockpit_membership_evolution;
+      REFRESH MATERIALIZED VIEW CONCURRENTLY cockpit_membership_last_seen;
+      REFRESH MATERIALIZED VIEW CONCURRENTLY cockpit_discussions_evolution;
+      REFRESH MATERIALIZED VIEW CONCURRENTLY cockpit_collections_evolution;
     `)
   }
 }

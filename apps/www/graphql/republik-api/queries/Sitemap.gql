@@ -1,0 +1,25 @@
+query sitemapByYear($from: DateTime!, $to: DateTime!) {
+  search(
+    filter: {
+      type: Document
+      template: "article"
+      publishedAt: { from: $from, to: $to }
+    }
+    first: 50000
+    sort: { key: publishedAt, direction: DESC }
+  ) {
+    totalCount
+    nodes {
+      entity {
+        ... on Document {
+          meta {
+            title
+            path
+            publishDate
+            lastPublishedAt
+          }
+        }
+      }
+    }
+  }
+}
