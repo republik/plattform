@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, useContext } from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
@@ -13,7 +13,7 @@ import {
   CalloutMenu,
   Label,
 } from '@project-r/styleguide'
-import { getFeatureDescription } from '../Article/Progress'
+import { getFeatureDescription, ProgressContext } from '../Article/Progress'
 import { IconCheckSmall, IconHighlightOff, IconRead } from '@republik/icons'
 
 const styles = {
@@ -22,22 +22,21 @@ const styles = {
   }),
 }
 
-const UserProgress = (
-  {
-    t,
-    documentId,
-    userProgress,
-    upsertDocumentProgress,
-    removeDocumentProgress,
-    revokeProgressConsent,
-    submitProgressConsent,
-    forceShortLabel,
-    noCallout,
-    noScroll,
-    displayMinutes,
-  },
-  { restoreArticleProgress, showConsentPrompt },
-) => {
+const UserProgress = ({
+  t,
+  documentId,
+  userProgress,
+  upsertDocumentProgress,
+  removeDocumentProgress,
+  revokeProgressConsent,
+  submitProgressConsent,
+  forceShortLabel,
+  noCallout,
+  noScroll,
+  displayMinutes,
+}) => {
+  const { restoreArticleProgress, showConsentPrompt } =
+    useContext(ProgressContext)
   // Renders the Progress Consent Form as a Callout in the Article Top Actionbar
   if (showConsentPrompt && !noCallout) {
     const ProgressConsentIcon = forwardRef((props, ref) => (

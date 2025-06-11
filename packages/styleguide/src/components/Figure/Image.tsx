@@ -53,7 +53,7 @@ const GalleryButton = ({ gallerySize, onClick }: GalleryButtonProps) => {
   )
 }
 
-const Image = (props, context) => {
+const Image = (props) => {
   const {
     src,
     dark,
@@ -66,6 +66,9 @@ const Image = (props, context) => {
     enableGallery = false,
     gallerySize,
   } = props
+
+  // FIXME: use real context here
+  const context = { toggleGallery: (bla: string) => {} }
 
   const onClick =
     enableGallery && context.toggleGallery
@@ -88,6 +91,7 @@ const Image = (props, context) => {
       srcSet={srcSet}
       alt={alt}
       onClick={onClick}
+      sizes={undefined}
     />
   ) : (
     <SwitchImage

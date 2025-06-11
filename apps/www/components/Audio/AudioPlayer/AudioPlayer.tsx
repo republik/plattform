@@ -102,7 +102,7 @@ const AudioPlayer = ({
   const { t } = useTranslation()
   const router = useRouter()
   const [colorScheme] = useColorContext()
-  const [_, ...queuedItems] = queue || [] // filter active-item from queue
+  const [, ...queuedItems] = queue || [] // filter active-item from queue
   const { paynoteInlineHeight } = usePaynotes()
 
   const toggleAudioPlayer = () => {
@@ -184,7 +184,7 @@ const AudioPlayer = ({
 
     return
   }, [isDesktop, inNativeApp, isAndroid, isFirefox, isExpanded])
-  
+
   return (
     <>
       <AnimatePresence>
@@ -195,7 +195,7 @@ const AudioPlayer = ({
               onBackdropClick={() => setIsExpanded(false)}
             >
               <motion.div
-                id={AUDIO_PLAYER_WRAPPER_ID}
+                data-id={AUDIO_PLAYER_WRAPPER_ID}
                 {...(inNativeApp && inIOS && !isExpanded && iOSSafeInsets)}
                 ref={ref}
                 initial={{ opacity: 0, y: 50 }}

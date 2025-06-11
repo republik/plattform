@@ -76,7 +76,7 @@ const Overlay: React.FC<OverlayProps> = ({
   mUpStyle,
   mini,
 }) => {
-  const rootDom = useRef<HTMLDivElement>()
+  const rootDom = useRef<HTMLDivElement>(null)
   const isDomAvailable = typeof document !== 'undefined'
   if (isDomAvailable && !rootDom.current) {
     rootDom.current = document.createElement('div')

@@ -88,7 +88,7 @@ const Carousel: React.FC<CarouselProps> = ({
     })
     ?.filter(Boolean)
 
-  const carouselRef = useRef<HTMLDivElement>()
+  const carouselRef = useRef<HTMLDivElement>(null)
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0)
   const [disableScrollIntoView, setDisableScrollIntoView] = useState(true)
