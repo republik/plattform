@@ -157,26 +157,9 @@ export function createDiscussionForumPostingSchema(
     schema.datePublished = discussion.document.meta.publishDate
   }
 
-  // Add main entity and comments if we have comments
+  // Add comments if we have them
   if (comments && comments.length > 0) {
-    // The main entity is typically the first top-level comment or post
-    const mainComment = comments[0]
-    if (mainComment) {
-      schema.mainEntity = createCommentSchema(mainComment, PUBLIC_BASE_URL)
-      
-      // Add all comments (including the main one)
-      schema.comment = comments.map(comment => 
-        createCommentSchema(comment, PUBLIC_BASE_URL)
-      )
-    }
-  } else if (discussion.comments?.nodes && discussion.comments.nodes.length > 0) {
-    // Fallback to flat comments if tree is not provided
-    const flatComments = discussion.comments.nodes.map(comment => ({
-      ...comment,
-      comments: { nodes: [] }
-    }))
-    
-    schema.comment = flatComments.map(comment => 
+    schema.comment = comments.map(comment => 
       createCommentSchema(comment, PUBLIC_BASE_URL)
     )
   }
