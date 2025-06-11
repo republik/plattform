@@ -11,7 +11,7 @@ module.exports = async (_, args, context) => {
 
   // Fetch pre-populated data
   const data = await context.pgdb.query(
-    `select * from cockpit_collections_evolution where "collectionId" = :collectionId`,
+    `select * from cockpit_collections_evolution where "collectionId" = :collectionId ORDER BY key`,
     {
       collectionId: collection.id,
     },

@@ -3,7 +3,7 @@ const moment = require('moment')
 module.exports = async (_, args, context) => {
   // Fetch pre-populated data
   const data = await context.pgdb.query(
-    'select * from cockpit_discussions_evolution;',
+    'select * from cockpit_discussions_evolution ORDER BY key;',
   )
 
   // A list of desired bucket keys to return
