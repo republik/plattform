@@ -13,6 +13,7 @@ query sitemapByYear($from: DateTime!, $to: DateTime!) {
       entity {
         ... on Document {
           meta {
+            title
             path
             publishDate
             lastPublishedAt
