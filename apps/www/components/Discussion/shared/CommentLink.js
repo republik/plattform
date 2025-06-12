@@ -44,9 +44,15 @@ export const getFocusHref = (discussion, comment) => {
 export const getFocusUrl = (discussion, comment) => {
   const focusHref = getFocusHref(discussion, comment)
   if (focusHref) {
-    const [protocol, hostname] = PUBLIC_BASE_URL.split('://')
+    const baseUrl = new URL(PUBLIC_BASE_URL)
     const { pathname, query } = focusHref
-    return format({ protocol, hostname, pathname, query })
+    return format({ 
+      protocol: baseUrl.protocol.slice(0, -1), // Remove trailing ':'
+      hostname: baseUrl.hostname,
+      port: baseUrl.port,
+      pathname, 
+      query 
+    })
   }
 }
 
