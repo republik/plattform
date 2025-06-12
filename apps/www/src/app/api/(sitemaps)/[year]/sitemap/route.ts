@@ -7,10 +7,8 @@ import {
 
 const BASE_URL = process.env.PUBLIC_BASE_URL
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { year: string } },
-) {
+export async function GET(request: NextRequest, props: { params: Promise<{ year: string }> }) {
+  const params = await props.params;
   const year = parseInt(params.year)
   const client = await getClient()
 

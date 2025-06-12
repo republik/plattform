@@ -146,10 +146,8 @@ export default async function Page({ params }: PageProps) {
   )
 }
 
-export async function generateMetadata(
-  { params }: PageProps,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata(props: PageProps, parent: ResolvingMetadata): Promise<Metadata> {
+  const params = await props.params;
   // read route params
 
   const res = await fetch(process.env.DATO_CMS_API_URL, {

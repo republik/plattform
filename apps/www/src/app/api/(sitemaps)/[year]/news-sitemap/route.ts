@@ -40,10 +40,8 @@ ${articles
 </urlset>`
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { year: string } },
-) {
+export async function GET(request: NextRequest, props: { params: Promise<{ year: string }> }) {
+  const params = await props.params;
   const { year } = params
 
   if (!year || isNaN(parseInt(year))) {
