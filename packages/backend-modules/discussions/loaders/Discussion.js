@@ -22,8 +22,22 @@ module.exports = (context) => ({
   byId: createDataLoader((ids) =>
     context.pgdb.public.discussions.find({ id: ids }),
   ),
-  byPath: createDataLoader((paths) =>
-    context.pgdb.public.discussions.find({ path: paths }),
+  byPath: createDataLoader(
+    async (paths) => {
+      const res = await context.pgdb.public.discussions.find(
+        {
+          path: paths,
+        },
+        { logger: console },
+      )
+      console.log(res)
+      return res
+    },
+    null,
+    (key, rows) => {
+      console.log({ key, rows })
+      return rows.find((row) => row.path === key)
+    },
   ),
   byRepoId: createDataLoader(
     (repoIds) => context.pgdb.public.discussions.find({ repoId: repoIds }),
