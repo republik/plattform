@@ -77,7 +77,7 @@ function isDialogPage(
   pathname: string,
   searchParams: URLSearchParams,
 ): boolean {
-  return pathname === '/dialog' && searchParams.has('t')
+  return pathname === '/dialog' && searchParams.has('id')
 }
 
 export const PaynotesProvider = ({ children }) => {
