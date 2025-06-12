@@ -8,24 +8,28 @@ function getSrcSet(src: string, widths: number[]): string {
     .join(',')
 }
 
-export type ResizedSrc = {
-  src?: string
-  srcSet?: string
-  dark?: {
-    src: string
-    srcSet?: string
-  }
-  maxWidth?: number
-  size: {
-    width: number
-    height: number
-  } | null
-}
+export type ResizedSrc =
+  | {
+      src: string
+      srcSet?: string
+      dark?: {
+        src: string
+        srcSet?: string
+      }
+      maxWidth?: number
+      size: {
+        width: number
+        height: number
+      } | null
+    }
+  | {
+      size: null
+    }
 
 export const getResizedSrcs = (
-  src,
-  srcDark,
-  displayWidth,
+  src?: string,
+  srcDark?: string,
+  displayWidth?: number,
   setMaxWidth = true,
 ): ResizedSrc => {
   if (!src) {
