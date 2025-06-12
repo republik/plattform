@@ -1,14 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import { css, merge } from 'glamor'
+import { DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react'
+import { mUp } from '../../theme/mediaQueries'
 import {
+  BREAKOUT,
+  MAX_WIDTH,
   PADDED_MAX_WIDTH,
   PADDED_MAX_WIDTH_BREAKOUT,
-  MAX_WIDTH,
   PADDING,
-  BREAKOUT,
 } from '../Center'
-import { css, merge } from 'glamor'
-import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
   container: css({
@@ -35,7 +34,19 @@ const styles = {
   }),
 }
 
-const TitleBlock = ({ children, attributes, center, margin, breakout }) => {
+const TitleBlock = ({
+  children,
+  attributes,
+  center,
+  margin,
+  breakout,
+}: {
+  children: ReactNode
+  attributes?: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>
+  center?: boolean
+  margin?: boolean
+  breakout?: boolean
+}) => {
   return (
     <section
       className='title-block'
@@ -53,12 +64,6 @@ const TitleBlock = ({ children, attributes, center, margin, breakout }) => {
       {children}
     </section>
   )
-}
-
-TitleBlock.propTypes = {
-  children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  center: PropTypes.bool,
 }
 
 export default TitleBlock

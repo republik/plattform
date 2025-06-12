@@ -11790,11 +11790,13 @@ fraction.js@^4.3.7:
   resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.3.7.tgz#06ca0085157e42fda7f9e726e79fefc4068840f7"
   integrity sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==
 
-framer-motion@^11.0.3:
-  version "11.1.7"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-11.1.7.tgz#ad970c1296e7b5fb26db222fd65d1329aef115a6"
-  integrity sha512-cW11Pu53eDAXUEhv5hEiWuIXWhfkbV32PlgVISn7jRdcAiVrJ1S03YQQ0/DzoswGYYwKi4qYmHHjCzAH52eSdQ==
+framer-motion@^12.17.0:
+  version "12.17.0"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-12.17.0.tgz#1f4c68e396f5f28860a84e102d92f28db44a85de"
+  integrity sha512-2hISKgDk49yCLStwG1wf4Kdy/D6eBw9/eRNaWFIYoI9vMQ/Mqd1Fz+gzVlEtxJmtQ9y4IWnXm19/+UXD3dAYAA==
   dependencies:
+    motion-dom "^12.17.0"
+    motion-utils "^12.12.1"
     tslib "^2.4.0"
 
 fresh@0.5.2:
@@ -17083,6 +17085,26 @@ moo@^0.5.0:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/moo/-/moo-0.5.2.tgz#f9fe82473bc7c184b0d32e2215d3f6e67278733c"
   integrity sha512-iSAJLHYKnX41mKcJKjqvnAN9sf0LMDTXDEvFv+ffuRR9a1MIuXLjMNL6EsnDHSkKLTWNqQQ5uo61P4EbU4NU+Q==
+
+motion-dom@^12.17.0:
+  version "12.17.0"
+  resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-12.17.0.tgz#69661708d0a0859042c3003cddf31d544c46d9fd"
+  integrity sha512-FA6/c70R9NKs3g41XDVONzmUUrEmyaifLVGCWtAmHP0usDnX9W+RN/tmbC4EUl0w6yLGvMTOwnWCFVgA5luhRg==
+  dependencies:
+    motion-utils "^12.12.1"
+
+motion-utils@^12.12.1:
+  version "12.12.1"
+  resolved "https://registry.yarnpkg.com/motion-utils/-/motion-utils-12.12.1.tgz#63e28751325cb9d1cd684f3c273a570022b0010e"
+  integrity sha512-f9qiqUHm7hWSLlNW8gS9pisnsN7CRFRD58vNjptKdsqFLpkVnX00TNeD6Q0d27V9KzT7ySFyK1TZ/DShfVOv6w==
+
+motion@^12.17.0:
+  version "12.17.0"
+  resolved "https://registry.yarnpkg.com/motion/-/motion-12.17.0.tgz#a3ecf7a229f773090d190aa32ac2eb46d4101916"
+  integrity sha512-04K87lcwuA1vK3CLpKegncbBq6y2dmQjUsp9iPz0SxFACdBtEHB3V120k0G/t1blHATFuoqMrrLELRljUdQCeg==
+  dependencies:
+    framer-motion "^12.17.0"
+    tslib "^2.4.0"
 
 mri@^1.1.0:
   version "1.2.0"

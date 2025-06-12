@@ -1,5 +1,4 @@
-import { useMemo } from 'react'
-import PropTypes from 'prop-types'
+import { CSSProperties, ReactNode, useMemo } from 'react'
 import { css } from 'glamor'
 import 'glamor/reset'
 import {
@@ -92,22 +91,50 @@ const styles = {
   }),
 }
 
-export const MainContainer = ({ children, maxWidth = '840px' }) => (
-  <Container style={{ maxWidth }}>{children}</Container>
-)
+export const MainContainer = ({
+  children,
+  maxWidth = '840px',
+}: {
+  children: ReactNode
+  maxWidth?: string | number
+}) => <Container style={{ maxWidth }}>{children}</Container>
 
-export const Content = ({ children, style }) => (
+export const Content = ({
+  children,
+  style,
+}: {
+  children: ReactNode
+  style?: CSSProperties
+}) => (
   <div {...styles.content} style={style}>
     {children}
   </div>
 )
 
+type FrameProps = {
+  children: ReactNode
+  raw?: boolean
+  meta?: Record<string, string | object>
+  cover?: ReactNode
+  secondaryNav?: ReactNode
+  formatColor?: string
+  footer?: boolean
+  pullable?: boolean
+  hasOverviewNav?: boolean
+  stickySecondaryNav?: boolean
+  isOnMarketingPage?: boolean
+  pageColorSchemeKey?: 'light' | 'dark' | 'auto'
+  containerMaxWidth?: string | number
+  customContentColorContext?: Record<string, string>
+  hideCTA?: boolean
+  draftMode?: boolean
+}
+
 const Frame = ({
   children,
-  raw,
+  raw = false,
   meta,
-  cover,
-  onNavExpanded,
+  cover = undefined,
   secondaryNav,
   formatColor,
   footer = true,
@@ -125,7 +152,7 @@ const Frame = ({
    */
   customContentColorContext,
   hideCTA = false,
-}) => {
+}: FrameProps) => {
   const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { t } = useTranslation()
   const { me, hasAccess } = useMe()
@@ -172,7 +199,6 @@ const Frame = ({
           <Header
             me={me}
             cover={cover}
-            onNavExpanded={onNavExpanded}
             secondaryNav={secondaryNav}
             formatColor={formatColor}
             pullable={pullable}
@@ -217,26 +243,6 @@ const Frame = ({
       </div>
     </ColorContextProvider>
   )
-}
-
-Frame.propTypes = {
-  children: PropTypes.node.isRequired,
-  raw: PropTypes.bool,
-  meta: PropTypes.object,
-  cover: PropTypes.any,
-  onNavExpanded: PropTypes.any,
-  secondaryNav: PropTypes.any,
-  formatColor: PropTypes.string,
-  footer: PropTypes.bool,
-  pullable: PropTypes.bool,
-  hasOverviewNav: PropTypes.bool,
-  stickySecondaryNav: PropTypes.any,
-  isOnMarketingPage: PropTypes.bool,
-  pageColorSchemeKey: PropTypes.string,
-  containerMaxWidth: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  customContentColorContext: PropTypes.object,
-  hideCTA: PropTypes.bool,
-  draftMode: PropTypes.bool,
 }
 
 export default Frame

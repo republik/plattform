@@ -50,7 +50,7 @@ const SubmissionView = ({
   )
   const shareText = `${title}: ${subheadText}`
 
-  const submissionRef = useRef()
+  const submissionRef = useRef(null)
   useEffect(() => {
     if (extract) return
     scrollIntoView(submissionRef.current, {

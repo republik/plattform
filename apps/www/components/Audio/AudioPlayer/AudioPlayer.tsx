@@ -13,7 +13,7 @@ import {
   useBodyScrollLock,
   useColorContext,
 } from '@project-r/styleguide'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'motion/react'
 import { css } from 'glamor'
 import AudioPlaybackElement from './AudioPlaybackElement'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'

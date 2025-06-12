@@ -23,7 +23,7 @@ export function useIntersectionObserver(
     options?.intersectionObserverOptions || {}
   const [isVisible, setIsVisible] = useState(false)
   const [observer, setObserver] = useState<IntersectionObserver>()
-  const callbackRef = useRef<(val: boolean) => void>()
+  const callbackRef = useRef<(val: boolean) => void>(null)
 
   // For performance reasons we store the callback function in a ref
   // to ensure the intersection observer is not recreated on every render
