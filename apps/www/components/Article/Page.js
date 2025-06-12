@@ -57,6 +57,7 @@ import Regwall from '@app/components/paynotes/regwall'
 import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import { WelcomeBanner } from '@app/components/paynotes/paynotes-in-trial/welcome'
+import ExtendedByline from '@app/components/article/extendedByline'
 
 const EmptyComponent = ({ children }) => children
 
@@ -204,6 +205,9 @@ const ArticlePage = ({
 
   // is true if the article or the format are paywall excluded
   const isPaywallExcluded = meta?.isPaywallExcluded
+
+  const bylineContributors = articleContent?.meta?.bylineContributors
+
   useEffect(() => {
     const resetPaynotes = () => {
       // console.log('resetPaynotes')
@@ -496,6 +500,7 @@ const ArticlePage = ({
                           <>{renderSchema(splitContent.main)}</>
                         )}
                       </div>
+                      <ExtendedByline bylineContributors={bylineContributors} />
                       <Regwall />
                       <Paywall />
                     </article>

@@ -9,6 +9,7 @@
   "dependencies": {
     "@orbiting/backend-modules-assets": "*",
     "@orbiting/backend-modules-auth": "*",
+    "@orbiting/backend-modules-authors": "*",
     "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-env": "*",
     "@orbiting/backend-modules-types": "*",
