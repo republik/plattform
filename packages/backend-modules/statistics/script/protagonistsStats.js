@@ -30,6 +30,14 @@ This is the article: ${content}
 `
 }
 
+/*
+* Use for sending a prompt to an Ollama LLM model for each article in the specified timeframe, to find out an articles protagonists and their gender.
+* Modify the prompt, elastic query filter, and expected JSON object shape from the LLM as needed.
+* Limit: max number of articles, default is 10 
+* begin, end: start and end date of published articles in the format '2025-12-31'
+* Usage example: node protagonistsStats.js --limit 100 --begin 2025-01-01 --end 2025-02-01
+*/
+
 function getStats(llmReponse) {
   const responseObject = JSON.parse(llmReponse)
   const genders = responseObject.protagonists.map((p) => p.assumed_gender)
@@ -43,7 +51,8 @@ function getStats(llmReponse) {
 
 async function main(argv) {
   const limit = argv.limit
-  const interval = argv.interval
+  const beginDate = argv.begin
+  const endDate = argv.end
 
   const query = {
     query: {
@@ -52,7 +61,8 @@ async function main(argv) {
           {
             range: {
               'meta.publishDate': {
-                gte: 'now-' + interval, // 1M = Last 1 Month
+                gte: beginDate, // + interval, // 1M = Last 1 Month
+                lte: endDate
               },
             },
           },
@@ -227,9 +237,6 @@ async function main(argv) {
           repoId: repoId,
           ollamaResponse: JSON.parse(data.message.content),
           stats: stats,
-          male: stats.male || 0,
-          female: stats.female || 0,
-          total: stats.total || 0
         })
         statsOnly.push({
           publishedAt: publishedAt,
@@ -267,9 +274,9 @@ async function main(argv) {
 
   console.log('-----------------')
 
-  const male = results.map((r) => r.stats.male || 0).reduce((a,b) => a+b, 0)
-  const female = results.map((r) => r.stats.female || 0).reduce((a,b) => a+b, 0)
-  const protagonists = results.map((r) => r.stats.total || 0).reduce((a,b) => a+b, 0)
+  const male = results.map((r) => r.stats?.male || 0).reduce((a,b) => a+b, 0)
+  const female = results.map((r) => r.stats?.female || 0).reduce((a,b) => a+b, 0)
+  const protagonists = results.map((r) => r.stats?.total || 0).reduce((a,b) => a+b, 0)
 
   console.log(`total: ${results.length} documents, ${protagonists} protagonists, ${male} male, ${female} female`)
 
@@ -279,10 +286,13 @@ async function main(argv) {
 }
 
 const argv = yargs
-  .option('interval', {
-    alias: 'i',
+  .option('begin', {
+    alias: 'b',
     type: 'string',
-    default: '1M',
+  })
+  .option('end', {
+    alias: 'e',
+    type: 'string',
   })
   .option('limit', {
     alias: 'l',
