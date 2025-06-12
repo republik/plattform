@@ -21,7 +21,8 @@ export async function generateMetadata(
   { params: { slug } }: PageProps,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const { data } = await getCMSClient().query({
+  const client = await getCMSClient()
+  const { data } = await client.query({
     query: EventMetaDocument,
     variables: { slug },
     context: {
@@ -56,7 +57,7 @@ export async function generateMetadata(
 }
 
 export default async function Page({ params: { slug } }: PageProps) {
-  const client = getCMSClient()
+  const client = await getCMSClient()
   const { data } = await client.query({
     query: EventDocument,
     variables: { slug },

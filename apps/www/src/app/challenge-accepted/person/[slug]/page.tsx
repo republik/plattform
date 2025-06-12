@@ -23,7 +23,8 @@ type PageProps = {
 }
 
 export default async function Page({ params: { slug } }: PageProps) {
-  const { data } = await getCMSClient().query({
+  const client = await getCMSClient()
+  const { data } = await client.query({
     query: PersonDetailDocument,
     variables: { slug },
     context: {

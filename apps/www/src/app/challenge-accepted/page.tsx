@@ -25,7 +25,7 @@ export async function generateMetadata(
   _, // params
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const client = getCMSClient()
+  const client = await getCMSClient()
   const { data } = await client.query({
     query: ChallengeAcceptedHubMetaDocument,
   })
@@ -53,9 +53,10 @@ export async function generateMetadata(
 }
 
 export default async function Page({ searchParams }) {
+  const client = await getCMSClient()
   const {
     data: { hub, challengeAcceptedTag, allNewsletters },
-  } = await getCMSClient().query({
+  } = await client.query({
     query: ChallengeAcceptedHubDocument,
     context: {
       fetchOptions: {

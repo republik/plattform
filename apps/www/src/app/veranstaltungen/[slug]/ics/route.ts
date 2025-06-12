@@ -14,7 +14,7 @@ export async function GET(
   request: Request,
   { params: { slug } }: { params: { slug: string } },
 ) {
-  const client = getCMSClient()
+  const client = await getCMSClient()
   const { data } = await client.query({
     query: EventDocument,
     variables: { slug },

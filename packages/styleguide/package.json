@@ -53,7 +53,7 @@
     "use-memo-one": "^1.1.2"
   },
   "devDependencies": {
-    "@apollo/client": "^3.8.4",
+    "@apollo/client": "^3.13.8",
     "@babel/standalone": "^7.15.8",
     "@republik/eslint-config-frontend": "*",
     "@republik/icons": "*",
@@ -104,7 +104,7 @@
     "validate-commit-msg": "^2.14.0"
   },
   "peerDependencies": {
-    "@apollo/client": "^3.8.4",
+    "@apollo/client": "^3.13.8",
     "@republik/icons": "*",
     "d3-array": "1.x",
     "d3-color": "1.x",

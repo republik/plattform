@@ -53,7 +53,7 @@ export async function GET(
     )
   }
   const yearString = String(parseInt(year))
-  const client = getClient()
+  const client = await getClient()
 
   const fromDate = new Date(parseInt(year), 0, 1) // January 1st of the year
   const toDate = new Date(parseInt(year) + 1, 0, 1) // January 1st of the next year

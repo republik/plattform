@@ -13,9 +13,9 @@ export async function GET() {
     copyright: `© 2017-${new Date().getFullYear()} Republik AG`,
   })
 
-  const gql = getClient()
+  const client = await getClient()
 
-  const { data } = await gql.query({ query: RssFeedDocument })
+  const { data } = await client.query({ query: RssFeedDocument })
 
   if (data) {
     data.feed.nodes.forEach((n) => {

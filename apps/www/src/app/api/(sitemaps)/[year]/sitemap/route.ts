@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getClient } from '../../../../../lib/apollo/client'
-import { SitemapByYearDocument, type SitemapByYearQuery } from '#graphql/republik-api/__generated__/gql/graphql'
-  
+import {
+  SitemapByYearDocument,
+  type SitemapByYearQuery,
+} from '#graphql/republik-api/__generated__/gql/graphql'
+
 const BASE_URL = process.env.PUBLIC_BASE_URL
 
 export async function GET(
@@ -9,7 +12,7 @@ export async function GET(
   { params }: { params: { year: string } },
 ) {
   const year = parseInt(params.year)
-  const client = getClient()
+  const client = await getClient()
 
   const fromDate = new Date(year, 0, 1) // January 1st of the year
   const toDate = new Date(year + 1, 0, 1) // January 1st of the next year
@@ -37,8 +40,11 @@ export async function GET(
 
     const articles = nodes
       .map(({ entity }) => entity)
-      .filter((entity): entity is NonNullable<typeof entity> & { __typename: 'Document' } => 
-        entity?.__typename === 'Document'
+      .filter(
+        (
+          entity,
+        ): entity is NonNullable<typeof entity> & { __typename: 'Document' } =>
+          entity?.__typename === 'Document',
       )
 
     // Generate XML sitemap
@@ -50,8 +56,7 @@ export async function GET(
         (article) => `  <url>
         <loc>${BASE_URL}${article.meta.path}</loc>
         <lastmod>${new Date(
-          article.meta.lastPublishedAt ||
-            article.meta.publishDate!,
+          article.meta.lastPublishedAt || article.meta.publishDate!,
         ).toISOString()}</lastmod>
       </url>`,
       )
