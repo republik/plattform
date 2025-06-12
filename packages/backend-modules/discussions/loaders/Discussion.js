@@ -22,6 +22,15 @@ module.exports = (context) => ({
   byId: createDataLoader((ids) =>
     context.pgdb.public.discussions.find({ id: ids }),
   ),
+  byPath: createDataLoader(
+    (paths) => {
+      return context.pgdb.public.discussions.find({
+        path: paths,
+      })
+    },
+    null,
+    (key, rows) => rows.find((row) => row.path === key),
+  ),
   byRepoId: createDataLoader(
     (repoIds) => context.pgdb.public.discussions.find({ repoId: repoIds }),
     null,
@@ -79,7 +88,7 @@ module.exports = (context) => ({
             FROM discussions d
             WHERE ARRAY[d.id] && :ids
           )
-          
+
           SELECT "discussionId", value FROM tags t, jsonb_array_elements(t.tags) value
         ), counts AS (
           WITH data AS (
@@ -87,8 +96,8 @@ module.exports = (context) => ({
               c."discussionId" "discussionId",
               c.id,
               CASE
-                WHEN (coalesce(jsonb_array_length(c.tags), 0) > 0) THEN c.tags 
-                WHEN (coalesce(jsonb_array_length(cr.tags), 0) > 0) THEN cr.tags 
+                WHEN (coalesce(jsonb_array_length(c.tags), 0) > 0) THEN c.tags
+                WHEN (coalesce(jsonb_array_length(cr.tags), 0) > 0) THEN cr.tags
                 ELSE '[]'::jsonb
               END tags
             FROM comments c
@@ -99,10 +108,10 @@ module.exports = (context) => ({
 
           SELECT d."discussionId", value, COUNT(*) count
           FROM data d, jsonb_array_elements(d.tags) AS value
-          
+
           GROUP BY 1, 2
         )
-        
+
         SELECT edt."discussionId", edt.value, coalesce(c.count, 0) count
         FROM "expectedDiscussionTags" edt
         LEFT JOIN counts c
