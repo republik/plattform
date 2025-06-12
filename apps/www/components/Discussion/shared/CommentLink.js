@@ -26,10 +26,10 @@ export const getFocusHref = (discussion, comment) => {
     discussion.document?.meta?.ownDiscussion?.id === discussion.id
   ) {
     return {
-      pathname: '/dialog',
-      query: { id: discussion.id, ...focusParams },
+      pathname: `/dialog/${discussion.path}`,
+      query: { ...focusParams },
     }
-  } else if (discussion.path) {
+  } else if (discussion.path) { 
     const { pathname, query } = parse(discussion.path, true)
     return {
       pathname,

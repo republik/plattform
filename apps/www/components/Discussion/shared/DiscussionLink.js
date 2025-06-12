@@ -34,8 +34,7 @@ export const getDiscussionUrlObject = (discussion) => {
   // article dialog pages start with  pathname /dialog
   if (meta.template === 'article') {
     return {
-      pathname: '/dialog',
-      query: { id: discussion.id },
+      pathname: `/dialog/${discussion.path}`,
     }
   } else {
     // discussion pages have discussions integrated on the same page

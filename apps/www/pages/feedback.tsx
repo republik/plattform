@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Frame from '../components/Frame'
 import { GENERAL_FEEDBACK_DISCUSSION_ID } from '../lib/constants'
-import { MaybeDiscussionContextProvider } from '../pages/dialog'
+import DiscussionContextProvider from '../components/Discussion/context/DiscussionContextProvider'
 import Discussion from '../components/Discussion/Discussion'
 import { Center, Editorial, Interaction } from '@project-r/styleguide'
 import { useTranslation } from '../lib/withT'
@@ -15,7 +15,7 @@ const FeedbackDialogPage = () => {
   return (
     <>
       <Frame hasOverviewNav raw formatColor='primary'>
-        <MaybeDiscussionContextProvider discussionId={activeDiscussionId}>
+        <DiscussionContextProvider discussionId={activeDiscussionId}>
           <Center>
             <div style={{ marginBottom: 30 }}>
               <Editorial.Format color='primary'>
@@ -36,7 +36,7 @@ const FeedbackDialogPage = () => {
             </div>
             <Discussion />
           </Center>
-        </MaybeDiscussionContextProvider>
+        </DiscussionContextProvider>
       </Frame>
     </>
   )
