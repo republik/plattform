@@ -38,7 +38,7 @@ const DiscussionCommentTreeRenderer = ({
     )
   }
 
-  if (discussion.isBoard && !inRootCommentOverlay) {
+  if (discussion?.isBoard && !inRootCommentOverlay) {
     return (
       <>
         {comments.map((comment) => (

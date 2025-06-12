@@ -319,11 +319,16 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
                   <a {...navLinkStyle}>Komplizen</a>
                 </FooterNavLink>
               </li>
-              <li>
-                <FooterNavLink href='/etikette'>
-                  <a {...navLinkStyle}>{t('footer/me/etiquette')}</a>
-                </FooterNavLink>
-              </li>
+                <li>
+                  <FooterNavLink href='/etikette'>
+                    <a {...navLinkStyle}>{t('footer/me/etiquette')}</a>
+                  </FooterNavLink>
+                </li>
+                <li>
+                  <FooterNavLink href='/feedback'>
+                    <a {...navLinkStyle}>Feedback</a>
+                  </FooterNavLink>
+                </li>
             </ul>
             <ul {...styles.navList}>
               <li {...colorScheme.set('color', 'textSoft')}>Rechtliches</li>

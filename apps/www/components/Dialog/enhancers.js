@@ -13,6 +13,8 @@ const getActiveDiscussions = gql`
           id
           meta {
             title
+            image
+            audioCover
             path
             template
             ownDiscussion {

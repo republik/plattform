@@ -12,18 +12,13 @@ const DiscussionLinkButton = ({
   isOnArticlePage,
 }) => {
   const meta = document && document.meta
-  const {
-    discussionId,
-    discussionPath,
-    discussionQuery,
-    discussionCount,
-    isDiscussionPage,
-  } = getDiscussionLinkProps(
-    meta.linkedDiscussion,
-    meta.ownDiscussion,
-    meta.template,
-    meta.path,
-  )
+  const { discussionId, discussionPath, discussionCount, isDiscussionPage } =
+    getDiscussionLinkProps(
+      meta.linkedDiscussion,
+      meta.ownDiscussion,
+      meta.template,
+      meta.path,
+    )
 
   const getLabel = () => {
     if (useCallToActionLabel) {
@@ -45,7 +40,6 @@ const DiscussionLinkButton = ({
     <Link
       href={{
         pathname: discussionPath,
-        query: discussionQuery,
       }}
       passHref
       prefetch={false}

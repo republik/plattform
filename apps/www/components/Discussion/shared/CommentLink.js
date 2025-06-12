@@ -16,21 +16,20 @@ export const getFocusHref = (discussion, comment) => {
     : {}
   if (discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID) {
     return {
-      pathname: '/dialog',
-      query: { t: 'general', ...focusParams },
+      pathname: '/feedback',
+      query: { ...focusParams },
     }
   } else if (
-    discussion.document &&
-    discussion.document.meta &&
-    discussion.document.meta.template === 'article' &&
-    discussion.document.meta.ownDiscussion &&
-    discussion.document.meta.ownDiscussion.id === discussion.id
+    discussion.document?.meta &&
+    discussion.document?.meta?.template === 'article' &&
+    discussion.document?.meta?.ownDiscussion &&
+    discussion.document?.meta?.ownDiscussion?.id === discussion.id
   ) {
     return {
-      pathname: '/dialog',
-      query: { t: 'article', id: discussion.id, ...focusParams },
+      pathname: `/dialog/${discussion.path}`,
+      query: { ...focusParams },
     }
-  } else if (discussion.path) {
+  } else if (discussion.path) { 
     const { pathname, query } = parse(discussion.path, true)
     return {
       pathname,
@@ -45,9 +44,15 @@ export const getFocusHref = (discussion, comment) => {
 export const getFocusUrl = (discussion, comment) => {
   const focusHref = getFocusHref(discussion, comment)
   if (focusHref) {
-    const [protocol, hostname] = PUBLIC_BASE_URL.split('://')
+    const baseUrl = new URL(PUBLIC_BASE_URL)
     const { pathname, query } = focusHref
-    return format({ protocol, hostname, pathname, query })
+    return format({ 
+      protocol: baseUrl.protocol.slice(0, -1), // Remove trailing ':'
+      hostname: baseUrl.hostname,
+      port: baseUrl.port,
+      pathname, 
+      query 
+    })
   }
 }
 

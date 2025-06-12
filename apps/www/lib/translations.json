@@ -4153,7 +4153,11 @@
     },
     {
       "key": "feedback/lead",
-      "value": "Die Republik ist nur so stark wie ihre Community. Teilen Sie Ihr Wissen und Ihre Perspektive."
+      "value": "Die Republik ist nur so stark wie ihre Community. Teilen Sie Ihr Wissen und Ihre Perspektive. {a}"
+    },
+    {
+      "key": "feedback/lead/etikette",
+      "value": "Wie wir in der Republik debattieren."
     },
     {
       "key": "feedback/general/title",

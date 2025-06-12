@@ -114,6 +114,7 @@ export default async function Footer() {
         Genossenschaftsrat: '/format/genossenschaftsrat',
         Komplizin: '/komplizin',
         Etikette: '/etikette',
+        Feedback: '/feedback',
       },
     },
     {
