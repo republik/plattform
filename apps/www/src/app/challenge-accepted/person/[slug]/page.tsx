@@ -17,12 +17,13 @@ import { vstack } from '@republik/theme/patterns'
 import Image from 'next/image'
 
 type PageProps = {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
-export default async function Page({ params: { slug } }: PageProps) {
+export default async function Page({ params }: PageProps) {
+  const { slug } = await params
   const client = await getCMSClient()
   const { data } = await client.query({
     query: PersonDetailDocument,

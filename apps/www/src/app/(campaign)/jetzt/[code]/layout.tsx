@@ -8,9 +8,9 @@ export default async function Layout({
   params,
 }: {
   children: React.ReactNode
-  params: { code: string }
+  params: Promise<{ code: string }>
 }) {
-  const data = await getInviteeData(params)
+  const data = await getInviteeData(await params)
 
   const { sender, me, validateReferralCode } = data
 

@@ -14,13 +14,14 @@ import {
 import { PUBLIC_BASE_URL } from 'lib/constants'
 
 type PageProps = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata(
-  { params: { slug } }: PageProps,
+  { params }: PageProps,
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
+  const { slug } = await params
   const client = await getCMSClient()
   const { data } = await client.query({
     query: EventMetaDocument,
@@ -56,7 +57,8 @@ export async function generateMetadata(
   }
 }
 
-export default async function Page({ params: { slug } }: PageProps) {
+export default async function Page({ params }: PageProps) {
+  const { slug } = await params
   const client = await getCMSClient()
   const { data } = await client.query({
     query: EventDocument,
