@@ -10,14 +10,14 @@ export type NextReadsResolverArgs = {
   feeds: string[]
 }
 
-interface NextReadsFeedResolver {
-  resolve: () => Promise<string[]>
+export interface NextReadsFeedResolver {
+  resolve: (exclude?: string[]) => Promise<string[]>
 }
 
 export class PopularLast7DaysFeed implements NextReadsFeedResolver {
   constructor(private pgdb: PgDb) {}
 
-  async resolve(): Promise<string[]> {
+  async resolve(exclude?: string[]): Promise<string[]> {
     return this.pgdb.query(
       `
       WITH
@@ -135,7 +135,7 @@ export class PopularLast7DaysFeed implements NextReadsFeedResolver {
 	popularity_score DESC
       LIMIT 30;
       `,
-      { exclude: [] },
+      { exclude: exclude },
     )
   }
 }

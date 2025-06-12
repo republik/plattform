@@ -3,16 +3,22 @@ import { NextReadsResolverArgs, PopularLast7DaysFeed } from '../../../lib'
 
 export = async function nextReads(
   _root: never,
-  _: NextReadsResolverArgs,
+  args: NextReadsResolverArgs,
   ctx: GraphqlContext,
 ) {
-  const repoIds = await new PopularLast7DaysFeed(ctx.pgdb).resolve()
-  const documents = ctx.loaders.Document.byRepoId.loadMany(repoIds)
-
-  return [
-    {
-      id: 'POPULAR_LAST_7_DAYS',
-      documents: documents,
-    },
+  const resolver = [
+    { id: 'POPULAR_LAST_7_DAYS', resolver: new PopularLast7DaysFeed(ctx.pgdb) },
   ]
+
+  const results = await Promise.all(
+    resolver.map(async (r) => ({
+      id: r.id,
+      documents: await (async () => {
+        const ids = await r.resolver.resolve([args.repoId])
+        return ctx.loaders.Document.byRepoId.loadMany(ids)
+      })(),
+    })),
+  )
+
+  return results
 }
