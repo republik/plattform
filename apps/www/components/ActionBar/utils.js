@@ -4,44 +4,38 @@ export const getDiscussionLinkProps = (
   template,
   path,
 ) => {
-  const isLinkedDiscussion =
-    linkedDiscussion &&
+  const isActiveLinkedDiscussion =
     (template === 'article' || template === 'page') &&
-    (!linkedDiscussion.closed ||
-      (linkedDiscussion.comments && linkedDiscussion.comments.totalCount > 0))
-  const isOwnDiscussion =
-    !isLinkedDiscussion &&
-    ownDiscussion &&
-    (!ownDiscussion.closed ||
-      (ownDiscussion.comments && ownDiscussion.comments.totalCount > 0))
-  const isArticleAutoDiscussion = isOwnDiscussion && template === 'article'
-  const isDiscussionPage = isOwnDiscussion && template === 'discussion'
+    (!linkedDiscussion?.closed || linkedDiscussion?.comments.totalCount > 0)
+
+  const isActiveOwnDiscussion =
+    !isActiveLinkedDiscussion &&
+    (!ownDiscussion?.closed || ownDiscussion?.comments?.totalCount > 0)
+
+  const isArticleAutoDiscussion =
+    isActiveOwnDiscussion && template === 'article'
+
+  const isDiscussionPage = isActiveOwnDiscussion && template === 'discussion'
+
   const discussionCount =
-    (isLinkedDiscussion &&
-      linkedDiscussion.comments &&
-      linkedDiscussion.comments.totalCount) ||
-    (isOwnDiscussion &&
-      ownDiscussion.comments &&
-      ownDiscussion.comments.totalCount) ||
+    (isActiveLinkedDiscussion && linkedDiscussion?.comments.totalCount) ||
+    (isActiveOwnDiscussion && ownDiscussion?.comments?.totalCount) ||
     undefined
 
   const discussionId =
-    (isLinkedDiscussion && linkedDiscussion.id) ||
-    (isOwnDiscussion && ownDiscussion.id) ||
+    (isActiveLinkedDiscussion && linkedDiscussion.id) ||
+    (isActiveOwnDiscussion && ownDiscussion.id) ||
     undefined
+
   const discussionPath =
-    (isLinkedDiscussion && linkedDiscussion.path) ||
-    (isArticleAutoDiscussion && '/dialog') ||
+    (isActiveLinkedDiscussion && linkedDiscussion.path) ||
+    (isArticleAutoDiscussion && `/dialog/${ownDiscussion.path}`) ||
     (isDiscussionPage && path) ||
     undefined
-  const discussionQuery = isArticleAutoDiscussion
-    ? { id: ownDiscussion.id }
-    : undefined
 
   return {
     discussionId,
     discussionPath,
-    discussionQuery,
     discussionCount,
     isDiscussionPage,
   }
