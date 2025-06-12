@@ -5,6 +5,7 @@ import {
   type SitemapByYearQuery,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { parseJSONObject } from '../../../../../../lib/safeJSON'
+import { toXML } from 'jstoxml'
 
 const BASE_URL = process.env.PUBLIC_BASE_URL
 const SCHEMA_PUBLISHER = process.env.NEXT_PUBLIC_SCHEMA_PUBLISHER
@@ -16,28 +17,44 @@ function generateNewsSiteMap(
     __typename: 'Document'
   })[],
 ) {
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-${articles
-  .map(({ meta }) => {
-    return `
-  <url>
-    <loc>${BASE_URL}${meta.path}</loc>
-    <lastmod>${new Date(
-      meta.lastPublishedAt || meta.publishDate!,
-    ).toISOString()}</lastmod>
-    <news:news>
-      <news:publication>
-        <news:name>${publisher.name}</news:name>
-        <news:language>${publisher.knowsLanguage}</news:language>
-      </news:publication>
-      <news:publication_date>${meta.publishDate}</news:publication_date>
-      <news:title>${meta.title}</news:title>
-    </news:news>
-  </url>`
+  const sitemapData = {
+    _name: 'urlset',
+    _attrs: {
+      xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9',
+      'xmlns:news': 'http://www.google.com/schemas/sitemap-news/0.9',
+    },
+    _content: articles.map(({ meta }) => ({
+      _name: 'url',
+      _content: [
+        { _name: 'loc', _content: `${BASE_URL}${meta.path}` },
+        { 
+          _name: 'lastmod', 
+          _content: new Date(
+            meta.lastPublishedAt || meta.publishDate!,
+          ).toISOString() 
+        },
+        {
+          _name: 'news:news',
+          _content: [
+            {
+              _name: 'news:publication',
+              _content: [
+                { _name: 'news:name', _content: publisher.name },
+                { _name: 'news:language', _content: publisher.knowsLanguage },
+              ],
+            },
+            { _name: 'news:publication_date', _content: meta.publishDate },
+            { _name: 'news:title', _content: meta.title },
+          ],
+        },
+      ],
+    })),
+  }
+
+  return toXML(sitemapData, {
+    header: true,
+    indent: '  ',
   })
-  .join('')}
-</urlset>`
 }
 
 export async function GET(request: NextRequest, props: { params: Promise<{ year: string }> }) {

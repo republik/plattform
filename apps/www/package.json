@@ -122,6 +122,7 @@
     "isomorphic-dompurify": "^2.3.0",
     "jose": "^4.8.3",
     "jotai": "^2.2.0",
+    "jstoxml": "^7.0.1",
     "load-script": "^1.0.0",
     "lodash": "^4.17.21",
     "lru-cache": "^4.1.3",

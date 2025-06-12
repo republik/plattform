@@ -3,6 +3,7 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const rw = require('rw')
 const { dsvFormat } = require('d3-dsv')
 const csvParse = dsvFormat(',').parse
+const bluebird = require('bluebird')
 
 console.log('running import of first name statistics of BfS....')
 
@@ -20,30 +21,36 @@ PgDb.connect()
 
     const transaction = await pgdb.transactionBegin()
 
-    console.log('Truncate db table statisticsNameSex...')
-    await transaction.public.statisticsNameSex.truncate()
+    try {
+      console.log('Truncate db table statisticsNameSex...')
+      await transaction.public.statisticsNameSex.truncate()
 
-    console.log('Parse csv and insert into db table...')
-    csvParse(input, async (row) => {
-      let femaleCount = parseInt(row.female, 10)
-      let maleCount = parseInt(row.male, 10)
-      let sex = 'both'
+      console.log('Parse csv and insert into db table...')
+      const rows = csvParse(input)
+      await bluebird.each(rows, (row) => {
+        let femaleCount = parseInt(row.female, 10)
+        let maleCount = parseInt(row.male, 10)
+        let sex = 'both'
+        if (isNaN(femaleCount) || femaleCount === 0) {
+          femaleCount = null
+          sex = 'male'
+        } else if (isNaN(maleCount) || maleCount === 0) {
+          maleCount = null
+          sex = 'female'
+        }
 
-      if (isNaN(femaleCount) || femaleCount === 0) {
-        femaleCount = null
-        sex = 'male'
-      } else if (isNaN(maleCount) || maleCount === 0) {
-        maleCount = null
-        sex = 'female'
-      }
-
-      await transaction.public.statisticsNameSex.insert({
-        firstName: row.firstname,
-        femaleCount,
-        maleCount,
-        sex,
+        return transaction.public.statisticsNameSex.insert({
+          firstName: row.firstname,
+          femaleCount,
+          maleCount,
+          sex,
+        })
       })
-    })
+    } catch (e) {
+      console.log('Error while importing data: ', e)
+      await transaction.transactionRollback()
+      throw e;
+    }
 
     if (dry) {
       console.log('rolling back...')

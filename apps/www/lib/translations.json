@@ -862,7 +862,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/label",
-      "value": "7-Uhr-Newsletter"
+      "value": "Republik heute"
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/frequency",
@@ -870,7 +870,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/description",
-      "value": "Die aktuellsten Beiträge der Republik. Jeden Morgen in Ihrem virtuellen Briefkasten."
+      "value": "Was die Republik aktuell zu bieten hat. Von Montag bis Freitag um 5 Uhr in Ihrem virtuellen Briefkasten."
     },
     {
       "key": "account/newsletterSubscriptions/WDWWW/label",
@@ -910,7 +910,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/label",
-      "value": "Challenge-Accepted-Newsletter"
+      "value": "Challenge Accepted"
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/frequency",
@@ -918,7 +918,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/description",
-      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Challenge accepted. Ein frischer Blick auf die grossen Herausforderungen und auf Menschen, die sie anpacken. Und jede Menge Gelegenheiten, sich auszutauschen, voneinander zu lernen und sich gegenseitig zu inspirieren."
+      "value": "Der Newsletter für alle, die sich der Klimakrise stellen. Und gemeinsam Wege aus der Krise finden wollen. Neugierig, kritisch, konstruktiv."
     },
     {
       "key": "account/newsletterSubscriptions/onlyName/subscribe",
@@ -6805,11 +6805,11 @@
     },
     {
       "key": "marketing/page/sections/title/weekly",
-      "value": "Wochenend-Newsletter"
+      "value": "Republik am Wochenende"
     },
     {
       "key": "account/newsletterSubscriptions/WEEKLY/label",
-      "value": "Wochenend-Newsletter"
+      "value": "Republik am Wochenende"
     },
     {
       "key": "account/newsletterSubscriptions/WEEKLY/frequency",
