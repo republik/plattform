@@ -118,7 +118,7 @@ export default DialogPage
 
 export const getServerSideProps = createGetServerSideProps(
   async ({ client, ctx, user }) => {
-    const path = '/' + ctx.params.path.join('/')
+    const path = '/' + [].concat(ctx.params.path).join('/')
 
     const {
       data: { discussion },
