@@ -7,10 +7,11 @@ import {
 } from '@project-r/styleguide'
 import { IconDiscussion } from '@republik/icons'
 
+
 const styles = {
   container: css({
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: 16,
     width: '100%',
   }),
@@ -21,6 +22,7 @@ const styles = {
   title: css({
     ...fontStyles.serifRegular,
     fontSize: 18,
+    lineHeight: '1.5',
     marginBottom: 4,
     [mediaQueries.mUp]: {
       fontSize: 22,
@@ -40,8 +42,9 @@ const styles = {
     width: '100%',
     aspectRatio: '1/1',
     position: 'relative',
+    overflow: 'hidden',
     [mediaQueries.mUp]: {
-      aspectRatio: '16/9',
+      aspectRatio: '4/3',
     },
   }),
   fallbackContainer: css({
@@ -64,7 +67,10 @@ const ArticleItem = ({ title, count, image }) => {
 
   return (
     <div {...styles.container}>
-      <div {...styles.imageContainer}>
+      <div 
+        {...styles.imageContainer}
+        // {...colorScheme.set('backgroundColor', 'hover')}
+      >
         {image ? (
           <Image
             src={image}
@@ -72,7 +78,10 @@ const ArticleItem = ({ title, count, image }) => {
             fill
             sizes='(max-width: 768px) 33vw, (max-width: 1200px) 25vw, 20vw'
             style={{
-              objectFit: 'cover',
+              objectFit: 'contain',
+              objectPosition: 'center',
+              transform: `scale(0.9))`,
+              transformOrigin: 'center',
             }}
           />
         ) : (
