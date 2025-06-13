@@ -1,17 +1,14 @@
-import { css } from 'glamor'
 import { Offers } from '@app/components/paynotes/paynote/paynote-offers'
+import { css } from 'glamor'
 
+import { MarketingLandingPageCmsQuery } from '#graphql/cms/__generated__/gql/graphql'
 import {
-  TeaserFrontTileRow,
-  TeaserFrontTile,
-  fontStyles,
   Editorial,
-  Button,
+  TeaserFrontTile,
+  TeaserFrontTileRow,
+  fontStyles,
   mediaQueries,
 } from '@project-r/styleguide'
-import Link from 'next/link'
-import { useTranslation } from '../../lib/withT'
-import { MarketingLandingPageCmsQuery } from '#graphql/cms/__generated__/gql/graphql'
 
 type ReasonsProps = {
   inNativeApp: boolean
@@ -19,18 +16,20 @@ type ReasonsProps = {
 }
 
 const Reasons = ({ inNativeApp, reasons }: ReasonsProps) => {
-  const { t } = useTranslation()
   return (
     <div style={{ maxWidth: 1280, margin: '0 auto', padding: '0 15px' }}>
-      <TeaserFrontTileRow columns={3}>
-        {reasons.map((reason) => (
-          <TeaserFrontTile align='top' key={reason.id}>
-            <h2 {...styles.title}>{reason.title}</h2>
-            <Editorial.P>{reason.description}</Editorial.P>
-          </TeaserFrontTile>
-        ))}
-      </TeaserFrontTileRow>
-
+      {
+        // @ts-expect-error wonky proptypes
+        <TeaserFrontTileRow columns={3}>
+          {reasons.map((reason) => (
+            // @ts-expect-error wonky proptypes
+            <TeaserFrontTile align='top' key={reason.id}>
+              <h2 {...styles.title}>{reason.title}</h2>
+              <Editorial.P>{reason.description}</Editorial.P>
+            </TeaserFrontTile>
+          ))}
+        </TeaserFrontTileRow>
+      }
       {!inNativeApp && (
         <div
           style={{

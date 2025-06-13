@@ -8,7 +8,7 @@ import { getMe } from '@app/lib/auth/me'
  * Only required for native apps.
  */
 export async function NativeAppMessageSync() {
-  const { isNativeApp } = getPlatformInformation()
+  const { isNativeApp } = await getPlatformInformation()
   if (!isNativeApp) {
     return null
   }

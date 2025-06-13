@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import {
   Flyer,
@@ -48,7 +48,7 @@ const Page: React.FC<{
   inNativeApp: boolean
   tileId?: string
   value: CustomElement[]
-  actionBar: JSX.Element
+  actionBar: ReactNode
 }> = ({ meta, repoId, documentId, inNativeApp, tileId, value, actionBar }) => {
   const { t } = useTranslation()
 

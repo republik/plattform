@@ -37,7 +37,7 @@ export function isBodyScrollLocked() {
 export function useBodyScrollLock<T extends HTMLElement>(
   lock = true,
 ): [Ref<T>] {
-  const ref = useRef<T>()
+  const ref = useRef<T>(null)
 
   const shouldLock = !!lock
   useEffect(() => {

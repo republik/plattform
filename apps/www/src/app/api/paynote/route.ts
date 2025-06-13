@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server'
 export const revalidate = 5
 
 export async function GET(): Promise<NextResponse<Paynotes>> {
-  const client = getCMSClient()
+  const client = await getCMSClient()
 
   const {
     data: {

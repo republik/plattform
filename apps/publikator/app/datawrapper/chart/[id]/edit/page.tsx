@@ -26,10 +26,11 @@ async function fetchLoginUrl(chartId: string) {
 }
 
 export default async function Login({
-  params: { id },
+  params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const loginUrl = await fetchLoginUrl(id)
 
   if (loginUrl) {

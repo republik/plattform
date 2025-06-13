@@ -9,7 +9,8 @@ import {
 } from '#graphql/cms/__generated__/gql/graphql'
 
 export default async function Page() {
-  const { data } = await getCMSClient().query({
+  const client = await getCMSClient()
+  const { data } = await client.query({
     query: EventsDocument,
     variables: {
       today: new Date(Date.now()).toISOString(),

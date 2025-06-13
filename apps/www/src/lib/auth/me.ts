@@ -9,7 +9,8 @@ export async function getMe(): Promise<{
   isMember: boolean
   hasActiveMembership: boolean
 }> {
-  const { data } = await getClient().query({ query: MeDocument })
+  const client = await getClient()
+  const { data } = await client.query({ query: MeDocument })
   return {
     me: data?.me,
     isMember: data?.me?.roles.some((role) => role === 'member'),

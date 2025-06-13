@@ -12,7 +12,7 @@ type Employees = {
 export const revalidate = 5
 
 export async function GET(): Promise<NextResponse<Employees>> {
-  const client = getCMSClient()
+  const client = await getCMSClient()
 
   const { data } = await client.query({
     query: EmployeesDocument,

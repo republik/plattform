@@ -10,7 +10,7 @@ import {
   useColorContext,
   fontStyles,
 } from '@project-r/styleguide'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { AudioPlayerProps } from './shared'
 import CurrentlyPlaying from './ui/CurrentlyPlaying'
 import Queue from './ui/tabs/queue/Queue'

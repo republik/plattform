@@ -7,11 +7,11 @@ import { parsePlatformInformation } from './shared'
  * to be used in a server-component.
  * @returns {@type ReturnType<typeof parsePlatformInformation>}
  */
-export function getPlatformInformation(): ReturnType<
-  typeof parsePlatformInformation
+export async function getPlatformInformation(): Promise<
+  ReturnType<typeof parsePlatformInformation>
 > {
   // get useragent header from headers
-  const userAgent = headers().get('user-agent')
+  const userAgent = (await headers()).get('user-agent')
   // parse useragent header
   return parsePlatformInformation(userAgent)
 }

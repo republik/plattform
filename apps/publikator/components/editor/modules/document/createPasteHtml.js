@@ -4,7 +4,7 @@ import * as htmlParse from 'rehype-parse'
 import rehype2remark from 'rehype-remark'
 import stringify from 'remark-stringify'
 
-import { getEventTransfer } from 'slate-react'
+import { getEventTransfer } from '@republik/slate-react'
 import unified from 'unified'
 
 const hasParent = (type, document, key) => {
@@ -19,7 +19,6 @@ const normalise = (html) =>
   html.replace(/<b[^>]*font-weight\s*:\s*normal[^>]*>/g, '')
 
 const PARAGRAPH_TYPES = ['PARAGRAPH', 'INFOP', 'BLOCKQUOTEPARAGRAPH']
-
 
 /*const {
   FRAGMENT,

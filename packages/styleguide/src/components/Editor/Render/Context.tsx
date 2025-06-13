@@ -6,7 +6,7 @@ type RenderProps = {
   children?: ReactNode
   Link?: React.FC<any>
   t?: Formatter
-  nav?: JSX.Element
+  nav?: ReactNode
   ShareTile?: React.FC<{ tileId: string }>
   noLazy?: boolean
   commitId?: string

@@ -61,7 +61,8 @@ export async function PersonList({
   linkToOverview?: boolean
   hidePersonId?: string
 }) {
-  const { data } = await getCMSClient().query({
+  const client = await getCMSClient()
+  const { data } = await client.query({
     query: ChallengeAcceptedPersonListDocument,
     context: {
       fetchOptions: {

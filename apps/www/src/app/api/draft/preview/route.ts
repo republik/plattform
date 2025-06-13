@@ -23,7 +23,8 @@ export async function GET(request: Request) {
   }
 
   // Enable Draft Mode by setting the cookie
-  draftMode().enable()
+  const dm = await draftMode()
+  dm.enable()
 
   // Redirect to the path
   redirect(path)

@@ -8,10 +8,8 @@ const CHALLENGE_ACCEPTED_SVG_URL =
 export const runtime = 'edge'
 
 // Image generation
-export async function GET(
-  _: NextRequest,
-  { params }: { params: { slug: string } },
-) {
+export async function GET(_: NextRequest, props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const res = await fetch(process.env.DATO_CMS_API_URL, {
     method: 'POST',
     headers: {

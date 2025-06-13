@@ -77,7 +77,8 @@ export const ArticleTeaser = async ({ path, image }: ArticleProps) => {
   // and extract the pathname from it.
   const url = new URL(path, PUBLIC_BASE_URL)
 
-  const { data } = await getClient().query<ArticleTeaserQuery>({
+  const client = await getClient()
+  const { data } = await client.query<ArticleTeaserQuery>({
     query: ArticleTeaserDocument,
     variables: { path: url.pathname },
   })

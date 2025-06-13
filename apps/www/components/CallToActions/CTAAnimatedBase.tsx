@@ -1,7 +1,7 @@
 'use client'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { useIntersectionObserver } from '../../lib/hooks/useIntersectionObserver'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 type CTABaseProps = {
   children: ReactNode
@@ -12,7 +12,7 @@ const getStorageKey = (id: string) => `cta-${id}-rendered`
 
 /**
  * A animated wrapper for call-to-actions to fade-in from the top once the page top is visited.
- * ⚠️ BE WARY ⚠️: This component uses framer-motion's motion.div to animate the call-to-action.
+ * ⚠️ BE WARY ⚠️: This component uses motion/react's motion.div to animate the call-to-action.
  * the client-bundle will be rather large. load components using this wrapper only when needed.
  * And in best case behind a dynamic import or suspense-boundary.
  */

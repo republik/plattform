@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     })
   }
 
-  const reqHeaders = headers()
+  const reqHeaders = await headers()
   if (
     reqHeaders.get('X-REVALIDATION-SECRET') !== process.env.REVALIDATION_SECRET
   ) {

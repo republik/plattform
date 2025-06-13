@@ -1,7 +1,4 @@
-import {
-  NextSSRInMemoryCache,
-  NextSSRApolloClient,
-} from '@apollo/experimental-nextjs-app-support/ssr'
+import { InMemoryCache, ApolloClient } from '@apollo/client-integration-nextjs'
 import { HttpLink, NormalizedCacheObject } from '@apollo/client'
 
 /**
@@ -13,7 +10,7 @@ export function getCMSClientBase({
   draftMode,
 }: {
   draftMode?: boolean
-}): NextSSRApolloClient<NormalizedCacheObject> {
+}): ApolloClient<NormalizedCacheObject> {
   if (!process.env.DATO_CMS_API_URL) {
     throw new Error('Missing DatoCMS API URL')
   }
@@ -34,8 +31,8 @@ export function getCMSClientBase({
     headers['X-Include-Drafts'] = 'true'
   }
 
-  return new NextSSRApolloClient({
-    cache: new NextSSRInMemoryCache(),
+  return new ApolloClient({
+    cache: new InMemoryCache(),
     link: new HttpLink({
       uri: process.env.DATO_CMS_API_URL,
       headers,

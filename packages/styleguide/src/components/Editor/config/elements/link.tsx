@@ -23,8 +23,8 @@ const Form: React.FC<ElementFormProps<LinkElement>> = ({
   const { t } = useRenderContext()
   const [href, setHref] = useState(element.href || '')
   const [title, setTitle] = useState(element.title || '')
-  const hrefRef = useRef<string>()
-  const titleRef = useRef<string>()
+  const hrefRef = useRef<string>(null)
+  const titleRef = useRef<string>(null)
   hrefRef.current = href
   titleRef.current = title
 

@@ -125,7 +125,7 @@ const Collapsable = ({
       }`,
     )
 
-  const root = useRef<HTMLDivElement>()
+  const root = useRef<HTMLDivElement>(null)
   const onToggleCollapsed = React.useCallback(
     () =>
       setBodyVisibility((v) => {

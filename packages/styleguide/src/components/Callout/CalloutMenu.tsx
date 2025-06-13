@@ -44,7 +44,7 @@ const CalloutMenu = ({
   inline = false,
 }: Props) => {
   const [showMenu, setMenu] = React.useState(initiallyOpen)
-  const toggleRef = React.useRef()
+  const toggleRef = React.useRef(null)
 
   const handleClick = (e) => {
     if (!hasAncestor(e.target, (node) => node === toggleRef.current)) {
@@ -72,10 +72,7 @@ const CalloutMenu = ({
       ref={toggleRef}
     >
       {showMenu && (
-        <Callout
-          onClose={() => setMenu(false)}
-          align={align}
-        >
+        <Callout onClose={() => setMenu(false)} align={align}>
           {children}
         </Callout>
       )}

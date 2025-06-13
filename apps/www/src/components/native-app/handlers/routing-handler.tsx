@@ -40,7 +40,7 @@ function useOnRouteChange(callBack: RouteChangeCallback) {
 export function NARoutingHandler() {
   const router = useRouter()
   const postMessage = usePostMessage()
-  const previousPushUrl = useRef<string>()
+  const previousPushUrl = useRef<string>(undefined)
 
   useOnRouteChange((url) => {
     postMessage({

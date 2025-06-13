@@ -1,7 +1,9 @@
 'use client'
 
-import { ThemeProvider as NextThemeProvider } from 'next-themes'
-import { ThemeProviderProps } from 'next-themes/dist/types'
+import {
+  ThemeProvider as NextThemeProvider,
+  type ThemeProviderProps,
+} from 'next-themes'
 
 export { useTheme } from 'next-themes'
 

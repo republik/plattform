@@ -5,7 +5,7 @@ import {
   useColorContext,
   mediaQueries,
 } from '@project-r/styleguide'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 function getIndeciesArray(value: number): number[] {
   if (value < 1) {
@@ -46,7 +46,7 @@ type StepsProps = {
 }
 
 const Steps = ({ stepCount, currentStep = 0, setStep }: StepsProps) => {
-  const stepsWrapperRef = useRef<HTMLOListElement>()
+  const stepsWrapperRef = useRef<HTMLOListElement>(null)
   const steps = useMemo(() => getIndeciesArray(stepCount), [stepCount])
 
   return (

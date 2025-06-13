@@ -127,7 +127,7 @@ export const QaBlock = ({ slug, questions, bgColor, valueLength, hint }) => {
     (q) => q.__typename === 'QuestionTypeText',
   )
 
-  const questionRef = useRef()
+  const questionRef = useRef(null)
   useEffect(() => {
     if (query?.focus === questions[0].id) {
       scrollIntoView(questionRef.current, {

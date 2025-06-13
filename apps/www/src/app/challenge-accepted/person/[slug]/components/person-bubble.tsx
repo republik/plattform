@@ -3,7 +3,8 @@ import { ChallengeAcceptedPersonListDocument } from '#graphql/cms/__generated__/
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 
 export async function PersonBubble() {
-  const { data } = await getCMSClient().query({
+  const client = await getCMSClient()
+  const { data } = await client.query({
     query: ChallengeAcceptedPersonListDocument,
     context: {
       fetchOptions: {

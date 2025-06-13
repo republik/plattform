@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Editor as SlateEditor } from 'slate-react'
+import { Editor as SlateEditor } from '@republik/slate-react'
 import { css } from 'glamor'
 
 import Loader from '../Loader'
