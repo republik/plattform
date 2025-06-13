@@ -5,7 +5,6 @@ export = {
     return self.id
   },
   documents: async (self: NextReadsResult) => {
-    console.log(self.documents)
-    return self.documents ?? []
+    return self.documents
   },
 }

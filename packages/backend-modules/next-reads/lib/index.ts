@@ -130,7 +130,7 @@ export class PopularLast7DaysFeed implements NextReadsFeedResolver {
       FROM
         popular
       WHERE
-        "repoId" NOT IN (:exclude)
+        "repoId" != ALL(:exclude)
       ORDER BY
         popularity_score_7_days DESC
       LIMIT 30;

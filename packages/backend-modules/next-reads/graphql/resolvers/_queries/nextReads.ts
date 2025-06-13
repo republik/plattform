@@ -20,7 +20,5 @@ export = async function nextReads(
     })),
   )
 
-  console.log(results)
-
   return results
 }
