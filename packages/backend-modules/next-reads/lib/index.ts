@@ -144,6 +144,7 @@ export class PopularLast20DaysCommentsFeed implements NextReadsFeedResolver {
   constructor(private pgdb: PgDb) {}
 
   async resolve(): Promise<string[]> {
+    await this.pgdb.query('select 1') // TODO
     throw new Error('Not implemented')
   }
 }
