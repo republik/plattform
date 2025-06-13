@@ -42,11 +42,6 @@ const nextConfig = {
     PUBLIC_BASE_URL,
     PUBLIC_CDN_URL,
   },
-  transpilePackages: [
-    '@project-r/styleguide',
-    '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11 and older safari versions
-    '@republik/icons', // Ensures ES5 compatibility to work in IE11 and older safari versions
-  ],
   webpack: (config) => {
     config.externals = config.externals || {}
     config.externals['lru-cache'] = 'lru-cache'

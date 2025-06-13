@@ -989,8 +989,12 @@
       "value": "Sie haben keine Berechtigung, diesen Newsletter zu abonnieren."
     },
     {
+      "key": "api/newsletters/request/DAILY/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Republik heute Newsletter."
+    },
+    {
       "key": "api/newsletters/request/WEEKLY/subject",
-      "value": "Bestätigen Sie Ihre Anmeldung zum Wochenend-Newsletter."
+      "value": "Bestätigen Sie Ihre Anmeldung zum Republik am Wochenende Newsletter."
     },
     {
       "key": "api/newsletters/request/PROJECTR/subject",
@@ -998,7 +1002,7 @@
     },
     {
       "key": "api/newsletters/request/CLIMATE/subject",
-      "value": "Bestätigen Sie Ihre Anmeldung zum Challenge-Accepted-Newsletter."
+      "value": "Bestätigen Sie Ihre Anmeldung zum Challenge Accepted Newsletter."
     },
     {
       "key": "api/newsletters/request/WDWWW/subject",
@@ -1023,6 +1027,14 @@
     {
       "key": "profile/portrait/needed",
       "value": "Sie benötigen ein Portrait, um auf der Community-Seite zu erscheinen"
+    },
+    {
+      "key": "api/profile/toManyUrls",
+      "value": "Ihr Profil enthält zu viele externe URLs."
+    },
+    {
+      "key": "api/profile/invalidUrls",
+      "value": "Ihr Profil enthält nicht erlaubte URLs."
     },
     {
       "key": "profile/candidacy/statement/needed",

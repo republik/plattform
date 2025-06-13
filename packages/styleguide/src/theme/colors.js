@@ -87,6 +87,7 @@ const colorsDeprecated = {
 // - create open source color scheme, mv brand values to env via internal handbook
 
 const colors = {
+  ...colorsDeprecated,
   light: {
     logo: '#000000',
     default: '#FFFFFF',
@@ -244,12 +245,5 @@ const colors = {
     },
   },
 }
-
-// add all deprecated colors, but only if they don't exist in new colors (no overwrites)
-Object.keys(colorsDeprecated).forEach((key) => {
-  if (!colors[key]) {
-    colors[key] = colorsDeprecated[key]
-  }
-})
 
 export default colors

@@ -58,3 +58,5 @@ User-agent: Webzio-Extended
 User-agent: wpbot
 User-agent: YouBot
 Disallow: /
+
+Sitemap: https://www.republik.ch/sitemap.xml

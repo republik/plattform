@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ReactNode, ReactElement } from 'react'
 import { css } from 'glamor'
 import { Interaction } from '../Typography'
 import Spinner from '../Spinner'
@@ -45,7 +45,7 @@ type LoaderProps = {
   error?: GraphQLError | ApolloError
   render?: () => React.ReactElement
   delay?: number
-  ErrorContainer?: React.ComponentType<{ children: React.ReactNode }>
+  ErrorContainer?: (props: { children: ReactNode }) => ReactElement
 }
 
 const Loader = ({
@@ -55,7 +55,7 @@ const Loader = ({
   error,
   render = () => null,
   delay = 500,
-  ErrorContainer = ({ children }) => children,
+  ErrorContainer = ({ children }) => <>{children}</>,
 }: LoaderProps) => {
   const [visible, setVisible] = useState(false)
   const [colorScheme] = useColorContext()
