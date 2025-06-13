@@ -10,14 +10,16 @@ export type NextReadsResolverArgs = {
   feeds: string[]
 }
 
+export type NextReadsResolverResult = { repoId: string; score: number }
+
 export interface NextReadsFeedResolver {
-  resolve: (exclude?: string[]) => Promise<string[]>
+  resolve: (exclude?: string[]) => Promise<NextReadsResolverResult[]>
 }
 
 export class PopularLast7DaysFeed implements NextReadsFeedResolver {
   constructor(private pgdb: PgDb) {}
 
-  async resolve(exclude?: string[]): Promise<string[]> {
+  async resolve(exclude?: string[]): Promise<NextReadsResolverResult[]> {
     return this.pgdb.query(
       `
       WITH
@@ -124,15 +126,13 @@ export class PopularLast7DaysFeed implements NextReadsFeedResolver {
 	)
       SELECT
         "repoId",
-       	readings_last_7_days as total_reading,
-       	complete_readings_last_7_days as completed_readings,
-       	popularity_score_7_days as popularity_score
+        popularity_score_7_days as score
       FROM
         popular
       WHERE
         "repoId" NOT IN (:exclude)
       ORDER BY
-	popularity_score DESC
+        popularity_score_7_days DESC
       LIMIT 30;
       `,
       { exclude: exclude },
@@ -143,7 +143,7 @@ export class PopularLast7DaysFeed implements NextReadsFeedResolver {
 export class PopularLast20DaysCommentsFeed implements NextReadsFeedResolver {
   constructor(private pgdb: PgDb) {}
 
-  async resolve(): Promise<string[]> {
+  async resolve(): Promise<NextReadsResolverResult[]> {
     await this.pgdb.query('select 1') // TODO
     throw new Error('Not implemented')
   }

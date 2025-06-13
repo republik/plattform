@@ -15,10 +15,12 @@ export = async function nextReads(
       id: r.id,
       documents: await (async () => {
         const ids = await r.resolver.resolve([args.repoId])
-        return ctx.loaders.Document.byRepoId.loadMany(ids)
+        return ctx.loaders.Document.byRepoId.loadMany(ids.map((r) => r.repoId))
       })(),
     })),
   )
+
+  console.log(results)
 
   return results
 }
