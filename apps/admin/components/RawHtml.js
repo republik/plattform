@@ -46,20 +46,29 @@ const styles = {
   }),
 }
 
-const RawHtml = ({ type, style, dangerouslySetInnerHTML }) =>
-  createElement(type, {
+/**
+ * RawHtmlProps
+ * @typedef {object} RawHtmlProps
+ * @property {string} type
+ * @property {'serif' | 'sansSerif'} style
+ * @property {{__html: string}} dangerouslySetInnerHTML
+ */
+
+/**
+ * Raw HTML component
+ * @param {RawHtmlProps} props
+ * @returns {JSX.Element}
+ */
+function RawHtml({
+  type = 'span',
+  style = 'sansSerif',
+  dangerouslySetInnerHTML,
+}) {
+  return createElement(type, {
     ...styles.default,
     ...styles[style],
     dangerouslySetInnerHTML,
   })
-
-RawHtml.defaultProps = {
-  type: 'span',
-  style: 'sansSerif',
-}
-
-RawHtml.propTypes = {
-  style: PropTypes.oneOf(['serif', 'sansSerif']).isRequired,
 }
 
 export default RawHtml
