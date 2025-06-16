@@ -122,7 +122,6 @@ type Discussion {
 
   closed: Boolean!
   collapsable: Boolean!
-  isBoard: Boolean!
   comments(
     # get children of this parent
     parentId: ID

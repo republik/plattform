@@ -37,7 +37,6 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     ...(discussionAnonymity ? { anonymity: discussionAnonymity } : {}),
     ...(discussionClosed !== null ? { closed: !!discussionClosed } : {}),
     ...(collapsable !== null ? { collapsable: !!collapsable } : {}),
-    ...(board !== null ? { isBoard: !!board } : {}),
     tags: tags ? tags.trim().split(',') : null,
     tagRequired: !!tagRequired,
     // TODO: get rid of allowedRoles concept in another branche

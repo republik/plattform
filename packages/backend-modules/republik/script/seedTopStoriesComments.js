@@ -144,12 +144,6 @@ Promise.props({
       repoId: 'republik-dev/discussion-top-stories-test',
     })
     await pgdb.public.comments.delete({ discussionId: discussion.id })
-    if (!discussion.isBoard) {
-      await pgdb.public.discussions.updateOne(
-        { id: discussion.id },
-        { isBoard: true },
-      )
-    }
 
     await Promise.each(comments, async (comment) => {
       const user = await pgdb.public.users.findOne({

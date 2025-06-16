@@ -13,39 +13,20 @@ const {
   slug: getSlug,
 } = require('@orbiting/backend-modules-republik/graphql/resolvers/User')
 const { clipNamesInText } = require('../../lib/nameClipper')
-const { stripUrlFromText } = require('../../lib/urlStripper')
-const { getEmbedByUrl } = require('@orbiting/backend-modules-embeds')
 
 const { DISPLAY_AUTHOR_SECRET, ASSETS_SERVER_BASE_URL } = process.env
 if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
-const embedForComment = async (
-  { embedUrl, discussionId, depth, published, adminUnpublished },
-  context,
-) => {
-  if (!embedUrl) {
-    return null
-  }
-  if (!(published && !adminUnpublished)) {
-    return null
-  }
-  const discussion = await context.loaders.Discussion.byId.load(discussionId)
-  if (discussion && discussion.isBoard && depth === 0) {
-    return getEmbedByUrl(embedUrl, context)
-  }
-  return null
-}
 
-const textForComment = async (comment, strip = false, context) => {
+const textForComment = async (comment, context) => {
   const {
     userId,
     content,
     published,
     adminUnpublished,
     discussionId,
-    embedUrl,
   } = comment
   const { user: me } = context
 
@@ -62,9 +43,6 @@ const textForComment = async (comment, strip = false, context) => {
         discussionId,
       )
     newContent = clipNamesInText(namesToClip, content)
-  }
-  if (strip && !!(await embedForComment(comment, context))) {
-    newContent = stripUrlFromText(embedUrl, content)
   }
   return newContent
 }
@@ -138,8 +116,6 @@ module.exports = {
     }
     return mdastToHumanString(remark.parse(text), length)
   },
-
-  embed: async (comment, args, context) => embedForComment(comment, context),
 
   contentLength: ({ content, embedUrl, userId }, args, { user: me }) =>
     me && me.id === userId
