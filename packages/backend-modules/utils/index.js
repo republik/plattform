@@ -11,7 +11,6 @@ module.exports = {
   slateVisit: require('./slate/visit'),
   hasUserActiveMembership: require('./hasUserActiveMembership'),
   fetchWithTimeout: require('./fetchWithTimeout'),
-  getUrls: require('./getUrls'),
   truncate: require('./truncate'),
   remark: require('./remark'),
   uuidForObject: require('./uuidForObject'),
