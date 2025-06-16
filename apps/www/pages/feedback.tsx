@@ -15,7 +15,7 @@ const FeedbackDialogPage = () => {
   return (
     <>
       <Frame hasOverviewNav raw formatColor='primary'>
-        <DiscussionContextProvider discussionId={activeDiscussionId}>
+        <DiscussionContextProvider discussionPath={'/feedback'}>
           <Center>
             <div style={{ marginBottom: 30 }}>
               <Editorial.Format color='primary'>

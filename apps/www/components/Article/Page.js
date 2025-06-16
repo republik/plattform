@@ -328,9 +328,7 @@ const ArticlePage = ({
   const hasOverviewNav = !meta?.series // no overview on series, so that seriesNav is rendered
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
 
-  const delegateMetaDown =
-    !!isFlyer ||
-    !!meta?.delegateDown
+  const delegateMetaDown = !!isFlyer || !!meta?.delegateDown
 
   return (
     <Frame
@@ -505,7 +503,7 @@ const ArticlePage = ({
                 {meta.template === 'discussion' && ownDiscussion && (
                   <Center breakout={breakout}>
                     <DiscussionContextProvider
-                      discussionId={ownDiscussion.id}
+                      discussionPath={ownDiscussion.path}
                       isBoardRoot={ownDiscussion.isBoard}
                     >
                       <Discussion documentMeta={rawContentMeta} showPayNotes />

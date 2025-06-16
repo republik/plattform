@@ -32,18 +32,7 @@ const styles = {
   }),
 }
 
-const MaybeDiscussionContextProvider = ({ discussionId, children }) => {
-  if (discussionId) {
-    return (
-      <DiscussionContextProvider discussionId={discussionId}>
-        {children}
-      </DiscussionContextProvider>
-    )
-  }
-  return children
-}
-
-const DialogContent = ({ activeDiscussionId, serverContext }) => {
+const DialogContent = () => {
   const { t } = useTranslation()
   const discussionContext = useDiscussion()
 
@@ -53,7 +42,7 @@ const DialogContent = ({ activeDiscussionId, serverContext }) => {
     !discussionContext.error &&
     !discussionContext.discussion
   ) {
-    return <StatusError statusCode={404} serverContext={serverContext} />
+    return <StatusError statusCode={404} />
   }
   // wait for loaded discussion object and skip if focus comment, handled by the provider
   const metaData = discussionContext?.discussion && {
@@ -82,7 +71,10 @@ const DialogContent = ({ activeDiscussionId, serverContext }) => {
               <DiscussionTitle />
             </Interaction.H1>
             <br />
-            <ActionBar discussion={activeDiscussionId} fontSize />
+            <ActionBar
+              discussion={discussionContext?.discussion?.id}
+              fontSize
+            />
             {!discussionContext?.discussion?.userCanComment && (
               <DialogPaynote />
             )}
@@ -94,52 +86,18 @@ const DialogContent = ({ activeDiscussionId, serverContext }) => {
   )
 }
 
-const DialogPage = ({ serverContext, discussionId }) => {
+const DialogPage = () => {
+  const router = useRouter()
+  const { path } = router.query
+  const discussionPath = '/' + [].concat(path || []).join('/')
+
   return (
     <Frame hasOverviewNav raw formatColor='primary' stickySecondaryNav={true}>
-      <MaybeDiscussionContextProvider discussionId={discussionId}>
-        <DialogContent
-          activeDiscussionId={discussionId}
-          serverContext={serverContext}
-        />
-      </MaybeDiscussionContextProvider>
+      <DiscussionContextProvider discussionPath={discussionPath}>
+        <DialogContent />
+      </DiscussionContextProvider>
     </Frame>
   )
 }
 
 export default DialogPage
-
-export const getServerSideProps = createGetServerSideProps(
-  async ({ client, ctx, user }) => {
-    const path = '/' + [].concat(ctx.params.path).join('/')
-
-    const {
-      data: { discussion },
-    } = await client.query({
-      query: gql`
-        query getDiscussionId($path: String!) {
-          discussion(path: $path) {
-            id
-          }
-        }
-      `,
-      variables: {
-        path,
-      },
-      // Ignore graphQLErrors and let the client handle/report them.
-      errorPolicy: 'ignore',
-    })
-
-    if (!discussion) {
-      return {
-        notFound: true,
-      }
-    }
-
-    return {
-      props: {
-        discussionId: discussion.id,
-      },
-    }
-  },
-)

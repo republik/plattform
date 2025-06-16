@@ -73,7 +73,7 @@ export const getServerSideProps = createGetServerSideProps(
     if (discussion && discussion.path) {
       return {
         redirect: {
-          destination: `/dialog/${discussion.path}${
+          destination: `/dialog${discussion.path}${
             focus ? `?focus=${focus}` : ''
           }`,
           permanent: true,

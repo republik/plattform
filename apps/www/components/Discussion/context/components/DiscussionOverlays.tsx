@@ -59,7 +59,7 @@ const DiscussionOverlays = ({
 
       {isBoardRoot && !!router.query.parent && (
         <RootCommentOverlay
-          discussionId={discussion.id}
+          discussionPath={discussion.path}
           parent={router.query.parent}
           onClose={() => {
             const href = getFocusHref(discussion)
