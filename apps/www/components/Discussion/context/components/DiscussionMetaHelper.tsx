@@ -3,7 +3,6 @@ import { inQuotes } from '@project-r/styleguide'
 
 import { useDiscussion } from '../DiscussionContext'
 import Meta from '../../../Frame/Meta'
-import { getFocusUrl } from '../../shared/CommentLink'
 import { useTranslation } from '../../../../lib/withT'
 import { PUBLIC_BASE_URL } from '../../../../lib/constants'
 
