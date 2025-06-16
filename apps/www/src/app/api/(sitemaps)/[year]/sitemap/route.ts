@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getClient } from '../../../../../lib/apollo/client'
-import { SitemapByYearDocument, type SitemapByYearQuery } from '#graphql/republik-api/__generated__/gql/graphql'
-  
+import {
+  SitemapByYearDocument,
+  type SitemapByYearQuery,
+} from '#graphql/republik-api/__generated__/gql/graphql'
+
 const BASE_URL = process.env.PUBLIC_BASE_URL
 
 export async function GET(
@@ -37,22 +40,29 @@ export async function GET(
 
     const articles = nodes
       .map(({ entity }) => entity)
-      .filter((entity): entity is NonNullable<typeof entity> & { __typename: 'Document' } => 
-        entity?.__typename === 'Document'
+      .filter(
+        (
+          entity,
+        ): entity is NonNullable<typeof entity> & { __typename: 'Document' } =>
+          entity?.__typename === 'Document',
       )
 
     // Generate XML sitemap
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     ${articles
-      .filter((article) => article.meta.path && article.meta.publishDate) // Filter out incomplete articles
+      .filter((article) => article.meta.path && article.meta.publishDate)
       .map(
         (article) => `  <url>
         <loc>${BASE_URL}${article.meta.path}</loc>
-        <lastmod>${new Date(
-          article.meta.lastPublishedAt ||
-            article.meta.publishDate!,
-        ).toISOString()}</lastmod>
+        <lastmod>${(() => {
+          const lastPublishedAt = new Date(article.meta.lastPublishedAt)
+          const publishDate = new Date(article.meta.publishDate)
+          // Return the more recent of the two dates
+          return lastPublishedAt > publishDate
+            ? lastPublishedAt.toISOString()
+            : publishDate.toISOString()
+        })()}</lastmod>
       </url>`,
       )
       .join('\n')}
