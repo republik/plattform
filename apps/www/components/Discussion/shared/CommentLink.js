@@ -4,7 +4,6 @@ import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import Link from 'next/link'
 
 export const getFocusHref = (discussion, comment) => {
-  console.log('discussion', discussion)
   const focusParams = { focus: comment?.id }
   if (discussion.document?.meta?.template === 'article') {
     return {
