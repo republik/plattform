@@ -105,7 +105,7 @@ const MailchimpInterface = ({ logger }: any) => {
         })
         const json = (await response.json()) as any
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug(`could not update member: ${email} ${json.detail}`)
+          console.log(`could not update member: ${email} ${json.detail}`)
           return null
         }
         return json
