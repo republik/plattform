@@ -1,10 +1,11 @@
-import { useDeferredValue, useState } from 'react'
+'use client'
+import { ReactNode, useDeferredValue, useState } from 'react'
 import styles from './icon-explorer.module.css'
 
 export const IconExplorer = ({
   icons,
 }: {
-  icons: { title: string; Icon: () => JSX.Element }[]
+  icons: { title: string; icon: ReactNode }[]
 }) => {
   const [search, setSearch] = useState('')
   const deferredSearch = useDeferredValue(search)
@@ -28,13 +29,11 @@ export const IconExplorer = ({
         }}
       ></input>
       <ul className={styles.grid}>
-        {items.map(({ title, Icon }, i) => {
+        {items.map(({ title, icon }, i) => {
           return (
             <li key={title + i} className={styles.icon}>
               <div className={styles.iconTitle}>{title}</div>
-              <div className={styles.iconWrapper}>
-                <Icon />
-              </div>
+              <div className={styles.iconWrapper}>{icon}</div>
             </li>
           )
         })}
