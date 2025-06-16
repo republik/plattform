@@ -19,15 +19,8 @@ if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
-
 const textForComment = async (comment, context) => {
-  const {
-    userId,
-    content,
-    published,
-    adminUnpublished,
-    discussionId,
-  } = comment
+  const { userId, content, published, adminUnpublished, discussionId } = comment
   const { user: me } = context
 
   const isPublished = !!(published && !adminUnpublished)
@@ -117,10 +110,8 @@ module.exports = {
     return mdastToHumanString(remark.parse(text), length)
   },
 
-  contentLength: ({ content, embedUrl, userId }, args, { user: me }) =>
-    me && me.id === userId
-      ? content.length - (embedUrl ? embedUrl.length : 0)
-      : null,
+  contentLength: ({ content, userId }, args, { user: me }) =>
+    me && me.id === userId ? content.length : null,
 
   upVotes: (comment) => {
     const { published, adminUnpublished, upVotes } = comment
@@ -289,24 +280,6 @@ module.exports = {
   },
 
   tags: (comment) => comment.tags || [],
-
-  mentioningDocument: async (
-    { mentioningRepoId, mentioningFragmentId: fragmentId },
-    args,
-    { loaders },
-  ) => {
-    if (!mentioningRepoId) {
-      return null
-    }
-    const doc = await loaders.Document.byRepoId.load(mentioningRepoId)
-    if (doc) {
-      return {
-        document: doc,
-        fragmentId,
-        iconUrl: `${ASSETS_SERVER_BASE_URL}/s3/republik-assets/assets/top-storys/top-story-badge.png`,
-      }
-    }
-  },
 
   userCanReport: ({ userId }, args, { user: me }) => !me || me?.id !== userId,
 

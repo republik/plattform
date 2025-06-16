@@ -37,7 +37,6 @@ export type CommentFragmentType = {
     }[]
   }>
   // TODO: Add type
-  embed: unknown
   updatedAt: DateTime
   createdAt: DateTime
   parentIds: string[]
@@ -79,45 +78,10 @@ export const COMMENT_FRAGMENT = gql`
         ...notificationInfo
       }
     }
-    embed {
-      ... on LinkPreview {
-        url
-        title
-        description
-        imageUrl
-        imageAlt
-        siteName
-        siteImageUrl
-        updatedAt
-        __typename
-      }
-      ... on TwitterEmbed {
-        id
-        url
-        text
-        html
-        userName
-        userScreenName
-        userProfileImageUrl
-        image
-        createdAt
-        __typename
-      }
-    }
     updatedAt
     createdAt
     parentIds
     tags
-    mentioningDocument {
-      iconUrl
-      document {
-        id
-        meta {
-          path
-        }
-      }
-      fragmentId
-    }
   }
   ${notificationInfo}
 `

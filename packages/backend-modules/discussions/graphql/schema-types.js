@@ -222,22 +222,13 @@ type Comment {
   userCanEdit: Boolean
   createdAt: DateTime!
   updatedAt: DateTime!
-
   depth: Int!
   hotness: Float!
-
   tags: [String!]!
-
   userCanReport: Boolean!
   userReportedAt: DateTime
   numReports: Int
-
   contentLength: Int
-
-  embed: Embed
-
-  mentioningDocument: MentioningDocument
-
   featuredAt: DateTime
   featuredText: String
   featuredTargets: [CommentFeaturedTarget!]
@@ -245,12 +236,6 @@ type Comment {
 
 enum CommentFeaturedTarget {
 ${getFeaturedTargets().join('\n')}
-}
-
-type MentioningDocument {
-  document: Document!
-  fragmentId: String
-  iconUrl: String!
 }
 
 enum MutationType {
