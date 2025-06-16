@@ -35,7 +35,11 @@ const {
 const {
   graphql: referralCampaigns,
 } = require('@orbiting/backend-modules-referral-campaigns')
-const { graphql: nextReads } = require('@orbiting/backend-modules-next-reads')
+const {
+  graphql: nextReads,
+  ReadingPositionRefreshWorker,
+  NextReadsFeedRefreshWorker,
+} = require('@orbiting/backend-modules-next-reads')
 
 const {
   graphql: paymentsGraphql,
@@ -107,6 +111,8 @@ function setupQueue(context, monitorQueueState = undefined) {
     SyncMailchimpUpdateWorker,
     SyncMailchimpEndedWorker,
     CockpitWorker,
+    ReadingPositionRefreshWorker,
+    NextReadsFeedRefreshWorker,
   ])
 
   return queue
@@ -368,6 +374,14 @@ const runOnce = async () => {
   await queue.schedule(
     'cockpit:refresh',
     '*/30 * * * *', // cron for every 30 minutes
+  )
+  await queue.schedule(
+    'next_reads:reading_position',
+    '15,45 * * * *', // At minute the 15th and 45th minute
+  )
+  await queue.schedule(
+    'next_reads:feed:refresh',
+    '*/30 * * * *', // every 30 minutes
   )
 
   const close = async () => {
