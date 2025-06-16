@@ -11,6 +11,7 @@ import DiscussionCommentTreeRenderer from './DiscussionCommentTreeRenderer'
 import DiscussionOptions from './DiscussionOptions/DiscussionOptions'
 import TagFilter from './DiscussionOptions/TagFilter'
 import makeCommentTree from './helpers/makeCommentTree'
+import createDiscussionForumPostingSchema from './helpers/createDiscussionForumPostingSchema'
 import { css } from 'glamor'
 import useDiscussionFocusHelper from './hooks/useDiscussionFocusHelper'
 
@@ -48,6 +49,11 @@ const Discussion = ({ documentMeta }: Props) => {
     return makeCommentTree(discussion?.comments)
   }, [discussion])
 
+  const structuredData = useMemo(() => {
+    if (!discussion) return null
+    return createDiscussionForumPostingSchema(discussion)
+  }, [discussion])
+
   const loadMore = async (): Promise<unknown> => {
     if (!discussion) return
     const lastNode =
@@ -72,6 +78,14 @@ const Discussion = ({ documentMeta }: Props) => {
       }
       render={() => (
         <>
+          {structuredData && (
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify(structuredData),
+              }}
+            />
+          )}
           <TagFilter discussion={discussion} />
           <DiscussionComposer
             isRoot
