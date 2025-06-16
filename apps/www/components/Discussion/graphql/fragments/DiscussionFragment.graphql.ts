@@ -67,6 +67,7 @@ export const DISCUSSION_FRAGMENT = gql`
         publishDate
         ownDiscussion {
           id
+          path
           closed
         }
         linkedDiscussion {

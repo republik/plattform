@@ -19,6 +19,7 @@ const getActiveDiscussions = gql`
             template
             ownDiscussion {
               id
+              path
               closed
             }
           }
@@ -92,6 +93,7 @@ const getComments = gql`
               template
               ownDiscussion {
                 id
+                path
                 closed
               }
               linkedDiscussion {
