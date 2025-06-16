@@ -3,6 +3,7 @@ import Frame from '../components/Frame'
 import {
   CDN_FRONTEND_BASE_URL,
   GENERAL_FEEDBACK_DISCUSSION_ID,
+  PUBLIC_BASE_URL,
 } from '../lib/constants'
 import DiscussionContextProvider from '../components/Discussion/context/DiscussionContextProvider'
 import Discussion from '../components/Discussion/Discussion'
@@ -20,6 +21,7 @@ const FeedbackDialogPage = () => {
     title: t('feedback/title'),
     description: t('feedback/general/lead'),
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
+    url: `${PUBLIC_BASE_URL}/feedback`,
   }
 
   return (

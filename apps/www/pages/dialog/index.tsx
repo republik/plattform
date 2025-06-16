@@ -3,7 +3,7 @@ import DialogLandingPage from '../../components/Dialog/Page'
 import Meta from 'components/Frame/Meta'
 import { Center, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { CDN_FRONTEND_BASE_URL } from 'lib/constants'
+import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from 'lib/constants'
 import Frame from 'components/Frame'
 import { gql } from '@apollo/client'
 
@@ -22,6 +22,7 @@ const metaData = {
   description:
     'Die Republik ist nur so stark wie ihre Community. Teilen Sie Ihr Wissen und Ihre Perspektive.',
   image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
+  url: `${PUBLIC_BASE_URL}/dialog`,
 }
 
 const DialogPage = () => {
