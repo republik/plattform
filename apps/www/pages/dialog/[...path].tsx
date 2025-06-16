@@ -1,4 +1,3 @@
-import { createGetServerSideProps } from '../../../lib/apollo/helpers'
 import { css } from 'glamor'
 import {
   Center,
@@ -7,20 +6,20 @@ import {
   Interaction,
   mediaQueries,
 } from '@project-r/styleguide'
-import Frame from '../../../components/Frame'
+import Frame from '../../components/Frame'
 import Link from 'next/link'
-import { useTranslation } from '../../../lib/withT'
+import { useTranslation } from '../../lib/withT'
 import { useRouter } from 'next/router'
-import Discussion from '../../../components/Discussion/Discussion'
-import DiscussionContextProvider from '../../../components/Discussion/context/DiscussionContextProvider'
-import { useDiscussion } from '../../../components/Discussion/context/DiscussionContext'
-import Meta from '../../../components/Frame/Meta'
-import StatusError from '../../../components/StatusError'
+import Discussion from '../../components/Discussion/Discussion'
+import DiscussionContextProvider from '../../components/Discussion/context/DiscussionContextProvider'
+import { useDiscussion } from '../../components/Discussion/context/DiscussionContext'
+import Meta from '../../components/Frame/Meta'
+import StatusError from '../../components/StatusError'
 import { DialogPaynote } from '@app/components/paynotes/paynotes-in-trial/dialog'
-import DiscussionTitle from '../../../components/Dialog/DiscussionTitle'
-import ActionBar from '../../../components/ActionBar'
-import { gql } from '@apollo/client'
+import DiscussionTitle from '../../components/Dialog/DiscussionTitle'
+import ActionBar from '../../components/ActionBar'
 import { PUBLIC_BASE_URL } from 'lib/constants'
+import { withDefaultSSR } from 'lib/apollo/helpers'
 
 const styles = {
   container: css({
@@ -90,7 +89,7 @@ const DialogPage = () => {
   const router = useRouter()
   const { path } = router.query
   const discussionPath = '/' + [].concat(path || []).join('/')
-
+  console.log('discussionPath', discussionPath)
   return (
     <Frame hasOverviewNav raw formatColor='primary' stickySecondaryNav={true}>
       <DiscussionContextProvider discussionPath={discussionPath}>
@@ -100,4 +99,4 @@ const DialogPage = () => {
   )
 }
 
-export default DialogPage
+export default withDefaultSSR(DialogPage)
