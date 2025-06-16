@@ -1,35 +1,17 @@
 import { parse, format } from 'url'
 
-import {
-  GENERAL_FEEDBACK_DISCUSSION_ID,
-  PUBLIC_BASE_URL,
-} from '../../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import Link from 'next/link'
 
 export const getFocusHref = (discussion, comment) => {
-  const focusParams = comment
-    ? discussion.isBoard
-      ? comment.parentIds && comment.parentIds.length
-        ? { parent: comment.parentIds[0], focus: comment.id }
-        : { parent: comment.id }
-      : { focus: comment.id }
-    : {}
-  if (discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID) {
-    return {
-      pathname: '/feedback',
-      query: { ...focusParams },
-    }
-  } else if (
-    discussion.document?.meta &&
-    discussion.document?.meta?.template === 'article' &&
-    discussion.document?.meta?.ownDiscussion &&
-    discussion.document?.meta?.ownDiscussion?.id === discussion.id
-  ) {
+  console.log('discussion', discussion)
+  const focusParams = { focus: comment?.id }
+  if (discussion.document?.meta?.template === 'article') {
     return {
       pathname: `/dialog${discussion.path}`,
       query: { ...focusParams },
     }
-  } else if (discussion.path) { 
+  } else if (discussion.path) {
     const { pathname, query } = parse(discussion.path, true)
     return {
       pathname,
@@ -46,12 +28,12 @@ export const getFocusUrl = (discussion, comment) => {
   if (focusHref) {
     const baseUrl = new URL(PUBLIC_BASE_URL)
     const { pathname, query } = focusHref
-    return format({ 
+    return format({
       protocol: baseUrl.protocol.slice(0, -1), // Remove trailing ':'
       hostname: baseUrl.hostname,
       port: baseUrl.port,
-      pathname, 
-      query 
+      pathname,
+      query,
     })
   }
 }
