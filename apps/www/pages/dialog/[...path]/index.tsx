@@ -45,7 +45,6 @@ const MaybeDiscussionContextProvider = ({ discussionId, children }) => {
 
 const DialogContent = ({ activeDiscussionId, serverContext }) => {
   const { t } = useTranslation()
-  const { query } = useRouter()
   const discussionContext = useDiscussion()
 
   if (
@@ -57,13 +56,12 @@ const DialogContent = ({ activeDiscussionId, serverContext }) => {
     return <StatusError statusCode={404} serverContext={serverContext} />
   }
   // wait for loaded discussion object and skip if focus comment, handled by the provider
-  const metaData = discussionContext?.discussion &&
-    !query.focus && {
-      title: t('discussion/meta/title', {
-        quotedDiscussionTitle: inQuotes(discussionContext.discussion.title),
-      }),
-      url: `${PUBLIC_BASE_URL}/dialog${discussionContext.discussion.path}`,
-    }
+  const metaData = discussionContext?.discussion && {
+    title: t('discussion/meta/title', {
+      quotedDiscussionTitle: inQuotes(discussionContext.discussion.title),
+    }),
+    url: `${PUBLIC_BASE_URL}/dialog${discussionContext.discussion.path}`,
+  }
 
   return (
     <>
@@ -98,12 +96,7 @@ const DialogContent = ({ activeDiscussionId, serverContext }) => {
 
 const DialogPage = ({ serverContext, discussionId }) => {
   return (
-    <Frame
-      hasOverviewNav
-      raw
-      formatColor='primary'
-      stickySecondaryNav={true}
-    >
+    <Frame hasOverviewNav raw formatColor='primary' stickySecondaryNav={true}>
       <MaybeDiscussionContextProvider discussionId={discussionId}>
         <DialogContent
           activeDiscussionId={discussionId}

@@ -330,9 +330,7 @@ const ArticlePage = ({
 
   const delegateMetaDown =
     !!isFlyer ||
-    !!meta?.delegateDown ||
-    !!(meta?.ownDiscussion?.id && router.query.focus) ||
-    !!(meta?.ownDiscussion?.isBoard && router.query.parent)
+    !!meta?.delegateDown
 
   return (
     <Frame
