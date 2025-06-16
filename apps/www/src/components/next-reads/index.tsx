@@ -3,6 +3,7 @@ import {
   NextReadsDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
+import { NextReadsSection } from '@app/components/next-reads/section'
 import { css } from '@republik/theme/css'
 
 function RecommendedRead({ document }: { document: Document }) {
@@ -84,22 +85,9 @@ function NextReads() {
       className={css({
         maxWidth: 975,
         margin: '50px auto 0',
-        borderTop: '1px solid black',
       })}
     >
-      <section>
-        <h3
-          className={css({
-            fontFamily: 'gtAmericaStandard',
-            fontWeight: 700,
-            fontSize: 20,
-            lineHeight: 1,
-            marginTop: 4,
-            marginBottom: 8,
-          })}
-        >
-          On the same topic
-        </h3>
+      <NextReadsSection title='On the same topic'>
         <div
           className={css({
             display: 'grid',
@@ -114,7 +102,7 @@ function NextReads() {
             </div>
           ))}
         </div>
-      </section>
+      </NextReadsSection>
     </div>
   )
 }
