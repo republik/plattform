@@ -28,7 +28,7 @@ const DiscussionLinkButton = ({
     }
 
     if (forceShortLabel) {
-      return discussionCount
+      return discussionCount.toString()
     }
 
     return t.pluralize('article/actionbar/discussion/label', {
@@ -48,7 +48,7 @@ const DiscussionLinkButton = ({
       <IconButton
         Icon={IconDiscussion}
         label={getLabel()}
-        labelShort={useCallToActionLabel ? getLabel() : discussionCount}
+        labelShort={getLabel()}
         fillColorName='primary'
         onClick={
           isDiscussionPage && isOnArticlePage
