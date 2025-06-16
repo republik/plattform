@@ -18,7 +18,9 @@ const styles = {
 }
 
 const metaData = {
-  title: 'Dialog Landing Page',
+  title: 'Republik Dialog',
+  description:
+    'Die Republik ist nur so stark wie ihre Community. Teilen Sie Ihr Wissen und Ihre Perspektive.',
   image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
 }
 
@@ -44,7 +46,7 @@ export default DialogPage
 
 export const getServerSideProps = createGetServerSideProps(
   async ({ client, ctx, user }) => {
-    const { id: discussionId, focus } = ctx?.query
+    const { id: discussionId, focus } = ctx?.query ?? {}
 
     if (!discussionId) {
       return {
