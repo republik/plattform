@@ -27,7 +27,7 @@ const metaData = {
 const DialogPage = () => {
   return (
     <Frame hasOverviewNav raw formatColor='primary' stickySecondaryNav={true}>
-      {metaData && <Meta data={metaData} />}
+      <Meta data={metaData} />
       <Center>
         <div {...styles.container}>
           <DialogLandingPage />
