@@ -98,6 +98,7 @@ const getSearchResults = gql`
                   template
                   ownDiscussion {
                     id
+                    path
                     closed
                   }
                 }

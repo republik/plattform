@@ -60,6 +60,7 @@ export const getDocument = gql`
         shareTextPosition
         ownDiscussion {
           id
+          path
           closed
           isBoard
           comments {

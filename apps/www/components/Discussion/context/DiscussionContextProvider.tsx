@@ -18,19 +18,13 @@ import { CommentFragmentType } from '../graphql/fragments/CommentFragment.graphq
  */
 const DiscussionContextProvider: FC<{
   children?: ReactNode
-  discussionId: string
+  discussionPath: string
   isBoardRoot?: boolean
   parentId?: string
   includeParent?: boolean
-}> = ({ children, discussionId, isBoardRoot, parentId, includeParent }) => {
+}> = ({ children, discussionPath, isBoardRoot, parentId, includeParent }) => {
   const { query } = useRouter()
-  const orderBy =
-    (query.order as string) ||
-    (isBoardRoot
-      ? 'HOT'
-      : discussionId === GENERAL_FEEDBACK_DISCUSSION_ID
-      ? 'DATE'
-      : 'AUTO')
+  const orderBy = query.order as string || 'AUTO'
 
   const activeTag = query.tag as string
   const focusId = query.focus as string
@@ -38,7 +32,7 @@ const DiscussionContextProvider: FC<{
   const depth = isBoardRoot ? 1 : 3
 
   const { discussion, error, loading, refetch, fetchMore } = useDiscussionData(
-    discussionId,
+    discussionPath,
     {
       orderBy,
       activeTag,
@@ -59,7 +53,7 @@ const DiscussionContextProvider: FC<{
   const featureOverlay = useOverlay<CommentFragmentType>()
 
   const contextValue: DiscussionContextValue = {
-    id: discussionId,
+    id: discussion?.id,
     discussion,
     loading: loading,
     error: error,
@@ -78,7 +72,7 @@ const DiscussionContextProvider: FC<{
 
   return (
     <DiscussionContext.Provider value={contextValue}>
-      <div data-discussion-id={discussionId}>
+      <div data-discussion-id={discussion?.id}>
         {children}
         {discussion && (
           <>

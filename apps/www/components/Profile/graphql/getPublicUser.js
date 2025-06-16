@@ -88,6 +88,7 @@ const getPublicUser = gql`
                 template
                 ownDiscussion {
                   id
+                  path
                   closed
                 }
                 linkedDiscussion {

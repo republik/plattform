@@ -107,7 +107,7 @@ function useDiscussionFocusHelper(): DiscussionFocusHelperType {
         reversedParentIDs.indexOf(closestLoadedParentId) + 1
 
       fetchMore({
-        discussionId: discussion.id,
+        discussionPath: discussion.path,
         parentId: closestLoadedParentId,
         after: discussion.comments.pageInfo.endCursor,
         depth: distanceToParent,
