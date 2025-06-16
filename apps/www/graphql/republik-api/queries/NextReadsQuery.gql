@@ -1,0 +1,40 @@
+query NextReads {
+  documents: search(
+    filters: [{key: "template", not: true, value: "section"},{key: "template", not: true, value: "editorialNewsletter"}, {key: "template", not: true, value: "format"}, {key: "template", not: true, value: "front"}]
+    filter: {feed: true}
+    sort: {key: publishedAt, direction: DESC}
+    first: 10
+  ) {
+    nodes {
+      entity {
+        ... on Document {
+          id
+          meta {
+            facebookImage
+            image
+            contributors {
+              name
+              kind
+            }
+            title
+            description
+            publishDate
+            path
+            kind
+            color
+            format {
+              id
+              meta {
+                title
+                color
+              }
+            }
+            series {
+              title
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,62 +1,62 @@
-import { cloneElement, useRef, useEffect, useMemo } from 'react'
-import { css } from 'glamor'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import compose from 'lodash/flowRight'
 import { useQuery } from '@apollo/client'
+import NextReads from '@app/components/next-reads'
+import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
+import { usePaynotes } from '@app/components/paynotes/paynotes-context'
+import { WelcomeBanner } from '@app/components/paynotes/paynotes-in-trial/welcome'
+import Paywall from '@app/components/paynotes/paywall'
+import Regwall from '@app/components/paynotes/regwall'
 
 import {
-  Center,
   Breakout,
+  Center,
   colors,
   Interaction,
   SeriesNav,
 } from '@project-r/styleguide'
+import { css } from 'glamor'
+import { reportError } from 'lib/errors/reportError'
+import compose from 'lodash/flowRight'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { cloneElement, useEffect, useMemo, useRef } from 'react'
+import { useMe } from '../../lib/context/MeContext'
+import useProlitterisTracking from '../../lib/hooks/useProlitterisTracking'
+import { parseJSONObject } from '../../lib/safeJSON'
+import { cleanAsPath } from '../../lib/utils/link'
+import { splitByTitle } from '../../lib/utils/mdast'
+import withInNativeApp from '../../lib/withInNativeApp'
 
 import withT from '../../lib/withT'
-import { parseJSONObject } from '../../lib/safeJSON'
-import withInNativeApp from '../../lib/withInNativeApp'
-import { splitByTitle } from '../../lib/utils/mdast'
-import { useMe } from '../../lib/context/MeContext'
-import { cleanAsPath } from '../../lib/utils/link'
-import useProlitterisTracking from '../../lib/hooks/useProlitterisTracking'
+import ActionBar from '../ActionBar'
+import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
+import NewsletterSignUp from '../Auth/NewsletterSignUp'
 
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
-import FontSizeSync from '../FontSize/Sync'
-import PageLoader from '../Loader'
-import Frame from '../Frame'
-import ActionBar from '../ActionBar'
 import FormatFeed from '../Feed/Format'
-import StatusError from '../StatusError'
-import NewsletterSignUp from '../Auth/NewsletterSignUp'
-import ArticleGallery from '../Gallery/ArticleGallery'
-import SectionNav from '../Sections/SinglePageNav'
-import SectionFeed from '../Sections/SinglePageFeed'
-import { withMarkAsReadMutation } from '../Notifications/enhancers'
-import ShareImageFlyer from '../Flyer/ShareImage'
 import Flyer from '../Flyer'
-import { getMetaData, runMetaFromQuery } from './metadata'
+import ShareImageFlyer from '../Flyer/ShareImage'
+import FontSizeSync from '../FontSize/Sync'
+import Frame from '../Frame'
+import ArticleGallery from '../Gallery/ArticleGallery'
+import PageLoader from '../Loader'
+import { withMarkAsReadMutation } from '../Notifications/enhancers'
+import SectionFeed from '../Sections/SinglePageFeed'
+import SectionNav from '../Sections/SinglePageNav'
+import StatusError from '../StatusError'
 import ActionBarOverlay from './ActionBarOverlay'
-import SeriesNavBar from './SeriesNavBar'
-import Extract from './Extract'
-import Progress from './Progress'
-import PodcastButtons from './PodcastButtons'
-import { getDocument } from './graphql/getDocument'
-import ShareImage from './ShareImage'
-import ArticleRecommendationsFeed from './ArticleRecommendationsFeed'
-import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
-import { reportError } from 'lib/errors/reportError'
 import NewsletterTitleBlock from './components/NewsletterTitleBlock'
-import PublikatorLinkBlock from './components/PublikatorLinkBlock'
-import useSchema from './useSchema'
 import PrepubNotice from './components/PrepubNotice'
-import Paywall from '@app/components/paynotes/paywall'
-import Regwall from '@app/components/paynotes/regwall'
-import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
-import { usePaynotes } from '@app/components/paynotes/paynotes-context'
-import { WelcomeBanner } from '@app/components/paynotes/paynotes-in-trial/welcome'
+import PublikatorLinkBlock from './components/PublikatorLinkBlock'
+import Extract from './Extract'
+import { getDocument } from './graphql/getDocument'
+import { getMetaData, runMetaFromQuery } from './metadata'
+import PodcastButtons from './PodcastButtons'
+import Progress from './Progress'
+import SeriesNavBar from './SeriesNavBar'
+import ShareImage from './ShareImage'
+import useSchema from './useSchema'
 
 const EmptyComponent = ({ children }) => children
 
@@ -560,7 +560,7 @@ const ArticlePage = ({
                   />
                 )}
 
-                <ArticleRecommendationsFeed path={cleanedPath} />
+                <NextReads />
               </div>
             </>
           )
