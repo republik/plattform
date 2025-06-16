@@ -5,6 +5,7 @@ export const getDiscussionLinkProps = (
   path,
 ) => {
   const isActiveLinkedDiscussion =
+    linkedDiscussion &&
     (template === 'article' || template === 'page') &&
     (!linkedDiscussion?.closed || linkedDiscussion?.comments.totalCount > 0)
 
@@ -29,7 +30,7 @@ export const getDiscussionLinkProps = (
 
   const discussionPath =
     (isActiveLinkedDiscussion && linkedDiscussion.path) ||
-    (isArticleAutoDiscussion && `/dialog/${ownDiscussion.path}`) ||
+    (isArticleAutoDiscussion && `/dialog${path}`) ||
     (isDiscussionPage && path) ||
     undefined
 

@@ -44,7 +44,7 @@ const DiscussionMetaHelper = ({
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           description: metaFocus.preview ? metaFocus.preview.string : undefined,
-          url: `${PUBLIC_BASE_URL}/dialog/${discussion.path}`,
+          url: `${PUBLIC_BASE_URL}/dialog${discussion.path}`,
         }}
       />
     )

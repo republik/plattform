@@ -62,7 +62,7 @@ const DialogContent = ({ activeDiscussionId, serverContext }) => {
       title: t('discussion/meta/title', {
         quotedDiscussionTitle: inQuotes(discussionContext.discussion.title),
       }),
-      url: `${PUBLIC_BASE_URL}/dialog/${discussionContext.discussion.path}`,
+      url: `${PUBLIC_BASE_URL}/dialog${discussionContext.discussion.path}`,
     }
 
   return (
