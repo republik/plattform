@@ -36,13 +36,10 @@ export type CommentFragmentType = {
       createAt: DateTime
     }[]
   }>
-  // TODO: Add type
   updatedAt: DateTime
   createdAt: DateTime
   parentIds: string[]
   tags: string[]
-  // TODO: Add type
-  mentionedDocument: unknown
 }
 
 export const COMMENT_FRAGMENT = gql`
