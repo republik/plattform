@@ -1,0 +1,31 @@
+mutation CancelMagazineSubscription(
+  $subscriptionId: ID!
+  $details: CancellationInput!
+  $cancelImmediately: Boolean
+) {
+  cancelMagazineSubscription(
+    subscriptionId: $subscriptionId
+    details: $details
+    cancelImmediately: $cancelImmediately
+  ) {
+    id
+  }
+}
+
+mutation ReactivateMagazineSubscription($subscriptionId: ID!) {
+  reactivateMagazineSubscription(subscriptionId: $subscriptionId) {
+    id
+  }
+}
+
+mutation UpdateMagazineSubscriptionDonation(
+  $subscriptionId: ID!
+  $donationAmount: Int!
+) {
+  updateMagazineSubscriptionDonation(
+    subscriptionId: $subscriptionId
+    donationAmount: $donationAmount
+  ) {
+    id
+  }
+}

@@ -1,7 +1,6 @@
-import type { ComponentPropsWithoutRef } from 'react'
-
 import { css, cx } from '@republik/theme/css'
 import { OTPInput } from 'input-otp'
+import type { ComponentPropsWithoutRef } from 'react'
 
 export function CodeInput({
   ...props
@@ -35,10 +34,12 @@ export function CodeInput({
                   borderWidth: '1px',
                   borderColor: 'divider',
                   borderRadius: '5px',
+                  color: 'black',
                   padding: '2',
                   width: '32px',
                   height: '46px',
                   fontSize: '2xl',
+                  backgroundColor: 'white',
                 }),
 
                 !props.disabled &&
@@ -47,11 +48,6 @@ export function CodeInput({
                     outlineStyle: 'solid',
                     outlineColor: 'text',
                     outlineWidth: '2px',
-                  }),
-
-                slot.char &&
-                  css({
-                    backgroundColor: 'white',
                   }),
               )}
             >

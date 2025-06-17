@@ -1,30 +1,27 @@
-import { forwardRef, Fragment, Component } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
-import { css, merge } from 'glamor'
+import { graphql } from '@apollo/client/react/hoc'
 import { max } from 'd3-array'
+import { css, merge } from 'glamor'
+import compose from 'lodash/flowRight'
+import { Component, forwardRef, Fragment } from 'react'
 
-import Meta from '../Frame/Meta'
 import withT from '../../lib/withT'
+import Meta from '../Frame/Meta'
 import Loader from '../Loader'
 
 import Detail from './Detail'
 
-import {
-  PUBLIC_BASE_URL,
-  CDN_FRONTEND_BASE_URL,
-  ASSETS_SERVER_BASE_URL,
-} from '../../lib/constants'
+import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
 
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import {
+  A,
+  Field,
+  fontFamilies,
   Interaction,
   mediaQueries,
-  fontFamilies,
-  Field,
-  A,
-  useColorContext,
   shouldIgnoreClick,
+  useColorContext,
 } from '@project-r/styleguide'
 import { withRouter } from 'next/router'
 import ErrorMessage from '../ErrorMessage'
@@ -442,11 +439,12 @@ export class List extends Component {
                   focusItem,
                 ),
                 url: `${PUBLIC_BASE_URL}/community?id=${focusItem.id}`,
-                image: `${ASSETS_SERVER_BASE_URL}/render?viewport=1200x628&updatedAt=${encodeURIComponent(
-                  focusItem.updatedAt,
-                )}&url=${encodeURIComponent(
-                  `${PUBLIC_BASE_URL}/community?share=${focusItem.id}`,
-                )}`,
+                image: screenshotUrl({
+                  url: `${PUBLIC_BASE_URL}/community?share=${focusItem.id}`,
+                  width: 1200,
+                  height: 628,
+                  version: focusItem.updatedAt,
+                }),
               }
             : {
                 pageTitle: t('testimonial/meta/pageTitle'),

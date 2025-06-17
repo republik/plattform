@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const { express: middlewares } = require('@orbiting/backend-modules-assets')
+const middlewares = require('./express')
 const basicAuthMiddleware = require('@orbiting/backend-modules-auth/express/basicAuth')
 const {
   createCORSMatcher,

@@ -425,6 +425,10 @@
       "value": "Republik: Ihre Mitgliedschaft"
     },
     {
+      "key": "api/email/subscription_created_benefactor_subscription/subject",
+      "value": "Republik: Ihre Mitgliedschaft"
+    },
+    {
       "key": "api/email/subscription_cancel_notice/subject",
       "value": "Bestätigung Ihrer Kündigung"
     },
@@ -434,6 +438,10 @@
     },
     {
       "key": "api/email/subscription_ended_yearly_subscription/subject",
+      "value": "Ihr letzter Tag an Bord der Republik"
+    },
+    {
+      "key": "api/email/subscription_ended_benefactor_subscription/subject",
       "value": "Ihr letzter Tag an Bord der Republik"
     },
     {
@@ -683,6 +691,10 @@
     {
       "key": "api/membership/cancel/category/UNCERTAIN_FUTURE",
       "value": "Unsichere Zukunft der Republik"
+    },
+    {
+      "key": "api/membership/cancel/category/NO_AUTO_PAY",
+      "value": "Ich möchte keine automatische Verlängerung."
     },
     {
       "key": "api/email/membership_cancel_notice/subject",
@@ -977,8 +989,12 @@
       "value": "Sie haben keine Berechtigung, diesen Newsletter zu abonnieren."
     },
     {
+      "key": "api/newsletters/request/DAILY/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Republik heute Newsletter."
+    },
+    {
       "key": "api/newsletters/request/WEEKLY/subject",
-      "value": "Bestätigen Sie Ihre Anmeldung zum Wochenend-Newsletter."
+      "value": "Bestätigen Sie Ihre Anmeldung zum Republik am Wochenende Newsletter."
     },
     {
       "key": "api/newsletters/request/PROJECTR/subject",
@@ -986,7 +1002,7 @@
     },
     {
       "key": "api/newsletters/request/CLIMATE/subject",
-      "value": "Bestätigen Sie Ihre Anmeldung zum Challenge-Accepted-Newsletter."
+      "value": "Bestätigen Sie Ihre Anmeldung zum Challenge Accepted Newsletter."
     },
     {
       "key": "api/newsletters/request/WDWWW/subject",
@@ -1011,6 +1027,14 @@
     {
       "key": "profile/portrait/needed",
       "value": "Sie benötigen ein Portrait, um auf der Community-Seite zu erscheinen"
+    },
+    {
+      "key": "api/profile/toManyUrls",
+      "value": "Ihr Profil enthält zu viele externe URLs."
+    },
+    {
+      "key": "api/profile/invalidUrls",
+      "value": "Ihr Profil enthält nicht erlaubte URLs."
     },
     {
       "key": "profile/candidacy/statement/needed",
@@ -1402,11 +1426,11 @@
     },
     {
       "key": "api/access/constraint/notInActiveTrial/error",
-      "value": "Es sieht so aus, als hätten Sie bereits eine kostenlose Gastwoche angefangen. Oben links können Sie sich anmelden."
+      "value": "ALREADY_IN_TRIAL_ERROR"
     },
     {
       "key": "api/access/constraint/recipientHasNoActiveMembershipOrSubscription/error",
-      "value": "Sie haben bereits eine aktive Mitgliedschaft. Oben links können Sie sich anmelden."
+      "value": "RECIEPIENT_HAS_MEMBERSHIP_ERROR"
     },
     {
       "key": "api/access/constraint/limitSlots/error",
@@ -2625,34 +2649,6 @@
       "value": "Ein Fehler verhinderte das Erzeugen für diesen Commit"
     },
     {
-      "key": "api/calendar/404",
-      "value": "Kalender existiert nicht"
-    },
-    {
-      "key": "api/calendar/slot/error/keyInvalid",
-      "value": "Gesuchter Kalendereintrag ist ungültig"
-    },
-    {
-      "key": "api/calendar/slot/error/userBookedAlready",
-      "value": "Kalendereintrag bereits vorhanden"
-    },
-    {
-      "key": "api/calendar/slot/error/slotIsNotInFuture",
-      "value": "Kalendereintrag liegt in Vergangenheit"
-    },
-    {
-      "key": "api/calendar/slot/error/slotIsNotOnAllowedWeekday",
-      "value": "Kalendereintrag nicht verfügbar (Wochentag nicht möglich)"
-    },
-    {
-      "key": "api/calendar/slot/error/slotIsNotAvailable",
-      "value": "Kalendereintrag nicht mehr verfügbar"
-    },
-    {
-      "key": "api/calendar/slot/error/404",
-      "value": "Kalendereintrag nicht gefunden"
-    },
-    {
       "key": "api/publikator/repo/404",
       "value": "Repo nicht gefunden"
     },
@@ -2715,6 +2711,34 @@
     {
       "key": "api/reportUser/reasonTooLong",
       "value": "Die Begründung ist zu lange. (Maximal {max} Zeichen)"
+    },
+    {
+      "key": "api/payments/price/ABO",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/payments/price/MONTHLY_ABO",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "api/payments/price/BENEFACTOR_ABO",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/payments/price/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/payments/price/ABO_DONATE_OPTION_YEARLY_020",
+      "value": "Jährliche Spende"
+    },
+    {
+      "key": "api/payments/price/ABO_DONATE_OPTION_YEARLY_120",
+      "value": "Jährliche Spende"
+    },
+    {
+      "key": "api/payments/price/ABO_DONATE_OPTION_YEARLY_240",
+      "value": "Jährliche Spende"
     }
   ]
 }

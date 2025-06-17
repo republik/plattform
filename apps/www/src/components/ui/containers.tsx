@@ -1,10 +1,16 @@
+import { css } from '@republik/theme/css'
+import { Token, token } from '@republik/theme/tokens'
 import { ReactNode } from 'react'
 
-import { css } from '@republik/theme/css'
-import { ColorToken, Token, token } from '@republik/theme/tokens'
-
-export const PaynoteContainer = ({ children }: { children: ReactNode }) => (
+export const PaynoteContainer = ({
+  children,
+  testId,
+}: {
+  children: ReactNode
+  testId?: string
+}) => (
   <div
+    data-testid={testId}
     className={css({
       borderTop: '2px solid',
       borderColor: 'text.black',

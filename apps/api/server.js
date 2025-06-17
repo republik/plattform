@@ -28,9 +28,7 @@ const {
   graphql: subscriptions,
 } = require('@orbiting/backend-modules-subscriptions')
 const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
-const { graphql: gsheets } = require('@orbiting/backend-modules-gsheets')
 const { graphql: mailbox } = require('@orbiting/backend-modules-mailbox')
-const { graphql: slots } = require('@orbiting/backend-modules-calendar')
 const {
   graphql: callToActions,
 } = require('@orbiting/backend-modules-call-to-actions')
@@ -41,7 +39,6 @@ const {
 const {
   graphql: paymentsGraphql,
   express: paymentsWebhook,
-  Payments: PaymentsService,
   StripeWebhookWorker,
   StripeCustomerCreateWorker,
   SyncAddressDataWorker,
@@ -69,7 +66,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-republik-crowdfundings/loaders'),
   ...require('@orbiting/backend-modules-republik/loaders'),
   ...require('@orbiting/backend-modules-publikator/loaders'),
-  ...require('@orbiting/backend-modules-calendar/loaders'),
+  ...require('@orbiting/backend-modules-payments').loaders,
 }
 
 const {
@@ -85,6 +82,7 @@ const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
 const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 
 const { Queue, GlobalQueue } = require('@orbiting/backend-modules-job-queue')
+const { CockpitWorker } = require('./workers/cockpit')
 
 function setupQueue(context, monitorQueueState = undefined) {
   const queue = Queue.createInstance(GlobalQueue, {
@@ -107,13 +105,13 @@ function setupQueue(context, monitorQueueState = undefined) {
     SyncMailchimpSetupWorker,
     SyncMailchimpUpdateWorker,
     SyncMailchimpEndedWorker,
+    CockpitWorker,
   ])
 
   return queue
 }
 
 const {
-  LOCAL_ASSETS_SERVER,
   MAIL_EXPRESS_RENDER,
   MAIL_EXPRESS_MAILCHIMP,
   SEARCH_PG_LISTENER,
@@ -167,9 +165,7 @@ const run = async (workerId, config) => {
     collections,
     subscriptions,
     embeds,
-    gsheets,
     mailbox,
-    slots,
     callToActions,
     referralCampaigns,
     paymentsGraphql,
@@ -179,7 +175,6 @@ const run = async (workerId, config) => {
   const middlewares = [
     paymentsWebhook,
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
-    require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-mail/express/mandrill'),
     require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
     require('@orbiting/backend-modules-publikator/express/webhook'),
@@ -194,13 +189,6 @@ const run = async (workerId, config) => {
     middlewares.push(
       require('@orbiting/backend-modules-mail/express/mailchimp'),
     )
-  }
-
-  if (LOCAL_ASSETS_SERVER) {
-    const { express } = require('@orbiting/backend-modules-assets')
-    for (const key of Object.keys(express)) {
-      middlewares.push(express[key])
-    }
   }
 
   // signin hooks
@@ -239,8 +227,6 @@ const run = async (workerId, config) => {
     })
     return context
   }
-
-  PaymentsService.start(connectionContext.pgdb)
 
   const server = await Server.start(
     graphqlSchema,
@@ -376,10 +362,11 @@ const runOnce = async () => {
 
   const queue = setupQueue(connectionContext, 120)
   await queue.start()
-
-  PaymentsService.start(context.pgdb)
-
   await queue.startWorkers()
+  await queue.schedule(
+    'cockpit:refresh',
+    '*/30 * * * *', // cron for every 30 minutes
+  )
 
   const close = async () => {
     await Promise.all(

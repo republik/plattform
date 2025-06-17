@@ -118,7 +118,9 @@ function redirectToHTTPS(req: NextRequest): NextResponse | null {
   reqURL.protocol = 'https:'
   reqURL.port = ''
 
-  return NextResponse.redirect(reqURL)
+  return NextResponse.redirect(reqURL, {
+    status: 308,
+  })
 }
 
 /**

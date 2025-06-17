@@ -15,7 +15,6 @@ import {
   Loader,
   RawHtml,
 } from '@project-r/styleguide'
-import { fragments as fragmentsGreeting } from './Greeting'
 import Newsletter, {
   fragments as fragmentsNewsletter,
 } from './Sections/Newsletter'
@@ -62,11 +61,6 @@ const QUERY = gql`
         }
       }
     }
-
-    employees(shuffle: 1, withGreeting: true) {
-      ...GreetingEmployee
-    }
-
     sections: documents(template: "section") {
       nodes {
         id
@@ -87,7 +81,6 @@ const QUERY = gql`
   ${fragmentsAppLogin.user}
   ${fragmentsUsability.user}
   ${fragmentsProfile.user}
-  ${fragmentsGreeting.employee}
   ${fragmentsSubscriptions.formats}
 `
 
@@ -283,7 +276,7 @@ class Page extends Component {
               return <Loader loading={loading} error={error} />
             }
 
-            const { employees, sections, roleStats } = data
+            const { sections } = data
 
             return (
               <Center>

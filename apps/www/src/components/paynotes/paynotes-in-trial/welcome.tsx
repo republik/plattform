@@ -3,12 +3,19 @@ import { css } from '@republik/theme/css'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 
 import { useTranslation } from 'lib/withT'
+import { IconClose } from '@republik/icons'
+import { useState } from 'react'
 
 export function WelcomeBanner() {
   const { t } = useTranslation()
   const { paynoteKind } = usePaynotes()
+  const [isVisible, setIsVisible] = useState(true)
 
   if (paynoteKind !== 'WELCOME_BANNER') {
+    return null
+  }
+
+  if (!isVisible) {
     return null
   }
 
@@ -22,15 +29,18 @@ export function WelcomeBanner() {
     >
       <div
         className={css({
-          maxWidth: 'narrow',
+          //maxWidth: 'narrow',
           padding: '4',
           margin: '0 auto',
           lineHeight: '1.4',
           display: 'flex',
-          gap: '4',
+          gap: '2',
+          md: {
+            alignItems: 'center',
+          },
         })}
       >
-        <div className={css({ flex: 0, pt: '2' })}>
+        <div className={css({ flex: 0, pt: '2', md: { pt: '0' } })}>
           <svg
             width='19'
             height='18'
@@ -45,6 +55,9 @@ export function WelcomeBanner() {
           </svg>
         </div>
         {t('paynotes/welcomeBanner')}
+        <div className={css({ marginLeft: 'auto', cursor: 'pointer' })}>
+          <IconClose size={24} onClick={() => setIsVisible(false)} />
+        </div>
       </div>
     </div>
   )

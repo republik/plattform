@@ -24,7 +24,7 @@ import SubscribeMenu from '../Notifications/SubscribeMenu'
 import BookmarkButton from './BookmarkButton'
 import DiscussionLinkButton from './DiscussionLinkButton'
 import UserProgress from './UserProgress'
-import { canReadFreely, useMe } from '../../lib/context/MeContext'
+import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 
@@ -71,8 +71,7 @@ const ActionBar = ({
   isCentered,
   shareParam,
 }) => {
-  const { me, meLoading, isEditor, trialStatus } = useMe()
-  const hasAccess = canReadFreely(trialStatus)
+  const { me, meLoading, isEditor, isMember } = useMe()
   const [pdfOverlayVisible, setPdfOverlayVisible] = useState(false)
   const [fontSizeOverlayVisible, setFontSizeOverlayVisible] = useState(false)
   const [shareOverlayVisible, setShareOverlayVisible] = useState(false)
@@ -318,7 +317,7 @@ const ActionBar = ({
         setPdfOverlayVisible(!pdfOverlayVisible)
       },
       modes: ['articleTop', 'articleBottom'],
-      show: hasPdf && hasAccess,
+      show: hasPdf && isMember,
     },
     {
       title: t('article/actionbar/fontSize/title'),
@@ -390,7 +389,7 @@ const ActionBar = ({
         'bookmark',
         'seriesEpisode',
       ],
-      show: !notBookmarkable && (meLoading || hasAccess),
+      show: !notBookmarkable && (meLoading || isMember),
     },
     {
       title: t('article/actionbar/share'),
@@ -499,7 +498,7 @@ const ActionBar = ({
           : play
         : toggleAudioPlayback,
       modes: ['feed', 'seriesEpisode'],
-      show: meta.audioSource?.mp3,
+      show: isMember && meta.audioSource?.mp3,
       group: 'audio',
     },
     {
@@ -531,7 +530,7 @@ const ActionBar = ({
         }
       },
       modes: ['feed', 'seriesEpisode'],
-      show: isAudioQueueAvailable && meta.audioSource?.mp3,
+      show: isMember && isAudioQueueAvailable && meta.audioSource?.mp3,
       group: 'audio',
     },
     {
@@ -568,7 +567,7 @@ const ActionBar = ({
 
   return (
     <div
-      {...(!hasAccess && mode !== 'articleOverlay' && styles.bottomMargin)}
+      {...(!isMember && mode !== 'articleOverlay' && styles.bottomMargin)}
       {...styles.hidePrint}
     >
       <div

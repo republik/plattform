@@ -9,7 +9,7 @@ import { timeFormat, chfFormat } from '../../lib/utils/format'
 import List, { Item } from '../List'
 import { Item as AccountItem } from './Elements'
 import GiveMemberships from './Memberships/Give'
-import query from './belongingsQuery'
+import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const dayFormat = timeFormat('%-d. %B %Y')
 
@@ -150,7 +150,7 @@ class PledgeList extends Component {
 export default compose(
   withT,
   withMe,
-  graphql(query, {
+  graphql(MyBelongingsDocument, {
     props: ({ data }) => {
       return {
         loading: data.loading,

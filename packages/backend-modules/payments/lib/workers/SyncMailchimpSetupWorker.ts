@@ -1,9 +1,9 @@
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
-import { Payments } from '../payments'
 import Stripe from 'stripe'
 import { WebhookService } from '../services/WebhookService'
 import { MailNotificationService } from '../services/MailNotificationService'
+import { SubscriptionService } from '../services/SubscriptionService'
 
 type Args = {
   $version: 'v1'
@@ -27,7 +27,7 @@ export class SyncMailchimpSetupWorker extends BaseWorker<Args> {
 
     const webhookService = new WebhookService(this.context.pgdb)
     const mailService = new MailNotificationService(this.context.pgdb)
-    const PaymentService = Payments.getInstance()
+    const subscriptionService = new SubscriptionService(this.context.pgdb)
 
     const wh =
       await webhookService.getEvent<Stripe.CheckoutSessionCompletedEvent>(
@@ -46,14 +46,12 @@ export class SyncMailchimpSetupWorker extends BaseWorker<Args> {
 
     const event = wh.payload
 
-    const subscription = await PaymentService.getSubscription({
+    const subscription = await subscriptionService.getSubscription({
       externalId: event.data.object.subscription as string,
     })
 
     if (!subscription) {
-      console.error(
-        'Subscription could not be found in the database',
-      )
+      console.error('Subscription could not be found in the database')
       return await this.pgBoss.fail(this.queue, job.id)
     }
 

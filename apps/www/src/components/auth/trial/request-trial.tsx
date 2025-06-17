@@ -39,7 +39,7 @@ const RequestTrial = (props: TrialFormProps) => {
         mutation: RequestAccessDocument,
         variables: {
           campaignId: REGWALL_CAMPAIGN,
-          payload: getConversionPayload(query),
+          payload: getConversionPayload(query, props.analyticsProps),
         },
       })
       .then(() => {

@@ -56,10 +56,6 @@ export interface UserRow {
   adminNotes: string | null
   defaultDiscussionNotificationOption: string
   discussionNotificationChannels: string[]
-  TOTPChallengeSecret: null
-  isTOTPChallengeSecretVerified: null
-  phoneNumberVerificationCode: string | null
-  isPhoneNumberVerified: boolean
   enabledSecondFactors: string[] | null
   deletedAt: Date | null
   preferredFirstFactor: string | null

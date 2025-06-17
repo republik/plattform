@@ -17,4 +17,5 @@ export = {
   useragent: require('./useragent'),
   Users: require('./Users'),
   UserEvents: require('./UserEvents'),
+  checkProfileUrls: require('./checkProfileUrls'),
 }

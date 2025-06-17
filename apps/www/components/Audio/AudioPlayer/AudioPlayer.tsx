@@ -184,6 +184,7 @@ const AudioPlayer = ({
 
     return
   }, [isDesktop, inNativeApp, isAndroid, isFirefox, isExpanded])
+  
   return (
     <>
       <AnimatePresence>

@@ -23,7 +23,6 @@ const {
 const {
   Redirections: { get: getRedirections },
 } = require('@orbiting/backend-modules-redirections')
-const { purgeUrls } = require('@orbiting/backend-modules-keyCDN')
 
 const {
   maybeDelcareMilestonePublished,
@@ -402,16 +401,6 @@ module.exports = async (_, args, context) => {
       id: repoId,
     },
   })
-
-  // purge pdfs in CDN
-  const purgeQueries = [
-    '',
-    '?download=1',
-    '?images=0',
-    '?images=0&download=1',
-    '?download=1&images=0',
-  ]
-  await purgeUrls(purgeQueries.map((q) => `/pdf${newPath}.pdf${q}`))
 
   if (!prepublication && !scheduledAt && notifyFilters) {
     await notifyPublish(repoId, notifyFilters, context)

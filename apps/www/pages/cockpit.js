@@ -219,7 +219,7 @@ const Page = ({
         error={data.error}
         style={{ minHeight: `calc(90vh)` }}
         render={() => {
-          if (!data.membershipStats) {
+          if (!data.membershipStats?.evolution?.buckets?.length) {
             return 'Die Cockpit-Daten konnten nicht geladen werden :('
           }
 
@@ -435,6 +435,7 @@ const Page = ({
                       '2022-01',
                       '2023-01',
                       '2024-01',
+                      '2025-01',
                     ],
                     height: 300,
                     domain: [0, 35000],

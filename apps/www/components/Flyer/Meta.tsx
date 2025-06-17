@@ -2,12 +2,13 @@ import React from 'react'
 
 import { CustomElement, renderSlateAsText } from '@project-r/styleguide'
 
-import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 import { useTranslation } from '../../lib/withT'
 
 import { getCacheKey } from '../Article/metadata'
 import Meta from '../Frame/Meta'
 
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import { MetaProps } from './index'
 
 export const getShareImageUrls = (
@@ -19,23 +20,24 @@ export const getShareImageUrls = (
   screenshotUrl: string
   shareImageUrl: string
 } => {
-  const screenshotUrl = new URL(meta.path, PUBLIC_BASE_URL)
-  screenshotUrl.searchParams.set('extract', tileId)
+  const pageUrl = new URL(meta.path, PUBLIC_BASE_URL)
+  pageUrl.searchParams.set('extract', tileId)
 
   if (showAll) {
-    screenshotUrl.searchParams.set('showAll', 'true')
+    pageUrl.searchParams.set('showAll', 'true')
   }
 
   const dimensions = showAll ? [760, 1] : [600, 314]
 
-  const shareImageUrl = new URL('/render', ASSETS_SERVER_BASE_URL)
-  shareImageUrl.searchParams.set('viewport', dimensions.join('x'))
-  shareImageUrl.searchParams.set('zoomFactor', '2')
-  shareImageUrl.searchParams.set('updatedAt', getCacheKey(documentId, meta))
-  shareImageUrl.searchParams.set('url', screenshotUrl.toString())
+  const shareImageUrl = screenshotUrl({
+    url: pageUrl.toString(),
+    width: dimensions[0],
+    height: dimensions[1],
+    version: getCacheKey(documentId, meta),
+  })
 
   return {
-    screenshotUrl: screenshotUrl.toString(),
+    screenshotUrl: pageUrl.toString(),
     shareImageUrl: shareImageUrl.toString(),
   }
 }

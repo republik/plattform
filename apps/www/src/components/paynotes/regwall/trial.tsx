@@ -1,19 +1,14 @@
-import { useState } from 'react'
-
-import { IconExpandMore } from '@republik/icons'
 import { css } from '@republik/theme/css'
 
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { Collapsible } from '@app/components/ui/collapsible'
 
 import { CDN_FRONTEND_BASE_URL } from 'lib/constants'
+import { useTranslation } from 'lib/withT'
 
 import { PaynoteSection } from '../../ui/containers'
-import { Button } from '../../ui/button'
-
 import TrialForm from '../../auth/trial'
 
 import Login from './login'
-import { useTranslation } from 'lib/withT'
 
 const TrialHeader = ({ variation }: { variation: string }) => {
   const { t } = useTranslation()
@@ -47,15 +42,8 @@ const TrialHeader = ({ variation }: { variation: string }) => {
   )
 }
 
-const WhyRegister = ({
-  analyticsProps,
-}: {
-  analyticsProps: Record<string, string>
-}) => {
+const WhyRegister = () => {
   const { t } = useTranslation()
-  const trackEvent = useTrackEvent()
-
-  const [expanded, setExpanded] = useState(false)
 
   return (
     <div
@@ -66,40 +54,19 @@ const WhyRegister = ({
         p: '4',
       })}
     >
-      {expanded ? (
+      <Collapsible title={t('regwall/whyRegister/title')}>
         <div
           className={css({
             display: 'flex',
             flexDir: 'column',
             gap: '4',
+            mt: '4',
           })}
           dangerouslySetInnerHTML={{
             __html: t('regwall/whyRegister/expanded'),
           }}
         />
-      ) : (
-        <Button
-          variant='link'
-          type='button'
-          className={css({
-            width: 'full',
-            textDecoration: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          })}
-          onClick={() => {
-            setExpanded(true)
-            trackEvent({
-              action: 'expand "why register" infobox',
-              ...analyticsProps,
-            })
-          }}
-        >
-          {t('regwall/whyRegister/title')}
-          <IconExpandMore size='24' />
-        </Button>
-      )}
+      </Collapsible>
     </div>
   )
 }
@@ -113,7 +80,7 @@ const Trial = ({
     <PaynoteSection>
       <TrialForm
         renderBefore={<TrialHeader variation={analyticsProps.variation} />}
-        renderAfter={<WhyRegister analyticsProps={analyticsProps} />}
+        renderAfter={<WhyRegister />}
         analyticsProps={analyticsProps}
       />
     </PaynoteSection>
