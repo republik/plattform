@@ -109,7 +109,7 @@ const Footer = ({ meta }) => {
         />
       </a>
       <p style={{ ...paragraphStyle, marginTop: 0 }}>
-        Republik AG, Sihlhallenstrasse 1, 8004 Zürich
+        Republik AG, Sihlhallenstrasse&#8288; 1, 8004&#8288; Zürich
       </p>
       {isProjectR && <ProjectRFooter />}
     </Center>
