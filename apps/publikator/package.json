@@ -104,7 +104,6 @@
     "rehype-parse": "^7.0.1",
     "rehype-remark": "^8.0.0",
     "remark-frontmatter": "^1.3.3",
-    "remark-parse": "^5.0.0",
     "remark-stringify": "^5.0.0",
     "scroll-into-view": "1.15.0",
     "shortid": "^2.2.15",
