@@ -3,15 +3,22 @@ query NextReads {
     filters: [{key: "template", not: true, value: "section"},{key: "template", not: true, value: "editorialNewsletter"}, {key: "template", not: true, value: "format"}, {key: "template", not: true, value: "front"}]
     filter: {feed: true}
     sort: {key: publishedAt, direction: DESC}
-    first: 10
+    first: 20
   ) {
     nodes {
       entity {
         ... on Document {
           id
           meta {
-            facebookImage
-            image
+            audioCover(properties: { width: 1024, height: 1024 })
+            audioCoverCrop {
+              x
+              y
+              width
+              height
+            }
+            estimatedReadingMinutes
+            estimatedConsumptionMinutes
             contributors {
               name
               kind
