@@ -7,8 +7,11 @@ import {
 
 const BASE_URL = process.env.PUBLIC_BASE_URL
 
-export async function GET(request: NextRequest, props: { params: Promise<{ year: string }> }) {
-  const params = await props.params;
+export async function GET(
+  request: NextRequest,
+  props: { params: Promise<{ year: string }> },
+) {
+  const params = await props.params
   const year = parseInt(params.year)
   const client = await getClient()
 
@@ -49,13 +52,18 @@ export async function GET(request: NextRequest, props: { params: Promise<{ year:
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     ${articles
-      .filter((article) => article.meta.path && article.meta.publishDate) // Filter out incomplete articles
+      .filter((article) => article.meta.path && article.meta.publishDate)
       .map(
         (article) => `  <url>
         <loc>${BASE_URL}${article.meta.path}</loc>
-        <lastmod>${new Date(
-          article.meta.lastPublishedAt || article.meta.publishDate!,
-        ).toISOString()}</lastmod>
+        <lastmod>${(() => {
+          const lastPublishedAt = new Date(article.meta.lastPublishedAt)
+          const publishDate = new Date(article.meta.publishDate)
+          // Return the more recent of the two dates
+          return lastPublishedAt > publishDate
+            ? lastPublishedAt.toISOString()
+            : publishDate.toISOString()
+        })()}</lastmod>
       </url>`,
       )
       .join('\n')}

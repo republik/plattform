@@ -45,6 +45,7 @@ export const documentFragment = `
       }
       ownDiscussion {
         id
+        path
         closed
         comments {
           totalCount

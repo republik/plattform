@@ -15,7 +15,6 @@ import { useMe } from '../../../lib/context/MeContext'
 import useReportCommentHandler from '../hooks/actions/useReportCommentHandler'
 import useUnpublishCommentHandler from '../hooks/actions/useUnpublishCommentHandler'
 import DiscussionComposer from '../DiscussionComposer/DiscussionComposer'
-import { useRouter } from 'next/router'
 import { useLocalCommentReports } from '../helpers/useLocalCommentReports'
 
 type Props = {
@@ -35,7 +34,6 @@ const CommentContainer = ({
 }: Props): ReactElement => {
   const { t } = useTranslation()
   const { me } = useMe()
-  const router = useRouter()
   const {
     id: discussionId,
     discussion,
@@ -87,19 +85,12 @@ const CommentContainer = ({
 
   const loadRemainingAfter = discussion?.comments?.pageInfo?.endCursor
   const loadRemainingReplies = useCallback(() => {
-    if (isBoard && parentId) {
-      const href = getFocusHref(discussion)
-      if (href) {
-        href.query.parent = parentId
-        return router.push(href)
-      }
-    }
     return fetchMore({
-      discussionId,
+      discussionPath: discussion?.path,
       parentId,
       after: loadRemainingAfter,
     })
-  }, [discussionId, parentId, loadRemainingAfter, fetchMore, isBoard])
+  }, [discussion, parentId, loadRemainingAfter, fetchMore])
 
   return (
     <CommentComponent

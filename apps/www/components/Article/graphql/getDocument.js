@@ -60,6 +60,7 @@ export const getDocument = gql`
         shareTextPosition
         ownDiscussion {
           id
+          path
           closed
           isBoard
           comments {
@@ -174,6 +175,7 @@ export const getDocument = gql`
                 }
                 ownDiscussion {
                   id
+                  path
                   closed
                   isBoard
                   comments {

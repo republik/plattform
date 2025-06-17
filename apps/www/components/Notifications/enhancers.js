@@ -123,6 +123,7 @@ export const notificationsQuery = gql`
                   template
                   ownDiscussion {
                     id
+                    path
                     closed
                   }
                   linkedDiscussion {

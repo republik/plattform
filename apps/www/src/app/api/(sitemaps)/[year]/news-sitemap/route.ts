@@ -27,11 +27,11 @@ function generateNewsSiteMap(
       _name: 'url',
       _content: [
         { _name: 'loc', _content: `${BASE_URL}${meta.path}` },
-        { 
-          _name: 'lastmod', 
+        {
+          _name: 'lastmod',
           _content: new Date(
             meta.lastPublishedAt || meta.publishDate!,
-          ).toISOString() 
+          ).toISOString(),
         },
         {
           _name: 'news:news',
@@ -57,8 +57,11 @@ function generateNewsSiteMap(
   })
 }
 
-export async function GET(request: NextRequest, props: { params: Promise<{ year: string }> }) {
-  const params = await props.params;
+export async function GET(
+  request: NextRequest,
+  props: { params: Promise<{ year: string }> },
+) {
+  const params = await props.params
   const { year } = params
 
   if (!year || isNaN(parseInt(year))) {
