@@ -11,7 +11,6 @@
     "dev": "concurrently \"PORT=3010 next dev\" \"yarn gql:types --watch\" \"panda --watch\"",
     "start": "next start",
     "build": "panda && yarn gql:types && next build",
-    "heroku-postbuild": "npm run build",
     "test": "jest",
     "test:watch": "jest --watch",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
