@@ -284,6 +284,7 @@ fragment DiscussionMetaData on Discussion {
       template
       ownDiscussion {
         id
+        path
         closed
       }
     }
