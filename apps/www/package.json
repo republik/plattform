@@ -55,7 +55,6 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@types/useragent": "2.3.1",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.6",
     "abab": "^2.0.5",
     "concurrently": "^8.2.1",
     "cross-env": "^7.0.3",
