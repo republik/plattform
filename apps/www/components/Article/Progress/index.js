@@ -9,6 +9,7 @@ import { mediaQueries, A } from '@project-r/styleguide'
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
 import { scrollIt } from '../../../lib/utils/scroll'
 import withMe from '../../../lib/apollo/withMe'
+import { PROGRESS_EXPLAINER_PATH } from '../../../lib/constants'
 
 import { withProgressApi } from './api'
 import { useMediaProgress } from '../../Audio/MediaProgress'
