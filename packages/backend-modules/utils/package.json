@@ -27,6 +27,8 @@
     "debug": "^4.1.1",
     "get-urls": "^10.0.0",
     "moment": "^2.26.0",
+    "remark-breaks": "^1.0.5",
+    "remark-parse": "^8.0.2",
     "unified": "^9.0.0",
     "unist-util-visit": "^2.0.2",
     "validator": "^13.7.0"

@@ -9,10 +9,11 @@ const BASE_URL = process.env.PUBLIC_BASE_URL
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { year: string } },
+  props: { params: Promise<{ year: string }> },
 ) {
+  const params = await props.params
   const year = parseInt(params.year)
-  const client = getClient()
+  const client = await getClient()
 
   const fromDate = new Date(year, 0, 1) // January 1st of the year
   const toDate = new Date(year + 1, 0, 1) // January 1st of the next year

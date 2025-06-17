@@ -72,7 +72,8 @@ const SenderProfile = ({
   )
 }
 
-export async function generateMetadata({ params }): Promise<Metadata> {
+export async function generateMetadata(props): Promise<Metadata> {
+  const params = await props.params;
   const data = await getInviteeData(params)
 
   const senderName = data.sender?.firstName
@@ -86,7 +87,8 @@ export async function generateMetadata({ params }): Promise<Metadata> {
   }
 }
 
-export default async function Page({ params }) {
+export default async function Page(props) {
+  const params = await props.params;
   const data = await getInviteeData(params)
 
   const { sender } = data

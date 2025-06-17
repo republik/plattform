@@ -7,7 +7,11 @@ const OptimisticQueueResponseHelper = {
     queue: readonly AudioQueueItem[],
     movedItemId: string,
     newPosition: number,
-  ): MoveAudioQueueItemMutation | undefined => {
+  ):
+    | {
+        audioQueueItems: AudioQueueItem[]
+      }
+    | undefined => {
     const currentIndexOfMovedItem = queue.findIndex(
       (item) => item.id === movedItemId,
     )

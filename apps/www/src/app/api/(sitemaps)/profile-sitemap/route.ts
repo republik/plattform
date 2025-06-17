@@ -9,8 +9,8 @@ const BASE_URL = process.env.PUBLIC_BASE_URL
 
 export async function GET() {
   try {
-    const client = getCMSClientBase({ draftMode: false })
-    
+    const client = await getCMSClientBase({ draftMode: false })
+
     const { data, error } = await client.query<EmployeesQuery>({
       query: EmployeesDocument,
     })

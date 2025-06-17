@@ -127,8 +127,8 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   const [countText, setCountText] = useState<number>(0)
   const [countMeta, setCountMeta] = useState<number>(0)
   const [searched, setSearched] = useState<boolean>(false)
-  const searchRef = useRef<HTMLInputElement>()
-  const replaceRef = useRef<HTMLInputElement>()
+  const searchRef = useRef<HTMLInputElement>(null)
+  const replaceRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setSearchTerm(replaceSpecialChars(displaySearchTerm))

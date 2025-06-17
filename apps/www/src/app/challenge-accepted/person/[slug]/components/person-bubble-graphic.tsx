@@ -171,7 +171,7 @@ const PersonBubbleItem = ({
 
 export const PersonBubbleForce = ({ people }: { people: People }) => {
   const { ref, width, height } = useResizeObserver()
-  const forceRef = useRef()
+  const forceRef = useRef(undefined)
 
   const simulation = useMemo(() => {
     return forceSimulation<PersonNode>(

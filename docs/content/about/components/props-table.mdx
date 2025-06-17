@@ -1,0 +1,66 @@
+import { Callout } from 'nextra/components'
+
+# Props Table
+
+With the Props Table, you can display a table of component props.
+
+## Example
+
+This is how it looks:
+
+import { PropsTable } from '@/components'
+import componentProps from 'lib/examples/component-example.tsx?props'
+
+<PropsTable props={componentProps.ComponentExample} />
+
+## Usage
+
+### Manually Defined Props
+
+```mdx filename="MDX"
+import { PropsTable } from '@/components'
+
+<PropsTable
+  props={[
+    {
+      name: 'someProp',
+      type: 'string',
+      required: true,
+      defaultValue: 'one',
+      description: 'Some prop',
+    },
+    {
+      name: 'anotherProp',
+      type: 'boolean',
+      required: false,
+      defaultValue: 'false',
+      description: 'Another prop',
+    },
+  ]}
+/>
+```
+
+### Generated Props
+
+When you append `?props` to an import of a TSX file which exports React components, its props are automatically extracted in the format that `PropsTable` expects.
+
+```mdx filename="MDX" /?props/
+import componentProps from 'components/my-component.tsx?props'
+
+import { PropsTable } from '@/components'
+
+<PropsTable props={componentProps.MyComponent} />
+```
+
+<Callout type="warning">
+  You can't use the identifier `props` when importing, as it will be overwritten by nextra. I.e. this won't work:
+
+```ts
+// This won't work:
+import props from 'components/my-component.tsx?props'
+
+// This will work:
+import myProps from 'components/my-component.tsx?props'
+```
+
+</Callout>

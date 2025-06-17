@@ -121,7 +121,7 @@ const AudioProvider = ({ children }) => {
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
-  const clearTimeoutId = useRef<NodeJS.Timeout | null>()
+  const clearTimeoutId = useRef<NodeJS.Timeout | null>(null)
 
   const { isAudioQueueAvailable } = useAudioQueue()
   const { getMediaProgress } = useMediaProgress()

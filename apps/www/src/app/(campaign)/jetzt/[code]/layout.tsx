@@ -3,14 +3,19 @@ import { getInviteeData } from '@app/app/(campaign)/campaign-data'
 import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/constants'
 import { redirect } from 'next/navigation'
 
-export default async function Layout({
-  children,
-  params,
-}: {
-  children: React.ReactNode
-  params: { code: string }
-}) {
-  const data = await getInviteeData(params)
+export default async function Layout(
+  props: {
+    children: React.ReactNode
+    params: Promise<{ code: string }>
+  }
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
+  const data = await getInviteeData(await params)
 
   const { sender, me, validateReferralCode } = data
 

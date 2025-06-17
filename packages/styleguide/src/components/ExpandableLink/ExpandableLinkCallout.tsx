@@ -152,8 +152,8 @@ const ExpandableLinkCallout = ({
   const [colorScheme] = useColorContext()
   const [calloutHeight, setCalloutHeight] = useState(400)
 
-  const calloutContainerRef = useRef<HTMLDivElement>()
-  const calloutRef = useRef<HTMLDivElement>()
+  const calloutContainerRef = useRef<HTMLDivElement>(null)
+  const calloutRef = useRef<HTMLDivElement>(null)
 
   const calloutRule = useMemo(
     () =>

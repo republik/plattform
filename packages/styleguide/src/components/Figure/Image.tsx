@@ -1,5 +1,4 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import { DetailedHTMLProps, ImgHTMLAttributes, useContext } from 'react'
 import { css } from 'glamor'
 import { imageSizeInfo } from '@republik/mdast-react-render'
 import { getResizedSrcs } from './utils'
@@ -8,6 +7,7 @@ import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { mUp } from '../../theme/mediaQueries'
 import SwitchImage from './SwitchImage'
 import { IconGallery } from '@republik/icons'
+import { GalleryContext } from './GalleryContext'
 
 export const MIN_GALLERY_IMG_WIDTH = 600
 
@@ -53,7 +53,33 @@ const GalleryButton = ({ gallerySize, onClick }: GalleryButtonProps) => {
   )
 }
 
-const Image = (props, context) => {
+type ImageProps = {
+  src?: string
+  dark?: {
+    src: string
+    srcSet?: string
+    size?: {
+      width: number
+      height: number
+    }
+  }
+  srcSet?: string
+  alt?: string
+  size?: {
+    width: number
+    height: number
+  }
+  maxWidth?: number
+  aboveTheFold?: boolean
+  enableGallery?: boolean
+  gallerySize?: number
+  attributes?: DetailedHTMLProps<
+    ImgHTMLAttributes<HTMLImageElement>,
+    HTMLImageElement
+  >
+}
+
+const Image = (props: ImageProps) => {
   const {
     src,
     dark,
@@ -67,13 +93,15 @@ const Image = (props, context) => {
     gallerySize,
   } = props
 
+  const context = useContext(GalleryContext)
+
   const onClick =
     enableGallery && context.toggleGallery
       ? () => context.toggleGallery(src)
       : undefined
 
   const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
-  let aspectRatio = size ? size.width / size.height : undefined
+  let aspectRatio = size ? +size.width / +size.height : undefined
   if (dark?.size) {
     aspectRatio = Math.min(aspectRatio, dark.size.width / dark.size.height)
   }
@@ -88,6 +116,7 @@ const Image = (props, context) => {
       srcSet={srcSet}
       alt={alt}
       onClick={onClick}
+      sizes={undefined}
     />
   ) : (
     <SwitchImage
@@ -132,28 +161,6 @@ const Image = (props, context) => {
       {wrappedImage}
     </div>
   )
-}
-
-Image.propTypes = {
-  src: PropTypes.string.isRequired,
-  dark: PropTypes.shape({
-    src: PropTypes.string.isRequired,
-    srcSet: PropTypes.string,
-  }),
-  srcSet: PropTypes.string,
-  alt: PropTypes.string,
-  size: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number,
-  }),
-  maxWidth: PropTypes.number,
-  aboveTheFold: PropTypes.bool,
-  enableGallery: PropTypes.bool,
-  gallerySize: PropTypes.number,
-}
-
-Image.contextTypes = {
-  toggleGallery: PropTypes.func,
 }
 
 Image.utils = {

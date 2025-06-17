@@ -1,4 +1,4 @@
-import { Component, Fragment, useRef, useEffect } from 'react'
+import { useRef, useEffect, createContext } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
@@ -16,20 +16,37 @@ import { withRouter } from 'next/router'
 
 const MIN_INDEX = 2
 
-class ProgressContextProvider extends Component {
-  getChildContext() {
-    return {
-      getMediaProgress: this.props.value.getMediaProgress,
-      saveMediaProgress: this.props.value.saveMediaProgress,
-      restoreArticleProgress: this.props.value.restoreArticleProgress,
-    }
-  }
-  render() {
-    return <Fragment>{this.props.children}</Fragment>
-  }
-}
+export const getFeatureDescription = (t) =>
+  t.elements('article/progressprompt/description/feature', {
+    link: PROGRESS_EXPLAINER_PATH ? (
+      <Link href={PROGRESS_EXPLAINER_PATH} key='link' passHref legacyBehavior>
+        <A>{t('article/progressprompt/description/feature/link')}</A>
+      </Link>
+    ) : null,
+  })
 
-ProgressContextProvider.childContextTypes = {
+export const ProgressContext = createContext({
+  getMediaProgress: () => {},
+  saveMediaProgress: () => {},
+  restoreArticleProgress: () => {},
+  showConsentPrompt: () => {},
+})
+
+// class ProgressContextProvider extends Component {
+//   getChildContext() {
+//     return {
+//       getMediaProgress: this.props.value.getMediaProgress,
+//       saveMediaProgress: this.props.value.saveMediaProgress,
+//       restoreArticleProgress: this.props.value.restoreArticleProgress,
+//       showConsentPrompt: this.props.value.showConsentPrompt,
+//     }
+//   }
+//   render() {
+//     return <Fragment>{this.props.children}</Fragment>
+//   }
+// }
+
+ProgressContext.childContextTypes = {
   getMediaProgress: PropTypes.func,
   saveMediaProgress: PropTypes.func,
   restoreArticleProgress: PropTypes.func,
@@ -200,7 +217,7 @@ const Progress = ({
 
 
   return (
-    <ProgressContextProvider
+    <ProgressContext
       value={{
         getMediaProgress,
         saveMediaProgress,
@@ -208,7 +225,7 @@ const Progress = ({
       }}
     >
       <div ref={refContainer}>{children}</div>
-    </ProgressContextProvider>
+    </ProgressContext>
   )
 }
 

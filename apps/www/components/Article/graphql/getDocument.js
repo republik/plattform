@@ -175,6 +175,7 @@ export const getDocument = gql`
                 }
                 ownDiscussion {
                   id
+                  path
                   closed
                   isBoard
                   comments {
