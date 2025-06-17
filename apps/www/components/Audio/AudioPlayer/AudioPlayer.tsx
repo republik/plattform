@@ -195,7 +195,7 @@ const AudioPlayer = ({
               onBackdropClick={() => setIsExpanded(false)}
             >
               <motion.div
-                data-id={AUDIO_PLAYER_WRAPPER_ID}
+                id={AUDIO_PLAYER_WRAPPER_ID}
                 {...(inNativeApp && inIOS && !isExpanded && iOSSafeInsets)}
                 ref={ref}
                 initial={{ opacity: 0, y: 50 }}
