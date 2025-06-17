@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
-import {css} from 'glamor'
+import { css } from 'glamor'
 import Play from './icons/Play'
 import Volume from './icons/Volume'
 import Subtitles from './icons/Subtitles'
-import {InlineSpinner} from './Spinner'
+import { InlineSpinner } from './Spinner'
 
 const PROGRESS_HEIGHT = 4
 
@@ -12,21 +12,21 @@ const styles = {
   wrapper: css({
     position: 'relative',
     lineHeight: 0,
-    marginBottom: PROGRESS_HEIGHT
+    marginBottom: PROGRESS_HEIGHT,
   }),
   video: css({
     width: '100%',
     height: 'auto',
     transition: 'height 200ms',
     '::-webkit-media-controls-panel': {
-      display: 'none !important'
+      display: 'none !important',
     },
     '::--webkit-media-controls-play-button': {
-      display: 'none !important'
+      display: 'none !important',
     },
     '::-webkit-media-controls-start-playback-button': {
-      display: 'none !important'
-    }
+      display: 'none !important',
+    },
   }),
   controls: css({
     position: 'absolute',
@@ -36,7 +36,7 @@ const styles = {
     bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     cursor: 'pointer',
-    transition: 'opacity 200ms'
+    transition: 'opacity 200ms',
   }),
   play: css({
     position: 'absolute',
@@ -45,21 +45,21 @@ const styles = {
     right: '5%',
     marginTop: -18,
     textAlign: 'center',
-    transition: 'opacity 200ms'
+    transition: 'opacity 200ms',
   }),
   progress: css({
     position: 'absolute',
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     bottom: -PROGRESS_HEIGHT,
     left: 0,
-    height: PROGRESS_HEIGHT
+    height: PROGRESS_HEIGHT,
   }),
   icons: css({
     position: 'absolute',
     zIndex: 6,
     right: 10,
     bottom: 10,
-    cursor: 'pointer'
+    cursor: 'pointer',
   }),
   scrub: css({
     zIndex: 3,
@@ -68,19 +68,19 @@ const styles = {
     bottom: -PROGRESS_HEIGHT,
     left: 0,
     right: 0,
-    cursor: 'ew-resize'
-  })
+    cursor: 'ew-resize',
+  }),
 }
 
 let globalState = {
   playingRef: undefined,
   muted: false,
   subtitles: false,
-  instances: []
+  instances: [],
 }
 
 class VideoPlayer extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -88,11 +88,11 @@ class VideoPlayer extends Component {
       progress: 0,
       muted: globalState.muted,
       subtitles: props.subtitles || globalState.subtitles,
-      loading: false
+      loading: false,
     }
 
     this.updateProgress = () => {
-      const {video} = this
+      const { video } = this
       if (!video) {
         return
       }
@@ -100,58 +100,56 @@ class VideoPlayer extends Component {
         const progress = video.currentTime / video.duration
         this.props.onProgress && this.props.onProgress(progress)
         return {
-          progress
+          progress,
         }
       })
     }
     this.syncProgress = () => {
-      this.readTimeout = setTimeout(
-        () => {
-          this.updateProgress()
-          this.syncProgress()
-        },
-        16
-      )
+      this.readTimeout = setTimeout(() => {
+        this.updateProgress()
+        this.syncProgress()
+      }, 16)
     }
-    this.ref = ref => { this.video = ref }
+    this.ref = (ref) => {
+      this.video = ref
+    }
     this.onPlay = () => {
-      if (
-        globalState.playingRef &&
-        globalState.playingRef !== this.video
-      ) {
+      if (globalState.playingRef && globalState.playingRef !== this.video) {
         globalState.playingRef.pause()
       }
       globalState.playingRef = this.video
       this.setState(() => ({
         playing: true,
-        loading: false
+        loading: false,
       }))
       this.syncProgress()
       this.props.onPlay && this.props.onPlay()
     }
     this.onPause = () => {
       this.setState(() => ({
-        playing: false
+        playing: false,
       }))
       clearTimeout(this.readTimeout)
       this.props.onPause && this.props.onPause()
     }
     this.onLoadStart = () => {
       this.setState(() => ({
-        loading: true
+        loading: true,
       }))
     }
     this.onCanPlay = () => {
       this.setState(() => ({
-        loading: false
+        loading: false,
       }))
     }
     this.onLoadedMetaData = () => {
       this.setTextTracksMode()
     }
-    this.scrubRef = ref => { this.scrubber = ref }
+    this.scrubRef = (ref) => {
+      this.scrubber = ref
+    }
     this.scrub = (event) => {
-      const {scrubber, video} = this
+      const { scrubber, video } = this
       if (this.scrubbing && scrubber && video && video.duration) {
         event.preventDefault()
         const rect = scrubber.getBoundingClientRect()
@@ -169,19 +167,16 @@ class VideoPlayer extends Component {
 
         const progress = Math.min(
           1,
-          Math.max(
-            (currentEvent.clientX - rect.left) / rect.width,
-            0
-          )
+          Math.max((currentEvent.clientX - rect.left) / rect.width, 0),
         )
         video.currentTime = video.duration * progress
         this.updateProgress()
       }
     }
-    this.scrubStart = event => {
+    this.scrubStart = (event) => {
       this.scrubbing = true
       if (event.type === 'mousedown') {
-        const up = e => {
+        const up = (e) => {
           this.scrubEnd(e)
           document.removeEventListener('mousemove', this.scrub)
           document.removeEventListener('mouseup', up)
@@ -191,7 +186,7 @@ class VideoPlayer extends Component {
       }
       this.scrub(event)
     }
-    this.scrubEnd = event => {
+    this.scrubEnd = (event) => {
       this.scrub(event)
       this.scrubbing = false
     }
@@ -199,8 +194,8 @@ class VideoPlayer extends Component {
       this.setState(state)
     }
   }
-  toggle () {
-    const {video} = this
+  toggle() {
+    const { video } = this
     if (video) {
       if (video.paused || video.ended) {
         this.play()
@@ -209,17 +204,17 @@ class VideoPlayer extends Component {
       }
     }
   }
-  play () {
-    const {video} = this
+  play() {
+    const { video } = this
     video && video.play()
   }
-  pause () {
-    const {video} = this
+  pause() {
+    const { video } = this
     video && video.pause()
   }
-  setTextTracksMode () {
-    const {subtitles} = this.state
-    const {src} = this.props
+  setTextTracksMode() {
+    const { subtitles } = this.state
+    const { src } = this.props
 
     if (!src.subtitles || subtitles === this._textTrackMode) {
       return
@@ -229,9 +224,8 @@ class VideoPlayer extends Component {
       this._textTrackMode = subtitles
     }
   }
-  componentDidMount () {
-    globalState.instances
-      .push(this.setInstanceState)
+  componentDidMount() {
+    globalState.instances.push(this.setInstanceState)
 
     this.video.addEventListener('play', this.onPlay)
     this.video.addEventListener('pause', this.onPause)
@@ -242,12 +236,13 @@ class VideoPlayer extends Component {
 
     this.setTextTracksMode()
   }
-  componentDidUpdate () {
+  componentDidUpdate() {
     this.setTextTracksMode()
   }
-  componentWillUnmount () {
-    globalState.instances = globalState.instances
-      .filter(setter => setter !== this.setInstanceState)
+  componentWillUnmount() {
+    globalState.instances = globalState.instances.filter(
+      (setter) => setter !== this.setInstanceState,
+    )
     if (globalState.playingRef === this.video) {
       globalState.playingRef = undefined
     }
@@ -260,87 +255,99 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('canplaythrough', this.onCanPlay)
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
   }
-  render () {
-    const {src, hidePlay} = this.props
-    const {
-      playing, progress,
-      muted, subtitles,
-      loading
-    } = this.state
+  render() {
+    const { src, hidePlay } = this.props
+    const { playing, progress, muted, subtitles, loading } = this.state
 
     return (
       <div {...styles.wrapper}>
-        <video {...styles.video}
+        <video
+          {...styles.video}
           style={this.props.style}
           autoPlay={this.props.autoPlay}
           muted={muted}
           ref={this.ref}
           crossOrigin='anonymous'
-          poster={src.poster}>
+          poster={src.poster}
+        >
           <source src={src.hls} type='application/x-mpegURL' />
           <source src={src.mp4} type='video/mp4' />
-          { /* crossOrigin subtitles won't work in older browser, serve from static */ }
-          {!!src.subtitles && <track label='Deutsch' kind='subtitles' srcLang='de' src={src.subtitles} default />}
+          {/* crossOrigin subtitles won't work in older browser, serve from static */}
+          {!!src.subtitles && (
+            <track
+              label='Deutsch'
+              kind='subtitles'
+              srcLang='de'
+              src={src.subtitles}
+              default
+            />
+          )}
         </video>
-        <div {...styles.controls}
-          style={{opacity: playing ? 0 : 1}}
-          onClick={() => this.toggle()}>
-          <div {...styles.play} style={{
-            opacity: (hidePlay || playing) ? 0 : 1
-          }}>
+        <div
+          {...styles.controls}
+          style={{ opacity: playing ? 0 : 1 }}
+          onClick={() => this.toggle()}
+        >
+          <div
+            {...styles.play}
+            style={{
+              opacity: hidePlay || playing ? 0 : 1,
+            }}
+          >
             <Play />
           </div>
           <div {...styles.icons}>
-            {loading && <InlineSpinner size={25} />}
-            {' '}
-            {!!src.subtitles && <a href='#'
-              title={`Untertitel ${subtitles ? 'an' : 'aus'}`}
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                const next = {
-                  subtitles: !subtitles
-                }
-                globalState.subtitles = next.subtitles
-                globalState.instances.forEach(setter => {
-                  setter(next)
-                })
-              }}>
-              <Subtitles off={!subtitles} />
-            </a>}
-            {' '}
-            <a href='#'
+            {loading && <InlineSpinner size={25} />}{' '}
+            {!!src.subtitles && (
+              <a
+                href='#'
+                title={`Untertitel ${subtitles ? 'an' : 'aus'}`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  const next = {
+                    subtitles: !subtitles,
+                  }
+                  globalState.subtitles = next.subtitles
+                  globalState.instances.forEach((setter) => {
+                    setter(next)
+                  })
+                }}
+              >
+                <Subtitles off={!subtitles} />
+              </a>
+            )}{' '}
+            <a
+              href='#'
               title={`Audio ${muted ? 'aus' : 'an'}`}
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
                 const next = {
-                  muted: !muted
+                  muted: !muted,
                 }
                 globalState.muted = next.muted
-                globalState.instances.forEach(setter => {
+                globalState.instances.forEach((setter) => {
                   setter(next)
                 })
-              }}>
+              }}
+            >
               <Volume off={muted} />
             </a>
           </div>
         </div>
-        <div {...styles.progress}
-          style={{width: `${progress * 100}%`}} />
-        <div {...styles.scrub}
+        <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
+        <div
+          {...styles.scrub}
           ref={this.scrubRef}
           onTouchStart={this.scrubStart}
           onTouchMove={this.scrub}
           onTouchEnd={this.scrubEnd}
-          onMouseDown={this.scrubStart} />
+          onMouseDown={this.scrubStart}
+        />
       </div>
     )
   }
-}
-
-VideoPlayer.defaultProps = {
-  hidePlay: false
 }
 
 export default VideoPlayer

@@ -1,9 +1,10 @@
 import { headers } from 'next/headers'
 
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
-import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc'
+import { registerApolloClient } from '@apollo/client-integration-nextjs'
 
-export const { getClient } = registerApolloClient(() => {
+export const { getClient } = registerApolloClient(async () => {
+  const _headers = await headers()
   return new ApolloClient({
     cache: new InMemoryCache(),
     link: new HttpLink({
@@ -13,9 +14,9 @@ export const { getClient } = registerApolloClient(() => {
       // (this does not work if you are rendering your page with `export const dynamic = "force-static"`)
       // fetchOptions: { cache: "no-store" },
       headers: {
-        cookie: headers().get('cookie') ?? '',
-        accept: headers().get('accept') ?? '',
-        Authorization: headers().get('Authorization') ?? '',
+        cookie: _headers.get('cookie') ?? '',
+        accept: _headers.get('accept') ?? '',
+        Authorization: _headers.get('Authorization') ?? '',
       },
       fetchOptions: {
         next: {

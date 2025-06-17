@@ -30,7 +30,10 @@ const BoardComment = (props: CommentProps) => (
     </div>
     {props.comment?.embed && (
       <div {...styles.item}>
-        <CommentEmbed embed={props.comment.embed} />
+        <CommentEmbed
+          embed={props.comment.embed}
+          mentioningDocument={undefined}
+        />
       </div>
     )}
   </div>

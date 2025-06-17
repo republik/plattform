@@ -13,7 +13,7 @@ import {
   useBodyScrollLock,
   useColorContext,
 } from '@project-r/styleguide'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'motion/react'
 import { css } from 'glamor'
 import AudioPlaybackElement from './AudioPlaybackElement'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
@@ -102,7 +102,7 @@ const AudioPlayer = ({
   const { t } = useTranslation()
   const router = useRouter()
   const [colorScheme] = useColorContext()
-  const [_, ...queuedItems] = queue || [] // filter active-item from queue
+  const [, ...queuedItems] = queue || [] // filter active-item from queue
   const { paynoteInlineHeight } = usePaynotes()
 
   const toggleAudioPlayer = () => {
@@ -184,7 +184,7 @@ const AudioPlayer = ({
 
     return
   }, [isDesktop, inNativeApp, isAndroid, isFirefox, isExpanded])
-  
+
   return (
     <>
       <AnimatePresence>

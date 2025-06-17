@@ -6,7 +6,7 @@ import { css } from '@republik/theme/css'
 import FAQList from './components/faq-list'
 
 export default async function FAQPage() {
-  const client = getCMSClient()
+  const client = await getCMSClient()
   const res = await client.query({ query: FaqDocument })
   return (
     <div>
