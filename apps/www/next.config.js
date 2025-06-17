@@ -42,19 +42,10 @@ const nextConfig = {
     PUBLIC_BASE_URL,
     PUBLIC_CDN_URL,
   },
-  webpack: (config) => {
-    config.externals = config.externals || {}
-    config.externals['lru-cache'] = 'lru-cache'
-    config.externals['react-dom/server'] = 'react-dom/server'
-    return config
-  },
+
   poweredByHeader: false,
   assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
-  useFileSystemPublicRoutes: true,
-  // , onDemandEntries: {
-  //   // wait 5 minutes before disposing entries
-  //   maxInactiveAge: 1000 * 60 * 5
-  // }
+
   eslint: {
     ignoreDuringBuilds: true,
   },
