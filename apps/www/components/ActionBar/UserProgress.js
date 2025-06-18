@@ -178,9 +178,4 @@ const UserProgress = ({
   )
 }
 
-// UserProgress.contextTypes = {
-//   restoreArticleProgress: PropTypes.func,
-//   showConsentPrompt: PropTypes.bool,
-// }
-
 export default compose(withT, withProgressApi)(UserProgress)
