@@ -28,6 +28,7 @@
     "dataloader": "^2.0.0",
     "glamor": "^2.20.40",
     "graphql-fields": "^2.0.3",
+    "isomorphic-dompurify": "^2.25.0",
     "prop-types": "^15.6.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

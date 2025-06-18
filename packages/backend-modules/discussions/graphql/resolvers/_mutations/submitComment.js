@@ -10,6 +10,7 @@ const { contentLength } = require('../Comment')
 const slack = require('../../../lib/slack')
 const { timeahead } = require('@orbiting/backend-modules-formats')
 const Promise = require('bluebird')
+const DOMPurify = require('isomorphic-dompurify')
 
 const { submitComment: notify } = require('../../../lib/Notifications')
 
@@ -79,7 +80,7 @@ module.exports = async (_, args, context) => {
       discussionId: discussion.id,
       parentId,
       userId: me.id,
-      content,
+      content: DOMPurify.sanitize(content),
       tags,
       now: args.now,
     },
