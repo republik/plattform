@@ -112,7 +112,7 @@
     "slate-prop-types": "^0.4.16",
     "subscriptions-transport-ws": "^0.9.17",
     "topojson": "^3.0.2",
-    "unified": "^7.0.0",
+    "unified": "^6.1.5",
     "unist-util-visit": "^2.0.3",
     "url": "^0.11.0",
     "uuid": "^9.0.1",
