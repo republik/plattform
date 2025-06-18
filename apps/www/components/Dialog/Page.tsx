@@ -4,7 +4,7 @@ import { mediaQueries } from '@project-r/styleguide'
 import { Interaction } from '@project-r/styleguide'
 import Link from 'next/link'
 import { A } from '@project-r/styleguide'
-import { ListWithQuery as TestimonialList } from '../Testimonial/List'
+import TestimonialList from '../Testimonial/List'
 import ActiveDiscussions from './ActiveDiscussions'
 import LatestComments from './LatestComments'
 
