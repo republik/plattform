@@ -25,9 +25,11 @@ const DialogOverviewPage = () => {
     <>
       <Interaction.Headline>{t('feedback/title')}</Interaction.Headline>
       <Interaction.P>
-        {t.elements('feedback/lead', {
-          a: <A href={'/etikette'}>{t('feedback/lead/etikette')}</A>,
-        })}
+        Die Republik ist nur so stark wie ihre Community. Teilen Sie Ihr Wissen
+        und Ihre Perspektive.{' '}
+        <A href='/etikette'>Wie wir in der Republik debattieren</A>. Sie können
+        auch <A href='/feedback'>Wünsche, Kritik und Lob</A> an die
+        Republik-Crew richten.
       </Interaction.P>
       <Interaction.H3 {...styles.h3}>
         {t('feedback/activeDiscussions/label')}
