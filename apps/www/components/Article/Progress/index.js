@@ -27,33 +27,7 @@ export const getFeatureDescription = (t) =>
     ) : null,
   })
 
-export const ProgressContext = createContext({
-  getMediaProgress: () => {},
-  saveMediaProgress: () => {},
-  restoreArticleProgress: () => {},
-  showConsentPrompt: () => {},
-})
-
-// class ProgressContextProvider extends Component {
-//   getChildContext() {
-//     return {
-//       getMediaProgress: this.props.value.getMediaProgress,
-//       saveMediaProgress: this.props.value.saveMediaProgress,
-//       restoreArticleProgress: this.props.value.restoreArticleProgress,
-//       showConsentPrompt: this.props.value.showConsentPrompt,
-//     }
-//   }
-//   render() {
-//     return <Fragment>{this.props.children}</Fragment>
-//   }
-// }
-
-ProgressContext.childContextTypes = {
-  getMediaProgress: PropTypes.func,
-  saveMediaProgress: PropTypes.func,
-  restoreArticleProgress: PropTypes.func,
-  showConsentPrompt: PropTypes.bool,
-}
+export const ProgressContext = createContext({})
 
 const Progress = ({
   children,
