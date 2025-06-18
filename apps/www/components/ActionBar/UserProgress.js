@@ -1,6 +1,5 @@
 import { forwardRef, useContext } from 'react'
 import { css } from 'glamor'
-import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 
 import withT from '../../lib/withT'
@@ -179,9 +178,9 @@ const UserProgress = ({
   )
 }
 
-UserProgress.contextTypes = {
-  restoreArticleProgress: PropTypes.func,
-  showConsentPrompt: PropTypes.bool,
-}
+// UserProgress.contextTypes = {
+//   restoreArticleProgress: PropTypes.func,
+//   showConsentPrompt: PropTypes.bool,
+// }
 
 export default compose(withT, withProgressApi)(UserProgress)
