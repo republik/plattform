@@ -1,10 +1,10 @@
 import { gql, useQuery } from '@apollo/client'
+import { useRouter } from 'next/router'
 import { max } from 'd3-array'
 import { css, merge } from 'glamor'
-import compose from 'lodash/flowRight'
-import { Component, forwardRef, Fragment } from 'react'
+import { Component, forwardRef, Fragment, useState } from 'react'
 
-import withT from '../../lib/withT'
+import { useTranslation } from '../../lib/withT'
 import Meta from '../Frame/Meta'
 import Loader from '../Loader'
 
@@ -22,7 +22,6 @@ import {
   shouldIgnoreClick,
   useColorContext,
 } from '@project-r/styleguide'
-import { withRouter } from 'next/router'
 import ErrorMessage from '../ErrorMessage'
 
 const { P } = Interaction
@@ -536,7 +535,7 @@ query statements($seed: Float, $search: String, $focus: String, $after: String, 
 }
 `
 
-const ListWithQueryComponent = (props) => {
+const ListWithQuery = (props) => {
   const { seed = null, first = 50, search, focus, membershipAfter, ssr } = props
   const { data, loading, error, fetchMore } = useQuery(query, {
     ssr: ssr,
@@ -586,85 +585,63 @@ const ListWithQueryComponent = (props) => {
   return <List {...listProps} />
 }
 
-export const ListWithQuery = compose(withT)(ListWithQueryComponent)
-
 export const generateSeed = () => Math.random() * 2 - 1
 
-class Container extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-  render() {
-    const { t, id, isPage, router, serverContext } = this.props
-    const { query } = this.state
+const TestimonialList = ({ id, isPage, serverContext, seed: initialSeed }) => {
+  const { t } = useTranslation()
+  const router = useRouter()
+ 
+  const [searchQuery, setSearchQuery] = useState()
+  const [seed, setSeed] = useState(initialSeed)
+  const [clearedFocus, setClearedFocus] = useState()
 
-    const seed = this.state.seed || this.props.seed
-
-    return (
-      <div>
-        <Field
-          label={t('testimonial/search/label')}
-          name='search'
-          value={query}
-          autoComplete='off'
-          onChange={(_, value) => {
-            this.setState(() => ({
-              query: value,
-            }))
-          }}
-        />
-        <div {...styles.options}>
-          <A
-            style={{ float: 'right', cursor: 'pointer' }}
-            onClick={() => {
-              this.setState(() => ({
-                seed: generateSeed(),
-              }))
-              if (isPage && (id || this.state.clearedFocus)) {
-                this.setState(
-                  {
-                    clearedFocus: undefined,
-                  },
-                  () => {
-                    router.replace('/community', undefined, {
-                      shallow: router.pathname === '/community',
-                    })
-                  },
-                )
-              }
-            }}
-          >
-            {t('testimonial/search/seed')}
-          </A>
-        </div>
-        <br style={{ clear: 'left' }} />
-        <ListWithQuery
-          isPage={isPage}
-          focus={query ? undefined : id || this.state.clearedFocus}
-          onSelect={() => {
-            if (!id) {
-              return
+  return (
+    <div>
+      <Field
+        label={t('testimonial/search/label')}
+        name='search'
+        value={searchQuery}
+        autoComplete='off'
+        onChange={(_, value) => {
+          setSearchQuery(value)
+        }}
+      />
+      <div {...styles.options}>
+        <A
+          style={{ float: 'right', cursor: 'pointer' }}
+          onClick={() => {
+            setSeed(generateSeed())
+            if (isPage && (id || clearedFocus)) {
+              setClearedFocus(undefined)
+              router.replace('/community', undefined, {
+                shallow: router.pathname === '/community',
+              })
             }
-            this.setState(
-              {
-                // keep it around for the query
-                clearedFocus: id,
-              },
-              () => {
-                router.push('/community', undefined, {
-                  shallow: router.pathname === '/community',
-                })
-              },
-            )
           }}
-          search={query}
-          seed={seed}
-          serverContext={serverContext}
-        />
+        >
+          {t('testimonial/search/seed')}
+        </A>
       </div>
-    )
-  }
+      <br style={{ clear: 'left' }} />
+      <ListWithQuery
+        isPage={isPage}
+        focus={searchQuery ? undefined : id || clearedFocus}
+        onSelect={() => {
+          if (!id) {
+            return
+          }
+          setClearedFocus(id)
+          router.push('/community', undefined, {
+            shallow: router.pathname === '/community',
+          })
+        }}
+        search={searchQuery}
+        seed={seed}
+        serverContext={serverContext}
+        t={t}
+      />
+    </div>
+  )
 }
 
-export default compose(withT, withRouter)(Container)
+export default TestimonialList
