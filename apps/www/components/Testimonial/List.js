@@ -536,7 +536,15 @@ query statements($seed: Float, $search: String, $focus: String, $after: String, 
 `
 
 const ListWithQuery = (props) => {
-  const { seed = null, first = 50, search, focus, membershipAfter, ssr } = props
+  const {
+    seed = null,
+    first = 50,
+    search,
+    focus,
+    membershipAfter,
+    ssr,
+    singleRow,
+  } = props
   const { data, loading, error, fetchMore } = useQuery(query, {
     ssr: ssr,
     variables: {
@@ -579,6 +587,7 @@ const ListWithQuery = (props) => {
     totalCount: data?.statements?.totalCount,
     statements: data?.statements?.nodes,
     hasMore: data?.statements?.pageInfo?.hasNextPage,
+    singleRow,
     loadMore,
   }
 
@@ -587,10 +596,19 @@ const ListWithQuery = (props) => {
 
 export const generateSeed = () => Math.random() * 2 - 1
 
-const TestimonialList = ({ id, isPage, serverContext, seed: initialSeed }) => {
+const TestimonialList = ({
+  id = null,
+  isPage = false,
+  serverContext = null,
+  seed: initialSeed = null,
+  singleRow = false,
+  minColumns = 1,
+  first = 50,
+  share = false,
+}) => {
   const { t } = useTranslation()
   const router = useRouter()
- 
+
   const [searchQuery, setSearchQuery] = useState()
   const [seed, setSeed] = useState(initialSeed)
   const [clearedFocus, setClearedFocus] = useState()
@@ -639,6 +657,10 @@ const TestimonialList = ({ id, isPage, serverContext, seed: initialSeed }) => {
         seed={seed}
         serverContext={serverContext}
         t={t}
+        singleRow={singleRow}
+        minColumns={minColumns}
+        first={first}
+        share={share}
       />
     </div>
   )
