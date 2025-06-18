@@ -1,5 +1,4 @@
-import { gql } from '@apollo/client'
-import { graphql } from '@apollo/client/react/hoc'
+import { gql, useQuery } from '@apollo/client'
 import { max } from 'd3-array'
 import { css, merge } from 'glamor'
 import compose from 'lodash/flowRight'
@@ -294,7 +293,9 @@ export class List extends Component {
     }
   }
   componentDidMount() {
-    this.props.isPage && window.addEventListener('scroll', this.onScroll)
+    if (this.props.isPage) {
+      window.addEventListener('scroll', this.onScroll)
+    }
     window.addEventListener('resize', this.measure)
     this.measure()
   }
@@ -302,7 +303,9 @@ export class List extends Component {
     this.measure()
   }
   componentWillUnmount() {
-    this.props.isPage && window.removeEventListener('scroll', this.onScroll)
+    if (this.props.isPage) {
+      window.removeEventListener('scroll', this.onScroll)
+    }
     window.removeEventListener('resize', this.measure)
   }
   getMaxColumns() {
@@ -533,54 +536,57 @@ query statements($seed: Float, $search: String, $focus: String, $after: String, 
 }
 `
 
-export const ListWithQuery = compose(
-  withT,
-  graphql(query, {
-    options: ({ ssr }) => ({
-      ssr,
-    }),
-    props: ({ data }) => {
-      return {
-        loading: data.loading,
-        error: data.error,
-        totalCount: data.statements && data.statements.totalCount,
-        statements: data.statements && data.statements.nodes,
-        hasMore: data.statements && data.statements.pageInfo.hasNextPage,
-        loadMore() {
-          return data.fetchMore({
-            updateQuery: (
-              previousResult,
-              { fetchMoreResult, queryVariables },
-            ) => {
-              const nodes = [
-                ...previousResult.statements.nodes,
-                ...fetchMoreResult.statements.nodes,
-              ]
-              return {
-                ...fetchMoreResult,
-                statements: {
-                  ...fetchMoreResult.statements,
-                  nodes: nodes.filter(
-                    ({ id }, index, all) =>
-                      index === all.findIndex((node) => node.id === id),
-                  ),
-                },
-              }
-            },
-            variables: {
-              after: data.statements.pageInfo.endCursor,
-            },
-          })
-        },
-      }
+const ListWithQueryComponent = (props) => {
+  const { seed = null, first = 50, search, focus, membershipAfter, ssr } = props
+  const { data, loading, error, fetchMore } = useQuery(query, {
+    ssr: ssr,
+    variables: {
+      seed: seed,
+      search: search,
+      focus: focus,
+      first: first,
+      membershipAfter: membershipAfter,
     },
-  }),
-)(List)
+  })
 
-ListWithQuery.defaultProps = {
-  seed: null,
-  first: 50,
+  const loadMore = () => {
+    return fetchMore({
+      updateQuery: (previousResult, { fetchMoreResult, queryVariables }) => {
+        const nodes = [
+          ...previousResult.statements.nodes,
+          ...fetchMoreResult.statements.nodes,
+        ]
+        return {
+          ...fetchMoreResult,
+          statements: {
+            ...fetchMoreResult.statements,
+            nodes: nodes.filter(
+              ({ id }, index, all) =>
+                index === all.findIndex((node) => node.id === id),
+            ),
+          },
+        }
+      },
+      variables: {
+        after: data?.statements?.pageInfo?.endCursor,
+      },
+    })
+  }
+
+  const listProps = {
+    ...props,
+    loading,
+    error,
+    totalCount: data?.statements?.totalCount,
+    statements: data?.statements?.nodes,
+    hasMore: data?.statements?.pageInfo?.hasNextPage,
+    loadMore,
+  }
+
+  return <List {...listProps} />
 }
+
+export const ListWithQuery = compose(withT)(ListWithQueryComponent)
 
 export const generateSeed = () => Math.random() * 2 - 1
 
