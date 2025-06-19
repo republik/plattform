@@ -14,7 +14,6 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     discussionAnonymity,
     discussionClosed = null,
     collapsable = null,
-    board = null,
     tags,
     tagRequired,
     template,
