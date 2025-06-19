@@ -30,19 +30,6 @@ Two root-level components and one more that can be loaded.
 />
 ```
 
-### Example with link preview
-
-```code
-<CommentList
-  t={t}
-  board
-  comments={{
-    totalCount: 2,
-    directTotalCount: 2,
-    nodes: [comments.comment10, comments.comment11]
-  }}
-/>
-```
 
 ### Complex Discussion Tree
 

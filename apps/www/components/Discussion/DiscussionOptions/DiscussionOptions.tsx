@@ -27,7 +27,6 @@ const DiscussionOptions = ({ documentMeta }: Props) => {
   const { discussion, refetch, orderBy } = useDiscussion()
   const resolvedOrderBy = discussion?.comments?.resolvedOrderBy
   const discussionType = documentMeta?.discussionType
-  const board = discussion?.isBoard
 
   const availableOrderBy = useMemo(() => {
     let items: string[]
@@ -36,13 +35,10 @@ const DiscussionOptions = ({ documentMeta }: Props) => {
       items = ['DATE', 'VOTES']
     } else {
       items = ['DATE', 'VOTES', 'REPLIES']
-      if (board) {
-        items = ['HOT', ...items]
-      }
     }
 
     return items
-  }, [discussionType, board])
+  }, [discussionType])
 
   const handleReload = async (e) => {
     e.preventDefault()

@@ -32,7 +32,6 @@ export type DiscussionFragmentType = {
   path: Nullable<string>
   closed: boolean
   collapsed: boolean
-  isBoard: boolean
   userPreference: Nullable<DiscussionPreferences>
   rules: DiscussionRules
   userWaitUntil: Nullable<DateTime>
@@ -80,7 +79,6 @@ export const DISCUSSION_FRAGMENT = gql`
     }
     path
     closed
-    isBoard
     userPreference {
       anonymity
       credential {

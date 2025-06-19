@@ -61,19 +61,17 @@ const styles = {
         },
       },
     }),
-  root: ({ isExpanded, nestLimitExceeded, depth, isBoard }) =>
+  root: ({ isExpanded, nestLimitExceeded, depth }) =>
     css({
       background: 'transparent',
       position: 'relative',
-      margin: isBoard
-        ? 0
-        : `10px 0 ${(isExpanded ? 24 : 16) + (depth === 0 ? 20 : 0)}px`,
+      margin: `10px 0 ${(isExpanded ? 24 : 16) + (depth === 0 ? 20 : 0)}px`,
       paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,
       [mUp]: {
         paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM,
       },
     }),
-  verticalToggle: ({ drawLineEnd, depth, isExpanded, isLast, isBoard }) =>
+  verticalToggle: ({ drawLineEnd, depth, isExpanded, isLast }) =>
     css({
       ...buttonStyle,
       position: 'absolute',
@@ -197,8 +195,6 @@ export type CommentProps<CommentType = any> = {
   menuItems?: ActionMenuItem[]
   focusId?: string
   isLast?: boolean
-  isBoard?: boolean
-  inRootCommentOverlay?: boolean
   CommentLink: React.ElementType
   userCanComment?: boolean
   userWaitUntil?: string
@@ -221,8 +217,6 @@ const CommentNode = ({
   userWaitUntil,
   focusId,
   isLast,
-  isBoard,
-  inRootCommentOverlay,
   CommentLink,
   editComposer,
 }: CommentProps) => {
@@ -245,11 +239,9 @@ const CommentNode = ({
     isExpanded,
     nestLimitExceeded,
     depth,
-    isBoard,
   })
   const verticalToggleStyle =
-    !isRoot &&
-    styles.verticalToggle({ isExpanded, depth, drawLineEnd, isLast, isBoard })
+    !isRoot && styles.verticalToggle({ isExpanded, depth, drawLineEnd, isLast })
   const verticalToggleStyleRules = useMemo(
     () =>
       css({
@@ -274,7 +266,7 @@ const CommentNode = ({
   if (isExpanded) {
     return (
       <div ref={root} data-comment-id={id} {...rootStyle}>
-        {!nestLimitExceeded && !isBoard && verticalToggleStyle && (
+        {!nestLimitExceeded && verticalToggleStyle && (
           <button
             {...verticalToggleStyle}
             {...verticalToggleStyleRules}
@@ -285,7 +277,6 @@ const CommentNode = ({
           {...merge(
             isHighlighted && styles.highlightContainer,
             isHighlighted && colorScheme.set('backgroundColor', 'alert'),
-            isRoot && inRootCommentOverlay ? styles.modalRoot : null,
           )}
         >
           {editComposer ? (
@@ -296,13 +287,9 @@ const CommentNode = ({
               comment={comment}
               isExpanded={isExpanded}
               isHighlighted={isHighlighted}
-              onToggle={
-                !isBoard &&
-                !(isRoot && inRootCommentOverlay) &&
-                (() => {
-                  setExpanded((prev) => !prev)
-                })
-              }
+              onToggle={() => {
+                setExpanded((prev) => !prev)
+              }}
               menuItems={menuItems}
               CommentLink={CommentLink}
             />
@@ -315,25 +302,21 @@ const CommentNode = ({
             voteActions={voteActions}
             userCanComment={userCanComment}
             userWaitUntil={userWaitUntil}
-            isBoard={isBoard}
           />
         </div>
         {children}
-        {!(isBoard && !inRootCommentOverlay) && (
-          <LoadMore
+        <LoadMore
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          t={t}
+          visualDepth={0}
+          count={
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
-            t={t}
-            visualDepth={0}
-            count={
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              comment?.comments?.directTotalCount -
-              comment.comments.nodes.length
-            }
-            onClick={actions.handleLoadReplies}
-          />
-        )}
+            comment?.comments?.directTotalCount - comment.comments.nodes.length
+          }
+          onClick={actions.handleLoadReplies}
+        />
       </div>
     )
   } else {

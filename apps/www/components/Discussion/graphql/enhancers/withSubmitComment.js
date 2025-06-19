@@ -96,8 +96,6 @@ export const withSubmitComment = compose(
               updatedAt: new Date().toISOString(),
               parentIds,
               tags,
-              embed: null,
-              mentioningDocument: null,
               userCanReport: false,
               userReportedAt: null,
               numReports: 0,

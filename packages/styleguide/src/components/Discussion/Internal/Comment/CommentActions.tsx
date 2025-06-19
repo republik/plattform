@@ -44,7 +44,6 @@ const propTypes = {
   }),
   userCanComment: PropTypes.bool,
   userWaitUntil: PropTypes.string,
-  isBoard: PropTypes.bool,
 }
 
 export const CommentActions = ({
@@ -54,7 +53,6 @@ export const CommentActions = ({
   voteActions,
   userCanComment,
   userWaitUntil,
-  isBoard,
 }) => {
   const isDesktop = useMediaQuery(mUp)
 
@@ -74,25 +72,6 @@ export const CommentActions = ({
   return (
     <div {...styles.root} {...colorScheme.set('color', 'text')}>
       <div {...styles.leftActionsWrapper}>
-        {isBoard && (
-          <IconButton
-            onClick={handleLoadReplies}
-            title={t('styleguide/CommentActions/expand')}
-            Icon={IconDiscussion}
-            fillColorName='primary'
-            size={20}
-            label={
-              comment.comments &&
-              comment.comments.totalCount > 0 &&
-              `${comment.comments.totalCount}`
-            }
-            labelShort={
-              comment.comments &&
-              comment.comments.totalCount > 0 &&
-              `${comment.comments.totalCount}`
-            }
-          />
-        )}
         {handleShare && comment?.published && (
           <IconButton
             title={t('styleguide/CommentActions/share')}
@@ -101,7 +80,7 @@ export const CommentActions = ({
             size={20}
           />
         )}
-        {handleReply && !isBoard && (
+        {handleReply && (
           <IconButton
             disabled={!!replyBlockedMessage}
             onClick={handleReply}

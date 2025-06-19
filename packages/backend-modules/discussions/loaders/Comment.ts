@@ -21,10 +21,6 @@ interface Comment {
   createdAt?: Date
   updatedAt?: Date
   tags?: string[]
-  urls?: string[]
-  embedUrl?: string
-  mentioningRepoId?: string
-  mentioningFragmentId?: string
   featuredAt?: Date
   featuredContent?: string
   featuredTargets?: string[]

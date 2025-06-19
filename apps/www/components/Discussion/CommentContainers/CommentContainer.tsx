@@ -6,7 +6,7 @@ import {
   readDiscussionCommentDraft,
 } from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
-import CommentLink, { getFocusHref } from '../shared/CommentLink'
+import CommentLink from '../shared/CommentLink'
 import { useDiscussion } from '../context/DiscussionContext'
 import useVoteCommentHandlers from '../hooks/actions/useVoteCommentHandlers'
 import { CommentTreeNode } from '../helpers/makeCommentTree'
@@ -21,16 +21,12 @@ type Props = {
   CommentComponent?: React.ElementType<CommentProps>
   comment: CommentTreeNode
   isLast?: boolean
-  isBoard?: boolean
-  inRootCommentOverlay?: boolean
 }
 
 const CommentContainer = ({
   CommentComponent = CommentNode,
   comment,
   isLast,
-  isBoard,
-  inRootCommentOverlay,
 }: Props): ReactElement => {
   const { t } = useTranslation()
   const { me } = useMe()
@@ -126,7 +122,6 @@ const CommentContainer = ({
       }
       focusId={discussion?.comments?.focus?.id}
       isLast={isLast}
-      inRootCommentOverlay={inRootCommentOverlay}
     >
       {discussion?.userCanComment && isReplying && (
         <DiscussionComposer
@@ -135,14 +130,13 @@ const CommentContainer = ({
           initialActiveState
         />
       )}
-      {!isBoard &&
-        comment.comments.nodes.map((reply, index) => (
-          <CommentContainer
-            key={reply.id}
-            comment={reply}
-            isLast={index === comment.comments.nodes.length - 1}
-          />
-        ))}
+      {comment.comments.nodes.map((reply, index) => (
+        <CommentContainer
+          key={reply.id}
+          comment={reply}
+          isLast={index === comment.comments.nodes.length - 1}
+        />
+      ))}
     </CommentComponent>
   )
 }
