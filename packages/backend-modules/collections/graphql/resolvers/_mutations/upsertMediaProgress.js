@@ -1,6 +1,6 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../../lib/Collection')
-const Progress = require('../../../lib/Progress')
+const ProgressOptOut = require('../../../lib/ProgressOptOut')
 
 module.exports = async (_, { mediaId, secs }, context) => {
   const { user: me, t, req } = context
@@ -8,7 +8,7 @@ module.exports = async (_, { mediaId, secs }, context) => {
   ensureSignedIn(req)
 
   const collection = await Collection.byNameForUser(
-    Progress.COLLECTION_NAME,
+    ProgressOptOut.COLLECTION_NAME,
     me.id,
     context,
   )
@@ -16,7 +16,7 @@ module.exports = async (_, { mediaId, secs }, context) => {
     throw new Error(t(`api/collections/collection/404`))
   }
 
-  if (!(await Progress.status(me.id, context))) {
+  if ((await ProgressOptOut.status(me.id, context))) {
     throw new Error(t('api/collections/progress/notEnabled'))
   }
 

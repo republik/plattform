@@ -2,9 +2,11 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { PROLITTERIS_OPT_OUT_CONSENT } from '../constants'
 
+const PROGRESS_OPT_OUT_CONSENT = 'PROGRESS_OPT_OUT'
+
 export const userProgressConsentFragment = `
   fragment ProgressConsent on User {
-    progressConsent: hasConsentedTo(name: "PROGRESS")
+    progressOptOut: hasConsentedTo(name: "${PROGRESS_OPT_OUT_CONSENT}")
   }
 `
 

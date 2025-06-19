@@ -62,7 +62,7 @@ const MediaProgressProvider = ({ children }) => {
   })
   const [upsertMediaProgress] = useUpsertMediaProgress()
 
-  const isTrackingAllowed = me && me.progressConsent === true
+  const isTrackingAllowed = me?.progressOptOut === null || me?.progressOptOut === false
 
   const saveMediaProgressNotPlaying = useMemo(
     () =>

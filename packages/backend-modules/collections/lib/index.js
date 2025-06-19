@@ -1,6 +1,6 @@
 module.exports = {
   Collection: require('./Collection'),
-  Progress: require('./Progress'),
+  ProgressOptOut: require('./ProgressOptOut'),
   stats: {
     evolution: require('./stats/evolution'),
   },
