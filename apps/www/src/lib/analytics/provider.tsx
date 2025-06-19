@@ -1,6 +1,8 @@
 'use client'
 import { useMe } from 'lib/context/MeContext'
 import PlausibleProvider from 'next-plausible'
+import { updateUTMConversionCookie } from './utm-cookie-storage'
+import { useEffect } from 'react'
 
 type AnalyticsProviderProps = Omit<
   Parameters<typeof PlausibleProvider>[0],
@@ -9,6 +11,13 @@ type AnalyticsProviderProps = Omit<
 
 export const AnalyticsProvider = (props: AnalyticsProviderProps) => {
   const { me, hasActiveMembership, trialStatus, meLoading } = useMe()
+
+  useEffect(() => {
+    if (hasActiveMembership) {
+      return
+    }
+    updateUTMConversionCookie()
+  }, [trialStatus])
 
   return (
     <PlausibleProvider
