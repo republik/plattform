@@ -10,7 +10,7 @@ import Box from '../components/Frame/Box'
 import VideoCover from '../components/VideoCover'
 import ActionBar from '../components/ActionBar'
 import List, { Highlight } from '../components/List'
-import { ListWithQuery as TestimonialList } from '../components/Testimonial/List'
+import TestimonialList from '../components/Testimonial/List'
 import ContainerWithSidebar from '../components/Crowdfunding/ContainerWithSidebar'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
