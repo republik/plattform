@@ -135,13 +135,7 @@ export const SubmissionAuthor = ({
         </Interaction.H3>
         <Label style={{ paddingRight: '20px' }}>
           <span {...colorScheme.set('color', 'textSoft')}>
-            {displayAuthor.credentials && (
-              <RawHtml
-                dangerouslySetInnerHTML={{
-                  __html: displayAuthor.credentials,
-                }}
-              />
-            )}
+            {displayAuthor.credentials}
             {createdAt && !displayAuthor.credentials && (
               <Link
                 href={submissionUrl}
