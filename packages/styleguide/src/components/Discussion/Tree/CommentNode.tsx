@@ -226,7 +226,7 @@ const CommentNode = ({
   const nestLimitExceeded = depth > config.nestLimit
   const isRoot = depth === 0
 
-  const root = React.useRef()
+  const root = React.useRef(null)
   const [isExpanded, setExpanded] = React.useState(true)
   const [colorScheme] = useColorContext()
 

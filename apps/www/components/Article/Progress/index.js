@@ -1,4 +1,4 @@
-import { Component, Fragment, useRef, useEffect } from 'react'
+import { useRef, useEffect, createContext } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
@@ -27,26 +27,7 @@ export const getFeatureDescription = (t) =>
     ) : null,
   })
 
-class ProgressContextProvider extends Component {
-  getChildContext() {
-    return {
-      getMediaProgress: this.props.value.getMediaProgress,
-      saveMediaProgress: this.props.value.saveMediaProgress,
-      restoreArticleProgress: this.props.value.restoreArticleProgress,
-      showConsentPrompt: this.props.value.showConsentPrompt,
-    }
-  }
-  render() {
-    return <Fragment>{this.props.children}</Fragment>
-  }
-}
-
-ProgressContextProvider.childContextTypes = {
-  getMediaProgress: PropTypes.func,
-  saveMediaProgress: PropTypes.func,
-  restoreArticleProgress: PropTypes.func,
-  showConsentPrompt: PropTypes.bool,
-}
+export const ProgressContext = createContext({})
 
 const Progress = ({
   children,
@@ -223,7 +204,7 @@ const Progress = ({
     article.meta.path !== PROGRESS_EXPLAINER_PATH
 
   return (
-    <ProgressContextProvider
+    <ProgressContext
       value={{
         getMediaProgress,
         saveMediaProgress,
@@ -232,7 +213,7 @@ const Progress = ({
       }}
     >
       <div ref={refContainer}>{children}</div>
-    </ProgressContextProvider>
+    </ProgressContext>
   )
 }
 

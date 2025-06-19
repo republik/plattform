@@ -21,7 +21,6 @@ const DiscussionOverlays = () => {
       {preferencesOverlay.open && (
         <DiscussionPreferences
           t={t}
-          discussionId={discussion.id}
           discussionPreferences={{
             ...preferences,
             loading,

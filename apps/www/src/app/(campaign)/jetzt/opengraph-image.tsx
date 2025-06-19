@@ -4,7 +4,7 @@ import { headers } from 'next/headers'
 export const contentType = 'image/png'
 
 export default async function OpenGraphImage() {
-  headers() // Keep this here to opt out of static prerendering of this route
+  await headers() // Keep this here to opt out of static prerendering of this route
 
   return generateShareImage({
     showPortrait: false,

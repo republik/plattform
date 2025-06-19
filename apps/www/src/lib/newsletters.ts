@@ -6,7 +6,8 @@ export async function getNewsletterSubscriptionStatus({
 }: {
   newsletterName: string
 }) {
-  const { data } = await getClient().query({
+  const client = await getClient()
+  const { data } = await client.query({
     query: CaNewsletterDocument,
     variables: {
       name: newsletterName,

@@ -71,7 +71,7 @@ const Answer: React.FC<{
   renderedContent: any
 }> = ({ author, meta, sharedAnswer, renderedContent }) => {
   const authorSlug = slug(author.name)
-  const ref = useRef()
+  const ref = useRef(null)
   useEffect(() => {
     if (sharedAnswer && sharedAnswer.author.name === author.name) {
       scrollIntoView(ref.current, { align: { top: 0 } })

@@ -1,3 +1,4 @@
+'use client'
 import * as allMediaQueries from './theme/mediaQueries'
 
 export { default as zIndex } from './theme/zIndex'
@@ -69,6 +70,7 @@ export {
   FigureImage,
   MIN_GALLERY_IMG_WIDTH,
 } from './components/Figure'
+export { GalleryContext } from './components/Figure/GalleryContext'
 export { Tweet } from './components/Social'
 export { Video } from './components/Video'
 export { TeaserFeed, getTeaserHref } from './components/TeaserFeed'

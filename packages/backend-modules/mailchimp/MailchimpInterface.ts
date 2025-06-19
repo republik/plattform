@@ -1,6 +1,6 @@
 const checkEnv = require('check-env')
 const crypto = require('crypto')
-const debug = require('debug')('mail:MailchimpInterface')
+const debug = require('debug')
 const { omitBy, isNil } = require('lodash')
 
 const base64u = require('@orbiting/backend-modules-base64u')
@@ -52,7 +52,7 @@ const MailchimpInterface = ({ logger }: any) => {
         .join('')
     },
     async fetchAuthenticated(method: any, url: string, request = {}) {
-      debug(`${method} ${url}`)
+      debug('mail:MailchimpInterface:fetch')(`${method} ${url}`)
       const options = {
         method,
         headers: {
@@ -73,7 +73,7 @@ const MailchimpInterface = ({ logger }: any) => {
         const response = await this.fetchAuthenticated('GET', url)
         const json = (await response.json()) as any
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug(`could not get member: ${email} ${json.detail}`)
+          debug('mail:MailchimpInterface:getMember')(`could not get member: ${email} ${json.detail}`)
           return null
         }
         return json
@@ -99,13 +99,13 @@ const MailchimpInterface = ({ logger }: any) => {
             EMAILB64U: base64u.encode(email),
           },
         }
-        debug('MailchimpInterface.updateMember PUT', { body })
+        debug('mail:MailchimpInterface:updateMember')('MailchimpInterface.updateMember PUT', { body })
         const response = await this.fetchAuthenticated('PUT', url, {
           body: JSON.stringify(body),
         })
         const json = (await response.json()) as any
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug(`could not update member: ${email} ${json.detail}`)
+          debug('mail:MailchimpInterface:updateError')(`could not update member: ${email} ${json.detail}`)
           return null
         }
         return json
@@ -127,7 +127,7 @@ const MailchimpInterface = ({ logger }: any) => {
         const response = await this.fetchAuthenticated('GET', url)
         const json = (await response.json()) as any
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug(
+          debug('mail:MailchimpInterface:getFromAudience')(
             `could not get members in audience: ${audienceId} ${json.detail}`,
           )
           return null
@@ -147,12 +147,12 @@ const MailchimpInterface = ({ logger }: any) => {
     https://www.chimpanswers.com/cleaning-your-mailchimp-audience/
     */
     async archiveMember(email: string, audienceId = MAILCHIMP_MAIN_LIST_ID) {
-      debug(`archiving ${email}`)
+      debug('mail:MailchimpInterface:archive')(`archiving ${email}`)
       const url = this.buildMembersApiUrl(email, audienceId)
       try {
         const response = await this.fetchAuthenticated('DELETE', url)
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug(`could not archive member: ${email}`)
+          debug('mail:MailchimpInterface:archiveError')(`could not archive member: ${email}`)
           return null
         }
         return true
@@ -162,13 +162,13 @@ const MailchimpInterface = ({ logger }: any) => {
       }
     },
     async deleteMember(email: string, audienceId = MAILCHIMP_MAIN_LIST_ID) {
-      debug(`deleting ${email}`)
+      debug('mail:MailchimpInterface:delete')(`deleting ${email}`)
       const url =
         this.buildMembersApiUrl(email, audienceId) + '/actions/delete-permanent'
       try {
         const response = await this.fetchAuthenticated('POST', url)
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug(`could not delete member from audience ${audienceId}: ${email}`)
+          debug('mail:MailchimpInterface:deleteError')(`could not delete member from audience ${audienceId}: ${email}`)
           return false
         }
         return true
