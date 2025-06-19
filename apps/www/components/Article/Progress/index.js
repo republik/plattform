@@ -4,12 +4,11 @@ import compose from 'lodash/flowRight'
 import { withApollo } from '@apollo/client/react/hoc'
 import debounce from 'lodash/debounce'
 
-import { mediaQueries, A } from '@project-r/styleguide'
+import { mediaQueries } from '@project-r/styleguide'
 
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
 import { scrollIt } from '../../../lib/utils/scroll'
 import withMe from '../../../lib/apollo/withMe'
-import { PROGRESS_EXPLAINER_PATH } from '../../../lib/constants'
 
 import { withProgressApi } from './api'
 import { useMediaProgress } from '../../Audio/MediaProgress'
@@ -17,23 +16,9 @@ import { withRouter } from 'next/router'
 
 const MIN_INDEX = 2
 
-export const getFeatureDescription = (t) =>
-  t.elements('article/progressprompt/description/feature', {
-    link: PROGRESS_EXPLAINER_PATH ? (
-      <Link href={PROGRESS_EXPLAINER_PATH} key='link' passHref legacyBehavior>
-        <A>{t('article/progressprompt/description/feature/link')}</A>
-      </Link>
-    ) : null,
-  })
-
 export const ProgressContext = createContext({})
 
-const Progress = ({
-  children,
-  me,
-  article,
-  upsertDocumentProgress,
-}) => {
+const Progress = ({ children, me, article, upsertDocumentProgress }) => {
   const refContainer = useRef()
   const lastClosestIndex = useRef()
   const refSaveProgress = useRef()
@@ -41,7 +26,9 @@ const Progress = ({
 
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
-  const isTrackingAllowed = me && me.progressOptOut === false
+  const isTrackingAllowed =
+    me?.progressOptOut === null || me?.progressOptOut === false
+
   const mobile = () => window.innerWidth < mediaQueries.mBreakPoint
   const headerHeight = () => (mobile() ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT)
 
@@ -190,7 +177,6 @@ const Progress = ({
       refSaveProgress.current.cancel()
     }
   }, [])
-
 
   return (
     <ProgressContext

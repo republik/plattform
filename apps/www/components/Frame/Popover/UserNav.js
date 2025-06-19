@@ -35,7 +35,7 @@ const UserNav = ({ me, hasActiveMembership }) => {
 
   const [colorScheme] = useColorContext()
   const currentPath = router.asPath
-  const hasProgress = !me?.progressOptOut
+  const hasProgress = me?.progressOptOut === null || me?.progressOptOut === false
   const variables = useMemo(() => {
     if (hasProgress) {
       return {

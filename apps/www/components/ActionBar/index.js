@@ -1,10 +1,7 @@
 import { useState, Fragment } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import {
-  IconButton,
-  shouldIgnoreClick,
-} from '@project-r/styleguide'
+import { IconButton, shouldIgnoreClick } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 
 import { postMessage } from '../../lib/withInNativeApp'

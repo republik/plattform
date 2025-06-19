@@ -50,7 +50,7 @@ const ProgressSettings = (props) => {
   const submitProgressOptOutAndClearProgress = () =>
     submitProgressOptOut().then(clearProgress).catch(catchServerError)
 
-  const hasAccepted = me && me.progressOptOut === false
+  const hasAccepted = me?.progressOptOut === null || me?.progressOptOut === false
 
   return (
     <Loader
