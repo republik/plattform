@@ -9,7 +9,7 @@ import {
 } from '@project-r/styleguide'
 import { findHighlight } from '../../lib/utils/mdast'
 import { formatExcerpt } from '../../lib/utils/format'
-import { sanitizeTextHTML } from '../../lib/sanitizeHTML'
+import { sanitizeSearchResultHTML } from '../../lib/sanitizeHTML'
 import Link from 'next/link'
 import { IconCheck } from '@republik/icons'
 
@@ -119,7 +119,9 @@ export const UserResult = ({ node }) => {
                   {...styles.highlight}
                   {...highlightEMRule}
                   dangerouslySetInnerHTML={{
-                    __html: sanitizeTextHTML(nameHighlight.fragments[0]),
+                    __html: sanitizeSearchResultHTML(
+                      nameHighlight.fragments[0] ?? '',
+                    ),
                   }}
                 />
               ) : (
