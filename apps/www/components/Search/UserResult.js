@@ -158,7 +158,7 @@ export const UserResult = ({ node }) => {
             {...styles.highlight}
             dangerouslySetInnerHTML={{
               __html: formatExcerpt(
-                sanitizeTextHTML(textHighlight.fragments[0]),
+                sanitizeSearchResultHTML(textHighlight.fragments[0] ?? ''),
               ),
             }}
           />

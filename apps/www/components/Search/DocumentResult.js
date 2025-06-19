@@ -6,6 +6,7 @@ import { css } from 'glamor'
 import { findHighlight } from '../../lib/utils/mdast'
 import withT from '../../lib/withT'
 import { formatExcerpt } from '../../lib/utils/format'
+import { sanitizeSearchResultHTML } from '../../lib/sanitizeHTML'
 
 export default withT(({ t, node }) => {
   const [colorScheme] = useColorContext()
@@ -42,7 +43,9 @@ export default withT(({ t, node }) => {
             {...highlightStyle}
             {...colorScheme.set('color', 'text')}
             dangerouslySetInnerHTML={{
-              __html: titleHighlight.fragments[0],
+              __html: sanitizeSearchResultHTML(
+                titleHighlight.fragments[0] ?? '',
+              ),
             }}
           />
         ) : (
@@ -55,7 +58,9 @@ export default withT(({ t, node }) => {
           <span
             {...highlightStyle}
             dangerouslySetInnerHTML={{
-              __html: descHighlight.fragments[0],
+              __html: sanitizeSearchResultHTML(
+                descHighlight.fragments[0] ?? '',
+              ),
             }}
           />
         ) : (
@@ -67,7 +72,9 @@ export default withT(({ t, node }) => {
           <span
             {...highlightStyle}
             dangerouslySetInnerHTML={{
-              __html: formatExcerpt(textHighlight.fragments[0]),
+              __html: formatExcerpt(
+                sanitizeSearchResultHTML(textHighlight.fragments[0] ?? ''),
+              ),
             }}
           />
         )
