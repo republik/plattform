@@ -16,13 +16,13 @@ import {
   Dropdown,
   useColorContext,
   fontStyles,
-  Field,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useMe } from '../../../lib/context/MeContext'
 import { useTranslation } from '../../../lib/withT'
-import FieldSet, { styles as fieldSetStyles } from '../../FieldSet'
+import FieldSet from '../../FieldSet'
 import { PORTRAIT_SIZE } from '../ProfileView'
+import { usePaynotes } from '../../../src/components/paynotes/paynotes-context'
 
 const styles = {
   portrait: css({
@@ -66,6 +66,7 @@ const EditProfile = ({ data: { user } }) => {
   const { t } = useTranslation()
   const isMe = me && me.id === user.id
   const [colorScheme] = useColorContext()
+  const { paynoteInlineHeight } = usePaynotes()
 
   const credential =
     user.credentials && user.credentials.find((c) => c.isListed)
@@ -229,7 +230,11 @@ const EditProfile = ({ data: { user } }) => {
       </section>
       <div
         {...colorScheme.set('backgroundColor', 'default')}
-        style={{ position: 'sticky', bottom: 0, padding: '0 0 8px 0' }}
+        style={{
+          position: 'sticky',
+          bottom: paynoteInlineHeight || 0,
+          padding: '0 0 8px 0',
+        }}
       >
         <Submit
           user={user}
