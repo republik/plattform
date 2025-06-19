@@ -5,7 +5,6 @@
   "scripts": {
     "start": "next start",
     "build": "next build",
-    "heroku-postbuild": "npm run build",
     "assets": "static-server assets --port 8000",
     "dev": "next dev"
   },

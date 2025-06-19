@@ -196,7 +196,7 @@ export const PriceSlider = ({
   const [dragging, setDragging] = useState(false)
   const trackRef = useRef<HTMLDivElement>(null)
   const animationControls = useAnimationControls()
-  const coord = useMotionValue(sliderScale.range()[0])
+  const coord = useMotionValue<number>(sliderScale.range()[0])
   const valueIndicatorCoord = useSpring(coord, {
     stiffness: 5000,
     damping: 200,
