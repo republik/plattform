@@ -67,9 +67,14 @@ export class PopularLast20DaysCommentsFeed implements NextReadsFeedResolver {
          	JOIN discussions d ON d."repoId" = p."repoId"
         WHERE
           p."repoId" != ALL(:exclude)
-          AND p."repoId" not in (SELECT "repoId" FROM next_reads.readings_in_the_last_7_days)
+          AND p."repoId" not in (
+            SELECT "repoId" FROM next_reads.readings_in_the_last_7_days
+              WHERE "repoId" != ALL(:exclude)
+              ORDER BY (readings + complete_readings * 3)
+              DESC LIMIT 30
+          )
           AND r."currentPhase" = 'published'
-          AND (CURRENT_DATE - (r.meta ->> 'publishDate')::date) < 21
+          AND (CURRENT_DATE - (r.meta ->> 'publishDate')::date) <= 20
         GROUP BY
          	p."repoId",
          	d.id,
