@@ -17,6 +17,7 @@ query NextReads {
               width
               height
             }
+            image
             estimatedReadingMinutes
             estimatedConsumptionMinutes
             contributors {
