@@ -5,7 +5,12 @@ import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 import React from 'react'
 
-const COLOURS = [
+type ColorType = {
+  color: string
+  background: string
+}
+
+const COLOURS: ColorType[] = [
   { color: '#FCFBE8', background: '#317D7F' },
   { color: '#892387', background: '#BCB0E0' },
   { color: '#5D55C7', background: '#EEADA5' },
@@ -84,9 +89,14 @@ function MostCommentedWithImage({ document }: { document: Document }) {
   )
 }
 
-function MostCommentedWithoutImage({ document }: { document: Document }) {
-  const { color, background } =
-    COLOURS[Math.floor(Math.random() * COLOURS.length)]
+function MostCommentedWithoutImage({
+  document,
+  colors,
+}: {
+  document: Document
+  colors: ColorType
+}) {
+  const { color, background } = colors
 
   return (
     <div
@@ -106,14 +116,20 @@ function MostCommentedWithoutImage({ document }: { document: Document }) {
   )
 }
 
-function MostCommentedRead({ document }: { document: Document }) {
+function MostCommentedRead({
+  document,
+  colors,
+}: {
+  document: Document
+  colors: ColorType
+}) {
   return (
     <Link href={document.meta.path}>
       <div className={css({ position: 'relative' })}>
         {document.meta.image ? (
           <MostCommentedWithImage document={document} />
         ) : (
-          <MostCommentedWithoutImage document={document} />
+          <MostCommentedWithoutImage document={document} colors={colors} />
         )}
       </div>
     </Link>
@@ -150,8 +166,12 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
           overflow: 'scroll',
         })}
       >
-        {documents.map((document) => (
-          <MostCommentedRead key={document.id} document={document} />
+        {documents.map((document, idx) => (
+          <MostCommentedRead
+            key={document.id}
+            document={document}
+            colors={COLOURS[idx % COLOURS.length]}
+          />
         ))}
       </div>
     </div>
