@@ -21,5 +21,4 @@ export const useProgress = () => {
     upsertDocumentProgress: upsertDocumentProgress,
     removeDocumentProgress: removeDocumentProgress,
   }
-    props: ({ mutate }) => ({
 }
