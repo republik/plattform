@@ -25,7 +25,7 @@ function NextReads() {
     .map((n) => n.entity) as Document[]
 
   return (
-    <div className={css({ mt: 50 })}>
+    <div className={css({ pt: 16 })}>
       <CuratedFeed documents={curatedReads} />
       <MostReadFeed documents={mostRead} />
       <MostCommentedFeed documents={mostCommented} />

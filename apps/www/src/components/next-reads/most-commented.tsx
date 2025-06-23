@@ -2,6 +2,7 @@ import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { SquareCover } from '@app/components/assets/SquareCover'
 import { sectionHeader, sectionItem } from '@app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
+import Link from 'next/link'
 
 function CategoryLabel({ document }: { document: Document }) {
   const text = document.meta.format?.meta.title || document.meta.series?.title
@@ -13,25 +14,27 @@ function CategoryLabel({ document }: { document: Document }) {
 function RecommendedRead({ document }: { document: Document }) {
   return (
     <div className={sectionItem}>
-      <div className={css({ marginBottom: 6 })}>
-        <SquareCover
-          size={1024}
-          title={document.meta.title}
-          cover={document.meta.audioCover}
-          crop={document.meta.audioCoverCrop}
-          image={document.meta.image}
-        />
-      </div>
-      <CategoryLabel document={document} />
-      <h4>{document.meta.title}</h4>
-      <p className='description'>{document.meta.description}</p>
-      <p className='author'>
-        Von{' '}
-        {document.meta.contributors
-          .filter((contributor) => contributor.kind.includes('Text'))
-          .map((contributor) => contributor.name)
-          .join(', ')}
-      </p>
+      <Link href={document.meta.path}>
+        <div className={css({ marginBottom: 6 })}>
+          <SquareCover
+            size={1024}
+            title={document.meta.title}
+            cover={document.meta.audioCover}
+            crop={document.meta.audioCoverCrop}
+            image={document.meta.image}
+          />
+        </div>
+        <CategoryLabel document={document} />
+        <h4>{document.meta.title}</h4>
+        <p className='description'>{document.meta.description}</p>
+        <p className='author'>
+          Von{' '}
+          {document.meta.contributors
+            .filter((contributor) => contributor.kind.includes('Text'))
+            .map((contributor) => contributor.name)
+            .join(', ')}
+        </p>
+      </Link>
     </div>
   )
 }
@@ -49,9 +52,7 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
         className={cx(
           sectionHeader,
           css({
-            md: {
-              textAlign: 'center',
-            },
+            textAlign: 'center',
           }),
         )}
       >

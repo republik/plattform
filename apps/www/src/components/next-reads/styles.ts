@@ -22,7 +22,7 @@ export const sectionItem = css({
   // title of the document
   '& h4': {
     fontFamily: 'rubis',
-    fontWeight: 500,
+    fontWeight: 'bold',
     fontSize: 18,
     lineHeight: 1.2,
     marginBottom: 2,

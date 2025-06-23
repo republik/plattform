@@ -1,6 +1,7 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { sectionHeader, sectionItem } from '@app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
+import Link from 'next/link'
 
 function CategoryLabel({ document }: { document: Document }) {
   const text = document.meta.format?.meta.title || document.meta.series?.title
@@ -17,22 +18,26 @@ function RecommendedRead({ document }: { document: Document }) {
         css({
           pb: 8,
           mb: 8,
-          borderBottom: '1px solid black',
+          borderBottomWidth: 1,
+          borderBottomStyle: 'solid',
+          borderBottomColor: 'divider',
           // exclude last item from border
           '&:last-of-type': { borderBottom: 'none', pb: 0 },
         }),
       )}
     >
-      <CategoryLabel document={document} />
-      <h4>{document.meta.title}</h4>
-      <p className='description'>{document.meta.description}</p>
-      <p className='author'>
-        Von{' '}
-        {document.meta.contributors
-          .filter((contributor) => contributor.kind.includes('Text'))
-          .map((contributor) => contributor.name)
-          .join(', ')}
-      </p>
+      <Link href={document.meta.path}>
+        <CategoryLabel document={document} />
+        <h4>{document.meta.title}</h4>
+        <p className='description'>{document.meta.description}</p>
+        <p className='author'>
+          Von{' '}
+          {document.meta.contributors
+            .filter((contributor) => contributor.kind.includes('Text'))
+            .map((contributor) => contributor.name)
+            .join(', ')}
+        </p>
+      </Link>
     </div>
   )
 }
@@ -41,18 +46,21 @@ export function CuratedFeed({ documents }: { documents: Document[] }) {
   return (
     <div
       className={css({
-        borderTop: '1px solid black',
         margin: '0 auto',
-        maxWidth: '665px',
+        maxWidth: '695px',
+        pl: '15px',
+        pr: '15px',
       })}
     >
-      <div className={sectionHeader}>
-        <h3>Mehr zum Thema</h3>
-      </div>
-      <div className={css({ pt: 4, pb: 16 })}>
-        {documents.map((document) => (
-          <RecommendedRead key={document.id} document={document} />
-        ))}
+      <div className={css({ borderTop: '1px solid black' })}>
+        <div className={sectionHeader}>
+          <h3>Mehr zum Thema</h3>
+        </div>
+        <div className={css({ pt: 4, pb: 16 })}>
+          {documents.map((document) => (
+            <RecommendedRead key={document.id} document={document} />
+          ))}
+        </div>
       </div>
     </div>
   )
