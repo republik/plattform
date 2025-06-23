@@ -1,6 +1,6 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { SquareCover } from '@app/components/assets/SquareCover'
-import { section, sectionItem } from '@app/components/next-reads/styles'
+import { sectionHeader, sectionItem } from '@app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
 
 function CategoryLabel({ document }: { document: Document }) {
@@ -39,16 +39,27 @@ function RecommendedRead({ document }: { document: Document }) {
 export function MostReadFeed({ documents }: { documents: Document[] }) {
   return (
     <div
-      className={cx(
-        section,
-        css({
-          borderTop: '1px solid black',
-          padding: 8,
-        }),
-      )}
+      className={css({
+        borderTop: '1px solid black',
+        px: 8,
+        pb: 8,
+      })}
     >
-      <h3>Was andere lesen</h3>
-      <p className='tagline'>Die meistbeachteten Beiträge der letzten Woche</p>
+      <div
+        className={cx(
+          sectionHeader,
+          css({
+            md: {
+              textAlign: 'center',
+            },
+          }),
+        )}
+      >
+        <h3>Was andere lesen</h3>
+        <p className='tagline'>
+          Die meistbeachteten Beiträge der letzten Woche
+        </p>
+      </div>
       <div
         className={css({
           display: 'grid',

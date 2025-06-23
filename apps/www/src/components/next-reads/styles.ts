@@ -1,15 +1,14 @@
 import { css } from '@republik/theme/css'
 
-export const section = css({
+export const sectionHeader = css({
+  mt: 8,
+  mb: 12,
   '& h3': {
     fontFamily: 'gtAmericaStandard',
     fontWeight: 700,
     fontSize: 20,
     lineHeight: 1,
     marginBottom: 4,
-    md: {
-      textAlign: 'center',
-    },
   },
   '& .tagline': {
     fontFamily: 'rubis',
@@ -17,9 +16,6 @@ export const section = css({
     fontStyle: 'italic',
     fontSize: 16,
     marginBottom: 16,
-    md: {
-      textAlign: 'center',
-    },
   },
 })
 
