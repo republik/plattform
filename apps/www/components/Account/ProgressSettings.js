@@ -28,13 +28,13 @@ const styles = {
   }),
 }
 
-const ProgressSettings = (props) => {
+const ProgressSettings = () => {
   // Since progress is an opt out, "revokeProgressOptOut" actually is
   // an opt in for the Progress feature
   // while submitProgressOptOut revokes consent to the Progress feature
   // this is consistent with how other consent settings work
   const { revokeProgressOptOut, submitProgressOptOut, clearProgress } = useProgress()
-  const { me, meLoading, progressConsent } = useMe()
+  const { meLoading, progressConsent } = useMe()
   const { t } = useTranslation()
 
   const [mutating, setMutating] = useState(false)
