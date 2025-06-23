@@ -37,7 +37,11 @@ const UserProgress = ({
       label={!forceShortLabel && t('article/actionbar/progress/read')}
       title={t('article/actionbar/progress/read')}
       onClick={() => {
-        removeDocumentProgress(documentId)
+        removeDocumentProgress({
+          variables: {
+            documentId,
+          },
+        })
       }}
       ref={ref}
       {...props}
@@ -49,7 +53,9 @@ const UserProgress = ({
       Icon={IconCheckSmall}
       title={t('article/actionbar/progress/markasread')}
       onClick={() => {
-        upsertDocumentProgress(documentId, 1, '')
+        upsertDocumentProgress({
+          variables: { documentId, percentage: 1, nodeId: '' },
+        })
       }}
       ref={ref}
       {...props}
@@ -78,7 +84,11 @@ const UserProgress = ({
             label={t('article/actionbar/progress/unread')}
             labelShort={t('article/actionbar/progress/unread')}
             onClick={() => {
-              removeDocumentProgress(documentId)
+              removeDocumentProgress({
+                variables: {
+                  documentId,
+                },
+              })
             }}
           />
         </CalloutMenu>
