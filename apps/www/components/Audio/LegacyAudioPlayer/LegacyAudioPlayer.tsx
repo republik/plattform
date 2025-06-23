@@ -1,6 +1,5 @@
 import { AudioContext } from '../AudioProvider'
 import { AudioPlayer as LegacyAudioPlayerUI } from '@project-r/styleguide'
-import ProgressComponent from '../../Article/Progress'
 import { useTranslation } from '../../../lib/withT'
 import { AUDIO_PLAYER_HEIGHT } from '../../constants'
 import Link from '../../Link/Href'
@@ -31,7 +30,6 @@ const LegacyAudioPlayer = () => {
           <>
             {!meLoading && legacyPlayerItem && (
               <BottomPanel wide foreground={true} visible={audioPlayerVisible}>
-                <ProgressComponent isArticle={false}>
                   <LegacyAudioPlayerUI
                     // when the audio src changes we need to remount the component
                     key={
@@ -60,7 +58,6 @@ const LegacyAudioPlayer = () => {
                     height={AUDIO_PLAYER_HEIGHT}
                     Link={Link}
                   />
-                </ProgressComponent>
               </BottomPanel>
             )}
           </>
