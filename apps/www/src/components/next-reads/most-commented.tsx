@@ -5,61 +5,110 @@ import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 import React from 'react'
 
+const COLOURS = [
+  { color: '#FCFBE8', background: '#317D7F' },
+  { color: '#892387', background: '#BCB0E0' },
+  { color: '#5D55C7', background: '#EEADA5' },
+  { color: '#FCE8F6', background: '#94355C' },
+]
+
+const MD_HEIGHT = 867
+const MD_WIDTH = 650
+
 export const Cover3_4 = ({
-  image: imageUrl,
+  image,
   title,
 }: {
-  image?: string
+  image: string
   title: string
 }) => {
-  // TODO: fallback for missing image
+  return (
+    <img
+      src={image}
+      alt={`cover for ${title}`}
+      width={MD_WIDTH}
+      height={MD_HEIGHT}
+      style={{
+        aspectRatio: '3/4',
+        objectFit: 'cover',
+      }}
+    />
+  )
+}
+
+function MostCommentedCoverText({ document }: { document: Document }) {
   return (
     <div
-      className={css({
-        backgroundColor: 'pink',
-        height: '867px',
-        width: '650px',
-      })}
-    >
-      {imageUrl && (
-        <img
-          src={imageUrl}
-          alt={`cover for ${title}`}
-          width='650px'
-          height='867px'
-          style={{
-            aspectRatio: '3/4',
-            objectFit: 'cover',
-          }}
-        />
+      className={cx(
+        nextReadItem,
+        css({
+          width: '90%',
+          ml: '5%',
+          textAlign: 'center',
+        }),
       )}
+    >
+      <h4>
+        <span className={css({ fontSize: 32 })}>{document.meta.title}</span>
+      </h4>
+      <p className='author'>{getAuthors(document)}</p>
     </div>
   )
 }
 
-function RecommendedRead({ document }: { document: Document }) {
+function MostCommentedWithImage({ document }: { document: Document }) {
+  return (
+    <div
+      className={css({
+        height: '867px',
+        width: '650px',
+      })}
+    >
+      <Cover3_4 title={document.meta.title} image={document.meta.image} />
+      <div
+        className={css({
+          position: 'absolute',
+          bottom: 16,
+          color: 'white',
+        })}
+      >
+        <MostCommentedCoverText document={document} />
+      </div>
+    </div>
+  )
+}
+
+function MostCommentedWithoutImage({ document }: { document: Document }) {
+  const { color, background } =
+    COLOURS[Math.floor(Math.random() * COLOURS.length)]
+
+  return (
+    <div
+      style={{
+        backgroundColor: background,
+        color: color,
+      }}
+      className={css({
+        height: '867px',
+        width: '650px',
+        display: 'flex',
+        alignItems: 'center',
+      })}
+    >
+      <MostCommentedCoverText document={document} />
+    </div>
+  )
+}
+
+function MostCommentedRead({ document }: { document: Document }) {
   return (
     <Link href={document.meta.path}>
       <div className={css({ position: 'relative' })}>
-        <Cover3_4 title={document.meta.title} image={document.meta.image} />
-        <div
-          className={cx(
-            nextReadItem,
-            css({
-              position: 'absolute',
-              bottom: 16,
-              width: '90%',
-              left: '5%',
-              textAlign: 'center',
-              color: 'white',
-            }),
-          )}
-        >
-          <h4>
-            <span className={css({ fontSize: 32 })}>{document.meta.title}</span>
-          </h4>
-          <p className='author'>{getAuthors(document)}</p>
-        </div>
+        {document.meta.image ? (
+          <MostCommentedWithImage document={document} />
+        ) : (
+          <MostCommentedWithoutImage document={document} />
+        )}
       </div>
     </Link>
   )
@@ -96,7 +145,7 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
         })}
       >
         {documents.map((document) => (
-          <RecommendedRead key={document.id} document={document} />
+          <MostCommentedRead key={document.id} document={document} />
         ))}
       </div>
     </div>
