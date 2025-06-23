@@ -165,7 +165,17 @@ export const getDocument = gql`
               id
               repoId
               ...BookmarkOnDocument
-              ...UserProgressOnDocument
+              userProgress {
+                id
+                percentage
+                nodeId
+                updatedAt
+                max {
+                  id
+                  percentage
+                  updatedAt
+                }
+              }
               meta {
                 title
                 publishDate
