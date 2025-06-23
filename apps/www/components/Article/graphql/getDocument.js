@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client'
 import { onDocumentFragment } from '../../Bookmarks/fragments'
-import { userProgressFragment } from '../Progress/api'
 import { notificationInfo, subInfo } from '../../Notifications/enhancers'
 
 export const getDocument = gql`
@@ -36,7 +35,17 @@ export const getDocument = gql`
         }
       }
       ...BookmarkOnDocument
-      ...UserProgressOnDocument
+      userProgress {
+        id
+        percentage
+        nodeId
+        updatedAt
+        max {
+          id
+          percentage
+          updatedAt
+        }
+      }
       meta {
         publishDate
         lastPublishedAt
@@ -223,7 +232,6 @@ export const getDocument = gql`
     }
   }
   ${onDocumentFragment}
-  ${userProgressFragment}
   ${subInfo}
   ${notificationInfo}
 `
