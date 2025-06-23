@@ -2,7 +2,7 @@ import { css } from '@republik/theme/css'
 
 export const sectionHeader = css({
   mt: 8,
-  mb: 12,
+  mb: 8,
   '& h3': {
     fontFamily: 'gtAmericaStandard',
     fontWeight: 700,
@@ -15,7 +15,6 @@ export const sectionHeader = css({
     fontWeight: 300,
     fontStyle: 'italic',
     fontSize: 16,
-    marginBottom: 16,
   },
 })
 
@@ -50,6 +49,5 @@ export const sectionItem = css({
     fontSize: 14,
     lineHeight: 1.2,
     letterSpacing: '0.01em',
-    marginBottom: 2,
   },
 })

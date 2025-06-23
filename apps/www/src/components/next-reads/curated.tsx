@@ -1,6 +1,6 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { sectionHeader, sectionItem } from '@app/components/next-reads/styles'
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
 
 function CategoryLabel({ document }: { document: Document }) {
   const text = document.meta.format?.meta.title || document.meta.series?.title
@@ -11,7 +11,18 @@ function CategoryLabel({ document }: { document: Document }) {
 
 function RecommendedRead({ document }: { document: Document }) {
   return (
-    <div className={sectionItem}>
+    <div
+      className={cx(
+        sectionItem,
+        css({
+          pb: 8,
+          mb: 8,
+          borderBottom: '1px solid black',
+          // exclude last item from border
+          '&:last-of-type': { borderBottom: 'none', pb: 0 },
+        }),
+      )}
+    >
       <CategoryLabel document={document} />
       <h4>{document.meta.title}</h4>
       <p className='description'>{document.meta.description}</p>
@@ -38,20 +49,11 @@ export function CuratedFeed({ documents }: { documents: Document[] }) {
       <div className={sectionHeader}>
         <h3>Mehr zum Thema</h3>
       </div>
-      {documents.map((document) => (
-        <div
-          key={document.id}
-          className={css({
-            marginBottom: '4',
-            py: 4,
-            // exclude last item from border
-            borderBottom: '1px solid black',
-            '&:last-of-type': { borderBottom: 'none' },
-          })}
-        >
-          <RecommendedRead document={document} />
-        </div>
-      ))}
+      <div className={css({ pt: 4, pb: 16 })}>
+        {documents.map((document) => (
+          <RecommendedRead key={document.id} document={document} />
+        ))}
+      </div>
     </div>
   )
 }
