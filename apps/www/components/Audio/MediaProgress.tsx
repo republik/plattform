@@ -55,20 +55,18 @@ const setLocalMediaProgress = async (data) => {
 }
 
 const MediaProgressProvider = ({ children }) => {
-  const { me } = useMe()
+  const { progressConsent } = useMe()
   const [queryMediaProgress] = useMediaProgressLazyQuery({
     fetchPolicy: 'network-only',
     ssr: false,
   })
   const [upsertMediaProgress] = useUpsertMediaProgress()
 
-  const isTrackingAllowed = me?.progressOptOut === null || me?.progressOptOut === false
-
   const saveMediaProgressNotPlaying = useMemo(
     () =>
       debounce((mediaId, currentTime) => {
         // Fires on pause, on scrub, on end of video.
-        if (isTrackingAllowed) {
+        if (progressConsent) {
           return upsertMediaProgress({
             variables: { mediaId, secs: currentTime },
           })
@@ -76,7 +74,7 @@ const MediaProgressProvider = ({ children }) => {
           return setLocalMediaProgress({ mediaId, currentTime })
         }
       }, 300),
-    [isTrackingAllowed, upsertMediaProgress, setLocalMediaProgress],
+    [progressConsent, upsertMediaProgress, setLocalMediaProgress],
   )
 
   const saveMediaProgressWhilePlaying = useMemo(
@@ -84,7 +82,7 @@ const MediaProgressProvider = ({ children }) => {
       throttle(
         (mediaId, currentTime) => {
           // Fires every 5 seconds while playing.
-          if (isTrackingAllowed) {
+          if (progressConsent) {
             return upsertMediaProgress({
               variables: { mediaId, secs: currentTime },
             })
@@ -95,7 +93,7 @@ const MediaProgressProvider = ({ children }) => {
         5000,
         { trailing: true },
       ),
-    [isTrackingAllowed, upsertMediaProgress, setLocalMediaProgress],
+    [progressConsent, upsertMediaProgress, setLocalMediaProgress],
   )
 
   const saveMediaProgress: SaveMediaProgress = (
@@ -117,7 +115,7 @@ const MediaProgressProvider = ({ children }) => {
     if (!mediaId) {
       return Promise.resolve()
     }
-    if (isTrackingAllowed) {
+    if (progressConsent) {
       return (
         queryMediaProgress({
           variables: { mediaId },

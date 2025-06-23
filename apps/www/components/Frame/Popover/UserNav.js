@@ -21,6 +21,7 @@ import { registerQueryVariables } from '../../Bookmarks/queries'
 import DarkmodeSwitch from '../DarkmodeSwitch'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useMe } from '../../../lib/context/MeContext'
 
 const SignoutLink = ({ children, ...props }) => (
   <div {...styles.signout}>
@@ -28,16 +29,16 @@ const SignoutLink = ({ children, ...props }) => (
   </div>
 )
 
-const UserNav = ({ me, hasActiveMembership }) => {
+const UserNav = () => {
+  const { me, progressConsent, hasActiveMembership } = useMe()
   const { t } = useTranslation()
   const { inNativeApp, inNativeIOSApp } = useInNativeApp()
   const router = useRouter()
 
   const [colorScheme] = useColorContext()
   const currentPath = router.asPath
-  const hasProgress = me?.progressOptOut === null || me?.progressOptOut === false
   const variables = useMemo(() => {
-    if (hasProgress) {
+    if (progressConsent) {
       return {
         collections: ['progress', 'bookmarks'],
         progress: 'UNFINISHED',
@@ -47,7 +48,7 @@ const UserNav = ({ me, hasActiveMembership }) => {
     return {
       collections: ['bookmarks'],
     }
-  }, [hasProgress])
+  }, [progressConsent])
   registerQueryVariables(variables)
 
   return (

@@ -5,8 +5,8 @@ import Frame from '../Frame'
 import { enforceMembership } from '../Auth/withMembership'
 import { withTester } from '../Auth/checkRoles'
 import DocumentListContainer from '../Feed/DocumentListContainer'
-import withT from '../../lib/withT'
-import withMe from '../../lib/apollo/withMe'
+import { useMe } from '../../lib/context/MeContext'
+import { useTranslation } from '../../lib/withT'
 
 import {
   mediaQueries,
@@ -34,12 +34,13 @@ const mergeConnection = (data, connection) => {
 
 const bookmarkIcon = <IconBookmarkBorder size={22} key='icon' />
 
-const Page = ({ t, me }) => {
-  const showProgressTabs = me?.progressOptOut === null || me?.progressOptOut === false
+const Page = () => {
+  const { progressConsent } = useMe()
+  const { t } = useTranslation()
 
   const [filter, setFilter] = useState('continue')
   const variables = useMemo(() => {
-    if (showProgressTabs) {
+    if (progressConsent) {
       if (filter === 'read') {
         return {
           collections: ['progress', 'bookmarks'],
@@ -56,7 +57,7 @@ const Page = ({ t, me }) => {
     return {
       collections: ['bookmarks'],
     }
-  }, [filter, showProgressTabs])
+  }, [filter, progressConsent])
   registerQueryVariables(variables)
 
   return (
@@ -68,7 +69,7 @@ const Page = ({ t, me }) => {
     >
       <Center style={{ marginBottom: 56 }}>
         <div {...styles.title}>{t('pages/bookmarks/title')}</div>
-        {showProgressTabs ? (
+        {progressConsent ? (
           <div {...styles.filter}>
             <Interaction.P>
               {['continue', 'bookmarks', 'read'].map((key) => (
@@ -100,7 +101,7 @@ const Page = ({ t, me }) => {
             <Interaction.P style={{ marginBottom: 60 }}>
               {t.first.elements(
                 [
-                  showProgressTabs && `pages/bookmarks/placeholder/${filter}`,
+                  progressConsent && `pages/bookmarks/placeholder/${filter}`,
                   'pages/bookmarks/placeholder',
                 ].filter(Boolean),
                 {
@@ -118,7 +119,7 @@ const Page = ({ t, me }) => {
             <Interaction.P {...styles.helpText}>
               {t.first(
                 [
-                  showProgressTabs && `pages/bookmarks/help/${filter}`,
+                  progressConsent && `pages/bookmarks/help/${filter}`,
                   'pages/bookmarks/help',
                 ].filter(Boolean),
               )}
@@ -127,7 +128,7 @@ const Page = ({ t, me }) => {
         />
       </Center>
     </Frame>
-  );
+  )
 }
 
 const styles = {
@@ -155,4 +156,4 @@ const styles = {
   }),
 }
 
-export default compose(withT, withMe, enforceMembership(), withTester)(Page)
+export default compose(enforceMembership(), withTester)(Page)

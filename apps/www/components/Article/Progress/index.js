@@ -13,21 +13,20 @@ import withMe from '../../../lib/apollo/withMe'
 import { withProgressApi } from './api'
 import { useMediaProgress } from '../../Audio/MediaProgress'
 import { withRouter } from 'next/router'
+import { useMe } from '../../../lib/context/MeContext'
 
 const MIN_INDEX = 2
 
 export const ProgressContext = createContext({})
 
-const Progress = ({ children, me, article, upsertDocumentProgress }) => {
+const Progress = ({ children, article, upsertDocumentProgress }) => {
   const refContainer = useRef()
   const lastClosestIndex = useRef()
   const refSaveProgress = useRef()
   const lastY = useRef()
+  const { me, progressConsent } = useMe()
 
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
-
-  const isTrackingAllowed =
-    me?.progressOptOut === null || me?.progressOptOut === false
 
   const mobile = () => window.innerWidth < mediaQueries.mBreakPoint
   const headerHeight = () => (mobile() ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT)
@@ -92,7 +91,7 @@ const Progress = ({ children, me, article, upsertDocumentProgress }) => {
   }
 
   refSaveProgress.current = debounce(() => {
-    if (!article || !isTrackingAllowed) {
+    if (!article || !progressConsent) {
       return
     }
 

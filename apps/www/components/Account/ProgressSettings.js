@@ -35,7 +35,7 @@ const ProgressSettings = (props) => {
   // while submitProgressOptOut revokes consent to the Progress feature
   // this is consistent with how other consent settings work
   const { revokeProgressOptOut, submitProgressOptOut, clearProgress } = props
-  const { me, meLoading } = useMe()
+  const { me, meLoading, progressConsent } = useMe()
   const { t } = useTranslation()
 
   const [mutating, setMutating] = useState(false)
@@ -50,8 +50,6 @@ const ProgressSettings = (props) => {
   const submitProgressOptOutAndClearProgress = () =>
     submitProgressOptOut().then(clearProgress).catch(catchServerError)
 
-  const hasAccepted = me?.progressOptOut === null || me?.progressOptOut === false
-
   return (
     <Loader
       loading={meLoading}
@@ -61,17 +59,17 @@ const ProgressSettings = (props) => {
             {t('article/progressprompt/description/feature')}
           </P>
           <Checkbox
-            checked={hasAccepted}
+            checked={progressConsent}
             disabled={mutating}
             onChange={() => {
               if (
-                hasAccepted &&
+                progressConsent &&
                 !window.confirm(t('account/progress/consent/confirmRevoke'))
               ) {
                 return
               }
               setMutating(true)
-              const consentMutation = hasAccepted
+              const consentMutation = progressConsent
                 ? submitProgressOptOutAndClearProgress
                 : revokeProgressOptOut
               consentMutation()
