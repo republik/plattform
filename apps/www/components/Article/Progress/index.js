@@ -1,5 +1,4 @@
 import { useRef, useEffect, createContext } from 'react'
-import PropTypes from 'prop-types' 
 import debounce from 'lodash/debounce'
 
 import { mediaQueries } from '@project-r/styleguide'
@@ -185,15 +184,6 @@ const Progress = ({ children, article }) => {
       <div ref={refContainer}>{children}</div>
     </ProgressContext>
   )
-}
-
-Progress.propTypes = {
-  children: PropTypes.node,
-  me: PropTypes.shape({
-    progressOptOut: PropTypes.bool,
-  }),
-  revokeConsent: PropTypes.func,
-  submitConsent: PropTypes.func,
 }
 
 export default Progress
