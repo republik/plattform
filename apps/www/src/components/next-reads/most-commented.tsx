@@ -62,14 +62,20 @@ function MostCommentedWithImage({ document }: { document: Document }) {
       className={css({
         height: '867px',
         width: '650px',
+        position: 'relative',
       })}
     >
       <Cover3_4 title={document.meta.title} image={document.meta.image} />
+
       <div
         className={css({
           position: 'absolute',
-          bottom: 16,
+          bottom: 0,
+          paddingBottom: 16,
           color: 'white',
+          background:
+            'linear-gradient(180deg, rgba(7, 7, 7, 0.00) 0%, #070707 100%)',
+          backdropFilter: 'blur(1px)',
         })}
       >
         <MostCommentedCoverText document={document} />
