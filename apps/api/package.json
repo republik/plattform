@@ -28,6 +28,7 @@
     "@orbiting/backend-modules-mailchimp": "*",
     "@orbiting/backend-modules-maillog": "*",
     "@orbiting/backend-modules-migrations": "*",
+    "@orbiting/backend-modules-next-reads": "*",
     "@orbiting/backend-modules-payments": "*",
     "@orbiting/backend-modules-publikator": "*",
     "@orbiting/backend-modules-push-notifications": "*",
