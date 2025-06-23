@@ -80,7 +80,7 @@ function MostCommentedWithImage({ document }: { document: Document }) {
           color: 'white',
           background:
             'linear-gradient(180deg, rgba(7, 7, 7, 0.00) 0%, #070707 100%)',
-          backdropFilter: 'blur(1px)',
+          backdropFilter: 'blur(2px)',
         })}
       >
         <MostCommentedCoverText document={document} />
@@ -123,16 +123,36 @@ function MostCommentedRead({
   document: Document
   colors: ColorType
 }) {
+  // NOT SURE THIS IS GREAT
+  /* const ref = useRef<HTMLDivElement | null>(null)
+  const [visible, setVisible] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!ref.current || !ref.current.parentElement.parentElement) return
+    const observer = new window.IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { root: ref.current.parentElement.parentElement, threshold: 0.7 },
+    )
+    observer.observe(ref.current)
+    return () => observer.disconnect()
+  }, []) */
+
+  /*ref={ref}
+    style={{
+        opacity: visible ? 1 : 0.2,
+        transition: 'opacity 0.3s',
+      }}*/
+
   return (
-    <Link href={document.meta.path}>
-      <div className={css({ position: 'relative' })}>
+    <div className={css({ position: 'relative' })}>
+      <Link href={document.meta.path}>
         {document.meta.image ? (
           <MostCommentedWithImage document={document} />
         ) : (
           <MostCommentedWithoutImage document={document} colors={colors} />
         )}
-      </div>
-    </Link>
+      </Link>
+    </div>
   )
 }
 
@@ -163,15 +183,22 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
           px: 1,
           mb: 1,
           mt: 16,
-          overflow: 'scroll',
+          overflowX: 'auto',
+          scrollSnapType: 'x mandatory',
         })}
       >
         {documents.map((document, idx) => (
-          <MostCommentedRead
+          <div
             key={document.id}
-            document={document}
-            colors={COLOURS[idx % COLOURS.length]}
-          />
+            className={css({
+              scrollSnapAlign: 'start',
+            })}
+          >
+            <MostCommentedRead
+              document={document}
+              colors={COLOURS[idx % COLOURS.length]}
+            />
+          </div>
         ))}
       </div>
     </div>
