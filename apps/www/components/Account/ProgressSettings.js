@@ -1,14 +1,13 @@
-import { useState } from 'react'
-import compose from 'lodash/flowRight'
 import { css } from 'glamor'
+import { useState } from 'react'
 import { useMe } from '../../lib/context/MeContext'
 import { useTranslation } from '../../lib/withT'
 
+import { Checkbox, InlineSpinner, Loader } from '@project-r/styleguide'
 import ErrorMessage from '../ErrorMessage'
 import { P } from './Elements'
-import { Loader, InlineSpinner, Checkbox } from '@project-r/styleguide'
 
-import { withProgressApi } from '../Article/Progress/api'
+import { useProgress } from '../Article/Progress/api'
 
 const styles = {
   headline: css({
@@ -34,7 +33,7 @@ const ProgressSettings = (props) => {
   // an opt in for the Progress feature
   // while submitProgressOptOut revokes consent to the Progress feature
   // this is consistent with how other consent settings work
-  const { revokeProgressOptOut, submitProgressOptOut, clearProgress } = props
+  const { revokeProgressOptOut, submitProgressOptOut, clearProgress } = useProgress()
   const { me, meLoading, progressConsent } = useMe()
   const { t } = useTranslation()
 
@@ -93,4 +92,4 @@ const ProgressSettings = (props) => {
   )
 }
 
-export default compose(withProgressApi)(ProgressSettings)
+export default ProgressSettings

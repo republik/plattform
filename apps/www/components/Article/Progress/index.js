@@ -1,30 +1,27 @@
 import { useRef, useEffect, createContext } from 'react'
-import PropTypes from 'prop-types'
-import compose from 'lodash/flowRight'
-import { withApollo } from '@apollo/client/react/hoc'
+import PropTypes from 'prop-types' 
 import debounce from 'lodash/debounce'
 
 import { mediaQueries } from '@project-r/styleguide'
 
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
 import { scrollIt } from '../../../lib/utils/scroll'
-import withMe from '../../../lib/apollo/withMe'
 
-import { withProgressApi } from './api'
+import { useProgress } from './api'
 import { useMediaProgress } from '../../Audio/MediaProgress'
-import { withRouter } from 'next/router'
 import { useMe } from '../../../lib/context/MeContext'
 
 const MIN_INDEX = 2
 
 export const ProgressContext = createContext({})
 
-const Progress = ({ children, article, upsertDocumentProgress }) => {
+const Progress = ({ children, article }) => {
   const refContainer = useRef()
   const lastClosestIndex = useRef()
   const refSaveProgress = useRef()
   const lastY = useRef()
-  const { me, progressConsent } = useMe()
+  const { progressConsent } = useMe()
+  const { upsertDocumentProgress } = useProgress()
 
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
@@ -199,9 +196,4 @@ Progress.propTypes = {
   submitConsent: PropTypes.func,
 }
 
-export default compose(
-  withApollo,
-  withProgressApi,
-  withMe,
-  withRouter,
-)(Progress)
+export default Progress

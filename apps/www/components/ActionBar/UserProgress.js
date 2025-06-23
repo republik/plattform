@@ -1,10 +1,10 @@
 import { forwardRef, useContext } from 'react'
 import compose from 'lodash/flowRight'
 
-import withT from '../../lib/withT'
+import { useTranslation } from '../../lib/withT'
 import datetime from '../Article/Progress/datetime'
 
-import { withProgressApi } from '../Article/Progress/api'
+import { useProgress } from '../Article/Progress/api'
 import { ProgressCircle, IconButton, CalloutMenu } from '@project-r/styleguide'
 import { ProgressContext } from '../Article/Progress'
 import { IconCheckSmall, IconHighlightOff, IconRead } from '@republik/icons'
@@ -13,15 +13,15 @@ const UserProgress = ({
   t,
   documentId,
   userProgress,
-  upsertDocumentProgress,
-  removeDocumentProgress,
+
   forceShortLabel,
   noCallout,
   noScroll,
   displayMinutes,
 }) => {
   const { restoreArticleProgress } = useContext(ProgressContext)
-
+  const { upsertDocumentProgress, removeDocumentProgress } = useProgress()
+  const { t } = useTranslation()
   // Once consent has been given or not return null if there is no user progress object
   // or displayminutes are below 1min
   if (!userProgress || displayMinutes < 1) {
@@ -131,4 +131,4 @@ const UserProgress = ({
   )
 }
 
-export default compose(withT, withProgressApi)(UserProgress)
+export default UserProgress
