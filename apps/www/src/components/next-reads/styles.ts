@@ -1,6 +1,6 @@
 import { css } from '@republik/theme/css'
 
-export const sectionHeader = css({
+export const nextReadHeader = css({
   mt: 8,
   mb: 8,
   '& h3': {
@@ -18,7 +18,7 @@ export const sectionHeader = css({
   },
 })
 
-export const sectionItem = css({
+export const nextReadItem = css({
   // title of the document
   '& h4': {
     fontFamily: 'rubis',

@@ -1,19 +1,13 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { SquareCover } from '@app/components/assets/SquareCover'
-import { sectionHeader, sectionItem } from '@app/components/next-reads/styles'
+import { CategoryLabel, getAuthors } from '@app/components/next-reads/helpers'
+import { nextReadHeader, nextReadItem } from '@app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 
-function CategoryLabel({ document }: { document: Document }) {
-  const text = document.meta.format?.meta.title || document.meta.series?.title
-  if (!text) return null
-  // set fomat color as text color
-  return <h5 className={css({ color: 'red' })}>{text}</h5>
-}
-
 function RecommendedRead({ document }: { document: Document }) {
   return (
-    <div className={cx(sectionItem, css({ marginBottom: '4' }))}>
+    <div className={cx(nextReadItem, css({ marginBottom: '4' }))}>
       <Link href={document.meta.path}>
         <div className={css({ marginBottom: 6 })}>
           <SquareCover
@@ -27,13 +21,7 @@ function RecommendedRead({ document }: { document: Document }) {
         <CategoryLabel document={document} />
         <h4>{document.meta.title}</h4>
         <p className='description'>{document.meta.description}</p>
-        <p className='author'>
-          Von{' '}
-          {document.meta.contributors
-            .filter((contributor) => contributor.kind.includes('Text'))
-            .map((contributor) => contributor.name)
-            .join(', ')}
-        </p>
+        <p className='author'>{getAuthors(document)}</p>
       </Link>
     </div>
   )
@@ -41,15 +29,10 @@ function RecommendedRead({ document }: { document: Document }) {
 
 export function MostReadFeed({ documents }: { documents: Document[] }) {
   return (
-    <div
-      className={css({
-        borderTop: '1px solid black',
-        px: 8,
-      })}
-    >
+    <div className={css({ borderTop: '1px solid black' })}>
       <div
         className={cx(
-          sectionHeader,
+          nextReadHeader,
           css({
             textAlign: 'center',
           }),
@@ -66,6 +49,7 @@ export function MostReadFeed({ documents }: { documents: Document[] }) {
           gridTemplateColumns: 'repeat(5, 1fr)',
           gridTemplateRows: 'auto',
           gap: 8,
+          px: 8,
           mt: 16,
           mb: 16,
         })}

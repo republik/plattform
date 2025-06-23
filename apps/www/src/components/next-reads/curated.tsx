@@ -1,20 +1,14 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
-import { sectionHeader, sectionItem } from '@app/components/next-reads/styles'
+import { CategoryLabel, getAuthors } from '@app/components/next-reads/helpers'
+import { nextReadHeader, nextReadItem } from '@app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
-
-function CategoryLabel({ document }: { document: Document }) {
-  const text = document.meta.format?.meta.title || document.meta.series?.title
-  if (!text) return null
-  // set fomat color as text color
-  return <h5 className={css({ color: 'red' })}>{text}</h5>
-}
 
 function RecommendedRead({ document }: { document: Document }) {
   return (
     <div
       className={cx(
-        sectionItem,
+        nextReadItem,
         css({
           pb: 8,
           mb: 8,
@@ -30,13 +24,7 @@ function RecommendedRead({ document }: { document: Document }) {
         <CategoryLabel document={document} />
         <h4>{document.meta.title}</h4>
         <p className='description'>{document.meta.description}</p>
-        <p className='author'>
-          Von{' '}
-          {document.meta.contributors
-            .filter((contributor) => contributor.kind.includes('Text'))
-            .map((contributor) => contributor.name)
-            .join(', ')}
-        </p>
+        <p className='author'>{getAuthors(document)}</p>
       </Link>
     </div>
   )
@@ -53,7 +41,7 @@ export function CuratedFeed({ documents }: { documents: Document[] }) {
       })}
     >
       <div className={css({ borderTop: '1px solid black' })}>
-        <div className={sectionHeader}>
+        <div className={nextReadHeader}>
           <h3>Mehr zum Thema</h3>
         </div>
         <div className={css({ pt: 4, pb: 16 })}>

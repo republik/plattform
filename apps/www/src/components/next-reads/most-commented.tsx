@@ -1,41 +1,67 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
-import { SquareCover } from '@app/components/assets/SquareCover'
-import { sectionHeader, sectionItem } from '@app/components/next-reads/styles'
+import { getAuthors } from '@app/components/next-reads/helpers'
+import { nextReadHeader, nextReadItem } from '@app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
+import React from 'react'
 
-function CategoryLabel({ document }: { document: Document }) {
-  const text = document.meta.format?.meta.title || document.meta.series?.title
-  if (!text) return null
-  // set fomat color as text color
-  return <h5 className={css({ color: 'red' })}>{text}</h5>
+export const Cover3_4 = ({
+  image: imageUrl,
+  title,
+}: {
+  image?: string
+  title: string
+}) => {
+  // TODO: fallback for missing image
+  return (
+    <div
+      className={css({
+        backgroundColor: 'pink',
+        height: '867px',
+        width: '650px',
+      })}
+    >
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt={`cover for ${title}`}
+          width='650px'
+          height='867px'
+          style={{
+            aspectRatio: '3/4',
+            objectFit: 'cover',
+          }}
+        />
+      )}
+    </div>
+  )
 }
 
 function RecommendedRead({ document }: { document: Document }) {
   return (
-    <div className={sectionItem}>
-      <Link href={document.meta.path}>
-        <div className={css({ marginBottom: 6 })}>
-          <SquareCover
-            size={1024}
-            title={document.meta.title}
-            cover={document.meta.audioCover}
-            crop={document.meta.audioCoverCrop}
-            image={document.meta.image}
-          />
+    <Link href={document.meta.path}>
+      <div className={css({ position: 'relative' })}>
+        <Cover3_4 title={document.meta.title} image={document.meta.image} />
+        <div
+          className={cx(
+            nextReadItem,
+            css({
+              position: 'absolute',
+              bottom: 16,
+              width: '90%',
+              left: '5%',
+              textAlign: 'center',
+              color: 'white',
+            }),
+          )}
+        >
+          <h4>
+            <span className={css({ fontSize: 32 })}>{document.meta.title}</span>
+          </h4>
+          <p className='author'>{getAuthors(document)}</p>
         </div>
-        <CategoryLabel document={document} />
-        <h4>{document.meta.title}</h4>
-        <p className='description'>{document.meta.description}</p>
-        <p className='author'>
-          Von{' '}
-          {document.meta.contributors
-            .filter((contributor) => contributor.kind.includes('Text'))
-            .map((contributor) => contributor.name)
-            .join(', ')}
-        </p>
-      </Link>
-    </div>
+      </div>
+    </Link>
   )
 }
 
@@ -44,13 +70,11 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
     <div
       className={css({
         borderTop: '1px solid black',
-        px: 8,
-        pb: 8,
       })}
     >
       <div
         className={cx(
-          sectionHeader,
+          nextReadHeader,
           css({
             textAlign: 'center',
           }),
@@ -64,13 +88,15 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
           display: 'grid',
           gridTemplateColumns: 'repeat(5, 1fr)',
           gridTemplateRows: 'auto',
-          gap: 8,
+          gap: 1,
+          px: 1,
+          mb: 1,
+          mt: 16,
+          overflow: 'scroll',
         })}
       >
         {documents.map((document) => (
-          <div key={document.id} className={css({ marginBottom: '4' })}>
-            <RecommendedRead document={document} />
-          </div>
+          <RecommendedRead key={document.id} document={document} />
         ))}
       </div>
     </div>
