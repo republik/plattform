@@ -1,5 +1,4 @@
 import { forwardRef, useContext } from 'react'
-import compose from 'lodash/flowRight'
 
 import { useTranslation } from '../../lib/withT'
 import datetime from '../Article/Progress/datetime'
@@ -10,10 +9,8 @@ import { ProgressContext } from '../Article/Progress'
 import { IconCheckSmall, IconHighlightOff, IconRead } from '@republik/icons'
 
 const UserProgress = ({
-  t,
   documentId,
   userProgress,
-
   forceShortLabel,
   noCallout,
   noScroll,
