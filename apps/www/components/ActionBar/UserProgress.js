@@ -129,7 +129,9 @@ const UserProgress = ({
             label={t('article/actionbar/progress/markasread')}
             labelShort={t('article/actionbar/progress/markasread')}
             onClick={() => {
-              upsertDocumentProgress(documentId, 1, '')
+              upsertDocumentProgress({
+                variables: { documentId, percentage: 1, nodeId: '' },
+              })
             }}
           />
         </CalloutMenu>
