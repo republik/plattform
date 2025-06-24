@@ -9,20 +9,26 @@ import { CuratedFeed } from './curated'
 import { MostCommentedFeed } from './most-commented'
 import { MostReadFeed } from './most-read'
 
-function NextReads() {
-  const { data, loading } = useQuery(NextReadsDocument)
+function NextReads({ repoId, path }: { repoId: string; path: string }) {
+  const { data, loading } = useQuery(NextReadsDocument, {
+    variables: { repoId, path },
+  })
 
-  if (loading) return null
+  if (loading || !data) return null
 
-  const curatedReads = data.documents.nodes
-    .slice(0, 3)
-    .map((n) => n.entity) as Document[]
-  const mostRead = data.documents.nodes
-    .slice(3, 8)
-    .map((n) => n.entity) as Document[]
-  const mostCommented = data.documents.nodes
-    .slice(14, 19)
-    .map((n) => n.entity) as Document[]
+  const curatedReads = data.CURATED_READS.meta.recommendations
+    .nodes as Document[]
+
+  const mostRead = data.nextReads
+    .filter((feed) => feed.id === 'POPULAR_LAST_7_DAYS')[0]
+    .documents.slice(0, 5) as Document[]
+
+  // TODO: maybe deduplicate with MostReadFeed?
+  const mostCommented = data.nextReads
+    .filter(
+      (feed) => feed.id === 'POPULAR_OF_THE_LAST_20_DAYS_WITH_COMMENTS_COUNT',
+    )[0]
+    .documents.slice(0, 5) as Document[]
 
   return (
     <div className={css({ pt: 16 })}>
