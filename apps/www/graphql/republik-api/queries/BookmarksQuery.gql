@@ -1,0 +1,77 @@
+query getCollectionItems(
+  $cursor: String
+  $collections: [String!]!
+  $progress: ProgressState
+  $lastDays: Int
+  $first: Int
+) {
+  me {
+    id
+    collectionItems(
+      names: $collections
+      first: $first
+      after: $cursor
+      progress: $progress
+      uniqueDocuments: true
+      lastDays: $lastDays
+    ) {
+      totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      nodes {
+        id
+        createdAt
+        document {
+          id
+          repoId
+          userBookmark: userCollectionItem(collectionName: "bookmarks") {
+            id
+            createdAt
+          }
+          content
+          userProgress {
+            id
+            percentage
+            nodeId
+            updatedAt
+            max {
+              id
+              percentage
+              updatedAt
+            }
+          }
+          meta {
+            image
+            credits
+            title
+            description
+            publishDate
+            prepublication
+            path
+            kind
+            template
+            color
+            estimatedReadingMinutes
+            estimatedConsumptionMinutes
+            contributors {
+              name
+              kind
+            }
+            format {
+              id
+              meta {
+                path
+                title
+                color
+                kind
+                externalBaseUrl
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
