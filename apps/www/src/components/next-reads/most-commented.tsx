@@ -2,7 +2,7 @@ import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { getAuthors } from '@app/components/next-reads/helpers'
 import {
   nextReadHeader,
-  nextReadItem,
+  nextReadItemTypography,
   nextReadsSection,
 } from '@app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
@@ -21,7 +21,6 @@ const COLOURS: ColorType[] = [
   { color: '#FCE8F6', background: '#94355C' },
 ]
 
-const MD_HEIGHT = 867
 const MD_WIDTH = 650
 
 export const Cover3_4 = ({
@@ -36,7 +35,6 @@ export const Cover3_4 = ({
       src={image}
       alt={`cover for ${title}`}
       width={MD_WIDTH}
-      height={MD_HEIGHT}
       style={{
         aspectRatio: '3/4',
         objectFit: 'cover',
@@ -49,7 +47,7 @@ function MostCommentedCoverText({ document }: { document: Document }) {
   return (
     <div
       className={cx(
-        nextReadItem,
+        nextReadItemTypography,
         css({
           pt: 4,
           width: '90%',
@@ -72,8 +70,7 @@ function MostCommentedWithImage({ document }: { document: Document }) {
   return (
     <div
       className={css({
-        height: '867px',
-        width: '650px',
+        width: MD_WIDTH,
         position: 'relative',
       })}
     >
@@ -113,7 +110,7 @@ function MostCommentedWithoutImage({
         color: color,
       }}
       className={css({
-        height: '867px',
+        aspectRatio: '3/4',
         width: '650px',
         display: 'flex',
         alignItems: 'center',

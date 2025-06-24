@@ -25,7 +25,7 @@ export const nextReadHeader = css({
   },
 })
 
-export const nextReadItem = css({
+export const nextReadItemTypography = css({
   // title of the document
   '& h4': {
     fontFamily: 'rubis',
