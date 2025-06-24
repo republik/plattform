@@ -11,7 +11,7 @@ import colors from '../../theme/colors'
 import { PLACEHOLDER_TEXT } from './index'
 
 export const SHARE_IMAGE_WIDTH = 1200
-export const SHARE_IMAGE_HEIGHT = 628
+export const SHARE_IMAGE_HEIGHT = 630
 export const SHARE_IMAGE_PADDING = 48
 
 export const socialPreviewStyles = {
