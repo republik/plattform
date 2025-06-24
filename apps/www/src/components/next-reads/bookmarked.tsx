@@ -39,6 +39,7 @@ export default function BookmarkedNextReadsFeed() {
     variables: {
       collections: ['bookmarks'],
       first: 10,
+      lastDays: 300,
       progress: ProgressState.Unfinished,
     },
   })
@@ -52,25 +53,37 @@ export default function BookmarkedNextReadsFeed() {
     <ColorContextLocalExtension localColors={localColors}>
       <GetColorScheme>
         {(colorScheme) => (
-          <div className={colorScheme.set('background', 'background')}>
-            <div className={css({ borderTop: '1px solid black' })}>
-              <div
-                className={cx(
-                  nextReadHeader,
-                  css({
-                    textAlign: 'center',
-                  }),
-                )}
-              >
-                <h3>Gemerkte Beiträge</h3>
-                <p className='tagline'>Deine Leseliste</p>
+          <div
+            {...colorScheme.set('backgroundColor', 'background')}
+            className={css({ pb: '24px' })}
+          >
+            <div className={css({ pl: '15px', pr: '15px' })}>
+              <div className={css({ borderTop: '1px solid black' })}>
+                <div
+                  className={cx(
+                    nextReadHeader,
+                    css({
+                      textAlign: 'center',
+                    }),
+                  )}
+                >
+                  <h3>Gemerkte Beiträge</h3>
+                  <p className='tagline'>Deine Leseliste</p>
+                </div>
               </div>
-            </div>
-            <FirstBookmarkItem document={documents[0]} />
-            <div className={css({ pt: 4, pb: 16 })}>
-              {documents.map((document) => (
-                <BookmarkItem key={document.id} document={document} />
-              ))}
+              <FirstBookmarkItem document={documents[0]} />
+              <div
+                className={css({
+                  display: 'flex',
+                  flexDirection: 'column',
+                  mt: '32px',
+                  gap: '32px',
+                })}
+              >
+                {documents.slice(1).map((document) => (
+                  <BookmarkItem key={document.id} document={document} />
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -112,8 +125,6 @@ const FirstBookmarkItem = ({ document }: { document: BookmarkDocument }) => {
         justifyContent: 'center',
         gap: '24px',
         maxWidth: '695px',
-        pl: '15px',
-        pr: '15px',
       })}
     >
       <h4
@@ -168,10 +179,44 @@ const FirstBookmarkItem = ({ document }: { document: BookmarkDocument }) => {
 }
 
 const BookmarkItem = ({ document }: { document: BookmarkDocument }) => {
-  console.log(document.userProgress?.max?.percentage)
   return (
-    <div>
-      <h4>{document.meta.title}</h4>
+    <div
+      className={css({
+        display: 'flex',
+        gap: '24px',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+      })}
+    >
+      <div
+        className={css({
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+        })}
+      >
+        <h4
+          className={css({
+            fontFamily: 'rubis',
+            fontSize: 18,
+            lineHeight: 1.2,
+          })}
+        >
+          {document.meta.title}
+        </h4>
+        <span>{document.meta.estimatedReadingMinutes} min</span>
+      </div>
+
+      <img
+        src={document.meta.image}
+        alt={`cover for ${document.meta.title}`}
+        width={112}
+        height={112}
+        style={{
+          aspectRatio: '1',
+          objectFit: 'cover',
+        }}
+      />
     </div>
   )
 }
