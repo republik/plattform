@@ -6,7 +6,6 @@ import {
 } from '../../../graphql/republik-api/__generated__/gql/graphql'
 import { css, cx } from '@republik/theme/css'
 import { nextReadHeader } from './styles'
-import { Cover3_4 } from './most-commented'
 import Link from 'next/link'
 import {
   ColorContextLocalExtension,
@@ -55,7 +54,7 @@ export default function BookmarkedNextReadsFeed() {
         {(colorScheme) => (
           <div
             {...colorScheme.set('backgroundColor', 'background')}
-            className={css({ pb: '24px' })}
+            className={css({ pb: '24px', md: { pb: '80px' } })}
           >
             <div className={css({ pl: '15px', pr: '15px' })}>
               <div className={css({ borderTop: '1px solid black' })}>
@@ -78,6 +77,10 @@ export default function BookmarkedNextReadsFeed() {
                   flexDirection: 'column',
                   mt: '32px',
                   gap: '32px',
+                  md: {
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                  },
                 })}
               >
                 {documents.slice(1).map((document) => (
@@ -133,11 +136,29 @@ const FirstBookmarkItem = ({ document }: { document: BookmarkDocument }) => {
           fontSize: 24,
           lineHeight: 1.2,
           textAlign: 'center',
+          md: {
+            fontSize: 32,
+          }
         })}
       >
         {document.meta.title}
       </h4>
-      <Cover3_4 image={document.meta.image} title={document.meta.title} />
+      {document.meta.image && (
+        <img
+          src={document.meta.image}
+          alt={`Cover for ${document.meta.title}`}
+          className={css({
+            width: '100%',
+            maxWidth: '400px',
+            aspectRatio: '3/4',
+            objectFit: 'cover',
+            md: {
+              aspectRatio: '4/3',
+              maxWidth: '650px',
+            },
+          })}
+        />
+      )}
       <div
         className={css({
           display: 'flex',
@@ -186,6 +207,13 @@ const BookmarkItem = ({ document }: { document: BookmarkDocument }) => {
         gap: '24px',
         alignItems: 'center',
         justifyContent: 'space-between',
+        maxWidth: '600px',
+        width: '100%',
+        margin: '0 auto',
+        md: {
+          flexDirection: 'column-reverse',
+          alignItems: 'flex-start',
+        },
       })}
     >
       <div
@@ -206,17 +234,21 @@ const BookmarkItem = ({ document }: { document: BookmarkDocument }) => {
         </h4>
         <span>{document.meta.estimatedReadingMinutes} min</span>
       </div>
-
-      <img
-        src={document.meta.image}
-        alt={`cover for ${document.meta.title}`}
-        width={112}
-        height={112}
-        style={{
-          aspectRatio: '1',
-          objectFit: 'cover',
-        }}
-      />
+      {document.meta.image && (
+        <img
+          src={document.meta.image}
+          alt={`Cover for ${document.meta.title}`}
+          className={css({
+            width: '100%',
+            maxWidth: '112px',
+            aspectRatio: '1',
+            objectFit: 'cover',
+            md: {
+              maxWidth: '215px',
+            },
+          })}
+        />
+      )}
     </div>
   )
 }
