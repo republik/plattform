@@ -29,7 +29,7 @@ function NextReads({ repoId, path }: { repoId: string; path: string }) {
       (feed) => feed.id === 'POPULAR_OF_THE_LAST_20_DAYS_WITH_COMMENTS_COUNT',
     )[0]
     .documents.slice(0, 5) as Document[]
-
+  
   return (
     <div className={css({ pt: 16 })}>
       <CuratedFeed documents={curatedReads} />

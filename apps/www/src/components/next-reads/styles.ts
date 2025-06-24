@@ -15,7 +15,7 @@ export const nextReadHeader = css({
     fontWeight: 700,
     fontSize: 20,
     lineHeight: 1,
-    marginBottom: 4,
+    mb: 4,
   },
   '& .tagline': {
     fontFamily: 'rubis',

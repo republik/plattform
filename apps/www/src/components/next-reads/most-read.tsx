@@ -49,12 +49,12 @@ const mostReadGrid = css({
   overflowX: 'auto',
   scrollSnapType: 'x mandatory',
   gap: 8,
-  mt: 16,
-  mb: 8,
+  mt: 12,
+  pb: 8,
   mx: '15px',
   md: {
     mx: 8,
-    mb: 16,
+    pb: 16,
   },
 })
 
