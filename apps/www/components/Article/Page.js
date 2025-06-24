@@ -560,7 +560,7 @@ const ArticlePage = ({
                   />
                 )}
 
-                <NextReads />
+                <NextReads path={cleanedPath} repoId={repoId} />
               </div>
             </>
           )

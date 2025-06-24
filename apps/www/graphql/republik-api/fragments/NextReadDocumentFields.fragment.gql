@@ -1,0 +1,35 @@
+fragment NextReadDocumentFields on Document {
+  id
+  meta {
+    audioCover(properties: { width: 1024, height: 1024 })
+    audioCoverCrop {
+      x
+      y
+      width
+      height
+    }
+    image
+    estimatedReadingMinutes
+    estimatedConsumptionMinutes
+    contributors {
+      name
+      kind
+    }
+    title
+    description
+    publishDate
+    path
+    kind
+    color
+    format {
+      id
+      meta {
+        title
+        color
+      }
+    }
+    series {
+      title
+    }
+  }
+}

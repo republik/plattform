@@ -1,46 +1,16 @@
-query NextReads {
-  documents: search(
-    filters: [{key: "template", not: true, value: "section"},{key: "template", not: true, value: "editorialNewsletter"}, {key: "template", not: true, value: "format"}, {key: "template", not: true, value: "front"}]
-    filter: {feed: true}
-    sort: {key: publishedAt, direction: DESC}
-    first: 20
-  ) {
-    nodes {
-      entity {
-        ... on Document {
-          id
-          meta {
-            audioCover(properties: { width: 1024, height: 1024 })
-            audioCoverCrop {
-              x
-              y
-              width
-              height
-            }
-            image
-            estimatedReadingMinutes
-            estimatedConsumptionMinutes
-            contributors {
-              name
-              kind
-            }
-            title
-            description
-            publishDate
-            path
-            kind
-            color
-            format {
-              id
-              meta {
-                title
-                color
-              }
-            }
-            series {
-              title
-            }
-          }
+query NextReads($repoId: ID!, $path: String!) {
+  nextReads(repoId: $repoId) {
+    id
+    documents {
+      ...NextReadDocumentFields
+    }
+  }
+  CURATED_READS: document(path: $path) {
+    id
+    meta {
+      recommendations {
+        nodes {
+          ...NextReadDocumentFields
         }
       }
     }
