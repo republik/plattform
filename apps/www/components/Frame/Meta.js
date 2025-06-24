@@ -1,10 +1,8 @@
 import Head from 'next/head'
 
-import {
-  imageSizeInfo,
-  imageResizeUrl,
-} from '@republik/mdast-react-render'
+import { imageResizeUrl, imageSizeInfo } from '@republik/mdast-react-render'
 
+import { SHARE_IMAGE_WIDTH } from '@project-r/styleguide'
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 import withT from '../../lib/withT'
 
@@ -55,8 +53,17 @@ const Meta = ({ data, t }) => {
 
   const twitterCard = twitterImage || image
 
-  const { width: ogImageWidth, height: ogImageHeight } =
-    (ogImage && imageSizeInfo(ogImage)) || {}
+  // We resize the OG image to a width of 1200px, so we need to infer the height
+  const ogImageSize = ogImage && imageSizeInfo(ogImage)
+  const resizedOgImageSize = ogImageSize
+    ? {
+        width: SHARE_IMAGE_WIDTH,
+        height: Math.round(
+          (SHARE_IMAGE_WIDTH / ogImageSize.width) * ogImageSize.height,
+        ),
+      }
+    : // If the original image size is not known, we cannot know the height
+      { width: SHARE_IMAGE_WIDTH }
 
   return (
     <Head>
@@ -74,12 +81,14 @@ const Meta = ({ data, t }) => {
         property='og:description'
         content={facebookDescription || description}
       />
-      {!!ogImage && <meta property='og:image' content={ogImage} />}
-      {!!ogImageWidth && (
-        <meta property='og:image:width' content={ogImageWidth} />
+      {!!ogImage && (
+        <meta property='og:image' content={imageResizeUrl(ogImage, '1200x')} />
       )}
-      {!!ogImageHeight && (
-        <meta property='og:image:height' content={ogImageHeight} />
+      {!!resizedOgImageSize.width && (
+        <meta property='og:image:width' content={resizedOgImageSize.width} />
+      )}
+      {!!resizedOgImageSize.height && (
+        <meta property='og:image:height' content={resizedOgImageSize.height} />
       )}
 
       <meta name='twitter:site' content='@RepublikMagazin' />
@@ -96,7 +105,7 @@ const Meta = ({ data, t }) => {
       {!!twitterCard && (
         <meta
           name='twitter:image:src'
-          content={imageResizeUrl(twitterCard, '3000x')}
+          content={imageResizeUrl(twitterCard, '1200x')}
         />
       )}
       {citationMeta &&
