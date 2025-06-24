@@ -48,6 +48,8 @@ export default function BookmarkedNextReadsFeed() {
   const documents =
     data.me?.collectionItems.nodes.map((node) => node.document) || []
 
+  const multipleDocuments = [...documents, ...documents]
+
   return (
     <ColorContextLocalExtension localColors={localColors}>
       <GetColorScheme>
@@ -77,13 +79,19 @@ export default function BookmarkedNextReadsFeed() {
                   flexDirection: 'column',
                   mt: '32px',
                   gap: '32px',
+                  width: '100%',
                   md: {
+                    margin: '0 auto',
+                    pt: '12px',
                     flexDirection: 'row',
                     justifyContent: 'center',
+                    alignItems: 'flex-start',
+                    maxWidth: '975px',
+                    gap: '24px',
                   },
                 })}
               >
-                {documents.slice(1).map((document) => (
+                {multipleDocuments.slice(1).map((document) => (
                   <BookmarkItem key={document.id} document={document} />
                 ))}
               </div>
@@ -121,7 +129,7 @@ const FirstBookmarkItem = ({ document }: { document: BookmarkDocument }) => {
   return (
     <div
       className={css({
-        margin: '16px auto',
+        margin: '16px auto 24px auto',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -205,14 +213,17 @@ const BookmarkItem = ({ document }: { document: BookmarkDocument }) => {
       className={css({
         display: 'flex',
         gap: '24px',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'space-between',
-        maxWidth: '600px',
+        maxWidth: '420px',
         width: '100%',
         margin: '0 auto',
         md: {
+          maxWidth: '309px',
           flexDirection: 'column-reverse',
-          alignItems: 'flex-start',
+          justifyContent: 'flex-start',
+          width: 'auto',
+          margin: 0
         },
       })}
     >
@@ -230,21 +241,21 @@ const BookmarkItem = ({ document }: { document: BookmarkDocument }) => {
             lineHeight: 1.2,
           })}
         >
-          {document.meta.title}
+          {document.meta.title} Add a lot of text here to see how it looks
         </h4>
-        <span>{document.meta.estimatedReadingMinutes} min</span>
+        <span>{document.meta.estimatedReadingMinutes} min Lesezeit</span>
       </div>
       {document.meta.image && (
         <img
-          src={document.meta.image}
+          src={`${document.meta.image}&resize=618x`}
           alt={`Cover for ${document.meta.title}`}
           className={css({
             width: '100%',
-            maxWidth: '112px',
             aspectRatio: '1',
             objectFit: 'cover',
+            maxWidth: '112px',
             md: {
-              maxWidth: '215px',
+              maxWidth: '309px',
             },
           })}
         />
