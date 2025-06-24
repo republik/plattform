@@ -48,8 +48,6 @@ export default function BookmarkedNextReadsFeed() {
   const documents =
     data.me?.collectionItems.nodes.map((node) => node.document) || []
 
-  const multipleDocuments = [...documents, ...documents]
-
   return (
     <ColorContextLocalExtension localColors={localColors}>
       <GetColorScheme>
@@ -72,29 +70,11 @@ export default function BookmarkedNextReadsFeed() {
                   <p className='tagline'>Deine Leseliste</p>
                 </div>
               </div>
-              <FirstBookmarkItem document={documents[0]} />
-              <div
-                className={css({
-                  display: 'flex',
-                  flexDirection: 'column',
-                  mt: '32px',
-                  gap: '32px',
-                  width: '100%',
-                  md: {
-                    margin: '0 auto',
-                    pt: '12px',
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'flex-start',
-                    maxWidth: '975px',
-                    gap: '24px',
-                  },
-                })}
-              >
-                {multipleDocuments.slice(1).map((document) => (
-                  <BookmarkItem key={document.id} document={document} />
-                ))}
-              </div>
+              <FirstBookmarkItem
+                document={documents[0]}
+                numberOfDocuments={documents.length}
+              />
+              <BookmarkItems documents={documents.slice(1)} />
             </div>
           </div>
         )}
@@ -103,7 +83,40 @@ export default function BookmarkedNextReadsFeed() {
   )
 }
 
-const FirstBookmarkItem = ({ document }: { document: BookmarkDocument }) => {
+const BookmarkItems = ({ documents }: { documents: BookmarkDocument[] }) => {
+  return (
+    <div
+      className={css({
+        display: 'flex',
+        flexDirection: 'column',
+        mt: '32px',
+        gap: '32px',
+        width: '100%',
+        md: {
+          margin: '0 auto',
+          pt: '12px',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          maxWidth: '975px',
+          gap: '24px',
+        },
+      })}
+    >
+      {documents.map((document) => (
+        <BookmarkItem key={document.id} document={document} />
+      ))}
+    </div>
+  )
+}
+
+const FirstBookmarkItem = ({
+  document,
+  numberOfDocuments,
+}: {
+  document: BookmarkDocument
+  numberOfDocuments: number
+}) => {
   const splitContent = document.content && splitByTitle(document.content)
 
   // Use page schema with container skipping to avoid white background
@@ -135,7 +148,7 @@ const FirstBookmarkItem = ({ document }: { document: BookmarkDocument }) => {
         alignItems: 'center',
         justifyContent: 'center',
         gap: '24px',
-        maxWidth: '695px',
+        maxWidth: '642px',
       })}
     >
       <h4
@@ -146,7 +159,7 @@ const FirstBookmarkItem = ({ document }: { document: BookmarkDocument }) => {
           textAlign: 'center',
           md: {
             fontSize: 32,
-          }
+          },
         })}
       >
         {document.meta.title}
@@ -190,7 +203,12 @@ const FirstBookmarkItem = ({ document }: { document: BookmarkDocument }) => {
           {renderSchema(splitContent.mainTruncated) as unknown as ReactNode}
         </div>
       )}
-      <Link href={document.meta.path}>
+      <Link
+        href={document.meta.path}
+        className={css({
+          alignSelf: numberOfDocuments < 1 && 'flex-start',
+        })}
+      >
         <span
           className={css({
             display: 'flex',
@@ -223,7 +241,7 @@ const BookmarkItem = ({ document }: { document: BookmarkDocument }) => {
           flexDirection: 'column-reverse',
           justifyContent: 'flex-start',
           width: 'auto',
-          margin: 0
+          margin: 0,
         },
       })}
     >
