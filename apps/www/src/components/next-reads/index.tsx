@@ -21,7 +21,7 @@ function NextReads() {
     .slice(3, 8)
     .map((n) => n.entity) as Document[]
   const mostCommented = data.documents.nodes
-    .slice(8, 13)
+    .slice(14, 19)
     .map((n) => n.entity) as Document[]
 
   return (

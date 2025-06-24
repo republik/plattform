@@ -42,6 +42,7 @@ export const Cover3_4 = ({
 }
 
 function MostCommentedCoverText({ document }: { document: Document }) {
+  console.log('MostCommentedCoverText', document.meta.title)
   return (
     <div
       className={cx(
@@ -76,6 +77,7 @@ function MostCommentedWithImage({ document }: { document: Document }) {
         className={css({
           position: 'absolute',
           bottom: 0,
+          width: '100%',
           paddingBottom: 16,
           color: 'white',
           background:
@@ -161,6 +163,7 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
     <div
       className={css({
         borderTop: '1px solid black',
+        px: 1,
       })}
     >
       <div
@@ -180,7 +183,6 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
           gridTemplateColumns: 'repeat(5, 1fr)',
           gridTemplateRows: 'auto',
           gap: 1,
-          px: 1,
           mb: 1,
           mt: 16,
           overflowX: 'auto',
