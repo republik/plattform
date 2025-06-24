@@ -974,7 +974,7 @@
     },
     {
       "key": "account/progress/consent/label",
-      "value": "Ich möchte diese Funktion nutzen"
+      "value": "Leseposition nutzen"
     },
     {
       "key": "account/progress/consent/confirmRevoke",
@@ -2502,7 +2502,7 @@
     },
     {
       "key": "package/ABO_GIVE_MONTHS/description",
-      "value": "Das Geschenk-Abo können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu. Postbestellungen werden innerhalb von 7 Tagen versendet"
+      "value": "Das Geschenk-Abo können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu."
     },
     {
       "key": "package/YEARLY_ABO/price",
@@ -3454,11 +3454,7 @@
     },
     {
       "key": "article/progressprompt/description/feature",
-      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn Sie die Funktion aktivieren, wird Ihr Leseverhalten bei der Republik aufgezeichnet. {link}"
-    },
-    {
-      "key": "article/progressprompt/description/feature/link",
-      "value": "Mehr Informationen"
+      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn die Funktion aktiv ist, wird Ihr Leseverhalten bei der Republik aufgezeichnet."
     },
     {
       "key": "article/progressprompt/question",
@@ -7153,7 +7149,7 @@
     },
     {
       "key": "package/ABO_GIVE/description",
-      "value": "Die Geschenkmitgliedschaft können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu. Postbestellungen werden innerhalb von 7 Tagen versendet"
+      "value": "Die Geschenkmitgliedschaft können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu."
     },
     {
       "key": "package/customize/price/payMore/threemonth",
