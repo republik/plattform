@@ -1,6 +1,10 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { getAuthors } from '@app/components/next-reads/helpers'
-import { nextReadHeader, nextReadItem } from '@app/components/next-reads/styles'
+import {
+  nextReadHeader,
+  nextReadItem,
+  nextReadsSection,
+} from '@app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 import React from 'react'
@@ -50,7 +54,6 @@ function MostCommentedCoverText({ document }: { document: Document }) {
         css({
           width: '90%',
           ml: '5%',
-          textAlign: 'center',
         }),
       )}
     >
@@ -125,28 +128,8 @@ function MostCommentedRead({
   document: Document
   colors: ColorType
 }) {
-  // NOT SURE THIS IS GREAT
-  /* const ref = useRef<HTMLDivElement | null>(null)
-  const [visible, setVisible] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (!ref.current || !ref.current.parentElement.parentElement) return
-    const observer = new window.IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { root: ref.current.parentElement.parentElement, threshold: 0.7 },
-    )
-    observer.observe(ref.current)
-    return () => observer.disconnect()
-  }, []) */
-
-  /*ref={ref}
-    style={{
-        opacity: visible ? 1 : 0.2,
-        transition: 'opacity 0.3s',
-      }}*/
-
   return (
-    <div className={css({ position: 'relative' })}>
+    <div className={css({ position: 'relative', scrollSnapAlign: 'start' })}>
       <Link href={document.meta.path}>
         {document.meta.image ? (
           <MostCommentedWithImage document={document} />
@@ -158,49 +141,31 @@ function MostCommentedRead({
   )
 }
 
+const mostCommentedGrid = css({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(5, 1fr)',
+  gridTemplateRows: 'auto',
+  gap: 1,
+  mb: 1,
+  mt: 16,
+  overflowX: 'auto',
+  scrollSnapType: 'x mandatory',
+})
+
 export function MostCommentedFeed({ documents }: { documents: Document[] }) {
   return (
-    <div
-      className={css({
-        borderTop: '1px solid black',
-        px: 1,
-      })}
-    >
-      <div
-        className={cx(
-          nextReadHeader,
-          css({
-            textAlign: 'center',
-          }),
-        )}
-      >
+    <div className={nextReadsSection}>
+      <div className={nextReadHeader}>
         <h3>Was zu reden gibt</h3>
         <p className='tagline'>Die meistkommentierten Beiträge des Monats</p>
       </div>
-      <div
-        className={css({
-          display: 'grid',
-          gridTemplateColumns: 'repeat(5, 1fr)',
-          gridTemplateRows: 'auto',
-          gap: 1,
-          mb: 1,
-          mt: 16,
-          overflowX: 'auto',
-          scrollSnapType: 'x mandatory',
-        })}
-      >
+      <div className={mostCommentedGrid}>
         {documents.map((document, idx) => (
-          <div
+          <MostCommentedRead
             key={document.id}
-            className={css({
-              scrollSnapAlign: 'start',
-            })}
-          >
-            <MostCommentedRead
-              document={document}
-              colors={COLOURS[idx % COLOURS.length]}
-            />
-          </div>
+            document={document}
+            colors={COLOURS[idx % COLOURS.length]}
+          />
         ))}
       </div>
     </div>
