@@ -46,12 +46,12 @@ export const Cover3_4 = ({
 }
 
 function MostCommentedCoverText({ document }: { document: Document }) {
-  console.log('MostCommentedCoverText', document.meta.title)
   return (
     <div
       className={cx(
         nextReadItem,
         css({
+          pt: 4,
           width: '90%',
           ml: '5%',
         }),
@@ -60,6 +60,9 @@ function MostCommentedCoverText({ document }: { document: Document }) {
       <h4>
         <span className={css({ fontSize: 32 })}>{document.meta.title}</span>
       </h4>
+      {!document.meta.image && (
+        <p className='description'>{document.meta.description}</p>
+      )}
       <p className='author'>{getAuthors(document)}</p>
     </div>
   )
@@ -85,7 +88,7 @@ function MostCommentedWithImage({ document }: { document: Document }) {
           color: 'white',
           background:
             'linear-gradient(180deg, rgba(7, 7, 7, 0.00) 0%, #070707 100%)',
-          backdropFilter: 'blur(2px)',
+          backdropFilter: 'blur(1px)',
         })}
       >
         <MostCommentedCoverText document={document} />
@@ -142,6 +145,8 @@ function MostCommentedRead({
 }
 
 const mostCommentedGrid = css({
+  maxWidth: '3270px',
+  margin: '0 auto',
   display: 'grid',
   gridTemplateColumns: 'repeat(5, 1fr)',
   gridTemplateRows: 'auto',
@@ -150,14 +155,17 @@ const mostCommentedGrid = css({
   mt: 16,
   overflowX: 'auto',
   scrollSnapType: 'x mandatory',
+  textAlign: 'center',
 })
 
 export function MostCommentedFeed({ documents }: { documents: Document[] }) {
   return (
-    <div className={nextReadsSection}>
-      <div className={nextReadHeader}>
-        <h3>Was zu reden gibt</h3>
-        <p className='tagline'>Die meistkommentierten Beiträge des Monats</p>
+    <>
+      <div className={nextReadsSection}>
+        <div className={nextReadHeader}>
+          <h3>Was zu reden gibt</h3>
+          <p className='tagline'>Die meistkommentierten Beiträge des Monats</p>
+        </div>
       </div>
       <div className={mostCommentedGrid}>
         {documents.map((document, idx) => (
@@ -168,6 +176,6 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
           />
         ))}
       </div>
-    </div>
+    </>
   )
 }
