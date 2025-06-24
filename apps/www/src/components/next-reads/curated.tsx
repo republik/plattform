@@ -1,6 +1,9 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { CategoryLabel, getAuthors } from '@app/components/next-reads/helpers'
-import { nextReadHeader, nextReadItem } from '@app/components/next-reads/styles'
+import {
+  nextReadHeader,
+  nextReadItemTypography,
+} from '@app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 
@@ -8,7 +11,7 @@ function RecommendedRead({ document }: { document: Document }) {
   return (
     <div
       className={cx(
-        nextReadItem,
+        nextReadItemTypography,
         css({
           pb: 8,
           mb: 8,

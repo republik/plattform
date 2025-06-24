@@ -15,7 +15,7 @@ export const nextReadHeader = css({
     fontWeight: 700,
     fontSize: 20,
     lineHeight: 1,
-    marginBottom: 4,
+    mb: 4,
   },
   '& .tagline': {
     fontFamily: 'rubis',
@@ -25,7 +25,7 @@ export const nextReadHeader = css({
   },
 })
 
-export const nextReadItem = css({
+export const nextReadItemTypography = css({
   // title of the document
   '& h4': {
     fontFamily: 'rubis',

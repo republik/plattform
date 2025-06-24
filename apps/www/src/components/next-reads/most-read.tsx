@@ -3,17 +3,26 @@ import { SquareCover } from '@app/components/assets/SquareCover'
 import { CategoryLabel, getAuthors } from '@app/components/next-reads/helpers'
 import {
   nextReadHeader,
-  nextReadItem,
+  nextReadItemTypography,
   nextReadsSection,
 } from '@app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 
-function RecommendedRead({ document }: { document: Document }) {
+const mostReadItemStyle = css({
+  mb: 4,
+  textAlign: 'left',
+  scrollSnapAlign: 'start',
+  scrollSnapMarginLeft: '15px',
+  width: '240px',
+  lg: {
+    width: 'auto',
+  },
+})
+
+function MostReadItem({ document }: { document: Document }) {
   return (
-    <div
-      className={cx(nextReadItem, css({ marginBottom: 4, textAlign: 'left' }))}
-    >
+    <div className={cx(nextReadItemTypography, mostReadItemStyle)}>
       <Link href={document.meta.path}>
         <div className={css({ marginBottom: 6 })}>
           <SquareCover
@@ -37,10 +46,16 @@ const mostReadGrid = css({
   display: 'grid',
   gridTemplateColumns: 'repeat(5, 1fr)',
   gridTemplateRows: 'auto',
+  overflowX: 'auto',
+  scrollSnapType: 'x mandatory',
   gap: 8,
-  px: 8,
-  mt: 16,
-  mb: 16,
+  mt: 12,
+  pb: 8,
+  mx: '15px',
+  md: {
+    mx: 8,
+    pb: 16,
+  },
 })
 
 export function MostReadFeed({ documents }: { documents: Document[] }) {
@@ -54,7 +69,7 @@ export function MostReadFeed({ documents }: { documents: Document[] }) {
       </div>
       <div className={mostReadGrid}>
         {documents.map((document) => (
-          <RecommendedRead key={document.id} document={document} />
+          <MostReadItem key={document.id} document={document} />
         ))}
       </div>
     </div>

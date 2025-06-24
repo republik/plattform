@@ -2,7 +2,7 @@ import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { getAuthors } from '@app/components/next-reads/helpers'
 import {
   nextReadHeader,
-  nextReadItem,
+  nextReadItemTypography,
   nextReadsSection,
 } from '@app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
@@ -21,25 +21,21 @@ const COLOURS: ColorType[] = [
   { color: '#FCE8F6', background: '#94355C' },
 ]
 
-const MD_HEIGHT = 867
 const MD_WIDTH = 650
 
-export const Cover3_4 = ({
-  image,
-  title,
-}: {
-  image: string
-  title: string
-}) => {
+export const CoverImage = ({ image }: { image: string }) => {
   return (
-    <img
-      src={image}
-      alt={`cover for ${title}`}
-      width={MD_WIDTH}
-      height={MD_HEIGHT}
+    <div
+      className={css({
+        width: '100%',
+        aspectRatio: '9/16',
+        md: { width: MD_WIDTH, aspectRatio: '3/4' },
+      })}
       style={{
-        aspectRatio: '3/4',
-        objectFit: 'cover',
+        backgroundImage: `url(${image})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
       }}
     />
   )
@@ -49,7 +45,7 @@ function MostCommentedCoverText({ document }: { document: Document }) {
   return (
     <div
       className={cx(
-        nextReadItem,
+        nextReadItemTypography,
         css({
           pt: 4,
           width: '90%',
@@ -72,12 +68,14 @@ function MostCommentedWithImage({ document }: { document: Document }) {
   return (
     <div
       className={css({
-        height: '867px',
-        width: '650px',
+        width: '100%',
         position: 'relative',
+        md: {
+          width: MD_WIDTH,
+        },
       })}
     >
-      <Cover3_4 title={document.meta.title} image={document.meta.image} />
+      <CoverImage image={document.meta.image} />
 
       <div
         className={css({
@@ -113,10 +111,14 @@ function MostCommentedWithoutImage({
         color: color,
       }}
       className={css({
-        height: '867px',
-        width: '650px',
+        aspectRatio: '9/16',
+        width: '100%',
         display: 'flex',
         alignItems: 'center',
+        md: {
+          aspectRatio: '3/4',
+          width: '650px',
+        },
       })}
     >
       <MostCommentedCoverText document={document} />
@@ -148,14 +150,17 @@ const mostCommentedGrid = css({
   maxWidth: '3270px',
   margin: '0 auto',
   display: 'grid',
-  gridTemplateColumns: 'repeat(5, 1fr)',
   gridTemplateRows: 'auto',
+  gridTemplateColumns: 'repeat(1, 1fr)',
   gap: 1,
   mb: 1,
-  mt: 16,
+  mt: 12,
   overflowX: 'auto',
   scrollSnapType: 'x mandatory',
   textAlign: 'center',
+  md: {
+    gridTemplateColumns: 'repeat(5, 1fr)',
+  },
 })
 
 export function MostCommentedFeed({ documents }: { documents: Document[] }) {
