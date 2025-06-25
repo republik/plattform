@@ -5,7 +5,11 @@ import {
   GetCollectionItemsQuery,
 } from '../../../graphql/republik-api/__generated__/gql/graphql'
 import { css, cx } from '@republik/theme/css'
-import { nextReadHeader, nextReadsSection } from './styles'
+import {
+  nextReadHeader,
+  nextReadItemTypography,
+  nextReadsSection,
+} from './styles'
 import Link from 'next/link'
 import {
   ColorContextLocalExtension,
@@ -163,7 +167,7 @@ const FirstBookmarkItem = ({
       </h4>
       {document.meta.image && (
         <img
-          src={document.meta.image}
+          src={`${document.meta.image}&resize=1300x`}
           alt={`Cover for ${document.meta.title}`}
           className={css({
             width: '100%',
@@ -195,6 +199,7 @@ const FirstBookmarkItem = ({
             fontFamily: 'rubis',
             fontSize: 18,
             lineHeight: 1.8,
+            textAlign: 'left',
           })}
         >
           {renderSchema(splitContent.mainTruncated) as unknown as ReactNode}
@@ -225,22 +230,25 @@ const FirstBookmarkItem = ({
 const BookmarkItem = ({ document }: { document: BookmarkDocument }) => {
   return (
     <div
-      className={css({
-        display: 'flex',
-        gap: '24px',
-        alignItems: 'flex-start',
-        justifyContent: 'space-between',
-        maxWidth: '420px',
-        width: '100%',
-        margin: '0 auto',
-        md: {
-          maxWidth: '309px',
-          flexDirection: 'column-reverse',
-          justifyContent: 'flex-start',
-          width: 'auto',
-          margin: 0,
-        },
-      })}
+      className={cx(
+        nextReadItemTypography,
+        css({
+          display: 'flex',
+          gap: '24px',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          maxWidth: '420px',
+          width: '100%',
+          margin: '0 auto',
+          md: {
+            maxWidth: '309px',
+            flexDirection: 'column-reverse',
+            justifyContent: 'flex-start',
+            width: 'auto',
+            margin: 0,
+          },
+        }),
+      )}
     >
       <div
         className={css({
@@ -249,15 +257,7 @@ const BookmarkItem = ({ document }: { document: BookmarkDocument }) => {
           gap: '8px',
         })}
       >
-        <h4
-          className={css({
-            fontFamily: 'rubis',
-            fontSize: 18,
-            lineHeight: 1.2,
-          })}
-        >
-          {document.meta.title} Add a lot of text here to see how it looks
-        </h4>
+        <h4>{document.meta.title}</h4>
         <span>{document.meta.estimatedReadingMinutes} min Lesezeit</span>
       </div>
       {document.meta.image && (
