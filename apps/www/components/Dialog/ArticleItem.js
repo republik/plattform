@@ -67,7 +67,7 @@ const ArticleItem = ({ title, count, image }) => {
 
   return (
     <div {...styles.container}>
-      <div 
+      {/* <div 
         {...styles.imageContainer}
         // {...colorScheme.set('backgroundColor', 'hover')}
       >
@@ -97,7 +97,7 @@ const ArticleItem = ({ title, count, image }) => {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
       <div {...styles.textContainer}>
         <p {...styles.title}>{title}</p>
         {count && (
