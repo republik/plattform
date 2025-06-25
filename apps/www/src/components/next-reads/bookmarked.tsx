@@ -5,7 +5,7 @@ import {
   GetCollectionItemsQuery,
 } from '../../../graphql/republik-api/__generated__/gql/graphql'
 import { css, cx } from '@republik/theme/css'
-import { nextReadHeader } from './styles'
+import { nextReadHeader, nextReadsSection } from './styles'
 import Link from 'next/link'
 import {
   ColorContextLocalExtension,
@@ -54,22 +54,19 @@ export default function BookmarkedNextReadsFeed() {
         {(colorScheme) => (
           <div
             {...colorScheme.set('backgroundColor', 'background')}
-            className={css({ pb: '24px', md: { pb: '80px' } })}
+            className={nextReadsSection}
           >
-            <div className={css({ pl: '15px', pr: '15px' })}>
-              <div className={css({ borderTop: '1px solid black' })}>
-                <div
-                  className={cx(
-                    nextReadHeader,
-                    css({
-                      textAlign: 'center',
-                    }),
-                  )}
-                >
-                  <h3>Gemerkte Beiträge</h3>
-                  <p className='tagline'>Deine Leseliste</p>
-                </div>
-              </div>
+            <div className={nextReadHeader}>
+              <h3>Gemerkte Beiträge</h3>
+              <p className='tagline'>Deine Leseliste</p>
+            </div>
+            <div
+              className={css({
+                px: '15px',
+                pb: '24px',
+                md: { pb: '80px' },
+              })}
+            >
               <FirstBookmarkItem
                 document={documents[0]}
                 numberOfDocuments={documents.length}
