@@ -70,9 +70,9 @@ const nextConfig = {
       // Migrated from custom express server
       {
         source: '/:path*',
-        headers: [
+        headers:
           // Security headers, peviously handled by helmet
-          ...Object.entries({
+          Object.entries({
             // 'Content-Security-Policy': `default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests`,
             // 'Cross-Origin-Opener-Policy': 'same-origin',
             // 'Cross-Origin-Resource-Policy': 'same-origin',
@@ -88,11 +88,10 @@ const nextConfig = {
             // removed by helmet by default, but we keep it for now
             'X-Powered-By': 'Republik',
             'X-XSS-Protection': '1; mode=block',
-          }).map(([key, value]) => ({
-            key,
-            value,
-          })),
-        ],
+            'X-Robots-Tag': process.env.ROBOTS_TAG_HEADER,
+          })
+            .filter(([, value]) => !!value)
+            .map(([key, value]) => ({ key, value })),
       },
     ]
   },
