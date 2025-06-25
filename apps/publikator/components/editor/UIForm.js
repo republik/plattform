@@ -9,6 +9,7 @@ const styles = {
     clear: 'both',
     width: `calc(100% + ${GUTTER}px)`,
     margin: `0 -${GUTTER / 2}px`,
+    marginBottom: '40px',
     ':after': {
       content: '""',
       display: 'table',

@@ -138,7 +138,7 @@ const MemoModule = ({ rule, TYPE, context }) => {
               data-disabled={disabled}
               data-visible={visible}
             >
-              <IconMemo />
+              <IconMemo size={24} />
             </span>
           )
         }),
