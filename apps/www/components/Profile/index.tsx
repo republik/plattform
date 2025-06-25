@@ -1,8 +1,5 @@
 import { useQuery } from '@apollo/client'
-import { css } from 'glamor'
-
 import { useTranslation } from '../../lib/withT'
-
 import Frame from '../Frame'
 
 import { PUBLIC_BASE_URL } from '../../lib/constants'
@@ -12,19 +9,8 @@ import { useMe } from '../../lib/context/MeContext'
 import getPublicUser from './graphql/getPublicUser'
 
 import { screenshotUrl } from '@app/lib/util/screenshot-api'
-import { Container, mediaQueries } from '@project-r/styleguide'
 import EditProfile from './EditProfile'
 import ProfileView from './ProfileView'
-
-const styles = {
-  container: css({
-    maxWidth: 840,
-    margin: '32px auto',
-    [mediaQueries.mUp]: {
-      margin: '96px auto',
-    },
-  }),
-}
 
 const ProfilePage = ({ data, fetchMore }) => {
   const router = useRouter()
@@ -34,13 +20,13 @@ const ProfilePage = ({ data, fetchMore }) => {
   } = router
 
   return (
-    <Container {...styles.container}>
+    <>
       {edit && me.id == data.user.id ? (
         <EditProfile data={data} />
       ) : (
         <ProfileView data={data} fetchMore={fetchMore} />
       )}
-    </Container>
+    </>
   )
 }
 

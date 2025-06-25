@@ -1,5 +1,5 @@
 import { NormalizedCacheObject } from '@apollo/client'
-import { NextSSRApolloClient } from '@apollo/experimental-nextjs-app-support/ssr'
+import type { ApolloClient } from '@apollo/client-integration-nextjs'
 import { getCMSClientBase } from './cms-client-base'
 import { draftMode } from 'next/headers'
 
@@ -11,6 +11,8 @@ import { draftMode } from 'next/headers'
  *
  * @returns ApolloClient to interact with DatoCMS
  */
-export function getCMSClient(): NextSSRApolloClient<NormalizedCacheObject> {
-  return getCMSClientBase({ draftMode: draftMode().isEnabled })
+export async function getCMSClient(): Promise<
+  ApolloClient<NormalizedCacheObject>
+> {
+  return getCMSClientBase({ draftMode: (await draftMode()).isEnabled })
 }

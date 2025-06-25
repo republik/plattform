@@ -14,6 +14,7 @@ import makeCommentTree from './helpers/makeCommentTree'
 import createDiscussionForumPostingSchema from './helpers/createDiscussionForumPostingSchema'
 import { css } from 'glamor'
 import useDiscussionFocusHelper from './hooks/useDiscussionFocusHelper'
+import FontSizeSync from 'components/FontSize/Sync'
 
 const styles = {
   commentsWrapper: css({
@@ -80,12 +81,13 @@ const Discussion = ({ documentMeta }: Props) => {
         <>
           {structuredData && (
             <script
-              type="application/ld+json"
+              type='application/ld+json'
               dangerouslySetInnerHTML={{
                 __html: JSON.stringify(structuredData),
               }}
             />
           )}
+          <FontSizeSync />
           <TagFilter discussion={discussion} />
           <DiscussionComposer
             isRoot

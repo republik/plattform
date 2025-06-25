@@ -1,0 +1,14 @@
+import { IconExplorer } from '@/components'
+
+# Icons
+
+### `@republik/icons`
+
+import * as icons from '@republik/icons'
+
+<IconExplorer
+  icons={Object.entries(icons).map(([title, Icon]) => ({
+    title,
+    icon: <Icon />,
+  }))}
+/>

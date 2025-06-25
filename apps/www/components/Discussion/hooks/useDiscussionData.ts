@@ -45,7 +45,7 @@ type DiscussionData = {
 }
 
 function useDiscussionData(
-  discussionId: string,
+  discussionPath: string,
   options?: DiscussionOptions,
 ): DiscussionData {
   const {
@@ -58,7 +58,7 @@ function useDiscussionData(
     previousData,
   } = useDiscussionQuery({
     variables: {
-      discussionId,
+      discussionPath,
       orderBy: options.orderBy,
       depth: options.depth,
       focusId: options.focusId,
@@ -85,7 +85,7 @@ function useDiscussionData(
   }: FetchMoreParams) =>
     fetchMore({
       variables: {
-        discussionId,
+        discussionPath,
         parentId,
         after,
         orderBy: options.orderBy,

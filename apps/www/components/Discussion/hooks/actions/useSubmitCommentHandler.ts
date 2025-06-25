@@ -27,7 +27,7 @@ export type SubmitCommentHandlerFunction = (
 function useSubmitCommentHandler(): SubmitCommentHandlerFunction {
   const [submitCommentMutation] = useSubmitCommentMutation()
 
-  const { orderBy, focusId, activeTag, depth } = useDiscussion()
+  const { orderBy, focusId, activeTag, depth, discussion } = useDiscussion()
 
   return async (
     content: string,
@@ -53,7 +53,7 @@ function useSubmitCommentHandler(): SubmitCommentHandlerFunction {
       // Write the result of the query into the DiscussionQuery cache
       update: (cache, { data: { submitComment: comment } }) => {
         const variables: DiscussionQueryVariables = {
-          discussionId,
+          discussionPath: discussion?.path,
           orderBy: orderBy,
           depth: depth,
           focusId: focusId,

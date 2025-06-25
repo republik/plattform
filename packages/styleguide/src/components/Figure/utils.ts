@@ -23,9 +23,9 @@ export type ResizedSrc = {
 }
 
 export const getResizedSrcs = (
-  src,
-  srcDark,
-  displayWidth,
+  src?: string,
+  srcDark?: string,
+  displayWidth?: number,
   setMaxWidth = true,
 ): ResizedSrc => {
   if (!src) {

@@ -16,15 +16,23 @@ import {
   Dropdown,
   useColorContext,
   fontStyles,
-  Field,
+  Container,
 } from '@project-r/styleguide'
 import Link from 'next/link'
 import { useMe } from '../../../lib/context/MeContext'
 import { useTranslation } from '../../../lib/withT'
-import FieldSet, { styles as fieldSetStyles } from '../../FieldSet'
+import FieldSet from '../../FieldSet'
 import { PORTRAIT_SIZE } from '../ProfileView'
+import { usePaynotes } from '../../../src/components/paynotes/paynotes-context'
 
 const styles = {
+  container: css({
+    maxWidth: 840,
+    margin: '32px auto',
+    [mediaQueries.mUp]: {
+      margin: '96px auto',
+    },
+  }),
   portrait: css({
     width: PORTRAIT_SIZE,
     height: PORTRAIT_SIZE,
@@ -66,6 +74,7 @@ const EditProfile = ({ data: { user } }) => {
   const { t } = useTranslation()
   const isMe = me && me.id === user.id
   const [colorScheme] = useColorContext()
+  const { paynoteInlineHeight } = usePaynotes()
 
   const credential =
     user.credentials && user.credentials.find((c) => c.isListed)
@@ -95,148 +104,159 @@ const EditProfile = ({ data: { user } }) => {
 
   return (
     <>
-      <Link
-        style={{
-          display: 'flex',
-          textDecoration: 'underline',
-          marginBottom: 16,
-        }}
-        href={{
-          pathname: `/~${user.slug}`,
-        }}
-      >
-        {t('profile/edit/return')}
-      </Link>
-      <section {...styles.editSection}>
-        <div {...styles.portrait}>
-          <Portrait
-            user={user}
-            isEditing={true}
-            isMe={isMe}
-            onChange={onChange}
-            values={values}
-            errors={errors}
-            dirty={dirty}
-          />
-        </div>
-      </section>
-      <section {...styles.editSection}>
-        <h2>{t('profile/username/title')}</h2>
-        <p>{t('profile/username/description')}</p>
-        <div {...styles.fields}>
-          <UsernameField
-            user={user}
-            values={values}
-            errors={errors}
-            onChange={onChange}
-          />
-        </div>
-      </section>
-      <section {...styles.editSection}>
-        <h2>{t('profile/credentials/title')}</h2>
-        <p>{t('profile/credentials/description')}</p>
-        <div {...styles.fields}>
-          <Credentials
-            user={user}
-            isEditing={true}
-            onChange={onChange}
-            values={values}
-            errors={errors}
-            dirty={dirty}
-          />
-        </div>
-      </section>
-      <section {...styles.editSection}>
-        <h2>{t('profile/section/bio/title')}</h2>
-        <p>{t('profile/section/bio/description')}</p>
-        <div {...styles.fields}>
-          <BiographyField
-            values={values}
-            errors={errors}
-            dirty={dirty}
-            onChange={onChange}
-            t={t}
-          />
-          <StatementField
-            values={values}
-            errors={errors}
-            dirty={dirty}
-            onChange={onChange}
-            t={t}
-          />
-        </div>
-      </section>
-      <section {...styles.editSection}>
-        <h2>{t('profile/section/profileLinks/title')}</h2>
-        <p>{t('profile/section/profileLinks/description')}</p>
-        <div {...styles.fields}>
-          <ProfileUrlFields
-            user={user}
-            onChange={onChange}
-            values={values}
-            errors={errors}
-            dirty={dirty}
-          />
-        </div>
-      </section>
-      <section {...styles.editSection}>
-        <h2>{t('profile/section/privacy/title')}</h2>
-        <p>{t('profile/section/privacy/description')}</p>
-        <div {...styles.fields}>
-          <PrivacySettings
-            user={user}
-            onChange={onChange}
-            values={values}
-            errors={errors}
-            dirty={dirty}
-          />
-          <Dropdown
-            t={t}
-            label={t('profile/contact/email/access/label')}
-            value={values.emailAccessRole}
-            onChange={(item) => {
-              onChange({
-                values: {
-                  emailAccessRole: item.value,
-                },
-              })
-            }}
-            items={['ADMIN', 'EDITOR', 'MEMBER', 'PUBLIC'].map((value) => ({
-              value: value,
-              text: t(`profile/contact/access/${value}`),
-            }))}
-          />
-        </div>
-      </section>
-      <section {...styles.editSection}>
-        <h2>{t('profile/section/other/title')}</h2>
-        <div {...styles.fields}>
-          <PgpPublicKeyField
-            values={values}
-            errors={errors}
-            dirty={dirty}
-            onChange={onChange}
-            t={t}
-          />
-          <ProlitterisIdField
-            values={values}
-            errors={errors}
-            dirty={dirty}
-            onChange={onChange}
-            t={t}
-          />
-        </div>
-      </section>
+      <Container {...styles.container}>
+        <Link
+          style={{
+            display: 'flex',
+            textDecoration: 'underline',
+            marginBottom: 16,
+          }}
+          href={{
+            pathname: `/~${user.slug}`,
+          }}
+        >
+          {t('profile/edit/return')}
+        </Link>
+        <section {...styles.editSection}>
+          <div {...styles.portrait}>
+            <Portrait
+              user={user}
+              isEditing={true}
+              isMe={isMe}
+              onChange={onChange}
+              values={values}
+              errors={errors}
+              dirty={dirty}
+            />
+          </div>
+        </section>
+        <section {...styles.editSection}>
+          <h2>{t('profile/username/title')}</h2>
+          <p>{t('profile/username/description')}</p>
+          <div {...styles.fields}>
+            <UsernameField
+              user={user}
+              values={values}
+              errors={errors}
+              onChange={onChange}
+            />
+          </div>
+        </section>
+        <section {...styles.editSection}>
+          <h2>{t('profile/credentials/title')}</h2>
+          <p>{t('profile/credentials/description')}</p>
+          <div {...styles.fields}>
+            <Credentials
+              user={user}
+              isEditing={true}
+              onChange={onChange}
+              values={values}
+              errors={errors}
+              dirty={dirty}
+            />
+          </div>
+        </section>
+        <section {...styles.editSection}>
+          <h2>{t('profile/section/bio/title')}</h2>
+          <p>{t('profile/section/bio/description')}</p>
+          <div {...styles.fields}>
+            <BiographyField
+              values={values}
+              errors={errors}
+              dirty={dirty}
+              onChange={onChange}
+              t={t}
+            />
+            <StatementField
+              values={values}
+              errors={errors}
+              dirty={dirty}
+              onChange={onChange}
+              t={t}
+            />
+          </div>
+        </section>
+        <section {...styles.editSection}>
+          <h2>{t('profile/section/profileLinks/title')}</h2>
+          <p>{t('profile/section/profileLinks/description')}</p>
+          <div {...styles.fields}>
+            <ProfileUrlFields
+              user={user}
+              onChange={onChange}
+              values={values}
+              errors={errors}
+              dirty={dirty}
+            />
+          </div>
+        </section>
+        <section {...styles.editSection}>
+          <h2>{t('profile/section/privacy/title')}</h2>
+          <p>{t('profile/section/privacy/description')}</p>
+          <div {...styles.fields}>
+            <PrivacySettings
+              user={user}
+              onChange={onChange}
+              values={values}
+              errors={errors}
+              dirty={dirty}
+            />
+            <Dropdown
+              t={t}
+              label={t('profile/contact/email/access/label')}
+              value={values.emailAccessRole}
+              onChange={(item) => {
+                onChange({
+                  values: {
+                    emailAccessRole: item.value,
+                  },
+                })
+              }}
+              items={['ADMIN', 'EDITOR', 'MEMBER', 'PUBLIC'].map((value) => ({
+                value: value,
+                text: t(`profile/contact/access/${value}`),
+              }))}
+            />
+          </div>
+        </section>
+        <section {...styles.editSection}>
+          <h2>{t('profile/section/other/title')}</h2>
+          <div {...styles.fields}>
+            <PgpPublicKeyField
+              values={values}
+              errors={errors}
+              dirty={dirty}
+              onChange={onChange}
+              t={t}
+            />
+            <ProlitterisIdField
+              values={values}
+              errors={errors}
+              dirty={dirty}
+              onChange={onChange}
+              t={t}
+            />
+          </div>
+        </section>
+      </Container>
       <div
+        style={{
+          borderWidth: 1,
+          borderStyle: 'solid',          position: 'sticky',
+          bottom: paynoteInlineHeight || 0,
+          padding: '8px 15px',
+          width: '100%',
+        }}
         {...colorScheme.set('backgroundColor', 'default')}
-        style={{ position: 'sticky', bottom: 0, padding: '0 0 8px 0' }}
+        {...colorScheme.set('borderColor', 'divider')}
       >
-        <Submit
-          user={user}
-          state={state}
-          setState={setState}
-          onChange={onChange}
-        />
+        <div style={{ maxWidth: 840, margin: '0 auto' }}>
+          <Submit
+            user={user}
+            state={state}
+            setState={setState}
+            onChange={onChange}
+          />
+        </div>
       </div>
     </>
   )

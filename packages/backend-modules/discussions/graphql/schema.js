@@ -8,7 +8,7 @@ schema {
 
 type queries {
   discussions: [Discussion!]!
-  discussion(id: ID!): Discussion
+  discussion(id: ID, path: String): Discussion
   activeDiscussions(
     lastDays: Int!
     first: Int

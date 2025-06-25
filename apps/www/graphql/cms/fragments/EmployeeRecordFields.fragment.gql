@@ -10,6 +10,7 @@ fragment EmployeeRecordFields on EmployeeRecord {
   title
   userId
   famous
+  _updatedAt
   profile {
     url(imgixParams: { sat: -100, w: 384, h: 384, fit: crop })
   }

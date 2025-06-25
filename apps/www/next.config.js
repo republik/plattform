@@ -42,24 +42,10 @@ const nextConfig = {
     PUBLIC_BASE_URL,
     PUBLIC_CDN_URL,
   },
-  transpilePackages: [
-    '@project-r/styleguide',
-    '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11 and older safari versions
-    '@republik/icons', // Ensures ES5 compatibility to work in IE11 and older safari versions
-  ],
-  webpack: (config) => {
-    config.externals = config.externals || {}
-    config.externals['lru-cache'] = 'lru-cache'
-    config.externals['react-dom/server'] = 'react-dom/server'
-    return config
-  },
+
   poweredByHeader: false,
   assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
-  useFileSystemPublicRoutes: true,
-  // , onDemandEntries: {
-  //   // wait 5 minutes before disposing entries
-  //   maxInactiveAge: 1000 * 60 * 5
-  // }
+
   eslint: {
     ignoreDuringBuilds: true,
   },

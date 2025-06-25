@@ -2,6 +2,7 @@ import { IconClose } from '@republik/icons'
 import { css, merge, simulate } from 'glamor'
 import React, {
   MutableRefObject,
+  ReactElement,
   ReactNode,
   useMemo,
   useRef,
@@ -151,7 +152,7 @@ const Field = React.forwardRef<
     showClearIcon?: boolean
     icon?: ReactNode
     simulate?: string
-    renderInput?: React.FC<Record<string, unknown>>
+    renderInput?: (props: any) => ReactElement
   }
 >(
   (
@@ -181,7 +182,7 @@ const Field = React.forwardRef<
     const [isValidating, setIsValidating] = useState(false)
     const [isDirty, setIsDirty] = useState(false)
     const [localStateValue, setLocalStateValue] = useState('')
-    const ownRef = useRef<HTMLInputElement>()
+    const ownRef = useRef<HTMLInputElement>(null)
     const [colorScheme] = useColorContext()
 
     const inputRef = (forwardRef ||

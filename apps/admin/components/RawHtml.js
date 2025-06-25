@@ -46,17 +46,16 @@ const styles = {
   }),
 }
 
-const RawHtml = ({ type, style, dangerouslySetInnerHTML }) =>
+const RawHtml = ({
+  type = 'span',
+  style = 'sansSerif',
+  dangerouslySetInnerHTML,
+}) =>
   createElement(type, {
     ...styles.default,
     ...styles[style],
     dangerouslySetInnerHTML,
   })
-
-RawHtml.defaultProps = {
-  type: 'span',
-  style: 'sansSerif',
-}
 
 RawHtml.propTypes = {
   style: PropTypes.oneOf(['serif', 'sansSerif']).isRequired,

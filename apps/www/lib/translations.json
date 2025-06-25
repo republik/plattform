@@ -862,7 +862,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/label",
-      "value": "7-Uhr-Newsletter"
+      "value": "Republik heute"
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/frequency",
@@ -870,7 +870,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/description",
-      "value": "Die aktuellsten Beiträge der Republik. Jeden Morgen in Ihrem virtuellen Briefkasten."
+      "value": "Was die Republik aktuell zu bieten hat. Von Montag bis Freitag um 5 Uhr in Ihrem virtuellen Briefkasten."
     },
     {
       "key": "account/newsletterSubscriptions/WDWWW/label",
@@ -910,7 +910,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/label",
-      "value": "Challenge-Accepted-Newsletter"
+      "value": "Challenge Accepted"
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/frequency",
@@ -918,7 +918,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/description",
-      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Challenge accepted. Ein frischer Blick auf die grossen Herausforderungen und auf Menschen, die sie anpacken. Und jede Menge Gelegenheiten, sich auszutauschen, voneinander zu lernen und sich gegenseitig zu inspirieren."
+      "value": "Der Newsletter für alle, die sich der Klimakrise stellen. Und gemeinsam Wege aus der Krise finden wollen. Neugierig, kritisch, konstruktiv."
     },
     {
       "key": "account/newsletterSubscriptions/onlyName/subscribe",
@@ -974,7 +974,7 @@
     },
     {
       "key": "account/progress/consent/label",
-      "value": "Ich möchte diese Funktion nutzen"
+      "value": "Leseposition nutzen"
     },
     {
       "key": "account/progress/consent/confirmRevoke",
@@ -2502,7 +2502,7 @@
     },
     {
       "key": "package/ABO_GIVE_MONTHS/description",
-      "value": "Das Geschenk-Abo können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu. Postbestellungen werden innerhalb von 7 Tagen versendet"
+      "value": "Das Geschenk-Abo können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu."
     },
     {
       "key": "package/YEARLY_ABO/price",
@@ -3454,11 +3454,7 @@
     },
     {
       "key": "article/progressprompt/description/feature",
-      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn Sie die Funktion aktivieren, wird Ihr Leseverhalten bei der Republik aufgezeichnet. {link}"
-    },
-    {
-      "key": "article/progressprompt/description/feature/link",
-      "value": "Mehr Informationen"
+      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn die Funktion aktiv ist, wird Ihr Leseverhalten bei der Republik aufgezeichnet."
     },
     {
       "key": "article/progressprompt/question",
@@ -4153,7 +4149,11 @@
     },
     {
       "key": "feedback/lead",
-      "value": "Die Republik ist nur so stark wie ihre Community. Teilen Sie Ihr Wissen und Ihre Perspektive."
+      "value": "Die Republik ist nur so stark wie ihre Community. Teilen Sie Ihr Wissen und Ihre Perspektive. {a}"
+    },
+    {
+      "key": "feedback/lead/etikette",
+      "value": "Wie wir in der Republik debattieren."
     },
     {
       "key": "feedback/general/title",
@@ -6805,11 +6805,11 @@
     },
     {
       "key": "marketing/page/sections/title/weekly",
-      "value": "Wochenend-Newsletter"
+      "value": "Republik am Wochenende"
     },
     {
       "key": "account/newsletterSubscriptions/WEEKLY/label",
-      "value": "Wochenend-Newsletter"
+      "value": "Republik am Wochenende"
     },
     {
       "key": "account/newsletterSubscriptions/WEEKLY/frequency",
@@ -7149,7 +7149,7 @@
     },
     {
       "key": "package/ABO_GIVE/description",
-      "value": "Die Geschenkmitgliedschaft können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu. Postbestellungen werden innerhalb von 7 Tagen versendet"
+      "value": "Die Geschenkmitgliedschaft können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu."
     },
     {
       "key": "package/customize/price/payMore/threemonth",

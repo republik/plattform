@@ -121,7 +121,7 @@ export const trackEventOnClick =
   (e) => {
     trackEvent([eventName, action, name, value])
 
-    if (shouldIgnoreClick(e)) {
+    if (shouldIgnoreClick(e, false)) {
       return
     }
 

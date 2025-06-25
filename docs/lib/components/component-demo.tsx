@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactElement, ReactNode } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import styles from './component-demo.module.css'
 
@@ -14,7 +14,7 @@ export const ComponentDemo = ({
   children,
 }: {
   file: string
-  Component: () => JSX.Element
+  Component: () => ReactElement
   children: ReactNode
 }) => (
   <div data-file={file}>

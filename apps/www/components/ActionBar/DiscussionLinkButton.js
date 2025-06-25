@@ -12,18 +12,13 @@ const DiscussionLinkButton = ({
   isOnArticlePage,
 }) => {
   const meta = document && document.meta
-  const {
-    discussionId,
-    discussionPath,
-    discussionQuery,
-    discussionCount,
-    isDiscussionPage,
-  } = getDiscussionLinkProps(
-    meta.linkedDiscussion,
-    meta.ownDiscussion,
-    meta.template,
-    meta.path,
-  )
+  const { discussionId, discussionPath, discussionCount, isDiscussionPage } =
+    getDiscussionLinkProps(
+      meta.linkedDiscussion,
+      meta.ownDiscussion,
+      meta.template,
+      meta.path,
+    )
 
   const getLabel = () => {
     if (useCallToActionLabel) {
@@ -33,7 +28,7 @@ const DiscussionLinkButton = ({
     }
 
     if (forceShortLabel) {
-      return discussionCount
+      return discussionCount.toString()
     }
 
     return t.pluralize('article/actionbar/discussion/label', {
@@ -45,7 +40,6 @@ const DiscussionLinkButton = ({
     <Link
       href={{
         pathname: discussionPath,
-        query: discussionQuery,
       }}
       passHref
       prefetch={false}
@@ -54,7 +48,7 @@ const DiscussionLinkButton = ({
       <IconButton
         Icon={IconDiscussion}
         label={getLabel()}
-        labelShort={useCallToActionLabel ? getLabel() : discussionCount}
+        labelShort={getLabel()}
         fillColorName='primary'
         onClick={
           isDiscussionPage && isOnArticlePage

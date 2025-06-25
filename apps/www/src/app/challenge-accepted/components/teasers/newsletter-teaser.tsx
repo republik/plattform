@@ -9,7 +9,8 @@ type NewsletterProps = {
 }
 
 export const NewsletterTeaser = async ({ path }: NewsletterProps) => {
-  const { data } = await getClient().query({
+  const client = await getClient()
+  const { data } = await client.query({
     query: ArticleTeaserDocument,
     variables: { path },
   })

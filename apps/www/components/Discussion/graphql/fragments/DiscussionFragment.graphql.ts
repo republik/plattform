@@ -19,6 +19,7 @@ export type DiscussionFragmentType = {
       publishDate: Nullable<DateTime>
       ownDiscussion: Nullable<{
         id: string
+        path: Nullable<string>
         closed: boolean
       }>
       linkedDiscussion: Nullable<{
@@ -67,6 +68,7 @@ export const DISCUSSION_FRAGMENT = gql`
         publishDate
         ownDiscussion {
           id
+          path
           closed
         }
         linkedDiscussion {

@@ -10,11 +10,14 @@ import { PUBLIC_BASE_URL } from 'lib/constants'
 import { notFound } from 'next/navigation'
 import { v5 as uuidV5 } from 'uuid'
 
-export async function GET(
-  request: Request,
-  { params: { slug } }: { params: { slug: string } },
-) {
-  const client = getCMSClient()
+export async function GET(request: Request, props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
+
+  const {
+    slug
+  } = params;
+
+  const client = await getCMSClient()
   const { data } = await client.query({
     query: EventDocument,
     variables: { slug },

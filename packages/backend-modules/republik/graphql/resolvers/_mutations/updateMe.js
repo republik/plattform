@@ -4,6 +4,7 @@ const {
   transformUser,
   Users,
   Roles,
+  checkProfileUrls,
 } = require('@orbiting/backend-modules-auth')
 const { getKeyId, containsPrivateKey } = require('../../../lib/pgp')
 const {
@@ -157,10 +158,7 @@ module.exports = async (_, args, context) => {
         throw new Error(t('profile/candidacy/needed'))
       }
 
-      if (
-        'birthyear' in args &&
-        (args.birthyear === null)
-      ) {
+      if ('birthyear' in args && args.birthyear === null) {
         throw new Error(t('profile/candidacy/birthyear/needed'))
       }
 
@@ -238,6 +236,14 @@ module.exports = async (_, args, context) => {
   if (args.birthyear) {
     if (args.birthyear < 1900 || args.birthyear > new Date().getFullYear()) {
       throw new Error(t('api/user/birthyearInvalid'))
+    }
+  }
+  if (args.profileUrls) {
+    if (args.profileUrls.length > 3) {
+      throw new Error(t('api/profile/toManyUrls'))
+    }
+    if (!checkProfileUrls(args.profileUrls)) {
+      throw new Error(t('api/profile/invalidUrls'))
     }
   }
 

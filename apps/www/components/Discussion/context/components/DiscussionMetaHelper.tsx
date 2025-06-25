@@ -3,7 +3,6 @@ import { inQuotes } from '@project-r/styleguide'
 
 import { useDiscussion } from '../DiscussionContext'
 import Meta from '../../../Frame/Meta'
-import { getFocusUrl } from '../../shared/CommentLink'
 import { useTranslation } from '../../../../lib/withT'
 
 /**
@@ -43,7 +42,6 @@ const DiscussionMetaHelper = ({
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           description: metaFocus.preview ? metaFocus.preview.string : undefined,
-          url: getFocusUrl(discussion, discussion.comments.focus),
         }}
       />
     )

@@ -15,21 +15,11 @@ module.exports = withBundleAnalyzer({
     ignoreDuringBuilds: true,
   },
   transpilePackages: [
-    '@project-r/styleguide',
     '@republik/nextjs-apollo-client',
+    '@republik/slate-react',
   ],
   generateBuildId: () => buildId,
   env: { BUILD_ID: buildId },
-  webpack: (config) => {
-    const alias = Object.assign({}, config.resolve.alias)
-    delete alias.url
-    config.resolve = {
-      ...config.resolve,
-      alias,
-    }
-
-    return config
-  },
   poweredByHeader: false,
   async redirects() {
     return [
