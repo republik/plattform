@@ -1,10 +1,6 @@
 import { getAuthors } from '@app/components/next-reads/helpers'
 import { Button } from '@app/components/ui/button'
-import {
-  ColorContextLocalExtension,
-  createPageSchema,
-  useColorContext,
-} from '@project-r/styleguide'
+import { createPageSchema } from '@project-r/styleguide'
 import { IconArrowRight } from '@republik/icons'
 import { renderMdast } from '@republik/mdast-react-render'
 import { css, cx } from '@republik/theme/css'
@@ -18,59 +14,44 @@ import {
   nextReadsSection,
 } from './styles'
 
-const localColors = {
-  light: { background: '#F2ECE6' },
-  dark: { background: '#444546' },
-}
-
-const GetColorScheme = ({ children }) => {
-  const [colorScheme] = useColorContext()
-
-  return children(colorScheme)
-}
-
 export default function BookmarkedNextReadsFeed({
   documents,
 }: {
   documents: Document[]
 }) {
   return (
-    <ColorContextLocalExtension localColors={localColors}>
-      <GetColorScheme>
-        {(colorScheme) => (
-          <div
-            {...colorScheme.set('backgroundColor', 'background')}
-            className={nextReadsSection}
+    <div
+      className={cx(
+        nextReadsSection,
+        css({ background: 'background.marketing' }),
+      )}
+    >
+      <div className={nextReadHeader}>
+        <h3>Gemerkte Beiträge</h3>
+        <p className='tagline'>Deine Leseliste</p>
+      </div>
+      <div
+        className={css({
+          px: '15px',
+          pb: '24px',
+          md: { pb: '80px' },
+        })}
+      >
+        <FirstBookmarkItem
+          document={documents[0]}
+          numberOfDocuments={documents.length}
+        />
+        <BookmarkItems documents={documents.slice(1)} />
+        <Link href='/lesezeichen'>
+          <Button
+            className={css({ mt: '36px', md: { mt: '48px' } })}
+            variant='outline'
           >
-            <div className={nextReadHeader}>
-              <h3>Gemerkte Beiträge</h3>
-              <p className='tagline'>Deine Leseliste</p>
-            </div>
-            <div
-              className={css({
-                px: '15px',
-                pb: '24px',
-                md: { pb: '80px' },
-              })}
-            >
-              <FirstBookmarkItem
-                document={documents[0]}
-                numberOfDocuments={documents.length}
-              />
-              <BookmarkItems documents={documents.slice(1)} />
-              <Link href='/lesezeichen'>
-                <Button
-                  className={css({ mt: '36px', md: { mt: '48px' } })}
-                  variant='outline'
-                >
-                  Lesezeichen verwalten
-                </Button>
-              </Link>
-            </div>
-          </div>
-        )}
-      </GetColorScheme>
-    </ColorContextLocalExtension>
+            Lesezeichen verwalten
+          </Button>
+        </Link>
+      </div>
+    </div>
   )
 }
 
