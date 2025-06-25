@@ -26,6 +26,7 @@ fragment NextReadDocumentFields on Document {
       meta {
         title
         color
+        externalBaseUrl
         section {
           id
           meta {
