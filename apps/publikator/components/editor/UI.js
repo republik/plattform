@@ -95,10 +95,11 @@ const UISidebar = ({
             padding: '20px 15px',
             width: '100%',
             overflowY: 'scroll',
+            backgroundColor: colors.secondaryBg,
             borderTop: `1px solid ${colors.divider}`,
           }}
         >
-          <div style={{ marginBottom: '40px' }}>
+          <div style={{ marginBottom: '36px' }}>
             {propertyForms.map((Form, i) => (
               <Form key={`form-${i}`} value={value} onChange={onChange} />
             ))}
