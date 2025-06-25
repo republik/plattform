@@ -15,12 +15,9 @@ type CommentSchema = {
   '@type': 'Comment'
   author: PersonSchema
   datePublished: string
-  dateModified?: string
   text: string
   url?: string
   comment?: CommentSchema[]
-  upvoteCount?: number
-  downvoteCount?: number
   interactionStatistic?: {
     '@type': 'InteractionCounter'
     interactionType: string
@@ -28,9 +25,7 @@ type CommentSchema = {
   }[]
 }
 
-/**
- * Converts a comment author to a Person schema
- */
+// Converts a comment author to a Person schema
 function createPersonSchema(
   author: CommentFragmentType['displayAuthor'],
 ): PersonSchema {
@@ -38,9 +33,10 @@ function createPersonSchema(
     '@type': 'Person',
     name: author.name,
   }
+  console.log('author', author)
 
   if (author.slug) {
-    person.url = `https://republik.ch/~${author.slug}`
+    person.url = `${PUBLIC_BASE_URL}/~${author.slug}`
   }
 
   if (author.profilePicture) {
@@ -50,9 +46,7 @@ function createPersonSchema(
   return person
 }
 
-/**
- * Converts a comment tree node to a Comment or DiscussionForumPosting schema
- */
+// Converts a comment tree node to a Comment schema
 function createCommentSchema(
   comment: CommentTreeNode,
   discussionPath: string,
@@ -64,9 +58,8 @@ function createCommentSchema(
     text: comment.text || '',
   }
 
-  commentSchema.url = `${PUBLIC_BASE_URL}/${discussionPath}?focus=${comment.id}`
+  commentSchema.url = `${PUBLIC_BASE_URL}/dialog${discussionPath}?focus=${comment.id}`
 
-  // Add vote counts as interaction statistics
   const interactionStats: CommentSchema['interactionStatistic'] = []
 
   if (comment.upVotes > 0) {
@@ -119,7 +112,7 @@ export function createDiscussionForumPostingSchema(
     '@context': 'https://schema.org',
     headline: discussion.title,
     '@type': 'DiscussionForumPosting',
-    url: `${PUBLIC_BASE_URL}${discussionPath}`,
+    url: `${PUBLIC_BASE_URL}/dialog${discussionPath}`,
     comment: comments.map((comment) =>
       createCommentSchema(comment, discussionPath),
     ),
