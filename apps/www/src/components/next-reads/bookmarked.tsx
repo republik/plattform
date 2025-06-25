@@ -21,6 +21,7 @@ import { renderMdast } from '@republik/mdast-react-render'
 import { createPageSchema } from '@project-r/styleguide'
 import { getAuthors } from '@app/components/next-reads/helpers'
 import { IconArrowRight } from '@republik/icons'
+import { Button } from '@app/components/ui/button'
 
 type BookmarkDocument = NonNullable<
   GetCollectionItemsQuery['me']
@@ -62,7 +63,7 @@ export default function BookmarkedNextReadsFeed() {
           >
             <div className={nextReadHeader}>
               <h3>Gemerkte Beiträge</h3>
-              <p className='tagline'>Deine Leseliste</p>
+              <p className='tagline'>Ihre Leseliste</p>
             </div>
             <div
               className={css({
@@ -76,6 +77,14 @@ export default function BookmarkedNextReadsFeed() {
                 numberOfDocuments={documents.length}
               />
               <BookmarkItems documents={documents.slice(1)} />
+              <Link href='/lesezeichen'>
+                <Button
+                  className={css({ mt: '36px', md: { mt: '48px' } })}
+                  variant='outline'
+                >
+                  Lesezeichen verwalten
+                </Button>
+              </Link>
             </div>
           </div>
         )}
@@ -143,13 +152,18 @@ const FirstBookmarkItem = ({
   return (
     <div
       className={css({
-        margin: '16px auto 24px auto',
+        margin: '0 auto',
+        pt: '16px',
+        pb: '24px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '24px',
         maxWidth: '642px',
+        md: {
+          pb: '40px',
+        },
       })}
     >
       <h4
@@ -203,26 +217,27 @@ const FirstBookmarkItem = ({
           })}
         >
           {renderSchema(splitContent.mainTruncated) as unknown as ReactNode}
+          <Link
+            href={document.meta.path}
+            className={css({
+              alignSelf: numberOfDocuments < 1 && 'flex-start',
+            })}
+          >
+            <span
+              className={css({
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                mt: '-16px',
+              })}
+            >
+              Weiterlesen
+              <IconArrowRight size={20} />
+            </span>
+          </Link>
         </div>
       )}
-      <Link
-        href={document.meta.path}
-        className={css({
-          alignSelf: numberOfDocuments < 1 && 'flex-start',
-        })}
-      >
-        <span
-          className={css({
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-          })}
-        >
-          Weiterlesen
-          <IconArrowRight size={20} />
-        </span>
-      </Link>
     </div>
   )
 }
