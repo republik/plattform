@@ -1,26 +1,26 @@
 import { useQuery } from '@apollo/client'
+import { getAuthors } from '@app/components/next-reads/helpers'
+import {
+  ColorContextLocalExtension,
+  createPageSchema,
+  useColorContext,
+} from '@project-r/styleguide'
+import { IconArrowRight } from '@republik/icons'
+import { renderMdast } from '@republik/mdast-react-render'
+import { css, cx } from '@republik/theme/css'
+import { splitByTitle } from 'lib/utils/mdast'
+import Link from 'next/link'
+import { ReactNode } from 'react'
 import {
   GetCollectionItemsDocument,
-  ProgressState,
   GetCollectionItemsQuery,
+  ProgressState,
 } from '../../../graphql/republik-api/__generated__/gql/graphql'
-import { css, cx } from '@republik/theme/css'
 import {
   nextReadHeader,
   nextReadItemTypography,
   nextReadsSection,
 } from './styles'
-import Link from 'next/link'
-import {
-  ColorContextLocalExtension,
-  useColorContext,
-} from '@project-r/styleguide'
-import { splitByTitle } from 'lib/utils/mdast'
-import { ReactNode } from 'react'
-import { renderMdast } from '@republik/mdast-react-render'
-import { createPageSchema } from '@project-r/styleguide'
-import { getAuthors } from '@app/components/next-reads/helpers'
-import { IconArrowRight } from '@republik/icons'
 
 type BookmarkDocument = NonNullable<
   GetCollectionItemsQuery['me']

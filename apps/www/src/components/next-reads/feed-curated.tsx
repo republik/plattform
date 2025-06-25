@@ -1,4 +1,8 @@
-import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
+import {
+  Document,
+  DocumentRecommendationsDocument,
+} from '#graphql/republik-api/__generated__/gql/graphql'
+import { useQuery } from '@apollo/client'
 import { CategoryLabel, getAuthors } from '@app/components/next-reads/helpers'
 import {
   nextReadHeader,
@@ -33,7 +37,15 @@ function RecommendedRead({ document }: { document: Document }) {
   )
 }
 
-export function CuratedFeed({ documents }: { documents: Document[] }) {
+export function CuratedFeed({ path }: { path: string }) {
+  const { data, loading } = useQuery(DocumentRecommendationsDocument, {
+    variables: { path },
+  })
+
+  if (loading || !data) return null
+
+  const documents = data.document.meta.recommendations.nodes as Document[]
+
   return (
     <div
       className={css({

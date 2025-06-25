@@ -1,18 +1,8 @@
-query NextReads($repoId: ID!, $path: String!) {
+query NextReads($repoId: ID!) {
   nextReads(repoId: $repoId) {
     id
     documents {
       ...NextReadDocumentFields
-    }
-  }
-  CURATED_READS: document(path: $path) {
-    id
-    meta {
-      recommendations {
-        nodes {
-          ...NextReadDocumentFields
-        }
-      }
     }
   }
 }
