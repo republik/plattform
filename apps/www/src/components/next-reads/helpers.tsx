@@ -1,7 +1,7 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 
 export const getAuthors = (
-  contributors: Array<{ kind?: string; name: string }>,
+  contributors: Array<{ kind?: string; name: string }> = [],
 ) =>
   'Von ' +
   contributors
