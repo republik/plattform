@@ -1,26 +1,27 @@
 import { useQuery } from '@apollo/client'
-import { getAuthors } from '@app/components/next-reads/helpers'
-import {
-  ColorContextLocalExtension,
-  createPageSchema,
-  useColorContext,
-} from '@project-r/styleguide'
-import { IconArrowRight } from '@republik/icons'
-import { renderMdast } from '@republik/mdast-react-render'
-import { css, cx } from '@republik/theme/css'
-import { splitByTitle } from 'lib/utils/mdast'
-import Link from 'next/link'
-import { ReactNode } from 'react'
 import {
   GetCollectionItemsDocument,
-  GetCollectionItemsQuery,
   ProgressState,
+  GetCollectionItemsQuery,
 } from '../../../graphql/republik-api/__generated__/gql/graphql'
+import { css, cx } from '@republik/theme/css'
 import {
   nextReadHeader,
   nextReadItemTypography,
   nextReadsSection,
 } from './styles'
+import Link from 'next/link'
+import {
+  ColorContextLocalExtension,
+  useColorContext,
+} from '@project-r/styleguide'
+import { splitByTitle } from 'lib/utils/mdast'
+import { ReactNode } from 'react'
+import { renderMdast } from '@republik/mdast-react-render'
+import { createPageSchema } from '@project-r/styleguide'
+import { getAuthors } from '@app/components/next-reads/helpers'
+import { IconArrowRight } from '@republik/icons'
+import { Button } from '@app/components/ui/button'
 
 type BookmarkDocument = NonNullable<
   GetCollectionItemsQuery['me']
@@ -76,6 +77,14 @@ export default function BookmarkedNextReadsFeed() {
                 numberOfDocuments={documents.length}
               />
               <BookmarkItems documents={documents.slice(1)} />
+              <Link href='/lesezeichen'>
+                <Button
+                  className={css({ mt: '36px', md: { mt: '48px' } })}
+                  variant='outline'
+                >
+                  Lesezeichen verwalten
+                </Button>
+              </Link>
             </div>
           </div>
         )}
@@ -150,6 +159,9 @@ const FirstBookmarkItem = ({
         justifyContent: 'center',
         gap: '24px',
         maxWidth: '642px',
+        md: {
+          pb: '40px',
+        },
       })}
     >
       <h4
@@ -203,26 +215,27 @@ const FirstBookmarkItem = ({
           })}
         >
           {renderSchema(splitContent.mainTruncated) as unknown as ReactNode}
+          <Link
+            href={document.meta.path}
+            className={css({
+              alignSelf: numberOfDocuments < 1 && 'flex-start',
+            })}
+          >
+            <span
+              className={css({
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                mt: '-16px',
+              })}
+            >
+              Weiterlesen
+              <IconArrowRight size={20} />
+            </span>
+          </Link>
         </div>
       )}
-      <Link
-        href={document.meta.path}
-        className={css({
-          alignSelf: numberOfDocuments < 1 && 'flex-start',
-        })}
-      >
-        <span
-          className={css({
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px',
-          })}
-        >
-          Weiterlesen
-          <IconArrowRight size={20} />
-        </span>
-      </Link>
     </div>
   )
 }
