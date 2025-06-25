@@ -12,5 +12,15 @@ export const getAuthors = (
 export function CategoryLabel({ document }: { document: Document }) {
   const text = document.meta.format?.meta.title || document.meta.series?.title
   if (!text) return null
-  return <h5 style={{ color: document.meta.format?.meta.color }}>{text}</h5>
+  return (
+    <h5
+      style={{
+        color:
+          document.meta.format?.meta.color ||
+          document.meta.format?.meta.section?.meta.color,
+      }}
+    >
+      {text}
+    </h5>
+  )
 }

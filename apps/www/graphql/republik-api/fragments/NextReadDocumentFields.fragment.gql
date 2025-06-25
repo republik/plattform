@@ -26,6 +26,12 @@ fragment NextReadDocumentFields on Document {
       meta {
         title
         color
+        section {
+          id
+          meta {
+            color
+          }
+        }
       }
     }
     series {
