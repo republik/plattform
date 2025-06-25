@@ -59,6 +59,33 @@ module.exports = {
       format('truetype');
 }
 @font-face {
+  font-family: 'Rubis';
+  font-weight: 500;
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.eot);
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.eot?#iefix)
+      format('embedded-opentype'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.woff2)
+      format('woff2'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.woff)
+      format('woff'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.ttf)
+      format('truetype');
+}
+@font-face {
+  font-family: 'Rubis';
+  font-weight: 500;
+  font-style: italic;
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.eot);
+  src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.eot?#iefix)
+      format('embedded-opentype'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.woff2)
+      format('woff2'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.woff)
+      format('woff'),
+    url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.ttf)
+      format('truetype');
+}
+@font-face {
   font-family: 'GT-America-Standard';
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.eot);
   src: url(https://cdn.repub.ch/s3/republik-assets/fonts/gt-america-standard-regular.eot?#iefix)
