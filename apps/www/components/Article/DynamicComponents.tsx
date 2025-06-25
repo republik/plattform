@@ -15,13 +15,10 @@ const TeamTeaser = dynamic(() => import('../About/TeamTeaser'), {
   loading: LoadingComponent,
   ssr: false,
 })
-const TestimonialList = dynamic(
-  () => import('../Testimonial/List').then((m) => m.ListWithQuery),
-  {
-    loading: LoadingComponent,
-    ssr: false,
-  },
-)
+const TestimonialList = dynamic(() => import('../Testimonial/List'), {
+  loading: LoadingComponent,
+  ssr: false,
+})
 const ReasonsVideo = dynamic(() => import('../About/ReasonsVideo'), {
   ssr: true,
 })

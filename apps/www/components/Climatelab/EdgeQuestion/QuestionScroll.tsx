@@ -1,11 +1,11 @@
 import { renderMdast } from '@republik/mdast-react-render'
 import { useRouter } from 'next/router'
-import React, { useMemo, useEffect, useRef, ReactNode } from 'react'
+import React, { ReactNode, useEffect, useMemo, useRef } from 'react'
 import scrollIntoView from 'scroll-into-view'
 
-import { createArticleSchema, slug, pxToRem } from '@project-r/styleguide'
+import { createArticleSchema, pxToRem, slug } from '@project-r/styleguide'
 
-import { ASSETS_SERVER_BASE_URL, PUBLIC_BASE_URL } from '../../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../../lib/constants'
 import { cleanAsPath } from '../../../lib/utils/link'
 import { useTranslation } from '../../../lib/withT'
 
@@ -15,6 +15,7 @@ import { SubmissionAuthor } from '../../Questionnaire/Submissions/legacy/Submiss
 
 import HeaderShare from '../shared/HeaderShare'
 
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import { PORTRAITS } from './config'
 import { Author, QuestionAnswer, ShareProps } from './index'
 
@@ -70,7 +71,7 @@ const Answer: React.FC<{
   renderedContent: any
 }> = ({ author, meta, sharedAnswer, renderedContent }) => {
   const authorSlug = slug(author.name)
-  const ref = useRef()
+  const ref = useRef(null)
   useEffect(() => {
     if (sharedAnswer && sharedAnswer.author.name === author.name) {
       scrollIntoView(ref.current, { align: { top: 0 } })
@@ -116,9 +117,7 @@ const QuestionScroll: React.FC<{
       '{name}',
       sharedAnswer ? sharedAnswer.author.name : '',
     ),
-    image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-      shareImageUrl,
-    )}`,
+    image: screenshotUrl({ url: shareImageUrl, width: 1200 }),
   }
 
   const schema = useMemo(

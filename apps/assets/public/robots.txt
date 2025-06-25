@@ -1,5 +1,0 @@
-User-agent: *
-Allow: /frontend/static/
-
-User-agent: *
-Disallow: /frontend/

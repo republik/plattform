@@ -27,33 +27,19 @@ export const rerouteDiscussion = (route, targetQuery) => {
 }
 
 export const getDiscussionUrlObject = (discussion) => {
-  let tab
-  if (discussion && discussion.document) {
-    const meta = discussion.document.meta || {}
-    const ownDiscussion = meta.ownDiscussion && !meta.ownDiscussion.closed
-    const template = meta.template
-    tab = ownDiscussion && template === 'article' && 'article'
+  const meta = discussion?.document?.meta
+  if (!meta) {
+    return null
   }
-  tab =
-    tab ||
-    (discussion &&
-      discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID &&
-      'general')
-  if (tab) {
+  // article dialog pages start with  pathname /dialog
+  if (meta.template === 'article') {
     return {
-      pathname: '/dialog',
-      query: { t: tab, id: tab === 'general' ? undefined : discussion.id },
+      pathname: `/dialog${discussion.path}`,
     }
-  }
-  if (discussion) {
+  } else {
+    // discussion pages have discussions integrated on the same page
     return {
-      pathname:
-        discussion.document &&
-        discussion.document.meta &&
-        discussion.document.meta.path
-          ? discussion.document.meta.path
-          : discussion.path,
-      query: {},
+      pathname: meta.path || discussion.path,
     }
   }
 }
@@ -65,7 +51,7 @@ const DiscussionLink = ({ children, discussion }) => {
       <Link href={href} passHref prefetch={false} legacyBehavior>
         {children}
       </Link>
-    );
+    )
   }
   return children
 }

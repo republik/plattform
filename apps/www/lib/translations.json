@@ -724,7 +724,10 @@
       "key": "Account/Delete/link",
       "value": "Löschungsanfrage"
     },
-    { "key": "UserGuidance/title", "value": "Kein laufendes Abonnement" },
+    {
+      "key": "UserGuidance/title",
+      "value": "Kein laufendes Abonnement"
+    },
     {
       "key": "UserGuidance/p1",
       "value": "Das Konto mit der E-Mail {email} hat kein gültiges Abonnement."
@@ -859,7 +862,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/label",
-      "value": "7-Uhr-Newsletter"
+      "value": "Republik heute"
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/frequency",
@@ -867,7 +870,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/description",
-      "value": "Die aktuellsten Beiträge der Republik. Jeden Morgen in Ihrem virtuellen Briefkasten."
+      "value": "Was die Republik aktuell zu bieten hat. Von Montag bis Freitag um 5 Uhr in Ihrem virtuellen Briefkasten."
     },
     {
       "key": "account/newsletterSubscriptions/WDWWW/label",
@@ -907,7 +910,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/label",
-      "value": "Challenge-Accepted-Newsletter"
+      "value": "Challenge Accepted"
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/frequency",
@@ -915,7 +918,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/description",
-      "value": "Die Klimakrise ist hier. Die Lage ist ernst. Challenge accepted. Ein frischer Blick auf die grossen Herausforderungen und auf Menschen, die sie anpacken. Und jede Menge Gelegenheiten, sich auszutauschen, voneinander zu lernen und sich gegenseitig zu inspirieren."
+      "value": "Der Newsletter für alle, die sich der Klimakrise stellen. Und gemeinsam Wege aus der Krise finden wollen. Neugierig, kritisch, konstruktiv."
     },
     {
       "key": "account/newsletterSubscriptions/onlyName/subscribe",
@@ -971,7 +974,7 @@
     },
     {
       "key": "account/progress/consent/label",
-      "value": "Ich möchte diese Funktion nutzen"
+      "value": "Leseposition nutzen"
     },
     {
       "key": "account/progress/consent/confirmRevoke",
@@ -1359,7 +1362,7 @@
     },
     {
       "key": "profile/url/error",
-      "value": "Webseite ungültig"
+      "value": "Die eingegebene URL ist ungültig. Webseiten müssen mit https:// beginnen."
     },
     {
       "key": "Account/ProfileForm/isEmailPublic/label",
@@ -1700,10 +1703,6 @@
     {
       "key": "footer/events",
       "value": "Veranstaltungen"
-    },
-    {
-      "key": "footer/updates",
-      "value": "Blog Crowdfunding"
     },
     {
       "key": "footer/about/projecR",
@@ -2503,7 +2502,7 @@
     },
     {
       "key": "package/ABO_GIVE_MONTHS/description",
-      "value": "Das Geschenk-Abo können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu. Postbestellungen werden innerhalb von 7 Tagen versendet"
+      "value": "Das Geschenk-Abo können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu."
     },
     {
       "key": "package/YEARLY_ABO/price",
@@ -3455,11 +3454,7 @@
     },
     {
       "key": "article/progressprompt/description/feature",
-      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn Sie die Funktion aktivieren, wird Ihr Leseverhalten bei der Republik aufgezeichnet. {link}"
-    },
-    {
-      "key": "article/progressprompt/description/feature/link",
-      "value": "Mehr Informationen"
+      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn die Funktion aktiv ist, wird Ihr Leseverhalten bei der Republik aufgezeichnet."
     },
     {
       "key": "article/progressprompt/question",
@@ -4101,22 +4096,6 @@
       "value": "Wo"
     },
     {
-      "key": "updates/pageTitle",
-      "value": "Neues – Republik"
-    },
-    {
-      "key": "updates/title",
-      "value": "Neuigkeiten zum Crowdfunding"
-    },
-    {
-      "key": "updates/metaDescription",
-      "value": "Das digitale Magazin von Project R – jetzt Mitglied werden."
-    },
-    {
-      "key": "updates/all",
-      "value": "Alle Meldungen"
-    },
-    {
       "key": "faq/pageTitle",
       "value": "Fragen – Republik"
     },
@@ -4170,7 +4149,11 @@
     },
     {
       "key": "feedback/lead",
-      "value": "Die Republik ist nur so stark wie ihre Community. Teilen Sie Ihr Wissen und Ihre Perspektive."
+      "value": "Die Republik ist nur so stark wie ihre Community. Teilen Sie Ihr Wissen und Ihre Perspektive. {a}"
+    },
+    {
+      "key": "feedback/lead/etikette",
+      "value": "Wie wir in der Republik debattieren."
     },
     {
       "key": "feedback/general/title",
@@ -6822,11 +6805,11 @@
     },
     {
       "key": "marketing/page/sections/title/weekly",
-      "value": "Wochenend-Newsletter"
+      "value": "Republik am Wochenende"
     },
     {
       "key": "account/newsletterSubscriptions/WEEKLY/label",
-      "value": "Wochenend-Newsletter"
+      "value": "Republik am Wochenende"
     },
     {
       "key": "account/newsletterSubscriptions/WEEKLY/frequency",
@@ -7166,7 +7149,7 @@
     },
     {
       "key": "package/ABO_GIVE/description",
-      "value": "Die Geschenkmitgliedschaft können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu. Postbestellungen werden innerhalb von 7 Tagen versendet"
+      "value": "Die Geschenkmitgliedschaft können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu."
     },
     {
       "key": "package/customize/price/payMore/threemonth",
@@ -7705,6 +7688,10 @@
       "value": "Jahresmitgliedschaft"
     },
     {
+      "key": "magazineSubscription/title/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
       "key": "magazineSubscription/title/MONTHLY_SUBSCRIPTION",
       "value": "Monats-Abo"
     },
@@ -7714,11 +7701,15 @@
     },
     {
       "key": "magazineSubscription/description",
-      "value": "Nächste Zahlung am {currentPeriodEnd} für CHF {renewsAtPrice}"
+      "value": "Erneuert sich am {currentPeriodEnd} für CHF {renewsAtPrice}"
     },
     {
       "key": "magazineSubscription/paymentMethod",
-      "value": "Zahlungsmethode: {paymentMethod}"
+      "value": "Zahlungsart: {paymentMethod}"
+    },
+    {
+      "key": "magazineSubscription/paymentMethod/change",
+      "value": "Zahlungsart ändern"
     },
     {
       "key": "magazineSubscription/noActiveSubscription",
@@ -7729,16 +7720,68 @@
       "value": "Ihre Mitgliedschaft läuft am {cancelAt} aus."
     },
     {
+      "key": "magazineSubscription/canceled/BENEFACTOR_SUBSCRIPTION",
+      "value": "Ihre Gönner-Mitgliedschaft läuft am {cancelAt} aus."
+    },
+    {
       "key": "magazineSubscription/canceled/MONTHLY_SUBSCRIPTION",
       "value": "Ihr Abo läuft am {cancelAt} aus."
     },
     {
-      "key": "magazineSubscription/customerPortalLink/YEARLY_SUBSCRIPTION",
-      "value": "Mitgliedschaft Verwalten"
+      "key": "magazineSubscription/cancel/YEARLY_SUBSCRIPTION",
+      "value": "Mitgliedschaft kündigen"
     },
     {
-      "key": "magazineSubscription/customerPortalLink/MONTHLY_SUBSCRIPTION",
-      "value": "Abo Verwalten"
+      "key": "magazineSubscription/cancel/BENEFACTOR_SUBSCRIPTION",
+      "value": "Mitgliedschaft kündigen"
+    },
+    {
+      "key": "magazineSubscription/cancel/MONTHLY_SUBSCRIPTION",
+      "value": "Abo kündigen"
+    },
+    {
+      "key": "magazineSubscription/donation/update",
+      "value": "Ändern"
+    },
+    {
+      "key": "magazineSubscription/donation/choose",
+      "value": "Beitrag erhöhen"
+    },
+    {
+      "key": "magazineSubscription/donation/chooseCustom",
+      "value": "Wählen"
+    },
+    {
+      "key": "magazineSubscription/donation/remove",
+      "value": "Ich möchte meinen Beitrag nicht mehr erhöhen"
+    },
+    {
+      "key": "magazineSubscription/donation/note",
+      "value": "Wählen Sie einen Betrag, um den Sie ihren Beitrag erhöhen möchten. Der angepasste Beitrag wird erst fällig, wenn sich Ihre Mitgliedschaft erneuert. Sie können ihn jederzeit anpassen oder zurücksetzen."
+    },
+    {
+      "key": "magazineSubscription/donation/wannaGiveMore",
+      "value": "Die Republik ist Ihnen mehr wert?"
+    },
+    {
+      "key": "magazineSubscription/donation/add",
+      "value": "Erhöhen Sie Ihren Beitrag"
+    },
+    {
+      "key": "magazineSubscription/donation/label",
+      "value": "Beinhaltet einen freiwilligen Beitrag von CHF {amount}."
+    },
+    {
+      "key": "magazineSubscription/reactivate/YEARLY_SUBSCRIPTION",
+      "value": "Mitgliedschaft reaktivieren"
+    },
+    {
+      "key": "magazineSubscription/reactivate/BENEFACTOR_SUBSCRIPTION",
+      "value": "Mitgliedschaft reaktivieren"
+    },
+    {
+      "key": "magazineSubscription/reactivate/MONTHLY_SUBSCRIPTION",
+      "value": "Abo reaktivieren"
     },
     {
       "key": "magazineSubscription/shoplink/MONTHLY",
@@ -7806,11 +7849,11 @@
     },
     {
       "key": "regwall/a/header/title",
-      "value": "Weiterlesen, ohne zu bezahlen" 
+      "value": "Weiterlesen, ohne zu bezahlen"
     },
     {
       "key": "regwall/a/header/description",
-      "value": "<b>Werden Sie unser Gast:</b> Eine Woche lang gratis alle Republik-Beiträge lesen, keine automatische Verlängerung." 
+      "value": "<b>Werden Sie unser Gast:</b> Eine Woche lang gratis alle Republik-Beiträge lesen, keine automatische Verlängerung."
     },
     {
       "key": "regwall/a/cta",
@@ -7818,11 +7861,11 @@
     },
     {
       "key": "regwall/b/header/title",
-      "value": "Weiterlesen geht ganz einfach:" 
+      "value": "Weiterlesen geht ganz einfach:"
     },
     {
       "key": "regwall/b/header/description",
-      "value": "<b>Als Gast:</b> 7 Tage lang kostenlos Zugang zu allen Republik-Beiträgen, keine Zahlungsangaben erforderlich." 
+      "value": "<b>Als Gast:</b> 7 Tage lang kostenlos Zugang zu allen Republik-Beiträgen, keine Zahlungsangaben erforderlich."
     },
     {
       "key": "regwall/b/cta",
@@ -7830,117 +7873,127 @@
     },
     {
       "key": "regwall/whyRegister/title",
-      "value": "Warum eine E-Mail-Adresse?" 
+      "value": "Warum eine E-Mail-Adresse?"
     },
     {
       "key": "regwall/whyRegister/expanded",
-      "value": "<p>Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Über Ihre E-Mail-Adresse können wir direkt mit Ihnen in Kontakt treten, ohne dass externe Suchmaschinen oder Social-Media-Plattformen zwischengeschaltet sind. <b>Wir geben Ihre E-Mail-Adresse niemals ausserhalb der Republik weiter</b>.</p><p>Wenn Sie keine Nachrichten mehr von der Republik erhalten möchten, können Sie sich <b>jederzeit abmelden</b>.</p>" 
+      "value": "<p>Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Über Ihre E-Mail-Adresse können wir direkt mit Ihnen in Kontakt treten, ohne dass externe Suchmaschinen oder Social-Media-Plattformen zwischengeschaltet sind. <b>Wir geben Ihre E-Mail-Adresse niemals ausserhalb der Republik weiter</b>.</p><p>Wenn Sie keine Nachrichten mehr von der Republik erhalten möchten, können Sie sich <b>jederzeit abmelden</b>.</p>"
     },
     {
       "key": "regwall/a/offers/description",
-      "value": "<b>Für Grosszügige und Unerschrockene:</b>" 
+      "value": "<b>Für Grosszügige und Unerschrockene:</b>"
     },
     {
       "key": "regwall/a/offers/cta",
-      "value": "Abo ab CHF 22.– / Monat" 
+      "value": "Abo ab CHF 22.– / Monat"
     },
     {
       "key": "regwall/b/offers/description",
-      "value": "<b>Als Abonnent*in:</b> Unterstützen Sie unabhängigen und werbefreien Journalismus." 
+      "value": "<b>Als Abonnent*in:</b> Unterstützen Sie unabhängigen und werbefreien Journalismus."
     },
     {
       "key": "regwall/b/offers/cta",
-      "value": "Abonnieren ab CHF 22.– / Monat" 
+      "value": "Abonnieren ab CHF 22.– / Monat"
     },
     {
       "key": "regwall/offers/cancellable",
-      "value": "Jederzeit kündbar" 
+      "value": "Jederzeit kündbar"
     },
     {
       "key": "paywall/offers/caption",
-      "value": "Einstiegsangebot" 
+      "value": "Einstiegsangebot"
     },
     {
-      "key": "paywall/offers/title/1",
-      "value": "Ihre kostenlose Gastwoche ist zu Ende." 
+      "key": "paywall/a/offers/title/1",
+      "value": "Ihre kostenlose Gastwoche ist zu Ende."
     },
     {
-      "key": "paywall/offers/title/2",
-      "value": "Doch unsere gemeinsame Reise muss hier nicht enden." 
+      "key": "paywall/a/offers/title/2",
+      "value": "Doch unsere gemeinsame Reise muss hier nicht enden."
+    },
+    {
+      "key": "paywall/b/offers/title/1",
+      "value": "Wie schön, Sie sind zurück!"
+    },
+    {
+      "key": "paywall/b/offers/title/2",
+      "value": "Wenn Sie schon da sind, dann bleiben Sie doch gleich?"
     },
     {
       "key": "paywall/offers/yearly/duration",
-      "value": "erstes Jahr" 
+      "value": "erstes Jahr"
     },
     {
       "key": "paywall/offers/yearly/description",
-      "value": "Danach 240.- jährlich. Jederzeit kündbar." 
+      "value": "Danach 240.- jährlich. Jederzeit kündbar."
     },
     {
       "key": "paywall/offers/monthly/duration",
-      "value": "erster Monat" 
+      "value": "erster Monat"
     },
     {
       "key": "paywall/offers/monthly/description",
-      "value": "Danach 22.- monatlich. Jederzeit kündbar." 
+      "value": "Danach 22.- monatlich. Jederzeit kündbar."
     },
     {
       "key": "paywall/offers/cta",
-      "value": "Jetzt abonnieren" 
+      "value": "Jetzt abonnieren"
     },
     {
       "key": "paywall/offers/survey",
-      "value": "Nein Danke, weil…" 
+      "value": "Nein Danke, weil…"
     },
     {
       "key": "paywall/offers/all",
-      "value": "Weitere Angebote anzeigen" 
+      "value": "Weitere Angebote anzeigen"
     },
     {
       "key": "paywall/survey/hint",
-      "value": "Wählen Sie aus, was am ehesten zutrifft." 
+      "value": "Wählen Sie aus, was am ehesten zutrifft."
     },
     {
       "key": "paywall/survey/all",
-      "value": "Weitere Angebote anzeigen" 
+      "value": "Weitere Angebote anzeigen"
     },
     {
       "key": "paywall/survey/thanks/title",
-      "value": "Vielen Dank für Ihr Feedback, wir hoffen, Sie bald wiederzusehen! 👋" 
+      "value": "Vielen Dank für Ihr Feedback, wir hoffen, Sie bald wiederzusehen! 👋"
     },
     {
       "key": "paywall/survey/thanks/description",
-      "value": "PS: Wussten Sie, dass Sie unser wöchentliches Nachrichtenbriefing auch ohne Abo als Newsletter erhalten können?" 
+      "value": "PS: Wussten Sie, dass Sie unser wöchentliches Nachrichtenbriefing auch ohne Abo als Newsletter erhalten können?"
     },
     {
       "key": "paywall/survey/thanks/link",
-      "value": "Das interessiert mich" 
+      "value": "Das interessiert mich"
     },
     {
       "key": "paynotes/dialog/title",
-      "value": "Willkommen im Dialog" 
+      "value": "Willkommen im Dialog"
     },
     {
       "key": "paynotes/dialog/description",
-      "value": "Als Gast sehen Sie, was zu reden gibt. Mit einem Abo nehmen Sie direkt am Gespräch mit Autorinnen und anderen Lesern teil." 
+      "value": "Als Gast sehen Sie, was zu reden gibt. Mit einem Abo nehmen Sie direkt am Gespräch mit Autorinnen und anderen Lesern teil."
     },
     {
       "key": "paynotes/dialog/cta",
-      "value": "Abonnieren und mitreden" 
+      "value": "Abonnieren und mitreden"
     },
-    {"key": "paynotes/ios/caption",
-      "value": "Unterstützen Sie unabhängigen Journalismus." },
+    {
+      "key": "paynotes/ios/caption",
+      "value": "Unterstützen Sie unabhängigen Journalismus."
+    },
     {
       "key": "paynotes/ios/cta",
-      "value": "Alle Angebote auf {link}" 
+      "value": "Alle Angebote auf {link}"
     },
     {
       "key": "paynotes/ios/text",
-      "value": "Alle Angebote auf shop.republik.ch" 
+      "value": "Alle Angebote auf shop.republik.ch"
     },
     {
       "key": "paynotes/welcomeBanner",
-      "value": "Ab sofort läuft Ihre siebentägige Gastwoche bei der Republik: Herzlich willkommen!" 
+      "value": "Ab sofort läuft Ihre siebentägige Gastwoche bei der Republik: Herzlich willkommen!"
     },
     {
       "key": "paynotes/account/title",

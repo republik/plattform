@@ -57,6 +57,7 @@ export function FormField({
             borderWidth: '1px',
             borderColor: 'black',
             borderRadius: '5px',
+            color: 'black',
             lineHeight: 1.5,
             p: '2',
             _disabled: {

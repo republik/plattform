@@ -39,7 +39,7 @@ const config = {
       {
         source: '/geschaeftsbericht',
         destination:
-          'https://cdn.republik.space/s3/republik-assets/assets/geschaeftsbericht2017_2018_fuer_gv_und_urabstimmung.pdf',
+          'https://cdn.repub.ch/s3/republik-assets/assets/geschaeftsbericht2017_2018_fuer_gv_und_urabstimmung.pdf',
         permanent: true,
       },
       {

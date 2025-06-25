@@ -15,8 +15,8 @@ module.exports = withBundleAnalyzer({
     ignoreDuringBuilds: true,
   },
   transpilePackages: [
-    '@project-r/styleguide',
     '@republik/nextjs-apollo-client',
+    '@republik/slate-react',
   ],
   generateBuildId: () => buildId,
   env: { BUILD_ID: buildId },

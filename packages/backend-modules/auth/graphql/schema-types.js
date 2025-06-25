@@ -56,12 +56,6 @@ type SignInResponse {
   alternativeFirstFactors: [SignInTokenType!]!
 }
 
-type SharedSecretResponse {
-  secret: String!
-  otpAuthUrl: String!
-  svg(errorCorrectionLevel: QRCodeErrorCorrectionLevel = M): String!
-}
-
 # Error Correction Level for QR Images
 # http://qrcode.meetheed.com/question17.php
 enum QRCodeErrorCorrectionLevel {
@@ -75,8 +69,6 @@ enum SignInTokenType {
   EMAIL_TOKEN
   EMAIL_CODE
   ACCESS_TOKEN
-  TOTP
-  SMS
   APP
 }
 

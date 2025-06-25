@@ -1,18 +1,13 @@
 import React, { Fragment, useMemo } from 'react'
 import { css } from 'glamor'
-import get from 'lodash/get'
 
 import { mUp } from '../../theme/mediaQueries'
 import { inQuotes } from '../../lib/inQuotes'
 import { useMediaQuery } from '../../lib/useMediaQuery'
 
 import { serifRegular14 } from '../Typography/styles'
-import {
-  CommentBodyParagraph,
-  CommentBodyFeaturedText,
-} from '../CommentBody'
+import { CommentBodyParagraph, CommentBodyFeaturedText } from '../CommentBody'
 import { Context, Header } from '../Discussion/Internal/Comment'
-import RawHtml from '../RawHtml/'
 import { useColorContext } from '../Colors/ColorContext'
 import { DiscussionContext } from '../Discussion/DiscussionContext'
 import DiscussionFooter from './DiscussionFooter'
@@ -67,18 +62,11 @@ export const CommentTeaser = ({
     displayAuthor,
     preview,
     featuredText,
-    highlights,
+    highlightedSearchResult,
     createdAt,
   } = comment
   const isDesktop = useMediaQuery(mUp)
   const [colorScheme] = useColorContext()
-  const highlight = get(highlights, '[0].fragments[0]', '').trim()
-
-  const endsWithPunctuation =
-    highlight &&
-    (Math.abs(highlight.lastIndexOf('...') - highlight.length) < 4 ||
-      Math.abs(highlight.lastIndexOf('…') - highlight.length) < 2 ||
-      Math.abs(highlight.lastIndexOf('.') - highlight.length) < 2)
 
   // assuming frontend currently supports only one tag.
   const tag = tags && !!tags.length && tags[0]
@@ -154,22 +142,13 @@ export const CommentTeaser = ({
                     {inQuotes(featuredText)}
                   </CommentBodyFeaturedText>
                 )}
-                {!!preview && !highlight && (
+                {!!preview && !highlightedSearchResult && (
                   <Fragment>
                     {preview.string}
                     {!!preview.more && <Fragment>&nbsp;…</Fragment>}
                   </Fragment>
                 )}
-                {!!highlight && (
-                  <Fragment>
-                    <RawHtml
-                      dangerouslySetInnerHTML={{
-                        __html: highlight,
-                      }}
-                    />
-                    {!endsWithPunctuation && <Fragment>&nbsp;…</Fragment>}
-                  </Fragment>
-                )}
+                {!!highlightedSearchResult && highlightedSearchResult}
               </a>
             </CommentLink>
           </CommentBodyParagraph>

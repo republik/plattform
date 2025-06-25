@@ -2,16 +2,16 @@ import { css } from 'glamor'
 
 import ActionBar from '../ActionBar'
 
-import { PUBLIC_BASE_URL, ASSETS_SERVER_BASE_URL } from '../../lib/constants'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
 
 import {
-  Interaction,
-  fontFamilies,
-  P as SerifP,
   A,
+  Interaction,
+  P as SerifP,
   VideoPlayer,
-  mediaQueries,
+  fontFamilies,
   inQuotes,
+  mediaQueries,
   useColorContext,
 } from '@project-r/styleguide'
 import Link from 'next/link'

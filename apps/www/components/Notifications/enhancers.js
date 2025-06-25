@@ -123,6 +123,7 @@ export const notificationsQuery = gql`
                   template
                   ownDiscussion {
                     id
+                    path
                     closed
                   }
                   linkedDiscussion {
@@ -178,24 +179,6 @@ export const possibleSubscriptions = gql`
 
 export const myUserSubscriptions = gql`
   query getMyUserSubscriptions {
-    authors: employees(onlyPromotedAuthors: true) {
-      name
-      user {
-        id
-        subscribedByMe {
-          ...subInfo
-          userDetails: object {
-            ... on User {
-              id
-              slug
-              documents {
-                totalCount
-              }
-            }
-          }
-        }
-      }
-    }
     myUserSubscriptions: me {
       id
       subscribedTo(objectType: User) {

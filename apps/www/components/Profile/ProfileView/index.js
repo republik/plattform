@@ -8,6 +8,7 @@ import {
   mediaQueries,
   IconButton,
   useColorContext,
+  Container,
 } from '@project-r/styleguide'
 
 import { useMe } from '../../../lib/context/MeContext'
@@ -22,6 +23,13 @@ import { CDN_FRONTEND_BASE_URL, ADMIN_BASE_URL } from '../../../lib/constants'
 export const PORTRAIT_SIZE = 210
 
 const styles = {
+  container: css({
+    maxWidth: 840,
+    margin: '32px auto',
+    [mediaQueries.mUp]: {
+      margin: '96px auto',
+    },
+  }),
   statement: css({
     ...fontStyles.serifTitle,
     fontSize: 27,
@@ -129,7 +137,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
   const isSupporter = checkRoles(me, ['supporter'])
   const listedCredential = user.credentials?.filter((c) => c.isListed)[0]
   return (
-    <>
+    <Container {...styles.container}>
       {isMe && (
         <Link
           style={{
@@ -278,7 +286,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
           />
         </div>
       </div>
-    </>
+    </Container>
   )
 }
 

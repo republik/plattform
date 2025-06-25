@@ -27,7 +27,7 @@ const exposeAccessField =
   (accessRoleKey, key, format) =>
   (user, args, { pgdb, user: me }) => {
     if (
-      user._raw[accessRoleKey] === 'PUBLIC' ||
+      (user.hasPublicProfile && user._raw[accessRoleKey] === 'PUBLIC') ||
       Roles.userIsMeOrInRoles(user, me, [
         user._raw[accessRoleKey].toLowerCase(),
         'admin',
@@ -62,9 +62,7 @@ module.exports = {
   disclosures: exposeProfileField('disclosures'),
   statement: exposeProfileField('statement'),
   gender(user, args, { user: me }) {
-    if (
-      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])
-    ) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.gender || user.gender
     }
     return null
@@ -175,7 +173,7 @@ module.exports = {
     }
     return null
   },
-  birthyear(user, args, {user: me}) {
+  birthyear(user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.birthyear
     }

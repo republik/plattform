@@ -1,42 +1,64 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
-import { Company } from '../../types'
-import { PaymentProvider } from '../../providers/provider'
-import { secondsToMilliseconds } from './utils'
+import { Company, PaymentWorkflow } from '../../types'
+import { parseStripeDate } from './utils'
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
+import { PaymentService } from '../../services/PaymentService'
+import { InvoiceService } from '../../services/InvoiceService'
+
+class InvoicePaymentSucceededWorkflow
+  implements PaymentWorkflow<Stripe.InvoicePaymentSucceededEvent>
+{
+  constructor(
+    protected readonly paymentService: PaymentService,
+    protected readonly invoiceService: InvoiceService,
+  ) {}
+
+  async run(
+    company: Company,
+    event: Stripe.InvoicePaymentSucceededEvent,
+  ): Promise<any> {
+    const stripeInvoiceId = event.data.object.id
+
+    const i = await this.paymentService.getInvoice(company, stripeInvoiceId)
+
+    if (!i) {
+      console.log('not processing event: stripe invoice not found')
+      return
+    }
+
+    const invoice = await this.invoiceService.getInvoice({ externalId: i.id })
+    if (!invoice) {
+      throw Error('invoice not saved locally')
+    }
+
+    const incoiceCharge = i.charge as Stripe.Charge
+
+    if (!incoiceCharge) {
+      console.error('no charge associated with the invoice not found')
+      return
+    }
+    const args = mapChargeArgs(company, invoice.id, incoiceCharge)
+
+    const ch = await this.invoiceService.getCharge({
+      externalId: incoiceCharge.id,
+    })
+    if (ch) {
+      await this.invoiceService.updateCharge({ id: ch.id }, args)
+    } else {
+      await this.invoiceService.saveCharge(args)
+    }
+  }
+}
 
 export async function processInvoicePaymentSucceeded(
-  paymentService: PaymentService,
+  ctx: PaymentWebhookContext,
   company: Company,
   event: Stripe.InvoicePaymentSucceededEvent,
 ) {
-  const i = await PaymentProvider.forCompany(company).getInvoice(
-    event.data.object.id,
-  )
-
-  if (!i) {
-    console.log('not processing event: stripe invoice not found')
-    return
-  }
-
-  const invoice = await paymentService.getInvoice({ externalId: i.id })
-  if (!invoice) {
-    throw Error('invoice not saved locally')
-  }
-
-  const incoiceCharge = i.charge as Stripe.Charge
-
-  if (!incoiceCharge) {
-    console.error('no charge associated with the invoice not found')
-    return
-  }
-  const args = mapChargeArgs(company, invoice.id, incoiceCharge)
-
-  const ch = await paymentService.getCharge({ externalId: incoiceCharge.id })
-  if (ch) {
-    paymentService.updateCharge({ id: ch.id }, args)
-  } else {
-    paymentService.saveCharge(args)
-  }
+  return new InvoicePaymentSucceededWorkflow(
+    new PaymentService(),
+    new InvoiceService(ctx.pgdb),
+  ).run(company, event)
 }
 
 export function mapChargeArgs(
@@ -66,6 +88,6 @@ export function mapChargeArgs(
     amountRefunded: charge.amount_refunded,
     paymentMethodType: paymentMethodType,
     fullyRefunded: charge.refunded,
-    createdAt: new Date(secondsToMilliseconds(charge.created)),
+    createdAt: parseStripeDate(charge.created),
   }
 }

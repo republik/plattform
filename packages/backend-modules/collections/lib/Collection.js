@@ -1,18 +1,7 @@
 const moment = require('moment')
 const {
   COLLECTION_NAME: PROGRESS_COLLECTION_NAME,
-  POLICY_NAME: PROGRESS_POLICY_NAME,
-} = require('./Progress')
-
-const {
-  Consents: { registerRevokeHook },
-} = require('@orbiting/backend-modules-auth')
-
-registerRevokeHook(
-  ({ userId, consent }, context) =>
-    consent === PROGRESS_POLICY_NAME &&
-    clearItems(userId, PROGRESS_COLLECTION_NAME, context),
-)
+} = require('./ProgressOptOut')
 
 const assignUserId = (collection, userId) =>
   collection && {

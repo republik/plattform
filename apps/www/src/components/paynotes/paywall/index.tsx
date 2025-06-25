@@ -1,17 +1,16 @@
-import { useEffect } from 'react'
-
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
   useTrackEvent,
 } from '@app/lib/analytics/event-tracking'
+import { useMe } from 'lib/context/MeContext'
+import { useEffect } from 'react'
 
 import { PaynoteContainer } from '../../ui/containers'
 
 import { getMeteringData } from '../article-metering'
 
 import { Offers } from './offers'
-import { useMe } from 'lib/context/MeContext'
 
 // Assumptions:
 // - the Paywall is only shown to user who are logged in
@@ -27,7 +26,7 @@ function Paywall() {
   }, [trackEvent])
 
   return (
-    <PaynoteContainer>
+    <PaynoteContainer testId='paywall'>
       <Offers
         additionalShopParams={{
           rep_ui_component: 'paywall',
@@ -50,4 +49,5 @@ function PaywallWithEvents() {
     </EventTrackingContext>
   )
 }
+
 export default PaywallWithEvents

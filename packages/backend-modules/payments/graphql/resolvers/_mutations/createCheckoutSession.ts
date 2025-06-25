@@ -1,18 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { GraphqlContext } from '@orbiting/backend-modules-types'
-import {
-  Shop,
-  checkIntroductoryOfferEligibility,
-  activeOffers,
-} from '../../../lib/shop'
-import { Payments } from '../../../lib/payments'
-import { default as Auth } from '@orbiting/backend-modules-auth'
-import { requiredCustomFields } from '../../../lib/shop/utils'
-import { Company } from '../../../lib/types'
+import { CheckoutSessionBuilder } from '../../../lib/shop/CheckoutSessionOptionBuilder'
+import { PaymentService } from '../../../lib/services/PaymentService'
+import { CustomerInfoService } from '../../../lib/services/CustomerInfoService'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
   promoCode?: string
+  withDonation?: string
+  withCustomDonation?: { amount: number }
+  withSelectedDiscount?: string
   complimentaryItems: {
     id: string
     quantity: number
@@ -31,58 +27,22 @@ export = async function createCheckoutSession(
   args: CreateCheckoutSessionArgs,
   ctx: GraphqlContext,
 ) {
-  const shop = new Shop(activeOffers())
+  const session = await new CheckoutSessionBuilder(
+    args.offerId,
+    new PaymentService(),
+    new CustomerInfoService(ctx.pgdb),
+  ).withCustomer(ctx.user)
 
-  const offer = await shop.getOfferById(args.offerId, {
-    promoCode: args.promoCode,
-    withIntroductoryOffer: await checkIntroductoryOfferEligibility(
-      ctx.pgdb,
-      ctx.user,
-    ),
-  })
+  session
+    .withMetadata(args.options?.metadata)
+    .withPromoCode(args.promoCode)
+    .withDonation(args.withCustomDonation)
+    .withReturnURL(args.options?.returnURL)
+    .withUIMode(args.options?.uiMode)
 
-  if (!offer) {
-    throw new Error('Unknown offer')
+  if (args.withSelectedDiscount) {
+    await session.withSelectedDiscount(args.withSelectedDiscount)
   }
 
-  if (offer?.requiresLogin) Auth.ensureUser(ctx.user)
-
-  const customerId = await getCustomer(offer.company, ctx.user?.id)
-
-  const sess = await shop.generateCheckoutSession({
-    offer: offer,
-    uiMode: args.options?.uiMode ?? 'EMBEDDED',
-    customerId: customerId,
-    customPrice: args.options?.customPrice,
-    discounts: offer.discount?.couponId
-      ? [offer.discount?.couponId]
-      : undefined,
-    customFields: requiredCustomFields(ctx.user),
-    metadata: args?.options?.metadata,
-    returnURL: args?.options?.returnURL,
-    complimentaryItems: args.complimentaryItems,
-  })
-
-  return {
-    company: offer.company,
-    sessionId: sess.id,
-    clientSecret: sess.client_secret,
-    url: sess.url,
-  }
-}
-
-async function getCustomer(company: Company, userId?: string) {
-  if (!userId) {
-    return undefined
-  }
-
-  const customerId = (
-    await Payments.getInstance().getCustomerIdForCompany(userId, company)
-  )?.customerId
-
-  if (customerId) {
-    return customerId
-  }
-
-  return await Payments.getInstance().createCustomer(company, userId)
+  return session.build()
 }

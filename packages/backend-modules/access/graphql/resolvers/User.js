@@ -13,10 +13,6 @@ module.exports = {
       return null
     }
 
-    if (!Roles.userIsInRoles(me, PRIVILEDGED_ROLES)) {
-      withPast = false
-    }
-
     const grants = await grantsLib.findByRecipient(user, { withPast, pgdb })
 
     debug('accessGrants', { user: user.id, grants: grants.length })
@@ -26,10 +22,6 @@ module.exports = {
   accessCampaigns: async (user, { withPast }, { user: me, pgdb }) => {
     if (!Roles.userIsMeOrInRoles(user, me, PRIVILEDGED_ROLES)) {
       return null
-    }
-
-    if (!Roles.userIsInRoles(me, PRIVILEDGED_ROLES)) {
-      withPast = false
     }
 
     const campaigns = await campaignsLib.findForGranter(user, {

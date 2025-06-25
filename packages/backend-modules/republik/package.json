@@ -22,6 +22,7 @@
     "db:seed:users": "cat ../auth/seeds/seeds.example.json | node ../auth/seeds/seed.js --truncate"
   },
   "dependencies": {
+    "@orbiting/backend-modules-assets": "*",
     "apollo-modules-node": "*",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",
@@ -32,8 +33,6 @@
     "lodash": "^4.17.19",
     "moment": "^2.26.0",
     "openpgp": "^4.10.4",
-    "remark-breaks": "^1.0.5",
-    "remark-parse": "^8.0.2",
     "sharp": "^0.29.3",
     "slugify": "^1.4.0",
     "stripe": "^8.119.0",

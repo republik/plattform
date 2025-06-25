@@ -81,6 +81,12 @@ const WebApp = ({
                             name='viewport'
                             content='width=device-width, initial-scale=1, viewport-fit=cover'
                           />
+                          <link
+                            rel='alternate'
+                            type='application/rss+xml'
+                            title='RSS Feed'
+                            href='/feed.xml'
+                          />
                         </Head>
                         <Component
                           serverContext={serverContext}

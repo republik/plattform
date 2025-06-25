@@ -3,19 +3,22 @@
   "private": true,
   "version": "0.0.0",
   "main": "dist/lib.js",
-  "module": "src/lib.ts",
+  "module": "dist/lib.mjs",
   "types": "dist/lib.d.ts",
   "exports": {
     ".": {
-      "import": "./src/lib.ts",
+      "types": "./dist/lib.d.ts",
+      "import": "./dist/lib.mjs",
       "require": "./dist/lib.js"
     },
     "./chart": {
-      "import": "./src/chart.ts",
+      "types": "./dist/chart.d.ts",
+      "import": "./dist/chart.mjs",
       "require": "./dist/chart.js"
     },
     "./editor": {
-      "import": "./src/editor.ts",
+      "types": "./dist/editor.d.ts",
+      "import": "./dist/editor.mjs",
       "require": "./dist/editor.js"
     }
   },
@@ -23,8 +26,7 @@
     "node": "^20.0.0"
   },
   "files": [
-    "dist",
-    "editor.js"
+    "dist"
   ],
   "author": "Thomas Preusse <t@preus.se> (https://t.preus.se/)",
   "license": "BSD-3-Clause",
@@ -33,16 +35,16 @@
     "url": "https://github.com/republik/plattform.git"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.dist.json",
+    "build": "tsup --clean",
     "start": "serve -s build",
-    "dev": "tsc -w --project tsconfig.dist.json",
+    "dev": "tsup --watch --sourcemap",
     "test": "jest",
     "test:dev": "jest --watch"
   },
   "dependencies": {
     "body-scroll-lock": "^3.1.5",
-    "next": "^14.2.26",
-    "next-themes": "^0.2.1",
+    "next": "^15.3.3",
+    "next-themes": "^0.4.6",
     "serve": "^13.0.2",
     "slate": "^0.88.1",
     "slate-history": "^0.86.0",
@@ -51,7 +53,7 @@
     "use-memo-one": "^1.1.2"
   },
   "devDependencies": {
-    "@apollo/client": "^3.8.4",
+    "@apollo/client": "^3.13.8",
     "@babel/standalone": "^7.15.8",
     "@republik/eslint-config-frontend": "*",
     "@republik/icons": "*",
@@ -64,9 +66,9 @@
     "@types/d3-time-format": "2.1.1",
     "@types/jest": "^29.5.1",
     "@types/node": "20",
-    "@types/prop-types": "^15.7.4",
-    "@types/react": "^18.3.1",
-    "@types/react-dom": "^18.3.0",
+    "@types/prop-types": "^15.7.15",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
     "babel-jest": "^29.5.0",
     "clipboard-copy": "^4.0.1",
     "d3-array": "^1.2.1",
@@ -88,20 +90,21 @@
     "jest-environment-jsdom": "^29.7.0",
     "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
-    "react": "^18.3.1",
+    "react": "^19.1.0",
     "react-autocomplete": "^1.4.1",
     "react-color": "^2.18.1",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.1.0",
     "react-maskedinput": "^4.0.1",
     "react-textarea-autosize": "^5.1.0",
     "rw": "^1.3.3",
     "scroll-into-view": "1.15.0",
     "semantic-release": "^17.1.1",
     "topojson": "^3.0.2",
+    "tsup": "^8.5.0",
     "validate-commit-msg": "^2.14.0"
   },
   "peerDependencies": {
-    "@apollo/client": "^3.8.4",
+    "@apollo/client": "^3.13.8",
     "@republik/icons": "*",
     "d3-array": "1.x",
     "d3-color": "1.x",

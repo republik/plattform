@@ -58,10 +58,9 @@ function isPaynoteOverlayHidden(
     pathname === '/meine-republik' ||
     pathname === '/probelesen' ||
     pathname === '/community' ||
+    pathname === '/2025/05/25/stellenauschreibung-specialist-storytelling' ||
     searchParams.has('extract') ||
-    searchParams.has('extractId') ||
-    pathname ===
-      '/2025/04/30/stellenausschreibung-trainee-unternehmensmanagement'
+    searchParams.has('extractId')
   )
 }
 
@@ -78,7 +77,7 @@ function isDialogPage(
   pathname: string,
   searchParams: URLSearchParams,
 ): boolean {
-  return pathname === '/dialog' && searchParams.has('t')
+  return pathname.startsWith('/dialog/')
 }
 
 export const PaynotesProvider = ({ children }) => {

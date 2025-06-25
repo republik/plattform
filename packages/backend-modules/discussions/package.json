@@ -21,16 +21,16 @@
     "build": "tsc"
   },
   "dependencies": {
-    "dataloader": "^2.0.0",
-    "graphql-fields": "^2.0.3",
-    "d3-time-format": "^2.2.3",
-    "glamor": "^2.20.40",
-    "@republik/mdast-react-render": "*",
     "@republik/mdast-mail-templates": "*",
+    "@republik/mdast-react-render": "*",
     "@republik/remark-preset": "*",
+    "d3-time-format": "^2.2.3",
+    "dataloader": "^2.0.0",
+    "glamor": "^2.20.40",
+    "graphql-fields": "^2.0.3",
     "prop-types": "^15.6.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "*"

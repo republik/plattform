@@ -1,3 +1,5 @@
+import Stripe from 'stripe'
+
 export type Company = 'PROJECT_R' | 'REPUBLIK'
 
 export type Order = {
@@ -12,7 +14,10 @@ export type Order = {
   updatedAt: Date
 }
 
-export type SubscriptionType = 'YEARLY_SUBSCRIPTION' | 'MONTHLY_SUBSCRIPTION'
+export type SubscriptionType =
+  | 'YEARLY_SUBSCRIPTION'
+  | 'BENEFACTOR_SUBSCRIPTION'
+  | 'MONTHLY_SUBSCRIPTION'
 
 export type SubscriptionStatus =
   | 'trialing'
@@ -120,6 +125,7 @@ export type Invoice = {
   totalTaxAmounts: any
   totalTaxAmount: number
   discounts: string[]
+  items: any
   periodStart: Date
   periodEnd: Date
   createdAt: Date
@@ -232,4 +238,21 @@ export type ChargeUpdate = {
   amountCaptured: number
   amountRefunded: number
   fullyRefunded: boolean
+}
+
+export type Transaction = {
+  id: string
+  amount: number
+  currency: string
+  status: string
+  subscriptionId?: string
+  pledgeId?: string
+}
+
+export interface PaymentWorkflow<T extends Stripe.Event> {
+  run(company: Company, event: T): Promise<any>
+}
+
+export interface MailNotifier<T extends object> {
+  sendEmail(recipient: string, args: T): Promise<any>
 }

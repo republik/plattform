@@ -42,24 +42,10 @@ const nextConfig = {
     PUBLIC_BASE_URL,
     PUBLIC_CDN_URL,
   },
-  transpilePackages: [
-    '@project-r/styleguide',
-    '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11 and older safari versions
-    '@republik/icons', // Ensures ES5 compatibility to work in IE11 and older safari versions
-  ],
-  webpack: (config) => {
-    config.externals = config.externals || {}
-    config.externals['lru-cache'] = 'lru-cache'
-    config.externals['react-dom/server'] = 'react-dom/server'
-    return config
-  },
+
   poweredByHeader: false,
   assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
-  useFileSystemPublicRoutes: true,
-  // , onDemandEntries: {
-  //   // wait 5 minutes before disposing entries
-  //   maxInactiveAge: 1000 * 60 * 5
-  // }
+
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -190,8 +176,14 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_SHOP_BASE_URL && {
         source: '/angebote',
         missing: [
-          { type: 'query', key: 'package', value: undefined },
-          { type: 'query', key: 'group', value: undefined },
+          // Don't redirect these packages, since we use them for payment slips or gifts
+          { type: 'query', key: 'package', value: 'PROLONG' },
+          { type: 'query', key: 'package', value: 'ABO' },
+          { type: 'query', key: 'package', value: 'DONATE' },
+          { type: 'query', key: 'package', value: 'BENEFACTOR' },
+          { type: 'query', key: 'package', value: 'ABO_GIVE' },
+          { type: 'query', key: 'package', value: 'ABO_GIVE_MONTHS' },
+          // Not sure what this is
           { type: 'query', key: 'goto', value: undefined },
         ],
         destination: process.env.NEXT_PUBLIC_SHOP_BASE_URL,
@@ -233,11 +225,10 @@ const nextConfig = {
         destination: '/503',
         permanent: false,
       },
-      // Migrated from custom express server
       {
-        source: '/updates/wer-sind-sie',
-        destination: '/503',
-        permanent: false,
+        source: '/updates',
+        destination: '/crowdfunding-updates',
+        permanent: true,
       },
       // Migrated from static questionnaire pages
       {

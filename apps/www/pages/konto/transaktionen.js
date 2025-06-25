@@ -1,13 +1,12 @@
-import { useRouter } from 'next/router'
-import Frame from '../../components/Frame'
-import withT from '../../lib/withT'
-import { withDefaultSSR } from '../../lib/apollo/helpers'
 import AccountTabs from '../../components/Account/AccountTabs'
 import { AccountEnforceMe } from '../../components/Account/Elements'
-import PledgeList from '../../components/Account/PledgeList'
+import Frame from '../../components/Frame'
+import { withDefaultSSR } from '../../lib/apollo/helpers'
+import withT from '../../lib/withT'
+// import PledgeList from '../../components/Account/PledgeList'
+import { Transactions } from '../../components/Account/Transactions'
 
 const TransactionPage = ({ t }) => {
-  const { query } = useRouter()
   return (
     <Frame
       meta={{
@@ -16,7 +15,8 @@ const TransactionPage = ({ t }) => {
     >
       <AccountEnforceMe>
         <AccountTabs />
-        <PledgeList highlightId={query.id} />
+        {/* <PledgeList highlightId={query.id} /> */}
+        <Transactions />
       </AccountEnforceMe>
     </Frame>
   )

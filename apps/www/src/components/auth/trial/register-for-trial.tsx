@@ -1,10 +1,10 @@
 import { css } from '@republik/theme/css'
+import { useMe } from 'lib/context/MeContext'
 
 import { useTranslation } from 'lib/withT'
+import { TrialFormProps } from '.'
 
 import { LoginForm } from '../login'
-import { TrialFormProps } from '.'
-import { useMe } from 'lib/context/MeContext'
 
 // This component is used in the trial flow when the user is not authenticated.
 // It consists of two steps:

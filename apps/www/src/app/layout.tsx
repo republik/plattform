@@ -19,6 +19,16 @@ export const metadata: Metadata = {
     default: 'Republik',
     template: '%s – Republik',
   },
+  alternates: {
+    types: {
+      'application/rss+xml': [
+        {
+          url: '/feed.xml',
+          title: 'RSS Feed',
+        },
+      ],
+    },
+  },
 }
 
 export default async function RootLayout({

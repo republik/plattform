@@ -6,7 +6,8 @@ import { Metadata } from 'next'
 // https://nextjs.org/docs/app/api-reference/functions/use-search-params#dynamic-rendering
 export const dynamic = 'force-dynamic'
 
-export async function generateMetadata({ params }): Promise<Metadata> {
+export async function generateMetadata(props): Promise<Metadata> {
+  const params = await props.params;
   const data = await getInviteeData(params)
 
   const senderName = data.sender?.firstName
@@ -22,7 +23,8 @@ export async function generateMetadata({ params }): Promise<Metadata> {
   }
 }
 
-export default async function Page({ params }) {
+export default async function Page(props) {
+  const params = await props.params;
   const data = await getInviteeData(params)
 
   const { sender } = data

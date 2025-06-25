@@ -29,7 +29,6 @@ import { useInfiniteScroll } from '../../lib/hooks/useInfiniteScroll'
 import { intersperse } from '../../lib/utils/helpers'
 import { cleanAsPath } from '../../lib/utils/link'
 import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
-import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
 import * as withData from './withData'
 import { IconCheckCircle } from '@republik/icons'
@@ -55,16 +54,13 @@ const archivedYears = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]
 
 export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   const { t } = useTranslation()
-  const { isEditor, isMember } = useMe()
-  const { isAudioQueueAvailable } = useAudioQueue()
-
-  const showPlayButton = !isFrontExtract && isMember && isAudioQueueAvailable
+  const { isEditor } = useMe()
 
   const schema = useMemo(
     () =>
       createFrontSchema({
         Link: HrefLink,
-        AudioPlayButton: showPlayButton ? TeaserAudioPlayButton : undefined,
+        AudioPlayButton: isFrontExtract ? undefined : TeaserAudioPlayButton,
         CommentLink,
         DiscussionLink,
         ...withData,

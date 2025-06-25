@@ -72,7 +72,7 @@ const CONTACT_EMAIL = 'kontakt@republik.ch'
 export default async function Footer() {
   const { me, hasActiveMembership } = await getMe()
 
-  const { isIOSApp } = getPlatformInformation()
+  const { isIOSApp } = await getPlatformInformation()
 
   const navs: FooterNavigationGroup[] = [
     {
@@ -114,6 +114,7 @@ export default async function Footer() {
         Genossenschaftsrat: '/format/genossenschaftsrat',
         Komplizin: '/komplizin',
         Etikette: '/etikette',
+        Feedback: '/feedback',
       },
     },
     {
