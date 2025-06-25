@@ -188,7 +188,7 @@ const FirstBookmarkItem = ({
           alignItems: 'center',
         })}
       >
-        <span>{getAuthors(document)}</span>
+        <span>{getAuthors(document.meta.contributors)}</span>
         <span>{document.meta.estimatedReadingMinutes} min</span>
       </div>
 

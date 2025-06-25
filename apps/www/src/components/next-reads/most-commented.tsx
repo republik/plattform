@@ -59,7 +59,7 @@ function MostCommentedCoverText({ document }: { document: Document }) {
       {!document.meta.image && (
         <p className='description'>{document.meta.description}</p>
       )}
-      <p className='author'>{getAuthors(document)}</p>
+      <p className='author'>{getAuthors(document.meta.contributors)}</p>
     </div>
   )
 }

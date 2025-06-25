@@ -36,7 +36,7 @@ function MostReadItem({ document }: { document: Document }) {
         <CategoryLabel document={document} />
         <h4>{document.meta.title}</h4>
         <p className='description'>{document.meta.description}</p>
-        <p className='author'>{getAuthors(document)}</p>
+        <p className='author'>{getAuthors(document.meta.contributors)}</p>
       </Link>
     </div>
   )

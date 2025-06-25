@@ -1,9 +1,11 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 
-export const getAuthors = (document: Document) =>
+export const getAuthors = (
+  contributors: Array<{ kind?: string; name: string }>,
+) =>
   'Von ' +
-  document.meta.contributors
-    .filter((contributor) => contributor.kind.includes('Text'))
+  contributors
+    .filter((contributor) => contributor.kind?.includes('Text'))
     .map((contributor) => contributor.name)
     .join(', ')
 
