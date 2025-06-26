@@ -216,7 +216,8 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
         isEditor: checkRoles(me, ['editor']),
         isClimateLabMember,
         trialStatus,
-        progressConsent: me?.progressOptOut !== true,
+        // Progress consent requires a logged in user AND them not having opted out
+        progressConsent: me && me.progressOptOut !== true,
       }}
     >
       <NextHead>
