@@ -7,6 +7,12 @@ import * as Sentry from '@sentry/nextjs'
 if (process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true') {
   Sentry.init({
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    integrations: [
+      // Include GraphQL queries in error spans
+      Sentry.graphqlClientIntegration({
+        endpoints: [process.env.NEXT_PUBLIC_API_URL],
+      }),
+    ],
   })
 }
 
