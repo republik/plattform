@@ -80,7 +80,7 @@
     "@republik/mdast-react-render": "*",
     "@republik/nextjs-apollo-client": "*",
     "@republik/theme": "*",
-    "@sentry/nextjs": "^7.110.1",
+    "@sentry/nextjs": "^9.32.0",
     "@stripe/react-stripe-js": "^1.7.0",
     "@use-it/event-listener": "^0.1.7",
     "apollo-fetch": "^0.7.0",
