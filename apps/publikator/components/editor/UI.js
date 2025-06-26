@@ -1,4 +1,5 @@
-import { useMemo } from 'react'
+import { useMemo, useRef, useEffect } from 'react'
+import React from 'react'
 import { getFromModules } from './'
 import { Interaction, Label, colors, IconButton } from '@project-r/styleguide'
 import { IconPrint, IconCode } from '@republik/icons'
@@ -11,6 +12,8 @@ const UISidebar = ({
   onSaveSearchAndReplace,
   onGoToRaw,
 }) => {
+  const formAreaRef = useRef(null)
+
   const {
     textFormatButtons,
     blockFormatButtons,
@@ -35,6 +38,27 @@ const UISidebar = ({
       propertyForms: getFromModules(uniqModules, (m) => m.ui && m.ui.forms),
     }
   }, [editorRef])
+
+  // Check if form area has meaningful content and hide if empty
+  // TODO: This is a hack to hide the form area when it's empty.
+  // If forms returned consistent values if they were empty, we could remove this.
+  // Some forms use createPropertyForm which wraps forms and calls an isDisabled function
+  // Some forms return null when inactive
+  // Some forms might return empty JSX or other falsy values
+  useEffect(() => {
+    if (!formAreaRef.current) return
+
+    const formArea = formAreaRef.current
+    const hasTextContent = formArea.textContent.trim().length > 0
+    const hasVisibleElements =
+      formArea.querySelectorAll('input, select, textarea, button').length > 0
+
+    if (!hasTextContent && !hasVisibleElements) {
+      formArea.style.display = 'none'
+    } else {
+      formArea.style.display = 'block'
+    }
+  }, [value]) // Re-check when editor value changes
 
   if (!value) {
     return null
@@ -87,25 +111,27 @@ const UISidebar = ({
           ))}
         </Interaction.P>
       </div>
-      {propertyForms.length > 0 && (
-        <div
-          style={{
-            flex: '0 1 auto',
-            maxHeight: '50%',
-            padding: '20px 15px',
-            width: '100%',
-            overflowY: 'scroll',
-            backgroundColor: colors.secondaryBg,
-            borderTop: `1px solid ${colors.divider}`,
-          }}
-        >
-          <div style={{ marginBottom: '36px' }}>
-            {propertyForms.map((Form, i) => (
-              <Form key={`form-${i}`} value={value} onChange={onChange} />
-            ))}
-          </div>
+      <div
+        ref={formAreaRef}
+        className='form-area'
+        style={{
+          flex: '0 1 auto',
+          maxHeight: '50%',
+          padding: '20px 15px',
+          width: '100%',
+          overflowY: 'scroll',
+          backgroundColor: colors.secondaryBg,
+          borderTop: `1px solid ${colors.divider}`,
+        }}
+      >
+        <div style={{ marginBottom: '36px' }}>
+          {propertyForms.map((Form, i) => (
+            <div key={`form-${i}`}>
+              <Form value={value} onChange={onChange} />
+            </div>
+          ))}
         </div>
-      )}
+      </div>
     </>
   )
 }
