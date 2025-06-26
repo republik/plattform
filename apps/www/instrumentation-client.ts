@@ -7,7 +7,13 @@ import * as Sentry from '@sentry/nextjs'
 if (process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true') {
   Sentry.init({
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-    ignoreErrors: ['Script error.', 'Error: aborted'],
+    ignoreErrors: [
+      'Script error.',
+      'Error: aborted',
+      // Review these filters
+      'Error: Failed to load',
+      'TypeError: Load failed',
+    ],
     denyUrls: [/https?:\/\/datawrapper\.dwcdn\.net\//],
     integrations: [
       // Include GraphQL queries in error spans
