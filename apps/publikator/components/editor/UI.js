@@ -66,7 +66,7 @@ const UISidebar = ({
 
   return (
     <>
-      <div style={{ flex: 1, overflowY: 'auto', padding: '15px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '15px 15px 55px 15px' }}>
         <p style={{ margin: '0 0 10px 0', fontSize: '12px' }}>
           {value.document.text.length}
           {' Zeichen'}
