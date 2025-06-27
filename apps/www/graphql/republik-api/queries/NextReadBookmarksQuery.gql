@@ -12,7 +12,6 @@ query NextReadsBookmarks {
         id
         document {
           ...NextReadDocumentFields
-          content
         }
       }
     }

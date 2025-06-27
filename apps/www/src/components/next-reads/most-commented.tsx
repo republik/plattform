@@ -54,7 +54,9 @@ function MostCommentedCoverText({ document }: { document: Document }) {
       )}
     >
       <h4>
-        <span className={css({ fontSize: 32 })}>{document.meta.title}</span>
+        <span className={css({ fontSize: 24, md: { fontSize: 32 } })}>
+          {document.meta.title}
+        </span>
       </h4>
       {!document.meta.image && (
         <p className='description'>{document.meta.description}</p>

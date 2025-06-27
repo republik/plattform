@@ -1,8 +1,10 @@
-import { getAuthors } from '@app/components/next-reads/helpers'
+import { SquareCover } from '@app/components/assets/SquareCover'
+import { CategoryLabel, getAuthors } from '@app/components/next-reads/helpers'
 import { Button } from '@app/components/ui/button'
 import { IconArrowRight } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
+import React from 'react'
 import { Document } from '../../../graphql/republik-api/__generated__/gql/graphql'
 import {
   nextReadHeader,
@@ -25,8 +27,8 @@ export function BookmarkedFeed({ documents }: { documents: Document[] }) {
       <div
         className={css({
           px: '15px',
-          pb: '24px',
-          md: { pb: '80px' },
+          pb: 8,
+          md: { pb: 16 },
         })}
       >
         <FirstBookmarkItem
@@ -53,17 +55,16 @@ const BookmarkItems = ({ documents }: { documents: Document[] }) => {
       className={css({
         display: 'flex',
         flexDirection: 'column',
-        mt: '32px',
-        gap: '32px',
+        mt: 8,
+        gap: 8,
         width: '100%',
         md: {
           margin: '0 auto',
-          pt: '12px',
+          pt: 6,
           flexDirection: 'row',
           justifyContent: 'center',
           alignItems: 'flex-start',
           maxWidth: '975px',
-          gap: '24px',
         },
       })}
     >
@@ -83,32 +84,24 @@ const FirstBookmarkItem = ({
 }) => {
   return (
     <div
-      className={css({
-        margin: '16px auto 24px auto',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '24px',
-        maxWidth: '642px',
-        md: {
-          pb: '40px',
-        },
-      })}
+      className={cx(
+        nextReadItemTypography,
+        css({
+          margin: '16px auto 24px auto',
+          display: 'flex',
+          flexShrink: 0,
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 4,
+          maxWidth: '642px',
+        }),
+      )}
     >
-      <h4
-        className={css({
-          fontFamily: 'rubis',
-          fontWeight: 500,
-          fontSize: 24,
-          lineHeight: 1.2,
-          textAlign: 'center',
-          md: {
-            fontSize: 32,
-          },
-        })}
-      >
-        {document.meta.title}
+      <h4>
+        <span className={css({ fontSize: 24, md: { fontSize: 32 } })}>
+          {document.meta.title}
+        </span>
       </h4>
       {document.meta.image && (
         <img
@@ -126,19 +119,11 @@ const FirstBookmarkItem = ({
           })}
         />
       )}
-      <div
-        className={css({
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px',
-          alignItems: 'center',
-        })}
-      >
-        <span>{getAuthors(document.meta.contributors)}</span>
-        <span>{document.meta.estimatedReadingMinutes} min</span>
-      </div>
-
-      <div
+      <p className='author'>{getAuthors(document.meta.contributors)}</p>
+      <p className='duration'>
+        {document.meta.estimatedReadingMinutes} Minuten
+      </p>
+      <p
         className={css({
           fontFamily: 'rubis',
           fontSize: 18,
@@ -147,26 +132,16 @@ const FirstBookmarkItem = ({
         })}
       >
         {document.meta.description}
-        <Link
-          href={document.meta.path}
-          className={css({
-            alignSelf: numberOfDocuments < 1 && 'flex-start',
-          })}
-        >
-          <span
-            className={css({
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              mt: '-16px',
-            })}
-          >
-            Weiterlesen
-            <IconArrowRight size={20} />
-          </span>
-        </Link>
-      </div>
+      </p>
+      <Link
+        href={document.meta.path}
+        className={css({
+          alignSelf: numberOfDocuments < 1 && 'flex-start',
+          justifySelf: 'center',
+        })}
+      >
+        Weiterlesen <IconArrowRight size={20} />
+      </Link>
     </div>
   )
 }
@@ -177,14 +152,16 @@ const BookmarkItem = ({ document }: { document: Document }) => {
       className={cx(
         nextReadItemTypography,
         css({
-          display: 'flex',
-          gap: '24px',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
+          gap: 4,
+          display: 'grid',
+          gridTemplateColumns: '2fr 1fr',
           maxWidth: '420px',
           width: '100%',
           margin: '0 auto',
+          textAlign: 'left',
           md: {
+            display: 'flex',
+            direction: 'column-reverse',
             maxWidth: '309px',
             flexDirection: 'column-reverse',
             justifyContent: 'flex-start',
@@ -194,31 +171,24 @@ const BookmarkItem = ({ document }: { document: Document }) => {
         }),
       )}
     >
-      <div
-        className={css({
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px',
-        })}
-      >
+      <div>
+        <CategoryLabel document={document} />
         <h4>{document.meta.title}</h4>
-        <span>{document.meta.estimatedReadingMinutes} min Lesezeit</span>
+        <p className='duration'>
+          {document.meta.estimatedReadingMinutes ||
+            document.meta.estimatedConsumptionMinutes}{' '}
+          Minuten
+        </p>
       </div>
-      {document.meta.image && (
-        <img
-          src={`${document.meta.image}&resize=618x`}
-          alt={`Cover for ${document.meta.title}`}
-          className={css({
-            width: '100%',
-            aspectRatio: '1',
-            objectFit: 'cover',
-            maxWidth: '112px',
-            md: {
-              maxWidth: '309px',
-            },
-          })}
+      <div className={css({ width: '100%' })}>
+        <SquareCover
+          size={1024}
+          title={document.meta.title}
+          cover={document.meta.audioCover}
+          crop={document.meta.audioCoverCrop}
+          image={document.meta.image}
         />
-      )}
+      </div>
     </div>
   )
 }

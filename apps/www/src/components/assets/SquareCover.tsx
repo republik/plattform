@@ -24,6 +24,7 @@ export const SquareCover = ({
         aspectRatio: '1/1',
         objectFit: 'cover',
         height: 'auto',
+        backgroundColor: 'white',
       })}
       src={cover || getImageCropURL(imageUrl, size * 2, crop)}
       style={{ width: size }}

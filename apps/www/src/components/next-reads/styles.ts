@@ -57,4 +57,11 @@ export const nextReadItemTypography = css({
     lineHeight: 1.2,
     letterSpacing: '0.01em',
   },
+  '& p.duration': {
+    fontFamily: 'gtAmericaStandard',
+    fontWeight: 400,
+    fontSize: 14,
+    lineHeight: 1.2,
+    color: 'textSoft',
+  },
 })
