@@ -354,6 +354,7 @@ const ArticlePage = ({
             )
           }
 
+          const isArticle = meta.template === 'article'
           const isFormat = meta.template === 'format'
           const isSection = meta.template === 'section'
           const isPage = meta.template === 'page'
@@ -560,7 +561,7 @@ const ArticlePage = ({
                   />
                 )}
 
-                <NextReads path={cleanedPath} repoId={repoId} />
+                {isArticle && <NextReads path={cleanedPath} repoId={repoId} />}
               </div>
             </>
           )
