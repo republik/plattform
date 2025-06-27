@@ -1,11 +1,12 @@
-import { SquareCover } from '@app/components/assets/SquareCover'
-import { CategoryLabel, getAuthors } from '@app/components/next-reads/helpers'
-import { Button } from '@app/components/ui/button'
 import { IconArrowRight } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 import React from 'react'
 import { Document } from '../../../graphql/republik-api/__generated__/gql/graphql'
+import { SquareCover } from '../assets/SquareCover'
+import { Button } from '../ui/button'
+import { CategoryLabel, getAuthors } from './helpers'
+import { NextReadsLoader } from './loading'
 import {
   nextReadHeader,
   nextReadItemTypography,
@@ -24,27 +25,31 @@ export function BookmarkedFeed({ documents }: { documents: Document[] }) {
         <h3>Gemerkte Beiträge</h3>
         <p className='tagline'>Deine Leseliste</p>
       </div>
-      <div
-        className={css({
-          px: '15px',
-          pb: 8,
-          md: { pb: 16 },
-        })}
-      >
-        <FirstBookmarkItem
-          document={documents[0]}
-          numberOfDocuments={documents.length}
-        />
-        <BookmarkItems documents={documents.slice(1)} />
-        <Link href='/lesezeichen'>
-          <Button
-            className={css({ mt: '36px', md: { mt: '48px' } })}
-            variant='outline'
-          >
-            Lesezeichen verwalten
-          </Button>
-        </Link>
-      </div>
+      {documents?.length ? (
+        <div
+          className={css({
+            px: '15px',
+            pb: 8,
+            md: { pb: 16 },
+          })}
+        >
+          <FirstBookmarkItem
+            document={documents[0]}
+            numberOfDocuments={documents.length}
+          />
+          <BookmarkItems documents={documents.slice(1)} />
+          <Link href='/lesezeichen'>
+            <Button
+              className={css({ mt: 8, md: { mt: 16 } })}
+              variant='outline'
+            >
+              Lesezeichen verwalten
+            </Button>
+          </Link>
+        </div>
+      ) : (
+        <NextReadsLoader />
+      )}
     </div>
   )
 }

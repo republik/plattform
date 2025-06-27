@@ -1,13 +1,14 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { SquareCover } from '@app/components/assets/SquareCover'
-import { CategoryLabel, getAuthors } from '@app/components/next-reads/helpers'
+import { css, cx } from '@republik/theme/css'
+import Link from 'next/link'
+import { CategoryLabel, getAuthors } from './helpers'
+import { NextReadsLoader } from './loading'
 import {
   nextReadHeader,
   nextReadItemTypography,
   nextReadsSection,
-} from '@app/components/next-reads/styles'
-import { css, cx } from '@republik/theme/css'
-import Link from 'next/link'
+} from './styles'
 
 const mostReadItemStyle = css({
   mb: 4,
@@ -58,7 +59,11 @@ const mostReadGrid = css({
   },
 })
 
-export function MostReadFeed({ documents }: { documents: Document[] }) {
+export function MostReadFeed({
+  documents,
+}: {
+  documents: Document[] | undefined
+}) {
   return (
     <div className={nextReadsSection}>
       <div className={nextReadHeader}>
@@ -67,11 +72,15 @@ export function MostReadFeed({ documents }: { documents: Document[] }) {
           Die meistbeachteten Beiträge der letzten Woche
         </p>
       </div>
-      <div className={mostReadGrid}>
-        {documents.map((document) => (
-          <MostReadItem key={document.id} document={document} />
-        ))}
-      </div>
+      {documents?.length ? (
+        <div className={mostReadGrid}>
+          {documents.map((document) => (
+            <MostReadItem key={document.id} document={document} />
+          ))}
+        </div>
+      ) : (
+        <NextReadsLoader />
+      )}
     </div>
   )
 }

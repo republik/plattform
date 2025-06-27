@@ -1,13 +1,14 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
-import { getAuthors } from '@app/components/next-reads/helpers'
+import { css, cx } from '@republik/theme/css'
+import Link from 'next/link'
+import React from 'react'
+import { getAuthors } from './helpers'
+import { NextReadsLoader } from './loading'
 import {
   nextReadHeader,
   nextReadItemTypography,
   nextReadsSection,
-} from '@app/components/next-reads/styles'
-import { css, cx } from '@republik/theme/css'
-import Link from 'next/link'
-import React from 'react'
+} from './styles'
 
 type ColorType = {
   color: string
@@ -174,15 +175,19 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
           <p className='tagline'>Die meistkommentierten Beiträge des Monats</p>
         </div>
       </div>
-      <div className={mostCommentedGrid}>
-        {documents.map((document, idx) => (
-          <MostCommentedRead
-            key={document.id}
-            document={document}
-            colors={COLOURS[idx % COLOURS.length]}
-          />
-        ))}
-      </div>
+      {documents?.length ? (
+        <div className={mostCommentedGrid}>
+          {documents.map((document, idx) => (
+            <MostCommentedRead
+              key={document.id}
+              document={document}
+              colors={COLOURS[idx % COLOURS.length]}
+            />
+          ))}
+        </div>
+      ) : (
+        <NextReadsLoader />
+      )}
     </>
   )
 }

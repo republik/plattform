@@ -3,13 +3,11 @@ import {
   DocumentRecommendationsDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { CategoryLabel, getAuthors } from '@app/components/next-reads/helpers'
-import {
-  nextReadHeader,
-  nextReadItemTypography,
-} from '@app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
+import { CategoryLabel, getAuthors } from './helpers'
+import { NextReadsLoader } from './loading'
+import { nextReadHeader, nextReadItemTypography } from './styles'
 
 function RecommendedRead({ document }: { document: Document }) {
   return (
@@ -38,13 +36,11 @@ function RecommendedRead({ document }: { document: Document }) {
 }
 
 export function CuratedFeed({ path }: { path: string }) {
-  const { data, loading } = useQuery(DocumentRecommendationsDocument, {
+  const { data } = useQuery(DocumentRecommendationsDocument, {
     variables: { path },
   })
 
-  if (loading || !data) return null
-
-  const documents = data.document.meta.recommendations.nodes as Document[]
+  const documents = data?.document.meta.recommendations.nodes as Document[]
 
   return (
     <div
@@ -59,11 +55,15 @@ export function CuratedFeed({ path }: { path: string }) {
         <div className={nextReadHeader}>
           <h3>Mehr zum Thema</h3>
         </div>
-        <div className={css({ pt: 4, pb: 16 })}>
-          {documents.map((document) => (
-            <RecommendedRead key={document.id} document={document} />
-          ))}
-        </div>
+        {documents?.length ? (
+          <div className={css({ pt: 4, pb: 16 })}>
+            {documents.map((document) => (
+              <RecommendedRead key={document.id} document={document} />
+            ))}
+          </div>
+        ) : (
+          <NextReadsLoader />
+        )}
       </div>
     </div>
   )
