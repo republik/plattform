@@ -11,8 +11,8 @@ if (process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true') {
       'Script error.',
       'Error: aborted',
       // Review these filters
-      'Error: Failed to load',
-      'TypeError: Load failed',
+      /Failed to load/i,
+      /Load failed/i,
     ],
     denyUrls: [/https?:\/\/datawrapper\.dwcdn\.net\//],
     integrations: [

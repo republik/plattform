@@ -5,7 +5,6 @@ import { IconButton, shouldIgnoreClick } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 
 import { postMessage } from '../../lib/withInNativeApp'
-import { reportError } from '../../lib/errors/reportError'
 
 import { splitByTitle } from '../../lib/utils/mdast'
 import { trackEvent } from '@app/lib/analytics/event-tracking'
@@ -107,9 +106,7 @@ const ActionBar = ({
           title: shareData.title || document.title,
           url: shareData.url || shareUrl,
         })
-      } catch (err) {
-        reportError(err)
-      }
+      } catch (e) {}
       // on all other devices we use our share overlay
     } else {
       setShareOverlayVisible(!shareOverlayVisible)
