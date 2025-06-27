@@ -1,0 +1,8 @@
+query NextReads($repoId: ID!) {
+  nextReads(repoId: $repoId) {
+    id
+    documents {
+      ...NextReadDocumentFields
+    }
+  }
+}

@@ -1,0 +1,12 @@
+query DocumentRecommendations($path: String!) {
+  document(path: $path) {
+    id
+    meta {
+      recommendations {
+        nodes {
+          ...NextReadDocumentFields
+        }
+      }
+    }
+  }
+}
