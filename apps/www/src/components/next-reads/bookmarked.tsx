@@ -99,6 +99,7 @@ const FirstBookmarkItem = ({
       <h4
         className={css({
           fontFamily: 'rubis',
+          fontWeight: 500,
           fontSize: 24,
           lineHeight: 1.2,
           textAlign: 'center',
