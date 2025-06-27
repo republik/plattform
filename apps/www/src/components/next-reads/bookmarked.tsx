@@ -163,8 +163,9 @@ const BookmarkItem = ({ document }: { document: Document }) => {
           position: 'relative', // for the link overlay placement
           md: {
             display: 'flex',
+            flex: 1,
             direction: 'column-reverse',
-            maxWidth: '309px',
+            maxWidth: '312px',
             flexDirection: 'column-reverse',
             justifyContent: 'flex-start',
             width: 'auto',
@@ -186,15 +187,13 @@ const BookmarkItem = ({ document }: { document: Document }) => {
           Minuten
         </p>
       </div>
-      <div className={css({ width: '100%' })}>
-        <SquareCover
-          size={1024}
-          title={document.meta.title}
-          cover={document.meta.audioCover}
-          crop={document.meta.audioCoverCrop}
-          image={document.meta.image}
-        />
-      </div>
+      <SquareCover
+        size={312}
+        title={document.meta.title}
+        cover={document.meta.audioCover}
+        crop={document.meta.audioCoverCrop}
+        image={document.meta.image}
+      />
     </div>
   )
 }

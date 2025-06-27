@@ -1,7 +1,7 @@
 fragment NextReadDocumentFields on Document {
   id
   meta {
-    audioCover(properties: { width: 1024, height: 1024 })
+    audioCover(properties: { width: 624, height: 624 })
     audioCoverCrop {
       x
       y

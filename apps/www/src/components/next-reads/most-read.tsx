@@ -20,6 +20,7 @@ const mostReadItemStyle = css({
   position: 'relative', // for the link overlay placement
   lg: {
     width: 'auto',
+    maxWidth: '312px',
   },
 })
 
@@ -29,7 +30,7 @@ function MostReadItem({ document }: { document: Document }) {
       <Link href={document.meta.path}>
         <div className={css({ marginBottom: 6 })}>
           <SquareCover
-            size={1024}
+            size={312}
             title={document.meta.title}
             cover={document.meta.audioCover}
             crop={document.meta.audioCoverCrop}
