@@ -8,7 +8,11 @@ import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
 import { CategoryLabel, getAuthors } from './helpers'
 import { NextReadsLoader } from './loading'
-import { nextReadHeader, nextReadItemTypography } from './styles'
+import {
+  nextReadHeader,
+  nextReadItemTypography,
+  nextReadsSection,
+} from './styles'
 
 function RecommendedRead({ document }: { document: Document }) {
   return (
@@ -57,20 +61,20 @@ export function CuratedFeed({ path }: { path: string }) {
         pr: '15px',
       })}
     >
-      <div className={css({ borderTop: '1px solid black' })}>
+      <div className={nextReadsSection}>
         <div className={nextReadHeader}>
           <h3>Mehr zum Thema</h3>
         </div>
-        {loading ? (
-          <NextReadsLoader />
-        ) : (
-          <div className={css({ pt: 4, pb: 16 })}>
-            {documents.map((document) => (
-              <RecommendedRead key={document.id} document={document} />
-            ))}
-          </div>
-        )}
       </div>
+      {loading ? (
+        <NextReadsLoader />
+      ) : (
+        <div className={css({ pt: 4, pb: 16 })}>
+          {documents.map((document) => (
+            <RecommendedRead key={document.id} document={document} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

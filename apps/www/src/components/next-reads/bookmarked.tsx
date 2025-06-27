@@ -16,9 +16,10 @@ import {
 export function BookmarkedFeed({ documents }: { documents: Document[] }) {
   return (
     <div
+      data-theme='light'
       className={cx(
         nextReadsSection,
-        css({ background: 'background.marketing' }),
+        css({ background: 'background.marketing', color: 'text' }),
       )}
     >
       <div className={nextReadHeader}>

@@ -1,9 +1,9 @@
 import { css } from '@republik/theme/css'
 
-export const SQUARE_IMG_MAX_WIDTH = 312
-
 export const nextReadsSection = css({
-  borderTop: '1px solid black',
+  borderTopWidth: '1px',
+  borderTopStyle: 'solid',
+  borderTopColor: 'contrast',
   maxWidth: '1700px',
   margin: '0 auto',
   textAlign: 'center',
