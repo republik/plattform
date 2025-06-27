@@ -1,5 +1,6 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { css, cx } from '@republik/theme/css'
+import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
 import React from 'react'
 import { getAuthors } from './helpers'
@@ -24,24 +25,6 @@ const COLOURS: ColorType[] = [
 
 const MD_WIDTH = 650
 
-export const CoverImage = ({ image }: { image: string }) => {
-  return (
-    <div
-      className={css({
-        width: '100%',
-        aspectRatio: '9/16',
-        md: { width: MD_WIDTH, aspectRatio: '3/4' },
-      })}
-      style={{
-        backgroundImage: `url(${image})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    />
-  )
-}
-
 function MostCommentedCoverText({ document }: { document: Document }) {
   return (
     <div
@@ -56,7 +39,9 @@ function MostCommentedCoverText({ document }: { document: Document }) {
     >
       <h4>
         <span className={css({ fontSize: 24, md: { fontSize: 32 } })}>
-          {document.meta.title}
+          <Link href={document.meta.path} className={linkOverlay()}>
+            {document.meta.title}
+          </Link>
         </span>
       </h4>
       {!document.meta.image && (
@@ -72,24 +57,27 @@ function MostCommentedWithImage({ document }: { document: Document }) {
     <div
       className={css({
         width: '100%',
+        aspectRatio: '9/16',
+        display: 'flex',
+        alignItems: 'end',
         position: 'relative',
-        md: {
-          width: MD_WIDTH,
-        },
+        md: { width: MD_WIDTH, aspectRatio: '3/4' },
       })}
+      style={{
+        backgroundImage: `url(${document.meta.image})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
     >
-      <CoverImage image={document.meta.image} />
-
       <div
         className={css({
-          position: 'absolute',
-          bottom: 0,
           width: '100%',
           paddingBottom: 16,
           color: 'white',
           background:
             'linear-gradient(180deg, rgba(7, 7, 7, 0.00) 0%, #070707 100%)',
-          backdropFilter: 'blur(1px)',
+          // backdropFilter: 'blur(1px)', -> messes the stacking context and breaks linkOverlay (FF)
         })}
       >
         <MostCommentedCoverText document={document} />
@@ -138,13 +126,11 @@ function MostCommentedRead({
 }) {
   return (
     <div className={css({ position: 'relative', scrollSnapAlign: 'start' })}>
-      <Link href={document.meta.path}>
-        {document.meta.image ? (
-          <MostCommentedWithImage document={document} />
-        ) : (
-          <MostCommentedWithoutImage document={document} colors={colors} />
-        )}
-      </Link>
+      {document.meta.image ? (
+        <MostCommentedWithImage document={document} />
+      ) : (
+        <MostCommentedWithoutImage document={document} colors={colors} />
+      )}
     </div>
   )
 }

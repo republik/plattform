@@ -4,6 +4,7 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import { css, cx } from '@republik/theme/css'
+import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
 import { CategoryLabel, getAuthors } from './helpers'
 import { NextReadsLoader } from './loading'
@@ -20,27 +21,32 @@ function RecommendedRead({ document }: { document: Document }) {
           borderBottomWidth: 1,
           borderBottomStyle: 'solid',
           borderBottomColor: 'divider',
+          position: 'relative', // for the link overlay placement
           // exclude last item from border
           '&:last-of-type': { borderBottom: 'none', pb: 0 },
         }),
       )}
     >
-      <Link href={document.meta.path}>
-        <CategoryLabel document={document} />
-        <h4>{document.meta.title}</h4>
-        <p className='description'>{document.meta.description}</p>
-        <p className='author'>{getAuthors(document.meta.contributors)}</p>
-      </Link>
+      <CategoryLabel document={document} />
+      <h4>
+        <Link href={document.meta.path} className={linkOverlay()}>
+          {document.meta.title}
+        </Link>
+      </h4>
+      <p className='description'>{document.meta.description}</p>
+      <p className='author'>{getAuthors(document.meta.contributors)}</p>
     </div>
   )
 }
 
 export function CuratedFeed({ path }: { path: string }) {
-  const { data } = useQuery(DocumentRecommendationsDocument, {
+  const { data, loading } = useQuery(DocumentRecommendationsDocument, {
     variables: { path },
   })
 
-  const documents = data?.document.meta.recommendations.nodes as Document[]
+  const documents = data?.document.meta.recommendations?.nodes as Document[]
+
+  if (!loading && !documents?.length) return null
 
   return (
     <div
@@ -55,14 +61,14 @@ export function CuratedFeed({ path }: { path: string }) {
         <div className={nextReadHeader}>
           <h3>Mehr zum Thema</h3>
         </div>
-        {documents?.length ? (
+        {loading ? (
+          <NextReadsLoader />
+        ) : (
           <div className={css({ pt: 4, pb: 16 })}>
             {documents.map((document) => (
               <RecommendedRead key={document.id} document={document} />
             ))}
           </div>
-        ) : (
-          <NextReadsLoader />
         )}
       </div>
     </div>

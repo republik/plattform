@@ -1,12 +1,12 @@
 import { IconArrowRight } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
+import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
 import React from 'react'
 import { Document } from '../../../graphql/republik-api/__generated__/gql/graphql'
 import { SquareCover } from '../assets/SquareCover'
 import { Button } from '../ui/button'
 import { CategoryLabel, getAuthors } from './helpers'
-import { NextReadsLoader } from './loading'
 import {
   nextReadHeader,
   nextReadItemTypography,
@@ -25,31 +25,24 @@ export function BookmarkedFeed({ documents }: { documents: Document[] }) {
         <h3>Gemerkte Beiträge</h3>
         <p className='tagline'>Deine Leseliste</p>
       </div>
-      {documents?.length ? (
-        <div
-          className={css({
-            px: '15px',
-            pb: 8,
-            md: { pb: 16 },
-          })}
-        >
-          <FirstBookmarkItem
-            document={documents[0]}
-            numberOfDocuments={documents.length}
-          />
-          <BookmarkItems documents={documents.slice(1)} />
-          <Link href='/lesezeichen'>
-            <Button
-              className={css({ mt: 8, md: { mt: 16 } })}
-              variant='outline'
-            >
-              Lesezeichen verwalten
-            </Button>
-          </Link>
-        </div>
-      ) : (
-        <NextReadsLoader />
-      )}
+      <div
+        className={css({
+          px: '15px',
+          pb: 8,
+          md: { pb: 16 },
+        })}
+      >
+        <FirstBookmarkItem
+          document={documents[0]}
+          numberOfDocuments={documents.length}
+        />
+        <BookmarkItems documents={documents.slice(1)} />
+        <Link href='/lesezeichen'>
+          <Button className={css({ mt: 8, md: { mt: 16 } })} variant='outline'>
+            Lesezeichen verwalten
+          </Button>
+        </Link>
+      </div>
     </div>
   )
 }
@@ -100,12 +93,15 @@ const FirstBookmarkItem = ({
           justifyContent: 'center',
           gap: 4,
           maxWidth: '642px',
+          position: 'relative', // for the link overlay placement
         }),
       )}
     >
       <h4>
         <span className={css({ fontSize: 24, md: { fontSize: 32 } })}>
-          {document.meta.title}
+          <Link href={document.meta.path} className={linkOverlay()}>
+            {document.meta.title}
+          </Link>
         </span>
       </h4>
       {document.meta.image && (
@@ -164,6 +160,7 @@ const BookmarkItem = ({ document }: { document: Document }) => {
           width: '100%',
           margin: '0 auto',
           textAlign: 'left',
+          position: 'relative', // for the link overlay placement
           md: {
             display: 'flex',
             direction: 'column-reverse',
@@ -178,7 +175,11 @@ const BookmarkItem = ({ document }: { document: Document }) => {
     >
       <div>
         <CategoryLabel document={document} />
-        <h4>{document.meta.title}</h4>
+        <h4>
+          <Link href={document.meta.path} className={linkOverlay()}>
+            {document.meta.title}
+          </Link>
+        </h4>
         <p className='duration'>
           {document.meta.estimatedReadingMinutes ||
             document.meta.estimatedConsumptionMinutes}{' '}

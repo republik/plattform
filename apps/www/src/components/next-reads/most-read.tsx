@@ -1,6 +1,7 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { SquareCover } from '@app/components/assets/SquareCover'
 import { css, cx } from '@republik/theme/css'
+import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
 import { CategoryLabel, getAuthors } from './helpers'
 import { NextReadsLoader } from './loading'
@@ -16,6 +17,7 @@ const mostReadItemStyle = css({
   scrollSnapAlign: 'start',
   scrollSnapMarginLeft: '15px',
   width: '240px',
+  position: 'relative', // for the link overlay placement
   lg: {
     width: 'auto',
   },
@@ -35,7 +37,11 @@ function MostReadItem({ document }: { document: Document }) {
           />
         </div>
         <CategoryLabel document={document} />
-        <h4>{document.meta.title}</h4>
+        <h4>
+          <Link href={document.meta.path} className={linkOverlay()}>
+            {document.meta.title}
+          </Link>
+        </h4>
         <p className='description'>{document.meta.description}</p>
         <p className='author'>{getAuthors(document.meta.contributors)}</p>
       </Link>
