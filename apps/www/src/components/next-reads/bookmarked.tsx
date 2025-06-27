@@ -1,12 +1,8 @@
 import { getAuthors } from '@app/components/next-reads/helpers'
 import { Button } from '@app/components/ui/button'
-import { createPageSchema } from '@project-r/styleguide'
 import { IconArrowRight } from '@republik/icons'
-import { renderMdast } from '@republik/mdast-react-render'
 import { css, cx } from '@republik/theme/css'
-import { splitByTitle } from 'lib/utils/mdast'
 import Link from 'next/link'
-import { ReactNode } from 'react'
 import { Document } from '../../../graphql/republik-api/__generated__/gql/graphql'
 import {
   nextReadHeader,
@@ -14,11 +10,7 @@ import {
   nextReadsSection,
 } from './styles'
 
-export default function BookmarkedNextReadsFeed({
-  documents,
-}: {
-  documents: Document[]
-}) {
+export function BookmarkedFeed({ documents }: { documents: Document[] }) {
   return (
     <div
       className={cx(
@@ -55,7 +47,7 @@ export default function BookmarkedNextReadsFeed({
   )
 }
 
-const BookmarkItems = ({ documents }: { documents: BookmarkDocument[] }) => {
+const BookmarkItems = ({ documents }: { documents: Document[] }) => {
   return (
     <div
       className={css({
@@ -89,28 +81,6 @@ const FirstBookmarkItem = ({
   document: Document
   numberOfDocuments: number
 }) => {
-  const splitContent = document.content && splitByTitle(document.content)
-
-  // Use page schema with container skipping to avoid white background
-  const schema = createPageSchema({
-    skipContainer: true,
-    skipCenter: true,
-  })
-
-  const renderSchema = (content) => {
-    return renderMdast(
-      {
-        ...content,
-        format: undefined,
-        section: undefined,
-        series: undefined,
-        repoId: document.repoId,
-      },
-      schema,
-      { MissingNode: ({ children }) => children },
-    )
-  }
-
   return (
     <div
       className={css({
@@ -167,37 +137,35 @@ const FirstBookmarkItem = ({
         <span>{document.meta.estimatedReadingMinutes} min</span>
       </div>
 
-      {splitContent?.mainTruncated && (
-        <div
+      <div
+        className={css({
+          fontFamily: 'rubis',
+          fontSize: 18,
+          lineHeight: 1.8,
+          textAlign: 'left',
+        })}
+      >
+        {document.meta.description}
+        <Link
+          href={document.meta.path}
           className={css({
-            fontFamily: 'rubis',
-            fontSize: 18,
-            lineHeight: 1.8,
-            textAlign: 'left',
+            alignSelf: numberOfDocuments < 1 && 'flex-start',
           })}
         >
-          {renderSchema(splitContent.mainTruncated) as unknown as ReactNode}
-          <Link
-            href={document.meta.path}
+          <span
             className={css({
-              alignSelf: numberOfDocuments < 1 && 'flex-start',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              mt: '-16px',
             })}
           >
-            <span
-              className={css({
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                mt: '-16px',
-              })}
-            >
-              Weiterlesen
-              <IconArrowRight size={20} />
-            </span>
-          </Link>
-        </div>
-      )}
+            Weiterlesen
+            <IconArrowRight size={20} />
+          </span>
+        </Link>
+      </div>
     </div>
   )
 }
