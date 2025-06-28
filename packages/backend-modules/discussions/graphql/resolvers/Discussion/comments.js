@@ -321,15 +321,6 @@ module.exports = async (discussion, args, context, info) => {
     ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey]) ||
     ascending(a.index, b.index)
 
-  // put unpublished to bottom
-  if (discussion.isBoard) {
-    comments.forEach((c) => {
-      if (c.depth === 0 && !c.isPublished) {
-        c.topValue = bottomValue
-      }
-    })
-  }
-
   let focusComment
   let topIds
   if (focusId) {

@@ -139,7 +139,6 @@ const DiscussionComposer = ({
         <CommentComposer
           t={t}
           isRoot={isRoot}
-          isBoard={false}
           onCloseLabel={undefined}
           discussionId={discussion.id}
           hideHeader={false}

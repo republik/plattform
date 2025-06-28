@@ -1,18 +1,4 @@
 const hotness = require('../hotness')
-const {
-  getUrls: { getUrlsFromText },
-} = require('@orbiting/backend-modules-utils')
-
-const MD_URL_REGEX = /\[.*?\]\((.*?)\)/gm
-
-const getUrls = (content) => {
-  const text = content.replace(MD_URL_REGEX, (match, url) => url)
-  const urls = getUrlsFromText(text) || null
-  return {
-    urls,
-    embedUrl: urls && urls.length ? urls[urls.length - 1] : null,
-  }
-}
 
 const create = async (
   {
@@ -44,7 +30,6 @@ const create = async (
     depth: (parentIds && parentIds.length) || 0,
     userId,
     content,
-    ...getUrls(content),
     hotness: hotness(0, 0, now.getTime()),
     ...(tags ? { tags } : {}),
     published,
@@ -56,7 +41,6 @@ const create = async (
 
 const edit = ({ content, tags, now = new Date() }) => ({
   content,
-  ...getUrls(content),
   ...(tags ? { tags } : {}),
   published: true,
   updatedAt: now,
