@@ -30,6 +30,7 @@ const IconButton = React.forwardRef<
     style?: React.CSSProperties
     size?: number
     disabled?: boolean
+    disabledFill?: string
     attributes?: Attributes
     invert?: boolean
   }
@@ -50,6 +51,7 @@ const IconButton = React.forwardRef<
       style: customStyles,
       size,
       disabled,
+      disabledFill,
       attributes,
       invert,
     },
@@ -58,7 +60,9 @@ const IconButton = React.forwardRef<
     const Element = href ? 'a' : 'button'
     const [colorScheme] = useColorContext()
 
-    const fillValue = disabled ? 'disabled' : fill || fillColorName || 'text'
+    const fillValue = disabled
+      ? disabledFill || 'disabled'
+      : fill || fillColorName || 'text'
 
     return (
       <Element
