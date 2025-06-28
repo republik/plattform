@@ -3,24 +3,22 @@ import { css } from 'glamor'
 import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
 import { colors, Label } from '@project-r/styleguide'
 
-export const SIDEBAR_WIDTH = 300
+export const SIDEBAR_WIDTH = 393
 
 const styles = {
   container: css({
     position: 'fixed',
     top: HEADER_HEIGHT,
+    height: `calc(100vh - ${HEADER_HEIGHT}px)`,
     right: 0,
     bottom: 0,
     width: SIDEBAR_WIDTH,
-    overflow: 'auto',
+    overflow: 'hidden',
     backgroundColor: '#fff',
     borderLeft: `1px solid ${colors.divider}`,
     opacity: 1,
     zIndex: ZINDEX_SIDEBAR,
-    // ensure 10px white space for <UIForm>s negative magins
-    padding: 10 + 1 * 2, // 1px border
     minWidth: 0,
-
     transition: 'transform 0.2s ease-in-out',
     transform: `translateX(${SIDEBAR_WIDTH}px)`,
     '&.open': {
@@ -29,6 +27,12 @@ const styles = {
     '@media print': {
       display: 'none',
     },
+  }),
+  tabContainer: css({
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    overflowY: 'scroll',
   }),
   overlay: css({
     opacity: '0.5',
@@ -42,8 +46,7 @@ const styles = {
   }),
   tabButtonContainer: css({
     borderBottom: `1px solid ${colors.divider}`,
-    paddingBottom: '10px',
-    marginBottom: '15px',
+    padding: '10px 15px',
   }),
   tabButton: css({
     display: 'inline-block',
@@ -61,7 +64,9 @@ export const TabButton = ({ active, tabId, onSelect, children }) => (
     className={active ? 'active' : ''}
     onMouseDown={(e) => {
       e.preventDefault()
-      !active && onSelect(tabId)
+      if (!active) {
+        onSelect(tabId)
+      }
     }}
   >
     {children}
@@ -69,7 +74,7 @@ export const TabButton = ({ active, tabId, onSelect, children }) => (
 )
 
 export const Tab = ({ active, children }) => {
-  return <div>{children}</div>
+  return <div {...styles.tabContainer}>{children}</div>
 }
 
 export default class Sidebar extends Component {

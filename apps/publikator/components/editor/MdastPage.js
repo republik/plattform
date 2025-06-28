@@ -30,7 +30,6 @@ import Sidebar, { SIDEBAR_WIDTH } from '../Sidebar'
 import Warning from '../Sidebar/Warning'
 
 import Loader from '../Loader'
-import CharCount from '../CharCount'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
 
@@ -66,7 +65,7 @@ import {
   withLatestCommit,
 } from '../Edit/enhancers'
 import Preview from '../Preview'
-import Replace from './Replace'
+
 
 const getTemplateById = gql`
   query getLatestCommit($repoId: ID!) {
@@ -103,16 +102,6 @@ const rmWarning = (message) => (state) => ({
 })
 
 const SIDEBAR_ICON_SIZE = 30
-
-const PrintButton = withT(({ t }) => (
-  <button
-    {...plainButtonRule}
-    style={{ color: colors.primary, marginTop: 10, display: 'block' }}
-    onClick={window.print}
-  >
-    {t('editor/print')}
-  </button>
-))
 
 export class EditorPage extends Component {
   constructor(...args) {
@@ -995,33 +984,19 @@ export class EditorPage extends Component {
             >
               {!readOnly && !showPreview && (
                 <Sidebar.Tab tabId='edit' label='Editieren'>
-                  <PrintButton />
-                  <Replace
-                    value={this.editor?.serializer.serialize(editorState)}
-                    onSave={this.persistChanges.bind(this)}
-                  />
-                  <CharCount value={editorState} />
                   {!!this.editor && (
                     <EditorUI
                       editorRef={this.editor}
                       onChange={this.uiChangeHandler}
                       value={editorState}
+                      onSaveSearchAndReplace={this.persistChanges.bind(this)}
+                      onGoToRaw={() => this.goToRaw(isTemplate)}
                     />
                   )}
-                  <button
-                    onClick={() => this.goToRaw(isTemplate)}
-                    {...plainButtonRule}
-                    style={{ color: colors.primary }}
-                  >
-                    {t('pages/raw/title')}
-                  </button>
                 </Sidebar.Tab>
               )}
               {!showPreview && (
                 <Sidebar.Tab tabId='workflow' label='Workflow'>
-                  <div style={{ marginBottom: 10 }}>
-                    <CharCount value={editorState} />
-                  </div>
                   <VersionControl
                     repoId={repoId}
                     commit={commit}

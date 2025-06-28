@@ -197,7 +197,7 @@ const createUI = ({ TYPE, editorOptions, context }) => {
         data-disabled={disabled}
         data-visible={visible}
       >
-        <InsertVarIcon />
+        <InsertVarIcon size={24} />
       </span>
     ))
 

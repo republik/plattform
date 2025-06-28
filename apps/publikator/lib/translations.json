@@ -1326,7 +1326,7 @@
     },
     {
       "key": "ui/sidebar/info/numCharacters",
-      "value": "Anzahl Zeichen"
+      "value": "Zeichen: "
     },
     {
       "key": "styleguide/DynamicComponent/error",
@@ -1878,7 +1878,7 @@
     },
     {
       "key": "editor/print",
-      "value": "PDF drucken"
+      "value": "Drucken"
     },
     {
       "key": "editor/replace/title",
