@@ -63,7 +63,6 @@ export const getRepoWithCommit = gql`
                 title
                 color
                 kind
-                externalBaseUrl
               }
             }
             section {
