@@ -9,7 +9,6 @@ import {
   mediaQueries,
   fontStyles,
   Loader,
-  getTeaserHref,
 } from '@project-r/styleguide'
 
 import { notificationsMiniQuery } from './enhancers'
@@ -66,16 +65,7 @@ const NotificationFeedMini = ({ data: { notifications, loading, error } }) => {
                             />
                           )}
 
-                          <Link
-                            href={
-                              getTeaserHref(
-                                path,
-                                node.object?.meta?.format?.meta.externalBaseUrl,
-                              ) ?? '/'
-                            }
-                            passHref
-                            {...styles.cleanLink}
-                          >
+                          <Link href={path ?? '/'} passHref {...styles.cleanLink}>
                             {dateFormat(new Date(node.createdAt))}{' '}
                             {node.content.title}
                           </Link>

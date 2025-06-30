@@ -5,17 +5,19 @@
 
 import * as Sentry from '@sentry/nextjs'
 
-const isProduction = process.env.NODE_ENV === 'production'
-const isDev = process.env.NODE_ENV === 'development'
-const sentryDisabled = process.env.SENTRY_DISABLED === 'true'
+if (process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true') {
+  Sentry.init({
+    dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
-Sentry.init({
-  dsn: 'https://ba8ba4ea6d7f9ad150547a6a15ac51f2@o4507101684105216.ingest.de.sentry.io/4507101768908880',
-
-  // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: isProduction ? 0.05 : 1,
-
-  // Setting this option to true will print useful information to the console while you're setting up Sentry.
-  debug: false,
-  enabled: !sentryDisabled && !isDev,
-})
+    ignoreErrors: [
+      'Script error.',
+      'Error: aborted',
+      /Failed to load/i,
+      /Failed to fetch/i,
+      /fetch failed/i,
+      /Load failed/i,
+      /NetworkError when attempting to fetch resource/i,
+      /Sie müssen sich zuerst anmelden/i,
+    ],
+  })
+}

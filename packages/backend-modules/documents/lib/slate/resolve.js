@@ -11,7 +11,6 @@ const {
 
 const { hasFullDocumentAccess } = require('../restrictions')
 const {
-  createResolver,
   createUrlReplacer,
   getRepoId,
   extractUserUrl,
@@ -29,16 +28,12 @@ const contentUrlResolver = async (
   searchString,
   user,
 ) => {
-  const docResolver = createResolver(_all, _users, errors)
-  const externalBaseUrl = docResolver(doc.meta?.format)?.meta?.externalBaseUrl
-
   const urlReplacer = createUrlReplacer(
     _all,
     _users,
     errors,
     urlPrefix,
     searchString,
-    externalBaseUrl,
   )
 
   const stripDocLinks = shouldStripDocLinks(user, doc)

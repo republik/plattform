@@ -78,7 +78,7 @@ const NewAppMessageSync = () => {
     }
     const onMessage = (event) => {
       const { content = {}, id } = event.data
-      if (content.type === 'onPushRegistered') {
+      if (content.type === 'onPushRegistered' && me) {
         // Register Notification Token
         const { token, os, osVersion, model, appVersion, userAgent } =
           content.data
@@ -93,7 +93,7 @@ const NewAppMessageSync = () => {
               userAgent,
             },
           },
-        })
+        }).catch(() => {})
       } else if (content.type === 'onAppMediaProgressUpdate') {
         // Audio Player sent media progress update
         const { currentTime, mediaId } = content

@@ -46,13 +46,6 @@ export const notificationsMiniQuery = gql`
           }
           ... on Document {
             id
-            meta {
-              format {
-                meta {
-                  externalBaseUrl
-                }
-              }
-            }
           }
         }
         content {

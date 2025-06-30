@@ -89,6 +89,7 @@ type MeContextValues = {
   isEditor: boolean
   isClimateLabMember: boolean
   trialStatus?: TrialStatusType
+  progressConsent: boolean
 }
 
 const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
@@ -215,6 +216,8 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
         isEditor: checkRoles(me, ['editor']),
         isClimateLabMember,
         trialStatus,
+        // Progress consent requires a logged in user AND them not having opted out
+        progressConsent: me && me.progressOptOut !== true,
       }}
     >
       <NextHead>

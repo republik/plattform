@@ -1,50 +1,29 @@
 import { useRef, useEffect, createContext } from 'react'
-import PropTypes from 'prop-types'
-import compose from 'lodash/flowRight'
-import { withApollo } from '@apollo/client/react/hoc'
 import debounce from 'lodash/debounce'
 
-import { mediaQueries, A } from '@project-r/styleguide'
+import { mediaQueries } from '@project-r/styleguide'
 
 import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
 import { scrollIt } from '../../../lib/utils/scroll'
-import withMe from '../../../lib/apollo/withMe'
-import { PROGRESS_EXPLAINER_PATH } from '../../../lib/constants'
 
-import { withProgressApi } from './api'
+import { useProgress } from './api'
 import { useMediaProgress } from '../../Audio/MediaProgress'
-import { withRouter } from 'next/router'
-import Link from 'next/link'
+import { useMe } from '../../../lib/context/MeContext'
 
 const MIN_INDEX = 2
 
-export const getFeatureDescription = (t) =>
-  t.elements('article/progressprompt/description/feature', {
-    link: PROGRESS_EXPLAINER_PATH ? (
-      <Link href={PROGRESS_EXPLAINER_PATH} key='link' passHref legacyBehavior>
-        <A>{t('article/progressprompt/description/feature/link')}</A>
-      </Link>
-    ) : null,
-  })
-
 export const ProgressContext = createContext({})
 
-const Progress = ({
-  children,
-  me,
-  article,
-  isArticle = true,
-  router,
-  upsertDocumentProgress,
-}) => {
+const Progress = ({ children, article }) => {
   const refContainer = useRef()
   const lastClosestIndex = useRef()
   const refSaveProgress = useRef()
   const lastY = useRef()
+  const { progressConsent } = useMe()
+  const { upsertDocumentProgress } = useProgress()
 
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
-  const isTrackingAllowed = me && me.progressConsent === true
   const mobile = () => window.innerWidth < mediaQueries.mBreakPoint
   const headerHeight = () => (mobile() ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT)
 
@@ -108,7 +87,7 @@ const Progress = ({
   }
 
   refSaveProgress.current = debounce(() => {
-    if (!article || !isTrackingAllowed) {
+    if (!article || !progressConsent) {
       return
     }
 
@@ -142,7 +121,13 @@ const Progress = ({
         Math.floor(article.userProgress.percentage * 100) !==
           Math.floor(percentage * 100))
     ) {
-      upsertDocumentProgress(article.id, percentage, element.nodeId)
+      upsertDocumentProgress({
+        variables: {
+          documentId: article.id,
+          percentage,
+          nodeId: element.nodeId,
+        },
+      })
     }
   }, 300)
 
@@ -194,22 +179,12 @@ const Progress = ({
     }
   }, [])
 
-  const showConsentPrompt =
-    isArticle &&
-    me &&
-    !router.query.trialSignup &&
-    me.progressConsent === null &&
-    article &&
-    article.meta &&
-    article.meta.path !== PROGRESS_EXPLAINER_PATH
-
   return (
     <ProgressContext
       value={{
         getMediaProgress,
         saveMediaProgress,
         restoreArticleProgress,
-        showConsentPrompt,
       }}
     >
       <div ref={refContainer}>{children}</div>
@@ -217,19 +192,4 @@ const Progress = ({
   )
 }
 
-Progress.propTypes = {
-  children: PropTypes.node,
-  me: PropTypes.shape({
-    progressConsent: PropTypes.bool,
-  }),
-  revokeConsent: PropTypes.func,
-  submitConsent: PropTypes.func,
-  isArticle: PropTypes.bool,
-}
-
-export default compose(
-  withApollo,
-  withProgressApi,
-  withMe,
-  withRouter,
-)(Progress)
+export default Progress

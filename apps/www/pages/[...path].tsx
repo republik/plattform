@@ -38,7 +38,7 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
       errorPolicy: 'ignore',
     })
 
-    if (article && !article.meta.format?.meta.externalBaseUrl) {
+    if (article) {
       return {
         revalidate: REVALIDATE_SECONDS,
         props: {},

@@ -73,7 +73,7 @@ export {
 export { GalleryContext } from './components/Figure/GalleryContext'
 export { Tweet } from './components/Social'
 export { Video } from './components/Video'
-export { TeaserFeed, getTeaserHref } from './components/TeaserFeed'
+export { TeaserFeed } from './components/TeaserFeed'
 export {
   TeaserFrontImage,
   TeaserFrontImageHeadline,
