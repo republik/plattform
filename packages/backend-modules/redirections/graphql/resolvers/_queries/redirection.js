@@ -9,9 +9,5 @@ module.exports = async (_, { path }, context) => {
     return null
   }
 
-  const [redirection] = await get(pathUrl.pathname, null, context).then(
-    (redirection) => [redirection],
-  )
-
-  return redirection
+  return get(pathUrl.pathname, null, context)
 }

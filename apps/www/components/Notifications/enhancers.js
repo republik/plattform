@@ -44,6 +44,9 @@ export const notificationsMiniQuery = gql`
             id
             published
           }
+          ... on Document {
+            id
+          }
         }
         content {
           title
