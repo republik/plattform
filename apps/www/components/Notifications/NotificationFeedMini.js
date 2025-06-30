@@ -67,12 +67,7 @@ const NotificationFeedMini = ({ data: { notifications, loading, error } }) => {
                           )}
 
                           <Link
-                            href={
-                              getTeaserHref(
-                                path,
-                                node.object?.meta?.format?.meta.externalBaseUrl,
-                              ) ?? '/'
-                            }
+                            href={path}
                             passHref
                             {...styles.cleanLink}
                           >

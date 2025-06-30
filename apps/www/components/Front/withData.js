@@ -41,7 +41,6 @@ export const FRONT_FEED_QUERY = gql`
                 id
                 meta {
                   path
-                  externalBaseUrl
                   title
                   color
                   kind

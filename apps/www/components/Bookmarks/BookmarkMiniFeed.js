@@ -6,7 +6,6 @@ import {
   mediaQueries,
   Loader,
   useColorContext,
-  getTeaserHref,
 } from '@project-r/styleguide'
 import BookmarkButton from '../ActionBar/BookmarkButton'
 import UserProgress from '../ActionBar/UserProgress'
@@ -36,10 +35,6 @@ const BookmarkMiniFeed = ({ data, style }) => {
                 const { userProgress, userBookmark, id } = node.document
                 const meta = node.document.meta
                 const { estimatedReadingMinutes, title, path } = meta
-                const href = getTeaserHref(
-                  path,
-                  meta.format?.meta.externalBaseUrl,
-                )
                 return (
                   <div
                     {...styles.tile}
@@ -48,7 +43,7 @@ const BookmarkMiniFeed = ({ data, style }) => {
                   >
                     <div {...styles.tileHeadlineContainer}>
                       <Link
-                        href={href}
+                        href={path}
                         passHref
                         {...styles.tileHeadline}
                         {...colorScheme.set('color', 'text')}

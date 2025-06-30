@@ -68,7 +68,6 @@ const TeaserMyMagazine = ({
                 const formatMeta = doc.meta.format?.meta
                 const formatTitle = formatMeta?.title
                 const formatPath = formatMeta?.path
-                const href = getTeaserHref(path, formatMeta?.externalBaseUrl)
 
                 const formatColor = formatMeta?.title
                   ? colorScheme.set(
@@ -110,7 +109,7 @@ const TeaserMyMagazine = ({
                       </Link>
                     ) : null}
                     <Headline>
-                      <Link href={href} passHref>
+                      <Link href={path} passHref>
                         <a
                           {...styles.tileHeadline}
                           {...colorScheme.set('color', 'text')}
@@ -301,7 +300,6 @@ WrappedTeaserMyMagazine.data = {
                   id
                   meta {
                     path
-                    externalBaseUrl
                     title
                     color
                     kind
@@ -336,7 +334,6 @@ WrappedTeaserMyMagazine.data = {
                     title
                     color
                     kind
-                    externalBaseUrl
                   }
                 }
               }
