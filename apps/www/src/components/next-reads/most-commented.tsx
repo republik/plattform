@@ -1,4 +1,5 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
@@ -152,7 +153,7 @@ const mostCommentedGrid = css({
   },
 })
 
-export function MostCommentedFeed({ documents }: { documents: Document[] }) {
+function MostCommentedGrid({ documents }: { documents: Document[] }) {
   return (
     <>
       <div className={nextReadsSection}>
@@ -175,5 +176,13 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
         <NextReadsLoader />
       )}
     </>
+  )
+}
+
+export function MostCommentedFeed({ documents }: { documents: Document[] }) {
+  return (
+    <EventTrackingContext category='MostCommentedFeed'>
+      <MostCommentedGrid documents={documents} />
+    </EventTrackingContext>
   )
 }

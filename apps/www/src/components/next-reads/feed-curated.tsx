@@ -3,6 +3,7 @@ import {
   DocumentRecommendationsDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
@@ -43,7 +44,7 @@ function RecommendedRead({ document }: { document: Document }) {
   )
 }
 
-export function CuratedFeed({ path }: { path: string }) {
+function CuratedList({ path }: { path: string }) {
   const { data, loading } = useQuery(DocumentRecommendationsDocument, {
     variables: { path },
   })
@@ -76,5 +77,13 @@ export function CuratedFeed({ path }: { path: string }) {
         </div>
       )}
     </div>
+  )
+}
+
+export function CuratedFeed({ path }: { path: string }) {
+  return (
+    <EventTrackingContext category='CuratedFeed'>
+      <CuratedList path={path} />
+    </EventTrackingContext>
   )
 }

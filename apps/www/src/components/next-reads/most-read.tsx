@@ -1,5 +1,6 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { SquareCover } from '@app/components/assets/SquareCover'
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
@@ -66,11 +67,7 @@ const mostReadGrid = css({
   },
 })
 
-export function MostReadFeed({
-  documents,
-}: {
-  documents: Document[] | undefined
-}) {
+function MostReadGrid({ documents }: { documents: Document[] | undefined }) {
   return (
     <div className={nextReadsSection}>
       <div className={nextReadHeader}>
@@ -89,5 +86,17 @@ export function MostReadFeed({
         <NextReadsLoader />
       )}
     </div>
+  )
+}
+
+export function MostReadFeed({
+  documents,
+}: {
+  documents: Document[] | undefined
+}) {
+  return (
+    <EventTrackingContext category='MostReadFeed'>
+      <MostReadGrid documents={documents} />
+    </EventTrackingContext>
   )
 }

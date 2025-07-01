@@ -1,3 +1,4 @@
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { IconArrowRight } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
@@ -14,6 +15,14 @@ import {
 } from './styles'
 
 export function BookmarkedFeed({ documents }: { documents: Document[] }) {
+  return (
+    <EventTrackingContext category='BookmarkedFeed'>
+      <BookmarkedGrid documents={documents} />
+    </EventTrackingContext>
+  )
+}
+
+function BookmarkedGrid({ documents }: { documents: Document[] }) {
   return (
     <div
       data-theme='light'
