@@ -237,7 +237,7 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
       <IconButton
         onClick={() => setReplacerVisible(true)}
         Icon={IconSearch}
-        label='Suchen'
+        label='Ersetzen'
       />
       {isReplacerVisible && (
         <Overlay

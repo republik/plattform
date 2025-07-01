@@ -45,7 +45,6 @@ import {
   colors,
   ErrorBoundary,
   mediaQueries,
-  plainButtonRule,
 } from '@project-r/styleguide'
 import { IconGears as SettingsIcon } from '@republik/icons'
 
@@ -989,6 +988,7 @@ export class EditorPage extends Component {
                       editorRef={this.editor}
                       onChange={this.uiChangeHandler}
                       value={editorState}
+                      serializedState={this.editor.serializer.serialize(editorState)}
                       onSaveSearchAndReplace={this.persistChanges.bind(this)}
                       onGoToRaw={() => this.goToRaw(isTemplate)}
                     />

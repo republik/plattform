@@ -5,12 +5,13 @@ import { Interaction, Label, colors, IconButton } from '@project-r/styleguide'
 import { IconPrint, IconCode } from '@republik/icons'
 import Replace from './Replace'
 
-const UISidebar = ({
+const EditorUI = ({
   editorRef,
   value,
   onChange,
   onSaveSearchAndReplace,
   onGoToRaw,
+  serializedState
 }) => {
   const formAreaRef = useRef(null)
 
@@ -80,7 +81,7 @@ const UISidebar = ({
           }}
         >
           <IconButton onClick={window.print} Icon={IconPrint} label='Drucken' />
-          <Replace value={value} onSave={onSaveSearchAndReplace} />
+          <Replace value={serializedState} onSave={onSaveSearchAndReplace} />
           <IconButton onClick={onGoToRaw} Icon={IconCode} label='Quellcode' />
         </div>
         <div style={{ margin: '24px 0' }}>
@@ -136,4 +137,4 @@ const UISidebar = ({
   )
 }
 
-export default UISidebar
+export default EditorUI
