@@ -86,7 +86,7 @@ const useAudioQueue = (): {
     if (audioQueueHasError) {
       reportError('useAudioQueue', audioQueueHasError)
     }
-  }, [reportError, audioQueueHasError])
+  }, [audioQueueHasError])
 
   /**
    *

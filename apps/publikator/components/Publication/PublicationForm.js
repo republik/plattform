@@ -152,10 +152,7 @@ const Form = ({
           {t('publish/meta/path/label')}
           {': '}
         </strong>
-        {(meta.format?.meta.externalBaseUrl || FRONTEND_BASE_URL).replace(
-          /https?:\/\/(www\.)?/,
-          '',
-        )}
+        {FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')}
         {content.meta.path ||
           (schema.getPath
             ? schema.getPath({

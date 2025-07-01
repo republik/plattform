@@ -113,11 +113,8 @@ ${error.stack}
           </div>
         </>
       )}
-      onError={(error, info) => {
-        reportError(
-          'componentDidCatch',
-          `${error}${info.componentStack}\n${error && error.stack}`,
-        ).then((id) => setErrorId(id))
+      onError={(error) => {
+        reportError('PageErrorBoundary', error).then((id) => setErrorId(id))
       }}
       onReset={() => {
         // reload after error

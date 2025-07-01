@@ -79,14 +79,7 @@ const extractUserUrl = (url) => {
 }
 
 const createUrlReplacer =
-  (
-    _all = [],
-    _users = [],
-    errors = [],
-    urlPrefix = '',
-    searchString = '',
-    externalBaseUrl,
-  ) =>
+  (_all = [], _users = [], errors = [], urlPrefix = '', searchString = '') =>
   (url, stripDocLinks) => {
     const userInfo = extractUserPath(url)
     if (userInfo) {
@@ -114,10 +107,7 @@ const createUrlReplacer =
     const linkedDoc = _all.find((d) => d.meta.repoId === repoId)
 
     if (linkedDoc) {
-      const linkedFormat = createResolver(_all, _users)(linkedDoc.meta?.format)
-      const formatExternalBaseUrl = linkedFormat?.meta?.externalBaseUrl
-
-      const baseUrl = formatExternalBaseUrl || urlPrefix || ''
+      const baseUrl = urlPrefix || ''
 
       // Stitch and parse simple URL version including arguments {urlPrefix}, {searchString}
       const resolvedUrl = new URL(
@@ -138,15 +128,6 @@ const createUrlReplacer =
       // If {urlPrefix} is set, return stringified {resolvedUrl}.
       if (urlPrefix) {
         return resolvedUrl.toString()
-      }
-
-      // If {externalBaseUrl} is given, replace {externalBaseUrl} to return
-      // relative URLs.
-      if (externalBaseUrl) {
-        const externalBasePath = new URL(externalBaseUrl)?.pathname
-        return resolvedUrl
-          .toString()
-          .replace(new RegExp(`^${externalBaseUrl}`), externalBasePath)
       }
 
       // Strip {FRONTEND_BASE_URL} to return relative URLs.
@@ -222,7 +203,8 @@ const metaFieldResolver = (meta, _all = [], _users = [], errors) => {
     totalCount: recommendationsNodes.length,
   }
 
-  const isPaywallExcluded = meta.isPaywallExcluded || format?.meta.isPaywallExcluded
+  const isPaywallExcluded =
+    meta.isPaywallExcluded || format?.meta.isPaywallExcluded
 
   return {
     series,

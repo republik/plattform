@@ -10,9 +10,13 @@ if (process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true') {
     ignoreErrors: [
       'Script error.',
       'Error: aborted',
-      // Review these filters
-      'Error: Failed to load',
-      'TypeError: Load failed',
+      /Failed to load/i,
+      /Failed to fetch/i,
+      /Load failed/i,
+      /fetch failed/i,
+      /NetworkError when attempting to fetch resource/i,
+      /Invariant: attempted to hard navigate to the same URL/i,
+      /Sie müssen sich zuerst anmelden/i,
     ],
     denyUrls: [/https?:\/\/datawrapper\.dwcdn\.net\//],
     integrations: [
