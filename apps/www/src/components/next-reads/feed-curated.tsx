@@ -62,7 +62,7 @@ export function CuratedFeed({ path }: { path: string }) {
       })}
     >
       <div className={nextReadsSection}>
-        <div className={nextReadHeader}>
+        <div className={cx(nextReadHeader, css({ textAlign: 'left' }))}>
           <h3>Mehr zum Thema</h3>
         </div>
       </div>

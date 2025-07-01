@@ -86,7 +86,9 @@ const FirstBookmarkItem = ({
       className={cx(
         nextReadItemTypography,
         css({
-          margin: '16px auto 24px auto',
+          mx: 'auto',
+          mt: 4,
+          mb: 12,
           display: 'flex',
           flexShrink: 0,
           flexDirection: 'column',
@@ -95,6 +97,9 @@ const FirstBookmarkItem = ({
           gap: 4,
           maxWidth: '642px',
           position: 'relative', // for the link overlay placement
+          md: {
+            mb: 6,
+          },
         }),
       )}
     >
@@ -122,9 +127,7 @@ const FirstBookmarkItem = ({
         />
       )}
       <p className='author'>{getAuthors(document.meta.contributors)}</p>
-      <p className='duration'>
-        {document.meta.estimatedReadingMinutes} Minuten
-      </p>
+      <p className='duration'>{document.meta.estimatedReadingMinutes} min</p>
       <p
         className={css({
           fontFamily: 'rubis',
@@ -185,7 +188,7 @@ const BookmarkItem = ({ document }: { document: Document }) => {
         <p className='duration'>
           {document.meta.estimatedReadingMinutes ||
             document.meta.estimatedConsumptionMinutes}{' '}
-          Minuten
+          min
         </p>
       </div>
       <SquareCover

@@ -64,6 +64,5 @@ export const nextReadItemTypography = css({
     fontWeight: 400,
     fontSize: 14,
     lineHeight: 1.2,
-    color: 'textSoft',
   },
 })

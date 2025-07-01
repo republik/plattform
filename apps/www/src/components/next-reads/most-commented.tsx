@@ -140,15 +140,15 @@ const mostCommentedGrid = css({
   margin: '0 auto',
   display: 'grid',
   gridTemplateRows: 'auto',
-  gridTemplateColumns: 'repeat(1, 1fr)',
+  gridTemplateColumns: '1',
   gap: 1,
   mb: 1,
   mt: 12,
-  overflowX: 'auto',
-  scrollSnapType: 'x mandatory',
   textAlign: 'center',
   md: {
     gridTemplateColumns: 'repeat(5, 1fr)',
+    overflowX: 'auto',
+    scrollSnapType: 'x mandatory',
   },
 })
 
