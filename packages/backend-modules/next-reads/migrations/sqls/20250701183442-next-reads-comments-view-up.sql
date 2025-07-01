@@ -43,4 +43,4 @@ CREATE MATERIALIZED VIEW next_reads.readings_and_comments_20_days AS (
 
 ) WITH NO DATA;
 
-CREATE UNIQUE INDEX next_reads_readings_and_comments_20_days_id ON next_reads.readings_and_comments_20_days(id);
+CREATE UNIQUE INDEX next_reads_readings_and_comments_20_days_id ON next_reads.readings_and_comments_20_days("repoId");
