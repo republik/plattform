@@ -7,6 +7,7 @@ import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { Document } from '../../../graphql/republik-api/__generated__/gql/graphql'
+import { useTranslation } from '../../../lib/withT'
 import { SquareCover } from '../assets/SquareCover'
 import { Button } from '../ui/button'
 import { CategoryLabel, getAuthors, NextReadLink } from './helpers'
@@ -25,6 +26,7 @@ export function BookmarkedFeed({ documents }: { documents: Document[] }) {
 }
 
 function BookmarkedGrid({ documents }: { documents: Document[] }) {
+  const { t } = useTranslation()
   const trackEvent = useTrackEvent()
 
   useEffect(() => {
@@ -42,8 +44,8 @@ function BookmarkedGrid({ documents }: { documents: Document[] }) {
       )}
     >
       <div className={nextReadHeader}>
-        <h3>Gemerkte Beiträge</h3>
-        <p className='tagline'>Deine Leseliste</p>
+        <h3>{t('nextReads/bookmarkedFeed/title')}</h3>
+        <p className='tagline'>{t('nextReads/bookmarkedFeed/subtitle')}</p>
       </div>
       <div
         className={css({
@@ -59,7 +61,7 @@ function BookmarkedGrid({ documents }: { documents: Document[] }) {
         <BookmarkItems documents={documents.slice(1)} />
         <Link href='/lesezeichen'>
           <Button className={css({ mt: 8, md: { mt: 16 } })} variant='outline'>
-            Lesezeichen verwalten
+            {t('nextReads/bookmarkedFeed/manageBookmarks')}
           </Button>
         </Link>
       </div>
@@ -100,6 +102,8 @@ const FirstBookmarkItem = ({
   document: Document
   numberOfDocuments: number
 }) => {
+  const { t } = useTranslation()
+  
   return (
     <div
       className={cx(
@@ -162,7 +166,7 @@ const FirstBookmarkItem = ({
           justifySelf: 'center',
         })}
       >
-        Weiterlesen <IconArrowRight size={20} />
+        {t('nextReads/bookmarkedFeed/readMore')} <IconArrowRight size={20} />
       </Link>
     </div>
   )

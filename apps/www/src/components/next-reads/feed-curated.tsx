@@ -9,6 +9,7 @@ import {
 } from '@app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
 import React, { useEffect } from 'react'
+import { useTranslation } from '../../../lib/withT'
 import { CategoryLabel, getAuthors, NextReadLink } from './helpers'
 import { NextReadsLoader } from './loading'
 import {
@@ -69,6 +70,7 @@ function CuratedList({ documents }: { documents: Document[] }) {
 }
 
 export function CuratedFeed({ path }: { path: string }) {
+  const { t } = useTranslation()
   const { data, loading } = useQuery(DocumentRecommendationsDocument, {
     variables: { path },
   })
@@ -89,7 +91,7 @@ export function CuratedFeed({ path }: { path: string }) {
       >
         <div className={nextReadsSection}>
           <div className={cx(nextReadHeader, css({ textAlign: 'left' }))}>
-            <h3>Mehr zum Thema</h3>
+            <h3>{t('nextReads/curatedFeed/title')}</h3>
           </div>
         </div>
         {loading ? <NextReadsLoader /> : <CuratedList documents={documents} />}

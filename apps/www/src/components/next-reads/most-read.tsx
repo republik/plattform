@@ -7,6 +7,7 @@ import {
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 import React, { useEffect } from 'react'
+import { useTranslation } from '../../../lib/withT'
 import { CategoryLabel, getAuthors, NextReadLink } from './helpers'
 import { NextReadsLoader } from './loading'
 import {
@@ -97,14 +98,14 @@ export function MostReadFeed({
 }: {
   documents: Document[] | undefined
 }) {
+  const { t } = useTranslation()
+  
   return (
     <EventTrackingContext category='NextReads:MostReadFeed'>
       <div className={nextReadsSection}>
         <div className={nextReadHeader}>
-          <h3>Was andere lesen</h3>
-          <p className='tagline'>
-            Die meistbeachteten Beiträge der letzten Woche
-          </p>
+          <h3>{t('nextReads/mostReadFeed/title')}</h3>
+          <p className='tagline'>{t('nextReads/mostReadFeed/subtitle')}</p>
         </div>
         {documents?.length ? (
           <MostReadGrid documents={documents} />

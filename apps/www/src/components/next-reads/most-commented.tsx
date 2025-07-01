@@ -5,6 +5,7 @@ import {
 } from '@app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
 import React, { useEffect } from 'react'
+import { useTranslation } from '../../../lib/withT'
 import { getAuthors, NextReadLink } from './helpers'
 import { NextReadsLoader } from './loading'
 import {
@@ -187,12 +188,14 @@ function MostCommentedGrid({ documents }: { documents: Document[] }) {
 }
 
 export function MostCommentedFeed({ documents }: { documents: Document[] }) {
+  const { t } = useTranslation()
+
   return (
     <EventTrackingContext category='NextReads:MostCommentedFeed'>
       <div className={nextReadsSection}>
         <div className={nextReadHeader}>
-          <h3>Was zu reden gibt</h3>
-          <p className='tagline'>Die meistkommentierten Beiträge des Monats</p>
+          <h3>{t('nextReads/mostCommentedFeed/title')}</h3>
+          <p className='tagline'>{t('nextReads/mostCommentedFeed/subtitle')}</p>
         </div>
       </div>
       {documents?.length ? (
