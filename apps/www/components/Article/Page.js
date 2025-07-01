@@ -505,7 +505,6 @@ const ArticlePage = ({
                   <Center breakout={breakout}>
                     <DiscussionContextProvider
                       discussionPath={ownDiscussion.path}
-                      isBoardRoot={ownDiscussion.isBoard}
                     >
                       <Discussion documentMeta={rawContentMeta} showPayNotes />
                     </DiscussionContextProvider>
