@@ -107,7 +107,6 @@ class Tree extends Component {
       commits: null,
       links: null,
       parentNodes: null,
-      isClient: false, // Track if we're on client side
     }
     this.measure = this.measure.bind(this)
   }
@@ -130,8 +129,6 @@ class Tree extends Component {
   }
 
   componentDidMount() {
-    // Mark as client-side to enable localStorage-dependent features
-    this.setState({ isClient: true })
     window.addEventListener('resize', this.measure)
     this.measure()
   }
@@ -238,7 +235,7 @@ class Tree extends Component {
 
   render() {
     const { repoId, isTemplate, t, localStorageCommitIds = [] } = this.props
-    const { width, height, slotWidth, commits, links, numSlots, isClient } = this.state
+    const { width, height, slotWidth, commits, links, numSlots } = this.state
 
     const paddingLeft = slotWidth ? numSlots * slotWidth + NODE_SIZE : 0
 
@@ -275,10 +272,9 @@ class Tree extends Component {
           <ul {...styles.list}>
             {commits.map((commit) => {
               const treeColors = this.getColor(commit.author.email)
-              // Only check localStorage on client side to avoid hydration mismatch
-              const hasLocalVersion = isClient && localStorageCommitIds.indexOf(commit.id) !== -1
+              const hasLocalVersion =
+                localStorageCommitIds.indexOf(commit.id) !== -1
               const hightlight = hasLocalVersion || commit.milestones.length
-              
               return (
                 <li
                   key={commit.id}
@@ -287,7 +283,7 @@ class Tree extends Component {
                     backgroundColor: hightlight
                       ? treeColors.highlightColor
                       : undefined,
-                    paddingLeft: paddingLeft || 0, // Ensure consistent fallback
+                    paddingLeft,
                   }}
                   {...styles.listItem}
                 >
@@ -402,7 +398,6 @@ class Tree extends Component {
                 key={commit.id}
                 ref={commit.setNodeRef}
                 style={{
-                  ...styles.nodeLink,
                   backgroundColor: this.getColor(commit.author.email).color,
                 }}
                 {...styles.commitNode}
@@ -414,10 +409,8 @@ class Tree extends Component {
                       commitId: commit.id,
                     },
                   }}
-                  {...styles.link}
-                >
-                  {' '}
-                </Link>
+                  {...css(styles.nodeLink)}
+                ></Link>
               </span>
             )
           })}
