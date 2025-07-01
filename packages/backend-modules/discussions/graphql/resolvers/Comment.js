@@ -14,7 +14,7 @@ const {
 } = require('@orbiting/backend-modules-republik/graphql/resolvers/User')
 const { clipNamesInText } = require('../../lib/nameClipper')
 
-const { DISPLAY_AUTHOR_SECRET, ASSETS_SERVER_BASE_URL } = process.env
+const { DISPLAY_AUTHOR_SECRET } = process.env
 if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
@@ -82,15 +82,14 @@ module.exports = {
     published && !adminUnpublished,
 
   content: async (comment, args, context) => {
-    const strip = args && args.strip !== null ? args.strip : false
-    const text = await textForComment(comment, strip, context)
+    const text = await textForComment(comment, context)
     if (!text) {
       return text
     }
     return remark.parse(text)
   },
 
-  text: (comment, args, context) => textForComment(comment, false, context),
+  text: (comment, args, context) => textForComment(comment, context),
 
   featuredText: ({
     published,
@@ -103,7 +102,7 @@ module.exports = {
       : null,
 
   preview: async (comment, { length = 500 }, context) => {
-    const text = await textForComment(comment, false, context)
+    const text = await textForComment(comment, context)
     if (!text) {
       return null
     }
