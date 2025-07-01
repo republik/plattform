@@ -1,13 +1,15 @@
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import {
+  EventTrackingContext,
+  useTrackEvent,
+} from '@app/lib/analytics/event-tracking'
 import { IconArrowRight } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
-import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Document } from '../../../graphql/republik-api/__generated__/gql/graphql'
 import { SquareCover } from '../assets/SquareCover'
 import { Button } from '../ui/button'
-import { CategoryLabel, getAuthors } from './helpers'
+import { CategoryLabel, getAuthors, NextReadLink } from './helpers'
 import {
   nextReadHeader,
   nextReadItemTypography,
@@ -16,13 +18,21 @@ import {
 
 export function BookmarkedFeed({ documents }: { documents: Document[] }) {
   return (
-    <EventTrackingContext category='BookmarkedFeed'>
+    <EventTrackingContext category='NextReads:BookmarkedFeed'>
       <BookmarkedGrid documents={documents} />
     </EventTrackingContext>
   )
 }
 
 function BookmarkedGrid({ documents }: { documents: Document[] }) {
+  const trackEvent = useTrackEvent()
+
+  useEffect(() => {
+    trackEvent({
+      action: 'is showing',
+    })
+  }, [trackEvent])
+
   return (
     <div
       data-theme='light'
@@ -76,8 +86,8 @@ const BookmarkItems = ({ documents }: { documents: Document[] }) => {
         },
       })}
     >
-      {documents.map((document) => (
-        <BookmarkItem key={document.id} document={document} />
+      {documents.map((document, index) => (
+        <BookmarkItem key={document.id} document={document} index={index + 1} />
       ))}
     </div>
   )
@@ -114,9 +124,7 @@ const FirstBookmarkItem = ({
     >
       <h4>
         <span className={css({ fontSize: 24, md: { fontSize: 32 } })}>
-          <Link href={document.meta.path} className={linkOverlay()}>
-            {document.meta.title}
-          </Link>
+          <NextReadLink document={document} index={0} />
         </span>
       </h4>
       {document.meta.image && (
@@ -160,7 +168,13 @@ const FirstBookmarkItem = ({
   )
 }
 
-const BookmarkItem = ({ document }: { document: Document }) => {
+const BookmarkItem = ({
+  document,
+  index,
+}: {
+  document: Document
+  index: number
+}) => {
   return (
     <div
       className={cx(
@@ -190,9 +204,7 @@ const BookmarkItem = ({ document }: { document: Document }) => {
       <div>
         <CategoryLabel document={document} />
         <h4>
-          <Link href={document.meta.path} className={linkOverlay()}>
-            {document.meta.title}
-          </Link>
+          <NextReadLink document={document} index={index} />
         </h4>
         <p className='duration'>
           {document.meta.estimatedReadingMinutes ||

@@ -3,11 +3,13 @@ import {
   DocumentRecommendationsDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import {
+  EventTrackingContext,
+  useTrackEvent,
+} from '@app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
-import { linkOverlay } from '@republik/theme/patterns'
-import Link from 'next/link'
-import { CategoryLabel, getAuthors } from './helpers'
+import React, { useEffect } from 'react'
+import { CategoryLabel, getAuthors, NextReadLink } from './helpers'
 import { NextReadsLoader } from './loading'
 import {
   nextReadHeader,
@@ -15,7 +17,13 @@ import {
   nextReadsSection,
 } from './styles'
 
-function RecommendedRead({ document }: { document: Document }) {
+function RecommendedRead({
+  document,
+  index,
+}: {
+  document: Document
+  index: number
+}) {
   return (
     <div
       className={cx(
@@ -34,9 +42,7 @@ function RecommendedRead({ document }: { document: Document }) {
     >
       <CategoryLabel document={document} />
       <h4>
-        <Link href={document.meta.path} className={linkOverlay()}>
-          {document.meta.title}
-        </Link>
+        <NextReadLink document={document} index={index} />
       </h4>
       <p className='description'>{document.meta.description}</p>
       <p className='author'>{getAuthors(document.meta.contributors)}</p>
@@ -44,7 +50,25 @@ function RecommendedRead({ document }: { document: Document }) {
   )
 }
 
-function CuratedList({ path }: { path: string }) {
+function CuratedList({ documents }: { documents: Document[] }) {
+  const trackEvent = useTrackEvent()
+
+  useEffect(() => {
+    trackEvent({
+      action: 'is showing',
+    })
+  }, [trackEvent])
+
+  return (
+    <div className={css({ pt: 4, pb: 16 })}>
+      {documents.map((document, index) => (
+        <RecommendedRead key={document.id} document={document} index={index} />
+      ))}
+    </div>
+  )
+}
+
+export function CuratedFeed({ path }: { path: string }) {
   const { data, loading } = useQuery(DocumentRecommendationsDocument, {
     variables: { path },
   })
@@ -54,36 +78,22 @@ function CuratedList({ path }: { path: string }) {
   if (!loading && !documents?.length) return null
 
   return (
-    <div
-      className={css({
-        margin: '0 auto',
-        maxWidth: '695px',
-        pl: '15px',
-        pr: '15px',
-      })}
-    >
-      <div className={nextReadsSection}>
-        <div className={cx(nextReadHeader, css({ textAlign: 'left' }))}>
-          <h3>Mehr zum Thema</h3>
+    <EventTrackingContext category='NextReads:CuratedFeed'>
+      <div
+        className={css({
+          margin: '0 auto',
+          maxWidth: '695px',
+          pl: '15px',
+          pr: '15px',
+        })}
+      >
+        <div className={nextReadsSection}>
+          <div className={cx(nextReadHeader, css({ textAlign: 'left' }))}>
+            <h3>Mehr zum Thema</h3>
+          </div>
         </div>
+        {loading ? <NextReadsLoader /> : <CuratedList documents={documents} />}
       </div>
-      {loading ? (
-        <NextReadsLoader />
-      ) : (
-        <div className={css({ pt: 4, pb: 16 })}>
-          {documents.map((document) => (
-            <RecommendedRead key={document.id} document={document} />
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-export function CuratedFeed({ path }: { path: string }) {
-  return (
-    <EventTrackingContext category='CuratedFeed'>
-      <CuratedList path={path} />
     </EventTrackingContext>
   )
 }

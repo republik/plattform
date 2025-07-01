@@ -1,4 +1,8 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { linkOverlay } from '@republik/theme/patterns'
+import Link from 'next/link'
+import React from 'react'
 
 export const getAuthors = (
   contributors: Array<{ kind?: string; name: string }> = [],
@@ -22,5 +26,31 @@ export function CategoryLabel({ document }: { document: Document }) {
     >
       {text}
     </h5>
+  )
+}
+
+export function NextReadLink({
+  document,
+  index,
+}: {
+  document: Document
+  index?: number
+}) {
+  const trackEvent = useTrackEvent()
+
+  return (
+    <Link
+      href={document.meta.path}
+      className={linkOverlay()}
+      onClick={() => {
+        trackEvent({
+          action: 'click recommended read',
+          path: document.meta.path,
+          index,
+        })
+      }}
+    >
+      {document.meta.title}
+    </Link>
   )
 }

@@ -1,10 +1,11 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import {
+  EventTrackingContext,
+  useTrackEvent,
+} from '@app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
-import { linkOverlay } from '@republik/theme/patterns'
-import Link from 'next/link'
-import React from 'react'
-import { getAuthors } from './helpers'
+import React, { useEffect } from 'react'
+import { getAuthors, NextReadLink } from './helpers'
 import { NextReadsLoader } from './loading'
 import {
   nextReadHeader,
@@ -26,7 +27,13 @@ const COLOURS: ColorType[] = [
 
 const MD_WIDTH = 650
 
-function MostCommentedCoverText({ document }: { document: Document }) {
+function MostCommentedCoverText({
+  document,
+  index,
+}: {
+  document: Document
+  index: number
+}) {
   return (
     <div
       className={cx(
@@ -40,9 +47,7 @@ function MostCommentedCoverText({ document }: { document: Document }) {
     >
       <h4>
         <span className={css({ fontSize: 24, md: { fontSize: 32 } })}>
-          <Link href={document.meta.path} className={linkOverlay()}>
-            {document.meta.title}
-          </Link>
+          <NextReadLink document={document} index={index} />
         </span>
       </h4>
       {!document.meta.image && (
@@ -53,7 +58,13 @@ function MostCommentedCoverText({ document }: { document: Document }) {
   )
 }
 
-function MostCommentedWithImage({ document }: { document: Document }) {
+function MostCommentedWithImage({
+  document,
+  index,
+}: {
+  document: Document
+  index: number
+}) {
   return (
     <div
       className={css({
@@ -81,7 +92,7 @@ function MostCommentedWithImage({ document }: { document: Document }) {
           // backdropFilter: 'blur(1px)', -> messes the stacking context and breaks linkOverlay (FF)
         })}
       >
-        <MostCommentedCoverText document={document} />
+        <MostCommentedCoverText document={document} index={index} />
       </div>
     </div>
   )
@@ -89,12 +100,12 @@ function MostCommentedWithImage({ document }: { document: Document }) {
 
 function MostCommentedWithoutImage({
   document,
-  colors,
+  index,
 }: {
   document: Document
-  colors: ColorType
+  index: number
 }) {
-  const { color, background } = colors
+  const { color, background } = COLOURS[index % COLOURS.length]
 
   return (
     <div
@@ -113,25 +124,25 @@ function MostCommentedWithoutImage({
         },
       })}
     >
-      <MostCommentedCoverText document={document} />
+      <MostCommentedCoverText document={document} index={index} />
     </div>
   )
 }
 
 function MostCommentedRead({
   document,
-  colors,
+  index,
 }: {
   document: Document
-  colors: ColorType
+  index: number
 }) {
+  const Component = document.meta.image
+    ? MostCommentedWithImage
+    : MostCommentedWithoutImage
+
   return (
     <div className={css({ position: 'relative', scrollSnapAlign: 'start' })}>
-      {document.meta.image ? (
-        <MostCommentedWithImage document={document} />
-      ) : (
-        <MostCommentedWithoutImage document={document} colors={colors} />
-      )}
+      <Component document={document} index={index} />
     </div>
   )
 }
@@ -154,8 +165,30 @@ const mostCommentedGrid = css({
 })
 
 function MostCommentedGrid({ documents }: { documents: Document[] }) {
+  const trackEvent = useTrackEvent()
+
+  useEffect(() => {
+    trackEvent({
+      action: 'is showing',
+    })
+  }, [trackEvent])
+
   return (
-    <>
+    <div className={mostCommentedGrid}>
+      {documents.map((document, index) => (
+        <MostCommentedRead
+          key={document.id}
+          document={document}
+          index={index}
+        />
+      ))}
+    </div>
+  )
+}
+
+export function MostCommentedFeed({ documents }: { documents: Document[] }) {
+  return (
+    <EventTrackingContext category='NextReads:MostCommentedFeed'>
       <div className={nextReadsSection}>
         <div className={nextReadHeader}>
           <h3>Was zu reden gibt</h3>
@@ -163,26 +196,10 @@ function MostCommentedGrid({ documents }: { documents: Document[] }) {
         </div>
       </div>
       {documents?.length ? (
-        <div className={mostCommentedGrid}>
-          {documents.map((document, idx) => (
-            <MostCommentedRead
-              key={document.id}
-              document={document}
-              colors={COLOURS[idx % COLOURS.length]}
-            />
-          ))}
-        </div>
+        <MostCommentedGrid documents={documents} />
       ) : (
         <NextReadsLoader />
       )}
-    </>
-  )
-}
-
-export function MostCommentedFeed({ documents }: { documents: Document[] }) {
-  return (
-    <EventTrackingContext category='MostCommentedFeed'>
-      <MostCommentedGrid documents={documents} />
     </EventTrackingContext>
   )
 }

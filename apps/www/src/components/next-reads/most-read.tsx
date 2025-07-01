@@ -1,10 +1,13 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
 import { SquareCover } from '@app/components/assets/SquareCover'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import {
+  EventTrackingContext,
+  useTrackEvent,
+} from '@app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
-import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
-import { CategoryLabel, getAuthors } from './helpers'
+import React, { useEffect } from 'react'
+import { CategoryLabel, getAuthors, NextReadLink } from './helpers'
 import { NextReadsLoader } from './loading'
 import {
   nextReadHeader,
@@ -25,7 +28,13 @@ const mostReadItemStyle = css({
   },
 })
 
-function MostReadItem({ document }: { document: Document }) {
+function MostReadItem({
+  document,
+  index,
+}: {
+  document: Document
+  index: number
+}) {
   return (
     <div className={cx(nextReadItemTypography, mostReadItemStyle)}>
       <Link href={document.meta.path}>
@@ -40,9 +49,7 @@ function MostReadItem({ document }: { document: Document }) {
         </div>
         <CategoryLabel document={document} />
         <h4>
-          <Link href={document.meta.path} className={linkOverlay()}>
-            {document.meta.title}
-          </Link>
+          <NextReadLink document={document} index={index} />
         </h4>
         <p className='description'>{document.meta.description}</p>
         <p className='author'>{getAuthors(document.meta.contributors)}</p>
@@ -67,24 +74,20 @@ const mostReadGrid = css({
   },
 })
 
-function MostReadGrid({ documents }: { documents: Document[] | undefined }) {
+function MostReadGrid({ documents }: { documents: Document[] }) {
+  const trackEvent = useTrackEvent()
+
+  useEffect(() => {
+    trackEvent({
+      action: 'is showing',
+    })
+  }, [trackEvent])
+
   return (
-    <div className={nextReadsSection}>
-      <div className={nextReadHeader}>
-        <h3>Was andere lesen</h3>
-        <p className='tagline'>
-          Die meistbeachteten Beiträge der letzten Woche
-        </p>
-      </div>
-      {documents?.length ? (
-        <div className={mostReadGrid}>
-          {documents.map((document) => (
-            <MostReadItem key={document.id} document={document} />
-          ))}
-        </div>
-      ) : (
-        <NextReadsLoader />
-      )}
+    <div className={mostReadGrid}>
+      {documents.map((document, index) => (
+        <MostReadItem key={document.id} document={document} index={index} />
+      ))}
     </div>
   )
 }
@@ -95,8 +98,20 @@ export function MostReadFeed({
   documents: Document[] | undefined
 }) {
   return (
-    <EventTrackingContext category='MostReadFeed'>
-      <MostReadGrid documents={documents} />
+    <EventTrackingContext category='NextReads:MostReadFeed'>
+      <div className={nextReadsSection}>
+        <div className={nextReadHeader}>
+          <h3>Was andere lesen</h3>
+          <p className='tagline'>
+            Die meistbeachteten Beiträge der letzten Woche
+          </p>
+        </div>
+        {documents?.length ? (
+          <MostReadGrid documents={documents} />
+        ) : (
+          <NextReadsLoader />
+        )}
+      </div>
     </EventTrackingContext>
   )
 }
