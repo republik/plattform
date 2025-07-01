@@ -21,9 +21,9 @@ type ColorType = {
 
 const COLOURS: ColorType[] = [
   { color: '#FCFBE8', background: '#317D7F' },
-  { color: '#892387', background: '#BCB0E0' },
-  { color: '#5D55C7', background: '#EEADA5' },
-  { color: '#FCE8F6', background: '#94355C' },
+  { color: '#201E1E', background: '#E2D334' },
+  { color: '#FF7CE7', background: '#431D32' },
+  { color: '#CA003C', background: '#BCCEDE' },
 ]
 
 const MD_WIDTH = 650
