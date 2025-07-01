@@ -1,13 +1,6 @@
 const debug = require('debug')('rediretions:lib:Redirections')
 
-const search = require('@orbiting/backend-modules-search/graphql/resolvers/_queries/search')
-const {
-  lib: {
-    resolve: { createResolver },
-  },
-} = require('@orbiting/backend-modules-documents')
 
-const { FRONTEND_BASE_URL } = process.env
 const DEFAULT_ROLES = ['editor', 'admin']
 
 const upsert = async (redirection, { pgdb }, now = new Date()) => {
@@ -260,100 +253,6 @@ const validateStatus = (status) => {
   }
 }
 
-const maybeApplyBaseUrl = (externalBaseUrl, context) => {
-  return async (redirections) => {
-    const repoIds = redirections
-      .map((redirection) => redirection?.resource?.repo?.id)
-      .filter(Boolean)
-
-    const connection =
-      !!repoIds.length &&
-      (await search(
-        null,
-        {
-          first: repoIds.length,
-          filter: {
-            repoId: repoIds,
-            type: 'Document',
-          },
-          sort: {
-            key: 'publishedAt',
-            direction: 'DESC',
-          },
-          withoutContent: true,
-          withoutAggs: true,
-        },
-        context,
-      ))
-
-    // Helper function to normalize {record.target}: If {externalBaseUrl}
-    // is available, prepend {FRONT_BASE_URL} to a relative path since
-    // {externalBaseUrl} is not desired entrypoint.
-    const normalizeTarget = (redirection) => {
-      if (externalBaseUrl) {
-        const target = new URL(redirection.target, FRONTEND_BASE_URL).toString()
-        return {
-          ...redirection,
-          target,
-        }
-      }
-
-      return redirection
-    }
-
-    return redirections.filter(Boolean).map((redirection) => {
-      // no results in serach look-up,
-      // thus only normalize target
-      if (!connection?.nodes?.length) {
-        return normalizeTarget(redirection)
-      }
-
-      const repoId = redirection?.resource?.repo?.id
-      // record contains not repo ID,
-      // thus only normalize target
-      if (!repoId) {
-        return normalizeTarget(redirection)
-      }
-
-      const node = connection.nodes.find(
-        (node) => node.entity.meta.repoId === repoId,
-      )
-      // repo ID does not exist in search look-up,
-      // thus only normalize target
-      if (!node) {
-        return normalizeTarget(redirection)
-      }
-
-      const { _all, _users, ...doc } = node.entity
-      const formatDoc = createResolver(_all, _users)(doc.meta?.format)
-
-      // If {externalBaseUrl} and a document format externalBaseUrl match
-      // return record without normalizing it.
-      if (
-        externalBaseUrl &&
-        externalBaseUrl === formatDoc?.meta?.externalBaseUrl
-      ) {
-        return redirection
-      }
-
-      // If a document has an {externalBaseUrl}, prepend it to {record.target}
-      if (formatDoc?.meta?.externalBaseUrl) {
-        const target = new URL(
-          `${formatDoc.meta.externalBaseUrl}${redirection.target}`,
-          FRONTEND_BASE_URL,
-        )
-
-        return {
-          ...redirection,
-          target: target.toString(),
-        }
-      }
-
-      return normalizeTarget(redirection)
-    })
-  }
-}
-
 module.exports = {
   upsert,
   add,
@@ -366,6 +265,5 @@ module.exports = {
   validateSource,
   validateTarget,
   validateStatus,
-  maybeApplyBaseUrl,
   DEFAULT_ROLES,
 }

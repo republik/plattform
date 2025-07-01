@@ -40,7 +40,6 @@ const USER_MENU_URL = '/meine-republik'
 
 const Header = ({
   isAnyNavExpanded,
-  setIsAnyNavExpanded,
   headerOffset,
   setHeaderOffset,
   hasSecondaryNav,

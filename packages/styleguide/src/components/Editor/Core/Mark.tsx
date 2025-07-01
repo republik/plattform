@@ -70,7 +70,7 @@ const Placeholder: React.FC<{
   tKey: string
 }> = ({ tKey, setStyle }) => {
   const { t } = useRenderContext()
-  const placeholderRef = useRef<HTMLSpanElement>()
+  const placeholderRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     setStyle({
@@ -104,12 +104,15 @@ export const LeafComponent: React.FC<{
   const [placeholderStyle, setPlaceholderStyle] = useState()
   const editor = useSlate()
   const showPlaceholder = isEmpty(leaf.text) && !leaf.end
-  const containerRef = useRef()
+  const containerRef = useRef(null)
 
   const selectEmptyText = (e) => {
     if (showPlaceholder) {
       e.preventDefault(e)
-      const parentPath = ReactEditor.findPath(editor, children.props.parent)
+      const parentPath = ReactEditor.findPath(
+        editor,
+        (children.props as any).parent,
+      )
       selectEmptyParentPath(editor, parentPath)
     }
   }

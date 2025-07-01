@@ -37,7 +37,7 @@
         "group": "dev",
         "panel": "dedicated",
         "close": true,
-        "showReuseMessage": false
+        "showReuseMessage": true
       },
       "problemMatcher": []
     },
@@ -49,7 +49,7 @@
         "group": "dev",
         "panel": "dedicated",
         "close": true,
-        "showReuseMessage": false
+        "showReuseMessage": true
       },
       "problemMatcher": []
     },
@@ -61,7 +61,19 @@
         "group": "dev",
         "panel": "dedicated",
         "close": true,
-        "showReuseMessage": false
+        "showReuseMessage": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "dev:api",
+      "type": "shell",
+      "command": "yarn turbo run dev --filter=@orbiting/api-app... --concurrency=20",
+      "presentation": {
+        "group": "dev",
+        "panel": "dedicated",
+        "close": true,
+        "showReuseMessage": true
       },
       "problemMatcher": []
     },
@@ -73,7 +85,7 @@
         "group": "dev",
         "panel": "dedicated",
         "close": true,
-        "showReuseMessage": false
+        "showReuseMessage": true
       },
       "problemMatcher": []
     },
@@ -85,7 +97,7 @@
         "group": "dev",
         "panel": "dedicated",
         "close": true,
-        "showReuseMessage": false
+        "showReuseMessage": true
       },
       "isBackground": true,
       "problemMatcher": []
@@ -98,7 +110,7 @@
         "group": "dev",
         "panel": "dedicated",
         "close": true,
-        "showReuseMessage": false
+        "showReuseMessage": true
       },
       "isBackground": true,
       "problemMatcher": []
@@ -111,7 +123,7 @@
         "group": "dev",
         "panel": "dedicated",
         "close": true,
-        "showReuseMessage": false
+        "showReuseMessage": true
       },
       "isBackground": true,
       "problemMatcher": []
@@ -126,7 +138,7 @@
         "group": "dev",
         "panel": "dedicated",
         "close": true,
-        "showReuseMessage": false
+        "showReuseMessage": true
       },
       "isBackground": true
     }

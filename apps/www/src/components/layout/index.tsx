@@ -23,8 +23,8 @@ export async function PageLayout({
   showFooter = true,
   children,
 }: LayoutProps) {
-  const { isNativeApp } = getPlatformInformation()
-  const draftModeEnabled = draftMode().isEnabled
+  const { isNativeApp } = await getPlatformInformation()
+  const draftModeEnabled = (await draftMode()).isEnabled
   const { me, hasActiveMembership } = await getMe()
 
   return (

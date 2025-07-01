@@ -43,7 +43,7 @@ const Page = ({
   const { questionIds, submissionId } = mapShareParam(query.share)
   const questionColor = getOrdinalColors(questionnaireConfig.design.colors)
 
-  const answersRef = useRef()
+  const answersRef = useRef(null)
   useEffect(() => {
     if (extract) return
     if (query?.focus === MAIN_VIEWPORT_FOCUS) {

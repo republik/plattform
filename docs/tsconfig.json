@@ -2,15 +2,17 @@
   "extends": "@republik/tsconfig/nextjs.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": {},
-    "moduleResolution": "Bundler"
+    "paths": {
+      "@/components": ["./lib/components/index.tsx"],
+      "@/components/*": ["./lib/components/*"]
+    },
+    "moduleResolution": "Bundler",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

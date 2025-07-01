@@ -6,7 +6,7 @@ import {
   readDiscussionCommentDraft,
 } from '@project-r/styleguide'
 import { useTranslation } from '../../../lib/withT'
-import CommentLink, { getFocusHref } from '../shared/CommentLink'
+import CommentLink from '../shared/CommentLink'
 import { useDiscussion } from '../context/DiscussionContext'
 import useVoteCommentHandlers from '../hooks/actions/useVoteCommentHandlers'
 import { CommentTreeNode } from '../helpers/makeCommentTree'
@@ -15,27 +15,21 @@ import { useMe } from '../../../lib/context/MeContext'
 import useReportCommentHandler from '../hooks/actions/useReportCommentHandler'
 import useUnpublishCommentHandler from '../hooks/actions/useUnpublishCommentHandler'
 import DiscussionComposer from '../DiscussionComposer/DiscussionComposer'
-import { useRouter } from 'next/router'
 import { useLocalCommentReports } from '../helpers/useLocalCommentReports'
 
 type Props = {
   CommentComponent?: React.ElementType<CommentProps>
   comment: CommentTreeNode
   isLast?: boolean
-  isBoard?: boolean
-  inRootCommentOverlay?: boolean
 }
 
 const CommentContainer = ({
   CommentComponent = CommentNode,
   comment,
   isLast,
-  isBoard,
-  inRootCommentOverlay,
 }: Props): ReactElement => {
   const { t } = useTranslation()
   const { me } = useMe()
-  const router = useRouter()
   const {
     id: discussionId,
     discussion,
@@ -87,19 +81,12 @@ const CommentContainer = ({
 
   const loadRemainingAfter = discussion?.comments?.pageInfo?.endCursor
   const loadRemainingReplies = useCallback(() => {
-    if (isBoard && parentId) {
-      const href = getFocusHref(discussion)
-      if (href) {
-        href.query.parent = parentId
-        return router.push(href)
-      }
-    }
     return fetchMore({
-      discussionId,
+      discussionPath: discussion?.path,
       parentId,
       after: loadRemainingAfter,
     })
-  }, [discussionId, parentId, loadRemainingAfter, fetchMore, isBoard])
+  }, [discussion, parentId, loadRemainingAfter, fetchMore])
 
   return (
     <CommentComponent
@@ -135,7 +122,6 @@ const CommentContainer = ({
       }
       focusId={discussion?.comments?.focus?.id}
       isLast={isLast}
-      inRootCommentOverlay={inRootCommentOverlay}
     >
       {discussion?.userCanComment && isReplying && (
         <DiscussionComposer
@@ -144,14 +130,13 @@ const CommentContainer = ({
           initialActiveState
         />
       )}
-      {!isBoard &&
-        comment.comments.nodes.map((reply, index) => (
-          <CommentContainer
-            key={reply.id}
-            comment={reply}
-            isLast={index === comment.comments.nodes.length - 1}
-          />
-        ))}
+      {comment.comments.nodes.map((reply, index) => (
+        <CommentContainer
+          key={reply.id}
+          comment={reply}
+          isLast={index === comment.comments.nodes.length - 1}
+        />
+      ))}
     </CommentComponent>
   )
 }

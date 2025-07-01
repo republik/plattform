@@ -19,9 +19,7 @@ import Newsletter, {
   fragments as fragmentsNewsletter,
 } from './Sections/Newsletter'
 import AppLogin, { fragments as fragmentsAppLogin } from './Sections/AppLogin'
-import Usability, {
-  fragments as fragmentsUsability,
-} from './Sections/Usability'
+import Usability from './Sections/Usability'
 import Profile, { fragments as fragmentsProfile } from './Sections/Profile'
 import Frame from '../Frame'
 import { scrollIt } from '../../lib/utils/scroll'
@@ -41,7 +39,6 @@ const QUERY = gql`
     user: me {
       ...NewsletterUser
       ...AppLoginUser
-      ...UsabilityUser
       ...ProfileUser
       activeMembership {
         active
@@ -79,7 +76,6 @@ const QUERY = gql`
 
   ${fragmentsNewsletter.user}
   ${fragmentsAppLogin.user}
-  ${fragmentsUsability.user}
   ${fragmentsProfile.user}
   ${fragmentsSubscriptions.formats}
 `

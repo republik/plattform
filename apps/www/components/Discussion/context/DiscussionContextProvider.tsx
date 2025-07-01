@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react'
-import { GENERAL_FEEDBACK_DISCUSSION_ID } from '../../../lib/constants'
 import { useRouter } from 'next/router'
 import useDiscussionData from '../hooks/useDiscussionData'
 import useOverlay from '../hooks/overlays/useOverlay'
@@ -18,27 +17,20 @@ import { CommentFragmentType } from '../graphql/fragments/CommentFragment.graphq
  */
 const DiscussionContextProvider: FC<{
   children?: ReactNode
-  discussionId: string
-  isBoardRoot?: boolean
+  discussionPath: string
   parentId?: string
   includeParent?: boolean
-}> = ({ children, discussionId, isBoardRoot, parentId, includeParent }) => {
+}> = ({ children, discussionPath, parentId, includeParent }) => {
   const { query } = useRouter()
-  const orderBy =
-    (query.order as string) ||
-    (isBoardRoot
-      ? 'HOT'
-      : discussionId === GENERAL_FEEDBACK_DISCUSSION_ID
-      ? 'DATE'
-      : 'AUTO')
+  const orderBy = (query.order as string) || 'AUTO'
 
   const activeTag = query.tag as string
   const focusId = query.focus as string
 
-  const depth = isBoardRoot ? 1 : 3
+  const depth = 3
 
   const { discussion, error, loading, refetch, fetchMore } = useDiscussionData(
-    discussionId,
+    discussionPath,
     {
       orderBy,
       activeTag,
@@ -59,7 +51,7 @@ const DiscussionContextProvider: FC<{
   const featureOverlay = useOverlay<CommentFragmentType>()
 
   const contextValue: DiscussionContextValue = {
-    id: discussionId,
+    id: discussion?.id,
     discussion,
     loading: loading,
     error: error,
@@ -78,11 +70,11 @@ const DiscussionContextProvider: FC<{
 
   return (
     <DiscussionContext.Provider value={contextValue}>
-      <div data-discussion-id={discussionId}>
+      <div data-discussion-id={discussion?.id}>
         {children}
         {discussion && (
           <>
-            <DiscussionOverlays isBoardRoot={isBoardRoot} />
+            <DiscussionOverlays />
             <DiscussionMetaHelper
               parentId={parentId}
               includeParent={includeParent}

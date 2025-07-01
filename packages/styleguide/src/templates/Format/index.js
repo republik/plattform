@@ -66,10 +66,6 @@ const createFormatSchema = ({
         key: 'notificationTitle',
       },
       {
-        label: 'Externe Basis-URL',
-        key: 'externalBaseUrl',
-      },
-      {
         label: 'Sharetafel Logo',
         key: 'shareLogo',
       },

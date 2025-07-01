@@ -46,13 +46,6 @@ export const notificationsMiniQuery = gql`
           }
           ... on Document {
             id
-            meta {
-              format {
-                meta {
-                  externalBaseUrl
-                }
-              }
-            }
           }
         }
         content {
@@ -113,7 +106,6 @@ export const notificationsQuery = gql`
               id
               title
               path
-              isBoard
               document {
                 id
                 meta {
@@ -123,6 +115,7 @@ export const notificationsQuery = gql`
                   template
                   ownDiscussion {
                     id
+                    path
                     closed
                   }
                   linkedDiscussion {

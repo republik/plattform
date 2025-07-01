@@ -8,7 +8,7 @@ import { useTranslation } from '../../../lib/withT'
 import ProfileUrlIcon from '../Common/ProfileUrlIcon'
 
 const isHTTPUrl = (url) =>
-  isURL(url, { require_host: true, require_tld: true })
+  isURL(url, { require_host: true, require_tld: true, require_protocol: true })
 
 const styles = {
   linkRow: css({

@@ -18,6 +18,7 @@ const getUser = (sequenceNumber, isAsc, pgdb) =>
       )
     WHERE
       m."sequenceNumber" ${isAsc ? '>' : '<'} :sequenceNumber
+      AND u."hasPublicProfile" = true
       AND u."isListed" = true
       AND u."isAdminUnlisted" = false
       AND u."portraitUrl" is not null

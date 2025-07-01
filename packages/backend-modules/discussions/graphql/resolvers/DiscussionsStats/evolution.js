@@ -1,20 +1,10 @@
 const moment = require('moment')
 
-const { createCache } = require('../../../lib/stats/evolution')
-
 module.exports = async (_, args, context) => {
   // Fetch pre-populated data
-  const data = await createCache(context).get()
-
-  // In case pre-populated data is not available...
-  if (!data) {
-    throw new Error(
-      'Unable to retrieve pre-populated data for DiscussionsStats.evolution',
-    )
-  }
-
-  // Retrieve pre-populated data.
-  const { result = [], updatedAt = new Date() } = data
+  const data = await context.pgdb.query(
+    'select * from cockpit_discussions_evolution ORDER BY key;',
+  )
 
   // A list of desired bucket keys to return
   const keys = []
@@ -29,9 +19,7 @@ module.exports = async (_, args, context) => {
   }
 
   return {
-    buckets: result
-      .filter(({ key }) => keys.includes(key))
-      .map((r) => ({ ...r, updatedAt })),
-    updatedAt,
+    buckets: data.filter(({ key }) => keys.includes(key)),
+    updatedAt: data[0]?.updatedAt || new Date(),
   }
 }

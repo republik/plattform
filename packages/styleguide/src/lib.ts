@@ -1,3 +1,4 @@
+'use client'
 import * as allMediaQueries from './theme/mediaQueries'
 
 export { default as zIndex } from './theme/zIndex'
@@ -69,9 +70,10 @@ export {
   FigureImage,
   MIN_GALLERY_IMG_WIDTH,
 } from './components/Figure'
+export { GalleryContext } from './components/Figure/GalleryContext'
 export { Tweet } from './components/Social'
 export { Video } from './components/Video'
-export { TeaserFeed, getTeaserHref } from './components/TeaserFeed'
+export { TeaserFeed } from './components/TeaserFeed'
 export {
   TeaserFrontImage,
   TeaserFrontImageHeadline,
@@ -145,7 +147,7 @@ export { IconLink as DiscussionIconLink } from './components/Discussion/Internal
 export { SEPARATOR as EXPANDABLE_LINK_SEPARATOR } from './components/ExpandableLink/ExpandableLink'
 
 export { default as DiscussionCommentsWrapper } from './components/Discussion/DiscussionCommentsWrapper'
-export { CommentNode, BoardComment } from './components/Discussion/Tree'
+export { CommentNode } from './components/Discussion/Tree'
 export type { CommentProps } from './components/Discussion/Tree'
 
 export { DiscussionContext } from './components/Discussion/DiscussionContext'

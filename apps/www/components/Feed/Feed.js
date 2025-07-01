@@ -22,7 +22,6 @@ class Feed extends Component {
         {...doc.meta}
         format={doc.meta.format}
         skipFormat={this.props.skipFormat}
-        externalBaseUrl={doc.meta.format?.meta.externalBaseUrl}
         repoId={doc.repoId}
         title={doc.meta.shortTitle || doc.meta.title}
         description={!doc.meta.shortTitle && doc.meta.description}

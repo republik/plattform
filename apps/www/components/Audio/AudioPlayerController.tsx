@@ -164,12 +164,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   const handleError = (error: Error | string) => {
     setHasError(true)
-    if (typeof error === 'string') {
-      reportError('handle audio-error', error)
-    } else {
-      error = JSON.stringify(error, Object.getOwnPropertyNames(error), 2)
-      reportError('handle audio-error', error)
-    }
+    reportError('handle audio-error', error)
     trackEvent([
       AudioPlayerLocations.AUDIO_PLAYER,
       AudioPlayerActions.ERROR,

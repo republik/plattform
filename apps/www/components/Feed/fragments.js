@@ -1,12 +1,21 @@
 import { onDocumentFragment as bookmarkOnDocumentFragment } from '../Bookmarks/fragments'
-import { userProgressFragment } from '../Article/Progress/api'
 
 export const documentFragment = `
   fragment FeedDocument on Document {
     id
     repoId
     ...BookmarkOnDocument
-    ...UserProgressOnDocument
+      userProgress {
+       id
+       percentage
+       nodeId
+       updatedAt
+       max {
+         id
+         percentage
+         updatedAt
+       }
+    }
     meta {
       credits
       title
@@ -40,11 +49,11 @@ export const documentFragment = `
           title
           color
           kind
-          externalBaseUrl
         }
       }
       ownDiscussion {
         id
+        path
         closed
         comments {
           totalCount
@@ -74,5 +83,4 @@ export const documentFragment = `
     }
   }
   ${bookmarkOnDocumentFragment}
-  ${userProgressFragment}
 `

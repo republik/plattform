@@ -42,24 +42,10 @@ const nextConfig = {
     PUBLIC_BASE_URL,
     PUBLIC_CDN_URL,
   },
-  transpilePackages: [
-    '@project-r/styleguide',
-    '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11 and older safari versions
-    '@republik/icons', // Ensures ES5 compatibility to work in IE11 and older safari versions
-  ],
-  webpack: (config) => {
-    config.externals = config.externals || {}
-    config.externals['lru-cache'] = 'lru-cache'
-    config.externals['react-dom/server'] = 'react-dom/server'
-    return config
-  },
+
   poweredByHeader: false,
   assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
-  useFileSystemPublicRoutes: true,
-  // , onDemandEntries: {
-  //   // wait 5 minutes before disposing entries
-  //   maxInactiveAge: 1000 * 60 * 5
-  // }
+
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -84,9 +70,9 @@ const nextConfig = {
       // Migrated from custom express server
       {
         source: '/:path*',
-        headers: [
+        headers:
           // Security headers, peviously handled by helmet
-          ...Object.entries({
+          Object.entries({
             // 'Content-Security-Policy': `default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests`,
             // 'Cross-Origin-Opener-Policy': 'same-origin',
             // 'Cross-Origin-Resource-Policy': 'same-origin',
@@ -102,11 +88,10 @@ const nextConfig = {
             // removed by helmet by default, but we keep it for now
             'X-Powered-By': 'Republik',
             'X-XSS-Protection': '1; mode=block',
-          }).map(([key, value]) => ({
-            key,
-            value,
-          })),
-        ],
+            'X-Robots-Tag': process.env.ROBOTS_TAG_HEADER,
+          })
+            .filter(([, value]) => !!value)
+            .map(([key, value]) => ({ key, value })),
       },
     ]
   },
@@ -276,44 +261,29 @@ const withConfiguredPlausibleProxy = withPlausibleProxy({
   subdirectory: '__plsb',
 })
 
-module.exports = withBundleAnalyzer(withConfiguredPlausibleProxy(nextConfig))
-
-// Injected content via Sentry wizard below
-
 module.exports = withSentryConfig(
-  module.exports,
-  {
-    // For all available options, see:
-    // https://github.com/getsentry/sentry-webpack-plugin#options
-
-    // Suppresses source map uploading logs during build
-    silent: true,
-    org: 'republik',
-    project: 'www-republik',
-  },
+  withBundleAnalyzer(withConfiguredPlausibleProxy(nextConfig)),
   {
     // For all available options, see:
     // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+
+    // Only print logs for uploading source maps in CI
+    silent: !process.env.CI,
+
     // Upload a larger set of source maps for prettier stack traces (increases build time)
     widenClientFileUpload: true,
 
-    // Transpiles SDK to be compatible with IE11 (increases bundle size)
-    transpileClientSDK: false,
-
-    // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
+    // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
+    // This can increase your server load as well as your hosting bill.
+    // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
+    // side errors will fail.
     tunnelRoute: '/monitoring',
-
-    // Hides source maps from generated client bundles
-    hideSourceMaps: true,
 
     // Automatically tree-shake Sentry logger statements to reduce bundle size
     disableLogger: true,
-
-    // Enables automatic instrumentation of Vercel Cron Monitors.
-    // See the following for more information:
-    // https://docs.sentry.io/product/crons/
-    // https://vercel.com/docs/cron-jobs
-    automaticVercelMonitors: true,
   },
 )
