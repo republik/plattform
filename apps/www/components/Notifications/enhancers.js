@@ -106,7 +106,6 @@ export const notificationsQuery = gql`
               id
               title
               path
-              isBoard
               document {
                 id
                 meta {

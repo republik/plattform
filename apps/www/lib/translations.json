@@ -7068,10 +7068,6 @@
       "value": "haben wir aktuell. Aber bis zum 31. März sind noch <strong>{openPeople}</strong> Erneuerungen fällig."
     },
     {
-      "key": "RootCommentOverlay/title",
-      "value": "Kommentare"
-    },
-    {
       "key": "PodcastButtons/title/play",
       "value": "Anhören und abonnieren"
     },
