@@ -26,7 +26,6 @@ const contentUrlResolver = (
   user,
 ) => {
   const docResolver = createResolver(_all, _users, errors)
-  const externalBaseUrl = docResolver(doc.meta?.format)?.meta?.externalBaseUrl
 
   const urlReplacer = createUrlReplacer(
     _all,
@@ -34,7 +33,6 @@ const contentUrlResolver = (
     errors,
     urlPrefix,
     searchString,
-    externalBaseUrl,
   )
 
   const stripDocLinks = shouldStripDocLinks(user, doc)
@@ -55,7 +53,11 @@ const contentUrlResolver = (
           audioSourceAac,
           audioSourceOgg,
         } = linkedDoc.meta
-        const hasAudio = audioSourceMp3 || audioSourceAac || audioSourceOgg || !linkedDoc.meta.suppressSyntheticReadAloud
+        const hasAudio =
+          audioSourceMp3 ||
+          audioSourceAac ||
+          audioSourceOgg ||
+          !linkedDoc.meta.suppressSyntheticReadAloud
         node.data.urlMeta = {
           documentId: linkedDoc.id,
           hasAudio,

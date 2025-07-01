@@ -58,7 +58,7 @@ const createPasteHtml =
 
       const toMd = unified()
         .use(htmlParse, {
-          emitParseErrors: true,
+          emitParseErrors: false,
           duplicateAttribute: false,
         })
         .use(rehype2remark)

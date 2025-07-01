@@ -3,17 +3,14 @@ const { paginate } = require('@orbiting/backend-modules-utils')
 
 const {
   findAll,
-  maybeApplyBaseUrl,
   DEFAULT_ROLES,
 } = require('../../../lib/Redirections')
 
 module.exports = async (_, args, context) => {
-  const { externalBaseUrl, ...paginateArgs } = args
+  const { ...paginateArgs } = args
   const { user, pgdb } = context
   Roles.ensureUserIsInRoles(user, DEFAULT_ROLES)
-  const nodes = await findAll(pgdb).then(
-    maybeApplyBaseUrl(externalBaseUrl, context),
-  )
+  const nodes = await findAll(pgdb)
 
   return paginate(paginateArgs, nodes)
 }

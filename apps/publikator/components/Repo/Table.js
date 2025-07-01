@@ -109,9 +109,6 @@ export const filterAndOrderRepos = gql`
               path
               format {
                 id
-                meta {
-                  externalBaseUrl
-                }
               }
             }
           }

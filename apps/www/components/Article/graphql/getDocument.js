@@ -100,7 +100,6 @@ export const getDocument = gql`
           id
           meta {
             path
-            externalBaseUrl
             title
             color
             kind
