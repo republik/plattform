@@ -1,4 +1,4 @@
-import { Children, Component } from 'react'
+import { Children, useEffect, useState } from 'react'
 import { css } from 'glamor'
 import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
 import { colors, Label } from '@project-r/styleguide'
@@ -73,80 +73,62 @@ export const TabButton = ({ active, tabId, onSelect, children }) => (
   </Label>
 )
 
-export const Tab = ({ active, children }) => {
+export const Tab = ({ children }) => {
   return <div {...styles.tabContainer}>{children}</div>
 }
 
-export default class Sidebar extends Component {
-  constructor(props, ...args) {
-    super(props, ...args)
-    this.state = {
-      selectedTabId: props.selectedTabId || null,
+const Sidebar = ({
+  selectedTabId: externallySelectedTabId,
+  prependChildren,
+  children,
+  isOpen,
+  isDisabled,
+}) => {
+  const [selectedTabId, setSelectedTabId] = useState(
+    externallySelectedTabId || null,
+  )
+
+  // necessary because the parent component changes the selectedTabId
+  useEffect(() => {
+    if (externallySelectedTabId) {
+      setSelectedTabId(externallySelectedTabId)
     }
+  }, [externallySelectedTabId])
 
-    this.tabClickHandler = this.tabClickHandler.bind(this)
-    this.mouseDownHandler = this.mouseDownHandler.bind(this)
-  }
+  const cleanChildren = Children.toArray(children)
+    .filter(Boolean)
+    .filter((c) => Boolean(c.props))
+  const tabProperties = cleanChildren.map((child) => child.props)
 
-  tabClickHandler(id) {
-    this.setState({
-      selectedTabId: id,
-    })
-  }
+  const tabButtons = tabProperties.map(({ tabId, label }) => (
+    <TabButton
+      key={`sidebar-tab-${tabId}`}
+      tabId={tabId}
+      onSelect={(id) => {
+        setSelectedTabId(id)
+      }}
+      active={selectedTabId === tabId}
+    >
+      {label}
+    </TabButton>
+  ))
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.selectedTabId &&
-      nextProps.selectedTabId !== this.props.selectedTabId
-    ) {
-      this.setState({
-        selectedTabId: nextProps.selectedTabId,
-      })
-    }
-  }
+  const activeTab = cleanChildren
+    .filter(Boolean)
+    .find((child) => child.props.tabId === selectedTabId)
 
-  mouseDownHandler(event) {
-    if (this.props.isDisabled) {
-      event.stopPropagation()
-      event.preventDefault()
-    }
-  }
-
-  render() {
-    const { prependChildren, children, isOpen, isDisabled } = this.props
-    const { selectedTabId } = this.state
-
-    const cleanChildren = Children.toArray(children)
-      .filter(Boolean)
-      .filter((c) => Boolean(c.props))
-    const tabProperties = cleanChildren.map((child) => child.props)
-
-    const tabButtons = tabProperties.map(({ tabId, label }) => (
-      <TabButton
-        key={`sidebar-tab-${tabId}`}
-        tabId={tabId}
-        onSelect={this.tabClickHandler}
-        active={selectedTabId === tabId}
-      >
-        {label}
-      </TabButton>
-    ))
-
-    const activeTab = cleanChildren
-      .filter(Boolean)
-      .find((child) => child.props.tabId === selectedTabId)
-
-    return (
-      <div {...styles.container} className={(isOpen && 'open') || ''}>
-        {prependChildren}
-        {isDisabled && (
-          <div {...styles.overlay} onMouseDown={(e) => e.preventDefault()} />
-        )}
-        <div {...styles.tabButtonContainer}>{tabButtons}</div>
-        {activeTab}
-      </div>
-    )
-  }
+  return (
+    <div {...styles.container} className={(isOpen && 'open') || ''}>
+      {prependChildren}
+      {isDisabled && (
+        <div {...styles.overlay} onMouseDown={(e) => e.preventDefault()} />
+      )}
+      <div {...styles.tabButtonContainer}>{tabButtons}</div>
+      {activeTab}
+    </div>
+  )
 }
 
 Sidebar.Tab = Tab
+
+export default Sidebar
