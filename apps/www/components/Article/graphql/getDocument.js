@@ -71,7 +71,6 @@ export const getDocument = gql`
           id
           path
           closed
-          isBoard
           comments {
             totalCount
           }
@@ -195,7 +194,6 @@ export const getDocument = gql`
                   id
                   path
                   closed
-                  isBoard
                   comments {
                     totalCount
                   }
