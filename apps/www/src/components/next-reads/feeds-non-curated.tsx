@@ -29,7 +29,7 @@ export function FeedsNonCurated({ repoId }: { repoId: string }) {
     .filter(
       (feed) => feed.id === 'POPULAR_OF_THE_LAST_20_DAYS_WITH_COMMENTS_COUNT',
     )[0]
-    .documents.slice(0, 5) as Document[]
+    .documents.slice(0, 6) as Document[]
 
   return (
     <>

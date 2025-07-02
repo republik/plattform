@@ -125,7 +125,9 @@ function MostCommentedWithoutImage({
         },
       })}
     >
-      <MostCommentedCoverText document={document} index={index} />
+      <div className={css({ pl: 4, pr: 4 })}>
+        <MostCommentedCoverText document={document} index={index} />
+      </div>
     </div>
   )
 }
@@ -142,7 +144,14 @@ function MostCommentedRead({
     : MostCommentedWithoutImage
 
   return (
-    <div className={css({ position: 'relative', scrollSnapAlign: 'start' })}>
+    <div
+      className={css({
+        position: 'relative',
+        scrollSnapAlign: 'start',
+        display: index === 5 ? 'none' : 'flex',
+        md: { display: 'flex' },
+      })}
+    >
       <Component document={document} index={index} />
     </div>
   )
@@ -159,7 +168,7 @@ const mostCommentedGrid = css({
   mt: 12,
   textAlign: 'center',
   md: {
-    gridTemplateColumns: 'repeat(5, 1fr)',
+    gridTemplateColumns: 'repeat(6, 1fr)',
     overflowX: 'auto',
     scrollSnapType: 'x mandatory',
   },
