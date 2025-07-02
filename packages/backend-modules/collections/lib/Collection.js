@@ -65,12 +65,12 @@ const findDocumentItemsByCollectionNames = (
       ${lastDays ? `AND document_item."updatedAt" >= :afterDate` : ''}
       ${
         progress === 'FINISHED'
-          ? `AND (progress_item.data->>'percentage')::numeric >= 1`
+          ? `AND ((progress_item.data->>'percentage')::numeric >= 1 OR (((progress_item.data->>'max')::jsonb->>'data')::jsonb->>'percentage')::numeric >= 1)`
           : ''
       }
       ${
         progress === 'UNFINISHED'
-          ? `AND (progress_item.data->>'percentage' IS NULL OR (progress_item.data->>'percentage')::numeric < 1)`
+          ? `AND (progress_item.data->>'percentage' IS NULL OR ((progress_item.data->>'percentage')::numeric < 1 AND (((progress_item.data->>'max')::jsonb->>'data')::jsonb->>'percentage')::numeric < 1))`
           : ''
       }
     ORDER BY document_item."updatedAt" DESC
