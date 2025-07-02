@@ -1,4 +1,4 @@
-import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
+import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
 import {
   EventTrackingContext,
   useTrackEvent,
@@ -32,7 +32,7 @@ function MostCommentedCoverText({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index: number
 }) {
   return (
@@ -63,7 +63,7 @@ function MostCommentedWithImage({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index: number
 }) {
   return (
@@ -103,7 +103,7 @@ function MostCommentedWithoutImage({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index: number
 }) {
   const { color, background } = COLOURS[index % COLOURS.length]
@@ -136,7 +136,7 @@ function MostCommentedRead({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index: number
 }) {
   const Component = document.meta.image
@@ -172,7 +172,11 @@ const mostCommentedGrid = css({
   },
 })
 
-function MostCommentedGrid({ documents }: { documents: Document[] }) {
+function MostCommentedGrid({
+  documents,
+}: {
+  documents: NextReadDocumentFieldsFragment[]
+}) {
   const trackEvent = useTrackEvent()
 
   useEffect(() => {
@@ -198,7 +202,7 @@ export function MostCommentedFeed({
   documents,
   loading,
 }: {
-  documents: Document[]
+  documents: NextReadDocumentFieldsFragment[] | undefined
   loading: boolean
 }) {
   const { t } = useTranslation()

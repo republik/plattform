@@ -1,11 +1,10 @@
-import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
+import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
 import { SquareCover } from '@app/components/assets/SquareCover'
 import {
   EventTrackingContext,
   useTrackEvent,
 } from '@app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
-import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { CategoryLabel, getAuthors, NextReadLink } from './helpers'
@@ -37,28 +36,26 @@ function MostReadItem({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index: number
 }) {
   return (
     <div className={cx(nextReadItemTypography, mostReadItemStyle)}>
-      <Link href={document.meta.path}>
-        <div className={css({ marginBottom: 6 })}>
-          <SquareCover
-            size={312}
-            title={document.meta.title}
-            cover={document.meta.audioCover}
-            crop={document.meta.audioCoverCrop}
-            image={document.meta.image}
-          />
-        </div>
-        <CategoryLabel document={document} />
-        <h4>
-          <NextReadLink document={document} index={index} />
-        </h4>
-        <p className='description'>{document.meta.description}</p>
-        <p className='author'>{getAuthors(document.meta.contributors)}</p>
-      </Link>
+      <div className={css({ marginBottom: 6 })}>
+        <SquareCover
+          size={312}
+          title={document.meta.title}
+          cover={document.meta.audioCover}
+          crop={document.meta.audioCoverCrop}
+          image={document.meta.image}
+        />
+      </div>
+      <CategoryLabel document={document} />
+      <h4>
+        <NextReadLink document={document} index={index} />
+      </h4>
+      <p className='description'>{document.meta.description}</p>
+      <p className='author'>{getAuthors(document.meta.contributors)}</p>
     </div>
   )
 }
@@ -78,7 +75,11 @@ const mostReadGrid = css({
   },
 })
 
-function MostReadGrid({ documents }: { documents: Document[] }) {
+function MostReadGrid({
+  documents,
+}: {
+  documents: NextReadDocumentFieldsFragment[]
+}) {
   const trackEvent = useTrackEvent()
 
   useEffect(() => {
@@ -100,7 +101,7 @@ export function MostReadFeed({
   documents,
   loading,
 }: {
-  documents: Document[] | undefined
+  documents: NextReadDocumentFieldsFragment[] | undefined
   loading: boolean
 }) {
   const { t } = useTranslation()

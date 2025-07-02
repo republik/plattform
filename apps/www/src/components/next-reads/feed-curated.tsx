@@ -1,6 +1,8 @@
+import { getFragmentData } from '#graphql/republik-api/__generated__/gql'
 import {
-  Document,
   DocumentRecommendationsDocument,
+  NextReadDocumentFieldsFragment,
+  NextReadDocumentFieldsFragmentDoc,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import {
@@ -22,7 +24,7 @@ function RecommendedRead({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index: number
 }) {
   return (
@@ -51,7 +53,11 @@ function RecommendedRead({
   )
 }
 
-function CuratedList({ documents }: { documents: Document[] }) {
+function CuratedList({
+  documents,
+}: {
+  documents: NextReadDocumentFieldsFragment[]
+}) {
   const trackEvent = useTrackEvent()
 
   useEffect(() => {
@@ -75,7 +81,7 @@ export function CuratedFeed({ path }: { path: string }) {
     variables: { path },
   })
 
-  const documents = data?.document.meta.recommendations?.nodes as Document[]
+  const documents = data?.document.meta.recommendations?.nodes
 
   if (!loading && !documents?.length) return null
 
@@ -94,7 +100,15 @@ export function CuratedFeed({ path }: { path: string }) {
             <h3>{t('nextReads/curatedFeed/title')}</h3>
           </div>
         </div>
-        {loading ? <NextReadsLoader /> : <CuratedList documents={documents} />}
+        {loading ? (
+          <NextReadsLoader />
+        ) : (
+          <CuratedList
+            documents={documents.map((document) =>
+              getFragmentData(NextReadDocumentFieldsFragmentDoc, document),
+            )}
+          />
+        )}
       </div>
     </EventTrackingContext>
   )

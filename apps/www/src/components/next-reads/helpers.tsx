@@ -1,4 +1,4 @@
-import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
+import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
@@ -13,7 +13,11 @@ export const getAuthors = (
     .map((contributor) => contributor.name)
     .join(', ')
 
-export function CategoryLabel({ document }: { document: Document }) {
+export function CategoryLabel({
+  document,
+}: {
+  document: NextReadDocumentFieldsFragment
+}) {
   const text = document.meta.format?.meta.title || document.meta.series?.title
   if (!text) return null
   return (
@@ -33,7 +37,7 @@ export function NextReadLink({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index?: number
 }) {
   const trackEvent = useTrackEvent()
