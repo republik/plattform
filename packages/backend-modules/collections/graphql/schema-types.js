@@ -56,6 +56,7 @@ extend type User {
   collectionItems(
     names: [String!]!
     progress: ProgressState
+    excludeRepoId: ID
     lastDays: Int
     uniqueDocuments: Boolean
     first: Int

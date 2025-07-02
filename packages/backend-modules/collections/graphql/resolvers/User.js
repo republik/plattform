@@ -40,6 +40,11 @@ module.exports = {
             index === all.findIndex((b) => b.repoId === a.repoId),
         )
       }
+      if (args.excludeRepoId) {
+        items = items.filter(
+          (item) => args.excludeRepoId !== item.repoId
+        )
+      }
       return paginate(args, items)
     }
     return paginate(args, [])
