@@ -93,7 +93,7 @@ const ArticlePage = ({
     refetch: articleRefetch,
   } = useQuery(getDocument, {
     variables: {
-      // path: cleanedPath,
+      path: cleanedPath,
     },
     skip: clientRedirection,
     // When graphQLErrors happen, we still want to get partial data to render the page
