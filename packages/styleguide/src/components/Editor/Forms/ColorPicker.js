@@ -44,7 +44,6 @@ class ColorPicker extends Component {
   }
 
   render() {
-    console.log(this.state)
     return (
       <div style={{ marginBottom: 5, position: 'relative' }}>
         <Label>{this.props.label}</Label>
