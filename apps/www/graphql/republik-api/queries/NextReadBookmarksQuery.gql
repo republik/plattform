@@ -3,7 +3,7 @@ query NextReadsBookmarks {
     id
     collectionItems(
       names: ["bookmarks"]
-      first: 5
+      first: 6
       progress: UNFINISHED
       uniqueDocuments: true
       lastDays: 300

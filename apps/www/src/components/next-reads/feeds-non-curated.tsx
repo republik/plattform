@@ -14,9 +14,10 @@ export function FeedsNonCurated({ repoId }: { repoId: string }) {
   })
   const { data: bookmarksData } = useQuery(NextReadsBookmarksDocument)
 
-  const bookmarks = (bookmarksData?.me?.collectionItems.nodes.map(
-    (node) => node.document,
-  ) || []) as Document[]
+  const bookmarks = bookmarksData?.me?.collectionItems.nodes
+    .map((node) => node.document as Document)
+    .filter((document) => document.repoId !== repoId)
+    .slice(0, 5)
 
   const mostRead = nextReadsData?.nextReads
     .filter((feed) => feed.id === 'POPULAR_LAST_7_DAYS')[0]
@@ -31,7 +32,7 @@ export function FeedsNonCurated({ repoId }: { repoId: string }) {
   return (
     <>
       <MostReadFeed documents={mostRead} />
-      {bookmarks.length ? (
+      {bookmarks?.length ? (
         <BookmarkedFeed documents={bookmarks} />
       ) : (
         <MostCommentedFeed documents={mostCommented} />
