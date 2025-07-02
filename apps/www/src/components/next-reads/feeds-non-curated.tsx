@@ -18,7 +18,7 @@ export function FeedsNonCurated({ repoId }: { repoId: string }) {
 
   const bookmarks = bookmarksData?.me?.collectionItems.nodes
     .map((node) => node.document as Document)
-    .filter((document) => document.repoId !== repoId)
+    .filter((document) => document?.repoId && document.repoId !== repoId)
     .slice(0, 5)
 
   const mostRead = nextReadsData?.nextReads
