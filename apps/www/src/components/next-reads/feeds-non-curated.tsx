@@ -17,16 +17,16 @@ export function FeedsNonCurated({ repoId }: { repoId: string }) {
     },
   )
   const { data: bookmarksData } = useQuery(NextReadsBookmarksDocument, {
+    variables: { repoId },
     fetchPolicy: 'network-only',
   })
 
   const bookmarks = bookmarksData?.me?.collectionItems.nodes
-
+    // apparently not all bookmarks have a document...?
+    .filter((node) => node.document)
     .map(({ document }) =>
       getFragmentData(NextReadDocumentFieldsFragmentDoc, document),
     )
-    .filter((document) => document?.repoId && document.repoId !== repoId)
-    .slice(0, 5)
 
   const mostRead = nextReadsData?.nextReads
     .filter((feed) => feed.id === 'POPULAR_LAST_7_DAYS')[0]
