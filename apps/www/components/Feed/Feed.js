@@ -40,7 +40,6 @@ class Feed extends Component {
       />
     ) : null
   }
-  x
 
   render() {
     const { documents, showHeader } = this.props
