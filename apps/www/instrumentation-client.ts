@@ -24,6 +24,8 @@ if (process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true') {
       Sentry.graphqlClientIntegration({
         endpoints: [process.env.NEXT_PUBLIC_API_URL],
       }),
+
+      Sentry.extraErrorDataIntegration({ depth: 5 }),
     ],
   })
 }
