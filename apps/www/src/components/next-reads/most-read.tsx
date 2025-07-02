@@ -65,11 +65,12 @@ const mostReadGrid = css({
   gridTemplateRows: 'auto',
   overflowX: 'auto',
   scrollSnapType: 'x mandatory',
-  gap: 8,
+  gap: 4,
   mt: 12,
   pb: 8,
   mx: '15px',
   md: {
+    gap: 8,
     mx: 8,
     pb: 16,
   },
@@ -99,7 +100,7 @@ export function MostReadFeed({
   documents: Document[] | undefined
 }) {
   const { t } = useTranslation()
-  
+
   return (
     <EventTrackingContext category='NextReads:MostReadFeed'>
       <div className={nextReadsSection}>
