@@ -560,7 +560,9 @@ const ArticlePage = ({
                   />
                 )}
 
-                {isArticle && <NextReads path={cleanedPath} repoId={repoId} />}
+                {isArticle && !isSeriesOverview && (
+                  <NextReads path={cleanedPath} repoId={repoId} />
+                )}
               </div>
             </>
           )
