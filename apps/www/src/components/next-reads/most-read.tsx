@@ -17,12 +17,16 @@ import {
 } from './styles'
 
 const mostReadItemStyle = css({
-  mb: 4,
   textAlign: 'left',
   scrollSnapAlign: 'start',
   scrollSnapMarginLeft: '15px',
   width: '240px',
   position: 'relative', // for the link overlay placement
+  mb: 4,
+  px: 3,
+  md: {
+    px: 4,
+  },
   lg: {
     width: 'auto',
     maxWidth: '312px',
@@ -65,12 +69,10 @@ const mostReadGrid = css({
   gridTemplateRows: 'auto',
   overflowX: 'auto',
   scrollSnapType: 'x mandatory',
-  gap: 4,
+  gap: 0,
   mt: 12,
   pb: 8,
-  mx: '15px',
   md: {
-    gap: 8,
     mx: 8,
     pb: 16,
   },
