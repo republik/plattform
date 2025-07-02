@@ -148,8 +148,6 @@ function MostCommentedRead({
       className={css({
         position: 'relative',
         scrollSnapAlign: 'start',
-        display: index === 5 ? 'none' : 'flex',
-        md: { display: 'flex' },
       })}
     >
       <Component document={document} index={index} />
