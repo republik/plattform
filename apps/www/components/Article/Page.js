@@ -104,7 +104,10 @@ const ArticlePage = ({
     if (articleError) {
       // In case we have partial data, still continue to render the page and report it silently
       if (articleData) {
-        reportError('Article Page getDocument Query', articleError)
+        reportError(
+          'Article Page getDocument Query returned data but also an error',
+          articleError,
+        )
       }
       // If there's no data, throw the error, so an error page is shown to the user where they can reload the page.
       // In some cases this will fix the query, because they may have been running an outdated version of the website.
