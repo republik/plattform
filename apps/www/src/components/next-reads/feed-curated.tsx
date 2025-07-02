@@ -1,6 +1,8 @@
+import { getFragmentData } from '#graphql/republik-api/__generated__/gql'
 import {
-  Document,
   DocumentRecommendationsDocument,
+  NextReadDocumentFieldsFragment,
+  NextReadDocumentFieldsFragmentDoc,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import {
@@ -10,7 +12,7 @@ import {
 import { css, cx } from '@republik/theme/css'
 import React, { useEffect } from 'react'
 import { useTranslation } from '../../../lib/withT'
-import { CategoryLabel, getAuthors, NextReadLink } from './helpers'
+import { CategoryLabel, NextReadAuthor, NextReadLink } from './helpers'
 import { NextReadsLoader } from './loading'
 import {
   nextReadHeader,
@@ -22,7 +24,7 @@ function RecommendedRead({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index: number
 }) {
   return (
@@ -46,12 +48,16 @@ function RecommendedRead({
         <NextReadLink document={document} index={index} />
       </h4>
       <p className='description'>{document.meta.description}</p>
-      <p className='author'>{getAuthors(document.meta.contributors)}</p>
+      <NextReadAuthor document={document} />
     </div>
   )
 }
 
-function CuratedList({ documents }: { documents: Document[] }) {
+function CuratedList({
+  documents,
+}: {
+  documents: NextReadDocumentFieldsFragment[]
+}) {
   const trackEvent = useTrackEvent()
 
   useEffect(() => {
@@ -75,7 +81,7 @@ export function CuratedFeed({ path }: { path: string }) {
     variables: { path },
   })
 
-  const documents = data?.document.meta.recommendations?.nodes as Document[]
+  const documents = data?.document.meta.recommendations?.nodes
 
   if (!loading && !documents?.length) return null
 
@@ -94,7 +100,15 @@ export function CuratedFeed({ path }: { path: string }) {
             <h3>{t('nextReads/curatedFeed/title')}</h3>
           </div>
         </div>
-        {loading ? <NextReadsLoader /> : <CuratedList documents={documents} />}
+        {loading ? (
+          <NextReadsLoader />
+        ) : (
+          <CuratedList
+            documents={documents.map((document) =>
+              getFragmentData(NextReadDocumentFieldsFragmentDoc, document),
+            )}
+          />
+        )}
       </div>
     </EventTrackingContext>
   )

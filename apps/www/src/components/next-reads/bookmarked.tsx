@@ -6,18 +6,27 @@ import { IconArrowRight } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 import React, { useEffect } from 'react'
-import { Document } from '../../../graphql/republik-api/__generated__/gql/graphql'
+import { NextReadDocumentFieldsFragment } from '../../../graphql/republik-api/__generated__/gql/graphql'
 import { useTranslation } from '../../../lib/withT'
 import { SquareCover } from '../assets/SquareCover'
 import { Button } from '../ui/button'
-import { CategoryLabel, getAuthors, NextReadLink } from './helpers'
+import {
+  CategoryLabel,
+  NextReadAuthor,
+  NextReadDuration,
+  NextReadLink,
+} from './helpers'
 import {
   nextReadHeader,
   nextReadItemTypography,
   nextReadsSection,
 } from './styles'
 
-export function BookmarkedFeed({ documents }: { documents: Document[] }) {
+export function BookmarkedFeed({
+  documents,
+}: {
+  documents: NextReadDocumentFieldsFragment[]
+}) {
   return (
     <EventTrackingContext category='NextReads:BookmarkedFeed'>
       <BookmarkedGrid documents={documents} />
@@ -25,7 +34,11 @@ export function BookmarkedFeed({ documents }: { documents: Document[] }) {
   )
 }
 
-function BookmarkedGrid({ documents }: { documents: Document[] }) {
+function BookmarkedGrid({
+  documents,
+}: {
+  documents: NextReadDocumentFieldsFragment[]
+}) {
   const { t } = useTranslation()
   const trackEvent = useTrackEvent()
 
@@ -69,7 +82,11 @@ function BookmarkedGrid({ documents }: { documents: Document[] }) {
   )
 }
 
-const BookmarkItems = ({ documents }: { documents: Document[] }) => {
+const BookmarkItems = ({
+  documents,
+}: {
+  documents: NextReadDocumentFieldsFragment[]
+}) => {
   return (
     <div
       className={css({
@@ -99,11 +116,11 @@ const FirstBookmarkItem = ({
   document,
   numberOfDocuments,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   numberOfDocuments: number
 }) => {
   const { t } = useTranslation()
-  
+
   return (
     <div
       className={cx(
@@ -147,8 +164,8 @@ const FirstBookmarkItem = ({
           })}
         />
       )}
-      <p className='author'>{getAuthors(document.meta.contributors)}</p>
-      <p className='duration'>{document.meta.estimatedReadingMinutes} min</p>
+      <NextReadAuthor document={document} />
+      <NextReadDuration document={document} />
       <p
         className={css({
           fontFamily: 'rubis',
@@ -176,7 +193,7 @@ const BookmarkItem = ({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index: number
 }) => {
   return (
@@ -210,11 +227,7 @@ const BookmarkItem = ({
         <h4>
           <NextReadLink document={document} index={index} />
         </h4>
-        <p className='duration'>
-          {document.meta.estimatedReadingMinutes ||
-            document.meta.estimatedConsumptionMinutes}{' '}
-          min
-        </p>
+        <NextReadDuration document={document} />
       </div>
       <SquareCover
         size={312}

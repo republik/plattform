@@ -1,4 +1,4 @@
-query NextReadsBookmarks {
+query NextReadsBookmarks($repoId: ID!) {
   me {
     id
     collectionItems(
@@ -7,6 +7,7 @@ query NextReadsBookmarks {
       progress: UNFINISHED
       uniqueDocuments: true
       lastDays: 300
+      excludeRepoId: $repoId
     ) {
       nodes {
         id

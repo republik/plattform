@@ -1,4 +1,4 @@
-import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
+import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
 import {
   EventTrackingContext,
   useTrackEvent,
@@ -6,7 +6,7 @@ import {
 import { css, cx } from '@republik/theme/css'
 import React, { useEffect } from 'react'
 import { useTranslation } from '../../../lib/withT'
-import { getAuthors, NextReadLink } from './helpers'
+import { NextReadAuthor, NextReadLink } from './helpers'
 import { NextReadsLoader } from './loading'
 import {
   nextReadHeader,
@@ -32,7 +32,7 @@ function MostCommentedCoverText({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index: number
 }) {
   return (
@@ -54,7 +54,7 @@ function MostCommentedCoverText({
       {!document.meta.image && (
         <p className='description'>{document.meta.description}</p>
       )}
-      <p className='author'>{getAuthors(document.meta.contributors)}</p>
+      <NextReadAuthor document={document} />
     </div>
   )
 }
@@ -63,7 +63,7 @@ function MostCommentedWithImage({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index: number
 }) {
   return (
@@ -103,7 +103,7 @@ function MostCommentedWithoutImage({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index: number
 }) {
   const { color, background } = COLOURS[index % COLOURS.length]
@@ -125,7 +125,9 @@ function MostCommentedWithoutImage({
         },
       })}
     >
-      <MostCommentedCoverText document={document} index={index} />
+      <div className={css({ pl: 4, pr: 4 })}>
+        <MostCommentedCoverText document={document} index={index} />
+      </div>
     </div>
   )
 }
@@ -134,7 +136,7 @@ function MostCommentedRead({
   document,
   index,
 }: {
-  document: Document
+  document: NextReadDocumentFieldsFragment
   index: number
 }) {
   const Component = document.meta.image
@@ -142,7 +144,12 @@ function MostCommentedRead({
     : MostCommentedWithoutImage
 
   return (
-    <div className={css({ position: 'relative', scrollSnapAlign: 'start' })}>
+    <div
+      className={css({
+        position: 'relative',
+        scrollSnapAlign: 'start',
+      })}
+    >
       <Component document={document} index={index} />
     </div>
   )
@@ -159,13 +166,17 @@ const mostCommentedGrid = css({
   mt: 12,
   textAlign: 'center',
   md: {
-    gridTemplateColumns: 'repeat(5, 1fr)',
+    gridTemplateColumns: 'repeat(6, 1fr)',
     overflowX: 'auto',
     scrollSnapType: 'x mandatory',
   },
 })
 
-function MostCommentedGrid({ documents }: { documents: Document[] }) {
+function MostCommentedGrid({
+  documents,
+}: {
+  documents: NextReadDocumentFieldsFragment[]
+}) {
   const trackEvent = useTrackEvent()
 
   useEffect(() => {
@@ -187,8 +198,16 @@ function MostCommentedGrid({ documents }: { documents: Document[] }) {
   )
 }
 
-export function MostCommentedFeed({ documents }: { documents: Document[] }) {
+export function MostCommentedFeed({
+  documents,
+  loading,
+}: {
+  documents: NextReadDocumentFieldsFragment[] | undefined
+  loading: boolean
+}) {
   const { t } = useTranslation()
+
+  if (!loading && !documents?.length) return null
 
   return (
     <EventTrackingContext category='NextReads:MostCommentedFeed'>
@@ -198,10 +217,10 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
           <p className='tagline'>{t('nextReads/mostCommentedFeed/subtitle')}</p>
         </div>
       </div>
-      {documents?.length ? (
-        <MostCommentedGrid documents={documents} />
-      ) : (
+      {loading ? (
         <NextReadsLoader />
+      ) : (
+        <MostCommentedGrid documents={documents} />
       )}
     </EventTrackingContext>
   )
