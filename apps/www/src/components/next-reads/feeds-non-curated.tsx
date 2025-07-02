@@ -12,7 +12,9 @@ export function FeedsNonCurated({ repoId }: { repoId: string }) {
   const { data: nextReadsData } = useQuery(NextReadsDocument, {
     variables: { repoId },
   })
-  const { data: bookmarksData } = useQuery(NextReadsBookmarksDocument)
+  const { data: bookmarksData } = useQuery(NextReadsBookmarksDocument, {
+    fetchPolicy: 'network-only',
+  })
 
   const bookmarks = bookmarksData?.me?.collectionItems.nodes
     .map((node) => node.document as Document)
