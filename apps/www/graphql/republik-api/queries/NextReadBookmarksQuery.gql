@@ -3,7 +3,7 @@ query NextReadsBookmarks($repoId: ID!) {
     id
     collectionItems(
       names: ["bookmarks"]
-      first: 6
+      first: 5
       progress: UNFINISHED
       uniqueDocuments: true
       lastDays: 300
