@@ -161,7 +161,7 @@ class Form extends Component {
             } else if (customField.items) {
               const defaultOnChange = onInputChange(key)
               input = (
-                <Dropdown
+                <Dropdown.Native
                   black={black}
                   items={customField.items}
                   label={label}
