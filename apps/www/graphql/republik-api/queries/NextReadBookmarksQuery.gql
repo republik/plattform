@@ -1,0 +1,19 @@
+query NextReadsBookmarks {
+  me {
+    id
+    collectionItems(
+      names: ["bookmarks"]
+      first: 5
+      progress: UNFINISHED
+      uniqueDocuments: true
+      lastDays: 300
+    ) {
+      nodes {
+        id
+        document {
+          ...NextReadDocumentFields
+        }
+      }
+    }
+  }
+}

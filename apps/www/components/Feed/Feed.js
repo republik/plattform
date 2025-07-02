@@ -1,15 +1,14 @@
-import { Component } from 'react'
-import compose from 'lodash/flowRight'
+import { TeaserFeed } from '@project-r/styleguide'
 import { nest } from 'd3-collection'
+import compose from 'lodash/flowRight'
+import PropTypes from 'prop-types'
+import { Component } from 'react'
 import { timeFormat } from '../../lib/utils/format'
-import Link from '../Link/Href'
 import withT from '../../lib/withT'
 import ActionBar from '../ActionBar'
-import StickySection from './StickySection'
-import PropTypes from 'prop-types'
+import Link from '../Link/Href'
 import formatCredits from './formatCredits'
-
-import { TeaserFeed } from '@project-r/styleguide'
+import StickySection from './StickySection'
 
 const dateFormat = timeFormat('%A,\n%d.%m.%Y')
 

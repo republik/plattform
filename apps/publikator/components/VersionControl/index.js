@@ -49,6 +49,7 @@ export const repoSubscription = gql`
 
 const styles = {
   container: css({
+    padding: '15px',
     backgroundColor: '#fff',
   }),
   button: {
