@@ -10,7 +10,12 @@ import { NextReadDocumentFieldsFragment } from '../../../graphql/republik-api/__
 import { useTranslation } from '../../../lib/withT'
 import { SquareCover } from '../assets/SquareCover'
 import { Button } from '../ui/button'
-import { CategoryLabel, getAuthors, NextReadLink } from './helpers'
+import {
+  CategoryLabel,
+  NextReadAuthor,
+  NextReadDuration,
+  NextReadLink,
+} from './helpers'
 import {
   nextReadHeader,
   nextReadItemTypography,
@@ -159,8 +164,8 @@ const FirstBookmarkItem = ({
           })}
         />
       )}
-      <p className='author'>{getAuthors(document.meta.contributors)}</p>
-      <p className='duration'>{document.meta.estimatedReadingMinutes} min</p>
+      <NextReadAuthor document={document} />
+      <NextReadDuration document={document} />
       <p
         className={css({
           fontFamily: 'rubis',
@@ -222,11 +227,7 @@ const BookmarkItem = ({
         <h4>
           <NextReadLink document={document} index={index} />
         </h4>
-        <p className='duration'>
-          {document.meta.estimatedReadingMinutes ||
-            document.meta.estimatedConsumptionMinutes}{' '}
-          min
-        </p>
+        <NextReadDuration document={document} />
       </div>
       <SquareCover
         size={312}

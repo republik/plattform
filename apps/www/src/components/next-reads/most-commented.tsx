@@ -6,7 +6,7 @@ import {
 import { css, cx } from '@republik/theme/css'
 import React, { useEffect } from 'react'
 import { useTranslation } from '../../../lib/withT'
-import { getAuthors, NextReadLink } from './helpers'
+import { NextReadAuthor, NextReadLink } from './helpers'
 import { NextReadsLoader } from './loading'
 import {
   nextReadHeader,
@@ -54,7 +54,7 @@ function MostCommentedCoverText({
       {!document.meta.image && (
         <p className='description'>{document.meta.description}</p>
       )}
-      <p className='author'>{getAuthors(document.meta.contributors)}</p>
+      <NextReadAuthor document={document} />
     </div>
   )
 }

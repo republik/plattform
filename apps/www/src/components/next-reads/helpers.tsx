@@ -4,14 +4,33 @@ import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
 import React from 'react'
 
-export const getAuthors = (
-  contributors: Array<{ kind?: string; name: string }> = [],
-) =>
-  'Von ' +
-  contributors
+export function NextReadAuthor({
+  document,
+}: {
+  document: NextReadDocumentFieldsFragment
+}) {
+  const authorsNames = document.meta.contributors
     .filter((contributor) => contributor.kind?.includes('Text'))
     .map((contributor) => contributor.name)
-    .join(', ')
+
+  if (authorsNames?.length === 0) return null
+
+  return <p className='author'>Von {authorsNames.join(', ')}</p>
+}
+
+export function NextReadDuration({
+  document,
+}: {
+  document: NextReadDocumentFieldsFragment
+}) {
+  const duration =
+    document.meta.estimatedReadingMinutes ||
+    document.meta.estimatedConsumptionMinutes
+
+  if (!duration) return null
+
+  return <p className='duration'>{duration} min</p>
+}
 
 export function CategoryLabel({
   document,

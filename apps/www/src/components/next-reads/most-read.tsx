@@ -7,7 +7,7 @@ import {
 import { css, cx } from '@republik/theme/css'
 import React, { useEffect } from 'react'
 import { useTranslation } from '../../../lib/withT'
-import { CategoryLabel, getAuthors, NextReadLink } from './helpers'
+import { CategoryLabel, NextReadAuthor, NextReadLink } from './helpers'
 import { NextReadsLoader } from './loading'
 import {
   nextReadHeader,
@@ -55,7 +55,7 @@ function MostReadItem({
         <NextReadLink document={document} index={index} />
       </h4>
       <p className='description'>{document.meta.description}</p>
-      <p className='author'>{getAuthors(document.meta.contributors)}</p>
+      <NextReadAuthor document={document} />
     </div>
   )
 }
