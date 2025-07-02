@@ -196,8 +196,16 @@ function MostCommentedGrid({ documents }: { documents: Document[] }) {
   )
 }
 
-export function MostCommentedFeed({ documents }: { documents: Document[] }) {
+export function MostCommentedFeed({
+  documents,
+  loading,
+}: {
+  documents: Document[]
+  loading: boolean
+}) {
   const { t } = useTranslation()
+
+  if (!loading && !documents?.length) return null
 
   return (
     <EventTrackingContext category='NextReads:MostCommentedFeed'>
@@ -207,10 +215,10 @@ export function MostCommentedFeed({ documents }: { documents: Document[] }) {
           <p className='tagline'>{t('nextReads/mostCommentedFeed/subtitle')}</p>
         </div>
       </div>
-      {documents?.length ? (
-        <MostCommentedGrid documents={documents} />
-      ) : (
+      {loading ? (
         <NextReadsLoader />
+      ) : (
+        <MostCommentedGrid documents={documents} />
       )}
     </EventTrackingContext>
   )

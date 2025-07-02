@@ -98,10 +98,14 @@ function MostReadGrid({ documents }: { documents: Document[] }) {
 
 export function MostReadFeed({
   documents,
+  loading,
 }: {
   documents: Document[] | undefined
+  loading: boolean
 }) {
   const { t } = useTranslation()
+
+  if (!loading && !documents?.length) return null
 
   return (
     <EventTrackingContext category='NextReads:MostReadFeed'>
@@ -110,11 +114,7 @@ export function MostReadFeed({
           <h3>{t('nextReads/mostReadFeed/title')}</h3>
           <p className='tagline'>{t('nextReads/mostReadFeed/subtitle')}</p>
         </div>
-        {documents?.length ? (
-          <MostReadGrid documents={documents} />
-        ) : (
-          <NextReadsLoader />
-        )}
+        {loading ? <NextReadsLoader /> : <MostReadGrid documents={documents} />}
       </div>
     </EventTrackingContext>
   )

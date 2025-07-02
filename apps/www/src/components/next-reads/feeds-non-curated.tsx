@@ -9,9 +9,12 @@ import { MostCommentedFeed } from './most-commented'
 import { MostReadFeed } from './most-read'
 
 export function FeedsNonCurated({ repoId }: { repoId: string }) {
-  const { data: nextReadsData } = useQuery(NextReadsDocument, {
-    variables: { repoId },
-  })
+  const { loading: nextReadsLoading, data: nextReadsData } = useQuery(
+    NextReadsDocument,
+    {
+      variables: { repoId },
+    },
+  )
   const { data: bookmarksData } = useQuery(NextReadsBookmarksDocument, {
     fetchPolicy: 'network-only',
   })
@@ -33,11 +36,14 @@ export function FeedsNonCurated({ repoId }: { repoId: string }) {
 
   return (
     <>
-      <MostReadFeed documents={mostRead} />
+      <MostReadFeed documents={mostRead} loading={nextReadsLoading} />
       {bookmarks?.length ? (
         <BookmarkedFeed documents={bookmarks} />
       ) : (
-        <MostCommentedFeed documents={mostCommented} />
+        <MostCommentedFeed
+          documents={mostCommented}
+          loading={nextReadsLoading}
+        />
       )}
     </>
   )
