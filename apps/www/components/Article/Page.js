@@ -93,7 +93,7 @@ const ArticlePage = ({
     refetch: articleRefetch,
   } = useQuery(getDocument, {
     variables: {
-      path: cleanedPath,
+      // path: cleanedPath,
     },
     skip: clientRedirection,
     // When graphQLErrors happen, we still want to get partial data to render the page
@@ -102,9 +102,15 @@ const ArticlePage = ({
 
   useEffect(() => {
     if (articleError) {
-      reportError('Article Page getDocument Query', articleError)
+      // In case we have partial data, still continue to render the page and report it silently
+      if (articleData) {
+        reportError('Article Page getDocument Query', articleError)
+      }
+      // If there's no data, throw the error, so an error page is shown to the user where they can reload the page.
+      // In some cases this will fix the query, because they may have been running an outdated version of the website.
+      throw articleError
     }
-  }, [articleError])
+  }, [articleError, articleData])
 
   const article = articleData?.article
   const documentId = article?.id
