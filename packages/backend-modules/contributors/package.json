@@ -1,0 +1,14 @@
+{
+  "name": "@orbiting/backend-modules-contributors",
+  "version": "0.1.0",
+  "private": true,
+  "main": "build/index.js",
+  "types": "build/@types",
+  "dependencies": {
+    "@orbiting/backend-modules-auth": "*",
+    "@orbiting/backend-modules-scalars": "*",
+    "@orbiting/backend-modules-types": "*",
+    "@orbiting/backend-modules-utils": "*",
+    "apollo-modules-node": "*"
+  }
+}
