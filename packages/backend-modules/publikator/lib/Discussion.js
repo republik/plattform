@@ -32,7 +32,6 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     path,
     repoId,
     ...(commentsMaxLength ? { maxLength: commentsMaxLength } : {}),
-    ...(commentsMinInterval ? { minInterval: commentsMinInterval } : {}),
     ...(discussionAnonymity ? { anonymity: discussionAnonymity } : {}),
     ...(discussionClosed !== null ? { closed: !!discussionClosed } : {}),
     ...(collapsable !== null ? { collapsable: !!collapsable } : {}),

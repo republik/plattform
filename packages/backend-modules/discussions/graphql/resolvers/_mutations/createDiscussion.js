@@ -3,7 +3,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 module.exports = async (_, args, { pgdb, user, t }) => {
   Roles.ensureUserIsInRoles(user, ['editor', 'admin'])
 
-  const { title, maxLength, minInterval, anonymity, tags, tagRequired } = args
+  const { title, maxLength, anonymity, tags, tagRequired } = args
 
   if (tagRequired && (!tags || tags.length === 0)) {
     throw new Error(t('api/discussion/tagRequiredButNoTags'))
@@ -13,7 +13,6 @@ module.exports = async (_, args, { pgdb, user, t }) => {
     {
       title,
       maxLength,
-      minInterval,
       anonymity,
       tags,
       tagRequired: !!tagRequired,
