@@ -854,7 +854,7 @@
     },
     {
       "key": "api/comment/suspended",
-      "value": "Sie sind noch {timeahead} vom Dialog suspendiert. Bei Fragen wenden Sie sich bitte an kontakt@republik.ch"
+      "value": "Sie sind noch bis {timeahead} vom Dialog suspendiert. Bei Fragen wenden Sie sich bitte an kontakt@republik.ch."
     },
     {
       "key": "api/comment/closed",
