@@ -41,14 +41,14 @@ module.exports = async (_, args, context) => {
 
   const [canComment, waitUntil] = await Promise.all([
     userCanComment(discussion, null, context),
-    userWaitUntil(discussion, null, context),
+    userWaitUntil(null, context),
   ])
   if (!canComment) {
     throw new Error(t('api/comment/canNotComment'))
   }
   if (waitUntil) {
     throw new Error(
-      t('api/comment/tooEarly', {
+      t('api/comment/suspended', {
         timeahead: timeahead(
           t,
           (waitUntil.getTime() - new Date().getTime()) / 1000,

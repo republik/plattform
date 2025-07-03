@@ -1,5 +1,5 @@
-module.exports = async ({ minInterval, id }, _, context) => {
-  const { pgdb, user, loaders } = context
+module.exports = async (_, context) => {
+  const { user, loaders } = context
 
   if (!user) {
     return null
@@ -10,25 +10,4 @@ module.exports = async ({ minInterval, id }, _, context) => {
     const until = Math.max(...suspensions.map((s) => s.endAt))
     return new Date(until)
   }
-
-  if (!minInterval) {
-    return null
-  }
-  const now = new Date().getTime()
-  const lastCommentByUser = await pgdb.public.comments.findFirst(
-    {
-      userId: user.id,
-      discussionId: id,
-      published: true,
-    },
-    {
-      orderBy: ['createdAt desc'],
-    },
-  )
-  if (!lastCommentByUser) {
-    return null
-  }
-  const nextPossibleTimestamp =
-    lastCommentByUser.createdAt.getTime() + minInterval
-  return nextPossibleTimestamp > now ? new Date(nextPossibleTimestamp) : null
 }

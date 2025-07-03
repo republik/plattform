@@ -90,7 +90,6 @@ export const DISCUSSION_FRAGMENT = gql`
     }
     rules {
       maxLength
-      minInterval
       anonymity
       disableTopLevelComments
     }

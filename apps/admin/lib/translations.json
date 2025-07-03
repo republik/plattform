@@ -4132,8 +4132,8 @@
       "value": "Sie müssen Mitglied sein, um zu kommentieren."
     },
     {
-      "key": "api/comment/tooEarly",
-      "value": "Sie sind zu früh. Bitte warten Sie, {waitFor} bevor Sie wieder kommentieren."
+      "key": "api/comment/suspended",
+      "value": "Sie sind noch {waitFor} vom Dialog suspendiert. Bei Fragen wenden Sie sich bitte an kontakt@republik.ch"
     },
     {
       "key": "api/voting/membershipRequired",

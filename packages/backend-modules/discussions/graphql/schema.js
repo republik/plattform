@@ -49,8 +49,6 @@ type mutations {
     title: String
     # max length of a comments content
     maxLength: Int
-    # min milliseconds between comments of one user
-    minInterval: Int
     anonymity: Permission!
     tags: [String!]
     # is a tag required (only applies to root level)

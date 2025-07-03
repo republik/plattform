@@ -27,10 +27,10 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/comment/notYours'))
     }
 
-    const waitUntil = userWaitUntil(discussion, null, context)
+    const waitUntil = userWaitUntil(null, context)
     if (waitUntil) {
       throw new Error(
-            t('api/comment/tooEarly', {
+            t('api/comment/suspended', {
               timeahead: timeahead(
                 t,
                 (waitUntil.getTime() - new Date().getTime()) / 1000,

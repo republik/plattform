@@ -11,7 +11,6 @@ module.exports.level1 = `
       title
       rules {
         maxLength
-        minInterval
         anonymity
       }
       comments(

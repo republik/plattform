@@ -853,8 +853,8 @@
       "value": "Die Diskussion konnte nicht gefunden werden."
     },
     {
-      "key": "api/comment/tooEarly",
-      "value": "Sie sind zu früh. Sie können {timeahead} wieder einen Beitrag schreiben."
+      "key": "api/comment/suspended",
+      "value": "Sie sind noch {waitFor} vom Dialog suspendiert. Bei Fragen wenden Sie sich bitte an kontakt@republik.ch"
     },
     {
       "key": "api/comment/closed",
