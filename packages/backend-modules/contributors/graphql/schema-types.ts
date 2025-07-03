@@ -51,6 +51,7 @@ input ContributorFilters {
   gender: GenderEnum
   hasProlitterisId: Boolean
   hasUserId: Boolean
+  search: String
 }
 
 input ContributorOrderBy {

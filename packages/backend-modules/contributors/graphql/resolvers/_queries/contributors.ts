@@ -10,6 +10,7 @@ type ContributorFilters = {
   gender?: 'm' | 'f' | 'd'
   hasProlitterisId?: boolean
   hasUserId?: boolean
+  search?: string
 }
 
 type ContributorOrderBy = {
@@ -64,6 +65,11 @@ export = async function contributors(
     } else {
       whereConditions.push('user_id IS NULL')
     }
+  }
+
+  if (filters.search) {
+    whereConditions.push('name ILIKE :search')
+    whereParams.search = `%${filters.search}%`
   }
 
   // Build ORDER BY clause
