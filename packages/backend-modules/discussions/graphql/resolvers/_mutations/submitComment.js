@@ -41,7 +41,7 @@ module.exports = async (_, args, context) => {
 
   const [canComment, waitUntil] = await Promise.all([
     userCanComment(discussion, null, context),
-    userWaitUntil(null, context),
+    userWaitUntil(discussion, null, context),
   ])
   if (!canComment) {
     throw new Error(t('api/comment/canNotComment'))

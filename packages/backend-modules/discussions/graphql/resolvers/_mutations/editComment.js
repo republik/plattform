@@ -27,7 +27,7 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/comment/notYours'))
     }
 
-    const waitUntil = userWaitUntil(null, context)
+    const waitUntil = userWaitUntil(discussion, null, context)
     if (waitUntil) {
       throw new Error(
             t('api/comment/suspended', {

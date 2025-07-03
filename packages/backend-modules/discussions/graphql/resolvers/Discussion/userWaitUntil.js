@@ -1,4 +1,4 @@
-module.exports = async (_, context) => {
+module.exports = async (discussion, _, context) => {
   const { user, loaders } = context
 
   if (!user) {
