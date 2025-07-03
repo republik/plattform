@@ -2,6 +2,8 @@ const slack = require('../../../lib/slack')
 const { transform } = require('../../../lib/Comment')
 const { contentLength } = require('../Comment')
 const Promise = require('bluebird')
+const { timeahead } = require('@orbiting/backend-modules-formats')
+const userWaitUntil = require('../Discussion/userWaitUntil')
 
 module.exports = async (_, args, context) => {
   const { pgdb, user, t, pubsub, loaders } = context
@@ -23,6 +25,18 @@ module.exports = async (_, args, context) => {
 
     if (!comment.userId || comment.userId !== user.id) {
       throw new Error(t('api/comment/notYours'))
+    }
+
+    const waitUntil = userWaitUntil(discussion, null, context)
+    if (waitUntil) {
+      throw new Error(
+            t('api/comment/tooEarly', {
+              timeahead: timeahead(
+                t,
+                (waitUntil.getTime() - new Date().getTime()) / 1000,
+              ),
+            }),
+          )
     }
 
     if (discussion.closed) {
