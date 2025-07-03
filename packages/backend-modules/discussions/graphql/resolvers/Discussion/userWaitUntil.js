@@ -10,4 +10,6 @@ module.exports = async (_, context) => {
     const until = Math.max(...suspensions.map((s) => s.endAt))
     return new Date(until)
   }
+
+  return null
 }
