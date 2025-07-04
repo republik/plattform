@@ -6,13 +6,12 @@ const styles = {
   popover: {
     position: 'absolute',
     zIndex: '2',
+    bottom: '0px',
+    left: '35px',
   },
   cover: {
     position: 'fixed',
-    top: '0px',
-    right: '0px',
-    bottom: '0px',
-    left: '0px',
+    inset: 0,
   },
   button: {
     display: 'inline-block',
@@ -46,7 +45,7 @@ class ColorPicker extends Component {
 
   render() {
     return (
-      <div style={{ marginBottom: 5 }}>
+      <div style={{ marginBottom: 5, position: 'relative' }}>
         <Label>{this.props.label}</Label>
         <div>
           <span

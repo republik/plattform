@@ -18,5 +18,7 @@ if (process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true') {
       /NetworkError when attempting to fetch resource/i,
       /Sie müssen sich zuerst anmelden/i,
     ],
+
+    integrations: [Sentry.extraErrorDataIntegration({ depth: 5 })],
   })
 }

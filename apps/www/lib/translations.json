@@ -7966,6 +7966,42 @@
     {
       "key": "paynotes/account/cta",
       "value": "Alle Angebote anzeigen"
+    },
+    {
+      "key": "nextReads/curatedFeed/title",
+      "value": "Von der Redaktion empfohlen"
+    },
+    {
+      "key": "nextReads/mostReadFeed/title",
+      "value": "Was andere lesen"
+    },
+    {
+      "key": "nextReads/mostReadFeed/subtitle",
+      "value": "Die meistbeachteten Beiträge der vergangenen Tage"
+    },
+    {
+      "key": "nextReads/mostCommentedFeed/title",
+      "value": "Verpasst?"
+    },
+    {
+      "key": "nextReads/mostCommentedFeed/subtitle",
+      "value": "Was in den letzten Wochen zu reden gab"
+    },
+    {
+      "key": "nextReads/bookmarkedFeed/title",
+      "value": "Gemerkte Beiträge"
+    },
+    {
+      "key": "nextReads/bookmarkedFeed/subtitle",
+      "value": "Ist jetzt ein guter Zeitpunkt?"
+    },
+    {
+      "key": "nextReads/bookmarkedFeed/readMore",
+      "value": "Weiterlesen"
+    },
+    {
+      "key": "nextReads/bookmarkedFeed/manageBookmarks",
+      "value": "Lesezeichen bearbeiten"
     }
   ]
 }

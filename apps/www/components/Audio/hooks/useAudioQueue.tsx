@@ -4,7 +4,13 @@ import { NEW_AUDIO_API_VERSION } from '../constants'
 import { useMe } from '../../../lib/context/MeContext'
 import createPersistedState from '../../../lib/hooks/use-persisted-state'
 import { AudioPlayerItem, AudioQueueItem } from '../types/AudioPlayerItem'
-import { ApolloError, FetchResult, useMutation, useQuery } from '@apollo/client'
+import {
+  ApolloCache,
+  ApolloError,
+  FetchResult,
+  useMutation,
+  useQuery,
+} from '@apollo/client'
 import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
 import { reportError } from 'lib/errors/reportError'
 import { useEffect } from 'react'
@@ -94,16 +100,18 @@ const useAudioQueue = (): {
    * @param audioQueueItems
    */
   const modifyApolloCacheWithUpdatedPlaylist = (
-    cache,
+    cache: ApolloCache<any>,
     { data: { audioQueueItems } },
   ) => {
-    const { me } = cache.readQuery({ query: AudioQueueQueryDocument })
-    cache.writeQuery({
-      query: AudioQueueQueryDocument,
-      data: {
-        me: { ...me, audioQueue: audioQueueItems },
-      },
-    })
+    const data = cache.readQuery({ query: AudioQueueQueryDocument })
+    if (data?.me) {
+      cache.writeQuery({
+        query: AudioQueueQueryDocument,
+        data: {
+          me: { ...data.me, audioQueue: audioQueueItems },
+        },
+      })
+    }
   }
 
   const [addAudioQueueItem] = useMutation(AddAudioQueueItemsDocument, {

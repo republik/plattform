@@ -247,7 +247,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         </>
       )}
       {options.includes('textPosition') && (
-        <Dropdown
+        <Dropdown.Native
           label='Text-Position'
           items={textPositions}
           value={node.data.get('textPosition')}
@@ -255,7 +255,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         />
       )}
       {options.includes('kind') && (
-        <Dropdown
+        <Dropdown.Native
           label='Inhaltsbezeichnung'
           items={kinds}
           value={node.data.get('kind')}
@@ -265,7 +265,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         />
       )}
       {options.includes('titleSize') && (
-        <Dropdown
+        <Dropdown.Native
           label='Titelgrösse'
           items={titleSizes}
           value={node.data.get('titleSize')}

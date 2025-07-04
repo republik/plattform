@@ -17,7 +17,6 @@ export type DiscussionCredential = {
 
 export type DiscussionRules = {
   maxLength: Nullable<number>
-  minInterval: Nullable<number>
   anonymity: DiscussionAnonymity
   disableTopLevelComments: Nullable<boolean>
 }

@@ -19,6 +19,7 @@ export class NextReadsFeedRefreshWorker extends BaseWorker<object> {
   async perform(_jobs: Job<unknown>[]): Promise<void> {
     await this.context.pgdb.run(`
       REFRESH MATERIALIZED VIEW CONCURRENTLY next_reads.readings_in_the_last_7_days;
+      REFRESH MATERIALIZED VIEW CONCURRENTLY next_reads.readings_and_comments_20_days;
     `)
 
     return

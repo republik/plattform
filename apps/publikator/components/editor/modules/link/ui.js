@@ -138,7 +138,7 @@ const createLink = (options) =>
       data-disabled={disabled}
       data-visible={visible}
     >
-      <IconLink />
+      <IconLink size={24} />
     </span>
   ))
 
