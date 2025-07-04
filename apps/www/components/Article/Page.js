@@ -35,8 +35,6 @@ import NewsletterSignUp from '../Auth/NewsletterSignUp'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
 import FormatFeed from '../Feed/Format'
-import Flyer from '../Flyer'
-import ShareImageFlyer from '../Flyer/ShareImage'
 import FontSizeSync from '../FontSize/Sync'
 import Frame from '../Frame'
 import ArticleGallery from '../Gallery/ArticleGallery'
@@ -45,8 +43,6 @@ import { withMarkAsReadMutation } from '../Notifications/enhancers'
 import SectionFeed from '../Sections/SinglePageFeed'
 import SectionNav from '../Sections/SinglePageNav'
 import StatusError from '../StatusError'
-import { withMarkAsReadMutation } from '../Notifications/enhancers'
-import { getMetaData, runMetaFromQuery } from './metadata'
 import ActionBarOverlay from './ActionBarOverlay'
 import NewsletterTitleBlock from './components/NewsletterTitleBlock'
 import PrepubNotice from './components/PrepubNotice'
@@ -64,7 +60,6 @@ const EmptyComponent = ({ children }) => children
 
 const ArticlePage = ({
   t,
-  inNativeApp,
   isPreview,
   markAsReadMutation,
   serverContext,
