@@ -1,36 +1,24 @@
 import { Loader } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
-
-import { withDefaultSSR } from '../../../../lib/apollo/helpers'
+import { withRouter } from 'next/router'
 import withAuthorization from '../../../../components/Auth/withAuthorization'
 
-import MdastEditPage from '../../../../components/editor/MdastPage'
-import SlateEditPage from '../../../../components/Edit'
-import { WarningContextProvider } from '../../../../components/Edit/Warnings'
+import EditPage from '../../../../components/editor'
 import {
   withCommitData,
   withLatestCommit,
-} from '../../../../components/Edit/enhancers'
-import { withRouter } from 'next/router'
+} from '../../../../components/editor/enhancers'
 import { ThemeProvider } from '../../../../components/theme-provider'
 
-const EditPageSwitch = ({ data, router: { query } }) => {
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
+
+const EditPageSwitch = ({ data }) => {
   if (data?.loading) {
     return <Loader loading />
   }
-  if (
-    query.schema === 'flyer' ||
-    (data?.repo?.commit || data?.repo?.latestCommit)?.document?.type === 'slate'
-  ) {
-    return (
-      <WarningContextProvider>
-        <SlateEditPage />
-      </WarningContextProvider>
-    )
-  }
   return (
     <ThemeProvider forcedTheme='light'>
-      <MdastEditPage />
+      <EditPage />
     </ThemeProvider>
   )
 }

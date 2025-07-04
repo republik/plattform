@@ -11,8 +11,6 @@
       "packages/backend-modules/*"
     ],
     "nohoist": [
-      "styleguide/slate",
-      "styleguide/slate-*",
       "**/zod"
     ]
   },

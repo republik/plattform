@@ -1,33 +1,33 @@
-import { useState, useEffect } from 'react'
-import Frame from '../../../../components/Frame'
-import initLocalStore from '../../../../lib/utils/localStorage'
-import { withRouter } from 'next/router'
-import withT from '../../../../lib/withT'
-import withAuthorization from '../../../../components/Auth/withAuthorization'
-import compose from 'lodash/flowRight'
-import { stringify, parse } from '@republik/remark-preset'
-import { css } from 'glamor'
 import {
   A,
   Button,
-  mediaQueries,
+  Checkbox,
   colors,
   fontFamilies,
-  Checkbox,
+  mediaQueries,
 } from '@project-r/styleguide'
 import {
   IconInfoOutline as InfoIcon,
   IconLens as CircleIcon,
 } from '@republik/icons'
+import { parse, stringify } from '@republik/remark-preset'
+import { css } from 'glamor'
+import compose from 'lodash/flowRight'
+import { withRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { Controlled as CodeMirror } from 'react-codemirror2'
+import withAuthorization from '../../../../components/Auth/withAuthorization'
+import Nav from '../../../../components/editor/Nav'
+import Frame from '../../../../components/Frame'
+import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
 import {
   UncommittedChanges,
   withUncommitedChanges,
 } from '../../../../components/VersionControl/UncommittedChanges'
-import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
-import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
-import Nav from '../../../../components/Edit/Nav'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import initLocalStore from '../../../../lib/utils/localStorage'
+import withT from '../../../../lib/withT'
 
 const styles = css({
   background: colors.secondaryBg,

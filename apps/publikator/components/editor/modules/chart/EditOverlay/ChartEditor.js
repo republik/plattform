@@ -1,10 +1,8 @@
+import { ChartEditor, Scroller, TabButton } from '@project-r/styleguide'
+import { csvFormat, tsvParse } from 'd3-dsv'
 import { useState } from 'react'
-import { tsvParse, csvFormat } from 'd3-dsv'
 import { JSONEditor, PlainEditor } from '../../../utils/CodeEditorFields'
 import SizeSelector from './SizeSelector'
-
-import { Scroller, TabButton } from '@project-r/styleguide'
-import { ChartEditor } from '@project-r/styleguide/editor'
 
 const tabs = [
   { value: 'basic', text: 'Grundeinstellungen' },

@@ -1,9 +1,8 @@
-import { IconButton } from '@project-r/styleguide'
-import { AuthorSearch } from '@project-r/styleguide/editor'
+import { AuthorSearch, IconButton } from '@project-r/styleguide'
+import { IconClose } from '@republik/icons'
+import { css } from 'glamor'
 
 import { MetaOption } from '../../../MetaDataForm/components/Layout'
-import { css } from 'glamor'
-import { IconClose } from '@republik/icons'
 
 const styles = {
   pill: css({

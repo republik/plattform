@@ -40,7 +40,7 @@ export const SecondaryNav = ({
       return -1
     }
 
-    return ['/', '/feed', '/journal', '/dialog', '/suche'].indexOf(currentPath)
+    return ['/', '/feed', '/dialog', '/suche'].indexOf(currentPath)
   }, [currentPath, isClimateLabMember, hasOverviewNav])
 
   return (

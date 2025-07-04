@@ -1,8 +1,10 @@
-import { useEffect } from 'react'
+import { graphql } from '@apollo/client/react/hoc'
+import { Loader } from '@project-r/styleguide'
+import { group } from 'd3-array'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { useRouter, withRouter } from 'next/router'
+import { useEffect } from 'react'
 import {
   getPublicationCalendar,
   getUrlWeekEnd,
@@ -13,10 +15,8 @@ import {
   offsetUrlWeek,
 } from '../../lib/utils/calendar'
 import { DateHeading, ReposByTemplate } from './Day'
-import { CurrentDates, Nav, NavButton, ResetLink } from './Nav'
 import { reposPerWeek } from './graphql'
-import { Loader } from '@project-r/styleguide'
-import { group } from 'd3-array'
+import { CurrentDates, Nav, NavButton, ResetLink } from './Nav'
 
 const styles = {
   container: css({
@@ -84,7 +84,9 @@ const Calendar = ({
   const router = useRouter()
 
   useEffect(() => {
-    !(from && until) && resetDates()
+    if (!(from && until)) {
+      resetDates()
+    }
   }, [])
 
   const changeDates = (dates) =>
@@ -122,7 +124,7 @@ const Calendar = ({
         height={300}
         render={() => {
           const reposByTemplate = group(reposSearch?.nodes || [], (repo) =>
-            ['editorialNewsletter', 'flyer'].indexOf(
+            ['editorialNewsletter'].indexOf(
               repo.latestCommit.document.meta.template,
             ) !== -1
               ? 'newsletter'
@@ -141,7 +143,7 @@ const Calendar = ({
           return (
             <div {...styles.calendar}>
               <CalendarByTemplate
-                template={['newsletters', 'flyer']}
+                template={['newsletters']}
                 calendar={newslettersCalendar}
                 isNewsletter
                 withHeading

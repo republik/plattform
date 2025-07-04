@@ -1,12 +1,12 @@
-import { Component } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
-import { css } from 'glamor'
+import { graphql } from '@apollo/client/react/hoc'
 import { Label } from '@project-r/styleguide'
-import Loader from '../Loader'
-import withT from '../../lib/withT'
+import { css } from 'glamor'
+import compose from 'lodash/flowRight'
+import { Component } from 'react'
 import * as fragments from '../../lib/graphql/fragments'
+import withT from '../../lib/withT'
+import Loader from '../Loader'
 
 import BaseCommit from './BaseCommit'
 import Checklist from './Checklist'
@@ -107,7 +107,14 @@ class EditSidebar extends Component {
   }
 
   render() {
-    const { t, commit, hasUncommittedChanges, isNew, data = {} } = this.props
+    const {
+      t,
+      commit,
+      hasUncommittedChanges,
+      isNew,
+      characterCount,
+      data = {},
+    } = this.props
     const { loading, error, repo } = data
 
     if (isNew) {
@@ -120,6 +127,10 @@ class EditSidebar extends Component {
         error={error}
         render={() => (
           <div {...styles.container}>
+            <p style={{ margin: '0 0 10px 0', fontSize: '12px' }}>
+              {characterCount}
+              {' Zeichen'}
+            </p>
             {!!repo && !!repo.commits && !!repo.commits.nodes && (
               <BaseCommit
                 repoId={repo.id}

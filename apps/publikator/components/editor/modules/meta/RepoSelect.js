@@ -1,9 +1,7 @@
-import { css } from 'glamor'
+import { A, colors, Label, RepoSearch } from '@project-r/styleguide'
 
 import { IconClose } from '@republik/icons'
-
-import { A, Label, colors } from '@project-r/styleguide'
-import { RepoSearch } from '@project-r/styleguide/editor'
+import { css } from 'glamor'
 
 import { RepoLink } from '../../utils/github'
 

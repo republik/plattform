@@ -1,14 +1,14 @@
-import React, { useRef, useEffect, useState } from 'react'
 import { css } from 'glamor'
+import React, { useEffect, useRef, useState } from 'react'
+import colors from '../../theme/colors'
 import { fontStyles } from '../../theme/fonts'
+import { Label } from '../Typography'
+import { PLACEHOLDER_TEXT } from './index'
+import { FACEBOOK_CARD_PREVIEW_WIDTH } from './SharePreviewFacebook'
 import {
   previewImageStyle,
   TWITTER_CARD_PREVIEW_WIDTH,
 } from './SharePreviewTwitter'
-import { FACEBOOK_CARD_PREVIEW_WIDTH } from './SharePreviewFacebook'
-import { Label } from '../Typography'
-import colors from '../../theme/colors'
-import { PLACEHOLDER_TEXT } from './index'
 
 export const SHARE_IMAGE_WIDTH = 1200
 export const SHARE_IMAGE_HEIGHT = 630
@@ -66,7 +66,6 @@ const formatFonts = {
   scribble: 'cursiveTitle',
   editorial: 'serifTitle',
   meta: 'sansSerifRegular',
-  flyer: 'flyerTitle',
 }
 
 const shareImageJustify = {
