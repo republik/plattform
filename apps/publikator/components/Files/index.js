@@ -1,18 +1,18 @@
 import { gql, useQuery } from '@apollo/client'
 import { Container } from '@project-r/styleguide'
-
-import { getRepoIdFromQuery } from '../../lib/repoIdHelper'
+import { css } from 'glamor'
 import { RepoFile } from '../../lib/graphql/fragments'
 
-import Loader from '../Loader'
+import { getRepoIdFromQuery } from '../../lib/repoIdHelper'
+import Nav from '../editor/Nav'
 import Frame from '../Frame'
-import Nav from '../Edit/Nav'
-import { Table, Tr, Th } from '../Table'
+
+import Loader from '../Loader'
+import { Table, Th, Tr } from '../Table'
 
 import Info from './Info'
-import Upload from './Upload'
 import Row from './Row'
-import { css, style } from 'glamor'
+import Upload from './Upload'
 
 const GET_FILES = gql`
   query getFiles($id: ID!) {

@@ -1,19 +1,19 @@
-import { useMemo } from 'react'
-import { withRouter } from 'next/router'
-import compose from 'lodash/flowRight'
 import { ColorContextProvider, VariableContext } from '@project-r/styleguide'
 import { renderMdast } from '@republik/mdast-react-render'
+import compose from 'lodash/flowRight'
+import { withRouter } from 'next/router'
+import { useMemo } from 'react'
+import { withCommitData } from '../../../../components/editor/enhancers'
+import Frame from '../../../../components/Frame'
 
 import Loader from '../../../../components/Loader'
-import Frame from '../../../../components/Frame'
 import { getSchema } from '../../../../components/Templates'
+import { ThemeProvider } from '../../../../components/theme-provider'
+import { withDefaultSSR } from '../../../../lib/apollo/helpers'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
 import initLocalStore from '../../../../lib/utils/localStorage'
 import withT from '../../../../lib/withT'
-import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
-import { withDefaultSSR } from '../../../../lib/apollo/helpers'
-import { withCommitData } from '../../../../components/Edit/enhancers'
-import { ThemeProvider } from '../../../../components/theme-provider'
 
 const PreviewPage = ({ t, router, data = {} }) => {
   const { loading, error, repo: { commit: { document } = {} } = {} } = data
