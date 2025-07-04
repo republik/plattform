@@ -216,6 +216,9 @@ export { default as ErrorBoundary } from './components/ErrorBoundary'
 export { Author as EmailAuthor } from './templates/shared/email/components/Author'
 
 export { default as ChartEditor } from './components/Chart/Editor'
+
 export { default as AuthorSearch } from './components/Editor/Forms/AuthorSearch'
 export { default as RepoSearch } from './components/Editor/Forms/RepoSearch'
 export { default as ColorPicker } from './components/Editor/Forms/ColorPicker'
+export { default as MemoForm } from './components/Editor/Forms/Memo'
+export { Marker } from './components/Marker'
