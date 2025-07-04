@@ -65,7 +65,6 @@ import {
 } from '../Edit/enhancers'
 import Preview from '../Preview'
 
-
 const getTemplateById = gql`
   query getLatestCommit($repoId: ID!) {
     templateRepo: repo(id: $repoId) {
@@ -988,7 +987,9 @@ export class EditorPage extends Component {
                       editorRef={this.editor}
                       onChange={this.uiChangeHandler}
                       value={editorState}
-                      serializedState={this.editor.serializer.serialize(editorState)}
+                      serializedState={this.editor.serializer.serialize(
+                        editorState,
+                      )}
                       onSaveSearchAndReplace={this.persistChanges.bind(this)}
                       onGoToRaw={() => this.goToRaw(isTemplate)}
                     />
@@ -998,6 +999,7 @@ export class EditorPage extends Component {
               {!showPreview && (
                 <Sidebar.Tab tabId='workflow' label='Workflow'>
                   <VersionControl
+                    characterCount={editorState?.document.text.length}
                     repoId={repoId}
                     commit={commit}
                     isNew={isNew}
