@@ -1,16 +1,20 @@
+import {
+  AuthorSearch,
+  Field,
+  Label,
+  RawHtml,
+  RepoSearch,
+} from '@project-r/styleguide'
+import { IconInfoOutline as MdInfoOutline, IconLink } from '@republik/icons'
+import { css } from 'glamor'
+import AutosizeInput from 'react-textarea-autosize'
 import { Text } from 'slate'
-import { Label, Field, RawHtml } from '@project-r/styleguide'
-import { AuthorSearch, RepoSearch } from '@project-r/styleguide/editor'
+import withT from '../../../../lib/withT'
 import UIForm from '../../UIForm'
+
+import { buttonStyles, createInlineButton, matchInline } from '../../utils'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import { AutoSlugLinkInfo } from '../../utils/github'
-import withT from '../../../../lib/withT'
-
-import { createInlineButton, matchInline, buttonStyles } from '../../utils'
-import AutosizeInput from 'react-textarea-autosize'
-import { css } from 'glamor'
-import { IconLink } from '@republik/icons'
-import { IconInfoOutline as MdInfoOutline } from '@republik/icons'
 
 const styles = {
   autoSize: css({

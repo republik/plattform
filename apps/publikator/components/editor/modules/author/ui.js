@@ -1,11 +1,8 @@
+import { AuthorSearch, Checkbox, Field, Label } from '@project-r/styleguide'
 import { Fragment } from 'react'
-import { createBlockButton, buttonStyles, matchBlock } from '../../utils'
-import injectBlock from '../../utils/injectBlock'
-
-import { Label, Checkbox, Field } from '@project-r/styleguide'
-import { AuthorSearch } from '@project-r/styleguide/editor'
-import { Text } from 'slate'
+import { buttonStyles, createBlockButton, matchBlock } from '../../utils'
 import createOnFieldChange from '../../utils/createOnFieldChange'
+import injectBlock from '../../utils/injectBlock'
 
 export default ({ TYPE, newBlock, editorOptions }) => {
   const InsertButton = createBlockButton({

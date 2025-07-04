@@ -1,21 +1,21 @@
-import { useState, useEffect } from 'react'
-import compose from 'lodash/flowRight'
-import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import {
   Editorial,
+  Marker,
+  MemoForm,
   Overlay,
-  OverlayToolbar,
   OverlayBody,
+  OverlayToolbar,
 } from '@project-r/styleguide'
-
-import { MemoForm, Marker } from '@project-r/styleguide/editor'
-
-import withT from '../../../../lib/withT'
-import { matchInline, createInlineButton, buttonStyles } from '../../utils'
-import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import { IconMemo } from '@republik/icons'
+import MarkdownSerializer from '@republik/slate-mdast-serializer'
+import compose from 'lodash/flowRight'
 
 import { withRouter } from 'next/router'
-import { IconMemo } from '@republik/icons'
+import { useEffect, useState } from 'react'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+
+import withT from '../../../../lib/withT'
+import { buttonStyles, createInlineButton, matchInline } from '../../utils'
 
 const Memo = compose(
   withT,
