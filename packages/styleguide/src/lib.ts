@@ -196,29 +196,16 @@ export * from './chart'
 export * from './templates'
 export { mdastToString } from './templates/Article/utils'
 
-export { default as SlateRender } from './components/Editor/Render'
-export { default as renderSlateAsText } from './components/Editor/Render/text'
-export {
-  default as flyerSchema,
-  flyerStructure,
-  flyerTemplate,
-} from './components/Editor/schema/flyer'
-export { RenderContextProvider } from './components/Editor/Render/Context'
-export type {
-  CustomDescendant,
-  CustomElement,
-} from './components/Editor/custom-types'
-
-export { FlyerTile, FlyerTileMeta } from './components/Flyer'
-export { FlyerDate } from './components/Flyer/Date'
 export { default as ErrorBoundary } from './components/ErrorBoundary'
 
 export { Author as EmailAuthor } from './templates/shared/email/components/Author'
 
 export { default as ChartEditor } from './components/Chart/Editor'
 
-export { default as AuthorSearch } from './components/Editor/Forms/AuthorSearch'
-export { default as RepoSearch } from './components/Editor/Forms/RepoSearch'
-export { default as ColorPicker } from './components/Editor/Forms/ColorPicker'
-export { default as MemoForm } from './components/Editor/Forms/Memo'
+export { default as AuthorSearch } from './components/MOVE_TO_PUBLIKATOR/AuthorSearch'
+export { default as RepoSearch } from './components/MOVE_TO_PUBLIKATOR/RepoSearch'
+export { default as ColorPicker } from './components/MOVE_TO_PUBLIKATOR/ColorPicker'
+
+export { default as MemoForm } from './components/MOVE_TO_PUBLIKATOR/Memo'
+
 export { Marker } from './components/Marker'

@@ -1,16 +1,15 @@
+import { css } from 'glamor'
 import React, { useMemo } from 'react'
 import colors from '../../theme/colors'
-import { mUp } from '../../theme/mediaQueries'
 import { fontStyles as _fontStyles } from '../../theme/fonts'
-import * as _fontStyleSizes from './styles'
+import { mUp } from '../../theme/mediaQueries'
+import { useColorContext } from '../Colors/useColorContext'
 import * as _Editorial from './Editorial'
 import * as _Interaction from './Interaction'
 import * as _Meta from './Meta'
 import * as _Scribble from './Scribble'
-import * as _Flyer from './Flyer'
-import { css } from 'glamor'
+import * as _fontStyleSizes from './styles'
 import { convertStyleToRem } from './utils'
-import { useColorContext } from '../Colors/useColorContext'
 
 // Namespaced exports.
 export const Editorial = { ..._Editorial }
