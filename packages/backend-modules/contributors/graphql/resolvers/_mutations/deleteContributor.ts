@@ -26,7 +26,7 @@ export = async function deleteContributor(
     }
 
     // Check if contributor is associated with any documents
-    // Contributors are stored in the meta.contributors field
+    // Contributors are stored in the meta.contributors array
     const documentAssociations = await transaction.query(`
       SELECT COUNT(*) as count 
       FROM publications.documents d 

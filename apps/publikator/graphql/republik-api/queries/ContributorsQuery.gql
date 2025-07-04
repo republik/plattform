@@ -1,0 +1,19 @@
+query Contributors($first: Int, $orderBy: ContributorOrderBy) {
+  contributors(first: $first, orderBy: $orderBy) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      name
+      shortBio
+      image
+      employee
+      userId
+      prolitterisId
+      slug
+    }
+  }
+}
