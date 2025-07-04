@@ -16,7 +16,6 @@ export const Editorial = { ..._Editorial }
 export const Interaction = { ..._Interaction }
 export const Meta = { ..._Meta }
 export const Scribble = { ..._Scribble }
-export const Flyer = { ..._Flyer }
 
 // Direct exports.
 export const fontStyles = {

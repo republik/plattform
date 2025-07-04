@@ -1,19 +1,18 @@
+import {
+  matchHeading,
+  matchParagraph,
+  matchZone,
+} from '@republik/mdast-react-render'
 import React from 'react'
-
-import colors from '../../theme/colors'
 import { FormatTag } from '../../components/Format'
 import TitleBlock from '../../components/TitleBlock'
-import * as Interaction from '../../components/Typography/Interaction'
 import * as Editorial from '../../components/Typography/Editorial'
+import * as Interaction from '../../components/Typography/Interaction'
+
+import colors from '../../theme/colors'
 
 import createArticleSchema, { COVER_TYPE } from '../Article'
 import { styles } from '../Article/utils'
-
-import {
-  matchZone,
-  matchHeading,
-  matchParagraph,
-} from '@republik/mdast-react-render'
 
 const DefaultLink = ({ children }) => children
 
@@ -54,7 +53,6 @@ const createFormatSchema = ({
           { value: 'meta', text: 'Meta' },
           { value: 'scribble', text: 'Ameise' },
           { value: 'opinion', text: 'Kolumne' },
-          { value: 'flyer', text: 'Journal' },
         ],
       },
       {

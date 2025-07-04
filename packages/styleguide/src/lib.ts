@@ -122,7 +122,6 @@ export {
   Interaction,
   Meta,
   Editorial,
-  Flyer,
   Sub,
   Sup,
   HR,

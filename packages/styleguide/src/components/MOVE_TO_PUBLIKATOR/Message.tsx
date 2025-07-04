@@ -21,10 +21,7 @@ export const Message: React.FC<{
     >
       <Label>
         <span
-          {...colorScheme.set(
-            'color',
-            type === 'error' ? 'flyerFormatText' : 'text',
-          )}
+          {...colorScheme.set('color', type === 'error' ? 'error' : 'text')}
         >
           {text}
         </span>
