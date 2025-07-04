@@ -1,10 +1,14 @@
 /// <reference lib="dom" />
 require('@orbiting/backend-modules-env').config()
 
-import yargs from 'yargs'
+import { ConnectionContext } from '@orbiting/backend-modules-types'
 import Promise from 'bluebird'
-import moment from 'moment'
 import _debug from 'debug'
+import moment from 'moment'
+import yargs from 'yargs'
+import { Commit } from '../lib/types'
+
+import { Repo } from '../loaders/Repo'
 
 const { parse: mdastParse } = require('@republik/remark-preset')
 
@@ -25,10 +29,6 @@ const {
     },
   },
 } = require('@orbiting/backend-modules-documents')
-import { ConnectionContext } from '@orbiting/backend-modules-types'
-
-import { Repo } from '../loaders/Repo'
-import { Commit } from '../lib/types'
 
 const debug = _debug('publikator:script:copyImages')
 
@@ -119,11 +119,11 @@ ConnectionContext.create(applicationName)
 
     const repos = await pgdb.query(
       `
-        SELECT
-          DISTINCT ON ("repoId")
+        SELECT DISTINCT
+        ON ("repoId")
           "repoId" "id"
         FROM publikator.commits
-        WHERE "createdAt" >= :after
+        WHERE "createdAt" >= : after
         ORDER BY "repoId", "createdAt" DESC
       `,
       { after: argv.after },
@@ -153,9 +153,9 @@ ConnectionContext.create(applicationName)
         }
 
         await Promise.all([
-          processRepoImageUrlsInContent(type, content, add),
-          processRepoImageUrlsInMeta(type, content, add),
-          processEmbedImageUrlsInContent(type, content, add),
+          processRepoImageUrlsInContent(content, add),
+          processRepoImageUrlsInMeta(content, add),
+          processEmbedImageUrlsInContent(content, add),
         ])
       })
       debug('%i image paths found (%s)', imagePaths.size, repoId)

@@ -49,7 +49,7 @@ async function transform(row) {
     date: row.createdAt,
   }
 
-  row.contentString = await stringifyNode('mdast', remark.parse(row.content))
+  row.contentString = await stringifyNode(remark.parse(row.content))
 
   return row
 }
@@ -62,12 +62,7 @@ const getDefaultResource = async ({ pgdb }) => {
         return pgdb.public.users.findOne(
           { id },
           {
-            fields: [
-              'id',
-              'firstName',
-              'lastName',
-              'username',
-            ],
+            fields: ['id', 'firstName', 'lastName', 'username'],
           },
         )
       },

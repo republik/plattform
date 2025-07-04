@@ -235,7 +235,7 @@ const getElasticDoc = async ({ doc, commitId, versionName, resolved }) => {
     resolved: !_.isEmpty(resolved) ? resolved : undefined,
     type: doc.type,
     content: doc.content,
-    contentString: await stringifyNode(doc.type, doc.content),
+    contentString: await stringifyNode(doc.content),
   }
 }
 
