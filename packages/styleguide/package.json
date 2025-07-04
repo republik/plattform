@@ -46,9 +46,6 @@
     "next": "^15.3.3",
     "next-themes": "^0.4.6",
     "serve": "^13.0.2",
-    "slate": "^0.88.1",
-    "slate-history": "^0.86.0",
-    "slate-react": "^0.88.2",
     "ts-jest": "^29.1.0",
     "use-memo-one": "^1.1.2"
   },
