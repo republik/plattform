@@ -107,7 +107,14 @@ class EditSidebar extends Component {
   }
 
   render() {
-    const { t, commit, hasUncommittedChanges, isNew, data = {} } = this.props
+    const {
+      t,
+      commit,
+      hasUncommittedChanges,
+      isNew,
+      characterCount,
+      data = {},
+    } = this.props
     const { loading, error, repo } = data
 
     if (isNew) {
@@ -120,6 +127,10 @@ class EditSidebar extends Component {
         error={error}
         render={() => (
           <div {...styles.container}>
+            <p style={{ margin: '0 0 10px 0', fontSize: '12px' }}>
+              {characterCount}
+              {' Zeichen'}
+            </p>
             {!!repo && !!repo.commits && !!repo.commits.nodes && (
               <BaseCommit
                 repoId={repo.id}
