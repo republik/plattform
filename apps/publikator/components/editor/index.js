@@ -1001,6 +1001,7 @@ export class EditorPage extends Component {
               {!showPreview && (
                 <Sidebar.Tab tabId='workflow' label='Workflow'>
                   <VersionControl
+                    characterCount={editorState?.document.text.length}
                     repoId={repoId}
                     commit={commit}
                     isNew={isNew}
