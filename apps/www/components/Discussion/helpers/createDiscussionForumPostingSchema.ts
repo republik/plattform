@@ -33,7 +33,6 @@ function createPersonSchema(
     '@type': 'Person',
     name: author.name,
   }
-  console.log('author', author)
 
   if (author.slug) {
     person.url = `${PUBLIC_BASE_URL}/~${author.slug}`
