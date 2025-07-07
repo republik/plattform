@@ -1,12 +1,10 @@
 import {
   Checkbox,
-  ColorPicker,
   colors,
   Dropdown,
   Field,
   Label,
   P,
-  RepoSearch,
   useColorContext,
 } from '@project-r/styleguide'
 
@@ -31,6 +29,9 @@ import shortId from 'shortid'
 import { Block, Text } from 'slate'
 
 import withT from '../../../../lib/withT'
+import ColorPicker from '../../../Forms/ColorPicker'
+
+import RepoSearch from '../../../Forms/RepoSearch'
 
 import UIForm from '../../UIForm'
 import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'

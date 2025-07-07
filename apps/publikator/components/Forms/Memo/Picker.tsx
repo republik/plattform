@@ -15,7 +15,7 @@ const styles = {
 }
 
 export const Picker: React.FC<{
-  marker: unknown
+  marker: string
   isSelected?: boolean
   onClick: React.MouseEventHandler
 }> = ({ marker = 'yellow', isSelected, onClick }) => {

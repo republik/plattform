@@ -1,7 +1,6 @@
 import {
   Editorial,
   Marker,
-  MemoForm,
   Overlay,
   OverlayBody,
   OverlayToolbar,
@@ -15,6 +14,8 @@ import { useEffect, useState } from 'react'
 import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
 import withT from '../../../../lib/withT'
+
+import MemoForm from '../../../Forms/Memo'
 import { buttonStyles, createInlineButton, matchInline } from '../../utils'
 
 const Memo = compose(

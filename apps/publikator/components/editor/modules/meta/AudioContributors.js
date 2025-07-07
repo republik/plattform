@@ -1,6 +1,7 @@
-import { AuthorSearch, IconButton } from '@project-r/styleguide'
+import { IconButton } from '@project-r/styleguide'
 import { IconClose } from '@republik/icons'
 import { css } from 'glamor'
+import AuthorSearch from '../../../Forms/AuthorSearch'
 
 import { MetaOption } from '../../../MetaDataForm/components/Layout'
 

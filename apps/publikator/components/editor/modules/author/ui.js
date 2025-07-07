@@ -1,5 +1,6 @@
-import { AuthorSearch, Checkbox, Field, Label } from '@project-r/styleguide'
+import { Checkbox, Field, Label } from '@project-r/styleguide'
 import { Fragment } from 'react'
+import AuthorSearch from '../../../Forms/AuthorSearch'
 import { buttonStyles, createBlockButton, matchBlock } from '../../utils'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import injectBlock from '../../utils/injectBlock'

@@ -145,7 +145,7 @@ ConnectionContext.create(applicationName)
       const maybeUpload = createMaybeUpload(repoId, argv.origin)
 
       await Promise.each(commits, async (commit: Commit) => {
-        const { type, meta } = commit
+        const { meta } = commit
 
         const content = {
           ...(commit.content || mdastParse(commit.content__markdown)),

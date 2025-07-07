@@ -1,9 +1,11 @@
-import { A, RepoSearch, useColorContext } from '@project-r/styleguide'
+import { A, useColorContext } from '@project-r/styleguide'
+
 import { IconAdd as MdAdd } from '@republik/icons'
 import { css } from 'glamor'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import withT from '../../../../../lib/withT'
+import RepoSearch from '../../../../Forms/RepoSearch'
 import {
   MetaSection,
   MetaSectionTitle,
