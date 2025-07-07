@@ -1,10 +1,9 @@
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
+
+import { Autocomplete, InlineSpinner } from '@project-r/styleguide'
 import debounce from 'lodash/debounce'
 import React, { Component } from 'react'
-
-import Autocomplete from '../Form/Autocomplete'
-import { InlineSpinner } from '../Spinner'
 import { ErrorMessage } from './Message'
 
 const getAuthors = gql`

@@ -1,6 +1,6 @@
+import { markersConfig } from '@project-r/styleguide'
 import { css } from 'glamor'
 import React from 'react'
-import { markersConfig, MarkerType } from '../../Marker'
 
 const styles = {
   picker: css({
@@ -15,7 +15,7 @@ const styles = {
 }
 
 export const Picker: React.FC<{
-  marker: MarkerType
+  marker: unknown
   isSelected?: boolean
   onClick: React.MouseEventHandler
 }> = ({ marker = 'yellow', isSelected, onClick }) => {

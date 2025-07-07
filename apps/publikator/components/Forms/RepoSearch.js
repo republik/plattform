@@ -1,12 +1,15 @@
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
+
+import {
+  Autocomplete,
+  InlineSpinner,
+  Interaction,
+  Label,
+  timeFormat,
+} from '@project-r/styleguide'
 import debounce from 'lodash/debounce'
 import React, { Component } from 'react'
-import { timeFormat } from '../../lib/timeFormat'
-import Autocomplete from '../Form/Autocomplete'
-import { InlineSpinner } from '../Spinner'
-
-import { Interaction, Label } from '../Typography'
 
 export const filterRepos = gql`
   query searchRepo(

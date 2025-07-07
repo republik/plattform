@@ -1,6 +1,5 @@
+import { Label, useColorContext } from '@project-r/styleguide'
 import React, { ReactNode } from 'react'
-import { useColorContext } from '../Colors/ColorContext'
-import { Label } from '../Typography'
 
 export const Message: React.FC<{
   text: string

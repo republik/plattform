@@ -201,10 +201,4 @@ export { Author as EmailAuthor } from './templates/shared/email/components/Autho
 
 export { default as ChartEditor } from './components/Chart/Editor'
 
-export { default as AuthorSearch } from './components/MOVE_TO_PUBLIKATOR/AuthorSearch'
-export { default as RepoSearch } from './components/MOVE_TO_PUBLIKATOR/RepoSearch'
-export { default as ColorPicker } from './components/MOVE_TO_PUBLIKATOR/ColorPicker'
-
-export { default as MemoForm } from './components/MOVE_TO_PUBLIKATOR/Memo'
-
-export { Marker } from './components/Marker'
+export { Marker, markerKeys, markersConfig } from './components/Marker'

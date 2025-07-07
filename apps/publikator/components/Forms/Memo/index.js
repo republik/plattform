@@ -1,8 +1,6 @@
+import { IconButton, Interaction, markerKeys } from '@project-r/styleguide'
 import { IconRemove } from '@republik/icons'
 import { css } from 'glamor'
-import IconButton from '../../IconButton'
-import { markerKeys } from '../../Marker'
-import { Interaction } from '../../Typography'
 import MemoTree from './MemoTree'
 
 import { Picker } from './Picker'

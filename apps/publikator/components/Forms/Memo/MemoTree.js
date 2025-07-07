@@ -1,13 +1,13 @@
+import {
+  CommentComposer,
+  CommentComposerPlaceholder,
+  CommentNode,
+  DiscussionContext,
+} from '@project-r/styleguide'
 import { IconEdit, IconUnpublish } from '@republik/icons'
 import compose from 'lodash/flowRight'
 import { useContext, useMemo, useState } from 'react'
 import withMe from '../../../lib/apollo/withMe'
-import {
-  CommentComposer,
-  CommentComposerPlaceholder,
-} from '../../Discussion/Composer'
-import { DiscussionContext } from '../../Discussion/DiscussionContext'
-import { CommentNode } from '../../Discussion/Tree'
 import { getDisplayAuthor, withMemos } from './graphql'
 
 const MemoTree = (props) => {

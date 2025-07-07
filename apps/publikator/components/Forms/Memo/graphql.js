@@ -1,9 +1,7 @@
-// TODO: move to publikator itself
-
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
 import compose from 'lodash/flowRight'
-import withMe from '../../../lib/apollo/withMe'
+import withMe from '../../../lib/withMe'
 
 export const getDisplayAuthor = (author) => {
   const user = author.user || author
