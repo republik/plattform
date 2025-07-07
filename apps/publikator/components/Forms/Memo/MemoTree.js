@@ -7,7 +7,7 @@ import {
 import { IconEdit, IconUnpublish } from '@republik/icons'
 import compose from 'lodash/flowRight'
 import { useContext, useMemo, useState } from 'react'
-import withMe from '../../../lib/apollo/withMe'
+import withMe from '../../../lib/withMe'
 import { getDisplayAuthor, withMemos } from './graphql'
 
 const MemoTree = (props) => {
