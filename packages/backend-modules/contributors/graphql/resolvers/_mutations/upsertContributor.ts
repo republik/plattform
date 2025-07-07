@@ -10,19 +10,6 @@ const { Roles } = Auth
 const MAX_NAME_LENGTH = 100
 const MAX_SHORT_BIO_LENGTH = 500
 
-const sanitizeInput = (input: string): string => {
-  if (!input) return input
-
-  // Remove potentially dangerous characters while preserving readability
-  return input
-    .replace(/[<>"']/g, '') // Remove < > " ' to prevent HTML injection and attribute breaking
-    .replace(/(?:javascript:|data:|vbscript:|about:|chrome:|file:|ftp:)/gi, '') // Remove dangerous protocols
-    .replace(/on\w+/gi, '') // Remove event handler names completely (onclick, onload, etc.)
-    .replace(/&[#\w]*;?/g, '') // Remove HTML entities
-    .replace(/[\t\n\r\v\f]/g, '') // Remove specific control characters (tab, newline, etc.)
-    .trim()
-}
-
 // URL validation utility
 const isValidUrl = (url: string): boolean => {
   try {
@@ -184,20 +171,14 @@ export = async function upsertContributor(
   } = args
   const warnings: string[] = []
 
-  // Sanitize input fields
-  const sanitizedName = sanitizeInput(name)
-  const sanitizedShortBio = shortBio ? sanitizeInput(shortBio) : shortBio
-  const sanitizedProlitterisName = prolitterisName
-    ? sanitizeInput(prolitterisName)
-    : prolitterisName
 
   const transaction = await pgdb.transactionBegin()
 
   try {
     // Check for duplicate names (warning only)
     const whereClauseForName = id
-      ? { name: sanitizedName, id: { '!=': id } }
-      : { name: sanitizedName }
+      ? { name, id: { '!=': id } }
+      : { name }
     const existingWithName = await transaction.public.contributors.findFirst(
       whereClauseForName,
     )
@@ -218,8 +199,6 @@ export = async function upsertContributor(
 
       if (existingWithProlitterisId) {
         await transaction.transactionRollback()
-        // Sanitize the name in the error message to prevent injection
-        const safeName = sanitizeInput(existingWithProlitterisId.name)
         return {
           contributor: null,
           isNew: false,
@@ -227,7 +206,7 @@ export = async function upsertContributor(
           errors: [
             {
               field: 'prolitterisId',
-              message: `Prolitteris ID ist schon einem*r anderen Autor*in: ${safeName} zugeordnet`,
+              message: `Prolitteris ID ist schon einem*r anderen Autor*in: ${name} zugeordnet`,
             },
           ],
         }
@@ -235,18 +214,18 @@ export = async function upsertContributor(
     }
 
     // Generate unique slug
-    const baseSlug = slugify(sanitizedName)
+    const baseSlug = slugify(name)
     const slug = await findUniqueSlug(baseSlug, transaction, id)
 
     const now = new Date()
     const contributorData = {
-      name: sanitizedName,
+      name,
       slug,
-      ...(sanitizedShortBio !== undefined && { shortBio: sanitizedShortBio }),
+      ...(shortBio !== undefined && { shortBio }),
       ...(image !== undefined && { image }),
       ...(prolitterisId !== undefined && { prolitterisId }),
-      ...(sanitizedProlitterisName !== undefined && {
-        prolitterisName: sanitizedProlitterisName,
+      ...(prolitterisName !== undefined && {
+        prolitterisName,
       }),
       ...(gender !== undefined && { gender }),
       ...(userId !== undefined && { userId }),
