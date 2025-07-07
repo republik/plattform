@@ -129,7 +129,7 @@ type UpsertContributorArgs = {
   prolitterisName?: string
   gender?: string
   userId?: string
-  employee?: boolean
+  employee?: "past" | "present"
 }
 
 type UpsertContributorResult = {

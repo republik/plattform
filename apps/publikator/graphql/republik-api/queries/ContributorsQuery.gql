@@ -1,13 +1,17 @@
-query Contributor($slug: String!) {
-  contributor(slug: $slug) {
+query Contributor($id: ID, $slug: String) {
+  contributor(id: $id, slug: $slug) {
     id
-    slug
     name
+    slug
     shortBio
     image
-    employee
-    userId
     prolitterisId
+    prolitterisName
+    gender
+    userId
+    employee
+    createdAt
+    updatedAt
   }
 }
 
@@ -21,12 +25,16 @@ query Contributors($first: Int, $orderBy: ContributorOrderBy) {
     nodes {
       id
       name
+      slug
       shortBio
       image
-      employee
-      userId
       prolitterisId
-      slug
+      prolitterisName
+      gender
+      userId
+      employee
+      createdAt
+      updatedAt
     }
   }
 }

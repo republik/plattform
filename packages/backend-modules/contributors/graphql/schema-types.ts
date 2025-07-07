@@ -1,6 +1,4 @@
 export = `
-// Add module schema types
-
 type Contributor {
   id: ID!
   name: String!

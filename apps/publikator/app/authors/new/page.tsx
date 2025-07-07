@@ -34,7 +34,10 @@ const CREATE_CONTRIBUTOR_MUTATION = gql`
         employee
         userId
         prolitterisId
-        gender
+        prolitterisName
+        gender 
+        createdAt
+        updatedAt
       }
       isNew
       warnings

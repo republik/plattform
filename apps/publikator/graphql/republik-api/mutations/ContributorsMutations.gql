@@ -1,16 +1,54 @@
-mutation UpdateContributor($id: ID!, $input: ContributorInput!) {
-  updateContributor(id: $id, input: $input) {
-    id
-    slug
-    name
-    shortBio
-    image
-    employee
-    userId
-    prolitterisId
+mutation UpsertContributor(
+  $id: ID
+  $name: String
+  $shortBio: String
+  $image: String
+  $prolitterisId: String
+  $prolitterisName: String
+  $gender: GenderEnum
+  $userId: ID
+  $employee: EmployeeStatusEnum
+) {
+  upsertContributor(
+    id: $id
+    name: $name
+    shortBio: $shortBio
+    image: $image
+    prolitterisId: $prolitterisId
+    prolitterisName: $prolitterisName
+    gender: $gender
+    userId: $userId
+    employee: $employee
+  ) {
+    contributor {
+      id
+      name
+      slug
+      shortBio
+      image
+      prolitterisId
+      prolitterisName
+      gender
+      userId
+      employee
+      createdAt
+      updatedAt
+    }
+    isNew
+    warnings
+    errors {
+      field
+      message
+    }
   }
 }
 
 mutation DeleteContributor($id: ID!) {
-  deleteContributor(id: $id)
+  deleteContributor(id: $id) {
+    success
+    errors {
+      field
+      message
+    }
+  }
 }
