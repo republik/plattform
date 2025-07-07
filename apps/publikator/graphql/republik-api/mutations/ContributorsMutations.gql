@@ -1,0 +1,16 @@
+mutation UpdateContributor($id: ID!, $input: ContributorInput!) {
+  updateContributor(id: $id, input: $input) {
+    id
+    slug
+    name
+    shortBio
+    image
+    employee
+    userId
+    prolitterisId
+  }
+}
+
+mutation DeleteContributor($id: ID!) {
+  deleteContributor(id: $id)
+}

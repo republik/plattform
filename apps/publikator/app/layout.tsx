@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 import '@radix-ui/themes/styles.css'
+import './global.css'
 import { Theme } from '@radix-ui/themes'
 import { Providers } from './providers'
 
@@ -11,7 +12,7 @@ export default function RootLayout({
   return (
     <html lang='de'>
       <body>
-        <Theme accentColor='gray' radius='small'>
+        <Theme accentColor='indigo' radius='small'>
           <Providers>
             {children}
           </Providers>

@@ -4,6 +4,7 @@ import { useQuery } from '@apollo/client'
 import { gql } from '@apollo/client'
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import {
   Avatar,
   Table,
@@ -16,13 +17,7 @@ import {
   Spinner,
   TextField,
 } from '@radix-ui/themes'
-import {
-  Pencil,
-  Search,
-  Plus,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react'
+import { Pencil, Search, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
 import TooltipIcons from '../components/author-table/tooltip-icons'
 
 export interface Contributor {
@@ -34,6 +29,7 @@ export interface Contributor {
   userId?: string | null
   prolitterisId?: string | null
   slug: string
+  updatedAt: string
 }
 
 interface ContributorsData {
@@ -81,6 +77,7 @@ const CONTRIBUTORS_QUERY = gql`
         userId
         prolitterisId
         slug
+        updatedAt
       }
     }
   }
@@ -99,6 +96,7 @@ const dummyContributors: Contributor[] = [
     userId: 'user123',
     prolitterisId: 'PL456',
     slug: 'marie-mueller',
+    updatedAt: '2024-01-15T10:30:00Z',
   },
   {
     id: '2',
@@ -111,6 +109,7 @@ const dummyContributors: Contributor[] = [
     userId: null,
     prolitterisId: 'PL789',
     slug: 'thomas-weber',
+    updatedAt: '2024-01-10T14:45:00Z',
   },
   {
     id: '3',
@@ -123,6 +122,7 @@ const dummyContributors: Contributor[] = [
     userId: 'user789',
     prolitterisId: null,
     slug: 'sarah-chen',
+    updatedAt: '2024-01-08T09:15:00Z',
   },
   {
     id: '4',
@@ -134,6 +134,7 @@ const dummyContributors: Contributor[] = [
     userId: 'user456',
     prolitterisId: 'PL123',
     slug: 'andreas-schmid',
+    updatedAt: '2024-01-12T16:20:00Z',
   },
   {
     id: '5',
@@ -146,6 +147,7 @@ const dummyContributors: Contributor[] = [
     userId: null,
     prolitterisId: 'PL999',
     slug: 'lisa-zimmermann',
+    updatedAt: '2024-01-05T11:30:00Z',
   },
   {
     id: '6',
@@ -157,15 +159,15 @@ const dummyContributors: Contributor[] = [
     userId: 'user999',
     prolitterisId: null,
     slug: 'michael-roth',
+    updatedAt: '2024-01-03T08:45:00Z',
   },
 ]
-
-
 
 const AuthorsPage: React.FC = () => {
   // Use dummy data for now - uncomment the real query when backend is ready
   const useDummyData = true
   const pageSize = 10
+  const router = useRouter()
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
@@ -179,7 +181,7 @@ const AuthorsPage: React.FC = () => {
       first: pageSize,
       after: cursors[currentPage - 1] || undefined,
       orderBy: {
-        field: 'name',
+        field: 'updatedAt',
         direction: 'ASC',
       },
     },
@@ -258,13 +260,11 @@ const AuthorsPage: React.FC = () => {
       </Heading>
 
       <Flex justify='start' mb='6' gap='2'>
-        <Link href="/authors/new">
+        <Link href='/authors/new'>
           <Button
             size='2'
             variant='solid'
             style={{
-              backgroundColor: 'black',
-              color: 'white',
               fontWeight: 'bold',
             }}
           >
@@ -289,15 +289,27 @@ const AuthorsPage: React.FC = () => {
             <Table.ColumnHeaderCell>Name</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Kurzbio</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Info</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell justify='end'>
-              Bearbeiten
-            </Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell>Aktualisiert</Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
 
         <Table.Body>
           {contributorsList.map((contributor) => (
-            <Table.Row key={contributor.id} align='center'>
+            <Table.Row
+              key={contributor.id}
+              align='center'
+              style={{
+                cursor: 'pointer',
+                transition: 'background-color 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#f8f9fa'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent'
+              }}
+              onClick={() => router.push(`/authors/${contributor.slug}/edit`)}
+            >
               <Table.Cell justify='start'>
                 <Avatar
                   src={contributor.image || undefined}
@@ -330,11 +342,9 @@ const AuthorsPage: React.FC = () => {
               </Table.Cell>
 
               <Table.Cell justify='end'>
-                <Link href={`/authors/${contributor.slug}/edit`}>
-                  <Button size='2' variant='ghost'>
-                    <Pencil size={16} />
-                  </Button>
-                </Link>
+                <Text size='1' color='gray' style={{ textAlign: 'right' }}>
+                  {new Date(contributor.updatedAt).toLocaleDateString()}
+                </Text>
               </Table.Cell>
             </Table.Row>
           ))}

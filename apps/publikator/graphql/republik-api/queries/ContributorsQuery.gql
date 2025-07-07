@@ -1,3 +1,16 @@
+query Contributor($slug: String!) {
+  contributor(slug: $slug) {
+    id
+    slug
+    name
+    shortBio
+    image
+    employee
+    userId
+    prolitterisId
+  }
+}
+
 query Contributors($first: Int, $orderBy: ContributorOrderBy) {
   contributors(first: $first, orderBy: $orderBy) {
     totalCount
