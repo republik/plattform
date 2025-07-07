@@ -18,8 +18,8 @@ type queries {
 
 type mutations {
   upsertContributor(
-    id: ID
-    name: String!
+    id: ID!
+    name: String
     shortBio: String
     image: String
     prolitterisId: String
@@ -29,6 +29,6 @@ type mutations {
     employee: EmployeeStatusEnum
   ): UpsertContributorResult!
   
-  deleteContributor(id: ID!): Boolean!
+  deleteContributor(id: ID!): DeleteContributorResult!
 }
 `

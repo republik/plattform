@@ -28,9 +28,15 @@ enum EmployeeStatusEnum {
 }
 
 type UpsertContributorResult {
-  contributor: Contributor!
+  contributor: Contributor
   isNew: Boolean!
   warnings: [String!]!
+  errors: [String!]!
+}
+
+type DeleteContributorResult {
+  success: Boolean!
+  errors: [String!]!
 }
 
 type ContributorConnection {

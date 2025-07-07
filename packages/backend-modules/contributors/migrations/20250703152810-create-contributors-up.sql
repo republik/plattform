@@ -1,8 +1,6 @@
--- Create ENUM types for gender and employee status
 CREATE TYPE gender_enum AS ENUM ('m', 'f', 'd');
 CREATE TYPE employee_status_enum AS ENUM ('past', 'present');
 
--- Create the contributors table
 CREATE TABLE contributors (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL,
@@ -18,13 +16,12 @@ CREATE TABLE contributors (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Create indexes for performance
 CREATE INDEX idx_contributors_slug ON contributors(slug);
 CREATE INDEX idx_contributors_prolitteris_id ON contributors(prolitteris_id) WHERE prolitteris_id IS NOT NULL;
 CREATE INDEX idx_contributors_user_id ON contributors(user_id) WHERE user_id IS NOT NULL;
 CREATE INDEX idx_contributors_name ON contributors(name);
 
--- Add a trigger to automatically update the updated_at timestamp
+-- Add a trigger function to automatically update the updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN

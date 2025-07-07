@@ -7,11 +7,16 @@ type DeleteContributorArgs = {
   id: string
 }
 
+type DeleteContributorResult = {
+  success: boolean
+  errors: string[]
+}
+
 export = async function deleteContributor(
   _: unknown,
   { id }: DeleteContributorArgs,
   { pgdb, user }: GraphqlContext,
-): Promise<boolean> {
+): Promise<DeleteContributorResult> {
   // Ensure user has appropriate permissions
   Roles.ensureUserIsInRoles(user, ['admin', 'editor', 'producer'])
 
@@ -22,7 +27,10 @@ export = async function deleteContributor(
     const contributor = await transaction.public.contributors.findOne({ id })
     if (!contributor) {
       await transaction.transactionRollback()
-      throw new Error(`Contributor with ID ${id} not found`)
+      return {
+        success: false,
+        errors: [`Contributor with ID ${id} not found`],
+      }
     }
 
     // Check if contributor is associated with any documents
@@ -37,16 +45,27 @@ export = async function deleteContributor(
     
     if (documentAssociations[0].count > 0) {
       await transaction.transactionRollback()
-      throw new Error('Autor*in kann nicht gelöscht werden, da sie mit einem Dokument verknüpft ist')
+      return {
+        success: false,
+        errors: ['Autor*in kann nicht gelöscht werden, da sie mit einem Dokument verknüpft ist'],
+      }
     }
 
     // Delete contributor
     await transaction.public.contributors.deleteOne({ id })
     
     await transaction.transactionCommit()
-    return true
+    return {
+      success: true,
+      errors: [],
+    }
   } catch (e) {
     await transaction.transactionRollback()
-    throw e
+    return {
+      success: false,
+      errors: [
+        `Ein unerwarteter Fehler ist aufgetreten: ${(e as Error).message}`,
+      ],
+    }
   }
 } 

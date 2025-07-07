@@ -7,14 +7,12 @@ import slugify from '@orbiting/backend-modules-utils/slugify'
 
 const { Roles } = Auth
 
-// Maximum length constraints
 const MAX_NAME_LENGTH = 100
 const MAX_SHORT_BIO_LENGTH = 500
 
-// Input sanitization utility
 const sanitizeInput = (input: string): string => {
   if (!input) return input
-  
+
   // Remove potentially dangerous characters while preserving readability
   return input
     .replace(/[<>]/g, '') // Remove < and > to prevent HTML injection
@@ -36,41 +34,41 @@ const isValidUrl = (url: string): boolean => {
 // Validate input fields
 const validateInput = (args: UpsertContributorArgs): string[] => {
   const errors: string[] = []
-  
+
   // Name validation
   if (!args.name || args.name.trim().length === 0) {
     errors.push('Name ist erforderlich')
   }
-  
+
   try {
     ensureStringLength(args.name, {
       min: 1,
       max: MAX_NAME_LENGTH,
-      error: `Name muss zwischen 1 und ${MAX_NAME_LENGTH} Zeichen lang sein`
+      error: `Name muss zwischen 1 und ${MAX_NAME_LENGTH} Zeichen lang sein`,
     })
   } catch (error) {
     errors.push((error as Error).message)
   }
-  
+
   // Short bio validation
   if (args.shortBio) {
     try {
       ensureStringLength(args.shortBio, {
         max: MAX_SHORT_BIO_LENGTH,
-        error: `Kurze Biografie darf maximal ${MAX_SHORT_BIO_LENGTH} Zeichen lang sein`
+        error: `Kurze Biografie darf maximal ${MAX_SHORT_BIO_LENGTH} Zeichen lang sein`,
       })
     } catch (error) {
       errors.push((error as Error).message)
     }
   }
-  
+
   // Image URL validation
   if (args.image) {
     if (!isValidUrl(args.image)) {
       errors.push('Bild-URL ist ungültig')
     }
   }
-  
+
   // Prolitteris ID validation
   if (args.prolitterisId) {
     // Validate that it's exactly 6 digits
@@ -78,21 +76,30 @@ const validateInput = (args: UpsertContributorArgs): string[] => {
       errors.push('Prolitteris ID muss genau 6 Ziffern enthalten')
     }
   }
-  
+
   // Gender validation (ensure it's one of the allowed values)
   if (args.gender && !['m', 'f', 'd'].includes(args.gender)) {
     errors.push('Geschlecht muss m, f oder d sein')
   }
-  
+
   // UserId validation (basic UUID format check)
-  if (args.userId && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(args.userId)) {
+  if (
+    args.userId &&
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      args.userId,
+    )
+  ) {
     errors.push('User ID muss ein gültiger UUID sein')
   }
-  
+
   return errors
 }
 
-const findUniqueSlug = async (baseSlug: string, pgdb: any, excludeId: string | null = null): Promise<string> => {
+const findUniqueSlug = async (
+  baseSlug: string,
+  pgdb: any,
+  excludeId: string | null = null,
+): Promise<string> => {
   let slug = baseSlug
   let suffix = 1
   let isUnique = false
@@ -104,7 +111,7 @@ const findUniqueSlug = async (baseSlug: string, pgdb: any, excludeId: string | n
     if (!slugExists) {
       isUnique = true
     } else {
-      // Add numbers: -1, -2, -3, etc.
+      // Add numbers if name slug already exists: -1, -2, -3, etc.
       slug = `${baseSlug}-${suffix}`
       suffix++
     }
@@ -126,9 +133,10 @@ type UpsertContributorArgs = {
 }
 
 type UpsertContributorResult = {
-  contributor: any
+  contributor: any | null
   isNew: boolean
   warnings: string[]
+  errors: string[]
 }
 
 export = async function upsertContributor(
@@ -142,38 +150,71 @@ export = async function upsertContributor(
   // Validate input
   const validationErrors = validateInput(args)
   if (validationErrors.length > 0) {
-    throw new Error(`Validierungsfehler: ${validationErrors.join(', ')}`)
+    return {
+      contributor: null,
+      isNew: false,
+      warnings: [],
+      errors: validationErrors,
+    }
   }
 
-  const { id, name, shortBio, image, prolitterisId, prolitterisName, gender, userId, employee } = args
+  const {
+    id,
+    name,
+    shortBio,
+    image,
+    prolitterisId,
+    prolitterisName,
+    gender,
+    userId,
+    employee,
+  } = args
   const warnings: string[] = []
 
   // Sanitize input fields
   const sanitizedName = sanitizeInput(name)
   const sanitizedShortBio = shortBio ? sanitizeInput(shortBio) : shortBio
-  const sanitizedProlitterisName = prolitterisName ? sanitizeInput(prolitterisName) : prolitterisName
+  const sanitizedProlitterisName = prolitterisName
+    ? sanitizeInput(prolitterisName)
+    : prolitterisName
 
   const transaction = await pgdb.transactionBegin()
-  
+
   try {
     // Check for duplicate names (warning only)
-    const whereClauseForName = id ? { name: sanitizedName, id: { '!=': id } } : { name: sanitizedName }
-    const existingWithName = await transaction.public.contributors.findFirst(whereClauseForName)
-    
+    const whereClauseForName = id
+      ? { name: sanitizedName, id: { '!=': id } }
+      : { name: sanitizedName }
+    const existingWithName = await transaction.public.contributors.findFirst(
+      whereClauseForName,
+    )
+
     if (existingWithName) {
-      warnings.push("Autor*in mit diesem Namen existiert bereits")
+      warnings.push('Autor*in mit diesem Namen existiert bereits')
     }
 
     // Check for duplicate prolitterisId (error)
     if (prolitterisId) {
-      const whereClauseForProlitteris = id ? { prolitterisId, id: { '!=': id } } : { prolitterisId }
-      const existingWithProlitterisId = await transaction.public.contributors.findFirst(whereClauseForProlitteris)
-      
+      const whereClauseForProlitteris = id
+        ? { prolitterisId, id: { '!=': id } }
+        : { prolitterisId }
+      const existingWithProlitterisId =
+        await transaction.public.contributors.findFirst(
+          whereClauseForProlitteris,
+        )
+
       if (existingWithProlitterisId) {
         await transaction.transactionRollback()
         // Sanitize the name in the error message to prevent injection
         const safeName = sanitizeInput(existingWithProlitterisId.name)
-        throw new Error(`Prolitteris ID ist schon einem*r anderen Autor*in: ${safeName} zugeordnet`)
+        return {
+          contributor: null,
+          isNew: false,
+          warnings: [],
+          errors: [
+            `Prolitteris ID ist schon einem*r anderen Autor*in: ${safeName} zugeordnet`,
+          ],
+        }
       }
     }
 
@@ -188,11 +229,13 @@ export = async function upsertContributor(
       ...(sanitizedShortBio !== undefined && { shortBio: sanitizedShortBio }),
       ...(image !== undefined && { image }),
       ...(prolitterisId !== undefined && { prolitterisId }),
-      ...(sanitizedProlitterisName !== undefined && { prolitterisName: sanitizedProlitterisName }),
+      ...(sanitizedProlitterisName !== undefined && {
+        prolitterisName: sanitizedProlitterisName,
+      }),
       ...(gender !== undefined && { gender }),
       ...(userId !== undefined && { userId }),
       ...(employee !== undefined && { employee }),
-      updatedAt: now
+      updatedAt: now,
     }
 
     let contributor
@@ -203,18 +246,23 @@ export = async function upsertContributor(
       const existing = await transaction.public.contributors.findOne({ id })
       if (!existing) {
         await transaction.transactionRollback()
-        throw new Error(`Contributor with ID ${id} not found`)
+        return {
+          contributor: null,
+          isNew: false,
+          warnings: [],
+          errors: [`Contributor with ID ${id} not found`],
+        }
       }
-      
+
       contributor = await transaction.public.contributors.updateAndGetOne(
         { id },
-        contributorData
+        contributorData,
       )
     } else {
       // Create new contributor
       contributor = await transaction.public.contributors.insertAndGet({
         ...contributorData,
-        createdAt: now
+        createdAt: now,
       })
       isNew = true
     }
@@ -224,10 +272,19 @@ export = async function upsertContributor(
     return {
       contributor,
       isNew,
-      warnings
+      warnings,
+      errors: [],
     }
   } catch (e) {
     await transaction.transactionRollback()
-    throw e
+    // Return unexpected errors as error messages instead of throwing
+    return {
+      contributor: null,
+      isNew: false,
+      warnings: [],
+      errors: [
+        `Ein unerwarteter Fehler ist aufgetreten: ${(e as Error).message}`,
+      ],
+    }
   }
-} 
+}
