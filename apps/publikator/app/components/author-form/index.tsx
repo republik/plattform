@@ -13,10 +13,10 @@ import {
   Select,
   Avatar,
   Separator,
-  Grid,
   AlertDialog,
+  Callout,
 } from '@radix-ui/themes'
-import { ArrowLeft, Save, Upload, X, Trash2 } from 'lucide-react'
+import { ArrowLeft, Save, Upload, X, Trash2, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 
 export interface ContributorInput {
@@ -41,6 +41,10 @@ interface AuthorFormProps {
   onSubmit: (data: ContributorInput) => void
   onDelete?: () => void
   title: string
+  errors?: string[]
+  warnings?: string[]
+  onClearErrors?: () => void
+  onClearWarnings?: () => void
 }
 
 export default function AuthorForm({
@@ -50,6 +54,10 @@ export default function AuthorForm({
   onSubmit,
   onDelete,
   title,
+  errors = [],
+  warnings = [],
+  onClearErrors,
+  onClearWarnings,
 }: AuthorFormProps) {
   const [formData, setFormData] = useState<ContributorInput>({
     name: '',
@@ -118,6 +126,9 @@ export default function AuthorForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    // Clear previous errors/warnings when submitting
+    if (onClearErrors) onClearErrors()
+    if (onClearWarnings) onClearWarnings()
     onSubmit(formData)
   }
 
@@ -161,6 +172,60 @@ export default function AuthorForm({
           </Button>
         )}
       </Flex>
+
+      {/* Error Messages */}
+      {errors.length > 0 && (
+        <Box mb='4'>
+          <Callout.Root color='red' mb='2'>
+            <Callout.Icon>
+              <AlertCircle size={16} />
+            </Callout.Icon>
+            <Callout.Text>
+              {errors.length === 1 ? (
+                errors[0]
+              ) : (
+                <Box>
+                  <Text weight='bold' mb='1'>
+                    Es sind Fehler aufgetreten:
+                  </Text>
+                  <ul style={{ margin: '0', paddingLeft: '20px' }}>
+                    {errors.map((error, index) => (
+                      <li key={index}>{error}</li>
+                    ))}
+                  </ul>
+                </Box>
+              )}
+            </Callout.Text>
+          </Callout.Root>
+        </Box>
+      )}
+
+      {/* Warning Messages */}
+      {warnings.length > 0 && (
+        <Box mb='4'>
+          <Callout.Root color='yellow' mb='2'>
+            <Callout.Icon>
+              <AlertCircle size={16} />
+            </Callout.Icon>
+            <Callout.Text>
+              {warnings.length === 1 ? (
+                warnings[0]
+              ) : (
+                <Box>
+                  <Text weight='bold' mb='1'>
+                    Warnungen:
+                  </Text>
+                  <ul style={{ margin: '0', paddingLeft: '20px' }}>
+                    {warnings.map((warning, index) => (
+                      <li key={index}>{warning}</li>
+                    ))}
+                  </ul>
+                </Box>
+              )}
+            </Callout.Text>
+          </Callout.Root>
+        </Box>
+      )}
 
       {/* Form */}
       <Card>
@@ -287,9 +352,9 @@ export default function AuthorForm({
                       <Select.Trigger />
                       <Select.Content>
                         <Select.Item value='none'>Keine Angabe</Select.Item>
-                        <Select.Item value='male'>Männlich</Select.Item>
-                        <Select.Item value='female'>Weiblich</Select.Item>
-                        <Select.Item value='diverse'>Divers</Select.Item>
+                        <Select.Item value='m'>Männlich</Select.Item>
+                        <Select.Item value='f'>Weiblich</Select.Item>
+                        <Select.Item value='d'>Divers</Select.Item>
                       </Select.Content>
                     </Select.Root>
                   </Box>

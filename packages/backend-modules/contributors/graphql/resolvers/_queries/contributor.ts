@@ -4,18 +4,25 @@ import Auth from '@orbiting/backend-modules-auth'
 const { Roles } = Auth
 
 type ContributorArgs = {
-  id: string
+  id?: string
+  slug?: string
 }
 
 export = async function contributor(
   _: unknown,
-  { id }: ContributorArgs,
+  { id, slug }: ContributorArgs,
   { pgdb, user }: GraphqlContext,
 ) {
   // Ensure user has appropriate permissions
   Roles.ensureUserIsInRoles(user, ['admin', 'editor', 'producer'])
 
-  const contributor = await pgdb.public.contributors.findOne({ id })
+  // Validate that exactly one of id or slug is provided
+  if ((!id && !slug) || (id && slug)) {
+    throw new Error('Please provide either id or slug, but not both')
+  }
+
+  const whereClause = id ? { id } : { slug }
+  const contributor = await pgdb.public.contributors.findOne(whereClause)
   
   if (!contributor) {
     return null

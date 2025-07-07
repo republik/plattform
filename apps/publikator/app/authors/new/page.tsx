@@ -7,16 +7,38 @@ import { gql } from '@apollo/client'
 import AuthorForm, { ContributorInput } from '../../components/author-form'
 
 const CREATE_CONTRIBUTOR_MUTATION = gql`
-  mutation CreateContributor($input: ContributorInput!) {
-    upsertContributor(input: $input) {
-      id
-      slug
-      name
-      shortBio
-      image
-      employee
-      userId
-      prolitterisId
+  mutation CreateContributor(
+    $name: String!
+    $shortBio: String
+    $image: String
+    $employee: EmployeeStatusEnum
+    $userId: ID
+    $prolitterisId: String
+    $gender: GenderEnum
+  ) {
+    upsertContributor(
+      name: $name
+      shortBio: $shortBio
+      image: $image
+      employee: $employee
+      userId: $userId
+      prolitterisId: $prolitterisId
+      gender: $gender
+    ) {
+      contributor {
+        id
+        slug
+        name
+        shortBio
+        image
+        employee
+        userId
+        prolitterisId
+        gender
+      }
+      isNew
+      warnings
+      errors
     }
   }
 `
@@ -24,13 +46,31 @@ const CREATE_CONTRIBUTOR_MUTATION = gql`
 export default function NewAuthorPage() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errors, setErrors] = useState<string[]>([])
+  const [warnings, setWarnings] = useState<string[]>([])
 
   const [createContributor] = useMutation(CREATE_CONTRIBUTOR_MUTATION, {
     onCompleted: (data) => {
-      router.push(`/authors/${data.upsertContributor.slug}/edit`)
+      const result = data.upsertContributor
+      
+      if (result.errors && result.errors.length > 0) {
+        setErrors(result.errors)
+        setIsSubmitting(false)
+        return
+      }
+      
+      if (result.warnings && result.warnings.length > 0) {
+        setWarnings(result.warnings)
+      }
+      
+      if (result.contributor) {
+        router.push(`/authors/${result.contributor.slug}/edit`)
+      }
     },
     onError: (error) => {
-      console.error('Error creating contributor:', error)
+      console.error('GraphQL Error creating contributor:', error)
+      setErrors([error.message || 'Ein unerwarteter Fehler ist aufgetreten'])
+      setIsSubmitting(false)
     },
   })
 
@@ -38,20 +78,38 @@ export default function NewAuthorPage() {
     setIsSubmitting(true)
 
     try {
+      // Map form data to mutation variables
+      const variables: any = {
+        name: formData.name,
+        shortBio: formData.shortBio || undefined,
+        image: formData.image || undefined,
+        userId: formData.userId || undefined,
+        prolitterisId: formData.prolitterisId || undefined,
+        gender: formData.gender || undefined,
+      }
+
+      // Map employee values to backend enums
+      if (formData.employee) {
+        if (formData.employee === 'present') variables.employee = 'present'
+        else if (formData.employee === 'past') variables.employee = 'past'
+      }
+
       await createContributor({
-        variables: {
-          input: {
-            ...formData,
-            userId: formData.userId || null,
-            prolitterisId: formData.prolitterisId || null,
-          },
-        },
+        variables,
       })
     } catch (error) {
       console.error('Error submitting form:', error)
-    } finally {
+      setErrors(['Ein unerwarteter Fehler ist aufgetreten'])
       setIsSubmitting(false)
     }
+  }
+
+  const handleClearErrors = () => {
+    setErrors([])
+  }
+
+  const handleClearWarnings = () => {
+    setWarnings([])
   }
 
   return (
@@ -59,6 +117,10 @@ export default function NewAuthorPage() {
       title="Neue Autor*in erstellen"
       onSubmit={handleSubmit}
       isSubmitting={isSubmitting}
+      errors={errors}
+      warnings={warnings}
+      onClearErrors={handleClearErrors}
+      onClearWarnings={handleClearWarnings}
     />
   )
 }

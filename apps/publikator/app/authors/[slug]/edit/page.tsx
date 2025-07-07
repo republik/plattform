@@ -18,28 +18,56 @@ const GET_CONTRIBUTOR_QUERY = gql`
       employee
       userId
       prolitterisId
+      gender
     }
   }
 `
 
 const UPDATE_CONTRIBUTOR_MUTATION = gql`
-  mutation UpdateContributor($id: ID!, $input: ContributorInput!) {
-    updateContributor(id: $id, input: $input) {
-      id
-      slug
-      name
-      shortBio
-      image
-      employee
-      userId
-      prolitterisId
+  mutation UpdateContributor(
+    $id: ID!
+    $name: String!
+    $shortBio: String
+    $image: String
+    $employee: EmployeeStatusEnum
+    $userId: ID
+    $prolitterisId: String
+    $gender: GenderEnum
+  ) {
+    upsertContributor(
+      id: $id
+      name: $name
+      shortBio: $shortBio
+      image: $image
+      employee: $employee
+      userId: $userId
+      prolitterisId: $prolitterisId
+      gender: $gender
+    ) {
+      contributor {
+        id
+        slug
+        name
+        shortBio
+        image
+        employee
+        userId
+        prolitterisId
+        gender
+      }
+      isNew
+      warnings
+      errors
     }
   }
 `
 
 const DELETE_CONTRIBUTOR_MUTATION = gql`
   mutation DeleteContributor($id: ID!) {
-    deleteContributor(id: $id)
+    deleteContributor(id: $id) {
+      success
+      errors
+    }
   }
 `
 
@@ -53,6 +81,8 @@ export default function EditAuthorPage({ params }: EditAuthorPageProps) {
   const resolvedParams = use(params)
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errors, setErrors] = useState<string[]>([])
+  const [warnings, setWarnings] = useState<string[]>([])
 
   const { data, loading, error } = useQuery(GET_CONTRIBUTOR_QUERY, {
     variables: { slug: resolvedParams.slug },
@@ -60,20 +90,46 @@ export default function EditAuthorPage({ params }: EditAuthorPageProps) {
   })
 
   const [updateContributor] = useMutation(UPDATE_CONTRIBUTOR_MUTATION, {
-    onCompleted: () => {
-      router.push('/authors')
+    onCompleted: (data) => {
+      const result = data.upsertContributor
+      
+      if (result.errors && result.errors.length > 0) {
+        setErrors(result.errors)
+        setIsSubmitting(false)
+        return
+      }
+      
+      if (result.warnings && result.warnings.length > 0) {
+        setWarnings(result.warnings)
+      }
+      
+      if (result.contributor) {
+        router.push('/authors')
+      }
     },
     onError: (error) => {
-      console.error('Error updating contributor:', error)
+      console.error('GraphQL Error updating contributor:', error)
+      setErrors([error.message || 'Ein unerwarteter Fehler ist aufgetreten'])
+      setIsSubmitting(false)
     },
   })
 
   const [deleteContributor] = useMutation(DELETE_CONTRIBUTOR_MUTATION, {
-    onCompleted: () => {
-      router.push('/authors')
+    onCompleted: (data) => {
+      const result = data.deleteContributor
+      
+      if (result.errors && result.errors.length > 0) {
+        setErrors(result.errors)
+        return
+      }
+      
+      if (result.success) {
+        router.push('/authors')
+      }
     },
     onError: (error) => {
-      console.error('Error deleting contributor:', error)
+      console.error('GraphQL Error deleting contributor:', error)
+      setErrors([error.message || 'Ein unerwarteter Fehler ist aufgetreten'])
     },
   })
 
@@ -81,19 +137,29 @@ export default function EditAuthorPage({ params }: EditAuthorPageProps) {
     setIsSubmitting(true)
     
     try {
+      // Map form data to mutation variables
+      const variables: any = {
+        id: data.contributor.id,
+        name: formData.name,
+        shortBio: formData.shortBio || undefined,
+        image: formData.image || undefined,
+        userId: formData.userId || undefined,
+        prolitterisId: formData.prolitterisId || undefined,
+        gender: formData.gender || undefined,
+      }
+
+      // Map employee values to backend enums
+      if (formData.employee) {
+        if (formData.employee === 'present') variables.employee = 'present'
+        else if (formData.employee === 'past') variables.employee = 'past'
+      }
+
       await updateContributor({
-        variables: {
-          id: data.contributor.id,
-          input: {
-            ...formData,
-            userId: formData.userId || null,
-            prolitterisId: formData.prolitterisId || null,
-          }
-        }
+        variables,
       })
     } catch (error) {
       console.error('Error submitting form:', error)
-    } finally {
+      setErrors(['Ein unerwarteter Fehler ist aufgetreten'])
       setIsSubmitting(false)
     }
   }
@@ -105,7 +171,16 @@ export default function EditAuthorPage({ params }: EditAuthorPageProps) {
       })
     } catch (error) {
       console.error('Error deleting contributor:', error)
+      setErrors(['Ein unerwarteter Fehler ist aufgetreten'])
     }
+  }
+
+  const handleClearErrors = () => {
+    setErrors([])
+  }
+
+  const handleClearWarnings = () => {
+    setWarnings([])
   }
 
   if (loading) {
@@ -136,6 +211,10 @@ export default function EditAuthorPage({ params }: EditAuthorPageProps) {
       onSubmit={handleSubmit}
       onDelete={handleDelete}
       isSubmitting={isSubmitting}
+      errors={errors}
+      warnings={warnings}
+      onClearErrors={handleClearErrors}
+      onClearWarnings={handleClearWarnings}
     />
   )
 } 
