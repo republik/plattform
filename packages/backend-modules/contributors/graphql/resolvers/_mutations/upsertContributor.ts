@@ -11,6 +11,26 @@ const { Roles } = Auth
 const MAX_NAME_LENGTH = 100
 const MAX_SHORT_BIO_LENGTH = 500
 
+type UpsertContributorArgs = {
+  id?: string
+  name: string
+  shortBio?: string
+  image?: string
+  prolitterisId?: string
+  prolitterisFirstname?: string
+  prolitterisLastname?: string
+  gender?: string
+  userId?: string
+  employee?: 'past' | 'present'
+}
+
+type UpsertContributorResult = {
+  contributor: any | null
+  isNew: boolean
+  warnings: string[]
+  errors: { field: string | null; message: string }[]
+}
+
 // URL validation utility
 const isValidUrl = (url: string): boolean => {
   try {
@@ -81,10 +101,7 @@ const validateInput = (
   }
 
   // UserId validation (basic UUID format check)
-  if (
-    args.userId &&
-    !isUuid(args.userId)
-  ) {
+  if (args.userId && !isUuid(args.userId)) {
     errors.push({
       field: 'userId',
       message: 'User ID muss ein gültiger UUID sein',
@@ -117,26 +134,6 @@ const findUniqueSlug = async (
   }
 
   return slug
-}
-
-type UpsertContributorArgs = {
-  id?: string
-  name: string
-  shortBio?: string
-  image?: string
-  prolitterisId?: string
-  prolitterisFirstname?: string
-  prolitterisLastname?: string
-  gender?: string
-  userId?: string
-  employee?: "past" | "present"
-}
-
-type UpsertContributorResult = {
-  contributor: any | null
-  isNew: boolean
-  warnings: string[]
-  errors: { field: string | null; message: string }[]
 }
 
 export = async function upsertContributor(
@@ -172,14 +169,11 @@ export = async function upsertContributor(
   } = args
   const warnings: string[] = []
 
-
   const transaction = await pgdb.transactionBegin()
 
   try {
     // Check for duplicate names (warning only)
-    const whereClauseForName = id
-      ? { name, id: { '!=': id } }
-      : { name }
+    const whereClauseForName = id ? { name, id: { '!=': id } } : { name }
     const existingWithName = await transaction.public.contributors.findFirst(
       whereClauseForName,
     )
@@ -289,7 +283,9 @@ export = async function upsertContributor(
       errors: [
         {
           field: null,
-          message: `Ein unerwarteter Fehler ist aufgetreten: ${(e as Error).message}`,
+          message: `Ein unerwarteter Fehler ist aufgetreten: ${
+            (e as Error).message
+          }`,
         },
       ],
     }
