@@ -1,3 +1,4 @@
+import { v4 as isUuid } from 'is-uuid'
 import type { GraphqlContext } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
 // @ts-expect-error - Missing TypeScript declarations for utils module
@@ -82,9 +83,7 @@ const validateInput = (
   // UserId validation (basic UUID format check)
   if (
     args.userId &&
-    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-      args.userId,
-    )
+    !isUuid(args.userId)
   ) {
     errors.push({
       field: 'userId',

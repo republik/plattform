@@ -9,6 +9,7 @@
     "@orbiting/backend-modules-scalars": "*",
     "@orbiting/backend-modules-types": "*",
     "@orbiting/backend-modules-utils": "*",
-    "apollo-modules-node": "*"
+    "apollo-modules-node": "*",
+    "is-uuid": "^1.0.2"
   }
 }
