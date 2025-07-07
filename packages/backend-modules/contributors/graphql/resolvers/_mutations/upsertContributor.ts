@@ -16,7 +16,7 @@ const sanitizeInput = (input: string): string => {
   // Remove potentially dangerous characters while preserving readability
   return input
     .replace(/[<>]/g, '') // Remove < and > to prevent HTML injection
-    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/(?:javascript:|data:|vbscript:)/gi, '') // Remove javascript:, data:, and vbscript: protocols
     .replace(/on\w+\s*=/gi, '') // Remove event handlers like onclick=
     .trim()
 }
