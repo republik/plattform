@@ -32,12 +32,14 @@ const isValidUrl = (url: string): boolean => {
 }
 
 // Validate input fields
-const validateInput = (args: UpsertContributorArgs): string[] => {
-  const errors: string[] = []
+const validateInput = (
+  args: UpsertContributorArgs,
+): { field: string | null; message: string }[] => {
+  const errors: { field: string | null; message: string }[] = []
 
   // Name validation
   if (!args.name || args.name.trim().length === 0) {
-    errors.push('Name ist erforderlich')
+    errors.push({ field: 'name', message: 'Name ist erforderlich' })
   }
 
   try {
@@ -47,7 +49,7 @@ const validateInput = (args: UpsertContributorArgs): string[] => {
       error: `Name muss zwischen 1 und ${MAX_NAME_LENGTH} Zeichen lang sein`,
     })
   } catch (error) {
-    errors.push((error as Error).message)
+    errors.push({ field: 'name', message: (error as Error).message })
   }
 
   // Short bio validation
@@ -58,14 +60,14 @@ const validateInput = (args: UpsertContributorArgs): string[] => {
         error: `Kurze Biografie darf maximal ${MAX_SHORT_BIO_LENGTH} Zeichen lang sein`,
       })
     } catch (error) {
-      errors.push((error as Error).message)
+      errors.push({ field: 'shortBio', message: (error as Error).message })
     }
   }
 
   // Image URL validation
   if (args.image) {
     if (!isValidUrl(args.image)) {
-      errors.push('Bild-URL ist ungültig')
+      errors.push({ field: 'image', message: 'Bild-URL ist ungültig' })
     }
   }
 
@@ -73,13 +75,19 @@ const validateInput = (args: UpsertContributorArgs): string[] => {
   if (args.prolitterisId) {
     // Validate that it's exactly 6 digits
     if (!/^\d{6}$/.test(args.prolitterisId)) {
-      errors.push('Prolitteris ID muss genau 6 Ziffern enthalten')
+      errors.push({
+        field: 'prolitterisId',
+        message: 'Prolitteris ID muss genau 6 Ziffern enthalten',
+      })
     }
   }
 
   // Gender validation (ensure it's one of the allowed values)
   if (args.gender && !['m', 'f', 'd'].includes(args.gender)) {
-    errors.push('Geschlecht muss m, f oder d sein')
+    errors.push({
+      field: 'gender',
+      message: 'Geschlecht muss m, f oder d sein',
+    })
   }
 
   // UserId validation (basic UUID format check)
@@ -89,7 +97,10 @@ const validateInput = (args: UpsertContributorArgs): string[] => {
       args.userId,
     )
   ) {
-    errors.push('User ID muss ein gültiger UUID sein')
+    errors.push({
+      field: 'userId',
+      message: 'User ID muss ein gültiger UUID sein',
+    })
   }
 
   return errors
@@ -136,7 +147,7 @@ type UpsertContributorResult = {
   contributor: any | null
   isNew: boolean
   warnings: string[]
-  errors: string[]
+  errors: { field: string | null; message: string }[]
 }
 
 export = async function upsertContributor(
@@ -212,7 +223,10 @@ export = async function upsertContributor(
           isNew: false,
           warnings: [],
           errors: [
-            `Prolitteris ID ist schon einem*r anderen Autor*in: ${safeName} zugeordnet`,
+            {
+              field: 'prolitterisId',
+              message: `Prolitteris ID ist schon einem*r anderen Autor*in: ${safeName} zugeordnet`,
+            },
           ],
         }
       }
@@ -250,7 +264,12 @@ export = async function upsertContributor(
           contributor: null,
           isNew: false,
           warnings: [],
-          errors: [`Contributor with ID ${id} not found`],
+          errors: [
+            {
+              field: 'id',
+              message: `Contributor with ID ${id} not found`,
+            },
+          ],
         }
       }
 
@@ -283,7 +302,10 @@ export = async function upsertContributor(
       isNew: false,
       warnings: [],
       errors: [
-        `Ein unerwarteter Fehler ist aufgetreten: ${(e as Error).message}`,
+        {
+          field: null,
+          message: `Ein unerwarteter Fehler ist aufgetreten: ${(e as Error).message}`,
+        },
       ],
     }
   }

@@ -12,12 +12,11 @@ import {
   Flex,
   Text,
   Button,
-  Tooltip,
   Heading,
   Spinner,
   TextField,
 } from '@radix-ui/themes'
-import { Pencil, Search, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
 import TooltipIcons from '../components/author-table/tooltip-icons'
 
 export interface Contributor {

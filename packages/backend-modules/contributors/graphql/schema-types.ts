@@ -27,16 +27,26 @@ enum EmployeeStatusEnum {
   present
 }
 
+type UpsertContributorError {
+  field: String
+  message: String!
+}
+
+type DeleteContributorError {
+  field: String
+  message: String!
+}
+
 type UpsertContributorResult {
   contributor: Contributor
   isNew: Boolean!
   warnings: [String!]!
-  errors: [String!]!
+  errors: [UpsertContributorError!]!
 }
 
 type DeleteContributorResult {
   success: Boolean!
-  errors: [String!]!
+  errors: [DeleteContributorError!]!
 }
 
 type ContributorConnection {

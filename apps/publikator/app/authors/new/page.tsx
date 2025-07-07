@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@apollo/client'
 import { gql } from '@apollo/client'
-import AuthorForm, { ContributorInput } from '../../components/author-form'
+import AuthorForm, { ContributorInput, FormError } from '../../components/author-form'
 
 const CREATE_CONTRIBUTOR_MUTATION = gql`
   mutation CreateContributor(
@@ -38,7 +38,10 @@ const CREATE_CONTRIBUTOR_MUTATION = gql`
       }
       isNew
       warnings
-      errors
+      errors {
+        field
+        message
+      }
     }
   }
 `
@@ -46,7 +49,7 @@ const CREATE_CONTRIBUTOR_MUTATION = gql`
 export default function NewAuthorPage() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [errors, setErrors] = useState<string[]>([])
+  const [errors, setErrors] = useState<FormError[]>([])
   const [warnings, setWarnings] = useState<string[]>([])
 
   const [createContributor] = useMutation(CREATE_CONTRIBUTOR_MUTATION, {
@@ -69,7 +72,7 @@ export default function NewAuthorPage() {
     },
     onError: (error) => {
       console.error('GraphQL Error creating contributor:', error)
-      setErrors([error.message || 'Ein unerwarteter Fehler ist aufgetreten'])
+      setErrors([{ field: null, message: error.message || 'Ein unerwarteter Fehler ist aufgetreten' }])
       setIsSubmitting(false)
     },
   })
@@ -99,7 +102,7 @@ export default function NewAuthorPage() {
       })
     } catch (error) {
       console.error('Error submitting form:', error)
-      setErrors(['Ein unerwarteter Fehler ist aufgetreten'])
+      setErrors([{ field: null, message: 'Ein unerwarteter Fehler ist aufgetreten' }])
       setIsSubmitting(false)
     }
   }

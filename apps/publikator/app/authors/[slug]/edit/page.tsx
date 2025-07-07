@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useQuery, useMutation } from '@apollo/client'
 import { gql } from '@apollo/client'
 import { Box, Flex, Spinner, Text } from '@radix-ui/themes'
-import AuthorForm, { ContributorInput } from '../../../components/author-form'
+import AuthorForm, { ContributorInput, FormError } from '../../../components/author-form'
 
 const GET_CONTRIBUTOR_QUERY = gql`
   query GetContributor($slug: String!) {
@@ -57,7 +57,10 @@ const UPDATE_CONTRIBUTOR_MUTATION = gql`
       }
       isNew
       warnings
-      errors
+      errors {
+        field
+        message
+      }
     }
   }
 `
@@ -66,7 +69,10 @@ const DELETE_CONTRIBUTOR_MUTATION = gql`
   mutation DeleteContributor($id: ID!) {
     deleteContributor(id: $id) {
       success
-      errors
+      errors {
+        field
+        message
+      }
     }
   }
 `
@@ -81,7 +87,7 @@ export default function EditAuthorPage({ params }: EditAuthorPageProps) {
   const resolvedParams = use(params)
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [errors, setErrors] = useState<string[]>([])
+  const [errors, setErrors] = useState<FormError[]>([])
   const [warnings, setWarnings] = useState<string[]>([])
 
   const { data, loading, error } = useQuery(GET_CONTRIBUTOR_QUERY, {
@@ -109,7 +115,7 @@ export default function EditAuthorPage({ params }: EditAuthorPageProps) {
     },
     onError: (error) => {
       console.error('GraphQL Error updating contributor:', error)
-      setErrors([error.message || 'Ein unerwarteter Fehler ist aufgetreten'])
+      setErrors([{ field: null, message: error.message || 'Ein unerwarteter Fehler ist aufgetreten' }])
       setIsSubmitting(false)
     },
   })
@@ -129,7 +135,7 @@ export default function EditAuthorPage({ params }: EditAuthorPageProps) {
     },
     onError: (error) => {
       console.error('GraphQL Error deleting contributor:', error)
-      setErrors([error.message || 'Ein unerwarteter Fehler ist aufgetreten'])
+      setErrors([{ field: null, message: error.message || 'Ein unerwarteter Fehler ist aufgetreten' }])
     },
   })
 
@@ -159,7 +165,7 @@ export default function EditAuthorPage({ params }: EditAuthorPageProps) {
       })
     } catch (error) {
       console.error('Error submitting form:', error)
-      setErrors(['Ein unerwarteter Fehler ist aufgetreten'])
+      setErrors([{ field: null, message: 'Ein unerwarteter Fehler ist aufgetreten' }])
       setIsSubmitting(false)
     }
   }
@@ -171,7 +177,7 @@ export default function EditAuthorPage({ params }: EditAuthorPageProps) {
       })
     } catch (error) {
       console.error('Error deleting contributor:', error)
-      setErrors(['Ein unerwarteter Fehler ist aufgetreten'])
+      setErrors([{ field: null, message: 'Ein unerwarteter Fehler ist aufgetreten' }])
     }
   }
 

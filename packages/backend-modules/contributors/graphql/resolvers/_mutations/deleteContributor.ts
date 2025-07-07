@@ -9,7 +9,7 @@ type DeleteContributorArgs = {
 
 type DeleteContributorResult = {
   success: boolean
-  errors: string[]
+  errors: { field: string | null; message: string }[]
 }
 
 export = async function deleteContributor(
@@ -29,7 +29,12 @@ export = async function deleteContributor(
       await transaction.transactionRollback()
       return {
         success: false,
-        errors: [`Contributor with ID ${id} not found`],
+        errors: [
+          {
+            field: 'id',
+            message: `Contributor with ID ${id} not found`,
+          },
+        ],
       }
     }
 
@@ -47,7 +52,12 @@ export = async function deleteContributor(
       await transaction.transactionRollback()
       return {
         success: false,
-        errors: ['Autor*in kann nicht gelöscht werden, da sie mit einem Dokument verknüpft ist'],
+        errors: [
+          {
+            field: null,
+            message: 'Autor*in kann nicht gelöscht werden, da sie mit einem Dokument verknüpft ist',
+          },
+        ],
       }
     }
 
@@ -64,7 +74,10 @@ export = async function deleteContributor(
     return {
       success: false,
       errors: [
-        `Ein unerwarteter Fehler ist aufgetreten: ${(e as Error).message}`,
+        {
+          field: null,
+          message: `Ein unerwarteter Fehler ist aufgetreten: ${(e as Error).message}`,
+        },
       ],
     }
   }

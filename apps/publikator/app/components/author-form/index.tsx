@@ -34,6 +34,11 @@ export interface ContributorData extends ContributorInput {
   slug?: string
 }
 
+export interface FormError {
+  field: string | null
+  message: string
+}
+
 interface AuthorFormProps {
   initialData?: ContributorData
   isEdit?: boolean
@@ -41,7 +46,7 @@ interface AuthorFormProps {
   onSubmit: (data: ContributorInput) => void
   onDelete?: () => void
   title: string
-  errors?: string[]
+  errors?: FormError[]
   warnings?: string[]
   onClearErrors?: () => void
   onClearWarnings?: () => void
@@ -70,6 +75,21 @@ export default function AuthorForm({
   })
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+
+  // Split errors into field-specific and general errors
+  const fieldErrors = errors.filter(error => error.field !== null)
+  const generalErrors = errors.filter(error => error.field === null)
+
+  // Helper function to get error for a specific field
+  const getFieldError = (fieldName: string): string | null => {
+    const error = fieldErrors.find(error => error.field === fieldName)
+    return error ? error.message : null
+  }
+
+  // Helper function to check if field has error
+  const hasFieldError = (fieldName: string): boolean => {
+    return fieldErrors.some(error => error.field === fieldName)
+  }
 
   // Populate form when initialData is provided
   useEffect(() => {
@@ -173,24 +193,24 @@ export default function AuthorForm({
         )}
       </Flex>
 
-      {/* Error Messages */}
-      {errors.length > 0 && (
+      {/* General Error Messages */}
+      {generalErrors.length > 0 && (
         <Box mb='4'>
           <Callout.Root color='red' mb='2'>
             <Callout.Icon>
               <AlertCircle size={16} />
             </Callout.Icon>
             <Callout.Text>
-              {errors.length === 1 ? (
-                errors[0]
+              {generalErrors.length === 1 ? (
+                generalErrors[0].message
               ) : (
                 <Box>
                   <Text weight='bold' mb='1'>
                     Es sind Fehler aufgetreten:
                   </Text>
                   <ul style={{ margin: '0', paddingLeft: '20px' }}>
-                    {errors.map((error, index) => (
-                      <li key={index}>{error}</li>
+                    {generalErrors.map((error, index) => (
+                      <li key={index}>{error.message}</li>
                     ))}
                   </ul>
                 </Box>
@@ -276,8 +296,14 @@ export default function AuthorForm({
                     onChange={handleImageUpload}
                     style={{ display: 'none' }}
                   />
+                  {getFieldError('image') && (
+                    <Text size='1' color='red'>
+                      {getFieldError('image')}
+                    </Text>
+                  )}
                 </Flex>
               </Box>
+              
               <Box>
                 <Text as='label' size='2' weight='bold' mb='1'>
                   Name *
@@ -287,7 +313,13 @@ export default function AuthorForm({
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder='Vor- und Nachname'
                   required
+                  color={hasFieldError('name') ? 'red' : undefined}
                 />
+                {getFieldError('name') && (
+                  <Text size='1' color='red' mt='1'>
+                    {getFieldError('name')}
+                  </Text>
+                )}
               </Box>
 
               <Box>
@@ -307,7 +339,13 @@ export default function AuthorForm({
                   placeholder='Maximal 500 Zeichen'
                   rows={4}
                   resize='vertical'
+                  color={hasFieldError('shortBio') ? 'red' : undefined}
                 />
+                {getFieldError('shortBio') && (
+                  <Text size='1' color='red' mt='1'>
+                    {getFieldError('shortBio')}
+                  </Text>
+                )}
               </Box>
 
               <Box>
@@ -318,10 +356,16 @@ export default function AuthorForm({
                   value={formData.userId || ''}
                   onChange={(e) => handleInputChange('userId', e.target.value)}
                   placeholder='User-ID (falls vorhanden)'
+                  color={hasFieldError('userId') ? 'red' : undefined}
                 />
                 <Text size='1' color='gray' mt='1'>
                   ID des verknüpften Verlegerkontos
                 </Text>
+                {getFieldError('userId') && (
+                  <Text size='1' color='red' mt='1'>
+                    {getFieldError('userId')}
+                  </Text>
+                )}
               </Box>
 
               <Box>
@@ -334,11 +378,18 @@ export default function AuthorForm({
                     handleInputChange('prolitterisId', e.target.value)
                   }
                   placeholder='PL-ID (falls vorhanden)'
+                  color={hasFieldError('prolitterisId') ? 'red' : undefined}
                 />
                 <Text size='1' color='gray' mt='1'>
                   ID für die Honorarabrechnung
                 </Text>
+                {getFieldError('prolitterisId') && (
+                  <Text size='1' color='red' mt='1'>
+                    {getFieldError('prolitterisId')}
+                  </Text>
+                )}
               </Box>
+              
               <Box>
                 <Flex align='center' justify='start' mb='1' gap='8'>
                   <Box>
@@ -349,7 +400,9 @@ export default function AuthorForm({
                       value={formData.gender || 'none'}
                       onValueChange={handleGenderChange}
                     >
-                      <Select.Trigger />
+                      <Select.Trigger 
+                        color={hasFieldError('gender') ? 'red' : undefined}
+                      />
                       <Select.Content>
                         <Select.Item value='none'>Keine Angabe</Select.Item>
                         <Select.Item value='m'>Männlich</Select.Item>
@@ -357,6 +410,11 @@ export default function AuthorForm({
                         <Select.Item value='d'>Divers</Select.Item>
                       </Select.Content>
                     </Select.Root>
+                    {getFieldError('gender') && (
+                      <Text size='1' color='red' mt='1'>
+                        {getFieldError('gender')}
+                      </Text>
+                    )}
                   </Box>
                   <Box>
                     <Text
@@ -372,13 +430,20 @@ export default function AuthorForm({
                       value={formData.employee || 'none'}
                       onValueChange={handleEmployeeChange}
                     >
-                      <Select.Trigger />
+                      <Select.Trigger 
+                        color={hasFieldError('employee') ? 'red' : undefined}
+                      />
                       <Select.Content>
                         <Select.Item value='none'>Extern</Select.Item>
                         <Select.Item value='present'>Aktuell</Select.Item>
                         <Select.Item value='past'>Ehemalig</Select.Item>
                       </Select.Content>
                     </Select.Root>
+                    {getFieldError('employee') && (
+                      <Text size='1' color='red' mt='1'>
+                        {getFieldError('employee')}
+                      </Text>
+                    )}
                   </Box>
                 </Flex>
               </Box>
