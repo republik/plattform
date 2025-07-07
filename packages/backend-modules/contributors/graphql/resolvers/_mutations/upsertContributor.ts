@@ -15,9 +15,11 @@ const sanitizeInput = (input: string): string => {
 
   // Remove potentially dangerous characters while preserving readability
   return input
-    .replace(/[<>]/g, '') // Remove < and > to prevent HTML injection
-    .replace(/(?:javascript:|data:|vbscript:)/gi, '') // Remove javascript:, data:, and vbscript: protocols
-    .replace(/on\w+\s*=/gi, '') // Remove event handlers like onclick=
+    .replace(/[<>"']/g, '') // Remove < > " ' to prevent HTML injection and attribute breaking
+    .replace(/(?:javascript:|data:|vbscript:|about:|chrome:|file:|ftp:)/gi, '') // Remove dangerous protocols
+    .replace(/on\w+/gi, '') // Remove event handler names completely (onclick, onload, etc.)
+    .replace(/&[#\w]*;?/g, '') // Remove HTML entities
+    .replace(/[\t\n\r\v\f]/g, '') // Remove specific control characters (tab, newline, etc.)
     .trim()
 }
 
