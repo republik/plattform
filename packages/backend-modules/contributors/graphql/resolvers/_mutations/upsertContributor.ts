@@ -145,7 +145,7 @@ export = async function upsertContributor(
   { pgdb, user }: GraphqlContext,
 ): Promise<UpsertContributorResult> {
   // Ensure user has appropriate permissions
-  Roles.ensureUserIsInRoles(user, ['admin', 'editor', 'producer'])
+  Roles.ensureUserIsInRoles(user, ['admin', 'producer'])
 
   // Validate input
   const validationErrors = validateInput(args)
