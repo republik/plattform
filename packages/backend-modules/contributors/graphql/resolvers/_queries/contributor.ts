@@ -13,8 +13,8 @@ export = async function contributor(
   { id, slug }: ContributorArgs,
   { pgdb, user }: GraphqlContext,
 ) {
-  // Ensure user has appropriate permissions
-  Roles.ensureUserIsInRoles(user, ['admin', 'editor', 'producer'])
+  // Check if user has permissions to access gender field
+  const hasGenderAccess = Roles.userIsInRoles(user, ['admin', 'editor', 'producer'])
 
   // Validate that exactly one of id or slug is provided
   if ((!id && !slug) || (id && slug)) {
@@ -26,6 +26,10 @@ export = async function contributor(
   
   if (!contributor) {
     return null
+  }
+
+  if (!hasGenderAccess) {
+    delete contributor.gender
   }
 
   return contributor

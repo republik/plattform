@@ -32,8 +32,8 @@ export = async function contributors(
   args: ContributorsArgs,
   { pgdb, user }: GraphqlContext,
 ) {
-  // Ensure user has appropriate permissions
-  Roles.ensureUserIsInRoles(user, ['admin', 'editor', 'supporter'])
+  // Check if user has permissions to access gender field
+  const hasGenderAccess = Roles.userIsInRoles(user, ['admin', 'editor', 'producer'])
 
   const { orderBy = { field: 'name', direction: 'ASC' }, filters = {} } = args
 
@@ -47,6 +47,10 @@ export = async function contributors(
   }
 
   if (filters.gender) {
+    // Only allow gender filtering if user has appropriate permissions
+    if (!hasGenderAccess) {
+      throw new Error('Insufficient permissions to filter by gender')
+    }
     whereConditions.push('gender = :gender')
     whereParams.gender = filters.gender
   }
@@ -78,6 +82,9 @@ export = async function contributors(
   // Build the complete query
   const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : ''
   
+  // Conditionally include gender field based on user permissions
+  const genderField = hasGenderAccess ? 'gender,' : ''
+  
   const query = `
     SELECT 
       id,
@@ -86,8 +93,9 @@ export = async function contributors(
       short_bio as "shortBio",
       image,
       prolitteris_id as "prolitterisId", 
-      prolitteris_name as "prolitterisName",
-      gender,
+      prolitteris_firstname as "prolitterisFirstname",
+      prolitteris_lastname as "prolitterisLastname",
+      ${genderField}
       user_id as "userId",
       employee_status as "employee",
       created_at as "createdAt",

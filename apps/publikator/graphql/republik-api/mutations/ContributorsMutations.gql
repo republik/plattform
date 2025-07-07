@@ -4,7 +4,8 @@ mutation UpsertContributor(
   $shortBio: String
   $image: String
   $prolitterisId: String
-  $prolitterisName: String
+  $prolitterisFirstname: String
+  $prolitterisLastname: String
   $gender: GenderEnum
   $userId: ID
   $employee: EmployeeStatusEnum
@@ -15,7 +16,8 @@ mutation UpsertContributor(
     shortBio: $shortBio
     image: $image
     prolitterisId: $prolitterisId
-    prolitterisName: $prolitterisName
+    prolitterisFirstname: $prolitterisFirstname
+    prolitterisLastname: $prolitterisLastname
     gender: $gender
     userId: $userId
     employee: $employee
@@ -27,7 +29,8 @@ mutation UpsertContributor(
       shortBio
       image
       prolitterisId
-      prolitterisName
+      prolitterisFirstname
+      prolitterisLastname
       gender
       userId
       employee

@@ -6,7 +6,8 @@ type Contributor {
   shortBio: String
   image: String
   prolitterisId: String
-  prolitterisName: String
+  prolitterisFirstname: String
+  prolitterisLastname: String
   gender: GenderEnum
   userId: ID
   employee: EmployeeStatusEnum

@@ -34,7 +34,8 @@ const CREATE_CONTRIBUTOR_MUTATION = gql`
         employee
         userId
         prolitterisId
-        prolitterisName
+        prolitterisFirstname
+        prolitterisLastname
         gender 
         createdAt
         updatedAt

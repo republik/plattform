@@ -126,7 +126,8 @@ type UpsertContributorArgs = {
   shortBio?: string
   image?: string
   prolitterisId?: string
-  prolitterisName?: string
+  prolitterisFirstname?: string
+  prolitterisLastname?: string
   gender?: string
   userId?: string
   employee?: "past" | "present"
@@ -164,7 +165,8 @@ export = async function upsertContributor(
     shortBio,
     image,
     prolitterisId,
-    prolitterisName,
+    prolitterisFirstname,
+    prolitterisLastname,
     gender,
     userId,
     employee,
@@ -224,8 +226,11 @@ export = async function upsertContributor(
       ...(shortBio !== undefined && { shortBio }),
       ...(image !== undefined && { image }),
       ...(prolitterisId !== undefined && { prolitterisId }),
-      ...(prolitterisName !== undefined && {
-        prolitterisName,
+      ...(prolitterisFirstname !== undefined && {
+        prolitterisFirstname,
+      }),
+      ...(prolitterisLastname !== undefined && {
+        prolitterisLastname,
       }),
       ...(gender !== undefined && { gender }),
       ...(userId !== undefined && { userId }),

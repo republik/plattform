@@ -6,7 +6,8 @@ query Contributor($id: ID, $slug: String) {
     shortBio
     image
     prolitterisId
-    prolitterisName
+    prolitterisFirstname
+    prolitterisLastname
     gender
     userId
     employee
@@ -29,7 +30,8 @@ query Contributors($first: Int, $orderBy: ContributorOrderBy) {
       shortBio
       image
       prolitterisId
-      prolitterisName
+      prolitterisFirstname
+      prolitterisLastname
       gender
       userId
       employee

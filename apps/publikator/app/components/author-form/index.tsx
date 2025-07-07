@@ -26,6 +26,8 @@ export interface ContributorInput {
   employee?: string | null
   userId?: string | null
   prolitterisId?: string | null
+  prolitterisFirstname?: string | null
+  prolitterisLastname?: string | null
   gender?: string | null
 }
 
@@ -72,6 +74,8 @@ export default function AuthorForm({
     userId: '',
     prolitterisId: '',
     gender: null,
+    prolitterisFirstname: null,
+    prolitterisLastname: null,
   })
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -102,6 +106,8 @@ export default function AuthorForm({
         userId: initialData.userId || '',
         prolitterisId: initialData.prolitterisId || '',
         gender: initialData.gender,
+        prolitterisFirstname: initialData.prolitterisFirstname,
+        prolitterisLastname: initialData.prolitterisLastname,
       })
       setImagePreview(initialData.image)
     }
@@ -388,6 +394,32 @@ export default function AuthorForm({
                     {getFieldError('prolitterisId')}
                   </Text>
                 )}
+              </Box>
+
+              <Box>
+                <Text as='label' size='2' weight='bold' mb='1'>
+                  Prolitteris-Vorname
+                </Text>
+                <TextField.Root
+                  value={formData.prolitterisFirstname || ''}
+                  onChange={(e) =>
+                    handleInputChange('prolitterisFirstname', e.target.value)
+                  }
+                  placeholder='Vorname (falls vorhanden)'
+                />
+              </Box>
+
+              <Box>
+                <Text as='label' size='2' weight='bold' mb='1'>
+                  Prolitteris-Nachname
+                </Text>
+                <TextField.Root
+                  value={formData.prolitterisLastname || ''}
+                  onChange={(e) =>
+                    handleInputChange('prolitterisLastname', e.target.value)
+                  }
+                  placeholder='Nachname (falls vorhanden)'
+                />
               </Box>
               
               <Box>
