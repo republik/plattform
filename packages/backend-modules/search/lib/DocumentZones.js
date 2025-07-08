@@ -80,7 +80,7 @@ const getElasticDoc = async (
     type,
     node,
     data: node?.data || {},
-    text: (await stringifyNode(node)).trim() || '',
+    text: (stringifyNode(node)).trim() || '',
   }
 }
 

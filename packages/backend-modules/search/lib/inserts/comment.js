@@ -49,7 +49,7 @@ async function transform(row) {
     date: row.createdAt,
   }
 
-  row.contentString = await stringifyNode(remark.parse(row.content))
+  row.contentString = stringifyNode(remark.parse(row.content))
 
   return row
 }

@@ -12,7 +12,6 @@ const {
 } = require('../../lib/process')
 const {
   contentUrlResolver,
-  contentUserResolver,
   metaUrlResolver,
   extractIdsFromNode,
 } = require('../../lib/resolve')
@@ -69,7 +68,6 @@ module.exports = {
       )
 
       await Promise.all([
-        contentUserResolver(doc.content, doc._users),
         processRepoImageUrlsInContent(doc.content, addFormatAuto),
         processEmbedImageUrlsInContent(doc.content, addFormatAuto),
       ])
@@ -156,7 +154,6 @@ module.exports = {
 
       const idsFromNodes = await Promise.map(nodes, async (node) => {
         await Promise.all([
-          contentUserResolver(node, doc._users),
           processRepoImageUrlsInContent(node, addFormatAuto),
           processEmbedImageUrlsInContent(node, addFormatAuto),
         ])
@@ -167,7 +164,7 @@ module.exports = {
           processIfHasAccess(node, context.user, doc._apiKey)
         }
 
-        return extractIdsFromNode(node, doc.meta.repoId)
+        return extractIdsFromNode(node)
       })
       const { docs, users } = await resolveEntities({
         context,

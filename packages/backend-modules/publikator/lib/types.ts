@@ -23,7 +23,7 @@ export interface Commit {
   repoId: string
   parentIds: string[]
   message: string
-  type: null | 'mdast' | 'slate'
+  type: null | 'mdast'
   content: string
   content__markdown: string
   meta: any

@@ -235,7 +235,7 @@ const getElasticDoc = async ({ doc, commitId, versionName, resolved }) => {
     resolved: !_.isEmpty(resolved) ? resolved : undefined,
     type: doc.type,
     content: doc.content,
-    contentString: await stringifyNode(doc.content),
+    contentString: stringifyNode(doc.content),
   }
 }
 
@@ -308,10 +308,8 @@ const addRelatedDocs = async ({
     const doc = docs[i]
 
     // from content
-    const { users, repos } = await extractIdsFromNode(
-      doc.type,
-      withoutContent ? doc.meta.credits : doc.content,
-      doc.repoId,
+    const { users, repos } = extractIdsFromNode(
+      withoutContent ? doc.meta.credits : doc.content
     )
     userIds = userIds.concat(users)
     repoIds = repoIds.concat(repos)
@@ -384,10 +382,8 @@ const addRelatedDocs = async ({
   for (const i in relatedDocs) {
     const doc = relatedDocs[i]
 
-    const { users } = await extractIdsFromNode(
-      doc.type,
-      withoutContent ? doc.meta.credits : doc.content,
-      doc.repoId,
+    const { users } = extractIdsFromNode(
+      withoutContent ? doc.meta.credits : doc.content
     )
     userIds = userIds.concat(users)
 

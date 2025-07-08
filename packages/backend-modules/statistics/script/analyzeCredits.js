@@ -113,7 +113,7 @@ PgDb.connect()
         .map(({ _source: { meta } }) => meta)
         .filter(({ credits }) => credits.children.length > 0),
       async (meta) => {
-        const credits = await stringifyNode(meta.credits)
+        const credits = stringifyNode(meta.credits)
 
         const analysis = new Analyzer().getAnalysis(credits)
 
