@@ -1004,9 +1004,13 @@
       "key": "api/newsletters/request/CLIMATE/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Challenge Accepted Newsletter."
     },
+      {
+        "key": "api/newsletters/request/WDWWW/subject",
+        "value": "Bestätigen Sie ihre Anmeldung zum Nachrichten-Briefing der Republik."
+      },
     {
-      "key": "api/newsletters/request/WDWWW/subject",
-      "value": "Bestätigen Sie ihre Anmeldung zum Nachrichten-Briefing der Republik."
+      "key": "api/newsletters/request/SUNDAY/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Republik am Sonntag Newsletter."
     },
     {
       "key": "api/newsletters/request/notSupported",
