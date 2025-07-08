@@ -1779,6 +1779,14 @@
     {
       "key": "editor/replace/nothingFound",
       "value": "Kein Treffer"
+    },
+    {
+      "key": "editor/specialChar/nbsp",
+      "value": "Dauerleerzeichen"
+    },
+    {
+      "key": "editor/specialChar/shy",
+      "value": "weiches Trennzeichen"
     }
   ]
 }
