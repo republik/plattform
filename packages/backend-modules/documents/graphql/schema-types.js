@@ -143,7 +143,6 @@ type Meta {
 
 enum DocumenSchemaType {
   mdast
-  slate
 }
 
 input DocumentInput {

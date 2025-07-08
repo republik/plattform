@@ -277,7 +277,7 @@ const getMeta = async (doc) => {
     ...times,
     ...resolvedFields,
     credits,
-    creditsString: await stringifyNode(credits),
+    creditsString: stringifyNode(credits),
     audioSource: getAudioSource(doc),
   }
 

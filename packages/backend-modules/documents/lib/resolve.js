@@ -320,10 +320,6 @@ const contentUrlResolver = (
   })
 }
 
-const contentUserResolver = (content, _users = []) => {
-  return Promise.resolve()
-}
-
 const metaUrlResolver = (
   meta,
   _all,
@@ -367,7 +363,7 @@ const metaUrlResolver = (
   }
 }
 
-const extractIdsFromNode = (node, contextRepoId) => {
+const extractIdsFromNode = (node) => {
   const repos = []
   const users = []
   visit(node, 'zone', (node) => {
@@ -450,7 +446,6 @@ module.exports = {
   extractUserUrl,
   createResolver,
   contentUrlResolver,
-  contentUserResolver,
   metaUrlResolver,
   metaFieldResolver,
   stringifyNode,
