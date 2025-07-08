@@ -6,9 +6,7 @@ const {
   Analyzer,
 } = require('@orbiting/backend-modules-statistics/lib/credits/analyzer')
 
-const { metaFieldResolver } = require('../common/resolve')
-
-const { stringifyNode } = require('./resolve')
+const { stringifyNode, metaFieldResolver } = require('./resolve')
 
 // mean German, see http://iovs.arvojournals.org/article.aspx?articleid=2166061
 const WORDS_PER_MIN = 180
