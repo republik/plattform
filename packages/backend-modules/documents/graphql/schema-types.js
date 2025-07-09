@@ -143,7 +143,7 @@ type Meta {
 
 enum DocumenSchemaType {
   mdast
-  slate
+  slate @deprecated(reason: "Not used anymore")
 }
 
 input DocumentInput {
@@ -156,7 +156,7 @@ type Document {
   repoId: ID!
   issuedForUserId: ID
 
-  type: DocumenSchemaType!
+  type: DocumenSchemaType! @deprecated(reason: "Not used anymore, always mdast")
   content: JSON!
 
   meta: Meta!
@@ -200,7 +200,7 @@ type DocumentZone {
   identifier: String!
   data: JSON!
   text: String
-  type: DocumenSchemaType!
+  type: DocumenSchemaType! @deprecated(reason: "Not used anymore, always mdast")
   node: JSON!
   document: Document
 }
