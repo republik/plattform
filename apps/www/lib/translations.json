@@ -881,6 +881,18 @@
       "value": "Wir beobachten für Sie das Weltgeschehen, filtern das Wichtigste heraus, ordnen es ein – und schicken es Ihnen jeden Freitag ansprechend verpackt in Ihre Inbox."
     },
     {
+      "key": "account/newsletterSubscriptions/SUNDAY/label",
+      "value": "Republik am Sonntag"
+    },
+    {
+      "key": "account/newsletterSubscriptions/SUNDAY/frequency",
+      "value": "Jeden Sonntag um 8 Uhr"
+    },
+    {
+      "key": "account/newsletterSubscriptions/SUNDAY/description",
+      "value": "Lesegenuss fernab aktueller News-Hektik. Jeden Sonntag präsentieren wir Ihnen einen Beitrag aus dem Archiv der Republik, der heute genauso lesenswert ist wie damals."
+    },
+    {
       "key": "account/newsletterSubscriptions/PROJECTR/label",
       "value": "Project-R-Newsletter"
     },
