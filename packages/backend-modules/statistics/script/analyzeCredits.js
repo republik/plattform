@@ -113,7 +113,7 @@ PgDb.connect()
         .map(({ _source: { meta } }) => meta)
         .filter(({ credits }) => credits.children.length > 0),
       async (meta) => {
-        const credits = await stringifyNode(meta.credits?.type, meta.credits)
+        const credits = stringifyNode(meta.credits)
 
         const analysis = new Analyzer().getAnalysis(credits)
 
@@ -236,7 +236,9 @@ PgDb.connect()
       '(f-n)+b%': (1 / stats['a-n']) * (stats.f + stats.b),
 
       // percentage überhang (gender ratio f - gender ratio m)
-      'überhang': (1 / stats['a-n']) * (stats.f + stats.b) - (1 / stats['a-n']) * (stats.m + stats.b),
+      überhang:
+        (1 / stats['a-n']) * (stats.f + stats.b) -
+        (1 / stats['a-n']) * (stats.m + stats.b),
     })
 
     console.warn('THIS SCRIPT IS FOR DEVELOPMENT PURPOSES ONLY.')

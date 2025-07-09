@@ -64,11 +64,6 @@ export const fontStyles = {
     fontWeight: 500,
     fontStyle: 'italic',
   },
-  flyerTitle: {
-    fontFamily: 'Druk-Wide, Roboto, sans-serif',
-    fontWeight: 500,
-    fontStyle: 'normal',
-  },
 }
 
 // Export for backwards compatibility
@@ -84,5 +79,4 @@ export const fontFamilies = {
   sansSerifBold: fontStyles.sansSerifBold.fontFamily,
   monospaceRegular: fontStyles.monospaceRegular.fontFamily,
   cursiveTitle: fontStyles.cursiveTitle.fontFamily,
-  flyerTitle: fontStyles.flyerTitle.fontFamily,
 }

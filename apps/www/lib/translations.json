@@ -57,10 +57,6 @@
       "value": "Feed"
     },
     {
-      "key": "navbar/flyer",
-      "value": "Journal"
-    },
-    {
       "key": "navbar/discussion",
       "value": "Dialog"
     },
@@ -3165,10 +3161,6 @@
       "value": "Teilen"
     },
     {
-      "key": "article/actionbar/flyer/share",
-      "value": "Journal teilen"
-    },
-    {
       "key": "article/actionbar/facebook/title",
       "value": "Auf Facebook teilen"
     },
@@ -3507,14 +3499,6 @@
     {
       "key": "article/prepublication/notice",
       "value": "Interne Publikation (Editoren-Vorschau)"
-    },
-    {
-      "key": "article/flyer/tile/branding",
-      "value": "Mehr Kurzes:"
-    },
-    {
-      "key": "article/flyer/tile/description",
-      "value": "Mehr Kurzes auf republik.ch/journal"
     },
     {
       "key": "progress/restore/time",
@@ -5789,26 +5773,6 @@
     },
     {
       "key": "Trial/Form/series/initial/afterSignIn",
-      "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
-    },
-    {
-      "key": "Trial/Form/flyer/waiting/title",
-      "value": "Sie haben Post!"
-    },
-    {
-      "key": "Trial/Form/flyer/completed/title",
-      "value": "Herzlich willkommen!"
-    },
-    {
-      "key": "Trial/Form/flyer/initial/title",
-      "value": "Danke für Ihr Interesse."
-    },
-    {
-      "key": "Trial/Form/flyer/initial/beforeSignIn",
-      "value": "Melden Sie sich an und lesen Sie weiter."
-    },
-    {
-      "key": "Trial/Form/flyer/initial/afterSignIn",
       "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
     },
     {

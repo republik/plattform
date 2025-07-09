@@ -1,8 +1,7 @@
-import { useMemo, useRef, useEffect } from 'react'
-import React from 'react'
-import { getFromModules } from './'
-import { Interaction, Label, colors, IconButton } from '@project-r/styleguide'
-import { IconPrint, IconCode } from '@republik/icons'
+import { colors, IconButton, Interaction, Label } from '@project-r/styleguide'
+import { IconCode, IconPrint } from '@republik/icons'
+import React, { useEffect, useMemo, useRef } from 'react'
+import { getFromModules } from './Editor'
 import Replace from './Replace'
 
 const EditorUI = ({
@@ -11,7 +10,7 @@ const EditorUI = ({
   onChange,
   onSaveSearchAndReplace,
   onGoToRaw,
-  serializedState
+  serializedState,
 }) => {
   const formAreaRef = useRef(null)
 
@@ -67,7 +66,9 @@ const EditorUI = ({
 
   return (
     <>
-      <div style={{ flex: 1, overflowY: 'auto', padding: '15px 15px 55px 15px' }}>
+      <div
+        style={{ flex: 1, overflowY: 'auto', padding: '15px 15px 55px 15px' }}
+      >
         <p style={{ margin: '0 0 10px 0', fontSize: '12px' }}>
           {value.document.text.length}
           {' Zeichen'}
