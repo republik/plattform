@@ -54,8 +54,6 @@ type DiscussionSuspension {
 type DiscussionRules {
   # max length of a comments content
   maxLength: Int
-  # min milliseconds between comments of one user
-  minInterval: Int
   anonymity: Permission!
   disableTopLevelComments: Boolean
   allowedRoles: [String!]!

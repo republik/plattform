@@ -8,7 +8,8 @@ Supported props:
 - `kind`: String `meta` or `editorial` (default)
 - `color`: Color for top border and title
 - `Link`, a Next.js like `<Link />` component
-  This will be wrapped around links. You should attach an `onClick` handler within, if you wish to do client side routing and or prefetching. The component recieves following props:
+  This will be wrapped around links. You should attach an `onClick` handler within, if you wish to do client side
+  routing and or prefetching. The component recieves following props:
   - `href` String, target url or path
   - `passHref` Boolean, indicates this will eventually end in an a tag and you may overwrite href
 - `bar`: an optional React element for actions.
@@ -126,13 +127,6 @@ With callout menu:
     {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
     {type: 'text', value: ', 31.12.2017'},
   ]} />
-```
-
-```react
-<TeaserFeed kind='flyer' format={{meta: {title: 'Republik Journal', kind: 'flyer'}}}
-  title='The quick brown fox jumps over the lazy dog'
-  description='Description (usually the lead) is omitted on flyer feed item.'
-/>
 ```
 
 ```react

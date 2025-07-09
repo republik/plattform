@@ -1,21 +1,19 @@
-import React from 'react'
-import { css } from 'glamor'
-
 import { matchZone } from '@republik/mdast-react-render'
+import { css } from 'glamor'
+import React from 'react'
 
-import { TeaserFeed } from '../../components/TeaserFeed'
+import Center from '../../components/Center'
+import { ChallengeAcceptedLiveTeaser } from '../../components/ChallengeAccepted/challenge-accepted-live-teaser'
+import LazyLoad from '../../components/LazyLoad'
+import Loader from '../../components/Loader'
 
 import { TeaserActiveDebates } from '../../components/TeaserActiveDebates'
 
-import { TeaserSectionTitle } from '../../components/TeaserShared'
+import { TeaserFeed } from '../../components/TeaserFeed'
 import { TeaserMyMagazine } from '../../components/TeaserMyMagazine'
-import { SeparatorGutenTag } from '../../components/SeparatorGutenTag'
 
-import Center from '../../components/Center'
-import Loader from '../../components/Loader'
-import LazyLoad from '../../components/LazyLoad'
+import { TeaserSectionTitle } from '../../components/TeaserShared'
 import { mUp } from '../../theme/mediaQueries'
-import { ChallengeAcceptedLiveTeaser } from '../../components/ChallengeAccepted/challenge-accepted-live-teaser'
 
 const styles = {
   feedContainer: css({
@@ -266,21 +264,6 @@ const createLiveTeasers = ({
           },
         ],
       },
-    },
-    {
-      matchMdast: (node) =>
-        matchZone('LIVETEASER')(node) && node.data.id === 'flyer',
-      props: (node) => node.data,
-      component: () => {
-        return <SeparatorGutenTag />
-      },
-      isVoid: true,
-      editorModule: 'liveteaser',
-      // editorOptions: {
-      //   type: 'LIVETEASERFLYER',
-      //   insertButtonText: 'Guten Tag',
-      //   insertId: 'flyer',
-      // },
     },
     {
       matchMdast: (node) =>

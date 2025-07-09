@@ -35,8 +35,6 @@ import NewsletterSignUp from '../Auth/NewsletterSignUp'
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
 import FormatFeed from '../Feed/Format'
-import Flyer from '../Flyer'
-import ShareImageFlyer from '../Flyer/ShareImage'
 import FontSizeSync from '../FontSize/Sync'
 import Frame from '../Frame'
 import ArticleGallery from '../Gallery/ArticleGallery'
@@ -62,7 +60,6 @@ const EmptyComponent = ({ children }) => children
 
 const ArticlePage = ({
   t,
-  inNativeApp,
   isPreview,
   markAsReadMutation,
   serverContext,
@@ -102,9 +99,18 @@ const ArticlePage = ({
 
   useEffect(() => {
     if (articleError) {
-      reportError('Article Page getDocument Query', articleError)
+      // In case we have partial data, still continue to render the page and report it silently
+      if (articleData) {
+        reportError(
+          'Article Page getDocument Query returned data but also an error',
+          articleError,
+        )
+      }
+      // If there's no data, throw the error, so an error page is shown to the user where they can reload the page.
+      // In some cases this will fix the query, because they may have been running an outdated version of the website.
+      throw articleError
     }
-  }, [articleError])
+  }, [articleError, articleData])
 
   const article = articleData?.article
   const documentId = article?.id
@@ -245,13 +251,6 @@ const ArticlePage = ({
       })
     : undefined
 
-  const actionBarFlyer = actionBar
-    ? cloneElement(actionBar, {
-        mode: 'flyer',
-        shareParam: undefined,
-      })
-    : undefined
-
   const series = meta?.series
   const episodes = series?.episodes
   const darkMode = article?.content?.meta?.darkMode
@@ -267,8 +266,6 @@ const ArticlePage = ({
       : meta.format && meta.format.meta)
   const formatColor = colorMeta && (colorMeta.color || colors[colorMeta.kind])
   const sectionColor = meta && meta.template === 'section' && meta.color
-
-  const isFlyer = treeType === 'slate'
 
   if (extract) {
     return (
@@ -287,17 +284,6 @@ const ArticlePage = ({
 
           if (extract === 'share') {
             return <ShareImage meta={meta} />
-          }
-
-          if (isFlyer) {
-            return (
-              <ShareImageFlyer
-                tileId={extract}
-                value={article.content.children}
-                schema={schema}
-                showAll={showAll}
-              />
-            )
           }
 
           return (
@@ -322,14 +308,11 @@ const ArticlePage = ({
 
   const splitContent = article && splitByTitle(article.content)
 
-  const hasStickySecondaryNav = meta
-    ? meta.template === 'section' || meta.template === 'flyer'
-    : true // show/keep around while loading meta
+  const hasStickySecondaryNav = meta ? meta.template === 'section' : true // show/keep around while loading meta
   const hasOverviewNav = !meta?.series // no overview on series, so that seriesNav is rendered
   const colorSchemeKey = darkMode ? 'dark' : 'auto'
 
-  const delegateMetaDown = !!isFlyer || !!meta?.delegateDown
-
+  const delegateMetaDown = !!meta?.delegateDown
   return (
     <Frame
       raw
@@ -408,98 +391,86 @@ const ArticlePage = ({
               <PrepubNotice meta={meta} breakout={breakout} />
               <WelcomeBanner />
 
-              {isFlyer ? (
-                <Flyer
-                  meta={meta}
-                  documentId={documentId}
-                  inNativeApp={inNativeApp}
-                  repoId={repoId}
-                  actionBar={actionBarFlyer}
-                  value={article.content.children}
-                  tileId={share}
-                />
-              ) : (
-                <ArticleGallery
-                  article={article}
-                  show={!!router.query.gallery}
-                  ref={galleryRef}
-                >
-                  <ProgressComponent article={article}>
-                    <article style={{ display: 'block' }}>
-                      {splitContent.title && (
-                        <div {...styles.titleBlock}>
-                          {renderSchema(splitContent.title)}
-                          <NewsletterTitleBlock meta={meta} />
-                          {isEditor && repoId && disableActionBar && (
-                            <PublikatorLinkBlock
-                              breakout={breakout}
-                              center={titleAlign === 'center'}
-                              repoId={repoId}
-                            />
-                          )}
-                          {(showNewsletterSignupTop ||
-                            actionBar ||
-                            showAudioPlayer ||
-                            showSectionNav) && (
-                            <Center breakout={breakout} {...styles.hidePrint}>
-                              {showNewsletterSignupTop && (
-                                <div {...styles.newsletterSignUpTop}>
-                                  <NewsletterSignUp
-                                    {...newsletterMeta}
-                                    smallButton
-                                    showDescription
-                                  />
-                                </div>
-                              )}
-                              {actionBar && (
-                                <div
-                                  ref={actionBarRef}
-                                  {...styles.actionBarContainer}
-                                  style={{
-                                    textAlign: titleAlign,
-                                    marginBottom: isEditorialNewsletter
-                                      ? 0
-                                      : undefined,
-                                  }}
-                                >
-                                  {actionBar}
-                                </div>
-                              )}
+              <ArticleGallery
+                article={article}
+                show={!!router.query.gallery}
+                ref={galleryRef}
+              >
+                <ProgressComponent article={article}>
+                  <article style={{ display: 'block' }}>
+                    {splitContent.title && (
+                      <div {...styles.titleBlock}>
+                        {renderSchema(splitContent.title)}
+                        <NewsletterTitleBlock meta={meta} />
+                        {isEditor && repoId && disableActionBar && (
+                          <PublikatorLinkBlock
+                            breakout={breakout}
+                            center={titleAlign === 'center'}
+                            repoId={repoId}
+                          />
+                        )}
+                        {(showNewsletterSignupTop ||
+                          actionBar ||
+                          showAudioPlayer ||
+                          showSectionNav) && (
+                          <Center breakout={breakout} {...styles.hidePrint}>
+                            {showNewsletterSignupTop && (
+                              <div {...styles.newsletterSignUpTop}>
+                                <NewsletterSignUp
+                                  {...newsletterMeta}
+                                  smallButton
+                                  showDescription
+                                />
+                              </div>
+                            )}
+                            {actionBar && (
+                              <div
+                                ref={actionBarRef}
+                                {...styles.actionBarContainer}
+                                style={{
+                                  textAlign: titleAlign,
+                                  marginBottom: isEditorialNewsletter
+                                    ? 0
+                                    : undefined,
+                                }}
+                              >
+                                {actionBar}
+                              </div>
+                            )}
 
-                              {showAudioPlayer && (
-                                <div style={{ marginTop: 32 }}>
-                                  <ArticleAudioPlayer document={article} />
-                                </div>
-                              )}
+                            {showAudioPlayer && (
+                              <div style={{ marginTop: 32 }}>
+                                <ArticleAudioPlayer document={article} />
+                              </div>
+                            )}
 
-                              {showSectionNav && (
-                                <Breakout size='breakout'>
-                                  <SectionNav
-                                    color={sectionColor}
-                                    linkedDocuments={article.linkedDocuments}
-                                  />
-                                </Breakout>
-                              )}
-                            </Center>
-                          )}
-                        </div>
-                      )}
-                      <div className='regwall'>
-                        {hasPaywall ? (
-                          <div {...styles.regwallFade}>
-                            {renderSchema(splitContent.mainTruncated)}
-                          </div>
-                        ) : (
-                          <>{renderSchema(splitContent.main)}</>
+                            {showSectionNav && (
+                              <Breakout size='breakout'>
+                                <SectionNav
+                                  color={sectionColor}
+                                  linkedDocuments={article.linkedDocuments}
+                                />
+                              </Breakout>
+                            )}
+                          </Center>
                         )}
                       </div>
-                      <Regwall />
-                      <Paywall />
-                    </article>
-                  </ProgressComponent>
-                  <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
-                </ArticleGallery>
-              )}
+                    )}
+                    <div className='regwall'>
+                      {hasPaywall ? (
+                        <div {...styles.regwallFade}>
+                          {renderSchema(splitContent.mainTruncated)}
+                        </div>
+                      ) : (
+                        <>{renderSchema(splitContent.main)}</>
+                      )}
+                    </div>
+                    <Regwall />
+                    <Paywall />
+                  </article>
+                </ProgressComponent>
+                <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
+              </ArticleGallery>
               <div {...styles.hidePrint}>
                 {meta.template === 'discussion' && ownDiscussion && (
                   <Center breakout={breakout}>

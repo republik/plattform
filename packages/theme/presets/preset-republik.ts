@@ -475,13 +475,6 @@ export const presetRepublik = definePreset({
             fontStyle: 'italic',
           },
         },
-        flyerTitle: {
-          value: {
-            fontFamily: 'Druk-Wide, Roboto, sans-serif',
-            fontWeight: 500,
-            fontStyle: 'normal',
-          },
-        },
       },
     },
 

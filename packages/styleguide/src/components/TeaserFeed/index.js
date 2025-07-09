@@ -1,14 +1,14 @@
+import { matchType, renderMdast } from '@republik/mdast-react-render'
+import { css } from 'glamor'
+import { timeFormat } from '../../lib/timeFormat'
+import colors from '../../theme/colors'
+import { Editorial } from '../Typography'
 import Container from './Container'
+import Credit from './Credit'
 import * as Headlines from './Headline'
+import Highlight from './Highlight'
 import InternalOnlyTag from './InternalOnlyTag'
 import Lead from './Lead'
-import Credit from './Credit'
-import { css } from 'glamor'
-import colors from '../../theme/colors'
-import { renderMdast, matchType } from '@republik/mdast-react-render'
-import { timeFormat } from '../../lib/timeFormat'
-import { Editorial } from '../Typography'
-import Highlight from './Highlight'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 
@@ -81,8 +81,6 @@ export const TeaserFeed = ({
       ? Headlines.Interaction
       : formatMeta.kind === 'scribble' || metaKind === 'scribble'
       ? Headlines.Scribble
-      : formatMeta.kind === 'flyer'
-      ? Headlines.Flyer
       : Headlines.Editorial
   const borderColor = formatMeta.title
     ? formatMeta.color || colors[formatMeta.kind]
@@ -123,7 +121,7 @@ export const TeaserFeed = ({
           title
         )}
       </Headline>
-      {!!description && formatMeta.kind !== 'flyer' && (
+      {!!description && (
         <Lead>
           {!nonInteractive ? (
             <Link href={path} passHref>

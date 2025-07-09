@@ -853,8 +853,8 @@
       "value": "Die Diskussion konnte nicht gefunden werden."
     },
     {
-      "key": "api/comment/tooEarly",
-      "value": "Sie sind zu früh. Sie können {timeahead} wieder einen Beitrag schreiben."
+      "key": "api/comment/suspended",
+      "value": "Sie sind noch bis {timeahead} vom Dialog suspendiert. Bei Fragen wenden Sie sich bitte an kontakt@republik.ch."
     },
     {
       "key": "api/comment/closed",
@@ -1004,9 +1004,13 @@
       "key": "api/newsletters/request/CLIMATE/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Challenge Accepted Newsletter."
     },
+      {
+        "key": "api/newsletters/request/WDWWW/subject",
+        "value": "Bestätigen Sie ihre Anmeldung zum Nachrichten-Briefing der Republik."
+      },
     {
-      "key": "api/newsletters/request/WDWWW/subject",
-      "value": "Bestätigen Sie ihre Anmeldung zum Nachrichten-Briefing der Republik."
+      "key": "api/newsletters/request/SUNDAY/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Republik am Sonntag Newsletter."
     },
     {
       "key": "api/newsletters/request/notSupported",

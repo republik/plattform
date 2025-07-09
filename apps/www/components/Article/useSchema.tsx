@@ -21,7 +21,6 @@ import {
   createNewsletterWebSchema,
   createSectionSchema,
   createPageSchema,
-  flyerSchema,
   createRequire,
   TeaserEmbedComment,
 } from '@project-r/styleguide'
@@ -49,9 +48,6 @@ const schemaCreators = {
   editorialNewsletter: createNewsletterWebSchema,
   section: createSectionSchema,
   page: createPageSchema,
-  flyer: () => {
-    return flyerSchema
-  },
 }
 
 const getSchemaCreator = (template) => {

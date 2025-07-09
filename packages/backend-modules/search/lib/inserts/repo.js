@@ -18,7 +18,7 @@ async function toStrings(type, nodes) {
 
   const nodeToString = async (key) => {
     const node = nodes[key]
-    const string = await stringifyNode(type, node)
+    const string = stringifyNode(node)
     return { [key]: string }
   }
 
