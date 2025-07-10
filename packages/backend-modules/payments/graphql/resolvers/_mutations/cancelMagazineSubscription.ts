@@ -41,11 +41,6 @@ export = async function cancelMagazineSubscription(
   Auth.Roles.ensureUserIsMeOrInRoles(owner, ctx.user, ['admin', 'supporter'])
 
   const cs = new CancellationService(new PaymentService(), ctx.pgdb, [
-    {
-      notify: async (...args) => {
-        console.log(args)
-      },
-    },
     new CancallationSlackNotifier(),
   ])
 

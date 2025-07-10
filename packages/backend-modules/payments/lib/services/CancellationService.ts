@@ -41,17 +41,17 @@ export class CancellationService {
   private readonly paymentService: PaymentService
   private billingRepo: BillingRepo
   private readonly db: PgDb
-  private readonly notifyers: SubscriptionCancelationStatusNotifier[]
+  private readonly notifiers: SubscriptionCancelationStatusNotifier[]
 
   constructor(
     paymentService: PaymentService,
     db: PgDb,
-    notifyers?: SubscriptionCancelationStatusNotifier[],
+    notifiers?: SubscriptionCancelationStatusNotifier[],
   ) {
     this.paymentService = paymentService
     this.billingRepo = new BillingRepo(db)
     this.db = db
-    this.notifyers = notifyers || []
+    this.notifiers = notifiers || []
   }
 
   async getCancellationDetails(
@@ -111,7 +111,7 @@ export class CancellationService {
     )
 
     await Promise.all(
-      this.notifyers.map((n) =>
+      this.notifiers.map((n) =>
         n.notify('cancelSubscription', actor, owner, newLocalSub, dbDetails),
       ),
     )
@@ -176,7 +176,7 @@ export class CancellationService {
 
     if (dbDetails) {
       await Promise.all(
-        this.notifyers.map((n) =>
+        this.notifiers.map((n) =>
           n.notify(
             'reactivateSubscription',
             actor,
