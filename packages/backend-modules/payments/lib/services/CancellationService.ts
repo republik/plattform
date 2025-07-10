@@ -5,7 +5,7 @@ import { BillingRepo } from '../database/BillingRepo'
 import { parseStripeDate } from '../handlers/stripe/utils'
 import { User } from '@orbiting/backend-modules-types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
-import { SubscriptionType } from '../../../mailchimp/build/@types/types'
+import { SubscriptionType } from '../types'
 import { SlackNotifierWorker } from '../workers/SlackNotifer'
 
 export type CancallationDetails = {
