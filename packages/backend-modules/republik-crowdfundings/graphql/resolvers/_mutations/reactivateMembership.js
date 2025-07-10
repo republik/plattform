@@ -160,7 +160,7 @@ module.exports = async (_, args, context) => {
 
     await transaction.transactionCommit()
 
-    enforceSubscriptions({ pgdb, userId: membership.userId })
+    await enforceSubscriptions({ pgdb, userId: membership.userId })
 
     await slack.publishMembership(
       user,
