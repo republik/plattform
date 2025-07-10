@@ -243,22 +243,21 @@ export class CancallationSlackNotifier
       case 'cancelSubscription':
         return `*${user.name}* (${user.email}): ${
           user.id !== actor.id ? `${action} (support)` : `${action}`
-        } (${subscriptionType})
-        ${[
+        } (${subscriptionType}) ${[
           details?.category && `Category: ${details.category}`,
           details?.reason,
         ]
           .filter(Boolean)
           .join('\n')}
 
-        ${this.adminBaseUrl}/users/${user.id}
-        `
+${this.adminBaseUrl}/users/${user.id}
+`
       case 'reactivateSubscription':
         return `*${user.name}* (${user.email}): ${
           user.id !== actor.id ? `${action} (support)` : `${action}`
         } (${subscriptionType})
-        ${this.adminBaseUrl}/users/${user.id}
-        `
+${this.adminBaseUrl}/users/${user.id}
+`
     }
   }
 }
