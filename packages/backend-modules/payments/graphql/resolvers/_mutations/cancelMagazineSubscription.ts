@@ -2,10 +2,7 @@ import { GraphqlContext, User } from '@orbiting/backend-modules-types'
 import { default as Auth } from '@orbiting/backend-modules-auth'
 import { Subscription } from '../../../lib/types'
 import { PaymentService } from '../../../lib/services/PaymentService'
-import {
-  CancallationSlackNotifier,
-  CancellationService,
-} from '../../../lib/services/CancellationService'
+import { CancellationService } from '../../../lib/services/CancellationService'
 import { SubscriptionService } from '../../../lib/services/SubscriptionService'
 
 type CancellationInput = {
@@ -40,9 +37,7 @@ export = async function cancelMagazineSubscription(
 
   Auth.Roles.ensureUserIsMeOrInRoles(owner, ctx.user, ['admin', 'supporter'])
 
-  const cs = new CancellationService(new PaymentService(), ctx.pgdb, [
-    new CancallationSlackNotifier(),
-  ])
+  const cs = new CancellationService(new PaymentService(), ctx.pgdb)
 
   const details = args.details
 

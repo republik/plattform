@@ -46,12 +46,14 @@ export class CancellationService {
   constructor(
     paymentService: PaymentService,
     db: PgDb,
-    notifiers?: SubscriptionCancelationStatusNotifier[],
+    notifiers: SubscriptionCancelationStatusNotifier[] = [
+      new CancallationSlackNotifier(),
+    ],
   ) {
     this.paymentService = paymentService
     this.billingRepo = new BillingRepo(db)
     this.db = db
-    this.notifiers = notifiers || []
+    this.notifiers = notifiers
   }
 
   async getCancellationDetails(
@@ -84,7 +86,7 @@ export class CancellationService {
         ...filterUndefined(details),
       })
 
-    const newSub = immediately
+    const updatedStripeSubscription = immediately
       ? await this.paymentService.deleteSubscription(
           sub.company,
           sub.externalId,
@@ -97,26 +99,36 @@ export class CancellationService {
           },
         )
 
-    const newLocalSub = await this.billingRepo.updateSubscription(
+    const updatedSubscription = await this.billingRepo.updateSubscription(
       { id: sub.id },
       {
-        currentPeriodStart: parseStripeDate(newSub.current_period_start),
-        currentPeriodEnd: parseStripeDate(newSub.current_period_end),
-        status: newSub.status,
-        cancelAt: parseStripeDate(newSub.cancel_at),
-        canceledAt: parseStripeDate(newSub.canceled_at),
-        cancelAtPeriodEnd: newSub.cancel_at_period_end,
-        endedAt: parseStripeDate(newSub.ended_at),
+        currentPeriodStart: parseStripeDate(
+          updatedStripeSubscription.current_period_start,
+        ),
+        currentPeriodEnd: parseStripeDate(
+          updatedStripeSubscription.current_period_end,
+        ),
+        status: updatedStripeSubscription.status,
+        cancelAt: parseStripeDate(updatedStripeSubscription.cancel_at),
+        canceledAt: parseStripeDate(updatedStripeSubscription.canceled_at),
+        cancelAtPeriodEnd: updatedStripeSubscription.cancel_at_period_end,
+        endedAt: parseStripeDate(updatedStripeSubscription.ended_at),
       },
     )
 
     await Promise.all(
       this.notifiers.map((n) =>
-        n.notify('cancelSubscription', actor, owner, newLocalSub, dbDetails),
+        n.notify(
+          'cancelSubscription',
+          actor,
+          owner,
+          updatedSubscription,
+          dbDetails,
+        ),
       ),
     )
 
-    return newLocalSub
+    return updatedSubscription
   }
 
   async revokeCancellation(
@@ -153,24 +165,29 @@ export class CancellationService {
       throw e
     }
 
-    const newSub = await this.paymentService.updateSubscription(
-      sub.company,
-      sub.externalId,
-      {
-        cancel_at_period_end: false,
-      },
-    )
+    const updatedStripeSubscription =
+      await this.paymentService.updateSubscription(
+        sub.company,
+        sub.externalId,
+        {
+          cancel_at_period_end: false,
+        },
+      )
 
-    const newLocalSub = await this.billingRepo.updateSubscription(
+    const updatedSubscrption = await this.billingRepo.updateSubscription(
       { id: sub.id },
       {
-        currentPeriodStart: parseStripeDate(newSub.current_period_start),
-        currentPeriodEnd: parseStripeDate(newSub.current_period_end),
-        status: newSub.status,
-        cancelAt: parseStripeDate(newSub.cancel_at),
-        canceledAt: parseStripeDate(newSub.canceled_at),
-        cancelAtPeriodEnd: newSub.cancel_at_period_end,
-        endedAt: parseStripeDate(newSub.ended_at),
+        currentPeriodStart: parseStripeDate(
+          updatedStripeSubscription.current_period_start,
+        ),
+        currentPeriodEnd: parseStripeDate(
+          updatedStripeSubscription.current_period_end,
+        ),
+        status: updatedStripeSubscription.status,
+        cancelAt: parseStripeDate(updatedStripeSubscription.cancel_at),
+        canceledAt: parseStripeDate(updatedStripeSubscription.canceled_at),
+        cancelAtPeriodEnd: updatedStripeSubscription.cancel_at_period_end,
+        endedAt: parseStripeDate(updatedStripeSubscription.ended_at),
       },
     )
 
@@ -181,14 +198,14 @@ export class CancellationService {
             'reactivateSubscription',
             actor,
             user,
-            newLocalSub,
+            updatedSubscrption,
             dbDetails,
           ),
         ),
       )
     }
 
-    return newLocalSub
+    return updatedSubscrption
   }
 }
 
