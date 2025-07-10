@@ -117,7 +117,7 @@ module.exports = {
           }
         }
 
-        enforceSubscriptions({ pgdb, userId: pledge.userId })
+        await enforceSubscriptions({ pgdb, userId: pledge.userId })
 
         return 200
       },
