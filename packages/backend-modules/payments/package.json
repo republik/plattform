@@ -12,6 +12,7 @@
     "@orbiting/backend-modules-utils": "*",
     "@orbiting/backend-modules-dataloader": "*",
     "@orbiting/backend-modules-slack": "*",
+    "@orbiting/backend-modules-translate": "*",
     "apollo-modules-node": "*",
     "body-parser": "^1.19.1",
     "crockford-base32": "^2.0.0",

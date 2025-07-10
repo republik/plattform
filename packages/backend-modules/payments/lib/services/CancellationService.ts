@@ -7,6 +7,7 @@ import { User } from '@orbiting/backend-modules-types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { SubscriptionType } from '../types'
 import { SlackNotifierWorker } from '../workers/SlackNotifer'
+import { t } from '@orbiting/backend-modules-translate'
 
 export type CancallationDetails = {
   category: string
@@ -244,7 +245,10 @@ export class CancallationSlackNotifier
         return `*${user.name}* (${user.email}): ${
           user.id !== actor.id ? `${action} (support)` : `${action}`
         } (${subscriptionType}) ${[
-          details?.category && `Category: ${details.category}`,
+          details?.category &&
+            `Category: ${t(
+              `api/membership/cancel/category/${details.category}`,
+            )}`,
           details?.reason,
         ]
           .filter(Boolean)
