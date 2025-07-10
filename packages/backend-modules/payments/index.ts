@@ -13,5 +13,6 @@ export { NoticePaymentFailedTransactionalWorker } from './lib/workers/NoticePaym
 export { SyncMailchimpSetupWorker } from './lib/workers/SyncMailchimpSetupWorker'
 export { SyncMailchimpUpdateWorker } from './lib/workers/SyncMailchimpUpdateWorker'
 export { SyncMailchimpEndedWorker } from './lib/workers/SyncMailchimpEndedWorker'
+export { SlackNotifierWorker } from './lib/workers/SlackNotifer'
 export { default as loaders } from './loaders'
 export * from './lib/payments'
