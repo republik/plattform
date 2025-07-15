@@ -23,7 +23,7 @@ const DiscussionLinkButton = ({
   const getLabel = () => {
     if (useCallToActionLabel) {
       return t.pluralize('article/actionbar/discussion/call-to-action', {
-        count: discussionCount || 0,
+        count: discussionCount,
       })
     }
 
@@ -32,7 +32,7 @@ const DiscussionLinkButton = ({
     }
 
     return t.pluralize('article/actionbar/discussion/label', {
-      count: discussionCount || 0,
+      count: discussionCount,
     })
   }
 
