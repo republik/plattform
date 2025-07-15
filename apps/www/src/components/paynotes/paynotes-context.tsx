@@ -57,7 +57,7 @@ function isPaynoteOverlayHidden(
     pathname === '/meine-republik' ||
     pathname === '/probelesen' ||
     pathname === '/community' ||
-    pathname === '/2025/05/25/stellenauschreibung-specialist-storytelling' ||
+    pathname === '/2025/07/14/stellenauschreibung-leitung-global' ||
     searchParams.has('extract') ||
     searchParams.has('extractId')
   )
