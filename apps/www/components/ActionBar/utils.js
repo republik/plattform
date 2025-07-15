@@ -11,7 +11,7 @@ export const getDiscussionLinkProps = (
     ? discussion?.path
     : `/dialog${discussion?.path}`
 
-  const discussionCount = discussion?.comments?.totalCount
+  const discussionCount = discussion?.comments?.totalCount ?? 0
 
   const discussionId =
     discussion?.closed && discussionCount === 0 ? undefined : discussion?.id
