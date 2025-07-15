@@ -23,7 +23,7 @@ module.exports = async (_, args, context) => {
   } = context
   Roles.ensureUserHasRole(req.user, 'supporter')
 
-  const { targetUserId, sourceUserId } = args
+  const { targetUserId, sourceUserId, dry=false } = args
 
   const now = new Date()
   const transaction = await pgdb.transactionBegin()
@@ -308,7 +308,16 @@ module.exports = async (_, args, context) => {
 
     // remove old user
     await transaction.public.users.deleteOne({ id: sourceUser.id })
-    await transaction.transactionCommit()
+
+    // dry run
+    if (!dry) {
+      await transaction.transactionCommit()
+    } else {
+      await transaction.transactionRollback()
+      logger.info('Dryrun, rolling back. ')
+      throw new Error('Dryrun, no users merged')
+    }
+    
 
     try {
       await changeEmailOnMailchimp({
