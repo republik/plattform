@@ -102,7 +102,7 @@ module.exports = async ({
   const hasSubscriptions = (customers) =>
     customers.findIndex(
       (c) =>
-        c.subscriptions.data.length &&
+        c.subscriptions?.data?.length &&
         c.subscriptions.data.filter((s) =>
           ['active', 'past_due', 'unpaid', 'paused'].includes(s.status),
         ).length,
