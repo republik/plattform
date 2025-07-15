@@ -98,15 +98,15 @@ module.exports = async ({
     getCustomers(sourceStripeCustomers),
   ])
 
+
   // check subscriptions
   const hasSubscriptions = (customers) =>
-    customers.findIndex(
+    customers.some(
       (c) =>
-        c.subscriptions?.data?.length &&
-        c.subscriptions.data.filter((s) =>
+        c.subscriptions?.data?.some((s) =>
           ['active', 'past_due', 'unpaid', 'paused'].includes(s.status),
-        ).length,
-    ) > -1
+        ),
+    )
 
   if (hasSubscriptions(targetCustomers) && hasSubscriptions(sourceCustomers)) {
     debug('target and source have subscriptions, abort')
