@@ -13,7 +13,8 @@ export const getDiscussionLinkProps = (
 
   const discussionCount = discussion?.comments?.totalCount
 
-  const discussionId = discussion?.closed ? undefined : discussion?.id
+  const discussionId =
+    discussion?.closed && discussionCount === 0 ? undefined : discussion?.id
 
   return {
     discussionId,
