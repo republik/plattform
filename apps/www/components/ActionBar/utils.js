@@ -5,11 +5,15 @@ export const getDiscussionLinkProps = (
 ) => {
   const discussion = linkedDiscussion || ownDiscussion
 
-  const discussionPath =
-    template === 'discussion' ? discussion?.path : `/dialog${discussion?.path}`
   const isDiscussionPage = template === 'discussion'
+
+  const discussionPath = isDiscussionPage
+    ? discussion?.path
+    : `/dialog${discussion?.path}`
+
   const discussionCount = discussion?.comments?.totalCount
-  const discussionId = discussion?.id
+
+  const discussionId = discussion?.closed ? undefined : discussion?.id
 
   return {
     discussionId,
