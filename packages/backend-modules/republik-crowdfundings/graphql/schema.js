@@ -91,7 +91,7 @@ type mutations {
 
   # merges the belongings from source to target
   # required role: admin
-  mergeUsers(targetUserId: ID!, sourceUserId: ID!, dry: Boolean): User!
+  mergeUsers(targetUserId: ID!, sourceUserId: ID!): User!
 
   # required role: supporter
   # only in case of status === 'DRAFT' the pledge is deleted
