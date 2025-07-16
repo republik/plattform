@@ -81,7 +81,7 @@ const validateInput = (
     }
   }
 
-  // Prolitteris ID validation
+  // Prolitteris validation
   if (args.prolitterisId) {
     // Validate that it's exactly 6 digits
     if (!/^\d{6}$/.test(args.prolitterisId)) {
@@ -90,13 +90,26 @@ const validateInput = (
         message: 'Prolitteris ID muss genau 6 Ziffern enthalten',
       })
     }
+    // Check if prolitteris_firstname and prolitteris_lastname are set
+    if (!args.prolitterisFirstname || !args.prolitterisLastname) {
+      errors.push(
+        {
+          field: 'prolitterisLastname',
+          message: 'Nachname ist erforderlich',
+        },
+        {
+          field: 'prolitterisFirstname',
+          message: 'Vorname ist erforderlich',
+        },
+      )
+    }
   }
 
   // Gender validation (ensure it's one of the allowed values)
-  if (args.gender && !['m', 'f', 'd'].includes(args.gender)) {
+  if (args.gender && !['m', 'f', 'd', 'na'].includes(args.gender)) {
     errors.push({
       field: 'gender',
-      message: 'Geschlecht muss m, f oder d sein',
+      message: 'Geschlecht muss m, f, d oder na sein',
     })
   }
 

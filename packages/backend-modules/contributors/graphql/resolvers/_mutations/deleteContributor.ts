@@ -32,14 +32,13 @@ export = async function deleteContributor(
         errors: [
           {
             field: 'id',
-            message: `Contributor with ID ${id} not found`,
+            message: `Autor*in mit ID ${id} nicht gefunden`,
           },
         ],
       }
     }
 
     // Check if contributor is associated with any documents
-    // Contributors are stored in the meta.contributors array
     const documentAssociations = await transaction.query(`
       SELECT COUNT(*) as count 
       FROM publications.documents d 
