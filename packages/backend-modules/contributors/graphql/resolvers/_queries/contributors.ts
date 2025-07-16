@@ -40,7 +40,6 @@ export = async function contributors(
 
   const { orderBy = { field: 'name', direction: 'ASC' }, filters = {} } = args
 
-  // Build WHERE clauses based on filters
   const whereConditions: string[] = []
   const whereParams: any = {}
 
@@ -74,12 +73,15 @@ export = async function contributors(
     whereParams.search = `%${filters.search}%`
   }
 
-  // Build ORDER BY clause
-  const orderByClause = `${
-    orderBy.field === 'name' ? 'name' : `"${orderBy.field}"`
-  } ${orderBy.direction}`
+  const fieldMapping: Record<string, string> = {
+    name: 'name',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
+  }
+  
+  const dbFieldName = fieldMapping[orderBy.field] || orderBy.field
+  const orderByClause = `${dbFieldName} ${orderBy.direction}`
 
-  // Build the complete query
   const whereClause =
     whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : ''
 
