@@ -11,6 +11,22 @@ const { Roles } = Auth
 const MAX_NAME_LENGTH = 100
 const MAX_SHORT_BIO_LENGTH = 500
 
+interface ArticleContributor {
+  id: string
+  name: string
+  slug: string
+  short_bio?: string | null
+  bio?: string | null
+  image?: string | null
+  prolitteris_id?: string | null
+  prolitteris_first_name?: string | null
+  prolitteris_last_name?: string | null
+  gender?: string | null
+  user_id?: string | null
+  created_at: Date
+  updated_at: Date
+}
+
 type UpsertContributorArgs = {
   id?: string
   name: string
@@ -185,27 +201,14 @@ export = async function upsertContributor(
   const transaction = await pgdb.transactionBegin()
 
   try {
-    // Check for duplicate names (warning only)
-    const whereClauseForName = id ? { name, id: { '!=': id } } : { name }
-    const existingWithName = await transaction.public.contributors.findFirst(
-      whereClauseForName,
-    )
-
-    if (existingWithName) {
-      warnings.push('Autor*in mit diesem Namen existiert bereits')
-    }
-
     // Check for duplicate prolitterisId (error)
     if (prolitterisId) {
-      const whereClauseForProlitteris = id
-        ? { prolitteris_id: prolitterisId, id: { '!=': id } }
-        : { prolitteris_id: prolitterisId }
-      const existingWithProlitterisId =
-        await transaction.public.contributors.findFirst(
-          whereClauseForProlitteris,
-        )
+      const existingContributorWithProlitterisId: ArticleContributor | null =
+        await transaction.public.contributors.findFirst({
+          prolitteris_id: prolitterisId,
+        })
 
-      if (existingWithProlitterisId) {
+      if (existingContributorWithProlitterisId) {
         await transaction.transactionRollback()
         return {
           contributor: null,
@@ -214,7 +217,7 @@ export = async function upsertContributor(
           errors: [
             {
               field: 'prolitterisId',
-              message: `Prolitteris ID ist schon einem*r anderen Autor*in: ${name} zugeordnet`,
+              message: `Prolitteris ID ist schon einem*r anderen Autor*in: ${existingContributorWithProlitterisId.slug} zugeordnet`,
             },
           ],
         }
@@ -224,6 +227,18 @@ export = async function upsertContributor(
     // Generate unique slug
     const baseSlug = slugify(name)
     const slug = await findUniqueSlug(baseSlug, transaction, id)
+
+    // Check for duplicate names (warning only)
+    const existingContributorWithName: ArticleContributor | null =
+      await transaction.public.contributors.findFirst({
+        name,
+      })
+
+    if (existingContributorWithName) {
+      warnings.push(
+        `Autor*in erstellt. Jdoch existiert ein*e Autor*in bereits mit diesem Namen: ${existingContributorWithName.slug}`,
+      )
+    }
 
     const now = new Date()
     const contributorData = {
@@ -249,8 +264,11 @@ export = async function upsertContributor(
 
     if (id) {
       // Update existing contributor
-      const existing = await transaction.public.contributors.findOne({ id })
-      if (!existing) {
+      const existingContributor: ArticleContributor | null =
+        await transaction.public.contributors.findOne({
+          id,
+        })
+      if (!existingContributor) {
         await transaction.transactionRollback()
         return {
           contributor: null,
@@ -259,7 +277,7 @@ export = async function upsertContributor(
           errors: [
             {
               field: 'id',
-              message: `Contributor with ID ${id} not found`,
+              message: `Autor*in mit ID ${id} nicht gefunden`,
             },
           ],
         }
