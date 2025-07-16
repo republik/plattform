@@ -21,13 +21,13 @@ type mutations {
     id: ID
     name: String
     shortBio: String
+    bio: String
     image: String
     prolitterisId: String
     prolitterisFirstname: String
     prolitterisLastname: String
     gender: GenderEnum
     userId: ID
-    employee: EmployeeStatusEnum
   ): UpsertContributorResult!
   
   deleteContributor(id: ID!): DeleteContributorResult!

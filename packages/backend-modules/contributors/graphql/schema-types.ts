@@ -4,13 +4,13 @@ type Contributor {
   name: String!
   slug: String!
   shortBio: String
+  bio: String
   image: String
   prolitterisId: String
   prolitterisFirstname: String
   prolitterisLastname: String
   gender: GenderEnum
   userId: ID
-  employee: EmployeeStatusEnum
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -19,11 +19,7 @@ enum GenderEnum {
   m
   f
   d
-}
-
-enum EmployeeStatusEnum {
-  past
-  present
+  na
 }
 
 type UpsertContributorError {
@@ -62,7 +58,6 @@ type ContributorPageInfo {
 }
 
 input ContributorFilters {
-  employeeStatus: EmployeeStatusEnum
   gender: GenderEnum
   hasProlitterisId: Boolean
   hasUserId: Boolean

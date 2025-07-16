@@ -6,7 +6,6 @@ import { paginate } from '@orbiting/backend-modules-utils'
 const { Roles } = Auth
 
 type ContributorFilters = {
-  employeeStatus?: 'past' | 'present'
   gender?: 'm' | 'f' | 'd'
   hasProlitterisId?: boolean
   hasUserId?: boolean
@@ -40,11 +39,6 @@ export = async function contributors(
   // Build WHERE clauses based on filters
   const whereConditions: string[] = []
   const whereParams: any = {}
-
-  if (filters.employeeStatus) {
-    whereConditions.push('employee_status = :employeeStatus')
-    whereParams.employeeStatus = filters.employeeStatus
-  }
 
   if (filters.gender) {
     // Only allow gender filtering if user has appropriate permissions
@@ -91,13 +85,13 @@ export = async function contributors(
       name,
       slug,
       short_bio as "shortBio",
+      bio,
       image,
       prolitteris_id as "prolitterisId", 
       prolitteris_firstname as "prolitterisFirstname",
       prolitteris_lastname as "prolitterisLastname",
       ${genderField}
       user_id as "userId",
-      employee_status as "employee",
       created_at as "createdAt",
       updated_at as "updatedAt"
     FROM contributors

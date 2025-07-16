@@ -15,13 +15,13 @@ type UpsertContributorArgs = {
   id?: string
   name: string
   shortBio?: string
+  bio?: string
   image?: string
   prolitterisId?: string
   prolitterisFirstname?: string
   prolitterisLastname?: string
   gender?: string
   userId?: string
-  employee?: 'past' | 'present'
 }
 
 type UpsertContributorResult = {
@@ -165,7 +165,6 @@ export = async function upsertContributor(
     prolitterisLastname,
     gender,
     userId,
-    employee,
   } = args
   const warnings: string[] = []
 
@@ -227,7 +226,6 @@ export = async function upsertContributor(
       }),
       ...(gender !== undefined && { gender }),
       ...(userId !== undefined && { userId }),
-      ...(employee !== undefined && { employee }),
       updatedAt: now,
     }
 
