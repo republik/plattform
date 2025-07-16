@@ -15,7 +15,7 @@ const GET_CONTRIBUTOR_QUERY = gql`
       name
       shortBio
       image
-      employee
+      bio
       userId
       prolitterisId
       gender
@@ -29,9 +29,10 @@ const UPDATE_CONTRIBUTOR_MUTATION = gql`
     $name: String!
     $shortBio: String
     $image: String
-    $employee: EmployeeStatusEnum
     $userId: ID
     $prolitterisId: String
+    $prolitterisFirstname: String
+    $prolitterisLastname: String
     $gender: GenderEnum
   ) {
     upsertContributor(
@@ -39,9 +40,11 @@ const UPDATE_CONTRIBUTOR_MUTATION = gql`
       name: $name
       shortBio: $shortBio
       image: $image
-      employee: $employee
+      bio: $bio
       userId: $userId
       prolitterisId: $prolitterisId
+      prolitterisFirstname: $prolitterisFirstname
+      prolitterisLastname: $prolitterisLastname
       gender: $gender
     ) {
       contributor {
@@ -50,9 +53,11 @@ const UPDATE_CONTRIBUTOR_MUTATION = gql`
         name
         shortBio
         image
-        employee
+        bio
         userId
         prolitterisId
+        prolitterisFirstname
+        prolitterisLastname
         gender
       }
       isNew

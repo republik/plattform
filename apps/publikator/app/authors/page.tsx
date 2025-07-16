@@ -24,11 +24,14 @@ export interface Contributor {
   name: string
   shortBio?: string
   image?: string
-  employee?: string | null
+  bio?: string | null
   userId?: string | null
   prolitterisId?: string | null
+  prolitterisFirstname?: string | null
+  prolitterisLastname?: string | null
   slug: string
   updatedAt: string
+  createdAt: string
 }
 
 interface ContributorsData {
@@ -72,99 +75,20 @@ const CONTRIBUTORS_QUERY = gql`
         name
         shortBio
         image
-        employee
+        bio
         userId
         prolitterisId
+        prolitterisFirstname
+        prolitterisLastname
         slug
         updatedAt
+        createdAt
       }
     }
   }
 `
 
-// Dummy data for preview
-const dummyContributors: Contributor[] = [
-  {
-    id: '1',
-    name: 'Marie Müller',
-    shortBio:
-      'Investigative Journalistin mit Fokus auf Klimawandel und Umweltpolitik. Schreibt seit 5 Jahren für die Republik.',
-    image:
-      'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-    employee: 'present',
-    userId: 'user123',
-    prolitterisId: 'PL456',
-    slug: 'marie-mueller',
-    updatedAt: '2024-01-15T10:30:00Z',
-  },
-  {
-    id: '2',
-    name: 'Thomas Weber',
-    shortBio:
-      'Politikwissenschaftler und Autor. Experte für europäische Politik und internationale Beziehungen.',
-    image:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-    employee: 'past',
-    userId: null,
-    prolitterisId: 'PL789',
-    slug: 'thomas-weber',
-    updatedAt: '2024-01-10T14:45:00Z',
-  },
-  {
-    id: '3',
-    name: 'Sarah Chen',
-    shortBio:
-      'Tech-Journalistin und ehemalige Software-Entwicklerin. Spezialisiert auf Digitalpolitik und KI.',
-    image:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
-    employee: null,
-    userId: 'user789',
-    prolitterisId: null,
-    slug: 'sarah-chen',
-    updatedAt: '2024-01-08T09:15:00Z',
-  },
-  {
-    id: '4',
-    name: 'Dr. Andreas Schmid',
-    shortBio:
-      'Wirtschaftswissenschaftler und Buchautor. Schreibt über Finanzmärkte und Wirtschaftspolitik.',
-    image: null,
-    employee: 'present',
-    userId: 'user456',
-    prolitterisId: 'PL123',
-    slug: 'andreas-schmid',
-    updatedAt: '2024-01-12T16:20:00Z',
-  },
-  {
-    id: '5',
-    name: 'Lisa Zimmermann',
-    shortBio:
-      'Fotojournalistin und Dokumentarfilmerin. Fokus auf soziale Gerechtigkeit und Menschenrechte.',
-    image:
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face',
-    employee: null,
-    userId: null,
-    prolitterisId: 'PL999',
-    slug: 'lisa-zimmermann',
-    updatedAt: '2024-01-05T11:30:00Z',
-  },
-  {
-    id: '6',
-    name: 'Michael Roth',
-    shortBio:
-      'Kulturjournalist und Kunstkritiker. Schreibt über zeitgenössische Kunst und Kulturpolitik.',
-    image: null,
-    employee: 'past',
-    userId: 'user999',
-    prolitterisId: null,
-    slug: 'michael-roth',
-    updatedAt: '2024-01-03T08:45:00Z',
-  },
-]
-
 const AuthorsPage: React.FC = () => {
-  // Use dummy data for now - uncomment the real query when backend is ready
-  const useDummyData = true
   const pageSize = 10
   const router = useRouter()
 
@@ -184,7 +108,6 @@ const AuthorsPage: React.FC = () => {
         direction: 'ASC',
       },
     },
-    skip: useDummyData, // Skip the real query when using dummy data
     onCompleted: (data) => {
       if (data.contributors.pageInfo.endCursor) {
         setCursors((prev) => {
@@ -196,7 +119,7 @@ const AuthorsPage: React.FC = () => {
     },
   })
 
-  if (loading && !useDummyData) {
+  if (loading) {
     return (
       <Box p='6'>
         <Flex align='center' justify='center' style={{ minHeight: '200px' }}>
@@ -206,7 +129,7 @@ const AuthorsPage: React.FC = () => {
     )
   }
 
-  if (error && !useDummyData) {
+  if (error) {
     return (
       <Box p='6'>
         <Text color='red'>Error: {error.message}</Text>
@@ -214,22 +137,12 @@ const AuthorsPage: React.FC = () => {
     )
   }
 
-  // Use dummy data or real data
-  const contributorsList = useDummyData
-    ? dummyContributors.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize,
-      )
-    : data?.contributors?.nodes || []
+  const contributorsList = data?.contributors?.nodes || []
 
   // Calculate pagination info
-  const totalCount = useDummyData
-    ? dummyContributors.length
-    : data?.contributors?.totalCount || 0
+  const totalCount = data?.contributors?.totalCount || 0
   const totalPages = Math.ceil(totalCount / pageSize)
-  const hasNextPage = useDummyData
-    ? currentPage < totalPages
-    : data?.contributors?.pageInfo?.hasNextPage || false
+  const hasNextPage = data?.contributors?.pageInfo?.hasNextPage || false
   const hasPreviousPage = currentPage > 1
 
   const handlePreviousPage = () => {
@@ -251,11 +164,6 @@ const AuthorsPage: React.FC = () => {
     <Box p='6'>
       <Heading size='8' mb='6'>
         Autor*innen
-        {useDummyData && (
-          <Text as='span' size='2' color='gray' ml='2'>
-            (Preview with dummy data)
-          </Text>
-        )}
       </Heading>
 
       <Flex justify='start' mb='6' gap='2'>
