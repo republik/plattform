@@ -1,7 +1,6 @@
 'use client'
 
 import { useQuery } from '@apollo/client'
-import { gql } from '@apollo/client'
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -18,75 +17,13 @@ import {
 } from '@radix-ui/themes'
 import { Search, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
 import TooltipIcons from '../components/author-table/tooltip-icons'
-
-export interface Contributor {
-  id: string
-  name: string
-  shortBio?: string
-  image?: string
-  bio?: string | null
-  userId?: string | null
-  prolitterisId?: string | null
-  prolitterisFirstname?: string | null
-  prolitterisLastname?: string | null
-  slug: string
-  updatedAt: string
-  createdAt: string
-}
-
-interface ContributorsData {
-  contributors: {
-    totalCount: number
-    pageInfo: {
-      hasNextPage: boolean
-      hasPreviousPage: boolean
-      startCursor?: string
-      endCursor?: string
-    }
-    nodes: Contributor[]
-  }
-}
-
-interface ContributorsVariables {
-  first: number
-  after?: string
-  orderBy: {
-    field: string
-    direction: string
-  }
-}
-
-const CONTRIBUTORS_QUERY = gql`
-  query Contributors(
-    $first: Int
-    $after: String
-    $orderBy: ContributorOrderBy
-  ) {
-    contributors(first: $first, after: $after, orderBy: $orderBy) {
-      totalCount
-      pageInfo {
-        hasNextPage
-        hasPreviousPage
-        startCursor
-        endCursor
-      }
-      nodes {
-        id
-        name
-        shortBio
-        image
-        bio
-        userId
-        prolitterisId
-        prolitterisFirstname
-        prolitterisLastname
-        slug
-        updatedAt
-        createdAt
-      }
-    }
-  }
-`
+import {
+  ContributorsDocument,
+  ContributorsQuery,
+  ContributorsQueryVariables,
+  OrderDirection,
+  ContributorOrderField,
+} from '../../graphql/republik-api/__generated__/gql/graphql'
 
 const AuthorsPage: React.FC = () => {
   const pageSize = 10
@@ -97,15 +34,15 @@ const AuthorsPage: React.FC = () => {
   const [cursors, setCursors] = useState<string[]>([]) // Store cursors for each page
 
   const { data, loading, error } = useQuery<
-    ContributorsData,
-    ContributorsVariables
-  >(CONTRIBUTORS_QUERY, {
+    ContributorsQuery,
+    ContributorsQueryVariables
+  >(ContributorsDocument, {
     variables: {
       first: pageSize,
-      after: cursors[currentPage - 1] || undefined,
+      after: cursors[currentPage - 1] || undefined, 
       orderBy: {
-        field: 'updatedAt',
-        direction: 'ASC',
+        field: ContributorOrderField.UpdatedAt,
+        direction: OrderDirection.Asc,
       },
     },
     onCompleted: (data) => {

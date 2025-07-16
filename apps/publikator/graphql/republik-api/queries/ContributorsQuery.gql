@@ -16,8 +16,8 @@ query Contributor($id: ID, $slug: String) {
   }
 }
 
-query Contributors($first: Int, $orderBy: ContributorOrderBy) {
-  contributors(first: $first, orderBy: $orderBy) {
+query Contributors($first: Int, $after: String, $orderBy: ContributorOrderBy) {
+  contributors(first: $first, after: $after, orderBy: $orderBy) {
     totalCount
     pageInfo {
       hasNextPage

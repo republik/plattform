@@ -1,6 +1,6 @@
 import { Box, Flex, Tooltip } from '@radix-ui/themes'
 import { IdCardLanyard, PhilippinePeso } from 'lucide-react'
-import { Contributor } from '../../authors/page'
+import { ArticleContributor } from '../../../graphql/republik-api/__generated__/gql/graphql'
 
 // Republik SVG Icon Component that works like lucide-react icons
 const RepublikIcon = ({ size = 16, color = 'currentColor', ...props }) => (
@@ -45,7 +45,7 @@ const TooltipIcon: React.FC<TooltipIconProps> = ({
 )
 
 const TooltipIcons = ({contributor}: {
-  contributor: Contributor
+  contributor: ArticleContributor
 }) => {
   return (
     <Flex gap='4'>
