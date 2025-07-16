@@ -7,6 +7,7 @@ import { API_URL } from '../lib/settings'
 // Create Apollo Client instance
 const client = new ApolloClient({
   uri: API_URL,
+  credentials: 'include',
   cache: new InMemoryCache(),
   defaultOptions: {
     watchQuery: {
