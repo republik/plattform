@@ -8,9 +8,9 @@ query Contributor($id: ID, $slug: String) {
     prolitterisId
     prolitterisFirstname
     prolitterisLastname
+    bio
     gender
     userId
-    employee
     createdAt
     updatedAt
   }
@@ -32,9 +32,9 @@ query Contributors($first: Int, $orderBy: ContributorOrderBy) {
       prolitterisId
       prolitterisFirstname
       prolitterisLastname
+      bio
       gender
       userId
-      employee
       createdAt
       updatedAt
     }

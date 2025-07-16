@@ -2,38 +2,38 @@ mutation UpsertContributor(
   $id: ID
   $name: String
   $shortBio: String
+  $bio: String
   $image: String
   $prolitterisId: String
   $prolitterisFirstname: String
   $prolitterisLastname: String
   $gender: GenderEnum
   $userId: ID
-  $employee: EmployeeStatusEnum
 ) {
   upsertContributor(
     id: $id
     name: $name
     shortBio: $shortBio
+    bio: $bio
     image: $image
     prolitterisId: $prolitterisId
     prolitterisFirstname: $prolitterisFirstname
     prolitterisLastname: $prolitterisLastname
     gender: $gender
-    userId: $userId
-    employee: $employee
+    userId: $userId 
   ) {
     contributor {
       id
       name
       slug
       shortBio
+      bio
       image
       prolitterisId
       prolitterisFirstname
       prolitterisLastname
       gender
       userId
-      employee
       createdAt
       updatedAt
     }

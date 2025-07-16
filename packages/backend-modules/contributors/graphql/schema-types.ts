@@ -33,7 +33,7 @@ type DeleteContributorError {
 }
 
 type UpsertContributorResult {
-  contributor: Contributor
+  contributor: ArticleContributor
   isNew: Boolean!
   warnings: [String!]!
   errors: [UpsertContributorError!]!
