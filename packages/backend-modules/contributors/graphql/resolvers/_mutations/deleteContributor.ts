@@ -15,10 +15,10 @@ type DeleteContributorResult = {
 export = async function deleteContributor(
   _: unknown,
   { id }: DeleteContributorArgs,
-  { pgdb, user }: GraphqlContext,
+  { pgdb, user: me }: GraphqlContext,
 ): Promise<DeleteContributorResult> {
   // Ensure user has appropriate permissions
-  Roles.ensureUserIsInRoles(user, ['admin', 'producer'])
+  Roles.ensureUserIsInRoles(me, ['admin', 'producer'])
 
   const transaction = await pgdb.transactionBegin()
   

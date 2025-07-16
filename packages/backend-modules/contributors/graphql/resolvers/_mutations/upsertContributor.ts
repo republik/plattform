@@ -152,10 +152,10 @@ const findUniqueSlug = async (
 export = async function upsertContributor(
   _: unknown,
   args: UpsertContributorArgs,
-  { pgdb, user }: GraphqlContext,
+  { pgdb, user: me }: GraphqlContext,
 ): Promise<UpsertContributorResult> {
   // Ensure user has appropriate permissions
-  Roles.ensureUserIsInRoles(user, ['admin', 'producer'])
+  Roles.ensureUserIsInRoles(me, ['admin', 'producer'])
 
   // Validate input
   const validationErrors = validateInput(args)

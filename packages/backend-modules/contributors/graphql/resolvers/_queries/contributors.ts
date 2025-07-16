@@ -29,10 +29,10 @@ type ContributorsArgs = {
 export = async function contributors(
   _: unknown,
   args: ContributorsArgs,
-  { pgdb, user }: GraphqlContext,
+  { pgdb, user: me }: GraphqlContext,
 ) {
   // Check if user has permissions to access gender field
-  const hasGenderAccess = Roles.userIsInRoles(user, [
+  const hasGenderAccess = Roles.userIsInRoles(me, [
     'admin',
     'editor',
     'producer',
