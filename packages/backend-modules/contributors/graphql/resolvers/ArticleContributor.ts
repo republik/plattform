@@ -9,13 +9,19 @@ export = {
     return root.prolitteris_first_name
   },
   prolitterisLastname: (root: any, _args: never, _ctx: GraphqlContext) => {
-    return root.prolitteris_first_name
+    return root.prolitteris_last_name
   },
   userId: (root: any, _args: never, _ctx: GraphqlContext) => {
     return root.user_id
   },
   shortBio: (root: any, _args: never, _ctx: GraphqlContext) => {
     return root.short_bio
+  },
+  createdAt: (root: any, _args: never, _ctx: GraphqlContext) => {
+    return root.created_at
+  },
+  updatedAt: (root: any, _args: never, _ctx: GraphqlContext) => {
+    return root.updated_at
   },
   gender: (root: any, _args: never, ctx: GraphqlContext) => {
     const hasGenderAccess = Auth.Roles.userIsInRoles(ctx.user, [
