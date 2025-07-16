@@ -18,6 +18,8 @@ const GET_CONTRIBUTOR_QUERY = gql`
       bio
       userId
       prolitterisId
+      prolitterisFirstname
+      prolitterisLastname
       gender
     }
   }
@@ -29,6 +31,7 @@ const UPDATE_CONTRIBUTOR_MUTATION = gql`
     $name: String!
     $shortBio: String
     $image: String
+    $bio: String
     $userId: ID
     $prolitterisId: String
     $prolitterisFirstname: String
@@ -153,16 +156,13 @@ export default function EditAuthorPage({ params }: EditAuthorPageProps) {
         id: data.contributor.id,
         name: formData.name,
         shortBio: formData.shortBio || undefined,
+        bio: formData.bio || undefined,
         image: formData.image || undefined,
         userId: formData.userId || undefined,
         prolitterisId: formData.prolitterisId || undefined,
         gender: formData.gender || undefined,
-      }
-
-      // Map employee values to backend enums
-      if (formData.employee) {
-        if (formData.employee === 'present') variables.employee = 'present'
-        else if (formData.employee === 'past') variables.employee = 'past'
+        prolitterisFirstname: formData.prolitterisFirstname || undefined,
+        prolitterisLastname: formData.prolitterisLastname || undefined,
       }
 
       await updateContributor({

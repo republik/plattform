@@ -50,15 +50,6 @@ const TooltipIcons = ({contributor}: {
   return (
     <Flex gap='4'>
       <TooltipIcon
-        condition={contributor.employee !== null}
-        tooltip={
-          contributor.employee !== null
-            ? 'Ist oder war Mitglied der Republik Redaktion'
-            : 'Externe*r Autor*in'
-        }
-        icon={RepublikIcon}
-      />
-      <TooltipIcon
         condition={contributor.userId !== null}
         tooltip={
           contributor.userId !== null

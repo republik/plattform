@@ -172,6 +172,7 @@ export = async function upsertContributor(
     id,
     name,
     shortBio,
+    bio,
     image,
     prolitterisId,
     prolitterisFirstname,
@@ -197,8 +198,8 @@ export = async function upsertContributor(
     // Check for duplicate prolitterisId (error)
     if (prolitterisId) {
       const whereClauseForProlitteris = id
-        ? { prolitterisId, id: { '!=': id } }
-        : { prolitterisId }
+        ? { prolitteris_id: prolitterisId, id: { '!=': id } }
+        : { prolitteris_id: prolitterisId }
       const existingWithProlitterisId =
         await transaction.public.contributors.findFirst(
           whereClauseForProlitteris,
@@ -228,17 +229,18 @@ export = async function upsertContributor(
     const contributorData = {
       name,
       slug,
-      ...(shortBio !== undefined && { shortBio }),
+      ...(shortBio !== undefined && { short_bio: shortBio }),
+      ...(bio !== undefined && { bio }),
       ...(image !== undefined && { image }),
-      ...(prolitterisId !== undefined && { prolitterisId }),
+      ...(prolitterisId !== undefined && { prolitteris_id: prolitterisId }),
       ...(prolitterisFirstname !== undefined && {
-        prolitterisFirstname,
+        prolitteris_first_name: prolitterisFirstname,
       }),
       ...(prolitterisLastname !== undefined && {
-        prolitterisLastname,
+        prolitteris_last_name: prolitterisLastname,
       }),
       ...(gender !== undefined && { gender }),
-      ...(userId !== undefined && { userId }),
+      ...(userId !== undefined && { user_id: userId }),
       updated_at: now,
     }
 

@@ -93,16 +93,13 @@ export default function NewAuthorPage() {
       const variables: any = {
         name: formData.name,
         shortBio: formData.shortBio || undefined,
+        bio: formData.bio || undefined,
         image: formData.image || undefined,
         userId: formData.userId || undefined,
         prolitterisId: formData.prolitterisId || undefined,
+        prolitterisFirstname: formData.prolitterisFirstname || undefined,
+        prolitterisLastname: formData.prolitterisLastname || undefined,
         gender: formData.gender || undefined,
-      }
-
-      // Map employee values to backend enums
-      if (formData.employee) {
-        if (formData.employee === 'present') variables.employee = 'present'
-        else if (formData.employee === 'past') variables.employee = 'past'
       }
 
       await createContributor({

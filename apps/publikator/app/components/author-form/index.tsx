@@ -23,7 +23,7 @@ export interface ContributorInput {
   name: string
   shortBio?: string
   image?: string
-  employee?: string | null
+  bio?: string | null
   userId?: string | null
   prolitterisId?: string | null
   prolitterisFirstname?: string | null
@@ -70,7 +70,7 @@ export default function AuthorForm({
     name: '',
     shortBio: '',
     image: '',
-    employee: null,
+    bio: '',
     userId: '',
     prolitterisId: '',
     gender: null,
@@ -102,7 +102,7 @@ export default function AuthorForm({
         name: initialData.name || '',
         shortBio: initialData.shortBio || '',
         image: initialData.image || '',
-        employee: initialData.employee,
+        bio: initialData.bio || '',
         userId: initialData.userId || '',
         prolitterisId: initialData.prolitterisId || '',
         gender: initialData.gender,
@@ -117,13 +117,6 @@ export default function AuthorForm({
     setFormData((prev) => ({
       ...prev,
       [field]: value,
-    }))
-  }
-
-  const handleEmployeeChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      employee: value === 'none' ? null : value,
     }))
   }
 
@@ -426,7 +419,7 @@ export default function AuthorForm({
                 <Flex align='center' justify='start' mb='1' gap='8'>
                   <Box>
                     <Text as='p' size='2' weight='bold' mb='1'>
-                      Geschlecht
+                      Gender
                     </Text>
                     <Select.Root
                       value={formData.gender || 'none'}
@@ -436,7 +429,7 @@ export default function AuthorForm({
                         color={hasFieldError('gender') ? 'red' : undefined}
                       />
                       <Select.Content>
-                        <Select.Item value='none'>Keine Angabe</Select.Item>
+                        <Select.Item value='na'>Keine Angabe</Select.Item>
                         <Select.Item value='m'>Männlich</Select.Item>
                         <Select.Item value='f'>Weiblich</Select.Item>
                         <Select.Item value='d'>Divers</Select.Item>
@@ -445,35 +438,6 @@ export default function AuthorForm({
                     {getFieldError('gender') && (
                       <Text size='1' color='red' mt='1'>
                         {getFieldError('gender')}
-                      </Text>
-                    )}
-                  </Box>
-                  <Box>
-                    <Text
-                      as='p'
-                      size='2'
-                      weight='bold'
-                      mb='1'
-                      style={{ width: '100%' }}
-                    >
-                      Teammitglied
-                    </Text>
-                    <Select.Root
-                      value={formData.employee || 'none'}
-                      onValueChange={handleEmployeeChange}
-                    >
-                      <Select.Trigger 
-                        color={hasFieldError('employee') ? 'red' : undefined}
-                      />
-                      <Select.Content>
-                        <Select.Item value='none'>Extern</Select.Item>
-                        <Select.Item value='present'>Aktuell</Select.Item>
-                        <Select.Item value='past'>Ehemalig</Select.Item>
-                      </Select.Content>
-                    </Select.Root>
-                    {getFieldError('employee') && (
-                      <Text size='1' color='red' mt='1'>
-                        {getFieldError('employee')}
                       </Text>
                     )}
                   </Box>
