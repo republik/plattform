@@ -150,7 +150,7 @@ const findUniqueSlug = async (
   let isUnique = false
 
   while (isUnique === false) {
-    const whereClause = excludeId ? { slug, id: { '!=': excludeId } } : { slug }
+    const whereClause = excludeId ? { slug, 'id !=': excludeId } : { slug }
     const slugExists = await pgdb.public.contributors.findFirst(whereClause)
 
     if (!slugExists) {
@@ -203,10 +203,11 @@ export = async function upsertContributor(
   try {
     // Check for duplicate prolitterisId (error)
     if (prolitterisId) {
+      const whereClause = id
+        ? { prolitteris_id: prolitterisId, 'id !=': id }
+        : { prolitteris_id: prolitterisId }
       const existingContributorWithProlitterisId: ArticleContributor | null =
-        await transaction.public.contributors.findFirst({
-          prolitteris_id: prolitterisId,
-        })
+        await transaction.public.contributors.findFirst(whereClause)
 
       if (existingContributorWithProlitterisId) {
         await transaction.transactionRollback()
@@ -229,10 +230,9 @@ export = async function upsertContributor(
     const slug = await findUniqueSlug(baseSlug, transaction, id)
 
     // Check for duplicate names (warning only)
+    const whereClause = id ? { name, 'id !=': id } : { name }
     const existingContributorWithName: ArticleContributor | null =
-      await transaction.public.contributors.findFirst({
-        name,
-      })
+      await transaction.public.contributors.findFirst(whereClause)
 
     if (existingContributorWithName) {
       warnings.push(
