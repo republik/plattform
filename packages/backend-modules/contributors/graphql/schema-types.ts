@@ -1,5 +1,5 @@
 export = `
-type Contributor {
+type ArticleContributor {
   id: ID!
   name: String!
   slug: String!
@@ -47,7 +47,7 @@ type DeleteContributorResult {
 type ContributorConnection {
   totalCount: Int!
   pageInfo: ContributorPageInfo!
-  nodes: [Contributor!]!
+  nodes: [ArticleContributor!]!
 }
 
 type ContributorPageInfo {

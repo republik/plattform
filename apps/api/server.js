@@ -40,6 +40,9 @@ const {
   ReadingPositionRefreshWorker,
   NextReadsFeedRefreshWorker,
 } = require('@orbiting/backend-modules-next-reads')
+const {
+  graphql: contributors,
+} = require('@orbiting/backend-modules-contributors')
 
 const {
   graphql: paymentsGraphql,
@@ -177,6 +180,7 @@ const run = async (workerId, config) => {
     referralCampaigns,
     paymentsGraphql,
     nextReads,
+    contributors,
   ])
 
   // middlewares

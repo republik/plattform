@@ -32,7 +32,11 @@ export = async function contributors(
   { pgdb, user }: GraphqlContext,
 ) {
   // Check if user has permissions to access gender field
-  const hasGenderAccess = Roles.userIsInRoles(user, ['admin', 'editor', 'producer'])
+  const hasGenderAccess = Roles.userIsInRoles(user, [
+    'admin',
+    'editor',
+    'producer',
+  ])
 
   const { orderBy = { field: 'name', direction: 'ASC' }, filters = {} } = args
 
@@ -71,35 +75,21 @@ export = async function contributors(
   }
 
   // Build ORDER BY clause
-  const orderByClause = `${orderBy.field === 'name' ? 'name' : `"${orderBy.field}"`} ${orderBy.direction}`
+  const orderByClause = `${
+    orderBy.field === 'name' ? 'name' : `"${orderBy.field}"`
+  } ${orderBy.direction}`
 
   // Build the complete query
-  const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : ''
-  
-  // Conditionally include gender field based on user permissions
-  const genderField = hasGenderAccess ? 'gender,' : ''
-  
+  const whereClause =
+    whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : ''
+
   const query = `
-    SELECT 
-      id,
-      name,
-      slug,
-      short_bio as "shortBio",
-      bio,
-      image,
-      prolitteris_id as "prolitterisId", 
-      prolitteris_firstname as "prolitterisFirstname",
-      prolitteris_lastname as "prolitterisLastname",
-      ${genderField}
-      user_id as "userId",
-      created_at as "createdAt",
-      updated_at as "updatedAt"
-    FROM contributors
+    SELECT * FROM contributors
     ${whereClause}
     ORDER BY ${orderByClause}
   `
 
-  const contributors = await pgdb.query(query, whereParams)
+  const contributors = await pgdb.public.query(query, whereParams)
 
   return paginate(args, contributors)
 }

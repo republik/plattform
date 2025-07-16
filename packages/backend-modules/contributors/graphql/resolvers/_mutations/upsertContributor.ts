@@ -239,7 +239,7 @@ export = async function upsertContributor(
       }),
       ...(gender !== undefined && { gender }),
       ...(userId !== undefined && { userId }),
-      updatedAt: now,
+      updated_at: now,
     }
 
     let contributor
@@ -271,7 +271,7 @@ export = async function upsertContributor(
       // Create new contributor
       contributor = await transaction.public.contributors.insertAndGet({
         ...contributorData,
-        createdAt: now,
+        created_at: now,
       })
       isNew = true
     }

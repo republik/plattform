@@ -5,7 +5,7 @@ schema {
 }
 
 type queries {
-  contributor(id: ID, slug: String): Contributor
+  contributor(id: ID, slug: String): ArticleContributor
   contributors(
     first: Int
     last: Int
@@ -29,7 +29,7 @@ type mutations {
     gender: GenderEnum
     userId: ID
   ): UpsertContributorResult!
-  
+
   deleteContributor(id: ID!): DeleteContributorResult!
 }
 `

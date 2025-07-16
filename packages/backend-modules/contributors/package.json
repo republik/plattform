@@ -4,6 +4,10 @@
   "private": true,
   "main": "build/index.js",
   "types": "build/@types",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc -w"
+  },
   "dependencies": {
     "@orbiting/backend-modules-auth": "*",
     "@orbiting/backend-modules-scalars": "*",
