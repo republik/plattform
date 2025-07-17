@@ -9,7 +9,7 @@ type DeleteContributorArgs = {
 
 type DeleteContributorResult = {
   success: boolean
-  errors: { field: string | null; message: string }[]
+  errors: { message: string }[]
 }
 
 export = async function deleteContributor(
@@ -31,7 +31,6 @@ export = async function deleteContributor(
         success: false,
         errors: [
           {
-            field: 'id',
             message: `Autor*in mit ID ${id} nicht gefunden`,
           },
         ],
@@ -53,7 +52,6 @@ export = async function deleteContributor(
         success: false,
         errors: [
           {
-            field: null,
             message: 'Autor*in kann nicht gelöscht werden, da sie mit einem Dokument verknüpft ist',
           },
         ],
@@ -74,7 +72,6 @@ export = async function deleteContributor(
       success: false,
       errors: [
         {
-          field: null,
           message: `Ein unerwarteter Fehler ist aufgetreten: ${(e as Error).message}`,
         },
       ],

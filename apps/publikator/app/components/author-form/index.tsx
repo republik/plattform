@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useActionState } from 'react'
 import {
   Box,
@@ -14,64 +14,36 @@ import {
   Select,
   Avatar,
   Separator,
-  AlertDialog,
 } from '@radix-ui/themes'
-import { ArrowLeft, Save, Upload, X, Trash2 } from 'lucide-react'
+import { ArrowLeft, Search, Save, Upload, X } from 'lucide-react'
 import Link from 'next/link'
 import GeneralWarningErrorCallout from './warning-error-callout'
-import {
-  ArticleContributor,
-  UpsertContributorError,
-  MutationsUpsertContributorArgs,
-  GenderEnum,
-} from '../../../graphql/republik-api/__generated__/gql/graphql'
-
-export interface FormState {
-  success: boolean
-  errors: UpsertContributorError[]
-  warnings: string[]
-  data?: ArticleContributor
-}
+import { ArticleContributor } from '../../../graphql/republik-api/__generated__/gql/graphql'
+import { upsertAuthor } from '../../authors/actions'
+import DeleteAuthorButton from './delete-author-button'
 
 interface AuthorFormProps {
   initialData?: ArticleContributor
   isEdit?: boolean
-  action: (prevState: FormState, formData: FormData) => Promise<FormState>
-  onDelete?: () => void
   title: string
 }
 
 export default function AuthorForm({
   initialData,
   isEdit = false,
-  action,
-  onDelete,
   title,
 }: AuthorFormProps) {
-  const [formData, setFormData] = useState<MutationsUpsertContributorArgs>({
-    name: '',
-    shortBio: '',
-    image: '',
-    bio: '',
-    userId: '',
-    prolitterisId: '',
-    gender: GenderEnum.Na,
-    prolitterisFirstname: '',
-    prolitterisLastname: '',
-  })
   const [imagePreview, setImagePreview] = useState<string | null>(null)
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-
-  // Use React 19's useActionState hook
-  const [state, formAction, isPending] = useActionState(action, {
+  const [formState, formAction, isPending] = useActionState(upsertAuthor, {
     success: false,
     errors: [],
     warnings: [],
+    data: initialData,
   })
 
   // Split errors into field-specific and general errors
-  const fieldErrors = state.errors.filter((error) => error.field !== null)
-  const generalErrors = state.errors.filter((error) => error.field === null)
+  const fieldErrors = formState.errors.filter((error) => error.field !== null)
+  const generalErrors = formState.errors.filter((error) => error.field === null)
 
   // Helper function to get error for a specific field
   const getFieldError = (fieldName: string): string | null => {
@@ -84,36 +56,6 @@ export default function AuthorForm({
     return fieldErrors.some((error) => error.field === fieldName)
   }
 
-  // Populate form when initialData is provided
-  useEffect(() => {
-    console.log('useEffect running with initialData:', initialData)
-    if (initialData) {
-      console.log('Setting formData with gender:', initialData.gender)
-      setFormData({
-        name: initialData.name || '',
-        shortBio: initialData.shortBio || '',
-        image: initialData.image || '',
-        bio: initialData.bio || '',
-        userId: initialData.userId || '',
-        prolitterisId: initialData.prolitterisId || '',
-        gender: initialData.gender,
-        prolitterisFirstname: initialData.prolitterisFirstname,
-        prolitterisLastname: initialData.prolitterisLastname,
-      })
-      setImagePreview(initialData.image)
-    }
-  }, [initialData])
-
-  const handleInputChange = (
-    field: keyof MutationsUpsertContributorArgs,
-    value: string,
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }))
-  }
-
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
@@ -121,29 +63,16 @@ export default function AuthorForm({
       reader.onload = (e) => {
         const result = e.target?.result as string
         setImagePreview(result)
-        setFormData((prev) => ({
-          ...prev,
-          image: result,
-        }))
       }
       reader.readAsDataURL(file)
     }
   }
 
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete()
-    }
-  }
-
   const removeImage = () => {
     setImagePreview(null)
-    setFormData((prev) => ({
-      ...prev,
-      image: '',
-    }))
   }
 
+  console.log(formState)
   return (
     <Box p='6' maxWidth='800px' mx='auto'>
       {/* Header */}
@@ -158,27 +87,23 @@ export default function AuthorForm({
           <Separator orientation='vertical' size='1' />
           <Heading size='6'>{title}</Heading>
         </Flex>
-        {isEdit && onDelete && (
-          <Button
-            variant='outline'
-            size='2'
-            color='red'
-            onClick={() => setShowDeleteDialog(true)}
-          >
-            <Trash2 size={16} />
-            Löschen
-          </Button>
+        {isEdit && (
+          <DeleteAuthorButton
+            name={formState.data?.name || ''}
+            id={formState.data?.id || ''}
+          />
         )}
       </Flex>
 
       <GeneralWarningErrorCallout
         generalErrors={generalErrors}
-        warnings={state.warnings}
+        warnings={formState.warnings}
       />
 
       {/* Form */}
       <Card>
         <form action={formAction}>
+          <input type='hidden' name='id' defaultValue={formState.data?.id} />
           <Box p='6'>
             <Flex direction='column' gap='4'>
               <Box>
@@ -189,7 +114,7 @@ export default function AuthorForm({
                   <Flex align='center' gap='3'>
                     <Avatar
                       src={imagePreview || undefined}
-                      fallback={formData.name?.charAt(0) || '?'}
+                      fallback={formState.data?.name?.charAt(0) || '?'}
                       size='8'
                     />
                     <Flex direction='column' gap='2'>
@@ -225,7 +150,11 @@ export default function AuthorForm({
                     onChange={handleImageUpload}
                     style={{ display: 'none' }}
                   />
-                  <input type='hidden' name='image' value={formData.image} />
+                  <input
+                    type='hidden'
+                    name='image'
+                    defaultValue={formState.data?.image}
+                  />
                   {getFieldError('image') && (
                     <Text size='1' color='red'>
                       {getFieldError('image')}
@@ -240,8 +169,7 @@ export default function AuthorForm({
                 </Text>
                 <TextField.Root
                   name='name'
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  defaultValue={formState.data?.name}
                   placeholder='Vor- und Nachname'
                   required
                   color={hasFieldError('name') ? 'red' : undefined}
@@ -258,16 +186,10 @@ export default function AuthorForm({
                   <Text as='label' size='2' weight='bold'>
                     Kurzbio
                   </Text>
-                  <Text size='1' color='gray'>
-                    {formData.shortBio?.length || 0}/500
-                  </Text>
                 </Flex>
                 <TextArea
                   name='shortBio'
-                  value={formData.shortBio}
-                  onChange={(e) =>
-                    handleInputChange('shortBio', e.target.value)
-                  }
+                  defaultValue={formState.data?.shortBio}
                   placeholder='Maximal 500 Zeichen'
                   rows={4}
                   resize='vertical'
@@ -286,13 +208,16 @@ export default function AuthorForm({
                 </Text>
                 <TextField.Root
                   name='userId'
-                  value={formData.userId || ''}
-                  onChange={(e) => handleInputChange('userId', e.target.value)}
-                  placeholder='User-ID (falls vorhanden)'
+                  defaultValue={formState.data?.userId}
+                  placeholder='User-ID suchen'
                   color={hasFieldError('userId') ? 'red' : undefined}
-                />
+                >
+                  <TextField.Slot>
+                    <Search size={16} />
+                  </TextField.Slot>
+                </TextField.Root>
                 <Text size='1' color='gray' mt='1'>
-                  ID des verknüpften Verlegerkontos
+                  ID des verknüpften Verlegerkontos (falls vorhanden)
                 </Text>
                 {getFieldError('userId') && (
                   <Text size='1' color='red' mt='1'>
@@ -307,10 +232,7 @@ export default function AuthorForm({
                 </Text>
                 <TextField.Root
                   name='prolitterisId'
-                  value={formData.prolitterisId}
-                  onChange={(e) =>
-                    handleInputChange('prolitterisId', e.target.value)
-                  }
+                  defaultValue={formState.data?.prolitterisId}
                   placeholder='PL-ID (falls vorhanden)'
                   color={hasFieldError('prolitterisId') ? 'red' : undefined}
                 />
@@ -330,10 +252,7 @@ export default function AuthorForm({
                 </Text>
                 <TextField.Root
                   name='prolitterisFirstname'
-                  value={formData.prolitterisFirstname || ''}
-                  onChange={(e) =>
-                    handleInputChange('prolitterisFirstname', e.target.value)
-                  }
+                  defaultValue={formState.data?.prolitterisFirstname}
                   placeholder='Vorname (falls vorhanden)'
                 />
               </Box>
@@ -344,10 +263,7 @@ export default function AuthorForm({
                 </Text>
                 <TextField.Root
                   name='prolitterisLastname'
-                  value={formData.prolitterisLastname || ''}
-                  onChange={(e) =>
-                    handleInputChange('prolitterisLastname', e.target.value)
-                  }
+                  defaultValue={formState.data?.prolitterisLastname}
                   placeholder='Nachname (falls vorhanden)'
                 />
               </Box>
@@ -360,10 +276,7 @@ export default function AuthorForm({
                     </Text>
                     <Select.Root
                       name='gender'
-                      value={formData.gender}
-                      onValueChange={(value) =>
-                        handleInputChange('gender', value)
-                      }
+                      defaultValue={formState.data?.gender}
                     >
                       <Select.Trigger
                         color={hasFieldError('gender') ? 'red' : undefined}
@@ -375,11 +288,6 @@ export default function AuthorForm({
                         <Select.Item value='d'>Divers</Select.Item>
                       </Select.Content>
                     </Select.Root>
-                    <input
-                      type='hidden'
-                      name='gender'
-                      value={formData.gender || 'na'}
-                    />
                     {getFieldError('gender') && (
                       <Text size='1' color='red' mt='1'>
                         {getFieldError('gender')}
@@ -406,7 +314,7 @@ export default function AuthorForm({
               <Button
                 type='submit'
                 size='2'
-                disabled={!formData.name || isPending}
+                disabled={isPending}
                 loading={isPending}
               >
                 <Save size={16} />
@@ -416,39 +324,6 @@ export default function AuthorForm({
           </Box>
         </form>
       </Card>
-
-      {/* Delete Confirmation Dialog */}
-      {isEdit && onDelete && (
-        <AlertDialog.Root
-          open={showDeleteDialog}
-          onOpenChange={setShowDeleteDialog}
-        >
-          <AlertDialog.Content>
-            <AlertDialog.Title>Autor*in löschen</AlertDialog.Title>
-            <AlertDialog.Description>
-              Möchten Sie <strong>{formData.name}</strong> wirklich löschen?
-              Diese Aktion kann nicht rückgängig gemacht werden.
-            </AlertDialog.Description>
-            <Flex justify='end' gap='3' mt='4'>
-              <AlertDialog.Cancel>
-                <Button variant='outline' size='2'>
-                  Abbrechen
-                </Button>
-              </AlertDialog.Cancel>
-              <AlertDialog.Action>
-                <Button
-                  variant='solid'
-                  size='2'
-                  color='red'
-                  onClick={handleDelete}
-                >
-                  Löschen
-                </Button>
-              </AlertDialog.Action>
-            </Flex>
-          </AlertDialog.Content>
-        </AlertDialog.Root>
-      )}
     </Box>
   )
 }

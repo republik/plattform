@@ -22,12 +22,7 @@ enum GenderEnum {
   na
 }
 
-type UpsertContributorError {
-  field: String
-  message: String!
-}
-
-type DeleteContributorError {
+type ContributorMutationError {
   field: String
   message: String!
 }
