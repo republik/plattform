@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
-import { Company } from '../types'
+import { Company, PaymentMethod } from '../types'
 
 export class PaymentService {
   #stripeAdapters: Record<Company, Stripe> = {
@@ -41,6 +41,65 @@ export class PaymentService {
     ].paymentMethods.retrieve(id)
 
     return paymentMethod ? paymentMethod : null
+  }
+
+  async getPaymentMethodForSubscription(
+    company: Company,
+    subscriptionExternalId: string,
+  ): Promise<PaymentMethod | null | undefined> {
+    const subscription = await this.getSubscription(
+      company,
+      subscriptionExternalId,
+    )
+
+    if (!subscription?.customer) {
+      return null
+    }
+
+    const customer = await this.getCustomer(
+      company,
+      subscription.customer as string,
+    )
+
+    if (!customer || customer.deleted) {
+      return null
+    }
+
+    const paymentMethodId =
+      subscription.default_payment_method ||
+      customer.invoice_settings.default_payment_method
+
+    if (typeof paymentMethodId !== 'string') {
+      return null
+    }
+
+    const paymentMethod = await this.getPaymentMethod(company, paymentMethodId)
+
+    if (!paymentMethod) {
+      return null
+    }
+
+    if (paymentMethod.card) {
+      return {
+        id: paymentMethodId,
+        method: this.capitalize(paymentMethod.card.brand),
+        last4: paymentMethod.card.last4,
+      }
+    }
+
+    if (paymentMethod.paypal) {
+      return {
+        id: paymentMethodId,
+        method: 'Paypal',
+      }
+    }
+
+    if (paymentMethod.twint) {
+      return {
+        id: paymentMethodId,
+        method: 'Twint',
+      }
+    }
   }
 
   async getSubscription(company: Company, id: string) {
@@ -201,5 +260,9 @@ export class PaymentService {
       signature,
       secret,
     )
+  }
+
+  capitalize(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1)
   }
 }

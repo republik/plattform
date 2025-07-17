@@ -465,6 +465,10 @@
       "value": "Republik: Sie haben ein Geschenk eingelöst"
     },
     {
+      "key": "api/email/subscription_renewal_notice_7_days/subject",
+      "value": "Ihre Mitgliedschaft erneuert sich automatisch"
+    },
+    {
       "key": "api/email/option/goodie/notebook/1",
       "value": "Notizbuch"
     },
