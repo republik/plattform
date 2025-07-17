@@ -85,7 +85,7 @@ export default function AuthorForm({
             </Button>
           </Link>
           <Separator orientation='vertical' size='1' />
-          <Heading size='6'>{title}</Heading>
+          <Heading size='3'>{title}</Heading>
         </Flex>
         {isEdit && (
           <DeleteAuthorButton
@@ -105,7 +105,7 @@ export default function AuthorForm({
         <form action={formAction}>
           <input type='hidden' name='id' defaultValue={formState.data?.id} />
           <Box p='6'>
-            <Flex direction='column' gap='4'>
+            <Flex direction='column' gap='5'>
               <Box>
                 <Text as='label' size='2' weight='bold' mb='2'>
                   Profilbild
@@ -225,48 +225,42 @@ export default function AuthorForm({
                   </Text>
                 )}
               </Box>
-
-              <Box>
-                <Text as='label' size='2' weight='bold' mb='1'>
-                  Prolitteris-ID
-                </Text>
-                <TextField.Root
-                  name='prolitterisId'
-                  defaultValue={formState.data?.prolitterisId}
-                  placeholder='PL-ID (falls vorhanden)'
-                  color={hasFieldError('prolitterisId') ? 'red' : undefined}
-                />
-                <Text size='1' color='gray' mt='1'>
-                  ID für die Honorarabrechnung
-                </Text>
-                {getFieldError('prolitterisId') && (
-                  <Text size='1' color='red' mt='1'>
-                    {getFieldError('prolitterisId')}
+              <Card>
+                <Flex direction='column' gap='2'>
+                  <Text as='label' size='2' weight='bold' mb='1'>
+                    Prolitteris-ID
                   </Text>
-                )}
-              </Box>
+                  <TextField.Root
+                    name='prolitterisId'
+                    defaultValue={formState.data?.prolitterisId}
+                    placeholder='PL-ID (falls vorhanden)'
+                    color={hasFieldError('prolitterisId') ? 'red' : undefined}
+                  />
+                  {getFieldError('prolitterisId') && (
+                    <Text size='1' color='red' mt='1'>
+                      {getFieldError('prolitterisId')}
+                    </Text>
+                  )}
 
-              <Box>
-                <Text as='label' size='2' weight='bold' mb='1'>
-                  Prolitteris Vorname
-                </Text>
-                <TextField.Root
-                  name='prolitterisFirstname'
-                  defaultValue={formState.data?.prolitterisFirstname}
-                  placeholder='Vorname (falls vorhanden)'
-                />
-              </Box>
+                  <Text as='label' size='2' weight='bold' mb='1'>
+                    Prolitteris Vorname
+                  </Text>
+                  <TextField.Root
+                    name='prolitterisFirstname'
+                    defaultValue={formState.data?.prolitterisFirstname}
+                    placeholder='Vorname (falls vorhanden)'
+                  />
 
-              <Box>
-                <Text as='label' size='2' weight='bold' mb='1'>
-                  Prolitteris Nachname
-                </Text>
-                <TextField.Root
-                  name='prolitterisLastname'
-                  defaultValue={formState.data?.prolitterisLastname}
-                  placeholder='Nachname (falls vorhanden)'
-                />
-              </Box>
+                  <Text as='label' size='2' weight='bold' mb='1'>
+                    Prolitteris Nachname
+                  </Text>
+                  <TextField.Root
+                    name='prolitterisLastname'
+                    defaultValue={formState.data?.prolitterisLastname}
+                    placeholder='Nachname (falls vorhanden)'
+                  />
+                </Flex>
+              </Card>
 
               <Box>
                 <Flex align='center' justify='start' mb='1' gap='8'>

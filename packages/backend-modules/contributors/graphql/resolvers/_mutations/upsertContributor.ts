@@ -40,12 +40,18 @@ type UpsertContributorArgs = {
   userId?: string
 }
 
-type UpsertContributorResult = {
-  contributor: any | null
-  isNew: boolean
-  warnings: string[]
-  errors: { field: string | null; message: string }[]
-}
+type UpsertContributorResponse =
+  | {
+      __typename: 'UpsertContributorSuccess'
+      contributor: ArticleContributor
+      isNew: boolean
+      warnings?: { field: string | null; message: string }[]
+    }
+  | {
+      __typename: 'UpsertContributorError'
+      warnings?: { field: string | null; message: string }[]
+      errors: { field: string | null; message: string }[]
+    }
 
 // URL validation utility
 const isValidUrl = (url: string): boolean => {
@@ -169,7 +175,7 @@ export = async function upsertContributor(
   _: unknown,
   args: UpsertContributorArgs,
   { pgdb, user: me }: GraphqlContext,
-): Promise<UpsertContributorResult> {
+): Promise<UpsertContributorResponse> {
   // Ensure user has appropriate permissions
   Roles.ensureUserIsInRoles(me, ['admin', 'producer'])
 
@@ -177,9 +183,7 @@ export = async function upsertContributor(
   const validationErrors = validateInput(args)
   if (validationErrors.length > 0) {
     return {
-      contributor: null,
-      isNew: false,
-      warnings: [],
+      __typename: 'UpsertContributorError',
       errors: validationErrors,
     }
   }
@@ -212,9 +216,7 @@ export = async function upsertContributor(
       if (existingContributorWithProlitterisId) {
         await transaction.transactionRollback()
         return {
-          contributor: null,
-          isNew: false,
-          warnings: [],
+          __typename: 'UpsertContributorError',
           errors: [
             {
               field: 'prolitterisId',
@@ -271,9 +273,7 @@ export = async function upsertContributor(
       if (!existingContributor) {
         await transaction.transactionRollback()
         return {
-          contributor: null,
-          isNew: false,
-          warnings: [],
+          __typename: 'UpsertContributorError',
           errors: [
             {
               field: 'id',
@@ -299,26 +299,13 @@ export = async function upsertContributor(
     await transaction.transactionCommit()
 
     return {
+      __typename: 'UpsertContributorSuccess',
       contributor,
       isNew,
-      warnings,
-      errors: [],
+      warnings: [],
     }
   } catch (e) {
     await transaction.transactionRollback()
-    // Return unexpected errors as error messages instead of throwing
-    return {
-      contributor: null,
-      isNew: false,
-      warnings: [],
-      errors: [
-        {
-          field: null,
-          message: `Ein unerwarteter Fehler ist aufgetreten: ${
-            (e as Error).message
-          }`,
-        },
-      ],
-    }
+    throw e
   }
 }

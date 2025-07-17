@@ -22,21 +22,31 @@ enum GenderEnum {
   na
 }
 
-type ContributorMutationError {
+union ContributorMutationResponse = UpsertContributorSuccess | UpsertContributorError
+
+type FieldError {
   field: String
   message: String!
 }
 
-type UpsertContributorResult {
-  contributor: ArticleContributor
-  isNew: Boolean!
-  warnings: [String!]!
-  errors: [UpsertContributorError!]!
+type UpsertContributorError {
+  errors: [FieldError!]!
+  warnings: [FieldError!]
 }
 
-type DeleteContributorResult {
-  success: Boolean!
-  errors: [DeleteContributorError!]!
+type UpsertContributorSuccess {
+  contributor: ArticleContributor!
+  isNew: Boolean!
+  warnings: [FieldError!]
+}
+
+union DeleteContributorResponse = DeleteContributorSuccess | DeleteContributorError
+
+type DeleteContributorSuccess {
+}
+
+type DeleteContributorError {
+  message: String!
 }
 
 type ContributorConnection {

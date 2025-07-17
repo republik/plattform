@@ -7,74 +7,48 @@ type DeleteContributorArgs = {
   id: string
 }
 
-type DeleteContributorResult = {
-  success: boolean
-  errors: { message: string }[]
-}
+type DeleteContributorResponse =
+  | {
+      __typename: "DeleteContributorSuccess"
+    }
+  | {
+      __typename: "DeleteContributorError"
+      message: string
+    }
 
 export = async function deleteContributor(
   _: unknown,
   { id }: DeleteContributorArgs,
   { pgdb, user: me }: GraphqlContext,
-): Promise<DeleteContributorResult> {
+): Promise<DeleteContributorResponse> {
   // Ensure user has appropriate permissions
   Roles.ensureUserIsInRoles(me, ['admin', 'producer'])
 
   const transaction = await pgdb.transactionBegin()
-  
+
   try {
     // Check if contributor exists
     const contributor = await transaction.public.contributors.findOne({ id })
     if (!contributor) {
       await transaction.transactionRollback()
       return {
-        success: false,
-        errors: [
-          {
-            message: `Autor*in mit ID ${id} nicht gefunden`,
-          },
-        ],
+        __typename: "DeleteContributorError",
+        message: `Autor*in mit ID ${id} nicht gefunden`,
       }
     }
 
-    // Check if contributor is associated with any documents
-    const documentAssociations = await transaction.query(`
-      SELECT COUNT(*) as count 
-      FROM publications.documents d 
-      WHERE d.content->'meta'->'contributors' @> $1
-    `, [
-      JSON.stringify([{ contributor: id }])
-    ])
-    
-    if (documentAssociations[0].count > 0) {
-      await transaction.transactionRollback()
-      return {
-        success: false,
-        errors: [
-          {
-            message: 'Autor*in kann nicht gelöscht werden, da sie mit einem Dokument verknüpft ist',
-          },
-        ],
-      }
-    }
+    // TODO: Check if contributor is associated with any document
+    // If user has documents they can't be deleted
 
     // Delete contributor
     await transaction.public.contributors.deleteOne({ id })
-    
+
     await transaction.transactionCommit()
     return {
-      success: true,
-      errors: [],
+      __typename: "DeleteContributorSuccess",
     }
   } catch (e) {
     await transaction.transactionRollback()
-    return {
-      success: false,
-      errors: [
-        {
-          message: `Ein unerwarteter Fehler ist aufgetreten: ${(e as Error).message}`,
-        },
-      ],
-    }
+    throw e
   }
-} 
+}

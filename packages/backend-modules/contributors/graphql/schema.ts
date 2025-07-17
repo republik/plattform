@@ -28,8 +28,8 @@ type mutations {
     prolitterisLastname: String
     gender: GenderEnum
     userId: ID
-  ): UpsertContributorResult!
+  ): UpsertContributorResponse!
 
-  deleteContributor(id: ID!): DeleteContributorResult!
+  deleteContributor(id: ID!): DeleteContributorResponse!
 }
 `
