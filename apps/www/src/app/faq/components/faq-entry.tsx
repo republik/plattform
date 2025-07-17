@@ -1,5 +1,5 @@
 import { FaqEntryRecord } from '#graphql/cms/__generated__/gql/graphql'
-import { StructuredText } from 'react-datocms'
+import { StructuredText } from 'react-datocms/structured-text'
 import { css } from '@republik/theme/css'
 
 type FAQEntryProps = {

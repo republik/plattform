@@ -6,7 +6,7 @@ import { css } from '@republik/theme/css'
 import { hstack, vstack } from '@republik/theme/patterns'
 import { IconShare } from '@republik/icons'
 import Image from 'next/image'
-import { StructuredText } from 'react-datocms'
+import { StructuredText } from 'react-datocms/structured-text'
 import { PUBLIC_BASE_URL } from 'lib/constants'
 
 type PersonDetailProps = {
