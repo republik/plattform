@@ -249,6 +249,12 @@ export type Transaction = {
   pledgeId?: string
 }
 
+export type PaymentMethod = {
+  id: string
+  method: string
+  last4?: string
+}
+
 export interface PaymentWorkflow<T extends Stripe.Event> {
   run(company: Company, event: T): Promise<any>
 }

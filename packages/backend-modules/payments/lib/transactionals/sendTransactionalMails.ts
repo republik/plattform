@@ -2,7 +2,12 @@ import { sendMailTemplate } from '@orbiting/backend-modules-mail'
 import { t } from '@orbiting/backend-modules-translate'
 
 import { PgDb } from 'pogi'
-import { Invoice, Subscription, SubscriptionType } from '../types'
+import {
+  Invoice,
+  PaymentMethod,
+  Subscription,
+  SubscriptionType,
+} from '../types'
 import type Stripe from 'stripe'
 import { getConfig } from '../config'
 import { PaymentService } from '../services/PaymentService'
@@ -301,6 +306,73 @@ export async function sendPaymentFailedNoticeMail(
 
   const templateName =
     'subscription_payment_failed_notice_' + subscription.type.toLowerCase()
+  const sendMailResult = await sendMailTemplate(
+    {
+      to: email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
+      subject: t(`api/email/${templateName}/subject`),
+      templateName,
+      mergeLanguage: 'handlebars',
+      globalMergeVars,
+    },
+    { pgdb },
+  )
+
+  return sendMailResult
+}
+
+type SendRenewalNoticeMailArgs = {
+  email: string
+  subscription: Subscription
+  amount: number
+  paymentAttemptDate: Date
+  paymentMethod: PaymentMethod
+}
+
+export async function sendRenewalNoticeMail(
+  {
+    email,
+    subscription,
+    amount,
+    paymentAttemptDate,
+    paymentMethod,
+  }: SendRenewalNoticeMailArgs,
+  pgdb: PgDb,
+) {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }
+
+  const globalMergeVars: MergeVariable[] = [
+    {
+      name: 'total',
+      content: (amount / 100).toString(),
+    },
+    {
+      name: 'renewal_date',
+      content: subscription.currentPeriodEnd.toLocaleDateString('de-CH', dateOptions)
+    },
+    {
+      name: 'payment_attempt_date',
+      content: paymentAttemptDate.toLocaleDateString('de-CH', dateOptions)
+    },
+    {
+      name: 'payment_method_name',
+      content: paymentMethod.method
+    },
+    {
+      name: 'is_credit_card',
+      content: !!paymentMethod.last4
+    },
+    {
+      name: 'credit_card_last4',
+      content: paymentMethod.last4 || ''
+    }
+  ]
+
+  const templateName = 'subscription_renewal_notice_7_days'
   const sendMailResult = await sendMailTemplate(
     {
       to: email,

@@ -9,6 +9,7 @@ import { processSubscriptionUpdate } from '../handlers/stripe/subscriptionUpdate
 import { processSubscriptionCreated } from '../handlers/stripe/subscriptionCreated'
 import { processCheckoutCompleted } from '../handlers/stripe/checkoutCompleted'
 import { processPaymentFailed } from '../handlers/stripe/paymentFailed'
+import { processInvoiceUpcoming } from '../handlers/stripe/invoiceUpcoming'
 import { isPledgeBased } from '../handlers/stripe/utils'
 import { processChargeRefunded } from '../handlers/stripe/chargeRefunded'
 import { processInvoicePaymentSucceeded } from '../handlers/stripe/invoicePaymentSucceeded'
@@ -90,6 +91,9 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
           break
         case 'invoice.payment_succeeded':
           await processInvoicePaymentSucceeded(ctx, job.data.company, event)
+          break
+        case 'invoice.upcoming':
+          await processInvoiceUpcoming(ctx, job.data.company, event)
           break
         case 'charge.refunded':
           await processChargeRefunded(ctx, job.data.company, event)
