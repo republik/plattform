@@ -1,93 +1,90 @@
 'use client'
 
-import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@apollo/client'
-import AuthorForm, {
-  ContributorInput,
-  FormError,
-} from '../../components/author-form'
+import AuthorForm, { FormState } from '../../components/author-form'
 import { UpsertContributorDocument } from '../../../graphql/republik-api/__generated__/gql/graphql'
 
 export default function NewAuthorPage() {
   const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [errors, setErrors] = useState<FormError[]>([])
-  const [warnings, setWarnings] = useState<string[]>([])
 
-  const [createContributor] = useMutation(UpsertContributorDocument, {
-    onCompleted: (data) => {
-      const result = data.upsertContributor
+  const [createContributor] = useMutation(UpsertContributorDocument)
 
-      if (result.errors && result.errors.length > 0) {
-        setErrors(
-          result.errors.map((error) => ({
+  // Action function for useActionState
+  const handleSubmitAction = async (
+    prevState: FormState,
+    formData: FormData,
+  ): Promise<FormState> => {
+    try {
+      // Extract form data
+      const contributorData = {
+        name: formData.get('name') as string,
+        shortBio: (formData.get('shortBio') as string) || undefined,
+        bio: (formData.get('bio') as string) || undefined,
+        image: (formData.get('image') as string) || undefined,
+        userId: (formData.get('userId') as string) || undefined,
+        prolitterisId: (formData.get('prolitterisId') as string) || undefined,
+        prolitterisFirstname:
+          (formData.get('prolitterisFirstname') as string) || undefined,
+        prolitterisLastname:
+          (formData.get('prolitterisLastname') as string) || undefined,
+        gender: (formData.get('gender') as any) || undefined,
+      }
+
+      const result = await createContributor({
+        variables: contributorData,
+      })
+
+      const mutationResult = result.data?.upsertContributor
+
+      if (mutationResult?.errors && mutationResult.errors.length > 0) {
+        return {
+          success: false,
+          errors: mutationResult.errors.map((error) => ({
             field: error.field || null,
             message: error.message,
           })),
-        )
-        setIsSubmitting(false)
-        return
+          warnings: [],
+        }
       }
 
-      if (result.warnings && result.warnings.length > 0) {
-        setWarnings(result.warnings)
+      const warnings = mutationResult?.warnings || []
+
+      if (mutationResult?.contributor) {
+        // Navigate to edit page on success
+        router.push(`/authors/${mutationResult.contributor.slug}`)
+        return {
+          success: true,
+          errors: [],
+          warnings: warnings,
+          data: mutationResult.contributor,
+        }
       }
 
-      if (result.contributor) {
-        router.push(`/authors/${result.contributor.slug}/edit`)
+      return {
+        success: false,
+        errors: [{ field: null, message: 'Unbekannter Fehler beim Erstellen' }],
+        warnings: [],
       }
-    },
-    onError: (error) => {
+    } catch (error) {
       console.error('GraphQL Error creating contributor:', error)
-      setErrors([
-        {
-          field: null,
-          message: error.message || 'Ein unerwarteter Fehler ist aufgetreten',
-        },
-      ])
-      setIsSubmitting(false)
-    },
-  })
-
-  const handleSubmit = async (formData: ContributorInput) => {
-    setIsSubmitting(true)
-
-    // Map form data to mutation variables
-    const variables: any = {
-      name: formData.name,
-      shortBio: formData.shortBio || undefined,
-      bio: formData.bio || undefined,
-      image: formData.image || undefined,
-      userId: formData.userId || undefined,
-      prolitterisId: formData.prolitterisId || undefined,
-      prolitterisFirstname: formData.prolitterisFirstname || undefined,
-      prolitterisLastname: formData.prolitterisLastname || undefined,
-      gender: formData.gender || undefined,
+      return {
+        success: false,
+        errors: [
+          {
+            field: null,
+            message:
+              error instanceof Error
+                ? error.message
+                : 'Ein unerwarteter Fehler ist aufgetreten',
+          },
+        ],
+        warnings: [],
+      }
     }
-
-    await createContributor({
-      variables,
-    })
-  }
-
-  const handleClearErrors = () => {
-    setErrors([])
-  }
-
-  const handleClearWarnings = () => {
-    setWarnings([])
   }
 
   return (
-    <AuthorForm
-      title='Neue Autor*in erstellen'
-      onSubmit={handleSubmit}
-      isSubmitting={isSubmitting}
-      errors={errors}
-      warnings={warnings}
-      onClearErrors={handleClearErrors}
-      onClearWarnings={handleClearWarnings}
-    />
+    <AuthorForm title='Neue Autor*in erstellen' action={handleSubmitAction} />
   )
 }

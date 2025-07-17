@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useActionState } from 'react'
 import {
   Box,
   Button,
@@ -14,90 +15,80 @@ import {
   Avatar,
   Separator,
   AlertDialog,
-  Callout,
 } from '@radix-ui/themes'
-import { ArrowLeft, Save, Upload, X, Trash2, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Save, Upload, X, Trash2 } from 'lucide-react'
 import Link from 'next/link'
+import GeneralWarningErrorCallout from './warning-error-callout'
+import {
+  ArticleContributor,
+  UpsertContributorError,
+  MutationsUpsertContributorArgs,
+  GenderEnum,
+} from '../../../graphql/republik-api/__generated__/gql/graphql'
 
-export interface ContributorInput {
-  name: string
-  shortBio?: string
-  image?: string
-  bio?: string | null
-  userId?: string | null
-  prolitterisId?: string | null
-  prolitterisFirstname?: string | null
-  prolitterisLastname?: string | null
-  gender?: string | null
-}
-
-export interface ContributorData extends ContributorInput {
-  id?: string
-  slug?: string
-}
-
-export interface FormError {
-  field: string | null
-  message: string
+export interface FormState {
+  success: boolean
+  errors: UpsertContributorError[]
+  warnings: string[]
+  data?: ArticleContributor
 }
 
 interface AuthorFormProps {
-  initialData?: ContributorData
+  initialData?: ArticleContributor
   isEdit?: boolean
-  isSubmitting?: boolean
-  onSubmit: (data: ContributorInput) => void
+  action: (prevState: FormState, formData: FormData) => Promise<FormState>
   onDelete?: () => void
   title: string
-  errors?: FormError[]
-  warnings?: string[]
-  onClearErrors?: () => void
-  onClearWarnings?: () => void
 }
 
 export default function AuthorForm({
   initialData,
   isEdit = false,
-  isSubmitting = false,
-  onSubmit,
+  action,
   onDelete,
   title,
-  errors = [],
-  warnings = [],
-  onClearErrors,
-  onClearWarnings,
 }: AuthorFormProps) {
-  const [formData, setFormData] = useState<ContributorInput>({
+  const [formData, setFormData] = useState<MutationsUpsertContributorArgs>({
     name: '',
     shortBio: '',
     image: '',
     bio: '',
     userId: '',
     prolitterisId: '',
-    gender: null,
-    prolitterisFirstname: null,
-    prolitterisLastname: null,
+    gender: GenderEnum.Na,
+    prolitterisFirstname: '',
+    prolitterisLastname: '',
   })
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
+  // Use React 19's useActionState hook
+  const [state, formAction, isPending] = useActionState(action, {
+    success: false,
+    errors: [],
+    warnings: [],
+  })
+
   // Split errors into field-specific and general errors
-  const fieldErrors = errors.filter(error => error.field !== null)
-  const generalErrors = errors.filter(error => error.field === null)
+  const fieldErrors = state.errors.filter((error) => error.field !== null)
+  const generalErrors = state.errors.filter((error) => error.field === null)
 
   // Helper function to get error for a specific field
   const getFieldError = (fieldName: string): string | null => {
-    const error = fieldErrors.find(error => error.field === fieldName)
+    const error = fieldErrors.find((error) => error.field === fieldName)
     return error ? error.message : null
   }
 
   // Helper function to check if field has error
   const hasFieldError = (fieldName: string): boolean => {
-    return fieldErrors.some(error => error.field === fieldName)
+    return fieldErrors.some((error) => error.field === fieldName)
   }
 
   // Populate form when initialData is provided
   useEffect(() => {
+    console.log('useEffect running with initialData:', initialData)
     if (initialData) {
+      console.log('Setting formData with gender:', initialData.gender)
       setFormData({
         name: initialData.name || '',
         shortBio: initialData.shortBio || '',
@@ -113,17 +104,13 @@ export default function AuthorForm({
     }
   }, [initialData])
 
-  const handleInputChange = (field: keyof ContributorInput, value: string) => {
+  const handleInputChange = (
+    field: keyof MutationsUpsertContributorArgs,
+    value: string,
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
-    }))
-  }
-
-  const handleGenderChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      gender: value === 'none' ? null : value,
     }))
   }
 
@@ -141,14 +128,6 @@ export default function AuthorForm({
       }
       reader.readAsDataURL(file)
     }
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    // Clear previous errors/warnings when submitting
-    if (onClearErrors) onClearErrors()
-    if (onClearWarnings) onClearWarnings()
-    onSubmit(formData)
   }
 
   const handleDelete = () => {
@@ -192,63 +171,14 @@ export default function AuthorForm({
         )}
       </Flex>
 
-      {/* General Error Messages */}
-      {generalErrors.length > 0 && (
-        <Box mb='4'>
-          <Callout.Root color='red' mb='2'>
-            <Callout.Icon>
-              <AlertCircle size={16} />
-            </Callout.Icon>
-            <Callout.Text>
-              {generalErrors.length === 1 ? (
-                generalErrors[0].message
-              ) : (
-                <Box>
-                  <Text weight='bold' mb='1'>
-                    Es sind Fehler aufgetreten:
-                  </Text>
-                  <ul style={{ margin: '0', paddingLeft: '20px' }}>
-                    {generalErrors.map((error, index) => (
-                      <li key={index}>{error.message}</li>
-                    ))}
-                  </ul>
-                </Box>
-              )}
-            </Callout.Text>
-          </Callout.Root>
-        </Box>
-      )}
-
-      {/* Warning Messages */}
-      {warnings.length > 0 && (
-        <Box mb='4'>
-          <Callout.Root color='yellow' mb='2'>
-            <Callout.Icon>
-              <AlertCircle size={16} />
-            </Callout.Icon>
-            <Callout.Text>
-              {warnings.length === 1 ? (
-                warnings[0]
-              ) : (
-                <Box>
-                  <Text weight='bold' mb='1'>
-                    Warnungen:
-                  </Text>
-                  <ul style={{ margin: '0', paddingLeft: '20px' }}>
-                    {warnings.map((warning, index) => (
-                      <li key={index}>{warning}</li>
-                    ))}
-                  </ul>
-                </Box>
-              )}
-            </Callout.Text>
-          </Callout.Root>
-        </Box>
-      )}
+      <GeneralWarningErrorCallout
+        generalErrors={generalErrors}
+        warnings={state.warnings}
+      />
 
       {/* Form */}
       <Card>
-        <form onSubmit={handleSubmit}>
+        <form action={formAction}>
           <Box p='6'>
             <Flex direction='column' gap='4'>
               <Box>
@@ -295,6 +225,7 @@ export default function AuthorForm({
                     onChange={handleImageUpload}
                     style={{ display: 'none' }}
                   />
+                  <input type='hidden' name='image' value={formData.image} />
                   {getFieldError('image') && (
                     <Text size='1' color='red'>
                       {getFieldError('image')}
@@ -302,12 +233,13 @@ export default function AuthorForm({
                   )}
                 </Flex>
               </Box>
-              
+
               <Box>
                 <Text as='label' size='2' weight='bold' mb='1'>
                   Name *
                 </Text>
                 <TextField.Root
+                  name='name'
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder='Vor- und Nachname'
@@ -331,6 +263,7 @@ export default function AuthorForm({
                   </Text>
                 </Flex>
                 <TextArea
+                  name='shortBio'
                   value={formData.shortBio}
                   onChange={(e) =>
                     handleInputChange('shortBio', e.target.value)
@@ -352,6 +285,7 @@ export default function AuthorForm({
                   Verknüpfte User-ID
                 </Text>
                 <TextField.Root
+                  name='userId'
                   value={formData.userId || ''}
                   onChange={(e) => handleInputChange('userId', e.target.value)}
                   placeholder='User-ID (falls vorhanden)'
@@ -372,7 +306,8 @@ export default function AuthorForm({
                   Prolitteris-ID
                 </Text>
                 <TextField.Root
-                  value={formData.prolitterisId || ''}
+                  name='prolitterisId'
+                  value={formData.prolitterisId}
                   onChange={(e) =>
                     handleInputChange('prolitterisId', e.target.value)
                   }
@@ -391,9 +326,10 @@ export default function AuthorForm({
 
               <Box>
                 <Text as='label' size='2' weight='bold' mb='1'>
-                  Prolitteris-Vorname
+                  Prolitteris Vorname
                 </Text>
                 <TextField.Root
+                  name='prolitterisFirstname'
                   value={formData.prolitterisFirstname || ''}
                   onChange={(e) =>
                     handleInputChange('prolitterisFirstname', e.target.value)
@@ -404,9 +340,10 @@ export default function AuthorForm({
 
               <Box>
                 <Text as='label' size='2' weight='bold' mb='1'>
-                  Prolitteris-Nachname
+                  Prolitteris Nachname
                 </Text>
                 <TextField.Root
+                  name='prolitterisLastname'
                   value={formData.prolitterisLastname || ''}
                   onChange={(e) =>
                     handleInputChange('prolitterisLastname', e.target.value)
@@ -414,7 +351,7 @@ export default function AuthorForm({
                   placeholder='Nachname (falls vorhanden)'
                 />
               </Box>
-              
+
               <Box>
                 <Flex align='center' justify='start' mb='1' gap='8'>
                   <Box>
@@ -422,10 +359,13 @@ export default function AuthorForm({
                       Gender
                     </Text>
                     <Select.Root
-                      value={formData.gender || 'none'}
-                      onValueChange={handleGenderChange}
+                      name='gender'
+                      value={formData.gender}
+                      onValueChange={(value) =>
+                        handleInputChange('gender', value)
+                      }
                     >
-                      <Select.Trigger 
+                      <Select.Trigger
                         color={hasFieldError('gender') ? 'red' : undefined}
                       />
                       <Select.Content>
@@ -435,6 +375,11 @@ export default function AuthorForm({
                         <Select.Item value='d'>Divers</Select.Item>
                       </Select.Content>
                     </Select.Root>
+                    <input
+                      type='hidden'
+                      name='gender'
+                      value={formData.gender || 'na'}
+                    />
                     {getFieldError('gender') && (
                       <Text size='1' color='red' mt='1'>
                         {getFieldError('gender')}
@@ -461,8 +406,8 @@ export default function AuthorForm({
               <Button
                 type='submit'
                 size='2'
-                disabled={!formData.name || isSubmitting}
-                loading={isSubmitting}
+                disabled={!formData.name || isPending}
+                loading={isPending}
               >
                 <Save size={16} />
                 {isEdit ? 'Änderungen speichern' : 'Autor*in erstellen'}

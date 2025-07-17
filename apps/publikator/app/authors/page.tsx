@@ -152,7 +152,7 @@ const AuthorsPage: React.FC = () => {
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = 'transparent'
               }}
-              onClick={() => router.push(`/authors/${contributor.slug}/edit`)}
+              onClick={() => router.push(`/authors/${contributor.slug}`)}
             >
               <Table.Cell justify='start'>
                 <Avatar
