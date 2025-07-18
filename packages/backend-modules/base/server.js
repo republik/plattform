@@ -107,13 +107,7 @@ const start = async (
   if (REQ_TIMEOUT) {
     server.use(timeout(REQ_TIMEOUT, { respond: false }), (req, res, next) => {
       req.on('timeout', () => {
-        console.error(
-          JSON.stringify({
-            req: req._log(),
-            message: 'Request Timeout',
-            level: 'ERROR',
-          }),
-        )
+        req.log.error('Request Timeout')
       })
       next()
     })

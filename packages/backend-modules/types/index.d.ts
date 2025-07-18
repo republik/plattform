@@ -11,6 +11,7 @@ export interface ConnectionContext {
   pgdb: PgDb
   redis: any
   pubsub: any
+  logger: Logger
 }
 export interface GraphqlContext extends ConnectionContext {
   t: any
@@ -19,7 +20,6 @@ export interface GraphqlContext extends ConnectionContext {
   scope?: 'request' | 'socket' | 'middleware' | 'scheduler'
   loaders: any
   user?: any
-  logger: Logger
 }
 
 /**

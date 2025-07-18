@@ -24,18 +24,20 @@ const LOG_LABELS = new Map([
 ])
 
 export const logger = pino({
-  // Use pino-pretty for development
   transport: TRANSPORTS[getENV()],
-  level: process.env.PINO_LOG_LEVEL || 'info',
+  level: process.env.LOG_LEVEL || (getENV() === 'DEV' ? 'debug' : 'info'),
   formatters: {
     level(label: string, number: number) {
       return { level: LOG_LABELS.get(number) || label }
     },
   },
+  // make msg key logDNA compliant
+  messageKey: 'message',
 })
 
 export const httpLogger = pinoHttp({
   logger,
+  msgPrefix: '[HTTP] ',
   redact: {
     paths: [
       'req.headers.authorization',
@@ -51,11 +53,6 @@ export const httpLogger = pinoHttp({
     res.setHeader('X-Request-Id', id)
     return id
   },
-  // Define custom serializers
-  serializers: {
-    // Exclude sensitive headers
-    // req(req: any) {
-    //   return req
-    // },
-  },
+  // only log requestID for child logs
+  quietReqLogger: true,
 })

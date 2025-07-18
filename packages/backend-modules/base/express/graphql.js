@@ -125,14 +125,27 @@ module.exports = async (
         async requestDidStart() {
           return {
             async didEncounterErrors({ context, request, errors }) {
-              console.error(
-                JSON.stringify({
-                  req: context.req._log(),
-                  message: `GraphQL error for operation '${request.operationName}'`,
-                  level: 'ERROR',
-                  graphQLErrors: errors,
-                }),
-              )
+              if (context.logger.isLevelEnabled('debug')) {
+                context.logger.debug(
+                  {
+                    graphqlRequest: {
+                      query: request.query,
+                      variables: request.variables,
+                      errors: errors,
+                    },
+                  },
+                  `GraphQL error for operation '${request.operationName}'`,
+                )
+              } else {
+                context.logger.error(
+                  {
+                    graphqlRequest: {
+                      errors: errors,
+                    },
+                  },
+                  `GraphQL error for operation '${request.operationName}'`,
+                )
+              }
             },
           }
         },

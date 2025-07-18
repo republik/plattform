@@ -23,7 +23,7 @@ export class ConfirmRevokeCancellationTransactionalWorker extends BaseWorker<Arg
       throw Error('unable to perform this job version. Expected v1')
     }
 
-    console.log(`[${this.queue}] start`)
+    this.logger.trace({ queue: this.queue, jobiId: job.id }, 'start')
 
     const webhookService = new WebhookService(this.context.pgdb)
     const mailService = new MailNotificationService(this.context.pgdb)
@@ -34,12 +34,18 @@ export class ConfirmRevokeCancellationTransactionalWorker extends BaseWorker<Arg
       )
 
     if (!wh) {
-      console.error('Webhook does not exist')
+      this.logger.error(
+        { queue: this.queue, jobiId: job.id },
+        'Webhook does not exist',
+      )
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
     if (wh.payload.type !== 'customer.subscription.updated') {
-      console.error('Webhook is not of type customer.subscription.updated')
+      this.logger.error(
+        { queue: this.queue, jobiId: job.id },
+        'Webhook is not of type customer.subscription.updated',
+      )
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
@@ -53,11 +59,13 @@ export class ConfirmRevokeCancellationTransactionalWorker extends BaseWorker<Arg
         revokedCancellationDate: job.data.revokedCancellationDate,
       })
     } catch (e) {
-      console.error(`[${this.queue}] error`)
-      console.error(e)
+      this.logger.error(
+        { queue: this.queue, jobiId: job.id, error: e },
+        'Webhook is not of type customer.subscription.updated',
+      )
       throw e
     }
 
-    console.log(`[${this.queue}] done`)
+    this.logger.trace({ queue: this.queue }, `done`)
   }
 }
