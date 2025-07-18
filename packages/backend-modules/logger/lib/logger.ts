@@ -6,40 +6,32 @@ export type Logger = PinoLogger
 
 const TRANSPORTS = {
   DEV: { target: 'pino-pretty' },
-  HEKOKU_LOGDNA: {
-    target: 'pino-logdna',
-    options: {
-      key: LOGDNA_KEY(),
-    },
-  },
   DEFAULT: undefined,
 }
 
-function LOGDNA_KEY() {
-  try {
-    if (process.env.LOGDNA_KEY) {
-      const key = JSON.parse(process.env.LOGDNA_KEY)
-      if (Array.isArray(key)) {
-        return key[0]
-      }
-      return key
-    }
-  } catch (error) {
-    console.error('Error fetching LOGDNA_KEY:', error)
-    return false
-  }
-}
-
-function getENV(): 'DEV' | 'HEKOKU_LOGDNA' | 'DEFAULT' {
+function getENV(): 'DEV' | 'DEFAULT' {
   if (process.env.NODE_ENV !== 'production') return 'DEV'
-  if (process.env.NODE_ENV === 'production' && LOGDNA_KEY())
-    return 'HEKOKU_LOGDNA'
   return 'DEFAULT'
 }
+
+const LOG_LABELS = new Map([
+  [10, 'TRACE'],
+  [20, 'DEBUG'],
+  [30, 'INFO'],
+  [40, 'WARN'],
+  [50, 'ERROR'],
+  [60, 'FATAL'],
+])
 
 export const logger = pino({
   // Use pino-pretty for development
   transport: TRANSPORTS[getENV()],
+  level: process.env.PINO_LOG_LEVEL || 'info',
+  formatters: {
+    level(label: string, number: number) {
+      return { level: LOG_LABELS.get(number) || label }
+    },
+  },
 })
 
 export const httpLogger = pinoHttp({
