@@ -6,6 +6,7 @@ const compression = require('compression')
 const timeout = require('connect-timeout')
 const helmet = require('helmet')
 const sleep = require('await-sleep')
+const { httpLogger } = require('@orbiting/backend-modules-logger')
 
 const graphql = require('./express/graphql')
 const graphiql = require('./express/graphiql')
@@ -47,6 +48,8 @@ const start = async (
 
   const server = express()
   const httpServer = createServer(server)
+
+  server.use(httpLogger)
 
   server.use(
     helmet({

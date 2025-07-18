@@ -2,6 +2,7 @@ const { ApolloServer } = require('apollo-server-express')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
+const { logger } = require('@orbiting/backend-modules-logger')
 
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
@@ -38,6 +39,7 @@ module.exports = async (
       req,
       scope,
       documentApiKey,
+      logger: req?.log || logger,
       user: global && global.testUser !== undefined ? global.testUser : user,
     })
     // prime User dataloader with me
