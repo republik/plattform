@@ -7,6 +7,7 @@
   "types": "build/@types",
   "dependencies": {
     "@orbiting/backend-modules-types": "*",
+    "@orbiting/backend-modules-logger": "*",
     "pg-boss": "^10.1.1",
     "debug": "^4.3.5"
   },

@@ -6,6 +6,7 @@ const compression = require('compression')
 const timeout = require('connect-timeout')
 const helmet = require('helmet')
 const sleep = require('await-sleep')
+const { httpLogger } = require('@orbiting/backend-modules-logger')
 
 const graphql = require('./express/graphql')
 const graphiql = require('./express/graphiql')
@@ -47,6 +48,8 @@ const start = async (
 
   const server = express()
   const httpServer = createServer(server)
+
+  server.use(httpLogger)
 
   server.use(
     helmet({
@@ -104,13 +107,7 @@ const start = async (
   if (REQ_TIMEOUT) {
     server.use(timeout(REQ_TIMEOUT, { respond: false }), (req, res, next) => {
       req.on('timeout', () => {
-        console.error(
-          JSON.stringify({
-            req: req._log(),
-            message: 'Request Timeout',
-            level: 'ERROR',
-          }),
-        )
+        req.log.error('Request Timeout')
       })
       next()
     })
