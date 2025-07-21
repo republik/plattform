@@ -28,7 +28,7 @@ export = async function deleteContributor(
 
   try {
     // Check if contributor exists
-    const contributor = await transaction.public.contributors.findOne({ id })
+    const contributor = await transaction.publikator.contributors.findOne({ id })
     if (!contributor) {
       await transaction.transactionRollback()
       return {
@@ -41,7 +41,7 @@ export = async function deleteContributor(
     // If user has documents they can't be deleted
 
     // Delete contributor
-    await transaction.public.contributors.deleteOne({ id })
+    await transaction.publikator.contributors.deleteOne({ id })
 
     await transaction.transactionCommit()
     return {

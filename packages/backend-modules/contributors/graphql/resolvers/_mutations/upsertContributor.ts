@@ -157,7 +157,7 @@ const findUniqueSlug = async (
 
   while (isUnique === false) {
     const whereClause = excludeId ? { slug, 'id !=': excludeId } : { slug }
-    const slugExists = await pgdb.public.contributors.findFirst(whereClause)
+    const slugExists = await pgdb.publikator.contributors.findFirst(whereClause)
 
     if (!slugExists) {
       isUnique = true
@@ -211,7 +211,7 @@ export = async function upsertContributor(
         ? { prolitteris_id: prolitterisId, 'id !=': id }
         : { prolitteris_id: prolitterisId }
       const existingContributorWithProlitterisId: ArticleContributor | null =
-        await transaction.public.contributors.findFirst(whereClause)
+        await transaction.publikator.contributors.findFirst(whereClause)
 
       if (existingContributorWithProlitterisId) {
         await transaction.transactionRollback()
@@ -234,7 +234,7 @@ export = async function upsertContributor(
     // Check for duplicate names (warning only)
     const whereClause = id ? { name, 'id !=': id } : { name }
     const existingContributorWithName: ArticleContributor | null =
-      await transaction.public.contributors.findFirst(whereClause)
+      await transaction.publikator.contributors.findFirst(whereClause)
 
     if (existingContributorWithName) {
       warnings.push(
@@ -267,7 +267,7 @@ export = async function upsertContributor(
     if (id) {
       // Update existing contributor
       const existingContributor: ArticleContributor | null =
-        await transaction.public.contributors.findOne({
+        await transaction.publikator.contributors.findOne({
           id,
         })
       if (!existingContributor) {
@@ -283,13 +283,13 @@ export = async function upsertContributor(
         }
       }
 
-      contributor = await transaction.public.contributors.updateAndGetOne(
+      contributor = await transaction.publikator.contributors.updateAndGetOne(
         { id },
         contributorData,
       )
     } else {
       // Create new contributor
-      contributor = await transaction.public.contributors.insertAndGet({
+      contributor = await transaction.publikator.contributors.insertAndGet({
         ...contributorData,
         created_at: now,
       })

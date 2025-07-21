@@ -16,7 +16,7 @@ export = async function contributor(
   }
 
   const whereClause = id ? { id } : { slug }
-  const contributor = await pgdb.public.contributors.findOne(whereClause)
+  const contributor = await pgdb.publikator.contributors.findOne(whereClause)
 
   if (!contributor) {
     return null
