@@ -21,6 +21,7 @@ import { ArticleContributor } from '../../../graphql/republik-api/__generated__/
 import { upsertAuthor } from '../../authors/actions'
 import DeleteAuthorButton from './delete-author-button'
 import ProfileImageUpload from './profile-image-upload'
+import ProlitterisFields from './prolitteris-fields'
 
 interface AuthorFormProps {
   initialData?: ArticleContributor
@@ -36,6 +37,9 @@ export default function AuthorForm({
   const [imageUrl, setImageUrl] = useState<string | null>(
     initialData?.image || null,
   )
+  
+  const [prolitterisValidationError, setProlitterisValidationError] = useState<string | null>(null)
+
   const [formState, formAction, isPending] = useActionState(upsertAuthor, {
     success: false,
     errors: [],
@@ -60,6 +64,17 @@ export default function AuthorForm({
 
   const handleImageChange = (url: string | null) => {
     setImageUrl(url)
+  }
+
+  const handleProlitterisValidationChange = (isValid: boolean, errorMessage: string | null) => {
+    setProlitterisValidationError(errorMessage)
+  }
+
+  const handleFormSubmit = (formData: FormData) => {
+    if (prolitterisValidationError) {
+      return
+    }
+    formAction(formData)
   }
 
   return (
@@ -91,7 +106,7 @@ export default function AuthorForm({
 
       {/* Form */}
       <Card>
-        <form action={formAction}>
+        <form action={handleFormSubmit}>
           <input type='hidden' name='id' defaultValue={formState.data?.id} />
           <Box p='6'>
             <Flex direction='column' gap='5'>
@@ -169,42 +184,17 @@ export default function AuthorForm({
                   </Text>
                 )}
               </Box>
-              <Card>
-                <Flex direction='column' gap='2'>
-                  <Text as='label' size='2' weight='bold' mb='1'>
-                    Prolitteris-ID
-                  </Text>
-                  <TextField.Root
-                    name='prolitterisId'
-                    defaultValue={formState.data?.prolitterisId}
-                    placeholder='PL-ID (falls vorhanden)'
-                    color={hasFieldError('prolitterisId') ? 'red' : undefined}
-                  />
-                  {getFieldError('prolitterisId') && (
-                    <Text size='1' color='red' mt='1'>
-                      {getFieldError('prolitterisId')}
-                    </Text>
-                  )}
 
-                  <Text as='label' size='2' weight='bold' mb='1'>
-                    Prolitteris Vorname
-                  </Text>
-                  <TextField.Root
-                    name='prolitterisFirstname'
-                    defaultValue={formState.data?.prolitterisFirstname}
-                    placeholder='Vorname (falls vorhanden)'
-                  />
-
-                  <Text as='label' size='2' weight='bold' mb='1'>
-                    Prolitteris Nachname
-                  </Text>
-                  <TextField.Root
-                    name='prolitterisLastname'
-                    defaultValue={formState.data?.prolitterisLastname}
-                    placeholder='Nachname (falls vorhanden)'
-                  />
-                </Flex>
-              </Card>
+              <ProlitterisFields
+                initialValues={{
+                  prolitterisId: formState.data?.prolitterisId,
+                  prolitterisFirstname: formState.data?.prolitterisFirstname,
+                  prolitterisLastname: formState.data?.prolitterisLastname,
+                }}
+                getFieldError={getFieldError}
+                hasFieldError={hasFieldError}
+                onValidationChange={handleProlitterisValidationChange}
+              />
 
               <Box>
                 <Flex align='center' justify='start' mb='1' gap='8'>
