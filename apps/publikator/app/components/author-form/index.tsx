@@ -14,7 +14,7 @@ import {
   Select,
   Separator,
 } from '@radix-ui/themes'
-import { ArrowLeft, Search, Save } from 'lucide-react'
+import { ArrowLeft, Save } from 'lucide-react'
 import Link from 'next/link'
 import GeneralWarningErrorCallout from './warning-error-callout'
 import { ArticleContributor } from '../../../graphql/republik-api/__generated__/gql/graphql'
@@ -22,6 +22,7 @@ import { upsertAuthor } from '../../authors/actions'
 import DeleteAuthorButton from './delete-author-button'
 import ProfileImageUpload from './profile-image-upload'
 import ProlitterisFields from './prolitteris-fields'
+import SelectUserField from './select-user-field'
 
 interface AuthorFormProps {
   initialData?: ArticleContributor
@@ -163,21 +164,12 @@ export default function AuthorForm({
 
               <Box>
                 <Text as='label' size='2' weight='bold' mb='1'>
-                  Verknüpfte User-ID
+                  Verknüpfter User
                 </Text>
-                <TextField.Root
-                  name='userId'
-                  defaultValue={formState.data?.userId}
-                  placeholder='User-ID suchen'
-                  color={hasFieldError('userId') ? 'red' : undefined}
-                >
-                  <TextField.Slot>
-                    <Search size={16} />
-                  </TextField.Slot>
-                </TextField.Root>
-                <Text size='1' color='gray' mt='1'>
-                  ID des verknüpften Verlegerkontos (falls vorhanden)
-                </Text>
+                <SelectUserField
+                  formState={formState}
+                  hasFieldError={hasFieldError}
+                />
                 {getFieldError('userId') && (
                   <Text size='1' color='red' mt='1'>
                     {getFieldError('userId')}
@@ -204,7 +196,7 @@ export default function AuthorForm({
                     </Text>
                     <Select.Root
                       name='gender'
-                      defaultValue={formState.data?.gender}
+                      defaultValue={formState.data?.gender || 'na'}
                     >
                       <Select.Trigger
                         color={hasFieldError('gender') ? 'red' : undefined}
