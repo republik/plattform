@@ -9,7 +9,7 @@ CREATE TABLE subscriptions (
   "userId"             uuid not null references "users" on update cascade on delete cascade,
   "filters"            jsonb,
   "objectType"         subscription_object_type not null,
-  "objectUserId"       uuid references "users",
+  "objectUserId"       uuid references "users" ON DELETE CASCADE,
   "objectDocumentId"   text,
   "objectDiscussionId" uuid references "discussions",
   "createdAt"          timestamptz default now(),
