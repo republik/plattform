@@ -12,15 +12,15 @@ import {
   TextField,
   TextArea,
   Select,
-  Avatar,
   Separator,
 } from '@radix-ui/themes'
-import { ArrowLeft, Search, Save, Upload, X } from 'lucide-react'
+import { ArrowLeft, Search, Save } from 'lucide-react'
 import Link from 'next/link'
 import GeneralWarningErrorCallout from './warning-error-callout'
 import { ArticleContributor } from '../../../graphql/republik-api/__generated__/gql/graphql'
 import { upsertAuthor } from '../../authors/actions'
 import DeleteAuthorButton from './delete-author-button'
+import ProfileImageUpload from './profile-image-upload'
 
 interface AuthorFormProps {
   initialData?: ArticleContributor
@@ -33,7 +33,9 @@ export default function AuthorForm({
   isEdit = false,
   title,
 }: AuthorFormProps) {
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(
+    initialData?.image || null,
+  )
   const [formState, formAction, isPending] = useActionState(upsertAuthor, {
     success: false,
     errors: [],
@@ -56,23 +58,10 @@ export default function AuthorForm({
     return fieldErrors.some((error) => error.field === fieldName)
   }
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const result = e.target?.result as string
-        setImagePreview(result)
-      }
-      reader.readAsDataURL(file)
-    }
+  const handleImageChange = (url: string | null) => {
+    setImageUrl(url)
   }
 
-  const removeImage = () => {
-    setImagePreview(null)
-  }
-
-  console.log(formState)
   return (
     <Box p='6' maxWidth='800px' mx='auto'>
       {/* Header */}
@@ -106,62 +95,17 @@ export default function AuthorForm({
           <input type='hidden' name='id' defaultValue={formState.data?.id} />
           <Box p='6'>
             <Flex direction='column' gap='5'>
-              <Box>
-                <Text as='label' size='2' weight='bold' mb='2'>
-                  Profilbild
-                </Text>
-                <Flex direction='column' gap='3'>
-                  <Flex align='center' gap='3'>
-                    <Avatar
-                      src={imagePreview || undefined}
-                      fallback={formState.data?.name?.charAt(0) || '?'}
-                      size='8'
-                    />
-                    <Flex direction='column' gap='2'>
-                      <Button
-                        type='button'
-                        variant='soft'
-                        size='1'
-                        onClick={() =>
-                          document.getElementById('image-upload')?.click()
-                        }
-                      >
-                        <Upload size={14} />
-                        {imagePreview ? 'Bild ersetzen' : 'Bild hochladen'}
-                      </Button>
-                      {imagePreview && (
-                        <Button
-                          type='button'
-                          variant='outline'
-                          size='1'
-                          color='red'
-                          onClick={removeImage}
-                        >
-                          <X size={14} />
-                          Entfernen
-                        </Button>
-                      )}
-                    </Flex>
-                  </Flex>
-                  <input
-                    id='image-upload'
-                    type='file'
-                    accept='image/*'
-                    onChange={handleImageUpload}
-                    style={{ display: 'none' }}
-                  />
-                  <input
-                    type='hidden'
-                    name='image'
-                    defaultValue={formState.data?.image}
-                  />
-                  {getFieldError('image') && (
-                    <Text size='1' color='red'>
-                      {getFieldError('image')}
-                    </Text>
-                  )}
-                </Flex>
-              </Box>
+              <ProfileImageUpload
+                currentImageUrl={imageUrl}
+                fallback={formState.data?.name?.charAt(0) || '?'}
+                onImageChange={handleImageChange}
+                error={getFieldError('image')}
+              />
+              <input
+                type='hidden'
+                name='image'
+                value={imageUrl || ''}
+              />
 
               <Box>
                 <Text as='label' size='2' weight='bold' mb='1'>

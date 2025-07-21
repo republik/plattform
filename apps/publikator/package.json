@@ -53,6 +53,7 @@
   "dependencies": {
     "@apollo/client": "^3.13.8",
     "@apollo/client-integration-nextjs": "^0.12.2",
+    "@aws-sdk/client-s3": "^3.846.0",
     "@next/bundle-analyzer": "^15.3.3",
     "@project-r/styleguide": "*",
     "@radix-ui/themes": "^3.2.1",
