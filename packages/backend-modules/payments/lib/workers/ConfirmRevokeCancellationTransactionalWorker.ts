@@ -23,7 +23,7 @@ export class ConfirmRevokeCancellationTransactionalWorker extends BaseWorker<Arg
       throw Error('unable to perform this job version. Expected v1')
     }
 
-    this.logger.trace({ queue: this.queue, jobiId: job.id }, 'start')
+    this.logger.debug({ queue: this.queue, jobiId: job.id }, 'start')
 
     const webhookService = new WebhookService(this.context.pgdb)
     const mailService = new MailNotificationService(this.context.pgdb)
@@ -66,6 +66,6 @@ export class ConfirmRevokeCancellationTransactionalWorker extends BaseWorker<Arg
       throw e
     }
 
-    this.logger.trace({ queue: this.queue }, `done`)
+    this.logger.debug({ queue: this.queue }, `done`)
   }
 }
