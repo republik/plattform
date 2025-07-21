@@ -53,6 +53,11 @@ export const httpLogger = pinoHttp({
     res.setHeader('X-Request-Id', id)
     return id
   },
+  customProps: (req: any, _res: any) => {
+    return {
+      userId: req?.user?.id || 'unknown',
+    }
+  },
   // only log requestID for child logs
   quietReqLogger: true,
 })
