@@ -30,21 +30,32 @@ export const upsertAuthor = async (
 ) => {
   const client = await getClient()
   const data = Object.fromEntries(formData) as MutationsUpsertContributorArgs
+
+  // Prepare mutation variables - we'll reuse this for preserving form data
+  const submittedFormData = {
+    id: data.id || undefined,
+    name: data.name,
+    shortBio: data.shortBio || undefined,
+    image: data.image || undefined,
+    bio: data.bio || undefined,
+    userId: data.userId || undefined,
+    prolitterisId: data.prolitterisId || undefined,
+    prolitterisFirstname: data.prolitterisFirstname || undefined,
+    prolitterisLastname: data.prolitterisLastname || undefined,
+    gender: data.gender,
+  }
+
+  const submittedContributorData: ArticleContributor = {
+    ...submittedFormData,
+    slug: prevState.data?.slug || '',
+    createdAt: prevState.data?.createdAt || new Date().toISOString(),
+    updatedAt: prevState.data?.updatedAt || new Date().toISOString(),
+  }
+
   try {
     const result = await client.mutate({
       mutation: UpsertContributorDocument,
-      variables: {
-        id: data.id || undefined,
-        name: data.name,
-        shortBio: data.shortBio || undefined,
-        image: data.image || undefined,
-        bio: data.bio || undefined,
-        userId: data.userId || undefined,
-        prolitterisId: data.prolitterisId || undefined,
-        prolitterisFirstname: data.prolitterisFirstname || undefined,
-        prolitterisLastname: data.prolitterisLastname || undefined,
-        gender: data.gender,
-      },
+      variables: submittedFormData,
     })
 
     const mutationResult = result.data?.upsertContributor
@@ -57,6 +68,7 @@ export const upsertAuthor = async (
           message: error.message,
         })),
         warnings: [],
+        data: submittedContributorData,
       }
     }
 
@@ -75,6 +87,7 @@ export const upsertAuthor = async (
       success: false,
       errors: [{ field: null, message: 'Unbekannter Fehler beim Speichern' }],
       warnings: [],
+      data: submittedContributorData,
     }
   } catch (error) {
     return {
@@ -89,6 +102,7 @@ export const upsertAuthor = async (
         },
       ],
       warnings: [],
+      data: submittedContributorData,
     }
   }
 }
@@ -133,7 +147,9 @@ export const uploadAuthorProfileImage = async (
   if (missingVars.length > 0) {
     return {
       success: false,
-      error: `Missing required environment variables: ${missingVars.join(', ')}`,
+      error: `Missing required environment variables: ${missingVars.join(
+        ', ',
+      )}`,
     }
   }
 
