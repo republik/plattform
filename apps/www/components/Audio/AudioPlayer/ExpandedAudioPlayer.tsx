@@ -34,10 +34,10 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    gap: 16,
+    gap: 24,
     width: '100%',
     height: '100vh',
-    paddingTop: 15,
+    paddingTop: 24,
     '& > *': {
       userSelect: 'none',
     },
@@ -90,7 +90,7 @@ const styles = {
   topWrapper: css({
     display: 'flex',
     flexDirection: 'column',
-    gap: 16,
+    gap: 24,
   }),
   topSection: css({
     display: 'flex',
