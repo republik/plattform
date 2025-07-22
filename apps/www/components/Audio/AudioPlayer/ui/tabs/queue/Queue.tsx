@@ -151,7 +151,15 @@ const Queue = ({
           margin: '24px 0',
         }}
         Icon={IconRemoveCircle}
-        onClick={() => clearAudioQueue()}
+        onClick={() => {
+          if (
+            window.confirm(
+              'Ihre Wiedergabeliste wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.',
+            )
+          ) {
+            clearAudioQueue()
+          }
+        }}
         label={'Wiedergabeliste leeren'}
         labelShort={'Wiedergabeliste leeren'}
       />

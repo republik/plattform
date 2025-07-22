@@ -9,12 +9,7 @@ const styles = {
   text: css({
     ...fontStyles.sansSerifRegular16,
     lineHeight: '22px',
-    '&:last-child': {
-      marginBottom: 0,
-    },
-  }),
-  iconWrapper: css({
-    marginLeft: 24,
+    marginTop: 24,
   }),
 }
 
