@@ -208,12 +208,16 @@ const AudioPlayer = ({
                   : colorScheme.set('backgroundColor', 'overlay'))}
                 {...colorScheme.set('boxShadow', 'overlayShadow')}
                 style={{
-                  marginBottom: `calc(${
-                    paynoteInlineHeight + MARGIN
-                  }px + env(safe-area-inset-bottom))`,
+                  marginBottom:
+                    paynoteInlineHeight !== 0
+                      ? `calc(${
+                          paynoteInlineHeight + MARGIN
+                        }px + env(safe-area-inset-bottom))`
+                      : undefined,
                   maxHeight:
-                    isExpanded &&
-                    `calc(100vh - ${paynoteInlineHeight + 2 * MARGIN}px)`,
+                    isExpanded && paynoteInlineHeight !== 0
+                      ? `calc(100vh - ${paynoteInlineHeight + 2 * MARGIN}px)`
+                      : undefined,
                 }}
               >
                 {isExpanded ? (
