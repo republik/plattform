@@ -22,7 +22,7 @@ enum GenderEnum {
   na
 }
 
-union ContributorMutationResponse = UpsertContributorSuccess | UpsertContributorError
+union UpsertContributorResponse = UpsertContributorSuccess | UpsertContributorError
 
 type FieldError {
   field: String
@@ -43,6 +43,7 @@ type UpsertContributorSuccess {
 union DeleteContributorResponse = DeleteContributorSuccess | DeleteContributorError
 
 type DeleteContributorSuccess {
+  message: String
 }
 
 type DeleteContributorError {

@@ -6,7 +6,7 @@ import { paginate } from '@orbiting/backend-modules-utils'
 const { Roles } = Auth
 
 type ContributorFilters = {
-  gender?: 'm' | 'f' | 'd'
+  gender?: 'm' | 'f' | 'd' | 'na'
   hasProlitterisId?: boolean
   hasUserId?: boolean
   search?: string
@@ -86,12 +86,12 @@ export = async function contributors(
     whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : ''
 
   const query = `
-    SELECT * FROM contributors
+    SELECT * FROM publikator.contributors
     ${whereClause}
     ORDER BY ${orderByClause}
   `
 
-  const contributors = await pgdb.public.query(query, whereParams)
+  const contributors = await pgdb.query(query, whereParams)
 
   return paginate(args, contributors)
 }

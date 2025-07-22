@@ -1,7 +1,7 @@
 CREATE TYPE publikator.gender_enum AS ENUM ('m', 'f', 'd', 'na');
 
 CREATE TABLE publikator.contributors (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name TEXT NOT NULL,
     slug TEXT NOT NULL UNIQUE,
     short_bio TEXT,
