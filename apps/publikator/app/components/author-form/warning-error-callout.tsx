@@ -10,7 +10,6 @@ const GeneralWarningErrorCallout = ({
 }) => {
   return (
     <>
-      {/* General Error Messages */}
       {generalErrors.length > 0 && (
         <Box mb='4'>
           <Callout.Root color='red' mb='2'>
@@ -37,7 +36,6 @@ const GeneralWarningErrorCallout = ({
         </Box>
       )}
 
-      {/* Warning Messages */}
       {warnings.length > 0 && (
         <Box mb='4'>
           <Callout.Root color='yellow' mb='2'>

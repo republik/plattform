@@ -39,19 +39,15 @@ export default function ProfileImageUpload({
 
         // Upload the image
         const result = await uploadAuthorProfileImage(file)
+
         if (result.success && result.url) {
-          console.log('Upload successful:', result.url)
-          // Update the preview with the actual uploaded image URL
           setImagePreview(result.url)
           onImageChange(result.url)
         } else {
-          // Reset preview on error
           setImagePreview(currentImageUrl || null)
           onImageChange(currentImageUrl || null)
-          console.error('Upload failed:', result.error)
         }
       } catch (error) {
-        console.error('Upload error:', error)
         setImagePreview(currentImageUrl || null)
         onImageChange(currentImageUrl || null)
       }

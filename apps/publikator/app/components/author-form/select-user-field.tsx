@@ -8,7 +8,7 @@ import {
   Avatar,
   Flex,
   Button,
-  Badge,
+  Card,
 } from '@radix-ui/themes'
 import { Search, User, X } from 'lucide-react'
 import { searchUsers } from '../../authors/(actions)/searchUsers'
@@ -128,24 +128,11 @@ const SelectUserField = ({
   return (
     <Box ref={containerRef} style={{ position: 'relative' }}>
       {selectedUser ? (
-        <Box
-          style={{
-            border: hasFieldError('userId')
-              ? '1px solid var(--red-8)'
-              : '1px solid var(--gray-6)',
-            borderRadius: 'var(--radius-2)',
-            padding: '8px 12px',
-            backgroundColor: 'var(--gray-1)',
-          }}
-        >
+        <Card variant='surface'>
           <Flex align='center' justify='between'>
-            <Flex align='center' gap='2'>
-              <Box>
-                <Text size='2' weight='medium'>
-                  {selectedUser.name || selectedUser.id}
-                </Text>
-              </Box>
-            </Flex>
+            <Text size='2' weight='medium'>
+              {selectedUser.name || selectedUser.id}
+            </Text>
             <Button
               size='1'
               variant='ghost'
@@ -155,7 +142,7 @@ const SelectUserField = ({
               <X size={14} />
             </Button>
           </Flex>
-        </Box>
+        </Card>
       ) : (
         <TextField.Root
           value={searchValue}
