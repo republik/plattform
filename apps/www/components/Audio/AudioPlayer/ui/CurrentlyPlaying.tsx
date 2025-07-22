@@ -13,17 +13,11 @@ const styles = {
     flexDirection: 'row',
     gap: 16,
   }),
-  coverWrapper: css({
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  }),
   detailWrapper: css({
     flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
-    gap: 6,
+    gap: 12,
   }),
   metaWrapper: css({
     display: 'flex',
@@ -66,23 +60,21 @@ const CurrentlyPlaying = ({
   return (
     <div>
       <div {...styles.root}>
-        <div {...styles.coverWrapper}>
-          <AudioCover
-            cover={coverMd}
-            size={90}
-            image={image}
-            format={format?.meta}
-            audioCoverCrop={audioCoverCrop}
-            alt={title}
-          />
-        </div>
+        <AudioCover
+          cover={coverMd}
+          size={90}
+          image={image}
+          format={format?.meta}
+          audioCoverCrop={audioCoverCrop}
+          alt={title}
+        />
         <div {...styles.detailWrapper}>
           {title && (
             <AudioPlayerTitle
               title={title}
               onClick={() => handleOpen(path)}
               lineClamp={3}
-              fontSize={19}
+              fontSize={17}
             />
           )}
 
