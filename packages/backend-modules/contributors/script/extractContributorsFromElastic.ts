@@ -1,13 +1,13 @@
-import yargs from 'yargs'
+// import yargs from 'yargs'
 
-async function main(argv) {
-
+async function main() {
+  
 }
 
-const argv = yargs
+ /* const argv = yargs
   .option('xxx', {
     alias: 'b',
     type: 'string',
-  }).argv
+  }).argv */
 
-main(argv)
+main()
