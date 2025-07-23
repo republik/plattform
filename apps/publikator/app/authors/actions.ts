@@ -13,8 +13,8 @@ import { v4 as uuidv4 } from 'uuid'
 
 export interface UpdateAuthorState {
   success: boolean
-  errors: UpsertContributorError[]
-  warnings: string[]
+  errors?: UpsertContributorError['errors']
+  warnings: UpsertContributorError['warnings']
   data?: ArticleContributor
 }
 
@@ -60,35 +60,26 @@ export const upsertAuthor = async (
 
     const mutationResult = result.data?.upsertContributor
 
-    if (mutationResult?.errors && mutationResult.errors.length > 0) {
+    // Handle error
+    if (mutationResult.__typename === 'UpsertContributorError') {
       return {
         success: false,
         errors: mutationResult.errors.map((error) => ({
           field: error.field || null,
           message: error.message,
         })),
-        warnings: [],
+        warnings: mutationResult.warnings || [],
         data: submittedContributorData,
       }
     }
 
-    const warnings = mutationResult?.warnings || []
-
-    if (mutationResult?.contributor) {
-      return {
-        success: true,
-        errors: [],
-        warnings: warnings,
-        data: mutationResult.contributor,
-      }
-    }
-
+    // Handle success
     return {
-      success: false,
-      errors: [{ field: null, message: 'Unbekannter Fehler beim Speichern' }],
-      warnings: [],
-      data: submittedContributorData,
+      success: true,
+      warnings: mutationResult.warnings || [],
+      data: mutationResult.contributor,
     }
+
   } catch (error) {
     return {
       success: false,

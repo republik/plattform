@@ -44,12 +44,12 @@ const DeleteAuthorButton = ({ name, id }: DeleteAuthorButtonProps) => {
                 variant='solid'
                 size='2'
                 color='red'
-                onClick={() =>
+                onClick={() => 
                   deleteAuthor(id).then((result) => {
                     if (result?.success) {
                       router.push('/authors')
                     } else {
-                      console.error(result.errors)
+                      console.error(result.message)
                     }
                   })
                 }
