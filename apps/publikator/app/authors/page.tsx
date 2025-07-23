@@ -16,7 +16,7 @@ import {
   TextField,
 } from '@radix-ui/themes'
 import { Search, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
-import TooltipIcons from '../components/author-table/tooltip-icons'
+import TooltipIcons from '../components/ui/tooltip-icons'
 import {
   ContributorsDocument,
   ContributorsQuery,
