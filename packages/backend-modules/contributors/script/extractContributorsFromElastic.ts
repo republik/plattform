@@ -6,9 +6,11 @@ import * as fs from 'fs'
 import { Client } from '@elastic/elasticsearch'
 import env from '@orbiting/backend-modules-env'
 import { slugify } from '@orbiting/backend-modules-utils'
+import { Contributor } from '../types'
 env.config()
 
-const ELASTIC_NODE = process.env.ELASTIC_URL || 'http://elastic:elastic@localhost:9200'
+const ELASTIC_NODE =
+  process.env.ELASTIC_URL || 'http://elastic:elastic@localhost:9200'
 
 const elastic = new Client({
   node: ELASTIC_NODE,
@@ -16,31 +18,12 @@ const elastic = new Client({
 
 const ES_INDEX_PREFIX = process.env.ES_INDEX_PREFIX || 'republik'
 
-type ElasticContributorKind =
-  | 'Text'
-  | 'voice'
-  | 'Illustration'
-  | 'Translation'
-  | 'Photos'
-  | 'Bilder'
-  | string
+type ElasticContributorKind = string
 
 type ElasticContributor = {
   kind?: ElasticContributorKind
   name: string
   userId?: string
-}
-
-type Contributor = {
-  name: string
-  slug: string
-  bio?: string
-  image?: string
-  prolitteris_id?: string
-  prolitteris_first_name?: string
-  prolitteris_last_name?: string
-  gender?: 'm' | 'f' | 'd' | 'na'
-  user_id?: string
 }
 
 type ElasticHit = {
@@ -234,25 +217,24 @@ async function main(argv: any) {
   console.log('to be checked:')
   console.log(JSON.stringify(toBeChecked))
 
-  const time = Date.now()
-
-  const constributorFileName = `contributors-${time}.json`
-  const toBeCheckedFileName = `check-${time}.json`
+  const contributorsFileName = argv.filename
+    ? `${argv.filename}.json`
+    : `contributors-${Date.now()}.json`
 
   try {
     fs.writeFileSync(
-      constributorFileName,
+      contributorsFileName,
       JSON.stringify(contributors, null, 2),
       'utf8',
     )
-    console.log(`successfully saved to ${constributorFileName}`)
+    console.log(`successfully saved to ${contributorsFileName}`)
 
     fs.writeFileSync(
-      toBeCheckedFileName,
+      `check-${contributorsFileName}`,
       JSON.stringify(toBeChecked, null, 2),
       'utf8',
     )
-    console.log(`successfully saved to ${toBeCheckedFileName}`)
+    console.log(`successfully saved to check-${contributorsFileName}`)
   } catch (error) {
     console.error(`Error saving data: ${error}`)
   }
@@ -271,6 +253,10 @@ const argv = yargs
     alias: 'l',
     type: 'number',
     default: 10,
+  })
+  .option('filename', {
+    alias: 'f',
+    type: 'string',
   }).argv
 
 main(argv)
