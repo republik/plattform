@@ -1,10 +1,8 @@
 import { v4 as isUuid } from 'is-uuid'
 import type { GraphqlContext } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
-// @ts-expect-error - Missing TypeScript declarations for utils module
 import { ensureStringLength } from '@orbiting/backend-modules-utils'
-// @ts-expect-error - Missing TypeScript declarations for utils module
-import slugify from '@orbiting/backend-modules-utils/slugify'
+import { slugify } from '@orbiting/backend-modules-utils'
 
 const { Roles } = Auth
 

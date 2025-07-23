@@ -1,6 +1,6 @@
 import type { GraphqlContext } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
-// @ts-expect-error - Missing TypeScript declarations for utils module
+
 import { paginate } from '@orbiting/backend-modules-utils'
 
 const { Roles } = Auth
