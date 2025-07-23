@@ -2,6 +2,7 @@
 import yargs from 'yargs'
 import * as fs from 'fs'
 import { PgDb } from '@orbiting/backend-modules-base/lib'
+import { slugify } from '@orbiting/backend-modules-utils'
 
 import { ContributorsRepo } from '../lib/ContributorsRepo'
 import { Contributor } from '../types'
@@ -10,9 +11,8 @@ import env from '@orbiting/backend-modules-env'
 env.config()
 
 interface Args {
-  file: string;
+  file: string
 }
-
 
 function loadFile(path: string): Contributor[] {
   try {
@@ -33,24 +33,60 @@ function loadFile(path: string): Contributor[] {
 
 async function main(argv: Args) {
   const filename = argv.file
-  const contributors = loadFile(filename)
-
-  // load profile data from db
-  const userIds = contributors
-    .map((c) => c.user_id)
-    .filter((id) => !!id) as string[]
+  const contributors: Contributor[] = loadFile(filename)
 
   const pgdb = await PgDb.connect({
     applicationName: 'Import script for contributors',
   })
   const repo = new ContributorsRepo(pgdb)
+
+  const userIds = contributors
+    .map((c) => c.user_id)
+    .filter((id) => !!id) as string[]
+
+  // find existing contributors
+  const contributorNames = contributors.map((c) => c.name)
+  const contributorsinDb = await repo.findContributorsByName(contributorNames)
+
+  let newContributors: Contributor[]
+  let contributorsToPossiblyUpdate: Contributor[]
+
+  if (contributorsinDb?.length) {
+    const namesInDb = contributorsinDb.map((c) => c.name)
+    newContributors = contributors.filter((c) => !namesInDb.includes(c.name))
+
+    // find existing contributors but with missing userId, where the same name with a userID exsists now
+    contributorsToPossiblyUpdate = contributors.filter(
+      (c) =>
+        c.user_id &&
+        !!contributorsinDb.find((cdb) => cdb.name === c.name && !cdb.user_id),
+    )
+  } else {
+    newContributors = contributors
+    contributorsToPossiblyUpdate = []
+  }
+
+  // log contributors which might need an update
+  console.log(
+    `there are ${contributorsToPossiblyUpdate.length} contributors in the DB that might be possible to connect with userIds:`,
+  )
+  console.log(JSON.stringify(contributorsToPossiblyUpdate))
+
+  if (!newContributors?.length) {
+    console.log('No new contributors to update, not doing anything')
+    await PgDb.disconnect(pgdb)
+    return
+  }
+
+  // load profile data from db
+
   const userRows = await repo.findUsersById(userIds)
 
   if (userRows?.length) {
     const userMap = new Map(userRows.map((user) => [user.id, user]))
 
-    contributors.forEach((c) => {
-      if (userRows && c.user_id) {
+    newContributors.forEach((c) => {
+      if (c.user_id) {
         const user = userMap.get(c.user_id)
 
         if (!user) {
@@ -84,7 +120,21 @@ async function main(argv: Args) {
   }
 
   // insert into db
-  const inserted = await repo.insertContributors(contributors)
+
+  // check and update slugs
+  const newSlugs = newContributors.map((c) => c.slug)
+  const slugsToUpdate = await repo.findExistingSlugs(newSlugs)
+  if (slugsToUpdate?.length) {
+    contributors
+      .filter((c) => slugsToUpdate.includes(c.slug))
+      .forEach(async (c) => {
+        const baseSlug = slugify(c.name)
+        const newSlug = await repo.findUniqueSlug(baseSlug)
+        c.slug = newSlug
+      })
+  }
+
+  const inserted = await repo.insertContributors(newContributors)
   console.log(`successfully inserted ${inserted.length} contributors`)
 
   await PgDb.disconnect(pgdb)
