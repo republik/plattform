@@ -45,8 +45,12 @@ const DeleteAuthorButton = ({ name, id }: DeleteAuthorButtonProps) => {
                 size='2'
                 color='red'
                 onClick={() => 
+                  // TODO: deletAuthor should alos return an error object on failure 
+                  // for example when the author has Documents assigned to it
+                  // This is not yet implemented in the backend. Once it is (when backend connection between authors and documents is implemented)
+                  // we should use the error object to display a message to the user.
                   deleteAuthor(id).then((result) => {
-                    if (result?.success) {
+                    if (result?.__typename === 'DeleteContributorSuccess') {
                       router.push('/authors')
                     } else {
                       console.error(result.message)

@@ -108,10 +108,7 @@ export const deleteAuthor = async (id: string) => {
     return result.data?.deleteContributor
   } catch (error) {
     return {
-      success: false,
-      errors: [
-        { field: null, message: 'Ein unerwarteter Fehler ist aufgetreten' },
-      ],
+      message: 'Ein unerwarteter Fehler ist aufgetreten',
     }
   }
 }
