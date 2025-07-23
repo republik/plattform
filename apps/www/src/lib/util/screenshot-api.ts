@@ -5,11 +5,13 @@ export function screenshotUrl({
   width,
   height,
   version,
+  elementId,
 }: {
   url: string
   width?: number
   height?: number
   version?: string
+  elementId?: string
 }) {
   const imageUrl = new URL('/api/screenshot', SCREENSHOT_SERVER_BASE_URL)
 
@@ -23,6 +25,9 @@ export function screenshotUrl({
   }
   if (version) {
     imageUrl.searchParams.set('version', version)
+  }
+  if (elementId) {
+    imageUrl.searchParams.set('elementId', elementId)
   }
 
   return imageUrl.toString()

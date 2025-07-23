@@ -18,7 +18,6 @@ import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
 import StatusError from '../../components/StatusError'
 import withMembership from '../../components/Auth/withMembership'
 import Frame from '../../components/Frame'
-import Front from '../../components/Front'
 import TeaserBlock from '../../components/Overview/TeaserBlock'
 import { P } from './Elements'
 import { getTeasersFromDocument } from './utils'
@@ -80,11 +79,11 @@ const FrontOverview = ({
 
   const onHighlight = (highlighFunction) => setHighlight(() => highlighFunction)
 
-  if (query.extractId) {
-    return (
-      <Front extractId={query.extractId} {...knownYears[year]} {...props} />
-    )
-  }
+  // if (query.extractId) {
+  //   return (
+  //     <Front extractId={query.extractId} {...knownYears[year]} {...props} />
+  //   )
+  // }
 
   const startDate = new Date(`${year - 1}-12-31T23:00:00.000Z`)
   const endDate = new Date(`${year}-12-31T23:00:00.000Z`)

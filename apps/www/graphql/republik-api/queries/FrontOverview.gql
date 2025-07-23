@@ -1,0 +1,29 @@
+query Front($path: String!) {
+  front: document(path: $path) {
+    id
+    children(first: 1000) {
+      totalCount
+      pageInfo {
+        hasNextPage
+      }
+      nodes {
+        id
+        body
+      }
+    }
+    meta {
+      lastPublishedAt
+    }
+  }
+}
+
+query Fronts {
+  fronts: documents(template: "front") {
+    nodes {
+      id
+      meta {
+        slug
+      }
+    }
+  }
+}
