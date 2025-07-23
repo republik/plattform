@@ -43,7 +43,7 @@ type UpsertContributorSuccess {
 union DeleteContributorResponse = DeleteContributorSuccess | DeleteContributorError
 
 type DeleteContributorSuccess {
-  message: String
+  success: Boolean
 }
 
 type DeleteContributorError {
