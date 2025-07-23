@@ -2,7 +2,7 @@ import { AlertDialog, Button, Flex } from '@radix-ui/themes'
 import { Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { deleteAuthor } from '../../authors/actions'
+import { deleteAuthor } from '../../authors/(actions)/deleteAuthor'
 
 interface DeleteAuthorButtonProps {
   name: string

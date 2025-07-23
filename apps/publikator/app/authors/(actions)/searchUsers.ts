@@ -1,4 +1,5 @@
 'use server'
+
 import { getClient } from '../../../lib/apollo/client'
 import { GetUsersDocument } from '../../../graphql/republik-api/__generated__/gql/graphql'
 

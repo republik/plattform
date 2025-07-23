@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react'
 import { Box, Button, Flex, Text, Avatar } from '@radix-ui/themes'
 import { Upload, X } from 'lucide-react'
-import { uploadAuthorProfileImage } from '../../authors/actions'
+import { uploadAuthorProfileImage } from '../../authors/(actions)/uploadAuthorProfileImage'
 
 interface ProfileImageUploadProps {
   currentImageUrl?: string
