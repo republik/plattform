@@ -31,7 +31,7 @@ const {
 const {
   express: { auth: Auth },
 } = require('@orbiting/backend-modules-auth')
-const requestLog = require('./express/requestLog')
+
 const keepalive = require('./express/keepalive')
 const { createCORSMatcher } = require('./lib/corsRegex')
 
@@ -90,9 +90,6 @@ const start = async (
       next()
     })
   }
-
-  // add req._log()
-  server.use(requestLog)
 
   if (RES_KEEPALIVE_INTERVALS_SECS) {
     try {

@@ -58,11 +58,13 @@ module.exports = async (_, args, context) => {
       await enforceSubscriptions({ pgdb, userId: membership.userId })
     } catch (e) {
       // ignore issues with newsletter subscriptions
-      console.warn('newsletter subscription changes failed', {
-        req: req._log(),
-        args,
-        error: e,
-      })
+      context.logger.error(
+        {
+          args,
+          error: e,
+        },
+        'newsletter subscription changes failed',
+      )
     }
 
     const { id, sequenceNumber, userId } = updatedMembership
@@ -81,16 +83,18 @@ module.exports = async (_, args, context) => {
       )
     } catch (e) {
       // swallow slack message
-      console.warn('publish to slack failed', {
-        req: req._log(),
-        args,
-        error: e,
-      })
+      context.logger.warn(
+        {
+          args,
+          error: e,
+        },
+        'publish to slack failed',
+      )
     }
 
     return updatedMembership
   } catch (e) {
-    console.error('resetMembership', e, { req: req._log() })
+    context.logger.error({ error: e }, 'resetMembership failed')
     await transaction.transactionRollback()
     throw e
   }
