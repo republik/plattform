@@ -144,6 +144,7 @@ export const TeaserFrontTileRow = ({
   autoColumns,
   mobileReverse,
   mobileColumns = 1,
+  id,
 }) => {
   const [colorScheme] = useColorContext()
   const autoBorders = css({
@@ -196,7 +197,7 @@ export const TeaserFrontTileRow = ({
       : styles[`mobileCol${mobileColumns}`],
   )
   return (
-    <div role='group' {...attributes} {...rowStyles}>
+    <div id={`teaser-${id}`} role='group' {...attributes} {...rowStyles}>
       {children}
     </div>
   )

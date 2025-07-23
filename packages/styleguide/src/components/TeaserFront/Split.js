@@ -69,6 +69,7 @@ const Split = ({
   aboveTheFold,
   feuilleton,
   audioPlayButton,
+  id,
 }) => {
   const background = bgColor
   const bylinePosition = feuilleton
@@ -80,6 +81,7 @@ const Split = ({
     : 'below'
   return (
     <div
+      id={`teaser-${id}`}
       {...attributes}
       {...css(
         styles.container,

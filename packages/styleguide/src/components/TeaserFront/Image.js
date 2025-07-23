@@ -47,12 +47,14 @@ const ImageBlock = ({
   onlyImage,
   feuilleton,
   audioPlayButton,
+  id,
 }) => {
   const background = bgColor || ''
   const isTextOnTop = textPosition !== 'underneath'
 
   return (
     <div
+      id={`teaser-${id}`}
       {...attributes}
       {...(feuilleton ? styles.containerFeuilleton : styles.container)}
       onClick={onClick}

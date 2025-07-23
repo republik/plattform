@@ -86,6 +86,7 @@ const Tile = ({
   onlyImage,
   singleColumn,
   audioPlayButton,
+  id,
 }) => {
   const [colorScheme] = useColorContext()
   const justifyContent =
@@ -107,6 +108,7 @@ const Tile = ({
 
   return (
     <div
+      id={`teaser-${id}`}
       {...attributes}
       onClick={onClick}
       {...colorScheme.set('backgroundColor', 'default')}
