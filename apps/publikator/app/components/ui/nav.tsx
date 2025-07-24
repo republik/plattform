@@ -29,7 +29,7 @@ const Nav = () => {
         align='center'
         justify='center'
         style={{
-          backgroundColor: 'var(--accent-10)',
+          backgroundColor: 'var(--accent-12)',
           borderRadius: 'var(--radius-3)',
         }}
       >

@@ -203,6 +203,27 @@ export = async function upsertContributor(
   const transaction = await pgdb.transactionBegin()
 
   try {
+    // Check if userId is connected to other contributor (error)
+    if (userId) {
+      const whereClause = id
+        ? { user_id: userId, 'id !=': id }
+        : { user_id: userId }
+      const existingContributorWithUserId: ArticleContributor | null =
+        await transaction.publikator.contributors.findFirst(whereClause)
+      if (existingContributorWithUserId) {
+        await transaction.transactionRollback()
+        return {
+          __typename: 'UpsertContributorError',
+          errors: [
+            {
+              field: 'userId',
+              message: `User ID ist bereits einem*r anderen Autor*in zugeordnet: ${existingContributorWithUserId.name}`,
+            },
+          ],
+        }
+      }
+    }
+
     // Check for duplicate prolitterisId (error)
     if (prolitterisId) {
       const whereClause = id
@@ -236,7 +257,7 @@ export = async function upsertContributor(
 
     if (existingContributorWithName) {
       warnings.push(
-        `Autor*in erstellt. Jdoch existiert ein*e Autor*in bereits mit diesem Namen: ${existingContributorWithName.slug}`,
+        `Autor*in erstellt. Ein*e Autor*in existiert jedoch bereits mit diesem Namen: ${existingContributorWithName.slug}`,
       )
     }
 
