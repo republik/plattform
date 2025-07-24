@@ -1,6 +1,6 @@
 import { UserRow } from '@orbiting/backend-modules-types'
 import { PgDb } from 'pogi'
-import { Contributor, ContributorRow } from '../types'
+import { Contributor, ContributorRow, GsheetAuthor } from '../types'
 
 export class ContributorsRepo {
   #pgdb: PgDb
@@ -17,7 +17,9 @@ export class ContributorsRepo {
     return this.#pgdb.public.users.find({ id: userIds })
   }
 
-  async insertContributors(contributors: Contributor[]): Promise<ContributorRow[]> {
+  async insertContributors(
+    contributors: Contributor[],
+  ): Promise<ContributorRow[]> {
     const tx = await this.#pgdb.transactionBegin()
     try {
       const inserted = await tx.publikator.contributors.insertAndGet(
@@ -49,11 +51,13 @@ export class ContributorsRepo {
     let slug = baseSlug
     let suffix = 1
     let isUnique = false
-  
+
     while (isUnique === false) {
       const whereClause = excludeId ? { slug, 'id !=': excludeId } : { slug }
-      const slugExists = await this.#pgdb.publikator.contributors.findFirst(whereClause)
-  
+      const slugExists = await this.#pgdb.publikator.contributors.findFirst(
+        whereClause,
+      )
+
       if (!slugExists) {
         isUnique = true
       } else {
@@ -62,7 +66,14 @@ export class ContributorsRepo {
         suffix++
       }
     }
-  
+
     return slug
+  }
+
+  async getGsheetAuthorGenderData(): Promise<GsheetAuthor[]> {
+    return this.#pgdb.public.gsheets.findOneFieldOnly(
+      { name: 'authors' },
+      'data',
+    )
   }
 }

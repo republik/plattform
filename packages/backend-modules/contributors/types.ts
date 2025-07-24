@@ -1,4 +1,3 @@
-
 export type Contributor = {
   name: string
   slug: string
@@ -23,3 +22,5 @@ export type ContributorRow = {
   gender?: 'm' | 'f' | 'd' | 'na'
   user_id?: string
 }
+
+export type GsheetAuthor = { name: string; gender: 'f' | 'm' | 'n' | 'b' }
