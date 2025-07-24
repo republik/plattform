@@ -1,7 +1,9 @@
 import { css } from '@republik/theme/css'
 import { getImgSrc } from 'components/Overview/utils'
+import Image from 'next/image'
+import Link from 'next/link'
 
-export function TeaserBlock({ teasers, path }) {
+export function TeaserBlock({ teasers, path, highlight }) {
   return (
     <div
       className={css({
@@ -11,19 +13,30 @@ export function TeaserBlock({ teasers, path }) {
       })}
     >
       {teasers.map((teaser) => {
+        const data = teaser.nodes[0]?.data
         return (
-          <div key={teaser.id}>
-            <img
-              alt=''
-              loading='lazy'
-              className={css({
-                maxWidth: '100%',
-                background: 'overlay',
-                minHeight: '100px',
-              })}
+          <Link
+            key={teaser.id}
+            className={css({
+              position: 'relative',
+              width: 'full',
+              aspectRatio: '3/2',
+            })}
+            href={data.url}
+          >
+            <Image
               src={getImgSrc(teaser, path)}
-            ></img>
-          </div>
+              unoptimized
+              alt=''
+              fill
+              className={css({
+                objectFit: 'contain',
+              })}
+              style={{
+                opacity: highlight && !highlight(data) ? 0.4 : 1,
+              }}
+            />
+          </Link>
         )
       })}
     </div>
