@@ -7,9 +7,10 @@ import { S3Client, CopyObjectCommand } from '@aws-sdk/client-s3'
 import { v4 as uuid } from 'uuid'
 
 import { ContributorsRepo } from '../lib/ContributorsRepo'
-import { Contributor } from '../types'
+import { Contributor, ContributorGender, GsheetAuthorGender } from '../types'
 
 import env from '@orbiting/backend-modules-env'
+import { UserRow } from '@orbiting/backend-modules-types'
 env.config()
 
 interface Args {
@@ -115,25 +116,13 @@ async function copyProfileImage(
   }
 }
 
-type PrepareContributorsForImport = {
-  contributorsToPossiblyUpdate: Contributor[]
-  gendersToCheck: Contributor[]
-  contributorsWithUpdatedSlugs: Contributor[]
-  newContributors: Contributor[]
-}
-
-async function importContributors(
-  repo: ContributorsRepo,
+async function filterForExistingContributors(
   contributors: Contributor[],
-): Promise<PrepareContributorsForImport> {
-  const userIds = contributors
-    .map((c) => c.user_id)
-    .filter((id) => !!id) as string[]
-
-  // find existing contributors
-  const contributorNames = contributors.map((c) => c.name)
-  const contributorsinDb = await repo.findContributorsByName(contributorNames)
-
+  contributorsinDb: Contributor[],
+): Promise<{
+  contributorsToPossiblyUpdate: Contributor[]
+  newContributors: Contributor[]
+}> {
   let newContributors: Contributor[]
   let contributorsToPossiblyUpdate: Contributor[]
 
@@ -156,56 +145,113 @@ async function importContributors(
     console.log('No new contributors to update, not doing anything')
     return {
       contributorsToPossiblyUpdate,
-      gendersToCheck: [],
-      contributorsWithUpdatedSlugs: [],
       newContributors: [],
     }
   }
+  return {
+    contributorsToPossiblyUpdate,
+    newContributors,
+  }
+}
+
+async function associateContributorWithProfileData(
+  userMap: Map<string, UserRow>,
+  contributor: Contributor,
+): Promise<Contributor> {
+  const user = userMap.get(contributor.user_id as string)
+
+  if (!user) {
+    console.log(
+      `no user found for id ${contributor.user_id}, name ${contributor.name}`,
+    )
+    contributor.user_id = undefined
+    return contributor
+  }
+
+  // profile info
+  contributor.bio = user.biography || undefined
+  contributor.prolitteris_id = user.prolitterisId || undefined
+  contributor.prolitteris_first_name = user.firstName
+  contributor.prolitteris_last_name = user.lastName
+
+  // copy image to right folder
+  if (user.portraitUrl) {
+    contributor.image = await copyProfileImage(user.portraitUrl)
+  }
+
+  if (user.gender) {
+    switch (user.gender) {
+      case 'weiblich':
+        contributor.gender = 'f'
+        break
+      case 'männlich':
+        contributor.gender = 'm'
+        break
+      default:
+        contributor.gender = 'd'
+    }
+  }
+
+  return contributor
+}
+
+function getGenderFromGsheetData(
+  c: Contributor,
+  authorGenderDataMap: Map<string, GsheetAuthorGender>,
+): ContributorGender | undefined {
+  const gender = authorGenderDataMap.get(c.name)
+  // gender is na for n and b, otherwise m, f, or undefined
+  if (gender === 'n' || gender === 'b') {
+    return 'na'
+  } else if (['m', 'f', undefined].includes(gender)) {
+    return gender
+  } else {
+    console.error(
+      `Unknown gender entry found in gsheet author gender data: ${c.name} - ${gender}`,
+    )
+    return 'na'
+  }
+}
+
+type ContributorsForImport = {
+  contributorsToPossiblyUpdate: Contributor[]
+  gendersToCheck: Contributor[]
+  contributorsWithUpdatedSlugs: Contributor[]
+  newContributors: Contributor[]
+}
+
+async function prepareContributorsForImport(
+  repo: ContributorsRepo,
+  contributors: Contributor[],
+): Promise<ContributorsForImport> {
+  // find existing contributors
+  const contributorNames = contributors.map((c) => c.name)
+  const contributorsinDb = await repo.findContributorsByName(contributorNames)
+
+  const { contributorsToPossiblyUpdate, newContributors } =
+    await filterForExistingContributors(contributors, contributorsinDb)
 
   // load profile data from db
-
+  const userIds = contributors
+    .map((c) => c.user_id)
+    .filter((id) => !!id) as string[]
   const userRows = await repo.findUsersById(userIds)
 
   if (userRows?.length) {
     const userMap = new Map(userRows.map((user) => [user.id, user]))
-
     await Promise.all(
       newContributors.map(async (c) => {
         if (c.user_id) {
-          const user = userMap.get(c.user_id)
-
-          if (!user) {
-            console.log(`no user found for id ${c.user_id}, name ${c.name}`)
-            c.user_id = undefined
-            return
-          }
-
-          // profile info
-          c.bio = user.biography || undefined
-          c.prolitteris_id = user.prolitterisId || undefined
-          c.prolitteris_first_name = user.firstName
-          c.prolitteris_last_name = user.lastName
-
-          // copy image to right folder
-          if (user.portraitUrl) {
-            c.image = await copyProfileImage(user.portraitUrl)
-          }
-
-          if (user.gender) {
-            switch (user.gender) {
-              case 'weiblich':
-                c.gender = 'f'
-                break
-              case 'männlich':
-                c.gender = 'm'
-                break
-              default:
-                c.gender = 'd'
-            }
-          }
+          return associateContributorWithProfileData(userMap, c)
         }
       }),
-    ).catch((error) => console.error('error while adding profile data', error))
+    ).catch((error) => {
+      console.error(
+        'Error while adding user profile data to contributors',
+        error,
+      )
+      throw error
+    })
   }
 
   // try to find gender in gsheet data if not already filled in
@@ -213,21 +259,15 @@ async function importContributors(
   const authorGenderDataMap = new Map(
     authorGenderData.map((d) => [d.name, d.gender]),
   )
-  const gendersToCheck: Contributor[] = []
+
   newContributors.forEach((c) => {
     if (!c.gender) {
-      const gender = authorGenderDataMap.get(c.name)
-      // gender is na for n and b, otherwise m, f, or undefined
-      if (gender === 'n' || gender === 'b') {
-        c.gender = 'na'
-        gendersToCheck.push(c)
-      } else {
-        c.gender = gender
-      }
+      c.gender = getGenderFromGsheetData(c, authorGenderDataMap)
     }
   })
-
-  // insert into db
+  const gendersToCheck: Contributor[] = newContributors.filter(
+    (c) => c.gender === 'na',
+  )
 
   // check and update slugs
   const newSlugs = newContributors.map((c) => c.slug)
@@ -243,7 +283,10 @@ async function importContributors(
           c.slug = newSlug
           contributorsWithUpdatedSlugs.push(c)
         }),
-    ).catch((error) => console.error('error while checking slugs', error))
+    ).catch((error) => {
+      console.error('error while checking slugs', error)
+      throw error
+    })
   }
 
   return {
@@ -268,7 +311,7 @@ async function main(argv: Args) {
     gendersToCheck,
     contributorsWithUpdatedSlugs,
     newContributors,
-  } = await importContributors(repo, contributors)
+  } = await prepareContributorsForImport(repo, contributors)
 
   // log contributors which might need an update
   if (contributorsToPossiblyUpdate.length) {
@@ -310,4 +353,11 @@ const argv = yargs.option('file', {
   description: 'Path to the contributors JSON file',
 }).argv as Args
 
-main(argv)
+if (require.main === module) {
+  main(argv)
+}
+
+export const importContributorsFunctions = {
+  extractS3KeyFromUrl,
+  prepareContributorsForImport,
+}
