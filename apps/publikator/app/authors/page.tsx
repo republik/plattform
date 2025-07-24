@@ -61,7 +61,7 @@ const AuthorsPage: React.FC = () => {
       after: cursors[currentPage - 1] || undefined,
       orderBy: {
         field: ContributorOrderField.UpdatedAt,
-        direction: OrderDirection.Asc,
+        direction: OrderDirection.Desc,
       },
       filters: debouncedSearchTerm
         ? { search: debouncedSearchTerm }

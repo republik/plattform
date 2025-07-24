@@ -38,8 +38,10 @@ export default function AuthorForm({
   const [imageUrl, setImageUrl] = useState<string | null>(
     initialData?.image || null,
   )
-  
-  const [prolitterisValidationError, setProlitterisValidationError] = useState<string | null>(null)
+
+  const [prolitterisValidationError, setProlitterisValidationError] = useState<
+    string | null
+  >(null)
 
   const [formState, formAction, isPending] = useActionState(upsertAuthor, {
     success: false,
@@ -49,8 +51,12 @@ export default function AuthorForm({
   })
 
   // Split errors into field-specific and general errors
-  const fieldErrors = formState.errors.filter((error) => error.field !== null)
-  const generalErrors = formState.errors.filter((error) => error.field === null)
+  const fieldErrors = (formState.errors || []).filter(
+    (error) => error.field !== null,
+  )
+  const generalErrors = (formState.errors || []).filter(
+    (error) => error.field === null,
+  )
 
   // Helper function to get error for a specific field
   const getFieldError = (fieldName: string): string | null => {
@@ -67,7 +73,10 @@ export default function AuthorForm({
     setImageUrl(url)
   }
 
-  const handleProlitterisValidationChange = (isValid: boolean, errorMessage: string | null) => {
+  const handleProlitterisValidationChange = (
+    isValid: boolean,
+    errorMessage: string | null,
+  ) => {
     setProlitterisValidationError(errorMessage)
   }
 
@@ -117,11 +126,7 @@ export default function AuthorForm({
                 onImageChange={handleImageChange}
                 error={getFieldError('image')}
               />
-              <input
-                type='hidden'
-                name='image'
-                value={imageUrl || ''}
-              />
+              <input type='hidden' name='image' value={imageUrl || ''} />
 
               <Box>
                 <Text as='label' size='2' weight='bold' mb='1'>
