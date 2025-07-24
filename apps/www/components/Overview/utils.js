@@ -6,7 +6,7 @@ export const getImgSrc = (teaser, path = '/', size = 240) =>
   screenshotUrl({
     url: `${PUBLIC_BASE_URL}/_front-overview${path}`,
     width: renderWidth,
-    elementId: teaser.id,
+    elementId: `teaser-${teaser.id}`,
   })
 
 export const getTeasersFromDocument = (doc) => {
