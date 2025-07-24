@@ -33,18 +33,20 @@ const AuthorsPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [cursors, setCursors] = useState<string[]>([]) // Store cursors for each page
 
-  const { data, loading, error } = useQuery<
+  const { data, loading, error, previousData } = useQuery<
     ContributorsQuery,
     ContributorsQueryVariables
   >(ContributorsDocument, {
     variables: {
       first: pageSize,
-      after: cursors[currentPage - 1] || undefined, 
+      after: cursors[currentPage - 1] || undefined,
       orderBy: {
         field: ContributorOrderField.UpdatedAt,
         direction: OrderDirection.Asc,
       },
     },
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-and-network',
     onCompleted: (data) => {
       if (data.contributors.pageInfo.endCursor) {
         setCursors((prev) => {
@@ -56,7 +58,8 @@ const AuthorsPage: React.FC = () => {
     },
   })
 
-  if (loading) {
+  // Show full loading only on initial load (when there's no previous data)
+  if (loading && !data && !previousData) {
     return (
       <Box p='6'>
         <Flex align='center' justify='center' style={{ minHeight: '200px' }}>
@@ -74,12 +77,14 @@ const AuthorsPage: React.FC = () => {
     )
   }
 
-  const contributorsList = data?.contributors?.nodes || []
+  // Use current data if available, otherwise fall back to previous data
+  const currentData = data || previousData
+  const contributorsList = currentData?.contributors?.nodes || []
 
-  // Calculate pagination info
-  const totalCount = data?.contributors?.totalCount || 0
+  // Calculate pagination info from current data
+  const totalCount = currentData?.contributors?.totalCount || 0
   const totalPages = Math.ceil(totalCount / pageSize)
-  const hasNextPage = data?.contributors?.pageInfo?.hasNextPage || false
+  const hasNextPage = currentData?.contributors?.pageInfo?.hasNextPage || false
   const hasPreviousPage = currentPage > 1
 
   const handlePreviousPage = () => {
@@ -133,7 +138,9 @@ const AuthorsPage: React.FC = () => {
             <Table.ColumnHeaderCell>Name</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Kurzbio</Table.ColumnHeaderCell>
             <Table.ColumnHeaderCell>Info</Table.ColumnHeaderCell>
-            <Table.ColumnHeaderCell>Aktualisiert</Table.ColumnHeaderCell>
+            <Table.ColumnHeaderCell justify='end'>
+              Aktualisiert
+            </Table.ColumnHeaderCell>
           </Table.Row>
         </Table.Header>
 
@@ -195,7 +202,7 @@ const AuthorsPage: React.FC = () => {
         </Table.Body>
       </Table.Root>
 
-      {contributorsList.length === 0 && (
+      {contributorsList.length === 0 && !loading && (
         <Box p='6' style={{ textAlign: 'center' }}>
           <Text>No contributors found</Text>
         </Box>
