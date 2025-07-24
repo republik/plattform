@@ -235,7 +235,7 @@ const FrontOverview = ({
         error={data.error}
         style={{ minHeight: `calc(90vh)` }}
         render={() => {
-          return groupedTeasers.slice(0, 1).map(({ key, values }, i) => {
+          return groupedTeasers.map(({ key, values }, i) => {
             const Text = text[key]
             return (
               <div
