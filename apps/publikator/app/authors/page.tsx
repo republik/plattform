@@ -1,7 +1,7 @@
 'use client'
 
 import { useQuery } from '@apollo/client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -15,7 +15,7 @@ import {
   Spinner,
   TextField,
 } from '@radix-ui/themes'
-import { Search, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Search, Plus, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import TooltipIcons from '../components/ui/tooltip-icons'
 import {
   ContributorsDocument,
@@ -33,6 +33,25 @@ const AuthorsPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [cursors, setCursors] = useState<string[]>([]) // Store cursors for each page
 
+  // Search state
+  const [searchTerm, setSearchTerm] = useState('')
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm)
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [searchTerm])
+
+  // Reset pagination when search changes
+  useEffect(() => {
+    setCurrentPage(1)
+    setCursors([])
+  }, [debouncedSearchTerm])
+
   const { data, loading, error, previousData } = useQuery<
     ContributorsQuery,
     ContributorsQueryVariables
@@ -44,6 +63,9 @@ const AuthorsPage: React.FC = () => {
         field: ContributorOrderField.UpdatedAt,
         direction: OrderDirection.Asc,
       },
+      filters: debouncedSearchTerm
+        ? { search: debouncedSearchTerm }
+        : undefined,
     },
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-and-network',
@@ -124,10 +146,24 @@ const AuthorsPage: React.FC = () => {
         <TextField.Root
           placeholder='Autor*in suchen'
           style={{ width: '300px' }}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         >
           <TextField.Slot>
             <Search height='16' width='16' />
           </TextField.Slot>
+          {searchTerm && (
+            <TextField.Slot side='right'>
+              <Button
+                variant='ghost'
+                size='1'
+                onClick={() => setSearchTerm('')}
+                style={{ padding: '4px' }}
+              >
+                <X height='16' width='16' />
+              </Button>
+            </TextField.Slot>
+          )}
         </TextField.Root>
       </Flex>
 
@@ -204,20 +240,37 @@ const AuthorsPage: React.FC = () => {
 
       {contributorsList.length === 0 && !loading && (
         <Box p='6' style={{ textAlign: 'center' }}>
-          <Text>No contributors found</Text>
+          <Text>
+            {debouncedSearchTerm
+              ? `Keine Autor*innen gefunden für "${debouncedSearchTerm}"`
+              : 'Keine Autor*innen gefunden'}
+          </Text>
+          {debouncedSearchTerm && (
+            <Button
+              variant='ghost'
+              size='2'
+              mt='2'
+              onClick={() => setSearchTerm('')}
+            >
+              Suche zurücksetzen
+            </Button>
+          )}
         </Box>
       )}
 
       {/* Pagination Controls */}
-      <Flex
-        justify='between'
-        align='center'
-        mt='6'
-        pt='4'
-        style={{ borderTop: '1px solid #E5E7EB' }}
-      >
+      <Flex justify='between' align='center' mt='4' pt='4'>
         <Text size='2' color='gray'>
-          Zeige {startIndex} bis {endIndex} von {totalCount} Autor*innen
+          {debouncedSearchTerm ? (
+            <>
+              Zeige {startIndex} bis {endIndex} von {totalCount} Suchergebnissen
+              für "{debouncedSearchTerm}"
+            </>
+          ) : (
+            <>
+              Zeige {startIndex} bis {endIndex} von {totalCount} Autor*innen
+            </>
+          )}
         </Text>
 
         <Flex align='center' gap='2'>
