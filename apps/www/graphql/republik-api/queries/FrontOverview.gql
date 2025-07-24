@@ -23,6 +23,7 @@ query Fronts {
       id
       meta {
         slug
+        path
       }
     }
   }

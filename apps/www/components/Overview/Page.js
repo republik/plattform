@@ -1,60 +1,31 @@
-import { useState } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
-import { withRouter } from 'next/router'
-import { max, ascending } from 'd3-array'
+import { FrontDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useQuery } from '@apollo/client'
 import {
   Button,
   Interaction,
   Loader,
   useColorContext,
 } from '@project-r/styleguide'
+import { ascending, max } from 'd3-array'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 
-import { swissTime } from '../../lib/utils/format'
-import withT from '../../lib/withT'
 import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
+import { swissTime } from '../../lib/utils/format'
+import { useTranslation } from '../../lib/withT'
 
-import StatusError from '../../components/StatusError'
-import withMembership from '../../components/Auth/withMembership'
 import Frame from '../../components/Frame'
+import StatusError from '../../components/StatusError'
 // import TeaserBlock from '../../components/Overview/TeaserBlock'
+import Link from 'next/link'
 import { TeaserBlock } from '../../components/Overview/TeaserBlock2'
+import { useMe } from '../../lib/context/MeContext'
 import { P } from './Elements'
 import { getTeasersFromDocument } from './utils'
-import Link from 'next/link'
 
-// ATTENTION: only list years here where a split Front document exists, e.g. republik/magazine-2023
-const knownYears = {
-  2018: { path: '/2018' },
-  2019: { path: '/2019' },
-  2020: { path: '/2020' },
-  2021: { path: '/2021' },
-  2022: { path: '/2022' },
-  2023: { path: '/2023' },
-  2024: { path: '/2024' },
-}
-
-const getAll = gql`
-  query getCompleteFrontOverview($path: String!) {
-    front: document(path: $path) {
-      id
-      content
-    }
-  }
-`
-const getKnownYear = gql`
-  query getFrontOverviewYear($after: ID, $before: ID) {
-    front: document(path: "/") {
-      id
-      children(after: $after, before: $before) {
-        nodes {
-          body
-        }
-      }
-    }
-  }
-`
+// ATTENTION: use last year here where a split Front document exists, e.g. republik/magazine-2023
+// TODO: Figure out how we can derive this dynamically from the Fronts query (probably should prerender this page)
+const LAST_ARCHIVED_YEAR = 2024
 
 const formatWeekRaw = swissTime.format('%W')
 const formatWeek = (date) => `Woche ${+formatWeekRaw(date) + 1}`
@@ -64,27 +35,21 @@ const formatByInterval = {
   monate: swissTime.format('%B'),
 }
 
-const FrontOverview = ({
-  data,
-  isMember,
-  me,
-  year,
-  text,
-  router: { query, pathname },
-  t,
-  serverContext,
-  ...props
-}) => {
+const FrontOverview = ({ year, text, serverContext }) => {
+  const { pathname } = useRouter()
+  const { t } = useTranslation()
+
+  const { isMember, me } = useMe()
   const [highlight, setHighlight] = useState()
   const [colorScheme] = useColorContext()
 
-  const onHighlight = (highlighFunction) => setHighlight(() => highlighFunction)
+  const path = year <= LAST_ARCHIVED_YEAR ? `/${year}` : '/'
 
-  // if (query.extractId) {
-  //   return (
-  //     <Front extractId={query.extractId} {...knownYears[year]} {...props} />
-  //   )
-  // }
+  const { data, loading, error } = useQuery(FrontDocument, {
+    variables: { path },
+  })
+
+  const onHighlight = (highlighFunction) => setHighlight(() => highlighFunction)
 
   const startDate = new Date(`${year - 1}-12-31T23:00:00.000Z`)
   const endDate = new Date(`${year}-12-31T23:00:00.000Z`)
@@ -118,7 +83,7 @@ const FrontOverview = ({
       : `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
   }
 
-  const teasers = getTeasersFromDocument(data.front)
+  const teasers = getTeasersFromDocument(data?.front)
     .reverse()
     .filter((teaser, i, all) => {
       const publishDates = teaser.nodes
@@ -144,7 +109,7 @@ const FrontOverview = ({
     })
     .sort((a, b) => ascending(a.publishDate, b.publishDate))
 
-  if (!data.loading && !data.error && !teasers.length) {
+  if (!loading && !error && !teasers.length) {
     return (
       <Frame raw>
         <StatusError statusCode={404} serverContext={serverContext} />
@@ -172,32 +137,7 @@ const FrontOverview = ({
     [[]],
   )[0]
 
-  // WANT ALL TEASERS AS HIGH RES IMAGES?
-  // import { getImgSrc } from './utils'
-  // let curls = 'mkdir pngs\n'
-  // groupedTeasers.forEach(({ key, values }) => {
-  //   const path = (knownYears[year] && knownYears[year].path) || '/'
-  //   let m = `\n# ${key}\n`
-  //   m += values.map((t, i) => {
-  //     const fileName = `pngs/${swissTime.format('%Y-%m-%dT%H')(t.publishDate)}-${t.id}-${i}.png`
-  //     const url = getImgSrc(t, path, null, false).replace('https://cdn.repub.ch/', 'https://assets.republik.space/') + '&zoomFactor=2'
-  //     return [
-  //       `if [ ! -f ${fileName} ]; then`,
-  //       `  curl -o "${fileName}" "${url}"; sleep 1;`,
-  //       'fi'
-  //     ].join('\n')
-  //   }).join('\n')
-
-  //   // console.log(m)
-  //   curls += m
-  // })
-  // if (typeof window !== 'undefined') { window.curls = curls }
-  // // use copy(curls)
-
-  if (
-    !knownYears[year] ||
-    (!knownYears[year].after && !knownYears[year].path)
-  ) {
+  if (path === '/') {
     groupedTeasers.reverse()
     groupedTeasers.forEach((m) => m.values.reverse())
   }
@@ -231,8 +171,8 @@ const FrontOverview = ({
       )}
 
       <Loader
-        loading={data.loading}
-        error={data.error}
+        loading={loading}
+        error={error}
         style={{ minHeight: `calc(90vh)` }}
         render={() => {
           return groupedTeasers.map(({ key, values }, i) => {
@@ -261,7 +201,7 @@ const FrontOverview = ({
                   )}
                 </P>
                 <TeaserBlock
-                  {...knownYears[year]}
+                  path={path}
                   teasers={values}
                   highlight={highlight}
                   onHighlight={onHighlight}
@@ -283,28 +223,4 @@ const FrontOverview = ({
   )
 }
 
-export default compose(
-  withRouter,
-  graphql(getAll, {
-    skip: (props) => {
-      const knownYear = knownYears[props.year]
-      return knownYear && !knownYear.path && !props.router.query.extractId
-    },
-    options: (props) => ({
-      variables: knownYears[props.year] || {
-        path: '/',
-      },
-    }),
-  }),
-  graphql(getKnownYear, {
-    skip: (props) => {
-      const knownYear = knownYears[props.year]
-      return (!knownYear || knownYear.path) && !props.router.query.extractId
-    },
-    options: (props) => ({
-      variables: knownYears[props.year],
-    }),
-  }),
-  withMembership,
-  withT,
-)(FrontOverview)
+export default FrontOverview
