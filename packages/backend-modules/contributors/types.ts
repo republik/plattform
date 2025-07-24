@@ -24,3 +24,20 @@ export type ContributorRow = {
 }
 
 export type GsheetAuthor = { name: string; gender: 'f' | 'm' | 'n' | 'b' }
+
+export type ElasticContributorKind = string
+
+export type ElasticContributor = {
+  kind?: ElasticContributorKind
+  name: string
+  userId?: string
+}
+
+export type RepoData = {
+  contributors: ElasticContributor[]
+}
+
+export type RawContributor = {
+  name: string
+  user_id?: string
+}
