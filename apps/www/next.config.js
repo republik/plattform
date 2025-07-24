@@ -93,6 +93,15 @@ const nextConfig = {
             .filter(([, value]) => !!value)
             .map(([key, value]) => ({ key, value })),
       },
+      {
+        source: '/_front/:year*',
+        headers: [
+          {
+            key: 'X-Robots-Tag',
+            value: 'noindex',
+          },
+        ],
+      },
     ]
   },
   async rewrites() {
