@@ -31,12 +31,10 @@ const TypoBlock = ({
   color,
   bgColor,
   audioPlayButton,
-  id,
 }) => {
   const background = bgColor || ''
   return (
     <div
-      id={`teaser-${id}`}
       {...attributes}
       {...styles.root}
       onClick={onClick}
