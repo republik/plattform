@@ -6,7 +6,12 @@ import * as fs from 'fs'
 import { Client } from '@elastic/elasticsearch'
 import env from '@orbiting/backend-modules-env'
 import { slugify } from '@orbiting/backend-modules-utils'
-import { Contributor } from '../types'
+import {
+  Contributor,
+  ElasticContributor,
+  RawContributor,
+  RepoData,
+} from '../types'
 env.config()
 
 const ELASTIC_NODE =
@@ -17,14 +22,6 @@ const elastic = new Client({
 })
 
 const ES_INDEX_PREFIX = process.env.ES_INDEX_PREFIX || 'republik'
-
-type ElasticContributorKind = string
-
-type ElasticContributor = {
-  kind?: ElasticContributorKind
-  name: string
-  userId?: string
-}
 
 type ElasticHit = {
   _index: string
@@ -43,18 +40,6 @@ type ElasticHit = {
       contributors: ElasticContributor[]
     }
   }
-}
-
-type ElasticRepoData = {
-  repoId: string
-  publishDate: Date
-  creditsString: string
-  contributors: ElasticContributor[]
-}
-
-type RawContributor = {
-  name: string
-  user_id?: string
 }
 
 function generateUniqueSlug(
@@ -85,9 +70,11 @@ function containsSpecialCharacters(text: string): boolean {
   return specialCharRegex.test(text)
 }
 
-function convertRepoDataToContributorsList(creditData: ElasticRepoData[]): RawContributor[] {
-  return creditData.flatMap((credit) =>
-    credit.contributors.map((c) => {
+function convertRepoDataToContributorsList(
+  repoContributors: RepoData[],
+): RawContributor[] {
+  return repoContributors.flatMap((repo) =>
+    repo.contributors.map((c) => {
       const contributor: RawContributor = { name: c.name }
       if (c.userId) {
         contributor.user_id = c.userId
@@ -97,7 +84,9 @@ function convertRepoDataToContributorsList(creditData: ElasticRepoData[]): RawCo
   )
 }
 
-function deduplicateNamesAndSlugs(rawContributors: RawContributor[]): Contributor[] {
+function deduplicateNamesAndSlugs(
+  rawContributors: RawContributor[],
+): Contributor[] {
   const contributorMap = new Map<string, Contributor>()
   const usedSlugs = new Set<string>()
 
@@ -135,35 +124,27 @@ function deduplicateNamesAndSlugs(rawContributors: RawContributor[]): Contributo
   return Array.from(contributorMap.values())
 }
 
-async function queryElastic(query: any) {
-  let elasticData: ElasticRepoData[] = []
+async function queryElastic(query: any): Promise<RepoData[] | undefined> {
+  let repoContributors: RepoData[] = []
   try {
     console.log(`Querying elastic on ${ELASTIC_NODE}`)
 
     const response = await elastic.search({
       index: ES_INDEX_PREFIX + '-document-read',
-      _source: [
-        'meta.repoId',
-        'meta.contributors',
-        'meta.publishDate',
-        'meta.creditsString',
-      ],
+      _source: ['meta.contributors'],
       body: query,
     })
 
     if (response.body.hits && response.body.hits.hits) {
-      elasticData = response.body.hits.hits.map((hit: ElasticHit) => {
+      repoContributors = response.body.hits.hits.map((hit: ElasticHit) => {
         if (hit._source?.meta) {
-          const repoId = hit._source.meta.repoId
-          const publishDate = hit._source.meta.publishDate
-          const creditsString = hit._source.meta.creditsString
-          const contributors = hit._source.meta.contributors
-          return { repoId, publishDate, creditsString, contributors }
+          const repo: RepoData = { contributors: hit._source.meta.contributors }
+          return repo
         }
         return null
       })
       console.log(
-        `Retrieved ${elasticData.length} documents from Elasticsearch.`,
+        `Retrieved ${repoContributors.length} documents from Elasticsearch.`,
       )
       /* const contributorKinds: Set<ElasticContributorKind> = new Set(
         creditData.flatMap((credit: any) =>
@@ -178,7 +159,7 @@ async function queryElastic(query: any) {
   } catch (e) {
     console.error('Error while querying elastic: ', e)
   }
-  return elasticData
+  return repoContributors
 }
 
 async function main(argv: any) {
@@ -213,15 +194,15 @@ async function main(argv: any) {
     size: limit,
   }
 
-
   const repoData = await queryElastic(query)
 
   if (!repoData) {
     return
   }
-  
+
   // convert to correct format
-  const rawContributors: RawContributor[] = convertRepoDataToContributorsList(repoData)
+  const rawContributors: RawContributor[] =
+    convertRepoDataToContributorsList(repoData)
 
   // deduplicate names and slugs
   const contributors: Contributor[] = deduplicateNamesAndSlugs(rawContributors)
@@ -280,4 +261,15 @@ const argv = yargs
     type: 'string',
   }).argv
 
-main(argv)
+if (require.main === module) {
+  main(argv)
+}
+
+export const extractContributorsFromElasticFunctions = {
+  generateUniqueSlug,
+  slugIsNumbered,
+  containsShortSequence,
+  containsSpecialCharacters,
+  convertRepoDataToContributorsList,
+  deduplicateNamesAndSlugs,
+}
