@@ -5,6 +5,7 @@ import {
 import { RenderFront } from 'components/Front'
 import { createGetStaticPaths, createGetStaticProps } from 'lib/apollo/helpers'
 import { GetStaticPaths } from 'next'
+import { useSearchParams } from 'next/navigation'
 
 type Params = {
   year: string
@@ -15,8 +16,20 @@ type Props = {
 }
 
 export default function FrontPage({ front }: Props) {
+  const searchParams = useSearchParams()
+
+  const extractId = searchParams.get('extractId')
+
+  if (!extractId) {
+    return null
+  }
+
   return (
-    <RenderFront front={front} nodes={front.children.nodes} isFrontExtract />
+    <RenderFront
+      front={front}
+      nodes={front.children.nodes.filter((node) => node.id === extractId)}
+      isFrontExtract
+    />
   )
 }
 

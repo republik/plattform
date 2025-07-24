@@ -4,9 +4,8 @@ import { PUBLIC_BASE_URL } from '../../lib/constants'
 export const renderWidth = 1200
 export const getImgSrc = (teaser, path = '/', size = 240) =>
   screenshotUrl({
-    url: `${PUBLIC_BASE_URL}/_front-overview${path}`,
+    url: `${PUBLIC_BASE_URL}/_front-overview${path}?extractId=${teaser.id}`,
     width: renderWidth,
-    elementId: `teaser-${teaser.id}`,
   })
 
 export const getTeasersFromDocument = (doc) => {
