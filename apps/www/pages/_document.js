@@ -1,67 +1,15 @@
-import { Children } from 'react'
-import Document, {
-  Html,
-  Head as DefaultHead,
-  Main,
-  NextScript,
-} from 'next/document'
 import { renderStaticOptimized } from 'glamor/server'
-
-// filter our preload links (js files)
-// see https://github.com/zeit/next.js/issues/5054
-class NoJsHead extends DefaultHead {
-  render() {
-    const res = super.render()
-
-    function transform(node) {
-      // remove next fouc prevention
-      if (node && node.props && node.props['data-next-hide-fouc']) {
-        return null
-      }
-      // remove all link preloads
-      if (
-        node &&
-        node.type === 'link' &&
-        node.props &&
-        node.props.rel === 'preload'
-      ) {
-        return null
-      }
-      if (node && node.props && node.props.children) {
-        return {
-          ...node,
-          props: {
-            ...node.props,
-            children: Children.map(node.props.children, transform),
-          },
-        }
-      }
-      if (Array.isArray(node)) {
-        return node.map(transform)
-      }
-
-      return node
-    }
-
-    return transform(res)
-  }
-}
+import Document, { Head, Html, Main, NextScript } from 'next/document'
 
 export default class MyDocument extends Document {
   static async getInitialProps({ renderPage, pathname, query, req, res }) {
     const page = await renderPage()
     const styles = renderStaticOptimized(() => page.html)
-    const nojs = pathname === '/' && !!query.extractId
-
-    if (nojs) {
-      res.setHeader('Cache-Control', 'max-age=3600, immutable')
-    }
 
     return {
       ...page,
       ...styles,
       env: require('../lib/constants'),
-      nojs,
     }
   }
 
@@ -69,9 +17,7 @@ export default class MyDocument extends Document {
     const {
       css,
       env: { PUBLIC_BASE_URL },
-      nojs,
     } = this.props
-    const Head = nojs ? NoJsHead : DefaultHead
     return (
       <Html lang='de'>
         <Head>
@@ -125,13 +71,8 @@ export default class MyDocument extends Document {
           <meta name='referrer' content='no-referrer' />
         </Head>
         <body>
-          {!nojs && (
-            <script
-              dangerouslySetInnerHTML={{ __html: `var _paq = _paq || [];` }}
-            />
-          )}
           <Main />
-          {!nojs && <NextScript />}
+          <NextScript />
         </body>
       </Html>
     )
