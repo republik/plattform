@@ -215,7 +215,7 @@ async function main(argv: any) {
 
   // store as json
   console.log('to be checked:')
-  console.log(JSON.stringify(toBeChecked))
+  console.log(toBeChecked)
 
   const contributorsFileName = argv.filename
     ? `${argv.filename}.json`

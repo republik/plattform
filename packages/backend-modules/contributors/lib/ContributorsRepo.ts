@@ -41,7 +41,11 @@ export class ContributorsRepo {
   }
 
   async findExistingSlugs(slugs: string[]): Promise<string[]> {
-    return this.#pgdb.publikator.contributors.find({ slug: slugs })
+    const existingSlugs = await this.#pgdb.publikator.contributors.find(
+      { slug: slugs },
+      { fields: 'slug' },
+    )
+    return existingSlugs.map((slugObject: { slug: string }) => slugObject.slug)
   }
 
   async findUniqueSlug(

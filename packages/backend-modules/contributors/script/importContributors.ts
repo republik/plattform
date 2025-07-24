@@ -114,7 +114,7 @@ async function copyProfileImage(
 
     return publicUrl
   } catch (error) {
-    console.error('Error uploading author profile image:', error)
+    console.error('Error uploading author profile image', error)
   }
 }
 
@@ -174,41 +174,43 @@ async function main(argv: Args) {
   if (userRows?.length) {
     const userMap = new Map(userRows.map((user) => [user.id, user]))
 
-    newContributors.forEach(async (c) => {
-      if (c.user_id) {
-        const user = userMap.get(c.user_id)
+    await Promise.all(
+      newContributors.map(async (c) => {
+        if (c.user_id) {
+          const user = userMap.get(c.user_id)
 
-        if (!user) {
-          console.log(`no user found for id ${c.user_id}, name ${c.name}`)
-          c.user_id = undefined
-          return
-        }
+          if (!user) {
+            console.log(`no user found for id ${c.user_id}, name ${c.name}`)
+            c.user_id = undefined
+            return
+          }
 
-        // profile info
-        c.bio = user.biography || undefined
-        c.prolitteris_id = user.prolitterisId || undefined
-        c.prolitteris_first_name = user.firstName
-        c.prolitteris_last_name = user.lastName
+          // profile info
+          c.bio = user.biography || undefined
+          c.prolitteris_id = user.prolitterisId || undefined
+          c.prolitteris_first_name = user.firstName
+          c.prolitteris_last_name = user.lastName
 
-        // copy image to right folder
-        if (user.portraitUrl) {
-          c.image = await copyProfileImage(user.portraitUrl)
-        }
+          // copy image to right folder
+          if (user.portraitUrl) {
+            c.image = await copyProfileImage(user.portraitUrl)
+          }
 
-        if (user.gender) {
-          switch (user.gender) {
-            case 'weiblich':
-              c.gender = 'f'
-              break
-            case 'männlich':
-              c.gender = 'm'
-              break
-            default:
-              c.gender = 'd'
+          if (user.gender) {
+            switch (user.gender) {
+              case 'weiblich':
+                c.gender = 'f'
+                break
+              case 'männlich':
+                c.gender = 'm'
+                break
+              default:
+                c.gender = 'd'
+            }
           }
         }
-      }
-    })
+      }),
+    ).catch((error) => console.error('error while adding profile data', error))
   }
 
   // try to find gender in gsheet data if not already filled in
@@ -243,13 +245,16 @@ async function main(argv: Args) {
   const newSlugs = newContributors.map((c) => c.slug)
   const slugsToUpdate = await repo.findExistingSlugs(newSlugs)
   if (slugsToUpdate?.length) {
-    contributors
-      .filter((c) => slugsToUpdate.includes(c.slug))
-      .forEach(async (c) => {
-        const baseSlug = slugify(c.name)
-        const newSlug = await repo.findUniqueSlug(baseSlug)
-        c.slug = newSlug
-      })
+    await Promise.all(
+      contributors
+        .filter((c) => slugsToUpdate.includes(c.slug))
+        .map(async (c) => {
+          const baseSlug = slugify(c.name)
+          const newSlug = await repo.findUniqueSlug(baseSlug)
+          c.slug = newSlug
+          console.log(newSlug)
+        }),
+    ).catch((error) => console.error('error while checking slugs', error))
   }
 
   const inserted = await repo.insertContributors(newContributors)
