@@ -45,11 +45,16 @@ type ElasticHit = {
   }
 }
 
-type CreditData = {
+type ElasticRepoData = {
   repoId: string
   publishDate: Date
   creditsString: string
   contributors: ElasticContributor[]
+}
+
+type RawContributor = {
+  name: string
+  user_id?: string
 }
 
 function generateUniqueSlug(
@@ -78,6 +83,102 @@ function containsShortSequence(text: string): boolean {
 function containsSpecialCharacters(text: string): boolean {
   const specialCharRegex = /[^\p{L}\p{N}\s-]/u
   return specialCharRegex.test(text)
+}
+
+function convertRepoDataToContributorsList(creditData: ElasticRepoData[]): RawContributor[] {
+  return creditData.flatMap((credit) =>
+    credit.contributors.map((c) => {
+      const contributor: RawContributor = { name: c.name }
+      if (c.userId) {
+        contributor.user_id = c.userId
+      }
+      return contributor
+    }),
+  )
+}
+
+function deduplicateNamesAndSlugs(rawContributors: RawContributor[]): Contributor[] {
+  const contributorMap = new Map<string, Contributor>()
+  const usedSlugs = new Set<string>()
+
+  for (const contributor of rawContributors) {
+    const name = contributor.name
+    const existingContributor = contributorMap.get(name)
+
+    const baseSlug = slugify(name)
+    let finalSlug: string
+
+    // Check if the slug has already been used
+    if (!usedSlugs.has(baseSlug)) {
+      finalSlug = baseSlug
+    } else {
+      // Generate a unique slug based on the base slug
+      finalSlug = generateUniqueSlug(baseSlug, usedSlugs)
+    }
+
+    // check if contributor with that name already exists, if necessary add userId
+    if (existingContributor) {
+      if (contributor.user_id && !existingContributor.user_id) {
+        existingContributor.user_id = contributor.user_id
+      }
+      usedSlugs.add(finalSlug)
+    } else {
+      contributorMap.set(name, {
+        name: name,
+        slug: finalSlug,
+        user_id: contributor.user_id,
+      })
+      usedSlugs.add(finalSlug)
+    }
+  }
+
+  return Array.from(contributorMap.values())
+}
+
+async function queryElastic(query: any) {
+  let elasticData: ElasticRepoData[] = []
+  try {
+    console.log(`Querying elastic on ${ELASTIC_NODE}`)
+
+    const response = await elastic.search({
+      index: ES_INDEX_PREFIX + '-document-read',
+      _source: [
+        'meta.repoId',
+        'meta.contributors',
+        'meta.publishDate',
+        'meta.creditsString',
+      ],
+      body: query,
+    })
+
+    if (response.body.hits && response.body.hits.hits) {
+      elasticData = response.body.hits.hits.map((hit: ElasticHit) => {
+        if (hit._source?.meta) {
+          const repoId = hit._source.meta.repoId
+          const publishDate = hit._source.meta.publishDate
+          const creditsString = hit._source.meta.creditsString
+          const contributors = hit._source.meta.contributors
+          return { repoId, publishDate, creditsString, contributors }
+        }
+        return null
+      })
+      console.log(
+        `Retrieved ${elasticData.length} documents from Elasticsearch.`,
+      )
+      /* const contributorKinds: Set<ElasticContributorKind> = new Set(
+        creditData.flatMap((credit: any) =>
+          credit.contributors.flatMap((c: ElasticContributor) => c.kind),
+        ), 
+      )
+      console.log(contributorKinds) */
+    } else {
+      console.error('No documents found.')
+      return
+    }
+  } catch (e) {
+    console.error('Error while querying elastic: ', e)
+  }
+  return elasticData
 }
 
 async function main(argv: any) {
@@ -112,98 +213,18 @@ async function main(argv: any) {
     size: limit,
   }
 
-  let creditData: CreditData[] = []
 
-  try {
-    console.log(`Querying elastic on ${ELASTIC_NODE}`)
+  const repoData = await queryElastic(query)
 
-    const response = await elastic.search({
-      index: ES_INDEX_PREFIX + '-document-read',
-      _source: [
-        'meta.repoId',
-        'meta.contributors',
-        'meta.publishDate',
-        'meta.creditsString',
-      ],
-      body: query,
-    })
-
-    if (response.body.hits && response.body.hits.hits) {
-      creditData = response.body.hits.hits.map((hit: ElasticHit) => {
-        if (hit._source?.meta) {
-          const repoId = hit._source.meta.repoId
-          const publishDate = hit._source.meta.publishDate
-          const creditsString = hit._source.meta.creditsString
-          const contributors = hit._source.meta.contributors
-          return { repoId, publishDate, creditsString, contributors }
-        }
-        return null
-      })
-      console.log(
-        `Retrieved ${creditData.length} documents from Elasticsearch.`,
-      )
-      /* const contributorKinds: Set<ElasticContributorKind> = new Set(
-        creditData.flatMap((credit: any) =>
-          credit.contributors.flatMap((c: ElasticContributor) => c.kind),
-        ), 
-      )
-      console.log(contributorKinds) */
-    } else {
-      console.log('No documents found.')
-      return
-    }
-  } catch (e) {
-    console.error('Error while querying elastic: ', e)
+  if (!repoData) {
+    return
   }
-
+  
   // convert to correct format
-  const rawContributors: Contributor[] = creditData.flatMap((credit) =>
-    credit.contributors.map((c) => {
-      const contributor: Contributor = { name: c.name, slug: slugify(c.name) }
-      if (c.userId) {
-        contributor.user_id = c.userId
-      }
-      return contributor
-    }),
-  )
+  const rawContributors: RawContributor[] = convertRepoDataToContributorsList(repoData)
 
   // deduplicate names and slugs
-  const contributorMap = new Map<string, Contributor>()
-  const usedSlugs = new Set<string>()
-
-  for (const contributor of rawContributors) {
-    const name = contributor.name
-    const existingContributor = contributorMap.get(name)
-
-    const baseSlug = slugify(name)
-
-    let finalSlug: string
-
-    // Check if the input contributor already has a slug and if it's unique
-    if (contributor.slug && !usedSlugs.has(contributor.slug)) {
-      finalSlug = contributor.slug
-    } else {
-      // Generate a unique slug based on the base slug
-      finalSlug = generateUniqueSlug(baseSlug, usedSlugs)
-    }
-
-    // check if contributor with that name already exists, if necessary add userId
-    if (existingContributor) {
-      if (contributor.user_id && !existingContributor.user_id) {
-        existingContributor.user_id = contributor.user_id
-      }
-      usedSlugs.add(finalSlug)
-    } else {
-      contributorMap.set(name, {
-        name: name,
-        slug: finalSlug,
-        user_id: contributor.user_id,
-      })
-      usedSlugs.add(finalSlug)
-    }
-  }
-
-  const contributors = Array.from(contributorMap.values())
+  const contributors: Contributor[] = deduplicateNamesAndSlugs(rawContributors)
 
   // check for weird stuff that should be looked at manually
   const toBeChecked = contributors.filter(
