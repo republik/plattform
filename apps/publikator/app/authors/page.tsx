@@ -158,7 +158,7 @@ const AuthorsPage: React.FC = () => {
                 variant='ghost'
                 size='1'
                 onClick={() => setSearchTerm('')}
-                style={{ padding: '4px' }}
+                style={{ padding: '4px', marginRight: 0 }}
               >
                 <X height='16' width='16' />
               </Button>
