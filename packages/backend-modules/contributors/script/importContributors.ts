@@ -96,15 +96,12 @@ async function copyProfileImage(
     const fileName = `${fileId}.jpeg`
     const s3Path = `publikator/author-images/${fileName}`
 
-    // only needed for testing, otherwise it should be AWS_S3_BUCKET everywhere
-    const sourceBucket = 'republik-assets'
-
-    const sourceKey = extractS3KeyFromUrl(imagePath, sourceBucket)
+    const sourceKey = extractS3KeyFromUrl(imagePath, AWS_S3_BUCKET as string)
 
     const copyCommand = new CopyObjectCommand({
       Bucket: AWS_S3_BUCKET,
       Key: s3Path,
-      CopySource: `/${sourceBucket}/${sourceKey}`,
+      CopySource: `/${AWS_S3_BUCKET}/${sourceKey}`,
     })
 
     await s3Client.send(copyCommand)
@@ -118,15 +115,17 @@ async function copyProfileImage(
   }
 }
 
-async function main(argv: Args) {
-  const filename = argv.file
-  const contributors: Contributor[] = loadFile(filename)
+type PrepareContributorsForImport = {
+  contributorsToPossiblyUpdate: Contributor[]
+  gendersToCheck: Contributor[]
+  contributorsWithUpdatedSlugs: Contributor[]
+  newContributors: Contributor[]
+}
 
-  const pgdb = await PgDb.connect({
-    applicationName: 'Import script for contributors',
-  })
-  const repo = new ContributorsRepo(pgdb)
-
+async function importContributors(
+  repo: ContributorsRepo,
+  contributors: Contributor[],
+): Promise<PrepareContributorsForImport> {
   const userIds = contributors
     .map((c) => c.user_id)
     .filter((id) => !!id) as string[]
@@ -153,18 +152,14 @@ async function main(argv: Args) {
     contributorsToPossiblyUpdate = []
   }
 
-  // log contributors which might need an update
-  if (contributorsToPossiblyUpdate.length) {
-    console.log(
-      `there are ${contributorsToPossiblyUpdate.length} contributors in the DB that might be possible to connect with userIds:`,
-    )
-    console.log(contributorsToPossiblyUpdate)
-  }
-
   if (!newContributors?.length) {
     console.log('No new contributors to update, not doing anything')
-    await PgDb.disconnect(pgdb)
-    return
+    return {
+      contributorsToPossiblyUpdate,
+      gendersToCheck: [],
+      contributorsWithUpdatedSlugs: [],
+      newContributors: [],
+    }
   }
 
   // load profile data from db
@@ -232,18 +227,12 @@ async function main(argv: Args) {
     }
   })
 
-  if (gendersToCheck.length) {
-    console.log(
-      `There are ${gendersToCheck.length} contributors with n or b genders that were saved as na: `,
-    )
-    console.log(gendersToCheck)
-  }
-
   // insert into db
 
   // check and update slugs
   const newSlugs = newContributors.map((c) => c.slug)
   const slugsToUpdate = await repo.findExistingSlugs(newSlugs)
+  const contributorsWithUpdatedSlugs: Contributor[] = []
   if (slugsToUpdate?.length) {
     await Promise.all(
       contributors
@@ -252,13 +241,64 @@ async function main(argv: Args) {
           const baseSlug = slugify(c.name)
           const newSlug = await repo.findUniqueSlug(baseSlug)
           c.slug = newSlug
-          console.log(newSlug)
+          contributorsWithUpdatedSlugs.push(c)
         }),
     ).catch((error) => console.error('error while checking slugs', error))
   }
 
-  const inserted = await repo.insertContributors(newContributors)
-  console.log(`successfully inserted ${inserted.length} contributors`)
+  return {
+    contributorsToPossiblyUpdate,
+    gendersToCheck,
+    contributorsWithUpdatedSlugs,
+    newContributors,
+  }
+}
+
+async function main(argv: Args) {
+  const filename = argv.file
+  const contributors: Contributor[] = loadFile(filename)
+
+  const pgdb = await PgDb.connect({
+    applicationName: 'Import script for contributors',
+  })
+  const repo = new ContributorsRepo(pgdb)
+
+  const {
+    contributorsToPossiblyUpdate,
+    gendersToCheck,
+    contributorsWithUpdatedSlugs,
+    newContributors,
+  } = await importContributors(repo, contributors)
+
+  // log contributors which might need an update
+  if (contributorsToPossiblyUpdate.length) {
+    console.log(
+      `there are ${contributorsToPossiblyUpdate.length} contributors in the DB that might be possible to connect with userIds:`,
+    )
+    console.log(contributorsToPossiblyUpdate)
+  }
+
+  // log contributors with genders to check
+  if (gendersToCheck?.length) {
+    console.log(
+      `There are ${gendersToCheck.length} contributors with n or b genders that were saved as na: `,
+    )
+    console.log(gendersToCheck)
+  }
+
+  // log contributors with updated slugs
+  if (contributorsWithUpdatedSlugs?.length) {
+    console.log(
+      `Duplicate slugs found and updated for ${contributorsWithUpdatedSlugs.length} contributors:`,
+    )
+    console.log(contributorsWithUpdatedSlugs)
+  }
+
+  // insert new contributors into the db
+  if (newContributors?.length) {
+    const inserted = await repo.insertContributors(newContributors)
+    console.log(`successfully inserted ${inserted.length} contributors`)
+  }
 
   await PgDb.disconnect(pgdb)
 }
