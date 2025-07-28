@@ -126,7 +126,7 @@ module.exports = async (
           return {
             async didEncounterErrors({ context, request, errors }) {
               if (context.logger.isLevelEnabled('debug')) {
-                context.logger.debug(
+                context.logger.error(
                   {
                     graphqlRequest: {
                       query: request.query,
