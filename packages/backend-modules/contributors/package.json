@@ -10,7 +10,8 @@
     "@orbiting/backend-modules-types": "*",
     "@orbiting/backend-modules-utils": "*",
     "apollo-modules-node": "*",
-    "is-uuid": "^1.0.2"
+    "is-uuid": "^1.0.2",
+    "@aws-sdk/client-s3": "^3.846.0"
   },
   "devDependencies": {
     "ts-jest": "^29.1.5"
