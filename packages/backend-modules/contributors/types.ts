@@ -26,6 +26,11 @@ export type ContributorRow = {
   user_id?: string
 }
 
+export type ContributorArgs = {
+  id?: string
+  slug?: string
+}
+
 export type GsheetAuthorGender = 'f' | 'm' | 'n' | 'b'
 
 export type GsheetAuthor = { name: string; gender: GsheetAuthorGender }

@@ -2,6 +2,7 @@ import { UserRow } from '@orbiting/backend-modules-types'
 import { PgDb } from 'pogi'
 import {
   Contributor,
+  ContributorArgs,
   ContributorRow,
   GsheetAuthor,
 } from '../types'
@@ -19,6 +20,15 @@ export class ContributorsRepo {
 
   async findUsersById(userIds: string[]): Promise<UserRow[] | null> {
     return this.#pgdb.public.users.find({ id: userIds })
+  }
+
+  async findContributorByIdOrSlug(
+    contributorArgs: ContributorArgs,
+  ): Promise<ContributorRow> {
+    const whereClause = contributorArgs.id
+      ? { id: contributorArgs.id }
+      : { slug: contributorArgs.slug }
+    return this.#pgdb.publikator.contributors.findOne(whereClause)
   }
 
   async insertContributors(

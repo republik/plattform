@@ -1,9 +1,6 @@
 import type { GraphqlContext } from '@orbiting/backend-modules-types'
-
-type ContributorArgs = {
-  id?: string
-  slug?: string
-}
+import { ContributorsRepo } from '../../../lib/ContributorsRepo'
+import { ContributorArgs } from '../../../types'
 
 export = async function contributor(
   _: unknown,
@@ -15,8 +12,9 @@ export = async function contributor(
     throw new Error('Please provide either id or slug, but not both')
   }
 
-  const whereClause = id ? { id } : { slug }
-  const contributor = await pgdb.publikator.contributors.findOne(whereClause)
+  const repo = new ContributorsRepo(pgdb)
+
+  const contributor = await repo.findContributorByIdOrSlug({id, slug})
 
   if (!contributor) {
     return null
