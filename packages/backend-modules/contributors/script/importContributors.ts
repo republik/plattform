@@ -42,6 +42,9 @@ function extractS3KeyFromUrl(url: string, bucket: string): string | undefined {
     if (pathname.startsWith('/s3/')) {
       pathname = pathname.substring(4)
     }
+    if (pathname.startsWith('/')) {
+      pathname = pathname.substring(1)
+    }
     if (pathname.startsWith(`${bucket}`)) {
       pathname = pathname.substring(bucket.length)
     }
@@ -346,18 +349,20 @@ async function main(argv: Args) {
   await PgDb.disconnect(pgdb)
 }
 
-const argv = yargs.option('file', {
-  alias: 'f',
-  type: 'string',
-  demandOption: true,
-  description: 'Path to the contributors JSON file',
-}).argv as Args
-
 if (require.main === module) {
+  const argv = yargs.option('file', {
+    alias: 'f',
+    type: 'string',
+    demandOption: true,
+    description: 'Path to the contributors JSON file',
+  }).argv as Args
+
   main(argv)
 }
 
 export const importContributorsFunctions = {
   extractS3KeyFromUrl,
-  prepareContributorsForImport,
+  filterForExistingContributors,
+  associateContributorWithProfileData,
+  getGenderFromGsheetData,
 }
