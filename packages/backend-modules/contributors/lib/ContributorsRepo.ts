@@ -1,6 +1,10 @@
 import { UserRow } from '@orbiting/backend-modules-types'
 import { PgDb } from 'pogi'
-import { Contributor, ContributorRow, GsheetAuthor } from '../types'
+import {
+  Contributor,
+  ContributorRow,
+  GsheetAuthor,
+} from '../types'
 
 export class ContributorsRepo {
   #pgdb: PgDb
@@ -82,5 +86,22 @@ export class ContributorsRepo {
       { name: 'authors' },
       'data',
     )
+  }
+
+  async searchContributors(
+    orderByClause: string,
+    whereConditions: string[],
+    whereParams: { gender?: string; search?: string },
+  ): Promise<ContributorRow[]> {
+    const whereClause =
+      whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : ''
+
+    const query = `
+    SELECT * FROM publikator.contributors
+    ${whereClause}
+    ORDER BY ${orderByClause}
+  `
+
+    return this.#pgdb.query(query, whereParams)
   }
 }

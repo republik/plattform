@@ -2,8 +2,18 @@ import type { GraphqlContext } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
 
 import { paginate } from '@orbiting/backend-modules-utils'
+import { ContributorsRepo } from '../../../lib/ContributorsRepo'
 
 const { Roles } = Auth
+
+type ContributorsArgs = {
+  first?: number
+  last?: number
+  before?: string
+  after?: string
+  orderBy?: ContributorOrderBy
+  filters?: ContributorFilters
+}
 
 type ContributorFilters = {
   gender?: 'm' | 'f' | 'd' | 'na'
@@ -15,15 +25,6 @@ type ContributorFilters = {
 type ContributorOrderBy = {
   field: 'name' | 'createdAt' | 'updatedAt'
   direction: 'ASC' | 'DESC'
-}
-
-type ContributorsArgs = {
-  first?: number
-  last?: number
-  before?: string
-  after?: string
-  orderBy?: ContributorOrderBy
-  filters?: ContributorFilters
 }
 
 export = async function contributors(
@@ -40,14 +41,16 @@ export = async function contributors(
 
   const { orderBy = { field: 'name', direction: 'ASC' }, filters = {} } = args
 
-  const whereConditions: string[] = []
-  const whereParams: any = {}
-
   if (filters.gender) {
     // Only allow gender filtering if user has appropriate permissions
     if (!hasGenderAccess) {
       throw new Error('Insufficient permissions to filter by gender')
     }
+  }
+  const whereConditions: string[] = []
+  const whereParams: { gender?: string; search?: string } = {}
+
+  if (filters.gender) {
     whereConditions.push('gender = :gender')
     whereParams.gender = filters.gender
   }
@@ -78,20 +81,17 @@ export = async function contributors(
     createdAt: 'created_at',
     updatedAt: 'updated_at',
   }
-  
+
   const dbFieldName = fieldMapping[orderBy.field] || orderBy.field
   const orderByClause = `${dbFieldName} ${orderBy.direction}`
 
-  const whereClause =
-    whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : ''
+  const repo = new ContributorsRepo(pgdb)
 
-  const query = `
-    SELECT * FROM publikator.contributors
-    ${whereClause}
-    ORDER BY ${orderByClause}
-  `
-
-  const contributors = await pgdb.query(query, whereParams)
+  const contributors = await repo.searchContributors(
+    orderByClause,
+    whereConditions,
+    whereParams,
+  )
 
   return paginate(args, contributors)
 }
