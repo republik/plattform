@@ -41,6 +41,9 @@ export class ContributorsRepo {
   }
 
   async findExistingSlugs(slugs: string[]): Promise<string[]> {
+    if (!slugs.length) {
+      return []
+    }
     const existingSlugs = await this.#pgdb.publikator.contributors.find(
       { slug: slugs },
       { fields: 'slug' },
