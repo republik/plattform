@@ -12,6 +12,10 @@ export type Contributor = {
 
 export type ContributorGender = 'm' | 'f' | 'd' | 'na'
 
+export function isContributorGender(genderString: string): genderString is ContributorGender {
+  return ['m', 'f', 'd', 'na'].includes(genderString);
+}
+
 
 export type ContributorRow = {
   id: string
@@ -24,6 +28,8 @@ export type ContributorRow = {
   prolitteris_last_name?: string
   gender?: ContributorGender
   user_id?: string
+  created_at: Date
+  updated_at: Date
 }
 
 export type ContributorArgs = {

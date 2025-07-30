@@ -3,27 +3,13 @@ import type { GraphqlContext } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
 import { ensureStringLength } from '@orbiting/backend-modules-utils'
 import { slugify } from '@orbiting/backend-modules-utils'
+import { ContributorRow, isContributorGender } from '../../../types'
+import { ContributorsRepo } from '../../../lib/ContributorsRepo'
 
 const { Roles } = Auth
 
 const MAX_NAME_LENGTH = 100
 const MAX_SHORT_BIO_LENGTH = 500
-
-interface ArticleContributor {
-  id: string
-  name: string
-  slug: string
-  short_bio?: string | null
-  bio?: string | null
-  image?: string | null
-  prolitteris_id?: string | null
-  prolitteris_first_name?: string | null
-  prolitteris_last_name?: string | null
-  gender?: string | null
-  user_id?: string | null
-  created_at: Date
-  updated_at: Date
-}
 
 type UpsertContributorArgs = {
   id?: string
@@ -41,7 +27,7 @@ type UpsertContributorArgs = {
 type UpsertContributorResponse =
   | {
       __typename: 'UpsertContributorSuccess'
-      contributor: ArticleContributor
+      contributor: ContributorRow
       isNew: boolean
       warnings?: { field: string | null; message: string }[]
     }
@@ -126,7 +112,7 @@ const validateInput = (
   }
 
   // Gender validation (ensure it's one of the allowed values)
-  if (args.gender && !['m', 'f', 'd', 'na'].includes(args.gender)) {
+  if (args.gender && !isContributorGender(args.gender)) {
     errors.push({
       field: 'gender',
       message: 'Geschlecht muss m, f, d oder na sein',
@@ -142,31 +128,6 @@ const validateInput = (
   }
 
   return errors
-}
-
-const findUniqueSlug = async (
-  baseSlug: string,
-  pgdb: any,
-  excludeId: string | null = null,
-): Promise<string> => {
-  let slug = baseSlug
-  let suffix = 1
-  let isUnique = false
-
-  while (isUnique === false) {
-    const whereClause = excludeId ? { slug, 'id !=': excludeId } : { slug }
-    const slugExists = await pgdb.publikator.contributors.findFirst(whereClause)
-
-    if (!slugExists) {
-      isUnique = true
-    } else {
-      // Add numbers if name slug already exists: -1, -2, -3, etc.
-      slug = `${baseSlug}-${suffix}`
-      suffix++
-    }
-  }
-
-  return slug
 }
 
 export = async function upsertContributor(
@@ -201,15 +162,12 @@ export = async function upsertContributor(
   const warnings: string[] = []
 
   const transaction = await pgdb.transactionBegin()
+  const repo = new ContributorsRepo(transaction)
 
   try {
     // Check if userId is connected to other contributor (error)
     if (userId) {
-      const whereClause = id
-        ? { user_id: userId, 'id !=': id }
-        : { user_id: userId }
-      const existingContributorWithUserId: ArticleContributor | null =
-        await transaction.publikator.contributors.findFirst(whereClause)
+      const existingContributorWithUserId: ContributorRow | null = await repo.findContributorByCondition({field: 'user_id', value: userId, excludeId: id})
       if (existingContributorWithUserId) {
         await transaction.transactionRollback()
         return {
@@ -226,11 +184,8 @@ export = async function upsertContributor(
 
     // Check for duplicate prolitterisId (error)
     if (prolitterisId) {
-      const whereClause = id
-        ? { prolitteris_id: prolitterisId, 'id !=': id }
-        : { prolitteris_id: prolitterisId }
-      const existingContributorWithProlitterisId: ArticleContributor | null =
-        await transaction.publikator.contributors.findFirst(whereClause)
+      const existingContributorWithProlitterisId: ContributorRow | null =
+        await repo.findContributorByCondition({field: 'prolitteris_id', value: prolitterisId, excludeId: id})
 
       if (existingContributorWithProlitterisId) {
         await transaction.transactionRollback()
@@ -248,12 +203,11 @@ export = async function upsertContributor(
 
     // Generate unique slug
     const baseSlug = slugify(name)
-    const slug = await findUniqueSlug(baseSlug, transaction, id)
+    const slug = await repo.findUniqueSlug(baseSlug, id)
 
     // Check for duplicate names (warning only)
-    const whereClause = id ? { name, 'id !=': id } : { name }
-    const existingContributorWithName: ArticleContributor | null =
-      await transaction.publikator.contributors.findFirst(whereClause)
+    const existingContributorWithName: ContributorRow | null =
+      await repo.findContributorByCondition({field: 'name', value: name, excludeId: id})
 
     if (existingContributorWithName) {
       warnings.push(
@@ -285,10 +239,8 @@ export = async function upsertContributor(
 
     if (id) {
       // Update existing contributor
-      const existingContributor: ArticleContributor | null =
-        await transaction.publikator.contributors.findOne({
-          id,
-        })
+      const existingContributor: ContributorRow | null =
+        await repo.findContributorByIdOrSlug({id})
       if (!existingContributor) {
         await transaction.transactionRollback()
         return {
