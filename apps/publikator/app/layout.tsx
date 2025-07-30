@@ -1,15 +1,25 @@
 import { ReactNode } from 'react'
+import '@radix-ui/themes/styles.css'
+import './global.css'
+import { Theme } from '@radix-ui/themes'
+import { Providers } from './providers'
+import Nav from './components/ui/nav'
 
-export default async function RootLayout({
-  // Layouts must accept a children prop.
-  // This will be populated with nested layouts or pages
+export default function RootLayout({
   children,
 }: {
   children: ReactNode
 }) {
   return (
     <html lang='de'>
-      <body>{children}</body>
+      <body>
+        <Theme accentColor='indigo' radius='small'>
+          <Providers>
+            <Nav />
+            {children}
+          </Providers>
+        </Theme>
+      </body>
     </html>
   )
 }
