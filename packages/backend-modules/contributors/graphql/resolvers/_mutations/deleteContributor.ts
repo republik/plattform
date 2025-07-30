@@ -1,5 +1,6 @@
 import type { GraphqlContext } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
+import { ContributorsRepo } from '../../../lib/ContributorsRepo'
 
 const { Roles } = Auth
 
@@ -25,10 +26,11 @@ export = async function deleteContributor(
   Roles.ensureUserIsInRoles(me, ['admin', 'producer'])
 
   const transaction = await pgdb.transactionBegin()
+  const repo = new ContributorsRepo(transaction)
 
   try {
     // Check if contributor exists
-    const contributor = await transaction.publikator.contributors.findOne({ id })
+    const contributor = await repo.findContributorByIdOrSlug({id})
     if (!contributor) {
       await transaction.transactionRollback()
       return {
@@ -41,7 +43,7 @@ export = async function deleteContributor(
     // If user has documents they can't be deleted
 
     // Delete contributor
-    await transaction.publikator.contributors.deleteOne({ id })
+    await repo.deleteContributor(id)
 
     await transaction.transactionCommit()
     return {

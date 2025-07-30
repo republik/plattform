@@ -31,6 +31,14 @@ export class ContributorsRepo {
     return this.#pgdb.publikator.contributors.findOne(whereClause)
   }
 
+  async deleteContributor(id: string): Promise<void> {
+    // deleteOne returns the number of rows deleted (0 or 1) and throws if more than 1 was deleted
+    const amountDeleted = await this.#pgdb.publikator.contributors.deleteOne({ id })
+    if (!amountDeleted) {
+      throw new Error('No contributor was deleted')
+    }
+  }
+
   async insertContributors(
     contributors: Contributor[],
   ): Promise<ContributorRow[]> {
