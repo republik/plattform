@@ -1,4 +1,3 @@
-const logger = console
 const postfinanceSHA = require('../../../lib/payments/postfinance/sha')
 const { v4: uuid } = require('uuid')
 const validator = require('validator')
@@ -35,11 +34,13 @@ module.exports = async (_, args, context) => {
 
     // Check if there are any options left viable to process
     if (pledgeOptions.length === 0) {
-      logger.error('at least one option required w/ amount > 0', {
-        req: req._log(),
-        args,
-        options: pledge.options,
-      })
+      context.logger.error(
+        {
+          args,
+          options: pledge.options,
+        },
+        'at least one option required w/ amount > 0',
+      )
       throw new Error(t('api/pledge/empty'))
     }
 
@@ -123,11 +124,13 @@ module.exports = async (_, args, context) => {
           (o) => o.membershipId === plo.membershipId && o.amount > 0,
         ).length > 1
       ) {
-        logger.error('options w/ membershipIds must be mutually exclusive!', {
-          req: req._log(),
-          args,
-          plo,
-        })
+        context.logger.error(
+          {
+            args,
+            plo,
+          },
+          'options w/ membershipIds must be mutually exclusive!',
+        )
         throw new Error(t('api/unexpected'))
       }
 
@@ -140,9 +143,9 @@ module.exports = async (_, args, context) => {
             option.membership.id === plo.membershipId,
         )
       ) {
-        logger.error(
+        context.logger.error(
+          { args, plo },
           'options must be valid combination of templateId and membershipId',
-          { req: req._log(), args, plo },
         )
         throw new Error(t('api/unexpected'))
       }
@@ -150,35 +153,33 @@ module.exports = async (_, args, context) => {
       const pko = packageOptions.find((pko) => pko.id === plo.templateId)
 
       if (packageId !== pko.packageId) {
-        logger.error('options must all be part of the same package!', {
-          req: req._log(),
-          args,
-          plo,
-          pko,
-        })
+        context.logger.error(
+          { args, plo, pko },
+          'options must all be part of the same package!',
+        )
         throw new Error(t('api/unexpected'))
       }
 
       if (pko.disabledAt && pko.disabledAt <= new Date()) {
-        logger.error(
-          `option must be enabled (disabledAt: ${pko.disabledAt.toISOString()})`,
-          { req: req._log(), args, plo, pko },
+        context.logger.error(
+          { args, plo, pko, disabledAt: pko.disabledAt.toISOString() },
+          `option must be enabled`,
         )
         throw new Error(t('api/unexpected'))
       }
 
       if (!(pko.minAmount <= plo.amount && plo.amount <= pko.maxAmount)) {
-        logger.error(
-          `amount in option (templateId: ${plo.templateId}) out of range`,
-          { req: req._log(), args, pko, plo },
+        context.logger.error(
+          { args, pko, plo, templateId: plo.templateId },
+          `amount in option out of range`,
         )
         throw new Error(t('api/unexpected'))
       }
 
       if (!pko.userPrice && plo.price !== pko.price) {
-        logger.error(
-          `price in option (templateId: ${plo.templateId}) is invalid`,
-          { req: req._log(), args, pko, plo },
+        context.logger.error(
+          { args, pko, plo, templateId: plo.templateId },
+          `price in option template is invalid`,
         )
         throw new Error(t('api/unexpected'))
       }
@@ -189,9 +190,9 @@ module.exports = async (_, args, context) => {
         (pko.reward.maxPeriods - pko.reward.minPeriods > 0 || plo.periods)
       ) {
         if (!plo.periods) {
-          logger.error(
-            `periods in option (templateId: ${plo.templateId}) is missing`,
-            { req: req._log(), args, pko, plo },
+          context.logger.error(
+            { args, pko, plo, templateId: plo.templateId },
+            `periods in option template is missing`,
           )
           throw new Error(t('api/unexpected'))
         }
@@ -200,9 +201,9 @@ module.exports = async (_, args, context) => {
           plo.periods > pko.reward.maxPeriods ||
           plo.periods < pko.reward.minPeriods
         ) {
-          logger.error(
-            `periods in option (templateId: ${plo.templateId}) out of range`,
-            { req: req._log(), args, pko, plo },
+          context.logger.error(
+            { args, pko, plo, templateId: plo.templateId },
+            `periods in option template out of range`,
           )
           throw new Error(t('api/unexpected'))
         }
@@ -214,19 +215,19 @@ module.exports = async (_, args, context) => {
       id: pkg.crowdfundingId,
     })
     const now = new Date()
-    const gracefullEnd = new Date(crowdfunding.endDate)
-    gracefullEnd.setMinutes(now.getMinutes() + 20)
-    if (gracefullEnd < now) {
-      logger.error('crowdfunding already closed', { req: req._log(), args })
+    const gracefulEnd = new Date(crowdfunding.endDate)
+    gracefulEnd.setMinutes(now.getMinutes() + 20)
+    if (gracefulEnd < now) {
+      context.logger.error({ args }, 'crowdfunding already closed')
       throw new Error(t('api/crowdfunding/tooLate'))
     }
 
     // check total
     const pledgeMinTotal = minTotal(pledgeOptions, packageOptions)
     if (pledge.total < pledgeMinTotal) {
-      logger.error(
-        `pledge.total (${pledge.total}) must be >= (${pledgeMinTotal})`,
-        { req: req._log(), args, pledgeMinTotal },
+      context.logger.error(
+        { args, pledgeMinTotal, pledgeTotal: pledge.total },
+        `pledge.total must be >= pledgeMinTotal`,
       )
       throw new Error(t('api/unexpected'))
     }
@@ -237,7 +238,7 @@ module.exports = async (_, args, context) => {
 
     // email address check if pledge.user is provided
     if (pledge.user && !validator.isEmail(pledge.user.email)) {
-      logger.error('pledge.user.email is invalid.', { req: req._log(), args })
+      context.logger.error({ args }, 'pledge.user.email is invalid.')
       throw new Error(t('api/email/invalid'))
     }
 
@@ -250,15 +251,15 @@ module.exports = async (_, args, context) => {
         (pledge.user && req.user.email !== pledge.user.email) ||
         (accessTokenUser && req.user.email !== accessTokenUser.email)
       ) {
-        logger.error(
+        context.logger.error(
+          { args },
           'req.user.email does not match, signout or remove access token first.',
-          { req: req._log(), args },
         )
         throw new Error(t('api/unexpected'))
       }
       user = req.user._raw
 
-      // load possible exising PF alias, only exists if the user is logged in,
+      // load possible existing PF alias, only exists if the user is logged in,
       // otherwise he can't have an alias already
       const paymentSource = await transaction.public.paymentSources.findFirst(
         {
@@ -393,7 +394,7 @@ module.exports = async (_, args, context) => {
         ) {
           if (userHasActiveMembership) {
             throw new Error(t('api/membership/monthly/hasActive'))
-          } 
+          }
         }
       }
     }
@@ -466,7 +467,7 @@ module.exports = async (_, args, context) => {
     }
   } catch (e) {
     await transaction.transactionRollback()
-    logger.info('transaction rollback', { req: req._log(), args, error: e })
+    context.logger.error({ args, error: e }, 'submit pledge failed')
     throw e
   }
 }

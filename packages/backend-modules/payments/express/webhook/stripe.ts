@@ -1,10 +1,10 @@
 import Stripe from 'stripe'
-import { PgDb } from 'pogi'
 import type { Request, Response } from 'express'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { Company } from '../../lib/types'
 import { StripeWebhookWorker } from '../../lib/workers/StripeWebhookWorker'
 import { WebhookService } from '../../lib/services/WebhookService'
+import { PgDb } from 'pogi'
 
 export async function handleStripeWebhook(
   req: Request,
@@ -18,7 +18,7 @@ export async function handleStripeWebhook(
     const event = webhookService.verifyWebhook(company, req)
 
     if (!event.livemode && !isInStripeTestMode()) {
-      console.log('skipping test event in live mode')
+      req.log.info('skipping test event in live mode')
       return res.sendStatus(304)
     }
 
@@ -47,10 +47,7 @@ export async function handleStripeWebhook(
     )
     return res.sendStatus(202)
   } catch (err) {
-    console.log(
-      `Webhook signature verification failed.`,
-      (err as Error).message,
-    )
+    req.log.error({ error: err }, `Webhook signature verification failed.`)
     return res.sendStatus(400)
   }
 }

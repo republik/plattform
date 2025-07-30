@@ -60,7 +60,7 @@ module.exports = async (_, { id, duration, durationUnit }, context) => {
     return updatedMembership
   } catch (e) {
     await transaction.transactionRollback()
-    console.error('appendPeriod', e, { req: req._log() })
+    context.logger.error({ error: e }, 'appendPeriod failed')
     throw e
   }
 }

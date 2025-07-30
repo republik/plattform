@@ -4,11 +4,14 @@ const {
   publishMonitor,
 } = require('@orbiting/backend-modules-republik/lib/slack')
 
-module.exports = async (
-  _,
-  args,
-  { pgdb, req, t, user: me, mail: { enforceSubscriptions } },
-) => {
+module.exports = async (_, args, context) => {
+  const {
+    pgdb,
+    req,
+    t,
+    user: me,
+    mail: { enforceSubscriptions },
+  } = context
   Roles.ensureUserHasRole(me, 'supporter')
 
   const { id: membershipId } = args
@@ -57,7 +60,7 @@ module.exports = async (
 
     await transaction.transactionCommit()
   } catch (e) {
-    console.error('activateMembership', e, { req: req._log() })
+    context.logger.error({ error: e }, 'activateMembership failed')
     await transaction.transactionRollback()
     throw e
   }
@@ -74,11 +77,13 @@ module.exports = async (
     }
   } catch (e) {
     // ignore issues with newsletter subscriptions
-    console.warn('newsletter subscription changes failed', {
-      req: req._log(),
-      args,
-      error: e,
-    })
+    context.logger.warn(
+      {
+        args,
+        error: e,
+      },
+      'newsletter subscription changes failed',
+    )
   }
 
   try {
@@ -88,7 +93,7 @@ module.exports = async (
     )
   } catch (e) {
     // swallow slack message
-    console.warn('publish to slack failed', { req: req._log(), args, error: e })
+    context.logger.warn({ args, error: e }, 'publish to slack failed')
   }
 
   return activatedMembership

@@ -1,19 +1,22 @@
 import PgBoss, { Job, ScheduleOptions, SendOptions } from 'pg-boss'
 import { BasePayload, Worker, WorkerQueue } from '../types'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
+import { Logger } from '@orbiting/backend-modules-logger'
 
 export abstract class BaseWorker<T extends Omit<BasePayload, '$version'>>
   implements Worker<T>
 {
   protected pgBoss: PgBoss
+  protected readonly logger: Logger
   protected readonly context: ConnectionContext
   abstract readonly queue: WorkerQueue
   readonly options: SendOptions = { retryLimit: 3, retryDelay: 1000 }
   // abstract performOptions?: PgBoss.WorkOptions | undefined
 
-  constructor(pgBoss: PgBoss, context: ConnectionContext) {
+  constructor(pgBoss: PgBoss, logger: Logger, context: ConnectionContext) {
     this.pgBoss = pgBoss
     this.context = context
+    this.logger = logger
   }
 
   abstract perform(jobs: Job<T>[]): Promise<void>
