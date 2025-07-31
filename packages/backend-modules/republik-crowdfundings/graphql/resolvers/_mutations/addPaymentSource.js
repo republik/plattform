@@ -3,11 +3,8 @@ const { paymentSources: getPaymentSources } = require('../User')
 const addSource = require('../../../lib/payments/stripe/addSource')
 const createCustomer = require('../../../lib/payments/stripe/createCustomer')
 
-module.exports = async (
-  _,
-  { sourceId, pspPayload },
-  { pgdb, req, user: me, t },
-) => {
+module.exports = async (_, { sourceId, pspPayload }, context) => {
+  const { pgdb, req, user: me, t } = context
   ensureSignedIn(req)
   const userId = me.id
 
@@ -41,7 +38,7 @@ module.exports = async (
     return await getPaymentSources(me, null, { pgdb, user: me })
   } catch (e) {
     await transaction.transactionRollback()
-    console.info('transaction rollback', { req: req._log(), error: e })
+    context.logger.error({ error: e }, 'add payment source failed')
     throw e
   }
 }

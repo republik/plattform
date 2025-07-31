@@ -36,7 +36,7 @@ import withInNativeApp from '../lib/withInNativeApp'
 
 import { getCMSClientBase } from '@app/lib/apollo/cms-client-base'
 import { CockpitDocument } from '#graphql/cms/__generated__/gql/graphql'
-import { StructuredText } from 'react-datocms'
+import { StructuredText } from 'react-datocms/structured-text'
 
 // Revalidate every 5 minutes
 const COCKPIT_PAGE_SSG_REVALIDATE = 60 * 5

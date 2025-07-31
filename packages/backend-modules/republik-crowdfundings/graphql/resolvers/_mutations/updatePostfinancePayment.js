@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const logger = console
 
-module.exports = async (_, args, { pgdb, req, t }) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, t } = context
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const { pfpId, mitteilung } = args
@@ -13,7 +13,7 @@ module.exports = async (_, args, { pgdb, req, t }) => {
       id: pfpId,
     })
     if (!pfp) {
-      logger.error('postfinancePayment not found', { req: req._log(), args })
+      context.logger.error({ args }, 'postfinancePayment not found')
       throw new Error(t('api/payment/404'))
     }
 
@@ -30,7 +30,7 @@ module.exports = async (_, args, { pgdb, req, t }) => {
     await transaction.transactionCommit()
   } catch (e) {
     await transaction.transactionRollback()
-    logger.info('transaction rollback', { req: req._log(), args, error: e })
+    context.logger.info({ args, error: e }, 'update postfinance payment failed')
     throw e
   }
 

@@ -14,12 +14,11 @@ export class SyncAddressDataWorker extends BaseWorker<Args> {
 
   async perform([job]: Job<Args>[]): Promise<void> {
     const customerService = new CustomerInfoService(this.context.pgdb)
-    console.log(`start ${this.queue} worker`)
+    this.logger.debug({ queue: this.queue, jobiId: job.id }, 'start')
 
     await customerService.updateUserAddress(job.data.userId, job.data.address)
 
-    console.log(`success ${this.queue} worker`)
-
+    this.logger.debug({ queue: this.queue, jobiId: job.id }, 'done')
     return
   }
 }

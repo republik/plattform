@@ -17,7 +17,10 @@ export class SlackNotifierWorker extends BaseWorker<Args> {
 
   async perform([job]: Job<Args>[]): Promise<void> {
     if (!job.data.channel) {
-      console.info(`Slack chancel not defined: noop`)
+      this.logger.debug(
+        { jobId: job.id, queue: this.queue },
+        'Slack channel not defined: noop',
+      )
       return
     }
 

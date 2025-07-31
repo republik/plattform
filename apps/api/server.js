@@ -227,8 +227,8 @@ const run = async (workerId, config) => {
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
     const context = {
-      ...defaultContext,
       ...connectionContext,
+      ...defaultContext,
       t,
       signInHooks,
       mail,
@@ -272,8 +272,8 @@ const runOnce = async () => {
   const createGraphQLContext = async (defaultContext) => {
     const loaders = {}
     const context = {
-      ...defaultContext,
       ...connectionContext,
+      ...defaultContext,
       t,
       mail,
       loaders,
