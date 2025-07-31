@@ -61,5 +61,5 @@ export const httpLogger = pinoHttp({
     }
   },
   // only log requestID for child logs
-  quietReqLogger: true,
+  quietReqLogger: process.env.PINO_QUIET_REQ_LOGGER !== 'false',
 })
