@@ -32,6 +32,7 @@ export const logger = pino({
     },
   },
   // make msg key logDNA compliant
+  errorKey: 'error',
   messageKey: 'message',
 })
 
