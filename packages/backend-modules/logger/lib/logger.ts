@@ -38,6 +38,7 @@ export const logger = pino({
 export const httpLogger = pinoHttp({
   logger,
   msgPrefix: '[HTTP] ',
+  autoLogging: getENV() === 'DEV' || process.env.PINO_AUTO_LOG === 'true',
   redact: {
     paths: [
       'req.headers.authorization',

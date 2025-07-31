@@ -240,7 +240,8 @@ module.exports = async (_, args, context) => {
       context.logger.warn(
         {
           userId: user.id,
-        }`deleteUser: could not delete ${user.email} from all mailchimp audiences. This might be because they were not added to all currently used audiences.`,
+        },
+        `deleteUser: could not delete ${user.email} from all mailchimp audiences. This might be because they were not added to all currently used audiences.`,
       )
     }
 
