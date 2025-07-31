@@ -321,6 +321,67 @@ export async function sendPaymentFailedNoticeMail(
   return sendMailResult
 }
 
+type SendRenewalPaymentSuccessfulNoticeMailArgs = {
+  email: string
+  subscription: Subscription
+  amount: number
+  paymentMethod: PaymentMethod
+}
+
+export async function sendRenewalPaymentSuccessfulNoticeMail(
+  {
+    email,
+    subscription,
+    amount,
+    paymentMethod,
+  }: SendRenewalPaymentSuccessfulNoticeMailArgs,
+  pgdb: PgDb,
+) {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }
+
+  const globalMergeVars: MergeVariable[] = [
+    {
+      name: 'total',
+      content: (amount / 100).toString(),
+    },
+    {
+      name: 'renewal_date',
+      content: subscription.currentPeriodEnd.toLocaleDateString('de-CH', dateOptions)
+    },
+    {
+      name: 'payment_method_name',
+      content: paymentMethod.method
+    },
+    {
+      name: 'is_credit_card',
+      content: !!paymentMethod.last4
+    },
+    {
+      name: 'credit_card_last4',
+      content: paymentMethod.last4 || ''
+    }
+  ]
+
+  const templateName = 'subscription_renewal_payment_successful'
+  const sendMailResult = await sendMailTemplate(
+    {
+      to: email,
+      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
+      subject: t(`api/email/${templateName}/subject`),
+      templateName,
+      mergeLanguage: 'handlebars',
+      globalMergeVars,
+    },
+    { pgdb },
+  )
+
+  return sendMailResult
+}
+
 type SendRenewalNoticeMailArgs = {
   email: string
   subscription: Subscription

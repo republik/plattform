@@ -11,6 +11,7 @@ export { ConfirmGiftAppliedTransactionalWorker } from './lib/workers/ConfirmGift
 export { NoticeEndedTransactionalWorker } from './lib/workers/NoticeEndedTransactionalWorker'
 export { NoticePaymentFailedTransactionalWorker } from './lib/workers/NoticePaymentFailedTransactionalWorker'
 export { NoticeRenewalTransactionalWorker } from './lib/workers/NoticeRenewalTransactionalWorker'
+export { NoticeRenewalPaymentSuccessfulTransactionalWorker } from './lib/workers/NoticeRenewalPaymentSuccessfulTransactionalWorker'
 export { SyncMailchimpSetupWorker } from './lib/workers/SyncMailchimpSetupWorker'
 export { SyncMailchimpUpdateWorker } from './lib/workers/SyncMailchimpUpdateWorker'
 export { SyncMailchimpEndedWorker } from './lib/workers/SyncMailchimpEndedWorker'

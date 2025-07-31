@@ -3,7 +3,6 @@ import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
 import { WebhookService } from '../services/WebhookService'
 import { MailNotificationService } from '../services/MailNotificationService'
-import { parseStripeDate } from '../handlers/stripe/utils'
 import { PaymentService } from '../services/PaymentService'
 import { Company } from '../types'
 
@@ -15,8 +14,8 @@ type Args = {
   company: Company
 }
 
-export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
-  readonly queue = 'payments:transactional:notice:subscription_renewal'
+export class NoticeRenewalPaymentSuccessfulTransactionalWorker extends BaseWorker<Args> {
+  readonly queue = 'payments:transactional:notice:renewal_payment_successful'
   readonly options: SendOptions = {
     retryLimit: 3,
     retryDelay: 120, // retry every 2 minutes
@@ -33,7 +32,7 @@ export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
     const mailService = new MailNotificationService(this.context.pgdb)
     const paymentService = new PaymentService()
 
-    const wh = await webhookService.getEvent<Stripe.InvoiceUpcomingEvent>(
+    const wh = await webhookService.getEvent<Stripe.InvoicePaymentSucceededEvent>(
       job.data.eventSourceId,
     )
 
@@ -45,10 +44,10 @@ export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
-    if (wh.payload.type !== 'invoice.upcoming') {
+    if (wh.payload.type !== 'invoice.payment_succeeded') {
       this.logger.error(
         { queue: this.queue, jobId: job.id },
-        'Webhook is not of type invoice.upcoming',
+        'Webhook is not of type invoice.payment_succeeded',
       )
       return await this.pgBoss.fail(this.queue, job.id)
     }
@@ -62,17 +61,16 @@ export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
 
     try {
       // send transactional
-      await mailService.sendNoticeSubscriptionRenewalTransactionalMail({
+      await mailService.sendNoticeRenewalPaymentSucceededTransactional({
         userId: job.data.userId,
         subscriptionId: job.data.subscriptionId,
         amount: event.data.object.amount_due,
-        paymentAttemptDate: parseStripeDate(event.data.object.next_payment_attempt),
         paymentMethod: paymentMethod
       })
     } catch (e) {
-      this.logger.error(
+       this.logger.error(
         { queue: this.queue, jobId: job.id, error: e },
-        'Error sending subscription renewal reminder notice transactional mail',
+        'Error sending subscription renewal payment succeeded notice transactional mail',
       )
       throw e
     }

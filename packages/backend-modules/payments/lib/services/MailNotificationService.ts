@@ -10,6 +10,7 @@ import {
   sendEndedNoticeMail,
   sendPaymentFailedNoticeMail,
   sendRenewalNoticeMail,
+  sendRenewalPaymentSuccessfulNoticeMail,
   sendRevokeCancellationConfirmationMail,
   sendSetupGiftMail,
   sendSetupSubscriptionMail,
@@ -211,6 +212,61 @@ export class MailNotificationService {
       { subscription, cancellationReason, email: userRow.email },
       this.#pgdb,
     )
+  }
+
+  async sendNoticeRenewalPaymentSucceededTransactional({
+    userId,
+    subscriptionId,
+    amount,
+    paymentMethod,
+  }: {
+    userId: string
+    subscriptionId: string
+    amount: number
+    paymentMethod: PaymentMethod | null | undefined
+  }): Promise<void> {
+    const subscription = await this.#billing.getSubscription({
+      id: subscriptionId,
+    })
+
+    if (!subscription) {
+      throw new Error(
+        `Subscription [${subscriptionId}] does not exist in the Database`,
+      )
+    }
+
+    if (subscription.type === 'MONTHLY_SUBSCRIPTION') {
+      throw new Error(
+        `not sending renewal payment successful notice transactional for monthly subscriptions`,
+      )
+    }
+
+    if (subscription.endedAt) {
+      throw new Error(
+        `Subscription ${subscriptionId} has ended, not sending renewal payment successful notice transactional`,
+      )
+    }
+
+    const userRow = await this.#users.findUserById(userId)
+
+    if (!userRow?.email) {
+      throw new Error(
+        `Could not find email for user with id ${userId}, not sending renewal payment successful notice transactional`,
+      )
+    }
+
+    // should we still send the transactional if we don't find a payment method? payment successful means that it was charged
+    if (!paymentMethod) {
+      throw new Error('No stored payment method found, not sending renewal payment successful notice transactional')
+    }
+
+    await sendRenewalPaymentSuccessfulNoticeMail({
+        email: userRow.email,
+        subscription,
+        amount,
+        paymentMethod,
+      },
+      this.#pgdb,)
   }
 
   async sendNoticeSubscriptionRenewalTransactionalMail({

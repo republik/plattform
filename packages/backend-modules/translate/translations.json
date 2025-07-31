@@ -469,6 +469,10 @@
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
     {
+      "key": "api/email/subscription_renewal_payment_successful/subject",
+      "value": "Ihre Mitgliedschaft wurde erfolgreich verlängert"
+    },
+    {
       "key": "api/email/option/goodie/notebook/1",
       "value": "Notizbuch"
     },

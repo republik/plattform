@@ -51,7 +51,10 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
 
     const event = wh.payload
     try {
-      console.log('processing stripe event %s [%s]', event.id, event.type)
+      this.logger.info(
+        { eventId: event.id, eventType: event.type },
+        'processing stripe event %s [%s]',
+      )
 
       const ctx = this.context
 
