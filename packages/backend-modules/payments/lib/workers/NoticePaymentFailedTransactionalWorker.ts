@@ -3,10 +3,14 @@ import { Job, SendOptions } from 'pg-boss'
 import Stripe from 'stripe'
 import { WebhookService } from '../services/WebhookService'
 import { MailNotificationService } from '../services/MailNotificationService'
+import { PaymentService } from '../services/PaymentService'
+import { Company } from '../types'
+import { parseStripeDate } from '../handlers/stripe/utils'
 
 type Args = {
   $version: 'v1'
   userId: string
+  company: Company
   eventSourceId: string
   invoiceExternalId: string
 }
@@ -27,6 +31,7 @@ export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
 
     const webhookService = new WebhookService(this.context.pgdb)
     const mailService = new MailNotificationService(this.context.pgdb)
+    const paymentService = new PaymentService()
 
     const wh = await webhookService.getEvent<Stripe.InvoicePaymentFailedEvent>(
       job.data.eventSourceId,
@@ -50,12 +55,19 @@ export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
 
     const event = wh.payload
 
+    const paymentMethod = await paymentService.getPaymentMethodForSubscription(
+      job.data.company,
+      event.data.object.subscription as string,
+    )
+
     try {
       // send transactional
       await mailService.sendNoticePaymentFailedTransactionalMail({
         subscriptionExternalId: event.data.object.subscription as string,
         userId: job.data.userId,
         invoiceExternalId: job.data.invoiceExternalId,
+        paymentAttemptDate: parseStripeDate(event.data.object.next_payment_attempt),
+        paymentMethod: paymentMethod || undefined
       })
     } catch (e) {
       this.logger.error(

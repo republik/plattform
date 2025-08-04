@@ -346,10 +346,14 @@ export class MailNotificationService {
     userId,
     subscriptionExternalId,
     invoiceExternalId,
+    paymentAttemptDate,
+    paymentMethod
   }: {
     userId: string
     subscriptionExternalId: string
     invoiceExternalId: string
+    paymentAttemptDate: Date | null | undefined
+    paymentMethod: PaymentMethod | undefined
   }): Promise<void> {
     const subscription = await this.#billing.getSubscription({
       externalId: subscriptionExternalId,
@@ -397,8 +401,14 @@ export class MailNotificationService {
       )
     }
 
+    if (!paymentAttemptDate) {
+      throw new Error(
+        'No next payment attempt date is set, not sending failed payment notice transactional',
+      )
+    }
+
     await sendPaymentFailedNoticeMail(
-      { subscription, invoice, email: userRow.email },
+      { subscription, invoice, email: userRow.email, paymentAttemptDate, paymentMethod },
       this.#pgdb,
     )
   }

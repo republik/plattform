@@ -291,16 +291,50 @@ type SendPaymentFailedNoticeMailArgs = {
   subscription: Subscription
   invoice: Invoice
   email: string
+  paymentAttemptDate: Date
+  paymentMethod?: PaymentMethod
 }
 
 export async function sendPaymentFailedNoticeMail(
-  { subscription, invoice, email }: SendPaymentFailedNoticeMailArgs,
+  {
+    subscription,
+    invoice,
+    email,
+    paymentAttemptDate,
+    paymentMethod,
+  }: SendPaymentFailedNoticeMailArgs,
   pgdb: PgDb,
 ) {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }
+
   const globalMergeVars: MergeVariable[] = [
     {
       name: 'total',
       content: (invoice.total / 100).toString(),
+    },
+    {
+      name: 'payment_attempt_date',
+      content: paymentAttemptDate.toLocaleDateString('de-CH', dateOptions),
+    },
+    {
+      name: 'has_payment_method',
+      content: !!paymentMethod,
+    },
+    {
+      name: 'payment_method_name',
+      content: paymentMethod?.method || 'NOT_FOUND',
+    },
+    {
+      name: 'is_credit_card',
+      content: !!paymentMethod?.last4 || false,
+    },
+    {
+      name: 'credit_card_last4',
+      content: paymentMethod?.last4 || '',
     },
   ]
 
@@ -350,20 +384,23 @@ export async function sendRenewalPaymentSuccessfulNoticeMail(
     },
     {
       name: 'renewal_date',
-      content: subscription.currentPeriodEnd.toLocaleDateString('de-CH', dateOptions)
+      content: subscription.currentPeriodEnd.toLocaleDateString(
+        'de-CH',
+        dateOptions,
+      ),
     },
     {
       name: 'payment_method_name',
-      content: paymentMethod.method
+      content: paymentMethod.method,
     },
     {
       name: 'is_credit_card',
-      content: !!paymentMethod.last4
+      content: !!paymentMethod.last4,
     },
     {
       name: 'credit_card_last4',
-      content: paymentMethod.last4 || ''
-    }
+      content: paymentMethod.last4 || '',
+    },
   ]
 
   const templateName = 'subscription_renewal_payment_successful'
@@ -413,24 +450,27 @@ export async function sendRenewalNoticeMail(
     },
     {
       name: 'renewal_date',
-      content: subscription.currentPeriodEnd.toLocaleDateString('de-CH', dateOptions)
+      content: subscription.currentPeriodEnd.toLocaleDateString(
+        'de-CH',
+        dateOptions,
+      ),
     },
     {
       name: 'payment_attempt_date',
-      content: paymentAttemptDate.toLocaleDateString('de-CH', dateOptions)
+      content: paymentAttemptDate.toLocaleDateString('de-CH', dateOptions),
     },
     {
       name: 'payment_method_name',
-      content: paymentMethod.method
+      content: paymentMethod.method,
     },
     {
       name: 'is_credit_card',
-      content: !!paymentMethod.last4
+      content: !!paymentMethod.last4,
     },
     {
       name: 'credit_card_last4',
-      content: paymentMethod.last4 || ''
-    }
+      content: paymentMethod.last4 || '',
+    },
   ]
 
   const templateName = 'subscription_renewal_notice_7_days'
