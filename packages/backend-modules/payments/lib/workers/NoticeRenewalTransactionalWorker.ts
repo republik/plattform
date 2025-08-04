@@ -65,6 +65,7 @@ export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
       await mailService.sendNoticeSubscriptionRenewalTransactionalMail({
         userId: job.data.userId,
         subscriptionId: job.data.subscriptionId,
+        isDiscounted: event.data.object.total_discount_amounts?.length > 0,
         amount: event.data.object.amount_due,
         paymentAttemptDate: parseStripeDate(event.data.object.next_payment_attempt),
         paymentMethod: paymentMethod

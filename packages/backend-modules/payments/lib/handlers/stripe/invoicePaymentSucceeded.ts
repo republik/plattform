@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { Company, PaymentWorkflow, Subscription } from '../../types'
+import { Company, PaymentWorkflow } from '../../types'
 import { parseStripeDate } from './utils'
 import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 import { PaymentService } from '../../services/PaymentService'

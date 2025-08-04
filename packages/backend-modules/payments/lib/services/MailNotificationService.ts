@@ -266,12 +266,14 @@ export class MailNotificationService {
   async sendNoticeSubscriptionRenewalTransactionalMail({
     userId,
     subscriptionId,
+    isDiscounted,
     amount,
     paymentAttemptDate,
     paymentMethod,
   }: {
     userId: string
     subscriptionId: string
+    isDiscounted: boolean
     amount: number
     paymentAttemptDate: Date | null | undefined
     paymentMethod: PaymentMethod | null | undefined
@@ -328,6 +330,7 @@ export class MailNotificationService {
       {
         email: userRow.email,
         subscription,
+        isDiscounted,
         amount,
         paymentAttemptDate,
         paymentMethod,
