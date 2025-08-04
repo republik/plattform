@@ -403,7 +403,7 @@ export async function sendRenewalPaymentSuccessfulNoticeMail(
     },
   ]
 
-  const templateName = 'subscription_renewal_payment_successful'
+  const templateName = subscription.type === 'MONTHLY_SUBSCRIPTION' ? 'subscription_renewal_payment_successful_monthly' : 'subscription_renewal_payment_successful'
   const sendMailResult = await sendMailTemplate(
     {
       to: email,

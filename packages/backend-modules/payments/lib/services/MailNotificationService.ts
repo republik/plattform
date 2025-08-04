@@ -235,12 +235,6 @@ export class MailNotificationService {
       )
     }
 
-    if (subscription.type === 'MONTHLY_SUBSCRIPTION') {
-      throw new Error(
-        `not sending renewal payment successful notice transactional for monthly subscriptions`,
-      )
-    }
-
     if (subscription.endedAt) {
       throw new Error(
         `Subscription ${subscriptionId} has ended, not sending renewal payment successful notice transactional`,

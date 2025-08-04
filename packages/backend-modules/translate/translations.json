@@ -473,6 +473,10 @@
       "value": "Ihre Mitgliedschaft wurde erfolgreich verlängert"
     },
     {
+      "key": "api/email/subscription_renewal_payment_successful_monthly/subject",
+      "value": "Ihr Monatsabo wurde erfolgreich verlängert"
+    },
+    {
       "key": "api/email/option/goodie/notebook/1",
       "value": "Notizbuch"
     },

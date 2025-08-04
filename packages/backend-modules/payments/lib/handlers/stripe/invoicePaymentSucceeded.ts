@@ -52,12 +52,11 @@ class InvoicePaymentSucceededWorkflow
       await this.invoiceService.saveCharge(args)
     }
 
-    // if invoice is a renewal for a yearly_subscription or a benefactor_subscription, send a transactional
     if (i.subscription) {
       const subscription = await this.subscriptionService.getSubscription({
         externalId: i.subscription as string,
       })
-      if (subscription && shouldSendAutoRenewalNotice(i, subscription)) {
+      if (subscription && shouldSendAutoRenewalNotice(i)) {
         const queue = Queue.getInstance()
 
         await queue.send<NoticeRenewalPaymentSuccessfulTransactionalWorker>(
@@ -77,16 +76,7 @@ class InvoicePaymentSucceededWorkflow
 
 function shouldSendAutoRenewalNotice(
   invoice: Stripe.Invoice,
-  subscription: Subscription,
 ): boolean {
-  // only send for yearly and benefactor
-  if (
-    !['YEARLY_SUBSCRIPTION', 'BENEFACTOR_SUBSCRIPTION'].includes(
-      subscription.type,
-    )
-  ) {
-    return false
-  }
   // do only send if it's not the initial invoice after checkout
   if (
     invoice.billing_reason === 'subscription_cycle' &&
