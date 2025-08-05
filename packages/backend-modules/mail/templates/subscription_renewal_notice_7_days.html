@@ -62,7 +62,42 @@
                       Sie können <a href="{{link_account_goto}}">Ihren Beitrag erhöhen</a>: Jeder zusätzliche Beitrag macht einen Unterschied, 
                       damit wir unserer Arbeit auch weiterhin nachgehen können.
                     </p>
-                    
+                    {{#if is_benefactor}}
+                    <p>Dieser Beitrag kommt zustande, weil Sie die Republik im letzten Jahr grosszügigerweise mit einer Gönner-Mitgliedschaft 
+                      {{#if with_donation}} und einer zusätzlichen Spende{{/if}}
+                      unterstützt haben. 
+                      Durch Sie ist unsere Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz erst möglich. 
+                      Wir bedanken uns von ganzem Herzen und hoffen, dass Sie sich und uns treu bleiben und weiterhin 
+                      in kompromisslosen Journalismus investieren. 
+                      Sollten Sie es sich anders überlegen, können Sie <a href="{{link_account_goto}}">Ihre Mitgliedschaft vor der Abbuchung noch anpassen.
+                      </p>
+                    {{else if is_discounted}}
+                    <p>
+                      Sie haben im letzten Jahr eine vergünstigte Mitgliedschaft
+                      gewählt. Da unsere Unabhängigkeit, ja unsere Existenz von der Unterstützung unserer 
+                      Verlegerinnen abhängt, würde es uns freuen, wenn Sie – falls es Ihre finanzielle Situation erlaubt - 
+                      <a href="{{link_account_goto}}">Ihren Mitgliedschaftsbeitrag erhöhen</a> könnten. Jede zusätzliche Summe macht einen Unterschied.
+                    </p>
+                    {{else if with_donation}} 
+                    <p>
+                      Dieser Beitrag kommt zustande, weil Sie die Republik im
+                      letzten Jahr grosszügigerweise mit einer zusätzlichen
+                      Spende unterstützt haben. Durch Sie ist unsere
+                      Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz
+                      erst möglich. Wir bedanken uns von ganzem Herzen und
+                      hoffen, dass Sie sich und uns treu bleiben und weiterhin
+                      in kompromisslosen Journalismus investieren. Sollten Sie
+                      es sich anders überlegen, können Sie die
+                      Höhe Ihres Spendenbeitrags vor der Abbuchung noch <a href="{{link_account_goto}}">anpassen</a>.
+                    </p>
+                    {{else}}
+                    <p>
+                      Sie haben sich im letzten Jahr für eine reguläre Mitgliedschaft entschieden. 
+                      Sie können Ihren <a href="{{link_account_goto}}">Beitrag erhöhen</a>: Jeder zusätzliche Beitrag macht einen Unterschied, 
+                      damit wir unserer Arbeit auch weiterhin nachgehen können. 
+                    </p>
+
+                    {{/if}}
                     <p>
                       Ausserdem können Sie <a href="{{link_account_goto}}">eine andere Kreditkarte hinterlegen, eine andere Zahlungsart wählen</a> 
                       oder (was wir zutiefst bedauern würden) Ihre Mitgliedschaft kündigen. 

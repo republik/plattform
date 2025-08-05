@@ -267,6 +267,7 @@ export class MailNotificationService {
     userId,
     subscriptionId,
     isDiscounted,
+    withDonation,
     amount,
     paymentAttemptDate,
     paymentMethod,
@@ -274,6 +275,7 @@ export class MailNotificationService {
     userId: string
     subscriptionId: string
     isDiscounted: boolean
+    withDonation: boolean
     amount: number
     paymentAttemptDate: Date | null | undefined
     paymentMethod: PaymentMethod | null | undefined
@@ -331,6 +333,7 @@ export class MailNotificationService {
         email: userRow.email,
         subscription,
         isDiscounted,
+        withDonation,
         amount,
         paymentAttemptDate,
         paymentMethod,

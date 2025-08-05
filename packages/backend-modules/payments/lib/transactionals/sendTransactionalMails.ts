@@ -422,7 +422,8 @@ export async function sendRenewalPaymentSuccessfulNoticeMail(
 type SendRenewalNoticeMailArgs = {
   email: string
   subscription: Subscription
-  discountAmount: number
+  isDiscounted: boolean
+  withDonation: boolean,
   amount: number
   paymentAttemptDate: Date
   paymentMethod: PaymentMethod
@@ -433,6 +434,7 @@ export async function sendRenewalNoticeMail(
     email,
     subscription,
     isDiscounted,
+    withDonation,
     amount,
     paymentAttemptDate,
     paymentMethod,
@@ -464,6 +466,10 @@ export async function sendRenewalNoticeMail(
     {
       name: 'is_discounted',
       content: isDiscounted
+    },
+    {
+      name: 'with_donation',
+      content: withDonation
     },
     {
       name: 'payment_attempt_date',
