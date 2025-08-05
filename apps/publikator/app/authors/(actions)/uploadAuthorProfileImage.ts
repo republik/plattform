@@ -31,7 +31,7 @@ export const uploadAuthorProfileImage = async (
   if (missingVars.length > 0) {
     return {
       success: false,
-      error: `Missing required environment variables: ${missingVars.join(
+      error: `Fehlende ENV Variablen: ${missingVars.join(
         ', ',
       )}`,
     }
@@ -74,13 +74,12 @@ export const uploadAuthorProfileImage = async (
       url: publicUrl,
     }
   } catch (error) {
-    console.error('Error uploading author profile image:', error)
     return {
       success: false,
       error:
         error instanceof Error
           ? error.message
-          : 'Unknown error occurred during upload',
+          : 'Ein unerwarteter Fehler ist aufgetreten',
     }
   }
 }
