@@ -25,7 +25,7 @@ import {
 import AuthorTable from '../components/author-table'
 
 const AuthorsPage: React.FC = () => {
-  const pageSize = 10
+  const pageSize = 15
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)

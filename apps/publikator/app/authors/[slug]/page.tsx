@@ -4,9 +4,7 @@ import { use } from 'react'
 import { useQuery } from '@apollo/client'
 import { Box, Flex, Spinner, Text } from '@radix-ui/themes'
 import AuthorForm from '../../components/author-form'
-import {
-  ContributorDocument,
-} from '../../../graphql/republik-api/__generated__/gql/graphql'
+import { ContributorDocument } from '../../../graphql/republik-api/__generated__/gql/graphql'
 
 interface EditAuthorPageProps {
   params: Promise<{
@@ -44,10 +42,6 @@ export default function EditAuthorPage({ params }: EditAuthorPageProps) {
   }
 
   return (
-    <AuthorForm
-      title='Autor*in bearbeiten'
-      initialData={data.contributor}
-      isEdit={true}
-    />
+    <AuthorForm title='Autor*in bearbeiten' initialData={data.contributor} />
   )
 }

@@ -26,15 +26,10 @@ import SelectUserField from './select-user-field'
 
 interface AuthorFormProps {
   initialData?: ArticleContributor
-  isEdit?: boolean
   title: string
 }
 
-export default function AuthorForm({
-  initialData,
-  isEdit = false,
-  title,
-}: AuthorFormProps) {
+export default function AuthorForm({ initialData, title }: AuthorFormProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(
     initialData?.image || null,
   )
@@ -101,7 +96,7 @@ export default function AuthorForm({
           <Separator orientation='vertical' size='1' />
           <Heading size='3'>{title}</Heading>
         </Flex>
-        {isEdit && (
+        {initialData && (
           <DeleteAuthorButton
             name={formState.data?.name || ''}
             id={formState.data?.id || ''}
@@ -243,7 +238,7 @@ export default function AuthorForm({
                 loading={isPending}
               >
                 <Save size={16} />
-                {isEdit ? 'Änderungen speichern' : 'Autor*in erstellen'}
+                {initialData ? 'Änderungen speichern' : 'Autor*in erstellen'}
               </Button>
             </Flex>
           </Box>
