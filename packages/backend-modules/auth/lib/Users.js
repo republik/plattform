@@ -269,7 +269,6 @@ const signIn = async (_email, signInContext, consents, _tokenType, accessToken, 
         })
       }, 2000)
     } else {
-      // why do we even call that here
       await startChallenge(tokenType, {
         pgdb,
         email,
