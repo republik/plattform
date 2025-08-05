@@ -657,7 +657,7 @@ const authorizeSession = async ({
       ),
     )
   } catch (e) {
-    logger.error({ error: e }, 'sign in hook failed in authorizeSession')
+    logger.warn({ error: e }, 'sign in hook failed in authorizeSession')
   }
 
   return user
