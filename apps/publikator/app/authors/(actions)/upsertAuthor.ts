@@ -12,7 +12,7 @@ export interface UpdateAuthorState {
   success: boolean
   errors?: UpsertContributorError['errors']
   warnings: UpsertContributorError['warnings']
-  data?: ArticleContributor
+  data?: Partial<ArticleContributor>
 }
 
 export const upsertAuthor = async (
@@ -36,13 +36,6 @@ export const upsertAuthor = async (
     gender: data.gender,
   }
 
-  const submittedContributorData: ArticleContributor = {
-    ...submittedFormData,
-    slug: prevState.data?.slug || '',
-    createdAt: prevState.data?.createdAt || new Date().toISOString(),
-    updatedAt: prevState.data?.updatedAt || new Date().toISOString(),
-  }
-
   try {
     const result = await client.mutate({
       mutation: UpsertContributorDocument,
@@ -60,7 +53,7 @@ export const upsertAuthor = async (
           message: error.message,
         })),
         warnings: mutationResult.warnings || [],
-        data: submittedContributorData,
+        data: submittedFormData,
       }
     }
 
@@ -84,7 +77,7 @@ export const upsertAuthor = async (
         },
       ],
       warnings: [],
-      data: submittedContributorData,
+      data: submittedFormData,
     }
   }
 }
