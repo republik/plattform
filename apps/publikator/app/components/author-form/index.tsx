@@ -239,7 +239,7 @@ export default function AuthorForm({
               <Button
                 type='submit'
                 size='2'
-                disabled={isPending}
+                disabled={isPending || !!prolitterisValidationError}
                 loading={isPending}
               >
                 <Save size={16} />
