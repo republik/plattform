@@ -4,12 +4,11 @@ import Link from 'next/link'
 import { Flex, Link as RadixLink } from '@radix-ui/themes'
 import Logo from '../../../public/static/logo.svg'
 import Image from 'next/image'
-import { useSearchParams, usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 
 const Nav = () => {
-  const searchParams = useSearchParams()
-  const query = Object.fromEntries(searchParams.entries())
   const pathname = usePathname()
+
   const views = [
     { pathname: '/', label: 'Dokumente' },
     { pathname: '/', view: 'templates', label: 'Vorlagen' },
@@ -46,7 +45,7 @@ const Nav = () => {
             <Link
               href={{
                 pathname: view.pathname,
-                query: { ...query, view: view.view || null },
+                query: { view: view.view || null },
               }}
             >
               {view.label}
@@ -57,5 +56,4 @@ const Nav = () => {
     </Flex>
   )
 }
-
 export default Nav
