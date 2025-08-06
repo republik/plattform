@@ -1,5 +1,5 @@
 import { Box, Flex, Tooltip } from '@radix-ui/themes'
-import { IdCardLanyard, PhilippinePeso } from 'lucide-react'
+import { IdCardLanyard, ParkingSquare } from 'lucide-react'
 import { ArticleContributor } from '../../../graphql/republik-api/__generated__/gql/graphql'
 
 interface TooltipIconProps {
@@ -48,7 +48,7 @@ const TooltipIcons = ({
             ? 'ProlitterisID hinterlegt'
             : 'Keine ProlitterisID hinterlegt'
         }
-        icon={PhilippinePeso}
+        icon={ParkingSquare}
       />
     </Flex>
   )

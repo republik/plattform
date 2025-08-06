@@ -4,7 +4,17 @@ import TooltipIcons from './tooltip-icons'
 import { ArticleContributor } from '../../../graphql/republik-api/__generated__/gql/graphql'
 
 interface AuthorTableProps {
-  contributorsList: ArticleContributor[]
+  contributorsList: Pick<
+    ArticleContributor,
+    | 'id'
+    | 'name'
+    | 'slug'
+    | 'shortBio'
+    | 'image'
+    | 'prolitterisId'
+    | 'userId'
+    | 'updatedAt'
+  >[]
 }
 
 const AuthorTable = ({ contributorsList }: AuthorTableProps) => {
