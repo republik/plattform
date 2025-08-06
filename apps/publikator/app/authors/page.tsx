@@ -166,7 +166,7 @@ const AuthorsPage: React.FC = () => {
       <AuthorTable contributorsList={contributorsList} />
 
       {contributorsList.length === 0 && !loading && (
-        <Box p='6' style={{ textAlign: 'center' }}>
+        <Flex p='6' justify='center' align='center' direction='column'>
           <Text>
             {debouncedSearchTerm
               ? `Keine Autor*innen gefunden für "${debouncedSearchTerm}"`
@@ -182,7 +182,7 @@ const AuthorsPage: React.FC = () => {
               Suche zurücksetzen
             </Button>
           )}
-        </Box>
+        </Flex>
       )}
 
       {/* Pagination Controls */}
