@@ -247,8 +247,8 @@ module.exports = async (_, args, context) => {
     campaignId = repoMeta.mailchimpCampaignId
 
     if (campaignId) {
-      const mailchimpCampaign = await getCampaign({ id: campaignId })
-      if (!mailchimpCampaign) {
+      const { status } = await getCampaign({ id: campaignId })
+      if (status === 404) {
         campaignId = null
       }
     }
