@@ -16,7 +16,10 @@ import {
 } from '@project-r/styleguide'
 import ImageInput from '../../utils/ImageInput'
 import withT from '../../../../lib/withT'
-import { MetaOptionGroup, MetaOptionGroupTitle } from "../../../MetaDataForm/components/Layout";
+import {
+  MetaOptionGroup,
+  MetaOptionGroupTitle,
+} from '../../../MetaDataForm/components/Layout'
 
 export const SOCIAL_MEDIA = ['facebook', 'twitter']
 
@@ -60,7 +63,9 @@ const UploadImage = withT(({ t, data, onInputChange, socialKey }) => {
         imageStyles={socialPreviewStyles[socialKey]}
         label={t(`metaData/field/${imageKey}`)}
         src={data.get(imageKey)}
-        placeholder={data.get('image')}
+        placeholder={
+          !data.get('image') ? '/static/teilen.png' : data.get('image')
+        }
         onChange={onInputChange(imageKey)}
       />
     </div>
