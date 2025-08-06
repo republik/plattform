@@ -313,7 +313,7 @@ module.exports = async (_, args, context) => {
 
     await maybeDelcareMilestonePublished(milestone, tx)
     await updateCurrentPhase(repoId, tx)
-    if (campaignId) {
+    if (campaignId && repoMeta.campaignId !== campaignId) {
       await updateRepo(repoId, { mailchimpCampaignId: campaignId }, tx)
     }
 
