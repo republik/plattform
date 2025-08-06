@@ -159,7 +159,7 @@ export = async function upsertContributor(
     gender,
     userId,
   } = args
-  const warnings: string[] = []
+  const warnings: { field: string | null; message: string }[] = []
 
   const transaction = await pgdb.transactionBegin()
   const repo = new ContributorsRepo(transaction)
@@ -167,7 +167,12 @@ export = async function upsertContributor(
   try {
     // Check if userId is connected to other contributor (error)
     if (userId) {
-      const existingContributorWithUserId: ContributorRow | null = await repo.findContributorByCondition({field: 'user_id', value: userId, excludeId: id})
+      const existingContributorWithUserId: ContributorRow | null =
+        await repo.findContributorByCondition({
+          field: 'user_id',
+          value: userId,
+          excludeId: id,
+        })
       if (existingContributorWithUserId) {
         await transaction.transactionRollback()
         return {
@@ -185,7 +190,11 @@ export = async function upsertContributor(
     // Check for duplicate prolitterisId (error)
     if (prolitterisId) {
       const existingContributorWithProlitterisId: ContributorRow | null =
-        await repo.findContributorByCondition({field: 'prolitteris_id', value: prolitterisId, excludeId: id})
+        await repo.findContributorByCondition({
+          field: 'prolitteris_id',
+          value: prolitterisId,
+          excludeId: id,
+        })
 
       if (existingContributorWithProlitterisId) {
         await transaction.transactionRollback()
@@ -207,12 +216,17 @@ export = async function upsertContributor(
 
     // Check for duplicate names (warning only)
     const existingContributorWithName: ContributorRow | null =
-      await repo.findContributorByCondition({field: 'name', value: name, excludeId: id})
+      await repo.findContributorByCondition({
+        field: 'name',
+        value: name,
+        excludeId: id,
+      })
 
     if (existingContributorWithName) {
-      warnings.push(
-        `Autor*in erstellt. Ein*e Autor*in existiert jedoch bereits mit diesem Namen: ${existingContributorWithName.slug}`,
-      )
+      warnings.push({
+        field: 'name',
+        message: `Autor*in erstellt. Ein*e Autor*in existiert jedoch bereits mit diesem Namen: ${existingContributorWithName.slug}`,
+      })
     }
 
     const now = new Date()
@@ -240,7 +254,7 @@ export = async function upsertContributor(
     if (id) {
       // Update existing contributor
       const existingContributor: ContributorRow | null =
-        await repo.findContributorByIdOrSlug({id})
+        await repo.findContributorByIdOrSlug({ id })
       if (!existingContributor) {
         await transaction.transactionRollback()
         return {

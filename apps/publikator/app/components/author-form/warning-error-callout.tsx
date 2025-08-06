@@ -1,12 +1,13 @@
 import { AlertCircle } from 'lucide-react'
 import { Box, Callout, Text } from '@radix-ui/themes'
+import { FieldError } from '../../../graphql/republik-api/__generated__/gql/graphql'
 
 const GeneralWarningErrorCallout = ({
   generalErrors,
   warnings,
 }: {
-  generalErrors: any[]
-  warnings: any[]
+  generalErrors: FieldError[]
+  warnings: FieldError[]
 }) => {
   return (
     <>
@@ -44,7 +45,7 @@ const GeneralWarningErrorCallout = ({
             </Callout.Icon>
             <Callout.Text>
               {warnings.length === 1 ? (
-                warnings[0]
+                warnings[0].message
               ) : (
                 <Box>
                   <Text weight='bold' mb='1'>
@@ -52,7 +53,7 @@ const GeneralWarningErrorCallout = ({
                   </Text>
                   <ul style={{ margin: '0', paddingLeft: '20px' }}>
                     {warnings.map((warning, index) => (
-                      <li key={index}>{warning}</li>
+                      <li key={index}>{warning.message}</li>
                     ))}
                   </ul>
                 </Box>
