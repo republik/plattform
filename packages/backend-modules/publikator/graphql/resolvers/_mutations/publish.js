@@ -263,7 +263,8 @@ module.exports = async (_, args, context) => {
 
       campaignId = id
     }
-    debug({ repoMetaCampaignId: repoMeta.mailchimpCampaignId, campaignId: campaignId })
+    debug('mailchimp campaign id: ')
+    debug(JSON.stringify({ repoMetaCampaignId: repoMeta.mailchimpCampaignId, campaignId: campaignId }))
   }
 
   // calc version number
