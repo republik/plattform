@@ -26,24 +26,25 @@ const TooltipIcon: React.FC<TooltipIconProps> = ({
   </Tooltip>
 )
 
-const TooltipIcons = ({contributor}: {
-  contributor: ArticleContributor
-}) => {
+const TooltipIcons = ({
+  userId,
+  prolitterisId,
+}: Partial<ArticleContributor>) => {
   return (
     <Flex gap='4'>
       <TooltipIcon
-        condition={contributor.userId !== null}
+        condition={userId !== null}
         tooltip={
-          contributor.userId !== null
+          userId !== null
             ? 'Verknüpftes Verlegerprofil'
             : 'Kein verknüpftes Verlegerprofil'
         }
         icon={IdCardLanyard}
       />
       <TooltipIcon
-        condition={contributor.prolitterisId !== null}
+        condition={prolitterisId !== null}
         tooltip={
-          contributor.prolitterisId !== null
+          prolitterisId !== null
             ? 'ProlitterisID hinterlegt'
             : 'Keine ProlitterisID hinterlegt'
         }

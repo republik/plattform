@@ -1,6 +1,6 @@
 import { Avatar, Table, Text } from '@radix-ui/themes'
 import { useRouter } from 'next/navigation'
-import TooltipIcons from '../ui/tooltip-icons'
+import TooltipIcons from './tooltip-icons'
 import { ArticleContributor } from '../../../graphql/republik-api/__generated__/gql/graphql'
 
 interface AuthorTableProps {
@@ -69,7 +69,10 @@ const AuthorTable = ({ contributorsList }: AuthorTableProps) => {
             </Table.Cell>
 
             <Table.Cell justify='center'>
-              <TooltipIcons contributor={contributor} />
+              <TooltipIcons
+                prolitterisId={contributor.prolitterisId}
+                userId={contributor.userId}
+              />
             </Table.Cell>
 
             <Table.Cell justify='end'>

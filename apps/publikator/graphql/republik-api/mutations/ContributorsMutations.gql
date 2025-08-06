@@ -26,7 +26,6 @@ mutation UpsertContributor(
       contributor {
         id
         name
-        slug
         shortBio
         bio
         image
@@ -35,8 +34,6 @@ mutation UpsertContributor(
         prolitterisLastname
         gender
         userId
-        createdAt
-        updatedAt
       }
       isNew
       warnings {

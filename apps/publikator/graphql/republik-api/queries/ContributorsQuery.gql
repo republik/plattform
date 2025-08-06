@@ -40,12 +40,7 @@ query Contributors(
       shortBio
       image
       prolitterisId
-      prolitterisFirstname
-      prolitterisLastname
-      bio
-      gender
       userId
-      createdAt
       updatedAt
     }
   }
