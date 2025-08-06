@@ -1,22 +1,22 @@
+import Stripe from 'stripe'
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
-import Stripe from 'stripe'
 import { WebhookService } from '../services/WebhookService'
 import { MailNotificationService } from '../services/MailNotificationService'
+import { parseStripeDate } from '../handlers/stripe/utils'
 import { PaymentService } from '../services/PaymentService'
 import { Company } from '../types'
-import { parseStripeDate } from '../handlers/stripe/utils'
 
 type Args = {
   $version: 'v1'
   userId: string
-  company: Company
   eventSourceId: string
-  invoiceExternalId: string
+  subscriptionId: string
+  company: Company
 }
 
-export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
-  readonly queue = 'payments:transactional:notice:payment_failed'
+export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
+  readonly queue = 'payments:transactional:notice:subscription_renewal'
   readonly options: SendOptions = {
     retryLimit: 3,
     retryDelay: 120, // retry every 2 minutes
@@ -27,13 +27,13 @@ export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
       throw Error('unable to perform this job version. Expected v1')
     }
 
-    this.logger.debug({ queue: this.queue, jobId: job.id }, 'start')
+    this.logger.debug({ queue: this.queue, jobiId: job.id }, 'start')
 
     const webhookService = new WebhookService(this.context.pgdb)
     const mailService = new MailNotificationService(this.context.pgdb)
     const paymentService = new PaymentService()
 
-    const wh = await webhookService.getEvent<Stripe.InvoicePaymentFailedEvent>(
+    const wh = await webhookService.getEvent<Stripe.InvoiceUpcomingEvent>(
       job.data.eventSourceId,
     )
 
@@ -45,10 +45,10 @@ export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
-    if (wh.payload.type !== 'invoice.payment_failed') {
+    if (wh.payload.type !== 'invoice.upcoming') {
       this.logger.error(
         { queue: this.queue, jobId: job.id },
-        'Webhook is not of type invoice.payment_failed',
+        'Webhook is not of type invoice.upcoming',
       )
       return await this.pgBoss.fail(this.queue, job.id)
     }
@@ -62,21 +62,23 @@ export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
 
     try {
       // send transactional
-      await mailService.sendNoticePaymentFailedTransactionalMail({
-        subscriptionExternalId: event.data.object.subscription as string,
+      await mailService.sendNoticeSubscriptionRenewalTransactionalMail({
         userId: job.data.userId,
-        invoiceExternalId: job.data.invoiceExternalId,
+        subscriptionId: job.data.subscriptionId,
+        isDiscounted: !!event.data.object.total_discount_amounts?.length,
+        withDonation: !!event.data.object.lines.data.filter((line) => line.description?.includes('Spende')).length,
+        amount: event.data.object.amount_due,
         paymentAttemptDate: parseStripeDate(event.data.object.next_payment_attempt),
-        paymentMethod: paymentMethod || undefined
+        paymentMethod: paymentMethod
       })
     } catch (e) {
       this.logger.error(
         { queue: this.queue, jobId: job.id, error: e },
-        'Error sending notice payment failed transactional mail',
+        'Error sending subscription renewal reminder notice transactional mail',
       )
       throw e
     }
 
-    this.logger.debug({ queue: this.queue, jobId: job.id }, 'done')
+    this.logger.debug({ queue: this.queue, jobiId: job.id }, 'done')
   }
 }
