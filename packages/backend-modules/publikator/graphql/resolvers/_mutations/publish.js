@@ -247,8 +247,8 @@ module.exports = async (_, args, context) => {
     campaignId = repoMeta.mailchimpCampaignId
 
     if (campaignId) {
-      const { status } = await getCampaign({ id: campaignId })
-      if (status === 404) {
+      const mailchimpCampaign = await getCampaign({ id: campaignId })
+      if (!mailchimpCampaign) {
         campaignId = null
       }
     }
@@ -263,6 +263,7 @@ module.exports = async (_, args, context) => {
 
       campaignId = id
     }
+    debug({ repoMetaCampaignId: repoMeta.mailchimpCampaignId, campaignId: campaignId })
   }
 
   // calc version number
@@ -312,7 +313,9 @@ module.exports = async (_, args, context) => {
 
     await maybeDelcareMilestonePublished(milestone, tx)
     await updateCurrentPhase(repoId, tx)
-    await updateRepo(repoId, { mailchimpCampaignId: campaignId }, tx)
+    if (campaignId) {
+      await updateRepo(repoId, { mailchimpCampaignId: campaignId }, tx)
+    }
 
     await tx.transactionCommit()
   } catch (e) {
