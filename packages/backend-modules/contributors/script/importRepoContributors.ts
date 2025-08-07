@@ -246,6 +246,8 @@ async function main(args: Args) {
 
   console.log(`Entries to check: `)
   console.log(reposToCheck)
+
+  await PgDb.disconnect(pgdb)
 }
 
 if (require.main === module) {
