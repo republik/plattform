@@ -12,11 +12,12 @@ type PersonSchema = {
 }
 
 type CommentSchema = {
-  '@type': 'Comment'
+  '@context'?: string
+  '@type': 'Comment' | 'DiscussionForumPosting'
   author: PersonSchema
   datePublished: string
   text: string
-  url?: string
+  url: string
   comment?: CommentSchema[]
   interactionStatistic?: {
     '@type': 'InteractionCounter'
@@ -49,15 +50,16 @@ function createPersonSchema(
 function createCommentSchema(
   comment: CommentTreeNode,
   discussionPath: string,
+  isTopLevel: boolean = false,
 ): CommentSchema {
   const commentSchema: CommentSchema = {
-    '@type': 'Comment',
+    '@context': isTopLevel ? 'https://schema.org' : undefined,
+    '@type': isTopLevel ? 'DiscussionForumPosting' : 'Comment',
     author: createPersonSchema(comment.displayAuthor),
     datePublished: comment.createdAt,
     text: comment.text || '',
+    url: `${PUBLIC_BASE_URL}/dialog${discussionPath}?focus=${comment.id}`,
   }
-
-  commentSchema.url = `${PUBLIC_BASE_URL}/dialog${discussionPath}?focus=${comment.id}`
 
   const interactionStats: CommentSchema['interactionStatistic'] = []
 
@@ -84,7 +86,7 @@ function createCommentSchema(
   // Add nested comments if they exist
   if (comment.comments?.nodes && comment.comments.nodes.length > 0) {
     commentSchema.comment = comment.comments.nodes.map((childComment) =>
-      createCommentSchema(childComment, discussionPath),
+      createCommentSchema(childComment, discussionPath, false),
     )
   }
 
@@ -93,13 +95,7 @@ function createCommentSchema(
 
 export function createDiscussionForumPostingSchema(
   discussion: DiscussionQuery['discussion'],
-): {
-  '@context': string
-  headline: string
-  '@type': string
-  url: string
-  comment: CommentSchema[]
-} | null {
+): CommentSchema | null {
   if (!discussion) {
     return null
   }
@@ -107,15 +103,12 @@ export function createDiscussionForumPostingSchema(
   const comments = commentTree.nodes
   const discussionPath = discussion.path || discussion.document?.meta?.path
 
-  return {
-    '@context': 'https://schema.org',
-    headline: discussion.title,
-    '@type': 'DiscussionForumPosting',
-    url: `${PUBLIC_BASE_URL}/dialog${discussionPath}`,
-    comment: comments.map((comment) =>
-      createCommentSchema(comment, discussionPath),
-    ),
+  // Return the first top-level comment as DiscussionForumPosting, or null if no comments
+  if (comments.length === 0) {
+    return null
   }
+
+  return createCommentSchema(comments[0], discussionPath, true)
 }
 
 export default createDiscussionForumPostingSchema

@@ -50,7 +50,7 @@ const Discussion = ({ documentMeta }: Props) => {
     return makeCommentTree(discussion?.comments)
   }, [discussion])
 
-  const structuredData = useMemo(() => {
+    const structuredData = useMemo(() => {
     if (!discussion) return null
     return createDiscussionForumPostingSchema(discussion)
   }, [discussion])
