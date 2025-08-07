@@ -95,7 +95,7 @@ function createCommentSchema(
 
 export function createDiscussionForumPostingSchema(
   discussion: DiscussionQuery['discussion'],
-): CommentSchema | null {
+): CommentSchema[] | null {
   if (!discussion) {
     return null
   }
@@ -103,12 +103,14 @@ export function createDiscussionForumPostingSchema(
   const comments = commentTree.nodes
   const discussionPath = discussion.path || discussion.document?.meta?.path
 
-  // Return the first top-level comment as DiscussionForumPosting, or null if no comments
+  // Return all top-level comments as DiscussionForumPosting entries
   if (comments.length === 0) {
     return null
   }
 
-  return createCommentSchema(comments[0], discussionPath, true)
+  return comments.map((comment) =>
+    createCommentSchema(comment, discussionPath, true),
+  )
 }
 
 export default createDiscussionForumPostingSchema
