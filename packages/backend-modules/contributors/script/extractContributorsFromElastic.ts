@@ -2,10 +2,9 @@
 import yargs from 'yargs'
 
 import * as fs from 'fs'
-
+import slugify from 'slugify'
 import { Client } from '@elastic/elasticsearch'
 import env from '@orbiting/backend-modules-env'
-import { slugify } from '@orbiting/backend-modules-utils'
 import {
   Contributor,
   ElasticContributor,
@@ -52,6 +51,17 @@ function generateUniqueSlug(
   return uniqueSlug
 }
 
+slugify.extend({
+  ä: 'ae',
+  ö: 'oe',
+  ü: 'ue',
+  '.': '',
+})
+
+function modifiedSlugify(text: string) {
+  return slugify(text.toLowerCase())
+}
+
 function slugIsNumbered(text: string): boolean {
   const numberedRegex = /-(\d+)$/i
   return numberedRegex.test(text)
@@ -91,7 +101,7 @@ function deduplicateNamesAndSlugs(
     const name = contributor.name
     const existingContributor = contributorMap.get(name)
 
-    const baseSlug = slugify(name)
+    const baseSlug = modifiedSlugify(name)
     let finalSlug: string
 
     // Check if the slug has already been used
@@ -166,6 +176,8 @@ async function queryElastic(query: any): Promise<RepoData[] | undefined> {
 /*
 * This script fetches contributors from elastic from published documents in the given time and saves them to json files.
 * It logs contributors that should be manually checked and maybe adapted, it also saves to them to the check-[filename].json file
+* To run this script, either use node-ts or run the js version of this file: 
+* ❯ node build/script/extractContributorsFromElastic.js --begin 2024-01-01 --end 2024-12-31 --limit 100 --filename test
 */
 async function main(argv: any) {
   // get contributors from elastic

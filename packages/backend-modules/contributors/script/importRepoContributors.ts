@@ -144,6 +144,8 @@ function isUserIdsMismatch(userId1?: string, userId2?: string): boolean {
 * Import repoContributors from elastic into DB. Contributors must already exist in DB for this to work.
 * This script takes all repos that don't yet have contributors associated, 
 * fetches the credits and contributors from elastic and tries to find the matching contributors in the DB by name.
+* To run this script, either use node-ts or run the js version of this file: 
+* ❯ node build/script/importRepoContributors.js --limit 100
 */
 async function main(args: Args) {
   const pgdb = await PgDb.connect({

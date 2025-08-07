@@ -2,7 +2,7 @@
 import yargs from 'yargs'
 import * as fs from 'fs'
 import { PgDb } from '@orbiting/backend-modules-base/lib'
-import { slugify } from '@orbiting/backend-modules-utils'
+import slugify from 'slugify'
 import { S3Client, CopyObjectCommand } from '@aws-sdk/client-s3'
 import { v4 as uuid } from 'uuid'
 
@@ -14,7 +14,18 @@ import env from '@orbiting/backend-modules-env'
 env.config()
 
 interface Args {
-  file: string
+  filename: string
+}
+
+slugify.extend({
+  ä: 'ae',
+  ö: 'oe',
+  ü: 'ue',
+  '.': '',
+})
+
+function modifiedSlugify(text: string) {
+  return slugify(text.toLowerCase())
 }
 
 function loadFile(path: string): Contributor[] {
@@ -283,7 +294,7 @@ async function prepareContributorsForImport(
       contributors
         .filter((c) => slugsToUpdate.includes(c.slug))
         .map(async (c) => {
-          const baseSlug = slugify(c.name)
+          const baseSlug = modifiedSlugify(c.name)
           const newSlug = await repo.findUniqueSlug(baseSlug)
           c.slug = newSlug
           contributorsWithUpdatedSlugs.push(c)
@@ -308,9 +319,11 @@ async function prepareContributorsForImport(
 * This imports the found contributors from elastic into the publikator.contributors table, using the data
 * from the user table and from the gsheets -> authors gender field.
 * It logs contributors that might have to be manually checked and corrected
+* * To run this script, either use node-ts or run the js version of this file: 
+* ❯ node build/script/importContributors.js --filename test
 */
 async function main(argv: Args) {
-  const filename = argv.file
+  const filename = argv.filename
   const contributors: Contributor[] = loadFile(`${filename}.json`)
 
   const pgdb = await PgDb.connect({
@@ -359,7 +372,7 @@ async function main(argv: Args) {
 }
 
 if (require.main === module) {
-  const argv = yargs.option('file', {
+  const argv = yargs.option('filename', {
     alias: 'f',
     type: 'string',
     demandOption: true,
