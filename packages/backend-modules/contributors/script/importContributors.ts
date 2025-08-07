@@ -174,8 +174,10 @@ async function associateContributorWithProfileData(
   // profile info
   contributor.bio = user.biography || undefined
   contributor.prolitteris_id = user.prolitterisId || undefined
-  contributor.prolitteris_first_name = user.firstName
-  contributor.prolitteris_last_name = user.lastName
+  if (user.prolitterisId) {
+    contributor.prolitteris_first_name = user.firstName
+    contributor.prolitteris_last_name = user.lastName
+  }
 
   // copy image to right folder
   if (user.portraitUrl) {
@@ -302,7 +304,7 @@ async function prepareContributorsForImport(
 
 async function main(argv: Args) {
   const filename = argv.file
-  const contributors: Contributor[] = loadFile(filename)
+  const contributors: Contributor[] = loadFile(`${filename}.json`)
 
   const pgdb = await PgDb.connect({
     applicationName: 'Import script for contributors',
