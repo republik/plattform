@@ -9,6 +9,7 @@ import { slugify } from '@orbiting/backend-modules-utils'
 import {
   Contributor,
   ElasticContributor,
+  ElasticContributorKind,
   RawContributor,
   RepoData,
 } from '../types'
@@ -31,10 +32,6 @@ type ElasticHit = {
   _source: {
     meta: {
       repoId: string
-      credits?: {
-        children: unknown[]
-        type: 'mdast' | null
-      }
       publishDate: Date
       creditsString: string
       contributors: ElasticContributor[]
@@ -131,14 +128,24 @@ async function queryElastic(query: any): Promise<RepoData[] | undefined> {
 
     const response = await elastic.search({
       index: ES_INDEX_PREFIX + '-document-read',
-      _source: ['meta.contributors'],
+      _source: [
+        'meta.contributors',
+        'meta.repoId',
+        'meta.publishDate',
+        'meta.creditsString',
+      ],
       body: query,
     })
 
     if (response.body.hits && response.body.hits.hits) {
       repoContributors = response.body.hits.hits.map((hit: ElasticHit) => {
         if (hit._source?.meta) {
-          const repo: RepoData = { contributors: hit._source.meta.contributors }
+          const repo: RepoData = {
+            contributors: hit._source.meta.contributors,
+            repoId: hit._source.meta.repoId,
+            publishDate: hit._source.meta.publishDate,
+            creditsString: hit._source.meta.creditsString,
+          }
           return repo
         }
         return null
@@ -146,12 +153,6 @@ async function queryElastic(query: any): Promise<RepoData[] | undefined> {
       console.log(
         `Retrieved ${repoContributors.length} documents from Elasticsearch.`,
       )
-      /* const contributorKinds: Set<ElasticContributorKind> = new Set(
-        creditData.flatMap((credit: any) =>
-          credit.contributors.flatMap((c: ElasticContributor) => c.kind),
-        ), 
-      )
-      console.log(contributorKinds) */
     } else {
       console.error('No documents found.')
       return
@@ -162,6 +163,10 @@ async function queryElastic(query: any): Promise<RepoData[] | undefined> {
   return repoContributors
 }
 
+/*
+* This script fetches contributors from elastic from published documents in the given time and saves them to json files.
+* It logs contributors that should be manually checked and maybe adapted, it also saves to them to the check-[filename].json file
+*/
 async function main(argv: any) {
   // get contributors from elastic
   const limit = argv.limit
@@ -219,24 +224,55 @@ async function main(argv: any) {
   console.log('to be checked:')
   console.log(toBeChecked)
 
+  // contributor kinds
+  const contributorKinds: Set<ElasticContributorKind> = new Set(
+    repoData.flatMap((repo: any) =>
+      repo.contributors.flatMap((c: ElasticContributor) => c.kind),
+    ),
+  )
+  console.log(JSON.stringify([...contributorKinds]))
+
   const contributorsFileName = argv.filename
     ? `${argv.filename}.json`
     : `contributors-${Date.now()}.json`
 
   try {
-    fs.writeFileSync(
+    await fs.writeFile(
       contributorsFileName,
       JSON.stringify(contributors, null, 2),
       'utf8',
+      (error) => {
+        if (error) {
+          console.error(`Error while writing ${contributorsFileName}`)
+        }
+      },
     )
+
     console.log(`successfully saved to ${contributorsFileName}`)
 
-    fs.writeFileSync(
+    await fs.writeFile(
       `check-${contributorsFileName}`,
       JSON.stringify(toBeChecked, null, 2),
       'utf8',
+      (error) => {
+        if (error) {
+          console.error(`Error while writing check-${contributorsFileName}`)
+        }
+      },
     )
     console.log(`successfully saved to check-${contributorsFileName}`)
+
+    await fs.writeFile(
+      `repos-${contributorsFileName}`,
+      JSON.stringify(repoData, null, 2),
+      'utf8',
+      (error) => {
+        if (error) {
+          console.error(`Error while writing repos-${contributorsFileName}`)
+        }
+      },
+    )
+    console.log(`successfully saved to repos-${contributorsFileName}`)
   } catch (error) {
     console.error(`Error saving data: ${error}`)
   }

@@ -8,9 +8,9 @@ import { v4 as uuid } from 'uuid'
 
 import { ContributorsRepo } from '../lib/ContributorsRepo'
 import { Contributor, ContributorGender, GsheetAuthorGender } from '../types'
+import { UserRow } from '@orbiting/backend-modules-types'
 
 import env from '@orbiting/backend-modules-env'
-import { UserRow } from '@orbiting/backend-modules-types'
 env.config()
 
 interface Args {
@@ -302,6 +302,13 @@ async function prepareContributorsForImport(
   }
 }
 
+/*
+* Run this script after running extractContributorsFromElastic, using the same filename argument, 
+* and after manually adjusting those with errors (in the filename.json file).
+* This imports the found contributors from elastic into the publikator.contributors table, using the data
+* from the user table and from the gsheets -> authors gender field.
+* It logs contributors that might have to be manually checked and corrected
+*/
 async function main(argv: Args) {
   const filename = argv.file
   const contributors: Contributor[] = loadFile(`${filename}.json`)
