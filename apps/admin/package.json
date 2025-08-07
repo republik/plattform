@@ -27,7 +27,7 @@
     "@republik/mdast-react-render": "*",
     "@republik/nextjs-apollo-client": "*",
     "@republik/theme": "*",
-    "@sentry/nextjs": "^7.110.1",
+    "@sentry/nextjs": "^9.32.0",
     "apollo-cache-inmemory": "^1.6.6",
     "d3-array": "^1.2.4",
     "d3-color": "^1.4.1",

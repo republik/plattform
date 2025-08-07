@@ -1,11 +1,13 @@
 import PgBoss from 'pg-boss'
 import { Worker, WorkerJobArgs, WorkerQueueName } from './types'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
+import { Logger } from '@orbiting/backend-modules-logger'
 
 export const GlobalQueue = Symbol('Global PGBoss queue')
 
 type WorkerConstructor = new (
   pgBoss: PgBoss,
+  logger: Logger,
   context: ConnectionContext,
 ) => Worker<any>
 
@@ -13,6 +15,7 @@ export class Queue {
   static instances: Record<symbol, Queue> = {}
 
   protected readonly pgBoss: PgBoss
+  protected readonly logger: Logger
   protected readonly context: ConnectionContext
   protected workers = new Map<WorkerQueueName<Worker<any>>, Worker<any>>()
 
@@ -30,6 +33,7 @@ export class Queue {
         connectionString: config.connectionString,
         monitorStateIntervalSeconds: config.monitorStateIntervalSeconds,
       },
+
       config.context,
     )
 
@@ -51,17 +55,18 @@ export class Queue {
 
     this.pgBoss = new PgBoss(options)
     this.context = context
+    this.logger = context.logger.child({}, { msgPrefix: '[JOB QUEUE] ' })
 
     this.pgBoss.on('error', (error) => {
-      console.error('[JobQueue]: %s', error)
+      this.logger.error({ error }, 'Processing error')
     })
     this.pgBoss.on('monitor-states', (stats) => {
-      console.log('[JobQueue]: ', stats)
+      this.logger.info(stats, 'monitor-states')
     })
   }
 
   registerWorker(worker: WorkerConstructor): Queue {
-    const workerInstance = new worker(this.pgBoss, this.context)
+    const workerInstance = new worker(this.pgBoss, this.logger, this.context)
     this.workers.set(workerInstance.queue, workerInstance)
     return this
   }

@@ -22,28 +22,7 @@ import { withApollo } from '../lib/apollo'
 import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
-import { reportError } from '../lib/errors/reportError'
 import { PaynotesProvider } from '@app/components/paynotes/paynotes-context'
-
-if (typeof window !== 'undefined') {
-  window.addEventListener('error', (event: ErrorEvent) => {
-    const { message, filename, lineno, colno, error } = event
-    reportError(
-      'onerror',
-      (error && error.stack) || [message, filename, lineno, colno].join('\n'),
-    )
-  })
-
-  window.addEventListener(
-    'unhandledrejection',
-    (event: PromiseRejectionEvent) => {
-      reportError(
-        'onunhandledrejection',
-        (event.reason && event.reason.stack) || event.reason,
-      )
-    },
-  )
-}
 
 type WebAppProps = {
   providedUserAgent?: string

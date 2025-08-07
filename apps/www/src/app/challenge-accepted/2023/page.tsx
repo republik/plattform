@@ -19,7 +19,7 @@ import { css } from '@republik/theme/css'
 import { hstack, vstack } from '@republik/theme/patterns'
 import { PUBLIC_BASE_URL } from 'lib/constants'
 import Image from 'next/image'
-import { StructuredText } from 'react-datocms'
+import { StructuredText } from 'react-datocms/structured-text'
 
 export async function generateMetadata(
   _, // params

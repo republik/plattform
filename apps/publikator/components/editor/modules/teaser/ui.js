@@ -1,47 +1,49 @@
 import {
-  colors,
-  Field,
-  Dropdown,
   Checkbox,
+  colors,
+  Dropdown,
+  Field,
   Label,
   P,
   useColorContext,
 } from '@project-r/styleguide'
-import { ColorPicker, RepoSearch } from '@project-r/styleguide/editor'
-import { useState } from 'react'
+
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconCheck as Check,
+  IconClose,
+  IconContentCopy as CopyToClipboard,
+  IconKeyboardArrowDown as ArrowDownIcon,
+  IconKeyboardArrowUp as ArrowUpIcon,
+  IconSubdirectoryArrowRight as MoveIntoIcon,
+  IconVerticalAlignBottom as MoveToEndIcon,
+} from '@republik/icons'
+import { stringify } from '@republik/remark-preset'
+import copyToClipboard from 'clipboard-copy'
 import { css } from 'glamor'
-import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'
-import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
+import { useState } from 'react'
 
 import shortId from 'shortid'
 
 import { Block, Text } from 'slate'
 
-import { getNewBlock } from './'
+import withT from '../../../../lib/withT'
+import ColorPicker from '../../../Forms/ColorPicker'
 
-import { getSubmodules } from './serializer'
-
-import {
-  IconArrowLeft,
-  IconArrowRight,
-  IconKeyboardArrowUp as ArrowUpIcon,
-  IconKeyboardArrowDown as ArrowDownIcon,
-  IconClose,
-  IconVerticalAlignBottom as MoveToEndIcon,
-  IconCheck as Check,
-  IconContentCopy as CopyToClipboard,
-  IconSubdirectoryArrowRight as MoveIntoIcon,
-} from '@republik/icons'
+import RepoSearch from '../../../Forms/RepoSearch'
 
 import UIForm from '../../UIForm'
-import ImageInput from '../../utils/ImageInput'
+import { buttonStyles, createPropertyForm, matchBlock } from '../../utils'
 import ContrastInfo from '../../utils/ContrastInfo'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import { AutoSlugLinkInfo } from '../../utils/github'
+import ImageInput from '../../utils/ImageInput'
+import { allBlocks, childIndex, depth, parent } from '../../utils/selection'
 
-import withT from '../../../../lib/withT'
-import { stringify } from '@republik/remark-preset'
-import copyToClipboard from 'clipboard-copy'
+import { getNewBlock } from './'
+
+import { getSubmodules } from './serializer'
 
 const textPositions = [
   { value: 'top', text: 'Top' },
@@ -247,7 +249,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         </>
       )}
       {options.includes('textPosition') && (
-        <Dropdown
+        <Dropdown.Native
           label='Text-Position'
           items={textPositions}
           value={node.data.get('textPosition')}
@@ -255,7 +257,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         />
       )}
       {options.includes('kind') && (
-        <Dropdown
+        <Dropdown.Native
           label='Inhaltsbezeichnung'
           items={kinds}
           value={node.data.get('kind')}
@@ -265,7 +267,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         />
       )}
       {options.includes('titleSize') && (
-        <Dropdown
+        <Dropdown.Native
           label='Titelgrösse'
           items={titleSizes}
           value={node.data.get('titleSize')}

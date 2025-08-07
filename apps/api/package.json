@@ -47,6 +47,7 @@
     "@orbiting/backend-modules-types": "*",
     "@orbiting/backend-modules-utils": "*",
     "@orbiting/backend-modules-voting": "*",
+    "@orbiting/backend-modules-logger": "*",
     "apollo-modules-node": "*",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",

@@ -24,7 +24,10 @@ module.exports = async ({ pgdb, t, redis, connectionContext }) => {
         account.endpointSecret,
       )
     } catch (e) {
-      console.error(e)
+      req.log.error(
+        { error: e },
+        '[Pledge Payments] error validating event signature',
+      )
       return 400
     }
 
@@ -44,7 +47,10 @@ module.exports = async ({ pgdb, t, redis, connectionContext }) => {
           ? companyIdForAccountId(event.account)
           : platform.company.id,
       ).catch((e) => {
-        console.error(e)
+        req.log.error(
+          { error: e, eventId: event?.id },
+          '[Pledge Payments] error handling event',
+        )
         throw e
       })
       if (result) {

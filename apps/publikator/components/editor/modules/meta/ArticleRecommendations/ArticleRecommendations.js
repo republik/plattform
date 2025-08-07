@@ -1,17 +1,19 @@
+import { A, useColorContext } from '@project-r/styleguide'
+
+import { IconAdd as MdAdd } from '@republik/icons'
+import { css } from 'glamor'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import withT from '../../../../../lib/withT'
-import { A, useColorContext } from '@project-r/styleguide'
-import { RepoSearch } from '@project-r/styleguide/editor'
-import { css } from 'glamor'
-import { IconAdd as MdAdd } from '@republik/icons'
-import ArticleRecommendationItem from './ArticleRecommendationItem'
-import { getAbsoluteRepoUrl } from './util/RepoLinkUtility'
-import { useRouter } from 'next/router'
-import { swapArrayElements } from './util/ArraySwapElementsUtility'
+import RepoSearch from '../../../../Forms/RepoSearch'
 import {
   MetaSection,
   MetaSectionTitle,
 } from '../../../../MetaDataForm/components/Layout'
+import ArticleRecommendationItem from './ArticleRecommendationItem'
+import { swapArrayElements } from './util/ArraySwapElementsUtility'
+import { getAbsoluteRepoUrl } from './util/RepoLinkUtility'
+
 const ARTICLE_RECOMMENDATIONS_KEY = 'recommendations'
 
 const styles = {

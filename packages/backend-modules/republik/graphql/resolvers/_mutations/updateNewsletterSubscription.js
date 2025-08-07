@@ -54,7 +54,7 @@ module.exports = async (_, args, context) => {
     user = userId ? await pgdb.public.users.findOne({ id: userId }) : me
 
     if (!user) {
-      console.error('user not found', { req: req._log() })
+      context.logger.error({ userId }, 'user not found')
       throw new Error(t('api/users/404'))
     }
 

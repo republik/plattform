@@ -62,7 +62,7 @@ const getSubscriptionsForDoc = async (
   }
 
   // from prepareMetaForPublish
-  const contributors = getContributors(doc.type, doc.meta || doc._meta)
+  const contributors = getContributors(doc.meta || doc._meta)
   const contributorUserIds = contributors.map((c) => c.userId).filter(Boolean)
   if (contributorUserIds.length) {
     const authorSubscriptions = await getSubscriptionsForUserAndObjects(

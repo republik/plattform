@@ -18,7 +18,7 @@ const useProlitterisTracking = (repoId: string, cleanedPath: string) => {
     }
     fetchProlitteris()
     setOnceAndDone(true)
-  }, [me, meLoading, hasActiveMembership, onceAndDone])
+  }, [me, meLoading, hasActiveMembership, onceAndDone, cleanedPath, repoId])
 }
 
 export default useProlitterisTracking

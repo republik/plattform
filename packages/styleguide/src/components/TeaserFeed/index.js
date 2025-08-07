@@ -1,15 +1,14 @@
-import React from 'react'
+import { matchType, renderMdast } from '@republik/mdast-react-render'
+import { css } from 'glamor'
+import { timeFormat } from '../../lib/timeFormat'
+import colors from '../../theme/colors'
+import { Editorial } from '../Typography'
 import Container from './Container'
+import Credit from './Credit'
 import * as Headlines from './Headline'
+import Highlight from './Highlight'
 import InternalOnlyTag from './InternalOnlyTag'
 import Lead from './Lead'
-import Credit from './Credit'
-import { css } from 'glamor'
-import colors from '../../theme/colors'
-import { renderMdast, matchType } from '@republik/mdast-react-render'
-import { timeFormat } from '../../lib/timeFormat'
-import { Editorial } from '../Typography'
-import Highlight from './Highlight'
 
 const dateFormat = timeFormat('%d.%m.%Y')
 
@@ -47,16 +46,12 @@ function getCreditsSchema(isInteractive = true) {
 
 const DefaultLink = ({ children, href }) => children
 
-export const getTeaserHref = (path, externalBaseUrl) =>
-  externalBaseUrl ? `${externalBaseUrl}${path}` : path
-
 export const TeaserFeed = ({
   kind: metaKind,
   color: metaColor,
   template,
   format,
   path,
-  externalBaseUrl,
   repoId,
   title,
   description,
@@ -76,10 +71,7 @@ export const TeaserFeed = ({
   skipFormat = false,
 }) => {
   const formatMeta = (format && format.meta) || {}
-  const href = getTeaserHref(
-    path,
-    externalBaseUrl || formatMeta.externalBaseUrl,
-  )
+
   const Headline =
     formatMeta.kind === 'meta' ||
     metaKind === 'meta' ||
@@ -89,8 +81,6 @@ export const TeaserFeed = ({
       ? Headlines.Interaction
       : formatMeta.kind === 'scribble' || metaKind === 'scribble'
       ? Headlines.Scribble
-      : formatMeta.kind === 'flyer'
-      ? Headlines.Flyer
       : Headlines.Editorial
   const borderColor = formatMeta.title
     ? formatMeta.color || colors[formatMeta.kind]
@@ -115,15 +105,15 @@ export const TeaserFeed = ({
       Link={Link}
       menu={menu}
       repoId={repoId}
-      href={href}
+      href={path}
       title={title}
       dense={dense}
       nonInteractive={nonInteractive}
     >
       <Headline formatColor={titleColor}>
         {!nonInteractive ? (
-          <Link href={href} passHref>
-            <a {...styles.link} href={href}>
+          <Link href={path} passHref>
+            <a {...styles.link} href={path}>
               {title}
             </a>
           </Link>
@@ -131,11 +121,11 @@ export const TeaserFeed = ({
           title
         )}
       </Headline>
-      {!!description && formatMeta.kind !== 'flyer' && (
+      {!!description && (
         <Lead>
           {!nonInteractive ? (
-            <Link href={href} passHref>
-              <a {...styles.link} href={href}>
+            <Link href={path} passHref>
+              <a {...styles.link} href={path}>
                 {description}
               </a>
             </Link>
@@ -154,8 +144,8 @@ export const TeaserFeed = ({
       )}
       {!!highlight && (
         <Highlight label={highlightLabel}>
-          <Link href={href} passHref>
-            <a {...styles.link} href={href}>
+          <Link href={path} passHref>
+            <a {...styles.link} href={path}>
               {highlight}
             </a>
           </Link>

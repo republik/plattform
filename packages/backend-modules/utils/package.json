@@ -25,7 +25,6 @@
     "abort-controller": "^3.0.0",
     "bluebird": "^3.7.2",
     "debug": "^4.1.1",
-    "get-urls": "^10.0.0",
     "moment": "^2.26.0",
     "remark-breaks": "^1.0.5",
     "remark-parse": "^8.0.2",

@@ -247,10 +247,5 @@ module.exports = {
       fontWeight: 500,
       fontStyle: 'italic',
     },
-    flyerTitle: {
-      fontFamily: 'Druk-Wide, Roboto, sans-serif',
-      fontWeight: 500,
-      fontStyle: 'normal',
-    },
   },
 }

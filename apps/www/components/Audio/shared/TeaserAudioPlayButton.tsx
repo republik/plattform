@@ -53,9 +53,11 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
               data.audioQueueItems,
             )
             const item = audioQueueItems.find(
-              (i) => i.document.id === documentId,
+              (i) => i.document?.id === documentId,
             )
-            toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
+            if (item?.document) {
+              toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
+            }
           })
         }
       }}

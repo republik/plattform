@@ -1,8 +1,8 @@
-import React, { useRef, useEffect, useState } from 'react'
 import { css } from 'glamor'
-import { fontStyles } from '../../theme/fonts'
-import colors from '../../theme/colors'
 import { relative } from 'path'
+import React from 'react'
+import colors from '../../theme/colors'
+import { fontStyles } from '../../theme/fonts'
 
 export const COVER_IMAGE_WIDTH = 1080
 export const COVER_IMAGE_HEIGHT = 1080
@@ -70,7 +70,7 @@ type Format = {
   shareBackgroundImage: string
   shareBackgroundImageInverted: string
   shareLogo: string
-  kind: 'scribble' | 'flyer'
+  kind: 'scribble'
 }
 
 type AudioCoverProps = {

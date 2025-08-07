@@ -69,7 +69,7 @@ const MediaProgressProvider = ({ children }) => {
         if (progressConsent) {
           return upsertMediaProgress({
             variables: { mediaId, secs: currentTime },
-          })
+          }).catch(() => {})
         } else {
           return setLocalMediaProgress({ mediaId, currentTime })
         }
@@ -85,7 +85,7 @@ const MediaProgressProvider = ({ children }) => {
           if (progressConsent) {
             return upsertMediaProgress({
               variables: { mediaId, secs: currentTime },
-            })
+            }).catch(() => {})
           } else {
             return setLocalMediaProgress({ mediaId, currentTime })
           }

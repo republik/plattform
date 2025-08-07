@@ -1,9 +1,9 @@
-import { useState } from 'react'
 import { ColorContextProvider } from '@project-r/styleguide'
 import { css } from 'glamor'
+import { useState } from 'react'
+import DarkmodeToggle from './DarkmodeToggle'
 
 import PreviewFrame from './Frame'
-import DarkmodeToggle from './DarkmodeToggle'
 import HasAccessToggle from './HasAccessToggle'
 import ScreeenSizePicker from './ScreenSizePicker'
 
@@ -29,7 +29,6 @@ const styles = {
 const Preview = ({
   commitId,
   repoId,
-  isFlyer,
   sideBarWidth = 0,
   commitOnly,
   darkmode,
@@ -68,7 +67,6 @@ const Preview = ({
           darkmode={previewDarkmode}
           hasAccess={previewHasAccess}
           sideBarWidth={sideBarWidth}
-          isFlyer={isFlyer}
           commitOnly={commitOnly}
         />
       </div>

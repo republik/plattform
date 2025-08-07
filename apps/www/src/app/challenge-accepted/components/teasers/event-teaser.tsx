@@ -11,7 +11,7 @@ import { IconCalendar, IconShare } from '@republik/icons'
 import { PUBLIC_BASE_URL } from 'lib/constants'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
-import { StructuredText } from 'react-datocms'
+import { StructuredText } from 'react-datocms/structured-text'
 
 type EventProps = {
   event: {

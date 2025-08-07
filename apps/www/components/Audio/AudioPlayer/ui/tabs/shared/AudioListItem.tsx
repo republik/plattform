@@ -5,7 +5,6 @@ import AudioPlayerTitle from '../../AudioPlayerTitle'
 import AudioCover from '../../AudioCover'
 import { useInNativeApp } from '../../../../../../lib/withInNativeApp'
 import { ReactNode } from 'react'
-import useMediaProgressQuery from '../../../../hooks/useMediaProgressQuery'
 import AudioCalloutMenu, { AudioListItemAction } from './AudioCalloutMenu'
 import { AudioQueueItem } from 'components/Audio/types/AudioPlayerItem'
 
@@ -93,12 +92,6 @@ const AudioListItem = ({
   const { meta } = item
   const { audioSource } = meta
   const publishDate = new Date(Date.parse(meta.publishDate))
-  const { data: progress } = useMediaProgressQuery({
-    variables: {
-      mediaId: item?.meta?.audioSource?.mediaId,
-    },
-    skip: !item?.meta?.audioSource?.mediaId,
-  })
 
   const durationString = formatMinutes(
     audioSource ? Math.max(audioSource.durationMs / 1000, 60) : 0,
@@ -146,12 +139,11 @@ const AudioListItem = ({
                     wordBreak: 'break-all',
                   }}
                 >
-                  {item.meta?.audioSource?.kind === 'syntheticReadAloud' &&
-                    'synthetisch'}
+                  {audioSource.kind === 'syntheticReadAloud' && 'synthetisch'}
                 </span>
               </span>
             </div>
-            {progress?.mediaProgress && progress.mediaProgress?.secs >= 10 && (
+            {audioSource.userProgress?.secs >= 10 && (
               <div
                 {...colorScheme.set('backgroundColor', 'hover')}
                 style={{ width: '100%', height: 2 }}
@@ -161,7 +153,7 @@ const AudioListItem = ({
                   style={{
                     position: 'relative',
                     width: `${
-                      (progress.mediaProgress.secs /
+                      (audioSource.userProgress.secs /
                         (audioSource.durationMs / 1000)) *
                       100
                     }%`,

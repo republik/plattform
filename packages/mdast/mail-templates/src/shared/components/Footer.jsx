@@ -69,6 +69,7 @@ const Footer = ({ meta }) => {
         <a href= 'https://www.republik.ch/format/republik-heute' style={footerLinkStyle} >Republik heute</a> |{' '} 
         <a href='https://www.republik.ch/format/was-diese-woche-wichtig-war' style={footerLinkStyle}>Was diese Woche wichtig war</a> |{' '} 
         <a href='https://www.republik.ch/format/republik-am-wochenende' style={footerLinkStyle}>Republik am Wochenende</a> |{' '} 
+        <a href='https://www.republik.ch/format/republik-am-sonntag' style={footerLinkStyle}>Republik am Sonntag</a> |{' '} 
         <a href='https://www.republik.ch/challenge-accepted' style={footerLinkStyle}>Challenge Accepted</a> |{' '} 
         <a href='https://www.republik.ch/format/project-r-newsletter' style={footerLinkStyle}>Project R</a>
       </p>

@@ -2,6 +2,7 @@ const Elasticsearch = require('./Elasticsearch')
 const PgDb = require('./PgDb')
 const Redis = require('./Redis')
 const RedisPubSub = require('./RedisPubSub')
+const { logger } = require('@orbiting/backend-modules-logger')
 
 const Promise = require('bluebird')
 
@@ -10,6 +11,7 @@ const create = async (applicationName) => ({
   redis: Redis.connect(),
   pubsub: RedisPubSub.connect(),
   elastic: Elasticsearch.connect(),
+  logger: logger,
 })
 
 const close = ({ pgdb, redis, pubsub, elastic }) =>

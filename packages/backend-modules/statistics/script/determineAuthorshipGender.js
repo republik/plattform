@@ -84,7 +84,7 @@ PgDb.connect()
           return !['/2018/02/21/bad-bottles'].includes(path)
         }),
       async (meta) => {
-        const credits = await stringifyNode(meta.credits?.type, meta.credits)
+        const credits = stringifyNode(meta.credits)
 
         const authorship = credits
           .replace(/(Von|By|Mit) /, '')

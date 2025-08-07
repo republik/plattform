@@ -1,5 +1,4 @@
 import { FC, ReactNode } from 'react'
-import { GENERAL_FEEDBACK_DISCUSSION_ID } from '../../../lib/constants'
 import { useRouter } from 'next/router'
 import useDiscussionData from '../hooks/useDiscussionData'
 import useOverlay from '../hooks/overlays/useOverlay'
@@ -19,17 +18,16 @@ import { CommentFragmentType } from '../graphql/fragments/CommentFragment.graphq
 const DiscussionContextProvider: FC<{
   children?: ReactNode
   discussionPath: string
-  isBoardRoot?: boolean
   parentId?: string
   includeParent?: boolean
-}> = ({ children, discussionPath, isBoardRoot, parentId, includeParent }) => {
+}> = ({ children, discussionPath, parentId, includeParent }) => {
   const { query } = useRouter()
-  const orderBy = query.order as string || 'AUTO'
+  const orderBy = (query.order as string) || 'AUTO'
 
   const activeTag = query.tag as string
   const focusId = query.focus as string
 
-  const depth = isBoardRoot ? 1 : 3
+  const depth = 3
 
   const { discussion, error, loading, refetch, fetchMore } = useDiscussionData(
     discussionPath,
@@ -76,7 +74,7 @@ const DiscussionContextProvider: FC<{
         {children}
         {discussion && (
           <>
-            <DiscussionOverlays isBoardRoot={isBoardRoot} />
+            <DiscussionOverlays />
             <DiscussionMetaHelper
               parentId={parentId}
               includeParent={includeParent}
