@@ -32,6 +32,36 @@ export type ContributorRow = {
   updated_at: Date
 }
 
+export type RepoContributor = {
+  repoId: string
+  contributorId: string
+  kind: ContributionKind
+  displayText?: string
+}
+
+export interface RepoContributorRow extends RepoContributor {
+  id: string
+}
+
+export type ContributionKind =
+  | 'text'
+  | 'picture'
+  | 'illustration'
+  | 'translation'
+  | 'research'
+  | 'production'
+  | 'voice'
+  | 'charts'
+  | 'sound'
+  | 'audio'
+  | 'video'
+  | 'design'
+  | 'animation'
+  | 'data_analysis'
+  | 'concept'
+  | 'editing'
+  | 'other' // default
+
 export type ContributorArgs = {
   id?: string
   slug?: string
@@ -51,6 +81,9 @@ export type ElasticContributor = {
 
 export type RepoData = {
   contributors: ElasticContributor[]
+  repoId: string
+  publishDate: Date
+  creditsString: string
 }
 
 export type RawContributor = {
