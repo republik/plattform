@@ -6,7 +6,23 @@ const {
   filterForExistingContributors,
   associateContributorWithProfileData,
   getGenderFromGsheetData,
+  findDuplicates,
 } = importContributorsFunctions
+
+describe('find duplicates in array', () => {
+  test('no duplicates', () => {
+    const arrayWithoutDuplicates = ['abc', 'cde', 'def']
+    const duplicates = findDuplicates(arrayWithoutDuplicates)
+    expect(duplicates).toHaveLength(0)
+  })
+
+  test('some duplicates', () => {
+    const arrayWithDuplicates = ['abc', 'abc', 'def', 'def', 'cde']
+    const duplicates = findDuplicates(arrayWithDuplicates)
+    expect(duplicates).toHaveLength(2)
+    expect(duplicates).toEqual(['abc', 'def'])
+  })
+})
 
 describe('test extract S3 key from URL function', () => {
   const bucket = 'my-test-bucket'
@@ -206,8 +222,8 @@ describe('associateContributorWithProfileData', () => {
 
     expect(updatedContributor.bio).toBeUndefined()
     expect(updatedContributor.prolitteris_id).toBeUndefined()
-    expect(updatedContributor.prolitteris_first_name).toBe('Jane')
-    expect(updatedContributor.prolitteris_last_name).toBe('Smith')
+    expect(updatedContributor.prolitteris_first_name).toBe(undefined)
+    expect(updatedContributor.prolitteris_last_name).toBe(undefined)
     expect(updatedContributor.image).toBeUndefined()
     expect(updatedContributor.gender).toBe('f')
   })
