@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { PgDb } from '@orbiting/backend-modules-base/lib'
 import { Client } from '@elastic/elasticsearch'
+import * as fs from 'fs'
 
 import env from '@orbiting/backend-modules-env'
 env.config()
@@ -42,6 +43,7 @@ type ElasticHit = {
 
 type Args = {
   limit: number
+  save: boolean
 }
 
 async function queryElastic(query: any): Promise<RepoData[] | undefined> {
@@ -112,7 +114,7 @@ function maybeFindContributor(
   } else {
     // none found, try to find by approximate name
     const approxMatches = dbContributors.filter((dbContributor) =>
-      contributor.name.includes(dbContributor.name),
+      contributor.name.toLowerCase().includes(dbContributor.name.toLowerCase()),
     )
     if (approxMatches.length === 1) {
       // approximate name finds a single contributor
@@ -140,13 +142,13 @@ function isUserIdsMismatch(userId1?: string, userId2?: string): boolean {
   return !!userId1 && !!userId2 && userId1 !== userId2
 }
 
-/*  
-* Import repoContributors from elastic into DB. Contributors must already exist in DB for this to work.
-* This script takes all repos that don't yet have contributors associated, 
-* fetches the credits and contributors from elastic and tries to find the matching contributors in the DB by name.
-* To run this script, either use node-ts or run the js version of this file: 
-* ❯ node build/script/importRepoContributors.js --limit 100
-*/
+/*
+ * Import repoContributors from elastic into DB. Contributors must already exist in DB for this to work.
+ * This script takes all repos that don't yet have contributors associated,
+ * fetches the credits and contributors from elastic and tries to find the matching contributors in the DB by name.
+ * To run this script, either use node-ts or run the js version of this file:
+ * ❯ node build/script/importRepoContributors.js --limit 100
+ */
 async function main(args: Args) {
   const pgdb = await PgDb.connect({
     applicationName: 'Import repoContributors',
@@ -181,7 +183,7 @@ async function main(args: Args) {
         ],
       },
     },
-    size: args.limit
+    size: args.limit,
   }
   const repoData: RepoData[] | undefined = await queryElastic(query)
 
@@ -242,21 +244,65 @@ async function main(args: Args) {
 
   // insert records
   const inserted = await dbRepo.insertRepoContributors(repoContributors)
-  console.log(`Inserted ${inserted.length} repoContributors`)
 
   console.log(`Entries to check: `)
-  console.log(reposToCheck)
+  console.log(JSON.stringify([...reposToCheck]))
+
+  console.log(`There are ${reposToCheck.length} repos with contributors you should check`)
+  console.log(`Inserted ${inserted.length} repoContributors`)
+
+  if (args.save) {
+    try {
+      await fs.writeFile(
+        `repo-contributors-to-check.json`,
+        JSON.stringify(reposToCheck, null, 2),
+        'utf8',
+        (error) => {
+          if (error) {
+            console.error(`Error while writing repo-contributors-to-check.json`)
+          }
+        },
+      )
+
+      console.log(`successfully saved to repo-contributors-to-check.json`)
+
+      await fs.writeFile(
+        `imported-repo-contributors.json`,
+        JSON.stringify(inserted, null, 2),
+        'utf8',
+        (error) => {
+          if (error) {
+            console.error(`Error while writing imported-repo-contributors.json`)
+          }
+        },
+      )
+
+      console.log(`successfully saved to imported-repo-contributors.json`)
+    } catch (error) {
+      console.error(
+        'Error while trying to save imported repoContributors as file',
+        error,
+      )
+    }
+  }
 
   await PgDb.disconnect(pgdb)
 }
 
 if (require.main === module) {
-  const args = yargs.option('limit', {
+  const args = yargs
+    .option('limit', {
       alias: 'l',
       type: 'number',
       default: 20000,
       description: 'Limit number of repos to be fetched from elastic',
+    })
+    .option('save', {
+      alias: 's',
+      type: 'boolean',
+      default: false,
+      description:
+        'Save the imported repo contributors and those that need manual checking to json files',
     }).argv as Args
   main(args)
 }
-
