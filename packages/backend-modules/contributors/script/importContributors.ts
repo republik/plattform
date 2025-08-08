@@ -15,6 +15,7 @@ env.config()
 
 interface Args {
   filename: string
+  save: boolean
 }
 
 slugify.extend({
@@ -229,6 +230,20 @@ function getGenderFromGsheetData(
   }
 }
 
+function findDuplicates(array: string[]): string[] {
+  const checked = new Set<string>()
+  const duplicates = new Set<string>
+
+  array.forEach((item) => {
+    if (checked.has(item)) {
+      duplicates.add(item)
+    } else {
+      checked.add(item)
+    }
+  })
+  return Array.from(duplicates)
+}
+
 type ContributorsForImport = {
   contributorsToPossiblyUpdate: Contributor[]
   gendersToCheck: Contributor[]
@@ -287,7 +302,9 @@ async function prepareContributorsForImport(
 
   // check and update slugs
   const newSlugs = newContributors.map((c) => c.slug)
-  const slugsToUpdate = await repo.findExistingSlugs(newSlugs)
+  const existingSlugsInDb = await repo.findExistingSlugs(newSlugs)
+  const otherDuplicateSlugs = findDuplicates(newSlugs)
+  const slugsToUpdate = existingSlugsInDb.concat(otherDuplicateSlugs || [])
   const contributorsWithUpdatedSlugs: Contributor[] = []
   if (slugsToUpdate?.length) {
     await Promise.all(
@@ -314,14 +331,15 @@ async function prepareContributorsForImport(
 }
 
 /*
-* Run this script after running extractContributorsFromElastic, using the same filename argument, 
-* and after manually adjusting those with errors (in the filename.json file).
-* This imports the found contributors from elastic into the publikator.contributors table, using the data
-* from the user table and from the gsheets -> authors gender field.
-* It logs contributors that might have to be manually checked and corrected
-* * To run this script, either use node-ts or run the js version of this file: 
-* ❯ node build/script/importContributors.js --filename test
-*/
+ * Run this script after running extractContributorsFromElastic, using the same filename argument,
+ * and after manually adjusting those with errors (in the filename.json file).
+ * This imports the found contributors from elastic into the publikator.contributors table, using the data
+ * from the user table and from the gsheets -> authors gender field.
+ * It logs contributors that might have to be manually checked and corrected, 
+ * and also saves them to imported-to-check-[filename].json and all imported contributors to imported-[filename].json if the --save option is set.
+ * To run this script, either use node-ts or run the js version of this file:
+ * ❯ node build/script/importContributors.js --filename test --save true
+ */
 async function main(argv: Args) {
   const filename = argv.filename
   const contributors: Contributor[] = loadFile(`${filename}.json`)
@@ -343,7 +361,7 @@ async function main(argv: Args) {
     console.log(
       `there are ${contributorsToPossiblyUpdate.length} contributors in the DB that might be possible to connect with userIds:`,
     )
-    console.log(contributorsToPossiblyUpdate)
+    console.log(JSON.stringify([...contributorsToPossiblyUpdate]))
   }
 
   // log contributors with genders to check
@@ -351,7 +369,7 @@ async function main(argv: Args) {
     console.log(
       `There are ${gendersToCheck.length} contributors with n or b genders that were saved as na: `,
     )
-    console.log(gendersToCheck)
+    console.log(JSON.stringify([...gendersToCheck]))
   }
 
   // log contributors with updated slugs
@@ -359,13 +377,55 @@ async function main(argv: Args) {
     console.log(
       `Duplicate slugs found and updated for ${contributorsWithUpdatedSlugs.length} contributors:`,
     )
-    console.log(contributorsWithUpdatedSlugs)
+    console.log(JSON.stringify([...contributorsWithUpdatedSlugs]))
   }
 
   // insert new contributors into the db
   if (newContributors?.length) {
     const inserted = await repo.insertContributors(newContributors)
     console.log(`successfully inserted ${inserted.length} contributors`)
+  }
+
+  // save contributors that should be checked to file:
+  if (argv.save) {
+    try {
+      const contributorsToCheck = (contributorsToPossiblyUpdate || []).concat(
+        gendersToCheck || [],
+        contributorsWithUpdatedSlugs || [],
+      )
+      await fs.writeFile(
+        `imported-to-check-${filename}.json`,
+        JSON.stringify(contributorsToCheck, null, 2),
+        'utf8',
+        (error) => {
+          if (error) {
+            console.error(
+              `Error while writing imported-to-check-${filename}.json`,
+            )
+          }
+        },
+      )
+
+      console.log(`successfully saved to imported-to-check-${filename}.json`)
+
+      await fs.writeFile(
+        `imported-${filename}.json`,
+        JSON.stringify(newContributors, null, 2),
+        'utf8',
+        (error) => {
+          if (error) {
+            console.error(`Error while writing imported-${filename}.json`)
+          }
+        },
+      )
+
+      console.log(`successfully saved to imported-${filename}.json`)
+    } catch (error) {
+      console.error(
+        'Error while trying to save imported contributors as file',
+        error,
+      )
+    }
   }
 
   await PgDb.disconnect(pgdb)
@@ -377,7 +437,14 @@ if (require.main === module) {
     type: 'string',
     demandOption: true,
     description: 'Path to the contributors JSON file',
-  }).argv as Args
+  })
+  .option('save', {
+    alias: 's',
+    type: 'boolean',
+    default: false,
+    description: 'Save the imported contributors and those that need manual checking to json files'
+  })
+  .argv as Args
 
   main(argv)
 }
