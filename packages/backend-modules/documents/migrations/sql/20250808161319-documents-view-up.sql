@@ -15,8 +15,12 @@ CREATE MATERIALIZED VIEW documents as (
       CASE
         WHEN commit_meta.template IN ('article', 'editorialNewsletter') THEN
           concat('/', to_char(repo_meta."publishDate", 'YYYY/MM/DD'), '/', commit_meta.slug)
+        WHEN commit_meta.template = 'discussion' THEN
+          concat('/', to_char(repo_meta."publishDate", 'YYYY/MM/DD'), '/', commit_meta.slug, '/diskussion')
         WHEN commit_meta.template = 'format' THEN
           concat('/format/', commit_meta.slug)
+        WHEN commit_meta.template = 'dossier' THEN
+          concat('/dossier/', commit_meta.slug)
         ELSE
           concat('/', commit_meta.slug)
       END AS PATH,
@@ -25,11 +29,11 @@ CREATE MATERIALIZED VIEW documents as (
       repo_meta."isTemplate" as is_template,
       repo_meta."publishDate" as publish_date,
       repo_meta."mailchimpCampaignId" as mailchimp_campaign_id,
-      milsteone_meta."updateMailchimp" as update_mailchimp,
-      milsteone_meta."notifyFilters" as notify_filters,
+      milestone_meta."updateMailchimp" as update_mailchimp,
+      milestone_meta."notifyFilters" as notify_filters,
       c.meta AS commit_meta,
       r.meta AS repo_meta,
-      m.meta AS milsteone_meta,
+      m.meta AS milestone_meta,
       COALESCE(commit_meta.feed, FALSE) AS feed,
       commit_meta.template,
       ARRAY(
@@ -45,7 +49,7 @@ CREATE MATERIALIZED VIEW documents as (
       publikator.milestones m
       JOIN publikator.repos r ON m."repoId" = r.id
       JOIN publikator.commits c ON m."commitId" = c.id
-      CROSS JOIN LATERAL jsonb_to_record(m.meta) AS milsteone_meta (
+      CROSS JOIN LATERAL jsonb_to_record(m.meta) AS milestone_meta (
         "updateMailchimp" boolean,
         "notifyFilters" TEXT[]
       )
