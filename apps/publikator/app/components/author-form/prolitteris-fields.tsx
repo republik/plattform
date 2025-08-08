@@ -4,11 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card, Flex, Text, TextField } from '@radix-ui/themes'
 
 interface ProlitterisFieldsProps {
-  initialValues?: {
-    prolitterisId?: string
-    prolitterisFirstname?: string
-    prolitterisLastname?: string
-  }
+  initialValues?: ProlitterisFieldsData
   getFieldError: (fieldName: string) => string | null
   hasFieldError: (fieldName: string) => boolean
   onValidationChange: (isValid: boolean, errorMessage: string | null) => void
@@ -21,7 +17,11 @@ interface ProlitterisFieldsData {
 }
 
 export default function ProlitterisFields({
-  initialValues = {},
+  initialValues = {
+    prolitterisId: '',
+    prolitterisFirstname: '',
+    prolitterisLastname: '',
+  },
   getFieldError,
   hasFieldError,
   onValidationChange,
@@ -33,9 +33,8 @@ export default function ProlitterisFields({
       prolitterisLastname: initialValues.prolitterisLastname || '',
     })
 
-  const [prolitterisValidationError, setProlitterisValidationError] = useState<
-    string | null
-  >(null)
+  const [prolitterisValidationError, setProlitterisValidationError] =
+    useState<string>()
 
   useEffect(() => {
     const { prolitterisId, prolitterisFirstname, prolitterisLastname } =
@@ -54,8 +53,7 @@ export default function ProlitterisFields({
 
     let errorMessage: string | null = null
     if (hasAnyValue && !hasAllValues) {
-      errorMessage =
-        'Es müssen alle Prolitteris-Felder ausgefüllt werden.'
+      errorMessage = 'Es müssen alle Prolitteris-Felder ausgefüllt werden.'
     }
 
     setProlitterisValidationError(errorMessage)
@@ -96,7 +94,7 @@ export default function ProlitterisFields({
         <TextField.Root
           name='prolitterisId'
           defaultValue={prolitterisFields.prolitterisId}
-          placeholder='PL-ID (falls vorhanden)'
+          placeholder='PL-ID'
           color={hasFieldErrorLocal('prolitterisId') ? 'red' : undefined}
           onChange={(e) =>
             handleProlitterisFieldChange('prolitterisId', e.target.value)
@@ -113,7 +111,7 @@ export default function ProlitterisFields({
         <TextField.Root
           name='prolitterisFirstname'
           defaultValue={prolitterisFields.prolitterisFirstname}
-          placeholder='Vorname (falls vorhanden)'
+          placeholder='Vorname'
           color={hasFieldErrorLocal('prolitterisFirstname') ? 'red' : undefined}
           onChange={(e) =>
             handleProlitterisFieldChange('prolitterisFirstname', e.target.value)
@@ -126,12 +124,16 @@ export default function ProlitterisFields({
         <TextField.Root
           name='prolitterisLastname'
           defaultValue={prolitterisFields.prolitterisLastname}
-          placeholder='Nachname (falls vorhanden)'
+          placeholder='Nachname'
           color={hasFieldErrorLocal('prolitterisLastname') ? 'red' : undefined}
           onChange={(e) =>
             handleProlitterisFieldChange('prolitterisLastname', e.target.value)
           }
         />
+        <Text size='1' mb='0'>
+          Alle Prolitteris Felder müssen ausgefüllt sein. Prolitteris Vor- und Nachnamen können vom Namen des*r
+          Autor*in abweichen.
+        </Text>
       </Flex>
     </Card>
   )
