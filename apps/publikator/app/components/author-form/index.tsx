@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useActionState } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   Box,
   Button,
@@ -30,6 +31,8 @@ interface AuthorFormProps {
 }
 
 export default function AuthorForm({ initialData, title }: AuthorFormProps) {
+  const router = useRouter()
+  
   const [imageUrl, setImageUrl] = useState<string | null>(
     initialData?.image || null,
   )
@@ -44,6 +47,13 @@ export default function AuthorForm({ initialData, title }: AuthorFormProps) {
     warnings: [],
     data: initialData,
   })
+
+  // Redirect to author list on successful submission
+  useEffect(() => {
+    if (formState.success) {
+      router.push('/authors')
+    }
+  }, [formState.success, router])
 
   // Split errors into field-specific and general errors
   const fieldErrors = (formState.errors || []).filter(

@@ -5,9 +5,9 @@ import { Card, Flex, Text, TextField } from '@radix-ui/themes'
 
 interface ProlitterisFieldsProps {
   initialValues?: {
-    prolitterisId?: string | null
-    prolitterisFirstname?: string | null
-    prolitterisLastname?: string | null
+    prolitterisId?: string
+    prolitterisFirstname?: string
+    prolitterisLastname?: string
   }
   getFieldError: (fieldName: string) => string | null
   hasFieldError: (fieldName: string) => boolean
