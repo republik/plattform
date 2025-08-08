@@ -253,31 +253,32 @@ async function main(args: Args) {
 
   if (args.save) {
     try {
+      const now = Date.now()
       await fs.writeFile(
-        `repo-contributors-to-check.json`,
+        `repo-contributors-to-check-${now}.json`,
         JSON.stringify(reposToCheck, null, 2),
         'utf8',
         (error) => {
           if (error) {
-            console.error(`Error while writing repo-contributors-to-check.json`)
+            console.error(`Error while writing repo-contributors-to-check-${now}.json`)
           }
         },
       )
 
-      console.log(`successfully saved to repo-contributors-to-check.json`)
+      console.log(`successfully saved to repo-contributors-to-check-${now}.json`)
 
       await fs.writeFile(
-        `imported-repo-contributors.json`,
+        `imported-repo-contributors-${now}.json`,
         JSON.stringify(inserted, null, 2),
         'utf8',
         (error) => {
           if (error) {
-            console.error(`Error while writing imported-repo-contributors.json`)
+            console.error(`Error while writing imported-repo-contributors-${now}.json`)
           }
         },
       )
 
-      console.log(`successfully saved to imported-repo-contributors.json`)
+      console.log(`successfully saved to imported-repo-contributors-${now}.json`)
     } catch (error) {
       console.error(
         'Error while trying to save imported repoContributors as file',
