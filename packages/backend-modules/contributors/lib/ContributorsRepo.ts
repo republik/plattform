@@ -96,6 +96,7 @@ export class ContributorsRepo {
   async findUniqueSlug(
     baseSlug: string,
     excludeId: string | null = null,
+    existingSlugs?: string[]
   ): Promise<string> {
     let slug = baseSlug
     let suffix = 1
@@ -107,7 +108,7 @@ export class ContributorsRepo {
         whereClause,
       )
 
-      if (!slugExists) {
+      if (!slugExists && !existingSlugs?.includes(slug)) {
         isUnique = true
       } else {
         // Add numbers if name slug already exists: -1, -2, -3, etc.

@@ -304,15 +304,16 @@ async function prepareContributorsForImport(
   const newSlugs = newContributors.map((c) => c.slug)
   const existingSlugsInDb = await repo.findExistingSlugs(newSlugs)
   const otherDuplicateSlugs = findDuplicates(newSlugs)
-  const slugsToUpdate = existingSlugsInDb.concat(otherDuplicateSlugs || [])
+  const slugsToUpdate = existingSlugsInDb.concat(otherDuplicateSlugs)
   const contributorsWithUpdatedSlugs: Contributor[] = []
   if (slugsToUpdate?.length) {
     await Promise.all(
-      contributors
+      newContributors
         .filter((c) => slugsToUpdate.includes(c.slug))
         .map(async (c) => {
           const baseSlug = modifiedSlugify(c.name)
-          const newSlug = await repo.findUniqueSlug(baseSlug)
+          const newSlug = await repo.findUniqueSlug(baseSlug, null, newSlugs)
+          newSlugs.push(newSlug)
           c.slug = newSlug
           contributorsWithUpdatedSlugs.push(c)
         }),
@@ -454,4 +455,5 @@ export const importContributorsFunctions = {
   filterForExistingContributors,
   associateContributorWithProfileData,
   getGenderFromGsheetData,
+  findDuplicates
 }
