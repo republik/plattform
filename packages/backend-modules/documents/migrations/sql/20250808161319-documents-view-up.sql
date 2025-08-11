@@ -24,8 +24,19 @@ CREATE MATERIALIZED VIEW documents as (
         ELSE
           concat('/', commit_meta.slug)
       END AS PATH,
-      regexp_replace(commit_meta.format, '^https://github\.com/', '') AS FORMAT,
-      regexp_replace(commit_meta.series, '^https://github\.com/', '') AS series,
+      regexp_replace(commit_meta.format, '^https://github\.com/', '') AS format,
+      (jsonb_typeof(commit_meta.series) = 'object') AS is_series,
+      (jsonb_typeof(commit_meta.series) = 'string') AS is_series_episode,
+      CASE
+        WHEN jsonb_typeof(commit_meta.series) = 'string' then
+          regexp_replace(commit_meta.series #>> '{}', '^https://github\.com/', '')
+        ELSE NULL
+      END AS series,
+      CASE
+        WHEN jsonb_typeof(commit_meta.series) = 'object' then
+          commit_meta.series
+        ELSE NULL
+      END AS series_meta,
       repo_meta."isTemplate" as is_template,
       repo_meta."publishDate" as publish_date,
       repo_meta."mailchimpCampaignId" as mailchimp_campaign_id,
@@ -66,7 +77,7 @@ CREATE MATERIALIZED VIEW documents as (
         "templateRepoId" TEXT,
         "image" text,
         "format" text,
-        "series" text,
+        "series" jsonb,
         "feed" boolean,
         "slug" text,
         "template" TEXT,
