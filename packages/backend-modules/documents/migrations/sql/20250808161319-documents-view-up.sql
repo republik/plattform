@@ -95,6 +95,7 @@ CREATE MATERIALIZED VIEW documents as (
 ) WITH NO DATA;
 
 CREATE UNIQUE INDEX documents_id_idx ON documents (id);
+CREATE INDEX documents_repo_id_idx on documents (repo_id);
 CREATE INDEX documents_state_idx on documents (document_state);
 CREATE INDEX documents_publish_date_desc_idx on documents  (publish_date DESC);
 CREATE INDEX documents_path_idx on documents (path text_pattern_ops);
