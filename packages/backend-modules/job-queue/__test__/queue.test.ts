@@ -7,6 +7,7 @@ import {
 import { JobState } from '../lib/types'
 import { Job, SendOptions } from 'pg-boss'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
+import { logger } from '@orbiting/backend-modules-logger'
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -47,7 +48,7 @@ describe('pg-boss worker test', () => {
         connectionString: postgresContainer.getConnectionUri(),
       },
       // mock connection context because we dont use it in this test
-      {} as ConnectionContext,
+      { logger: logger } as ConnectionContext,
     )
     queue.registerWorker(DemoWorker).registerWorker(DemoErrorWorker)
 

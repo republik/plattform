@@ -46,6 +46,7 @@ export class InvoiceUpdatedWorkflow
     )
     if (isPledgeBased(sub?.metadata)) {
       console.log(`pledge invoice event [${event.id}]; skipping`)
+      return
     }
 
     await this.invoiceService.updateInvoice(

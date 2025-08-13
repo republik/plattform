@@ -29,7 +29,7 @@ CREATE TABLE "notifications" (
 
   "userId"              uuid NOT NULL references "users",
 
-  "subscriptionId"      uuid references "subscriptions",
+  "subscriptionId"      uuid references "subscriptions" ON DELETE CASCADE,
 
   "channels"            jsonb,
 

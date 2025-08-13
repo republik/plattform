@@ -1,8 +1,8 @@
 const { BaseWorker } = require('@orbiting/backend-modules-job-queue')
 
 class CockpitWorker extends BaseWorker {
-  constructor(pgboss, context) {
-    super(pgboss, context)
+  constructor(pgboss, logger, context) {
+    super(pgboss, logger, context)
     this.queue = 'cockpit:refresh'
   }
 

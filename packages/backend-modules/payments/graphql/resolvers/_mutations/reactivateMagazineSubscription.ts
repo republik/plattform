@@ -1,5 +1,5 @@
 import Auth from '@orbiting/backend-modules-auth'
-import { GraphqlContext } from '@orbiting/backend-modules-types'
+import { GraphqlContext, User } from '@orbiting/backend-modules-types'
 import { PaymentService } from '../../../lib/services/PaymentService'
 import { Subscription } from '../../../lib/types'
 import { CancellationService } from '../../../lib/services/CancellationService'
@@ -16,20 +16,25 @@ export = async function cancelMagazineSubscription(
     id: args.subscriptionId,
   })
   if (!sub) {
-    throw Error('api/unexpected')
+    throw new Error('api/unexpected')
   }
 
-  Auth.Roles.ensureUserIsMeOrInRoles(
-    await getSubscriptionOwner(ctx, sub),
-    ctx.user,
-    ['admin', 'supporter'],
-  )
+  const owner = await getSubscriptionOwner(ctx, sub)
+  if (!owner) {
+    throw new Error('api/unexpected')
+  }
+
+  Auth.Roles.ensureUserIsMeOrInRoles(owner, ctx.user, ['admin', 'supporter'])
 
   const cs = new CancellationService(new PaymentService(), ctx.pgdb)
 
-  return cs.revokeCancellation(sub)
+  return cs.revokeCancellation(ctx.user, owner, sub)
 }
 
-async function getSubscriptionOwner(ctx: GraphqlContext, sub: Subscription) {
-  return await ctx.pgdb.public.users.findOne({ id: sub.userId })
+async function getSubscriptionOwner(
+  ctx: GraphqlContext,
+  sub: Subscription,
+): Promise<User | null> {
+  const row = await ctx.pgdb.public.users.findOne({ id: sub.userId })
+  return Auth.transformUser(row)
 }
