@@ -11,15 +11,16 @@ import { FormField, RadioOption } from '../../ui/form'
 import { Button } from '../../ui/button'
 
 import IosCTA from '../ios-cta'
+import { token } from '@republik/theme/tokens'
 
-type OfferOptions = '1' | '9' | '22'
+type OfferOptions = 'H25OFF21' | 'H25OFF13' | ''
 
 export function Offers({
   additionalShopParams = {},
 }: {
   additionalShopParams?: Record<string, string>
 }) {
-  const [option, setOption] = useState<OfferOptions>('1')
+  const [option, setOption] = useState<OfferOptions>('H25OFF13')
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
 
@@ -72,12 +73,18 @@ export function Offers({
               width: 'full',
               background: 'background',
             })}
+            style={{
+              background:
+                option === 'H25OFF21'
+                  ? token('colors.background')
+                  : token('colors.background.marketing'),
+            }}
           >
             <RadioOption
-              name='price_choice'
-              value='1'
-              checked={option === '1'}
-              onChange={() => setOption('1')}
+              name='promo_code'
+              value='H25OFF21'
+              checked={option === 'H25OFF21'}
+              onChange={() => setOption('H25OFF21')}
             >
               <span className={css({ display: 'block' })}>
                 <small>CHF</small>{' '}
@@ -95,12 +102,18 @@ export function Offers({
               width: 'full',
               background: 'background',
             })}
+            style={{
+              background:
+                option === 'H25OFF13'
+                  ? token('colors.background')
+                  : token('colors.background.marketing'),
+            }}
           >
             <RadioOption
-              name='price_choice'
-              value='9'
-              checked={option === '9'}
-              onChange={() => setOption('9')}
+              name='promo_code'
+              value='H25OFF13'
+              checked={option === 'H25OFF13'}
+              onChange={() => setOption('H25OFF13')}
             >
               <span className={css({ display: 'block' })}>
                 <small>CHF</small>{' '}
@@ -118,12 +131,18 @@ export function Offers({
               width: 'full',
               background: 'background',
             })}
+            style={{
+              background:
+                option === ''
+                  ? token('colors.background')
+                  : token('colors.background.marketing'),
+            }}
           >
             <RadioOption
-              name='price_choice'
-              value='22'
-              checked={option === '22'}
-              onChange={() => setOption('22')}
+              name='promo_code'
+              value=''
+              checked={option === ''}
+              onChange={() => setOption('')}
             >
               <span className={css({ display: 'block' })}>
                 <small>CHF</small>{' '}
@@ -147,9 +166,8 @@ export function Offers({
             width: 'full',
           })}
         >
-          {option === 'YEARLY'
-            ? 'Unlimitierter Zugang. 240.– jährlich nach dem ersten Jahr. Jederzeit kündbar.'
-            : 'Unlimitierter Zugang. 22.– monatlich nach dem ersten Monat. Jederzeit kündbar.'}
+          Unlimitierter Zugang. 22.– monatlich nach dem ersten Monat. Jederzeit
+          kündbar.
         </div>
 
         <Button type='submit'>Jetzt abonnieren</Button>

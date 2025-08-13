@@ -227,6 +227,8 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                 display: 'flex',
                 flexDir: 'column',
                 gap: '4',
+                px: '8',
+                pt: '4',
               })}
             >
               <Dialog.Title asChild>
