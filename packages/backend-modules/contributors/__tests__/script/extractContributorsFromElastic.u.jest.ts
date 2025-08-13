@@ -27,10 +27,16 @@ describe('test converting repo data to contributors list', () => {
     ]
     const repoData: RepoData[] = [
       {
+        repoId: 'republik/foo-bar',
         contributors: elasticContributors1,
+        creditsString: 'Luciana Kolbeck (Text), Photo Grapher (Bilder)',
+        publishDate: new Date('2025-08-13 08:00:00'),
       },
       {
+        repoId: 'republik/foo-bar',
         contributors: elasticContributors2,
+        creditsString: 'Journi Reporter, Luciana Kolbeck (Text)',
+        publishDate: new Date('2025-08-13 08:00:00'),
       },
     ]
     const expectedContributors: RawContributor[] = [
@@ -47,10 +53,16 @@ describe('test converting repo data to contributors list', () => {
   test('no contributors', () => {
     const repoData: RepoData[] = [
       {
+        repoId: 'republik/foo-bar',
         contributors: [],
+        creditsString: '',
+        publishDate: new Date('2025-08-13 08:00:00'),
       },
       {
+        repoId: 'republik/foo-bar',
         contributors: [],
+        creditsString: '',
+        publishDate: new Date('2025-08-13 08:00:00'),
       },
     ]
     expect(convertRepoDataToContributorsList(repoData)).toEqual([])
@@ -146,11 +158,15 @@ describe('test deduplicating contributors and slugs', () => {
       { name: 'Luciaena Kolbeck' },
     ]
     const expectedContributors: Contributor[] = [
-      { name: 'Luciaena Kolbeck', slug: 'luciaena-kolbeck', user_id: '123-456' },
+      {
+        name: 'Luciaena Kolbeck',
+        slug: 'luciaena-kolbeck',
+        user_id: '123-456',
+      },
       { name: 'Photo Grapher', slug: 'photo-grapher' },
       { name: 'Journi Reporter', slug: 'journi-reporter' },
       { name: 'Luciana Kolbeck', slug: 'luciana-kolbeck' },
-      { name: 'Luciäna Kolbeck', slug: 'luciaena-kolbeck-1' }
+      { name: 'Luciäna Kolbeck', slug: 'luciaena-kolbeck-1' },
     ]
     expect(deduplicateNamesAndSlugs(rawContributors)).toEqual(
       expectedContributors,
