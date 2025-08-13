@@ -263,6 +263,8 @@ module.exports = async (_, args, context) => {
 
       campaignId = id
     }
+    debug('mailchimp campaign id: ')
+    debug(JSON.stringify({ repoMetaCampaignId: repoMeta.mailchimpCampaignId, campaignId: campaignId }))
   }
 
   // calc version number
@@ -312,7 +314,9 @@ module.exports = async (_, args, context) => {
 
     await maybeDelcareMilestonePublished(milestone, tx)
     await updateCurrentPhase(repoId, tx)
-    await updateRepo(repoId, { mailchimpCampaignId: campaignId }, tx)
+    if (campaignId && repoMeta.campaignId !== campaignId) {
+      await updateRepo(repoId, { mailchimpCampaignId: campaignId }, tx)
+    }
 
     await tx.transactionCommit()
   } catch (e) {

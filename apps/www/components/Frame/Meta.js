@@ -44,12 +44,11 @@ const Meta = ({ data, t }) => {
     pageTitle ||
     (title && t('components/Frame/Meta/title', { title }))
 
-  // to prevent facebook from using a random image from the website we fall back to a square avatar and claim it's below 315px in size to trigger the small image layout
-  // - https://developers.facebook.com/docs/sharing/webmasters/images/?locale=en_US
+  // fallback image
   const ogImage =
     facebookImage ||
     image ||
-    `${CDN_FRONTEND_BASE_URL}/static/avatar310.png?size=310x310`
+    `${CDN_FRONTEND_BASE_URL}/static/social-media/teilen.png`
 
   const twitterCard = twitterImage || image
 

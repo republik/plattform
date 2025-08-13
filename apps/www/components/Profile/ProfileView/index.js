@@ -197,8 +197,8 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
               <IconButton
                 Icon={IconMailOutline}
                 href={`mailto:${user.email}`}
-                label='Email'
-                labelShort='Email'
+                label='E-Mail'
+                labelShort='E-Mail'
               />
             )}
             {user.pgpPublicKeyId && (

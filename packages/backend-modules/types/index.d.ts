@@ -1,4 +1,5 @@
 import { PgDb } from 'pogi'
+import type { Logger } from 'pino'
 
 declare const __brand: unique symbol
 type Brand<B> = { [__brand]: B }
@@ -10,6 +11,7 @@ export interface ConnectionContext {
   pgdb: PgDb
   redis: any
   pubsub: any
+  logger: Logger
 }
 export interface GraphqlContext extends ConnectionContext {
   t: any

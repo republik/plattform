@@ -1,10 +1,10 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const logger = console
 const generateMemberships = require('../../../lib/generateMemberships')
 const { sendPaymentSuccessful } = require('../../../lib/Mail')
 const { refreshPotForPledgeId } = require('../../../lib/membershipPot')
 
-module.exports = async (_, args, { pgdb, req, t, redis, user: me }) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, t, redis, user: me } = context
   Roles.ensureUserHasRole(me, 'supporter')
 
   const { paymentId, status, reason } = args
@@ -15,38 +15,39 @@ module.exports = async (_, args, { pgdb, req, t, redis, user: me }) => {
   try {
     const payment = await transaction.public.payments.findOne({ id: paymentId })
     if (!payment) {
-      logger.error('payment not found', { req: req._log(), args })
+      context.logger.error({ args }, 'payment not found')
       throw new Error(t('api/payment/404'))
     }
 
     // check if state transform is allowed
     if (status === 'PAID') {
       if (payment.status !== 'WAITING') {
-        logger.error('only payments with status WAITING can be set to PAID', {
-          req: req._log(),
-          args,
-          payment,
-        })
+        context.logger.error(
+          { args, payment },
+          'only payments with status WAITING can be set to PAID',
+        )
         throw new Error(t('api/unexpected'))
       }
       if (!reason) {
-        logger.error('need reason', { req: req._log(), args, payment })
+        context.logger.error({ args, payment }, 'need reason')
         throw new Error(t('package/customize/userPrice/reason/error'))
       }
     } else if (status === 'REFUNDED') {
       if (payment.status !== 'WAITING_FOR_REFUND') {
-        logger.error(
+        context.logger.error(
+          { args, payment },
           'only payments with status WAITING_FOR_REFUND can be REFUNDED',
-          { req: req._log(), args, payment },
         )
         throw new Error(t('api/unexpected'))
       }
     } else {
-      logger.error('only change to PAID and REFUNDED supported.', {
-        req: req._log(),
-        args,
-        payment,
-      })
+      context.logger.error(
+        {
+          args,
+          payment,
+        },
+        'only change to PAID and REFUNDED supported.',
+      )
       throw new Error(t('api/unexpected'))
     }
 
@@ -117,13 +118,13 @@ module.exports = async (_, args, { pgdb, req, t, redis, user: me }) => {
     await transaction.transactionCommit()
   } catch (e) {
     await transaction.transactionRollback()
-    logger.info('transaction rollback', { req: req._log(), args, error: e })
+    context.logger.error({ args, error: e }, 'update payment failed')
     throw e
   }
 
   if (updatedPledge) {
     await refreshPotForPledgeId(updatedPledge.id, { pgdb }).catch((e) => {
-      console.error('error after payPledge', e)
+      context.logger.error({ args, error: e }, 'error after payPledge')
     })
   }
 

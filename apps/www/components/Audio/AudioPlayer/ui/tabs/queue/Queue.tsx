@@ -27,6 +27,8 @@ import {
 } from '../../../../types/AudioActionTracking'
 import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { AudioQueueItem } from 'components/Audio/types/AudioPlayerItem'
+import { IconButton } from '@project-r/styleguide'
+import { IconRemoveCircle } from '@republik/icons'
 
 const styles = {
   list: css({
@@ -68,8 +70,12 @@ const Queue = ({
    */
   const [items, setItems] = useState<AudioQueueItem[]>(inputItems)
   const { toggleAudioPlayer, removeAudioQueueItem } = useAudioContext()
-  const { audioQueueIsLoading, reorderAudioQueue, checkIfHeadOfQueue } =
-    useAudioQueue()
+  const {
+    audioQueueIsLoading,
+    reorderAudioQueue,
+    checkIfHeadOfQueue,
+    clearAudioQueue,
+  } = useAudioQueue()
 
   /**
    * Synchronize the items passed via props with the internal items state.
@@ -139,43 +145,62 @@ const Queue = ({
   }
 
   return (
-    <DndContext
-      onDragStart={() => {
-        if (inNativeApp) {
-          setForceScrollLock(true)
-        }
-      }}
-      onDragEnd={(e) => {
-        setForceScrollLock(false)
-        handleDragEnd(e)
-      }}
-      modifiers={[
-        restrictToVerticalAxis,
-        restrictToWindowEdges,
-        restrictToFirstScrollableAncestor,
-      ]}
-      sensors={sensors}
-    >
-      <SortableContext
-        items={items.map((item) => item.id)}
-        strategy={verticalListSortingStrategy}
+    <>
+      <IconButton
+        style={{
+          margin: '24px 0',
+        }}
+        Icon={IconRemoveCircle}
+        onClick={() => {
+          if (
+            window.confirm(
+              'Ihre Wiedergabeliste wird gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden.',
+            )
+          ) {
+            clearAudioQueue()
+          }
+        }}
+        label={'Wiedergabeliste leeren'}
+        labelShort={'Wiedergabeliste leeren'}
+      />
+      <DndContext
+        onDragStart={() => {
+          if (inNativeApp) {
+            setForceScrollLock(true)
+          }
+        }}
+        onDragEnd={(e) => {
+          setForceScrollLock(false)
+          handleDragEnd(e)
+        }}
+        modifiers={[
+          restrictToVerticalAxis,
+          restrictToWindowEdges,
+          restrictToFirstScrollableAncestor,
+        ]}
+        sensors={sensors}
       >
-        <ol {...styles.list}>
-          {items.map((item) => (
-            <QueueItem
-              key={item.id}
-              t={t}
-              item={item}
-              isActive={!!checkIfHeadOfQueue(item.document.id)}
-              onClick={handleClick}
-              onRemove={handleRemove}
-              onDownload={handleDownload}
-              onOpen={handleOpenArticle}
-            />
-          ))}
-        </ol>
-      </SortableContext>
-    </DndContext>
+        <SortableContext
+          items={items.map((item) => item.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <ol {...styles.list}>
+            {items.map((item) => (
+              <QueueItem
+                key={item.id}
+                t={t}
+                item={item}
+                isActive={!!checkIfHeadOfQueue(item.document.id)}
+                onClick={handleClick}
+                onRemove={handleRemove}
+                onDownload={handleDownload}
+                onOpen={handleOpenArticle}
+              />
+            ))}
+          </ol>
+        </SortableContext>
+      </DndContext>
+    </>
   )
 }
 

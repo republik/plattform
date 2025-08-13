@@ -1,4 +1,3 @@
-const logger = console
 const { ascending } = require('d3-array')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const uniq = require('lodash/uniq')
@@ -32,23 +31,25 @@ module.exports = async (_, args, context) => {
       id: targetUserId,
     })
     if (!targetUser) {
-      logger.error('target user not found', { req: req._log(), targetUserId })
+      context.logger.error({ targetUserId }, 'target user not found')
       throw new Error(t('api/users/404'))
     }
     const sourceUser = await transaction.public.users.findOne({
       id: sourceUserId,
     })
     if (!sourceUser) {
-      logger.error('source user not found', { req: req._log(), sourceUserId })
+      context.logger.error({ sourceUserId }, 'source user not found')
       throw new Error(t('api/users/404'))
     }
 
     if (targetUser.id === sourceUser.id) {
-      logger.error('source- and target-user must not be the same', {
-        req: req._log(),
-        sourceUser,
-        targetUser,
-      })
+      context.logger.error(
+        {
+          sourceUser,
+          targetUser,
+        },
+        'source- and target-user must not be the same',
+      )
       throw new Error(t('api/users/merge/sourceAndTargetIdentical'))
     }
 
@@ -301,7 +302,10 @@ module.exports = async (_, args, context) => {
         await operation()
         await transaction.savePointRelease(savePoint)
       } catch (e) {
-        console.log('mergeUsers encountered a problem, continuing', e)
+        context.logger.error(
+          { error: e },
+          'mergeUsers encountered a problem, continuing',
+        )
         await transaction.transactionRollback({ savePoint })
       }
     }
@@ -315,17 +319,20 @@ module.exports = async (_, args, context) => {
         user: sourceUser,
         newEmail: targetUser.email,
       })
-    } catch (_e) {
-      logger.error('newsletter subscription changes failed in mergeUsers!', _e)
+    } catch (e) {
+      context.logger.error(
+        { error: e },
+        'newsletter subscription changes failed in mergeUsers!',
+      )
     }
 
     try {
       await cache({ prefix: `User:${sourceUserId}` }, { redis }).invalidate()
       await cache({ prefix: `User:${targetUserId}` }, { redis }).invalidate()
-    } catch (_e) {
-      logger.error(
+    } catch (e) {
+      context.logger.error(
+        { error: e },
         'failed to clear user cache for source and/or target user in mergeUsers',
-        _e,
       )
     }
 
@@ -342,7 +349,7 @@ module.exports = async (_, args, context) => {
         `error message: ${e.message}`,
       ].join('\n'),
     )
-    logger.info('transaction rollback', { req: req._log(), args, error: e })
+    context.logger.error({ args, error: e }, 'merge user failed')
     throw e
   }
 

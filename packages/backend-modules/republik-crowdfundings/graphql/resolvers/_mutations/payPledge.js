@@ -15,7 +15,7 @@ const {
 const logger = console
 
 module.exports = async (_, args, context) => {
-  const { pgdb, req, t } = context
+  const { pgdb, t } = context
   const { pledgePayment } = args
   const { pledgeId } = pledgePayment
 
@@ -24,11 +24,14 @@ module.exports = async (_, args, context) => {
     pgdb,
     fn: async ({ pledge, transaction }) => {
       if (!pledge) {
-        logger.error(`pledge (${pledgeId}) not found`, {
-          req: req._log(),
-          args,
-          pledge,
-        })
+        context.logger.error(
+          {
+            args,
+            pledgeId,
+            pledge,
+          },
+          `pledge not found`,
+        )
         throw new Error(t('api/unexpected'))
       }
 
@@ -62,12 +65,14 @@ module.exports = async (_, args, context) => {
         ) {
           return {}
         }
-        logger.error('pledge is already paid', {
-          req: req._log(),
-          args,
-          pledge,
-          pledgePayment,
-        })
+        context.logger.error(
+          {
+            args,
+            pledge,
+            pledgePayment,
+          },
+          'pledge is already paid',
+        )
         throw new Error(t('api/pledge/alreadyPaid'))
       }
 
@@ -80,12 +85,14 @@ module.exports = async (_, args, context) => {
         id: pledge.packageId,
       })
       if (pkg.paymentMethods.indexOf(pledgePayment.method) === -1) {
-        logger.error('payPledge paymentMethod not allowed', {
-          req: req._log(),
-          args,
-          pledge,
-          pledgePayment,
-        })
+        context.logger.error(
+          {
+            args,
+            pledge,
+            pledgePayment,
+          },
+          'payPledge paymentMethod not allowed',
+        )
         throw new Error(t('api/pledge/paymentMethod/notAllowed'))
       }
 
@@ -138,8 +145,7 @@ module.exports = async (_, args, context) => {
           logger,
         })
       } else {
-        logger.error('unsupported paymentMethod', {
-          req: req._log(),
+        context.logger.error('unsupported paymentMethod', {
           args,
           pledge,
           pledgePayment,
@@ -152,12 +158,14 @@ module.exports = async (_, args, context) => {
       }
 
       if (!pledgeStatus) {
-        logger.error('pledgeStatus undefined', {
-          req: req._log(),
-          args,
-          pledge,
-          pledgeStatus,
-        })
+        context.logger.error(
+          {
+            args,
+            pledge,
+            pledgeStatus,
+          },
+          'pledgeStatus undefined',
+        )
         throw new Error(t('api/unexpected'))
       }
 

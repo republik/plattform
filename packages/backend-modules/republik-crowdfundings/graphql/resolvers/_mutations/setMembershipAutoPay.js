@@ -68,13 +68,18 @@ module.exports = async (_, { id, autoPay }, context) => {
       )
     } catch (e) {
       // swallow slack message
-      console.warn('publish to slack failed', { req: req._log(), error: e })
+      context.logger.warn(
+        {
+          error: e,
+        },
+        'publish to slack failed',
+      )
     }
 
     return updatedMembership
   } catch (e) {
     await transaction.transactionRollback()
-    console.error('setMembershipAutoPay', e, { req: req._log() })
+    context.logger.error({ error: e }, 'setMembershipAutoPay failed')
     throw e
   }
 }

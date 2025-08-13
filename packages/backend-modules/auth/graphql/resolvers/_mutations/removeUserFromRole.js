@@ -6,7 +6,8 @@ const {
   isRoleClaimableByMe,
 } = require('../../../lib/Roles')
 
-module.exports = async (_, args, { pgdb, loaders, user: me, req, t }) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, loaders, user: me, req, t } = context
   const { userId, role } = args
   const isMyself = !userId || me.id === userId
 
@@ -34,7 +35,7 @@ module.exports = async (_, args, { pgdb, loaders, user: me, req, t }) => {
     )
   } catch (e) {
     // swallow slack message
-    console.warn('publish to slack failed', { req: req._log(), args, error: e })
+    context.logger.warn({ args, error: e }, 'publish to slack failed')
   }
 
   await loaders.User.byId.clear(user.id)

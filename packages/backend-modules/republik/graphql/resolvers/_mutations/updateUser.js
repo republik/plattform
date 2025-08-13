@@ -2,14 +2,13 @@ const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 
 const { upsertAddress } = require('../../../lib/address')
 
-const logger = console
-
-module.exports = async (_, args, { pgdb, req, t, mail }) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, t, mail } = context
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const user = await pgdb.public.users.findOne({ id: args.userId })
   if (!user) {
-    logger.error('user not found', { req: req._log() })
+    context.logger.error({ userId: args.userId }, 'user not found')
     throw new Error(t('api/users/404'))
   }
 
@@ -57,7 +56,7 @@ module.exports = async (_, args, { pgdb, req, t, mail }) => {
     return transformUser(updatedUser)
   } catch (e) {
     await transaction.transactionRollback()
-    logger.error('error in transaction', { req: req._log(), args, error: e })
+    context.logger.error({ args, error: e }, 'update user failed')
     throw new Error(t('api/unexpected'))
   }
 }

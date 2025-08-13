@@ -60,6 +60,7 @@ const {
   SyncMailchimpEndedWorker,
   ConfirmGiftSubscriptionTransactionalWorker,
   ConfirmGiftAppliedTransactionalWorker,
+  SlackNotifierWorker,
   setupPaymentUserEventHooks,
 } = require('@orbiting/backend-modules-payments')
 
@@ -116,6 +117,7 @@ function setupQueue(context, monitorQueueState = undefined) {
     CockpitWorker,
     ReadingPositionRefreshWorker,
     NextReadsFeedRefreshWorker,
+    SlackNotifierWorker,
   ])
 
   return queue
@@ -227,8 +229,8 @@ const run = async (workerId, config) => {
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
     const context = {
-      ...defaultContext,
       ...connectionContext,
+      ...defaultContext,
       t,
       signInHooks,
       mail,
@@ -272,8 +274,8 @@ const runOnce = async () => {
   const createGraphQLContext = async (defaultContext) => {
     const loaders = {}
     const context = {
-      ...defaultContext,
       ...connectionContext,
+      ...defaultContext,
       t,
       mail,
       loaders,
@@ -375,18 +377,20 @@ const runOnce = async () => {
   const queue = setupQueue(connectionContext, 120)
   await queue.start()
   await queue.startWorkers()
-  await queue.schedule(
-    'cockpit:refresh',
-    '*/30 * * * *', // cron for every 30 minutes
-  )
-  await queue.schedule(
-    'next_reads:reading_position',
-    '15,45 * * * *', // At minute the 15th and 45th minute
-  )
-  await queue.schedule(
-    'next_reads:feed:refresh',
-    '*/30 * * * *', // every 30 minutes
-  )
+  if (!DEV) {
+    await queue.schedule(
+      'cockpit:refresh',
+      '*/30 * * * *', // cron for every 30 minutes
+    )
+    await queue.schedule(
+      'next_reads:reading_position',
+      '15,45 * * * *', // At minute the 15th and 45th minute
+    )
+    await queue.schedule(
+      'next_reads:feed:refresh',
+      '*/30 * * * *', // every 30 minutes
+    )
+  }
 
   const close = async () => {
     await Promise.all(

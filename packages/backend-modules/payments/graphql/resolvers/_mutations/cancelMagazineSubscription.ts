@@ -30,19 +30,22 @@ export = async function cancelMagazineSubscription(
     throw Error('api/unexpected')
   }
 
-  Auth.Roles.ensureUserIsMeOrInRoles(
-    await getSubscriptionOwner(ctx, sub),
-    ctx.user,
-    ['admin', 'supporter'],
-  )
+  const owner = await getSubscriptionOwner(ctx, sub)
+  if (!owner) {
+    throw Error('api/unexpected')
+  }
+
+  Auth.Roles.ensureUserIsMeOrInRoles(owner, ctx.user, ['admin', 'supporter'])
 
   const cs = new CancellationService(new PaymentService(), ctx.pgdb)
 
   const details = args.details
 
-  const actorIsSupport = isSupportActor(sub.userId, ctx.user)
+  const actorIsSupport = isSupportActor(ctx.user, owner)
 
   return cs.cancelSubscription(
+    ctx.user,
+    owner,
     sub,
     {
       category: details.type,
@@ -56,14 +59,18 @@ export = async function cancelMagazineSubscription(
   )
 }
 
-async function getSubscriptionOwner(ctx: GraphqlContext, sub: Subscription) {
-  return await ctx.pgdb.public.users.findOne({ id: sub.userId })
+async function getSubscriptionOwner(
+  ctx: GraphqlContext,
+  sub: Subscription,
+): Promise<User | null> {
+  const row = await ctx.pgdb.public.users.findOne({ id: sub.userId })
+  return Auth.transformUser(row)
 }
 
-function isSupportActor(userId: string, user: User) {
-  if (!user.roles.includes('admin') && !user.roles.includes('supporter')) {
+function isSupportActor(actor: User, owner: User) {
+  if (!actor.roles.includes('admin') && !actor.roles.includes('supporter')) {
     return false
   }
 
-  return userId !== user.id
+  return actor.id !== owner.id
 }

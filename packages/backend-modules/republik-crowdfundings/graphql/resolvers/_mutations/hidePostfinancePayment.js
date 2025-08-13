@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const logger = console
 
-module.exports = async (_, args, { pgdb, req, t }) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, t } = context
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const { id } = args
@@ -11,14 +11,16 @@ module.exports = async (_, args, { pgdb, req, t }) => {
   try {
     const pfp = await transaction.public.postfinancePayments.findOne({ id })
     if (!pfp) {
-      logger.error('postfinancePayment not found', { req: req._log(), args })
+      context.logger.error({ args }, 'postfinancePayment not found')
       throw new Error(t('api/payment/404'))
     }
     if (pfp.matched) {
-      logger.error('can not hide matched postfinancePayments', {
-        req: req._log(),
-        args,
-      })
+      context.logger.error(
+        {
+          args,
+        },
+        'can not hide matched postfinancePayments',
+      )
       throw new Error(t('api/postfinancePayment/hide/matched'))
     }
 
@@ -35,7 +37,7 @@ module.exports = async (_, args, { pgdb, req, t }) => {
     await transaction.transactionCommit()
   } catch (e) {
     await transaction.transactionRollback()
-    logger.info('transaction rollback', { req: req._log(), args, error: e })
+    context.logger.error({ args, error: e }, 'hide pf payment failed')
     throw e
   }
 

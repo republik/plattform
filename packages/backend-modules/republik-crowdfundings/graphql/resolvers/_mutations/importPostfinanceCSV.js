@@ -51,7 +51,6 @@ const parsePostfinanceExport = async (inputFile, pgdb) => {
   const iban = delimitedFile.slice(0, 5).reduce((acc, row) => {
     const parsedRow = row.match(/^Konto:;([A-Z0-9]{5,34})/)
 
-
     if (!parsedRow) {
       return acc
     }
@@ -146,7 +145,8 @@ const insertPayments = async (paymentsInput, tableName, pgdb) => {
   return numPaymentsBefore
 }
 
-module.exports = async (_, args, { pgdb, req, t, redis }) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, t, redis } = context
   Roles.ensureUserHasRole(req.user, 'accountant')
   const { csv } = args
 
@@ -202,11 +202,11 @@ num possible duplicate payments: ${possibleDuplicateCount}
     return result
   } catch (e) {
     await transaction.transactionRollback()
-    console.info('transaction rollback', { req: req._log(), args, error: e })
+    context.logger.error({ args, error: e }, 'import pf csv failed')
     throw e
   } finally {
     await refreshAllPots({ pgdb }).catch((e) => {
-      console.error('error after matchPayments', e)
+      context.logger.error({ error: e }, 'error after matchPayments')
     })
   }
 }

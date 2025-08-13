@@ -1,6 +1,7 @@
 import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
+import { token } from '@republik/theme/tokens'
 import Link from 'next/link'
 import React from 'react'
 
@@ -39,12 +40,16 @@ export function CategoryLabel({
 }) {
   const text = document.meta.format?.meta.title || document.meta.series?.title
   if (!text) return null
+
+  const color =
+    document.meta.format?.meta.color ||
+    document.meta.format?.meta.section?.meta.color
+
   return (
     <h5
       style={{
-        color:
-          document.meta.format?.meta.color ||
-          document.meta.format?.meta.section?.meta.color,
+        // If the format color is set to black-ish, use a variable that works in dark mode
+        color: color?.match(/^#(000|282828)/i) ? token('colors.text') : color,
       }}
     >
       {text}
