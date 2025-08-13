@@ -32,30 +32,55 @@ function* calculateMonths(minAge: number, maxAge: number) {
 
 async function main() {
   for (const { months } of calculateMonths(15, 30)) {
+    const promoCode = `U30M${months.toString().padStart(3, '0')}`
+
     const res = await Promise.all([
-      RepublikAGStripe.coupons.create({
-        name: `U30 Angebot - ${months} Monate`,
-        amount_off: 13 * 100, // 22 - 13 = 9
-        currency: 'CHF',
-        duration: 'repeating',
-        duration_in_months: months,
-        metadata: {
-          campaign: 'U30',
-        },
-      }),
-      ProjectRStripe.coupons.create({
-        name: `U30 Angebot - ${months} Monate`,
-        amount_off: 141 * 100, // 240 - 141 = 99 CHF in Rappen
-        currency: 'CHF',
-        duration: 'repeating',
-        duration_in_months: months,
-        metadata: {
-          campaign: 'U30',
-        },
-      }),
+      RepublikAGStripe.coupons
+        .create({
+          name: `U30 Angebot`,
+          amount_off: 13 * 100, // 22 - 13 = 9
+          currency: 'CHF',
+          duration: 'repeating',
+          duration_in_months: months,
+          metadata: {
+            campaign: 'U30',
+          },
+        })
+        .then(async (coupon) => {
+          await RepublikAGStripe.promotionCodes.create({
+            coupon: coupon.id,
+            code: promoCode,
+          })
+
+          return coupon
+        }),
+      ProjectRStripe.coupons
+        .create({
+          name: `U30 Angebot`,
+          amount_off: 141 * 100, // 240 - 141 = 99 CHF in Rappen
+          currency: 'CHF',
+          duration: 'repeating',
+          duration_in_months: months,
+          metadata: {
+            campaign: 'U30M',
+          },
+        })
+        .then(async (coupon) => {
+          await ProjectRStripe.promotionCodes.create({
+            coupon: coupon.id,
+            code: promoCode,
+          })
+
+          return coupon
+        }),
     ])
 
-    console.log({ months, republik_id: res[0].id, project_r_id: res[1].id })
+    console.log({
+      months,
+      promoCode,
+      republik_id: res[0].id,
+      project_r_id: res[1].id,
+    })
   }
 }
 
