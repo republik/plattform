@@ -13,14 +13,23 @@ import { Button } from '../../ui/button'
 import IosCTA from '../ios-cta'
 import { token } from '@republik/theme/tokens'
 
-type OfferOptions = 'H25OFF21' | 'H25OFF13' | ''
+type Offer = {
+  value: 'H25OFF21' | 'H25OFF13' | ''
+  price: string
+}
+
+const OFFERS: Offer[] = [
+  { value: 'H25OFF21', price: '1.–' },
+  { value: 'H25OFF13', price: '9.–' },
+  { value: '', price: '22.–' },
+]
 
 export function Offers({
   additionalShopParams = {},
 }: {
   additionalShopParams?: Record<string, string>
 }) {
-  const [option, setOption] = useState<OfferOptions>('H25OFF13')
+  const [option, setOption] = useState<Offer['value']>('H25OFF13')
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
 
@@ -28,6 +37,18 @@ export function Offers({
   if (isIOSApp) {
     return <IosCTA />
   }
+
+  const allHiddenParams = { ...utmParams, ...additionalShopParams }
+
+  const radioContainerStyles = css({
+    textAlign: 'left',
+    padding: '4',
+    border: '2px solid',
+    borderColor: 'rgba(0,0,0,0.3)',
+    borderRadius: '6',
+    width: 'full',
+    background: 'background',
+  })
 
   return (
     <form
@@ -39,13 +60,10 @@ export function Offers({
         })
       }}
     >
-      <input type='hidden' hidden name='promo_code' value='EINSTIEG' />
-      {Object.entries(utmParams).map(([k, v]) => {
-        return <input type='hidden' hidden key={k} name={k} value={v} />
-      })}
-      {Object.entries(additionalShopParams).map(([k, v]) => {
-        return <input type='hidden' hidden key={k} name={k} value={v} />
-      })}
+      {Object.entries(allHiddenParams).map(([k, v]) => (
+        <input type='hidden' hidden key={k} name={k} value={v} />
+      ))}
+
       <div
         className={css({
           display: 'flex',
@@ -63,93 +81,30 @@ export function Offers({
             gap: '4',
           })}
         >
-          <div
-            className={css({
-              textAlign: 'left',
-              padding: '4',
-              border: '2px solid',
-              borderColor: 'rgba(0,0,0,0.3)',
-              borderRadius: '6',
-              width: 'full',
-              background: 'background',
-            })}
-            style={{
-              background:
-                option === 'H25OFF21'
-                  ? token('colors.background')
-                  : token('colors.background.marketing'),
-            }}
-          >
-            <RadioOption
-              name='promo_code'
-              value='H25OFF21'
-              checked={option === 'H25OFF21'}
-              onChange={() => setOption('H25OFF21')}
+          {OFFERS.map(({ value, price }) => (
+            <div
+              key={value}
+              className={radioContainerStyles}
+              style={{
+                background:
+                  option === value
+                    ? token('colors.background')
+                    : token('colors.background.marketing'),
+              }}
             >
-              <span className={css({ display: 'block' })}>
-                <small>CHF</small>{' '}
-                <span className={css({ fontWeight: 'bold' })}>1.–</span>
-              </span>
-            </RadioOption>
-          </div>
-          <div
-            className={css({
-              textAlign: 'left',
-              padding: '4',
-              border: '2px solid',
-              borderColor: 'rgba(0,0,0,0.3)',
-              borderRadius: '6',
-              width: 'full',
-              background: 'background',
-            })}
-            style={{
-              background:
-                option === 'H25OFF13'
-                  ? token('colors.background')
-                  : token('colors.background.marketing'),
-            }}
-          >
-            <RadioOption
-              name='promo_code'
-              value='H25OFF13'
-              checked={option === 'H25OFF13'}
-              onChange={() => setOption('H25OFF13')}
-            >
-              <span className={css({ display: 'block' })}>
-                <small>CHF</small>{' '}
-                <span className={css({ fontWeight: 'bold' })}>9.–</span>
-              </span>
-            </RadioOption>
-          </div>
-          <div
-            className={css({
-              textAlign: 'left',
-              padding: '4',
-              border: '2px solid',
-              borderColor: 'rgba(0,0,0,0.3)',
-              borderRadius: '6',
-              width: 'full',
-              background: 'background',
-            })}
-            style={{
-              background:
-                option === ''
-                  ? token('colors.background')
-                  : token('colors.background.marketing'),
-            }}
-          >
-            <RadioOption
-              name='promo_code'
-              value=''
-              checked={option === ''}
-              onChange={() => setOption('')}
-            >
-              <span className={css({ display: 'block' })}>
-                <small>CHF</small>{' '}
-                <span className={css({ fontWeight: 'bold' })}>22.–</span>
-              </span>
-            </RadioOption>
-          </div>
+              <RadioOption
+                name='promo_code'
+                value={value}
+                checked={option === value}
+                onChange={() => setOption(value)}
+              >
+                <span className={css({ display: 'block' })}>
+                  <small>CHF</small>{' '}
+                  <span className={css({ fontWeight: 'bold' })}>{price}</span>
+                </span>
+              </RadioOption>
+            </div>
+          ))}
         </div>
 
         <FormField
