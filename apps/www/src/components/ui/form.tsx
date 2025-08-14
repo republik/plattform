@@ -28,6 +28,7 @@ export function FormField({
         display: 'flex',
         flexDirection: 'column',
         gap: '1.5',
+        width: 'full',
       })}
       data-invalid={error ? 'true' : undefined}
     >
