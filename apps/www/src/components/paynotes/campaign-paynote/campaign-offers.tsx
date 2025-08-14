@@ -47,7 +47,11 @@ export function Offers({
     borderColor: 'rgba(0,0,0,0.3)',
     borderRadius: '6',
     width: 'full',
-    background: 'background',
+    background: 'background.marketing',
+    _peerChecked: {
+      background: 'background',
+      borderColor: 'text.marketingAccent',
+    },
   })
 
   return (
@@ -82,28 +86,22 @@ export function Offers({
           })}
         >
           {OFFERS.map(({ value, price }) => (
-            <div
+            <RadioOption
               key={value}
-              className={radioContainerStyles}
-              style={{
-                background:
-                  option === value
-                    ? token('colors.background')
-                    : token('colors.background.marketing'),
-              }}
+              name='promo_code'
+              value={value}
+              checked={option === value}
+              onChange={() => setOption(value)}
+              hideRadio
+              className='peer'
             >
-              <RadioOption
-                name='promo_code'
-                value={value}
-                checked={option === value}
-                onChange={() => setOption(value)}
-              >
+              <div key={value} className={radioContainerStyles}>
                 <span className={css({ display: 'block' })}>
                   <small>CHF</small>{' '}
                   <span className={css({ fontWeight: 'bold' })}>{price}</span>
                 </span>
-              </RadioOption>
-            </div>
+              </div>
+            </RadioOption>
           ))}
         </div>
 
