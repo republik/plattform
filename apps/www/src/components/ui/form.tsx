@@ -28,6 +28,7 @@ export function FormField({
         display: 'flex',
         flexDirection: 'column',
         gap: '1.5',
+        width: 'full',
       })}
       data-invalid={error ? 'true' : undefined}
     >
@@ -100,11 +101,13 @@ export function FormField({
 
 export function RadioOption({
   children,
+  hideRadio,
   ...inputProps
 }: {
   value: string
   name: string
   children: ReactNode
+  hideRadio?: boolean
 } & InputHTMLAttributes<HTMLInputElement>) {
   const id = useId()
   return (
@@ -162,11 +165,12 @@ export function RadioOption({
               },
             },
           }),
+          hideRadio && visuallyHidden(),
           inputProps.className,
         )}
       />
 
-      <span>{children}</span>
+      {children}
     </label>
   )
 }
