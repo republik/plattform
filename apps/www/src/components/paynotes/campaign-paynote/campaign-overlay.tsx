@@ -22,7 +22,10 @@ import useResizeObserver from 'use-resize-observer'
 import { getMeteringData } from '../article-metering'
 import IosCTA from '../ios-cta'
 import { usePaynoteVariants } from '../paynote/use-paynotes'
-import { CampaignHero } from '@app/components/paynotes/campaign-paynote/campaign-hero'
+import {
+  CampaignHero,
+  CampaignHeroMini,
+} from '@app/components/paynotes/campaign-paynote/campaign-hero'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
@@ -50,7 +53,12 @@ function MiniPaynoteMessage({
   const words = message.split(' ')
 
   return (
-    <Dialog.Trigger onClick={onClick}>
+    <Dialog.Trigger
+      onClick={onClick}
+      className={css({
+        textAlign: 'left',
+      })}
+    >
       <span>
         {words.map((word) => {
           return word === '{PRICE_MONTHLY}' ? (
@@ -68,7 +76,7 @@ function MiniPaynoteMessage({
           textDecoration: 'underline',
           fontSize: 'base',
           cursor: 'pointer',
-          mx: 'auto',
+          // mx: 'auto',
           display: 'block',
 
           mt: '4',
@@ -78,7 +86,7 @@ function MiniPaynoteMessage({
           },
         })}
       >
-        Mehr erfahren
+        Zum Angebot
       </span>
     </Dialog.Trigger>
   )
@@ -137,15 +145,16 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
         ref={ref}
         data-theme='light'
         className={css({
-          backgroundColor: 'background.marketing',
-          color: 'text',
+          backgroundColor: 'contrast',
+          color: 'white',
           position: 'fixed',
           inset: 'auto 0 0 0',
           zIndex: 9998,
           p: '6',
-          textAlign: 'center',
+          textAlign: 'left',
           textStyle: 'sans',
           boxShadow: 'sm',
+          spaceY: '4',
           '@media print': {
             display: 'none',
           },
@@ -157,8 +166,9 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
           },
         })}
       >
+        <CampaignHeroMini />
         <MiniPaynoteMessage
-          message={miniPaynote.message}
+          message={'Die Republik für alle ab CHF 1.- im ersten Monat.'}
           onClick={() => {
             setVariant('offers-only')
             trackEvent({ action: 'Opened on click' })
@@ -205,7 +215,8 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
               // px: '8',
               // pt: '12',
               boxShadow: 'sm',
-              mt: '15dvh',
+              // mt: '15dvh',
+              mt: '0',
               _stateOpen: {
                 animation: 'fadeIn',
               },
@@ -221,9 +232,9 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
               className={css({
                 margin: '0 auto',
                 maxW: '34rem',
-                textStyle: 'serifRegular',
+                textStyle: 'sansSerifRegular',
                 lineHeight: 1.6,
-                fontSize: 'l',
+                fontSize: 'base',
                 display: 'flex',
                 flexDir: 'column',
                 gap: '4',
@@ -237,12 +248,10 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                     textStyle: { base: 'h3Serif', sm: 'h2Serif' },
                     lineHeight: 1.4,
                   })}
-                >
-                  TITLE
-                </h2>
+                ></h2>
               </Dialog.Title>
 
-              {variant === 'paynote' ? (
+              {/* {variant === 'paynote' ? (
                 <div
                   className={css({
                     display: 'flex',
@@ -255,6 +264,29 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                   <StructuredText
                     data={paynote?.message.value}
                   ></StructuredText>
+                </div>
+              ) : null} */}
+
+              {variant === 'paynote' ? (
+                <div
+                  className={css({
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '4',
+                    pb: '4',
+                    fontSize: 'base',
+                  })}
+                >
+                  <p>
+                    Wir möchten, dass Sie sich in diesen chaotischen Zeiten
+                    zurechtfinden können. Denn nur wer gut informiert ist, kann
+                    auch etwas tun.
+                  </p>
+
+                  <p>
+                    Deshalb gibt es die Republik jetzt ab CHF 1.- im ersten
+                    Monat.
+                  </p>
                 </div>
               ) : null}
 
@@ -321,6 +353,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                 position: 'absolute',
                 top: '4',
                 right: '4',
+                color: 'white',
               })}
               onClick={() => {
                 trackEvent({

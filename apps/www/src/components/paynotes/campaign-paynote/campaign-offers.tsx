@@ -69,6 +69,7 @@ export function Offers({
     borderRadius: '6',
     width: 'full',
     background: 'background.marketing',
+    whiteSpace: 'nowrap',
     _peerChecked: {
       background: 'background',
       borderColor: 'text.marketingAccent',
@@ -100,11 +101,19 @@ export function Offers({
           alignItems: 'center',
         })}
       >
+        <p
+          className={css({
+            color: 'textSoft',
+          })}
+        >
+          Wählen Sie einen Betrag aus. Gültig bis zum 28.09.2025
+        </p>
+
         <div
           className={css({
             width: 'full',
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(50px,1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(60px, 1fr))',
             gap: '4',
           })}
         >
@@ -124,7 +133,7 @@ export function Offers({
               >
                 <div key={promoCode} className={radioContainerStyles}>
                   <span className={css({ display: 'block' })}>
-                    <small>CHF</small>{' '}
+                    <small className={css({ fontSize: 'xs' })}>CHF</small>{' '}
                     <span className={css({ fontWeight: 'bold' })}>
                       {amount}.–
                     </span>
