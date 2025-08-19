@@ -5,6 +5,8 @@ export const presetCampaign2025 = definePreset({
   conditions: {
     extend: {
       campaign2025: '[data-page-theme="campaign-2025"] &',
+      campaign2025Inverted:
+        '[data-page-theme="campaign-2025"]:where([data-theme-inverted]) &',
       // campaign2025Dark:
       //   '[data-theme="dark"] [data-page-theme="campaign-2025"] &',
       // campaign2025DarkInverted:
@@ -19,7 +21,8 @@ export const presetCampaign2025 = definePreset({
         colors: {
           campaign2025: {
             beige: { value: '#F2ECE6' },
-            yellowLight: { value: '#FFFDF080' },
+            charcoal: { value: '#313131' },
+            white: { value: '#ffffff' },
             red: { value: '#FF6969' },
             darkRed: { value: '#3B0012' },
           },
@@ -41,17 +44,20 @@ export const presetCampaign2025 = definePreset({
           },
           overlay: {
             value: {
-              _campaign2025: 'rgba(0,0,0,0.05)',
+              _campaign2025: 'rgba(255,255,255,0.05)',
+              _campaign2025Inverted: 'rgba(0,0,0,0.05)',
             },
           },
           divider: {
             value: {
-              _campaign2025: 'rgba(0,0,0,0.15)',
+              _campaign2025: 'rgba(255,255,255,0.15)',
+              _campaign2025Inverted: 'rgba(0,0,0,0.15)',
             },
           },
           pageBackground: {
             value: {
-              _campaign2025: '#F2ECE6',
+              _campaign2025: '{colors.campaign2025.charcoal}',
+              _campaign2025Inverted: '{colors.campaign2025.beige}',
             },
           },
           contrast: {
@@ -62,7 +68,8 @@ export const presetCampaign2025 = definePreset({
           text: {
             DEFAULT: {
               value: {
-                _campaign2025: '#191919',
+                _campaign2025: '{colors.campaign2025.white}',
+                _campaign2025Inverted: '{colors.neutral.950}',
               },
             },
             inverted: {
