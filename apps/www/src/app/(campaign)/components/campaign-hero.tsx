@@ -19,6 +19,12 @@ export function CampaignHeroSection({ children }: { children: ReactNode }) {
           fontFamily: 'republikSerif',
           textAlign: 'left',
           lineHeight: '0.9',
+
+          lg: {
+            fontSize: '16xl',
+            textAlign: 'center',
+            maxW: '[64rem]',
+          },
         })}
       >
         {children}

@@ -101,6 +101,7 @@ export const presetRepublik = definePreset({
           '3xl': { value: '2rem' },
           '4xl': { value: '3rem' },
           '8xl': { value: '6rem' },
+          '16xl': { value: '12rem' },
         },
         lineHeights: {
           1: { value: 1 },

@@ -48,7 +48,7 @@ export function Offers({
 }: {
   additionalShopParams?: Record<string, string>
 }) {
-  const [option, setOption] = useState<DiscountOption['promoCode']>('H25OFF13')
+  const [option, setOption] = useState<DiscountOption['promoCode']>(undefined)
   const [customAmount, setCustomAmount] = useState<number | undefined>()
 
   const utmParams = getUTMSessionStorage()
