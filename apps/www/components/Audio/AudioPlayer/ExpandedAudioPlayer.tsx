@@ -84,6 +84,8 @@ const styles = {
     justifyContent: 'space-between',
   }),
   body: css({
+    position: 'relative',
+    overflowY: 'scroll',
     display: 'flex',
     flexDirection: 'column',
     gap: 0,
@@ -199,7 +201,6 @@ const ExpandedAudioPlayer = ({
         ? css({
             [`@media (orientation: landscape)`]: {
               flexDirection: 'row',
-              alignSelf: 'flex-start',
               gap: 36,
               '> div': {
                 flex: 1,
