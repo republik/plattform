@@ -97,7 +97,7 @@ const AudioPlayer = ({
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [forceScrollLock, setForceScrollLock] = useState(false)
   const [ref] = useBodyScrollLock<HTMLDivElement>(
-    (isExpanded && !isDesktop) || forceScrollLock,
+    ((isExpanded && !isDesktop) || forceScrollLock) && !inNativeApp,
   )
   const { t } = useTranslation()
   const router = useRouter()
