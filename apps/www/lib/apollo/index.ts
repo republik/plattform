@@ -9,7 +9,7 @@ import { createAppWorkerLink } from './appWorkerLink'
 export const { initializeApollo, withApollo } = createApolloClientUtilities({
   name: '@orbiting/www-app',
   version: process.env.BUILD_ID,
-  apiUrl: API_URL,
+  apiUrl: typeof window === 'undefined' ? API_URL : '/graphql',
   wsUrl: API_WS_URL,
   mobileConfigOptions: {
     isInMobileApp: inNativeAppBrowser && inNativeAppBrowserLegacy,
