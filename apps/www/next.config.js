@@ -103,6 +103,10 @@ const nextConfig = {
           source: '/_ssr/:path*',
           destination: '/404',
         },
+        {
+          source: '/graphql',
+          destination: process.env.NEXT_PUBLIC_API_URL,
+        },
       ],
       afterFiles: [
         // impossible route via file system path
