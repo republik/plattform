@@ -89,12 +89,12 @@ const AudioPlayer = ({
   const [, ...queuedItems] = queue || [] // filter active-item from queue
   const { paynoteInlineHeight } = usePaynotes()
 
-  // Desktop styles only apply when not in native app
+  // Desktop styles only apply to hover-capable devices (desktops/laptops) in landscape mode
   const desktopWrapperStyle = useMemo(
     () =>
       !inNativeApp
         ? css({
-            [mediaQueries.mUp]: {
+            [`${mediaQueries.mUp} and (hover: hover)`]: {
               right: 15,
               width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
               maxWidth: 420,
@@ -112,7 +112,7 @@ const AudioPlayer = ({
     () =>
       !inNativeApp
         ? css({
-            [mediaQueries.mUp]: {
+            [`${mediaQueries.mUp} and (hover: hover)`]: {
               height: 'auto',
               marginRight: 'calc(15px + env(safe-area-inset-right))',
               marginLeft: 'calc(15px + env(safe-area-inset-left))',
