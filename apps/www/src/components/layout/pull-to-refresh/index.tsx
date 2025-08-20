@@ -4,6 +4,7 @@ import { css } from '@republik/theme/css'
 import { IconRefresh } from '@republik/icons'
 import { useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useAudioContext } from '../../../../components/Audio/AudioProvider'
 
 // eslint-disable-next-line no-unused-vars
 enum IndicatorState {
@@ -29,15 +30,17 @@ function usePullToRefresh(
     maxPullDistance?: number
     triggerThreshold?: number
     pullResistance?: number
+    isDisabled?: boolean
   } = {
     maxPullDistance: 240,
     triggerThreshold: 240,
     pullResistance: 0.4,
+    isDisabled: false,
   },
 ) {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   const callbackRef = useRef<typeof callback>(() => {})
-  const { maxPullDistance, triggerThreshold, pullResistance } = options
+  const { maxPullDistance, triggerThreshold, pullResistance, isDisabled } = options
 
   const appr = useMemo<(_: number) => number>(
     () => (x: number) => {
@@ -61,7 +64,7 @@ function usePullToRefresh(
 
     function handleTouchStart(startEvent: TouchEvent) {
       const el = ref.current
-      if (!el || window.scrollY !== 0) return
+      if (!el || window.scrollY !== 0 || isDisabled) return
 
       // get the initial Y position
       const initialY = startEvent.touches[0].clientY
@@ -152,7 +155,7 @@ function usePullToRefresh(
     return () => {
       window.removeEventListener('touchstart', handleTouchStart)
     }
-  }, [ref.current, callbackRef, appr, triggerThreshold])
+  }, [ref.current, callbackRef, appr, triggerThreshold, isDisabled])
 }
 
 type PullToRefreshProps = {
@@ -161,6 +164,7 @@ type PullToRefreshProps = {
 
 export function PullToRefresh({ children, ...props }: PullToRefreshProps) {
   const ref = useRef<HTMLDivElement>(null)
+  const { isExpanded: audioPlayerExpanded } = useAudioContext()
 
   const { refresh } = useRouter()
 
@@ -168,7 +172,9 @@ export function PullToRefresh({ children, ...props }: PullToRefreshProps) {
     refresh()
   }, [refresh])
 
-  usePullToRefresh(ref, pullToRefresh)
+  usePullToRefresh(ref, pullToRefresh, {
+    isDisabled: audioPlayerExpanded,
+  })
 
   return (
     <div className={css({ position: 'relative' })}>
