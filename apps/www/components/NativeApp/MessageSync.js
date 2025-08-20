@@ -37,13 +37,11 @@ const NewAppMessageSync = () => {
   const [signInQuery, setSignInQuery] = useState()
   const router = useRouter()
   const [, setOSColorScheme] = usePersistedOSColorSchemeKey()
-  
-  // Track last sent URL to prevent duplicates
-  const lastSentUrlRef = useRef(null)
-
   const client = useApolloClient()
   const { me } = useMe()
   const [upsertDevice] = useMutation(upsertDeviceMutation)
+  
+  const lastSentUrlRef = useRef(null)
 
   useEffect(() => {
     const handleRouteChange = (url) => {
@@ -53,7 +51,6 @@ const NewAppMessageSync = () => {
       }
       
       lastSentUrlRef.current = url
-      console.log('[MessageSync] Pages Router - Route changed to:', url)
       postMessage({
         type: 'routeChange',
         payload: { url },
@@ -63,47 +60,18 @@ const NewAppMessageSync = () => {
     // Handle initial page load (router events don't fire on initial load)
     const currentUrl = window.location.href
     lastSentUrlRef.current = currentUrl
-    console.log('[MessageSync] Pages Router - Initial sync:', currentUrl)
     postMessage({
       type: 'routeChange',
       payload: { url: currentUrl },
     })
     
-    // Listen to multiple router events for comprehensive coverage
+    // Listen to start and complete of route change
     router.events.on('routeChangeStart', handleRouteChange)
     router.events.on('routeChangeComplete', handleRouteChange)
-    router.events.on('hashChangeComplete', handleRouteChange)
     
     return () => {
       router.events.off('routeChangeStart', handleRouteChange)
       router.events.off('routeChangeComplete', handleRouteChange)
-      router.events.off('hashChangeComplete', handleRouteChange)
-    }
-  }, [])
-
-  // Fallback: Listen to browser navigation events (back/forward, direct URL changes)
-  useEffect(() => {
-    const handlePopState = () => {
-      const currentUrl = window.location.href
-      
-      // Prevent duplicate messages
-      if (lastSentUrlRef.current === currentUrl) {
-        return
-      }
-      
-      lastSentUrlRef.current = currentUrl
-      console.log('[MessageSync] Pages Router - Browser navigation to:', currentUrl)
-      postMessage({
-        type: 'routeChange',
-        payload: { url: currentUrl },
-      })
-    }
-
-    // Listen to browser back/forward button
-    window.addEventListener('popstate', handlePopState)
-    
-    return () => {
-      window.removeEventListener('popstate', handlePopState)
     }
   }, [])
 
