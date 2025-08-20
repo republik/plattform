@@ -70,7 +70,6 @@ const styles = {
     position: 'relative',
     [mediaQueries.mUp]: {
       minHeight: 282,
-      maxHeight: 282,
     },
   }),
   tabBorder: css({
