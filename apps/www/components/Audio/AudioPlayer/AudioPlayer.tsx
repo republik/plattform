@@ -89,7 +89,7 @@ const AudioPlayer = ({
   const [, ...queuedItems] = queue || [] // filter active-item from queue
   const { paynoteInlineHeight } = usePaynotes()
 
-  // Desktop styles only apply to hover-capable devices (desktops/laptops) in landscape mode
+  // Desktop styles only apply to hover-capable devices (desktops/laptops)
   const desktopWrapperStyle = useMemo(
     () =>
       !inNativeApp
