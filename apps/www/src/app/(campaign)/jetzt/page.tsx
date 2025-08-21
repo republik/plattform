@@ -1,6 +1,5 @@
 import { CampaignHeroSection } from '@app/app/(campaign)/components/campaign-hero'
-import { CTA } from '@app/app/(campaign)/jetzt/call-to-action'
-import Container from '@app/components/container'
+import { ContainerNarrow } from '@app/components/container'
 import { Logo } from '@app/components/layout/header/logo'
 import { Offers } from '@app/components/paynotes/campaign-paynote/campaign-offers'
 import { css } from '@republik/theme/css'
@@ -18,7 +17,7 @@ export default async function Page() {
         <h1>Uns ist es nicht egal.</h1>
         <div
           className={css({
-            maxW: 'maxContentWidth',
+            maxW: 'content.narrow',
             textAlign: 'left',
             textStyle: 'body',
             fontSize: 'xl',
@@ -48,9 +47,10 @@ export default async function Page() {
           color: 'text',
           background: 'pageBackground',
           pt: '16',
+          fontSize: 'l',
         })}
       >
-        <Container>
+        <ContainerNarrow>
           <div
             className={css({
               flexGrow: 1,
@@ -64,7 +64,7 @@ export default async function Page() {
 
             <Offers />
           </div>
-        </Container>
+        </ContainerNarrow>
       </div>
     </>
   )

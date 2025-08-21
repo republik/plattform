@@ -62,8 +62,9 @@ export function Offers({
   const allHiddenParams = { ...utmParams, ...additionalShopParams }
 
   const radioContainerStyles = css({
-    textAlign: 'left',
-    padding: '4',
+    textAlign: 'center',
+    px: '2',
+    py: '3',
     border: '2px solid',
     borderColor: 'rgba(0,0,0,0.3)',
     borderRadius: '6',
@@ -72,8 +73,10 @@ export function Offers({
     whiteSpace: 'nowrap',
     _peerChecked: {
       background: 'background',
-      borderColor: 'text.marketingAccent',
+      borderColor: 'text',
     },
+    fontSize: '2xl',
+    fontWeight: 'medium',
   })
 
   return (
@@ -133,10 +136,12 @@ export function Offers({
               >
                 <div key={promoCode} className={radioContainerStyles}>
                   <span className={css({ display: 'block' })}>
-                    <small className={css({ fontSize: 'xs' })}>CHF</small>{' '}
-                    <span className={css({ fontWeight: 'bold' })}>
-                      {amount}.–
-                    </span>
+                    <small
+                      className={css({ fontWeight: 'normal', fontSize: 'xs' })}
+                    >
+                      CHF
+                    </small>{' '}
+                    <span>{amount}.–</span>
                   </span>
                 </div>
               </RadioOption>
@@ -146,28 +151,56 @@ export function Offers({
           })}
         </div>
 
-        <FormField
-          name='custom_price'
-          label='Eigener Betrag'
-          type='number'
-          min={1}
-          max={22}
-          className={css({ width: 'full' })}
-          value={customAmount ?? ''}
-          onChange={(e) => {
-            const value = e.currentTarget.valueAsNumber
-            if (!isNaN(value)) {
-              setCustomAmount(value)
-              const promoCode = DISCOUNT_OPTIONS.find(
-                (offer) => offer.amount === value,
-              )?.promoCode
-              if (promoCode) {
-                setOption(promoCode)
-              }
-            }
-          }}
-        />
+        <div
+          className={css({
+            width: 'full',
+            px: '4',
+            py: '2',
+            fontSize: 'xs',
+            borderWidth: '2px',
+            textAlign: 'center',
+            borderColor: 'rgba(0,0,0,0.3)',
+            borderRadius: '6',
+            background: 'white',
+            display: 'flex',
+            alignItems: 'baseline',
 
+            _focusWithin: {
+              borderColor: 'text',
+            },
+          })}
+        >
+          <span>CHF</span>
+
+          <FormField
+            name='custom_price'
+            label='Eigener Betrag'
+            hideLabel
+            placeholder='Preis Ihrer Wahl'
+            type='number'
+            min={1}
+            max={22}
+            className={css({
+              width: 'full',
+              border: 'none',
+              outline: 'none',
+              fontSize: 'xl',
+            })}
+            value={customAmount ?? ''}
+            onChange={(e) => {
+              const value = e.currentTarget.valueAsNumber
+              if (!isNaN(value)) {
+                setCustomAmount(value)
+                const promoCode = DISCOUNT_OPTIONS.find(
+                  (offer) => offer.amount === value,
+                )?.promoCode
+                if (promoCode) {
+                  setOption(promoCode)
+                }
+              }
+            }}
+          />
+        </div>
         <div
           className={css({
             fontSize: 's',
