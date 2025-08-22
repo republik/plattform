@@ -1,22 +1,11 @@
 import { getSenderData } from '@app/app/(campaign)/campaign-data'
-import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
-import { CampaignProgress } from '@app/app/(campaign)/components/campaign-progress'
-import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
-import {
-  ShareImageConfigurator,
-  ShareLink,
-} from '@app/app/(campaign)/jetzt-einladen/share-components'
+import { CampaignHeroSection } from '@app/app/(campaign)/components/campaign-hero'
+import { ShareLink } from '@app/app/(campaign)/jetzt-einladen/share-components'
 import Container from '@app/components/container'
 import { css } from '@republik/theme/css'
-import Link from 'next/link'
-import { redirect } from 'next/navigation'
-import {
-  CAMPAIGN_META_ARTICLE_URL,
-  CAMPAIGN_REFERRALS_GOAL,
-} from '../constants'
-import { Success } from '@app/app/(campaign)/jetzt-einladen/success'
-import { Metadata } from 'next'
 import { PUBLIC_BASE_URL } from 'lib/constants'
+import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Laden Sie jemanden ein',
@@ -25,12 +14,14 @@ export const metadata: Metadata = {
 export default async function Page() {
   const { me, campaign } = await getSenderData()
 
-  const url = `${PUBLIC_BASE_URL}/jetzt/${
-    me?.hasPublicProfile ? me.username : me?.referralCode
-  }`
+  // The version with referral code for private profile users:
+  // const url = `${PUBLIC_BASE_URL}/jetzt/${
+  //   me?.hasPublicProfile ? me.username : me?.referralCode
+  // }`
 
-  const imageUrl = `${process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL}/jetzt/${
-    me?.hasPublicProfile ? me.username : me?.referralCode
+  // The version with generic URL (no referral code) except for public profile users:
+  const url = `${PUBLIC_BASE_URL}/jetzt/${
+    me?.hasPublicProfile ? me.username : ''
   }`
 
   // Redirect to campaign thank you page
@@ -42,108 +33,61 @@ export default async function Page() {
     return redirect('/anmelden')
   }
 
-  const referred = me.referrals?.count || 0
-
-  const aboType = me.activeMembership?.type.name
-  const hasMonthlyAbo = aboType === 'MONTHLY_ABO'
-  const hasRegularAbo = ['ABO', 'BENEFACTOR_ABO'].includes(aboType)
-
   return (
-    <Container>
+    <>
+      <CampaignHeroSection>
+        <h1>Uns ist es nicht egal.</h1>
+      </CampaignHeroSection>
       <div
+        data-page-theme='campaign-2025'
+        data-theme-inverted
         className={css({
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8',
-          py: '8-16',
-          fontSize: 'xl',
+          color: 'text',
+          background: 'pageBackground',
         })}
       >
-        <CampaignLogo
-          className={css({
-            width: { base: '120px', md: '240px' },
+        <Container>
+          <div
+            className={css({
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8',
+              py: '8-16',
+              fontSize: 'l',
+            })}
+          >
+            <h2 className={css({ textStyle: 'campaignHeading' })}>
+              Gemeinsam mit Ihnen können wir dort hinschauen, wo es wichtig ist.
+            </h2>
 
-            maxWidth: 'full',
-            height: 'auto',
-            mx: 'auto',
-          })}
-        />
-        <h1
-          className={css({
-            textStyle: 'campaignHeading',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8',
-          })}
-        >
-          <TypewriterContent />
-        </h1>
+            <p>
+              Helfen Sie uns, die Republik bekannter zu machen. Kopieren Sie den
+              Link unten und senden Sie ihn per E-mail, Direktnachricht oder auf
+              Social Media weiter. Über diesen Link können alle die Republik ab
+              CHF 1.- im ersten Monat abonnieren.
+            </p>
 
-        <Success
-          referred={referred}
-          hasMonthlyAbo={hasMonthlyAbo}
-          hasRegularAbo={hasRegularAbo}
-        />
+            <ShareLink url={url} />
 
-        {/* <p>
-          Lassen Sie uns diese Verantwortung auf mehr Schultern verteilen:{' '}
-          <Link href={CAMPAIGN_META_ARTICLE_URL}>
-            Bis zum 31. März suchen wir {CAMPAIGN_REFERRALS_GOAL} zusätzliche
-            Verleger und Verlegerinnen
-          </Link>
-          . Denn je mehr Menschen sich einsetzen, desto breiter ist die
-          Grundlage für das, weshalb wir alle hier sind: unabhängiger
-          Journalismus.
-        </p> */}
-
-        <p>
-          Ihr Einsatz wirkt: In genau drei Wochen haben wir gemeinsam 1000 neue
-          Verlegerinnen und Verleger an Bord geholt! Und wir bleiben dran – denn
-          je mehr Menschen sich engagieren, desto breiter ist die Grundlage für
-          unser gemeinsames Projekt: unabhängiger Journalismus.
-        </p>
-        <p>
-          Laden Sie heute noch weitere Freundinnen und Bekannte zum
-          vergünstigten Einstiegspreis ein. Wie viele schaffen wir bis zum 31.
-          März?
-        </p>
-
-        <p>Aktueller Zwischenstand:</p>
-
-        <div>
-          <CampaignProgress />
-        </div>
-
-        <h2 className={css({ textStyle: 'campaignHeading' })}>
-          Helfen Sie mit!
-        </h2>
-
-        <p>
-          Teilen Sie Ihren Kampagnen-Link. Über diesen erhalten die
-          Empfängerinnen ein zeitlich limitiertes Einstiegsangebot: ein Jahr
-          Republik ab CHF 120. Wenn das erste Mal jemand über Ihren Link ein
-          neues Abo abschliesst,{' '}
-          {hasRegularAbo && <>verlängern wir Ihr eigenes um einen Monat.</>}
-          {hasMonthlyAbo && (
-            <>
-              schreiben wir Ihnen auf einen schreiben wir Ihnen auf einen
-              zukünftigen Republik-Monat CHF 20 gut.
-            </>
-          )}
-        </p>
-
-        <ShareLink url={url} />
-
-        <p>
-          Ein Link ist Ihnen zu unpersönlich? Dann teilen Sie Ihr Kampagnen-Bild
-          - und vergessen Sie nicht, Ihren Link manuell mitzusenden.
-        </p>
-
-        <ShareImageConfigurator
-          url={imageUrl}
-          userHasPublicProfile={me?.hasPublicProfile}
-        />
+            <h3 className={css({ fontWeight: 'medium' })}> Warum teilen?</h3>
+            <ul className={css({ listStyle: 'outside', pl: '4' })}>
+              <li>
+                Sie ermöglichen anderen einen günstigen Zugang zum
+                Qualitätsjournalismus der Republik.
+              </li>
+              <li>
+                Indem Sie den Link weiterverbreiten, wird die Arbeit der
+                Republik sichtbarer und bekannter.
+              </li>
+              <li>
+                Je grösser die Community, umso stabiler ist das Fundament für
+                unseren Journalismus. Denn: Die Republik ist unabhängig und wird
+                von ihren Leserinnen finanziert.
+              </li>
+            </ul>
+          </div>
+        </Container>
       </div>
-    </Container>
+    </>
   )
 }
