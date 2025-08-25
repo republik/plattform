@@ -37,7 +37,7 @@ async function main() {
     const res = await Promise.all([
       RepublikAGStripe.coupons
         .create({
-          name: `U30 Angebot`,
+          name: `Angebot für Junge`,
           amount_off: 13 * 100, // 22 - 13 = 9
           currency: 'CHF',
           duration: 'repeating',
@@ -56,7 +56,7 @@ async function main() {
         }),
       ProjectRStripe.coupons
         .create({
-          name: `U30 Angebot`,
+          name: `Angebot für Junge`,
           amount_off: 141 * 100, // 240 - 141 = 99 CHF in Rappen
           currency: 'CHF',
           duration: 'repeating',
