@@ -466,7 +466,7 @@
     },
     {
       "key": "api/email/subscription_renewal_notice_7_days/subject",
-      "value": "Ihre Mitgliedschaft erneuert sich automatisch"
+      "value": "Herzlichen Dank für Ihre Unterstützung, wir freuen uns Sie an Bord zu wissen!"
     },
     {
       "key": "api/email/subscription_renewal_payment_successful/subject",
