@@ -1,79 +1,15 @@
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
-import { TypewriterContent } from '@app/app/(campaign)/components/typewriter-content'
-import { CTA } from '@app/app/(campaign)/jetzt/call-to-action'
+import { CampaignHeroSection } from '@app/app/(campaign)/components/campaign-hero'
+import { ContainerNarrow } from '@app/components/container'
+import { Logo } from '@app/components/layout/header/logo'
+import { Offers } from '@app/components/paynotes/campaign-paynote/campaign-offers'
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import Image from 'next/image'
-import { ReactNode } from 'react'
-
-const SenderProfile = ({
-  portrait,
-  children,
-}: {
-  portrait?: string
-  children: ReactNode
-}) => {
-  return (
-    <div
-      className={css({
-        display: 'flex',
-        flexDirection: 'row',
-        gap: '4',
-        alignItems: 'center',
-        // background: 'primary',
-        // color: 'pageBackground',
-        // borderBottom: '2px solid token(colors.primary)',
-        // borderTop: '2px solid token(colors.primary)',
-        // p: '2',
-        // borderRadius: '5px',
-        maxW: 600,
-      })}
-    >
-      {portrait && (
-        <div
-          style={{
-            flexShrink: 0,
-            position: 'relative',
-          }}
-        >
-          <Image
-            className={css({
-              borderRadius: '4px',
-              // borderWidth: '2px',
-              // borderColor: 'primary',
-              // borderStyle: 'solid',
-              boxShadow: 'sm',
-              height: '4rem',
-              width: '4rem',
-              // width: { base: '4.5rem', md: '4rem' },
-              // height: { base: '4.5rem', md: '4rem' },
-            })}
-            alt='Portrait'
-            src={portrait}
-            width={96}
-            height={96}
-            unoptimized
-          />
-        </div>
-      )}
-      <div
-        className={css({
-          flex: '0 1 auto',
-          fontSize: { base: 'xl', md: '2xl' },
-          textWrap: 'balance',
-          '& em': {
-            textStyle: 'sansSerifBold',
-          },
-        })}
-      >
-        <p>{children}</p>
-      </div>
-    </div>
-  )
-}
+import Link from 'next/link'
 
 export async function generateMetadata(props): Promise<Metadata> {
-  const params = await props.params;
+  const params = await props.params
   const data = await getInviteeData(params)
 
   const senderName = data.sender?.firstName
@@ -83,107 +19,119 @@ export async function generateMetadata(props): Promise<Metadata> {
     : 'Jemand'
 
   return {
-    title: `${senderName} lädt Sie ein, die Republik mit einem Abo zu unterstützen.`,
+    title: `${senderName} ist nicht egal, was du von
+          der Welt erfährst.`,
   }
 }
 
 export default async function Page(props) {
-  const params = await props.params;
+  const params = await props.params
   const data = await getInviteeData(params)
 
   const { sender } = data
 
   return (
     <>
-      <h1
-        className={css({
-          textStyle: 'campaignHeading',
-          pr: '16',
-        })}
-      >
-        <TypewriterContent external />
-      </h1>
-      <div
-        className={css({
-          flexGrow: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'stretch',
-          gap: '8',
-        })}
-      >
-        {sender && (
-          <div>
-            <SenderProfile portrait={sender.portrait}>
-              <>
-                <em>
-                  {sender.firstName} {sender.lastName}
-                </em>{' '}
-                hat Sie eingeladen, die Republik mit einem Abo zu unterstützen.
-              </>
-            </SenderProfile>
-          </div>
-        )}
+      <div className={css({ pt: '8' })}>
+        <Link href='/' className={css({ textDecoration: 'none' })}>
+          <Logo />
+        </Link>
+      </div>
+      <CampaignHeroSection>
+        {sender?.portrait && (
+          <Image
+            className={css({
+              // borderRadius: '4px',
+              // borderWidth: '2px',
+              // borderColor: 'primary',
+              // borderStyle: 'solid',
+              // boxShadow: 'sm',
+              height: '8rem',
+              width: '8rem',
+              mb: '16',
+              mx: '4',
+              lg: {
+                mx: 'auto',
+              },
 
-        <p>
-          Die Republik ist ein digitales Magazin für Politik, Wirtschaft,
-          Gesellschaft und Kultur. Unabhängig und werbefrei – finanziert von
-          seinen Leserinnen und Lesern.
-        </p>
-        <p>
-          In der Republik erwarten Sie täglich 1 bis 3 Beiträge zum Lesen und
-          Hören. Wir nehmen uns die nötige Zeit, um aktuelle Themen und Fragen
-          für Sie angemessen und sorgfältig zu recherchieren, zu erzählen – und
-          alle Fakten zu überprüfen.
-        </p>
-        <p>
-          Damit Sie einen klaren Kopf behalten, mutig handeln und klug
-          entscheiden können.
-        </p>
-        <div
+              // width: { base: '4.5rem', md: '4rem' },
+              // height: { base: '4.5rem', md: '4rem' },
+            })}
+            alt=''
+            src={sender.portrait}
+            width={96}
+            height={96}
+            unoptimized
+          />
+        )}
+        <h1
           className={css({
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '4',
+            px: '4',
+            fontSize: '4xl',
+            lineHeight: '1.1',
+            lg: { fontSize: '8xl' },
           })}
         >
-          <h2
+          {sender ? `${sender.firstName}` : 'Uns'} ist nicht egal, was du von
+          der Welt erfährst.
+        </h1>
+        <div
+          className={css({
+            maxW: 'content.narrow',
+            textAlign: 'left',
+            textStyle: 'body',
+            fontSize: 'xl',
+            spaceY: '4',
+            px: '4',
+            mx: 'auto',
+            mt: '16',
+            lineHeight: '1.5',
+          })}
+        >
+          <p>
+            Es sind chaotische Zeiten. Aber die Journalistinnen und Journalisten
+            der Republik schauen für dich dort hin, wo es wichtig ist.
+            Engagiert, sorgfältig und neugierig.
+          </p>
+          <p>
+            Damit du nicht von Desinformation, Lärm und Bullshit überrollt
+            wirst. Denn nur wer gut informiert ist, kann auch etwas tun.
+          </p>
+        </div>
+      </CampaignHeroSection>
+      <div
+        data-page-theme='campaign-2025'
+        data-theme-inverted
+        className={css({
+          color: 'text',
+          background: 'pageBackground',
+          py: '8',
+          fontSize: 'l',
+        })}
+      >
+        <ContainerNarrow>
+          <div
             className={css({
-              fontWeight: 'bold',
-            })}
-          >
-            Warum bestehende Abonnenten die Republik unterstützen:
-          </h2>
-          <ul
-            className={css({
+              flexGrow: 1,
               display: 'flex',
               flexDirection: 'column',
-              gap: '2',
-              '&> li::before': {
-                content: '"«"',
-              },
-              '&> li::after': {
-                content: '"»"',
-              },
+              alignItems: 'stretch',
+              gap: '4',
             })}
           >
-            <li>
-              Die Beiträge helfen mir immer wieder, das chaotische Weltgeschehen
-              besser einzuordnen, und unterstützen mich bei der Meinungsbildung.
-            </li>
-            <li>
-              Unabhängiger Journalismus ist unter Druck. Es braucht Gegensteuer.
-            </li>
-            <li>
-              Super Mischung aus Reportagen mit grossem Aktualitätsbezug, tolle
-              Qualität und mutige neue Projekte wie das Klimalabor.
-            </li>
-            <li>
-              Journalismus kostet. Und guten Journalismus will ich unterstützen.
-            </li>
-          </ul>
-        </div>
-        <CTA href={`/jetzt/${params.code}/angebot`} />
+            <h3
+              className={css({
+                textTransform: 'uppercase',
+                fontWeight: 'medium',
+              })}
+            >
+              Nur für kurze Zeit
+            </h3>
+            <p>Die Republik ab CHF 1.– im ersten Monat.</p>
+
+            <Offers />
+          </div>
+        </ContainerNarrow>
       </div>
     </>
   )

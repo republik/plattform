@@ -1,15 +1,12 @@
 import { getCampaignReferralsData } from '@app/app/(campaign)/campaign-data'
-import { CampaignLogo } from '@app/app/(campaign)/components/campaign-logo'
 import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/constants'
-import Container from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
-import { getMe } from '@app/lib/auth/me'
 import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import { getMe } from '@app/lib/auth/me'
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { ReactNode } from 'react'
-import { CampaignHeroSection } from '@app/app/(campaign)/components/campaign-hero'
 
 export const metadata: Metadata = {
   title: `Unterstützen Sie die Republik mit einem Abo!`,
