@@ -3,11 +3,14 @@ const {
 } = require('@orbiting/backend-modules-auth')
 const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 
-module.exports = async (
-  _,
-  args,
-  { pgdb, req, user: me, t, mail: { enforceSubscriptions } },
-) => {
+module.exports = async (_, args, context) => {
+  const {
+    pgdb,
+    user: me,
+    t,
+    mail: { enforceSubscriptions },
+  } = context
+
   ensureUserIsInRoles(me, ['supporter'])
 
   const { membershipId, userId } = args
@@ -34,7 +37,9 @@ module.exports = async (
     }
 
     if (membership.userId === user.id) {
-      console.info('moveMembership: membership already belongs to target user')
+      context.logger.info(
+        'moveMembership: membership already belongs to target user',
+      )
       await transaction.transactionCommit()
       return membership
     }
@@ -61,18 +66,20 @@ module.exports = async (
     try {
       await enforceSubscriptions({ pgdb, userId: membership.userId })
       await enforceSubscriptions({ pgdb, userId })
-    } catch (e2) {
+    } catch (e) {
       // ignore issues with newsletter subscriptions
-      console.error('newsletter subscription changes failed', {
-        req: req._log(),
-        args,
-        error: e2,
-      })
+      context.logger.error(
+        {
+          args,
+          error: e,
+        },
+        'newsletter subscription changes failed',
+      )
     }
 
     return newMembership
   } catch (e) {
-    console.error('movePledge', e, { req: req._log() })
+    context.logger.error({ error: e }, 'movemembership failed')
     await transaction.transactionRollback()
     throw e
   }

@@ -1,0 +1,9 @@
+query getUsers($search: String!) {
+  users(search: $search, hasPublicProfile: true) {
+    id
+    slug
+    name
+    email
+    portrait
+  }
+}

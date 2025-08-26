@@ -61,7 +61,7 @@ const Feed = ({ meta }) => {
     if (error) {
       reportError('Feed getFeed Query', error)
     }
-  }, [reportError, error])
+  }, [error])
 
   const connection = data?.documents
 

@@ -23,7 +23,7 @@ export class ConfirmSetupTransactionalWorker extends BaseWorker<Args> {
       throw Error('unable to perform this job version. Expected v1')
     }
 
-    console.log(`[${this.queue}] start`)
+    this.logger.debug({ queue: this.queue, jobiId: job.id }, 'start')
 
     const webhookService = new WebhookService(this.context.pgdb)
     const mailService = new MailNotificationService(this.context.pgdb)
@@ -34,12 +34,18 @@ export class ConfirmSetupTransactionalWorker extends BaseWorker<Args> {
       )
 
     if (!wh) {
-      console.error('Webhook dose not exist')
+      this.logger.error(
+        { queue: this.queue, jobId: job.id },
+        'Webhook does not exist',
+      )
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
     if (wh.payload.type !== 'checkout.session.completed') {
-      console.error('Webhook is not of type checkout.session.completed')
+      this.logger.error(
+        { queue: this.queue, jobId: job.id },
+        'Webhook is not of type checkout.session.completed',
+      )
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
@@ -53,11 +59,14 @@ export class ConfirmSetupTransactionalWorker extends BaseWorker<Args> {
         invoiceId: job.data.invoiceId,
       })
     } catch (e) {
-      console.error(`[${this.queue}] error`)
-      console.error(e)
+      this.logger.error(
+        { queue: this.queue, jobId: job.id, error: e },
+        'Error sending transactional email',
+        e,
+      )
       throw e
     }
 
-    console.log(`[${this.queue}] done`)
+    this.logger.debug({ queue: this.queue, jobiId: job.id }, 'done')
   }
 }

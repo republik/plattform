@@ -1,0 +1,73 @@
+/* Radix Themes custom color overrides */
+.radix-themes {
+  --indigo-1: #fcfcfd;
+  --indigo-2: #f9f9fb;
+  --indigo-3: #eff0f3;
+  --indigo-4: #e7e8ec;
+  --indigo-5: #e0e1e6;
+  --indigo-6: #d8d9e0;
+  --indigo-7: #cdced7;
+  --indigo-8: #b9bbc6;
+  --indigo-9: #000;
+  --indigo-10: #2c2d33;
+  --indigo-11: #62636c;
+  --indigo-12: #1e1f24;
+
+  --indigo-a1: #00005503;
+  --indigo-a2: #00005506;
+  --indigo-a3: #00104010;
+  --indigo-a4: #000b3618;
+  --indigo-a5: #0009321f;
+  --indigo-a6: #00073527;
+  --indigo-a7: #00063332;
+  --indigo-a8: #00083046;
+  --indigo-a9: #000000;
+  --indigo-a10: #000109d3;
+  --indigo-a11: #0002119d;
+  --indigo-a12: #000107e1;
+
+  --indigo-contrast: #fff;
+  --indigo-surface: #f8f8facc;
+  --indigo-indicator: #000;
+  --indigo-track: #000;
+}
+
+/* Dark theme overrides for .radix-themes */
+.radix-themes.dark,
+.radix-themes .dark,
+.dark .radix-themes {
+  --indigo-1: #111113;
+  --indigo-2: #19191b;
+  --indigo-3: #222325;
+  --indigo-4: #292a2e;
+  --indigo-5: #303136;
+  --indigo-6: #393a40;
+  --indigo-7: #46484f;
+  --indigo-8: #5f606a;
+  --indigo-9: #fff;
+  --indigo-10: #f5f6f8;
+  --indigo-11: #b2b3bd;
+  --indigo-12: #eeeef0;
+
+  --indigo-a1: #1111bb03;
+  --indigo-a2: #cbcbf90b;
+  --indigo-a3: #d6e2f916;
+  --indigo-a4: #d1d9f920;
+  --indigo-a5: #d7ddfd28;
+  --indigo-a6: #d9defc33;
+  --indigo-a7: #dae2fd43;
+  --indigo-a8: #e0e3fd60;
+  --indigo-a9: #ffffff;
+  --indigo-a10: #fcfdfff8;
+  --indigo-a11: #eff0feb9;
+  --indigo-a12: #fdfdffef;
+
+  --indigo-contrast: #311921;
+  --indigo-surface: #21212580;
+  --indigo-indicator: #fff;
+  --indigo-track: #fff;
+}
+
+:root {
+  --color-background: #fff;
+}

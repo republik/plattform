@@ -11,5 +11,5 @@ module.exports = async ({ id }) => {
     },
   })
     .then((response) => response.json())
-    .catch((error) => console.error('updateMailchimp failed', { error }))
+    .catch((error) => console.error('get campaign from mailchimp failed', { error }))
 }

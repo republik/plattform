@@ -48,6 +48,10 @@ module.exports = async (server, pgdb, t, redis, connectionContext) => {
         connected,
       })
     } catch (e) {
+      req.log.error(
+        { error: e },
+        '[Pledge Payments] error processing stripe webhook ',
+      )
       code = 500
     }
     return res.sendStatus(code)

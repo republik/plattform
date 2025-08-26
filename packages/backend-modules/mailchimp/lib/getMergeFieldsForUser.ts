@@ -24,6 +24,7 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
   MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
+  MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
   REGWALL_TRIAL_CAMPAIGN_ID,
 } = getConfig()
 
@@ -44,6 +45,7 @@ export const mergeFieldNames = {
   [MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE]: 'NL_CLIMATE',
   [MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]: 'NL_WDWWW',
   [MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]: 'NL_ACCOMPL',
+  [MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY]: 'NL_SUNDAY',
 } as const
 
 export async function getMergeFieldsForUser({
@@ -92,6 +94,10 @@ export async function getMergeFieldsForUser({
     NL_WDWWW: hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
+    ),
+    NL_SUNDAY: hasInterest(
+      newsletterInterests,
+      MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
     ),
     NL_ACCOMPL: hasInterest(
       newsletterInterests,

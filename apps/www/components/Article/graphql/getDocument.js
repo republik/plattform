@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client'
 import { onDocumentFragment } from '../../Bookmarks/fragments'
-import { userProgressFragment } from '../Progress/api'
 import { notificationInfo, subInfo } from '../../Notifications/enhancers'
 
 export const getDocument = gql`
@@ -36,7 +35,17 @@ export const getDocument = gql`
         }
       }
       ...BookmarkOnDocument
-      ...UserProgressOnDocument
+      userProgress {
+        id
+        percentage
+        nodeId
+        updatedAt
+        max {
+          id
+          percentage
+          updatedAt
+        }
+      }
       meta {
         publishDate
         lastPublishedAt
@@ -62,7 +71,6 @@ export const getDocument = gql`
           id
           path
           closed
-          isBoard
           comments {
             totalCount
           }
@@ -91,7 +99,6 @@ export const getDocument = gql`
           id
           meta {
             path
-            externalBaseUrl
             title
             color
             kind
@@ -156,7 +163,17 @@ export const getDocument = gql`
               id
               repoId
               ...BookmarkOnDocument
-              ...UserProgressOnDocument
+              userProgress {
+                id
+                percentage
+                nodeId
+                updatedAt
+                max {
+                  id
+                  percentage
+                  updatedAt
+                }
+              }
               meta {
                 title
                 publishDate
@@ -177,7 +194,6 @@ export const getDocument = gql`
                   id
                   path
                   closed
-                  isBoard
                   comments {
                     totalCount
                   }
@@ -223,7 +239,6 @@ export const getDocument = gql`
     }
   }
   ${onDocumentFragment}
-  ${userProgressFragment}
   ${subInfo}
   ${notificationInfo}
 `

@@ -7,6 +7,7 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
+  MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
 } = getConfig()
 
 const NewsletterSubscriptionConfig = [
@@ -34,6 +35,10 @@ const NewsletterSubscriptionConfig = [
   {
     name: 'WDWWW',
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
+  },
+  {
+    name: 'SUNDAY',
+    interestId: MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
   },
 ]
 

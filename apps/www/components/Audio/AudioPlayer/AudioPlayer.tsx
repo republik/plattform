@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { AudioPlayerProps } from '../AudioPlayerController'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { useTranslation } from '../../../lib/withT'
@@ -34,15 +34,6 @@ const styles = {
     right: 0,
     display: 'flex',
     boxShadow: '0px -5px 15px -3px rgba(0,0,0,0.1)',
-    [mediaQueries.mUp]: {
-      right: 15,
-      width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
-      maxWidth: 420,
-      marginRight: MARGIN * 2,
-      marginBottom: MARGIN * 2,
-      padding: 0,
-      maxHeight: ' min(720px, calc(100vh - 60px))',
-    },
   }),
   wrapperMini: css({
     marginRight: 'calc(15px + env(safe-area-inset-right))',
@@ -64,13 +55,6 @@ const styles = {
     paddingRight: 'calc(15px + env(safe-area-inset-left))',
     paddingBottom: 0,
     width: '100%',
-    [mediaQueries.mUp]: {
-      height: 'auto',
-      marginRight: 'calc(15px + env(safe-area-inset-right))',
-      marginLeft: 'calc(15px + env(safe-area-inset-left))',
-      marginBottom: 'calc(15px + env(safe-area-inset-bottom))',
-      padding: 9,
-    },
   }),
 }
 
@@ -97,13 +81,48 @@ const AudioPlayer = ({
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const [forceScrollLock, setForceScrollLock] = useState(false)
   const [ref] = useBodyScrollLock<HTMLDivElement>(
-    (isExpanded && !isDesktop) || forceScrollLock,
+    ((isExpanded && !isDesktop) || forceScrollLock) && !inNativeApp,
   )
   const { t } = useTranslation()
   const router = useRouter()
   const [colorScheme] = useColorContext()
   const [, ...queuedItems] = queue || [] // filter active-item from queue
   const { paynoteInlineHeight } = usePaynotes()
+
+  // Desktop styles only apply to hover-capable devices (desktops/laptops)
+  const desktopWrapperStyle = useMemo(
+    () =>
+      !inNativeApp
+        ? css({
+            [`${mediaQueries.mUp} and (hover: hover)`]: {
+              right: 15,
+              width: ['290px', `calc(100% - ${MARGIN * 2}px)`],
+              maxWidth: 420,
+              marginRight: MARGIN * 2,
+              marginBottom: MARGIN * 2,
+              padding: 0,
+              maxHeight: ' min(720px, calc(100vh - 60px))',
+            },
+          })
+        : css({}),
+    [inNativeApp],
+  )
+
+  const desktopWrapperExpandedStyle = useMemo(
+    () =>
+      !inNativeApp
+        ? css({
+            [`${mediaQueries.mUp} and (hover: hover)`]: {
+              height: 'auto',
+              marginRight: 'calc(15px + env(safe-area-inset-right))',
+              marginLeft: 'calc(15px + env(safe-area-inset-left))',
+              marginBottom: 'calc(15px + env(safe-area-inset-bottom))',
+              padding: 9,
+            },
+          })
+        : css({}),
+    [inNativeApp],
+  )
 
   const toggleAudioPlayer = () => {
     if (isPlaying) {
@@ -202,18 +221,26 @@ const AudioPlayer = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 50 }}
                 {...styles.wrapper}
+                {...desktopWrapperStyle}
+                {...(isExpanded && desktopWrapperExpandedStyle)}
                 {...(isExpanded ? styles.wrapperExpanded : styles.wrapperMini)}
                 {...(inNativeApp && isExpanded
                   ? colorScheme.set('backgroundColor', 'default')
                   : colorScheme.set('backgroundColor', 'overlay'))}
                 {...colorScheme.set('boxShadow', 'overlayShadow')}
                 style={{
-                  marginBottom: `calc(${
-                    paynoteInlineHeight + MARGIN
-                  }px + env(safe-area-inset-bottom))`,
+                  marginBottom:
+                    paynoteInlineHeight !== 0
+                      ? `calc(${
+                          paynoteInlineHeight + MARGIN
+                        }px + env(safe-area-inset-bottom))`
+                      : undefined,
                   maxHeight:
-                    isExpanded &&
-                    `calc(100vh - ${paynoteInlineHeight + 2 * MARGIN}px)`,
+                    isExpanded && paynoteInlineHeight !== 0
+                      ? `calc(100vh - ${
+                          paynoteInlineHeight + (inNativeApp ? 0 : 2 * MARGIN)
+                        }px)`
+                      : undefined,
                 }}
               >
                 {isExpanded ? (

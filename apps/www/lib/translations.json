@@ -57,10 +57,6 @@
       "value": "Feed"
     },
     {
-      "key": "navbar/flyer",
-      "value": "Journal"
-    },
-    {
       "key": "navbar/discussion",
       "value": "Dialog"
     },
@@ -885,6 +881,18 @@
       "value": "Wir beobachten für Sie das Weltgeschehen, filtern das Wichtigste heraus, ordnen es ein – und schicken es Ihnen jeden Freitag ansprechend verpackt in Ihre Inbox."
     },
     {
+      "key": "account/newsletterSubscriptions/SUNDAY/label",
+      "value": "Republik am Sonntag"
+    },
+    {
+      "key": "account/newsletterSubscriptions/SUNDAY/frequency",
+      "value": "Jeden Sonntag um 8 Uhr"
+    },
+    {
+      "key": "account/newsletterSubscriptions/SUNDAY/description",
+      "value": "Lesegenuss fernab aktueller News-Hektik. Jeden Sonntag präsentieren wir Ihnen einen Beitrag aus dem Archiv der Republik, der heute genauso lesenswert ist wie damals."
+    },
+    {
       "key": "account/newsletterSubscriptions/PROJECTR/label",
       "value": "Project-R-Newsletter"
     },
@@ -974,7 +982,7 @@
     },
     {
       "key": "account/progress/consent/label",
-      "value": "Ich möchte diese Funktion nutzen"
+      "value": "Leseposition nutzen"
     },
     {
       "key": "account/progress/consent/confirmRevoke",
@@ -2502,7 +2510,7 @@
     },
     {
       "key": "package/ABO_GIVE_MONTHS/description",
-      "value": "Das Geschenk-Abo können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu. Postbestellungen werden innerhalb von 7 Tagen versendet"
+      "value": "Das Geschenk-Abo können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu."
     },
     {
       "key": "package/YEARLY_ABO/price",
@@ -3153,10 +3161,6 @@
       "value": "Teilen"
     },
     {
-      "key": "article/actionbar/flyer/share",
-      "value": "Journal teilen"
-    },
-    {
       "key": "article/actionbar/facebook/title",
       "value": "Auf Facebook teilen"
     },
@@ -3454,11 +3458,7 @@
     },
     {
       "key": "article/progressprompt/description/feature",
-      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn Sie die Funktion aktivieren, wird Ihr Leseverhalten bei der Republik aufgezeichnet. {link}"
-    },
-    {
-      "key": "article/progressprompt/description/feature/link",
-      "value": "Mehr Informationen"
+      "value": "Springen Sie an die Stelle zurück, an der Sie einen Text oder ein Hörstück unterbrochen haben. Wenn die Funktion aktiv ist, wird Ihr Leseverhalten bei der Republik aufgezeichnet."
     },
     {
       "key": "article/progressprompt/question",
@@ -3499,14 +3499,6 @@
     {
       "key": "article/prepublication/notice",
       "value": "Interne Publikation (Editoren-Vorschau)"
-    },
-    {
-      "key": "article/flyer/tile/branding",
-      "value": "Mehr Kurzes:"
-    },
-    {
-      "key": "article/flyer/tile/description",
-      "value": "Mehr Kurzes auf republik.ch/journal"
     },
     {
       "key": "progress/restore/time",
@@ -5784,26 +5776,6 @@
       "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
     },
     {
-      "key": "Trial/Form/flyer/waiting/title",
-      "value": "Sie haben Post!"
-    },
-    {
-      "key": "Trial/Form/flyer/completed/title",
-      "value": "Herzlich willkommen!"
-    },
-    {
-      "key": "Trial/Form/flyer/initial/title",
-      "value": "Danke für Ihr Interesse."
-    },
-    {
-      "key": "Trial/Form/flyer/initial/beforeSignIn",
-      "value": "Melden Sie sich an und lesen Sie weiter."
-    },
-    {
-      "key": "Trial/Form/flyer/initial/afterSignIn",
-      "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen."
-    },
-    {
       "key": "pages/cardGroups/description",
       "value": "Wischen Sie sich durch die engagierten, sich aufopfernden und machthungrigen Politikerinnen Ihres Kantons und treten Sie in einen Dialog mit ihnen."
     },
@@ -7072,10 +7044,6 @@
       "value": "haben wir aktuell. Aber bis zum 31. März sind noch <strong>{openPeople}</strong> Erneuerungen fällig."
     },
     {
-      "key": "RootCommentOverlay/title",
-      "value": "Kommentare"
-    },
-    {
       "key": "PodcastButtons/title/play",
       "value": "Anhören und abonnieren"
     },
@@ -7153,7 +7121,7 @@
     },
     {
       "key": "package/ABO_GIVE/description",
-      "value": "Die Geschenkmitgliedschaft können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu. Postbestellungen werden innerhalb von 7 Tagen versendet"
+      "value": "Die Geschenkmitgliedschaft können Sie in Form eines digitalen oder physischen Gutscheins der beschenkten Person überreichen. Den Gutscheincode schicken wir Ihnen direkt per E-Mail zu."
     },
     {
       "key": "package/customize/price/payMore/threemonth",
@@ -8010,6 +7978,42 @@
     {
       "key": "paynotes/account/cta",
       "value": "Alle Angebote anzeigen"
+    },
+    {
+      "key": "nextReads/curatedFeed/title",
+      "value": "Von der Redaktion empfohlen"
+    },
+    {
+      "key": "nextReads/mostReadFeed/title",
+      "value": "Was andere lesen"
+    },
+    {
+      "key": "nextReads/mostReadFeed/subtitle",
+      "value": "Die meistbeachteten Beiträge der vergangenen Tage"
+    },
+    {
+      "key": "nextReads/mostCommentedFeed/title",
+      "value": "Verpasst?"
+    },
+    {
+      "key": "nextReads/mostCommentedFeed/subtitle",
+      "value": "Was in den letzten Wochen zu reden gab"
+    },
+    {
+      "key": "nextReads/bookmarkedFeed/title",
+      "value": "Gemerkte Beiträge"
+    },
+    {
+      "key": "nextReads/bookmarkedFeed/subtitle",
+      "value": "Ist jetzt ein guter Zeitpunkt?"
+    },
+    {
+      "key": "nextReads/bookmarkedFeed/readMore",
+      "value": "Weiterlesen"
+    },
+    {
+      "key": "nextReads/bookmarkedFeed/manageBookmarks",
+      "value": "Lesezeichen bearbeiten"
     }
   ]
 }

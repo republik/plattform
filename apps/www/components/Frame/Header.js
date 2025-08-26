@@ -6,10 +6,12 @@ import {
   mediaQueries,
   HeaderHeightProvider,
   useColorContext,
+  isBodyScrollLocked,
 } from '@project-r/styleguide'
 import { useTranslation } from '../../lib/withT'
 import { postMessage, useInNativeApp } from '../../lib/withInNativeApp'
 import NotificationIcon from '../Notifications/NotificationIcon'
+import { useAudioContext } from '../Audio/AudioProvider'
 import HLine from '../Frame/HLine'
 
 import User from './User'
@@ -52,6 +54,7 @@ const Header = ({
 }) => {
   const { t } = useTranslation()
   const { inNativeIOSApp, inNativeApp } = useInNativeApp()
+  const { isExpanded: audioPlayerExpanded } = useAudioContext()
   const [colorScheme] = useColorContext()
   const [isMobile, setIsMobile] = useState()
   const [scrollableHeaderHeight, setScrollableHeaderHeight] =
@@ -71,8 +74,7 @@ const Header = ({
   const lastDiff = useRef()
 
   const topLevelPaths = ['/', '/feed', '/dialog', '/suche', USER_MENU_URL]
-  const isOnTopLevelPage =
-    topLevelPaths.includes(router.asPath) || router.asPath.endsWith('/journal')
+  const isOnTopLevelPage = topLevelPaths.includes(router.asPath)
   const backButton = inNativeIOSApp && me && !isOnTopLevelPage
 
   // check if we can pop the navigation stack
@@ -266,6 +268,11 @@ const Header = ({
       />
       {inNativeApp && pullable && (
         <Pullable
+          shouldPullToRefresh={() => 
+            window.scrollY <= 0 && 
+            !isBodyScrollLocked() && 
+            !audioPlayerExpanded
+          }
           onRefresh={() => {
             if (inNativeIOSApp) {
               postMessage({ type: 'haptic', payload: { type: 'impactLight' } })

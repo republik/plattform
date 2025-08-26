@@ -14,7 +14,7 @@ module.exports = {
     'customer.subscription.updated',
     'customer.subscription.deleted',
   ],
-  handle: (event, pgdb, t) => {
+  handle: async (event, pgdb, t) => {
     const subscription = event.data.object
     const pledgeId = subscription.metadata.pledgeId
 
@@ -117,7 +117,7 @@ module.exports = {
           }
         }
 
-        enforceSubscriptions({ pgdb, userId: pledge.userId })
+        await enforceSubscriptions({ pgdb, userId: pledge.userId })
 
         return 200
       },

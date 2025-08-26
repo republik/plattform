@@ -2,6 +2,7 @@ const { ApolloServer } = require('apollo-server-express')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
+const { logger: baseLogger } = require('@orbiting/backend-modules-logger')
 
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
@@ -33,11 +34,20 @@ module.exports = async (
       ? authorization.slice(documentApiKeyScheme.length + 1)
       : null
 
+    const logger =
+      req?.log || baseLogger.child({}, { msgPrefix: `[${scope}] ` })
+
+    logger.setBindings({
+      contextScope: scope,
+      userId: user?.id || 'unknown user',
+    })
+
     const context = createGraphqlContext({
       ...rest,
       req,
       scope,
       documentApiKey,
+      logger,
       user: global && global.testUser !== undefined ? global.testUser : user,
     })
     // prime User dataloader with me
@@ -123,14 +133,27 @@ module.exports = async (
         async requestDidStart() {
           return {
             async didEncounterErrors({ context, request, errors }) {
-              console.error(
-                JSON.stringify({
-                  req: context.req._log(),
-                  message: `GraphQL error for operation '${request.operationName}'`,
-                  level: 'ERROR',
-                  graphQLErrors: errors,
-                }),
-              )
+              if (context.logger.isLevelEnabled('debug')) {
+                context.logger.error(
+                  {
+                    graphqlRequest: {
+                      query: request.query,
+                      variables: request.variables,
+                      errors: errors,
+                    },
+                  },
+                  `GraphQL error for operation '${request.operationName}'`,
+                )
+              } else {
+                context.logger.error(
+                  {
+                    graphqlRequest: {
+                      errors: errors,
+                    },
+                  },
+                  `GraphQL error for operation '${request.operationName}'`,
+                )
+              }
             },
           }
         },

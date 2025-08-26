@@ -14,6 +14,7 @@ const config = {
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE:
     'MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE',
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW: 'MAILCHIMP_INTEREST_NEWSLETTER_WDWWW',
+  MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY: 'MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY',
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY: 'MAILCHIMP_INTEREST_NEWSLETTER_DAILY',
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY: 'MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY',
   REGWALL_TRIAL_CAMPAIGN_ID: 'REGWALL_TRIAL_CAMPAIGN_ID'
@@ -65,6 +66,7 @@ describe('test that merge fields are generated correctly from user data with mis
       NL_PROJ_R: undefined,
       NL_CLIMATE: undefined,
       NL_WDWWW: undefined,
+      NL_SUNDAY: undefined,
       NL_ACCOMPL: undefined,
     }
     expect(mergeFields).resolves.toStrictEqual(expectedResult)
@@ -104,6 +106,7 @@ describe('test that merge fields are generated correctly from user data with mis
       NL_PROJ_R: undefined,
       NL_CLIMATE: undefined,
       NL_WDWWW: undefined,
+      NL_SUNDAY: undefined,
       NL_ACCOMPL: undefined,
     }
     expect(mergeFields).resolves.toStrictEqual(expectedResult)

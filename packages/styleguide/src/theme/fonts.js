@@ -24,6 +24,16 @@ export const fontStyles = {
     fontWeight: 700,
     fontStyle: 'italic',
   },
+  serifMedium: {
+    fontFamily: 'Rubis, Georgia, serif',
+    fontWeight: 500,
+    fontStyle: 'normal',
+  },
+  serifMediumItalic: {
+    fontFamily: 'Rubis, Georgia, serif',
+    fontWeight: 500,
+    fontStyle: 'italic',
+  },
   sansSerifRegular: {
     fontFamily: 'GT-America-Standard, Helvetica Neue, Helvetica, sans-serif',
     fontWeight: 400,
@@ -54,11 +64,6 @@ export const fontStyles = {
     fontWeight: 500,
     fontStyle: 'italic',
   },
-  flyerTitle: {
-    fontFamily: 'Druk-Wide, Roboto, sans-serif',
-    fontWeight: 500,
-    fontStyle: 'normal',
-  },
 }
 
 // Export for backwards compatibility
@@ -68,11 +73,12 @@ export const fontFamilies = {
   serifItalic: fontStyles.serifItalic.fontFamily,
   serifBold: fontStyles.serifBold.fontFamily,
   serifBoldItalic: fontStyles.serifBoldItalic.fontFamily,
+  serifMedium: fontStyles.serifMedium.fontFamily,
+  serifMediumItalic: fontStyles.serifMediumItalic.fontFamily,
   sansSerifRegular: fontStyles.sansSerifRegular.fontFamily,
   sansSerifItalic: fontStyles.sansSerifItalic.fontFamily,
   sansSerifMedium: fontStyles.sansSerifMedium.fontFamily,
   sansSerifBold: fontStyles.sansSerifBold.fontFamily,
   monospaceRegular: fontStyles.monospaceRegular.fontFamily,
   cursiveTitle: fontStyles.cursiveTitle.fontFamily,
-  flyerTitle: fontStyles.flyerTitle.fontFamily,
 }

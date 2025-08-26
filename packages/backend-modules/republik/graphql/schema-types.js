@@ -132,6 +132,7 @@ enum NewsletterName {
   ACCOMPLICE
   CLIMATE
   WDWWW
+  SUNDAY
 }
 
 type Video {

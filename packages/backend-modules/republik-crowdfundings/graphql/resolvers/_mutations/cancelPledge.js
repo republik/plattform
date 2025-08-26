@@ -1,5 +1,3 @@
-const logger = console
-
 const moment = require('moment')
 const Promise = require('bluebird')
 
@@ -30,7 +28,7 @@ module.exports = async (_, args, context) => {
     mail: { enforceSubscriptions },
   } = context
   if (!PARKING_PLEDGE_ID || !PARKING_USER_ID) {
-    console.error(
+    context.logger.error(
       'cancelPledge: missing PARKING_PLEDGE_ID and/or PARKING_USER_ID',
     )
     throw new Error(t('api/unexpected'))
@@ -47,13 +45,13 @@ module.exports = async (_, args, context) => {
   try {
     const pledge = await transaction.public.pledges.findOne({ id: pledgeId })
     if (!pledge) {
-      logger.error('pledge not found', { req: req._log(), pledgeId })
+      context.logger.error({ pledgeId }, 'pledge not found')
       throw new Error(t('api/pledge/404'))
     }
     if (pledge.id === PARKING_PLEDGE_ID || pledge.userId === PARKING_USER_ID) {
       const message =
         'pledge PARKING_PLEDGE_ID by PARKING_USER_ID can not be cancelled'
-      logger.error(message, { req: req._log(), pledge })
+      context.logger.error({ pledgeId }, message)
       throw new Error(message)
     }
     const pkg = await transaction.public.packages.findOne({
@@ -199,7 +197,7 @@ module.exports = async (_, args, context) => {
     )
   } catch (e) {
     await transaction.transactionRollback()
-    logger.info('transaction rollback', { req: req._log(), args, error: e })
+    context.logger.error({ args, error: e }, 'cancel pledge failed')
     throw e
   }
 

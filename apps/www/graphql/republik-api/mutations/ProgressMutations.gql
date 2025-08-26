@@ -1,0 +1,67 @@
+mutation upsertDocumentProgress(
+  $documentId: ID!
+  $percentage: Float!
+  $nodeId: String!
+) {
+  upsertDocumentProgress(
+    documentId: $documentId
+    percentage: $percentage
+    nodeId: $nodeId
+  ) {
+    id
+    document {
+      id
+      userProgress {
+        id
+        percentage
+        nodeId
+        updatedAt
+        max {
+          id
+          percentage
+          updatedAt
+        }
+      }
+    }
+  }
+}
+
+mutation removeDocumentProgress($documentId: ID!) {
+  removeDocumentProgress(documentId: $documentId) {
+    id
+    document {
+      id
+      userProgress {
+        id
+        percentage
+        nodeId
+        updatedAt
+        max {
+          id
+          percentage
+          updatedAt
+        }
+      }
+    }
+  }
+}
+
+mutation submitConsent {
+  submitConsent(name: "PROGRESS_OPT_OUT") {
+    id
+    progressOptOut: hasConsentedTo(name: "PROGRESS_OPT_OUT")
+  }
+}
+
+mutation revokeConsent {
+  revokeConsent(name: "PROGRESS_OPT_OUT") {
+    id
+    progressOptOut: hasConsentedTo(name: "PROGRESS_OPT_OUT")
+  }
+}
+
+mutation clearProgress {
+  clearProgress {
+    id
+  }
+}

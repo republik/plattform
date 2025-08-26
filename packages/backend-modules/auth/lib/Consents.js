@@ -4,13 +4,11 @@ const MissingConsentsError = newAuthError(
   'api/consents/missing',
 )
 
-const revokeHooks = []
-
 const VALID_POLICIES = [
   'PRIVACY',
   'TOS',
   'STATUTE',
-  'PROGRESS',
+  'PROGRESS_OPT_OUT',
   'PROLITTERIS_OPT_OUT',
   'NEWSLETTER_DAILY',
   'NEWSLETTER_WEEKLY',
@@ -18,10 +16,11 @@ const VALID_POLICIES = [
   'NEWSLETTER_ACCOMPLICE',
   'NEWSLETTER_PROJECTR',
   'NEWSLETTER_WDWWW',
+  'NEWSLETTER_SUNDAY',
 ]
 
 const REVOKABLE_POLICIES = [
-  'PROGRESS',
+  'PROGRESS_OPT_OUT',
   'PROLITTERIS_OPT_OUT',
   'NEWSLETTER_DAILY',
   'NEWSLETTER_WEEKLY',
@@ -29,6 +28,7 @@ const REVOKABLE_POLICIES = [
   'NEWSLETTER_ACCOMPLICE',
   'NEWSLETTER_PROJECTR',
   'NEWSLETTER_WDWWW',
+  'NEWSLETTER_SUNDAY',
 ]
 
 const getAllConsentRecords = ({ userId, pgdb }) =>
@@ -114,7 +114,7 @@ const saveConsents = async ({ userId, consents = [], req, pgdb, t }) => {
   const insertConsents = consents.filter(
     (consent) => existingConsents.indexOf(consent) === -1,
   )
-  return Promise.all(
+ return Promise.all(
     insertConsents.map((consent) =>
       pgdb.public.consents.insert({
         userId,
@@ -136,12 +136,7 @@ const revokeConsent = async ({ userId, consent }, context) => {
     ip: req.ip,
     record: 'REVOKE',
   })
-  for (const hook of revokeHooks) {
-    await hook({ userId, consent }, context)
-  }
 }
-
-const registerRevokeHook = (hook) => revokeHooks.push(hook)
 
 module.exports = {
   REVOKABLE_POLICIES,
@@ -153,5 +148,4 @@ module.exports = {
   ensureAllRequiredConsents,
   saveConsents,
   revokeConsent,
-  registerRevokeHook,
 }

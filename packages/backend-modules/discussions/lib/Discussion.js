@@ -35,8 +35,6 @@ const upsert = async (
     if (
       (settings.title && settings.title !== discussion.title) ||
       (settings.maxLength && settings.maxLength !== discussion.maxLength) ||
-      (settings.minInterval &&
-        settings.minInterval !== discussion.minInterval) ||
       (settings.anonymity && settings.anonymity !== discussion.anonymity) ||
       (settings.path && settings.path !== discussion.path) ||
       (settings.closed !== undefined &&
@@ -45,9 +43,6 @@ const upsert = async (
       (settings.collapsable !== undefined &&
         settings.collapsable !== null &&
         settings.collapsable !== discussion.collapsable) ||
-      (settings.isBoard !== undefined &&
-        settings.isBoard !== null &&
-        settings.isBoard !== discussion.isBoard) ||
       (settings.tagRequired !== undefined &&
         settings.tagRequired !== discussion.tagRequired) ||
       (settings.tags && settings.tags !== (discussion.tags || []).join(',')) ||

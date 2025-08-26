@@ -1,9 +1,9 @@
-import { css } from 'glamor'
+import { A, colors, Label } from '@project-r/styleguide'
 
 import { IconClose } from '@republik/icons'
+import { css } from 'glamor'
 
-import { A, Label, colors } from '@project-r/styleguide'
-import { RepoSearch } from '@project-r/styleguide/editor'
+import RepoSearch from '../../../Forms/RepoSearch'
 
 import { RepoLink } from '../../utils/github'
 
@@ -68,7 +68,7 @@ export default ({
             onRefChange(null)
           }}
         >
-          <IconClose size={25} />
+          <IconClose size={24} />
         </A>
       </div>
     )

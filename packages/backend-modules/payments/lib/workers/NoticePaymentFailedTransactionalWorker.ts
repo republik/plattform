@@ -23,7 +23,7 @@ export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
       throw Error('unable to perform this job version. Expected v1')
     }
 
-    console.log(`[${this.queue}] start`)
+    this.logger.debug({ queue: this.queue, jobId: job.id }, 'start')
 
     const webhookService = new WebhookService(this.context.pgdb)
     const mailService = new MailNotificationService(this.context.pgdb)
@@ -33,12 +33,18 @@ export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
     )
 
     if (!wh) {
-      console.error('Webhook does not exist')
+      this.logger.error(
+        { queue: this.queue, jobId: job.id },
+        'Webhook does not exist',
+      )
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
     if (wh.payload.type !== 'invoice.payment_failed') {
-      console.error('Webhook is not of type invoice.payment_failed')
+      this.logger.error(
+        { queue: this.queue, jobId: job.id },
+        'Webhook is not of type invoice.payment_failed',
+      )
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
@@ -52,11 +58,13 @@ export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
         invoiceExternalId: job.data.invoiceExternalId,
       })
     } catch (e) {
-      console.error(`[${this.queue}] error`)
-      console.error(e)
+      this.logger.error(
+        { queue: this.queue, jobId: job.id, error: e },
+        'Error sending notice payment failed transactional mail',
+      )
       throw e
     }
 
-    console.log(`[${this.queue}] done`)
+    this.logger.debug({ queue: this.queue, jobId: job.id }, 'done')
   }
 }

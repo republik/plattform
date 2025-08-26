@@ -73,7 +73,7 @@ export {
 export { GalleryContext } from './components/Figure/GalleryContext'
 export { Tweet } from './components/Social'
 export { Video } from './components/Video'
-export { TeaserFeed, getTeaserHref } from './components/TeaserFeed'
+export { TeaserFeed } from './components/TeaserFeed'
 export {
   TeaserFrontImage,
   TeaserFrontImageHeadline,
@@ -122,7 +122,6 @@ export {
   Interaction,
   Meta,
   Editorial,
-  Flyer,
   Sub,
   Sup,
   HR,
@@ -147,7 +146,7 @@ export { IconLink as DiscussionIconLink } from './components/Discussion/Internal
 export { SEPARATOR as EXPANDABLE_LINK_SEPARATOR } from './components/ExpandableLink/ExpandableLink'
 
 export { default as DiscussionCommentsWrapper } from './components/Discussion/DiscussionCommentsWrapper'
-export { CommentNode, BoardComment } from './components/Discussion/Tree'
+export { CommentNode } from './components/Discussion/Tree'
 export type { CommentProps } from './components/Discussion/Tree'
 
 export { DiscussionContext } from './components/Discussion/DiscussionContext'
@@ -196,21 +195,10 @@ export * from './chart'
 export * from './templates'
 export { mdastToString } from './templates/Article/utils'
 
-export { default as SlateRender } from './components/Editor/Render'
-export { default as renderSlateAsText } from './components/Editor/Render/text'
-export {
-  default as flyerSchema,
-  flyerStructure,
-  flyerTemplate,
-} from './components/Editor/schema/flyer'
-export { RenderContextProvider } from './components/Editor/Render/Context'
-export type {
-  CustomDescendant,
-  CustomElement,
-} from './components/Editor/custom-types'
-
-export { FlyerTile, FlyerTileMeta } from './components/Flyer'
-export { FlyerDate } from './components/Flyer/Date'
 export { default as ErrorBoundary } from './components/ErrorBoundary'
 
 export { Author as EmailAuthor } from './templates/shared/email/components/Author'
+
+export { default as ChartEditor } from './components/Chart/Editor'
+
+export { Marker, markerKeys, markersConfig } from './components/Marker'

@@ -26,23 +26,20 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginTop: 8,
-    gap: 8,
+    marginTop: 24,
+    gap: 24,
   }),
   mainControls: css({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-center',
     alignItems: 'center',
-    gap: 16,
-    [mediaQueries.sDown]: {
-      gap: 8,
-    },
+    gap: 24,
   }),
   secondaryControls: css({
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
     gap: 32,
@@ -114,6 +111,21 @@ const AudioControl = ({
         showTime
       />
       <div {...styles.controlWrapper}>
+        <div {...styles.secondaryControls}>
+          <div>
+            <IconButton
+              Icon={isAutoPlayEnabled ? IconAutoplay : IconAutopause}
+              label={autoPlayText}
+              labelShort={autoPlayText}
+              onClick={() => setAutoPlayEnabled(!isAutoPlayEnabled)}
+              style={{ marginRight: 0, minWidth: 125 }}
+            />
+          </div>
+          <PlaybackRateControl
+            playbackRate={playbackRate}
+            setPlaybackRate={handlePlaybackRateChange}
+          />
+        </div>
         <div {...styles.mainControls}>
           <IconButton
             size={32}
@@ -152,21 +164,6 @@ const AudioControl = ({
             onClick={handleSkipToNext}
             Icon={IconSkipNext}
             style={{ marginRight: 0 }}
-          />
-        </div>
-        <div {...styles.secondaryControls}>
-          <div>
-            <IconButton
-              Icon={isAutoPlayEnabled ? IconAutoplay : IconAutopause}
-              label={autoPlayText}
-              labelShort={autoPlayText}
-              onClick={() => setAutoPlayEnabled(!isAutoPlayEnabled)}
-              style={{ marginRight: 0, minWidth: 125 }}
-            />
-          </div>
-          <PlaybackRateControl
-            playbackRate={playbackRate}
-            setPlaybackRate={handlePlaybackRateChange}
           />
         </div>
       </div>

@@ -1,5 +1,4 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const logger = console
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, t } = context
@@ -13,14 +12,16 @@ module.exports = async (_, args, context) => {
   try {
     const pfp = await transaction.public.postfinancePayments.findOne({ id })
     if (!pfp) {
-      logger.error('postfinancePayment not found', { req: req._log(), args })
+      context.logger.error({ args }, 'postfinancePayment not found')
       throw new Error(t('api/payment/404'))
     }
     if (pfp.matched) {
-      logger.error('postfinacePayment is matched already', {
-        req: req._log(),
-        args,
-      })
+      context.logger.error(
+        {
+          args,
+        },
+        'postfinacePayment is matched already',
+      )
       throw new Error(t('api/postfinancePayment/match/noChange'))
     }
 
@@ -29,12 +30,9 @@ module.exports = async (_, args, context) => {
       status: 'PAID',
     })
     if (payments.length < 1) {
-      logger.error(
+      context.logger.error(
+        { args },
         'can not set pfp to paid if no related PAID payment is found',
-        {
-          req: req._log(),
-          args,
-        },
       )
       throw new Error(
         t('api/postfinancePayment/match/noPayment', { hrid: pfp.mitteilung }),
@@ -46,12 +44,11 @@ module.exports = async (_, args, context) => {
       matched: true,
     })
     if (pfp2.length) {
-      logger.error(
-        'another postfinancePayment with the same hrid is matched already',
+      context.logger.error(
         {
-          req: req._log(),
           args,
         },
+        'another postfinancePayment with the same hrid is matched already',
       )
       throw new Error(
         t('api/postfinancePayment/match/duplicate', { hrid: pfp.mitteilung }),
@@ -71,7 +68,7 @@ module.exports = async (_, args, context) => {
     await transaction.transactionCommit()
   } catch (e) {
     await transaction.transactionRollback()
-    logger.info('transaction rollback', { req: req._log(), args, error: e })
+    context.logger.error({ args, error: e }, 'manually match PF payment failed')
     throw e
   }
 

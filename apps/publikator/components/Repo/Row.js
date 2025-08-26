@@ -29,7 +29,7 @@ const PublicationLink =
     (
       <a
         key={name}
-        href={`${format?.meta.externalBaseUrl || FRONTEND_BASE_URL}${path}`}
+        href={`${FRONTEND_BASE_URL}${path}`}
       >
         <Icon color={colors.primary} />
       </a>

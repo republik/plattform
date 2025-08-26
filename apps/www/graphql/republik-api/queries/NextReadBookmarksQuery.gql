@@ -1,0 +1,20 @@
+query NextReadsBookmarks($repoId: ID!) {
+  me {
+    id
+    collectionItems(
+      names: ["bookmarks"]
+      first: 5
+      progress: UNFINISHED
+      uniqueDocuments: true
+      lastDays: 300
+      excludeRepoId: $repoId
+    ) {
+      nodes {
+        id
+        document {
+          ...NextReadDocumentFields
+        }
+      }
+    }
+  }
+}

@@ -1,18 +1,7 @@
 const moment = require('moment')
 const {
   COLLECTION_NAME: PROGRESS_COLLECTION_NAME,
-  POLICY_NAME: PROGRESS_POLICY_NAME,
-} = require('./Progress')
-
-const {
-  Consents: { registerRevokeHook },
-} = require('@orbiting/backend-modules-auth')
-
-registerRevokeHook(
-  ({ userId, consent }, context) =>
-    consent === PROGRESS_POLICY_NAME &&
-    clearItems(userId, PROGRESS_COLLECTION_NAME, context),
-)
+} = require('./ProgressOptOut')
 
 const assignUserId = (collection, userId) =>
   collection && {
@@ -76,12 +65,12 @@ const findDocumentItemsByCollectionNames = (
       ${lastDays ? `AND document_item."updatedAt" >= :afterDate` : ''}
       ${
         progress === 'FINISHED'
-          ? `AND (progress_item.data->>'percentage')::numeric >= 1`
+          ? `AND ((progress_item.data->>'percentage')::numeric >= 1 OR (((progress_item.data->>'max')::jsonb->>'data')::jsonb->>'percentage')::numeric >= 1)`
           : ''
       }
       ${
         progress === 'UNFINISHED'
-          ? `AND (progress_item.data->>'percentage' IS NULL OR (progress_item.data->>'percentage')::numeric < 1)`
+          ? `AND (progress_item.data->>'percentage' IS NULL OR ((progress_item.data->>'percentage')::numeric < 1 AND (((progress_item.data->>'max')::jsonb->>'data')::jsonb->>'percentage')::numeric < 1))`
           : ''
       }
     ORDER BY document_item."updatedAt" DESC
