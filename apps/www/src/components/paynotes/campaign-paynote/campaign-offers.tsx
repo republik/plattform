@@ -101,15 +101,16 @@ export function Offers({
           gap: '4',
           flexDir: 'column',
           textStyle: 'body',
-          alignItems: 'center',
+          // alignItems: 'center',
         })}
       >
         <p
           className={css({
             color: 'textSoft',
+            fontSize: 's',
           })}
         >
-          Wählen Sie einen Betrag aus. Gültig bis zum 28.09.2025
+          Wählen Sie einen Betrag aus:
         </p>
 
         <div
@@ -117,7 +118,7 @@ export function Offers({
             width: 'full',
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(60px, 1fr))',
-            gap: '4',
+            gap: '2',
           })}
         >
           {DISCOUNT_OPTIONS.flatMap(({ promoCode, amount, showAsButton }) => {
@@ -201,18 +202,38 @@ export function Offers({
             }}
           />
         </div>
-        <div
+
+        <Button size='full' type='submit'>
+          Weiter
+        </Button>
+
+        <p
           className={css({
             fontSize: 's',
-            textAlign: 'left',
-            width: 'full',
+            textAlign: 'center',
           })}
         >
-          Unlimitierter Zugang. 22.– monatlich nach dem ersten Monat. Jederzeit
-          kündbar.
-        </div>
+          Ab dem zweiten Monat CHF 22.– pro Monat.
+          <br />
+          Wir informieren Sie vor der Verlängerung per{' '}
+          <span className={css({ whiteSpace: 'nowrap' })}>E-Mail</span>.<br />
+          <span
+            className={css({
+              fontWeight: 'medium',
+            })}
+          >
+            Jederzeit kündbar.
+          </span>
+        </p>
 
-        <Button type='submit'>Jetzt abonnieren</Button>
+        <p
+          className={css({
+            fontSize: 's',
+            color: 'textSoft',
+          })}
+        >
+          Dieses Angebot läuft bis und mit 28.09.2025.
+        </p>
       </div>
     </form>
   )

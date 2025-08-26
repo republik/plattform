@@ -62,7 +62,7 @@ export const presetCampaign2025 = definePreset({
           },
           contrast: {
             value: {
-              _campaign2025: '{colors.campaign2025.red}',
+              _campaign2025: '#191919',
             },
           },
           text: {

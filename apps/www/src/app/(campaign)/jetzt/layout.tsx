@@ -58,7 +58,6 @@ export default async function CampaignLayout({
               className={css({
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '8',
                 // py: '8-16',
                 fontSize: 'xl',
                 position: 'relative',

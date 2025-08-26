@@ -14,7 +14,13 @@ export default async function Page() {
         </Link>
       </div>
       <CampaignHeroSection>
-        <h1>Uns ist es nicht egal.</h1>
+        <h1
+          className={css({
+            px: '4',
+          })}
+        >
+          Uns ist es nicht egal.
+        </h1>
         <div
           className={css({
             maxW: 'content.narrow',
@@ -22,15 +28,15 @@ export default async function Page() {
             textStyle: 'body',
             fontSize: 'xl',
             spaceY: '4',
+            px: '4',
             mx: 'auto',
             mt: '16',
             lineHeight: '1.5',
-            px: '4',
           })}
         >
           <p>
             Es sind chaotische Zeiten. Aber wir wenden uns nicht ab: Unsere
-            Journalistinnen und Journalisten schauen für Sie dorthin, wo es
+            Journalistinnen und Journalisten schauen für Sie dort hin, wo es
             wichtig ist. Engagiert, sorgfältig und neugierig.
           </p>
           <p>
@@ -38,6 +44,7 @@ export default async function Page() {
             Bullshit überrollt werden. Denn nur wer gut informiert ist, kann
             auch etwas tun.
           </p>
+          <p>Gemeinsam gegen die Gleichgültigkeit.</p>
         </div>
       </CampaignHeroSection>
       <div
@@ -46,7 +53,7 @@ export default async function Page() {
         className={css({
           color: 'text',
           background: 'pageBackground',
-          pt: '16',
+          py: '8',
           fontSize: 'l',
         })}
       >
@@ -57,10 +64,18 @@ export default async function Page() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'stretch',
-              gap: '8',
+              gap: '4',
             })}
           >
-            <p>Für einen Monat Lesen Sie Republik zum Preis Ihrer Wahl.</p>
+            <h3
+              className={css({
+                textTransform: 'uppercase',
+                fontWeight: 'medium',
+              })}
+            >
+              Nur für kurze Zeit
+            </h3>
+            <p>Die Republik ab CHF 1.– im ersten Monat.</p>
 
             <Offers />
           </div>
