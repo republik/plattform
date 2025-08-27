@@ -1,0 +1,47 @@
+query Contributor($id: ID, $slug: String) {
+  contributor(id: $id, slug: $slug) {
+    id
+    name
+    slug
+    shortBio
+    image
+    prolitterisId
+    prolitterisFirstname
+    prolitterisLastname
+    bio
+    gender
+    userId
+    createdAt
+    updatedAt
+  }
+}
+
+query Contributors(
+  $first: Int
+  $after: String
+  $orderBy: ContributorOrderBy
+  $filters: ContributorFilters
+) {
+  contributors(
+    first: $first
+    after: $after
+    orderBy: $orderBy
+    filters: $filters
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    nodes {
+      id
+      name
+      slug
+      shortBio
+      image
+      prolitterisId
+      userId
+      updatedAt
+    }
+  }
+}

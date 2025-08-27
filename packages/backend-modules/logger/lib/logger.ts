@@ -57,7 +57,7 @@ export const httpLogger = pinoHttp({
   },
   customProps: (req: any, _res: any) => {
     return {
-      userId: req?.user?.id || 'unknown',
+      userId: req?.user?.id || 'unknown user',
     }
   },
   // only log requestID for child logs

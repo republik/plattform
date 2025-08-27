@@ -1,6 +1,4 @@
 import { css } from 'glamor'
-import { relative } from 'path'
-import React from 'react'
 import colors from '../../theme/colors'
 import { fontStyles } from '../../theme/fonts'
 
@@ -32,7 +30,7 @@ const styles = {
   formatTitle: css({
     ...fontStyles.sansSerifMedium,
     marginBottom: 18,
-    fontSize: 172,
+    fontSize: 156,
     width: '100%',
     textAlign: 'center',
     zIndex: 1,

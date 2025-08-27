@@ -161,15 +161,8 @@ const setPreferredFirstFactor = async (user, tokenType = null, pgdb) => {
   )
 }
 
-const signIn = async (
-  _email,
-  context,
-  pgdb,
-  req,
-  consents,
-  _tokenType,
-  accessToken,
-) => {
+const signIn = async (_email, signInContext, consents, _tokenType, accessToken, context) => {
+  const { pgdb, req } = context
   if (req.user) {
     // req is authenticated
     return {
@@ -237,7 +230,7 @@ const signIn = async (
             session,
             email,
             accessToken,
-            context,
+            context: signInContext,
           })
           tokenType = ACCESS_TOKEN
         } catch (e) {
@@ -257,7 +250,7 @@ const signIn = async (
         pgdb,
         session,
         email,
-        context,
+        context: signInContext,
       })
     }
 
@@ -280,7 +273,7 @@ const signIn = async (
         pgdb,
         email,
         token,
-        context,
+        context: signInContext,
         country,
         phrase,
         user,
