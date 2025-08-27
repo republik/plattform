@@ -230,6 +230,7 @@ export function Offers({
           className={css({
             fontSize: 's',
             color: 'textSoft',
+            textAlign: 'center',
           })}
         >
           Dieses Angebot läuft bis und mit 28.09.2025.

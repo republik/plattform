@@ -22,10 +22,11 @@ import useResizeObserver from 'use-resize-observer'
 import { getMeteringData } from '../article-metering'
 import IosCTA from '../ios-cta'
 import { usePaynoteVariants } from '../paynote/use-paynotes'
-import {
-  CampaignHero,
-  CampaignHeroMini,
-} from '@app/components/paynotes/campaign-paynote/campaign-hero'
+import { CampaignHeroSection } from '@app/app/(campaign)/components/campaign-hero'
+// import {
+//   CampaignHero,
+//   CampaignHeroMini,
+// } from '@app/components/paynotes/campaign-paynote/campaign-hero'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
@@ -57,6 +58,7 @@ function MiniPaynoteMessage({
       onClick={onClick}
       className={css({
         textAlign: 'left',
+        lineHeight: 1.5,
       })}
     >
       <span>
@@ -86,7 +88,7 @@ function MiniPaynoteMessage({
           },
         })}
       >
-        Zum Angebot
+        Mehr Erfahren
       </span>
     </Dialog.Trigger>
   )
@@ -145,7 +147,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
         ref={ref}
         data-theme='light'
         className={css({
-          backgroundColor: 'contrast',
+          backgroundColor: '#313131',
           color: 'white',
           position: 'fixed',
           inset: 'auto 0 0 0',
@@ -166,9 +168,20 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
           },
         })}
       >
-        <CampaignHeroMini />
+        <div
+          className={css({
+            fontSize: '3xl',
+            fontFamily: 'republikSerif',
+            textAlign: 'left',
+            lineHeight: '1',
+          })}
+        >
+          Uns ist nicht egal.
+        </div>
         <MiniPaynoteMessage
-          message={'Die Republik für alle ab CHF 1.- im ersten Monat.'}
+          message={
+            'Und Ihnen? Die Republik für alle ab CHF 1.- im ersten Monat.'
+          }
           onClick={() => {
             setVariant('offers-only')
             trackEvent({ action: 'Opened on click' })
@@ -225,70 +238,49 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
               },
             })}
           >
-            <CampaignHero />
+            <CampaignHeroSection>
+              <Dialog.Title asChild>
+                <h2
+                  className={css({
+                    px: '4',
+                  })}
+                >
+                  Uns ist es nicht egal.
+                </h2>
+              </Dialog.Title>
+            </CampaignHeroSection>
 
             <div
               data-testid='paynote-overlay'
               className={css({
                 margin: '0 auto',
-                maxW: '34rem',
+                maxW: 'content.narrow',
                 textStyle: 'sansSerifRegular',
-                lineHeight: 1.6,
-                fontSize: 'base',
+                fontSize: 'l',
                 display: 'flex',
                 flexDir: 'column',
                 gap: '4',
-                px: '8',
-                pt: '4',
+                px: '4',
+                pt: '8',
+                lineHeight: 1.5,
               })}
             >
-              <Dialog.Title asChild>
-                <h2
-                  className={css({
-                    textStyle: { base: 'h3Serif', sm: 'h2Serif' },
-                    lineHeight: 1.4,
-                  })}
-                ></h2>
-              </Dialog.Title>
+              <p>
+                Wir möchten, dass Sie sich in diesen chaotischen Zeiten
+                zurechtfinden können. Denn nur wer gut informiert ist, kann auch
+                etwas tun.
+              </p>
 
-              {/* {variant === 'paynote' ? (
-                <div
-                  className={css({
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '4',
-                    pb: '4',
-                    fontSize: 18,
-                  })}
-                >
-                  <StructuredText
-                    data={paynote?.message.value}
-                  ></StructuredText>
-                </div>
-              ) : null} */}
+              <h3
+                className={css({
+                  textTransform: 'uppercase',
+                  fontWeight: 'medium',
+                })}
+              >
+                Nur für kurze Zeit
+              </h3>
 
-              {variant === 'paynote' ? (
-                <div
-                  className={css({
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '4',
-                    pb: '4',
-                    fontSize: 'base',
-                  })}
-                >
-                  <p>
-                    Wir möchten, dass Sie sich in diesen chaotischen Zeiten
-                    zurechtfinden können. Denn nur wer gut informiert ist, kann
-                    auch etwas tun.
-                  </p>
-
-                  <p>
-                    Deshalb gibt es die Republik jetzt ab CHF 1.- im ersten
-                    Monat.
-                  </p>
-                </div>
-              ) : null}
+              <p>Die Republik ab CHF 1.– im ersten Monat.</p>
 
               <Offers
                 additionalShopParams={{
