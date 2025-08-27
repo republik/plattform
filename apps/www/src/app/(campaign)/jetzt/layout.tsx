@@ -1,5 +1,4 @@
 import { getCampaignReferralsData } from '@app/app/(campaign)/campaign-data'
-import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/constants'
 import { PageLayout } from '@app/components/layout'
 import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { getMe } from '@app/lib/auth/me'
@@ -9,8 +8,8 @@ import { redirect } from 'next/navigation'
 import { ReactNode } from 'react'
 
 export const metadata: Metadata = {
-  title: `Unterstützen Sie die Republik mit einem Abo!`,
-  description: 'Bis zum 31. März 2024 ab CHF 120 für ein Jahr.',
+  title: `Uns ist es nicht egal, was Sie von der Welt erfahren.`,
+  description: 'Bis zum 28. September 2025 ab CHF 1 für einen Monat.',
   robots: { index: false, follow: false },
 }
 
@@ -29,10 +28,9 @@ export default async function CampaignLayout({
     return redirect('/jetzt-vorbei')
   }
 
-  // User is logged in but has some kind of yearly subscription
-  const meIsEligible = !UNELIGIBLE_RECEIVER_MEMBERSHIPS.includes(
-    me?.activeMembership?.type.name,
-  )
+  // User is logged in but does not have some kind of subscription
+  const meIsEligible = !me?.activeMembership && !me?.activeMagazineSubscription
+
   if (me && !meIsEligible) {
     return redirect('/jetzt-einladen')
   }

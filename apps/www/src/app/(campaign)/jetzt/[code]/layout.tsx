@@ -1,19 +1,14 @@
 import { ReferralCodeValidationResult } from '#graphql/republik-api/__generated__/gql/graphql'
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
-import { UNELIGIBLE_RECEIVER_MEMBERSHIPS } from '@app/app/(campaign)/constants'
 import { redirect } from 'next/navigation'
 
-export default async function Layout(
-  props: {
-    children: React.ReactNode
-    params: Promise<{ code: string }>
-  }
-) {
-  const params = await props.params;
+export default async function Layout(props: {
+  children: React.ReactNode
+  params: Promise<{ code: string }>
+}) {
+  const params = await props.params
 
-  const {
-    children
-  } = props;
+  const { children } = props
 
   const data = await getInviteeData(await params)
 
@@ -27,10 +22,9 @@ export default async function Layout(
     return redirect('/jetzt')
   }
 
-  // User is logged in but has some kind of yearly subscription
-  const meIsEligible = !UNELIGIBLE_RECEIVER_MEMBERSHIPS.includes(
-    me?.activeMembership?.type.name,
-  )
+  // User is logged in but does not have some kind of subscription
+  const meIsEligible = !me?.activeMembership && !me?.activeMagazineSubscription
+
   if (me && !meIsEligible) {
     return redirect('/jetzt-einladen')
   }

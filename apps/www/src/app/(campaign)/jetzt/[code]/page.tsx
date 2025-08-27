@@ -16,7 +16,7 @@ export async function generateMetadata(props): Promise<Metadata> {
     ? `${data.sender.firstName}${
         data.sender.lastName ? ' ' + data.sender.lastName : ''
       }`
-    : 'Jemand'
+    : 'Uns'
 
   return {
     title: `${senderName} ist nicht egal, was du von
