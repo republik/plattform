@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { useMe } from 'lib/context/MeContext'
 import { useUserAgent } from 'lib/context/UserAgentContext'
 import { updateArticleMetering } from './article-metering'
+import { useCampaign } from '@app/components/paynotes/campaign-paynote/use-campaign'
 
 type PaynoteKindType =
   | null
@@ -83,6 +84,7 @@ function isDialogPage(
 
 export const PaynotesProvider = ({ children }) => {
   const { meLoading, trialStatus } = useMe()
+  const { campaign } = useCampaign()
 
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -100,15 +102,14 @@ export const PaynotesProvider = ({ children }) => {
 
   useEffect(() => {})
 
+  const isCampaignActive = campaign?.isActive
+
   useEffect(() => {
     if (meLoading) return
     // console.log({ template, trialStatus, pathname, searchParams })
 
     // Active membership: no paynote
     if (trialStatus === 'MEMBER') return setPaynoteKind(null)
-
-    // TODO: implement logic
-    const IS_CAMPAIGN = true
 
     // ANYTHING THAT'S NOT AN ARTICLE:
     //
@@ -123,7 +124,7 @@ export const PaynotesProvider = ({ children }) => {
     // anything else that's not an article: minimized paynote overlay
     if (template !== 'article')
       return setPaynoteKind(
-        IS_CAMPAIGN ? 'CAMPAIGN_OVERLAY_CLOSED' : 'OVERLAY_CLOSED',
+        isCampaignActive ? 'CAMPAIGN_OVERLAY_CLOSED' : 'OVERLAY_CLOSED',
       )
 
     // ARTICLES:
@@ -134,7 +135,7 @@ export const PaynotesProvider = ({ children }) => {
     // want to show these clever foxes the paywall)
     if (isSearchBot)
       return setPaynoteKind(
-        IS_CAMPAIGN ? 'CAMPAIGN_OVERLAY_OPEN' : 'OVERLAY_OPEN',
+        isCampaignActive ? 'CAMPAIGN_OVERLAY_OPEN' : 'OVERLAY_OPEN',
       )
 
     // just signed up for a trial: welcome banner
@@ -147,7 +148,7 @@ export const PaynotesProvider = ({ children }) => {
     // the other group (group B) is shown the more prominent overlay
     if (trialStatus === 'TRIAL_GROUP_B')
       return setPaynoteKind(
-        IS_CAMPAIGN ? 'CAMPAIGN_OVERLAY_OPEN' : 'OVERLAY_OPEN',
+        isCampaignActive ? 'CAMPAIGN_OVERLAY_OPEN' : 'OVERLAY_OPEN',
       )
 
     // abo teilen users are shown the inline paynote
@@ -157,7 +158,7 @@ export const PaynotesProvider = ({ children }) => {
     // exception for marked articles (via metadata)
     if (isPaywallExcluded)
       return setPaynoteKind(
-        IS_CAMPAIGN ? 'CAMPAIGN_OVERLAY_CLOSED' : 'OVERLAY_CLOSED',
+        isCampaignActive ? 'CAMPAIGN_OVERLAY_CLOSED' : 'OVERLAY_CLOSED',
       )
 
     // trial expired: show paywall
@@ -169,7 +170,7 @@ export const PaynotesProvider = ({ children }) => {
     const { meteringStatus } = updateArticleMetering(pathname)
     if (meteringStatus === 'READING_GRANTED')
       return setPaynoteKind(
-        IS_CAMPAIGN ? 'CAMPAIGN_OVERLAY_OPEN' : 'OVERLAY_OPEN',
+        isCampaignActive ? 'CAMPAIGN_OVERLAY_OPEN' : 'OVERLAY_OPEN',
       )
 
     // trial eligible users see the regwall
@@ -185,6 +186,7 @@ export const PaynotesProvider = ({ children }) => {
     isSearchBot,
     template,
     isPaywallExcluded,
+    isCampaignActive,
   ])
 
   // console.log({ paynoteKind })

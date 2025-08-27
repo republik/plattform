@@ -3,9 +3,8 @@ import {
   CampaignReferralsDocument,
   CampaignSenderDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
+import { CAMPAIGN_SLUG } from '@app/app/(campaign)/campaign-config'
 import { getClient } from '@app/lib/apollo/client'
-
-const CAMPAIGN_SLUG = 'autumn-2025'
 
 export async function getInviteeData({ code }: { code: string }) {
   const client = await getClient()
