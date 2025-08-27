@@ -54,10 +54,11 @@ export class CheckoutSessionBuilder {
   private optionalSessionVars: {
     complimentaryItems?: any[]
     promoCode?: string
-    customerId?: string
-    metadata?: any
+    customerId: Promise<string | undefined>
+    metadata?: Record<string, string>
+    couponMetadata: Promise<Stripe.Metadata | undefined>
+    selectedDiscount: Promise<{ type: 'DISCOUNT'; value: Discount } | undefined>
     returnURL?: string
-    selectedDiscount?: { type: 'DISCOUNT'; value: Discount }
     selectedDonation?: CustomDonation
   }
 
@@ -73,22 +74,41 @@ export class CheckoutSessionBuilder {
     this.paymentService = paymentService
     this.customerInfoService = CustomerInfoService
     this.uiMode = 'EMBEDDED'
-    this.optionalSessionVars = {}
+    this.optionalSessionVars = {
+      customerId: (async () => undefined)(),
+      couponMetadata: (async () => undefined)(),
+      selectedDiscount: (async () => undefined)(),
+    }
   }
 
   public withPromoCode(code?: string): this {
     if (code) {
+      this.optionalSessionVars.couponMetadata = (async () => {
+        const promo = await this.paymentService.getPromotion(
+          this.offer.company,
+          code,
+        )
+        if (promo) {
+          return promo.coupon.metadata || {}
+        }
+        return undefined
+      })()
       this.optionalSessionVars.promoCode = code
     }
     return this
   }
 
-  public async withSelectedDiscount(id?: string): Promise<this> {
+  public withSelectedDiscount(id?: string): this {
     if (id && this.offer.discountOpitions?.find((d) => d.coupon === id)) {
-      const coupon = await this.paymentService.getCoupon(this.offer.company, id)
-      this.optionalSessionVars.selectedDiscount = coupon
-        ? { type: 'DISCOUNT', value: couponToDiscount(coupon) }
-        : undefined
+      this.optionalSessionVars.selectedDiscount = (async () => {
+        const coupon = await this.paymentService.getCoupon(
+          this.offer.company,
+          id,
+        )
+        return coupon
+          ? { type: 'DISCOUNT', value: couponToDiscount(coupon) }
+          : undefined
+      })()
     }
     return this
   }
@@ -100,15 +120,13 @@ export class CheckoutSessionBuilder {
     return this
   }
 
-  public async withCustomer(user?: User): Promise<this> {
+  public withCustomer(user?: User): this {
     if (this.offer.requiresLogin && !user) {
       throw new Error('api/signIn')
     }
-
-    this.optionalSessionVars.customerId = await this.getCustomer(
-      this.offer.company,
-      user?.id,
-    )
+    this.optionalSessionVars.customerId = (async () => {
+      return await this.getCustomer(this.offer.company, user?.id)
+    })()
     return this
   }
 
@@ -144,26 +162,37 @@ export class CheckoutSessionBuilder {
   }> {
     const { customerId, metadata } = this.optionalSessionVars
 
-    const [lineItems, donationLineItems, discount] = await Promise.all([
-      this.genLineItems(),
-      this.genDonationLineItems(),
-      this.resolveDiscount(),
-    ])
+    const [lineItems, donationLineItems, discount, couponMeta] =
+      await Promise.all([
+        this.genLineItems(),
+        this.genDonationLineItems(),
+        this.resolveDiscount(),
+        this.resolveCouponMetadata(),
+      ])
 
     const allLineItems = [...lineItems, ...donationLineItems]
+
+    const mergedMetadata = {
+      ...metadata,
+      ...this.offer.metaData,
+      ...couponMeta,
+    }
 
     const config: Stripe.Checkout.SessionCreateParams = {
       ...this.checkoutUIConfig(),
       mode: this.getCheckoutMode(),
-      customer: customerId,
+      customer: await customerId,
       line_items: allLineItems,
       currency: 'CHF',
       discounts: discount ? [this.formatDiscount(discount)] : undefined,
       locale: 'de',
       shipping_address_collection: this.getShippingAddressCollection(),
       payment_method_configuration: this.getPaymentConfigId(),
-      metadata: { ...metadata, ...this.offer.metaData },
-      subscription_data: this.getSubscriptionData(),
+      metadata: mergedMetadata,
+      subscription_data:
+        this.offer.type === 'SUBSCRIPTION'
+          ? { metadata: mergedMetadata }
+          : undefined,
       consent_collection: { terms_of_service: 'required' },
     }
 
@@ -178,6 +207,17 @@ export class CheckoutSessionBuilder {
       clientSecret: sess.client_secret,
       url: sess.url,
     }
+  }
+
+  private async resolveCouponMetadata(): Promise<Record<string, string>> {
+    const metadata: Record<string, string> = {}
+    const resolvedCouponMetadata = await this.optionalSessionVars.couponMetadata
+    if (resolvedCouponMetadata) {
+      Object.keys(resolvedCouponMetadata).forEach((key) => {
+        metadata[`coupon_${key}`] = resolvedCouponMetadata[key]
+      })
+    }
+    return metadata
   }
 
   private getCheckoutMode(): 'payment' | 'subscription' {
@@ -198,8 +238,9 @@ export class CheckoutSessionBuilder {
       }
     }
 
-    if (selectedDiscount) {
-      return selectedDiscount
+    const resolvedSelectedDiscount = await selectedDiscount
+    if (resolvedSelectedDiscount) {
+      return resolvedSelectedDiscount
     }
 
     if (promoCode && this.offer.allowPromotions) {
@@ -303,17 +344,6 @@ export class CheckoutSessionBuilder {
     return this.optionalSessionVars.complimentaryItems?.length
       ? { allowed_countries: ['CH'] }
       : undefined
-  }
-
-  private getSubscriptionData(): { metadata: Record<string, any> } | undefined {
-    if (this.offer.type !== 'SUBSCRIPTION') return undefined
-
-    return {
-      metadata: {
-        ...this.optionalSessionVars.metadata,
-        ...this.offer.metaData,
-      },
-    }
   }
 
   private checkoutUIConfig() {
