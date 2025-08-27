@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!--[if gte mso 15]>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
+    <![endif]-->
+    <style type="text/css">
+      {{{sg_font_faces}}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{{sg_font_style_sans_serif_regular}}}
+      }
+      p strong {
+        {{{sg_font_style_sans_serif_medium}}}
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #fff">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+            >
+              <tbody>
+                <tr>
+                  <td style="padding: 20px">
+                    <p>Guten Tag</p>
+                    <p>
+                      In den letzten zwölf Monaten haben wir für Sie recherchiert, geschrieben, 
+                      fotografiert, korrigiert, programmiert und vieles mehr. 
+                      Das war nur möglich, weil es Menschen wie Sie gibt, denen unabhängiger, 
+                      werbefreier Qualitätsjournalismus wichtig ist. 
+                      Egal, ob Sie uns einmal pro Woche oder einmal pro Jahr lesen (oder hören): 
+                      Wir hoffen, dass wir Sie immer wieder erfolgreich überzeugen, 
+                      herausfordern, informieren, erfreuen (und vielleicht auch ab und zu ärgern) konnten.
+                    </p>
+                    <p>
+                      Denn der wirkliche Feind der Demokratie ist die Gleichgültigkeit – und dagegen schreiben wir an.
+                    </p>
+                    <p>
+                      Weiter möchten wir Sie darüber informieren, 
+                      dass sich Ihre Mitgliedschaft in den kommenden Tagen automatisch erneuert. 
+                      Ihr Bezahlmittel {{payment_method_name}} {{#if is_credit_card}}mit den Endziffern {{credit_card_last4}} {{/if}}
+                      belasten wir am {{payment_attempt_date}} mit CHF {{total}}. 
+                    </p>
+                    {{#if is_benefactor}}
+                    <p>Dieser Beitrag kommt zustande, weil Sie die Republik im letzten Jahr grosszügigerweise mit einer Gönner-Mitgliedschaft 
+                      {{#if with_donation}} und einer zusätzlichen Spende{{/if}}
+                      unterstützt haben. 
+                      Durch Sie ist unsere Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz erst möglich. 
+                      Wir bedanken uns von ganzem Herzen und hoffen, dass Sie sich und uns treu bleiben und weiterhin 
+                      in kompromisslosen Journalismus investieren. 
+                      Sollten Sie es sich anders überlegen, können Sie <a href="{{link_account_goto}}">Ihre Mitgliedschaft vor der Abbuchung noch anpassen.
+                      </p>
+                    {{else if is_discounted}}
+                    <p>
+                      Sie haben im letzten Jahr eine vergünstigte Mitgliedschaft
+                      gewählt. Da unsere Unabhängigkeit, ja unsere Existenz von der Unterstützung unserer 
+                      Verlegerinnen abhängt, würde es uns freuen, wenn Sie – falls es Ihre finanzielle Situation erlaubt - 
+                      <a href="{{link_account_goto}}">Ihren Mitgliedschaftsbeitrag erhöhen</a> könnten. Jede zusätzliche Summe macht einen Unterschied.
+                    </p>
+                    {{else if with_donation}} 
+                    <p>
+                      Dieser Beitrag kommt zustande, weil Sie die Republik im
+                      letzten Jahr grosszügigerweise mit einer zusätzlichen
+                      Spende unterstützt haben. Durch Sie ist unsere
+                      Unabhängigkeit, unsere Werbefreiheit, ja unsere Existenz
+                      erst möglich. Wir bedanken uns von ganzem Herzen und
+                      hoffen, dass Sie sich und uns treu bleiben und weiterhin
+                      in kompromisslosen Journalismus investieren. Sollten Sie
+                      es sich anders überlegen, können Sie die
+                      Höhe Ihres Spendenbeitrags vor der Abbuchung noch <a href="{{link_account_goto}}">anpassen</a>.
+                    </p>
+                    {{else}}
+                    <p>
+                      Sie haben sich im letzten Jahr für eine reguläre Mitgliedschaft entschieden. 
+                      Sie können Ihren <a href="{{link_account_goto}}">Beitrag erhöhen</a>: Jeder zusätzliche Beitrag macht einen Unterschied, 
+                      damit wir unserer Arbeit auch weiterhin nachgehen können. 
+                    </p>
+
+                    {{/if}}
+                    <p>
+                      Ausserdem können Sie <a href="{{link_account_goto}}">eine andere Kreditkarte hinterlegen, eine andere Zahlungsart wählen</a> 
+                      oder (was wir zutiefst bedauern würden) Ihre Mitgliedschaft kündigen. 
+                      Wir melden uns erneut, sobald Ihre Mitgliedschaft erfolgreich verlängert wurde. 
+                      In der Zwischenzeit können Sie sich bei Fragen unter <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a> melden.
+                    </p>
+                    <p>Wir freuen uns auf ein weiteres Jahr mit Ihnen! 
+                    </p>
+                    <p>
+                      Herzlich<br />
+                      Ihre Crew der Republik
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 20px">
+                    <p
+                      style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <img
+                        height="79"
+                        src="{{frontend_base_url}}/static/logo_republik_newsletter.png"
+                        style="
+                          border: 0px;
+                          width: 180px !important;
+                          height: 79px !important;
+                          margin: 0px;
+                        "
+                        width="180"
+                        alt=""
+                      />
+                      <br />
+                      Republik AG<br />
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br />
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br />
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -4,6 +4,9 @@ import { parseStripeDate } from './utils'
 import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 import { PaymentService } from '../../services/PaymentService'
 import { InvoiceService } from '../../services/InvoiceService'
+import { SubscriptionService } from '../../services/SubscriptionService'
+import { Queue } from '@orbiting/backend-modules-job-queue'
+import { NoticeRenewalPaymentSuccessfulTransactionalWorker } from '../../workers/NoticeRenewalPaymentSuccessfulTransactionalWorker'
 
 class InvoicePaymentSucceededWorkflow
   implements PaymentWorkflow<Stripe.InvoicePaymentSucceededEvent>
@@ -11,6 +14,7 @@ class InvoicePaymentSucceededWorkflow
   constructor(
     protected readonly paymentService: PaymentService,
     protected readonly invoiceService: InvoiceService,
+    protected readonly subscriptionService: SubscriptionService,
   ) {}
 
   async run(
@@ -47,7 +51,40 @@ class InvoicePaymentSucceededWorkflow
     } else {
       await this.invoiceService.saveCharge(args)
     }
+
+    if (i.subscription) {
+      const subscription = await this.subscriptionService.getSubscription({
+        externalId: i.subscription as string,
+      })
+      if (subscription && shouldSendAutoRenewalNotice(i)) {
+        const queue = Queue.getInstance()
+
+        await queue.send<NoticeRenewalPaymentSuccessfulTransactionalWorker>(
+          'payments:transactional:notice:renewal_payment_successful',
+          {
+            $version: 'v1',
+            eventSourceId: event.id,
+            userId: subscription.userId,
+            subscriptionId: subscription.id,
+            company: company,
+          },
+        )
+      }
+    }
   }
+}
+
+function shouldSendAutoRenewalNotice(
+  invoice: Stripe.Invoice,
+): boolean {
+  // do only send if it's not the initial invoice after checkout
+  if (
+    invoice.billing_reason === 'subscription_cycle' &&
+    invoice.collection_method === 'charge_automatically'
+  ) {
+    return true
+  }
+  return false
 }
 
 export async function processInvoicePaymentSucceeded(
@@ -58,6 +95,7 @@ export async function processInvoicePaymentSucceeded(
   return new InvoicePaymentSucceededWorkflow(
     new PaymentService(),
     new InvoiceService(ctx.pgdb),
+    new SubscriptionService(ctx.pgdb),
   ).run(company, event)
 }
 

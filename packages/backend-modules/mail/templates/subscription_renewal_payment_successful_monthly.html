@@ -42,44 +42,20 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
-                    {{#if has_payment_method}}
                     <p>
-                      Leider konnten wir den Betrag von CHF {{total}} für Ihre Republik-Jahresmitgliedschaft nicht der 
-                      von Ihnen angegebenen Zahlungsmethode {{payment_method_name}} {{#if is_credit_card}}mit den Endziffern {{credit_card_last4}} {{/if}} belasten.
-                    </p>
-                    <p>
-                      Falls Sie eine andere Zahlungsmethode verwenden wollen, können
-                      Sie die nötigen Änderungen hier jederzeit vornehmen:
-                      <a href="{{link_account_goto}}">www.republik.ch/konto</a>
-                    </p>
-                    {{else}}
-                    <p>
-                      Leider konnten wir den Betrag von CHF {{total}} für Ihre Republik-Jahresmitgliedschaft nicht automatisch abbuchen.
+                      Wir haben Ihr Abo um einen weiteren Monat verlängert: 
+                      Dafür wurde Ihr Bezahlmittel {{payment_method_name}} {{#if is_credit_card}}mit den Endziffern {{credit_card_last4}} {{/if}}mit
+                      CHF {{total}} belastet.
                     </p>
                     <p>
-                      Bitte hinterlegen Sie eine gültige Zahlungsmethode hier:
-                      <a href="{{link_account_goto}}">www.republik.ch/konto</a>
-                    </p>
-                    {{/if}}
-                    <p>Wir versuchen es am {{payment_attempt_date}} erneut.</p>
-                    <p>
-                      Wenn wir Ihre Zahlungsmethode weiterhin nicht belasten können, 
-                      gehen wir davon aus, dass Sie die Republik nicht mehr lesen möchten, 
-                      und deaktivieren Ihre Mitgliedschaft. Das wäre sehr schade und wir hoffen, 
-                      dass es nicht so weit kommt.
+                      Wir bedanken uns für Ihre Treue und Ihr Vertrauen.
                     </p>
                     <p>
-                      Können wir Sie beim Einrichten der Zahlungsmethode unterstützen? Oder haben Sie eine andere Frage? Kein Problem, melden Sie sich einfach via 
-                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a> 
-                      bei uns.
+                      Ihr Abo läuft neu bis zum
+                      {{renewal_date}}.
                     </p>
-                    <p>Die Republik finanziert sich über ihre Leserinnen und Leser: Es kommt also wirklich auf jede einzelne Person an. 
-                      Jede zusätzliche Summe macht einen Unterschied. 
-                    </p>
-                    <p>
-                      Herzliche Grüsse<br />
-                      Ihre Crew der Republik
-                    </p>
+                    <p>Herzlich</p>
+                    <p>Ihre Crew der Republik</p>
                   </td>
                 </tr>
                 <tr>

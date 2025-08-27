@@ -465,6 +465,18 @@
       "value": "Republik: Sie haben ein Geschenk eingelöst"
     },
     {
+      "key": "api/email/subscription_renewal_notice_7_days/subject",
+      "value": "Herzlichen Dank für Ihre Unterstützung, wir freuen uns Sie an Bord zu wissen!"
+    },
+    {
+      "key": "api/email/subscription_renewal_payment_successful/subject",
+      "value": "Ihre Mitgliedschaft wurde erfolgreich verlängert"
+    },
+    {
+      "key": "api/email/subscription_renewal_payment_successful_monthly/subject",
+      "value": "Ihr Monatsabo wurde erfolgreich verlängert"
+    },
+    {
       "key": "api/email/option/goodie/notebook/1",
       "value": "Notizbuch"
     },
@@ -807,10 +819,6 @@
     {
       "key": "api/email/membership_owner_autopay_notice/subject",
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
-    },
-    {
-      "key": "api/email/membership_owner_feedback/subject",
-      "value": "Sind Sie zufrieden?"
     },
     {
       "key": "api/email/membership_owner_upgrade_monthly/subject",

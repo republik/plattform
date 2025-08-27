@@ -76,6 +76,7 @@ class PaymentFailedWorkflow
         userId,
         event.id,
         stripeInvoiceId,
+        company
       )
     }
 
@@ -86,7 +87,7 @@ class PaymentFailedWorkflow
 class PaymentFailedNotifier {
   constructor(protected readonly queue: Queue) {}
 
-  async notify(userId: string, eventId: string, invoiceExternalId: string) {
+  async notify(userId: string, eventId: string, invoiceExternalId: string, company: Company) {
     return this.queue.send<NoticePaymentFailedTransactionalWorker>(
       'payments:transactional:notice:payment_failed',
       {
@@ -94,6 +95,7 @@ class PaymentFailedNotifier {
         eventSourceId: eventId,
         userId: userId,
         invoiceExternalId: invoiceExternalId,
+        company: company
       },
     )
   }
