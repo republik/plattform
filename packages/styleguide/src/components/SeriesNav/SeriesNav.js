@@ -157,4 +157,5 @@ SeriesNav.propTypes = {
   seriesDescription: PropTypes.bool,
 }
 
-export default SeriesNav
+// Simple memoization - will work correctly if parent provides stable props
+export default React.memo(SeriesNav)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import * as Interaction from '../../components/Typography/Interaction'
 import colors from '../../theme/colors'
@@ -539,17 +539,23 @@ const createTeasers = ({
     ],
   }
 
+  // Memoized SeriesNav wrapper for document content
+  const SeriesNavMemo = ({ series, repoId, ...otherProps }) => {
+    // Stabilize series object reference to prevent rerenders when article.userProgress changes
+    const stableSeries = useMemo(() => series, [series])
+    // Stabilize repoId to prevent current tile rerenders
+    const stableRepoId = useMemo(() => repoId, [repoId])
+    
+    if (!stableSeries) {
+      return null
+    }
+    
+    return <SeriesNav t={t} series={stableSeries} repoId={stableRepoId} {...otherProps} />
+  }
+
   const seriesNav = {
     matchMdast: matchZone('SERIES_NAV'),
-    component: ({ ...props }) => {
-      // HOTFIX: prevent Errors when navigation to an article with a seriesNav
-      // when series is null.
-      if (!props.series) {
-        return null
-      }
-
-      return <SeriesNav t={t} {...props} />
-    },
+    component: SeriesNavMemo,
     props: (node, index, parent, { ancestors }) => {
       const root = ancestors[ancestors.length - 1]
       return {

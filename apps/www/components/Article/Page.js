@@ -255,8 +255,16 @@ const ArticlePage = ({
   const episodes = series?.episodes
   const darkMode = article?.content?.meta?.darkMode
 
+  // stabilizes series and repoId to prevent SeriesNav rerenders when article.userProgress updates
+  const stableSeries = useMemo(() => series, [series])
+  const stableRepoId = useMemo(() => repoId, [repoId])
+
   const seriesSecondaryNav = showSeriesNav && (
-    <SeriesNavBar me={me} series={series} repoId={repoId} />
+    <SeriesNavBar
+      me={me}
+      series={stableSeries || series}
+      repoId={stableRepoId}
+    />
   )
 
   const colorMeta =
@@ -508,8 +516,8 @@ const ArticlePage = ({
                 {episodes && !isSeriesOverview && (
                   <SeriesNav
                     inline
-                    repoId={repoId}
-                    series={series}
+                    repoId={stableRepoId}
+                    series={stableSeries}
                     ActionBar={me && ActionBar}
                     Link={Link}
                     t={t}

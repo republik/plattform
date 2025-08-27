@@ -73,4 +73,4 @@ const SeriesNavTile = ({
   )
 }
 
-export default SeriesNavTile
+export default React.memo(SeriesNavTile)

@@ -148,4 +148,4 @@ const SeriesNavTileContent = ({
   )
 }
 
-export default SeriesNavTileContent
+export default React.memo(SeriesNavTileContent)
