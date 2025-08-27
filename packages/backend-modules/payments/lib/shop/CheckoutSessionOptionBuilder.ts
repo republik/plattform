@@ -72,7 +72,7 @@ export class CheckoutSessionBuilder {
     const offer = activeOffers().find((o) => o.id === offerId)
     if (!offer) throw new Error('api/shop/unknown/offer')
 
-    logger.info(offer, 'creating CheckoutSessionBuilder')
+    logger.info({ offer }, 'creating CheckoutSessionBuilder')
 
     this.offer = offer
     this.paymentService = paymentService
