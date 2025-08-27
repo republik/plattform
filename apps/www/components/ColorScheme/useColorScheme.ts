@@ -19,21 +19,20 @@ const DEFAULT_KEY = 'auto'
 
 export const useColorSchemePreference = () => {
   const { theme, setTheme } = useTheme()
-  const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
-  const inNewApp = inNativeApp && !inNativeAppLegacy
+  const { inNativeApp } = useInNativeApp()
   const currentKey = (theme === 'system' ? 'auto' : theme) || DEFAULT_KEY
   const [legacyKey, setPersistedKey] = usePersistedColorSchemeKey<
     string | undefined
   >(undefined)
 
   useEffect(() => {
-    if (inNewApp) {
+    if (inNativeApp) {
       postMessage({
         type: 'setColorScheme',
         colorSchemeKey: currentKey,
       })
     }
-  }, [inNewApp, currentKey])
+  }, [inNativeApp, currentKey])
 
   const set = (value: string) => {
     setTheme(value === 'auto' ? 'system' : value)

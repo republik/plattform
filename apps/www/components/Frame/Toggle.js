@@ -29,7 +29,7 @@ const PADDING_DESKTOP = Math.floor((HEADER_HEIGHT - SIZE) / 2)
  */
 const Toggle = ({ expanded, closeOverlay, ...props }) => {
   const [colorScheme] = useColorContext()
-  const { audioQueue, isAudioQueueAvailable } = useAudioQueue()
+  const { audioQueue } = useAudioQueue()
   const {
     audioPlayerVisible,
     setAudioPlayerVisible,
@@ -70,7 +70,7 @@ const Toggle = ({ expanded, closeOverlay, ...props }) => {
     }
   }
 
-  return expanded || isAudioQueueAvailable ? (
+  return expanded ? (
     <button {...styles.menuToggle} onClick={onClick} {...props}>
       <div style={{ opacity: !expanded ? 1 : 0 }} {...styles.audioButton}>
         <IconMic {...colorScheme.set('fill', 'text')} size={SIZE} />

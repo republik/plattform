@@ -80,7 +80,7 @@ const ActionBar = ({
     checkIfActivePlayerItem,
     isPlaying,
   } = useAudioContext()
-  const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
+  const { checkIfInQueue } = useAudioQueue()
   const { isNativeApp, isIOS, isAndroid } = usePlatformInformation()
 
   const handleShareClick = async (e, shareData = {}) => {
@@ -523,7 +523,7 @@ const ActionBar = ({
         }
       },
       modes: ['feed', 'seriesEpisode'],
-      show: isMember && isAudioQueueAvailable && meta.audioSource?.mp3,
+      show: isMember && meta.audioSource?.mp3,
       group: 'audio',
     },
     {

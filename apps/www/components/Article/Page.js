@@ -77,9 +77,7 @@ const ArticlePage = ({
     usePaynotes()
   const hasPaywall = paynoteKind === 'PAYWALL' || paynoteKind === 'REGWALL'
 
-  const { isAudioQueueAvailable } = useAudioQueue()
-
-  const showPlayButton = !extract && !hasPaywall && isAudioQueueAvailable
+  const showPlayButton = !extract && !hasPaywall
 
   const cleanedPath = cleanAsPath(router.asPath)
 
