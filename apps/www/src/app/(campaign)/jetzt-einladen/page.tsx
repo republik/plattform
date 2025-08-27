@@ -36,7 +36,13 @@ export default async function Page() {
   return (
     <>
       <CampaignHeroSection>
-        <h1>Uns ist es nicht egal.</h1>
+        <h1
+          className={css({
+            px: '4',
+          })}
+        >
+          Uns ist es nicht egal.
+        </h1>
       </CampaignHeroSection>
       <div
         data-page-theme='campaign-2025'
