@@ -23,7 +23,6 @@ import {
 } from '../constants'
 import { useTranslation } from '../../lib/withT'
 import { useInNativeApp } from '../../lib/withInNativeApp'
-import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
 import { checkRoles } from '../../lib/apollo/withMe'
 import CallToActionBanner from '../CallToActions/CallToActionBanner'
@@ -153,7 +152,7 @@ const Frame = ({
   customContentColorContext,
   hideCTA = false,
 }: FrameProps) => {
-  const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
+  const { inNativeApp } = useInNativeApp()
   const { t } = useTranslation()
   const { me, hasAccess } = useMe()
   const isClimateLabOnlyUser = checkRoles(me, ['climate'])
@@ -207,7 +206,6 @@ const Frame = ({
             isOnMarketingPage={isOnMarketingPage}
             pageColorSchemeKey={pageColorSchemeKey}
           >
-            {inNativeAppLegacy && <LegacyAppNoticeBox t={t} />}
             {me &&
               !me.activeMagazineSubscription &&
               me.prolongBeforeDate !== null &&
