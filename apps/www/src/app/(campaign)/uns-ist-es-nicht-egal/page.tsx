@@ -1,7 +1,7 @@
 import { CampaignHeroSection } from '@app/app/(campaign)/components/campaign-hero'
 import { ContainerNarrow } from '@app/components/container'
 import { Logo } from '@app/components/layout/header/logo'
-import { Offers } from '@app/components/paynotes/campaign-paynote/campaign-offers'
+import { Offers } from '@app/app/(campaign)/components/campaign-offers'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 

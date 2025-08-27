@@ -1,28 +1,26 @@
 'use client'
 
-import { Offers } from '@app/components/paynotes/campaign-paynote/campaign-offers'
+import { CampaignHeroSection } from '@app/app/(campaign)/components/campaign-hero'
+import { Offers } from '@app/app/(campaign)/components/campaign-offers'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
   useTrackEvent,
 } from '@app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
-
 import * as Dialog from '@radix-ui/react-dialog'
 import { IconExpandMore } from '@republik/icons'
 import { css } from '@republik/theme/css'
-import { useMotionValueEvent, useScroll } from 'motion/react'
 import { useMe } from 'lib/context/MeContext'
 import { useTranslation } from 'lib/withT'
+import { useMotionValueEvent, useScroll } from 'motion/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Fragment, useEffect, useState } from 'react'
-import { StructuredText } from 'react-datocms/structured-text'
 import useResizeObserver from 'use-resize-observer'
 import { getMeteringData } from '../article-metering'
 import IosCTA from '../ios-cta'
 import { usePaynoteVariants } from '../paynote/use-paynotes'
-import { CampaignHeroSection } from '@app/app/(campaign)/components/campaign-hero'
 // import {
 //   CampaignHero,
 //   CampaignHeroMini,

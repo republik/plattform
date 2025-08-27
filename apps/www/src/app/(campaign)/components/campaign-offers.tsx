@@ -7,10 +7,10 @@ import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { useState } from 'react'
 
-import { FormField, RadioOption } from '../../ui/form'
-import { Button } from '../../ui/button'
+import { FormField, RadioOption } from '../../../components/ui/form'
+import { Button } from '../../../components/ui/button'
 
-import IosCTA from '../ios-cta'
+import IosCTA from '../../../components/paynotes/ios-cta'
 
 type DiscountOption = {
   promoCode: `H25OFF${number}` | ''
