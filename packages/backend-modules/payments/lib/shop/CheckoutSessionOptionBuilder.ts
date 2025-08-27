@@ -1,4 +1,5 @@
 import { User } from '@orbiting/backend-modules-types'
+import { Logger } from '@orbiting/backend-modules-logger'
 import {
   Offer,
   activeOffers,
@@ -66,9 +67,12 @@ export class CheckoutSessionBuilder {
     offerId: string,
     paymentService: PaymentService,
     CustomerInfoService: CustomerInfoService,
+    logger: Logger,
   ) {
     const offer = activeOffers().find((o) => o.id === offerId)
     if (!offer) throw new Error('api/shop/unknown/offer')
+
+    logger.info(offer, 'creating CheckoutSessionBuilder')
 
     this.offer = offer
     this.paymentService = paymentService

@@ -31,6 +31,7 @@ export = async function createCheckoutSession(
     args.offerId,
     new PaymentService(),
     new CustomerInfoService(ctx.pgdb),
+    ctx.logger,
   )
     .withCustomer(ctx.user)
     .withMetadata(args.options?.metadata)
