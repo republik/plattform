@@ -20,7 +20,7 @@ import { AutoForm as AddressForm, AddressView } from '../Account/AddressForm'
 
 import { PF_FORM_ACTION, PAYPAL_FORM_ACTION } from '../../lib/constants'
 
-import { inNativeAppBrowser } from '../../lib/withInNativeApp'
+import { inNativeAppStatic } from '../../lib/withInNativeApp'
 
 import * as postfinance from './postfinance'
 import * as paypal from './paypal'
@@ -73,17 +73,17 @@ const PAYMENT_METHODS = [
     },
   },
   {
-    disabled: inNativeAppBrowser,
+    disabled: inNativeAppStatic,
     key: WalletPaymentMethod.APPLE_PAY,
     Icon: ApplePayMark,
   },
   {
-    disabled: inNativeAppBrowser,
+    disabled: inNativeAppStatic,
     key: WalletPaymentMethod.GOOGLE_PAY,
     Icon: GooglePayMark,
   },
   {
-    disabled: inNativeAppBrowser,
+    disabled: inNativeAppStatic,
     key: 'POSTFINANCECARD',
     bgColor: '#FCCC12',
     Icon: PSPIcons.Postcard,
@@ -93,7 +93,7 @@ const PAYMENT_METHODS = [
     key: 'PAYMENTSLIP',
   },
   {
-    disabled: inNativeAppBrowser,
+    disabled: inNativeAppStatic,
     key: 'PAYPAL',
     Icon: PSPIcons.PayPal,
   },

@@ -4,7 +4,7 @@ import {
   matchIOSUserAgent,
 } from '../context/UserAgentContext'
 
-import { inNativeAppBrowserAppVersion } from '../withInNativeApp'
+import { inNativeAppStaticVersion } from '../withInNativeApp'
 
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 
@@ -51,9 +51,9 @@ const getCouponCodeParams = (query) => {
 export const getConversionPayload = (query = {}, localContext = {}) => {
   return {
     localContext,
-    app: inNativeAppBrowserAppVersion
+    app: inNativeAppStaticVersion
       ? {
-          version: inNativeAppBrowserAppVersion,
+          version: inNativeAppStaticVersion,
           platform: matchIOSUserAgent(navigator.userAgent)
             ? 'ios'
             : matchAndroidUserAgent(navigator.userAgent)

@@ -5,7 +5,7 @@ import { getNativeAppBuildId, getNativeAppVersion } from './parse-useragent'
 
 export { getNativeAppVersion, getNativeAppBuildId }
 
-export const inNativeAppBrowserAppVersion = process.browser
+export const inNativeAppStaticVersion = process.browser
   ? getNativeAppVersion(navigator.userAgent)
   : undefined
 
@@ -24,16 +24,16 @@ const isNewerVersion = (oldVer, newVer) => {
   return true
 }
 
-export const inNativeAppBrowser = !!inNativeAppBrowserAppVersion
-export const inNativeIOSAppBrowser =
-  inNativeAppBrowser && matchIOSUserAgent(navigator.userAgent)
+export const inNativeAppStatic = !!inNativeAppStaticVersion
+export const inNativeIOSAppStatic =
+  inNativeAppStatic && matchIOSUserAgent(navigator.userAgent)
 
-const runInNativeAppBrowser = inNativeAppBrowser
+const runInNativeAppStatic = inNativeAppStatic
   ? (callback) => callback()
   : // eslint-disable-next-line @typescript-eslint/no-empty-function
     () => {}
 
-runInNativeAppBrowser(() => {
+runInNativeAppStatic(() => {
   const orgUrl =
     window.location.pathname + window.location.search + window.location.hash
   const orgTime = Date.now()
@@ -92,7 +92,7 @@ runInNativeAppBrowser(() => {
   }
 })
 
-export const postMessage = !inNativeAppBrowser
+export const postMessage = !inNativeAppStatic
   ? // eslint-disable-next-line @typescript-eslint/no-empty-function
     () => {} // does nothing outside of app, e.g. gallery full screen message
   : window.ReactNativeWebView && window.ReactNativeWebView.postMessage
