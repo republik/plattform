@@ -1,6 +1,6 @@
 import { getSenderData } from '@app/app/(campaign)/campaign-data'
 import { CampaignHeroSection } from '@app/app/(campaign)/components/campaign-hero'
-import { ShareLink } from '@app/app/(campaign)/jetzt-einladen/share-components'
+import { ShareLink } from '@app/app/(campaign)/einladen/share-components'
 import Container from '@app/components/container'
 import { css } from '@republik/theme/css'
 import { PUBLIC_BASE_URL } from 'lib/constants'
@@ -20,17 +20,17 @@ export default async function Page() {
   // }`
 
   // The version with generic URL (no referral code) except for public profile users:
-  const url = `${PUBLIC_BASE_URL}/jetzt/${
-    me?.hasPublicProfile ? me.username : ''
+  const url = `${PUBLIC_BASE_URL}/uns-ist-es-nicht-egal${
+    me?.hasPublicProfile ? `/${me.username}` : ''
   }`
 
   // Redirect to campaign thank you page
   if (!campaign?.isActive) {
-    return redirect('/jetzt-danke')
+    return redirect('/')
   }
 
   if (!me) {
-    return redirect('/anmelden')
+    return redirect(`/anmelden?redirect=${encodeURIComponent('/einladen')}`)
   }
 
   return (

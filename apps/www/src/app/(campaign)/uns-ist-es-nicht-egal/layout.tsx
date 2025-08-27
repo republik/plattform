@@ -32,7 +32,7 @@ export default async function CampaignLayout({
   const meIsEligible = !me?.activeMembership && !me?.activeMagazineSubscription
 
   if (me && !meIsEligible) {
-    return redirect('/jetzt-einladen')
+    return redirect('/einladen')
   }
 
   return (

@@ -10,7 +10,7 @@ export default async function Layout(props: {
 
   const { children } = props
 
-  const data = await getInviteeData(await params)
+  const data = await getInviteeData(params)
 
   const { sender, me, validateReferralCode } = data
 
@@ -19,14 +19,14 @@ export default async function Layout(props: {
     !sender &&
     validateReferralCode === ReferralCodeValidationResult.NotFound
   ) {
-    return redirect('/jetzt')
+    return redirect('/uns-ist-es-nicht-egal')
   }
 
   // User is logged in but does not have some kind of subscription
   const meIsEligible = !me?.activeMembership && !me?.activeMagazineSubscription
 
   if (me && !meIsEligible) {
-    return redirect('/jetzt-einladen')
+    return redirect('/einladen')
   }
 
   // Sender and user are the same person
@@ -34,15 +34,7 @@ export default async function Layout(props: {
     validateReferralCode === ReferralCodeValidationResult.IsOwn ||
     params.code === me?.slug
   ) {
-    return redirect('/jetzt-einladen')
-  }
-
-  // There is neither a sender nor is the referral code valid
-  if (
-    !sender &&
-    validateReferralCode === ReferralCodeValidationResult.NotFound
-  ) {
-    return redirect('/jetzt')
+    return redirect('/einladen')
   }
 
   return <>{children}</>
