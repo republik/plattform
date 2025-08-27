@@ -10,6 +10,7 @@ import {
 } from '@project-r/styleguide'
 import { useTranslation } from '../../lib/withT'
 import { postMessage, useInNativeApp } from '../../lib/withInNativeApp'
+import { useScrollDirection } from '../../src/lib/hooks/useScrollDirection'
 import NotificationIcon from '../Notifications/NotificationIcon'
 import { useAudioContext } from '../Audio/AudioProvider'
 import HLine from '../Frame/HLine'
@@ -42,8 +43,6 @@ const USER_MENU_URL = '/meine-republik'
 
 const Header = ({
   isAnyNavExpanded,
-  headerOffset,
-  setHeaderOffset,
   hasSecondaryNav,
   me,
   secondaryNav,
@@ -56,11 +55,16 @@ const Header = ({
   const { inNativeIOSApp, inNativeApp } = useInNativeApp()
   const { isExpanded: audioPlayerExpanded } = useAudioContext()
   const [colorScheme] = useColorContext()
-  const [isMobile, setIsMobile] = useState()
   const [scrollableHeaderHeight, setScrollableHeaderHeight] =
     useState(HEADER_HEIGHT_MOBILE)
   const [expandedNav, setExpandedNav] = useState(null)
   const router = useRouter()
+  
+  // Use the simplified scroll direction hook
+  const scrollDirection = useScrollDirection({
+    upThreshold: 25,
+    downThreshold: scrollableHeaderHeight,
+  })
 
   useEffect(() => {
     if (router.pathname === USER_MENU_URL) {
@@ -69,9 +73,6 @@ const Header = ({
   }, [router.pathname, setExpandedNav])
 
   const fixedRef = useRef()
-  const diff = useRef(0)
-  const lastY = useRef()
-  const lastDiff = useRef()
 
   const topLevelPaths = ['/', '/feed', '/dialog', '/suche', USER_MENU_URL]
   const isOnTopLevelPage = topLevelPaths.includes(router.asPath)
@@ -87,56 +88,24 @@ const Header = ({
 
   const userButtonLink = me ? '/meine-republik' : '/anmelden'
 
-  useEffect(() => {
-    const onScroll = () => {
-      const y = Math.max(window.pageYOffset, 0)
-
-      if (isAnyNavExpanded) {
-        diff.current = 0
-      } else {
-        const newDiff = lastY.current ? lastY.current - y : 0
-        diff.current += newDiff
-        diff.current = Math.min(
-          Math.max(-scrollableHeaderHeight, diff.current),
-          0,
-        )
-      }
-
-      if (diff.current !== lastDiff.current && fixedRef.current) {
-        fixedRef.current.style.top = `${diff.current}px`
-        setHeaderOffset(diff.current)
-      }
-
-      lastY.current = y
-      lastDiff.current = diff.current
-    }
-
-    const measure = () => {
-      const mobile = window.innerWidth < mediaQueries.mBreakPoint
-      if (mobile !== isMobile) {
-        setIsMobile(mobile)
-      }
-      onScroll()
-    }
-
-    window.addEventListener('scroll', onScroll)
-    window.addEventListener('resize', measure)
-    measure()
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', measure)
-    }
-  }, [isAnyNavExpanded, scrollableHeaderHeight, isMobile])
-
   const hasStickySecondary = hasSecondaryNav && stickySecondaryNav
   useEffect(() => {
-    setScrollableHeaderHeight(
-      (isMobile ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT) +
-        (hasSecondaryNav && !hasStickySecondary ? SUBHEADER_HEIGHT : 0) +
-        // scroll away thin HLine
-        (formatColor || hasStickySecondary ? 0 : 1),
-    )
-  }, [isMobile, hasSecondaryNav, hasStickySecondary, formatColor])
+    const updateHeaderHeight = () => {
+      const isMobile = window.innerWidth < mediaQueries.mBreakPoint
+      setScrollableHeaderHeight(
+        (isMobile ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT) +
+          (hasSecondaryNav && !hasStickySecondary ? SUBHEADER_HEIGHT : 0) +
+          // scroll away thin HLine
+          (formatColor || hasStickySecondary ? 0 : 1),
+      )
+    }
+
+    window.addEventListener('resize', updateHeaderHeight)
+    updateHeaderHeight()
+    return () => {
+      window.removeEventListener('resize', updateHeaderHeight)
+    }
+  }, [hasSecondaryNav, hasStickySecondary, formatColor])
 
   const showToggle = me || inNativeApp || router.pathname === '/angebote'
   const showClose = router.pathname === USER_MENU_URL
@@ -147,6 +116,12 @@ const Header = ({
         {...styles.navBar}
         {...colorScheme.set('backgroundColor', 'default')}
         ref={fixedRef}
+        style={{
+          transform: `translateY(${
+            scrollDirection === 'down' && !isAnyNavExpanded ? -scrollableHeaderHeight : 0
+          }px)`,
+          transition: 'transform 0.3s ease-out',
+        }}
       >
         <div {...styles.primary}>
           <div {...styles.navBarItem}>
@@ -257,7 +232,7 @@ const Header = ({
           router={router}
           formatColor={formatColor}
           hasOverviewNav={hasOverviewNav}
-          isSecondarySticky={headerOffset === -scrollableHeaderHeight}
+          isSecondarySticky={scrollDirection === 'down' && !isAnyNavExpanded}
         />
         <HLine formatColor={formatColor} />
       </div>
@@ -290,7 +265,6 @@ const Header = ({
 
 const HeaderWithContext = (props) => {
   const [isAnyNavExpanded, setIsAnyNavExpanded] = useState(false)
-  const [headerOffset, setHeaderOffset] = useState(0)
 
   const {
     cover,
@@ -308,18 +282,16 @@ const HeaderWithContext = (props) => {
         minWidth: 0,
         headerHeight:
           HEADER_HEIGHT_MOBILE +
-          (hasSecondaryNav ? SUBHEADER_HEIGHT : 0) +
-          headerOffset,
+          (hasSecondaryNav ? SUBHEADER_HEIGHT : 0),
       },
       {
         minWidth: mediaQueries.mBreakPoint,
         headerHeight:
           HEADER_HEIGHT +
-          (hasSecondaryNav ? SUBHEADER_HEIGHT : 0) +
-          headerOffset,
+          (hasSecondaryNav ? SUBHEADER_HEIGHT : 0),
       },
     ]
-  }, [hasSecondaryNav, headerOffset])
+  }, [hasSecondaryNav])
 
   return (
     <HeaderHeightProvider config={headerConfig}>
@@ -329,8 +301,6 @@ const HeaderWithContext = (props) => {
           hasSecondaryNav={hasSecondaryNav}
           isAnyNavExpanded={isAnyNavExpanded}
           setIsAnyNavExpanded={setIsAnyNavExpanded}
-          headerOffset={headerOffset}
-          setHeaderOffset={setHeaderOffset}
         />
       )}
       {cover}
@@ -348,6 +318,7 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
+    willChange: 'transform',
     '@media print': {
       display: 'none',
     },
