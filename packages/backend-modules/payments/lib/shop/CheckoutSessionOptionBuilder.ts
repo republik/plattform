@@ -57,7 +57,9 @@ export class CheckoutSessionBuilder {
     promoCode?: string
     customerId: Promise<string | undefined>
     metadata?: Record<string, string>
-    couponMetadata: Promise<Stripe.Metadata | undefined>
+    couponMetadata: Promise<
+      { discountName: string | null; metadata: Stripe.Metadata } | undefined
+    >
     selectedDiscount: Promise<{ type: 'DISCOUNT'; value: Discount } | undefined>
     returnURL?: string
     selectedDonation?: CustomDonation
@@ -93,7 +95,10 @@ export class CheckoutSessionBuilder {
           code,
         )
         if (promo) {
-          return promo.coupon.metadata || {}
+          return {
+            discountName: promo.coupon.name,
+            metadata: promo.coupon.metadata || {},
+          }
         }
         return undefined
       })()
@@ -217,8 +222,11 @@ export class CheckoutSessionBuilder {
     const metadata: Record<string, string> = {}
     const resolvedCouponMetadata = await this.optionalSessionVars.couponMetadata
     if (resolvedCouponMetadata) {
-      Object.keys(resolvedCouponMetadata).forEach((key) => {
-        metadata[`coupon_${key}`] = resolvedCouponMetadata[key]
+      if (resolvedCouponMetadata.discountName) {
+        metadata['discountName'] = resolvedCouponMetadata.discountName
+      }
+      Object.keys(resolvedCouponMetadata.metadata).forEach((key) => {
+        metadata[`coupon_${key}`] = resolvedCouponMetadata.metadata[key]
       })
     }
     return metadata
