@@ -2,7 +2,7 @@ const { ApolloServer } = require('apollo-server-express')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
-const { logger } = require('@orbiting/backend-modules-logger')
+const { logger: baseLogger } = require('@orbiting/backend-modules-logger')
 
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
@@ -34,12 +34,20 @@ module.exports = async (
       ? authorization.slice(documentApiKeyScheme.length + 1)
       : null
 
+    const logger =
+      req?.log || baseLogger.child({}, { msgPrefix: `[${scope}] ` })
+
+    logger.setBindings({
+      contextScope: scope,
+      userId: user?.id || 'unknown user',
+    })
+
     const context = createGraphqlContext({
       ...rest,
       req,
       scope,
       documentApiKey,
-      logger: req?.log || logger,
+      logger,
       user: global && global.testUser !== undefined ? global.testUser : user,
     })
     // prime User dataloader with me

@@ -1,10 +1,16 @@
 import { PgDb } from 'pogi'
-import { NOT_STARTED_STATUS_TYPES, ACTIVE_STATUS_TYPES } from '../types'
+import {
+  NOT_STARTED_STATUS_TYPES,
+  ACTIVE_STATUS_TYPES,
+  PaymentMethod,
+} from '../types'
 import {
   sendCancelConfirmationMail,
   sendConfirmGiftAppliedMail,
   sendEndedNoticeMail,
   sendPaymentFailedNoticeMail,
+  sendRenewalNoticeMail,
+  sendRenewalPaymentSuccessfulNoticeMail,
   sendRevokeCancellationConfirmationMail,
   sendSetupGiftMail,
   sendSetupSubscriptionMail,
@@ -208,14 +214,146 @@ export class MailNotificationService {
     )
   }
 
+  async sendNoticeRenewalPaymentSucceededTransactional({
+    userId,
+    subscriptionId,
+    amount,
+    paymentMethod,
+  }: {
+    userId: string
+    subscriptionId: string
+    amount: number
+    paymentMethod: PaymentMethod | null | undefined
+  }): Promise<void> {
+    const subscription = await this.#billing.getSubscription({
+      id: subscriptionId,
+    })
+
+    if (!subscription) {
+      throw new Error(
+        `Subscription [${subscriptionId}] does not exist in the Database`,
+      )
+    }
+
+    if (subscription.endedAt) {
+      throw new Error(
+        `Subscription ${subscriptionId} has ended, not sending renewal payment successful notice transactional`,
+      )
+    }
+
+    const userRow = await this.#users.findUserById(userId)
+
+    if (!userRow?.email) {
+      throw new Error(
+        `Could not find email for user with id ${userId}, not sending renewal payment successful notice transactional`,
+      )
+    }
+
+    // should we still send the transactional if we don't find a payment method? payment successful means that it was charged
+    if (!paymentMethod) {
+      throw new Error('No stored payment method found, not sending renewal payment successful notice transactional')
+    }
+
+    await sendRenewalPaymentSuccessfulNoticeMail({
+        email: userRow.email,
+        subscription,
+        amount,
+        paymentMethod,
+      },
+      this.#pgdb,)
+  }
+
+  async sendNoticeSubscriptionRenewalTransactionalMail({
+    userId,
+    subscriptionId,
+    isDiscounted,
+    withDonation,
+    amount,
+    paymentAttemptDate,
+    paymentMethod,
+  }: {
+    userId: string
+    subscriptionId: string
+    isDiscounted: boolean
+    withDonation: boolean
+    amount: number
+    paymentAttemptDate: Date | null | undefined
+    paymentMethod: PaymentMethod | null | undefined
+  }): Promise<void> {
+    const subscription = await this.#billing.getSubscription({
+      id: subscriptionId,
+    })
+
+    if (!subscription) {
+      throw new Error(
+        `Subscription [${subscriptionId}] does not exist in the Database`,
+      )
+    }
+
+    if (subscription.type === 'MONTHLY_SUBSCRIPTION') {
+      throw new Error(
+        `not sending renewal notice transactional for monthly subscriptions`,
+      )
+    }
+
+    if (!ACTIVE_STATUS_TYPES.includes(subscription.status)) {
+      throw new Error(
+        `not sending renewal notice transactional for subscription ${subscriptionId} with status ${subscription.status}`,
+      )
+    }
+
+    if (subscription.endedAt) {
+      throw new Error(
+        `Subscription ${subscriptionId} has ended, not sending renewal notice transactional`,
+      )
+    }
+
+    const userRow = await this.#users.findUserById(userId)
+
+    if (!userRow?.email) {
+      throw new Error(
+        `Could not find email for user with id ${userId}, not sending renewal notice transactional`,
+      )
+    }
+
+    if (!paymentAttemptDate) {
+      throw new Error(
+        'No next payment attempt date is set, not sending renewal notice transactional',
+      )
+    }
+
+    // should we still send the transactional if we don't find a payment method?
+    // Will it still be tried to charge somehow?
+    if (!paymentMethod) {
+      throw new Error('No stored payment method found, not sending renewal notice transactional')
+    }
+
+    await sendRenewalNoticeMail(
+      {
+        email: userRow.email,
+        subscription,
+        isDiscounted,
+        withDonation,
+        amount,
+        paymentAttemptDate,
+        paymentMethod,
+      },
+      this.#pgdb,
+    )
+  }
+
   async sendNoticePaymentFailedTransactionalMail({
     userId,
     subscriptionExternalId,
     invoiceExternalId,
+    paymentAttemptDate,
+    paymentMethod
   }: {
     userId: string
     subscriptionExternalId: string
     invoiceExternalId: string
+    paymentAttemptDate: Date | null | undefined
+    paymentMethod: PaymentMethod | undefined
   }): Promise<void> {
     const subscription = await this.#billing.getSubscription({
       externalId: subscriptionExternalId,
@@ -263,8 +401,14 @@ export class MailNotificationService {
       )
     }
 
+    if (!paymentAttemptDate) {
+      throw new Error(
+        'No next payment attempt date is set, not sending failed payment notice transactional',
+      )
+    }
+
     await sendPaymentFailedNoticeMail(
-      { subscription, invoice, email: userRow.email },
+      { subscription, invoice, email: userRow.email, paymentAttemptDate, paymentMethod },
       this.#pgdb,
     )
   }
@@ -276,7 +420,7 @@ export class MailNotificationService {
     subscriptionExternalId: string
     userId: string
   }): Promise<void> {
-    // TODO: we could probably use the same transactional flow for switching between monthly/yearly 
+    // TODO: we could probably use the same transactional flow for switching between monthly/yearly
     // due to gifts, if we check the subscription metadata here
     const subscription = await this.#billing.getSubscription({
       externalId: subscriptionExternalId,
@@ -328,7 +472,10 @@ export class MailNotificationService {
       throw new Error('unknown user')
     }
 
-    await sendConfirmGiftAppliedMail({email: userRow.email, subscriptionType: subscription.type }, this.#pgdb)
+    await sendConfirmGiftAppliedMail(
+      { email: userRow.email, subscriptionType: subscription.type },
+      this.#pgdb,
+    )
   }
 
   async syncMailchimpSetupSubscription({
@@ -380,5 +527,3 @@ export class MailNotificationService {
     return !(memberships?.length > 0 || subscriptions?.length > 0)
   }
 }
-
-

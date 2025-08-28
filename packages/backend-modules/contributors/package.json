@@ -1,0 +1,24 @@
+{
+  "name": "@orbiting/backend-modules-contributors",
+  "version": "0.1.0",
+  "private": true,
+  "main": "build/index.js",
+  "types": "build/@types",
+  "dependencies": {
+    "@orbiting/backend-modules-auth": "*",
+    "@orbiting/backend-modules-scalars": "*",
+    "@orbiting/backend-modules-types": "*",
+    "@orbiting/backend-modules-utils": "*",
+    "apollo-modules-node": "*",
+    "is-uuid": "^1.0.2",
+    "@aws-sdk/client-s3": "^3.846.0"
+  },
+  "devDependencies": {
+    "ts-jest": "^29.1.5"
+  },
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
+    "test": "jest"
+  }
+}

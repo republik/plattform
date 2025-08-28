@@ -40,6 +40,9 @@ const {
   ReadingPositionRefreshWorker,
   NextReadsFeedRefreshWorker,
 } = require('@orbiting/backend-modules-next-reads')
+const {
+  graphql: contributors,
+} = require('@orbiting/backend-modules-contributors')
 
 const {
   graphql: paymentsGraphql,
@@ -52,6 +55,8 @@ const {
   ConfirmRevokeCancellationTransactionalWorker,
   NoticeEndedTransactionalWorker,
   NoticePaymentFailedTransactionalWorker,
+  NoticeRenewalTransactionalWorker,
+  NoticeRenewalPaymentSuccessfulTransactionalWorker,
   SyncMailchimpSetupWorker,
   SyncMailchimpUpdateWorker,
   SyncMailchimpEndedWorker,
@@ -108,6 +113,8 @@ function setupQueue(context, monitorQueueState = undefined) {
     ConfirmGiftAppliedTransactionalWorker,
     NoticeEndedTransactionalWorker,
     NoticePaymentFailedTransactionalWorker,
+    NoticeRenewalTransactionalWorker,
+    NoticeRenewalPaymentSuccessfulTransactionalWorker,
     SyncMailchimpSetupWorker,
     SyncMailchimpUpdateWorker,
     SyncMailchimpEndedWorker,
@@ -179,6 +186,7 @@ const run = async (workerId, config) => {
     referralCampaigns,
     paymentsGraphql,
     nextReads,
+    contributors,
   ])
 
   // middlewares
