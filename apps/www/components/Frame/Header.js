@@ -252,13 +252,25 @@ const Header = ({
 const HeaderWithContext = (props) => {
   const [isAnyNavExpanded, setIsAnyNavExpanded] = useState(false)
 
-  const { cover, children, hasOverviewNav, secondaryNav } = props
-
+  const { cover, children, hasOverviewNav, secondaryNav, stickySecondaryNav } =
+    props
   const hasSecondaryNav = hasOverviewNav || secondaryNav
+
+  // Use the simplified scroll direction hook
+  const scrollDirection = useScrollDirection({
+    upThreshold: 25,
+    downThreshold: HEADER_HEIGHT + (hasSecondaryNav ? SUBHEADER_HEIGHT : 0),
+  })
 
   return (
     <HeaderHeightProvider
-      height={HEADER_HEIGHT + (hasSecondaryNav ? SUBHEADER_HEIGHT : 0)}
+      height={
+        scrollDirection === 'down'
+          ? stickySecondaryNav && hasSecondaryNav
+            ? SUBHEADER_HEIGHT
+            : 0
+          : HEADER_HEIGHT + (hasSecondaryNav ? SUBHEADER_HEIGHT : 0)
+      }
     >
       <Header
         {...props}

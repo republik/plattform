@@ -10,13 +10,14 @@ import {
   fontStyles,
   useColorContext,
   useBodyScrollLock,
-  useHeaderHeight,
   SeriesNav,
   shouldIgnoreClick,
 } from '@project-r/styleguide'
 import { cleanAsPath } from '../../lib/utils/link'
 import withT from '../../lib/withT'
 import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
+import { HEADER_HEIGHT, SUBHEADER_HEIGHT } from '../constants'
+
 const styles = {
   button: css({
     ...fontStyles.sansSerifRegular,
@@ -75,7 +76,6 @@ const SeriesNavBar = ({ t, me, series, router, repoId }) => {
   const [colorScheme] = useColorContext()
   const [expanded, setExpanded] = useState(false)
   const [ref] = useBodyScrollLock(expanded)
-  const headerHeight = useHeaderHeight()
   const episodes = series && series.episodes
   const currentPath = cleanAsPath(router.asPath)
   const currentEpisode = episodes.find(
@@ -161,8 +161,8 @@ const SeriesNavBar = ({ t, me, series, router, repoId }) => {
       </a>
       <div
         style={{
-          top: headerHeight + 1, // 1px for border bottom
-          height: `calc(100vh - ${headerHeight}px)`,
+          top: HEADER_HEIGHT + SUBHEADER_HEIGHT + 1, // 1px for border bottom
+          height: `calc(100vh - ${HEADER_HEIGHT + SUBHEADER_HEIGHT}px)`,
         }}
         {...colorScheme.set('backgroundColor', 'default')}
         {...colorScheme.set('color', 'text')}

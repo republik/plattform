@@ -17,6 +17,7 @@ const styles = {
     position: 'sticky',
     zIndex: 10,
     margin: '24px 0',
+    transition: 'top 0.3s ease-out',
   }),
   hr: css({
     margin: 0,
