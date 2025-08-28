@@ -84,6 +84,7 @@ export type Subscription = {
   userId: string
   type: SubscriptionType
   status: SubscriptionStatus
+  metadata?: { discountName?: string }
   cancelAt: Date | undefined
   currentPeriodStart: Date
   currentPeriodEnd: Date
