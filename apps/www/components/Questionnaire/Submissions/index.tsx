@@ -37,7 +37,7 @@ const Page = ({
   extract,
   share,
 }: SubmissionsOverviewProps) => {
-  const [headerHeight] = useHeaderHeight()
+  const headerHeight = useHeaderHeight()
   const router = useRouter()
   const { query } = router
   const { questionIds, submissionId } = mapShareParam(query.share)

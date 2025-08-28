@@ -31,7 +31,7 @@ const SubmissionView = ({
   const { t } = useTranslation()
   const router = useRouter()
   const pathname = router.asPath.split('?')[0]
-  const [headerHeight] = useHeaderHeight()
+  const headerHeight = useHeaderHeight()
 
   const { loading, error, data } = useQuery(
     QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,

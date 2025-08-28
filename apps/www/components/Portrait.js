@@ -9,7 +9,7 @@ import {
   slug,
 } from '@project-r/styleguide'
 
-import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from './constants'
+import { HEADER_HEIGHT } from './constants'
 
 const portraitStyle = css({
   position: 'relative',
@@ -24,10 +24,7 @@ const portraitStyle = css({
 
 const anchorStyle = css({
   position: 'absolute',
-  top: -(HEADER_HEIGHT_MOBILE + 10),
-  [mediaQueries.mUp]: {
-    top: -(HEADER_HEIGHT + 10),
-  },
+  top: -(HEADER_HEIGHT + 10),
 })
 
 const portraitImageLeftStyle = css({

@@ -104,7 +104,7 @@ export const SubmissionAuthor = ({
 }) => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
-  const [headerHeight] = useHeaderHeight()
+  const headerHeight = useHeaderHeight()
   const isUpdated = createdAt && updatedAt && updatedAt !== createdAt
   return (
     <div

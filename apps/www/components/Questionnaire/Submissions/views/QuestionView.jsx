@@ -41,7 +41,7 @@ const QuestionView = ({
   questionnaireBgColor,
 }) => {
   const { t } = useTranslation()
-  const [headerHeight] = useHeaderHeight()
+  const headerHeight = useHeaderHeight()
   const { loading, error, data, fetchMore } = useQuery(
     QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
     {

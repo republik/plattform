@@ -8,7 +8,6 @@ import {
 import { css } from 'glamor'
 import {
   HEADER_HEIGHT,
-  HEADER_HEIGHT_MOBILE,
   HEADER_HORIZONTAL_PADDING,
   ZINDEX_FRAME_TOGGLE,
   TRANSITION_MS,
@@ -19,8 +18,7 @@ import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { IconClose, IconMic } from '@republik/icons'
 
 const SIZE = 28
-const PADDING_MOBILE = Math.floor((HEADER_HEIGHT_MOBILE - SIZE) / 2)
-const PADDING_DESKTOP = Math.floor((HEADER_HEIGHT - SIZE) / 2)
+const PADDING = Math.floor((HEADER_HEIGHT - SIZE) / 2)
 
 /**
  * Component to render the toggle element in the top right corner of the frame on top of the nav.
@@ -102,14 +100,11 @@ const styles = {
     border: 'none',
     boxShadow: 'none',
     outline: 'none',
-    padding: PADDING_MOBILE,
+    padding: PADDING,
     position: 'relative',
     // Additional 4 px to account for scrollbar
     paddingRight: HEADER_HORIZONTAL_PADDING + 4,
     lineHeight: 0,
-    [mediaQueries.mUp]: {
-      padding: PADDING_DESKTOP,
-    },
   }),
   audioCount: css({
     ...fontStyles.sansSerifMedium,
@@ -129,11 +124,8 @@ const styles = {
     position: 'absolute',
     // Additional 4 px to account for scrollbar
     right: HEADER_HORIZONTAL_PADDING + 4,
-    top: PADDING_MOBILE,
+    top: PADDING,
     transition: `opacity ${TRANSITION_MS}ms ease-out`,
-    [mediaQueries.mUp]: {
-      top: PADDING_DESKTOP,
-    },
   }),
 }
 

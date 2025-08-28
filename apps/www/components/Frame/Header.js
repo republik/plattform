@@ -24,7 +24,6 @@ import CallToAction from './CallToAction'
 
 import {
   HEADER_HEIGHT,
-  HEADER_HEIGHT_MOBILE,
   SUBHEADER_HEIGHT,
   ZINDEX_POPOVER,
   LOGO_WIDTH,
@@ -55,11 +54,17 @@ const Header = ({
   const { inNativeIOSApp, inNativeApp } = useInNativeApp()
   const { isExpanded: audioPlayerExpanded } = useAudioContext()
   const [colorScheme] = useColorContext()
-  const [scrollableHeaderHeight, setScrollableHeaderHeight] =
-    useState(HEADER_HEIGHT_MOBILE)
   const [expandedNav, setExpandedNav] = useState(null)
   const router = useRouter()
-  
+
+  const scrollableHeaderHeight = useMemo(() => {
+    return (
+      HEADER_HEIGHT +
+      (hasSecondaryNav && !stickySecondaryNav ? SUBHEADER_HEIGHT : 0) +
+      (formatColor || !!stickySecondaryNav ? 0 : 1)
+    )
+  }, [hasSecondaryNav, stickySecondaryNav, formatColor])
+
   // Use the simplified scroll direction hook
   const scrollDirection = useScrollDirection({
     upThreshold: 25,
@@ -88,25 +93,6 @@ const Header = ({
 
   const userButtonLink = me ? '/meine-republik' : '/anmelden'
 
-  const hasStickySecondary = hasSecondaryNav && stickySecondaryNav
-  useEffect(() => {
-    const updateHeaderHeight = () => {
-      const isMobile = window.innerWidth < mediaQueries.mBreakPoint
-      setScrollableHeaderHeight(
-        (isMobile ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT) +
-          (hasSecondaryNav && !hasStickySecondary ? SUBHEADER_HEIGHT : 0) +
-          // scroll away thin HLine
-          (formatColor || hasStickySecondary ? 0 : 1),
-      )
-    }
-
-    window.addEventListener('resize', updateHeaderHeight)
-    updateHeaderHeight()
-    return () => {
-      window.removeEventListener('resize', updateHeaderHeight)
-    }
-  }, [hasSecondaryNav, hasStickySecondary, formatColor])
-
   const showToggle = me || inNativeApp || router.pathname === '/angebote'
   const showClose = router.pathname === USER_MENU_URL
 
@@ -118,7 +104,9 @@ const Header = ({
         ref={fixedRef}
         style={{
           transform: `translateY(${
-            scrollDirection === 'down' && !isAnyNavExpanded ? -scrollableHeaderHeight : 0
+            scrollDirection === 'down' && !isAnyNavExpanded
+              ? -scrollableHeaderHeight
+              : 0
           }px)`,
           transition: 'transform 0.3s ease-out',
         }}
@@ -243,10 +231,8 @@ const Header = ({
       />
       {inNativeApp && pullable && (
         <Pullable
-          shouldPullToRefresh={() => 
-            window.scrollY <= 0 && 
-            !isBodyScrollLocked() && 
-            !audioPlayerExpanded
+          shouldPullToRefresh={() =>
+            window.scrollY <= 0 && !isBodyScrollLocked() && !audioPlayerExpanded
           }
           onRefresh={() => {
             if (inNativeIOSApp) {
@@ -266,43 +252,20 @@ const Header = ({
 const HeaderWithContext = (props) => {
   const [isAnyNavExpanded, setIsAnyNavExpanded] = useState(false)
 
-  const {
-    cover,
-    children,
-    hasOverviewNav,
-    secondaryNav,
-    isOnMarketingPage,
-    me,
-  } = props
+  const { cover, children, hasOverviewNav, secondaryNav } = props
 
   const hasSecondaryNav = hasOverviewNav || secondaryNav
-  const headerConfig = useMemo(() => {
-    return [
-      {
-        minWidth: 0,
-        headerHeight:
-          HEADER_HEIGHT_MOBILE +
-          (hasSecondaryNav ? SUBHEADER_HEIGHT : 0),
-      },
-      {
-        minWidth: mediaQueries.mBreakPoint,
-        headerHeight:
-          HEADER_HEIGHT +
-          (hasSecondaryNav ? SUBHEADER_HEIGHT : 0),
-      },
-    ]
-  }, [hasSecondaryNav])
 
   return (
-    <HeaderHeightProvider config={headerConfig}>
-      {!(isOnMarketingPage && !me) && (
-        <Header
-          {...props}
-          hasSecondaryNav={hasSecondaryNav}
-          isAnyNavExpanded={isAnyNavExpanded}
-          setIsAnyNavExpanded={setIsAnyNavExpanded}
-        />
-      )}
+    <HeaderHeightProvider
+      height={HEADER_HEIGHT + (hasSecondaryNav ? SUBHEADER_HEIGHT : 0)}
+    >
+      <Header
+        {...props}
+        hasSecondaryNav={hasSecondaryNav}
+        isAnyNavExpanded={isAnyNavExpanded}
+        setIsAnyNavExpanded={setIsAnyNavExpanded}
+      />
       {cover}
       {children}
     </HeaderHeightProvider>
@@ -318,7 +281,6 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    willChange: 'transform',
     '@media print': {
       display: 'none',
     },
@@ -349,10 +311,9 @@ const styles = {
   }),
   back: css({
     display: 'block',
-    padding: Math.floor((HEADER_HEIGHT_MOBILE - BACK_BUTTON_SIZE) / 2),
+    padding: Math.floor((HEADER_HEIGHT - BACK_BUTTON_SIZE) / 2),
     paddingRight: 0,
     [mediaQueries.mUp]: {
-      padding: Math.floor((HEADER_HEIGHT - BACK_BUTTON_SIZE) / 2),
       paddingRight: 0,
     },
   }),
@@ -380,24 +341,21 @@ const styles = {
     },
   }),
   buttonFormatColor: css({
-    height: HEADER_HEIGHT_MOBILE,
+    height: HEADER_HEIGHT,
     [mediaQueries.mUp]: {
       padding: '10px 30px',
-      height: HEADER_HEIGHT,
     },
   }),
   buttonGeneric: css({
-    height: HEADER_HEIGHT_MOBILE + 1,
+    height: HEADER_HEIGHT + 1,
     marginBottom: -1, // overlap HR line below button
     [mediaQueries.mUp]: {
       padding: '10px 30px',
-      height: HEADER_HEIGHT + 1,
     },
   }),
   buttonMarketing: css({
-    height: HEADER_HEIGHT_MOBILE,
+    height: HEADER_HEIGHT,
     [mediaQueries.mUp]: {
-      height: HEADER_HEIGHT,
       padding: '10px 80px',
     },
   }),

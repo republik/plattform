@@ -75,7 +75,7 @@ const SeriesNavBar = ({ t, me, series, router, repoId }) => {
   const [colorScheme] = useColorContext()
   const [expanded, setExpanded] = useState(false)
   const [ref] = useBodyScrollLock(expanded)
-  const [headerHeight] = useHeaderHeight()
+  const headerHeight = useHeaderHeight()
   const episodes = series && series.episodes
   const currentPath = cleanAsPath(router.asPath)
   const currentEpisode = episodes.find(

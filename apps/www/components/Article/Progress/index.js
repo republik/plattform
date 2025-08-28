@@ -3,7 +3,7 @@ import debounce from 'lodash/debounce'
 
 import { mediaQueries } from '@project-r/styleguide'
 
-import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
+import { HEADER_HEIGHT } from '../../constants'
 import { scrollIt } from '../../../lib/utils/scroll'
 
 import { useProgress } from './api'
@@ -25,7 +25,6 @@ const Progress = ({ children, article }) => {
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
   const mobile = () => window.innerWidth < mediaQueries.mBreakPoint
-  const headerHeight = () => (mobile() ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT)
 
   const getProgressElements = () => {
     const progressElements = refContainer.current
@@ -37,7 +36,7 @@ const Progress = ({ children, article }) => {
   const getClosestElement = (progressElements) => {
     const getDistanceForIndex = (index) => {
       return Math.abs(
-        progressElements[index].getBoundingClientRect().top - headerHeight(),
+        progressElements[index].getBoundingClientRect().top - HEADER_HEIGHT,
       )
     }
 
@@ -79,7 +78,7 @@ const Progress = ({ children, article }) => {
     const { bottom } = lastElement.getBoundingClientRect()
     const { top } = refContainer.current.getBoundingClientRect()
     const height = bottom - top
-    const yFromArticleTop = Math.max(0, -top + headerHeight())
+    const yFromArticleTop = Math.max(0, -top + HEADER_HEIGHT)
     const ratio = yFromArticleTop / height
     const percentage =
       ratio === 0 ? 0 : -top + window.innerHeight > height ? 1 : ratio
@@ -149,12 +148,12 @@ const Progress = ({ children, article }) => {
 
     if (progressElement) {
       const { top } = progressElement.getBoundingClientRect()
-      const isInViewport = top - headerHeight() > 0 && top < window.innerHeight
+      const isInViewport = top - HEADER_HEIGHT > 0 && top < window.innerHeight
       // We don't scroll on mobile if the element of interest is already in viewport
       // This may happen on swipe navigation in iPhone X.
       if (!mobile() || !isInViewport) {
         scrollIt(
-          window.pageYOffset + top - headerHeight() - (mobile() ? 10 : 20),
+          window.pageYOffset + top - HEADER_HEIGHT - (mobile() ? 10 : 20),
           400,
         )
       }
@@ -162,7 +161,7 @@ const Progress = ({ children, article }) => {
     }
     if (percentage) {
       const { height } = refContainer.current.getBoundingClientRect()
-      const offset = percentage * height - headerHeight()
+      const offset = percentage * height - HEADER_HEIGHT
       scrollIt(offset, 400)
     }
   }

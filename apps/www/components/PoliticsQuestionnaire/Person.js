@@ -43,7 +43,7 @@ import {
 import { cantonTranslation, partyTranslation } from './utils'
 
 const Page = ({ responses, authorData }) => {
-  const [headerHeight] = useHeaderHeight()
+  const headerHeight = useHeaderHeight()
   const [colorScheme] = useColorContext()
 
   const router = useRouter()

@@ -21,7 +21,7 @@ const StickySection = ({ children, label, hasSpaceAfter = true }) => {
   const [isMedium, setIsMedium] = useState(false)
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
-  const [headerHeight] = useHeaderHeight()
+  const headerHeight = useHeaderHeight()
 
   const sectionRef = useRef(null)
   const stateRef = useRef()

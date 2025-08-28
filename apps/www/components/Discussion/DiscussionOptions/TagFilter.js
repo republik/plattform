@@ -60,7 +60,7 @@ const TagLink = ({ tag, commentCount }) => {
 
 const TagFilter = ({ discussion }) => {
   const [colorScheme] = useColorContext()
-  const [headerHeight] = useHeaderHeight()
+  const headerHeight = useHeaderHeight()
   const route = useRouter()
   const {
     query: { tag: activeTag },
