@@ -1,5 +1,4 @@
 import React from 'react'
-import { mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
 import CallToAction from '../Frame/CallToAction'
 import { SignInLink } from '../Frame/User'
@@ -11,7 +10,7 @@ const MarketingHeader = () => {
     <div {...styles.header}>
       <div style={{ paddingLeft: 16 }}>
         <Link href='/anmelden'>
-          <SignInLink isOnMarketingPage={true} />
+          <SignInLink />
         </Link>
       </div>
       <CallToAction isOnMarketingPage={true} formatColor={undefined} />
