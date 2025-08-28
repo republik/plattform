@@ -8,10 +8,13 @@ import { SubscriptionService } from '../../lib/services/SubscriptionService'
 export = {
   async stripeCustomer(
     user: User,
-    { company }: { company: Company },
+    { company }: { company?: Company | null },
     ctx: GraphqlContext,
   ) {
     Auth.Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
+    if (!company) {
+      return null
+    }
 
     return await new CustomerInfoService(ctx.pgdb).getCustomerIdForCompany(
       user.id,
@@ -31,8 +34,8 @@ export = {
         ctx.pgdb,
       ).fetchActiveSubscription(user.id)
       return res
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      ctx.logger.error({ error }, 'failed to fetch activeMagazineSubscription')
       return []
     }
   },
@@ -45,8 +48,8 @@ export = {
         USER_VISIBLE_STATUS_TYPES,
       )
       return res
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      ctx.logger.error({ error }, 'failed to fetch magazineSubscription')
       return []
     }
   },
@@ -57,7 +60,7 @@ export = {
     try {
       return fetchTransactions(ctx.pgdb, user.id)
     } catch (e) {
-      console.log(e)
+      ctx.logger.error(e, 'failed to fetch user payment transactions')
       return []
     }
   },
