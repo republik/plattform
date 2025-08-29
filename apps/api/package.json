@@ -2,7 +2,7 @@
   "name": "@orbiting/api-app",
   "version": "0.0.1",
   "engines": {
-    "node": "^20.0.0"
+    "node": "^22.0.0"
   },
   "private": true,
   "license": "AGPL-3.0",

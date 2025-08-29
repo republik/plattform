@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.1.0",
   "engines": {
-    "node": "^20.0.0"
+    "node": "^20 || ^22"
   },
   "scripts": {
     "dev": "concurrently \"PORT=3006 next dev\" \"yarn gql:types --watch\"",
