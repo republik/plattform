@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { css } from 'glamor'
 
 import { useColorContext, mediaQueries, zIndex } from '@project-r/styleguide'
-import { useInNativeApp } from '../../lib/withInNativeApp'
 
 const MARGIN = 15
 
@@ -14,6 +13,7 @@ const styles = {
     margin: `0 ${MARGIN}px`,
     [mediaQueries.mUp]: {
       right: MARGIN,
+      marginRight: 2* MARGIN,
     },
   }),
   wide: css({
@@ -30,7 +30,6 @@ const BottomPanel = ({
   foreground = false,
 }) => {
   const [colorScheme] = useColorContext()
-  const { inIOSVersion, inNativeApp } = useInNativeApp()
 
   const bottomRule = useMemo(
     () =>
