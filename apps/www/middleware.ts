@@ -1,10 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import {
-  getJWTCookieValue,
-  getSessionCookieValue,
-  verifyJWT,
-} from './lib/auth/JWTHelper'
-import fetchMyRoles from './lib/helpers/middleware/FetchMeObject'
 
 const CURTAIN_COOKIE_NAME = 'OpenSesame'
 const CURTAIN_PASSTHROUGH_PATHS = [
@@ -172,78 +166,6 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
     resUrl.searchParams.delete('extractId')
     resUrl.pathname = `/_front/${extractId}`
     return NextResponse.rewrite(resUrl)
-  }
-
-  /* ------------ Logic to handle SSG front- & marketing-page ------------ */
-
-  /**
-   * Rewrite to the front if the user is a member
-   * @param roles Roles of the user
-   * @returns NextResponse
-   */
-  function rewriteBasedOnRoles(roles: string[] = []): NextResponse {
-    const openAccess = process.env.NEXT_PUBLIC_OPEN_ACCESS === 'true'
-
-    if (openAccess) {
-      return NextResponse.next()
-    }
-
-    if (!roles?.includes('member')) {
-      resUrl.pathname = '/marketing'
-      return NextResponse.rewrite(resUrl)
-    }
-
-    return NextResponse.next()
-  }
-
-  /**
-   * Load me from the API and rewrite according to the loaded me object.
-   * Also add the set-cookie header to the response.
-   * @param req
-   * @returns
-   */
-  async function rewriteBasedOnMe(req: NextRequest): Promise<NextResponse> {
-    const { me, cookie } = await fetchMyRoles(req)
-
-    const response = rewriteBasedOnRoles(me?.roles)
-
-    if (cookie) {
-      // Forward cookies to the client
-      response.headers.set('Set-Cookie', cookie)
-    }
-
-    return response
-  }
-
-  /**
-   * Redirect based on the jwt-token after it was successfully validated
-   * @param token JWT found in the cookie header
-   * @returns NextResponse
-   */
-  async function rewriteBasedOnToken(token: string): Promise<NextResponse> {
-    try {
-      // Parse and verify JWT to decide about redirection
-      const jwtBody = await verifyJWT(token)
-
-      // empty jwt-payload -> expired session-cookie
-      return rewriteBasedOnRoles(jwtBody?.roles)
-    } catch (err) {
-      // Rewrite to gateway to fetch a new valid JWT
-      console.error('JWT Verification Error', err)
-      // Rewrite based on fetched me object
-      return rewriteBasedOnMe(req)
-    }
-  }
-
-  const sessionCookie = getSessionCookieValue(req)
-  const tokenCookie = getJWTCookieValue(req)
-
-  if (sessionCookie && tokenCookie) {
-    // Rewrite based on token
-    return await rewriteBasedOnToken(tokenCookie)
-  } else {
-    // Rewrite if no JWT is present
-    return await rewriteBasedOnMe(req)
   }
 
   return NextResponse.next()
