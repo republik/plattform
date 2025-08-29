@@ -13,7 +13,7 @@ export function CampaignHeroSection({ children }: { children: ReactNode }) {
         className={css({
           py: '16',
           margin: '0 auto',
-          maxW: 'maxContentWidth',
+          maxW: 'content.narrow',
           fontSize: '8xl',
           fontFamily: 'republikSerif',
           textAlign: 'left',
