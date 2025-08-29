@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation'
 import { ReactNode } from 'react'
 
 export const metadata: Metadata = {
-  title: `Uns ist es nicht egal, was Sie von der Welt erfahren.`,
+  title: `Uns ist nicht egal, was Sie von der Welt erfahren.`,
   description: 'Bis zum 28. September 2025 ab CHF 1 für einen Monat.',
   robots: { index: false, follow: false },
 }

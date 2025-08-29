@@ -174,7 +174,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
             lineHeight: '1',
           })}
         >
-          Uns ist nicht egal.
+          Uns ist es nicht egal.
         </div>
         <MiniPaynoteMessage
           message={
