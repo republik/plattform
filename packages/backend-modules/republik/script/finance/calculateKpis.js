@@ -43,6 +43,11 @@ const isCancelledOrRefunded = (item) => {
   return ['CANCELLED', 'REFUNDED', 'FAILED'].includes(item.status.toUpperCase())
 }
 
+const isBenefactorSubscriptionOrMembership = (item) => {
+      return item.packageName === 'BENEFACTOR' || item.packageName === 'BENEFACTOR_SUBSCRIPTION' ||
+        (item.packageName === 'PROLONG' && item.price >= 100000)
+    }
+
 const evaluateCompanyMonth = async (
   company,
   begin,
@@ -216,9 +221,7 @@ const evaluateCompanyMonth = async (
        */
 
       const GoennerMitgliedschaften = Mitgliedschaften.filter(
-        (i) =>
-          i.packageName === 'BENEFACTOR' ||
-          (i.packageName === 'PROLONG' && i.price >= 100000),
+        (i) => isBenefactorSubscriptionOrMembership(i),
       )
 
       results.GoennerMitgliedschaften = {
@@ -238,9 +241,7 @@ const evaluateCompanyMonth = async (
 
       const StornierteGoennerMitgliedschaften =
         StornierteMitgliedschaften.filter(
-          (i) =>
-            i.packageName === 'BENEFACTOR' ||
-            (i.packageName === 'PROLONG' && i.price >= 100000),
+          (i) => isBenefactorSubscriptionOrMembership(i),
         )
 
       results.StornierteGoennerMitgliedschaften = {
