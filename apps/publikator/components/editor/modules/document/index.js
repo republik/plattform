@@ -1,8 +1,8 @@
-import { Document as SlateDocument } from 'slate'
-import { parse } from '@republik/remark-preset'
 import { slug } from '@project-r/styleguide'
+import { parse } from '@republik/remark-preset'
 
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
+import { Document as SlateDocument } from 'slate'
 import { findOrCreate } from '../../utils/serialization'
 
 export default ({ rule, subModules, TYPE }) => {
@@ -140,8 +140,23 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [documentRule],
   })
 
-  const newDocument = ({ title, repoId }) =>
-    serializer.deserialize({
+  const newDocument = ({ title, repoId }) => {
+    const mdastDocument = parse(
+      `<section><h6>${coverModule.TYPE}</h6>
+
+# ${title}
+
+<hr/></section>
+
+<section><h6>${centerModule.TYPE}</h6>
+
+Ladies and Gentlemen,
+
+<hr/></section>
+`,
+    )
+    console.log('index.js', mdastDocument)
+    return serializer.deserialize({
       repoId,
       ...parse(
         `<section><h6>${coverModule.TYPE}</h6>
@@ -158,6 +173,7 @@ Ladies and Gentlemen,
 `,
       ),
     })
+  }
 
   const Container = rule.component
 

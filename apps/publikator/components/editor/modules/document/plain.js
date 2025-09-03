@@ -1,13 +1,9 @@
-import { Document as SlateDocument } from 'slate'
-import { parse } from '@republik/remark-preset'
-
-import { slug, mdastToString } from '@project-r/styleguide'
+import { mdastToString, slug } from '@project-r/styleguide'
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
+import { Document as SlateDocument } from 'slate'
 
 import createPasteHtml from './createPasteHtml'
-import { safeDump } from 'js-yaml'
-
-import { generateAuthorsLine } from '../../../../lib/utils/helpers'
+import { getPlainDocumentTemplate } from './plainDocumentTemplate'
 
 export default ({ rule, subModules, TYPE }) => {
   const centerModule = subModules.find((m) => m.name === 'center')
@@ -131,58 +127,18 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [documentRule],
   })
 
-  const newDocument = ({ title = '', schema = '', repoId }, me) =>
-    serializer.deserialize({
+  const newDocument = ({ title = '', schema = '', repoId }, me) => {
+    const mdastDocument = getPlainDocumentTemplate({
+      schema,
+      rule,
+      titleModule,
+      centerModule,
       repoId,
-      ...parse(`---
-${safeDump({
-  template: schema,
-  title,
-  auto: true,
-  autoSlug: true,
-  feed: true,
-  gallery: true,
-})}
----
-${
-  titleModule
-    ? `
-<section><h6>${titleModule.TYPE}</h6>
-
-${
-  rule.editorOptions?.titleCenter
-    ? `\`\`\`
-{
-  "center": true
-}
-\`\`\``
-    : ''
-}
-
-# ${title}
-
-Lead
-${
-  rule.editorOptions?.skipCredits
-    ? ''
-    : `
-    
-${generateAuthorsLine(me)}
-
-`
-}
-<hr/></section>
-
-`
-    : ''
-}
-<section><h6>${centerModule.TYPE}</h6>
-
-${titleModule ? 'Text' : title}
-
-<hr/></section>
-`),
+      title,
+      me,
     })
+    return serializer.deserialize(mdastDocument)
+  }
 
   const Container = rule.component
 
