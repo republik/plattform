@@ -1,46 +1,72 @@
-import { slug } from '@project-r/styleguide'
-import { parse } from '@republik/remark-preset'
-
+import { mdastToString, slug } from '@project-r/styleguide'
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import { Document as SlateDocument } from 'slate'
-import { findOrCreate } from '../../utils/serialization'
+
+import createPasteHtml from './createPasteHtml'
+import { getDocumentTemplate } from './documentTemplate'
 
 export default ({ rule, subModules, TYPE }) => {
-  const coverModule = subModules.find((m) => m.name === 'cover')
-  if (!coverModule) {
-    throw new Error('Missing cover submodule')
-  }
   const centerModule = subModules.find((m) => m.name === 'center')
   if (!centerModule) {
     throw new Error('Missing center submodule')
   }
+  const titleModule = subModules.find((m) => m.name === 'title')
+  const figureModule = subModules.find((m) => m.name === 'figure')
+  const dynamicComponentModule = subModules.find(
+    (m) => m.name === 'dynamiccomponent',
+  )
 
-  const coverSerializer = coverModule.helpers.serializer
-  const centerSerializer = centerModule.helpers.serializer
+  const childSerializer = new MarkdownSerializer({
+    rules: subModules
+      .reduce(
+        (a, m) =>
+          a.concat(
+            m.helpers && m.helpers.serializer && m.helpers.serializer.rules,
+          ),
+        [],
+      )
+      .filter(Boolean),
+  })
 
   const autoMeta = (documentNode) => {
     const data = documentNode.data
-    const autoMeta = !data || !data.size || data.get('auto')
-    if (!autoMeta) {
-      return null
-    }
-    const cover = documentNode.nodes.find(
-      (n) => n.type === coverModule.TYPE && n.kind === 'block',
-    )
-    if (!cover) {
+    const autoMeta = !data || !data.delete('template').size || data.get('auto')
+    const autoSlug = data.get('autoSlug')
+    if (!autoMeta && !autoSlug) {
       return null
     }
 
-    const title = cover.nodes.first()
-    const lead = cover.nodes.get(1)
+    let newData = data
 
-    const newData = data
-      .set('auto', true)
-      .set('feed', true)
-      .set('title', title ? title.text : '')
-      .set('slug', title ? slug(title.text) : '')
-      .set('description', lead ? lead.text : '')
-      .set('image', cover.data.get('src'))
+    if (autoMeta) {
+      const title =
+        titleModule &&
+        documentNode.nodes.find(
+          (n) => n.type === titleModule.TYPE && n.kind === 'block',
+        )
+      const fallbackTitle = data.get('title')
+
+      if (title) {
+        const headline = title.nodes.first()
+        const headlineText = headline ? headline.text : ''
+        const lead = title.nodes.get(2)
+
+        newData = newData
+          .set('title', headlineText)
+          .set('description', lead ? lead.text : '')
+      } else if (fallbackTitle) {
+        if (data.get('template') === 'editorialNewsletter') {
+          newData = newData.set('emailSubject', fallbackTitle)
+        }
+      }
+
+      if (data.get('template') === 'discussion') {
+        newData = newData.set('collapsable', true)
+      }
+    }
+    if (autoSlug) {
+      newData = newData.set('slug', slug(newData.get('title')))
+    }
 
     return data.equals(newData) ? null : newData
   }
@@ -49,54 +75,24 @@ export default ({ rule, subModules, TYPE }) => {
     match: (object) => object.kind === 'document',
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, rest) => {
-      const cover = findOrCreate(
-        node.children,
-        {
-          type: 'zone',
-          identifier: coverModule.TYPE,
-        },
-        {
-          children: [],
-        },
-      )
-
-      let center = findOrCreate(
-        node.children,
-        {
-          type: 'zone',
-          identifier: centerModule.TYPE,
-        },
-        {
-          children: [],
-        },
-      )
-
-      const centerIndex = node.children.indexOf(center)
-      const before = []
-      const after = []
       node.children.forEach((child, index) => {
-        if (child !== cover && child !== center) {
-          if (index > centerIndex) {
-            after.push(child)
-          } else {
-            before.push(child)
-          }
-        }
+        // ToDo: match against rule.rules.matchMdast and wrap in center if no match
       })
-      if (before.length || after.length) {
-        center = {
-          ...center,
-          children: [...before, ...center.children, ...after],
-        }
-      }
 
       const documentNode = {
         data: node.meta,
         kind: 'document',
-        nodes: [
-          coverSerializer.fromMdast(cover, 0, node, rest),
-          centerSerializer.fromMdast(center, 1, node, rest),
-        ],
+        nodes: childSerializer.fromMdast(node.children, 0, node, {
+          context: {
+            ...rest.context,
+            // pass format to title through context
+            meta: node.meta,
+            format: node.format,
+            section: node.section,
+            series: node.series,
+            repoId: node.repoId,
+          },
+        }),
       }
 
       const newData = autoMeta(SlateDocument.fromJSON(documentNode))
@@ -110,28 +106,19 @@ export default ({ rule, subModules, TYPE }) => {
       }
     },
     toMdast: (object, index, parent, rest) => {
-      const cover = findOrCreate(object.nodes, {
-        kind: 'block',
-        type: coverModule.TYPE,
-      })
-      const center = findOrCreate(
-        object.nodes,
-        { kind: 'block', type: centerModule.TYPE },
-        { nodes: [] },
-      )
-      const centerIndex = object.nodes.indexOf(center)
-      object.nodes.forEach((node, index) => {
-        if (node !== cover && node !== center) {
-          center.nodes[index > centerIndex ? 'push' : 'unshift'](node)
-        }
-      })
       return {
         type: 'root',
         meta: object.data,
-        children: [
-          coverSerializer.toMdast(cover, 0, object, rest),
-          centerSerializer.toMdast(center, 1, object, rest),
-        ],
+        children: childSerializer
+          .toMdast(object.nodes, 0, object, rest)
+          .filter((mdNode) => {
+            return !(
+              mdNode.identifier === centerModule.TYPE &&
+              mdNode.children.length === 1 &&
+              mdNode.children[0].type === 'paragraph' &&
+              mdastToString(mdNode.children[0]) === ''
+            )
+          }),
       }
     },
   }
@@ -140,39 +127,17 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [documentRule],
   })
 
-  const newDocument = ({ title, repoId }) => {
-    const mdastDocument = parse(
-      `<section><h6>${coverModule.TYPE}</h6>
-
-# ${title}
-
-<hr/></section>
-
-<section><h6>${centerModule.TYPE}</h6>
-
-Ladies and Gentlemen,
-
-<hr/></section>
-`,
-    )
-    console.log('index.js', mdastDocument)
-    return serializer.deserialize({
+  const newDocument = ({ title = '', schema = '', repoId }, me) => {
+    const mdastDocument = getDocumentTemplate({
+      schema,
+      rule,
+      titleModule,
+      centerModule,
       repoId,
-      ...parse(
-        `<section><h6>${coverModule.TYPE}</h6>
-
-# ${title}
-
-<hr/></section>
-
-<section><h6>${centerModule.TYPE}</h6>
-
-Ladies and Gentlemen,
-
-<hr/></section>
-`,
-      ),
+      title,
+      me,
     })
+    return serializer.deserialize(mdastDocument)
   }
 
   const Container = rule.component
@@ -186,39 +151,93 @@ Ladies and Gentlemen,
     changes: {},
     plugins: [
       {
-        renderEditor: ({ children }) => <Container>{children}</Container>,
+        onPaste: createPasteHtml(centerModule, figureModule),
+        renderEditor: ({ children, value }) => (
+          <Container>{children}</Container>
+        ),
+        validateNode: (node) => {
+          if (node.kind !== 'document') return
+
+          const adjacentCenter = node.nodes.find(
+            (n, i) =>
+              i &&
+              n.type === centerModule.TYPE &&
+              node.nodes.get(i - 1).type === centerModule.TYPE,
+          )
+          if (!adjacentCenter) return
+
+          return (change) => {
+            change.mergeNodeByKey(adjacentCenter.key)
+          }
+        },
         schema: {
           document: {
             nodes: [
-              {
-                types: [coverModule.TYPE],
-                kinds: ['block'],
+              dynamicComponentModule && {
+                types: [dynamicComponentModule.TYPE],
+                min: 0,
+                max: 1,
+              },
+              figureModule && {
+                types: [figureModule.TYPE],
+                min: 0,
+                max: 1,
+              },
+              titleModule && {
+                types: [titleModule.TYPE],
                 min: 1,
                 max: 1,
               },
               {
-                types: [centerModule.TYPE],
-                kinds: ['block'],
+                types: subModules
+                  .filter((module) => module !== titleModule)
+                  .map((module) => module.TYPE),
                 min: 1,
-                max: 1,
               },
-            ],
+            ].filter(Boolean),
+            first: (titleModule || figureModule) && {
+              types: [
+                titleModule && titleModule.TYPE,
+                figureModule && figureModule.TYPE,
+                dynamicComponentModule && dynamicComponentModule.TYPE,
+              ].filter(Boolean),
+            },
+            last: {
+              types: [centerModule.TYPE],
+            },
             normalize: (change, reason, { node, index, child }) => {
               if (reason === 'child_required') {
                 change.insertNodeByKey(node.key, index, {
                   kind: 'block',
-                  type: index === 0 ? coverModule.TYPE : centerModule.TYPE,
+                  type:
+                    !titleModule ||
+                    node.nodes.find((n) => n.type === titleModule.TYPE)
+                      ? centerModule.TYPE
+                      : titleModule.TYPE,
                 })
               }
               if (reason === 'child_type_invalid') {
                 change.setNodeByKey(child.key, {
-                  type: index === 0 ? coverModule.TYPE : centerModule.TYPE,
+                  type:
+                    index === 0 && titleModule
+                      ? titleModule.TYPE
+                      : centerModule.TYPE,
                 })
               }
-              if (reason === 'child_unknown') {
-                if (index > 1) {
-                  change.mergeNodeByKey(child.key)
-                }
+              if (
+                reason === 'first_child_kind_invalid' ||
+                reason === 'first_child_type_invalid'
+              ) {
+                change.insertNodeByKey(node.key, 0, {
+                  kind: 'block',
+                  type: titleModule ? titleModule.TYPE : figureModule.TYPE,
+                })
+              }
+              if (reason === 'last_child_type_invalid') {
+                change.insertNodeByKey(node.key, node.nodes.size, {
+                  kind: 'block',
+                  type: centerModule.TYPE,
+                })
               }
             },
           },

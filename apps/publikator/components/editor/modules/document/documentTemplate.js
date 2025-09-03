@@ -30,7 +30,7 @@ const getTitleTemplate = ({ rule, titleModule, title, me }) => ({
   ].filter(Boolean),
 })
 
-export const getPlainDocumentTemplate = ({
+export const getDocumentTemplate = ({
   schema,
   rule,
   titleModule,
