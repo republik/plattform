@@ -1,22 +1,20 @@
-import { Map } from 'immutable'
-import { parse } from '@republik/remark-preset'
-import { Block, Inline } from 'slate'
-
 import { Label } from '@project-r/styleguide'
 import { IconTag as InsertVarIcon } from '@republik/icons'
-
-import MetaForm from '../../utils/MetaForm'
+import { parse } from '@republik/remark-preset'
+import { Map } from 'immutable'
+import { Inline } from 'slate'
 import withT from '../../../../lib/withT'
 
-import injectBlock from '../../utils/injectBlock'
-
 import {
-  createPropertyForm,
-  createInlineButton,
   buttonStyles,
+  createInlineButton,
   matchBlock,
   matchInline,
 } from '../../utils'
+
+import injectBlock from '../../utils/injectBlock'
+
+import MetaForm from '../../utils/MetaForm'
 
 const blockFactories = {
   greeting: ({ context }) => {

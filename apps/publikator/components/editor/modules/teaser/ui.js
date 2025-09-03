@@ -19,7 +19,6 @@ import {
   IconSubdirectoryArrowRight as MoveIntoIcon,
   IconVerticalAlignBottom as MoveToEndIcon,
 } from '@republik/icons'
-import { stringify } from '@republik/remark-preset'
 import copyToClipboard from 'clipboard-copy'
 import { css } from 'glamor'
 import { useState } from 'react'
@@ -606,12 +605,7 @@ const CopyMdButton = ({ node, serializer }) => {
   const copyMd = (event) => {
     event.preventDefault()
     const mdast = serializer.serialize({ document: node })
-    const md = stringify({
-      type: 'root',
-      meta: {},
-      children: [mdast],
-    })
-    copyToClipboard(md).then(() => setSuccess(true))
+    copyToClipboard(mdast).then(() => setSuccess(true))
   }
 
   return (
