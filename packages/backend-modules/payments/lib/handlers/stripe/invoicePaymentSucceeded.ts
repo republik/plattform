@@ -101,7 +101,7 @@ export async function processInvoicePaymentSucceeded(
 
 export function mapChargeArgs(
   company: Company,
-  invoiceId: string,
+  invoiceId: string | null,
   charge: Stripe.Charge,
 ) {
   let paymentMethodType: 'CARD' | 'TWINT' | 'PAYPAL' | null = null
@@ -127,5 +127,6 @@ export function mapChargeArgs(
     paymentMethodType: paymentMethodType,
     fullyRefunded: charge.refunded,
     createdAt: parseStripeDate(charge.created),
+    externalPaymentIntent: charge.payment_intent as string,
   }
 }
