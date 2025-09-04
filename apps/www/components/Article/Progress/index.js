@@ -188,7 +188,7 @@ const Progress = ({ children, documentPath }) => {
         getMediaProgress,
         saveMediaProgress,
         restoreArticleProgress,
-        getDocumentProgress,
+        useDocumentProgress,
       }}
     >
       <div ref={refContainer}>{children}</div>
