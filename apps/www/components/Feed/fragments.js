@@ -5,6 +5,12 @@ export const documentFragment = `
     id
     repoId
     ...BookmarkOnDocument
+    userProgress {
+      id
+      max {
+        percentage
+      }
+    }
     meta {
       credits
       title
