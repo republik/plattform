@@ -9,16 +9,25 @@ import { ProgressContext } from '../Article/Progress'
 import { IconCheckSmall, IconHighlightOff, IconRead } from '@republik/icons'
 
 const UserProgress = ({
-  documentId,
-  userProgress,
+  documentPath,
   forceShortLabel,
   noCallout,
   noScroll,
   displayMinutes,
 }) => {
   const { restoreArticleProgress } = useContext(ProgressContext)
-  const { upsertDocumentProgress, removeDocumentProgress } = useProgress()
+  const {
+    upsertDocumentProgress,
+    removeDocumentProgress, 
+    getDocumentProgress,
+  } = useProgress()
   const { t } = useTranslation()
+
+  const { data } = getDocumentProgress({
+    variables: { path: documentPath },
+  })
+  const userProgress = data?.document?.userProgress
+  const documentId = data?.document?.id
   // Once consent has been given or not return null if there is no user progress object
   // or displayminutes are below 1min
   if (!userProgress || displayMinutes < 1) {

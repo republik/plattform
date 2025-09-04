@@ -1,0 +1,14 @@
+query getDocumentProgress($path: String!) {
+  document(path: $path) {
+    id
+    userProgress {
+      percentage
+      nodeId
+      updatedAt
+      max {
+        percentage
+        updatedAt
+      }
+    }
+  }
+}

@@ -14,15 +14,21 @@ const MIN_INDEX = 2
 
 export const ProgressContext = createContext({})
 
-const Progress = ({ children, article }) => {
+const Progress = ({ children, documentPath }) => {
   const refContainer = useRef()
   const lastClosestIndex = useRef()
   const refSaveProgress = useRef()
   const lastY = useRef()
   const { progressConsent } = useMe()
-  const { upsertDocumentProgress } = useProgress()
+  const { upsertDocumentProgress, getDocumentProgress } = useProgress()
 
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
+  
+  const { data } = getDocumentProgress({
+    variables: { path: documentPath },
+  })
+  const userProgress = data?.document?.userProgress
+  const documentId = data?.document?.id
 
   const mobile = () => window.innerWidth < mediaQueries.mBreakPoint
   const headerHeight = () => (mobile() ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT)
@@ -87,7 +93,7 @@ const Progress = ({ children, article }) => {
   }
 
   refSaveProgress.current = debounce(() => {
-    if (!article || !progressConsent) {
+    if (!documentPath || !progressConsent) {
       return
     }
 
@@ -116,14 +122,14 @@ const Progress = ({ children, article }) => {
       percentage > 0 &&
       // ignore elements until min index
       element.index >= MIN_INDEX &&
-      (!article.userProgress ||
-        article.userProgress.nodeId !== element.nodeId ||
-        Math.floor(article.userProgress.percentage * 100) !==
+      (!userProgress ||
+        userProgress.nodeId !== element.nodeId ||
+        Math.floor(userProgress.percentage * 100) !==
           Math.floor(percentage * 100))
     ) {
       upsertDocumentProgress({
         variables: {
-          documentId: article.id,
+          documentId: documentId,
           percentage,
           nodeId: element.nodeId,
         },
@@ -135,7 +141,7 @@ const Progress = ({ children, article }) => {
     if (e) {
       e.preventDefault()
     }
-    const { percentage, nodeId } = article.userProgress
+    const { percentage, nodeId } = userProgress
 
     const progressElements = getProgressElements()
     const progressElement =
@@ -185,6 +191,7 @@ const Progress = ({ children, article }) => {
         getMediaProgress,
         saveMediaProgress,
         restoreArticleProgress,
+        getDocumentProgress,
       }}
     >
       <div ref={refContainer}>{children}</div>

@@ -185,8 +185,7 @@ const ActionBar = ({
   const isSeriesOverview = meta && meta.series?.overview?.id === document?.id
   const hasPdf = meta && meta.template === 'article' && !isSeriesOverview
   const notBookmarkable =
-    meta?.template === 'page' ||
-    meta?.template === 'editorialNewsletter'
+    meta?.template === 'page' || meta?.template === 'editorialNewsletter'
   const isDiscussion = meta && meta.template === 'discussion'
   const emailSubject = t('article/share/emailSubject', {
     title: document.meta.title,
@@ -283,9 +282,8 @@ const ActionBar = ({
       title: t('article/actionbar/userprogress'),
       element: (
         <UserProgress
-          documentId={document.id}
+          documentPath={document.meta.path}
           forceShortLabel={forceShortLabel}
-          userProgress={document.userProgress}
           noCallout={
             mode === 'articleOverlay' ||
             mode === 'bookmark' ||
@@ -296,7 +294,7 @@ const ActionBar = ({
         />
       ),
       modes: ['articleOverlay', 'feed', 'bookmark', 'seriesEpisode'],
-      show: !!document && document.userProgress,
+      show: !!document,
     },
     {
       title: t('article/actionbar/pdf/options'),
@@ -420,8 +418,7 @@ const ActionBar = ({
       title: t('article/actionbar/userprogress'),
       element: (
         <UserProgress
-          documentId={document.id}
-          userProgress={document.userProgress}
+          documentPath={document.meta.path}
           displayMinutes={displayMinutes}
         />
       ),

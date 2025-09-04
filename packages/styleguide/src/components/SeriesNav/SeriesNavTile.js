@@ -6,9 +6,7 @@ import {
   TILE_MARGIN_RIGHT,
   TILE_GRID_PADDING,
 } from '../TeaserCarousel/constants'
-import { mUp } from '../../theme/mediaQueries'
 import SeriesNavTileContent from './SeriesNavTileContent'
-import { sansSerifRegular14, sansSerifRegular12 } from '../Typography/styles'
 
 const GRID_MIN_WIDTH = 300
 const OUTER_CONTAINER_PADDING = PADDING
