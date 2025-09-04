@@ -1012,10 +1012,10 @@
       "key": "api/newsletters/request/CLIMATE/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Challenge Accepted Newsletter."
     },
-      {
-        "key": "api/newsletters/request/WDWWW/subject",
-        "value": "Bestätigen Sie ihre Anmeldung zum Nachrichten-Briefing der Republik."
-      },
+    {
+      "key": "api/newsletters/request/WDWWW/subject",
+      "value": "Bestätigen Sie ihre Anmeldung zum Nachrichten-Briefing der Republik."
+    },
     {
       "key": "api/newsletters/request/SUNDAY/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Republik am Sonntag Newsletter."
@@ -2751,6 +2751,22 @@
     {
       "key": "api/payments/price/ABO_DONATE_OPTION_YEARLY_240",
       "value": "Jährliche Spende"
+    },
+    {
+      "key": "api/payments/dicsount_duration_display_months/1",
+      "value": "{months} Monat"
+    },
+    {
+      "key": "api/payments/dicsount_duration_display_months/other",
+      "value": "{months} Monate"
+    },
+    {
+      "key": "api/payments/dicsount_duration_display_years/1",
+      "value": "{years} Jahr"
+    },
+    {
+      "key": "api/payments/dicsount_duration_display_years/other",
+      "value": "{years} Jahre"
     }
   ]
 }

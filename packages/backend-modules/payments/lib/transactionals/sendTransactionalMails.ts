@@ -84,11 +84,55 @@ export async function sendSetupSubscriptionMail(
 
   if (invoice.discounts.length > 0 && invoice.totalDiscountAmount) {
     const discount = invoice.discounts[0] as any
+    const duration = discount.coupon.duration
+    const duration_in_months = discount.coupon.duration_in_months
+
     globalMergeVars.push(
       { name: 'discount_code', content: discount.coupon.name },
       {
         name: 'discount_total',
         content: (invoice.totalDiscountAmount / 100).toFixed(2),
+      },
+      {
+        name: 'discount_duration_forever',
+        content: duration === 'forever',
+      },
+      {
+        name: 'discount_duration_repeating',
+        content: duration === 'repeating',
+      },
+      {
+        name: 'discount_duration_once',
+        content: duration === 'once',
+      },
+      {
+        name: 'discount_duration_in_months',
+        content: duration_in_months,
+      },
+      {
+        name: 'discount_duration_display_in_months',
+        content: t.pluralize('api/payments/dicsount_duration_display_months', {
+          months: duration_in_months,
+          count: duration_in_months,
+        }),
+      },
+      {
+        name: 'discount_duration_display',
+        content: [
+          duration_in_months / 12 > 0 &&
+            t.pluralize('api/payments/dicsount_duration_display_years', {
+              years: Math.floor(duration_in_months / 12),
+              count: Math.floor(duration_in_months / 12),
+            }),
+          duration_in_months / 12 > 0 && duration_in_months % 12 > 0 && 'und',
+          duration_in_months % 12 > 0 &&
+            t.pluralize('api/payments/dicsount_duration_display_months', {
+              months: duration_in_months % 12,
+              count: duration_in_months % 12,
+            }),
+        ]
+          .filter(Boolean)
+          .join(' '),
       },
     )
   }

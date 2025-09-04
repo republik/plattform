@@ -40,7 +40,7 @@ const getSectionNav = gql`
               color
               kind
             }
-            linkedDocuments(feed: true, first: 0) {
+            linkedDocuments(first: 0) {
               totalCount
             }
           }

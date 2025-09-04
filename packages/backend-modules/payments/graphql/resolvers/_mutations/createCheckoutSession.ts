@@ -27,22 +27,19 @@ export = async function createCheckoutSession(
   args: CreateCheckoutSessionArgs,
   ctx: GraphqlContext,
 ) {
-  const session = await new CheckoutSessionBuilder(
+  const session = new CheckoutSessionBuilder(
     args.offerId,
     new PaymentService(),
     new CustomerInfoService(ctx.pgdb),
-  ).withCustomer(ctx.user)
-
-  session
+    ctx.logger,
+  )
+    .withCustomer(ctx.user)
     .withMetadata(args.options?.metadata)
     .withPromoCode(args.promoCode)
+    .withSelectedDiscount(args.withSelectedDiscount)
     .withDonation(args.withCustomDonation)
     .withReturnURL(args.options?.returnURL)
     .withUIMode(args.options?.uiMode)
-
-  if (args.withSelectedDiscount) {
-    await session.withSelectedDiscount(args.withSelectedDiscount)
-  }
 
   return session.build()
 }
