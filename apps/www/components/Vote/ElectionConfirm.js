@@ -66,7 +66,7 @@ const ElectionConfirm = compose(
     const [isUpdating, setUpdating] = useState(false)
     const [error, setError] = useState(null)
     const ref = useRef()
-    const [headerHeight] = useHeaderHeight()
+    const headerHeight = useHeaderHeight()
 
     useEffect(() => {
       const { top } = ref.current.getBoundingClientRect()

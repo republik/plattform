@@ -1,59 +1,17 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
-
-const DEFAULT_CONFIG = [{ minWidth: 0, headerHeight: 0 }]
+import { createContext, useContext } from 'react'
 
 const HeaderHeightContext = createContext({
-  value: DEFAULT_CONFIG[0].headerHeight,
-  rules: [],
+  value: 0,
 })
 
 export function useHeaderHeight() {
   const headerHeightContext = useContext(HeaderHeightContext)
-  return [headerHeightContext.value, headerHeightContext.rules]
+  return headerHeightContext.value
 }
 
-export const HeaderHeightProvider = ({ children, config = DEFAULT_CONFIG }) => {
-  const [headerHeightValue, setHeaderHeightValue] = useState(
-    config[0].headerHeight,
-  )
-
-  const rules = useMemo(
-    () =>
-      config.map(({ minWidth, headerHeight }) => ({
-        mediaQuery: `@media only screen and (min-width: ${minWidth}px)`,
-        headerHeight,
-      })),
-    [config],
-  )
-
-  useEffect(() => {
-    const handleResize = () => {
-      const nextHeaderHeightValue = config.reduce((acc, cur) => {
-        if (window.innerWidth >= cur.minWidth) {
-          return cur.headerHeight
-        } else {
-          return acc
-        }
-      }, 0)
-      if (headerHeightValue !== nextHeaderHeightValue) {
-        setHeaderHeightValue(nextHeaderHeightValue)
-      }
-    }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [config, headerHeightValue])
-
+export const HeaderHeightProvider = ({ children, height = 0 }) => {
   return (
-    <HeaderHeightContext.Provider value={{ value: headerHeightValue, rules }}>
+    <HeaderHeightContext.Provider value={{ value: height }}>
       {children}
     </HeaderHeightContext.Provider>
   )
