@@ -25,8 +25,7 @@ const Progress = ({ children, documentPath }) => {
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
   
   const { data } = useDocumentProgress({ path: documentPath })
-  const userProgress = data?.document?.userProgress
-  const documentId = data?.document?.id
+  const { userProgress, id: documentId } = data?.document || {}
 
   const mobile = () => window.innerWidth < mediaQueries.mBreakPoint
 

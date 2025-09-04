@@ -24,11 +24,11 @@ export const useProgress = () => {
   }
 
   return {
-    submitProgressOptOut: submitProgressOptOut,
-    clearProgress: clearProgress,
-    revokeProgressOptOut: revokeProgressOptOut,
-    upsertDocumentProgress: upsertDocumentProgress,
-    removeDocumentProgress: removeDocumentProgress,
-    useDocumentProgress: useDocumentProgress,
+    submitProgressOptOut,
+    clearProgress,
+    revokeProgressOptOut,
+    upsertDocumentProgress,
+    removeDocumentProgress,
+    useDocumentProgress,
   }
 }

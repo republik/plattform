@@ -24,8 +24,8 @@ const UserProgress = ({
   const { t } = useTranslation()
 
   const { data } = useDocumentProgress({ path: documentPath })
-  const userProgress = data?.document?.userProgress
-  const documentId = data?.document?.id
+  const { userProgress, id: documentId } = data?.document || {}
+  
   // Once consent has been given or not return null if there is no user progress object
   // or displayminutes are below 1min
   if (!userProgress || displayMinutes < 1) {
