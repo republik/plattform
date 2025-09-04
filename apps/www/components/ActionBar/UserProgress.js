@@ -15,7 +15,6 @@ const UserProgress = ({
   noScroll,
   displayMinutes,
 }) => {
-  console.log('documentPath', documentPath)
   const { restoreArticleProgress } = useContext(ProgressContext)
   const {
     upsertDocumentProgress,
