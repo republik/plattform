@@ -7,7 +7,7 @@ import {
   Button,
   useColorContext,
 } from '@project-r/styleguide'
-import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
+import { HEADER_HEIGHT } from '../../constants'
 
 import { useTranslation } from '../../../lib/withT'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
@@ -180,10 +180,7 @@ const styles = {
   }),
   hrFixed: css({
     position: 'fixed',
-    top: HEADER_HEIGHT_MOBILE - 1,
-    [mediaQueries.mUp]: {
-      top: HEADER_HEIGHT - 1,
-    },
+    top: HEADER_HEIGHT - 1,
   }),
   signInBlock: css({
     display: 'block',

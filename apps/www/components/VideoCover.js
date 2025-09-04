@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import { VideoPlayer, mediaQueries } from '@project-r/styleguide'
 
 import { scrollIt } from '../lib/utils/scroll'
-import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE, ZINDEX_HEADER } from './constants'
+import { HEADER_HEIGHT, ZINDEX_HEADER } from './constants'
 import { IconPlay } from '@republik/icons'
 
 const blinkBg = css.keyframes({
@@ -217,7 +217,6 @@ class VideoCover extends Component {
               this.setState(
                 () => ({ ended: true }),
                 () => {
-                  const topFixed = mobile ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT
                   const duration = 800
 
                   let top = 0
@@ -233,7 +232,7 @@ class VideoCover extends Component {
                         this.state.videoHeight,
                         this.state.windowHeight * MAX_HEIGHT,
                       ) -
-                      topFixed +
+                      HEADER_HEIGHT +
                       10,
                     duration,
                   )

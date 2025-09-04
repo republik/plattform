@@ -56,7 +56,7 @@
                       <a href="{{link_account_share}}"
                         >mit Ihren Freunden oder Feinden teilen</a
                       >.
-                    </p>                    
+                    </p>
 
                     <p>Details zum Kauf:</p>
 
@@ -65,7 +65,14 @@
                     >
                       <li>Monatlicher Preis: CHF {{total_before_discount}}</li>
                       {{#if discount_code}}
-                      <li>{{discount_code}}: CHF –{{discount_total}}</li>
+                      <li>
+                        {{discount_code}}: CHF –{{discount_total}}
+                        {{#if discount_duration_repeating}}
+                        {{#if discount_duration_in_months}}
+                        für {{discount_duration_display_in_months}}
+                        {{/if}}
+                        {{/if}}
+                      </li>
                       {{/if}}
                       <li>
                         <strong>Total: CHF {{total}}</strong>
@@ -73,16 +80,17 @@
                     </ul>
 
                     <p>
-                      Das Monats-Abo verlängert sich automatisch{{#if discount_code}} zum Normalpreis{{/if}}. Die von Ihnen angegebene
-                      Zahlungsmethode belasten wir dementsprechend ab dem kommenden Monat mit CHF
-                      {{total_before_discount}} monatlich.
+                      Das Monats-Abo verlängert sich automatisch{{#if discount_duration_once}} zum Normalpreis{{/if}}.
+                      Die von Ihnen angegebene Zahlungsmethode belasten wir dementsprechend {{#if discount_duration_once}}ab dem kommenden Monat{{/if}}
+                      mit CHF {{next_total}} monatlich{{#if discount_duration_repeating}} bis zum Ablauf des Rabattes ({{discount_duration_display_in_months}}),
+                      danach mit CHF {{total_before_discount}}{{/if}}.
                     </p>
 
                     <p>
-                      In Ihrem 
+                      In Ihrem
                       <a href="{{link_account_goto}}">Konto</a> finden Sie
-                      <a href="{{link_account_abos_goto}}">alle relevanten Informationen zu Ihrem Monats-Abo</a>. 
-                      Dort können Sie Ihre Einstellungen verwalten (z.B. die Zahlungsmethode ändern) 
+                      <a href="{{link_account_abos_goto}}">alle relevanten Informationen zu Ihrem Monats-Abo</a>.
+                      Dort können Sie Ihre Einstellungen verwalten (z.B. die Zahlungsmethode ändern)
                       oder das Abo jederzeit kündigen (was wir nicht hoffen).
                     </p>
 

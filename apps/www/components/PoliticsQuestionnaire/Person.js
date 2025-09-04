@@ -43,7 +43,6 @@ import {
 import { cantonTranslation, partyTranslation } from './utils'
 
 const Page = ({ responses, authorData }) => {
-  const [headerHeight] = useHeaderHeight()
   const [colorScheme] = useColorContext()
 
   const router = useRouter()
@@ -124,7 +123,6 @@ const Page = ({ responses, authorData }) => {
         <div
           {...submissionStyles.header}
           style={{
-            top: headerHeight,
             padding: '10px 0',
             margin: '10px 0 0',
           }}
