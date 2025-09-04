@@ -18,14 +18,12 @@ const UserProgress = ({
   const { restoreArticleProgress } = useContext(ProgressContext)
   const {
     upsertDocumentProgress,
-    removeDocumentProgress, 
-    getDocumentProgress,
+    removeDocumentProgress,
+    useDocumentProgress,
   } = useProgress()
   const { t } = useTranslation()
 
-  const { data } = getDocumentProgress({
-    variables: { path: documentPath },
-  })
+  const { data } = useDocumentProgress({ path: documentPath })
   const userProgress = data?.document?.userProgress
   const documentId = data?.document?.id
   // Once consent has been given or not return null if there is no user progress object

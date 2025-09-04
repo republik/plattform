@@ -14,7 +14,12 @@ export const useProgress = () => {
   const [revokeProgressOptOut] = useMutation(RevokeConsentDocument)
   const [upsertDocumentProgress] = useMutation(UpsertDocumentProgressDocument)
   const [removeDocumentProgress] = useMutation(RemoveDocumentProgressDocument)
-  const getDocumentProgress = useQuery(GetDocumentProgressDocument)
+
+  const useDocumentProgress = (variables: { path: string }) => {
+    return useQuery(GetDocumentProgressDocument, {
+      variables,
+    })
+  }
 
   return {
     submitProgressOptOut: submitProgressOptOut,
@@ -22,6 +27,6 @@ export const useProgress = () => {
     revokeProgressOptOut: revokeProgressOptOut,
     upsertDocumentProgress: upsertDocumentProgress,
     removeDocumentProgress: removeDocumentProgress,
-    getDocumentProgress: getDocumentProgress,
+    useDocumentProgress: useDocumentProgress,
   }
 }

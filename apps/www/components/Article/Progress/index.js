@@ -20,13 +20,11 @@ const Progress = ({ children, documentPath }) => {
   const refSaveProgress = useRef()
   const lastY = useRef()
   const { progressConsent } = useMe()
-  const { upsertDocumentProgress, getDocumentProgress } = useProgress()
+  const { upsertDocumentProgress, useDocumentProgress } = useProgress()
 
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
   
-  const { data } = getDocumentProgress({
-    variables: { path: documentPath },
-  })
+  const { data } = useDocumentProgress({ path: documentPath })
   const userProgress = data?.document?.userProgress
   const documentId = data?.document?.id
 
