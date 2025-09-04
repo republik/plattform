@@ -12,12 +12,17 @@ export const useProgress = () => {
   const [submitProgressOptOut] = useMutation(SubmitConsentDocument)
   const [clearProgress] = useMutation(ClearProgressDocument)
   const [revokeProgressOptOut] = useMutation(RevokeConsentDocument)
-  const [upsertDocumentProgress] = useMutation(UpsertDocumentProgressDocument)
-  const [removeDocumentProgress] = useMutation(RemoveDocumentProgressDocument)
+  const [upsertDocumentProgress] = useMutation(UpsertDocumentProgressDocument, {
+    refetchQueries: [GetDocumentProgressDocument]
+  })
+  const [removeDocumentProgress] = useMutation(RemoveDocumentProgressDocument, {
+    refetchQueries: [GetDocumentProgressDocument]
+  })
 
   const useDocumentProgress = (variables: { path: string }) => {
     return useQuery(GetDocumentProgressDocument, {
       variables,
+      skip: !variables.path, // Skip query if path is not provided
     })
   }
 
