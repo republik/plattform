@@ -9,6 +9,7 @@ import { FormField } from '@app/components/ui/form'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { token } from '@republik/theme/tokens'
 import { useState } from 'react'
 
 type DiscountOption = {
@@ -43,7 +44,7 @@ const DISCOUNT_OPTIONS: DiscountOption[] = [
   { promoCode: '', amount: 22, showAsButton: true },
 ]
 
-const radioContainerStyles = css({
+const radioContainerStyle = css({
   textAlign: 'center',
   px: '2',
   py: '3',
@@ -59,6 +60,25 @@ const radioContainerStyles = css({
   },
   fontSize: '2xl',
   fontWeight: 'medium',
+})
+
+const inputContainerStyle = css({
+  width: 'full',
+  px: '4',
+  py: '2',
+  fontSize: 'xs',
+  borderWidth: '2px',
+  textAlign: 'center',
+  borderColor: 'rgba(0,0,0,0.3)',
+  borderRadius: '6',
+  background: 'transparent',
+  display: 'flex',
+  alignItems: 'baseline',
+
+  _focusWithin: {
+    borderColor: 'text',
+    background: 'background',
+  },
 })
 
 export function Offers({
@@ -134,7 +154,7 @@ export function Offers({
                 }}
                 className='peer'
               >
-                <div key={promoCode} className={radioContainerStyles}>
+                <div key={promoCode} className={radioContainerStyle}>
                   <span className={css({ display: 'block' })}>
                     <small
                       className={css({ fontWeight: 'normal', fontSize: 'xs' })}
@@ -152,23 +172,11 @@ export function Offers({
         </div>
 
         <div
-          className={css({
-            width: 'full',
-            px: '4',
-            py: '2',
-            fontSize: 'xs',
-            borderWidth: '2px',
-            textAlign: 'center',
-            borderColor: 'rgba(0,0,0,0.3)',
-            borderRadius: '6',
-            background: 'white',
-            display: 'flex',
-            alignItems: 'baseline',
-
-            _focusWithin: {
-              borderColor: 'text',
-            },
-          })}
+          className={inputContainerStyle}
+          style={{
+            background: customAmount ? token('colors.background') : undefined,
+            borderColor: customAmount ? token('colors.text') : undefined,
+          }}
         >
           <span>CHF</span>
 
@@ -185,18 +193,20 @@ export function Offers({
               border: 'none',
               outline: 'none',
               fontSize: 'xl',
+              background: 'transparent',
             })}
             value={customAmount ?? ''}
             onChange={(e) => {
               const value = e.currentTarget.valueAsNumber
-              if (!isNaN(value)) {
+              if (isNaN(value)) {
+                setCustomAmount(undefined)
+                setOption(undefined)
+              } else {
                 setCustomAmount(value)
                 const promoCode = DISCOUNT_OPTIONS.find(
                   (offer) => offer.amount === value,
                 )?.promoCode
-                if (promoCode) {
-                  setOption(promoCode)
-                }
+                setOption(promoCode)
               }
             }}
           />
