@@ -5,7 +5,6 @@ export const documentFragment = `
     id
     repoId
     ...BookmarkOnDocument
-    }
     meta {
       credits
       title
