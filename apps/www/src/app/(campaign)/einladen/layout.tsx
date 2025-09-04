@@ -11,7 +11,6 @@ export default async function Layout(props: { children: React.ReactNode }) {
             className={css({
               color: 'text',
               bg: 'pageBackground',
-              // pb: '16-32',
             })}
             style={{
               minHeight: 'calc(100dvh - 69px)',
