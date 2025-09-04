@@ -2,15 +2,14 @@
 
 import { css } from '@republik/theme/css'
 
+import IosCTA from '@app/components/paynotes/ios-cta'
+import { OfferOptionLabelOnly } from '@app/components/paynotes/offer-options'
+import { Button } from '@app/components/ui/button'
+import { FormField } from '@app/components/ui/form'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { useState } from 'react'
-
-import { FormField, RadioOption } from '../../../components/ui/form'
-import { Button } from '../../../components/ui/button'
-
-import IosCTA from '../../../components/paynotes/ios-cta'
 
 type DiscountOption = {
   promoCode: `H25OFF${number}` | ''
@@ -18,6 +17,7 @@ type DiscountOption = {
   showAsButton?: boolean
 }
 
+// There needs to be one Stripe promo code for each discounted amount. (Promo codes are named after the amount *off*, but we display the final amount in the UI)
 const DISCOUNT_OPTIONS: DiscountOption[] = [
   { promoCode: 'H25OFF21', amount: 1, showAsButton: true },
   { promoCode: 'H25OFF20', amount: 2 },
@@ -43,6 +43,24 @@ const DISCOUNT_OPTIONS: DiscountOption[] = [
   { promoCode: '', amount: 22, showAsButton: true },
 ]
 
+const radioContainerStyles = css({
+  textAlign: 'center',
+  px: '2',
+  py: '3',
+  border: '2px solid',
+  borderColor: 'rgba(0,0,0,0.3)',
+  borderRadius: '6',
+  width: 'full',
+  background: 'background.marketing',
+  whiteSpace: 'nowrap',
+  _peerChecked: {
+    background: 'background',
+    borderColor: 'text',
+  },
+  fontSize: '2xl',
+  fontWeight: 'medium',
+})
+
 export function Offers({
   additionalShopParams = {},
 }: {
@@ -60,24 +78,6 @@ export function Offers({
   }
 
   const allHiddenParams = { ...utmParams, ...additionalShopParams }
-
-  const radioContainerStyles = css({
-    textAlign: 'center',
-    px: '2',
-    py: '3',
-    border: '2px solid',
-    borderColor: 'rgba(0,0,0,0.3)',
-    borderRadius: '6',
-    width: 'full',
-    background: 'background.marketing',
-    whiteSpace: 'nowrap',
-    _peerChecked: {
-      background: 'background',
-      borderColor: 'text',
-    },
-    fontSize: '2xl',
-    fontWeight: 'medium',
-  })
 
   return (
     <form
@@ -123,7 +123,7 @@ export function Offers({
         >
           {DISCOUNT_OPTIONS.flatMap(({ promoCode, amount, showAsButton }) => {
             return showAsButton ? (
-              <RadioOption
+              <OfferOptionLabelOnly
                 key={promoCode}
                 name='promo_code'
                 value={promoCode}
@@ -132,7 +132,6 @@ export function Offers({
                   setOption(promoCode)
                   setCustomAmount(undefined)
                 }}
-                hideRadio
                 className='peer'
               >
                 <div key={promoCode} className={radioContainerStyles}>
@@ -145,7 +144,7 @@ export function Offers({
                     <span>{amount}.–</span>
                   </span>
                 </div>
-              </RadioOption>
+              </OfferOptionLabelOnly>
             ) : (
               []
             )
