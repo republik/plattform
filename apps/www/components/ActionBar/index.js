@@ -1,7 +1,11 @@
 import { useState, Fragment } from 'react'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
-import { IconButton, shouldIgnoreClick } from '@project-r/styleguide'
+import {
+  IconButton,
+  shouldIgnoreClick,
+  ProgressCircle,
+} from '@project-r/styleguide'
 import withT from '../../lib/withT'
 
 import { postMessage } from '../../lib/withInNativeApp'
@@ -19,7 +23,7 @@ import { useAudioContext } from '../Audio/AudioProvider'
 import SubscribeMenu from '../Notifications/SubscribeMenu'
 import BookmarkButton from './BookmarkButton'
 import DiscussionLinkButton from './DiscussionLinkButton'
-import UserProgress from './UserProgress'
+import UserProgress, { FeedUserProgress } from './UserProgress'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
@@ -185,8 +189,7 @@ const ActionBar = ({
   const isSeriesOverview = meta && meta.series?.overview?.id === document?.id
   const hasPdf = meta && meta.template === 'article' && !isSeriesOverview
   const notBookmarkable =
-    meta?.template === 'page' ||
-    meta?.template === 'editorialNewsletter'
+    meta?.template === 'page' || meta?.template === 'editorialNewsletter'
   const isDiscussion = meta && meta.template === 'discussion'
   const emailSubject = t('article/share/emailSubject', {
     title: document.meta.title,
@@ -283,20 +286,29 @@ const ActionBar = ({
       title: t('article/actionbar/userprogress'),
       element: (
         <UserProgress
-          documentId={document.id}
+          documentPath={document.meta.path}
           forceShortLabel={forceShortLabel}
-          userProgress={document.userProgress}
-          noCallout={
-            mode === 'articleOverlay' ||
-            mode === 'bookmark' ||
-            mode === 'seriesEpisode'
-          }
-          noScroll={mode === 'feed'}
+          noCallout={true}
+          noScroll={false}
           displayMinutes={displayMinutes}
         />
       ),
-      modes: ['articleOverlay', 'feed', 'bookmark', 'seriesEpisode'],
-      show: !!document && document.userProgress,
+      modes: ['articleOverlay', 'bookmark', 'seriesEpisode'],
+      show: !!document,
+    },
+    // The feed document query provides user progress for the feed documents directly
+    // so we don't use the UserProgress component here, which fetches the progress itself
+    {
+      title: t('feed/actionbar/userprogress'),
+      element: (
+        <FeedUserProgress
+          progressPercentage={Math.round(
+            document.userProgress?.max?.percentage * 100,
+          )}
+        />
+      ),
+      modes: ['feed'],
+      show: !!document.userProgress?.max?.percentage,
     },
     {
       title: t('article/actionbar/pdf/options'),
@@ -420,8 +432,7 @@ const ActionBar = ({
       title: t('article/actionbar/userprogress'),
       element: (
         <UserProgress
-          documentId={document.id}
-          userProgress={document.userProgress}
+          documentPath={document.meta.path}
           displayMinutes={displayMinutes}
         />
       ),

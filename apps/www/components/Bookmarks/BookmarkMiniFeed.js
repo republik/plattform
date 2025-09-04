@@ -32,7 +32,7 @@ const BookmarkMiniFeed = ({ data, style }) => {
               .filter((node) => node.document)
               .slice(0, 3)
               .map((node) => {
-                const { userProgress, userBookmark, id } = node.document
+                const { userBookmark, id } = node.document
                 const meta = node.document.meta
                 const { estimatedReadingMinutes, title, path } = meta
                 return (
@@ -58,13 +58,12 @@ const BookmarkMiniFeed = ({ data, style }) => {
                         bookmarked={!!userBookmark}
                         skipRefetch
                       />
-                      {userProgress && estimatedReadingMinutes > 1 && (
+                      {estimatedReadingMinutes > 1 && (
                         <UserProgress
-                          documentId={id}
+                          documentPath={path}
                           forceShortLabel
                           noCallout
                           noScroll
-                          userProgress={userProgress}
                         />
                       )}
                     </div>
