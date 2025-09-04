@@ -128,6 +128,8 @@ const Front = ({
   const shouldRefetch = shouldAutoRefetch && lastMountAt < dailyUpdateTime
   const [isRefetching, setIsRefetching] = useState(shouldRefetch)
 
+  console.log('front', { loading, shouldRefetch, isRefetching, front })
+
   useEffect(() => {
     if (shouldRefetch) {
       refetch().then(() => {
