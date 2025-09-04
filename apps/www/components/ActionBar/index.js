@@ -288,12 +288,8 @@ const ActionBar = ({
         <UserProgress
           documentPath={document.meta.path}
           forceShortLabel={forceShortLabel}
-          noCallout={
-            mode === 'articleOverlay' ||
-            mode === 'bookmark' ||
-            mode === 'seriesEpisode'
-          }
-          noScroll={mode === 'feed'}
+          noCallout={true}
+          noScroll={false}
           displayMinutes={displayMinutes}
         />
       ),
