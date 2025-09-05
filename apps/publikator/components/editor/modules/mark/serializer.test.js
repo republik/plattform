@@ -1,12 +1,53 @@
 import { paragraphModule } from './testUtils'
-import { parse, stringify } from '@republik/remark-preset'
 
 const serializer = paragraphModule.helpers.serializer
 
 describe('mark serialization test-suite', () => {
   it('mark serialization', () => {
-    const md = `_Hello_ ~~World~~**You**`
-    const value = serializer.deserialize(parse(md))
+    const mdast = {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'emphasis',
+              children: [
+                {
+                  type: 'text',
+                  value: 'Hello',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              value: ' ',
+            },
+            {
+              type: 'delete',
+              children: [
+                {
+                  type: 'text',
+                  value: 'World',
+                },
+              ],
+            },
+            {
+              type: 'strong',
+              children: [
+                {
+                  type: 'text',
+                  value: 'You',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
+
+    const value = serializer.deserialize(mdast)
     const node = value.document.nodes.first()
 
     expect(node.kind).toBe('block')
@@ -42,13 +83,50 @@ describe('mark serialization test-suite', () => {
     expect(youMarks.size).toBe(1)
     expect(youMarks.first().type).toBe('STRONG')
 
-    expect(stringify(serializer.serialize(value)).trimRight()).toBe(md)
+    expect(serializer.serialize(value)).toEqual(mdast)
   })
 
   test('mark subsup serialization', () => {
-    const md = 'CO<sub>2eq</sub> 40 µg/m<sup>3</sup>\n'
-    const value = serializer.deserialize(parse(md))
+    const mdast = {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'CO',
+            },
+            {
+              type: 'sub',
+              children: [
+                {
+                  type: 'text',
+                  value: '2eq',
+                },
+              ],
+            },
+            {
+              type: 'text',
+              value: ' 40 µg/m',
+            },
+            {
+              type: 'sup',
+              children: [
+                {
+                  type: 'text',
+                  value: '3',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
 
-    expect(stringify(serializer.serialize(value))).toBe(md)
+    const value = serializer.deserialize(mdast)
+
+    expect(serializer.serialize(value)).toEqual(mdast)
   })
 })

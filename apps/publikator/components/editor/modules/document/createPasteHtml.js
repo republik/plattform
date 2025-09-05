@@ -1,11 +1,6 @@
-import { parse } from '@republik/remark-preset'
-
-import htmlParse from 'rehype-parse'
-import rehype2remark from 'rehype-remark'
-import stringify from 'remark-stringify'
-
 import { getEventTransfer } from '@republik/slate-react'
-import { unified } from 'unified'
+import { fromHtml } from 'hast-util-from-html'
+import { toMdast } from 'hast-util-to-mdast'
 
 const hasParent = (type, document, key) => {
   const parent = document.getParent(key)
@@ -56,22 +51,15 @@ const createPasteHtml =
       )
       const isCaption = blockType === 'CAPTION_TEXT'
 
-      const toMd = unified()
-        .use(htmlParse, {
-          emitParseErrors: false,
-          duplicateAttribute: false,
-        })
-        .use(rehype2remark)
-        .use(stringify)
-      const pastedMd = toMd.processSync(
-        isCenter || isCaption ? normalise(transfer.html) : transfer.text,
-      )
+      const html =
+        isCenter || isCaption ? normalise(transfer.html) : transfer.text
+      const hast = fromHtml(html)
+      const mdast = toMdast(hast)
+
       const currentSerializer = isCaption
         ? figureModule.helpers.captionSerializer
         : centerModule.helpers.childSerializer
-      const pastedAst = currentSerializer.deserialize(
-        parse(pastedMd.toString()),
-      )
+      const pastedAst = currentSerializer.deserialize(mdast)
 
       change.insertFragment(pastedAst.document)
       return true
