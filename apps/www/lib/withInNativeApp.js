@@ -5,11 +5,9 @@ import { getNativeAppBuildId, getNativeAppVersion } from './parse-useragent'
 
 export { getNativeAppVersion, getNativeAppBuildId }
 
-export const inNativeAppBrowserAppVersion = process.browser
+export const inNativeAppStaticVersion = process.browser
   ? getNativeAppVersion(navigator.userAgent)
   : undefined
-
-const isLegacyApp = (version) => parseFloat(version) < 2
 
 const isNewerVersion = (oldVer, newVer) => {
   if (!oldVer || !newVer) return true
@@ -26,23 +24,16 @@ const isNewerVersion = (oldVer, newVer) => {
   return true
 }
 
-export const inNativeAppBrowserLegacy = isLegacyApp(
-  inNativeAppBrowserAppVersion,
-)
+export const inNativeAppStatic = !!inNativeAppStaticVersion
+export const inNativeIOSAppStatic =
+  inNativeAppStatic && matchIOSUserAgent(navigator.userAgent)
 
-export const inNativeAppBrowser = !!inNativeAppBrowserAppVersion
-export const inNativeIOSAppBrowser =
-  inNativeAppBrowser && matchIOSUserAgent(navigator.userAgent)
-
-const runInNativeAppBrowser = inNativeAppBrowser
+const runInNativeAppStatic = inNativeAppStatic
   ? (callback) => callback()
   : // eslint-disable-next-line @typescript-eslint/no-empty-function
     () => {}
 
-runInNativeAppBrowser(() => {
-  if (!inNativeAppBrowserLegacy) {
-    return
-  }
+runInNativeAppStatic(() => {
   const orgUrl =
     window.location.pathname + window.location.search + window.location.hash
   const orgTime = Date.now()
@@ -101,15 +92,9 @@ runInNativeAppBrowser(() => {
   }
 })
 
-export const postMessage = !inNativeAppBrowser
+export const postMessage = !inNativeAppStatic
   ? // eslint-disable-next-line @typescript-eslint/no-empty-function
     () => {} // does nothing outside of app, e.g. gallery full screen message
-  : inNativeAppBrowserLegacy
-  ? (msg) =>
-      window.postMessage(
-        typeof msg === 'string' ? msg : JSON.stringify(msg),
-        '*',
-      )
   : window.ReactNativeWebView && window.ReactNativeWebView.postMessage
   ? (msg) =>
       window.ReactNativeWebView.postMessage(
@@ -137,7 +122,6 @@ export const useInNativeApp = () => {
 
   return {
     inNativeApp,
-    inNativeAppLegacy: isLegacyApp(inNativeAppVersion),
     inNativeAppVersion,
     inNativeAppBuildId,
     isMinimalNativeAppVersion: (minVersion) =>
