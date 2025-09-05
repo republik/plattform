@@ -28,9 +28,7 @@ const {
   resubscribeEmail,
 } = require('@orbiting/backend-modules-mailchimp')
 
-const {
-  FRONTEND_BASE_URL,
-} = process.env
+const { FRONTEND_BASE_URL } = process.env
 
 const mail = createMail(NewsletterSubscriptionConfig)
 
@@ -1103,7 +1101,7 @@ mail.sendReferralCampaignMail = async (
         },
         {
           name: 'link_sender_page',
-          content: `${FRONTEND_BASE_URL}/jetzt-einladen`,
+          content: `${FRONTEND_BASE_URL}/einladen`,
         },
         {
           name: 'has_monthly_abo',

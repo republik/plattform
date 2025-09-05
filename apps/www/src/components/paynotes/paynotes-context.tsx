@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { useMe } from 'lib/context/MeContext'
 import { useUserAgent } from 'lib/context/UserAgentContext'
 import { updateArticleMetering } from './article-metering'
+import { useCampaign } from '@app/components/paynotes/campaign-paynote/use-campaign'
 
 type PaynoteKindType =
   | null
@@ -16,6 +17,8 @@ type PaynoteKindType =
   | 'BANNER'
   | 'PAYNOTE_INLINE'
   | 'WELCOME_BANNER'
+  | 'CAMPAIGN_OVERLAY_OPEN'
+  | 'CAMPAIGN_OVERLAY_CLOSED'
 
 type TemplateType =
   | null
@@ -81,6 +84,7 @@ function isDialogPage(
 
 export const PaynotesProvider = ({ children }) => {
   const { meLoading, trialStatus } = useMe()
+  const { campaign } = useCampaign()
 
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -97,6 +101,8 @@ export const PaynotesProvider = ({ children }) => {
   const [isPaywallExcluded, setIsPaywallExcluded] = useState<boolean>(false)
 
   useEffect(() => {})
+
+  const isCampaignActive = campaign?.isActive
 
   useEffect(() => {
     if (meLoading) return
@@ -116,7 +122,10 @@ export const PaynotesProvider = ({ children }) => {
       return setPaynoteKind('DIALOG')
 
     // anything else that's not an article: minimized paynote overlay
-    if (template !== 'article') return setPaynoteKind('OVERLAY_CLOSED')
+    if (template !== 'article')
+      return setPaynoteKind(
+        isCampaignActive ? 'CAMPAIGN_OVERLAY_CLOSED' : 'OVERLAY_CLOSED',
+      )
 
     // ARTICLES:
     //
@@ -124,7 +133,10 @@ export const PaynotesProvider = ({ children }) => {
     // but we show the overlay (in case someone is
     // spoofing the user agent to read our content, we still
     // want to show these clever foxes the paywall)
-    if (isSearchBot) return setPaynoteKind('OVERLAY_OPEN')
+    if (isSearchBot)
+      return setPaynoteKind(
+        isCampaignActive ? 'CAMPAIGN_OVERLAY_OPEN' : 'OVERLAY_OPEN',
+      )
 
     // just signed up for a trial: welcome banner
     if (trialStatus.includes('TRIAL_GROUP') && searchParams.has('trialSignup'))
@@ -134,14 +146,20 @@ export const PaynotesProvider = ({ children }) => {
     if (trialStatus === 'TRIAL_GROUP_A') return setPaynoteKind('PAYNOTE_INLINE')
 
     // the other group (group B) is shown the more prominent overlay
-    if (trialStatus === 'TRIAL_GROUP_B') return setPaynoteKind('OVERLAY_OPEN')
+    if (trialStatus === 'TRIAL_GROUP_B')
+      return setPaynoteKind(
+        isCampaignActive ? 'CAMPAIGN_OVERLAY_OPEN' : 'OVERLAY_OPEN',
+      )
 
     // abo teilen users are shown the inline paynote
     if (trialStatus === 'TRIAL_GROUP_TEILEN')
       return setPaynoteKind('PAYNOTE_INLINE')
 
     // exception for marked articles (via metadata)
-    if (isPaywallExcluded) return setPaynoteKind('OVERLAY_CLOSED')
+    if (isPaywallExcluded)
+      return setPaynoteKind(
+        isCampaignActive ? 'CAMPAIGN_OVERLAY_CLOSED' : 'OVERLAY_CLOSED',
+      )
 
     // trial expired: show paywall
     if (trialStatus === 'NOT_TRIAL_ELIGIBLE') return setPaynoteKind('PAYWALL')
@@ -151,7 +169,9 @@ export const PaynotesProvider = ({ children }) => {
     // pages (eg "/feed") may count towards the metering.
     const { meteringStatus } = updateArticleMetering(pathname)
     if (meteringStatus === 'READING_GRANTED')
-      return setPaynoteKind('OVERLAY_OPEN')
+      return setPaynoteKind(
+        isCampaignActive ? 'CAMPAIGN_OVERLAY_OPEN' : 'OVERLAY_OPEN',
+      )
 
     // trial eligible users see the regwall
     if (trialStatus === 'TRIAL_ELIGIBLE') return setPaynoteKind('REGWALL')
@@ -166,6 +186,7 @@ export const PaynotesProvider = ({ children }) => {
     isSearchBot,
     template,
     isPaywallExcluded,
+    isCampaignActive,
   ])
 
   // console.log({ paynoteKind })
