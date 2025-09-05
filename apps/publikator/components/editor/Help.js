@@ -1,3 +1,4 @@
+import { A } from '@project-r/styleguide'
 import { css } from 'glamor'
 
 const styles = {
@@ -13,11 +14,9 @@ const styles = {
 const Help = () => (
   <div {...styles.container}>
     <p>
-      <b>
-        <a href='https://republikmagazin.notion.site' target='_blank'>
-          Toolbox
-        </a>
-      </b>
+      <A href='https://republikmagazin.notion.site' target='_blank'>
+        Storytelling toolbox
+      </A>
     </p>
   </div>
 )
