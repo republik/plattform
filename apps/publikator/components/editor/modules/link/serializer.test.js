@@ -1,7 +1,6 @@
-import { parse, stringify } from '@republik/remark-preset'
+import createParagraphModule from '../paragraph'
 
 import createLinkModule from './'
-import createParagraphModule from '../paragraph'
 
 const linkModule = createLinkModule({
   TYPE: 'LINK',
@@ -23,7 +22,45 @@ const serializer = paragraphModule.helpers.serializer
 
 describe('link serializer test-suite', () => {
   it('link serialization', () => {
-    const value = serializer.deserialize(parse('[Test](example.com)'))
+    const mdast = {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'link',
+              title: '',
+              url: 'example.com',
+              children: [{ type: 'text', value: 'Test' }],
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
+
+    const mdastNormalised = {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            { type: 'text', value: '' },
+            {
+              type: 'link',
+              title: '',
+              url: 'example.com',
+              children: [{ type: 'text', value: 'Test' }],
+            },
+            { type: 'text', value: '' },
+          ],
+        },
+      ],
+      meta: {},
+    }
+
+    const value = serializer.deserialize(mdast)
     const node = value.document.nodes.first()
 
     expect(node.kind).toBe('block')
@@ -35,8 +72,6 @@ describe('link serializer test-suite', () => {
 
     expect(link.getIn(['data', 'href'])).toBe('example.com')
 
-    expect(stringify(serializer.serialize(value)).trimRight()).toBe(
-      '[Test](example.com)',
-    )
+    expect(serializer.serialize(value)).toEqual(mdastNormalised)
   })
 })
