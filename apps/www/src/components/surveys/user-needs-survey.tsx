@@ -13,20 +13,29 @@ const UserNeedsSurvey = () => {
   const [survey, setSurvey] = useState<
     { text: string; selected: boolean; sentiment: 'happy' | 'unhappy' }[]
   >([
-    { text: 'Stilvoll', selected: false, sentiment: 'happy' },
-    { text: 'Inspirierend', selected: false, sentiment: 'happy' },
-    { text: 'Nichts neues', selected: false, sentiment: 'unhappy' },
     { text: 'Aha-Moment', selected: false, sentiment: 'happy' },
     { text: 'Berührend', selected: false, sentiment: 'happy' },
+    { text: 'Nichts neues', selected: false, sentiment: 'unhappy' },
+    { text: 'Stilvoll', selected: false, sentiment: 'happy' },
     { text: 'Zieht sich', selected: false, sentiment: 'unhappy' },
-    { text: 'Hilfreich', selected: false, sentiment: 'happy' },
     { text: 'Verwirrend', selected: false, sentiment: 'unhappy' },
+    { text: 'Inspirierend', selected: false, sentiment: 'happy' },
+    { text: 'Hilfreich', selected: false, sentiment: 'happy' },
   ])
 
   return (
-    <div>
+    <div
+      style={{ backgroundColor: '#f1ebeb' }}
+      className={css({
+        margin: '0 auto',
+        maxW: '690px',
+        padding: '4',
+      })}
+    >
       <div>
-        <h2 className={css({ textStyle: 'h2Sans' })}>{question.text}</h2>
+        <h2 className={css({ textStyle: 'h2Sans', marginTop: 2 })}>
+          {question.text}
+        </h2>
         <div
           className={css({
             display: 'flex',
@@ -60,7 +69,16 @@ const UserNeedsSurvey = () => {
             Nein
           </Button>
         </div>
-        <p>12'329 Leserinnen fanden den Beitrag lesenwert.</p>
+        {question.answer === 'Ja' && (
+          <p className={css({ textStyle: 'airy' })}>
+            12'329 Leserinnen fanden den Beitrag lesenwert.
+          </p>
+        )}
+        {question.answer === 'Nein' && (
+          <p className={css({ textStyle: 'airy' })}>
+            32 Leserinnen von 12'361 sind Ihrer Meinung.
+          </p>
+        )}
       </div>
       <div
         className={css({
@@ -71,6 +89,7 @@ const UserNeedsSurvey = () => {
         <div
           className={css({
             display: 'flex',
+            flexWrap: 'wrap',
             gap: '4',
             marginBottom: '4',
             marginTop: '2',
