@@ -22,7 +22,7 @@ function* calculateCHFAmount(minCHF: number, maxCHF: number, step: number) {
 
 async function main() {
   for (const chf of calculateCHFAmount(1, 21, 1)) {
-    const promoCode = `H25OFF${(22 - chf).toString().padStart(2, '0')}`
+    const promoCode = `H25OFF${chf.toString().padStart(2, '0')}`
 
     const res = await Promise.all([
       RepublikAGStripe.coupons
