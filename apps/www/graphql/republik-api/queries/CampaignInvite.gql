@@ -11,6 +11,9 @@ query CampaignInvite(
         name
       }
     }
+    activeMagazineSubscription {
+      id
+    }
   }
 
   # Is the invite code a valid referral code (usernames don't work here)

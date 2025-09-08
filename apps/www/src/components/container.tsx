@@ -18,3 +18,18 @@ export default function Container({ children }: ContainerProps) {
     </div>
   )
 }
+
+export function ContainerNarrow({ children }: ContainerProps) {
+  return (
+    <div
+      className={css({
+        mx: 'auto',
+        px: '4',
+        maxWidth: 'content.narrow',
+        width: 'full',
+      })}
+    >
+      {children}
+    </div>
+  )
+}
