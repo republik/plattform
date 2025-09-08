@@ -15,12 +15,13 @@ const UserNeedsSurvey = () => {
   >([
     { text: 'Aha-Moment', selected: false, sentiment: 'happy' },
     { text: 'Berührend', selected: false, sentiment: 'happy' },
+    { text: 'Deep dive', selected: false, sentiment: 'happy' },
     { text: 'Nichts neues', selected: false, sentiment: 'unhappy' },
     { text: 'Stilvoll', selected: false, sentiment: 'happy' },
     { text: 'Zieht sich', selected: false, sentiment: 'unhappy' },
     { text: 'Verwirrend', selected: false, sentiment: 'unhappy' },
     { text: 'Inspirierend', selected: false, sentiment: 'happy' },
-    { text: 'Hilfreich', selected: false, sentiment: 'happy' },
+    { text: 'Nützlich', selected: false, sentiment: 'happy' },
   ])
 
   return (
