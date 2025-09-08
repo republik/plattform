@@ -80,6 +80,14 @@ const InstantSurvey = dynamic(() => import('../Questionnaire/InstantSurvey'), {
   ssr: false,
 })
 
+const UserNeedSurvey = dynamic(
+  () => import('@app/components/surveys/user-needs-survey'),
+  {
+    loading: LoadingComponent,
+    ssr: false,
+  },
+)
+
 const ClimateLabInlineTeaser = dynamic(
   () => import('../Climatelab/InlineTeaser/ClimateLabInlineTeaser'),
   {
@@ -162,6 +170,7 @@ export const dynamicComponentIdentifiers = {
   ELECTION_RESULT: ElectionResult,
   ELECTION_RESULT_DIVERSITY: ElectionResultDiversity,
   INSTANT_SURVEY: InstantSurvey,
+  USER_NEED_SURVEY: UserNeedSurvey,
   QUESTIONNAIRE: Questionnaire,
   QUESTIONNAIRE_SUBMISSIONS: QuestionnaireSubmissions,
   QUESTIONNAIRE_OVERVIEW: QuestionnaireOverview,

@@ -1,10 +1,10 @@
 'use client'
 
-import { Spinner } from './spinner'
+import { Slot } from '@radix-ui/react-slot'
 import { css, cx } from '@republik/theme/css'
 import { button, type ButtonVariantProps } from '@republik/theme/recipes'
-import { Slot } from '@radix-ui/react-slot'
 import { useMemo } from 'react'
+import { Spinner } from './spinner'
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
   ButtonVariantProps & {
