@@ -695,8 +695,8 @@ export class EditorPage extends Component {
         isTemplate: isNew ? isTemplate === 'true' : data?.repo?.isTemplate,
         message: message,
         document: {
-          content: JSON.parse(
-            JSON.stringify(this.editor.serializer.serialize(editorState)),
+          content: structuredClone(
+            this.editor.serializer.serialize(editorState),
           ),
         },
       })
