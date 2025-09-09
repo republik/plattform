@@ -1,29 +1,38 @@
-import { useRouter } from 'next/router'
-import Front from '../components/Front'
-import { createGetStaticProps, withDefaultSSR } from 'lib/apollo/helpers'
+import { Interaction } from '@project-r/styleguide'
+import Frame from 'components/Frame'
 import { FRONT_QUERY } from 'components/Front/graphql/getFrontQuery.graphql'
+import { createGetStaticProps } from 'lib/apollo/helpers'
+import { PUBLIC_BASE_URL } from 'lib/constants'
+import { useTranslation } from 'lib/withT'
+import Front, { RenderFront } from '../components/Front'
 
 const FRONT_PATH = '/'
 
 const FrontPage = ({ front }) => {
+  const { t } = useTranslation()
+
+  const meta = front && {
+    ...front.meta,
+    title: front.meta.title || t('pages/magazine/title'),
+    url: `${PUBLIC_BASE_URL}${front.meta.path}`,
+  }
+
   return (
-    <Front
-      shouldAutoRefetch
-      hasOverviewNav
-      front={front}
-      renderBefore={undefined}
-      renderAfter={undefined}
-      containerStyle={undefined}
-      serverContext={undefined}
-      documentPath={FRONT_PATH}
-    />
+    <Frame hasOverviewNav raw meta={meta}>
+      {front.meta.prepublication && (
+        <div>
+          <Interaction.P>{t('front/prepublication/notice')}</Interaction.P>
+        </div>
+      )}
+      <RenderFront front={front} nodes={front.children.nodes} />
+    </Frame>
   )
 }
 
 export default FrontPage
 
-export const getStaticProps = createGetStaticProps<unknown, Params>(
-  async (client, { params }) => {
+export const getStaticProps = createGetStaticProps<unknown>(
+  async (client) => {
     // Throw error to fail build if the key is not defined
 
     // Query the front-document
@@ -32,7 +41,7 @@ export const getStaticProps = createGetStaticProps<unknown, Params>(
       variables: {
         path: FRONT_PATH,
         // first: finite ? 1000 : 15,
-        first: 1000,
+        first: 100,
         // before: finite ? 'end' : undefined,
         before: 'end',
         // only: params?.extractId,
@@ -40,6 +49,8 @@ export const getStaticProps = createGetStaticProps<unknown, Params>(
     })
 
     const front = frontQueryResult.data?.front
+
+    console.log(front.children.pageInfo, front.children.nodes.length)
 
     // const feedNode = front?.children?.nodes.find((c) => c.id === 'feed')
 

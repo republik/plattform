@@ -65,6 +65,7 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
         DiscussionLink,
         ...withData,
         ActionBar,
+        // @ts-expect-error huh
         t,
       }),
     [],
@@ -84,20 +85,9 @@ export const RenderFront = ({ front, nodes, isFrontExtract = false }) => {
   return <>{content}</>
 }
 
-let lastMountAt = undefined
+const lastMountAt = undefined
 
-const Front = ({
-  front,
-  renderBefore,
-  renderAfter,
-  containerStyle,
-  extractId,
-  serverContext,
-  finite,
-  hasOverviewNav,
-  shouldAutoRefetch,
-  documentPath,
-}) => {
+const Front = ({ front, containerStyle, finite, shouldAutoRefetch }) => {
   const { t } = useTranslation()
   const router = useRouter()
 
@@ -179,6 +169,7 @@ const Front = ({
     setInfiniteScroll,
   ] = useInfiniteScroll({
     hasMore,
+    loadMore: () => {},
     // loadMore: fetchMore,
   })
 
@@ -200,7 +191,11 @@ const Front = ({
         </div>
       )}
       <div>
-        {loadingMoreError && <ErrorMessage error={loadingMoreError} />}
+        {loadingMoreError && (
+          <ErrorMessage error={loadingMoreError} style={undefined}>
+            {null}
+          </ErrorMessage>
+        )}
         {loadingMore && <InlineSpinner />}
         {!infiniteScroll && hasMore && (
           <Editorial.A
@@ -242,25 +237,18 @@ const Front = ({
   const endIndex = nodes.findIndex((node) => node.id === 'end')
   const sliceIndex = endIndex === -1 ? undefined : endIndex
 
+  console.log({ endIndex, sliceIndex })
+
   return (
-    <Frame hasOverviewNav={hasOverviewNav} raw meta={meta}>
-      {renderBefore && renderBefore(meta)}
-      <div ref={containerRef} style={containerStyle}>
-        {front.meta.prepublication && (
-          <div {...styles.prepublicationNotice}>
-            <Interaction.P>{t('front/prepublication/notice')}</Interaction.P>
-          </div>
-        )}
-        <RenderFront front={front} nodes={nodes.slice(0, sliceIndex)} />
-        {end}
-        {sliceIndex && (
-          <>
-            <RenderFront front={front} nodes={nodes.slice(endIndex + 1)} />
-          </>
-        )}
-      </div>
-      {renderAfter && renderAfter(meta)}
-    </Frame>
+    <div ref={containerRef} style={containerStyle}>
+      <RenderFront front={front} nodes={nodes.slice(0, sliceIndex)} />
+      {end}
+      {sliceIndex && (
+        <>
+          <RenderFront front={front} nodes={nodes.slice(endIndex + 1)} />
+        </>
+      )}
+    </div>
   )
 }
 

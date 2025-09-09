@@ -11,7 +11,7 @@ import { useRef, useState, useEffect } from 'react'
  * </div>)
  */
 export const useInfiniteScroll = ({ hasMore, loadMore }) => {
-  const containerRef = useRef()
+  const containerRef = useRef(null)
   const [infiniteScroll, setInfiniteScroll] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
   const [loadingMoreError, setLoadingMoreError] = useState(undefined)
@@ -44,7 +44,7 @@ export const useInfiniteScroll = ({ hasMore, loadMore }) => {
       onScroll()
       return () => window.removeEventListener('scroll', onScroll)
     }
-  }, [infiniteScroll, hasMore, loadingMore])
+  }, [infiniteScroll, hasMore, loadingMore, loadMore])
 
   return [
     {
@@ -54,5 +54,5 @@ export const useInfiniteScroll = ({ hasMore, loadMore }) => {
       loadingMoreError,
     },
     setInfiniteScroll,
-  ]
+  ] as const
 }
