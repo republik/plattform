@@ -113,9 +113,9 @@ export function Offers({
       {
         // Only include hidden input when custom amount is used and a promo code is found
         // Otherwise the promo_code value is used from the OfferOption below
-        customAmount && selectedPromoCode && (
+        customAmount && selectedPromoCode ? (
           <input type='hidden' name='promo_code' value={selectedPromoCode} />
-        )
+        ) : null
       }
 
       {Object.entries(allHiddenParams).map(([k, v]) => (
