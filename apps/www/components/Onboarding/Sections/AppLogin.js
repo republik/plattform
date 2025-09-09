@@ -90,7 +90,7 @@ const AppLogin = (props) => {
           <img
             {...styles.badge}
             src={`${CDN_FRONTEND_BASE_URL}/static/google-play-badge.png`}
-            height='564'
+            width='564'
             height='168'
             alt={t('Onboarding/Sections/AppLogin/android/alt')}
           />
