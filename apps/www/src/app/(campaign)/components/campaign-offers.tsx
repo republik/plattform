@@ -109,7 +109,9 @@ export function Offers({
         })
       }}
     >
-      {customAmount && <input type='hidden' name='promo_code' value={option} />}
+      {customAmount && option && (
+        <input type='hidden' name='promo_code' value={option} />
+      )}
 
       {Object.entries(allHiddenParams).map(([k, v]) => (
         <input type='hidden' hidden key={k} name={k} value={v} />
