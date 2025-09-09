@@ -5,15 +5,6 @@ import { PaymentService } from '../../services/PaymentService'
 import { InvoiceService } from '../../services/InvoiceService'
 import { mapChargeArgs } from './invoicePaymentSucceeded'
 
-type ChargeArgs = {
-  paid: boolean
-  status: string
-  amount: number
-  amountCaptured: number
-  amountRefunded: number
-  fullyRefunded: boolean
-}
-
 export class ChargeSucceededWorkflow
   implements PaymentWorkflow<Stripe.ChargeSucceededEvent>
 {
