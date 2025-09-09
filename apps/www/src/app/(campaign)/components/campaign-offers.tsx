@@ -86,7 +86,8 @@ export function Offers({
 }: {
   additionalShopParams?: Record<string, string>
 }) {
-  const [option, setOption] = useState<DiscountOption['promoCode']>(undefined)
+  const [selectedPromoCode, setSelectedPromoCode] =
+    useState<DiscountOption['promoCode']>(undefined)
   const [customAmount, setCustomAmount] = useState<number | undefined>()
 
   const utmParams = getUTMSessionStorage()
@@ -105,17 +106,24 @@ export function Offers({
       action={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/MONTHLY`}
       onSubmit={() => {
         trackEvent({
-          action: `Go to ${option} shop`,
+          action: `Go to MONTHLY shop`,
         })
       }}
     >
-      {customAmount && <input type='hidden' name='promo_code' value={option} />}
+      {
+        // Only include hidden input when custom amount is used and a promo code is found
+        // Otherwise the promo_code value is used from the OfferOption below
+        customAmount && selectedPromoCode && (
+          <input type='hidden' name='promo_code' value={selectedPromoCode} />
+        )
+      }
 
       {Object.entries(allHiddenParams).map(([k, v]) => (
         <input type='hidden' hidden key={k} name={k} value={v} />
       ))}
 
       <div
+        data-theme='light'
         className={css({
           display: 'flex',
           gap: '4',
@@ -147,9 +155,11 @@ export function Offers({
                 key={promoCode}
                 name='promo_code'
                 value={promoCode}
-                checked={option === promoCode && customAmount === undefined}
+                checked={
+                  selectedPromoCode === promoCode && customAmount === undefined
+                }
                 onChange={() => {
-                  setOption(promoCode)
+                  setSelectedPromoCode(promoCode)
                   setCustomAmount(undefined)
                 }}
                 className='peer'
@@ -200,13 +210,13 @@ export function Offers({
               const value = e.currentTarget.valueAsNumber
               if (isNaN(value)) {
                 setCustomAmount(undefined)
-                setOption(undefined)
+                setSelectedPromoCode(undefined)
               } else {
                 setCustomAmount(value)
                 const promoCode = DISCOUNT_OPTIONS.find(
                   (offer) => offer.amount === value,
                 )?.promoCode
-                setOption(promoCode)
+                setSelectedPromoCode(promoCode)
               }
             }}
           />
