@@ -106,7 +106,7 @@ export function Offers({
       action={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/MONTHLY`}
       onSubmit={() => {
         trackEvent({
-          action: `Go to ${selectedPromoCode} shop`,
+          action: `Go to MONTHLY shop`,
         })
       }}
     >

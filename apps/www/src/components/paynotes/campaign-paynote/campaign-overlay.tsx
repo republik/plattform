@@ -18,17 +18,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Fragment, useEffect, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
-import { getMeteringData } from '../article-metering'
 import IosCTA from '../ios-cta'
-import { usePaynoteVariants } from '../paynote/use-paynotes'
-// import {
-//   CampaignHero,
-//   CampaignHeroMini,
-// } from '@app/components/paynotes/campaign-paynote/campaign-hero'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
-
-type ContentVariant = 'paynote' | 'offers-only'
 
 function MiniPaynoteMessage({
   message,
@@ -96,11 +88,9 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
   const [expanded, setExpanded] = useState<boolean>(false)
   const [scrollThresholdReached, setScrollThresholdReached] =
     useState<boolean>(false)
-  const [variant, setVariant] = useState<ContentVariant>('offers-only')
-  const paynotes = usePaynoteVariants()
   const trackEvent = useTrackEvent()
   const pathname = usePathname()
-  const { me, trialStatus } = useMe()
+  const { me } = useMe()
   const { setPaynoteInlineHeight } = usePaynotes()
   const { scrollYProgress } = useScroll()
 
@@ -118,26 +108,15 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
   })
 
   useEffect(() => {
-    if (paynotes && scrollThresholdReached) {
+    if (scrollThresholdReached) {
       if (isExpanded) {
-        setVariant('paynote')
         setExpanded(true)
         trackEvent({
           action: 'Opened on scroll',
-          paynoteTitle: paynotes?.paynote.title,
         })
       }
     }
-  }, [isExpanded, scrollThresholdReached, trackEvent, paynotes])
-
-  if (!paynotes) {
-    return null
-  }
-
-  const { paynote, miniPaynote } = paynotes
-
-  const paynoteVariantForAnalytics =
-    variant === 'paynote' ? paynote.title : miniPaynote.message
+  }, [isExpanded, scrollThresholdReached, trackEvent])
 
   return (
     <Dialog.Root open={expanded} onOpenChange={setExpanded}>
@@ -181,7 +160,6 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
             'Und Ihnen? Die Republik für alle ab CHF 1.- im ersten Monat.'
           }
           onClick={() => {
-            setVariant('offers-only')
             trackEvent({ action: 'Opened on click' })
           }}
         />
@@ -210,13 +188,11 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
             onEscapeKeyDown={() =>
               trackEvent({
                 action: 'Closed via escape key',
-                paynoteTitle: variant === 'paynote' ? paynote.title : undefined,
               })
             }
             onPointerDownOutside={() =>
               trackEvent({
                 action: 'Closed via click outside',
-                paynoteTitle: variant === 'paynote' ? paynote.title : undefined,
               })
             }
             aria-describedby={undefined}
@@ -282,10 +258,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
 
               <Offers
                 additionalShopParams={{
-                  rep_ui_component: 'paynote-overlay',
-                  rep_paynote_title: paynoteVariantForAnalytics,
-                  rep_trial_status: trialStatus,
-                  ...getMeteringData('rep_'),
+                  rep_ui_component: 'campaign-overlay',
                 }}
               />
 
@@ -301,8 +274,6 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                 onClick={() => {
                   trackEvent({
                     action: 'Closed via "Not now"',
-                    paynoteTitle:
-                      variant === 'paynote' ? paynote.title : undefined,
                   })
                 }}
               >
@@ -348,8 +319,6 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
               onClick={() => {
                 trackEvent({
                   action: 'Closed via icon',
-                  paynoteTitle:
-                    variant === 'paynote' ? paynote.title : undefined,
                 })
               }}
             >
