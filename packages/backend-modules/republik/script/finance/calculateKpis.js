@@ -151,7 +151,7 @@ const evaluateCompanyMonth = async (
       0-ol."discountAmount" "discount", -- should always be 0 for single donations
       ol.price "donation", -- the full price is a donation for donations
       'DONATE' "packageName", -- hardcoded
-      'MembershipType' "type", -- not a goodie
+      NULL "type", -- not a goodie nor a membership
       1 "amount", -- ->> quantity but it's not possible to buy multiple donations at the moment
       1 "periods", -- not applicable
       ol."priceSubtotal" "price"
