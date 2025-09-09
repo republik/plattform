@@ -64,7 +64,8 @@ const evaluateCompanyMonth = async (
       pay.method::text,
       c.name AS "companyName",
       p.total,
-      p.donation,
+      CASE WHEN p.donation < 0 THEN p.donation ELSE 0 END "discount",
+      CASE WHEN p.donation >= 0 THEN p.donation ELSE 0 END "donation",
       pkgs.name aS "packageName",
       r.type,
       po.amount,
@@ -108,7 +109,12 @@ const evaluateCompanyMonth = async (
       c.provider::text "method", -- might need to be changed to "paymentMethodType" depending on how the booking works between paypal and stripe
       c.company::text "companyName",
       i.total, 
-      0-i."totalDiscountAmount" "donation",
+      0-i."totalDiscountAmount" "discount",
+      COALESCE(
+      	SUM(ol.price) FILTER (WHERE ol.description = 'Freiwilliger Beitrag'), -- hardcoded for Freiwilliger Beitrag in oderLineItems
+      	CASE WHEN s.type = 'MONTHLY_SUBSCRIPTION' THEN i."totalBeforeDiscount" - 2200 -- if no orderLineItems entry (before May 2025) then use hardcoded subscription prices, before that date no paying more was possible
+      	WHEN s.type = 'YEARLY_SUBSCRIPTION' THEN i."totalBeforeDiscount" - 24000 END) 
+      	"donation",
       s.type::text "packageName",
       'MembershipType' "type",
       1 "amount", -- could be inferred from invoice items ->> quantity but it's not possible to buy multiple subscriptions or other goods at the moment
@@ -118,6 +124,8 @@ const evaluateCompanyMonth = async (
     FROM payments."charges" c
     INNER JOIN payments."invoices" i ON c."invoiceId" = i.id 
     INNER JOIN payments."subscriptions" s ON i."subscriptionId" = s.id 
+    INNER JOIN payments.orders o ON o."subscriptionId" = s.id 
+    LEFT JOIN payments."orderLineItems" ol ON ol."orderId" = o.id 
     
     WHERE
         (
@@ -128,6 +136,39 @@ const evaluateCompanyMonth = async (
           'YYYY-MM-DD',
         )}' AND '${end.format('YYYY-MM-DD')}'
         )
+
+    GROUP BY c.id, i.id, s.id, o.id
+
+    UNION ALL
+
+    SELECT o.id, 
+      o."createdAt", 
+      o."updatedAt", 
+      'succeeded' "status", -- not yet saved in charges so we don't know if the charge was refunded
+      'STRIPE' "method", -- we don't know the provider because it's not saved in charges
+      o.company::text "companyName",
+      ol.price "total", 
+      0-ol."discountAmount" "discount", -- should always be 0 for single donations
+      ol.price "donation", -- the full price is a donation for donations
+      'DONATE' "packageName", -- hardcoded
+      'MembershipType' "type", -- not a goodie
+      1 "amount", -- ->> quantity but it's not possible to buy multiple donations at the moment
+      1 "periods", -- not applicable
+      ol."priceSubtotal" "price"
+
+    FROM payments.orders o 
+    JOIN payments."orderLineItems" ol ON ol."orderId" = o.id 
+    
+    WHERE
+        (
+          o."createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+          'YYYY-MM-DD',
+        )}' AND '${end.format('YYYY-MM-DD')}'
+          OR o."updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+          'YYYY-MM-DD',
+        )}' AND '${end.format('YYYY-MM-DD')}'
+        )
+    AND o."invoiceId" IS NULL
     ;
   `
 
@@ -192,13 +233,13 @@ const evaluateCompanyMonth = async (
        */
 
       const ReduzierteMitgliedschaften = Mitgliedschaften.filter(
-        (m) => m.donation < 0,
+        (m) => m.discount < 0,
       )
 
       results.ReduzierteMitgliedschaften = {
         Betrag:
           ReduzierteMitgliedschaften.map(
-            (m) => m.amount * (m.periods || 1) * m.donation,
+            (m) => m.amount * (m.periods || 1) * m.discount,
           ).reduce((p, c) => p + c, 0) / 100,
       }
 
@@ -207,12 +248,12 @@ const evaluateCompanyMonth = async (
        */
 
       const StornierteReduzierteMitgliedschaften =
-        StornierteMitgliedschaften.filter((m) => m.donation < 0)
+        StornierteMitgliedschaften.filter((m) => m.discount < 0)
 
       results.StornierteReduzierteMitgliedschaften = {
         Betrag:
           StornierteReduzierteMitgliedschaften.map(
-            (m) => m.amount * (m.periods || 1) * m.donation,
+            (m) => m.amount * (m.periods || 1) * m.discount,
           ).reduce((p, c) => p - c, 0) / 100,
       }
 
@@ -352,13 +393,13 @@ const evaluateCompanyMonth = async (
        */
 
       const ReduzierteAbonnements = Abonnements.filter(
-        (m) => m.donation < 0,
+        (m) => m.discount < 0,
       )
 
       results.ReduzierteAbonnements = {
         Betrag:
         ReduzierteAbonnements.map(
-            (m) => m.amount * (m.periods || 1) * m.donation,
+            (m) => m.amount * (m.periods || 1) * m.discount,
           ).reduce((p, c) => p + c, 0) / 100,
       }
 
@@ -367,12 +408,12 @@ const evaluateCompanyMonth = async (
        */
 
       const StornierteReduzierteAbonnements =
-        StornierteAbonnements.filter((m) => m.donation < 0)
+        StornierteAbonnements.filter((m) => m.discount < 0)
 
       results.StornierteReduzierteAbonnements = {
         Betrag:
         StornierteReduzierteAbonnements.map(
-            (m) => m.amount * (m.periods || 1) * m.donation,
+            (m) => m.amount * (m.periods || 1) * m.discount,
           ).reduce((p, c) => p - c, 0) / 100,
       }
 
