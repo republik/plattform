@@ -116,6 +116,7 @@ export function Offers({
       ))}
 
       <div
+        data-theme='light'
         className={css({
           display: 'flex',
           gap: '4',
