@@ -10,7 +10,7 @@ import {
   A,
   plainButtonRule,
 } from '@project-r/styleguide'
-import StickySection from '../Feed/StickySection'
+import DateLabel from '../Feed/DateLabel'
 import CommentNotification from './CommentNotification'
 import InfiniteScroll from '../Frame/InfiniteScroll'
 import { timeFormat } from '../../lib/utils/format'
@@ -203,11 +203,7 @@ export default compose(
           >
             {groupByDate.entries(nodes).map(({ key, values }, i, all) => {
               return (
-                <StickySection
-                  key={i}
-                  hasSpaceAfter={i < all.length - 1}
-                  label={key}
-                >
+                <DateLabel key={i} label={key}>
                   {values.map((node, j) => {
                     if (
                       !node.object ||
@@ -259,7 +255,7 @@ export default compose(
                       />
                     )
                   })}
-                </StickySection>
+                </DateLabel>
               )
             })}
           </InfiniteScroll>

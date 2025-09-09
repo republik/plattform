@@ -10,7 +10,6 @@ import {
 import {
   ZINDEX_POPOVER,
   HEADER_HEIGHT,
-  HEADER_HEIGHT_MOBILE,
 } from '../../constants'
 import { useEffect } from 'react'
 
@@ -27,14 +26,10 @@ const Popover = ({ expanded, id, children }) => {
   return (
     <div
       {...css({
-        top: HEADER_HEIGHT_MOBILE,
-        height: `calc(100vh - ${HEADER_HEIGHT_MOBILE}px)`,
+        top: HEADER_HEIGHT,
+        height: `calc(100vh - ${HEADER_HEIGHT}px)`,
         borderTopWidth: 1,
         borderTopStyle: 'solid',
-        [mediaQueries.mUp]: {
-          top: HEADER_HEIGHT,
-          height: `calc(100vh - ${HEADER_HEIGHT}px)`,
-        },
       })}
       {...colorScheme.set('borderColor', 'divider')}
       {...colorScheme.set('backgroundColor', 'default')}
