@@ -13,6 +13,10 @@ const styles = {
   p: css({
     marginBottom: 20,
   }),
+  badge: css({
+    width: 200,
+    maxWidth: '100%',
+  }),
 }
 
 export const fragments = {
@@ -71,8 +75,10 @@ const AppLogin = (props) => {
         <br />
         <A href='https://itunes.apple.com/ch/app/republik/id1392772910'>
           <img
+            {...styles.badge}
             src={`${CDN_FRONTEND_BASE_URL}/static/apple-store-badge.png`}
-            height='54'
+            width='564'
+            height='189'
             alt={t('Onboarding/Sections/AppLogin/ios/alt')}
           />
         </A>
@@ -82,8 +88,10 @@ const AppLogin = (props) => {
         <br />
         <A href='https://play.google.com/store/apps/details?id=app.republik'>
           <img
+            {...styles.badge}
             src={`${CDN_FRONTEND_BASE_URL}/static/google-play-badge.png`}
-            height='54'
+            height='564'
+            height='168'
             alt={t('Onboarding/Sections/AppLogin/android/alt')}
           />
         </A>
