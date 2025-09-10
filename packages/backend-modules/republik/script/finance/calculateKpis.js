@@ -106,7 +106,7 @@ const evaluateCompanyMonth = async (
         WHEN (c."fullyRefunded" OR c."amountRefunded" > 0) THEN 'refunded' 
         ELSE c."status"::text 
         END "status", 
-      c.provider::text "method", -- might need to be changed to "paymentMethodType" depending on how the booking works between paypal and stripe
+      c.provider::text "method", -- is okay as provider according to Dedi, does not need to have the paymentMethodType
       c.company::text "companyName",
       i.total, 
       0-i."totalDiscountAmount" "discount",
@@ -141,11 +141,11 @@ const evaluateCompanyMonth = async (
 
     UNION ALL
 
-    SELECT o.id, 
-      o."createdAt", 
-      o."updatedAt", 
-      'succeeded' "status", -- not yet saved in charges so we don't know if the charge was refunded
-      'STRIPE' "method", -- we don't know the provider because it's not saved in charges
+    SELECT COALESCE(c.id, o.id) "id", 
+      COALESCE(c."createdAt", o."createdAt") "createdAt", 
+      COALESCE(c."updatedAt", o."updatedAt") "updatedAt", 
+      COALESCE(c.status, 'succeeded') "status", -- not yet saved in charges so we don't know if the charge was refunded
+      COALESCE(c.provider::text, 'STRIPE') "method", -- is okay as provider according to Dedi, does not need to have the paymentMethodType
       o.company::text "companyName",
       ol.price "total", 
       0-ol."discountAmount" "discount", -- should always be 0 for single donations
@@ -157,14 +157,15 @@ const evaluateCompanyMonth = async (
       ol."priceSubtotal" "price"
 
     FROM payments.orders o 
-    JOIN payments."orderLineItems" ol ON ol."orderId" = o.id 
+    JOIN payments."orderLineItems" ol ON ol."orderId" = o.id
+    LEFT JOIN payments.charges c ON c."paymentIntentId" = o."paymentIntentId"
     
     WHERE
         (
-          o."createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+          COALESCE(c."createdAt", o."createdAt") AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
           'YYYY-MM-DD',
         )}' AND '${end.format('YYYY-MM-DD')}'
-          OR o."updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+          OR COALESCE(c."updatedAt", o."updatedAt") AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
           'YYYY-MM-DD',
         )}' AND '${end.format('YYYY-MM-DD')}'
         )
