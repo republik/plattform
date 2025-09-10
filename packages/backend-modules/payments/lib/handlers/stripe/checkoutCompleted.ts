@@ -303,7 +303,7 @@ class OneTimePaymentCheckoutCompletedWorkflow
       externalId: event.data.object.id,
       status: paymentStatus as 'paid' | 'unpaid',
       shippingAddressId: addressId,
-      externalPaymentIntent: sess.payment_intent,
+      paymentIntentId: sess.payment_intent,
     }
 
     const order = await this.invoiceService.saveOrder(orderDraft)

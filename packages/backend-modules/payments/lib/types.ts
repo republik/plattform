@@ -229,7 +229,7 @@ export type ChargeInsert = {
   paymentMethodType: 'CARD' | 'TWINT' | 'PAYPAL' | null
   fullyRefunded: boolean
   createdAt: Date
-  externalPaymentIntent: string
+  paymentIntentId: string
 }
 
 export type ChargeUpdate = {
