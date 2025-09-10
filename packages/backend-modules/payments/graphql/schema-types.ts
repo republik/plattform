@@ -236,4 +236,17 @@ input CheckoutSessionOptions {
   returnURL: String
 }
 
+type MagazineSubscriptionUpgrade {
+  id: String!
+  userId: String!
+  subscriptionId: String!
+  status: String!
+  scheduledStart: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input MagazineSubscriptionUpgradeInput {
+  subscriptionId: String
+}
 `
