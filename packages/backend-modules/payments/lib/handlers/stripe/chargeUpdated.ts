@@ -13,7 +13,7 @@ type ChargRefundArgs = {
   fullyRefunded: boolean
 }
 
-export class ChargeRefundedWorkflow
+export class ChargeUpdatedWorkflow
   implements PaymentWorkflow<Stripe.ChargeRefundedEvent>
 {
   constructor(
@@ -21,7 +21,15 @@ export class ChargeRefundedWorkflow
     protected readonly invoiceService: InvoiceService,
   ) {}
 
-  async run(company: Company, event: Stripe.ChargeRefundedEvent): Promise<any> {
+  async run(
+    company: Company,
+    event:
+      | Stripe.ChargeRefundedEvent
+      | Stripe.ChargeUpdatedEvent
+      | Stripe.ChargeFailedEvent
+      | Stripe.ChargeExpiredEvent
+      | Stripe.ChargeCapturedEvent,
+  ): Promise<any> {
     const chargeId = event.data.object.id
 
     const charge = await this.paymentService.getCharge(company, chargeId)
@@ -38,12 +46,17 @@ export class ChargeRefundedWorkflow
   }
 }
 
-export async function processChargeRefunded(
+export async function processChargeUpdated(
   ctx: PaymentWebhookContext,
   company: Company,
-  event: Stripe.ChargeRefundedEvent,
+  event:
+    | Stripe.ChargeRefundedEvent
+    | Stripe.ChargeUpdatedEvent
+    | Stripe.ChargeFailedEvent
+    | Stripe.ChargeExpiredEvent
+    | Stripe.ChargeCapturedEvent,
 ) {
-  return new ChargeRefundedWorkflow(
+  return new ChargeUpdatedWorkflow(
     new PaymentService(),
     new InvoiceService(ctx.pgdb),
   ).run(company, event)

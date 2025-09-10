@@ -11,7 +11,7 @@ import { processCheckoutCompleted } from '../handlers/stripe/checkoutCompleted'
 import { processPaymentFailed } from '../handlers/stripe/paymentFailed'
 import { processInvoiceUpcoming } from '../handlers/stripe/invoiceUpcoming'
 import { isPledgeBased } from '../handlers/stripe/utils'
-import { processChargeRefunded } from '../handlers/stripe/chargeRefunded'
+import { processChargeUpdated } from '../handlers/stripe/chargeUpdated'
 import { processInvoicePaymentSucceeded } from '../handlers/stripe/invoicePaymentSucceeded'
 import { WebhookService } from '../services/WebhookService'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
@@ -122,7 +122,11 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
           await processChargeSucceeded(ctx, job.data.company, event)
           break
         case 'charge.refunded':
-          await processChargeRefunded(ctx, job.data.company, event)
+        case 'charge.updated':
+        case 'charge.failed':
+        case 'charge.expired':
+        case 'charge.captured':
+          await processChargeUpdated(ctx, job.data.company, event)
           break
         default:
           this.logger.debug(
