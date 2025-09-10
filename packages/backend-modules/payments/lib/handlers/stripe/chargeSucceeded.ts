@@ -28,14 +28,27 @@ export class ChargeSucceededWorkflow
 
     // check if charge already exists (from payment etc)
     // if not save new charge
-    const existingCharge = await this.invoiceService.getCharge({ externalId: chargeId })
+    const existingCharge = await this.invoiceService.getCharge({
+      externalId: chargeId,
+    })
     if (existingCharge) {
       // do nothing
       return
     }
 
-    const chargeArgs = mapChargeArgs(company, null, charge)
-    await this.invoiceService.saveCharge(chargeArgs)
+    // check if there's an order with this payment intent
+    // avoids saving charges for books, card games, etc
+    const paymentIntent = charge.payment_intent as string
+    const existingOrder = await this.invoiceService.getOrderByPaymentIntent(
+      paymentIntent,
+    )
+    if (existingOrder) {
+      const chargeArgs = mapChargeArgs(company, null, charge)
+      await this.invoiceService.saveCharge(chargeArgs)
+    } else {
+      // try again
+      throw new Error(`order with payment intent ${paymentIntent} could not be found, try again`)
+    }
 
     return
   }

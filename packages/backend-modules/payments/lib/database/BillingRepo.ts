@@ -55,6 +55,7 @@ export interface PaymentBillingRepo {
   ): Promise<Subscription>
   getUserOrders(userId: string): Promise<Order[]>
   getOrder(orderId: string): Promise<Order | null>
+  getOrderByPaymentIntent(paymentIntentId: string): Promise<Order | null>
   saveOrder(order: OrderRepoArgs): Promise<Order>
   getInvoice(by: SelectCriteria): Promise<Invoice | null>
   saveInvoice(userId: string, args: any): Promise<Invoice>
@@ -74,6 +75,12 @@ export class BillingRepo implements PaymentBillingRepo {
   getOrder(orderId: string): Promise<Order> {
     return this.#pgdb.payments.orders.findOne({
       id: orderId,
+    })
+  }
+
+  getOrderByPaymentIntent(paymentIntentId: string): Promise<Order | null> {
+    return this.#pgdb.payments.orders.findOne({
+      paymentIntentId: paymentIntentId,
     })
   }
 
