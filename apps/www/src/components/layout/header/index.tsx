@@ -23,6 +23,7 @@ const getInitials = (name, email) =>
     .filter(Boolean)
     .map((s) => s[0])
     .join('')
+    .toUpperCase()
 
 const Avatar = ({
   portrait,
@@ -35,6 +36,7 @@ const Avatar = ({
     width: 'header.avatar',
     height: 'header.avatar',
     objectFit: 'cover',
+    color: 'text',
   })
 
   return portrait ? (
@@ -149,64 +151,65 @@ export function PageHeader({
             justifyContent: 'flex-end',
           })}
         >
-          {
-            hasActiveMembership ? (
-              <div
-                className={css({
-                  width: 'header.avatar',
-                  height: 'header.avatar',
-                  m: 'header.avatarMargin',
-                  display: 'flex',
-                  placeContent: 'center center',
-                })}
-              >
+          <div
+            className={css({
+              width: 'header.avatar',
+              height: 'header.avatar',
+              m: 'header.avatarMargin',
+              display: 'flex',
+              placeContent: 'center center',
+            })}
+          >
+            {
+              hasActiveMembership ? (
                 <button disabled className={css({ p: '0' })}>
                   <IconMic size={28} />
                 </button>
-              </div>
-            ) : null
-            // TODO: decide what to do with this abonnieren CTA
+              ) : null
 
-            // <Link
-            //   href='/angebote'
-            //   className={css({
-            //     textDecoration: 'none',
-            //     display: 'flex',
-            //     alignItems: 'center',
-            //     justifyContent: 'center',
-            //     flexDirection: 'row',
-            //     alignSelf: 'stretch',
-            //     background: 'text',
-            //     color: 'text.inverted',
-            //     padding: '10px 20px',
-            //     fontSize: '16px',
-            //     height: '100%',
-            //     md: {
-            //       padding: '10px 30px',
-            //       fontSize: '22px',
-            //     },
-            //   })}
-            // >
-            //   <span
-            //     className={css({
-            //       display: 'none',
-            //       md: { display: 'inline-block' },
-            //     })}
-            //   >
-            //     Jetzt abonnieren
-            //   </span>
-            //   <span
-            //     className={css({
-            //       display: 'inline-block',
-            //       md: {
-            //         display: 'none',
-            //       },
-            //     })}
-            //   >
-            //     Abo
-            //   </span>
-            // </Link>
-          }
+              // TODO: decide what to do with this abonnieren CTA
+
+              // <Link
+              //   href='/angebote'
+              //   className={css({
+              //     textDecoration: 'none',
+              //     display: 'flex',
+              //     alignItems: 'center',
+              //     justifyContent: 'center',
+              //     flexDirection: 'row',
+              //     alignSelf: 'stretch',
+              //     background: 'text',
+              //     color: 'text.inverted',
+              //     padding: '10px 20px',
+              //     fontSize: '16px',
+              //     height: '100%',
+              //     md: {
+              //       padding: '10px 30px',
+              //       fontSize: '22px',
+              //     },
+              //   })}
+              // >
+              //   <span
+              //     className={css({
+              //       display: 'none',
+              //       md: { display: 'inline-block' },
+              //     })}
+              //   >
+              //     Jetzt abonnieren
+              //   </span>
+              //   <span
+              //     className={css({
+              //       display: 'inline-block',
+              //       md: {
+              //         display: 'none',
+              //       },
+              //     })}
+              //   >
+              //     Abo
+              //   </span>
+              // </Link>
+            }
+          </div>
         </div>
       </div>
 

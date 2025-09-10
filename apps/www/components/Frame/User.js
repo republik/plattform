@@ -7,7 +7,6 @@ import {
 } from '@project-r/styleguide'
 import {
   HEADER_HEIGHT,
-  HEADER_HEIGHT_MOBILE,
   HEADER_HORIZONTAL_PADDING,
 } from '../constants'
 import { useTranslation } from '../../lib/withT'
@@ -15,11 +14,9 @@ import { ME_PORTRAIT_STORAGE_KEY } from '../../lib/context/MeContext'
 import { IconAccountBox } from '@republik/icons'
 
 const BUTTON_SIZE = 32
-const BUTTON_SIZE_MOBILE = 26
 const BUTTON_PADDING = (HEADER_HEIGHT - BUTTON_SIZE) / 2
-const BUTTON_PADDING_MOBILE = (HEADER_HEIGHT_MOBILE - BUTTON_SIZE_MOBILE) / 2
 
-export const SignInLink = ({ isOnMarketingPage }) => {
+export const SignInLink = () => {
   const [colorScheme] = useColorContext()
   const { t } = useTranslation()
   return (
@@ -59,7 +56,7 @@ const User = ({ me, title, backButton, onClick }) => {
         {...colorScheme.set('color', 'text')}
         style={{
           paddingLeft: backButton
-            ? BUTTON_PADDING_MOBILE / 2
+            ? BUTTON_PADDING / 2
             : HEADER_HORIZONTAL_PADDING,
         }}
       >
@@ -120,20 +117,13 @@ const styles = {
     cursor: 'pointer',
     opacity: 'inherit',
     textAlign: 'left',
-    height: HEADER_HEIGHT_MOBILE,
+    height: HEADER_HEIGHT,
     width: 'auto',
-    [mediaQueries.mUp]: {
-      height: HEADER_HEIGHT,
-      width: 'auto',
-    },
   }),
   button: css({
     display: 'inline-block',
     textDecoration: 'none',
-    padding: `${BUTTON_PADDING_MOBILE}px`,
-    [mediaQueries.mUp]: {
-      padding: `${BUTTON_PADDING}px`,
-    },
+    padding: `${BUTTON_PADDING}px`,
   }),
   portrait: css({
     position: 'relative',
@@ -142,16 +132,10 @@ const styles = {
     textAlign: 'center',
     textTransform: 'uppercase',
     ...fontStyles.serifTitle,
-    fontSize: BUTTON_SIZE_MOBILE / 2,
-    lineHeight: `${BUTTON_SIZE_MOBILE + 4}px`,
-    height: `${BUTTON_SIZE_MOBILE}px`,
-    width: `${BUTTON_SIZE_MOBILE}px`,
-    [mediaQueries.mUp]: {
-      fontSize: BUTTON_SIZE / 2,
-      lineHeight: `${BUTTON_SIZE + 5}px`,
-      height: `${BUTTON_SIZE}px`,
-      width: `${BUTTON_SIZE}px`,
-    },
+    fontSize: BUTTON_SIZE / 2,
+    lineHeight: `${BUTTON_SIZE + 5}px`,
+    height: `${BUTTON_SIZE}px`,
+    width: `${BUTTON_SIZE}px`,
   }),
   temporaryInitals: css({
     ':before': {
@@ -169,12 +153,8 @@ const styles = {
     display: 'none',
     '& svg': {
       display: 'inline',
-      width: BUTTON_SIZE_MOBILE,
-      height: BUTTON_SIZE_MOBILE,
-      [mediaQueries.mUp]: {
-        width: BUTTON_SIZE,
-        height: BUTTON_SIZE,
-      },
+      width: BUTTON_SIZE,
+      height: BUTTON_SIZE,
     },
     [mediaQueries.mUp]: {
       display: 'inline-block',
@@ -191,12 +171,8 @@ const styles = {
   }),
   stack: css({
     position: 'relative',
-    height: `${BUTTON_SIZE_MOBILE}px`,
-    width: `${BUTTON_SIZE_MOBILE}px`,
-    [mediaQueries.mUp]: {
-      height: `${BUTTON_SIZE}px`,
-      width: `${BUTTON_SIZE}px`,
-    },
+    height: `${BUTTON_SIZE}px`,
+    width: `${BUTTON_SIZE}px`,
     '& > *': {
       position: 'absolute',
     },

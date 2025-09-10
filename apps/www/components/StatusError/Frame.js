@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { css } from 'glamor'
 import { range } from 'd3-array'
 
-import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
+import { HEADER_HEIGHT } from '../constants'
 
 import {
   NarrowContainer,
@@ -19,12 +19,11 @@ const styles = {
     left: 0,
     right: 0,
     fontFamily: fontFamilies.sansSerifMedium,
-    top: HEADER_HEIGHT_MOBILE,
+    top: HEADER_HEIGHT,
     height: 220,
     paddingTop: 20,
     fontSize: 150,
     [mediaQueries.mUp]: {
-      top: HEADER_HEIGHT,
       height: 420,
       fontSize: 300,
     },
