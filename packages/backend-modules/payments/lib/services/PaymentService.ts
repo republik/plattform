@@ -2,6 +2,25 @@ import Stripe from 'stripe'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { Company, PaymentMethod } from '../types'
 
+type Discount = {
+  coupon?: string
+  discount?: string
+  promo_code?: string
+}
+
+type Item = {
+  price?: string
+  quantity: number
+  discounts?: Discount[]
+}
+
+export type ScheduleSubscriptionArgs = {
+  internalRef: string
+  items: Item[]
+  collectionMethod: 'send_invoice' | 'charge_automatically'
+  startDate: number
+}
+
 export class PaymentService {
   #stripeAdapters: Record<Company, Stripe> = {
     PROJECT_R: ProjectRStripe,
@@ -126,6 +145,28 @@ export class PaymentService {
         subscription: id,
       })
     ).data
+  }
+
+  async scheduleSubscription(
+    company: Company,
+    customerId: string,
+    options: ScheduleSubscriptionArgs,
+  ) {
+    return this.#stripeAdapters[company].subscriptionSchedules.create({
+      customer: customerId,
+      start_date: options.startDate,
+      end_behavior: 'release',
+      phases: [
+        {
+          items: options.items,
+          iterations: 1,
+          collection_method: options.collectionMethod,
+          metadata: {
+            'republik:internal:ref': options.internalRef,
+          },
+        },
+      ],
+    })
   }
 
   async createSubscriptionItem(
