@@ -111,10 +111,6 @@ export class InvoiceService {
     return this.billing.getOrder(id)
   }
 
-  getOrderByPaymentIntent(paymentIntentId: string): Promise<Order | null> {
-    return this.billing.getOrderByPaymentIntent(paymentIntentId)
-  }
-
   saveOrder(order: OrderArgs): Promise<Order> {
     return this.billing.saveOrder(order)
   }

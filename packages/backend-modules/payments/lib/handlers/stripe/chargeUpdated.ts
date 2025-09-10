@@ -11,6 +11,9 @@ type ChargRefundArgs = {
   amountCaptured: number
   amountRefunded: number
   fullyRefunded: boolean
+  description?: string | null
+  failureCode?: string | null
+  failureMessage?: string | null
 }
 
 export class ChargeUpdatedWorkflow
@@ -70,5 +73,8 @@ export function mapChargeUpdateArgs(charge: Stripe.Charge): ChargRefundArgs {
     amountCaptured: charge.amount_captured,
     amountRefunded: charge.amount_refunded,
     fullyRefunded: charge.refunded,
+    description: charge.description,
+    failureCode: charge.failure_code,
+    failureMessage: charge.failure_message
   }
 }

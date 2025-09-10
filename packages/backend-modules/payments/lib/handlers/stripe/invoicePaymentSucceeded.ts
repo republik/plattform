@@ -128,5 +128,9 @@ export function mapChargeArgs(
     fullyRefunded: charge.refunded,
     createdAt: parseStripeDate(charge.created),
     paymentIntentId: charge.payment_intent as string,
+    customerId: charge.customer as string,
+    description: charge.description,
+    failureCode: charge.failure_code,
+    failureMessage: charge.failure_message
   }
 }

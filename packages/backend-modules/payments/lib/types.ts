@@ -230,6 +230,10 @@ export type ChargeInsert = {
   fullyRefunded: boolean
   createdAt: Date
   paymentIntentId: string
+  customerId: string
+  description?: string | null
+  failureCode?: string | null 
+  failureMessage?: string | null
 }
 
 export type ChargeUpdate = {
