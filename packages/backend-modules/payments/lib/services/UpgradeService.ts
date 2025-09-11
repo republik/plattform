@@ -5,6 +5,8 @@ import { PaymentService } from './PaymentService'
 import { CancelationRepo } from '../database/CancelationRepo'
 import { CustomerInfoService } from './CustomerInfoService'
 import { Upgrade, UpgradeRepo } from '../database/UpgradeRepo'
+import { User } from '@orbiting/backend-modules-types'
+import Auth from '@orbiting/backend-modules-auth'
 
 type SubscriptionUpgrade = {
   status: string
@@ -30,18 +32,33 @@ export class UpgradeService {
   }
 
   public async scheduleSubscriptionUpgrade(
+    actor: User,
     subscriptionId: string,
   ): Promise<Upgrade> {
-    this.logger.debug({ subscriptionId }, 'scheduling subscription update')
+    this.logger.debug(
+      { subscriptionId, actor: actor.id },
+      'scheduling subscription update',
+    )
+
     const localSub = await this.billingRepo.getSubscription({
       id: subscriptionId,
     })
+
+    Auth.Roles.userIsMeOrInRoles({ id: localSub?.userId }, actor, [
+      'admin',
+      'support',
+    ])
+
     if (!localSub) {
       throw new Error('Unknown subscription')
     }
 
     if (localSub.type != 'MONTHLY_SUBSCRIPTION') {
       throw new Error('Upgrades are only support for monthly subscriptions')
+    }
+
+    if (await this.hasUnresolvedUpgrades(subscriptionId)) {
+      throw new Error('Subscription has unresoved upgrades')
     }
 
     const projectRCustomerId = await this.getProjectRCustomerId(localSub.userId)
@@ -91,14 +108,43 @@ export class UpgradeService {
   }
 
   public async cancelSubscriptionUpgrade(
-    upgradeId: string,
+    actor: User,
+    subscriptionId: string,
   ): Promise<SubscriptionUpgrade> {
-    this.logger.debug({ upgradeId }, 'scheduling subscription update')
-    return {
-      status: 'pending',
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    this.logger.debug(
+      { subscriptionId, actor },
+      'scheduling subscription update',
+    )
+
+    const localSub = await this.billingRepo.getSubscription({
+      id: subscriptionId,
+    })
+
+    Auth.Roles.userIsMeOrInRoles({ id: localSub?.userId }, actor, [
+      'admin',
+      'support',
+    ])
+
+    if (!localSub) {
+      throw new Error('Unknown subscription')
     }
+
+    const upgrades = await this.upgradeRepo.getUnresolvedUpgrades(localSub.id)
+
+    if (upgrades.length === 0) {
+      throw new Error('no upgrade to cancel')
+    }
+
+    const [upgrade] = upgrades
+
+    const res = await this.paymentService.cancelScheduleSubscription(
+      'PROJECT_R',
+      upgrade.externalId,
+    )
+
+    return this.upgradeRepo.updateUpgrade(upgrade.id, {
+      status: res.status,
+    })
   }
 
   private async getProjectRCustomerId(userId: string) {
@@ -111,5 +157,12 @@ export class UpgradeService {
     }
 
     return await this.customerInfoService.createCustomer('PROJECT_R', userId)
+  }
+
+  private async hasUnresolvedUpgrades(subscriptionId: string) {
+    const upgrades = await this.upgradeRepo.getUnresolvedUpgrades(
+      subscriptionId,
+    )
+    return upgrades.length > 0
   }
 }

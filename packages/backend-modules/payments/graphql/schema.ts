@@ -32,5 +32,8 @@ type mutations {
   upgradeMagazineSubscription(
     upgradeInput: MagazineSubscriptionUpgradeInput
   ): MagazineSubscriptionUpgrade
+  cancelUpgradeMagazineSubscription(
+    upgradeCancelationInput: MagazineSubscriptionUpgradeCancelationInput
+  ): MagazineSubscriptionUpgrade
 }
 `

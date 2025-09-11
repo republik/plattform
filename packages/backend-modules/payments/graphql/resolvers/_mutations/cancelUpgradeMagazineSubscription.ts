@@ -2,15 +2,15 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { UpgradeService } from '../../../lib/services/UpgradeService'
 import Auth from '@orbiting/backend-modules-auth'
 
-export = function upgradeMagazineSubscription(
+export = function cancelUpgradeMagazineSubscription(
   _root: never,
-  args: { upgradeInput: { subscriptionId: string } },
+  args: { upgradeCancelationInput: { subscriptionId: string } },
   ctx: GraphqlContext,
 ) {
   Auth.ensureUser(ctx.user)
 
-  return new UpgradeService(ctx.pgdb, ctx.logger).scheduleSubscriptionUpgrade(
+  return new UpgradeService(ctx.pgdb, ctx.logger).cancelSubscriptionUpgrade(
     ctx.user,
-    args.upgradeInput.subscriptionId,
+    args.upgradeCancelationInput.subscriptionId,
   )
 }
