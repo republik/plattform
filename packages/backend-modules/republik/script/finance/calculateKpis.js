@@ -43,6 +43,11 @@ const isCancelledOrRefunded = (item) => {
   return ['CANCELLED', 'REFUNDED', 'FAILED'].includes(item.status.toUpperCase())
 }
 
+const isBenefactorSubscriptionOrMembership = (item) => {
+      return item.packageName === 'BENEFACTOR' || item.packageName === 'BENEFACTOR_SUBSCRIPTION' ||
+        (item.packageName === 'PROLONG' && item.price >= 100000)
+    }
+
 const evaluateCompanyMonth = async (
   company,
   begin,
@@ -51,78 +56,45 @@ const evaluateCompanyMonth = async (
   pgdb,
 ) => {
   const query = `
-    SELECT
-      pay.id,
-      pay."createdAt" AT TIME ZONE 'Europe/Zurich' "createdAt",
-      pay."updatedAt" AT TIME ZONE 'Europe/Zurich' "updatedAt",
-      pay.status::text,
-      pay.method::text,
-      c.name AS "companyName",
-      p.total,
-      p.donation,
-      pkgs.name aS "packageName",
-      r.type,
-      po.amount,
-      po.periods,
-      po.price
-
-    FROM "payments" pay
-
-    INNER JOIN "pledgePayments" ppay ON ppay."paymentId" = pay.id
-    INNER JOIN "pledges" p ON p.id = ppay."pledgeId"
-    INNER JOIN "packages" pkgs ON pkgs.id = p."packageId"
-
-    INNER JOIN "pledgeOptions" po ON po."pledgeId" = p.id
-    INNER JOIN "packageOptions" pkgso ON pkgso.id = po."templateId"
-    LEFT OUTER JOIN "rewards" r ON r.id = pkgso."rewardId"
-
-    INNER JOIN "companies" c ON c.id = pkgs."companyId"
+    SELECT * FROM calculate_kpis_pledges
 
     WHERE
       (
-        pay."createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+        "createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
           'YYYY-MM-DD',
         )}' AND '${end.format('YYYY-MM-DD')}'
-        OR pay."updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+        OR "updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
           'YYYY-MM-DD',
         )}' AND '${end.format('YYYY-MM-DD')}'
       )
-      AND po.amount > 0
-
-    GROUP BY pay.id, c.id, p.id, pkgs.id, r.id, po.id
 
     UNION ALL
 	
-    SELECT c.id, 
-      c."createdAt", 
-      c."updatedAt", 
-      CASE 
-        WHEN (c."fullyRefunded" OR c."amountRefunded" > 0) THEN 'refunded' 
-        ELSE c."status"::text 
-        END "status", 
-      c.provider::text "method", -- might need to be changed to "paymentMethodType" depending on how the booking works between paypal and stripe
-      c.company::text "companyName",
-      i.total, 
-      0-i."totalDiscountAmount" "donation",
-      s.type::text "packageName",
-      'MembershipType' "type",
-      1 "amount", -- could be inferred from invoice items ->> quantity but it's not possible to buy multiple subscriptions or other goods at the moment
-      1 "periods", -- could be inferred from type and invoice period start and end but it's not possible to buy multiple periods at the moment
-      i."totalBeforeDiscount" "price"
-
-    FROM payments."charges" c
-    INNER JOIN payments."invoices" i ON c."invoiceId" = i.id 
-    INNER JOIN payments."subscriptions" s ON i."subscriptionId" = s.id 
+    SELECT * FROM calculate_kpis_subscriptions
     
     WHERE
-        (
-          c."createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+      (
+        "createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
           'YYYY-MM-DD',
         )}' AND '${end.format('YYYY-MM-DD')}'
-          OR c."updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+        OR "updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
           'YYYY-MM-DD',
         )}' AND '${end.format('YYYY-MM-DD')}'
-        )
+      )
+
+    UNION ALL
+
+    SELECT * FROM calculate_kpis_shop_donations
+    
+    WHERE
+      (
+        "createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+          'YYYY-MM-DD',
+        )}' AND '${end.format('YYYY-MM-DD')}'
+        OR "updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+          'YYYY-MM-DD',
+        )}' AND '${end.format('YYYY-MM-DD')}'
+      )
     ;
   `
 
@@ -187,13 +159,13 @@ const evaluateCompanyMonth = async (
        */
 
       const ReduzierteMitgliedschaften = Mitgliedschaften.filter(
-        (m) => m.donation < 0,
+        (m) => m.discount < 0,
       )
 
       results.ReduzierteMitgliedschaften = {
         Betrag:
           ReduzierteMitgliedschaften.map(
-            (m) => m.amount * (m.periods || 1) * m.donation,
+            (m) => m.amount * (m.periods || 1) * m.discount,
           ).reduce((p, c) => p + c, 0) / 100,
       }
 
@@ -202,12 +174,12 @@ const evaluateCompanyMonth = async (
        */
 
       const StornierteReduzierteMitgliedschaften =
-        StornierteMitgliedschaften.filter((m) => m.donation < 0)
+        StornierteMitgliedschaften.filter((m) => m.discount < 0)
 
       results.StornierteReduzierteMitgliedschaften = {
         Betrag:
           StornierteReduzierteMitgliedschaften.map(
-            (m) => m.amount * (m.periods || 1) * m.donation,
+            (m) => m.amount * (m.periods || 1) * m.discount,
           ).reduce((p, c) => p - c, 0) / 100,
       }
 
@@ -216,9 +188,7 @@ const evaluateCompanyMonth = async (
        */
 
       const GoennerMitgliedschaften = Mitgliedschaften.filter(
-        (i) =>
-          i.packageName === 'BENEFACTOR' ||
-          (i.packageName === 'PROLONG' && i.price >= 100000),
+        (i) => isBenefactorSubscriptionOrMembership(i),
       )
 
       results.GoennerMitgliedschaften = {
@@ -238,9 +208,7 @@ const evaluateCompanyMonth = async (
 
       const StornierteGoennerMitgliedschaften =
         StornierteMitgliedschaften.filter(
-          (i) =>
-            i.packageName === 'BENEFACTOR' ||
-            (i.packageName === 'PROLONG' && i.price >= 100000),
+          (i) => isBenefactorSubscriptionOrMembership(i),
         )
 
       results.StornierteGoennerMitgliedschaften = {
@@ -351,13 +319,13 @@ const evaluateCompanyMonth = async (
        */
 
       const ReduzierteAbonnements = Abonnements.filter(
-        (m) => m.donation < 0,
+        (m) => m.discount < 0,
       )
 
       results.ReduzierteAbonnements = {
         Betrag:
         ReduzierteAbonnements.map(
-            (m) => m.amount * (m.periods || 1) * m.donation,
+            (m) => m.amount * (m.periods || 1) * m.discount,
           ).reduce((p, c) => p + c, 0) / 100,
       }
 
@@ -366,12 +334,12 @@ const evaluateCompanyMonth = async (
        */
 
       const StornierteReduzierteAbonnements =
-        StornierteAbonnements.filter((m) => m.donation < 0)
+        StornierteAbonnements.filter((m) => m.discount < 0)
 
       results.StornierteReduzierteAbonnements = {
         Betrag:
         StornierteReduzierteAbonnements.map(
-            (m) => m.amount * (m.periods || 1) * m.donation,
+            (m) => m.amount * (m.periods || 1) * m.discount,
           ).reduce((p, c) => p - c, 0) / 100,
       }
 
