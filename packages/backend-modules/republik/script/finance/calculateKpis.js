@@ -60,12 +60,12 @@ const evaluateCompanyMonth = async (
 
     WHERE
       (
-        "createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+        "createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN ('${begin.format(
           'YYYY-MM-DD',
-        )}' AND '${end.format('YYYY-MM-DD')}'
-        OR "updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+        )}' AT TIME ZONE 'Europe/Zurich') AND ('${end.format('YYYY-MM-DD')}' AT TIME ZONE 'Europe/Zurich')
+        OR "updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN ('${begin.format(
           'YYYY-MM-DD',
-        )}' AND '${end.format('YYYY-MM-DD')}'
+        )}' AT TIME ZONE 'Europe/Zurich') AND ('${end.format('YYYY-MM-DD')}' AT TIME ZONE 'Europe/Zurich')
       )
 
     UNION ALL
@@ -74,26 +74,26 @@ const evaluateCompanyMonth = async (
     
     WHERE
       (
-        "createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+        "createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN ('${begin.format(
           'YYYY-MM-DD',
-        )}' AND '${end.format('YYYY-MM-DD')}'
-        OR "updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+        )}' AT TIME ZONE 'Europe/Zurich') AND ('${end.format('YYYY-MM-DD')}' AT TIME ZONE 'Europe/Zurich')
+        OR "updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN ('${begin.format(
           'YYYY-MM-DD',
-        )}' AND '${end.format('YYYY-MM-DD')}'
+        )}' AT TIME ZONE 'Europe/Zurich') AND ('${end.format('YYYY-MM-DD')}' AT TIME ZONE 'Europe/Zurich')
       )
 
     UNION ALL
 
     SELECT * FROM calculate_kpis_shop_donations
     
-    WHERE
+   WHERE
       (
-        "createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+        "createdAt" AT TIME ZONE 'Europe/Zurich' BETWEEN ('${begin.format(
           'YYYY-MM-DD',
-        )}' AND '${end.format('YYYY-MM-DD')}'
-        OR "updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN '${begin.format(
+        )}' AT TIME ZONE 'Europe/Zurich') AND ('${end.format('YYYY-MM-DD')}' AT TIME ZONE 'Europe/Zurich')
+        OR "updatedAt" AT TIME ZONE 'Europe/Zurich' BETWEEN ('${begin.format(
           'YYYY-MM-DD',
-        )}' AND '${end.format('YYYY-MM-DD')}'
+        )}' AT TIME ZONE 'Europe/Zurich') AND ('${end.format('YYYY-MM-DD')}' AT TIME ZONE 'Europe/Zurich')
       )
     ;
   `
