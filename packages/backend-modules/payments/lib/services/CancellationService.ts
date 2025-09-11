@@ -8,22 +8,11 @@ import { Queue } from '@orbiting/backend-modules-job-queue'
 import { SubscriptionType } from '../types'
 import { SlackNotifierWorker } from '../workers/SlackNotifer'
 import { t } from '@orbiting/backend-modules-translate'
-
-export type CancallationDetails = {
-  category: string
-  reason?: string
-  suppressConfirmation?: boolean
-  suppressWinback?: boolean
-  cancelledViaSupport?: boolean
-}
-
-export type DBCancallationDetails = CancallationDetails & {
-  id: string
-  revokedAt: Date | null
-  subscriptionId: string
-  createdAt: Date
-  updatedAt: Date
-}
+import {
+  CancallationDetails,
+  CancelationRepo,
+  DBCancallationDetails,
+} from '../database/CancelationRepo'
 
 export type CancellationAction = 'cancelSubscription' | 'reactivateSubscription'
 
@@ -40,6 +29,7 @@ interface SubscriptionCancelationStatusNotifier {
 export class CancellationService {
   private readonly paymentService: PaymentService
   private billingRepo: BillingRepo
+  private cancelationRepo: CancelationRepo
   private readonly db: PgDb
   private readonly notifiers: SubscriptionCancelationStatusNotifier[]
 
@@ -52,6 +42,7 @@ export class CancellationService {
   ) {
     this.paymentService = paymentService
     this.billingRepo = new BillingRepo(db)
+    this.cancelationRepo = new CancelationRepo(db)
     this.db = db
     this.notifiers = notifiers
   }
@@ -80,11 +71,10 @@ export class CancellationService {
     details: CancallationDetails,
     immediately: boolean = false,
   ): Promise<Subscription> {
-    const dbDetails =
-      await this.db.payments.subscriptionCancellations.insertAndGet({
-        subscriptionId: sub.id,
-        ...filterUndefined(details),
-      })
+    const dbDetails = await this.cancelationRepo.insertCancelation(
+      sub.id,
+      details,
+    )
 
     const updatedStripeSubscription = immediately
       ? await this.paymentService.deleteSubscription(
@@ -136,34 +126,7 @@ export class CancellationService {
     user: User,
     sub: Subscription,
   ): Promise<Subscription> {
-    const tx = await this.db.transactionBegin()
-
-    let dbDetails: DBCancallationDetails | undefined
-
-    try {
-      const cancelation = await tx.payments.subscriptionCancellations.findFirst(
-        {
-          subscriptionId: sub.id,
-          revokedAt: null,
-        },
-      )
-
-      if (cancelation) {
-        const [data] = await tx.payments.subscriptionCancellations.updateAndGet(
-          { id: cancelation.id },
-          {
-            revokedAt: new Date(),
-            updatedAt: new Date(),
-          },
-        )
-        dbDetails = data
-      }
-
-      await tx.transactionCommit()
-    } catch (e) {
-      await tx.transactionRollback()
-      throw e
-    }
+    const dbDetails = await this.cancelationRepo.revokeLatestCancelation(sub.id)
 
     const updatedStripeSubscription =
       await this.paymentService.updateSubscription(
@@ -281,10 +244,4 @@ ${this.adminBaseUrl}/users/${user.id}
 `
     }
   }
-}
-
-function filterUndefined<T extends Record<string, any>>(obj: T): Partial<T> {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([, value]) => value !== undefined),
-  ) as Partial<T>
 }
