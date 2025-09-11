@@ -18,16 +18,17 @@ export class UpgradeRepo {
     this.pgdb = pgdb
   }
 
-  async getUnresolvedUpgrades(userId: string) {
-    const records = await this.pgdb.payments.subscription_upgrades.getAll({
-      user_id: userId,
+  async getUnresolvedUpgrades(subscriptionId: string): Promise<Upgrade[]> {
+    const records = await this.pgdb.payments.subscription_upgrades.find({
+      subscription_id: subscriptionId,
+      'status <>': ['resolved', 'canceled'], // not in
     })
 
-    records.map(this.camelCaseKeys) as Upgrade[]
+    return records.map(this.camelCaseKeys) as Upgrade[]
   }
 
   async getUpgradesForUser(userId: string) {
-    const records = await this.pgdb.payments.subscription_upgrades.getAll({
+    const records = await this.pgdb.payments.subscription_upgrades.find({
       user_id: userId,
     })
 
@@ -83,8 +84,6 @@ export class UpgradeRepo {
         updated_at: new Date(),
       },
     )
-
-    console.log(res)
 
     return this.camelCaseKeys(res) as Upgrade
   }

@@ -249,4 +249,8 @@ type MagazineSubscriptionUpgrade {
 input MagazineSubscriptionUpgradeInput {
   subscriptionId: String
 }
+
+input MagazineSubscriptionUpgradeCancelationInput {
+  subscriptionId: String
+}
 `

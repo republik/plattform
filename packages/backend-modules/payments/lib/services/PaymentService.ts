@@ -169,6 +169,12 @@ export class PaymentService {
     })
   }
 
+  async cancelScheduleSubscription(company: Company, scheduleId: string) {
+    return this.#stripeAdapters[company].subscriptionSchedules.cancel(
+      scheduleId,
+    )
+  }
+
   async createSubscriptionItem(
     company: Company,
     params: Stripe.SubscriptionItemCreateParams,
