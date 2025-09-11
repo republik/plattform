@@ -37,8 +37,8 @@ SELECT
 CREATE OR REPLACE VIEW calculate_kpis_subscriptions AS
 
 SELECT c.id, 
-      c."createdAt", 
-      c."updatedAt", 
+      c."createdAt" AT TIME ZONE 'Europe/Zurich' "createdAt", 
+      c."updatedAt" AT TIME ZONE 'Europe/Zurich' "updatedAt", 
       CASE 
         WHEN (c."fullyRefunded" OR c."amountRefunded" > 0) THEN 'refunded' 
         ELSE c."status"::text 
@@ -69,8 +69,8 @@ SELECT c.id,
 CREATE OR REPLACE VIEW calculate_kpis_shop_donations AS
 
 SELECT COALESCE(c.id, o.id) "id", 
-      COALESCE(c."createdAt", o."createdAt") "createdAt", 
-      COALESCE(c."updatedAt", o."updatedAt") "updatedAt", 
+      COALESCE(c."createdAt" AT TIME ZONE 'Europe/Zurich', o."createdAt" AT TIME ZONE 'Europe/Zurich') "createdAt", 
+      COALESCE(c."updatedAt" AT TIME ZONE 'Europe/Zurich', o."updatedAt" AT TIME ZONE 'Europe/Zurich') "updatedAt", 
       COALESCE(c.status::text, 'succeeded') "status", -- not yet saved in charges so we don't know if the charge was refunded
       COALESCE(c.provider::text, 'STRIPE') "method", -- is okay as provider according to Dedi, does not need to have the paymentMethodType
       o.company::text "companyName",
