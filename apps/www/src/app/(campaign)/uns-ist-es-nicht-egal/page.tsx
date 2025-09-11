@@ -77,7 +77,11 @@ export default async function Page() {
             </h3>
             <p>Die Republik ab CHF 1.– im ersten Monat.</p>
 
-            <Offers />
+            <Offers
+              additionalShopParams={{
+                rep_ui_component: 'campaign-page',
+              }}
+            />
           </div>
         </ContainerNarrow>
       </div>
