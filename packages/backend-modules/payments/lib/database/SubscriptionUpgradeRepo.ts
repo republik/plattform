@@ -11,14 +11,16 @@ export type Upgrade = {
   updatedAt: Date
 }
 
-export class UpgradeRepo {
+export class SubscriptionUpgradeRepo {
   private pgdb: PgDb
 
   public constructor(pgdb: PgDb) {
     this.pgdb = pgdb
   }
 
-  async getUnresolvedUpgrades(subscriptionId: string): Promise<Upgrade[]> {
+  async getUnresolvedSubscriptionUpgrades(
+    subscriptionId: string,
+  ): Promise<Upgrade[]> {
     const records = await this.pgdb.payments.subscription_upgrades.find({
       subscription_id: subscriptionId,
       'status <>': ['resolved', 'canceled'], // not in
@@ -27,7 +29,7 @@ export class UpgradeRepo {
     return records.map(this.camelCaseKeys) as Upgrade[]
   }
 
-  async getUpgradesForUser(userId: string) {
+  async getSupbscriptionUpgradesForUser(userId: string) {
     const records = await this.pgdb.payments.subscription_upgrades.find({
       user_id: userId,
     })
@@ -35,7 +37,7 @@ export class UpgradeRepo {
     records.map(this.camelCaseKeys) as Upgrade[]
   }
 
-  async saveUpgrade(
+  async saveSubscriptionUpgrade(
     args: Partial<{
       userId: string
       subscriptionId: string
@@ -59,7 +61,7 @@ export class UpgradeRepo {
     return this.camelCaseKeys(rec) as Upgrade
   }
 
-  async updateUpgrade(
+  async updateSubscriptionUpgrade(
     upgradeId: string,
     args: Partial<{
       userId: string

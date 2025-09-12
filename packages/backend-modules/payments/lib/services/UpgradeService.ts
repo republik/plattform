@@ -4,7 +4,10 @@ import { BillingRepo, PaymentBillingRepo } from '../database/BillingRepo'
 import { PaymentService } from './PaymentService'
 import { CancelationRepo } from '../database/CancelationRepo'
 import { CustomerInfoService } from './CustomerInfoService'
-import { Upgrade, UpgradeRepo } from '../database/UpgradeRepo'
+import {
+  Upgrade,
+  SubscriptionUpgradeRepo,
+} from '../database/SubscriptionUpgradeRepo'
 import { User } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
 
@@ -19,7 +22,7 @@ export class UpgradeService {
   private customerInfoService: CustomerInfoService
   private billingRepo: PaymentBillingRepo
   private cancelationRepo: CancelationRepo
-  private upgradeRepo: UpgradeRepo
+  private subsubscriptionUpgradeRepo: SubscriptionUpgradeRepo
   private logger: Logger
 
   public constructor(pgdb: PgDb, logger: Logger) {
@@ -27,7 +30,7 @@ export class UpgradeService {
     this.customerInfoService = new CustomerInfoService(pgdb)
     this.billingRepo = new BillingRepo(pgdb)
     this.cancelationRepo = new CancelationRepo(pgdb)
-    this.upgradeRepo = new UpgradeRepo(pgdb)
+    this.subsubscriptionUpgradeRepo = new SubscriptionUpgradeRepo(pgdb)
     this.logger = logger
   }
 
@@ -82,12 +85,13 @@ export class UpgradeService {
       },
     )
 
-    const upgrade = await this.upgradeRepo.saveUpgrade({
-      userId: localSub.userId,
-      subscriptionId: localSub.id,
-      status: 'pending',
-      scheduledStart: new Date(remoteSub.current_period_end * 1000),
-    })
+    const upgrade =
+      await this.subsubscriptionUpgradeRepo.saveSubscriptionUpgrade({
+        userId: localSub.userId,
+        subscriptionId: localSub.id,
+        status: 'pending',
+        scheduledStart: new Date(remoteSub.current_period_end * 1000),
+      })
 
     // we only allow upgrades to Project R
     const subSchedule = await this.paymentService.scheduleSubscription(
@@ -101,10 +105,13 @@ export class UpgradeService {
       },
     )
 
-    return this.upgradeRepo.updateUpgrade(upgrade.id, {
-      externalId: subSchedule.id,
-      status: 'registered',
-    })
+    return this.subsubscriptionUpgradeRepo.updateSubscriptionUpgrade(
+      upgrade.id,
+      {
+        externalId: subSchedule.id,
+        status: 'registered',
+      },
+    )
   }
 
   public async cancelSubscriptionUpgrade(
@@ -129,7 +136,10 @@ export class UpgradeService {
       throw new Error('Unknown subscription')
     }
 
-    const upgrades = await this.upgradeRepo.getUnresolvedUpgrades(localSub.id)
+    const upgrades =
+      await this.subsubscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades(
+        localSub.id,
+      )
 
     if (upgrades.length === 0) {
       throw new Error('no upgrade to cancel')
@@ -142,9 +152,12 @@ export class UpgradeService {
       upgrade.externalId,
     )
 
-    return this.upgradeRepo.updateUpgrade(upgrade.id, {
-      status: res.status,
-    })
+    return this.subsubscriptionUpgradeRepo.updateSubscriptionUpgrade(
+      upgrade.id,
+      {
+        status: res.status,
+      },
+    )
   }
 
   private async getProjectRCustomerId(userId: string) {
@@ -160,9 +173,10 @@ export class UpgradeService {
   }
 
   private async hasUnresolvedUpgrades(subscriptionId: string) {
-    const upgrades = await this.upgradeRepo.getUnresolvedUpgrades(
-      subscriptionId,
-    )
+    const upgrades =
+      await this.subsubscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades(
+        subscriptionId,
+      )
     return upgrades.length > 0
   }
 }
