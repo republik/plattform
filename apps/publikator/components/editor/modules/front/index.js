@@ -100,7 +100,6 @@ export default ({ rule, subModules, TYPE }) => {
 
   const newDocument = ({ schema }) => {
     const mdastTemplate = getFrontTemplate({ schema })
-    console.log('mdastTemplate', mdastTemplate)
     return serializer.deserialize(mdastTemplate)
   }
 
