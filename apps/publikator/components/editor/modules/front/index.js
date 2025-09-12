@@ -1,9 +1,9 @@
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
-import { parse } from '@republik/remark-preset'
-import { Set, is } from 'immutable'
+import { is, Set } from 'immutable'
 
 import { matchBlock } from '../../utils'
 import { extract as extractRepoId } from '../../utils/github'
+import { getFrontTemplate } from './frontTemplate'
 
 export default ({ rule, subModules, TYPE }) => {
   const matchLiveTeaserFeed = matchBlock('LIVETEASERFEED')
@@ -98,89 +98,10 @@ export default ({ rule, subModules, TYPE }) => {
     rules: [documentRule],
   })
 
-  const newDocument = ({ title, schema }) =>
-    serializer.deserialize(
-      parse(
-        `
----
-template: ${schema}
----
-
-<section><h6>TEASER</h6>
-
-\`\`\`
-{
-  "teaserType": "frontImage"
-}
-\`\`\`
-
-![desert](/static/desert.jpg)
-
-# The sand is near aka Teaser 3
-
-An article by [Christof Moser](), 31 December 2017
-
-<hr/></section>
-
-<section><h6>TEASER</h6>
-
-\`\`\`
-{
-  "teaserType": "frontImage"
-}
-\`\`\`
-
-![desert](/static/desert.jpg)
-
-###### Teaser 1
-
-# The sand is near
-
-#### Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-
-An article by [Christof Moser](), 31 December 2017
-
-<hr/></section>
-
-<section><h6>TEASER</h6>
-
-\`\`\`
-{
-  "teaserType": "frontImage"
-}
-\`\`\`
-
-###### Teaser 2
-
-# The sand is near
-
-#### Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-
-An article by [Christof Moser](), 31 December 2017
-
-<hr/></section>
-
-<section><h6>TEASER</h6>
-
-\`\`\`
-{
-  "teaserType": "frontImage"
-}
-\`\`\`
-
-![desert](/static/desert.jpg)
-
-# The sand is near aka Teaser 3
-
-#### Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-
-An article by [Christof Moser](), 31 December 2017
-
-<hr/></section>
-
-`.trim(),
-      ),
-    )
+  const newDocument = ({ schema }) => {
+    const mdastTemplate = getFrontTemplate({ schema })
+    return serializer.deserialize(mdastTemplate)
+  }
 
   const Container = rule.component
 

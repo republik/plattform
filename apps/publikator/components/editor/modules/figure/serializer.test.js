@@ -1,9 +1,8 @@
-import createFigureModule from './'
-import createImageModule from './image'
-import createParagraphModule from '../paragraph'
-import createCaptionModule from './caption'
-import { parse, stringify } from '@republik/remark-preset'
 import { boldModule } from '../mark/testUtils'
+import createParagraphModule from '../paragraph'
+import createFigureModule from './'
+import createCaptionModule from './caption'
+import createImageModule from './image'
 
 const TYPE = 'FIGURE'
 
@@ -51,22 +50,145 @@ const figureModule = createFigureModule({
 
 const serializer = figureModule.helpers.serializer
 
+const figureMdast = {
+  type: 'root',
+  children: [
+    {
+      type: 'zone',
+      identifier: 'FIGURE',
+      data: {
+        excludeFromGallery: false,
+        captionRight: undefined,
+        float: undefined,
+        plain: undefined,
+        size: undefined,
+      },
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'image',
+              url: 'example.com/img.jpg',
+              alt: 'Alt',
+            },
+            {
+              type: 'text',
+              value: ' ',
+            },
+            {
+              type: 'image',
+              url: 'example.com/img-dark.jpg',
+              alt: 'Alt',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'Caption',
+            },
+            {
+              type: 'emphasis',
+              children: [
+                {
+                  type: 'text',
+                  value: 'Byline',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  meta: {},
+}
+
+const captionMdast = {
+  type: 'root',
+  children: [
+    {
+      type: 'paragraph',
+      children: [
+        {
+          type: 'text',
+          value: 'A',
+        },
+        {
+          type: 'strong',
+          children: [
+            {
+              type: 'break',
+            },
+            {
+              type: 'text',
+              value: 'B',
+            },
+          ],
+        },
+        {
+          type: 'emphasis',
+          children: [
+            {
+              type: 'text',
+              value: 'Caption',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  meta: {},
+}
+
+const captionMdastNormalised = {
+  type: 'root',
+  children: [
+    {
+      type: 'paragraph',
+      children: [
+        {
+          type: 'text',
+          value: 'A',
+        },
+        {
+          type: 'strong',
+          children: [
+            // added empty text block
+            {
+              type: 'text',
+              value: '',
+            },
+            {
+              type: 'break',
+            },
+            {
+              type: 'text',
+              value: 'B',
+            },
+          ],
+        },
+        {
+          type: 'emphasis',
+          children: [
+            {
+              type: 'text',
+              value: 'Caption',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  meta: {},
+}
+
 describe('figure serializer test-suite', () => {
   it('figure serialization', () => {
-    const md = `<section><h6>${TYPE}</h6>
-
-\`\`\`
-{
-  "excludeFromGallery": false
-}
-\`\`\`
-
-![Alt](example.com/img.jpg) ![Alt](example.com/img-dark.jpg)
-
-Caption_Byline_
-
-<hr /></section>`
-    const value = serializer.deserialize(parse(md))
+    const value = serializer.deserialize(figureMdast)
     const node = value.document.nodes.first()
     expect(node.getIn(['data', 'excludeFromGallery'])).toBe(false)
     const image = node.nodes.first()
@@ -76,20 +198,17 @@ Caption_Byline_
     const caption = node.nodes.get(1)
     expect(caption.kind).toBe('block')
     expect(caption.type).toBe('FIGURE_CAPTION')
-    expect(stringify(serializer.serialize(value)).trimRight()).toBe(md)
+    expect(serializer.serialize(value)).toEqual(figureMdast)
   })
 
   it('figure caption with break in mark', () => {
     const serializer = captionModule.helpers.serializer
 
-    const md = `A**${'  '}
-B**_Caption_
-`
-    const value = serializer.deserialize(parse(md))
+    const value = serializer.deserialize(captionMdast)
     const node = value.document.nodes.first()
 
     expect(node.kind).toBe('block')
     expect(node.type).toBe('FIGURE_CAPTION')
-    expect(stringify(serializer.serialize(value))).toBe(md)
+    expect(serializer.serialize(value)).toEqual(captionMdastNormalised)
   })
 })
