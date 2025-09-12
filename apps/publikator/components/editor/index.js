@@ -695,9 +695,7 @@ export class EditorPage extends Component {
         isTemplate: isNew ? isTemplate === 'true' : data?.repo?.isTemplate,
         message: message,
         document: {
-          content: structuredClone(
-            this.editor.serializer.serialize(editorState),
-          ),
+          content: this.editor.serializer.serialize(editorState),
         },
       })
         .then(({ data }) => {
