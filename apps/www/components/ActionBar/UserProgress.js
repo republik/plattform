@@ -9,16 +9,23 @@ import { ProgressContext } from '../Article/Progress'
 import { IconCheckSmall, IconHighlightOff, IconRead } from '@republik/icons'
 
 const UserProgress = ({
-  documentId,
-  userProgress,
+  documentPath,
   forceShortLabel,
   noCallout,
   noScroll,
   displayMinutes,
 }) => {
   const { restoreArticleProgress } = useContext(ProgressContext)
-  const { upsertDocumentProgress, removeDocumentProgress } = useProgress()
+  const {
+    upsertDocumentProgress,
+    removeDocumentProgress,
+    useDocumentProgress,
+  } = useProgress()
   const { t } = useTranslation()
+
+  const { data } = useDocumentProgress({ path: documentPath })
+  const { userProgress, id: documentId } = data?.document || {}
+
   // Once consent has been given or not return null if there is no user progress object
   // or displayminutes are below 1min
   if (!userProgress || displayMinutes < 1) {
@@ -137,6 +144,32 @@ const UserProgress = ({
         </CalloutMenu>
       )}
     </>
+  )
+}
+
+export const FeedUserProgress = ({ progressPercentage }) => {
+  const read = progressPercentage === 100
+  return (
+    <IconButton
+      Icon={
+        read
+          ? IconRead
+          : () => (
+              <ProgressCircle
+                progress={progressPercentage}
+                strokeColorName='text'
+                strokePlaceholder
+                size={24}
+                strokeWidth={2}
+              />
+            )
+      }
+      onClick={undefined}
+      href={undefined}
+      title={'Leseposition'}
+      label={read ? 'Gelesen' : `${progressPercentage}%`}
+      labelShort={read ? undefined : `${progressPercentage}%`}
+    />
   )
 }
 

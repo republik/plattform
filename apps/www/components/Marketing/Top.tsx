@@ -3,7 +3,7 @@ import MarketingNewsBox from 'components/Marketing/MarketingNewsBox'
 import { css } from 'glamor'
 import React from 'react'
 import { useMe } from '../../lib/context/MeContext'
-import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
+import { HEADER_HEIGHT } from '../constants'
 import Carousel, { CarouselProps } from './Carousel'
 import Lead from './Lead'
 import MarketingHeader from './MarketingHeader'
@@ -65,7 +65,7 @@ const styles = {
     flexDirection: 'column-reverse',
     justifyContent: 'flex-end',
     gap: 64,
-    paddingTop: HEADER_HEIGHT_MOBILE,
+    paddingTop: HEADER_HEIGHT,
     margin: '64px 0 40px 0',
     [mediaQueries.mUp]: {
       flexDirection: 'row',

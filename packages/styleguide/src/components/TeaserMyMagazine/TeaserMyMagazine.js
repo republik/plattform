@@ -336,17 +336,6 @@ WrappedTeaserMyMagazine.data = {
                   }
                 }
               }
-              userProgress {
-                id
-                percentage
-                nodeId
-                updatedAt
-                max {
-                  id
-                  percentage
-                  updatedAt
-                }
-              }
               userBookmark: userCollectionItem(collectionName: "bookmarks") {
                 id
                 createdAt

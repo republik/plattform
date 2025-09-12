@@ -114,13 +114,21 @@ class SubscriptionCheckoutCompletedWorkflow
         if (invoiceData) {
           const args = mapInvoiceArgs(company, invoiceData)
           invoiceId = (await this.invoiceService.saveInvoice(userId, args)).id
+          const charge = invoiceData.charge as Stripe.Charge
           const chargeArgs = mapChargeArgs(
             company,
             invoiceId,
-            invoiceData.charge as Stripe.Charge,
+            charge,
           )
           try {
-            await this.invoiceService.saveCharge(chargeArgs)
+            const ch = await this.invoiceService.getCharge({
+              externalId: charge.id,
+            })
+            if (ch) {
+              await this.invoiceService.updateCharge({ id: ch.id }, chargeArgs)
+            } else {
+              await this.invoiceService.saveCharge(chargeArgs)
+            }
           } catch (e) {
             if (e instanceof Error) {
               console.log(`Error recording charge: ${e.message}`)
@@ -295,6 +303,7 @@ class OneTimePaymentCheckoutCompletedWorkflow
       externalId: event.data.object.id,
       status: paymentStatus as 'paid' | 'unpaid',
       shippingAddressId: addressId,
+      paymentIntentId: sess.payment_intent,
     }
 
     const order = await this.invoiceService.saveOrder(orderDraft)

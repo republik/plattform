@@ -220,7 +220,7 @@ export type Address = {
 export type ChargeInsert = {
   company: Company
   externalId: string
-  invoiceId: string
+  invoiceId: string | null
   paid: boolean
   status: string
   amount: number
@@ -229,6 +229,11 @@ export type ChargeInsert = {
   paymentMethodType: 'CARD' | 'TWINT' | 'PAYPAL' | null
   fullyRefunded: boolean
   createdAt: Date
+  paymentIntentId: string
+  customerId: string
+  description?: string | null
+  failureCode?: string | null 
+  failureMessage?: string | null
 }
 
 export type ChargeUpdate = {

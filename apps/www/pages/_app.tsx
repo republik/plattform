@@ -23,6 +23,7 @@ import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { PaynotesProvider } from '@app/components/paynotes/paynotes-context'
+import { CampaignOverlay } from '@app/components/paynotes/campaign-paynote/campaign-overlay'
 
 type WebAppProps = {
   providedUserAgent?: string
@@ -74,6 +75,7 @@ const WebApp = ({
                         <AudioPlayerOrchestrator />
                         <SyncUTMToSessionStorage />
                         <PaynoteOverlay />
+                        <CampaignOverlay />
                       </PaynotesProvider>
                     </ColorContextProvider>
                   </ThemeProvider>

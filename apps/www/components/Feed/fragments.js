@@ -5,16 +5,11 @@ export const documentFragment = `
     id
     repoId
     ...BookmarkOnDocument
-      userProgress {
-       id
-       percentage
-       nodeId
-       updatedAt
-       max {
-         id
-         percentage
-         updatedAt
-       }
+    userProgress {
+      id
+      max {
+        percentage
+      }
     }
     meta {
       credits

@@ -4,7 +4,7 @@ import { useTranslation } from '../../lib/withT'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import { mediaQueries, useColorContext } from '@project-r/styleguide'
 
-import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
+import { HEADER_HEIGHT } from '../constants'
 import Link from 'next/link'
 
 const CallToAction = ({ formatColor, isOnMarketingPage }) => {
@@ -77,24 +77,21 @@ const styles = {
     },
   }),
   buttonFormatColor: css({
-    height: HEADER_HEIGHT_MOBILE,
+    height: HEADER_HEIGHT,
     [mediaQueries.mUp]: {
       padding: '10px 30px',
-      height: HEADER_HEIGHT,
     },
   }),
   buttonGeneric: css({
-    height: HEADER_HEIGHT_MOBILE + 1,
+    height: HEADER_HEIGHT + 1,
     marginBottom: -1, // overlap HR line below button
     [mediaQueries.mUp]: {
       padding: '10px 30px',
-      height: HEADER_HEIGHT + 1,
     },
   }),
   buttonMarketing: css({
-    height: HEADER_HEIGHT_MOBILE,
+    height: HEADER_HEIGHT,
     [mediaQueries.mUp]: {
-      height: HEADER_HEIGHT,
       padding: '10px 80px',
     },
   }),

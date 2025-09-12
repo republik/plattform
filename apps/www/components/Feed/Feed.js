@@ -8,7 +8,7 @@ import withT from '../../lib/withT'
 import ActionBar from '../ActionBar'
 import Link from '../Link/Href'
 import formatCredits from './formatCredits'
-import StickySection from './StickySection'
+import DateLabel from './DateLabel'
 
 const dateFormat = timeFormat('%A,\n%d.%m.%Y')
 
@@ -46,9 +46,9 @@ class Feed extends Component {
 
     if (showHeader) {
       return groupByDate.entries(documents).map(({ key, values }, i, all) => (
-        <StickySection key={i} hasSpaceAfter={i < all.length - 1} label={key}>
+        <DateLabel key={i} label={key}>
           {values.map(this.renderFeedItem)}
-        </StickySection>
+        </DateLabel>
       ))
     } else {
       return documents.map(this.renderFeedItem)
