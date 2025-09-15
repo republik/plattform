@@ -7,7 +7,6 @@ import { StripeCustomerCreateWorker } from '../workers/StripeCustomerCreateWorke
 import { UserDataRepo } from '../database/UserRepo'
 import { UserRow } from '@orbiting/backend-modules-types'
 import { PaymentService } from './PaymentService'
-import { getStripeAccountID, getStripeAPIKey } from '../config'
 
 const RegionNames = new Intl.DisplayNames(['de-CH'], { type: 'region' })
 
