@@ -3,7 +3,7 @@ import { Company } from '../types'
 import { User } from '@orbiting/backend-modules-types'
 import { PaymentService } from '../services/PaymentService'
 import { CustomerInfoService } from '../services/CustomerInfoService'
-import { Logger } from '../../../logger/build/@types'
+import { Logger } from '@orbiting/backend-modules-logger'
 import { getConfig } from '../config'
 
 export class SetupSessionBuilder {
