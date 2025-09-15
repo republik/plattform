@@ -9,7 +9,7 @@ import { ReactNode } from 'react'
 
 export const metadata: Metadata = {
   title: `Uns ist nicht egal, was Sie von der Welt erfahren.`,
-  description: 'Bis zum 28. September 2025 ab CHF 1 für einen Monat.',
+  description: 'Bis zum 28. September 2025 ab CHF 1.– für einen Monat.',
   robots: { index: false, follow: false },
 }
 
