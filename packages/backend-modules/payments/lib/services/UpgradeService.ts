@@ -1,5 +1,5 @@
 import { PgDb } from 'pogi'
-import { Logger } from '../../../logger/build/@types'
+import { Logger } from '@orbiting/backend-modules-logger'
 import { BillingRepo, PaymentBillingRepo } from '../database/BillingRepo'
 import { PaymentService } from './PaymentService'
 import { CancelationRepo } from '../database/CancelationRepo'
