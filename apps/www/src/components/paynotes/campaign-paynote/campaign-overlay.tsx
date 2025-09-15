@@ -286,7 +286,6 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
                 className={css({
                   py: '6',
                   mt: '2',
-                  mx: '-8',
                   textAlign: 'center',
                   borderTopWidth: 1,
                   borderTopStyle: 'solid',
