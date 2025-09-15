@@ -35,5 +35,6 @@ type mutations {
   cancelUpgradeMagazineSubscription(
     upgradeCancelationInput: MagazineSubscriptionUpgradeCancelationInput
   ): MagazineSubscriptionUpgrade
+  createSetupIntent(companyName: CompanyName, options: CheckoutSessionOptions): CheckoutSession
 }
 `

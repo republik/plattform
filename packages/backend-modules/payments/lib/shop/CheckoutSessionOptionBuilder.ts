@@ -16,6 +16,13 @@ import { getConfig } from '../config'
 import { PaymentService } from '../services/PaymentService'
 import { CustomerInfoService } from '../services/CustomerInfoService'
 
+export type SetupConfig = {
+  company: Company
+  mode: 'SETUP'
+  requiresLogin: true
+}
+export type OfferConfig = Offer | SetupConfig
+
 export type Price = {
   price: string
   quantity: number
@@ -68,7 +75,7 @@ export class CheckoutSessionBuilder {
   constructor(
     offerId: string,
     paymentService: PaymentService,
-    CustomerInfoService: CustomerInfoService,
+    customerInfoService: CustomerInfoService,
     logger: Logger,
   ) {
     const offer = activeOffers().find((o) => o.id === offerId)
@@ -78,7 +85,7 @@ export class CheckoutSessionBuilder {
 
     this.offer = offer
     this.paymentService = paymentService
-    this.customerInfoService = CustomerInfoService
+    this.customerInfoService = customerInfoService
     this.uiMode = 'EMBEDDED'
     this.optionalSessionVars = {
       customerId: (async () => undefined)(),
@@ -388,6 +395,7 @@ export class CheckoutSessionBuilder {
         this.uiMode satisfies never
     }
   }
+
   private getPaymentConfigId() {
     switch (this.offer.company) {
       case 'PROJECT_R':
