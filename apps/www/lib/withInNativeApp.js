@@ -129,7 +129,7 @@ export const NativeAppHelpers = {
 }
 
 export const useInNativeApp = () => {
-  const { userAgent, isIOS, isAndroid } = useUserAgent()
+  const { userAgent, isIOS, isAndroid } = useUserAgent() ?? {}
 
   const inNativeAppVersion = getNativeAppVersion(userAgent)
   const inNativeAppBuildId = getNativeAppBuildId(userAgent)

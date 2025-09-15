@@ -41,6 +41,7 @@ function IosCTA() {
           {t.elements('paynotes/ios/cta', {
             link: (
               <Link
+                key='link'
                 className={css({ textDecoration: 'underline' })}
                 href={process.env.NEXT_PUBLIC_SHOP_BASE_URL}
                 onClick={(e) => {
