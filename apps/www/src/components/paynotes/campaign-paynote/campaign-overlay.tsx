@@ -78,7 +78,7 @@ function MiniPaynoteMessage({
           },
         })}
       >
-        Mehr Erfahren
+        Mehr erfahren
       </span>
     </Dialog.Trigger>
   )
@@ -157,7 +157,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
         </div>
         <MiniPaynoteMessage
           message={
-            'Und Ihnen? Die Republik für alle ab CHF 1.- im ersten Monat.'
+            'Und Ihnen? Die Republik für alle ab CHF 1.– im ersten Monat.'
           }
           onClick={() => {
             trackEvent({ action: 'Opened on click' })
