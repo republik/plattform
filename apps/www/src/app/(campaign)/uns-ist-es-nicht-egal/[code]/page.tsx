@@ -1,8 +1,8 @@
 import { getInviteeData } from '@app/app/(campaign)/campaign-data'
 import { CampaignHeroSection } from '@app/app/(campaign)/components/campaign-hero'
+import { Offers } from '@app/app/(campaign)/components/campaign-offers'
 import { ContainerNarrow } from '@app/components/container'
 import { Logo } from '@app/components/layout/header/logo'
-import { Offers } from '@app/app/(campaign)/components/campaign-offers'
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import Image from 'next/image'
@@ -19,7 +19,7 @@ export async function generateMetadata(props): Promise<Metadata> {
     : 'Uns'
 
   return {
-    title: `${senderName} ist nicht egal, was du von
+    title: `${senderName} ist es nicht egal, was du von
           der Welt erfährst.`,
   }
 }
