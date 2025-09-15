@@ -70,7 +70,7 @@ export default async function Page() {
               Helfen Sie uns, die Republik bekannter zu machen. Kopieren Sie den
               Link unten und senden Sie ihn per E-mail, Direktnachricht oder auf
               Social Media weiter. Über diesen Link können alle die Republik ab
-              CHF 1.- im ersten Monat abonnieren.
+              CHF 1.– im ersten Monat abonnieren.
             </p>
 
             <ShareLink url={url} />
