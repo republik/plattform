@@ -9,12 +9,8 @@ import {
   useMemo,
 } from 'react'
 
-import createPersistedState from '../../lib/hooks/use-persisted-state'
-import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
-
-import { useMediaProgress } from './MediaProgress'
+import { useInNativeApp } from '../../lib/withInNativeApp'
 import { AudioPlayerItem, AudioQueueItem } from './types/AudioPlayerItem'
-import useAudioQueue from './hooks/useAudioQueue'
 import EventEmitter from 'events'
 import { AudioPlayerLocations } from './types/AudioActionTracking'
 
@@ -64,7 +60,6 @@ export function useAudioContextEvent<E = Event>(
 type AudioContextValue = {
   activePlayerItem: AudioQueueItem | null
   setActivePlayerItem: Dispatch<SetStateAction<AudioQueueItem | null>>
-  legacyPlayerItem: AudioPlayerItem | undefined
   audioPlayerVisible: boolean
   setAudioPlayerVisible: Dispatch<SetStateAction<boolean>>
   isExpanded: boolean
@@ -99,32 +94,21 @@ export const AudioContext = createContext<AudioContextValue>({
   onCloseAudioPlayer: notImplemented,
   activePlayerItem: null,
   setActivePlayerItem: notImplemented,
-  legacyPlayerItem: undefined,
   autoPlayActive: false,
 })
 
 export const useAudioContext = () => useContext<AudioContextValue>(AudioContext)
 
-const usePersistedLegacyPlayerItem = createPersistedState<AudioPlayerItem>(
-  'republik-audioplayer-audiostate',
-)
-
 const AudioProvider = ({ children }) => {
-  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
+  const { inNativeIOSApp } = useInNativeApp()
   const [activePlayerItem, setActivePlayerItem] =
     useState<AudioQueueItem | null>(null)
-  const [legacyPlayerItem, setLegacyPlayerItem] = usePersistedLegacyPlayerItem<
-    AudioPlayerItem | undefined
-  >(undefined)
   const [autoPlayAudioPlayerItem, setAutoPlayAudioPlayerItem] =
     useState<AudioPlayerItem | null>(null)
   const [audioPlayerVisible, setAudioPlayerVisible] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const clearTimeoutId = useRef<NodeJS.Timeout | null>(null)
-
-  const { isAudioQueueAvailable } = useAudioQueue()
-  const { getMediaProgress } = useMediaProgress()
 
   const toggleAudioPlayer = async (
     playerItem: AudioPlayerItem,
@@ -141,39 +125,11 @@ const AudioProvider = ({ children }) => {
     if (!url) {
       return
     }
-    const mediaId = audioSource.mediaId
 
-    if (isAudioQueueAvailable) {
-      AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYER, {
-        item: playerItem,
-        location: location || AudioPlayerLocations.AUDIO_PLAYER,
-      })
-    } else {
-      if (inNativeApp) {
-        let currentTime
-        if (mediaId) {
-          currentTime = await getMediaProgress({ mediaId })
-        }
-        // The below constructed payload is required by the legacy in-app
-        // audio player.
-        const payload = {
-          audioSource,
-          url,
-          title,
-          sourcePath: path,
-          mediaId,
-        }
-        postMessage({
-          type: 'play-audio',
-          payload: {
-            ...payload,
-            currentTime,
-          },
-        })
-      }
-      setLegacyPlayerItem(playerItem)
-      setAutoPlayAudioPlayerItem(playerItem)
-    }
+    AudioEventEmitter.emit(AudioContextEvent.TOGGLE_PLAYER, {
+      item: playerItem,
+      location: location || AudioPlayerLocations.AUDIO_PLAYER,
+    })
     clearTimeout(clearTimeoutId.current)
   }
 
@@ -181,7 +137,6 @@ const AudioProvider = ({ children }) => {
     setAudioPlayerVisible(false)
     clearTimeoutId.current = setTimeout(() => {
       setActivePlayerItem(undefined)
-      setLegacyPlayerItem(undefined)
     }, 300)
   }
 
@@ -210,26 +165,11 @@ const AudioProvider = ({ children }) => {
     [activePlayerItem],
   )
 
-  // Legacy in-app audio player this will open up the player for the last played element
-  // This may be deleted sometime in the future once every app version below v2.2.0 is discontinued
-  useEffect(() => {
-    setAudioPlayerVisible(!!legacyPlayerItem)
-  }, [legacyPlayerItem])
-
-  // This clears the persisted active-player state in the browser or the native app.
-  // If a value was persisted the above effect kept on opening the player.
-  useEffect(() => {
-    if (isAudioQueueAvailable) {
-      setLegacyPlayerItem(null)
-    }
-  }, [isAudioQueueAvailable])
-
   return (
     <AudioContext.Provider
       value={{
         activePlayerItem,
         setActivePlayerItem,
-        legacyPlayerItem,
         audioPlayerVisible,
         setAudioPlayerVisible,
         isExpanded,
