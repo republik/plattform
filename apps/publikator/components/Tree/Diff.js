@@ -23,16 +23,12 @@ export const DIFF_QUERY = gql`
 
       commit: commit(id: $commitId) {
         id
-        document {
-          content
-        }
+        markdown
       }
 
       parentCommit: commit(id: $parentCommitId) {
         id
-        document {
-          content
-        }
+        markdown
       }
     }
   }
@@ -95,19 +91,11 @@ export default function TreeDiff(props) {
                   error={error}
                   render={() => (
                     <ReactDiffViewer
-                      newValue={JSON.stringify(
-                        data.repo.commit.document.content,
-                        null,
-                        2,
-                      )}
+                      newValue={data.repo.commit.markdown}
                       styles={newStyles}
                       splitView={false}
-                      oldValue={JSON.stringify(
-                        data.repo.parentCommit.document.content,
-                        null,
-                        2,
-                      )}
-                      compareMethod={DiffMethod.LINES}
+                      oldValue={data.repo.parentCommit.markdown}
+                      compareMethod={DiffMethod.WORDS_WITH_SPACE}
                       extraLinesSurroundingDiff={1}
                       codeFoldMessageRenderer={() => <MdMoreHoriz />}
                     />
