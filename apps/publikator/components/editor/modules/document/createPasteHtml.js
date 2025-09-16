@@ -52,13 +52,21 @@ const createPasteHtml = (centerModule) => (event, change, editor) => {
     try {
       const html = normalise(transfer.html)
       const hast = fromHtml(html)
-      const mdast = toMdast(hast)
+      const mdast = toMdast(hast, {})
       const currentSerializer = centerModule.helpers.childSerializer
-      const pastedAst = currentSerializer.deserialize(mdast)
+      const pastedAst = currentSerializer.deserialize(mdast, {
+        context: {},
+        onNoRule: () => {
+          // this happens when we paste something that's not quite correct html
+          // (e.g. li element without a parent ul)
+          // in this case we want to fall back to plain text
+          throw new Error('No rule to convert mdast to slate')
+        },
+      })
       change.insertFragment(pastedAst.document)
       return true
     } catch (e) {
-      console.error(e)
+      console.log('Error pasting html, falling back to text', e)
       change.insertText(transfer.text.replace(/\n+/g, '\n'))
       return true
     }
