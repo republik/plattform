@@ -1,8 +1,7 @@
 import { matchZone } from '@republik/mdast-react-render'
-import { parse, stringify } from '@republik/remark-preset'
-
-import { createEmbedVideoModule, createEmbedTwitterModule } from './'
 import createParagraphModule from '../paragraph'
+
+import { createEmbedTwitterModule, createEmbedVideoModule } from './'
 
 const paragraphModule = createParagraphModule({
   TYPE: 'PARAGRAPH',
@@ -40,23 +39,43 @@ const embedTwitterSerializer = embedTwitterModule.helpers.serializer
 
 describe('embed serializer test-suite', () => {
   it('embedVideo serialization', () => {
-    const md = `<section><h6>EMBEDVIDEO</h6>
+    const mdast = {
+      type: 'root',
+      children: [
+        {
+          type: 'zone',
+          identifier: 'EMBEDVIDEO',
+          data: {
+            __typename: 'VimeoEmbed',
+            id: '242527960',
+            userId: '/users/4801470',
+            userName: 'Roman De Giuli',
+            thumbnail:
+              'https://i.vimeocdn.com/video/666449997_960x556.jpg?r=pad',
+          },
+          children: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  type: 'link',
+                  url: 'https://vimeo.com/channels/staffpicks/242527960',
+                  children: [
+                    {
+                      type: 'text',
+                      value: 'https://vimeo.com/channels/staffpicks/242527960',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
 
-\`\`\`
-{
-  "__typename": "VimeoEmbed",
-  "id": "242527960",
-  "userId": "/users/4801470",
-  "userName": "Roman De Giuli",
-  "thumbnail": "https://i.vimeocdn.com/video/666449997_960x556.jpg?r=pad"
-}
-\`\`\`
-
-<https://vimeo.com/channels/staffpicks/242527960>
-
-<hr /></section>`
-
-    const value = embedVideoSerializer.deserialize(parse(md))
+    const value = embedVideoSerializer.deserialize(mdast)
     const embed = value.document.nodes.first()
 
     expect(embed.kind).toBe('block')
@@ -71,30 +90,48 @@ describe('embed serializer test-suite', () => {
       url: 'https://vimeo.com/channels/staffpicks/242527960',
     })
 
-    expect(stringify(embedVideoSerializer.serialize(value)).trimRight()).toBe(
-      md,
-    )
+    expect(embedVideoSerializer.serialize(value)).toEqual(mdast)
   })
 
   it('embedTwitter serialization', () => {
-    const md = `<section><h6>EMBEDTWITTER</h6>
+    const mdast = {
+      type: 'root',
+      children: [
+        {
+          type: 'zone',
+          identifier: 'EMBEDTWITTER',
+          data: {
+            __typename: 'TwitterEmbed',
+            id: '930363029669203969',
+            text: 'Good luck against Argentina later, @alexiwobi https://t.co/mm9us0b7JC',
+            userId: '34613288',
+            userName: 'Arsenal FC',
+            userScreenName: 'Arsenal',
+          },
+          children: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  type: 'link',
+                  url: 'https://twitter.com/Arsenal/status/930363029669203969',
+                  children: [
+                    {
+                      type: 'text',
+                      value:
+                        'https://twitter.com/Arsenal/status/930363029669203969',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
 
-\`\`\`
-{
-  "__typename": "TwitterEmbed",
-  "id": "930363029669203969",
-  "text": "Good luck against Argentina later, @alexiwobi https://t.co/mm9us0b7JC",
-  "userId": "34613288",
-  "userName": "Arsenal FC",
-  "userScreenName": "Arsenal"
-}
-\`\`\`
-
-<https://twitter.com/Arsenal/status/930363029669203969>
-
-<hr /></section>`
-
-    const value = embedTwitterSerializer.deserialize(parse(md))
+    const value = embedTwitterSerializer.deserialize(mdast)
     const embed = value.document.nodes.first()
 
     expect(embed.kind).toBe('block')
@@ -110,8 +147,6 @@ describe('embed serializer test-suite', () => {
       url: 'https://twitter.com/Arsenal/status/930363029669203969',
     })
 
-    expect(stringify(embedTwitterSerializer.serialize(value)).trimRight()).toBe(
-      md,
-    )
+    expect(embedTwitterSerializer.serialize(value)).toEqual(mdast)
   })
 })

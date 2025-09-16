@@ -1,5 +1,5 @@
-import { Value } from 'slate'
 import isEqual from 'lodash.isequal'
+import { Value } from 'slate'
 
 const rootRule = {
   match: (object) => object.kind === 'document',
@@ -26,6 +26,7 @@ export default class MdastSerializer {
       .concat(rules.filter((rule) => rule !== rootRule))
       .concat(rootRule)
   }
+
   toMdast(
     rawNode,
     rootIndex = 0,
@@ -131,10 +132,12 @@ export default class MdastSerializer {
       ? visitArray(rawNode, rootParent)
       : visit(rawNode, rootIndex, rootParent)
   }
+
   serialize(value, options = {}) {
     const raw = value.document.toJSON()
     return this.toMdast(raw, 0, null, options)
   }
+
   fromMdast(
     mdast,
     rootIndex = 0,
@@ -223,6 +226,7 @@ export default class MdastSerializer {
         slateNode = rule.fromMdast(node, index, parent, {
           visitChildren,
           context,
+          onNoRule,
         })
       }
 
@@ -236,6 +240,7 @@ export default class MdastSerializer {
       ? visitArray(mdast, rootParent)
       : visit(mdast, rootIndex, rootParent)
   }
+
   deserialize(data, options = {}) {
     return Value.fromJSON(this.fromMdast(data, 0, null, options))
   }
