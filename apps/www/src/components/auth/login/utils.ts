@@ -1,4 +1,4 @@
-export type SignupContextType = 'trial'
+export type SignupContextType = 'trial' | 'signIn'
 
 export const reloadPage = (
   context?: SignupContextType,

@@ -1,18 +1,17 @@
 'use client'
-import { type ReactNode, useState } from 'react'
-
-import { ApolloError, useMutation } from '@apollo/client'
-
-import { vstack } from '@republik/theme/patterns'
-
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
-
 import {
   SignInDocument,
   SignInTokenType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 
+import { ApolloError, useMutation } from '@apollo/client'
+
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+
+import { vstack } from '@republik/theme/patterns'
+
 import { useTranslation } from 'lib/withT'
+import { type ReactNode, useState } from 'react'
 import isEmail from 'validator/lib/isEmail'
 
 import { Button } from '../../ui/button'
@@ -44,6 +43,7 @@ interface LoginFormProps {
   renderBefore?: ReactNode
   renderAfter?: ReactNode
   redirectUrl?: string
+  defaultEmail?: string
 }
 
 export function LoginForm(props: LoginFormProps) {
@@ -125,13 +125,14 @@ export function LoginForm(props: LoginFormProps) {
       >
         <FormField
           label='E-Mail-Adresse'
+          defaultValue={props.defaultEmail ?? undefined}
           name='email'
           type='email'
           autoFocus={props.autoFocus}
           onFocus={() => setShowTos(true)}
         />
         {error && <ErrorMessage error={error} />}
-        {showTos && <Tos />}
+        {props.context === 'trial' && showTos && <Tos />}
         <Submit pending={pending}>{props.submitButtonText}</Submit>
       </div>
       {props.renderAfter}
