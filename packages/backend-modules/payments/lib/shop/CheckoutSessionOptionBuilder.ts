@@ -209,7 +209,8 @@ export class CheckoutSessionBuilder {
         this.offer.type === 'SUBSCRIPTION'
           ? { metadata: mergedMetadata }
           : undefined,
-      // consent_collection: { terms_of_service: 'required' },
+      consent_collection:
+        this.uiMode !== 'CUSTOM' ? { terms_of_service: 'required' } : undefined,
     }
 
     const sess = await this.paymentService.createCheckoutSession(
