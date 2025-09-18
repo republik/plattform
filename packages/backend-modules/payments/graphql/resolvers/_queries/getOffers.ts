@@ -4,7 +4,9 @@ import { activeOffers, Shop } from '../../../lib/shop'
 export = async function getOffers(
   _root: never,
   args: { promoCode?: string },
-  _ctx: GraphqlContext,
+  ctx: GraphqlContext,
 ) {
-  return new Shop(activeOffers()).getOffers(args.promoCode)
+  return new Shop(activeOffers(), ctx.pgdb)
+    .withContext({ userId: ctx.user.id })
+    .getOffers(args.promoCode)
 }

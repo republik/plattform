@@ -5,6 +5,7 @@ export const GIFTS_ENABLED = () =>
   process.env.PAYMENTS_SHOP_GIFTS_ENABLED === 'true'
 
 export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
+export type OfferAvailability = 'PURCHASABLE' | 'UPGRADEABLE' | 'UNAVAILABLE'
 
 export type PriceDefinition = {
   type: 'PRICE'
@@ -56,6 +57,8 @@ export type OfferAPIResult = {
   id: string
   company: Company
   name: string
+  availability: OfferAvailability
+  startDate?: Date
   requiresLogin: boolean
   price: {
     amount: number

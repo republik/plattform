@@ -4,14 +4,19 @@ import { Offer, OfferAPIResult, Discount, Promotion } from './offers'
 import { PaymentService } from '../services/PaymentService'
 import { Price } from './CheckoutSessionOptionBuilder'
 import { OfferBuilder } from './OfferBuilder'
+import { PgDb } from 'pogi'
 
 export class Shop {
   #offers: Offer[]
   #paymentServices: PaymentService
+  #context: Record<string, any>
+  #pgdb: PgDb
 
-  constructor(offers: Offer[]) {
+  constructor(offers: Offer[], pgdb: PgDb) {
     this.#offers = offers
     this.#paymentServices = new PaymentService()
+    this.#pgdb = pgdb
+    this.#context = {}
   }
 
   public async genLineItems(offer: Offer): Promise<Price[]> {
@@ -31,6 +36,11 @@ export class Shop {
     }))
   }
 
+  withContext(context: Record<string, any>): this {
+    this.#context = context
+    return this
+  }
+
   isValidOffer(id: string) {
     const offer = this.#offers.find((offer) => id === offer.id)
     if (!offer) throw new Error('Invalid Offer')
@@ -44,7 +54,8 @@ export class Shop {
     const offer = this.#offers.find((o) => o.id === id)
     if (!offer) return null
 
-    return new OfferBuilder(this.#paymentServices, offer)
+    return new OfferBuilder(this.#paymentServices, this.#pgdb, offer)
+      .withContext(this.#context)
       .withPromoCode(promoCode)
       .build()
   }
@@ -65,8 +76,15 @@ export class Shop {
     const offers = this.#offers.filter((o) => o.company === company)
     if (!offers.length) return []
 
-    const offerBuilder = new OfferBuilder(this.#paymentServices, offers)
-    return offerBuilder.withPromoCode(promoCode).buildAll()
+    const offerBuilder = new OfferBuilder(
+      this.#paymentServices,
+      this.#pgdb,
+      offers,
+    )
+    return offerBuilder
+      .withContext(this.#context)
+      .withPromoCode(promoCode)
+      .buildAll()
   }
 }
 
