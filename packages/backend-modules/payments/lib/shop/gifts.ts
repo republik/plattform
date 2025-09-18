@@ -272,7 +272,7 @@ export class GiftShop {
 
     const customerId = await this.getCustomerId(cRepo, gift.company, userId)
 
-    const shop = new Shop(activeOffers())
+    const shop = new Shop(activeOffers(), this.#pgdb)
     const offer = shop.isValidOffer(gift.offer)
     const lineItems = await shop.genLineItems(offer)
 
@@ -372,7 +372,7 @@ export class GiftShop {
         const cRepo = new CustomerRepo(this.#pgdb)
         const customerId = await this.getCustomerId(cRepo, 'PROJECT_R', userId)
 
-        const shop = new Shop(activeOffers())
+        const shop = new Shop(activeOffers(), this.#pgdb)
         const offer = shop.isValidOffer(gift.offer)
 
         const tx = await this.#pgdb.transactionBegin()
@@ -443,7 +443,7 @@ export class GiftShop {
     const customerId = await this.getCustomerId(cRepo, gift.company, userId)
     const endDate = await this.getMembershipEndDate(this.#pgdb, id)
 
-    const shop = new Shop(activeOffers())
+    const shop = new Shop(activeOffers(), this.#pgdb)
 
     const offer = shop.isValidOffer(gift.offer)
     const lineItems = await shop.genLineItems(offer)
@@ -558,7 +558,7 @@ export class GiftShop {
 
         const customerId = await this.getCustomerId(cRepo, 'PROJECT_R', userId)
 
-        const shop = new Shop(activeOffers())
+        const shop = new Shop(activeOffers(), this.#pgdb)
         const offer = shop.isValidOffer(gift.offer)
         const lineItems = await shop.genLineItems(offer)
 
