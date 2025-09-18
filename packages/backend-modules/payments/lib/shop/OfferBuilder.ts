@@ -108,7 +108,7 @@ export class OfferBuilder {
         return { kind: 'UNAVAILABLE' }
       }
     }
-    return { kind: 'PURCHASABLE' }
+    return { kind: 'PURCHASABLE', startDate: new Date() }
   }
 
   private resolveUpgradePaths(sub: Subscription): string[] {
