@@ -5,6 +5,7 @@ import {
   Offer,
   OfferAPIResult,
   OfferAvailability,
+  resolveUpgradePaths,
 } from './offers'
 import { promotionToDiscount } from '.'
 import { PgDb } from 'pogi'
@@ -102,26 +103,13 @@ export class OfferBuilder {
   ): Promise<{ kind: OfferAvailability; startDate?: Date }> {
     const sub = await this.context.activeSubscription
     if (sub) {
-      if (this.resolveUpgradePaths(sub).includes(offer.id)) {
+      if (resolveUpgradePaths(sub).includes(offer.id)) {
         return { kind: 'UPGRADEABLE', startDate: sub.currentPeriodEnd }
       } else {
         return { kind: 'UNAVAILABLE' }
       }
     }
     return { kind: 'PURCHASABLE', startDate: new Date() }
-  }
-
-  private resolveUpgradePaths(sub: Subscription): string[] {
-    switch (sub.type) {
-      case 'MONTHLY_SUBSCRIPTION':
-        return ['YEARLY', 'YEARLY_REDUCED', 'STUDENT', 'BENEFACTOR']
-
-      case 'YEARLY_SUBSCRIPTION':
-        return ['BENEFACTOR', 'DONATION']
-
-      case 'BENEFACTOR_SUBSCRIPTION':
-        return ['DONATION']
-    }
   }
 
   private async resolveDiscount(

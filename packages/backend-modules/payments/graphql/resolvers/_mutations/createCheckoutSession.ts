@@ -2,6 +2,7 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { CheckoutSessionBuilder } from '../../../lib/shop/CheckoutSessionOptionBuilder'
 import { PaymentService } from '../../../lib/services/PaymentService'
 import { CustomerInfoService } from '../../../lib/services/CustomerInfoService'
+import { SubscriptionService } from '../../../lib/services/SubscriptionService'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
@@ -31,6 +32,7 @@ export = async function createCheckoutSession(
     args.offerId,
     new PaymentService(),
     new CustomerInfoService(ctx.pgdb),
+    new SubscriptionService(ctx.pgdb),
     ctx.logger,
   )
     .withCustomer(ctx.user)

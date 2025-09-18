@@ -1,3 +1,4 @@
+import { Subscription } from '../types'
 import { getConfig } from '../config'
 import { Company } from '../types'
 
@@ -216,4 +217,17 @@ export const GIFTS_OFFERS: Offer[] = [
 
 export function activeOffers(): Readonly<Offer>[] {
   return [...Offers, ...(GIFTS_ENABLED() ? GIFTS_OFFERS : [])]
+}
+
+export function resolveUpgradePaths(sub: Subscription): string[] {
+  switch (sub.type) {
+    case 'MONTHLY_SUBSCRIPTION':
+      return ['YEARLY', 'YEARLY_REDUCED', 'STUDENT', 'BENEFACTOR']
+
+    case 'YEARLY_SUBSCRIPTION':
+      return ['BENEFACTOR', 'DONATION']
+
+    case 'BENEFACTOR_SUBSCRIPTION':
+      return ['DONATION']
+  }
 }
