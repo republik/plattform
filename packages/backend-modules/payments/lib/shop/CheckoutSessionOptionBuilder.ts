@@ -9,12 +9,16 @@ import {
   promotionToDiscount,
   DiscountOption,
   OfferType,
+  OfferAvailability,
+  resolveUpgradePaths,
 } from '.'
 import { Company } from '../types'
 import Stripe from 'stripe'
 import { getConfig } from '../config'
 import { PaymentService } from '../services/PaymentService'
 import { CustomerInfoService } from '../services/CustomerInfoService'
+import { Subscription } from '../types'
+import { SubscriptionService } from '../services/SubscriptionService'
 
 export type SetupConfig = {
   company: Company
@@ -58,10 +62,12 @@ export class CheckoutSessionBuilder {
   private offer: Offer
   private paymentService: PaymentService
   private customerInfoService: CustomerInfoService
+  private subscriptionService: SubscriptionService
   private uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
   private optionalSessionVars: {
     complimentaryItems?: any[]
     promoCode?: string
+    userId?: string
     customerId: Promise<string | undefined>
     metadata?: Record<string, string>
     couponMetadata: Promise<
@@ -70,12 +76,14 @@ export class CheckoutSessionBuilder {
     selectedDiscount: Promise<{ type: 'DISCOUNT'; value: Discount } | undefined>
     returnURL?: string
     selectedDonation?: CustomDonation
+    activeSubscription?: Subscription | null
   }
 
   constructor(
     offerId: string,
     paymentService: PaymentService,
     customerInfoService: CustomerInfoService,
+    subscriptionService: SubscriptionService,
     logger: Logger,
   ) {
     const offer = activeOffers().find((o) => o.id === offerId)
@@ -86,6 +94,7 @@ export class CheckoutSessionBuilder {
     this.offer = offer
     this.paymentService = paymentService
     this.customerInfoService = customerInfoService
+    this.subscriptionService = subscriptionService
     this.uiMode = 'EMBEDDED'
     this.optionalSessionVars = {
       customerId: (async () => undefined)(),
@@ -140,6 +149,7 @@ export class CheckoutSessionBuilder {
     if (this.offer.requiresLogin && !user) {
       throw new Error('api/signIn')
     }
+    this.optionalSessionVars.userId = user?.id
     this.optionalSessionVars.customerId = (async () => {
       return await this.getCustomer(this.offer.company, user?.id)
     })()
@@ -177,6 +187,11 @@ export class CheckoutSessionBuilder {
     url: string | null
   }> {
     const { customerId, metadata } = this.optionalSessionVars
+
+    const availability = await this.checkAvailability()
+    if (availability === 'UPGRADEABLE') {
+      return this.buildSetupSession()
+    }
 
     const [lineItems, donationLineItems, discount, couponMeta] =
       await Promise.all([
@@ -224,6 +239,71 @@ export class CheckoutSessionBuilder {
       clientSecret: sess.client_secret,
       url: sess.url,
     }
+  }
+
+  async buildSetupSession(): Promise<{
+    company: Company
+    sessionId: string | null
+    clientSecret: string | null
+    url: string | null
+  }> {
+    const { customerId, metadata, activeSubscription } =
+      this.optionalSessionVars
+
+    const [_discount, couponMeta] = await Promise.all([
+      this.resolveDiscount(),
+      this.resolveCouponMetadata(),
+    ])
+
+    const mergedMetadata = {
+      ...metadata,
+      ...this.offer.metaData,
+      ...couponMeta,
+      ...{ currentSubscription: activeSubscription?.id || null },
+    }
+
+    const config: Stripe.Checkout.SessionCreateParams = {
+      ...this.checkoutUIConfig(),
+      mode: 'setup',
+      currency: 'CHF',
+      customer: await customerId,
+      metadata: mergedMetadata,
+      consent_collection:
+        this.uiMode !== 'CUSTOM' ? { terms_of_service: 'required' } : undefined,
+    }
+
+    const sess = await this.paymentService.createCheckoutSession(
+      this.offer.company,
+      config,
+    )
+
+    return {
+      company: this.offer.company,
+      sessionId: sess.id,
+      clientSecret: sess.client_secret,
+      url: sess.url,
+    }
+  }
+
+  private async checkAvailability(): Promise<OfferAvailability> {
+    const userId = this.optionalSessionVars.userId
+    if (userId) {
+      const sub = (
+        await this.subscriptionService.listSubscriptions(userId, ['active'])
+      )[0]
+
+      this.optionalSessionVars.activeSubscription = sub
+
+      if (sub) {
+        if (resolveUpgradePaths(sub).includes(this.offer.id)) {
+          return 'UPGRADEABLE'
+        } else {
+          return 'UNAVAILABLE'
+        }
+      }
+    }
+
+    return 'PURCHASABLE'
   }
 
   private async resolveCouponMetadata(): Promise<Record<string, string>> {

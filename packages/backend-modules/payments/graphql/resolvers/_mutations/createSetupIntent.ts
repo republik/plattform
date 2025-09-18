@@ -3,7 +3,7 @@ import { Company } from '../../../lib/types'
 import Auth from '@orbiting/backend-modules-auth'
 import { PaymentService } from '../../../lib/services/PaymentService'
 import { CustomerInfoService } from '../../../lib/services/CustomerInfoService'
-import { SetupSessionBuilder } from '../../../lib/shop/SetupSessionBuilder'
+import { UpgradeSetupSessionBuilder } from '../../../lib/shop/UpgradeSetupSessionBuilder'
 
 export = async function syncPaymentMethods(
   _root: never,
@@ -15,7 +15,7 @@ export = async function syncPaymentMethods(
 ) {
   Auth.ensureSignedIn(ctx)
 
-  const csb = new SetupSessionBuilder(
+  const csb = new UpgradeSetupSessionBuilder(
     args.companyName,
     new PaymentService(),
     new CustomerInfoService(ctx.pgdb),
