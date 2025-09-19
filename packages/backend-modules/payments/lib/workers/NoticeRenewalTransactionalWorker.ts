@@ -57,7 +57,7 @@ export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
 
     const paymentMethod = await paymentService.getPaymentMethodForSubscription(
       job.data.company,
-      event.data.object.subscription as string,
+      event.data.object.parent?.subscription_details?.subscription as string,
     )
 
     try {
@@ -66,10 +66,14 @@ export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
         userId: job.data.userId,
         subscriptionId: job.data.subscriptionId,
         isDiscounted: !!event.data.object.total_discount_amounts?.length,
-        withDonation: !!event.data.object.lines.data.filter((line) => line.description?.includes('Spende')).length,
+        withDonation: !!event.data.object.lines.data.filter((line) =>
+          line.description?.includes('Spende'),
+        ).length,
         amount: event.data.object.amount_due,
-        paymentAttemptDate: parseStripeDate(event.data.object.next_payment_attempt),
-        paymentMethod: paymentMethod
+        paymentAttemptDate: parseStripeDate(
+          event.data.object.next_payment_attempt,
+        ),
+        paymentMethod: paymentMethod,
       })
     } catch (e) {
       this.logger.error(

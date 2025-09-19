@@ -93,10 +93,10 @@ export class CancellationService {
       { id: sub.id },
       {
         currentPeriodStart: parseStripeDate(
-          updatedStripeSubscription.current_period_start,
+          updatedStripeSubscription.items.data[0].current_period_start,
         ),
         currentPeriodEnd: parseStripeDate(
-          updatedStripeSubscription.current_period_end,
+          updatedStripeSubscription.items.data[0].current_period_end,
         ),
         status: updatedStripeSubscription.status,
         cancelAt: parseStripeDate(updatedStripeSubscription.cancel_at),
@@ -141,10 +141,10 @@ export class CancellationService {
       { id: sub.id },
       {
         currentPeriodStart: parseStripeDate(
-          updatedStripeSubscription.current_period_start,
+          updatedStripeSubscription.items.data[0].current_period_start,
         ),
         currentPeriodEnd: parseStripeDate(
-          updatedStripeSubscription.current_period_end,
+          updatedStripeSubscription.items.data[0].current_period_end,
         ),
         status: updatedStripeSubscription.status,
         cancelAt: parseStripeDate(updatedStripeSubscription.cancel_at),

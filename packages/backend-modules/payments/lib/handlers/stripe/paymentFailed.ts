@@ -30,7 +30,8 @@ class PaymentFailedWorkflow
 
   async run(company: Company, event: Stripe.InvoicePaymentFailedEvent) {
     const customerId = event.data.object.customer as string
-    const stripeSubId = event.data.object.subscription as string
+    const stripeSubId = event.data.object.parent?.subscription_details
+      ?.subscription as string
     const stripeInvoiceId = event.data.object.id as string
 
     const userId = await this.customerInfoService.getUserIdForCompanyCustomer(
@@ -76,7 +77,7 @@ class PaymentFailedWorkflow
         userId,
         event.id,
         stripeInvoiceId,
-        company
+        company,
       )
     }
 
@@ -87,7 +88,12 @@ class PaymentFailedWorkflow
 class PaymentFailedNotifier {
   constructor(protected readonly queue: Queue) {}
 
-  async notify(userId: string, eventId: string, invoiceExternalId: string, company: Company) {
+  async notify(
+    userId: string,
+    eventId: string,
+    invoiceExternalId: string,
+    company: Company,
+  ) {
     return this.queue.send<NoticePaymentFailedTransactionalWorker>(
       'payments:transactional:notice:payment_failed',
       {
@@ -95,7 +101,7 @@ class PaymentFailedNotifier {
         eventSourceId: eventId,
         userId: userId,
         invoiceExternalId: invoiceExternalId,
-        company: company
+        company: company,
       },
     )
   }

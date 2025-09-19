@@ -5,7 +5,7 @@ import { Queue } from '@orbiting/backend-modules-job-queue'
 import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker'
 import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
-import { mapChargeArgs } from './invoicePaymentSucceeded'
+// import { mapChargeArgs } from './invoicePaymentSucceeded'
 import { GiftShop } from '../../shop/gifts'
 import { sendGiftPurchaseMail } from '../../transactionals/sendTransactionalMails'
 import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
@@ -18,6 +18,8 @@ import { PgDb } from 'pogi'
 import { sendMailTemplate } from '@orbiting/backend-modules-mail'
 import { t } from '@orbiting/backend-modules-translate'
 import { getConfig } from '../../config'
+import { UpgradeService } from '../../services/UpgradeService'
+import { Logger } from '@orbiting/backend-modules-types'
 
 const { PROJECT_R_DONATION_PRODUCT_ID } = getConfig()
 
@@ -34,11 +36,39 @@ export async function processCheckoutCompleted(
   event: Stripe.CheckoutSessionCompletedEvent,
 ) {
   switch (event.data.object.mode) {
+    case 'setup': {
+      return new SetupWorkflow(
+        new PaymentService(),
+        new CustomerInfoService(ctx.pgdb),
+        new SubscriptionService(ctx.pgdb),
+        new UpgradeService(ctx.pgdb, ctx.logger),
+        new InvoiceService(ctx.pgdb),
+        ctx.logger.child(
+          { eventId: event.id },
+          { msgPrefix: '[Checkout SetupWorkflow]' },
+        ),
+      ).run(company, event)
+    }
     case 'subscription': {
-      return handleSubscription(ctx, company, event)
+      return new SubscriptionCheckoutCompletedWorkflow(
+        new PaymentService(),
+        new CustomerInfoService(ctx.pgdb),
+        new SubscriptionService(ctx.pgdb),
+        new InvoiceService(ctx.pgdb),
+      ).run(company, event)
     }
     case 'payment': {
-      return handlePayment(ctx, company, event)
+      return new OneTimePaymentCheckoutCompletedWorkflow(
+        new PaymentService(),
+        new GiftShop(ctx.pgdb),
+        new UserService(ctx.pgdb),
+        new CustomerInfoService(ctx.pgdb),
+        new InvoiceService(ctx.pgdb),
+        {
+          gift: new GiftCodeNotifier(ctx.pgdb),
+          donation: new DonateNotifier(ctx.pgdb),
+        },
+      ).run(company, event)
     }
   }
 }
@@ -114,26 +144,23 @@ class SubscriptionCheckoutCompletedWorkflow
         if (invoiceData) {
           const args = mapInvoiceArgs(company, invoiceData)
           invoiceId = (await this.invoiceService.saveInvoice(userId, args)).id
-          const charge = invoiceData.charge as Stripe.Charge
-          const chargeArgs = mapChargeArgs(
-            company,
-            invoiceId,
-            charge,
-          )
-          try {
-            const ch = await this.invoiceService.getCharge({
-              externalId: charge.id,
-            })
-            if (ch) {
-              await this.invoiceService.updateCharge({ id: ch.id }, chargeArgs)
-            } else {
-              await this.invoiceService.saveCharge(chargeArgs)
-            }
-          } catch (e) {
-            if (e instanceof Error) {
-              console.log(`Error recording charge: ${e.message}`)
-            }
-          }
+
+          // TODO!: FIX charge tracking
+          // const invoiceCharge = invoiceData.payments?.data[0].payment
+          // .charge as Stripe.Charge
+
+          // const chargeArgs = mapChargeArgs(
+          //   company,
+          //   invoiceId,
+          //   invoiceCharge as Stripe.Charge,
+          // )
+          // try {
+          //   await this.invoiceService.saveCharge(chargeArgs)
+          // } catch (e) {
+          //   if (e instanceof Error) {
+          //     console.log(`Error recording charge: ${e.message}`)
+          //   }
+          // }
         }
       } else {
         invoiceId = i.id
@@ -202,19 +229,6 @@ class SubscriptionCheckoutCompletedWorkflow
   }
 }
 
-async function handleSubscription(
-  ctx: PaymentWebhookContext,
-  company: Company,
-  event: Stripe.CheckoutSessionCompletedEvent,
-) {
-  return new SubscriptionCheckoutCompletedWorkflow(
-    new PaymentService(),
-    new CustomerInfoService(ctx.pgdb),
-    new SubscriptionService(ctx.pgdb),
-    new InvoiceService(ctx.pgdb),
-  ).run(company, event)
-}
-
 class OneTimePaymentCheckoutCompletedWorkflow
   implements PaymentWorkflow<Stripe.CheckoutSessionCompletedEvent>
 {
@@ -277,16 +291,16 @@ class OneTimePaymentCheckoutCompletedWorkflow
     })
 
     let addressId: string | undefined = undefined
-    if (sess.shipping_details) {
-      const shippingAddress = sess.shipping_details.address!
+    if (sess.collected_information?.shipping_details) {
+      const shipping_details = sess.collected_information?.shipping_details
       const data = {
-        name: sess.shipping_details.name!,
-        city: shippingAddress.city,
-        line1: shippingAddress.line1,
-        line2: shippingAddress.line2,
-        postalCode: shippingAddress.postal_code,
+        name: shipping_details.name!,
+        city: shipping_details.address.city,
+        line1: shipping_details.address.line1,
+        line2: shipping_details.address.line2,
+        postalCode: shipping_details.address.postal_code,
         country: new Intl.DisplayNames(['de-CH'], { type: 'region' }).of(
-          shippingAddress.country!,
+          shipping_details.address.country!,
         ),
       }
       addressId = (await this.userService.insertAddress(data)).id
@@ -309,7 +323,7 @@ class OneTimePaymentCheckoutCompletedWorkflow
     const order = await this.invoiceService.saveOrder(orderDraft)
 
     const orderLineItems = lineItems.map((i) => {
-      return { orderId: order.id, ...i }
+      return { orderId: order.id, ...i, description: i.description ?? null }
     })
 
     await this.invoiceService.saveOrderItems(orderLineItems)
@@ -424,20 +438,54 @@ class DonateNotifier implements MailNotifier<{ total_amount: number }> {
   }
 }
 
-async function handlePayment(
-  ctx: PaymentWebhookContext,
-  company: Company,
-  event: Stripe.CheckoutSessionCompletedEvent,
-) {
-  return new OneTimePaymentCheckoutCompletedWorkflow(
-    new PaymentService(),
-    new GiftShop(ctx.pgdb),
-    new UserService(ctx.pgdb),
-    new CustomerInfoService(ctx.pgdb),
-    new InvoiceService(ctx.pgdb),
-    {
-      gift: new GiftCodeNotifier(ctx.pgdb),
-      donation: new DonateNotifier(ctx.pgdb),
-    },
-  ).run(company, event)
+class SetupWorkflow
+  implements PaymentWorkflow<Stripe.CheckoutSessionCompletedEvent>
+{
+  // private paymentService: PaymentService
+  // private customerInfoService: CustomerInfoService
+  // private subscriptionService: SubscriptionService
+  private upgradeService: UpgradeService
+  // private invoiceService: InvoiceService
+  private logger: Logger
+
+  constructor(
+    _paymentService: PaymentService,
+    _customerInfoService: CustomerInfoService,
+    _subscriptionService: SubscriptionService,
+    upgradeService: UpgradeService,
+    _invoiceService: InvoiceService,
+    logger: Logger,
+  ) {
+    // this.paymentService = paymentService
+    // this.customerInfoService = customerInfoService
+    // this.subscriptionService = subscriptionService
+    this.upgradeService = upgradeService
+    // this.invoiceService = invoiceService
+    this.logger = logger
+  }
+  async run(
+    company: Company,
+    event: Stripe.CheckoutSessionCompletedEvent,
+  ): Promise<any> {
+    this.logger.debug(
+      { company, eventMeta: event.data.object.metadata },
+      'Event received',
+    )
+
+    const metadata = event.data.object.metadata
+    if (metadata?.currentSubscription) {
+      // TODO!: check for presaved upgrade in db
+      // TODO!: allow for discounts
+      // TODO!: allow for donations
+      // TODO!: allow for upgrades other than month
+      const res = await this.upgradeService.nonInteractiveSubscriptionUpgrade(
+        metadata.currentSubscription,
+      )
+      this.logger.debug(res, 'upgrade scheduled')
+    } else {
+      this.logger.debug(metadata, 'no subscription to upgrade')
+    }
+
+    return
+  }
 }

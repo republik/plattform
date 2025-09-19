@@ -102,12 +102,15 @@ export function mapSubscriptionArgs(
   company: Company,
   sub: Stripe.Subscription,
 ): SubscriptionArgs {
+  const current_period_start = sub.items.data[0].current_period_start
+  const current_period_end = sub.items.data[0].current_period_end
+
   return {
     company: company,
     type: getSubscriptionType(sub?.items.data[0].price.product as string),
     externalId: sub.id,
-    currentPeriodStart: parseStripeDate(sub.current_period_start),
-    currentPeriodEnd: parseStripeDate(sub.current_period_end),
+    currentPeriodStart: parseStripeDate(current_period_start),
+    currentPeriodEnd: parseStripeDate(current_period_end),
     status: sub.status,
     metadata: sub.metadata,
   }

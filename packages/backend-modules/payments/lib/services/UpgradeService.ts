@@ -85,12 +85,14 @@ export class UpgradeService {
       },
     )
 
+    const current_end = remoteSub.items.data[0]?.current_period_end
+
     const upgrade =
       await this.subsubscriptionUpgradeRepo.saveSubscriptionUpgrade({
         userId: localSub.userId,
         subscriptionId: localSub.id,
         status: 'pending',
-        scheduledStart: new Date(remoteSub.current_period_end * 1000),
+        scheduledStart: new Date(current_end * 1000),
       })
 
     // we only allow upgrades to Project R
@@ -100,7 +102,7 @@ export class UpgradeService {
       {
         internalRef: `upgrade:${upgrade.id}`,
         items: [{ price: membershipPriceId.id, quantity: 1 }],
-        startDate: remoteSub.current_period_end,
+        startDate: current_end,
         collectionMethod: 'charge_automatically',
       },
     )
@@ -156,6 +158,77 @@ export class UpgradeService {
       upgrade.id,
       {
         status: res.status,
+      },
+    )
+  }
+
+  public async nonInteractiveSubscriptionUpgrade(subscriptionId: string) {
+    this.logger.debug({ subscriptionId }, 'scheduling subscription update')
+
+    const localSub = await this.billingRepo.getSubscription({
+      id: subscriptionId,
+    })
+
+    if (!localSub) {
+      throw new Error('Unknown subscription')
+    }
+
+    if (localSub.type != 'MONTHLY_SUBSCRIPTION') {
+      throw new Error('Upgrades are only support for monthly subscriptions')
+    }
+
+    if (await this.hasUnresolvedUpgrades(subscriptionId)) {
+      throw new Error('Subscription has unresoved upgrades')
+    }
+
+    const projectRCustomerId = await this.getProjectRCustomerId(localSub.userId)
+    const [membershipPriceId] = await this.paymentService.getPrices(
+      'PROJECT_R',
+      ['ABO'],
+    )
+
+    await this.cancelationRepo.insertCancelation(localSub.id, {
+      category: 'SYSTEM',
+      reason: 'Subscription Upgrade',
+      suppressConfirmation: true,
+      suppressWinback: true,
+    })
+
+    const remoteSub = await this.paymentService.updateSubscription(
+      localSub.company,
+      localSub.externalId,
+      {
+        cancel_at_period_end: true,
+      },
+    )
+
+    const current_period_end = remoteSub.items.data[0].current_period_end
+
+    const upgrade =
+      await this.subsubscriptionUpgradeRepo.saveSubscriptionUpgrade({
+        userId: localSub.userId,
+        subscriptionId: localSub.id,
+        status: 'pending',
+        scheduledStart: new Date(current_period_end * 1000),
+      })
+
+    // we only allow upgrades to Project R
+    const subSchedule = await this.paymentService.scheduleSubscription(
+      'PROJECT_R',
+      projectRCustomerId,
+      {
+        internalRef: `upgrade:${upgrade.id}`,
+        items: [{ price: membershipPriceId.id, quantity: 1 }],
+        startDate: current_period_end,
+        collectionMethod: 'charge_automatically',
+      },
+    )
+
+    return this.subsubscriptionUpgradeRepo.updateSubscriptionUpgrade(
+      upgrade.id,
+      {
+        externalId: subSchedule.id,
+        status: 'registered',
       },
     )
   }

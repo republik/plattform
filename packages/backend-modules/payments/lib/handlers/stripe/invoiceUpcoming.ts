@@ -25,7 +25,8 @@ export class InvoiceUpcomingWorkflow
     }
 
     const customerId = event.data.object.customer as string
-    const externalSubscriptionId = event.data.object.subscription as string
+    const externalSubscriptionId = event.data.object.parent
+      ?.subscription_details?.subscription as string
 
     const userId = await this.customerInfoService.getUserIdForCompanyCustomer(
       company,
@@ -46,14 +47,16 @@ export class InvoiceUpcomingWorkflow
 
     const queue = Queue.getInstance()
 
-    await queue.send<NoticeRenewalTransactionalWorker>('payments:transactional:notice:subscription_renewal',
+    await queue.send<NoticeRenewalTransactionalWorker>(
+      'payments:transactional:notice:subscription_renewal',
       {
         $version: 'v1',
         eventSourceId: event.id,
         userId: userId,
         subscriptionId: subscription.id,
-        company: company
-      },)
+        company: company,
+      },
+    )
   }
 }
 
