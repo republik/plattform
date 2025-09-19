@@ -23,6 +23,7 @@ function Login({ email }: { email: string }) {
     setAutofocus(true)
   }
 
+  // TODO: extract dialog to its own UI component
   return (
     <Dialog.Root defaultOpen={true}>
       <Dialog.Portal>
@@ -138,6 +139,7 @@ function isWalled(paynote: PaynoteKindType) {
 export function LoginPopup() {
   const router = useRouter()
   const { query } = router
+  // TODO: decode email (base64)
   const email = query.email
 
   const { paynoteKind } = usePaynotes()
