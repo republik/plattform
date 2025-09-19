@@ -32,9 +32,10 @@ export class NoticeRenewalPaymentSuccessfulTransactionalWorker extends BaseWorke
     const mailService = new MailNotificationService(this.context.pgdb)
     const paymentService = new PaymentService()
 
-    const wh = await webhookService.getEvent<Stripe.InvoicePaymentSucceededEvent>(
-      job.data.eventSourceId,
-    )
+    const wh =
+      await webhookService.getEvent<Stripe.InvoicePaymentSucceededEvent>(
+        job.data.eventSourceId,
+      )
 
     if (!wh) {
       this.logger.error(
@@ -56,7 +57,7 @@ export class NoticeRenewalPaymentSuccessfulTransactionalWorker extends BaseWorke
 
     const paymentMethod = await paymentService.getPaymentMethodForSubscription(
       job.data.company,
-      event.data.object.subscription as string,
+      event.data.object.parent?.subscription_details?.subscription as string,
     )
 
     try {
@@ -65,10 +66,10 @@ export class NoticeRenewalPaymentSuccessfulTransactionalWorker extends BaseWorke
         userId: job.data.userId,
         subscriptionId: job.data.subscriptionId,
         amount: event.data.object.amount_due,
-        paymentMethod: paymentMethod
+        paymentMethod: paymentMethod,
       })
     } catch (e) {
-       this.logger.error(
+      this.logger.error(
         { queue: this.queue, jobId: job.id, error: e },
         'Error sending subscription renewal payment succeeded notice transactional mail',
       )

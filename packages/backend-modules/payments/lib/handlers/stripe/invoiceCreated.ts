@@ -43,7 +43,7 @@ class InvoiceCreatedWorkflow
       throw new Error(`Unknown invoice ${externalInvoiceId}`)
     }
 
-    if (!invoice.subscription) {
+    if (!invoice.parent?.subscription_details?.subscription) {
       console.log(
         `Only subscription invoices currently not supported [${event.id}]`,
       )
@@ -52,7 +52,7 @@ class InvoiceCreatedWorkflow
 
     const sub = await this.paymentService.getSubscription(
       company,
-      invoice.subscription as string,
+      invoice.parent?.subscription_details?.subscription as string,
     )
 
     if (isPledgeBased(sub?.metadata)) {
@@ -93,19 +93,18 @@ export function mapInvoiceArgs(
       ) || 0,
     totalDiscountAmounts: invoice.total_discount_amounts,
     totalExcludingTax: invoice.total_excluding_tax || 0,
-    totalTaxAmounts: invoice.total_tax_amounts,
-    totalTaxAmount: invoice.total_tax_amounts.reduce(
-      (acc, value) => acc + value.amount,
-      0,
-    ),
+    totalTaxAmounts: invoice.total_taxes,
+    totalTaxAmount:
+      invoice.total_taxes?.reduce((acc, value) => acc + value.amount, 0) || 0,
     company: company,
     items: invoice.lines.data,
     discounts: invoice.discounts,
     metadata: invoice.metadata,
-    externalId: invoice.id,
+    externalId: invoice.id!,
     periodStart: parseStripeDate(invoice.lines.data[0].period.start),
     periodEnd: parseStripeDate(invoice.lines.data[0].period.end),
     status: invoice.status as any,
-    externalSubscriptionId: invoice.subscription as string,
+    externalSubscriptionId: invoice.parent?.subscription_details
+      ?.subscription as string,
   }
 }

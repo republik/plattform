@@ -281,7 +281,7 @@ export class GiftShop {
     ].subscriptions.create({
       customer: customerId,
       items: lineItems,
-      coupon: gift.coupon,
+      discounts: [{ coupon: gift.coupon }],
       collection_method: 'send_invoice',
       days_until_due: 14,
       metadata: {
@@ -357,15 +357,19 @@ export class GiftShop {
         const sub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
           stripeId,
           {
-            coupon: gift.coupon,
+            discounts: [{ coupon: gift.coupon }],
             cancel_at_period_end: false, // if a subscription is canceled we need to uncancel it.
           },
         )
+
+        // TODO!: ensure that this is the period of the magazine subscription
+        const current_period_end = sub.items.data[0].current_period_end
+
         return {
           id: membershipId,
           aboType: 'MONLTY_ABO',
           company: 'REPUBLIK',
-          starting: parseStripeDate(sub.current_period_end),
+          starting: parseStripeDate(current_period_end),
         }
       }
       case 'PROJECT_R': {
@@ -405,16 +409,20 @@ export class GiftShop {
         )
 
         const lineItems = await shop.genLineItems(offer)
+
+        // TODO!: ensure that this is the period of the magazine subscription
+        const current_period_end = oldSub.items.data[0].current_period_end
+
         // create new subscription starting at the end period of the old one
         await this.#stripeAdapters.PROJECT_R.subscriptionSchedules.create({
           customer: customerId,
-          start_date: oldSub.current_period_end,
+          start_date: current_period_end,
           phases: [
             {
               items: lineItems,
               iterations: 1,
               collection_method: 'send_invoice',
-              coupon: gift.coupon,
+              discounts: [{ coupon: gift.coupon }],
               invoice_settings: {
                 days_until_due: 14,
               },
@@ -425,11 +433,12 @@ export class GiftShop {
             },
           ],
         })
+
         return {
           id: membershipId,
           aboType: 'YEARLY_SUBSCRIPION',
           company: 'PROJECT_R',
-          starting: parseStripeDate(oldSub.current_period_end),
+          starting: parseStripeDate(current_period_end),
         }
       }
     }
@@ -456,7 +465,7 @@ export class GiftShop {
           items: lineItems,
           iterations: 1,
           collection_method: 'send_invoice',
-          coupon: gift.coupon,
+          discounts: [{ coupon: gift.coupon }],
           invoice_settings: {
             days_until_due: 14,
           },
@@ -498,15 +507,17 @@ export class GiftShop {
         const sub = await this.#stripeAdapters.PROJECT_R.subscriptions.update(
           stripeId,
           {
-            coupon: gift.coupon,
+            discounts: [{ coupon: gift.coupon }],
             cancel_at_period_end: false, // if a subscription is canceled we need to uncancel it.
           },
         )
+        // TODO!: ensure that this is the period of the magazine subscription
+        const current_period_end = sub.items.data[0].current_period_end
         return {
           id: id,
           aboType: 'YEARLY',
           company: 'PROJECT_R',
-          starting: parseStripeDate(sub.current_period_end),
+          starting: parseStripeDate(current_period_end),
         }
       }
       case 'REPUBLIK': {
@@ -542,15 +553,18 @@ export class GiftShop {
         const sub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
           stripeId,
           {
-            coupon: gift.coupon,
+            discounts: [{ coupon: gift.coupon }],
             cancel_at_period_end: false, // if a subscription is canceled we need to uncancel it.
           },
         )
+
+        // TODO!: ensure that this is the period of the magazine subscription
+        const current_period_end = sub.items.data[0].current_period_end
         return {
           id: subScriptionId,
           aboType: 'MONLTY',
           company: 'REPUBLIK',
-          starting: parseStripeDate(sub.current_period_end),
+          starting: parseStripeDate(current_period_end),
         }
       }
       case 'PROJECT_R': {
@@ -568,16 +582,19 @@ export class GiftShop {
           stripeId,
         )
 
+        // TODO!: ensure that this is the period of the magazine subscription
+        const current_period_end = oldSub.items.data[0].current_period_end
+
         // create new subscription starting at the end period of the old one
         await this.#stripeAdapters.PROJECT_R.subscriptionSchedules.create({
           customer: customerId,
-          start_date: oldSub.current_period_end,
+          start_date: current_period_end,
           phases: [
             {
               items: lineItems,
               iterations: 1,
               collection_method: 'send_invoice',
-              coupon: gift.coupon,
+              discounts: [{ coupon: gift.coupon }],
               invoice_settings: {
                 days_until_due: 14,
               },
@@ -591,7 +608,7 @@ export class GiftShop {
         return {
           company: 'PROJECT_R',
           aboType: 'YEARLY_SUBSCRIPION',
-          starting: parseStripeDate(oldSub.current_period_end),
+          starting: parseStripeDate(current_period_end),
         }
       }
     }

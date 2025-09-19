@@ -21,7 +21,7 @@ class InvoicePaymentSucceededWorkflow
     company: Company,
     event: Stripe.InvoicePaymentSucceededEvent,
   ): Promise<any> {
-    const stripeInvoiceId = event.data.object.id
+    const stripeInvoiceId = event.data.object.id as string
 
     const i = await this.paymentService.getInvoice(company, stripeInvoiceId)
 
@@ -30,13 +30,14 @@ class InvoicePaymentSucceededWorkflow
       return
     }
 
-    const invoice = await this.invoiceService.getInvoice({ externalId: i.id })
+    const invoice = await this.invoiceService.getInvoice({
+      externalId: i.id as string,
+    })
     if (!invoice) {
       throw Error('invoice not saved locally')
     }
 
-    const incoiceCharge = i.charge as Stripe.Charge
-
+    const incoiceCharge = i.payments?.data[0].payment.charge as Stripe.Charge
     if (!incoiceCharge) {
       console.error('no charge associated with the invoice not found')
       return
@@ -52,9 +53,9 @@ class InvoicePaymentSucceededWorkflow
       await this.invoiceService.saveCharge(args)
     }
 
-    if (i.subscription) {
+    if (i.parent?.subscription_details?.subscription) {
       const subscription = await this.subscriptionService.getSubscription({
-        externalId: i.subscription as string,
+        externalId: i.parent.subscription_details?.subscription as string,
       })
       if (subscription && shouldSendAutoRenewalNotice(i)) {
         const queue = Queue.getInstance()
@@ -74,9 +75,7 @@ class InvoicePaymentSucceededWorkflow
   }
 }
 
-function shouldSendAutoRenewalNotice(
-  invoice: Stripe.Invoice,
-): boolean {
+function shouldSendAutoRenewalNotice(invoice: Stripe.Invoice): boolean {
   // do only send if it's not the initial invoice after checkout
   if (
     invoice.billing_reason === 'subscription_cycle' &&

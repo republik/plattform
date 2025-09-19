@@ -236,9 +236,19 @@ export class PaymentService {
     return prices.data
   }
 
+  async getPrice(company: Company, id: string): Promise<Stripe.Price | null> {
+    const price = await this.#stripeAdapters[company].prices.retrieve(id)
+
+    return price
+  }
+
   async getInvoice(company: Company, id: string) {
     const invoice = await this.#stripeAdapters[company].invoices.retrieve(id, {
-      expand: ['discounts', 'charge'],
+      expand: [
+        'discounts',
+        'payments.data.payment.charge',
+        'payments.data.payment.payment_intent',
+      ],
     })
 
     return invoice ? invoice : null
