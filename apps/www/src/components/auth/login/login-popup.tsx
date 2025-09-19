@@ -9,23 +9,14 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { IconClose } from '@republik/icons'
 
 import { css } from '@republik/theme/css'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 
 import { LoginForm } from '../login'
 
-function isWalled(paynote: PaynoteKindType) {
-  return ['PAYWALL', 'REGWALL', 'CAMPAIGN_OVERLAY_OPEN'].includes(paynote)
-}
-
-export function LoginPopup() {
-  const [defaultEmail, setDefaultEmail] = useState<string>(
-    'anna.traussnig@gmail.com',
-  )
+function Login({ email }: { email: string }) {
+  const [defaultEmail, setDefaultEmail] = useState<string>(email)
   const [autofocus, setAutofocus] = useState<boolean>(false)
-
-  const { paynoteKind } = usePaynotes()
-
-  if (!isWalled(paynoteKind)) return null
 
   function correctEmail() {
     setDefaultEmail('')
@@ -138,4 +129,20 @@ export function LoginPopup() {
       </Dialog.Portal>
     </Dialog.Root>
   )
+}
+
+function isWalled(paynote: PaynoteKindType) {
+  return ['PAYWALL', 'REGWALL', 'CAMPAIGN_OVERLAY_OPEN'].includes(paynote)
+}
+
+export function LoginPopup() {
+  const router = useRouter()
+  const { query } = router
+  const email = query.email
+
+  const { paynoteKind } = usePaynotes()
+
+  if (!email || !isWalled(paynoteKind)) return null
+
+  return <Login email={email} />
 }
