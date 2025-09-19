@@ -35,6 +35,12 @@ enum CheckoutUIMode {
  EMBEDDED
 }
 
+enum OfferAvailability {
+  UNAVAILABLE
+  PURCHASABLE
+  UPGRADEABLE
+}
+
 type StripeCustomer {
   customerId: String!
   company: CompanyName!
@@ -121,6 +127,10 @@ type SubscriptionOffer implements Offer {
   requiresLogin: Boolean
   requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
+
+  # only available on subscription type
+  availability: OfferAvailability!
+  startDate: DateTime
 }
 
 type GiftOffer implements Offer {
@@ -236,4 +246,21 @@ input CheckoutSessionOptions {
   returnURL: String
 }
 
+type MagazineSubscriptionUpgrade {
+  id: String!
+  userId: String!
+  subscriptionId: String!
+  status: String!
+  scheduledStart: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+input MagazineSubscriptionUpgradeInput {
+  subscriptionId: String
+}
+
+input MagazineSubscriptionUpgradeCancelationInput {
+  subscriptionId: String
+}
 `

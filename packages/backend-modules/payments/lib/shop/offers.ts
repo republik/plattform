@@ -1,3 +1,4 @@
+import { Subscription } from '../types'
 import { getConfig } from '../config'
 import { Company } from '../types'
 
@@ -5,6 +6,7 @@ export const GIFTS_ENABLED = () =>
   process.env.PAYMENTS_SHOP_GIFTS_ENABLED === 'true'
 
 export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
+export type OfferAvailability = 'PURCHASABLE' | 'UPGRADEABLE' | 'UNAVAILABLE'
 
 export type PriceDefinition = {
   type: 'PRICE'
@@ -56,6 +58,8 @@ export type OfferAPIResult = {
   id: string
   company: Company
   name: string
+  availability: OfferAvailability
+  startDate?: Date
   requiresLogin: boolean
   price: {
     amount: number
@@ -213,4 +217,17 @@ export const GIFTS_OFFERS: Offer[] = [
 
 export function activeOffers(): Readonly<Offer>[] {
   return [...Offers, ...(GIFTS_ENABLED() ? GIFTS_OFFERS : [])]
+}
+
+export function resolveUpgradePaths(sub: Subscription): string[] {
+  switch (sub.type) {
+    case 'MONTHLY_SUBSCRIPTION':
+      return ['YEARLY', 'YEARLY_REDUCED', 'STUDENT', 'BENEFACTOR']
+
+    case 'YEARLY_SUBSCRIPTION':
+      return ['BENEFACTOR', 'DONATION']
+
+    case 'BENEFACTOR_SUBSCRIPTION':
+      return ['DONATION']
+  }
 }
