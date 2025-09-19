@@ -10,6 +10,7 @@ import {
 } from '../database/SubscriptionUpgradeRepo'
 import { User } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
+import { getSubscriptionType } from '../handlers/stripe/utils'
 
 type SubscriptionUpgrade = {
   status: string
@@ -182,7 +183,7 @@ export class UpgradeService {
     }
 
     const projectRCustomerId = await this.getProjectRCustomerId(localSub.userId)
-    const [membershipPriceId] = await this.paymentService.getPrices(
+    const [subscriptionPrice] = await this.paymentService.getPrices(
       'PROJECT_R',
       ['ABO'],
     )
@@ -208,6 +209,7 @@ export class UpgradeService {
       await this.subsubscriptionUpgradeRepo.saveSubscriptionUpgrade({
         userId: localSub.userId,
         subscriptionId: localSub.id,
+        subscriptionType: getSubscriptionType(subscriptionPrice.id),
         status: 'pending',
         scheduledStart: new Date(current_period_end * 1000),
       })
@@ -218,7 +220,7 @@ export class UpgradeService {
       projectRCustomerId,
       {
         internalRef: `upgrade:${upgrade.id}`,
-        items: [{ price: membershipPriceId.id, quantity: 1 }],
+        items: [{ price: subscriptionPrice.id, quantity: 1 }],
         startDate: current_period_end,
         collectionMethod: 'charge_automatically',
       },

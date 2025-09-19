@@ -64,7 +64,10 @@ type MagazineSubscription {
   canceledAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
+
+  upgrade: MagazineSubscriptionUpgrade
 }
+
 
 type DonationInfo {
   amount: Int!
@@ -252,6 +255,7 @@ input CheckoutSessionOptions {
 type MagazineSubscriptionUpgrade {
   id: String!
   userId: String!
+  type: MagazineSubscriptionType
   subscriptionId: String!
   status: String!
   scheduledStart: DateTime!
