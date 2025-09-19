@@ -3,7 +3,6 @@ import { PaymentService } from '../../lib/services/PaymentService'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { InvoiceService } from '../../lib/services/InvoiceService'
 import { getConfig } from '../../lib/config'
-import { UpgradeService } from '../../lib/services/UpgradeService'
 import { SubscriptionUpgradeRepo } from '../../lib/database/SubscriptionUpgradeRepo'
 
 const { PROJECT_R_DONATION_PRODUCT_ID } = getConfig()
