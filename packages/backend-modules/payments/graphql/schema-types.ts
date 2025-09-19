@@ -36,6 +36,7 @@ enum CheckoutUIMode {
 }
 
 enum OfferAvailability {
+  UNAVAILABLE_CURRENT
   UNAVAILABLE
   PURCHASABLE
   UPGRADEABLE
@@ -102,6 +103,7 @@ interface Offer {
   requiresLogin: Boolean
   requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
+  availability: OfferAvailability!
 }
 
 type Donation {
@@ -127,9 +129,9 @@ type SubscriptionOffer implements Offer {
   requiresLogin: Boolean
   requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
+  availability: OfferAvailability!
 
   # only available on subscription type
-  availability: OfferAvailability!
   startDate: DateTime
 }
 
@@ -146,6 +148,7 @@ type GiftOffer implements Offer {
   requiresLogin: Boolean
   requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
+  availability: OfferAvailability!
 }
 
 type Price {
