@@ -298,6 +298,11 @@ export class CheckoutSessionBuilder {
         if (resolveUpgradePaths(sub).includes(this.offer.id)) {
           return 'UPGRADEABLE'
         } else {
+          const [offerType] = this.offer.id.split('_')
+          const [supType] = sub.type.split('_')
+
+          if (offerType === supType) return 'UNAVAILABLE_CURRENT'
+
           return 'UNAVAILABLE'
         }
       }

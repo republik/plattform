@@ -6,7 +6,11 @@ export const GIFTS_ENABLED = () =>
   process.env.PAYMENTS_SHOP_GIFTS_ENABLED === 'true'
 
 export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
-export type OfferAvailability = 'PURCHASABLE' | 'UPGRADEABLE' | 'UNAVAILABLE'
+export type OfferAvailability =
+  | 'PURCHASABLE'
+  | 'UPGRADEABLE'
+  | 'UNAVAILABLE'
+  | 'UNAVAILABLE_CURRENT'
 
 export type PriceDefinition = {
   type: 'PRICE'

@@ -102,10 +102,17 @@ export class OfferBuilder {
     offer: Offer,
   ): Promise<{ kind: OfferAvailability; startDate?: Date }> {
     const sub = await this.context.activeSubscription
+    if (offer.id.startsWith('GIFT')) return { kind: 'PURCHASABLE' }
+
     if (sub) {
       if (resolveUpgradePaths(sub).includes(offer.id)) {
         return { kind: 'UPGRADEABLE', startDate: sub.currentPeriodEnd }
       } else {
+        const [offerType] = offer.id.split('_')
+        const [supType] = sub.type.split('_')
+
+        if (offerType === supType) return { kind: 'UNAVAILABLE_CURRENT' }
+
         return { kind: 'UNAVAILABLE' }
       }
     }
