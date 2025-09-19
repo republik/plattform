@@ -1,9 +1,11 @@
 import { PgDb } from 'pogi'
+import { SubscriptionType } from '../types'
 
 export type Upgrade = {
   id: string
   userId: string
   subscriptionId: string
+  subscriptionType: SubscriptionType | null
   externalId: string
   status: string
   scheduledStart: Date
@@ -41,6 +43,7 @@ export class SubscriptionUpgradeRepo {
     args: Partial<{
       userId: string
       subscriptionId: string
+      subscriptionType: string | null
       externalId: string
       status: string
       scheduledStart: Date
@@ -49,6 +52,7 @@ export class SubscriptionUpgradeRepo {
     const insert = this.filterUndefined({
       user_id: args.userId,
       subscription_id: args.subscriptionId,
+      subscription_type: args.subscriptionType,
       external_id: args.externalId,
       status: args.status,
       scheduled_start: args.scheduledStart,
