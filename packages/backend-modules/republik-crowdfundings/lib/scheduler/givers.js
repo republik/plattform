@@ -11,7 +11,6 @@ const { PARKING_USER_ID } = process.env
 
 const DAYS_BEFORE_END_DATE = 45
 const MAX_DAYS_BEFORE_END_DATE = 33
-const EXCLUDE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
 const formatDate = (date) => moment(date).format('YYYYMMDD')
 
@@ -25,11 +24,11 @@ const getUsers = async ({ now }, { pgdb }) => {
     maxEndDate: maxEndDate.toISOString(),
   })
 
-  const users = await pgdb.query(
+  const query = 
     `
     WITH dormant_membership_user_ids AS (
       SELECT
-        DISTINCT(m."userId") as "userId"
+        m."userId" as "userId"
       FROM
         memberships m
       JOIN
@@ -38,15 +37,14 @@ const getUsers = async ({ now }, { pgdb }) => {
       JOIN
         packages pkg
         ON p."packageId" = pkg.id
+      JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
+      LEFT JOIN "membershipPeriods" mp ON mp."membershipId" = m.id
       WHERE
-        m.id NOT IN (SELECT "membershipId" FROM "membershipPeriods") AND --no period
+        mp.id IS NULL AND --no period
         pkg.name != 'ABO_GIVE' AND
         m."userId" != :PARKING_USER_ID AND
-        m."membershipTypeId" IN (
-          SELECT id FROM "membershipTypes" WHERE name = ANY('{${EXCLUDE_MEMBERSHIP_TYPES.join(
-            ',',
-          )}}')
-        )
+        mt.name IN ('ABO', 'BENEFACTOR_ABO')
+      GROUP BY m."userId"
     ), givers AS (
       SELECT
         u.id AS "userId",
@@ -69,13 +67,15 @@ const getUsers = async ({ now }, { pgdb }) => {
         "membershipPeriods" mp
         ON
           m.id = mp."membershipId"
+      LEFT JOIN dormant_membership_user_ids dm ON dm."userId" = u.id
       WHERE
         u.id != :PARKING_USER_ID AND
-        u.id NOT IN (SELECT "userId" FROM dormant_membership_user_ids)
+        dm."userId" IS NULL
       GROUP BY
         1, 2, 3
-      ORDER BY
-       1, 4
+      HAVING 
+        max(mp."endDate") > :minEndDate AND
+        max(mp."endDate") < :maxEndDate
     )
       SELECT
         "userId",
@@ -85,12 +85,10 @@ const getUsers = async ({ now }, { pgdb }) => {
         min("lastEndDate") as "minLastEndDate"
       FROM
         givers
-      WHERE
-        "lastEndDate" > :minEndDate AND
-        "lastEndDate" < :maxEndDate
       GROUP BY
         1, 2
-  `,
+  `
+  const users = await pgdb.query(query,
     {
       PARKING_USER_ID,
       minEndDate,
