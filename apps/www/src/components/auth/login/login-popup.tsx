@@ -24,7 +24,7 @@ function Login({ email }: { email: string }) {
   return (
     <Dialog.Root defaultOpen={true}>
       <Dialog.Portal>
-        <Overlay title='Welcome back to Republik'>
+        <Overlay>
           <div
             className={css({
               padding: 4,
@@ -35,18 +35,20 @@ function Login({ email }: { email: string }) {
           >
             <LoginForm
               renderBefore={
-                <div className={css({ mb: 4 })}>
-                  <h2 className={css({ mb: 4 })}>Log in and keep on reading</h2>
-                  <div className={css({ textStyle: 'airy' })}>
-                    <ol>
-                      <li>1. Confirm your email address.</li>
-                      <li>2. Enter the verification code.</li>
-                      <li>
-                        3. Read the article you came for, and hopefully many
-                        more.
-                      </li>
-                    </ol>
-                  </div>
+                <div
+                  className={css({
+                    mb: '8-16',
+                    textAlign: 'center',
+                  })}
+                >
+                  <h2>
+                    <Dialog.Title className={css({ mb: 4 })}>
+                      Looks like you are a subscriber
+                    </Dialog.Title>
+                  </h2>
+                  <p className={css({ textStyle: 'airy' })}>
+                    Please, <b>log in to read the article.</b>
+                  </p>
                 </div>
               }
               renderAfter={
@@ -59,7 +61,7 @@ function Login({ email }: { email: string }) {
                     textAlign: 'center',
                   })}
                 >
-                  <Button variant='link' onClick={correctEmail}>
+                  <Button variant='link' size='large' onClick={correctEmail}>
                     Not your email address?
                   </Button>
                 </div>

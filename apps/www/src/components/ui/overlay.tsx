@@ -7,11 +7,10 @@ import { IconClose } from '@republik/icons'
 import { css } from '@republik/theme/css'
 
 type ModalProps = {
-  title: string
   children: React.ReactNode
 }
 
-export function Overlay({ title, children }: ModalProps) {
+export function Overlay({ children }: ModalProps) {
   return (
     <Dialog.Overlay
       // data-theme='dark'
@@ -36,7 +35,7 @@ export function Overlay({ title, children }: ModalProps) {
           left: '50%',
           transform: 'translate(-50%, -50%)',
           width: '90vw',
-          maxWidth: 'content.narrow',
+          maxWidth: 'content.text',
           maxHeight: '85vh',
           _stateOpen: { animation: 'fadeIn' },
           _stateClosed: {
@@ -47,22 +46,17 @@ export function Overlay({ title, children }: ModalProps) {
         <div
           className={css({
             display: 'flex',
-            justifyContent: 'space-between',
-            borderBottom: '1px solid',
-            borderColor: 'divider',
+            justifyContent: 'end',
             padding: 4,
           })}
         >
-          <Dialog.Title className={css({ textStyle: 'sansSerifMedium' })}>
-            {title}
-          </Dialog.Title>
           <Dialog.Close asChild>
             <Button aria-label='Close' variant='link'>
-              <IconClose />
+              <IconClose size={32} />
             </Button>
           </Dialog.Close>
         </div>
-        {children}
+        <div className={css({ padding: '8-16' })}>{children}</div>
       </Dialog.Content>
     </Dialog.Overlay>
   )
