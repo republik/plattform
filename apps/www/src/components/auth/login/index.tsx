@@ -97,7 +97,10 @@ export function LoginForm(props: LoginFormProps) {
     if (result.data?.signIn) {
       setEmail(email)
       trackEvent({
-        action: 'Initiated trial registration',
+        action:
+          props.context === 'trial'
+            ? 'Initiated trial registration'
+            : 'Initiated login',
         ...props.analyticsProps,
       })
     }

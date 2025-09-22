@@ -11,6 +11,8 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { css } from '@republik/theme/css'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import isEmail from 'validator/lib/isEmail'
+import { maybeDecode } from '../../../../lib/utils/base64u'
 
 import { LoginForm } from '../login'
 
@@ -66,7 +68,7 @@ function Login({ email }: { email: string }) {
                   </Button>
                 </div>
               }
-              analyticsProps={{}}
+              analyticsProps={{ variation: 'prefilled login popup' }}
               defaultEmail={defaultEmail}
               autoFocus={autofocus}
               key={defaultEmail} // reset form when email is changed
@@ -85,14 +87,15 @@ function isWalled(paynote: PaynoteKindType) {
 export function LoginPopup() {
   const router = useRouter()
   const { query } = router
-  // TODO: decode email (base64)
   const email = query.email
 
   const { paynoteKind } = usePaynotes()
 
-  console.log({ paynoteKind })
-
   if (!email || !isWalled(paynoteKind)) return null
 
-  return <Login email={email} />
+  const decodedEmail = maybeDecode(email as string)
+
+  if (!isEmail(decodedEmail)) return null
+
+  return <Login email={decodedEmail} />
 }

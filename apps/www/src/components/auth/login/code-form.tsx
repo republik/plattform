@@ -1,24 +1,23 @@
 'use client'
 
-import { useEffect, useId, useRef, useState } from 'react'
-import { useRouter } from 'next/router'
-
-import { ApolloError, useApolloClient } from '@apollo/client'
-
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
-
-import { visuallyHidden, vstack } from '@republik/theme/patterns'
-import { css } from '@republik/theme/css'
-
 import {
   AuthorizeSessionDocument,
   RequestAccessDocument,
   SignInTokenType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 
-import { useTranslation } from 'lib/withT'
+import { ApolloError, useApolloClient } from '@apollo/client'
+
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { css } from '@republik/theme/css'
+
+import { visuallyHidden, vstack } from '@republik/theme/patterns'
 import { REGWALL_CAMPAIGN } from 'lib/constants'
 import { getConversionPayload } from 'lib/utils/conversion-payload'
+
+import { useTranslation } from 'lib/withT'
+import { useRouter } from 'next/router'
+import { useEffect, useId, useRef, useState } from 'react'
 
 import { Spinner } from '../../ui/spinner'
 
@@ -74,7 +73,10 @@ export function CodeForm({
       .then(() => {
         // console.log('trial registration success')
         trackEvent({
-          action: 'Completely trial registration',
+          action:
+            context === 'trial'
+              ? 'Completely trial registration'
+              : 'Completed login',
           ...analyticsProps,
         })
         reloadPage(context, redirectUrl)
