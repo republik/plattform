@@ -152,13 +152,6 @@ type MembershipStats {
   # Return sum of active or overdue memberships
   count: Int!
   monthlys: [MonthlyMembershipStat!]!
-  periods(
-    minEndDate: Date!
-    maxEndDate: Date!
-    # filter by membershipTypes
-    # default: [ABO]
-    membershipTypes: [String!]
-  ): MembershipPeriodStats!
   """
   Returns membership evolution in monthly buckets.
   """
@@ -212,22 +205,6 @@ type MonthlyMembershipStat {
   renewableCount: Int!
   renewedCount: Int!
   renewedRatio: Float!
-}
-
-type MembershipPeriodStats {
-  # combination: minEndDate-maxEndDate-membershipTypes
-  id: ID!
-  totalMemberships: Int!
-  # any day that an action occurred that affected a period that ended within the specified end dates
-  days: [MembershipPeriodStatsDay!]!
-}
-
-type MembershipPeriodStatsDay {
-  # combination: dayDate-membershipTypes
-  id: ID!
-  date: Date!
-  cancelCount: Int!
-  prolongCount: Int!
 }
 
 type MembershipStatsAges {
