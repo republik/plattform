@@ -1,9 +1,5 @@
 'use client'
 
-import {
-  PaynoteKindType,
-  usePaynotes,
-} from '@app/components/paynotes/paynotes-context'
 import { Button } from '@app/components/ui/button'
 import { Overlay } from '@app/components/ui/overlay'
 import * as Dialog from '@radix-ui/react-dialog'
@@ -80,18 +76,12 @@ function Login({ email }: { email: string }) {
   )
 }
 
-function isWalled(paynote: PaynoteKindType) {
-  return ['PAYWALL', 'REGWALL', 'CAMPAIGN_OVERLAY_OPEN'].includes(paynote)
-}
-
 export function LoginPopup() {
   const router = useRouter()
   const { query } = router
   const email = query.email
 
-  const { paynoteKind } = usePaynotes()
-
-  if (!email || !isWalled(paynoteKind)) return null
+  if (!email) return null
 
   const decodedEmail = maybeDecode(email as string)
 
