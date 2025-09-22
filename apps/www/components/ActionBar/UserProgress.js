@@ -28,7 +28,8 @@ const UserProgress = ({
 
   // Once consent has been given or not return null if there is no user progress object
   // or displayminutes are below 1min
-  if (!userProgress || displayMinutes < 1) {
+  // or the document hasn't been loaded (yet)
+  if (!userProgress || displayMinutes < 1 || !documentId) {
     return null
   }
 
