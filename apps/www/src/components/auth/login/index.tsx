@@ -54,6 +54,7 @@ export function LoginForm(props: LoginFormProps) {
   const [showTos, setShowTos] = useState(props.autoFocus ?? false)
   const [pending, setPending] = useState(false)
   const { t } = useTranslation()
+  const isFirstLogin = props.context === 'trial' // could be extended to registration scenarios
 
   if (signInRes.data?.signIn && email) {
     return (
@@ -96,13 +97,13 @@ export function LoginForm(props: LoginFormProps) {
 
     if (result.data?.signIn) {
       setEmail(email)
-      trackEvent({
-        action:
-          props.context === 'trial'
-            ? 'Initiated trial registration'
-            : 'Initiated login',
-        ...props.analyticsProps,
-      })
+      // TODO: delete once we have done an analysis of the regwall
+      if (props.context === 'trial') {
+        trackEvent({
+          action: 'Initiated trial registration',
+          ...props.analyticsProps,
+        })
+      }
     }
 
     if (result.errors && result.errors.length > 0) {
@@ -135,7 +136,7 @@ export function LoginForm(props: LoginFormProps) {
           onFocus={() => setShowTos(true)}
         />
         {error && <ErrorMessage error={error} />}
-        {props.context === 'trial' && showTos && <Tos />}
+        {isFirstLogin && showTos && <Tos />}
         <Submit pending={pending}>{props.submitButtonText}</Submit>
       </div>
       {props.renderAfter}

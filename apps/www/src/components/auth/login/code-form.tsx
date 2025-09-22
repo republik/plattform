@@ -71,18 +71,16 @@ export function CodeForm({
         },
       })
       .then(() => {
-        // console.log('trial registration success')
-        trackEvent({
-          action:
-            context === 'trial'
-              ? 'Completely trial registration'
-              : 'Completed login',
-          ...analyticsProps,
-        })
+        // TODO: delete once we have done an analysis of the regwall
+        if (context === 'trial') {
+          trackEvent({
+            action: 'Completely trial registration',
+            ...analyticsProps,
+          })
+        }
         reloadPage(context, redirectUrl)
       })
       .catch((err) => {
-        // console.error('trial registration error', err)
         if (
           err.message === 'RECIEPIENT_HAS_MEMBERSHIP_ERROR' ||
           err.message === 'ALREADY_IN_TRIAL_ERROR'
@@ -93,7 +91,6 @@ export function CodeForm({
       })
 
   const handleLoginSuccess = (res) => {
-    // console.log({ context })
     if (context === 'trial') {
       registerForTrial()
     } else {
