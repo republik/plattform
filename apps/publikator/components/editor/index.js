@@ -8,7 +8,6 @@ import {
   mediaQueries,
 } from '@project-r/styleguide'
 import { IconGears as SettingsIcon } from '@republik/icons'
-import { parse, stringify } from '@republik/remark-preset'
 import { timeFormat } from 'd3-time-format'
 
 import createDebug from 'debug'
@@ -495,11 +494,7 @@ export class EditorPage extends Component {
         }
         let authorsP = findAuthorsP(json)
         if (authorsP) {
-          const authorsMdast = parse(generateAuthorsLine(this.props.me))
-            .children[0]
-          authorsP.children = authorsMdast.children
-          authorsP.type = authorsMdast.type
-          delete authorsP.value
+          authorsP = generateAuthorsLine(this.props.me)
         }
         json.meta.title = router.query.title
 
@@ -700,13 +695,7 @@ export class EditorPage extends Component {
         isTemplate: isNew ? isTemplate === 'true' : data?.repo?.isTemplate,
         message: message,
         document: {
-          content: parse(
-            stringify(
-              JSON.parse(
-                JSON.stringify(this.editor.serializer.serialize(editorState)),
-              ),
-            ),
-          ),
+          content: this.editor.serializer.serialize(editorState),
         },
       })
         .then(({ data }) => {

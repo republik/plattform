@@ -1,7 +1,6 @@
-import createCoverModule from './'
 import createHeadlineModule from '../headline'
 import createParagraphModule from '../paragraph'
-import { parse, stringify } from '@republik/remark-preset'
+import createCoverModule from './'
 
 const TYPE = 'COVER'
 
@@ -33,23 +32,95 @@ const coverModule = createCoverModule({
 
 const serializer = coverModule.helpers.serializer
 
+const mdast = {
+  type: 'root',
+  children: [
+    {
+      type: 'zone',
+      identifier: 'COVER',
+      data: {},
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'image',
+              title: null,
+              url: 'img.jpg',
+              alt: 'Alt',
+            },
+          ],
+        },
+        {
+          type: 'heading',
+          depth: 1,
+          children: [
+            {
+              type: 'text',
+              value: 'Title',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'Lead',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  meta: {},
+}
+
+const mdastNormalised = {
+  type: 'root',
+  children: [
+    {
+      type: 'zone',
+      identifier: 'COVER',
+      children: [
+        {
+          type: 'image',
+          url: 'img.jpg',
+          alt: 'Alt',
+        },
+        {
+          type: 'heading',
+          depth: 1,
+          children: [
+            {
+              type: 'text',
+              value: 'Title',
+            },
+          ],
+        },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'Lead',
+            },
+          ],
+        },
+      ],
+    },
+  ],
+  meta: {},
+}
+
 describe('cover serializer test-suite', () => {
   it('cover serialization', () => {
-    const md = `<section><h6>${TYPE}</h6>
-
-![Alt](img.jpg)
-
-# Title
-
-Lead
-
-<hr /></section>`
-    const value = serializer.deserialize(parse(md))
+    const value = serializer.deserialize(mdast)
     const node = value.document.nodes.first()
 
     expect(node.kind).toBe('block')
     expect(node.type).toBe(TYPE)
 
-    expect(stringify(serializer.serialize(value)).trimRight()).toBe(md)
+    expect(serializer.serialize(value)).toEqual(mdastNormalised)
   })
 })

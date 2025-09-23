@@ -1,6 +1,5 @@
-import createParagraphModule from './'
-import { parse, stringify } from '@republik/remark-preset'
 import { boldModule } from '../mark/testUtils'
+import createParagraphModule from './'
 
 describe('paragraph serialization test-suite', () => {
   it('paragraph serialization', () => {
@@ -12,14 +11,30 @@ describe('paragraph serialization test-suite', () => {
 
     const serializer = paragraphModule.helpers.serializer
 
-    const value = serializer.deserialize(parse('Test'))
+    const mdast = {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'Test',
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
+
+    const value = serializer.deserialize(mdast)
     const node = value.document.nodes.first()
 
     expect(node.kind).toBe('block')
     expect(node.type).toBe('P')
     expect(node.text).toBe('Test')
 
-    expect(stringify(serializer.serialize(value)).trimRight()).toBe('Test')
+    expect(serializer.serialize(value)).toEqual(mdast)
   })
 
   it('paragraph with break in mark', () => {
@@ -34,14 +49,74 @@ describe('paragraph serialization test-suite', () => {
     const md = `A**${'  '}
 B**
 `
-    const value = serializer.deserialize(parse(md))
+    const mdast = {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'A',
+            },
+            {
+              type: 'strong',
+              children: [
+                {
+                  type: 'break',
+                },
+                {
+                  type: 'text',
+                  value: 'B',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
+
+    const mdastNormalised = {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: 'A',
+            },
+            {
+              type: 'strong',
+              children: [
+                {
+                  type: 'text',
+                  value: '',
+                },
+                {
+                  type: 'break',
+                },
+                {
+                  type: 'text',
+                  value: 'B',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
+
+    const value = serializer.deserialize(mdast)
     const node = value.document.nodes.first()
 
     expect(node.kind).toBe('block')
     expect(node.type).toBe('P')
     expect(node.text).toBe('A\nB')
 
-    expect(stringify(serializer.serialize(value))).toBe(md)
+    expect(serializer.serialize(value)).toEqual(mdastNormalised)
   })
 
   it('paragraph with mdastPlaceholder', () => {
@@ -57,15 +132,29 @@ B**
 
     const serializer = paragraphModule.helpers.serializer
 
-    const md = `\u2063
-`
-    const value = serializer.deserialize(parse(md))
+    const mdast = {
+      type: 'root',
+      children: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              type: 'text',
+              value: '⁣',
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
+
+    const value = serializer.deserialize(mdast)
     const node = value.document.nodes.first()
 
     expect(node.kind).toBe('block')
     expect(node.type).toBe('P')
     expect(node.text).toBe(String())
 
-    expect(stringify(serializer.serialize(value))).toBe(md)
+    expect(serializer.serialize(value)).toEqual(mdast)
   })
 })

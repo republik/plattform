@@ -23,7 +23,7 @@ const Progress = ({ children, documentPath }) => {
   const { upsertDocumentProgress, useDocumentProgress } = useProgress()
 
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
-  
+
   const { data } = useDocumentProgress({ path: documentPath })
   const { userProgress, id: documentId } = data?.document || {}
 
@@ -89,7 +89,7 @@ const Progress = ({ children, documentPath }) => {
   }
 
   refSaveProgress.current = debounce(() => {
-    if (!documentPath || !progressConsent) {
+    if (!documentId || !progressConsent) {
       return
     }
 

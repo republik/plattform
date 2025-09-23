@@ -15,8 +15,7 @@ import createChartModule from './modules/chart'
 import createChartCanvasModule from './modules/chart/canvas'
 import createCoverModule from './modules/cover'
 
-import createDocumentModule from './modules/document'
-import createDocumentPlainModule from './modules/document/plain'
+import createDocumentPlainModule from './modules/document'
 import createFrontDossier from './modules/dossier/front'
 import createDossierIntro from './modules/dossier/intro'
 import createDynamicComponentModule from './modules/dynamiccomponent'
@@ -60,7 +59,6 @@ const moduleCreators = {
   embedTwitter: createEmbedTwitterModule,
   embedComment: createEmbedCommentModule,
   embedDatawrapper: createEmbedDatawrapperModule,
-  document: createDocumentModule,
   documentPlain: createDocumentPlainModule,
   cover: createCoverModule,
   center: createCenterModule,

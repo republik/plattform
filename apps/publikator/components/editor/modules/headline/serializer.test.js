@@ -1,5 +1,4 @@
 import createHeadlineModule from './'
-import { parse, stringify } from '@republik/remark-preset'
 
 describe('headline serializer test-suite', () => {
   it('h1 serialization', () => {
@@ -15,14 +14,31 @@ describe('headline serializer test-suite', () => {
 
     const serializer = module.helpers.serializer
 
-    const value = serializer.deserialize(parse('# Test'))
+    const mdast = {
+      type: 'root',
+      children: [
+        {
+          type: 'heading',
+          depth: 1,
+          children: [
+            {
+              type: 'text',
+              value: 'Test',
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
+
+    const value = serializer.deserialize(mdast)
     const node = value.document.nodes.first()
 
     expect(node.kind).toBe('block')
     expect(node.type).toBe('H1')
     expect(node.text).toBe('Test')
 
-    expect(stringify(serializer.serialize(value)).trimRight()).toBe('# Test')
+    expect(serializer.serialize(value)).toEqual(mdast)
   })
 
   it('h2 serialization', () => {
@@ -38,14 +54,31 @@ describe('headline serializer test-suite', () => {
 
     const serializer = module.helpers.serializer
 
-    const value = serializer.deserialize(parse('## Test'))
+    const mdast = {
+      type: 'root',
+      children: [
+        {
+          type: 'heading',
+          depth: 2,
+          children: [
+            {
+              type: 'text',
+              value: 'Test',
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
+
+    const value = serializer.deserialize(mdast)
     const node = value.document.nodes.first()
 
     expect(node.kind).toBe('block')
     expect(node.type).toBe('H2')
     expect(node.text).toBe('Test')
 
-    expect(stringify(serializer.serialize(value)).trimRight()).toBe('## Test')
+    expect(serializer.serialize(value)).toEqual(mdast)
   })
 
   it('h3 serialization', () => {
@@ -61,13 +94,30 @@ describe('headline serializer test-suite', () => {
 
     const serializer = module.helpers.serializer
 
-    const value = serializer.deserialize(parse('### Test'))
+    const mdast = {
+      type: 'root',
+      children: [
+        {
+          type: 'heading',
+          depth: 3,
+          children: [
+            {
+              type: 'text',
+              value: 'Test',
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
+
+    const value = serializer.deserialize(mdast)
     const node = value.document.nodes.first()
 
     expect(node.kind).toBe('block')
     expect(node.type).toBe('H3')
     expect(node.text).toBe('Test')
 
-    expect(stringify(serializer.serialize(value)).trimRight()).toBe('### Test')
+    expect(serializer.serialize(value)).toEqual(mdast)
   })
 })
