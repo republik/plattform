@@ -71,13 +71,10 @@ export function CodeForm({
         },
       })
       .then(() => {
-        // TODO: delete once we have done an analysis of the regwall
-        if (context === 'trial') {
-          trackEvent({
-            action: 'Completely trial registration',
-            ...analyticsProps,
-          })
-        }
+        trackEvent({
+          action: 'Completed login',
+          ...analyticsProps,
+        })
         reloadPage(context, redirectUrl)
       })
       .catch((err) => {
@@ -94,7 +91,7 @@ export function CodeForm({
     if (context === 'trial') {
       registerForTrial()
     } else {
-      reloadPage(undefined, redirectUrl)
+      reloadPage(context, redirectUrl)
     }
   }
 

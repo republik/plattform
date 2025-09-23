@@ -13,5 +13,11 @@ export const reloadPage = (
     url.searchParams.set('trialSignup', 'true')
     return window.location.replace(url.toString())
   }
+  if (context === 'signIn') {
+    const url = new URL(window.location.href)
+    // remove email from query params to leaking it further
+    url.searchParams.delete('email')
+    return window.location.replace(url.toString())
+  }
   window.location.reload()
 }

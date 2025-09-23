@@ -97,13 +97,10 @@ export function LoginForm(props: LoginFormProps) {
 
     if (result.data?.signIn) {
       setEmail(email)
-      // TODO: delete once we have done an analysis of the regwall
-      if (props.context === 'trial') {
-        trackEvent({
-          action: 'Initiated trial registration',
-          ...props.analyticsProps,
-        })
-      }
+      trackEvent({
+        action: 'Initiated login',
+        ...props.analyticsProps,
+      })
     }
 
     if (result.errors && result.errors.length > 0) {
