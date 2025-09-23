@@ -27,10 +27,6 @@ const {
 } = require('@orbiting/backend-modules-referral-campaigns')
 
 const surplus = require('@orbiting/backend-modules-republik/graphql/resolvers/RevenueStats/surplus')
-const {
-  populate: populateMembershipStatsEvolution,
-} = require('@orbiting/backend-modules-republik/lib/MembershipStats/evolution')
-const countRange = require('@orbiting/backend-modules-republik/graphql/resolvers/MembershipStats/countRange')
 
 const init = async (context) => {
   debug('init')
@@ -144,16 +140,6 @@ const init = async (context) => {
       runFunc: (args, context) =>
         Promise.all([
           surplus(null, { min: '2019-12-01', forceRecache: true }, context),
-          populateMembershipStatsEvolution(context),
-          countRange(
-            null,
-            {
-              min: '2020-02-29T23:00:00Z',
-              max: '2020-03-31T23:00:00Z',
-              forceRecache: true,
-            },
-            context,
-          ),
         ]),
       lockTtlSecs,
       runIntervalSecs: 60 * 60,
