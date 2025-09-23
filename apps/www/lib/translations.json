@@ -8017,15 +8017,15 @@
     },
     {
       "key": "loginPopup/title",
-      "value": "Looks like you are a subscriber"
+      "value": "Sieht so aus, als wären Sie Verleger"
     },
     {
       "key": "loginPopup/description",
-      "value": "Please, <b>log in to read the article.</b>"
+      "value": "Bitte <b>melden Sie sich an, um den Artikel zu lesen.</b>"
     },
     {
       "key": "loginPopup/resetButton",
-      "value": "Not your email address?"
+      "value": "Nicht Ihre E-Mail-Adresse?"
     }
   ]
 }
