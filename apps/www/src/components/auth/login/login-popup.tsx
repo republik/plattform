@@ -7,7 +7,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 
 import { css } from '@republik/theme/css'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import isEmail from 'validator/lib/isEmail'
 import { useMe } from '../../../../lib/context/MeContext'
 import { maybeDecode } from '../../../../lib/utils/base64u'
@@ -55,18 +55,6 @@ function ResetButton({ onClick }) {
 function Login({ email }: { email: string }) {
   const [defaultEmail, setDefaultEmail] = useState<string>(email)
   const [autofocus, setAutofocus] = useState<boolean>(false)
-  const router = useRouter()
-
-  function removeEmailFromQuery() {
-    const { email: emailParam, ...query } = router.query
-    router.replace(
-      {
-        query,
-      },
-      undefined,
-      { shallow: true },
-    )
-  }
 
   function resetEmail() {
     setDefaultEmail('')
@@ -74,7 +62,7 @@ function Login({ email }: { email: string }) {
   }
 
   return (
-    <Dialog.Root defaultOpen={true} onOpenChange={removeEmailFromQuery}>
+    <Dialog.Root defaultOpen={true}>
       <Dialog.Portal>
         <Overlay>
           <div
@@ -104,29 +92,30 @@ function Login({ email }: { email: string }) {
 export function LoginPopup() {
   const { meLoading, me } = useMe()
   const router = useRouter()
-  const {
-    query: { email, ...restQuery },
-  } = router
+  const [email, setEmail] = useState<string>('')
 
-  if (meLoading || me) {
-    router.replace(
-      {
-        query: restQuery,
-      },
-      undefined,
-      { shallow: true },
-    )
-    return null
-  }
+  useEffect(() => {
+    if (router.isReady && router.query.email) {
+      const { email: emailParam, ...restQuery } = router.query
 
-  if (!email) return null
+      const decodedEmail = maybeDecode(emailParam as string)
+      if (isEmail(decodedEmail)) {
+        setEmail(decodedEmail)
+      }
 
-  const decodedEmail = maybeDecode(email as string)
-  if (!isEmail(decodedEmail)) return null
+      router.replace(
+        { pathname: router.pathname, query: restQuery },
+        undefined,
+        { shallow: true },
+      )
+    }
+  }, [router.isReady, router.query.email, router])
+
+  if (meLoading || me || !email) return null
 
   return (
     <EventTrackingContext category='SimplifiedLogin'>
-      <Login email={decodedEmail} />
+      <Login email={email} />
     </EventTrackingContext>
   )
 }
