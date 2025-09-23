@@ -42,7 +42,27 @@ export const findAuthorsP = (document) => {
 
 const pubDateFormat = swissTime.format('%d.%m.%Y')
 
-export const generateAuthorsLine = (me) =>
-  `Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'}, ${pubDateFormat(
-    new Date(),
-  )}`
+export const generateAuthorsLine = (me) => ({
+  type: 'paragraph',
+  children: [
+    {
+      type: 'text',
+      value: 'Von ',
+    },
+    {
+      type: 'link',
+      title: null,
+      url: me ? `/~${me.id})` : '',
+      children: [
+        {
+          type: 'text',
+          value: me ? me.name : 'Autor',
+        },
+      ],
+    },
+    {
+      type: 'text',
+      value: `, ${pubDateFormat(new Date())}`,
+    },
+  ],
+})
