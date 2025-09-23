@@ -9,12 +9,15 @@ import { css } from '@republik/theme/css'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import isEmail from 'validator/lib/isEmail'
+
 import { useMe } from '../../../../lib/context/MeContext'
 import { maybeDecode } from '../../../../lib/utils/base64u'
+import { useTranslation } from '../../../../lib/withT'
 
 import { LoginForm } from '../login'
 
 function LoginHeader() {
+  const { t } = useTranslation()
   return (
     <div
       className={css({
@@ -24,17 +27,21 @@ function LoginHeader() {
     >
       <h2>
         <Dialog.Title className={css({ mb: 4 })}>
-          Looks like you are a subscriber
+          {t('loginPopup/title')}
         </Dialog.Title>
       </h2>
-      <p className={css({ textStyle: 'airy' })}>
-        Please, <b>log in to read the article.</b>
-      </p>
+      <p
+        className={css({ textStyle: 'airy' })}
+        dangerouslySetInnerHTML={{
+          __html: t('loginPopup/description'),
+        }}
+      />
     </div>
   )
 }
 
 function ResetButton({ onClick }) {
+  const { t } = useTranslation()
   return (
     <div
       className={css({
@@ -46,7 +53,7 @@ function ResetButton({ onClick }) {
       })}
     >
       <Button variant='link' size='large' onClick={onClick}>
-        Not your email address?
+        {t('loginPopup/resetButton')}
       </Button>
     </div>
   )

@@ -8014,6 +8014,18 @@
     {
       "key": "nextReads/bookmarkedFeed/manageBookmarks",
       "value": "Lesezeichen bearbeiten"
+    },
+    {
+      "key": "loginPopup/title",
+      "value": "Looks like you are a subscriber"
+    },
+    {
+      "key": "loginPopup/description",
+      "value": "Please, <b>log in to read the article.</b>"
+    },
+    {
+      "key": "loginPopup/resetButton",
+      "value": "Not your email address?"
     }
   ]
 }
