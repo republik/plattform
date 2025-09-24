@@ -40,7 +40,7 @@ function ResetButton({ onClick }) {
   const { t } = useTranslation()
   return (
     <Button type='button' variant='link' onClick={onClick}>
-      {t('loginPopup/resetButton')}
+      {t('auth/login/email/reset')}
     </Button>
   )
 }
