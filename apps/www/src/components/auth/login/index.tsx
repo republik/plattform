@@ -1,4 +1,5 @@
 'use client'
+
 import {
   SignInDocument,
   SignInTokenType,
@@ -30,7 +31,16 @@ type SubmitProps = {
 export function Submit({ children, pending }: SubmitProps) {
   return (
     <Button type='submit' size='full' disabled={pending} loading={pending}>
-      {children ?? 'Submit'}
+      {children ?? 'Weiter'}
+    </Button>
+  )
+}
+
+function ResetButton({ onClick }) {
+  const { t } = useTranslation()
+  return (
+    <Button type='button' variant='link' onClick={onClick}>
+      {t('loginPopup/resetButton')}
     </Button>
   )
 }
@@ -47,13 +57,17 @@ interface LoginFormProps {
 }
 
 export function LoginForm(props: LoginFormProps) {
+  const { t } = useTranslation()
   const [signIn, signInRes] = useMutation(SignInDocument)
   const trackEvent = useTrackEvent()
+
+  const [defaultEmail, setDefaultEmail] = useState(props.defaultEmail ?? '')
+  const [autoFocus, setAutoFocus] = useState(props.autoFocus ?? false)
   const [email, setEmail] = useState<string | null>(null)
   const [error, setError] = useState<ApolloError | string | undefined>()
   const [showTos, setShowTos] = useState(props.autoFocus ?? false)
   const [pending, setPending] = useState(false)
-  const { t } = useTranslation()
+
   const isFirstLogin = props.context === 'trial' // could be extended to registration scenarios
 
   if (signInRes.data?.signIn && email) {
@@ -111,7 +125,11 @@ export function LoginForm(props: LoginFormProps) {
   }
 
   return (
-    <form action='POST' onSubmit={submitEmail}>
+    <form
+      action='POST'
+      onSubmit={submitEmail}
+      key={defaultEmail ?? 'email-submit'}
+    >
       {props.renderBefore}
       <div
         className={vstack({
@@ -125,12 +143,22 @@ export function LoginForm(props: LoginFormProps) {
         })}
       >
         <FormField
-          label='E-Mail-Adresse'
-          defaultValue={props.defaultEmail ?? undefined}
+          label='Ihre E-Mail-Adresse'
+          defaultValue={defaultEmail ?? undefined}
           name='email'
           type='email'
-          autoFocus={props.autoFocus}
+          autoFocus={autoFocus}
           onFocus={() => setShowTos(true)}
+          description={
+            defaultEmail && (
+              <ResetButton
+                onClick={() => {
+                  setDefaultEmail('')
+                  setAutoFocus(true)
+                }}
+              />
+            )
+          }
         />
         {error && <ErrorMessage error={error} />}
         {isFirstLogin && showTos && <Tos />}

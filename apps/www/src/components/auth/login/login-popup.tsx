@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from '@app/components/ui/button'
 import { Overlay } from '@app/components/ui/overlay'
 import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import * as Dialog from '@radix-ui/react-dialog'
@@ -40,34 +39,7 @@ function LoginHeader() {
   )
 }
 
-function ResetButton({ onClick }) {
-  const { t } = useTranslation()
-  return (
-    <div
-      className={css({
-        marginTop: 2,
-        fontSize: 's',
-        lineHeight: 1.4,
-        color: 'textSoft',
-        textAlign: 'center',
-      })}
-    >
-      <Button variant='link' size='large' onClick={onClick}>
-        {t('loginPopup/resetButton')}
-      </Button>
-    </div>
-  )
-}
-
 function Login({ email }: { email: string }) {
-  const [defaultEmail, setDefaultEmail] = useState<string>(email)
-  const [autofocus, setAutofocus] = useState<boolean>(false)
-
-  function resetEmail() {
-    setDefaultEmail('')
-    setAutofocus(true)
-  }
-
   return (
     <Dialog.Root defaultOpen={true}>
       <Dialog.Portal>
@@ -83,11 +55,8 @@ function Login({ email }: { email: string }) {
             <LoginForm
               context='signIn'
               renderBefore={<LoginHeader />}
-              renderAfter={<ResetButton onClick={resetEmail} />}
               analyticsProps={{ variation: 'prefilled login popup' }}
-              defaultEmail={defaultEmail}
-              autoFocus={autofocus}
-              key={defaultEmail} // reset form when email is changed
+              defaultEmail={email}
             />
           </div>
         </Overlay>
