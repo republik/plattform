@@ -150,7 +150,7 @@ type Greeting {
 
 type MembershipStats {
   # Return sum of active or overdue memberships
-  count: Int!
+  count: Int! @deprecated(reason: "Use evolution instead")
   monthlys: [MonthlyMembershipStat!]!
   """
   Returns membership evolution in monthly buckets.
@@ -172,7 +172,7 @@ type MembershipStats {
   countRange(
     min: DateTime!
     max: DateTime!
-  ): Int!
+  ): Int! @deprecated(reason: "Not kept up to date any longer")
   """
   Returns age distribution for users with active memberships
   """
