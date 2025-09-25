@@ -39,9 +39,8 @@ const Subject = ({ children, color, collapsedColor, columns }) => {
         ? labCompactColor.darker(2)
         : labCompactColor.brighter(3),
     '&::after': {
-      content: !!children.length ? ' ' : undefined,
+      content: ' ',
     },
-    paddingRight: !!children.length ? '.2em' : 0,
     [tUp]: {
       color: labColor.l > 50 ? labColor.darker(2) : labColor.brighter(3),
     },
