@@ -24,7 +24,7 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
     toggleAudioPlayer,
     checkIfActivePlayerItem,
   } = useAudioContext()
-  const { isAudioQueueAvailable, addAudioQueueItem } = useAudioQueue()
+  const { addAudioQueueItem } = useAudioQueue()
   const { isMember } = useMe()
 
   if (!documentId) {
@@ -33,7 +33,7 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
 
   const isActivePlayerItem = checkIfActivePlayerItem(documentId)
 
-  const isVisible = isAudioQueueAvailable && isMember
+  const isVisible = isMember
 
   return (
     <button

@@ -1,6 +1,3 @@
-import { useInNativeApp } from '../../../lib/withInNativeApp'
-import compareVersion from '../../../lib/react-native/CompareVersion'
-import { NEW_AUDIO_API_VERSION } from '../constants'
 import { useMe } from '../../../lib/context/MeContext'
 import createPersistedState from '../../../lib/hooks/use-persisted-state'
 import { AudioPlayerItem, AudioQueueItem } from '../types/AudioPlayerItem'
@@ -63,12 +60,10 @@ const useAudioQueue = (): {
   reorderAudioQueue: (
     reorderedQueueItems: AudioQueueItem[],
   ) => Promise<FetchResult<ReorderAudioQueueMutation>>
-  isAudioQueueAvailable: boolean
   checkIfHeadOfQueue: (documentId: string) => AudioQueueItem
   checkIfInQueue: (audioItemId: string) => AudioQueueItem
   getAudioQueueItemIndex: (documentId: string) => number
 } => {
-  const { inNativeApp, inNativeAppVersion } = useInNativeApp()
   const { meLoading, me } = useMe()
   const {
     data: meWithAudioQueue,
@@ -309,10 +304,6 @@ const useAudioQueue = (): {
     moveAudioQueueItem: handleMoveQueueItem,
     clearAudioQueue: handleClearQueue,
     reorderAudioQueue: handleQueueReorder,
-    isAudioQueueAvailable:
-      !inNativeApp || // in browser
-      (inNativeApp && // in app with non legacy version
-        compareVersion(inNativeAppVersion, NEW_AUDIO_API_VERSION) >= 0),
     checkIfHeadOfQueue,
     checkIfInQueue,
     getAudioQueueItemIndex,
