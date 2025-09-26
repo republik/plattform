@@ -1,23 +1,24 @@
 'use client'
 
+import { useEffect, useId, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
+
+import { ApolloError, useApolloClient } from '@apollo/client'
+
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+
+import { visuallyHidden, vstack } from '@republik/theme/patterns'
+import { css } from '@republik/theme/css'
+
 import {
   AuthorizeSessionDocument,
   RequestAccessDocument,
   SignInTokenType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 
-import { ApolloError, useApolloClient } from '@apollo/client'
-
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
-import { css } from '@republik/theme/css'
-
-import { visuallyHidden, vstack } from '@republik/theme/patterns'
+import { useTranslation } from 'lib/withT'
 import { REGWALL_CAMPAIGN } from 'lib/constants'
 import { getConversionPayload } from 'lib/utils/conversion-payload'
-
-import { useTranslation } from 'lib/withT'
-import { useRouter } from 'next/router'
-import { useEffect, useId, useRef, useState } from 'react'
 
 import { Spinner } from '../../ui/spinner'
 
@@ -71,13 +72,15 @@ export function CodeForm({
         },
       })
       .then(() => {
+        // console.log('trial registration success')
         trackEvent({
-          action: 'Completed login',
+          action: 'Completely trial registration',
           ...analyticsProps,
         })
         reloadPage(context, redirectUrl)
       })
       .catch((err) => {
+        // console.error('trial registration error', err)
         if (
           err.message === 'RECIEPIENT_HAS_MEMBERSHIP_ERROR' ||
           err.message === 'ALREADY_IN_TRIAL_ERROR'
@@ -88,10 +91,11 @@ export function CodeForm({
       })
 
   const handleLoginSuccess = (res) => {
+    // console.log({ context })
     if (context === 'trial') {
       registerForTrial()
     } else {
-      reloadPage(context, redirectUrl)
+      reloadPage(undefined, redirectUrl)
     }
   }
 

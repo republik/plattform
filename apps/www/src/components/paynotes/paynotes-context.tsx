@@ -1,13 +1,13 @@
-import { useCampaign } from '@app/components/paynotes/campaign-paynote/use-campaign'
+import { createContext, useContext, useEffect, useState } from 'react'
+
+import { usePathname, useSearchParams } from 'next/navigation'
 
 import { useMe } from 'lib/context/MeContext'
 import { useUserAgent } from 'lib/context/UserAgentContext'
-
-import { usePathname, useSearchParams } from 'next/navigation'
-import { createContext, useContext, useEffect, useState } from 'react'
 import { updateArticleMetering } from './article-metering'
+import { useCampaign } from '@app/components/paynotes/campaign-paynote/use-campaign'
 
-export type PaynoteKindType =
+type PaynoteKindType =
   | null
   | 'DIALOG'
   | 'OVERLAY_CLOSED'

@@ -11,9 +11,9 @@ import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import * as Dialog from '@radix-ui/react-dialog'
 import { IconExpandMore } from '@republik/icons'
 import { css } from '@republik/theme/css'
+import { useMotionValueEvent, useScroll } from 'motion/react'
 import { useMe } from 'lib/context/MeContext'
 import { useTranslation } from 'lib/withT'
-import { useMotionValueEvent, useScroll } from 'motion/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Fragment, useEffect, useState } from 'react'
@@ -201,7 +201,7 @@ function PaynoteOverlayDialog({ isExpanded = false }) {
             aria-describedby={undefined}
             className={css({
               position: 'relative',
-              background: 'background',
+              background: 'background.marketing',
               px: '8',
               pt: '12',
               boxShadow: 'sm',

@@ -232,7 +232,6 @@ export const presetRepublik = definePreset({
         sizes: {
           maxContentWidth: { value: '52rem' },
           content: {
-            text: { value: '42rem' },
             narrow: { value: '27rem' },
           },
           header: {

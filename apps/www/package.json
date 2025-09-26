@@ -73,7 +73,7 @@
     "@next/bundle-analyzer": "^15.3.3",
     "@project-r/styleguide": "*",
     "@radix-ui/react-collapsible": "^1.0.3",
-    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-toggle-group": "^1.0.4",
     "@radix-ui/react-visually-hidden": "^1.0.3",
     "@republik/icons": "*",
