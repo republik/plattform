@@ -6,6 +6,7 @@ const compression = require('compression')
 const timeout = require('connect-timeout')
 const helmet = require('helmet')
 const sleep = require('await-sleep')
+const ipfilter = require('express-ipfilter').IpFilter
 const { httpLogger } = require('@orbiting/backend-modules-logger')
 
 const graphql = require('./express/graphql')
@@ -25,6 +26,7 @@ const {
   RES_KEEPALIVE_MAX_SECS,
   REQ_DELAY_MS,
   REQ_TIMEOUT,
+  IP_BLOCKLIST,
 } = process.env
 
 // middlewares
@@ -63,6 +65,18 @@ const start = async (
       },
     }),
   )
+
+  if (IP_BLOCKLIST) {
+    const ipBlocklist = IP_BLOCKLIST.split(',')
+    console.log('Blocking IPs', ipBlocklist)
+    server.use(
+      ipfilter(ipBlocklist, {
+        mode: 'deny',
+        logLevel: 'deny',
+        trustProxy: !DEV,
+      }),
+    )
+  }
 
   // prod only
   if (!DEV) {
@@ -163,6 +177,15 @@ const start = async (
     close,
     createGraphqlContext,
   }
+
+  // Handle errors (e.g. when IPs are denied)
+  server.use((err, req, res, next) => {
+    if (err) {
+      res
+        .status(err.status || 500)
+        .send(err.status === 403 ? 'Forbidden' : 'Something went wrong')
+    }
+  })
 
   return new Promise((resolve) => {
     const callback = () => {
