@@ -7776,6 +7776,10 @@
       "value": "Bitte geben Sie Ihre E-Mail-Adresse ein."
     },
     {
+      "key": "auth/login/email/reset",
+      "value": "Nicht korrekt?"
+    },
+    {
       "key": "auth/login/email/submit",
       "value": "Anmelden"
     },
@@ -8014,6 +8018,14 @@
     {
       "key": "nextReads/bookmarkedFeed/manageBookmarks",
       "value": "Lesezeichen bearbeiten"
+    },
+    {
+      "key": "loginPopup/title",
+      "value": "Willkommen zurück!"
+    },
+    {
+      "key": "loginPopup/description",
+      "value": "Bitte <b>melden Sie sich an</b>, um den Beitrag zu lesen."
     }
   ]
 }

@@ -139,7 +139,9 @@ module.exports = async (_, args, context) => {
     utm_campaign: repoId,
   }
 
-  const searchString = '?' + querystring.stringify(utmParams)
+  const base64Email = 'email=*|EMAILB64U|*'
+
+  const searchString = '?' + querystring.stringify(utmParams) + '&' + base64Email
 
   await contentUrlResolver(
     resolvedDoc,

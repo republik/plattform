@@ -1,18 +1,18 @@
 'use client'
-import { type ReactNode, useState } from 'react'
-
-import { ApolloError, useMutation } from '@apollo/client'
-
-import { vstack } from '@republik/theme/patterns'
-
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 
 import {
   SignInDocument,
   SignInTokenType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 
+import { ApolloError, useMutation } from '@apollo/client'
+
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+
+import { vstack } from '@republik/theme/patterns'
+
 import { useTranslation } from 'lib/withT'
+import { type ReactNode, useState } from 'react'
 import isEmail from 'validator/lib/isEmail'
 
 import { Button } from '../../ui/button'
@@ -31,7 +31,16 @@ type SubmitProps = {
 export function Submit({ children, pending }: SubmitProps) {
   return (
     <Button type='submit' size='full' disabled={pending} loading={pending}>
-      {children ?? 'Submit'}
+      {children ?? 'Weiter'}
+    </Button>
+  )
+}
+
+function ResetButton({ onClick }) {
+  const { t } = useTranslation()
+  return (
+    <Button type='button' variant='link' onClick={onClick}>
+      {t('auth/login/email/reset')}
     </Button>
   )
 }
@@ -44,16 +53,22 @@ interface LoginFormProps {
   renderBefore?: ReactNode
   renderAfter?: ReactNode
   redirectUrl?: string
+  defaultEmail?: string
 }
 
 export function LoginForm(props: LoginFormProps) {
+  const { t } = useTranslation()
   const [signIn, signInRes] = useMutation(SignInDocument)
   const trackEvent = useTrackEvent()
+
+  const [defaultEmail, setDefaultEmail] = useState(props.defaultEmail ?? '')
+  const [autoFocus, setAutoFocus] = useState(props.autoFocus ?? false)
   const [email, setEmail] = useState<string | null>(null)
   const [error, setError] = useState<ApolloError | string | undefined>()
   const [showTos, setShowTos] = useState(props.autoFocus ?? false)
   const [pending, setPending] = useState(false)
-  const { t } = useTranslation()
+
+  const isFirstLogin = props.context === 'trial' // could be extended to registration scenarios
 
   if (signInRes.data?.signIn && email) {
     return (
@@ -97,7 +112,7 @@ export function LoginForm(props: LoginFormProps) {
     if (result.data?.signIn) {
       setEmail(email)
       trackEvent({
-        action: 'Initiated trial registration',
+        action: 'Initiated login',
         ...props.analyticsProps,
       })
     }
@@ -110,7 +125,11 @@ export function LoginForm(props: LoginFormProps) {
   }
 
   return (
-    <form action='POST' onSubmit={submitEmail}>
+    <form
+      action='POST'
+      onSubmit={submitEmail}
+      key={defaultEmail ?? 'email-submit'}
+    >
       {props.renderBefore}
       <div
         className={vstack({
@@ -124,14 +143,25 @@ export function LoginForm(props: LoginFormProps) {
         })}
       >
         <FormField
-          label='E-Mail-Adresse'
+          label='Ihre E-Mail-Adresse'
+          defaultValue={defaultEmail ?? undefined}
           name='email'
           type='email'
-          autoFocus={props.autoFocus}
+          autoFocus={autoFocus}
           onFocus={() => setShowTos(true)}
+          description={
+            defaultEmail && (
+              <ResetButton
+                onClick={() => {
+                  setDefaultEmail('')
+                  setAutoFocus(true)
+                }}
+              />
+            )
+          }
         />
         {error && <ErrorMessage error={error} />}
-        {showTos && <Tos />}
+        {isFirstLogin && showTos && <Tos />}
         <Submit pending={pending}>{props.submitButtonText}</Submit>
       </div>
       {props.renderAfter}
