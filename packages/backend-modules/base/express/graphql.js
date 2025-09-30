@@ -1,4 +1,5 @@
 const { ApolloServer } = require('apollo-server-express')
+const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
@@ -129,6 +130,8 @@ module.exports = async (
       return response
     },
     plugins: [
+      // https://www.apollographql.com/docs/apollo-server/v3/api/plugin/drain-http-server
+      ApolloServerPluginDrainHttpServer({ httpServer }),
       {
         async requestDidStart() {
           return {
