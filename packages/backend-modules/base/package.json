@@ -21,13 +21,12 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@orbiting/backend-modules-logger": "*",
+    "@apollo/server": "^5.0.0",
+    "@as-integrations/express4": "^1.1.2",
     "@elastic/elasticsearch": "7.13.0",
     "@graphql-tools/schema": "^10.0.2",
+    "@orbiting/backend-modules-logger": "*",
     "apollo-modules-node": "*",
-    "apollo-server": "^3.13.0",
-    "apollo-server-core": "^3.13.0",
-    "apollo-server-express": "^3.13.0",
     "await-sleep": "^0.0.1",
     "bluebird": "^3.7.2",
     "body-parser": "^1.18.3",
@@ -49,9 +48,9 @@
     "subscriptions-transport-ws": "^0.9.16"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@orbiting/backend-modules-types": "*",
     "@types/debug": "^4.1.5",
-    "supertest": "^7.0.0",
-    "@faker-js/faker": "^8.4.1"
+    "supertest": "^7.0.0"
   }
 }
