@@ -40,7 +40,7 @@
     "date-fns": "^2.22.1",
     "downshift": "^2.2.3",
     "glamor": "^2.20.40",
-    "graphql": "^15.3.0",
+    "graphql": "^16.11.0",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.29.1",

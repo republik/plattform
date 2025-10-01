@@ -80,7 +80,7 @@
     "debug": "^4.0.1",
     "downshift": "^2.2.3",
     "glamor": "^2.20.40",
-    "graphql": "^15.3.0",
+    "graphql": "^16.11.0",
     "immutable": "^3.8.2",
     "immutable-treeutils": "^1.2.0",
     "is-url": "^1.2.4",

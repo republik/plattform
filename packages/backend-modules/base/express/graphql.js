@@ -1,5 +1,12 @@
-const { ApolloServer } = require('apollo-server-express')
-const { ApolloServerPluginDrainHttpServer } = require('apollo-server-core')
+const { ApolloServer } = require('@apollo/server')
+const {
+  ApolloServerPluginDrainHttpServer,
+} = require('@apollo/server/plugin/drainHttpServer')
+const {
+  ApolloServerPluginLandingPageProductionDefault,
+} = require('@apollo/server/plugin/landingPage/default')
+const { expressMiddleware } = require('@as-integrations/express4')
+const express = require('express')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
@@ -103,10 +110,6 @@ module.exports = async (
 
   const apolloServer = new ApolloServer({
     schema: executableSchema,
-    context: ({ req, res, connection }) =>
-      connection
-        ? connection.context
-        : createContext({ user: req.user, req, res, scope: 'request' }),
     cache: 'bounded',
     introspection: true,
     playground: false, // see ./graphiql.js
@@ -115,27 +118,20 @@ module.exports = async (
       onConnect: webSocketOnConnect,
       keepAlive: WS_KEEPALIVE_INTERVAL || 40000,
     },
-    formatResponse: (response, { context }) => {
-      // strip problematic character (\u2028) for requests from our iOS app
-      // see https://github.com/orbiting/app/issues/159
-      const { req } = context
-      const ua = req.headers['user-agent']
-      if (
-        ua &&
-        ua.includes('RepublikApp') &&
-        (ua.includes('iPhone') || ua.includes('iPad') || ua.includes('iPod'))
-      ) {
-        return JSON.parse(JSON.stringify(response).replace(/\u2028/g, ''))
-      }
-      return response
-    },
     plugins: [
-      // https://www.apollographql.com/docs/apollo-server/v3/api/plugin/drain-http-server
+      ApolloServerPluginLandingPageProductionDefault({
+        footer: false,
+      }),
+      // https://www.apollographql.com/docs/apollo-server/api/plugin/drain-http-server
       ApolloServerPluginDrainHttpServer({ httpServer }),
       {
         async requestDidStart() {
           return {
-            async didEncounterErrors({ context, request, errors }) {
+            async didEncounterErrors({
+              contextValue: context,
+              request,
+              errors,
+            }) {
               if (context.logger.isLevelEnabled('debug')) {
                 context.logger.error(
                   {
@@ -180,12 +176,15 @@ module.exports = async (
   )
 
   await apolloServer.start()
-
-  apolloServer.applyMiddleware({
-    app: server,
-    cors: false,
-    bodyParserConfig: {
+  server.use(
+    '/graphql',
+    express.json({
       limit: '128mb',
-    },
-  })
+    }),
+    expressMiddleware(apolloServer, {
+      context: async ({ req, res }) => {
+        return createContext({ user: req.user, req, res, scope: 'request' })
+      },
+    }),
+  )
 }
