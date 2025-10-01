@@ -6,7 +6,7 @@ schema {
 }
 
 type queries {
-  repo(id: ID!): Repo!
+  repo(id: ID!): Repo
 
   """
   This query is a cached version of repos query. It uses cached information
