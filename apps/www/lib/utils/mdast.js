@@ -14,7 +14,12 @@ const splitChildrenTruncated = (
   start,
   charsCutoff = TRUNCATE_AFTER_CHARS,
 ) => {
-  const center = content.children[start]
+  const center = content.children.find((node) => node.identifier === 'CENTER')
+
+  if (!center) {
+    return splitChildren(content, start)
+  }
+
   const centerChildren = center.children.reduce(
     (acc, node) => {
       if (acc.chars < charsCutoff) {
