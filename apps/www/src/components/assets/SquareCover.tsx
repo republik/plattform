@@ -20,6 +20,7 @@ export const SquareCover = ({
 }: SquareCoverProps) => {
   return (
     <img
+      loading='lazy'
       className={css({
         aspectRatio: '1/1',
         objectFit: 'cover',
