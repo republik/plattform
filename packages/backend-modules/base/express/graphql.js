@@ -127,7 +127,11 @@ module.exports = async (
       {
         async requestDidStart() {
           return {
-            async didEncounterErrors({ context, request, errors }) {
+            async didEncounterErrors({
+              contextValue: context,
+              request,
+              errors,
+            }) {
               if (context.logger.isLevelEnabled('debug')) {
                 context.logger.error(
                   {
@@ -178,10 +182,9 @@ module.exports = async (
       limit: '128mb',
     }),
     expressMiddleware(apolloServer, {
-      context: async ({ req, res, connection }) =>
-        connection
-          ? connection.context
-          : createContext({ user: req.user, req, res, scope: 'request' }),
+      context: async ({ req, res }) => {
+        return createContext({ user: req.user, req, res, scope: 'request' })
+      },
     }),
   )
 }
