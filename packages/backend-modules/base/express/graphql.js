@@ -122,7 +122,7 @@ module.exports = async (
       ApolloServerPluginLandingPageProductionDefault({
         footer: false,
       }),
-      // https://www.apollographql.com/docs/apollo-server/v3/api/plugin/drain-http-server
+      // https://www.apollographql.com/docs/apollo-server/api/plugin/drain-http-server
       ApolloServerPluginDrainHttpServer({ httpServer }),
       {
         async requestDidStart() {
