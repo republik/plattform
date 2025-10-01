@@ -17,7 +17,7 @@ export function LazyBackgroundImage({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          console.log('Loading background image:', backgroundImage)
+          // console.log('Loading background image:', backgroundImage)
           const ele = entry.target as HTMLDivElement
           ele.style.backgroundImage = `url(${backgroundImage})`
           // Once the image is loaded, we can stop observing
@@ -26,7 +26,7 @@ export function LazyBackgroundImage({
       },
       {
         threshold: 0,
-        scrollMargin: '50px',
+        rootMargin: '50px',
       },
     )
     observer.observe(element)
