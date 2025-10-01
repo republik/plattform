@@ -118,20 +118,6 @@ module.exports = async (
       onConnect: webSocketOnConnect,
       keepAlive: WS_KEEPALIVE_INTERVAL || 40000,
     },
-    formatResponse: (response, { context }) => {
-      // strip problematic character (\u2028) for requests from our iOS app
-      // see https://github.com/orbiting/app/issues/159
-      const { req } = context
-      const ua = req.headers['user-agent']
-      if (
-        ua &&
-        ua.includes('RepublikApp') &&
-        (ua.includes('iPhone') || ua.includes('iPad') || ua.includes('iPod'))
-      ) {
-        return JSON.parse(JSON.stringify(response).replace(/\u2028/g, ''))
-      }
-      return response
-    },
     plugins: [
       ApolloServerPluginLandingPageProductionDefault({
         footer: false,
