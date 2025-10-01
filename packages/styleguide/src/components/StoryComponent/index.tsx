@@ -2,7 +2,6 @@ import { css } from 'glamor'
 import { useTheme } from 'next-themes'
 import Script from 'next/script'
 import { useEffect, useRef, useState } from 'react'
-import { Figure, FigureSize } from '../Figure'
 
 declare global {
   interface Window {
@@ -24,17 +23,7 @@ const styles = {
   }),
 }
 
-function DatawrapperInteractive({
-  datawrapperId,
-  forceDark = false,
-  size,
-  plain = false,
-}: {
-  datawrapperId: string
-  size: FigureSize
-  forceDark?: boolean
-  plain?: boolean
-}) {
+function StoryComponent({ name, props }: { name: string; props: React.props }) {
   const chartRef = useRef<HTMLDivElement>(null)
   const [embedData, setEmbedData] = useState<
     Record<string, string | number> | undefined
@@ -93,30 +82,10 @@ function DatawrapperInteractive({
   }, [embedData, plain, scriptReady, dark])
 
   return (
-    <Figure size={size}>
-      {idMissing ? (
-        <div
-          style={{
-            color: 'var(--color-error)',
-            padding: 15,
-          }}
-        >
-          Chart-ID fehlt
-        </div>
-      ) : error ? (
-        <div
-          style={{
-            color: 'var(--color-error)',
-            padding: 15,
-          }}
-        >
-          {error}
-        </div>
-      ) : null}
-      <div ref={chartRef} style={{ minHeight: 10 }}></div>
+    <>
+      <my-counter></my-counter>
       <Script
-        id='datawrapper-lib'
-        src='https://datawrapper.dwcdn.net/lib/datawrapper.js'
+        src='https://story.preview.republik.love/story-components/examples-vanilla-web-component/dist'
         onReady={() => {
           setScriptReady(true)
         }}
@@ -125,49 +94,8 @@ function DatawrapperInteractive({
           setScriptReady(true)
         }}
       />
-    </Figure>
-  )
-}
-
-// We use the image instead of the interactive chart for the pdf version
-// https://datawrapper.dwcdn.net/DW123ID/full.png -> 600px wide
-function DatawrapperPrint({ datawrapperId }: { datawrapperId: string }) {
-  return (
-    <figure>
-      <img
-        width={600}
-        src={`https://datawrapper.dwcdn.net/${datawrapperId}/full.png`}
-      />
-    </figure>
-  )
-}
-
-function Datawrapper({
-  datawrapperId,
-  forceDark = false,
-  size,
-  plain = false,
-}: {
-  datawrapperId: string
-  size: FigureSize
-  forceDark?: boolean
-  plain?: boolean
-}) {
-  return (
-    <>
-      <div {...styles.hidePrint}>
-        <DatawrapperInteractive
-          datawrapperId={datawrapperId}
-          forceDark={forceDark}
-          size={size}
-          plain={plain}
-        />
-      </div>
-      <div {...styles.showPrint}>
-        <DatawrapperPrint datawrapperId={datawrapperId} />
-      </div>
     </>
   )
 }
 
-export default Datawrapper
+export default StoryComponent
