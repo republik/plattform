@@ -66,7 +66,11 @@ const createPasteHtml = (centerModule) => (event, change, editor) => {
       change.insertFragment(pastedAst.document)
       return true
     } catch (e) {
-      console.log('Error pasting html, falling back to text', e)
+      console.log('Error pasting html, falling back to text', e, {
+        html,
+        hast,
+        mdast,
+      })
       change.insertText(transfer.text.replace(/\n+/g, '\n'))
       return true
     }
