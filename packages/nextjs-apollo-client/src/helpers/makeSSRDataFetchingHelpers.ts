@@ -8,6 +8,7 @@ import {
 } from 'next'
 import {
   APOLLO_STATE_PROP_NAME,
+  forwardSSRRequestHeaders,
   InitializeApolloFunc,
 } from '../apollo/apolloClient'
 import { PagePropsWithApollo } from './withApollo'
@@ -56,7 +57,7 @@ export function makeSSRDataFetchingHelpers<U>(
       // Use the request object to pass on the cookies to the graphql requests
       const apolloClient = initializeApollo(null, {
         // Pass headers of the client-request to the apollo-link
-        headers: context.req.headers,
+        headers: forwardSSRRequestHeaders(context.req.headers),
         onResponse: (response: Response) => {
           const cookies = response.headers.get('Set-Cookie')
           if (cookies) {

@@ -4,6 +4,7 @@ import { NextPage, NextPageContext } from 'next'
 import { PagePropsWithApollo } from './withApollo'
 import {
   APOLLO_STATE_PROP_NAME,
+  forwardSSRRequestHeaders,
   InitializeApolloFunc,
 } from '../apollo/apolloClient'
 
@@ -59,8 +60,10 @@ export function makeWithDefaultSSR(
       if (!process.browser) {
         props.providedUserAgent = ctx.req.headers['user-agent']
 
+        console.log(forwardSSRRequestHeaders(ctx.req.headers), ctx.req.headers)
+
         const apolloClient = initializeApollo(null, {
-          headers: ctx.req.headers,
+          headers: forwardSSRRequestHeaders(ctx.req.headers),
           onResponse: (response: Response) => {
             const cookies = response.headers.get('Set-Cookie')
             if (cookies) {
