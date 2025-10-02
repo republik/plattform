@@ -266,6 +266,7 @@ export class CheckoutSessionBuilder {
       ...this.checkoutUIConfig(),
       mode: 'setup',
       currency: 'CHF',
+      locale: 'de',
       customer: await customerId,
       metadata: mergedMetadata,
       consent_collection:
