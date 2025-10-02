@@ -60,8 +60,6 @@ export function makeWithDefaultSSR(
       if (!process.browser) {
         props.providedUserAgent = ctx.req.headers['user-agent']
 
-        console.log(forwardSSRRequestHeaders(ctx.req.headers), ctx.req.headers)
-
         const apolloClient = initializeApollo(null, {
           headers: forwardSSRRequestHeaders(ctx.req.headers),
           onResponse: (response: Response) => {
