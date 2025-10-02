@@ -11,6 +11,7 @@ import {
 import { User } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
 import { getSubscriptionType } from '../handlers/stripe/utils'
+import Stripe from 'stripe'
 
 type SubscriptionUpgrade = {
   status: string
@@ -209,7 +210,9 @@ export class UpgradeService {
       await this.subsubscriptionUpgradeRepo.saveSubscriptionUpgrade({
         userId: localSub.userId,
         subscriptionId: localSub.id,
-        subscriptionType: getSubscriptionType(subscriptionPrice.id),
+        subscriptionType: getSubscriptionType(
+          (subscriptionPrice.product as Stripe.Product).id,
+        ),
         status: 'pending',
         scheduledStart: new Date(current_period_end * 1000),
       })
