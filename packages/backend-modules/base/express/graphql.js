@@ -171,7 +171,7 @@ module.exports = async (
     },
     {
       server: httpServer,
-      path: apolloServer.graphqlPath,
+      path: '/graphql',
     },
   )
 
