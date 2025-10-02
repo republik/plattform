@@ -255,7 +255,7 @@ input CheckoutSessionOptions {
 type MagazineSubscriptionUpgrade {
   id: String!
   userId: String!
-  type: MagazineSubscriptionType
+  subscriptionType: MagazineSubscriptionType
   subscriptionId: String!
   status: String!
   scheduledStart: DateTime!
