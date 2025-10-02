@@ -276,7 +276,16 @@ export default withDefaultSSR(
           fetchPolicy: 'cache-and-network',
         }
       },
-      props: ({ data }) => {
+      props: ({ data, ownProps: { t, router } }) => {
+        if (data?.repo === null) {
+          return {
+            data: {
+              error: t('repo/warn/missing', {
+                repoId: getRepoIdFromQuery(router.query),
+              }),
+            },
+          }
+        }
         return {
           data,
           commits:
