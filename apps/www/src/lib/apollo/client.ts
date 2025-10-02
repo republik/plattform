@@ -15,7 +15,6 @@ export const { getClient } = registerApolloClient(async () => {
       // fetchOptions: { cache: "no-store" },
       headers: {
         cookie: _headers.get('cookie') ?? '',
-        accept: _headers.get('accept') ?? '',
         Authorization: _headers.get('Authorization') ?? '',
       },
       fetchOptions: {
