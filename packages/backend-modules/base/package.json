@@ -45,7 +45,7 @@
     "helmet": "^3.22.0",
     "pogi": "^2.11.1",
     "redis": "^3.0.2",
-    "subscriptions-transport-ws": "^0.9.16"
+    "subscriptions-transport-ws": "^0.11.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
