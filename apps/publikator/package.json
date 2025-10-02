@@ -111,7 +111,7 @@
     "shortid": "^2.2.15",
     "slate": "^0.31.8",
     "slate-prop-types": "^0.4.16",
-    "subscriptions-transport-ws": "^0.9.17",
+    "subscriptions-transport-ws": "^0.11.0",
     "topojson": "^3.0.2",
     "unist-util-visit": "^2.0.3",
     "url": "^0.11.0",
