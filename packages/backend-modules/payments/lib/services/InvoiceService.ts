@@ -19,7 +19,7 @@ type OrderLineItem = {
   lineItemId: string
   externalPriceId: string
   priceLookupKey: string | null
-  description: string | undefined
+  description: string | null
   quantity: number | null
   price: number
   priceSubtotal: number

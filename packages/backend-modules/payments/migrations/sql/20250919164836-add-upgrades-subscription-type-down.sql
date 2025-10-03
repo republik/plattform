@@ -1,0 +1,3 @@
+-- migrate down here: DROP TABLE...
+
+ALTER TABLE payments.subscription_upgrades DROP COLUMN subscription_type;

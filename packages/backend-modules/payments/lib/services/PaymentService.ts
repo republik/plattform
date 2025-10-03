@@ -2,6 +2,25 @@ import Stripe from 'stripe'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { Company, PaymentMethod } from '../types'
 
+type Discount = {
+  coupon?: string
+  discount?: string
+  promo_code?: string
+}
+
+type Item = {
+  price?: string
+  quantity: number
+  discounts?: Discount[]
+}
+
+export type ScheduleSubscriptionArgs = {
+  internalRef: string
+  items: Item[]
+  collectionMethod: 'send_invoice' | 'charge_automatically'
+  startDate: number
+}
+
 export class PaymentService {
   #stripeAdapters: Record<Company, Stripe> = {
     PROJECT_R: ProjectRStripe,
@@ -128,6 +147,34 @@ export class PaymentService {
     ).data
   }
 
+  async scheduleSubscription(
+    company: Company,
+    customerId: string,
+    options: ScheduleSubscriptionArgs,
+  ) {
+    return this.#stripeAdapters[company].subscriptionSchedules.create({
+      customer: customerId,
+      start_date: options.startDate,
+      end_behavior: 'release',
+      phases: [
+        {
+          items: options.items,
+          iterations: 1,
+          collection_method: options.collectionMethod,
+          metadata: {
+            'republik:internal:ref': options.internalRef,
+          },
+        },
+      ],
+    })
+  }
+
+  async cancelScheduleSubscription(company: Company, scheduleId: string) {
+    return this.#stripeAdapters[company].subscriptionSchedules.cancel(
+      scheduleId,
+    )
+  }
+
   async createSubscriptionItem(
     company: Company,
     params: Stripe.SubscriptionItemCreateParams,
@@ -189,9 +236,19 @@ export class PaymentService {
     return prices.data
   }
 
+  async getPrice(company: Company, id: string): Promise<Stripe.Price | null> {
+    const price = await this.#stripeAdapters[company].prices.retrieve(id)
+
+    return price
+  }
+
   async getInvoice(company: Company, id: string) {
     const invoice = await this.#stripeAdapters[company].invoices.retrieve(id, {
-      expand: ['discounts', 'charge'],
+      expand: [
+        'discounts',
+        'payments.data.payment.charge',
+        'payments.data.payment.payment_intent',
+      ],
     })
 
     return invoice ? invoice : null

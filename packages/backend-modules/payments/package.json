@@ -18,7 +18,7 @@
     "crockford-base32": "^2.0.0",
     "dayjs": "^1.11.13",
     "pogi": "^2.11.1",
-    "stripe": "^17.4.0"
+    "stripe": "^18.5.0"
   },
   "devDependencies": {
     "@types/express": "4.17.21"
