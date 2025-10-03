@@ -5,17 +5,20 @@ import { PaymentService } from '../services/PaymentService'
 import { Price } from './CheckoutSessionOptionBuilder'
 import { OfferBuilder } from './OfferBuilder'
 import { PgDb } from 'pogi'
+import { Logger } from '@orbiting/backend-modules-types'
 
 export class Shop {
   #offers: Offer[]
   #paymentServices: PaymentService
   #context: Record<string, any>
   #pgdb: PgDb
+  #logger: Logger
 
-  constructor(offers: Offer[], pgdb: PgDb) {
+  constructor(offers: Offer[], pgdb: PgDb, logger: Logger) {
     this.#offers = offers
     this.#paymentServices = new PaymentService()
     this.#pgdb = pgdb
+    this.#logger = logger
     this.#context = {}
   }
 
@@ -54,7 +57,12 @@ export class Shop {
     const offer = this.#offers.find((o) => o.id === id)
     if (!offer) return null
 
-    return new OfferBuilder(this.#paymentServices, this.#pgdb, offer)
+    return new OfferBuilder(
+      this.#paymentServices,
+      this.#pgdb,
+      offer,
+      this.#logger,
+    )
       .withContext(this.#context)
       .withPromoCode(promoCode)
       .build()
@@ -80,6 +88,7 @@ export class Shop {
       this.#paymentServices,
       this.#pgdb,
       offers,
+      this.#logger,
     )
     return offerBuilder
       .withContext(this.#context)

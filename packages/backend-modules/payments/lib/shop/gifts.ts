@@ -13,6 +13,7 @@ import createLogger from 'debug'
 import { getConfig } from '../config'
 import { parseStripeDate } from '../handlers/stripe/utils'
 import { CustomerInfoService } from '../services/CustomerInfoService'
+import { Logger } from '@orbiting/backend-modules-types'
 
 const logger = createLogger('payments:gifts')
 
@@ -110,6 +111,7 @@ export const REPUBLIK_PAYMENTS_CANCEL_REASON = 'republik.system.cancel-reason'
 
 export class GiftShop {
   #pgdb: PgDb
+  #logger: Logger
   #giftRepo: GiftVoucherRepo
   #stripeAdapters: Record<Company, Stripe> = {
     PROJECT_R: ProjectRStripe,
@@ -117,8 +119,9 @@ export class GiftShop {
   }
   #customerInfoService: CustomerInfoService
 
-  constructor(pgdb: PgDb) {
+  constructor(pgdb: PgDb, logger: Logger) {
     this.#pgdb = pgdb
+    this.#logger = logger
     this.#giftRepo = new GiftVoucherRepo(pgdb)
     this.#customerInfoService = new CustomerInfoService(this.#pgdb)
   }
@@ -272,7 +275,7 @@ export class GiftShop {
 
     const customerId = await this.getCustomerId(cRepo, gift.company, userId)
 
-    const shop = new Shop(activeOffers(), this.#pgdb)
+    const shop = new Shop(activeOffers(), this.#pgdb, this.#logger)
     const offer = shop.isValidOffer(gift.offer)
     const lineItems = await shop.genLineItems(offer)
 
@@ -376,7 +379,7 @@ export class GiftShop {
         const cRepo = new CustomerRepo(this.#pgdb)
         const customerId = await this.getCustomerId(cRepo, 'PROJECT_R', userId)
 
-        const shop = new Shop(activeOffers(), this.#pgdb)
+        const shop = new Shop(activeOffers(), this.#pgdb, this.#logger)
         const offer = shop.isValidOffer(gift.offer)
 
         const tx = await this.#pgdb.transactionBegin()
@@ -452,7 +455,7 @@ export class GiftShop {
     const customerId = await this.getCustomerId(cRepo, gift.company, userId)
     const endDate = await this.getMembershipEndDate(this.#pgdb, id)
 
-    const shop = new Shop(activeOffers(), this.#pgdb)
+    const shop = new Shop(activeOffers(), this.#pgdb, this.#logger)
 
     const offer = shop.isValidOffer(gift.offer)
     const lineItems = await shop.genLineItems(offer)
@@ -572,7 +575,7 @@ export class GiftShop {
 
         const customerId = await this.getCustomerId(cRepo, 'PROJECT_R', userId)
 
-        const shop = new Shop(activeOffers(), this.#pgdb)
+        const shop = new Shop(activeOffers(), this.#pgdb, this.#logger)
         const offer = shop.isValidOffer(gift.offer)
         const lineItems = await shop.genLineItems(offer)
 

@@ -60,7 +60,7 @@ export async function processCheckoutCompleted(
     case 'payment': {
       return new OneTimePaymentCheckoutCompletedWorkflow(
         new PaymentService(),
-        new GiftShop(ctx.pgdb),
+        new GiftShop(ctx.pgdb, ctx.logger),
         new UserService(ctx.pgdb),
         new CustomerInfoService(ctx.pgdb),
         new InvoiceService(ctx.pgdb),

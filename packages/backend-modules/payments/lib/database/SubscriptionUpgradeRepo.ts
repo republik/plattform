@@ -21,22 +21,24 @@ export class SubscriptionUpgradeRepo {
   }
 
   async getUnresolvedSubscriptionUpgrades(
-    subscriptionId: string,
+    select:
+      | { subscription_id: string; user_id?: never }
+      | { subscription_id?: never; user_id: string },
   ): Promise<Upgrade[]> {
     const records = await this.pgdb.payments.subscription_upgrades.find({
-      subscription_id: subscriptionId,
+      ...select,
       'status <>': ['resolved', 'canceled'], // not in
     })
 
     return records.map(this.camelCaseKeys) as Upgrade[]
   }
 
-  async getSupbscriptionUpgradesForUser(userId: string) {
+  async getSupbscriptionUpgradesForUser(userId: string): Promise<Upgrade[]> {
     const records = await this.pgdb.payments.subscription_upgrades.find({
       user_id: userId,
     })
 
-    records.map(this.camelCaseKeys) as Upgrade[]
+    return records.map(this.camelCaseKeys) as Upgrade[]
   }
 
   async saveSubscriptionUpgrade(

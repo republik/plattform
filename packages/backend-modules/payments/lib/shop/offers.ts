@@ -11,6 +11,7 @@ export type OfferAvailability =
   | 'UPGRADEABLE'
   | 'UNAVAILABLE'
   | 'UNAVAILABLE_CURRENT'
+  | 'UNAVAILABLE_UPGRADE_PENDING'
 
 export type PriceDefinition = {
   type: 'PRICE'

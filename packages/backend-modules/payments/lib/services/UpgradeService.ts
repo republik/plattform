@@ -59,9 +59,9 @@ export class UpgradeService {
     }
 
     const upgrades =
-      await this.subsubscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades(
-        localSub.id,
-      )
+      await this.subsubscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades({
+        subscription_id: localSub.id,
+      })
 
     if (upgrades.length === 0) {
       throw new Error('no upgrade to cancel')
@@ -97,7 +97,7 @@ export class UpgradeService {
       throw new Error('Unknown subscription')
     }
 
-    if (await this.hasUnresolvedUpgrades(subscriptionId)) {
+    if (await this.subscriptionHasUnresolvedUpgrades(subscriptionId)) {
       throw new Error('Subscription has unresoved upgrades')
     }
 
@@ -164,6 +164,22 @@ export class UpgradeService {
     )
   }
 
+  async userHasUnresolvedUpgrades(userId: string): Promise<boolean> {
+    const upgrades =
+      await this.subsubscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades({
+        user_id: userId,
+      })
+    return upgrades.length > 0
+  }
+
+  async subscriptionHasUnresolvedUpgrades(subscriptionId: string) {
+    const upgrades =
+      await this.subsubscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades({
+        subscription_id: subscriptionId,
+      })
+    return upgrades.length > 0
+  }
+
   private async getCustomerId(company: Company, userId: string) {
     const customer = await this.customerInfoService.getCustomerIdForCompany(
       userId,
@@ -174,13 +190,5 @@ export class UpgradeService {
     }
 
     return await this.customerInfoService.createCustomer(company, userId)
-  }
-
-  private async hasUnresolvedUpgrades(subscriptionId: string) {
-    const upgrades =
-      await this.subsubscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades(
-        subscriptionId,
-      )
-    return upgrades.length > 0
   }
 }

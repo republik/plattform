@@ -66,7 +66,7 @@ export = {
 
   async upgrade(subscription: Subscription, _args: never, ctx: GraphqlContext) {
     return new SubscriptionUpgradeRepo(ctx.pgdb)
-      .getUnresolvedSubscriptionUpgrades(subscription.id)
+      .getUnresolvedSubscriptionUpgrades({ subscription_id: subscription.id })
       .then((u) => u[0])
   },
 }

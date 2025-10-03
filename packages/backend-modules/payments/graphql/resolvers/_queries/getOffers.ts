@@ -6,7 +6,7 @@ export = async function getOffers(
   args: { promoCode?: string },
   ctx: GraphqlContext,
 ) {
-  return new Shop(activeOffers(), ctx.pgdb)
+  return new Shop(activeOffers(), ctx.pgdb, ctx.logger)
     .withContext({ userId: ctx.user?.id })
     .getOffers(args.promoCode)
 }
