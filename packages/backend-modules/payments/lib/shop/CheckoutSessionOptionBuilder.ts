@@ -250,16 +250,24 @@ export class CheckoutSessionBuilder {
     const { customerId, metadata, activeSubscription } =
       this.optionalSessionVars
 
-    const [_discount, couponMeta] = await Promise.all([
+    const [discount, couponMeta] = await Promise.all([
       this.resolveDiscount(),
       this.resolveCouponMetadata(),
     ])
 
-    const mergedMetadata = {
+    const mergedMetadata: Record<string, string | number | null> = {
+      ...{ upgradeOfferId: this.offer.id },
       ...metadata,
       ...this.offer.metaData,
       ...couponMeta,
-      ...{ currentSubscription: activeSubscription?.id || null },
+    }
+
+    if (activeSubscription?.id) {
+      mergedMetadata.currentSubscription = activeSubscription.id
+    }
+
+    if (discount) {
+      mergedMetadata.discount = JSON.stringify(discount)
     }
 
     const config: Stripe.Checkout.SessionCreateParams = {

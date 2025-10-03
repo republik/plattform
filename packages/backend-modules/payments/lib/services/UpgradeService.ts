@@ -4,14 +4,12 @@ import { BillingRepo, PaymentBillingRepo } from '../database/BillingRepo'
 import { PaymentService } from './PaymentService'
 import { CancelationRepo } from '../database/CancelationRepo'
 import { CustomerInfoService } from './CustomerInfoService'
-import {
-  Upgrade,
-  SubscriptionUpgradeRepo,
-} from '../database/SubscriptionUpgradeRepo'
+import { SubscriptionUpgradeRepo } from '../database/SubscriptionUpgradeRepo'
 import { User } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
-import { getSubscriptionType } from '../handlers/stripe/utils'
-import Stripe from 'stripe'
+import { OfferService } from './OfferService'
+import { activeOffers } from '../shop'
+import { Company } from '../types'
 
 type SubscriptionUpgrade = {
   status: string
@@ -25,6 +23,7 @@ export class UpgradeService {
   private billingRepo: PaymentBillingRepo
   private cancelationRepo: CancelationRepo
   private subsubscriptionUpgradeRepo: SubscriptionUpgradeRepo
+  private offerService: OfferService
   private logger: Logger
 
   public constructor(pgdb: PgDb, logger: Logger) {
@@ -33,89 +32,8 @@ export class UpgradeService {
     this.billingRepo = new BillingRepo(pgdb)
     this.cancelationRepo = new CancelationRepo(pgdb)
     this.subsubscriptionUpgradeRepo = new SubscriptionUpgradeRepo(pgdb)
+    this.offerService = new OfferService(activeOffers())
     this.logger = logger
-  }
-
-  public async scheduleSubscriptionUpgrade(
-    actor: User,
-    subscriptionId: string,
-  ): Promise<Upgrade> {
-    this.logger.debug(
-      { subscriptionId, actor: actor.id },
-      'scheduling subscription update',
-    )
-
-    const localSub = await this.billingRepo.getSubscription({
-      id: subscriptionId,
-    })
-
-    Auth.Roles.userIsMeOrInRoles({ id: localSub?.userId }, actor, [
-      'admin',
-      'support',
-    ])
-
-    if (!localSub) {
-      throw new Error('Unknown subscription')
-    }
-
-    if (localSub.type != 'MONTHLY_SUBSCRIPTION') {
-      throw new Error('Upgrades are only support for monthly subscriptions')
-    }
-
-    if (await this.hasUnresolvedUpgrades(subscriptionId)) {
-      throw new Error('Subscription has unresoved upgrades')
-    }
-
-    const projectRCustomerId = await this.getProjectRCustomerId(localSub.userId)
-    const [membershipPriceId] = await this.paymentService.getPrices(
-      'PROJECT_R',
-      ['ABO'],
-    )
-
-    await this.cancelationRepo.insertCancelation(localSub.id, {
-      category: 'SYSTEM',
-      reason: 'Subscription Upgrade',
-      suppressConfirmation: true,
-      suppressWinback: true,
-    })
-
-    const remoteSub = await this.paymentService.updateSubscription(
-      localSub.company,
-      localSub.externalId,
-      {
-        cancel_at_period_end: true,
-      },
-    )
-
-    const current_end = remoteSub.items.data[0]?.current_period_end
-
-    const upgrade =
-      await this.subsubscriptionUpgradeRepo.saveSubscriptionUpgrade({
-        userId: localSub.userId,
-        subscriptionId: localSub.id,
-        status: 'pending',
-        scheduledStart: new Date(current_end * 1000),
-      })
-
-    // we only allow upgrades to Project R
-    const subSchedule = await this.paymentService.scheduleSubscription(
-      'PROJECT_R',
-      projectRCustomerId,
-      {
-        internalRef: `upgrade:${upgrade.id}`,
-        items: [{ price: membershipPriceId.id, quantity: 1 }],
-        startDate: current_end,
-        collectionMethod: 'charge_automatically',
-      },
-    )
-
-    return this.subsubscriptionUpgradeRepo.updateSubscriptionUpgrade(
-      upgrade.id,
-      {
-        externalId: subSchedule.id,
-        status: 'registered',
-      },
-    )
   }
 
   public async cancelSubscriptionUpgrade(
@@ -164,8 +82,12 @@ export class UpgradeService {
     )
   }
 
-  public async nonInteractiveSubscriptionUpgrade(subscriptionId: string) {
+  public async nonInteractiveSubscriptionUpgrade(
+    subscriptionId: string,
+    args: { offerId: string; discount?: string },
+  ) {
     this.logger.debug({ subscriptionId }, 'scheduling subscription update')
+    this.offerService.isValidSubscriptionOffer(args.offerId)
 
     const localSub = await this.billingRepo.getSubscription({
       id: subscriptionId,
@@ -175,18 +97,23 @@ export class UpgradeService {
       throw new Error('Unknown subscription')
     }
 
-    if (localSub.type != 'MONTHLY_SUBSCRIPTION') {
-      throw new Error('Upgrades are only support for monthly subscriptions')
-    }
-
     if (await this.hasUnresolvedUpgrades(subscriptionId)) {
       throw new Error('Subscription has unresoved upgrades')
     }
 
-    const projectRCustomerId = await this.getProjectRCustomerId(localSub.userId)
-    const [subscriptionPrice] = await this.paymentService.getPrices(
-      'PROJECT_R',
-      ['ABO'],
+    const lookupKeys = this.offerService
+      .getOfferItems(args.offerId)
+      .map((i) => i.lookupKey)
+
+    const companyName = this.offerService.getOfferMerchent(args.offerId)
+
+    const targetCustomerId = await this.getCustomerId(
+      companyName,
+      localSub.userId,
+    )
+    const prices = await this.paymentService.getPrices(
+      companyName,
+      lookupKeys ?? [],
     )
 
     await this.cancelationRepo.insertCancelation(localSub.id, {
@@ -206,24 +133,23 @@ export class UpgradeService {
 
     const current_period_end = remoteSub.items.data[0].current_period_end
 
+    const subscriptionType = this.offerService.getSubscriptionType(args.offerId)
+
     const upgrade =
       await this.subsubscriptionUpgradeRepo.saveSubscriptionUpgrade({
         userId: localSub.userId,
         subscriptionId: localSub.id,
-        subscriptionType: getSubscriptionType(
-          (subscriptionPrice.product as Stripe.Product).id,
-        ),
+        subscriptionType: subscriptionType,
         status: 'pending',
         scheduledStart: new Date(current_period_end * 1000),
       })
 
-    // we only allow upgrades to Project R
     const subSchedule = await this.paymentService.scheduleSubscription(
-      'PROJECT_R',
-      projectRCustomerId,
+      companyName,
+      targetCustomerId,
       {
         internalRef: `upgrade:${upgrade.id}`,
-        items: [{ price: subscriptionPrice.id, quantity: 1 }],
+        items: prices.map((p) => ({ price: p.id, quantity: 1 })),
         startDate: current_period_end,
         collectionMethod: 'charge_automatically',
       },
@@ -238,16 +164,16 @@ export class UpgradeService {
     )
   }
 
-  private async getProjectRCustomerId(userId: string) {
+  private async getCustomerId(company: Company, userId: string) {
     const customer = await this.customerInfoService.getCustomerIdForCompany(
       userId,
-      'PROJECT_R',
+      company,
     )
     if (customer !== null) {
       return customer.customerId
     }
 
-    return await this.customerInfoService.createCustomer('PROJECT_R', userId)
+    return await this.customerInfoService.createCustomer(company, userId)
   }
 
   private async hasUnresolvedUpgrades(subscriptionId: string) {

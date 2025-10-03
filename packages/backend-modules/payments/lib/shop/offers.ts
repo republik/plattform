@@ -1,4 +1,4 @@
-import { Subscription } from '../types'
+import { Subscription, SubscriptionType } from '../types'
 import { getConfig } from '../config'
 import { Company } from '../types'
 
@@ -39,7 +39,7 @@ export type ComplimentaryItemOrder = {
   quantity: number
 }
 
-export type Offer = {
+export type BaseOffer = {
   id: string
   company: Company
   name: string
@@ -57,6 +57,17 @@ export type Offer = {
   }
   taxRateId?: string
 }
+
+export type SubscriptionOffer = BaseOffer & {
+  type: 'SUBSCRIPTION'
+  subscriptionType: SubscriptionType
+}
+
+export type OneTimeOffer = BaseOffer & {
+  type: 'ONETIME_PAYMENT'
+}
+
+export type Offer = SubscriptionOffer | OneTimeOffer
 
 export type OfferAPIResult = {
   id: string
@@ -110,11 +121,12 @@ export type DiscountOption =
   | { type: 'DISCOUNT'; value: Discount }
   | { type: 'PROMO'; value: Promotion }
 
-export const Offers: Readonly<Offer>[] = [
+export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
   {
     id: 'YEARLY',
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'YEARLY_SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
@@ -126,6 +138,7 @@ export const Offers: Readonly<Offer>[] = [
     id: 'YEARLY_REDUCED',
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'YEARLY_SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
@@ -144,6 +157,7 @@ export const Offers: Readonly<Offer>[] = [
     id: 'BENEFACTOR',
     name: 'Gönnermitgliedschaft',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'BENEFACTOR_SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
@@ -166,6 +180,7 @@ export const Offers: Readonly<Offer>[] = [
     id: 'STUDENT',
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'YEARLY_SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
@@ -180,6 +195,7 @@ export const Offers: Readonly<Offer>[] = [
     id: 'MONTHLY',
     name: 'Monats-Abo',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'MONTHLY_SUBSCRIPTION',
     company: 'REPUBLIK',
     requiresLogin: true,
     requiresAddress: false,

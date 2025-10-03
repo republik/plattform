@@ -473,19 +473,44 @@ class SetupWorkflow
     )
 
     const metadata = event.data.object.metadata
-    if (metadata?.currentSubscription) {
-      // TODO!: check for presaved upgrade in db
+    try {
+      const upgradeConfig = this.parseMetadata(metadata)
       // TODO!: allow for discounts
       // TODO!: allow for donations
-      // TODO!: allow for upgrades other than month
+      // The upgrade service will check if a upgrade is already pending
       const res = await this.upgradeService.nonInteractiveSubscriptionUpgrade(
-        metadata.currentSubscription,
+        upgradeConfig.currentSubscription,
+        { offerId: upgradeConfig.upgradeOfferId },
       )
       this.logger.debug(res, 'upgrade scheduled')
-    } else {
-      this.logger.debug(metadata, 'no subscription to upgrade')
+    } catch (e) {
+      this.logger.debug(
+        { error: e },
+        'error handling subscription upgrade order',
+      )
     }
 
     return
+  }
+
+  private parseMetadata(metadata: Stripe.Metadata | null): {
+    currentSubscription: string
+    upgradeOfferId: string
+  } {
+    if (metadata === null) {
+      throw new Error('no upgrade config provided')
+    }
+
+    if (
+      !('currentSubscription' in metadata) ||
+      !('upgradeOfferId' in metadata)
+    ) {
+      throw new Error('incomplete upgrade config')
+    }
+
+    return {
+      currentSubscription: metadata.currentSubscription,
+      upgradeOfferId: metadata.upgradeOfferId,
+    }
   }
 }
