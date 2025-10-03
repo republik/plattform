@@ -110,6 +110,7 @@
     "scroll-into-view": "1.15.0",
     "shortid": "^2.2.15",
     "slate": "^0.31.8",
+    "slate-html-serializer": "^0.4.16",
     "slate-prop-types": "^0.4.16",
     "subscriptions-transport-ws": "^0.11.0",
     "topojson": "^3.0.2",

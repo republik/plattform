@@ -24143,6 +24143,14 @@ slate-dev-logger@^0.1.36:
   resolved "https://registry.yarnpkg.com/slate-dev-logger/-/slate-dev-logger-0.1.43.tgz#77f6ca7207fcbf453a5516f3aa8b19794d1d26dc"
   integrity sha512-GkcPMGzmPVm85AL+jaKnzhIA0UH9ktQDEIDM+FuQtz+TAPcpPCQiRAaZ6I2p2uD0Hq9bImhKSCtHIa0qRxiVGw==
 
+slate-html-serializer@^0.4.16:
+  version "0.4.16"
+  resolved "https://registry.yarnpkg.com/slate-html-serializer/-/slate-html-serializer-0.4.16.tgz#7a3d032a55649fa62bdf62b1de9db38c667f117b"
+  integrity sha512-oGgukcnx2ivt9cjzWOfoRif2t9BaNzkObgt+1/lYln389GGq2R5KgYJVPMrKVbYnJgpoaWrX85dm8tEOyaJ3aQ==
+  dependencies:
+    slate-dev-logger "^0.1.36"
+    type-of "^2.0.1"
+
 slate-hyperscript@^0.4.16:
   version "0.4.16"
   resolved "https://registry.yarnpkg.com/slate-hyperscript/-/slate-hyperscript-0.4.16.tgz#b11084acabf51671301386397d3549bda0c05fbb"
