@@ -151,11 +151,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   }
 
   // Rewrite if someone tries to directly access the front or the front-preview url
-  if (
-    req.nextUrl.pathname === '/marketing' ||
-    req.nextUrl.pathname === '/front' ||
-    req.nextUrl.pathname.startsWith('/_front/')
-  ) {
+  if (req.nextUrl.pathname === '/marketing') {
     resUrl.pathname = '/404'
     return NextResponse.rewrite(resUrl)
   }
@@ -163,15 +159,6 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   // Don't run the middleware unless on home-page
   if (req.nextUrl.pathname !== '/') {
     return NextResponse.next()
-  }
-  // Redirect to front-preview ssr to generate article front-preview
-  // used in the yearly overview
-  if (resUrl.searchParams.has('extractId')) {
-    // Remap extractId query param to id-slug
-    const extractId = resUrl.searchParams.get('extractId')
-    resUrl.searchParams.delete('extractId')
-    resUrl.pathname = `/_front/${extractId}`
-    return NextResponse.rewrite(resUrl)
   }
 
   /* ------------ Logic to handle SSG front- & marketing-page ------------ */
