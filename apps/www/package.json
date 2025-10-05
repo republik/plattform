@@ -8,8 +8,9 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "concurrently \"PORT=3010 next dev\" \"yarn gql:types --watch\" \"panda --watch\"",
+    "dev": " concurrently \"PORT=3010 NODE_OPTIONS='--inspect' next dev\" \"yarn gql:types --watch\" \"panda --watch\"",
     "start": "next start",
+    "inspect": "NODE_OPTIONS='--inspect' next start",
     "build": "panda && yarn gql:types && next build",
     "test": "jest",
     "test:watch": "jest --watch",

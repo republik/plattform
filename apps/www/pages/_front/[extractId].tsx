@@ -13,16 +13,12 @@ type Props = {
 }
 
 const FrontPreviewPage: NextPage<Props> = ({ extractId }) => (
+  // @ts-expect-error huh
   <Front
     shouldAutoRefetch
-    hasOverviewNav
-    extractId={paramToString(extractId)}
-    documentPath={'/'}
+    // extractId={paramToString(extractId)}
+    // documentPath={'/'}
     finite
-    renderBefore={undefined}
-    renderAfter={undefined}
-    containerStyle={undefined}
-    serverContext={undefined}
   />
 )
 

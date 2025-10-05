@@ -1,57 +1,39 @@
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { ParsedUrlQuery } from 'querystring'
-import Front from '../components/Front'
-import { FRONT_QUERY } from '../components/Front/graphql/getFrontQuery.graphql'
-import { useMe } from '../lib/context/MeContext'
-import {
-  FRONT_FEED_QUERY,
-  getFrontFeedOptions,
-} from '../components/Front/withData'
-import { createGetStaticProps } from '../lib/apollo/helpers'
+import { Interaction } from '@project-r/styleguide'
+import Frame from 'components/Frame'
+import { FRONT_QUERY } from 'components/Front/graphql/getFrontQuery.graphql'
+import { createGetStaticProps } from 'lib/apollo/helpers'
+import { PUBLIC_BASE_URL } from 'lib/constants'
+import { useTranslation } from 'lib/withT'
+import Front, { RenderFront } from '../components/Front'
 
-const FRONT_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 const FRONT_PATH = '/'
 
-const FrontPage = () => {
-  const router = useRouter()
-  const { meLoading, hasAccess } = useMe()
+const FrontPage = ({ front }) => {
+  const { t } = useTranslation()
 
-  useEffect(() => {
-    if (meLoading) return
-    // reload to re-trigger the middleware to rewrite to the marketing-page
-    if (!hasAccess) {
-      window.location.reload()
-    }
-  }, [meLoading, hasAccess])
+  const meta = front && {
+    ...front.meta,
+    title: front.meta.title || t('pages/magazine/title'),
+    url: `${PUBLIC_BASE_URL}${front.meta.path}`,
+  }
 
   return (
-    <Front
-      shouldAutoRefetch
-      hasOverviewNav
-      extractId={router.query.extractId}
-      finite
-      renderBefore={undefined}
-      renderAfter={undefined}
-      containerStyle={undefined}
-      serverContext={undefined}
-      documentPath={FRONT_PATH}
-    />
+    <Frame hasOverviewNav raw meta={meta}>
+      {front.meta.prepublication && (
+        <div>
+          <Interaction.P>{t('front/prepublication/notice')}</Interaction.P>
+        </div>
+      )}
+      <RenderFront front={front} nodes={front.children.nodes} />
+    </Frame>
   )
 }
 
 export default FrontPage
 
-interface Params extends ParsedUrlQuery {
-  extractId?: string
-}
-
-export const getStaticProps = createGetStaticProps<unknown, Params>(
-  async (client, { params }) => {
+export const getStaticProps = createGetStaticProps<unknown>(
+  async (client) => {
     // Throw error to fail build if the key is not defined
-    if (!process.env.SSG_DOCUMENTS_API_KEY) {
-      throw new Error('Missing SSG_DOCUMENTS_API_KEY environment variable')
-    }
 
     // Query the front-document
     const frontQueryResult = await client.query({
@@ -59,45 +41,51 @@ export const getStaticProps = createGetStaticProps<unknown, Params>(
       variables: {
         path: FRONT_PATH,
         // first: finite ? 1000 : 15,
-        first: 1000,
+        first: 100,
         // before: finite ? 'end' : undefined,
         before: 'end',
-        only: params?.extractId,
+        // only: params?.extractId,
       },
     })
+
     const front = frontQueryResult.data?.front
-    const feedNode = front?.children?.nodes.find((c) => c.id === 'feed')
 
-    // Query front-feed if present
-    if (feedNode) {
-      // Start query options - (identical to code in www/components/Front/withData.js)
-      const feedNodeIndex =
-        frontQueryResult.data.front.children.nodes.indexOf(feedNode)
+    console.log(front.children.pageInfo, front.children.nodes.length)
 
-      const priorRepoIds = front.children.nodes
-        .slice(0, feedNodeIndex)
-        .map((node) => node?.body?.data?.urlMeta?.repoId)
-        .filter(Boolean)
+    // const feedNode = front?.children?.nodes.find((c) => c.id === 'feed')
 
-      const options = getFrontFeedOptions({
-        lastPublishedAt: frontQueryResult.data.front.lastPublishedAt,
-        priorRepoIds,
-        ...feedNode.body.data,
-      })
-      // End query options
+    // // Query front-feed if present
+    // if (feedNode) {
+    //   // Start query options - (identical to code in www/components/Front/withData.js)
+    //   const feedNodeIndex =
+    //     frontQueryResult.data.front.children.nodes.indexOf(feedNode)
 
-      await client.query({
-        query: FRONT_FEED_QUERY,
-        variables: options.variables,
-      })
-    }
+    //   const priorRepoIds = front.children.nodes
+    //     .slice(0, feedNodeIndex)
+    //     .map((node) => node?.body?.data?.urlMeta?.repoId)
+    //     .filter(Boolean)
+
+    //   const options = getFrontFeedOptions({
+    //     lastPublishedAt: frontQueryResult.data.front.lastPublishedAt,
+    //     priorRepoIds,
+    //     ...feedNode.body.data,
+    //   })
+    //   // End query options
+
+    //   await client.query({
+    //     query: FRONT_FEED_QUERY,
+    //     variables: options.variables,
+    //   })
+    // }
 
     return {
-      props: {},
-      revalidate: FRONT_PAGE_SSG_REVALIDATE,
+      props: {
+        front,
+      },
+      revalidate: 5 * 60,
     }
   },
-  {
-    authorization: `DocumentApiKey ${process.env.SSG_DOCUMENTS_API_KEY}`,
-  },
+  // {
+  //   authorization: `DocumentApiKey ${process.env.SSG_DOCUMENTS_API_KEY}`,
+  // },
 )
