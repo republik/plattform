@@ -179,6 +179,7 @@ type Discount {
   duration: String!,
   durationInMonths: Int
   currency: String!
+  endDate: DateTime
 }
 
 type Product {
@@ -262,6 +263,14 @@ type MagazineSubscriptionUpgrade {
   scheduledStart: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
+  billingDetails: MagazineSubscriptionUpgradeBillingDetails!
+}
+
+type MagazineSubscriptionUpgradeBillingDetails {
+  total: Int
+  discount: Discount
+  donation: DonationInfo
+  billingDate: DateTime
 }
 
 input MagazineSubscriptionUpgradeInput {

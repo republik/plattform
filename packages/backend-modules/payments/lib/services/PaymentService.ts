@@ -147,6 +147,13 @@ export class PaymentService {
     ).data
   }
 
+  async getScheduledSubscriptionInvoicePreview(company: Company, id: string) {
+    return this.#stripeAdapters[company].invoices.createPreview({
+      schedule: id,
+      expand: ['discounts'],
+    })
+  }
+
   async scheduleSubscription(
     company: Company,
     customerId: string,
