@@ -47,7 +47,7 @@ export type BaseOffer = {
   type: OfferType
   items: PriceDefinition[]
   complimentaryItems?: ComplimentaryItem[]
-  discountOpitions?: DiscountDefinition[]
+  discountOptions?: DiscountDefinition[]
   suggestedDonations?: number[]
   fixedDiscount?: string
   requiresLogin: boolean
@@ -149,7 +149,7 @@ export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
         lookupKey: 'ABO',
       },
     ],
-    discountOpitions: getConfig().PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS.map(
+    discountOptions: getConfig().PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS.map(
       (couponId) => ({ type: 'DISCOUNT', coupon: couponId }),
     ),
     allowPromotions: false,

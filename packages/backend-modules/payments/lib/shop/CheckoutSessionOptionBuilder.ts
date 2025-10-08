@@ -124,7 +124,7 @@ export class CheckoutSessionBuilder {
   }
 
   public withSelectedDiscount(id?: string): this {
-    if (id && this.offer.discountOpitions?.find((d) => d.coupon === id)) {
+    if (id && this.offer.discountOptions?.find((d) => d.coupon === id)) {
       this.optionalSessionVars.selectedDiscount = (async () => {
         const coupon = await this.paymentService.getCoupon(
           this.offer.company,
