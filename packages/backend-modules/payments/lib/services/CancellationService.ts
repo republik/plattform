@@ -13,6 +13,7 @@ import {
   CancelationRepo,
   DBCancallationDetails,
 } from '../database/CancelationRepo'
+import { SubscriptionUpgradeRepo } from '../database/SubscriptionUpgradeRepo'
 
 export type CancellationAction = 'cancelSubscription' | 'reactivateSubscription'
 
@@ -30,6 +31,7 @@ export class CancellationService {
   private readonly paymentService: PaymentService
   private billingRepo: BillingRepo
   private cancelationRepo: CancelationRepo
+  private subsubscriptionUpgradeRepo: SubscriptionUpgradeRepo
   private readonly db: PgDb
   private readonly notifiers: SubscriptionCancelationStatusNotifier[]
 
@@ -43,6 +45,7 @@ export class CancellationService {
     this.paymentService = paymentService
     this.billingRepo = new BillingRepo(db)
     this.cancelationRepo = new CancelationRepo(db)
+    this.subsubscriptionUpgradeRepo = new SubscriptionUpgradeRepo(db)
     this.db = db
     this.notifiers = notifiers
   }
@@ -126,6 +129,8 @@ export class CancellationService {
     user: User,
     sub: Subscription,
   ): Promise<Subscription> {
+    await this.checkForUnresolvedUpgrades(sub.id)
+
     const dbDetails = await this.cancelationRepo.revokeLatestCancelation(sub.id)
 
     const updatedStripeSubscription =
@@ -169,6 +174,19 @@ export class CancellationService {
     }
 
     return updatedSubscrption
+  }
+
+  private async checkForUnresolvedUpgrades(subscriptionId: string) {
+    const upgrades =
+      await this.subsubscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades({
+        subscription_id: subscriptionId,
+      })
+
+    if (upgrades.length === 0) {
+      throw new Error(
+        'Can not revoke cancelation of subscription in upgrade Progress. Cancel Upgrade instead',
+      )
+    }
   }
 }
 

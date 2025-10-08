@@ -74,6 +74,15 @@ export class UpgradeService {
       upgrade.externalId,
     )
 
+    await this.cancelationRepo.revokeLatestCancelation(localSub.id)
+    await this.paymentService.updateSubscription(
+      localSub.company,
+      localSub.externalId,
+      {
+        cancel_at_period_end: false,
+      },
+    )
+
     return this.subsubscriptionUpgradeRepo.updateSubscriptionUpgrade(
       upgrade.id,
       {
