@@ -14,6 +14,7 @@ import { OfferService } from './OfferService'
 import { activeOffers, DiscountOption } from '../shop'
 import { Company, Subscription } from '../types'
 import { getConfig } from '../config'
+import { CustomDonation } from '../shop/CheckoutSessionOptionBuilder'
 
 type SubscriptionUpgrade = {
   status: string
@@ -305,11 +306,14 @@ export class UpgradeService {
     )
     const items: Item[] = prices.map((p) => ({ price: p.id, quantity: 1 }))
 
+    this.logger.debug(args.donation, 'donation amount')
+
     if (
-      !args.donation?.amount ||
-      !this.offerService.supportsDonations(args.offerId)
+      !args.donation === undefined ||
+      this.offerService.supportsDonations(args.offerId)
     ) {
-      const donation = this.buildDonationItem(args.donation?.amount)
+      const donation = this.buildDonationItem(args.donation)
+      this.logger.debug(donation, 'donation')
       if (donation) {
         items.push(donation)
       }
@@ -320,39 +324,35 @@ export class UpgradeService {
 
   private async buildUpgradeDiscounts(
     args: SubscriptionUpgradeConfig,
-  ): Promise<{ promotion_code: string }[]> {
+  ): Promise<{ promotion_code: string }[] | { coupon: string }[]> {
     this.offerService.isValidOffer(args.offerId)
-    const companyName = this.offerService.getOfferMerchent(args.offerId)
 
-    if (!args.promoCode) {
+    if (!args.discount) {
       return []
     }
 
-    const res = await this.paymentService.getPromotion(
-      companyName,
-      args.promoCode,
-    )
-    if (!res) {
-      return []
-    }
+    const discount = args.discount
 
-    return [{ promotion_code: res.code }]
+    if (discount.type === 'DISCOUNT') {
+      return [{ coupon: discount.value.id }]
+    }
+    if (discount.type === 'PROMO') {
+      return [{ promotion_code: discount.value.id }]
+    }
+    return []
   }
 
-  private buildDonationItem(amount?: number): Item | null {
-    if (!amount || amount < 0) return null
+  private buildDonationItem(donation?: CustomDonation): Item | null {
+    if (!donation || !donation.recurring || donation.amount < 0) return null
 
     return {
       price_data: {
         product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
-        unit_amount: amount,
+        unit_amount: donation.amount,
         currency: 'CHF',
         recurring: {
           interval: 'year',
           interval_count: 1,
-          usage_type: 'licensed',
-          trial_period_days: null,
-          meter: null,
         },
       },
       quantity: 1,

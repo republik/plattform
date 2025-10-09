@@ -489,6 +489,7 @@ class SetupWorkflow
         { error: e },
         'error handling subscription upgrade order',
       )
+      throw e
     }
 
     return

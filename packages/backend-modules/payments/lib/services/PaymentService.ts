@@ -8,7 +8,7 @@ type Discount = {
   promo_code?: string
 }
 
-type Recurring = Stripe.Price.Recurring
+type Recurring = Stripe.PriceCreateParams.Recurring
 
 export type Item =
   | {
