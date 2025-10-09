@@ -1,7 +1,7 @@
 import { PgDb } from 'pogi'
 import { Logger } from '@orbiting/backend-modules-logger'
 import { BillingRepo, PaymentBillingRepo } from '../database/BillingRepo'
-import { PaymentService } from './PaymentService'
+import { Item, PaymentService } from './PaymentService'
 import { CancelationRepo } from '../database/CancelationRepo'
 import { CustomerInfoService } from './CustomerInfoService'
 import { SubscriptionUpgradeRepo } from '../database/SubscriptionUpgradeRepo'
@@ -9,7 +9,8 @@ import { User } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
 import { OfferService } from './OfferService'
 import { activeOffers } from '../shop'
-import { Company } from '../types'
+import { Company, Subscription } from '../types'
+import { getConfig } from '../config'
 
 type SubscriptionUpgrade = {
   status: string
@@ -17,12 +18,24 @@ type SubscriptionUpgrade = {
   updatedAt: Date
 }
 
+type SubscriptionUpgradeInput = {
+  offerId: string
+  discount?: string
+  donation?: { amount: number }
+  promoCode?: string
+}
+
+const CANCELATION_DATA = {
+  CATEGORY: 'SYSTEM',
+  REASON: 'Subscription Upgrade',
+}
+
 export class UpgradeService {
   private paymentService: PaymentService
   private customerInfoService: CustomerInfoService
   private billingRepo: PaymentBillingRepo
   private cancelationRepo: CancelationRepo
-  private subsubscriptionUpgradeRepo: SubscriptionUpgradeRepo
+  private subscriptionUpgradeRepo: SubscriptionUpgradeRepo
   private offerService: OfferService
   private logger: Logger
 
@@ -31,7 +44,7 @@ export class UpgradeService {
     this.customerInfoService = new CustomerInfoService(pgdb)
     this.billingRepo = new BillingRepo(pgdb)
     this.cancelationRepo = new CancelationRepo(pgdb)
-    this.subsubscriptionUpgradeRepo = new SubscriptionUpgradeRepo(pgdb)
+    this.subscriptionUpgradeRepo = new SubscriptionUpgradeRepo(pgdb)
     this.offerService = new OfferService(activeOffers())
     this.logger = logger
   }
@@ -45,21 +58,13 @@ export class UpgradeService {
       'scheduling subscription update',
     )
 
-    const localSub = await this.billingRepo.getSubscription({
-      id: subscriptionId,
-    })
-
-    Auth.Roles.userIsMeOrInRoles({ id: localSub?.userId }, actor, [
-      'admin',
-      'support',
-    ])
-
-    if (!localSub) {
-      throw new Error('Unknown subscription')
-    }
+    const localSub = await this.validateSubscriptionOwnership(
+      subscriptionId,
+      actor,
+    )
 
     const upgrades =
-      await this.subsubscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades({
+      await this.subscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades({
         subscription_id: localSub.id,
       })
 
@@ -83,109 +88,69 @@ export class UpgradeService {
       },
     )
 
-    return this.subsubscriptionUpgradeRepo.updateSubscriptionUpgrade(
-      upgrade.id,
-      {
-        status: res.status,
-      },
-    )
+    return this.subscriptionUpgradeRepo.updateSubscriptionUpgrade(upgrade.id, {
+      status: res.status,
+    })
   }
 
   public async nonInteractiveSubscriptionUpgrade(
     subscriptionId: string,
-    args: { offerId: string; discount?: string },
+    args: SubscriptionUpgradeInput,
   ) {
     this.logger.debug({ subscriptionId }, 'scheduling subscription update')
     this.offerService.isValidSubscriptionOffer(args.offerId)
 
-    const localSub = await this.billingRepo.getSubscription({
-      id: subscriptionId,
-    })
-
-    if (!localSub) {
-      throw new Error('Unknown subscription')
-    }
-
-    if (await this.subscriptionHasUnresolvedUpgrades(subscriptionId)) {
-      throw new Error('Subscription has unresoved upgrades')
-    }
-
-    const lookupKeys = this.offerService
-      .getOfferItems(args.offerId)
-      .map((i) => i.lookupKey)
-
-    const companyName = this.offerService.getOfferMerchent(args.offerId)
-
-    const targetCustomerId = await this.getCustomerId(
-      companyName,
-      localSub.userId,
-    )
-    const prices = await this.paymentService.getPrices(
-      companyName,
-      lookupKeys ?? [],
+    const subscription = await this.validateSubscriptionCanBeUpgraded(
+      subscriptionId,
     )
 
-    await this.cancelationRepo.insertCancelation(localSub.id, {
-      category: 'SYSTEM',
-      reason: 'Subscription Upgrade',
-      suppressConfirmation: true,
-      suppressWinback: true,
-    })
-
-    const remoteSub = await this.paymentService.updateSubscription(
-      localSub.company,
-      localSub.externalId,
-      {
-        cancel_at_period_end: true,
-      },
+    const { cancelAt: scheduledStart } = await this.registerUpgradeCancelation(
+      subscription,
     )
-
-    const current_period_end = remoteSub.items.data[0].current_period_end
-
     const subscriptionType = this.offerService.getSubscriptionType(args.offerId)
 
-    const upgrade =
-      await this.subsubscriptionUpgradeRepo.saveSubscriptionUpgrade({
-        userId: localSub.userId,
-        subscriptionId: localSub.id,
-        subscriptionType: subscriptionType,
-        status: 'pending',
-        scheduledStart: new Date(current_period_end * 1000),
-      })
+    const upgrade = await this.subscriptionUpgradeRepo.saveSubscriptionUpgrade({
+      userId: subscription.userId,
+      subscriptionId: subscription.id,
+      subscriptionType: subscriptionType,
+      status: 'pending',
+      scheduledStart: new Date(scheduledStart * 1000),
+    })
 
-    const subSchedule = await this.paymentService.scheduleSubscription(
+    const companyName = this.offerService.getOfferMerchent(args.offerId)
+    const subscriptionUpgrade = await this.paymentService.scheduleSubscription(
       companyName,
-      targetCustomerId,
+      await this.getCustomerId(companyName, subscription.userId),
       {
         internalRef: `upgrade:${upgrade.id}`,
-        items: prices.map((p) => ({ price: p.id, quantity: 1 })),
-        startDate: current_period_end,
+        items: await this.buildUpgradeItems(args),
+        discounts: await this.buildUpgradeDiscounts(args),
+        startDate: scheduledStart,
         collectionMethod: 'charge_automatically',
       },
     )
 
-    return this.subsubscriptionUpgradeRepo.updateSubscriptionUpgrade(
-      upgrade.id,
-      {
-        externalId: subSchedule.id,
-        status: 'registered',
-      },
-    )
+    return this.subscriptionUpgradeRepo.updateSubscriptionUpgrade(upgrade.id, {
+      externalId: subscriptionUpgrade.id,
+      status: 'registered',
+    })
   }
 
-  async userHasUnresolvedUpgrades(userId: string): Promise<boolean> {
+  async hasUnresolvedUpgrades(
+    select:
+      | {
+          subscription_id: string
+          user_id?: never
+        }
+      | {
+          subscription_id?: never
+          user_id: string
+        },
+  ) {
     const upgrades =
-      await this.subsubscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades({
-        user_id: userId,
-      })
-    return upgrades.length > 0
-  }
-
-  async subscriptionHasUnresolvedUpgrades(subscriptionId: string) {
-    const upgrades =
-      await this.subsubscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades({
-        subscription_id: subscriptionId,
-      })
+      await this.subscriptionUpgradeRepo.getUnresolvedSubscriptionUpgrades(
+        select,
+      )
     return upgrades.length > 0
   }
 
@@ -199,5 +164,137 @@ export class UpgradeService {
     }
 
     return await this.customerInfoService.createCustomer(company, userId)
+  }
+
+  private async validateSubscriptionOwnership(
+    subscriptionId: string,
+    actor: User,
+  ) {
+    const localSub = await this.getSubscription(subscriptionId)
+
+    Auth.Roles.userIsMeOrInRoles({ id: localSub?.userId }, actor, [
+      'admin',
+      'support',
+    ])
+
+    return localSub
+  }
+
+  private async getSubscription(subscriptionId: string): Promise<Subscription> {
+    const localSub = await this.billingRepo.getSubscription({
+      id: subscriptionId,
+    })
+
+    if (!localSub) {
+      throw new Error('Unknown subscription')
+    }
+
+    return localSub
+  }
+
+  private async registerUpgradeCancelation(
+    localSub: Subscription,
+  ): Promise<{ cancelAt: number }> {
+    await this.cancelationRepo.insertCancelation(localSub.id, {
+      category: CANCELATION_DATA.CATEGORY,
+      reason: CANCELATION_DATA.REASON,
+      suppressConfirmation: true,
+      suppressWinback: true,
+    })
+
+    const remoteSub = await this.paymentService.updateSubscription(
+      localSub.company,
+      localSub.externalId,
+      {
+        cancel_at_period_end: true,
+      },
+    )
+
+    return { cancelAt: remoteSub.cancel_at! }
+  }
+
+  private async validateSubscriptionCanBeUpgraded(subscriptionId: string) {
+    const localSub = await this.billingRepo.getSubscription({
+      id: subscriptionId,
+    })
+
+    if (!localSub) {
+      throw new Error('Unknown subscription')
+    }
+
+    if (await this.hasUnresolvedUpgrades({ subscription_id: subscriptionId })) {
+      throw new Error('Subscription has unresoved upgrades')
+    }
+    return localSub
+  }
+
+  private async buildUpgradeItems(
+    args: SubscriptionUpgradeInput,
+  ): Promise<Item[]> {
+    this.offerService.isValidOffer(args.offerId)
+    const companyName = this.offerService.getOfferMerchent(args.offerId)
+
+    const lookupKeys = this.offerService
+      .getOfferItems(args.offerId)
+      .map((i) => i.lookupKey)
+
+    const prices = await this.paymentService.getPrices(
+      companyName,
+      lookupKeys ?? [],
+    )
+    const items: Item[] = prices.map((p) => ({ price: p.id, quantity: 1 }))
+
+    if (
+      !args.donation?.amount ||
+      !this.offerService.supportsDonations(args.offerId)
+    ) {
+      const donation = this.buildDonationItem(args.donation?.amount)
+      if (donation) {
+        items.push(donation)
+      }
+    }
+
+    return items
+  }
+
+  private async buildUpgradeDiscounts(
+    args: SubscriptionUpgradeInput,
+  ): Promise<{ promotion_code: string }[]> {
+    this.offerService.isValidOffer(args.offerId)
+    const companyName = this.offerService.getOfferMerchent(args.offerId)
+
+    if (!args.promoCode) {
+      return []
+    }
+
+    const res = await this.paymentService.getPromotion(
+      companyName,
+      args.promoCode,
+    )
+    if (!res) {
+      return []
+    }
+
+    return [{ promotion_code: res.code }]
+  }
+
+  private buildDonationItem(amount?: number): Item | null {
+    if (!amount || amount < 0) return null
+
+    return {
+      price_data: {
+        product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
+        unit_amount: amount,
+        currency: 'CHF',
+        recurring: {
+          interval: 'year',
+          interval_count: 1,
+          usage_type: 'licensed',
+          trial_period_days: null,
+          meter: null,
+        },
+      },
+      quantity: 1,
+    }
   }
 }

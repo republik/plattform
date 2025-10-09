@@ -55,7 +55,9 @@ export class OfferBuilder {
         return subs[0]
       })()
       this.context.hasUnresolvedUpgrades = (async () => {
-        return await this.upgradeService.userHasUnresolvedUpgrades(userId)
+        return await this.upgradeService.hasUnresolvedUpgrades({
+          user_id: userId,
+        })
       })()
     } else {
       this.context.activeSubscription = (async () => null)()

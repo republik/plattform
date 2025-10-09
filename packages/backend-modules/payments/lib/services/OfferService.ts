@@ -45,6 +45,10 @@ export class OfferService {
     throw new Error(`Unable to get subscriptionType on offerType ${offer.type}`)
   }
 
+  supportsDonations(offerId: OfferId): boolean {
+    return this.offers.get(offerId)!.company === 'PROJECT_R'
+  }
+
   resolveUpgradePaths(subType: SubscriptionType): OfferId[] {
     switch (subType) {
       case 'MONTHLY_SUBSCRIPTION':

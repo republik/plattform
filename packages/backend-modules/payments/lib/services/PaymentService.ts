@@ -8,16 +8,32 @@ type Discount = {
   promo_code?: string
 }
 
-type Item = {
-  price?: string
-  quantity: number
-  discounts?: Discount[]
-}
+type Recurring = Stripe.Price.Recurring
+
+export type Item =
+  | {
+      price: string
+      price_data?: never
+      quantity: number
+      discounts?: Discount[]
+    }
+  | {
+      price?: never
+      price_data: {
+        unit_amount: number
+        product: string
+        recurring: Recurring
+        currency: 'CHF'
+      }
+      quantity: number
+      discounts?: Discount[]
+    }
 
 export type ScheduleSubscriptionArgs = {
   internalRef: string
   items: Item[]
   collectionMethod: 'send_invoice' | 'charge_automatically'
+  discounts: Stripe.SubscriptionScheduleCreateParams.Phase.Discount[]
   startDate: number
 }
 
@@ -167,6 +183,7 @@ export class PaymentService {
         {
           items: options.items,
           iterations: 1,
+          discounts: options.discounts,
           collection_method: options.collectionMethod,
           metadata: {
             'republik:internal:ref': options.internalRef,
