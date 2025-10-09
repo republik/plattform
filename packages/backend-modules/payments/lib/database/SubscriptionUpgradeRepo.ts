@@ -8,6 +8,7 @@ export type Upgrade = {
   subscriptionType: SubscriptionType | null
   externalId: string
   status: string
+  upgradeConfig: any
   scheduledStart: Date
   createdAt: Date
   updatedAt: Date
@@ -20,14 +21,24 @@ export class SubscriptionUpgradeRepo {
     this.pgdb = pgdb
   }
 
+  async getSubscriptionUpgrade(id: string): Promise<Upgrade | null> {
+    const record = await this.pgdb.payments.subscription_upgrades.findOne({
+      id: id,
+    })
+    if (!record) return null
+
+    return this.camelCaseKeys(record) as Upgrade
+  }
+
   async getUnresolvedSubscriptionUpgrades(
     select:
-      | { subscription_id: string; user_id?: never }
-      | { subscription_id?: never; user_id: string },
+      | { 'id !='?: string; subscription_id: string; user_id?: never }
+      | { 'id !='?: string; subscription_id?: never; user_id: string },
   ): Promise<Upgrade[]> {
     const records = await this.pgdb.payments.subscription_upgrades.find({
       ...select,
-      'status <>': ['resolved', 'canceled'], // not in
+      // we have to ignore initialized upgrades as well
+      'status <>': ['resolved', 'canceled', 'initialized'], // not in
     })
 
     return records.map(this.camelCaseKeys) as Upgrade[]
@@ -48,6 +59,7 @@ export class SubscriptionUpgradeRepo {
       subscriptionType: string | null
       externalId: string
       status: string
+      upgradeConfig: any
       scheduledStart: Date
     }>,
   ): Promise<Upgrade> {
@@ -57,6 +69,7 @@ export class SubscriptionUpgradeRepo {
       subscription_type: args.subscriptionType,
       external_id: args.externalId,
       status: args.status,
+      upgrade_config: args.upgradeConfig,
       scheduled_start: args.scheduledStart,
     })
 
@@ -74,7 +87,7 @@ export class SubscriptionUpgradeRepo {
       subscriptionId: string
       externalId: string
       status: string
-      scheduledStart: Date
+      scheduledStart: Date | null
     }>,
   ) {
     const update = this.filterUndefined({

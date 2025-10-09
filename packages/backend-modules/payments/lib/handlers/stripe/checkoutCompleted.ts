@@ -474,13 +474,14 @@ class SetupWorkflow
 
     const metadata = event.data.object.metadata
     try {
-      const upgradeConfig = this.parseMetadata(metadata)
-      // TODO!: allow for discounts
-      // TODO!: allow for donations
-      // The upgrade service will check if a upgrade is already pending
+      const upgradeRef = this.getUpgradeRef(metadata)
+
+      if (!upgradeRef || !upgradeRef.upgradeId) {
+        throw new Error('Upgrade ref missing')
+      }
+
       const res = await this.upgradeService.nonInteractiveSubscriptionUpgrade(
-        upgradeConfig.currentSubscription,
-        { offerId: upgradeConfig.upgradeOfferId },
+        upgradeRef?.upgradeId,
       )
       this.logger.debug(res, 'upgrade scheduled')
     } catch (e) {
@@ -493,24 +494,11 @@ class SetupWorkflow
     return
   }
 
-  private parseMetadata(metadata: Stripe.Metadata | null): {
-    currentSubscription: string
-    upgradeOfferId: string
-  } {
-    if (metadata === null) {
-      throw new Error('no upgrade config provided')
-    }
+  private getUpgradeRef(metadata: Stripe.Metadata | null): {
+    upgradeId: string
+  } | null {
+    if (!metadata) return null
 
-    if (
-      !('currentSubscription' in metadata) ||
-      !('upgradeOfferId' in metadata)
-    ) {
-      throw new Error('incomplete upgrade config')
-    }
-
-    return {
-      currentSubscription: metadata.currentSubscription,
-      upgradeOfferId: metadata.upgradeOfferId,
-    }
+    return { upgradeId: metadata['republik:upgrade:ref'] }
   }
 }

@@ -4,11 +4,14 @@ import { BillingRepo, PaymentBillingRepo } from '../database/BillingRepo'
 import { Item, PaymentService } from './PaymentService'
 import { CancelationRepo } from '../database/CancelationRepo'
 import { CustomerInfoService } from './CustomerInfoService'
-import { SubscriptionUpgradeRepo } from '../database/SubscriptionUpgradeRepo'
+import {
+  SubscriptionUpgradeRepo,
+  Upgrade,
+} from '../database/SubscriptionUpgradeRepo'
 import { User } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
 import { OfferService } from './OfferService'
-import { activeOffers } from '../shop'
+import { activeOffers, DiscountOption } from '../shop'
 import { Company, Subscription } from '../types'
 import { getConfig } from '../config'
 
@@ -18,11 +21,12 @@ type SubscriptionUpgrade = {
   updatedAt: Date
 }
 
-type SubscriptionUpgradeInput = {
+type SubscriptionUpgradeConfig = {
   offerId: string
-  discount?: string
+  discount?: DiscountOption
   donation?: { amount: number }
   promoCode?: string
+  metadata?: Record<string, string | number | null>
 }
 
 const CANCELATION_DATA = {
@@ -47,6 +51,26 @@ export class UpgradeService {
     this.subscriptionUpgradeRepo = new SubscriptionUpgradeRepo(pgdb)
     this.offerService = new OfferService(activeOffers())
     this.logger = logger
+  }
+
+  public async initializeSubscriptionUpgrade(
+    userId: string,
+    subscriptionId: string,
+    args: SubscriptionUpgradeConfig,
+  ) {
+    this.offerService.isValidSubscriptionOffer(args.offerId)
+    const subscriptionType = this.offerService.getSubscriptionType(args.offerId)
+    const subscription = await this.validateSubscriptionCanBeUpgraded(
+      subscriptionId,
+    )
+
+    return await this.subscriptionUpgradeRepo.saveSubscriptionUpgrade({
+      userId: userId,
+      subscriptionId: subscription.id,
+      subscriptionType: subscriptionType,
+      upgradeConfig: args,
+      status: 'initialized',
+    })
   }
 
   public async cancelSubscriptionUpgrade(
@@ -93,29 +117,32 @@ export class UpgradeService {
     })
   }
 
-  public async nonInteractiveSubscriptionUpgrade(
-    subscriptionId: string,
-    args: SubscriptionUpgradeInput,
-  ) {
-    this.logger.debug({ subscriptionId }, 'scheduling subscription update')
-    this.offerService.isValidSubscriptionOffer(args.offerId)
-
-    const subscription = await this.validateSubscriptionCanBeUpgraded(
-      subscriptionId,
+  public async nonInteractiveSubscriptionUpgrade(upgradeId: string) {
+    let upgrade = await this.markUpgradeAsProcessing(upgradeId)
+    const subscription = await this.validateNoOtherUpgradesAreInProgress(
+      upgrade,
     )
+    const args = upgrade.upgradeConfig as SubscriptionUpgradeConfig
+
+    this.logger.debug(
+      { subscriptionId: upgrade.subscriptionId },
+      'scheduling subscription update',
+    )
+
+    this.offerService.isValidSubscriptionOffer(args.offerId)
 
     const { cancelAt: scheduledStart } = await this.registerUpgradeCancelation(
       subscription,
     )
-    const subscriptionType = this.offerService.getSubscriptionType(args.offerId)
 
-    const upgrade = await this.subscriptionUpgradeRepo.saveSubscriptionUpgrade({
-      userId: subscription.userId,
-      subscriptionId: subscription.id,
-      subscriptionType: subscriptionType,
-      status: 'pending',
-      scheduledStart: new Date(scheduledStart * 1000),
-    })
+    upgrade = await this.subscriptionUpgradeRepo.updateSubscriptionUpgrade(
+      upgrade.id,
+      {
+        subscriptionId: subscription.id,
+        status: 'pending',
+        scheduledStart: new Date(scheduledStart * 1000),
+      },
+    )
 
     const companyName = this.offerService.getOfferMerchent(args.offerId)
     const subscriptionUpgrade = await this.paymentService.scheduleSubscription(
@@ -126,6 +153,7 @@ export class UpgradeService {
         items: await this.buildUpgradeItems(args),
         discounts: await this.buildUpgradeDiscounts(args),
         startDate: scheduledStart,
+        metadata: args.metadata,
         collectionMethod: 'charge_automatically',
       },
     )
@@ -136,13 +164,24 @@ export class UpgradeService {
     })
   }
 
+  private async markUpgradeAsProcessing(upgradeId: string) {
+    return await this.subscriptionUpgradeRepo.updateSubscriptionUpgrade(
+      upgradeId,
+      {
+        status: 'processing',
+      },
+    )
+  }
+
   async hasUnresolvedUpgrades(
     select:
       | {
+          'id !='?: string
           subscription_id: string
           user_id?: never
         }
       | {
+          'id !='?: string
           subscription_id?: never
           user_id: string
         },
@@ -228,8 +267,30 @@ export class UpgradeService {
     return localSub
   }
 
+  private async validateNoOtherUpgradesAreInProgress(
+    upgrade: Upgrade,
+  ): Promise<Subscription> {
+    const inProgress = await this.hasUnresolvedUpgrades({
+      'id !=': upgrade.id,
+      subscription_id: upgrade.subscriptionId,
+    })
+    if (inProgress) {
+      throw new Error('Other Upgrade in progress')
+    }
+
+    const subscription = await this.billingRepo.getSubscription({
+      id: upgrade.subscriptionId,
+    })
+
+    if (!subscription) {
+      throw new Error('Unknown subscription')
+    }
+
+    return subscription
+  }
+
   private async buildUpgradeItems(
-    args: SubscriptionUpgradeInput,
+    args: SubscriptionUpgradeConfig,
   ): Promise<Item[]> {
     this.offerService.isValidOffer(args.offerId)
     const companyName = this.offerService.getOfferMerchent(args.offerId)
@@ -258,7 +319,7 @@ export class UpgradeService {
   }
 
   private async buildUpgradeDiscounts(
-    args: SubscriptionUpgradeInput,
+    args: SubscriptionUpgradeConfig,
   ): Promise<{ promotion_code: string }[]> {
     this.offerService.isValidOffer(args.offerId)
     const companyName = this.offerService.getOfferMerchent(args.offerId)

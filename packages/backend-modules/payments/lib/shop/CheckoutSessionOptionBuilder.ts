@@ -19,6 +19,7 @@ import { PaymentService } from '../services/PaymentService'
 import { CustomerInfoService } from '../services/CustomerInfoService'
 import { Subscription } from '../types'
 import { SubscriptionService } from '../services/SubscriptionService'
+import { UpgradeService } from '../services/UpgradeService'
 
 export type SetupConfig = {
   company: Company
@@ -63,6 +64,7 @@ export class CheckoutSessionBuilder {
   private paymentService: PaymentService
   private customerInfoService: CustomerInfoService
   private subscriptionService: SubscriptionService
+  private upgreadeService: UpgradeService
   private uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
   private optionalSessionVars: {
     complimentaryItems?: any[]
@@ -84,6 +86,7 @@ export class CheckoutSessionBuilder {
     paymentService: PaymentService,
     customerInfoService: CustomerInfoService,
     subscriptionService: SubscriptionService,
+    upgreadeService: UpgradeService,
     logger: Logger,
   ) {
     const offer = activeOffers().find((o) => o.id === offerId)
@@ -95,6 +98,7 @@ export class CheckoutSessionBuilder {
     this.paymentService = paymentService
     this.customerInfoService = customerInfoService
     this.subscriptionService = subscriptionService
+    this.upgreadeService = upgreadeService
     this.uiMode = 'EMBEDDED'
     this.optionalSessionVars = {
       customerId: (async () => undefined)(),
@@ -250,25 +254,33 @@ export class CheckoutSessionBuilder {
     const { customerId, metadata, activeSubscription } =
       this.optionalSessionVars
 
+    if (!customerId || !activeSubscription) {
+      throw Error('Can not inilazie session')
+    }
+
     const [discount, couponMeta] = await Promise.all([
       this.resolveDiscount(),
       this.resolveCouponMetadata(),
     ])
 
     const mergedMetadata: Record<string, string | number | null> = {
-      ...{ upgradeOfferId: this.offer.id },
       ...metadata,
       ...this.offer.metaData,
       ...couponMeta,
     }
 
-    if (activeSubscription?.id) {
-      mergedMetadata.currentSubscription = activeSubscription.id
-    }
+    const upgradeRef = await this.upgreadeService.initializeSubscriptionUpgrade(
+      this.optionalSessionVars.userId!,
+      activeSubscription.id,
+      {
+        offerId: this.offer.id,
+        discount: discount ?? undefined,
+        donation: this.optionalSessionVars.selectedDonation,
+        metadata: mergedMetadata,
+      },
+    )
 
-    if (discount) {
-      mergedMetadata.discount = JSON.stringify(discount)
-    }
+    mergedMetadata['republik:upgrade:ref'] = upgradeRef.id
 
     const config: Stripe.Checkout.SessionCreateParams = {
       ...this.checkoutUIConfig(),

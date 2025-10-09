@@ -35,6 +35,7 @@ export type ScheduleSubscriptionArgs = {
   collectionMethod: 'send_invoice' | 'charge_automatically'
   discounts: Stripe.SubscriptionScheduleCreateParams.Phase.Discount[]
   startDate: number
+  metadata?: Record<string, string | number | null>
 }
 
 export class PaymentService {
@@ -186,6 +187,7 @@ export class PaymentService {
           discounts: options.discounts,
           collection_method: options.collectionMethod,
           metadata: {
+            ...options.metadata,
             'republik:internal:ref': options.internalRef,
           },
         },
