@@ -1,4 +1,5 @@
 import { Field, Interaction, Label, Radio } from '@project-r/styleguide'
+import { JSONEditor } from '../../utils/CodeEditorFields'
 import OverlayFormManager from '../../utils/OverlayFormManager'
 
 const Form = ({ data, onChange, editor, node }) => {
@@ -111,6 +112,13 @@ const Form = ({ data, onChange, editor, node }) => {
           required
         />
       </Interaction.P>
+      <JSONEditor
+        label='Story Component Data'
+        config={data.get('componentData')}
+        onChange={(componentData) => {
+          onChange(data.set('componentData', componentData))
+        }}
+      />
     </>
   )
 }
