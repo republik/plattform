@@ -19,7 +19,7 @@ export = async function redeemGiftVoucher(
 ): Promise<RedeemGiftResult> {
   Auth.ensureUser(ctx.user)
 
-  const giftShop = new GiftShop(ctx.pgdb)
+  const giftShop = new GiftShop(ctx.pgdb, ctx.logger)
   try {
     const res = await giftShop.redeemVoucher(args.voucherCode, ctx.user.id)
 

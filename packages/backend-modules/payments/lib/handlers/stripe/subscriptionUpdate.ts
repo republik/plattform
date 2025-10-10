@@ -33,7 +33,7 @@ class SubscriptionUpdatedWorkflow
 
     const appliedVouchers = event.data.object.discounts
     const previousVouchers = event.data.previous_attributes?.discounts
-    const discountCode = event.data.object.discount?.coupon?.id
+    const discountCode = event.data.object.discounts[0] as string
 
     const sub = await this.subscriptionService.getSubscription({
       externalId: event.data.object.id,
@@ -49,9 +49,11 @@ class SubscriptionUpdatedWorkflow
       company: company,
       externalId: event.data.object.id,
       currentPeriodStart: parseStripeDate(
-        event.data.object.current_period_start,
+        event.data.object.items.data[0].current_period_start,
       ),
-      currentPeriodEnd: parseStripeDate(event.data.object.current_period_end),
+      currentPeriodEnd: parseStripeDate(
+        event.data.object.items.data[0].current_period_start,
+      ),
       status: event.data.object.status,
       metadata: event.data.object.metadata,
       cancelAt: parseStripeDate(cancelAt),
@@ -60,7 +62,7 @@ class SubscriptionUpdatedWorkflow
     })
 
     const hasPeriodChanged =
-      !!event.data.previous_attributes?.current_period_end
+      !!event.data.previous_attributes?.items?.data[0].current_period_end
 
     const previousCanceledAt = event.data.previous_attributes?.canceled_at
     const revokedCancellationDate = parseStripeDate(previousCanceledAt)

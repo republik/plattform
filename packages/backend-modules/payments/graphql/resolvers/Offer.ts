@@ -16,13 +16,13 @@ export = {
       throw new Error('api/shop/unknownOffer')
     }
 
-    if (typeof offer.discountOpitions === 'undefined') {
+    if (typeof offer.discountOptions === 'undefined') {
       return []
     }
 
     const results = (
       await Promise.allSettled(
-        offer.discountOpitions.map(async (code) => {
+        offer.discountOptions.map(async (code) => {
           const coupon = await paymentService.getCoupon(
             offer.company,
             code.coupon,

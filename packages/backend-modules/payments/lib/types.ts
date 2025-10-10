@@ -232,7 +232,7 @@ export type ChargeInsert = {
   paymentIntentId: string
   customerId: string
   description?: string | null
-  failureCode?: string | null 
+  failureCode?: string | null
   failureMessage?: string | null
 }
 
