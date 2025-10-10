@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { Company, MailNotifier, PaymentWorkflow } from '../../types'
+import { Company, MailNotifier, Order, PaymentWorkflow } from '../../types'
 import { ConfirmSetupTransactionalWorker } from '../../workers/ConfirmSetupTransactionalWorker'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker'
@@ -38,9 +38,7 @@ export async function processCheckoutCompleted(
   switch (event.data.object.mode) {
     case 'setup': {
       return new SetupWorkflow(
-        new PaymentService(),
         new CustomerInfoService(ctx.pgdb),
-        new SubscriptionService(ctx.pgdb),
         new UpgradeService(ctx.pgdb, ctx.logger),
         new InvoiceService(ctx.pgdb),
         ctx.logger.child(
@@ -55,6 +53,11 @@ export async function processCheckoutCompleted(
         new CustomerInfoService(ctx.pgdb),
         new SubscriptionService(ctx.pgdb),
         new InvoiceService(ctx.pgdb),
+        Queue.getInstance(),
+        ctx.logger.child(
+          { eventId: event.id },
+          { msgPrefix: '[Checkout SubscriptionWorkflow]' },
+        ),
       ).run(company, event)
     }
     case 'payment': {
@@ -81,101 +84,42 @@ class SubscriptionCheckoutCompletedWorkflow
     protected readonly customerInfoService: CustomerInfoService,
     protected readonly subscriptionService: SubscriptionService,
     protected readonly invoiceService: InvoiceService,
+    protected readonly queue: Queue,
+    protected readonly logger: Logger,
   ) {}
 
   async run(
     company: Company,
     event: Stripe.CheckoutSessionCompletedEvent,
   ): Promise<any> {
-    const customerId = event.data.object.customer?.toString()
-    if (!customerId) {
-      throw new CheckoutProcessingError('No stripe customer')
-    }
+    const customerId = this.extractCustomerId(event)
+    const userId = await this.resolveUserId(company, customerId)
+    const paymentStatus = this.normalizePaymentStatus(event)
 
-    const userId = await this.customerInfoService.getUserIdForCompanyCustomer(
+    const [subId, invoiceId] = await Promise.all([
+      await this.processSubscription(event, company, userId),
+      await this.processInvoice(event, company, userId),
+    ])
+
+    const order = await this.saveOrder(
+      userId,
       company,
-      customerId,
+      event,
+      invoiceId,
+      subId,
+      paymentStatus,
     )
-    if (!userId) {
-      throw Error(`User for ${customerId} does not exists`)
-    }
 
-    let paymentStatus = event.data.object.payment_status
-    if (paymentStatus === 'no_payment_required') {
-      // no payments required are treated as paid
-      paymentStatus = 'paid'
-    }
+    await this.processLineItems(event, company, order)
+    await this.runNotifiers(event, invoiceId, userId)
+    return
+  }
 
-    let subId: string | undefined
-    const externalSubId = event.data.object.subscription
-    if (typeof externalSubId === 'string') {
-      // if checkout contains a subscription that is not in the database try to save it
-      const s = await this.subscriptionService.getSubscription({
-        externalId: externalSubId,
-      })
-      if (!s) {
-        const subscription = await this.paymentService.getSubscription(
-          company,
-          externalSubId,
-        )
-        if (subscription) {
-          const args = mapSubscriptionArgs(company, subscription)
-          subId = (
-            await this.subscriptionService.setupSubscription(userId, args)
-          ).id
-        }
-      } else {
-        subId = s.id
-      }
-    }
-
-    let invoiceId: string | undefined
-    const extInvoiceId = event.data.object.invoice
-    if (typeof extInvoiceId === 'string') {
-      const i = await this.invoiceService.getInvoice({
-        externalId: extInvoiceId,
-      })
-      if (!i) {
-        // if checkout contains a invoice that is not in the database try to save it
-        const invoiceData = await this.paymentService.getInvoice(
-          company,
-          extInvoiceId as string,
-        )
-        if (invoiceData) {
-          const args = mapInvoiceArgs(company, invoiceData)
-          invoiceId = (await this.invoiceService.saveInvoice(userId, args)).id
-
-          // TODO!: FIX charge tracking
-          // const invoiceCharge = invoiceData.payments?.data[0].payment
-          // .charge as Stripe.Charge
-
-          // const chargeArgs = mapChargeArgs(
-          //   company,
-          //   invoiceId,
-          //   invoiceCharge as Stripe.Charge,
-          // )
-          // try {
-          //   await this.invoiceService.saveCharge(chargeArgs)
-          // } catch (e) {
-          //   if (e instanceof Error) {
-          //     console.log(`Error recording charge: ${e.message}`)
-          //   }
-          // }
-        }
-      } else {
-        invoiceId = i.id
-      }
-    }
-
-    const order = await this.invoiceService.saveOrder({
-      userId: userId,
-      company: company,
-      externalId: event.data.object.id,
-      invoiceId: invoiceId as string,
-      subscriptionId: subId as string,
-      status: paymentStatus as 'paid' | 'unpaid',
-    })
-
+  private async processLineItems(
+    event: Stripe.CheckoutSessionCompletedEvent,
+    company: Company,
+    order: Order,
+  ) {
     const sess = await this.paymentService.getCheckoutSession(
       company,
       event.data.object.id,
@@ -206,11 +150,153 @@ class SubscriptionCheckoutCompletedWorkflow
     if (orderLineItems?.length) {
       await this.invoiceService.saveOrderItems(orderLineItems)
     }
+  }
 
-    const queue = Queue.getInstance()
+  private async saveOrder(
+    userId: string,
+    company: Company,
+    event: Stripe.CheckoutSessionCompletedEvent,
+    invoiceId: string | undefined,
+    subId: string | undefined,
+    paymentStatus: string,
+  ) {
+    return await this.invoiceService.saveOrder({
+      userId: userId,
+      company: company,
+      externalId: event.data.object.id,
+      invoiceId: invoiceId,
+      subscriptionId: subId,
+      status: paymentStatus as 'paid' | 'unpaid',
+    })
+  }
 
+  private async processInvoice(
+    event: Stripe.CheckoutSessionCompletedEvent,
+    company: Company,
+    userId: string,
+  ) {
+    const extInvoiceId = event.data.object.invoice
+    if (typeof extInvoiceId === 'string') {
+      const existingInvoice = await this.invoiceService.getInvoice({
+        externalId: extInvoiceId,
+      })
+      if (existingInvoice) {
+        return existingInvoice.id
+      }
+    }
+
+    // if checkout contains a invoice that is not in the database try to save it
+    const stripeInvoice = await this.paymentService.getInvoice(
+      company,
+      extInvoiceId as string,
+    )
+    if (!stripeInvoice) {
+      this.logger.warn(`Invoice not found in Stripe`, {
+        externalId: extInvoiceId,
+      })
+      return undefined
+    }
+    const args = mapInvoiceArgs(company, stripeInvoice)
+    const saved = await this.invoiceService.saveInvoice(userId, args)
+
+    // await this.trackCharges(invoiceData, company)
+    return saved.id
+  }
+
+  // private async trackCharges(
+  //   invoiceData: Stripe.Response<Stripe.Invoice>,
+  //   company: string,
+  // ) {
+  // TODO!: FIX charge tracking for stripe api 2025-08-27.basil
+  // const invoiceCharge = invoiceData.payments?.data[0].payment
+  //   .charge as Stripe.Charge
+  // const chargeArgs = mapChargeArgs(
+  //   company,
+  //   invoiceId,
+  //   invoiceCharge as Stripe.Charge,
+  // )
+  // try {
+  //   await this.invoiceService.saveCharge(chargeArgs)
+  // } catch (e) {
+  //   if (e instanceof Error) {
+  //     console.log(`Error recording charge: ${e.message}`)
+  //   }
+  // }
+  // }
+
+  private async processSubscription(
+    event: Stripe.CheckoutSessionCompletedEvent,
+    company: Company,
+    userId: string,
+  ) {
+    const externalSubId = event.data.object.subscription
+    if (typeof externalSubId !== 'string') {
+      return undefined
+    }
+
+    const existingSubscription = await this.subscriptionService.getSubscription(
+      {
+        externalId: externalSubId,
+      },
+    )
+    if (existingSubscription) {
+      return existingSubscription.id
+    }
+
+    const subscription = await this.paymentService.getSubscription(
+      company,
+      externalSubId,
+    )
+    if (!subscription) {
+      this.logger.warn(`Subscription not found in Stripe`, {
+        externalId: externalSubId,
+      })
+      return undefined
+    }
+
+    const args = mapSubscriptionArgs(company, subscription)
+    const created = await this.subscriptionService.setupSubscription(
+      userId,
+      args,
+    )
+    return created.id
+  }
+
+  private normalizePaymentStatus(event: Stripe.CheckoutSessionCompletedEvent) {
+    let paymentStatus = event.data.object.payment_status
+    if (paymentStatus === 'no_payment_required') {
+      // no payments required are treated as paid
+      paymentStatus = 'paid'
+    }
+    return paymentStatus
+  }
+
+  private async resolveUserId(company: Company, customerId: string) {
+    const userId = await this.customerInfoService.getUserIdForCompanyCustomer(
+      company,
+      customerId,
+    )
+    if (!userId) {
+      throw Error(`User for ${customerId} does not exists`)
+    }
+    return userId
+  }
+
+  private extractCustomerId(event: Stripe.CheckoutSessionCompletedEvent) {
+    const customerId = event.data.object.customer?.toString()
+    if (!customerId) {
+      throw new CheckoutProcessingError('No stripe customer')
+    }
+    return customerId
+  }
+
+  private async runNotifiers(
+    event: Stripe.CheckoutSessionCompletedEvent,
+    invoiceId: string | undefined,
+    userId: string,
+  ) {
     await Promise.all([
-      queue.send<ConfirmSetupTransactionalWorker>(
+      this.queue.send<ConfirmSetupTransactionalWorker>(
         'payments:transactional:confirm:setup',
         {
           $version: 'v1',
@@ -219,13 +305,15 @@ class SubscriptionCheckoutCompletedWorkflow
           userId: userId,
         },
       ),
-      queue.send<SyncMailchimpSetupWorker>('payments:mailchimp:sync:setup', {
-        $version: 'v1',
-        eventSourceId: event.id,
-        userId: userId,
-      }),
+      this.queue.send<SyncMailchimpSetupWorker>(
+        'payments:mailchimp:sync:setup',
+        {
+          $version: 'v1',
+          eventSourceId: event.id,
+          userId: userId,
+        },
+      ),
     ])
-    return
   }
 }
 
@@ -329,18 +417,12 @@ class OneTimePaymentCheckoutCompletedWorkflow
     await this.invoiceService.saveOrderItems(orderLineItems)
 
     const donation = sess.line_items.data.find((i) => {
-      if (
-        typeof i.price?.product === 'object' &&
-        i.price?.product.id === PROJECT_R_DONATION_PRODUCT_ID
-      ) {
-        return i
-      } else if (
-        typeof i.price?.product === 'string' &&
-        i.price?.product === PROJECT_R_DONATION_PRODUCT_ID
-      ) {
-        return i
-      }
-      return null
+      return (
+        (typeof i.price?.product === 'object' &&
+          i.price?.product.id === PROJECT_R_DONATION_PRODUCT_ID) ||
+        (typeof i.price?.product === 'string' &&
+          i.price?.product === PROJECT_R_DONATION_PRODUCT_ID)
+      )
     })
 
     if (donation && sess.customer_details?.email) {
@@ -449,14 +531,11 @@ class SetupWorkflow
   private logger: Logger
 
   constructor(
-    _paymentService: PaymentService,
     _customerInfoService: CustomerInfoService,
-    _subscriptionService: SubscriptionService,
     upgradeService: UpgradeService,
     _invoiceService: InvoiceService,
     logger: Logger,
   ) {
-    // this.paymentService = paymentService
     // this.customerInfoService = customerInfoService
     // this.subscriptionService = subscriptionService
     this.upgradeService = upgradeService
@@ -467,14 +546,10 @@ class SetupWorkflow
     company: Company,
     event: Stripe.CheckoutSessionCompletedEvent,
   ): Promise<any> {
-    this.logger.debug(
-      { company, eventMeta: event.data.object.metadata },
-      'Event received',
-    )
+    this.logger.debug({ company, eventMeta: event.id }, 'Event received')
 
-    const metadata = event.data.object.metadata
     try {
-      const upgradeRef = this.getUpgradeRef(metadata)
+      const upgradeRef = this.getUpgradeRef(event.data.object.metadata)
 
       if (!upgradeRef || !upgradeRef.upgradeId) {
         throw new Error('Upgrade ref missing')
@@ -483,6 +558,7 @@ class SetupWorkflow
       const res = await this.upgradeService.nonInteractiveSubscriptionUpgrade(
         upgradeRef?.upgradeId,
       )
+
       this.logger.debug(res, 'upgrade scheduled')
     } catch (e) {
       this.logger.debug(
