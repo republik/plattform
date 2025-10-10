@@ -40,7 +40,6 @@ export async function processCheckoutCompleted(
       return new SetupWorkflow(
         new CustomerInfoService(ctx.pgdb),
         new UpgradeService(ctx.pgdb, ctx.logger),
-        new InvoiceService(ctx.pgdb),
         ctx.logger.child(
           { eventId: event.id },
           { msgPrefix: '[Checkout SetupWorkflow]' },
@@ -615,13 +614,10 @@ class SetupWorkflow
   constructor(
     _customerInfoService: CustomerInfoService,
     upgradeService: UpgradeService,
-    _invoiceService: InvoiceService,
     logger: Logger,
   ) {
     // this.customerInfoService = customerInfoService
-    // this.subscriptionService = subscriptionService
     this.upgradeService = upgradeService
-    // this.invoiceService = invoiceService
     this.logger = logger
   }
   async run(
