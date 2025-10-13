@@ -1,21 +1,20 @@
-import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
-import * as React from 'react'
 import {
   CommentNode,
   CommentProps,
   readDiscussionCommentDraft,
 } from '@project-r/styleguide'
-import { useTranslation } from '../../../lib/withT'
-import CommentLink from '../shared/CommentLink'
-import { useDiscussion } from '../context/DiscussionContext'
-import useVoteCommentHandlers from '../hooks/actions/useVoteCommentHandlers'
-import { CommentTreeNode } from '../helpers/makeCommentTree'
-import getCommentMenuItems from './getCommentActions'
+import * as React from 'react'
+import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { useMe } from '../../../lib/context/MeContext'
+import { useTranslation } from '../../../lib/withT'
+import { useDiscussion } from '../context/DiscussionContext'
+import DiscussionComposer from '../DiscussionComposer/DiscussionComposer'
+import { CommentTreeNode } from '../helpers/makeCommentTree'
 import useReportCommentHandler from '../hooks/actions/useReportCommentHandler'
 import useUnpublishCommentHandler from '../hooks/actions/useUnpublishCommentHandler'
-import DiscussionComposer from '../DiscussionComposer/DiscussionComposer'
-import { useLocalCommentReports } from '../helpers/useLocalCommentReports'
+import useVoteCommentHandlers from '../hooks/actions/useVoteCommentHandlers'
+import CommentLink from '../shared/CommentLink'
+import getCommentMenuItems from './getCommentActions'
 
 type Props = {
   CommentComponent?: React.ElementType<CommentProps>
@@ -51,31 +50,25 @@ const CommentContainer = ({
   const voteHandlers = useVoteCommentHandlers()
   const reportCommentHandler = useReportCommentHandler()
   const unpublishCommentHandler = useUnpublishCommentHandler()
-  const { checkIfAlreadyReported } = useLocalCommentReports()
 
   const menuItems = useMemo(
     () =>
       getCommentMenuItems({
         t,
         comment,
-        setEditMode: setIsEditing,
         roles: me?.roles ?? [],
         actions: {
-          reportCommentHandler,
           unpublishCommentHandler,
           featureCommentHandler: featureOverlay.handleOpen,
         },
-        checkIfAlreadyReported,
       }),
     [
       t,
       comment,
       setIsEditing,
       me?.roles,
-      reportCommentHandler,
       unpublishCommentHandler,
       featureOverlay.handleOpen,
-      checkIfAlreadyReported,
     ],
   )
 
@@ -99,6 +92,8 @@ const CommentContainer = ({
           : undefined,
         handleLoadReplies: loadRemainingReplies,
         handleShare: shareOverlay.shareHandler,
+        handleEdit: () => setIsEditing(true),
+        handleReport: reportCommentHandler,
       }}
       voteActions={{
         handleUpVote: voteHandlers.upVoteCommentHandler,

@@ -1,14 +1,14 @@
-import React, { useMemo } from 'react'
-import * as config from '../config'
-import { useColorContext } from '../../Colors/ColorContext'
 import { css, merge } from 'glamor'
-import * as Comment from '../Internal/Comment'
-import { CommentActions } from '../Internal/Comment/CommentActions'
+import React, { useMemo } from 'react'
 import { mUp } from '../../../theme/mediaQueries'
+import { useColorContext } from '../../Colors/ColorContext'
+import * as config from '../config'
+import * as Comment from '../Internal/Comment'
 import { COLLAPSE_WRAPPER_CLASSNAME } from '../Internal/Comment'
+import { ActionMenuItem } from '../Internal/Comment/ActionsMenu'
+import { CommentActions } from '../Internal/Comment/CommentActions'
 import { Header } from '../Internal/Comment/Header'
 import { LoadMore } from './LoadMore'
-import { ActionMenuItem } from '../Internal/Comment/ActionsMenu'
 
 const buttonStyle = {
   display: 'block',
@@ -186,6 +186,8 @@ export type CommentProps<CommentType = any> = {
     handleShare: (comment: CommentType) => Promise<unknown>
     handleReply: () => void
     handleLoadReplies: () => Promise<unknown>
+    handleEdit: () => void
+    handleReport: (commentId: string, message: string) => unknown
   }
   voteActions?: {
     handleUpVote: (commentId: string) => Promise<unknown>
@@ -295,14 +297,16 @@ const CommentNode = ({
             />
           )}
 
-          <CommentActions
-            t={t}
-            comment={comment}
-            actions={actions}
-            voteActions={voteActions}
-            userCanComment={userCanComment}
-            userWaitUntil={userWaitUntil}
-          />
+          {comment?.text && (
+            <CommentActions
+              t={t}
+              comment={comment}
+              actions={actions}
+              voteActions={voteActions}
+              userCanComment={userCanComment}
+              userWaitUntil={userWaitUntil}
+            />
+          )}
         </div>
         {children}
         <LoadMore

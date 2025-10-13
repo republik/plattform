@@ -1,20 +1,15 @@
-import React, { useContext } from 'react'
 import { css } from 'glamor'
-import { sansSerifMedium16 } from '../../../Typography/styles'
+import PropTypes from 'prop-types'
+import React, { useContext } from 'react'
 import { ellipsize, underline } from '../../../../lib/styleMixins'
-import * as config from '../../config'
-import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
 import { useColorContext } from '../../../Colors/ColorContext'
-import IconButton from '../../../IconButton'
+import { sansSerifMedium16 } from '../../../Typography/styles'
+import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
+import * as config from '../../config'
+import { DiscussionContext } from '../../DiscussionContext'
 
 import ActionsMenu, { ActionsMenuItemPropType } from './ActionsMenu'
-import PropTypes from 'prop-types'
 import HeaderMetaLine from './HeaderMetaLine'
-import { DiscussionContext } from '../../DiscussionContext'
-import { IconAdd, IconRemove } from '@republik/icons'
-
-export const profilePictureSize = 40
-export const profilePictureMargin = 10
 
 const styles = {
   root: css({
@@ -116,8 +111,6 @@ export const Header = ({
   t,
   comment,
   menuItems,
-  isExpanded,
-  onToggle,
   CommentLink = DefaultLink,
   isPreview = false,
 }) => {
@@ -128,7 +121,6 @@ export const Header = ({
     published = true,
     adminUnpublished = false,
     unavailable,
-    comments,
     parentIds = [],
   } = comment
   const { profilePicture, name } = displayAuthor || {}
@@ -194,26 +186,6 @@ export const Header = ({
         />
       </div>
       <div {...styles.actionsWrapper}>
-        {onToggle && (
-          <div className={COLLAPSE_WRAPPER_CLASSNAME}>
-            <IconButton
-              invert={true}
-              Icon={isExpanded ? IconRemove : IconAdd}
-              fillColorName='textSoft'
-              size={20}
-              onClick={onToggle}
-              style={{
-                marginLeft: 10,
-              }}
-              label={
-                !isExpanded &&
-                t.pluralize('styleguide/comment/header/expandCount', {
-                  count: comments.totalCount + 1,
-                })
-              }
-            />
-          </div>
-        )}
         {menuItems && menuItems.length > 0 && <ActionsMenu items={menuItems} />}
       </div>
     </div>
