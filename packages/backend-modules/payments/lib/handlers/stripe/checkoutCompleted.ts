@@ -1,11 +1,16 @@
 import Stripe from 'stripe'
-import { Company, MailNotifier, Order, PaymentWorkflow } from '../../types'
+import {
+  Company,
+  Invoice,
+  MailNotifier,
+  Order,
+  PaymentWorkflow,
+} from '../../types'
 import { ConfirmSetupTransactionalWorker } from '../../workers/ConfirmSetupTransactionalWorker'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker'
 import { mapSubscriptionArgs } from './subscriptionCreated'
 import { mapInvoiceArgs } from './invoiceCreated'
-// import { mapChargeArgs } from './invoicePaymentSucceeded'
 import { GiftShop, Voucher } from '../../shop/gifts'
 import { sendGiftPurchaseMail } from '../../transactionals/sendTransactionalMails'
 import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
@@ -20,6 +25,7 @@ import { t } from '@orbiting/backend-modules-translate'
 import { getConfig } from '../../config'
 import { UpgradeService } from '../../services/UpgradeService'
 import { Logger } from '@orbiting/backend-modules-types'
+import { InvoicePaymentStatusToChargeStatus } from './utils'
 
 const { PROJECT_R_DONATION_PRODUCT_ID } = getConfig()
 
@@ -198,30 +204,97 @@ class SubscriptionCheckoutCompletedWorkflow
     const args = mapInvoiceArgs(company, stripeInvoice)
     const saved = await this.invoiceService.saveInvoice(userId, args)
 
-    // await this.trackCharges(invoiceData, company)
+    await this.trackCharges(company, saved, stripeInvoice)
+
     return saved.id
   }
 
-  // private async trackCharges(
-  //   invoiceData: Stripe.Response<Stripe.Invoice>,
-  //   company: string,
-  // ) {
-  // TODO!: FIX charge tracking for stripe api 2025-08-27.basil
-  // const invoiceCharge = invoiceData.payments?.data[0].payment
-  //   .charge as Stripe.Charge
-  // const chargeArgs = mapChargeArgs(
-  //   company,
-  //   invoiceId,
-  //   invoiceCharge as Stripe.Charge,
-  // )
-  // try {
-  //   await this.invoiceService.saveCharge(chargeArgs)
-  // } catch (e) {
-  //   if (e instanceof Error) {
-  //     console.log(`Error recording charge: ${e.message}`)
-  //   }
-  // }
-  // }
+  private async trackCharges(
+    company: Company,
+    invoice: Invoice,
+    invoiceData: Stripe.Response<Stripe.Invoice>,
+  ) {
+    if (!invoiceData.payments) return
+    Promise.all(
+      invoiceData.payments.data.map(async (payment) => {
+        this.logger.debug({ payment, invoice }, 'invoice payment')
+
+        const paymentIntent = payment.payment
+          .payment_intent as Stripe.PaymentIntent
+
+        const charge = await this.paymentService.getCharge(
+          company,
+          paymentIntent.latest_charge! as string,
+        )
+
+        if (!charge) {
+          this.logger.error(
+            { chargeId: paymentIntent.latest_charge, invoiceId: invoice.id },
+            'charge not found',
+          )
+          return null
+        }
+
+        let paymentMethodType: 'CARD' | 'TWINT' | 'PAYPAL' | null = null
+        if (paymentIntent.payment_method) {
+          const pm = await this.paymentService.getPaymentMethod(
+            company,
+            paymentIntent.payment_method.toString(),
+          )
+          if (pm?.card) {
+            paymentMethodType = 'CARD'
+          }
+          if (pm?.twint) {
+            paymentMethodType = 'TWINT'
+          }
+          if (pm?.paypal) {
+            paymentMethodType = 'PAYPAL'
+          }
+        }
+
+        const data = {
+          company: company,
+          externalId: charge.id,
+          invoiceId: invoice.id,
+          paid: payment.status === 'paid',
+          status:
+            InvoicePaymentStatusToChargeStatus[
+              payment.status as keyof typeof InvoicePaymentStatusToChargeStatus
+            ],
+          amount: payment.amount_requested,
+          amountCaptured: charge?.amount_captured || 0,
+          amountRefunded: charge?.amount_refunded || 0,
+          paymentMethodType: paymentMethodType,
+          fullyRefunded: charge?.refunded || false,
+          createdAt: new Date(payment.created * 1000),
+          paymentIntentId: paymentIntent.id,
+          customerId: paymentIntent.customer as string,
+          description: paymentIntent.description,
+          failureCode: paymentIntent.last_payment_error?.code,
+          failureMessage: paymentIntent.last_payment_error?.message,
+        }
+
+        try {
+          await this.invoiceService.saveCharge(data)
+        } catch (e) {
+          if (
+            e instanceof Error &&
+            e.message.includes('charge_external_id_idx')
+          ) {
+            this.logger.info(
+              { externalId: charge.id, invoiceId: invoice.id },
+              'charge already recorded',
+            )
+          } else if (e instanceof Error) {
+            this.logger.error(
+              { error: e, invoice: invoice.id },
+              `Error recording charge: ${e.message}`,
+            )
+          }
+        }
+      }),
+    )
+  }
 
   private async processSubscription(
     event: Stripe.CheckoutSessionCompletedEvent,

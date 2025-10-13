@@ -1,12 +1,13 @@
 import Stripe from 'stripe'
 import { Company, PaymentWorkflow } from '../../types'
-import { parseStripeDate } from './utils'
+import { InvoicePaymentStatusToChargeStatus, parseStripeDate } from './utils'
 import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 import { PaymentService } from '../../services/PaymentService'
 import { InvoiceService } from '../../services/InvoiceService'
 import { SubscriptionService } from '../../services/SubscriptionService'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { NoticeRenewalPaymentSuccessfulTransactionalWorker } from '../../workers/NoticeRenewalPaymentSuccessfulTransactionalWorker'
+import { Logger } from '@orbiting/backend-modules-types'
 
 class InvoicePaymentSucceededWorkflow
   implements PaymentWorkflow<Stripe.InvoicePaymentSucceededEvent>
@@ -15,6 +16,7 @@ class InvoicePaymentSucceededWorkflow
     protected readonly paymentService: PaymentService,
     protected readonly invoiceService: InvoiceService,
     protected readonly subscriptionService: SubscriptionService,
+    protected readonly logger: Logger,
   ) {}
 
   async run(
@@ -37,21 +39,72 @@ class InvoicePaymentSucceededWorkflow
       throw Error('invoice not saved locally')
     }
 
-    const incoiceCharge = i.payments?.data[0].payment.charge as Stripe.Charge
-    if (!incoiceCharge) {
-      console.error('no charge associated with the invoice not found')
-      return
-    }
-    const args = mapChargeArgs(company, invoice.id, incoiceCharge)
+    Promise.all(
+      i.payments!.data.map(async (payment) => {
+        const paymentIntent = payment.payment
+          .payment_intent as Stripe.PaymentIntent
 
-    const ch = await this.invoiceService.getCharge({
-      externalId: incoiceCharge.id,
-    })
-    if (ch) {
-      await this.invoiceService.updateCharge({ id: ch.id }, args)
-    } else {
-      await this.invoiceService.saveCharge(args)
-    }
+        const charge = await this.paymentService.getCharge(
+          company,
+          paymentIntent.latest_charge! as string,
+        )
+        if (!charge) {
+          this.logger.error(
+            { chargeId: paymentIntent.latest_charge, invoiceId: invoice.id },
+            'charge not found',
+          )
+          return null
+        }
+
+        let paymentMethodType: 'CARD' | 'TWINT' | 'PAYPAL' | null = null
+        if (paymentIntent.payment_method) {
+          const pm = await this.paymentService.getPaymentMethod(
+            company,
+            paymentIntent.payment_method.toString(),
+          )
+          if (pm?.card) {
+            paymentMethodType = 'CARD'
+          }
+          if (pm?.twint) {
+            paymentMethodType = 'TWINT'
+          }
+          if (pm?.paypal) {
+            paymentMethodType = 'PAYPAL'
+          }
+        }
+
+        const data = {
+          company: company,
+          externalId: charge.id,
+          invoiceId: invoice.id,
+          paid: payment.status === 'paid',
+          status:
+            InvoicePaymentStatusToChargeStatus[
+              payment.status as keyof typeof InvoicePaymentStatusToChargeStatus
+            ],
+          amount: payment.amount_requested,
+          amountCaptured: charge?.amount_captured || 0,
+          amountRefunded: charge?.amount_refunded || 0,
+          paymentMethodType: paymentMethodType,
+          fullyRefunded: charge?.refunded || false,
+          createdAt: new Date(payment.created * 1000),
+          paymentIntentId: paymentIntent.id,
+          customerId: paymentIntent.customer as string,
+          description: paymentIntent.description,
+          failureCode: paymentIntent.last_payment_error?.code,
+          failureMessage: paymentIntent.last_payment_error?.message,
+        }
+
+        const ch = await this.invoiceService.getCharge({
+          externalId: charge.id!,
+        })
+        if (ch) {
+          await this.invoiceService.updateCharge({ id: ch.id }, data)
+        } else {
+          await this.invoiceService.saveCharge(data)
+        }
+      }),
+    )
 
     if (i.parent?.subscription_details?.subscription) {
       const subscription = await this.subscriptionService.getSubscription({
@@ -95,6 +148,10 @@ export async function processInvoicePaymentSucceeded(
     new PaymentService(),
     new InvoiceService(ctx.pgdb),
     new SubscriptionService(ctx.pgdb),
+    ctx.logger.child(
+      { eventId: event.id },
+      { msgPrefix: '[Invoice Payment Succeeded]' },
+    ),
   ).run(company, event)
 }
 
@@ -130,6 +187,6 @@ export function mapChargeArgs(
     customerId: charge.customer as string,
     description: charge.description,
     failureCode: charge.failure_code,
-    failureMessage: charge.failure_message
+    failureMessage: charge.failure_message,
   }
 }

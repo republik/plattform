@@ -222,7 +222,7 @@ export type ChargeInsert = {
   externalId: string
   invoiceId: string | null
   paid: boolean
-  status: string
+  status: 'succeeded' | 'pending' | 'failed'
   amount: number
   amountCaptured: number
   amountRefunded: number
