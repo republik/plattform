@@ -2,11 +2,11 @@
   "data": [
     {
       "key": "styleguide/Collapsable/expand",
-      "value": "Alles lesen"
+      "value": "Mehr lesen"
     },
     {
       "key": "styleguide/Collapsable/collapse",
-      "value": "Weniger"
+      "value": "Weniger lesen"
     },
     {
       "key": "styleguide/Collapsable/table/expand",
