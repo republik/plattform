@@ -37,7 +37,7 @@ const styles = {
       paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,
       borderBottomWidth: depth === 0 ? 1 : 0,
       borderBottomStyle: 'solid',
-      paddingBottom: depth === 0 ? 24 : 0,
+      paddingBottom: depth === 0 ? 48 : 0,
       [mUp]: {
         paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM,
       },
@@ -186,11 +186,6 @@ const CommentNode = ({
     () =>
       css({
         '::before': { background: colorScheme.getCSSColor('divider') },
-        '@media (hover)': {
-          ':hover::before': {
-            background: colorScheme.getCSSColor('primary'),
-          },
-        },
       }),
     [colorScheme],
   )
