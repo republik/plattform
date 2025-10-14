@@ -33,8 +33,11 @@ const styles = {
     css({
       background: 'transparent',
       position: 'relative',
-      margin: `10px 0 ${24 + (depth === 0 ? 20 : 0)}px`,
+      margin: `48px 0 ${24 + (depth === 0 ? 20 : 0)}px`,
       paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,
+      borderBottomWidth: depth === 0 ? 1 : 0,
+      borderBottomStyle: 'solid',
+      paddingBottom: depth === 0 ? 24 : 0,
       [mUp]: {
         paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM,
       },
@@ -42,7 +45,7 @@ const styles = {
   verticalToggle: ({ depth, isLast }) =>
     css({
       position: 'absolute',
-      top: 0,
+      top: -24,
       left: -((config.indentSizeS - config.verticalLineWidth) / 2),
       bottom: -(depth === 1 && !isLast ? 24 : 0),
       width: config.indentSizeS,
@@ -193,7 +196,12 @@ const CommentNode = ({
   )
 
   return (
-    <div ref={root} data-comment-id={id} {...rootStyle}>
+    <div
+      ref={root}
+      data-comment-id={id}
+      {...rootStyle}
+      {...colorScheme.set('borderColor', 'divider')}
+    >
       {!nestLimitExceeded && verticalToggleStyle && (
         <div {...verticalToggleStyle} {...verticalToggleStyleRules} />
       )}
