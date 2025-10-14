@@ -99,8 +99,6 @@ const propTypes = {
     parentIds: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   menuItems: PropTypes.arrayOf(ActionsMenuItemPropType),
-  isExpanded: PropTypes.bool,
-  onToggle: PropTypes.func,
   CommentLink: PropTypes.elementType,
   isPreview: PropTypes.bool,
 }
