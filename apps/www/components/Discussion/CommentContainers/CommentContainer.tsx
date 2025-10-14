@@ -58,6 +58,7 @@ const CommentContainer = ({
         comment,
         roles: me?.roles ?? [],
         actions: {
+          setEditMode: setIsEditing,
           unpublishCommentHandler,
           featureCommentHandler: featureOverlay.handleOpen,
         },
@@ -92,7 +93,6 @@ const CommentContainer = ({
           : undefined,
         handleLoadReplies: loadRemainingReplies,
         handleShare: shareOverlay.shareHandler,
-        handleEdit: () => setIsEditing(true),
         handleReport: reportCommentHandler,
       }}
       voteActions={{

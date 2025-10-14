@@ -1,5 +1,5 @@
 import { css } from 'glamor'
-import { Pencil, Reply, Share } from 'lucide-react'
+import { Reply, Share } from 'lucide-react'
 import PropTypes from 'prop-types'
 import React, { useMemo } from 'react'
 import { useCurrentMinute } from '../../../../lib/useCurrentMinute'
@@ -40,7 +40,7 @@ const propTypes = {
 export const CommentActions = ({
   t,
   comment,
-  actions: { handleReply, handleShare, handleEdit, handleReport },
+  actions: { handleReply, handleShare, handleReport },
   voteActions,
   userCanComment,
   userWaitUntil,
@@ -61,16 +61,6 @@ export const CommentActions = ({
 
   return (
     <div {...styles.container}>
-      {handleEdit && comment?.userCanEdit && (
-        <IconButton
-          title={t('styleguide/CommentActions/edit')}
-          Icon={Pencil}
-          size={16}
-          fill='primary'
-          label={t('styleguide/CommentActions/edit')}
-          onClick={handleEdit}
-        />
-      )}
       {voteActions && comment?.published && (
         <ClapButton
           t={t}

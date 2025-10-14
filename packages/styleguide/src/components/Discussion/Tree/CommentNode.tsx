@@ -131,7 +131,6 @@ export type CommentProps<CommentType = any> = {
     handleShare: (comment: CommentType) => Promise<unknown>
     handleReply: () => void
     handleLoadReplies: () => Promise<unknown>
-    handleEdit: () => void
     handleReport: (commentId: string, message: string) => unknown
   }
   voteActions?: {

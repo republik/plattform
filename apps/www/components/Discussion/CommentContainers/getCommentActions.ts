@@ -1,5 +1,6 @@
 import { timeFormat } from 'd3-time-format'
-import { EyeOff, Star } from 'lucide-react'
+import { EyeOff, Pencil, Star } from 'lucide-react'
+import { Dispatch, SetStateAction } from 'react'
 import { CommentFragmentType } from '../graphql/fragments/CommentFragment.graphql'
 import { UnpublishCommentHandler } from '../hooks/actions/useUnpublishCommentHandler'
 
@@ -11,6 +12,7 @@ type Options = {
   actions: {
     unpublishCommentHandler?: UnpublishCommentHandler
     featureCommentHandler?: any
+    setEditMode?: Dispatch<SetStateAction<boolean>>
   }
   roles: string[]
   t: any
@@ -38,21 +40,34 @@ function getCommentActions({ t, comment, roles, actions }: Options) {
     })
   }
 
+  if (actions.setEditMode && comment.userCanEdit) {
+    items.push({
+      icon: Pencil,
+      label: t('styleguide/CommentActions/edit'),
+      onClick: () => actions.setEditMode(true),
+    })
+  }
+
   const canUnpublish = roles.includes('admin') || roles.includes('moderator')
 
   if (
     actions.unpublishCommentHandler &&
     comment.published &&
     !comment.adminUnpublished &&
-    canUnpublish
+    (canUnpublish || comment.userCanEdit)
   ) {
     items.push({
       icon: EyeOff,
       label: t('styleguide/CommentActions/unpublish'),
       onClick: async () => {
-        const message = t('styleguide/CommentActions/unpublish/confirm/admin', {
-          name: comment.displayAuthor.name,
-        })
+        const message = t(
+          `styleguide/CommentActions/unpublish/confirm${
+            comment.userCanEdit ? '' : '/admin'
+          }`,
+          {
+            name: comment.displayAuthor.name,
+          },
+        )
         if (!window.confirm(message)) {
           return
         } else {

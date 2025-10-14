@@ -2026,7 +2026,7 @@
     },
     {
       "key": "styleguide/CommentActions/unpublish",
-      "value": "Beitrag zurückziehen"
+      "value": "zurückziehen"
     },
     {
       "key": "styleguide/CommentActions/unpublish/confirm",
@@ -2094,7 +2094,7 @@
     },
     {
       "key": "styleguide/CommentActions/feature",
-      "value": "Beitrag hervorheben"
+      "value": "hervorheben"
     },
     {
       "key": "styleguide/CommentActions/featured",
@@ -7441,7 +7441,7 @@
     },
     {
       "key": "FeatureCommentOverlay/title",
-      "value": "Beitrag hervorheben"
+      "value": "hervorheben"
     },
     {
       "key": "FeatureCommentOverlay/DEFAULT/add",

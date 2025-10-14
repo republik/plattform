@@ -1612,7 +1612,7 @@
     },
     {
       "key": "styleguide/CommentActions/unpublish",
-      "value": "Beitrag zurückziehen"
+      "value": "zurückziehen"
     },
     {
       "key": "styleguide/CommentActions/unpublish/confirm",
