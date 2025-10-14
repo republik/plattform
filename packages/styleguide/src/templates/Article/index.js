@@ -11,14 +11,13 @@ import Button from '../../components/Button'
 import Center from '../../components/Center'
 import { ChartLead, ChartLegend, ChartTitle } from '../../components/Chart'
 import CsvChart from '../../components/Chart/Csv'
+import Datawrapper from '../../components/Datawrapper'
 import ErrorBoundary from '../../components/ErrorBoundary'
 
 import { CoverTextTitleBlockHeadline, Figure } from '../../components/Figure'
 import IllustrationHtml from '../../components/IllustrationHtml'
 
 import { Tweet } from '../../components/Social'
-
-import StoryComponent from '../../components/StoryComponent'
 import TeaserEmbedComment from '../../components/TeaserEmbedComment'
 import { TeaserFeed } from '../../components/TeaserFeed'
 import { getFormatLine } from '../../components/TeaserFeed/utils'
@@ -212,8 +211,8 @@ const createSchema = ({
 
   const storyComponent = {
     matchMdast: matchZone('STORYCOMPONENT'),
-    component: StoryComponent,
-    editorModule: 'storycomponent',
+    component: Datawrapper,
+    editorModule: 'storyComponent',
     editorOptions: {
       type: 'STORYCOMPONENT',
       insertButtonText: 'Story Component (Beta)',
@@ -221,7 +220,7 @@ const createSchema = ({
     },
     props: (node) => ({
       name: node.data.name,
-      src: node.data.src, // TODO
+      props: node.data.props,
     }),
     isVoid: true,
   }
