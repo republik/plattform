@@ -1,3 +1,4 @@
+import { IconFlagFilled } from '@republik/icons'
 import { Flag } from 'lucide-react'
 import React from 'react'
 import IconButton from '../../../IconButton'
@@ -37,12 +38,15 @@ export const ReportButton = ({ t, comment, handleReport }: Props) => {
     )
   }
 
+  const alreadyReported =
+    comment.userReportedAt || (comment.numReports && comment.numReports > 0)
+
   return (
     <IconButton
-      Icon={Flag}
+      Icon={alreadyReported ? IconFlagFilled : Flag}
       size={16}
-      fill={comment.userReportedAt ? 'error' : undefined}
-      disabled={comment.userReportedAt}
+      fill={alreadyReported ? 'error' : undefined}
+      disabled={alreadyReported}
       onClick={openReportDialog}
       label={
         comment.numReports && comment.numReports > 0
