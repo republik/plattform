@@ -220,7 +220,8 @@ const createSchema = ({
       insertTypes: ['PARAGRAPH'],
     },
     props: (node) => ({
-      tagname: node.data.tagname,
+      name: node.data.name,
+      src: node.data.src, // TODO
     }),
     isVoid: true,
   }
