@@ -219,6 +219,9 @@ const createSchema = ({
       insertButtonText: 'Story Component (Beta)',
       insertTypes: ['PARAGRAPH'],
     },
+    props: (node) => ({
+      tagname: node.data.tagname,
+    }),
     isVoid: true,
   }
 

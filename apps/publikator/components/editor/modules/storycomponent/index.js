@@ -61,9 +61,6 @@ const StoryComponent = ({ rule, TYPE }) => {
     Block.create({
       type: TYPE,
       isVoid: true,
-      data: {
-        componentData: {},
-      },
     })
 
   return {
@@ -82,7 +79,6 @@ const StoryComponent = ({ rule, TYPE }) => {
       {
         renderNode(props) {
           const { node, editor } = props
-          const { key, ...rest } = props
           if (node.type !== TYPE) return
           const data = node.data.toJS()
           const component = <Component {...data} />
@@ -90,7 +86,11 @@ const StoryComponent = ({ rule, TYPE }) => {
             <OverlayFormContextProvider>
               <div style={{ position: 'relative' }}>
                 <CustomUi node={node} editor={editor} TYPE={TYPE} />
-                <EditOverlay key={key} {...rest} component={component} />
+                <EditOverlay
+                  key='story-overlay'
+                  {...props}
+                  component={component}
+                />
               </div>
             </OverlayFormContextProvider>
           )
