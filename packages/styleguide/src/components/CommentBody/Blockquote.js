@@ -1,6 +1,7 @@
 import { css } from 'glamor'
 import React from 'react'
 import { mUp } from '../../theme/mediaQueries'
+import { useColorContext } from '../Colors/useColorContext'
 import { serifRegular14, serifRegular16 } from '../Typography/styles'
 import { convertStyleToRem } from '../Typography/utils'
 
