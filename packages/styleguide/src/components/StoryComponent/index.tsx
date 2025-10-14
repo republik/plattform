@@ -20,14 +20,10 @@ function StoryComponent({ tagname, componentData }: StoryComponentProps) {
 
   return (
     <>
-      <style>{`${tagname}:not(:defined) {
-        opacity: 0;
-      }`}</style>
       <CustomElement
         ref={ref}
         key={tagname}
         data={JSON.stringify(componentData)}
-        style={{}}
       />
       <Script type='module' src={src} strategy='lazyOnload' />
     </>
