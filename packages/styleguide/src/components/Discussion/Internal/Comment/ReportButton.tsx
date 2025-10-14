@@ -44,6 +44,11 @@ export const ReportButton = ({ t, comment, handleReport }: Props) => {
       fill={comment.userReportedAt ? 'error' : undefined}
       disabled={comment.userReportedAt}
       onClick={openReportDialog}
+      label={
+        comment.numReports && comment.numReports > 0
+          ? String(comment.numReports)
+          : undefined
+      }
       title={
         comment.numReports && comment.numReports > 0
           ? t('styleguide/CommentActions/reportWithAmount', {
