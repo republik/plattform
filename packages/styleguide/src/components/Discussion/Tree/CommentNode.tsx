@@ -47,7 +47,7 @@ const styles = {
       position: 'absolute',
       top: -24,
       left: -((config.indentSizeS - config.verticalLineWidth) / 2),
-      bottom: -(depth === 1 && !isLast ? 24 : 0),
+      bottom: -(depth === 1 && !isLast ? 48 : 24),
       width: config.indentSizeS,
 
       [mUp]: {

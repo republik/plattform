@@ -1,9 +1,9 @@
-import React from 'react'
 import { css } from 'glamor'
+import React from 'react'
+import { mUp } from '../../theme/mediaQueries'
 
 import { useColorContext } from '../Colors/useColorContext'
-import { mUp } from '../../theme/mediaQueries'
-import { serifRegular14, serifRegular16 } from '../Typography/styles'
+import { sansSerifRegular15, sansSerifRegular17 } from '../Typography/styles'
 import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
@@ -20,9 +20,9 @@ const styles = {
   }),
   paragraph: css({
     margin: '6px 0',
-    ...convertStyleToRem(serifRegular14),
+    ...convertStyleToRem(sansSerifRegular15),
     [mUp]: {
-      ...convertStyleToRem(serifRegular16),
+      ...convertStyleToRem(sansSerifRegular17),
       margin: '10px 0',
     },
     '&:first-child': {
