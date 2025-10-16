@@ -1,5 +1,4 @@
 import Script from 'next/script'
-import React from 'react'
 
 interface StoryComponentProps {
   tagname?: string
@@ -13,7 +12,7 @@ function StoryComponent({ tagname, componentData }: StoryComponentProps) {
   // const src = `https://story.preview.republik.love/story-components/${tagname}/dist/index.js`
   const src = 'http://localhost:5173/dist/index.js' // use locally running build
 
-  const CustomCompponent = tagname as keyof JSX.IntrinsicElements
+  const CustomCompponent = tagname as any
 
   // tried for several hours to set the componentdata props with javascript instead of via attribute, to no avail...
 
