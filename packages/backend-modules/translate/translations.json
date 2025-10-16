@@ -2767,6 +2767,18 @@
     {
       "key": "api/payments/dicsount_duration_display_years/other",
       "value": "{years} Jahre"
+    },
+    {
+      "key": "api/payments/subscription_type/YEARLY_SUBSCRIPTION",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/payments/subscription_type/MONTHLY_SUBSCRIPTION",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "api/payments/subscription_type/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönner-Mitgliedschaft"
     }
   ]
 }

@@ -251,16 +251,20 @@ export class MailNotificationService {
 
     // should we still send the transactional if we don't find a payment method? payment successful means that it was charged
     if (!paymentMethod) {
-      throw new Error('No stored payment method found, not sending renewal payment successful notice transactional')
+      throw new Error(
+        'No stored payment method found, not sending renewal payment successful notice transactional',
+      )
     }
 
-    await sendRenewalPaymentSuccessfulNoticeMail({
+    await sendRenewalPaymentSuccessfulNoticeMail(
+      {
         email: userRow.email,
         subscription,
         amount,
         paymentMethod,
       },
-      this.#pgdb,)
+      this.#pgdb,
+    )
   }
 
   async sendNoticeSubscriptionRenewalTransactionalMail({
@@ -325,7 +329,9 @@ export class MailNotificationService {
     // should we still send the transactional if we don't find a payment method?
     // Will it still be tried to charge somehow?
     if (!paymentMethod) {
-      throw new Error('No stored payment method found, not sending renewal notice transactional')
+      throw new Error(
+        'No stored payment method found, not sending renewal notice transactional',
+      )
     }
 
     await sendRenewalNoticeMail(
@@ -347,7 +353,7 @@ export class MailNotificationService {
     subscriptionExternalId,
     invoiceExternalId,
     paymentAttemptDate,
-    paymentMethod
+    paymentMethod,
   }: {
     userId: string
     subscriptionExternalId: string
@@ -408,7 +414,13 @@ export class MailNotificationService {
     }
 
     await sendPaymentFailedNoticeMail(
-      { subscription, invoice, email: userRow.email, paymentAttemptDate, paymentMethod },
+      {
+        subscription,
+        invoice,
+        email: userRow.email,
+        paymentAttemptDate,
+        paymentMethod,
+      },
       this.#pgdb,
     )
   }

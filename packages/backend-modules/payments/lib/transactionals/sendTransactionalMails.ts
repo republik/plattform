@@ -9,26 +9,16 @@ import {
   SubscriptionType,
 } from '../types'
 import type Stripe from 'stripe'
-import { getConfig } from '../config'
 import { PaymentService } from '../services/PaymentService'
+import { DONATION_PRODUCTS, SUBSCRIPTION_PRODUCTS } from '../constants'
 
-type MergeVariable = { name: string; content: string | boolean }
+export type MergeVariable = { name: string; content: string | boolean }
 
 type SendSetupSubscriptionMailArgs = {
   subscription: Subscription
   invoice: Invoice
   email: string
 }
-
-const CONFIG = getConfig()
-
-const SUBSCRIPTION_PRODUCTS = [
-  CONFIG.BENEFACTOR_SUBSCRIPTION_STRIPE_PRODUCT_ID,
-  CONFIG.YEARLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
-  CONFIG.MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
-]
-
-const DONATION_PRODUCTS = [CONFIG.PROJECT_R_DONATION_PRODUCT_ID]
 
 export async function sendSetupSubscriptionMail(
   { subscription, invoice, email }: SendSetupSubscriptionMailArgs,
@@ -552,33 +542,6 @@ export async function sendRenewalNoticeMail(
   ]
 
   const templateName = 'subscription_renewal_notice_7_days'
-  const sendMailResult = await sendMailTemplate(
-    {
-      to: email,
-      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
-      subject: t(`api/email/${templateName}/subject`),
-      templateName,
-      mergeLanguage: 'handlebars',
-      globalMergeVars,
-    },
-    { pgdb },
-  )
-
-  return sendMailResult
-}
-
-export async function sendGiftPurchaseMail(
-  { voucherCode, email }: { voucherCode: string; email: string },
-  pgdb: PgDb,
-) {
-  const globalMergeVars: MergeVariable[] = [
-    {
-      name: 'voucher_codes',
-      content: voucherCode,
-    },
-  ]
-
-  const templateName = 'payment_successful_gift_voucher'
   const sendMailResult = await sendMailTemplate(
     {
       to: email,

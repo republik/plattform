@@ -41,9 +41,3 @@ export function parseStripeDate(
   }
   return undefined
 }
-
-export const InvoicePaymentStatusToChargeStatus = {
-  paid: 'succeeded',
-  open: 'pending',
-  canceled: 'failed',
-} as const
