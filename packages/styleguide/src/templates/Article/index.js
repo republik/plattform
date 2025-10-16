@@ -213,6 +213,10 @@ const createSchema = ({
   const storyComponent = {
     matchMdast: matchZone('STORYCOMPONENT'),
     component: StoryComponent,
+    props: (node) => ({
+      tagname: node.data.tagname,
+      componentData: node.data.componentData,
+    }),
     editorModule: 'storycomponent',
     editorOptions: {
       type: 'STORYCOMPONENT',
