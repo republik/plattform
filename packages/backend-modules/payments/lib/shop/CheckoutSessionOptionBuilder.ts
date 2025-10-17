@@ -1,18 +1,20 @@
 import { User } from '@orbiting/backend-modules-types'
 import { Logger } from '@orbiting/backend-modules-logger'
 import {
-  Offer,
   activeOffers,
-  ComplimentaryItem,
-  Discount,
   couponToDiscount,
   promotionToDiscount,
-  DiscountOption,
-  OfferType,
-  OfferAvailability,
   resolveUpgradePaths,
 } from '.'
-import { Company } from '../types'
+import {
+  Company,
+  ComplimentaryItem,
+  Discount,
+  DiscountOption,
+  Offer,
+  OfferAvailability,
+  OfferType,
+} from '../types'
 import Stripe from 'stripe'
 import { getConfig } from '../config'
 import { PaymentService } from '../services/PaymentService'

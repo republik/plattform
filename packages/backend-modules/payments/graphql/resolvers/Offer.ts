@@ -1,5 +1,6 @@
 import { PaymentService } from '../../lib/services/PaymentService'
-import { activeOffers, couponToDiscount, Offer } from '../../lib/shop'
+import { activeOffers, couponToDiscount } from '../../lib/shop'
+import { Offer } from '../../lib/types'
 
 export = {
   __resolveType: (offer: Offer, _args: never, _context: never) => {

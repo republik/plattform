@@ -1,6 +1,5 @@
 import { Branded } from '@orbiting/backend-modules-types'
-import { Offer, PriceDefinition } from '../shop'
-import { Company, SubscriptionType } from '../types'
+import { Company, Offer, PriceDefinition, SubscriptionType } from '../types'
 
 export type ValidOfferId = Branded<string, 'offerId'>
 export type ValidSubscriptionOfferId = Branded<string, 'subscriptionOfferId'>

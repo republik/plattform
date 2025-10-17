@@ -1,6 +1,5 @@
 import Stripe from 'stripe'
-import { Company } from '../types'
-import { Offer, OfferAPIResult, Discount, Promotion } from './offers'
+import { Company, Discount, Offer, OfferAPIResult, Promotion } from '../types'
 import { PaymentService } from '../services/PaymentService'
 import { Price } from './CheckoutSessionOptionBuilder'
 import { OfferBuilder } from './OfferBuilder'

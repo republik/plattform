@@ -11,8 +11,8 @@ import {
 import { User } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
 import { OfferService } from './OfferService'
-import { activeOffers, DiscountOption } from '../shop'
-import { Company, Subscription } from '../types'
+import { activeOffers } from '../shop'
+import { Company, DiscountOption, Subscription } from '../types'
 import { getConfig } from '../config'
 import { CustomDonation } from '../shop/CheckoutSessionOptionBuilder'
 
