@@ -30,6 +30,14 @@ export class OfferService {
     return this.offers.get(offerId)!.company
   }
 
+  getOffer(offerId: OfferId): Offer {
+    return this.offers.get(offerId)!
+  }
+
+  getOffers(): Offer[] {
+    return Array.from(this.offers.values())
+  }
+
   getOfferItems(offerId: OfferId): PriceDefinition[] {
     return this.offers.get(offerId)!.items
   }

@@ -1,11 +1,6 @@
 import { User } from '@orbiting/backend-modules-types'
 import { Logger } from '@orbiting/backend-modules-logger'
-import {
-  activeOffers,
-  couponToDiscount,
-  promotionToDiscount,
-  resolveUpgradePaths,
-} from '.'
+import { activeOffers, resolveUpgradePaths } from '.'
 import {
   Company,
   ComplimentaryItem,
@@ -22,6 +17,7 @@ import { CustomerInfoService } from '../services/CustomerInfoService'
 import { Subscription } from '../types'
 import { SubscriptionService } from '../services/SubscriptionService'
 import { UpgradeService } from '../services/UpgradeService'
+import { couponToDiscount, promotionToDiscount } from './utils'
 
 export type SetupConfig = {
   company: Company

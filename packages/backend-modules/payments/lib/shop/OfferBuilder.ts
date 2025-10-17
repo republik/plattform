@@ -1,7 +1,6 @@
 import Stripe from 'stripe'
 import { PaymentService } from '../services/PaymentService'
 import { resolveUpgradePaths } from './offers'
-import { promotionToDiscount } from '.'
 import { PgDb } from 'pogi'
 import { SubscriptionService } from '../services/SubscriptionService'
 import {
@@ -13,6 +12,7 @@ import {
 } from '../types'
 import { UpgradeService } from '../services/UpgradeService'
 import { Logger } from '@orbiting/backend-modules-types'
+import { promotionToDiscount } from './utils'
 
 export class OfferBuilder {
   private paymentService: PaymentService

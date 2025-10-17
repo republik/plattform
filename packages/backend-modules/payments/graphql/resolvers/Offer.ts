@@ -1,5 +1,5 @@
 import { PaymentService } from '../../lib/services/PaymentService'
-import { activeOffers, couponToDiscount } from '../../lib/shop'
+import { activeOffers, utils } from '../../lib/shop'
 import { Offer } from '../../lib/types'
 
 export = {
@@ -28,7 +28,7 @@ export = {
             offer.company,
             code.coupon,
           )
-          return coupon ? { ...couponToDiscount(coupon) } : null
+          return coupon ? { ...utils.couponToDiscount(coupon) } : null
         }),
       )
     )
