@@ -6,10 +6,8 @@ import { SubscriptionService } from '../services/SubscriptionService'
 import { InvoiceService } from '../services/InvoiceService'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 
-import {
-  CheckoutProcessingError,
-  INVOICE_PAYMENT_STATUS_TO_CHARGE_STATUS,
-} from '../constants'
+import { INVOICE_PAYMENT_STATUS_TO_CHARGE_STATUS } from '../constants'
+import { CheckoutProcessingError } from '../errors'
 import { mapInvoiceArgs } from '../handlers/stripe/invoiceCreated'
 import { mapSubscriptionArgs } from '../handlers/stripe/subscriptionCreated'
 import { ConfirmSetupTransactionalWorker } from '../workers/ConfirmSetupTransactionalWorker'

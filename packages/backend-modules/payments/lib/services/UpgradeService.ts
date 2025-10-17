@@ -33,7 +33,7 @@ type SubscriptionUpgradeConfig = {
 const CANCELATION_DATA = {
   CATEGORY: 'SYSTEM',
   REASON: 'Subscription Upgrade',
-}
+} as const
 
 export class UpgradeService {
   private paymentService: PaymentService

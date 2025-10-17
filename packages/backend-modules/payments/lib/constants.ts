@@ -18,10 +18,3 @@ export const INVOICE_PAYMENT_STATUS_TO_CHARGE_STATUS = {
 
 export const GIFTS_ENABLED = () =>
   process.env.PAYMENTS_SHOP_GIFTS_ENABLED === 'true'
-
-export class CheckoutProcessingError extends Error {
-  constructor(msg: string) {
-    super(msg)
-    this.name = 'CheckoutProcessingError'
-  }
-}

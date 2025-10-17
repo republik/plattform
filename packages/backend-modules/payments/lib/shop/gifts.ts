@@ -15,22 +15,9 @@ import { CustomerInfoService } from '../services/CustomerInfoService'
 import { Logger } from '@orbiting/backend-modules-types'
 import { OfferService } from '../services/OfferService'
 import { Item, PaymentService } from '../services/PaymentService'
+import { GiftAlreadyAppliedError, GiftNotApplicableError } from '../errors'
 
 const logger = createLogger('payments:gifts')
-
-export class GiftNotApplicableError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'api/gifts/error/gift_not_applicable'
-  }
-}
-
-export class GiftAlreadyAppliedError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'api/gifts/error/gift_already_applied'
-  }
-}
 
 export type ApplyGiftResult = {
   id?: string
