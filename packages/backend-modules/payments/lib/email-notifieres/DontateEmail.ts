@@ -3,12 +3,16 @@ import { MailNotifier } from '../types'
 import { sendMailTemplate } from '@orbiting/backend-modules-mail'
 import { t } from '@orbiting/backend-modules-translate'
 
-export class DonateEmail implements MailNotifier<{ total_amount: number }> {
+export type DonationNotifierArgs = {
+  total_amount: number
+}
+
+export class DonateEmail implements MailNotifier<DonationNotifierArgs> {
   readonly templateName = 'payment_successful_donate'
 
   constructor(protected readonly pgdb: PgDb) {}
 
-  async sendEmail(email: string, args: { total_amount: number }) {
+  async sendEmail(email: string, args: DonationNotifierArgs) {
     const globalMergeVars = [
       {
         name: 'total_formatted',

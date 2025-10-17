@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 import { Company, PaymentWorkflow } from '../../types'
-import { InvoicePaymentStatusToChargeStatus, parseStripeDate } from './utils'
+import { parseStripeDate } from './utils'
 import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 import { PaymentService } from '../../services/PaymentService'
 import { InvoiceService } from '../../services/InvoiceService'
@@ -8,6 +8,7 @@ import { SubscriptionService } from '../../services/SubscriptionService'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { NoticeRenewalPaymentSuccessfulTransactionalWorker } from '../../workers/NoticeRenewalPaymentSuccessfulTransactionalWorker'
 import { Logger } from '@orbiting/backend-modules-types'
+import { INVOICE_PAYMENT_STATUS_TO_CHARGE_STATUS } from '../../constants'
 
 class InvoicePaymentSucceededWorkflow
   implements PaymentWorkflow<Stripe.InvoicePaymentSucceededEvent>
@@ -79,8 +80,8 @@ class InvoicePaymentSucceededWorkflow
           invoiceId: invoice.id,
           paid: payment.status === 'paid',
           status:
-            InvoicePaymentStatusToChargeStatus[
-              payment.status as keyof typeof InvoicePaymentStatusToChargeStatus
+            INVOICE_PAYMENT_STATUS_TO_CHARGE_STATUS[
+              payment.status as keyof typeof INVOICE_PAYMENT_STATUS_TO_CHARGE_STATUS
             ],
           amount: payment.amount_requested,
           amountCaptured: charge?.amount_captured || 0,

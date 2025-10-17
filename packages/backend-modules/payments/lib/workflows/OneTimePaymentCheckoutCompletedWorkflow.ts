@@ -7,6 +7,8 @@ import { CustomerInfoService } from '../services/CustomerInfoService'
 import { InvoiceService } from '../services/InvoiceService'
 import { CheckoutProcessingError } from '../constants'
 import { getConfig } from '../config'
+import { DonationNotifierArgs } from '../email-notifieres/DontateEmail'
+import { GiftCodeNotifierArgs } from '../email-notifieres/GiftEmail'
 
 const { PROJECT_R_DONATION_PRODUCT_ID } = getConfig()
 
@@ -19,10 +21,10 @@ export class OneTimePaymentCheckoutCompletedWorkflow
     protected readonly userService: UserService,
     protected readonly customerInfoService: CustomerInfoService,
     protected readonly invoiceService: InvoiceService,
-    protected readonly notifiers: Record<
-      'donation' | 'gift',
-      MailNotifier<any>
-    >,
+    protected readonly notifiers: {
+      donation?: MailNotifier<DonationNotifierArgs>
+      gift?: MailNotifier<GiftCodeNotifierArgs>
+    },
   ) {}
 
   async run(

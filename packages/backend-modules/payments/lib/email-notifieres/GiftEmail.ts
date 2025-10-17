@@ -4,12 +4,16 @@ import { MailNotifier } from '../types'
 import { sendMailTemplate } from '@orbiting/backend-modules-mail'
 import { t } from '@orbiting/backend-modules-translate'
 
-export class GiftCodeEmail implements MailNotifier<{ code: string }> {
+export type GiftCodeNotifierArgs = {
+  code: string
+}
+
+export class GiftCodeEmail implements MailNotifier<GiftCodeNotifierArgs> {
   private readonly templateName = 'payment_successful_gift_voucher'
 
   constructor(protected readonly pgdb: PgDb) {}
 
-  async sendEmail(email: string, args: { code: string }) {
+  async sendEmail(email: string, args: GiftCodeNotifierArgs) {
     const globalMergeVars: MergeVariable[] = [
       {
         name: 'voucher_codes',
