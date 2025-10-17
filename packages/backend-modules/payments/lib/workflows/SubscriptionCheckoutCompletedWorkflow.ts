@@ -5,7 +5,7 @@ import { CustomerInfoService } from '../services/CustomerInfoService'
 import { SubscriptionService } from '../services/SubscriptionService'
 import { InvoiceService } from '../services/InvoiceService'
 import { Queue } from '@orbiting/backend-modules-job-queue'
-import { Logger } from '../../../logger/build/@types'
+
 import {
   CheckoutProcessingError,
   INVOICE_PAYMENT_STATUS_TO_CHARGE_STATUS,
@@ -14,6 +14,7 @@ import { mapInvoiceArgs } from '../handlers/stripe/invoiceCreated'
 import { mapSubscriptionArgs } from '../handlers/stripe/subscriptionCreated'
 import { ConfirmSetupTransactionalWorker } from '../workers/ConfirmSetupTransactionalWorker'
 import { SyncMailchimpSetupWorker } from '../workers/SyncMailchimpSetupWorker'
+import { Logger } from '@orbiting/backend-modules-types'
 
 export class SubscriptionCheckoutCompletedWorkflow
   implements PaymentWorkflow<Stripe.CheckoutSessionCompletedEvent>
