@@ -2769,16 +2769,28 @@
       "value": "{years} Jahre"
     },
     {
-      "key": "api/payments/subscription_type/YEARLY_SUBSCRIPTION",
-      "value": "Jahresmitgliedschaft"
-    },
-    {
       "key": "api/payments/subscription_type/MONTHLY_SUBSCRIPTION",
       "value": "Monats-Abo"
     },
     {
+      "key": "api/payments/subscription_type/YEARLY_SUBSCRIPTION",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
       "key": "api/payments/subscription_type/BENEFACTOR_SUBSCRIPTION",
       "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_setup_successful_upgrade/MONTHLY_SUBSCRIPTION/subject",
+      "value": "Wechsel zum Monats-Abo"
+    },
+    {
+      "key": "api/email/subscription_setup_successful_upgrade/YEARLY_SUBSCRIPTION/subject",
+      "value": "Wechsel zur Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_setup_successful_upgrade/BENEFACTOR_SUBSCRIPTION/subject",
+      "value": "Wechsel zur Gönner-Mitgliedschaft"
     }
   ]
 }

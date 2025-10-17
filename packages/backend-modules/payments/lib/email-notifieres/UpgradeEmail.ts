@@ -46,7 +46,9 @@ export class UpgradeEmail implements MailNotifier<UpgradeNotifierArgs> {
       {
         to: email,
         fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
-        subject: t(`api/email/${this.templateName}/subject`),
+        subject: t(
+          `api/email/${this.templateName}/${args.upgrade.subscriptionType}/subject`,
+        ),
         templateName: this.templateName,
         mergeLanguage: 'handlebars',
         globalMergeVars,
