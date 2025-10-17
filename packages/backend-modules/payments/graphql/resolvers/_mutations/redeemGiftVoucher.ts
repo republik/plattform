@@ -1,11 +1,11 @@
 import { GraphqlContext } from '@orbiting/backend-modules-types'
+import { GiftShop } from '../../../lib/shop/gifts'
+import { default as Auth } from '@orbiting/backend-modules-auth'
+import { t } from '@orbiting/backend-modules-translate'
 import {
   GiftAlreadyAppliedError,
   GiftNotApplicableError,
-  GiftShop,
-} from '../../../lib/shop/gifts'
-import { default as Auth } from '@orbiting/backend-modules-auth'
-import { t } from '@orbiting/backend-modules-translate'
+} from '../../../lib/errors'
 
 type RedeemGiftResult = {
   aboType: string
