@@ -180,6 +180,8 @@ const createPasteHtml = (centerModule) => (event, change, editor) => {
   const cursor = editor.value.selection.anchorKey
   const blockType = editor.value.document.getClosestBlock(cursor).type
 
+  console.log('PASTE EVENT', transfer, blockType)
+
   if (!transfer?.text) return
 
   if (transfer.type === 'text' || transfer.type === 'rich') {
@@ -192,6 +194,7 @@ const createPasteHtml = (centerModule) => (event, change, editor) => {
   }
 
   if (transfer.type === 'html') {
+    console.log('-> CONVERTING HTML')
     const isCenter = hasParent(centerModule.TYPE, editor.value.document, cursor)
 
     // we only paste html when we are in a paragraph in a center block (aka fliesstext)
