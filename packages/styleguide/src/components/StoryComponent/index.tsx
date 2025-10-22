@@ -1,26 +1,54 @@
 import Script from 'next/script'
+import { useEffect, useState } from 'react'
+import { Figure, FigureSize } from '../Figure'
+import Spinner from '../Spinner'
 
 interface StoryComponentProps {
   tagname?: string
   componentData?: Record<string, any>
+  size: FigureSize
 }
 
-function StoryComponent({ tagname, componentData }: StoryComponentProps) {
-  if (!tagname) return <p>Tag name missing</p>
+function StoryComponent({ tagname, componentData, size }: StoryComponentProps) {
+  const [isReady, setIsReady] = useState(false)
 
-  // TODO: env variable for story server
+  // TODO: env variable for story server?
   // const src = `https://story.preview.republik.love/story-components/${tagname}/dist/index.js`
   const src = 'http://localhost:5173/dist/index.js' // use locally running build
-
   const CustomCompponent = tagname as any
 
-  // tried for several hours to set the componentdata props with javascript instead of via attribute, to no avail...
+  useEffect(() => {
+    if (tagname) {
+      customElements.whenDefined(tagname).then(() => {
+        setIsReady(true)
+      })
+    }
+  }, [tagname])
+
+  // FYI: tried for several hours to set the componentdata props with javascript instead of via attribute, to no avail...
+
+  if (!tagname) return <p>Tag name missing</p>
+
+  const Loader = (
+    <div
+      style={{
+        minHeight: '150px',
+        position: 'relative',
+      }}
+    >
+      <Spinner />
+    </div>
+  )
 
   return (
-    <>
-      <CustomCompponent componentdata={JSON.stringify(componentData)} />
+    <Figure size={size}>
+      {isReady ? (
+        <CustomCompponent componentdata={JSON.stringify(componentData)} />
+      ) : (
+        Loader
+      )}
       <Script type='module' src={src} strategy='lazyOnload' />
-    </>
+    </Figure>
   )
 }
 
