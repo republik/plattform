@@ -4,17 +4,21 @@ import { Figure, FigureSize } from '../Figure'
 import Spinner from '../Spinner'
 
 interface StoryComponentProps {
-  tagname?: string
+  url?: string
   componentData?: Record<string, any>
   size: FigureSize
 }
 
-function StoryComponent({ tagname, componentData, size }: StoryComponentProps) {
+function StoryComponent({ url, componentData, size }: StoryComponentProps) {
   const [isReady, setIsReady] = useState(false)
+  const regex = /\S*\/story-components\/([\w\-]+)\/dist\/index\.js\S*/
+  // const tagname = url ? url.match(regex)?[0] : null
+  const tagname = 'the-big-question'
 
-  // TODO: env variable for story server?
+  // TODO: live deployment for story server
+  // TODO: pass the whole url as prop (query string for cache busting)
   // const src = `https://story.preview.republik.love/story-components/${tagname}/dist/index.js`
-  const src = 'http://localhost:5173/dist/index.js' // use locally running build
+  // const src = 'http://localhost:5173/dist/index.js' // use locally running build
   const CustomCompponent = tagname as any
 
   useEffect(() => {
@@ -47,7 +51,7 @@ function StoryComponent({ tagname, componentData, size }: StoryComponentProps) {
       ) : (
         Loader
       )}
-      <Script type='module' src={src} strategy='lazyOnload' />
+      <Script type='module' src={url} strategy='lazyOnload' />
     </Figure>
   )
 }

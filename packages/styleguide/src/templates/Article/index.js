@@ -216,6 +216,7 @@ const createSchema = ({
     props: (node) => ({
       tagname: node.data.tagname,
       componentData: node.data.componentData,
+      url: node.data.url,
     }),
     editorModule: 'storycomponent',
     editorOptions: {
