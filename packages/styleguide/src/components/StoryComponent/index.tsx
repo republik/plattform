@@ -11,13 +11,16 @@ interface StoryComponentProps {
 
 function StoryComponent({ url, componentData, size }: StoryComponentProps) {
   const [isReady, setIsReady] = useState(false)
+
+  // const url = `https://story.preview.republik.love/story-components/${tagname}/dist/index.js`
   const regex = /\S*\/story-components\/([\w\-]+)\/dist\/index\.js\S*/
   const tagname = url?.match(regex)[1]
 
+  // const url = 'http://localhost:5173/dist/index.js' // for local testing
+  // const tagname = 'the-big-question' // for local testing
+
   // TODO: live deployment for story server
   // TODO: pass the whole url as prop (query string for cache busting)
-  // const src = `https://story.preview.republik.love/story-components/${tagname}/dist/index.js`
-  // const src = 'http://localhost:5173/dist/index.js' // use locally running build
   const CustomCompponent = tagname as any
 
   useEffect(() => {
