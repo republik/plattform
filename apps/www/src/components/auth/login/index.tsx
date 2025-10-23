@@ -48,7 +48,6 @@ function ResetButton({ onClick }) {
 interface LoginFormProps {
   submitButtonText?: string
   context?: SignupContextType
-  analyticsProps: Record<string, string>
   autoFocus?: boolean
   renderBefore?: ReactNode
   renderAfter?: ReactNode
@@ -75,7 +74,6 @@ export function LoginForm(props: LoginFormProps) {
       <CodeForm
         email={email}
         context={props.context}
-        analyticsProps={props.analyticsProps}
         redirectUrl={props.redirectUrl}
       />
     )
@@ -113,7 +111,6 @@ export function LoginForm(props: LoginFormProps) {
       setEmail(email)
       trackEvent({
         action: 'Initiated login',
-        ...props.analyticsProps,
       })
     }
 

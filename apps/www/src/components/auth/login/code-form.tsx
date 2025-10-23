@@ -28,16 +28,10 @@ import { reloadPage, SignupContextType } from './utils'
 export interface CodeFormProps {
   email: string
   context?: SignupContextType
-  analyticsProps: Record<string, string>
   redirectUrl?: string
 }
 
-export function CodeForm({
-  email,
-  context,
-  analyticsProps,
-  redirectUrl,
-}: CodeFormProps) {
+export function CodeForm({ email, context, redirectUrl }: CodeFormProps) {
   const codeId = useId()
   const router = useRouter()
   const { query } = router
@@ -67,13 +61,12 @@ export function CodeForm({
         mutation: RequestAccessDocument,
         variables: {
           campaignId: REGWALL_CAMPAIGN,
-          payload: getConversionPayload(query, analyticsProps),
+          payload: getConversionPayload(query),
         },
       })
       .then(() => {
         trackEvent({
           action: 'Completed login',
-          ...analyticsProps,
         })
         reloadPage(context, redirectUrl)
       })
