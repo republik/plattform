@@ -12,8 +12,7 @@ interface StoryComponentProps {
 function StoryComponent({ url, componentData, size }: StoryComponentProps) {
   const [isReady, setIsReady] = useState(false)
   const regex = /\S*\/story-components\/([\w\-]+)\/dist\/index\.js\S*/
-  // const tagname = url ? url.match(regex)?[0] : null
-  const tagname = 'the-big-question'
+  const tagname = url?.match(regex)[1]
 
   // TODO: live deployment for story server
   // TODO: pass the whole url as prop (query string for cache busting)
