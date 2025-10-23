@@ -28,7 +28,7 @@ import { reloadPage, SignupContextType } from './utils'
 export interface CodeFormProps {
   email: string
   context?: SignupContextType
-  analyticsProps?: Record<string, string>
+  analyticsProps: Record<string, string>
   redirectUrl?: string
 }
 

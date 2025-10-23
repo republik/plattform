@@ -48,7 +48,7 @@ function ResetButton({ onClick }) {
 interface LoginFormProps {
   submitButtonText?: string
   context?: SignupContextType
-  analyticsProps?: Record<string, string>
+  analyticsProps: Record<string, string>
   autoFocus?: boolean
   renderBefore?: ReactNode
   renderAfter?: ReactNode
