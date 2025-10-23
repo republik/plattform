@@ -15,11 +15,10 @@ type ArticleMetering = {
 
 type MeteringStatus = 'READING_GRANTED' | 'READING_DENIED'
 
-// TODO: move to env variables, maybe?
-const AB_CONFIGS: MeteringConfig[] = [
-  { maxArticles: 1 },
-  { maxArticles: 3, daysToExpire: 30 },
-]
+// We used to have one group with 3 reads per month: { maxArticles: 3, daysToExpire: 30 } 
+// and one without (no expiration date): { maxArticles: 1 }.
+// We stopped the test but kept the code in case we want to test other metering configurations.
+const AB_CONFIGS: MeteringConfig[] = [{ maxArticles: 1 }]
 
 const METERING_KEY = 'metering'
 
