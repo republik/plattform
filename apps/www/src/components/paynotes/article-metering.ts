@@ -20,7 +20,10 @@ type MeteringStatus = 'READING_GRANTED' | 'READING_DENIED'
 // We stopped the test but kept the code in case we want to test other metering configurations.
 const AB_CONFIGS: MeteringConfig[] = [{ maxArticles: 1 }]
 
-const METERING_KEY = 'metering'
+// the key is the version of the metering configuration
+// when changed the previous local storage is ignored and a new one is created
+// this essentially means that all users will start with a new metering configuration
+const METERING_KEY = 'metering-1'
 
 function isNotExpiredDate(readAt: Date, daysToExpire: number) {
   const readDate = new Date(readAt)
