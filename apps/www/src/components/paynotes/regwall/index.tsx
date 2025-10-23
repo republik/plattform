@@ -15,29 +15,20 @@ import Trial from './trial'
 
 const Regwall = () => {
   const trackEvent = useTrackEvent()
-  const variation = Math.random() < 0.5 ? 'a' : 'b'
   const { trialStatus } = useMe()
 
   useEffect(() => {
     trackEvent({
       action: 'is showing',
-      variation,
     })
-  }, [trackEvent, variation])
-
-  const analyticsProps = {
-    variation,
-    ...getMeteringData(),
-  }
+  }, [trackEvent])
 
   return (
     <PaynoteContainer testId='regwall'>
-      <Trial analyticsProps={analyticsProps} />
+      <Trial />
       <Offers
-        analyticsProps={analyticsProps}
         additionalShopParams={{
           rep_ui_component: 'regwall',
-          rep_regwall_variation: variation,
           rep_trial_status: trialStatus,
           ...getMeteringData('rep_'),
         }}
