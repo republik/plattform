@@ -29,5 +29,8 @@ type mutations {
     donationAmount: Int!
   ): MagazineSubscription!
   createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
+  cancelUpgradeMagazineSubscription(
+    upgradeCancelationInput: MagazineSubscriptionUpgradeCancelationInput
+  ): MagazineSubscriptionUpgrade
 }
 `

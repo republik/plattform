@@ -2,6 +2,42 @@ import Stripe from 'stripe'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { Company, PaymentMethod } from '../types'
 
+type Discount = {
+  coupon?: string
+  discount?: string
+  promo_code?: string
+}
+
+type Recurring = Stripe.PriceCreateParams.Recurring
+
+export type Item =
+  | {
+      price: string
+      price_data?: never
+      quantity: number
+      discounts?: Discount[]
+    }
+  | {
+      price?: never
+      price_data: {
+        unit_amount: number
+        product: string
+        recurring: Recurring
+        currency: 'CHF'
+      }
+      quantity: number
+      discounts?: Discount[]
+    }
+
+export type ScheduleSubscriptionArgs = {
+  internalRef: string
+  items: Item[]
+  collectionMethod: 'send_invoice' | 'charge_automatically'
+  discounts: Stripe.SubscriptionScheduleCreateParams.Phase.Discount[]
+  startDate: number
+  metadata?: Record<string, string | number | null>
+}
+
 export class PaymentService {
   #stripeAdapters: Record<Company, Stripe> = {
     PROJECT_R: ProjectRStripe,
@@ -128,6 +164,43 @@ export class PaymentService {
     ).data
   }
 
+  async getScheduledSubscriptionInvoicePreview(company: Company, id: string) {
+    return this.#stripeAdapters[company].invoices.createPreview({
+      schedule: id,
+      expand: ['discounts'],
+    })
+  }
+
+  async scheduleSubscription(
+    company: Company,
+    customerId: string,
+    options: ScheduleSubscriptionArgs,
+  ) {
+    return this.#stripeAdapters[company].subscriptionSchedules.create({
+      customer: customerId,
+      start_date: options.startDate,
+      end_behavior: 'release',
+      phases: [
+        {
+          items: options.items,
+          iterations: 1,
+          discounts: options.discounts,
+          collection_method: options.collectionMethod,
+          metadata: {
+            ...options.metadata,
+            'republik:internal:ref': options.internalRef,
+          },
+        },
+      ],
+    })
+  }
+
+  async cancelScheduleSubscription(company: Company, scheduleId: string) {
+    return this.#stripeAdapters[company].subscriptionSchedules.cancel(
+      scheduleId,
+    )
+  }
+
   async createSubscriptionItem(
     company: Company,
     params: Stripe.SubscriptionItemCreateParams,
@@ -189,9 +262,19 @@ export class PaymentService {
     return prices.data
   }
 
+  async getPrice(company: Company, id: string): Promise<Stripe.Price | null> {
+    const price = await this.#stripeAdapters[company].prices.retrieve(id)
+
+    return price
+  }
+
   async getInvoice(company: Company, id: string) {
     const invoice = await this.#stripeAdapters[company].invoices.retrieve(id, {
-      expand: ['discounts', 'charge'],
+      expand: [
+        'discounts',
+        'payments.data.payment.charge',
+        'payments.data.payment.payment_intent',
+      ],
     })
 
     return invoice ? invoice : null

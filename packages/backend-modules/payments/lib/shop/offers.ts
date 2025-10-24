@@ -1,112 +1,13 @@
+import { Offer, Subscription, SubscriptionOffer } from '../types'
 import { getConfig } from '../config'
-import { Company } from '../types'
+import { GIFTS_ENABLED } from '../constants'
 
-export const GIFTS_ENABLED = () =>
-  process.env.PAYMENTS_SHOP_GIFTS_ENABLED === 'true'
-
-export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
-
-export type PriceDefinition = {
-  type: 'PRICE'
-  lookupKey: string
-  taxRateId?: string
-}
-export type DiscountDefinition = { type: 'DISCOUNT'; coupon: string }
-
-export type ComplimentaryItem = {
-  id: string
-  maxQuantity: number
-  lookupKey: string
-}
-
-export type PriceInfo = {
-  amount: number
-  currency: string
-  recurring?: {
-    interval: 'year' | 'month'
-    intervalCount: number
-  }
-}
-
-export type ComplimentaryItemOrder = {
-  id: string
-  quantity: number
-}
-
-export type Offer = {
-  id: string
-  company: Company
-  name: string
-  type: OfferType
-  items: PriceDefinition[]
-  complimentaryItems?: ComplimentaryItem[]
-  discountOpitions?: DiscountDefinition[]
-  suggestedDonations?: number[]
-  fixedDiscount?: string
-  requiresLogin: boolean
-  requiresAddress: boolean
-  allowPromotions: boolean
-  metaData?: {
-    [name: string]: string | number | null
-  }
-  taxRateId?: string
-}
-
-export type OfferAPIResult = {
-  id: string
-  company: Company
-  name: string
-  requiresLogin: boolean
-  price: {
-    amount: number
-    currency: string
-    recurring?: {
-      interval: 'year' | 'month'
-      intervalCount: number
-    }
-  }
-  suggestedDonations?: number[]
-  discount?: APIDiscountResult
-}
-
-export interface APIDiscountResult {
-  id?: string
-  name: string
-  amountOff: number
-  duration: 'forever' | 'once' | 'repeating'
-  durationInMonths: number | null
-  currency: string
-}
-
-export type Discount = {
-  id: string
-  type: 'DISCOUNT'
-  name: string
-  amountOff: number
-  duration: 'forever' | 'once' | 'repeating'
-  durationInMonths: number | null
-  currency: string
-}
-
-export type Promotion = {
-  id: string
-  type: 'PROMO'
-  name: string
-  amountOff: number
-  duration: 'forever' | 'once' | 'repeating'
-  durationInMonths: number | null
-  currency: string
-}
-
-export type DiscountOption =
-  | { type: 'DISCOUNT'; value: Discount }
-  | { type: 'PROMO'; value: Promotion }
-
-export const Offers: Readonly<Offer>[] = [
+export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
   {
     id: 'YEARLY',
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'YEARLY_SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
@@ -118,6 +19,7 @@ export const Offers: Readonly<Offer>[] = [
     id: 'YEARLY_REDUCED',
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'YEARLY_SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
@@ -127,7 +29,7 @@ export const Offers: Readonly<Offer>[] = [
         lookupKey: 'ABO',
       },
     ],
-    discountOpitions: getConfig().PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS.map(
+    discountOptions: getConfig().PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS.map(
       (couponId) => ({ type: 'DISCOUNT', coupon: couponId }),
     ),
     allowPromotions: false,
@@ -136,6 +38,7 @@ export const Offers: Readonly<Offer>[] = [
     id: 'BENEFACTOR',
     name: 'Gönnermitgliedschaft',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'BENEFACTOR_SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
@@ -158,6 +61,7 @@ export const Offers: Readonly<Offer>[] = [
     id: 'STUDENT',
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'YEARLY_SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
@@ -172,6 +76,7 @@ export const Offers: Readonly<Offer>[] = [
     id: 'MONTHLY',
     name: 'Monats-Abo',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'MONTHLY_SUBSCRIPTION',
     company: 'REPUBLIK',
     requiresLogin: true,
     requiresAddress: false,
@@ -213,4 +118,17 @@ export const GIFTS_OFFERS: Offer[] = [
 
 export function activeOffers(): Readonly<Offer>[] {
   return [...Offers, ...(GIFTS_ENABLED() ? GIFTS_OFFERS : [])]
+}
+
+export function resolveUpgradePaths(sub: Subscription): string[] {
+  switch (sub.type) {
+    case 'MONTHLY_SUBSCRIPTION':
+      return ['YEARLY', 'YEARLY_REDUCED', 'STUDENT', 'BENEFACTOR']
+
+    case 'YEARLY_SUBSCRIPTION':
+      return ['BENEFACTOR', 'DONATION']
+
+    case 'BENEFACTOR_SUBSCRIPTION':
+      return ['DONATION']
+  }
 }

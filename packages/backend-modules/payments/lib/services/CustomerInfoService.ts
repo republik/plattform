@@ -5,8 +5,9 @@ import { Companies } from '../payments'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { StripeCustomerCreateWorker } from '../workers/StripeCustomerCreateWorker'
 import { UserDataRepo } from '../database/UserRepo'
-import { UserRow } from '@orbiting/backend-modules-types'
+import { User, UserRow } from '@orbiting/backend-modules-types'
 import { PaymentService } from './PaymentService'
+import auth from '@orbiting/backend-modules-auth'
 
 const RegionNames = new Intl.DisplayNames(['de-CH'], { type: 'region' })
 
@@ -147,6 +148,23 @@ export class CustomerInfoService {
     }
 
     return null
+  }
+
+  async getUserForCompanyCustomer(
+    company: Company,
+    customerId: string,
+  ): Promise<User | null> {
+    const userId = await this.getUserIdForCompanyCustomer(company, customerId)
+    if (!userId) {
+      return null
+    }
+
+    const user = await this.#users.findUserById(userId)
+    if (!user) {
+      return null
+    }
+
+    return auth.transformUser(user)
   }
 
   async updateCustomerEmail(company: Company, userId: string, email: string) {

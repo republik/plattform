@@ -75,6 +75,6 @@ export function mapChargeUpdateArgs(charge: Stripe.Charge): ChargRefundArgs {
     fullyRefunded: charge.refunded,
     description: charge.description,
     failureCode: charge.failure_code,
-    failureMessage: charge.failure_message
+    failureMessage: charge.failure_message,
   }
 }
