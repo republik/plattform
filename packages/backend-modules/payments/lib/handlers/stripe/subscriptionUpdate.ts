@@ -52,7 +52,7 @@ class SubscriptionUpdatedWorkflow
         event.data.object.items.data[0].current_period_start,
       ),
       currentPeriodEnd: parseStripeDate(
-        event.data.object.items.data[0].current_period_start,
+        event.data.object.items.data[0].current_period_end,
       ),
       status: event.data.object.status,
       metadata: event.data.object.metadata,

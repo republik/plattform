@@ -50,6 +50,8 @@ export class OfferBuilder {
       this.context.activeSubscription = (async () => {
         const subs = await this.subscriptionService.listSubscriptions(userId, [
           'active',
+          'past_due',
+          'unpaid',
         ])
 
         return subs[0]
