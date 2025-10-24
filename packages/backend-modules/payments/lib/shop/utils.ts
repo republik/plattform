@@ -79,16 +79,15 @@ export function couponToDiscount(coupon: Stripe.Coupon): Discount {
   }
 }
 
+// There should be a nice way to do this. But for now this has to make do...
 export function getAboPriceItem(
   i: Stripe.SubscriptionItem | Stripe.InvoiceItem | Stripe.InvoiceLineItem,
 ) {
-  console.log(i)
-
   if (i.object === 'subscription_item' && typeof i.price.product === 'string') {
-    SUBSCRIPTION_PRODUCTS.includes(i.price.product)
+    return SUBSCRIPTION_PRODUCTS.includes(i.price.product)
   }
   if (i.object === 'subscription_item' && typeof i.price.product === 'object') {
-    SUBSCRIPTION_PRODUCTS.includes(i.price.product.id)
+    return SUBSCRIPTION_PRODUCTS.includes(i.price.product.id)
   }
   if (
     i.object === 'invoiceitem' &&

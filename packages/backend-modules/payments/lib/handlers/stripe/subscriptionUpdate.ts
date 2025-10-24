@@ -47,7 +47,6 @@ class SubscriptionUpdatedWorkflow
       await this.cancellationService.getCancellationDetails(sub)
 
     const subItem = event.data.object.items.data.find(getAboPriceItem)
-
     if (!subItem) {
       throw new Error('Subscription does not contain an ABO item')
     }
