@@ -182,7 +182,7 @@ export class CancellationService {
         subscription_id: subscriptionId,
       })
 
-    if (upgrades.length === 0) {
+    if (upgrades.length !== 0) {
       throw new Error(
         'Can not revoke cancelation of subscription in upgrade Progress. Cancel Upgrade instead',
       )
