@@ -82,15 +82,30 @@ export function couponToDiscount(coupon: Stripe.Coupon): Discount {
 export function getAboPriceItem(
   i: Stripe.SubscriptionItem | Stripe.InvoiceItem | Stripe.InvoiceLineItem,
 ) {
-  if (i.object === 'subscription_item') {
-    SUBSCRIPTION_PRODUCTS.includes(i.price.product.toString())
+  console.log(i)
+
+  if (i.object === 'subscription_item' && typeof i.price.product === 'string') {
+    SUBSCRIPTION_PRODUCTS.includes(i.price.product)
   }
-  if (i.object === 'invoiceitem') {
-    return SUBSCRIPTION_PRODUCTS.includes(
-      i.pricing?.price_details?.product as string,
-    )
+  if (i.object === 'subscription_item' && typeof i.price.product === 'object') {
+    SUBSCRIPTION_PRODUCTS.includes(i.price.product.id)
   }
-  if (i.object === 'line_item') {
+  if (
+    i.object === 'invoiceitem' &&
+    typeof i.pricing?.price_details?.product === 'string'
+  ) {
+    return SUBSCRIPTION_PRODUCTS.includes(i.pricing?.price_details?.product)
+  }
+  if (
+    i.object === 'invoiceitem' &&
+    typeof i.pricing?.price_details?.product === 'string'
+  ) {
+    return SUBSCRIPTION_PRODUCTS.includes(i.pricing?.price_details?.product)
+  }
+  if (
+    i.object === 'line_item' &&
+    typeof i.pricing?.price_details?.product === 'string'
+  ) {
     return SUBSCRIPTION_PRODUCTS.includes(
       i.pricing?.price_details?.product as string,
     )
