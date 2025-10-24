@@ -12,6 +12,7 @@ import { CancellationService } from '../../services/CancellationService'
 import { PaymentService } from '../../services/PaymentService'
 import { SubscriptionService } from '../../services/SubscriptionService'
 import { CustomerInfoService } from '../../services/CustomerInfoService'
+import { getAboPriceItem } from '../../shop/utils'
 
 class SubscriptionUpdatedWorkflow
   implements PaymentWorkflow<Stripe.CustomerSubscriptionUpdatedEvent>
@@ -39,21 +40,23 @@ class SubscriptionUpdatedWorkflow
       externalId: event.data.object.id,
     })
     if (!sub) {
-      throw Error('Unknown subscription')
+      throw new Error('Unknown subscription')
     }
 
     const cancellationReason =
       await this.cancellationService.getCancellationDetails(sub)
 
+    const subItem = event.data.object.items.data.find(getAboPriceItem)
+
+    if (!subItem) {
+      throw new Error('Subscription does not contain an ABO item')
+    }
+
     await this.subscriptionService.updateSubscription({
       company: company,
       externalId: event.data.object.id,
-      currentPeriodStart: parseStripeDate(
-        event.data.object.items.data[0].current_period_start,
-      ),
-      currentPeriodEnd: parseStripeDate(
-        event.data.object.items.data[0].current_period_end,
-      ),
+      currentPeriodStart: parseStripeDate(subItem.current_period_start),
+      currentPeriodEnd: parseStripeDate(subItem.current_period_end),
       status: event.data.object.status,
       metadata: event.data.object.metadata,
       cancelAt: parseStripeDate(cancelAt),
@@ -62,7 +65,7 @@ class SubscriptionUpdatedWorkflow
     })
 
     const hasPeriodChanged =
-      !!event.data.previous_attributes?.items?.data[0].current_period_end
+      !!event.data.previous_attributes?.items?.data.find(getAboPriceItem)
 
     const previousCanceledAt = event.data.previous_attributes?.canceled_at
     const revokedCancellationDate = parseStripeDate(previousCanceledAt)

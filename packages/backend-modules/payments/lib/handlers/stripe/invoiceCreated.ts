@@ -5,6 +5,7 @@ import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 import { InvoiceService } from '../../services/InvoiceService'
 import { PaymentService } from '../../services/PaymentService'
 import { CustomerInfoService } from '../../services/CustomerInfoService'
+import { getAboPriceItem } from '../../shop/utils'
 
 class InvoiceCreatedWorkflow
   implements PaymentWorkflow<Stripe.InvoiceCreatedEvent>
@@ -83,6 +84,8 @@ export function mapInvoiceArgs(
   company: Company,
   invoice: Stripe.Invoice,
 ): InvoiceArgs {
+  const subItem = invoice.lines.data.find(getAboPriceItem)
+
   return {
     total: invoice.total,
     totalBeforeDiscount: invoice.subtotal,
@@ -101,8 +104,12 @@ export function mapInvoiceArgs(
     discounts: invoice.discounts,
     metadata: invoice.metadata,
     externalId: invoice.id!,
-    periodStart: parseStripeDate(invoice.lines.data[0].period.start),
-    periodEnd: parseStripeDate(invoice.lines.data[0].period.end),
+    periodStart: subItem?.period.start
+      ? parseStripeDate(subItem?.period.start)
+      : undefined,
+    periodEnd: subItem?.period.end
+      ? parseStripeDate(subItem?.period.end)
+      : undefined,
     status: invoice.status as any,
     externalSubscriptionId: invoice.parent?.subscription_details
       ?.subscription as string,
