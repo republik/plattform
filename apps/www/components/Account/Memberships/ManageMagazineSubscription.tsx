@@ -1,7 +1,9 @@
 import {
   ActiveMagazineSubscriptionDocument,
   ActiveMagazineSubscriptionQuery,
+  CancelUpgradeMagazineSubscriptionDocument,
   CreateStripeCustomerPortalSessionDocument,
+  MagazineSubscriptionUpgrade,
   ReactivateMagazineSubscriptionDocument,
   UpdateMagazineSubscriptionDonationDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
@@ -89,6 +91,7 @@ export function ManageMagazineSubscription() {
             : ''
         }`}
       </Interaction.H3>
+
       {subscription.cancelAt ? (
         <>
           <Interaction.P>
@@ -153,7 +156,8 @@ export function ManageMagazineSubscription() {
       )}
 
       {subscription.canceledAt ? (
-        !subscription.endedAt && (
+        !subscription.endedAt &&
+        !subscription.upgrade && (
           <div>
             <EditButton
               onClick={() => {
@@ -172,7 +176,77 @@ export function ManageMagazineSubscription() {
       ) : (
         <></>
       )}
+
+      {subscription.upgrade && (
+        <SubscriptionUpgrade
+          subscription={subscription}
+          refetchSubscriptions={refetchSubscriptions}
+          isPolling={isPolling}
+        />
+      )}
     </div>
+  )
+}
+
+const SubscriptionUpgrade = ({
+  subscription,
+  refetchSubscriptions,
+  isPolling,
+}: {
+  subscription: MagazineSubscription
+  refetchSubscriptions: () => void
+  isPolling: boolean
+}) => {
+  const { t } = useTranslation()
+  const [cancelUpgrade] = useMutation(CancelUpgradeMagazineSubscriptionDocument)
+
+  return (
+    <>
+      <Interaction.H3 style={{ marginBlock: 8 }}>
+        {`${t(`magazineSubscriptionUpgrade/title`, {
+          from: t(`magazineSubscription/title/${subscription.type}`),
+          to: t(
+            `magazineSubscription/title/${subscription.upgrade.subscriptionType}`,
+          ),
+        })}`}
+      </Interaction.H3>
+
+      <Interaction.P>
+        {t(
+          `magazineSubscriptionUpgrade/description/${subscription.upgrade.subscriptionType}`,
+          {
+            startAt: new Date(
+              subscription.upgrade.scheduledStart,
+            ).toLocaleDateString('de-CH', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            }),
+            amount: (subscription.upgrade.billingDetails.total / 100).toFixed(
+              0,
+            ),
+          },
+        )}
+      </Interaction.P>
+
+      <div>
+        <EditButton
+          onClick={() => {
+            if (!isPolling) {
+              cancelUpgrade({
+                variables: {
+                  // ID of the original subscription, NOT the upgrade
+                  subscriptionId: subscription.id,
+                },
+              }).then(refetchSubscriptions)
+            }
+          }}
+        >
+          {t(`magazineSubscriptionUpgrade/cancel`)}{' '}
+          {isPolling && <BabySpinner />}
+        </EditButton>
+      </div>
+    </>
   )
 }
 
