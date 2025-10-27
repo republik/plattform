@@ -272,12 +272,4 @@ type MagazineSubscriptionUpgradeBillingDetails {
   donation: DonationInfo
   billingDate: DateTime
 }
-
-input MagazineSubscriptionUpgradeInput {
-  subscriptionId: String
-}
-
-input MagazineSubscriptionUpgradeCancelationInput {
-  subscriptionId: String
-}
 `

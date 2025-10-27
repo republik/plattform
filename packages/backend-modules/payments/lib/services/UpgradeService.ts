@@ -104,14 +104,32 @@ export class UpgradeService {
       upgrade.externalId,
     )
 
-    await this.cancelationRepo.revokeLatestCancelation(localSub.id)
-    await this.paymentService.updateSubscription(
-      localSub.company,
-      localSub.externalId,
+    const systemCancelation = await this.cancelationRepo.getOne(
       {
-        cancel_at_period_end: false,
+        subscriptionId: subscriptionId,
+        category: CANCELATION_DATA.CATEGORY,
+        reason: CANCELATION_DATA.REASON,
+        revokedAt: null,
       },
+      { createdAt: 'desc' },
     )
+    if (systemCancelation) {
+      await this.cancelationRepo.updateCancelation(systemCancelation.id, {
+        revokedAt: new Date(),
+      })
+      await this.paymentService.updateSubscription(
+        localSub.company,
+        localSub.externalId,
+        {
+          cancel_at_period_end: false,
+        },
+      )
+    } else {
+      this.logger.info(
+        { subscriptionId: subscriptionId },
+        'no system cancelation found. Keeping cancelation state in place',
+      )
+    }
 
     return this.subscriptionUpgradeRepo.updateSubscriptionUpgrade(upgrade.id, {
       status: res.status,
@@ -235,6 +253,10 @@ export class UpgradeService {
   private async registerUpgradeCancelation(
     localSub: Subscription,
   ): Promise<{ cancelAt: number }> {
+    if (localSub.cancelAtPeriodEnd && localSub.cancelAt) {
+      return { cancelAt: Math.floor(localSub.cancelAt.getTime() / 1000) }
+    }
+
     await this.cancelationRepo.insertCancelation(localSub.id, {
       category: CANCELATION_DATA.CATEGORY,
       reason: CANCELATION_DATA.REASON,

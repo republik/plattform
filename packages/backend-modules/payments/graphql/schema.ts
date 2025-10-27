@@ -30,7 +30,7 @@ type mutations {
   ): MagazineSubscription!
   createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
   cancelUpgradeMagazineSubscription(
-    upgradeCancelationInput: MagazineSubscriptionUpgradeCancelationInput
+    subscriptionId: ID!
   ): MagazineSubscriptionUpgrade
 }
 `

@@ -36,6 +36,26 @@ export class CancelationRepo {
     return dbDetails
   }
 
+  public async getOne(
+    select: Partial<DBCancallationDetails>,
+    options?: string | string[] | { [fieldName: string]: 'asc' | 'desc' },
+  ): Promise<DBCancallationDetails | null> {
+    return this.db.payments.subscriptionCancellations.findFirst(select, options)
+  }
+
+  public async updateCancelation(
+    id: string,
+    args: Partial<CancallationDetails & { revokedAt?: Date }>,
+  ): Promise<DBCancallationDetails | null> {
+    const [data] =
+      await this.db.payments.subscriptionCancellations.updateAndGet(
+        { id: id },
+        this.filterUndefined({ ...args, updatedAt: new Date() }),
+      )
+
+    return data
+  }
+
   public async revokeLatestCancelation(
     subId: string,
   ): Promise<DBCancallationDetails | undefined> {
