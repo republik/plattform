@@ -8,6 +8,7 @@ import { useTranslation } from 'lib/useT'
 import { swissTime } from 'lib/utils/formats'
 import { useEffect } from 'react'
 import SubscriptionStatusBadge from './SubscriptionStatusBadge'
+import { divider } from '@republik/theme/patterns'
 
 const dateTimeFormat = swissTime.format('%d.%m.%Y, %H:%M Uhr')
 export const displayDateTime = (rawDate) => {
@@ -127,8 +128,29 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                               {displayDateTime(subscription.canceledAt)}
                             </>
                           )}
+                          {subscription.upgrade && (
+                            <>
+                              , Wechsel durchgeführt am{' '}
+                              {displayDateTime(subscription.upgrade.createdAt)}
+                            </>
+                          )}
                         </div>
-                        {subscription.canceledAt ? (
+                        {subscription.upgrade ? (
+                          <div>
+                            <>
+                              ⬆️ Wechsel zu{' '}
+                              {t(
+                                `account/MagazineSubscription/type/${subscription.upgrade.subscriptionType}`,
+                              )}{' '}
+                              am{' '}
+                              <b>
+                                {displayDateTime(
+                                  subscription.upgrade.scheduledStart,
+                                )}
+                              </b>
+                            </>
+                          </div>
+                        ) : subscription.canceledAt ? (
                           <div>
                             {subscription.endedAt ? (
                               <>
