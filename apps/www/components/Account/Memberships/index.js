@@ -68,57 +68,29 @@ const Memberships = ({
                 <UserGuidance />
               </div>
             )}
-            {inNativeIOSApp && (
-              <AccountBox>
-                {isMinimalNativeAppVersion('2.3.0') ? (
-                  <P>
-                    Verwalten Sie Ihr Konto im Web.
-                    <br />
-                    <A
-                      href='#'
-                      onClick={(e) => {
-                        e.preventDefault()
-                        postMessage({
-                          type: 'external-link',
-                        })
-                      }}
-                    >
-                      shop.republik.ch
-                    </A>
-                  </P>
-                ) : (
-                  <P>{t('account/ios/box')}</P>
-                )}
-              </AccountBox>
-            )}
 
-            {/* Account Section, hide in iOS */}
-            {!inNativeIOSApp && (
+            {activeMagazineSubscription ? (
+              // If user has active magazine subscription, we need to show the info.
+              <ManageMagazineSubscription
+                subscription={activeMagazineSubscription}
+              />
+            ) : hasActiveMemberships ? (
+              // If user has *other* active memberships
               <>
-                {activeMagazineSubscription ? (
-                  // If user has active magazine subscription, we need to show the info.
-                  <ManageMagazineSubscription
-                    subscription={activeMagazineSubscription}
-                  />
-                ) : hasActiveMemberships ? (
-                  // If user has *other* active memberships
-                  <>
-                    <MembershipList highlightId={query.id} />
-                    {paymentMethodCompany && (
-                      <AccountSection
-                        id='payment'
-                        title={t('memberships/title/payment')}
-                      >
-                        <PaymentSources
-                          company={paymentMethodCompany}
-                          query={query}
-                        />
-                      </AccountSection>
-                    )}
-                  </>
-                ) : null}
+                <MembershipList highlightId={query.id} />
+                {paymentMethodCompany && (
+                  <AccountSection
+                    id='payment'
+                    title={t('memberships/title/payment')}
+                  >
+                    <PaymentSources
+                      company={paymentMethodCompany}
+                      query={query}
+                    />
+                  </AccountSection>
+                )}
               </>
-            )}
+            ) : null}
           </>
         )
       }}
