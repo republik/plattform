@@ -33,6 +33,10 @@
       "value": "Republik teilen"
     },
     {
+      "key": "nav/onboarding",
+      "value": "Einrichtungsassistent"
+    },
+    {
       "key": "nav/invite-friends",
       "value": "Verstärkung holen"
     },
