@@ -8,7 +8,6 @@ import { useTranslation } from 'lib/useT'
 import { swissTime } from 'lib/utils/formats'
 import { useEffect } from 'react'
 import SubscriptionStatusBadge from './SubscriptionStatusBadge'
-import { divider } from '@republik/theme/patterns'
 
 const dateTimeFormat = swissTime.format('%d.%m.%Y, %H:%M Uhr')
 export const displayDateTime = (rawDate) => {
