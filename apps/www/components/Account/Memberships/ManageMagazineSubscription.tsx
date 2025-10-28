@@ -2,8 +2,8 @@ import {
   ActiveMagazineSubscriptionDocument,
   ActiveMagazineSubscriptionQuery,
   CancelUpgradeMagazineSubscriptionDocument,
+  CompanyName,
   CreateStripeCustomerPortalSessionDocument,
-  MagazineSubscriptionUpgrade,
   ReactivateMagazineSubscriptionDocument,
   UpdateMagazineSubscriptionDonationDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
@@ -183,7 +183,7 @@ const Subscription = ({
           </Interaction.H3>
 
           <div>
-            <CustomerPortalLink subscription={subscription} />
+            <CustomerPortalLink company={subscription.company} />
           </div>
         </>
       )}
@@ -266,15 +266,13 @@ const SubscriptionUpgrade = ({
           {isPolling && <BabySpinner />}
         </EditButton>
       </div>
+
+      {/* TODO: payment method for upgrade */}
     </>
   )
 }
 
-const CustomerPortalLink = ({
-  subscription,
-}: {
-  subscription: MagazineSubscription
-}) => {
+const CustomerPortalLink = ({ company }: { company: CompanyName }) => {
   const router = useRouter()
   const { t } = useTranslation()
 
@@ -287,7 +285,7 @@ const CustomerPortalLink = ({
       onClick={(e) => {
         e.preventDefault()
         createStripeCustomerPortalSession({
-          variables: { companyName: subscription.company },
+          variables: { companyName: company },
         })
           .then(({ data }) => {
             router.push(data.createStripeCustomerPortalSession.sessionUrl)
