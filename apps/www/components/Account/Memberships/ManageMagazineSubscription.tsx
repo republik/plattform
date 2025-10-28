@@ -34,21 +34,13 @@ type MagazineSubscription = NonNullable<
 >
 
 export function ManageMagazineSubscription() {
-  const { data, startPolling, stopPolling, refetch } = useQuery(
+  const { data, startPolling, stopPolling } = useQuery(
     ActiveMagazineSubscriptionDocument,
     // make sure that up-to-date information is shown when user navigates back from /abgang
     { fetchPolicy: 'cache-and-network' },
   )
 
-  const [reactivateSubscription] = useMutation(
-    ReactivateMagazineSubscriptionDocument,
-  )
-
   const [isPolling, setIsPolling] = useState(false)
-
-  const subscription = data?.me?.activeMagazineSubscription
-
-  const { t } = useTranslation()
 
   // Subscriptions don't update immediately after being canceled/reactivated, so we start polling instead of refetching immediately
   const refetchSubscriptions = () => {
@@ -67,6 +59,8 @@ export function ManageMagazineSubscription() {
     }
   }, [data, stopPolling])
 
+  const subscription = data?.me?.activeMagazineSubscription
+
   if (!subscription) {
     return null
   }
@@ -84,18 +78,57 @@ export function ManageMagazineSubscription() {
         },
       })}
     >
+      {subscription.upgrade ? (
+        <SubscriptionUpgrade
+          subscription={subscription}
+          refetchSubscriptions={refetchSubscriptions}
+          isPolling={isPolling}
+        />
+      ) : (
+        <Subscription
+          subscription={subscription}
+          refetchSubscriptions={refetchSubscriptions}
+          isPolling={isPolling}
+        />
+      )}
+    </div>
+  )
+}
+
+type SubscriptionProps = {
+  subscription: MagazineSubscription
+  refetchSubscriptions: () => void
+  isPolling: boolean
+}
+
+const Subscription = ({
+  subscription,
+  refetchSubscriptions,
+  isPolling,
+}: SubscriptionProps) => {
+  const { t } = useTranslation()
+  const [reactivateSubscription] = useMutation(
+    ReactivateMagazineSubscriptionDocument,
+  )
+
+  return (
+    <>
       <Interaction.H3 style={{ marginBottom: 8 }}>
-        {`${t(`magazineSubscription/title/${subscription.type}`)} ${
-          subscription.cancelAt
-            ? `${t('magazineSubscription/title/canceled')}`
-            : ''
-        }`}
+        {t(`magazineSubscription/title/${subscription.type}`)}
       </Interaction.H3>
 
-      {subscription.cancelAt ? (
+      {subscription.canceledAt && subscription.cancelAt ? (
         <>
           <Interaction.P>
-            {t(`magazineSubscription/canceled/${subscription.type}`, {
+            {t(`magazineSubscription/canceled`, {
+              canceledAt: new Date(subscription.canceledAt).toLocaleDateString(
+                'de-CH',
+                {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                },
+              ),
               cancelAt: new Date(subscription.cancelAt).toLocaleDateString(
                 'de-CH',
                 {
@@ -131,7 +164,7 @@ export function ManageMagazineSubscription() {
                 : t('magazineSubscription/donation/wannaGiveMore')}{' '}
               <UpdateDonationLink
                 subscription={subscription}
-                onUpdate={refetch}
+                onUpdate={refetchSubscriptions}
               />
             </Interaction.P>
           )}
@@ -176,15 +209,7 @@ export function ManageMagazineSubscription() {
       ) : (
         <></>
       )}
-
-      {subscription.upgrade && (
-        <SubscriptionUpgrade
-          subscription={subscription}
-          refetchSubscriptions={refetchSubscriptions}
-          isPolling={isPolling}
-        />
-      )}
-    </div>
+    </>
   )
 }
 
@@ -192,23 +217,14 @@ const SubscriptionUpgrade = ({
   subscription,
   refetchSubscriptions,
   isPolling,
-}: {
-  subscription: MagazineSubscription
-  refetchSubscriptions: () => void
-  isPolling: boolean
-}) => {
+}: SubscriptionProps) => {
   const { t } = useTranslation()
   const [cancelUpgrade] = useMutation(CancelUpgradeMagazineSubscriptionDocument)
 
   return (
     <>
       <Interaction.H3 style={{ marginBlock: 8 }}>
-        {`${t(`magazineSubscriptionUpgrade/title`, {
-          from: t(`magazineSubscription/title/${subscription.type}`),
-          to: t(
-            `magazineSubscription/title/${subscription.upgrade.subscriptionType}`,
-          ),
-        })}`}
+        {t(`magazineSubscription/title/${subscription.type}`)}
       </Interaction.H3>
 
       <Interaction.P>
@@ -222,6 +238,10 @@ const SubscriptionUpgrade = ({
               month: 'long',
               day: 'numeric',
             }),
+            from: t(`magazineSubscription/title/${subscription.type}`),
+            to: t(
+              `magazineSubscription/title/${subscription.upgrade.subscriptionType}`,
+            ),
             amount: (subscription.upgrade.billingDetails.total / 100).toFixed(
               0,
             ),

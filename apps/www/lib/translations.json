@@ -7688,16 +7688,8 @@
       "value": "Sie haben kein gültiges Abonnement"
     },
     {
-      "key": "magazineSubscription/canceled/YEARLY_SUBSCRIPTION",
-      "value": "Ihre Mitgliedschaft läuft am {cancelAt} aus."
-    },
-    {
-      "key": "magazineSubscription/canceled/BENEFACTOR_SUBSCRIPTION",
-      "value": "Ihre Gönner-Mitgliedschaft läuft am {cancelAt} aus."
-    },
-    {
-      "key": "magazineSubscription/canceled/MONTHLY_SUBSCRIPTION",
-      "value": "Ihr Monats-Abo läuft am {cancelAt} aus."
+      "key": "magazineSubscription/canceled",
+      "value": "Wurde am {canceledAt} gekündigt und läuft am {cancelAt} aus."
     },
     {
       "key": "magazineSubscription/cancel/YEARLY_SUBSCRIPTION",
@@ -7717,19 +7709,19 @@
     },
     {
       "key": "magazineSubscriptionUpgrade/description/YEARLY_SUBSCRIPTION",
-      "value": "Ihre Jahresmitgliedschaft beginnt am {startAt} für CHF {amount}."
+      "value": "Wechselt am {startAt} zu einer Jahresmitgliedschaft für CHF {amount}."
     },
     {
       "key": "magazineSubscriptionUpgrade/description/BENEFACTOR_SUBSCRIPTION",
-      "value": "Ihre Gönner-Mitgliedschaft beginnt am {startAt} für CHF {amount}."
+      "value": "Wechselt am {startAt} zu einer Gönner-Mitgliedschaft für CHF {amount}."
     },
     {
       "key": "magazineSubscriptionUpgrade/description/MONTHLY_SUBSCRIPTION",
-      "value": "Ihr Monats-Abo beginnt am {startAt} für CHF {amount}."
+      "value": "Wechselt am {startAt} zu einem Monats-Abo für CHF {amount}."
     },
     {
       "key": "magazineSubscriptionUpgrade/cancel",
-      "value": "Wechsel auf {to} kündigen"
+      "value": "Wechsel rückgängig machen"
     },
     {
       "key": "magazineSubscription/donation/update",

@@ -18,10 +18,8 @@ mutation ReactivateMagazineSubscription($subscriptionId: ID!) {
   }
 }
 
-mutation CancelUpgradeMagazineSubscription($subscriptionId: String) {
-  cancelUpgradeMagazineSubscription(
-    upgradeCancelationInput: { subscriptionId: $subscriptionId }
-  ) {
+mutation CancelUpgradeMagazineSubscription($subscriptionId: ID!) {
+  cancelUpgradeMagazineSubscription(subscriptionId: $subscriptionId) {
     id
   }
 }
