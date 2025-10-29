@@ -1,6 +1,7 @@
 import Stripe from 'stripe'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { Company, PaymentMethod } from '../types'
+import { LineItem } from '../shop/CheckoutSessionOptionBuilder'
 
 type Discount = {
   coupon?: string
@@ -29,9 +30,28 @@ export type Item =
       discounts?: Discount[]
     }
 
+export type OnetimeItem =
+  | {
+      price: string
+      price_data?: never
+      quantity: number
+      discounts?: Discount[]
+    }
+  | {
+      price?: never
+      price_data: {
+        unit_amount: number
+        product: string
+        currency: 'CHF'
+      }
+      quantity: number
+      discounts?: Discount[]
+    }
+
 export type ScheduleSubscriptionArgs = {
   internalRef: string
   items: Item[]
+  add_invoice_items?: LineItem[]
   collectionMethod: 'send_invoice' | 'charge_automatically'
   discounts: Stripe.SubscriptionScheduleCreateParams.Phase.Discount[]
   startDate: number
@@ -184,6 +204,7 @@ export class PaymentService {
         {
           items: options.items,
           iterations: 1,
+          add_invoice_items: options.add_invoice_items,
           discounts: options.discounts,
           collection_method: options.collectionMethod,
           metadata: {

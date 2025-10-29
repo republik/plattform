@@ -1,7 +1,7 @@
 import { PgDb } from 'pogi'
 import { Logger } from '@orbiting/backend-modules-logger'
 import { BillingRepo, PaymentBillingRepo } from '../database/BillingRepo'
-import { Item, PaymentService } from './PaymentService'
+import { Item, OnetimeItem, PaymentService } from './PaymentService'
 import { CancelationRepo } from '../database/CancelationRepo'
 import { CustomerInfoService } from './CustomerInfoService'
 import {
@@ -14,7 +14,9 @@ import { OfferService } from './OfferService'
 import { activeOffers } from '../shop'
 import { Company, DiscountOption, Subscription } from '../types'
 import { getConfig } from '../config'
-import { CustomDonation } from '../shop/CheckoutSessionOptionBuilder'
+import { CustomDonation, LineItem } from '../shop/CheckoutSessionOptionBuilder'
+
+type TypedData<K, T> = { type: K; data: T }
 
 type SubscriptionUpgrade = {
   status: string
@@ -163,13 +165,16 @@ export class UpgradeService {
       },
     )
 
+    const { items, additionalItems } = await this.buildUpgradeItems(args)
+
     const companyName = this.offerService.getOfferMerchent(args.offerId)
     const subscriptionUpgrade = await this.paymentService.scheduleSubscription(
       companyName,
       await this.getCustomerId(companyName, subscription.userId),
       {
         internalRef: `upgrade:${upgrade.id}`,
-        items: await this.buildUpgradeItems(args),
+        items: items,
+        add_invoice_items: additionalItems,
         discounts: await this.buildUpgradeDiscounts(args),
         startDate: scheduledStart,
         metadata: args.metadata,
@@ -314,7 +319,7 @@ export class UpgradeService {
 
   private async buildUpgradeItems(
     args: SubscriptionUpgradeConfig,
-  ): Promise<Item[]> {
+  ): Promise<{ items: Item[]; additionalItems: LineItem[] }> {
     this.offerService.isValidOffer(args.offerId)
     const companyName = this.offerService.getOfferMerchent(args.offerId)
 
@@ -327,6 +332,7 @@ export class UpgradeService {
       lookupKeys ?? [],
     )
     const items: Item[] = prices.map((p) => ({ price: p.id, quantity: 1 }))
+    const additionalItems: LineItem[] = []
 
     this.logger.debug(args.donation, 'donation amount')
 
@@ -336,12 +342,13 @@ export class UpgradeService {
     ) {
       const donation = this.buildDonationItem(args.donation)
       this.logger.debug(donation, 'donation')
-      if (donation) {
-        items.push(donation)
-      }
+      if (donation?.type === 'Item') {
+        items.push(donation.data)
+      } else if (donation?.type === 'OnetimeItem')
+        additionalItems.push(donation.data)
     }
 
-    return items
+    return { items, additionalItems }
   }
 
   private async buildUpgradeDiscounts(
@@ -364,20 +371,39 @@ export class UpgradeService {
     return []
   }
 
-  private buildDonationItem(donation?: CustomDonation): Item | null {
+  private buildDonationItem(
+    donation?: CustomDonation,
+  ): TypedData<'Item', Item> | TypedData<'OnetimeItem', OnetimeItem> | null {
     if (!donation || !donation.recurring || donation.amount < 0) return null
 
-    return {
-      price_data: {
-        product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
-        unit_amount: donation.amount,
-        currency: 'CHF',
-        recurring: {
-          interval: 'year',
-          interval_count: 1,
+    if (!donation.recurring) {
+      return {
+        type: 'OnetimeItem',
+        data: {
+          price_data: {
+            product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
+            unit_amount: donation.amount,
+            currency: 'CHF',
+          },
+          quantity: 1,
         },
+      }
+    }
+
+    return {
+      type: 'Item',
+      data: {
+        price_data: {
+          product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
+          unit_amount: donation.amount,
+          currency: 'CHF',
+          recurring: {
+            interval: 'year',
+            interval_count: 1,
+          },
+        },
+        quantity: 1,
       },
-      quantity: 1,
     }
   }
 }
