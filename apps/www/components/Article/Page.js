@@ -43,7 +43,6 @@ import PageLoader from '../Loader'
 import { withMarkAsReadMutation } from '../Notifications/enhancers'
 import SectionFeed from '../Sections/SinglePageFeed'
 import SectionNav from '../Sections/SinglePageNav'
-import StatusError from '../StatusError'
 import ActionBarOverlay from './ActionBarOverlay'
 import NewsletterTitleBlock from './components/NewsletterTitleBlock'
 import PrepubNotice from './components/PrepubNotice'
@@ -59,13 +58,7 @@ import useSchema from './useSchema'
 
 const EmptyComponent = ({ children }) => children
 
-const ArticlePage = ({
-  t,
-  isPreview,
-  markAsReadMutation,
-  serverContext,
-  clientRedirection,
-}) => {
+const ArticlePage = ({ t, isPreview, markAsReadMutation, serverContext }) => {
   const actionBarRef = useRef()
   const bottomActionBarRef = useRef()
   const galleryRef = useRef()
@@ -93,7 +86,6 @@ const ArticlePage = ({
     variables: {
       path: cleanedPath,
     },
-    skip: clientRedirection,
     // When graphQLErrors happen, we still want to get partial data to render the page
     errorPolicy: 'all',
   })
@@ -273,16 +265,6 @@ const ArticlePage = ({
       <PageLoader
         loading={articleLoading && !articleData}
         render={() => {
-          if (!article) {
-            return (
-              <StatusError
-                statusCode={404}
-                clientRedirection={clientRedirection}
-                serverContext={serverContext}
-              />
-            )
-          }
-
           if (extract === 'share') {
             return <ShareImage meta={meta} />
           }
@@ -328,16 +310,6 @@ const ArticlePage = ({
       <PageLoader
         loading={articleLoading && !articleData}
         render={() => {
-          if (!article || !schema) {
-            return (
-              <StatusError
-                statusCode={404}
-                clientRedirection={clientRedirection}
-                serverContext={serverContext}
-              />
-            )
-          }
-
           const isArticle = meta.template === 'article'
           const isFormat = meta.template === 'format'
           const isSection = meta.template === 'section'
