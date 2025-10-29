@@ -4,12 +4,15 @@ import { ParsedUrlQuery } from 'querystring'
 import { gql } from '@apollo/client'
 import { getDocument } from '../components/Article/graphql/getDocument'
 import { createGetStaticProps } from '../lib/apollo/helpers'
+import { isExternal } from '../components/StatusError'
 
 type Params = {
   path: string[]
 } & ParsedUrlQuery
 
-type Props = unknown
+type Props = {
+  clientRedirection?: any
+}
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
   return {
@@ -59,6 +62,14 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
     })
 
     if (redirection) {
+      if (isExternal(redirection.target)) {
+        return {
+          props: {
+            clientRedirection: redirection,
+          },
+          revalidate: REVALIDATE_SECONDS,
+        }
+      }
       return {
         revalidate: REVALIDATE_SECONDS,
         redirect: {
