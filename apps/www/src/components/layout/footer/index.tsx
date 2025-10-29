@@ -80,11 +80,10 @@ export default async function Footer() {
       links: {
         Konto: me ? '/konto' : null,
         Profil: me ? `/~${me.slug || me.id}` : null,
-        Angebote: !isIOSApp && !hasActiveMembership ? '/angebote' : null,
-        Verschenken:
-          !isIOSApp && hasActiveMembership
-            ? { pathname: '/verschenken', query: { group: 'GIVE' } }
-            : null,
+        Angebote: !isIOSApp ? process.env.NEXT_PUBLIC_SHOP_BASE_URL : null,
+        Verschenken: !isIOSApp
+          ? `${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/geschenke`
+          : null,
         'Gutschein einlösen': !isIOSApp ? '/abholen' : null,
         'Republik teilen':
           me &&
