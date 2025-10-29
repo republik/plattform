@@ -10,7 +10,7 @@ import TrialForm from '../../auth/trial'
 
 import Login from './login'
 
-const TrialHeader = ({ variation }: { variation: string }) => {
+const TrialHeader = () => {
   const { t } = useTranslation()
   return (
     <div
@@ -30,11 +30,11 @@ const TrialHeader = ({ variation }: { variation: string }) => {
           alt='Illustration registration wall'
         />
       </div>
-      <h2>{t(`regwall/${variation}/header/title`)}</h2>
+      <h2>{t(`regwall/header/title`)}</h2>
       <div className={css({ textStyle: 'airy' })}>
         <p
           dangerouslySetInnerHTML={{
-            __html: t(`regwall/${variation}/header/description`),
+            __html: t(`regwall/header/description`),
           }}
         />
       </div>
@@ -71,17 +71,12 @@ const WhyRegister = () => {
   )
 }
 
-const Trial = ({
-  analyticsProps,
-}: {
-  analyticsProps: { variation: string }
-}) => {
+const Trial = () => {
   return (
     <PaynoteSection>
       <TrialForm
-        renderBefore={<TrialHeader variation={analyticsProps.variation} />}
+        renderBefore={<TrialHeader />}
         renderAfter={<WhyRegister />}
-        analyticsProps={analyticsProps}
       />
     </PaynoteSection>
   )

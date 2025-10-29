@@ -7824,28 +7824,16 @@
       "value": "Anmelden"
     },
     {
-      "key": "regwall/a/header/title",
+      "key": "regwall/header/title",
       "value": "Weiterlesen, ohne zu bezahlen"
     },
     {
-      "key": "regwall/a/header/description",
+      "key": "regwall/header/description",
       "value": "<b>Werden Sie unser Gast:</b> Eine Woche lang gratis alle Republik-Beiträge lesen, keine automatische Verlängerung."
     },
     {
-      "key": "regwall/a/cta",
+      "key": "regwall/cta",
       "value": "Als Gast anmelden und weiterlesen"
-    },
-    {
-      "key": "regwall/b/header/title",
-      "value": "Weiterlesen geht ganz einfach:"
-    },
-    {
-      "key": "regwall/b/header/description",
-      "value": "<b>Als Gast:</b> 7 Tage lang kostenlos Zugang zu allen Republik-Beiträgen, keine Zahlungsangaben erforderlich."
-    },
-    {
-      "key": "regwall/b/cta",
-      "value": "Als Gast registrieren"
     },
     {
       "key": "regwall/whyRegister/title",
