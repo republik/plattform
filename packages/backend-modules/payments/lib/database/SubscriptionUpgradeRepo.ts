@@ -1,13 +1,20 @@
 import { PgDb } from 'pogi'
 import { SubscriptionType } from '../types'
 
+export type UpgradeStatus =
+  | 'registered'
+  | 'canceled'
+  | 'processing'
+  | 'pending'
+  | 'resolved'
+
 export type Upgrade = {
   id: string
   userId: string
   subscriptionId: string
   subscriptionType: SubscriptionType | null
   externalId: string
-  status: string
+  status: UpgradeStatus
   upgradeConfig: any
   scheduledStart: Date
   createdAt: Date

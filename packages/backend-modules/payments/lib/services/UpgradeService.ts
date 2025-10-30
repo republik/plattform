@@ -32,6 +32,8 @@ type SubscriptionUpgradeConfig = {
   metadata?: Record<string, string | number | null>
 }
 
+export type UpgradeStatus = 'registered' | 'processing' | 'pending' | 'resolved'
+
 const CANCELATION_DATA = {
   CATEGORY: 'SYSTEM',
   REASON: 'Subscription Upgrade',
@@ -172,7 +174,7 @@ export class UpgradeService {
       companyName,
       await this.getCustomerId(companyName, subscription.userId),
       {
-        internalRef: `upgrade:${upgrade.id}`,
+        internalRef: upgrade.id,
         items: items,
         add_invoice_items: additionalItems,
         discounts: await this.buildUpgradeDiscounts(args),
@@ -188,11 +190,20 @@ export class UpgradeService {
     })
   }
 
-  private async markUpgradeAsProcessing(upgradeId: string) {
+  public async markUpgradeAsProcessing(upgradeId: string) {
     return await this.subscriptionUpgradeRepo.updateSubscriptionUpgrade(
       upgradeId,
       {
         status: 'processing',
+      },
+    )
+  }
+
+  public async markUpgradeAsResolved(upgradeId: string) {
+    return await this.subscriptionUpgradeRepo.updateSubscriptionUpgrade(
+      upgradeId,
+      {
+        status: 'resolved',
       },
     )
   }

@@ -16,6 +16,10 @@ import { Logger } from '@orbiting/backend-modules-types'
 import { OfferService } from '../services/OfferService'
 import { Item, PaymentService } from '../services/PaymentService'
 import { GiftAlreadyAppliedError, GiftNotApplicableError } from '../errors'
+import {
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES,
+} from '../constants'
 
 const logger = createLogger('payments:gifts')
 
@@ -88,12 +92,6 @@ const GIFTS: Gift[] = [
     valueType: 'PERCENTAGE',
   },
 ]
-
-export const REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES =
-  'republik.subscription.replaces'
-
-export const REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN =
-  'republik.subscription.origin'
 
 export const REPUBLIK_PAYMENTS_CANCEL_REASON = 'republik.system.cancel-reason'
 

@@ -12,9 +12,9 @@ import { SetupWorkflow } from '../../workflows/SetupCheckoutCompleatedWorkflow'
 import { SubscriptionCheckoutCompletedWorkflow } from '../../workflows/SubscriptionCheckoutCompletedWorkflow'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { OneTimePaymentCheckoutCompletedWorkflow } from '../../workflows/OneTimePaymentCheckoutCompletedWorkflow'
-import { UpgradeEmail } from '../../email-notifieres/UpgradeEmail'
-import { DonateEmail } from '../../email-notifieres/DontateEmail'
-import { GiftCodeEmail } from '../../email-notifieres/GiftEmail'
+import { UpgradeSetupEmail } from '../../email-notifiers/UpgradeSetupEmail'
+import { DonateEmail } from '../../email-notifiers/DontateEmail'
+import { GiftCodeEmail } from '../../email-notifiers/GiftEmail'
 
 export async function processCheckoutCompleted(
   ctx: PaymentWebhookContext,
@@ -33,7 +33,7 @@ export async function processCheckoutCompleted(
           { msgPrefix: '[Checkout SetupWorkflow]' },
         ),
         {
-          upgrade: new UpgradeEmail(ctx.pgdb),
+          upgrade: new UpgradeSetupEmail(ctx.pgdb),
         },
       ).run(company, event)
     }

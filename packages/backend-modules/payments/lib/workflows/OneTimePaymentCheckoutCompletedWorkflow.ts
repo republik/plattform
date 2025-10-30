@@ -7,8 +7,8 @@ import { CustomerInfoService } from '../services/CustomerInfoService'
 import { InvoiceService } from '../services/InvoiceService'
 import { CheckoutProcessingError } from '../errors'
 import { getConfig } from '../config'
-import { DonationNotifierArgs } from '../email-notifieres/DontateEmail'
-import { GiftCodeNotifierArgs } from '../email-notifieres/GiftEmail'
+import { DonationNotifierArgs } from '../email-notifiers/DontateEmail'
+import { GiftCodeNotifierArgs } from '../email-notifiers/GiftEmail'
 
 const { PROJECT_R_DONATION_PRODUCT_ID } = getConfig()
 

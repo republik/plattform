@@ -6,7 +6,7 @@ import { CustomerInfoService } from '../services/CustomerInfoService'
 import { UpgradeService } from '../services/UpgradeService'
 import { Logger } from '@orbiting/backend-modules-types'
 import { Upgrade } from '../database/SubscriptionUpgradeRepo'
-import { UpgradeNotifierArgs } from '../email-notifieres/UpgradeEmail'
+import { UpgradeNotifierArgs } from '../email-notifiers/UpgradeSetupEmail'
 
 export class SetupWorkflow
   implements PaymentWorkflow<Stripe.CheckoutSessionCompletedEvent>

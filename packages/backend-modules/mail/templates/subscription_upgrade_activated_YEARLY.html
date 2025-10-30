@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!--[if gte mso 15]>
+      <xml>
+        <o:officedocumentsettings>
+          <o:allowpng />
+          <o:pixelsperinch>96</o:pixelsperinch>
+        </o:officedocumentsettings>
+      </xml>
+    <![endif]-->
+    <style type="text/css">
+      {{{sg_font_faces}}}
+    </style>
+    <style type="text/css">
+      p {
+        color:#282828;font-size:17px;line-height:24px;
+        {{{sg_font_style_sans_serif_regular}}}
+      }
+      p strong {
+        {{{sg_font_style_sans_serif_medium}}}
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #fff">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table
+              align="center"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              style="max-width:640px;color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+            >
+              <tbody>
+                <tr>
+                  <td style="padding: 20px">
+                    <p>Guten Tag</p>
+                    <p>
+                      Ihre Jahresmitgliedschaft ist seit heute aktiviert. Herzlichen Dank für Ihre Unterstützung!
+                    </p>
+                    <p>
+                      Sie können damit <a href="https://{{frontend_base_url}}/anmelden">das Magazin lesen</a>, an <a href="{{frontend_base_url}}/dialog">sämtlichen Debatten teilnehmen</a> und die Republik <a href="{{frontend_base_url}}/teilen">mit Ihren Freunden oder Feinden teilen</a>.
+                      Ausserdem sind Sie jetzt Mitglied der Project R Genossenschaft.
+                      Als solches haben Sie keine Verpflichtungen, können aber bei ausgewählten Fragen mitentscheiden (zur jährlich stattfindenden Urabstimmung erhalten Sie eine Einladung per E-Mail).
+                    </p>
+
+                    <p>Details zum Kauf:</p>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <li>Jahresmitgliedschaft: CHF {{subscription_total_before_discount}}</li>
+                      {{#if discount_code}}
+                      <li>
+                        {{discount_code}}: CHF –{{discount_total}}
+                        {{#if discount_duration_repeating}}
+                        {{#if discount_duration_in_months}}
+                        für {{discount_duration_display}}
+                        {{/if}}
+                        {{/if}}
+                      </li>
+                      {{/if}}
+                      {{#if recurring_donation}}
+                      <li>Jährlicher freiwilliger Beitrag: CHF {{recurring_donation}}</li>
+                      {{/if}}
+                      {{#if onetime_donation}}
+                      <li>Einmaliger freiwilliger Beitrag: CHF {{onetime_donation}}</li>
+                      {{/if}}
+                      <li>
+                        <strong>Total: CHF {{total}}</strong>
+                      </li>
+                    </ul>
+
+                    <p>
+                      Ihre Jahresmitgliedschaft verlängert sich automatisch{{#if discount_duration_once}} zum Normalpreis{{#if recurring_donation}}
+                      zuzüglich des von Ihnen gewählten freiwilligen Beitrags von CHF {{recurring_donation}}{{/if}}{{/if}}.
+                      Die von Ihnen angegebene Zahlungsmethode belasten wir dementsprechend {{#if discount_duration_once}}ab dem kommenden Jahr{{/if}}
+                      jährlich mit CHF {{next_total}}{{#if discount_duration_repeating}} bis zum Ablauf des Rabattes ({{discount_duration_display}}),
+                      danach mit CHF {{total_before_discount}}{{/if}}.
+                    </p>
+
+                    <p>
+                      In Ihrem
+                      <a href="{{link_account_goto}}">Konto</a> finden Sie
+                      <a href="{{link_account_abos_goto}}">alle relevanten Informationen zu Ihrem Wechsel zur {{next_abo_name}}</a>.
+                      Dort können Sie den Wechsel zur {{next_abo_name}} auch bis zum {{start_date}} rückgängig machen.
+                    </p>
+
+                    <p>Wir bedanken uns für Ihre Unterstützung und wünschen Ihnen weiterhin viel Vergnügen mit der Republik.</p>
+                    <p>Ihre Crew der Republik</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 20px">
+                    <p
+                      style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <img
+                        height="79"
+                        src="{{frontend_base_url}}/static/logo_republik_newsletter.png"
+                        style="
+                          border: 0px;
+                          width: 180px !important;
+                          height: 79px !important;
+                          margin: 0px;
+                        "
+                        width="180"
+                        alt=""
+                      />
+                      <br />
+                      Republik AG<br />
+                      Sihlhallenstrasse 1, CH-8004 Zürich<br />
+                      <a href="{{frontend_base_url}}">www.republik.ch</a><br />
+                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

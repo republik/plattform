@@ -16,5 +16,13 @@ export const INVOICE_PAYMENT_STATUS_TO_CHARGE_STATUS = {
   canceled: 'failed',
 } as const
 
+export const REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES =
+  'republik:subscription:replaces'
+
+export const REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN =
+  'republik:subscription:origin'
+
+export const REPUBLIK_PAYMENTS_INTERNAL_REF = 'republik:internal:ref'
+
 export const GIFTS_ENABLED = () =>
   process.env.PAYMENTS_SHOP_GIFTS_ENABLED === 'true'

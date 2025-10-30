@@ -1,5 +1,5 @@
 import { PgDb } from 'pogi'
-import { Company, MailNotifier, Subscription } from '../types'
+import { Company, MailNotifier, Subscription, SubscriptionType } from '../types'
 import { Upgrade } from '../database/SubscriptionUpgradeRepo'
 import Stripe from 'stripe'
 
@@ -13,12 +13,16 @@ export type UpgradeNotifierArgs = {
   invoice: Stripe.Invoice
 }
 
-export class UpgradeEmail implements MailNotifier<UpgradeNotifierArgs> {
-  readonly templateName = 'subscription_setup_successful_upgrade'
+export class UpgradeSetupEmail implements MailNotifier<UpgradeNotifierArgs> {
+  readonly templateNameBase = 'subscription_setup_successful_upgrade'
 
   constructor(protected readonly pgdb: PgDb) {}
 
   async sendEmail(email: string, args: UpgradeNotifierArgs) {
+    const templateName = `${
+      this.templateNameBase
+    }_${this.subscriptionTypeBaseName(args.upgrade.subscriptionType!)}`
+
     const globalMergeVars = [
       {
         name: 'total',
@@ -47,9 +51,9 @@ export class UpgradeEmail implements MailNotifier<UpgradeNotifierArgs> {
         to: email,
         fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
         subject: t(
-          `api/email/${this.templateName}/${args.upgrade.subscriptionType}/subject`,
+          `api/email/${templateName}/${args.upgrade.subscriptionType}/subject`,
         ),
-        templateName: this.templateName,
+        templateName: templateName,
         mergeLanguage: 'handlebars',
         globalMergeVars,
       },
@@ -57,5 +61,9 @@ export class UpgradeEmail implements MailNotifier<UpgradeNotifierArgs> {
     )
 
     return sendMailResult
+  }
+
+  private subscriptionTypeBaseName(type: SubscriptionType): string {
+    return type.replace(/_.*/, '')
   }
 }

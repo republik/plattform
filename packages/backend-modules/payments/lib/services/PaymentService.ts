@@ -2,6 +2,10 @@ import Stripe from 'stripe'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { Company, PaymentMethod } from '../types'
 import { LineItem } from '../shop/CheckoutSessionOptionBuilder'
+import {
+  REPUBLIK_PAYMENTS_INTERNAL_REF,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN,
+} from '../constants'
 
 type Discount = {
   coupon?: string
@@ -209,7 +213,8 @@ export class PaymentService {
           collection_method: options.collectionMethod,
           metadata: {
             ...options.metadata,
-            'republik:internal:ref': options.internalRef,
+            [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'UPGRADE',
+            [REPUBLIK_PAYMENTS_INTERNAL_REF]: options.internalRef,
           },
         },
       ],

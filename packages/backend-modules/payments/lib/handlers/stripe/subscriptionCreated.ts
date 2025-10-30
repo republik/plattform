@@ -3,12 +3,17 @@ import { Company, PaymentWorkflow, SubscriptionArgs } from '../../types'
 import { getSubscriptionType, parseStripeDate } from './utils'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { ConfirmGiftSubscriptionTransactionalWorker } from '../../workers/ConfirmGiftSubscriptionTransactionalWorker'
-import { REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN } from '../../shop/gifts'
 import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker'
 import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 import { SubscriptionService } from '../../services/SubscriptionService'
 import { CustomerInfoService } from '../../services/CustomerInfoService'
 import { PaymentService } from '../../services/PaymentService'
+import { ConfirmUpgradeSubscriptionTransactionalWorker } from '../../workers/ConfirmUpgradeSubscriptionTransactionalWorker'
+import {
+  REPUBLIK_PAYMENTS_INTERNAL_REF,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN,
+} from '../../constants'
+import { UpgradeService } from '../../services/UpgradeService'
 
 class SubscriptionCreatedWorkflow
   implements PaymentWorkflow<Stripe.CustomerSubscriptionCreatedEvent>
@@ -17,6 +22,7 @@ class SubscriptionCreatedWorkflow
     protected readonly paymentService: PaymentService,
     protected readonly customerInfoService: CustomerInfoService,
     protected readonly subscriptionService: SubscriptionService,
+    protected readonly upgradeService: UpgradeService,
   ) {}
 
   async run(
@@ -82,6 +88,35 @@ class SubscriptionCreatedWorkflow
       ])
     }
 
+    const isUpgrade =
+      subscription.metadata[REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN] === 'UPGRADE'
+
+    if (isUpgrade) {
+      const upgradeId = subscription.metadata[REPUBLIK_PAYMENTS_INTERNAL_REF]
+
+      await Promise.all([
+        queue.send<ConfirmUpgradeSubscriptionTransactionalWorker>(
+          'payments:transactional:confirm:upgrade:subscription',
+          {
+            $version: 'v1',
+            eventSourceId: event.id,
+            userId: userId,
+            subscriptionId: subscription.id,
+            upgradeId: upgradeId,
+            company: company,
+          },
+        ),
+        queue.send<SyncMailchimpSetupWorker>('payments:mailchimp:sync:setup', {
+          $version: 'v1',
+          eventSourceId: event.id,
+          userId: userId,
+        }),
+        async () => {
+          return this.upgradeService.markUpgradeAsResolved(upgradeId)
+        },
+      ])
+    }
+
     return
   }
 }
@@ -95,6 +130,7 @@ export async function processSubscriptionCreated(
     new PaymentService(),
     new CustomerInfoService(ctx.pgdb),
     new SubscriptionService(ctx.pgdb),
+    new UpgradeService(ctx.pgdb, ctx.logger),
   ).run(company, event)
 }
 
