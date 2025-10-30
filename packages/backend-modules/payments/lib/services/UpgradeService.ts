@@ -32,8 +32,6 @@ type SubscriptionUpgradeConfig = {
   metadata?: Record<string, string | number | null>
 }
 
-export type UpgradeStatus = 'registered' | 'processing' | 'pending' | 'resolved'
-
 const CANCELATION_DATA = {
   CATEGORY: 'SYSTEM',
   REASON: 'Subscription Upgrade',
@@ -348,7 +346,7 @@ export class UpgradeService {
     this.logger.debug(args.donation, 'donation amount')
 
     if (
-      !args.donation === undefined ||
+      args.donation !== undefined ||
       this.offerService.supportsDonations(args.offerId)
     ) {
       const donation = this.buildDonationItem(args.donation)
@@ -385,7 +383,7 @@ export class UpgradeService {
   private buildDonationItem(
     donation?: CustomDonation,
   ): TypedData<'Item', Item> | TypedData<'OnetimeItem', OnetimeItem> | null {
-    if (!donation || !donation.recurring || donation.amount < 0) return null
+    if (!donation || donation.amount < 0) return null
 
     if (!donation.recurring) {
       return {

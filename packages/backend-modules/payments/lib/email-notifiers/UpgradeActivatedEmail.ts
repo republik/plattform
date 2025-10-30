@@ -26,9 +26,7 @@ export class UpgradeActivatedEmail
   ) {}
 
   async sendEmail(email: string, args: UpgradeActivatedNotifierArgs) {
-    const templateName = `${
-      this.templateNameBase
-    }_${this.subscriptionTypeBaseName(args.upgrade.subscriptionType!)}`
+    const templateName = this.getTemplateName(args.upgrade.subscriptionType!)
 
     const invoice = await this.getInvoiceData(args.company, args.upgrade)
     if (!invoice) {
@@ -49,9 +47,7 @@ export class UpgradeActivatedEmail
       {
         to: email,
         fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
-        subject: t(
-          `api/email/${templateName}/${args.upgrade.subscriptionType}/subject`,
-        ),
+        subject: t(`api/email/${templateName}/subject`),
         templateName: templateName,
         mergeLanguage: 'handlebars',
         globalMergeVars,
@@ -222,6 +218,12 @@ export class UpgradeActivatedEmail
       })
 
     return { subscriptionItem, donationItem }
+  }
+
+  private getTemplateName(subscriptionType: SubscriptionType) {
+    const to = this.subscriptionTypeBaseName(subscriptionType)
+
+    return `${this.templateNameBase}_${to}`
   }
 
   private subscriptionTypeBaseName(type: SubscriptionType): string {
