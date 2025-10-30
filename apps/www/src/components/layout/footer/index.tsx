@@ -84,6 +84,9 @@ export default async function Footer() {
         Verschenken: !isIOSApp
           ? `${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/geschenke`
           : null,
+        'Freiwilliger Beitrag': !isIOSApp
+          ? `${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/DONATION`
+          : null,
         'Gutschein einlösen': !isIOSApp ? '/abholen' : null,
         'Republik teilen':
           me &&

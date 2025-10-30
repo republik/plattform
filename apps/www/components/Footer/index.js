@@ -221,6 +221,13 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
                     </FooterNavLink>
                   </li>
                   <li>
+                    <FooterNavLink
+                      href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/DONATION`}
+                    >
+                      <a {...navLinkStyle}>{t('footer/me/donate')}</a>
+                    </FooterNavLink>
+                  </li>
+                  <li>
                     <FooterNavLink href='/abholen'>
                       <a {...navLinkStyle}>{t('footer/me/claim')}</a>
                     </FooterNavLink>
