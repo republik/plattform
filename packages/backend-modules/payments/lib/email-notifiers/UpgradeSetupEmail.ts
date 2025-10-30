@@ -19,9 +19,7 @@ export class UpgradeSetupEmail implements MailNotifier<UpgradeNotifierArgs> {
   constructor(protected readonly pgdb: PgDb) {}
 
   async sendEmail(email: string, args: UpgradeNotifierArgs) {
-    const templateName = `${
-      this.templateNameBase
-    }_${this.subscriptionTypeBaseName(args.upgrade.subscriptionType!)}`
+    const templateName = this.getTemplateName(args)
 
     const globalMergeVars = [
       {
@@ -61,6 +59,14 @@ export class UpgradeSetupEmail implements MailNotifier<UpgradeNotifierArgs> {
     )
 
     return sendMailResult
+  }
+
+  private getTemplateName(args: UpgradeNotifierArgs) {
+    // ends up being subscription_setup_successful_upgrade_<ABO_TYPE>_TO_<ABO_TYPE>
+    const from = this.subscriptionTypeBaseName(args.currentSubscription.type)
+    const to = this.subscriptionTypeBaseName(args.upgrade.subscriptionType!)
+
+    return `${this.templateNameBase}_${from}_TO_${to}`
   }
 
   private subscriptionTypeBaseName(type: SubscriptionType): string {
