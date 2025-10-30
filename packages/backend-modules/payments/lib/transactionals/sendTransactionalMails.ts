@@ -142,7 +142,7 @@ export async function sendSetupSubscriptionMail(
     )
   }
 
-  const nextInvoice = await new PaymentService().getInvoicePreview(
+  const nextInvoice = await new PaymentService().getSubscriptionInvoicePreview(
     subscription.company,
     subscription.externalId,
   )

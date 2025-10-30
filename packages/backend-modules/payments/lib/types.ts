@@ -1,5 +1,7 @@
 import Stripe from 'stripe'
 
+export type TypedData<K, T> = { type: K; data: T }
+
 export type Company = 'PROJECT_R' | 'REPUBLIK'
 
 export type Order = {
@@ -10,6 +12,8 @@ export type Order = {
   subscriptionId: string
   invoiceId: string
   status: 'paid' | 'unpaid'
+  metadata?: any
+  expiresAt: Date
   createdAt: Date
   updatedAt: Date
 }

@@ -18,6 +18,12 @@ import { Subscription } from '../types'
 import { SubscriptionService } from '../services/SubscriptionService'
 import { UpgradeService } from '../services/UpgradeService'
 import { couponToDiscount, promotionToDiscount } from './utils'
+import { randomUUID } from 'node:crypto'
+import { InvoiceService } from '../services/InvoiceService'
+import {
+  REPUBLIK_PAYMENTS_INTERNAL_REF,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN,
+} from '../constants'
 
 export type SetupConfig = {
   company: Company
@@ -53,6 +59,14 @@ export type RecurringPriceData = {
   tax_rates?: string[]
 }
 
+export type CheckoutResult = {
+  orderId: string
+  company: Company
+  sessionId: string | null
+  clientSecret: string | null
+  url: string | null
+}
+
 export type CustomDonation = { amount: number; recurring?: boolean }
 
 export type LineItem = Price | PriceData | RecurringPriceData
@@ -63,6 +77,7 @@ export class CheckoutSessionBuilder {
   private customerInfoService: CustomerInfoService
   private subscriptionService: SubscriptionService
   private upgreadeService: UpgradeService
+  private invoiceService: InvoiceService
   private uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
   private optionalSessionVars: {
     complimentaryItems?: any[]
@@ -85,6 +100,7 @@ export class CheckoutSessionBuilder {
     customerInfoService: CustomerInfoService,
     subscriptionService: SubscriptionService,
     upgreadeService: UpgradeService,
+    invoiceService: InvoiceService,
     logger: Logger,
   ) {
     const offer = activeOffers().find((o) => o.id === offerId)
@@ -97,6 +113,7 @@ export class CheckoutSessionBuilder {
     this.customerInfoService = customerInfoService
     this.subscriptionService = subscriptionService
     this.upgreadeService = upgreadeService
+    this.invoiceService = invoiceService
     this.uiMode = 'EMBEDDED'
     this.optionalSessionVars = {
       customerId: (async () => undefined)(),
@@ -182,17 +199,14 @@ export class CheckoutSessionBuilder {
     return this
   }
 
-  async build(): Promise<{
-    company: Company
-    sessionId: string | null
-    clientSecret: string | null
-    url: string | null
-  }> {
+  async build(): Promise<CheckoutResult> {
+    const orderId = randomUUID()
+
     const { customerId, metadata } = this.optionalSessionVars
 
     const availability = await this.checkAvailability()
     if (availability === 'UPGRADEABLE') {
-      return this.buildSetupSession()
+      return this.buildSetupSession(orderId)
     }
 
     const [lineItems, donationLineItems, discount, couponMeta] =
@@ -209,6 +223,7 @@ export class CheckoutSessionBuilder {
       ...metadata,
       ...this.offer.metaData,
       ...couponMeta,
+      'republik:payments:order:id': orderId,
     }
 
     const config: Stripe.Checkout.SessionCreateParams = {
@@ -235,7 +250,15 @@ export class CheckoutSessionBuilder {
       config,
     )
 
+    await this.saveOrder({
+      checkoutId: orderId,
+      sess,
+      lineItems: sess.line_items!.data,
+      mergedMetadata,
+    })
+
     return {
+      orderId: orderId,
       company: this.offer.company,
       sessionId: sess.id,
       clientSecret: sess.client_secret,
@@ -243,12 +266,7 @@ export class CheckoutSessionBuilder {
     }
   }
 
-  async buildSetupSession(): Promise<{
-    company: Company
-    sessionId: string | null
-    clientSecret: string | null
-    url: string | null
-  }> {
+  async buildSetupSession(checkoutId: string): Promise<CheckoutResult> {
     const { customerId, metadata, activeSubscription } =
       this.optionalSessionVars
 
@@ -265,6 +283,8 @@ export class CheckoutSessionBuilder {
       ...metadata,
       ...this.offer.metaData,
       ...couponMeta,
+      [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'UPGRADE',
+      'republik:payments:order:id': checkoutId,
     }
 
     const upgradeRef = await this.upgreadeService.initializeSubscriptionUpgrade(
@@ -278,7 +298,7 @@ export class CheckoutSessionBuilder {
       },
     )
 
-    mergedMetadata['republik:upgrade:ref'] = upgradeRef.id
+    mergedMetadata[REPUBLIK_PAYMENTS_INTERNAL_REF] = upgradeRef.id
 
     const config: Stripe.Checkout.SessionCreateParams = {
       ...this.checkoutUIConfig(),
@@ -296,7 +316,15 @@ export class CheckoutSessionBuilder {
       config,
     )
 
+    await this.saveOrder({
+      checkoutId,
+      sess,
+      lineItems: [],
+      mergedMetadata,
+    })
+
     return {
+      orderId: checkoutId,
       company: this.offer.company,
       sessionId: sess.id,
       clientSecret: sess.client_secret,
@@ -499,6 +527,40 @@ export class CheckoutSessionBuilder {
       default:
         this.uiMode satisfies never
     }
+  }
+
+  private async saveOrder(args: {
+    checkoutId: string
+    sess: Stripe.Checkout.Session
+    lineItems: Stripe.LineItem[]
+    mergedMetadata?: any
+  }) {
+    await this.invoiceService.saveOrder({
+      id: args.checkoutId,
+      company: this.offer.company,
+      userId: this.optionalSessionVars.userId,
+      externalId: args.sess.id,
+      status: 'unpaid',
+      metadata: args.mergedMetadata,
+      expiresAt: new Date(args.sess.expires_at * 1000),
+    })
+
+    await this.invoiceService.saveOrderItems(
+      args.lineItems.map((line) => {
+        return {
+          orderId: args.checkoutId,
+          lineItemId: line.id,
+          externalPriceId: line.price!.id,
+          priceLookupKey: line.price!.lookup_key,
+          description: line.description,
+          quantity: line.quantity,
+          price: line.amount_total,
+          priceSubtotal: line.amount_subtotal,
+          taxAmount: line.amount_tax,
+          discountAmount: line.amount_discount,
+        }
+      }),
+    )
   }
 
   private getPaymentConfigId() {

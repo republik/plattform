@@ -20,10 +20,11 @@ export = {
   },
   async renewsAtPrice(subscription: Subscription) {
     try {
-      const nextInvoice = await new PaymentService().getInvoicePreview(
-        subscription.company,
-        subscription.externalId,
-      )
+      const nextInvoice =
+        await new PaymentService().getSubscriptionInvoicePreview(
+          subscription.company,
+          subscription.externalId,
+        )
 
       return nextInvoice?.total
     } catch {

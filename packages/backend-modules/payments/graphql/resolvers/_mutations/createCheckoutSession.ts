@@ -4,6 +4,7 @@ import { PaymentService } from '../../../lib/services/PaymentService'
 import { CustomerInfoService } from '../../../lib/services/CustomerInfoService'
 import { SubscriptionService } from '../../../lib/services/SubscriptionService'
 import { UpgradeService } from '../../../lib/services/UpgradeService'
+import { InvoiceService } from '../../../lib/services/InvoiceService'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
@@ -35,6 +36,7 @@ export = async function createCheckoutSession(
     new CustomerInfoService(ctx.pgdb),
     new SubscriptionService(ctx.pgdb),
     new UpgradeService(ctx.pgdb, ctx.logger),
+    new InvoiceService(ctx.pgdb),
     ctx.logger,
   )
     .withCustomer(ctx.user)

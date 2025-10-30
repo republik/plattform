@@ -8,6 +8,7 @@ schema {
 type queries {
   getOffers(promoCode: String): [Offer!]!
   getOffer(offerId: ID!, promoCode: String): Offer
+  getCheckout(orderId: ID!): Checkout
   validateGiftVoucher(voucherCode: String!): GiftVoucherValidationResult
 }
 

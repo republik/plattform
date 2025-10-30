@@ -165,7 +165,7 @@ export class UpgradeActivatedEmail
       )
     }
 
-    const nextInvoice = await this.paymentService.getInvoicePreview(
+    const nextInvoice = await this.paymentService.getSubscriptionInvoicePreview(
       company,
       subscriptionId,
     )

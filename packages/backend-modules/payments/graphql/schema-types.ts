@@ -88,6 +88,7 @@ type CustomerPortalSession {
 }
 
 type CheckoutSession {
+  orderId: ID!
   company: CompanyName!
   sessionId: String!
   clientSecret: String
@@ -272,4 +273,13 @@ type MagazineSubscriptionUpgradeBillingDetails {
   donation: DonationInfo
   billingDate: DateTime
 }
+
+type Checkout {
+  orderId: ID!
+  sessionId: ID!
+  total: Int!,
+  discount: Int!,
+  tax: Int!,
+}
+
 `

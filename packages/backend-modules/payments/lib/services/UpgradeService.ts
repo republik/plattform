@@ -12,11 +12,9 @@ import { User } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
 import { OfferService } from './OfferService'
 import { activeOffers } from '../shop'
-import { Company, DiscountOption, Subscription } from '../types'
+import { Company, DiscountOption, Subscription, TypedData } from '../types'
 import { getConfig } from '../config'
 import { CustomDonation, LineItem } from '../shop/CheckoutSessionOptionBuilder'
-
-type TypedData<K, T> = { type: K; data: T }
 
 type SubscriptionUpgrade = {
   status: string
@@ -24,7 +22,7 @@ type SubscriptionUpgrade = {
   updatedAt: Date
 }
 
-type SubscriptionUpgradeConfig = {
+export type SubscriptionUpgradeConfig = {
   offerId: string
   discount?: DiscountOption
   donation?: { amount: number }
@@ -54,6 +52,10 @@ export class UpgradeService {
     this.subscriptionUpgradeRepo = new SubscriptionUpgradeRepo(pgdb)
     this.offerService = new OfferService(activeOffers())
     this.logger = logger
+  }
+
+  public async getUpgrade(upgradeId: string) {
+    return this.subscriptionUpgradeRepo.getSubscriptionUpgrade(upgradeId)
   }
 
   public async initializeSubscriptionUpgrade(
@@ -342,8 +344,6 @@ export class UpgradeService {
     )
     const items: Item[] = prices.map((p) => ({ price: p.id, quantity: 1 }))
     const additionalItems: LineItem[] = []
-
-    this.logger.debug(args.donation, 'donation amount')
 
     if (
       args.donation !== undefined ||
