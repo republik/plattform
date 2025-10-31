@@ -14,7 +14,13 @@ export = async function getOffer(
   offerService.isValidOffer(args.offerId)
   const offer = offerService.getOffer(args.offerId)
 
-  return new OfferBuilder(new PaymentService(), ctx.pgdb, offer, ctx.logger)
+  return new OfferBuilder(
+    offerService,
+    new PaymentService(),
+    ctx.pgdb,
+    offer,
+    ctx.logger,
+  )
     .withContext({ userId: ctx.user?.id })
     .withPromoCode(args.promoCode)
     .build()

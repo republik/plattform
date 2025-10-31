@@ -10,18 +10,20 @@ export = async function getOffers(
   args: { promoCode?: string },
   ctx: GraphqlContext,
 ) {
-  const offers = new OfferService(activeOffers()).getOffers()
+  const offerService = new OfferService(activeOffers())
+  const allOffers = offerService.getOffers()
+  const paymentService = new PaymentService()
 
   const fetcher = (offers: Offer[]) =>
-    new OfferBuilder(new PaymentService(), ctx.pgdb, offers, ctx.logger)
+    new OfferBuilder(offerService, paymentService, ctx.pgdb, offers, ctx.logger)
       .withContext({ userId: ctx.user?.id })
       .withPromoCode(args.promoCode)
       .buildAll()
 
   return (
     await Promise.all([
-      fetcher(offers.filter((o) => o.company === 'REPUBLIK')),
-      fetcher(offers.filter((o) => o.company === 'PROJECT_R')),
+      fetcher(allOffers.filter((o) => o.company === 'REPUBLIK')),
+      fetcher(allOffers.filter((o) => o.company === 'PROJECT_R')),
     ])
   ).flat()
 }

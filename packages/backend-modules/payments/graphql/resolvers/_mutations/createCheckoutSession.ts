@@ -5,6 +5,8 @@ import { CustomerInfoService } from '../../../lib/services/CustomerInfoService'
 import { SubscriptionService } from '../../../lib/services/SubscriptionService'
 import { UpgradeService } from '../../../lib/services/UpgradeService'
 import { InvoiceService } from '../../../lib/services/InvoiceService'
+import { OfferService } from '../../../lib/services/OfferService'
+import { activeOffers } from '../../../lib/shop'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
@@ -32,6 +34,7 @@ export = async function createCheckoutSession(
 ) {
   const session = new CheckoutSessionBuilder(
     args.offerId,
+    new OfferService(activeOffers()),
     new PaymentService(),
     new CustomerInfoService(ctx.pgdb),
     new SubscriptionService(ctx.pgdb),

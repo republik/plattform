@@ -1,7 +1,7 @@
 import { PgDb } from 'pogi'
 import { Logger } from '@orbiting/backend-modules-logger'
 import { BillingRepo, PaymentBillingRepo } from '../database/BillingRepo'
-import { Item, OnetimeItem, PaymentService } from './PaymentService'
+import { Item, PaymentService } from './PaymentService'
 import { CancelationRepo } from '../database/CancelationRepo'
 import { CustomerInfoService } from './CustomerInfoService'
 import {
@@ -12,9 +12,8 @@ import { User } from '@orbiting/backend-modules-types'
 import Auth from '@orbiting/backend-modules-auth'
 import { OfferService } from './OfferService'
 import { activeOffers } from '../shop'
-import { Company, DiscountOption, Subscription, TypedData } from '../types'
-import { getConfig } from '../config'
-import { CustomDonation, LineItem } from '../shop/CheckoutSessionOptionBuilder'
+import { Company, DiscountOption, Subscription } from '../types'
+import { LineItem } from '../shop/CheckoutSessionOptionBuilder'
 
 type SubscriptionUpgrade = {
   status: string
@@ -177,7 +176,7 @@ export class UpgradeService {
         internalRef: upgrade.id,
         items: items,
         add_invoice_items: additionalItems,
-        discounts: await this.buildUpgradeDiscounts(args),
+        discounts: this.offerService.buildDiscount(args.discount),
         startDate: scheduledStart,
         metadata: args.metadata,
         collectionMethod: 'charge_automatically',
@@ -328,7 +327,7 @@ export class UpgradeService {
     return subscription
   }
 
-  private async buildUpgradeItems(
+  async buildUpgradeItems(
     args: SubscriptionUpgradeConfig,
   ): Promise<{ items: Item[]; additionalItems: LineItem[] }> {
     this.offerService.isValidOffer(args.offerId)
@@ -349,7 +348,7 @@ export class UpgradeService {
       args.donation !== undefined ||
       this.offerService.supportsDonations(args.offerId)
     ) {
-      const donation = this.buildDonationItem(args.donation)
+      const donation = this.offerService.buildDonationItem(args.donation)
       this.logger.debug(donation, 'donation')
       if (donation?.type === 'Item') {
         items.push(donation.data)
@@ -358,61 +357,5 @@ export class UpgradeService {
     }
 
     return { items, additionalItems }
-  }
-
-  private async buildUpgradeDiscounts(
-    args: SubscriptionUpgradeConfig,
-  ): Promise<{ promotion_code: string }[] | { coupon: string }[]> {
-    this.offerService.isValidOffer(args.offerId)
-
-    if (!args.discount) {
-      return []
-    }
-
-    const discount = args.discount
-
-    if (discount.type === 'DISCOUNT') {
-      return [{ coupon: discount.value.id }]
-    }
-    if (discount.type === 'PROMO') {
-      return [{ promotion_code: discount.value.id }]
-    }
-    return []
-  }
-
-  private buildDonationItem(
-    donation?: CustomDonation,
-  ): TypedData<'Item', Item> | TypedData<'OnetimeItem', OnetimeItem> | null {
-    if (!donation || donation.amount < 0) return null
-
-    if (!donation.recurring) {
-      return {
-        type: 'OnetimeItem',
-        data: {
-          price_data: {
-            product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
-            unit_amount: donation.amount,
-            currency: 'CHF',
-          },
-          quantity: 1,
-        },
-      }
-    }
-
-    return {
-      type: 'Item',
-      data: {
-        price_data: {
-          product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
-          unit_amount: donation.amount,
-          currency: 'CHF',
-          recurring: {
-            interval: 'year',
-            interval_count: 1,
-          },
-        },
-        quantity: 1,
-      },
-    }
   }
 }

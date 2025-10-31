@@ -1,3 +1,4 @@
+import { Branded } from '@orbiting/backend-modules-types'
 import Stripe from 'stripe'
 
 export type TypedData<K, T> = { type: K; data: T }
@@ -272,6 +273,11 @@ export interface MailNotifier<T extends object> {
   sendEmail(recipient: string, args: T): Promise<any>
 }
 
+export type ValidOfferId = Branded<string, 'offerId'>
+export type ValidSubscriptionOfferId = Branded<string, 'subscriptionOfferId'>
+
+export type OfferId = ValidOfferId | ValidSubscriptionOfferId
+
 export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
 export type OfferAvailability =
   | 'PURCHASABLE'
@@ -308,7 +314,7 @@ export type ComplimentaryItemOrder = {
 }
 
 export type BaseOffer = {
-  id: string
+  id: OfferId
   company: Company
   name: string
   type: OfferType

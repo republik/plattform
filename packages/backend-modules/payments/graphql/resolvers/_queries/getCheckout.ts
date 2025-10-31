@@ -5,21 +5,8 @@ import {
   REPUBLIK_PAYMENTS_INTERNAL_REF,
   REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN,
 } from '../../../lib/constants'
-import {
-  SubscriptionUpgradeConfig,
-  UpgradeService,
-} from '../../../lib/services/UpgradeService'
-import {
-  Item,
-  OnetimeItem,
-  PaymentService,
-} from '../../../lib/services/PaymentService'
-import {
-  CustomDonation,
-  LineItem,
-} from '../../../lib/shop/CheckoutSessionOptionBuilder'
-import { TypedData } from '../../../lib/types'
-import { getConfig } from '../../../lib/config'
+import { UpgradeService } from '../../../lib/services/UpgradeService'
+import { PaymentService } from '../../../lib/services/PaymentService'
 import { OfferService } from '../../../lib/services/OfferService'
 import { activeOffers } from '../../../lib/shop'
 
@@ -48,13 +35,11 @@ export = async function getCheckout(
       return null
     }
 
-    const { items, additionalItems } = await buildUpgradeItems(
-      paymentService,
-      offerService,
+    const { items, additionalItems } = await upgradeService.buildUpgradeItems(
       upgrade.upgradeConfig,
     )
 
-    const discount = buildUpgradeDiscounts(offerService, upgrade.upgradeConfig)
+    const discount = offerService.buildDiscount(upgrade.upgradeConfig.discount)
 
     const invoicePreview = await paymentService.getInvoicePreview(
       order.company,
@@ -93,91 +78,4 @@ export = async function getCheckout(
     discounts: sess?.total_details?.amount_discount,
     tax: sess?.total_details?.amount_tax,
   }
-}
-
-async function buildUpgradeItems(
-  paymentService: PaymentService,
-  offerService: OfferService,
-  args: SubscriptionUpgradeConfig,
-): Promise<{ items: Item[]; additionalItems: LineItem[] }> {
-  offerService.isValidOffer(args.offerId)
-  const companyName = offerService.getOfferMerchent(args.offerId)
-
-  const lookupKeys = offerService
-    .getOfferItems(args.offerId)
-    .map((i) => i.lookupKey)
-
-  const prices = await paymentService.getPrices(companyName, lookupKeys ?? [])
-  const items: Item[] = prices.map((p) => ({ price: p.id, quantity: 1 }))
-  const additionalItems: LineItem[] = []
-
-  if (
-    args.donation !== undefined ||
-    offerService.supportsDonations(args.offerId)
-  ) {
-    const donation = buildDonationItem(args.donation)
-    if (donation?.type === 'Item') {
-      items.push(donation.data)
-    } else if (donation?.type === 'OnetimeItem')
-      additionalItems.push(donation.data)
-  }
-
-  return { items, additionalItems }
-}
-
-function buildDonationItem(
-  donation?: CustomDonation,
-): TypedData<'Item', Item> | TypedData<'OnetimeItem', OnetimeItem> | null {
-  if (!donation || donation.amount < 0) return null
-
-  if (!donation.recurring) {
-    return {
-      type: 'OnetimeItem',
-      data: {
-        price_data: {
-          product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
-          unit_amount: donation.amount,
-          currency: 'CHF',
-        },
-        quantity: 1,
-      },
-    }
-  }
-
-  return {
-    type: 'Item',
-    data: {
-      price_data: {
-        product: getConfig().PROJECT_R_DONATION_PRODUCT_ID,
-        unit_amount: donation.amount,
-        currency: 'CHF',
-        recurring: {
-          interval: 'year',
-          interval_count: 1,
-        },
-      },
-      quantity: 1,
-    },
-  }
-}
-
-function buildUpgradeDiscounts(
-  offerService: OfferService,
-  args: SubscriptionUpgradeConfig,
-): { promotion_code: string }[] | { coupon: string }[] {
-  offerService.isValidOffer(args.offerId)
-
-  if (!args.discount) {
-    return []
-  }
-
-  const discount = args.discount
-
-  if (discount.type === 'DISCOUNT') {
-    return [{ coupon: discount.value.id }]
-  }
-  if (discount.type === 'PROMO') {
-    return [{ promotion_code: discount.value.id }]
-  }
-  return []
 }

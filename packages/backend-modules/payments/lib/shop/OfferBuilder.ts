@@ -1,6 +1,5 @@
 import Stripe from 'stripe'
 import { PaymentService } from '../services/PaymentService'
-import { resolveUpgradePaths } from './offers'
 import { PgDb } from 'pogi'
 import { SubscriptionService } from '../services/SubscriptionService'
 import {
@@ -13,8 +12,10 @@ import {
 import { UpgradeService } from '../services/UpgradeService'
 import { Logger } from '@orbiting/backend-modules-types'
 import { promotionToDiscount } from './utils'
+import { OfferService } from '../services/OfferService'
 
 export class OfferBuilder {
+  private offerService: OfferService
   private paymentService: PaymentService
   private subscriptionService: SubscriptionService
   private upgradeService: UpgradeService
@@ -28,11 +29,13 @@ export class OfferBuilder {
   }
 
   constructor(
+    offerService: OfferService,
     paymentService: PaymentService,
     pgdb: PgDb,
     offer: Offer | Offer[],
     logger: Logger,
   ) {
+    this.offerService = offerService
     this.paymentService = paymentService
     this.subscriptionService = new SubscriptionService(pgdb)
     this.upgradeService = new UpgradeService(pgdb, logger)
@@ -119,7 +122,7 @@ export class OfferBuilder {
     if (offer.id.startsWith('GIFT')) return { kind: 'PURCHASABLE' }
 
     if (sub) {
-      if (resolveUpgradePaths(sub).includes(offer.id)) {
+      if (this.offerService.resolveUpgradePaths(sub.type).includes(offer.id)) {
         if (hasUnresolvedUpgreads && offer.id !== 'DONATION') {
           return { kind: 'UNAVAILABLE_UPGRADE_PENDING' }
         }

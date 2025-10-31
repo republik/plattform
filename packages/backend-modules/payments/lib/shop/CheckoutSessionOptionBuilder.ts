@@ -1,6 +1,5 @@
 import { User } from '@orbiting/backend-modules-types'
 import { Logger } from '@orbiting/backend-modules-logger'
-import { activeOffers, resolveUpgradePaths } from '.'
 import {
   Company,
   ComplimentaryItem,
@@ -24,6 +23,7 @@ import {
   REPUBLIK_PAYMENTS_INTERNAL_REF,
   REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN,
 } from '../constants'
+import { OfferService } from '../services/OfferService'
 
 export type SetupConfig = {
   company: Company
@@ -73,6 +73,7 @@ export type LineItem = Price | PriceData | RecurringPriceData
 
 export class CheckoutSessionBuilder {
   private offer: Offer
+  private offerService: OfferService
   private paymentService: PaymentService
   private customerInfoService: CustomerInfoService
   private subscriptionService: SubscriptionService
@@ -96,6 +97,7 @@ export class CheckoutSessionBuilder {
 
   constructor(
     offerId: string,
+    offerService: OfferService,
     paymentService: PaymentService,
     customerInfoService: CustomerInfoService,
     subscriptionService: SubscriptionService,
@@ -103,12 +105,7 @@ export class CheckoutSessionBuilder {
     invoiceService: InvoiceService,
     logger: Logger,
   ) {
-    const offer = activeOffers().find((o) => o.id === offerId)
-    if (!offer) throw new Error('api/shop/unknown/offer')
-
-    logger.info({ offer }, 'creating CheckoutSessionBuilder')
-
-    this.offer = offer
+    this.offerService = offerService
     this.paymentService = paymentService
     this.customerInfoService = customerInfoService
     this.subscriptionService = subscriptionService
@@ -120,6 +117,11 @@ export class CheckoutSessionBuilder {
       couponMetadata: (async () => undefined)(),
       selectedDiscount: (async () => undefined)(),
     }
+
+    this.offerService.isValidOffer(offerId)
+    this.offer = this.offerService.getOffer(offerId)
+
+    logger.info({ offer: this.offer }, 'creating CheckoutSessionBuilder')
   }
 
   public withPromoCode(code?: string): this {
@@ -342,7 +344,11 @@ export class CheckoutSessionBuilder {
       this.optionalSessionVars.activeSubscription = sub
 
       if (sub) {
-        if (resolveUpgradePaths(sub).includes(this.offer.id)) {
+        if (
+          this.offerService
+            .resolveUpgradePaths(sub.type)
+            .includes(this.offer.id)
+        ) {
           return 'UPGRADEABLE'
         } else {
           const [offerType] = this.offer.id.split('_')

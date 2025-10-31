@@ -1,10 +1,10 @@
-import { Offer, Subscription, SubscriptionOffer } from '../types'
+import { Offer, OfferId, SubscriptionOffer } from '../types'
 import { getConfig } from '../config'
 import { GIFTS_ENABLED } from '../constants'
 
 export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
   {
-    id: 'YEARLY',
+    id: 'YEARLY' as OfferId,
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
     subscriptionType: 'YEARLY_SUBSCRIPTION',
@@ -16,7 +16,7 @@ export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
     allowPromotions: true,
   },
   {
-    id: 'YEARLY_REDUCED',
+    id: 'YEARLY_REDUCED' as OfferId,
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
     subscriptionType: 'YEARLY_SUBSCRIPTION',
@@ -35,7 +35,7 @@ export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
     allowPromotions: false,
   },
   {
-    id: 'BENEFACTOR',
+    id: 'BENEFACTOR' as OfferId,
     name: 'Gönnermitgliedschaft',
     type: 'SUBSCRIPTION',
     subscriptionType: 'BENEFACTOR_SUBSCRIPTION',
@@ -47,7 +47,7 @@ export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
     allowPromotions: false,
   },
   {
-    id: 'DONATION',
+    id: 'DONATION' as OfferId,
     name: 'Einmalige Spende',
     type: 'ONETIME_PAYMENT',
     company: 'PROJECT_R',
@@ -58,7 +58,7 @@ export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
     allowPromotions: false,
   },
   {
-    id: 'STUDENT',
+    id: 'STUDENT' as OfferId,
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
     subscriptionType: 'YEARLY_SUBSCRIPTION',
@@ -73,7 +73,7 @@ export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
     },
   },
   {
-    id: 'MONTHLY',
+    id: 'MONTHLY' as OfferId,
     name: 'Monats-Abo',
     type: 'SUBSCRIPTION',
     subscriptionType: 'MONTHLY_SUBSCRIPTION',
@@ -93,7 +93,7 @@ export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
 
 export const GIFTS_OFFERS: Offer[] = [
   {
-    id: 'GIFT_YEARLY',
+    id: 'GIFT_YEARLY' as OfferId,
     name: 'Jahresmitgliedschaft als Geschenk',
     type: 'ONETIME_PAYMENT',
     company: 'PROJECT_R',
@@ -104,7 +104,7 @@ export const GIFTS_OFFERS: Offer[] = [
     items: [{ type: 'PRICE', lookupKey: 'GIFT_YEARLY' }],
   },
   {
-    id: 'GIFT_MONTHLY',
+    id: 'GIFT_MONTHLY' as OfferId,
     name: '3-Monats-Abo als Geschenk',
     type: 'ONETIME_PAYMENT',
     company: 'REPUBLIK',
@@ -118,17 +118,4 @@ export const GIFTS_OFFERS: Offer[] = [
 
 export function activeOffers(): Readonly<Offer>[] {
   return [...Offers, ...(GIFTS_ENABLED() ? GIFTS_OFFERS : [])]
-}
-
-export function resolveUpgradePaths(sub: Subscription): string[] {
-  switch (sub.type) {
-    case 'MONTHLY_SUBSCRIPTION':
-      return ['YEARLY', 'YEARLY_REDUCED', 'STUDENT', 'BENEFACTOR']
-
-    case 'YEARLY_SUBSCRIPTION':
-      return ['BENEFACTOR', 'DONATION']
-
-    case 'BENEFACTOR_SUBSCRIPTION':
-      return ['DONATION']
-  }
 }
