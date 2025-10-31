@@ -2,8 +2,9 @@ import auth from '@orbiting/backend-modules-auth'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { InvoiceService } from '../../../lib/services/InvoiceService'
 import {
-  REPUBLIK_PAYMENTS_INTERNAL_REF,
-  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN,
+  REPUBLIK_PAYMENTS_INTERNAL_REF as INTERNAL_REF,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN as SUBSCRIPTION_ORIGIN,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN_TYPE_UPGRADE as ORIGIN_UPGRADE,
 } from '../../../lib/constants'
 import { UpgradeService } from '../../../lib/services/UpgradeService'
 import { PaymentService } from '../../../lib/services/PaymentService'
@@ -27,9 +28,9 @@ export = async function getCheckout(
     return null
   }
 
-  if (order.metadata[REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN] === 'UPGRADE') {
+  if (order.metadata[SUBSCRIPTION_ORIGIN] === ORIGIN_UPGRADE) {
     const upgrade = await upgradeService.getUpgrade(
-      order.metadata[REPUBLIK_PAYMENTS_INTERNAL_REF],
+      order.metadata[INTERNAL_REF],
     )
     if (!upgrade) {
       return null

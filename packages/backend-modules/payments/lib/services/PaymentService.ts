@@ -3,8 +3,9 @@ import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { Company, PaymentMethod } from '../types'
 import { LineItem } from '../shop/CheckoutSessionOptionBuilder'
 import {
-  REPUBLIK_PAYMENTS_INTERNAL_REF,
-  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN,
+  REPUBLIK_PAYMENTS_INTERNAL_REF as INTERNAL_REF,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN as SUBSCRIPTION_ORIGIN,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN_TYPE_UPGRADE as ORIGIN_UPGRADE,
 } from '../constants'
 
 type Discount = {
@@ -213,8 +214,8 @@ export class PaymentService {
           collection_method: options.collectionMethod,
           metadata: {
             ...options.metadata,
-            [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'UPGRADE',
-            [REPUBLIK_PAYMENTS_INTERNAL_REF]: options.internalRef,
+            [SUBSCRIPTION_ORIGIN]: ORIGIN_UPGRADE,
+            [INTERNAL_REF]: options.internalRef,
           },
         },
       ],

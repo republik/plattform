@@ -10,8 +10,10 @@ import { CustomerInfoService } from '../../services/CustomerInfoService'
 import { PaymentService } from '../../services/PaymentService'
 import { ConfirmUpgradeSubscriptionTransactionalWorker } from '../../workers/ConfirmUpgradeSubscriptionTransactionalWorker'
 import {
-  REPUBLIK_PAYMENTS_INTERNAL_REF,
-  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN,
+  REPUBLIK_PAYMENTS_INTERNAL_REF as INTERNAL_REF,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN as SUBSCRIPTION_ORIGIN,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN_TYPE_UPGRADE as ORIGIN_UPGRADE,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN_TYPE_GIFT as ORIGIN_GIFT,
 } from '../../constants'
 import { UpgradeService } from '../../services/UpgradeService'
 
@@ -65,7 +67,7 @@ class SubscriptionCreatedWorkflow
     await this.subscriptionService.setupSubscription(userId, args)
 
     const isGiftSubscription =
-      subscription.metadata[REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN] === 'GIFT'
+      subscription.metadata[SUBSCRIPTION_ORIGIN] === ORIGIN_GIFT
 
     const queue = Queue.getInstance()
 
@@ -89,10 +91,10 @@ class SubscriptionCreatedWorkflow
     }
 
     const isUpgrade =
-      subscription.metadata[REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN] === 'UPGRADE'
+      subscription.metadata[SUBSCRIPTION_ORIGIN] === ORIGIN_UPGRADE
 
     if (isUpgrade) {
-      const upgradeId = subscription.metadata[REPUBLIK_PAYMENTS_INTERNAL_REF]
+      const upgradeId = subscription.metadata[INTERNAL_REF]
 
       await Promise.all([
         queue.send<ConfirmUpgradeSubscriptionTransactionalWorker>(

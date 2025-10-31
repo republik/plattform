@@ -7,7 +7,7 @@ import { UpgradeService } from '../services/UpgradeService'
 import { Logger } from '@orbiting/backend-modules-types'
 import { Upgrade } from '../database/SubscriptionUpgradeRepo'
 import { UpgradeNotifierArgs } from '../email-notifiers/UpgradeSetupEmail'
-import { REPUBLIK_PAYMENTS_INTERNAL_REF } from '../constants'
+import { REPUBLIK_PAYMENTS_INTERNAL_REF as INTERNAL_REF } from '../constants'
 
 export class SetupWorkflow
   implements PaymentWorkflow<Stripe.CheckoutSessionCompletedEvent>
@@ -59,7 +59,7 @@ export class SetupWorkflow
   } | null {
     if (!metadata) return null
 
-    return { upgradeId: metadata[REPUBLIK_PAYMENTS_INTERNAL_REF] }
+    return { upgradeId: metadata[INTERNAL_REF] }
   }
 
   private async runNotifieres(

@@ -20,8 +20,9 @@ import { couponToDiscount, promotionToDiscount } from './utils'
 import { randomUUID } from 'node:crypto'
 import { InvoiceService } from '../services/InvoiceService'
 import {
-  REPUBLIK_PAYMENTS_INTERNAL_REF,
-  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN,
+  REPUBLIK_PAYMENTS_INTERNAL_REF as INTERNAL_REF,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN as SUBSCRIPTION_ORIGIN,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN_TYPE_UPGRADE as ORIGIN_UPGRADE,
 } from '../constants'
 import { OfferService } from '../services/OfferService'
 
@@ -285,7 +286,7 @@ export class CheckoutSessionBuilder {
       ...metadata,
       ...this.offer.metaData,
       ...couponMeta,
-      [REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN]: 'UPGRADE',
+      [SUBSCRIPTION_ORIGIN]: ORIGIN_UPGRADE,
       'republik:payments:order:id': checkoutId,
     }
 
@@ -300,7 +301,7 @@ export class CheckoutSessionBuilder {
       },
     )
 
-    mergedMetadata[REPUBLIK_PAYMENTS_INTERNAL_REF] = upgradeRef.id
+    mergedMetadata[INTERNAL_REF] = upgradeRef.id
 
     const config: Stripe.Checkout.SessionCreateParams = {
       ...this.checkoutUIConfig(),
