@@ -256,7 +256,7 @@ export class CheckoutSessionBuilder {
     await this.saveOrder({
       checkoutId: orderId,
       sess,
-      lineItems: sess.line_items!.data,
+      lineItems: sess.line_items?.data ?? [],
       mergedMetadata,
     })
 
