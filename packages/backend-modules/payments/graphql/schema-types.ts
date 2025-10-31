@@ -97,7 +97,7 @@ type CheckoutSession {
 }
 
 type CheckoutSessionBreakdown {
-  startDate: Date
+  startDate: DateTime
   total: Int!,
   discount: Int!,
   tax: Int!,
