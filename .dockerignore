@@ -1,0 +1,54 @@
+# Node modules and logs
+node_modules
+**/node_modules
+npm-debug.log
+yarn-error.log
+**/yarn-error.log
+pnpm-debug.log
+**/pnpm-debug.log
+
+# Environment files (including nested)
+**/.env
+**/.env.*
+**/*.local
+
+# Turborepo and build caches
+.cache
+.turbo
+dist
+.out
+.next
+**/dist
+**/.next
+**/.turbo
+**/.cache
+**/build
+
+# Testfiels
+**/__test__
+**/__tests__
+
+# Editor and OS files
+.idea
+.vscode
+*.swp
+*.swo
+*.swn
+.DS_Store
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Logs
+*.log
+logs
+*.log.*
+
+# macOS files
+.DS_Store
+**/.DS_Store
