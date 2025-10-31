@@ -10,7 +10,7 @@ import {
   ValidSubscriptionOfferId,
 } from '../types'
 import { getConfig } from '../config'
-import { CustomDonation } from '../shop/CheckoutSessionOptionBuilder'
+import { CustomDonation } from '../shop/CheckoutSessionBuilder'
 import { Item, OnetimeItem } from './PaymentService'
 
 export class OfferService {

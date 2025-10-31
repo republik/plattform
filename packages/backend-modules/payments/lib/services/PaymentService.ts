@@ -1,7 +1,7 @@
 import Stripe from 'stripe'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { Company, PaymentMethod } from '../types'
-import { LineItem } from '../shop/CheckoutSessionOptionBuilder'
+import { LineItem } from '../shop/CheckoutSessionBuilder'
 import {
   REPUBLIK_PAYMENTS_INTERNAL_REF as INTERNAL_REF,
   REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN as SUBSCRIPTION_ORIGIN,

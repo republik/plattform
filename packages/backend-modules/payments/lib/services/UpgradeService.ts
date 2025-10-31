@@ -13,7 +13,7 @@ import Auth from '@orbiting/backend-modules-auth'
 import { OfferService } from './OfferService'
 import { activeOffers } from '../shop'
 import { Company, DiscountOption, Subscription } from '../types'
-import { LineItem } from '../shop/CheckoutSessionOptionBuilder'
+import { LineItem } from '../shop/CheckoutSessionBuilder'
 
 type SubscriptionUpgrade = {
   status: string
@@ -225,6 +225,46 @@ export class UpgradeService {
         select,
       )
     return upgrades.length > 0
+  }
+
+  async previewInvoiceBreakdown(company: Company, upgradeId: string) {
+    const upgrade = await this.getUpgrade(upgradeId)
+    if (!upgrade) {
+      return null
+    }
+
+    const { items, additionalItems } = await this.buildUpgradeItems(
+      upgrade.upgradeConfig,
+    )
+
+    const discount = this.offerService.buildDiscount(
+      upgrade.upgradeConfig.discount,
+    )
+
+    const invoicePreview = await this.paymentService.getInvoicePreview(
+      company,
+      {
+        preview_mode: 'next',
+        subscription_details: {
+          items: items,
+        },
+        invoice_items: additionalItems,
+        discounts: discount ?? [],
+      },
+    )
+
+    return {
+      total: invoicePreview.total,
+      discount:
+        invoicePreview.total_discount_amounts?.reduce((acc, d) => {
+          return acc + d.amount
+        }, 0) || 0,
+      tax:
+        invoicePreview.total_taxes?.reduce((acc, t) => {
+          return acc + t.amount
+        }, 0) || 0,
+      startDate: upgrade.scheduledStart,
+    }
   }
 
   private async getCustomerId(company: Company, userId: string) {

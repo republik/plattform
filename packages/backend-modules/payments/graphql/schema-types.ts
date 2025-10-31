@@ -93,6 +93,14 @@ type CheckoutSession {
   sessionId: String!
   clientSecret: String
   url: String
+  breakdown: CheckoutSessionBreakdown
+}
+
+type CheckoutSessionBreakdown {
+  startDate: Date!
+  total: Int!,
+  discount: Int!,
+  tax: Int!,
 }
 
 interface Offer {
@@ -272,14 +280,6 @@ type MagazineSubscriptionUpgradeBillingDetails {
   discount: Discount
   donation: DonationInfo
   billingDate: DateTime
-}
-
-type Checkout {
-  orderId: ID!
-  sessionId: ID!
-  total: Int!,
-  discount: Int!,
-  tax: Int!,
 }
 
 `

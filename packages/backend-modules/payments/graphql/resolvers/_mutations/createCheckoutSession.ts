@@ -1,5 +1,5 @@
 import { GraphqlContext } from '@orbiting/backend-modules-types'
-import { CheckoutSessionBuilder } from '../../../lib/shop/CheckoutSessionOptionBuilder'
+import { CheckoutSessionBuilder } from '../../../lib/shop/CheckoutSessionBuilder'
 import { PaymentService } from '../../../lib/services/PaymentService'
 import { CustomerInfoService } from '../../../lib/services/CustomerInfoService'
 import { SubscriptionService } from '../../../lib/services/SubscriptionService'

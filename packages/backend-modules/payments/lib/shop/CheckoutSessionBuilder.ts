@@ -66,6 +66,12 @@ export type CheckoutResult = {
   sessionId: string | null
   clientSecret: string | null
   url: string | null
+  breakdown?: {
+    startDate?: Date
+    total: number
+    discount?: number
+    tax?: number
+  }
 }
 
 export type CustomDonation = { amount: number; recurring?: boolean }
@@ -78,7 +84,7 @@ export class CheckoutSessionBuilder {
   private paymentService: PaymentService
   private customerInfoService: CustomerInfoService
   private subscriptionService: SubscriptionService
-  private upgreadeService: UpgradeService
+  private upgradeService: UpgradeService
   private invoiceService: InvoiceService
   private uiMode: 'HOSTED' | 'CUSTOM' | 'EMBEDDED'
   private optionalSessionVars: {
@@ -110,7 +116,7 @@ export class CheckoutSessionBuilder {
     this.paymentService = paymentService
     this.customerInfoService = customerInfoService
     this.subscriptionService = subscriptionService
-    this.upgreadeService = upgreadeService
+    this.upgradeService = upgreadeService
     this.invoiceService = invoiceService
     this.uiMode = 'EMBEDDED'
     this.optionalSessionVars = {
@@ -266,6 +272,12 @@ export class CheckoutSessionBuilder {
       sessionId: sess.id,
       clientSecret: sess.client_secret,
       url: sess.url,
+      breakdown: {
+        startDate: new Date(),
+        total: sess.amount_total!,
+        discount: sess.total_details?.amount_discount,
+        tax: sess.total_details?.amount_tax,
+      },
     }
   }
 
@@ -290,7 +302,7 @@ export class CheckoutSessionBuilder {
       'republik:payments:order:id': checkoutId,
     }
 
-    const upgradeRef = await this.upgreadeService.initializeSubscriptionUpgrade(
+    const upgradeRef = await this.upgradeService.initializeSubscriptionUpgrade(
       this.optionalSessionVars.userId!,
       activeSubscription.id,
       {
@@ -326,12 +338,18 @@ export class CheckoutSessionBuilder {
       mergedMetadata,
     })
 
+    const breakdown = await this.upgradeService.previewInvoiceBreakdown(
+      this.offer.company,
+      upgradeRef.id,
+    )
+
     return {
       orderId: checkoutId,
       company: this.offer.company,
       sessionId: sess.id,
       clientSecret: sess.client_secret,
       url: sess.url,
+      breakdown: breakdown ?? undefined,
     }
   }
 
