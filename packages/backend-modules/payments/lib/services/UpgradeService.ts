@@ -72,6 +72,7 @@ export class UpgradeService {
       userId: userId,
       subscriptionId: subscription.id,
       subscriptionType: subscriptionType,
+      scheduledStart: subscription.currentPeriodEnd,
       upgradeConfig: args,
       status: 'initialized',
     })
