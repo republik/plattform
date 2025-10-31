@@ -23,7 +23,7 @@ export = async function getCheckout(
   const paymentService = new PaymentService()
   const offerService = new OfferService(activeOffers())
 
-  const order = await invoiceService.getOrder(args.orderId)
+  const order = await invoiceService.getOrder({ id: args.orderId })
   if (!order || order.userId !== ctx.user.id) {
     return null
   }

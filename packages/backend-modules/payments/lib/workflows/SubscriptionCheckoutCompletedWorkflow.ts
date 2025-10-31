@@ -98,14 +98,16 @@ export class SubscriptionCheckoutCompletedWorkflow
     subId: string | undefined,
     paymentStatus: string,
   ) {
-    return await this.invoiceService.saveOrder({
-      userId: userId,
-      company: company,
-      externalId: event.data.object.id,
-      invoiceId: invoiceId,
-      subscriptionId: subId,
-      status: paymentStatus as 'paid' | 'unpaid',
-    })
+    return await this.invoiceService.updateOrder(
+      { externalId: event.data.object.id },
+      {
+        userId: userId,
+        company: company,
+        invoiceId: invoiceId,
+        subscriptionId: subId,
+        status: paymentStatus as 'paid' | 'unpaid',
+      },
+    )
   }
 
   private async processInvoice(
