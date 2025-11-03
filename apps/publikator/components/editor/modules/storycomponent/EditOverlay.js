@@ -5,6 +5,7 @@ import OverlayFormManager from '../../utils/OverlayFormManager'
 const Form = ({ data, onChange, editor, node }) => {
   const parent = editor.value.document.getParent(node.key)
   const url = node.data.get('url')
+  const tagname = node.data.get('tagname')
 
   return (
     <>
@@ -109,6 +110,14 @@ const Form = ({ data, onChange, editor, node }) => {
           label='Story Component URL'
           value={url}
           onChange={(e, value) => onChange(data.set('url', value))}
+          required
+        />
+      </Interaction.P>
+      <Interaction.P>
+        <Field
+          label='HTML Tagname'
+          value={tagname}
+          onChange={(e, value) => onChange(data.set('tagname', value))}
           required
         />
       </Interaction.P>
