@@ -15,9 +15,7 @@ function StoryComponent({
   componentData,
   size,
 }: StoryComponentProps) {
-  console.log('StoryComponent', { url, tagname, componentData, size })
   // const url = 'http://localhost:5173/dist/index.js' // for local testing
-  // const tagname = 'the-big-question' // for local testing
 
   const CustomCompponent = tagname as any
 
