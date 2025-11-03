@@ -239,7 +239,7 @@ export class CheckoutSessionBuilder {
     }
 
     const config: Stripe.Checkout.SessionCreateParams = {
-      ...this.checkoutUIConfig(),
+      ...this.checkoutUIConfig(orderId),
       mode: this.getCheckoutMode(),
       customer: await customerId,
       line_items: allLineItems,
@@ -285,7 +285,7 @@ export class CheckoutSessionBuilder {
     }
   }
 
-  async buildSetupSession(checkoutId: string): Promise<CheckoutResult> {
+  async buildSetupSession(orderId: string): Promise<CheckoutResult> {
     const { customerId, metadata, activeSubscription } =
       this.optionalSessionVars
 
@@ -303,7 +303,7 @@ export class CheckoutSessionBuilder {
       ...this.offer.metaData,
       ...couponMeta,
       [SUBSCRIPTION_ORIGIN]: ORIGIN_UPGRADE,
-      'republik:payments:order:id': checkoutId,
+      'republik:payments:order:id': orderId,
     }
 
     const upgradeRef = await this.upgradeService.initializeSubscriptionUpgrade(
@@ -320,7 +320,7 @@ export class CheckoutSessionBuilder {
     mergedMetadata[INTERNAL_REF] = upgradeRef.id
 
     const config: Stripe.Checkout.SessionCreateParams = {
-      ...this.checkoutUIConfig(),
+      ...this.checkoutUIConfig(orderId),
       mode: 'setup',
       currency: 'CHF',
       locale: 'de',
@@ -336,7 +336,7 @@ export class CheckoutSessionBuilder {
     )
 
     await this.saveOrder({
-      checkoutId,
+      checkoutId: orderId,
       sess,
       lineItems: [],
       mergedMetadata,
@@ -348,7 +348,7 @@ export class CheckoutSessionBuilder {
     )
 
     return {
-      orderId: checkoutId,
+      orderId: orderId,
       company: this.offer.company,
       sessionId: sess.id,
       status: sess.status,
@@ -528,30 +528,32 @@ export class CheckoutSessionBuilder {
       : undefined
   }
 
-  private checkoutUIConfig() {
+  private checkoutUIConfig(orderId: string) {
     const returnURL =
-      this.optionalSessionVars.returnURL ||
-      `${getConfig().SHOP_BASE_URL}/angebot/${
-        this.offer.id
-      }?session_id={CHECKOUT_SESSION_ID}`
+      this.optionalSessionVars.returnURL &&
+      URL.canParse(this.optionalSessionVars.returnURL)
+        ? new URL(this.optionalSessionVars.returnURL)!
+        : new URL(`/angebot/${this.offer.id}`, getConfig().SHOP_BASE_URL)!
+
+    returnURL?.searchParams.set('order_id', orderId)
 
     switch (this.uiMode) {
       case 'EMBEDDED':
         return {
           ui_mode: 'embedded' as Stripe.Checkout.SessionCreateParams.UiMode,
-          return_url: returnURL,
+          return_url: returnURL.toString(),
           redirect_on_completion:
             'if_required' as Stripe.Checkout.SessionCreateParams.RedirectOnCompletion,
         }
       case 'CUSTOM':
         return {
           ui_mode: 'custom' as Stripe.Checkout.SessionCreateParams.UiMode,
-          return_url: returnURL,
+          return_url: returnURL.toString(),
         }
       case 'HOSTED':
         return {
           ui_mode: 'hosted' as Stripe.Checkout.SessionCreateParams.UiMode,
-          success_url: returnURL,
+          success_url: returnURL.toString(),
           cancel_url: `${getConfig().SHOP_BASE_URL}/angebot/${this.offer.id}`,
         }
       default:
