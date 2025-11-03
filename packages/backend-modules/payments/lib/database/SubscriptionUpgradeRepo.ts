@@ -1,5 +1,5 @@
 import { PgDb } from 'pogi'
-import { SubscriptionType } from '../types'
+import { Company, SubscriptionType } from '../types'
 
 export type UpgradeStatus =
   | 'registered'
@@ -62,6 +62,7 @@ export class SubscriptionUpgradeRepo {
   async saveSubscriptionUpgrade(
     args: Partial<{
       userId: string
+      company: Company
       subscriptionId: string
       subscriptionType: string | null
       externalId: string
@@ -72,6 +73,7 @@ export class SubscriptionUpgradeRepo {
   ): Promise<Upgrade> {
     const insert = this.filterUndefined({
       user_id: args.userId,
+      company: args.company,
       subscription_id: args.subscriptionId,
       subscription_type: args.subscriptionType,
       external_id: args.externalId,
@@ -91,6 +93,7 @@ export class SubscriptionUpgradeRepo {
     upgradeId: string,
     args: Partial<{
       userId: string
+      company: Company
       subscriptionId: string
       externalId: string
       status: string
@@ -99,6 +102,7 @@ export class SubscriptionUpgradeRepo {
   ) {
     const update = this.filterUndefined({
       user_id: args.userId,
+      company: args.company,
       subscription_id: args.subscriptionId,
       external_id: args.externalId,
       status: args.status,

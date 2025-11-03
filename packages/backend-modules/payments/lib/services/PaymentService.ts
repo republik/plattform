@@ -136,31 +136,7 @@ export class PaymentService {
 
     const paymentMethod = await this.getPaymentMethod(company, paymentMethodId)
 
-    if (!paymentMethod) {
-      return null
-    }
-
-    if (paymentMethod.card) {
-      return {
-        id: paymentMethodId,
-        method: this.capitalize(paymentMethod.card.brand),
-        last4: paymentMethod.card.last4,
-      }
-    }
-
-    if (paymentMethod.paypal) {
-      return {
-        id: paymentMethodId,
-        method: 'Paypal',
-      }
-    }
-
-    if (paymentMethod.twint) {
-      return {
-        id: paymentMethodId,
-        method: 'Twint',
-      }
-    }
+    return this.formatPaymentMethodResult(paymentMethod)
   }
 
   async getSubscription(company: Company, id: string) {
@@ -377,6 +353,38 @@ export class PaymentService {
       signature,
       secret,
     )
+  }
+
+  formatPaymentMethodResult(
+    paymentMethod: Stripe.PaymentMethod | null,
+  ): PaymentMethod | null {
+    if (!paymentMethod) {
+      return null
+    }
+
+    if (paymentMethod.card) {
+      return {
+        id: paymentMethod.id,
+        method: this.capitalize(paymentMethod.card.brand),
+        last4: paymentMethod.card.last4,
+      }
+    }
+
+    if (paymentMethod.paypal) {
+      return {
+        id: paymentMethod.id,
+        method: 'Paypal',
+      }
+    }
+
+    if (paymentMethod.twint) {
+      return {
+        id: paymentMethod.id,
+        method: 'Twint',
+      }
+    }
+
+    return null
   }
 
   capitalize(str: string): string {

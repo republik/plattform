@@ -60,18 +60,21 @@ export type RecurringPriceData = {
   tax_rates?: string[]
 }
 
+type CheckoutStatus = 'open' | 'complete' | 'expired'
+
 export type CheckoutResult = {
   orderId: string
   company: Company
   sessionId: string | null
   clientSecret: string | null
+  status: CheckoutStatus | null
   url: string | null
   breakdown?: {
     startDate?: Date
     total: number
     discount?: number
     tax?: number
-  }
+  } | null
 }
 
 export type CustomDonation = { amount: number; recurring?: boolean }
@@ -271,6 +274,7 @@ export class CheckoutSessionBuilder {
       company: this.offer.company,
       sessionId: sess.id,
       clientSecret: sess.client_secret,
+      status: sess.status,
       url: sess.url,
       breakdown: {
         startDate: new Date(),
@@ -347,6 +351,7 @@ export class CheckoutSessionBuilder {
       orderId: checkoutId,
       company: this.offer.company,
       sessionId: sess.id,
+      status: sess.status,
       clientSecret: sess.client_secret,
       url: sess.url,
       breakdown: breakdown ?? undefined,

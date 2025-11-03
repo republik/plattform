@@ -8,12 +8,13 @@ import {
 } from '../../../lib/constants'
 import { UpgradeService } from '../../../lib/services/UpgradeService'
 import { PaymentService } from '../../../lib/services/PaymentService'
+import { CheckoutResult } from '../../../lib/shop/CheckoutSessionBuilder'
 
 export = async function getCheckout(
   _root: never,
   args: { orderId: string },
   ctx: GraphqlContext,
-) {
+): Promise<CheckoutResult | null> {
   auth.ensureSignedIn(ctx)
 
   const invoiceService = new InvoiceService(ctx.pgdb)
@@ -38,6 +39,7 @@ export = async function getCheckout(
     company: order.company,
     sessionId: sess.id,
     clientSecret: sess.client_secret,
+    status: sess.status,
     url: sess.url,
   }
 
@@ -56,7 +58,7 @@ export = async function getCheckout(
     return {
       ...checkoutSession,
       breakdown: {
-        total: sess.amount_total,
+        total: sess.amount_total || 0,
         discount: sess.total_details?.amount_discount,
         tax: sess.total_details?.amount_tax,
       },

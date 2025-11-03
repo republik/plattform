@@ -1,7 +1,6 @@
 import { z } from 'zod'
 const DEFAULT_SCHEMA_NAME = 'payments'
 const STRIPE_API_VERSION = '2025-08-27.basil'
-// const STRIPE_CUSTOM_CHECKOUT_API_VERSION = '2025-08-27; custom_checkout_beta=v1'
 
 const keyToEnvMap = {
   SHOP_BASE_URL: 'SHOP_BASE_URL',

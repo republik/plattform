@@ -63,6 +63,7 @@ export class UpgradeService {
     args: SubscriptionUpgradeConfig,
   ) {
     this.offerService.isValidSubscriptionOffer(args.offerId)
+    const company = this.offerService.getOfferMerchent(args.offerId)
     const subscriptionType = this.offerService.getSubscriptionType(args.offerId)
     const subscription = await this.validateSubscriptionCanBeUpgraded(
       subscriptionId,
@@ -70,6 +71,7 @@ export class UpgradeService {
 
     return await this.subscriptionUpgradeRepo.saveSubscriptionUpgrade({
       userId: userId,
+      company: company,
       subscriptionId: subscription.id,
       subscriptionType: subscriptionType,
       scheduledStart: subscription.currentPeriodEnd,

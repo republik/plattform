@@ -92,8 +92,15 @@ type CheckoutSession {
   company: CompanyName!
   sessionId: String!
   clientSecret: String
+  status: CheckoutSessionStatus
   url: String
   breakdown: CheckoutSessionBreakdown
+}
+
+enum CheckoutSessionStatus {
+  open
+  complete
+  expired
 }
 
 type CheckoutSessionBreakdown {
@@ -269,6 +276,8 @@ type MagazineSubscriptionUpgrade {
   subscriptionType: MagazineSubscriptionType
   subscriptionId: String!
   status: String!
+  company: CompanyName!
+  paymentMethod: String
   scheduledStart: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
