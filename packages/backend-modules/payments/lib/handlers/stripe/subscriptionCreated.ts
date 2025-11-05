@@ -16,6 +16,7 @@ import {
   REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN_TYPE_GIFT as ORIGIN_GIFT,
 } from '../../constants'
 import { UpgradeService } from '../../services/UpgradeService'
+import { getAboPriceItem } from '../../shop/utils'
 
 class SubscriptionCreatedWorkflow
   implements PaymentWorkflow<Stripe.CustomerSubscriptionCreatedEvent>
@@ -140,15 +141,17 @@ export function mapSubscriptionArgs(
   company: Company,
   sub: Stripe.Subscription,
 ): SubscriptionArgs {
-  const current_period_start = sub.items.data[0].current_period_start
-  const current_period_end = sub.items.data[0].current_period_end
+  const abo = sub.items.data.find(getAboPriceItem)
+  if (!abo) {
+    throw new Error('subscription has no abo item')
+  }
 
   return {
     company: company,
-    type: getSubscriptionType(sub?.items.data[0].price.product as string),
+    type: getSubscriptionType(abo.price.product as string),
     externalId: sub.id,
-    currentPeriodStart: parseStripeDate(current_period_start),
-    currentPeriodEnd: parseStripeDate(current_period_end),
+    currentPeriodStart: parseStripeDate(abo.current_period_start),
+    currentPeriodEnd: parseStripeDate(abo.current_period_end),
     status: sub.status,
     metadata: sub.metadata,
   }

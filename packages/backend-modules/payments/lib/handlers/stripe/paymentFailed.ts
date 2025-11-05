@@ -29,10 +29,21 @@ class PaymentFailedWorkflow
   }
 
   async run(company: Company, event: Stripe.InvoicePaymentFailedEvent) {
-    const customerId = event.data.object.customer as string
-    const stripeSubId = event.data.object.parent?.subscription_details
+    const stripeInvoiceId = event.data.object.id!
+
+    const invoice = await this.paymentService.getInvoice(
+      company,
+      stripeInvoiceId,
+    )
+
+    if (!invoice) {
+      console.error(`unknown invoice ${stripeInvoiceId}`)
+      return
+    }
+
+    const customerId = invoice.customer as string
+    const stripeSubId = invoice.parent?.subscription_details
       ?.subscription as string
-    const stripeInvoiceId = event.data.object.id as string
 
     const userId = await this.customerInfoService.getUserIdForCompanyCustomer(
       company,
