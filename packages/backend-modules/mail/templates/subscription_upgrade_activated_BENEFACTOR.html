@@ -43,14 +43,46 @@
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
                     <p>
-                      Wir freuen uns, dass Sie sich für einen Wechsel von einem Monatsabo zur Gönnermitgliedschaft entschieden haben.
-                      Sie erhöhen dadurch unsere Planungssicherheit und sichern die Zukunft der Republik langfristig.
+                      Ihre Gönnermitgliedschaft ist seit heute aktiviert. Herzlichen Dank für Ihre Unterstützung!
                     </p>
-                    <p>Wir freuen uns, dass Sie sich für eine {{next_abo_name}} entschieden haben.</p>
-                    <p>Ihre Jahresmitgliedschaft wird am wird am {{start_date}} aktiv.</p>
+                    <p>
+                      Sie können damit <a href="https://{{frontend_base_url}}/anmelden">das Magazin lesen</a>, an <a href="{{frontend_base_url}}/dialog">sämtlichen Debatten teilnehmen</a> und die Republik <a href="{{frontend_base_url}}/teilen">mit Ihren Freunden oder Feinden teilen</a>.
+                      Ausserdem sind Sie jetzt Mitglied der Project R Genossenschaft.
+                      Als solches haben Sie keine Verpflichtungen, können aber bei ausgewählten Fragen mitentscheiden (zur jährlich stattfindenden Urabstimmung erhalten Sie eine Einladung per E-Mail).
+                    </p>
+
+                    <p>Details zum Kauf:</p>
+                    <ul
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      <li>Gönnermitgliedschaft: CHF {{subscription_total_before_discount}}</li>
+                      {{#if discount_code}}
+                      <li>
+                        {{discount_code}}: CHF –{{discount_total}}
+                        {{#if discount_duration_repeating}}
+                        {{#if discount_duration_in_months}}
+                        für {{discount_duration_display}}
+                        {{/if}}
+                        {{/if}}
+                      </li>
+                      {{/if}}
+                      {{#if recurring_donation}}
+                      <li>Jährlicher freiwilliger Beitrag: CHF {{recurring_donation}}</li>
+                      {{/if}}
+                      {{#if onetime_donation}}
+                      <li>Einmaliger freiwilliger Beitrag: CHF {{onetime_donation}}</li>
+                      {{/if}}
+                      <li>
+                        <strong>Total: CHF {{total}}</strong>
+                      </li>
+                    </ul>
 
                     <p>
-                      Die von Ihnen angegebene Zahlungsmethode belasten wir am {{start_date}} mit CHF {{total}}.
+                      Ihre Gönnermitgliedschaft verlängert sich automatisch{{#if discount_duration_once}} zum Normalpreis{{#if recurring_donation}}
+                      zuzüglich des von Ihnen gewählten freiwilligen Beitrags von CHF {{recurring_donation}}{{/if}}{{/if}}.
+                      Die von Ihnen angegebene Zahlungsmethode belasten wir dementsprechend {{#if discount_duration_once}}ab dem kommenden Jahr{{/if}}
+                      jährlich mit CHF {{next_total}}{{#if discount_duration_repeating}} bis zum Ablauf des Rabattes ({{discount_duration_display}}),
+                      danach mit CHF {{total_before_discount}}{{/if}}.
                     </p>
 
                     <p>

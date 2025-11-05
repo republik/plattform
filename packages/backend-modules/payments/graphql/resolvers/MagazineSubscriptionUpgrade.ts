@@ -28,7 +28,7 @@ export = {
   async billingDetails(root: any, _args: never, _ctx: GraphqlContext) {
     const ps = new PaymentService()
     const res = await ps.getScheduledSubscriptionInvoicePreview(
-      root.subscriptionType.startsWith('YEARLY') ? 'PROJECT_R' : 'REPUBLIK',
+      root.company,
       root.externalId,
     )
 
