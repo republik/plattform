@@ -1,22 +1,23 @@
-import { css } from 'glamor'
 import React from 'react'
+import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
-import { useColorContext } from '../Colors/useColorContext'
 import {
   sansSerifRegular12,
   sansSerifRegular15,
-  sansSerifRegular16,
-  sansSerifRegular17,
-  sansSerifRegular19,
+  serifRegular14,
+  serifRegular16,
+  serifRegular17,
+  serifRegular19,
 } from '../Typography/styles'
 import { convertStyleToRem } from '../Typography/utils'
+import { useColorContext } from '../Colors/useColorContext'
 
 const styles = {
   p: css({
-    ...convertStyleToRem(sansSerifRegular15),
+    ...convertStyleToRem(serifRegular14),
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular16),
+      ...convertStyleToRem(serifRegular16),
     },
     margin: '10px 0',
     ':first-child': {
@@ -43,9 +44,9 @@ const styles = {
     },
   }),
   featuredText: css({
-    ...convertStyleToRem(sansSerifRegular17),
+    ...convertStyleToRem(serifRegular17),
     [mUp]: {
-      ...convertStyleToRem(sansSerifRegular19),
+      ...convertStyleToRem(serifRegular19),
     },
   }),
 }

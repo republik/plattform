@@ -1342,11 +1342,11 @@
     },
     {
       "key": "styleguide/Collapsable/expand",
-      "value": "Mehr lesen"
+      "value": "Alles lesen"
     },
     {
       "key": "styleguide/Collapsable/collapse",
-      "value": "Weniger lesen"
+      "value": "Weniger"
     },
     {
       "key": "styleguide/Collapsable/table/expand",
@@ -1561,8 +1561,12 @@
       "value": "Antwort in {link}"
     },
     {
-      "key": "styleguide/CommentTreeLoadMore/label",
-      "value": "Weitere Beiträge anzeigen"
+      "key": "styleguide/CommentTreeLoadMore/label/1",
+      "value": "Ein weiterer Kommentar"
+    },
+    {
+      "key": "styleguide/CommentTreeLoadMore/label/other",
+      "value": "{count} weitere Kommentare"
     },
     {
       "key": "styleguide/CommentTreeCollapse/label",

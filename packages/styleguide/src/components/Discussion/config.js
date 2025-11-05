@@ -2,8 +2,8 @@
  * The size of each indent. Note that this is the total size including
  * the width of the vertical line.
  */
-export const indentSizeS = 14
-export const indentSizeM = 18
+export const indentSizeS = 10
+export const indentSizeM = 16
 
 /**
  * The width of the vertical line.

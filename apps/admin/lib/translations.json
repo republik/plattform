@@ -1612,7 +1612,7 @@
     },
     {
       "key": "styleguide/CommentActions/unpublish",
-      "value": "zurückziehen"
+      "value": "Beitrag zurückziehen"
     },
     {
       "key": "styleguide/CommentActions/unpublish/confirm",
@@ -1675,8 +1675,12 @@
       "value": "Zum Beitrag"
     },
     {
-      "key": "styleguide/CommentTreeLoadMore/label",
-      "value": "Weitere Beiträge anzeigen"
+      "key": "styleguide/CommentTreeLoadMore/label/1",
+      "value": "Ein weiterer Beitrag"
+    },
+    {
+      "key": "styleguide/CommentTreeLoadMore/label/other",
+      "value": "{count} weitere Beiträge"
     },
     {
       "key": "styleguide/CommentTreeCollapse/label",
@@ -2846,6 +2850,7 @@
       "key": "events/labels/location",
       "value": "Wo"
     },
+
     {
       "key": "faq/pageTitle",
       "value": "Fragen – Republik"
@@ -4727,14 +4732,12 @@
       "key": "account/access/Events/details/show",
       "value": "Events anzeigen"
     },
+
     {
       "key": "account/MagazineSubscription/status/trialing",
       "value": "trialing"
     },
-    {
-      "key": "account/MagazineSubscription/status/active",
-      "value": "Aktiv"
-    },
+    { "key": "account/MagazineSubscription/status/active", "value": "Aktiv" },
     {
       "key": "account/MagazineSubscription/status/incomplete",
       "value": "Unvollständig"
@@ -4763,10 +4766,7 @@
       "key": "account/MagazineSubscription/status/overdue",
       "value": "Überfällig"
     },
-    {
-      "key": "account/MagazineSubscription/status/ended",
-      "value": "Geendet"
-    },
+    { "key": "account/MagazineSubscription/status/ended", "value": "Geendet" },
     {
       "key": "account/MagazineSubscription/type/MONTHLY_SUBSCRIPTION",
       "value": "Monats-Abo"

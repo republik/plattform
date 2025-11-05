@@ -1,16 +1,15 @@
-import { IconCheck } from '@republik/icons'
-import { css } from 'glamor'
-import { Pencil } from 'lucide-react'
-import PropTypes, { InferProps } from 'prop-types'
 import React, { useMemo } from 'react'
-import { ellipsize } from '../../../../lib/styleMixins'
-import { useColorContext } from '../../../Colors/ColorContext'
+import { css } from 'glamor'
 import {
   sansSerifMedium16,
   sansSerifRegular14,
 } from '../../../Typography/styles'
+import { ellipsize } from '../../../../lib/styleMixins'
 import { convertStyleToRem, pxToRem } from '../../../Typography/utils'
+import { useColorContext } from '../../../Colors/ColorContext'
+import PropTypes, { InferProps } from 'prop-types'
 import { DisplayAuthorPropType } from '../PropTypes'
+import { IconCheck, IconEditCircle } from '@republik/icons'
 
 const buttonStyle = {
   background: 'none',
@@ -194,7 +193,7 @@ export const Header = ({
         />
         {onClick && (
           <div {...styles.action} {...colorScheme.set('color', 'primary')}>
-            <Pencil size={16} />
+            <IconEditCircle size={24} />
           </div>
         )}
       </div>

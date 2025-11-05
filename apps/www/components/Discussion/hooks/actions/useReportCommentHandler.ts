@@ -1,6 +1,8 @@
+import { useMe } from './../../../../lib/context/MeContext'
+import { toRejectedString } from '../../graphql/utils'
 import { useMutation } from '@apollo/client'
 import { REPORT_COMMENT_MUTATION } from '../../graphql/documents'
-import { toRejectedString } from '../../graphql/utils'
+import { useLocalCommentReports } from '../../helpers/useLocalCommentReports'
 
 export type ReportCommentHandler = (
   commentId: string,
@@ -9,6 +11,10 @@ export type ReportCommentHandler = (
 
 function useReportCommentHandler(): ReportCommentHandler {
   const [reportCommentMutation] = useMutation(REPORT_COMMENT_MUTATION)
+  const { me } = useMe()
+  const { addLocalCommentReport } = useLocalCommentReports()
+
+  // TODO: if guest store the reported comments in local storage for 30 days
 
   function reportCommentHandler(commentId, description) {
     return reportCommentMutation({
@@ -18,6 +24,9 @@ function useReportCommentHandler(): ReportCommentHandler {
       },
     })
       .then((res) => {
+        if (!me) {
+          addLocalCommentReport(commentId)
+        }
         return res
       })
 

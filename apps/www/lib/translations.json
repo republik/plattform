@@ -2030,7 +2030,7 @@
     },
     {
       "key": "styleguide/CommentActions/unpublish",
-      "value": "zurückziehen"
+      "value": "Beitrag zurückziehen"
     },
     {
       "key": "styleguide/CommentActions/unpublish/confirm",
@@ -2042,7 +2042,7 @@
     },
     {
       "key": "styleguide/CommentActions/edit",
-      "value": "bearbeiten"
+      "value": "Beitrag bearbeiten"
     },
     {
       "key": "styleguide/CommentActions/upvote",
@@ -2098,7 +2098,7 @@
     },
     {
       "key": "styleguide/CommentActions/feature",
-      "value": "hervorheben"
+      "value": "Beitrag hervorheben"
     },
     {
       "key": "styleguide/CommentActions/featured",
@@ -2106,11 +2106,11 @@
     },
     {
       "key": "styleguide/Collapsable/expand",
-      "value": "Mehr lesen"
+      "value": "Alles lesen"
     },
     {
       "key": "styleguide/Collapsable/collapse",
-      "value": "Weniger lesen"
+      "value": "Weniger"
     },
     {
       "key": "styleguide/Collapsable/table/expand",
@@ -2141,8 +2141,12 @@
       "value": "Antwort in {link}"
     },
     {
-      "key": "styleguide/CommentTreeLoadMore/label",
-      "value": "Weitere Beiträge anzeigen"
+      "key": "styleguide/CommentTreeLoadMore/label/1",
+      "value": "Ein weiterer Beitrag"
+    },
+    {
+      "key": "styleguide/CommentTreeLoadMore/label/other",
+      "value": "{count} weitere Beiträge"
     },
     {
       "key": "styleguide/CommentTreeCollapse/label",
@@ -7445,7 +7449,7 @@
     },
     {
       "key": "FeatureCommentOverlay/title",
-      "value": "hervorheben"
+      "value": "Beitrag hervorheben"
     },
     {
       "key": "FeatureCommentOverlay/DEFAULT/add",

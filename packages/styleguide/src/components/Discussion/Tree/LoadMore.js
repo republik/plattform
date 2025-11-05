@@ -1,12 +1,12 @@
-import { css } from 'glamor'
-import PropTypes from 'prop-types'
 import React, { useMemo, useState } from 'react'
-import { usePrevious } from '../../../lib/usePrevious'
-import { useColorContext } from '../../Colors/ColorContext'
-import BabySpinner from '../../Spinner/BabySpinner'
+import PropTypes from 'prop-types'
+import { css } from 'glamor'
 
 import { sansSerifRegular14 } from '../../Typography/styles'
+import { usePrevious } from '../../../lib/usePrevious'
 import { convertStyleToRem, pxToRem } from '../../Typography/utils'
+import { useColorContext } from '../../Colors/ColorContext'
+import BabySpinner from '../../Spinner/BabySpinner'
 
 const styles = {
   root: css({
@@ -103,7 +103,7 @@ export const LoadMore1 = ({ t, alternative, count, onClick }) => {
       }}
     >
       <span>
-        {t('styleguide/CommentTreeLoadMore/label')} ({count})
+        {t.pluralize('styleguide/CommentTreeLoadMore/label', { count })}
         {showSpinner && (
           <span
             style={{

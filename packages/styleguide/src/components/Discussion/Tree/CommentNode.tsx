@@ -1,13 +1,23 @@
-import { css, merge } from 'glamor'
 import React, { useMemo } from 'react'
-import { mUp } from '../../../theme/mediaQueries'
-import { useColorContext } from '../../Colors/ColorContext'
 import * as config from '../config'
+import { useColorContext } from '../../Colors/ColorContext'
+import { css, merge } from 'glamor'
 import * as Comment from '../Internal/Comment'
-import { ActionMenuItem } from '../Internal/Comment/ActionsMenu'
 import { CommentActions } from '../Internal/Comment/CommentActions'
+import { mUp } from '../../../theme/mediaQueries'
+import { COLLAPSE_WRAPPER_CLASSNAME } from '../Internal/Comment'
 import { Header } from '../Internal/Comment/Header'
 import { LoadMore } from './LoadMore'
+import { ActionMenuItem } from '../Internal/Comment/ActionsMenu'
+
+const buttonStyle = {
+  display: 'block',
+  background: 'transparent',
+  border: 'none',
+  cursor: 'pointer',
+  outline: 'none',
+  padding: 0,
+}
 
 const styles = {
   highlightContainer: css({
@@ -29,25 +39,47 @@ const styles = {
     marginBottom: 15,
   }),
   hiddenToggle: css({ display: 'none' }),
-  root: ({ nestLimitExceeded, depth }) =>
+  commentWrapper: ({ isExpanded }) =>
+    css({
+      /*
+       * On larger screens, hide the action button and reveal only on hover.
+       */
+      [mUp]: isExpanded && {
+        [`& .${COLLAPSE_WRAPPER_CLASSNAME}`]: {
+          visibility: 'hidden',
+        },
+        '@media(hover)': {
+          [`:hover .${COLLAPSE_WRAPPER_CLASSNAME}`]: {
+            visibility: 'visible',
+          },
+        },
+      },
+      // In case device doesn't support hover
+      '@media(hover:none)': {
+        [`& .${COLLAPSE_WRAPPER_CLASSNAME}`]: {
+          visibility: 'visible',
+        },
+      },
+    }),
+  root: ({ isExpanded, nestLimitExceeded, depth }) =>
     css({
       background: 'transparent',
       position: 'relative',
-      margin: `48px 0 ${24 + (depth === 0 ? 20 : 0)}px`,
+      margin: `10px 0 ${(isExpanded ? 24 : 16) + (depth === 0 ? 20 : 0)}px`,
       paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeS,
-      borderBottomWidth: depth === 0 ? 1 : 0,
-      borderBottomStyle: 'solid',
-      paddingBottom: depth === 0 ? 48 : 0,
       [mUp]: {
         paddingLeft: nestLimitExceeded || depth < 1 ? 0 : config.indentSizeM,
       },
     }),
-  verticalToggle: ({ depth, isLast }) =>
+  verticalToggle: ({ drawLineEnd, depth, isExpanded, isLast }) =>
     css({
+      ...buttonStyle,
       position: 'absolute',
-      top: -24,
+      top: 0,
       left: -((config.indentSizeS - config.verticalLineWidth) / 2),
-      bottom: -(depth === 1 && !isLast ? 48 : 24),
+      bottom:
+        (drawLineEnd ? 20 : 0) -
+        (depth === 1 && !isLast ? (isExpanded ? 24 : 16) : 0),
       width: config.indentSizeS,
 
       [mUp]: {
@@ -66,6 +98,23 @@ const styles = {
           left: (config.indentSizeM - config.verticalLineWidth) / 2,
         },
       },
+      ...(drawLineEnd
+        ? {
+            '::after': {
+              display: 'block',
+              content: '""',
+              position: 'absolute',
+              width: `${config.verticalLineWidth + 2 * 2}px`,
+              height: `${config.verticalLineWidth + 2 * 2}px`,
+              bottom: -2 - config.verticalLineWidth / 2,
+              borderRadius: '100%',
+              left: (config.indentSizeS - config.verticalLineWidth) / 2 - 2,
+              [mUp]: {
+                left: (config.indentSizeM - config.verticalLineWidth) / 2 - 2,
+              },
+            },
+          }
+        : {}),
     }),
   menuWrapper: css({
     display: 'flex',
@@ -82,6 +131,8 @@ const MockLink = (props) => <>{props.children}</>
 type CommentUIProps = {
   t: any
   comment: any
+  isExpanded: boolean
+  onToggle?: () => void
   tagText?: string
   menuItems?: ActionMenuItem[]
   CommentLink?: React.ElementType
@@ -92,15 +143,19 @@ type CommentUIProps = {
 export const CommentUI = ({
   t,
   comment,
+  isExpanded,
+  onToggle,
   menuItems,
   CommentLink = MockLink,
   isPreview = false,
   isHighlighted = false,
 }: CommentUIProps) => (
-  <div>
+  <div {...styles.commentWrapper({ isExpanded })}>
     <Header
       t={t}
       comment={comment}
+      isExpanded={isExpanded}
+      onToggle={onToggle}
       menuItems={menuItems}
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -131,7 +186,6 @@ export type CommentProps<CommentType = any> = {
     handleShare: (comment: CommentType) => Promise<unknown>
     handleReply: () => void
     handleLoadReplies: () => Promise<unknown>
-    handleReport: (commentId: string, message: string) => unknown
   }
   voteActions?: {
     handleUpVote: (commentId: string) => Promise<unknown>
@@ -173,51 +227,74 @@ const CommentNode = ({
   const isRoot = depth === 0
 
   const root = React.useRef(null)
+  const [isExpanded, setExpanded] = React.useState(true)
   const [colorScheme] = useColorContext()
 
+  /*
+   * This is an experiment to draw end points at the vertical toggle lines.
+   */
+  const drawLineEnd = false
+
   const rootStyle = styles.root({
+    isExpanded,
     nestLimitExceeded,
     depth,
   })
   const verticalToggleStyle =
-    !isRoot && styles.verticalToggle({ depth, isLast })
+    !isRoot && styles.verticalToggle({ isExpanded, depth, drawLineEnd, isLast })
   const verticalToggleStyleRules = useMemo(
     () =>
       css({
         '::before': { background: colorScheme.getCSSColor('divider') },
+        '@media (hover)': {
+          ':hover::before': {
+            background: colorScheme.getCSSColor('primary'),
+          },
+          ':hover::after': {
+            background: drawLineEnd
+              ? colorScheme.getCSSColor('primary')
+              : 'none',
+          },
+        },
+        '::after': {
+          background: drawLineEnd ? colorScheme.getCSSColor('divider') : 'none',
+        },
       }),
-    [colorScheme],
+    [colorScheme, drawLineEnd],
   )
 
-  return (
-    <div
-      ref={root}
-      data-comment-id={id}
-      {...rootStyle}
-      {...colorScheme.set('borderColor', 'divider')}
-    >
-      {!nestLimitExceeded && verticalToggleStyle && (
-        <div {...verticalToggleStyle} {...verticalToggleStyleRules} />
-      )}
-      <div
-        {...merge(
-          isHighlighted && styles.highlightContainer,
-          isHighlighted && colorScheme.set('backgroundColor', 'alert'),
-        )}
-      >
-        {editComposer ? (
-          editComposer
-        ) : (
-          <CommentUI
-            t={t}
-            comment={comment}
-            isHighlighted={isHighlighted}
-            menuItems={menuItems}
-            CommentLink={CommentLink}
+  if (isExpanded) {
+    return (
+      <div ref={root} data-comment-id={id} {...rootStyle}>
+        {!nestLimitExceeded && verticalToggleStyle && (
+          <button
+            {...verticalToggleStyle}
+            {...verticalToggleStyleRules}
+            onClick={() => setExpanded((prev) => !prev)}
           />
         )}
+        <div
+          {...merge(
+            isHighlighted && styles.highlightContainer,
+            isHighlighted && colorScheme.set('backgroundColor', 'alert'),
+          )}
+        >
+          {editComposer ? (
+            editComposer
+          ) : (
+            <CommentUI
+              t={t}
+              comment={comment}
+              isExpanded={isExpanded}
+              isHighlighted={isHighlighted}
+              onToggle={() => {
+                setExpanded((prev) => !prev)
+              }}
+              menuItems={menuItems}
+              CommentLink={CommentLink}
+            />
+          )}
 
-        {comment?.text && (
           <CommentActions
             t={t}
             comment={comment}
@@ -226,23 +303,44 @@ const CommentNode = ({
             userCanComment={userCanComment}
             userWaitUntil={userWaitUntil}
           />
-        )}
-      </div>
-      {children}
-      <LoadMore
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        t={t}
-        visualDepth={0}
-        count={
+        </div>
+        {children}
+        <LoadMore
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          comment?.comments?.directTotalCount - comment.comments.nodes.length
-        }
-        onClick={actions.handleLoadReplies}
-      />
-    </div>
-  )
+          t={t}
+          visualDepth={0}
+          count={
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            comment?.comments?.directTotalCount - comment.comments.nodes.length
+          }
+          onClick={actions.handleLoadReplies}
+        />
+      </div>
+    )
+  } else {
+    return (
+      <div ref={root} data-comment-id={id} {...rootStyle}>
+        {verticalToggleStyle && (
+          <button
+            {...verticalToggleStyle}
+            onClick={() => setExpanded((prev) => !prev)}
+          />
+        )}
+        <Comment.Header
+          t={t}
+          comment={comment}
+          isExpanded={isExpanded}
+          onToggle={() => setExpanded((prev) => !prev)}
+          menuItems={menuItems}
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          CommentLink={CommentLink}
+        />
+      </div>
+    )
+  }
 }
 
 export default CommentNode

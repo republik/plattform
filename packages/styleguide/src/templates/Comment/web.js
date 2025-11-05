@@ -1,18 +1,19 @@
+import createCommentSchema from './schema'
+
 import {
   CommentBodyBlockCode,
   CommentBodyBlockQuote,
   CommentBodyBlockQuoteNested,
   CommentBodyBlockQuoteParagraph,
   CommentBodyCode,
-  CommentBodyContainer,
   CommentBodyDefinition,
+  CommentBodyContainer,
   CommentBodyHeading,
   CommentBodyList,
   CommentBodyListItem,
   CommentBodyParagraph,
 } from '../../components/CommentBody'
 import { Editorial } from '../../components/Typography'
-import createCommentSchema from './schema'
 
 const createCommentWebSchema = ({ ...args } = {}) => {
   return createCommentSchema({
