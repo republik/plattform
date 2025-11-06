@@ -27,6 +27,7 @@ export async function processCheckoutCompleted(
         new PaymentService(),
         new SubscriptionService(ctx.pgdb),
         new CustomerInfoService(ctx.pgdb),
+        new InvoiceService(ctx.pgdb),
         new UpgradeService(ctx.pgdb, ctx.logger),
         ctx.logger.child(
           { eventId: event.id },

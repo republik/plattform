@@ -7,7 +7,11 @@ import { UpgradeService } from '../services/UpgradeService'
 import { Logger } from '@orbiting/backend-modules-types'
 import { Upgrade } from '../database/SubscriptionUpgradeRepo'
 import { UpgradeNotifierArgs } from '../email-notifiers/UpgradeSetupEmail'
-import { REPUBLIK_PAYMENTS_INTERNAL_REF as INTERNAL_REF } from '../constants'
+import {
+  REPUBLIK_PAYMENTS_INTERNAL_REF as INTERNAL_REF,
+  REPUBLIK_PAYMENTS_ORDER_REF as ORDER_REF,
+} from '../constants'
+import { InvoiceService } from '../services/InvoiceService'
 
 export class SetupWorkflow
   implements PaymentWorkflow<Stripe.CheckoutSessionCompletedEvent>
@@ -16,6 +20,7 @@ export class SetupWorkflow
     private readonly paymentService: PaymentService,
     private readonly subscriptionService: SubscriptionService,
     private readonly customerInfoService: CustomerInfoService,
+    private readonly invoiceService: InvoiceService,
     private readonly upgradeService: UpgradeService,
     private readonly logger: Logger,
     private readonly notifiers: Record<
@@ -35,6 +40,13 @@ export class SetupWorkflow
       if (!upgradeRef || !upgradeRef.upgradeId) {
         throw new Error('Upgrade ref missing')
       }
+
+      await this.invoiceService.updateOrder(
+        { externalId: event.data.object.id },
+        {
+          status: 'paid',
+        },
+      )
 
       const res = await this.upgradeService.nonInteractiveSubscriptionUpgrade(
         upgradeRef?.upgradeId,
@@ -56,10 +68,14 @@ export class SetupWorkflow
 
   private getUpgradeRef(metadata: Stripe.Metadata | null): {
     upgradeId: string
+    orderId: string
   } | null {
     if (!metadata) return null
 
-    return { upgradeId: metadata[INTERNAL_REF] }
+    return {
+      upgradeId: metadata[INTERNAL_REF],
+      orderId: metadata[ORDER_REF],
+    }
   }
 
   private async runNotifieres(

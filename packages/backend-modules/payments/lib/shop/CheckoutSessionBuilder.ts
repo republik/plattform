@@ -21,6 +21,7 @@ import { randomUUID } from 'node:crypto'
 import { InvoiceService } from '../services/InvoiceService'
 import {
   REPUBLIK_PAYMENTS_INTERNAL_REF as INTERNAL_REF,
+  REPUBLIK_PAYMENTS_ORDER_REF as ORDER_REF,
   REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN as SUBSCRIPTION_ORIGIN,
   REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN_TYPE_UPGRADE as ORIGIN_UPGRADE,
 } from '../constants'
@@ -235,7 +236,7 @@ export class CheckoutSessionBuilder {
       ...metadata,
       ...this.offer.metaData,
       ...couponMeta,
-      'republik:payments:order:id': orderId,
+      [ORDER_REF]: orderId,
     }
 
     const config: Stripe.Checkout.SessionCreateParams = {
@@ -303,7 +304,7 @@ export class CheckoutSessionBuilder {
       ...this.offer.metaData,
       ...couponMeta,
       [SUBSCRIPTION_ORIGIN]: ORIGIN_UPGRADE,
-      'republik:payments:order:id': orderId,
+      [ORDER_REF]: orderId,
     }
 
     const upgradeRef = await this.upgradeService.initializeSubscriptionUpgrade(

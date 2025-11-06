@@ -26,6 +26,7 @@ export const REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN_TYPE_GIFT = 'GIFT'
 export const REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN_TYPE_UPGRADE = 'UPGRADE'
 
 export const REPUBLIK_PAYMENTS_INTERNAL_REF = 'republik:internal:ref'
+export const REPUBLIK_PAYMENTS_ORDER_REF = 'republik:payments:order:id'
 
 export const GIFTS_ENABLED = () =>
   process.env.PAYMENTS_SHOP_GIFTS_ENABLED === 'true'
