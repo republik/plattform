@@ -57,17 +57,20 @@ export class NoticePaymentFailedTransactionalWorker extends BaseWorker<Args> {
 
     const paymentMethod = await paymentService.getPaymentMethodForSubscription(
       job.data.company,
-      event.data.object.subscription as string,
+      event.data.object.parent?.subscription_details?.subscription as string,
     )
 
     try {
       // send transactional
       await mailService.sendNoticePaymentFailedTransactionalMail({
-        subscriptionExternalId: event.data.object.subscription as string,
+        subscriptionExternalId: event.data.object.parent?.subscription_details
+          ?.subscription as string,
         userId: job.data.userId,
         invoiceExternalId: job.data.invoiceExternalId,
-        paymentAttemptDate: parseStripeDate(event.data.object.next_payment_attempt),
-        paymentMethod: paymentMethod || undefined
+        paymentAttemptDate: parseStripeDate(
+          event.data.object.next_payment_attempt,
+        ),
+        paymentMethod: paymentMethod || undefined,
       })
     } catch (e) {
       this.logger.error(

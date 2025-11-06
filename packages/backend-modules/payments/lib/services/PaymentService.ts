@@ -1,6 +1,67 @@
 import Stripe from 'stripe'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { Company, PaymentMethod } from '../types'
+import { LineItem } from '../shop/CheckoutSessionBuilder'
+import {
+  REPUBLIK_PAYMENTS_INTERNAL_REF as INTERNAL_REF,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN as SUBSCRIPTION_ORIGIN,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN_TYPE_UPGRADE as ORIGIN_UPGRADE,
+} from '../constants'
+
+type Discount = {
+  coupon?: string
+  discount?: string
+  promo_code?: string
+}
+
+type Recurring = Stripe.PriceCreateParams.Recurring
+
+export type Item =
+  | {
+      price: string
+      price_data?: never
+      quantity: number
+      discounts?: Discount[]
+    }
+  | {
+      price?: never
+      price_data: {
+        unit_amount: number
+        product: string
+        recurring: Recurring
+        currency: 'CHF'
+      }
+      quantity: number
+      discounts?: Discount[]
+    }
+
+export type OnetimeItem =
+  | {
+      price: string
+      price_data?: never
+      quantity: number
+      discounts?: Discount[]
+    }
+  | {
+      price?: never
+      price_data: {
+        unit_amount: number
+        product: string
+        currency: 'CHF'
+      }
+      quantity: number
+      discounts?: Discount[]
+    }
+
+export type ScheduleSubscriptionArgs = {
+  internalRef: string
+  items: Item[]
+  add_invoice_items?: LineItem[]
+  collectionMethod: 'send_invoice' | 'charge_automatically'
+  discounts: Stripe.SubscriptionScheduleCreateParams.Phase.Discount[]
+  startDate: number
+  metadata?: Record<string, string | number | null>
+}
 
 export class PaymentService {
   #stripeAdapters: Record<Company, Stripe> = {
@@ -75,31 +136,7 @@ export class PaymentService {
 
     const paymentMethod = await this.getPaymentMethod(company, paymentMethodId)
 
-    if (!paymentMethod) {
-      return null
-    }
-
-    if (paymentMethod.card) {
-      return {
-        id: paymentMethodId,
-        method: this.capitalize(paymentMethod.card.brand),
-        last4: paymentMethod.card.last4,
-      }
-    }
-
-    if (paymentMethod.paypal) {
-      return {
-        id: paymentMethodId,
-        method: 'Paypal',
-      }
-    }
-
-    if (paymentMethod.twint) {
-      return {
-        id: paymentMethodId,
-        method: 'Twint',
-      }
-    }
+    return this.formatPaymentMethodResult(paymentMethod)
   }
 
   async getSubscription(company: Company, id: string) {
@@ -126,6 +163,45 @@ export class PaymentService {
         subscription: id,
       })
     ).data
+  }
+
+  async getScheduledSubscriptionInvoicePreview(company: Company, id: string) {
+    return this.#stripeAdapters[company].invoices.createPreview({
+      schedule: id,
+      expand: ['discounts'],
+    })
+  }
+
+  async scheduleSubscription(
+    company: Company,
+    customerId: string,
+    options: ScheduleSubscriptionArgs,
+  ) {
+    return this.#stripeAdapters[company].subscriptionSchedules.create({
+      customer: customerId,
+      start_date: options.startDate,
+      end_behavior: 'release',
+      phases: [
+        {
+          items: options.items,
+          iterations: 1,
+          add_invoice_items: options.add_invoice_items,
+          discounts: options.discounts,
+          collection_method: options.collectionMethod,
+          metadata: {
+            ...options.metadata,
+            [SUBSCRIPTION_ORIGIN]: ORIGIN_UPGRADE,
+            [INTERNAL_REF]: options.internalRef,
+          },
+        },
+      ],
+    })
+  }
+
+  async cancelScheduleSubscription(company: Company, scheduleId: string) {
+    return this.#stripeAdapters[company].subscriptionSchedules.cancel(
+      scheduleId,
+    )
   }
 
   async createSubscriptionItem(
@@ -189,20 +265,37 @@ export class PaymentService {
     return prices.data
   }
 
+  async getPrice(company: Company, id: string): Promise<Stripe.Price | null> {
+    const price = await this.#stripeAdapters[company].prices.retrieve(id)
+
+    return price
+  }
+
   async getInvoice(company: Company, id: string) {
     const invoice = await this.#stripeAdapters[company].invoices.retrieve(id, {
-      expand: ['discounts', 'charge'],
+      expand: [
+        'discounts',
+        'payments.data.payment.charge',
+        'payments.data.payment.payment_intent',
+      ],
     })
 
     return invoice ? invoice : null
   }
 
-  async getInvoicePreview(company: Company, subId: string) {
+  async getSubscriptionInvoicePreview(company: Company, subId: string) {
     const invoice = await this.#stripeAdapters[company].invoices.createPreview({
       subscription: subId,
     })
 
     return invoice ? invoice : null
+  }
+
+  async getInvoicePreview(
+    company: Company,
+    params: Stripe.InvoiceCreatePreviewParams,
+  ) {
+    return this.#stripeAdapters[company].invoices.createPreview(params)
   }
 
   async getCharge(company: Company, id: string) {
@@ -260,6 +353,38 @@ export class PaymentService {
       signature,
       secret,
     )
+  }
+
+  formatPaymentMethodResult(
+    paymentMethod: Stripe.PaymentMethod | null,
+  ): PaymentMethod | null {
+    if (!paymentMethod) {
+      return null
+    }
+
+    if (paymentMethod.card) {
+      return {
+        id: paymentMethod.id,
+        method: this.capitalize(paymentMethod.card.brand),
+        last4: paymentMethod.card.last4,
+      }
+    }
+
+    if (paymentMethod.paypal) {
+      return {
+        id: paymentMethod.id,
+        method: 'Paypal',
+      }
+    }
+
+    if (paymentMethod.twint) {
+      return {
+        id: paymentMethod.id,
+        method: 'Twint',
+      }
+    }
+
+    return null
   }
 
   capitalize(str: string): string {

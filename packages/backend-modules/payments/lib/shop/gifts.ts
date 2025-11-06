@@ -6,29 +6,22 @@ import { CrockfordBase32 } from 'crockford-base32'
 import { ProjectRStripe, RepublikAGStripe } from '../providers/stripe'
 import { CustomerRepo } from '../database/CutomerRepo'
 import { activeOffers } from './offers'
-import { Shop } from './Shop'
 import dayjs from 'dayjs'
 import { GiftVoucherRepo } from '../database/GiftVoucherRepo'
 import createLogger from 'debug'
 import { getConfig } from '../config'
 import { parseStripeDate } from '../handlers/stripe/utils'
 import { CustomerInfoService } from '../services/CustomerInfoService'
+import { Logger } from '@orbiting/backend-modules-types'
+import { OfferService } from '../services/OfferService'
+import { Item, PaymentService } from '../services/PaymentService'
+import { GiftAlreadyAppliedError, GiftNotApplicableError } from '../errors'
+import {
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES,
+} from '../constants'
 
 const logger = createLogger('payments:gifts')
-
-export class GiftNotApplicableError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'api/gifts/error/gift_not_applicable'
-  }
-}
-
-export class GiftAlreadyAppliedError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'api/gifts/error/gift_already_applied'
-  }
-}
 
 export type ApplyGiftResult = {
   id?: string
@@ -100,12 +93,6 @@ const GIFTS: Gift[] = [
   },
 ]
 
-export const REPUBLIK_PAYMENTS_SUBSCRIPTION_REPLACES =
-  'republik.subscription.replaces'
-
-export const REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN =
-  'republik.subscription.origin'
-
 export const REPUBLIK_PAYMENTS_CANCEL_REASON = 'republik.system.cancel-reason'
 
 export class GiftShop {
@@ -116,11 +103,15 @@ export class GiftShop {
     REPUBLIK: RepublikAGStripe,
   }
   #customerInfoService: CustomerInfoService
+  #offerService: OfferService
+  #paymentService: PaymentService
 
-  constructor(pgdb: PgDb) {
+  constructor(pgdb: PgDb, _logger: Logger) {
     this.#pgdb = pgdb
     this.#giftRepo = new GiftVoucherRepo(pgdb)
     this.#customerInfoService = new CustomerInfoService(this.#pgdb)
+    this.#offerService = new OfferService(activeOffers())
+    this.#paymentService = new PaymentService()
   }
 
   async generateNewVoucher({
@@ -271,17 +262,14 @@ export class GiftShop {
     const cRepo = new CustomerRepo(this.#pgdb)
 
     const customerId = await this.getCustomerId(cRepo, gift.company, userId)
-
-    const shop = new Shop(activeOffers())
-    const offer = shop.isValidOffer(gift.offer)
-    const lineItems = await shop.genLineItems(offer)
+    const lineItems = await this.buildGiftItems({ offerId: gift.offer })
 
     const subscription = await this.#stripeAdapters[
       gift.company
     ].subscriptions.create({
       customer: customerId,
       items: lineItems,
-      coupon: gift.coupon,
+      discounts: [{ coupon: gift.coupon }],
       collection_method: 'send_invoice',
       days_until_due: 14,
       metadata: {
@@ -294,7 +282,7 @@ export class GiftShop {
         subscription.latest_invoice.toString(),
       )
     }
-    return { aboType: offer.id, company: gift.company, starting: new Date() }
+    return { aboType: gift.offer, company: gift.company, starting: new Date() }
   }
 
   private async applyGiftToMembershipAbo(
@@ -357,23 +345,26 @@ export class GiftShop {
         const sub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
           stripeId,
           {
-            coupon: gift.coupon,
+            discounts: [{ coupon: gift.coupon }],
             cancel_at_period_end: false, // if a subscription is canceled we need to uncancel it.
           },
         )
+
+        // TODO!: ensure that this is the period of the magazine subscription
+        const current_period_end = sub.items.data[0].current_period_end
+
         return {
           id: membershipId,
           aboType: 'MONLTY_ABO',
           company: 'REPUBLIK',
-          starting: parseStripeDate(sub.current_period_end),
+          starting: parseStripeDate(current_period_end),
         }
       }
       case 'PROJECT_R': {
         const cRepo = new CustomerRepo(this.#pgdb)
         const customerId = await this.getCustomerId(cRepo, 'PROJECT_R', userId)
 
-        const shop = new Shop(activeOffers())
-        const offer = shop.isValidOffer(gift.offer)
+        this.#offerService.isValidOffer(gift.offer)
 
         const tx = await this.#pgdb.transactionBegin()
 
@@ -404,17 +395,21 @@ export class GiftShop {
           stripeId,
         )
 
-        const lineItems = await shop.genLineItems(offer)
+        const lineItems = await this.buildGiftItems({ offerId: gift.offer })
+
+        // TODO!: ensure that this is the period of the magazine subscription
+        const current_period_end = oldSub.items.data[0].current_period_end
+
         // create new subscription starting at the end period of the old one
         await this.#stripeAdapters.PROJECT_R.subscriptionSchedules.create({
           customer: customerId,
-          start_date: oldSub.current_period_end,
+          start_date: current_period_end,
           phases: [
             {
               items: lineItems,
               iterations: 1,
               collection_method: 'send_invoice',
-              coupon: gift.coupon,
+              discounts: [{ coupon: gift.coupon }],
               invoice_settings: {
                 days_until_due: 14,
               },
@@ -425,11 +420,12 @@ export class GiftShop {
             },
           ],
         })
+
         return {
           id: membershipId,
           aboType: 'YEARLY_SUBSCRIPION',
           company: 'PROJECT_R',
-          starting: parseStripeDate(oldSub.current_period_end),
+          starting: parseStripeDate(current_period_end),
         }
       }
     }
@@ -443,10 +439,7 @@ export class GiftShop {
     const customerId = await this.getCustomerId(cRepo, gift.company, userId)
     const endDate = await this.getMembershipEndDate(this.#pgdb, id)
 
-    const shop = new Shop(activeOffers())
-
-    const offer = shop.isValidOffer(gift.offer)
-    const lineItems = await shop.genLineItems(offer)
+    const lineItems = await this.buildGiftItems({ offerId: gift.offer })
 
     await this.#stripeAdapters[gift.company].subscriptionSchedules.create({
       customer: customerId,
@@ -456,7 +449,7 @@ export class GiftShop {
           items: lineItems,
           iterations: 1,
           collection_method: 'send_invoice',
-          coupon: gift.coupon,
+          discounts: [{ coupon: gift.coupon }],
           invoice_settings: {
             days_until_due: 14,
           },
@@ -498,15 +491,17 @@ export class GiftShop {
         const sub = await this.#stripeAdapters.PROJECT_R.subscriptions.update(
           stripeId,
           {
-            coupon: gift.coupon,
+            discounts: [{ coupon: gift.coupon }],
             cancel_at_period_end: false, // if a subscription is canceled we need to uncancel it.
           },
         )
+        // TODO!: ensure that this is the period of the magazine subscription
+        const current_period_end = sub.items.data[0].current_period_end
         return {
           id: id,
           aboType: 'YEARLY',
           company: 'PROJECT_R',
-          starting: parseStripeDate(sub.current_period_end),
+          starting: parseStripeDate(current_period_end),
         }
       }
       case 'REPUBLIK': {
@@ -542,15 +537,18 @@ export class GiftShop {
         const sub = await this.#stripeAdapters.REPUBLIK.subscriptions.update(
           stripeId,
           {
-            coupon: gift.coupon,
+            discounts: [{ coupon: gift.coupon }],
             cancel_at_period_end: false, // if a subscription is canceled we need to uncancel it.
           },
         )
+
+        // TODO!: ensure that this is the period of the magazine subscription
+        const current_period_end = sub.items.data[0].current_period_end
         return {
           id: subScriptionId,
           aboType: 'MONLTY',
           company: 'REPUBLIK',
-          starting: parseStripeDate(sub.current_period_end),
+          starting: parseStripeDate(current_period_end),
         }
       }
       case 'PROJECT_R': {
@@ -558,9 +556,7 @@ export class GiftShop {
 
         const customerId = await this.getCustomerId(cRepo, 'PROJECT_R', userId)
 
-        const shop = new Shop(activeOffers())
-        const offer = shop.isValidOffer(gift.offer)
-        const lineItems = await shop.genLineItems(offer)
+        const lineItems = await this.buildGiftItems({ offerId: gift.offer })
 
         //cancel old monthly subscription on Republik AG
         const oldSub = await this.cancelSubscriptionForUpgrade(
@@ -568,16 +564,19 @@ export class GiftShop {
           stripeId,
         )
 
+        // TODO!: ensure that this is the period of the magazine subscription
+        const current_period_end = oldSub.items.data[0].current_period_end
+
         // create new subscription starting at the end period of the old one
         await this.#stripeAdapters.PROJECT_R.subscriptionSchedules.create({
           customer: customerId,
-          start_date: oldSub.current_period_end,
+          start_date: current_period_end,
           phases: [
             {
               items: lineItems,
               iterations: 1,
               collection_method: 'send_invoice',
-              coupon: gift.coupon,
+              discounts: [{ coupon: gift.coupon }],
               invoice_settings: {
                 days_until_due: 14,
               },
@@ -591,7 +590,7 @@ export class GiftShop {
         return {
           company: 'PROJECT_R',
           aboType: 'YEARLY_SUBSCRIPION',
-          starting: parseStripeDate(oldSub.current_period_end),
+          starting: parseStripeDate(current_period_end),
         }
       }
     }
@@ -667,7 +666,25 @@ export class GiftShop {
       cancel_at_period_end: true,
     })
   }
+
+  private async buildGiftItems(args: { offerId: string }): Promise<Item[]> {
+    this.#offerService.isValidOffer(args.offerId)
+    const companyName = this.#offerService.getOfferMerchent(args.offerId)
+
+    const lookupKeys = this.#offerService
+      .getOfferItems(args.offerId)
+      .map((i) => i.lookupKey)
+
+    const prices = await this.#paymentService.getPrices(
+      companyName,
+      lookupKeys ?? [],
+    )
+    const items: Item[] = prices.map((p) => ({ price: p.id, quantity: 1 }))
+
+    return items
+  }
 }
+
 function ensureCouponCanBeApplied(
   currentSub: Stripe.Response<Stripe.Subscription>,
   gift: Gift,
