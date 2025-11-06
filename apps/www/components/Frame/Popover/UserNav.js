@@ -126,10 +126,7 @@ const UserNav = () => {
                           </NavLink>
                         )}
                         <NavLink
-                          href={{
-                            pathname: '/angebote',
-                            query: { group: 'GIVE' },
-                          }}
+                          href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/geschenke`}
                           currentPath={currentPath}
                           large
                         >
@@ -137,10 +134,7 @@ const UserNav = () => {
                         </NavLink>
                         <NavLink
                           {...fontStyles.sansSerifLight16}
-                          href={{
-                            pathname: '/angebote',
-                            query: { package: 'DONATE' },
-                          }}
+                          href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/DONATION`}
                           currentPath={currentPath}
                           large
                         >

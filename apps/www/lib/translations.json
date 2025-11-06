@@ -26,7 +26,7 @@
     },
     {
       "key": "nav/donate",
-      "value": "Spenden"
+      "value": "Freiwilliger Beitrag"
     },
     {
       "key": "nav/share",
@@ -1775,6 +1775,10 @@
     {
       "key": "footer/me/give",
       "value": "Verschenken"
+    },
+    {
+      "key": "footer/me/donate",
+      "value": "Freiwilliger Beitrag"
     },
     {
       "key": "footer/me/signOut",

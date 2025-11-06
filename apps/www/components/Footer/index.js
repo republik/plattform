@@ -209,21 +209,22 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
               {!inNativeIOSApp && (
                 <>
                   <li>
+                    <FooterNavLink href={process.env.NEXT_PUBLIC_SHOP_BASE_URL}>
+                      <a {...navLinkStyle}>{t('footer/offers')}</a>
+                    </FooterNavLink>
+                  </li>
+                  <li>
                     <FooterNavLink
-                      href={{
-                        pathname: '/angebote',
-                        query: {
-                          group: hasActiveMembership ? 'GIVE' : undefined,
-                        },
-                      }}
+                      href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/geschenke`}
                     >
-                      <a {...navLinkStyle}>
-                        {t(
-                          hasActiveMembership
-                            ? 'footer/me/give'
-                            : 'footer/offers',
-                        )}
-                      </a>
+                      <a {...navLinkStyle}>{t('footer/me/give')}</a>
+                    </FooterNavLink>
+                  </li>
+                  <li>
+                    <FooterNavLink
+                      href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/DONATION`}
+                    >
+                      <a {...navLinkStyle}>{t('footer/me/donate')}</a>
                     </FooterNavLink>
                   </li>
                   <li>
@@ -319,16 +320,16 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
                   <a {...navLinkStyle}>Komplizen</a>
                 </FooterNavLink>
               </li>
-                <li>
-                  <FooterNavLink href='/etikette'>
-                    <a {...navLinkStyle}>{t('footer/me/etiquette')}</a>
-                  </FooterNavLink>
-                </li>
-                <li>
-                  <FooterNavLink href='/feedback'>
-                    <a {...navLinkStyle}>Feedback</a>
-                  </FooterNavLink>
-                </li>
+              <li>
+                <FooterNavLink href='/etikette'>
+                  <a {...navLinkStyle}>{t('footer/me/etiquette')}</a>
+                </FooterNavLink>
+              </li>
+              <li>
+                <FooterNavLink href='/feedback'>
+                  <a {...navLinkStyle}>Feedback</a>
+                </FooterNavLink>
+              </li>
             </ul>
             <ul {...styles.navList}>
               <li {...colorScheme.set('color', 'textSoft')}>Rechtliches</li>
