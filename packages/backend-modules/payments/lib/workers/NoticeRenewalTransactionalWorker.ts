@@ -57,28 +57,12 @@ export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
     }
 
     const event = wh.payload
-
-    const invoice = await paymentService.getInvoice(
-      job.data.company,
-      event.data.object.id!,
-    )
-
-    if (!invoice) {
-      this.logger.error(
-        {
-          queue: this.queue,
-          jobId: job.id,
-          company: job.data.company,
-          invoiceId: event.data.object.id,
-        },
-        'Error fatching invoice linked to invoice.upcoming',
-      )
-      return await this.pgBoss.fail(this.queue, job.id)
-    }
+    const upcomingInvoice = event.data.object
+    const parent = event.data.object.parent
 
     const paymentMethod = await paymentService.getPaymentMethodForSubscription(
       job.data.company,
-      event.data.object.parent?.subscription_details?.subscription as string,
+      parent?.subscription_details?.subscription as string,
     )
 
     try {
@@ -86,13 +70,13 @@ export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
       await mailService.sendNoticeSubscriptionRenewalTransactionalMail({
         userId: job.data.userId,
         subscriptionId: job.data.subscriptionId,
-        isDiscounted: !!invoice.total_discount_amounts?.length,
-        withDonation: !!invoice.lines.data.filter(
+        isDiscounted: !!upcomingInvoice.total_discount_amounts?.length,
+        withDonation: !!upcomingInvoice.lines.data.filter(
           (line) =>
             line.pricing?.price_details?.product ===
             PROJECT_R_DONATION_PRODUCT_ID,
         ).length,
-        amount: invoice.amount_due,
+        amount: upcomingInvoice.amount_due,
         paymentAttemptDate: parseStripeDate(
           event.data.object.next_payment_attempt,
         ),

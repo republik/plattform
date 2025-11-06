@@ -26,18 +26,9 @@ export class InvoiceUpcomingWorkflow
       return
     }
 
-    const stripeInvoiceId = event.data.object.id!
-
-    const i = await this.paymentService.getInvoice(company, stripeInvoiceId)
-
-    if (!i) {
-      console.error(`unknown invoice ${stripeInvoiceId}`)
-      return
-    }
-
-    const customerId = i.customer as string
-    const externalSubscriptionId = i.parent!.subscription_details!
-      .subscription! as string
+    const customerId = event.data.object.customer as string
+    const externalSubscriptionId = event.data.object.parent!
+      .subscription_details!.subscription! as string
 
     const userId = await this.customerInfoService.getUserIdForCompanyCustomer(
       company,
