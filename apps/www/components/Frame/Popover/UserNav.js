@@ -102,6 +102,16 @@ const UserNav = () => {
                     >
                       {t('Frame/Popover/myprofile')}
                     </NavLink>
+                    <NavLink
+                      {...fontStyles.sansSerifLight16}
+                      href={{
+                        pathname: '/einrichten',
+                      }}
+                      currentPath={currentPath}
+                      large
+                    >
+                      {t('nav/onboarding')}
+                    </NavLink>
                   </div>
                 </div>
                 <hr
@@ -139,6 +149,16 @@ const UserNav = () => {
                           large
                         >
                           {t('nav/donate')}
+                        </NavLink>
+                        <NavLink
+                          {...fontStyles.sansSerifLight16}
+                          href={{
+                            pathname: '/teilen',
+                          }}
+                          currentPath={currentPath}
+                          large
+                        >
+                          {t('nav/share')}
                         </NavLink>
                       </>
                     )}
