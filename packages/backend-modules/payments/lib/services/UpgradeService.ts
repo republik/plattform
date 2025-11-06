@@ -29,7 +29,7 @@ export type SubscriptionUpgradeConfig = {
   metadata?: Record<string, string | number | null>
 }
 
-const CANCELATION_DATA = {
+export const UPGRADE_CANCELATION_DATA = {
   CATEGORY: 'SYSTEM',
   REASON: 'Subscription Upgrade',
 } as const
@@ -113,8 +113,8 @@ export class UpgradeService {
     const systemCancelation = await this.cancelationRepo.getOne(
       {
         subscriptionId: subscriptionId,
-        category: CANCELATION_DATA.CATEGORY,
-        reason: CANCELATION_DATA.REASON,
+        category: UPGRADE_CANCELATION_DATA.CATEGORY,
+        reason: UPGRADE_CANCELATION_DATA.REASON,
         revokedAt: null,
       },
       { createdAt: 'desc' },
@@ -316,8 +316,8 @@ export class UpgradeService {
     }
 
     await this.cancelationRepo.insertCancelation(localSub.id, {
-      category: CANCELATION_DATA.CATEGORY,
-      reason: CANCELATION_DATA.REASON,
+      category: UPGRADE_CANCELATION_DATA.CATEGORY,
+      reason: UPGRADE_CANCELATION_DATA.REASON,
       suppressConfirmation: true,
       suppressWinback: true,
     })

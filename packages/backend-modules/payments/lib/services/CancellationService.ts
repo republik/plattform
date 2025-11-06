@@ -67,6 +67,20 @@ export class CancellationService {
     return cancelation
   }
 
+  async getLatestUnrevokedCancellationDetails(
+    sub: Subscription,
+  ): Promise<CancallationDetails | null> {
+    const cancelation = await this.cancelationRepo.getOne(
+      {
+        subscriptionId: sub.id,
+        revokedAt: null,
+      },
+      { createdAt: 'desc' },
+    )
+
+    return cancelation
+  }
+
   async cancelSubscription(
     actor: User,
     owner: User,

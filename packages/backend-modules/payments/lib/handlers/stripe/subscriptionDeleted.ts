@@ -7,6 +7,9 @@ import { parseStripeDate } from './utils'
 import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 import { CustomerInfoService } from '../../services/CustomerInfoService'
 import { SubscriptionService } from '../../services/SubscriptionService'
+import { UPGRADE_CANCELATION_DATA } from '../../services/UpgradeService'
+import { CancellationService } from '../../services/CancellationService'
+import { PaymentService } from '../../services/PaymentService'
 
 class ProcessSubscriptionDeletedWorkflow
   implements PaymentWorkflow<Stripe.CustomerSubscriptionDeletedEvent>
@@ -15,16 +18,20 @@ class ProcessSubscriptionDeletedWorkflow
     protected readonly queue: Queue,
     protected readonly customerInfoService: CustomerInfoService,
     protected readonly subscriptionService: SubscriptionService,
+    protected readonly cancelationService: CancellationService,
   ) {}
 
   async run(company: Company, event: Stripe.CustomerSubscriptionDeletedEvent) {
-    await this.subscriptionService.disableSubscription(
+    const sub = await this.subscriptionService.disableSubscription(
       { externalId: event.data.object.id },
       {
         endedAt: parseStripeDate(event.data.object.ended_at || 0),
         canceledAt: parseStripeDate(event.data.object.canceled_at || 0),
       },
     )
+
+    const cancelationDetails =
+      await this.cancelationService.getLatestUnrevokedCancellationDetails(sub)
 
     const customerId = event.data.object.customer as string
 
@@ -34,6 +41,14 @@ class ProcessSubscriptionDeletedWorkflow
     )
     if (!userId) {
       throw Error(`User for ${customerId} does not exists`)
+    }
+
+    if (
+      cancelationDetails?.category === UPGRADE_CANCELATION_DATA.CATEGORY &&
+      cancelationDetails.reason === UPGRADE_CANCELATION_DATA.REASON
+    ) {
+      // do not send ended notification on subscription upgrade
+      return
     }
 
     await Promise.all([
@@ -68,5 +83,6 @@ export async function processSubscriptionDeleted(
     Queue.getInstance(),
     new CustomerInfoService(ctx.pgdb),
     new SubscriptionService(ctx.pgdb),
+    new CancellationService(new PaymentService(), ctx.pgdb),
   ).run(company, event)
 }
