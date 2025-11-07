@@ -1,10 +1,8 @@
+import { css } from 'glamor'
 import { useTheme } from 'next-themes'
 import Script from 'next/script'
 import { useEffect, useRef, useState } from 'react'
 import { Figure, FigureSize } from '../Figure'
-import FigureImage from '../Figure/Image'
-import { css } from 'glamor'
-import { MAX_WIDTH } from '../Center'
 
 declare global {
   interface Window {

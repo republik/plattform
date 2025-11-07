@@ -1,64 +1,150 @@
 import Stripe from 'stripe'
 import { PaymentService } from '../services/PaymentService'
-import { APIDiscountResult, Offer, OfferAPIResult } from './offers'
-import { promotionToDiscount } from '.'
+import { PgDb } from 'pogi'
+import { SubscriptionService } from '../services/SubscriptionService'
+import {
+  APIDiscountResult,
+  Offer,
+  OfferAPIResult,
+  OfferAvailability,
+  Subscription,
+} from '../types'
+import { UpgradeService } from '../services/UpgradeService'
+import { Logger } from '@orbiting/backend-modules-types'
+import { promotionToDiscount } from './utils'
+import { OfferService } from '../services/OfferService'
 
 export class OfferBuilder {
-  #paymentService: PaymentService
-  #offers: Offer[]
-  #promoCode?: string
-  #priceData?: Stripe.Price[]
-
-  constructor(paymentService: PaymentService, offer: Offer | Offer[]) {
-    this.#paymentService = paymentService
-    this.#offers = Array.isArray(offer) ? offer : [offer]
+  private offerService: OfferService
+  private paymentService: PaymentService
+  private subscriptionService: SubscriptionService
+  private upgradeService: UpgradeService
+  private offers: Offer[]
+  private promoCode?: string
+  private priceData?: Stripe.Price[]
+  private context: {
+    userId?: string
+    activeSubscription?: Promise<Subscription | null>
+    hasUnresolvedUpgrades?: Promise<boolean | null>
   }
 
-  withPromoCode(promoCode?: string) {
-    this.#promoCode = promoCode
+  constructor(
+    offerService: OfferService,
+    paymentService: PaymentService,
+    pgdb: PgDb,
+    offer: Offer | Offer[],
+    logger: Logger,
+  ) {
+    this.offerService = offerService
+    this.paymentService = paymentService
+    this.subscriptionService = new SubscriptionService(pgdb)
+    this.upgradeService = new UpgradeService(pgdb, logger)
+    this.context = {}
+
+    this.offers = Array.isArray(offer) ? offer : [offer]
+  }
+
+  withContext(context: Record<string, any>): this {
+    this.context = { ...context }
+
+    if (this.context.userId) {
+      const userId = this.context.userId
+
+      this.context.activeSubscription = (async () => {
+        const subs = await this.subscriptionService.listSubscriptions(userId, [
+          'active',
+          'past_due',
+          'unpaid',
+        ])
+
+        return subs[0]
+      })()
+      this.context.hasUnresolvedUpgrades = (async () => {
+        return await this.upgradeService.hasUnresolvedUpgrades({
+          user_id: userId,
+        })
+      })()
+    } else {
+      this.context.activeSubscription = (async () => null)()
+    }
+
+    return this
+  }
+
+  withPromoCode(promoCode?: string): this {
+    this.promoCode = promoCode
     return this
   }
 
   async build(): Promise<OfferAPIResult> {
-    if (!this.#priceData) await this.fetchPrices()
-    return this.buildOfferData(this.#offers[0])
+    if (!this.priceData) await this.fetchPrices()
+    return this.buildOfferData(this.offers[0])
   }
 
   async buildAll(): Promise<OfferAPIResult[]> {
-    if (!this.#priceData) await this.fetchPrices()
-    return Promise.all(this.#offers.map((offer) => this.buildOfferData(offer)))
+    if (!this.priceData) await this.fetchPrices()
+    return Promise.all(this.offers.map((offer) => this.buildOfferData(offer)))
   }
 
   private async fetchPrices() {
-    const lookupKeys = this.#offers.flatMap((o) =>
+    const lookupKeys = this.offers.flatMap((o) =>
       o.items.map((i) => i.lookupKey),
     )
 
-    this.#priceData = await this.#paymentService.getPrices(
-      this.#offers[0].company,
+    this.priceData = await this.paymentService.getPrices(
+      this.offers[0].company,
       lookupKeys,
     )
   }
 
   private async buildOfferData(offer: Offer): Promise<OfferAPIResult> {
-    const price = this.#priceData!.find(
+    const price = this.priceData!.find(
       (p) => p.lookup_key === offer.items[0]?.lookupKey,
     )!
 
     const discount = await this.resolveDiscount(offer)
+    const availability = await this.resolveAvailability(offer)
 
     return {
       ...offer,
+      availability: availability.kind,
+      startDate: availability.startDate,
       price: this.formatPrice(price),
       discount: discount ?? undefined,
     }
+  }
+
+  private async resolveAvailability(
+    offer: Offer,
+  ): Promise<{ kind: OfferAvailability; startDate?: Date }> {
+    const sub = await this.context.activeSubscription
+    const hasUnresolvedUpgreads = await this.context.hasUnresolvedUpgrades
+    if (offer.id.startsWith('GIFT')) return { kind: 'PURCHASABLE' }
+
+    if (sub) {
+      if (this.offerService.resolveUpgradePaths(sub.type).includes(offer.id)) {
+        if (hasUnresolvedUpgreads && offer.id !== 'DONATION') {
+          return { kind: 'UNAVAILABLE_UPGRADE_PENDING' }
+        }
+
+        return { kind: 'UPGRADEABLE', startDate: sub.currentPeriodEnd }
+      } else {
+        const [offerType] = offer.id.split('_')
+        const [supType] = sub.type.split('_')
+
+        if (offerType === supType) return { kind: 'UNAVAILABLE_CURRENT' }
+
+        return { kind: 'UNAVAILABLE' }
+      }
+    }
+    return { kind: 'PURCHASABLE', startDate: new Date() }
   }
 
   private async resolveDiscount(
     offer: Offer,
   ): Promise<APIDiscountResult | null> {
     if (offer.fixedDiscount) {
-      const promotion = await this.#paymentService.getPromotion(
+      const promotion = await this.paymentService.getPromotion(
         offer.company,
         offer.fixedDiscount,
       )
@@ -66,10 +152,10 @@ export class OfferBuilder {
       return promotion ? promotionToDiscount(promotion) : null
     }
 
-    if (this.#promoCode && offer.allowPromotions) {
-      const promotion = await this.#paymentService.getPromotion(
+    if (this.promoCode && offer.allowPromotions) {
+      const promotion = await this.paymentService.getPromotion(
         offer.company,
-        this.#promoCode,
+        this.promoCode,
       )
       return promotion ? promotionToDiscount(promotion) : null
     }

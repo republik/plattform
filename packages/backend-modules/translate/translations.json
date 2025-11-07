@@ -2767,6 +2767,38 @@
     {
       "key": "api/payments/dicsount_duration_display_years/other",
       "value": "{years} Jahre"
+    },
+    {
+      "key": "api/payments/subscription_type/MONTHLY_SUBSCRIPTION",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "api/payments/subscription_type/YEARLY_SUBSCRIPTION",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/payments/subscription_type/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_setup_successful_upgrade_TO_MONTHLY/subject",
+      "value": "Ihr Wechsel zum Monats-Abo"
+    },
+    {
+      "key": "api/email/subscription_setup_successful_upgrade_MONTHLY_TO_YEARLY/subject",
+      "value": "Ihr Wechsel zur Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_setup_successful_upgrade_MONTHLY_TO_BENEFACTOR/subject",
+      "value": "Ihr Wechsel zur Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_upgrade_activated_YEARLY/subject",
+      "value": "Ihre Gönner-Mitgliedschaft ist aktiviert"
+    },
+    {
+      "key": "api/email/subscription_upgrade_activated_BENEFACTOR/subject",
+      "value": "Ihre Gönner-Mitgliedschaft ist aktiviert"
     }
   ]
 }

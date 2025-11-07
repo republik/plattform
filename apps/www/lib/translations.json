@@ -26,11 +26,15 @@
     },
     {
       "key": "nav/donate",
-      "value": "Spenden"
+      "value": "Freiwilliger Beitrag"
     },
     {
       "key": "nav/share",
       "value": "Republik teilen"
+    },
+    {
+      "key": "nav/onboarding",
+      "value": "Einrichtungsassistent"
     },
     {
       "key": "nav/invite-friends",
@@ -1775,6 +1779,10 @@
     {
       "key": "footer/me/give",
       "value": "Verschenken"
+    },
+    {
+      "key": "footer/me/donate",
+      "value": "Freiwilliger Beitrag"
     },
     {
       "key": "footer/me/signOut",
@@ -7688,28 +7696,40 @@
       "value": "Sie haben kein gültiges Abonnement"
     },
     {
-      "key": "magazineSubscription/canceled/YEARLY_SUBSCRIPTION",
-      "value": "Ihre Mitgliedschaft läuft am {cancelAt} aus."
-    },
-    {
-      "key": "magazineSubscription/canceled/BENEFACTOR_SUBSCRIPTION",
-      "value": "Ihre Gönner-Mitgliedschaft läuft am {cancelAt} aus."
-    },
-    {
-      "key": "magazineSubscription/canceled/MONTHLY_SUBSCRIPTION",
-      "value": "Ihr Abo läuft am {cancelAt} aus."
+      "key": "magazineSubscription/canceled",
+      "value": "Wurde am {canceledAt} gekündigt und läuft am {cancelAt} aus."
     },
     {
       "key": "magazineSubscription/cancel/YEARLY_SUBSCRIPTION",
-      "value": "Mitgliedschaft kündigen"
+      "value": "Jahresmitgliedschaft kündigen"
     },
     {
       "key": "magazineSubscription/cancel/BENEFACTOR_SUBSCRIPTION",
-      "value": "Mitgliedschaft kündigen"
+      "value": "Gönner-Mitgliedschaft kündigen"
     },
     {
       "key": "magazineSubscription/cancel/MONTHLY_SUBSCRIPTION",
-      "value": "Abo kündigen"
+      "value": "Monats-Abo kündigen"
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/title",
+      "value": "Wechsel von {from} auf {to}"
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/description/YEARLY_SUBSCRIPTION",
+      "value": "Wechselt am {startAt} zu einer Jahresmitgliedschaft für CHF {amount}."
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/description/BENEFACTOR_SUBSCRIPTION",
+      "value": "Wechselt am {startAt} zu einer Gönner-Mitgliedschaft für CHF {amount}."
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/description/MONTHLY_SUBSCRIPTION",
+      "value": "Wechselt am {startAt} zu einem Monats-Abo für CHF {amount}."
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/cancel",
+      "value": "Wechsel rückgängig machen"
     },
     {
       "key": "magazineSubscription/donation/update",

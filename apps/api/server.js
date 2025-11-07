@@ -62,6 +62,7 @@ const {
   SyncMailchimpEndedWorker,
   ConfirmGiftSubscriptionTransactionalWorker,
   ConfirmGiftAppliedTransactionalWorker,
+  ConfirmUpgradeSubscriptionTransactionalWorker,
   SlackNotifierWorker,
   setupPaymentUserEventHooks,
 } = require('@orbiting/backend-modules-payments')
@@ -111,6 +112,7 @@ function setupQueue(context, monitorQueueState = undefined) {
     ConfirmRevokeCancellationTransactionalWorker,
     ConfirmGiftSubscriptionTransactionalWorker,
     ConfirmGiftAppliedTransactionalWorker,
+    ConfirmUpgradeSubscriptionTransactionalWorker,
     NoticeEndedTransactionalWorker,
     NoticePaymentFailedTransactionalWorker,
     NoticeRenewalTransactionalWorker,

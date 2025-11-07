@@ -48,6 +48,7 @@ import createQuoteModule from './modules/quote'
 import createSeriesNavModule from './modules/seriesnav'
 import createSpecialModule from './modules/special'
 import createSpecialCharsModule from './modules/specialchars'
+import createStoryComponentModule from './modules/storycomponent'
 import createTeaserModule from './modules/teaser'
 import createTeaserGroupModule from './modules/teasergroup'
 import createTitleModule from './modules/title'
@@ -96,6 +97,7 @@ const moduleCreators = {
   chart: createChartModule,
   chartCanvas: createChartCanvasModule,
   dynamiccomponent: createDynamicComponentModule,
+  storycomponent: createStoryComponentModule,
   liveteaser: createLiveTeaserModule,
   button: createButtonModule,
   variable: createVariableModule,

@@ -127,8 +127,29 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                               {displayDateTime(subscription.canceledAt)}
                             </>
                           )}
+                          {subscription.upgrade && (
+                            <>
+                              , Wechsel durchgeführt am{' '}
+                              {displayDateTime(subscription.upgrade.createdAt)}
+                            </>
+                          )}
                         </div>
-                        {subscription.canceledAt ? (
+                        {subscription.upgrade ? (
+                          <div>
+                            <>
+                              ⬆️ Wechsel zu{' '}
+                              {t(
+                                `account/MagazineSubscription/type/${subscription.upgrade.subscriptionType}`,
+                              )}{' '}
+                              am{' '}
+                              <b>
+                                {displayDateTime(
+                                  subscription.upgrade.scheduledStart,
+                                )}
+                              </b>
+                            </>
+                          </div>
+                        ) : subscription.canceledAt ? (
                           <div>
                             {subscription.endedAt ? (
                               <>

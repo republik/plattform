@@ -194,7 +194,7 @@ const createBase = ({ metaBody, metaHeadlines, Link = DefaultLink }) => {
         matchMdast: matchType('listItem'),
         component: ListItem,
         editorModule: 'listItem',
-        rules: [paragraph],
+        rules: [paragraph, ...globalInlines],
       },
     ],
   }
