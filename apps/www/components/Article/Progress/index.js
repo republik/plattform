@@ -1,14 +1,13 @@
-import { useRef, useEffect, createContext } from 'react'
-import debounce from 'lodash/debounce'
-
 import { mediaQueries } from '@project-r/styleguide'
+import debounce from 'lodash/debounce'
+import { createContext, useEffect, useRef } from 'react'
+import { useMe } from '../../../lib/context/MeContext'
+import { scrollIt } from '../../../lib/utils/scroll'
+import { useMediaProgress } from '../../Audio/MediaProgress'
 
 import { HEADER_HEIGHT } from '../../constants'
-import { scrollIt } from '../../../lib/utils/scroll'
 
 import { useProgress } from './api'
-import { useMediaProgress } from '../../Audio/MediaProgress'
-import { useMe } from '../../../lib/context/MeContext'
 
 const MIN_INDEX = 2
 
@@ -26,6 +25,8 @@ const Progress = ({ children, documentPath }) => {
 
   const { data } = useDocumentProgress({ path: documentPath })
   const { userProgress, id: documentId } = data?.document || {}
+
+  console.log({ data, userProgress, documentId })
 
   const mobile = () => window.innerWidth < mediaQueries.mBreakPoint
 
@@ -111,6 +112,7 @@ const Progress = ({ children, documentPath }) => {
 
     const element = getClosestElement(progressElements)
     const percentage = getPercentage(progressElements)
+    console.log({ element, percentage })
 
     if (
       element &&
@@ -123,6 +125,8 @@ const Progress = ({ children, documentPath }) => {
         Math.floor(userProgress.percentage * 100) !==
           Math.floor(percentage * 100))
     ) {
+      console.log('Saving progress:')
+      console.log({ percentage, documentId, nodeId: element.nodeId })
       upsertDocumentProgress({
         variables: {
           documentId: documentId,
@@ -190,6 +194,7 @@ const Progress = ({ children, documentPath }) => {
         useDocumentProgress,
       }}
     >
+      TESTESTEST
       <div ref={refContainer}>{children}</div>
     </ProgressContext>
   )
