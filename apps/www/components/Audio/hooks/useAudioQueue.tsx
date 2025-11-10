@@ -117,18 +117,10 @@ const useAudioQueue = (): {
   const [addAudioQueueItem] = useMutation(AddAudioQueueItemsDocument, {
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
-  const [removeAudioQueueItem] = useMutation(RemoveAudioQueueItemDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
-  const [moveAudioQueueItem] = useMutation(MoveAudioQueueItemDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
-  const [clearAudioQueue] = useMutation(ClearAudioQueueDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
-  const [reorderAudioQueue] = useMutation(ReorderAudioQueueDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
-  })
+  const [removeAudioQueueItem] = useMutation(RemoveAudioQueueItemDocument)
+  const [moveAudioQueueItem] = useMutation(MoveAudioQueueItemDocument)
+  const [clearAudioQueue] = useMutation(ClearAudioQueueDocument)
+  const [reorderAudioQueue] = useMutation(ReorderAudioQueueDocument)
 
   /**
    * Add an audio item to the queue or to the local storage if the user is not a member.

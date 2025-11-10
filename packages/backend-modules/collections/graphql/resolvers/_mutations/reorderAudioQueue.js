@@ -1,13 +1,31 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { reorderItems } = require('../../../lib/AudioQueue')
+const { reorderItems, getCollectionName } = require('../../../lib/AudioQueue')
+const { ascending } = require('d3-array')
 
 module.exports = async (_, args, context) => {
   const { ids } = args
-  const { user: me, loaders } = context
+  const { user: me, loaders, pgdb } = context
 
   Roles.ensureUserHasRole(me, 'member')
 
   await reorderItems({ ids }, context)
 
-  return loaders.AudioQueue.byUserId.load(me.id)
+  // Return only minimal data (IDs and sequences) without loading full documents
+  const collection = await loaders.Collection.byKeyObj.load({
+    name: getCollectionName(),
+  })
+
+  if (!collection) {
+    return []
+  }
+
+  const items = await pgdb.public.collectionDocumentItems.find(
+    {
+      collectionId: collection.id,
+      userId: me.id,
+    },
+    { orderBy: ['createdAt'] }
+  )
+
+  return items.sort((a, b) => ascending(a.data?.sequence, b.data?.sequence))
 }
