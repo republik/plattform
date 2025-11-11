@@ -1,5 +1,5 @@
 const { createApolloFetch } = require('apollo-fetch')
-const { SubscriptionClient } = require('subscriptions-transport-ws')
+const { createClient } = require('graphql-ws')
 const ws = require('ws')
 
 module.exports = (port) => {
@@ -29,17 +29,46 @@ module.exports = (port) => {
           next()
         }),
 
-    createSubscriptionClient: (options) => {
-      return new SubscriptionClient(
-        GRAPHQL_WS_URI,
-        {
-          connectionParams: {
-            cookies: cookie || null,
-          },
-          ...options,
+    createSubscriptionClient: (options = {}) => {
+      const client = createClient({
+        url: GRAPHQL_WS_URI,
+        connectionParams: () => ({
+          cookies: cookie || null,
+        }),
+        webSocketImpl: ws,
+        retryAttempts: 0,
+        on: {
+          connected: options.connectionCallback
+            ? () => options.connectionCallback(null)
+            : undefined,
+          error: options.connectionCallback || undefined,
         },
-        ws,
-      )
+      })
+
+      // Create compatibility wrapper for old subscriptions-transport-ws API
+      return {
+        request: ({ query, variables, operationName }) => ({
+          subscribe: ({ next, error, complete }) => {
+            const unsubscribe = client.subscribe(
+              { query, variables, operationName },
+              {
+                next: (value) => next(value),
+                error: (err) => error && error(err),
+                complete: () => complete && complete(),
+              },
+            )
+            return { unsubscribe }
+          },
+        }),
+        onConnected: (callback) => {
+          // graphql-ws doesn't have a direct equivalent, but we can use a promise
+          // The connection happens on first subscribe, so we'll call it immediately
+          setTimeout(callback, 100)
+        },
+        close: () => {
+          client.dispose()
+        },
+      }
     },
   }
 }

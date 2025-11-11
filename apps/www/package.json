@@ -141,7 +141,7 @@
     "react-textarea-autosize": "^7.1.2",
     "scroll-into-view": "1.16.2",
     "sharp": "^0.31.3",
-    "subscriptions-transport-ws": "^0.11.0",
+    "graphql-ws": "^5.14.0",
     "topojson": "^3.0.2",
     "use-resize-observer": "^9.1.0",
     "useragent": "^2.3.0",

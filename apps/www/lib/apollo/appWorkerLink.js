@@ -1,5 +1,5 @@
 import { ApolloLink, Observable } from '@apollo/client'
-import { SubscriptionClient } from 'subscriptions-transport-ws'
+import { createClient } from 'graphql-ws'
 import { postMessage } from '../withInNativeApp'
 import { v4 as uuid } from 'uuid'
 import { parseJSONObject } from '../safeJSON'
@@ -10,45 +10,16 @@ export const hasSubscriptionOperation = ({ query: { definitions } }) =>
       kind === 'OperationDefinition' && operation === 'subscription',
   )
 
-const GQL_MESSAGES_TYPES = ['start', 'data', 'stop', 'error', 'complete']
-
-// WebSocket compliant interface to handle subscriptions via app worker
-class WorkerInterface {
-  constructor(url, protocol) {
-    this.url = url
-    this.protocol = protocol
-    this.readyState = WorkerInterface.OPEN
-    this.onMessageCallback = null
-  }
-
-  send(serializedMessage) {
-    postMessage(serializedMessage)
-  }
-
-  close() {
-    document.removeEventListener('message', this.onMessageCallback)
-  }
-
-  onMessage(fn) {
-    return ({ data }) => {
-      const d = parseJSONObject(data)
-
-      if (GQL_MESSAGES_TYPES.includes(d.type)) {
-        fn({ data })
-      }
-    }
-  }
-
-  set onmessage(fn) {
-    this.onMessageCallback = this.onMessage(fn)
-
-    document.addEventListener('message', this.onMessageCallback)
-  }
-}
-
-WorkerInterface.CLOSED = 'CLOSED'
-WorkerInterface.OPEN = 'OPEN'
-WorkerInterface.CONNECTING = 'CONNECTING'
+const GQL_MESSAGES_TYPES = [
+  'connection_init',
+  'connection_ack',
+  'ping',
+  'pong',
+  'subscribe',
+  'next',
+  'error',
+  'complete',
+]
 
 // Apollo link implementation to resolve queries and mutations via app worker
 class PromiseWorkerLink extends ApolloLink {
@@ -115,11 +86,73 @@ class PromiseWorkerLink extends ApolloLink {
 class SubscriptionWorkerLink extends ApolloLink {
   constructor() {
     super()
-    this.subscriptionClient = new SubscriptionClient(null, {}, WorkerInterface)
+    this.subscriptions = new Map()
+    this.messageHandler = this.handleMessage.bind(this)
+    document.addEventListener('message', this.messageHandler)
+  }
+
+  handleMessage(event) {
+    const message = parseJSONObject(event.data)
+
+    if (!GQL_MESSAGES_TYPES.includes(message.type)) {
+      return
+    }
+
+    const subscription = this.subscriptions.get(message.id)
+    if (!subscription) {
+      return
+    }
+
+    switch (message.type) {
+      case 'next':
+        subscription.observer.next(message.payload)
+        break
+      case 'error':
+        subscription.observer.error(message.payload)
+        this.subscriptions.delete(message.id)
+        break
+      case 'complete':
+        subscription.observer.complete()
+        this.subscriptions.delete(message.id)
+        break
+    }
   }
 
   request(operation) {
-    return this.subscriptionClient.request(operation)
+    return new Observable((observer) => {
+      const id = uuid()
+      
+      this.subscriptions.set(id, { observer, operation })
+
+      // Send subscription request to app worker using graphql-ws protocol
+      postMessage(
+        JSON.stringify({
+          id,
+          type: 'subscribe',
+          payload: {
+            query: operation.query,
+            variables: operation.variables,
+            operationName: operation.operationName,
+          },
+        }),
+      )
+
+      // Return cleanup function
+      return () => {
+        this.subscriptions.delete(id)
+        postMessage(
+          JSON.stringify({
+            id,
+            type: 'complete',
+          }),
+        )
+      }
+    })
+  }
+
+  cleanup() {
+    document.removeEventListener('message', this.messageHandler)
+    this.subscriptions.clear()
   }
 }
 

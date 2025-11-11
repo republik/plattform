@@ -42,10 +42,11 @@
     "graphql": "^16.11.0",
     "graphql-redis-subscriptions": "^2.2.1",
     "graphql-subscriptions": "^2.0.0",
+    "graphql-ws": "^5.14.0",
     "helmet": "^3.22.0",
     "pogi": "^2.11.1",
     "redis": "^3.0.2",
-    "subscriptions-transport-ws": "^0.11.0"
+    "ws": "^8.14.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",

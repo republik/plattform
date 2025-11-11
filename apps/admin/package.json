@@ -55,7 +55,7 @@
     "remark": "^10.0.1",
     "remark-react": "^5.0.1",
     "scroll-into-view": "^1.15.0",
-    "subscriptions-transport-ws": "^0.11.0",
+    "graphql-ws": "^5.14.0",
     "topojson": "^3.0.2",
     "validator": "^10.11.0"
   },

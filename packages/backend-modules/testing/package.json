@@ -60,11 +60,12 @@
     "apollo-modules-node": "*",
     "jest": "^29.7.0",
     "jest-environment-node": "^29.5.0",
-    "subscriptions-transport-ws": "^0.11.0",
+    "graphql-ws": "^5.14.0",
     "ts-jest": "^29.1.0",
     "why-is-node-running": "^2.1.2"
   },
   "dependencies": {
-    "graphql": "^16.11.0"
+    "graphql": "^16.11.0",
+    "ws": "^8.14.0"
   }
 }

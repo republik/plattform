@@ -8,8 +8,8 @@ const {
 const { expressMiddleware } = require('@as-integrations/express4')
 const express = require('express')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
-const { SubscriptionServer } = require('subscriptions-transport-ws')
-const { execute, subscribe } = require('graphql')
+const { useServer } = require('graphql-ws/lib/use/ws')
+const { WebSocketServer } = require('ws')
 const { logger: baseLogger } = require('@orbiting/backend-modules-logger')
 
 const cookie = require('cookie')
@@ -18,7 +18,7 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
   COOKIE_NAME,
 } = require('@orbiting/backend-modules-auth/lib/CookieOptions')
-const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
+const { NODE_ENV } = process.env
 
 const documentApiKeyScheme = 'DocumentApiKey'
 
@@ -114,10 +114,6 @@ module.exports = async (
     introspection: true,
     playground: false, // see ./graphiql.js
     tracing: NODE_ENV === 'development',
-    subscriptions: {
-      onConnect: webSocketOnConnect,
-      keepAlive: WS_KEEPALIVE_INTERVAL || 40000,
-    },
     plugins: [
       ApolloServerPluginLandingPageProductionDefault({
         footer: false,
@@ -160,19 +156,40 @@ module.exports = async (
     ],
   })
 
-  // setup websocket server
-  SubscriptionServer.create(
+  // setup websocket server with graphql-ws
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: '/graphql',
+  })
+
+  useServer(
     {
       schema: executableSchema,
-      execute: execute,
-      subscribe: subscribe,
-      onConnect: webSocketOnConnect,
-      keepAlive: WS_KEEPALIVE_INTERVAL || 40000,
+      context: async (ctx) => {
+        // Adapt the graphql-ws context to our existing webSocketOnConnect function
+        // graphql-ws provides ctx.connectionParams and ctx.extra.socket
+        const connectionParams = ctx.connectionParams || {}
+        const websocket = ctx.extra.socket
+        
+        // Create a compatibility layer for the old API
+        const compatWebsocket = {
+          upgradeReq: websocket.upgradeReq || {
+            headers: websocket._socket?._httpMessage?.headers || {},
+          },
+        }
+        
+        return await webSocketOnConnect(connectionParams, compatWebsocket)
+      },
+      onConnect: async (ctx) => {
+        const logger = baseLogger.child({}, { msgPrefix: '[socket:connect] ' })
+        logger.info('WebSocket client connected')
+      },
+      onDisconnect: async (ctx) => {
+        const logger = baseLogger.child({}, { msgPrefix: '[socket:disconnect] ' })
+        logger.info('WebSocket client disconnected')
+      },
     },
-    {
-      server: httpServer,
-      path: '/graphql',
-    },
+    wsServer,
   )
 
   await apolloServer.start()

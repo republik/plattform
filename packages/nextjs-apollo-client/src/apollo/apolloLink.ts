@@ -1,5 +1,6 @@
 import { ApolloLink, HttpLink } from '@apollo/client'
-import { WebSocketLink } from '@apollo/client/link/ws'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { createClient } from 'graphql-ws'
 
 import { ApolloClientOptions } from './apolloClient'
 import { isClient, isDev } from './utils'
@@ -57,14 +58,17 @@ export const createLink = ({
   if (isClient && wsUrl) {
     return ApolloLink.split(
       hasSubscriptionOperation,
-      new WebSocketLink({
-        uri: rewriteAPIHost(wsUrl),
-        options: {
+      new GraphQLWsLink(
+        createClient({
+          url: rewriteAPIHost(wsUrl),
           lazy: true,
-          reconnect: true,
-          timeout: 50000,
-        },
-      }),
+          retryAttempts: 5,
+          shouldRetry: () => true,
+          connectionParams: () => ({
+            // Auth params if needed
+          }),
+        }),
+      ),
       http,
     )
   }
