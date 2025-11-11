@@ -61,6 +61,7 @@ import {
   withCommitMutation,
   withLatestCommit,
 } from './enhancers'
+import Help from './Help'
 import Nav from './Nav'
 import EditorUI from './UI'
 
@@ -996,6 +997,11 @@ export class EditorPage extends Component {
                     isNew={isNew}
                     hasUncommittedChanges={hasUncommittedChanges}
                   />
+                </Sidebar.Tab>
+              )}
+              {!showPreview && (
+                <Sidebar.Tab tabId='help' label='Help'>
+                  <Help />
                 </Sidebar.Tab>
               )}
             </Sidebar>
