@@ -1,6 +1,5 @@
 'use client'
 
-import GoogleCTA from '@app/components/paynotes/google-cta'
 import { OfferOptionRadio } from '@app/components/paynotes/offer-options'
 import { Button } from '@app/components/ui/button'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
@@ -8,7 +7,7 @@ import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
-import IosCTA from '../ios-cta'
+import NativeCta from '../native-cta'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
 
@@ -21,13 +20,9 @@ export function Offers({
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
 
-  const { isIOSApp, isAndroidApp } = usePlatformInformation()
-  if (isIOSApp) {
-    return <IosCTA />
-  }
-
-  if (isAndroidApp) {
-    return <GoogleCTA />
+  const { isNativeApp } = usePlatformInformation()
+  if (isNativeApp) {
+    return <NativeCta />
   }
 
   return (

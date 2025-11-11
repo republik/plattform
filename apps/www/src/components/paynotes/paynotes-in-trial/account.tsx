@@ -1,26 +1,26 @@
-import { css } from '@republik/theme/css'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { css } from '@republik/theme/css'
 
 import { useMe } from 'lib/context/MeContext'
-import { useTranslation } from 'lib/withT'
 import { timeFormat } from 'lib/utils/format'
+import { useTranslation } from 'lib/withT'
 
 import { Button } from '../../ui/button'
 
-import IosCTA from '../ios-cta'
+import NativeCta from '../native-cta'
 
 const dayFormat = timeFormat('%e. %B %Y')
 
 function AccountCta() {
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
-  const { isIOSApp } = usePlatformInformation()
+  const { isNativeApp } = usePlatformInformation()
   const { t } = useTranslation()
 
-  if (isIOSApp) return <IosCTA />
+  if (isNativeApp) return <NativeCta />
 
   return (
     <form
@@ -57,7 +57,7 @@ export function AccountPaynote() {
         new Date(grant.endAt) > acc ? new Date(grant.endAt) : acc,
       new Date(),
     )
-    console.log(me.accessGrants)
+  console.log(me.accessGrants)
   const maxEndAtString = dayFormat(new Date(maxEndAt))
   const description = (
     t.elements('paynotes/account/description', {

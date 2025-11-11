@@ -1,8 +1,6 @@
 'use client'
 
-import GoogleCTA from '@app/components/paynotes/google-cta'
-
-import IosCTA from '@app/components/paynotes/ios-cta'
+import NativeCta from '@app/components/paynotes/native-cta'
 import { OfferOptionLabelOnly } from '@app/components/paynotes/offer-options'
 import { Button } from '@app/components/ui/button'
 import { FormField } from '@app/components/ui/form'
@@ -94,13 +92,9 @@ export function Offers({
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
 
-  const { isIOSApp, isAndroidApp } = usePlatformInformation()
-  if (isIOSApp) {
-    return <IosCTA />
-  }
-
-  if (isAndroidApp) {
-    return <GoogleCTA />
+  const { isNativeApp } = usePlatformInformation()
+  if (isNativeApp) {
+    return <NativeCta />
   }
 
   const allHiddenParams = { ...utmParams, ...additionalShopParams }

@@ -7980,15 +7980,15 @@
       "value": "Abonnieren und mitreden"
     },
     {
-      "key": "paynotes/ios/caption",
+      "key": "paynotes/native/caption",
       "value": "Unterstützen Sie unabhängigen Journalismus."
     },
     {
-      "key": "paynotes/ios/cta",
+      "key": "paynotes/native/cta",
       "value": "Alle Angebote auf {link}"
     },
     {
-      "key": "paynotes/ios/text",
+      "key": "paynotes/native/text",
       "value": "Alle Angebote auf shop.republik.ch"
     },
     {

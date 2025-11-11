@@ -1,20 +1,19 @@
 'use client'
 
-import { css } from '@republik/theme/css'
-
 import { Offers } from '@app/components/paynotes/paynote/paynote-offers'
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
-import { StructuredText } from 'react-datocms/structured-text'
-import { usePaynoteVariants } from './use-paynotes'
+import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { css } from '@republik/theme/css'
 import { useMe } from 'lib/context/MeContext'
+import { StructuredText } from 'react-datocms/structured-text'
 import { getMeteringData } from '../article-metering'
-import PaynoteAuthor from './paynote-author'
 import { usePaynotes } from '../paynotes-context'
+import PaynoteAuthor from './paynote-author'
+import { usePaynoteVariants } from './use-paynotes'
 
 function PaynoteInline() {
   const { paynoteKind } = usePaynotes()
-  const { isIOSApp } = usePlatformInformation()
+  const { isNativeApp } = usePlatformInformation()
   const paynotes = usePaynoteVariants()
   const { trialStatus } = useMe()
 
@@ -22,8 +21,7 @@ function PaynoteInline() {
     return null
   }
 
-  // TODO: iOS
-  const ready = paynotes && !isIOSApp
+  const ready = paynotes && !isNativeApp
 
   if (!ready) {
     return null

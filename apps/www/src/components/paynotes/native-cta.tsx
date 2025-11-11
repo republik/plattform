@@ -1,3 +1,5 @@
+import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+
 import { IconArrowRight } from '@republik/icons'
 import { css } from '@republik/theme/css'
 
@@ -5,7 +7,7 @@ import { postMessage, useInNativeApp } from 'lib/withInNativeApp'
 import { useTranslation } from 'lib/withT'
 import Link from 'next/link'
 
-const iosCtaStyle = css({
+const nativeCtaStyle = css({
   textStyle: 'body',
   fontSize: 'base',
   textAlign: 'center',
@@ -28,16 +30,17 @@ function Arrow() {
   )
 }
 
-function GoogleCTA() {
+function NativeCta() {
   const { t } = useTranslation()
   const { isMinimalNativeAppVersion } = useInNativeApp()
-  const canUseLinkCta = isMinimalNativeAppVersion('2.3.0')
+  const { isIOSApp } = usePlatformInformation()
+  const canUseIOSLinkCta = isIOSApp && isMinimalNativeAppVersion('2.3.0')
 
-  if (canUseLinkCta) {
+  if (canUseIOSLinkCta) {
     return (
-      <div className={iosCtaStyle}>
+      <div className={nativeCtaStyle}>
         <p>
-          {t.elements('paynotes/ios/cta', {
+          {t.elements('paynotes/native/cta', {
             link: (
               <Link
                 key='link'
@@ -61,11 +64,11 @@ function GoogleCTA() {
   }
 
   return (
-    <div className={iosCtaStyle}>
+    <div className={nativeCtaStyle}>
       <Arrow />
-      <p>{t('paynotes/ios/text')}</p>
+      <p>{t('paynotes/native/text')}</p>
     </div>
   )
 }
 
-export default GoogleCTA
+export default NativeCta
