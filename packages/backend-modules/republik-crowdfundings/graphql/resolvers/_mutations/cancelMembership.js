@@ -3,6 +3,7 @@ const cancelMembership = require('../../../lib/cancelMembership')
 const createCache = require('../../../lib/cache')
 const slack = require('@orbiting/backend-modules-republik/lib/slack')
 const { label: getLabel } = require('../CancellationCategory')
+const { overdue } = require('../resolvers/Membership')
 
 module.exports = async (_, args, context) => {
   const { pgdb, req, t, mail } = context
@@ -53,10 +54,13 @@ module.exports = async (_, args, context) => {
 
     const cancelledViaSupport = user.id !== me.id || details.cancelledViaSupport
 
+    const cancelImmediately =
+      immediately || (await overdue(membership, null, { pgdb }))
+
     const cancelledMembership = await cancelMembership(
       membership,
       { ...details, cancelledViaSupport },
-      { immediately },
+      { immediately: cancelImmediately },
       t,
       transaction,
     )

@@ -2,8 +2,6 @@ const debug = require('debug')('crowdfundings:cancelMembership')
 
 const cancelSubscription = require('./payments/stripe/cancelSubscription')
 
-const { overdue } = require('../graphql/resolvers/Membership')
-
 module.exports = async (membership, details, options, t, pgdb) => {
   const {
     reason,
@@ -14,7 +12,7 @@ module.exports = async (membership, details, options, t, pgdb) => {
   } = details
   let { immediately } = options
 
-  if (immediately || (await overdue(membership, null, { pgdb }))) {
+  if (immediately) {
     immediately = true
   }
 

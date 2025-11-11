@@ -38,7 +38,7 @@ const changeover = async (
     SELECT DISTINCT("userId") AS id FROM memberships
     WHERE
       -- Potential ending memberships to change over to dormant membership
-      "endDate" < :endDate
+      ("endDate" < :endDate OR "endDate" + "graceInterval" < :endDate)
       AND "userId" != :PARKING_USER_ID
   `,
     { endDate, PARKING_USER_ID },
