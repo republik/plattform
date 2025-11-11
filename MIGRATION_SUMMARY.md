@@ -10,6 +10,27 @@ Replace the deprecated and unmaintained `subscriptions-transport-ws` library wit
 
 ## Changes Made
 
+### 0. Legacy Mobile App Cleanup
+
+Removed support for legacy mobile app versions (< 2.0):
+
+**Deleted Files:**
+- `apps/www/lib/apollo/appWorkerLink.js` - Legacy worker link for app versions < 2.0
+- `apps/www/components/Frame/LegacyAppNoticeBox.js` - Legacy app upgrade notice
+
+**Updated Files:**
+- `apps/www/lib/apollo/index.ts` - Removed mobile config options
+- `apps/www/lib/withInNativeApp.js` - Removed legacy app handling, postMessage monkey-patching, and route syncing
+- `apps/www/components/Frame/index.tsx` - Removed legacy app notice box
+- `apps/www/components/NativeApp/MessageSync.js` - Simplified to only support v2.0+ message format
+- `apps/www/components/Frame/DarkmodeSwitch.js` - Removed legacy dark mode handling
+- `apps/www/components/ColorScheme/useColorScheme.ts` - Simplified to not check for legacy apps
+- `packages/nextjs-apollo-client/src/apollo/apolloClient.ts` - Removed `mobileConfigOptions` type definition
+- `packages/nextjs-apollo-client/src/apollo/apolloLink.ts` - Removed mobile config options parameter and conditional logic
+- `packages/nextjs-apollo-client/src/index.ts` - Removed `mobileConfigOptions` from type union
+
+Modern native apps (v2.0+) use `window.ReactNativeWebView.postMessage` directly and can establish WebSocket connections like regular browsers.
+
 ### 1. Server-Side Changes
 
 **File: `packages/backend-modules/base/express/graphql.js`**

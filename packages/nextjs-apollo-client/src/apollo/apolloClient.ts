@@ -33,10 +33,6 @@ export type ApolloClientOptions = {
   wsUrl?: string
   headers?: { [key: string]: string } | IncomingHttpHeaders
   onResponse?: (response: Response) => void
-  mobileConfigOptions?: {
-    isInMobileApp: boolean
-    createAppWorkerLink: () => ApolloLink
-  }
   errorLink?: ApolloLink
 }
 

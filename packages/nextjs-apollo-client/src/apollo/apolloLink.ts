@@ -44,11 +44,7 @@ export const createLink = ({
   headers = {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onResponse = () => {},
-  mobileConfigOptions,
 }: CreateLinkOptions) => {
-  if (mobileConfigOptions && mobileConfigOptions.isInMobileApp) {
-    return mobileConfigOptions.createAppWorkerLink()
-  }
   const http = new HttpLink({
     uri: rewriteAPIHost(apiUrl),
     credentials: 'include',

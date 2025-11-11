@@ -14,7 +14,6 @@ type CreateApolloClientUtilitiesOptions = Pick<
   ApolloClientOptions,
   | 'apiUrl'
   | 'wsUrl'
-  | 'mobileConfigOptions'
   | 'name'
   | 'version'
   | 'headers'
