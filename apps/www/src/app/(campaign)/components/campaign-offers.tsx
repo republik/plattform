@@ -1,6 +1,6 @@
 'use client'
 
-import { css } from '@republik/theme/css'
+import GoogleCTA from '@app/components/paynotes/google-cta'
 
 import IosCTA from '@app/components/paynotes/ios-cta'
 import { OfferOptionLabelOnly } from '@app/components/paynotes/offer-options'
@@ -9,6 +9,7 @@ import { FormField } from '@app/components/ui/form'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { css } from '@republik/theme/css'
 import { token } from '@republik/theme/tokens'
 import { useState } from 'react'
 
@@ -93,9 +94,13 @@ export function Offers({
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
 
-  const { isIOSApp } = usePlatformInformation()
+  const { isIOSApp, isAndroidApp } = usePlatformInformation()
   if (isIOSApp) {
     return <IosCTA />
+  }
+
+  if (isAndroidApp) {
+    return <GoogleCTA />
   }
 
   const allHiddenParams = { ...utmParams, ...additionalShopParams }

@@ -1,7 +1,5 @@
-import { useContext, useMemo, useRef } from 'react'
-
-// legacy imports for old-style dynamic components
-import compose from 'lodash/flowRight'
+import { ApolloConsumer, ApolloProvider, gql } from '@apollo/client'
+import { Mutation, Query, Subscription } from '@apollo/client/react/components'
 import {
   graphql,
   withApollo,
@@ -9,25 +7,27 @@ import {
   withQuery,
   withSubscription,
 } from '@apollo/client/react/hoc'
-import { ApolloConsumer, ApolloProvider, gql } from '@apollo/client'
-import { Mutation, Query, Subscription } from '@apollo/client/react/components'
-
-import { renderMdast } from '@republik/mdast-react-render'
 import {
   createArticleSchema,
-  createFormatSchema,
-  createDossierSchema,
   createDiscussionSchema,
+  createDossierSchema,
+  createFormatSchema,
   createNewsletterWebSchema,
-  createSectionSchema,
   createPageSchema,
   createRequire,
+  createSectionSchema,
   TeaserEmbedComment,
 } from '@project-r/styleguide'
+
+import { renderMdast } from '@republik/mdast-react-render'
 
 import { useMe } from 'lib/context/MeContext'
 import { useInNativeApp } from 'lib/withInNativeApp'
 import { useTranslation } from 'lib/withT'
+
+// legacy imports for old-style dynamic components
+import compose from 'lodash/flowRight'
+import { useContext, useMemo, useRef } from 'react'
 
 import { AudioContext } from '../Audio/AudioProvider'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
@@ -137,8 +137,8 @@ const useSchema = ({
       getSchemaCreator(template)({
         t,
         Link: HrefLink,
-        plattformUnauthorizedZoneText: inNativeIOSApp
-          ? t('plattformUnauthorizedZoneText/ios')
+        plattformUnauthorizedZoneText: inNativeApp
+          ? t('plattformUnauthorizedZoneText/apps')
           : undefined,
         dynamicComponentRequire,
         dynamicComponentIdentifiers,

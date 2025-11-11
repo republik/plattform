@@ -1,26 +1,26 @@
-import { useMemo } from 'react'
+import {
+  ColorContextProvider,
+  fontStyles,
+  Logo,
+  mediaQueries,
+  useColorContext,
+} from '@project-r/styleguide'
+import { IconOpensource } from '@republik/icons'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import {
-  Logo,
-  mediaQueries,
-  fontStyles,
-  ColorContextProvider,
-  useColorContext,
-} from '@project-r/styleguide'
+import { useMemo } from 'react'
+import withMe from '../../lib/apollo/withMe'
+import { useInNativeApp } from '../../lib/withInNativeApp'
 
 import withT from '../../lib/withT'
-import withMe from '../../lib/apollo/withMe'
 import { withSignOut } from '../Auth/SignOut'
-import { useInNativeApp } from '../../lib/withInNativeApp'
 import { ZINDEX_FOOTER } from '../constants'
+import Address from './Address'
+import LightSwitch from './lightswitch'
 
 import SocialLinks from './SocialLinks'
-import Address from './Address'
-import { IconOpensource } from '@republik/icons'
-import LightSwitch from './lightswitch'
 
 const styles = {
   bg: css({
@@ -136,12 +136,8 @@ const styles = {
 
 const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
   const [colorScheme] = useColorContext()
-  const {
-    inNativeApp,
-    inNativeAppVersion,
-    inNativeAppBuildId,
-    inNativeIOSApp,
-  } = useInNativeApp()
+  const { inNativeApp, inNativeAppVersion, inNativeAppBuildId } =
+    useInNativeApp()
 
   const navLinkStyle = useMemo(
     () =>
@@ -206,7 +202,7 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
                   </li>
                 </>
               )}
-              {!inNativeIOSApp && (
+              {!inNativeApp && (
                 <>
                   <li>
                     <FooterNavLink href={process.env.NEXT_PUBLIC_SHOP_BASE_URL}>
@@ -280,13 +276,11 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
                   <a {...navLinkStyle}>{t('nav/cockpit')}</a>
                 </FooterNavLink>
               </li>
-              {!inNativeIOSApp && (
-                <li>
-                  <FooterNavLink href='/faq'>
-                    <a {...navLinkStyle}>{t('footer/me/faq')}</a>
-                  </FooterNavLink>
-                </li>
-              )}
+              <li>
+                <FooterNavLink href='/faq'>
+                  <a {...navLinkStyle}>{t('footer/me/faq')}</a>
+                </FooterNavLink>
+              </li>
               <li>
                 <a
                   {...navLinkStyle}

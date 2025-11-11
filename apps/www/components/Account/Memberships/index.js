@@ -1,31 +1,24 @@
 import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
-import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 
-import withT from '../../../lib/withT'
-import { useInNativeApp, postMessage } from '../../../lib/withInNativeApp'
+import { useColorContext } from '@project-r/styleguide'
+import compose from 'lodash/flowRight'
+import { useRouter } from 'next/router'
 
-import Loader from '../../Loader'
-import UserGuidance from '../UserGuidance'
+import { useEffect } from 'react'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
+
+import withT from '../../../lib/withT'
 
 import withMembership from '../../Auth/withMembership'
-import Box from '../../Frame/Box'
 
-import { Interaction, useColorContext, A } from '@project-r/styleguide'
+import Loader from '../../Loader'
+import AccountSection from '../AccountSection'
 
 import MembershipList from '../Memberships/List'
 import PaymentSources from '../PaymentSources'
-import AccountSection from '../AccountSection'
+import UserGuidance from '../UserGuidance'
 import { ManageMagazineSubscription } from './ManageMagazineSubscription'
-
-const { P } = Interaction
-
-const AccountBox = ({ children }) => {
-  return <Box style={{ padding: 14, marginBottom: 20 }}>{children}</Box>
-}
 
 const Memberships = ({
   loading,
@@ -37,8 +30,8 @@ const Memberships = ({
   activeMagazineSubscription,
 }) => {
   const { query } = useRouter()
-  const { inNativeIOSApp, isMinimalNativeAppVersion } = useInNativeApp()
   const [colorScheme] = useColorContext()
+  const { inNativeApp } = useInNativeApp()
 
   useEffect(() => {
     if (window.location.hash.substr(1).length > 0) {
@@ -70,6 +63,7 @@ const Memberships = ({
             )}
 
             {activeMagazineSubscription ? (
+              // TODO: show a vanilla to the magazine in the apps
               // If user has active magazine subscription, we need to show the info.
               <ManageMagazineSubscription
                 subscription={activeMagazineSubscription}

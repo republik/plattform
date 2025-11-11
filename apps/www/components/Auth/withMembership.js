@@ -1,33 +1,32 @@
+import { A, Interaction } from '@project-r/styleguide'
+import { OPEN_ACCESS } from 'lib/constants'
+import Link from 'next/link'
 import { Fragment } from 'react'
-
-import { useTranslation } from '../../lib/withT'
+import { useMe } from '../../lib/context/MeContext'
 import { useInNativeApp } from '../../lib/withInNativeApp'
 
-import Frame from '../Frame'
-import SignIn from './SignIn'
-import Me from './Me'
+import { useTranslation } from '../../lib/withT'
 
-import { Interaction, A } from '@project-r/styleguide'
+import Frame from '../Frame'
+import { withMembership } from './checkRoles'
+import Me from './Me'
+import SignIn from './SignIn'
 
 import withAuthorization, { PageCenter } from './withAuthorization'
-import { withMembership } from './checkRoles'
-import Link from 'next/link'
-import { useMe } from '../../lib/context/MeContext'
-import { OPEN_ACCESS } from 'lib/constants'
 
 export const UnauthorizedMessage = ({
   unauthorizedTexts: { title, description } = {},
 }) => {
   const { me } = useMe()
-  const { inNativeIOSApp } = useInNativeApp()
+  const { inNativeApp } = useInNativeApp()
   const { t } = useTranslation()
 
-  if (inNativeIOSApp) {
+  if (inNativeApp) {
     return (
       <Fragment>
         {me && (
           <Interaction.H1 style={{ marginBottom: 10 }}>
-            {t('withMembership/ios/unauthorized/title')}
+            {t('withMembership/app/unauthorized/title')}
           </Interaction.H1>
         )}
         <br />
@@ -35,14 +34,14 @@ export const UnauthorizedMessage = ({
           beforeSignedInAs={
             <Fragment>
               <Interaction.P style={{ marginBottom: 20 }}>
-                {t('withMembership/ios/unauthorized/noMembership')}
+                {t('withMembership/app/unauthorized/noMembership')}
               </Interaction.P>
             </Fragment>
           }
           beforeSignInForm={
             <Fragment>
               <Interaction.P style={{ marginBottom: 20 }}>
-                {t('withMembership/ios/unauthorized/signIn')}
+                {t('withMembership/app/unauthorized/signIn')}
               </Interaction.P>
             </Fragment>
           }
