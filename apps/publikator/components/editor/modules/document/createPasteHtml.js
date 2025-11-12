@@ -1,6 +1,5 @@
 import { getEventTransfer } from '@republik/slate-react'
-import { fromHtml } from 'hast-util-from-html'
-import { toMdast } from 'hast-util-to-mdast'
+import Html from 'slate-html-serializer'
 
 const hasParent = (type, document, key) => {
   const parent = document.getParent(key)
@@ -8,25 +7,180 @@ const hasParent = (type, document, key) => {
   return parent.type === type ? true : hasParent(type, document, parent.key)
 }
 
-// Google adds a weird b tag around the paragraphs.
-// We remove it, because the parser doesnt like it.
-const normalise = (html) =>
-  html.replace(/<b[^>]*font-weight\s*:\s*normal[^>]*>/g, '')
+const getDescendantNodes = (node, all = []) => {
+  node.childNodes.forEach((child) => {
+    all.push(child)
+    getDescendantNodes(child, all)
+  })
+  return all
+}
 
 const PARAGRAPH_TYPES = ['PARAGRAPH', 'INFOP', 'BLOCKQUOTEPARAGRAPH']
 
-/*const {
-  FRAGMENT,
-  HTML,
-  NODE,
-  RICH,
-  TEXT
-} = TRANSFER_TYPES*/
+// Tags to blocks.
+const BLOCK_TAGS = {
+  p: 'PARAGRAPH',
+  // li: 'LISTITEM', -> custom handler to flatten nested lists
+  // ul: 'LIST',
+  // ol: 'LIST',
+  blockquote: 'PARAGRAPH',
+  h1: 'H2',
+  h2: 'H2',
+  h3: 'H2',
+  h4: 'H2',
+  h5: 'H2',
+  h6: 'H2',
+}
+
+// Tags to marks.
+const MARK_TAGS = {
+  strong: 'STRONG',
+  b: 'STRONG',
+  em: 'EMPHASIS',
+  i: 'EMPHASIS',
+}
+
+// Serializer rules.
+const RULES = [
+  {
+    deserialize(el, next) {
+      const block = BLOCK_TAGS[el.tagName.toLowerCase()]
+      if (!block) return
+      return {
+        kind: 'block',
+        type: block,
+        nodes: next(el.childNodes),
+      }
+    },
+  },
+  {
+    deserialize(el, next) {
+      const mark = MARK_TAGS[el.tagName.toLowerCase()]
+      if (!mark) return
+      return {
+        kind: 'mark',
+        type: mark,
+        nodes: next(el.childNodes),
+      }
+    },
+  },
+  // Special case for lists
+  {
+    deserialize(el, next) {
+      if (!['ul', 'ol'].includes(el.tagName.toLowerCase())) return
+      // nested lists are not supported, so we convert them to paragraphs
+      if (el.parentNode?.tagName?.toLowerCase() === 'li')
+        return {
+          kind: 'block',
+          type: 'PARAGRAPH',
+          nodes: next(el.childNodes),
+        }
+      return {
+        kind: 'block',
+        type: 'LIST',
+        data: {
+          ordered: false,
+          compact: true,
+        },
+        nodes: next(
+          getDescendantNodes(el).filter(
+            (n) => n.tagName?.toLowerCase() === 'li',
+          ),
+        ),
+      }
+    },
+  },
+  {
+    // Special case for images, to grab their src.
+    deserialize(el) {
+      if (el.tagName.toLowerCase() != 'img') return
+      return {
+        kind: 'block',
+        type: 'FIGURE',
+        isVoid: false,
+        data: {
+          excludeFromGallery: false,
+        },
+        nodes: [
+          {
+            kind: 'block',
+            type: 'FIGURE_IMAGE',
+            isVoid: true,
+            data: {
+              alt: 'Alt',
+              src: el.getAttribute('src'),
+              srcDark: el.getAttribute('src'),
+            },
+          },
+          {
+            kind: 'block',
+            type: 'FIGURE_CAPTION',
+            isVoid: false,
+            nodes: [
+              {
+                kind: 'block',
+                type: 'CAPTION_TEXT',
+                isVoid: false,
+                nodes: [
+                  {
+                    kind: 'text',
+                    leaves: [
+                      {
+                        kind: 'leaf',
+                        text: 'Caption',
+                      },
+                    ],
+                  },
+                ],
+              },
+              {
+                kind: 'block',
+                type: 'EMPHASIS',
+                isVoid: false,
+                nodes: [
+                  {
+                    kind: 'text',
+                    leaves: [
+                      {
+                        kind: 'leaf',
+                        text: 'Byline',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      }
+    },
+  },
+  {
+    // Special case for links, to grab their href.
+    deserialize(el, next) {
+      if (el.tagName.toLowerCase() != 'a') return
+      return {
+        kind: 'inline',
+        type: 'LINK',
+        isVoid: false,
+        data: {
+          title: '',
+          href: el.getAttribute('href'),
+        },
+        nodes: next(el.childNodes),
+      }
+    },
+  },
+]
+
+const serializer = new Html({ rules: RULES })
 
 const createPasteHtml = (centerModule) => (event, change, editor) => {
   const transfer = getEventTransfer(event)
   const cursor = editor.value.selection.anchorKey
   const blockType = editor.value.document.getClosestBlock(cursor).type
+
+  // console.log('PASTE EVENT', transfer, blockType)
 
   if (!transfer?.text) return
 
@@ -40,6 +194,7 @@ const createPasteHtml = (centerModule) => (event, change, editor) => {
   }
 
   if (transfer.type === 'html') {
+    // console.log('-> CONVERTING HTML')
     const isCenter = hasParent(centerModule.TYPE, editor.value.document, cursor)
 
     // we only paste html when we are in a paragraph in a center block (aka fliesstext)
@@ -48,25 +203,14 @@ const createPasteHtml = (centerModule) => (event, change, editor) => {
       return true
     }
 
-    // we fall back to inserting plain text when the html cannot be converted to mdast
     try {
-      const html = normalise(transfer.html)
-      const hast = fromHtml(html)
-      const mdast = toMdast(hast, {})
-      const currentSerializer = centerModule.helpers.childSerializer
-      const pastedAst = currentSerializer.deserialize(mdast, {
-        context: {},
-        onNoRule: () => {
-          // this happens when we paste something that's not quite correct html
-          // (e.g. li element without a parent ul)
-          // in this case we want to fall back to plain text
-          throw new Error('No rule to convert mdast to slate')
-        },
-      })
-      change.insertFragment(pastedAst.document)
+      const { document } = serializer.deserialize(
+        transfer.html.replace(/[\n\r]+/g, '\n'),
+      )
+      change.insertFragment(document)
       return true
     } catch (e) {
-      console.log('Error pasting html, falling back to text', e)
+      console.log('error pasting html', e)
       change.insertText(transfer.text.replace(/\n+/g, '\n'))
       return true
     }
