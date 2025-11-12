@@ -1,9 +1,9 @@
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
+import compose from 'lodash/flowRight'
+import Link from 'next/link'
 
 import withInNativeApp from '../../lib/withInNativeApp'
-import Link from 'next/link'
 
 const tokenQuery = gql`
   query accessTokenCustomPledge {
@@ -30,7 +30,6 @@ const TokenPackageLink = compose(
     children,
     params,
     inNativeApp,
-    inNativeIOSApp,
     inIOS,
     ...props
   }) => {

@@ -13,7 +13,7 @@ import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { css } from '@republik/theme/css'
 import { useTranslation } from 'lib/withT'
 import { useState } from 'react'
-import IosCTA from '../ios-cta'
+import NativeCta from '../native-cta'
 import { ExitSurvey, OpenSurveyButton } from './exit-survey'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
@@ -211,12 +211,12 @@ export function Offers({
 }: {
   additionalShopParams?: Record<string, string>
 }) {
-  const { isIOSApp } = usePlatformInformation()
-  if (isIOSApp) {
+  const { isNativeApp } = usePlatformInformation()
+  if (isNativeApp) {
     return (
       <PaynoteSection background='colors.background.marketingAlt'>
         <OffersHeader />
-        <IosCTA />
+        <NativeCta />
       </PaynoteSection>
     )
   }

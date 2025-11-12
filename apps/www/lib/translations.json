@@ -193,15 +193,15 @@
       "value": "Konto ansehen"
     },
     {
-      "key": "withMembership/ios/unauthorized/title",
+      "key": "withMembership/native/unauthorized/title",
       "value": "Verlegerbereich"
     },
     {
-      "key": "withMembership/ios/unauthorized/noMembership",
+      "key": "withMembership/native/unauthorized/noMembership",
       "value": "Sie haben keine aktive Mitgliedschaft."
     },
     {
-      "key": "withMembership/ios/unauthorized/signIn",
+      "key": "withMembership/native/unauthorized/signIn",
       "value": "Die Nutzung der App erfordert eine Mitgliedschaft oder ein Abo bei der Republik. "
     },
     {
@@ -1161,7 +1161,7 @@
       "value": "Anmelden und Republik verschenken"
     },
     {
-      "key": "Account/Access/Campaigns/becomeMamber/title",
+      "key": "Account/Access/Campaigns/becomeMember/title",
       "value": "Mitglied werden und Republik verschenken"
     },
     {
@@ -4372,7 +4372,7 @@
       "value": "Diese Visualisierung kann, aufgrund eines technischen Fehlers, nicht dargestellt werden."
     },
     {
-      "key": "plattformUnauthorizedZoneText/ios",
+      "key": "plattformUnauthorizedZoneText/native",
       "value": "Inhalt nur für Mitglieder. <a href=\"/probelesen\">Probelesen?</a>"
     },
     {
@@ -4682,6 +4682,10 @@
     {
       "key": "memberships/manage/autoPay/disable",
       "value": "Automatische Abbuchung deaktivieren"
+    },
+    {
+      "key": "memberships/manage/native/info",
+      "value": "Zum Verwalten besuchen Sie unsere Webseite."
     },
     {
       "key": "option/PROLONG/additionalPeriods/endDate",
@@ -5286,6 +5290,10 @@
     {
       "key": "prolongNecessary/YEARLY_ABO/overdue/explanation/cancelText",
       "value": "Abonnement kündigen"
+    },
+    {
+      "key": "prolongNecessary/native/info",
+      "value": "besuchen Sie unsere Webseite."
     },
     {
       "key": "crowdfunding/status/time/ended/PROLONG",
@@ -7976,16 +7984,20 @@
       "value": "Abonnieren und mitreden"
     },
     {
-      "key": "paynotes/ios/caption",
+      "key": "paynotes/native/caption",
       "value": "Unterstützen Sie unabhängigen Journalismus."
     },
     {
-      "key": "paynotes/ios/cta",
+      "key": "paynotes/native/cta",
       "value": "Alle Angebote auf {link}"
     },
     {
       "key": "paynotes/ios/text",
       "value": "Alle Angebote auf shop.republik.ch"
+    },
+    {
+      "key": "paynotes/android/text",
+      "value": "Alle Angebote finden Sie im Republik Online-Shop."
     },
     {
       "key": "paynotes/welcomeBanner",

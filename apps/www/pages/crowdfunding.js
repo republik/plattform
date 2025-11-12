@@ -1,36 +1,35 @@
-import Router, { withRouter } from 'next/router'
-import { css } from 'glamor'
-
-import { thousandSeparator } from '../lib/utils/format'
-import withT from '../lib/withT'
-import withInNativeApp from '../lib/withInNativeApp'
-
-import Frame from '../components/Frame'
-import Box from '../components/Frame/Box'
-import VideoCover from '../components/VideoCover'
-import ActionBar from '../components/ActionBar'
-import List, { Highlight } from '../components/List'
-import TestimonialList from '../components/Testimonial/List'
-import ContainerWithSidebar from '../components/Crowdfunding/ContainerWithSidebar'
-
-import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
-
 import {
-  Label,
-  Button,
-  Lead,
-  P,
   A,
+  Button,
+  Editorial,
+  fontStyles,
   H1,
   H2,
   Interaction,
-  VideoPlayer,
+  Label,
+  Lead,
+  P,
   useColorContext,
-  fontStyles,
-  Editorial,
+  VideoPlayer,
 } from '@project-r/styleguide'
+import { css } from 'glamor'
 import Link from 'next/link'
+import Router, { withRouter } from 'next/router'
+import ActionBar from '../components/ActionBar'
+import ContainerWithSidebar from '../components/Crowdfunding/ContainerWithSidebar'
+
+import Frame from '../components/Frame'
+import Box from '../components/Frame/Box'
+import List, { Highlight } from '../components/List'
+import TestimonialList from '../components/Testimonial/List'
+import VideoCover from '../components/VideoCover'
 import { withDefaultSSR } from '../lib/apollo/helpers'
+
+import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '../lib/constants'
+
+import { thousandSeparator } from '../lib/utils/format'
+import withInNativeApp from '../lib/withInNativeApp'
+import withT from '../lib/withT'
 
 const styles = {
   mediaDiversity: css({
@@ -67,9 +66,9 @@ export const VIDEOS = {
   },
 }
 
-export const Page = ({ router, t, inNativeIOSApp }) => {
+export const Page = ({ router, t, inNativeApp }) => {
   const [colorScheme] = useColorContext()
-  const pledgeLink = inNativeIOSApp ? null : (
+  const pledgeLink = inNativeApp ? null : (
     <Link href='/angebote' passHref legacyBehavior>
       <A>Jetzt mitmachen!</A>
     </Link>
@@ -618,7 +617,7 @@ export const Page = ({ router, t, inNativeIOSApp }) => {
         </P>
         <P>Willkommen an Bord!</P>
         <br />
-        {!inNativeIOSApp && (
+        {!inNativeApp && (
           <Link href='/angebote' key='pledge' passHref legacyBehavior>
             <Button primary style={{ minWidth: 300 }}>
               Jetzt mitmachen!
@@ -660,7 +659,7 @@ export const Page = ({ router, t, inNativeIOSApp }) => {
         <br />
       </ContainerWithSidebar>
     </Frame>
-  );
+  )
 }
 
 export default withDefaultSSR(withRouter(withT(withInNativeApp(Page))))
