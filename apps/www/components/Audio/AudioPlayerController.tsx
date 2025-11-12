@@ -493,15 +493,21 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     try {
       // Save the progress of the current track at 100%
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
-      await removeAudioQueueItem(activePlayerItem.id)
       
-      // After mutation, get updated queue from hook (uses optimistic response)
-      const updatedQueue = audioQueue || []
+      // Filter out current item to get updated queue
+      // Note: Can't use audioQueue from hook as React state hasn't updated yet
+      const updatedQueue = (audioQueue || []).filter(
+        item => item.id !== activePlayerItem.id
+      )
 
       console.log('Audio Controller: onQueueAdvance', {
+        removingItemId: activePlayerItem.id,
         queueLength: updatedQueue.length,
         autoPlay,
       })
+
+      // Remove from server (optimistic response keeps UI in sync)
+      await removeAudioQueueItem(activePlayerItem.id)
 
       audioQueueRef.current = [...updatedQueue]
       setInitialized(true)
