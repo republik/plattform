@@ -19,12 +19,14 @@ export class OfferBuilder {
   private paymentService: PaymentService
   private subscriptionService: SubscriptionService
   private upgradeService: UpgradeService
+  private pgdb: PgDb
   private offers: Offer[]
   private promoCode?: string
   private priceData?: Stripe.Price[]
   private context: {
     userId?: string
     activeSubscription?: Promise<Subscription | null>
+    activeMembership?: Promise<any | null>
     hasUnresolvedUpgrades?: Promise<boolean | null>
   }
 
@@ -39,6 +41,7 @@ export class OfferBuilder {
     this.paymentService = paymentService
     this.subscriptionService = new SubscriptionService(pgdb)
     this.upgradeService = new UpgradeService(pgdb, logger)
+    this.pgdb = pgdb
     this.context = {}
 
     this.offers = Array.isArray(offer) ? offer : [offer]
@@ -58,6 +61,13 @@ export class OfferBuilder {
         ])
 
         return subs[0]
+      })()
+      this.context.activeMembership = (async () => {
+        const activeMembership = await this.pgdb.public.memberships.find({
+          userId: userId,
+          active: true,
+        })
+        return activeMembership[0]
       })()
       this.context.hasUnresolvedUpgrades = (async () => {
         return await this.upgradeService.hasUnresolvedUpgrades({
@@ -118,6 +128,12 @@ export class OfferBuilder {
     offer: Offer,
   ): Promise<{ kind: OfferAvailability; startDate?: Date }> {
     const sub = await this.context.activeSubscription
+    const membership = await this.context.activeMembership
+
+    if (membership?.active) {
+      return { kind: 'UNAVAILABLE' }
+    }
+
     const hasUnresolvedUpgreads = await this.context.hasUnresolvedUpgrades
     if (offer.id.startsWith('GIFT')) return { kind: 'PURCHASABLE' }
 
