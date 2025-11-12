@@ -63,7 +63,6 @@ const Memberships = ({
             )}
 
             {activeMagazineSubscription ? (
-              // TODO: show a vanilla to the magazine in the apps
               // If user has active magazine subscription, we need to show the info.
               <ManageMagazineSubscription
                 subscription={activeMagazineSubscription}
