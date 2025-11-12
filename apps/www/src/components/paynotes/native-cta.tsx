@@ -65,7 +65,6 @@ function NativeCta() {
 
   return (
     <div className={nativeCtaStyle}>
-      <Arrow />
       {isIOSApp && <p>{t('paynotes/ios/text')}</p>}
       {isAndroidApp && <p>{t('paynotes/android/text')}</p>}
     </div>
