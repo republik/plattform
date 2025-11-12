@@ -138,7 +138,7 @@ const useSchema = ({
         t,
         Link: HrefLink,
         plattformUnauthorizedZoneText: inNativeApp
-          ? t('plattformUnauthorizedZoneText/apps')
+          ? t('plattformUnauthorizedZoneText/native')
           : undefined,
         dynamicComponentRequire,
         dynamicComponentIdentifiers,
