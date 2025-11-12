@@ -26,9 +26,37 @@ const Actions = ({
   setAutoPay,
 }) => {
   const [{ updating, remoteError }, setState] = useState({})
+  const { inNativeApp } = useInNativeApp()
 
   if (updating) {
     return <InlineSpinner />
+  }
+
+  if (inNativeApp) {
+    return (
+      <>
+        <P>{t('memberships/manage/native/info')}</P>
+        {membership.active && !hasWaitingMemberships && membership.renew && (
+          <P>
+            <Link
+              href={{
+                pathname: '/abgang',
+                query: { membershipId: membership.id },
+              }}
+              passHref
+              legacyBehavior
+            >
+              <A>
+                {t.first([
+                  `memberships/${membership.type.name}/manage/cancel/link`,
+                  'memberships/manage/cancel/link',
+                ])}
+              </A>
+            </Link>
+          </P>
+        )}
+      </>
+    )
   }
 
   return (
@@ -254,7 +282,6 @@ const Manage = ({
   const endDate = latestPeriod && new Date(latestPeriod.endDate)
   const formattedEndDate = latestPeriod && dayFormat(endDate)
   const overdue = latestPeriod && endDate < new Date()
-  const { inNativeApp } = useInNativeApp()
 
   return (
     <AccountItem
@@ -278,11 +305,6 @@ const Manage = ({
             { formattedEndDate },
             '',
           )}
-          {inNativeApp ? (
-            <span>, {t('prolongNecessary/native/info')}</span>
-          ) : (
-            ''
-          )}
         </P>
       )}
       {membership.active && !!latestPeriod && overdue && (
@@ -293,11 +315,6 @@ const Manage = ({
               'memberships/latestPeriod/overdue',
             ],
             { formattedEndDate },
-          )}
-          {inNativeApp ? (
-            <span>, {t('prolongNecessary/native/info')}</span>
-          ) : (
-            ''
           )}
         </P>
       )}
@@ -310,14 +327,9 @@ const Manage = ({
             ],
             { formattedEndDate },
           )}
-          {inNativeApp ? (
-            <span>, {t('prolongNecessary/native/info')}</span>
-          ) : (
-            ''
-          )}
         </P>
       )}
-      {actions && !inNativeApp && (
+      {actions && (
         <ManageActions
           membership={membership}
           activeMembership={activeMembership}

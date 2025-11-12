@@ -4684,6 +4684,10 @@
       "value": "Automatische Abbuchung deaktivieren"
     },
     {
+      "key": "memberships/manage/native/info",
+      "value": "Zum Verwalten besuchen Sie unsere Webseite."
+    },
+    {
       "key": "option/PROLONG/additionalPeriods/endDate",
       "value": "Neu gültig bis {formattedEndDate}"
     },
