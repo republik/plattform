@@ -5288,8 +5288,8 @@
       "value": "Abonnement kündigen"
     },
     {
-      "key": "prolongNecessary/apps/info",
-      "value": "Besuchen Sie unsere Webseite, um mehr zu verlängern."
+      "key": "prolongNecessary/native/info",
+      "value": "besuchen Sie unsere Webseite."
     },
     {
       "key": "crowdfunding/status/time/ended/PROLONG",

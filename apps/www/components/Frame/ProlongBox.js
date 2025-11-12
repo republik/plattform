@@ -114,7 +114,7 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
       '',
     )
 
-    const link = (inNativeApp && t('prolongNecessary/apps/info')) ||
+    const link = (inNativeApp && t('prolongNecessary/native/info')) ||
       (membership.canProlong && (
         <TokenPackageLink key='link' params={{ package: 'PROLONG' }}>
           <Editorial.A {...styleTextColor}>

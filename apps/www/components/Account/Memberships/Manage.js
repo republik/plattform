@@ -1,18 +1,19 @@
-import { useState } from 'react'
-import PropTypes from 'prop-types'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
 
-import withT from '../../../lib/withT'
+import { A, colors, InlineSpinner } from '@project-r/styleguide'
+import compose from 'lodash/flowRight'
+import Link from 'next/link'
+import PropTypes from 'prop-types'
+import { useState } from 'react'
 import { errorToString } from '../../../lib/utils/errors'
 import { timeFormat } from '../../../lib/utils/format'
-import { Item as AccountItem, P } from '../Elements'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
+
+import withT from '../../../lib/withT'
 
 import TokenPackageLink from '../../Link/TokenPackage'
-
-import { InlineSpinner, colors, A } from '@project-r/styleguide'
-import Link from 'next/link'
+import { Item as AccountItem, P } from '../Elements'
 
 const dayFormat = timeFormat('%d. %B %Y')
 
@@ -253,6 +254,7 @@ const Manage = ({
   const endDate = latestPeriod && new Date(latestPeriod.endDate)
   const formattedEndDate = latestPeriod && dayFormat(endDate)
   const overdue = latestPeriod && endDate < new Date()
+  const { inNativeApp } = useInNativeApp()
 
   return (
     <AccountItem
@@ -268,16 +270,19 @@ const Manage = ({
     >
       {membership.active && !!latestPeriod && !overdue && (
         <P>
-          {membership.active &&
-            !membership.overdue &&
-            t.first(
-              [
-                `memberships/${membership.type.name}/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`,
-                `memberships/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`,
-              ],
-              { formattedEndDate },
-              '',
-            )}
+          {t.first(
+            [
+              `memberships/${membership.type.name}/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`,
+              `memberships/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`,
+            ],
+            { formattedEndDate },
+            '',
+          )}
+          {inNativeApp ? (
+            <span>, {t('prolongNecessary/native/info')}</span>
+          ) : (
+            ''
+          )}
         </P>
       )}
       {membership.active && !!latestPeriod && overdue && (
@@ -288,6 +293,11 @@ const Manage = ({
               'memberships/latestPeriod/overdue',
             ],
             { formattedEndDate },
+          )}
+          {inNativeApp ? (
+            <span>, {t('prolongNecessary/native/info')}</span>
+          ) : (
+            ''
           )}
         </P>
       )}
@@ -300,9 +310,14 @@ const Manage = ({
             ],
             { formattedEndDate },
           )}
+          {inNativeApp ? (
+            <span>, {t('prolongNecessary/native/info')}</span>
+          ) : (
+            ''
+          )}
         </P>
       )}
-      {actions && (
+      {actions && !inNativeApp && (
         <ManageActions
           membership={membership}
           activeMembership={activeMembership}
