@@ -26,7 +26,7 @@ export const UnauthorizedMessage = ({
       <Fragment>
         {me && (
           <Interaction.H1 style={{ marginBottom: 10 }}>
-            {t('withMembership/app/unauthorized/title')}
+            {t('withMembership/native/unauthorized/title')}
           </Interaction.H1>
         )}
         <br />
@@ -34,14 +34,14 @@ export const UnauthorizedMessage = ({
           beforeSignedInAs={
             <Fragment>
               <Interaction.P style={{ marginBottom: 20 }}>
-                {t('withMembership/app/unauthorized/noMembership')}
+                {t('withMembership/native/unauthorized/noMembership')}
               </Interaction.P>
             </Fragment>
           }
           beforeSignInForm={
             <Fragment>
               <Interaction.P style={{ marginBottom: 20 }}>
-                {t('withMembership/app/unauthorized/signIn')}
+                {t('withMembership/native/unauthorized/signIn')}
               </Interaction.P>
             </Fragment>
           }

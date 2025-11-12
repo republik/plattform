@@ -193,15 +193,15 @@
       "value": "Konto ansehen"
     },
     {
-      "key": "withMembership/app/unauthorized/title",
+      "key": "withMembership/native/unauthorized/title",
       "value": "Verlegerbereich"
     },
     {
-      "key": "withMembership/app/unauthorized/noMembership",
+      "key": "withMembership/native/unauthorized/noMembership",
       "value": "Sie haben keine aktive Mitgliedschaft."
     },
     {
-      "key": "withMembership/app/unauthorized/signIn",
+      "key": "withMembership/native/unauthorized/signIn",
       "value": "Die Nutzung der App erfordert eine Mitgliedschaft oder ein Abo bei der Republik. "
     },
     {
