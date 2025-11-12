@@ -8,7 +8,7 @@ const {
 const { expressMiddleware } = require('@as-integrations/express4')
 const express = require('express')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
-const { useServer } = require('graphql-ws/lib/use/ws')
+const { useServer } = require('graphql-ws/use/ws')
 const { WebSocketServer } = require('ws')
 const { logger: baseLogger } = require('@orbiting/backend-modules-logger')
 
@@ -18,6 +18,7 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
   COOKIE_NAME,
 } = require('@orbiting/backend-modules-auth/lib/CookieOptions')
+const { validate, getOperationAST, GraphQLError, parse } = require('graphql')
 const { NODE_ENV } = process.env
 
 const documentApiKeyScheme = 'DocumentApiKey'
@@ -60,52 +61,15 @@ module.exports = async (
     })
     // prime User dataloader with me
     if (
-      context.user &&
-      context.user.id && // global.testUser has no id
-      context.loaders &&
-      context.loaders.User
+      context?.user?.id && // global.testUser has no id
+      context?.loaders?.User
     ) {
       context.loaders.User.byId.prime(context.user.id, context.user)
     }
-    return context
-  }
 
-  const webSocketOnConnect = async (connectionParams, websocket) => {
-    try {
-      // apollo-fetch used in tests sends cookie on the connectionParams
-      const cookiesRaw =
-        NODE_ENV === 'development' && connectionParams.cookies
-          ? connectionParams.cookies
-          : websocket.upgradeReq.headers.cookie
-      if (!cookiesRaw) {
-        return createContext({ scope: 'socket' })
-      }
-      const cookies = cookie.parse(cookiesRaw)
-      const authCookie = cookies[COOKIE_NAME]
-      const sid =
-        authCookie &&
-        cookieParser.signedCookie(authCookie, process.env.SESSION_SECRET)
-      const session = sid && (await pgdb.public.sessions.findOne({ sid }))
-      if (
-        session &&
-        session.sess &&
-        session.sess.passport &&
-        session.sess.passport.user
-      ) {
-        const user = await pgdb.public.users.findOne({
-          id: session.sess.passport.user,
-        })
-        return createContext({
-          scope: 'socket',
-          user: transformUser(user),
-        })
-      }
-      return createContext({ scope: 'socket' })
-    } catch (e) {
-      console.error('error in subscriptions.onConnect', e)
-      // throwing inside onConnect disconnects the client
-      throw new Error('error in subscriptions.onConnect')
-    }
+    logger.debug('gql context ready')
+
+    return context
   }
 
   const apolloServer = new ApolloServer({
@@ -165,28 +129,45 @@ module.exports = async (
   useServer(
     {
       schema: executableSchema,
-      context: async (ctx) => {
-        // Adapt the graphql-ws context to our existing webSocketOnConnect function
-        // graphql-ws provides ctx.connectionParams and ctx.extra.socket
-        const connectionParams = ctx.connectionParams || {}
-        const websocket = ctx.extra.socket
-        
-        // Create a compatibility layer for the old API
-        const compatWebsocket = {
-          upgradeReq: websocket.upgradeReq || {
-            headers: websocket._socket?._httpMessage?.headers || {},
-          },
+      onConnect: async (conn) => {
+        // only allow connections for signed in users
+        return (await authWebSocket(conn, pgdb)) !== null
+      },
+      // hook to only allow subscription operations over the websocket connection
+      onSubscribe: (_conn, _id, payload) => {
+        const args = {
+          schema: executableSchema,
+          operationName: payload.operationName,
+          document: parse(payload.query),
+          variableValues: payload.variables,
         }
-        
-        return await webSocketOnConnect(connectionParams, compatWebsocket)
+        const operationAST = getOperationAST(args.document, args.operationName)
+        if (!operationAST) {
+          return [new GraphQLError('Unable to identify operation')]
+        }
+        if (operationAST.operation !== 'subscription') {
+          return [
+            new GraphQLError('Only subscription operations are supported'),
+          ]
+        }
+        const errors = validate(args.schema, args.document)
+        if (errors.length > 0) {
+          return errors
+        }
+
+        return args
       },
-      onConnect: async (ctx) => {
-        const logger = baseLogger.child({}, { msgPrefix: '[socket:connect] ' })
-        logger.info('WebSocket client connected')
-      },
-      onDisconnect: async (ctx) => {
-        const logger = baseLogger.child({}, { msgPrefix: '[socket:disconnect] ' })
-        logger.info('WebSocket client disconnected')
+      context: async (conn) => {
+        try {
+          const user = await authWebSocket(conn, pgdb)
+
+          return createContext({
+            scope: 'socket',
+            user: transformUser(user),
+          })
+        } catch (e) {
+          throw new Error('Unautherised websocket connection')
+        }
       },
     },
     wsServer,
@@ -204,4 +185,46 @@ module.exports = async (
       },
     }),
   )
+}
+
+/**
+ * Authenticate a websocket connection
+ * @param {import('graphql-ws').Context} conn
+ */
+async function authWebSocket(conn, pgdb) {
+  const authCookie = getSessionCookieFromWebSocket(conn)
+  const sid = cookieParser.signedCookie(authCookie, process.env.SESSION_SECRET)
+
+  const user = await getUserBySessionId(sid, pgdb)
+  if (!user) {
+    return null
+  }
+
+  return user
+}
+
+/**
+ * Extract session cookie form websocket request
+ * @param {import('graphql-ws').Context} conn
+ */
+function getSessionCookieFromWebSocket(conn) {
+  // apparently apollo fetch in tests passes the cookie as connectionParams
+  const cookieHeader =
+    NODE_ENV === 'development' && conn.connectionParams?.cookies
+      ? conn.connectionParams?.cookies
+      : conn.extra.request.headers.cookie
+
+  const cookies = cookie.parse(cookieHeader)
+  const authCookie = cookies[COOKIE_NAME]
+
+  return authCookie
+}
+
+async function getUserBySessionId(sid, pgdb) {
+  const user = await pgdb.public.queryOne(
+    `SELECT u.* FROM sessions s JOIN users u on u.id = (s.sess->'passport'->>'user')::uuid WHERE s.sid = :sid;`,
+    { sid: sid },
+  )
+
+  return user
 }

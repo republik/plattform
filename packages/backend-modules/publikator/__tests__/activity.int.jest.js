@@ -28,14 +28,14 @@ test('no user uncommittedChanges', async () => {
         expect(error).toBeFalsy()
       },
     })
-    client
-      .request({
+    client.subscribe(
+      {
         query: UNCOMMITED_CHANGES_SUBSCRIPTION,
         variables: {
           repoId: 'irrelevant',
         },
-      })
-      .subscribe({
+      },
+      {
         next: (result) => {
           expect(result).toBeTruthy()
           expect(result.errors).toBeTruthy()
@@ -45,7 +45,8 @@ test('no user uncommittedChanges', async () => {
           resolve()
         },
         // error: (errors) => {
-      })
+      },
+    )
   })
 })
 
@@ -62,14 +63,14 @@ test('no role uncommittedChanges', async () => {
         expect(error).toBeFalsy()
       },
     })
-    client
-      .request({
+    client.subscribe(
+      {
         query: UNCOMMITED_CHANGES_SUBSCRIPTION,
         variables: {
           repoId: 'irrelevant',
         },
-      })
-      .subscribe({
+      },
+      {
         next: (result) => {
           expect(result).toBeTruthy()
           expect(result.errors).toBeTruthy()
@@ -80,7 +81,8 @@ test('no role uncommittedChanges', async () => {
           client.close()
           resolve()
         },
-      })
+      },
+    )
   })
 })
 
@@ -100,7 +102,7 @@ test('uncommittedChanges', async () => {
         expect(error).toBeFalsy()
       },
     })
-    client.onConnected(() => {
+    client.on('connected', () => {
       setTimeout(() => {
         apolloFetch({
           query: UNCOMMITED_CHANGES_MUTATION,
@@ -112,14 +114,14 @@ test('uncommittedChanges', async () => {
       }, 200)
     })
 
-    client
-      .request({
+    client.subscribe(
+      {
         query: UNCOMMITED_CHANGES_SUBSCRIPTION,
         variables: {
           repoId,
         },
-      })
-      .subscribe({
+      },
+      {
         next: (result) => {
           expect(result).toBeTruthy()
           expect(result.errors).toBeFalsy()
@@ -129,6 +131,7 @@ test('uncommittedChanges', async () => {
           client.close()
           resolve()
         },
-      })
+      },
+    )
   })
 })

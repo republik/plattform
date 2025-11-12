@@ -45,30 +45,7 @@ module.exports = (port) => {
         },
       })
 
-      // Create compatibility wrapper for old subscriptions-transport-ws API
-      return {
-        request: ({ query, variables, operationName }) => ({
-          subscribe: ({ next, error, complete }) => {
-            const unsubscribe = client.subscribe(
-              { query, variables, operationName },
-              {
-                next: (value) => next(value),
-                error: (err) => error && error(err),
-                complete: () => complete && complete(),
-              },
-            )
-            return { unsubscribe }
-          },
-        }),
-        onConnected: (callback) => {
-          // graphql-ws doesn't have a direct equivalent, but we can use a promise
-          // The connection happens on first subscribe, so we'll call it immediately
-          setTimeout(callback, 100)
-        },
-        close: () => {
-          client.dispose()
-        },
-      }
+      return client
     },
   }
 }
