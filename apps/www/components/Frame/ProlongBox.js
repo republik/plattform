@@ -75,6 +75,22 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
 
     const styleTextColor = colorScheme.set('color', 'text')
 
+    if (inNativeApp && membership.canProlong) {
+      return (
+        <div
+          {...styles.box}
+          {...styleTextColor}
+          {...colorScheme.set('backgroundColor', 'alert')}
+        >
+          <SingleLine>
+            {t.first.elements(prefixTranslationKeys, {
+              link: t('prolongNecessary/native/info'),
+            })}
+          </SingleLine>
+        </div>
+      )
+    }
+
     const explanation = t.first.elements(
       prefixTranslationKeys.map((k) => `${k}/explanation`),
       {
@@ -114,26 +130,25 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
       '',
     )
 
-    const link = (inNativeApp && t('prolongNecessary/native/info')) ||
-      (membership.canProlong && (
-        <TokenPackageLink key='link' params={{ package: 'PROLONG' }}>
-          <Editorial.A {...styleTextColor}>
-            {t.first(prefixTranslationKeys.map((k) => `${k}/linkText`))}
-          </Editorial.A>
-        </TokenPackageLink>
-      )) || (
-        <Link
-          key='link'
-          href={{ pathname: `/angebote`, query: { package: 'ABO' } }}
-          passHref
-          prefetch={false}
-          legacyBehavior
-        >
-          <Editorial.A {...styleTextColor}>
-            {t.first(prefixTranslationKeys.map((k) => `${k}/linkText`))}
-          </Editorial.A>
-        </Link>
-      )
+    const link = (membership.canProlong && (
+      <TokenPackageLink key='link' params={{ package: 'PROLONG' }}>
+        <Editorial.A {...styleTextColor}>
+          {t.first(prefixTranslationKeys.map((k) => `${k}/linkText`))}
+        </Editorial.A>
+      </TokenPackageLink>
+    )) || (
+      <Link
+        key='link'
+        href={{ pathname: `/angebote`, query: { package: 'ABO' } }}
+        passHref
+        prefetch={false}
+        legacyBehavior
+      >
+        <Editorial.A {...styleTextColor}>
+          {t.first(prefixTranslationKeys.map((k) => `${k}/linkText`))}
+        </Editorial.A>
+      </Link>
+    )
 
     return (
       <div
