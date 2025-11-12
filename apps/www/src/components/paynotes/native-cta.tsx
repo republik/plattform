@@ -33,7 +33,7 @@ function Arrow() {
 function NativeCta() {
   const { t } = useTranslation()
   const { isMinimalNativeAppVersion } = useInNativeApp()
-  const { isIOSApp } = usePlatformInformation()
+  const { isIOSApp, isAndroidApp } = usePlatformInformation()
   const canUseIOSLinkCta = isIOSApp && isMinimalNativeAppVersion('2.3.0')
 
   if (canUseIOSLinkCta) {
@@ -66,7 +66,8 @@ function NativeCta() {
   return (
     <div className={nativeCtaStyle}>
       <Arrow />
-      <p>{t('paynotes/native/text')}</p>
+      {isIOSApp && <p>{t('paynotes/ios/text')}</p>}
+      {isAndroidApp && <p>{t('paynotes/android/text')}</p>}
     </div>
   )
 }

@@ -2,7 +2,6 @@
 
 import { Offers } from '@app/components/paynotes/paynote/paynote-offers'
 import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { css } from '@republik/theme/css'
 import { useMe } from 'lib/context/MeContext'
 import { StructuredText } from 'react-datocms/structured-text'
@@ -13,7 +12,6 @@ import { usePaynoteVariants } from './use-paynotes'
 
 function PaynoteInline() {
   const { paynoteKind } = usePaynotes()
-  const { isNativeApp } = usePlatformInformation()
   const paynotes = usePaynoteVariants()
   const { trialStatus } = useMe()
 
@@ -21,9 +19,7 @@ function PaynoteInline() {
     return null
   }
 
-  const ready = paynotes && !isNativeApp
-
-  if (!ready) {
+  if (!paynotes) {
     return null
   }
 

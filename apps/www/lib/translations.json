@@ -7988,8 +7988,12 @@
       "value": "Alle Angebote auf {link}"
     },
     {
-      "key": "paynotes/native/text",
+      "key": "paynotes/ios/text",
       "value": "Alle Angebote auf shop.republik.ch"
+    },
+    {
+      "key": "paynotes/android/text",
+      "value": "Alle Angebote finden Sie im Republik Web Shop."
     },
     {
       "key": "paynotes/welcomeBanner",
