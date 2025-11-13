@@ -191,7 +191,7 @@ module.exports = async (
     socketManager.closeConnections(sessionId)
   })
 
-  await await apolloServer.start()
+  await apolloServer.start()
   server.use(
     '/graphql',
     jsonBodyMiddleware,
@@ -203,20 +203,30 @@ module.exports = async (
   )
 }
 
+const standardJsonParser = express.json({ limit: '10mb' })
+const trustedJsonParser = express.json({ limit: '128mb' })
+const TRUSTED_GQL_CLIENT = process.env.TRUSTED_GQL_CLIENT ?? null
+
 function jsonBodyMiddleware(req, res, next) {
   const client = req.get('apollographql-client-name') ?? 'unknown-client'
-  const trustedClient = process.env.TRUSTED_GQL_CLIENT ?? null
 
-  const limit = trustedClient && trustedClient === client ? '128mb' : '10mb'
+  const isTrusted =
+    TRUSTED_GQL_CLIENT && TRUSTED_GQL_CLIENT === client ? '128mb' : '10mb'
 
   req.log.debug(
-    { limit: limit, trustedClient: trustedClient, client },
+    {
+      limit: isTrusted ? '128mb' : '10mb',
+      trustedClient: TRUSTED_GQL_CLIENT,
+      client,
+    },
     'json body parser limit set',
   )
 
-  return express.json({
-    limit: limit,
-  })(req, res, next)
+  if (isTrusted) {
+    return trustedJsonParser(req, res, next)
+  } else {
+    return standardJsonParser(req, res, next)
+  }
 }
 
 /**
@@ -226,6 +236,9 @@ function jsonBodyMiddleware(req, res, next) {
 async function authWebSocket(conn, pgdb) {
   const authCookie = getSessionCookieFromWebSocket(conn)
   const sid = cookieParser.signedCookie(authCookie, process.env.SESSION_SECRET)
+  if (!sid) {
+    return null
+  }
 
   const user = await getUserBySessionId(sid, pgdb)
   if (!user) {
