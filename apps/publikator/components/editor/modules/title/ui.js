@@ -10,7 +10,7 @@ export default ({ TYPE, subModules, editorOptions }) => {
     block.type === TYPE || subModules.some((m) => m.TYPE === block.type)
   const Form = createPropertyForm({
     isDisabled: ({ value }) => !value.blocks.some(isTitleBlock),
-  })(({ disabled, value, onChange }) => {
+  })(({ disabled, value, onChange, repoId }) => {
     if (disabled) {
       return null
     }
@@ -54,6 +54,7 @@ export default ({ TYPE, subModules, editorOptions }) => {
                     center: block.data.get('center') || false,
                   })}
                   onInputChange={onInputChange(block)}
+                  repoId={repoId}
                 />
                 {hasAnyCover && (
                   <A

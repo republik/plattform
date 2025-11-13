@@ -13,7 +13,7 @@ export const createCoverForm = (TYPE) =>
         return matchBlock(TYPE)(value.document.getParent(block.key))
       })
     },
-  })(({ disabled, value, onChange }) => {
+  })(({ disabled, value, onChange, repoId }) => {
     if (disabled) {
       return null
     }
@@ -40,6 +40,7 @@ export const createCoverForm = (TYPE) =>
             alt: '',
           }).merge(node.data)}
           onInputChange={onInputChange}
+          repoId={repoId}
         />
         <Label>
           Anzeigegrössen: 2000x1125 und 1280x675 (zentrierter Schnitt)

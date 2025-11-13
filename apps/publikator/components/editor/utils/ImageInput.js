@@ -4,6 +4,7 @@ import { Label, Spinner } from '@project-r/styleguide'
 import withT from '../../../lib/withT'
 import { IconClose as MdClose } from '@republik/icons'
 import { useImageUpload } from '../../../lib/hooks/useImageUpload'
+import { useRepoFileUrl } from '../../../lib/hooks/useRepoFileUrl'
 
 const styles = {
   label: css({
@@ -47,6 +48,9 @@ const ImageInput = ({
 }) => {
   const { uploadImage, uploading, progress, error } = useImageUpload(repoId)
   const [previewUrl, setPreviewUrl] = useState(null)
+  
+  // Resolve repo-file:// URLs to actual HTTP URLs
+  const resolvedSrc = useRepoFileUrl(src)
 
   const handleFileChange = async (e) => {
     const files = e.target.files
@@ -98,7 +102,7 @@ const ImageInput = ({
     }
   }
 
-  const displaySrc = previewUrl || src
+  const displaySrc = previewUrl || resolvedSrc
 
   return (
     <div style={{ position: 'relative' }}>

@@ -4,6 +4,7 @@ import { colors } from '@project-r/styleguide'
 import { matchBlock } from '../../utils'
 import { gray2x1 } from '../../utils/placeholder'
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
+import { useRepoFileUrl } from '../../../../lib/hooks/useRepoFileUrl'
 
 const styles = {
   border: css({
@@ -16,6 +17,24 @@ const styles = {
       outlineColor: colors.primary,
     },
   }),
+}
+
+// Wrapper component to resolve repo-file:// URLs
+const FigureImageRenderer = ({ Image, src, srcDark, alt, active, attributes }) => {
+  const resolvedSrc = useRepoFileUrl(src)
+  const resolvedSrcDark = useRepoFileUrl(srcDark)
+
+  return (
+    <span {...styles.border} {...attributes} data-active={active}>
+      <Image
+        src={resolvedSrc || gray2x1}
+        dark={{
+          src: resolvedSrcDark || resolvedSrc || gray2x1,
+        }}
+        alt={alt}
+      />
+    </span>
+  )
 }
 
 export default ({ rule, subModules, TYPE }) => {
@@ -77,16 +96,14 @@ export default ({ rule, subModules, TYPE }) => {
           )
 
           return (
-            <span {...styles.border} {...attributes} data-active={active}>
-              <Image
-                src={node.data.get('src') || gray2x1}
-                dark={{
-                  src:
-                    node.data.get('srcDark') || node.data.get('src') || gray2x1,
-                }}
-                alt={node.data.get('alt')}
-              />
-            </span>
+            <FigureImageRenderer
+              Image={Image}
+              src={node.data.get('src')}
+              srcDark={node.data.get('srcDark')}
+              alt={node.data.get('alt')}
+              active={active}
+              attributes={attributes}
+            />
           )
         },
         schema: {

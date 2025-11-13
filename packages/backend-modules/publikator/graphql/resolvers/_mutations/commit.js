@@ -19,7 +19,7 @@ const {
 const { hashObject } = require('../../../lib/git')
 const { updateCurrentPhase, toCommit } = require('../../../lib/postgres')
 const { maybeApplyAudioSourceDuration } = require('../../../lib/audioSource')
-const { getPublicUrl } = require('../../../lib/File/utils')
+const { getPublicUrl, updateAcl } = require('../../../lib/File/utils')
 
 const {
   lib: {
@@ -84,6 +84,16 @@ const createImageUrlHandler = (repoId, pgdb) => {
       
       if (file.status !== 'Private' && file.status !== 'Public') {
         throw new Error(`File ${fileId} is not ready (status: ${file.status})`)
+      }
+      
+      // Make the file Public when it's committed to a document
+      if (file.status === 'Private') {
+        await pgdb.publikator.files.updateOne(
+          { id: fileId },
+          { status: 'Public', updatedAt: new Date() }
+        )
+        await updateAcl({ ...file, status: 'Public' })
+        file.status = 'Public'
       }
       
       // Return the S3 URL with dimensions if available
@@ -178,7 +188,7 @@ module.exports = async (_, args, context) => {
 
       // Create repo if it doesn't exist yet
       if (!repo) {
-        await tx.publikator.repos.insert({ id: repoId, meta: { isTemplate } })
+      await tx.publikator.repos.insert({ id: repoId, meta: { isTemplate } })
       }
     }
 

@@ -61,7 +61,7 @@ module.exports = async (_, args, context) => {
     // Extract image metadata if this is an image
     const imageMetadata = await extractImageMetadata(file)
 
-    const updatedFile = await pgdb.publikator.files.updateAndGetOne(
+    const updatedFile = await tx.publikator.files.updateAndGetOne(
       { id },
       {
         status: 'Private',
@@ -72,6 +72,10 @@ module.exports = async (_, args, context) => {
     )
 
     await tx.transactionCommit()
+    
+    // Clear the loader cache for this file
+    loaders.File.byId.clear(id)
+    
     return updatedFile
   } catch (e) {
     await tx.transactionRollback()

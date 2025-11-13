@@ -32,7 +32,7 @@ const blockFactories = {
 }
 
 const createForm = (options) =>
-  withT(({ t, value, onChange }) => {
+  withT(({ t, value, onChange, repoId }) => {
     const { TYPE, editorOptions } = options
 
     const matchInlineType = matchInline(TYPE)
@@ -71,6 +71,7 @@ const createForm = (options) =>
             ).merge(node.data)}
             onInputChange={onInputChange(node)}
             customFields={editorOptions.fields}
+            repoId={repoId}
           />
         ))}
       </div>
