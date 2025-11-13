@@ -983,6 +983,7 @@ export class EditorPage extends Component {
                       )}
                       onSaveSearchAndReplace={this.persistChanges.bind(this)}
                       onGoToRaw={() => this.goToRaw(isTemplate)}
+                      repoId={repoId}
                     />
                   )}
                 </Sidebar.Tab>

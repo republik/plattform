@@ -1,6 +1,8 @@
 import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
+import compose from 'lodash/flowRight'
+import { withRouter } from 'next/router'
 
 import {
   Interaction,
@@ -10,6 +12,7 @@ import {
   slug,
 } from '@project-r/styleguide'
 import withT from '../../../../lib/withT'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
 import MetaForm from '../../utils/MetaForm'
 import SlugField from '../../utils/SlugField'
@@ -63,7 +66,9 @@ const MetaData = ({
   customFields = [],
   teaser: Teaser,
   t,
+  router,
 }) => {
+  const repoId = getRepoIdFromQuery(router.query)
   const node = value.document
 
   const titleNode = value.document.findDescendant(
@@ -311,6 +316,7 @@ const MetaData = ({
             format={formatData}
             editor={editor}
             node={node}
+            repoId={repoId}
           />
           <MetaOptionGroupTitle>SEO</MetaOptionGroupTitle>
           <MetaOptionGroup>
@@ -349,4 +355,4 @@ const MetaData = ({
   )
 }
 
-export default withT(MetaData)
+export default compose(withT, withRouter)(MetaData)

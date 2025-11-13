@@ -255,6 +255,12 @@ type RepoFile {
   readyAt: DateTime
   failedAt: DateTime
   destroyedAt: DateTime
+  # Image-specific metadata
+  contentType: String
+  size: Int
+  width: Int
+  height: Int
+  isImage: Boolean!
 }
 
 `

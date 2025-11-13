@@ -105,6 +105,8 @@ type mutations {
   repoFileUploadBegin(
     repoId: ID!
     name: String!
+    contentType: String
+    size: Int
   ): RepoFile!
   "Commit an upload to file"
   repoFileUploadCommit(id: ID!): RepoFile!

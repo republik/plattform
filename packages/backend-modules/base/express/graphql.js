@@ -178,9 +178,8 @@ module.exports = async (
   await apolloServer.start()
   server.use(
     '/graphql',
-    express.json({
-      limit: '128mb',
-    }),
+    // 16MB limit for all requests - images now upload via presigned URLs instead of base64
+    express.json({ limit: '16mb' }),
     expressMiddleware(apolloServer, {
       context: async ({ req, res }) => {
         return createContext({ user: req.user, req, res, scope: 'request' })

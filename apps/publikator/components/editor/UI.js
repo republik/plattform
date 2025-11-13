@@ -11,6 +11,7 @@ const EditorUI = ({
   onSaveSearchAndReplace,
   onGoToRaw,
   serializedState,
+  repoId,
 }) => {
   const formAreaRef = useRef(null)
 
@@ -129,7 +130,7 @@ const EditorUI = ({
         <div style={{ marginBottom: '36px' }}>
           {propertyForms.map((Form, i) => (
             <div key={`form-${i}`}>
-              <Form value={value} onChange={onChange} />
+              <Form value={value} onChange={onChange} repoId={repoId} />
             </div>
           ))}
         </div>

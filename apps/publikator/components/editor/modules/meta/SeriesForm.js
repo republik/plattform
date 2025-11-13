@@ -255,6 +255,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                   logo,
                 })
               }}
+              repoId={repoId}
             />
           </div>
           <div style={{ float: 'left' }}>
@@ -269,6 +270,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                   logoDark,
                 })
               }}
+              repoId={repoId}
             />
           </div>
           <br style={{ clear: 'both' }} />
