@@ -11,6 +11,8 @@ const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { useServer } = require('graphql-ws/use/ws')
 const { WebSocketServer } = require('ws')
 const { logger: baseLogger } = require('@orbiting/backend-modules-logger')
+const socketManager = require('../lib/socket-manager')
+const ControlChannel = require('../lib/ControlChannel')
 
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
@@ -131,7 +133,17 @@ module.exports = async (
       schema: executableSchema,
       onConnect: async (conn) => {
         // only allow connections for signed in users
-        return (await authWebSocket(conn, pgdb)) !== null
+        const authCtx = await authWebSocket(conn, pgdb)
+        if (authCtx !== null) {
+          conn.extra.sessionId = authCtx.sid
+          socketManager.addSocket(authCtx.sid, conn.extra.socket)
+          return true
+        }
+      },
+      onClose: (conn) => {
+        if (conn.extra.sessionId) {
+          socketManager.removeSocket(conn.extra.sessionId, conn.extra.socket)
+        }
       },
       // hook to only allow subscription operations over the websocket connection
       onSubscribe: (_conn, _id, payload) => {
@@ -159,12 +171,14 @@ module.exports = async (
       },
       context: async (conn) => {
         try {
-          const user = await authWebSocket(conn, pgdb)
+          const authCtx = await authWebSocket(conn, pgdb)
 
-          return createContext({
+          const gqlContext = await createContext({
             scope: 'socket',
-            user: transformUser(user),
+            user: transformUser(authCtx.user),
           })
+
+          return gqlContext
         } catch (e) {
           throw new Error('Unautherised websocket connection')
         }
@@ -173,18 +187,36 @@ module.exports = async (
     wsServer,
   )
 
-  await apolloServer.start()
+  ControlChannel.subscribe('auth:logout', ({ sessionId }) => {
+    socketManager.closeConnections(sessionId)
+  })
+
+  await await apolloServer.start()
   server.use(
     '/graphql',
-    express.json({
-      limit: '128mb',
-    }),
+    jsonBodyMiddleware,
     expressMiddleware(apolloServer, {
       context: async ({ req, res }) => {
         return createContext({ user: req.user, req, res, scope: 'request' })
       },
     }),
   )
+}
+
+function jsonBodyMiddleware(req, res, next) {
+  const client = req.get('apollographql-client-name') ?? 'unknown-client'
+  const trustedClient = process.env.TRUSTED_GQL_CLIENT ?? null
+
+  const limit = trustedClient && trustedClient === client ? '128mb' : '10mb'
+
+  req.log.debug(
+    { limit: limit, trustedClient: trustedClient, client },
+    'json body parser limit set',
+  )
+
+  return express.json({
+    limit: limit,
+  })(req, res, next)
 }
 
 /**
@@ -200,7 +232,7 @@ async function authWebSocket(conn, pgdb) {
     return null
   }
 
-  return user
+  return { sid, user }
 }
 
 /**

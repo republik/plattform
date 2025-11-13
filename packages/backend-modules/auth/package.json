@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@orbiting/backend-modules-dataloader": "*",
+    "@orbiting/backend-modules-base": "*",
     "@types/is-uuid": "^1.0.0",
     "apollo-modules-node": "*",
     "check-env": "^1.3.0",
