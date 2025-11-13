@@ -47,18 +47,42 @@
                     <p
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                      <strong style="{{sg_font_style_sans_serif_medium}}">ARTIKEL PUBLIZIERTT</strong
-                      >
+                      <strong style="{{sg_font_style_sans_serif_medium}}">Neuer Beitrag von
+                      {{#if AUTHOR_PORTRAIT_URL}}
+
+                      <img
+                        height="50"
+                        src="{{AUTHOR_PORTRAIT_URL}}"
+                        style="
+                          border: 0px;
+                          border-radius: 100%;
+                          width: 50px !important;
+                          height: 50px !important;
+                          margin: 0px;
+                        "
+                        width="50"
+                        alt=""
+                      />
+
+                      {{/if}}
+
+                      {{AUTHOR_NAME}}</strong>
                     </p>
                     <p
-                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                      style="color:#282828;font-size:24px;line-height:32px;{{sg_font_style_serif_title}}"
                     >
+                      {{TITLE}}
+                    </p>
+                    <p
+                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_serif_regular}}"
+                    >
+                      {{DESCRIPTION}}
                     </p>
 
                     <p
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                      <a href="{{URL}}">Den Beitrag im Kontext auf republik.ch anzeigen</a>. Dort können Sie antworten und weiter debattieren.<br/>
+                      <a href="{{URL}}">Beitrag öffnen</a>
                     </p>
                   </td>
                 </tr>
