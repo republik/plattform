@@ -6,7 +6,8 @@ const {
 
 const Promise = require('bluebird')
 
-const { FRONTEND_BASE_URL } = process.env
+const { DEFAULT_MAIL_FROM_ADDRESS, DEFAULT_MAIL_FROM_NAME, FRONTEND_BASE_URL } =
+  process.env
 
 const groupSubscribersByObjectId = (subscribers, key) =>
   subscribers.reduce((agg, user) => {
@@ -114,7 +115,9 @@ const notifyPublish = async (
 
     const title =
       subscribedDoc.meta.notificationTitle ||
-      t('api/notifications/doc/title', {title: `«${subscribedDoc.meta.title}»`})
+      t('api/notifications/doc/title', {
+        title: `«${subscribedDoc.meta.title}»`,
+      })
 
     const subscribers = docSubscribersByDocId[docId]
 
@@ -126,6 +129,15 @@ const notifyPublish = async (
           app: {
             ...appContent,
             title,
+          },
+          mail: (u) => {
+            return {
+              to: u.email,
+              subject: title,
+              fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
+              fromName: DEFAULT_MAIL_FROM_NAME,
+              templateName: 'publish_article_notification',
+            }
           },
         },
       },
@@ -191,6 +203,17 @@ const notifyPublish = async (
               title: t('api/notifications/doc/author/title', {
                 name: author.name,
               }),
+            },
+            mail: (u) => {
+              return {
+                to: u.email,
+                subject: t('api/notifications/doc/author/title', {
+                  name: author.name,
+                }),
+                fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
+                fromName: DEFAULT_MAIL_FROM_NAME,
+                templateName: 'publish_author_notification',
+              }
             },
           },
         },
