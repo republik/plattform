@@ -129,13 +129,24 @@ export class OfferBuilder {
   ): Promise<{ kind: OfferAvailability; startDate?: Date }> {
     const sub = await this.context.activeSubscription
     const membership = await this.context.activeMembership
+    const hasUnresolvedUpgreads = await this.context.hasUnresolvedUpgrades
+
+    if (offer.id.startsWith('GIFT')) return { kind: 'PURCHASABLE' }
 
     if (membership?.active) {
+      const typeName = await this.getPledgeMembershipTypeName(
+        membership.membershipTypeId,
+      )
+
+      if (
+        offer.id === 'DONATION' &&
+        (typeName.name === 'ABO' || typeName.name === 'BENEFACTOR_ABO')
+      ) {
+        return { kind: 'PURCHASABLE', startDate: new Date() }
+      }
+
       return { kind: 'UNAVAILABLE' }
     }
-
-    const hasUnresolvedUpgreads = await this.context.hasUnresolvedUpgrades
-    if (offer.id.startsWith('GIFT')) return { kind: 'PURCHASABLE' }
 
     if (sub) {
       if (this.offerService.resolveUpgradePaths(sub.type).includes(offer.id)) {
@@ -197,5 +208,14 @@ export class OfferBuilder {
           }
         : undefined,
     }
+  }
+
+  private async getPledgeMembershipTypeName(typeId: string) {
+    console.log(typeId)
+
+    return this.pgdb.public.membershipTypes.findFirst(
+      { id: typeId },
+      { fields: ['name'] },
+    )
   }
 }
