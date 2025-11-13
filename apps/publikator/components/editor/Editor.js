@@ -198,6 +198,7 @@ class Editor extends Component {
       mdastSchema: schema,
       meta: props.meta,
       isTemplate: props.isTemplate,
+      repoId: props.repoId,
     }
     const rootModule = initModule(rootRule, context)
 

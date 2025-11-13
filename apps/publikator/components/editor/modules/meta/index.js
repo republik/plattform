@@ -22,6 +22,7 @@ export default ({ rule, TYPE, context = {} }) => {
                   mdastSchema={context.mdastSchema}
                   contextMeta={context.meta}
                   isTemplate={context.isTemplate}
+                  repoId={context.repoId}
                 />
               </ColorContextProvider>
             </div>

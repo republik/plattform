@@ -93,6 +93,7 @@ class Form extends Component {
       customFields = [],
       getWidth = defaultGetWidth,
       black,
+      repoId,
     } = this.props
 
     return (
@@ -177,6 +178,7 @@ class Form extends Component {
                   src={value}
                   onChange={onInputChange(key)}
                   dark={!!key.match(/dark/i)}
+                  repoId={repoId}
                 />
               )
             } else if (typeof value === 'boolean') {

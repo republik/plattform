@@ -46,14 +46,19 @@ module.exports = async (_, args, context) => {
   const tx = await pgdb.transactionBegin()
 
   try {
-    const repo = await loaders.Repo.byId.load(repoId)
+    // Check if repo exists, if not create it (similar to commit mutation)
+    let repo = await tx.publikator.repos.findOne({ id: repoId })
     if (!repo) {
-      throw new Error(t('api/publikator/repo/404'))
+      // Create the repo if it doesn't exist yet (first upload before first commit)
+      repo = await tx.publikator.repos.insertAndGet({ 
+        id: repoId, 
+        meta: {} 
+      })
     }
 
     const safeFileName = getSafeFileName(name)
 
-    const file = await pgdb.publikator.files.insertAndGet({
+    const file = await tx.publikator.files.insertAndGet({
       repoId: repo.id,
       name: safeFileName,
       status: 'Pending',

@@ -390,6 +390,7 @@ export default withT(({ t, editor, node, onRepoInputChange, repoId }) => {
                   data={defaultValues.merge(values)}
                   onInputChange={onEpisodeFieldChange}
                   getWidth={() => '50%'}
+                  repoId={repoId}
                 />
               </div>
             )

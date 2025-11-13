@@ -30,7 +30,7 @@ const previews = {
   twitter: SharePreviewTwitter,
 }
 
-const BaseForm = ({ socialKey, data, onInputChange }) => {
+const BaseForm = ({ socialKey, data, onInputChange, repoId }) => {
   const initValues = Map([
     [socialKey + 'Title', ''],
     [socialKey + 'Description', ''],
@@ -43,6 +43,7 @@ const BaseForm = ({ socialKey, data, onInputChange }) => {
       data={initData}
       onInputChange={onInputChange}
       getWidth={() => 620}
+      repoId={repoId}
     />
   )
 }
@@ -185,6 +186,7 @@ const ShareImageForm = withT(({ t, editor, node, onInputChange, format, repoId }
               socialKey={socialKey}
               data={data}
               onInputChange={onInputChange}
+              repoId={repoId}
             />
             {generated ? (
               <>

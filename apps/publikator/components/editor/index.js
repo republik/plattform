@@ -777,8 +777,8 @@ export class EditorPage extends Component {
       t,
     } = this.props
     const { commitId, publishDate, preview: showPreview } = router.query
-    const repoId = getRepoIdFromQuery(router.query)
     const { loading, repo } = data
+    const repoId = repo?.id || getRepoIdFromQuery(router.query)
     const { loading: templateLoading, error: templateError } = templateData
     const {
       schema,
@@ -952,6 +952,7 @@ export class EditorPage extends Component {
                         schema={schema}
                         isTemplate={isTemplate}
                         meta={meta}
+                        repoId={repoId}
                         value={editorState}
                         onChange={this.changeHandler}
                         onDocumentChange={this.documentChangeHandler}

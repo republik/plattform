@@ -67,8 +67,9 @@ const MetaData = ({
   teaser: Teaser,
   t,
   router,
+  repoId: propsRepoId,
 }) => {
-  const repoId = getRepoIdFromQuery(router.query)
+  const repoId = propsRepoId || getRepoIdFromQuery(router.query)
   const node = value.document
 
   const titleNode = value.document.findDescendant(
@@ -226,6 +227,7 @@ const MetaData = ({
           onInputChange={onInputChange}
           black
           getWidth={getWidth}
+          repoId={repoId}
         />
         <br />
         {slugFieldElement}
@@ -285,6 +287,7 @@ const MetaData = ({
           onInputChange={onInputChange}
           black
           getWidth={() => '50%'}
+          repoId={repoId}
         />
         {!!series && (
           <SeriesForm
@@ -320,7 +323,7 @@ const MetaData = ({
           />
           <MetaOptionGroupTitle>SEO</MetaOptionGroupTitle>
           <MetaOptionGroup>
-            <MetaForm data={seoData} onInputChange={onInputChange} black />
+            <MetaForm data={seoData} onInputChange={onInputChange} black repoId={repoId} />
             {slugFieldElement}
             <GooglePreview
               title={
@@ -348,6 +351,7 @@ const MetaData = ({
           node={node}
           onInputChange={onInputChange}
           format={titleData?.format?.meta}
+          repoId={repoId}
         />
         <ArticleRecommendations editor={editor} node={node} />
       </div>

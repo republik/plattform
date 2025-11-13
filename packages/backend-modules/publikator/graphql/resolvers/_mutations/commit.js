@@ -161,7 +161,13 @@ module.exports = async (_, args, context) => {
     }
 
     const repo = await tx.publikator.repos.findOne({ id: repoId })
-    if (repo) {
+    
+    // Check if there are any commits in this repo (not just if repo exists)
+    const hasCommits = repo 
+      ? await tx.publikator.commits.count({ repoId }) > 0
+      : false
+    
+    if (hasCommits) {
       if (!parentId) {
         throw new Error(t('api/commit/parentId/required', { repoId }))
       }
@@ -170,7 +176,10 @@ module.exports = async (_, args, context) => {
         throw new Error(t('api/commit/parentId/notAllowed', { repoId }))
       }
 
-      await tx.publikator.repos.insert({ id: repoId, meta: { isTemplate } })
+      // Create repo if it doesn't exist yet
+      if (!repo) {
+        await tx.publikator.repos.insert({ id: repoId, meta: { isTemplate } })
+      }
     }
 
     const imageUrlHandler = createImageUrlHandler(repoId, tx)
