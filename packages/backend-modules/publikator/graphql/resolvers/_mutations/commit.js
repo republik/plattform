@@ -19,6 +19,7 @@ const {
 const { hashObject } = require('../../../lib/git')
 const { updateCurrentPhase, toCommit } = require('../../../lib/postgres')
 const { maybeApplyAudioSourceDuration } = require('../../../lib/audioSource')
+const { getPublicUrl, updateAcl } = require('../../../lib/File/utils')
 
 const {
   lib: {
@@ -68,12 +69,44 @@ const maybeDataUriToBlob = async (url) => {
   return generateImageData(dataUriToBuffer(url))
 }
 
-const createImageUrlHandler = (repoId) => {
+const createImageUrlHandler = (repoId, pgdb) => {
   const unprefix = createRepoUrlUnprefixer(repoId)
 
   return async (url) => {
+    // NEW: Handle repo-file:// references
+    if (url && url.startsWith('repo-file://')) {
+      const fileId = url.replace('repo-file://', '')
+      const file = await pgdb.publikator.files.findOne({ id: fileId, repoId })
+      
+      if (!file) {
+        throw new Error(`File not found: ${fileId}`)
+      }
+      
+      if (file.status !== 'Private' && file.status !== 'Public') {
+        throw new Error(`File ${fileId} is not ready (status: ${file.status})`)
+      }
+      
+      // Make the file Public when it's committed to a document
+      if (file.status === 'Private') {
+        await pgdb.publikator.files.updateOne(
+          { id: fileId },
+          { status: 'Public', updatedAt: new Date() }
+        )
+        await updateAcl({ ...file, status: 'Public' })
+        file.status = 'Public'
+      }
+      
+      // Return the S3 URL with dimensions if available
+      const publicUrl = getPublicUrl(file)
+      if (file.width && file.height) {
+        return `${publicUrl}?size=${file.width}x${file.height}`
+      }
+      return publicUrl
+    }
+
     const unprefixedUrl = unprefix(url)
 
+    // KEEP for backward compatibility - process existing base64 images in old commits
     const image =
       (await maybeFetchToBlob(unprefixedUrl)) ||
       (await maybeDataUriToBlob(unprefixedUrl))
@@ -138,7 +171,13 @@ module.exports = async (_, args, context) => {
     }
 
     const repo = await tx.publikator.repos.findOne({ id: repoId })
-    if (repo) {
+    
+    // Check if there are any commits in this repo (not just if repo exists)
+    const hasCommits = repo 
+      ? await tx.publikator.commits.count({ repoId }) > 0
+      : false
+    
+    if (hasCommits) {
       if (!parentId) {
         throw new Error(t('api/commit/parentId/required', { repoId }))
       }
@@ -147,10 +186,13 @@ module.exports = async (_, args, context) => {
         throw new Error(t('api/commit/parentId/notAllowed', { repoId }))
       }
 
+      // Create repo if it doesn't exist yet
+      if (!repo) {
       await tx.publikator.repos.insert({ id: repoId, meta: { isTemplate } })
+      }
     }
 
-    const imageUrlHandler = createImageUrlHandler(repoId)
+    const imageUrlHandler = createImageUrlHandler(repoId, tx)
 
     await Promise.all([
       processRepoImageUrlsInContent(content, imageUrlHandler),

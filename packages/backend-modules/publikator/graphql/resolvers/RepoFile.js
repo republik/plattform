@@ -13,4 +13,8 @@ module.exports = {
       null
     )
   },
+  isImage: (file) => {
+    if (!file.contentType) return false
+    return file.contentType.startsWith('image/')
+  },
 }

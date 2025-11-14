@@ -20,7 +20,7 @@ const AUDIO_SOURCE_KINDS = [
   'readAloud',
   // 'syntheticReadAloud', // not in use (yet)
 ]
-export default withT(({ t, editor, node, onInputChange, format }) => {
+export default withT(({ t, editor, node, onInputChange, format, repoId }) => {
   const audioCoverAnchors = [null, 'middle'].map((value) => ({
     value,
     text: t(`metaData/audio/cover/anchor/${value}`),
@@ -60,6 +60,7 @@ export default withT(({ t, editor, node, onInputChange, format }) => {
           onInputChange={onInputChange}
           getWidth={() => ''}
           black
+          repoId={repoId}
         />
       </MetaOption>
       <MetaOptionGroupTitle>Audiotyp</MetaOptionGroupTitle>

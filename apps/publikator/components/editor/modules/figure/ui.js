@@ -30,7 +30,7 @@ function createUI({
       return !value.blocks.some(isFigureBlock)
     },
   })(
-    withT(({ disabled, value, onChange, t }) => {
+    withT(({ disabled, value, onChange, t, repoId }) => {
       if (disabled) {
         return null
       }
@@ -88,6 +88,7 @@ function createUI({
                       alt: '',
                     }).merge(imageBlock.data.remove('srcDark'))}
                     onInputChange={onInputChange(imageBlock)}
+                    repoId={repoId}
                   />
                   {imageBlock.data.get('src') && (
                     <>
@@ -96,6 +97,7 @@ function createUI({
                           srcDark: imageBlock.data.get('srcDark') || '',
                         })}
                         onInputChange={onInputChange(imageBlock)}
+                        repoId={repoId}
                       />
                       <Label>{t('metaData/field/srcDark/note')}</Label>
                     </>
@@ -107,6 +109,7 @@ function createUI({
                           captionBlock.data.get('captionRight') || false,
                       })}
                       onInputChange={onInputChange(captionBlock)}
+                      repoId={repoId}
                     />
                   )}
                   {plainOption && (
@@ -115,6 +118,7 @@ function createUI({
                         plain: block.data.get('plain') || false,
                       })}
                       onInputChange={onInputChange(block)}
+                      repoId={repoId}
                     />
                   )}
                   {!!applicableSizes.length && (

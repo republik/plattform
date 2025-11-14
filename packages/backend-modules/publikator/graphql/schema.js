@@ -7,6 +7,7 @@ schema {
 
 type queries {
   repo(id: ID!): Repo
+  repoFile(id: ID!): RepoFile
 
   """
   This query is a cached version of repos query. It uses cached information
@@ -105,6 +106,8 @@ type mutations {
   repoFileUploadBegin(
     repoId: ID!
     name: String!
+    contentType: String
+    size: Int
   ): RepoFile!
   "Commit an upload to file"
   repoFileUploadCommit(id: ID!): RepoFile!

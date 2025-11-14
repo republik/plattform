@@ -30,7 +30,7 @@ const previews = {
   twitter: SharePreviewTwitter,
 }
 
-const BaseForm = ({ socialKey, data, onInputChange }) => {
+const BaseForm = ({ socialKey, data, onInputChange, repoId }) => {
   const initValues = Map([
     [socialKey + 'Title', ''],
     [socialKey + 'Description', ''],
@@ -43,11 +43,12 @@ const BaseForm = ({ socialKey, data, onInputChange }) => {
       data={initData}
       onInputChange={onInputChange}
       getWidth={() => 620}
+      repoId={repoId}
     />
   )
 }
 
-const UploadImage = withT(({ t, data, onInputChange, socialKey }) => {
+const UploadImage = withT(({ t, data, onInputChange, socialKey, repoId }) => {
   const imageKey = socialKey + 'Image'
   const labelHeight = 17 + 5
 
@@ -67,6 +68,7 @@ const UploadImage = withT(({ t, data, onInputChange, socialKey }) => {
           !data.get('image') ? '/static/teilen.png' : data.get('image')
         }
         onChange={onInputChange(imageKey)}
+        repoId={repoId}
       />
     </div>
   )
@@ -114,7 +116,7 @@ const PreviewText = ({ data, socialKey }) => {
   )
 }
 
-const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
+const ShareImageForm = withT(({ t, editor, node, onInputChange, format, repoId }) => {
   const generated = !!(
     node.data.get('shareText') ||
     node.data.get('shareFontSize') ||
@@ -184,6 +186,7 @@ const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
               socialKey={socialKey}
               data={data}
               onInputChange={onInputChange}
+              repoId={repoId}
             />
             {generated ? (
               <>
@@ -206,6 +209,7 @@ const ShareImageForm = withT(({ t, editor, node, onInputChange, format }) => {
                 socialKey={socialKey}
                 data={data}
                 onInputChange={onInputChange}
+                repoId={repoId}
               />
             )}
             <PreviewText data={data} socialKey={socialKey} />

@@ -33,7 +33,7 @@ export default ({ TYPE, newBlock, rule }) => {
     </span>
   ))
 
-  const Form = ({ disabled, value, onChange }) => {
+  const Form = ({ disabled, value, onChange, repoId }) => {
     if (disabled) {
       return null
     }
@@ -57,6 +57,7 @@ export default ({ TYPE, newBlock, rule }) => {
                 identifier: '',
               }).merge(node.data)}
               onInputChange={onInputChange}
+              repoId={repoId}
             />
           )
         })}
