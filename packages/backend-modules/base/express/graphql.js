@@ -12,7 +12,7 @@ const { useServer } = require('graphql-ws/use/ws')
 const { WebSocketServer } = require('ws')
 const { logger: baseLogger } = require('@orbiting/backend-modules-logger')
 const socketManager = require('../lib/socket-manager')
-const ControlChannel = require('../lib/ControlChannel')
+const ControlBus = require('../lib/ControlBus')
 
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
@@ -187,7 +187,7 @@ module.exports = async (
     wsServer,
   )
 
-  ControlChannel.subscribe('auth:logout', ({ sessionId }) => {
+  ControlBus.subscribe('auth:logout', ({ sessionId }) => {
     socketManager.closeConnections(sessionId)
   })
 

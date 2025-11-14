@@ -4,5 +4,5 @@ module.exports = {
   Redis: require('./Redis'),
   RedisPubSub: require('./RedisPubSub'),
   ConnectionContext: require('./ConnectionContext'),
-  ControlChannel: require('./ControlChannel'),
+  ControlBus: require('./ControlBus'),
 }
