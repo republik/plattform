@@ -77,7 +77,8 @@ function fetchTransactions(pgdb: PgDb, userId: string) {
       status::text,
       total as amount,
       "createdAt"
-    FROM payments.invoices WHERE "userId" = :userId
+    FROM payments.invoices WHERE "userId" = :userId and status not in ('')
+         AND status not in ('void', 'draft', 'uncollectible')
     UNION ALL
     SELECT
       "pledgePayments".id,
@@ -93,7 +94,9 @@ function fetchTransactions(pgdb: PgDb, userId: string) {
   	JOIN public.payments AS p_payments ON "pledgePayments"."paymentId" = p_payments.id
   	JOIN public.packages AS package ON pledges."packageId" = package.id
   	JOIN public.companies AS companies ON package."companyId" = companies.id
-    WHERE pledges."userId" = :userId ORDER BY "createdAt" DESC
+    WHERE pledges."userId" = :userId
+          AND p_payments.status::text not in ('CANCELLED')
+    ORDER BY "createdAt" DESC
   `,
     {
       userId: userId,
