@@ -1,32 +1,32 @@
 import { ColorContextProvider } from '@project-r/styleguide'
+import { useMe } from '../../lib/context/MeContext'
 
 import { useInNativeApp } from '../../lib/withInNativeApp'
 import UserGuidance from '../Account/UserGuidance'
+import ChallengeAcceptedMarketingTeaser from '../ChallengeAccepted/ChallengeAcceptedMarketingTeaser'
 import ErrorMessage from '../ErrorMessage'
-import MarketingTrialForm from './MarketingTrialForm'
 import { MainContainer } from '../Frame'
+import Carpet from './Carpet'
+import SectionContainer from './Common/SectionContainer'
+import Community from './Community'
+import Formats from './Formats'
+import Logo from './Logo'
+import MarketingTrialForm from './MarketingTrialForm'
+import Reasons from './Reasons'
+import Team from './Team'
 
 import Top from './Top'
-import Carpet from './Carpet'
-import Team from './Team'
-import Reasons from './Reasons'
-import Formats from './Formats'
 import Vision from './Vision'
-import Logo from './Logo'
-import Community from './Community'
-import SectionContainer from './Common/SectionContainer'
-import ChallengeAcceptedMarketingTeaser from '../ChallengeAccepted/ChallengeAcceptedMarketingTeaser'
-import { useMe } from '../../lib/context/MeContext'
 // CAMPAIGN MODE
 // import { TrialPaynote } from '@app/app/(campaign)/components/trial-paynote'
 
 const Marketing = ({ data }) => {
-  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
+  const { inNativeApp } = useInNativeApp()
   const { me, meLoading, meError, hasActiveMembership } = useMe()
 
   return (
     <>
-      {me && !meLoading && !hasActiveMembership && !inNativeIOSApp && (
+      {me && !meLoading && !hasActiveMembership && (
         <div
           style={{
             paddingTop: 30,

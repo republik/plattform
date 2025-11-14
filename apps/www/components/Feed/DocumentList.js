@@ -1,17 +1,17 @@
-import compose from 'lodash/flowRight'
+import { A, Button, Interaction, Spinner } from '@project-r/styleguide'
 import { css } from 'glamor'
+import compose from 'lodash/flowRight'
+import Link from 'next/link'
 import PropTypes from 'prop-types'
-import { A, Spinner, Interaction, Button } from '@project-r/styleguide'
-
-import withT from '../../lib/withT'
-import withInNativeApp, { useInNativeApp } from '../../lib/withInNativeApp'
-import Feed from './Feed'
-import ErrorMessage from '../ErrorMessage'
 
 import { useInfiniteScroll } from '../../lib/hooks/useInfiniteScroll'
+import withInNativeApp, { useInNativeApp } from '../../lib/withInNativeApp'
+
+import withT from '../../lib/withT'
 import { WithoutAccess } from '../Auth/withMembership'
+import ErrorMessage from '../ErrorMessage'
 import Box from '../Frame/Box'
-import Link from 'next/link'
+import Feed from './Feed'
 
 const styles = {
   more: css({
@@ -35,7 +35,7 @@ const DocumentList = ({
     { containerRef, infiniteScroll, loadingMore, loadingMoreError },
     setInfiniteScroll,
   ] = useInfiniteScroll({ hasMore, loadMore })
-  const { inNativeIOSApp } = useInNativeApp()
+  const { inNativeApp } = useInNativeApp()
 
   if (totalCount < 1) {
     return null
@@ -79,7 +79,7 @@ const DocumentList = ({
                   </Link>
                   .
                 </Interaction.P>
-                {!inNativeIOSApp && (
+                {!inNativeApp && (
                   <>
                     <Interaction.P>
                       Falls nicht: Höchste Zeit, an Bord zu kommen!
@@ -105,7 +105,7 @@ const DocumentList = ({
           <A
             href='#'
             onClick={(event) => {
-              event && event.preventDefault()
+              event?.preventDefault()
               setInfiniteScroll(true)
             }}
           >

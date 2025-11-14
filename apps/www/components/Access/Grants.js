@@ -1,19 +1,19 @@
-import compose from 'lodash/flowRight'
+import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { graphql } from '@apollo/client/react/hoc'
 
-import { Interaction, A } from '@project-r/styleguide'
+import { A, Interaction } from '@project-r/styleguide'
+import compose from 'lodash/flowRight'
+import Link from 'next/link'
 
 import { timeFormat } from '../../lib/utils/format'
 import withInNativeApp from '../../lib/withInNativeApp'
 import withT from '../../lib/withT'
-import Link from 'next/link'
-import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const { P } = Interaction
 
 const dayFormat = timeFormat('%e. %B %Y')
 
-const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
+const AccessGrants = ({ accessGrants, inNativeApp, t }) => {
   const maxEndAt =
     accessGrants.length > 0 &&
     accessGrants.reduce(
@@ -27,7 +27,7 @@ const AccessGrants = ({ accessGrants, inNativeIOSApp, t }) => {
       {t.elements('Account/Access/Grants/message/claimed', {
         maxEndAt: <span>{dayFormat(new Date(maxEndAt))}</span>,
       })}
-      {!inNativeIOSApp && (
+      {!inNativeApp && (
         <>
           {' '}
           <Link href='/angebote' key='pledge' passHref legacyBehavior>

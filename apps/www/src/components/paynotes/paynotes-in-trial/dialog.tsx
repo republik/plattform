@@ -1,23 +1,23 @@
-import { css } from '@republik/theme/css'
+import { usePaynotes } from '@app/components/paynotes/paynotes-context'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
-import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { css } from '@republik/theme/css'
 
 import { useTranslation } from 'lib/withT'
 
 import { Button } from '../../ui/button'
 
-import IosCTA from '../ios-cta'
+import NativeCta from '../native-cta'
 
 function DialogCta() {
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
-  const { isIOSApp } = usePlatformInformation()
+  const { isNativeApp } = usePlatformInformation()
   const { t } = useTranslation()
 
-  if (isIOSApp) return <IosCTA />
+  if (isNativeApp) return <NativeCta />
 
   return (
     <form

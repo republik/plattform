@@ -1,5 +1,6 @@
 import { matchIOSUserAgent, useUserAgent } from './context/UserAgentContext'
 import { getNativeAppBuildId, getNativeAppVersion } from './parse-useragent'
+import { parseJSONObject } from './safeJSON'
 
 export { getNativeAppVersion, getNativeAppBuildId }
 
@@ -65,6 +66,7 @@ export const useInNativeApp = () => {
     isAndroid: isAndroid,
     inIOSVersion: isIOS ? getIOSVersion(userAgent) : undefined,
     inNativeIOSApp: inNativeApp && isIOS,
+    inNativeAndroidApp: inNativeApp && isAndroid,
   }
 }
 

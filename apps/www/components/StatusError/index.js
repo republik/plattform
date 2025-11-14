@@ -1,20 +1,20 @@
-import { Fragment, useEffect } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
+
+import { Editorial, Interaction } from '@project-r/styleguide'
+import compose from 'lodash/flowRight'
 import { withRouter } from 'next/router'
+import { Fragment, useEffect } from 'react'
+import { PUBLIC_BASE_URL } from '../../lib/constants'
+import withInNativeApp from '../../lib/withInNativeApp'
 
 import withT from '../../lib/withT'
-import withInNativeApp from '../../lib/withInNativeApp'
-import { PUBLIC_BASE_URL } from '../../lib/constants'
-
-import Loader from '../Loader'
 import Me from '../Auth/Me'
 import Meta from '../Frame/Meta'
 
-import ErrorFrame from './Frame'
+import Loader from '../Loader'
 
-import { Interaction, Editorial } from '@project-r/styleguide'
+import ErrorFrame from './Frame'
 
 export const isExternal = (target) =>
   !target.startsWith('/') &&
@@ -151,10 +151,7 @@ export default compose(
         path: asPath.split('#')[0],
       },
     }),
-    props: ({
-      data,
-      ownProps: { serverContext, statusCode, inNativeApp, inNativeIOSApp },
-    }) => {
+    props: ({ data, ownProps: { serverContext, statusCode, inNativeApp } }) => {
       const redirection = !data.error && !data.loading && data.redirection
 
       let loading = data.loading
@@ -163,13 +160,13 @@ export default compose(
       if (redirection) {
         const { target, status } = redirection
         const targetIsExternal = isExternal(target)
-        const restrictedIOSPath =
-          inNativeIOSApp && target.match(/^\/angebote(\?|$)/)
+        const restrictedAppPath =
+          inNativeApp && target.match(/^\/angebote(\?|$)/)
 
         loading = true
 
         if (serverContext) {
-          if (!inNativeApp || (!targetIsExternal && !restrictedIOSPath)) {
+          if (!inNativeApp || (!targetIsExternal && !restrictedAppPath)) {
             serverContext.res.redirect(status || 302, target)
             throw new Error('redirect')
           }
