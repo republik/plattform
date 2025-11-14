@@ -164,6 +164,13 @@ export class OfferBuilder {
         return { kind: 'UNAVAILABLE' }
       }
     }
+
+    if (offer.id === 'DONATION') {
+      // dontains are only available for members of Project R which should
+      // be covered by the cases above...
+      return { kind: 'UNAVAILABLE' }
+    }
+
     return { kind: 'PURCHASABLE', startDate: new Date() }
   }
 
