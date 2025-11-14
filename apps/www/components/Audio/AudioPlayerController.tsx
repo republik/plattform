@@ -493,20 +493,25 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     try {
       // Save the progress of the current track at 100%
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
-      const { data } = await removeAudioQueueItem(activePlayerItem.id)
-      const audioQueueItems = getFragmentData(
-        AudioQueueItemFragmentDoc,
-        data.audioQueueItems,
+      
+      // Filter out current item to get updated queue
+      // Note: Can't use audioQueue from hook as React state hasn't updated yet
+      const updatedQueue = (audioQueue || []).filter(
+        item => item.id !== activePlayerItem.id
       )
 
       console.log('Audio Controller: onQueueAdvance', {
-        data,
+        removingItemId: activePlayerItem.id,
+        queueLength: updatedQueue.length,
         autoPlay,
       })
 
-      audioQueueRef.current = [...audioQueueItems]
+      // Remove from server (optimistic response keeps UI in sync)
+      await removeAudioQueueItem(activePlayerItem.id)
+
+      audioQueueRef.current = [...updatedQueue]
       setInitialized(true)
-      if (data.audioQueueItems.length === 0) {
+      if (updatedQueue.length === 0) {
         setActivePlayerItem(null)
         if (inNativeApp && isPlaying) {
           onStop(false)
@@ -517,7 +522,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           activePlayerItem?.document?.meta?.path,
         ])
       } else {
-        const nextItem = audioQueueItems[0]
+        const nextItem = updatedQueue[0]
         setupNextAudioItem(nextItem, autoPlay).catch(handleError)
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
@@ -547,9 +552,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           if (isHeadOfQueue && audioQueue?.length > 1) {
             setupNextAudioItem(audioQueue[1], false).catch(handleError)
           }
-          const { data } = await removeAudioQueueItem(audioQueueItemId)
-          const queue = data.audioQueueItems
-          if (queue?.length === 0) {
+          await removeAudioQueueItem(audioQueueItemId)
+          // Queue is updated via optimistic response, check if empty after mutation
+          if ((audioQueue?.length || 0) <= 1) {
             onStop(false)
           }
           // If the head of the queue was removed, setup the new head
@@ -558,7 +563,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         handleError(error)
       }
     },
-    [audioQueue, setupNextAudioItem, removeAudioQueueItem],
+    [audioQueue, setupNextAudioItem, removeAudioQueueItem, onStop, checkIfHeadOfQueue],
   )
 
   const togglePlayer = useCallback(
