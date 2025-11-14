@@ -218,8 +218,6 @@ export class OfferBuilder {
   }
 
   private async getPledgeMembershipTypeName(typeId: string) {
-    console.log(typeId)
-
     return this.pgdb.public.membershipTypes.findFirst(
       { id: typeId },
       { fields: ['name'] },

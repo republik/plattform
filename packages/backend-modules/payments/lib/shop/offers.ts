@@ -48,7 +48,7 @@ export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
   },
   {
     id: 'DONATION' as OfferId,
-    name: 'Einmalige Spende',
+    name: 'Freiwilliger Beitrag',
     type: 'ONETIME_PAYMENT',
     company: 'PROJECT_R',
     requiresLogin: true,
