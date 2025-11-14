@@ -153,6 +153,9 @@ export class OfferBuilder {
         if (hasUnresolvedUpgreads && offer.id !== 'DONATION') {
           return { kind: 'UNAVAILABLE_UPGRADE_PENDING' }
         }
+        if (offer.id === 'DONATION') {
+          return { kind: 'PURCHASABLE', startDate: new Date() }
+        }
 
         return { kind: 'UPGRADEABLE', startDate: sub.currentPeriodEnd }
       } else {
