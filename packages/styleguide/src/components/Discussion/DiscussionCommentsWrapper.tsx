@@ -1,9 +1,8 @@
-import React, { FC, PropsWithChildren } from 'react'
-import PropTypes, { InferProps } from 'prop-types'
 import { css } from 'glamor'
-import { LoadMore } from './Tree/LoadMore'
+import PropTypes, { InferProps } from 'prop-types'
+import React, { FC, PropsWithChildren } from 'react'
 import { useColorContext } from '../Colors/ColorContext'
-import ColorContextHelper from './Statements/helpers/ColorContextHelper'
+import { LoadMore } from './Tree/LoadMore'
 
 const styles = {
   wrapper: css({
@@ -32,27 +31,18 @@ const propTypes = {
 
 const DiscussionCommentsWrapper: FC<
   PropsWithChildren<InferProps<typeof propTypes>>
-> = ({
-  children,
-  t,
-  loadMore,
-  moreAvailableCount,
-  errorMessage,
-  tagMappings,
-}) => {
+> = ({ children, t, loadMore, moreAvailableCount, errorMessage }) => {
   const [colorScheme] = useColorContext()
   return (
-    <ColorContextHelper tagMappings={tagMappings}>
-      <div {...styles.wrapper}>
-        {errorMessage && (
-          <p {...colorScheme.set('color', 'error')}>{errorMessage}</p>
-        )}
-        {children}
-        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-        {/* @ts-ignore */}
-        <LoadMore count={moreAvailableCount} t={t} onClick={loadMore} />
-      </div>
-    </ColorContextHelper>
+    <div {...styles.wrapper}>
+      {errorMessage && (
+        <p {...colorScheme.set('color', 'error')}>{errorMessage}</p>
+      )}
+      {children}
+      {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+      {/* @ts-ignore */}
+      <LoadMore count={moreAvailableCount} t={t} onClick={loadMore} />
+    </div>
   )
 }
 
