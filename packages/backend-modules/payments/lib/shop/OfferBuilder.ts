@@ -129,18 +129,32 @@ export class OfferBuilder {
   ): Promise<{ kind: OfferAvailability; startDate?: Date }> {
     const sub = await this.context.activeSubscription
     const membership = await this.context.activeMembership
+    const hasUnresolvedUpgreads = await this.context.hasUnresolvedUpgrades
+
+    if (offer.id.startsWith('GIFT')) return { kind: 'PURCHASABLE' }
 
     if (membership?.active) {
+      const typeName = await this.getPledgeMembershipTypeName(
+        membership.membershipTypeId,
+      )
+
+      if (
+        offer.id === 'DONATION' &&
+        (typeName.name === 'ABO' || typeName.name === 'BENEFACTOR_ABO')
+      ) {
+        return { kind: 'PURCHASABLE', startDate: new Date() }
+      }
+
       return { kind: 'UNAVAILABLE' }
     }
-
-    const hasUnresolvedUpgreads = await this.context.hasUnresolvedUpgrades
-    if (offer.id.startsWith('GIFT')) return { kind: 'PURCHASABLE' }
 
     if (sub) {
       if (this.offerService.resolveUpgradePaths(sub.type).includes(offer.id)) {
         if (hasUnresolvedUpgreads && offer.id !== 'DONATION') {
           return { kind: 'UNAVAILABLE_UPGRADE_PENDING' }
+        }
+        if (offer.id === 'DONATION') {
+          return { kind: 'PURCHASABLE', startDate: new Date() }
         }
 
         return { kind: 'UPGRADEABLE', startDate: sub.currentPeriodEnd }
@@ -153,6 +167,13 @@ export class OfferBuilder {
         return { kind: 'UNAVAILABLE' }
       }
     }
+
+    if (offer.id === 'DONATION') {
+      // dontains are only available for members of Project R which should
+      // be covered by the cases above...
+      return { kind: 'UNAVAILABLE' }
+    }
+
     return { kind: 'PURCHASABLE', startDate: new Date() }
   }
 
@@ -197,5 +218,12 @@ export class OfferBuilder {
           }
         : undefined,
     }
+  }
+
+  private async getPledgeMembershipTypeName(typeId: string) {
+    return this.pgdb.public.membershipTypes.findFirst(
+      { id: typeId },
+      { fields: ['name'] },
+    )
   }
 }
