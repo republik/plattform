@@ -136,6 +136,7 @@ module.exports = async (
         const authCtx = await authWebSocket(conn, pgdb)
         if (authCtx !== null) {
           conn.extra.sessionId = authCtx.sid
+          conn.extra.authCtx = authCtx
           socketManager.addSocket(authCtx.sid, conn.extra.socket)
           return true
         }
@@ -171,11 +172,9 @@ module.exports = async (
       },
       context: async (conn) => {
         try {
-          const authCtx = await authWebSocket(conn, pgdb)
-
           const gqlContext = await createContext({
             scope: 'socket',
-            user: transformUser(authCtx.user),
+            user: transformUser(conn.extra.authCtx.user),
           })
 
           return gqlContext
