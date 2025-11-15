@@ -77,7 +77,7 @@ function fetchTransactions(pgdb: PgDb, userId: string) {
       status::text,
       total as amount,
       "createdAt"
-    FROM payments.invoices WHERE "userId" = :userId and status not in ('')
+    FROM payments.invoices WHERE "userId" = :userId
          AND status not in ('void', 'draft', 'uncollectible')
     UNION ALL
     SELECT
