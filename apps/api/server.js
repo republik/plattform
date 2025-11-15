@@ -2,7 +2,7 @@ const { merge } = require('apollo-modules-node')
 
 const {
   server: Server,
-  lib: { ConnectionContext },
+  lib: { ConnectionContext, ControlBus },
 } = require('@orbiting/backend-modules-base')
 const {
   NotifyListener: SearchNotifyListener,
@@ -162,6 +162,7 @@ const start = async () => {
 }
 
 const run = async (workerId, config) => {
+  await ControlBus.connect()
   const { graphql: republik } = require('@orbiting/backend-modules-republik')
   const {
     graphql: republikCrowdfundings,
@@ -259,7 +260,10 @@ const run = async (workerId, config) => {
   )
 
   const close = () => {
-    return server.close().then(() => ConnectionContext.close(connectionContext))
+    return server.close().then(async () => {
+      await ControlBus.disconnect()
+      await ConnectionContext.close(connectionContext)
+    })
   }
 
   process.once('SIGTERM', close)

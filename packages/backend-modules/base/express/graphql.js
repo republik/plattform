@@ -8,9 +8,11 @@ const {
 const { expressMiddleware } = require('@as-integrations/express4')
 const express = require('express')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
-const { SubscriptionServer } = require('subscriptions-transport-ws')
-const { execute, subscribe } = require('graphql')
+const { useServer } = require('graphql-ws/use/ws')
+const { WebSocketServer } = require('ws')
 const { logger: baseLogger } = require('@orbiting/backend-modules-logger')
+const socketManager = require('../lib/socket-manager')
+const ControlBus = require('../lib/ControlBus')
 
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
@@ -18,7 +20,8 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
   COOKIE_NAME,
 } = require('@orbiting/backend-modules-auth/lib/CookieOptions')
-const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
+const { validate, getOperationAST, GraphQLError, parse } = require('graphql')
+const { NODE_ENV } = process.env
 
 const documentApiKeyScheme = 'DocumentApiKey'
 
@@ -60,52 +63,15 @@ module.exports = async (
     })
     // prime User dataloader with me
     if (
-      context.user &&
-      context.user.id && // global.testUser has no id
-      context.loaders &&
-      context.loaders.User
+      context?.user?.id && // global.testUser has no id
+      context?.loaders?.User
     ) {
       context.loaders.User.byId.prime(context.user.id, context.user)
     }
-    return context
-  }
 
-  const webSocketOnConnect = async (connectionParams, websocket) => {
-    try {
-      // apollo-fetch used in tests sends cookie on the connectionParams
-      const cookiesRaw =
-        NODE_ENV === 'development' && connectionParams.cookies
-          ? connectionParams.cookies
-          : websocket.upgradeReq.headers.cookie
-      if (!cookiesRaw) {
-        return createContext({ scope: 'socket' })
-      }
-      const cookies = cookie.parse(cookiesRaw)
-      const authCookie = cookies[COOKIE_NAME]
-      const sid =
-        authCookie &&
-        cookieParser.signedCookie(authCookie, process.env.SESSION_SECRET)
-      const session = sid && (await pgdb.public.sessions.findOne({ sid }))
-      if (
-        session &&
-        session.sess &&
-        session.sess.passport &&
-        session.sess.passport.user
-      ) {
-        const user = await pgdb.public.users.findOne({
-          id: session.sess.passport.user,
-        })
-        return createContext({
-          scope: 'socket',
-          user: transformUser(user),
-        })
-      }
-      return createContext({ scope: 'socket' })
-    } catch (e) {
-      console.error('error in subscriptions.onConnect', e)
-      // throwing inside onConnect disconnects the client
-      throw new Error('error in subscriptions.onConnect')
-    }
+    logger.debug('gql context ready')
+
+    return context
   }
 
   const apolloServer = new ApolloServer({
@@ -114,10 +80,6 @@ module.exports = async (
     introspection: true,
     playground: false, // see ./graphiql.js
     tracing: NODE_ENV === 'development',
-    subscriptions: {
-      onConnect: webSocketOnConnect,
-      keepAlive: WS_KEEPALIVE_INTERVAL || 40000,
-    },
     plugins: [
       ApolloServerPluginLandingPageProductionDefault({
         footer: false,
@@ -160,31 +122,153 @@ module.exports = async (
     ],
   })
 
-  // setup websocket server
-  SubscriptionServer.create(
+  // setup websocket server with graphql-ws
+  const wsServer = new WebSocketServer({
+    server: httpServer,
+    path: '/graphql',
+  })
+
+  useServer(
     {
       schema: executableSchema,
-      execute: execute,
-      subscribe: subscribe,
-      onConnect: webSocketOnConnect,
-      keepAlive: WS_KEEPALIVE_INTERVAL || 40000,
+      onConnect: async (conn) => {
+        // only allow connections for signed in users
+        const authCtx = await authWebSocket(conn, pgdb)
+        if (authCtx !== null) {
+          conn.extra.sessionId = authCtx.sid
+          conn.extra.authCtx = authCtx
+          socketManager.addSocket(authCtx.sid, conn.extra.socket)
+          return true
+        }
+      },
+      onClose: (conn) => {
+        if (conn.extra.sessionId) {
+          socketManager.removeSocket(conn.extra.sessionId, conn.extra.socket)
+        }
+      },
+      // hook to only allow subscription operations over the websocket connection
+      onSubscribe: (_conn, _id, payload) => {
+        const args = {
+          schema: executableSchema,
+          operationName: payload.operationName,
+          document: parse(payload.query),
+          variableValues: payload.variables,
+        }
+        const operationAST = getOperationAST(args.document, args.operationName)
+        if (!operationAST) {
+          return [new GraphQLError('Unable to identify operation')]
+        }
+        if (operationAST.operation !== 'subscription') {
+          return [
+            new GraphQLError('Only subscription operations are supported'),
+          ]
+        }
+        const errors = validate(args.schema, args.document)
+        if (errors.length > 0) {
+          return errors
+        }
+
+        return args
+      },
+      context: async (conn) => {
+        try {
+          const gqlContext = await createContext({
+            scope: 'socket',
+            user: transformUser(conn.extra.authCtx.user),
+          })
+
+          return gqlContext
+        } catch (e) {
+          throw new Error('Unautherised websocket connection')
+        }
+      },
     },
-    {
-      server: httpServer,
-      path: '/graphql',
-    },
+    wsServer,
   )
+
+  ControlBus.subscribe('auth:logout', ({ sessionId }) => {
+    socketManager.closeConnections(sessionId)
+  })
 
   await apolloServer.start()
   server.use(
     '/graphql',
-    express.json({
-      limit: '128mb',
-    }),
+    jsonBodyMiddleware,
     expressMiddleware(apolloServer, {
       context: async ({ req, res }) => {
         return createContext({ user: req.user, req, res, scope: 'request' })
       },
     }),
   )
+}
+
+const standardJsonParser = express.json({ limit: '10mb' })
+const trustedJsonParser = express.json({ limit: '128mb' })
+const TRUSTED_GQL_CLIENT = process.env.TRUSTED_GQL_CLIENT ?? null
+
+function jsonBodyMiddleware(req, res, next) {
+  const client = req.get('apollographql-client-name') ?? 'unknown-client'
+
+  const isTrusted =
+    TRUSTED_GQL_CLIENT && TRUSTED_GQL_CLIENT === client ? '128mb' : '10mb'
+
+  req.log.debug(
+    {
+      limit: isTrusted ? '128mb' : '10mb',
+      trustedClient: TRUSTED_GQL_CLIENT,
+      client,
+    },
+    'json body parser limit set',
+  )
+
+  if (isTrusted) {
+    return trustedJsonParser(req, res, next)
+  } else {
+    return standardJsonParser(req, res, next)
+  }
+}
+
+/**
+ * Authenticate a websocket connection
+ * @param {import('graphql-ws').Context} conn
+ */
+async function authWebSocket(conn, pgdb) {
+  const authCookie = getSessionCookieFromWebSocket(conn)
+  const sid = cookieParser.signedCookie(authCookie, process.env.SESSION_SECRET)
+  if (!sid) {
+    return null
+  }
+
+  const user = await getUserBySessionId(sid, pgdb)
+  if (!user) {
+    return null
+  }
+
+  return { sid, user }
+}
+
+/**
+ * Extract session cookie form websocket request
+ * @param {import('graphql-ws').Context} conn
+ */
+function getSessionCookieFromWebSocket(conn) {
+  // apparently apollo fetch in tests passes the cookie as connectionParams
+  const cookieHeader =
+    NODE_ENV === 'development' && conn.connectionParams?.cookies
+      ? conn.connectionParams?.cookies
+      : conn.extra.request.headers.cookie
+
+  const cookies = cookie.parse(cookieHeader)
+  const authCookie = cookies[COOKIE_NAME]
+
+  return authCookie
+}
+
+async function getUserBySessionId(sid, pgdb) {
+  const user = await pgdb.public.queryOne(
+    `SELECT u.* FROM sessions s JOIN users u on u.id = (s.sess->'passport'->>'user')::uuid WHERE s.sid = :sid;`,
+    { sid: sid },
+  )
+
+  return user
 }
