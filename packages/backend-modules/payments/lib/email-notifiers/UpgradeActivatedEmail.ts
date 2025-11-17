@@ -28,7 +28,7 @@ export class UpgradeActivatedEmail
   async sendEmail(email: string, args: UpgradeActivatedNotifierArgs) {
     const templateName = this.getTemplateName(args.upgrade.subscriptionType!)
 
-    const invoice = await this.getInvoiceData(args.company, args.upgrade)
+    const invoice = await this.getInvoiceData(args.company, args.subscriptionId)
     if (!invoice) {
       throw new Error('Invoice does not exist')
     }
@@ -181,16 +181,16 @@ export class UpgradeActivatedEmail
     return globalMergeVars
   }
 
-  private async getInvoiceData(company: Company, upgrade: Upgrade) {
+  private async getInvoiceData(company: Company, subscriptionId: string) {
     const sub = await this.paymentService.getSubscription(
       company,
-      upgrade.externalId,
+      subscriptionId,
     )
     if (typeof sub?.latest_invoice !== 'string') {
       throw new Error('Invalid invoice reference')
     }
 
-    return this.paymentService.getInvoice('PROJECT_R', sub?.latest_invoice)
+    return this.paymentService.getInvoice(company, sub?.latest_invoice)
   }
 
   private getItems(invoice: Stripe.Invoice) {
