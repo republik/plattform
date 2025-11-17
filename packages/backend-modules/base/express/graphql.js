@@ -11,6 +11,7 @@ const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
 const { logger: baseLogger } = require('@orbiting/backend-modules-logger')
+const { ApolloArmor } = require('@escape.tech/graphql-armor')
 
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
@@ -21,6 +22,16 @@ const {
 const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
 
 const documentApiKeyScheme = 'DocumentApiKey'
+
+const gqlArmor = new ApolloArmor({
+  maxAliases: {
+    n: 5,
+  },
+  blockFieldSuggestion: {
+    enabled: false,
+  },
+})
+const gqlProtection = gqlArmor.protect()
 
 module.exports = async (
   server,
@@ -119,6 +130,7 @@ module.exports = async (
       keepAlive: WS_KEEPALIVE_INTERVAL || 40000,
     },
     plugins: [
+      ...gqlProtection.plugins,
       ApolloServerPluginLandingPageProductionDefault({
         footer: false,
       }),
@@ -158,6 +170,7 @@ module.exports = async (
         },
       },
     ],
+    validationRules: [...gqlProtection.validationRules],
   })
 
   // setup websocket server
