@@ -23,12 +23,35 @@ const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
 
 const documentApiKeyScheme = 'DocumentApiKey'
 
+function logRejection(ctx, error) {
+  if (ctx?.logger) {
+    ctx.logger.error({ error })
+  } else {
+    console.error({
+      ctx,
+      error,
+    })
+  }
+}
+
 const gqlArmor = new ApolloArmor({
   maxAliases: {
+    enabled: true,
     n: 5,
+    onReject: [logRejection],
+  },
+  maxDepth: {
+    enabled: true,
+    n: 20,
+    onReject: [logRejection],
+  },
+  costLimit: {
+    enabled: false,
+    onReject: [logRejection],
   },
   blockFieldSuggestion: {
     enabled: false,
+    onReject: [logRejection],
   },
 })
 const gqlProtection = gqlArmor.protect()
