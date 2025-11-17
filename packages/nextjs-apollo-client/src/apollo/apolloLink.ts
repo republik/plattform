@@ -1,5 +1,6 @@
 import { ApolloLink, HttpLink } from '@apollo/client'
-import { WebSocketLink } from '@apollo/client/link/ws'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions'
+import { createClient } from 'graphql-ws'
 
 import { ApolloClientOptions } from './apolloClient'
 import { isClient, isDev } from './utils'
@@ -43,11 +44,7 @@ export const createLink = ({
   headers = {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   onResponse = () => {},
-  mobileConfigOptions,
 }: CreateLinkOptions) => {
-  if (mobileConfigOptions && mobileConfigOptions.isInMobileApp) {
-    return mobileConfigOptions.createAppWorkerLink()
-  }
   const http = new HttpLink({
     uri: rewriteAPIHost(apiUrl),
     credentials: 'include',
@@ -57,14 +54,17 @@ export const createLink = ({
   if (isClient && wsUrl) {
     return ApolloLink.split(
       hasSubscriptionOperation,
-      new WebSocketLink({
-        uri: rewriteAPIHost(wsUrl),
-        options: {
+      new GraphQLWsLink(
+        createClient({
+          url: rewriteAPIHost(wsUrl),
           lazy: true,
-          reconnect: true,
-          timeout: 50000,
-        },
-      }),
+          retryAttempts: 5,
+          shouldRetry: () => true,
+          connectionParams: () => ({
+            // Auth params if needed
+          }),
+        }),
+      ),
       http,
     )
   }

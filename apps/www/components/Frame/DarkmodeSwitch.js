@@ -1,12 +1,10 @@
 import { forwardRef } from 'react'
 import { CalloutMenu, IconButton, Radio } from '@project-r/styleguide'
-import { useInNativeApp } from '../../lib/withInNativeApp'
 
 import { IconDarkMode } from '@republik/icons'
 import { useTheme } from '../ColorScheme/ThemeProvider'
 
 const DarkmodeSwitch = ({ t }) => {
-  const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { theme, setTheme } = useTheme()
 
   const iconLabel =
@@ -33,41 +31,37 @@ const DarkmodeSwitch = ({ t }) => {
   return (
     <CalloutMenu Element={Icon}>
       <div style={{ width: 180, lineHeight: '2.5rem' }}>
-        {
-          <>
-            <Radio
-              value='dark'
-              checked={theme === 'dark'}
-              onChange={() => {
-                setTheme('dark')
-              }}
-            >
-              {t('darkmode/switch/on')}
-            </Radio>
-            <br />
-            <Radio
-              value='light'
-              checked={theme === 'light'}
-              onChange={() => {
-                setTheme(inNativeAppLegacy ? '' : 'light')
-              }}
-            >
-              {t('darkmode/switch/off')}
-            </Radio>
-            <br />
-            {!inNativeAppLegacy && (
-              <Radio
-                value='auto'
-                checked={theme === 'system'}
-                onChange={() => {
-                  setTheme('system')
-                }}
-              >
-                {t('darkmode/switch/auto')}
-              </Radio>
-            )}
-          </>
-        }
+        <>
+          <Radio
+            value='dark'
+            checked={theme === 'dark'}
+            onChange={() => {
+              setTheme('dark')
+            }}
+          >
+            {t('darkmode/switch/on')}
+          </Radio>
+          <br />
+          <Radio
+            value='light'
+            checked={theme === 'light'}
+            onChange={() => {
+              setTheme('light')
+            }}
+          >
+            {t('darkmode/switch/off')}
+          </Radio>
+          <br />
+          <Radio
+            value='auto'
+            checked={theme === 'system'}
+            onChange={() => {
+              setTheme('system')
+            }}
+          >
+            {t('darkmode/switch/auto')}
+          </Radio>
+        </>
       </div>
     </CalloutMenu>
   )

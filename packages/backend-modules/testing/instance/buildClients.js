@@ -1,5 +1,5 @@
 const { createApolloFetch } = require('apollo-fetch')
-const { SubscriptionClient } = require('subscriptions-transport-ws')
+const { createClient } = require('graphql-ws')
 const ws = require('ws')
 
 module.exports = (port) => {
@@ -29,17 +29,23 @@ module.exports = (port) => {
           next()
         }),
 
-    createSubscriptionClient: (options) => {
-      return new SubscriptionClient(
-        GRAPHQL_WS_URI,
-        {
-          connectionParams: {
-            cookies: cookie || null,
-          },
-          ...options,
+    createSubscriptionClient: (options = {}) => {
+      const client = createClient({
+        url: GRAPHQL_WS_URI,
+        connectionParams: () => ({
+          cookies: cookie || null,
+        }),
+        webSocketImpl: ws,
+        retryAttempts: 0,
+        on: {
+          connected: options.connectionCallback
+            ? () => options.connectionCallback(null)
+            : undefined,
+          error: options.connectionCallback || undefined,
         },
-        ws,
-      )
+      })
+
+      return client
     },
   }
 }
