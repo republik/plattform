@@ -11,7 +11,6 @@ const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
 const { logger: baseLogger } = require('@orbiting/backend-modules-logger')
-const { ApolloArmor } = require('@escape.tech/graphql-armor')
 
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
@@ -19,42 +18,10 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
   COOKIE_NAME,
 } = require('@orbiting/backend-modules-auth/lib/CookieOptions')
+const { gqlProtection } = require('./gqlProtection')
 const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
 
 const documentApiKeyScheme = 'DocumentApiKey'
-
-function logRejection(ctx, error) {
-  if (ctx?.logger) {
-    ctx.logger.error({ error })
-  } else {
-    console.error({
-      ctx,
-      error,
-    })
-  }
-}
-
-const gqlArmor = new ApolloArmor({
-  maxAliases: {
-    enabled: true,
-    n: 5,
-    onReject: [logRejection],
-  },
-  maxDepth: {
-    enabled: true,
-    n: 20,
-    onReject: [logRejection],
-  },
-  costLimit: {
-    enabled: false,
-    onReject: [logRejection],
-  },
-  blockFieldSuggestion: {
-    enabled: false,
-    onReject: [logRejection],
-  },
-})
-const gqlProtection = gqlArmor.protect()
 
 module.exports = async (
   server,
