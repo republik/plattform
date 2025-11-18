@@ -111,12 +111,14 @@ const notifyPublish = async (
   )
 
   await Promise.each(Object.keys(docSubscribersByDocId), async (docId) => {
+    // docId === repoId of the format. This is the format!
     const subscribedDoc = await loaders.Document.byRepoId.load(docId)
 
     const title =
       subscribedDoc.meta.notificationTitle ||
       t('api/notifications/doc/title', {
-        title: `«${subscribedDoc.meta.title}»`,
+        formatTitle: `«${subscribedDoc.meta.title}»`,
+        articleTitle: `«${doc.meta.title}»`,
       })
 
     const subscribers = docSubscribersByDocId[docId]
@@ -137,6 +139,24 @@ const notifyPublish = async (
               fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
               fromName: DEFAULT_MAIL_FROM_NAME,
               templateName: 'publish_article_notification',
+              globalMergeVars: [
+                {
+                  name: 'TITLE',
+                  content: doc.meta.title,
+                },
+                {
+                  name: 'FORMAT_TITLE',
+                  content: subscribedDoc.meta.title,
+                },
+                {
+                  name: 'DESCRIPTION',
+                  content: doc.meta.description,
+                },
+                {
+                  name: 'URL',
+                  content: appContent.url,
+                },
+              ],
             }
           },
         },
