@@ -2,6 +2,37 @@ const debug = require('debug')('votings:lib:queries')
 const pick = require('lodash/pick')
 const isEqual = require('lodash/isEqual')
 
+// Performance optimization: Cache for turnout calculations
+// to avoid expensive full table scans on every request
+const turnoutCache = new Map()
+const TURNOUT_CACHE_TTL = 60000 // 1 minute in milliseconds
+
+const getCachedValue = (cacheKey) => {
+  const cached = turnoutCache.get(cacheKey)
+  if (cached && Date.now() - cached.timestamp < TURNOUT_CACHE_TTL) {
+    debug('turnoutCache hit for', cacheKey)
+    return cached.value
+  }
+  debug('turnoutCache miss for', cacheKey)
+  return null
+}
+
+const setCachedValue = (cacheKey, value) => {
+  turnoutCache.set(cacheKey, {
+    value,
+    timestamp: Date.now(),
+  })
+  // Cleanup old cache entries periodically
+  if (turnoutCache.size > 100) {
+    const now = Date.now()
+    for (const [key, entry] of turnoutCache.entries()) {
+      if (now - entry.timestamp > TURNOUT_CACHE_TTL) {
+        turnoutCache.delete(key)
+      }
+    }
+  }
+}
+
 const tableMapping = {
   votings: {
     name: 'votings',
@@ -160,7 +191,13 @@ const buildQueries = (tableName) => {
   }
 
   const numSubmitted = async (entityId, pgdb) => {
-    return pgdb.queryOneField(
+    const cacheKey = `submitted:${table.name}:${entityId}`
+    const cached = getCachedValue(cacheKey)
+    if (cached !== null) {
+      return cached
+    }
+
+    const result = await pgdb.queryOneField(
       `
       SELECT COUNT(DISTINCT "userId")
       FROM "${table.ballotsTable}" b
@@ -168,9 +205,18 @@ const buildQueries = (tableName) => {
     `,
       { entityId },
     )
+
+    setCachedValue(cacheKey, result)
+    return result
   }
 
   const numSubmittedByGroup = async (groupSlug, pgdb) => {
+    const cacheKey = `submittedByGroup:${table.name}:${groupSlug}`
+    const cached = getCachedValue(cacheKey)
+    if (cached !== null) {
+      return cached
+    }
+
     const queries = []
     const params = []
 
@@ -199,7 +245,9 @@ const buildQueries = (tableName) => {
 
     debug('numSubmittedByGroup', submittedQuery)
 
-    return pgdb.queryOneField(submittedQuery, params)
+    const result = await pgdb.queryOneField(submittedQuery, params)
+    setCachedValue(cacheKey, result)
+    return result
   }
 
   const haveSameRestrictions = (entityA, entityB) => {
@@ -271,23 +319,55 @@ const buildQueries = (tableName) => {
     return pgdb.queryOneField(query, options)
   }
 
-  const numEligible = (entity, pgdb) => countEligibles(entity, null, pgdb)
+  const numEligible = async (entity, pgdb) => {
+    const cacheKey = `eligible:${table.name}:${entity.id}`
+    const cached = getCachedValue(cacheKey)
+    if (cached !== null) {
+      return cached
+    }
+
+    const startTime = Date.now()
+    const result = await countEligibles(entity, null, pgdb)
+    const duration = Date.now() - startTime
+    debug(
+      `numEligible for ${table.name}:${entity.id} took ${duration}ms, result: ${result}`,
+    )
+
+    setCachedValue(cacheKey, result)
+    return result
+  }
 
   const isEligible = async (userId, entity, pgdb) => {
     if (!userId || !entity) {
       return false
     }
 
+    // Cache eligibility checks per user per entity per request
+    const cacheKey = `eligible:${table.name}:${entity.id}:${userId}`
+    const cached = getCachedValue(cacheKey)
+    if (cached !== null) {
+      return cached
+    }
+
+    const allowedRoles = entity.allowedRoles && entity.allowedRoles.length > 0
+    const allowedMemberships =
+      entity.allowedMemberships && entity.allowedMemberships.length > 0
+
+    // Fast path: no restrictions means everyone is eligible
+    if (!allowedRoles && !allowedMemberships) {
+      setCachedValue(cacheKey, true)
+      return true
+    }
+
     const user = await pgdb.public.users.findOne({ id: userId })
     if (!user) {
+      setCachedValue(cacheKey, false)
       return false
     }
 
-    if ((await countEligibles(entity, user.id, pgdb)) <= 0) {
-      return false
-    }
-
-    return true
+    const result = (await countEligibles(entity, user.id, pgdb)) > 0
+    setCachedValue(cacheKey, result)
+    return result
   }
 
   const turnout = async (entity, pgdb) => ({
