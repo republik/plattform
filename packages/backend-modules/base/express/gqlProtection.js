@@ -51,7 +51,7 @@ function createAcceptLogger(name) {
 const gqlArmor = new ApolloArmor({
   maxAliases: {
     enabled: true,
-    n: 5,
+    n: 6,
     onReject: [createRejectLogger('maxAliases')],
   },
   maxDepth: {
