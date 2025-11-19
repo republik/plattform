@@ -62,9 +62,6 @@ export const documentFragment = `
           totalCount
         }
       }
-      series {
-        title
-      }
     }
   }
   ${bookmarkOnDocumentFragment}
