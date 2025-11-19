@@ -64,16 +64,6 @@ export const documentFragment = `
       }
       series {
         title
-        episodes {
-          label
-          document {
-            id
-            repoId
-            meta {
-              path
-            }
-          }
-        }
       }
     }
   }
