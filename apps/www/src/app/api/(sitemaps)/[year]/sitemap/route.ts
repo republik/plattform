@@ -7,6 +7,8 @@ import {
 
 const BASE_URL = process.env.PUBLIC_BASE_URL
 
+export const revalidate = 3600
+
 export async function GET(
   request: NextRequest,
   props: { params: Promise<{ year: string }> },
@@ -72,6 +74,7 @@ export async function GET(
     return new NextResponse(sitemap, {
       headers: {
         'Content-Type': 'application/xml',
+        'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
       },
     })
   } catch (error) {

@@ -12,6 +12,8 @@ const SCHEMA_PUBLISHER = process.env.NEXT_PUBLIC_SCHEMA_PUBLISHER
 
 const publisher = parseJSONObject(SCHEMA_PUBLISHER)
 
+export const revalidate = 3600
+
 function generateNewsSiteMap(
   articles: (NonNullable<SitemapByYearQuery['search']['nodes'][0]['entity']> & {
     __typename: 'Document'
