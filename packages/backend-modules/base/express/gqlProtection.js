@@ -4,38 +4,46 @@ const { logger: baseLogger } = require('@orbiting/backend-modules-logger')
 
 const validationLogger = baseLogger.child({}, { msgPrefix: '[Graphql Armor] ' })
 
+function getOperation(ctx) {
+  const doc = ctx?.getDocument()
+
+  const operationDef = doc?.definitions?.find(
+    (def) => def.kind === Kind.OPERATION_DEFINITION,
+  )
+
+  const operation = operationDef.name
+    ? operationDef.name.value
+    : doc
+    ? print(doc)
+    : 'Unknown operation'
+
+  return operation
+}
+
 function createRejectLogger(name) {
   return function (ctx, error) {
     const doc = ctx?.getDocument() ? print(ctx?.getDocument()) : null
+    const operation = getOperation(ctx)
 
     validationLogger.error(
       {
         rule: name,
+        operation: operation,
         doc: doc,
         error,
       },
-      'request rejected',
+      `rule: [${name}] operation: [${operation}] request rejected`,
     )
   }
 }
 
 function createAcceptLogger(name) {
   return function (ctx, details) {
-    const doc = ctx?.getDocument()
+    const operation = getOperation(ctx)
 
-    const operationDef = doc?.definitions?.find(
-      (def) => def.kind === Kind.OPERATION_DEFINITION,
-    )
-
-    const operation = operationDef.name
-      ? operationDef.name.value
-      : doc
-      ? print(doc)
-      : null
-
-    validationLogger.info(
+    validationLogger.debug(
       { rule: name, value: details.n, operation },
-      'request accepted',
+      `rule: [${name}] operation: [${operation}] request accepted`,
     )
   }
 }
@@ -57,6 +65,18 @@ const gqlArmor = new ApolloArmor({
     maxCost: 100000,
     onAccept: [createAcceptLogger('costLimit')],
     onReject: [createRejectLogger('costLimit')],
+  },
+  maxDirectives: {
+    enabled: true,
+    n: 50,
+    onAccept: [createAcceptLogger('maxDirectives')],
+    onReject: [createRejectLogger('maxDirectives')],
+  },
+  maxTokens: {
+    enabled: true,
+    n: 1000,
+    onAccept: [createAcceptLogger('maxTokens')],
+    onReject: [createRejectLogger('maxTokens')],
   },
   blockFieldSuggestion: {
     enabled: false,
