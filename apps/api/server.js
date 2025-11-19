@@ -8,7 +8,6 @@ const {
   NotifyListener: SearchNotifyListener,
 } = require('@orbiting/backend-modules-search')
 const { t } = require('@orbiting/backend-modules-translate')
-const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const {
   graphql: redirections,
@@ -294,8 +293,6 @@ const runOnce = async () => {
 
   const context = await createGraphQLContext({ scope: 'scheduler' })
 
-  const slackGreeter = await SlackGreeter.start()
-
   let searchNotifyListener
   if (SEARCH_PG_LISTENER && SEARCH_PG_LISTENER !== 'false') {
     searchNotifyListener = await SearchNotifyListener.start(context)
@@ -401,7 +398,6 @@ const runOnce = async () => {
   const close = async () => {
     await Promise.all(
       [
-        slackGreeter && slackGreeter.close(),
         searchNotifyListener && searchNotifyListener.close(),
         accessScheduler && accessScheduler.close(),
         membershipScheduler && membershipScheduler.close(),
