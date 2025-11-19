@@ -809,10 +809,6 @@
       "value": "Dunkles Farbschema forcieren"
     },
     {
-      "key": "metaData/isRestricted",
-      "value": "Eingeschränkter Zugang auf Links"
-    },
-    {
       "key": "metaData/recommendations/heading",
       "value": "Vorgeschlagene Beiträge"
     },
