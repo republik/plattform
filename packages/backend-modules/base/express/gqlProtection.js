@@ -11,11 +11,11 @@ function getOperation(ctx) {
     (def) => def.kind === Kind.OPERATION_DEFINITION,
   )
 
-  const operation = operationDef.name
-    ? operationDef.name.value
-    : doc
-    ? print(doc)
-    : 'Unknown operation'
+  if (!operationDef) {
+    return 'Unknown operation'
+  }
+
+  const operation = operationDef?.name?.value || 'Unknown operation'
 
   return operation
 }
@@ -69,13 +69,11 @@ const gqlArmor = new ApolloArmor({
   maxDirectives: {
     enabled: true,
     n: 50,
-    onAccept: [createAcceptLogger('maxDirectives')],
     onReject: [createRejectLogger('maxDirectives')],
   },
   maxTokens: {
     enabled: true,
     n: 1000,
-    onAccept: [createAcceptLogger('maxTokens')],
     onReject: [createRejectLogger('maxTokens')],
   },
   blockFieldSuggestion: {
