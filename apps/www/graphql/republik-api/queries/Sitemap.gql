@@ -5,7 +5,7 @@ query sitemapByYear($from: DateTime!, $to: DateTime!) {
       template: "article"
       publishedAt: { from: $from, to: $to }
     }
-    first: 50000
+    first: 3000
     sort: { key: publishedAt, direction: DESC }
   ) {
     totalCount
