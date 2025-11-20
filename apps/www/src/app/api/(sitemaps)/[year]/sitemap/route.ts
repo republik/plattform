@@ -3,6 +3,7 @@ import { getClient } from '../../../../../lib/apollo/client'
 import {
   SitemapByYearDocument,
   type SitemapByYearQuery,
+  type Document,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const BASE_URL = process.env.PUBLIC_BASE_URL
@@ -19,34 +20,43 @@ export async function GET(
   const toDate = new Date(year + 1, 0, 1) // January 1st of the next year
 
   try {
-    const { data, error } = await client.query<SitemapByYearQuery>({
-      query: SitemapByYearDocument,
-      variables: {
-        from: fromDate.toISOString(),
-        to: toDate.toISOString(),
-      },
-    })
+    const allArticles: Document[] = []
+    let hasNextPage = true
+    let after: string | undefined = undefined
+    const pageSize = 500
 
-    if (error) {
-      console.error(`[sitemap-${year}]`, error)
-      return NextResponse.json(
-        { error: 'Failed to fetch data' },
-        { status: 500 },
-      )
+    while (hasNextPage) {
+      const { data, error } = await client.query<SitemapByYearQuery>({
+        query: SitemapByYearDocument,
+        variables: {
+          from: fromDate.toISOString(),
+          to: toDate.toISOString(),
+          first: pageSize,
+          after,
+        },
+      })
+
+      if (error) {
+        console.error(`[sitemap-${year}]`, error)
+        return NextResponse.json(
+          { error: 'Failed to fetch data' },
+          { status: 500 },
+        )
+      }
+
+      const {
+        search: { nodes, pageInfo },
+      } = data
+
+      const articles = nodes.map(({ entity }) => entity as Document)
+
+      allArticles.push(...articles)
+
+      hasNextPage = pageInfo.hasNextPage
+      after = pageInfo.endCursor || undefined
     }
 
-    const {
-      search: { nodes },
-    } = data
-
-    const articles = nodes
-      .map(({ entity }) => entity)
-      .filter(
-        (
-          entity,
-        ): entity is NonNullable<typeof entity> & { __typename: 'Document' } =>
-          entity?.__typename === 'Document',
-      )
+    const articles = allArticles
 
     // Generate XML sitemap
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

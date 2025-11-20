@@ -1,14 +1,24 @@
-query sitemapByYear($from: DateTime!, $to: DateTime!) {
+query sitemapByYear(
+  $from: DateTime!
+  $to: DateTime!
+  $first: Int!
+  $after: String
+) {
   search(
     filter: {
       type: Document
       template: "article"
       publishedAt: { from: $from, to: $to }
     }
-    first: -1
+    first: $first
+    after: $after
     sort: { key: publishedAt, direction: DESC }
   ) {
     totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
     nodes {
       entity {
         ... on Document {
