@@ -2794,7 +2794,7 @@
     },
     {
       "key": "api/email/subscription_upgrade_activated_YEARLY/subject",
-      "value": "Ihre Gönner-Mitgliedschaft ist aktiviert"
+      "value": "Ihre Jahresmitgliedschaft ist aktiviert"
     },
     {
       "key": "api/email/subscription_upgrade_activated_BENEFACTOR/subject",
