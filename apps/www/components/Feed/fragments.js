@@ -62,19 +62,6 @@ export const documentFragment = `
           totalCount
         }
       }
-      series {
-        title
-        episodes {
-          label
-          document {
-            id
-            repoId
-            meta {
-              path
-            }
-          }
-        }
-      }
     }
   }
   ${bookmarkOnDocumentFragment}
