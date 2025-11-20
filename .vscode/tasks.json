@@ -68,7 +68,7 @@
     {
       "label": "dev:api",
       "type": "shell",
-      "command": "yarn turbo run dev --filter=@orbiting/api-app... --concurrency=20",
+      "command": "yarn turbo run dev --filter=@orbiting/api-app... --concurrency=100",
       "presentation": {
         "group": "dev",
         "panel": "dedicated",

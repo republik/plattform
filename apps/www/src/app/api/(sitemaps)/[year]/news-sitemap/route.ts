@@ -3,6 +3,7 @@ import { getClient } from '../../../../../lib/apollo/client'
 import {
   SitemapByYearDocument,
   type SitemapByYearQuery,
+  type Document,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { parseJSONObject } from '../../../../../../lib/safeJSON'
 import { toXML } from 'jstoxml'
@@ -12,11 +13,7 @@ const SCHEMA_PUBLISHER = process.env.NEXT_PUBLIC_SCHEMA_PUBLISHER
 
 const publisher = parseJSONObject(SCHEMA_PUBLISHER)
 
-function generateNewsSiteMap(
-  articles: (NonNullable<SitemapByYearQuery['search']['nodes'][0]['entity']> & {
-    __typename: 'Document'
-  })[],
-) {
+function generateNewsSiteMap(articles: Document[]) {
   const sitemapData = {
     _name: 'urlset',
     _attrs: {
@@ -77,33 +74,40 @@ export async function GET(
   const toDate = new Date(parseInt(year) + 1, 0, 1) // January 1st of the next year
 
   try {
-    const { data, errors } = await client.query<SitemapByYearQuery>({
-      query: SitemapByYearDocument,
-      variables: {
-        from: fromDate.toISOString(),
-        to: toDate.toISOString(),
-      },
-    })
+    const allArticles: Document[] = []
+    let hasNextPage = true
+    let after: string | undefined = undefined
+    const pageSize = 500
 
-    if (errors) {
-      console.error(`[news-sitemap-${yearString}]`, errors)
-      return NextResponse.json({ error: 'GraphQL error' }, { status: 500 })
+    while (hasNextPage) {
+      const { data, errors } = await client.query<SitemapByYearQuery>({
+        query: SitemapByYearDocument,
+        variables: {
+          from: fromDate.toISOString(),
+          to: toDate.toISOString(),
+          first: pageSize,
+          after,
+        },
+      })
+
+      if (errors) {
+        console.error(`[news-sitemap-${yearString}]`, errors)
+        return NextResponse.json({ error: 'GraphQL error' }, { status: 500 })
+      }
+
+      const {
+        search: { nodes, pageInfo },
+      } = data
+
+      const articles = nodes.map(({ entity }) => entity as Document)
+
+      allArticles.push(...articles)
+
+      hasNextPage = pageInfo.hasNextPage
+      after = pageInfo.endCursor || undefined
     }
 
-    const {
-      search: { nodes },
-    } = data
-
-    const articles = nodes
-      .map(({ entity }) => entity)
-      .filter(
-        (
-          entity,
-        ): entity is NonNullable<typeof entity> & { __typename: 'Document' } =>
-          entity?.__typename === 'Document',
-      )
-
-    const sitemap = generateNewsSiteMap(articles)
+    const sitemap = generateNewsSiteMap(allArticles)
 
     return new NextResponse(sitemap, {
       headers: {
