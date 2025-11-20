@@ -494,8 +494,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
       // Save the progress of the current track at 100%
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
       
-      // Filter out current item to get updated queue
-      // Note: Can't use audioQueue from hook as React state hasn't updated yet
       const updatedQueue = (audioQueue || []).filter(
         item => item.id !== activePlayerItem.id
       )
@@ -506,7 +504,6 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         autoPlay,
       })
 
-      // Remove from server (optimistic response keeps UI in sync)
       await removeAudioQueueItem(activePlayerItem.id)
 
       audioQueueRef.current = [...updatedQueue]

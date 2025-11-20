@@ -8,8 +8,6 @@ module.exports = {
       return
     }
 
-    // Use dataloader to batch progress queries instead of individual lookups
-    // This eliminates N+1 queries when loading multiple audio items
     const collection = await loaders.Collection.byKeyObj.load({
       name: PROGRESS_COLLECTION_NAME,
     })
@@ -24,7 +22,6 @@ module.exports = {
       collectionId: collection.id,
     })
 
-    // Spread data field to match expected MediaProgress shape
     return item ? { ...item, ...item.data } : null
   },
 }

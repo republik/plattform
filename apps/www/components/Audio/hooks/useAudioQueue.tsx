@@ -14,6 +14,7 @@ import {
 import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
 import { reportError } from 'lib/errors/reportError'
 import { useEffect } from 'react'
+import { v4 as uuid } from 'uuid'
 import {
   AddAudioQueueItemsDocument,
   AddAudioQueueItemsMutation,
@@ -183,7 +184,7 @@ const useAudioQueue = (): {
       })
     } else {
       const mockAudioQueueItem: AudioQueueItem = {
-        id: item.id,
+        id: uuid(),
         document: item,
         sequence: 0,
       }

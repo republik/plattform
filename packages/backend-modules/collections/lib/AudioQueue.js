@@ -1,5 +1,5 @@
 const Promise = require('bluebird')
-const { v4: uuid } = require('uuid')
+const { v4: isUuid } = require('is-uuid')
 
 const getCollectionName = () => 'audioqueue'
 
@@ -38,7 +38,7 @@ const upsertItem = async (input, context) => {
   const { id, entityType, entityId, sequence } = input
   const { user: me, loaders, pgdb, t } = context
 
-  if (!!id && !uuid(id)) {
+  if (!!id && !isUuid(id)) {
     throw new Error(t('api/collections/audioQueue/error/invalidItemId'))
   }
 
@@ -145,7 +145,7 @@ const removeItem = async (input, context) => {
   const { id } = input
   const { user: me, loaders, pgdb, t } = context
 
-  if (!!id && !uuid(id)) {
+  if (!!id && !isUuid(id)) {
     throw new Error(t('api/collections/audioQueue/error/invalidItemId'))
   }
 
