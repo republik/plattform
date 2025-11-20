@@ -123,6 +123,8 @@ const notifyPublish = async (
 
     const subscribers = docSubscribersByDocId[docId]
 
+    const formatUrl = new URL(subscribedDoc.meta.path, FRONTEND_BASE_URL)
+
     event = await sendNotification(
       {
         event: event ? { id: event.id } : eventInfo,
@@ -147,6 +149,10 @@ const notifyPublish = async (
                 {
                   name: 'FORMAT_TITLE',
                   content: subscribedDoc.meta.title,
+                },
+                {
+                  name: 'FORMAT_URL',
+                  content: formatUrl.toString(),
                 },
                 {
                   name: 'DESCRIPTION',
@@ -221,6 +227,8 @@ const notifyPublish = async (
         portraitUrl = u.toString()
       }
 
+      const profileUrl = new URL(`~${author.slug}`, FRONTEND_BASE_URL)
+
       event = await sendNotification(
         {
           event: event ? { id: event.id } : eventInfo,
@@ -245,6 +253,10 @@ const notifyPublish = async (
                   {
                     name: 'AUTHOR_NAME',
                     content: author.name,
+                  },
+                  {
+                    name: 'AUTHOR_PROFILE_URL',
+                    content: profileUrl.toString(),
                   },
                   {
                     name: 'AUTHOR_PORTRAIT_URL',

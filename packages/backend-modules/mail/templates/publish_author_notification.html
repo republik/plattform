@@ -47,8 +47,8 @@
                     <p
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                      <strong style="{{sg_font_style_sans_serif_medium}}">Neuer Beitrag von
-                      {{#if AUTHOR_PORTRAIT_URL}}
+                      Neuer Beitrag von
+                      <strong style="{{sg_font_style_sans_serif_medium}}">{{#if AUTHOR_PORTRAIT_URL}}
 
                       <img
                         height="50"
@@ -66,7 +66,7 @@
 
                       {{/if}}
 
-                      {{AUTHOR_NAME}}</strong>
+                      <a style="color:#282828;text-decoration:none" href="{{AUTHOR_PROFILE_URL}}">{{AUTHOR_NAME}}</a></strong>
                     </p>
                     <p
                       style="color:#282828;font-size:24px;line-height:32px;{{sg_font_style_serif_title}}"
@@ -83,6 +83,17 @@
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
                       <a href="{{URL}}">Beitrag öffnen</a>
+                    </p>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding: 0 20px 20px 20px">
+                    <p
+                      style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      Sie erhalten diese E-Mail, weil Sie {{AUTHOR_NAME}} abonniert haben. Sie können Ihre E-Mail-Benachrichtigungen in
+                      <a href="{{link_account_notifications}}">Ihrem Konto</a> anpassen oder abbestellen.
                     </p>
                   </td>
                 </tr>
