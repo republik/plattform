@@ -74,7 +74,6 @@ export async function GET(
   const toDate = new Date(parseInt(year) + 1, 0, 1) // January 1st of the next year
 
   try {
-    // Query filters by type: Document, so all entities are guaranteed to be Documents
     const allArticles: Document[] = []
     let hasNextPage = true
     let after: string | undefined = undefined
