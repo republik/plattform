@@ -7,8 +7,6 @@ import {
 
 const BASE_URL = process.env.PUBLIC_BASE_URL
 
-export const revalidate = 3600
-
 export async function GET(
   request: NextRequest,
   props: { params: Promise<{ year: string }> },
