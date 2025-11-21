@@ -14,6 +14,7 @@ import {
 import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
 import { reportError } from 'lib/errors/reportError'
 import { useEffect } from 'react'
+import { v4 as uuid } from 'uuid'
 import {
   AddAudioQueueItemsDocument,
   AddAudioQueueItemsMutation,
@@ -114,20 +115,52 @@ const useAudioQueue = (): {
     }
   }
 
+  /**
+   * Cache update for mutations returning minimal data (IDs only).
+   * Preserves the ORDER from server response while keeping full cached data.
+   */
+  const updateCacheWithMinimalData = (
+    cache: ApolloCache<any>,
+    { data },
+  ) => {
+    if (!data?.audioQueueItems) return
+
+    const cachedData = cache.readQuery({ query: AudioQueueQueryDocument })
+    if (!cachedData?.me) return
+
+    // Create lookup map of cached items by ID
+    const cachedItemsById = new Map(
+      (cachedData.me.audioQueue || []).map(item => [item.id, item])
+    )
+
+    // Map server response order to full cached items
+    // Server returns items in correct order (sorted by sequence on backend)
+    const updatedQueue = data.audioQueueItems
+      .map(serverItem => cachedItemsById.get(serverItem.id))
+      .filter(Boolean) // Remove any items not found in cache
+
+    cache.writeQuery({
+      query: AudioQueueQueryDocument,
+      data: {
+        me: { ...cachedData.me, audioQueue: updatedQueue },
+      },
+    })
+  }
+
   const [addAudioQueueItem] = useMutation(AddAudioQueueItemsDocument, {
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
   const [removeAudioQueueItem] = useMutation(RemoveAudioQueueItemDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
+    update: updateCacheWithMinimalData,
   })
   const [moveAudioQueueItem] = useMutation(MoveAudioQueueItemDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
+    update: updateCacheWithMinimalData,
   })
   const [clearAudioQueue] = useMutation(ClearAudioQueueDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
+    update: updateCacheWithMinimalData,
   })
   const [reorderAudioQueue] = useMutation(ReorderAudioQueueDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
+    update: updateCacheWithMinimalData,
   })
 
   /**
@@ -151,7 +184,7 @@ const useAudioQueue = (): {
       })
     } else {
       const mockAudioQueueItem: AudioQueueItem = {
-        id: item.id,
+        id: uuid(),
         document: item,
         sequence: 0,
       }

@@ -9,6 +9,7 @@ import {
   isBodyScrollLocked,
 } from '@project-r/styleguide'
 import { useTranslation } from '../../lib/withT'
+import { useMe } from '../../lib/context/MeContext'
 import { postMessage, useInNativeApp } from '../../lib/withInNativeApp'
 import { useScrollDirection } from '../../src/lib/hooks/useScrollDirection'
 import NotificationIcon from '../Notifications/NotificationIcon'
@@ -56,7 +57,7 @@ const Header = ({
   const [colorScheme] = useColorContext()
   const [expandedNav, setExpandedNav] = useState(null)
   const router = useRouter()
-
+  const { isMember } = useMe()
   const scrollableHeaderHeight = useMemo(() => {
     return (
       HEADER_HEIGHT +
@@ -93,7 +94,7 @@ const Header = ({
 
   const userButtonLink = me ? '/meine-republik' : '/anmelden'
 
-  const showToggle = me || inNativeApp || router.pathname === '/angebote'
+  const showToggle = isMember || inNativeApp || router.pathname === '/angebote'
   const showClose = router.pathname === USER_MENU_URL
 
   return (

@@ -1,5 +1,7 @@
 const Promise = require('bluebird')
-const { v4: uuid } = require('uuid')
+const { v4: isUuid } = require('is-uuid')
+
+const MAX_QUEUE_SIZE = 20
 
 const getCollectionName = () => 'audioqueue'
 
@@ -34,11 +36,36 @@ const pickSequenceRange = (start, end) => (item) => {
   return sequence >= min && sequence <= max
 }
 
+/**
+ * Enforces the queue size limit by removing oldest items (lowest sequence numbers)
+ * when the queue exceeds MAX_QUEUE_SIZE.
+ * Uses a single efficient SQL query to delete excess items.
+ */
+const enforceQueueLimit = async (collectionId, userId, context) => {
+  const { pgdb } = context
+
+  // Use a single SQL query
+  // Delete all items except the top MAX_QUEUE_SIZE by sequence
+  await pgdb.query(`
+    DELETE FROM "collectionDocumentItems"
+    WHERE "collectionId" = $1
+      AND "userId" = $2
+      AND id NOT IN (
+        SELECT id
+        FROM "collectionDocumentItems"
+        WHERE "collectionId" = $1
+          AND "userId" = $2
+        ORDER BY (data->>'sequence')::int DESC NULLS LAST
+        LIMIT $3
+      )
+  `, [collectionId, userId, MAX_QUEUE_SIZE])
+}
+
 const upsertItem = async (input, context) => {
   const { id, entityType, entityId, sequence } = input
   const { user: me, loaders, pgdb, t } = context
 
-  if (!!id && !uuid(id)) {
+  if (!!id && !isUuid(id)) {
     throw new Error(t('api/collections/audioQueue/error/invalidItemId'))
   }
 
@@ -139,13 +166,16 @@ const upsertItem = async (input, context) => {
       },
     })
   }
+
+  // Enforce queue size limit
+  await enforceQueueLimit(collection.id, me.id, context)
 }
 
 const removeItem = async (input, context) => {
   const { id } = input
   const { user: me, loaders, pgdb, t } = context
 
-  if (!!id && !uuid(id)) {
+  if (!!id && !isUuid(id)) {
     throw new Error(t('api/collections/audioQueue/error/invalidItemId'))
   }
 
@@ -213,6 +243,9 @@ const reorderItems = async (input, context) => {
       id,
     }),
   )
+
+  // Enforce queue size limit
+  await enforceQueueLimit(collection.id, me.id, context)
 }
 
 module.exports = {

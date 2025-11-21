@@ -60,13 +60,14 @@ mutation AddAudioQueueItems($entity: AudioQueueEntityInput!, $sequence: Int) {
 
 mutation MoveAudioQueueItem($id: ID!, $sequence: Int!) {
   audioQueueItems: moveAudioQueueItem(id: $id, sequence: $sequence) {
-    ...AudioQueueItem
+    id
+    sequence
   }
 }
 
 mutation RemoveAudioQueueItem($id: ID!) {
   audioQueueItems: removeAudioQueueItem(id: $id) {
-    ...AudioQueueItem
+    id
   }
 }
 
@@ -78,7 +79,8 @@ mutation ClearAudioQueue {
 
 mutation ReorderAudioQueue($ids: [ID!]!) {
   audioQueueItems: reorderAudioQueue(ids: $ids) {
-    ...AudioQueueItem
+    id
+    sequence
   }
 }
 
