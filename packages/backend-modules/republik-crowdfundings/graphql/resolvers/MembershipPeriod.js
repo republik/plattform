@@ -1,7 +1,5 @@
 module.exports = {
-  async membership(membershipPeriod, args, { pgdb }) {
-    return pgdb.public.memberships.findOne({
-      id: membershipPeriod.membershipId,
-    })
+  async membership(membershipPeriod, _args, { loaders }) {
+    return loaders.Membership.byId.load(membershipPeriod.membershipId)
   },
 }

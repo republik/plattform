@@ -26,7 +26,7 @@ const createMembershipCache = (membership, prop, context) =>
   )
 
 const membershipResolver = {
-  async type(membership, args, context) {
+  async type(membership, _args, context) {
     return createMembershipCache(membership, 'type', context).cache(() =>
       context.loaders.MembershipType.byId.load(membership.membershipTypeId),
     )
@@ -72,16 +72,16 @@ const membershipResolver = {
     )
   },
   async endDate(membership, args, context) {
-    const { pgdb } = context
     if (!membership.active) {
       return null
     }
 
     return createMembershipCache(membership, 'endDate', context).cache(
       async () => {
-        const periods = await pgdb.public.membershipPeriods.find({
-          membershipId: membership.id,
-        })
+        const { periods } =
+          await context.loaders.MembershipPeriods.byMembershipId.load(
+            membership.id,
+          )
 
         if (periods.length < 1) {
           return null
@@ -92,16 +92,16 @@ const membershipResolver = {
     )
   },
   async graceEndDate(membership, args, context) {
-    const { pgdb } = context
     if (!membership.active) {
       return null
     }
 
     return createMembershipCache(membership, 'graceEndDate', context).cache(
       async () => {
-        const periods = await pgdb.public.membershipPeriods.find({
-          membershipId: membership.id,
-        })
+        const { periods } =
+          await context.loaders.MembershipPeriods.byMembershipId.load(
+            membership.id,
+          )
 
         if (periods.length < 1) {
           return null
@@ -111,12 +111,9 @@ const membershipResolver = {
       },
     )
   },
-  async pledge(membership, args, { pgdb, user: me }) {
+  async pledge(membership, args, { pgdb, user: me, loaders }) {
     const pledge =
-      membership.pledge ||
-      (await pgdb.public.pledges.findOne({
-        id: membership.pledgeId,
-      }))
+      membership.pledge || (await loaders.Pledge.byId.load(membership.pledgeId))
 
     if (membership.userId !== me.id && pledge.userId !== me.id) {
       Roles.ensureUserIsInRoles(me, ['admin', 'supporter'])
@@ -124,13 +121,13 @@ const membershipResolver = {
 
     return pledge
   },
-  async periods(membership, args, { pgdb }) {
-    const periods = await pgdb.public.membershipPeriods.find(
-      { membershipId: membership.id },
-      // the frontends rely on endDate DESC
-      // - if you want to change this you'll need to adapt them
-      { orderBy: { endDate: 'DESC' } },
-    )
+  async periods(membership, args, { loaders }) {
+    // the frontends rely on endDate DESC
+    // - if you want to change this you'll need to adapt them
+    const { periods } =
+      await loaders.MembershipPeriods.byMembershipIdInDescOrder.load(
+        membership.id,
+      )
 
     const now = new Date()
 
