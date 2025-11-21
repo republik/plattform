@@ -1,6 +1,7 @@
-import { Component } from 'react'
+import { useRef, useState } from 'react'
 import { css } from 'glamor'
-import { Label, Button } from '@project-r/styleguide'
+import { Label, Button, Spinner } from '@project-r/styleguide'
+import { useImageUpload } from '../../../../lib/hooks/useImageUpload'
 
 const styles = {
   label: css({
@@ -12,83 +13,98 @@ const styles = {
   }),
 }
 
-const readFiles = (onChange) => (e) => {
-  const files = [...e.target.files]
+const FilesInput = ({ onChange, repoId }) => {
+  const inputRef = useRef(null)
+  const { uploadImage } = useImageUpload(repoId)
+  const [uploading, setUploading] = useState(false)
 
-  if (files.length < 1) {
-    return
-  }
+  const handleFiles = async (e) => {
+    const files = [...e.target.files]
 
-  const htmlFile = files.find((file) => file.type === 'text/html')
-  const imageFiles = files.filter((file) => file.type.split('/')[0] === 'image')
+    if (files.length < 1) {
+      return
+    }
 
-  if (!htmlFile) {
-    return
-  }
+    const htmlFile = files.find((file) => file.type === 'text/html')
+    const imageFiles = files.filter(
+      (file) => file.type.split('/')[0] === 'image',
+    )
 
-  const code = new Promise((resolve) => {
-    const reader = new window.FileReader()
-    reader.addEventListener('load', () => resolve(reader.result))
-    reader.addEventListener('error', (e) => window.alert(e))
-    reader.readAsText(htmlFile)
-  })
+    if (!htmlFile) {
+      return
+    }
 
-  const images = Promise.all(
-    imageFiles.map(
-      (file) =>
-        new Promise((resolve) => {
-          const reader = new window.FileReader()
+    setUploading(true)
 
-          reader.addEventListener('load', () => {
-            resolve({
-              url: reader.result,
+    try {
+      // Read HTML file
+      const code = await new Promise((resolve, reject) => {
+        const reader = new window.FileReader()
+        reader.addEventListener('load', () => resolve(reader.result))
+        reader.addEventListener('error', (e) => reject(e))
+        reader.readAsText(htmlFile)
+      })
+
+      // Upload images to S3 and get repo-file:// references
+      const images = await Promise.all(
+        imageFiles.map(async (file) => {
+          try {
+            const fileReference = await uploadImage(file)
+            return {
+              url: fileReference, // repo-file://{fileId}
               ref: file.name,
-            })
-          })
-          reader.addEventListener('error', (e) => window.alert(e))
-          reader.readAsDataURL(file)
+            }
+          } catch (error) {
+            console.error(`Failed to upload ${file.name}:`, error)
+            window.alert(`Failed to upload ${file.name}: ${error.message}`)
+            throw error
+          }
         }),
-    ),
-  )
+      )
 
-  Promise.all([code, images]).then(([code, images]) =>
-    onChange({
-      code,
-      images,
-    }),
-  )
-}
-
-class ImageInput extends Component {
-  constructor(...args) {
-    super(...args)
-    this.setInput = (ref) => {
-      this.input = ref
+      onChange({
+        code,
+        images,
+      })
+    } catch (error) {
+      console.error('Error processing files:', error)
+    } finally {
+      setUploading(false)
+      if (inputRef.current) {
+        inputRef.current.value = ''
+      }
     }
   }
-  render() {
-    const { onChange } = this.props
-    return (
-      <label>
-        <Label {...styles.label}>Dateien (ai2html-output)</Label>
-        <Button
-          onClick={() => {
-            this.input.click()
-          }}
-        >
-          hochladen
-        </Button>
-        <input
-          ref={this.setInput}
-          type='file'
-          accept='text/html,image/*'
-          multiple
-          {...styles.input}
-          onChange={readFiles(onChange)}
-        />
-      </label>
-    )
-  }
+
+  return (
+    <label>
+      <Label {...styles.label}>Dateien (ai2html-output)</Label>
+      <Button
+        onClick={() => {
+          inputRef.current?.click()
+        }}
+        disabled={uploading}
+      >
+        {uploading ? (
+          <>
+            <Spinner size={16} style={{ marginRight: 8 }} />
+            hochladen...
+          </>
+        ) : (
+          'hochladen'
+        )}
+      </Button>
+      <input
+        ref={inputRef}
+        type='file'
+        accept='text/html,image/*'
+        multiple
+        {...styles.input}
+        onChange={handleFiles}
+        disabled={uploading}
+      />
+    </label>
+  )
 }
 
-export default ImageInput
+export default FilesInput

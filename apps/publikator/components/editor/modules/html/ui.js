@@ -11,7 +11,7 @@ export default ({ TYPE, newBlock, editorOptions }) => {
     isDisabled: ({ value }) => {
       return !value.blocks.some(isHtmlBlock)
     },
-  })(({ disabled, value, onChange }) => {
+  })(({ disabled, value, onChange, repoId }) => {
     if (disabled) {
       return null
     }
@@ -22,6 +22,7 @@ export default ({ TYPE, newBlock, editorOptions }) => {
             <div key={`html-${i}`}>
               <FilesInput
                 data={block.data}
+                repoId={repoId}
                 onChange={(files) => {
                   console.log(files)
                   onChange(

@@ -1,6 +1,8 @@
 import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
+import compose from 'lodash/flowRight'
+import { withRouter } from 'next/router'
 
 import {
   Interaction,
@@ -10,6 +12,7 @@ import {
   slug,
 } from '@project-r/styleguide'
 import withT from '../../../../lib/withT'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 
 import MetaForm from '../../utils/MetaForm'
 import SlugField from '../../utils/SlugField'
@@ -63,7 +66,10 @@ const MetaData = ({
   customFields = [],
   teaser: Teaser,
   t,
+  router,
+  repoId: propsRepoId,
 }) => {
+  const repoId = propsRepoId || getRepoIdFromQuery(router.query)
   const node = value.document
 
   const titleNode = value.document.findDescendant(
@@ -221,6 +227,7 @@ const MetaData = ({
           onInputChange={onInputChange}
           black
           getWidth={getWidth}
+          repoId={repoId}
         />
         <br />
         {slugFieldElement}
@@ -280,6 +287,7 @@ const MetaData = ({
           onInputChange={onInputChange}
           black
           getWidth={() => '50%'}
+          repoId={repoId}
         />
         {!!series && (
           <SeriesForm
@@ -311,10 +319,11 @@ const MetaData = ({
             format={formatData}
             editor={editor}
             node={node}
+            repoId={repoId}
           />
           <MetaOptionGroupTitle>SEO</MetaOptionGroupTitle>
           <MetaOptionGroup>
-            <MetaForm data={seoData} onInputChange={onInputChange} black />
+            <MetaForm data={seoData} onInputChange={onInputChange} black repoId={repoId} />
             {slugFieldElement}
             <GooglePreview
               title={
@@ -342,6 +351,7 @@ const MetaData = ({
           node={node}
           onInputChange={onInputChange}
           format={titleData?.format?.meta}
+          repoId={repoId}
         />
         <ArticleRecommendations editor={editor} node={node} />
       </div>
@@ -349,4 +359,4 @@ const MetaData = ({
   )
 }
 
-export default withT(MetaData)
+export default compose(withT, withRouter)(MetaData)

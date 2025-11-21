@@ -222,7 +222,7 @@ export const TeaserButton = (options) => {
   }
 }
 
-const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
+const Form = withT(({ node, onChange, onTypeChange, options, t, repoId }) => {
   return (
     <UIForm>
       <Field
@@ -363,6 +363,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
           label='Bild'
           src={node.data.get('image')}
           onChange={onChange('image')}
+          repoId={repoId}
         />
       )}
       {options.includes('imageDark') && node.data.get('image') && (
@@ -372,6 +373,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
             src={node.data.get('imageDark')}
             onChange={onChange('imageDark')}
             dark
+            repoId={repoId}
           />
           <Label>{t('metaData/field/srcDark/note')}</Label>
         </>
@@ -444,6 +446,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
           maxWidth={100}
           src={node.data.get('formatLogo')}
           onChange={onChange('formatLogo')}
+          repoId={repoId}
         />
       )}
     </UIForm>
@@ -477,7 +480,7 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
 
       return !teaser
     },
-  })(({ disabled, onChange, value }) => {
+  })(({ disabled, onChange, value, repoId }) => {
     if (disabled) {
       return null
     }
@@ -591,6 +594,7 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
           onChange={handlerFactory}
           onTypeChange={handleTypeChange}
           options={options.rule.editorOptions.formOptions}
+          repoId={repoId}
         />
       </div>
     )

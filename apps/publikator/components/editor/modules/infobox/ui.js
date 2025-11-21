@@ -22,7 +22,7 @@ export default ({
   const isInfoboxBlock = matchSubmodules(TYPE, subModules)
   const Form = createPropertyForm({
     isDisabled: ({ value }) => !value.blocks.some(isInfoboxBlock),
-  })(({ disabled, value, onChange }) => {
+  })(({ disabled, value, onChange, repoId }) => {
     if (disabled) {
       return null
     }
@@ -168,6 +168,7 @@ export default ({
                       figureFloat: block.data.get('figureFloat') || false,
                     })}
                     onInputChange={onInputChange(block)}
+                    repoId={repoId}
                   />
                 )}
               </div>

@@ -46,7 +46,7 @@ export default ({ TYPE, newBlock, rule = {}, zone }) => {
     )
   }
 
-  const Form = ({ disabled, value, onChange }) => {
+  const Form = ({ disabled, value, onChange, repoId }) => {
     if (disabled) {
       return null
     }
@@ -75,6 +75,7 @@ export default ({ TYPE, newBlock, rule = {}, zone }) => {
               notes={Map(form.map((field) => [field.key, field.note]))}
               customFields={form}
               onInputChange={onInputChange}
+              repoId={repoId}
             />
           )
         })}
