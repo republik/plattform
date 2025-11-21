@@ -86,7 +86,7 @@ const extractUserUrl = (url) => {
 
 const createUrlReplacer =
   (_all = [], _users = [], errors = [], urlPrefix = '', searchString = '') =>
-  (url, stripDocLinks) => {
+  (url) => {
     const userInfo = extractUserPath(url)
     if (userInfo) {
       const user = _users.find((u) => u.id === userInfo.id)
@@ -103,11 +103,6 @@ const createUrlReplacer =
     // {url} lacks {repoId} and is nothing to resolve further.
     if (!repoId) {
       return url
-    }
-
-    // Return early if {stripDocLinks} argument is set as nothing has to be resolved.
-    if (stripDocLinks) {
-      return ''
     }
 
     const linkedDoc = _all.find((d) => d.meta.repoId === repoId)
@@ -224,20 +219,6 @@ const metaFieldResolver = (meta, _all = [], _users = [], errors) => {
   }
 }
 
-const isRestricted = (doc) => {
-  const resolver = createResolver(doc._all)
-  const formatDoc = resolver(doc.meta?.format)
-
-  return doc.meta?.isRestricted || formatDoc?.meta?.isRestricted
-}
-
-const shouldStripDocLinks = (user, doc) =>
-  isRestricted(doc) &&
-  // user is undefined during publish -> no stripping
-  // null during document delivery -> strip unless authorized
-  user !== undefined &&
-  !hasFullDocumentAccess(user, doc._apiKey)
-
 const contentUrlResolver = (
   doc,
   _all = [],
@@ -257,10 +238,8 @@ const contentUrlResolver = (
     searchString,
   )
 
-  const stripDocLinks = shouldStripDocLinks(user, doc)
-
   visit(doc.content, 'link', (node) => {
-    node.url = urlReplacer(node.url, stripDocLinks)
+    node.url = urlReplacer(node.url)
   })
   visit(doc.content, 'zone', (node) => {
     if (node.data) {
@@ -301,8 +280,8 @@ const contentUrlResolver = (
             : undefined,
         }
       }
-      node.data.url = urlReplacer(node.data.url, stripDocLinks)
-      node.data.formatUrl = urlReplacer(node.data.formatUrl, stripDocLinks)
+      node.data.url = urlReplacer(node.data.url)
+      node.data.formatUrl = urlReplacer(node.data.formatUrl)
     }
   })
 
@@ -433,7 +412,7 @@ const stringifyNode = (node) =>
           'FIGURE',
           'NOTE',
           'HTML',
-        ].includes(node.identifier),
+          ].includes(node.identifier),
     ),
     '\n',
   )
