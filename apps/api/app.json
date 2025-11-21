@@ -137,7 +137,6 @@
     },
     "SLACK_API_TOKEN": "",
     "SLACK_CHANNEL_COMMENTS": "",
-    "SLACK_CHANNEL_GREETING": "",
     "STRIPE_ACCOUNT_ID_PROJECT_R": {
       "required": true
     },
