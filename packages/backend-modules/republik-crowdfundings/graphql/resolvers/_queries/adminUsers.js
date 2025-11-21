@@ -116,6 +116,23 @@ const patterns = [
 module.exports = async (_, { limit, offset = 0, search }, { pgdb, user }) => {
   Roles.ensureUserHasRole(user, 'supporter')
 
+  // Fast-path: Check for exact email match first
+  // This avoids expensive fuzzy search for the common case where we have
+  // an exact email from Zendesk (99% of ZAT usage)
+  if (search && search.includes('@')) {
+    const exactMatch = await pgdb.public.users.findOne({
+      email: search.toLowerCase(),
+      deletedAt: null,
+    })
+
+    if (exactMatch) {
+      return {
+        items: [transformUser(exactMatch)],
+        count: 1,
+      }
+    }
+  }
+
   const pattern =
     search &&
     patterns.reduce((chosen, pattern) => {
