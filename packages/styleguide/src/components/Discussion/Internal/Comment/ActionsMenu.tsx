@@ -1,11 +1,11 @@
-import React, { SVGAttributes } from 'react'
-import PropTypes from 'prop-types'
-import { css } from 'glamor'
-import CalloutMenu from '../../../Callout/CalloutMenu'
-import IconButton from '../../../IconButton'
-import { useColorContext } from '../../../Colors/ColorContext'
 import { IconMoreVertical } from '@republik/icons'
+import { css } from 'glamor'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { IconType } from '../../../../types/icon'
+import CalloutMenu from '../../../Callout/CalloutMenu'
+import { useColorContext } from '../../../Colors/ColorContext'
+import IconButton from '../../../IconButton'
 
 const MoreIconWithProps = (props) => (
   <IconButton title='Mehr' Icon={IconMoreVertical} {...props} />
@@ -58,6 +58,7 @@ const ActionsMenu = ({ items = [] }: Props) => {
             labelShort={item.label}
             disabled={item.disabled}
             onClick={item.onClick}
+            size={16}
           />
         ))}
       </div>

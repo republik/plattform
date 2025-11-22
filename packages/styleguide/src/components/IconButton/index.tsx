@@ -1,14 +1,15 @@
+import { css } from 'glamor'
 import React, {
   Attributes,
   ComponentType,
   MouseEventHandler,
   ReactNode,
   SVGProps,
+  useMemo,
 } from 'react'
-import { css } from 'glamor'
+import { fontStyles } from '../../theme/fonts'
 
 import { mUp } from '../../theme/mediaQueries'
-import { fontStyles } from '../../theme/fonts'
 import { useColorContext } from '../Colors/ColorContext'
 
 const ICON_SIZE = 24
@@ -32,6 +33,8 @@ const IconButton = React.forwardRef<
     disabled?: boolean
     attributes?: Attributes
     invert?: boolean
+    active?: boolean
+    strokeWidth?: number | string
   }
 >(
   (
@@ -52,25 +55,52 @@ const IconButton = React.forwardRef<
       disabled,
       attributes,
       invert,
+      active,
+      strokeWidth,
     },
     ref,
   ) => {
     const Element = href ? 'a' : 'button'
     const [colorScheme] = useColorContext()
 
-    const fillValue = disabled ? 'disabled' : fill || fillColorName || 'text'
+    const fillValue = fill || fillColorName
+    const doesSomething = (href || onClick || onMouseDown) && !disabled
+
+    const dynamicStyles = useMemo(
+      () =>
+        !doesSomething
+          ? css({
+              color: colorScheme.getCSSColor(fill || 'disabled'),
+              fill: colorScheme.getCSSColor(fill || 'disabled'),
+              opacity: 0.7,
+            })
+          : css({
+              color: colorScheme.getCSSColor(fillValue || 'textSoft'),
+              fill: colorScheme.getCSSColor(fillValue || 'textSoft'),
+              cursor: 'pointer',
+              '@media (hover)': {
+                ':hover': {
+                  color: colorScheme.getCSSColor(fillValue || 'text'),
+                  fill: colorScheme.getCSSColor(fillValue || 'text'),
+                },
+              },
+              '&.active': {
+                color: colorScheme.getCSSColor(fillValue || 'text'),
+                fill: colorScheme.getCSSColor(fillValue || 'text'),
+              },
+            }),
+      [colorScheme, fillValue, doesSomething],
+    )
 
     return (
       <Element
         {...styles.button}
         {...(invert && styles.invertFlex)}
-        {...((onClick || onMouseDown || href) && styles.hover)}
         {...attributes}
         style={{
-          cursor:
-            (href || onClick || onMouseDown) && !disabled ? 'pointer' : 'auto',
           ...customStyles,
         }}
+        className={active ? 'active' : ''}
         onClick={onClick}
         onMouseDown={onMouseDown}
         href={href}
@@ -79,29 +109,21 @@ const IconButton = React.forwardRef<
         ref={ref}
         title={title}
         disabled={disabled}
+        {...dynamicStyles}
       >
         <Icon
           size={size || ICON_SIZE}
           width={size || ICON_SIZE}
           height={size || ICON_SIZE}
-          {...colorScheme.set('fill', fillValue)}
-          {...colorScheme.set('color', fillValue)}
+          strokeWidth={strokeWidth}
         />
         {label && (
-          <span
-            {...styles.label}
-            {...styles.long}
-            {...colorScheme.set('color', fillValue)}
-          >
+          <span {...styles.label} {...styles.long}>
             {label}
           </span>
         )}
         {labelShort && (
-          <span
-            {...styles.label}
-            {...styles.short}
-            {...colorScheme.set('color', fillValue)}
-          >
+          <span {...styles.label} {...styles.short}>
             {labelShort}
           </span>
         )}
@@ -117,12 +139,11 @@ const styles = {
     flexDirection: 'row',
     alignItems: 'center',
     textDecoration: 'none',
-    marginRight: 20,
+    marginRight: 16,
     border: 0,
     padding: 0,
     color: 'inherit',
     backgroundColor: 'transparent',
-    transition: 'opacity 0.3s',
     ':focus': {
       outline: 'none',
     },
@@ -132,14 +153,11 @@ const styles = {
     ':only-child': {
       margin: 0,
     },
-    [mUp]: {
-      marginRight: 24,
-    },
     ':disabled': {
       cursor: 'default',
     },
     '& > *:not(:last-child)': {
-      marginRight: 8,
+      marginRight: 4,
       marginLeft: 0,
     },
   }),
@@ -147,18 +165,11 @@ const styles = {
     flexDirection: 'row-reverse',
     '& > *:not(:last-child)': {
       marginRight: 0,
-      marginLeft: 8,
-    },
-  }),
-  hover: css({
-    '@media(hover)': {
-      ':hover:not(:disabled) > *': {
-        opacity: 0.6,
-      },
+      marginLeft: 4,
     },
   }),
   label: css({
-    ...fontStyles.sansSerifMedium,
+    ...fontStyles.sansSerifRegular,
     fontSize: 14,
     whiteSpace: 'nowrap',
   }),
