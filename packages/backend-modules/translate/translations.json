@@ -2198,7 +2198,7 @@
     },
     {
       "key": "api/notifications/doc/title",
-      "value": "{title} jetzt online"
+      "value": "Neuer Beitrag in {formatTitle}: {articleTitle}"
     },
     {
       "key": "api/notifications/doc/author/title",
