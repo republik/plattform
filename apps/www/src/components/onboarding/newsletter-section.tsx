@@ -2,12 +2,14 @@ import { NewsletterSubscription } from '#graphql/republik-api/__generated__/gql/
 import { OnboardingH3 } from '@app/components/onboarding/onboarding-ui'
 import { css } from '@republik/theme/css'
 import { PlusCircle } from 'lucide-react'
+import { useTranslation } from '../../../lib/withT'
 
 function NewsletterCard({
   subscription,
 }: {
   subscription: NewsletterSubscription
 }) {
+  const { t } = useTranslation()
   return (
     <div
       className={css({
@@ -30,14 +32,22 @@ function NewsletterCard({
         alt='newletter icon'
       />
       <div className={css({ textAlign: 'left' })}>
-        <h4 className={css({ textStyle: 'sansSerifMedium', fontSize: 'l' })}>
-          {subscription.name}
+        <h4
+          className={css({
+            textStyle: 'sansSerifMedium',
+            fontSize: 'l',
+            lineHeight: '1',
+            mb: 1,
+          })}
+        >
+          {t(`newsletters/${subscription.name}/name`)}
         </h4>
         <p className={css({ lineHeight: '1.2', mb: 1 })}>
-          Jeden Morgen die kompakte Übersicht: Was die Republik aktuell zu
-          bieten hat.
+          {t(`newsletters/${subscription.name}/description`)}
         </p>
-        <p className={css({ color: 'textSoft' })}>Montag bis Freitag</p>
+        <p className={css({ color: 'textSoft' })}>
+          {t(`newsletters/${subscription.name}/schedule`)}
+        </p>
       </div>
       <button
         className={css({

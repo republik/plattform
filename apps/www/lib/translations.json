@@ -8054,6 +8054,66 @@
     {
       "key": "loginPopup/description",
       "value": "Bitte <b>melden Sie sich an</b>, um den Beitrag zu lesen."
+    },
+    {
+      "key": "newsletters/DAILY/name",
+      "value": "Republik Heute"
+    },
+    {
+      "key": "newsletters/DAILY/description",
+      "value": "Jeden Morgen die kompakte Übersicht: Was die Republik aktuell zu bieten hat."
+    },
+    {
+      "key": "newsletters/DAILY/schedule",
+      "value": "Montag bis Freitag"
+    },
+    {
+      "key": "newsletters/WDWWW/name",
+      "value": "Was diese Woche wichtig war"
+    },
+    {
+      "key": "newsletters/WDWWW/description",
+      "value": "Die News der Woche, sorgfältig ausgewählt und kompakt eingeordnet."
+    },
+    {
+      "key": "newsletters/WDWWW/schedule",
+      "value": "Freitag"
+    },
+    {
+      "key": "newsletters/WEEKLY/name",
+      "value": "Republik am Wochenende"
+    },
+    {
+      "key": "newsletters/WEEKLY/description",
+      "value": "Lektüre für das Wochenende und alle Beiträge der Woche nochmals im Überblick."
+    },
+    {
+      "key": "newsletters/WEEKLY/schedule",
+      "value": "Samstag"
+    },
+    {
+      "key": "newsletters/CLIMATE/name",
+      "value": "Challenge Accepted"
+    },
+    {
+      "key": "newsletters/CLIMATE/description",
+      "value": "Der Newsletter für alle, die sich der Klimakrise stellen."
+    },
+    {
+      "key": "newsletters/CLIMATE/schedule",
+      "value": "Alle 2-3 Wochen"
+    },
+    {
+      "key": "newsletters/SUNDAY/name",
+      "value": "Republik am Sonntag"
+    },
+    {
+      "key": "newsletters/SUNDAY/description",
+      "value": "Lesegenuss fernab aktueller News-Hektik."
+    },
+    {
+      "key": "newsletters/SUNDAY/schedule",
+      "value": "Sonntags"
     }
   ]
 }
