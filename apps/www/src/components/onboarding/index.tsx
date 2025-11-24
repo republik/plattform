@@ -1,36 +1,15 @@
 import { css } from '@republik/theme/css'
 import { PlusCircle } from 'lucide-react'
+import OnboardingHeader from './onboarding-header'
 
 function NextReads() {
   return (
     <div className={css({ p: 6 })}>
-      <div className={css({ textAlign: 'center', pb: 8 })}>
-        <h2
-          className={css({
-            fontFamily: 'rubis',
-            fontWeight: 500,
-            fontSize: 'l',
-            color: 'textSoft',
-          })}
-        >
-          Tipp 1 von 2
-        </h2>
-        <h1
-          className={css({
-            mt: 0,
-            mb: 2,
-            fontFamily: 'rubis',
-            fontWeight: 500,
-            fontSize: '2xl',
-            lineHeight: '1.2',
-          })}
-        >
-          Lassen Sie sich die Republik ins Postfach liefern
-        </h1>
-        <p className={css({ color: 'textSoft' })}>
-          Welche Newsletter möchten Sie erhalten?
-        </p>
-      </div>
+      <OnboardingHeader>
+        <h2>Tipp 1 von 2</h2>
+        <h1>Lassen Sie sich die Republik ins Postfach liefern</h1>
+        <p>Welche Newsletter möchten Sie erhalten?</p>
+      </OnboardingHeader>
 
       <div className={css({ py: 4, textAlign: 'center' })}>
         <h3
