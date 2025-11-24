@@ -159,7 +159,6 @@ const query = gql`
 `
 
 // Generate a seed that changes once per day (at midnight UTC)
-// This ensures all TV instances show the same sequence
 const getDailySeed = () => {
   const now = new Date()
   const daysSinceEpoch = Math.floor(now.getTime() / (1000 * 60 * 60 * 24))
@@ -173,7 +172,7 @@ const TV = ({ duration = 30000 }) => {
   const [shuffledStatements, setShuffledStatements] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  // Fetch 200 testimonials once
+  // Fetch 100 testimonials once
   const { data, loading, error } = useQuery(query, {
     variables: {
       seed,
