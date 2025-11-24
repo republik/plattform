@@ -64,7 +64,7 @@ module.exports = (context) => ({
         FROM
           comments
         WHERE
-          ARRAY["discussionId"] && :ids
+          "discussionId" = ANY (:ids)
         GROUP BY
           "discussionId"
       `,
@@ -86,7 +86,7 @@ module.exports = (context) => ({
           WITH tags AS (
             SELECT id "discussionId", tags
             FROM discussions d
-            WHERE ARRAY[d.id] && :ids
+            WHERE d.id = ANY (:ids)
           )
 
           SELECT "discussionId", value FROM tags t, jsonb_array_elements(t.tags) value
@@ -103,7 +103,7 @@ module.exports = (context) => ({
             FROM comments c
             LEFT JOIN comments cr
             ON cr.id = (c."parentIds"->>0)::uuid
-            WHERE ARRAY[c."discussionId"] && :ids
+            WHERE c."discussionId" = ANY (:ids)
           )
 
           SELECT d."discussionId", value, COUNT(*) count
@@ -153,7 +153,7 @@ module.exports = (context) => ({
             discussions d
             ON c."discussionId" = d.id
           WHERE
-            ARRAY[c."discussionId"] && :ids
+            c."discussionId" = ANY (:ids)
             AND (dp."userId" IS NULL OR dp.anonymous = false)
             AND d.anonymity != 'ENFORCED'
             AND u."firstName" != 'Anonymous'
@@ -210,7 +210,7 @@ module.exports = (context) => ({
             discussions d
             ON c."discussionId" = d.id
           WHERE
-            ARRAY[c."discussionId"] && :ids
+            c."discussionId" = ANY (:ids)
             AND (dp."userId" IS NULL OR dp.anonymous = false)
             AND d.anonymity != 'ENFORCED'
             AND u."firstName" != 'Anonymous'
