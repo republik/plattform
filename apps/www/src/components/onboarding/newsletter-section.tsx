@@ -1,7 +1,13 @@
-import { NewsletterSubscription } from '#graphql/republik-api/__generated__/gql/graphql'
+import {
+  NewsletterSubscription,
+  UpdateNewsletterSubscriptionDocument,
+} from '#graphql/republik-api/__generated__/gql/graphql'
+import { useMutation } from '@apollo/client'
 import { OnboardingH3 } from '@app/components/onboarding/onboarding-ui'
+import { Spinner } from '@app/components/ui/spinner'
 import { css } from '@republik/theme/css'
-import { PlusCircle } from 'lucide-react'
+import { CircleCheck, PlusCircle } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 
 function NewsletterCard({
@@ -10,6 +16,22 @@ function NewsletterCard({
   subscription: NewsletterSubscription
 }) {
   const { t } = useTranslation()
+  const [updateNewsletterSubscription] = useMutation(
+    UpdateNewsletterSubscriptionDocument,
+  )
+  const [isPending, setIsPending] = useState(false)
+
+  async function toggleSubscription() {
+    setIsPending(true)
+    await updateNewsletterSubscription({
+      variables: {
+        name: subscription.name,
+        subscribed: !subscription.subscribed,
+      },
+    })
+    setIsPending(false)
+  }
+
   return (
     <div
       className={css({
@@ -18,8 +40,11 @@ function NewsletterCard({
         borderWidth: '1px',
         borderStyle: 'solid',
         borderColor: 'divider',
-        p: 2,
+        p: 4,
+        cursor: 'pointer',
       })}
+      onClick={toggleSubscription}
+      role='button'
     >
       <img
         className={css({
@@ -56,8 +81,16 @@ function NewsletterCard({
           pt: 1,
           pr: 1,
         })}
+        onClick={toggleSubscription}
+        disabled={isPending}
       >
-        <PlusCircle />
+        {isPending ? (
+          <Spinner size='large' />
+        ) : subscription.subscribed ? (
+          <CircleCheck className={css({ color: 'primary' })} />
+        ) : (
+          <PlusCircle />
+        )}
       </button>
     </div>
   )
