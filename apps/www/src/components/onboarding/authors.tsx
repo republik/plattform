@@ -8,7 +8,7 @@ import PodcastsSection from './podcasts-section'
 function OnboardingAuthors() {
   return (
     <>
-      <div className={css({ p: 6 })}>
+      <div className={css({ p: 4 })}>
         <OnboardingHeader>
           <h2>Tipp 2 von 2</h2>
           <h1>Folgen Sie Stimmen, die Sie interessieren</h1>
