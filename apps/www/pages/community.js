@@ -15,7 +15,7 @@ const CommunityPage = ({ serverContext, seed }) => {
   }
 
   if (query.tv) {
-    return <TV duration={+Math.max(1000, query.duration || 30000)} />
+    return <TV />
   }
 
   if (query.img) {
