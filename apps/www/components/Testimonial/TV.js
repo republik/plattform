@@ -1,11 +1,10 @@
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
+import { useEffect, useState } from 'react'
+import { useQuery, gql } from '@apollo/client'
 import { css } from 'glamor'
 
 import Head from 'next/head'
 
-import withT from '../../lib/withT'
+import { useTranslation } from '../../lib/withT'
 
 import Loader from '../Loader'
 
@@ -95,61 +94,58 @@ const fontSizeBoost = (length) => {
   return 0
 }
 
-const Item = ({ loading, error, t, statement }) => (
-  <Loader
-    loading={loading || (!statement && !error)}
-    error={error}
-    render={() => {
-      const {
-        statement: statementString,
-        portrait,
-        name,
-        role,
-        sequenceNumber,
-      } = statement
-      return (
-        <div {...styles.container}>
-          <div {...styles.screen}>
-            <Head>
-              <meta name='robots' content='noindex' />
-            </Head>
-            <img {...styles.image} src={portrait} />
-            <div {...styles.text}>
-              <Interaction.H2 {...styles.name}>{name}</Interaction.H2>
-              <Interaction.P {...styles.role}>{role}</Interaction.P>
-              {statementString && (
-                <P
-                  {...styles.quote}
-                  style={{
-                    fontSize: toViewport(
-                      24 + fontSizeBoost(statementString.length),
-                    ),
-                  }}
-                >
-                  {inQuotes(statementString)}
-                </P>
-              )}
-              {!!sequenceNumber && (
-                <div {...styles.number}>
-                  {t('memberships/sequenceNumber/label', {
-                    sequenceNumber,
-                  })}
-                </div>
-              )}
+const Item = ({ statement, t }) => {
+  if (!statement) {
+    return null
+  }
+
+  const {
+    statement: statementString,
+    portrait,
+    name,
+    role,
+    sequenceNumber,
+  } = statement
+
+  return (
+    <div {...styles.container}>
+      <div {...styles.screen}>
+        <Head>
+          <meta name='robots' content='noindex' />
+        </Head>
+        <img {...styles.image} src={portrait} alt={name} />
+        <div {...styles.text}>
+          <Interaction.H2 {...styles.name}>{name}</Interaction.H2>
+          <Interaction.P {...styles.role}>{role}</Interaction.P>
+          {statementString && (
+            <P
+              {...styles.quote}
+              style={{
+                fontSize: toViewport(24 + fontSizeBoost(statementString.length)),
+              }}
+            >
+              {inQuotes(statementString)}
+            </P>
+          )}
+          {!!sequenceNumber && (
+            <div {...styles.number}>
+              {t('memberships/sequenceNumber/label', {
+                sequenceNumber,
+              })}
             </div>
-            <div {...styles.logo}>
-              <Logo />
-            </div>
-          </div>
+          )}
         </div>
-      )
-    }}
-  />
-)
+        <div {...styles.logo}>
+          <Logo />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const query = gql`
-  query statements {
-    statements(first: 1) {
+  query statements($seed: Float!, $first: Int!) {
+    statements(seed: $seed, first: $first) {
       totalCount
       nodes {
         id
@@ -162,19 +158,68 @@ const query = gql`
   }
 `
 
-export default compose(
-  withT,
-  graphql(query, {
-    props: ({ data }) => {
-      return {
-        loading: data.loading,
-        error: data.error,
-        statement:
-          data.statements && data.statements.nodes && data.statements.nodes[0],
-      }
+// Generate a seed that changes once per day (at midnight UTC)
+// This ensures all TV instances show the same sequence
+const getDailySeed = () => {
+  const now = new Date()
+  const daysSinceEpoch = Math.floor(now.getTime() / (1000 * 60 * 60 * 24))
+  // Convert to seed range [-1, 1]
+  return (daysSinceEpoch % 1000) / 500 - 1
+}
+
+const TV = ({ duration = 30000 }) => {
+  const { t } = useTranslation()
+  const [seed] = useState(() => getDailySeed())
+  const [shuffledStatements, setShuffledStatements] = useState([])
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  // Fetch 200 testimonials once
+  const { data, loading, error } = useQuery(query, {
+    variables: {
+      seed,
+      first: 100,
     },
-    options: ({ duration }) => ({
-      pollInterval: duration,
-    }),
-  }),
-)(Item)
+  })
+
+  const statements = data?.statements?.nodes || []
+
+  // Shuffle statements once when loaded
+  useEffect(() => {
+    if (statements.length === 0) {
+      return
+    }
+
+    const shuffled = [...statements]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    
+    setShuffledStatements(shuffled)
+  }, [statements])
+
+  // Rotate through shuffled statements client-side
+  useEffect(() => {
+    if (shuffledStatements.length === 0) {
+      return
+    }
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % shuffledStatements.length)
+    }, duration)
+
+    return () => clearInterval(interval)
+  }, [shuffledStatements.length, duration])
+
+  return (
+    <Loader
+      loading={loading}
+      error={error}
+      render={() => (
+        <Item statement={shuffledStatements[currentIndex]} t={t} />
+      )}
+    />
+  )
+}
+
+export default TV
