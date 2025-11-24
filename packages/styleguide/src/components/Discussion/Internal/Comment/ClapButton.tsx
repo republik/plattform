@@ -28,6 +28,7 @@ export const ClapButton = ({
       onClick={() => upVoteHandler(comment.id)}
       title={t('styleguide/CommentActions/upvote')}
       label={comment?.upVotes || '0'}
+      labelShort={comment?.upVotes || '0'}
     />
   )
 }
