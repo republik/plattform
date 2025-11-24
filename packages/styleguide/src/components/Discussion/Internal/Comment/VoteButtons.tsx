@@ -1,10 +1,9 @@
-import React, { useMemo } from 'react'
-import { css } from 'glamor'
-import IconButton from '../../../IconButton'
-import { useColorContext } from '../../../Colors/ColorContext'
-import { fontStyles } from '../../../Typography'
-import comment from '../../../../templates/Comment'
 import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
+import { css } from 'glamor'
+import React from 'react'
+import { useColorContext } from '../../../Colors/ColorContext'
+import IconButton from '../../../IconButton'
+import { fontStyles } from '../../../Typography'
 
 const styles = {
   votes: css({
