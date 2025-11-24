@@ -1,6 +1,7 @@
 import { css } from '@republik/theme/css'
 import { ReactNode } from 'react'
 
+// TODO: add back button on mobile
 function OnboardingHeader({ children }: { children: ReactNode }) {
   return (
     <div

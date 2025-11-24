@@ -1,9 +1,9 @@
 import { NewsletterSettingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { OnboardingNextStep } from '@app/components/onboarding/onboarding-ui'
 import { css } from '@republik/theme/css'
 import NewsletterSection from './newsletter-section'
 import OnboardingHeader from './onboarding-header'
+import { OnboardingNextStep } from './onboarding-ui'
 
 const FEATURED = ['DAILY', 'WDWWW', 'WEEKLY']
 const MORE = ['CLIMATE', 'SUNDAY']
@@ -11,7 +11,7 @@ const MORE = ['CLIMATE', 'SUNDAY']
 const matchSubscriptions = (nlList, subscriptions) =>
   nlList.map((nlName) => subscriptions.find((s) => s.name === nlName))
 
-function Newsletters() {
+function OnboardingNewsletters() {
   const { loading, data } = useQuery(NewsletterSettingsDocument)
   if (loading) return null
 
@@ -40,9 +40,9 @@ function Newsletters() {
         />
       </div>
 
-      <OnboardingNextStep onNextStep={() => undefined} />
+      <OnboardingNextStep href='/onboarding/tipp-2' />
     </>
   )
 }
 
-export default Newsletters
+export default OnboardingNewsletters

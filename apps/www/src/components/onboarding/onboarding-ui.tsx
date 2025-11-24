@@ -1,5 +1,6 @@
-import { Button } from '@app/components/ui/button'
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
+import { button } from '@republik/theme/recipes'
+import Link from 'next/link'
 import { ReactNode } from 'react'
 
 export function OnboardingH3({ children }: { children: ReactNode }) {
@@ -16,7 +17,7 @@ export function OnboardingH3({ children }: { children: ReactNode }) {
   )
 }
 
-export function OnboardingNextStep({ onNextStep }: { onNextStep: () => void }) {
+export function OnboardingNextStep({ href }: { href: string }) {
   return (
     <div
       className={css({
@@ -35,14 +36,12 @@ export function OnboardingNextStep({ onNextStep }: { onNextStep: () => void }) {
         Ändern im Konto jederzeit möglich.
       </p>
 
-      <Button
-        type='button'
-        size='full'
-        className={css({ mt: 2 })}
-        onClick={onNextStep}
+      <Link
+        className={cx(button({ size: 'full' }), css({ mt: 2 }))}
+        href={href}
       >
         Weiter
-      </Button>
+      </Link>
     </div>
   )
 }
