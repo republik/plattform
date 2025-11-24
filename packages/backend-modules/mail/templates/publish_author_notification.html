@@ -47,40 +47,50 @@
                     <p
                       style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
                     >
-                      Neuer Beitrag von
-                      <strong style="{{sg_font_style_sans_serif_medium}}">{{#if AUTHOR_PORTRAIT_URL}}
-
+                      Ein neuer Beitrag wurde publiziert:
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:20px;border-top:1px solid #DBDCDD;border-bottom:1px solid #DBDCDD">
+                    <p style="color:#282828;font-size:17px;line-height:24px;margin:0 0 16px 0;{{sg_font_style_sans_serif_medium}}">
+                      {{#if AUTHOR_PORTRAIT_URL}}
                       <img
                         height="50"
                         src="{{AUTHOR_PORTRAIT_URL}}"
                         style="
                           border: 0px;
                           border-radius: 100%;
-                          width: 50px !important;
-                          height: 50px !important;
-                          margin: 0px;
+                          width: 42px !important;
+                          height: 42px !important;
+                          margin: -3px 5px 0 0;
+                          vertical-align:middle;
                         "
                         width="50"
                         alt=""
                       />
-
                       {{/if}}
-
-                      <a style="color:#282828;text-decoration:none" href="{{AUTHOR_PROFILE_URL}}">{{AUTHOR_NAME}}</a></strong>
+                      <a style="color:#282828;text-decoration:none" href="{{AUTHOR_PROFILE_URL}}">Von {{AUTHOR_NAME}}</a>
                     </p>
+
                     <p
-                      style="color:#282828;font-size:24px;line-height:32px;{{sg_font_style_serif_title}}"
+                      style="color:#282828;font-size:30px;line-height:40px;margin:8px 0;{{sg_font_style_serif_title}}"
                     >
                       {{TITLE}}
                     </p>
                     <p
-                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_serif_regular}}"
+                      style="color:#282828;font-size:19px;line-height:27px;margin:0 0 5px 0;{{sg_font_style_serif_regular}}"
                     >
                       {{DESCRIPTION}}
                     </p>
+                    <p
+                      style="color:#282828;font-size:15px;line-height:21px;margin:0;{{sg_font_style_sans_serif_regular}}"
+                    >
+                      {{CREDITS}}
+                    </p>
 
                     <p
-                      style="color:#282828;font-size:17px;line-height:24px;{{sg_font_style_sans_serif_regular}}"
+                      style="color:#282828;font-size:17px;line-height:24px;margin:16px 0 0 0;{{sg_font_style_sans_serif_regular}}"
                     >
                       <a href="{{URL}}">Beitrag öffnen</a>
                     </p>
@@ -92,7 +102,7 @@
                     <p
                       style="color:#282828;font-size:14px;line-height:20px;{{sg_font_style_sans_serif_regular}}"
                     >
-                      Sie erhalten diese E-Mail, weil Sie {{AUTHOR_NAME}} abonniert haben. Sie können Ihre E-Mail-Benachrichtigungen in
+                      Sie erhalten diese E-Mail, weil Sie <a href="{{AUTHOR_PROFILE_URL}}">{{AUTHOR_NAME}}</a> abonniert haben. Sie können Ihre E-Mail-Benachrichtigungen in
                       <a href="{{link_account_notifications}}">Ihrem Konto</a> anpassen oder abbestellen.
                     </p>
                   </td>

@@ -125,6 +125,8 @@ const notifyPublish = async (
 
     const formatUrl = new URL(subscribedDoc.meta.path, FRONTEND_BASE_URL)
 
+    const formatColor = subscribedDoc.meta.color ?? '#282828'
+
     event = await sendNotification(
       {
         event: event ? { id: event.id } : eventInfo,
@@ -155,8 +157,16 @@ const notifyPublish = async (
                   content: formatUrl.toString(),
                 },
                 {
+                  name: 'FORMAT_COLOR',
+                  content: formatColor,
+                },
+                {
                   name: 'DESCRIPTION',
                   content: doc.meta.description,
+                },
+                {
+                  name: 'CREDITS',
+                  content: doc.meta.creditsString,
                 },
                 {
                   name: 'URL',
@@ -222,7 +232,7 @@ const notifyPublish = async (
       let portraitUrl
       if (URL.canParse(author._raw.portraitUrl)) {
         const u = new URL(author._raw.portraitUrl)
-        u.searchParams.set('resize', '100x')
+        u.searchParams.set('resize', '84x')
         u.searchParams.set('bw', '1')
         portraitUrl = u.toString()
       }
@@ -269,6 +279,10 @@ const notifyPublish = async (
                   {
                     name: 'DESCRIPTION',
                     content: doc.meta.description,
+                  },
+                  {
+                    name: 'CREDITS',
+                    content: doc.meta.creditsString,
                   },
                   {
                     name: 'URL',
