@@ -1,8 +1,13 @@
+import { NewsletterSubscription } from '#graphql/republik-api/__generated__/gql/graphql'
 import { OnboardingH3 } from '@app/components/onboarding/onboarding-ui'
 import { css } from '@republik/theme/css'
 import { PlusCircle } from 'lucide-react'
 
-function NewsletterCard() {
+function NewsletterCard({
+  subscription,
+}: {
+  subscription: NewsletterSubscription
+}) {
   return (
     <div
       className={css({
@@ -26,7 +31,7 @@ function NewsletterCard() {
       />
       <div className={css({ textAlign: 'left' })}>
         <h4 className={css({ textStyle: 'sansSerifMedium', fontSize: 'l' })}>
-          Republik Heute
+          {subscription.name}
         </h4>
         <p className={css({ lineHeight: '1.2', mb: 1 })}>
           Jeden Morgen die kompakte Übersicht: Was die Republik aktuell zu
@@ -48,20 +53,26 @@ function NewsletterCard() {
   )
 }
 
-function NewsletterSection({ title }: { title: string }) {
+function NewsletterSection({
+  title,
+  subscriptions,
+}: {
+  title: string
+  subscriptions: NewsletterSubscription[]
+}) {
   return (
-    <section className={css({ py: 4, textAlign: 'center' })}>
+    <section className={css({ pt: 4, textAlign: 'center' })}>
       <OnboardingH3>{title}</OnboardingH3>
       <div
         className={css({
           display: 'flex',
           flexDirection: 'column',
-          gap: 4,
+          gap: 6,
         })}
       >
-        <NewsletterCard />
-        <NewsletterCard />
-        <NewsletterCard />
+        {subscriptions.map((subscription) => (
+          <NewsletterCard key={subscription.name} subscription={subscription} />
+        ))}
       </div>
     </section>
   )
