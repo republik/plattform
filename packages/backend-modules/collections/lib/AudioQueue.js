@@ -65,7 +65,7 @@ const enforceQueueLimit = async (collectionId, userId, context) => {
     `
     WITH ranked AS (
       SELECT id,
-             ROW_NUMBER() OVER (ORDER BY (data->>'sequence')::int DESC NULLS LAST) as rn
+             ROW_NUMBER() OVER (ORDER BY (data->>'sequence')::int ASC NULLS LAST) as rn
       FROM "collectionDocumentItems"
       WHERE "collectionId" = $1 AND "userId" = $2
     )
