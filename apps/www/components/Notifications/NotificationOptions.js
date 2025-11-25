@@ -133,9 +133,7 @@ const NotificationOptions = ({
                 </Checkbox>
               </p>
             ))}
-            <P style={{ marginTop: 10 }}>
-              {t('account/notificationOptions/dialog')}
-            </P>
+
             <div {...styles.dropdown}>
               <Dropdown
                 label={t('account/defaultDiscussionNotificationOption/label')}

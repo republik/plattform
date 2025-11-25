@@ -978,7 +978,7 @@
     },
     {
       "key": "account/defaultDiscussionNotificationOption/label",
-      "value": "Benachrichtigungen über Beiträge"
+      "value": "Standardeinstellung für Dialog-Benachrichtigungen"
     },
     {
       "key": "account/progress/title",
@@ -1878,15 +1878,15 @@
     },
     {
       "key": "components/Discussion/Notification/MY_CHILDREN/label",
-      "value": "Meine und von abonnierten Profilen"
+      "value": "Antworten auf meine Beiträge"
     },
     {
       "key": "components/Discussion/Notification/ALL/label",
-      "value": "Alle neuen"
+      "value": "Alle neuen Beiträge"
     },
     {
       "key": "components/Discussion/Notification/NONE/label",
-      "value": "Keine"
+      "value": "Keine Benachrichtigungen"
     },
     {
       "key": "components/Discussion/Notification/settings",
