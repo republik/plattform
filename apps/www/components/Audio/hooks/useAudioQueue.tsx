@@ -116,33 +116,29 @@ const useAudioQueue = (): {
   }
 
   /**
-   * Cache update for mutations returning minimal data (IDs only).
-   * Preserves the ORDER from server response while keeping full cached data.
+   * Cache update for mutations that only return Id's and sequence
+   * Creates an updated audioqueue from the server response without
+   * fetching the full audioqueue data from the server.
    */
   const updateCacheWithMinimalData = (
     cache: ApolloCache<any>,
-    { data },
+    { data: { audioQueueItems } },
   ) => {
-    if (!data?.audioQueueItems) return
+    const data = cache.readQuery({ query: AudioQueueQueryDocument })
+    if (!data?.me) return
 
-    const cachedData = cache.readQuery({ query: AudioQueueQueryDocument })
-    if (!cachedData?.me) return
-
-    // Create lookup map of cached items by ID
     const cachedItemsById = new Map(
-      (cachedData.me.audioQueue || []).map(item => [item.id, item])
+      (data.me.audioQueue || []).map((item) => [item.id, item]),
     )
 
-    // Map server response order to full cached items
-    // Server returns items in correct order (sorted by sequence on backend)
-    const updatedQueue = data.audioQueueItems
-      .map(serverItem => cachedItemsById.get(serverItem.id))
+    const updatedQueue = audioQueueItems
+      .map((serverItem) => cachedItemsById.get(serverItem.id))
       .filter(Boolean) // Remove any items not found in cache
 
     cache.writeQuery({
       query: AudioQueueQueryDocument,
       data: {
-        me: { ...cachedData.me, audioQueue: updatedQueue },
+        me: { ...data.me, audioQueue: updatedQueue },
       },
     })
   }
