@@ -14,6 +14,8 @@ const patterns = [
         u.email <->> :word AS word_sim,
         u.id "userId"
       FROM users u
+      WHERE u.email % :word
+        AND u."deletedAt" IS NULL
     `,
     threshold: 0.3,
   },
@@ -37,6 +39,7 @@ const patterns = [
         u.id "userId"
       FROM "users" u
       JOIN "addresses" a ON a.id = u."addressId"
+      WHERE u."deletedAt" IS NULL
 
       UNION
 
@@ -52,6 +55,8 @@ const patterns = [
         p."userId" "userId"
       FROM "pledges" p
       JOIN "addresses" a ON a.id = p."shippingAddressId"
+      JOIN "users" u ON p."userId" = u.id
+      WHERE u."deletedAt" IS NULL
     `,
   },
   {
@@ -64,6 +69,9 @@ const patterns = [
       FROM "payments" pay
       JOIN "pledgePayments" pp ON pay.id = pp."paymentId"
       JOIN "pledges" p ON pp."pledgeId" = p.id
+      JOIN "users" u ON p."userId" = u.id
+      WHERE pay."hrid" % :word
+        AND u."deletedAt" IS NULL
     `,
   },
   {
@@ -74,7 +82,10 @@ const patterns = [
         m."voucherCode" <->> :word AS word_sim,
         m."userId"
       FROM "memberships" m
+      JOIN "users" u ON m."userId" = u.id
       WHERE m."voucherCode" IS NOT NULL
+        AND m."voucherCode" % :word
+        AND u."deletedAt" IS NULL
     `,
   },
   {
@@ -85,6 +96,9 @@ const patterns = [
         m."sequenceNumber"::text <->> :word AS word_sim,
         m."userId"
       FROM "memberships" m
+      JOIN "users" u ON m."userId" = u.id
+      WHERE m."sequenceNumber"::text % :word
+        AND u."deletedAt" IS NULL
     `,
     threshold: 0.2,
   },
@@ -96,7 +110,10 @@ const patterns = [
         ag."voucherCode" <->> :word AS word_sim,
         coalesce(ag."recipientUserId", ag."granterUserId") "userId"
       FROM "accessGrants" ag
+      JOIN "users" u ON coalesce(ag."recipientUserId", ag."granterUserId") = u.id
       WHERE ag."voucherCode" IS NOT NULL
+        AND ag."voucherCode" % :word
+        AND u."deletedAt" IS NULL
     `,
   },
   {
@@ -107,14 +124,32 @@ const patterns = [
         concat_ws(' ', u."firstName", u."lastName") <->> :word AS word_sim,
         u.id "userId"
       FROM users u
-      WHERE u."firstName" IS NOT NULL
-        OR u."lastName" IS NOT NULL
+      WHERE (u."firstName" % :word OR u."lastName" % :word)
+        AND (u."firstName" IS NOT NULL OR u."lastName" IS NOT NULL)
+        AND u."deletedAt" IS NULL
     `,
   },
 ]
 
 module.exports = async (_, { limit, offset = 0, search }, { pgdb, user }) => {
   Roles.ensureUserHasRole(user, 'supporter')
+
+  // Fast-path: Check for exact email match first
+  // This avoids expensive fuzzy search for the common case where we have
+  // an exact email from Zendesk (99% of ZAT usage)
+  if (search && search.includes('@')) {
+    const exactMatch = await pgdb.public.users.findOne({
+      email: search.toLowerCase(),
+      deletedAt: null,
+    })
+
+    if (exactMatch) {
+      return {
+        items: [transformUser(exactMatch)],
+        count: 1,
+      }
+    }
+  }
 
   const pattern =
     search &&
