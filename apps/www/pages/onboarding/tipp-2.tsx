@@ -1,4 +1,4 @@
-import AuthorsOnboarding from '@app/components/onboarding/authors'
+import FollowOnboarding from '@app/components/onboarding/follow'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { withDefaultSSR } from '../../lib/apollo/helpers'
@@ -13,7 +13,7 @@ function Page() {
     }
   }, [me?.id])
 
-  return <AuthorsOnboarding />
+  return <FollowOnboarding />
 }
 
 export default withDefaultSSR(Page)

@@ -1,0 +1,22 @@
+query OnboardingFormats {
+  sections: documents(template: "section") {
+    nodes {
+      id
+      linkedDocuments {
+        totalCount
+        nodes {
+          id
+          meta {
+            title
+          }
+          subscribedBy(onlyMe: true) {
+            nodes {
+              id
+              active
+            }
+          }
+        }
+      }
+    }
+  }
+}

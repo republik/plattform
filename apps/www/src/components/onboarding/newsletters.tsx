@@ -1,25 +1,18 @@
-import { NewsletterSettingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import {
+  NewsletterSettingsDocument,
+  NewsletterSubscription,
+} from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
+import { NL_FEATURED, NL_MORE } from './config'
 import NewsletterSection from './newsletter-section'
 import OnboardingHeader from './onboarding-header'
 import { OnboardingNextStep } from './onboarding-ui'
 
-const FEATURED = ['DAILY', 'WDWWW', 'WEEKLY']
-const MORE = ['CLIMATE', 'SUNDAY']
-
-const matchSubscriptions = (nlList, subscriptions) =>
-  nlList.map((nlName) => subscriptions.find((s) => s.name === nlName))
-
 function OnboardingNewsletters() {
-  const { loading, data } = useQuery(NewsletterSettingsDocument)
-  if (loading) return null
-
-  const subscriptions = data?.me?.newsletterSettings?.subscriptions
-  if (!subscriptions) return null
-
-  const featuredSubscriptions = matchSubscriptions(FEATURED, subscriptions)
-  const moreSubscriptions = matchSubscriptions(MORE, subscriptions)
+  const { data } = useQuery(NewsletterSettingsDocument)
+  const subscriptions = data?.me?.newsletterSettings
+    ?.subscriptions as NewsletterSubscription[]
 
   return (
     <>
@@ -32,11 +25,13 @@ function OnboardingNewsletters() {
 
         <NewsletterSection
           title='Beliebteste'
-          subscriptions={featuredSubscriptions}
+          newsletters={NL_FEATURED}
+          subscriptions={subscriptions}
         />
         <NewsletterSection
           title='Was für Sie?'
-          subscriptions={moreSubscriptions}
+          newsletters={NL_MORE}
+          subscriptions={subscriptions}
         />
       </div>
 

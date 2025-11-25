@@ -1,19 +1,22 @@
 import {
+  NewsletterName,
   NewsletterSubscription,
   UpdateNewsletterSubscriptionDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
-import { OnboardingH3 } from '@app/components/onboarding/onboarding-ui'
 import { Spinner } from '@app/components/ui/spinner'
 import { css } from '@republik/theme/css'
 import { CircleCheck, PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
+import { OnboardingH3 } from './onboarding-ui'
 
 function NewsletterCard({
-  subscription,
+  newsletter,
+  subscribed,
 }: {
-  subscription: NewsletterSubscription
+  newsletter: NewsletterName
+  subscribed?: boolean
 }) {
   const { t } = useTranslation()
   const [updateNewsletterSubscription] = useMutation(
@@ -22,11 +25,13 @@ function NewsletterCard({
   const [isPending, setIsPending] = useState(false)
 
   async function toggleSubscription() {
+    if (isPending) return
+    
     setIsPending(true)
     await updateNewsletterSubscription({
       variables: {
-        name: subscription.name,
-        subscribed: !subscription.subscribed,
+        name: newsletter,
+        subscribed: !subscribed,
       },
     })
     setIsPending(false)
@@ -65,13 +70,13 @@ function NewsletterCard({
             mb: 1,
           })}
         >
-          {t(`newsletters/${subscription.name}/name`)}
+          {t(`newsletters/${newsletter}/name`)}
         </h4>
         <p className={css({ lineHeight: '1.2', mb: 1 })}>
-          {t(`newsletters/${subscription.name}/description`)}
+          {t(`newsletters/${newsletter}/description`)}
         </p>
         <p className={css({ color: 'textSoft' })}>
-          {t(`newsletters/${subscription.name}/schedule`)}
+          {t(`newsletters/${newsletter}/schedule`)}
         </p>
       </div>
       <button
@@ -86,7 +91,7 @@ function NewsletterCard({
       >
         {isPending ? (
           <Spinner size='large' />
-        ) : subscription.subscribed ? (
+        ) : subscribed ? (
           <CircleCheck className={css({ color: 'primary' })} />
         ) : (
           <PlusCircle />
@@ -96,12 +101,19 @@ function NewsletterCard({
   )
 }
 
+const isSubscribed = (
+  name: NewsletterName,
+  subscriptions?: NewsletterSubscription[],
+) => subscriptions?.find((s) => s?.name === name)?.subscribed
+
 function NewsletterSection({
   title,
+  newsletters,
   subscriptions,
 }: {
   title: string
-  subscriptions: NewsletterSubscription[]
+  newsletters: NewsletterName[]
+  subscriptions?: NewsletterSubscription[]
 }) {
   return (
     <section className={css({ pt: 4, textAlign: 'center' })}>
@@ -113,8 +125,12 @@ function NewsletterSection({
           gap: 6,
         })}
       >
-        {subscriptions.map((subscription) => (
-          <NewsletterCard key={subscription.name} subscription={subscription} />
+        {newsletters.map((newsletter) => (
+          <NewsletterCard
+            key={newsletter}
+            newsletter={newsletter}
+            subscribed={isSubscribed(newsletter, subscriptions)}
+          />
         ))}
       </div>
     </section>

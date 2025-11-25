@@ -8114,6 +8114,54 @@
     {
       "key": "newsletters/SUNDAY/schedule",
       "value": "Sonntags"
+    },
+    {
+      "key": "onboarding/formats/Binswanger/author",
+      "value": "Daniel Binswanger"
+    },
+    {
+      "key": "onboarding/formats/Binswanger/description",
+      "value": "Der Wochenkommentar"
+    },
+    {
+      "key": "onboarding/formats/Rosenwasser/author",
+      "value": "Anna Rosenwasser"
+    },
+    {
+      "key": "onboarding/formats/Rosenwasser/description",
+      "value": "Der queere Blick unter die Oberfläche"
+    },
+    {
+      "key": "onboarding/formats/Wie reden wir eigentlich?/author",
+      "value": "Marie-José Kolly"
+    },
+    {
+      "key": "onboarding/formats/Wie reden wir eigentlich?/description",
+      "value": "Was unsere Sprache über uns verrät"
+    },
+    {
+      "key": "onboarding/formats/Vahland/author",
+      "value": "Kia Vahland"
+    },
+    {
+      "key": "onboarding/formats/Vahland/description",
+      "value": "Aktualität durch die Brille grosser Kunst"
+    },
+    {
+      "key": "onboarding/formats/Pfister/author",
+      "value": "Gerhard Pfister"
+    },
+    {
+      "key": "onboarding/formats/Pfister/description",
+      "value": "Politphilosophischer Blick auf die Schweiz"
+    },
+    {
+      "key": "onboarding/formats/Strassberg/author",
+      "value": "Daniel Strassberg"
+    },
+    {
+      "key": "onboarding/formats/Strassberg/description",
+      "value": "Philosopisches Schlaglicht auf die Gegenwart"
     }
   ]
 }
