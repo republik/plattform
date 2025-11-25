@@ -35,17 +35,15 @@ const membershipResolver = {
   async overdue(membership, args, context) {
     if (!membership.active) return false
 
-    const periods = await membershipResolver.periods(membership, null, context)
-    const hasPeriods = !!periods.length
-    if (!hasPeriods) {
-      console.trace(
-        // Sanity check: an active membership should always have a period.
-        `[data integrity] active membership without periode: ${membership.id}`,
+    const { latestPeriod } =
+      await context.loaders.MembershipPeriods.latestByMembershipId.load(
+        membership.id,
       )
+
+    if (!latestPeriod) {
       return false
     }
 
-    const latestPeriod = periods[0]
     const isLatestPeriodEnded = new Date(latestPeriod.endDate) < new Date()
     return isLatestPeriodEnded
   },
