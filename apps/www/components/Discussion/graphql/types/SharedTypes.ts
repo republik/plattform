@@ -1,6 +1,6 @@
 import Nullable from '../../../../lib/types/Nullable'
 
-export type DiscussionNotificationChannel = 'WEB' | 'EMAIL' | 'APP'
+export type NotificationChannel = 'WEB' | 'EMAIL' | 'APP'
 
 export type DiscussionNotificationOption = 'MY_CHILDREN' | 'ALL' | 'NONE'
 

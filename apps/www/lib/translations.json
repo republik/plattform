@@ -969,11 +969,11 @@
       "value": "Ihre Standardeinstellung für den Dialog:"
     },
     {
-      "key": "account/discussionNotificationChannels/EMAIL/label",
+      "key": "account/notificationChannels/EMAIL/label",
       "value": "E-Mail"
     },
     {
-      "key": "account/discussionNotificationChannels/APP/label",
+      "key": "account/notificationChannels/APP/label",
       "value": "App"
     },
     {
@@ -7369,7 +7369,7 @@
     },
     {
       "key": "Notifications/settings/discussion",
-      "value": "Debattenbeiträge"
+      "value": "Benachrichtigungen"
     },
     {
       "key": "Notifications/settings/newsletter",
@@ -7380,8 +7380,8 @@
       "value": "Ihrem Konto"
     },
     {
-      "key": "account/discussionNotificationChannels/intro",
-      "value": "Ich möchte Debattenbenachrichtigungen auf folgendem Weg erhalten:"
+      "key": "account/notificationChannels/intro",
+      "value": "Ich möchte Benachrichtigungen zu neuen Beiträgen im Magazin und im Dialog auf folgendem Weg erhalten:"
     },
     {
       "key": "Onboarding/Sections/Subscriptions/heading",

@@ -42,7 +42,7 @@ type queries {
 type mutations {
   updateNotificationSettings(
     defaultDiscussionNotificationOption: DiscussionNotificationOption
-    discussionNotificationChannels: [DiscussionNotificationChannel!]
+    notificationChannels: [NotificationChannel!]
   ): User!
 
   createDiscussion(

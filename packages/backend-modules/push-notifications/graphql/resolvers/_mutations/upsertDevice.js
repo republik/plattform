@@ -81,8 +81,8 @@ module.exports = async (
         SET
           "hadDevice" = true
           ${
-            me._raw.discussionNotificationChannels.indexOf('APP') === -1 // avoid duplicates
-              ? ', "discussionNotificationChannels" = "discussionNotificationChannels" || \'["APP"]\''
+            me._raw.notificationChannels.indexOf('APP') === -1 // avoid duplicates
+              ? ', "notificationChannels" = "notificationChannels" || \'["APP"]\''
               : ''
           }
         WHERE

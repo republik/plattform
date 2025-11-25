@@ -222,8 +222,11 @@ module.exports = {
     return null
   },
   discussionNotificationChannels(user, args, { user: me }) {
+    throw Error('Bitte Seite neu laden')
+  },
+  notificationChannels(user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      return user._raw.discussionNotificationChannels
+      return user._raw.notificationChannels
     }
     return []
   },

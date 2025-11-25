@@ -61,7 +61,7 @@ export const notificationsQuery = gql`
   query getNotifications($after: String) {
     me {
       id
-      discussionNotificationChannels
+      notificationChannels
     }
     notifications(first: 10, after: $after) {
       totalCount
