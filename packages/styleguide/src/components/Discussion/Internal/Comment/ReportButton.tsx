@@ -1,7 +1,7 @@
 import { IconFlagFilled } from '@republik/icons'
 import { Flag } from 'lucide-react'
 import React from 'react'
-import IconButton from '../../../IconButton'
+import IconButton from '../../../IconButton/discussion-button'
 
 type Props = {
   t: any

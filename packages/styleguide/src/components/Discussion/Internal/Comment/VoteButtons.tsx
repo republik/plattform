@@ -2,7 +2,7 @@ import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
 import { css } from 'glamor'
 import React from 'react'
 import { useColorContext } from '../../../Colors/ColorContext'
-import IconButton from '../../../IconButton'
+import IconButton from '../../../IconButton/discussion-button'
 import { fontStyles } from '../../../Typography'
 
 const styles = {
