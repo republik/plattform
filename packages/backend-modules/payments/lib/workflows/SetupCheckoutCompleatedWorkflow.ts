@@ -34,6 +34,8 @@ export class SetupWorkflow
   ): Promise<any> {
     this.logger.debug({ company, eventMeta: event.id }, 'Event received')
 
+    await this.updateCustomerDefaultPaymentMethod(company, event)
+
     try {
       const upgradeRef = this.getUpgradeRef(event.data.object.metadata)
 
@@ -64,6 +66,47 @@ export class SetupWorkflow
     }
 
     return
+  }
+
+  private async updateCustomerDefaultPaymentMethod(
+    company: Company,
+    event: Stripe.CheckoutSessionCompletedEvent,
+  ) {
+    const evenSsetupIntent = event.data.object.setup_intent
+    const customer = event.data.object.customer!
+
+    if (!evenSsetupIntent) {
+      this.logger.error(
+        { company, eventMeta: event.id, sessionId: event.data.object.id },
+        'can not process checkout session setup intent without setup intent',
+      )
+      throw new Error(
+        'can not process checkout session setup intent without setup intent',
+      )
+    }
+
+    const setupIntent = await this.paymentService.getSetupIntent(
+      company,
+      typeof evenSsetupIntent === 'string'
+        ? evenSsetupIntent
+        : evenSsetupIntent.id,
+    )
+
+    if (!setupIntent) {
+      throw new Error('Unknown Setupintent')
+    }
+
+    if (!setupIntent.payment_method) {
+      throw new Error('Payment Method missing')
+    }
+
+    return await this.paymentService.updateCustomerDefaultPaymentMethod(
+      company,
+      typeof customer === 'string' ? customer : customer.id,
+      typeof setupIntent.payment_method === 'string'
+        ? setupIntent.payment_method
+        : setupIntent.payment_method.id,
+    )
   }
 
   private getUpgradeRef(metadata: Stripe.Metadata | null): {
