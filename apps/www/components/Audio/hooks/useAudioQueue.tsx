@@ -36,6 +36,8 @@ const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
 )
 
+const MAX_QUEUE_SIZE = 10
+
 /**
  * useAudioQueue acts as a provider for the audio queue and all it's mutations.
  * Additionally, it provides the user-progress for all queued audio-items.
@@ -169,6 +171,12 @@ const useAudioQueue = (): {
     position?: number,
   ): Promise<FetchResult<AddAudioQueueItemsMutation>> => {
     if (me) {
+      // Enforce queue limit by removing oldest item (end of queue) before adding
+      if (audioQueueItems.length >= MAX_QUEUE_SIZE) {
+        const lastItem = audioQueueItems[audioQueueItems.length - 1]
+        await removeAudioQueueItem({ variables: { id: lastItem.id } })
+      }
+
       return addAudioQueueItem({
         variables: {
           entity: {
