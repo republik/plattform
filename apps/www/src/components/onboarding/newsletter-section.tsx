@@ -26,7 +26,7 @@ function NewsletterCard({
 
   async function toggleSubscription() {
     if (isPending) return
-    
+
     setIsPending(true)
     await updateNewsletterSubscription({
       variables: {
@@ -79,24 +79,26 @@ function NewsletterCard({
           {t(`newsletters/${newsletter}/schedule`)}
         </p>
       </div>
-      <button
-        className={css({
-          flex: '0 0 1',
-          alignSelf: 'flex-start',
-          pt: 1,
-          pr: 1,
-        })}
-        onClick={toggleSubscription}
-        disabled={isPending}
-      >
-        {isPending ? (
-          <Spinner size='large' />
-        ) : subscribed ? (
-          <CircleCheck className={css({ color: 'primary' })} />
-        ) : (
-          <PlusCircle />
-        )}
-      </button>
+      {subscribed !== undefined && (
+        <button
+          className={css({
+            flex: '0 0 1',
+            alignSelf: 'flex-start',
+            pt: 1,
+            pr: 1,
+          })}
+          onClick={toggleSubscription}
+          disabled={isPending}
+        >
+          {isPending ? (
+            <Spinner size='large' />
+          ) : subscribed ? (
+            <CircleCheck className={css({ color: 'primary' })} />
+          ) : (
+            <PlusCircle />
+          )}
+        </button>
+      )}
     </div>
   )
 }

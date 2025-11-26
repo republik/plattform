@@ -1,12 +1,16 @@
 import {
+  Document,
   OnboardingFormatsDocument,
-  UpdateNewsletterSubscriptionDocument,
+  SubToDocDocument,
+  UnSubFromDocDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation, useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
+import { CircleCheck, PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { Button } from '../ui/button'
+import { Spinner } from '../ui/spinner'
 import { FORMATS_FEATURED } from './config'
 import { OnboardingH3 } from './onboarding-ui'
 
@@ -19,34 +23,83 @@ function FollowButton({
   subscribed?: boolean
   isPending?: boolean
 }) {
+  if (isPending)
+    return (
+      <div className={css({ display: 'flex', justifyContent: 'center' })}>
+        <Spinner />
+      </div>
+    )
+
   return (
     <Button
       variant='link'
-      className={css({ fontWeight: 500, textDecoration: 'none' })}
+      className={css({
+        fontWeight: 500,
+        textDecoration: 'none',
+        width: 'auto',
+      })}
       onClick={onClick}
+      disabled={isPending}
     >
-      + Folgen
+      {subscribed ? (
+        <span
+          className={css({
+            color: 'textSoft',
+            display: 'inline-flex',
+            gap: '1',
+          })}
+        >
+          <CircleCheck size={16} /> Gefolgt
+        </span>
+      ) : (
+        <span
+          className={css({
+            display: 'inline-flex',
+            gap: '1',
+          })}
+        >
+          <PlusCircle size={16} /> Folgen
+        </span>
+      )}
     </Button>
   )
 }
 
-function FormatCard({ format }: { format: string }) {
+function FormatCard({
+  format,
+  document,
+}: {
+  format: string
+  document: Document
+}) {
   const { t } = useTranslation()
-  const [updateNewsletterSubscription] = useMutation(
-    UpdateNewsletterSubscriptionDocument,
-  )
+  const [subToDoc] = useMutation(SubToDocDocument, {
+    refetchQueries: [{ query: OnboardingFormatsDocument }],
+  })
+  const [unSubFromDoc] = useMutation(UnSubFromDocDocument, {
+    refetchQueries: [{ query: OnboardingFormatsDocument }],
+  })
   const [isPending, setIsPending] = useState(false)
+
+  const subscriptionId = document?.subscribedBy.nodes.find((n) => n.active)?.id
 
   async function toggleSubscription() {
     if (isPending) return
 
     setIsPending(true)
-    await updateNewsletterSubscription({
-      variables: {
-        name: format,
-        subscribed: !subscribed,
-      },
-    })
+    if (subscriptionId) {
+      await unSubFromDoc({
+        variables: {
+          subscriptionId,
+        },
+      })
+    } else {
+      await subToDoc({
+        variables: {
+          documentId: document.id,
+        },
+      })
+    }
     setIsPending(false)
   }
 
@@ -88,15 +141,25 @@ function FormatCard({ format }: { format: string }) {
         {t(`onboarding/formats/${format}/description`)}
       </h4>
       <div style={{ marginTop: 'auto' }}>
-        <FollowButton onClick={toggleSubscription} />
+        <FollowButton
+          onClick={toggleSubscription}
+          subscribed={!!subscriptionId}
+          isPending={isPending}
+        />
       </div>
     </div>
   )
 }
 
+const getDocument = (name: string, subscriptions?: Document[]) =>
+  subscriptions?.find((doc) => doc?.meta?.title === name)
+
 function FormatsSection() {
   const { data } = useQuery(OnboardingFormatsDocument)
-  const subscriptions = data?.sections.nodes
+  const documents = data?.sections.nodes
+    .map((format) => format.linkedDocuments.nodes)
+    .flat() as Document[]
+
   return (
     <section className={css({ pt: 4 })}>
       <OnboardingH3>Perspektiven mit Haltung</OnboardingH3>
@@ -109,7 +172,11 @@ function FormatsSection() {
         })}
       >
         {FORMATS_FEATURED.map((format) => (
-          <FormatCard key={format} format={format} />
+          <FormatCard
+            key={format}
+            format={format}
+            document={getDocument(format, documents)}
+          />
         ))}
       </div>
     </section>
