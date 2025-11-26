@@ -27,3 +27,10 @@ export const AUTHORS_FEATURED: string[] = [
   'angelikahardegger',
   'eblulle',
 ]
+
+export const PODCASTS_FEATURED: string[] = [
+  'republik/format-dritte-gewalt',
+  'republik/format-sondersession',
+  'republik/format-gute-frage',
+  'republik/format-was-wurde-eigentlich-aus',
+]

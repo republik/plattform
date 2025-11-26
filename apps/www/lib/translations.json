@@ -8162,6 +8162,38 @@
     {
       "key": "onboarding/formats/republik/format-gedankensplitter/description",
       "value": "Philosopisches Schlaglicht auf die Gegenwart"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-dritte-gewalt/title",
+      "value": "Dritte Gewalt"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-dritte-gewalt/description",
+      "value": "Gerichtsreporterin Brigitte Hürlimann erzählt von ihren spannendsten Fällen."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-sondersession/title",
+      "value": "Sonder session"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-sondersession/description",
+      "value": "Ein Gespräch, ein Ziel: Mehr Durchblick im Schweizer Politikdschungel."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-gute-frage/title",
+      "value": "Gute Frage"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-gute-frage/description",
+      "value": "Gemeinsam entwirren wir Fragen, die uns nicht loslassen."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-was-wurde-eigentlich-aus/title",
+      "value": "Update!"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-was-wurde-eigentlich-aus/description",
+      "value": "Die Geschichten nach den Geschichten. Wir liefern ein Update."
     }
   ]
 }

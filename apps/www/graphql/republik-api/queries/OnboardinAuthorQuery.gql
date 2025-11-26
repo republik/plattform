@@ -6,20 +6,7 @@ query OnboardingAuthor($slug: String!) {
     portrait
     subscribedBy(onlyMe: true) {
       nodes {
-        id
-        active
-        object {
-          ... on User {
-            id
-            name
-          }
-          ... on Document {
-            id
-            meta {
-              title
-            }
-          }
-        }
+        ...SubscriptionFields
       }
     }
   }

@@ -1,5 +1,8 @@
+import { Button } from '@app/components/ui/button'
+import { Spinner } from '@app/components/ui/spinner'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
+import { CircleCheck, PlusCircle } from 'lucide-react'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
@@ -9,7 +12,8 @@ export function OnboardingH3({ children }: { children: ReactNode }) {
       className={css({
         fontFamily: 'gtAmericaStandard',
         fontWeight: 'bold',
-        mb: 4,
+        mb: 6,
+        mx: 2,
       })}
     >
       {children}
@@ -43,5 +47,50 @@ export function OnboardingNextStep({ href }: { href: string }) {
         Weiter
       </Link>
     </div>
+  )
+}
+
+export function OnboardingFollowButton({
+  onClick,
+  subscribed,
+  isPending,
+}: {
+  onClick: () => void
+  subscribed?: boolean
+  isPending?: boolean
+}) {
+  return (
+    <Button
+      variant='link'
+      className={css({
+        fontWeight: 500,
+        textDecoration: 'none',
+      })}
+      onClick={onClick}
+      disabled={isPending}
+    >
+      {isPending ? (
+        <Spinner />
+      ) : subscribed ? (
+        <span
+          className={css({
+            color: 'textSoft',
+            display: 'inline-flex',
+            gap: '1',
+          })}
+        >
+          <CircleCheck size={16} /> Gefolgt
+        </span>
+      ) : (
+        <span
+          className={css({
+            display: 'inline-flex',
+            gap: '1',
+          })}
+        >
+          <PlusCircle size={16} /> Folgen
+        </span>
+      )}
+    </Button>
   )
 }

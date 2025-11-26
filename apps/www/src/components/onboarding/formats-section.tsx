@@ -6,64 +6,10 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation, useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
-import { CircleCheck, PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
-import { Button } from '../ui/button'
-import { Spinner } from '../ui/spinner'
 import { FORMATS_FEATURED } from './config'
-import { OnboardingH3 } from './onboarding-ui'
-
-function FollowButton({
-  onClick,
-  subscribed,
-  isPending,
-}: {
-  onClick: () => void
-  subscribed?: boolean
-  isPending?: boolean
-}) {
-  if (isPending)
-    return (
-      <div className={css({ display: 'flex', justifyContent: 'center' })}>
-        <Spinner />
-      </div>
-    )
-
-  return (
-    <Button
-      variant='link'
-      className={css({
-        fontWeight: 500,
-        textDecoration: 'none',
-        width: 'auto',
-      })}
-      onClick={onClick}
-      disabled={isPending}
-    >
-      {subscribed ? (
-        <span
-          className={css({
-            color: 'textSoft',
-            display: 'inline-flex',
-            gap: '1',
-          })}
-        >
-          <CircleCheck size={16} /> Gefolgt
-        </span>
-      ) : (
-        <span
-          className={css({
-            display: 'inline-flex',
-            gap: '1',
-          })}
-        >
-          <PlusCircle size={16} /> Folgen
-        </span>
-      )}
-    </Button>
-  )
-}
+import { OnboardingFollowButton, OnboardingH3 } from './onboarding-ui'
 
 function FormatCard({ format }: { format: Document }) {
   const { t } = useTranslation()
@@ -131,7 +77,7 @@ function FormatCard({ format }: { format: Document }) {
         {t(`onboarding/formats/${format.repoId}/description`)}
       </h4>
       <div style={{ marginTop: 'auto' }}>
-        <FollowButton
+        <OnboardingFollowButton
           onClick={toggleSubscription}
           subscribed={!!subscriptionId}
           isPending={isPending}
@@ -140,9 +86,6 @@ function FormatCard({ format }: { format: Document }) {
     </div>
   )
 }
-
-const getFormat = (repoId: string, formats: Document[]): Document =>
-  formats.find((format) => format.repoId === repoId)
 
 function FormatsSection() {
   const { data } = useQuery(OnboardingFormatsDocument, {
@@ -165,7 +108,10 @@ function FormatsSection() {
         })}
       >
         {FORMATS_FEATURED.map((repoId) => (
-          <FormatCard key={repoId} format={getFormat(repoId, formats)} />
+          <FormatCard
+            key={repoId}
+            format={formats.find((format) => format.repoId === repoId)}
+          />
         ))}
       </div>
     </section>
