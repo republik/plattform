@@ -1,0 +1,11 @@
+mutation Subscribe($objectId: ID!, $type: SubscriptionObjectType!) {
+  subscribe(objectId: $objectId, type: $type) {
+    ...SubscriptionFields
+  }
+}
+
+mutation Unsubscribe($subscriptionId: ID!) {
+  unsubscribe(subscriptionId: $subscriptionId) {
+    ...SubscriptionFields
+  }
+}

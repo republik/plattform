@@ -1,8 +1,9 @@
 import {
   Document,
   OnboardingFormatsDocument,
-  SubToDocDocument,
-  UnSubFromDocDocument,
+  SubscribeDocument,
+  SubscriptionObjectType,
+  UnsubscribeDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation, useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
@@ -17,8 +18,8 @@ import {
 
 function FormatCard({ format }: { format: Document }) {
   const { t } = useTranslation()
-  const [subToDoc] = useMutation(SubToDocDocument)
-  const [unSubFromDoc] = useMutation(UnSubFromDocDocument)
+  const [subscribe] = useMutation(SubscribeDocument)
+  const [unsubscribe] = useMutation(UnsubscribeDocument)
   const [isPending, setIsPending] = useState(false)
 
   const subscriptionId = format.subscribedBy.nodes.find((n) => n.active)?.id
@@ -30,15 +31,16 @@ function FormatCard({ format }: { format: Document }) {
 
     setIsPending(true)
     if (subscriptionId) {
-      await unSubFromDoc({
+      await unsubscribe({
         variables: {
           subscriptionId,
         },
       })
     } else {
-      await subToDoc({
+      await subscribe({
         variables: {
-          documentId: format.id,
+          objectId: format.id,
+          type: SubscriptionObjectType.Document,
         },
       })
     }

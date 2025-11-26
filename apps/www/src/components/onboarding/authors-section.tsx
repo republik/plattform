@@ -1,8 +1,11 @@
 import {
   OnboardingAuthorDocument,
+  SubscribeDocument,
+  SubscriptionObjectType,
+  UnsubscribeDocument,
   User,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { AUTHORS_FEATURED } from '@app/components/onboarding/config'
 import { Button } from '@app/components/ui/button'
 import { css } from '@republik/theme/css'
@@ -17,13 +20,39 @@ const AUTHORS_ALWAYS_SHOWN = 3
 
 function AuthorCard({ slug }: { slug: string }) {
   const [isPending, setIsPending] = useState(false)
+  const [subscribe] = useMutation(SubscribeDocument)
+  const [unsubscribe] = useMutation(UnsubscribeDocument)
   const { data } = useQuery(OnboardingAuthorDocument, {
     variables: { slug },
   })
 
   const author = data?.user as User
-
   if (!author) return null
+
+  const subscriptionId = author.subscribedBy.nodes.find((n) => n.active)?.id
+
+  async function toggleSubscription(e) {
+    e.stopPropagation()
+
+    if (isPending) return
+
+    setIsPending(true)
+    if (subscriptionId) {
+      await unsubscribe({
+        variables: {
+          subscriptionId,
+        },
+      })
+    } else {
+      await subscribe({
+        variables: {
+          objectId: author.id,
+          type: SubscriptionObjectType.User,
+        },
+      })
+    }
+    setIsPending(false)
+  }
 
   return (
     <div className={css({ display: 'flex', alignItems: 'center', gap: 2 })}>
@@ -38,8 +67,8 @@ function AuthorCard({ slug }: { slug: string }) {
       </div>
       <div className={css({ ml: 'auto' })}>
         <OnboardingFollowButton
-          onClick={(e) => undefined}
-          subscribed={false}
+          onClick={toggleSubscription}
+          subscribed={!!subscriptionId}
           isPending={isPending}
         />
       </div>
