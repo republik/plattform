@@ -21,6 +21,10 @@ export function OnboardingH3({ children }: { children: ReactNode }) {
   )
 }
 
+export function OnboardingSection({ children }: { children: ReactNode }) {
+  return <section className={css({ py: 4 })}>{children}</section>
+}
+
 export function OnboardingNextStep({ href }: { href: string }) {
   return (
     <div

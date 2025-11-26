@@ -9,7 +9,11 @@ import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { FORMATS_FEATURED } from './config'
-import { OnboardingFollowButton, OnboardingH3 } from './onboarding-ui'
+import {
+  OnboardingFollowButton,
+  OnboardingH3,
+  OnboardingSection,
+} from './onboarding-ui'
 
 function FormatCard({ format }: { format: Document }) {
   const { t } = useTranslation()
@@ -99,7 +103,7 @@ function FormatsSection() {
   if (!formats?.length) return null
 
   return (
-    <section className={css({ pt: 4 })}>
+    <OnboardingSection>
       <OnboardingH3>Perspektiven mit Haltung</OnboardingH3>
       <div
         className={css({
@@ -116,7 +120,7 @@ function FormatsSection() {
           />
         ))}
       </div>
-    </section>
+    </OnboardingSection>
   )
 }
 

@@ -9,7 +9,7 @@ import { css } from '@republik/theme/css'
 import { CircleCheck, PlusCircle } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
-import { OnboardingH3 } from './onboarding-ui'
+import { OnboardingH3, OnboardingSection } from './onboarding-ui'
 
 function NewsletterCard({
   newsletter,
@@ -120,24 +120,26 @@ function NewsletterSection({
   subscriptions?: NewsletterSubscription[]
 }) {
   return (
-    <section className={css({ pt: 4, textAlign: 'center' })}>
-      <OnboardingH3>{title}</OnboardingH3>
-      <div
-        className={css({
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 6,
-        })}
-      >
-        {newsletters.map((newsletter) => (
-          <NewsletterCard
-            key={newsletter}
-            newsletter={newsletter}
-            subscribed={isSubscribed(newsletter, subscriptions)}
-          />
-        ))}
+    <OnboardingSection>
+      <div className={css({ textAlign: 'center' })}>
+        <OnboardingH3>{title}</OnboardingH3>
+        <div
+          className={css({
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 6,
+          })}
+        >
+          {newsletters.map((newsletter) => (
+            <NewsletterCard
+              key={newsletter}
+              newsletter={newsletter}
+              subscribed={isSubscribed(newsletter, subscriptions)}
+            />
+          ))}
+        </div>
       </div>
-    </section>
+    </OnboardingSection>
   )
 }
 

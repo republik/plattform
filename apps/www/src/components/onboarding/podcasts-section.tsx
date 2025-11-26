@@ -9,7 +9,11 @@ import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { PODCASTS_FEATURED } from './config'
-import { OnboardingFollowButton, OnboardingH3 } from './onboarding-ui'
+import {
+  OnboardingFollowButton,
+  OnboardingH3,
+  OnboardingSection,
+} from './onboarding-ui'
 
 function PodcastCard({ podcast }: { podcast: Document }) {
   const { t } = useTranslation()
@@ -110,7 +114,7 @@ function PodcastsSection() {
   if (!podcasts?.length) return null
 
   return (
-    <section className={css({ pt: 4 })}>
+    <OnboardingSection>
       <OnboardingH3>Podcasts und Audioserien</OnboardingH3>
       <div
         className={css({
@@ -127,7 +131,7 @@ function PodcastsSection() {
           />
         ))}
       </div>
-    </section>
+    </OnboardingSection>
   )
 }
 
