@@ -6,10 +6,11 @@ import {
   User,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation, useQuery } from '@apollo/client'
-import { AUTHORS_FEATURED } from '@app/components/onboarding/config'
-import { Button } from '@app/components/ui/button'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
+import { useTranslation } from '../../../lib/withT'
+import { Button } from '../ui/button'
+import { AUTHORS_FEATURED } from './config'
 import {
   OnboardingFollowButton,
   OnboardingH3,
@@ -19,6 +20,8 @@ import {
 const AUTHORS_ALWAYS_SHOWN = 3
 
 function AuthorCard({ slug }: { slug: string }) {
+  const { t } = useTranslation()
+
   const [isPending, setIsPending] = useState(false)
   const [subscribe] = useMutation(SubscribeDocument)
   const [unsubscribe] = useMutation(UnsubscribeDocument)
@@ -63,7 +66,9 @@ function AuthorCard({ slug }: { slug: string }) {
       />
       <div>
         <h4 className={css({ fontWeight: 'bold' })}>{author.name}</h4>
-        <p className={css({ color: 'textSoft' })}>Big Tech</p>
+        <p className={css({ color: 'textSoft' })}>
+          {t(`onboarding/authors/${slug}/beat`)}
+        </p>
       </div>
       <div className={css({ ml: 'auto' })}>
         <OnboardingFollowButton

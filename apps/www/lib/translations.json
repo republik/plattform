@@ -8194,6 +8194,26 @@
     {
       "key": "onboarding/podcasts/republik/format-was-wurde-eigentlich-aus/description",
       "value": "Die Geschichten nach den Geschichten. Wir liefern ein Update."
+    },
+    {
+      "key": "onboarding/authors/adriennefichter/beat",
+      "value": "Big Tech"
+    },
+    {
+      "key": "onboarding/authors/bhurlimann/beat",
+      "value": "Justiz"
+    },
+    {
+      "key": "onboarding/authors/sabrinamweiss/beat",
+      "value": "Klimakrise"
+    },
+    {
+      "key": "onboarding/authors/eblulle/beat",
+      "value": "Reporter"
+    },
+    {
+      "key": "onboarding/authors/angelikahardegger/beat",
+      "value": "Reporterin"
     }
   ]
 }
