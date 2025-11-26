@@ -37,11 +37,7 @@ module.exports = async (_, args, context, info) => {
   const filterByDiscussionIds = discussionIds.filter(Boolean).length > 0
 
   const queryWhere = `
-    ${
-      filterByDiscussionIds
-        ? 'ARRAY[c."discussionId"] && :discussionIds AND'
-        : ''
-    }
+    ${filterByDiscussionIds ? 'c."discussionId" = ANY(:discussionIds) AND' : ''}
     ${toDepth >= 0 ? 'c."depth" <= :toDepth AND' : ''}
     ${featuredTarget ? ':featuredTarget = ANY(c."featuredTargets") AND' : ''}
     c."published" = true AND
