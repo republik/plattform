@@ -22,7 +22,7 @@ export function OnboardingH3({ children }: { children: ReactNode }) {
 }
 
 export function OnboardingSection({ children }: { children: ReactNode }) {
-  return <section className={css({ py: 4 })}>{children}</section>
+  return <section className={css({ pt: 4, pb: 12 })}>{children}</section>
 }
 
 export function OnboardingNextStep({ href }: { href: string }) {

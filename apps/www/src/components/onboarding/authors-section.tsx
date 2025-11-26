@@ -4,6 +4,7 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import { AUTHORS_FEATURED } from '@app/components/onboarding/config'
+import { Button } from '@app/components/ui/button'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import {
@@ -11,6 +12,8 @@ import {
   OnboardingH3,
   OnboardingSection,
 } from './onboarding-ui'
+
+const AUTHORS_ALWAYS_SHOWN = 3
 
 function AuthorCard({ slug }: { slug: string }) {
   const [isPending, setIsPending] = useState(false)
@@ -45,6 +48,8 @@ function AuthorCard({ slug }: { slug: string }) {
 }
 
 function AuthorsSection() {
+  const [showAll, setShowAll] = useState(false)
+
   return (
     <OnboardingSection>
       <OnboardingH3>Unsere Autorinnen</OnboardingH3>
@@ -55,10 +60,30 @@ function AuthorsSection() {
           gap: 6,
         })}
       >
-        {AUTHORS_FEATURED.map((slug) => (
+        {AUTHORS_FEATURED.slice(0, AUTHORS_ALWAYS_SHOWN).map((slug) => (
           <AuthorCard slug={slug} key={slug} />
         ))}
+
+        {showAll &&
+          AUTHORS_FEATURED.slice(AUTHORS_ALWAYS_SHOWN).map((slug) => (
+            <AuthorCard slug={slug} key={slug} />
+          ))}
       </div>
+
+      {!showAll && (
+        <div
+          className={css({
+            mt: 8,
+            display: 'flex',
+            justifyContent: 'center',
+            color: 'textSoft',
+          })}
+        >
+          <Button variant='link' onClick={() => setShowAll(true)} type='button'>
+            Mehr anzeigen
+          </Button>
+        </div>
+      )}
     </OnboardingSection>
   )
 }
