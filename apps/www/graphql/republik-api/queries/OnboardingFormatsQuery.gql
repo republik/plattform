@@ -1,29 +1,25 @@
-query OnboardingFormats {
-  sections: documents(template: "section") {
+query OnboardingFormats($repoIds: [ID!]) {
+  documents(repoIds: $repoIds) {
     nodes {
       id
-      linkedDocuments {
+      repoId
+      meta {
+        title
+        audioCover
+      }
+      subscribedBy(onlyMe: true) {
         nodes {
           id
-          meta {
-            title
-            audioCover
-          }
-          subscribedBy(onlyMe: true) {
-            nodes {
+          active
+          object {
+            ... on User {
               id
-              active
-              object {
-                ... on User {
-                  id
-                  name
-                }
-                ... on Document {
-                  id
-                  meta {
-                    title
-                  }
-                }
+              name
+            }
+            ... on Document {
+              id
+              meta {
+                title
               }
             }
           }

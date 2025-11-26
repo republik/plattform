@@ -65,19 +65,13 @@ function FollowButton({
   )
 }
 
-function FormatCard({
-  format,
-  document,
-}: {
-  format: string
-  document: Document
-}) {
+function FormatCard({ format }: { format: Document }) {
   const { t } = useTranslation()
   const [subToDoc] = useMutation(SubToDocDocument)
   const [unSubFromDoc] = useMutation(UnSubFromDocDocument)
   const [isPending, setIsPending] = useState(false)
 
-  const subscriptionId = document?.subscribedBy.nodes.find((n) => n.active)?.id
+  const subscriptionId = format.subscribedBy.nodes.find((n) => n.active)?.id
 
   async function toggleSubscription() {
     if (isPending) return
@@ -92,7 +86,7 @@ function FormatCard({
     } else {
       await subToDoc({
         variables: {
-          documentId: document.id,
+          documentId: format.id,
         },
       })
     }
@@ -118,12 +112,12 @@ function FormatCard({
     >
       <img
         width='84'
-        src={document?.meta.audioCover}
+        src={format.meta.audioCover}
         alt='formats image'
         className={css({ borderRadius: '100px', mx: 'auto', pb: 4 })}
       />
       <p className={css({ fontSize: 'l', letterSpacing: '-0.11' })}>
-        {t(`onboarding/formats/${format}/author`)}
+        {t(`onboarding/formats/${format.repoId}/author`)}
       </p>
       <h4
         className={css({
@@ -134,7 +128,7 @@ function FormatCard({
           mt: 2,
         })}
       >
-        {t(`onboarding/formats/${format}/description`)}
+        {t(`onboarding/formats/${format.repoId}/description`)}
       </h4>
       <div style={{ marginTop: 'auto' }}>
         <FollowButton
@@ -147,14 +141,17 @@ function FormatCard({
   )
 }
 
-const getDocument = (name: string, subscriptions?: Document[]) =>
-  subscriptions?.find((doc) => doc?.meta?.title === name)
+const getFormat = (repoId: string, formats: Document[]): Document =>
+  formats.find((format) => format.repoId === repoId)
 
 function FormatsSection() {
-  const { data } = useQuery(OnboardingFormatsDocument)
-  const documents = data?.sections.nodes
-    .map((format) => format.linkedDocuments.nodes)
-    .flat() as Document[]
+  const { data } = useQuery(OnboardingFormatsDocument, {
+    variables: { repoIds: FORMATS_FEATURED },
+  })
+
+  const formats = data?.documents.nodes as Document[]
+
+  if (!formats?.length) return null
 
   return (
     <section className={css({ pt: 4 })}>
@@ -167,12 +164,8 @@ function FormatsSection() {
           pb: 4,
         })}
       >
-        {FORMATS_FEATURED.map((format) => (
-          <FormatCard
-            key={format}
-            format={format}
-            document={getDocument(format, documents)}
-          />
+        {FORMATS_FEATURED.map((repoId) => (
+          <FormatCard key={repoId} format={getFormat(repoId, formats)} />
         ))}
       </div>
     </section>

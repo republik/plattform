@@ -11,10 +11,19 @@ export const NL_MORE: NewsletterName[] = [
 ]
 
 export const FORMATS_FEATURED: string[] = [
-  'Binswanger',
-  'Rosenwasser',
-  'Vahland',
-  'Pfister',
-  'Wie reden wir eigentlich?',
-  'Strassberg',
+  'republik/format-binswanger',
+  'republik/format-rosenwasser',
+  'republik/format-vahland',
+  'republik/format-pfister',
+  'republik/format-format-wie-reden-wir-eigentlich',
+  'republik/format-gedankensplitter',
+]
+
+// TODO: slugs can change (though not so often) -> use ID
+export const AUTHORS_FEATURED: string[] = [
+  'adriennefichter',
+  'bhurlimann',
+  'sabrinamweiss',
+  'angelikahardegger',
+  'eblulle',
 ]

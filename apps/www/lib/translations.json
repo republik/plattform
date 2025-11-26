@@ -8116,51 +8116,51 @@
       "value": "Sonntags"
     },
     {
-      "key": "onboarding/formats/Binswanger/author",
+      "key": "onboarding/formats/republik/format-binswanger/author",
       "value": "Daniel Binswanger"
     },
     {
-      "key": "onboarding/formats/Binswanger/description",
+      "key": "onboarding/formats/republik/format-binswanger/description",
       "value": "Der Wochenkommentar"
     },
     {
-      "key": "onboarding/formats/Rosenwasser/author",
+      "key": "onboarding/formats/republik/format-rosenwasser/author",
       "value": "Anna Rosenwasser"
     },
     {
-      "key": "onboarding/formats/Rosenwasser/description",
+      "key": "onboarding/formats/republik/format-rosenwasser/description",
       "value": "Der queere Blick unter die Oberfläche"
     },
     {
-      "key": "onboarding/formats/Wie reden wir eigentlich?/author",
+      "key": "onboarding/formats/republik/format-format-wie-reden-wir-eigentlich/author",
       "value": "Marie-José Kolly"
     },
     {
-      "key": "onboarding/formats/Wie reden wir eigentlich?/description",
+      "key": "onboarding/formats/republik/format-format-wie-reden-wir-eigentlich/description",
       "value": "Was unsere Sprache über uns verrät"
     },
     {
-      "key": "onboarding/formats/Vahland/author",
+      "key": "onboarding/formats/republik/format-vahland/author",
       "value": "Kia Vahland"
     },
     {
-      "key": "onboarding/formats/Vahland/description",
+      "key": "onboarding/formats/republik/format-vahland/description",
       "value": "Aktualität durch die Brille grosser Kunst"
     },
     {
-      "key": "onboarding/formats/Pfister/author",
+      "key": "onboarding/formats/republik/format-pfister/author",
       "value": "Gerhard Pfister"
     },
     {
-      "key": "onboarding/formats/Pfister/description",
+      "key": "onboarding/formats/republik/format-pfister/description",
       "value": "Politphilosophischer Blick auf die Schweiz"
     },
     {
-      "key": "onboarding/formats/Strassberg/author",
+      "key": "onboarding/formats/republik/format-gedankensplitter/author",
       "value": "Daniel Strassberg"
     },
     {
-      "key": "onboarding/formats/Strassberg/description",
+      "key": "onboarding/formats/republik/format-gedankensplitter/description",
       "value": "Philosopisches Schlaglicht auf die Gegenwart"
     }
   ]
