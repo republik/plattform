@@ -73,12 +73,8 @@ function FormatCard({
   document: Document
 }) {
   const { t } = useTranslation()
-  const [subToDoc] = useMutation(SubToDocDocument, {
-    refetchQueries: [{ query: OnboardingFormatsDocument }],
-  })
-  const [unSubFromDoc] = useMutation(UnSubFromDocDocument, {
-    refetchQueries: [{ query: OnboardingFormatsDocument }],
-  })
+  const [subToDoc] = useMutation(SubToDocDocument)
+  const [unSubFromDoc] = useMutation(UnSubFromDocDocument)
   const [isPending, setIsPending] = useState(false)
 
   const subscriptionId = document?.subscribedBy.nodes.find((n) => n.active)?.id
@@ -122,8 +118,8 @@ function FormatCard({
     >
       <img
         width='84'
-        src='https://www.republik.ch/_next/image?url=https%3A%2F%2Fcdn.repub.ch%2Fs3%2Frepublik-assets%2Fportraits%2F9e26dc51867ec05a944b4ff4bcfba835.jpeg%3Fsize%3D750x1334%26resize%3D384x384%26bw%3D1%26format%3Dauto&w=640&q=75'
-        alt='authors portrait'
+        src={document?.meta.audioCover}
+        alt='formats image'
         className={css({ borderRadius: '100px', mx: 'auto', pb: 4 })}
       />
       <p className={css({ fontSize: 'l', letterSpacing: '-0.11' })}>

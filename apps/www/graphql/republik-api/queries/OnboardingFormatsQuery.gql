@@ -3,16 +3,28 @@ query OnboardingFormats {
     nodes {
       id
       linkedDocuments {
-        totalCount
         nodes {
           id
           meta {
             title
+            audioCover
           }
           subscribedBy(onlyMe: true) {
             nodes {
               id
               active
+              object {
+                ... on User {
+                  id
+                  name
+                }
+                ... on Document {
+                  id
+                  meta {
+                    title
+                  }
+                }
+              }
             }
           }
         }

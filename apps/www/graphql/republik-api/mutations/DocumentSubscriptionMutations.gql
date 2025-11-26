@@ -1,11 +1,37 @@
 mutation subToDoc($documentId: ID!) {
   subscribe(objectId: $documentId, type: Document) {
     id
+    active
+    object {
+      ... on User {
+        id
+        name
+      }
+      ... on Document {
+        id
+        meta {
+          title
+        }
+      }
+    }
   }
 }
 
 mutation unSubFromDoc($subscriptionId: ID!) {
   unsubscribe(subscriptionId: $subscriptionId) {
     id
+    active
+    object {
+      ... on User {
+        id
+        name
+      }
+      ... on Document {
+        id
+        meta {
+          title
+        }
+      }
+    }
   }
 }
