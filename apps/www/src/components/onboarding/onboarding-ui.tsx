@@ -55,7 +55,7 @@ export function OnboardingFollowButton({
   subscribed,
   isPending,
 }: {
-  onClick: () => void
+  onClick: (e: any) => void
   subscribed?: boolean
   isPending?: boolean
 }) {
@@ -68,6 +68,7 @@ export function OnboardingFollowButton({
       })}
       onClick={onClick}
       disabled={isPending}
+      type='button'
     >
       {isPending ? (
         <Spinner />

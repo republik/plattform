@@ -19,7 +19,9 @@ function FormatCard({ format }: { format: Document }) {
 
   const subscriptionId = format.subscribedBy.nodes.find((n) => n.active)?.id
 
-  async function toggleSubscription() {
+  async function toggleSubscription(e) {
+    e.stopPropagation()
+
     if (isPending) return
 
     setIsPending(true)
@@ -46,42 +48,42 @@ function FormatCard({ format }: { format: Document }) {
         scrollSnapAlign: 'start',
         height: '280px',
         backgroundColor: 'background.marketing',
-        textAlign: 'center',
         mx: 2,
-        px: 4,
-        py: 6,
+        p: 4,
         display: 'flex',
         flexDirection: 'column',
       })}
       onClick={toggleSubscription}
       role='button'
     >
-      <img
-        width='84'
-        src={format.meta.audioCover}
-        alt='formats image'
-        className={css({ borderRadius: '100px', mx: 'auto', pb: 4 })}
-      />
-      <p className={css({ fontSize: 'l', letterSpacing: '-0.11' })}>
-        {t(`onboarding/formats/${format.repoId}/author`)}
-      </p>
       <h4
         className={css({
-          fontFamily: 'gtAmericaStandard',
-          fontWeight: 'bold',
-          fontSize: 'l',
-          lineHeight: 1.2,
-          mt: 2,
+          fontFamily: 'republikSerif',
+          fontSize: '2xl',
+          lineHeight: 1,
+          letterSpacing: -0.02,
         })}
       >
         {t(`onboarding/formats/${format.repoId}/description`)}
       </h4>
-      <div style={{ marginTop: 'auto' }}>
+      <p className={css({ fontSize: 'l', letterSpacing: '-0.11' })}>
+        Von {t(`onboarding/formats/${format.repoId}/author`)}
+      </p>
+      <div
+        style={{
+          marginTop: 'auto',
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'end',
+        }}
+      >
         <OnboardingFollowButton
           onClick={toggleSubscription}
           subscribed={!!subscriptionId}
           isPending={isPending}
         />
+        <img width='120' src={format.meta.audioCover} alt='cover image' />
       </div>
     </div>
   )

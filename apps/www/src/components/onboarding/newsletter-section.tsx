@@ -24,7 +24,9 @@ function NewsletterCard({
   )
   const [isPending, setIsPending] = useState(false)
 
-  async function toggleSubscription() {
+  async function toggleSubscription(e) {
+    e.stopPropagation()
+
     if (isPending) return
 
     setIsPending(true)
