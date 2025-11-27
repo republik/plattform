@@ -5,7 +5,7 @@ import React from 'react'
 import { IconType } from '../../../../types/icon'
 import CalloutMenu from '../../../Callout/CalloutMenu'
 import { useColorContext } from '../../../Colors/ColorContext'
-import IconButton from '../../../IconButton'
+import IconButton from '../../../IconButton/discussion-button'
 
 const MoreIconWithProps = (props) => (
   <IconButton title='Mehr' Icon={IconMoreVertical} {...props} />
