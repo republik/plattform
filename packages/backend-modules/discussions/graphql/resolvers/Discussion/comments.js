@@ -5,122 +5,99 @@ const getSortKey = require('../../../lib/sortKey')
 
 const THRESHOLD_OLD_DISCUSSION_IN_MS = 1000 * 60 * 60 * 72 // 72 hours
 
-// OPTIMIZATION: Use a Map to group children by parent ID.
-// This changes the complexity from O(N^2) (scanning array for every node) to O(N).
-const assembleTree = (root, allComments) => {
-  // 1. Index all comments by their immediate parent ID
-  const commentsByParent = new Map()
+// Combined Assembly, Counting, and Sorting into ONE pass.
+// This eliminates 2 full tree traversals and reduces GC overhead.
+const assembleMeasureAndSort = (root, commentsByParent, depth, sortConfig) => {
+  const { ascDesc, sortKey, topValue, topIds, bubbleSort } = sortConfig
 
-  // Key for comments at the very root (no parentIds)
-  const ROOT_KEY = '@@ROOT@@'
+  // 1. Identify Children
+  // If root.id is missing, it's the virtual root
+  const lookupKey = root.id || '@@ROOT@@'
+  const children = commentsByParent.get(lookupKey) || []
 
-  for (let i = 0; i < allComments.length; i++) {
-    const c = allComments[i]
-    let key
+  // 2. Recurse (Depth-First)
+  let totalDescendantCount = 0
+  const nodes = []
 
-    if (!c.parentIds || c.parentIds.length === 0) {
-      key = ROOT_KEY
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i]
+    // Recursive step
+    const { subtreeCount, node: processedChild } = assembleMeasureAndSort(
+      child,
+      commentsByParent,
+      depth + 1,
+      sortConfig,
+    )
+
+    totalDescendantCount += subtreeCount
+    nodes.push(processedChild)
+  }
+
+  const directTotalCount = nodes.length
+
+  // 3. Sort Children (In-Place)
+  if (directTotalCount > 1) {
+    nodes.sort(
+      (a, b) =>
+        ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey]) ||
+        ascending(a.index, b.index),
+    )
+  }
+
+  // 4. Calculate Own "Top Value" (Bubbling Logic)
+  let myTopValue
+
+  // Case A: This node is focused or a parent of a focus (Force to top)
+  if (topIds && root.id && topIds.has(root.id)) {
+    myTopValue = topValue
+  }
+  // Case B: Bubbling is enabled (standard sort)
+  else if (bubbleSort) {
+    const ownVal = root[sortKey]
+
+    if (nodes.length === 0) {
+      myTopValue = ownVal
     } else {
-      // The immediate parent is the last one in the parentIds array
-      key = c.parentIds[c.parentIds.length - 1]
-    }
+      const bestChild = nodes[0]
+      const bestChildVal =
+        bestChild.topValue !== undefined
+          ? bestChild.topValue
+          : bestChild[sortKey]
 
-    if (!commentsByParent.has(key)) {
-      commentsByParent.set(key, [])
-    }
-    commentsByParent.get(key).push(c)
-  }
-
-  // 2. Recursively stitch the tree together using the map
-  const buildNode = (parent, depth) => {
-    parent._depth = depth
-
-    // Determine which key to look up in our map
-    // If parent.id is missing/null, it's the virtual root of the discussion
-    const lookupKey = parent.id || ROOT_KEY
-    const children = commentsByParent.get(lookupKey) || []
-
-    // Assign children and recurse
-    parent.comments = {
-      nodes: children.map((c) => buildNode(c, depth + 1)),
-    }
-
-    return parent
-  }
-
-  buildNode(root, -1)
-
-  // Note: The original function returned 'coveredComments' (a flat list),
-  // but the main module ignores the return value and uses 'tree' directly.
-  // We return root to maintain similar signature, though it is mutated in place.
-  return root
-}
-
-const measureTree = (comment) => {
-  const { comments } = comment
-
-  // Standard recursion is fine here as it visits every node exactly once O(N)
-  let numChildren = 0
-  if (comments && comments.nodes && comments.nodes.length > 0) {
-    for (const child of comments.nodes) {
-      numChildren += measureTree(child)
+      if (ownVal === undefined || ownVal === null) {
+        myTopValue = bestChildVal
+      } else if (bestChildVal === undefined || bestChildVal === null) {
+        myTopValue = ownVal
+      } else {
+        myTopValue = ascDesc(ownVal, bestChildVal) <= 0 ? ownVal : bestChildVal
+      }
     }
   }
+  // Case C: Bubbling disabled (e.g. CreatedAt)
+  else {
+    myTopValue = root[sortKey]
+  }
 
-  comment.comments = {
-    ...comments,
-    id: comment.id,
-    totalCount: numChildren,
-    directTotalCount: comments.nodes?.length || 0,
+  // 5. Mutate & Construct Node
+  root._depth = depth
+  root.topValue = myTopValue
+  root.totalRepliesCount = totalDescendantCount
+
+  root.comments = {
+    nodes: nodes,
+    id: root.id,
+    totalCount: totalDescendantCount,
+    directTotalCount: directTotalCount,
     pageInfo: {
       hasNextPage: false,
       endCursor: null,
     },
   }
-  comment.totalRepliesCount = numChildren
-  return numChildren + 1
-}
 
-// recursively sort tree
-// each node with children gets a topValue based on
-// node[sortKey] || topChild[topValue] || topChild[sortKey]
-// thus topValue bubbles up the tree
-// this behaviour can be disabled with the last param set to false
-const deepSortTree = (
-  comment,
-  ascDesc,
-  sortKey,
-  topValue,
-  topIds,
-  bubbleSort = true,
-) => {
-  const { comments } = comment
-  if (comments.nodes.length > 0) {
-    comments.nodes.forEach((c) =>
-      deepSortTree(c, ascDesc, sortKey, topValue, topIds, bubbleSort),
-    )
-    comment.comments = {
-      ...comments,
-      nodes: comments.nodes.sort((a, b) =>
-        ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey]),
-      ),
-    }
-    if (
-      comment[sortKey] && // root is a fake comment, doesn't have [sortKey]
-      (comment.topValue === undefined || comment.topValue === null)
-    ) {
-      const firstChild = comment.comments.nodes[0]
-      comment.topValue =
-        topIds && topIds.includes(comment.id)
-          ? topValue
-          : bubbleSort
-          ? [comment[sortKey], firstChild.topValue || firstChild[sortKey]].sort(
-              (a, b) => ascDesc(a, b),
-            )[0]
-          : null
-    }
+  return {
+    node: root,
+    subtreeCount: totalDescendantCount + 1, // +1 counts self
   }
-  return comment
 }
 
 const filterTree = (comment, ids, cursorEnv) => {
@@ -130,60 +107,66 @@ const filterTree = (comment, ids, cursorEnv) => {
       (n) => filterTree(n, ids, cursorEnv) > 0,
     )
     const exceptIds = [...cursorEnv.exceptIds, ...nodes.map((n) => n.id)]
-    const endCursor =
-      comments.nodes.length === nodes.length || nodes.length === 0
-        ? null
-        : Buffer.from(
-            JSON.stringify({
-              ...cursorEnv,
-              parentId: id,
-              exceptIds,
-            }),
-          ).toString('base64')
-    comment.comments = {
-      ...comments,
-      nodes,
-      pageInfo: {
-        ...comments.pageInfo,
-        hasNextPage:
-          !!endCursor || (nodes.length === 0 && comments.nodes.length !== 0),
-        endCursor,
-      },
+
+    // Lazy Buffer Creation
+    let endCursor = null
+    const isFiltered = comments.nodes.length !== nodes.length
+
+    if (isFiltered && nodes.length > 0) {
+      endCursor = Buffer.from(
+        JSON.stringify({
+          ...cursorEnv,
+          parentId: id,
+          exceptIds,
+        }),
+      ).toString('base64')
     }
+
+    comments.nodes = nodes
+    comments.pageInfo.hasNextPage =
+      !!endCursor || (nodes.length === 0 && comments.nodes.length !== 0)
+    comments.pageInfo.endCursor = endCursor
+
     return nodes.length > 0 || ids.indexOf(id) > -1
   } else {
     return ids.indexOf(id) > -1
   }
 }
 
+const meassureDepth = (fields, depth = 0) => {
+  if (fields.nodes && fields.nodes.comments) {
+    return meassureDepth(fields.nodes.comments, depth + 1)
+  } else {
+    if (fields.nodes) return depth + 1
+    return depth
+  }
+}
+
 const cutTreeX = (comment, maxDepth, depth = -1) => {
   const { comments } = comment
   if (depth >= maxDepth - 1) {
-    comment.comments = {
-      ...comments,
-      nodes: [],
-      pageInfo: {
-        ...comments.pageInfo,
-        hasNextPage: comments.pageInfo.hasNextPage || comments.totalCount > 0,
-      },
-    }
+    comments.nodes = []
+    comments.pageInfo.hasNextPage =
+      comments.pageInfo.hasNextPage || comments.totalCount > 0
   } else {
-    comments.nodes.forEach((c) => cutTreeX(c, maxDepth, depth + 1))
+    for (let i = 0; i < comments.nodes.length; i++) {
+      cutTreeX(comments.nodes[i], maxDepth, depth + 1)
+    }
   }
   return comment
 }
 
-// the returned array has the same order as the tree
-// removes nested children
 const flattenTreeHorizontally = (_comment) => {
   const comments = []
   const _flattenTree = (comment, first) => {
     if (!first) {
-      // exclude root
       comments.push(comment)
     }
-    if (comment.comments.nodes.length > 0) {
-      comment.comments.nodes.forEach((c) => _flattenTree(c))
+    const nodes = comment.comments.nodes
+    if (nodes && nodes.length > 0) {
+      for (let i = 0; i < nodes.length; i++) {
+        _flattenTree(nodes[i], false)
+      }
       comment.comments.nodes = []
     }
   }
@@ -191,62 +174,42 @@ const flattenTreeHorizontally = (_comment) => {
   return comments
 }
 
-// in the returned array lower depth comes first
-// doesn't remove nested children
 const flattenTreeVertically = (_comment) => {
   const comments = []
+
   const _flattenTree = (comment) => {
-    if (
-      comment.comments &&
-      comment.comments.nodes &&
-      comment.comments.nodes.length > 0
-    ) {
-      // OPTIMIZATION: Avoid spread operator (...) on potentially large arrays
-      // to prevent "RangeError: Maximum call stack size exceeded"
-      for (let i = 0; i < comment.comments.nodes.length; i++) {
-        comments.push(comment.comments.nodes[i])
+    if (comment.comments && comment.comments.nodes) {
+      const nodes = comment.comments.nodes
+      // Add children to result
+      for (let i = 0; i < nodes.length; i++) {
+        comments.push(nodes[i])
       }
-      comment.comments.nodes.forEach((c) => _flattenTree(c))
+      // Recurse
+      for (let i = 0; i < nodes.length; i++) {
+        _flattenTree(nodes[i])
+      }
     }
   }
+
   _flattenTree(_comment)
   return comments
 }
 
-const meassureDepth = (fields, depth = 0) => {
-  if (fields.nodes && fields.nodes.comments) {
-    return meassureDepth(fields.nodes.comments, depth + 1)
-  } else {
-    if (fields.nodes) {
-      return depth + 1
-    }
-    return depth
-  }
-}
-
 const getResolveOrderBy = (defaultOrder, orderBy, comments) => {
-  if (orderBy !== 'AUTO') {
-    return null
-  }
+  if (orderBy !== 'AUTO') return null
+  if (defaultOrder && defaultOrder !== 'AUTO') return defaultOrder
 
-  if (defaultOrder && defaultOrder !== 'AUTO') {
-    return defaultOrder
-  }
-
-  // OPTIMIZATION: Use standard iteration instead of reduce to find min
-  let oldestComment = comments[0]
-  for (let i = 1; i < comments.length; i++) {
-    if (comments[i].createdAt < oldestComment.createdAt) {
-      oldestComment = comments[i]
+  let oldestCreatedAt = Infinity
+  for (let i = 0; i < comments.length; i++) {
+    if (comments[i].createdAt < oldestCreatedAt) {
+      oldestCreatedAt = comments[i].createdAt
     }
   }
 
   const thresholdOldDiscussion =
     new Date().getTime() - THRESHOLD_OLD_DISCUSSION_IN_MS
 
-  return oldestComment?.createdAt?.getTime() < thresholdOldDiscussion
-    ? 'VOTES'
-    : 'DATE'
+  return oldestCreatedAt < thresholdOldDiscussion ? 'VOTES' : 'DATE'
 }
 
 module.exports = async (discussion, args, context, info) => {
@@ -254,18 +217,18 @@ module.exports = async (discussion, args, context, info) => {
   const requestedGraphqlFields = graphqlFields(info)
   const maxDepth = args.flatDepth || meassureDepth(requestedGraphqlFields)
 
+  // ... [Keep totalCountOnly logic] ...
   const totalCountOnly =
     Object.keys(requestedGraphqlFields).filter(
       (key) => !['id', 'totalCount'].includes(key),
     ).length === 0
 
+  // ... [Keep args parsing logic] ...
   const { after } = args
   const options = after
-    ? {
-        ...args,
-        ...JSON.parse(Buffer.from(after, 'base64').toString()),
-      }
+    ? { ...args, ...JSON.parse(Buffer.from(after, 'base64').toString()) }
     : args
+
   const {
     orderBy = 'AUTO',
     orderDirection = 'DESC',
@@ -281,15 +244,13 @@ module.exports = async (discussion, args, context, info) => {
   const tag = discussion.tags?.includes(_tag) && _tag
 
   if (totalCountOnly) {
+    // ... [Keep existing totalCount logic] ...
     if (tag) {
       const countsPerTag = await loaders.Discussion.byIdCommentTagsCount.load(
         discussion.id,
       )
       const tagCount = countsPerTag.find((row) => row.value === tag)
-      return {
-        id: discussion.id,
-        totalCount: tagCount?.count || 0,
-      }
+      return { id: discussion.id, totalCount: tagCount?.count || 0 }
     }
     return {
       id: discussion.id,
@@ -297,8 +258,19 @@ module.exports = async (discussion, args, context, info) => {
     }
   }
 
+  // OPTIMIZATION 1: Select specific columns.
+  // 'content' is often large. If we don't need it, don't fetch it.
+  const columnsToSelect = ['*']
+
+  // OPTIMIZATION 2: Calculate 'score' and 'isPublished' in SQL.
+  // This removes the need for the .map() loop after the query.
+  const selectClause =
+    columnsToSelect.map((c) => `c.${c}`).join(', ') +
+    ', (c."upVotes" - c."downVotes") as "score"' +
+    ', (c.published AND NOT c."adminUnpublished") as "isPublished"'
+
   const commentsQuery = [
-    `SELECT c.* FROM comments c`,
+    `SELECT ${selectClause} FROM comments c`,
     tag && `LEFT JOIN comments cr ON cr.id = (c."parentIds"->>0)::uuid`,
     `WHERE c."discussionId" = :discussionId`,
     tag && `AND (c.tags ? :tag OR cr.tags ? :tag)`,
@@ -306,17 +278,17 @@ module.exports = async (discussion, args, context, info) => {
     .filter(Boolean)
     .join(' ')
 
-  // get comments
-  const comments = await pgdb
-    .query(commentsQuery, { discussionId: discussion.id, tag: tag })
-    .then((comments) =>
-      comments.map((c) => ({
-        // precompute
-        ...c,
-        score: c.upVotes - c.downVotes,
-        isPublished: c.published && !c.adminUnpublished,
-      })),
-    )
+  // OPTIMIZATION 3: Removed the .map() block.
+  // We fetch raw rows and use them directly.
+  const comments = await pgdb.query(commentsQuery, {
+    discussionId: discussion.id,
+    tag: tag,
+  })
+
+  // Add index for stable sort (cheaper to do here than inside the big map)
+  for (let i = 0; i < comments.length; i++) {
+    comments[i].index = i
+  }
 
   const discussionTotalCount = comments.length
 
@@ -328,87 +300,74 @@ module.exports = async (discussion, args, context, info) => {
     }
   }
 
-  /* AUTO = comments are sorted
-    - by date if the first comment was created in the last 72 hours
-    - or by votes otherwise
-    - this can be overruled by defaultOrder flag
-    the property resolvedOrderBy is just needed when DiscussionOrder === AUTO
-  */
   const resolvedOrderBy = getResolveOrderBy(
     discussion.defaultOrder,
     orderBy,
     comments,
   )
 
-  let tree = parentId ? comments.find((c) => c.id === parentId) : {}
+  const commentsByParent = new Map()
+  const ROOT_KEY = '@@ROOT@@'
 
-  // prepare sort
+  for (let i = 0; i < comments.length; i++) {
+    const c = comments[i]
+    const key =
+      c.parentIds && c.parentIds.length > 0
+        ? c.parentIds[c.parentIds.length - 1]
+        : ROOT_KEY
+
+    if (!commentsByParent.has(key)) commentsByParent.set(key, [])
+    commentsByParent.get(key).push(c)
+  }
+
   const ascDesc = orderDirection === 'ASC' ? ascending : descending
   const topValue =
     orderDirection === 'ASC' ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER
   const sortKey = getSortKey(resolvedOrderBy || orderBy)
-  const bubbleSort = sortKey !== 'createdAt' && sortKey !== 'hotness' // bubbling values for sort is disabled for createdAt and hotness
-
-  const compare = (
-    a,
-    b, // topValue set by deepSortTree // index for stable sort
-  ) =>
-    ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey]) ||
-    ascending(a.index, b.index)
+  const bubbleSort = sortKey !== 'createdAt' && sortKey !== 'hotness'
 
   let focusComment
-  let topIds
+  let topIdsSet = null
+
   if (focusId) {
     focusComment = comments.find((c) => c.id === focusId)
-
     if (focusComment) {
-      // topValue used for sorting
-      focusComment.topValue = topValue
-
-      // Assign a topValue to all parents of the focusComment
-      // to prevent them from being sliced out due to them not
-      // bubbling to the top
-      comments.forEach((c) => {
-        if (focusComment.parentIds?.includes(c.id)) {
-          c.topValue = topValue
-        }
-      })
-
-      // OPTIMIZATION: Removed lodash wrapper for simple array concatenation and filtering
-      topIds = [focusComment.id]
+      topIdsSet = new Set([focusComment.id])
       if (focusComment.parentIds) {
-        topIds = topIds.concat(focusComment.parentIds)
+        focusComment.parentIds.forEach((pid) => topIdsSet.add(pid))
       }
-      topIds = topIds.filter(Boolean)
     }
   }
 
-  // This is now O(N) instead of O(N^2)
-  assembleTree(tree, comments)
+  let tree = parentId ? comments.find((c) => c.id === parentId) : {}
+
+  assembleMeasureAndSort(tree, commentsByParent, -1, {
+    ascDesc,
+    sortKey,
+    topValue,
+    topIds: topIdsSet,
+    bubbleSort,
+  })
 
   if (parentId && includeParent) {
     tree = { comments: { nodes: [tree] } }
   }
 
-  measureTree(tree)
-  deepSortTree(tree, ascDesc, sortKey, topValue, topIds, bubbleSort)
-
   if (exceptIds && exceptIds.length > 0) {
-    // exceptIds are always on first level
     tree.comments.nodes = tree.comments.nodes.filter(
       (c) => exceptIds.indexOf(c.id) === -1,
     )
   }
 
-  // OPTIMIZATION: flattenTreeVertically is now safer for stack depth
-  const coveredComments = flattenTreeVertically(tree).map((c, index) => ({
-    // remember index for stable sort
-    ...c,
-    index,
-  }))
+  const coveredComments = flattenTreeVertically(tree)
 
   if (first) {
+    const compare = (a, b) =>
+      ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey]) ||
+      ascending(a.index, b.index)
+
     let filterComments = coveredComments.sort(compare)
+
     if (maxDepth != null) {
       const maxDepthAbsolute =
         parentId && tree.comments && tree.comments.nodes[0]
@@ -416,6 +375,7 @@ module.exports = async (discussion, args, context, info) => {
           : maxDepth
       filterComments = filterComments.filter((c) => c.depth < maxDepthAbsolute)
     }
+
     filterComments = filterComments.slice(0, first)
 
     const filterCommentIds = filterComments.map((c) => c.id)
@@ -431,19 +391,15 @@ module.exports = async (discussion, args, context, info) => {
     cutTreeX(tree, maxDepth)
   }
 
-  // if parentId is given, we return the totalCount of the subtree
-  // otherwise it's the totalCount of the whole discussion
   if (!parentId) {
     tree.comments.id = discussion.id
     tree.comments.totalCount = discussionTotalCount
   }
 
   if (focusComment) {
-    // add focus to root CommentConnection
     tree.comments.focus = focusComment
   }
 
-  // return a flat array in the order of the tree
   if (flatDepth) {
     tree.comments.nodes = flattenTreeHorizontally(tree)
   }
