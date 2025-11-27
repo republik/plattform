@@ -36,7 +36,7 @@ const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
 )
 
-const MAX_QUEUE_SIZE = 10
+const MAX_QUEUE_SIZE = 20
 
 /**
  * useAudioQueue acts as a provider for the audio queue and all it's mutations.
