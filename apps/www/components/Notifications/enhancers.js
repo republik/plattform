@@ -146,7 +146,7 @@ export const notificationsQuery = gql`
 
 export const possibleSubscriptions = gql`
   query getSubscriptions {
-    sections: documents(template: "section") {
+    sections: documents(template: "section", feed: true) {
       nodes {
         id
         repoId
