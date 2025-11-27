@@ -96,6 +96,18 @@ export class PaymentService {
     })
   }
 
+  async updateCustomerDefaultPaymentMethod(
+    company: Company,
+    customerId: string,
+    pmId: string,
+  ) {
+    return this.#stripeAdapters[company].customers.update(customerId, {
+      invoice_settings: {
+        default_payment_method: pmId,
+      },
+    })
+  }
+
   async getPaymentMethod(company: Company, id: string) {
     const paymentMethod = await this.#stripeAdapters[
       company
@@ -302,6 +314,16 @@ export class PaymentService {
     const charge = await this.#stripeAdapters[company].charges.retrieve(id)
 
     return charge ? charge : null
+  }
+
+  async getSetupIntent(company: Company, id: string) {
+    const intent = await this.#stripeAdapters[company].setupIntents.retrieve(id)
+
+    if (!intent) {
+      return null
+    }
+
+    return intent
   }
 
   async createCheckoutSession(

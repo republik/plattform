@@ -1,8 +1,10 @@
 import { forEachRow, Options, JobContext, JobFn } from '../../index'
 
+// old audio queue items should be deleted if the audio queue is very long
 const AGE_DAYS = 90
+const MAX_ITEMS = 50
 
-export default module.exports = async function setup(
+export = async function setup(
   options: Options,
   context: JobContext,
 ): Promise<JobFn> {
@@ -10,23 +12,30 @@ export default module.exports = async function setup(
   const { dryRun } = options
   const now = new Date()
 
+  const collection = await pgdb.public.collections.findOne({
+    name: 'audioqueue',
+  })
+
   return async function () {
     const qryConditions = {
-      'createdAt <': now.setDate(now.getDate() - AGE_DAYS),
+      collectionId: collection.id, 
+      'updatedAt <': now.setDate(now.getDate() - AGE_DAYS),
+      'data ?': 'sequence',
+      'data->sequence >': MAX_ITEMS,
     }
 
     const tx = await pgdb.transactionBegin()
     try {
       const handlerDebug = debug.extend('handler')
       const batchHandler = async function (ids: string[]): Promise<void> {
-        debug('delete %i rows%s', ids.length, dryRun ? ' (dry-run only)' : '')
-        handlerDebug('delete ids%s: %o', dryRun ? ' (dry-run only)' : '', ids)
+        debug('update %i rows%s', ids.length, dryRun ? ' (dry-run only)' : '')
+        handlerDebug('update ids%s: %o', dryRun ? ' (dry-run only)' : '', ids)
 
-        await tx.public.paymentsLog.delete({ id: ids })
+        await tx.public.collectionDocumentItems.delete({ id: ids })
       }
 
       await forEachRow(
-        'paymentsLog',
+        'collectionDocumentItems',
         qryConditions,
         options,
         { batchHandler },
