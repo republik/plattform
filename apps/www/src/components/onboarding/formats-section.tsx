@@ -58,6 +58,9 @@ function FormatCard({ format }: { format: Document }) {
         p: 4,
         display: 'flex',
         flexDirection: 'column',
+        md: {
+          mx: 'initial',
+        },
       })}
       onClick={toggleSubscription}
       role='button'
@@ -113,6 +116,11 @@ function FormatsSection() {
           overflowX: 'scroll',
           scrollSnapType: 'x mandatory',
           pb: 4,
+          md: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+            gap: 4,
+          },
         })}
       >
         {FORMATS_FEATURED.map((repoId) => (

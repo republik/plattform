@@ -14,6 +14,9 @@ export function OnboardingH3({ children }: { children: ReactNode }) {
         fontWeight: 'bold',
         mb: 6,
         mx: 2,
+        md: {
+          textAlign: 'center',
+        },
       })}
     >
       {children}

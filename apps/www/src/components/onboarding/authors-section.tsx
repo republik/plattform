@@ -92,6 +92,10 @@ function AuthorsSection() {
           display: 'flex',
           flexDirection: 'column',
           gap: 6,
+          md: {
+            maxW: '360px',
+            mx: 'auto',
+          },
         })}
       >
         {AUTHORS_FEATURED.slice(0, AUTHORS_ALWAYS_SHOWN).map((slug) => (
