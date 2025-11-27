@@ -74,7 +74,7 @@ const notifyPublish = async (
           }),
     },
     context,
-  ).then((subs) =>
+  ).then((subs) => {
     subs.forEach((sub) => {
       if (
         (!filters || filters.includes('Document')) &&
@@ -96,8 +96,8 @@ const notifyPublish = async (
       } else {
         console.warn('discarded subscription', sub.id)
       }
-    }),
-  )
+    })
+  })
 
   let event
 
@@ -112,20 +112,25 @@ const notifyPublish = async (
 
   await Promise.each(Object.keys(docSubscribersByDocId), async (docId) => {
     // docId === repoId of the format. This is the format!
-    const subscribedDoc = await loaders.Document.byRepoId.load(docId)
+    const format = await loaders.Document.byRepoId.load(docId)
+
+    // Do not send notifications for newsletter formats
+    if (format.meta.newsletter) {
+      return
+    }
 
     const title =
-      subscribedDoc.meta.notificationTitle ||
+      format.meta.notificationTitle ||
       t('api/notifications/doc/title', {
-        formatTitle: `«${subscribedDoc.meta.title}»`,
+        formatTitle: `«${format.meta.title}»`,
         articleTitle: `«${doc.meta.title}»`,
       })
 
     const subscribers = docSubscribersByDocId[docId]
 
-    const formatUrl = new URL(subscribedDoc.meta.path, FRONTEND_BASE_URL)
+    const formatUrl = new URL(format.meta.path, FRONTEND_BASE_URL)
 
-    const formatColor = subscribedDoc.meta.color ?? '#282828'
+    const formatColor = format.meta.color ?? '#282828'
 
     event = await sendNotification(
       {
@@ -150,7 +155,7 @@ const notifyPublish = async (
                 },
                 {
                   name: 'FORMAT_TITLE',
-                  content: subscribedDoc.meta.title,
+                  content: format.meta.title,
                 },
                 {
                   name: 'FORMAT_URL',
