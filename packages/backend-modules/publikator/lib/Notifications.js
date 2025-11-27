@@ -232,8 +232,9 @@ const notifyPublish = async (
       let portraitUrl
       if (URL.canParse(author._raw.portraitUrl)) {
         const u = new URL(author._raw.portraitUrl)
-        u.searchParams.set('resize', '84x')
+        u.searchParams.set('resize', '84x84')
         u.searchParams.set('bw', '1')
+        u.searchParams.set('format', 'auto')
         portraitUrl = u.toString()
       }
 

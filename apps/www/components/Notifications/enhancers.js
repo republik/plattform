@@ -180,6 +180,7 @@ export const myUserSubscriptions = gql`
             ... on User {
               id
               slug
+              portrait
               documents {
                 totalCount
               }
