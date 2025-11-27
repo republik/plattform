@@ -5,13 +5,9 @@ const getSortKey = require('../../../lib/sortKey')
 
 const THRESHOLD_OLD_DISCUSSION_IN_MS = 1000 * 60 * 60 * 72 // 72 hours
 
-// OPTIMIZATION: Use a Map to group children by parent ID.
-// This changes the complexity from O(N^2) (scanning array for every node) to O(N).
 const assembleTree = (root, allComments) => {
-  // 1. Index all comments by their immediate parent ID
   const commentsByParent = new Map()
 
-  // Key for comments at the very root (no parentIds)
   const ROOT_KEY = '@@ROOT@@'
 
   for (let i = 0; i < allComments.length; i++) {
@@ -21,7 +17,6 @@ const assembleTree = (root, allComments) => {
     if (!c.parentIds || c.parentIds.length === 0) {
       key = ROOT_KEY
     } else {
-      // The immediate parent is the last one in the parentIds array
       key = c.parentIds[c.parentIds.length - 1]
     }
 
@@ -31,12 +26,9 @@ const assembleTree = (root, allComments) => {
     commentsByParent.get(key).push(c)
   }
 
-  // 2. Recursively stitch the tree together using the map
   const buildNode = (parent, depth) => {
     parent._depth = depth
 
-    // Determine which key to look up in our map
-    // If parent.id is missing/null, it's the virtual root of the discussion
     const lookupKey = parent.id || ROOT_KEY
     const children = commentsByParent.get(lookupKey) || []
 
@@ -49,17 +41,11 @@ const assembleTree = (root, allComments) => {
   }
 
   buildNode(root, -1)
-
-  // Note: The original function returned 'coveredComments' (a flat list),
-  // but the main module ignores the return value and uses 'tree' directly.
-  // We return root to maintain similar signature, though it is mutated in place.
-  return root
 }
 
 const measureTree = (comment) => {
   const { comments } = comment
 
-  // Standard recursion is fine here as it visits every node exactly once O(N)
   let numChildren = 0
   if (comments && comments.nodes && comments.nodes.length > 0) {
     for (const child of comments.nodes) {
@@ -201,8 +187,6 @@ const flattenTreeVertically = (_comment) => {
       comment.comments.nodes &&
       comment.comments.nodes.length > 0
     ) {
-      // OPTIMIZATION: Avoid spread operator (...) on potentially large arrays
-      // to prevent "RangeError: Maximum call stack size exceeded"
       for (let i = 0; i < comment.comments.nodes.length; i++) {
         comments.push(comment.comments.nodes[i])
       }
@@ -298,7 +282,11 @@ module.exports = async (discussion, args, context, info) => {
   }
 
   const commentsQuery = [
-    `SELECT c.* FROM comments c`,
+    `SELECT
+    c.*,
+    (c."upVotes" - c."downVotes") as score,
+    (c.published AND NOT c."adminUnpublished") as "isPublished"
+    FROM comments c`,
     tag && `LEFT JOIN comments cr ON cr.id = (c."parentIds"->>0)::uuid`,
     `WHERE c."discussionId" = :discussionId`,
     tag && `AND (c.tags ? :tag OR cr.tags ? :tag)`,
@@ -306,17 +294,10 @@ module.exports = async (discussion, args, context, info) => {
     .filter(Boolean)
     .join(' ')
 
-  // get comments
-  const comments = await pgdb
-    .query(commentsQuery, { discussionId: discussion.id, tag: tag })
-    .then((comments) =>
-      comments.map((c) => ({
-        // precompute
-        ...c,
-        score: c.upVotes - c.downVotes,
-        isPublished: c.published && !c.adminUnpublished,
-      })),
-    )
+  const comments = await pgdb.query(commentsQuery, {
+    discussionId: discussion.id,
+    tag: tag,
+  })
 
   const discussionTotalCount = comments.length
 
@@ -362,7 +343,6 @@ module.exports = async (discussion, args, context, info) => {
     focusComment = comments.find((c) => c.id === focusId)
 
     if (focusComment) {
-      // topValue used for sorting
       focusComment.topValue = topValue
 
       // Assign a topValue to all parents of the focusComment
@@ -374,7 +354,6 @@ module.exports = async (discussion, args, context, info) => {
         }
       })
 
-      // OPTIMIZATION: Removed lodash wrapper for simple array concatenation and filtering
       topIds = [focusComment.id]
       if (focusComment.parentIds) {
         topIds = topIds.concat(focusComment.parentIds)
@@ -383,7 +362,6 @@ module.exports = async (discussion, args, context, info) => {
     }
   }
 
-  // This is now O(N) instead of O(N^2)
   assembleTree(tree, comments)
 
   if (parentId && includeParent) {
@@ -400,9 +378,7 @@ module.exports = async (discussion, args, context, info) => {
     )
   }
 
-  // OPTIMIZATION: flattenTreeVertically is now safer for stack depth
   const coveredComments = flattenTreeVertically(tree).map((c, index) => ({
-    // remember index for stable sort
     ...c,
     index,
   }))
@@ -431,19 +407,15 @@ module.exports = async (discussion, args, context, info) => {
     cutTreeX(tree, maxDepth)
   }
 
-  // if parentId is given, we return the totalCount of the subtree
-  // otherwise it's the totalCount of the whole discussion
   if (!parentId) {
     tree.comments.id = discussion.id
     tree.comments.totalCount = discussionTotalCount
   }
 
   if (focusComment) {
-    // add focus to root CommentConnection
     tree.comments.focus = focusComment
   }
 
-  // return a flat array in the order of the tree
   if (flatDepth) {
     tree.comments.nodes = flattenTreeHorizontally(tree)
   }
