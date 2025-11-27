@@ -72,16 +72,17 @@ const SubscribedAuthors = ({
       error={error}
       render={() => {
         const allSubscribedUsers = myUserSubscriptions.subscribedTo.nodes
-        
+
         const subscribedAuthors = allSubscribedUsers
           .filter((user) => user.userDetails.documents.totalCount > 0)
           .sort((a, b) => a.object.name.localeCompare(b.object.name))
-        
-          const subscribedUsers = allSubscribedUsers
+
+        const subscribedUsers = allSubscribedUsers
           .filter((user) => user.userDetails.documents.totalCount === 0)
           .sort((a, b) => a.object.name.localeCompare(b.object.name))
 
-        const susbcribedAuthorsAndUsersSorted = subscribedAuthors.concat(subscribedUsers)
+        const susbcribedAuthorsAndUsersSorted =
+          subscribedAuthors.concat(subscribedUsers)
 
         const totalSubs =
           allSubscribedUsers &&
