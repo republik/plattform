@@ -1,6 +1,6 @@
 module.exports = {
   Comment: require('./Comment'),
-  Credential: require('./Credential'),
+  CredentialById: require('./CredentialById'),
   Discussion: require('./Discussion'),
   DiscussionPreferences: require('./DiscussionPreferences'),
   DiscussionSuspension: require('./DiscussionSuspension'),

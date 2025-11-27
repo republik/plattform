@@ -209,8 +209,8 @@ module.exports = {
     ])
 
     const credential =
-      commenterPreferences &&
-      (await loaders.Credential.byId.load(commenterPreferences.credentialId))
+      commenterPreferences?.credentialId &&
+      (await loaders.CredentialById.load(commenterPreferences.credentialId))
 
     let anonymous
     if (discussion.anonymity === 'ENFORCED') {

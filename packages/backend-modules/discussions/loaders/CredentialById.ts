@@ -9,10 +9,10 @@ type Credential = {
   verified: boolean
 }
 
-export = (context: GraphqlContext) => ({
-  byId: new DataLoader<string, Credential | null>(
+export = (context: GraphqlContext) =>
+  new DataLoader<string, Credential | null>(
     async (ids) => {
-      const results = context.pgdb.credentials.find({ id: ids })
+      const results = await context.pgdb.public.credentials.find({ id: ids })
 
       const credentials = new Map()
 
@@ -23,5 +23,4 @@ export = (context: GraphqlContext) => ({
     {
       maxBatchSize: 1000,
     },
-  ),
-})
+  )

@@ -25,12 +25,12 @@ export = (context: GraphqlContext) => ({
     async (keys) => {
       const stringKeys = keys.map(toKey)
 
-      const results = await context.pgdb.query(
+      const results = await context.pgdb.public.query(
         `select
           *,
-          ("userId"::text || "discussionId"::text) as _dataloader_lookup_key
+          ("userId"::text || ':' || "discussionId"::text) as _dataloader_lookup_key
           FROM public."discussionPreferences" dp
-          WHERE ("userId"::text || "discussionId"::text) = ANY(:keys)`,
+          WHERE ("userId"::text || ':' || "discussionId"::text) = ANY(:keys)`,
         { keys: stringKeys },
       )
 
