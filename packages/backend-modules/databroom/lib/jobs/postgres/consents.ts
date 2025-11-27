@@ -2,10 +2,10 @@ import { forEachRow, Options, JobContext, JobFn } from '../../index'
 
 const AGE_DAYS = 365
 
-export default module.exports = async function setup(
+export default module.exports = function setup(
   options: Options,
   context: JobContext,
-): Promise<JobFn> {
+): JobFn {
   const { pgdb, debug } = context
   const { dryRun } = options
   const now = new Date()

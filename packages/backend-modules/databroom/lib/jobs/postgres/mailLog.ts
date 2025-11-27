@@ -9,10 +9,10 @@ import {
 
 const AGE_DAYS = 90
 
-export default module.exports = async function setup(
+export default module.exports = function setup(
   options: Options,
   context: JobContext,
-): Promise<JobFn> {
+): JobFn {
   const { pgdb, debug } = context
   const { dryRun, nice } = options
   const now = new Date()
