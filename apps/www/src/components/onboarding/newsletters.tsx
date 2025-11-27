@@ -36,7 +36,7 @@ function OnboardingNewsletters() {
         />
       </div>
 
-      <OnboardingNextStep href='/onboarding/tipp-2' />
+      <OnboardingNextStep href='/onboarding/tipp-2'>Weiter</OnboardingNextStep>
     </Frame>
   )
 }

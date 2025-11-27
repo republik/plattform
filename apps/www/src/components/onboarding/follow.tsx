@@ -28,7 +28,7 @@ function OnboardingFollow() {
         <PodcastsSection />
       </div>
 
-      <OnboardingNextStep href='/onboarding/jetzt-aber' />
+      <OnboardingNextStep href='/'>Fertig!</OnboardingNextStep>
     </Frame>
   )
 }

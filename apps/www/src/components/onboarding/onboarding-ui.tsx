@@ -34,7 +34,13 @@ export function OnboardingSection({ children }: { children: ReactNode }) {
   )
 }
 
-export function OnboardingNextStep({ href }: { href: string }) {
+export function OnboardingNextStep({
+  href,
+  children,
+}: {
+  href: string
+  children: ReactNode
+}) {
   return (
     <div
       className={css({
@@ -59,7 +65,7 @@ export function OnboardingNextStep({ href }: { href: string }) {
           className={cx(button({ size: 'full' }), css({ mt: 2 }))}
           href={href}
         >
-          Weiter
+          {children}
         </Link>
       </div>
     </div>
