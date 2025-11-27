@@ -238,10 +238,36 @@ const reorderItems = async (input, context) => {
   )
 }
 
+const getItems = async (userId, context, { first } = {}) => {
+  const { loaders, pgdb } = context
+
+  const collection = await loaders.Collection.byKeyObj.load({
+    name: getCollectionName(),
+  })
+
+  if (!collection) {
+    return []
+  }
+
+  // Use raw SQL to properly order by JSON field and limit
+  const items = await pgdb.query(
+    `
+    SELECT * FROM "collectionDocumentItems"
+    WHERE "collectionId" = :collectionId AND "userId" = :userId
+    ORDER BY (data->>'sequence')::int ASC
+    ${first ? 'LIMIT :first' : ''}
+    `,
+    { collectionId: collection.id, userId, first },
+  )
+
+  return items
+}
+
 module.exports = {
   getCollectionName,
 
   upsertItem,
   removeItem,
   reorderItems,
+  getItems,
 }

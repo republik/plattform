@@ -1,5 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../lib/Collection')
+const AudioQueue = require('../../lib/AudioQueue')
 const { paginate } = require('@orbiting/backend-modules-utils')
 
 const accessRoles = ['member']
@@ -49,8 +50,12 @@ module.exports = {
     }
     return paginate(args, [])
   },
-  audioQueue(user, args, context) {
+  async audioQueue(user, args, context) {
     if (canAccess(user, context)) {
+      // Use direct query with limit when `first` is specified for efficiency
+      if (args.first) {
+        return AudioQueue.getItems(user.id, context, { first: args.first })
+      }
       return context.loaders.AudioQueue.byUserId.load(user.id)
     }
 

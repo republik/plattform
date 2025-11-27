@@ -79,6 +79,7 @@ const useAudioQueue = (): {
     error: audioQueueHasError,
     refetch: refetchAudioQueue,
   } = useQuery(AudioQueueQueryDocument, {
+    variables: { first: MAX_QUEUE_SIZE },
     skip: meLoading || !me,
     errorPolicy: 'all',
   })

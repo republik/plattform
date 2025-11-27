@@ -70,7 +70,7 @@ extend type User {
   mutations \`addAudioQueueItem\`, \`moveAudioQueueItem\`,
   \`removeAudioQueueItem\` or \`clearAudioQueue\` to modify queue.
   """
-  audioQueue: [AudioQueueItem!]
+  audioQueue(first: Int): [AudioQueueItem!]
 }
 
 type DocumentProgress implements CollectionItemInterface {
