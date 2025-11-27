@@ -119,7 +119,7 @@ const submitComment = async (comment, discussion, context, testUsers) => {
           dp."notificationOption" = 'ALL' OR
           (dp."notificationOption" IS NULL AND u."defaultDiscussionNotificationOption" = 'ALL') OR
           (
-            ARRAY[c.id] && :parentIds AND
+            c.id = ANY(:parentIds) AND
             (
               dp."notificationOption" = 'MY_CHILDREN' OR
               (dp."notificationOption" IS NULL AND u."defaultDiscussionNotificationOption" = 'MY_CHILDREN')
