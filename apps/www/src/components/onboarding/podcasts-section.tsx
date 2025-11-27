@@ -122,8 +122,12 @@ function PodcastsSection() {
         className={css({
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
-          gridGap: 8,
+          gap: 8,
           pb: 4,
+          md: {
+            gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+            gap: 4,
+          },
         })}
       >
         {PODCASTS_FEATURED.map((repoId) => (
