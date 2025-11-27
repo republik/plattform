@@ -117,20 +117,48 @@ const useAudioQueue = (): {
     }
   }
 
+  /**
+   * Cache update for mutations that only return Id's and sequence
+   * Creates an updated audioqueue from the server response without
+   * fetching the full audioqueue data from the server.
+   */
+  const updateCacheWithMinimalData = (
+    cache: ApolloCache<any>,
+    { data: { audioQueueItems } },
+  ) => {
+    const data = cache.readQuery({ query: AudioQueueQueryDocument })
+    if (!data?.me) return
+
+    const cachedItemsById = new Map(
+      (data.me.audioQueue || []).map((item) => [item.id, item]),
+    )
+
+    const updatedQueue = audioQueueItems
+      .map((serverItem) => cachedItemsById.get(serverItem.id))
+      .filter(Boolean) // Remove any items not found in cache
+
+    cache.writeQuery({
+      query: AudioQueueQueryDocument,
+      data: {
+        me: { ...data.me, audioQueue: updatedQueue },
+      },
+    })
+  }
+
   const [addAudioQueueItem] = useMutation(AddAudioQueueItemsDocument, {
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
   const [removeAudioQueueItem] = useMutation(RemoveAudioQueueItemDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
+    update: updateCacheWithMinimalData,
   })
   const [moveAudioQueueItem] = useMutation(MoveAudioQueueItemDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
+    update: updateCacheWithMinimalData,
   })
   const [clearAudioQueue] = useMutation(ClearAudioQueueDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
+    update: updateCacheWithMinimalData,
   })
   const [reorderAudioQueue] = useMutation(ReorderAudioQueueDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
+    update: updateCacheWithMinimalData,
   })
 
   /**
