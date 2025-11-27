@@ -1465,10 +1465,6 @@
       "value": "Sie können sich selbst keinen Zugriff teilen."
     },
     {
-      "key": "api/access/constraint/requirePackage/error",
-      "value": "Sie benötigen ein bestimmtes Abonnement oder Mitgliedschaft um den Zugriff zu teilen."
-    },
-    {
       "key": "api/access/constraint/requireActiveMembershipOrSubscription/error",
       "value": "Sie benötigen ein aktives Abonnement oder eine Mitgliedschaft um den Zugriff zu teilen."
     },
