@@ -42,52 +42,72 @@ function NewsletterCard({
   return (
     <div
       className={css({
-        display: 'flex',
-        gap: 2,
         borderWidth: '1px',
         borderStyle: 'solid',
         borderColor: 'divider',
         p: 4,
         cursor: 'pointer',
+        textAlign: 'left',
+        position: 'relative',
+        md: {
+          width: '280px',
+          height: '180px',
+        },
       })}
       onClick={toggleSubscription}
       role='button'
     >
-      <img
+      <div
         className={css({
-          flex: '0 0 1',
-          alignSelf: 'flex-start',
-          pt: 1,
+          display: 'flex',
+          gap: 2,
+          height: '100%',
         })}
-        width='42'
-        src='https://cdn.repub.ch/s3/republik-assets/repos/republik/wdwww-21-nov/images/93bddbde7caa064aab732fe6c42d474abab7a962.png?size=1890x945&format=auto&resize=768x'
-        alt='newletter icon'
-      />
-      <div className={css({ textAlign: 'left' })}>
-        <h4
-          className={css({
-            textStyle: 'sansSerifMedium',
-            fontSize: 'l',
-            lineHeight: '1',
-            mb: 1,
-          })}
-        >
-          {t(`newsletters/${newsletter}/name`)}
-        </h4>
-        <p className={css({ lineHeight: '1.2', mb: 1 })}>
-          {t(`newsletters/${newsletter}/description`)}
-        </p>
-        <p className={css({ color: 'textSoft' })}>
-          {t(`newsletters/${newsletter}/schedule`)}
-        </p>
-      </div>
-      {subscribed !== undefined && (
-        <button
+      >
+        <img
           className={css({
             flex: '0 0 1',
             alignSelf: 'flex-start',
             pt: 1,
-            pr: 1,
+          })}
+          width='42'
+          src='https://cdn.repub.ch/s3/republik-assets/repos/republik/wdwww-21-nov/images/93bddbde7caa064aab732fe6c42d474abab7a962.png?size=1890x945&format=auto&resize=768x'
+          alt='newletter icon'
+        />
+        <div
+          className={css({
+            textAlign: 'left',
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+          })}
+        >
+          <h4
+            className={css({
+              textStyle: 'sansSerifMedium',
+              fontSize: 'l',
+              lineHeight: '1',
+              mb: 1,
+              maxWidth: '85%',
+            })}
+          >
+            {t(`newsletters/${newsletter}/name`)}
+          </h4>
+          <p className={css({ lineHeight: '1.2', mb: 1 })}>
+            {t(`newsletters/${newsletter}/description`)}
+          </p>
+          <p className={css({ color: 'textSoft', mt: 'auto' })}>
+            {t(`newsletters/${newsletter}/schedule`)}
+          </p>
+        </div>
+      </div>
+      {subscribed !== undefined && (
+        <button
+          className={css({
+            position: 'absolute',
+            top: 4,
+            right: 4,
+            cursor: 'pointer',
           })}
           onClick={toggleSubscription}
           disabled={isPending}
