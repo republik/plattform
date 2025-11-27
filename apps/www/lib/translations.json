@@ -969,16 +969,16 @@
       "value": "Ihre Standardeinstellung für den Dialog:"
     },
     {
-      "key": "account/discussionNotificationChannels/EMAIL/label",
+      "key": "account/notificationChannels/EMAIL/label",
       "value": "E-Mail"
     },
     {
-      "key": "account/discussionNotificationChannels/APP/label",
+      "key": "account/notificationChannels/APP/label",
       "value": "App"
     },
     {
       "key": "account/defaultDiscussionNotificationOption/label",
-      "value": "Benachrichtigungen über Beiträge"
+      "value": "Standardeinstellung für Dialog-Benachrichtigungen"
     },
     {
       "key": "account/progress/title",
@@ -1878,15 +1878,15 @@
     },
     {
       "key": "components/Discussion/Notification/MY_CHILDREN/label",
-      "value": "Meine und von abonnierten Profilen"
+      "value": "Antworten auf meine Beiträge"
     },
     {
       "key": "components/Discussion/Notification/ALL/label",
-      "value": "Alle neuen"
+      "value": "Alle neuen Beiträge"
     },
     {
       "key": "components/Discussion/Notification/NONE/label",
-      "value": "Keine"
+      "value": "Keine Benachrichtigungen"
     },
     {
       "key": "components/Discussion/Notification/settings",
@@ -7369,7 +7369,7 @@
     },
     {
       "key": "Notifications/settings/discussion",
-      "value": "Debattenbeiträge"
+      "value": "Dialog-Benachrichtigungen"
     },
     {
       "key": "Notifications/settings/newsletter",
@@ -7380,8 +7380,8 @@
       "value": "Ihrem Konto"
     },
     {
-      "key": "account/discussionNotificationChannels/intro",
-      "value": "Ich möchte Debattenbenachrichtigungen auf folgendem Weg erhalten:"
+      "key": "account/notificationChannels/intro",
+      "value": "Ich möchte Benachrichtigungen zu neuen Beiträgen im Magazin und im Dialog auf folgendem Weg erhalten:"
     },
     {
       "key": "Onboarding/Sections/Subscriptions/heading",

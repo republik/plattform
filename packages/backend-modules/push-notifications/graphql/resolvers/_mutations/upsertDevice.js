@@ -79,17 +79,16 @@ module.exports = async (
         UPDATE
           users
         SET
-          "hadDevice" = true
-          ${
-            me._raw.discussionNotificationChannels.indexOf('APP') === -1 // avoid duplicates
-              ? ', "discussionNotificationChannels" = "discussionNotificationChannels" || \'["APP"]\''
-              : ''
-          }
+          "hadDevice" = true,
+          "notificationChannels" = "notificationChannels" || :channels
         WHERE
           id = :userId
       `,
         {
           userId: me.id,
+          channels: me._raw.notificationChannels.includes('APP')
+            ? '[]'
+            : '["APP"]',
         },
       )
     }
