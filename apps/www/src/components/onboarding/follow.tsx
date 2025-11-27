@@ -13,7 +13,7 @@ function OnboardingFollow() {
         <OnboardingHeader>
           <div className={css({ display: 'flex', alignItems: 'center' })}>
             <OnboardingBackButton href='/onboarding/tipp-1' />
-            <div>
+            <div class>
               <h2>Tipp 2 von 2</h2>
               <h1>Folgen Sie Stimmen, die Sie interessieren</h1>
             </div>

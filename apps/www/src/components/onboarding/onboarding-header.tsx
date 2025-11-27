@@ -41,6 +41,8 @@ function OnboardingHeader({ children }: { children: ReactNode }) {
         },
         md: {
           mt: 8,
+          maxW: '400px',
+          mx: 'auto',
         },
       })}
     >
