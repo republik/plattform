@@ -82,11 +82,12 @@ function AuthorCard({ slug }: { slug: string }) {
 }
 
 function AuthorsSection() {
+  const { t } = useTranslation()
   const [showAll, setShowAll] = useState(false)
 
   return (
     <OnboardingSection>
-      <OnboardingH3>Unsere Autorinnen</OnboardingH3>
+      <OnboardingH3>{t('onboarding/authors/title')}</OnboardingH3>
       <div
         className={css({
           display: 'flex',
@@ -118,7 +119,7 @@ function AuthorsSection() {
           })}
         >
           <Button variant='link' onClick={() => setShowAll(true)} type='button'>
-            Mehr anzeigen
+            {t('onboarding/authors/more')}
           </Button>
         </div>
       )}

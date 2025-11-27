@@ -109,6 +109,7 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
 }
 
 function PodcastsSection() {
+  const { t } = useTranslation()
   const { data } = useQuery(OnboardingFormatsDocument, {
     variables: { repoIds: PODCASTS_FEATURED },
   })
@@ -119,7 +120,7 @@ function PodcastsSection() {
 
   return (
     <OnboardingSection>
-      <OnboardingH3>Podcasts und Audioserien</OnboardingH3>
+      <OnboardingH3>{t('onboarding/podcasts/title')}</OnboardingH3>
       <div
         className={css({
           display: 'grid',

@@ -107,6 +107,7 @@ function FormatCard({ format }: { format?: Document }) {
 }
 
 function FormatsSection() {
+  const { t } = useTranslation()
   const { data } = useQuery(OnboardingFormatsDocument, {
     variables: { repoIds: FORMATS_FEATURED },
   })
@@ -117,7 +118,7 @@ function FormatsSection() {
 
   return (
     <OnboardingSection>
-      <OnboardingH3>Perspektiven mit Haltung</OnboardingH3>
+      <OnboardingH3>{t('onboarding/formats/title')}</OnboardingH3>
       <div
         className={css({
           display: 'flex',

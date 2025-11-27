@@ -1,4 +1,5 @@
 import { css } from '@republik/theme/css'
+import { useTranslation } from '../../../lib/withT'
 import { Frame } from '../ui/containers'
 import AuthorsSection from './authors-section'
 import FormatsSection from './formats-section'
@@ -7,6 +8,7 @@ import { OnboardingNextStep } from './onboarding-ui'
 import PodcastsSection from './podcasts-section'
 
 function OnboardingFollow() {
+  const { t } = useTranslation()
   return (
     <Frame>
       <div className={css({ px: 4, py: 6 })}>
@@ -14,11 +16,11 @@ function OnboardingFollow() {
           <div className={css({ display: 'flex', alignItems: 'center' })}>
             <OnboardingBackButton href='/onboarding/tipp-1' />
             <div>
-              <h2>Tipp 2 von 2</h2>
-              <h1>Folgen Sie Stimmen, die Sie interessieren</h1>
+              <h2>{t('onboarding/follow/step')}</h2>
+              <h1>{t('onboarding/follow/title')}</h1>
             </div>
           </div>
-          <p>Wir informieren Sie per E-Mail über neue Beiträge.</p>
+          <p>{t('onboarding/follow/description')}</p>
         </OnboardingHeader>
 
         <FormatsSection />

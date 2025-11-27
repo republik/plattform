@@ -8116,6 +8116,34 @@
       "value": "Sonntags"
     },
     {
+      "key": "onboarding/follow/step",
+      "value": "Tipp 2 von 2"
+    },
+    {
+      "key": "onboarding/follow/title",
+      "value": "Folgen Sie Stimmen, die Sie interessieren"
+    },
+    {
+      "key": "onboarding/follow/description",
+      "value": "Wir informieren Sie per E-Mail über neue Beiträge."
+    },
+    {
+      "key": "onboarding/formats/title",
+      "value": "Perspektiven mit Haltung"
+    },
+    {
+      "key": "onboarding/authors/title",
+      "value": "Unsere Autorinnen"
+    },
+    {
+      "key": "onboarding/authors/more",
+      "value": "Mehr anzeigen"
+    },
+    {
+      "key": "onboarding/podcasts/title",
+      "value": "Podcasts und Audioserien"
+    },
+    {
       "key": "onboarding/formats/republik/format-binswanger/author",
       "value": "Daniel Binswanger"
     },
@@ -8221,7 +8249,7 @@
     },
     {
       "key": "onboarding/podcasts/republik/format-im-gespraech/title",
-      "value": "Im Gespräch"
+      "value": "Im Gesprächc"
     },
     {
       "key": "onboarding/podcasts/republik/format-im-gespraech/description",
