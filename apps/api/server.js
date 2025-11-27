@@ -383,15 +383,15 @@ const runOnce = async () => {
   if (!DEV) {
     await queue.schedule(
       'cockpit:refresh',
-      '*/30 * * * *', // cron for every 30 minutes
+      '*/120 * * * *', // cron for every 120 minutes
     )
     await queue.schedule(
       'next_reads:reading_position',
-      '15,45 * * * *', // At minute the 15th and 45th minute
+      '*/45 * * * *', // every 45 minutes
     )
     await queue.schedule(
       'next_reads:feed:refresh',
-      '*/30 * * * *', // every 30 minutes
+      '*/60 * * * *', // every 60 minutes
     )
   }
 
