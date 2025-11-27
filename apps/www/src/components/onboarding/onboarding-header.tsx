@@ -1,7 +1,21 @@
+import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
 import { css } from '@republik/theme/css'
+import { ChevronLeft } from 'lucide-react'
+import Link from 'next/link'
 import { ReactNode } from 'react'
 
-// TODO: add back button on mobile
+export function OnboardingBackButton({ href }: { href: string }) {
+  const { isNativeApp } = usePlatformInformation()
+
+  if (!href || !isNativeApp) return null
+
+  return (
+    <Link href={href} className={css({ p: 2 })}>
+      <ChevronLeft />
+    </Link>
+  )
+}
+
 function OnboardingHeader({ children }: { children: ReactNode }) {
   return (
     <div

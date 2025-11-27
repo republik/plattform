@@ -1,3 +1,5 @@
+// TODO: move to env variables
+
 import { NewsletterName } from '#graphql/republik-api/__generated__/gql/graphql'
 
 export const NL_FEATURED: NewsletterName[] = [
