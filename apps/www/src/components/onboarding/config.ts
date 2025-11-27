@@ -30,9 +30,17 @@ export const AUTHORS_FEATURED: string[] = [
   'eblulle',
 ]
 
-export const PODCASTS_FEATURED: string[] = [
+/*export const PODCASTS_FEATURED: string[] = [
   'republik/format-dritte-gewalt',
   'republik/format-sondersession',
   'republik/format-gute-frage',
   'republik/format-was-wurde-eigentlich-aus',
+]*/
+
+// STAGING
+export const PODCASTS_FEATURED: string[] = [
+  'republik/format-am-klavier',
+  'republik/format-wochenrevue',
+  'republik/format-republik-live',
+  'republik/format-im-gespraech',
 ]

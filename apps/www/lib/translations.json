@@ -8196,6 +8196,38 @@
       "value": "Die Geschichten nach den Geschichten. Wir liefern ein Update."
     },
     {
+      "key": "onboarding/podcasts/republik/format-am-klavier/title",
+      "value": "Am Klavier"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-am-klavier/description",
+      "value": "Gerichtsreporterin Brigitte Hürlimann erzählt von ihren spannendsten Fällen."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-republik-live/title",
+      "value": "Republik live"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-republik-live/description",
+      "value": "Ein Gespräch, ein Ziel: Mehr Durchblick im Schweizer Politikdschungel."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-wochenrevue/title",
+      "value": "Wochen revue"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-wochenrevue/description",
+      "value": "Gemeinsam entwirren wir Fragen, die uns nicht loslassen."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-im-gespraech/title",
+      "value": "Im Gespräch"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-im-gespraech/description",
+      "value": "Die Geschichten nach den Geschichten. Wir liefern ein Update."
+    },
+    {
       "key": "onboarding/authors/adriennefichter/beat",
       "value": "Big Tech"
     },

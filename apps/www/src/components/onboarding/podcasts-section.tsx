@@ -16,11 +16,13 @@ import {
   OnboardingSection,
 } from './onboarding-ui'
 
-function PodcastCard({ podcast }: { podcast: Document }) {
+function PodcastCard({ podcast }: { podcast?: Document }) {
   const { t } = useTranslation()
   const [subscribe] = useMutation(SubscribeDocument)
   const [unsubscribe] = useMutation(UnsubscribeDocument)
   const [isPending, setIsPending] = useState(false)
+
+  if (!podcast) return null
 
   const subscriptionId = podcast.subscribedBy.nodes.find((n) => n.active)?.id
 

@@ -61,7 +61,7 @@ function AuthorCard({ slug }: { slug: string }) {
     <div className={css({ display: 'flex', alignItems: 'center', gap: 2 })}>
       <img
         width='96'
-        className={css({ borderRadius: '96px' })}
+        className={css({ borderRadius: '96px', backgroundColor: 'gray' })}
         src={author.portrait}
       />
       <div>

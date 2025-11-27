@@ -16,11 +16,13 @@ import {
   OnboardingSection,
 } from './onboarding-ui'
 
-function FormatCard({ format }: { format: Document }) {
+function FormatCard({ format }: { format?: Document }) {
   const { t } = useTranslation()
   const [subscribe] = useMutation(SubscribeDocument)
   const [unsubscribe] = useMutation(UnsubscribeDocument)
   const [isPending, setIsPending] = useState(false)
+
+  if (!format) return null
 
   const subscriptionId = format.subscribedBy.nodes.find((n) => n.active)?.id
 
@@ -92,7 +94,13 @@ function FormatCard({ format }: { format: Document }) {
           subscribed={!!subscriptionId}
           isPending={isPending}
         />
-        <img width='120' src={format.meta.audioCover} alt='cover image' />
+        <img
+          width='120'
+          height='120'
+          src={format.meta.audioCover}
+          alt='cover image'
+          className={css({ backgroundColor: 'gray' })}
+        />
       </div>
     </div>
   )
