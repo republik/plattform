@@ -14,6 +14,7 @@ import {
 import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
 import { reportError } from 'lib/errors/reportError'
 import { useEffect } from 'react'
+import { v4 as uuid } from 'uuid'
 import {
   AddAudioQueueItemsDocument,
   AddAudioQueueItemsMutation,
@@ -34,6 +35,8 @@ import { getFragmentData } from '#graphql/cms/__generated__/gql'
 const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
 )
+
+const MAX_QUEUE_SIZE = 20
 
 /**
  * useAudioQueue acts as a provider for the audio queue and all it's mutations.
@@ -140,6 +143,12 @@ const useAudioQueue = (): {
     position?: number,
   ): Promise<FetchResult<AddAudioQueueItemsMutation>> => {
     if (me) {
+      // Enforce queue limit by removing oldest item (end of queue) before adding
+      if (audioQueueItems.length >= MAX_QUEUE_SIZE) {
+        const lastItem = audioQueueItems[audioQueueItems.length - 1]
+        await removeAudioQueueItem({ variables: { id: lastItem.id } })
+      }
+
       return addAudioQueueItem({
         variables: {
           entity: {
@@ -151,7 +160,7 @@ const useAudioQueue = (): {
       })
     } else {
       const mockAudioQueueItem: AudioQueueItem = {
-        id: item.id,
+        id: uuid(),
         document: item,
         sequence: 0,
       }
