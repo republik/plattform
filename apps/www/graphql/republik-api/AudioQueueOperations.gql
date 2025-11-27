@@ -43,10 +43,10 @@ fragment AudioQueueItem on AudioQueueItem {
   }
 }
 
-query AudioQueueQuery($first: Int) {
+query AudioQueueQuery {
   me {
     id
-    audioQueue(first: $first) {
+    audioQueue {
       ...AudioQueueItem
     }
   }
