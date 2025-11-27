@@ -49,10 +49,6 @@ function NewsletterCard({
         cursor: 'pointer',
         textAlign: 'left',
         position: 'relative',
-        md: {
-          width: '280px',
-          height: '180px',
-        },
       })}
       onClick={toggleSubscription}
       role='button'
@@ -148,6 +144,10 @@ function NewsletterSection({
             display: 'flex',
             flexDirection: 'column',
             gap: 6,
+            md: {
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+            },
           })}
         >
           {newsletters.map((newsletter) => (

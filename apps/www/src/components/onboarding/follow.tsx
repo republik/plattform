@@ -1,4 +1,5 @@
 import { css } from '@republik/theme/css'
+import { Frame } from '../ui/containers'
 import AuthorsSection from './authors-section'
 import FormatsSection from './formats-section'
 import OnboardingHeader, { OnboardingBackButton } from './onboarding-header'
@@ -7,7 +8,7 @@ import PodcastsSection from './podcasts-section'
 
 function OnboardingFollow() {
   return (
-    <>
+    <Frame>
       <div className={css({ px: 4, py: 6 })}>
         <OnboardingHeader>
           <div className={css({ display: 'flex', alignItems: 'center' })}>
@@ -26,7 +27,7 @@ function OnboardingFollow() {
       </div>
 
       <OnboardingNextStep href='/onboarding/jetzt-aber' />
-    </>
+    </Frame>
   )
 }
 

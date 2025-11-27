@@ -39,6 +39,9 @@ function OnboardingHeader({ children }: { children: ReactNode }) {
         '& p': {
           color: 'textSoft',
         },
+        md: {
+          mt: 8,
+        },
       })}
     >
       {children}

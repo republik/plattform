@@ -22,13 +22,20 @@ export function OnboardingH3({ children }: { children: ReactNode }) {
 }
 
 export function OnboardingSection({ children }: { children: ReactNode }) {
-  return <section className={css({ pt: 4, pb: 12 })}>{children}</section>
+  return (
+    <section
+      className={css({ pt: 4, pb: 12, md: { maxWidth: 'shop', mx: 'auto' } })}
+    >
+      {children}
+    </section>
+  )
 }
 
 export function OnboardingNextStep({ href }: { href: string }) {
   return (
     <div
       className={css({
+        mt: 'auto',
         position: 'sticky',
         bottom: 0,
         background: 'background',
@@ -44,12 +51,14 @@ export function OnboardingNextStep({ href }: { href: string }) {
         Ändern im Konto jederzeit möglich.
       </p>
 
-      <Link
-        className={cx(button({ size: 'full' }), css({ mt: 2 }))}
-        href={href}
-      >
-        Weiter
-      </Link>
+      <div className={css({ md: { maxWidth: '330px', mx: 'auto' } })}>
+        <Link
+          className={cx(button({ size: 'full' }), css({ mt: 2 }))}
+          href={href}
+        >
+          Weiter
+        </Link>
+      </div>
     </div>
   )
 }

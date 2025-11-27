@@ -44,6 +44,7 @@ export const presetRepublik = definePreset({
           24: { value: '6rem' },
           narrow: { value: '30rem' },
           center: { value: '695px' },
+          shop: { value: '866px' },
         },
         spacing: {
           0: { value: '0rem' },
