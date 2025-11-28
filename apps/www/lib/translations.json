@@ -5397,7 +5397,7 @@
     },
     {
       "key": "AudioPlayer/noMemberText",
-      "value": "Der Audioplayer und die Wiedergabeliste sind nur für Mitglieder verfügbar."
+      "value": "Die Wiedergabeliste ist nur für Mitglieder verfügbar."
     },
     {
       "key": "AudioPlayer/Queue/Add",
