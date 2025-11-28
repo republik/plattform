@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import CallToAction from '../Frame/CallToAction'
-import { SignInLink } from '../Frame/User'
+import { SignInLink } from '../Frame/Header'
 import Link from 'next/link'
 import { HEADER_HEIGHT } from '../constants'
 

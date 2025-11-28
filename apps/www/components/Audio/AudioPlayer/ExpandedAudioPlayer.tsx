@@ -148,7 +148,7 @@ const ExpandedAudioPlayer = ({
   const { inNativeApp } = useInNativeApp()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const router = useRouter()
-  const { hasAccess } = useMe()
+  const { hasAccess, isMember } = useMe()
 
   // On Android we expect the back-button to close the expanded-player
   // and not the browser to navigate back.
@@ -214,7 +214,11 @@ const ExpandedAudioPlayer = ({
     <div {...styles.root} {...(!hasAccess && styles.rootNoAccess)}>
       <div {...styles.header}>
         <p {...styles.heading} {...colorScheme.set('color', 'text')}>
-          {t('AudioPlayer/Queue/ActiveHeading')}
+          {t(
+            activeItem
+              ? 'AudioPlayer/Queue/ActiveHeading'
+              : 'AudioPlayer/Queue/NoActiveHeading',
+          )}
         </p>
         <IconButton
           Icon={IconExpandMore}
@@ -253,7 +257,7 @@ const ExpandedAudioPlayer = ({
             {hasError && <AudioError />}
           </div>
         )}
-        {hasAccess && (
+        {isMember && (
           <div {...styles.queueWrapper}>
             <Scroller>
               <TabButton
@@ -295,6 +299,9 @@ const ExpandedAudioPlayer = ({
               )}
             </motion.div>
           </div>
+        )}
+        {!isMember && !activeItem && (
+          <p> {t('AudioPlayer/noMemberText')}</p>
         )}
       </div>
     </div>
