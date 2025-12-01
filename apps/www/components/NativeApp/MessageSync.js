@@ -159,26 +159,20 @@ const NewAppMessageSync = () => {
 }
 
 const SyncMe = () => {
-  const { inNativeAppLegacy } = useInNativeApp()
   const { me, meLoading } = useMe()
 
   useEffect(() => {
     if (meLoading) {
       return
     }
-    // Post current user data to native app
-    if (inNativeAppLegacy) {
-      postMessage({ type: 'initial-state', payload: { me } })
-    } else {
-      postMessage({ type: 'isSignedIn', payload: !!me })
-    }
-  }, [me, meLoading, inNativeAppLegacy])
+    postMessage({ type: 'isSignedIn', payload: !!me })
+  }, [me, meLoading])
 
   return null
 }
 
 const MessageSync = () => {
-  const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
+  const { inNativeApp } = useInNativeApp()
 
   if (!inNativeApp) {
     return null
@@ -187,7 +181,7 @@ const MessageSync = () => {
   return (
     <>
       <SyncMe />
-      {!inNativeAppLegacy && <NewAppMessageSync />}
+      <NewAppMessageSync />
     </>
   )
 }

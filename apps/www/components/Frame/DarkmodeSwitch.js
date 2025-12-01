@@ -1,12 +1,10 @@
 import { forwardRef } from 'react'
 import { CalloutMenu, IconButton, Radio } from '@project-r/styleguide'
-import { useInNativeApp } from '../../lib/withInNativeApp'
 
 import { IconDarkMode } from '@republik/icons'
 import { useTheme } from '../ColorScheme/ThemeProvider'
 
 const DarkmodeSwitch = ({ t }) => {
-  const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
   const { theme, setTheme } = useTheme()
 
   const iconLabel =
@@ -48,24 +46,11 @@ const DarkmodeSwitch = ({ t }) => {
             <Radio
               value='light'
               checked={theme === 'light'}
-              onChange={() => {
-                setTheme(inNativeAppLegacy ? '' : 'light')
-              }}
+              onChange={() => setTheme('light')}
             >
               {t('darkmode/switch/off')}
             </Radio>
             <br />
-            {!inNativeAppLegacy && (
-              <Radio
-                value='auto'
-                checked={theme === 'system'}
-                onChange={() => {
-                  setTheme('system')
-                }}
-              >
-                {t('darkmode/switch/auto')}
-              </Radio>
-            )}
           </>
         }
       </div>

@@ -9,7 +9,6 @@ export const inNativeAppBrowserAppVersion = process.browser
   ? getNativeAppVersion(navigator.userAgent)
   : undefined
 
-const isLegacyApp = (version) => parseFloat(version) < 2
 
 const isNewerVersion = (oldVer, newVer) => {
   if (!oldVer || !newVer) return true
@@ -26,10 +25,6 @@ const isNewerVersion = (oldVer, newVer) => {
   return true
 }
 
-export const inNativeAppBrowserLegacy = isLegacyApp(
-  inNativeAppBrowserAppVersion,
-)
-
 export const inNativeAppBrowser = !!inNativeAppBrowserAppVersion
 export const inNativeIOSAppBrowser =
   inNativeAppBrowser && matchIOSUserAgent(navigator.userAgent)
@@ -40,9 +35,6 @@ const runInNativeAppBrowser = inNativeAppBrowser
     () => {}
 
 runInNativeAppBrowser(() => {
-  if (!inNativeAppBrowserLegacy) {
-    return
-  }
   const orgUrl =
     window.location.pathname + window.location.search + window.location.hash
   const orgTime = Date.now()
@@ -104,12 +96,6 @@ runInNativeAppBrowser(() => {
 export const postMessage = !inNativeAppBrowser
   ? // eslint-disable-next-line @typescript-eslint/no-empty-function
     () => {} // does nothing outside of app, e.g. gallery full screen message
-  : inNativeAppBrowserLegacy
-  ? (msg) =>
-      window.postMessage(
-        typeof msg === 'string' ? msg : JSON.stringify(msg),
-        '*',
-      )
   : window.ReactNativeWebView && window.ReactNativeWebView.postMessage
   ? (msg) =>
       window.ReactNativeWebView.postMessage(
@@ -137,7 +123,6 @@ export const useInNativeApp = () => {
 
   return {
     inNativeApp,
-    inNativeAppLegacy: isLegacyApp(inNativeAppVersion),
     inNativeAppVersion,
     inNativeAppBuildId,
     isMinimalNativeAppVersion: (minVersion) =>
