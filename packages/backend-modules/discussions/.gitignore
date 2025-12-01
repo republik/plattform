@@ -1,3 +1,3 @@
 loaders/Comment.js
-loaders/Credential.js
+loaders/CredentialById.js
 loaders/DiscussionPreferences.js
