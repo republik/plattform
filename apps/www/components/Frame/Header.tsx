@@ -16,7 +16,7 @@ import { useScrollDirection } from '../../src/lib/hooks/useScrollDirection'
 import { useAudioContext } from '../Audio/AudioProvider'
 import HLine from './HLine'
 
-import User from './User'
+import Avatar from './Avatar'
 import LoadingBar from './LoadingBar'
 import Pullable from './Pullable'
 import AudioPlayerToggle from './AudioPlayerToggle'
@@ -110,7 +110,7 @@ const Header = ({
               </button>
             )}
             {me ? (
-              <User
+              <Avatar
                 me={me}
                 title={t('header/nav/user/open/aria')}
                 onClick={() => {
