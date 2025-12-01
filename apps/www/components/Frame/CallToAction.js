@@ -53,9 +53,9 @@ const CallToAction = ({ formatColor, isOnMarketingPage }) => {
       {...buttonColorRule}
     >
       <span {...styles.buttonTextMobile}>
-        {t('marketing/page/carpet/buttonsmall')}
+        {t('cta/buttonsmall')}
       </span>
-      <span {...styles.buttonText}>{t('marketing/page/carpet/button')}</span>
+      <span {...styles.buttonText}>{t('cta/button')}</span>
     </Link>
   )
 }
