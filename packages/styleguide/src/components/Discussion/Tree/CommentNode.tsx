@@ -216,17 +216,14 @@ const CommentNode = ({
             CommentLink={CommentLink}
           />
         )}
-
-        {comment?.text && (
-          <CommentActions
-            t={t}
-            comment={comment}
-            actions={actions}
-            voteActions={voteActions}
-            userCanComment={userCanComment}
-            userWaitUntil={userWaitUntil}
-          />
-        )}
+        <CommentActions
+          t={t}
+          comment={comment}
+          actions={actions}
+          voteActions={voteActions}
+          userCanComment={userCanComment}
+          userWaitUntil={userWaitUntil}
+        />
       </div>
       {children}
       <LoadMore

@@ -59,7 +59,7 @@ export interface UserRow {
   previewsSentAt: any | null
   adminNotes: string | null
   defaultDiscussionNotificationOption: string
-  discussionNotificationChannels: string[]
+  notificationChannels: string[]
   enabledSecondFactors: string[] | null
   deletedAt: Date | null
   preferredFirstFactor: string | null

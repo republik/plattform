@@ -106,14 +106,14 @@ export const UNPUBLISH_COMMENT_MUTATION = gql`
 export const updateNotificationSettingsMutation = gql`
   mutation updateNotificationSettings(
     $defaultDiscussionNotificationOption: DiscussionNotificationOption
-    $discussionNotificationChannels: [DiscussionNotificationChannel!]
+    $notificationChannels: [NotificationChannel!]
   ) {
     updateNotificationSettings(
       defaultDiscussionNotificationOption: $defaultDiscussionNotificationOption
-      discussionNotificationChannels: $discussionNotificationChannels
+      notificationChannels: $notificationChannels
     ) {
       id
-      discussionNotificationChannels
+      notificationChannels
       defaultDiscussionNotificationOption
     }
   }

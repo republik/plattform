@@ -1,6 +1,6 @@
 import { IconClap, IconClapFilled } from '@republik/icons'
 import React from 'react'
-import IconButton from '../../../IconButton'
+import IconButton from '../../../IconButton/discussion-button'
 
 type Props = {
   t: any

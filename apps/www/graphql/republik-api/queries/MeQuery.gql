@@ -12,7 +12,7 @@ query Me {
     roles
     isListed
     hasPublicProfile
-    discussionNotificationChannels
+    notificationChannels
     regwallTrialStatus
     accessCampaigns {
       id
