@@ -182,11 +182,7 @@ const flattenTreeHorizontally = (_comment) => {
 const flattenTreeVertically = (_comment) => {
   const comments = []
   const _flattenTree = (comment) => {
-    if (
-      comment.comments &&
-      comment.comments.nodes &&
-      comment.comments.nodes.length > 0
-    ) {
+    if (comment?.comments?.nodes?.length > 0) {
       for (let i = 0; i < comment.comments.nodes.length; i++) {
         comments.push(comment.comments.nodes[i])
       }
