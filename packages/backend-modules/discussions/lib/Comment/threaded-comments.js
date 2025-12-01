@@ -1,9 +1,23 @@
 const THRESHOLD_OLD_DISCUSSION_IN_MS = 1000 * 60 * 60 * 72 // 72 hours
 
+const ROOT_KEY = '@@ROOT@@'
+
+const buildNode = (parent, depth, commentsByParent) => {
+  parent._depth = depth
+
+  const lookupKey = parent.id || ROOT_KEY
+  const children = commentsByParent.get(lookupKey) || []
+
+  // Assign children and recurse
+  parent.comments = {
+    nodes: children.map((c) => buildNode(c, depth + 1, commentsByParent)),
+  }
+
+  return parent
+}
+
 const assembleTree = (root, allComments) => {
   const commentsByParent = new Map()
-
-  const ROOT_KEY = '@@ROOT@@'
 
   for (let i = 0; i < allComments.length; i++) {
     const c = allComments[i]
@@ -21,21 +35,7 @@ const assembleTree = (root, allComments) => {
     commentsByParent.get(key).push(c)
   }
 
-  const buildNode = (parent, depth) => {
-    parent._depth = depth
-
-    const lookupKey = parent.id || ROOT_KEY
-    const children = commentsByParent.get(lookupKey) || []
-
-    // Assign children and recurse
-    parent.comments = {
-      nodes: children.map((c) => buildNode(c, depth + 1)),
-    }
-
-    return parent
-  }
-
-  buildNode(root, -1)
+  buildNode(root, -1, commentsByParent)
 }
 
 const measureTree = (comment) => {
@@ -145,7 +145,7 @@ const cutTreeX = (comment, maxDepth, depth = -1) => {
       nodes: [],
       pageInfo: {
         ...comments.pageInfo,
-        hasNextPage: comments.pageInfo.hasNextPage || comments.totalCount > 0,
+        hasNextPage: comments.pageInfo?.hasNextPage || comments.totalCount > 0,
       },
     }
   } else {
@@ -189,7 +189,7 @@ const flattenTreeVertically = (_comment) => {
 }
 
 const measureDepth = (fields, depth = 0) => {
-  if (fields.nodes && fields.nodes.comments) {
+  if (fields.nodes?.comments) {
     return measureDepth(fields.nodes.comments, depth + 1)
   } else {
     if (fields.nodes) {
