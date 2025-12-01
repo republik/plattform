@@ -1,1 +1,1 @@
-DROP INDEX discussion_preferences_lookup_idx ON "public"."discussionPreferences";
+DROP INDEX discussion_preferences_lookup_idx;
