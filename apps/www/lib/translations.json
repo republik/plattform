@@ -8116,6 +8116,22 @@
       "value": "Sonntags"
     },
     {
+      "key": "onboarding/newsletters/step",
+      "value": "Tipp 1 von 2"
+    },
+    {
+      "key": "onboarding/newsletters/title",
+      "value": "Lassen Sie sich die Republik ins Postfach liefern"
+    },
+    {
+      "key": "onboarding/newsletters/description",
+      "value": "Welche Newsletter möchten Sie erhalten?"
+    },
+    {
+      "key": "onboarding/newsletters/next",
+      "value": "Weiter"
+    },
+    {
       "key": "onboarding/follow/step",
       "value": "Tipp 2 von 2"
     },
@@ -8126,6 +8142,10 @@
     {
       "key": "onboarding/follow/description",
       "value": "Wir informieren Sie per E-Mail über neue Beiträge."
+    },
+    {
+      "key": "onboarding/follow/next",
+      "value": "Fertig!"
     },
     {
       "key": "onboarding/formats/title",
