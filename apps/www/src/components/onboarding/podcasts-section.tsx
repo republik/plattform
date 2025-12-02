@@ -54,6 +54,7 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
       className={css({
         display: 'flex',
         flexDirection: 'column',
+        cursor: 'pointer',
       })}
       onClick={toggleSubscription}
       role='button'
@@ -63,31 +64,16 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
           display: 'flex',
           flexDirection: 'column',
           aspectRatio: '1/1',
-          padding: 2,
           mb: 2,
-          background: 'background.marketing',
           justifyContent: 'space-between',
         })}
       >
-        <p
-          className={css({
-            fontFamily: 'republikSerif',
-            fontSize: '3xl',
-            lineHeight: '0.9',
-            textAlign: 'right',
-          })}
-        >
-          R
-        </p>
-        <h4
-          className={css({
-            fontFamily: 'republikSerif',
-            fontSize: '3xl',
-            lineHeight: '0.9',
-          })}
-        >
-          {t(`onboarding/podcasts/${podcast.repoId}/title`)}
-        </h4>
+        <img
+          width='100%'
+          height='100%'
+          src={`/static/onboarding/podcasts/${podcast.repoId}.jpg`}
+          alt={podcast.meta.title}
+        />
       </div>
       <p
         className={css({

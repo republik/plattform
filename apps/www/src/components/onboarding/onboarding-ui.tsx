@@ -97,7 +97,7 @@ export function OnboardingFollowButton({
       ) : subscribed ? (
         <span
           className={css({
-            color: 'textSoft',
+            opacity: 0.6,
             display: 'inline-flex',
             gap: '1',
           })}

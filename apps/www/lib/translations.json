@@ -8212,64 +8212,32 @@
       "value": "Philosopisches Schlaglicht auf die Gegenwart"
     },
     {
-      "key": "onboarding/podcasts/republik/format-dritte-gewalt/title",
-      "value": "Dritte Gewalt"
-    },
-    {
       "key": "onboarding/podcasts/republik/format-dritte-gewalt/description",
       "value": "Gerichtsreporterin Brigitte Hürlimann erzählt von ihren spannendsten Fällen."
-    },
-    {
-      "key": "onboarding/podcasts/republik/format-sondersession/title",
-      "value": "Sonder session"
     },
     {
       "key": "onboarding/podcasts/republik/format-sondersession/description",
       "value": "Ein Gespräch, ein Ziel: Mehr Durchblick im Schweizer Politikdschungel."
     },
     {
-      "key": "onboarding/podcasts/republik/format-gute-frage/title",
-      "value": "Gute Frage"
-    },
-    {
       "key": "onboarding/podcasts/republik/format-gute-frage/description",
       "value": "Gemeinsam entwirren wir Fragen, die uns nicht loslassen."
-    },
-    {
-      "key": "onboarding/podcasts/republik/format-was-wurde-eigentlich-aus/title",
-      "value": "Update!"
     },
     {
       "key": "onboarding/podcasts/republik/format-was-wurde-eigentlich-aus/description",
       "value": "Die Geschichten nach den Geschichten. Wir liefern ein Update."
     },
     {
-      "key": "onboarding/podcasts/republik/format-am-klavier/title",
-      "value": "Am Klavier"
-    },
-    {
       "key": "onboarding/podcasts/republik/format-am-klavier/description",
       "value": "Gerichtsreporterin Brigitte Hürlimann erzählt von ihren spannendsten Fällen."
-    },
-    {
-      "key": "onboarding/podcasts/republik/format-republik-live/title",
-      "value": "Republik live"
     },
     {
       "key": "onboarding/podcasts/republik/format-republik-live/description",
       "value": "Ein Gespräch, ein Ziel: Mehr Durchblick im Schweizer Politikdschungel."
     },
     {
-      "key": "onboarding/podcasts/republik/format-wochenrevue/title",
-      "value": "Wochen revue"
-    },
-    {
       "key": "onboarding/podcasts/republik/format-wochenrevue/description",
       "value": "Gemeinsam entwirren wir Fragen, die uns nicht loslassen."
-    },
-    {
-      "key": "onboarding/podcasts/republik/format-im-gespraech/title",
-      "value": "Im Gesprächc"
     },
     {
       "key": "onboarding/podcasts/republik/format-im-gespraech/description",
@@ -8280,20 +8248,40 @@
       "value": "Big Tech"
     },
     {
-      "key": "onboarding/authors/bhurlimann/beat",
-      "value": "Justiz"
+      "key": "onboarding/authors/dbuehler/beat",
+      "value": "Medien"
     },
     {
       "key": "onboarding/authors/sabrinamweiss/beat",
       "value": "Klimakrise"
     },
     {
-      "key": "onboarding/authors/eblulle/beat",
-      "value": "Reporter"
+      "key": "onboarding/authors/palbrecht/beat",
+      "value": "Wirtschaft"
     },
     {
       "key": "onboarding/authors/angelikahardegger/beat",
       "value": "Reporterin"
+    },
+    {
+      "key": "onboarding/authors/ceisenach/beat",
+      "value": "Wissenschaft"
+    },
+    {
+      "key": "onboarding/authors/graf/beat",
+      "value": "Literatur"
+    },
+    {
+      "key": "onboarding/authors/bhurlimann/beat",
+      "value": "Justiz"
+    },
+    {
+      "key": "onboarding/authors/chanimann/beat",
+      "value": "Reporter"
+    },
+    {
+      "key": "onboarding/authors/luciaherrmann/beat",
+      "value": "Community"
     }
   ]
 }

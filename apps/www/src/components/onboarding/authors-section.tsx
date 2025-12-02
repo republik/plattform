@@ -30,14 +30,13 @@ function AuthorCard({ slug }: { slug: string }) {
   })
 
   const author = data?.user as User
-  if (!author) return null
 
-  const subscriptionId = author.subscribedBy.nodes.find((n) => n.active)?.id
+  const subscriptionId = author?.subscribedBy.nodes.find((n) => n.active)?.id
 
   async function toggleSubscription(e) {
     e.stopPropagation()
 
-    if (isPending) return
+    if (isPending || !author) return
 
     setIsPending(true)
     if (subscriptionId) {
@@ -58,14 +57,27 @@ function AuthorCard({ slug }: { slug: string }) {
   }
 
   return (
-    <div className={css({ display: 'flex', alignItems: 'center', gap: 2 })}>
+    <div
+      className={css({
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        cursor: 'pointer',
+      })}
+      onClick={toggleSubscription}
+      role='button'
+    >
       <img
         width='96'
-        className={css({ borderRadius: '96px', backgroundColor: 'gray' })}
-        src={author.portrait}
+        height='96'
+        className={css({
+          borderRadius: '96px',
+          backgroundColor: 'divider',
+        })}
+        src={author?.portrait || '/static/profiledefault.png'}
       />
       <div>
-        <h4 className={css({ fontWeight: 'bold' })}>{author.name}</h4>
+        <h4 className={css({ fontWeight: 'bold' })}>{author?.name || '...'}</h4>
         <p className={css({ color: 'textSoft' })}>
           {t(`onboarding/authors/${slug}/beat`)}
         </p>
