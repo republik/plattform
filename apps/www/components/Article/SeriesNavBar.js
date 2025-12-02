@@ -11,7 +11,7 @@ import {
   useColorContext,
   useBodyScrollLock,
   SeriesNav,
-  plainButtonRule
+  plainButtonRule,
 } from '@project-r/styleguide'
 import { cleanAsPath } from '../../lib/utils/link'
 import withT from '../../lib/withT'
@@ -118,8 +118,7 @@ const SeriesNavBar = ({ t, me, series, router, repoId }) => {
     <>
       <button
         {...styles.seriesNavBarButton}
-        href={titlePath}
-        onClick={(e) => {
+        onClick={() => {
           setExpanded(!expanded)
         }}
       >
