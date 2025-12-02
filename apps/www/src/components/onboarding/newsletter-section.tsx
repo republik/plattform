@@ -6,7 +6,7 @@ import {
 import { useMutation } from '@apollo/client'
 import { Spinner } from '@app/components/ui/spinner'
 import { css } from '@republik/theme/css'
-import { CircleCheck, PlusCircle } from 'lucide-react'
+import { CircleCheckBig, Plus } from 'lucide-react'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { OnboardingH3, OnboardingSection } from './onboarding-ui'
@@ -111,9 +111,15 @@ function NewsletterCard({
           {isPending ? (
             <Spinner size='large' />
           ) : subscribed ? (
-            <CircleCheck className={css({ color: 'primary' })} />
+            <CircleCheckBig />
           ) : (
-            <PlusCircle />
+            <Plus
+              className={css({
+                color: 'text.inverted',
+                background: 'black',
+                borderRadius: '100%',
+              })}
+            />
           )}
         </button>
       )}
