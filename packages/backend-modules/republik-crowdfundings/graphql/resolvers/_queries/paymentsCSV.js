@@ -142,8 +142,8 @@ module.exports = async (_, args, { pgdb, user }) => {
       users u
       ON p."userId" = u.id
     WHERE
-      ARRAY[pay.id] && :paymentIds AND
-      ARRAY[p."packageId"] && :packageIds
+      pay.id = ANY(:paymentIds) AND
+      p."packageId" = ANY(:packageIds)
     GROUP BY
       pay.id, p.id, u.id
     ORDER BY
