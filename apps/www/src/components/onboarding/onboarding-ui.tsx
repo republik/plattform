@@ -1,8 +1,6 @@
 import { Button } from '@app/components/ui/button'
-import { Spinner } from '@app/components/ui/spinner'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
-import { CircleCheck, PlusCircle } from 'lucide-react'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
@@ -83,7 +81,6 @@ export function OnboardingFollowButton({
 }) {
   return (
     <Button
-      variant='link'
       className={css({
         fontWeight: 500,
         textDecoration: 'none',
@@ -91,29 +88,11 @@ export function OnboardingFollowButton({
       onClick={onClick}
       disabled={isPending}
       type='button'
+      size='small'
+      variant={subscribed ? 'outline' : 'default'}
+      loading={isPending}
     >
-      {isPending ? (
-        <Spinner />
-      ) : subscribed ? (
-        <span
-          className={css({
-            opacity: 0.6,
-            display: 'inline-flex',
-            gap: '1',
-          })}
-        >
-          <CircleCheck size={16} /> Gefolgt
-        </span>
-      ) : (
-        <span
-          className={css({
-            display: 'inline-flex',
-            gap: '1',
-          })}
-        >
-          <PlusCircle size={16} /> Folgen
-        </span>
-      )}
+      {subscribed ? 'Gefolgt' : 'Folgen'}
     </Button>
   )
 }
