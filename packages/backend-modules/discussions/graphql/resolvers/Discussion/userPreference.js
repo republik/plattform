@@ -3,7 +3,7 @@ module.exports = async (discussion, _, { loaders, user }) => {
     return null
   }
 
-  const dp = await loaders.Discussion.Commenter.discussionPreferences.load({
+  const dp = await loaders.DiscussionPreferences.byUserIdAndDiscussionId.load({
     discussionId: discussion.id,
     userId: user.id,
   })
@@ -17,7 +17,8 @@ module.exports = async (discussion, _, { loaders, user }) => {
 
   return {
     anonymity: dp.anonymous, // this naming is bogous!
-    credential: dp.credential,
+    credential:
+      dp?.credentialId && loaders.CredentialById.load(dp.credentialId),
     notifications: dp.notificationOption,
   }
 }
