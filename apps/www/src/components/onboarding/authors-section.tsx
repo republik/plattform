@@ -108,11 +108,13 @@ function AuthorsSection() {
           display: 'flex',
           flexDirection: 'column',
           gap: 6,
-          px: 12,
           md: {
             display: 'grid',
             gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
             gap: 12,
+          },
+          lg: {
+            px: 12,
           },
         })}
       >
