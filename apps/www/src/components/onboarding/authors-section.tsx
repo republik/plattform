@@ -17,7 +17,7 @@ import {
   OnboardingSection,
 } from './onboarding-ui'
 
-const AUTHORS_ALWAYS_SHOWN = 3
+const AUTHORS_ALWAYS_SHOWN = 4
 
 function AuthorCard({ slug }: { slug: string }) {
   const { t } = useTranslation()
@@ -63,13 +63,16 @@ function AuthorCard({ slug }: { slug: string }) {
         alignItems: 'center',
         gap: 2,
         cursor: 'pointer',
+        md: {
+          maxWidth: '350px',
+        },
       })}
       onClick={toggleSubscription}
       role='button'
     >
       <img
-        width='96'
-        height='96'
+        width='84'
+        height='84'
         className={css({
           borderRadius: '96px',
           backgroundColor: 'divider',
@@ -105,9 +108,11 @@ function AuthorsSection() {
           display: 'flex',
           flexDirection: 'column',
           gap: 6,
+          px: 12,
           md: {
-            maxW: '360px',
-            mx: 'auto',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+            gap: 12,
           },
         })}
       >
