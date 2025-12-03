@@ -9,7 +9,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
-import { PODCASTS_FEATURED } from './config'
+import { PODCASTS_FEATURED, PODCASTS_STYLE } from './config'
 import {
   OnboardingFollowButton,
   OnboardingH3,
@@ -60,20 +60,37 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
       role='button'
     >
       <div
+        style={PODCASTS_STYLE[podcast.repoId]}
         className={css({
           display: 'flex',
           flexDirection: 'column',
           aspectRatio: '1/1',
+          padding: 2,
           mb: 2,
           justifyContent: 'space-between',
+          fontSize: '3xl',
+          fontFamily: 'republikSerif',
+          lineHeight: '0.9',
+          md: {
+            fontSize: '4xl',
+          },
         })}
       >
-        <img
-          width='100%'
-          height='100%'
-          src={`/static/onboarding/podcasts/${podcast.repoId}.jpg`}
-          alt={podcast.meta.title}
-        />
+        <h4
+          className={css({
+            textAlign: 'right',
+          })}
+        >
+          {t(`onboarding/podcasts/${podcast.repoId}/title`)}
+        </h4>
+        <span
+          className={css({
+            lineHeight: 0.5,
+            color: 'white',
+          })}
+        >
+          R
+        </span>
       </div>
       <p
         className={css({

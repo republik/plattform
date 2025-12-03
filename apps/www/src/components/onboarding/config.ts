@@ -15,17 +15,34 @@ export const FORMATS_FEATURED: string[] = [
   'republik/format-rosenwasser',
   'republik/format-vahland',
   'republik/format-pfister',
-  'republik/format-format-wie-reden-wir-eigentlich',
   'republik/format-gedankensplitter',
+  'republik/format-format-wie-reden-wir-eigentlich',
 ]
 
-export const FORMATS_BG: { [key: string]: string } = {
-  'republik/format-binswanger': '#D6CCCB',
-  'republik/format-rosenwasser': '#CF8D82',
-  'republik/format-vahland': '#C1C06A',
-  'republik/format-pfister': '#BAB0DC',
-  'republik/format-format-wie-reden-wir-eigentlich': '#B9919E',
-  'republik/format-gedankensplitter': '#A1B3A6',
+type StyleType = {
+  backgroundColor?: string
+  color?: string
+}
+
+export const FORMATS_STYLE: { [key: string]: StyleType } = {
+  'republik/format-binswanger': {
+    backgroundColor: '#EEB8BF',
+  },
+  'republik/format-rosenwasser': {
+    backgroundColor: '#8CDBB6',
+  },
+  'republik/format-vahland': {
+    backgroundColor: '#A9A7E0',
+  },
+  'republik/format-pfister': {
+    backgroundColor: '#EF6B6D',
+  },
+  'republik/format-gedankensplitter': {
+    backgroundColor: '#F2ECE6',
+  },
+  'republik/format-format-wie-reden-wir-eigentlich': {
+    backgroundColor: '#DAFF8D',
+  },
 }
 
 // TODO: slugs can change (though not so often) -> use ID
@@ -48,6 +65,21 @@ export const PODCASTS_FEATURED: string[] = [
   'republik/format-gute-frage',
   'republik/format-was-wurde-eigentlich-aus',
 ]
+
+export const PODCASTS_STYLE: { [key: string]: StyleType } = {
+  'republik/format-dritte-gewalt': {
+    backgroundColor: '#EEB8BF',
+  },
+  'republik/format-sondersession': {
+    backgroundColor: '#8CDBB6',
+  },
+  'republik/format-gute-frage': {
+    backgroundColor: '#A9A7E0',
+  },
+  'republik/format-was-wurde-eigentlich-aus': {
+    backgroundColor: '#EF6B6D',
+  },
+}
 
 // STAGING
 /*export const PODCASTS_FEATURED: string[] = [

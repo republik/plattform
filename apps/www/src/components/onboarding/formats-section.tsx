@@ -9,7 +9,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
-import { FORMATS_BG, FORMATS_FEATURED } from './config'
+import { FORMATS_FEATURED, FORMATS_STYLE } from './config'
 import {
   OnboardingFollowButton,
   OnboardingH3,
@@ -54,7 +54,7 @@ function FormatCard({ format }: { format?: Document }) {
       className={css({
         flex: '0 0 280px',
         scrollSnapAlign: 'start',
-        height: '280px',
+        height: '315px',
         mx: 2,
         p: 4,
         display: 'flex',
@@ -64,7 +64,7 @@ function FormatCard({ format }: { format?: Document }) {
           mx: 'initial',
         },
       })}
-      style={{ backgroundColor: FORMATS_BG[format.repoId] }}
+      style={FORMATS_STYLE[format.repoId] || {}}
       onClick={toggleSubscription}
       role='button'
     >
@@ -74,6 +74,7 @@ function FormatCard({ format }: { format?: Document }) {
           fontSize: '2xl',
           lineHeight: 1,
           letterSpacing: -0.02,
+          pb: 2,
         })}
       >
         {t(`onboarding/formats/${format.repoId}/description`)}
