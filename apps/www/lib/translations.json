@@ -8160,6 +8160,10 @@
       "value": "Mehr anzeigen"
     },
     {
+      "key": "onboarding/authors/less",
+      "value": "Weniger anzeigen"
+    },
+    {
       "key": "onboarding/podcasts/title",
       "value": "Podcasts und Audioserien"
     },
@@ -8289,7 +8293,7 @@
     },
     {
       "key": "onboarding/authors/palbrecht/beat",
-      "value": "Wirtschaft"
+      "value": "Wohnpolitik"
     },
     {
       "key": "onboarding/authors/angelikahardegger/beat",
@@ -8314,6 +8318,14 @@
     {
       "key": "onboarding/authors/luciaherrmann/beat",
       "value": "Community"
+    },
+    {
+      "key": "onboarding/authors/ywegelin/beat",
+      "value": "Wirtschaft"
+    },
+    {
+      "key": "onboarding/authors/asscholl/beat",
+      "value": "Film"
     }
   ]
 }

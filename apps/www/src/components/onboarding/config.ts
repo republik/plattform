@@ -57,6 +57,8 @@ export const AUTHORS_FEATURED: string[] = [
   'bhurlimann',
   'chanimann',
   'luciaherrmann',
+  'ywegelin',
+  'asscholl',
 ]
 
 export const PODCASTS_FEATURED: string[] = [

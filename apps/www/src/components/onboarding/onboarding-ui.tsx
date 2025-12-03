@@ -25,7 +25,7 @@ export function OnboardingH3({ children }: { children: ReactNode }) {
 export function OnboardingSection({ children }: { children: ReactNode }) {
   return (
     <section
-      className={css({ pt: 4, pb: 12, md: { maxWidth: 'shop', mx: 'auto' } })}
+      className={css({ pt: 4, pb: 16, md: { maxWidth: 'shop', mx: 'auto' } })}
     >
       {children}
     </section>

@@ -97,8 +97,7 @@ function FormatCard({ format }: { format?: Document }) {
           isPending={isPending}
         />
         <img
-          width='120'
-          height='120'
+          className={css({ maxHeight: '160px', maxWidth: '120px' })}
           src={`/static/onboarding/columns/${format.repoId}.png`}
           alt={format.meta.title}
         />

@@ -17,9 +17,7 @@ import {
   OnboardingSection,
 } from './onboarding-ui'
 
-const AUTHORS_ALWAYS_SHOWN = 4
-
-function AuthorCard({ slug }: { slug: string }) {
+function AuthorCard({ slug, showAll }: { slug: string; showAll: boolean }) {
   const { t } = useTranslation()
 
   const [isPending, setIsPending] = useState(false)
@@ -58,15 +56,15 @@ function AuthorCard({ slug }: { slug: string }) {
 
   return (
     <div
-      className={css({
-        display: 'flex',
+      className={`${css({
+        display: 'none',
         alignItems: 'center',
         gap: 2,
         cursor: 'pointer',
         md: {
           maxWidth: '350px',
         },
-      })}
+      })} author-card ${showAll ? 'show-author-card' : ''}`}
       onClick={toggleSubscription}
       role='button'
     >
@@ -84,8 +82,20 @@ function AuthorCard({ slug }: { slug: string }) {
         <p className={css({ color: 'textSoft' })}>
           {t(`onboarding/authors/${slug}/beat`)}
         </p>
+        <div
+          className={css({
+            display: 'none',
+            md: { display: 'block', mt: 2 },
+          })}
+        >
+          <OnboardingFollowButton
+            onClick={toggleSubscription}
+            subscribed={!!subscriptionId}
+            isPending={isPending}
+          />
+        </div>
       </div>
-      <div className={css({ ml: 'auto' })}>
+      <div className={css({ ml: 'auto', md: { display: 'none' } })}>
         <OnboardingFollowButton
           onClick={toggleSubscription}
           subscribed={!!subscriptionId}
@@ -107,41 +117,47 @@ function AuthorsSection() {
         className={css({
           display: 'flex',
           flexDirection: 'column',
-          gap: 6,
+          gap: 8,
+          // CSS solution to show only first 3 authors on mobile and
+          // first 6 on desktop and allow to expand to all authors
+          // on all devices
+          '& .author-card:nth-child(-n + 3)': {
+            display: 'flex',
+          },
+          '& .author-card.show-author-card': {
+            display: 'flex',
+          },
           md: {
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-            gap: 12,
-          },
-          lg: {
-            px: 12,
+            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+            rowGap: 12,
+            '& .author-card:nth-child(-n + 6)': {
+              display: 'flex',
+            },
           },
         })}
       >
-        {AUTHORS_FEATURED.slice(0, AUTHORS_ALWAYS_SHOWN).map((slug) => (
-          <AuthorCard slug={slug} key={slug} />
+        {AUTHORS_FEATURED.map((slug) => (
+          <AuthorCard slug={slug} key={slug} showAll={showAll} />
         ))}
-
-        {showAll &&
-          AUTHORS_FEATURED.slice(AUTHORS_ALWAYS_SHOWN).map((slug) => (
-            <AuthorCard slug={slug} key={slug} />
-          ))}
       </div>
 
-      {!showAll && (
-        <div
-          className={css({
-            mt: 8,
-            display: 'flex',
-            justifyContent: 'center',
-            color: 'textSoft',
-          })}
+      <div
+        className={css({
+          mt: 8,
+          display: 'flex',
+          justifyContent: 'center',
+          color: 'textSoft',
+        })}
+      >
+        <Button
+          variant='link'
+          onClick={() => setShowAll(!showAll)}
+          type='button'
         >
-          <Button variant='link' onClick={() => setShowAll(true)} type='button'>
-            {t('onboarding/authors/more')}
-          </Button>
-        </div>
-      )}
+          {t(`onboarding/authors/${showAll ? 'less' : 'more'}`)}
+        </Button>
+      </div>
     </OnboardingSection>
   )
 }
