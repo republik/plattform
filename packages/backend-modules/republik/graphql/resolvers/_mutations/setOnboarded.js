@@ -1,5 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const {transformUser} = require('@orbiting/backend-modules-auth')
+const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const ALLOWED_ROLES = ['admin', 'supporter']
 
@@ -17,11 +17,13 @@ module.exports = async (_, args, context) => {
   const tx = await pgdb.transactionBegin()
 
   try {
-    const updatedUser = await tx.public.users.updateAndGetOne({id: user.id}, {onboarded: onboardingDate})
+    const updatedUser = await tx.public.users.updateAndGetOne(
+      { id: user.id },
+      { onboarded: onboardingDate },
+    )
     await tx.transactionCommit()
 
     return transformUser(updatedUser)
-
   } catch (e) {
     console.error('setOnboarded', e)
     await tx.transactionRollback()
