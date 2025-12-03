@@ -117,6 +117,12 @@ type mutations {
     """Reason for reporting the user. Max 500 characters."""
     reason: String!
   ): Boolean!
+
+  setOnboarded(
+    userId: ID!,
+    """Onboarding date"""
+    onboardingDate: DateTime!
+  ): User!
 }
 
 type subscriptions {
