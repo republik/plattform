@@ -1,0 +1,2 @@
+DROP INDEX IF EXISTS comments_featured_targets_default_idx;
+DROP INDEX IF EXISTS comments_featured_targets_marketing_idx;
