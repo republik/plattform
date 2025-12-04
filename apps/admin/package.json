@@ -57,7 +57,7 @@
     "scroll-into-view": "^1.15.0",
     "subscriptions-transport-ws": "^0.11.0",
     "topojson": "^3.0.2",
-    "validator": "^10.11.0"
+    "validator": "^13.15.22"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "5.0.2",
