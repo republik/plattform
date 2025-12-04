@@ -133,8 +133,6 @@ type Meta {
   paynotes: [JSON]
   paynoteMode: PaynoteMode
   
-  isRestricted: Boolean
-  
   sendAsEmail: Boolean
 
   # article is excluded from paywall
