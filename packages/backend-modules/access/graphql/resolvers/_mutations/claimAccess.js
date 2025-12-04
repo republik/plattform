@@ -10,7 +10,7 @@ module.exports = async (
   { req, user, pgdb, redis, t, mail },
 ) => {
   ensureSignedIn(req)
-  await ensureUserHasNoNewSubscription(user, pgdb)
+  await ensureUserHasNoNewSubscription(user, pgdb, t)
   debug('begin', { voucherCode, user: user.id })
 
   const transaction = await pgdb.transactionBegin()
@@ -39,7 +39,7 @@ module.exports = async (
   }
 }
 
-async function ensureUserHasNoNewSubscription(user, pgdb) {
+async function ensureUserHasNoNewSubscription(user, pgdb, t) {
   const result = await pgdb.payments.subscriptions.findFirst(
     {
       userId: user.id,
@@ -49,6 +49,8 @@ async function ensureUserHasNoNewSubscription(user, pgdb) {
   )
 
   if (result) {
-    throw new Error('api/error/can-not-redeem-membership-with-new-subscription')
+    throw new Error(
+      t('api/access/claim/can-not-redeem-membership-with-new-subscription'),
+    )
   }
 }

@@ -1533,6 +1533,10 @@
       "value": "Ihr Gutscheincode ist leider ungültig. Da hat sich vielleicht ein Vertipper eingeschlichen, oder der Gutscheincode ist bereits abgelaufen."
     },
     {
+      "key": "api/access/claim/can-not-redeem-membership-with-new-subscription",
+      "value": "Ups, es ist ein Fehler aufgetreten. Melden Sie sich bitte mit dem Gutscheincode bei unserem Support-Team: kontakt@republik.ch."
+    },
+    {
       "key": "api/access/request/campaign/error",
       "value": "Kampagne «{campaignId}» ist ungültig."
     },
