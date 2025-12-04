@@ -44,7 +44,7 @@
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "moment": "^2.29.1",
-    "next": "15.3.6",
+    "next": "15.4.8",
     "prop-types": "^15.7.2",
     "react": "^19.1.0",
     "react-autosize-textarea": "^5.0.1",
