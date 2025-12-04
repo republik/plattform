@@ -1,4 +1,7 @@
+import { Branded } from '@orbiting/backend-modules-types'
 import Stripe from 'stripe'
+
+export type TypedData<K, T> = { type: K; data: T }
 
 export type Company = 'PROJECT_R' | 'REPUBLIK'
 
@@ -10,6 +13,8 @@ export type Order = {
   subscriptionId: string
   invoiceId: string
   status: 'paid' | 'unpaid'
+  metadata?: any
+  expiresAt: Date
   createdAt: Date
   updatedAt: Date
 }
@@ -220,15 +225,20 @@ export type Address = {
 export type ChargeInsert = {
   company: Company
   externalId: string
-  invoiceId: string
+  invoiceId: string | null
   paid: boolean
-  status: string
+  status: 'succeeded' | 'pending' | 'failed'
   amount: number
   amountCaptured: number
   amountRefunded: number
   paymentMethodType: 'CARD' | 'TWINT' | 'PAYPAL' | null
   fullyRefunded: boolean
   createdAt: Date
+  paymentIntentId: string
+  customerId: string
+  description?: string | null
+  failureCode?: string | null
+  failureMessage?: string | null
 }
 
 export type ChargeUpdate = {
@@ -249,6 +259,12 @@ export type Transaction = {
   pledgeId?: string
 }
 
+export type PaymentMethod = {
+  id: string
+  method: string
+  last4?: string
+}
+
 export interface PaymentWorkflow<T extends Stripe.Event> {
   run(company: Company, event: T): Promise<any>
 }
@@ -256,3 +272,125 @@ export interface PaymentWorkflow<T extends Stripe.Event> {
 export interface MailNotifier<T extends object> {
   sendEmail(recipient: string, args: T): Promise<any>
 }
+
+export type ValidOfferId = Branded<string, 'offerId'>
+export type ValidSubscriptionOfferId = Branded<string, 'subscriptionOfferId'>
+
+export type OfferId = ValidOfferId | ValidSubscriptionOfferId
+
+export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
+export type OfferAvailability =
+  | 'PURCHASABLE'
+  | 'UPGRADEABLE'
+  | 'UNAVAILABLE'
+  | 'UNAVAILABLE_CURRENT'
+  | 'UNAVAILABLE_UPGRADE_PENDING'
+
+export type PriceDefinition = {
+  type: 'PRICE'
+  lookupKey: string
+  taxRateId?: string
+}
+export type DiscountDefinition = { type: 'DISCOUNT'; coupon: string }
+
+export type ComplimentaryItem = {
+  id: string
+  maxQuantity: number
+  lookupKey: string
+}
+
+export type PriceInfo = {
+  amount: number
+  currency: string
+  recurring?: {
+    interval: 'year' | 'month'
+    intervalCount: number
+  }
+}
+
+export type ComplimentaryItemOrder = {
+  id: string
+  quantity: number
+}
+
+export type BaseOffer = {
+  id: OfferId
+  company: Company
+  name: string
+  type: OfferType
+  items: PriceDefinition[]
+  complimentaryItems?: ComplimentaryItem[]
+  discountOptions?: DiscountDefinition[]
+  suggestedDonations?: number[]
+  fixedDiscount?: string
+  requiresLogin: boolean
+  requiresAddress: boolean
+  allowPromotions: boolean
+  metaData?: {
+    [name: string]: string | number | null
+  }
+  taxRateId?: string
+}
+
+export type SubscriptionOffer = BaseOffer & {
+  type: 'SUBSCRIPTION'
+  subscriptionType: SubscriptionType
+}
+
+export type OneTimeOffer = BaseOffer & {
+  type: 'ONETIME_PAYMENT'
+}
+
+export type Offer = SubscriptionOffer | OneTimeOffer
+
+export type OfferAPIResult = {
+  id: string
+  company: Company
+  name: string
+  availability: OfferAvailability
+  startDate?: Date
+  requiresLogin: boolean
+  price: {
+    amount: number
+    currency: string
+    recurring?: {
+      interval: 'year' | 'month'
+      intervalCount: number
+    }
+  }
+  suggestedDonations?: number[]
+  discount?: APIDiscountResult
+}
+
+export interface APIDiscountResult {
+  id?: string
+  name: string
+  amountOff: number
+  duration: 'forever' | 'once' | 'repeating'
+  durationInMonths: number | null
+  currency: string
+}
+
+export type Discount = {
+  id: string
+  type: 'DISCOUNT'
+  name: string
+  amountOff: number
+  duration: 'forever' | 'once' | 'repeating'
+  durationInMonths: number | null
+  currency: string
+}
+
+export type Promotion = {
+  id: string
+  type: 'PROMO'
+  name: string
+  amountOff: number
+  duration: 'forever' | 'once' | 'repeating'
+  durationInMonths: number | null
+  currency: string
+}
+
+export type DiscountOption =
+  | { type: 'DISCOUNT'; value: Discount }
+  | { type: 'PROMO'; value: Promotion }

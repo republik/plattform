@@ -1,17 +1,16 @@
-import { ReactElement, ReactNode } from 'react'
-import { useDiscussion } from '../context/DiscussionContext'
-import { useInNativeApp } from '../../../lib/withInNativeApp'
-import { useMe } from '../../../lib/context/MeContext'
-import Box from '../../Frame/Box'
 import {
-  A,
   Editorial,
   Interaction,
   timeahead,
   useCurrentMinute,
 } from '@project-r/styleguide'
 import Link from 'next/link'
+import { ReactElement, ReactNode } from 'react'
+import { useMe } from '../../../lib/context/MeContext'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
 import { useTranslation } from '../../../lib/withT'
+import Box from '../../Frame/Box'
+import { useDiscussion } from '../context/DiscussionContext'
 
 type Props = {
   children: ReactNode
@@ -34,19 +33,20 @@ const DiscussionComposerBarrier = ({
   isEditing = false,
   showPayNotes,
 }: Props): ReactElement => {
-  const { inNativeIOSApp } = useInNativeApp()
+  const { inNativeApp } = useInNativeApp()
   const { discussion } = useDiscussion()
   const { hasActiveMembership } = useMe()
   const { t } = useTranslation()
 
   const now = useCurrentMinute()
+
   function timeAheadFromNow(dateString) {
     return timeahead(t, (now - Date.parse(dateString)) / 1000)
   }
 
   const isHiddenTopLevelComposer =
     isRoot && !!discussion?.rules?.disableTopLevelComments
-  const hidePayNote = !showPayNotes || inNativeIOSApp
+  const hidePayNote = !showPayNotes || inNativeApp
 
   if (!discussion || isHiddenTopLevelComposer) {
     return null
@@ -86,7 +86,7 @@ const DiscussionComposerBarrier = ({
           )}
         </Interaction.P>
       </Box>
-    );
+    )
   }
 
   const waitUntilDate =

@@ -1,0 +1,296 @@
+import { v4 as isUuid } from 'is-uuid'
+import type { GraphqlContext } from '@orbiting/backend-modules-types'
+import Auth from '@orbiting/backend-modules-auth'
+import { ensureStringLength } from '@orbiting/backend-modules-utils'
+import { slugify } from '@orbiting/backend-modules-utils'
+import { ContributorRow, isContributorGender } from '../../../types'
+import { ContributorsRepo } from '../../../lib/ContributorsRepo'
+
+const { Roles } = Auth
+
+const MAX_NAME_LENGTH = 100
+const MAX_SHORT_BIO_LENGTH = 500
+
+type UpsertContributorArgs = {
+  id?: string
+  name: string
+  shortBio?: string
+  bio?: string
+  image?: string
+  prolitterisId?: string
+  prolitterisFirstname?: string
+  prolitterisLastname?: string
+  gender?: string
+  userId?: string
+}
+
+type UpsertContributorResponse =
+  | {
+      __typename: 'UpsertContributorSuccess'
+      contributor: ContributorRow
+      isNew: boolean
+      warnings?: { field: string | null; message: string }[]
+    }
+  | {
+      __typename: 'UpsertContributorError'
+      warnings?: { field: string | null; message: string }[]
+      errors: { field: string | null; message: string }[]
+    }
+
+// URL validation utility
+const isValidUrl = (url: string): boolean => {
+  try {
+    const urlObj = new URL(url)
+    return urlObj.protocol === 'http:' || urlObj.protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
+// Validate input fields
+const validateInput = (
+  args: UpsertContributorArgs,
+): { field: string | null; message: string }[] => {
+  const errors: { field: string | null; message: string }[] = []
+
+  // Name validation
+  if (!args.name || args.name.trim().length === 0) {
+    errors.push({ field: 'name', message: 'Name ist erforderlich' })
+  }
+
+  try {
+    ensureStringLength(args.name, {
+      min: 1,
+      max: MAX_NAME_LENGTH,
+      error: `Name muss zwischen 1 und ${MAX_NAME_LENGTH} Zeichen lang sein`,
+    })
+  } catch (error) {
+    errors.push({ field: 'name', message: (error as Error).message })
+  }
+
+  // Short bio validation
+  if (args.shortBio) {
+    try {
+      ensureStringLength(args.shortBio, {
+        max: MAX_SHORT_BIO_LENGTH,
+        error: `Kurze Biografie darf maximal ${MAX_SHORT_BIO_LENGTH} Zeichen lang sein`,
+      })
+    } catch (error) {
+      errors.push({ field: 'shortBio', message: (error as Error).message })
+    }
+  }
+
+  // Image URL validation
+  if (args.image) {
+    if (!isValidUrl(args.image)) {
+      errors.push({ field: 'image', message: 'Bild-URL ist ungültig' })
+    }
+  }
+
+  // Prolitteris validation
+  if (args.prolitterisId) {
+    // Validate that it's exactly 6 digits
+    if (!/^\d{6}$/.test(args.prolitterisId)) {
+      errors.push({
+        field: 'prolitterisId',
+        message: 'Prolitteris ID muss genau 6 Ziffern enthalten',
+      })
+    }
+    // Check if prolitteris_firstname and prolitteris_lastname are set
+    if (!args.prolitterisFirstname || !args.prolitterisLastname) {
+      errors.push(
+        {
+          field: 'prolitterisLastname',
+          message: 'Nachname ist erforderlich',
+        },
+        {
+          field: 'prolitterisFirstname',
+          message: 'Vorname ist erforderlich',
+        },
+      )
+    }
+  }
+
+  // Gender validation (ensure it's one of the allowed values)
+  if (args.gender && !isContributorGender(args.gender)) {
+    errors.push({
+      field: 'gender',
+      message: 'Geschlecht muss m, f, d oder na sein',
+    })
+  }
+
+  // UserId validation (basic UUID format check)
+  if (args.userId && !isUuid(args.userId)) {
+    errors.push({
+      field: 'userId',
+      message: 'User ID muss ein gültiger UUID sein',
+    })
+  }
+
+  return errors
+}
+
+export = async function upsertContributor(
+  _: unknown,
+  args: UpsertContributorArgs,
+  { pgdb, user: me }: GraphqlContext,
+): Promise<UpsertContributorResponse> {
+  // Ensure user has appropriate permissions
+  Roles.ensureUserIsInRoles(me, ['admin', 'producer'])
+
+  // Validate input
+  const validationErrors = validateInput(args)
+  if (validationErrors.length > 0) {
+    return {
+      __typename: 'UpsertContributorError',
+      errors: validationErrors,
+    }
+  }
+
+  const {
+    id,
+    name,
+    shortBio,
+    bio,
+    image,
+    prolitterisId,
+    prolitterisFirstname,
+    prolitterisLastname,
+    gender,
+    userId,
+  } = args
+  const warnings: { field: string | null; message: string }[] = []
+
+  const transaction = await pgdb.transactionBegin()
+  const repo = new ContributorsRepo(transaction)
+
+  try {
+    // Check if userId is connected to other contributor (error)
+    if (userId) {
+      const existingContributorWithUserId: ContributorRow | null =
+        await repo.findContributorByCondition({
+          field: 'user_id',
+          value: userId,
+          excludeId: id,
+        })
+      if (existingContributorWithUserId) {
+        await transaction.transactionRollback()
+        return {
+          __typename: 'UpsertContributorError',
+          errors: [
+            {
+              field: 'userId',
+              message: `User ID ist bereits einem*r anderen Autor*in zugeordnet: ${existingContributorWithUserId.name}`,
+            },
+          ],
+        }
+      }
+    }
+
+    // Check for duplicate prolitterisId (error)
+    if (prolitterisId) {
+      const existingContributorWithProlitterisId: ContributorRow | null =
+        await repo.findContributorByCondition({
+          field: 'prolitteris_id',
+          value: prolitterisId,
+          excludeId: id,
+        })
+
+      if (existingContributorWithProlitterisId) {
+        await transaction.transactionRollback()
+        return {
+          __typename: 'UpsertContributorError',
+          errors: [
+            {
+              field: 'prolitterisId',
+              message: `Prolitteris ID ist schon einem*r anderen Autor*in: ${existingContributorWithProlitterisId.slug} zugeordnet`,
+            },
+          ],
+        }
+      }
+    }
+
+    // Generate unique slug
+    const baseSlug = slugify(name)
+    const slug = await repo.findUniqueSlug(baseSlug, id)
+
+    // Check for duplicate names (warning only)
+    const existingContributorWithName: ContributorRow | null =
+      await repo.findContributorByCondition({
+        field: 'name',
+        value: name,
+        excludeId: id,
+      })
+
+    if (existingContributorWithName) {
+      warnings.push({
+        field: 'name',
+        message: `Autor*in erstellt. Ein*e Autor*in existiert jedoch bereits mit diesem Namen: ${existingContributorWithName.slug}`,
+      })
+    }
+
+    const now = new Date()
+    const contributorData = {
+      name,
+      slug,
+      ...(shortBio !== undefined && { short_bio: shortBio }),
+      ...(bio !== undefined && { bio }),
+      ...(image !== undefined && { image }),
+      ...(prolitterisId !== undefined && { prolitteris_id: prolitterisId }),
+      ...(prolitterisFirstname !== undefined && {
+        prolitteris_first_name: prolitterisFirstname,
+      }),
+      ...(prolitterisLastname !== undefined && {
+        prolitteris_last_name: prolitterisLastname,
+      }),
+      ...(gender !== undefined && { gender }),
+      ...(userId !== undefined && { user_id: userId }),
+      updated_at: now,
+    }
+
+    let contributor
+    let isNew = false
+
+    if (id) {
+      // Update existing contributor
+      const existingContributor: ContributorRow | null =
+        await repo.findContributorByIdOrSlug({ id })
+      if (!existingContributor) {
+        await transaction.transactionRollback()
+        return {
+          __typename: 'UpsertContributorError',
+          errors: [
+            {
+              field: 'id',
+              message: `Autor*in mit ID ${id} nicht gefunden`,
+            },
+          ],
+        }
+      }
+
+      contributor = await transaction.publikator.contributors.updateAndGetOne(
+        { id },
+        contributorData,
+      )
+    } else {
+      // Create new contributor
+      contributor = await transaction.publikator.contributors.insertAndGet({
+        ...contributorData,
+        created_at: now,
+      })
+      isNew = true
+    }
+
+    await transaction.transactionCommit()
+
+    return {
+      __typename: 'UpsertContributorSuccess',
+      contributor,
+      isNew,
+      warnings: [],
+    }
+  } catch (e) {
+    await transaction.transactionRollback()
+    throw e
+  }
+}

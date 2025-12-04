@@ -1,12 +1,13 @@
-import { createContext, useContext, useEffect, useState } from 'react'
-
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useCampaign } from '@app/components/paynotes/campaign-paynote/use-campaign'
 
 import { useMe } from 'lib/context/MeContext'
 import { useUserAgent } from 'lib/context/UserAgentContext'
+
+import { usePathname, useSearchParams } from 'next/navigation'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { updateArticleMetering } from './article-metering'
 
-type PaynoteKindType =
+export type PaynoteKindType =
   | null
   | 'DIALOG'
   | 'OVERLAY_CLOSED'
@@ -16,6 +17,8 @@ type PaynoteKindType =
   | 'BANNER'
   | 'PAYNOTE_INLINE'
   | 'WELCOME_BANNER'
+  | 'CAMPAIGN_OVERLAY_OPEN'
+  | 'CAMPAIGN_OVERLAY_CLOSED'
 
 type TemplateType =
   | null
@@ -81,6 +84,7 @@ function isDialogPage(
 
 export const PaynotesProvider = ({ children }) => {
   const { meLoading, trialStatus } = useMe()
+  const { campaign } = useCampaign()
 
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -98,25 +102,38 @@ export const PaynotesProvider = ({ children }) => {
 
   useEffect(() => {})
 
+  const isCampaignActive = campaign?.isActive
+
   useEffect(() => {
-    if (meLoading) return
+    if (meLoading) {
+      return
+    }
     // console.log({ template, trialStatus, pathname, searchParams })
 
     // Active membership: no paynote
-    if (trialStatus === 'MEMBER') return setPaynoteKind(null)
-
+    if (trialStatus === 'MEMBER') {
+      return setPaynoteKind(null)
+    }
     // ANYTHING THAT'S NOT AN ARTICLE:
     //
     // special pages without any paynote
-    if (isPaynoteOverlayHidden(pathname, searchParams))
+    if (isPaynoteOverlayHidden(pathname, searchParams)) {
       return setPaynoteKind(null)
-
+    }
     // dialog page: we show a special paynote
-    if (isDialogPage(pathname, searchParams) || template === 'discussion')
+    if (isDialogPage(pathname, searchParams) || template === 'discussion') {
       return setPaynoteKind('DIALOG')
+    }
+
+    // Campaign active and *not* an article
+    if (isCampaignActive && template !== 'article') {
+      return setPaynoteKind('CAMPAIGN_OVERLAY_CLOSED')
+    }
 
     // anything else that's not an article: minimized paynote overlay
-    if (template !== 'article') return setPaynoteKind('OVERLAY_CLOSED')
+    if (template !== 'article') {
+      return setPaynoteKind('OVERLAY_CLOSED')
+    }
 
     // ARTICLES:
     //
@@ -124,37 +141,57 @@ export const PaynotesProvider = ({ children }) => {
     // but we show the overlay (in case someone is
     // spoofing the user agent to read our content, we still
     // want to show these clever foxes the paywall)
-    if (isSearchBot) return setPaynoteKind('OVERLAY_OPEN')
+
+    // When a campaign is active:
+    if (isCampaignActive) {
+      return setPaynoteKind('CAMPAIGN_OVERLAY_OPEN')
+    }
+
+    if (isSearchBot) {
+      return setPaynoteKind('OVERLAY_OPEN')
+    }
 
     // just signed up for a trial: welcome banner
-    if (trialStatus.includes('TRIAL_GROUP') && searchParams.has('trialSignup'))
+    if (
+      trialStatus.includes('TRIAL_GROUP') &&
+      searchParams.has('trialSignup')
+    ) {
       return setPaynoteKind('WELCOME_BANNER')
-
+    }
     // one trial group (group A) is shown an inline paynote
-    if (trialStatus === 'TRIAL_GROUP_A') return setPaynoteKind('PAYNOTE_INLINE')
-
+    if (trialStatus === 'TRIAL_GROUP_A') {
+      return setPaynoteKind('PAYNOTE_INLINE')
+    }
     // the other group (group B) is shown the more prominent overlay
-    if (trialStatus === 'TRIAL_GROUP_B') return setPaynoteKind('OVERLAY_OPEN')
+    if (trialStatus === 'TRIAL_GROUP_B') {
+      return setPaynoteKind('OVERLAY_OPEN')
+    }
 
     // abo teilen users are shown the inline paynote
-    if (trialStatus === 'TRIAL_GROUP_TEILEN')
+    if (trialStatus === 'TRIAL_GROUP_TEILEN') {
       return setPaynoteKind('PAYNOTE_INLINE')
-
+    }
     // exception for marked articles (via metadata)
-    if (isPaywallExcluded) return setPaynoteKind('OVERLAY_CLOSED')
+    if (isPaywallExcluded) {
+      return setPaynoteKind('OVERLAY_CLOSED')
+    }
 
     // trial expired: show paywall
-    if (trialStatus === 'NOT_TRIAL_ELIGIBLE') return setPaynoteKind('PAYWALL')
+    if (trialStatus === 'NOT_TRIAL_ELIGIBLE') {
+      return setPaynoteKind('PAYWALL')
+    }
 
     // CAVEAT: we don't ever want the "template" state to be set to something
     // wrong (notably: "article") after the pathname has changed. Otherwise some funny
     // pages (eg "/feed") may count towards the metering.
     const { meteringStatus } = updateArticleMetering(pathname)
-    if (meteringStatus === 'READING_GRANTED')
+    if (meteringStatus === 'READING_GRANTED') {
       return setPaynoteKind('OVERLAY_OPEN')
-
+    }
     // trial eligible users see the regwall
-    if (trialStatus === 'TRIAL_ELIGIBLE') return setPaynoteKind('REGWALL')
+    if (trialStatus === 'TRIAL_ELIGIBLE') {
+      return setPaynoteKind('REGWALL')
+    }
 
     // catch-all: do nothing
     return setPaynoteKind(null)
@@ -166,6 +203,7 @@ export const PaynotesProvider = ({ children }) => {
     isSearchBot,
     template,
     isPaywallExcluded,
+    isCampaignActive,
   ])
 
   // console.log({ paynoteKind })

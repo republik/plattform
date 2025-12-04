@@ -27,7 +27,7 @@ export const getCollectionItems = gql`
       id
       collectionItems(
         names: $collections
-        first: 50
+        first: 10
         after: $cursor
         progress: $progress
         uniqueDocuments: true

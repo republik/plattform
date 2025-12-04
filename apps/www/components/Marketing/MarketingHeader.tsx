@@ -1,18 +1,16 @@
 import React from 'react'
-import { mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
 import CallToAction from '../Frame/CallToAction'
-import { SignInLink } from '../Frame/User'
 import Link from 'next/link'
-import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
+import { HEADER_HEIGHT } from '../constants'
+import { useTranslation } from 'lib/withT'
 
 const MarketingHeader = () => {
+  const { t } = useTranslation()
   return (
     <div {...styles.header}>
       <div style={{ paddingLeft: 16 }}>
-        <Link href='/anmelden'>
-          <SignInLink isOnMarketingPage={true} />
-        </Link>
+        <Link href='/anmelden'>{t('header/signin')}</Link>
       </div>
       <CallToAction isOnMarketingPage={true} formatColor={undefined} />
     </div>
@@ -29,10 +27,7 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    height: HEADER_HEIGHT_MOBILE,
-    [mediaQueries.mUp]: {
-      height: HEADER_HEIGHT,
-    },
+    height: HEADER_HEIGHT,
   }),
 }
 

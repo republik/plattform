@@ -34,8 +34,6 @@
     "dev:setup": "yarn migrate:db:create && yarn migrate:up && yarn migrate:db:import && yarn pull:elasticsearch --flush && yarn populate",
     "pull:elasticsearch": "packages/backend-modules/search/script/pullElasticsearch.js",
     "pull:images": "packages/backend-modules/publikator/script/copyImages.js",
-    "populate:membershipStats:evolution": "packages/backend-modules/republik/script/MembershipStats/evolution/populate.js",
-    "populate:membershipStats:lastSeen": "packages/backend-modules/republik/script/MembershipStats/lastSeen/populate.js",
     "populate:membershipStats:ages": "packages/backend-modules/republik/script/MembershipStats/ages/populate.js",
     "populate:revenueStats:segments": "packages/backend-modules/republik/script/RevenueStats/segments/populate.js",
     "populate:collections:evolution": "packages/backend-modules/collections/script/stats/evolution.js",
@@ -45,7 +43,7 @@
     "populate:membershipStats:names": "packages/backend-modules/republik/script/MembershipStats/names/populate.js",
     "populate:membershipStats:geo": "packages/backend-modules/republik/script/MembershipStats/geo/populate.js",
     "populate:membershipStats:geoCities": "packages/backend-modules/republik/script/MembershipStats/geoCities/populate.js",
-    "populate": "yarn populate:membershipStats:evolution; yarn populate:membershipStats:lastSeen; yarn populate:membershipStats:geoCities; yarn populate:revenueStats:segments; yarn populate:collections:evolution; yarn populate:collections:last; yarn populate:discussions:evolution; yarn populate:discussions:last; yarn populate:membershipStats:ages; yarn populate:membershipStats:names; yarn populate:membershipStats:geo;",
+    "populate": "yarn populate:membershipStats:geoCities; yarn populate:revenueStats:segments; yarn populate:collections:evolution; yarn populate:collections:last; yarn populate:discussions:evolution; yarn populate:discussions:last; yarn populate:membershipStats:ages; yarn populate:membershipStats:names; yarn populate:membershipStats:geo;",
     "migrate:db:create": "packages/backend-modules/migrations/script/db/create.js",
     "migrate:db:import": "packages/backend-modules/migrations/script/db/import.js",
     "migrate:create": "packages/backend-modules/migrations/script/create.js",
@@ -84,7 +82,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react-dom": "^19.2.1",
     "typescript": "^5.6.2"
   }
 }

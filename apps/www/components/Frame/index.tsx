@@ -16,7 +16,6 @@ import Box from './Box'
 import ProlongBox from './ProlongBox'
 import {
   HEADER_HEIGHT,
-  HEADER_HEIGHT_MOBILE,
   SUBHEADER_HEIGHT,
   FRAME_CONTENT_PADDING,
   FRAME_CONTENT_PADDING_MOBILE,
@@ -66,10 +65,7 @@ const styles = {
   padHeader: css({
     // minus 1px for first sticky hr from header
     // - otherwise there is a jump when scroll 0 and opening hamburger
-    paddingTop: HEADER_HEIGHT_MOBILE - 1,
-    [mediaQueries.mUp]: {
-      paddingTop: HEADER_HEIGHT - 1,
-    },
+    paddingTop: HEADER_HEIGHT - 1,
     '@media print': {
       paddingTop: 0,
     },
@@ -163,13 +159,8 @@ const Frame = ({
   const padHeaderRule = useMemo(() => {
     return css({
       paddingTop: hasSecondaryNav
-        ? HEADER_HEIGHT_MOBILE + SUBHEADER_HEIGHT
-        : HEADER_HEIGHT_MOBILE - 1,
-      [mediaQueries.mUp]: {
-        paddingTop: hasSecondaryNav
-          ? HEADER_HEIGHT + SUBHEADER_HEIGHT
-          : HEADER_HEIGHT - 1,
-      },
+        ? HEADER_HEIGHT + SUBHEADER_HEIGHT
+        : HEADER_HEIGHT - 1,
       '@media print': {
         paddingTop: 0,
       },

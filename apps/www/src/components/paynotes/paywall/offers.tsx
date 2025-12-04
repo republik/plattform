@@ -3,20 +3,17 @@ import {
   PastAccessGrantsDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
+import { OfferOptionRadio } from '@app/components/paynotes/offer-options'
+import { Button } from '@app/components/ui/button'
+import { PaynoteSection } from '@app/components/ui/containers'
+import { ArrowLink } from '@app/components/ui/links'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
-
 import { css } from '@republik/theme/css'
 import { useTranslation } from 'lib/withT'
 import { useState } from 'react'
-
-import { Button } from '../../ui/button'
-import { PaynoteSection } from '../../ui/containers'
-import { RadioOption } from '../../ui/form'
-import { ArrowLink } from '../../ui/links'
-import IosCTA from '../ios-cta'
-
+import NativeCta from '../native-cta'
 import { ExitSurvey, OpenSurveyButton } from './exit-survey'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
@@ -122,7 +119,7 @@ function OffersForm({
               >
                 Sie sparen 14&thinsp;%
               </span>
-              <RadioOption
+              <OfferOptionRadio
                 name='product'
                 value='YEARLY'
                 checked={option === 'YEARLY'}
@@ -149,7 +146,7 @@ function OffersForm({
                   </span>
                   <span>{t('paywall/offers/yearly/description')}</span>
                 </span>
-              </RadioOption>
+              </OfferOptionRadio>
             </div>
 
             <div
@@ -160,7 +157,7 @@ function OffersForm({
                 mb: '6',
               })}
             >
-              <RadioOption
+              <OfferOptionRadio
                 name='product'
                 value='MONTHLY'
                 checked={option === 'MONTHLY'}
@@ -187,7 +184,7 @@ function OffersForm({
                   </span>
                   <span>{t('paywall/offers/monthly/description')}</span>
                 </span>
-              </RadioOption>
+              </OfferOptionRadio>
             </div>
 
             <Button type='submit' size='full'>
@@ -214,12 +211,12 @@ export function Offers({
 }: {
   additionalShopParams?: Record<string, string>
 }) {
-  const { isIOSApp } = usePlatformInformation()
-  if (isIOSApp) {
+  const { isNativeApp } = usePlatformInformation()
+  if (isNativeApp) {
     return (
       <PaynoteSection background='colors.background.marketingAlt'>
         <OffersHeader />
-        <IosCTA />
+        <NativeCta />
       </PaynoteSection>
     )
   }

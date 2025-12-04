@@ -19,7 +19,7 @@ const Subject = ({ children }) => {
   const [colorScheme] = useColorContext()
   const customStyles = css(styles, {
     '&::after': {
-      content: children.length ? ' ' : undefined,
+      content: ' ',
     },
   })
   return (

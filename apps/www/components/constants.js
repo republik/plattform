@@ -1,15 +1,9 @@
-import { Logo, mediaQueries } from '@project-r/styleguide'
+import { Logo } from '@project-r/styleguide'
 
 export const HEADER_HEIGHT = 60
-export const HEADER_HEIGHT_MOBILE = 48
 export const HEADER_ICON_SIZE = 22
 export const SUBHEADER_HEIGHT = 40
 export const HEADER_HORIZONTAL_PADDING = 16
-
-export const HEADER_HEIGHT_CONFIG = [
-  { minWidth: 0, headerHeight: HEADER_HEIGHT_MOBILE },
-  { minWidth: mediaQueries.mBreakPoint, headerHeight: HEADER_HEIGHT },
-]
 
 export const LOGO_HEIGHT = 28.02
 export const LOGO_WIDTH = LOGO_HEIGHT * Logo.ratio
@@ -17,9 +11,7 @@ export const LOGO_PADDING = Math.floor((HEADER_HEIGHT - LOGO_HEIGHT - 1) / 2)
 
 export const LOGO_HEIGHT_MOBILE = 22.78
 export const LOGO_WIDTH_MOBILE = LOGO_HEIGHT_MOBILE * Logo.ratio
-export const LOGO_PADDING_MOBILE = Math.floor(
-  (HEADER_HEIGHT_MOBILE - LOGO_HEIGHT_MOBILE - 1) / 2,
-)
+export const LOGO_PADDING_MOBILE = Math.floor((HEADER_HEIGHT - LOGO_HEIGHT_MOBILE - 1) / 2)
 
 export const FRAME_CONTENT_PADDING = 50
 export const FRAME_CONTENT_PADDING_MOBILE = 25

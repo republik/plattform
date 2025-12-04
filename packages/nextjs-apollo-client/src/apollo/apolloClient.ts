@@ -15,6 +15,17 @@ import possibleTypes from '../generated/possibleTypes.json'
 
 export const APOLLO_STATE_PROP_NAME = '__APOLLO_STATE__'
 
+// Filter headers which get passed from the http request to the Apollo Client request
+export function forwardSSRRequestHeaders(headers: IncomingHttpHeaders) {
+  return {
+    // For authorization
+    cookie: headers.cookie,
+    authorization: headers.authorization,
+    // For debugging errors
+    'sentry-trace': headers['sentry-trace'],
+  }
+}
+
 export type ApolloClientOptions = {
   name?: string
   version?: string

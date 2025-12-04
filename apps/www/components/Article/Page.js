@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client'
+import { LoginPopup } from '@app/components/auth/login/login-popup'
 import NextReads from '@app/components/next-reads'
 import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
@@ -387,6 +388,7 @@ const ArticlePage = ({
 
           return (
             <>
+              <LoginPopup />
               <FontSizeSync />
               <PrepubNotice meta={meta} breakout={breakout} />
               <WelcomeBanner />
@@ -396,7 +398,7 @@ const ArticlePage = ({
                 show={!!router.query.gallery}
                 ref={galleryRef}
               >
-                <ProgressComponent article={article}>
+                <ProgressComponent documentPath={meta.path}>
                   <article style={{ display: 'block' }}>
                     {splitContent.title && (
                       <div {...styles.titleBlock}>

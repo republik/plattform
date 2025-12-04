@@ -166,10 +166,7 @@ export const styles = {
     display: 'block',
     visibility: 'hidden',
     position: 'relative',
-    top: -65, // HEADER_HEIGHT_MOBILE + 20
-    [mUp]: {
-      top: -80, // HEADER_HEIGHT + 20
-    },
+    top: -80, // HEADER_HEIGHT + 20
   }),
 }
 

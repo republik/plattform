@@ -32,4 +32,4 @@ This package comes with it's own messages. Edit them in [translations.js](/lib/t
 
 ## Caveats
 
-At the moment this module expects a `_log() ` function to be present on express's request which can be used to sanitize the req before logging it in debug or error cases. If you use this module without [backend-modules-base](https://github.com/orbiting/backends/tree/master/packages/base) you can still use the function from [there](https://github.com/orbiting/backends/blob/master/packages/base/express/requestLog.js).
+expects a logger that conforms to the pino logger interface on the GraphQL context

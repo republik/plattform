@@ -117,6 +117,10 @@
       "value": "Zugelassene Rollen: {roles}"
     },
     {
+      "key": "repo/warn/missing",
+      "value": "Repo {repoId} nicht gefunden."
+    },
+    {
       "key": "repo/add/title",
       "value": "Neues Dokument"
     },
@@ -1338,11 +1342,11 @@
     },
     {
       "key": "styleguide/Collapsable/expand",
-      "value": "Alles lesen"
+      "value": "Mehr lesen"
     },
     {
       "key": "styleguide/Collapsable/collapse",
-      "value": "Weniger"
+      "value": "Weniger lesen"
     },
     {
       "key": "styleguide/Collapsable/table/expand",
@@ -1557,12 +1561,8 @@
       "value": "Antwort in {link}"
     },
     {
-      "key": "styleguide/CommentTreeLoadMore/label/1",
-      "value": "Ein weiterer Kommentar"
-    },
-    {
-      "key": "styleguide/CommentTreeLoadMore/label/other",
-      "value": "{count} weitere Kommentare"
+      "key": "styleguide/CommentTreeLoadMore/label",
+      "value": "Weitere Beiträge anzeigen"
     },
     {
       "key": "styleguide/CommentTreeCollapse/label",

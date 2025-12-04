@@ -6,7 +6,7 @@ import {
   useColorContext,
   ColorContextProvider,
 } from '@project-r/styleguide'
-import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
+import { HEADER_HEIGHT } from '../constants'
 import TrialForm from '../Trial/Form'
 import { useTranslation } from '../../lib/withT'
 
@@ -37,10 +37,7 @@ const MarketingTrialForm = () => {
 
 const styles = {
   trialformsection: css({
-    paddingTop: HEADER_HEIGHT_MOBILE,
-    [mediaQueries.mUp]: {
-      paddingTop: HEADER_HEIGHT,
-    },
+    paddingTop: HEADER_HEIGHT,
   }),
   container: css({
     padding: '15px 15px 30px 15px',

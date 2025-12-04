@@ -4,7 +4,7 @@ import NextHead from 'next/head'
 import { ApolloError, useQuery } from '@apollo/client'
 import { checkRoles } from '../apollo/withMe'
 import { css } from 'glamor'
-import { getInitials } from '../../components/Frame/User'
+import { getInitials } from '../../components/Frame/Avatar'
 import {
   MeDocument,
   MeQuery,

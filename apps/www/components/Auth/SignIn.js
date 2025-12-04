@@ -1,25 +1,25 @@
-import { Component, Fragment } from 'react'
-import PropTypes from 'prop-types'
-import compose from 'lodash/flowRight'
-import { graphql, withApollo } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
-
-import withT from '../../lib/withT'
 import { MeDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import withInNativeApp from '../../lib/withInNativeApp'
-
-import ErrorMessage from '../ErrorMessage'
+import { gql } from '@apollo/client'
+import { graphql, withApollo } from '@apollo/client/react/hoc'
 
 import {
+  Editorial,
   InlineSpinner,
   Interaction,
   RawHtml,
-  Editorial,
 } from '@project-r/styleguide'
+import compose from 'lodash/flowRight'
+import Link from 'next/link'
+import PropTypes from 'prop-types'
+import { Component, Fragment } from 'react'
+import withInNativeApp from '../../lib/withInNativeApp'
+
+import withT from '../../lib/withT'
+
+import ErrorMessage from '../ErrorMessage'
+import EmailForm, { checkEmail } from './EmailForm'
 
 import Poller from './Poller'
-import EmailForm, { checkEmail } from './EmailForm'
-import Link from 'next/link'
 
 class SignIn extends Component {
   constructor(props) {
@@ -104,7 +104,7 @@ class SignIn extends Component {
   }
 
   render() {
-    const { t, label, beforeForm, inNativeIOSApp } = this.props
+    const { t, label, beforeForm } = this.props
     const {
       phrase,
       tokenType,
@@ -185,14 +185,10 @@ class SignIn extends Component {
               <Editorial.A>{t('signIn/privacy')}</Editorial.A>
             </Link>
             {' – '}
-            {!inNativeIOSApp && (
-              <>
-                <Link href='/faq' passHref legacyBehavior>
-                  <Editorial.A>{t('signIn/faq')}</Editorial.A>
-                </Link>
-                {' – '}
-              </>
-            )}
+            <Link href='/faq' passHref legacyBehavior>
+              <Editorial.A>{t('signIn/faq')}</Editorial.A>
+            </Link>
+            {' – '}
             {t('signIn/hint')}
           </>
         }

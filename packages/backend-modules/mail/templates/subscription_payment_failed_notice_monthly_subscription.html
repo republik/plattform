@@ -42,15 +42,26 @@
                 <tr>
                   <td style="padding: 20px">
                     <p>Guten Tag</p>
+                    {{#if has_payment_method}}
                     <p>
-                      Leider konnten wir den Betrag von CHF {{total}} für Ihr Republik-Monatsabonnement nicht
-                      Ihrer gewählten Zahlungsmethode belasten.
+                      Leider konnten wir den Betrag von CHF {{total}} für Ihre Republik-Monatsabonnement nicht der 
+                      von Ihnen angegebenen Zahlungsmethode {{payment_method_name}} {{#if is_credit_card}}mit den Endziffern {{credit_card_last4}} {{/if}} belasten.
                     </p>
                     <p>
                       Falls Sie eine andere Zahlungsmethode verwenden wollen, können
                       Sie die nötigen Änderungen hier jederzeit vornehmen:
                       <a href="{{link_account_goto}}">www.republik.ch/konto</a>
                     </p>
+                    {{else}}
+                    <p>
+                      Leider konnten wir den Betrag von CHF {{total}} für Ihre Republik-Jahresmitgliedschaft nicht automatisch abbuchen.
+                    </p>
+                    <p>
+                      Bitte hinterlegen Sie eine gültige Zahlungsmethode hier:
+                      <a href="{{link_account_goto}}">www.republik.ch/konto</a>
+                    </p>
+                    {{/if}}
+                    <p>Wir versuchen es am {{payment_attempt_date}} erneut.</p>
                     <p>
                       Wenn wir Ihre Zahlungsmethode weiterhin nicht belasten können, 
                       gehen wir davon aus, dass Sie die Republik nicht mehr lesen möchten, 
@@ -58,8 +69,7 @@
                       dass es nicht so weit kommt.
                     </p>
                     <p>
-                      Können wir Sie beim Einrichten der Zahlungsmethode unterstützen? Oder haben Sie eine andere Frage? Kein Problem, melden Sie sich einfach via 
-                      <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a> 
+                      Können wir Sie beim Einrichten der Zahlungsmethode unterstützen? Oder haben Sie eine andere Frage? Kein Problem, melden Sie sich einfach via <a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a> 
                       bei uns.
                     </p>
                     <p>Die Republik finanziert sich über ihre Leserinnen und Leser: Es kommt also wirklich auf jede einzelne Person an. 

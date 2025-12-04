@@ -58,6 +58,13 @@ const IndexNav = compose(
           />
         </span>
       ))}
+      <IndexNavLink
+        href={{
+          pathname: '/authors',
+        }}
+        label={'Autoren'}
+        isActive={query.view === 'authors'}
+      />
     </span>
   )
 })

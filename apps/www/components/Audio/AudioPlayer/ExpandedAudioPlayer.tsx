@@ -19,6 +19,7 @@ import LatestArticles from './ui/tabs/latest/LatestArticles'
 import AudioError from './ui/AudioError'
 import { useUserAgent } from '../../../lib/context/UserAgentContext'
 import { useMe } from '../../../lib/context/MeContext'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
 import downloadAudioSourceFile from '../helpers/DownloadAudioSource'
 import { trackEvent } from '@app/lib/analytics/event-tracking'
 import {
@@ -33,7 +34,6 @@ const styles = {
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
     gap: 24,
     width: '100%',
     height: '100vh',
@@ -63,12 +63,10 @@ const styles = {
     minHeight: 0,
     overflowY: 'auto',
     scrollbarWidth: 'thin',
-    // Hack to ensure scrollbar is within the padding of the overlay
-    marginRight: ['-10x', 'calc(-1 * max(10px, env(safe-area-inset-right)))'],
-    paddingRight: ['10px', 'max(10px, env(safe-area-inset-right))'],
+    WebkitOverflowScrolling: 'touch',
+    position: 'relative',
     [mediaQueries.mUp]: {
       minHeight: 282,
-      maxHeight: 282,
     },
   }),
   tabBorder: css({
@@ -80,6 +78,13 @@ const styles = {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  }),
+  body: css({
+    position: 'relative',
+    overflowY: 'scroll',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 0,
   }),
   heading: css({
     ...fontStyles.sansSerifMedium16,
@@ -96,21 +101,6 @@ const styles = {
     display: 'flex',
     gap: 24,
     flexDirection: 'column',
-    // TODO: only apply on mobile
-    // Media queries mDown not working here, because phone is larger in landscape than mobile-breakpoint
-    [`@media (orientation: landscape) and ${mediaQueries.mDown}`]: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      '> div': {
-        flex: 1,
-        alignSelf: 'flex-end',
-      },
-      '> div:last-child': {
-        display: 'flex',
-        gap: 16,
-        flexDirection: 'column-reverse',
-      },
-    },
   }),
 }
 
@@ -152,9 +142,10 @@ const ExpandedAudioPlayer = ({
   const [colorScheme] = useColorContext()
   const [activeTab, setActiveTab] = React.useState<'QUEUE' | 'LATEST'>('QUEUE')
   const { isAndroid } = useUserAgent()
+  const { inNativeApp } = useInNativeApp()
   const isDesktop = useMediaQuery(mediaQueries.mUp)
   const router = useRouter()
-  const { hasAccess } = useMe()
+  const { hasAccess, isMember } = useMe()
 
   // On Android we expect the back-button to close the expanded-player
   // and not the browser to navigate back.
@@ -200,11 +191,31 @@ const ExpandedAudioPlayer = ({
     [colorScheme],
   )
 
+  const nativeAppBodyStyle = useMemo(
+    () =>
+      inNativeApp
+        ? css({
+            [`@media (orientation: landscape)`]: {
+              flexDirection: 'row',
+              gap: 36,
+              '> div': {
+                flex: 1,
+              },
+            },
+          })
+        : css({}),
+    [inNativeApp],
+  )
+
   return (
     <div {...styles.root} {...(!hasAccess && styles.rootNoAccess)}>
       <div {...styles.header}>
         <p {...styles.heading} {...colorScheme.set('color', 'text')}>
-          {t('AudioPlayer/Queue/ActiveHeading')}
+          {t(
+            activeItem
+              ? 'AudioPlayer/Queue/ActiveHeading'
+              : 'AudioPlayer/Queue/NoActiveHeading',
+          )}
         </p>
         <IconButton
           Icon={IconExpandMore}
@@ -213,78 +224,83 @@ const ExpandedAudioPlayer = ({
           onClick={handleMinimize}
         />
       </div>
-      {activeItem && (
-        <div {...styles.topWrapper}>
-          <div {...styles.topSection}>
-            <CurrentlyPlaying
-              t={t}
-              item={activeItem}
-              handleOpen={handleOpenArticle}
-              handleDownload={handleDownload}
-            />
-          </div>
-          <AudioControl
-            handleToggle={handleToggle}
-            handleSeek={handleSeek}
-            handleForward={handleForward}
-            handleBackward={handleBackward}
-            handlePlaybackRateChange={handlePlaybackRateChange}
-            handleSkipToNext={handleSkipToNext}
-            isPlaying={isPlaying}
-            isLoading={isLoading}
-            playbackRate={playbackRate}
-            currentTime={currentTime}
-            duration={duration}
-            buffered={buffered}
-            isAutoPlayEnabled={isAutoPlayEnabled}
-            setAutoPlayEnabled={setAutoPlayEnabled}
-          />
-          {hasError && <AudioError />}
-        </div>
-      )}
-      {hasAccess && (
-        <div {...styles.queueWrapper}>
-          <Scroller>
-            <TabButton
-              text={t('AudioPlayer/Queue')}
-              isActive={activeTab === 'QUEUE'}
-              onClick={() => setActiveTab('QUEUE')}
-            />
-            <TabButton
-              text={t('AudioPlayer/Latest')}
-              isActive={activeTab === 'LATEST'}
-              onClick={() => setActiveTab('LATEST')}
-            />
-            <span
-              {...styles.tabBorder}
-              {...colorScheme.set('borderColor', 'divider')}
-            />
-          </Scroller>
-          <motion.div
-            ref={bodyLockTargetRef}
-            layoutScroll
-            {...styles.queue}
-            {...queueScrollbarStyle}
-          >
-            {activeTab === 'QUEUE' && (
-              <Queue
+      <div {...styles.body} {...nativeAppBodyStyle}>
+        {activeItem && (
+          <div {...styles.topWrapper}>
+            <div {...styles.topSection}>
+              <CurrentlyPlaying
                 t={t}
-                activeItem={activeItem}
-                items={queuedItems}
-                handleOpenArticle={handleOpenArticle}
-                handleDownload={handleDownload}
-                setForceScrollLock={setForceScrollLock}
-              />
-            )}
-            {activeTab === 'LATEST' && (
-              <LatestArticles
-                handleOpenArticle={handleOpenArticle}
+                item={activeItem}
+                handleOpen={handleOpenArticle}
                 handleDownload={handleDownload}
               />
-            )}
-          </motion.div>
-        </div>
-      )}
+            </div>
+            <AudioControl
+              handleToggle={handleToggle}
+              handleSeek={handleSeek}
+              handleForward={handleForward}
+              handleBackward={handleBackward}
+              handlePlaybackRateChange={handlePlaybackRateChange}
+              handleSkipToNext={handleSkipToNext}
+              isPlaying={isPlaying}
+              isLoading={isLoading}
+              playbackRate={playbackRate}
+              currentTime={currentTime}
+              duration={duration}
+              buffered={buffered}
+              isAutoPlayEnabled={isAutoPlayEnabled}
+              setAutoPlayEnabled={setAutoPlayEnabled}
+            />
+            {hasError && <AudioError />}
+          </div>
+        )}
+        {isMember && (
+          <div {...styles.queueWrapper}>
+            <Scroller>
+              <TabButton
+                text={t('AudioPlayer/Queue')}
+                isActive={activeTab === 'QUEUE'}
+                onClick={() => setActiveTab('QUEUE')}
+              />
+              <TabButton
+                text={t('AudioPlayer/Latest')}
+                isActive={activeTab === 'LATEST'}
+                onClick={() => setActiveTab('LATEST')}
+              />
+              <span
+                {...styles.tabBorder}
+                {...colorScheme.set('borderColor', 'divider')}
+              />
+            </Scroller>
+            <motion.div
+              ref={bodyLockTargetRef}
+              layoutScroll
+              {...styles.queue}
+              {...queueScrollbarStyle}
+            >
+              {activeTab === 'QUEUE' && (
+                <Queue
+                  t={t}
+                  activeItem={activeItem}
+                  items={queuedItems}
+                  handleOpenArticle={handleOpenArticle}
+                  handleDownload={handleDownload}
+                  setForceScrollLock={setForceScrollLock}
+                />
+              )}
+              {activeTab === 'LATEST' && (
+                <LatestArticles
+                  handleOpenArticle={handleOpenArticle}
+                  handleDownload={handleDownload}
+                />
+              )}
+            </motion.div>
+          </div>
+        )}
+        {!isMember && !activeItem && (
+          <p> {t('AudioPlayer/noMemberText')}</p>
+        )}
+      </div>
     </div>
   )
 }

@@ -101,6 +101,7 @@ export const presetRepublik = definePreset({
           '3xl': { value: '2rem' },
           '4xl': { value: '3rem' },
           '8xl': { value: '6rem' },
+          '16xl': { value: '12rem' },
         },
         lineHeights: {
           1: { value: 1 },
@@ -230,6 +231,10 @@ export const presetRepublik = definePreset({
         },
         sizes: {
           maxContentWidth: { value: '52rem' },
+          content: {
+            text: { value: '42rem' },
+            narrow: { value: '27rem' },
+          },
           header: {
             height: { value: { base: '48px', md: '60px' } },
             avatar: { value: { base: '26px', md: '32px' } },

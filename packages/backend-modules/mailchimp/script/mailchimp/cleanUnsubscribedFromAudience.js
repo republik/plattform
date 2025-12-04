@@ -2,7 +2,7 @@
 require('@orbiting/backend-modules-env').config()
 
 const yargs = require('yargs')
-const archiveUnsubscribed = require('../../lib/scheduler/archiveUnsubscribed')
+const { archiveUnsubscribed } = require('../../build/lib/scheduler/archiveUnsubscribed')
 
 const argv = yargs.option('dry-run', {
   default: true,

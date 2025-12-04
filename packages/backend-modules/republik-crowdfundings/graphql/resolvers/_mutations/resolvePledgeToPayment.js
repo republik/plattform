@@ -1,5 +1,4 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const logger = console
 const { minTotal, regularTotal } = require('../../../lib/Pledge')
 const generateMemberships = require('../../../lib/generateMemberships')
 const { sendPaymentSuccessful } = require('../../../lib/Mail')
@@ -9,11 +8,15 @@ const {
 const { refreshPotForPledgeId } = require('../../../lib/membershipPot')
 const Promise = require('bluebird')
 
-module.exports = async (
-  _,
-  args,
-  { pgdb, req, t, mail: { enforceSubscriptions }, redis },
-) => {
+module.exports = async (_, args, context) => {
+  const {
+    pgdb,
+    req,
+    t,
+    mail: { enforceSubscriptions },
+    redis,
+  } = context
+
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const { pledgeId, reason } = args
@@ -25,13 +28,13 @@ module.exports = async (
   try {
     pledge = await transaction.public.pledges.findOne({ id: pledgeId })
     if (!pledge) {
-      logger.error('pledge not found', { req: req._log(), pledgeId })
+      context.logger.error({ pledgeId }, 'pledge not found')
       throw new Error(t('api/pledge/404'))
     }
     if (pledge.status !== 'PAID_INVESTIGATE') {
-      logger.error(
+      context.logger.error(
+        { args, pledge },
         'pledge must have status PAID_INVESTIGATE to be eligitable for resolving',
-        { req: req._log(), args, pledge },
       )
       throw new Error(t('api/pledge/resolve/status'))
     }
@@ -57,20 +60,24 @@ module.exports = async (
       },
     )
     if (payments.length > 1) {
-      logger.error('pledge has multiple payments, this is not supported', {
-        req: req._log(),
-        args,
-        payments,
-      })
+      context.logger.error(
+        {
+          args,
+          payments,
+        },
+        'pledge has multiple payments, this is not supported',
+      )
       throw new Error(t('api/pledge/resolve/multiplePayments'))
     }
     const payment = payments[0]
     if (payment.status !== 'PAID') {
-      logger.error('pledge payment must be PAID', {
-        req: req._log(),
-        args,
-        payment,
-      })
+      context.logger.error(
+        {
+          args,
+          payment,
+        },
+        'pledge payment must be PAID',
+      )
       throw new Error(t('api/pledge/resolve/payment/status'))
     }
     const newTotal = payment.total
@@ -88,18 +95,18 @@ module.exports = async (
      * Check if new total is lower than expected minimum total
      *
      * Due to currency exchange rates, new total can not be lower than
-     * 90 precent of minimum.
+     * 90 percent of minimum.
      */
     const expectedMinTotal = minTotal(pledgeOptions, packageOptions) * 0.9
     if (newTotal < expectedMinTotal) {
-      logger.error(
-        `total (${payment.total}) must be >= (${expectedMinTotal})`,
+      context.logger.error(
         {
-          req: req._log(),
           args,
           payment,
+          total: payment.total,
           expectedMinTotal,
         },
+        `total must be >= expectedMinTotal`,
       )
       throw new Error(
         t('api/pledge/resolve/payment/notEnough', {
@@ -144,7 +151,7 @@ module.exports = async (
     await transaction.transactionCommit()
   } catch (e) {
     await transaction.transactionRollback()
-    logger.info('transaction rollback', { req: req._log(), args, error: e })
+    context.logger.error({ args, error: e }, 'resolve payment to pledge failed')
     throw e
   }
 
@@ -159,7 +166,7 @@ module.exports = async (
         } newTotal:${updatedPledge.total / 100}`,
       ),
     ]).catch((e) => {
-      console.error('error after payPledge', e)
+      context.logger.error({ error: e }, 'error after payPledge')
     })
   }
 

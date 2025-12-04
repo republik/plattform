@@ -1,11 +1,11 @@
 import { GraphqlContext } from '@orbiting/backend-modules-types'
+import { GiftShop } from '../../../lib/shop/gifts'
+import { default as Auth } from '@orbiting/backend-modules-auth'
+import { t } from '@orbiting/backend-modules-translate'
 import {
   GiftAlreadyAppliedError,
   GiftNotApplicableError,
-  GiftShop,
-} from '../../../lib/shop/gifts'
-import { default as Auth } from '@orbiting/backend-modules-auth'
-import { t } from '@orbiting/backend-modules-translate'
+} from '../../../lib/errors'
 
 type RedeemGiftResult = {
   aboType: string
@@ -19,7 +19,7 @@ export = async function redeemGiftVoucher(
 ): Promise<RedeemGiftResult> {
   Auth.ensureUser(ctx.user)
 
-  const giftShop = new GiftShop(ctx.pgdb)
+  const giftShop = new GiftShop(ctx.pgdb, ctx.logger)
   try {
     const res = await giftShop.redeemVoucher(args.voucherCode, ctx.user.id)
 

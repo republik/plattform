@@ -8,10 +8,13 @@ import { SubscriptionService } from '../../lib/services/SubscriptionService'
 export = {
   async stripeCustomer(
     user: User,
-    { company }: { company: Company },
+    { company }: { company?: Company | null },
     ctx: GraphqlContext,
   ) {
     Auth.Roles.ensureUserIsMeOrInRoles(user, ctx.user, ['admin', 'supporter'])
+    if (!company) {
+      return null
+    }
 
     return await new CustomerInfoService(ctx.pgdb).getCustomerIdForCompany(
       user.id,
@@ -31,8 +34,8 @@ export = {
         ctx.pgdb,
       ).fetchActiveSubscription(user.id)
       return res
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      ctx.logger.error({ error }, 'failed to fetch activeMagazineSubscription')
       return []
     }
   },
@@ -45,8 +48,8 @@ export = {
         USER_VISIBLE_STATUS_TYPES,
       )
       return res
-    } catch (e) {
-      console.log(e)
+    } catch (error) {
+      ctx.logger.error({ error }, 'failed to fetch magazineSubscription')
       return []
     }
   },
@@ -57,7 +60,7 @@ export = {
     try {
       return fetchTransactions(ctx.pgdb, user.id)
     } catch (e) {
-      console.log(e)
+      ctx.logger.error(e, 'failed to fetch user payment transactions')
       return []
     }
   },
@@ -75,6 +78,7 @@ function fetchTransactions(pgdb: PgDb, userId: string) {
       total as amount,
       "createdAt"
     FROM payments.invoices WHERE "userId" = :userId
+         AND status not in ('void', 'draft', 'uncollectible')
     UNION ALL
     SELECT
       "pledgePayments".id,
@@ -90,7 +94,9 @@ function fetchTransactions(pgdb: PgDb, userId: string) {
   	JOIN public.payments AS p_payments ON "pledgePayments"."paymentId" = p_payments.id
   	JOIN public.packages AS package ON pledges."packageId" = package.id
   	JOIN public.companies AS companies ON package."companyId" = companies.id
-    WHERE pledges."userId" = :userId ORDER BY "createdAt" DESC
+    WHERE pledges."userId" = :userId
+          AND p_payments.status::text not in ('CANCELLED')
+    ORDER BY "createdAt" DESC
   `,
     {
       userId: userId,

@@ -15,8 +15,7 @@ import createChartModule from './modules/chart'
 import createChartCanvasModule from './modules/chart/canvas'
 import createCoverModule from './modules/cover'
 
-import createDocumentModule from './modules/document'
-import createDocumentPlainModule from './modules/document/plain'
+import createDocumentPlainModule from './modules/document'
 import createFrontDossier from './modules/dossier/front'
 import createDossierIntro from './modules/dossier/intro'
 import createDynamicComponentModule from './modules/dynamiccomponent'
@@ -49,6 +48,7 @@ import createQuoteModule from './modules/quote'
 import createSeriesNavModule from './modules/seriesnav'
 import createSpecialModule from './modules/special'
 import createSpecialCharsModule from './modules/specialchars'
+import createStoryComponentModule from './modules/storycomponent'
 import createTeaserModule from './modules/teaser'
 import createTeaserGroupModule from './modules/teasergroup'
 import createTitleModule from './modules/title'
@@ -60,7 +60,6 @@ const moduleCreators = {
   embedTwitter: createEmbedTwitterModule,
   embedComment: createEmbedCommentModule,
   embedDatawrapper: createEmbedDatawrapperModule,
-  document: createDocumentModule,
   documentPlain: createDocumentPlainModule,
   cover: createCoverModule,
   center: createCenterModule,
@@ -98,6 +97,7 @@ const moduleCreators = {
   chart: createChartModule,
   chartCanvas: createChartCanvasModule,
   dynamiccomponent: createDynamicComponentModule,
+  storycomponent: createStoryComponentModule,
   liveteaser: createLiveTeaserModule,
   button: createButtonModule,
   variable: createVariableModule,

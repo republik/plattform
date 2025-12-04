@@ -8,7 +8,6 @@ const {
   NotifyListener: SearchNotifyListener,
 } = require('@orbiting/backend-modules-search')
 const { t } = require('@orbiting/backend-modules-translate')
-const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const {
   graphql: redirections,
@@ -40,6 +39,9 @@ const {
   ReadingPositionRefreshWorker,
   NextReadsFeedRefreshWorker,
 } = require('@orbiting/backend-modules-next-reads')
+const {
+  graphql: contributors,
+} = require('@orbiting/backend-modules-contributors')
 
 const {
   graphql: paymentsGraphql,
@@ -52,11 +54,14 @@ const {
   ConfirmRevokeCancellationTransactionalWorker,
   NoticeEndedTransactionalWorker,
   NoticePaymentFailedTransactionalWorker,
+  NoticeRenewalTransactionalWorker,
+  NoticeRenewalPaymentSuccessfulTransactionalWorker,
   SyncMailchimpSetupWorker,
   SyncMailchimpUpdateWorker,
   SyncMailchimpEndedWorker,
   ConfirmGiftSubscriptionTransactionalWorker,
   ConfirmGiftAppliedTransactionalWorker,
+  ConfirmUpgradeSubscriptionTransactionalWorker,
   SlackNotifierWorker,
   setupPaymentUserEventHooks,
 } = require('@orbiting/backend-modules-payments')
@@ -106,8 +111,11 @@ function setupQueue(context, monitorQueueState = undefined) {
     ConfirmRevokeCancellationTransactionalWorker,
     ConfirmGiftSubscriptionTransactionalWorker,
     ConfirmGiftAppliedTransactionalWorker,
+    ConfirmUpgradeSubscriptionTransactionalWorker,
     NoticeEndedTransactionalWorker,
     NoticePaymentFailedTransactionalWorker,
+    NoticeRenewalTransactionalWorker,
+    NoticeRenewalPaymentSuccessfulTransactionalWorker,
     SyncMailchimpSetupWorker,
     SyncMailchimpUpdateWorker,
     SyncMailchimpEndedWorker,
@@ -179,6 +187,7 @@ const run = async (workerId, config) => {
     referralCampaigns,
     paymentsGraphql,
     nextReads,
+    contributors,
   ])
 
   // middlewares
@@ -225,8 +234,8 @@ const run = async (workerId, config) => {
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
     const context = {
-      ...defaultContext,
       ...connectionContext,
+      ...defaultContext,
       t,
       signInHooks,
       mail,
@@ -270,8 +279,8 @@ const runOnce = async () => {
   const createGraphQLContext = async (defaultContext) => {
     const loaders = {}
     const context = {
-      ...defaultContext,
       ...connectionContext,
+      ...defaultContext,
       t,
       mail,
       loaders,
@@ -283,8 +292,6 @@ const runOnce = async () => {
   }
 
   const context = await createGraphQLContext({ scope: 'scheduler' })
-
-  const slackGreeter = await SlackGreeter.start()
 
   let searchNotifyListener
   if (SEARCH_PG_LISTENER && SEARCH_PG_LISTENER !== 'false') {
@@ -376,22 +383,21 @@ const runOnce = async () => {
   if (!DEV) {
     await queue.schedule(
       'cockpit:refresh',
-      '*/30 * * * *', // cron for every 30 minutes
+      '*/120 * * * *', // cron for every 120 minutes
     )
     await queue.schedule(
       'next_reads:reading_position',
-      '15,45 * * * *', // At minute the 15th and 45th minute
+      '*/45 * * * *', // every 45 minutes
     )
     await queue.schedule(
       'next_reads:feed:refresh',
-      '*/30 * * * *', // every 30 minutes
+      '*/60 * * * *', // every 60 minutes
     )
   }
 
   const close = async () => {
     await Promise.all(
       [
-        slackGreeter && slackGreeter.close(),
         searchNotifyListener && searchNotifyListener.close(),
         accessScheduler && accessScheduler.close(),
         membershipScheduler && membershipScheduler.close(),

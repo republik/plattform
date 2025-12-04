@@ -1,7 +1,6 @@
-import { parse, stringify } from '@republik/remark-preset'
+import createParagraphModule from '../paragraph'
 
 import createBlockquoteModule from './'
-import createParagraphModule from '../paragraph'
 
 const paragraphModule = createParagraphModule({
   TYPE: 'PARAGRAPH',
@@ -23,11 +22,28 @@ const serializer = blockquoteModule.helpers.serializer
 
 describe('blockquote serializer test-suite', () => {
   it('blockquote serialization', () => {
-    const value = serializer.deserialize(parse('> A test'))
+    const mdast = {
+      type: 'root',
+      children: [
+        {
+          type: 'blockquote',
+          data: {},
+          identifier: undefined,
+          children: [
+            {
+              type: 'paragraph',
+              children: [{ type: 'text', value: 'A test' }],
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
+    const value = serializer.deserialize(mdast)
     const node = value.document.nodes.first()
     expect(node.kind).toBe('block')
     expect(node.type).toBe('BLOCKQUOTE')
     expect(node.text).toBe('A test')
-    expect(stringify(serializer.serialize(value)).trimRight()).toBe('> A test')
+    expect(serializer.serialize(value)).toEqual(mdast)
   })
 })

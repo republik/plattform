@@ -8,6 +8,7 @@ schema {
 type queries {
   getOffers(promoCode: String): [Offer!]!
   getOffer(offerId: ID!, promoCode: String): Offer
+  getCheckoutSession(orderId: ID!): CheckoutSession
   validateGiftVoucher(voucherCode: String!): GiftVoucherValidationResult
 }
 
@@ -29,5 +30,8 @@ type mutations {
     donationAmount: Int!
   ): MagazineSubscription!
   createStripeCustomerPortalSession(companyName: CompanyName): CustomerPortalSession
+  cancelUpgradeMagazineSubscription(
+    subscriptionId: ID!
+  ): MagazineSubscriptionUpgrade
 }
 `

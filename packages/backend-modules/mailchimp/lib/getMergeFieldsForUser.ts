@@ -39,6 +39,7 @@ export const mergeFieldNames = {
   newsletterOptInWb: 'NL_LINK_WD',
   trialState: 'TRIAL',
   regwallTrialState: 'REG_TRIAL',
+  specialOffer: 'DISCOUNT',
   [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: 'NL_DAILY',
   [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: 'NL_WEEKLY',
   [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: 'NL_PROJ_R',
@@ -61,6 +62,7 @@ export async function getMergeFieldsForUser({
   const linkWdwww = user?.email && getConsentLink(user.email, 'WDWWW')
   const trialState = getTrialState(segmentData)
   const regwallTrialState = getRegwallTrialState(segmentData)
+  const specialOffer = segmentData.activeSubscription?.metadata?.discountName
 
   const newsletterInterests = segmentData.mailchimpMember?.interests
 
@@ -75,6 +77,7 @@ export async function getMergeFieldsForUser({
     [mergeFieldNames.newsletterOptInWb]: linkWdwww,
     [mergeFieldNames.trialState]: trialState,
     [mergeFieldNames.regwallTrialState]: regwallTrialState,
+    [mergeFieldNames.specialOffer]: specialOffer,
     NL_DAILY: hasInterest(
       newsletterInterests,
       MAILCHIMP_INTEREST_NEWSLETTER_DAILY,

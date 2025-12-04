@@ -1,7 +1,12 @@
 import { GraphqlContext } from '@orbiting/backend-modules-types'
-import { CheckoutSessionBuilder } from '../../../lib/shop/CheckoutSessionOptionBuilder'
+import { CheckoutSessionBuilder } from '../../../lib/shop/CheckoutSessionBuilder'
 import { PaymentService } from '../../../lib/services/PaymentService'
 import { CustomerInfoService } from '../../../lib/services/CustomerInfoService'
+import { SubscriptionService } from '../../../lib/services/SubscriptionService'
+import { UpgradeService } from '../../../lib/services/UpgradeService'
+import { InvoiceService } from '../../../lib/services/InvoiceService'
+import { OfferService } from '../../../lib/services/OfferService'
+import { activeOffers } from '../../../lib/shop'
 
 type CreateCheckoutSessionArgs = {
   offerId: string
@@ -27,22 +32,23 @@ export = async function createCheckoutSession(
   args: CreateCheckoutSessionArgs,
   ctx: GraphqlContext,
 ) {
-  const session = await new CheckoutSessionBuilder(
+  const session = new CheckoutSessionBuilder(
     args.offerId,
+    new OfferService(activeOffers()),
     new PaymentService(),
     new CustomerInfoService(ctx.pgdb),
-  ).withCustomer(ctx.user)
-
-  session
+    new SubscriptionService(ctx.pgdb),
+    new UpgradeService(ctx.pgdb, ctx.logger),
+    new InvoiceService(ctx.pgdb),
+    ctx.logger,
+  )
+    .withCustomer(ctx.user)
     .withMetadata(args.options?.metadata)
     .withPromoCode(args.promoCode)
+    .withSelectedDiscount(args.withSelectedDiscount)
     .withDonation(args.withCustomDonation)
     .withReturnURL(args.options?.returnURL)
     .withUIMode(args.options?.uiMode)
-
-  if (args.withSelectedDiscount) {
-    await session.withSelectedDiscount(args.withSelectedDiscount)
-  }
 
   return session.build()
 }

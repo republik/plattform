@@ -11,7 +11,10 @@ const { withPlausibleProxy } = require('next-plausible')
 const isProduction = process.env.NODE_ENV === 'production'
 
 const buildId =
+  // Git commit hash on Heroku
   process.env.SOURCE_VERSION?.substring(0, 10) ||
+  // ... and on Vercel
+  process.env.VERCEL_GIT_COMMIT_SHA?.substring(0, 10) ||
   new Date(Date.now()).toISOString()
 
 function appendProtocol(href) {
@@ -36,6 +39,8 @@ const PUBLIC_CDN_URL = process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  // deploymentId for Skew protection: this will trigger a hard refresh when outdated clients navigate. See https://nextjs.org/docs/app/guides/self-hosting#version-skew
+  deploymentId: buildId,
   generateBuildId: () => buildId,
   env: {
     BUILD_ID: buildId,
@@ -45,7 +50,8 @@ const nextConfig = {
 
   poweredByHeader: false,
   assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
-
+  // Maximum amount of time where stale content is allowed to be served from cache (CDN, browser etc.)
+  expireTime: 60,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -111,6 +117,10 @@ const nextConfig = {
         {
           source: '/_ssr/:path*',
           destination: '/404',
+        },
+        {
+          source: '/graphql',
+          destination: process.env.NEXT_PUBLIC_API_URL,
         },
       ],
       afterFiles: [

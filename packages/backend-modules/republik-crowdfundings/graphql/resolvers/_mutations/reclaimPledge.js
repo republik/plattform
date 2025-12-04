@@ -1,15 +1,16 @@
-const logger = console
 const { sendPledgeConfirmations } = require('../../../lib/Mail')
 const mergeCustomers = require('../../../lib/payments/stripe/mergeCustomers')
 
-module.exports = async (
-  _,
-  args,
-  { pgdb, req, t, mail: { enforceSubscriptions } },
-) => {
+module.exports = async (_, args, context) => {
+  const {
+    pgdb,
+    req,
+    t,
+    mail: { enforceSubscriptions },
+  } = context
   // check user
   if (!req.user) {
-    logger.error('unauthorized reclaimPledge', { req: req._log(), args })
+    context.logger.error({ args }, 'unauthorized reclaimPledge')
     throw new Error(t('api/unauthorized'))
   }
 
@@ -19,11 +20,14 @@ module.exports = async (
     // check pledgeId
     const pledge = await transaction.public.pledges.findOne({ id: pledgeId })
     if (!pledge) {
-      logger.error(`pledge (${pledgeId}) not found`, {
-        req: req._log(),
-        args,
-        pledge,
-      })
+      context.logger.error(
+        {
+          args,
+          pledge,
+          pledgeId,
+        },
+        `pledge not found`,
+      )
       throw new Error(t('api/unexpected'))
     }
 
@@ -32,20 +36,24 @@ module.exports = async (
       id: pledge.userId,
     })
     if (pledgeUser.email === req.user.email) {
-      logger.info('pledge already belongs to the claiming email', {
-        req: req._log(),
-        args,
-        pledgeUser,
-      })
+      context.logger.info(
+        {
+          args,
+          pledgeUser,
+        },
+        'pledge already belongs to the claiming email',
+      )
       await transaction.transactionCommit()
       return true
     }
     if (pledgeUser.verified) {
-      logger.error('cannot claim pledges of verified users', {
-        req: req._log(),
-        args,
-        pledge,
-      })
+      context.logger.error(
+        {
+          args,
+          pledge,
+        },
+        'cannot claim pledges of verified users',
+      )
       throw new Error(
         t('api/reclaim/verified', {
           pledgeEmail: pledgeUser.email,
@@ -104,17 +112,19 @@ module.exports = async (
       })
     } catch (e) {
       // ignore issues with newsletter subscriptions
-      logger.error('newsletter subscription changes failed', {
-        req: req._log(),
-        args,
-        error: e,
-      })
+      context.logger.error(
+        {
+          args,
+          error: e,
+        },
+        'newsletter subscription changes failed',
+      )
     }
 
     return true
   } catch (e) {
     await transaction.transactionRollback()
-    logger.info('transaction rollback', { req: req._log(), error: e })
+    context.logger.error({ error: e }, 'reclaim pledge failed')
     throw e
   }
 }

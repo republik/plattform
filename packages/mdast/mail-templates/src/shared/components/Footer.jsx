@@ -29,7 +29,7 @@ const ProjectRFooter = () => (
   <>
     <a href='https://project-r.ch/' style={linkStyle}>
       <img
-        src='https://assets.project-r.ch/images/project_r_logo_newsletter.png'
+        src='https://www.project-r.ch/images/project_r_logo.svg'
         style={{
           border: 0,
           width: '50px !important',

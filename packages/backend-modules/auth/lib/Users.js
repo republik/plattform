@@ -161,15 +161,8 @@ const setPreferredFirstFactor = async (user, tokenType = null, pgdb) => {
   )
 }
 
-const signIn = async (
-  _email,
-  context,
-  pgdb,
-  req,
-  consents,
-  _tokenType,
-  accessToken,
-) => {
+const signIn = async (_email, signInContext, consents, _tokenType, accessToken, context) => {
+  const { pgdb, req } = context
   if (req.user) {
     // req is authenticated
     return {
@@ -181,10 +174,7 @@ const signIn = async (
   }
 
   if (!validator.isEmail(_email)) {
-    debug('invalid email: %O', {
-      req: req._log(),
-      _email,
-    })
+    context.logger.debug({ email: _email }, 'invalid email')
     throw new EmailInvalidError({ email: _email })
   }
 
@@ -240,7 +230,7 @@ const signIn = async (
             session,
             email,
             accessToken,
-            context,
+            context: signInContext,
           })
           tokenType = ACCESS_TOKEN
         } catch (e) {
@@ -260,19 +250,22 @@ const signIn = async (
         pgdb,
         session,
         email,
-        context,
+        context: signInContext,
       })
     }
 
     if (shouldAutoLogin({ email })) {
       setTimeout(async () => {
-        console.warn(`🔓💥 Auto Login for ${email} due to AUTO_LOGIN_REGEX`)
+        context.logger.warn(
+          `🔓💥 Auto Login for ${email} due to AUTO_LOGIN_REGEX`,
+        )
         await authorizeSession({
           pgdb,
           tokens: [token],
           email,
           req,
           me: user,
+          logger: context.logger.child({}, { prefix: '[Auhtorize Session] ' }),
         })
       }, 2000)
     } else {
@@ -280,7 +273,7 @@ const signIn = async (
         pgdb,
         email,
         token,
-        context,
+        context: signInContext,
         country,
         phrase,
         user,
@@ -307,7 +300,7 @@ const signIn = async (
 }
 
 const shouldAutoLogin = ({ email }) => {
-  if (AUTO_LOGIN_REGEX) {
+  if (process.env.NODE_ENV !== 'production' && AUTO_LOGIN_REGEX) {
     try {
       return new RegExp(AUTO_LOGIN_REGEX).test(email)
     } catch (e) {
@@ -496,6 +489,7 @@ const authorizeSession = async ({
   requiredFields = [],
   req,
   me,
+  logger,
 }) => {
   if (!validator.isEmail(emailFromQuery)) {
     throw new EmailInvalidError({ email: emailFromQuery })
@@ -527,12 +521,15 @@ const authorizeSession = async ({
     })
     if (curSession) {
       if (session && session.id !== curSession.id) {
-        console.error('multiple different session?!')
+        logger.error(
+          { attemptedSession: session.id, currentSession: curSession.id },
+          'multiple different session?!',
+        )
         throw new SessionTokenValidationFailed({ email: emailFromQuery })
       }
       session = curSession
     } else if (!session) {
-      console.error('session is required to validate against', req._log())
+      logger.error('session is required to validate against')
       throw new SessionTokenValidationFailed({ email: emailFromQuery })
     }
 
@@ -660,7 +657,7 @@ const authorizeSession = async ({
       ),
     )
   } catch (e) {
-    console.warn('sign in hook failed in authorizeSession', e)
+    logger.warn({ error: e }, 'sign in hook failed in authorizeSession')
   }
 
   return user

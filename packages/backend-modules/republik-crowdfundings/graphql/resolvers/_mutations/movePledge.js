@@ -2,11 +2,14 @@ const {
   Roles: { ensureUserIsInRoles },
 } = require('@orbiting/backend-modules-auth')
 
-module.exports = async (
-  _,
-  args,
-  { pgdb, req, user: me, t, mail: { enforceSubscriptions } },
-) => {
+module.exports = async (_, args, context) => {
+  const {
+    pgdb,
+    user: me,
+    t,
+    mail: { enforceSubscriptions },
+  } = context
+
   ensureUserIsInRoles(me, ['supporter'])
 
   const { pledgeId, userId } = args
@@ -25,7 +28,7 @@ module.exports = async (
     }
 
     if (pledge.userId === user.id) {
-      console.info('movePledge: pledge already belongs to target user')
+      context.logger.info('movePledge: pledge already belongs to target user')
       await transaction.transactionCommit()
       return pledge
     }
@@ -78,18 +81,20 @@ module.exports = async (
     try {
       await enforceSubscriptions({ pgdb, userId: pledge.userId })
       await enforceSubscriptions({ pgdb, userId })
-    } catch (e2) {
+    } catch (e) {
       // ignore issues with newsletter subscriptions
-      console.error('newsletter subscription changes failed', {
-        req: req._log(),
-        args,
-        error: e2,
-      })
+      context.logger.error(
+        {
+          args,
+          error: e,
+        },
+        'newsletter subscription changes failed',
+      )
     }
 
     return newPledge
   } catch (e) {
-    console.error('movePledge', e, { req: req._log() })
+    console.error({ error: e }, 'movePledge failed')
     await transaction.transactionRollback()
     throw e
   }

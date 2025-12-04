@@ -3,6 +3,7 @@ import { PaymentService } from '../../lib/services/PaymentService'
 import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { InvoiceService } from '../../lib/services/InvoiceService'
 import { getConfig } from '../../lib/config'
+import { SubscriptionUpgradeRepo } from '../../lib/database/SubscriptionUpgradeRepo'
 
 const { PROJECT_R_DONATION_PRODUCT_ID } = getConfig()
 
@@ -19,10 +20,11 @@ export = {
   },
   async renewsAtPrice(subscription: Subscription) {
     try {
-      const nextInvoice = await new PaymentService().getInvoicePreview(
-        subscription.company,
-        subscription.externalId,
-      )
+      const nextInvoice =
+        await new PaymentService().getSubscriptionInvoicePreview(
+          subscription.company,
+          subscription.externalId,
+        )
 
       return nextInvoice?.total
     } catch {
@@ -54,59 +56,18 @@ export = {
 
   async paymentMethod(subscription: Subscription) {
     const paymentService = new PaymentService()
-
-    const sub = await paymentService.getSubscription(
+    const paymentMethod = await paymentService.getPaymentMethodForSubscription(
       subscription.company,
       subscription.externalId,
     )
-    if (!sub) {
-      return null
-    }
-
-    const customer = await paymentService.getCustomer(
-      subscription.company,
-      sub.customer as string,
-    )
-
-    if (!customer || customer.deleted) {
-      return null
-    }
-
-    const paymentMethodId =
-      sub.default_payment_method ||
-      customer.invoice_settings.default_payment_method
-
-    if (typeof paymentMethodId !== 'string') {
-      return null
-    }
-
-    const paymentMethod = await paymentService.getPaymentMethod(
-      subscription.company,
-      paymentMethodId,
-    )
-
-    if (!paymentMethod) {
-      return null
-    }
-
-    if (paymentMethod.card) {
-      return `${capitalize(paymentMethod.card.brand)} *${
-        paymentMethod.card.last4
-      }`
-    }
-
-    if (paymentMethod.paypal) {
-      return `Paypal`
-    }
-
-    if (paymentMethod.twint) {
-      return `Twint`
-    }
-
-    return null
+    return paymentMethod?.last4
+      ? `${paymentMethod.method} *${paymentMethod.last4}`
+      : paymentMethod?.method
   },
-}
 
-function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1)
+  async upgrade(subscription: Subscription, _args: never, ctx: GraphqlContext) {
+    return new SubscriptionUpgradeRepo(ctx.pgdb)
+      .getUnresolvedSubscriptionUpgrades({ subscription_id: subscription.id })
+      .then((u) => u[0])
+  },
 }

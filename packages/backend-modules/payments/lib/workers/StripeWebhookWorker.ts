@@ -9,11 +9,13 @@ import { processSubscriptionUpdate } from '../handlers/stripe/subscriptionUpdate
 import { processSubscriptionCreated } from '../handlers/stripe/subscriptionCreated'
 import { processCheckoutCompleted } from '../handlers/stripe/checkoutCompleted'
 import { processPaymentFailed } from '../handlers/stripe/paymentFailed'
+import { processInvoiceUpcoming } from '../handlers/stripe/invoiceUpcoming'
 import { isPledgeBased } from '../handlers/stripe/utils'
-import { processChargeRefunded } from '../handlers/stripe/chargeRefunded'
+import { processChargeUpdated } from '../handlers/stripe/chargeUpdated'
 import { processInvoicePaymentSucceeded } from '../handlers/stripe/invoicePaymentSucceeded'
 import { WebhookService } from '../services/WebhookService'
 import { ConnectionContext } from '@orbiting/backend-modules-types'
+import { processChargeSucceeded } from '../handlers/stripe/chargeSucceeded'
 
 type WorkerArgsV1 = {
   $version: 'v1'
@@ -41,13 +43,19 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
     )
 
     if (!wh) {
-      console.error('Webhook dose not exist')
+      this.logger.error(
+        { eventId: job.data.eventSourceId },
+        'Webhook not found',
+      )
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
     const event = wh.payload
     try {
-      console.log('processing stripe event %s [%s]', event.id, event.type)
+      this.logger.info(
+        { eventId: event.id, eventType: event.type },
+        'processing stripe event %s [%s]',
+      )
 
       const ctx = this.context
 
@@ -57,21 +65,30 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
           break
         case 'customer.subscription.created':
           if (isPledgeBased(event.data.object.metadata)) {
-            console.log('pledge based event [%s]; skipping', event.id)
+            this.logger.info(
+              { eventId: event.id },
+              'pledge based event; skipping',
+            )
             break
           }
           await processSubscriptionCreated(ctx, job.data.company, event)
           break
         case 'customer.subscription.updated':
           if (isPledgeBased(event.data.object.metadata)) {
-            console.log('pledge based event [%s]; skipping', event.id)
+            this.logger.info(
+              { eventId: event.id },
+              'pledge based event; skipping',
+            )
             break
           }
           await processSubscriptionUpdate(ctx, job.data.company, event)
           break
         case 'customer.subscription.deleted':
           if (isPledgeBased(event.data.object.metadata)) {
-            console.log('pledge based event [%s]; skipping', event.id)
+            this.logger.info(
+              { eventId: event.id },
+              'pledge based event; skipping',
+            )
             break
           }
           await processSubscriptionDeleted(ctx, job.data.company, event)
@@ -91,26 +108,48 @@ export class StripeWebhookWorker extends BaseWorker<WorkerArgsV1> {
         case 'invoice.payment_succeeded':
           await processInvoicePaymentSucceeded(ctx, job.data.company, event)
           break
+        case 'invoice.upcoming':
+          await processInvoiceUpcoming(ctx, job.data.company, event)
+          break
+        case 'charge.succeeded':
+          if (isPledgeBased(event.data.object.metadata)) {
+            this.logger.info(
+              { eventId: event.id },
+              'pledge based event; skipping',
+            )
+            break
+          }
+          await processChargeSucceeded(ctx, job.data.company, event)
+          break
         case 'charge.refunded':
-          await processChargeRefunded(ctx, job.data.company, event)
+        case 'charge.updated':
+        case 'charge.failed':
+        case 'charge.expired':
+        case 'charge.captured':
+          await processChargeUpdated(ctx, job.data.company, event)
           break
         default:
-          console.log('skipping %s no handler for this event', event.type)
+          this.logger.debug(
+            { eventId: event.id, eventType: event.type },
+            'skipping webhook event; no handler for this event',
+          )
       }
     } catch (e) {
-      console.error(
-        'processing stripe event %s [%s] failed',
-        event.id,
-        event.type,
+      this.logger.error(
+        {
+          eventId: event.id,
+          eventType: event.type,
+          error: e,
+        },
+        'processing stripe event failed',
       )
-      console.error(e)
+
       throw e
     }
 
-    console.log(
-      'successfully processed stripe event %s [%s]',
-      event.id,
-      event.type,
+    this.logger.info(
+      { eventId: event.id, eventType: event.type },
+      'successfully processed stripe event',
     )
     await webhookService.markEventAsProcessed(event.id)
   }

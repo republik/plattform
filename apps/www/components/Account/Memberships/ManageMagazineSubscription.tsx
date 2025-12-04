@@ -1,6 +1,8 @@
 import {
   ActiveMagazineSubscriptionDocument,
   ActiveMagazineSubscriptionQuery,
+  CancelUpgradeMagazineSubscriptionDocument,
+  CompanyName,
   CreateStripeCustomerPortalSessionDocument,
   ReactivateMagazineSubscriptionDocument,
   UpdateMagazineSubscriptionDonationDocument,
@@ -32,21 +34,13 @@ type MagazineSubscription = NonNullable<
 >
 
 export function ManageMagazineSubscription() {
-  const { data, startPolling, stopPolling, refetch } = useQuery(
+  const { data, startPolling, stopPolling } = useQuery(
     ActiveMagazineSubscriptionDocument,
     // make sure that up-to-date information is shown when user navigates back from /abgang
     { fetchPolicy: 'cache-and-network' },
   )
 
-  const [reactivateSubscription] = useMutation(
-    ReactivateMagazineSubscriptionDocument,
-  )
-
   const [isPolling, setIsPolling] = useState(false)
-
-  const subscription = data?.me?.activeMagazineSubscription
-
-  const { t } = useTranslation()
 
   // Subscriptions don't update immediately after being canceled/reactivated, so we start polling instead of refetching immediately
   const refetchSubscriptions = () => {
@@ -65,6 +59,8 @@ export function ManageMagazineSubscription() {
     }
   }, [data, stopPolling])
 
+  const subscription = data?.me?.activeMagazineSubscription
+
   if (!subscription) {
     return null
   }
@@ -82,17 +78,57 @@ export function ManageMagazineSubscription() {
         },
       })}
     >
+      {subscription.upgrade ? (
+        <SubscriptionUpgrade
+          subscription={subscription}
+          refetchSubscriptions={refetchSubscriptions}
+          isPolling={isPolling}
+        />
+      ) : (
+        <Subscription
+          subscription={subscription}
+          refetchSubscriptions={refetchSubscriptions}
+          isPolling={isPolling}
+        />
+      )}
+    </div>
+  )
+}
+
+type SubscriptionProps = {
+  subscription: MagazineSubscription
+  refetchSubscriptions: () => void
+  isPolling: boolean
+}
+
+const Subscription = ({
+  subscription,
+  refetchSubscriptions,
+  isPolling,
+}: SubscriptionProps) => {
+  const { t } = useTranslation()
+  const [reactivateSubscription] = useMutation(
+    ReactivateMagazineSubscriptionDocument,
+  )
+
+  return (
+    <>
       <Interaction.H3 style={{ marginBottom: 8 }}>
-        {`${t(`magazineSubscription/title/${subscription.type}`)} ${
-          subscription.cancelAt
-            ? `${t('magazineSubscription/title/canceled')}`
-            : ''
-        }`}
+        {t(`magazineSubscription/title/${subscription.type}`)}
       </Interaction.H3>
-      {subscription.cancelAt ? (
+
+      {subscription.canceledAt && subscription.cancelAt ? (
         <>
           <Interaction.P>
-            {t(`magazineSubscription/canceled/${subscription.type}`, {
+            {t(`magazineSubscription/canceled`, {
+              canceledAt: new Date(subscription.canceledAt).toLocaleDateString(
+                'de-CH',
+                {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                },
+              ),
               cancelAt: new Date(subscription.cancelAt).toLocaleDateString(
                 'de-CH',
                 {
@@ -128,7 +164,7 @@ export function ManageMagazineSubscription() {
                 : t('magazineSubscription/donation/wannaGiveMore')}{' '}
               <UpdateDonationLink
                 subscription={subscription}
-                onUpdate={refetch}
+                onUpdate={refetchSubscriptions}
               />
             </Interaction.P>
           )}
@@ -147,13 +183,14 @@ export function ManageMagazineSubscription() {
           </Interaction.H3>
 
           <div>
-            <CustomerPortalLink subscription={subscription} />
+            <CustomerPortalLink company={subscription.company} />
           </div>
         </>
       )}
 
       {subscription.canceledAt ? (
-        !subscription.endedAt && (
+        !subscription.endedAt &&
+        !subscription.upgrade && (
           <div>
             <EditButton
               onClick={() => {
@@ -172,15 +209,70 @@ export function ManageMagazineSubscription() {
       ) : (
         <></>
       )}
-    </div>
+    </>
   )
 }
 
-const CustomerPortalLink = ({
+const SubscriptionUpgrade = ({
   subscription,
-}: {
-  subscription: MagazineSubscription
-}) => {
+  refetchSubscriptions,
+  isPolling,
+}: SubscriptionProps) => {
+  const { t } = useTranslation()
+  const [cancelUpgrade] = useMutation(CancelUpgradeMagazineSubscriptionDocument)
+
+  return (
+    <>
+      <Interaction.H3 style={{ marginBlock: 8 }}>
+        {t(`magazineSubscription/title/${subscription.type}`)}
+      </Interaction.H3>
+
+      <Interaction.P>
+        {t(
+          `magazineSubscriptionUpgrade/description/${subscription.upgrade.subscriptionType}`,
+          {
+            startAt: new Date(
+              subscription.upgrade.scheduledStart,
+            ).toLocaleDateString('de-CH', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            }),
+            from: t(`magazineSubscription/title/${subscription.type}`),
+            to: t(
+              `magazineSubscription/title/${subscription.upgrade.subscriptionType}`,
+            ),
+            amount: (subscription.upgrade.billingDetails.total / 100).toFixed(
+              0,
+            ),
+          },
+        )}
+      </Interaction.P>
+
+      <div>
+        <EditButton
+          onClick={() => {
+            if (!isPolling) {
+              cancelUpgrade({
+                variables: {
+                  // ID of the original subscription, NOT the upgrade
+                  subscriptionId: subscription.id,
+                },
+              }).then(refetchSubscriptions)
+            }
+          }}
+        >
+          {t(`magazineSubscriptionUpgrade/cancel`)}{' '}
+          {isPolling && <BabySpinner />}
+        </EditButton>
+      </div>
+
+      {/* TODO: payment method for upgrade */}
+    </>
+  )
+}
+
+const CustomerPortalLink = ({ company }: { company: CompanyName }) => {
   const router = useRouter()
   const { t } = useTranslation()
 
@@ -193,7 +285,7 @@ const CustomerPortalLink = ({
       onClick={(e) => {
         e.preventDefault()
         createStripeCustomerPortalSession({
-          variables: { companyName: subscription.company },
+          variables: { companyName: company },
         })
           .then(({ data }) => {
             router.push(data.createStripeCustomerPortalSession.sessionUrl)

@@ -1,0 +1,1 @@
+DROP INDEX discussion_preferences_lookup_idx;

@@ -1,10 +1,10 @@
 import { parse } from '@republik/remark-preset'
 
+import { getEventTransfer } from '@republik/slate-react'
+
 import htmlParse from 'rehype-parse'
 import rehype2remark from 'rehype-remark'
 import stringify from 'remark-stringify'
-
-import { getEventTransfer } from '@republik/slate-react'
 import { unified } from 'unified'
 
 const hasParent = (type, document, key) => {

@@ -26,11 +26,15 @@
     },
     {
       "key": "nav/donate",
-      "value": "Spenden"
+      "value": "Freiwilliger Beitrag"
     },
     {
       "key": "nav/share",
       "value": "Republik teilen"
+    },
+    {
+      "key": "nav/onboarding",
+      "value": "Einrichtungsassistent"
     },
     {
       "key": "nav/invite-friends",
@@ -189,15 +193,15 @@
       "value": "Konto ansehen"
     },
     {
-      "key": "withMembership/ios/unauthorized/title",
+      "key": "withMembership/native/unauthorized/title",
       "value": "Verlegerbereich"
     },
     {
-      "key": "withMembership/ios/unauthorized/noMembership",
+      "key": "withMembership/native/unauthorized/noMembership",
       "value": "Sie haben keine aktive Mitgliedschaft."
     },
     {
-      "key": "withMembership/ios/unauthorized/signIn",
+      "key": "withMembership/native/unauthorized/signIn",
       "value": "Die Nutzung der App erfordert eine Mitgliedschaft oder ein Abo bei der Republik. "
     },
     {
@@ -965,16 +969,16 @@
       "value": "Ihre Standardeinstellung für den Dialog:"
     },
     {
-      "key": "account/discussionNotificationChannels/EMAIL/label",
+      "key": "account/notificationChannels/EMAIL/label",
       "value": "E-Mail"
     },
     {
-      "key": "account/discussionNotificationChannels/APP/label",
+      "key": "account/notificationChannels/APP/label",
       "value": "App"
     },
     {
       "key": "account/defaultDiscussionNotificationOption/label",
-      "value": "Benachrichtigungen über Beiträge"
+      "value": "Standardeinstellung für Dialog-Benachrichtigungen"
     },
     {
       "key": "account/progress/title",
@@ -1157,7 +1161,7 @@
       "value": "Anmelden und Republik verschenken"
     },
     {
-      "key": "Account/Access/Campaigns/becomeMamber/title",
+      "key": "Account/Access/Campaigns/becomeMember/title",
       "value": "Mitglied werden und Republik verschenken"
     },
     {
@@ -1777,6 +1781,10 @@
       "value": "Verschenken"
     },
     {
+      "key": "footer/me/donate",
+      "value": "Freiwilliger Beitrag"
+    },
+    {
       "key": "footer/me/signOut",
       "value": "Abmelden"
     },
@@ -1870,15 +1878,15 @@
     },
     {
       "key": "components/Discussion/Notification/MY_CHILDREN/label",
-      "value": "Meine und von abonnierten Profilen"
+      "value": "Antworten auf meine Beiträge"
     },
     {
       "key": "components/Discussion/Notification/ALL/label",
-      "value": "Alle neuen"
+      "value": "Alle neuen Beiträge"
     },
     {
       "key": "components/Discussion/Notification/NONE/label",
-      "value": "Keine"
+      "value": "Keine Benachrichtigungen"
     },
     {
       "key": "components/Discussion/Notification/settings",
@@ -2026,7 +2034,7 @@
     },
     {
       "key": "styleguide/CommentActions/unpublish",
-      "value": "Beitrag zurückziehen"
+      "value": "zurückziehen"
     },
     {
       "key": "styleguide/CommentActions/unpublish/confirm",
@@ -2038,7 +2046,7 @@
     },
     {
       "key": "styleguide/CommentActions/edit",
-      "value": "Beitrag bearbeiten"
+      "value": "bearbeiten"
     },
     {
       "key": "styleguide/CommentActions/upvote",
@@ -2094,7 +2102,7 @@
     },
     {
       "key": "styleguide/CommentActions/feature",
-      "value": "Beitrag hervorheben"
+      "value": "hervorheben"
     },
     {
       "key": "styleguide/CommentActions/featured",
@@ -2102,11 +2110,11 @@
     },
     {
       "key": "styleguide/Collapsable/expand",
-      "value": "Alles lesen"
+      "value": "Mehr lesen"
     },
     {
       "key": "styleguide/Collapsable/collapse",
-      "value": "Weniger"
+      "value": "Weniger lesen"
     },
     {
       "key": "styleguide/Collapsable/table/expand",
@@ -2137,12 +2145,8 @@
       "value": "Antwort in {link}"
     },
     {
-      "key": "styleguide/CommentTreeLoadMore/label/1",
-      "value": "Ein weiterer Beitrag"
-    },
-    {
-      "key": "styleguide/CommentTreeLoadMore/label/other",
-      "value": "{count} weitere Beiträge"
+      "key": "styleguide/CommentTreeLoadMore/label",
+      "value": "Weitere Beiträge anzeigen"
     },
     {
       "key": "styleguide/CommentTreeCollapse/label",
@@ -4364,7 +4368,7 @@
       "value": "Diese Visualisierung kann, aufgrund eines technischen Fehlers, nicht dargestellt werden."
     },
     {
-      "key": "plattformUnauthorizedZoneText/ios",
+      "key": "plattformUnauthorizedZoneText/native",
       "value": "Inhalt nur für Mitglieder. <a href=\"/probelesen\">Probelesen?</a>"
     },
     {
@@ -4674,6 +4678,10 @@
     {
       "key": "memberships/manage/autoPay/disable",
       "value": "Automatische Abbuchung deaktivieren"
+    },
+    {
+      "key": "memberships/manage/native/info",
+      "value": "Zum Verwalten besuchen Sie unsere Webseite."
     },
     {
       "key": "option/PROLONG/additionalPeriods/endDate",
@@ -5280,6 +5288,10 @@
       "value": "Abonnement kündigen"
     },
     {
+      "key": "prolongNecessary/native/info",
+      "value": "besuchen Sie unsere Webseite."
+    },
+    {
       "key": "crowdfunding/status/time/ended/PROLONG",
       "value": "Ein detaillierter Überblick folgt Ende Monat."
     },
@@ -5384,6 +5396,10 @@
       "value": "Wiedergabeliste"
     },
     {
+      "key": "AudioPlayer/noMemberText",
+      "value": "Die Wiedergabeliste ist nur für Mitglieder verfügbar."
+    },
+    {
       "key": "AudioPlayer/Queue/Add",
       "value": "Zur Wiedergabeliste hinzufügen"
     },
@@ -5394,6 +5410,10 @@
     {
       "key": "AudioPlayer/Queue/ActiveHeading",
       "value": "Aktueller Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/NoActiveHeading",
+      "value": "Audioplayer"
     },
     {
       "key": "AudioPlayer/Queue/Remove",
@@ -7357,7 +7377,7 @@
     },
     {
       "key": "Notifications/settings/discussion",
-      "value": "Debattenbeiträge"
+      "value": "Dialog-Benachrichtigungen"
     },
     {
       "key": "Notifications/settings/newsletter",
@@ -7368,8 +7388,8 @@
       "value": "Ihrem Konto"
     },
     {
-      "key": "account/discussionNotificationChannels/intro",
-      "value": "Ich möchte Debattenbenachrichtigungen auf folgendem Weg erhalten:"
+      "key": "account/notificationChannels/intro",
+      "value": "Ich möchte Benachrichtigungen zu neuen Beiträgen im Magazin und im Dialog auf folgendem Weg erhalten:"
     },
     {
       "key": "Onboarding/Sections/Subscriptions/heading",
@@ -7445,7 +7465,7 @@
     },
     {
       "key": "FeatureCommentOverlay/title",
-      "value": "Beitrag hervorheben"
+      "value": "hervorheben"
     },
     {
       "key": "FeatureCommentOverlay/DEFAULT/add",
@@ -7688,28 +7708,40 @@
       "value": "Sie haben kein gültiges Abonnement"
     },
     {
-      "key": "magazineSubscription/canceled/YEARLY_SUBSCRIPTION",
-      "value": "Ihre Mitgliedschaft läuft am {cancelAt} aus."
-    },
-    {
-      "key": "magazineSubscription/canceled/BENEFACTOR_SUBSCRIPTION",
-      "value": "Ihre Gönner-Mitgliedschaft läuft am {cancelAt} aus."
-    },
-    {
-      "key": "magazineSubscription/canceled/MONTHLY_SUBSCRIPTION",
-      "value": "Ihr Abo läuft am {cancelAt} aus."
+      "key": "magazineSubscription/canceled",
+      "value": "Wurde am {canceledAt} gekündigt und läuft am {cancelAt} aus."
     },
     {
       "key": "magazineSubscription/cancel/YEARLY_SUBSCRIPTION",
-      "value": "Mitgliedschaft kündigen"
+      "value": "Jahresmitgliedschaft kündigen"
     },
     {
       "key": "magazineSubscription/cancel/BENEFACTOR_SUBSCRIPTION",
-      "value": "Mitgliedschaft kündigen"
+      "value": "Gönner-Mitgliedschaft kündigen"
     },
     {
       "key": "magazineSubscription/cancel/MONTHLY_SUBSCRIPTION",
-      "value": "Abo kündigen"
+      "value": "Monats-Abo kündigen"
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/title",
+      "value": "Wechsel von {from} auf {to}"
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/description/YEARLY_SUBSCRIPTION",
+      "value": "Wechselt am {startAt} zu einer Jahresmitgliedschaft für CHF {amount}."
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/description/BENEFACTOR_SUBSCRIPTION",
+      "value": "Wechselt am {startAt} zu einer Gönner-Mitgliedschaft für CHF {amount}."
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/description/MONTHLY_SUBSCRIPTION",
+      "value": "Wechselt am {startAt} zu einem Monats-Abo für CHF {amount}."
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/cancel",
+      "value": "Wechsel rückgängig machen"
     },
     {
       "key": "magazineSubscription/donation/update",
@@ -7774,6 +7806,10 @@
     {
       "key": "auth/login/email/missing",
       "value": "Bitte geben Sie Ihre E-Mail-Adresse ein."
+    },
+    {
+      "key": "auth/login/email/reset",
+      "value": "Nicht korrekt?"
     },
     {
       "key": "auth/login/email/submit",
@@ -7952,16 +7988,20 @@
       "value": "Abonnieren und mitreden"
     },
     {
-      "key": "paynotes/ios/caption",
+      "key": "paynotes/native/caption",
       "value": "Unterstützen Sie unabhängigen Journalismus."
     },
     {
-      "key": "paynotes/ios/cta",
+      "key": "paynotes/native/cta",
       "value": "Alle Angebote auf {link}"
     },
     {
       "key": "paynotes/ios/text",
       "value": "Alle Angebote auf shop.republik.ch"
+    },
+    {
+      "key": "paynotes/android/text",
+      "value": "Alle Angebote finden Sie im Republik Online-Shop."
     },
     {
       "key": "paynotes/welcomeBanner",
@@ -8014,6 +8054,14 @@
     {
       "key": "nextReads/bookmarkedFeed/manageBookmarks",
       "value": "Lesezeichen bearbeiten"
+    },
+    {
+      "key": "loginPopup/title",
+      "value": "Willkommen zurück!"
+    },
+    {
+      "key": "loginPopup/description",
+      "value": "Bitte <b>melden Sie sich an</b>, um den Beitrag zu lesen."
     }
   ]
 }

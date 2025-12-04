@@ -1,16 +1,13 @@
 'use client'
 
-import { css } from '@republik/theme/css'
-
+import { OfferOptionRadio } from '@app/components/paynotes/offer-options'
+import { Button } from '@app/components/ui/button'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { css } from '@republik/theme/css'
 import { useState } from 'react'
-
-import { RadioOption } from '../../ui/form'
-import { Button } from '../../ui/button'
-
-import IosCTA from '../ios-cta'
+import NativeCta from '../native-cta'
 
 type OfferOptions = 'MONTHLY' | 'YEARLY'
 
@@ -23,9 +20,9 @@ export function Offers({
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
 
-  const { isIOSApp } = usePlatformInformation()
-  if (isIOSApp) {
-    return <IosCTA />
+  const { isNativeApp } = usePlatformInformation()
+  if (isNativeApp) {
+    return <NativeCta />
   }
 
   return (
@@ -64,7 +61,7 @@ export function Offers({
             width: 'full',
           })}
         >
-          <RadioOption
+          <OfferOptionRadio
             name='product'
             value='MONTHLY'
             checked={option === 'MONTHLY'}
@@ -84,7 +81,7 @@ export function Offers({
                 11.– für einen Monat
               </span>
             </span>
-          </RadioOption>
+          </OfferOptionRadio>
         </div>
         <div
           className={css({
@@ -97,7 +94,7 @@ export function Offers({
             background: 'background',
           })}
         >
-          <RadioOption
+          <OfferOptionRadio
             name='product'
             value='YEARLY'
             checked={option === 'YEARLY'}
@@ -133,7 +130,7 @@ export function Offers({
                 12&thinsp;% günstiger als ein Monats-Abo
               </span>
             </span>
-          </RadioOption>
+          </OfferOptionRadio>
         </div>
 
         <div

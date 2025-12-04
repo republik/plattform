@@ -20,7 +20,7 @@ export class InvoiceUpdatedWorkflow
   ) {}
 
   async run(company: Company, event: InvoiceUpdatedEvent): Promise<any> {
-    const stripeInvoiceId = event.data.object.id
+    const stripeInvoiceId = event.data.object.id!
 
     const invoice = await this.paymentService.getInvoice(
       company,
@@ -32,7 +32,7 @@ export class InvoiceUpdatedWorkflow
       return
     }
 
-    if (!invoice.subscription) {
+    if (!invoice.parent?.subscription_details?.subscription) {
       console.error(
         'Only subscription invoices are supported invoice %s',
         stripeInvoiceId,
@@ -42,15 +42,16 @@ export class InvoiceUpdatedWorkflow
 
     const sub = await this.paymentService.getSubscription(
       company,
-      invoice.subscription as string,
+      invoice.parent?.subscription_details?.subscription as string,
     )
     if (isPledgeBased(sub?.metadata)) {
       console.log(`pledge invoice event [${event.id}]; skipping`)
+      return
     }
 
     await this.invoiceService.updateInvoice(
       {
-        externalId: invoice.id,
+        externalId: invoice.id!,
       },
       {
         total: invoice.total,

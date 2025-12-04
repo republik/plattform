@@ -1,19 +1,27 @@
-const Collection = require('../../lib/Collection')
+const { COLLECTION_NAME: PROGRESS_COLLECTION_NAME } = require('../../lib/ProgressOptOut')
 
 module.exports = {
-  userProgress({ mediaId }, args, context) {
-    const { user: me } = context
+  async userProgress({ mediaId }, args, context) {
+    const { user: me, loaders } = context
 
     if (!mediaId || !me) {
       return
     }
 
-    return Collection.getMediaProgressItem(
-      {
-        mediaId,
-        userId: me.id,
-      },
-      context,
-    )
+    const collection = await loaders.Collection.byKeyObj.load({
+      name: PROGRESS_COLLECTION_NAME,
+    })
+
+    if (!collection) {
+      return
+    }
+
+    const item = await loaders.CollectionMediaItem.byKeyObj.load({
+      mediaId,
+      userId: me.id,
+      collectionId: collection.id,
+    })
+
+    return item ? { ...item, ...item.data } : null
   },
 }

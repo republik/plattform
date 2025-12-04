@@ -16,7 +16,9 @@ extend type User {
   ): CommentConnection!
 
   defaultDiscussionNotificationOption: DiscussionNotificationOption
-  discussionNotificationChannels: [DiscussionNotificationChannel!]!
+
+  discussionNotificationChannels: [NotificationChannel!]! @deprecated(reason: "Use notificationChannels")
+  notificationChannels: [NotificationChannel!]!
 
   isSuspended: Boolean
   suspendedUntil: DateTime
@@ -34,7 +36,7 @@ enum DiscussionNotificationOption {
   ALL
   NONE
 }
-enum DiscussionNotificationChannel {
+enum NotificationChannel {
   WEB
   EMAIL
   APP

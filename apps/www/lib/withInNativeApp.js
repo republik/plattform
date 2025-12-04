@@ -1,7 +1,7 @@
 import Router from 'next/router'
-import { parseJSONObject } from './safeJSON'
 import { matchIOSUserAgent, useUserAgent } from './context/UserAgentContext'
 import { getNativeAppBuildId, getNativeAppVersion } from './parse-useragent'
+import { parseJSONObject } from './safeJSON'
 
 export { getNativeAppVersion, getNativeAppBuildId }
 
@@ -129,7 +129,7 @@ export const NativeAppHelpers = {
 }
 
 export const useInNativeApp = () => {
-  const { userAgent, isIOS, isAndroid } = useUserAgent()
+  const { userAgent, isIOS, isAndroid } = useUserAgent() ?? {}
 
   const inNativeAppVersion = getNativeAppVersion(userAgent)
   const inNativeAppBuildId = getNativeAppBuildId(userAgent)
@@ -146,6 +146,7 @@ export const useInNativeApp = () => {
     isAndroid: isAndroid,
     inIOSVersion: isIOS ? getIOSVersion(userAgent) : undefined,
     inNativeIOSApp: inNativeApp && isIOS,
+    inNativeAndroidApp: inNativeApp && isAndroid,
   }
 }
 

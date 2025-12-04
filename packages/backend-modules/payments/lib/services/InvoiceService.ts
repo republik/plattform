@@ -19,7 +19,7 @@ type OrderLineItem = {
   lineItemId: string
   externalPriceId: string
   priceLookupKey: string | null
-  description: string | undefined
+  description: string | null
   quantity: number | null
   price: number
   priceSubtotal: number
@@ -107,12 +107,16 @@ export class InvoiceService {
     return this.billing.getUserOrders(userId)
   }
 
-  getOrder(id: string): Promise<Order | null> {
-    return this.billing.getOrder(id)
+  getOrder(by: SelectCriteria): Promise<Order | null> {
+    return this.billing.getOrder(by)
   }
 
   saveOrder(order: OrderArgs): Promise<Order> {
     return this.billing.saveOrder(order)
+  }
+
+  updateOrder(by: SelectCriteria, order: Partial<OrderArgs>): Promise<Order> {
+    return this.billing.updateOrder(by, order)
   }
 
   saveOrderItems(orderItems: OrderLineItem[]): Promise<any> {

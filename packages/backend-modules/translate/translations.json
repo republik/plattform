@@ -465,6 +465,18 @@
       "value": "Republik: Sie haben ein Geschenk eingelöst"
     },
     {
+      "key": "api/email/subscription_renewal_notice_7_days/subject",
+      "value": "Herzlichen Dank für Ihre Unterstützung, wir freuen uns Sie an Bord zu wissen!"
+    },
+    {
+      "key": "api/email/subscription_renewal_payment_successful/subject",
+      "value": "Ihre Mitgliedschaft wurde erfolgreich verlängert"
+    },
+    {
+      "key": "api/email/subscription_renewal_payment_successful_monthly/subject",
+      "value": "Ihr Monatsabo wurde erfolgreich verlängert"
+    },
+    {
       "key": "api/email/option/goodie/notebook/1",
       "value": "Notizbuch"
     },
@@ -809,10 +821,6 @@
       "value": "Ihre Mitgliedschaft erneuert sich automatisch"
     },
     {
-      "key": "api/email/membership_owner_feedback/subject",
-      "value": "Sind Sie zufrieden?"
-    },
-    {
       "key": "api/email/membership_owner_upgrade_monthly/subject",
       "value": "Wechseln Sie zur Jahresmitgliedschaft!"
     },
@@ -1004,10 +1012,10 @@
       "key": "api/newsletters/request/CLIMATE/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Challenge Accepted Newsletter."
     },
-      {
-        "key": "api/newsletters/request/WDWWW/subject",
-        "value": "Bestätigen Sie ihre Anmeldung zum Nachrichten-Briefing der Republik."
-      },
+    {
+      "key": "api/newsletters/request/WDWWW/subject",
+      "value": "Bestätigen Sie ihre Anmeldung zum Nachrichten-Briefing der Republik."
+    },
     {
       "key": "api/newsletters/request/SUNDAY/subject",
       "value": "Bestätigen Sie Ihre Anmeldung zum Republik am Sonntag Newsletter."
@@ -1455,10 +1463,6 @@
     {
       "key": "api/access/constraint/recipientNotGranter/error",
       "value": "Sie können sich selbst keinen Zugriff teilen."
-    },
-    {
-      "key": "api/access/constraint/requirePackage/error",
-      "value": "Sie benötigen ein bestimmtes Abonnement oder Mitgliedschaft um den Zugriff zu teilen."
     },
     {
       "key": "api/access/constraint/requireActiveMembershipOrSubscription/error",
@@ -2190,7 +2194,7 @@
     },
     {
       "key": "api/notifications/doc/title",
-      "value": "{title} jetzt online"
+      "value": "Neuer Beitrag in {formatTitle}: {articleTitle}"
     },
     {
       "key": "api/notifications/doc/author/title",
@@ -2743,6 +2747,54 @@
     {
       "key": "api/payments/price/ABO_DONATE_OPTION_YEARLY_240",
       "value": "Jährliche Spende"
+    },
+    {
+      "key": "api/payments/dicsount_duration_display_months/1",
+      "value": "{months} Monat"
+    },
+    {
+      "key": "api/payments/dicsount_duration_display_months/other",
+      "value": "{months} Monate"
+    },
+    {
+      "key": "api/payments/dicsount_duration_display_years/1",
+      "value": "{years} Jahr"
+    },
+    {
+      "key": "api/payments/dicsount_duration_display_years/other",
+      "value": "{years} Jahre"
+    },
+    {
+      "key": "api/payments/subscription_type/MONTHLY_SUBSCRIPTION",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "api/payments/subscription_type/YEARLY_SUBSCRIPTION",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/payments/subscription_type/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_setup_successful_upgrade_TO_MONTHLY/subject",
+      "value": "Ihr Wechsel zum Monats-Abo"
+    },
+    {
+      "key": "api/email/subscription_setup_successful_upgrade_MONTHLY_TO_YEARLY/subject",
+      "value": "Ihr Wechsel zur Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_setup_successful_upgrade_MONTHLY_TO_BENEFACTOR/subject",
+      "value": "Ihr Wechsel zur Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_upgrade_activated_YEARLY/subject",
+      "value": "Ihre Jahresmitgliedschaft ist aktiviert"
+    },
+    {
+      "key": "api/email/subscription_upgrade_activated_BENEFACTOR/subject",
+      "value": "Ihre Gönner-Mitgliedschaft ist aktiviert"
     }
   ]
 }
