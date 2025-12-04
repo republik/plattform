@@ -118,11 +118,7 @@ type mutations {
     reason: String!
   ): Boolean!
 
-  setOnboarded(
-    userId: ID!,
-    """Onboarding date"""
-    onboardingDate: DateTime!
-  ): User!
+  setOnboarded: User!
 }
 
 type subscriptions {

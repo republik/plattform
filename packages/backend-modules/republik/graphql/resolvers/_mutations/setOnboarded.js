@@ -1,25 +1,14 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
-const ALLOWED_ROLES = ['admin', 'supporter']
-
 module.exports = async (_, args, context) => {
-  const { user: me, t, loaders, pgdb } = context
-  const { userId, onboardingDate } = args
-
-  const user = await loaders.User.byId.load(userId)
-  if (!user) {
-    throw new Error(t('api/reportUser/userNotFound'))
-  }
-
-  Roles.ensureUserIsMeOrInRoles(user, me, ALLOWED_ROLES)
+  const { user: me, t, pgdb } = context
 
   const tx = await pgdb.transactionBegin()
 
   try {
     const updatedUser = await tx.public.users.updateAndGetOne(
-      { id: user.id },
-      { onboarded: onboardingDate },
+      { id: me.id },
+      { onboarded: new Date() },
     )
     await tx.transactionCommit()
 
