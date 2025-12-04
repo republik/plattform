@@ -2,6 +2,7 @@ import { useCampaign } from '@app/components/paynotes/campaign-paynote/use-campa
 
 import { useMe } from 'lib/context/MeContext'
 import { useUserAgent } from 'lib/context/UserAgentContext'
+import { useIpAllowlist } from 'lib/context/IpAllowlistContext'
 
 import { usePathname, useSearchParams } from 'next/navigation'
 import { createContext, useContext, useEffect, useState } from 'react'
@@ -90,6 +91,7 @@ export const PaynotesProvider = ({ children }) => {
   const searchParams = useSearchParams()
 
   const { isSearchBot } = useUserAgent()
+  const { hasAllowlistAccess } = useIpAllowlist()
 
   const [paynoteKind, setPaynoteKind] = useState<PaynoteKindType>(null)
   const [paynoteInlineHeight, setPaynoteInlineHeight] = useState<number>(0)
@@ -112,6 +114,10 @@ export const PaynotesProvider = ({ children }) => {
 
     // Active membership: no paynote
     if (trialStatus === 'MEMBER') {
+      return setPaynoteKind(null)
+    }
+    // IP allowlist access: no paynote
+    if (hasAllowlistAccess) {
       return setPaynoteKind(null)
     }
     // ANYTHING THAT'S NOT AN ARTICLE:
@@ -204,6 +210,7 @@ export const PaynotesProvider = ({ children }) => {
     template,
     isPaywallExcluded,
     isCampaignActive,
+    hasAllowlistAccess,
   ])
 
   // console.log({ paynoteKind })
