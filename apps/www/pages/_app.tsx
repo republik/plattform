@@ -8,6 +8,7 @@ import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
 import Head from 'next/head'
 
 import { PaynoteOverlay } from '@app/components/paynotes/paynote/paynote-overlay'
+import { IpAllowlistBanner } from '@app/components/ip-allowlist-banner'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { OPEN_ACCESS } from 'lib/constants'
@@ -21,6 +22,7 @@ import MessageSync from '../components/NativeApp/MessageSync'
 import { withApollo } from '../lib/apollo'
 import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
+import IpAllowlistProvider from '../lib/context/IpAllowlistContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { PaynotesProvider } from '@app/components/paynotes/paynotes-context'
 import { CampaignOverlay } from '@app/components/paynotes/campaign-paynote/campaign-overlay'
@@ -48,13 +50,14 @@ const WebApp = ({
       <MeContextProvider assumeAccess={assumeAccess}>
         <AnalyticsProvider>
           <UserAgentProvider providedValue={providedUserAgent}>
-            <MediaProgressContext>
-              <AudioProvider>
-                <AppVariableContext>
-                  <ThemeProvider>
-                    <RootColorVariables />
-                    <ColorContextProvider colorSchemeKey='auto'>
-                      <PaynotesProvider>
+            <IpAllowlistProvider>
+              <MediaProgressContext>
+                <AudioProvider>
+                  <AppVariableContext>
+                    <ThemeProvider>
+                      <RootColorVariables />
+                      <ColorContextProvider colorSchemeKey='auto'>
+                        <PaynotesProvider>
                         <MessageSync />
                         <Head>
                           <meta
@@ -68,6 +71,7 @@ const WebApp = ({
                             href='/feed.xml'
                           />
                         </Head>
+                        <IpAllowlistBanner />
                         <Component
                           serverContext={serverContext}
                           {...otherPageProps}
@@ -76,12 +80,13 @@ const WebApp = ({
                         <SyncUTMToSessionStorage />
                         <PaynoteOverlay />
                         <CampaignOverlay />
-                      </PaynotesProvider>
-                    </ColorContextProvider>
-                  </ThemeProvider>
-                </AppVariableContext>
-              </AudioProvider>
-            </MediaProgressContext>
+                        </PaynotesProvider>
+                      </ColorContextProvider>
+                    </ThemeProvider>
+                  </AppVariableContext>
+                </AudioProvider>
+              </MediaProgressContext>
+            </IpAllowlistProvider>
           </UserAgentProvider>
         </AnalyticsProvider>
       </MeContextProvider>

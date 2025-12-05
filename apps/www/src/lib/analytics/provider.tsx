@@ -1,5 +1,6 @@
 'use client'
 import { useMe } from 'lib/context/MeContext'
+import { useIpAllowlist } from 'lib/context/IpAllowlistContext'
 import PlausibleProvider from 'next-plausible'
 
 type AnalyticsProviderProps = Omit<
@@ -9,6 +10,7 @@ type AnalyticsProviderProps = Omit<
 
 export const AnalyticsProvider = (props: AnalyticsProviderProps) => {
   const { me, hasActiveMembership, trialStatus, meLoading } = useMe()
+  const { allowlistName } = useIpAllowlist()
 
   return (
     <PlausibleProvider
@@ -22,6 +24,7 @@ export const AnalyticsProvider = (props: AnalyticsProviderProps) => {
           ? 'logged in'
           : 'anonymous',
         trial_status: trialStatus, // keeping the user_type too, as not to break compatibilty by deleting  the "user_type" prop.
+        ...(allowlistName && { ip_allowlist: allowlistName }),
       }}
       // Defer enabling analytics until me query has been loaded. This should still reliably track the 1st page view, just a bit later.
       enabled={!meLoading}
