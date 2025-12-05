@@ -48,6 +48,12 @@ const nextConfig = {
     PUBLIC_CDN_URL,
   },
 
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
+
   poweredByHeader: false,
   assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
   // Maximum amount of time where stale content is allowed to be served from cache (CDN, browser etc.)
