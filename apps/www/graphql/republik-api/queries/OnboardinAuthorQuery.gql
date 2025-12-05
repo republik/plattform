@@ -1,0 +1,13 @@
+query OnboardingAuthor($slug: String!) {
+  user(slug: $slug) {
+    id
+    slug
+    name
+    portrait
+    subscribedBy(onlyMe: true) {
+      nodes {
+        ...SubscriptionFields
+      }
+    }
+  }
+}

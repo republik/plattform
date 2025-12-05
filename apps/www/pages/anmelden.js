@@ -1,15 +1,15 @@
-import { useEffect } from 'react'
+import { Interaction } from '@project-r/styleguide'
 import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 
 import SignIn from '../components/Auth/SignIn'
+import { PageCenter } from '../components/Auth/withAuthorization'
 import Frame from '../components/Frame'
 import Loader from '../components/Loader'
-import { PageCenter } from '../components/Auth/withAuthorization'
-
-import { useTranslation } from '../lib/withT'
 import { withDefaultSSR } from '../lib/apollo/helpers'
 import { useMe } from '../lib/context/MeContext'
-import { Interaction } from '@project-r/styleguide'
+
+import { useTranslation } from '../lib/withT'
 
 const allowedSignInRedirectOrigins =
   process.env.NEXT_PUBLIC_ALLOWED_SIGNIN_REDIRECT_ORIGINS?.split(',') || []
@@ -23,6 +23,11 @@ const SigninPage = () => {
   useEffect(() => {
     if (me && query?.redirect) {
       try {
+        console.log(me)
+        if (!me.onboarded) {
+          router.replace('/onboarding/tipp-1')
+          return
+        }
         const redirectTarget = decodeURIComponent(query.redirect)
         const redirectUrl = new URL(redirectTarget, window.location.origin)
 

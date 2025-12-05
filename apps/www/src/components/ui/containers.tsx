@@ -63,3 +63,11 @@ export const PaynoteSection = ({
     </div>
   )
 }
+
+export const Frame = ({ children }: { children: ReactNode }) => {
+  return (
+    <div className={css({ minH: '100vh', display: 'flex', flexDir: 'column' })}>
+      {children}
+    </div>
+  )
+}
