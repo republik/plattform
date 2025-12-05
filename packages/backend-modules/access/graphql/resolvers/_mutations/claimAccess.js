@@ -50,7 +50,7 @@ async function ensureUserHasNoNewSubscription(user, pgdb, t) {
 
   if (result) {
     throw new Error(
-      t('api/access/claim/can-not-redeem-membership-with-new-subscription'),
+      t('api/access/claim/can-not-claim-access-with-active-subscription'),
     )
   }
 }
