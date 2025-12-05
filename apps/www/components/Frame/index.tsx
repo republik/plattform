@@ -26,7 +26,6 @@ import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
 import { checkRoles } from '../../lib/apollo/withMe'
 import CallToActionBanner from '../CallToActions/CallToActionBanner'
-import { IpAllowlistBanner } from '../../src/components/ip-allowlist-banner'
 import { DraftModeIndicator } from 'components/DraftModeIndicator'
 
 css.global('html', { boxSizing: 'border-box' })
@@ -214,7 +213,6 @@ const Frame = ({
               localColorVariables={customContentColorContext}
             >
               <div {...styles.page} data-template={meta?.template}>
-                <IpAllowlistBanner />
                 {!hideCTA && <CallToActionBanner />}
 
                 {draftMode && <DraftModeIndicator />}

@@ -31,6 +31,7 @@ import {
 } from '../constants'
 import { IconBack } from '@republik/icons'
 import Link from 'next/link'
+import { IpAllowlistBanner } from '../../src/components/ip-allowlist-banner'
 
 const BACK_BUTTON_SIZE = 24
 
@@ -144,6 +145,7 @@ const Header = ({
           isSecondarySticky={scrollDirection === 'down' && !isAnyNavExpanded}
         />
         <HLine formatColor={formatColor} />
+        <IpAllowlistBanner />
         <LoadingBar />
       </div>
       {inNativeApp && pullable && (
