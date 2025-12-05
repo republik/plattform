@@ -8,6 +8,7 @@ module.exports = async (_, args, context) => {
     pgdb,
     req,
     t,
+    user,
     mail: {
       enforceSubscriptions,
       sendMembershipClaimNotice,
@@ -15,6 +16,7 @@ module.exports = async (_, args, context) => {
     },
   } = context
   ensureSignedIn(req)
+  await ensureUserHasNoNewSubscription(user, pgdb, t)
 
   const transaction = await pgdb.transactionBegin()
 
@@ -123,4 +125,20 @@ module.exports = async (_, args, context) => {
   }
 
   return true
+}
+
+async function ensureUserHasNoNewSubscription(user, pgdb, t) {
+  const result = await pgdb.payments.subscriptions.findFirst(
+    {
+      userId: user.id,
+      status: ['active', 'past_due', 'unpaid', 'paused'],
+    },
+    { fields: ['id'] },
+  )
+
+  if (result) {
+    throw new Error(
+      t('api/access/claim/can-not-redeem-membership-with-new-subscription'),
+    )
+  }
 }
