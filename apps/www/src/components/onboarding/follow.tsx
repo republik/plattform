@@ -1,4 +1,8 @@
+import { SetOnboardedDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useMutation } from '@apollo/client'
 import { css } from '@republik/theme/css'
+import { useEffect } from 'react'
+import { useMe } from '../../../lib/context/MeContext'
 import { useTranslation } from '../../../lib/withT'
 import { Frame } from '../ui/containers'
 import AuthorsSection from './authors-section'
@@ -9,6 +13,15 @@ import PodcastsSection from './podcasts-section'
 
 function OnboardingFollow() {
   const { t } = useTranslation()
+  const { meLoading, me } = useMe()
+  const [setOnboarded] = useMutation(SetOnboardedDocument)
+
+  useEffect(() => {
+    if (!meLoading && !me?.onboarded) {
+      setOnboarded()
+    }
+  }, [meLoading, me, setOnboarded])
+
   return (
     <Frame>
       <div className={css({ px: 4, py: 6 })}>
