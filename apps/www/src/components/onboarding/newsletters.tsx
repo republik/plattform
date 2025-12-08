@@ -1,9 +1,14 @@
+'use client'
+
 import {
   NewsletterSettingsDocument,
   NewsletterSubscription,
+  SetOnboardedDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
+import { useEffect } from 'react'
+import { useMe } from '../../../lib/context/MeContext'
 import { useTranslation } from '../../../lib/withT'
 import { Frame } from '../ui/containers'
 import { NL_FEATURED, NL_MORE } from './config'
@@ -16,6 +21,17 @@ function OnboardingNewsletters() {
   const { data } = useQuery(NewsletterSettingsDocument)
   const subscriptions = data?.me?.newsletterSettings
     ?.subscriptions as NewsletterSubscription[]
+
+  // whether the user has completes both onboarding steps or not, if they
+  // open the newsletters step, we consider onboarding done
+  const { meLoading, me } = useMe()
+  const [setOnboarded] = useMutation(SetOnboardedDocument)
+
+  useEffect(() => {
+    if (!meLoading && !me?.onboarded) {
+      setOnboarded()
+    }
+  }, [meLoading, me, setOnboarded])
 
   return (
     <Frame>
@@ -38,7 +54,7 @@ function OnboardingNewsletters() {
         />
       </div>
 
-      <OnboardingNextStep href='/onboarding/tipp-2'>
+      <OnboardingNextStep href='/einrichten/tipp-2'>
         {t('onboarding/newsletters/next')}
       </OnboardingNextStep>
     </Frame>

@@ -8140,8 +8140,12 @@
       "value": "Folgen Sie Stimmen, die Sie interessieren"
     },
     {
-      "key": "onboarding/follow/description",
+      "key": "onboarding/follow/web/description",
       "value": "Wir informieren Sie per E-Mail über neue Beiträge."
+    },
+    {
+      "key": "onboarding/follow/app/description",
+      "value": "Wir informieren Sie per Push-Benachrichtigung über neue Beiträge."
     },
     {
       "key": "onboarding/follow/next",

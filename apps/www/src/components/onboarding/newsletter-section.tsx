@@ -1,3 +1,5 @@
+'use client'
+
 import {
   NewsletterName,
   NewsletterSubscription,
@@ -113,19 +115,23 @@ function NewsletterCard({
           ) : subscribed ? (
             <Check
               strokeWidth={2.5}
+              size={20}
               className={css({
+                color: 'text.inverted',
+                background: 'black',
                 borderRadius: '100%',
+                borderColor: 'black',
                 borderWidth: '2px',
                 borderStyle: 'solid',
-                borderColor: 'black',
+                boxSizing: 'content-box',
               })}
             />
           ) : (
             <Plus
               className={css({
-                color: 'text.inverted',
-                background: 'black',
                 borderRadius: '100%',
+                borderWidth: '2px',
+                borderStyle: 'solid',
               })}
             />
           )}

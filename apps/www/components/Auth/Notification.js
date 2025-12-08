@@ -1,21 +1,17 @@
+import { Button, Interaction } from '@project-r/styleguide'
+import Link from 'next/link'
 import isEmail from 'validator/lib/isEmail'
 
-import { Interaction, Button } from '@project-r/styleguide'
-
-import { CURTAIN_MESSAGE } from '../../lib/constants'
 import withMe from '../../lib/apollo/withMe'
-import withT from '../../lib/withT'
 import * as base64u from '../../lib/utils/base64u'
 import { useInNativeApp } from '../../lib/withInNativeApp'
+import withT from '../../lib/withT'
 import { DEFAULT_TOKEN_TYPE } from '../constants'
 
 import RawHtmlTranslation from '../RawHtmlTranslation'
+import MacNewsletterSubscription from './MacNewsletterSubscription'
 import Me from './Me'
 import TokenAuthorization from './TokenAuthorization'
-import MacNewsletterSubscription from './MacNewsletterSubscription'
-import Link from 'next/link'
-
-const hasCurtain = !!CURTAIN_MESSAGE
 
 const { H1, P } = Interaction
 
@@ -36,9 +32,15 @@ const knownTypes = [
 
 const AuthNotification = ({ query, goTo, onClose, t, me }) => {
   const { inNativeApp } = useInNativeApp()
+  const { onboarded } = me || {}
 
   const { context, token, tokenType, noAutoAuthorize } = query
   let { type, email } = query
+
+  if (type === 'email-confirmed' && !onboarded) {
+    return null
+  }
+
   if (email !== undefined) {
     try {
       if (base64u.match(email)) {
@@ -109,6 +111,7 @@ const AuthNotification = ({ query, goTo, onClose, t, me }) => {
     const displayCloseNote =
       !me || ['claim', 'preview', 'access'].includes(context)
 
+    // we don't give users who are not onboarded the option to go anywhere but on the onboarding screen
     let closeElement = onClose ? (
       <div style={{ marginTop: 20 }}>
         <Button block primary onClick={onClose}>
@@ -118,7 +121,7 @@ const AuthNotification = ({ query, goTo, onClose, t, me }) => {
     ) : afterTokenAuth && displayCloseNote ? (
       <P>{t('notifications/closeNote')}</P>
     ) : (
-      ((!hasCurtain && !isUnkownType) || inNativeApp) && (
+      (!isUnkownType || inNativeApp) && (
         <div style={{ marginTop: 20 }}>
           <Link href='/' passHref legacyBehavior>
             <Button block primary>
