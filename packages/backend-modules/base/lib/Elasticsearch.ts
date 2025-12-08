@@ -1,6 +1,7 @@
-const { Client } = require('@elastic/elasticsearch')
+import { Client } from '@elastic/elasticsearch'
+import { SearchRequest } from '@elastic/elasticsearch/lib/api/types'
 
-const connect = (node) =>
+const connect = (node: string) =>
   new Client({
     node:
       node ||
@@ -9,13 +10,13 @@ const connect = (node) =>
     requestTimeout: 600000,
   })
 
-const disconnect = (client) => client.close()
+const disconnect = (client: Client) => client.close()
 
-const scroll = async function* (client, params) {
+const scroll = async function* (client: Client, params: SearchRequest) {
   let response = await client.search(params)
 
   while (true) {
-    const sourceHits = response.body.hits.hits
+    const sourceHits = response.hits.hits
 
     if (sourceHits.length === 0) {
       break
@@ -25,18 +26,18 @@ const scroll = async function* (client, params) {
       yield hit
     }
 
-    if (!response.body._scroll_id) {
+    if (!response._scroll_id) {
       break
     }
 
     response = await client.scroll({
-      scrollId: response.body._scroll_id,
+      scroll_id: response._scroll_id,
       scroll: params.scroll,
     })
   }
 }
 
-module.exports = {
+export = {
   connect,
   disconnect,
   scroll,

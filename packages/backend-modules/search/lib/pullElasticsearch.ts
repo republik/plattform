@@ -7,10 +7,13 @@ const mappings = require('./indices')
 
 const { getIndexAlias, getDateTimeIndex } = require('./utils')
 
-const timeout = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+const timeout = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms))
 
-module.exports = async ({
-  indices: indicesFilter = mappings.list.map(({ name }) => name),
+export = async ({
+  indices: indicesFilter = mappings.list.map(
+    ({ name }: { name: string }) => name,
+  ),
   switch: doSwitch = true,
   inserts: doInserts = true,
   flush: doFlush = false,
@@ -25,12 +28,12 @@ module.exports = async ({
   const elastic = Elasticsearch.connect()
   const redis = Redis.connect()
 
-  const indices = mappings.list.filter(({ name }) =>
+  const indices = mappings.list.filter(({ name }: { name: string }) =>
     indicesFilter.includes(name),
   )
 
   await Promise.all(
-    indices.map(async ({ type, name, analysis, mapping }) => {
+    indices.map(async ({ type, name, analysis, mapping }: any) => {
       const readAlias = getIndexAlias(name, 'read')
       const writeAlias = getIndexAlias(name, 'write')
       const index = getDateTimeIndex(name)
@@ -42,9 +45,10 @@ module.exports = async ({
        * backends is posting data to ElasticSearch before mapping, indices
        * and aliases are setup.
        */
-      const {
-        body: [writeAliasAsIndex],
-      } = await elastic.cat.indices({ index: `${writeAlias}*`, format: 'json' })
+      const [writeAliasAsIndex] = await elastic.cat.indices({
+        index: `${writeAlias}*`,
+        format: 'json',
+      })
 
       if (writeAlias === writeAliasAsIndex?.index) {
         debug('delete index masquerading as alias', { writeAlias })
@@ -103,7 +107,7 @@ module.exports = async ({
             },
           },
         })
-        .catch((e) => {
+        .catch((e: any) => {
           console.error(
             `Error while creating index "%s" occured: %o`,
             index,
@@ -188,7 +192,7 @@ module.exports = async ({
         index: getIndexAlias(name, '*'),
       })
 
-      const deletable = []
+      const deletable: string[] = []
 
       Object.keys(indices).forEach((name) => {
         if (Object.keys(indices[name].aliases).length === 0) {

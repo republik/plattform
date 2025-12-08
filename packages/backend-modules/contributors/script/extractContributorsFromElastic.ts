@@ -23,18 +23,12 @@ const elastic = new Client({
 
 const ES_INDEX_PREFIX = process.env.ES_INDEX_PREFIX || 'republik'
 
-type ElasticHit = {
-  _index: string
-  _type: string
-  _id: string
-  _score: number
-  _source: {
-    meta: {
-      repoId: string
-      publishDate: Date
-      creditsString: string
-      contributors: ElasticContributor[]
-    }
+type ElasticDocumentMeta = {
+  meta: {
+    repoId: string
+    publishDate: Date
+    creditsString: string
+    contributors: ElasticContributor[]
   }
 }
 
@@ -132,11 +126,11 @@ function deduplicateNamesAndSlugs(
 }
 
 async function queryElastic(query: any): Promise<RepoData[] | undefined> {
-  let repoContributors: RepoData[] = []
+  let repoContributors: (RepoData | null)[] = []
   try {
     console.log(`Querying elastic on ${ELASTIC_NODE}`)
 
-    const response = await elastic.search({
+    const response = await elastic.search<ElasticDocumentMeta>({
       index: ES_INDEX_PREFIX + '-document-read',
       _source: [
         'meta.contributors',
@@ -147,8 +141,8 @@ async function queryElastic(query: any): Promise<RepoData[] | undefined> {
       body: query,
     })
 
-    if (response.body.hits && response.body.hits.hits) {
-      repoContributors = response.body.hits.hits.map((hit: ElasticHit) => {
+    if (response.hits && response.hits.hits) {
+      repoContributors = response.hits.hits.map((hit) => {
         if (hit._source?.meta) {
           const repo: RepoData = {
             contributors: hit._source.meta.contributors,
@@ -170,15 +164,15 @@ async function queryElastic(query: any): Promise<RepoData[] | undefined> {
   } catch (e) {
     console.error('Error while querying elastic: ', e)
   }
-  return repoContributors
+  return repoContributors.filter((e) => e != null)
 }
 
 /*
-* This script fetches contributors from elastic from published documents in the given time and saves them to json files.
-* It logs contributors that should be manually checked and maybe adapted, it also saves to them to the check-[filename].json file
-* To run this script, either use node-ts or run the js version of this file: 
-* ❯ node build/script/extractContributorsFromElastic.js --begin 2024-01-01 --end 2024-12-31 --limit 100 --filename test
-*/
+ * This script fetches contributors from elastic from published documents in the given time and saves them to json files.
+ * It logs contributors that should be manually checked and maybe adapted, it also saves to them to the check-[filename].json file
+ * To run this script, either use node-ts or run the js version of this file:
+ * ❯ node build/script/extractContributorsFromElastic.js --begin 2024-01-01 --end 2024-12-31 --limit 100 --filename test
+ */
 async function main(argv: any) {
   // get contributors from elastic
   const limit = argv.limit
