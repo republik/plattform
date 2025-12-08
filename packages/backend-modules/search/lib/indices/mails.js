@@ -25,7 +25,6 @@ const address = {
 
 module.exports = {
   type,
-  name: type.toLowerCase(),
   searchable: false,
   analysis: {
     normalizer: {
@@ -37,15 +36,13 @@ module.exports = {
     },
   },
   mapping: {
-    [type]: {
-      dynamic: false,
-      properties: {
-        date: { type: 'date' },
-        from: { ...address },
-        to: { ...address },
-        cc: { ...address },
-        bcc: { ...address },
-      },
+    dynamic: false,
+    properties: {
+      date: { type: 'date' },
+      from: { ...address },
+      to: { ...address },
+      cc: { ...address },
+      bcc: { ...address },
     },
   },
 }

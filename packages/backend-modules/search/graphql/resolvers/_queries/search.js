@@ -44,7 +44,7 @@ const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 const FUZZINESS_WORD_LENGTH_THRESHOLD = 5
 
-const deepMergeArrays = function (objValue, srcValue) {
+const deepMergeArrays = (objValue, srcValue) => {
   if (_.isArray(objValue)) {
     return objValue.concat(srcValue)
   }
@@ -80,7 +80,7 @@ const getSimpleQueryStringQuery = (searchTerm) => {
   return `(${sanitizedSearchTerm}) | ("${sanitizedSearchTerm}") | (${fuzzySearchTerm})`
 }
 
-const createShould = function (
+function createShould(
   searchTerm,
   searchFilter,
   indicesList,
@@ -425,7 +425,9 @@ const search = async (__, args, context, info) => {
 
   const indicesList = getIndicesList(filter)
   const query = {
-    index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
+    index: indicesList.map(({ type }) =>
+      getIndexAlias(type.toLowerCase(), 'read'),
+    ),
     from,
     size: first,
     track_total_hits: true,
@@ -445,8 +447,7 @@ const search = async (__, args, context, info) => {
 
   let result = await cache.get(query)
   if (!result) {
-    const { body } = await elastic.search(query)
-    result = body
+    result = await elastic.search(query)
     // no reason to await cache priming
     cache.set(query, result, options)
   }

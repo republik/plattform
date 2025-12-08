@@ -58,35 +58,31 @@ const getDefaultResource = async ({ pgdb }) => {
   return {
     table: pgdb.public.comments,
     payload: {
-      getUser: async function (id) {
-        return pgdb.public.users.findOne(
+      getUser: async (id) =>
+        pgdb.public.users.findOne(
           { id },
           {
             fields: ['id', 'firstName', 'lastName', 'username'],
           },
-        )
-      },
-      getDiscussion: async function (id) {
-        return pgdb.public.discussions.findOne(
+        ),
+      getDiscussion: async (id) =>
+        pgdb.public.discussions.findOne(
           { id },
           { fields: ['anonymity', 'hidden'] },
-        )
-      },
-      getDiscussionPreferences: async function (userId, discussionId) {
-        return pgdb.public.discussionPreferences.findOne(
+        ),
+      getDiscussionPreferences: async (userId, discussionId) =>
+        pgdb.public.discussionPreferences.findOne(
           {
             userId,
             discussionId,
           },
           { fields: ['anonymous', 'credentialId'] },
-        )
-      },
-      getCredentials: async function (userId) {
-        return pgdb.public.credentials.find(
+        ),
+      getCredentials: async (userId) =>
+        pgdb.public.credentials.find(
           { userId },
           { fields: ['id', 'userId', 'description', 'isListed'] },
-        )
-      },
+        ),
     },
     transform,
   }

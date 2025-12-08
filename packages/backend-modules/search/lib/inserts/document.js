@@ -87,7 +87,7 @@ const after = async ({ indexName, elastic }) => {
   await upsertResolvedMeta({
     indexName,
     entities: dossiers,
-    type: 'dossier',
+    // type: 'dossier',
     elastic,
   })
 
@@ -95,7 +95,7 @@ const after = async ({ indexName, elastic }) => {
   await upsertResolvedMeta({
     indexName,
     entities: formats,
-    type: 'format',
+    // type: 'format',
     elastic,
   })
 
@@ -103,7 +103,7 @@ const after = async ({ indexName, elastic }) => {
   await upsertResolvedMeta({
     indexName,
     entities: sections,
-    type: 'section',
+    // type: 'section',
     elastic,
   })
 }
@@ -124,7 +124,7 @@ module.exports = {
       { orderBy: { updatedAt: 'desc' } },
     )
 
-    await Promise.map(
+    await Promise.all(
       repos,
       async function mapRepo(repo) {
         const { id: repoId, meta: repoMeta } = repo

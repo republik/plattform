@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Redis = require('@orbiting/backend-modules-base/lib/Redis')
@@ -10,7 +11,7 @@ const { getIndexAlias, getDateTimeIndex } = require('./utils')
 const timeout = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms))
 
-export = async ({
+module.exports = async ({
   indices: indicesFilter = mappings.list.map(
     ({ name }: { name: string }) => name,
   ),
@@ -33,22 +34,22 @@ export = async ({
   )
 
   await Promise.all(
-    indices.map(async ({ type, name, analysis, mapping }: any) => {
+    indices.map(async ({ type, analysis, mapping }: any) => {
+      const name = type.toLowerCase()
       const readAlias = getIndexAlias(name, 'read')
       const writeAlias = getIndexAlias(name, 'write')
       const index = getDateTimeIndex(name)
 
       /**
        * Remove index masquerading as a write alias.
-       *
-       * Indices named like write aliases are inadvertantly created when
-       * backends is posting data to ElasticSearch before mapping, indices
-       * and aliases are setup.
        */
-      const [writeAliasAsIndex] = await elastic.cat.indices({
+      const catResponse = await elastic.cat.indices({
         index: `${writeAlias}*`,
         format: 'json',
       })
+
+      // ES8: Response is the array directly
+      const [writeAliasAsIndex] = catResponse || []
 
       if (writeAlias === writeAliasAsIndex?.index) {
         debug('delete index masquerading as alias', { writeAlias })
@@ -57,7 +58,8 @@ export = async ({
 
       if (doSwitch) {
         debug('remove write alias', { writeAlias, index })
-        const { body: hasWriteAlias } = await elastic.indices.existsAlias({
+        // ES8 Fix: existsAlias returns boolean directly, NOT { body: boolean }
+        const hasWriteAlias = await elastic.indices.existsAlias({
           name: writeAlias,
         })
 
@@ -81,37 +83,22 @@ export = async ({
       await elastic.indices
         .create({
           index,
-          /**
-           * In [ElasticSearch] 6.8, the index creation, index template,
-           * and mapping APIs support a query string parameter
-           * (include_type_name) which indicates whether requests and
-           * responses should include a type name. It defaults to true,
-           * and should be set to an explicit value to prepare to upgrade
-           * to 7.0. Not setting include_type_name will result in a
-           * deprecation warning. Indices which don’t have an explicit
-           * type will use the dummy type name _doc.
-           *
-           * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/removal-of-types.html
-           */
-          include_type_name: true,
-          body: {
-            aliases,
-            mappings: {
-              ...mapping,
-            },
-            settings: {
-              number_of_shards: 5,
-              analysis,
-              // Disable refresh_interval to allow speedier bulk operations
-              refresh_interval: -1,
-            },
+          aliases,
+          mappings: {
+            ...mapping,
+          },
+          settings: {
+            number_of_shards: 5,
+            analysis,
+            // Disable refresh_interval to allow speedier bulk operations
+            refresh_interval: '-1',
           },
         })
         .catch((e: any) => {
           console.error(
-            `Error while creating index "%s" occured: %o`,
+            `Error while creating index "%s" occured: %s`,
             index,
-            e.meta.body,
+            JSON.stringify(e.meta?.body || e, null, 2),
           )
           throw new Error(`Error while creating index`)
         })
@@ -188,7 +175,7 @@ export = async ({
         redis,
       })
 
-      const { body: indices } = await elastic.indices.getAlias({
+      const indices = await elastic.indices.getAlias({
         index: getIndexAlias(name, '*'),
       })
 

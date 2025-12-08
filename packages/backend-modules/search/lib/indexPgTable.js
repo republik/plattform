@@ -92,7 +92,7 @@ const bulk = async ({
     payload.body.push({
       update: {
         _index: indexName,
-        _type: type,
+        // _type: type,
         _id: doc.id,
         retry_on_conflict: 3,
       },
@@ -112,7 +112,7 @@ const bulk = async ({
     payload.body.push({
       delete: {
         _index: indexName,
-        _type: type,
+        // _type: type,
         _id: id,
       },
     })

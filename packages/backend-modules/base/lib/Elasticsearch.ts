@@ -1,14 +1,15 @@
 import { Client } from '@elastic/elasticsearch'
-import { SearchRequest } from '@elastic/elasticsearch/lib/api/types'
+import type { SearchRequest } from '@elastic/elasticsearch/lib/api/types'
 
-const connect = (node: string) =>
-  new Client({
+function connect(node: string): Client {
+  return new Client({
     node:
       node ||
       process.env.ELASTIC_URL ||
       'http://elastic:elastic@localhost:9200',
     requestTimeout: 600000,
   })
+}
 
 const disconnect = (client: Client) => client.close()
 
@@ -38,6 +39,7 @@ const scroll = async function* (client: Client, params: SearchRequest) {
 }
 
 export = {
+  EsClient: Client,
   connect,
   disconnect,
   scroll,

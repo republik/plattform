@@ -132,13 +132,20 @@ const getDefaultResource = async ({ pgdb }) => {
     table: pgdb.publikator.repos,
     payload: {
       getLatestCommit: async function (repoId) {
-        return pgdb.publikator.commits
-          .findOne({ repoId }, { orderBy: { createdAt: 'desc' }, limit: 1 })
-          .then((row) => ({
-            ...row,
-            content: row.content || mdastParse(row.content__markdown),
-            type: row.type || 'mdast',
-          }))
+        const row = await pgdb.publikator.commits.findOne(
+          { repoId },
+          { orderBy: { createdAt: 'desc' }, limit: 1 },
+        )
+
+        if (!row) {
+          return
+        }
+
+        return {
+          ...row,
+          content: row.content || mdastParse(row.content__markdown),
+          type: row.type || 'mdast',
+        }
       },
     },
     transform,

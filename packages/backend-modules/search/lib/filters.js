@@ -87,15 +87,20 @@ const filterReducer = (schemas) => (filters) => {
   }
 
   let impliedType
-  const typeFilter = filters.find((f) => f.key === 'type')
+  const typeFilter = filters.find((f) => f.key === 'type' || f.key === '__type')
+
   let filter = filters.reduce((filterObj, { key, value, not }) => {
     debug('filterReducer', { key, value, not })
+    const effectiveKey = key === 'type' ? '__type' : key
 
-    const schema = schemas.find((schema) => !!schema[key])
-    const schemaEntry = schema?.[key]
+    const schema = schemas.find((schema) => !!schema[effectiveKey])
+    const schemaEntry = schema?.[effectiveKey]
     debug('schemaEntry', schemaEntry)
     if (!schemaEntry) {
-      console.warn('missing schemaEntry for filter:', { key, value })
+      console.warn('missing schemaEntry for filter:', {
+        key: effectiveKey,
+        value,
+      })
       return filterObj
     }
 
@@ -105,7 +110,11 @@ const filterReducer = (schemas) => (filters) => {
       return filterObj
     }
 
-    if (key !== 'type' && !typeFilter && (not === undefined || !not)) {
+    if (
+      effectiveKey !== '__type' &&
+      !typeFilter &&
+      (not === undefined || !not)
+    ) {
       if (impliedType && impliedType !== schema.__type) {
         throw new Error(
           'filterReducer: filter imply contradicting types',
@@ -118,13 +127,14 @@ const filterReducer = (schemas) => (filters) => {
 
     return {
       ...filterObj,
-      ...getFilter(key, filterValue, not),
+      ...getFilter(effectiveKey, filterValue, not),
     }
   }, {})
+
   if (impliedType) {
     filter = {
       ...filter,
-      ...getFilter('type', impliedType),
+      ...getFilter('__type', impliedType),
     }
   }
   return filter
