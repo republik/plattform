@@ -182,6 +182,12 @@ module.exports = {
   age: exposeAccessField('ageAccessRole', 'birthyear', (birthyear) =>
     birthyear ? age(birthyear) : null,
   ),
+  onboarded(user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.onboarded
+    }
+    return null
+  },
   async address(user, args, { loaders, user: me }) {
     if (
       Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||

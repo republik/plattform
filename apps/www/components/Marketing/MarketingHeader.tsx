@@ -1,17 +1,16 @@
 import React from 'react'
 import { css } from 'glamor'
 import CallToAction from '../Frame/CallToAction'
-import { SignInLink } from '../Frame/User'
 import Link from 'next/link'
 import { HEADER_HEIGHT } from '../constants'
+import { useTranslation } from 'lib/withT'
 
 const MarketingHeader = () => {
+  const { t } = useTranslation()
   return (
     <div {...styles.header}>
       <div style={{ paddingLeft: 16 }}>
-        <Link href='/anmelden'>
-          <SignInLink />
-        </Link>
+        <Link href='/anmelden'>{t('header/signin')}</Link>
       </div>
       <CallToAction isOnMarketingPage={true} formatColor={undefined} />
     </div>

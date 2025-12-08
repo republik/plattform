@@ -64,7 +64,7 @@ module.exports = async (_, args, { pgdb, t }) => {
       JOIN memberships m
         ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1)
       WHERE
-        ARRAY[u.id] && :ids;
+        u.id = ANY(:ids);
     `,
       { ids: nodeIds },
     )

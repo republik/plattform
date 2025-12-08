@@ -20,9 +20,9 @@ exports.stringArrayFilterWhere = (stringArrayFilter, table) => {
   if (!stringArrayFilter) {
     return null
   }
-  return `ARRAY[${prefixString(table)}"${
+  return `${prefixString(table)}"${
     stringArrayFilter.field
-  }"] && :stringArray`
+  }" = ANY(:stringArray)`
 }
 
 exports.booleanFilterWhere = (booleanFilter, table) => {

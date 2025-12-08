@@ -11,7 +11,7 @@ import {
   useColorContext,
   useBodyScrollLock,
   SeriesNav,
-  shouldIgnoreClick,
+  plainButtonRule,
 } from '@project-r/styleguide'
 import { cleanAsPath } from '../../lib/utils/link'
 import withT from '../../lib/withT'
@@ -19,15 +19,12 @@ import { IconKeyboardArrowDown, IconKeyboardArrowUp } from '@republik/icons'
 import { HEADER_HEIGHT, SUBHEADER_HEIGHT } from '../constants'
 
 const styles = {
-  button: css({
+  seriesNavBarButton: css({
+    ...plainButtonRule,
     ...fontStyles.sansSerifRegular,
     padding: '5px 0',
-    textAlign: 'left',
-    top: 0,
-    whiteSpace: 'nowrap',
+    width: '100%',
     textDecoration: 'none',
-    color: 'inherit',
-    display: 'inline-block',
     cursor: 'pointer',
   }),
   menu: css({
@@ -55,13 +52,13 @@ const styles = {
   title: css({
     fontSize: 15,
     display: 'flex',
+    gap: 6,
     justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
     maxWidth: '100%',
-    overflow: 'hidden',
-    paddingRight: '30px',
+    minWidth: 0,
     position: 'relative',
-    textOverflow: 'ellipsis',
     [mediaQueries.mUp]: {
       fontSize: 18,
     },
@@ -69,6 +66,20 @@ const styles = {
   logo: css({
     height: 24,
     marginRight: 6,
+    flexShrink: 0,
+  }),
+  seriesTitle: css({
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    flexShrink: 1,
+  }),
+  episodeLabel: css({
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+  }),
+  arrowIcon: css({
+    flexShrink: 0,
   }),
 }
 
@@ -105,14 +116,9 @@ const SeriesNavBar = ({ t, me, series, router, repoId }) => {
 
   return (
     <>
-      <a
-        {...styles.button}
-        href={titlePath}
-        onClick={(e) => {
-          if (shouldIgnoreClick(e)) {
-            return
-          }
-          e.preventDefault()
+      <button
+        {...styles.seriesNavBarButton}
+        onClick={() => {
           setExpanded(!expanded)
         }}
       >
@@ -137,20 +143,17 @@ const SeriesNavBar = ({ t, me, series, router, repoId }) => {
             </>
           )}
 
-          {series.title}
-
-          {currentEpisode &&
-            (series.title.match(/\?$/)
-              ? ` ${currentEpisode.label}`
-              : ` – ${currentEpisode.label}`)}
-          <span>
-            {expanded && (
+          {currentEpisode && (
+            <span {...styles.episodeLabel}>{`${currentEpisode.label}: `}</span>
+          )}
+          <span {...styles.seriesTitle}>{series.title}</span>
+          <span {...styles.arrowIcon}>
+            {expanded ? (
               <IconKeyboardArrowUp
                 size='28'
                 {...colorScheme.set('fill', 'text')}
               />
-            )}
-            {!expanded && (
+            ) : (
               <IconKeyboardArrowDown
                 size='28'
                 {...colorScheme.set('fill', 'text')}
@@ -158,7 +161,7 @@ const SeriesNavBar = ({ t, me, series, router, repoId }) => {
             )}
           </span>
         </span>
-      </a>
+      </button>
       <div
         style={{
           top: HEADER_HEIGHT + SUBHEADER_HEIGHT + 1, // 1px for border bottom

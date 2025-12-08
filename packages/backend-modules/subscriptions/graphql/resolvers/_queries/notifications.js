@@ -1,7 +1,7 @@
 const paginate = require('../../../lib/paginateNotificationConnection')
 const moment = require('moment')
 
-const MAX_RECORDS = 1000
+const MAX_RECORDS = 100
 
 module.exports = async (_, args, context) => {
   const { req, pgdb, user: me } = context

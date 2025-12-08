@@ -1,4 +1,4 @@
-import { Logo, mediaQueries } from '@project-r/styleguide'
+import { Logo } from '@project-r/styleguide'
 
 export const HEADER_HEIGHT = 60
 export const HEADER_ICON_SIZE = 22
