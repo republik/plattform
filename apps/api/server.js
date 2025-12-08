@@ -237,8 +237,11 @@ const run = async (workerId, config) => {
 
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
-    const clientIp = defaultContext.req?.headers['x-forwarded-for'] || 
-                     defaultContext.req?.connection?.remoteAddress
+    // Per web standard, x-forwarded-for format is: "client, proxy1, proxy2"
+    const forwardedFor = defaultContext.req?.headers['x-forwarded-for']
+    const clientIp = forwardedFor 
+      ? forwardedFor.split(',')[0].trim()
+      : defaultContext.req?.connection?.remoteAddress
     const context = {
       ...connectionContext,
       ...defaultContext,
