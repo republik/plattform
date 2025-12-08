@@ -236,7 +236,7 @@ class TeaserBlock extends Component {
                     schema={this.schema}
                   />
                 )}
-                <Link href={teaserUrl} passHref>
+                <Link href={teaserUrl} prefetch={false} passHref>
                   <div
                     ref={(el) => {
                       this.teaserRefs[teaser.id] = el
