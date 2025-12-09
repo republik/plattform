@@ -23,7 +23,7 @@ const RENDER_WIDTH = 1175 // Tablet breakpoint width for desktop layout
 const teaserHoverStyle = css({
   cursor: 'pointer',
   ':hover': {
-    transform: 'scale(1.03)',
+    transform: 'scale(0.97)',
     zIndex: 1,
   },
 })
@@ -86,7 +86,7 @@ const TeaserBlock: React.FC<TeaserBlockProps> = ({
       }
 
       const { width: parentWidth } = parent.getBoundingClientRect()
-      
+
       // On mobile viewports (< 640px), skip scaling to let teasers render naturally
       const isMobileViewport = window.innerWidth < 640
 
@@ -97,7 +97,7 @@ const TeaserBlock: React.FC<TeaserBlockProps> = ({
         const innerContainer = teaser.querySelector('[data-teaser-inner]')
         if (innerContainer) {
           const inner = innerContainer as HTMLElement
-          
+
           if (isMobileViewport) {
             // On mobile: no scaling, natural width
             inner.style.width = '100%'
@@ -187,7 +187,7 @@ const TeaserBlock: React.FC<TeaserBlockProps> = ({
 
           return (
             <div key={teaser.id}>
-              <Link href={teaserUrl} prefetch={false} passHref>
+              <Link href={teaserUrl} prefetch={false}>
                 <div
                   {...teaserHoverStyle}
                   ref={(el) => {

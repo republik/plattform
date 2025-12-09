@@ -127,7 +127,7 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
   }
 
   return (
-    <Frame raw pageColorSchemeKey='dark'>
+    <Frame raw pageColorSchemeKey='dark' hasOverviewNav>
       <TimelineNavigation
         year={year}
         currentMonth={month}

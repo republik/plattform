@@ -1,7 +1,11 @@
 import React, { useEffect, useRef } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
-import { useColorContext, fontStyles, mediaQueries } from '@project-r/styleguide'
+import {
+  useColorContext,
+  fontStyles,
+  mediaQueries,
+} from '@project-r/styleguide'
 import { getMonthName } from './yearDataUtils'
 
 interface TimelineNavigationProps {
@@ -18,23 +22,19 @@ const styles = {
     marginBottom: 40,
     marginTop: 20,
   }),
-  monthTimeline: css({
+  timeline: css({
     display: 'flex',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'baseline',
     overflowX: 'auto',
     scrollSnapType: 'x mandatory',
-    gap: 24,
-    padding: '10px 15px',
+    gap: 32,
+    padding: '0 15px',
     WebkitOverflowScrolling: 'touch',
-    [mediaQueries.mUp]: {
-      justifyContent: 'center',
-    },
   }),
   monthItem: css({
     flex: '0 0 auto',
     scrollSnapAlign: 'start',
-    minWidth: 48,
     textAlign: 'center',
     cursor: 'pointer',
     transition: 'transform 0.2s',
@@ -43,40 +43,24 @@ const styles = {
     },
   }),
   monthLinkActive: css({
-    ...fontStyles.sansSerifMedium32,
+    ...fontStyles.sansSerifMedium26,
   }),
   monthLinkInactive: css({
-    ...fontStyles.sansSerifMedium16,
-    opacity: 0.9,
-  }),
-
-  yearTimeline: css({
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    gap: 12,
-    overflowX: 'auto',
-    scrollSnapType: 'x mandatory',
-    WebkitOverflowScrolling: 'touch',
-    padding: '0 15px',
-    [mediaQueries.mUp]: {
-      justifyContent: 'center',
-    },
+    ...fontStyles.sansSerifRegular16,
   }),
   yearLink: css({
     flex: '0 0 auto',
-    padding: '8px 16px',
+    padding: '0px 0px 16px 0px',
     transition: 'transform 0.2s',
     '&:hover': {
       transform: 'translateY(-2px)',
     },
   }),
   yearLinkInactive: css({
-    ...fontStyles.sansSerifMedium16,
-    opacity: 0.9,
+    ...fontStyles.sansSerifRegular16,
   }),
   yearLinkActive: css({
-    ...fontStyles.sansSerifMedium40,
+    ...fontStyles.sansSerifMedium26,
   }),
 }
 
@@ -132,12 +116,13 @@ const TimelineNavigation: React.FC<TimelineNavigationProps> = ({
   return (
     <div {...styles.container}>
       {/* Year Timeline */}
-      <div {...styles.yearTimeline} ref={yearTimelineRef}>
+      <div {...styles.timeline} ref={yearTimelineRef}>
         {years.map((y) => {
           const isActive = y === year
           const yearLinkStyle = {
             ...styles.yearLink,
             ...(isActive ? styles.yearLinkActive : styles.yearLinkInactive),
+            ...colorScheme.set('color', isActive ? 'text' : 'textSoft'),
           }
 
           return (
@@ -156,7 +141,7 @@ const TimelineNavigation: React.FC<TimelineNavigationProps> = ({
       </div>
 
       {/* Month Timeline */}
-      <div {...styles.monthTimeline} ref={timelineRef}>
+      <div {...styles.timeline} ref={timelineRef}>
         {months.map((month) => {
           const hasContent = monthsWithContent.includes(month)
           const isActive = month === currentMonth
@@ -165,6 +150,7 @@ const TimelineNavigation: React.FC<TimelineNavigationProps> = ({
           const monthLinkStyle = {
             ...styles.monthItem,
             ...(isActive ? styles.monthLinkActive : styles.monthLinkInactive),
+            ...colorScheme.set('color', isActive ? 'text' : 'textSoft'),
           }
 
           return (
