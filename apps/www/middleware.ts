@@ -55,7 +55,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
 
   // Redirect to front-preview ssr to generate article front-preview
   // used in the yearly overview
-  if (resUrl.searchParams.has('extractId')) {
+  if (req.nextUrl.pathname === '/' && resUrl.searchParams.has('extractId')) {
     // Remap extractId query param to id-slug
     const extractId = resUrl.searchParams.get('extractId')
     resUrl.searchParams.delete('extractId')
@@ -118,7 +118,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - monitoring (Sentry tunnel route)
-     * - einrichten (onboarding steps)
      */
     '/((?!api|_next/static|_next/image|favicon.ico|monitoring).*)',
   ],

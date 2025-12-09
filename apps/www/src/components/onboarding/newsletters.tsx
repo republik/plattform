@@ -29,7 +29,8 @@ function OnboardingNewsletters() {
 
   useEffect(() => {
     if (!meLoading && !me?.onboarded) {
-      setOnboarded()
+      console.log('Setting user as onboarded')
+      setOnboarded().then()
     }
   }, [meLoading, me, setOnboarded])
 

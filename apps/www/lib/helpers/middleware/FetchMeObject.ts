@@ -4,10 +4,9 @@ import { NextRequest } from 'next/server'
  * Function to fetch the roles of the user and updated cookies
  * @param req
  */
-async function fetchMeObject(req: NextRequest): Promise<{
-  me: null | { onboarded: string | null }
-  cookie: string
-}> {
+async function fetchMeObject(
+  req: NextRequest,
+): Promise<{ me: null | { onboarded: string | null }; cookie: string }> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}?query={me{onboarded}}`,
     {
