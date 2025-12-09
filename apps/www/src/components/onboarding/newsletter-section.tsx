@@ -7,6 +7,7 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
 import { Spinner } from '@app/components/ui/spinner'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { Check, Plus } from 'lucide-react'
 import { useState } from 'react'
@@ -25,6 +26,7 @@ function NewsletterCard({
     UpdateNewsletterSubscriptionDocument,
   )
   const [isPending, setIsPending] = useState(false)
+  const track = useTrackEvent()
 
   async function toggleSubscription(e) {
     e.stopPropagation()
@@ -32,12 +34,21 @@ function NewsletterCard({
     if (isPending) return
 
     setIsPending(true)
-    await updateNewsletterSubscription({
+    const { data } = await updateNewsletterSubscription({
       variables: {
         name: newsletter,
         subscribed: !subscribed,
       },
     })
+
+    if (data) {
+      track({
+        action: data.updateNewsletterSubscription.subscribed
+          ? 'Newsletter Subscribe'
+          : 'Newsletter Unsubscribe',
+        name: data.updateNewsletterSubscription.name,
+      })
+    }
     setIsPending(false)
   }
 

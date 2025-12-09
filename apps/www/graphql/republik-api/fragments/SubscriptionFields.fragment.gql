@@ -12,5 +12,8 @@ fragment SubscriptionFields on Subscription {
         title
       }
     }
+    ... on Discussion {
+      id
+    }
   }
 }
