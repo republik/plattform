@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getJWTCookieValue, getSessionCookieValue, verifyJWT } from './lib/auth/JWTHelper'
+import {
+  getJWTCookieValue,
+  getSessionCookieValue,
+  verifyJWT,
+} from './lib/auth/JWTHelper'
 import fetchMeObject from './lib/helpers/middleware/FetchMeObject'
 
 /**
@@ -150,7 +154,9 @@ export const config = {
      * - favicon.ico (favicon file)
      * - monitoring (Sentry tunnel route)
      * - graphql (GraphQL proxy)
+     * - static (static files in public/static dir)
+     * - __plsb (Plausible proxy)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|monitoring|graphql).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|monitoring|graphql|static|__plsb).*)',
   ],
 }
