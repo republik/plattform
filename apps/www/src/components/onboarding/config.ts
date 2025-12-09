@@ -1,4 +1,12 @@
 import { NewsletterName } from '#graphql/republik-api/__generated__/gql/graphql'
+import { type StaticImageData } from 'next/image'
+
+import formatBinswanger from './assets/format-binswanger.png'
+import formatRosenwasser from './assets/format-rosenwasser.png'
+import formatGedankensplitter from './assets/format-gedankensplitter.png'
+import formatVahland from './assets/format-vahland.png'
+import formatPfister from './assets/format-pfister.png'
+import formatWieRedenWirEigentlich from './assets/format-format-wie-reden-wir-eigentlich.png'
 
 export const NL_FEATURED: NewsletterName[] = [
   NewsletterName.Daily,
@@ -22,26 +30,33 @@ export const FORMATS_FEATURED: string[] = [
 type StyleType = {
   backgroundColor?: string
   color?: string
+  imageSrc?: StaticImageData
 }
 
 export const FORMATS_STYLE: { [key: string]: StyleType } = {
   'republik/format-binswanger': {
     backgroundColor: '#EEB8BF',
+    imageSrc: formatBinswanger,
   },
   'republik/format-rosenwasser': {
     backgroundColor: '#8CDBB6',
+    imageSrc: formatRosenwasser,
   },
   'republik/format-vahland': {
     backgroundColor: '#A9A7E0',
+    imageSrc: formatVahland,
   },
   'republik/format-pfister': {
     backgroundColor: '#EF6B6D',
+    imageSrc: formatPfister,
   },
   'republik/format-gedankensplitter': {
     backgroundColor: '#F2ECE6',
+    imageSrc: formatGedankensplitter,
   },
   'republik/format-format-wie-reden-wir-eigentlich': {
     backgroundColor: '#DAFF8D',
+    imageSrc: formatWieRedenWirEigentlich,
   },
 }
 

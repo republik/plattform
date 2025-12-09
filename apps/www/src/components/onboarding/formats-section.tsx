@@ -11,6 +11,7 @@ import { css } from '@republik/theme/css'
 import { useTranslation } from '../../../lib/withT'
 import { FORMATS_FEATURED, FORMATS_STYLE } from './config'
 import { OnboardingH3, OnboardingSection } from './onboarding-ui'
+import Image from 'next/image'
 
 function FormatCard({ format }: { format?: Document }) {
   const { t } = useTranslation()
@@ -63,10 +64,10 @@ function FormatCard({ format }: { format?: Document }) {
           objectId={format.id}
           type={SubscriptionObjectType.Document}
         />
-        <img
+        <Image
           className={css({ maxHeight: '160px', maxWidth: '120px' })}
-          src={`/static/onboarding/columns/${format.repoId}.png`}
-          alt={format.meta.title}
+          src={FORMATS_STYLE[format.repoId]?.imageSrc}
+          alt='' // Decorative images don't need alt text
         />
       </div>
     </div>
