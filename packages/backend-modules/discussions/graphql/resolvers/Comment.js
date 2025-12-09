@@ -202,13 +202,15 @@ module.exports = {
     const [discussion, commenter, commenterPreferences] = await Promise.all([
       loaders.Discussion.byId.load(comment.discussionId),
       loaders.User.byId.load(comment.userId),
-      loaders.Discussion.Commenter.discussionPreferences.load({
+      loaders.DiscussionPreferences.byUserIdAndDiscussionId.load({
         userId: comment.userId,
         discussionId: comment.discussionId,
       }),
     ])
 
-    const credential = commenterPreferences && commenterPreferences.credential
+    const credential =
+      commenterPreferences?.credentialId &&
+      (await loaders.CredentialById.load(commenterPreferences.credentialId))
 
     let anonymous
     if (discussion.anonymity === 'ENFORCED') {

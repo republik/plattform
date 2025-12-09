@@ -2,12 +2,12 @@ import { createRef, Component } from 'react'
 import { css } from 'glamor'
 import debounce from 'lodash/debounce'
 
-import { LazyLoad } from '@project-r/styleguide'
+import { LazyLoad, createFrontSchema } from '@project-r/styleguide'
+import { renderMdast } from '@republik/mdast-react-render'
+import Link from 'next/link'
 
 import TeaserHover from './TeaserHover'
-import TeaserNodes from './TeaserNodes'
-import QueuedImg from './QueuedImg'
-import { getImgSrc } from './utils'
+import HrefLink from '../Link/Href'
 
 const SIZES = [
   { minWidth: 0, columns: 3 },
@@ -19,21 +19,21 @@ const SIZES = [
 ]
 
 export const GAP = 10
-
-const styles = {
-  container: css({
-    display: 'block',
-    columnGap: GAP,
-    width: '100%',
-    lineHeight: 0,
-  }),
-}
+const RENDER_WIDTH = 1175 // Tablet breakpoint width for desktop layout
 
 class TeaserBlock extends Component {
   constructor(props, ...args) {
     super(props, ...args)
     this.blockRef = createRef()
+    this.teaserRefs = {}
     this.state = {}
+
+    // Create schema for rendering teasers
+    this.schema = createFrontSchema({
+      Link: HrefLink,
+      AudioPlayButton: undefined,
+      t: (key) => key, // Simple passthrough for translation
+    })
   }
   measure = debounce(() => {
     const parent = this.blockRef.current
@@ -51,8 +51,25 @@ class TeaserBlock extends Component {
     this.measurements = teaserElements.map((teaser) => {
       const rect = teaser.getBoundingClientRect()
 
+      // Calculate scale for this teaser
+      const teaserId = teaser.getAttribute('data-teaser')
+      const scale = rect.width / RENDER_WIDTH
+
+      // Apply scale transform to inner container and measure its content
+      const innerContainer = teaser.querySelector('[data-teaser-inner]')
+      if (innerContainer && scale) {
+        innerContainer.style.transform = `scale(${scale})`
+
+        // Get the actual rendered height of the content before scaling
+        const contentHeight = innerContainer.scrollHeight
+
+        // Set the outer container's height to the scaled content height
+        const scaledHeight = contentHeight * scale
+        teaser.style.height = `${scaledHeight}px`
+      }
+
       return {
-        id: teaser.getAttribute('data-teaser'),
+        id: teaserId,
         x: rect.left - left,
         y: rect.top - top,
         height: rect.height - GAP, // substract unbreakable margin, see below
@@ -83,9 +100,8 @@ class TeaserBlock extends Component {
       onHighlight,
       lazy,
       maxHeight,
-      maxColumns = 6,
+      maxColumns = 4,
       noHover,
-      backgroundColor,
       teasers,
       style = {},
     } = this.props
@@ -105,14 +121,12 @@ class TeaserBlock extends Component {
         ref={this.blockRef}
         style={{
           position: 'relative',
-          ...style,
         }}
       >
         <LazyLoad
           visible={!lazy}
           consistentPlaceholder
           attributes={{
-            ...styles.container,
             ...css({
               ...SIZES.filter((s) => s.columns <= maxColumns).reduce(
                 (styles, size) => {
@@ -197,8 +211,9 @@ class TeaserBlock extends Component {
               )
             }
 
-            const Image = lazy ? QueuedImg : 'img'
-
+            // Get the URL from the first node
+            const teaserUrl = teaser.nodes[0]?.data?.url || '#'
+            
             return (
               <div
                 key={teaser.id}
@@ -218,34 +233,64 @@ class TeaserBlock extends Component {
                     contextWidth={width}
                     path={path}
                     highlight={highlight}
+                    schema={this.schema}
                   />
                 )}
-                <div
-                  style={{
-                    position: 'relative',
-                    // unbreakable margin
-                    // GAP needs to be with an inline-block to prevent
-                    // the browser from breaking the margin between columns
-                    display: 'inline-block',
-                  }}
-                  data-teaser={teaser.id}
-                >
-                  <Image
-                    onLoad={this.measure}
-                    src={getImgSrc(teaser, path)}
-                    style={{
-                      display: 'block',
-                      marginBottom: GAP,
-                      width: '100%',
+                <Link href={teaserUrl} prefetch={false} passHref>
+                  <div
+                    ref={(el) => {
+                      this.teaserRefs[teaser.id] = el
+                      if (el) {
+                        // Trigger measure after render
+                        this.measure()
+                      }
                     }}
-                  />
-                  <TeaserNodes
-                    nodes={teaser.nodes}
-                    highlight={highlight}
-                    noClick={hover && hover.touch}
-                    backgroundColor={backgroundColor}
-                  />
-                </div>
+                    style={{
+                      position: 'relative',
+                      // unbreakable margin
+                      // GAP needs to be with an inline-block to prevent
+                      // the browser from breaking the margin between columns
+                      display: 'inline-block',
+                      width: '100%',
+                      marginBottom: GAP,
+                      overflow: 'hidden',
+                      // Height will be set by measure() after scaling
+                      minHeight: 100, // Prevent layout shift while measuring
+                    }}
+                    data-teaser={teaser.id}
+                  >
+                    <div
+                      data-teaser-inner
+                      style={{
+                        width: RENDER_WIDTH,
+                        transformOrigin: '0% 0%',
+                        transition: 'transform 100ms',
+                        pointerEvents: 'none', // Prevent inner links from intercepting clicks
+                      }}
+                    >
+                      {renderMdast(
+                        {
+                          type: 'root',
+                          children: teaser.nodes[0]?.data?.teaserType === 'frontTile' 
+                            ? [
+                                {
+                                  type: 'zone',
+                                  identifier: 'TEASERGROUP',
+                                  data: {
+                                    columns: 1,
+                                    mobileColumns: 1,
+                                  },
+                                  children: teaser.nodes,
+                                }
+                              ]
+                            : teaser.nodes,
+                        },
+                        this.schema,
+                        { MissingNode: ({ children }) => children },
+                      )}
+                    </div>
+                  </div>
+                </Link>
               </div>
             )
           })}

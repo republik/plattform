@@ -5313,6 +5313,10 @@
       "value": "Wiedergabeliste"
     },
     {
+      "key": "AudioPlayer/noMemberText",
+      "value": "Die Wiedergabeliste ist nur für Mitglieder verfügbar."
+    },
+    {
       "key": "AudioPlayer/Queue/Add",
       "value": "Zur Wiedergabeliste hinzufügen"
     },
@@ -5323,6 +5327,10 @@
     {
       "key": "AudioPlayer/Queue/ActiveHeading",
       "value": "Aktueller Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/NoActiveHeading",
+      "value": "Audioplayer"
     },
     {
       "key": "AudioPlayer/Queue/Remove",

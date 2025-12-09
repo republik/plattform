@@ -19,4 +19,5 @@ module.exports = {
   getFeaturedTargets,
   getDefaultFeaturedTarget,
   transform: require('./transform'),
+  threadedComments: require('./threaded-comments'),
 }

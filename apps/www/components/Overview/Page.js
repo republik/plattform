@@ -172,28 +172,6 @@ const FrontOverview = ({
     [[]],
   )[0]
 
-  // WANT ALL TEASERS AS HIGH RES IMAGES?
-  // import { getImgSrc } from './utils'
-  // let curls = 'mkdir pngs\n'
-  // groupedTeasers.forEach(({ key, values }) => {
-  //   const path = (knownYears[year] && knownYears[year].path) || '/'
-  //   let m = `\n# ${key}\n`
-  //   m += values.map((t, i) => {
-  //     const fileName = `pngs/${swissTime.format('%Y-%m-%dT%H')(t.publishDate)}-${t.id}-${i}.png`
-  //     const url = getImgSrc(t, path, null, false).replace('https://cdn.repub.ch/', 'https://assets.republik.space/') + '&zoomFactor=2'
-  //     return [
-  //       `if [ ! -f ${fileName} ]; then`,
-  //       `  curl -o "${fileName}" "${url}"; sleep 1;`,
-  //       'fi'
-  //     ].join('\n')
-  //   }).join('\n')
-
-  //   // console.log(m)
-  //   curls += m
-  // })
-  // if (typeof window !== 'undefined') { window.curls = curls }
-  // // use copy(curls)
-
   if (
     !knownYears[year] ||
     (!knownYears[year].after && !knownYears[year].path)
