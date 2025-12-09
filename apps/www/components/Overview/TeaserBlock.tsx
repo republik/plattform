@@ -1,19 +1,20 @@
 import React, { useRef, useState, useEffect, useCallback, useMemo } from 'react'
-import { css } from 'glamor'
+import { css, media } from 'glamor'
 import debounce from 'lodash/debounce'
-import { LazyLoad, createFrontSchema } from '@project-r/styleguide'
+import {
+  LazyLoad,
+  createFrontSchema,
+  mediaQueries,
+} from '@project-r/styleguide'
 import { renderMdast } from '@republik/mdast-react-render'
 import Link from 'next/link'
 
 import HrefLink from '../Link/Href'
 
 const SIZES = [
-  { minWidth: 0, columns: 3 },
-  { minWidth: 570, columns: 4 },
-  { minWidth: 690, columns: 5 },
-  { minWidth: 810, columns: 6 },
-  { minWidth: 930, columns: 7 },
-  { minWidth: 1150, columns: 8 },
+  { minWidth: 0, columns: 1 },
+  { minWidth: mediaQueries.mBreakPoint, columns: 2 },
+  { minWidth: mediaQueries.lBreakPoint, columns: 3 },
 ]
 
 const RENDER_WIDTH = 1175 // Tablet breakpoint width for desktop layout
@@ -25,7 +26,6 @@ const teaserHoverStyle = css({
     zIndex: 1,
   },
 })
-
 
 export interface TeaserNode {
   identifier: string
@@ -193,7 +193,8 @@ const TeaserBlock: React.FC<TeaserBlockProps> = ({
                     overflow: 'hidden',
                     minHeight: 100,
                     opacity: isMeasured ? 1 : 0,
-                    transition: 'opacity 0.3s ease-in-out, transform 0.2s ease-in-out',
+                    transition:
+                      'opacity 0.3s ease-in-out, transform 0.2s ease-in-out',
                   }}
                   data-teaser={teaser.id}
                 >
