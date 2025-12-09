@@ -6,7 +6,8 @@ query OnboardingAuthor($slug: String!) {
     portrait
     subscribedBy(onlyMe: true) {
       nodes {
-        ...SubscriptionFields
+        id
+        active
       }
     }
   }

@@ -3,7 +3,6 @@
 import {
   OnboardingAuthorDocument,
   SubscriptionObjectType,
-  User,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import { OnboardingFollowButton } from '@app/components/onboarding/follow-button'
@@ -20,7 +19,7 @@ function AuthorCard({ slug, showAll }: { slug: string; showAll: boolean }) {
     variables: { slug },
   })
 
-  const author = data?.user as User
+  const author = data?.user
 
   const subscriptionId = author?.subscribedBy.nodes.find((n) => n.active)?.id
 
@@ -57,7 +56,7 @@ function AuthorCard({ slug, showAll }: { slug: string; showAll: boolean }) {
         >
           <OnboardingFollowButton
             subscriptionId={subscriptionId}
-            objectId={author.id}
+            objectId={author?.id}
             type={SubscriptionObjectType.User}
           />
         </div>
@@ -65,7 +64,7 @@ function AuthorCard({ slug, showAll }: { slug: string; showAll: boolean }) {
       <div className={css({ ml: 'auto', md: { display: 'none' } })}>
         <OnboardingFollowButton
           subscriptionId={subscriptionId}
-          objectId={author.id}
+          objectId={author?.id}
           type={SubscriptionObjectType.User}
         />
       </div>

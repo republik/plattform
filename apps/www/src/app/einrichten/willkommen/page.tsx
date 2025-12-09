@@ -76,7 +76,7 @@ export default async function Page() {
             className={cx(button({ size: 'full' }), css({ mt: 2 }))}
             href='/einrichten'
           >
-            {"Los geht's!"}
+            {'Los gehts!'}
           </Link>
         </div>
       </div>
