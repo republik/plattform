@@ -172,10 +172,19 @@ const elasticFilterBuilder = (schemas) => (filterInput) => {
       const { key, value, options } = filterInput[hash]
 
       const schema = schemas.find((schema) => !!schema[key])
-      const schemaEntry = schema[key]
+
+      let schemaEntry = schema[key]
+
       if (!schemaEntry) {
         throw new Error(`Missing schemaEntry for filter: ${key}`)
       }
+
+      // fix so we don't have to rename the whole schema.__type logic everywhere
+      if (key === '__type' && typeof schemaEntry !== 'object') {
+        schemaEntry = schema.type
+      }
+
+      
 
       const criteria = schemaEntry.criteria
       if (!criteria) {

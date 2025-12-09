@@ -14,7 +14,7 @@ const { termCriteriaBuilder } = require('./filters')
 const indexType = 'DocumentZone'
 const indexRef = {
   index: getIndexAlias(indexType.toLowerCase(), 'write'),
-  type: indexType,
+  // type: indexType,
 }
 
 const schema = {
