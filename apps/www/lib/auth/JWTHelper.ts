@@ -1,10 +1,10 @@
 import * as jose from 'jose'
 import { NextRequest } from 'next/server'
-import { COOKIE_NAME, JWT_COOKIE_NAME } from './constants'
+import { COOKIE_NAME, JWT_COOKIE_NAME } from './constants' // Extend jose JWTPayload with our expected payload properties
 
-// Extend jose JWTPayload with our expected payload properties
+// Extend jose JWTPayload with our expected onboarded property
 export type JWTPayload = jose.JWTPayload & {
-  roles?: string[]
+  onboarded?: string
 }
 
 export function getSessionCookieValue(req: NextRequest): string {

@@ -6,7 +6,7 @@ import { NextRequest } from 'next/server'
  */
 async function fetchMeObject(
   req: NextRequest,
-): Promise<{ me: null | { onboarded: string | null }; cookie: string }> {
+): Promise<{ me: null | { onboarded?: string }; cookie: string }> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}?query={me{onboarded}}`,
     {
