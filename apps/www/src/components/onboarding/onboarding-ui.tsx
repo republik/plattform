@@ -1,4 +1,3 @@
-import { Button } from '@app/components/ui/button'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
@@ -67,32 +66,5 @@ export function OnboardingNextStep({
         </Link>
       </div>
     </div>
-  )
-}
-
-export function OnboardingFollowButton({
-  onClick,
-  subscribed,
-  isPending,
-}: {
-  onClick: (e: any) => void
-  subscribed?: boolean
-  isPending?: boolean
-}) {
-  return (
-    <Button
-      className={css({
-        fontWeight: 500,
-        textDecoration: 'none',
-      })}
-      onClick={onClick}
-      disabled={isPending}
-      type='button'
-      size='small'
-      variant={subscribed ? 'outline' : 'default'}
-      loading={isPending}
-    >
-      {subscribed ? 'Gefolgt' : 'Folgen'}
-    </Button>
   )
 }

@@ -2,29 +2,20 @@
 
 import {
   OnboardingAuthorDocument,
-  SubscribeDocument,
   SubscriptionObjectType,
-  UnsubscribeDocument,
   User,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useMutation, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
+import { OnboardingFollowButton } from '@app/components/onboarding/follow-button'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { Button } from '../ui/button'
 import { AUTHORS_FEATURED } from './config'
-import {
-  OnboardingFollowButton,
-  OnboardingH3,
-  OnboardingSection,
-} from './onboarding-ui'
+import { OnboardingH3, OnboardingSection } from './onboarding-ui'
 
 function AuthorCard({ slug, showAll }: { slug: string; showAll: boolean }) {
   const { t } = useTranslation()
-
-  const [isPending, setIsPending] = useState(false)
-  const [subscribe] = useMutation(SubscribeDocument)
-  const [unsubscribe] = useMutation(UnsubscribeDocument)
   const { data } = useQuery(OnboardingAuthorDocument, {
     variables: { slug },
   })
@@ -33,42 +24,16 @@ function AuthorCard({ slug, showAll }: { slug: string; showAll: boolean }) {
 
   const subscriptionId = author?.subscribedBy.nodes.find((n) => n.active)?.id
 
-  async function toggleSubscription(e) {
-    e.stopPropagation()
-
-    if (isPending || !author) return
-
-    setIsPending(true)
-    if (subscriptionId) {
-      await unsubscribe({
-        variables: {
-          subscriptionId,
-        },
-      })
-    } else {
-      await subscribe({
-        variables: {
-          objectId: author.id,
-          type: SubscriptionObjectType.User,
-        },
-      })
-    }
-    setIsPending(false)
-  }
-
   return (
     <div
       className={`${css({
         display: 'none',
         alignItems: 'center',
         gap: 2,
-        cursor: 'pointer',
         md: {
           maxWidth: '350px',
         },
       })} author-card ${showAll ? 'show-author-card' : ''}`}
-      onClick={toggleSubscription}
-      role='button'
     >
       <img
         width='84'
@@ -91,17 +56,17 @@ function AuthorCard({ slug, showAll }: { slug: string; showAll: boolean }) {
           })}
         >
           <OnboardingFollowButton
-            onClick={toggleSubscription}
-            subscribed={!!subscriptionId}
-            isPending={isPending}
+            subscriptionId={subscriptionId}
+            objectId={author.id}
+            type={SubscriptionObjectType.User}
           />
         </div>
       </div>
       <div className={css({ ml: 'auto', md: { display: 'none' } })}>
         <OnboardingFollowButton
-          onClick={toggleSubscription}
-          subscribed={!!subscriptionId}
-          isPending={isPending}
+          subscriptionId={subscriptionId}
+          objectId={author.id}
+          type={SubscriptionObjectType.User}
         />
       </div>
     </div>

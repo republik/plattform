@@ -3,53 +3,21 @@
 import {
   Document,
   OnboardingFormatsDocument,
-  SubscribeDocument,
   SubscriptionObjectType,
-  UnsubscribeDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useMutation, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
+import { OnboardingFollowButton } from '@app/components/onboarding/follow-button'
 import { css } from '@republik/theme/css'
-import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { FORMATS_FEATURED, FORMATS_STYLE } from './config'
-import {
-  OnboardingFollowButton,
-  OnboardingH3,
-  OnboardingSection,
-} from './onboarding-ui'
+import { OnboardingH3, OnboardingSection } from './onboarding-ui'
 
 function FormatCard({ format }: { format?: Document }) {
   const { t } = useTranslation()
-  const [subscribe] = useMutation(SubscribeDocument)
-  const [unsubscribe] = useMutation(UnsubscribeDocument)
-  const [isPending, setIsPending] = useState(false)
 
   if (!format) return null
 
   const subscriptionId = format.subscribedBy.nodes.find((n) => n.active)?.id
-
-  async function toggleSubscription(e) {
-    e.stopPropagation()
-
-    if (isPending) return
-
-    setIsPending(true)
-    if (subscriptionId) {
-      await unsubscribe({
-        variables: {
-          subscriptionId,
-        },
-      })
-    } else {
-      await subscribe({
-        variables: {
-          objectId: format.id,
-          type: SubscriptionObjectType.Document,
-        },
-      })
-    }
-    setIsPending(false)
-  }
 
   return (
     <div
@@ -61,14 +29,11 @@ function FormatCard({ format }: { format?: Document }) {
         p: 4,
         display: 'flex',
         flexDirection: 'column',
-        cursor: 'pointer',
         md: {
           mx: 'initial',
         },
       })}
       style={FORMATS_STYLE[format.repoId] || {}}
-      onClick={toggleSubscription}
-      role='button'
     >
       <h4
         className={css({
@@ -94,9 +59,9 @@ function FormatCard({ format }: { format?: Document }) {
         }}
       >
         <OnboardingFollowButton
-          onClick={toggleSubscription}
-          subscribed={!!subscriptionId}
-          isPending={isPending}
+          subscriptionId={subscriptionId}
+          objectId={format.id}
+          type={SubscriptionObjectType.Document}
         />
         <img
           className={css({ maxHeight: '160px', maxWidth: '120px' })}

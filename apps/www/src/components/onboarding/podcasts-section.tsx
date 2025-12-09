@@ -3,63 +3,28 @@
 import {
   Document,
   OnboardingFormatsDocument,
-  SubscribeDocument,
   SubscriptionObjectType,
-  UnsubscribeDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useMutation, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
+import { OnboardingFollowButton } from '@app/components/onboarding/follow-button'
 import { css } from '@republik/theme/css'
-import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { PODCASTS_FEATURED, PODCASTS_STYLE } from './config'
-import {
-  OnboardingFollowButton,
-  OnboardingH3,
-  OnboardingSection,
-} from './onboarding-ui'
+import { OnboardingH3, OnboardingSection } from './onboarding-ui'
 
 function PodcastCard({ podcast }: { podcast?: Document }) {
   const { t } = useTranslation()
-  const [subscribe] = useMutation(SubscribeDocument)
-  const [unsubscribe] = useMutation(UnsubscribeDocument)
-  const [isPending, setIsPending] = useState(false)
 
   if (!podcast) return null
 
   const subscriptionId = podcast.subscribedBy.nodes.find((n) => n.active)?.id
-
-  async function toggleSubscription(e) {
-    e.stopPropagation()
-
-    if (isPending) return
-
-    setIsPending(true)
-    if (subscriptionId) {
-      await unsubscribe({
-        variables: {
-          subscriptionId,
-        },
-      })
-    } else {
-      await subscribe({
-        variables: {
-          objectId: podcast.id,
-          type: SubscriptionObjectType.Document,
-        },
-      })
-    }
-    setIsPending(false)
-  }
 
   return (
     <div
       className={css({
         display: 'flex',
         flexDirection: 'column',
-        cursor: 'pointer',
       })}
-      onClick={toggleSubscription}
-      role='button'
     >
       <div
         style={PODCASTS_STYLE[podcast.repoId]}
@@ -104,9 +69,9 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
       </p>
       <div className={css({ mt: 2 })}>
         <OnboardingFollowButton
-          onClick={toggleSubscription}
-          subscribed={!!subscriptionId}
-          isPending={isPending}
+          subscriptionId={subscriptionId}
+          objectId={podcast.id}
+          type={SubscriptionObjectType.Document}
         />
       </div>
     </div>
