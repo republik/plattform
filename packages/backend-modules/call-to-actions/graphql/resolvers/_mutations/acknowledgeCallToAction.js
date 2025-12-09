@@ -20,6 +20,7 @@ module.exports = async (_, args, context) => {
     }
 
     if (cta.acknowledgedAt) {
+      await tx.transactionRollback()
       return cta
     }
 
