@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
-import { useColorContext } from '@project-r/styleguide'
+import { useColorContext, fontStyles } from '@project-r/styleguide'
 import { getMonthName } from './yearDataUtils'
 
 interface TimelineNavigationProps {
@@ -18,53 +18,15 @@ const styles = {
     marginBottom: 40,
     marginTop: 20,
   }),
-  yearSelector: css({
+  monthTimeline: css({
     display: 'flex',
-    alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
-    gap: 15,
-  }),
-  yearButton: css({
-    padding: '8px 16px',
-    border: 'none',
-    background: 'transparent',
-    cursor: 'pointer',
-    fontSize: 18,
-    fontFamily: 'inherit',
-    transition: 'opacity 0.2s',
-    '&:hover': {
-      opacity: 0.7,
-    },
-    '&:disabled': {
-      opacity: 0.3,
-      cursor: 'not-allowed',
-    },
-  }),
-  currentYear: css({
-    fontSize: 24,
-    fontWeight: 'bold',
-    minWidth: 80,
-    textAlign: 'center',
-  }),
-  timeline: css({
-    display: 'flex',
+    alignItems: 'center',
     overflowX: 'auto',
     scrollSnapType: 'x mandatory',
-    gap: 8,
+    gap: 12,
     padding: '10px 0',
     WebkitOverflowScrolling: 'touch',
-    scrollbarWidth: 'thin',
-    '::-webkit-scrollbar': {
-      height: 6,
-    },
-    '::-webkit-scrollbar-track': {
-      background: 'rgba(255, 255, 255, 0.1)',
-    },
-    '::-webkit-scrollbar-thumb': {
-      background: 'rgba(255, 255, 255, 0.3)',
-      borderRadius: 3,
-    },
   }),
   monthItem: css({
     flex: '0 0 auto',
@@ -72,31 +34,44 @@ const styles = {
     minWidth: 100,
     padding: '12px 16px',
     textAlign: 'center',
-    borderRadius: 4,
-    textDecoration: 'none',
     cursor: 'pointer',
-    transition: 'all 0.2s',
-    border: '1px solid transparent',
+    transition: 'transform 0.2s',
     '&:hover': {
       transform: 'translateY(-2px)',
     },
   }),
-  monthActive: css({
-    fontWeight: 'bold',
-    border: '1px solid currentColor',
+  monthLinkActive: css({
+    ...fontStyles.sansSerifMedium32,
   }),
-  monthEmpty: css({
-    opacity: 0.4,
-    cursor: 'default',
-    pointerEvents: 'none',
+  monthLinkInactive: css({
+    ...fontStyles.sansSerifMedium16,
+    opacity: 0.9,
   }),
-  monthName: css({
-    fontSize: 14,
-    marginBottom: 4,
+
+  yearTimeline: css({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 12,
+    overflowX: 'auto',
+    scrollSnapType: 'x mandatory',
+    WebkitOverflowScrolling: 'touch',
+    padding: '10px 0',
   }),
-  monthCount: css({
-    fontSize: 11,
-    opacity: 0.8,
+  yearLink: css({
+    flex: '0 0 auto',
+    padding: '8px 16px',
+    transition: 'transform 0.2s',
+    '&:hover': {
+      transform: 'translateY(-2px)',
+    },
+  }),
+  yearLinkInactive: css({
+    ...fontStyles.sansSerifMedium16,
+    opacity: 0.9,
+  }),
+  yearLinkActive: css({
+    ...fontStyles.sansSerifMedium40,
   }),
 }
 
@@ -109,6 +84,7 @@ const TimelineNavigation: React.FC<TimelineNavigationProps> = ({
 }) => {
   const [colorScheme] = useColorContext()
   const timelineRef = useRef<HTMLDivElement>(null)
+  const yearTimelineRef = useRef<HTMLDivElement>(null)
 
   // Scroll current month into view
   useEffect(() => {
@@ -126,68 +102,77 @@ const TimelineNavigation: React.FC<TimelineNavigationProps> = ({
     }
   }, [currentMonth])
 
+  // Scroll current year into view
+  useEffect(() => {
+    if (yearTimelineRef.current) {
+      const activeYear = yearTimelineRef.current.querySelector(
+        `[data-year="${year}"]`,
+      )
+      if (activeYear) {
+        activeYear.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'center',
+        })
+      }
+    }
+  }, [year])
+
   const months = Array.from({ length: 12 }, (_, i) => i + 1)
+  const years = Array.from(
+    { length: maxYear - minYear + 1 },
+    (_, i) => minYear + i,
+  )
 
   return (
     <div {...styles.container}>
-      {/* Year Selector */}
-      <div {...styles.yearSelector} {...colorScheme.set('color', 'text')}>
-        <Link href={`/${year - 1}/1`} passHref legacyBehavior>
-          <button
-            {...styles.yearButton}
-            disabled={year <= minYear}
-            {...colorScheme.set('color', 'text')}
-          >
-            ←
-          </button>
-        </Link>
-        <div {...styles.currentYear}>{year}</div>
-        <Link href={`/${year + 1}/1`} passHref legacyBehavior>
-          <button
-            {...styles.yearButton}
-            disabled={year >= maxYear}
-            {...colorScheme.set('color', 'text')}
-          >
-            →
-          </button>
-        </Link>
+      {/* Year Timeline */}
+      <div {...styles.yearTimeline} ref={yearTimelineRef}>
+        {years.map((y) => {
+          const isActive = y === year
+          const yearLinkStyle = {
+            ...styles.yearLink,
+            ...(isActive ? styles.yearLinkActive : styles.yearLinkInactive),
+          }
+
+          return (
+            <Link key={y} href={`/${y}/1`} passHref legacyBehavior>
+              <a
+                {...yearLinkStyle}
+                {...colorScheme.set('color', 'text')}
+                data-year={y}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                {y}
+              </a>
+            </Link>
+          )
+        })}
       </div>
 
       {/* Month Timeline */}
-      <div {...styles.timeline} ref={timelineRef}>
+      <div {...styles.monthTimeline} ref={timelineRef}>
         {months.map((month) => {
           const hasContent = monthsWithContent.includes(month)
           const isActive = month === currentMonth
           const isEmpty = !hasContent
 
-          const monthStyle = {
+          const monthLinkStyle = {
             ...styles.monthItem,
-            ...(isActive ? styles.monthActive : {}),
-            ...(isEmpty ? styles.monthEmpty : {}),
+            ...(isActive ? styles.monthLinkActive : styles.monthLinkInactive),
           }
 
           return (
             <Link
               key={month}
               href={`/${year}/${month}`}
-              passHref
-              legacyBehavior
+              {...monthLinkStyle}
+              {...colorScheme.set('color', 'text')}
+              data-month={month}
+              aria-current={isActive ? 'page' : undefined}
+              aria-disabled={isEmpty}
             >
-              <a
-                {...monthStyle}
-                {...colorScheme.set('color', 'text')}
-                {...colorScheme.set('backgroundColor', 'hover')}
-                data-month={month}
-                aria-current={isActive ? 'page' : undefined}
-                aria-disabled={isEmpty}
-              >
-                <div {...styles.monthName}>{getMonthName(month)}</div>
-                {hasContent && (
-                  <div {...styles.monthCount}>
-                    {isEmpty ? '—' : '●'}
-                  </div>
-                )}
-              </a>
+              {getMonthName(month)}
             </Link>
           )
         })}

@@ -15,6 +15,7 @@ const SIZES = [
   { minWidth: 0, columns: 1 },
   { minWidth: mediaQueries.mBreakPoint, columns: 2 },
   { minWidth: mediaQueries.lBreakPoint, columns: 3 },
+  { minWidth: 1400, columns: 4 },
 ]
 
 const RENDER_WIDTH = 1175 // Tablet breakpoint width for desktop layout
@@ -85,25 +86,36 @@ const TeaserBlock: React.FC<TeaserBlockProps> = ({
       }
 
       const { width: parentWidth } = parent.getBoundingClientRect()
+      
+      // On mobile viewports (< 640px), skip scaling to let teasers render naturally
+      const isMobileViewport = window.innerWidth < 640
 
       teaserElements.forEach((teaser) => {
         const rect = teaser.getBoundingClientRect()
 
-        // Calculate scale for this teaser
-        const scale = rect.width / RENDER_WIDTH
-
         // Apply scale transform to inner container and measure its content
         const innerContainer = teaser.querySelector('[data-teaser-inner]')
-        if (innerContainer && scale) {
+        if (innerContainer) {
           const inner = innerContainer as HTMLElement
-          inner.style.transform = `scale(${scale})`
+          
+          if (isMobileViewport) {
+            // On mobile: no scaling, natural width
+            inner.style.width = '100%'
+            inner.style.transform = 'none'
+            ;(teaser as HTMLElement).style.height = 'auto'
+          } else {
+            // On desktop: scale down from RENDER_WIDTH
+            inner.style.width = `${RENDER_WIDTH}px`
+            const scale = rect.width / RENDER_WIDTH
+            inner.style.transform = `scale(${scale})`
 
-          // Get the actual rendered height of the content before scaling
-          const contentHeight = inner.scrollHeight
+            // Get the actual rendered height of the content before scaling
+            const contentHeight = inner.scrollHeight
 
-          // Set the outer container's height to the scaled content height
-          const scaledHeight = contentHeight * scale
-          ;(teaser as HTMLElement).style.height = `${scaledHeight}px`
+            // Set the outer container's height to the scaled content height
+            const scaledHeight = contentHeight * scale
+            ;(teaser as HTMLElement).style.height = `${scaledHeight}px`
+          }
         }
       })
 
@@ -135,7 +147,7 @@ const TeaserBlock: React.FC<TeaserBlockProps> = ({
   }, [teasers, measure])
 
   return (
-    <div ref={blockRef}>
+    <div ref={blockRef} style={{ paddingLeft: 15, paddingRight: 15 }}>
       <LazyLoad
         visible={false}
         consistentPlaceholder

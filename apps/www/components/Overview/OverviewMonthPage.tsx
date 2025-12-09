@@ -2,9 +2,8 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
 import { ascending } from 'd3-array'
-import { Interaction, Loader, useColorContext } from '@project-r/styleguide'
+import { Loader } from '@project-r/styleguide'
 
-import { useTranslation } from '../../lib/withT'
 import {
   GetCompleteFrontOverviewDocument,
   GetFrontOverviewYearDocument,
@@ -20,7 +19,6 @@ import {
   filterTeasersByMonth,
   getMonthsWithContent,
   getNearestMonthWithContent,
-  getMonthName,
 } from './yearDataUtils'
 
 interface OverviewMonthPageProps {
@@ -46,9 +44,7 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
   month,
   serverContext,
 }) => {
-  const { t } = useTranslation()
   const router = useRouter()
-  const [colorScheme] = useColorContext()
 
   // Determine which query to use based on known years
   const isArchivedYear = ARCHIVED_FRONT_DOCUMENTS[year]
@@ -137,17 +133,6 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
         currentMonth={month}
         monthsWithContent={monthsWithContent}
       />
-
-      <Interaction.H1
-        style={{
-          marginBottom: 20,
-          marginTop: 0,
-        }}
-        {...colorScheme.set('color', 'text')}
-      >
-        {getMonthName(month)}
-      </Interaction.H1>
-
       <TeaserBlock teasers={monthTeasers} />
     </Frame>
   )
