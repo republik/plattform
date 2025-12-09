@@ -79,7 +79,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   ): NextResponse {
     if (notOnboarded) {
       resUrl.pathname = '/einrichten/willkommen'
-      return NextResponse.rewrite(resUrl)
+      return NextResponse.redirect(resUrl)
     }
 
     return NextResponse.next()
@@ -149,7 +149,8 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - monitoring (Sentry tunnel route)
+     * - graphql (GraphQL proxy)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|monitoring).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|monitoring|graphql).*)',
   ],
 }
