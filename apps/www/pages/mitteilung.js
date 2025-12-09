@@ -1,37 +1,36 @@
+import {
+  A,
+  Interaction,
+  Logo,
+  mediaQueries,
+  NarrowContainer,
+  useColorContext,
+} from '@project-r/styleguide'
+import { IconClose } from '@republik/icons'
 import { css } from 'glamor'
-import Head from 'next/head'
 
 import compose from 'lodash/flowRight'
+import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter, withRouter } from 'next/router'
-
-import withMe from '../lib/apollo/withMe'
-import { useTranslation } from '../lib/withT'
-import withInNativeApp from '../lib/withInNativeApp'
-import { intersperse } from '../lib/utils/helpers'
-
-import {
-  HEADER_HEIGHT,
-  LOGO_WIDTH,
-  LOGO_PADDING,
-  LOGO_WIDTH_MOBILE,
-  LOGO_PADDING_MOBILE,
-} from '../components/constants'
 
 import AuthNotification from '../components/Auth/Notification'
 
-import { CURTAIN_MESSAGE, CDN_FRONTEND_BASE_URL } from '../lib/constants'
-
 import {
-  Interaction,
-  NarrowContainer,
-  Logo,
-  A,
-  mediaQueries,
-  useColorContext,
-} from '@project-r/styleguide'
-import Link from 'next/link'
+  HEADER_HEIGHT,
+  LOGO_PADDING,
+  LOGO_PADDING_MOBILE,
+  LOGO_WIDTH,
+  LOGO_WIDTH_MOBILE,
+} from '../components/constants'
 import { withDefaultSSR } from '../lib/apollo/helpers'
-import { IconClose } from '@republik/icons'
+
+import withMe from '../lib/apollo/withMe'
+
+import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
+import { intersperse } from '../lib/utils/helpers'
+import withInNativeApp from '../lib/withInNativeApp'
+import { useTranslation } from '../lib/withT'
 
 const styles = {
   bar: css({
@@ -87,8 +86,6 @@ const styles = {
   }),
 }
 
-const hasCurtain = !!CURTAIN_MESSAGE
-
 const { P } = Interaction
 
 const fixAmpsInQuery = (rawQuery) => {
@@ -142,10 +139,6 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
         src={`${CDN_FRONTEND_BASE_URL}/static/project_r_logo.png`}
       />
     </a>
-  ) : hasCurtain ? (
-    <div {...styles.logoRepublik}>
-      <Logo />
-    </div>
   ) : (
     <a href='/' target={logoTarget} {...styles.logoRepublik}>
       <Logo />
@@ -181,8 +174,8 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
             marginTop: inNativeApp ? 15 : undefined,
           }}
         >
-          <AuthNotification query={query} />
-          {!hasCurtain && links.length > 0 && (
+          <AuthNotification router={router} query={query} />
+          {links.length > 0 && (
             <P {...styles.link}>
               {intersperse(
                 links.map((link, i) => (
