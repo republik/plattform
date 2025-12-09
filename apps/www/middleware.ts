@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getJWTCookieValue, getSessionCookieValue, verifyJWT } from './lib/auth/JWTHelper'
 import fetchMeObject from './lib/helpers/middleware/FetchMeObject'
 
 /**
@@ -63,17 +64,20 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
     return NextResponse.rewrite(resUrl)
   }
 
+  if (req.nextUrl.pathname.startsWith('/einrichten')) {
+    // Let onboarding pages pass through the middleware
+    return NextResponse.next()
+  }
+
   /**
    * Rewrite to the onboarding if the user has not completed onboarding yet.
-   * @param loggedIn
-   * @param onboarded The date when the user completed onboarding
+   * @param notOnboarded The date when the user completed onboarding
    * @returns NextResponse
    */
   function rewriteBasedOnOnboardingStatus(
-    loggedIn: boolean,
-    onboarded?: string,
+    notOnboarded?: boolean,
   ): NextResponse {
-    if (loggedIn && !onboarded) {
+    if (notOnboarded) {
       resUrl.pathname = '/einrichten/willkommen'
       return NextResponse.rewrite(resUrl)
     }
@@ -90,7 +94,7 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   async function rewriteBasedOnMe(req: NextRequest): Promise<NextResponse> {
     const { me, cookie } = await fetchMeObject(req)
 
-    const response = rewriteBasedOnOnboardingStatus(!!me, me?.onboarded)
+    const response = rewriteBasedOnOnboardingStatus(!!me && !me?.onboarded)
 
     if (cookie) {
       // Forward cookies to the client
@@ -100,7 +104,34 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
     return response
   }
 
-  if (!req.nextUrl.pathname.startsWith('/einrichten')) {
+  /**
+   * Redirect based on the jwt-token after it was successfully validated
+   * @param token JWT found in the cookie header
+   * @returns NextResponse
+   */
+  async function rewriteBasedOnToken(token: string): Promise<NextResponse> {
+    try {
+      // Parse and verify JWT to decide about redirection
+      const jwtBody = await verifyJWT(token)
+
+      // empty jwt-payload -> expired session-cookie
+      return rewriteBasedOnOnboardingStatus(!jwtBody?.onboarded)
+    } catch (err) {
+      // Rewrite to gateway to fetch a new valid JWT
+      console.error('JWT Verification Error', err)
+      // Rewrite based on fetched me object
+      return rewriteBasedOnMe(req)
+    }
+  }
+
+  const sessionCookie = getSessionCookieValue(req)
+  const tokenCookie = getJWTCookieValue(req)
+
+  if (sessionCookie && tokenCookie) {
+    // Rewrite based on token
+    return await rewriteBasedOnToken(tokenCookie)
+  } else {
+    // Rewrite if no JWT is present
     return await rewriteBasedOnMe(req)
   }
 
