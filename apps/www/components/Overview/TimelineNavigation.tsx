@@ -19,6 +19,9 @@ interface TimelineNavigationProps {
 const styles = {
   container: css({
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
     marginBottom: 40,
     marginTop: 20,
   }),
@@ -28,13 +31,14 @@ const styles = {
     alignItems: 'baseline',
     overflowX: 'auto',
     scrollSnapType: 'x mandatory',
-    gap: 32,
-    padding: '0 15px',
+    gap: 24,
+    padding: '0 15px 4px 0',
     WebkitOverflowScrolling: 'touch',
   }),
-  monthItem: css({
+  timelineItem: css({
     flex: '0 0 auto',
     scrollSnapAlign: 'start',
+    paddingLeft: '15px',
     textAlign: 'center',
     cursor: 'pointer',
     transition: 'transform 0.2s',
@@ -42,25 +46,11 @@ const styles = {
       transform: 'translateY(-2px)',
     },
   }),
-  monthLinkActive: css({
+  timelineItemActive: css({
     ...fontStyles.sansSerifMedium26,
   }),
-  monthLinkInactive: css({
+  timelineItemInactive: css({
     ...fontStyles.sansSerifRegular16,
-  }),
-  yearLink: css({
-    flex: '0 0 auto',
-    padding: '0px 0px 16px 0px',
-    transition: 'transform 0.2s',
-    '&:hover': {
-      transform: 'translateY(-2px)',
-    },
-  }),
-  yearLinkInactive: css({
-    ...fontStyles.sansSerifRegular16,
-  }),
-  yearLinkActive: css({
-    ...fontStyles.sansSerifMedium26,
   }),
 }
 
@@ -120,21 +110,20 @@ const TimelineNavigation: React.FC<TimelineNavigationProps> = ({
         {years.map((y) => {
           const isActive = y === year
           const yearLinkStyle = {
-            ...styles.yearLink,
-            ...(isActive ? styles.yearLinkActive : styles.yearLinkInactive),
+            ...styles.timelineItem,
+            ...(isActive ? styles.timelineItemActive : styles.timelineItemInactive),
             ...colorScheme.set('color', isActive ? 'text' : 'textSoft'),
           }
 
           return (
-            <Link key={y} href={`/${y}/1`} passHref legacyBehavior>
-              <a
-                {...yearLinkStyle}
-                {...colorScheme.set('color', 'text')}
-                data-year={y}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                {y}
-              </a>
+            <Link
+              key={y}
+              href={`/${y}/1`}
+              {...yearLinkStyle}
+              data-year={y}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {y}
             </Link>
           )
         })}
@@ -148,8 +137,8 @@ const TimelineNavigation: React.FC<TimelineNavigationProps> = ({
           const isEmpty = !hasContent
 
           const monthLinkStyle = {
-            ...styles.monthItem,
-            ...(isActive ? styles.monthLinkActive : styles.monthLinkInactive),
+            ...styles.timelineItem,
+            ...(isActive ? styles.timelineItemActive : styles.timelineItemInactive),
             ...colorScheme.set('color', isActive ? 'text' : 'textSoft'),
           }
 
@@ -158,7 +147,6 @@ const TimelineNavigation: React.FC<TimelineNavigationProps> = ({
               key={month}
               href={`/${year}/${month}`}
               {...monthLinkStyle}
-              {...colorScheme.set('color', 'text')}
               data-month={month}
               aria-current={isActive ? 'page' : undefined}
               aria-disabled={isEmpty}
