@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { css } from 'glamor'
 import Link from 'next/link'
-import { useColorContext, fontStyles } from '@project-r/styleguide'
+import { useColorContext, fontStyles, mediaQueries } from '@project-r/styleguide'
 import { getMonthName } from './yearDataUtils'
 
 interface TimelineNavigationProps {
@@ -20,19 +20,21 @@ const styles = {
   }),
   monthTimeline: css({
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     overflowX: 'auto',
     scrollSnapType: 'x mandatory',
-    gap: 12,
-    padding: '10px 0',
+    gap: 24,
+    padding: '10px 15px',
     WebkitOverflowScrolling: 'touch',
+    [mediaQueries.mUp]: {
+      justifyContent: 'center',
+    },
   }),
   monthItem: css({
     flex: '0 0 auto',
     scrollSnapAlign: 'start',
-    minWidth: 100,
-    padding: '12px 16px',
+    minWidth: 48,
     textAlign: 'center',
     cursor: 'pointer',
     transition: 'transform 0.2s',
@@ -50,13 +52,16 @@ const styles = {
 
   yearTimeline: css({
     display: 'flex',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     gap: 12,
     overflowX: 'auto',
     scrollSnapType: 'x mandatory',
     WebkitOverflowScrolling: 'touch',
-    padding: '10px 0',
+    padding: '0 15px',
+    [mediaQueries.mUp]: {
+      justifyContent: 'center',
+    },
   }),
   yearLink: css({
     flex: '0 0 auto',
