@@ -1,18 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
 import { ascending } from 'd3-array'
-import {
-  Button,
-  Interaction,
-  Loader,
-  useColorContext,
-} from '@project-r/styleguide'
-import Link from 'next/link'
+import { Interaction, Loader, useColorContext } from '@project-r/styleguide'
 
 import { useTranslation } from '../../lib/withT'
-import { CDN_FRONTEND_BASE_URL } from '../../lib/constants'
-import { useMe } from '../../lib/context/MeContext'
 import {
   GetCompleteFrontOverviewDocument,
   GetFrontOverviewYearDocument,
@@ -22,7 +14,6 @@ import StatusError from '../StatusError'
 import Frame from '../Frame'
 import TeaserBlock from './TeaserBlock'
 import TimelineNavigation from './TimelineNavigation'
-import { P } from './Elements'
 
 import {
   prepareTeasersForYear,
@@ -140,15 +131,13 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
   }
 
   return (
-    <Frame pageColorSchemeKey='dark'>
-      {/* Timeline Navigation */}
+    <Frame raw pageColorSchemeKey='dark'>
       <TimelineNavigation
         year={year}
         currentMonth={month}
         monthsWithContent={monthsWithContent}
       />
 
-      {/* Month heading */}
       <Interaction.H1
         style={{
           marginBottom: 20,
@@ -159,12 +148,7 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
         {getMonthName(month)}
       </Interaction.H1>
 
-      {/* Teaser Block */}
-      <TeaserBlock
-        path={isArchivedYear && isArchivedYear.path}
-        teasers={monthTeasers}
-        lazy={false}
-      />
+      <TeaserBlock teasers={monthTeasers} />
     </Frame>
   )
 }

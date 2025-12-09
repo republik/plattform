@@ -16,12 +16,17 @@ const SIZES = [
   { minWidth: 1150, columns: 8 },
 ]
 
-export const GAP = 10
 const RENDER_WIDTH = 1175 // Tablet breakpoint width for desktop layout
 
-// TypeScript Interfaces
-// Note: More specific types should be generated from GraphQL schema
-// For now using minimal interfaces for the teaser data structure
+const teaserHoverStyle = css({
+  cursor: 'pointer',
+  ':hover': {
+    transform: 'scale(1.03)',
+    zIndex: 1,
+  },
+})
+
+
 export interface TeaserNode {
   identifier: string
   data: Record<string, any>
@@ -45,16 +50,14 @@ export interface TeaserBlockProps {
 }
 
 const TeaserBlock: React.FC<TeaserBlockProps> = ({
-  path,
-  lazy,
   maxHeight,
   maxColumns = 4,
   teasers,
-  style = {},
 }) => {
   const blockRef = useRef<HTMLDivElement>(null)
   const teaserRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
   const [width, setWidth] = useState<number | undefined>(undefined)
+  const [isMeasured, setIsMeasured] = useState(false)
 
   // Create schema for rendering teasers (memoized)
   const schema = useMemo(
@@ -74,7 +77,9 @@ const TeaserBlock: React.FC<TeaserBlockProps> = ({
         return
       }
 
-      const teaserElements = Array.from(parent.querySelectorAll('[data-teaser]'))
+      const teaserElements = Array.from(
+        parent.querySelectorAll('[data-teaser]'),
+      )
       if (!teaserElements.length) {
         return
       }
@@ -105,8 +110,13 @@ const TeaserBlock: React.FC<TeaserBlockProps> = ({
       if (width !== parentWidth) {
         setWidth(parentWidth)
       }
+
+      // Mark as measured after first layout calculation
+      if (!isMeasured) {
+        setIsMeasured(true)
+      }
     }, 33),
-    [width],
+    [width, isMeasured],
   )
 
   // Mount and unmount effects
@@ -125,14 +135,9 @@ const TeaserBlock: React.FC<TeaserBlockProps> = ({
   }, [teasers, measure])
 
   return (
-    <div
-      ref={blockRef}
-      style={{
-        position: 'relative',
-      }}
-    >
+    <div ref={blockRef}>
       <LazyLoad
-        visible={!lazy}
+        visible={false}
         consistentPlaceholder
         attributes={{
           ...css({
@@ -172,6 +177,7 @@ const TeaserBlock: React.FC<TeaserBlockProps> = ({
             <div key={teaser.id}>
               <Link href={teaserUrl} prefetch={false} passHref>
                 <div
+                  {...teaserHoverStyle}
                   ref={(el) => {
                     teaserRefs.current[teaser.id] = el
                     if (el) {
@@ -181,15 +187,13 @@ const TeaserBlock: React.FC<TeaserBlockProps> = ({
                   }}
                   style={{
                     position: 'relative',
-                    // unbreakable margin
-                    // GAP needs to be with an inline-block to prevent
-                    // the browser from breaking the margin between columns
                     display: 'inline-block',
                     width: '100%',
-                    marginBottom: GAP,
+                    marginBottom: 10,
                     overflow: 'hidden',
-                    // Height will be set by measure() after scaling
-                    minHeight: 100, // Prevent layout shift while measuring
+                    minHeight: 100,
+                    opacity: isMeasured ? 1 : 0,
+                    transition: 'opacity 0.3s ease-in-out, transform 0.2s ease-in-out',
                   }}
                   data-teaser={teaser.id}
                 >
@@ -199,7 +203,7 @@ const TeaserBlock: React.FC<TeaserBlockProps> = ({
                       width: RENDER_WIDTH,
                       transformOrigin: '0% 0%',
                       transition: 'transform 100ms',
-                      pointerEvents: 'none', // Prevent inner links from intercepting clicks
+                      pointerEvents: 'none',
                     }}
                   >
                     {renderMdast(
