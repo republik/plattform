@@ -1,14 +1,15 @@
-import { useEffect } from 'react'
+import { ForceOnboarding } from '@app/components/onboarding/force-onboarding'
 import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
+import { useEffect } from 'react'
 import Front from '../components/Front'
 import { FRONT_QUERY } from '../components/Front/graphql/getFrontQuery.graphql'
-import { useMe } from '../lib/context/MeContext'
 import {
   FRONT_FEED_QUERY,
   getFrontFeedOptions,
 } from '../components/Front/withData'
 import { createGetStaticProps } from '../lib/apollo/helpers'
+import { useMe } from '../lib/context/MeContext'
 
 const FRONT_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 const FRONT_PATH = '/'
@@ -26,17 +27,19 @@ const FrontPage = () => {
   }, [meLoading, hasAccess])
 
   return (
-    <Front
-      shouldAutoRefetch
-      hasOverviewNav
-      extractId={router.query.extractId}
-      finite
-      renderBefore={undefined}
-      renderAfter={undefined}
-      containerStyle={undefined}
-      serverContext={undefined}
-      documentPath={FRONT_PATH}
-    />
+    <ForceOnboarding>
+      <Front
+        shouldAutoRefetch
+        hasOverviewNav
+        extractId={router.query.extractId}
+        finite
+        renderBefore={undefined}
+        renderAfter={undefined}
+        containerStyle={undefined}
+        serverContext={undefined}
+        documentPath={FRONT_PATH}
+      />
+    </ForceOnboarding>
   )
 }
 
