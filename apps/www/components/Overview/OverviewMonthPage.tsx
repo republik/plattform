@@ -19,7 +19,9 @@ import {
   filterTeasersByMonth,
   getMonthsWithContent,
   getNearestMonthWithContent,
+  getMonthName,
 } from './yearDataUtils'
+import { CDN_FRONTEND_BASE_URL } from 'lib/constants'
 
 interface OverviewMonthPageProps {
   year: number
@@ -70,6 +72,14 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
     skip: useArchivedFrontQuery,
   })
 
+  const monthName = getMonthName(month)
+
+  const meta = {
+    title: `${monthName} ${year}`,
+    description: `Die Republik-Beiträge aus ${monthName} ${year} im Überblick.`,
+    image: `${CDN_FRONTEND_BASE_URL}/static/social-media/overview.png`,
+  }
+
   // Use data from whichever query is active
   const data = useArchivedFrontQuery ? archivedFrontData : currentYearData
   const loading = useArchivedFrontQuery
@@ -79,7 +89,7 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
 
   if (loading) {
     return (
-      <Frame pageColorSchemeKey='dark'>
+      <Frame pageColorSchemeKey='dark' meta={meta} raw>
         <Loader loading={true} style={{ minHeight: '90vh' }} />
       </Frame>
     )
@@ -87,7 +97,7 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
 
   if (error) {
     return (
-      <Frame pageColorSchemeKey='dark'>
+      <Frame pageColorSchemeKey='dark' meta={meta} raw>
         <Loader loading={false} error={error} style={{ minHeight: '90vh' }} />
       </Frame>
     )
@@ -120,14 +130,14 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
   // Show 404 if no teasers found
   if (!loading && !error && monthTeasers.length === 0) {
     return (
-      <Frame raw>
+      <Frame raw meta={meta}>
         <StatusError statusCode={404} serverContext={serverContext} />
       </Frame>
     )
   }
 
   return (
-    <Frame raw pageColorSchemeKey='dark' hasOverviewNav>
+    <Frame raw pageColorSchemeKey='dark' hasOverviewNav meta={meta}>
       <TimelineNavigation
         year={year}
         currentMonth={month}
