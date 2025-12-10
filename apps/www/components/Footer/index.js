@@ -9,7 +9,6 @@ import { IconOpensource } from '@republik/icons'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import withMe from '../../lib/apollo/withMe'
 import { useInNativeApp } from '../../lib/withInNativeApp'
@@ -134,7 +133,7 @@ const styles = {
   }),
 }
 
-const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
+const Footer = ({ t, me, signOut, hasActiveMembership }) => {
   const [colorScheme] = useColorContext()
   const { inNativeApp, inNativeAppVersion, inNativeAppBuildId } =
     useInNativeApp()
@@ -158,28 +157,24 @@ const Footer = ({ t, me, signOut, isOnMarketingPage, hasActiveMembership }) => {
     <Link prefetch={false} {...props} legacyBehavior />
   )
 
-  const router = useRouter()
-
   return (
     <div {...styles.bg}>
       <div {...styles.content}>
         <div {...styles.topRow}>
           <SocialLinks />
-          {!isOnMarketingPage ? (
-            <FooterNavLink href='/'>
-              <a>
-                <div {...styles.logo}>
-                  <Logo {...colorScheme.set('fill', 'text')} height={20} />
-                  <span
-                    {...colorScheme.set('color', 'textSoft')}
-                    {...styles.since}
-                  >
-                    {t('footer/since')}
-                  </span>
-                </div>
-              </a>
-            </FooterNavLink>
-          ) : null}
+          <FooterNavLink href='/'>
+            <a>
+              <div {...styles.logo}>
+                <Logo {...colorScheme.set('fill', 'text')} height={20} />
+                <span
+                  {...colorScheme.set('color', 'textSoft')}
+                  {...styles.since}
+                >
+                  {t('footer/since')}
+                </span>
+              </div>
+            </a>
+          </FooterNavLink>
         </div>
         <hr {...styles.hr} {...colorScheme.set('borderColor', 'divider')} />
         <div {...styles.middleRow}>

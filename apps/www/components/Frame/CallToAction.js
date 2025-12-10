@@ -7,11 +7,11 @@ import { mediaQueries, useColorContext } from '@project-r/styleguide'
 import { HEADER_HEIGHT } from '../constants'
 import Link from 'next/link'
 
-const CallToAction = ({ formatColor, isOnMarketingPage }) => {
+const CallToAction = ({ formatColor }) => {
   const [colorScheme] = useColorContext()
   const { t } = useTranslation()
   const { inNativeApp } = useInNativeApp()
-  const showTrialButton = inNativeApp && isOnMarketingPage
+  const showTrialButton = inNativeApp
 
   const buttonColorRule = useMemo(() => {
     return css({
@@ -45,16 +45,10 @@ const CallToAction = ({ formatColor, isOnMarketingPage }) => {
       prefetch={false}
       data-hide-if-me='true'
       {...styles.button}
-      {...(isOnMarketingPage
-        ? styles.buttonMarketing
-        : formatColor
-        ? styles.buttonFormatColor
-        : styles.buttonGeneric)}
+      {...(formatColor ? styles.buttonFormatColor : styles.buttonGeneric)}
       {...buttonColorRule}
     >
-      <span {...styles.buttonTextMobile}>
-        {t('cta/buttonsmall')}
-      </span>
+      <span {...styles.buttonTextMobile}>{t('cta/buttonsmall')}</span>
       <span {...styles.buttonText}>{t('cta/button')}</span>
     </Link>
   )
