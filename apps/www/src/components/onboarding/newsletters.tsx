@@ -55,7 +55,7 @@ function OnboardingNewsletters() {
         />
       </div>
 
-      <OnboardingNextStep href='/einrichten/tipp-2'>
+      <OnboardingNextStep href='/einrichten/folgen'>
         {t('onboarding/newsletters/next')}
       </OnboardingNextStep>
     </Frame>
