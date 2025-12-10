@@ -23,7 +23,6 @@ const SigninPage = () => {
   useEffect(() => {
     if (me && query?.redirect) {
       try {
-        console.log(me)
         if (!me.onboarded) {
           router.replace('/onboarding/tipp-1')
           return
