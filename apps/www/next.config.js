@@ -259,6 +259,7 @@ const nextConfig = {
       },
       // Redirect overview pages to 1st month
       { source: '/:year(\\d{4})', destination: '/archiv/:year/1', permanent: false },
+      { source: '/archiv/:year(\\d{4})', destination: '/archiv/:year/1', permanent: false },
     ].filter(Boolean)
   },
   experimental: {
