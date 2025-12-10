@@ -3,14 +3,16 @@ import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 export const ForceOnboarding = ({ children }) => {
-  const { meLoading, me } = useMe()
+  const { me } = useMe()
   const router = useRouter()
 
+  const notOnboarded = me && !me.onboarded
+
   useEffect(() => {
-    if (!meLoading && me && !me.onboarded) {
-      router.push('/einrichten/Willkommen')
+    if (notOnboarded) {
+      router.push('/einrichten/willkommen')
     }
-  }, [meLoading, me, router])
+  }, [notOnboarded, router])
 
   return <>{children}</>
 }
