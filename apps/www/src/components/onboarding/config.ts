@@ -2,11 +2,11 @@ import { NewsletterName } from '#graphql/republik-api/__generated__/gql/graphql'
 import { type StaticImageData } from 'next/image'
 
 import formatBinswanger from './assets/format-binswanger.png'
-import formatRosenwasser from './assets/format-rosenwasser.png'
-import formatGedankensplitter from './assets/format-gedankensplitter.png'
-import formatVahland from './assets/format-vahland.png'
-import formatPfister from './assets/format-pfister.png'
 import formatWieRedenWirEigentlich from './assets/format-format-wie-reden-wir-eigentlich.png'
+import formatGedankensplitter from './assets/format-gedankensplitter.png'
+import formatPfister from './assets/format-pfister.png'
+import formatRosenwasser from './assets/format-rosenwasser.png'
+import formatVahland from './assets/format-vahland.png'
 
 export const NL_FEATURED: NewsletterName[] = [
   NewsletterName.Daily,
@@ -76,7 +76,7 @@ export const AUTHORS_FEATURED: string[] = [
   'asscholl',
 ]
 
-export const PODCASTS_FEATURED: string[] = [
+/*export const PODCASTS_FEATURED: string[] = [
   'republik/format-dritte-gewalt',
   'republik/format-sondersession',
   'republik/format-gute-frage',
@@ -96,12 +96,27 @@ export const PODCASTS_STYLE: { [key: string]: StyleType } = {
   'republik/format-was-wurde-eigentlich-aus': {
     backgroundColor: '#EF6B6D',
   },
-}
+}*/
 
 // STAGING
-/*export const PODCASTS_FEATURED: string[] = [
+export const PODCASTS_FEATURED: string[] = [
   'republik/format-am-klavier',
   'republik/format-wochenrevue',
   'republik/format-republik-live',
   'republik/format-im-gespraech',
-]*/
+]
+
+export const PODCASTS_STYLE: { [key: string]: StyleType } = {
+  'republik/format-am-klavier': {
+    backgroundColor: '#EEB8BF',
+  },
+  'republik/format-wochenrevue': {
+    backgroundColor: '#8CDBB6',
+  },
+  'republik/format-republik-live': {
+    backgroundColor: '#A9A7E0',
+  },
+  'republik/format-im-gespraech': {
+    backgroundColor: '#EF6B6D',
+  },
+}
