@@ -19,7 +19,9 @@ import {
   filterTeasersByMonth,
   getMonthsWithContent,
   getNearestMonthWithContent,
+  getMonthName,
 } from './yearDataUtils'
+import { CDN_FRONTEND_BASE_URL } from 'lib/constants'
 
 interface OverviewMonthPageProps {
   year: number
@@ -126,8 +128,16 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
     )
   }
 
+  const monthName = getMonthName(month)
+
+  const meta = {
+    title: `${monthName} ${year}`,
+    description: `Die Republik-Beiträge aus ${monthName} ${year} im Überblick.`,
+    image: `${CDN_FRONTEND_BASE_URL}/static/social-media/overview.png`,
+  }
+
   return (
-    <Frame raw pageColorSchemeKey='dark' hasOverviewNav>
+    <Frame raw pageColorSchemeKey='dark' hasOverviewNav meta={meta}>
       <TimelineNavigation
         year={year}
         currentMonth={month}
