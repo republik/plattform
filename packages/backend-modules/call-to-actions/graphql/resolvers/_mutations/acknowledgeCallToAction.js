@@ -11,15 +11,16 @@ module.exports = async (_, args, context) => {
   try {
     const cta = await tx.public.callToActions.findOne({ id })
 
-    if (cta.userId !== me.id) {
-      throw new Error(t('api/call-to-actions/acknowledge/notAllowed'))
-    }
-
     if (!cta) {
       throw new Error(t('api/call-to-actions/acknowledge/404'))
     }
 
+    if (cta.userId !== me.id) {
+      throw new Error(t('api/call-to-actions/acknowledge/notAllowed'))
+    }
+
     if (cta.acknowledgedAt) {
+      await tx.transactionRollback()
       return cta
     }
 
