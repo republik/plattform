@@ -53,7 +53,7 @@ function createCommentSchema(
   isTopLevel: boolean = false,
 ): CommentSchema {
   const commentSchema: CommentSchema = {
-    '@context': isTopLevel ? 'https://schema.org' : undefined,
+    '@context': 'https://schema.org/',
     '@type': isTopLevel ? 'DiscussionForumPosting' : 'Comment',
     author: createPersonSchema(comment.displayAuthor),
     datePublished: comment.createdAt,
@@ -66,7 +66,7 @@ function createCommentSchema(
   if (comment.upVotes > 0) {
     interactionStats.push({
       '@type': 'InteractionCounter',
-      interactionType: 'https://schema.org/LikeAction',
+      interactionType: 'LikeAction',
       userInteractionCount: comment.upVotes,
     })
   }
@@ -74,7 +74,7 @@ function createCommentSchema(
   if (comment.downVotes > 0) {
     interactionStats.push({
       '@type': 'InteractionCounter',
-      interactionType: 'https://schema.org/DislikeAction',
+      interactionType: 'DislikeAction',
       userInteractionCount: comment.downVotes,
     })
   }
