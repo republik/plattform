@@ -118,7 +118,7 @@ const TimelineNavigation: React.FC<TimelineNavigationProps> = ({
           return (
             <Link
               key={y}
-              href={`/${y}/1`}
+              href={`/archiv/${y}/1`}
               {...yearLinkStyle}
               data-year={y}
               aria-current={isActive ? 'page' : undefined}
@@ -145,7 +145,7 @@ const TimelineNavigation: React.FC<TimelineNavigationProps> = ({
           return (
             <Link
               key={month}
-              href={`/${year}/${month}`}
+              href={`/archiv/${year}/${month}`}
               {...monthLinkStyle}
               data-month={month}
               aria-current={isActive ? 'page' : undefined}
