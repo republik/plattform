@@ -1,5 +1,5 @@
-import { createGetServerSideProps } from '../../lib/apollo/helpers'
-import OverviewMonthPage from '../../components/Overview/OverviewMonthPage'
+import { createGetServerSideProps } from '../../../lib/apollo/helpers'
+import OverviewMonthPage from '../../../components/Overview/OverviewMonthPage'
 
 export const getServerSideProps = createGetServerSideProps(
   async ({ ctx: { params } }) => {
