@@ -65,13 +65,12 @@ const getDefaultResource = async ({ pgdb }) => {
   return {
     table: pgdb.public.questionnaireSubmissions,
     payload: {
-      getQuestions: async function (questionnaireId) {
-        return pgdb.public.questions.find(
+      getQuestions: async (questionnaireId) =>
+        pgdb.public.questions.find(
           { questionnaireId },
           { fields: ['id', 'text', 'type', 'typePayload'] },
-        )
-      },
-      getAnswers: async function (questionnaireId, userId, pseudonym) {
+        ),
+      getAnswers: async (questionnaireId, userId, pseudonym) => {
         if (!userId && !pseudonym) {
           return []
         }
@@ -86,14 +85,13 @@ const getDefaultResource = async ({ pgdb }) => {
           { fields: ['id', 'questionId', 'payload'] },
         )
       },
-      getUser: async function (id) {
-        return pgdb.public.users.findOne(
+      getUser: async (id) =>
+        pgdb.public.users.findOne(
           { id },
           {
             fields: ['firstName', 'lastName', 'hasPublicProfile'],
           },
-        )
-      },
+        ),
     },
     transform,
   }

@@ -12,8 +12,8 @@ const timeout = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms))
 
 module.exports = async ({
-  indices: indicesFilter = mappings.list.map(
-    ({ name }: { name: string }) => name,
+  indices: indicesFilter = mappings.list.map(({ type }: { type: string }) =>
+    type.toLocaleLowerCase(),
   ),
   switch: doSwitch = true,
   inserts: doInserts = true,
@@ -29,8 +29,8 @@ module.exports = async ({
   const elastic = Elasticsearch.connect()
   const redis = Redis.connect()
 
-  const indices = mappings.list.filter(({ name }: { name: string }) =>
-    indicesFilter.includes(name),
+  const indices = mappings.list.filter(({ type }: { type: string }) =>
+    indicesFilter.includes(type.toLocaleLowerCase()),
   )
 
   await Promise.all(

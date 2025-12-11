@@ -141,9 +141,10 @@ module.exports = async (_, args, context) => {
 
   const base64Email = 'email=*|EMAILB64U|*'
 
-  const searchString = '?' + querystring.stringify(utmParams) + '&' + base64Email
+  const searchString =
+    '?' + querystring.stringify(utmParams) + '&' + base64Email
 
-  await contentUrlResolver(
+  contentUrlResolver(
     resolvedDoc,
     _all,
     _users,
@@ -266,7 +267,12 @@ module.exports = async (_, args, context) => {
       campaignId = id
     }
     debug('mailchimp campaign id: ')
-    debug(JSON.stringify({ repoMetaCampaignId: repoMeta.mailchimpCampaignId, campaignId: campaignId }))
+    debug(
+      JSON.stringify({
+        repoMetaCampaignId: repoMeta.mailchimpCampaignId,
+        campaignId: campaignId,
+      }),
+    )
   }
 
   // calc version number

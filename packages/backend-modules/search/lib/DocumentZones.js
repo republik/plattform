@@ -80,18 +80,18 @@ const getElasticDoc = async (
     type,
     node,
     data: node?.data || {},
-    text: (stringifyNode(node)).trim() || '',
+    text: stringifyNode(node).trim() || '',
   }
 }
 
-const switchState = async function (
+const switchState = async (
   elastic,
   state,
   repoId,
   commitId,
   versionName,
   immediate,
-) {
+) => {
   debug('switchState', { state, repoId, commitId })
   const queries = []
   const painless = []

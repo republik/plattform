@@ -33,7 +33,7 @@ const {
 } = require('@orbiting/backend-modules-publikator/lib/Derivative/SyntheticReadAloud')
 
 module.exports = {
-  repoId(doc, args, context) {
+  repoId(doc, _args, _context) {
     return (
       doc.repoId ||
       Buffer.from(doc.id, 'base64')
@@ -43,13 +43,13 @@ module.exports = {
         .join('/')
     )
   },
-  issuedForUserId(doc, args, context) {
+  issuedForUserId(_doc, _args, context) {
     return context.user?.id || null
   },
   type(doc) {
     return doc.type || 'mdast'
   },
-  async content(doc, { urlPrefix, searchString }, context, info) {
+  async content(doc, { urlPrefix, searchString }, context) {
     // we only do auto slugging when in a published documents context
     // - this is easiest detectable by _all being present from documents resolver
     // - alt check info.path for documents / document being the root
@@ -57,7 +57,7 @@ module.exports = {
     if (doc._all || doc._users) {
       processContentHashing(doc.type, doc.content)
 
-      await contentUrlResolver(
+      contentUrlResolver(
         doc,
         doc._all,
         doc._users,
@@ -80,7 +80,7 @@ module.exports = {
     }
     return doc.content
   },
-  async meta(doc, { urlPrefix, searchString }, context, info) {
+  async meta(doc, { urlPrefix, searchString }, context) {
     const meta = await getMeta(doc)
     if (doc._all || doc._users) {
       metaUrlResolver(
@@ -104,7 +104,6 @@ module.exports = {
     doc,
     { first, last, before, after, only, urlPrefix, searchString },
     context,
-    info,
   ) {
     if (!doc || !doc.content || !doc.content.children) {
       return {
@@ -180,7 +179,7 @@ module.exports = {
       doc._all = doc._all.concat(docs)
       doc._users = doc._users.concat(users)
 
-      await contentUrlResolver(
+      contentUrlResolver(
         doc,
         doc._all,
         doc._users,

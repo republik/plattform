@@ -45,7 +45,6 @@ const indexType = 'Document'
 
 const indexRef = {
   index: getIndexAlias(indexType.toLowerCase(), 'write'),
-  // type: indexType,
 }
 
 const getDocumentId = ({ repoId, commitId, versionName }) =>
@@ -358,13 +357,13 @@ const addRelatedDocs = async ({
 
     seriesRelatedDocs.forEach((doc) => {
       const meta = doc.content.meta
-      meta.series.overview &&
+      if (meta.series?.overview) {
         repoIds.push(getRepoId(meta.series.overview).repoId)
-      meta.series.episodes &&
-        meta.series.episodes.forEach((episode) => {
-          debug(getRepoId(episode.document).repoId)
-          repoIds.push(getRepoId(episode.document).repoId)
-        })
+      }
+      meta.series?.episodes?.forEach((episode) => {
+        debug(getRepoId(episode.document).repoId)
+        repoIds.push(getRepoId(episode.document).repoId)
+      })
     })
   }
 
@@ -424,7 +423,7 @@ const addRelatedDocs = async ({
   })
 }
 
-const switchState = async function (elastic, state, repoId, docId) {
+const switchState = async (elastic, state, repoId, docId) => {
   debug('switchState', { state, repoId, docId })
   const queries = []
   const painless = []
@@ -467,12 +466,7 @@ const switchState = async function (elastic, state, repoId, docId) {
   })
 }
 
-const resetScheduledAt = async function (
-  elastic,
-  isPrepublication,
-  repoId,
-  docId,
-) {
+const resetScheduledAt = async (elastic, isPrepublication, repoId, docId) => {
   debug('resetScheduledAt', { isPrepublication, repoId, docId })
 
   return elastic.updateByQuery({

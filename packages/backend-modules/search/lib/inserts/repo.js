@@ -13,10 +13,10 @@ function getCommit(restCommit) {
   return { id, message, createdAt }
 }
 
-async function toStrings(type, nodes) {
+function toStrings(_type, nodes) {
   const keys = Object.keys(nodes)
 
-  const nodeToString = async (key) => {
+  const nodeToString = (key) => {
     const node = nodes[key]
     const string = stringifyNode(node)
     return { [key]: string }
@@ -131,7 +131,7 @@ const getDefaultResource = async ({ pgdb }) => {
   return {
     table: pgdb.publikator.repos,
     payload: {
-      getLatestCommit: async function (repoId) {
+      getLatestCommit: async (repoId) => {
         const row = await pgdb.publikator.commits.findOne(
           { repoId },
           { orderBy: { createdAt: 'desc' }, limit: 1 },

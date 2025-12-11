@@ -91,7 +91,7 @@ function createShould(
   const queries = []
 
   // A query for each ES index
-  indicesList.forEach(({ type, index, search }) => {
+  indicesList.forEach(({ search }) => {
     let must = {
       match_all: {},
     }

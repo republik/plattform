@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const _ = require('lodash')
 
 const termCriteriaBuilder = (fieldName) => (value, options) => ({
-  clause: options && options.not ? 'must_not' : 'must',
+  clause: options?.not ? 'must_not' : 'must',
   filter: {
     ...(_.isArray(value)
       ? { terms: { [fieldName]: [...new Set(value)] } }

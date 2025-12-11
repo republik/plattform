@@ -10,7 +10,7 @@ const argv = yargs
   .option('indices', {
     alias: ['i', 'index'],
     array: true,
-    choices: mappings.list.map(({ name }) => name),
+    choices: mappings.list.map(({ type }) => type.toLowerCase()),
   })
   .option('switch', {
     alias: 's',
