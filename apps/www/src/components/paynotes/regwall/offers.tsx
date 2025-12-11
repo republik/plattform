@@ -53,7 +53,6 @@ function Offers({
 }) {
   const { t } = useTranslation()
   const { isNativeApp } = usePlatformInformation()
-  const variation = analyticsProps.variation
 
   return (
     <PaynoteSection background='colors.background.marketingAlt'>
