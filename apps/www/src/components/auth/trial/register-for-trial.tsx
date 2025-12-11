@@ -14,7 +14,12 @@ const RegisterForTrial = (props: TrialFormProps) => {
   const { t } = useTranslation()
 
   return (
-    <LoginForm context='trial' submitButtonText={t(`regwall/cta`)} {...props} />
+    <LoginForm
+      analyticsProps={{ variation: t('regwall/cta') }}
+      context='trial'
+      submitButtonText={t(`regwall/cta`)}
+      {...props}
+    />
   )
 }
 
@@ -37,6 +42,7 @@ export const RegisterForTrialMinimal = () => {
     >
       <LoginForm
         context='trial'
+        analyticsProps={{ variation: t('regwall/cta') }}
         submitButtonText={t(`regwall/cta`)}
         redirectUrl='/'
       />
