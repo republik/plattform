@@ -1,6 +1,0 @@
-query IpAllowlistAccess {
-  ipAllowlistAccess {
-    name
-  }
-}
-

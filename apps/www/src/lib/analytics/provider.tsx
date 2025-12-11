@@ -1,6 +1,5 @@
 'use client'
 import { useMe } from 'lib/context/MeContext'
-import { useIpAllowlist } from 'lib/context/IpAllowlistContext'
 import PlausibleProvider from 'next-plausible'
 
 type AnalyticsProviderProps = Omit<
@@ -9,8 +8,7 @@ type AnalyticsProviderProps = Omit<
 >
 
 export const AnalyticsProvider = (props: AnalyticsProviderProps) => {
-  const { me, hasActiveMembership, trialStatus, meLoading } = useMe()
-  const { allowlistName } = useIpAllowlist()
+  const { me, hasActiveMembership, trialStatus, meLoading, allowlistName } = useMe()
 
   return (
     <PlausibleProvider

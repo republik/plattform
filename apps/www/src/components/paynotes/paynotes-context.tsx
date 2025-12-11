@@ -2,7 +2,6 @@ import { useCampaign } from '@app/components/paynotes/campaign-paynote/use-campa
 
 import { useMe } from 'lib/context/MeContext'
 import { useUserAgent } from 'lib/context/UserAgentContext'
-import { useIpAllowlist } from 'lib/context/IpAllowlistContext'
 
 import { usePathname, useSearchParams } from 'next/navigation'
 import { createContext, useContext, useEffect, useState } from 'react'
@@ -84,14 +83,13 @@ function isDialogPage(
 }
 
 export const PaynotesProvider = ({ children }) => {
-  const { meLoading, trialStatus } = useMe()
+  const { meLoading, trialStatus, hasAllowlistAccess } = useMe()
   const { campaign } = useCampaign()
 
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
   const { isSearchBot } = useUserAgent()
-  const { hasAllowlistAccess } = useIpAllowlist()
 
   const [paynoteKind, setPaynoteKind] = useState<PaynoteKindType>(null)
   const [paynoteInlineHeight, setPaynoteInlineHeight] = useState<number>(0)

@@ -22,7 +22,6 @@ import MessageSync from '../components/NativeApp/MessageSync'
 import { withApollo } from '../lib/apollo'
 import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
-import IpAllowlistProvider from '../lib/context/IpAllowlistContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
 import { PaynotesProvider } from '@app/components/paynotes/paynotes-context'
 import { CampaignOverlay } from '@app/components/paynotes/campaign-paynote/campaign-overlay'
@@ -50,43 +49,41 @@ const WebApp = ({
       <MeContextProvider assumeAccess={assumeAccess}>
         <AnalyticsProvider>
           <UserAgentProvider providedValue={providedUserAgent}>
-            <IpAllowlistProvider>
-              <MediaProgressContext>
-                <AudioProvider>
-                  <AppVariableContext>
-                    <ThemeProvider>
-                      <RootColorVariables />
-                      <ColorContextProvider colorSchemeKey='auto'>
-                        <PaynotesProvider>
-                        <MessageSync />
-                        <Head>
-                          <meta
-                            name='viewport'
-                            content='width=device-width, initial-scale=1, viewport-fit=cover'
-                          />
-                          <link
-                            rel='alternate'
-                            type='application/rss+xml'
-                            title='RSS Feed'
-                            href='/feed.xml'
-                          />
-                        </Head>
-                        <IpAllowlistBanner />
-                        <Component
-                          serverContext={serverContext}
-                          {...otherPageProps}
+            <MediaProgressContext>
+              <AudioProvider>
+                <AppVariableContext>
+                  <ThemeProvider>
+                    <RootColorVariables />
+                    <ColorContextProvider colorSchemeKey='auto'>
+                      <PaynotesProvider>
+                      <MessageSync />
+                      <Head>
+                        <meta
+                          name='viewport'
+                          content='width=device-width, initial-scale=1, viewport-fit=cover'
                         />
-                        <AudioPlayerOrchestrator />
-                        <SyncUTMToSessionStorage />
-                        <PaynoteOverlay />
-                        <CampaignOverlay />
-                        </PaynotesProvider>
-                      </ColorContextProvider>
-                    </ThemeProvider>
-                  </AppVariableContext>
-                </AudioProvider>
-              </MediaProgressContext>
-            </IpAllowlistProvider>
+                        <link
+                          rel='alternate'
+                          type='application/rss+xml'
+                          title='RSS Feed'
+                          href='/feed.xml'
+                        />
+                      </Head>
+                      <IpAllowlistBanner />
+                      <Component
+                        serverContext={serverContext}
+                        {...otherPageProps}
+                      />
+                      <AudioPlayerOrchestrator />
+                      <SyncUTMToSessionStorage />
+                      <PaynoteOverlay />
+                      <CampaignOverlay />
+                      </PaynotesProvider>
+                    </ColorContextProvider>
+                  </ThemeProvider>
+                </AppVariableContext>
+              </AudioProvider>
+            </MediaProgressContext>
           </UserAgentProvider>
         </AnalyticsProvider>
       </MeContextProvider>
