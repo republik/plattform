@@ -39,6 +39,7 @@ docker-data
 
 # editor config
 .idea
+*.code-workspace
 
 # tsbuildinfo
 tsconfig.tsbuildinfo
