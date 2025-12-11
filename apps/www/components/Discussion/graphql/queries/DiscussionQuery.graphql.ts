@@ -12,7 +12,7 @@ import Nullable from '../../../../lib/types/Nullable'
 
 // Variables for the discussion query
 export type DiscussionQueryVariables = {
-  discussionId: string
+  discussionPath: string
   parentId?: string
   after?: string
   orderBy: string
@@ -79,7 +79,7 @@ export type DiscussionQuery = {
 
 export const DISCUSSION_QUERY = gql`
   query discussion(
-    $discussionId: ID!
+    $discussionPath: String
     $parentId: ID
     $after: String
     $orderBy: DiscussionOrder!
@@ -93,7 +93,7 @@ export const DISCUSSION_QUERY = gql`
       name
       portrait
     }
-    discussion(id: $discussionId) {
+    discussion(path: $discussionPath) {
       ...Discussion
       allComments: comments(
         parentId: $parentId

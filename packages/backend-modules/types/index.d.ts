@@ -1,7 +1,10 @@
 import { PgDb } from 'pogi'
+import type { Logger } from 'pino'
 
 declare const __brand: unique symbol
 type Brand<B> = { [__brand]: B }
+
+export type Logger = Logger
 
 export type Branded<T, B> = T & Brand<B>
 
@@ -10,6 +13,7 @@ export interface ConnectionContext {
   pgdb: PgDb
   redis: any
   pubsub: any
+  logger: Logger
 }
 export interface GraphqlContext extends ConnectionContext {
   t: any
@@ -55,11 +59,7 @@ export interface UserRow {
   previewsSentAt: any | null
   adminNotes: string | null
   defaultDiscussionNotificationOption: string
-  discussionNotificationChannels: string[]
-  TOTPChallengeSecret: null
-  isTOTPChallengeSecretVerified: null
-  phoneNumberVerificationCode: string | null
-  isPhoneNumberVerified: boolean
+  notificationChannels: string[]
   enabledSecondFactors: string[] | null
   deletedAt: Date | null
   preferredFirstFactor: string | null

@@ -13,40 +13,14 @@ const {
   slug: getSlug,
 } = require('@orbiting/backend-modules-republik/graphql/resolvers/User')
 const { clipNamesInText } = require('../../lib/nameClipper')
-const { stripUrlFromText } = require('../../lib/urlStripper')
-const { getEmbedByUrl } = require('@orbiting/backend-modules-embeds')
 
-const { DISPLAY_AUTHOR_SECRET, ASSETS_SERVER_BASE_URL } = process.env
+const { DISPLAY_AUTHOR_SECRET } = process.env
 if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
-const embedForComment = async (
-  { embedUrl, discussionId, depth, published, adminUnpublished },
-  context,
-) => {
-  if (!embedUrl) {
-    return null
-  }
-  if (!(published && !adminUnpublished)) {
-    return null
-  }
-  const discussion = await context.loaders.Discussion.byId.load(discussionId)
-  if (discussion && discussion.isBoard && depth === 0) {
-    return getEmbedByUrl(embedUrl, context)
-  }
-  return null
-}
-
-const textForComment = async (comment, strip = false, context) => {
-  const {
-    userId,
-    content,
-    published,
-    adminUnpublished,
-    discussionId,
-    embedUrl,
-  } = comment
+const textForComment = async (comment, context) => {
+  const { userId, content, published, adminUnpublished, discussionId } = comment
   const { user: me } = context
 
   const isPublished = !!(published && !adminUnpublished)
@@ -62,9 +36,6 @@ const textForComment = async (comment, strip = false, context) => {
         discussionId,
       )
     newContent = clipNamesInText(namesToClip, content)
-  }
-  if (strip && !!(await embedForComment(comment, context))) {
-    newContent = stripUrlFromText(embedUrl, content)
   }
   return newContent
 }
@@ -111,15 +82,14 @@ module.exports = {
     published && !adminUnpublished,
 
   content: async (comment, args, context) => {
-    const strip = args && args.strip !== null ? args.strip : false
-    const text = await textForComment(comment, strip, context)
+    const text = await textForComment(comment, context)
     if (!text) {
       return text
     }
     return remark.parse(text)
   },
 
-  text: (comment, args, context) => textForComment(comment, false, context),
+  text: (comment, args, context) => textForComment(comment, context),
 
   featuredText: ({
     published,
@@ -132,19 +102,15 @@ module.exports = {
       : null,
 
   preview: async (comment, { length = 500 }, context) => {
-    const text = await textForComment(comment, false, context)
+    const text = await textForComment(comment, context)
     if (!text) {
       return null
     }
     return mdastToHumanString(remark.parse(text), length)
   },
 
-  embed: async (comment, args, context) => embedForComment(comment, context),
-
-  contentLength: ({ content, embedUrl, userId }, args, { user: me }) =>
-    me && me.id === userId
-      ? content.length - (embedUrl ? embedUrl.length : 0)
-      : null,
+  contentLength: ({ content, userId }, args, { user: me }) =>
+    me && me.id === userId ? content.length : null,
 
   upVotes: (comment) => {
     const { published, adminUnpublished, upVotes } = comment
@@ -236,13 +202,15 @@ module.exports = {
     const [discussion, commenter, commenterPreferences] = await Promise.all([
       loaders.Discussion.byId.load(comment.discussionId),
       loaders.User.byId.load(comment.userId),
-      loaders.Discussion.Commenter.discussionPreferences.load({
+      loaders.DiscussionPreferences.byUserIdAndDiscussionId.load({
         userId: comment.userId,
         discussionId: comment.discussionId,
       }),
     ])
 
-    const credential = commenterPreferences && commenterPreferences.credential
+    const credential =
+      commenterPreferences?.credentialId &&
+      (await loaders.CredentialById.load(commenterPreferences.credentialId))
 
     let anonymous
     if (discussion.anonymity === 'ENFORCED') {
@@ -313,24 +281,6 @@ module.exports = {
   },
 
   tags: (comment) => comment.tags || [],
-
-  mentioningDocument: async (
-    { mentioningRepoId, mentioningFragmentId: fragmentId },
-    args,
-    { loaders },
-  ) => {
-    if (!mentioningRepoId) {
-      return null
-    }
-    const doc = await loaders.Document.byRepoId.load(mentioningRepoId)
-    if (doc) {
-      return {
-        document: doc,
-        fragmentId,
-        iconUrl: `${ASSETS_SERVER_BASE_URL}/s3/republik-assets/assets/top-storys/top-story-badge.png`,
-      }
-    }
-  },
 
   userCanReport: ({ userId }, args, { user: me }) => !me || me?.id !== userId,
 

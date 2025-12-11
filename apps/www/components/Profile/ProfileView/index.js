@@ -8,6 +8,7 @@ import {
   mediaQueries,
   IconButton,
   useColorContext,
+  Container,
 } from '@project-r/styleguide'
 
 import { useMe } from '../../../lib/context/MeContext'
@@ -22,6 +23,13 @@ import { CDN_FRONTEND_BASE_URL, ADMIN_BASE_URL } from '../../../lib/constants'
 export const PORTRAIT_SIZE = 210
 
 const styles = {
+  container: css({
+    maxWidth: 840,
+    margin: '32px auto',
+    [mediaQueries.mUp]: {
+      margin: '96px auto',
+    },
+  }),
   statement: css({
     ...fontStyles.serifTitle,
     fontSize: 27,
@@ -129,7 +137,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
   const isSupporter = checkRoles(me, ['supporter'])
   const listedCredential = user.credentials?.filter((c) => c.isListed)[0]
   return (
-    <>
+    <Container {...styles.container}>
       {isMe && (
         <Link
           style={{
@@ -171,6 +179,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
                 height={PORTRAIT_SIZE}
                 alt='Profilbild'
                 src={user.portrait}
+                unoptimized
               />
             ) : (
               <img src={CDN_FRONTEND_BASE_URL + '/static/profiledefault.png'} />
@@ -189,8 +198,8 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
               <IconButton
                 Icon={IconMailOutline}
                 href={`mailto:${user.email}`}
-                label='Email'
-                labelShort='Email'
+                label='E-Mail'
+                labelShort='E-Mail'
               />
             )}
             {user.pgpPublicKeyId && (
@@ -260,28 +269,25 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
               />
             )}
           </div>
-          {/* only show articles and comments for logged in users */}
-          {me && (
-            <ProfileCommentsAndDocuments
-              isMe={isMe}
-              user={user}
-              loadMoreDocuments={makeLoadMore(fetchMore, 'documents', {
-                firstComments: 0,
-                firstDocuments: 20,
-                afterDocument:
-                  user.documents.pageInfo && user.documents.pageInfo.endCursor,
-              })}
-              loadMoreComments={makeLoadMore(fetchMore, 'comments', {
-                firstDocuments: 0,
-                firstComments: 40,
-                afterComment:
-                  user.comments.pageInfo && user.comments.pageInfo.endCursor,
-              })}
-            />
-          )}
+          <ProfileCommentsAndDocuments
+            isMe={isMe}
+            user={user}
+            loadMoreDocuments={makeLoadMore(fetchMore, 'documents', {
+              firstComments: 0,
+              firstDocuments: 20,
+              afterDocument:
+                user.documents.pageInfo && user.documents.pageInfo.endCursor,
+            })}
+            loadMoreComments={makeLoadMore(fetchMore, 'comments', {
+              firstDocuments: 0,
+              firstComments: 40,
+              afterComment:
+                user.comments.pageInfo && user.comments.pageInfo.endCursor,
+            })}
+          />
         </div>
       </div>
-    </>
+    </Container>
   )
 }
 

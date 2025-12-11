@@ -22,7 +22,7 @@ const barStyle = css({
   left: '-10%',
 })
 
-const Spinner = ({ size }) => {
+const Spinner = ({ size = 50 }) => {
   const bars = []
   for (let i = 0; i < 12; i++) {
     const style = {}
@@ -45,14 +45,10 @@ const inlineBlock = css({
   display: 'inline-block',
 })
 
-export const InlineSpinner = ({ size }) => (
+export const InlineSpinner = ({ size = 50 }) => (
   <span {...inlineBlock} style={{ width: size, height: size }}>
     <Spinner size={size} />
   </span>
 )
-
-Spinner.defaultProps = InlineSpinner.defaultProps = {
-  size: 50,
-}
 
 export default Spinner

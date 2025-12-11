@@ -46,13 +46,6 @@ export const notificationsMiniQuery = gql`
           }
           ... on Document {
             id
-            meta {
-              format {
-                meta {
-                  externalBaseUrl
-                }
-              }
-            }
           }
         }
         content {
@@ -68,7 +61,7 @@ export const notificationsQuery = gql`
   query getNotifications($after: String) {
     me {
       id
-      discussionNotificationChannels
+      notificationChannels
     }
     notifications(first: 10, after: $after) {
       totalCount
@@ -113,7 +106,6 @@ export const notificationsQuery = gql`
               id
               title
               path
-              isBoard
               document {
                 id
                 meta {
@@ -123,6 +115,7 @@ export const notificationsQuery = gql`
                   template
                   ownDiscussion {
                     id
+                    path
                     closed
                   }
                   linkedDiscussion {
@@ -153,7 +146,7 @@ export const notificationsQuery = gql`
 
 export const possibleSubscriptions = gql`
   query getSubscriptions {
-    sections: documents(template: "section") {
+    sections: documents(template: "section", feed: true) {
       nodes {
         id
         repoId
@@ -178,24 +171,6 @@ export const possibleSubscriptions = gql`
 
 export const myUserSubscriptions = gql`
   query getMyUserSubscriptions {
-    authors: employees(onlyPromotedAuthors: true) {
-      name
-      user {
-        id
-        subscribedByMe {
-          ...subInfo
-          userDetails: object {
-            ... on User {
-              id
-              slug
-              documents {
-                totalCount
-              }
-            }
-          }
-        }
-      }
-    }
     myUserSubscriptions: me {
       id
       subscribedTo(objectType: User) {
@@ -205,6 +180,7 @@ export const myUserSubscriptions = gql`
             ... on User {
               id
               slug
+              portrait
               documents {
                 totalCount
               }

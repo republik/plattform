@@ -1,22 +1,21 @@
-import { Fragment } from 'react'
-import { useRouter } from 'next/router'
-import { timeDay } from 'd3-time'
-
 import {
+  Button,
+  Center,
   Editorial,
   Interaction,
   mediaQueries,
-  Button,
-  Center,
   useColorContext,
 } from '@project-r/styleguide'
+import { timeDay } from 'd3-time'
 
 import { css } from 'glamor'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { Fragment } from 'react'
+import { timeFormat } from '../../lib/utils/format'
+import { useInNativeApp } from '../../lib/withInNativeApp'
 
 import TokenPackageLink from '../Link/TokenPackage'
-import { useInNativeApp } from '../../lib/withInNativeApp'
-import { timeFormat } from '../../lib/utils/format'
-import Link from 'next/link'
 
 const styles = {
   box: css({
@@ -40,11 +39,13 @@ const dayFormat = timeFormat('%d. %B %Y')
 const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
   const [colorScheme] = useColorContext()
   const router = useRouter()
-  const { isMinimalNativeAppVersion, inNativeIOSApp } = useInNativeApp()
+  const { inNativeApp } = useInNativeApp()
 
+  // on iOS iframe to stripe were not possible before app v2.0.2
+  // NOTE TO REVIEWER:
+  // prolong BROKE when trying it on my device -> 3d secure redirect failed
+  // kept all the useful stuff, but redirected to the website for app users (see link component below)
   if (
-    // on iOS iframe to stripe were not possible before app v2.0.2
-    (inNativeIOSApp && !isMinimalNativeAppVersion('2.0.2')) ||
     router.pathname === '/angebote' ||
     router.pathname === '/abgang' ||
     router.pathname === '/cockpit'
@@ -73,6 +74,22 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
     const graceEndDate = new Date(membership.graceEndDate)
 
     const styleTextColor = colorScheme.set('color', 'text')
+
+    if (inNativeApp && membership.canProlong) {
+      return (
+        <div
+          {...styles.box}
+          {...styleTextColor}
+          {...colorScheme.set('backgroundColor', 'alert')}
+        >
+          <SingleLine>
+            {t.first.elements(prefixTranslationKeys, {
+              link: t('prolongNecessary/native/info'),
+            })}
+          </SingleLine>
+        </div>
+      )
+    }
 
     const explanation = t.first.elements(
       prefixTranslationKeys.map((k) => `${k}/explanation`),
@@ -151,7 +168,7 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
           {buttonText && !membership.canProlong && (
             <Link
               key='link'
-              href={{ pathname: `/angebote`}}
+              href={{ pathname: `/angebote` }}
               passHref
               prefetch={false}
               legacyBehavior

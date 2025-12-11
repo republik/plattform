@@ -1,56 +1,58 @@
 import Stripe from 'stripe'
-import { PaymentService } from '../../payments'
-import { Company } from '../../types'
+import { Company, PaymentWorkflow } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { NoticeEndedTransactionalWorker } from '../../workers/NoticeEndedTransactionalWorker'
 import { SyncMailchimpEndedWorker } from '../../workers/SyncMailchimpEndedWorker'
-import {
-  getMailSettings,
-  REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY,
-} from '../../mail-settings'
-import { secondsToMilliseconds } from './utils'
-import { REPUBLIK_PAYMENTS_CANCEL_REASON } from '../../shop/gifts'
+import { parseStripeDate } from './utils'
+import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
+import { CustomerInfoService } from '../../services/CustomerInfoService'
+import { SubscriptionService } from '../../services/SubscriptionService'
+import { UPGRADE_CANCELATION_DATA } from '../../services/UpgradeService'
+import { CancellationService } from '../../services/CancellationService'
+import { PaymentService } from '../../services/PaymentService'
 
-export async function processSubscriptionDeleted(
-  paymentService: PaymentService,
-  _company: Company,
-  event: Stripe.CustomerSubscriptionDeletedEvent,
-) {
-  const endTimestamp = secondsToMilliseconds(event.data.object.ended_at || 0)
-  const canceledAtTimestamp = secondsToMilliseconds(
-    event.data.object.canceled_at || 0,
-  )
+class ProcessSubscriptionDeletedWorkflow
+  implements PaymentWorkflow<Stripe.CustomerSubscriptionDeletedEvent>
+{
+  constructor(
+    protected readonly queue: Queue,
+    protected readonly customerInfoService: CustomerInfoService,
+    protected readonly subscriptionService: SubscriptionService,
+    protected readonly cancelationService: CancellationService,
+  ) {}
 
-  await paymentService.disableSubscription(
-    { externalId: event.data.object.id },
-    {
-      endedAt: new Date(endTimestamp),
-      canceledAt: new Date(canceledAtTimestamp),
-    },
-    event.data.object.metadata[REPUBLIK_PAYMENTS_CANCEL_REASON] === 'UPGRADE'
-      ? { keepMembership: true }
-      : undefined,
-  )
+  async run(company: Company, event: Stripe.CustomerSubscriptionDeletedEvent) {
+    const sub = await this.subscriptionService.disableSubscription(
+      { externalId: event.data.object.id },
+      {
+        endedAt: parseStripeDate(event.data.object.ended_at || 0),
+        canceledAt: parseStripeDate(event.data.object.canceled_at || 0),
+      },
+    )
 
-  const customerId = event.data.object.customer as string
+    const cancelationDetails =
+      await this.cancelationService.getLatestUnrevokedCancellationDetails(sub)
 
-  const userId = await paymentService.getUserIdForCompanyCustomer(
-    _company,
-    customerId,
-  )
-  if (!userId) {
-    throw Error(`User for ${customerId} does not exists`)
-  }
+    const customerId = event.data.object.customer as string
 
-  const mailSettings = getMailSettings(
-    event.data.object.metadata[REPUBLIK_PAYMENTS_MAIL_SETTINGS_KEY],
-  )
+    const userId = await this.customerInfoService.getUserIdForCompanyCustomer(
+      company,
+      customerId,
+    )
+    if (!userId) {
+      throw Error(`User for ${customerId} does not exists`)
+    }
 
-  if (mailSettings['notice:ended']) {
-    const queue = Queue.getInstance()
+    if (
+      cancelationDetails?.category === UPGRADE_CANCELATION_DATA.CATEGORY &&
+      cancelationDetails.reason === UPGRADE_CANCELATION_DATA.REASON
+    ) {
+      // do not send ended notification on subscription upgrade
+      return
+    }
 
     await Promise.all([
-      queue.send<NoticeEndedTransactionalWorker>(
+      this.queue.send<NoticeEndedTransactionalWorker>(
         'payments:transactional:notice:ended',
         {
           $version: 'v1',
@@ -58,13 +60,29 @@ export async function processSubscriptionDeleted(
           userId: userId,
         },
       ),
-      queue.send<SyncMailchimpEndedWorker>('payments:mailchimp:sync:ended', {
-        $version: 'v1',
-        eventSourceId: event.id,
-        userId: userId,
-      }),
+      this.queue.send<SyncMailchimpEndedWorker>(
+        'payments:mailchimp:sync:ended',
+        {
+          $version: 'v1',
+          eventSourceId: event.id,
+          userId: userId,
+        },
+      ),
     ])
-  }
 
-  return
+    return
+  }
+}
+
+export async function processSubscriptionDeleted(
+  ctx: PaymentWebhookContext,
+  company: Company,
+  event: Stripe.CustomerSubscriptionDeletedEvent,
+) {
+  return await new ProcessSubscriptionDeletedWorkflow(
+    Queue.getInstance(),
+    new CustomerInfoService(ctx.pgdb),
+    new SubscriptionService(ctx.pgdb),
+    new CancellationService(new PaymentService(), ctx.pgdb),
+  ).run(company, event)
 }

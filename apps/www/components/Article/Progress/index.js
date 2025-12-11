@@ -1,71 +1,33 @@
-import { Component, Fragment, useRef, useEffect } from 'react'
-import PropTypes from 'prop-types'
-import compose from 'lodash/flowRight'
-import { withApollo } from '@apollo/client/react/hoc'
+import { useRef, useEffect, createContext } from 'react'
 import debounce from 'lodash/debounce'
 
-import { mediaQueries, A } from '@project-r/styleguide'
+import { mediaQueries } from '@project-r/styleguide'
 
-import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
+import { HEADER_HEIGHT } from '../../constants'
 import { scrollIt } from '../../../lib/utils/scroll'
-import withMe from '../../../lib/apollo/withMe'
-import { PROGRESS_EXPLAINER_PATH } from '../../../lib/constants'
 
-import { withProgressApi } from './api'
+import { useProgress } from './api'
 import { useMediaProgress } from '../../Audio/MediaProgress'
-import { withRouter } from 'next/router'
-import Link from 'next/link'
+import { useMe } from '../../../lib/context/MeContext'
 
 const MIN_INDEX = 2
 
-export const getFeatureDescription = (t) =>
-  t.elements('article/progressprompt/description/feature', {
-    link: PROGRESS_EXPLAINER_PATH ? (
-      <Link href={PROGRESS_EXPLAINER_PATH} key='link' passHref legacyBehavior>
-        <A>{t('article/progressprompt/description/feature/link')}</A>
-      </Link>
-    ) : null,
-  })
+export const ProgressContext = createContext({})
 
-class ProgressContextProvider extends Component {
-  getChildContext() {
-    return {
-      getMediaProgress: this.props.value.getMediaProgress,
-      saveMediaProgress: this.props.value.saveMediaProgress,
-      restoreArticleProgress: this.props.value.restoreArticleProgress,
-      showConsentPrompt: this.props.value.showConsentPrompt,
-    }
-  }
-  render() {
-    return <Fragment>{this.props.children}</Fragment>
-  }
-}
-
-ProgressContextProvider.childContextTypes = {
-  getMediaProgress: PropTypes.func,
-  saveMediaProgress: PropTypes.func,
-  restoreArticleProgress: PropTypes.func,
-  showConsentPrompt: PropTypes.bool,
-}
-
-const Progress = ({
-  children,
-  me,
-  article,
-  isArticle,
-  router,
-  upsertDocumentProgress,
-}) => {
+const Progress = ({ children, documentPath }) => {
   const refContainer = useRef()
   const lastClosestIndex = useRef()
   const refSaveProgress = useRef()
   const lastY = useRef()
+  const { progressConsent } = useMe()
+  const { upsertDocumentProgress, useDocumentProgress } = useProgress()
 
   const { getMediaProgress, saveMediaProgress } = useMediaProgress()
 
-  const isTrackingAllowed = me && me.progressConsent === true
+  const { data } = useDocumentProgress({ path: documentPath })
+  const { userProgress, id: documentId } = data?.document || {}
+
   const mobile = () => window.innerWidth < mediaQueries.mBreakPoint
-  const headerHeight = () => (mobile() ? HEADER_HEIGHT_MOBILE : HEADER_HEIGHT)
 
   const getProgressElements = () => {
     const progressElements = refContainer.current
@@ -77,7 +39,7 @@ const Progress = ({
   const getClosestElement = (progressElements) => {
     const getDistanceForIndex = (index) => {
       return Math.abs(
-        progressElements[index].getBoundingClientRect().top - headerHeight(),
+        progressElements[index].getBoundingClientRect().top - HEADER_HEIGHT,
       )
     }
 
@@ -119,7 +81,7 @@ const Progress = ({
     const { bottom } = lastElement.getBoundingClientRect()
     const { top } = refContainer.current.getBoundingClientRect()
     const height = bottom - top
-    const yFromArticleTop = Math.max(0, -top + headerHeight())
+    const yFromArticleTop = Math.max(0, -top + HEADER_HEIGHT)
     const ratio = yFromArticleTop / height
     const percentage =
       ratio === 0 ? 0 : -top + window.innerHeight > height ? 1 : ratio
@@ -127,7 +89,7 @@ const Progress = ({
   }
 
   refSaveProgress.current = debounce(() => {
-    if (!article || !isTrackingAllowed) {
+    if (!documentId || !progressConsent) {
       return
     }
 
@@ -156,12 +118,18 @@ const Progress = ({
       percentage > 0 &&
       // ignore elements until min index
       element.index >= MIN_INDEX &&
-      (!article.userProgress ||
-        article.userProgress.nodeId !== element.nodeId ||
-        Math.floor(article.userProgress.percentage * 100) !==
+      (!userProgress ||
+        userProgress.nodeId !== element.nodeId ||
+        Math.floor(userProgress.percentage * 100) !==
           Math.floor(percentage * 100))
     ) {
-      upsertDocumentProgress(article.id, percentage, element.nodeId)
+      upsertDocumentProgress({
+        variables: {
+          documentId: documentId,
+          percentage,
+          nodeId: element.nodeId,
+        },
+      })
     }
   }, 300)
 
@@ -169,7 +137,7 @@ const Progress = ({
     if (e) {
       e.preventDefault()
     }
-    const { percentage, nodeId } = article.userProgress
+    const { percentage, nodeId } = userProgress
 
     const progressElements = getProgressElements()
     const progressElement =
@@ -183,12 +151,12 @@ const Progress = ({
 
     if (progressElement) {
       const { top } = progressElement.getBoundingClientRect()
-      const isInViewport = top - headerHeight() > 0 && top < window.innerHeight
+      const isInViewport = top - HEADER_HEIGHT > 0 && top < window.innerHeight
       // We don't scroll on mobile if the element of interest is already in viewport
       // This may happen on swipe navigation in iPhone X.
       if (!mobile() || !isInViewport) {
         scrollIt(
-          window.pageYOffset + top - headerHeight() - (mobile() ? 10 : 20),
+          window.pageYOffset + top - HEADER_HEIGHT - (mobile() ? 10 : 20),
           400,
         )
       }
@@ -196,7 +164,7 @@ const Progress = ({
     }
     if (percentage) {
       const { height } = refContainer.current.getBoundingClientRect()
-      const offset = percentage * height - headerHeight()
+      const offset = percentage * height - HEADER_HEIGHT
       scrollIt(offset, 400)
     }
   }
@@ -213,46 +181,18 @@ const Progress = ({
     }
   }, [])
 
-  const showConsentPrompt =
-    isArticle &&
-    me &&
-    !router.query.trialSignup &&
-    me.progressConsent === null &&
-    article &&
-    article.meta &&
-    article.meta.path !== PROGRESS_EXPLAINER_PATH
-
   return (
-    <ProgressContextProvider
+    <ProgressContext
       value={{
         getMediaProgress,
         saveMediaProgress,
         restoreArticleProgress,
-        showConsentPrompt,
+        useDocumentProgress,
       }}
     >
       <div ref={refContainer}>{children}</div>
-    </ProgressContextProvider>
+    </ProgressContext>
   )
 }
 
-Progress.propTypes = {
-  children: PropTypes.node,
-  me: PropTypes.shape({
-    progressConsent: PropTypes.bool,
-  }),
-  revokeConsent: PropTypes.func,
-  submitConsent: PropTypes.func,
-  isArticle: PropTypes.bool,
-}
-
-Progress.defaultProps = {
-  isArticle: true,
-}
-
-export default compose(
-  withApollo,
-  withProgressApi,
-  withMe,
-  withRouter,
-)(Progress)
+export default Progress

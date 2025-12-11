@@ -23,7 +23,6 @@ const {
 const {
   Redirections: { get: getRedirections },
 } = require('@orbiting/backend-modules-redirections')
-const { purgeUrls } = require('@orbiting/backend-modules-keyCDN')
 
 const {
   maybeDelcareMilestonePublished,
@@ -140,7 +139,9 @@ module.exports = async (_, args, context) => {
     utm_campaign: repoId,
   }
 
-  const searchString = '?' + querystring.stringify(utmParams)
+  const base64Email = 'email=*|EMAILB64U|*'
+
+  const searchString = '?' + querystring.stringify(utmParams) + '&' + base64Email
 
   await contentUrlResolver(
     resolvedDoc,
@@ -264,6 +265,8 @@ module.exports = async (_, args, context) => {
 
       campaignId = id
     }
+    debug('mailchimp campaign id: ')
+    debug(JSON.stringify({ repoMetaCampaignId: repoMeta.mailchimpCampaignId, campaignId: campaignId }))
   }
 
   // calc version number
@@ -313,7 +316,9 @@ module.exports = async (_, args, context) => {
 
     await maybeDelcareMilestonePublished(milestone, tx)
     await updateCurrentPhase(repoId, tx)
-    await updateRepo(repoId, { mailchimpCampaignId: campaignId }, tx)
+    if (campaignId && repoMeta.campaignId !== campaignId) {
+      await updateRepo(repoId, { mailchimpCampaignId: campaignId }, tx)
+    }
 
     await tx.transactionCommit()
   } catch (e) {
@@ -350,7 +355,7 @@ module.exports = async (_, args, context) => {
   // do the mailchimp update
   if (campaignId) {
     // Update campaign configuration
-    const { title, emailSubject, path } = doc.content.meta
+    const { title, emailSubject } = doc.content.meta
     if (!title || !emailSubject) {
       throw new Error('Mailchimp: missing title or subject', {
         title,
@@ -374,17 +379,7 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/publish/error/updateCampaign'))
     })
 
-    // Update campaign content (HTML)
-    let html = getHTML(resolvedDoc)
-
-    // Plausible beacon
-    const plausibleBeacon = new URL(`/api/email-open`, FRONTEND_BASE_URL)
-    plausibleBeacon.searchParams.set('url', FRONTEND_BASE_URL + path)
-    // TODO: Should we add the UTM parameters here like in the Matomo implementation? Shouldn't they just be used in links in the email?
-    html = html.replace(
-      '</body>',
-      `<img alt="" src="${plausibleBeacon}" height="1" width="1"></body>`,
-    )
+    const html = getHTML(resolvedDoc)
 
     await updateCampaignContent({ campaignId, html }).catch((error) => {
       console.error(error)
@@ -402,16 +397,6 @@ module.exports = async (_, args, context) => {
       id: repoId,
     },
   })
-
-  // purge pdfs in CDN
-  const purgeQueries = [
-    '',
-    '?download=1',
-    '?images=0',
-    '?images=0&download=1',
-    '?download=1&images=0',
-  ]
-  await purgeUrls(purgeQueries.map((q) => `/pdf${newPath}.pdf${q}`))
 
   if (!prepublication && !scheduledAt && notifyFilters) {
     await notifyPublish(repoId, notifyFilters, context)

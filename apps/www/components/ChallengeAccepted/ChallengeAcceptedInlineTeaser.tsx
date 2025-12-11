@@ -1,23 +1,22 @@
 import { gql, useQuery } from '@apollo/client'
-import { useMe } from 'lib/context/MeContext'
-import withLocalColorScheme from './withColorScheme'
-import { challengeAcceptedColors } from './colors'
-import { css } from 'glamor'
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import {
-  Button,
   Center,
   fontStyles,
-  plainLinkRule,
   mediaQueries,
+  plainLinkRule,
 } from '@project-r/styleguide'
+import { IconArrowRight } from '@republik/icons'
 import NewsletterSignUp from 'components/Auth/NewsletterSignUp'
-import Link from 'next/link'
+import { css } from 'glamor'
+import { useMe } from 'lib/context/MeContext'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import ChallengeAcceptedSVG from '../../public/static/challenge-accepted/challenge-accepted.svg'
 import ChallengeAcceptedSVGDark from '../../public/static/challenge-accepted/challenge-accepted_dark.svg'
-import { useRouter } from 'next/router'
-import { IconArrowRight } from '@republik/icons'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import { challengeAcceptedColors } from './colors'
+import withLocalColorScheme from './withColorScheme'
 
 const styles = {
   p: css({
@@ -76,7 +75,7 @@ export const CANewsLetterSignUp = () => {
           marginBottom: '1rem',
         })}
       >
-        15’000 sind schon dabei. Jetzt für den Newsletter anmelden.
+        20’000 sind schon dabei. Jetzt für den Newsletter anmelden.
       </h2>
       <EventTrackingContext category='ChallengeAcceptedPayNote' name={asPath}>
         <NewsletterSignUp name={NEWSLETTER_NAME} free />

@@ -83,11 +83,11 @@ const Scroller = ({
   arrowSize = 28,
   innerPadding = 0,
 }: ScrollerType) => {
-  const scrollRef = useRef<HTMLDivElement>()
+  const scrollRef = useRef<HTMLDivElement>(null)
   const [{ left, right }, setArrows] = useState({ left: false, right: false })
   const [colorScheme] = useColorContext()
 
-  const lastActiveChildIndex = useRef<number>()
+  const lastActiveChildIndex = useRef<number>(undefined)
   useEffect(() => {
     const scroller = scrollRef.current
     const target = Array.from(scroller.children)[activeChildIndex + 1] // + 1 for pad element

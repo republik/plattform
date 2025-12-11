@@ -12,9 +12,15 @@ query Me {
     roles
     isListed
     hasPublicProfile
-    discussionNotificationChannels
+    notificationChannels
+    regwallTrialStatus
     accessCampaigns {
       id
+    }
+    accessGrants {
+      id
+      status
+      endAt
     }
     hasDormantMembership
     prolongBeforeDate
@@ -32,6 +38,6 @@ query Me {
       id
     }
     prolitterisOptOut: hasConsentedTo(name: "PROLITTERIS_OPT_OUT")
-    progressConsent: hasConsentedTo(name: "PROGRESS")
+    progressOptOut: hasConsentedTo(name: "PROGRESS_OPT_OUT")
   }
 }

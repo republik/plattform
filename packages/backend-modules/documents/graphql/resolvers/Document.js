@@ -12,7 +12,6 @@ const {
 } = require('../../lib/process')
 const {
   contentUrlResolver,
-  contentUserResolver,
   metaUrlResolver,
   extractIdsFromNode,
 } = require('../../lib/resolve')
@@ -69,20 +68,14 @@ module.exports = {
       )
 
       await Promise.all([
-        contentUserResolver(doc.type, doc.content, doc._users),
-        processRepoImageUrlsInContent(doc.type, doc.content, addFormatAuto),
-        processEmbedImageUrlsInContent(doc.type, doc.content, addFormatAuto),
+        processRepoImageUrlsInContent(doc.content, addFormatAuto),
+        processEmbedImageUrlsInContent(doc.content, addFormatAuto),
       ])
 
-      processMembersOnlyZonesInContent(
-        doc.type,
-        doc.content,
-        context.user,
-        doc._apiKey,
-      )
-      processNodeModifiersInContent(doc.type, doc.content, context.user)
+      processMembersOnlyZonesInContent(doc.content, context.user, doc._apiKey)
+      processNodeModifiersInContent(doc.content, context.user)
       if (doc.meta.template !== 'article') {
-        processIfHasAccess(doc.type, doc.content, context.user, doc._apiKey)
+        processIfHasAccess(doc.content, context.user, doc._apiKey)
       }
     }
     return doc.content
@@ -161,23 +154,17 @@ module.exports = {
 
       const idsFromNodes = await Promise.map(nodes, async (node) => {
         await Promise.all([
-          contentUserResolver(doc.type, node, doc._users),
-          processRepoImageUrlsInContent(doc.type, node, addFormatAuto),
-          processEmbedImageUrlsInContent(doc.type, node, addFormatAuto),
+          processRepoImageUrlsInContent(node, addFormatAuto),
+          processEmbedImageUrlsInContent(node, addFormatAuto),
         ])
 
-        processMembersOnlyZonesInContent(
-          doc.type,
-          node,
-          context.user,
-          doc._apiKey,
-        )
-        processNodeModifiersInContent(doc.type, node, context.user)
+        processMembersOnlyZonesInContent(node, context.user, doc._apiKey)
+        processNodeModifiersInContent(node, context.user)
         if (doc.meta.template !== 'article') {
-          processIfHasAccess(doc.type, node, context.user, doc._apiKey)
+          processIfHasAccess(node, context.user, doc._apiKey)
         }
 
-        return extractIdsFromNode(doc.type, node, doc.meta.repoId)
+        return extractIdsFromNode(node)
       })
       const { docs, users } = await resolveEntities({
         context,

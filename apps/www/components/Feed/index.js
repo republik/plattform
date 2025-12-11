@@ -8,7 +8,7 @@ import { reportError } from '../../lib/errors/reportError'
 import withInNativeApp from '../../lib/withInNativeApp'
 import Loader from '../Loader'
 
-import { mediaQueries, Center, Interaction } from '@project-r/styleguide'
+import { mediaQueries, Center } from '@project-r/styleguide'
 import DocumentList from './DocumentList'
 import { makeLoadMore } from './DocumentListContainer'
 import { documentFragment } from './fragments'
@@ -25,10 +25,6 @@ const styles = {
 
 const query = gql`
   query getFeed($cursor: String) {
-    greeting {
-      text
-      id
-    }
     documents: search(
       filters: [
         { key: "template", not: true, value: "section" }
@@ -37,7 +33,7 @@ const query = gql`
       ]
       filter: { feed: true }
       sort: { key: publishedAt, direction: DESC }
-      first: 30
+      first: 20
       after: $cursor
     ) {
       totalCount
@@ -55,17 +51,8 @@ const query = gql`
   ${documentFragment}
 `
 
-const greetingSubscription = gql`
-  subscription {
-    greeting {
-      id
-      text
-    }
-  }
-`
-
 const Feed = ({ meta }) => {
-  const { error, loading, data, fetchMore, subscribeToMore } = useQuery(query, {
+  const { error, loading, data, fetchMore } = useQuery(query, {
     // When graphQLErrors happen, we still want to get partial data to render the feed
     errorPolicy: 'all',
   })
@@ -74,40 +61,11 @@ const Feed = ({ meta }) => {
     if (error) {
       reportError('Feed getFeed Query', error)
     }
-  }, [reportError, error])
+  }, [error])
 
   const connection = data?.documents
-  const greeting = data?.greeting
 
   const mapNodes = (node) => node.entity
-
-  useEffect(() => {
-    if (!subscribeToMore) {
-      return
-    }
-    let unsubscribe = subscribeToMore({
-      document: greetingSubscription,
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) {
-          return prev
-        }
-        const { greeting } = subscriptionData.data.greeting
-        if (greeting) {
-          return {
-            ...prev,
-            greeting: {
-              ...greeting,
-            },
-          }
-        } else {
-          return prev
-        }
-      },
-    })
-    return () => {
-      unsubscribe()
-    }
-  }, [subscribeToMore])
 
   return (
     <Frame hasOverviewNav stickySecondaryNav raw meta={meta}>
@@ -117,12 +75,6 @@ const Feed = ({ meta }) => {
           render={() => {
             return (
               <>
-                {greeting && (
-                  <Interaction.H1 style={{ marginBottom: '40px' }}>
-                    {greeting.text}
-                  </Interaction.H1>
-                )}
-
                 <DocumentList
                   documents={connection.nodes.map(mapNodes)}
                   totalCount={connection.totalCount}

@@ -6,7 +6,6 @@ import {
   mediaQueries,
   Loader,
   useColorContext,
-  getTeaserHref,
 } from '@project-r/styleguide'
 import BookmarkButton from '../ActionBar/BookmarkButton'
 import UserProgress from '../ActionBar/UserProgress'
@@ -33,13 +32,9 @@ const BookmarkMiniFeed = ({ data, style }) => {
               .filter((node) => node.document)
               .slice(0, 3)
               .map((node) => {
-                const { userProgress, userBookmark, id } = node.document
+                const { userBookmark, id } = node.document
                 const meta = node.document.meta
                 const { estimatedReadingMinutes, title, path } = meta
-                const href = getTeaserHref(
-                  path,
-                  meta.format?.meta.externalBaseUrl,
-                )
                 return (
                   <div
                     {...styles.tile}
@@ -48,7 +43,7 @@ const BookmarkMiniFeed = ({ data, style }) => {
                   >
                     <div {...styles.tileHeadlineContainer}>
                       <Link
-                        href={href}
+                        href={path}
                         passHref
                         {...styles.tileHeadline}
                         {...colorScheme.set('color', 'text')}
@@ -63,13 +58,12 @@ const BookmarkMiniFeed = ({ data, style }) => {
                         bookmarked={!!userBookmark}
                         skipRefetch
                       />
-                      {userProgress && estimatedReadingMinutes > 1 && (
+                      {estimatedReadingMinutes > 1 && (
                         <UserProgress
-                          documentId={id}
+                          documentPath={path}
                           forceShortLabel
                           noCallout
                           noScroll
-                          userProgress={userProgress}
                         />
                       )}
                     </div>

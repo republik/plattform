@@ -1,49 +1,49 @@
+import {
+  matchHeading,
+  matchImage,
+  matchParagraph,
+  matchType,
+  matchZone,
+} from '@republik/mdast-react-render'
 import React, { useEffect, useState } from 'react'
-
-import Container from './Container'
-import Center from '../../components/Center'
+import { AudioPlayer } from '../../components/AudioPlayer'
 import Button from '../../components/Button'
+import Center from '../../components/Center'
+import { ChartLead, ChartLegend, ChartTitle } from '../../components/Chart'
+import CsvChart from '../../components/Chart/Csv'
+import ErrorBoundary from '../../components/ErrorBoundary'
+
+import { CoverTextTitleBlockHeadline, Figure } from '../../components/Figure'
+import IllustrationHtml from '../../components/IllustrationHtml'
+
+import { Tweet } from '../../components/Social'
+
+import StoryComponent from '../../components/StoryComponent'
+import TeaserEmbedComment from '../../components/TeaserEmbedComment'
+import { TeaserFeed } from '../../components/TeaserFeed'
+import { getFormatLine } from '../../components/TeaserFeed/utils'
+
+import { TeaserFrontLogo } from '../../components/TeaserFront'
 import TitleBlock from '../../components/TitleBlock'
 import { HR } from '../../components/Typography'
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Meta from '../../components/Typography/Meta'
 import * as Scribble from '../../components/Typography/Scribble'
-import { TeaserFeed } from '../../components/TeaserFeed'
-import IllustrationHtml from '../../components/IllustrationHtml'
-import CsvChart from '../../components/Chart/Csv'
-import { ChartTitle, ChartLead, ChartLegend } from '../../components/Chart'
-import ErrorBoundary from '../../components/ErrorBoundary'
-
-import { Figure, CoverTextTitleBlockHeadline } from '../../components/Figure'
-
-import { Tweet } from '../../components/Social'
 import { Video } from '../../components/Video'
 import { VideoPlayer } from '../../components/VideoPlayer'
-import { AudioPlayer } from '../../components/AudioPlayer'
-
-import { TeaserFrontLogo } from '../../components/TeaserFront'
-import { getFormatLine } from '../../components/TeaserFeed/utils'
-
-import {
-  matchType,
-  matchZone,
-  matchHeading,
-  matchParagraph,
-  matchImage,
-} from '@republik/mdast-react-render'
-
-import { matchLast, globalInlines, styles, getDatePath } from './utils'
+import authorRule from '../shared/email/rules/authorRule'
+import elseRule from '../shared/email/rules/elseRule'
+import ifRule from '../shared/email/rules/ifRule'
+import { embedDataWrapperRule } from '../shared/rules/embedDatawrapperRule'
 
 import createBase from './base'
 import createBlocks from './blocks'
-import createTeasers from './teasers'
+
+import Container from './Container'
 import createDynamicComponent from './dynamicComponent'
-import TeaserEmbedComment from '../../components/TeaserEmbedComment'
-import ifRule from '../shared/email/rules/ifRule'
-import elseRule from '../shared/email/rules/elseRule'
-import authorRule from '../shared/email/rules/authorRule'
-import Datawrapper from '../../components/Datawrapper'
-import { embedDataWrapperRule } from '../shared/rules/embedDatawrapperRule'
+import createTeasers from './teasers'
+
+import { getDatePath, globalInlines, matchLast, styles } from './utils'
 
 const getProgressId = (node, index, parent, { ancestors }) => {
   if (parent.identifier === 'CENTER') {
@@ -111,6 +111,11 @@ const createSchema = ({
   documentEditorOptions = { skipCredits: false },
   customMetaFields = [
     {
+      label: 'Regwall ausschalten',
+      key: 'isPaywallExcluded',
+      ref: 'bool',
+    },
+    {
       label: 'Bildergalerie aktiv',
       key: 'gallery',
       ref: 'bool',
@@ -163,7 +168,6 @@ const createSchema = ({
   repoPrefix = 'article-',
   series = true,
   darkMode = true,
-  paynotes = true,
   Link = DefaultLink,
   getPath = getDatePath,
   t = () => '',
@@ -180,7 +184,6 @@ const createSchema = ({
   withCommentData = withData,
   CommentLink = DefaultLink,
   ActionBar = DefaultActionBar,
-  PayNote,
   noEmpty = true,
   AudioPlayButton,
 } = {}) => {
@@ -195,7 +198,6 @@ const createSchema = ({
     t,
     Link,
     ActionBar,
-    PayNote,
     plattformUnauthorizedZoneText,
     AudioPlayButton,
   })
@@ -207,6 +209,23 @@ const createSchema = ({
     insertButtonText: 'Dynamic Component',
     type: DYNAMICCOMPONENT_TYPE,
   })
+
+  const storyComponent = {
+    matchMdast: matchZone('STORYCOMPONENT'),
+    component: StoryComponent,
+    props: (node) => ({
+      tagname: node.data.tagname,
+      componentData: node.data.componentData,
+      url: node.data.url,
+    }),
+    editorModule: 'storycomponent',
+    editorOptions: {
+      type: 'STORYCOMPONENT',
+      insertButtonText: 'Story Component (Beta)',
+      insertTypes: ['PARAGRAPH'],
+    },
+    isVoid: true,
+  }
 
   const TeaserEmbedCommentWithLiveData = withCommentData(TeaserEmbedComment)
   const TeaserEmbedCommentSwitch = (props) => {
@@ -242,7 +261,6 @@ const createSchema = ({
             editorOptions: {
               series,
               darkMode,
-              paynotes,
               customFields: customMetaFields,
               teaser:
                 previewTeaser ||
@@ -260,6 +278,7 @@ const createSchema = ({
           },
           blocks.cover,
           addProgressProps(dynamicComponent),
+          addProgressProps(storyComponent),
           addProgressProps(embedDataWrapperRule()),
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
@@ -731,6 +750,7 @@ const createSchema = ({
                 isVoid: true,
               },
               dynamicComponent,
+              storyComponent,
             ].map(addProgressProps),
           },
           addProgressProps(base.centerFigure),

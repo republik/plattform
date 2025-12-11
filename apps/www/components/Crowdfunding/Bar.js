@@ -82,7 +82,14 @@ const widthForGoal = (goal, status, accessor) => {
   )
 }
 
-const GoalBar = ({ status, goals, accessor, format, showLast, color }) => {
+const GoalBar = ({
+  status,
+  goals,
+  accessor,
+  format = (value) => value,
+  showLast,
+  color,
+}) => {
   const [colorScheme] = useColorContext()
   const [hover, setHover] = useState(undefined)
   const [goal, setGoal] = useState(undefined)
@@ -182,10 +189,6 @@ const GoalBar = ({ status, goals, accessor, format, showLast, color }) => {
       )}
     </div>
   )
-}
-
-GoalBar.defaultProps = {
-  format: (value) => value,
 }
 
 export default GoalBar

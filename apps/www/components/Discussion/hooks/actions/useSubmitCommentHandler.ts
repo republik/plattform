@@ -27,7 +27,7 @@ export type SubmitCommentHandlerFunction = (
 function useSubmitCommentHandler(): SubmitCommentHandlerFunction {
   const [submitCommentMutation] = useSubmitCommentMutation()
 
-  const { orderBy, focusId, activeTag, depth } = useDiscussion()
+  const { orderBy, focusId, activeTag, depth, discussion } = useDiscussion()
 
   return async (
     content: string,
@@ -52,31 +52,40 @@ function useSubmitCommentHandler(): SubmitCommentHandlerFunction {
       },
       // Write the result of the query into the DiscussionQuery cache
       update: (cache, { data: { submitComment: comment } }) => {
-        const variables: DiscussionQueryVariables = {
-          discussionId,
-          orderBy: orderBy,
-          depth: depth,
-          focusId: focusId,
-          activeTag: activeTag,
+        try {
+          cache.updateQuery<DiscussionQuery, DiscussionQueryVariables>(
+            {
+              query: DISCUSSION_QUERY,
+              variables: {
+                discussionPath: discussion?.path,
+                orderBy: orderBy,
+                depth: depth,
+                focusId: focusId,
+                activeTag: activeTag,
+              },
+            },
+            (data) => {
+              // If no cached query data exists, don't do anything.
+              if (!data) {
+                return
+              }
+              return produce(
+                data,
+                mergeComment({
+                  comment,
+                  activeTag: activeTag,
+                  initialParentId: parentId,
+                }),
+              )
+            },
+          )
+        } catch (e) {
+          // If the cache update fails, the mutation still succeeded, so we don't have to do anything else.
+          console.warn(
+            "Couldn't update client cache after comment submit mutation",
+            e,
+          )
         }
-
-        const readQueries = cache.readQuery<
-          DiscussionQuery,
-          DiscussionQueryVariables
-        >({ query: DISCUSSION_QUERY, variables })
-
-        cache.writeQuery<DiscussionQuery, DiscussionQueryVariables>({
-          query: DISCUSSION_QUERY,
-          variables,
-          data: produce(
-            readQueries,
-            mergeComment({
-              comment,
-              activeTag: activeTag,
-              initialParentId: parentId,
-            }),
-          ),
-        })
       },
     }).catch(toRejectedString)
   }

@@ -238,7 +238,6 @@ export default compose(
             meta {
               title
               color
-              externalBaseUrl
             }
           }
         }

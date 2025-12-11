@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client'
 import { onDocumentFragment } from '../../Bookmarks/fragments'
-import { userProgressFragment } from '../Progress/api'
 import { notificationInfo, subInfo } from '../../Notifications/enhancers'
 
 export const getDocument = gql`
@@ -36,7 +35,6 @@ export const getDocument = gql`
         }
       }
       ...BookmarkOnDocument
-      ...UserProgressOnDocument
       meta {
         publishDate
         lastPublishedAt
@@ -60,8 +58,8 @@ export const getDocument = gql`
         shareTextPosition
         ownDiscussion {
           id
+          path
           closed
-          isBoard
           comments {
             totalCount
           }
@@ -85,11 +83,11 @@ export const getDocument = gql`
             profileUrls
           }
         }
+        isPaywallExcluded
         format {
           id
           meta {
             path
-            externalBaseUrl
             title
             color
             kind
@@ -113,6 +111,7 @@ export const getDocument = gql`
               name
               free
             }
+            isPaywallExcluded
           }
         }
         section {
@@ -153,7 +152,6 @@ export const getDocument = gql`
               id
               repoId
               ...BookmarkOnDocument
-              ...UserProgressOnDocument
               meta {
                 title
                 publishDate
@@ -172,8 +170,8 @@ export const getDocument = gql`
                 }
                 ownDiscussion {
                   id
+                  path
                   closed
-                  isBoard
                   comments {
                     totalCount
                   }
@@ -215,13 +213,10 @@ export const getDocument = gql`
         indicateGallery
         indicateVideo
         prepublication
-        paynotes
-        paynoteMode
       }
     }
   }
   ${onDocumentFragment}
-  ${userProgressFragment}
   ${subInfo}
   ${notificationInfo}
 `

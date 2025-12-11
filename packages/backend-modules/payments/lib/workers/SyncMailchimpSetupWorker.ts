@@ -1,9 +1,9 @@
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
-import { Payments } from '../payments'
 import Stripe from 'stripe'
 import { WebhookService } from '../services/WebhookService'
 import { MailNotificationService } from '../services/MailNotificationService'
+import { SubscriptionService } from '../services/SubscriptionService'
 
 type Args = {
   $version: 'v1'
@@ -23,11 +23,11 @@ export class SyncMailchimpSetupWorker extends BaseWorker<Args> {
       throw Error('unable to perform this job version. Expected v1')
     }
 
-    console.log(`[${this.queue}] start`)
+    this.logger.debug({ queue: this.queue, jobiId: job.id }, 'start')
 
     const webhookService = new WebhookService(this.context.pgdb)
     const mailService = new MailNotificationService(this.context.pgdb)
-    const PaymentService = Payments.getInstance()
+    const subscriptionService = new SubscriptionService(this.context.pgdb)
 
     const wh =
       await webhookService.getEvent<Stripe.CheckoutSessionCompletedEvent>(
@@ -35,23 +35,30 @@ export class SyncMailchimpSetupWorker extends BaseWorker<Args> {
       )
 
     if (!wh) {
-      console.error('Webhook does not exist')
+      this.logger.error(
+        { queue: this.queue, jobiId: job.id },
+        'Webhook does not exist',
+      )
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
     if (wh.payload.type !== 'checkout.session.completed') {
-      console.error('Webhook is not of type checkout.session.completed')
+      this.logger.error(
+        { queue: this.queue, jobiId: job.id },
+        'Webhook is not of type checkout.session.completed',
+      )
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
     const event = wh.payload
 
-    const subscription = await PaymentService.getSubscription({
+    const subscription = await subscriptionService.getSubscription({
       externalId: event.data.object.subscription as string,
     })
 
     if (!subscription) {
-      console.error(
+      this.logger.error(
+        { queue: this.queue, jobiId: job.id },
         'Subscription could not be found in the database',
       )
       return await this.pgBoss.fail(this.queue, job.id)
@@ -62,6 +69,6 @@ export class SyncMailchimpSetupWorker extends BaseWorker<Args> {
       subscriptionExternalId: event.data.object.subscription as string,
     })
 
-    console.log(`[${this.queue}] done`)
+    this.logger.debug({ queue: this.queue, jobiId: job.id }, 'done')
   }
 }

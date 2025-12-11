@@ -4,7 +4,7 @@ export interface StringObject {
   [key: string]: string
 }
 
-type KeyConstraint = StringObject | string
+export type KeyConstraint = StringObject | string
 
 const getCacheKey = (key: KeyConstraint) => {
   if (typeof key === 'string') {
@@ -18,7 +18,7 @@ const getCacheKey = (key: KeyConstraint) => {
   throw new Error('invalid key')
 }
 
-interface ValueConstraint {
+export interface ValueConstraint {
   id?: string
   [key: string]: any
 }
@@ -59,6 +59,9 @@ type FindFunction<Key, Value> = (
   options?: { many?: boolean },
 ) => Value | Value[] | undefined
 
+/**
+ * @deprecated in favor of using `new Dataloader` directly.
+ */
 export default module.exports = function createDataLoader<
   Key extends KeyConstraint,
   Value extends ValueConstraint,

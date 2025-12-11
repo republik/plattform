@@ -1,5 +1,5 @@
 const Promise = require('bluebird')
-const { v4: uuid } = require('uuid')
+const { v4: isUuid } = require('is-uuid')
 
 const getCollectionName = () => 'audioqueue'
 
@@ -38,7 +38,7 @@ const upsertItem = async (input, context) => {
   const { id, entityType, entityId, sequence } = input
   const { user: me, loaders, pgdb, t } = context
 
-  if (!!id && !uuid(id)) {
+  if (!!id && !isUuid(id)) {
     throw new Error(t('api/collections/audioQueue/error/invalidItemId'))
   }
 
@@ -87,14 +87,37 @@ const upsertItem = async (input, context) => {
 
   const currentSequence = existingItem?.data?.sequence
 
-  const nextSequence =
-    (items.length &&
-      Math.max(...items.map((item) => item.data?.sequence || 0))) + 1
+  // Calculate sequence boundaries
+  const maxSequence = items.length > 0
+    ? Math.max(...items.map((item) => item.data?.sequence || 0))
+    : 0
+  const minSequence = items.length > 0
+    ? Math.min(...items.map((item) => item.data?.sequence || Infinity))
+    : 0
 
-  const aimSequence =
-    (!sequence && existingItem && nextSequence - 1) ||
-    ((!sequence || sequence > nextSequence) && nextSequence) ||
-    sequence
+  const nextSequence = maxSequence + 1
+  const playNextSequence = minSequence + 1
+
+  // Determine target sequence for the item
+  let aimSequence
+
+  if (existingItem && !sequence) {
+    // Case 1: Updating existing item without specifying new position
+    // → Keep it at its current position
+    aimSequence = currentSequence
+  } else if (!sequence) {
+    // Case 2: Adding new item without specifying position
+    // → Insert as "play next" (right after current/first item)
+    aimSequence = playNextSequence
+  } else if (sequence > nextSequence) {
+    // Case 3: (Edge case) Specified position is beyond queue end
+    // → Cap it at the end of queue to avoid gaps
+    aimSequence = nextSequence
+  } else {
+    // Case 4: Valid specific position provided
+    // → Use it as requested
+    aimSequence = sequence
+  }
 
   const resequenceItems = items
     .filter(omitItem(existingItem))
@@ -145,7 +168,7 @@ const removeItem = async (input, context) => {
   const { id } = input
   const { user: me, loaders, pgdb, t } = context
 
-  if (!!id && !uuid(id)) {
+  if (!!id && !isUuid(id)) {
     throw new Error(t('api/collections/audioQueue/error/invalidItemId'))
   }
 

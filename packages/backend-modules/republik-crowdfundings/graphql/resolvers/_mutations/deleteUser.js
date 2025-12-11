@@ -72,7 +72,7 @@ const deleteRelatedData = async (
       DELETE
         FROM sessions s
       WHERE
-        ARRAY[(s.sess #>> '{passport, user}')::uuid] && :userIds
+        (s.sess #>> '{passport, user}')::uuid = ANY(:userIds)
     `,
       {
         userIds: [userId],
@@ -237,7 +237,10 @@ module.exports = async (_, args, context) => {
       email: user.email,
     })
     if (!mailchimpResult.every((result) => result === true)) {
-      console.warn(
+      context.logger.warn(
+        {
+          userId: user.id,
+        },
         `deleteUser: could not delete ${user.email} from all mailchimp audiences. This might be because they were not added to all currently used audiences.`,
       )
     }
@@ -280,8 +283,6 @@ module.exports = async (_, args, context) => {
           hasPublicProfile: false,
           isListed: false,
           isAdminUnlisted: true,
-          isPhoneNumberVerified: false,
-          isTOTPChallengeSecretVerified: false,
           deletedAt: new Date(),
           ...nulledColumns,
         },
@@ -308,7 +309,7 @@ module.exports = async (_, args, context) => {
       : null
   } catch (e) {
     await transaction.transactionRollback()
-    console.info('transaction rollback', { req: req._log(), args, error: e })
+    context.logger.error({ args, error: e }, 'delete user failed')
     throw e
   }
 }

@@ -1,6 +1,14 @@
 const debug = require('debug')('access:lib:perks:subscribeToMailJourney')
 
-const { MAILCHIMP_PROBELESEN_AUDIENCE_ID } = process.env
+const {
+  MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+  MAILCHIMP_REGWALL_TRIAL_AUDIENCE_ID,
+} = process.env
+
+const audiences = {
+  REGWALL_TRIAL: MAILCHIMP_REGWALL_TRIAL_AUDIENCE_ID,
+  PROBELESEN: MAILCHIMP_PROBELESEN_AUDIENCE_ID,
+}
 
 const give = async (
   campaign,
@@ -12,7 +20,11 @@ const give = async (
   redis,
   mail,
 ) => {
-  const audienceId = MAILCHIMP_PROBELESEN_AUDIENCE_ID
+  if (!(settings?.audience)) {
+    throw new Error(`Error while subscribing user to mailchimp journey ${settings?.audience}, valid audience settings are REGWALL_TRIAL and PROBELESEN`)
+  }
+
+  const audienceId = audiences[settings.audience]
 
   await mail.addUserToAudience({
     user: recipient,

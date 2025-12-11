@@ -83,21 +83,6 @@ type mutations {
   # required role to change others: supporter
   preferredFirstFactor(userId: ID, tokenType: SignInTokenType): User!
 
-  # Generate a new sharedSecret for TOTP
-  initTOTPSharedSecret: SharedSecretResponse!
-
-  # Validate the sharedSecret for the first time via token payload
-  validateTOTPSharedSecret(totp: String): Boolean!
-
-  # Activate or deactivate 2FA
-  updateTwoFactorAuthentication(enabled: Boolean!, type: SignInTokenType!): Boolean!
-
-  # Resend Verification Code to confirm a phone number
-  sendPhoneNumberVerificationCode: Boolean!
-
-  # Verify a phone number
-  verifyPhoneNumber(verificationCode: String!): Boolean!
-
   # Add a user to a given role
   addUserToRole(userId: ID, role: String!): User!
 

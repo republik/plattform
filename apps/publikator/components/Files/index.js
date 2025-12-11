@@ -1,18 +1,18 @@
 import { gql, useQuery } from '@apollo/client'
 import { Container } from '@project-r/styleguide'
-
-import { getRepoIdFromQuery } from '../../lib/repoIdHelper'
+import { css } from 'glamor'
 import { RepoFile } from '../../lib/graphql/fragments'
 
-import Loader from '../Loader'
+import { getRepoIdFromQuery } from '../../lib/repoIdHelper'
+import Nav from '../editor/Nav'
 import Frame from '../Frame'
-import Nav from '../Edit/Nav'
-import { Table, Tr, Th } from '../Table'
+
+import Loader from '../Loader'
+import { Table, Th, Tr } from '../Table'
 
 import Info from './Info'
-import Upload from './Upload'
 import Row from './Row'
-import { css, style } from 'glamor'
+import Upload from './Upload'
 
 const GET_FILES = gql`
   query getFiles($id: ID!) {
@@ -33,11 +33,22 @@ const styles = {
   }),
 }
 
-const FilesPage = ({ router }) => {
+const FilesPage = ({ router, t }) => {
   const repoId = getRepoIdFromQuery(router.query)
   const variables = { id: repoId }
 
-  const { data, loading, error } = useQuery(GET_FILES, { variables })
+  const {
+    data,
+    loading,
+    error: queryError,
+  } = useQuery(GET_FILES, { variables })
+
+  const error =
+    data?.repo === null
+      ? t('repo/warn/missing', {
+          repoId,
+        })
+      : queryError
 
   return (
     <Frame>

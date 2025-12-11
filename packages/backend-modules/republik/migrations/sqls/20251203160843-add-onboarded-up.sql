@@ -1,0 +1,3 @@
+-- migrate up here: CREATE TABLE...
+-- needs to be executed outside of the migration due to DB locks
+ALTER TABLE "public"."users" ADD COLUMN IF NOT EXISTS "onboarded" timestamp with time zone;

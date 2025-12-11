@@ -35,13 +35,10 @@
     "@orbiting/backend-modules-embeds": "*",
     "@orbiting/backend-modules-env": "*",
     "@orbiting/backend-modules-formats": "*",
-    "@orbiting/backend-modules-gsheets": "*",
     "@orbiting/backend-modules-invoices": "*",
-    "@orbiting/backend-modules-keyCDN": "*",
     "@orbiting/backend-modules-mail": "*",
     "@orbiting/backend-modules-mailchimp": "*",
     "@orbiting/backend-modules-mailbox": "*",
-    "@orbiting/backend-modules-matomo": "*",
     "@orbiting/backend-modules-migrations": "*",
     "@orbiting/backend-modules-publikator": "*",
     "@orbiting/backend-modules-push-notifications": "*",
@@ -63,11 +60,11 @@
     "apollo-modules-node": "*",
     "jest": "^29.7.0",
     "jest-environment-node": "^29.5.0",
-    "subscriptions-transport-ws": "^0.9.16",
+    "subscriptions-transport-ws": "^0.11.0",
     "ts-jest": "^29.1.0",
     "why-is-node-running": "^2.1.2"
   },
   "dependencies": {
-    "graphql": "^15.3.0"
+    "graphql": "^16.11.0"
   }
 }

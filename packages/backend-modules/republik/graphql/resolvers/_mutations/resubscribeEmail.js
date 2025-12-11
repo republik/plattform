@@ -8,21 +8,21 @@ const QUERY_CACHE_TTL_SECONDS = 60 // One minute
 
 const createResubscribeEmailCacheFn = (userId, context) => {
   return create(
-  {
-    namespace: 'republik',
-    prefix: 'mail:resubscribeEmail',
-    key: userId,
-    ttl: QUERY_CACHE_TTL_SECONDS,
-  },
-  context,
-)}
+    {
+      namespace: 'republik',
+      prefix: 'mail:resubscribeEmail',
+      key: userId,
+      ttl: QUERY_CACHE_TTL_SECONDS,
+    },
+    context,
+  )
+}
 
 module.exports = async (_, args, context) => {
   const { userId } = args
   const {
     user: me,
     pgdb,
-    req,
     t,
     mail: { getNewsletterSettings, resubscribeEmail },
   } = context
@@ -30,7 +30,7 @@ module.exports = async (_, args, context) => {
   const user = userId ? await pgdb.public.users.findOne({ id: userId }) : me
 
   if (!user) {
-    console.error('user not found', { req: req._log() })
+    context.logger.error({ userId }, 'user not found')
     throw new Error(t('api/users/404'))
   }
 
@@ -41,7 +41,8 @@ module.exports = async (_, args, context) => {
   try {
     return getNewsletterSettings({ user })
   } catch (error) {
-    console.error('getNewsletterProfile failed', { error })
+    context.logger.error({ error }, 'getNewsletterProfile failed')
+    // console.error('getNewsletterProfile failed', { error })
     throw new Error(t('api/newsletters/get/failed'))
   }
 }

@@ -1,0 +1,66 @@
+mutation UpsertContributor(
+  $id: ID
+  $name: String
+  $shortBio: String
+  $bio: String
+  $image: String
+  $prolitterisId: String
+  $prolitterisFirstname: String
+  $prolitterisLastname: String
+  $gender: GenderEnum
+  $userId: ID
+) {
+  upsertContributor(
+    id: $id
+    name: $name
+    shortBio: $shortBio
+    bio: $bio
+    image: $image
+    prolitterisId: $prolitterisId
+    prolitterisFirstname: $prolitterisFirstname
+    prolitterisLastname: $prolitterisLastname
+    gender: $gender
+    userId: $userId
+  ) {
+    ... on UpsertContributorSuccess {
+      contributor {
+        id
+        name
+        shortBio
+        bio
+        image
+        prolitterisId
+        prolitterisFirstname
+        prolitterisLastname
+        gender
+        userId
+      }
+      isNew
+      warnings {
+        field
+        message
+      }
+    }
+    ... on UpsertContributorError {
+      warnings {
+        field
+        message
+      }
+      errors {
+        field
+        message
+      }
+    }
+  }
+}
+
+mutation DeleteContributor($id: ID!) {
+  deleteContributor(id: $id) {
+    ... on DeleteContributorError {
+      message
+    }
+    ... on DeleteContributorSuccess {
+      success
+    }
+  }
+}

@@ -1,17 +1,19 @@
-import { useMemo } from 'react'
 import {
-  Loader,
   DiscussionCommentsWrapper,
+  Loader,
   pxToRem,
 } from '@project-r/styleguide'
+import FontSizeSync from 'components/FontSize/Sync'
+import { css } from 'glamor'
+import { useMemo } from 'react'
 import { useTranslation } from '../../lib/withT'
 import { useDiscussion } from './context/DiscussionContext'
-import DiscussionComposer from './DiscussionComposer/DiscussionComposer'
 import DiscussionCommentTreeRenderer from './DiscussionCommentTreeRenderer'
+import DiscussionComposer from './DiscussionComposer/DiscussionComposer'
 import DiscussionOptions from './DiscussionOptions/DiscussionOptions'
 import TagFilter from './DiscussionOptions/TagFilter'
+import createDiscussionForumPostingSchema from './helpers/createDiscussionForumPostingSchema'
 import makeCommentTree from './helpers/makeCommentTree'
-import { css } from 'glamor'
 import useDiscussionFocusHelper from './hooks/useDiscussionFocusHelper'
 
 const styles = {
@@ -21,16 +23,10 @@ const styles = {
 }
 
 type Props = {
-  showPayNotes?: boolean
-  inRootCommentOverlay?: boolean
   documentMeta?: any
 }
 
-const Discussion = ({
-  documentMeta,
-  inRootCommentOverlay,
-  showPayNotes,
-}: Props) => {
+const Discussion = ({ documentMeta }: Props) => {
   const { t } = useTranslation()
 
   const {
@@ -52,6 +48,11 @@ const Discussion = ({
       }
     }
     return makeCommentTree(discussion?.comments)
+  }, [discussion])
+
+  const structuredData = useMemo(() => {
+    if (!discussion) return null
+    return createDiscussionForumPostingSchema(discussion)
   }, [discussion])
 
   const loadMore = async (): Promise<unknown> => {
@@ -78,24 +79,26 @@ const Discussion = ({
       }
       render={() => (
         <>
-          {!inRootCommentOverlay && (
-            <>
-              <TagFilter discussion={discussion} />
-              <DiscussionComposer
-                isRoot
-                placeholder={
-                  documentMeta?.discussionType === 'statements'
-                    ? t('components/Discussion/Statement/Placeholder')
-                    : undefined
-                }
-                showPayNotes={showPayNotes}
-              />
-            </>
+          {structuredData && (
+            <script
+              type='application/ld+json'
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify(structuredData),
+              }}
+            />
           )}
+          <FontSizeSync />
+          <TagFilter discussion={discussion} />
+          <DiscussionComposer
+            isRoot
+            placeholder={
+              documentMeta?.discussionType === 'statements'
+                ? t('components/Discussion/Statement/Placeholder')
+                : undefined
+            }
+          />
           <div {...styles.commentsWrapper}>
-            {!inRootCommentOverlay && (
-              <DiscussionOptions documentMeta={documentMeta} />
-            )}
+            <DiscussionOptions documentMeta={documentMeta} />
             <DiscussionCommentsWrapper
               t={t}
               loadMore={loadMore}
@@ -105,12 +108,7 @@ const Discussion = ({
               tagMappings={documentMeta?.tagMappings}
               errorMessage={focusError?.message}
             >
-              <DiscussionCommentTreeRenderer
-                comments={comments.nodes}
-                discussion={discussion}
-                inRootCommentOverlay={inRootCommentOverlay}
-                documentMeta={documentMeta}
-              />
+              <DiscussionCommentTreeRenderer comments={comments.nodes} />
             </DiscussionCommentsWrapper>
           </div>
         </>

@@ -1,9 +1,7 @@
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import { useRouter } from 'next/router'
+import { PUBLIC_BASE_URL } from '../../../../lib/constants'
 import Meta from '../../../Frame/Meta'
-import {
-  ASSETS_SERVER_BASE_URL,
-  PUBLIC_BASE_URL,
-} from '../../../../lib/constants'
 
 const QuestionnaireMeta = ({ share, shareText }) => {
   const router = useRouter()
@@ -20,9 +18,7 @@ const QuestionnaireMeta = ({ share, shareText }) => {
         url,
         title: shareText,
         description: share.description,
-        image: `${ASSETS_SERVER_BASE_URL}/render?width=1200&height=1&url=${encodeURIComponent(
-          shareImageUrl,
-        )}`,
+        image: screenshotUrl({ url: shareImageUrl, width: 1200 }),
       }}
     />
   )

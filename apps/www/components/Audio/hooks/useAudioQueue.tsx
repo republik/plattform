@@ -4,10 +4,17 @@ import { NEW_AUDIO_API_VERSION } from '../constants'
 import { useMe } from '../../../lib/context/MeContext'
 import createPersistedState from '../../../lib/hooks/use-persisted-state'
 import { AudioPlayerItem, AudioQueueItem } from '../types/AudioPlayerItem'
-import { ApolloError, FetchResult, useMutation, useQuery } from '@apollo/client'
+import {
+  ApolloCache,
+  ApolloError,
+  FetchResult,
+  useMutation,
+  useQuery,
+} from '@apollo/client'
 import OptimisticQueueResponseHelper from '../helpers/OptimisticQueueResponseHelper'
 import { reportError } from 'lib/errors/reportError'
 import { useEffect } from 'react'
+import { v4 as uuid } from 'uuid'
 import {
   AddAudioQueueItemsDocument,
   AddAudioQueueItemsMutation,
@@ -28,6 +35,8 @@ import { getFragmentData } from '#graphql/cms/__generated__/gql'
 const usePersistedAudioState = createPersistedState<AudioQueueItem>(
   'audio-player-local-state',
 )
+
+const MAX_QUEUE_SIZE = 20
 
 /**
  * useAudioQueue acts as a provider for the audio queue and all it's mutations.
@@ -86,7 +95,7 @@ const useAudioQueue = (): {
     if (audioQueueHasError) {
       reportError('useAudioQueue', audioQueueHasError)
     }
-  }, [reportError, audioQueueHasError])
+  }, [audioQueueHasError])
 
   /**
    *
@@ -94,14 +103,44 @@ const useAudioQueue = (): {
    * @param audioQueueItems
    */
   const modifyApolloCacheWithUpdatedPlaylist = (
-    cache,
+    cache: ApolloCache<any>,
     { data: { audioQueueItems } },
   ) => {
-    const { me } = cache.readQuery({ query: AudioQueueQueryDocument })
+    const data = cache.readQuery({ query: AudioQueueQueryDocument })
+    if (data?.me) {
+      cache.writeQuery({
+        query: AudioQueueQueryDocument,
+        data: {
+          me: { ...data.me, audioQueue: audioQueueItems },
+        },
+      })
+    }
+  }
+
+  /**
+   * Cache update for mutations that only return Id's and sequence
+   * Creates an updated audioqueue from the server response without
+   * fetching the full audioqueue data from the server.
+   */
+  const updateCacheWithMinimalData = (
+    cache: ApolloCache<any>,
+    { data: { audioQueueItems } },
+  ) => {
+    const data = cache.readQuery({ query: AudioQueueQueryDocument })
+    if (!data?.me) return
+
+    const cachedItemsById = new Map(
+      (data.me.audioQueue || []).map((item) => [item.id, item]),
+    )
+
+    const updatedQueue = audioQueueItems
+      .map((serverItem) => cachedItemsById.get(serverItem.id))
+      .filter(Boolean) // Remove any items not found in cache
+
     cache.writeQuery({
       query: AudioQueueQueryDocument,
       data: {
-        me: { ...me, audioQueue: audioQueueItems },
+        me: { ...data.me, audioQueue: updatedQueue },
       },
     })
   }
@@ -110,16 +149,16 @@ const useAudioQueue = (): {
     update: modifyApolloCacheWithUpdatedPlaylist,
   })
   const [removeAudioQueueItem] = useMutation(RemoveAudioQueueItemDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
+    update: updateCacheWithMinimalData,
   })
   const [moveAudioQueueItem] = useMutation(MoveAudioQueueItemDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
+    update: updateCacheWithMinimalData,
   })
   const [clearAudioQueue] = useMutation(ClearAudioQueueDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
+    update: updateCacheWithMinimalData,
   })
   const [reorderAudioQueue] = useMutation(ReorderAudioQueueDocument, {
-    update: modifyApolloCacheWithUpdatedPlaylist,
+    update: updateCacheWithMinimalData,
   })
 
   /**
@@ -132,6 +171,12 @@ const useAudioQueue = (): {
     position?: number,
   ): Promise<FetchResult<AddAudioQueueItemsMutation>> => {
     if (me) {
+      // Enforce queue limit by removing oldest item (end of queue) before adding
+      if (audioQueueItems.length >= MAX_QUEUE_SIZE) {
+        const lastItem = audioQueueItems[audioQueueItems.length - 1]
+        await removeAudioQueueItem({ variables: { id: lastItem.id } })
+      }
+
       return addAudioQueueItem({
         variables: {
           entity: {
@@ -143,7 +188,7 @@ const useAudioQueue = (): {
       })
     } else {
       const mockAudioQueueItem: AudioQueueItem = {
-        id: item.id,
+        id: uuid(),
         document: item,
         sequence: 0,
       }

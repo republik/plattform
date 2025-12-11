@@ -7,10 +7,8 @@ import {
   plainLinkRule,
   RelativeTime,
   useColorContext,
-  useHeaderHeight,
   IconButton,
   usePrevious,
-  RawHtml,
 } from '@project-r/styleguide'
 import { useEffect, useRef, useState } from 'react'
 import { max, shuffle } from 'd3-array'
@@ -104,12 +102,11 @@ export const SubmissionAuthor = ({
 }) => {
   const { t } = useTranslation()
   const [colorScheme] = useColorContext()
-  const [headerHeight] = useHeaderHeight()
   const isUpdated = createdAt && updatedAt && updatedAt !== createdAt
   return (
     <div
       {...styles.header}
-      style={{ top: headerHeight, ...customStyle }}
+      style={{ top: 0, ...customStyle }}
       {...colorScheme.set(
         'backgroundColor',
         isHighlighted ? 'alert' : 'default',
@@ -135,13 +132,7 @@ export const SubmissionAuthor = ({
         </Interaction.H3>
         <Label style={{ paddingRight: '20px' }}>
           <span {...colorScheme.set('color', 'textSoft')}>
-            {displayAuthor.credentials && (
-              <RawHtml
-                dangerouslySetInnerHTML={{
-                  __html: displayAuthor.credentials,
-                }}
-              />
-            )}
+            {displayAuthor.credentials}
             {createdAt && !displayAuthor.credentials && (
               <Link
                 href={submissionUrl}

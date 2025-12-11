@@ -15,7 +15,6 @@ import MetaForm from '../../utils/MetaForm'
 import SlugField from '../../utils/SlugField'
 import RepoSelect from './RepoSelect'
 import SeriesForm from './SeriesForm'
-import PaynotesForm from './PaynotesForm'
 import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 import ShareImageForm from './ShareImageForm'
@@ -60,7 +59,6 @@ const MetaData = ({
   isTemplate,
   series,
   darkMode,
-  paynotes,
   additionalFields = [],
   customFields = [],
   teaser: Teaser,
@@ -232,7 +230,6 @@ const MetaData = ({
             key: 'darkMode',
             label: t('metaData/darkMode'),
           },
-          { key: 'isRestricted', label: t('metaData/isRestricted') },
         ]
           .filter(Boolean)
           .map((customField) => {
@@ -346,13 +343,6 @@ const MetaData = ({
           format={titleData?.format?.meta}
         />
         <ArticleRecommendations editor={editor} node={node} />
-        {!!paynotes && (
-          <PaynotesForm
-            editor={editor}
-            node={node}
-            isFormat={titleData.meta.template === 'format'}
-          />
-        )}
       </div>
     </div>
   )

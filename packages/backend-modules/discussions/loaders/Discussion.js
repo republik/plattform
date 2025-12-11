@@ -22,6 +22,15 @@ module.exports = (context) => ({
   byId: createDataLoader((ids) =>
     context.pgdb.public.discussions.find({ id: ids }),
   ),
+  byPath: createDataLoader(
+    (paths) => {
+      return context.pgdb.public.discussions.find({
+        path: paths,
+      })
+    },
+    null,
+    (key, rows) => rows.find((row) => row.path === key),
+  ),
   byRepoId: createDataLoader(
     (repoIds) => context.pgdb.public.discussions.find({ repoId: repoIds }),
     null,
@@ -55,7 +64,7 @@ module.exports = (context) => ({
         FROM
           comments
         WHERE
-          ARRAY["discussionId"] && :ids
+          "discussionId" = ANY (:ids)
         GROUP BY
           "discussionId"
       `,
@@ -77,9 +86,9 @@ module.exports = (context) => ({
           WITH tags AS (
             SELECT id "discussionId", tags
             FROM discussions d
-            WHERE ARRAY[d.id] && :ids
+            WHERE d.id = ANY (:ids)
           )
-          
+
           SELECT "discussionId", value FROM tags t, jsonb_array_elements(t.tags) value
         ), counts AS (
           WITH data AS (
@@ -87,22 +96,22 @@ module.exports = (context) => ({
               c."discussionId" "discussionId",
               c.id,
               CASE
-                WHEN (coalesce(jsonb_array_length(c.tags), 0) > 0) THEN c.tags 
-                WHEN (coalesce(jsonb_array_length(cr.tags), 0) > 0) THEN cr.tags 
+                WHEN (coalesce(jsonb_array_length(c.tags), 0) > 0) THEN c.tags
+                WHEN (coalesce(jsonb_array_length(cr.tags), 0) > 0) THEN cr.tags
                 ELSE '[]'::jsonb
               END tags
             FROM comments c
             LEFT JOIN comments cr
             ON cr.id = (c."parentIds"->>0)::uuid
-            WHERE ARRAY[c."discussionId"] && :ids
+            WHERE c."discussionId" = ANY (:ids)
           )
 
           SELECT d."discussionId", value, COUNT(*) count
           FROM data d, jsonb_array_elements(d.tags) AS value
-          
+
           GROUP BY 1, 2
         )
-        
+
         SELECT edt."discussionId", edt.value, coalesce(c.count, 0) count
         FROM "expectedDiscussionTags" edt
         LEFT JOIN counts c
@@ -144,7 +153,7 @@ module.exports = (context) => ({
             discussions d
             ON c."discussionId" = d.id
           WHERE
-            ARRAY[c."discussionId"] && :ids
+            c."discussionId" = ANY (:ids)
             AND (dp."userId" IS NULL OR dp.anonymous = false)
             AND d.anonymity != 'ENFORCED'
             AND u."firstName" != 'Anonymous'
@@ -201,7 +210,7 @@ module.exports = (context) => ({
             discussions d
             ON c."discussionId" = d.id
           WHERE
-            ARRAY[c."discussionId"] && :ids
+            c."discussionId" = ANY (:ids)
             AND (dp."userId" IS NULL OR dp.anonymous = false)
             AND d.anonymity != 'ENFORCED'
             AND u."firstName" != 'Anonymous'

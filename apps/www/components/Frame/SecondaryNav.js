@@ -29,7 +29,7 @@ export const SecondaryNav = ({
   const [colorScheme] = useColorContext()
   const router = useRouter()
   const currentPath = router.asPath
-  const { hasAccess, isClimateLabMember } = useMe()
+  const { isClimateLabMember } = useMe()
 
   // Sine ClimateLab the elements are rendered in a Scroller.
   // To calculate the active index inside the scroller,
@@ -40,7 +40,7 @@ export const SecondaryNav = ({
       return -1
     }
 
-    return ['/', '/feed', '/journal', '/dialog', '/suche'].indexOf(currentPath)
+    return ['/', '/feed', '/dialog', '/suche'].indexOf(currentPath)
   }, [currentPath, isClimateLabMember, hasOverviewNav])
 
   return (
@@ -132,8 +132,6 @@ export const SecondaryNav = ({
 const styles = {
   secondaryNav: css({
     zIndex: ZINDEX_HEADER,
-    left: 0,
-    right: 0,
     height: SUBHEADER_HEIGHT,
     display: 'flex',
     justifyContent: 'flex-start',

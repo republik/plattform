@@ -8,7 +8,6 @@ const {
   NotifyListener: SearchNotifyListener,
 } = require('@orbiting/backend-modules-search')
 const { t } = require('@orbiting/backend-modules-translate')
-const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const {
   graphql: redirections,
@@ -28,20 +27,25 @@ const {
   graphql: subscriptions,
 } = require('@orbiting/backend-modules-subscriptions')
 const { graphql: embeds } = require('@orbiting/backend-modules-embeds')
-const { graphql: gsheets } = require('@orbiting/backend-modules-gsheets')
 const { graphql: mailbox } = require('@orbiting/backend-modules-mailbox')
-const { graphql: slots } = require('@orbiting/backend-modules-calendar')
 const {
   graphql: callToActions,
 } = require('@orbiting/backend-modules-call-to-actions')
 const {
   graphql: referralCampaigns,
 } = require('@orbiting/backend-modules-referral-campaigns')
+const {
+  graphql: nextReads,
+  ReadingPositionRefreshWorker,
+  NextReadsFeedRefreshWorker,
+} = require('@orbiting/backend-modules-next-reads')
+const {
+  graphql: contributors,
+} = require('@orbiting/backend-modules-contributors')
 
 const {
   graphql: paymentsGraphql,
   express: paymentsWebhook,
-  Payments: PaymentsService,
   StripeWebhookWorker,
   StripeCustomerCreateWorker,
   SyncAddressDataWorker,
@@ -50,11 +54,15 @@ const {
   ConfirmRevokeCancellationTransactionalWorker,
   NoticeEndedTransactionalWorker,
   NoticePaymentFailedTransactionalWorker,
+  NoticeRenewalTransactionalWorker,
+  NoticeRenewalPaymentSuccessfulTransactionalWorker,
   SyncMailchimpSetupWorker,
   SyncMailchimpUpdateWorker,
   SyncMailchimpEndedWorker,
   ConfirmGiftSubscriptionTransactionalWorker,
   ConfirmGiftAppliedTransactionalWorker,
+  ConfirmUpgradeSubscriptionTransactionalWorker,
+  SlackNotifierWorker,
   setupPaymentUserEventHooks,
 } = require('@orbiting/backend-modules-payments')
 
@@ -69,7 +77,7 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-republik-crowdfundings/loaders'),
   ...require('@orbiting/backend-modules-republik/loaders'),
   ...require('@orbiting/backend-modules-publikator/loaders'),
-  ...require('@orbiting/backend-modules-calendar/loaders'),
+  ...require('@orbiting/backend-modules-payments').loaders,
 }
 
 const {
@@ -85,6 +93,7 @@ const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
 const mail = require('@orbiting/backend-modules-republik-crowdfundings/lib/Mail')
 
 const { Queue, GlobalQueue } = require('@orbiting/backend-modules-job-queue')
+const { CockpitWorker } = require('./workers/cockpit')
 
 function setupQueue(context, monitorQueueState = undefined) {
   const queue = Queue.createInstance(GlobalQueue, {
@@ -102,18 +111,24 @@ function setupQueue(context, monitorQueueState = undefined) {
     ConfirmRevokeCancellationTransactionalWorker,
     ConfirmGiftSubscriptionTransactionalWorker,
     ConfirmGiftAppliedTransactionalWorker,
+    ConfirmUpgradeSubscriptionTransactionalWorker,
     NoticeEndedTransactionalWorker,
     NoticePaymentFailedTransactionalWorker,
+    NoticeRenewalTransactionalWorker,
+    NoticeRenewalPaymentSuccessfulTransactionalWorker,
     SyncMailchimpSetupWorker,
     SyncMailchimpUpdateWorker,
     SyncMailchimpEndedWorker,
+    CockpitWorker,
+    ReadingPositionRefreshWorker,
+    NextReadsFeedRefreshWorker,
+    SlackNotifierWorker,
   ])
 
   return queue
 }
 
 const {
-  LOCAL_ASSETS_SERVER,
   MAIL_EXPRESS_RENDER,
   MAIL_EXPRESS_MAILCHIMP,
   SEARCH_PG_LISTENER,
@@ -167,19 +182,18 @@ const run = async (workerId, config) => {
     collections,
     subscriptions,
     embeds,
-    gsheets,
     mailbox,
-    slots,
     callToActions,
     referralCampaigns,
     paymentsGraphql,
+    nextReads,
+    contributors,
   ])
 
   // middlewares
   const middlewares = [
     paymentsWebhook,
     require('@orbiting/backend-modules-republik-crowdfundings/express/paymentWebhooks'),
-    require('@orbiting/backend-modules-gsheets/express/gsheets'),
     require('@orbiting/backend-modules-mail/express/mandrill'),
     require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
     require('@orbiting/backend-modules-publikator/express/webhook'),
@@ -194,13 +208,6 @@ const run = async (workerId, config) => {
     middlewares.push(
       require('@orbiting/backend-modules-mail/express/mailchimp'),
     )
-  }
-
-  if (LOCAL_ASSETS_SERVER) {
-    const { express } = require('@orbiting/backend-modules-assets')
-    for (const key of Object.keys(express)) {
-      middlewares.push(express[key])
-    }
   }
 
   // signin hooks
@@ -227,8 +234,8 @@ const run = async (workerId, config) => {
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
     const context = {
-      ...defaultContext,
       ...connectionContext,
+      ...defaultContext,
       t,
       signInHooks,
       mail,
@@ -239,8 +246,6 @@ const run = async (workerId, config) => {
     })
     return context
   }
-
-  PaymentsService.start(connectionContext.pgdb)
 
   const server = await Server.start(
     graphqlSchema,
@@ -274,8 +279,8 @@ const runOnce = async () => {
   const createGraphQLContext = async (defaultContext) => {
     const loaders = {}
     const context = {
-      ...defaultContext,
       ...connectionContext,
+      ...defaultContext,
       t,
       mail,
       loaders,
@@ -287,8 +292,6 @@ const runOnce = async () => {
   }
 
   const context = await createGraphQLContext({ scope: 'scheduler' })
-
-  const slackGreeter = await SlackGreeter.start()
 
   let searchNotifyListener
   if (SEARCH_PG_LISTENER && SEARCH_PG_LISTENER !== 'false') {
@@ -376,15 +379,25 @@ const runOnce = async () => {
 
   const queue = setupQueue(connectionContext, 120)
   await queue.start()
-
-  PaymentsService.start(context.pgdb)
-
   await queue.startWorkers()
+  if (!DEV) {
+    await queue.schedule(
+      'cockpit:refresh',
+      '*/120 * * * *', // cron for every 120 minutes
+    )
+    await queue.schedule(
+      'next_reads:reading_position',
+      '*/45 * * * *', // every 45 minutes
+    )
+    await queue.schedule(
+      'next_reads:feed:refresh',
+      '*/60 * * * *', // every 60 minutes
+    )
+  }
 
   const close = async () => {
     await Promise.all(
       [
-        slackGreeter && slackGreeter.close(),
         searchNotifyListener && searchNotifyListener.close(),
         accessScheduler && accessScheduler.close(),
         membershipScheduler && membershipScheduler.close(),

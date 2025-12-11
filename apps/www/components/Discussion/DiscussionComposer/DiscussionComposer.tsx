@@ -15,8 +15,6 @@ import SecondaryActions from '../shared/SecondaryActions'
 import DiscussionComposerBarrier from './DiscussionComposerBarrier'
 import usePreviewCommentHandler from '../helpers/usePreviewCommentHandler'
 
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
-
 const propTypes = {
   showPayNotes: PropTypes.bool,
   isRoot: PropTypes.bool,
@@ -141,7 +139,9 @@ const DiscussionComposer = ({
         <CommentComposer
           t={t}
           isRoot={isRoot}
+          onCloseLabel={undefined}
           discussionId={discussion.id}
+          hideHeader={false}
           parentId={parentId}
           commentId={commentId}
           onSubmit={({ text, tags = [] }) => handleSubmit(text, tags)}

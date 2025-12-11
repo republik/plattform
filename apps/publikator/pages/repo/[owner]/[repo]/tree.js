@@ -1,31 +1,31 @@
-import { Component, Fragment } from 'react'
-import { withRouter } from 'next/router'
-import { css } from 'glamor'
-import compose from 'lodash/flowRight'
+import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
-import withAuthorization from '../../../../components/Auth/withAuthorization'
-
-import Loader from '../../../../components/Loader'
-import Tree from '../../../../components/Tree'
-import Frame from '../../../../components/Frame'
-import RepoArchive from '../../../../components/Repo/Archive'
-import RepoArchivedBanner from '../../../../components/Repo/ArchivedBanner'
 import {
-  NarrowContainer,
   A,
   InlineSpinner,
   Interaction,
+  NarrowContainer,
 } from '@project-r/styleguide'
-import { getKeys as getLocalStorageKeys } from '../../../../lib/utils/localStorage'
-import * as fragments from '../../../../lib/graphql/fragments'
+import { css } from 'glamor'
+import compose from 'lodash/flowRight'
+import { withRouter } from 'next/router'
+import { Component, Fragment } from 'react'
+import withAuthorization from '../../../../components/Auth/withAuthorization'
+import Nav from '../../../../components/editor/Nav'
+import Frame from '../../../../components/Frame'
+
+import Loader from '../../../../components/Loader'
 
 import CurrentPublications from '../../../../components/Publication/Current'
+import RepoArchive from '../../../../components/Repo/Archive'
+import RepoArchivedBanner from '../../../../components/Repo/ArchivedBanner'
+import Tree from '../../../../components/Tree'
 import UncommittedChanges from '../../../../components/VersionControl/UncommittedChanges'
-import withT from '../../../../lib/withT'
-import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
-import { gql } from '@apollo/client'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
-import Nav from '../../../../components/Edit/Nav'
+import * as fragments from '../../../../lib/graphql/fragments'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import { getKeys as getLocalStorageKeys } from '../../../../lib/utils/localStorage'
+import withT from '../../../../lib/withT'
 
 export const COMMIT_LIMIT = 40
 export const getRepoHistory = gql`
@@ -276,7 +276,16 @@ export default withDefaultSSR(
           fetchPolicy: 'cache-and-network',
         }
       },
-      props: ({ data }) => {
+      props: ({ data, ownProps: { t, router } }) => {
+        if (data?.repo === null) {
+          return {
+            data: {
+              error: t('repo/warn/missing', {
+                repoId: getRepoIdFromQuery(router.query),
+              }),
+            },
+          }
+        }
         return {
           data,
           commits:

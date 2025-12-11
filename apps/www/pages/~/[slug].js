@@ -1,18 +1,9 @@
 import { gql } from '@apollo/client'
 import Profile from '../../components/Profile'
 import { createGetServerSideProps } from '../../lib/apollo/helpers'
+import getPublicUser from '../../components/Profile/graphql/getPublicUser'
 
 export default Profile
-
-const GET_PUBLIC_USER_SLUG = gql`
-  query getPublicUserSlug($slug: String!) {
-    user(slug: $slug) {
-      id
-      username
-      slug
-    }
-  }
-`
 
 const GET_PROFILE_REDIRECT = gql`
   query GetProfileRedirect($path: String!) {
@@ -41,8 +32,12 @@ export const getServerSideProps = createGetServerSideProps(
     const {
       data: { user },
     } = await client.query({
-      query: GET_PUBLIC_USER_SLUG,
-      variables: { slug },
+      query: getPublicUser,
+      variables: {
+        slug,
+        firstDocuments: 10,
+        firstComments: 10,
+      },
     })
 
     if (user) {
@@ -54,7 +49,7 @@ export const getServerSideProps = createGetServerSideProps(
         }
       }
 
-      return { props: { user } }
+      return { props: { slug } }
     }
 
     // check if a redirect is registered for this path

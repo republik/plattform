@@ -1,14 +1,14 @@
+import { Offers } from '@app/components/paynotes/paynote/paynote-offers'
 import { Interaction } from '@project-r/styleguide'
+import AccessCampaigns from '../components/Access/Campaigns'
+import SignIn from '../components/Auth/SignIn'
+import Frame from '../components/Frame'
+import { withDefaultSSR } from '../lib/apollo/helpers'
+import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
+import { useMe } from '../lib/context/MeContext'
+import { useInNativeApp } from '../lib/withInNativeApp'
 
 import { t, useTranslation } from '../lib/withT'
-import { withDefaultSSR } from '../lib/apollo/helpers'
-import { useMe } from '../lib/context/MeContext'
-import AccessCampaigns from '../components/Access/Campaigns'
-import Frame from '../components/Frame'
-import SignIn from '../components/Auth/SignIn'
-import { useInNativeApp } from '../lib/withInNativeApp'
-import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
-import { Offers } from '@app/components/paynote-overlay/paynote-offers'
 
 const meta = {
   title: t('pages/access/title'),
@@ -17,7 +17,7 @@ const meta = {
 }
 
 const Page = () => {
-  const { inNativeIOSApp } = useInNativeApp()
+  const { inNativeApp } = useInNativeApp()
   const { t } = useTranslation()
   const { me, hasActiveMembership } = useMe()
 
@@ -32,10 +32,10 @@ const Page = () => {
           <SignIn />
         </div>
       )}
-      {me && !hasActiveMembership && !inNativeIOSApp && (
+      {me && !hasActiveMembership && !inNativeApp && (
         <div style={{ marginTop: 36 }}>
           <Interaction.H2 style={{ marginBottom: 36 }}>
-            {t('Account/Access/Campaigns/becomeMamber/title')}
+            {t('Account/Access/Campaigns/becomeMember/title')}
           </Interaction.H2>
           <Offers />
         </div>

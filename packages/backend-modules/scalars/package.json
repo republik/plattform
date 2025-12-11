@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "apollo-modules-node": "*",
-    "graphql": "^15.3.0",
+    "graphql": "^16.11.0",
     "graphql-type-json": "^0.3.2"
   }
 }

@@ -2,7 +2,7 @@ import { gql } from '@apollo/client'
 import Nullable from '../../../../lib/types/Nullable'
 import {
   DiscussionCredential,
-  DiscussionNotificationChannel,
+  NotificationChannel,
   DiscussionNotificationOption,
 } from '../types/SharedTypes'
 import {
@@ -22,7 +22,7 @@ export type DiscussionPreferencesQuery = {
     portrait: Nullable<string>
     credentials: DiscussionCredential[]
     defaultDiscussionNotificationOption: DiscussionNotificationOption
-    discussionNotificationChannels: DiscussionNotificationChannel[]
+    notificationChannels: NotificationChannel[]
   }
   discussion: DiscussionFragmentType
 }
@@ -40,7 +40,7 @@ export const DISCUSSION_PREFERENCES_QUERY = gql`
         isListed
       }
       defaultDiscussionNotificationOption
-      discussionNotificationChannels
+      notificationChannels
     }
     discussion(id: $discussionId) {
       ...Discussion

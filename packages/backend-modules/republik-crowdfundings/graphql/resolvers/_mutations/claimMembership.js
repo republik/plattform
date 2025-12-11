@@ -1,5 +1,3 @@
-const logger = console
-
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
 const activateMembership = require('../../../lib/activateMembership')
@@ -10,6 +8,7 @@ module.exports = async (_, args, context) => {
     pgdb,
     req,
     t,
+    user,
     mail: {
       enforceSubscriptions,
       sendMembershipClaimNotice,
@@ -17,6 +16,7 @@ module.exports = async (_, args, context) => {
     },
   } = context
   ensureSignedIn(req)
+  await ensureUserHasNoNewSubscription(user, pgdb, t)
 
   const transaction = await pgdb.transactionBegin()
 
@@ -61,11 +61,13 @@ module.exports = async (_, args, context) => {
       }
     } catch (e) {
       // swallow cache invalidating errors
-      logger.error('invalidating user caches failed', {
-        req: req._log(),
-        args,
-        error: e,
-      })
+      context.logger.error(
+        {
+          args,
+          error: e,
+        },
+        'invalidating user caches failed',
+      )
     }
 
     try {
@@ -77,11 +79,13 @@ module.exports = async (_, args, context) => {
       })
     } catch (e) {
       // ignore issues with newsletter subscriptions
-      logger.error('newsletter subscription changes failed', {
-        req: req._log(),
-        args,
-        error: e,
-      })
+      context.logger.error(
+        {
+          args,
+          error: e,
+        },
+        'newsletter subscription changes failed',
+      )
     }
 
     try {
@@ -92,11 +96,13 @@ module.exports = async (_, args, context) => {
         )
       }
     } catch (e) {
-      logger.error('mail.sendMembershipClaimNotice failed', {
-        req: req._log(),
-        args,
-        error: e,
-      })
+      context.logger.error(
+        {
+          args,
+          error: e,
+        },
+        'mail.sendMembershipClaimNotice failed',
+      )
     }
     try {
       await sendMembershipClaimerOnboarding(
@@ -104,17 +110,35 @@ module.exports = async (_, args, context) => {
         { pgdb, t },
       )
     } catch (e) {
-      logger.error('mail.sendMembershipClaimerOnboarding failed', {
-        req: req._log(),
-        args,
-        error: e,
-      })
+      context.logger.error(
+        {
+          args,
+          error: e,
+        },
+        'mail.sendMembershipClaimerOnboarding failed',
+      )
     }
   } catch (e) {
     await transaction.transactionRollback()
-    logger.info('transaction rollback', { req: req._log(), args, error: e })
+    context.logger.error({ args, error: e }, 'claim membership failed')
     throw e
   }
 
   return true
+}
+
+async function ensureUserHasNoNewSubscription(user, pgdb, t) {
+  const result = await pgdb.payments.subscriptions.findFirst(
+    {
+      userId: user.id,
+      status: ['active', 'past_due', 'unpaid', 'paused'],
+    },
+    { fields: ['id'] },
+  )
+
+  if (result) {
+    throw new Error(
+      t('api/membership/claim/can-not-redeem-membership-with-new-subscription'),
+    )
+  }
 }

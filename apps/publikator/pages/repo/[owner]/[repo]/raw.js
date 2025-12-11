@@ -1,33 +1,31 @@
-import { useState, useEffect } from 'react'
-import Frame from '../../../../components/Frame'
-import initLocalStore from '../../../../lib/utils/localStorage'
-import { withRouter } from 'next/router'
-import withT from '../../../../lib/withT'
-import withAuthorization from '../../../../components/Auth/withAuthorization'
-import compose from 'lodash/flowRight'
-import { stringify, parse } from '@republik/remark-preset'
-import { css } from 'glamor'
+/* eslint-disable @typescript-eslint/no-require-imports */
+// -> we need them for codemirror
+
 import {
   A,
   Button,
-  mediaQueries,
   colors,
   fontFamilies,
-  Checkbox,
+  mediaQueries,
 } from '@project-r/styleguide'
-import {
-  IconInfoOutline as InfoIcon,
-  IconLens as CircleIcon,
-} from '@republik/icons'
+import { IconLens as CircleIcon } from '@republik/icons'
+import { css } from 'glamor'
+import compose from 'lodash/flowRight'
+import { withRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import { Controlled as CodeMirror } from 'react-codemirror2'
+import withAuthorization from '../../../../components/Auth/withAuthorization'
+import Nav from '../../../../components/editor/Nav'
+import Frame from '../../../../components/Frame'
+import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
 import {
   UncommittedChanges,
   withUncommitedChanges,
 } from '../../../../components/VersionControl/UncommittedChanges'
-import BranchingNotice from '../../../../components/VersionControl/BranchingNotice'
-import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
 import { withDefaultSSR } from '../../../../lib/apollo/helpers'
-import Nav from '../../../../components/Edit/Nav'
+import { getRepoIdFromQuery } from '../../../../lib/repoIdHelper'
+import initLocalStore from '../../../../lib/utils/localStorage'
+import withT from '../../../../lib/withT'
 
 const styles = css({
   background: colors.secondaryBg,
@@ -60,19 +58,25 @@ const styles = css({
 
 // CodeMirror can only run in the browser
 if (process.browser) {
-  require('../../../../components/editor/utils/codemirror-md')
+  window.jsonlint = require('jsonlint-mod')
+  require('codemirror/mode/javascript/javascript')
+  require('codemirror/addon/edit/matchbrackets')
+  require('codemirror/addon/edit/closebrackets')
+  require('codemirror/addon/lint/lint')
+  require('codemirror/addon/lint/json-lint')
   require('codemirror/addon/fold/foldcode')
   require('codemirror/addon/fold/foldgutter')
-  require('codemirror/addon/fold/xml-fold')
+  require('codemirror/addon/fold/brace-fold')
 }
 
-const hasOpenSections = (md) => {
-  if (!md) return
-  // in synch with our remark-preset
-  // https://github.com/orbiting/mdast/blob/fabbd146dd16f7bdcbf7b699c5bac7161f14d197/packages/remark-preset/src/index.js#L23-L28
-  const openTags = md.match(/<section>\s*<h6>([^<]+)<\/h6>/g)
-  const closeTags = md.match(/<hr\s*\/>\s*<\/section>/g)
-  return openTags?.length !== closeTags?.length
+const stringify = (json) => (json ? JSON.stringify(json, null, 2) : '')
+
+const safeParse = (string) => {
+  let json
+  try {
+    json = JSON.parse(string)
+  } catch (e) {}
+  return json
 }
 
 export default withDefaultSSR(
@@ -91,10 +95,8 @@ export default withDefaultSSR(
     const repoId = getRepoIdFromQuery(router.query)
     const { commitId, schema, template, isTemplate } = router.query
     const [store, setStore] = useState(undefined)
-    const [md, setMd] = useState('')
-    const [meta, setMeta] = useState(undefined)
+    const [stringifiedMdast, setStringifiedMdast] = useState('')
     const [foldCode, setFoldCode] = useState(false)
-    const [editMeta, setEditMeta] = useState(false)
     const [validity, setValidity] = useState(true)
 
     const goToEditor = (e) => {
@@ -113,28 +115,13 @@ export default withDefaultSSR(
 
     const onSave = (e) => {
       if (e) e.preventDefault()
-      const editedMdast = editMeta
-        ? parse(md)
-        : {
-            ...parse(md),
-            meta,
-          }
-
-      if (!editedMdast.meta.template) {
-        editedMdast.meta.template = meta.template
-      }
-      store.set('editorState', editedMdast)
+      store.set('editorState', safeParse(stringifiedMdast))
       goToEditor()
     }
 
-    const onEditMeta = () => {
-      if (editMeta) return
-      setEditMeta(true)
-      const contentAndMeta = stringify({
-        ...parse(md),
-        meta,
-      })
-      setMd(contentAndMeta)
+    const handleErrors = (errors) => {
+      const hasErrors = errors && errors.length
+      setValidity(!hasErrors)
     }
 
     useEffect(() => {
@@ -144,16 +131,10 @@ export default withDefaultSSR(
 
     useEffect(() => {
       if (!store) return
-      setMeta(store.get('editorState').meta)
       const documentSchema = store.get('editorState').meta?.template || schema
       setFoldCode(documentSchema !== 'front')
-      const editorMdast = { ...store.get('editorState'), meta: {} }
-      setMd(stringify(editorMdast))
-    }, [store])
-
-    useEffect(() => {
-      setValidity(!hasOpenSections(md))
-    }, [md])
+      setStringifiedMdast(stringify(store.get('editorState')))
+    }, [store, schema])
 
     return (
       <Frame raw>
@@ -217,44 +198,32 @@ export default withDefaultSSR(
         </Frame.Header>
         <Frame.Body raw>
           <div {...styles}>
-            <div className='Info'>
-              <A
-                href='https://github.com/orbiting/publikator-frontend/blob/master/docs/raw.md'
-                target='_blank'
-              >
-                <InfoIcon />
-              </A>
-            </div>
-            <div className='Checkbox' style={{ opacity: editMeta ? 0.5 : 1 }}>
-              <Checkbox checked={editMeta} onChange={onEditMeta}>
-                {t('pages/raw/metadata')}
-              </Checkbox>
-            </div>
-            {md !== '' ? (
-              <CodeMirror
-                value={md}
-                options={{
-                  mode: 'markdown',
-                  theme: 'neo',
-                  lineNumbers: true,
-                  lineWrapping: true,
-                  smartIndent: false,
-                  viewportMargin: Infinity,
-                  foldGutter: foldCode,
-                  gutters: [
-                    'CodeMirror-linenumbers',
-                    foldCode && 'CodeMirror-foldgutter',
-                  ].filter(Boolean),
-                  foldOptions: process.browser &&
-                    foldCode && {
-                      rangeFinder: require('codemirror').fold.xml,
-                    },
-                }}
-                onBeforeChange={(editor, data, value) => {
-                  setMd(value)
-                }}
-              />
-            ) : null}
+            <CodeMirror
+              value={stringifiedMdast}
+              options={{
+                theme: 'neo',
+                mode: 'application/json',
+                lint: {
+                  onUpdateLinting: handleErrors,
+                },
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                autofocus: true,
+                lineNumbers: true,
+                lineWrapping: true,
+                smartIndent: true,
+                viewportMargin: Infinity,
+                foldGutter: foldCode,
+                gutters: [
+                  'CodeMirror-linenumbers',
+                  foldCode && 'CodeMirror-foldgutter',
+                ].filter(Boolean),
+              }}
+              onBeforeChange={(editor, data, value) => {
+                setStringifiedMdast(value)
+                console.log({ editor, data })
+              }}
+            />
           </div>
         </Frame.Body>
       </Frame>

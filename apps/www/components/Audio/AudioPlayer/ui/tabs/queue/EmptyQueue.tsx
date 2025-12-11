@@ -9,17 +9,12 @@ const styles = {
   text: css({
     ...fontStyles.sansSerifRegular16,
     lineHeight: '22px',
-    '&:last-child': {
-      marginBottom: 0,
-    },
-  }),
-  iconWrapper: css({
-    marginLeft: 24,
+    marginTop: 24,
   }),
 }
 
 const EmptyQueue = ({ t }: { t: any }) => {
-  const { me } = useMe()
+  const { progressConsent } = useMe()
   const [colorScheme] = useColorContext()
   return (
     <div {...colorScheme.set('color', 'text')}>
@@ -29,7 +24,7 @@ const EmptyQueue = ({ t }: { t: any }) => {
           icon: <IconPlaylistAdd key='add-icon' size={24} />,
         })}
       </p>
-      {me && !me.progressConsent && (
+      {!progressConsent && (
         <p {...styles.text}>
           {t('AudioPlayer/Queue/EmptyQueue/progressInfo')}{' '}
           <Link href='/konto/einstellungen' legacyBehavior>
@@ -41,7 +36,7 @@ const EmptyQueue = ({ t }: { t: any }) => {
         </p>
       )}
     </div>
-  );
+  )
 }
 
 export default EmptyQueue

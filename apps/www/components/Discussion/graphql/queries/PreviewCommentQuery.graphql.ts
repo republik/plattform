@@ -11,7 +11,7 @@ export type PreviewCommentQueryVariables = {
 }
 
 export type PreviewCommentQuery = {
-  commentPreview: Pick<CommentFragmentType, 'id' | 'content' | 'embed'> & {
+  commentPreview: Pick<CommentFragmentType, 'id' | 'content' > & {
     contentLength: Nullable<number>
   }
 }
@@ -37,31 +37,6 @@ export const PREVIEW_COMMENT_QUERY = gql`
       tags
       updatedAt
       createdAt
-      embed {
-        ... on LinkPreview {
-          url
-          title
-          description
-          imageUrl
-          imageAlt
-          siteName
-          siteImageUrl
-          updatedAt
-          __typename
-        }
-        ... on TwitterEmbed {
-          id
-          url
-          text
-          html
-          userName
-          userScreenName
-          userProfileImageUrl
-          image
-          createdAt
-          __typename
-        }
-      }
     }
   }
 `

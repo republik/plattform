@@ -4,6 +4,7 @@ extend type User {
   stripeCustomer(company: CompanyName): StripeCustomer
   magazineSubscriptions: [MagazineSubscription!]!
   activeMagazineSubscription: MagazineSubscription
+  transactions: [Transaction!]!
 }
 
 enum MagazineSubscriptionStatus {
@@ -15,13 +16,12 @@ enum MagazineSubscriptionStatus {
   past_due
   paused
   canceled
-  overdue
-  ended
 }
 
 enum MagazineSubscriptionType {
   YEARLY_SUBSCRIPTION
   MONTHLY_SUBSCRIPTION
+  BENEFACTOR_SUBSCRIPTION
 }
 
 enum CompanyName {
@@ -33,6 +33,14 @@ enum CheckoutUIMode {
  HOSTED
  CUSTOM
  EMBEDDED
+}
+
+enum OfferAvailability {
+  PURCHASABLE
+  UPGRADEABLE
+  UNAVAILABLE
+  UNAVAILABLE_CURRENT
+  UNAVAILABLE_UPGRADE_PENDING
 }
 
 type StripeCustomer {
@@ -47,6 +55,7 @@ type MagazineSubscription {
   status: MagazineSubscriptionStatus!
   stripeId: String!
   invoices: [Invoice!]!
+  donation: DonationInfo
   renewsAtPrice: Int
   paymentMethod: String
   currentPeriodStart: DateTime
@@ -56,6 +65,13 @@ type MagazineSubscription {
   canceledAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
+
+  upgrade: MagazineSubscriptionUpgrade
+}
+
+
+type DonationInfo {
+  amount: Int!
 }
 
 type Invoice {
@@ -72,10 +88,26 @@ type CustomerPortalSession {
 }
 
 type CheckoutSession {
+  orderId: ID!
   company: CompanyName!
   sessionId: String!
   clientSecret: String
+  status: CheckoutSessionStatus
   url: String
+  breakdown: CheckoutSessionBreakdown
+}
+
+enum CheckoutSessionStatus {
+  open
+  complete
+  expired
+}
+
+type CheckoutSessionBreakdown {
+  startDate: DateTime
+  total: Int!,
+  discount: Int!,
+  tax: Int!,
 }
 
 interface Offer {
@@ -84,9 +116,24 @@ interface Offer {
   name: String!
   price: Price!
   customPrice: CustomPrice
+  suggestedDonations: [Int!]
+  discountOptions: [Discount!]
   discount: Discount
   allowPromotions: Boolean
+  requiresLogin: Boolean
+  requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
+  availability: OfferAvailability!
+}
+
+type Donation {
+  id: ID!
+  price: Price!
+}
+
+input CustomDonation {
+  amount: Int!
+  recurring: Boolean
 }
 
 type SubscriptionOffer implements Offer {
@@ -95,9 +142,17 @@ type SubscriptionOffer implements Offer {
   name: String!
   price: Price!
   customPrice: CustomPrice
+  suggestedDonations: [Int!]
+  discountOptions: [Discount!]
   discount: Discount
   allowPromotions: Boolean
+  requiresLogin: Boolean
+  requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
+  availability: OfferAvailability!
+
+  # only available on subscription type
+  startDate: DateTime
 }
 
 type GiftOffer implements Offer {
@@ -106,9 +161,14 @@ type GiftOffer implements Offer {
   name: String!
   price: Price!
   customPrice: CustomPrice
+  suggestedDonations: [Int!]
+  discountOptions: [Discount!]
   discount: Discount
   allowPromotions: Boolean
+  requiresLogin: Boolean
+  requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
+  availability: OfferAvailability!
 }
 
 type Price {
@@ -119,7 +179,7 @@ type Price {
 
 type Recurring {
   interval: String!
-  interval_count: Int!
+  intervalCount: Int!
 }
 
 type CustomPrice {
@@ -129,9 +189,13 @@ type CustomPrice {
 }
 
 type Discount {
+  id: ID!
   name: String
   amountOff: Int!
+  duration: String!,
+  durationInMonths: Int
   currency: String!
+  endDate: DateTime
 }
 
 type Product {
@@ -140,19 +204,58 @@ type Product {
 }
 
 type ComplimentaryItem {
-  id: String!
+  id: ID!
   maxQuantity: Int!
 }
 
 type GiftVoucherValidationResult {
-  type: String!
+  type: String
   valid: Boolean!
+  company: CompanyName
   isLegacyVoucher: Boolean!
 }
 
 type RedeemGiftResult {
   aboType: String!
   starting: DateTime!
+}
+
+interface Transaction {
+  id: ID!
+  amount: Int!
+  currency: String!
+  company: CompanyName!
+  status: String!
+  createdAt: DateTime!
+}
+
+type SubscriptionTransaction implements Transaction {
+  id: ID!
+  amount: Int!
+  currency: String!
+  company: CompanyName!
+  status: String!
+  createdAt: DateTime!
+  subscription: MagazineSubscription!
+}
+
+type PledgeTransaction implements Transaction {
+  id: ID!
+  amount: Int!
+  currency: String!
+  company: CompanyName!
+  status: String!
+  createdAt: DateTime!
+  pledge: Pledge!
+}
+
+type GiftTransaction implements Transaction {
+  id: ID!
+  amount: Int!
+  currency: String!
+  company: CompanyName!
+  status: String!
+  createdAt: DateTime!
 }
 
 input ComplimentaryItemOrder {
@@ -167,12 +270,25 @@ input CheckoutSessionOptions {
   returnURL: String
 }
 
-input CancelSubscriptionOptions {
-  feedback: String
+type MagazineSubscriptionUpgrade {
+  id: String!
+  userId: String!
+  subscriptionType: MagazineSubscriptionType
+  subscriptionId: String!
+  status: String!
+  company: CompanyName!
+  paymentMethod: String
+  scheduledStart: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  billingDetails: MagazineSubscriptionUpgradeBillingDetails!
 }
 
-input CancelSubscription {
-  subscriptionId: ID!
-  options: CancelSubscriptionOptions
+type MagazineSubscriptionUpgradeBillingDetails {
+  total: Int
+  discount: Discount
+  donation: DonationInfo
+  billingDate: DateTime
 }
+
 `

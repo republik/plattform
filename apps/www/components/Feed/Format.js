@@ -21,7 +21,7 @@ const getFeedDocuments = gql`
       filter: $filter
       filters: $filters
       sort: { key: publishedAt, direction: DESC }
-      first: 30
+      first: 20
     ) {
       totalCount
       pageInfo {

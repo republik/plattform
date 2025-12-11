@@ -148,7 +148,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             'phonenumberNote',
             'previewsSentAt',
             'defaultDiscussionNotificationOption',
-            'discussionNotificationChannels',
+            'notificationChannels',
             'preferredFirstFactor',
             'disclosures',
             'referralCode',
@@ -326,23 +326,6 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
         }),
       )
     }
-
-    /**
-     * calendarSlots
-     */
-    const calendarSlots = await pgdb.public.calendarSlots.find({
-      userId: user.id,
-    })
-    await save(
-      destination,
-      'calendars-slots',
-      'Kalender-Einträge',
-      calendarSlots.map((slot) => {
-        return {
-          ...pick(slot, ['calendarSlug', 'key', 'createdAt', 'revokedAt']),
-        }
-      }),
-    )
 
     /**
      * callToActions

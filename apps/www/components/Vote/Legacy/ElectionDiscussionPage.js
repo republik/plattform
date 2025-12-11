@@ -73,8 +73,7 @@ const DiscussionPage = ({ router, data, vt }) => {
           const selectedDiscussion = isValid
             ? router.query.discussion
             : VOTING_COOP_BOARD_SLUG
-          const discussionId =
-            data[selectedDiscussion] && data[selectedDiscussion].discussion.id
+          const discussionPath = data[selectedDiscussion]?.discussion.path
           const translationKey = DISCUSSION_TITLES[selectedDiscussion]
 
           return (
@@ -141,7 +140,7 @@ const DiscussionPage = ({ router, data, vt }) => {
                   </div>
                 </div>
                 <Body dangerousHTML={vt(`${translationKey}Intro`)} />
-                <DiscussionContextProvider discussionId={discussionId}>
+                <DiscussionContextProvider discussionPath={discussionPath}>
                   <Discussion />
                 </DiscussionContextProvider>
               </div>

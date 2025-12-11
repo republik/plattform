@@ -2,6 +2,10 @@ import { GraphqlContext } from '@orbiting/backend-modules-types'
 import { GiftShop } from '../../../lib/shop/gifts'
 import { default as Auth } from '@orbiting/backend-modules-auth'
 import { t } from '@orbiting/backend-modules-translate'
+import {
+  GiftAlreadyAppliedError,
+  GiftNotApplicableError,
+} from '../../../lib/errors'
 
 type RedeemGiftResult = {
   aboType: string
@@ -9,13 +13,13 @@ type RedeemGiftResult = {
 }
 
 export = async function redeemGiftVoucher(
-  _root: never, // eslint-disable-line @typescript-eslint/no-unused-vars
+  _root: never,
   args: { voucherCode: string },
   ctx: GraphqlContext,
 ): Promise<RedeemGiftResult> {
   Auth.ensureUser(ctx.user)
 
-  const giftShop = new GiftShop(ctx.pgdb)
+  const giftShop = new GiftShop(ctx.pgdb, ctx.logger)
   try {
     const res = await giftShop.redeemVoucher(args.voucherCode, ctx.user.id)
 
@@ -24,7 +28,13 @@ export = async function redeemGiftVoucher(
       starting: res.starting,
     }
   } catch (e) {
-    console.error(e)
+    if (
+      e instanceof GiftAlreadyAppliedError ||
+      e instanceof GiftNotApplicableError
+    ) {
+      console.error(e)
+      throw new Error(e.name)
+    }
 
     throw new Error(t('api/unexpected'))
   }

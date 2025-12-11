@@ -94,7 +94,6 @@ type Meta {
   lastPublishedAt: DateTime
   feed: Boolean
   gallery: Boolean
-  externalBaseUrl: String
   kind: String
   color: String
   series: Series
@@ -134,14 +133,15 @@ type Meta {
   paynotes: [JSON]
   paynoteMode: PaynoteMode
   
-  isRestricted: Boolean
-  
   sendAsEmail: Boolean
+
+  # article is excluded from paywall
+  isPaywallExcluded: Boolean
 }
 
 enum DocumenSchemaType {
   mdast
-  slate
+  slate @deprecated(reason: "Not used anymore")
 }
 
 input DocumentInput {
@@ -154,7 +154,7 @@ type Document {
   repoId: ID!
   issuedForUserId: ID
 
-  type: DocumenSchemaType!
+  type: DocumenSchemaType! @deprecated(reason: "Not used anymore, always mdast")
   content: JSON!
 
   meta: Meta!
@@ -198,7 +198,7 @@ type DocumentZone {
   identifier: String!
   data: JSON!
   text: String
-  type: DocumenSchemaType!
+  type: DocumenSchemaType! @deprecated(reason: "Not used anymore, always mdast")
   node: JSON!
   document: Document
 }

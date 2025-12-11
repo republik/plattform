@@ -3,13 +3,12 @@ import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import {
   IconButton,
-  Interaction,
   shouldIgnoreClick,
+  ProgressCircle,
 } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 
 import { postMessage } from '../../lib/withInNativeApp'
-import { reportError } from '../../lib/errors/reportError'
 
 import { splitByTitle } from '../../lib/utils/mdast'
 import { trackEvent } from '@app/lib/analytics/event-tracking'
@@ -24,8 +23,7 @@ import { useAudioContext } from '../Audio/AudioProvider'
 import SubscribeMenu from '../Notifications/SubscribeMenu'
 import BookmarkButton from './BookmarkButton'
 import DiscussionLinkButton from './DiscussionLinkButton'
-import UserProgress from './UserProgress'
-import ShareButtons from './ShareButtons'
+import UserProgress, { FeedUserProgress } from './UserProgress'
 import { useMe } from '../../lib/context/MeContext'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
@@ -73,7 +71,7 @@ const ActionBar = ({
   isCentered,
   shareParam,
 }) => {
-  const { me, meLoading, hasAccess, isEditor } = useMe()
+  const { me, meLoading, isEditor, isMember } = useMe()
   const [pdfOverlayVisible, setPdfOverlayVisible] = useState(false)
   const [fontSizeOverlayVisible, setFontSizeOverlayVisible] = useState(false)
   const [shareOverlayVisible, setShareOverlayVisible] = useState(false)
@@ -112,9 +110,7 @@ const ActionBar = ({
           title: shareData.title || document.title,
           url: shareData.url || shareUrl,
         })
-      } catch (err) {
-        reportError(err)
-      }
+      } catch (e) {}
       // on all other devices we use our share overlay
     } else {
       setShareOverlayVisible(!shareOverlayVisible)
@@ -190,12 +186,14 @@ const ActionBar = ({
     (meta && meta.podcast) ||
     (meta && meta.audioSource && meta.format && meta.format.meta.podcast)
 
+  const isNewsletterFormat = !!(
+    meta?.newsletter || meta?.format?.meta?.newsletter
+  )
+
   const isSeriesOverview = meta && meta.series?.overview?.id === document?.id
   const hasPdf = meta && meta.template === 'article' && !isSeriesOverview
   const notBookmarkable =
-    meta?.template === 'page' ||
-    meta?.template === 'flyer' ||
-    meta?.template === 'editorialNewsletter'
+    meta?.template === 'page' || meta?.template === 'editorialNewsletter'
   const isDiscussion = meta && meta.template === 'discussion'
   const emailSubject = t('article/share/emailSubject', {
     title: document.meta.title,
@@ -292,20 +290,29 @@ const ActionBar = ({
       title: t('article/actionbar/userprogress'),
       element: (
         <UserProgress
-          documentId={document.id}
+          documentPath={document.meta.path}
           forceShortLabel={forceShortLabel}
-          userProgress={document.userProgress}
-          noCallout={
-            mode === 'articleOverlay' ||
-            mode === 'bookmark' ||
-            mode === 'seriesEpisode'
-          }
-          noScroll={mode === 'feed'}
+          noCallout={true}
+          noScroll={false}
           displayMinutes={displayMinutes}
         />
       ),
-      modes: ['articleOverlay', 'feed', 'bookmark', 'seriesEpisode'],
-      show: !!document && document.userProgress,
+      modes: ['articleOverlay', 'bookmark', 'seriesEpisode'],
+      show: !!document,
+    },
+    // The feed document query provides user progress for the feed documents directly
+    // so we don't use the UserProgress component here, which fetches the progress itself
+    {
+      title: t('feed/actionbar/userprogress'),
+      element: (
+        <FeedUserProgress
+          progressPercentage={Math.round(
+            document.userProgress?.max?.percentage * 100,
+          )}
+        />
+      ),
+      modes: ['feed'],
+      show: !!document.userProgress?.max?.percentage,
     },
     {
       title: t('article/actionbar/pdf/options'),
@@ -319,7 +326,7 @@ const ActionBar = ({
         setPdfOverlayVisible(!pdfOverlayVisible)
       },
       modes: ['articleTop', 'articleBottom'],
-      show: hasPdf,
+      show: hasPdf && isMember,
     },
     {
       title: t('article/actionbar/fontSize/title'),
@@ -357,7 +364,7 @@ const ActionBar = ({
           attributes={{ ['data-show-if-me']: true }}
         />
       ),
-      modes: ['articleTop', 'articleBottom', 'flyer'],
+      modes: ['articleTop', 'articleBottom'],
       show:
         // only show if there is something to subscribe to
         (isDiscussion ||
@@ -365,7 +372,9 @@ const ActionBar = ({
           meta.format ||
           meta.contributors?.some((c) => c.user)) &&
         // and signed in or loading me
-        (me || meLoading),
+        (me || meLoading) &&
+        // and not a newsletter
+        !isNewsletterFormat,
     },
     // The subscription menu is available for all users with an active-membership.
     {
@@ -391,7 +400,7 @@ const ActionBar = ({
         'bookmark',
         'seriesEpisode',
       ],
-      show: !notBookmarkable && (meLoading || hasAccess),
+      show: !notBookmarkable && (meLoading || isMember),
     },
     {
       title: t('article/actionbar/share'),
@@ -413,7 +422,7 @@ const ActionBar = ({
               t('article/actionbar/share'),
             )
           : '',
-      modes: ['articleTop', 'articleOverlay', 'articleBottom', 'flyer'],
+      modes: ['articleTop', 'articleOverlay', 'articleBottom'],
       show: true,
     },
     {
@@ -429,8 +438,7 @@ const ActionBar = ({
       title: t('article/actionbar/userprogress'),
       element: (
         <UserProgress
-          documentId={document.id}
-          userProgress={document.userProgress}
+          documentPath={document.meta.path}
           displayMinutes={displayMinutes}
         />
       ),
@@ -473,7 +481,7 @@ const ActionBar = ({
           fill={'#E9A733'}
         />
       ),
-      modes: ['articleTop', 'flyer'],
+      modes: ['articleTop'],
       show: document?.repoId && isEditor,
     },
     {
@@ -487,7 +495,7 @@ const ActionBar = ({
           fill={'#E9A733'}
         />
       ),
-      modes: ['articleTop', 'flyer'],
+      modes: ['articleTop'],
       show: document?.repoId && isEditor && getAnalyticsDashboardUrl(meta.path),
     },
     {
@@ -500,7 +508,7 @@ const ActionBar = ({
           : play
         : toggleAudioPlayback,
       modes: ['feed', 'seriesEpisode'],
-      show: meta.audioSource?.mp3,
+      show: isMember && meta.audioSource?.mp3,
       group: 'audio',
     },
     {
@@ -532,7 +540,7 @@ const ActionBar = ({
         }
       },
       modes: ['feed', 'seriesEpisode'],
-      show: isAudioQueueAvailable && meta.audioSource?.mp3,
+      show: isMember && isAudioQueueAvailable && meta.audioSource?.mp3,
       group: 'audio',
     },
     {
@@ -569,7 +577,7 @@ const ActionBar = ({
 
   return (
     <div
-      {...(!hasAccess && mode !== 'articleOverlay' && styles.bottomMargin)}
+      {...(!isMember && mode !== 'articleOverlay' && styles.bottomMargin)}
       {...styles.hidePrint}
     >
       <div

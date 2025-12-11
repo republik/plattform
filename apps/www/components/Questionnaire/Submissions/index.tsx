@@ -37,19 +37,18 @@ const Page = ({
   extract,
   share,
 }: SubmissionsOverviewProps) => {
-  const [headerHeight] = useHeaderHeight()
   const router = useRouter()
   const { query } = router
   const { questionIds, submissionId } = mapShareParam(query.share)
   const questionColor = getOrdinalColors(questionnaireConfig.design.colors)
 
-  const answersRef = useRef()
+  const answersRef = useRef(null)
   useEffect(() => {
     if (extract) return
     if (query?.focus === MAIN_VIEWPORT_FOCUS) {
       scrollIntoView(answersRef.current, {
         time: 0,
-        align: { topOffset: headerHeight, top: 0 },
+        align: { top: 0 },
       })
     }
   }, [])

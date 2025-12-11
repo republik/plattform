@@ -1,15 +1,15 @@
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
-import withT from '../../lib/withT'
+import { graphql } from '@apollo/client/react/hoc'
 import { Loader } from '@project-r/styleguide'
 import { css } from 'glamor'
+import compose from 'lodash/flowRight'
+import withT from '../../lib/withT'
+import Nav from '../editor/Nav'
+import Frame from '../Frame'
+import Preview from '../Preview'
+import RepoArchivedBanner from '../Repo/ArchivedBanner'
 
 import PublicationForm from './PublicationForm'
-import RepoArchivedBanner from '../Repo/ArchivedBanner'
-import Frame from '../Frame'
-import Nav from '../Edit/Nav'
-import Preview from '../Preview'
 
 const PUBLICATION_COLUMN_WIDTH = 500
 
@@ -63,7 +63,6 @@ export const getRepoWithCommit = gql`
                 title
                 color
                 kind
-                externalBaseUrl
               }
             }
             section {
@@ -152,7 +151,6 @@ const PublishForm = ({ t, data }) => {
         error={error}
         render={() => {
           const { isArchived, commit } = repo
-          const isFlyer = commit?.document?.type === 'slate'
           return (
             <Frame>
               <Frame.Header>
@@ -174,7 +172,6 @@ const PublishForm = ({ t, data }) => {
                     <Preview
                       repoId={commit.document.repoId}
                       commitId={commit.id}
-                      isFlyer={isFlyer}
                       sideBarWidth={PUBLICATION_COLUMN_WIDTH}
                       commitOnly={true}
                     />

@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from 'react'
-import { useColorContext, Loader, usePrevious } from '@project-r/styleguide'
+import { Loader, useColorContext, usePrevious } from '@project-r/styleguide'
+import { useEffect, useRef, useState } from 'react'
 
 const PREVIEW_MARGIN = 16
 
@@ -29,7 +29,6 @@ const PreviewFrame = ({
   darkmode,
   hasAccess,
   sideBarWidth = 0,
-  isFlyer,
   commitOnly,
 }) => {
   const [scaleFactor, setScaleFactor] = useState(1)
@@ -42,14 +41,12 @@ const PreviewFrame = ({
 
   const screenSize = screenSizes[previewScreenSize]
 
-  const src = `/${
-    isFlyer ? 'flyer' : 'repo'
-  }/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}&commitOnly=${commitOnly}`
+  const src = `/repo/${repoId}/preview?commitId=${commitId}&darkmode=${darkmode}&hasAccess=${hasAccess}&commitOnly=${commitOnly}`
   const prevSrc = usePrevious(src)
   if (src !== prevSrc && !iframeLoading) {
     setIframeLoading(true)
   }
-  // workaround for onload event not firing e.g. for flyer on page load
+  // workaround for onload event not firing
   useEffect(() => {
     const toId = setTimeout(() => {
       setIframeLoading(false)

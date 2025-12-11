@@ -1,15 +1,14 @@
 import { cssFor } from 'glamor'
 import { Mso } from '@republik/mdast-react-render/email'
 import Header from './Header'
-import { editorialFontRule, interactionFontRule } from '../../styleguide-clone/components/Typography'
+import {
+  editorialFontRule,
+  interactionFontRule,
+} from '../../styleguide-clone/components/Typography'
 import { VariableContext } from '../../styleguide-clone/components/Variables'
 import Footer from './Footer'
 
-const Container = ({
-  children,
-  meta,
-  variableContext,
-}) => {
+const Container = ({ children, meta, variableContext }) => {
   return (
     <html>
       <head>
@@ -81,6 +80,33 @@ const Container = ({
             url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.woff)
               format('woff'),
             url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-bolditalic.ttf)
+              format('truetype');
+        }
+        @font-face {
+          font-family: 'Rubis';
+          font-weight: 500;
+          src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.eot);
+          src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.eot?#iefix)
+              format('embedded-opentype'),
+            url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.woff2)
+              format('woff2'),
+            url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.woff)
+              format('woff'),
+            url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-medium.ttf)
+              format('truetype');
+        }
+        @font-face {
+          font-family: 'Rubis';
+          font-weight: 500;
+          font-style: italic;
+          src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.eot);
+          src: url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.eot?#iefix)
+              format('embedded-opentype'),
+            url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.woff2)
+              format('woff2'),
+            url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.woff)
+              format('woff'),
+            url(https://cdn.repub.ch/s3/republik-assets/fonts/rubis-mediumitalic.ttf)
               format('truetype');
         }
         @font-face {

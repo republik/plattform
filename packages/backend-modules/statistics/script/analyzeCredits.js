@@ -35,6 +35,12 @@ const argv = yargs
     coerce: moment,
     default: moment().startOf('month'),
   })
+  .option('text-only', {
+    alias: 't',
+    type: 'boolean',
+    default: false,
+    description: 'Only analyze author gender',
+  })
   .help()
   .version().argv
 
@@ -43,6 +49,7 @@ const articles = []
 
 const elastic = Elasticsearch.connect()
 const days = argv.end.diff(argv.begin, 'days')
+const textOnly = argv['text-only']
 
 const normalize = (string) =>
   string
@@ -106,12 +113,18 @@ PgDb.connect()
         .map(({ _source: { meta } }) => meta)
         .filter(({ credits }) => credits.children.length > 0),
       async (meta) => {
-        const credits = await stringifyNode(meta.credits?.type, meta.credits)
+        const credits = stringifyNode(meta.credits)
 
         const analysis = new Analyzer().getAnalysis(credits)
-        // console.log(analysis)
 
-        const { contributors } = analysis
+        let { contributors } = analysis
+
+        // console.log('----------CONTRIBUTORS----------')
+        // console.log(contributors)
+        if (textOnly) {
+          contributors = contributors.filter((c) => c.kind?.includes('Text'))
+        }
+        // console.log(contributors)
 
         // Unable to determine an author
         if (!contributors.length) {
@@ -221,6 +234,11 @@ PgDb.connect()
       // gender ratios over all w/o unkown, neutral including b (both)
       '(m-n)+b%': (1 / stats['a-n']) * (stats.m + stats.b),
       '(f-n)+b%': (1 / stats['a-n']) * (stats.f + stats.b),
+
+      // percentage überhang (gender ratio f - gender ratio m)
+      überhang:
+        (1 / stats['a-n']) * (stats.f + stats.b) -
+        (1 / stats['a-n']) * (stats.m + stats.b),
     })
 
     console.warn('THIS SCRIPT IS FOR DEVELOPMENT PURPOSES ONLY.')

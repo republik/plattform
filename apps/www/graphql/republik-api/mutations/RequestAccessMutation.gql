@@ -1,0 +1,6 @@
+mutation requestAccess($campaignId: ID!, $payload: JSON) {
+  requestAccess(campaignId: $campaignId, payload: $payload) {
+    id
+    endAt
+  }
+}

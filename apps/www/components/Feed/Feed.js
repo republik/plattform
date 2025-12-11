@@ -1,15 +1,14 @@
-import { Component } from 'react'
-import compose from 'lodash/flowRight'
+import { TeaserFeed } from '@project-r/styleguide'
 import { nest } from 'd3-collection'
+import compose from 'lodash/flowRight'
+import PropTypes from 'prop-types'
+import { Component } from 'react'
 import { timeFormat } from '../../lib/utils/format'
-import Link from '../Link/Href'
 import withT from '../../lib/withT'
 import ActionBar from '../ActionBar'
-import StickySection from './StickySection'
-import PropTypes from 'prop-types'
+import Link from '../Link/Href'
 import formatCredits from './formatCredits'
-
-import { TeaserFeed } from '@project-r/styleguide'
+import DateLabel from './DateLabel'
 
 const dateFormat = timeFormat('%A,\n%d.%m.%Y')
 
@@ -22,7 +21,6 @@ class Feed extends Component {
         {...doc.meta}
         format={doc.meta.format}
         skipFormat={this.props.skipFormat}
-        externalBaseUrl={doc.meta.format?.meta.externalBaseUrl}
         repoId={doc.repoId}
         title={doc.meta.shortTitle || doc.meta.title}
         description={!doc.meta.shortTitle && doc.meta.description}
@@ -48,9 +46,9 @@ class Feed extends Component {
 
     if (showHeader) {
       return groupByDate.entries(documents).map(({ key, values }, i, all) => (
-        <StickySection key={i} hasSpaceAfter={i < all.length - 1} label={key}>
+        <DateLabel key={i} label={key}>
           {values.map(this.renderFeedItem)}
-        </StickySection>
+        </DateLabel>
       ))
     } else {
       return documents.map(this.renderFeedItem)

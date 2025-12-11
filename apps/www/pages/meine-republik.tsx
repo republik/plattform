@@ -6,7 +6,7 @@ import { useMe } from '../lib/context/MeContext'
 import { useEffect } from 'react'
 
 function MeineRepublikPage() {
-  const { me, hasActiveMembership } = useMe()
+  const { me } = useMe()
   const router = useRouter()
   useEffect(() => {
     if (!me) {
@@ -15,10 +15,10 @@ function MeineRepublikPage() {
   }, [me?.id])
 
   return (
-    <Frame raw pullable={false} hideCTA>
+    <Frame hasOverviewNav raw pullable={false} hideCTA>
       {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
       {/* @ts-ignore */}
-      <UserNav me={me} hasActiveMembership={hasActiveMembership} />
+      <UserNav />
     </Frame>
   )
 }

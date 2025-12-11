@@ -26,6 +26,7 @@
     "@types/uuid": "^8.3.0"
   },
   "dependencies": {
+    "@orbiting/backend-modules-dataloader": "*",
     "@types/is-uuid": "^1.0.0",
     "apollo-modules-node": "*",
     "check-env": "^1.3.0",

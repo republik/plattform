@@ -336,7 +336,7 @@ class UpdateMe extends Component {
                                   values.birthyear && values.birthyear.length
                                     ? parseInt(values.birthyear)
                                     : null,
-                                gender: values.genderCustom || values.gender,
+                                gender: values.gender,
                                 address: isEmptyAddress(values, me)
                                   ? undefined
                                   : {

@@ -16,7 +16,9 @@ extend type User {
   ): CommentConnection!
 
   defaultDiscussionNotificationOption: DiscussionNotificationOption
-  discussionNotificationChannels: [DiscussionNotificationChannel!]!
+
+  discussionNotificationChannels: [NotificationChannel!]! @deprecated(reason: "Use notificationChannels")
+  notificationChannels: [NotificationChannel!]!
 
   isSuspended: Boolean
   suspendedUntil: DateTime
@@ -34,7 +36,7 @@ enum DiscussionNotificationOption {
   ALL
   NONE
 }
-enum DiscussionNotificationChannel {
+enum NotificationChannel {
   WEB
   EMAIL
   APP
@@ -54,8 +56,6 @@ type DiscussionSuspension {
 type DiscussionRules {
   # max length of a comments content
   maxLength: Int
-  # min milliseconds between comments of one user
-  minInterval: Int
   anonymity: Permission!
   disableTopLevelComments: Boolean
   allowedRoles: [String!]!
@@ -122,7 +122,6 @@ type Discussion {
 
   closed: Boolean!
   collapsable: Boolean!
-  isBoard: Boolean!
   comments(
     # get children of this parent
     parentId: ID
@@ -223,22 +222,13 @@ type Comment {
   userCanEdit: Boolean
   createdAt: DateTime!
   updatedAt: DateTime!
-
   depth: Int!
   hotness: Float!
-
   tags: [String!]!
-
   userCanReport: Boolean!
   userReportedAt: DateTime
   numReports: Int
-
   contentLength: Int
-
-  embed: Embed
-
-  mentioningDocument: MentioningDocument
-
   featuredAt: DateTime
   featuredText: String
   featuredTargets: [CommentFeaturedTarget!]
@@ -246,12 +236,6 @@ type Comment {
 
 enum CommentFeaturedTarget {
 ${getFeaturedTargets().join('\n')}
-}
-
-type MentioningDocument {
-  document: Document!
-  fragmentId: String
-  iconUrl: String!
 }
 
 enum MutationType {

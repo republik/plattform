@@ -19,6 +19,7 @@ export type DiscussionFragmentType = {
       publishDate: Nullable<DateTime>
       ownDiscussion: Nullable<{
         id: string
+        path: Nullable<string>
         closed: boolean
       }>
       linkedDiscussion: Nullable<{
@@ -31,7 +32,6 @@ export type DiscussionFragmentType = {
   path: Nullable<string>
   closed: boolean
   collapsed: boolean
-  isBoard: boolean
   userPreference: Nullable<DiscussionPreferences>
   rules: DiscussionRules
   userWaitUntil: Nullable<DateTime>
@@ -67,6 +67,7 @@ export const DISCUSSION_FRAGMENT = gql`
         publishDate
         ownDiscussion {
           id
+          path
           closed
         }
         linkedDiscussion {
@@ -78,7 +79,6 @@ export const DISCUSSION_FRAGMENT = gql`
     }
     path
     closed
-    isBoard
     userPreference {
       anonymity
       credential {
@@ -90,7 +90,6 @@ export const DISCUSSION_FRAGMENT = gql`
     }
     rules {
       maxLength
-      minInterval
       anonymity
       disableTopLevelComments
     }

@@ -2,7 +2,8 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const matchPayments = require('../../../lib/payments/matchPayments')
 const { refreshAllPots } = require('../../../lib/membershipPot')
 
-module.exports = async (_, args, { pgdb, req, t, redis }) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, t, redis } = context
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const transaction = await pgdb.transactionBegin()
@@ -15,17 +16,17 @@ module.exports = async (_, args, { pgdb, req, t, redis }) => {
 rematchPayments result:
 num matched payments: ${numMatchedPayments}
 num updated pledges: ${numUpdatedPledges}
-num payments successfull: ${numPaymentsSuccessful}
+num payments successful: ${numPaymentsSuccessful}
     `
-    console.log(result)
+    context.logger.info(result)
     return result
   } catch (e) {
     await transaction.transactionRollback()
-    console.info('transaction rollback', { req: req._log(), args, error: e })
+    context.loggegr.error({ args, error: e }, 'rematch payments failed')
     throw e
   } finally {
     await refreshAllPots({ pgdb }).catch((e) => {
-      console.error('error after matchPayments', e)
+      context.logger.error({ error: e }, 'error after matchPayments')
     })
   }
 }

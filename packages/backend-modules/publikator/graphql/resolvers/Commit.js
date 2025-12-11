@@ -57,9 +57,9 @@ module.exports = {
     const proxy = createProxyUrlPrefixer()
 
     await Promise.all([
-      processRepoImageUrlsInContent(type, content, prefix),
-      processRepoImageUrlsInMeta(type, content, prefix),
-      processEmbedsInContent(type, content, proxy, context),
+      processRepoImageUrlsInContent(content, prefix),
+      processRepoImageUrlsInMeta(content, prefix),
+      processEmbedsInContent(content, proxy, context),
     ])
 
     return {
@@ -95,7 +95,7 @@ module.exports = {
     if (!associatedDerivative) {
       return null
     }
-    
+
     return applyAssetsAudioUrl(associatedDerivative)
   },
   canDerive: async (commit, args) => {

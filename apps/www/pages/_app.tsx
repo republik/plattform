@@ -7,8 +7,10 @@ import { ColorContextProvider, RootColorVariables } from '@project-r/styleguide'
 import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
 import Head from 'next/head'
 
+import { PaynoteOverlay } from '@app/components/paynotes/paynote/paynote-overlay'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
+import { OPEN_ACCESS } from 'lib/constants'
 import { AppProps } from 'next/app'
 import AppVariableContext from '../components/Article/AppVariableContext'
 import AudioPlayerOrchestrator from '../components/Audio/AudioPlayerOrchestrator'
@@ -20,30 +22,8 @@ import { withApollo } from '../lib/apollo'
 import MeContextProvider from '../lib/context/MeContext'
 import UserAgentProvider from '../lib/context/UserAgentContext'
 import PageErrorBoundary from '../lib/errors/PageErrorBoundary'
-import { reportError } from '../lib/errors/reportError'
-import { PaynoteOverlay } from '@app/components/paynote-overlay/paynote-overlay'
-import { OPEN_ACCESS } from 'lib/constants'
-import { useRouter } from 'next/router'
-
-if (typeof window !== 'undefined') {
-  window.addEventListener('error', (event: ErrorEvent) => {
-    const { message, filename, lineno, colno, error } = event
-    reportError(
-      'onerror',
-      (error && error.stack) || [message, filename, lineno, colno].join('\n'),
-    )
-  })
-
-  window.addEventListener(
-    'unhandledrejection',
-    (event: PromiseRejectionEvent) => {
-      reportError(
-        'onunhandledrejection',
-        (event.reason && event.reason.stack) || event.reason,
-      )
-    },
-  )
-}
+import { PaynotesProvider } from '@app/components/paynotes/paynotes-context'
+import { CampaignOverlay } from '@app/components/paynotes/campaign-paynote/campaign-overlay'
 
 type WebAppProps = {
   providedUserAgent?: string
@@ -63,15 +43,6 @@ const WebApp = ({
     ...otherPageProps
   } = pageProps
 
-  const router = useRouter()
-
-  const hidePaynoteOverlay =
-    (router.pathname === '/angebote' && router.query.package !== undefined) ||
-    router.pathname === '/mitteilung' ||
-    router.pathname === '/anmelden' ||
-    router.query.extract !== undefined ||
-    router.query.extractId !== undefined
-
   return (
     <PageErrorBoundary>
       <MeContextProvider assumeAccess={assumeAccess}>
@@ -83,22 +54,29 @@ const WebApp = ({
                   <ThemeProvider>
                     <RootColorVariables />
                     <ColorContextProvider colorSchemeKey='auto'>
-                      <MessageSync />
-                      <Head>
-                        <meta
-                          name='viewport'
-                          content='width=device-width, initial-scale=1, viewport-fit=cover'
+                      <PaynotesProvider>
+                        <MessageSync />
+                        <Head>
+                          <meta
+                            name='viewport'
+                            content='width=device-width, initial-scale=1, viewport-fit=cover'
+                          />
+                          <link
+                            rel='alternate'
+                            type='application/rss+xml'
+                            title='RSS Feed'
+                            href='/feed.xml'
+                          />
+                        </Head>
+                        <Component
+                          serverContext={serverContext}
+                          {...otherPageProps}
                         />
-                      </Head>
-                      <Component
-                        serverContext={serverContext}
-                        {...otherPageProps}
-                      />
-                      <AudioPlayerOrchestrator />
-                      <SyncUTMToSessionStorage />
-                      {hidePaynoteOverlay ? null : (
-                        <PaynoteOverlay key={router.pathname} />
-                      )}
+                        <AudioPlayerOrchestrator />
+                        <SyncUTMToSessionStorage />
+                        <PaynoteOverlay />
+                        <CampaignOverlay />
+                      </PaynotesProvider>
                     </ColorContextProvider>
                   </ThemeProvider>
                 </AppVariableContext>

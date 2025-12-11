@@ -1,11 +1,14 @@
 module.exports = {
   granterDenylist: require('./granterDenylist'),
   limitGrants: require('./limitGrants'),
+  limitClaims: require('./limitClaims'),
   limitRevokedSlots: require('./limitRevokedSlots'),
   limitSlots: require('./limitSlots'),
   notGrantable: require('./notGrantable'),
+  notInActiveTrial: require('./notInActiveTrial'),
   notVisible: require('./notVisible'),
   recipientDenylist: require('./recipientDenylist'),
+  recipientHasNoActiveMembershipOrSubscription: require('./recipientHasNoActiveMembershipOrSubscription'),
   recipientInNoSlot: require('./recipientInNoSlot'),
   recipientIsGranter: require('./recipientIsGranter'),
   recipientNotGranter: require('./recipientNotGranter'),
@@ -13,6 +16,5 @@ module.exports = {
   requireEmail: require('./requireEmail'),
   requireExistingGrants: require('./requireExistingGrants'),
   requireGiftableMembership: require('./requireGiftableMembership'),
-  requirePackage: require('./requirePackage'),
   requireRole: require('./requireRole'),
 }

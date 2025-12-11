@@ -19,13 +19,13 @@ import { css } from '@republik/theme/css'
 import { hstack, vstack } from '@republik/theme/patterns'
 import { PUBLIC_BASE_URL } from 'lib/constants'
 import Image from 'next/image'
-import { StructuredText } from 'react-datocms'
+import { StructuredText } from 'react-datocms/structured-text'
 
 export async function generateMetadata(
   _, // params
   parent: ResolvingMetadata,
 ): Promise<Metadata> {
-  const client = getCMSClient()
+  const client = await getCMSClient()
   const { data } = await client.query({
     query: ChallengeAcceptedHubMetaDocument,
   })
@@ -53,9 +53,10 @@ export async function generateMetadata(
 }
 
 export default async function Page() {
+  const client = await getCMSClient()
   const {
     data: { hub },
-  } = await getCMSClient().query({
+  } = await client.query({
     query: ChallengeAcceptedHubDocument,
     context: {
       fetchOptions: {

@@ -15,28 +15,34 @@ import {
 } from '../types'
 import { ACTIVE_STATUS_TYPES } from '../types'
 
+export type OrderStatus = 'paid' | 'unpaid'
+
 export type OrderArgs = {
+  id?: string
   userId?: string
   customerEmail?: string
   metadata?: any
   company: Company
-  status: 'paid' | 'unpaid'
+  status: OrderStatus
   externalId: string
   invoiceId?: string
   subscriptionId?: string
   shippingAddressId?: string
+  expiresAt?: Date
 }
 
 export type OrderRepoArgs = {
+  id?: string
   userId?: string
   customerEmail?: string
   metadata?: any
   company: Company
-  status: 'paid' | 'unpaid'
+  status: OrderStatus
   externalId: string
   invoiceId?: string
   subscriptionId?: string
   shippingAddressId?: string
+  expiresAt?: Date
 }
 
 export interface PaymentBillingRepo {
@@ -54,8 +60,9 @@ export interface PaymentBillingRepo {
     args: SubscriptionUpdateArgs,
   ): Promise<Subscription>
   getUserOrders(userId: string): Promise<Order[]>
-  getOrder(orderId: string): Promise<Order | null>
+  getOrder(by: SelectCriteria): Promise<Order | null>
   saveOrder(order: OrderRepoArgs): Promise<Order>
+  updateOrder(by: SelectCriteria, order: Partial<OrderRepoArgs>): Promise<Order>
   getInvoice(by: SelectCriteria): Promise<Invoice | null>
   saveInvoice(userId: string, args: any): Promise<Invoice>
   updateInvoice(by: SelectCriteria, args: any): Promise<Invoice>
@@ -71,10 +78,8 @@ export class BillingRepo implements PaymentBillingRepo {
     this.#pgdb = dbConn
   }
 
-  getOrder(orderId: string): Promise<Order> {
-    return this.#pgdb.payments.orders.findOne({
-      id: orderId,
-    })
+  getOrder(by: SelectCriteria): Promise<Order | null> {
+    return this.#pgdb.payments.orders.findOne(by)
   }
 
   getUserOrders(userId: string): Promise<Order[]> {
@@ -85,6 +90,13 @@ export class BillingRepo implements PaymentBillingRepo {
 
   saveOrder(order: OrderRepoArgs): Promise<Order> {
     return this.#pgdb.payments.orders.insertAndGet(order)
+  }
+
+  updateOrder(by: SelectCriteria, order: OrderRepoArgs): Promise<Order> {
+    return this.#pgdb.payments.orders.updateAndGetOne(by, {
+      ...order,
+      updatedAt: new Date(),
+    })
   }
 
   getSubscription(by: SelectCriteria): Promise<Subscription | null> {
@@ -128,7 +140,10 @@ export class BillingRepo implements PaymentBillingRepo {
     by: SelectCriteria,
     args: SubscriptionUpdateArgs,
   ): Promise<Subscription> {
-    return this.#pgdb.payments.subscriptions.updateAndGetOne(by, args)
+    return this.#pgdb.payments.subscriptions.updateAndGetOne(by, {
+      ...args,
+      updatedAt: new Date(),
+    })
   }
 
   getInvoice(by: SelectCriteria): Promise<Invoice | null> {
@@ -145,6 +160,7 @@ export class BillingRepo implements PaymentBillingRepo {
   updateInvoice(by: SelectCriteria, args: any): Promise<Invoice> {
     return this.#pgdb.payments.invoices.updateAndGet(by, {
       ...args,
+      updatedAt: new Date(),
     })
   }
 
@@ -160,6 +176,9 @@ export class BillingRepo implements PaymentBillingRepo {
     charge: SelectCriteria,
     args: ChargeUpdate,
   ): Promise<any | null> {
-    return this.#pgdb.payments.charges.updateAndGet(charge, args)
+    return this.#pgdb.payments.charges.updateAndGet(charge, {
+      ...args,
+      updatedAt: new Date(),
+    })
   }
 }

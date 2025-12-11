@@ -22,7 +22,7 @@ const GET_MAILBOX = gql`
     $id: ID
   ) {
     mailbox(
-      first: 100
+      first: 30
       after: $after
       filters: { hasError: $hasError, email: $search, id: $id }
     ) {

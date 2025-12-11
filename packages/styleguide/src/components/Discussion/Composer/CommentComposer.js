@@ -87,7 +87,6 @@ const propTypes = {
   initialText: PropTypes.string,
   initialTagValue: PropTypes.string,
 
-  isBoard: PropTypes.bool,
   autoFocus: PropTypes.bool,
   hideHeader: PropTypes.bool,
 }
@@ -119,7 +118,6 @@ export const CommentComposer = ({
   initialText,
   initialTagValue,
 
-  isBoard,
   autoFocus = true,
   hideHeader,
 }) => {

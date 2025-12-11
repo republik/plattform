@@ -1,30 +1,32 @@
-import { cloneElement, Children } from 'react'
-
 import {
-  createNewsletterWebSchema,
   createArticleSchema,
-  createPageSchema,
-  createFrontSchema,
-  createFormatSchema,
-  createSectionSchema,
   createDiscussionSchema,
   createDossierSchema,
+  createFormatSchema,
+  createFrontSchema,
+  createNewsletterWebSchema,
+  createPageSchema,
+  createSectionSchema,
 } from '@project-r/styleguide'
-
-import { getDatePath } from '@project-r/styleguide/editor'
+import { Children, cloneElement } from 'react'
 import { t } from '../../lib/withT'
+import dynamicComponentIdentifiers from '../editor/modules/dynamiccomponent/identifiers'
 
 import dynamicComponentRequire from '../editor/modules/dynamiccomponent/require'
-import dynamicComponentIdentifiers from '../editor/modules/dynamiccomponent/identifiers'
 import * as withArticleData from './withArticleData'
 import * as withFrontData from './withFrontData'
 
-const NoOpLink = ({ children }) =>
-  cloneElement(Children.only(children), {
-    onClick: (e) => {
-      e.preventDefault()
-    },
-  })
+const NoOpLink = (props) => {
+  try {
+    return cloneElement(Children.only(props.children), {
+      onClick: (e) => {
+        e.preventDefault()
+      },
+    })
+  } catch {
+    return <a {...props} onClick={(e) => e.preventDefault()} />
+  }
+}
 
 const articleSchemaParams = {
   t,
@@ -37,10 +39,6 @@ const articleSchemaParams = {
 
 const schemas = {
   editorialNewsletter: createNewsletterWebSchema(),
-  flyer: {
-    getPath: getDatePath,
-    repoPrefix: 'flyer-',
-  },
   article: createArticleSchema(articleSchemaParams),
   front: createFrontSchema({
     Link: NoOpLink,

@@ -115,26 +115,17 @@ export const Lead = ({ children, attributes, ...props }: LeadProps) => {
   )
 }
 
-const subjectStyle = {
+const subjectStyle = css({
   color: '#8c8c8c',
   display: 'inline',
   margin: 0,
+  '&::after': {
+    content: ' ',
+  },
   ...convertStyleToRem(styles.sansSerifRegular19),
   [mUp]: {
     ...convertStyleToRem(styles.sansSerifRegular23),
     lineHeight: '27px',
-  },
-}
-
-const subject = css({
-  ...subjectStyle,
-})
-
-const subjectWithChildren = css({
-  ...subjectStyle,
-  paddingRight: '.2em',
-  '&::after': {
-    content: ' ',
   },
 })
 
@@ -144,12 +135,8 @@ type SubjectProps = {
 } & React.ComponentPropsWithoutRef<'h2'>
 
 export const Subject = ({ children, attributes, ...props }: SubjectProps) => {
-  const style =
-    children && React.Children.toArray(children).length > 0
-      ? subjectWithChildren
-      : subject
   return (
-    <h2 {...attributes} {...props} {...style}>
+    <h2 {...attributes} {...props} {...subjectStyle}>
       {children}
     </h2>
   )
@@ -248,12 +235,16 @@ type ParagraphProps = {
   noMarginTop?: boolean
 } & React.ComponentPropsWithoutRef<'p'>
 
-export const P = ({ children, attributes, noMarginTop, ...props }: ParagraphProps) => {
+export const P = ({
+  children,
+  attributes,
+  noMarginTop,
+  ...props
+}: ParagraphProps) => {
   const [colorScheme] = useColorContext()
-  const className = [
-    attributes?.className,
-    noMarginTop && 'no-margin-top'
-  ].filter(Boolean).join(' ')
+  const className = [attributes?.className, noMarginTop && 'no-margin-top']
+    .filter(Boolean)
+    .join(' ')
   return (
     <p
       {...attributes}

@@ -110,7 +110,7 @@ module.exports = async (_, args, context) => {
   } catch (e) {
     if (!pgdb.isTransactionActive()) {
       await transaction.transactionRollback()
-      console.info('transaction rollback', { req: req._log(), args, error: e })
+      context.logger.error({ error: e, args }, 'claim membership failed')
     }
 
     throw e

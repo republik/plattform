@@ -1,26 +1,27 @@
-import { useMemo } from 'react'
-import { css } from 'glamor'
 import {
+  Button,
+  Center,
   fontStyles,
   mediaQueries,
-  Center,
-  Button,
   useColorContext,
 } from '@project-r/styleguide'
-import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../../constants'
-
-import { useTranslation } from '../../../lib/withT'
-import { useInNativeApp } from '../../../lib/withInNativeApp'
-import SignIn from '../../Auth/SignIn'
-import SignOut from '../../Auth/SignOut'
-import Footer from '../../Footer'
-import NavLink, { NavA } from './NavLink'
-import NotificationFeedMini from '../../Notifications/NotificationFeedMini'
-import BookmarkMiniFeed from '../../Bookmarks/BookmarkMiniFeed'
-import { registerQueryVariables } from '../../Bookmarks/queries'
-import DarkmodeSwitch from '../DarkmodeSwitch'
+import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useMemo } from 'react'
+import { useMe } from '../../../lib/context/MeContext'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
+
+import { useTranslation } from '../../../lib/withT'
+import SignIn from '../../Auth/SignIn'
+import SignOut from '../../Auth/SignOut'
+import BookmarkMiniFeed from '../../Bookmarks/BookmarkMiniFeed'
+import { registerQueryVariables } from '../../Bookmarks/queries'
+import { HEADER_HEIGHT } from '../../constants'
+import Footer from '../../Footer'
+import NotificationFeedMini from '../../Notifications/NotificationFeedMini'
+import DarkmodeSwitch from '../DarkmodeSwitch'
+import NavLink, { NavA } from './NavLink'
 
 const SignoutLink = ({ children, ...props }) => (
   <div {...styles.signout}>
@@ -28,16 +29,16 @@ const SignoutLink = ({ children, ...props }) => (
   </div>
 )
 
-const UserNav = ({ me, hasActiveMembership }) => {
+const UserNav = () => {
+  const { me, progressConsent, hasActiveMembership } = useMe()
   const { t } = useTranslation()
-  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
+  const { inNativeApp } = useInNativeApp()
   const router = useRouter()
 
   const [colorScheme] = useColorContext()
   const currentPath = router.asPath
-  const hasProgress = !!me?.progressConsent
   const variables = useMemo(() => {
-    if (hasProgress) {
+    if (progressConsent) {
       return {
         collections: ['progress', 'bookmarks'],
         progress: 'UNFINISHED',
@@ -47,7 +48,7 @@ const UserNav = ({ me, hasActiveMembership }) => {
     return {
       collections: ['bookmarks'],
     }
-  }, [hasProgress])
+  }, [progressConsent])
   registerQueryVariables(variables)
 
   return (
@@ -65,7 +66,7 @@ const UserNav = ({ me, hasActiveMembership }) => {
                 </div>
               </>
             )}
-            {!hasActiveMembership && !inNativeIOSApp && (
+            {!hasActiveMembership && !inNativeApp && (
               <Link href='/angebote' passHref legacyBehavior>
                 <Button style={{ marginTop: 24, marginBottom: 24 }} block>
                   {t('nav/becomemember')}
@@ -101,6 +102,16 @@ const UserNav = ({ me, hasActiveMembership }) => {
                     >
                       {t('Frame/Popover/myprofile')}
                     </NavLink>
+                    <NavLink
+                      {...fontStyles.sansSerifLight16}
+                      href={{
+                        pathname: '/einrichten',
+                      }}
+                      currentPath={currentPath}
+                      large
+                    >
+                      {t('nav/onboarding')}
+                    </NavLink>
                   </div>
                 </div>
                 <hr
@@ -110,7 +121,7 @@ const UserNav = ({ me, hasActiveMembership }) => {
                 />
                 <div {...styles.navSection}>
                   <div {...styles.navLinks}>
-                    {!inNativeIOSApp && (
+                    {!inNativeApp && (
                       <>
                         {me?.activeMembership?.canProlong && (
                           <NavLink
@@ -125,10 +136,7 @@ const UserNav = ({ me, hasActiveMembership }) => {
                           </NavLink>
                         )}
                         <NavLink
-                          href={{
-                            pathname: '/angebote',
-                            query: { group: 'GIVE' },
-                          }}
+                          href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/geschenke`}
                           currentPath={currentPath}
                           large
                         >
@@ -136,14 +144,21 @@ const UserNav = ({ me, hasActiveMembership }) => {
                         </NavLink>
                         <NavLink
                           {...fontStyles.sansSerifLight16}
-                          href={{
-                            pathname: '/angebote',
-                            query: { package: 'DONATE' },
-                          }}
+                          href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/DONATION`}
                           currentPath={currentPath}
                           large
                         >
                           {t('nav/donate')}
+                        </NavLink>
+                        <NavLink
+                          {...fontStyles.sansSerifLight16}
+                          href={{
+                            pathname: '/teilen',
+                          }}
+                          currentPath={currentPath}
+                          large
+                        >
+                          {t('nav/share')}
                         </NavLink>
                       </>
                     )}
@@ -179,10 +194,7 @@ const styles = {
   }),
   hrFixed: css({
     position: 'fixed',
-    top: HEADER_HEIGHT_MOBILE - 1,
-    [mediaQueries.mUp]: {
-      top: HEADER_HEIGHT - 1,
-    },
+    top: HEADER_HEIGHT - 1,
   }),
   signInBlock: css({
     display: 'block',

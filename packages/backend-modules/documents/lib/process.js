@@ -1,127 +1,199 @@
-const process = {
-  common: require('./common/process'),
-  mdast: require('./mdast/process'),
-  slate: require('./slate/process'),
-}
+const visit = require('unist-util-visit')
+const Promise = require('bluebird')
+const crypto = require('crypto')
 
-const processContentHashing = (type, content) => {
-  const processContentHashing =
-    process[type || 'mdast']?.processContentHashing ||
-    process.common?.processContentHashing
+const {
+  imageKeys: embedImageKeys,
+  getEmbedByUrl,
+  canGetEmbedType,
+} = require('@orbiting/backend-modules-embeds')
 
-  if (!processContentHashing) {
-    console.warn(
-      `process/processContentHashing for type "${type}" not implemented`,
-    )
-    return
+const modifiers = require('./modifiers')
+const { hasFullDocumentAccess } = require('./restrictions')
+
+const processRepoImageUrlsInMeta = async (mdast, fn) => {
+  const fns = []
+
+  if (mdast.meta) {
+    Object.keys(mdast.meta).forEach((key) => {
+      if (key.match(/image/i)) {
+        fns.push(async () => {
+          mdast.meta[key] = await fn(mdast.meta[key])
+        })
+      }
+    })
+    const series = mdast.meta.series
+    if (series && Array.isArray(series.episodes)) {
+      if (series.logo) {
+        fns.push(async () => {
+          series.logo = await fn(series.logo)
+        })
+      }
+      if (series.logoDark) {
+        fns.push(async () => {
+          series.logoDark = await fn(series.logoDark)
+        })
+      }
+      series.episodes.forEach((episode) => {
+        if (episode.image) {
+          fns.push(async () => {
+            episode.image = await fn(episode.image)
+          })
+        }
+      })
+    }
   }
 
-  return processContentHashing(content)
+  return Promise.all(fns.map((fn) => fn()))
 }
 
-const processRepoImageUrlsInContent = async (type, content, fn) => {
-  const processRepoImageUrlsInContent =
-    process[type || 'mdast']?.processRepoImageUrlsInContent ||
-    process.common?.processRepoImageUrlsInContent
-
-  if (!processRepoImageUrlsInContent) {
-    console.warn(
-      `process/processRepoImageUrlsInContent for type "${type}" not implemented`,
-    )
-    return
-  }
-
-  return processRepoImageUrlsInContent(content, fn)
+const processContentHashing = (content) => {
+  content.children?.forEach((child) => {
+    if (
+      (child.identifier === 'TEASERGROUP' || child.identifier === 'TEASER') &&
+      child.data &&
+      !child.data.contentHash
+    ) {
+      child.data.contentHash = crypto
+        .createHash('sha256')
+        .update(JSON.stringify(child))
+        .digest('hex')
+    }
+  })
 }
 
-const processEmbedImageUrlsInContent = async (type, content, fn) => {
-  const processEmbedImageUrlsInContent =
-    process[type || 'mdast']?.processEmbedImageUrlsInContent ||
-    process.common?.processEmbedImageUrlsInContent
+const processRepoImageUrlsInContent = async (content, fn) => {
+  const fns = []
 
-  if (!processEmbedImageUrlsInContent) {
-    console.warn(
-      `process/processEmbedImageUrlsInContent for type "${type}" not implemented`,
-    )
-    return
-  }
+  // mdast content
+  visit(content, 'image', (node) => {
+    fns.push(async () => {
+      node.url = await fn(node.url)
+    })
+  })
+  visit(content, 'zone', (node) => {
+    if (node.data?.formatLogo) {
+      fns.push(async () => {
+        node.data.formatLogo = await fn(node.data.formatLogo)
+      })
+    }
+  })
 
-  return processEmbedImageUrlsInContent(content, fn)
+  return Promise.each(fns, (fn) => fn())
 }
 
-const processRepoImageUrlsInMeta = async (type, content, fn) => {
-  const processRepoImageUrlsInMeta =
-    process[type || 'mdast']?.processRepoImageUrlsInMeta ||
-    process.common?.processRepoImageUrlsInMeta
+const processEmbedImageUrlsInContent = async (mdast, fn) => {
+  const fns = []
 
-  if (!processRepoImageUrlsInMeta) {
-    console.warn(
-      `process/processRepoImageUrlsInMeta for type "${type}" not implemented`,
-    )
-    return
-  }
+  visit(mdast, 'zone', (node) => {
+    if (node.data && node.identifier.startsWith('EMBED')) {
+      fns.push(() => {
+        return Promise.map(embedImageKeys, async (key) => {
+          if (node.data[key]) {
+            node.data[key] = await fn(node.data[key])
+          }
+          if (node.data.src?.[key]) {
+            node.data.src[key] = await fn(node.data.src[key])
+          }
+        })
+      })
+    }
+  })
 
-  return processRepoImageUrlsInMeta(content, fn)
+  return Promise.each(fns, (fn) => fn())
 }
 
-const processEmbedsInContent = async (type, content, fn, context) => {
-  const processEmbedsInContent =
-    process[type || 'mdast']?.processEmbedsInContent ||
-    process.common?.processEmbedsInContent
+const processEmbedsInContent = async (mdast, fn, context) => {
+  const fns = []
 
-  if (!processEmbedsInContent) {
-    console.warn(
-      `process/processEmbedsInContent for type "${type}" not implemented`,
-    )
-    return
-  }
+  visit(mdast, 'zone', (node) => {
+    if (node.data && node.identifier.startsWith('EMBED')) {
+      visit(node, 'link', (link) => {
+        const { url } = link
 
-  return processEmbedsInContent(content, fn, context)
+        fns.push(async () => {
+          try {
+            const embed =
+              url &&
+              canGetEmbedType(node.data.__typename) &&
+              (await getEmbedByUrl(url, context))
+
+            if (embed) {
+              Object.keys(node.data)
+                .filter((key) => typeof node.data[key] !== 'object')
+                .filter((key) => !!embed[key])
+                .forEach((key) => (node.data[key] = embed[key]))
+              if (node.data.src) {
+                Object.keys(node.data.src)
+                  .filter((key) => !!embed.src?.[key])
+                  .forEach((key) => (node.data.src[key] = embed.src[key]))
+              }
+            }
+          } catch (e) {
+            console.warn(
+              `processEmbedsInContent on "${url}" failed: ${e.message}`,
+            )
+          }
+
+          await Promise.map(embedImageKeys, async (key) => {
+            if (node.data[key]) {
+              node.data[key] = await fn(node.data[key])
+            }
+            if (node.data.src?.[key]) {
+              node.data.src[key] = await fn(node.data.src[key])
+            }
+          })
+
+          return node.data
+        })
+      })
+    }
+  })
+
+  return Promise.all(fns.map((fn) => fn()))
 }
 
-const processMembersOnlyZonesInContent = (type, content, user, apiKey) => {
-  const processMembersOnlyZonesInContent =
-    process[type || 'mdast']?.processMembersOnlyZonesInContent ||
-    process.common?.processMembersOnlyZonesInContent
-
-  if (!processMembersOnlyZonesInContent) {
-    console.warn(
-      `process/processMembersOnlyZonesInContent for type "${type}" not implemented`,
-    )
-    return
-  }
-
-  return processMembersOnlyZonesInContent(content, user, apiKey)
+const processMembersOnlyZonesInContent = (mdast, user, apiKey) => {
+  visit(mdast, 'zone', (node) => {
+    if (node.data?.membersOnly && !hasFullDocumentAccess(user, apiKey)) {
+      node.children = []
+    }
+  })
 }
 
-const processNodeModifiersInContent = (type, content, user) => {
-  const processNodeModifiersInContent =
-    process[type || 'mdast']?.processNodeModifiersInContent ||
-    process.common?.processNodeModifiersInContent
-
-  if (!processNodeModifiersInContent) {
-    console.warn(
-      `process/processNodeModifiersInContent for type "${type}" not implemented`,
+const processNodeModifiersInContent = (mdast, user) => {
+  visit(mdast, 'zone', (node) => {
+    node.data?.modifiers?.forEach?.(({ name, ...settings }) =>
+      modifiers[name]?.(settings, node, user),
     )
-    return
-  }
 
-  return processNodeModifiersInContent(content, user)
+    // Prevent modifiers prop to be exposed
+    delete node.data?.modifiers
+  })
 }
 
-const processIfHasAccess = (type, content, user, apiKey) => {
-  const processIfHasAccess =
-    process[type || 'mdast']?.processIfHasAccess ||
-    process.common?.processIfHasAccess
+const processIfHasAccess = (mdast, user, apiKey) => {
+  visit(mdast, 'zone', (node, index, parent) => {
+    if (node.identifier === 'IF' && node.data?.present === 'hasAccess') {
+      const elseIndex = node.children.findIndex(
+        ({ identifier }) => identifier === 'ELSE',
+      )
 
-  if (!processIfHasAccess) {
-    console.warn(
-      `process/processIfHasAccess for type "${type}" not implemented`,
-    )
-    return
-  }
+      const children = hasFullDocumentAccess(user, apiKey)
+        ? node.children.filter((_, index) => index !== elseIndex)
+        : node.children.find((_, index) => index === elseIndex)?.children || []
 
-  return processIfHasAccess(content, user, apiKey)
+      // unwrap into parent children
+      parent.children = [
+        ...parent.children.slice(0, index),
+        ...children,
+        ...parent.children.slice(index + 1),
+      ]
+
+      // revisit entry index again as children may contain an IF block
+      return index
+    }
+  })
 }
 
 module.exports = {

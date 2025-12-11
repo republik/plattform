@@ -1,64 +1,67 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { myUserSubscriptions } from './enhancers'
 import {
   Editorial,
-  plainButtonRule,
-  A,
   Interaction,
   mediaQueries,
   useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { descending } from 'd3-array'
 import SubscribeCheckbox from './SubscribeCheckbox'
 import withT from '../../lib/withT'
 import Loader from '../Loader'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const styles = {
   checkboxes: css({
     margin: '20px 0',
   }),
-  authorContainer: css({
+  authors: css({
     display: 'flex',
     flexDirection: 'column',
-    paddingTop: 8,
-    ':first-of-type': {
-      paddingTop: 0,
-    },
-    paddingBottom: 5,
+    gap: 16,
+  }),
+  authorContainer: css({
+    display: 'grid',
+    gap: 16,
+    gridTemplateColumns: '42px 1fr',
+    gridTemplateAreas: `"portrait name"
+      "portrait actions"`,
+    alignItems: 'center',
     [mediaQueries.mUp]: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      gridTemplateColumns: '42px 1fr max-content',
+      gridTemplateAreas: '"portrait name actions"',
     },
   }),
   author: css({
-    display: 'flex',
-    flexDirection: 'row',
-    marginBottom: 10,
-    [mediaQueries.mUp]: {
-      marginBottom: 0,
-    },
+    gridArea: 'name',
+  }),
+  authorPortrait: css({
+    gridArea: 'portrait',
+    backgroundColor: 'var(--color-hover)',
+    display: 'block',
+    borderRadius: 42,
+    width: 42,
+    height: 42,
+    objectFit: 'cover',
   }),
   checkbox: css({
+    gridArea: 'actions',
     display: 'flex',
     flexDirection: 'row',
-    ' div': {
-      marginRight: 16,
-    },
+    alignItems: 'center',
+    gap: 16,
   }),
 }
 
 const SubscribedAuthors = ({
   t,
-  data: { authors, myUserSubscriptions, loading, error },
+  data: { myUserSubscriptions, loading, error },
 }) => {
   const [colorScheme] = useColorContext()
-  const [showAll, setShowAll] = useState(false)
-  const [initiallySubscribedAuthorIds, setInitiallySubscribedAuthorIds] =
-    useState([])
 
   const authorContainerRule = useMemo(
     () =>
@@ -72,58 +75,27 @@ const SubscribedAuthors = ({
     [colorScheme],
   )
 
-  const initializeSubscribedAuthorIds = (
-    authors,
-    myUserSubscriptions,
-    setInitialySubscribedAuthorIds,
-  ) => {
-    if (!authors || !myUserSubscriptions) {
-      return
-    }
-
-    const subscribedOtherAuthors = myUserSubscriptions.subscribedTo.nodes
-    const subscribedPromotedAuthors = authors.map(
-      (author) => author.user.subscribedByMe,
-    )
-
-    const allSusbcribedAuthors = subscribedPromotedAuthors
-      .concat(subscribedOtherAuthors)
-      .filter((author) => author.active)
-      .map((author) => author.object.id)
-
-    setInitialySubscribedAuthorIds(allSusbcribedAuthors)
-  }
-
   return (
     <Loader
       loading={loading}
       error={error}
       render={() => {
-        const subscribedPromotedAuthors = authors.map(
-          (author) => author.user.subscribedByMe,
-        )
-        const subscribedOtherAuthors = myUserSubscriptions.subscribedTo.nodes
-        const allSusbcribedAuthors = subscribedPromotedAuthors.concat(
-          subscribedOtherAuthors,
-        )
-        const filteredAuthors = allSusbcribedAuthors
-          .filter(
-            (author, index, all) =>
-              all.findIndex((e) => e.id === author.id) === index,
-          )
-          .sort((a, b) =>
-            descending(
-              +initiallySubscribedAuthorIds.includes(a.object.id),
-              +initiallySubscribedAuthorIds.includes(b.object.id),
-            ),
-          )
+        const allSubscribedUsers = myUserSubscriptions.subscribedTo.nodes
 
-        const visibleAuthors =
-          filteredAuthors && filteredAuthors.filter((author) => author.active)
+        const subscribedAuthors = allSubscribedUsers
+          .filter((user) => user.userDetails.documents.totalCount > 0)
+          .sort((a, b) => a.object.name.localeCompare(b.object.name))
+
+        const subscribedUsers = allSubscribedUsers
+          .filter((user) => user.userDetails.documents.totalCount === 0)
+          .sort((a, b) => a.object.name.localeCompare(b.object.name))
+
+        const susbcribedAuthorsAndUsersSorted =
+          subscribedAuthors.concat(subscribedUsers)
 
         const totalSubs =
-          filteredAuthors &&
-          filteredAuthors.filter((author) => author.active).length
+          allSubscribedUsers &&
+          allSubscribedUsers.filter((user) => user.active).length
 
         return (
           <>
@@ -133,60 +105,58 @@ const SubscribedAuthors = ({
               })}
             </Interaction.P>
             <div style={{ margin: '20px 0' }}>
-              {(showAll ? filteredAuthors : visibleAuthors).map((author) => (
-                <div
-                  {...styles.authorContainer}
-                  {...authorContainerRule}
-                  key={author.object.id}
-                >
-                  <div {...styles.author}>
-                    <Link
-                      href={`/~${author.userDetails.slug}`}
-                      passHref
-                      legacyBehavior
-                    >
-                      <Editorial.A>{author.object.name}</Editorial.A>
-                    </Link>
-                  </div>
-                  <div {...styles.checkbox}>
-                    {(author.userDetails.documents.totalCount ||
-                    (author.active && author.filters.includes('Document'))
-                      ? ['Document', 'Comment']
-                      : ['Comment']
-                    ).map((filter) => (
-                      <SubscribeCheckbox
-                        key={`${author.object.id}-${filter}`}
-                        subscription={author}
-                        filterName={filter}
-                        filterLabel
-                        callout
+              {susbcribedAuthorsAndUsersSorted.map((user) => {
+                const portraitUrl = user.userDetails.portrait
+                  ? new URL(user.userDetails.portrait)
+                  : null
+                portraitUrl?.searchParams.set('resize', '84x84')
+
+                return (
+                  <div
+                    {...styles.authorContainer}
+                    {...authorContainerRule}
+                    key={user.object.id}
+                  >
+                    {portraitUrl ? (
+                      <Image
+                        className={styles.authorPortrait}
+                        src={portraitUrl.toString()}
+                        width={84}
+                        height={84}
+                        unoptimized
+                        alt=''
                       />
-                    ))}
+                    ) : (
+                      <div className={styles.authorPortrait}></div>
+                    )}
+                    <div {...styles.author}>
+                      <Link
+                        href={`/~${user.userDetails.slug}`}
+                        passHref
+                        legacyBehavior
+                      >
+                        <Editorial.A>{user.object.name}</Editorial.A>
+                      </Link>
+                    </div>
+                    <div {...styles.checkbox}>
+                      {(user.userDetails.documents.totalCount ||
+                      (user.active && user.filters.includes('Document'))
+                        ? ['Document', 'Comment']
+                        : ['Comment']
+                      ).map((filter) => (
+                        <SubscribeCheckbox
+                          key={`${user.object.id}-${filter}`}
+                          subscription={user}
+                          filterName={filter}
+                          filterLabel
+                          callout
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
-            {filteredAuthors.length !== visibleAuthors.length && (
-              <button
-                {...plainButtonRule}
-                onClick={() => {
-                  initializeSubscribedAuthorIds(
-                    authors,
-                    myUserSubscriptions,
-                    setInitiallySubscribedAuthorIds,
-                  )
-                  setShowAll(!showAll)
-                }}
-              >
-                <A>
-                  {t(
-                    `Notifications/settings/formats/${
-                      showAll ? 'hide' : 'show'
-                    }`,
-                  )}
-                </A>
-              </button>
-            )}
           </>
         )
       }}

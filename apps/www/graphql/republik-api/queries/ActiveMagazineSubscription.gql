@@ -1,0 +1,32 @@
+query ActiveMagazineSubscription {
+  me {
+    activeMagazineSubscription {
+      id
+      type
+      company
+      currentPeriodEnd
+      cancelAt
+      canceledAt
+      endedAt
+      status
+      paymentMethod
+      renewsAtPrice
+
+      donation {
+        amount
+      }
+
+      upgrade {
+        id
+        scheduledStart
+        subscriptionType
+        billingDetails {
+          total
+          donation {
+            amount
+          }
+        }
+      }
+    }
+  }
+}

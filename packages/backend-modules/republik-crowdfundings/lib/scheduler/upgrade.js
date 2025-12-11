@@ -3,24 +3,6 @@ const Promise = require('bluebird')
 
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
-const { countFormat } = require('@orbiting/backend-modules-formats')
-
-const {
-  getCount: getMembershipStatsCount,
-} = require('@orbiting/backend-modules-republik/lib/MembershipStats/evolution')
-
-const getOptions = async (context) => {
-  const options = {}
-
-  try {
-    options.membershipsCount = await getMembershipStatsCount(context)
-    debug('options.membershipsCount', options.membershipsCount)
-  } catch (e) {
-    console.warn(e)
-  }
-
-  return options
-}
 
 const findRecipients = (context) => {
   /**
@@ -90,8 +72,7 @@ const findRecipients = (context) => {
   `)
 }
 
-const sendMail = (options, context) => (recipient) => {
-  const { membershipsCount } = options
+const sendMail = (context) => (recipient) => {
   const { t } = context
 
   const { name } = transformUser(recipient)
@@ -100,10 +81,6 @@ const sendMail = (options, context) => (recipient) => {
     {
       name: 'name',
       content: name.trim(),
-    },
-    membershipsCount && {
-      name: 'memberships_count',
-      content: countFormat(membershipsCount),
     },
   ]
 
@@ -132,9 +109,7 @@ const inform = async function (args, context) {
     return
   }
 
-  const options = await getOptions(context)
-
-  await Promise.map(recipients, sendMail(options, context), { concurrency: 2 })
+  await Promise.map(recipients, sendMail(context), { concurrency: 2 })
 }
 
 module.exports = {

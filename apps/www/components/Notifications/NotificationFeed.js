@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import {
   Interaction,
   Center,
@@ -7,8 +8,9 @@ import {
   fontStyles,
   useColorContext,
   A,
+  plainButtonRule,
 } from '@project-r/styleguide'
-import StickySection from '../Feed/StickySection'
+import DateLabel from '../Feed/DateLabel'
 import CommentNotification from './CommentNotification'
 import InfiniteScroll from '../Frame/InfiniteScroll'
 import { timeFormat } from '../../lib/utils/format'
@@ -17,6 +19,8 @@ import { css } from 'glamor'
 import DocumentNotification from './DocumentNotification'
 import withT from '../../lib/withT'
 import Link from 'next/link'
+import compose from 'lodash/flowRight'
+import { withMarkAllAsReadMutation } from './enhancers'
 
 const dateFormat = timeFormat('%A,\n%d.%m.%Y')
 
@@ -86,7 +90,10 @@ const ReloadBanner = withT(({ t, futureNotifications, onReload }) => {
   )
 })
 
-export default withT(
+export default compose(
+  withT,
+  withMarkAllAsReadMutation,
+)(
   ({
     t,
     notifications,
@@ -95,10 +102,25 @@ export default withT(
     fetchMore,
     futureNotifications,
     onReload,
+    markAllAsReadMutation,
   }) => {
     const { nodes, totalCount, unreadCount, pageInfo } = notifications
     const hasNextPage = pageInfo && pageInfo.hasNextPage
     const [colorScheme] = useColorContext()
+
+    const linkStyleRule = useMemo(
+      () =>
+        css({
+          textDecoration: 'none',
+          color: colorScheme.getCSSColor('primary'),
+          '@media (hover)': {
+            ':hover': {
+              color: colorScheme.getCSSColor('primaryHover'),
+            },
+          },
+        }),
+      [colorScheme],
+    )
 
     const loadMore = () =>
       fetchMore({
@@ -150,6 +172,17 @@ export default withT(
               <A>{t('Notifications/settings')}</A>
             </Link>
 
+            {!isEmpty && (
+              <button
+                {...linkStyleRule}
+                {...plainButtonRule}
+                style={{ marginLeft: 15 }}
+                onClick={() => markAllAsReadMutation().then(onReload)}
+              >
+                {t('Notifications/markAsRead')}
+              </button>
+            )}
+
             {isEmpty && (
               <Interaction.P style={{ marginTop: 40 }}>
                 <RawHtml
@@ -170,11 +203,7 @@ export default withT(
           >
             {groupByDate.entries(nodes).map(({ key, values }, i, all) => {
               return (
-                <StickySection
-                  key={i}
-                  hasSpaceAfter={i < all.length - 1}
-                  label={key}
-                >
+                <DateLabel key={i} label={key}>
                   {values.map((node, j) => {
                     if (
                       !node.object ||
@@ -226,7 +255,7 @@ export default withT(
                       />
                     )
                   })}
-                </StickySection>
+                </DateLabel>
               )
             })}
           </InfiniteScroll>

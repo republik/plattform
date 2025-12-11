@@ -7,6 +7,7 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    'react-dom/server': 'react-dom/server.edge',
   },
   testPathIgnorePatterns: ['node_modules', '<rootDir>/dist/'],
   preset: 'ts-jest',

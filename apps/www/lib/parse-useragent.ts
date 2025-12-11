@@ -1,3 +1,5 @@
+import { isbot } from 'isbot'
+
 /**
  * Parse a useragent string to retrieve the republik-app version.
  * @param value useragent string
@@ -45,3 +47,11 @@ export const matchAndroidUserAgent = (value?: string): boolean =>
  */
 export const matchFirefoxUserAgent = (value?: string): boolean =>
   !!value && !!value.match(/Firefox/)
+
+/**
+ * Parse a useragent-string to check if is a crawler bot
+ * @param value useragent string
+ * @returns boolean that says whether the useragent is a crawler bot
+ */
+export const matchSearchBotUserAgent = (value?: string): boolean =>
+  !!value && isbot(value)

@@ -16,7 +16,7 @@ import {
 } from '@project-r/styleguide'
 import NavLink from '../Frame/Popover/NavLink'
 import Link from 'next/link'
-import { HEADER_HEIGHT, HEADER_HEIGHT_MOBILE } from '../constants'
+import { HEADER_HEIGHT } from '../constants'
 import withT from '../../lib/withT'
 import { IconChevronRight } from '@republik/icons'
 
@@ -40,7 +40,7 @@ const getSectionNav = gql`
               color
               kind
             }
-            linkedDocuments(feed: true, first: 0) {
+            linkedDocuments(first: 0) {
               totalCount
             }
           }
@@ -273,10 +273,7 @@ const styles = {
   }),
   hrFixed: css({
     position: 'fixed',
-    top: HEADER_HEIGHT_MOBILE,
-    [mediaQueries.mUp]: {
-      top: HEADER_HEIGHT,
-    },
+    top: HEADER_HEIGHT,
   }),
   signInBlock: css({
     display: 'block',

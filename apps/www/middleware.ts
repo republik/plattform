@@ -118,7 +118,9 @@ function redirectToHTTPS(req: NextRequest): NextResponse | null {
   reqURL.protocol = 'https:'
   reqURL.port = ''
 
-  return NextResponse.redirect(reqURL)
+  return NextResponse.redirect(reqURL, {
+    status: 308,
+  })
 }
 
 /**
@@ -257,7 +259,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - monitoring (Sentry tunnel route)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|monitoring).*)',
   ],
 }

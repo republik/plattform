@@ -6,6 +6,7 @@ import { AudioPlayerLocations } from '../types/AudioActionTracking'
 import { IconPauseCircle, IconPlayCircleOutline } from '@republik/icons'
 import { getFragmentData } from '#graphql/cms/__generated__/gql'
 import { AudioQueueItemFragmentDoc } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useMe } from 'lib/context/MeContext'
 
 type FrontAudioPlayButtonProps = {
   documentId?: string
@@ -23,7 +24,8 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
     toggleAudioPlayer,
     checkIfActivePlayerItem,
   } = useAudioContext()
-  const { addAudioQueueItem } = useAudioQueue()
+  const { isAudioQueueAvailable, addAudioQueueItem } = useAudioQueue()
+  const { isMember } = useMe()
 
   if (!documentId) {
     return null
@@ -31,12 +33,16 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
 
   const isActivePlayerItem = checkIfActivePlayerItem(documentId)
 
+  const isVisible = isAudioQueueAvailable && isMember
+
   return (
     <button
+      style={{ visibility: isVisible ? 'visible' : 'hidden' }}
       {...plainButtonRule}
       title='Beitrag hören'
       onClick={(e) => {
         e.stopPropagation()
+        if (!isVisible) return
 
         if (isActivePlayerItem) {
           toggleAudioPlayback()
@@ -47,9 +53,11 @@ const TeaserAudioPlayButton = ({ documentId }: FrontAudioPlayButtonProps) => {
               data.audioQueueItems,
             )
             const item = audioQueueItems.find(
-              (i) => i.document.id === documentId,
+              (i) => i.document?.id === documentId,
             )
-            toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
+            if (item?.document) {
+              toggleAudioPlayer(item.document, AudioPlayerLocations.FRONT)
+            }
           })
         }
       }}

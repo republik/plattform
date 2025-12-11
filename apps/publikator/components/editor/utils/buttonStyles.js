@@ -19,7 +19,7 @@ const format = {
     opacity: 0.3,
     color: colors.secondary,
   },
-  '&[data-active="false"][data-disabled="false"]:hover': {
+  '&[data-active="false"]:not([data-disabled="true"]):hover': {
     color: colors.text,
   },
 }
@@ -42,7 +42,8 @@ export default {
   mark: css({
     textAlign: 'center',
     display: 'inline-block',
-    width: '30px',
+    width: '24px',
+    height: '24px',
     ...format,
   }),
   block: css({

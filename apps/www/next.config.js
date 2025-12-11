@@ -11,7 +11,10 @@ const { withPlausibleProxy } = require('next-plausible')
 const isProduction = process.env.NODE_ENV === 'production'
 
 const buildId =
+  // Git commit hash on Heroku
   process.env.SOURCE_VERSION?.substring(0, 10) ||
+  // ... and on Vercel
+  process.env.VERCEL_GIT_COMMIT_SHA?.substring(0, 10) ||
   new Date(Date.now()).toISOString()
 
 function appendProtocol(href) {
@@ -36,30 +39,19 @@ const PUBLIC_CDN_URL = process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  // deploymentId for Skew protection: this will trigger a hard refresh when outdated clients navigate. See https://nextjs.org/docs/app/guides/self-hosting#version-skew
+  deploymentId: buildId,
   generateBuildId: () => buildId,
   env: {
     BUILD_ID: buildId,
     PUBLIC_BASE_URL,
     PUBLIC_CDN_URL,
   },
-  transpilePackages: [
-    '@project-r/styleguide',
-    '@republik/nextjs-apollo-client', // Ensures ES5 compatibility to work in IE11 and older safari versions
-    '@republik/icons', // Ensures ES5 compatibility to work in IE11 and older safari versions
-  ],
-  webpack: (config) => {
-    config.externals = config.externals || {}
-    config.externals['lru-cache'] = 'lru-cache'
-    config.externals['react-dom/server'] = 'react-dom/server'
-    return config
-  },
+
   poweredByHeader: false,
   assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
-  useFileSystemPublicRoutes: true,
-  // , onDemandEntries: {
-  //   // wait 5 minutes before disposing entries
-  //   maxInactiveAge: 1000 * 60 * 5
-  // }
+  // Maximum amount of time where stale content is allowed to be served from cache (CDN, browser etc.)
+  expireTime: 60,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -84,9 +76,9 @@ const nextConfig = {
       // Migrated from custom express server
       {
         source: '/:path*',
-        headers: [
+        headers:
           // Security headers, peviously handled by helmet
-          ...Object.entries({
+          Object.entries({
             // 'Content-Security-Policy': `default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests`,
             // 'Cross-Origin-Opener-Policy': 'same-origin',
             // 'Cross-Origin-Resource-Policy': 'same-origin',
@@ -102,11 +94,10 @@ const nextConfig = {
             // removed by helmet by default, but we keep it for now
             'X-Powered-By': 'Republik',
             'X-XSS-Protection': '1; mode=block',
-          }).map(([key, value]) => ({
-            key,
-            value,
-          })),
-        ],
+            'X-Robots-Tag': process.env.ROBOTS_TAG_HEADER,
+          })
+            .filter(([, value]) => !!value)
+            .map(([key, value]) => ({ key, value })),
       },
     ]
   },
@@ -117,6 +108,10 @@ const nextConfig = {
         {
           source: '/_ssr/:path*',
           destination: '/404',
+        },
+        {
+          source: '/graphql',
+          destination: process.env.NEXT_PUBLIC_API_URL,
         },
       ],
       afterFiles: [
@@ -190,8 +185,14 @@ const nextConfig = {
       process.env.NEXT_PUBLIC_SHOP_BASE_URL && {
         source: '/angebote',
         missing: [
-          { type: 'query', key: 'package', value: undefined },
-          { type: 'query', key: 'group', value: undefined },
+          // Don't redirect these packages, since we use them for payment slips or gifts
+          { type: 'query', key: 'package', value: 'PROLONG' },
+          { type: 'query', key: 'package', value: 'ABO' },
+          { type: 'query', key: 'package', value: 'DONATE' },
+          { type: 'query', key: 'package', value: 'BENEFACTOR' },
+          { type: 'query', key: 'package', value: 'ABO_GIVE' },
+          { type: 'query', key: 'package', value: 'ABO_GIVE_MONTHS' },
+          // Not sure what this is
           { type: 'query', key: 'goto', value: undefined },
         ],
         destination: process.env.NEXT_PUBLIC_SHOP_BASE_URL,
@@ -233,11 +234,10 @@ const nextConfig = {
         destination: '/503',
         permanent: false,
       },
-      // Migrated from custom express server
       {
-        source: '/updates/wer-sind-sie',
-        destination: '/503',
-        permanent: false,
+        source: '/updates',
+        destination: '/crowdfunding-updates',
+        permanent: true,
       },
       // Migrated from static questionnaire pages
       {
@@ -257,6 +257,9 @@ const nextConfig = {
           '/politik-in-26-fragen-ihre-antworten?share=submission-:id',
         permanent: true,
       },
+      // Redirect overview pages to 1st month
+      { source: '/:year(\\d{4})', destination: '/archiv/:year/1', permanent: false },
+      { source: '/archiv/:year(\\d{4})', destination: '/archiv/:year/1', permanent: false },
     ].filter(Boolean)
   },
   experimental: {
@@ -271,44 +274,29 @@ const withConfiguredPlausibleProxy = withPlausibleProxy({
   subdirectory: '__plsb',
 })
 
-module.exports = withBundleAnalyzer(withConfiguredPlausibleProxy(nextConfig))
-
-// Injected content via Sentry wizard below
-
 module.exports = withSentryConfig(
-  module.exports,
-  {
-    // For all available options, see:
-    // https://github.com/getsentry/sentry-webpack-plugin#options
-
-    // Suppresses source map uploading logs during build
-    silent: true,
-    org: 'republik',
-    project: 'www-republik',
-  },
+  withBundleAnalyzer(withConfiguredPlausibleProxy(nextConfig)),
   {
     // For all available options, see:
     // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+    authToken: process.env.SENTRY_AUTH_TOKEN,
+
+    // Only print logs for uploading source maps in CI
+    silent: !process.env.CI,
+
     // Upload a larger set of source maps for prettier stack traces (increases build time)
     widenClientFileUpload: true,
 
-    // Transpiles SDK to be compatible with IE11 (increases bundle size)
-    transpileClientSDK: false,
-
-    // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
+    // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
+    // This can increase your server load as well as your hosting bill.
+    // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
+    // side errors will fail.
     tunnelRoute: '/monitoring',
-
-    // Hides source maps from generated client bundles
-    hideSourceMaps: true,
 
     // Automatically tree-shake Sentry logger statements to reduce bundle size
     disableLogger: true,
-
-    // Enables automatic instrumentation of Vercel Cron Monitors.
-    // See the following for more information:
-    // https://docs.sentry.io/product/crons/
-    // https://vercel.com/docs/cron-jobs
-    automaticVercelMonitors: true,
   },
 )

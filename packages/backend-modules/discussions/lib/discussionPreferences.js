@@ -11,10 +11,20 @@ const setDiscussionPreferences = async ({
 }) => {
   const { credential: credentialDescription } = discussionPreferences
 
+  const findQuery = {
+    userId,
+    discussionId: discussion.id,
+  }
+  const existingDP = await transaction.public.discussionPreferences.findOne(
+    findQuery,
+  )
+
   // default anonymity
   let anonymity
   if (discussionPreferences.anonymity === undefined) {
-    anonymity = discussion.anonymity === 'ENFORCED'
+    // if mutation is called without specific anonymity settings,
+    // use the existing user preference or the default discusssion setting
+    anonymity = existingDP?.anonymous ?? discussion.anonymity === 'ENFORCED'
   } else {
     anonymity = discussionPreferences.anonymity
   }
@@ -53,13 +63,6 @@ const setDiscussionPreferences = async ({
     credentialId = null
   }
 
-  const findQuery = {
-    userId,
-    discussionId: discussion.id,
-  }
-  const existingDP = await transaction.public.discussionPreferences.findOne(
-    findQuery,
-  )
   const user = await transaction.public.users.findOne({ id: userId })
 
   const updateQuery = {
@@ -93,7 +96,7 @@ const setDiscussionPreferences = async ({
 
   await Promise.all([
     mutation,
-    loaders.Discussion.Commenter.discussionPreferences.clear(findQuery),
+    loaders.DiscussionPreferences.byUserIdAndDiscussionId.clear(findQuery),
   ])
 
   await ensureAnonymousDifferentiator({

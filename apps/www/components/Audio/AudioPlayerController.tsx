@@ -164,12 +164,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
 
   const handleError = (error: Error | string) => {
     setHasError(true)
-    if (typeof error === 'string') {
-      reportError('handle audio-error', error)
-    } else {
-      error = JSON.stringify(error, Object.getOwnPropertyNames(error), 2)
-      reportError('handle audio-error', error)
-    }
+    reportError('handle audio-error', error)
     trackEvent([
       AudioPlayerLocations.AUDIO_PLAYER,
       AudioPlayerActions.ERROR,
@@ -498,20 +493,22 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
     try {
       // Save the progress of the current track at 100%
       await saveActiveItemProgress({ currentTime: duration, isPlaying: false })
-      const { data } = await removeAudioQueueItem(activePlayerItem.id)
-      const audioQueueItems = getFragmentData(
-        AudioQueueItemFragmentDoc,
-        data.audioQueueItems,
+      
+      const updatedQueue = (audioQueue || []).filter(
+        item => item.id !== activePlayerItem.id
       )
 
       console.log('Audio Controller: onQueueAdvance', {
-        data,
+        removingItemId: activePlayerItem.id,
+        queueLength: updatedQueue.length,
         autoPlay,
       })
 
-      audioQueueRef.current = [...audioQueueItems]
+      await removeAudioQueueItem(activePlayerItem.id)
+
+      audioQueueRef.current = [...updatedQueue]
       setInitialized(true)
-      if (data.audioQueueItems.length === 0) {
+      if (updatedQueue.length === 0) {
         setActivePlayerItem(null)
         if (inNativeApp && isPlaying) {
           onStop(false)
@@ -522,7 +519,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           activePlayerItem?.document?.meta?.path,
         ])
       } else {
-        const nextItem = audioQueueItems[0]
+        const nextItem = updatedQueue[0]
         setupNextAudioItem(nextItem, autoPlay).catch(handleError)
         trackEvent([
           AudioPlayerLocations.AUDIO_PLAYER,
@@ -552,9 +549,9 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
           if (isHeadOfQueue && audioQueue?.length > 1) {
             setupNextAudioItem(audioQueue[1], false).catch(handleError)
           }
-          const { data } = await removeAudioQueueItem(audioQueueItemId)
-          const queue = data.audioQueueItems
-          if (queue?.length === 0) {
+          await removeAudioQueueItem(audioQueueItemId)
+          // Queue is updated via optimistic response, check if empty after mutation
+          if ((audioQueue?.length || 0) <= 1) {
             onStop(false)
           }
           // If the head of the queue was removed, setup the new head
@@ -563,7 +560,7 @@ const AudioPlayerController = ({ children }: AudioPlayerContainerProps) => {
         handleError(error)
       }
     },
-    [audioQueue, setupNextAudioItem, removeAudioQueueItem],
+    [audioQueue, setupNextAudioItem, removeAudioQueueItem, onStop, checkIfHeadOfQueue],
   )
 
   const togglePlayer = useCallback(

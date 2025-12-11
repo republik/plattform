@@ -7,9 +7,10 @@ import {
   Button,
   Checkbox,
   plainButtonRule,
-  colors,
-  Interaction,
+  Interaction,  
+  IconButton,
 } from '@project-r/styleguide'
+import { IconSearch } from '@republik/icons'
 import { escapeRegExp } from 'lodash'
 
 import { useTranslation } from '../../lib/withT'
@@ -127,8 +128,8 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
   const [countText, setCountText] = useState<number>(0)
   const [countMeta, setCountMeta] = useState<number>(0)
   const [searched, setSearched] = useState<boolean>(false)
-  const searchRef = useRef<HTMLInputElement>()
-  const replaceRef = useRef<HTMLInputElement>()
+  const searchRef = useRef<HTMLInputElement>(null)
+  const replaceRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setSearchTerm(replaceSpecialChars(displaySearchTerm))
@@ -233,13 +234,11 @@ const Replace: React.FC<{ value: any; onSave: (e: any) => undefined }> = ({
 
   return (
     <>
-      <button
-        {...plainButtonRule}
-        style={{ color: colors.primary, marginTop: 10, display: 'block' }}
+      <IconButton
         onClick={() => setReplacerVisible(true)}
-      >
-        {title}
-      </button>
+        Icon={IconSearch}
+        label='Ersetzen'
+      />
       {isReplacerVisible && (
         <Overlay
           onClose={closeReplacer}

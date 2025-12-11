@@ -1,28 +1,29 @@
 import { MagazineSubscriptionStatus } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useTranslation } from 'lib/useT'
 
 interface Color {
-  light: string
-  dark: string
+  background: string
+  foreground: string
 }
 
 const successColoring: Color = {
-  light: '#E6FFEC',
-  dark: '#34D399',
+  background: '#00AA00',
+  foreground: '#ffffff',
 }
 
 const errorColoring: Color = {
-  light: '#FFEEEE',
-  dark: '#EF4444',
+  background: '#dc2626',
+  foreground: '#fff',
 }
 
 const warningColoring: Color = {
-  light: '#FFFAF0',
-  dark: '#F59E0B',
+  background: '#F59E0B',
+  foreground: '#fff',
 }
 
 const infoColoring: Color = {
-  light: '#EFF6FF',
-  dark: '#3B82F6',
+  background: '#3B82F6',
+  foreground: '#fff',
 }
 
 interface SubscriptionStatusBadgeProps {
@@ -31,13 +32,11 @@ interface SubscriptionStatusBadgeProps {
 
 const colorMapping: Record<MagazineSubscriptionStatus, Color> = {
   canceled: infoColoring,
-  ended: infoColoring,
   paused: infoColoring,
   active: successColoring,
   trialing: successColoring,
   incomplete: warningColoring,
   incomplete_expired: warningColoring,
-  overdue: errorColoring,
   past_due: errorColoring,
   unpaid: errorColoring,
 }
@@ -47,20 +46,21 @@ export default function SubscriptionStatusBadge(
 ) {
   const color = colorMapping[props.status]
 
+  const { t } = useTranslation()
+
   return (
     <span
       style={{
         padding: '0.25rem 0.75rem',
         borderRadius: '1rem',
-        backgroundColor: color.light,
-        color: color.dark,
-        border: `1px solid ${color.dark}`,
+        backgroundColor: color.background,
+        color: color.foreground,
         textTransform: 'capitalize',
         fontSize: '0.75rem',
-        fontWeight: 600,
+        fontWeight: '500',
       }}
     >
-      {props.status.replaceAll('_', ' ')}
+      {t(`account/MagazineSubscription/status/${props.status}`)}
     </span>
   )
 }

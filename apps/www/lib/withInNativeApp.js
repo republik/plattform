@@ -1,7 +1,7 @@
 import Router from 'next/router'
-import { parseJSONObject } from './safeJSON'
 import { matchIOSUserAgent, useUserAgent } from './context/UserAgentContext'
 import { getNativeAppBuildId, getNativeAppVersion } from './parse-useragent'
+import { parseJSONObject } from './safeJSON'
 
 export { getNativeAppVersion, getNativeAppBuildId }
 
@@ -12,6 +12,7 @@ export const inNativeAppBrowserAppVersion = process.browser
 const isLegacyApp = (version) => parseFloat(version) < 2
 
 const isNewerVersion = (oldVer, newVer) => {
+  if (!oldVer || !newVer) return true
   const oldParts = oldVer.split('.')
   const newParts = newVer.split('.')
   for (var i = 0; i < newParts.length; i++) {
@@ -128,7 +129,7 @@ export const NativeAppHelpers = {
 }
 
 export const useInNativeApp = () => {
-  const { userAgent, isIOS, isAndroid } = useUserAgent()
+  const { userAgent, isIOS, isAndroid } = useUserAgent() ?? {}
 
   const inNativeAppVersion = getNativeAppVersion(userAgent)
   const inNativeAppBuildId = getNativeAppBuildId(userAgent)
@@ -145,6 +146,7 @@ export const useInNativeApp = () => {
     isAndroid: isAndroid,
     inIOSVersion: isIOS ? getIOSVersion(userAgent) : undefined,
     inNativeIOSApp: inNativeApp && isIOS,
+    inNativeAndroidApp: inNativeApp && isAndroid,
   }
 }
 

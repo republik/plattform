@@ -1,99 +1,141 @@
-import { Component } from 'react'
-import { getFromModules } from './'
-import { Interaction, Label, colors } from '@project-r/styleguide'
-import PropTypes from 'prop-types'
+import { colors, IconButton, Interaction, Label } from '@project-r/styleguide'
+import { IconCode, IconPrint } from '@republik/icons'
+import React, { useEffect, useMemo, useRef } from 'react'
+import { getFromModules } from './Editor'
+import Replace from './Replace'
 
-const Sidebar = ({
-  textFormatButtons,
-  blockFormatButtons,
-  insertButtons,
-  propertyForms,
+const EditorUI = ({
+  editorRef,
   value,
   onChange,
-}) => (
-  <div>
-    <Interaction.P>
-      <Label>Text</Label>
-      <br />
-      {textFormatButtons.map((Button, i) => (
-        <Button key={`text-fmt-${i}`} value={value} onChange={onChange} />
-      ))}
-    </Interaction.P>
-    <Interaction.P>
-      <Label>Block</Label>
-      {blockFormatButtons.map((Button, i) => (
-        <Button key={`block-fmt-${i}`} value={value} onChange={onChange} />
-      ))}
-    </Interaction.P>
-    <Interaction.P>
-      <Label>Einfügen</Label>
-      {insertButtons.map((Button, i) => (
-        <Button key={`insert-${i}`} value={value} onChange={onChange} />
-      ))}
-    </Interaction.P>
-    <div
-      style={{
-        marginTop: 10,
-        marginBottom: 250,
-        paddingTop: 20,
-        borderTop: `1px solid ${colors.divider}`,
-      }}
-    >
-      {propertyForms.map((Form, i) => (
-        <Form key={`form-${i}`} value={value} onChange={onChange} />
-      ))}
-    </div>
-  </div>
-)
+  onSaveSearchAndReplace,
+  onGoToRaw,
+  serializedState,
+}) => {
+  const formAreaRef = useRef(null)
 
-class UISidebar extends Component {
-  constructor(props, ...args) {
-    super(props, ...args)
+  const {
+    textFormatButtons,
+    blockFormatButtons,
+    insertButtons,
+    propertyForms,
+  } = useMemo(() => {
+    const { uniqModules } = editorRef
 
-    const { uniqModules } = props.editorRef
-
-    this.textFormatButtons = getFromModules(
-      uniqModules,
-      (m) => m.ui && m.ui.textFormatButtons,
-    )
-
-    this.blockFormatButtons = getFromModules(
-      uniqModules,
-      (m) => m.ui && m.ui.blockFormatButtons,
-    )
-
-    this.insertButtons = getFromModules(
-      uniqModules,
-      (m) => m.ui && m.ui.insertButtons,
-    )
-
-    this.propertyForms = getFromModules(uniqModules, (m) => m.ui && m.ui.forms)
-  }
-
-  render() {
-    if (!this.props.value) {
-      return null
+    return {
+      textFormatButtons: getFromModules(
+        uniqModules,
+        (m) => m.ui && m.ui.textFormatButtons,
+      ),
+      blockFormatButtons: getFromModules(
+        uniqModules,
+        (m) => m.ui && m.ui.blockFormatButtons,
+      ),
+      insertButtons: getFromModules(
+        uniqModules,
+        (m) => m.ui && m.ui.insertButtons,
+      ),
+      propertyForms: getFromModules(uniqModules, (m) => m.ui && m.ui.forms),
     }
-    return (
-      <Sidebar
-        textFormatButtons={this.textFormatButtons}
-        blockFormatButtons={this.blockFormatButtons}
-        insertButtons={this.insertButtons}
-        propertyForms={this.propertyForms}
-        value={this.props.value}
-        onChange={this.props.onChange}
-      />
-    )
+  }, [editorRef])
+
+  // Check if form area has meaningful content and hide if empty
+  // TODO: This is a hack to hide the form area when it's empty.
+  // If forms returned consistent values if they were empty, we could remove this.
+  // Some forms use createPropertyForm which wraps forms and calls an isDisabled function
+  // Some forms return null when inactive
+  // Some forms might return empty JSX or other falsy values
+  useEffect(() => {
+    if (!formAreaRef.current) return
+
+    const formArea = formAreaRef.current
+    const hasTextContent = formArea.textContent.trim().length > 0
+    const hasVisibleElements =
+      formArea.querySelectorAll('input, select, textarea, button').length > 0
+
+    if (!hasTextContent && !hasVisibleElements) {
+      formArea.style.display = 'none'
+    } else {
+      formArea.style.display = 'block'
+    }
+  }, [value]) // Re-check when editor value changes
+
+  if (!value) {
+    return null
   }
+
+  return (
+    <>
+      <div
+        style={{ flex: 1, overflowY: 'auto', padding: '15px 15px 55px 15px' }}
+      >
+        <p style={{ margin: '0 0 10px 0', fontSize: '12px' }}>
+          {value.document.text.length}
+          {' Zeichen'}
+        </p>
+
+        <div
+          style={{
+            display: 'flex',
+            overflowX: 'scroll',
+            width: '100%',
+          }}
+        >
+          <IconButton onClick={window.print} Icon={IconPrint} label='Drucken' />
+          <Replace value={serializedState} onSave={onSaveSearchAndReplace} />
+          <IconButton onClick={onGoToRaw} Icon={IconCode} label='Quellcode' />
+        </div>
+        <div style={{ margin: '24px 0' }}>
+          <p style={{ fontSize: '16px', margin: '0 0 12px 0' }}>Text</p>
+          <div
+            style={{
+              display: 'flex',
+              gap: '12px',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+            }}
+          >
+            {textFormatButtons.map((Button, i) => (
+              <Button key={`text-fmt-${i}`} value={value} onChange={onChange} />
+            ))}
+          </div>
+        </div>
+        <Interaction.P>
+          <Label>Block</Label>
+          {blockFormatButtons.map((Button, i) => (
+            <Button key={`block-fmt-${i}`} value={value} onChange={onChange} />
+          ))}
+        </Interaction.P>
+        <Interaction.P>
+          <Label>Einfügen</Label>
+          {insertButtons.map((Button, i) => (
+            <Button key={`insert-${i}`} value={value} onChange={onChange} />
+          ))}
+        </Interaction.P>
+      </div>
+      <div
+        ref={formAreaRef}
+        className='form-area'
+        style={{
+          flex: '0 1 auto',
+          maxHeight: '50%',
+          padding: '20px 15px',
+          width: '100%',
+          overflowY: 'scroll',
+          backgroundColor: colors.secondaryBg,
+          borderTop: `1px solid ${colors.divider}`,
+        }}
+      >
+        <div style={{ marginBottom: '36px' }}>
+          {propertyForms.map((Form, i) => (
+            <div key={`form-${i}`}>
+              <Form value={value} onChange={onChange} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  )
 }
 
-UISidebar.propTypes = {
-  editorRef: PropTypes.shape({
-    uniqModules: PropTypes.array.isRequired,
-    slate: PropTypes.shape({
-      change: PropTypes.func.isRequired,
-    }).isRequired,
-  }).isRequired,
-}
-
-export default UISidebar
+export default EditorUI

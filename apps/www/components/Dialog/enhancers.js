@@ -13,10 +13,13 @@ const getActiveDiscussions = gql`
           id
           meta {
             title
+            image
+            audioCover
             path
             template
             ownDiscussion {
               id
+              path
               closed
             }
           }
@@ -80,7 +83,6 @@ const getComments = gql`
           id
           title
           path
-          isBoard
           document {
             id
             meta {
@@ -90,6 +92,7 @@ const getComments = gql`
               template
               ownDiscussion {
                 id
+                path
                 closed
               }
               linkedDiscussion {

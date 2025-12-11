@@ -1,17 +1,17 @@
-import React from 'react'
 import { css } from 'glamor'
+import React from 'react'
 
 import { mUp } from '../../theme/mediaQueries'
-import { serifRegular14, serifRegular16 } from '../Typography/styles'
-import { Editorial } from '../Typography'
+import { Interaction } from '../Typography'
+import { sansSerifRegular15, sansSerifRegular16 } from '../Typography/styles'
 import { convertStyleToRem } from '../Typography/utils'
 
 const styles = {
   container: css({
     wordWrap: 'break-word',
-    ...convertStyleToRem(serifRegular14),
+    ...convertStyleToRem(sansSerifRegular15),
     [mUp]: {
-      ...convertStyleToRem(serifRegular16),
+      ...convertStyleToRem(sansSerifRegular16),
     },
     '& > *:first-child': {
       marginTop: 0,
@@ -23,7 +23,7 @@ const styles = {
 }
 
 export default ({ children }) => (
-  <div {...styles.container} {...Editorial.fontRule}>
+  <div {...styles.container} {...Interaction.fontRule}>
     {children}
   </div>
 )

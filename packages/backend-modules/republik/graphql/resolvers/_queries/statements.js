@@ -20,6 +20,10 @@ module.exports = async (_, args, { pgdb, t }) => {
   const { first, after, search, focus, membershipAfter } = args
   const seed = args.seed || Math.random() * 2 - 1
 
+  if (first < 0) {
+    throw new Error('api/statements/minNodes')
+  }
+
   if (first > 100) {
     throw new Error(t('api/statements/maxNodes'))
   }
@@ -60,7 +64,7 @@ module.exports = async (_, args, { pgdb, t }) => {
       JOIN memberships m
         ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1)
       WHERE
-        ARRAY[u.id] && :ids;
+        u.id = ANY(:ids);
     `,
       { ids: nodeIds },
     )
@@ -101,7 +105,8 @@ module.exports = async (_, args, { pgdb, t }) => {
         credentials c
         ON c."userId" = u.id AND c."isListed" = true
       WHERE
-        u."isListed" = true
+        u."hasPublicProfile" = true
+        AND u."isListed" = true
         AND u."isAdminUnlisted" = false
         AND u."portraitUrl" is not null
         ${!membershipAfter ? 'AND u.roles @> \'["member"]\'' : ''}
@@ -137,7 +142,8 @@ module.exports = async (_, args, { pgdb, t }) => {
         FROM users u
         ${membershipAfter ? fragmentJoinMinMaxDates : ''}
         WHERE
-          u."isListed" = true
+          u."hasPublicProfile" = true
+          AND u."isListed" = true
           AND u."isAdminUnlisted" = false
           AND u."portraitUrl" is not null
           ${!membershipAfter ? 'AND u.roles @> \'["member"]\'' : ''}

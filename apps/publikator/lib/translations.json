@@ -117,6 +117,10 @@
       "value": "Zugelassene Rollen: {roles}"
     },
     {
+      "key": "repo/warn/missing",
+      "value": "Repo {repoId} nicht gefunden."
+    },
+    {
       "key": "repo/add/title",
       "value": "Neues Dokument"
     },
@@ -159,10 +163,6 @@
     {
       "key": "repo/add/template/article",
       "value": "Artikel"
-    },
-    {
-      "key": "repo/add/template/flyer",
-      "value": "Journal"
     },
     {
       "key": "repo/add/template/front",
@@ -769,130 +769,6 @@
       "value": "Schriftgrösse"
     },
     {
-      "key": "metaData/paynotes",
-      "value": "Störer"
-    },
-    {
-      "key": "metaData/paynotes/dropdown",
-      "value": "Störertyp"
-    },
-    {
-      "key": "metaData/paynotes/mode/auto",
-      "value": "auto"
-    },
-    {
-      "key": "metaData/paynotes/mode/button",
-      "value": "auto (nur Abo kaufen)"
-    },
-    {
-      "key": "metaData/paynotes/mode/trialForm",
-      "value": "auto (nur Probelesen)"
-    },
-    {
-      "key": "metaData/paynotes/mode/custom",
-      "value": "spezial"
-    },
-    {
-      "key": "metaData/paynotes/mode/noPaynote",
-      "value": "keine"
-    },
-    {
-      "key": "metaData/paynotes/mode/climate",
-      "value": "Klimalab"
-    },
-    {
-      "key": "metaData/paynotes/add",
-      "value": "Spezialangefertigte Störer hinzufügen"
-    },
-    {
-      "key": "metaData/paynotes/title",
-      "value": "Spezialangefertigte Störer"
-    },
-    {
-      "key": "metaData/paynotes/index",
-      "value": "Störer #{index}"
-    },
-    {
-      "key": "metaData/paynotes/before",
-      "value": "Am Anfang"
-    },
-    {
-      "key": "metaData/paynotes/after",
-      "value": "Am Ende"
-    },
-    {
-      "key": "metaData/paynotes/new",
-      "value": "Neuer Störer"
-    },
-    {
-      "key": "metaData/paynotes/help",
-      "value": "B-Tags für <b>&lt;b&gt;gefettet&lt;/b&gt;</b>. Für einen neuen Paragraf, eine leere Zeile – doppelter Umbruch."
-    },
-    {
-      "key": "metaData/paynote/form/target/title",
-      "value": "Ziel"
-    },
-    {
-      "key": "metaData/paynote/form/target/value/true",
-      "value": "Ja"
-    },
-    {
-      "key": "metaData/paynote/form/target/value/false",
-      "value": "Nein"
-    },
-    {
-      "key": "metaData/paynote/form/target/value/undefined",
-      "value": "Egal"
-    },
-    {
-      "key": "metaData/paynote/form/target/hasActiveMembership",
-      "value": "Aktive Mitglieder"
-    },
-    {
-      "key": "metaData/paynote/form/target/isEligibleForTrial",
-      "value": "Probelesen berechtigt"
-    },
-    {
-      "key": "metaData/paynote/form/cta/label",
-      "value": "Aktivierung"
-    },
-    {
-      "key": "metaData/paynote/form/cta/0",
-      "value": "Probelesen"
-    },
-    {
-      "key": "metaData/paynote/form/cta/1",
-      "value": "Button"
-    },
-    {
-      "key": "metaData/paynote/form/cta/2",
-      "value": "Keine"
-    },
-    {
-      "key": "metaData/paynote/form/content",
-      "value": "Inhalt"
-    },
-    {
-      "key": "metaData/paynote/form/button/label",
-      "value": "Label"
-    },
-    {
-      "key": "metaData/paynote/form/button/link",
-      "value": "Link"
-    },
-    {
-      "key": "metaData/paynote/form/secondary/prefix",
-      "value": "Sekundärer Präfix (optional)"
-    },
-    {
-      "key": "metaData/paynote/form/secondary/label",
-      "value": "Sekundäres Label (optional)"
-    },
-    {
-      "key": "metaData/paynote/form/secondary/link",
-      "value": "Sekundärer Link (optional)"
-    },
-    {
       "key": "metaData/field/url",
       "value": "URL"
     },
@@ -931,10 +807,6 @@
     {
       "key": "metaData/darkMode",
       "value": "Dunkles Farbschema forcieren"
-    },
-    {
-      "key": "metaData/isRestricted",
-      "value": "Eingeschränkter Zugang auf Links"
     },
     {
       "key": "metaData/recommendations/heading",
@@ -1450,7 +1322,7 @@
     },
     {
       "key": "ui/sidebar/info/numCharacters",
-      "value": "Anzahl Zeichen"
+      "value": "Zeichen: "
     },
     {
       "key": "styleguide/DynamicComponent/error",
@@ -1466,11 +1338,11 @@
     },
     {
       "key": "styleguide/Collapsable/expand",
-      "value": "Alles lesen"
+      "value": "Mehr lesen"
     },
     {
       "key": "styleguide/Collapsable/collapse",
-      "value": "Weniger"
+      "value": "Weniger lesen"
     },
     {
       "key": "styleguide/Collapsable/table/expand",
@@ -1685,12 +1557,8 @@
       "value": "Antwort in {link}"
     },
     {
-      "key": "styleguide/CommentTreeLoadMore/label/1",
-      "value": "Ein weiterer Kommentar"
-    },
-    {
-      "key": "styleguide/CommentTreeLoadMore/label/other",
-      "value": "{count} weitere Kommentare"
+      "key": "styleguide/CommentTreeLoadMore/label",
+      "value": "Weitere Beiträge anzeigen"
     },
     {
       "key": "styleguide/CommentTreeCollapse/label",
@@ -1861,148 +1729,12 @@
       "value": "Aufmacher"
     },
     {
-      "key": "editor/element/flyerTopic",
-      "value": "Format"
-    },
-    {
-      "key": "editor/element/flyerTitle",
-      "value": "Titel"
-    },
-    {
-      "key": "editor/element/flyerAuthor",
-      "value": "Autorin"
-    },
-    {
-      "key": "editor/element/flyerMetaP",
-      "value": "Moderation"
-    },
-    {
-      "key": "editor/element/flyerOpeningP",
-      "value": "Begrüssung"
-    },
-    {
-      "key": "editor/element/flyerPunchline",
-      "value": "Punchline"
-    },
-    {
-      "key": "editor/element/flyerDate",
-      "value": "Datum"
-    },
-    {
-      "key": "editor/element/flyerTile",
-      "value": "Standard-Block"
-    },
-    {
-      "key": "editor/element/flyerTileMeta",
-      "value": "Moderations-Block"
-    },
-    {
-      "key": "editor/element/quiz",
-      "value": "Quiz"
-    },
-    {
-      "key": "editor/element/quizItem",
-      "value": "Quiz-Element"
-    },
-    {
-      "key": "editor/element/quizAnswer",
-      "value": "Antwort"
-    },
-    {
-      "key": "editor/element/quizAnswerInfo",
-      "value": "Info"
-    },
-    {
-      "key": "editor/element/quizAnswerInfoP",
-      "value": "Info-Paragraph"
-    },
-    {
-      "key": "editor/placeholder/paragraph",
-      "value": "Text"
-    },
-    {
-      "key": "editor/placeholder/listItem",
-      "value": "Text"
-    },
-    {
-      "key": "editor/placeholder/flyerSignature",
-      "value": "Text"
-    },
-    {
-      "key": "editor/placeholder/quizAnswerInfoP",
-      "value": "Infos zu Antwort (oder Enter für weitere Option)"
-    },
-    {
-      "key": "editor/mark/bold",
-      "value": "fett"
-    },
-    {
-      "key": "editor/mark/italic",
-      "value": "kursiv"
-    },
-    {
-      "key": "editor/mark/strikethrough",
-      "value": "durchgestrichen"
-    },
-    {
-      "key": "editor/mark/sup",
-      "value": "hochgestellt"
-    },
-    {
-      "key": "editor/mark/sub",
-      "value": "tiefgestellt"
-    },
-    {
-      "key": "editor/specialChar/nbsp",
-      "value": "Dauerleerzeichen"
-    },
-    {
-      "key": "editor/specialChar/shy",
-      "value": "weiches Trennzeichen"
-    },
-    {
-      "key": "editor/specialChar/quotes",
-      "value": "Guillemets"
-    },
-    {
-      "key": "editor/specialChar/nestedQuotes",
-      "value": "einfache Guillemets"
-    },
-    {
-      "key": "editor/blockUi/moveUp",
-      "value": "nach oben schieben"
-    },
-    {
-      "key": "editor/blockUi/moveDown",
-      "value": "nach unten schieben"
-    },
-    {
-      "key": "editor/blockUi/edit",
-      "value": "Element bearbeiten"
-    },
-    {
-      "key": "editor/blockUi/new/before",
-      "value": "oben einfügen"
-    },
-    {
-      "key": "editor/blockUi/new/after",
-      "value": "unten einfügen"
-    },
-    {
-      "key": "editor/blockUi/remove",
-      "value": "Element entfernen"
-    },
-    {
-      "key": "editor/meta/flyer/defaultShareText",
-      "value": "Die Tage sind zäh und die Agenden sind voll. Trotzdem kurz Zeit für Journalismus?"
-    },
-    {
       "key": "editor/workflow/uncommittedChanges",
       "value": "Committen oder verwerfen Sie Ihre Änderungen, um die Phase anzupassen."
     },
     {
       "key": "editor/print",
-      "value": "PDF drucken"
+      "value": "Drucken"
     },
     {
       "key": "editor/replace/title",
@@ -2043,6 +1775,14 @@
     {
       "key": "editor/replace/nothingFound",
       "value": "Kein Treffer"
+    },
+    {
+      "key": "editor/specialChar/nbsp",
+      "value": "Dauerleerzeichen"
+    },
+    {
+      "key": "editor/specialChar/shy",
+      "value": "weiches Trennzeichen"
     }
   ]
 }

@@ -728,19 +728,19 @@
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/label",
-      "value": "Täglicher Newsletter"
+      "value": "Republik heute"
     },
     {
       "key": "account/newsletterSubscriptions/DAILY/frequency",
-      "value": "montags, dienstags, mittwochs und freitags"
+      "value": "Von Montag bis Freitag um 5 Uhr"
     },
     {
       "key": "account/newsletterSubscriptions/WEEKLY/label",
-      "value": "Wochenend-Newsletter"
+      "value": "Republik am Wochenende"
     },
     {
       "key": "account/newsletterSubscriptions/WEEKLY/frequency",
-      "value": "samstags"
+      "value": "Samstags um 5 Uhr"
     },
     {
       "key": "account/newsletterSubscriptions/FEUILLETON/label",
@@ -756,7 +756,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/PROJECTR/frequency",
-      "value": "unregelmässig"
+      "value": "8 bis 12 Mal pro Jahr\n"
     },
     {
       "key": "account/newsletterSubscriptions/COVID19/label",
@@ -772,7 +772,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/ACCOMPLICE/frequency",
-      "value": "unregelmässig"
+      "value": "4 bis 6 Mal pro Jahr"
     },
     {
       "key": "account/newsletterSubscriptions/WINTER/label",
@@ -780,11 +780,27 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/label",
-      "value": "Challenge-Accepted-Newsletter"
+      "value": "Challenge Accepted"
+    },
+    {
+      "key": "account/newsletterSubscriptions/CLIMATE/frequency",
+      "value": "Alle 2–3 Wochen"
     },
     {
       "key": "account/newsletterSubscriptions/WDWWW/label",
       "value": "Was diese Woche wichtig war"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WDWWW/frequency",
+      "value": "Jeden Freitag"
+    },
+    {
+      "key": "account/newsletterSubscriptions/SUNDAY/label",
+      "value": "Republik am Sonntag"
+    },
+    {
+      "key": "account/newsletterSubscriptions/SUNDAY/frequency",
+      "value": "Jeden Sonntag"
     },
     {
       "key": "account/authSettings/title",
@@ -811,39 +827,39 @@
       "value": "Debatten-Benachrichtigungen"
     },
     {
-      "key": "account/discussionNotificationChannels/intro",
+      "key": "account/notificationChannels/intro",
       "value": "Ich möchte Benachrichtungen auf folgendem Weg erhalten:"
     },
     {
-      "key": "account/discussionNotificationChannels/EMAIL/label",
+      "key": "account/notificationChannels/EMAIL/label",
       "value": "E-Mail"
     },
     {
-      "key": "account/discussionNotificationChannels/WEB/label",
+      "key": "account/notificationChannels/WEB/label",
       "value": "Browser (Beta)"
     },
     {
-      "key": "account/discussionNotificationChannels/WEB/hint/live",
+      "key": "account/notificationChannels/WEB/hint/live",
       "value": "Sie erhalten Browser-Benachrichtungen, während Sie eine Debattenseite in einem beliebigen Browserfenster offen haben."
     },
     {
-      "key": "account/discussionNotificationChannels/WEB/hint/unsupported",
+      "key": "account/notificationChannels/WEB/hint/unsupported",
       "value": "Ihr Browser unterstützt leider keine Benachrichtungen."
     },
     {
-      "key": "account/discussionNotificationChannels/WEB/hint/denied",
+      "key": "account/notificationChannels/WEB/hint/denied",
       "value": "Sie haben Benachrichtungen in Ihrem Browser geblockt. Bitte aktualisieren Sie Ihre Browsereinstellungen, so dass Benachrichtigungen für https://www.republik.ch erlaubt sind."
     },
     {
-      "key": "account/discussionNotificationChannels/WEB/hint/default",
+      "key": "account/notificationChannels/WEB/hint/default",
       "value": "Um auch wirklich Browser-Benachrichtungen zu erhalten, müssen Sie Ihrem Browser das erlauben:"
     },
     {
-      "key": "account/discussionNotificationChannels/WEB/enable",
+      "key": "account/notificationChannels/WEB/enable",
       "value": "Browser-Benachrichtungen erlauben"
     },
     {
-      "key": "account/discussionNotificationChannels/APP/label",
+      "key": "account/notificationChannels/APP/label",
       "value": "App"
     },
     {
@@ -1319,10 +1335,6 @@
       "value": "Veranstaltungen"
     },
     {
-      "key": "footer/updates",
-      "value": "Blog Crowdfunding"
-    },
-    {
       "key": "footer/about/projecR",
       "value": "Project R"
     },
@@ -1600,7 +1612,7 @@
     },
     {
       "key": "styleguide/CommentActions/unpublish",
-      "value": "Beitrag zurückziehen"
+      "value": "zurückziehen"
     },
     {
       "key": "styleguide/CommentActions/unpublish/confirm",
@@ -1663,12 +1675,8 @@
       "value": "Zum Beitrag"
     },
     {
-      "key": "styleguide/CommentTreeLoadMore/label/1",
-      "value": "Ein weiterer Beitrag"
-    },
-    {
-      "key": "styleguide/CommentTreeLoadMore/label/other",
-      "value": "{count} weitere Beiträge"
+      "key": "styleguide/CommentTreeLoadMore/label",
+      "value": "Weitere Beiträge anzeigen"
     },
     {
       "key": "styleguide/CommentTreeCollapse/label",
@@ -2411,250 +2419,6 @@
       "value": "Sie brauchen eine Mitgliedschaft, um die Beiträge zu lesen."
     },
     {
-      "key": "article/payNote/before",
-      "value": "Danke für Ihre Neugier! Dieser Artikel wurde grosszügigerweise für Sie von einer unserer {count} Verlegerinnen und Verleger freigeschaltet. {buyLink}"
-    },
-    {
-      "key": "article/payNote/before/ios",
-      "value": "Danke für Ihre Neugier! Dieser Artikel wurde grosszügigerweise für Sie von einer unserer {count} Verlegerinnen und Verleger freigeschaltet."
-    },
-    {
-      "key": "article/payNote/before/buyText",
-      "value": "Kommen Sie ebenfalls an Bord!"
-    },
-    {
-      "key": "article/payNote/after",
-      "value": "Schön, Sie hier unten wieder zu sehen! Es wäre uns eine Freude, wenn Sie bei der Republik Verlegerin oder Verleger würden. Wir versprechen Ihnen dafür Journalismus ohne Kompromisse: ohne Schnörkel, ohne Werbung, ohne Ausreden bei Fehlern. {buyLink}"
-    },
-    {
-      "key": "article/payNote/after/ios",
-      "value": "Schön, Sie hier unten wieder zu sehen! Wir hoffen, es hat Ihnen gefallen."
-    },
-    {
-      "key": "article/payNote/after/buyText",
-      "value": "Erfahren Sie mehr."
-    },
-    {
-      "key": "article/payNote/after/series",
-      "value": "Dieser Artikel ist Teil einer Serie. Werden Sie Verleger, um alle Episoden zu lesen."
-    },
-    {
-      "key": "article/payNote/secondaryAction/text",
-      "value": "Noch nicht überzeugt? {link}"
-    },
-    {
-      "key": "article/payNote/secondaryAction/linkText",
-      "value": "Jetzt probelesen"
-    },
-    {
-      "key": "article/payNote/series/before",
-      "value": "Wir sind die Republik – ein neues Modell im Schweizer Journalismus. Unser digitales Magazin arbeitet unabhängig: keine Werbung, keine Klick-Wirtschaft, keine Kompromisse in der Qualität. Wollen Sie unabhängigen Journalismus unterstützen, freuen wir uns, Sie an Bord zu sehen."
-    },
-    {
-      "key": "article/payNote/series/before/buy/button",
-      "value": "Ja, ich will!"
-    },
-    {
-      "key": "article/payNote/series/after/title",
-      "value": "Wollen Sie mehr lesen?"
-    },
-    {
-      "key": "article/payNote/series/after",
-      "value": "Dieser Beitrag ist Teil einer Serie. Wollen Sie die ganze Geschichte? Dann kommen Sie an Bord! Wir sind die Republik – ein neues Modell im Schweizer Journalismus. Unser digitales Magazin arbeitet unabhängig: keine Werbung, keine Klick-Wirtschaft, keine Kompromisse in der Qualität."
-    },
-    {
-      "key": "article/payNote/series/after/buy/button",
-      "value": "An Bord kommen!"
-    },
-    {
-      "key": "article/payNote/180920-v1/before",
-      "value": "Wir sind die Republik – ein neues Modell im Schweizer Journalismus. Unser Online-Magazin arbeitet unabhängig: keine Werbung, keine Klick-Wirtschaft, keine Kompromisse in der Qualität. Wollen Sie unabhängigen Journalismus unterstützen, freuen wir uns, Sie an Bord zu sehen."
-    },
-    {
-      "key": "article/payNote/180920-v1/before/buy/button",
-      "value": "Ja, ich will!"
-    },
-    {
-      "key": "article/payNote/180920-v1/after/title",
-      "value": "Wenn Sie schon hier sind …"
-    },
-    {
-      "key": "article/payNote/180920-v1/after",
-      "value": "… treffen Sie eine Entscheidung: Wollen Sie, dass die noch junge Republik weiterhin unabhängigen Journalismus betreiben kann? Wir sind niemandem verpflichtet ausser unseren Leserinnen, unserem Gewissen und dem Kampf gegen die Langeweile. Weder Oligarchen noch Werbetreibende haben einen Einfluss auf unsere Berichterstattung. Doch das funktioniert nur, wenn viele uns dabei unterstützen. {count} tun dies bereits."
-    },
-    {
-      "key": "article/payNote/180920-v1/after/buy/button",
-      "value": "Ich bin dabei."
-    },
-    {
-      "key": "article/payNote/180920-v2/before",
-      "value": "Wir sind die Republik. Wir liefern Journalismus – mit Sorgfalt, mit Tiefe, mit Witz, aber ohne Werbung. Unser Ziel ist, Ihnen das Wesentliche zu liefern. Also nicht das Wetter, sondern das Klima. Denn wir wollen Ihre Zeit nicht mit Unfug verschwenden. Wollen Sie täglich das Beste, was wir zustande bringen?"
-    },
-    {
-      "key": "article/payNote/180920-v2/before/buy/button",
-      "value": "Republik abonnieren!"
-    },
-    {
-      "key": "article/payNote/180920-v2/after/title",
-      "value": "Wenn Sie gerade da sind …"
-    },
-    {
-      "key": "article/payNote/180920-v2/after",
-      "value": "… hat Ihnen dieser Beitrag gefallen? Wir sind die Republik. Ein unabhängiges Online-Magazin, das vergangenen Januar gestartet ist. Unser Job ist, Ihnen jeden Tag Artikel zu liefern, die in die Tiefe gehen. Die besten Analysen, Reportagen, Interviews, Kulturrezensionen, Bundeshausnachrichten, die wir hinkriegen. Wollen Sie ab heute jeden Tag das Klügste lesen, was uns einfällt?"
-    },
-    {
-      "key": "article/payNote/180920-v2/after/buy/button",
-      "value": "Republik abonnieren!"
-    },
-    {
-      "key": "article/payNote/180920-v3/before",
-      "value": "{count} Verlegerinnen können sich vielleicht irren. Aber alle haben den Mut gehabt, die Republik zu unterstützen. Unser kühnes Ziel: eine gewichtige Stimme in der Schweizer Medienlandschaft zu sein. Das können wir nicht allein, sondern nur gemeinsam. Mit Ihnen?"
-    },
-    {
-      "key": "article/payNote/180920-v3/before/buy/button",
-      "value": "Verleger werden!"
-    },
-    {
-      "key": "article/payNote/180920-v3/after/title",
-      "value": "Wenn Sie schon da sind …"
-    },
-    {
-      "key": "article/payNote/180920-v3/after",
-      "value": "… wir sind die Republik, ein junges Medienunternehmen mit {count} Verlegerinnen und Journalisten. Unser Ziel: eine gewichtige Stimme in der Schweizer Medienlandschaft zu sein. Und eine vernünftige in der politischen Debatte. Unser digitales Magazin berichtet über Politik, Wirtschaft, Gesellschaft und Kultur. Dafür brauchen wir Sie. Wollen Sie Verlegerin oder Verleger der Republik werden?"
-    },
-    {
-      "key": "article/payNote/180920-v3/after/buy/button",
-      "value": "Unbedingt!"
-    },
-    {
-      "key": "article/payNote/180920-v4/before",
-      "value": "Wir sind die Republik. Ein digitales Magazin für Politik, Gesellschaft, Wirtschaft, Kultur, das im Januar 2018 gestartet ist. Es ist ein Projekt gegen die Wahrscheinlichkeit: Wir wollen im winzigen Schweizer Markt ausschliesslich von unseren Leserinnen finanziert sein. Wollen Sie Teil dieses Abenteuers sein?"
-    },
-    {
-      "key": "article/payNote/180920-v4/before/buy/button",
-      "value": "Natürlich!"
-    },
-    {
-      "key": "article/payNote/180920-v4/after/title",
-      "value": "Wenn Sie gerade da sind …"
-    },
-    {
-      "key": "article/payNote/180920-v4/after",
-      "value": "… wollen Sie heute ein Risiko eingehen? Und zusammen mit uns Ihre Zeit, Ihr Vertrauen und Ihr Geld in unabhängigen Journalismus investieren? Entweder mit Vorsicht via ein monatlich kündbares Abonnement? Oder tollkühn via eines über ein Jahr?"
-    },
-    {
-      "key": "article/payNote/180920-v4/after/buy/button",
-      "value": "Ja, ich wage es!"
-    },
-    {
-      "key": "article/payNote/180920-v5/before",
-      "value": "Wir sind die Republik – ein neues Modell im Schweizer Journalismus. Unser digitales Magazin ist unabhängig: keine Werbung, keine Klick-Wirtschaft, keine Kompromisse in der Qualität. Wollen Sie unabhängigen Journalismus unterstützen, freuen wir uns, Sie an Bord zu sehen."
-    },
-    {
-      "key": "article/payNote/180920-v5/before/buy/button",
-      "value": "Republik unterstützen!"
-    },
-    {
-      "key": "article/payNote/180920-v5/after/title",
-      "value": "Da Sie schon hier sind – eine Warnung!"
-    },
-    {
-      "key": "article/payNote/180920-v5/after",
-      "value": "Wir von der Republik wollen Sie als Abonnentin gewinnen. Deshalb sagen wir Ihnen nur ungern, dass Lesen nicht ohne Risiko ist. Schopenhauer warnte, dass gleichsam mit fremdem Kopf denkt, wer liest. Und dadurch allmählich die Fähigkeit verliert, selber zu denken. Sein Schluss: «Solches aber ist der Fall sehr vieler Gelehrter: Sie haben sich dumm gelesen.» Deshalb versprechen wir Ihnen, falls Sie uns abonnieren, Ihnen so wenig wie möglich zu liefern: nur das Wesentliche. Und nur im Notfall mehr als drei Texte pro Tag. "
-    },
-    {
-      "key": "article/payNote/180920-v5/after/buy/button",
-      "value": "Okay, weniger ist mehr!"
-    },
-    {
-      "key": "article/payNote/180920-v6/before",
-      "value": "Wir sind die Republik und haben das ehrgeizige Ziel, für Sie so etwas wie die Steuererklärung zu werden. Denn unabhängiger Journalismus ist wie die Steuern – ein notwendiges Ärgernis. Wie der US-Republikaner Oliver Wendell Holmes (1841–1935) sagte: «Ich zahle gerne Steuern. Damit kaufe ich mir Zivilisation.»"
-    },
-    {
-      "key": "article/payNote/180920-v6/before/buy/button",
-      "value": "Zivilisation kaufen!"
-    },
-    {
-      "key": "article/payNote/180920-v6/after/title",
-      "value": "Wenn Sie schon hier sind …"
-    },
-    {
-      "key": "article/payNote/180920-v6/after",
-      "value": "Wir sind die Republik – ein digitales Magazin ohne Werbung und ohne Kompromisse im Journalismus. Und hätten Sie gerne an Bord. Mit dem ehrgeizigen Ziel, für Sie so etwas wie Ihre Steuererklärung zu werden. Denn unabhängiger Journalismus ist wie die Steuern – ein notwendiges Ärgernis. Ganz so, wie es der US-Republikaner Oliver Wendell Holmes (1841-1935) sagte: «Ich zahle gerne Steuern. Damit kaufe ich mir Zivilisation.»"
-    },
-    {
-      "key": "article/payNote/180920-v6/after/buy/button",
-      "value": "Ich kaufe Zivilisation."
-    },
-    {
-      "key": "article/payNote/180920-v7/before",
-      "value": "Wir sind die Republik – ein neues Modell im Schweizer Journalismus. Unser digitales Magazin ist unabhängig: keine Werbung, keine Klick-Wirtschaft, keine Kompromisse in der Qualität. Wollen Sie unabhängigen Journalismus unterstützen, freuen wir uns, Sie an Bord zu sehen."
-    },
-    {
-      "key": "article/payNote/180920-v7/before/buy/button",
-      "value": "Ja, ich will!"
-    },
-    {
-      "key": "article/payNote/180920-v7/after/title",
-      "value": "Ihr Urteil?"
-    },
-    {
-      "key": "article/payNote/180920-v7/after",
-      "value": "Ihr Urteil lautet natürlich: Sie sind zur Freiheit verurteilt – lebenslänglich. Und zwar von Jean-Paul Sartre, der Konsumgüterindustrie, der liberalen Revolution von 1848, dem Feminismus, dem Historienfilm «Braveheart», Pippi Langstrumpf, der Verfassung, dem Zufall. Und von uns. Es wäre schön, wenn Sie sich die Freiheit nehmen würden, bei unserem Magazin an Bord zu kommen."
-    },
-    {
-      "key": "article/payNote/180920-v7/after/buy/button",
-      "value": "Freiheit nehmen!"
-    },
-    {
-      "key": "article/payNote/180920-v8/before",
-      "value": "Sie glauben, dass Meinungsvielfalt darin besteht, dass es linke und rechte Medien gibt? Die dann im Schützengraben aufeinander schiessen? Wir glauben das nicht. Die Aufgabe des Journalismus ist, eine gemeinsame Grundlage zu schaffen, auf der man um seine Interessen kämpft. Dafür arbeitet die Republik."
-    },
-    {
-      "key": "article/payNote/180920-v8/before/buy/button",
-      "value": "Republik abonnieren!"
-    },
-    {
-      "key": "article/payNote/180920-v8/after/title",
-      "value": "War dieser Artikel genug Mainstream?"
-    },
-    {
-      "key": "article/payNote/180920-v8/after",
-      "value": "Sie glauben, dass Meinungsvielfalt darin besteht, dass es linke und rechte Medien gibt? Die dann im Schützengraben aufeinander schiessen? Wir glauben das nicht. Denn in einem gespaltenen Mediensystem debattieren die Leute nicht über zwei Blickwinkel auf die Wirklichkeit. Sondern sie debattieren in zwei Wirklichkeiten. Die Aufgabe des Journalismus ist, eine gemeinsame Grundlage zu schaffen, auf der man dann um seine Interessen kämpft. Eine Gesellschaft ist nur so gut wie ihre Debatten. Dafür arbeiten wir in der Republik."
-    },
-    {
-      "key": "article/payNote/180920-v8/after/buy/button",
-      "value": "Ich bin dabei!"
-    },
-    {
-      "key": "article/payNote/180920-v9/before",
-      "value": "Wir sind die Republik – ein neues Modell im Schweizer Journalismus. Unser Online-Magazin arbeitet unabhängig: keine Werbung, keine Klick-Wirtschaft, keine Kompromisse in der Qualität. Wollen Sie unabhängigen Journalismus unterstützen, freuen wir uns, Sie an Bord zu sehen."
-    },
-    {
-      "key": "article/payNote/180920-v9/before/buy/button",
-      "value": "Republik unterstützen!"
-    },
-    {
-      "key": "article/payNote/180920-v9/after/title",
-      "value": "Sie haben in diesem Artikel viele Worte gelesen …"
-    },
-    {
-      "key": "article/payNote/180920-v9/after",
-      "value": "… aber die wichtigsten drei fehlten. Seit je beruht jede funktionierende Gemeinschaft auf diesen drei Worten. Liebende sagen sie zueinander. Gute Politiker sagen sie ihren Wählern, gute Priester ihrer Gemeinde, gute Eltern ihrem Kind. Sie lauten: Fürchte dich nicht! – Wir von der Republik glauben, dass auch im Journalismus gilt, was Franklin D. Roosevelt einst zur Politik sagte: «Wir haben nichts zu fürchten als die Furcht selbst.»"
-    },
-    {
-      "key": "article/payNote/180920-v9/after/buy/button",
-      "value": "Ich bin an Bord."
-    },
-    {
-      "key": "article/payNote/bottomPanel/close",
-      "value": "Schliessen"
-    },
-    {
-      "key": "article/payNote/bottomPanel/actions/later",
-      "value": "Später"
-    },
-    {
       "key": "article/share/title",
       "value": "Artikel teilen"
     },
@@ -3081,22 +2845,6 @@
     {
       "key": "events/labels/location",
       "value": "Wo"
-    },
-    {
-      "key": "updates/pageTitle",
-      "value": "Neues – Republik"
-    },
-    {
-      "key": "updates/title",
-      "value": "Neuigkeiten zum Crowdfunding"
-    },
-    {
-      "key": "updates/metaDescription",
-      "value": "Das digitale Magazin von Project R – jetzt Mitglied werden."
-    },
-    {
-      "key": "updates/all",
-      "value": "Alle Meldungen"
     },
     {
       "key": "faq/pageTitle",
@@ -3691,14 +3439,6 @@
       "value": "Crew"
     },
     {
-      "key": "menu/updates",
-      "value": "Neues"
-    },
-    {
-      "key": "menu/updates/wer-sind-sie",
-      "value": "Neues"
-    },
-    {
       "key": "menu/events",
       "value": "Veranstaltungen"
     },
@@ -4279,10 +4019,6 @@
       "value": "Ereignis nicht gefunden"
     },
     {
-      "key": "updates/404",
-      "value": "Update nicht gefunden"
-    },
-    {
       "key": "testimonial/title",
       "value": "Jetzt ein Statement abgeben"
     },
@@ -4399,8 +4135,8 @@
       "value": "Sie müssen Mitglied sein, um zu kommentieren."
     },
     {
-      "key": "api/comment/tooEarly",
-      "value": "Sie sind zu früh. Bitte warten Sie, {waitFor} bevor Sie wieder kommentieren."
+      "key": "api/comment/suspended",
+      "value": "Sie sind noch bis {timeahead} vom Dialog suspendiert. Bei Fragen wenden Sie sich bitte an kontakt@republik.ch."
     },
     {
       "key": "api/voting/membershipRequired",
@@ -4990,6 +4726,58 @@
     {
       "key": "account/access/Events/details/show",
       "value": "Events anzeigen"
+    },
+    {
+      "key": "account/MagazineSubscription/status/trialing",
+      "value": "trialing"
+    },
+    {
+      "key": "account/MagazineSubscription/status/active",
+      "value": "Aktiv"
+    },
+    {
+      "key": "account/MagazineSubscription/status/incomplete",
+      "value": "Unvollständig"
+    },
+    {
+      "key": "account/MagazineSubscription/status/incomplete_expired",
+      "value": "Unvollständig, abgelaufen"
+    },
+    {
+      "key": "account/MagazineSubscription/status/unpaid",
+      "value": "Unbezahlt"
+    },
+    {
+      "key": "account/MagazineSubscription/status/past_due",
+      "value": "Überfällig"
+    },
+    {
+      "key": "account/MagazineSubscription/status/paused",
+      "value": "Pausiert"
+    },
+    {
+      "key": "account/MagazineSubscription/status/canceled",
+      "value": "Abgelaufen"
+    },
+    {
+      "key": "account/MagazineSubscription/status/overdue",
+      "value": "Überfällig"
+    },
+    {
+      "key": "account/MagazineSubscription/status/ended",
+      "value": "Geendet"
+    },
+    {
+      "key": "account/MagazineSubscription/type/MONTHLY_SUBSCRIPTION",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "account/MagazineSubscription/type/YEARLY_SUBSCRIPTION",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "account/MagazineSubscription/type/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönnermitgliedschaft"
     }
   ]
 }

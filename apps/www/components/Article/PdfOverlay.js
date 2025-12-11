@@ -20,7 +20,7 @@ export const getPdfUrl = (
   { path, lastPublishedAt },
   { images, pageFormat } = {},
 ) => {
-  const pdfUrl = new URL(`${SCREENSHOT_SERVER_BASE_URL}/api/pdf`)
+  const pdfUrl = new URL('/api/pdf', SCREENSHOT_SERVER_BASE_URL)
 
   const articleUrl = `${PUBLIC_BASE_URL}/${path}`
 

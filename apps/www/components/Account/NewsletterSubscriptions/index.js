@@ -54,14 +54,7 @@ export const NEWSLETTER_SETTINGS = gql`
   ${newsletterFragment}
 `
 
-const NewsletterSubscriptions = ({
-  t,
-  isMember,
-  free,
-  onlyName,
-  smallButton,
-  onSubscribe,
-}) => {
+const NewsletterSubscriptions = ({ t, onlyName, smallButton, onSubscribe }) => {
   return (
     <Query query={NEWSLETTER_SETTINGS} variables={{ onlyName }}>
       {({ loading, error, data }) => {
@@ -138,11 +131,6 @@ const NewsletterSubscriptions = ({
                     </>
                   )}
                 </Mutation>
-              </FrameBox>
-            )}
-            {!isMember && !free && (
-              <FrameBox style={{ margin: '10px 0', padding: 15 }}>
-                <P>{t('account/newsletterSubscriptions/noMembership')}</P>
               </FrameBox>
             )}
             {subscriptions.map(({ name, subscribed }) => (

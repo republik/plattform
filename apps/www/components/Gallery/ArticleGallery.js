@@ -4,14 +4,11 @@ import Gallery from './Gallery'
 import { imageSizeInfo } from '@republik/mdast-react-render'
 import { postMessage } from '../../lib/withInNativeApp'
 import { removeQuery } from '../../lib/utils/link'
-import { MIN_GALLERY_IMG_WIDTH } from '@project-r/styleguide'
-
-export const mdastToString = (node) =>
-  node
-    ? node.value ||
-      (node.children && node.children.map(mdastToString).join('')) ||
-      ''
-    : ''
+import {
+  GalleryContext,
+  mdastToString,
+  MIN_GALLERY_IMG_WIDTH,
+} from '@project-r/styleguide'
 
 const getGroupFigures = (group) => {
   const nodes = group.children
@@ -114,10 +111,6 @@ class ArticleGallery extends Component {
         this.toggleGallery(galleryItems[0].src)
       }
     }
-
-    this.getChildContext = () => ({
-      toggleGallery: this.toggleGallery,
-    })
   }
 
   static getDerivedStateFromProps(nextProps) {
@@ -138,26 +131,24 @@ class ArticleGallery extends Component {
     const { show, startItemSrc, galleryItems } = this.state
     const enabled = article?.content?.meta?.gallery !== false
     return (
-      <Fragment>
-        {article.content && enabled && show && (
-          <Gallery
-            onClose={this.toggleGallery}
-            items={galleryItems}
-            startItemSrc={startItemSrc}
-          />
-        )}
-        {children}
-      </Fragment>
+      <GalleryContext value={{ toggleGallery: this.toggleGallery }}>
+        <Fragment>
+          {article.content && enabled && show && (
+            <Gallery
+              onClose={this.toggleGallery}
+              items={galleryItems}
+              startItemSrc={startItemSrc}
+            />
+          )}
+          {children}
+        </Fragment>
+      </GalleryContext>
     )
   }
 }
 
 ArticleGallery.propTypes = {
   article: PropTypes.object.isRequired,
-}
-
-ArticleGallery.childContextTypes = {
-  toggleGallery: PropTypes.func,
 }
 
 export default ArticleGallery

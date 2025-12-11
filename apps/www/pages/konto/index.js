@@ -1,21 +1,22 @@
-import { useEffect } from 'react'
-import { css } from 'glamor'
-import compose from 'lodash/flowRight'
-import { useRouter } from 'next/router'
-import Link from 'next/link'
-import { mediaQueries, A, Interaction } from '@project-r/styleguide'
+import { AccountPaynote } from '@app/components/paynotes/paynotes-in-trial/account'
+import { A, Interaction, mediaQueries } from '@project-r/styleguide'
 
+import { css } from 'glamor'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+
+import AccountSection from '../../components/Account/AccountSection'
+import AccountTabs from '../../components/Account/AccountTabs'
+import { AccountEnforceMe, HintArea } from '../../components/Account/Elements'
+import Memberships from '../../components/Account/Memberships'
+import UpdateEmail, { UserEmail } from '../../components/Account/UserInfo/Email'
+import NameAddress from '../../components/Account/UserInfo/NameAddress'
 import Frame from '../../components/Frame'
 import Merci from '../../components/Pledge/Merci'
-import withT from '../../lib/withT'
 import { withDefaultSSR } from '../../lib/apollo/helpers'
-import AccountTabs from '../../components/Account/AccountTabs'
-import AccountSection from '../../components/Account/AccountSection'
-import Memberships from '../../components/Account/Memberships'
-import { HintArea, AccountEnforceMe } from '../../components/Account/Elements'
-import NameAddress from '../../components/Account/UserInfo/NameAddress'
-import UpdateEmail, { UserEmail } from '../../components/Account/UserInfo/Email'
-import withMe from '../../lib/apollo/withMe'
+import { useMe } from '../../lib/context/MeContext'
+import { useTranslation } from '../../lib/withT'
 
 const { Emphasis } = Interaction
 
@@ -31,7 +32,9 @@ const styles = {
   column: css({ flex: 1 }),
 }
 
-const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
+const AccountPage = () => {
+  const { t } = useTranslation()
+  const { trialStatus, hasActiveMembership } = useMe()
   const meta = {
     title: t('pages/account/title'),
   }
@@ -57,49 +60,13 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
   const account = (
     <AccountEnforceMe>
       <AccountTabs />
-      <div {...styles.container}>
-        {hasAccess && (
-          <div {...styles.column}>
-            <AccountSection
-              id='onboarding'
-              title={t('Account/Onboarding/title')}
-            >
-              <HintArea>
-                {t.elements('Account/Onboarding/text', {
-                  link: (
-                    <Link key='link' href='/einrichten' passHref legacyBehavior>
-                      <A>
-                        <Emphasis>{t('Account/Onboarding/link')}</Emphasis>
-                      </A>
-                    </Link>
-                  ),
-                })}
-              </HintArea>
-            </AccountSection>
-          </div>
-        )}
 
-        {hasActiveMembership && (
-          <div {...styles.column}>
-            <AccountSection
-              id='teilen'
-              title={t('Account/Access/Campaigns/title')}
-            >
-              <HintArea>
-                {t.elements('Account/Access/text', {
-                  link: (
-                    <Link key='link' href='/teilen' passHref legacyBehavior>
-                      <A>
-                        <Emphasis>{t('Account/Access/link')}</Emphasis>
-                      </A>
-                    </Link>
-                  ),
-                })}
-              </HintArea>
-            </AccountSection>
-          </div>
-        )}
-      </div>
+      {trialStatus.includes('TRIAL_GROUP') && (
+        <div style={{ margin: '24px 0' }}>
+          <AccountPaynote />
+        </div>
+      )}
+
       <Memberships />
       <AccountSection id='account' title={t('Account/Update/title')}>
         <div style={{ marginBottom: 24 }}>
@@ -108,6 +75,26 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
         </div>
         <NameAddress />
       </AccountSection>
+      <div {...styles.column}>
+        <AccountSection id='delete' title={t('Account/Delete/title')}>
+          <HintArea>
+            {t.elements('Account/Delete/text', {
+              link: (
+                <Link
+                  key='link'
+                  href='/datenschutz-loeschungsanfrage'
+                  passHref
+                  legacyBehavior
+                >
+                  <A>
+                    <Emphasis>{t('Account/Delete/link')}</Emphasis>
+                  </A>
+                </Link>
+              ),
+            })}
+          </HintArea>
+        </AccountSection>
+      </div>
     </AccountEnforceMe>
   )
 
@@ -118,4 +105,4 @@ const AccountPage = ({ t, hasAccess, hasActiveMembership }) => {
   )
 }
 
-export default withDefaultSSR(compose(withT, withMe)(AccountPage))
+export default withDefaultSSR(AccountPage)

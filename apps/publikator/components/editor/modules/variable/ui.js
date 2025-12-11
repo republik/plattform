@@ -1,81 +1,31 @@
-import { Map } from 'immutable'
-import { parse } from '@republik/remark-preset'
-import { Block, Inline } from 'slate'
-
 import { Label } from '@project-r/styleguide'
 import { IconTag as InsertVarIcon } from '@republik/icons'
-
-import MetaForm from '../../utils/MetaForm'
+import { Map } from 'immutable'
+import { Inline } from 'slate'
 import withT from '../../../../lib/withT'
 
-import injectBlock from '../../utils/injectBlock'
-
 import {
-  createPropertyForm,
-  createInlineButton,
   buttonStyles,
+  createInlineButton,
   matchBlock,
   matchInline,
 } from '../../utils'
 
+import injectBlock from '../../utils/injectBlock'
+
+import MetaForm from '../../utils/MetaForm'
+import { greetingMdast, hasAccessMdast } from './mdastTemplates'
+
 const blockFactories = {
   greeting: ({ context }) => {
     return context.rootSerializer
-      .deserialize(
-        parse(
-          `
-<section><h6>CENTER</h6>
-
-<section><h6>IF</h6>
-
-\`\`\`
-{"present": "lastName"}
-\`\`\`
-
-Guten Tag <span data-variable="firstName"></span> <span data-variable="lastName"></span>
-
-<section><h6>ELSE</h6>
-
-Willkommen
-
-<hr /></section>
-
-<hr /></section>
-
-<hr /></section>
-`.trim(),
-        ),
-      )
+      .deserialize(greetingMdast)
       .document.nodes.first()
       .nodes.first()
   },
   hasAccess: ({ context }) => {
     return context.rootSerializer
-      .deserialize(
-        parse(
-          `
-<section><h6>CENTER</h6>
-
-<section><h6>IF</h6>
-
-\`\`\`
-{"present": "hasAccess"}
-\`\`\`
-
-Nur sichtbar mit Magazin-Zugriff – für Mitglieder, Abonnentinnen oder Probeleser.
-
-<section><h6>ELSE</h6>
-
-Nur ohne Magazin-Zugriff sichtbar – als Gast.
-
-<hr /></section>
-
-<hr /></section>
-
-<hr /></section>
-`.trim(),
-        ),
-      )
+      .deserialize(hasAccessMdast)
       .document.nodes.first()
       .nodes.first()
   },
@@ -197,7 +147,7 @@ const createUI = ({ TYPE, editorOptions, context }) => {
         data-disabled={disabled}
         data-visible={visible}
       >
-        <InsertVarIcon />
+        <InsertVarIcon size={24} />
       </span>
     ))
 

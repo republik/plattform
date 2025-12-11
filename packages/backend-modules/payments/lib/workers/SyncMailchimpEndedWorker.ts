@@ -1,9 +1,10 @@
 import { BaseWorker } from '@orbiting/backend-modules-job-queue'
 import { Job, SendOptions } from 'pg-boss'
-import { Payments } from '../payments'
 import Stripe from 'stripe'
 import { WebhookService } from '../services/WebhookService'
 import { MailNotificationService } from '../services/MailNotificationService'
+import { InvoiceService } from '../services/InvoiceService'
+import { SubscriptionService } from '../services/SubscriptionService'
 
 type Args = {
   $version: 'v1'
@@ -23,12 +24,12 @@ export class SyncMailchimpEndedWorker extends BaseWorker<Args> {
       throw Error('unable to perform this job version. Expected v1')
     }
 
-    console.log(`[${this.queue}] start`)
+    this.logger.debug({ queue: this.queue, jobiId: job.id }, 'start')
 
     const webhookService = new WebhookService(this.context.pgdb)
     const mailService = new MailNotificationService(this.context.pgdb)
-
-    const PaymentService = Payments.getInstance()
+    const invoiceService = new InvoiceService(this.context.pgdb)
+    const subscriptionService = new SubscriptionService(this.context.pgdb)
 
     const wh =
       await webhookService.getEvent<Stripe.CustomerSubscriptionDeletedEvent>(
@@ -36,26 +37,33 @@ export class SyncMailchimpEndedWorker extends BaseWorker<Args> {
       )
 
     if (!wh) {
-      console.error('Webhook does not exist')
+      this.logger.error(
+        { queue: this.queue, jobId: job.id },
+        'Webhook does not exist',
+      )
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
     if (wh.payload.type !== 'customer.subscription.deleted') {
-      console.error('Webhook is not of type customer.subscription.deleted')
+      this.logger.error(
+        { queue: this.queue, jobId: job.id },
+        'Webhook is not of type customer.subscription.deleted',
+      )
       return await this.pgBoss.fail(this.queue, job.id)
     }
 
     const event = wh.payload
 
-    const invoice = await PaymentService.getInvoice({
+    const invoice = await invoiceService.getInvoice({
       externalId: event.data.object.latest_invoice as string,
     })
-    const subscription = await PaymentService.getSubscription({
+    const subscription = await subscriptionService.getSubscription({
       externalId: event.data.object.id as string,
     })
 
     if (!invoice || !subscription) {
-      console.error(
+      this.logger.error(
+        { queue: this.queue, jobiId: job.id },
         'Latest invoice or subscription could not be found in the database',
       )
       return await this.pgBoss.fail(this.queue, job.id)
@@ -65,6 +73,6 @@ export class SyncMailchimpEndedWorker extends BaseWorker<Args> {
       userId: job.data.userId,
     })
 
-    console.log(`[${this.queue}] done`)
+    this.logger.debug({ queue: this.queue, jobiId: job.id }, 'done')
   }
 }

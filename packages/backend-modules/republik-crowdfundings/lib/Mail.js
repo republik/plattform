@@ -28,9 +28,7 @@ const {
   resubscribeEmail,
 } = require('@orbiting/backend-modules-mailchimp')
 
-const {
-  FRONTEND_BASE_URL,
-} = process.env
+const { FRONTEND_BASE_URL } = process.env
 
 const mail = createMail(NewsletterSubscriptionConfig)
 
@@ -354,7 +352,7 @@ mail.prepareMembershipWinback = async (
 }
 
 mail.prepareMembershipOwnerNotice = async (
-  { user, endDate, graceEndDate, cancelUntilDate, templateName },
+  { user, endDate, graceEndDate, cancelUntilDate, templateName, fromName },
   { pgdb, t },
 ) => {
   const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
@@ -382,6 +380,7 @@ mail.prepareMembershipOwnerNotice = async (
         sequenceNumber,
       },
     ),
+    fromName,
     templateName,
     mergeLanguage: 'handlebars',
     globalMergeVars: [
@@ -1102,7 +1101,7 @@ mail.sendReferralCampaignMail = async (
         },
         {
           name: 'link_sender_page',
-          content: `${FRONTEND_BASE_URL}/jetzt-einladen`,
+          content: `${FRONTEND_BASE_URL}/einladen`,
         },
         {
           name: 'has_monthly_abo',

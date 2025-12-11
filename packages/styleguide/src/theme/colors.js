@@ -38,7 +38,6 @@ const colorsDeprecated = {
   lightFill: '#E9E9E9',
   online: '#00DC00',
   social: '#E9A733',
-  flyer: '#405080',
   neutral: '#bbb',
   highlight: '#FFFFCC',
   sequential: [
@@ -87,6 +86,7 @@ const colorsDeprecated = {
 // - create open source color scheme, mv brand values to env via internal handbook
 
 const colors = {
+  ...colorsDeprecated,
   light: {
     logo: '#000000',
     default: '#FFFFFF',
@@ -112,7 +112,6 @@ const colors = {
     accentColorFormats: '#d44438',
     accentColorMeta: '#000000',
     accentColorAudio: '#000000',
-    accentColorFlyer: '#002BA3',
     overlayShadow: '0 0 15px rgba(0,0,0,0.1)',
     fadeOutGradientDefault:
       'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)',
@@ -148,10 +147,6 @@ const colors = {
     discrete9: '#bcbd22',
     discrete10: '#17becf',
     chartsInverted: '#000000',
-    flyerBg: '#E6ECFF',
-    flyerText: '#141414',
-    flyerMetaText: '#002BA3',
-    flyerFormatText: '#990025',
     imageChoiceShadow:
       '0 1px 2px 0 rgba(0, 0, 0, 0.24), 0 0 2px 0 rgba(0, 0, 0, 0.12)',
     imageChoiceShadowHover:
@@ -183,7 +178,6 @@ const colors = {
     accentColorFormats: '#d44438',
     accentColorMeta: '#FFFFFF',
     accentColorAudio: '#FFFFFF',
-    accentColorFlyer: '#A3BBFF',
     overlayShadow: '0 0 15px rgba(0,0,0,0.3)',
     fadeOutGradientDefault:
       'linear-gradient(0deg, rgba(25,25,25,1) 0%, rgba(25,25,25,0) 100%)',
@@ -219,10 +213,6 @@ const colors = {
     discrete9: '#bcbd22',
     discrete10: '#17becf',
     chartsInverted: '#FFFFFF',
-    flyerBg: '#001140',
-    flyerText: '#F0F0F0',
-    flyerMetaText: '#A3BBFF',
-    flyerFormatText: '#D90034',
     imageChoiceShadow:
       '0 1px 2px 0 rgba(255, 255, 255, 0.24), 0 0 2px 0 rgba(255, 255, 255, 0.12)',
     imageChoiceShadowHover:
@@ -236,7 +226,6 @@ const colors = {
       '#282828': 'accentColorMeta',
       '#07809A': 'accentColorBriefing',
       '#07809a': 'accentColorBriefing',
-      '#405080': 'accentColorFlyer',
     },
     charts: {
       '#000': 'chartsInverted',
@@ -244,12 +233,5 @@ const colors = {
     },
   },
 }
-
-// add all deprecated colors, but only if they don't exist in new colors (no overwrites)
-Object.keys(colorsDeprecated).forEach((key) => {
-  if (!colors[key]) {
-    colors[key] = colorsDeprecated[key]
-  }
-})
 
 export default colors

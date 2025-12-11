@@ -1,0 +1,43 @@
+mutation CancelMagazineSubscription(
+  $subscriptionId: ID!
+  $details: CancellationInput!
+  $cancelImmediately: Boolean
+) {
+  cancelMagazineSubscription(
+    subscriptionId: $subscriptionId
+    details: $details
+    cancelImmediately: $cancelImmediately
+  ) {
+    id
+  }
+}
+
+mutation ReactivateMagazineSubscription($subscriptionId: ID!) {
+  reactivateMagazineSubscription(subscriptionId: $subscriptionId) {
+    id
+  }
+}
+
+mutation CancelUpgradeMagazineSubscription($subscriptionId: ID!) {
+  cancelUpgradeMagazineSubscription(subscriptionId: $subscriptionId) {
+    id
+  }
+}
+
+mutation UpdateMagazineSubscriptionDonation(
+  $subscriptionId: ID!
+  $donationAmount: Int!
+) {
+  updateMagazineSubscriptionDonation(
+    subscriptionId: $subscriptionId
+    donationAmount: $donationAmount
+  ) {
+    id
+  }
+}
+
+mutation createStripeCustomerPortalSession($companyName: CompanyName!) {
+  createStripeCustomerPortalSession(companyName: $companyName) {
+    sessionUrl
+  }
+}

@@ -1,6 +1,7 @@
 query UserMagazineSubscriptions($userId: ID!) {
   user(id: $userId) {
     magazineSubscriptions {
+      id
       company
       type
       status
@@ -12,6 +13,23 @@ query UserMagazineSubscriptions($userId: ID!) {
       endedAt
       canceledAt
       renewsAtPrice
+
+      donation {
+        amount
+      }
+
+      upgrade {
+        id
+        createdAt
+        scheduledStart
+        subscriptionType
+        billingDetails {
+          total
+          donation {
+            amount
+          }
+        }
+      }
     }
   }
 }

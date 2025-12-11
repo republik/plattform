@@ -1,32 +1,27 @@
-import { forwardRef, Fragment, Component } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
-import { css, merge } from 'glamor'
+import { gql, useQuery } from '@apollo/client'
+import { useRouter } from 'next/router'
 import { max } from 'd3-array'
+import { css, merge } from 'glamor'
+import { Component, forwardRef, Fragment, useState } from 'react'
 
+import { useTranslation } from '../../lib/withT'
 import Meta from '../Frame/Meta'
-import withT from '../../lib/withT'
 import Loader from '../Loader'
 
 import Detail from './Detail'
 
-import {
-  PUBLIC_BASE_URL,
-  CDN_FRONTEND_BASE_URL,
-  ASSETS_SERVER_BASE_URL,
-} from '../../lib/constants'
+import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '../../lib/constants'
 
+import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import {
+  A,
+  Field,
+  fontFamilies,
   Interaction,
   mediaQueries,
-  fontFamilies,
-  Field,
-  A,
-  useColorContext,
   shouldIgnoreClick,
+  useColorContext,
 } from '@project-r/styleguide'
-import { withRouter } from 'next/router'
 import ErrorMessage from '../ErrorMessage'
 
 const { P } = Interaction
@@ -297,7 +292,9 @@ export class List extends Component {
     }
   }
   componentDidMount() {
-    this.props.isPage && window.addEventListener('scroll', this.onScroll)
+    if (this.props.isPage) {
+      window.addEventListener('scroll', this.onScroll)
+    }
     window.addEventListener('resize', this.measure)
     this.measure()
   }
@@ -305,7 +302,9 @@ export class List extends Component {
     this.measure()
   }
   componentWillUnmount() {
-    this.props.isPage && window.removeEventListener('scroll', this.onScroll)
+    if (this.props.isPage) {
+      window.removeEventListener('scroll', this.onScroll)
+    }
     window.removeEventListener('resize', this.measure)
   }
   getMaxColumns() {
@@ -442,11 +441,12 @@ export class List extends Component {
                   focusItem,
                 ),
                 url: `${PUBLIC_BASE_URL}/community?id=${focusItem.id}`,
-                image: `${ASSETS_SERVER_BASE_URL}/render?viewport=1200x628&updatedAt=${encodeURIComponent(
-                  focusItem.updatedAt,
-                )}&url=${encodeURIComponent(
-                  `${PUBLIC_BASE_URL}/community?share=${focusItem.id}`,
-                )}`,
+                image: screenshotUrl({
+                  url: `${PUBLIC_BASE_URL}/community?share=${focusItem.id}`,
+                  width: 1200,
+                  height: 628,
+                  version: focusItem.updatedAt,
+                }),
               }
             : {
                 pageTitle: t('testimonial/meta/pageTitle'),
@@ -535,132 +535,135 @@ query statements($seed: Float, $search: String, $focus: String, $after: String, 
 }
 `
 
-export const ListWithQuery = compose(
-  withT,
-  graphql(query, {
-    options: ({ ssr }) => ({
-      ssr,
-    }),
-    props: ({ data }) => {
-      return {
-        loading: data.loading,
-        error: data.error,
-        totalCount: data.statements && data.statements.totalCount,
-        statements: data.statements && data.statements.nodes,
-        hasMore: data.statements && data.statements.pageInfo.hasNextPage,
-        loadMore() {
-          return data.fetchMore({
-            updateQuery: (
-              previousResult,
-              { fetchMoreResult, queryVariables },
-            ) => {
-              const nodes = [
-                ...previousResult.statements.nodes,
-                ...fetchMoreResult.statements.nodes,
-              ]
-              return {
-                ...fetchMoreResult,
-                statements: {
-                  ...fetchMoreResult.statements,
-                  nodes: nodes.filter(
-                    ({ id }, index, all) =>
-                      index === all.findIndex((node) => node.id === id),
-                  ),
-                },
-              }
-            },
-            variables: {
-              after: data.statements.pageInfo.endCursor,
-            },
-          })
-        },
-      }
+const ListWithQuery = (props) => {
+  const {
+    seed = null,
+    first = 50,
+    search,
+    focus,
+    membershipAfter,
+    ssr,
+    singleRow,
+  } = props
+  const { data, loading, error, fetchMore } = useQuery(query, {
+    ssr: ssr,
+    variables: {
+      seed: seed,
+      search: search,
+      focus: focus,
+      first: first,
+      membershipAfter: membershipAfter,
     },
-  }),
-)(List)
+  })
 
-ListWithQuery.defaultProps = {
-  seed: null,
-  first: 50,
+  const loadMore = () => {
+    return fetchMore({
+      updateQuery: (previousResult, { fetchMoreResult, queryVariables }) => {
+        const nodes = [
+          ...previousResult.statements.nodes,
+          ...fetchMoreResult.statements.nodes,
+        ]
+        return {
+          ...fetchMoreResult,
+          statements: {
+            ...fetchMoreResult.statements,
+            nodes: nodes.filter(
+              ({ id }, index, all) =>
+                index === all.findIndex((node) => node.id === id),
+            ),
+          },
+        }
+      },
+      variables: {
+        after: data?.statements?.pageInfo?.endCursor,
+      },
+    })
+  }
+
+  const listProps = {
+    ...props,
+    loading,
+    error,
+    totalCount: data?.statements?.totalCount,
+    statements: data?.statements?.nodes,
+    hasMore: data?.statements?.pageInfo?.hasNextPage,
+    singleRow,
+    loadMore,
+  }
+
+  return <List {...listProps} />
 }
 
 export const generateSeed = () => Math.random() * 2 - 1
 
-class Container extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-  render() {
-    const { t, id, isPage, router, serverContext } = this.props
-    const { query } = this.state
+const TestimonialList = ({
+  id = null,
+  isPage = false,
+  serverContext = null,
+  seed: initialSeed = null,
+  singleRow = false,
+  minColumns = 1,
+  first = 50,
+  share = false,
+}) => {
+  const { t } = useTranslation()
+  const router = useRouter()
 
-    const seed = this.state.seed || this.props.seed
+  const [searchQuery, setSearchQuery] = useState()
+  const [seed, setSeed] = useState(initialSeed)
+  const [clearedFocus, setClearedFocus] = useState()
 
-    return (
-      <div>
-        <Field
-          label={t('testimonial/search/label')}
-          name='search'
-          value={query}
-          autoComplete='off'
-          onChange={(_, value) => {
-            this.setState(() => ({
-              query: value,
-            }))
-          }}
-        />
-        <div {...styles.options}>
-          <A
-            style={{ float: 'right', cursor: 'pointer' }}
-            onClick={() => {
-              this.setState(() => ({
-                seed: generateSeed(),
-              }))
-              if (isPage && (id || this.state.clearedFocus)) {
-                this.setState(
-                  {
-                    clearedFocus: undefined,
-                  },
-                  () => {
-                    router.replace('/community', undefined, {
-                      shallow: router.pathname === '/community',
-                    })
-                  },
-                )
-              }
-            }}
-          >
-            {t('testimonial/search/seed')}
-          </A>
-        </div>
-        <br style={{ clear: 'left' }} />
-        <ListWithQuery
-          isPage={isPage}
-          focus={query ? undefined : id || this.state.clearedFocus}
-          onSelect={() => {
-            if (!id) {
-              return
+  return (
+    <div>
+      <Field
+        label={t('testimonial/search/label')}
+        name='search'
+        value={searchQuery}
+        autoComplete='off'
+        onChange={(_, value) => {
+          setSearchQuery(value)
+        }}
+      />
+      <div {...styles.options}>
+        <A
+          style={{ float: 'right', cursor: 'pointer' }}
+          onClick={() => {
+            setSeed(generateSeed())
+            if (isPage && (id || clearedFocus)) {
+              setClearedFocus(undefined)
+              router.replace('/community', undefined, {
+                shallow: router.pathname === '/community',
+              })
             }
-            this.setState(
-              {
-                // keep it around for the query
-                clearedFocus: id,
-              },
-              () => {
-                router.push('/community', undefined, {
-                  shallow: router.pathname === '/community',
-                })
-              },
-            )
           }}
-          search={query}
-          seed={seed}
-          serverContext={serverContext}
-        />
+        >
+          {t('testimonial/search/seed')}
+        </A>
       </div>
-    )
-  }
+      <br style={{ clear: 'left' }} />
+      <ListWithQuery
+        isPage={isPage}
+        focus={searchQuery ? undefined : id || clearedFocus}
+        onSelect={() => {
+          if (!id) {
+            return
+          }
+          setClearedFocus(id)
+          router.push('/community', undefined, {
+            shallow: router.pathname === '/community',
+          })
+        }}
+        search={searchQuery}
+        seed={seed}
+        serverContext={serverContext}
+        t={t}
+        singleRow={singleRow}
+        minColumns={minColumns}
+        first={first}
+        share={share}
+      />
+    </div>
+  )
 }
 
-export default compose(withT, withRouter)(Container)
+export default TestimonialList

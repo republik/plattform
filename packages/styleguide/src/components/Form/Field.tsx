@@ -1,24 +1,24 @@
-import React, {
-  useState,
-  useRef,
-  useMemo,
-  MutableRefObject,
-  ReactNode,
-} from 'react'
+import { IconClose } from '@republik/icons'
 import { css, merge, simulate } from 'glamor'
+import React, {
+  MutableRefObject,
+  ReactElement,
+  ReactNode,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { fontStyles } from '../../theme/fonts'
 import { mUp } from '../../theme/mediaQueries'
+import { plainButtonRule } from '../Button'
 import { useColorContext } from '../Colors/ColorContext'
-import PropTypes from 'prop-types'
 import {
+  BORDER_WIDTH,
+  FIELD_HEIGHT,
+  LINE_HEIGHT,
   X_PADDING,
   Y_PADDING,
-  BORDER_WIDTH,
-  LINE_HEIGHT,
-  FIELD_HEIGHT,
 } from './constants'
-import { plainButtonRule } from '../Button'
-import { IconClose } from '@republik/icons'
 
 const styles = {
   container: css({
@@ -152,7 +152,7 @@ const Field = React.forwardRef<
     showClearIcon?: boolean
     icon?: ReactNode
     simulate?: string
-    renderInput?: React.FC<Record<string, unknown>>
+    renderInput?: (props: any) => ReactElement
   }
 >(
   (
@@ -172,7 +172,7 @@ const Field = React.forwardRef<
       disabled,
       required,
       value,
-      renderInput,
+      renderInput = (props) => <input {...props} />,
     },
     forwardRef,
   ) => {
@@ -182,7 +182,7 @@ const Field = React.forwardRef<
     const [isValidating, setIsValidating] = useState(false)
     const [isDirty, setIsDirty] = useState(false)
     const [localStateValue, setLocalStateValue] = useState('')
-    const ownRef = useRef<HTMLInputElement>()
+    const ownRef = useRef<HTMLInputElement>(null)
     const [colorScheme] = useColorContext()
 
     const inputRef = (forwardRef ||
@@ -327,16 +327,5 @@ const Field = React.forwardRef<
     )
   },
 )
-
-Field.propTypes = {
-  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  renderInput: PropTypes.func.isRequired,
-  icon: PropTypes.node,
-  disabled: PropTypes.bool,
-}
-
-Field.defaultProps = {
-  renderInput: (props) => <input {...props} />,
-}
 
 export default Field

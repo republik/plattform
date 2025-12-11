@@ -11,7 +11,6 @@ import {
   Interaction,
   Loader,
   NarrowContainer,
-  useHeaderHeight,
 } from '@project-r/styleguide'
 
 import { QUESTIONNAIRE_ONLY_SUBMISSIONS_QUERY } from '../graphql'
@@ -120,19 +119,18 @@ const AnswerGridOverview = ({ slug, question, valueLength, hint }) => {
 
 export const QaBlock = ({ slug, questions, bgColor, valueLength, hint }) => {
   const router = useRouter()
-  const [headerHeight] = useHeaderHeight()
   const { query } = router
 
   const hasTextAnswer = questions.some(
     (q) => q.__typename === 'QuestionTypeText',
   )
 
-  const questionRef = useRef()
+  const questionRef = useRef(null)
   useEffect(() => {
     if (query?.focus === questions[0].id) {
       scrollIntoView(questionRef.current, {
         time: 0,
-        align: { topOffset: headerHeight, top: 0 },
+        align: { top: 0 },
       })
     }
   }, [])

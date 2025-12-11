@@ -1,0 +1,136 @@
+query MyBelongings {
+  me {
+    id
+    hasDormantMembership
+    memberships {
+      id
+      accessGranted
+      claimerName
+      voucherCode
+      createdAt
+      sequenceNumber
+      renew
+      active
+      overdue
+      autoPay
+      autoPayIsMutable
+      canProlong
+      user {
+        id
+      }
+      pledge {
+        id
+        package {
+          name
+          group
+          company {
+            id
+            name
+          }
+        }
+        options {
+          price
+          reward {
+            ... on MembershipType {
+              name
+            }
+          }
+        }
+      }
+      periods {
+        beginDate
+        endDate
+      }
+      type {
+        name
+      }
+    }
+    magazineSubscriptions {
+      id
+      type
+      company
+      status
+    }
+    activeMagazineSubscription {
+      id
+      type
+      company
+      currentPeriodEnd
+      cancelAt
+      canceledAt
+      endedAt
+      status
+      paymentMethod
+      renewsAtPrice
+    }
+    accessGrants {
+      endAt
+      campaign {
+        id
+        title
+        description
+      }
+    }
+    pledges {
+      id
+      package {
+        name
+        group
+        company {
+          id
+          name
+        }
+      }
+      options {
+        templateId
+        reward {
+          ... on MembershipType {
+            name
+            interval
+          }
+          ... on Goodie {
+            name
+          }
+        }
+        minAmount
+        maxAmount
+        amount
+        periods
+        price
+        accessGranted
+        membership {
+          id
+          user {
+            id
+            name
+          }
+          sequenceNumber
+        }
+        additionalPeriods {
+          endDate
+        }
+      }
+      status
+      total
+      donation
+      payments {
+        method
+        total
+        status
+        paymentslipUrl
+        createdAt
+      }
+      memberships {
+        id
+        claimerName
+        voucherCode
+        createdAt
+        sequenceNumber
+        type {
+          name
+        }
+      }
+      createdAt
+    }
+  }
+}

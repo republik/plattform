@@ -1,0 +1,57 @@
+query Questionnaire($slug: String!) {
+  questionnaire(slug: $slug) {
+    id
+    beginDate
+    endDate
+    userHasSubmitted
+    userSubmitDate
+    resubmitAnswers
+    revokeSubmissions
+    userIsEligible
+    questions {
+      ... on QuestionInterface {
+        id
+        order
+        text
+        explanation
+        private
+        metadata
+        userAnswer {
+          id
+          payload
+        }
+      }
+      ... on QuestionTypeText {
+        maxLength
+      }
+      ... on QuestionTypeChoice {
+        cardinality
+        options {
+          label
+          value
+          category
+          requireAddress
+        }
+      }
+      ... on QuestionTypeImageChoice {
+        options {
+          label
+          value
+          category
+          requireAddress
+          imageUrl
+        }
+      }
+      ... on QuestionTypeRange {
+        kind
+        ticks {
+          label
+          value
+        }
+      }
+      ... on QuestionTypeDocument {
+        template
+      }
+    }
+  }
+}

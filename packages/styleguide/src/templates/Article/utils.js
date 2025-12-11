@@ -102,7 +102,6 @@ const variableRule = {
   },
 }
 
-
 const nestedInlines = [
   {
     matchMdast: matchType('sub'),
@@ -151,14 +150,23 @@ export const styles = {
     color: 'inherit',
     textDecoration: 'none',
   }),
+  linkOverlay: css({
+    ':before': {
+      content: '""',
+      position: 'absolute',
+      inset: 0,
+      zIndex: 0,
+      // uncomment below to debug overlay
+      // border: '3px dashed hotpink',
+      // backgroundColor: 'hotpink',
+      // mixBlendMode: 'multiply',
+    },
+  }),
   anchor: css({
     display: 'block',
     visibility: 'hidden',
     position: 'relative',
-    top: -65, // HEADER_HEIGHT_MOBILE + 20
-    [mUp]: {
-      top: -80, // HEADER_HEIGHT + 20
-    },
+    top: -80, // HEADER_HEIGHT + 20
   }),
 }
 

@@ -26,19 +26,17 @@ import { RawStatus } from '../components/Crowdfunding/Status'
 
 import withT from '../lib/withT'
 
-import { ListWithQuery as TestimonialList } from '../components/Testimonial/List'
+import TestimonialList from '../components/Testimonial/List'
 
-import Link from 'next/link'
 import { createGetStaticProps } from '../lib/apollo/helpers'
 import withMe from '../lib/apollo/withMe'
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import { swissTime } from '../lib/utils/format'
 import withInNativeApp from '../lib/withInNativeApp'
 
-import { CAMPAIGN_META_ARTICLE_URL } from '@app/app/(campaign)/constants'
 import { getCMSClientBase } from '@app/lib/apollo/cms-client-base'
 import { CockpitDocument } from '#graphql/cms/__generated__/gql/graphql'
-import { StructuredText } from 'react-datocms'
+import { StructuredText } from 'react-datocms/structured-text'
 
 // Revalidate every 5 minutes
 const COCKPIT_PAGE_SSG_REVALIDATE = 60 * 5
@@ -219,7 +217,7 @@ const Page = ({
         error={data.error}
         style={{ minHeight: `calc(90vh)` }}
         render={() => {
-          if (!data.membershipStats) {
+          if (!data.membershipStats?.evolution?.buckets?.length) {
             return 'Die Cockpit-Daten konnten nicht geladen werden :('
           }
 
@@ -435,6 +433,7 @@ const Page = ({
                       '2022-01',
                       '2023-01',
                       '2024-01',
+                      '2025-01',
                     ],
                     height: 300,
                     domain: [0, 35000],

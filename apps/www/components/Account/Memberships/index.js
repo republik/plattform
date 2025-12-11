@@ -1,31 +1,24 @@
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
-import compose from 'lodash/flowRight'
+import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { graphql } from '@apollo/client/react/hoc'
 
-import withT from '../../../lib/withT'
+import { useColorContext } from '@project-r/styleguide'
+import compose from 'lodash/flowRight'
+import { useRouter } from 'next/router'
+
+import { useEffect } from 'react'
 import { useInNativeApp } from '../../../lib/withInNativeApp'
 
-import Loader from '../../Loader'
-import UserGuidance from '../UserGuidance'
+import withT from '../../../lib/withT'
 
-import AccessGrants from '../../Access/Grants'
 import withMembership from '../../Auth/withMembership'
-import Box from '../../Frame/Box'
 
-import { Interaction, useColorContext } from '@project-r/styleguide'
+import Loader from '../../Loader'
+import AccountSection from '../AccountSection'
 
-import belongingsQuery from '../belongingsQuery'
 import MembershipList from '../Memberships/List'
 import PaymentSources from '../PaymentSources'
-import AccountSection from '../AccountSection'
-import SubscriptionItem from './SubscriptionItem'
-
-const { P } = Interaction
-
-const AccountBox = ({ children }) => {
-  return <Box style={{ padding: 14, marginBottom: 20 }}>{children}</Box>
-}
+import UserGuidance from '../UserGuidance'
+import { ManageMagazineSubscription } from './ManageMagazineSubscription'
 
 const Memberships = ({
   loading,
@@ -37,8 +30,8 @@ const Memberships = ({
   activeMagazineSubscription,
 }) => {
   const { query } = useRouter()
-  const { inNativeIOSApp } = useInNativeApp()
   const [colorScheme] = useColorContext()
+  const { inNativeApp } = useInNativeApp()
 
   useEffect(() => {
     if (window.location.hash.substr(1).length > 0) {
@@ -57,11 +50,6 @@ const Memberships = ({
       render={() => {
         return (
           <>
-            {hasAccessGrants && !hasActiveMemberships && (
-              <AccountBox>
-                <AccessGrants />
-              </AccountBox>
-            )}
             {!hasAccessGrants && !hasActiveMemberships && (
               <div
                 {...colorScheme.set('backgroundColor', 'hover')}
@@ -73,41 +61,29 @@ const Memberships = ({
                 <UserGuidance />
               </div>
             )}
-            {inNativeIOSApp && (
-              <AccountBox>
-                <P>{t('account/ios/box')}</P>
-              </AccountBox>
-            )}
 
-            {/* Account Section, hide in iOS */}
-            {!inNativeIOSApp && (
+            {activeMagazineSubscription ? (
+              // If user has active magazine subscription, we need to show the info.
+              <ManageMagazineSubscription
+                subscription={activeMagazineSubscription}
+              />
+            ) : hasActiveMemberships ? (
+              // If user has *other* active memberships
               <>
-                {activeMagazineSubscription ? (
-                  // If user has active magazine subscription, we need to show the info.
-                  <AccountSection id='abos' title={t('memberships/title/1')}>
-                    <SubscriptionItem
-                      subscription={activeMagazineSubscription}
+                <MembershipList highlightId={query.id} />
+                {paymentMethodCompany && (
+                  <AccountSection
+                    id='payment'
+                    title={t('memberships/title/payment')}
+                  >
+                    <PaymentSources
+                      company={paymentMethodCompany}
+                      query={query}
                     />
                   </AccountSection>
-                ) : hasActiveMemberships ? (
-                  // If user has *other* active memberships
-                  <>
-                    <MembershipList highlightId={query.id} />
-                    {paymentMethodCompany && (
-                      <AccountSection
-                        id='payment'
-                        title={t('memberships/title/payment')}
-                      >
-                        <PaymentSources
-                          company={paymentMethodCompany}
-                          query={query}
-                        />
-                      </AccountSection>
-                    )}
-                  </>
-                ) : null}
+                )}
               </>
-            )}
+            ) : null}
           </>
         )
       }}
@@ -118,7 +94,7 @@ const Memberships = ({
 export default compose(
   withT,
   withMembership,
-  graphql(belongingsQuery, {
+  graphql(MyBelongingsDocument, {
     props: ({ data }) => {
       const isReady = !data.loading && !data.error && data.me
 

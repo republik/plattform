@@ -48,7 +48,7 @@ module.exports = async (_, args, context) => {
   }
   if (waitUntil) {
     throw new Error(
-      t('api/comment/tooEarly', {
+      t('api/comment/suspended', {
         timeahead: timeahead(
           t,
           (waitUntil.getTime() - new Date().getTime()) / 1000,
