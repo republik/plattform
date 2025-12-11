@@ -88,12 +88,6 @@ const getFilter = (key, value, not) => {
 const filterReducer = (schemas) => (filters) => {
   let impliedType
   const typeFilter = filters.find((f) => f.key === 'type')
-
-  console.log({
-    impliedType,
-    typeFilter,
-  })
-
   const filter = filters.reduce((filterObj, { key, value, not }) => {
     debug('filterReducer', { key, value, not })
 
