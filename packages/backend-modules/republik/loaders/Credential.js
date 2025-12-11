@@ -12,8 +12,8 @@ module.exports = (context) => ({
         FROM credentials c
         LEFT JOIN "discussionPreferences" dp
         ON c.id = dp."credentialId"
-        WHERE 
-          ARRAY[c."userId"] && :userIds
+        WHERE
+          c."userId" = ANY(:userIds)
         GROUP BY 1
     `,
         { userIds },

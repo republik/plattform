@@ -73,10 +73,8 @@ const NotificationOptions = ({
       error={error}
       ErrorContainer={ErrorContainer}
       render={() => {
-        const {
-          discussionNotificationChannels,
-          defaultDiscussionNotificationOption,
-        } = meDiscussionNotification
+        const { notificationChannels, defaultDiscussionNotificationOption } =
+          meDiscussionNotification
         // the 'ALL' option is confusing as a default as it will show
         // on discussions but only gets truly 'activated' when you take
         // part in it, yielding a different behaviour from setting an
@@ -98,14 +96,14 @@ const NotificationOptions = ({
 
         return (
           <Fragment>
-            <P>{t('account/discussionNotificationChannels/intro')}</P>
+            <P>{t('account/notificationChannels/intro')}</P>
             {DISCUSSION_NOTIFICATION_CHANNELS.map((channel) => (
               <p {...styles.checkboxItem} key={channel}>
                 <Checkbox
                   disabled={!!mutatingChannel}
-                  checked={discussionNotificationChannels.indexOf(channel) > -1}
+                  checked={notificationChannels.indexOf(channel) > -1}
                   onChange={(_, checked) => {
-                    let channels = [].concat(discussionNotificationChannels)
+                    let channels = [].concat(notificationChannels)
                     if (checked) {
                       channels.push(channel)
                     } else {
@@ -113,7 +111,7 @@ const NotificationOptions = ({
                     }
                     setMutatingChannel(channel)
                     updateNotificationSettings({
-                      discussionNotificationChannels: channels,
+                      notificationChannels: channels,
                     }).then(
                       () => {
                         setServerError()
@@ -126,7 +124,7 @@ const NotificationOptions = ({
                     )
                   }}
                 >
-                  {t(`account/discussionNotificationChannels/${channel}/label`)}
+                  {t(`account/notificationChannels/${channel}/label`)}
                   {mutatingChannel === channel && (
                     <span {...styles.spinner}>
                       <InlineSpinner size={24} />
@@ -135,9 +133,7 @@ const NotificationOptions = ({
                 </Checkbox>
               </p>
             ))}
-            <P style={{ marginTop: 10 }}>
-              {t('account/notificationOptions/dialog')}
-            </P>
+
             <div {...styles.dropdown}>
               <Dropdown
                 label={t('account/defaultDiscussionNotificationOption/label')}
@@ -179,7 +175,7 @@ const query = gql`
   query myDiscussionNotificationSettings {
     meDiscussionNotification: me {
       id
-      discussionNotificationChannels
+      notificationChannels
       defaultDiscussionNotificationOption
     }
   }

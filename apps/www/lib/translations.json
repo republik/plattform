@@ -26,11 +26,15 @@
     },
     {
       "key": "nav/donate",
-      "value": "Spenden"
+      "value": "Freiwilliger Beitrag"
     },
     {
       "key": "nav/share",
       "value": "Republik teilen"
+    },
+    {
+      "key": "nav/onboarding",
+      "value": "Einrichtungsassistent"
     },
     {
       "key": "nav/invite-friends",
@@ -189,15 +193,15 @@
       "value": "Konto ansehen"
     },
     {
-      "key": "withMembership/ios/unauthorized/title",
+      "key": "withMembership/native/unauthorized/title",
       "value": "Verlegerbereich"
     },
     {
-      "key": "withMembership/ios/unauthorized/noMembership",
+      "key": "withMembership/native/unauthorized/noMembership",
       "value": "Sie haben keine aktive Mitgliedschaft."
     },
     {
-      "key": "withMembership/ios/unauthorized/signIn",
+      "key": "withMembership/native/unauthorized/signIn",
       "value": "Die Nutzung der App erfordert eine Mitgliedschaft oder ein Abo bei der Republik. "
     },
     {
@@ -341,10 +345,6 @@
       "value": "Mitglied werden"
     },
     {
-      "key": "marketing/preview/button/label",
-      "value": "Probe lesen"
-    },
-    {
       "key": "marketing/trial/button/label",
       "value": "Probe lesen"
     },
@@ -392,93 +392,18 @@
       "key": "marketing/signup/lead",
       "value": "Bitte tragen Sie unten Ihre E-Mail-Adresse ein. Im Gegenzug laden wir Sie auf einen Streifzug durch die Republik ein. Gerne schicken wir Ihnen zudem einen aktuellen Newsletter, dann sehen Sie einen Tag lang, worüber wir berichten. "
     },
-    {
-      "key": "marketing/page/new",
-      "value": "Täglich ein bis drei neue Beiträge. Im Web, in der App oder als Newsletter."
-    },
+
     {
       "key": "marketing/signup/button/label",
       "value": "Anmelden"
     },
     {
-      "key": "marketing/page/lead/subtitle",
-      "value": "Das digitale Magazin für Politik, Wirtschaft, Gesellschaft und Kultur."
-    },
-    {
-      "key": "marketing/page/lead/info",
-      "value": "Zum Lesen und Hören."
-    },
-    {
-      "key": "marketing/page/reasons/1/title",
-      "value": "Werbefrei"
-    },
-    {
-      "key": "marketing/page/reasons/1/text",
-      "value": "Die Republik ist komplett werbefrei. So können wir uns auf unseren einzigen Kunden konzentrieren: Sie."
-    },
-    {
-      "key": "marketing/page/reasons/2/title",
-      "value": "Transparent"
-    },
-    {
-      "key": "marketing/page/reasons/2/text",
-      "value": "Wir legen alles offen: unsere Finanzen, Arbeitsweisen, Fehler, Löhne – weil wir überzeugt sind, dass Transparenz wichtig ist."
-    },
-    {
-      "key": "marketing/page/reasons/3/title",
-      "value": "Leserinnen­finanziert"
-    },
-    {
-      "key": "marketing/page/reasons/3/text",
-      "value": "Die Republik wird finanziert durch ihre rund 27’000 Abonnentinnen. Wir gehören niemandem – aber jedem unserer Mitglieder ein bisschen."
-    },
-    {
-      "key": "marketing/page/vision/headline",
-      "value": "Ohne Journalismus keine Demokratie. Und ohne Demokratie keine Freiheit."
-    },
-    {
-      "key": "marketing/page/vision/paragraph1",
-      "value": "Bei der Republik und beim Journalismus überhaupt geht es nicht nur um den individuellen Nutzen. Es geht auch darum, eine wichtige Funktion in einer Demokratie auszuüben: den Mächtigen auf die Finger zu schauen, unabhängig zu recherchieren und Missstände aufzudecken. "
-    },
-    {
-      "key": "marketing/page/vision/paragraph2",
-      "value": "Unser Ziel: Journalismus, der die Köpfe klarer, das Handeln mutiger, die Entscheidungen klüger macht. Und der das Gemeinsame stärkt: die Freiheit, den Rechtsstaat, die Demokratie."
-    },
-    {
-      "key": "marketing/page/carpet/text",
-      "value": "Täglich ein bis drei neue Beiträge. Im Web, in der App oder als Newsletter. "
-    },
-    {
-      "key": "marketing/page/carpet/button",
+      "key": "cta/button",
       "value": "Jetzt abonnieren"
     },
     {
-      "key": "marketing/page/carpet/buttonsmall",
+      "key": "cta/buttonsmall",
       "value": "Abo"
-    },
-    {
-      "key": "marketing/page/team/title",
-      "value": "Wir sind Ihr Team"
-    },
-    {
-      "key": "marketing/page/team/lead",
-      "value": "Unsere Crew besteht aus kompetenten Profis. Den besten, die wir finden konnten. Uns eint die Leidenschaft für guten Journalismus."
-    },
-    {
-      "key": "marketing/page/community/title",
-      "value": "Wir stehen mit Ihnen im Dialog"
-    },
-    {
-      "key": "marketing/page/community/lead",
-      "value": "Die Republik wird mit Ihrer Stimme vielfältiger, interessanter und reflektierter."
-    },
-    {
-      "key": "marketing/page/sections/title",
-      "value": "Wir sind nützlich"
-    },
-    {
-      "key": "marketing/page/sections/lead",
-      "value": "Die Republik ist eine Dienstleistung für interessierte Menschen in einer komplexen Welt. Wir recherchieren, fragen nach, ordnen ein und decken auf. Und liefern Ihnen Fakten und Zusammenhänge als Grundlage für Ihre eigenen Überlegungen und Entscheidungen."
     },
     {
       "key": "marketing/readAloud/title",
@@ -491,10 +416,6 @@
     {
       "key": "marketing/readAloud/lead2",
       "value": "Dürfen wir Sie benachrichtigen, sobald es losgeht?"
-    },
-    {
-      "key": "marketing/page/vision/more",
-      "value": "Unsere Vision"
     },
     {
       "key": "marketing/offers/students",
@@ -965,16 +886,16 @@
       "value": "Ihre Standardeinstellung für den Dialog:"
     },
     {
-      "key": "account/discussionNotificationChannels/EMAIL/label",
+      "key": "account/notificationChannels/EMAIL/label",
       "value": "E-Mail"
     },
     {
-      "key": "account/discussionNotificationChannels/APP/label",
+      "key": "account/notificationChannels/APP/label",
       "value": "App"
     },
     {
       "key": "account/defaultDiscussionNotificationOption/label",
-      "value": "Benachrichtigungen über Beiträge"
+      "value": "Standardeinstellung für Dialog-Benachrichtigungen"
     },
     {
       "key": "account/progress/title",
@@ -1157,7 +1078,7 @@
       "value": "Anmelden und Republik verschenken"
     },
     {
-      "key": "Account/Access/Campaigns/becomeMamber/title",
+      "key": "Account/Access/Campaigns/becomeMember/title",
       "value": "Mitglied werden und Republik verschenken"
     },
     {
@@ -1777,6 +1698,10 @@
       "value": "Verschenken"
     },
     {
+      "key": "footer/me/donate",
+      "value": "Freiwilliger Beitrag"
+    },
+    {
       "key": "footer/me/signOut",
       "value": "Abmelden"
     },
@@ -1870,15 +1795,15 @@
     },
     {
       "key": "components/Discussion/Notification/MY_CHILDREN/label",
-      "value": "Meine und von abonnierten Profilen"
+      "value": "Antworten auf meine Beiträge"
     },
     {
       "key": "components/Discussion/Notification/ALL/label",
-      "value": "Alle neuen"
+      "value": "Alle neuen Beiträge"
     },
     {
       "key": "components/Discussion/Notification/NONE/label",
-      "value": "Keine"
+      "value": "Keine Benachrichtigungen"
     },
     {
       "key": "components/Discussion/Notification/settings",
@@ -2026,7 +1951,7 @@
     },
     {
       "key": "styleguide/CommentActions/unpublish",
-      "value": "Beitrag zurückziehen"
+      "value": "zurückziehen"
     },
     {
       "key": "styleguide/CommentActions/unpublish/confirm",
@@ -2038,7 +1963,7 @@
     },
     {
       "key": "styleguide/CommentActions/edit",
-      "value": "Beitrag bearbeiten"
+      "value": "bearbeiten"
     },
     {
       "key": "styleguide/CommentActions/upvote",
@@ -2094,7 +2019,7 @@
     },
     {
       "key": "styleguide/CommentActions/feature",
-      "value": "Beitrag hervorheben"
+      "value": "hervorheben"
     },
     {
       "key": "styleguide/CommentActions/featured",
@@ -2102,11 +2027,11 @@
     },
     {
       "key": "styleguide/Collapsable/expand",
-      "value": "Alles lesen"
+      "value": "Mehr lesen"
     },
     {
       "key": "styleguide/Collapsable/collapse",
-      "value": "Weniger"
+      "value": "Weniger lesen"
     },
     {
       "key": "styleguide/Collapsable/table/expand",
@@ -2137,12 +2062,8 @@
       "value": "Antwort in {link}"
     },
     {
-      "key": "styleguide/CommentTreeLoadMore/label/1",
-      "value": "Ein weiterer Beitrag"
-    },
-    {
-      "key": "styleguide/CommentTreeLoadMore/label/other",
-      "value": "{count} weitere Beiträge"
+      "key": "styleguide/CommentTreeLoadMore/label",
+      "value": "Weitere Beiträge anzeigen"
     },
     {
       "key": "styleguide/CommentTreeCollapse/label",
@@ -4364,7 +4285,7 @@
       "value": "Diese Visualisierung kann, aufgrund eines technischen Fehlers, nicht dargestellt werden."
     },
     {
-      "key": "plattformUnauthorizedZoneText/ios",
+      "key": "plattformUnauthorizedZoneText/native",
       "value": "Inhalt nur für Mitglieder. <a href=\"/probelesen\">Probelesen?</a>"
     },
     {
@@ -4674,6 +4595,10 @@
     {
       "key": "memberships/manage/autoPay/disable",
       "value": "Automatische Abbuchung deaktivieren"
+    },
+    {
+      "key": "memberships/manage/native/info",
+      "value": "Zum Verwalten besuchen Sie unsere Webseite."
     },
     {
       "key": "option/PROLONG/additionalPeriods/endDate",
@@ -5280,6 +5205,10 @@
       "value": "Abonnement kündigen"
     },
     {
+      "key": "prolongNecessary/native/info",
+      "value": "besuchen Sie unsere Webseite."
+    },
+    {
       "key": "crowdfunding/status/time/ended/PROLONG",
       "value": "Ein detaillierter Überblick folgt Ende Monat."
     },
@@ -5384,6 +5313,10 @@
       "value": "Wiedergabeliste"
     },
     {
+      "key": "AudioPlayer/noMemberText",
+      "value": "Die Wiedergabeliste ist nur für Mitglieder verfügbar."
+    },
+    {
       "key": "AudioPlayer/Queue/Add",
       "value": "Zur Wiedergabeliste hinzufügen"
     },
@@ -5394,6 +5327,10 @@
     {
       "key": "AudioPlayer/Queue/ActiveHeading",
       "value": "Aktueller Beitrag"
+    },
+    {
+      "key": "AudioPlayer/Queue/NoActiveHeading",
+      "value": "Audioplayer"
     },
     {
       "key": "AudioPlayer/Queue/Remove",
@@ -6780,10 +6717,6 @@
       "value": "Lektüre für das Wochenende samt Rückblick auf die Geschichten der vergangenen Woche."
     },
     {
-      "key": "marketing/page/sections/title/weekly",
-      "value": "Republik am Wochenende"
-    },
-    {
       "key": "account/newsletterSubscriptions/WEEKLY/label",
       "value": "Republik am Wochenende"
     },
@@ -7357,7 +7290,7 @@
     },
     {
       "key": "Notifications/settings/discussion",
-      "value": "Debattenbeiträge"
+      "value": "Dialog-Benachrichtigungen"
     },
     {
       "key": "Notifications/settings/newsletter",
@@ -7368,8 +7301,8 @@
       "value": "Ihrem Konto"
     },
     {
-      "key": "account/discussionNotificationChannels/intro",
-      "value": "Ich möchte Debattenbenachrichtigungen auf folgendem Weg erhalten:"
+      "key": "account/notificationChannels/intro",
+      "value": "Ich möchte Benachrichtigungen zu neuen Beiträgen im Magazin und im Dialog auf folgendem Weg erhalten:"
     },
     {
       "key": "Onboarding/Sections/Subscriptions/heading",
@@ -7445,7 +7378,7 @@
     },
     {
       "key": "FeatureCommentOverlay/title",
-      "value": "Beitrag hervorheben"
+      "value": "hervorheben"
     },
     {
       "key": "FeatureCommentOverlay/DEFAULT/add",
@@ -7688,28 +7621,40 @@
       "value": "Sie haben kein gültiges Abonnement"
     },
     {
-      "key": "magazineSubscription/canceled/YEARLY_SUBSCRIPTION",
-      "value": "Ihre Mitgliedschaft läuft am {cancelAt} aus."
-    },
-    {
-      "key": "magazineSubscription/canceled/BENEFACTOR_SUBSCRIPTION",
-      "value": "Ihre Gönner-Mitgliedschaft läuft am {cancelAt} aus."
-    },
-    {
-      "key": "magazineSubscription/canceled/MONTHLY_SUBSCRIPTION",
-      "value": "Ihr Abo läuft am {cancelAt} aus."
+      "key": "magazineSubscription/canceled",
+      "value": "Wurde am {canceledAt} gekündigt und läuft am {cancelAt} aus."
     },
     {
       "key": "magazineSubscription/cancel/YEARLY_SUBSCRIPTION",
-      "value": "Mitgliedschaft kündigen"
+      "value": "Jahresmitgliedschaft kündigen"
     },
     {
       "key": "magazineSubscription/cancel/BENEFACTOR_SUBSCRIPTION",
-      "value": "Mitgliedschaft kündigen"
+      "value": "Gönner-Mitgliedschaft kündigen"
     },
     {
       "key": "magazineSubscription/cancel/MONTHLY_SUBSCRIPTION",
-      "value": "Abo kündigen"
+      "value": "Monats-Abo kündigen"
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/title",
+      "value": "Wechsel von {from} auf {to}"
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/description/YEARLY_SUBSCRIPTION",
+      "value": "Wechselt am {startAt} zu einer Jahresmitgliedschaft für CHF {amount}."
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/description/BENEFACTOR_SUBSCRIPTION",
+      "value": "Wechselt am {startAt} zu einer Gönner-Mitgliedschaft für CHF {amount}."
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/description/MONTHLY_SUBSCRIPTION",
+      "value": "Wechselt am {startAt} zu einem Monats-Abo für CHF {amount}."
+    },
+    {
+      "key": "magazineSubscriptionUpgrade/cancel",
+      "value": "Wechsel rückgängig machen"
     },
     {
       "key": "magazineSubscription/donation/update",
@@ -7944,16 +7889,20 @@
       "value": "Abonnieren und mitreden"
     },
     {
-      "key": "paynotes/ios/caption",
+      "key": "paynotes/native/caption",
       "value": "Unterstützen Sie unabhängigen Journalismus."
     },
     {
-      "key": "paynotes/ios/cta",
+      "key": "paynotes/native/cta",
       "value": "Alle Angebote auf {link}"
     },
     {
       "key": "paynotes/ios/text",
       "value": "Alle Angebote auf shop.republik.ch"
+    },
+    {
+      "key": "paynotes/android/text",
+      "value": "Alle Angebote finden Sie im Republik Online-Shop."
     },
     {
       "key": "paynotes/welcomeBanner",

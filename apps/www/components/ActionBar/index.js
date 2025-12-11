@@ -186,6 +186,10 @@ const ActionBar = ({
     (meta && meta.podcast) ||
     (meta && meta.audioSource && meta.format && meta.format.meta.podcast)
 
+  const isNewsletterFormat = !!(
+    meta?.newsletter || meta?.format?.meta?.newsletter
+  )
+
   const isSeriesOverview = meta && meta.series?.overview?.id === document?.id
   const hasPdf = meta && meta.template === 'article' && !isSeriesOverview
   const notBookmarkable =
@@ -368,7 +372,9 @@ const ActionBar = ({
           meta.format ||
           meta.contributors?.some((c) => c.user)) &&
         // and signed in or loading me
-        (me || meLoading),
+        (me || meLoading) &&
+        // and not a newsletter
+        !isNewsletterFormat,
     },
     // The subscription menu is available for all users with an active-membership.
     {

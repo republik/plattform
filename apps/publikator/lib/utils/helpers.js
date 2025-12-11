@@ -52,7 +52,7 @@ export const generateAuthorsLine = (me) => ({
     {
       type: 'link',
       title: null,
-      url: me ? `/~${me.id})` : '',
+      url: me ? `/~${me.id}` : '',
       children: [
         {
           type: 'text',

@@ -4,6 +4,7 @@ import {
   CancellationCategoriesDocument,
   CancellationCategoryType,
   CancelMagazineSubscriptionDocument,
+  CancelUpgradeMagazineSubscriptionDocument,
   ReactivateMagazineSubscriptionDocument,
   UserMagazineSubscriptionsQuery,
 } from '#graphql/republik-api/__generated__/gql/graphql'
@@ -38,11 +39,12 @@ export function MagazineSubscriptionActions({
   const [reactivateSubscription] = useMutation(
     ReactivateMagazineSubscriptionDocument,
   )
+  const [cancelUpgrade] = useMutation(CancelUpgradeMagazineSubscriptionDocument)
 
   const { t } = useTranslation()
 
   const [confirmAction, setConfirmAction] = useState<
-    'cancel' | 'reactivate' | undefined
+    'cancel' | 'reactivate' | 'cancelUpgrade' | undefined
   >()
 
   const [submissionError, setSubssionError] = useState<Error | undefined>()
@@ -112,8 +114,39 @@ export function MagazineSubscriptionActions({
               })
           }}
         ></ConfirmOverlay>
+      ) : confirmAction === 'cancelUpgrade' ? (
+        <ConfirmOverlay
+          title={`Wechsel auf ${t(
+            `account/MagazineSubscription/type/${subscription.upgrade?.subscriptionType}`,
+          )} abbrechen`}
+          buttonLabel='Wechsel abbrechen'
+          error={submissionError}
+          close={reset}
+          action={() => {
+            cancelUpgrade({
+              variables: {
+                subscriptionId: subscription.id,
+              },
+            })
+              .then(reset)
+              .catch((err) => {
+                setSubssionError(err)
+              })
+          }}
+        >
+          Das {t(`account/MagazineSubscription/type/${subscription.type}`)} wird
+          wieder reaktiviert, wenn es nicht vor dem Wechsel schon gekündigt war.
+        </ConfirmOverlay>
       ) : null}
-      {subscription.canceledAt ? (
+      {subscription.upgrade ? (
+        <TextButton
+          onClick={() => {
+            setConfirmAction('cancelUpgrade')
+          }}
+        >
+          Wechsel abbrechen
+        </TextButton>
+      ) : subscription.canceledAt ? (
         !subscription.endedAt && (
           <TextButton
             onClick={() => {
@@ -180,7 +213,13 @@ function ConfirmOverlay({
             action(new FormData(e.currentTarget))
           }}
         >
-          {children}
+          <div
+            {...css({
+              marginBlock: '1rem',
+            })}
+          >
+            {children}
+          </div>
 
           <Button primary type='submit'>
             {buttonLabel}

@@ -14,7 +14,6 @@ import AudioPlayerTitle from './ui/AudioPlayerTitle'
 import AudioCover from '../AudioPlayer/ui/AudioCover'
 import AudioError from './ui/AudioError'
 import { IconClose, IconExpandLess, IconPause, IconPlay } from '@republik/icons'
-import { useMe } from 'lib/context/MeContext'
 
 export const MINI_AUDIO_PLAYER_HEIGHT = 68
 
@@ -89,7 +88,6 @@ const MiniAudioPlayer = ({
   hasError,
 }: MiniAudioPlayerProps) => {
   const isDesktop = useMediaQuery(mediaQueries.mUp)
-  const { isMember } = useMe()
 
   if (!activeItem) {
     handleClose()
@@ -139,15 +137,13 @@ const MiniAudioPlayer = ({
               <Time currentTime={currentTime} duration={duration} />
             </div>
             <div {...styles.buttonWrapper}>
-              {isMember && (
-                <IconButton
-                  Icon={IconExpandLess}
-                  size={32}
-                  fillColorName='text'
-                  title={t(`styleguide/AudioPlayer/expand`)}
-                  onClick={handleExpand}
-                />
-              )}
+              <IconButton
+                Icon={IconExpandLess}
+                size={32}
+                fillColorName='text'
+                title={t(`styleguide/AudioPlayer/expand`)}
+                onClick={handleExpand}
+              />
               <IconButton
                 Icon={IconClose}
                 size={24}

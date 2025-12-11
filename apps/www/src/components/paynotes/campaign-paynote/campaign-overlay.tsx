@@ -18,7 +18,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Fragment, useEffect, useState } from 'react'
 import useResizeObserver from 'use-resize-observer'
-import IosCTA from '../ios-cta'
+import NativeCta from '../native-cta'
 
 const ARTICLE_SCROLL_THRESHOLD = 0.15 // how much of page has scrolled
 
@@ -29,14 +29,14 @@ function MiniPaynoteMessage({
   message: string
   onClick: () => void
 }) {
-  const { isIOSApp } = usePlatformInformation()
+  const { isNativeApp } = usePlatformInformation()
   const { t } = useTranslation()
 
-  if (isIOSApp) {
+  if (isNativeApp) {
     return (
       <div>
-        <span>{t('paynotes/ios/caption')}</span>
-        <IosCTA />
+        <span>{t('paynotes/native/caption')}</span>
+        <NativeCta />
       </div>
     )
   }

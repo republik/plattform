@@ -33,7 +33,7 @@ const query = gql`
       ]
       filter: { feed: true }
       sort: { key: publishedAt, direction: DESC }
-      first: 30
+      first: 20
       after: $cursor
     ) {
       totalCount

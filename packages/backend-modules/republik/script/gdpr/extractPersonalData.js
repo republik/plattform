@@ -148,7 +148,7 @@ Promise.props({ pgdb: PgDb.connect(), elastic: Elasticsearch.connect() })
             'phonenumberNote',
             'previewsSentAt',
             'defaultDiscussionNotificationOption',
-            'discussionNotificationChannels',
+            'notificationChannels',
             'preferredFirstFactor',
             'disclosures',
             'referralCode',

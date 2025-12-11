@@ -1,36 +1,35 @@
-import { createRef, Component, Fragment } from 'react'
-import compose from 'lodash/flowRight'
-import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import { withRouter } from 'next/router'
-import { css } from 'glamor'
+import { Query } from '@apollo/client/react/components'
 
 import {
-  mediaQueries,
-  fontStyles,
-  Center,
-  Interaction,
   A,
   Button,
+  Center,
+  fontStyles,
+  Interaction,
   Loader,
+  mediaQueries,
   RawHtml,
 } from '@project-r/styleguide'
+import { css } from 'glamor'
+import compose from 'lodash/flowRight'
+import Link from 'next/link'
+import { withRouter } from 'next/router'
+import { Component, createRef, Fragment } from 'react'
+import { scrollIt } from '../../lib/utils/scroll'
+import withT from '../../lib/withT'
+import { HEADER_HEIGHT } from '../constants'
+import Frame from '../Frame'
+import { SECTION_SPACE } from './Section'
+import AppLogin, { fragments as fragmentsAppLogin } from './Sections/AppLogin'
 import Newsletter, {
   fragments as fragmentsNewsletter,
 } from './Sections/Newsletter'
-import AppLogin, { fragments as fragmentsAppLogin } from './Sections/AppLogin'
-import Usability from './Sections/Usability'
 import Profile, { fragments as fragmentsProfile } from './Sections/Profile'
-import Frame from '../Frame'
-import { scrollIt } from '../../lib/utils/scroll'
-import { HEADER_HEIGHT } from '../constants'
-import { SECTION_SPACE } from './Section'
-import withT from '../../lib/withT'
 import Subscriptions, {
   fragments as fragmentsSubscriptions,
 } from './Sections/Subscriptions'
-import withInNativeApp from '../../lib/withInNativeApp'
-import Link from 'next/link'
+import Usability from './Sections/Usability'
 
 const { P } = Interaction
 
@@ -251,7 +250,6 @@ class Page extends Component {
         query: { context, package: packageName },
       },
       t,
-      inNativeIOSApp,
     } = this.props
     const { expandedSection } = this.state
 
@@ -419,7 +417,7 @@ class Page extends Component {
                           </A>
                         </Link>
                       ),
-                      linkFaq: !inNativeIOSApp && (
+                      linkFaq: (
                         <Link key='route' href='/faq' passHref legacyBehavior>
                           <A>
                             {t.first([
@@ -478,4 +476,4 @@ const OnboardingHeader = ({ children }) => {
   return <div {...styles.title}>{children}</div>
 }
 
-export default compose(withT, withRouter, withInNativeApp)(Page)
+export default compose(withT, withRouter)(Page)

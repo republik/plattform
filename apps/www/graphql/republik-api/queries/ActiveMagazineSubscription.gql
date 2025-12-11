@@ -15,6 +15,18 @@ query ActiveMagazineSubscription {
       donation {
         amount
       }
+
+      upgrade {
+        id
+        scheduledStart
+        subscriptionType
+        billingDetails {
+          total
+          donation {
+            amount
+          }
+        }
+      }
     }
   }
 }

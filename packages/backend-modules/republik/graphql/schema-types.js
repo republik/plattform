@@ -69,6 +69,8 @@ extend type User {
 
   newsletterSettings: NewsletterSettings!
   prolitterisId: String
+
+  onboarded: DateTime
 }
 
 type NewsletterSettings {

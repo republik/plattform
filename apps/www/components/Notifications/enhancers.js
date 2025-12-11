@@ -61,7 +61,7 @@ export const notificationsQuery = gql`
   query getNotifications($after: String) {
     me {
       id
-      discussionNotificationChannels
+      notificationChannels
     }
     notifications(first: 10, after: $after) {
       totalCount
@@ -146,7 +146,7 @@ export const notificationsQuery = gql`
 
 export const possibleSubscriptions = gql`
   query getSubscriptions {
-    sections: documents(template: "section") {
+    sections: documents(template: "section", feed: true) {
       nodes {
         id
         repoId
@@ -180,6 +180,7 @@ export const myUserSubscriptions = gql`
             ... on User {
               id
               slug
+              portrait
               documents {
                 totalCount
               }

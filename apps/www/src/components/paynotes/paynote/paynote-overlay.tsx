@@ -20,7 +20,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { StructuredText } from 'react-datocms/structured-text'
 import useResizeObserver from 'use-resize-observer'
 import { getMeteringData } from '../article-metering'
-import IosCTA from '../ios-cta'
+import NativeCta from '../native-cta'
 import PaynoteAuthor from './paynote-author'
 import { usePaynoteVariants } from './use-paynotes'
 
@@ -35,14 +35,14 @@ function MiniPaynoteMessage({
   message: string
   onClick: () => void
 }) {
-  const { isIOSApp } = usePlatformInformation()
+  const { isNativeApp } = usePlatformInformation()
   const { t } = useTranslation()
 
-  if (isIOSApp) {
+  if (isNativeApp) {
     return (
       <div>
-        <span>{t('paynotes/ios/caption')}</span>
-        <IosCTA />
+        <span>{t('paynotes/native/caption')}</span>
+        <NativeCta />
       </div>
     )
   }
