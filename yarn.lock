@@ -3436,22 +3436,22 @@
     "@emnapi/runtime" "^1.4.3"
     "@tybys/wasm-util" "^0.10.0"
 
-"@next/bundle-analyzer@15.3.6":
-  version "15.3.6"
-  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-15.3.6.tgz#a80a7acbdc2c5b44b29df2f1ea320d3cfaffd784"
-  integrity sha512-uhgUWqk6JlvuX6Y7weC5uOQ0i4Mm5Vyq7zBP6bOwlPV8mxr8Z+UCrYIQDNCwQdZGKK5XzJpUNvUjmXTbLoWJYg==
+"@next/bundle-analyzer@15.3.7":
+  version "15.3.7"
+  resolved "https://registry.yarnpkg.com/@next/bundle-analyzer/-/bundle-analyzer-15.3.7.tgz#be82503a45ed6df611d61b288127b1d0681dba36"
+  integrity sha512-babqhmtGeARk7+XNA/r4raFSDk2uggD9AAOnhJAHCi+FWbXcoeJsmTHcV8QhMcpJacY+xNaA64hfCtYyuy21yQ==
   dependencies:
     webpack-bundle-analyzer "4.10.1"
 
-"@next/env@15.3.6":
-  version "15.3.6"
-  resolved "https://registry.yarnpkg.com/@next/env/-/env-15.3.6.tgz#30d4be8f9a68b59cfcd3bc6d8ca8434bc02a3e6b"
-  integrity sha512-/cK+QPcfRbDZxmI/uckT4lu9pHCfRIPBLqy88MhE+7Vg5hKrEYc333Ae76dn/cw2FBP2bR/GoK/4DU+U7by/Nw==
+"@next/env@15.3.7":
+  version "15.3.7"
+  resolved "https://registry.yarnpkg.com/@next/env/-/env-15.3.7.tgz#8998e6806883a17ac4dab7b033546201ccae5bb0"
+  integrity sha512-1fzTVgpRoCwd0zo0/Xs5dt0vM4Ir7/uoeC3FjmuluNALQlllIPQ1zCOL6GMV8QTwK92e9htZTwqaRedzudD7Bg==
 
-"@next/eslint-plugin-next@15.3.6":
-  version "15.3.6"
-  resolved "https://registry.yarnpkg.com/@next/eslint-plugin-next/-/eslint-plugin-next-15.3.6.tgz#d46b7cb1f98b2ee06b46e8e8d4b36301d493e93d"
-  integrity sha512-gvt7l1r4N0zHCXyXYj39ObrTBr8TxyA/306Z/kjseYk6hiefu3zexRKRVjVmQqUpxe9oxyfYWMZFtsBYPgr1oA==
+"@next/eslint-plugin-next@15.3.7":
+  version "15.3.7"
+  resolved "https://registry.yarnpkg.com/@next/eslint-plugin-next/-/eslint-plugin-next-15.3.7.tgz#8c44a7b230c9b6076e04ea85a351b80efe03c1e7"
+  integrity sha512-DmX7Jd08Y88/vhEjufBNgG+NwHCAqIZ/MNNUkx3wDCToRnICwqPT6f4Sjek9WSujq6rw21BJJFMu4i1cKfMm5w==
   dependencies:
     fast-glob "3.3.1"
 
@@ -13540,12 +13540,12 @@ escodegen@^2.0.0:
   optionalDependencies:
     source-map "~0.6.1"
 
-eslint-config-next@15.3.6:
-  version "15.3.6"
-  resolved "https://registry.yarnpkg.com/eslint-config-next/-/eslint-config-next-15.3.6.tgz#a3a02969b61cda6b2818d0935c892861555b0e75"
-  integrity sha512-UylZINx8zjSgKHFn60h6Pjwgb40xkJ1ip9jfJ5t7D9/TJNnBIMoH5MtDWdEMatby3jiUB3twvk5cZgtOGOh9Qg==
+eslint-config-next@15.3.7:
+  version "15.3.7"
+  resolved "https://registry.yarnpkg.com/eslint-config-next/-/eslint-config-next-15.3.7.tgz#d8f260feecd35ea4b5e2a91ad94ec4a07329d55d"
+  integrity sha512-/4Bj88Hcnwuw4bfPNgw/3LbwiSNKMjMneN3XH+Syf1kdbIGMG0nBmipecvBtcPre8EfEUp3v9WX1mu3tWNbemw==
   dependencies:
-    "@next/eslint-plugin-next" "15.3.6"
+    "@next/eslint-plugin-next" "15.3.7"
     "@rushstack/eslint-patch" "^1.10.3"
     "@typescript-eslint/eslint-plugin" "^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0"
     "@typescript-eslint/parser" "^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0"
@@ -20088,12 +20088,12 @@ next-themes@^0.4.0, next-themes@^0.4.6:
   resolved "https://registry.yarnpkg.com/next-themes/-/next-themes-0.4.6.tgz#8d7e92d03b8fea6582892a50a928c9b23502e8b6"
   integrity sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==
 
-next@15.3.6:
-  version "15.3.6"
-  resolved "https://registry.yarnpkg.com/next/-/next-15.3.6.tgz#8e4ac567d58b98b5ade166b923bd98173f731209"
-  integrity sha512-oI6D1zbbsh6JzzZFDCSHnnx6Qpvd1fSkVJu/5d8uluqnxzuoqtodVZjYvNovooznUq8udSAiKp7MbwlfZ8Gm6w==
+next@15.3.7:
+  version "15.3.7"
+  resolved "https://registry.yarnpkg.com/next/-/next-15.3.7.tgz#5f0a7b7320573baca89e98eb5139249677e3d8fd"
+  integrity sha512-7dzkjUftt7PAtspscMY+n7dx6Gg+/si89AwwwEMiupSd5bozpQNEbkYczzcIVaYloohZUTsGImq96FGrh0rFUw==
   dependencies:
-    "@next/env" "15.3.6"
+    "@next/env" "15.3.7"
     "@swc/counter" "0.1.3"
     "@swc/helpers" "0.5.15"
     busboy "1.6.0"
@@ -22338,10 +22338,10 @@ react-docgen@^7.0.1:
     resolve "^1.22.1"
     strip-indent "^4.0.0"
 
-react-dom@^19.2.1:
-  version "19.2.1"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.2.1.tgz#ce3527560bda4f997e47d10dab754825b3061f59"
-  integrity sha512-ibrK8llX2a4eOskq1mXKu/TGZj9qzomO+sNfO98M6d9zIPOEhlBkMkBUBLd1vgS0gQsLDBzA+8jJBVXDnfHmJg==
+react-dom@^19.2.2:
+  version "19.2.2"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.2.2.tgz#c62579e8949964e2f9d76d9f7b097be1462e15eb"
+  integrity sha512-fhyD2BLrew6qYf4NNtHff1rLXvzR25rq49p+FeqByOazc6TcSi2n8EYulo5C1PbH+1uBW++5S1SG7FcUU6mlDg==
   dependencies:
     scheduler "^0.27.0"
 
@@ -22511,10 +22511,10 @@ react-textarea-autosize@^7.1.2:
     "@babel/runtime" "^7.1.2"
     prop-types "^15.6.0"
 
-react@^19.1.0:
-  version "19.2.1"
-  resolved "https://registry.yarnpkg.com/react/-/react-19.2.1.tgz#8600fa205e58e2e807f6ef431c9f6492591a2700"
-  integrity sha512-DGrYcCWK7tvYMnWh79yrPHt+vdx9tY+1gPZa7nJQtO/p8bLTDaHp4dzwEhQB7pZ4Xe3ok4XKuEPrVuc+wlpkmw==
+react@^19.2.2:
+  version "19.2.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-19.2.2.tgz#d596d8be169aba32d99c7558cdc4f5aa9cff73f3"
+  integrity sha512-BdOGOY8OKRBcgoDkwqA8Q5XvOIhoNx/Sh6BnGJlet2Abt0X5BK0BDrqGyQgLhAVjD2nAg5f6o01u/OPUhG022Q==
 
 reactcss@^1.2.0:
   version "1.2.3"
