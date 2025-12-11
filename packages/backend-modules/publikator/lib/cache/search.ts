@@ -6,22 +6,28 @@ const utils = require('@orbiting/backend-modules-search/lib/utils')
 
 import { getPhases } from '../../lib/phases'
 
-const getSort = (args: any) => {
+type OrderFieldKey = 'CREATED_AT' | 'NAME' | 'PUSHED_AT' | 'UPDATED_AT'
+
+// see https://developer.github.com/v4/enum/repositoryorderfield/
+const OrderFields: Record<OrderFieldKey, string> = {
+  CREATED_AT: 'createdAt',
+  NAME: 'name.keyword',
+  PUSHED_AT: 'commit.createdAt',
+  UPDATED_AT: 'updatedAt',
+  // 'STARGAZERS' is not implemented. Keeping in sync is hard.
+}
+
+type SortorderArgs = {
+  orderBy?: { field: OrderFieldKey; direction?: 'asc' | 'desc' }
+}
+
+const getSort = (args: SortorderArgs) => {
   // Default sorting
   if (!args.orderBy) {
     return
   }
 
-  // see https://developer.github.com/v4/enum/repositoryorderfield/
-  const map: any = {
-    CREATED_AT: 'createdAt',
-    NAME: 'name.keyword',
-    PUSHED_AT: 'commit.createdAt',
-    UPDATED_AT: 'updatedAt',
-    // 'STARGAZERS' is not implemented. Keeping in sync is hard.
-  }
-
-  const field = map[args.orderBy.field]
+  const field = OrderFields[args.orderBy.field]
 
   if (!field) {
     throw new Error(
