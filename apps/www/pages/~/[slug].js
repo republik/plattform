@@ -23,7 +23,7 @@ export const getServerSideProps = createGetServerSideProps(
     if (slug === 'me') {
       return {
         redirect: {
-          destination: `/~${me.slug}`,
+          destination: me ? `/~${me.slug}` : '/',
           permanent: false,
         },
       }
