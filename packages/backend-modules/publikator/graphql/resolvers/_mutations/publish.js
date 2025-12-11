@@ -153,7 +153,6 @@ module.exports = async (_, args, context) => {
   )
 
   metaUrlResolver(
-    resolvedDoc.type,
     resolvedDoc.content.meta,
     _all,
     _users,

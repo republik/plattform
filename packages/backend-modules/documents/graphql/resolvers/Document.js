@@ -1,6 +1,5 @@
 const { getMeta } = require('../../lib/meta')
 const {
-  processContentHashing,
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
@@ -53,8 +52,6 @@ module.exports = {
     // - alt check info.path for documents / document being the root
     //   https://gist.github.com/tpreusse/f79833a023706520da53647f9c61c7f6
     if (doc._all || doc._users) {
-      processContentHashing(doc.type, doc.content)
-
       contentUrlResolver(
         doc,
         doc._all,
@@ -145,9 +142,6 @@ module.exports = {
       children.some((v, i) => v.data.id === startCursor && i > firstIndex)
 
     if (doc._all) {
-      // add content hash before mutating children by resolving
-      processContentHashing(doc.type, { children: nodes })
-
       const idsFromNodes = await Promise.all(
         nodes.map(async (node) => {
           await Promise.all([

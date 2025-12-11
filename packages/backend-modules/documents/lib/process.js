@@ -47,21 +47,6 @@ const processRepoImageUrlsInMeta = async (mdast, fn) => {
   return Promise.all(fns.map((fn) => fn()))
 }
 
-const processContentHashing = (content) => {
-  content.children?.forEach((child) => {
-    if (
-      (child.identifier === 'TEASERGROUP' || child.identifier === 'TEASER') &&
-      child.data &&
-      !child.data.contentHash
-    ) {
-      child.data.contentHash = crypto
-        .createHash('sha256')
-        .update(JSON.stringify(child))
-        .digest('hex')
-    }
-  })
-}
-
 const processRepoImageUrlsInContent = async (content, fn) => {
   const fns = []
 
@@ -197,7 +182,6 @@ const processIfHasAccess = (mdast, user, apiKey) => {
 }
 
 module.exports = {
-  processContentHashing,
   processRepoImageUrlsInContent,
   processEmbedImageUrlsInContent,
   processRepoImageUrlsInMeta,
