@@ -35,6 +35,14 @@ enum CheckoutUIMode {
  EMBEDDED
 }
 
+enum OfferAvailability {
+  PURCHASABLE
+  UPGRADEABLE
+  UNAVAILABLE
+  UNAVAILABLE_CURRENT
+  UNAVAILABLE_UPGRADE_PENDING
+}
+
 type StripeCustomer {
   customerId: String!
   company: CompanyName!
@@ -57,7 +65,10 @@ type MagazineSubscription {
   canceledAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
+
+  upgrade: MagazineSubscriptionUpgrade
 }
+
 
 type DonationInfo {
   amount: Int!
@@ -77,10 +88,26 @@ type CustomerPortalSession {
 }
 
 type CheckoutSession {
+  orderId: ID!
   company: CompanyName!
   sessionId: String!
   clientSecret: String
+  status: CheckoutSessionStatus
   url: String
+  breakdown: CheckoutSessionBreakdown
+}
+
+enum CheckoutSessionStatus {
+  open
+  complete
+  expired
+}
+
+type CheckoutSessionBreakdown {
+  startDate: DateTime
+  total: Int!,
+  discount: Int!,
+  tax: Int!,
 }
 
 interface Offer {
@@ -96,6 +123,7 @@ interface Offer {
   requiresLogin: Boolean
   requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
+  availability: OfferAvailability!
 }
 
 type Donation {
@@ -121,6 +149,10 @@ type SubscriptionOffer implements Offer {
   requiresLogin: Boolean
   requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
+  availability: OfferAvailability!
+
+  # only available on subscription type
+  startDate: DateTime
 }
 
 type GiftOffer implements Offer {
@@ -136,6 +168,7 @@ type GiftOffer implements Offer {
   requiresLogin: Boolean
   requiresAddress: Boolean
   complimentaryItems: [ComplimentaryItem!]
+  availability: OfferAvailability!
 }
 
 type Price {
@@ -162,6 +195,7 @@ type Discount {
   duration: String!,
   durationInMonths: Int
   currency: String!
+  endDate: DateTime
 }
 
 type Product {
@@ -234,6 +268,27 @@ input CheckoutSessionOptions {
   uiMode: CheckoutUIMode
   metadata: JSON # String key value object
   returnURL: String
+}
+
+type MagazineSubscriptionUpgrade {
+  id: String!
+  userId: String!
+  subscriptionType: MagazineSubscriptionType
+  subscriptionId: String!
+  status: String!
+  company: CompanyName!
+  paymentMethod: String
+  scheduledStart: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  billingDetails: MagazineSubscriptionUpgradeBillingDetails!
+}
+
+type MagazineSubscriptionUpgradeBillingDetails {
+  total: Int
+  discount: Discount
+  donation: DonationInfo
+  billingDate: DateTime
 }
 
 `

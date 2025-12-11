@@ -1,31 +1,24 @@
 import { MyBelongingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
-import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 
-import withT from '../../../lib/withT'
-import { useInNativeApp, postMessage } from '../../../lib/withInNativeApp'
+import { useColorContext } from '@project-r/styleguide'
+import compose from 'lodash/flowRight'
+import { useRouter } from 'next/router'
 
-import Loader from '../../Loader'
-import UserGuidance from '../UserGuidance'
+import { useEffect } from 'react'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
+
+import withT from '../../../lib/withT'
 
 import withMembership from '../../Auth/withMembership'
-import Box from '../../Frame/Box'
 
-import { Interaction, useColorContext, A } from '@project-r/styleguide'
+import Loader from '../../Loader'
+import AccountSection from '../AccountSection'
 
 import MembershipList from '../Memberships/List'
 import PaymentSources from '../PaymentSources'
-import AccountSection from '../AccountSection'
+import UserGuidance from '../UserGuidance'
 import { ManageMagazineSubscription } from './ManageMagazineSubscription'
-
-const { P } = Interaction
-
-const AccountBox = ({ children }) => {
-  return <Box style={{ padding: 14, marginBottom: 20 }}>{children}</Box>
-}
 
 const Memberships = ({
   loading,
@@ -37,8 +30,8 @@ const Memberships = ({
   activeMagazineSubscription,
 }) => {
   const { query } = useRouter()
-  const { inNativeIOSApp, isMinimalNativeAppVersion } = useInNativeApp()
   const [colorScheme] = useColorContext()
+  const { inNativeApp } = useInNativeApp()
 
   useEffect(() => {
     if (window.location.hash.substr(1).length > 0) {
@@ -68,57 +61,29 @@ const Memberships = ({
                 <UserGuidance />
               </div>
             )}
-            {inNativeIOSApp && (
-              <AccountBox>
-                {isMinimalNativeAppVersion('2.3.0') ? (
-                  <P>
-                    Verwalten Sie Ihr Konto im Web.
-                    <br />
-                    <A
-                      href='#'
-                      onClick={(e) => {
-                        e.preventDefault()
-                        postMessage({
-                          type: 'external-link',
-                        })
-                      }}
-                    >
-                      shop.republik.ch
-                    </A>
-                  </P>
-                ) : (
-                  <P>{t('account/ios/box')}</P>
-                )}
-              </AccountBox>
-            )}
 
-            {/* Account Section, hide in iOS */}
-            {!inNativeIOSApp && (
+            {activeMagazineSubscription ? (
+              // If user has active magazine subscription, we need to show the info.
+              <ManageMagazineSubscription
+                subscription={activeMagazineSubscription}
+              />
+            ) : hasActiveMemberships ? (
+              // If user has *other* active memberships
               <>
-                {activeMagazineSubscription ? (
-                  // If user has active magazine subscription, we need to show the info.
-                  <ManageMagazineSubscription
-                    subscription={activeMagazineSubscription}
-                  />
-                ) : hasActiveMemberships ? (
-                  // If user has *other* active memberships
-                  <>
-                    <MembershipList highlightId={query.id} />
-                    {paymentMethodCompany && (
-                      <AccountSection
-                        id='payment'
-                        title={t('memberships/title/payment')}
-                      >
-                        <PaymentSources
-                          company={paymentMethodCompany}
-                          query={query}
-                        />
-                      </AccountSection>
-                    )}
-                  </>
-                ) : null}
+                <MembershipList highlightId={query.id} />
+                {paymentMethodCompany && (
+                  <AccountSection
+                    id='payment'
+                    title={t('memberships/title/payment')}
+                  >
+                    <PaymentSources
+                      company={paymentMethodCompany}
+                      query={query}
+                    />
+                  </AccountSection>
+                )}
               </>
-            )}
+            ) : null}
           </>
         )
       }}

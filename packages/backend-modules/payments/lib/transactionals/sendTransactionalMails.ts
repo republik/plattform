@@ -9,10 +9,10 @@ import {
   SubscriptionType,
 } from '../types'
 import type Stripe from 'stripe'
-import { getConfig } from '../config'
 import { PaymentService } from '../services/PaymentService'
+import { DONATION_PRODUCTS, SUBSCRIPTION_PRODUCTS } from '../constants'
 
-type MergeVariable = { name: string; content: string | boolean }
+export type MergeVariable = { name: string; content: string | boolean }
 
 type SendSetupSubscriptionMailArgs = {
   subscription: Subscription
@@ -20,32 +20,30 @@ type SendSetupSubscriptionMailArgs = {
   email: string
 }
 
-const CONFIG = getConfig()
-
-const SUBSCRIPTION_PRODUCTS = [
-  CONFIG.BENEFACTOR_SUBSCRIPTION_STRIPE_PRODUCT_ID,
-  CONFIG.YEARLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
-  CONFIG.MONTHLY_SUBSCRIPTION_STRIPE_PRODUCT_ID,
-]
-
-const DONATION_PRODUCTS = [CONFIG.PROJECT_R_DONATION_PRODUCT_ID]
-
 export async function sendSetupSubscriptionMail(
   { subscription, invoice, email }: SendSetupSubscriptionMailArgs,
   pgdb: PgDb,
 ) {
+  const paymentService = new PaymentService()
+
   const subscriptionItem: Stripe.InvoiceItem = invoice.items.find(
     (i: Stripe.InvoiceItem) => {
-      if (i.price?.product && typeof i.price.product === 'string') {
-        return SUBSCRIPTION_PRODUCTS.includes(i.price?.product)
+      if (
+        i.pricing?.price_details?.product &&
+        typeof i.pricing?.price_details?.product === 'string'
+      ) {
+        return SUBSCRIPTION_PRODUCTS.includes(i.pricing?.price_details?.product)
       }
       return false
     },
   )
   const donationItem: Stripe.InvoiceItem = invoice.items.find(
     (i: Stripe.InvoiceItem) => {
-      if (i.price?.product && typeof i.price.product === 'string') {
-        return DONATION_PRODUCTS.includes(i.price?.product)
+      if (
+        i.pricing?.price_details?.product &&
+        typeof i.pricing?.price_details?.product === 'string'
+      ) {
+        return DONATION_PRODUCTS.includes(i.pricing?.price_details?.product)
       }
       return false
     },
@@ -70,16 +68,23 @@ export async function sendSetupSubscriptionMail(
     })
   }
 
-  if (donationItem && donationItem.price?.recurring) {
-    globalMergeVars.push({
-      name: 'recurring_donation',
-      content: (donationItem.amount / 100).toFixed(2),
-    })
-  } else if (donationItem) {
-    globalMergeVars.push({
-      name: 'onetime_donation',
-      content: (donationItem.amount / 100).toFixed(2),
-    })
+  if (donationItem) {
+    const priceId = donationItem.pricing!.price_details!.price!
+    const dontationPrice = await paymentService.getPrice(
+      subscription.company,
+      priceId,
+    )
+    if (dontationPrice) {
+      globalMergeVars.push({
+        name: 'recurring_donation',
+        content: (donationItem.amount / 100).toFixed(2),
+      })
+    } else if (donationItem) {
+      globalMergeVars.push({
+        name: 'onetime_donation',
+        content: (donationItem.amount / 100).toFixed(2),
+      })
+    }
   }
 
   if (invoice.discounts.length > 0 && invoice.totalDiscountAmount) {
@@ -137,7 +142,7 @@ export async function sendSetupSubscriptionMail(
     )
   }
 
-  const nextInvoice = await new PaymentService().getInvoicePreview(
+  const nextInvoice = await new PaymentService().getSubscriptionInvoicePreview(
     subscription.company,
     subscription.externalId,
   )
@@ -447,7 +452,10 @@ export async function sendRenewalPaymentSuccessfulNoticeMail(
     },
   ]
 
-  const templateName = subscription.type === 'MONTHLY_SUBSCRIPTION' ? 'subscription_renewal_payment_successful_monthly' : 'subscription_renewal_payment_successful'
+  const templateName =
+    subscription.type === 'MONTHLY_SUBSCRIPTION'
+      ? 'subscription_renewal_payment_successful_monthly'
+      : 'subscription_renewal_payment_successful'
   const sendMailResult = await sendMailTemplate(
     {
       to: email,
@@ -467,7 +475,7 @@ type SendRenewalNoticeMailArgs = {
   email: string
   subscription: Subscription
   isDiscounted: boolean
-  withDonation: boolean,
+  withDonation: boolean
   amount: number
   paymentAttemptDate: Date
   paymentMethod: PaymentMethod
@@ -505,15 +513,15 @@ export async function sendRenewalNoticeMail(
     },
     {
       name: 'is_benefactor',
-      content: subscription.type === 'BENEFACTOR_SUBSCRIPTION'
+      content: subscription.type === 'BENEFACTOR_SUBSCRIPTION',
     },
     {
       name: 'is_discounted',
-      content: isDiscounted
+      content: isDiscounted,
     },
     {
       name: 'with_donation',
-      content: withDonation
+      content: withDonation,
     },
     {
       name: 'payment_attempt_date',
@@ -534,33 +542,6 @@ export async function sendRenewalNoticeMail(
   ]
 
   const templateName = 'subscription_renewal_notice_7_days'
-  const sendMailResult = await sendMailTemplate(
-    {
-      to: email,
-      fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS as string,
-      subject: t(`api/email/${templateName}/subject`),
-      templateName,
-      mergeLanguage: 'handlebars',
-      globalMergeVars,
-    },
-    { pgdb },
-  )
-
-  return sendMailResult
-}
-
-export async function sendGiftPurchaseMail(
-  { voucherCode, email }: { voucherCode: string; email: string },
-  pgdb: PgDb,
-) {
-  const globalMergeVars: MergeVariable[] = [
-    {
-      name: 'voucher_codes',
-      content: voucherCode,
-    },
-  ]
-
-  const templateName = 'payment_successful_gift_voucher'
   const sendMailResult = await sendMailTemplate(
     {
       to: email,

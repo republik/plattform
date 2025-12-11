@@ -1,9 +1,7 @@
-import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { ParsedUrlQuery } from 'querystring'
 import Front from '../components/Front'
 import { FRONT_QUERY } from '../components/Front/graphql/getFrontQuery.graphql'
-import { useMe } from '../lib/context/MeContext'
 import {
   FRONT_FEED_QUERY,
   getFrontFeedOptions,
@@ -15,16 +13,6 @@ const FRONT_PATH = '/'
 
 const FrontPage = () => {
   const router = useRouter()
-  const { meLoading, hasAccess } = useMe()
-
-  useEffect(() => {
-    if (meLoading) return
-    // reload to re-trigger the middleware to rewrite to the marketing-page
-    if (!hasAccess) {
-      window.location.reload()
-    }
-  }, [meLoading, hasAccess])
-
   return (
     <Front
       shouldAutoRefetch

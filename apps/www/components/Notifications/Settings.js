@@ -12,8 +12,7 @@ export default compose(
 )(({ t }) => {
   return (
     <>
-
-      <AccountSection title={t('Notifications/settings/discussion')}>
+      <AccountSection title={t('Notifications/settings/title')}>
         <NotificationOptions />
       </AccountSection>
 

@@ -132,8 +132,6 @@ export const SecondaryNav = ({
 const styles = {
   secondaryNav: css({
     zIndex: ZINDEX_HEADER,
-    left: 0,
-    right: 0,
     height: SUBHEADER_HEIGHT,
     display: 'flex',
     justifyContent: 'flex-start',

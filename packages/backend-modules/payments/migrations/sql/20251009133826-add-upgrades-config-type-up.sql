@@ -1,0 +1,3 @@
+-- migrate up here: CREATE TABLE...
+
+ALTER TABLE payments.subscription_upgrades ADD COLUMN upgrade_config JSONB;

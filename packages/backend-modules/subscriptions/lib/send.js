@@ -3,7 +3,7 @@ const { getSubscriptionsForUserAndObject } = require('./Subscriptions')
 const pushNotifications = require('@orbiting/backend-modules-push-notifications/lib/app')
 
 const getChannelsForUser = (user, subscription) => {
-  return user._raw.discussionNotificationChannels
+  return user._raw.notificationChannels
 }
 
 const send = async (args, context) => {

@@ -60,7 +60,7 @@ const repoFragment = `
 
 export const reposPerWeek = gql`
   query repoWeek($publishDateRange: RepoPublishDateRange) {
-    reposSearch(first: 100, publishDateRange: $publishDateRange) {
+    reposSearch(first: 50, publishDateRange: $publishDateRange) {
       nodes {
         ...CalendarRepoFragment
         currentPhase {

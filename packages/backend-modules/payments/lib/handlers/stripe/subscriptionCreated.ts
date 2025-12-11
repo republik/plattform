@@ -3,12 +3,20 @@ import { Company, PaymentWorkflow, SubscriptionArgs } from '../../types'
 import { getSubscriptionType, parseStripeDate } from './utils'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { ConfirmGiftSubscriptionTransactionalWorker } from '../../workers/ConfirmGiftSubscriptionTransactionalWorker'
-import { REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN } from '../../shop/gifts'
 import { SyncMailchimpSetupWorker } from '../../workers/SyncMailchimpSetupWorker'
 import { PaymentWebhookContext } from '../../workers/StripeWebhookWorker'
 import { SubscriptionService } from '../../services/SubscriptionService'
 import { CustomerInfoService } from '../../services/CustomerInfoService'
 import { PaymentService } from '../../services/PaymentService'
+import { ConfirmUpgradeSubscriptionTransactionalWorker } from '../../workers/ConfirmUpgradeSubscriptionTransactionalWorker'
+import {
+  REPUBLIK_PAYMENTS_INTERNAL_REF as INTERNAL_REF,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN as SUBSCRIPTION_ORIGIN,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN_TYPE_UPGRADE as ORIGIN_UPGRADE,
+  REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN_TYPE_GIFT as ORIGIN_GIFT,
+} from '../../constants'
+import { UpgradeService } from '../../services/UpgradeService'
+import { getAboPriceItem } from '../../shop/utils'
 
 class SubscriptionCreatedWorkflow
   implements PaymentWorkflow<Stripe.CustomerSubscriptionCreatedEvent>
@@ -17,6 +25,7 @@ class SubscriptionCreatedWorkflow
     protected readonly paymentService: PaymentService,
     protected readonly customerInfoService: CustomerInfoService,
     protected readonly subscriptionService: SubscriptionService,
+    protected readonly upgradeService: UpgradeService,
   ) {}
 
   async run(
@@ -59,7 +68,7 @@ class SubscriptionCreatedWorkflow
     await this.subscriptionService.setupSubscription(userId, args)
 
     const isGiftSubscription =
-      subscription.metadata[REPUBLIK_PAYMENTS_SUBSCRIPTION_ORIGIN] === 'GIFT'
+      subscription.metadata[SUBSCRIPTION_ORIGIN] === ORIGIN_GIFT
 
     const queue = Queue.getInstance()
 
@@ -82,6 +91,35 @@ class SubscriptionCreatedWorkflow
       ])
     }
 
+    const isUpgrade =
+      subscription.metadata[SUBSCRIPTION_ORIGIN] === ORIGIN_UPGRADE
+
+    if (isUpgrade) {
+      const upgradeId = subscription.metadata[INTERNAL_REF]
+
+      await Promise.all([
+        queue.send<ConfirmUpgradeSubscriptionTransactionalWorker>(
+          'payments:transactional:confirm:upgrade:subscription',
+          {
+            $version: 'v1',
+            eventSourceId: event.id,
+            userId: userId,
+            subscriptionId: subscription.id,
+            upgradeId: upgradeId,
+            company: company,
+          },
+        ),
+        queue.send<SyncMailchimpSetupWorker>('payments:mailchimp:sync:setup', {
+          $version: 'v1',
+          eventSourceId: event.id,
+          userId: userId,
+        }),
+        async () => {
+          return this.upgradeService.markUpgradeAsResolved(upgradeId)
+        },
+      ])
+    }
+
     return
   }
 }
@@ -95,6 +133,7 @@ export async function processSubscriptionCreated(
     new PaymentService(),
     new CustomerInfoService(ctx.pgdb),
     new SubscriptionService(ctx.pgdb),
+    new UpgradeService(ctx.pgdb, ctx.logger),
   ).run(company, event)
 }
 
@@ -102,12 +141,17 @@ export function mapSubscriptionArgs(
   company: Company,
   sub: Stripe.Subscription,
 ): SubscriptionArgs {
+  const abo = sub.items.data.find(getAboPriceItem)
+  if (!abo) {
+    throw new Error('subscription has no abo item')
+  }
+
   return {
     company: company,
-    type: getSubscriptionType(sub?.items.data[0].price.product as string),
+    type: getSubscriptionType(abo.price.product as string),
     externalId: sub.id,
-    currentPeriodStart: parseStripeDate(sub.current_period_start),
-    currentPeriodEnd: parseStripeDate(sub.current_period_end),
+    currentPeriodStart: parseStripeDate(abo.current_period_start),
+    currentPeriodEnd: parseStripeDate(abo.current_period_end),
     status: sub.status,
     metadata: sub.metadata,
   }

@@ -1,20 +1,20 @@
-import { useMemo } from 'react'
 import {
-  Loader,
   DiscussionCommentsWrapper,
+  Loader,
   pxToRem,
 } from '@project-r/styleguide'
+import FontSizeSync from 'components/FontSize/Sync'
+import { css } from 'glamor'
+import { useMemo } from 'react'
 import { useTranslation } from '../../lib/withT'
 import { useDiscussion } from './context/DiscussionContext'
-import DiscussionComposer from './DiscussionComposer/DiscussionComposer'
 import DiscussionCommentTreeRenderer from './DiscussionCommentTreeRenderer'
+import DiscussionComposer from './DiscussionComposer/DiscussionComposer'
 import DiscussionOptions from './DiscussionOptions/DiscussionOptions'
 import TagFilter from './DiscussionOptions/TagFilter'
-import makeCommentTree from './helpers/makeCommentTree'
 import createDiscussionForumPostingSchema from './helpers/createDiscussionForumPostingSchema'
-import { css } from 'glamor'
+import makeCommentTree from './helpers/makeCommentTree'
 import useDiscussionFocusHelper from './hooks/useDiscussionFocusHelper'
-import FontSizeSync from 'components/FontSize/Sync'
 
 const styles = {
   commentsWrapper: css({
@@ -108,11 +108,7 @@ const Discussion = ({ documentMeta }: Props) => {
               tagMappings={documentMeta?.tagMappings}
               errorMessage={focusError?.message}
             >
-              <DiscussionCommentTreeRenderer
-                comments={comments.nodes}
-                discussion={discussion}
-                documentMeta={documentMeta}
-              />
+              <DiscussionCommentTreeRenderer comments={comments.nodes} />
             </DiscussionCommentsWrapper>
           </div>
         </>

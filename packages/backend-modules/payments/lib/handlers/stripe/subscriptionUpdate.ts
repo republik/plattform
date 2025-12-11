@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { Company, PaymentWorkflow } from '../../types'
+import { Company, PaymentWorkflow, Subscription } from '../../types'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { ConfirmCancelTransactionalWorker } from '../../workers/ConfirmCancelTransactionalWorker'
 import { SyncMailchimpUpdateWorker } from '../../workers/SyncMailchimpUpdateWorker'
@@ -12,6 +12,7 @@ import { CancellationService } from '../../services/CancellationService'
 import { PaymentService } from '../../services/PaymentService'
 import { SubscriptionService } from '../../services/SubscriptionService'
 import { CustomerInfoService } from '../../services/CustomerInfoService'
+import { getAboPriceItem } from '../../shop/utils'
 
 class SubscriptionUpdatedWorkflow
   implements PaymentWorkflow<Stripe.CustomerSubscriptionUpdatedEvent>
@@ -28,43 +29,50 @@ class SubscriptionUpdatedWorkflow
     company: Company,
     event: Stripe.CustomerSubscriptionUpdatedEvent,
   ): Promise<any> {
+    const externalSubscriptionId = event.data.object.id
     const cancelAt = event.data.object.cancel_at
     const canceledAt = event.data.object.canceled_at
 
     const appliedVouchers = event.data.object.discounts
     const previousVouchers = event.data.previous_attributes?.discounts
-    const discountCode = event.data.object.discount?.coupon?.id
+    const discountCode = event.data.object.discounts[0] as string
 
-    const sub = await this.subscriptionService.getSubscription({
+    const stripeSub = await this.paymentService.getSubscription(
+      company,
+      externalSubscriptionId,
+    )
+
+    const localSub = await this.subscriptionService.getSubscription({
       externalId: event.data.object.id,
     })
-    if (!sub) {
-      throw Error('Unknown subscription')
+    if (!localSub || !stripeSub) {
+      throw new Error('Unknown subscription')
     }
 
     const cancellationReason =
-      await this.cancellationService.getCancellationDetails(sub)
+      await this.cancellationService.getCancellationDetails(localSub)
+
+    const subItem = stripeSub.items.data.find(getAboPriceItem)
+    if (!subItem) {
+      throw new Error('Subscription does not contain an ABO item')
+    }
+
+    const hasPeriodChanged = this.hasPeriodChanged(stripeSub, localSub)
+    const previousCanceledAt = event.data.previous_attributes?.canceled_at
+    const revokedCancellationDate = parseStripeDate(previousCanceledAt)
+    const isCancellationRevoked = !cancelAt && !!revokedCancellationDate
 
     await this.subscriptionService.updateSubscription({
       company: company,
-      externalId: event.data.object.id,
-      currentPeriodStart: parseStripeDate(
-        event.data.object.current_period_start,
-      ),
-      currentPeriodEnd: parseStripeDate(event.data.object.current_period_end),
+      externalId: externalSubscriptionId,
+      currentPeriodStart: parseStripeDate(subItem.current_period_start),
+      currentPeriodEnd: parseStripeDate(subItem.current_period_end),
       status: event.data.object.status,
       metadata: event.data.object.metadata,
       cancelAt: parseStripeDate(cancelAt),
       canceledAt: parseStripeDate(canceledAt),
       cancelAtPeriodEnd: event.data.object.cancel_at_period_end,
     })
-
-    const hasPeriodChanged =
-      !!event.data.previous_attributes?.current_period_end
-
-    const previousCanceledAt = event.data.previous_attributes?.canceled_at
-    const revokedCancellationDate = parseStripeDate(previousCanceledAt)
-    const isCancellationRevoked = !cancelAt && !!revokedCancellationDate
 
     if (hasPeriodChanged) {
       const customerId = event.data.object.customer as string
@@ -190,6 +198,26 @@ class SubscriptionUpdatedWorkflow
         ),
       ])
     }
+  }
+
+  private hasPeriodChanged(
+    stripeSub: Stripe.Response<Stripe.Subscription>,
+    localSub: Subscription,
+  ) {
+    const newSubscriptionPeriodEnd =
+      stripeSub.items.data.find(getAboPriceItem)?.current_period_end
+
+    if (!newSubscriptionPeriodEnd) {
+      // unliky that this ever happens but typescript is type script
+      // we have to make it happy.
+      return true
+    }
+
+    // if the timestamps don't match the period changed and we return true
+    return (
+      parseStripeDate(newSubscriptionPeriodEnd).getTime() !==
+      localSub.currentPeriodEnd.getTime()
+    )
   }
 }
 

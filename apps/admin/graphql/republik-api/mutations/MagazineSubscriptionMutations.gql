@@ -18,6 +18,12 @@ mutation ReactivateMagazineSubscription($subscriptionId: ID!) {
   }
 }
 
+mutation CancelUpgradeMagazineSubscription($subscriptionId: ID!) {
+  cancelUpgradeMagazineSubscription(subscriptionId: $subscriptionId) {
+    id
+  }
+}
+
 mutation UpdateMagazineSubscriptionDonation(
   $subscriptionId: ID!
   $donationAmount: Int!

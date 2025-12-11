@@ -1,14 +1,14 @@
-import compose from 'lodash/flowRight'
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
-import Link from 'next/link'
 
-import Campaign from './Campaign'
+import { Button, Interaction } from '@project-r/styleguide'
+import compose from 'lodash/flowRight'
+import Link from 'next/link'
+import useInNativeApp from '../../../lib/withInNativeApp'
+import withT from '../../../lib/withT'
 import Loader from '../../Loader'
 
-import { Interaction, Button } from '@project-r/styleguide'
-import withT from '../../../lib/withT'
-import useInNativeApp from '../../../lib/withInNativeApp'
+import Campaign from './Campaign'
 
 const query = gql`
   query accessCampaigns {
@@ -41,44 +41,48 @@ const query = gql`
 `
 
 const Campaigns = ({ t, data, grantAccess, revokeAccess }) => {
-  const { inNativeIOSApp } = useInNativeApp()
-  return <>
-    <Loader
-      loading={data.loading}
-      error={data.error}
-      render={() => {
-        if (!data.me) {
-          return null
-        }
-        if (!data.me.accessCampaigns) {
-          return <>
-            <Interaction.P>
-              {t('Account/Access/Page/noCampaign')}
-            </Interaction.P>
-            {!inNativeIOSApp && (
-              <Link href='/angebote' passHref legacyBehavior>
-                <Button style={{ marginTop: 24, marginBottom: 24 }} primary>
-                  {t('Account/Access/Page/link')}
-                </Button>
-              </Link>
-            )}
-          </>;
-        }
-        return (
-          <>
-            {data.me.accessCampaigns.map((campaign, key) => (
-              <Campaign
-                key={`campaign-${key}`}
-                campaign={campaign}
-                grantAccess={grantAccess}
-                revokeAccess={revokeAccess}
-              />
-            ))}
-          </>
-        )
-      }}
-    />
-  </>;
+  const { inNativeApp } = useInNativeApp()
+  return (
+    <>
+      <Loader
+        loading={data.loading}
+        error={data.error}
+        render={() => {
+          if (!data.me) {
+            return null
+          }
+          if (!data.me.accessCampaigns) {
+            return (
+              <>
+                <Interaction.P>
+                  {t('Account/Access/Page/noCampaign')}
+                </Interaction.P>
+                {!inNativeApp && (
+                  <Link href='/angebote' passHref legacyBehavior>
+                    <Button style={{ marginTop: 24, marginBottom: 24 }} primary>
+                      {t('Account/Access/Page/link')}
+                    </Button>
+                  </Link>
+                )}
+              </>
+            )
+          }
+          return (
+            <>
+              {data.me.accessCampaigns.map((campaign, key) => (
+                <Campaign
+                  key={`campaign-${key}`}
+                  campaign={campaign}
+                  grantAccess={grantAccess}
+                  revokeAccess={revokeAccess}
+                />
+              ))}
+            </>
+          )
+        }}
+      />
+    </>
+  )
 }
 
 const grantMutation = gql`

@@ -59,6 +59,9 @@ type FindFunction<Key, Value> = (
   options?: { many?: boolean },
 ) => Value | Value[] | undefined
 
+/**
+ * @deprecated in favor of using `new Dataloader` directly.
+ */
 export default module.exports = function createDataLoader<
   Key extends KeyConstraint,
   Value extends ValueConstraint,

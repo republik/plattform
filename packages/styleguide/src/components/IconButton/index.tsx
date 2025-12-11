@@ -1,3 +1,4 @@
+import { css } from 'glamor'
 import React, {
   Attributes,
   ComponentType,
@@ -5,10 +6,9 @@ import React, {
   ReactNode,
   SVGProps,
 } from 'react'
-import { css } from 'glamor'
+import { fontStyles } from '../../theme/fonts'
 
 import { mUp } from '../../theme/mediaQueries'
-import { fontStyles } from '../../theme/fonts'
 import { useColorContext } from '../Colors/ColorContext'
 
 const ICON_SIZE = 24

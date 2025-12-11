@@ -1,18 +1,19 @@
-import { useState } from 'react'
-import PropTypes from 'prop-types'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
 
-import withT from '../../../lib/withT'
+import { A, colors, InlineSpinner } from '@project-r/styleguide'
+import compose from 'lodash/flowRight'
+import Link from 'next/link'
+import PropTypes from 'prop-types'
+import { useState } from 'react'
 import { errorToString } from '../../../lib/utils/errors'
 import { timeFormat } from '../../../lib/utils/format'
-import { Item as AccountItem, P } from '../Elements'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
+
+import withT from '../../../lib/withT'
 
 import TokenPackageLink from '../../Link/TokenPackage'
-
-import { InlineSpinner, colors, A } from '@project-r/styleguide'
-import Link from 'next/link'
+import { Item as AccountItem, P } from '../Elements'
 
 const dayFormat = timeFormat('%d. %B %Y')
 
@@ -25,9 +26,37 @@ const Actions = ({
   setAutoPay,
 }) => {
   const [{ updating, remoteError }, setState] = useState({})
+  const { inNativeApp } = useInNativeApp()
 
   if (updating) {
     return <InlineSpinner />
+  }
+
+  if (inNativeApp) {
+    return (
+      <>
+        <P>{t('memberships/manage/native/info')}</P>
+        {membership.active && !hasWaitingMemberships && membership.renew && (
+          <P>
+            <Link
+              href={{
+                pathname: '/abgang',
+                query: { membershipId: membership.id },
+              }}
+              passHref
+              legacyBehavior
+            >
+              <A>
+                {t.first([
+                  `memberships/${membership.type.name}/manage/cancel/link`,
+                  'memberships/manage/cancel/link',
+                ])}
+              </A>
+            </Link>
+          </P>
+        )}
+      </>
+    )
   }
 
   return (
@@ -268,16 +297,14 @@ const Manage = ({
     >
       {membership.active && !!latestPeriod && !overdue && (
         <P>
-          {membership.active &&
-            !membership.overdue &&
-            t.first(
-              [
-                `memberships/${membership.type.name}/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`,
-                `memberships/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`,
-              ],
-              { formattedEndDate },
-              '',
-            )}
+          {t.first(
+            [
+              `memberships/${membership.type.name}/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`,
+              `memberships/latestPeriod/renew/${membership.renew}/autoPay/${membership.autoPay}`,
+            ],
+            { formattedEndDate },
+            '',
+          )}
         </P>
       )}
       {membership.active && !!latestPeriod && overdue && (

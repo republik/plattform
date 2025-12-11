@@ -9,6 +9,7 @@ const uniq = require('lodash/uniq')
 const { ascending } = require('d3-array')
 const { parse, Source } = require('graphql')
 const schemaTypes = require('../graphql/schema-types')
+const { Roles } = require('@orbiting/backend-modules-auth')
 
 const EventObjectTypes = parse(new Source(schemaTypes))
   .definitions.find(
@@ -36,11 +37,12 @@ const buildObjectFindProps = ({ id, type }, t) => {
   }
 }
 
-const getUsersWithSubscriptions = (subscriptions = [], { loaders }) => {
-  return Promise.map(subscriptions, async (sub) => ({
+const getUsersWithSubscriptions = async (subscriptions = [], { loaders }) => {
+  const users = await Promise.map(subscriptions, async (sub) => ({
     ...(await loaders.User.byId.load(sub.userId)),
     __subscription: sub,
   }))
+  return users.filter((user) => Roles.userHasRole(user, 'member'))
 }
 
 const getIdForSubscription = ({ userId, objectId, type }) => {

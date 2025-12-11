@@ -827,39 +827,39 @@
       "value": "Debatten-Benachrichtigungen"
     },
     {
-      "key": "account/discussionNotificationChannels/intro",
+      "key": "account/notificationChannels/intro",
       "value": "Ich möchte Benachrichtungen auf folgendem Weg erhalten:"
     },
     {
-      "key": "account/discussionNotificationChannels/EMAIL/label",
+      "key": "account/notificationChannels/EMAIL/label",
       "value": "E-Mail"
     },
     {
-      "key": "account/discussionNotificationChannels/WEB/label",
+      "key": "account/notificationChannels/WEB/label",
       "value": "Browser (Beta)"
     },
     {
-      "key": "account/discussionNotificationChannels/WEB/hint/live",
+      "key": "account/notificationChannels/WEB/hint/live",
       "value": "Sie erhalten Browser-Benachrichtungen, während Sie eine Debattenseite in einem beliebigen Browserfenster offen haben."
     },
     {
-      "key": "account/discussionNotificationChannels/WEB/hint/unsupported",
+      "key": "account/notificationChannels/WEB/hint/unsupported",
       "value": "Ihr Browser unterstützt leider keine Benachrichtungen."
     },
     {
-      "key": "account/discussionNotificationChannels/WEB/hint/denied",
+      "key": "account/notificationChannels/WEB/hint/denied",
       "value": "Sie haben Benachrichtungen in Ihrem Browser geblockt. Bitte aktualisieren Sie Ihre Browsereinstellungen, so dass Benachrichtigungen für https://www.republik.ch erlaubt sind."
     },
     {
-      "key": "account/discussionNotificationChannels/WEB/hint/default",
+      "key": "account/notificationChannels/WEB/hint/default",
       "value": "Um auch wirklich Browser-Benachrichtungen zu erhalten, müssen Sie Ihrem Browser das erlauben:"
     },
     {
-      "key": "account/discussionNotificationChannels/WEB/enable",
+      "key": "account/notificationChannels/WEB/enable",
       "value": "Browser-Benachrichtungen erlauben"
     },
     {
-      "key": "account/discussionNotificationChannels/APP/label",
+      "key": "account/notificationChannels/APP/label",
       "value": "App"
     },
     {
@@ -1612,7 +1612,7 @@
     },
     {
       "key": "styleguide/CommentActions/unpublish",
-      "value": "Beitrag zurückziehen"
+      "value": "zurückziehen"
     },
     {
       "key": "styleguide/CommentActions/unpublish/confirm",
@@ -1675,12 +1675,8 @@
       "value": "Zum Beitrag"
     },
     {
-      "key": "styleguide/CommentTreeLoadMore/label/1",
-      "value": "Ein weiterer Beitrag"
-    },
-    {
-      "key": "styleguide/CommentTreeLoadMore/label/other",
-      "value": "{count} weitere Beiträge"
+      "key": "styleguide/CommentTreeLoadMore/label",
+      "value": "Weitere Beiträge anzeigen"
     },
     {
       "key": "styleguide/CommentTreeCollapse/label",
@@ -2850,7 +2846,6 @@
       "key": "events/labels/location",
       "value": "Wo"
     },
-
     {
       "key": "faq/pageTitle",
       "value": "Fragen – Republik"
@@ -4732,12 +4727,14 @@
       "key": "account/access/Events/details/show",
       "value": "Events anzeigen"
     },
-
     {
       "key": "account/MagazineSubscription/status/trialing",
       "value": "trialing"
     },
-    { "key": "account/MagazineSubscription/status/active", "value": "Aktiv" },
+    {
+      "key": "account/MagazineSubscription/status/active",
+      "value": "Aktiv"
+    },
     {
       "key": "account/MagazineSubscription/status/incomplete",
       "value": "Unvollständig"
@@ -4766,7 +4763,10 @@
       "key": "account/MagazineSubscription/status/overdue",
       "value": "Überfällig"
     },
-    { "key": "account/MagazineSubscription/status/ended", "value": "Geendet" },
+    {
+      "key": "account/MagazineSubscription/status/ended",
+      "value": "Geendet"
+    },
     {
       "key": "account/MagazineSubscription/type/MONTHLY_SUBSCRIPTION",
       "value": "Monats-Abo"

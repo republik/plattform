@@ -230,7 +230,6 @@ const MetaData = ({
             key: 'darkMode',
             label: t('metaData/darkMode'),
           },
-          { key: 'isRestricted', label: t('metaData/isRestricted') },
         ]
           .filter(Boolean)
           .map((customField) => {

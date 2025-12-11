@@ -118,7 +118,7 @@ type Notification {
   object: EventObject
   subscription: Subscription
   content: NotificationContent!
-  channels: [DiscussionNotificationChannel]!
+  channels: [NotificationChannel]!
   appPushesSuccessful: Int
   appPushesFailed: Int
   readAt: DateTime

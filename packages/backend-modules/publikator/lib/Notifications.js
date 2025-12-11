@@ -6,7 +6,8 @@ const {
 
 const Promise = require('bluebird')
 
-const { FRONTEND_BASE_URL } = process.env
+const { DEFAULT_MAIL_FROM_ADDRESS, DEFAULT_MAIL_FROM_NAME, FRONTEND_BASE_URL } =
+  process.env
 
 const groupSubscribersByObjectId = (subscribers, key) =>
   subscribers.reduce((agg, user) => {
@@ -73,7 +74,7 @@ const notifyPublish = async (
           }),
     },
     context,
-  ).then((subs) =>
+  ).then((subs) => {
     subs.forEach((sub) => {
       if (
         (!filters || filters.includes('Document')) &&
@@ -95,8 +96,8 @@ const notifyPublish = async (
       } else {
         console.warn('discarded subscription', sub.id)
       }
-    }),
-  )
+    })
+  })
 
   let event
 
@@ -110,13 +111,26 @@ const notifyPublish = async (
   )
 
   await Promise.each(Object.keys(docSubscribersByDocId), async (docId) => {
-    const subscribedDoc = await loaders.Document.byRepoId.load(docId)
+    // docId === repoId of the format. This is the format!
+    const format = await loaders.Document.byRepoId.load(docId)
+
+    // Do not send notifications for newsletter formats
+    if (format.meta.newsletter) {
+      return
+    }
 
     const title =
-      subscribedDoc.meta.notificationTitle ||
-      t('api/notifications/doc/title', {title: `«${subscribedDoc.meta.title}»`})
+      format.meta.notificationTitle ||
+      t('api/notifications/doc/title', {
+        formatTitle: `«${format.meta.title}»`,
+        articleTitle: `«${doc.meta.title}»`,
+      })
 
     const subscribers = docSubscribersByDocId[docId]
+
+    const formatUrl = new URL(format.meta.path, FRONTEND_BASE_URL)
+
+    const formatColor = format.meta.color ?? '#282828'
 
     event = await sendNotification(
       {
@@ -126,6 +140,45 @@ const notifyPublish = async (
           app: {
             ...appContent,
             title,
+          },
+          mail: (u) => {
+            return {
+              to: u.email,
+              subject: title,
+              fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
+              fromName: DEFAULT_MAIL_FROM_NAME,
+              templateName: 'publish_article_notification',
+              globalMergeVars: [
+                {
+                  name: 'TITLE',
+                  content: doc.meta.title,
+                },
+                {
+                  name: 'FORMAT_TITLE',
+                  content: format.meta.title,
+                },
+                {
+                  name: 'FORMAT_URL',
+                  content: formatUrl.toString(),
+                },
+                {
+                  name: 'FORMAT_COLOR',
+                  content: formatColor,
+                },
+                {
+                  name: 'DESCRIPTION',
+                  content: doc.meta.description,
+                },
+                {
+                  name: 'CREDITS',
+                  content: doc.meta.creditsString,
+                },
+                {
+                  name: 'URL',
+                  content: appContent.url,
+                },
+              ],
+            }
           },
         },
       },
@@ -181,6 +234,17 @@ const notifyPublish = async (
       const author = await loaders.User.byId.load(authorId)
       const subscribers = authorSubscribersByAuthorId[authorId]
 
+      let portraitUrl
+      if (URL.canParse(author._raw.portraitUrl)) {
+        const u = new URL(author._raw.portraitUrl)
+        u.searchParams.set('resize', '84x84')
+        u.searchParams.set('bw', '1')
+        u.searchParams.set('format', 'auto')
+        portraitUrl = u.toString()
+      }
+
+      const profileUrl = new URL(`~${author.slug}`, FRONTEND_BASE_URL)
+
       event = await sendNotification(
         {
           event: event ? { id: event.id } : eventInfo,
@@ -191,6 +255,47 @@ const notifyPublish = async (
               title: t('api/notifications/doc/author/title', {
                 name: author.name,
               }),
+            },
+            mail: (u) => {
+              return {
+                to: u.email,
+                subject: t('api/notifications/doc/author/title', {
+                  name: author.name,
+                }),
+                fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
+                fromName: DEFAULT_MAIL_FROM_NAME,
+                templateName: 'publish_author_notification',
+                globalMergeVars: [
+                  {
+                    name: 'AUTHOR_NAME',
+                    content: author.name,
+                  },
+                  {
+                    name: 'AUTHOR_PROFILE_URL',
+                    content: profileUrl.toString(),
+                  },
+                  {
+                    name: 'AUTHOR_PORTRAIT_URL',
+                    content: portraitUrl,
+                  },
+                  {
+                    name: 'TITLE',
+                    content: doc.meta.title,
+                  },
+                  {
+                    name: 'DESCRIPTION',
+                    content: doc.meta.description,
+                  },
+                  {
+                    name: 'CREDITS',
+                    content: doc.meta.creditsString,
+                  },
+                  {
+                    name: 'URL',
+                    content: appContent.url,
+                  },
+                ],
+              }
             },
           },
         },

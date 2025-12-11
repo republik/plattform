@@ -18,6 +18,7 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
   COOKIE_NAME,
 } = require('@orbiting/backend-modules-auth/lib/CookieOptions')
+const { gqlProtection } = require('./gqlProtection')
 const { NODE_ENV, WS_KEEPALIVE_INTERVAL } = process.env
 
 const documentApiKeyScheme = 'DocumentApiKey'
@@ -119,6 +120,7 @@ module.exports = async (
       keepAlive: WS_KEEPALIVE_INTERVAL || 40000,
     },
     plugins: [
+      ...gqlProtection.plugins,
       ApolloServerPluginLandingPageProductionDefault({
         footer: false,
       }),
@@ -158,6 +160,7 @@ module.exports = async (
         },
       },
     ],
+    validationRules: [...gqlProtection.validationRules],
   })
 
   // setup websocket server
