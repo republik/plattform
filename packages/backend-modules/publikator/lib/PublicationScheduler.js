@@ -6,7 +6,7 @@ const index = indices.dict.documents
 const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
 const { handleRedirection } = require('./Document')
 const {
-  maybeDelcareMilestonePublished,
+  maybeDeclareMilestonePublished,
   updateCurrentPhase,
 } = require('./postgres')
 const { notifyPublish } = require('./Notifications')
@@ -69,7 +69,7 @@ const init = async (context) => {
 
         const tx = await pgdb.transactionBegin()
         try {
-          await maybeDelcareMilestonePublished(milestone, tx)
+          await maybeDeclareMilestonePublished(milestone, tx)
           await updateCurrentPhase(repoId, tx)
 
           if (milestone.scope === 'publication') {

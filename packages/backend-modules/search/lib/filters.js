@@ -67,38 +67,42 @@ const rangeCriteriaBuilder =
     }
   }
 
+const getFilter = (key, value, not) => {
+  const filterData = {
+    key,
+    value,
+    options: { not },
+  }
+  debug('filterData', filterData)
+  const filterHash =
+    key +
+    crypto.createHash('md5').update(JSON.stringify(filterData)).digest('hex')
+  return {
+    [filterHash]: filterData,
+  }
+}
+
 // converts a filter array (with generic value as string) to a (typed) filter obj
 // adds a type filter if the schema implies it and no type filter
 // is explicitly added
 const filterReducer = (schemas) => (filters) => {
-  const getFilter = (key, value, not) => {
-    const filterData = {
-      key,
-      value,
-      options: { not },
-    }
-    debug('filterData', filterData)
-    const filterHash =
-      key +
-      crypto.createHash('md5').update(JSON.stringify(filterData)).digest('hex')
-    return {
-      [filterHash]: filterData,
-    }
-  }
-
   let impliedType
-  const typeFilter = filters.find((f) => f.key === 'type' || f.key === '__type')
+  const typeFilter = filters.find((f) => f.key === 'type')
 
-  let filter = filters.reduce((filterObj, { key, value, not }) => {
+  console.log({
+    impliedType,
+    typeFilter,
+  })
+
+  const filter = filters.reduce((filterObj, { key, value, not }) => {
     debug('filterReducer', { key, value, not })
-    const effectiveKey = key === 'type' ? '__type' : key
 
-    const schema = schemas.find((schema) => !!schema[effectiveKey])
-    const schemaEntry = schema?.[effectiveKey]
+    const schema = schemas.find((schema) => !!schema[key])
+    const schemaEntry = schema?.[key]
     debug('schemaEntry', schemaEntry)
     if (!schemaEntry) {
       console.warn('missing schemaEntry for filter:', {
-        key: effectiveKey,
+        key: key,
         value,
       })
       return filterObj
@@ -110,11 +114,7 @@ const filterReducer = (schemas) => (filters) => {
       return filterObj
     }
 
-    if (
-      effectiveKey !== '__type' &&
-      !typeFilter &&
-      (not === undefined || !not)
-    ) {
+    if (key !== 'type' && !typeFilter && (not === undefined || !not)) {
       if (impliedType && impliedType !== schema.__type) {
         throw new Error(
           'filterReducer: filter imply contradicting types',
@@ -125,17 +125,11 @@ const filterReducer = (schemas) => (filters) => {
       impliedType = schema.__type
     }
 
-    return {
-      ...filterObj,
-      ...getFilter(effectiveKey, filterValue, not),
-    }
+    return Object.assign(filterObj, getFilter(key, filterValue, not))
   }, {})
 
   if (impliedType) {
-    filter = {
-      ...filter,
-      ...getFilter('__type', impliedType),
-    }
+    Object.assign(filter, getFilter('type', impliedType))
   }
   return filter
 }

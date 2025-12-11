@@ -82,7 +82,6 @@ module.exports = {
     const meta = await getMeta(doc)
     if (doc._all || doc._users) {
       metaUrlResolver(
-        doc.type,
         meta,
         doc._all,
         doc._users,

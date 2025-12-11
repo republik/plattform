@@ -260,11 +260,11 @@ const resolveEntities = async ({
       ).map(transformUser)
     : []
 
-  const search = require('../graphql/resolvers/_queries/search')
+  const searchResolver = require('../graphql/resolvers/_queries/search')
   const sanitizedRepoIds = [...new Set(repoIds.filter(Boolean))]
   const docs = !sanitizedRepoIds.length
     ? []
-    : await search(
+    : await searchResolver(
         null,
         {
           recursive: true,
@@ -305,7 +305,6 @@ const addRelatedDocs = async ({
 
   for (const i in docs) {
     const doc = docs[i]
-
     // from content
     const { users, repos } = extractIdsFromNode(
       withoutContent ? doc.meta.credits : doc.content,
