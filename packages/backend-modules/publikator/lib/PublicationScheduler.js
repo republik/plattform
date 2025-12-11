@@ -1,5 +1,4 @@
 const debug = require('debug')('publikator:lib:scheduler')
-const Promise = require('bluebird')
 const { intervalScheduler } = require('@orbiting/backend-modules-schedulers')
 const indices = require('@orbiting/backend-modules-search/lib/indices')
 const index = indices.dict.documents
@@ -15,8 +14,8 @@ const { upsert: upsertDiscussion } = require('./Discussion')
 const lockTtlSecs = 30 // increased from 10 to 30 seconds because of front publishing issues and elastic version conflict errors
 
 const getScheduledDocuments = async (elastic) => {
-  const { body } = await elastic.search({
-    index: getIndexAlias(index.name, 'read'),
+  const res = await elastic.search({
+    index: getIndexAlias(index.type.toLocaleLowerCase(), 'read'),
     size: lockTtlSecs, // Amount publishing 1 document a second
     body: {
       sort: { 'meta.scheduledAt': 'asc' },
@@ -33,7 +32,7 @@ const getScheduledDocuments = async (elastic) => {
     },
   })
 
-  return body.hits.hits.map((hit) => hit._source)
+  return res.hits.hits.map((hit) => hit._source)
 }
 
 const init = async (context) => {
@@ -51,7 +50,7 @@ const init = async (context) => {
         debug('scheduled documents found', docs.length)
       }
 
-      await Promise.each(docs, async (doc) => {
+      const doPublish = async (doc) => {
         // repos:republik/article-briefing-aus-bern-14/scheduled-publication
         const versionName = doc.versionName
         const repoId = doc.meta.repoId
@@ -131,7 +130,22 @@ const init = async (context) => {
           versionName: doc.versionName,
           scheduledAt: doc.meta.scheduledAt,
         })
-      })
+      }
+
+      for (const doc of docs) {
+        try {
+          await doPublish(doc)
+        } catch (err) {
+          context?.logger?.error(
+            {
+              repoId: doc.meta.repoId,
+              versionName: doc.versionName,
+              error: err,
+            },
+            '[PublicationScheduler]: error while publishing document',
+          )
+        }
+      }
     },
     lockTtlSecs,
     runIntervalSecs: lockTtlSecs,
