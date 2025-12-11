@@ -64,11 +64,11 @@ const find = async (args: any, context: GraphqlContext) => {
 
   const fields = [
     'id',
-    'commit.strings.text',
+    // 'commit.strings.text',
+    'commit.meta.title',
     'commit.strings.title',
     'commit.strings.lead',
     'commit.strings.credits',
-    'commit.meta.title',
   ]
 
   const query: any = {
