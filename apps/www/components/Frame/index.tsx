@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode, useMemo } from 'react'
+import { CSSProperties, ReactNode, useMemo, useEffect } from 'react'
 import { css } from 'glamor'
 import 'glamor/reset'
 import {
@@ -21,7 +21,7 @@ import {
   FRAME_CONTENT_PADDING_MOBILE,
 } from '../constants'
 import { useTranslation } from '../../lib/withT'
-import { useInNativeApp } from '../../lib/withInNativeApp'
+import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
 import { checkRoles } from '../../lib/apollo/withMe'
@@ -118,7 +118,6 @@ type FrameProps = {
   pullable?: boolean
   hasOverviewNav?: boolean
   stickySecondaryNav?: boolean
-  isOnMarketingPage?: boolean
   pageColorSchemeKey?: 'light' | 'dark' | 'auto'
   containerMaxWidth?: string | number
   customContentColorContext?: Record<string, string>
@@ -137,7 +136,6 @@ const Frame = ({
   pullable,
   hasOverviewNav: wantOverviewNav,
   stickySecondaryNav,
-  isOnMarketingPage,
   pageColorSchemeKey,
   containerMaxWidth,
   draftMode,
@@ -166,6 +164,16 @@ const Frame = ({
       },
     })
   }, [hasSecondaryNav])
+
+  useEffect(() => {
+    if (inNativeApp) {
+      postMessage({
+        type: 'setColorScheme',
+        colorSchemeKey: pageColorSchemeKey,
+      })
+    }
+  }, [inNativeApp, pageColorSchemeKey])
+
   return (
     <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
       <noscript>
@@ -195,7 +203,6 @@ const Frame = ({
             pullable={pullable}
             hasOverviewNav={hasOverviewNav}
             stickySecondaryNav={stickySecondaryNav}
-            isOnMarketingPage={isOnMarketingPage}
             pageColorSchemeKey={pageColorSchemeKey}
           >
             {inNativeAppLegacy && <LegacyAppNoticeBox t={t} />}
@@ -228,9 +235,7 @@ const Frame = ({
             </OptionalLocalColorContext>
           </Header>
         </div>
-        {!inNativeApp && footer && (
-          <Footer isOnMarketingPage={isOnMarketingPage} />
-        )}
+        {!inNativeApp && footer && <Footer />}
       </div>
     </ColorContextProvider>
   )

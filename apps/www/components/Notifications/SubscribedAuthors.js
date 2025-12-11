@@ -1,19 +1,13 @@
-import { useMemo } from 'react'
-import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
-import { myUserSubscriptions } from './enhancers'
-import {
-  Editorial,
-  Interaction,
-  mediaQueries,
-  useColorContext,
-} from '@project-r/styleguide'
+import { Interaction, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
-import SubscribeCheckbox from './SubscribeCheckbox'
+import compose from 'lodash/flowRight'
+import Image from 'next/image'
+import Link from 'next/link'
 import withT from '../../lib/withT'
 import Loader from '../Loader'
-import Link from 'next/link'
-import Image from 'next/image'
+import { myUserSubscriptions } from './enhancers'
+import SubscribeCheckbox from './SubscribeCheckbox'
 
 const styles = {
   checkboxes: css({
@@ -26,26 +20,29 @@ const styles = {
   }),
   authorContainer: css({
     display: 'grid',
-    gap: 16,
-    gridTemplateColumns: '42px 1fr',
+    columnGap: 16,
+    gridTemplateColumns: '64px 1fr',
     gridTemplateAreas: `"portrait name"
       "portrait actions"`,
-    alignItems: 'center',
+    placeItems: 'center start',
     [mediaQueries.mUp]: {
-      gridTemplateColumns: '42px 1fr max-content',
+      gridTemplateColumns: '64px 1fr max-content',
       gridTemplateAreas: '"portrait name actions"',
     },
   }),
-  author: css({
+  authorName: css({
     gridArea: 'name',
+    display: 'block',
+    fontWeight: '700',
+    textDecoration: 'none',
   }),
   authorPortrait: css({
     gridArea: 'portrait',
     backgroundColor: 'var(--color-hover)',
     display: 'block',
-    borderRadius: 42,
-    width: 42,
-    height: 42,
+    borderRadius: 64,
+    width: 64,
+    height: 64,
     objectFit: 'cover',
   }),
   checkbox: css({
@@ -61,20 +58,6 @@ const SubscribedAuthors = ({
   t,
   data: { myUserSubscriptions, loading, error },
 }) => {
-  const [colorScheme] = useColorContext()
-
-  const authorContainerRule = useMemo(
-    () =>
-      css({
-        [mediaQueries.mUp]: {
-          '&:nth-child(even)': {
-            backgroundColor: colorScheme.getCSSColor('hover'),
-          },
-        },
-      }),
-    [colorScheme],
-  )
-
   return (
     <Loader
       loading={loading}
@@ -104,40 +87,33 @@ const SubscribedAuthors = ({
                 count: totalSubs,
               })}
             </Interaction.P>
-            <div style={{ margin: '20px 0' }}>
+            <div {...styles.authors}>
               {susbcribedAuthorsAndUsersSorted.map((user) => {
                 const portraitUrl = user.userDetails.portrait
                   ? new URL(user.userDetails.portrait)
                   : null
-                portraitUrl?.searchParams.set('resize', '84x84')
+                portraitUrl?.searchParams.set('resize', '128x128')
 
                 return (
-                  <div
-                    {...styles.authorContainer}
-                    {...authorContainerRule}
-                    key={user.object.id}
-                  >
+                  <div {...styles.authorContainer} key={user.object.id}>
                     {portraitUrl ? (
                       <Image
                         className={styles.authorPortrait}
                         src={portraitUrl.toString()}
-                        width={84}
-                        height={84}
+                        width={128}
+                        height={128}
                         unoptimized
                         alt=''
                       />
                     ) : (
                       <div className={styles.authorPortrait}></div>
                     )}
-                    <div {...styles.author}>
-                      <Link
-                        href={`/~${user.userDetails.slug}`}
-                        passHref
-                        legacyBehavior
-                      >
-                        <Editorial.A>{user.object.name}</Editorial.A>
-                      </Link>
-                    </div>
+                    <Link
+                      {...styles.authorName}
+                      href={`/~${user.userDetails.slug}`}
+                    >
+                      {user.object.name}
+                    </Link>
                     <div {...styles.checkbox}>
                       {(user.userDetails.documents.totalCount ||
                       (user.active && user.filters.includes('Document'))
