@@ -118,7 +118,6 @@ type FrameProps = {
   pullable?: boolean
   hasOverviewNav?: boolean
   stickySecondaryNav?: boolean
-  isOnMarketingPage?: boolean
   pageColorSchemeKey?: 'light' | 'dark' | 'auto'
   containerMaxWidth?: string | number
   customContentColorContext?: Record<string, string>
@@ -137,7 +136,6 @@ const Frame = ({
   pullable,
   hasOverviewNav: wantOverviewNav,
   stickySecondaryNav,
-  isOnMarketingPage,
   pageColorSchemeKey,
   containerMaxWidth,
   draftMode,
@@ -195,7 +193,6 @@ const Frame = ({
             pullable={pullable}
             hasOverviewNav={hasOverviewNav}
             stickySecondaryNav={stickySecondaryNav}
-            isOnMarketingPage={isOnMarketingPage}
             pageColorSchemeKey={pageColorSchemeKey}
           >
             {inNativeAppLegacy && <LegacyAppNoticeBox t={t} />}
@@ -229,7 +226,7 @@ const Frame = ({
           </Header>
         </div>
         {!inNativeApp && footer && (
-          <Footer isOnMarketingPage={isOnMarketingPage} />
+          <Footer />
         )}
       </div>
     </ColorContextProvider>
