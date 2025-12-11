@@ -21,7 +21,7 @@ import {
   FRAME_CONTENT_PADDING_MOBILE,
 } from '../constants'
 import { useTranslation } from '../../lib/withT'
-import { useInNativeApp } from '../../lib/withInNativeApp'
+import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
 import LegacyAppNoticeBox from './LegacyAppNoticeBox'
 import { useMe } from '../../lib/context/MeContext'
 import { checkRoles } from '../../lib/apollo/withMe'

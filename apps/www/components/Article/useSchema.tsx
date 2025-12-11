@@ -22,7 +22,7 @@ import {
 import { renderMdast } from '@republik/mdast-react-render'
 
 import { useMe } from 'lib/context/MeContext'
-import { useInNativeApp } from 'lib/withInNativeApp'
+import { useInNativeApp, postMessage } from 'lib/withInNativeApp'
 import { useTranslation } from 'lib/withT'
 
 // legacy imports for old-style dynamic components
