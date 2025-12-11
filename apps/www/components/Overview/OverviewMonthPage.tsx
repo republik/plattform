@@ -89,7 +89,7 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
 
   if (loading) {
     return (
-      <Frame pageColorSchemeKey='dark' meta={meta} raw>
+      <Frame pullable={false} pageColorSchemeKey='dark' meta={meta} raw>
         <Loader loading={true} style={{ minHeight: '90vh' }} />
       </Frame>
     )
@@ -97,7 +97,7 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
 
   if (error) {
     return (
-      <Frame pageColorSchemeKey='dark' meta={meta} raw>
+      <Frame pullable={false} pageColorSchemeKey='dark' meta={meta} raw>
         <Loader loading={false} error={error} style={{ minHeight: '90vh' }} />
       </Frame>
     )
@@ -130,14 +130,20 @@ const OverviewMonthPage: React.FC<OverviewMonthPageProps> = ({
   // Show 404 if no teasers found
   if (!loading && !error && monthTeasers.length === 0) {
     return (
-      <Frame raw meta={meta}>
+      <Frame pullable={false} raw meta={meta}>
         <StatusError statusCode={404} serverContext={serverContext} />
       </Frame>
     )
   }
 
   return (
-    <Frame raw pageColorSchemeKey='dark' hasOverviewNav meta={meta}>
+    <Frame
+      pullable={false}
+      raw
+      pageColorSchemeKey='dark'
+      hasOverviewNav
+      meta={meta}
+    >
       <TimelineNavigation
         year={year}
         currentMonth={month}
