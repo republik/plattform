@@ -27,6 +27,7 @@ export function OnboardingFollowButton({
   const [subscribe] = useMutation(SubscribeDocument)
   const [unsubscribe] = useMutation(UnsubscribeDocument)
   const [isPending, setIsPending] = useState(false)
+  const [showSpinner, setShowSpinner] = useState(false)
   const track = useTrackEvent()
 
   function trackSubscription(
@@ -54,6 +55,10 @@ export function OnboardingFollowButton({
     if (isPending) return
 
     setIsPending(true)
+    // while we disable the button for the whole duration of the request,
+    // we only show the spinner if the request takes longer than 1s
+    const spinner = setTimeout(() => setShowSpinner(true), 1000)
+
     if (subscriptionId) {
       const { data } = await unsubscribe({
         variables: {
@@ -75,6 +80,8 @@ export function OnboardingFollowButton({
         postMessage({ type: 'isSignedIn', payload: true })
       }
     }
+    clearTimeout(spinner)
+    setShowSpinner(false)
     setIsPending(false)
   }
 
@@ -89,7 +96,7 @@ export function OnboardingFollowButton({
       type='button'
       size='small'
       variant={subscriptionId ? 'outline' : 'default'}
-      loading={isPending}
+      loading={showSpinner}
     >
       {subscriptionId ? 'Gefolgt' : 'Folgen'}
     </Button>

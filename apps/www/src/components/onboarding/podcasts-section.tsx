@@ -38,7 +38,7 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
           fontSize: '3xl',
           fontFamily: 'republikSerif',
           lineHeight: '0.9',
-          md: {
+          lg: {
             fontSize: '4xl',
           },
         })}
