@@ -82,7 +82,7 @@ const toRecords = ({ _id, _source }) => ({
 
 const count = async ({ user, filters }, elastic) => {
   try {
-    const { statusCode, body } = await elastic.search({
+    const res = await elastic.search({
       index: getIndexAlias('mail', 'read'),
       body: {
         size: 0,
@@ -91,7 +91,7 @@ const count = async ({ user, filters }, elastic) => {
       },
     })
 
-    const total = (statusCode === 200 && body.hits.total) || 0
+    const total = res?.hits?.total || 0
     const count = Number.isFinite(total.value) ? total.value : total
 
     return count
