@@ -85,16 +85,20 @@ export const AUTHORS_FEATURED: string[] = [
 
 export const PODCASTS_STYLE: { [key: string]: StyleType } = {
   'republik/format-dritte-gewalt': {
-    backgroundColor: '#EEB8BF',
+    backgroundColor: '#3C1F59',
+    color: '#00FFFF',
   },
   'republik/format-sondersession': {
-    backgroundColor: '#8CDBB6',
+    backgroundColor: '#025E58',
+    color: '#FFB6EF',
   },
   'republik/format-gute-frage': {
-    backgroundColor: '#A9A7E0',
+    backgroundColor: '#890024',
+    color: '#FF416D',
   },
   'republik/format-was-wurde-eigentlich-aus': {
-    backgroundColor: '#EF6B6D',
+    backgroundColor: '#D4C800',
+    color: '#000000',
   },
 }*/
 
@@ -108,15 +112,19 @@ export const PODCASTS_FEATURED: string[] = [
 
 export const PODCASTS_STYLE: { [key: string]: StyleType } = {
   'republik/format-am-klavier': {
-    backgroundColor: '#EEB8BF',
+    backgroundColor: '#3C1F59',
+    color: '#00FFFF',
   },
   'republik/format-wochenrevue': {
-    backgroundColor: '#8CDBB6',
+    backgroundColor: '#025E58',
+    color: '#FFB6EF',
   },
   'republik/format-republik-live': {
-    backgroundColor: '#A9A7E0',
+    backgroundColor: '#890024',
+    color: '#FF416D',
   },
   'republik/format-im-gespraech': {
-    backgroundColor: '#EF6B6D',
+    backgroundColor: '#D4C800',
+    color: '#000000',
   },
 }
