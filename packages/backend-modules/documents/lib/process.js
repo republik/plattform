@@ -1,6 +1,4 @@
 const visit = require('unist-util-visit')
-const Promise = require('bluebird')
-const crypto = require('crypto')
 
 const {
   imageKeys: embedImageKeys,
@@ -64,7 +62,9 @@ const processRepoImageUrlsInContent = async (content, fn) => {
     }
   })
 
-  return Promise.each(fns, (fn) => fn())
+  for (const fn of fns) {
+    await fn()
+  }
 }
 
 const processEmbedImageUrlsInContent = async (mdast, fn) => {
@@ -73,19 +73,23 @@ const processEmbedImageUrlsInContent = async (mdast, fn) => {
   visit(mdast, 'zone', (node) => {
     if (node.data && node.identifier.startsWith('EMBED')) {
       fns.push(() => {
-        return Promise.map(embedImageKeys, async (key) => {
-          if (node.data[key]) {
-            node.data[key] = await fn(node.data[key])
-          }
-          if (node.data.src?.[key]) {
-            node.data.src[key] = await fn(node.data.src[key])
-          }
-        })
+        return Promise.all(
+          embedImageKeys.map(async (key) => {
+            if (node.data[key]) {
+              node.data[key] = await fn(node.data[key])
+            }
+            if (node.data.src?.[key]) {
+              node.data.src[key] = await fn(node.data.src[key])
+            }
+          }),
+        )
       })
     }
   })
 
-  return Promise.each(fns, (fn) => fn())
+  for (const fn of fns) {
+    await fn()
+  }
 }
 
 const processEmbedsInContent = async (mdast, fn, context) => {
@@ -107,11 +111,15 @@ const processEmbedsInContent = async (mdast, fn, context) => {
               Object.keys(node.data)
                 .filter((key) => typeof node.data[key] !== 'object')
                 .filter((key) => !!embed[key])
-                .forEach((key) => (node.data[key] = embed[key]))
+                .forEach((key) => {
+                  node.data[key] = embed[key]
+                })
               if (node.data.src) {
                 Object.keys(node.data.src)
                   .filter((key) => !!embed.src?.[key])
-                  .forEach((key) => (node.data.src[key] = embed.src[key]))
+                  .forEach((key) => {
+                    node.data.src[key] = embed.src[key]
+                  })
               }
             }
           } catch (e) {
@@ -120,14 +128,16 @@ const processEmbedsInContent = async (mdast, fn, context) => {
             )
           }
 
-          await Promise.map(embedImageKeys, async (key) => {
-            if (node.data[key]) {
-              node.data[key] = await fn(node.data[key])
-            }
-            if (node.data.src?.[key]) {
-              node.data.src[key] = await fn(node.data.src[key])
-            }
-          })
+          await Promise.all(
+            embedImageKeys.map(async (key) => {
+              if (node.data[key]) {
+                node.data[key] = await fn(node.data[key])
+              }
+              if (node.data.src?.[key]) {
+                node.data.src[key] = await fn(node.data.src[key])
+              }
+            }),
+          )
 
           return node.data
         })
@@ -148,9 +158,9 @@ const processMembersOnlyZonesInContent = (mdast, user, apiKey) => {
 
 const processNodeModifiersInContent = (mdast, user) => {
   visit(mdast, 'zone', (node) => {
-    node.data?.modifiers?.forEach?.(({ name, ...settings }) =>
-      modifiers[name]?.(settings, node, user),
-    )
+    node.data?.modifiers?.forEach?.(({ name, ...settings }) => {
+      modifiers[name]?.(settings, node, user)
+    })
 
     // Prevent modifiers prop to be exposed
     delete node.data?.modifiers

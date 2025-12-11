@@ -232,16 +232,16 @@ const getElasticDoc = async ({ doc, commitId, versionName, resolved }) => {
     versionName,
     meta, // doc.meta === doc.content.meta
     resolved: !_.isEmpty(resolved) ? resolved : undefined,
-    // type: doc.type,
     content: doc.content,
     contentString: stringifyNode(doc.content),
   }
 }
 
-const getDocsForConnection = (connection) =>
-  connection.nodes
+const getDocsForConnection = (connection) => {
+  return connection.nodes
     .filter((node) => node.type === 'Document')
     .map((node) => node.entity)
+}
 
 const resolveEntities = async ({
   repoIds = [],
