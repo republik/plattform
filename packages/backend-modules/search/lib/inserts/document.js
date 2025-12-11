@@ -1,5 +1,3 @@
-const Promise = require('bluebird')
-
 const {
   document: getDocument,
 } = require('@orbiting/backend-modules-publikator/graphql/resolvers/Commit')
@@ -36,8 +34,15 @@ const getContext = (payload) => {
   return context
 }
 
-const upsertResolvedMeta = ({ indexName, entities, type, elastic }) => {
-  return Promise.mapSeries(entities, async (entity) => {
+const upsertResolvedMeta = async ({
+  indexName,
+  entities,
+  metaType,
+  elastic,
+}) => {
+  const results = []
+
+  for (const entity of entities) {
     const repoName = entity.meta.repoId.split('/').slice(-1)
 
     const result = await elastic
@@ -48,14 +53,14 @@ const upsertResolvedMeta = ({ indexName, entities, type, elastic }) => {
           script: {
             lang: 'painless',
             source: `if (!ctx._source.containsKey("resolved")) {
-            ctx._source.resolved = new HashMap()
-          }
+                ctx._source.resolved = new HashMap()
+              }
 
-          if (!ctx._source.resolved.containsKey("meta")) {
-            ctx._source.resolved.meta = new HashMap()
-          }
+              if (!ctx._source.resolved.containsKey("meta")) {
+                ctx._source.resolved.meta = new HashMap()
+              }
 
-          ctx._source.resolved.meta.${type} = params.entity`,
+              ctx._source.resolved.meta.${metaType} = params.entity`,
             params: {
               entity,
             },
@@ -64,7 +69,7 @@ const upsertResolvedMeta = ({ indexName, entities, type, elastic }) => {
             bool: {
               filter: {
                 terms: {
-                  [`meta.${type}`]: getResourceUrls(repoName),
+                  [`meta.${metaType}`]: getResourceUrls(repoName),
                 },
               },
             },
@@ -72,14 +77,18 @@ const upsertResolvedMeta = ({ indexName, entities, type, elastic }) => {
         },
       })
       .catch((e) => {
-        console.log(entity, repoName, type, e.meta?.body?.failures)
+        console.log(entity, repoName, metaType, e.meta?.body?.failures)
         return []
       })
 
     if (result.failures?.length > 0) {
       console.error(entity.repoId, result.failures)
     }
-  })
+
+    results.push(result)
+  }
+
+  return results
 }
 
 const after = async ({ indexName, elastic }) => {
@@ -87,7 +96,7 @@ const after = async ({ indexName, elastic }) => {
   await upsertResolvedMeta({
     indexName,
     entities: dossiers,
-    // type: 'dossier',
+    metaType: 'dossier',
     elastic,
   })
 
@@ -95,7 +104,7 @@ const after = async ({ indexName, elastic }) => {
   await upsertResolvedMeta({
     indexName,
     entities: formats,
-    // type: 'format',
+    metaType: 'format',
     elastic,
   })
 
@@ -103,7 +112,7 @@ const after = async ({ indexName, elastic }) => {
   await upsertResolvedMeta({
     indexName,
     entities: sections,
-    // type: 'section',
+    metaType: 'section',
     elastic,
   })
 }
@@ -111,6 +120,9 @@ const after = async ({ indexName, elastic }) => {
 module.exports = {
   before: () => {},
   insert: async ({ indexName, type: indexType, elastic, pgdb, redis }) => {
+    // work around until we updated to node 22 and can work with node esm modules
+    const { default: pLimit } = await import('p-limit')
+
     const stats = { [indexType]: { added: 0, total: 0 } }
     const statsInterval = setInterval(() => {
       console.log(indexName, stats)
@@ -124,76 +136,69 @@ module.exports = {
       { orderBy: { updatedAt: 'desc' } },
     )
 
-    await Promise.all(
-      repos,
-      async function mapRepo(repo) {
-        const { id: repoId, meta: repoMeta } = repo
-        const publications = await pgdb.publikator.milestones.find({
+    const limit = pLimit(10)
+
+    await limit.map(repos, async function mapRepo(repo) {
+      const { id: repoId, meta: repoMeta } = repo
+      const publications = await pgdb.publikator.milestones.find({
+        repoId,
+        scope: ['publication', 'prepublication'],
+        revokedAt: null,
+      })
+
+      stats[indexType].total += publications.length
+
+      const hasPrepublication = !!publications.find(
+        (p) => p.scope === 'prepublication',
+      )
+
+      for (const publication of publications) {
+        const doc = structuredClone(
+          await getDocument(
+            { id: publication.commitId, repoId: publication.repoId },
+            { publicAssets: true },
+            context,
+          ),
+        )
+
+        const scheduledAt = publication.scheduledAt
+        const isScheduled = !publication.publishedAt
+        const isPrepublication = publication.scope === 'prepublication'
+        const lastPublishedAt = scheduledAt || publication.publishedAt
+
+        // prepareMetaForPublish creates missing discussions as a side-effect
+        doc.content.meta = await prepareMetaForPublish({
           repoId,
-          scope: ['publication', 'prepublication'],
-          revokedAt: null,
+          repoMeta,
+          scheduledAt,
+          lastPublishedAt,
+          prepublication: isPrepublication,
+          doc,
+          now,
+          context,
         })
 
-        stats[indexType].total += publications.length
+        const elasticDoc = await getElasticDoc({
+          indexName,
+          indexType,
+          doc,
+          commitId: publication.commitId,
+          versionName: publication.name,
+        })
 
-        const hasPrepublication = !!publications.find(
-          (p) => p.scope === 'prepublication',
-        )
+        const publish = createPublish({
+          prepublication: isPrepublication,
+          scheduledAt: isScheduled ? scheduledAt : undefined,
+          hasPrepublication,
+          elastic,
+          elasticDoc,
+        })
 
-        await Promise.each(
-          publications,
-          async function mapPublication(publication) {
-            const doc = JSON.parse(
-              JSON.stringify(
-                await getDocument(
-                  { id: publication.commitId, repoId: publication.repoId },
-                  { publicAssets: true },
-                  context,
-                ),
-              ),
-            )
+        await publish.insert()
 
-            const scheduledAt = publication.scheduledAt
-            const isScheduled = !publication.publishedAt
-            const isPrepublication = publication.scope === 'prepublication'
-            const lastPublishedAt = scheduledAt || publication.publishedAt
-
-            // prepareMetaForPublish creates missing discussions as a side-effect
-            doc.content.meta = await prepareMetaForPublish({
-              repoId,
-              repoMeta,
-              scheduledAt,
-              lastPublishedAt,
-              prepublication: isPrepublication,
-              doc,
-              now,
-              context,
-            })
-
-            const elasticDoc = await getElasticDoc({
-              indexName,
-              indexType,
-              doc,
-              commitId: publication.commitId,
-              versionName: publication.name,
-            })
-
-            const publish = createPublish({
-              prepublication: isPrepublication,
-              scheduledAt: isScheduled ? scheduledAt : undefined,
-              hasPrepublication,
-              elastic,
-              elasticDoc,
-            })
-
-            await publish.insert()
-
-            stats[indexType].added++
-          },
-        )
-      },
-      { concurrency: 10 },
-    )
+        stats[indexType].added++
+      }
+    })
 
     clearInterval(statsInterval)
 

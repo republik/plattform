@@ -1,5 +1,3 @@
-const Promise = require('bluebird')
-
 const { getMeta } = require('../../lib/meta')
 const {
   processContentHashing,
@@ -151,20 +149,23 @@ module.exports = {
       // add content hash before mutating children by resolving
       processContentHashing(doc.type, { children: nodes })
 
-      const idsFromNodes = await Promise.map(nodes, async (node) => {
-        await Promise.all([
-          processRepoImageUrlsInContent(node, addFormatAuto),
-          processEmbedImageUrlsInContent(node, addFormatAuto),
-        ])
+      const idsFromNodes = await Promise.all(
+        nodes.map(async (node) => {
+          await Promise.all([
+            processRepoImageUrlsInContent(node, addFormatAuto),
+            processEmbedImageUrlsInContent(node, addFormatAuto),
+          ])
 
-        processMembersOnlyZonesInContent(node, context.user, doc._apiKey)
-        processNodeModifiersInContent(node, context.user)
-        if (doc.meta.template !== 'article') {
-          processIfHasAccess(node, context.user, doc._apiKey)
-        }
+          processMembersOnlyZonesInContent(node, context.user, doc._apiKey)
+          processNodeModifiersInContent(node, context.user)
+          if (doc.meta.template !== 'article') {
+            processIfHasAccess(node, context.user, doc._apiKey)
+          }
 
-        return extractIdsFromNode(node)
-      })
+          return extractIdsFromNode(node)
+        }),
+      )
+
       const { docs, users } = await resolveEntities({
         context,
         userIds: idsFromNodes.reduce(

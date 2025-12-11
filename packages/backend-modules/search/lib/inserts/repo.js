@@ -1,5 +1,4 @@
 const visit = require('unist-util-visit')
-const Promise = require('bluebird')
 
 const {
   stringifyNode,
@@ -29,7 +28,7 @@ function toStrings(_type, nodes) {
     }
   }
 
-  return Promise.map(keys, nodeToString).reduce(toObject)
+  return keys.map(nodeToString).reduce(toObject)
 }
 
 async function getCommitStrings(type, content) {
@@ -72,7 +71,7 @@ async function getCommitStrings(type, content) {
     })
   }
 
-  return { strings: await toStrings(type, nodes) }
+  return { strings: toStrings(type, nodes) }
 }
 
 function getCommitMeta(meta) {
@@ -121,7 +120,7 @@ async function transform(row) {
     ...row,
     commit: {
       ...getCommit(restCommit),
-      ...(await getCommitStrings(type, content)),
+      ...getCommitStrings(type, content),
       ...getCommitMeta(meta),
     },
   }

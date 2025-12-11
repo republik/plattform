@@ -1,6 +1,5 @@
 const crypto = require('crypto')
 const visit = require('unist-util-visit')
-const Promise = require('bluebird')
 const debug = require('debug')('search:lib:DocumentZones')
 
 const {
@@ -172,23 +171,25 @@ const createPublish = (elastic, elasticDoc) => {
 
   return {
     insert: async (desiredState) => {
-      const inserts = await Promise.map(findNodes(elasticDoc), async (node) => {
-        const documentZoneElasticDoc = await getElasticDoc(
-          repoId,
-          commitId,
-          versionName,
-          desiredState,
-          publishDate,
-          elasticDoc.type,
-          node,
-        )
+      const inserts = await Promise.all(
+        findNodes(elasticDoc).map(async (node) => {
+          const documentZoneElasticDoc = await getElasticDoc(
+            repoId,
+            commitId,
+            versionName,
+            desiredState,
+            publishDate,
+            elasticDoc.type,
+            node,
+          )
 
-        return elastic.index({
-          ...indexRef,
-          id: documentZoneElasticDoc.id,
-          body: documentZoneElasticDoc,
-        })
-      })
+          return elastic.index({
+            ...indexRef,
+            id: documentZoneElasticDoc.id,
+            body: documentZoneElasticDoc,
+          })
+        }),
+      )
 
       actions.push('insert')
 

@@ -1,15 +1,16 @@
-const Promise = require('bluebird')
-
 const bulk = require('../indexPgTable')
 
 async function transform(row) {
   const { questionnaireId, userId, pseudonym } = row
 
-  const { questions, answers, user } = await Promise.props({
-    questions: this.payload.getQuestions(questionnaireId),
-    answers: this.payload.getAnswers(questionnaireId, userId, pseudonym),
-    user: this.payload.getUser(userId),
-  })
+  const [questions, answers, user] = await Promise.all([
+    // questions
+    this.payload.getQuestions(questionnaireId),
+    // answers
+    this.payload.getAnswers(questionnaireId, userId, pseudonym),
+    // user
+    this.payload.getUser(userId),
+  ])
 
   row.resolved = {
     answers: answers

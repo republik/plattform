@@ -1,5 +1,3 @@
-const Promise = require('bluebird')
-
 const {
   stringifyNode,
 } = require('@orbiting/backend-modules-documents/lib/resolve')
@@ -10,16 +8,17 @@ const bulk = require('../../lib/indexPgTable')
 async function transform(row) {
   const { userId, discussionId } = row
 
-  const { user, discussion, discussionPreferences, credentials } =
-    await Promise.props({
-      user: this.payload.getUser(userId),
-      discussion: this.payload.getDiscussion(discussionId),
-      discussionPreferences: this.payload.getDiscussionPreferences(
-        userId,
-        discussionId,
-      ),
-      credentials: this.payload.getCredentials(userId),
-    })
+  const [user, discussion, discussionPreferences, credentials] =
+    await Promise.all([
+      // user
+      this.payload.getUser(userId),
+      // discussion
+      this.payload.getDiscussion(discussionId),
+      // discussionPreferences
+      this.payload.getDiscussionPreferences(userId, discussionId),
+      // credentials
+      this.payload.getCredentials(userId),
+    ])
 
   const isAnonymityEnforced = discussion.anonymity === 'ENFORCED'
   const isAnonymous = !!discussionPreferences?.anonymous
