@@ -172,7 +172,7 @@ const Frame = ({
         colorSchemeKey: pageColorSchemeKey,
       })
     }
-  }, [inNativeApp, inNativeApp, pageColorSchemeKey])
+  }, [inNativeApp, pageColorSchemeKey])
 
   return (
     <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
