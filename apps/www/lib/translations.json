@@ -8165,7 +8165,7 @@
     },
     {
       "key": "onboarding/authors/title",
-      "value": "Unsere Autorinnen"
+      "value": "Autorinnen"
     },
     {
       "key": "onboarding/authors/more",
@@ -8177,7 +8177,7 @@
     },
     {
       "key": "onboarding/podcasts/title",
-      "value": "Podcasts und Audioserien"
+      "value": "Podcasts"
     },
     {
       "key": "onboarding/formats/republik/format-binswanger/author",
@@ -8185,7 +8185,7 @@
     },
     {
       "key": "onboarding/formats/republik/format-binswanger/description",
-      "value": "Das Wochenkommentar"
+      "value": "Der Wochenkommentar"
     },
     {
       "key": "onboarding/formats/republik/format-rosenwasser/author",
@@ -8281,7 +8281,7 @@
     },
     {
       "key": "onboarding/podcasts/republik/format-wochenrevue/description",
-      "value": "Gemeinsam entwirren wir Fragen, die uns nicht loslassen."
+      "value": "Der Podcast für alle, die genug haben von einfachen Antworten."
     },
     {
       "key": "onboarding/podcasts/republik/format-im-gespraech/title",
@@ -8305,7 +8305,7 @@
     },
     {
       "key": "onboarding/authors/palbrecht/beat",
-      "value": "Wohnpolitik"
+      "value": "Wirtschaft"
     },
     {
       "key": "onboarding/authors/angelikahardegger/beat",
