@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode, useMemo } from 'react'
+import { CSSProperties, ReactNode, useMemo, useEffect } from 'react'
 import { css } from 'glamor'
 import 'glamor/reset'
 import {
@@ -164,6 +164,16 @@ const Frame = ({
       },
     })
   }, [hasSecondaryNav])
+
+  useEffect(() => {
+    if (inNativeApp) {
+      postMessage({
+        type: 'setColorScheme',
+        colorSchemeKey: pageColorSchemeKey,
+      })
+    }
+  }, [inNativeApp, pageColorSchemeKey])
+
   return (
     <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
       <noscript>
@@ -225,9 +235,7 @@ const Frame = ({
             </OptionalLocalColorContext>
           </Header>
         </div>
-        {!inNativeApp && footer && (
-          <Footer />
-        )}
+        {!inNativeApp && footer && <Footer />}
       </div>
     </ColorContextProvider>
   )
