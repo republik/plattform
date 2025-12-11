@@ -19,7 +19,7 @@ import {
 
 import AuthNotification from '../components/Auth/Notification'
 
-import { CURTAIN_MESSAGE, CDN_FRONTEND_BASE_URL } from '../lib/constants'
+import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
 
 import {
   Interaction,
@@ -87,8 +87,6 @@ const styles = {
   }),
 }
 
-const hasCurtain = !!CURTAIN_MESSAGE
-
 const { P } = Interaction
 
 const fixAmpsInQuery = (rawQuery) => {
@@ -142,10 +140,6 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
         src={`${CDN_FRONTEND_BASE_URL}/static/project_r_logo.png`}
       />
     </a>
-  ) : hasCurtain ? (
-    <div {...styles.logoRepublik}>
-      <Logo />
-    </div>
   ) : (
     <a href='/' target={logoTarget} {...styles.logoRepublik}>
       <Logo />
@@ -182,7 +176,7 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
           }}
         >
           <AuthNotification query={query} />
-          {!hasCurtain && links.length > 0 && (
+          {links.length > 0 && (
             <P {...styles.link}>
               {intersperse(
                 links.map((link, i) => (
