@@ -16,6 +16,14 @@ const spinnerVariants = cva({
         h: '24px',
         w: '24px',
       },
+      full: {
+        h: '24px',
+        w: '24px',
+      },
+      small: {
+        h: '12px',
+        w: '12px',
+      },
     },
   },
   defaultVariants: { size: 'default' },
