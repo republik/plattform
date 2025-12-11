@@ -10,18 +10,26 @@ import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { Button } from '../ui/button'
-import { AUTHORS_FEATURED } from './config'
+import { AUTHORS_FEATURED, AuthorType } from './config'
 import { OnboardingH3, OnboardingSection } from './onboarding-ui'
 
-function AuthorCard({ slug, showAll }: { slug: string; showAll: boolean }) {
+function AuthorCard({
+  author,
+  showAll,
+}: {
+  author: AuthorType
+  showAll: boolean
+}) {
   const { t } = useTranslation()
   const { data } = useQuery(OnboardingAuthorDocument, {
-    variables: { slug },
+    variables: { id: author.id },
   })
 
-  const author = data?.user
+  const authorData = data?.user
 
-  const subscriptionId = author?.subscribedBy.nodes.find((n) => n.active)?.id
+  const subscriptionId = authorData?.subscribedBy.nodes.find(
+    (n) => n.active,
+  )?.id
 
   return (
     <div
@@ -41,12 +49,14 @@ function AuthorCard({ slug, showAll }: { slug: string; showAll: boolean }) {
           borderRadius: '96px',
           backgroundColor: 'divider',
         })}
-        src={author?.portrait || '/static/profiledefault.png'}
+        src={authorData?.portrait || '/static/profiledefault.png'}
       />
       <div>
-        <h4 className={css({ fontWeight: 'bold' })}>{author?.name || '...'}</h4>
+        <h4 className={css({ fontWeight: 'bold' })}>
+          {authorData?.name || '...'}
+        </h4>
         <p className={css({ color: 'textSoft' })}>
-          {t(`onboarding/authors/${slug}/beat`)}
+          {t(`onboarding/authors/${author.slug}/beat`)}
         </p>
         <div
           className={css({
@@ -56,7 +66,7 @@ function AuthorCard({ slug, showAll }: { slug: string; showAll: boolean }) {
         >
           <OnboardingFollowButton
             subscriptionId={subscriptionId}
-            objectId={author?.id}
+            objectId={author.id}
             type={SubscriptionObjectType.User}
           />
         </div>
@@ -64,7 +74,7 @@ function AuthorCard({ slug, showAll }: { slug: string; showAll: boolean }) {
       <div className={css({ ml: 'auto', md: { display: 'none' } })}>
         <OnboardingFollowButton
           subscriptionId={subscriptionId}
-          objectId={author?.id}
+          objectId={author.id}
           type={SubscriptionObjectType.User}
         />
       </div>
@@ -103,8 +113,8 @@ function AuthorsSection() {
           },
         })}
       >
-        {AUTHORS_FEATURED.map((slug) => (
-          <AuthorCard slug={slug} key={slug} showAll={showAll} />
+        {AUTHORS_FEATURED.map((author) => (
+          <AuthorCard author={author} key={author.slug} showAll={showAll} />
         ))}
       </div>
 

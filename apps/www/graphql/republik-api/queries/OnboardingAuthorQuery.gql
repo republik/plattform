@@ -1,5 +1,5 @@
-query OnboardingAuthor($slug: String!) {
-  user(slug: $slug) {
+query OnboardingAuthor($id: ID!) {
+  user(id: $id) {
     id
     slug
     name
