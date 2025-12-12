@@ -42,6 +42,9 @@ const {
 const {
   graphql: contributors,
 } = require('@orbiting/backend-modules-contributors')
+const {
+  graphql: allowlist,
+} = require('@orbiting/backend-modules-allowlist')
 
 const {
   graphql: paymentsGraphql,
@@ -188,6 +191,7 @@ const run = async (workerId, config) => {
     paymentsGraphql,
     nextReads,
     contributors,
+    allowlist,
   ])
 
   // middlewares
@@ -233,9 +237,15 @@ const run = async (workerId, config) => {
 
   const createGraphQLContext = (defaultContext) => {
     const loaders = {}
+    // Per web standard, x-forwarded-for format is: "client, proxy1, proxy2"
+    const forwardedFor = defaultContext.req?.headers['x-forwarded-for']
+    const clientIp = forwardedFor 
+      ? forwardedFor.split(',')[0].trim()
+      : defaultContext.req?.connection?.remoteAddress
     const context = {
       ...connectionContext,
       ...defaultContext,
+      clientIp,
       t,
       signInHooks,
       mail,

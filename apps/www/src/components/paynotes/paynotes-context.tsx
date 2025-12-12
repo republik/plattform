@@ -83,7 +83,7 @@ function isDialogPage(
 }
 
 export const PaynotesProvider = ({ children }) => {
-  const { meLoading, trialStatus } = useMe()
+  const { meLoading, trialStatus, hasAllowlistAccess } = useMe()
   const { campaign } = useCampaign()
 
   const pathname = usePathname()
@@ -112,6 +112,10 @@ export const PaynotesProvider = ({ children }) => {
 
     // Active membership: no paynote
     if (trialStatus === 'MEMBER') {
+      return setPaynoteKind(null)
+    }
+    // IP allowlist access: no paynote
+    if (hasAllowlistAccess) {
       return setPaynoteKind(null)
     }
     // ANYTHING THAT'S NOT AN ARTICLE:
@@ -204,6 +208,7 @@ export const PaynotesProvider = ({ children }) => {
     template,
     isPaywallExcluded,
     isCampaignActive,
+    hasAllowlistAccess,
   ])
 
   // console.log({ paynoteKind })
