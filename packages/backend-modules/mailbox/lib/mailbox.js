@@ -104,7 +104,7 @@ const count = async ({ user, filters }, elastic) => {
 
 const find = async ({ user, size, filters }, { after, before }, elastic) => {
   try {
-    const { statusCode, body } = await elastic.search({
+    const res = await elastic.search({
       index: getIndexAlias('mail', 'read'),
       body: {
         size,
@@ -123,11 +123,7 @@ const find = async ({ user, size, filters }, { after, before }, elastic) => {
       },
     })
 
-    if (statusCode !== 200) {
-      throw Error('query failed')
-    }
-
-    return body.hits.hits.map(toRecords)
+    return res.hits.hits.map(toRecords)
   } catch (e) {
     console.warn(e.message)
   }
