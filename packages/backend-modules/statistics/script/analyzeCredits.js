@@ -69,7 +69,7 @@ PgDb.connect()
         })),
       )
 
-    const { body } = await elastic
+    const res = await elastic
       .search({
         index: utils.getIndexAlias('document', 'read'),
         _source: ['meta.path', 'meta.credits', 'meta.publishDate'],
@@ -106,7 +106,7 @@ PgDb.connect()
         throw new Error('Something broke')
       })
 
-    const hits = body.hits.hits
+    const hits = res.hits.hits
 
     await Promise.each(
       hits
@@ -145,7 +145,7 @@ PgDb.connect()
               unclassifiedAuthors.push({ author: authorName, path: meta.path })
             }
 
-            return (classifiedAuthor && classifiedAuthor.gender) || 'n'
+            return classifiedAuthor?.gender || 'n'
           })
           .reduce((previousValue, currentValue = 'n') => {
             if (previousValue === 'n') {
@@ -190,7 +190,7 @@ PgDb.connect()
       },
     )
 
-    unclassifiedAuthors.map(({ author, path }) => {
+    unclassifiedAuthors.forEach(({ author, path }) => {
       console.warn(author, path)
     })
 

@@ -60,8 +60,7 @@ const extractUserPath = (path) => {
   if (!path) {
     return
   }
-  const match = String(path).match(userPath)
-  const id = match && match[1]
+  const [id] = String(path).match(userPath) || []
   if (id) {
     return {
       id,
@@ -122,9 +121,9 @@ const createUrlReplacer =
       // Merge {parsedUrl.searchParams} into {resolvedUrl.searchParams}
       // parsedUrl overwrites same keys in resolvedUrl.
       // resolvedUrl may contain searchParams from parsed {searchString}.
-      parsedUrl.searchParams.forEach((value, name) =>
-        resolvedUrl.searchParams.set(name, value),
-      )
+      parsedUrl.searchParams.forEach((value, name) => {
+        resolvedUrl.searchParams.set(name, value)
+      })
 
       // If {urlPrefix} is set, return stringified {resolvedUrl}.
       if (urlPrefix) {
@@ -178,7 +177,7 @@ const metaFieldResolver = (meta, _all = [], _users = [], errors) => {
   // string, aka github url if this document belongs to a series
   if (typeof series === 'string') {
     const seriesDocument = resolver(meta.series)
-    series = seriesDocument && seriesDocument.content.meta.series
+    series = seriesDocument?.content.meta.series
   }
   if (series) {
     series = {
@@ -377,7 +376,7 @@ const extractIdsFromNode = (node) => {
  * @param  {Function} [predicate] Predicate function, receives node as argument
  * @return {Object}               Filtered mdast Object
  */
-const mdastFilter = function (node, predicate = () => true) {
+const mdastFilter = (node, predicate = () => true) => {
   // Return null if predicate is false.
   if (!predicate(node)) {
     return null

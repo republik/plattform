@@ -2,7 +2,6 @@ const type = 'User'
 
 module.exports = {
   type,
-  name: type.toLowerCase(),
   path: 'public.users',
   search: {
     termFields: {
@@ -47,51 +46,49 @@ module.exports = {
     },
   },
   mapping: {
-    [type]: {
-      dynamic: false,
-      properties: {
-        __type: {
-          type: 'keyword',
-        },
-        __sort: {
-          properties: {
-            date: {
-              type: 'date',
-            },
+    dynamic: false,
+    properties: {
+      __type: {
+        type: 'keyword',
+      },
+      __sort: {
+        properties: {
+          date: {
+            type: 'date',
           },
         },
-        resolved: {
-          properties: {
-            credential: {
-              type: 'text',
-              analyzer: 'german',
-            },
+      },
+      resolved: {
+        properties: {
+          credential: {
+            type: 'text',
+            analyzer: 'german',
           },
         },
+      },
 
-        biography: {
-          type: 'text',
-          analyzer: 'german',
-          fields: {
-            keyword: {
-              type: 'keyword',
-              ignore_above: 256,
-            },
+      biography: {
+        type: 'text',
+        analyzer: 'german',
+        fields: {
+          keyword: {
+            type: 'keyword',
+            ignore_above: 256,
           },
         },
-        hasPublicProfile: {
-          type: 'boolean',
-        },
-        name: {
-          type: 'text',
-        },
-        statement: {
-          type: 'text',
-          analyzer: 'german',
-        },
-        username: {
-          type: 'text',
-        },
+      },
+      hasPublicProfile: {
+        type: 'boolean',
+      },
+      name: {
+        type: 'text',
+      },
+      statement: {
+        type: 'text',
+        analyzer: 'german',
+      },
+      username: {
+        type: 'text',
       },
     },
   },

@@ -12,7 +12,7 @@ const drop = async (prefix, { debug: doDebug = true } = {}) => {
     .indices({
       h: ['index'],
     })
-    .then(({ stats }) => stats && stats.split('\n'))
+    .then(({ stats }) => stats?.split('\n'))
 
   if (!indices || !indices.length) {
     return

@@ -2,7 +2,6 @@ const type = 'Comment'
 
 module.exports = {
   type,
-  name: type.toLowerCase(),
   path: 'public.comments',
   search: {
     termFields: {
@@ -33,61 +32,59 @@ module.exports = {
     },
   },
   mapping: {
-    [type]: {
-      dynamic: false,
-      properties: {
-        __type: {
-          type: 'keyword',
-        },
-        __sort: {
-          properties: {
-            date: {
-              type: 'date',
-            },
+    dynamic: false,
+    properties: {
+      __type: {
+        type: 'keyword',
+      },
+      __sort: {
+        properties: {
+          date: {
+            type: 'date',
           },
         },
-        resolved: {
-          properties: {
-            user: {
-              properties: {
-                name: {
-                  type: 'text',
-                },
-              },
-            },
-            discussion: {
-              properties: {
-                hidden: {
-                  type: 'boolean',
-                },
+      },
+      resolved: {
+        properties: {
+          user: {
+            properties: {
+              name: {
+                type: 'text',
               },
             },
           },
-        },
-
-        contentString: {
-          type: 'text',
-          analyzer: 'german',
-          fielddata: true,
-          fields: {
-            count: {
-              type: 'token_count',
-              analyzer: 'standard',
-              store: true,
-            },
-            keyword: {
-              type: 'keyword',
-              ignore_above: 256,
+          discussion: {
+            properties: {
+              hidden: {
+                type: 'boolean',
+              },
             },
           },
         },
+      },
 
-        published: {
-          type: 'boolean',
+      contentString: {
+        type: 'text',
+        analyzer: 'german',
+        fielddata: true,
+        fields: {
+          count: {
+            type: 'token_count',
+            analyzer: 'standard',
+            store: true,
+          },
+          keyword: {
+            type: 'keyword',
+            ignore_above: 256,
+          },
         },
-        adminUnpublished: {
-          type: 'boolean',
-        },
+      },
+
+      published: {
+        type: 'boolean',
+      },
+      adminUnpublished: {
+        type: 'boolean',
       },
     },
   },

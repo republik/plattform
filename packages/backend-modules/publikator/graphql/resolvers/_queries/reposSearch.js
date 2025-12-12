@@ -83,12 +83,12 @@ module.exports = async (__, args, context) => {
 
   const options = getOptions(args)
 
-  const { body } = await client.find(options, context)
+  const res = await client.find(options, context)
 
   const { first, from } = options
   const {
     hits: { total, hits },
-  } = body
+  } = res
   const totalCount = Number.isFinite(total?.value) ? total.value : total
 
   const hasNextPage = first > 0 && totalCount > from + first
@@ -102,7 +102,7 @@ module.exports = async (__, args, context) => {
 
   const data = {
     nodes: repos,
-    aggregations: body.aggregations,
+    aggregations: res.aggregations,
     totalCount,
     pageInfo: {
       hasNextPage,

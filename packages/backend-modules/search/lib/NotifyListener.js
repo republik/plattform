@@ -82,12 +82,12 @@ const cascadeUpdateConfig = {
   ],
 }
 
-const updateCascade = async function ({ table, rows }, { pgdb, elastic }) {
+const updateCascade = async ({ table, rows }, { pgdb, elastic }) => {
   if (cascadeUpdateConfig[table]) {
     debug('found cascade configuration')
 
     return Promise.all(
-      cascadeUpdateConfig[table].map(async function (config) {
+      cascadeUpdateConfig[table].map(async (config) => {
         const sources =
           config.via === 'id'
             ? rows.map((row) => ({ id: row.id }))
@@ -201,7 +201,7 @@ const run = async (workQueue, context) => {
 }
 
 let singleton
-const start = async function ({ pgdb, elastic }) {
+const start = async ({ pgdb, elastic }) => {
   if (singleton) {
     // this is just a precautionary measure, the limitation could be lifted
     // without the need to change other code here

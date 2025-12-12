@@ -11,7 +11,7 @@ const {
   lib: { ConnectionContext },
 } = require('@orbiting/backend-modules-base')
 
-const { maybeDelcareMilestonePublished } = require('../lib/postgres')
+const { maybeDeclareMilestonePublished } = require('../lib/postgres')
 const { maybeApplyAudioSourceDuration } = require('../lib/audioSource')
 
 const debug = Debug('publikator:script:migrateAudioSources')
@@ -162,7 +162,7 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
         })
         debug('inserted milestone: %s (%s)', milestone.id, versionName)
 
-        await maybeDelcareMilestonePublished(milestone, tx)
+        await maybeDeclareMilestonePublished(milestone, tx)
 
         console.log(
           'inserted milestone',

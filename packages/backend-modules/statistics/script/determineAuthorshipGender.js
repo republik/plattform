@@ -47,7 +47,7 @@ PgDb.connect()
       'data',
     )
 
-    const { body } = await elastic.search({
+    const res = await elastic.search({
       index: utils.getIndexAlias('document', 'read'),
       _source: ['meta.path', 'meta.credits', 'meta.publishDate'],
       size: days * 10, // sane maximum amount of articles per day
@@ -74,7 +74,7 @@ PgDb.connect()
       },
     })
 
-    const hits = body.hits.hits
+    const hits = res.hits.hits
 
     await Promise.map(
       hits
@@ -143,7 +143,7 @@ PgDb.connect()
               unclassifiedAuthors.push({ author: authorName, path: meta.path })
             }
 
-            return (classifiedAuthor && classifiedAuthor.gender) || 'n'
+            return classifiedAuthor?.gender || 'n'
           })
           .reduce((previousValue, currentValue = 'n') => {
             if (previousValue === 'n') {
@@ -164,7 +164,7 @@ PgDb.connect()
       },
     )
 
-    unclassifiedAuthors.map(({ author, path }) => {
+    unclassifiedAuthors.forEach(({ author, path }) => {
       console.warn(author, path)
     })
 

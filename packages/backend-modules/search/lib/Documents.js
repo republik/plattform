@@ -45,7 +45,6 @@ const indexType = 'Document'
 
 const indexRef = {
   index: getIndexAlias(indexType.toLowerCase(), 'write'),
-  type: indexType,
 }
 
 const getDocumentId = ({ repoId, commitId, versionName }) =>
@@ -233,16 +232,16 @@ const getElasticDoc = async ({ doc, commitId, versionName, resolved }) => {
     versionName,
     meta, // doc.meta === doc.content.meta
     resolved: !_.isEmpty(resolved) ? resolved : undefined,
-    type: doc.type,
     content: doc.content,
     contentString: stringifyNode(doc.content),
   }
 }
 
-const getDocsForConnection = (connection) =>
-  connection.nodes
+const getDocsForConnection = (connection) => {
+  return connection.nodes
     .filter((node) => node.type === 'Document')
     .map((node) => node.entity)
+}
 
 const resolveEntities = async ({
   repoIds = [],
@@ -261,11 +260,11 @@ const resolveEntities = async ({
       ).map(transformUser)
     : []
 
-  const search = require('../graphql/resolvers/_queries/search')
+  const searchResolver = require('../graphql/resolvers/_queries/search')
   const sanitizedRepoIds = [...new Set(repoIds.filter(Boolean))]
   const docs = !sanitizedRepoIds.length
     ? []
-    : await search(
+    : await searchResolver(
         null,
         {
           recursive: true,
@@ -306,10 +305,9 @@ const addRelatedDocs = async ({
 
   for (const i in docs) {
     const doc = docs[i]
-
     // from content
     const { users, repos } = extractIdsFromNode(
-      withoutContent ? doc.meta.credits : doc.content
+      withoutContent ? doc.meta.credits : doc.content,
     )
     userIds = userIds.concat(users)
     repoIds = repoIds.concat(repos)
@@ -358,13 +356,13 @@ const addRelatedDocs = async ({
 
     seriesRelatedDocs.forEach((doc) => {
       const meta = doc.content.meta
-      meta.series.overview &&
+      if (meta.series?.overview) {
         repoIds.push(getRepoId(meta.series.overview).repoId)
-      meta.series.episodes &&
-        meta.series.episodes.forEach((episode) => {
-          debug(getRepoId(episode.document).repoId)
-          repoIds.push(getRepoId(episode.document).repoId)
-        })
+      }
+      meta.series?.episodes?.forEach((episode) => {
+        debug(getRepoId(episode.document).repoId)
+        repoIds.push(getRepoId(episode.document).repoId)
+      })
     })
   }
 
@@ -383,7 +381,7 @@ const addRelatedDocs = async ({
     const doc = relatedDocs[i]
 
     const { users } = extractIdsFromNode(
-      withoutContent ? doc.meta.credits : doc.content
+      withoutContent ? doc.meta.credits : doc.content,
     )
     userIds = userIds.concat(users)
 
@@ -424,7 +422,7 @@ const addRelatedDocs = async ({
   })
 }
 
-const switchState = async function (elastic, state, repoId, docId) {
+const switchState = async (elastic, state, repoId, docId) => {
   debug('switchState', { state, repoId, docId })
   const queries = []
   const painless = []
@@ -467,12 +465,7 @@ const switchState = async function (elastic, state, repoId, docId) {
   })
 }
 
-const resetScheduledAt = async function (
-  elastic,
-  isPrepublication,
-  repoId,
-  docId,
-) {
+const resetScheduledAt = async (elastic, isPrepublication, repoId, docId) => {
   debug('resetScheduledAt', { isPrepublication, repoId, docId })
 
   return elastic.updateByQuery({
@@ -748,8 +741,8 @@ const createPublish = ({
   return func(elastic, redis, elasticDoc, hasPrepublication)
 }
 
-const isPathUsed = async function (elastic, path, repoId) {
-  const { body } = await elastic.search({
+const isPathUsed = async (elastic, path, repoId) => {
+  const res = await elastic.search({
     ...indexRef,
     body: {
       query: {
@@ -766,7 +759,7 @@ const isPathUsed = async function (elastic, path, repoId) {
     },
   })
 
-  const total = body.hits.total
+  const total = res.hits.total
   const totalCount = Number.isFinite(total?.value) ? total.value : total
 
   debug('isPathUsed', { path, repoId, totalCount })
@@ -777,8 +770,8 @@ const isPathUsed = async function (elastic, path, repoId) {
 /**
  * Return all publications for a given repo ID, stored in ElasticSearch.
  */
-const findPublications = async function (elastic, repoId) {
-  const { body } = await elastic.search({
+const findPublications = async (elastic, repoId) => {
+  const res = await elastic.search({
     ...indexRef,
     body: {
       query: {
@@ -792,15 +785,15 @@ const findPublications = async function (elastic, repoId) {
     },
   })
 
-  return body.hits.hits.map((hit) => hit._source)
+  return res.hits.hits.map((hit) => hit._source)
 }
 
 /**
  * Return published and scheduled publications for a given repo ID, store
  * in ElasticSearch.
  */
-const findPublished = async function (elastic, repoId) {
-  const { body } = await elastic.search({
+const findPublished = async (elastic, repoId) => {
+  const res = await elastic.search({
     ...indexRef,
     body: {
       query: {
@@ -828,15 +821,15 @@ const findPublished = async function (elastic, repoId) {
     },
   })
 
-  return body.hits.hits.map((hit) => hit._source)
+  return res.hits.hits.map((hit) => hit._source)
 }
 
-const findTemplates = async function (elastic, template, repoId) {
+const findTemplates = async (elastic, template, repoId) => {
   const filter = repoId
     ? { term: { 'meta.repoId': repoId.split('/').slice(-2).join('/') } }
     : { term: { 'meta.template': template } }
 
-  const { body } = await elastic.search({
+  const res = await elastic.search({
     ...indexRef,
     size: 10000,
     body: {
@@ -852,9 +845,9 @@ const findTemplates = async function (elastic, template, repoId) {
     },
   })
 
-  debug('findTemplates', { template, repoId, filter, total: body.hits.total })
+  debug('findTemplates', { template, repoId, filter, total: res.hits.total })
 
-  return body.hits.hits.map((hit) => hit._source)
+  return res.hits.hits.map((hit) => hit._source)
 }
 
 module.exports = {
