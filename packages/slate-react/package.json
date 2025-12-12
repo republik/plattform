@@ -24,8 +24,8 @@
     "slate-prop-types": "^0.4.16"
   },
   "peerDependencies": {
-    "react": "^0.14.0 || ^15.0.0 || ^16.0.0",
-    "react-dom": "^0.14.0 || ^15.0.0 || ^16.0.0",
+    "react": "^19.2.2",
+    "react-dom": "^19.2.2",
     "slate": "^0.31.8"
   },
   "devDependencies": {
