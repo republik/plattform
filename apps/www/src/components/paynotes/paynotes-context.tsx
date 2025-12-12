@@ -114,9 +114,9 @@ export const PaynotesProvider = ({ children }) => {
     if (trialStatus === 'MEMBER') {
       return setPaynoteKind(null)
     }
-    // IP allowlist access: no paynote
+    // IP allowlist access: only show dialog paynote
     if (hasAllowlistAccess) {
-      return setPaynoteKind(null)
+      return setPaynoteKind('DIALOG')
     }
     // ANYTHING THAT'S NOT AN ARTICLE:
     //
