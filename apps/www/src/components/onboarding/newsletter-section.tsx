@@ -91,6 +91,8 @@ function NewsletterCard({
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
+            pr: '22px',
+            md: { pr: 0 },
           })}
         >
           <h4
@@ -99,15 +101,17 @@ function NewsletterCard({
               fontSize: 'l',
               lineHeight: '1',
               mb: 1,
-              maxWidth: '85%',
+              md: {
+                maxWidth: '80%',
+              },
             })}
           >
             {t(`newsletters/${newsletter}/name`)}
           </h4>
-          <p className={css({ lineHeight: '1.2', mb: 1 })}>
+          <p className={css({ lineHeight: '1.2', mb: 2 })}>
             {t(`newsletters/${newsletter}/description`)}
           </p>
-          <p className={css({ color: 'textSoft', mt: 'auto' })}>
+          <p className={css({ color: 'textSoft' })}>
             {t(`newsletters/${newsletter}/schedule`)}
           </p>
         </div>
