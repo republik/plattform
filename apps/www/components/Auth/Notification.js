@@ -2,7 +2,6 @@ import isEmail from 'validator/lib/isEmail'
 
 import { Interaction, Button } from '@project-r/styleguide'
 
-import { CURTAIN_MESSAGE } from '../../lib/constants'
 import withMe from '../../lib/apollo/withMe'
 import withT from '../../lib/withT'
 import * as base64u from '../../lib/utils/base64u'
@@ -14,8 +13,6 @@ import Me from './Me'
 import TokenAuthorization from './TokenAuthorization'
 import MacNewsletterSubscription from './MacNewsletterSubscription'
 import Link from 'next/link'
-
-const hasCurtain = !!CURTAIN_MESSAGE
 
 const { H1, P } = Interaction
 
@@ -118,7 +115,7 @@ const AuthNotification = ({ query, goTo, onClose, t, me }) => {
     ) : afterTokenAuth && displayCloseNote ? (
       <P>{t('notifications/closeNote')}</P>
     ) : (
-      ((!hasCurtain && !isUnkownType) || inNativeApp) && (
+      (!isUnkownType || inNativeApp) && (
         <div style={{ marginTop: 20 }}>
           <Link href='/' passHref legacyBehavior>
             <Button block primary>

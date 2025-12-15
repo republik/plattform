@@ -24,11 +24,13 @@ import {
   LOGO_WIDTH,
   LOGO_WIDTH_MOBILE,
 } from '../components/constants'
+
 import { withDefaultSSR } from '../lib/apollo/helpers'
 
 import withMe from '../lib/apollo/withMe'
 
-import { CDN_FRONTEND_BASE_URL, CURTAIN_MESSAGE } from '../lib/constants'
+import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
+
 import { intersperse } from '../lib/utils/helpers'
 import withInNativeApp from '../lib/withInNativeApp'
 import { useTranslation } from '../lib/withT'
@@ -87,8 +89,6 @@ const styles = {
   }),
 }
 
-const hasCurtain = !!CURTAIN_MESSAGE
-
 const { P } = Interaction
 
 const fixAmpsInQuery = (rawQuery) => {
@@ -142,10 +142,6 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
         src={`${CDN_FRONTEND_BASE_URL}/static/project_r_logo.png`}
       />
     </a>
-  ) : hasCurtain ? (
-    <div {...styles.logoRepublik}>
-      <Logo />
-    </div>
   ) : (
     <a href='/' target={logoTarget} {...styles.logoRepublik}>
       <Logo />
@@ -182,7 +178,7 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
           }}
         >
           <AuthNotification query={query} />
-          {!hasCurtain && links.length > 0 && (
+          {links.length > 0 && (
             <P {...styles.link}>
               {intersperse(
                 links.map((link, i) => (

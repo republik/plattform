@@ -15,8 +15,9 @@ const RegisterForTrial = (props: TrialFormProps) => {
 
   return (
     <LoginForm
+      analyticsProps={{ variation: t('regwall/cta') }}
       context='trial'
-      submitButtonText={t(`regwall/${props.analyticsProps.variation}/cta`)}
+      submitButtonText={t(`regwall/cta`)}
       {...props}
     />
   )
@@ -25,7 +26,6 @@ const RegisterForTrial = (props: TrialFormProps) => {
 export const RegisterForTrialMinimal = () => {
   const { t } = useTranslation()
   const { me, meLoading } = useMe()
-  const analyticsProps = { variation: 'a' }
 
   if (me || meLoading) {
     return null
@@ -42,8 +42,8 @@ export const RegisterForTrialMinimal = () => {
     >
       <LoginForm
         context='trial'
-        analyticsProps={analyticsProps}
-        submitButtonText={t(`regwall/${analyticsProps.variation}/cta`)}
+        analyticsProps={{ variation: t('regwall/cta') }}
+        submitButtonText={t(`regwall/cta`)}
         redirectUrl='/'
       />
     </div>

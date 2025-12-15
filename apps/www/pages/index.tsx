@@ -1,7 +1,6 @@
-import { ForceOnboarding } from '@app/components/onboarding/force-onboarding'
 import { useRouter } from 'next/router'
+import { ForceOnboarding } from '@app/components/onboarding/force-onboarding'
 import { ParsedUrlQuery } from 'querystring'
-import { useEffect } from 'react'
 import Front from '../components/Front'
 import { FRONT_QUERY } from '../components/Front/graphql/getFrontQuery.graphql'
 import {
@@ -9,23 +8,12 @@ import {
   getFrontFeedOptions,
 } from '../components/Front/withData'
 import { createGetStaticProps } from '../lib/apollo/helpers'
-import { useMe } from '../lib/context/MeContext'
 
 const FRONT_PAGE_SSG_REVALIDATE = 60 // revalidate every minute
 const FRONT_PATH = '/'
 
 const FrontPage = () => {
   const router = useRouter()
-  const { meLoading, hasAccess } = useMe()
-
-  useEffect(() => {
-    if (meLoading) return
-    // reload to re-trigger the middleware to rewrite to the marketing-page
-    if (!hasAccess) {
-      window.location.reload()
-    }
-  }, [meLoading, hasAccess])
-
   return (
     <ForceOnboarding>
       <Front

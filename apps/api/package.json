@@ -16,6 +16,7 @@
     "@opentelemetry/sdk-trace-node": "^2.2.0",
     "@opentelemetry/semantic-conventions": "^1.38.0",
     "@orbiting/backend-modules-access": "*",
+    "@orbiting/backend-modules-allowlist": "*",
     "@orbiting/backend-modules-auth": "*",
     "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-base64u": "*",

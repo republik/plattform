@@ -8,6 +8,7 @@ import type { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
 import Head from 'next/head'
 
 import { PaynoteOverlay } from '@app/components/paynotes/paynote/paynote-overlay'
+import { IpAllowlistBanner } from '@app/components/ip-allowlist-banner'
 import { AnalyticsProvider } from '@app/lib/analytics/provider'
 import { SyncUTMToSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { OPEN_ACCESS } from 'lib/constants'
@@ -55,27 +56,28 @@ const WebApp = ({
                     <RootColorVariables />
                     <ColorContextProvider colorSchemeKey='auto'>
                       <PaynotesProvider>
-                        <MessageSync />
-                        <Head>
-                          <meta
-                            name='viewport'
-                            content='width=device-width, initial-scale=1, viewport-fit=cover'
-                          />
-                          <link
-                            rel='alternate'
-                            type='application/rss+xml'
-                            title='RSS Feed'
-                            href='/feed.xml'
-                          />
-                        </Head>
-                        <Component
-                          serverContext={serverContext}
-                          {...otherPageProps}
+                      <MessageSync />
+                      <Head>
+                        <meta
+                          name='viewport'
+                          content='width=device-width, initial-scale=1, viewport-fit=cover'
                         />
-                        <AudioPlayerOrchestrator />
-                        <SyncUTMToSessionStorage />
-                        <PaynoteOverlay />
-                        <CampaignOverlay />
+                        <link
+                          rel='alternate'
+                          type='application/rss+xml'
+                          title='RSS Feed'
+                          href='/feed.xml'
+                        />
+                      </Head>
+                      <IpAllowlistBanner />
+                      <Component
+                        serverContext={serverContext}
+                        {...otherPageProps}
+                      />
+                      <AudioPlayerOrchestrator />
+                      <SyncUTMToSessionStorage />
+                      <PaynoteOverlay />
+                      <CampaignOverlay />
                       </PaynotesProvider>
                     </ColorContextProvider>
                   </ThemeProvider>

@@ -17,6 +17,7 @@ if (process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true') {
       /Load failed/i,
       /NetworkError when attempting to fetch resource/i,
       /Sie müssen sich zuerst anmelden/i,
+      /__firefox__/i,
     ],
 
     integrations: [Sentry.extraErrorDataIntegration({ depth: 5 })],

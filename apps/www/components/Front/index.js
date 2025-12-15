@@ -266,7 +266,7 @@ const Front = ({
                       archivedYears.map((year) => (
                         <Link
                           key={year}
-                          href={`/${year}`}
+                          href={`/archiv/${year}/1`}
                           passHref
                           legacyBehavior
                         >

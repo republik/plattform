@@ -10,6 +10,7 @@ import { useTranslation } from 'lib/withT'
 import { Button } from '../../ui/button'
 
 import NativeCta from '../native-cta'
+import { useMe } from 'lib/context/MeContext'
 
 function DialogCta() {
   const utmParams = getUTMSessionStorage()
@@ -45,8 +46,9 @@ export function DialogPaynote() {
   const { t } = useTranslation()
 
   const { paynoteKind } = usePaynotes()
+  const { hasAllowlistAccess } = useMe()
 
-  if (paynoteKind !== 'DIALOG') {
+  if (paynoteKind !== 'DIALOG' && !hasAllowlistAccess) {
     return null
   }
 
