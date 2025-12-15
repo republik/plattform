@@ -33,10 +33,6 @@
       "value": "Republik teilen"
     },
     {
-      "key": "nav/onboarding",
-      "value": "Einrichtungsassistent"
-    },
-    {
       "key": "nav/invite-friends",
       "value": "Verstärkung holen"
     },
@@ -392,7 +388,6 @@
       "key": "marketing/signup/lead",
       "value": "Bitte tragen Sie unten Ihre E-Mail-Adresse ein. Im Gegenzug laden wir Sie auf einen Streifzug durch die Republik ein. Gerne schicken wir Ihnen zudem einen aktuellen Newsletter, dann sehen Sie einen Tag lang, worüber wir berichten. "
     },
-
     {
       "key": "marketing/signup/button/label",
       "value": "Anmelden"
@@ -1164,14 +1159,6 @@
     {
       "key": "Account/Access/Campaigns/Grants/beginBefore",
       "value": "einlösbar bis zum {beginBefore}"
-    },
-    {
-      "key": "Account/Onboarding/title",
-      "value": "Konto einrichten"
-    },
-    {
-      "key": "Account/Onboarding/text",
-      "value": "Mit dem Wichtigsten hilft der kurze {link}."
     },
     {
       "key": "Account/Onboarding/link",
@@ -5415,218 +5402,6 @@
     {
       "key": "Auth/CodeAuthorization/help/lastResort",
       "value": "Reissen alle Stricke, verzagen Sie nicht: Schreiben Sie unserem Erste-Hilfe-Team unter kontakt@republik.ch."
-    },
-    {
-      "key": "Onboarding/Page/meta/title",
-      "value": "Einrichtungsassistent"
-    },
-    {
-      "key": "Onboarding/Page/title",
-      "value": "Konto einrichten 🔧"
-    },
-    {
-      "key": "Onboarding/Page/preface",
-      "value": "Das Wichtigste zum Republik-Nutzen können Sie hier einstellen."
-    },
-    {
-      "key": "Onboarding/Page/pledge/title",
-      "value": "Danke 🌟"
-    },
-    {
-      "key": "Onboarding/Page/pledge/preface",
-      "value": "Mit Ihrer Mitgliedschaft können Sie ab sofort nicht nur die Republik konsumieren, sondern Sie können und sollen sie auch beeinflussen."
-    },
-    {
-      "key": "Onboarding/Page/context:pledge/packageName:YEARLY_ABO/preface",
-      "value": "Mit Ihrem Abo können Sie ab sofort nicht nur die Republik lesen und hören, Sie können auch mitdiskutieren."
-    },
-    {
-      "key": "Onboarding/Page/pledge/introduction",
-      "value": "Dieser kurze Einrichtungsassistent hilft Ihnen mit dem Wichtigsten vorab."
-    },
-    {
-      "key": "Onboarding/Page/claim/title",
-      "value": "Willkommen auf der «Verlagsetage» 🐘"
-    },
-    {
-      "key": "Onboarding/Page/claim/preface",
-      "value": "Mit Ihrer Mitgliedschaft können Sie ab sofort nicht nur die Republik konsumieren, sondern Sie können und sollen sie auch beeinflussen."
-    },
-    {
-      "key": "Onboarding/Page/claim/introduction",
-      "value": "Dieser kurze Einrichtungsassistent hilft Ihnen mit dem Wichtigsten vorab."
-    },
-    {
-      "key": "Onboarding/Page/access/title",
-      "value": "Ihre «Tour de la Republik» 🚴‍"
-    },
-    {
-      "key": "Onboarding/Page/access/preface",
-      "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen. Und wir versuchen Sie ganz unumwunden von uns zu überzeugen."
-    },
-    {
-      "key": "Onboarding/Page/access/introduction",
-      "value": "Damit Ihre wenigen Probetage zu vielen Bleibetagen werden, hilft Ihnen dieser Einrichtungsassistent mit dem Wichtigsten."
-    },
-    {
-      "key": "Onboarding/Page/trial/title",
-      "value": "Ihre «Tour de la Republik» 🚴‍"
-    },
-    {
-      "key": "Onboarding/Page/trial/preface",
-      "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen. Und wir versuchen Sie ganz unumwunden von uns zu überzeugen."
-    },
-    {
-      "key": "Onboarding/Page/trial/introduction",
-      "value": "Damit Ihre wenigen Probetage zu vielen Bleibetagen werden, hilft Ihnen dieser Einrichtungsassistent mit dem Wichtigsten."
-    },
-    {
-      "key": "Onboarding/Page/start",
-      "value": "Start"
-    },
-    {
-      "key": "Onboarding/Page/button",
-      "value": "Zum Magazin"
-    },
-    {
-      "key": "Onboarding/Page/more/account",
-      "value": "Weitere Einstellungen finden Sie im {link}."
-    },
-    {
-      "key": "Onboarding/Page/more/account/link",
-      "value": "Konto"
-    },
-    {
-      "key": "Onboarding/Page/more/questions",
-      "value": "Falls Sie weitere Fragen zur Nutzung der Republik haben, lesen Sie unsere {linkManual} oder die {linkFaq}."
-    },
-    {
-      "key": "Onboarding/Page/more/questions/linkManual",
-      "value": "Gebrauchsanleitung"
-    },
-    {
-      "key": "Onboarding/Page/more/questions/linkFaq",
-      "value": "FAQs"
-    },
-    {
-      "key": "Onboarding/Page/more/help",
-      "value": "Nötigenfalls steht Ihnen auch unser Erste-Hilfe-Team Rede und Antwort unter {email}."
-    },
-    {
-      "key": "Onboarding/Page/more/help/email",
-      "value": "kontakt@republik.ch"
-    },
-    {
-      "key": "Onboarding/Section/button/continue",
-      "value": "Weiter"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/heading",
-      "value": "App und Login"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/paragraph1",
-      "value": "Wir empfehlen Ihnen unsere App."
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/paragraph2",
-      "value": "Bei der Republik melden Sie sich nicht mit einem Passwort an, sondern über einen Bestätigungs-Link an Ihre E-Mail-Adresse."
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/paragraph3",
-      "value": "Ganz einfach geht das mit der App: Anstatt eines Bestätigungs-Links schicken wir Ihnen eine Push-Notification aufs Handy."
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/hasDevice/true/paragraph1",
-      "value": "Sie nutzen bereits die Republik-App."
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/hasDevice/true/paragraph2",
-      "value": "Die App können Sie auf einer beliebigen Anzahl von Geräten installieren."
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/ios",
-      "value": "iPhone oder iPad:"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/ios/alt",
-      "value": "im Apple App Store erhältlich"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/android",
-      "value": "Android-Geräte:"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/android/alt",
-      "value": "bei Google Play erhältlich"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/apk",
-      "value": "APK für Android:"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/apk/link",
-      "value": "APK herunterladen"
-    },
-    {
-      "key": "Onboarding/Sections/Newsletter/preamble",
-      "value": "Mit den E-Mail-Newslettern halten wir Sie auf dem Laufenden."
-    },
-    {
-      "key": "Onboarding/Sections/Newsletter/hint",
-      "value": "Diese Einstellungen lassen sich im {link} anpassen."
-    },
-    {
-      "key": "Onboarding/Sections/Newsletter/hint/link",
-      "value": "Konto"
-    },
-    {
-      "key": "Onboarding/Sections/Usability/heading",
-      "value": "Lesen, Hören, Sehen"
-    },
-    {
-      "key": "Onboarding/Sections/Usability/paragraph1",
-      "value": "Auf Wunsch merken wir uns Ihre Lese- und Hörposition in Beiträgen."
-    },
-    {
-      "key": "Onboarding/Sections/Usability/paragraph2",
-      "value": "So können Sie auf unterschiedlichen Geräten an der letzten Stelle weiterlesen."
-    },
-    {
-      "key": "Onboarding/Sections/Usability/paragraph3",
-      "value": "Mehr Lesekomfort, für den wir allerdings Ihr persönliches Leseverhalten aufzeichnen müssen. {linkMore}"
-    },
-    {
-      "key": "Onboarding/Sections/Usability/linkMore",
-      "value": "Mehr Informationen"
-    },
-    {
-      "key": "Onboarding/Sections/Usability/button/submitConsent",
-      "value": "Ja"
-    },
-    {
-      "key": "Onboarding/Sections/Usability/button/revokeConsent",
-      "value": "Nein"
-    },
-    {
-      "key": "Onboarding/Sections/Profile/heading",
-      "value": "Profil"
-    },
-    {
-      "key": "Onboarding/Sections/Profile/paragraph1",
-      "value": "Das Profil ist Ihre Visitenkarte bei der Republik."
-    },
-    {
-      "key": "Onboarding/Sections/Profile/paragraph2",
-      "value": "Wir verlinken Ihr Profil zum Beispiel bei Ihren Dialogbeiträgen."
-    },
-    {
-      "key": "Onboarding/Sections/Profile/button/save",
-      "value": "Speichern"
-    },
-    {
-      "key": "Onboarding/Sections/Profile/button/continue",
-      "value": "Später"
     },
     {
       "key": "Climatelab/Postcard/PostcardPreview/merci1",
