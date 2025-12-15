@@ -2,11 +2,10 @@
 
 import {
   NewsletterName,
-  NewsletterSubscription,
   UpdateNewsletterSubscriptionDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
-import { NL_STYLE } from '@app/components/onboarding/config'
+import { NL_STYLE } from '@app/components/newsletters/config'
 import { Spinner } from '@app/components/ui/spinner'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
@@ -14,7 +13,6 @@ import { Check, Plus } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
-import { OnboardingH3, OnboardingSection } from './onboarding-ui'
 
 function NewsletterCard({
   newsletter,
@@ -161,46 +159,4 @@ function NewsletterCard({
   )
 }
 
-const isSubscribed = (
-  name: NewsletterName,
-  subscriptions?: NewsletterSubscription[],
-) => subscriptions?.find((s) => s?.name === name)?.subscribed
-
-function NewsletterSection({
-  title,
-  newsletters,
-  subscriptions,
-}: {
-  title: string
-  newsletters: NewsletterName[]
-  subscriptions?: NewsletterSubscription[]
-}) {
-  return (
-    <OnboardingSection>
-      <div className={css({ textAlign: 'center' })}>
-        <OnboardingH3>{title}</OnboardingH3>
-        <div
-          className={css({
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 6,
-            md: {
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-            },
-          })}
-        >
-          {newsletters.map((newsletter) => (
-            <NewsletterCard
-              key={newsletter}
-              newsletter={newsletter}
-              subscribed={isSubscribed(newsletter, subscriptions)}
-            />
-          ))}
-        </div>
-      </div>
-    </OnboardingSection>
-  )
-}
-
-export default NewsletterSection
+export default NewsletterCard

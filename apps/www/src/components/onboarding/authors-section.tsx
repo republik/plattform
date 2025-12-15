@@ -6,12 +6,12 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import { OnboardingFollowButton } from '@app/components/onboarding/follow-button'
+import { Section, SectionH3 } from '@app/components/ui/section'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { Button } from '../ui/button'
 import { AUTHORS_FEATURED, AuthorType } from './config'
-import { OnboardingH3, OnboardingSection } from './onboarding-ui'
 
 function AuthorCard({
   author,
@@ -87,8 +87,8 @@ function AuthorsSection() {
   const [showAll, setShowAll] = useState(false)
 
   return (
-    <OnboardingSection>
-      <OnboardingH3>{t('onboarding/authors/title')}</OnboardingH3>
+    <Section>
+      <SectionH3>{t('onboarding/authors/title')}</SectionH3>
       <div
         className={css({
           display: 'flex',
@@ -134,7 +134,7 @@ function AuthorsSection() {
           {t(`onboarding/authors/${showAll ? 'less' : 'more'}`)}
         </Button>
       </div>
-    </OnboardingSection>
+    </Section>
   )
 }
 

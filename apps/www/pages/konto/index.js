@@ -17,6 +17,7 @@ import Merci from '../../components/Pledge/Merci'
 import { withDefaultSSR } from '../../lib/apollo/helpers'
 import { useMe } from '../../lib/context/MeContext'
 import { useTranslation } from '../../lib/withT'
+import { EventTrackingContext } from '../../src/lib/analytics/event-tracking'
 
 const { Emphasis } = Interaction
 
@@ -59,42 +60,44 @@ const AccountPage = () => {
 
   const account = (
     <AccountEnforceMe>
-      <AccountTabs />
+      <EventTrackingContext category='Account'>
+        <AccountTabs />
 
-      {trialStatus.includes('TRIAL_GROUP') && (
-        <div style={{ margin: '24px 0' }}>
-          <AccountPaynote />
-        </div>
-      )}
+        {trialStatus.includes('TRIAL_GROUP') && (
+          <div style={{ margin: '24px 0' }}>
+            <AccountPaynote />
+          </div>
+        )}
 
-      <Memberships />
-      <AccountSection id='account' title={t('Account/Update/title')}>
-        <div style={{ marginBottom: 24 }}>
-          <UserEmail />
-          <UpdateEmail />
-        </div>
-        <NameAddress />
-      </AccountSection>
-      <div {...styles.column}>
-        <AccountSection id='delete' title={t('Account/Delete/title')}>
-          <HintArea>
-            {t.elements('Account/Delete/text', {
-              link: (
-                <Link
-                  key='link'
-                  href='/datenschutz-loeschungsanfrage'
-                  passHref
-                  legacyBehavior
-                >
-                  <A>
-                    <Emphasis>{t('Account/Delete/link')}</Emphasis>
-                  </A>
-                </Link>
-              ),
-            })}
-          </HintArea>
+        <Memberships />
+        <AccountSection id='account' title={t('Account/Update/title')}>
+          <div style={{ marginBottom: 24 }}>
+            <UserEmail />
+            <UpdateEmail />
+          </div>
+          <NameAddress />
         </AccountSection>
-      </div>
+        <div {...styles.column}>
+          <AccountSection id='delete' title={t('Account/Delete/title')}>
+            <HintArea>
+              {t.elements('Account/Delete/text', {
+                link: (
+                  <Link
+                    key='link'
+                    href='/datenschutz-loeschungsanfrage'
+                    passHref
+                    legacyBehavior
+                  >
+                    <A>
+                      <Emphasis>{t('Account/Delete/link')}</Emphasis>
+                    </A>
+                  </Link>
+                ),
+              })}
+            </HintArea>
+          </AccountSection>
+        </div>
+      </EventTrackingContext>
     </AccountEnforceMe>
   )
 

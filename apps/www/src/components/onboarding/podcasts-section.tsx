@@ -7,10 +7,10 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import { OnboardingFollowButton } from '@app/components/onboarding/follow-button'
+import { Section, SectionH3 } from '@app/components/ui/section'
 import { css } from '@republik/theme/css'
 import { useTranslation } from '../../../lib/withT'
 import { PODCASTS_FEATURED, PODCASTS_STYLE } from './config'
-import { OnboardingH3, OnboardingSection } from './onboarding-ui'
 
 function PodcastCard({ podcast }: { podcast?: Document }) {
   const { t } = useTranslation()
@@ -89,8 +89,8 @@ function PodcastsSection() {
   if (!podcasts?.length) return null
 
   return (
-    <OnboardingSection>
-      <OnboardingH3>{t('onboarding/podcasts/title')}</OnboardingH3>
+    <Section>
+      <SectionH3>{t('onboarding/podcasts/title')}</SectionH3>
       <div
         className={css({
           display: 'grid',
@@ -110,7 +110,7 @@ function PodcastsSection() {
           />
         ))}
       </div>
-    </OnboardingSection>
+    </Section>
   )
 }
 

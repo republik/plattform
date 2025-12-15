@@ -7,11 +7,11 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import { OnboardingFollowButton } from '@app/components/onboarding/follow-button'
+import { Section, SectionH3 } from '@app/components/ui/section'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
 import { useTranslation } from '../../../lib/withT'
 import { FORMATS_FEATURED, FORMATS_STYLE } from './config'
-import { OnboardingH3, OnboardingSection } from './onboarding-ui'
 
 function FormatCard({ format }: { format?: Document }) {
   const { t } = useTranslation()
@@ -87,8 +87,8 @@ function FormatsSection() {
   if (!formats?.length) return null
 
   return (
-    <OnboardingSection>
-      <OnboardingH3>{t('onboarding/formats/title')}</OnboardingH3>
+    <Section>
+      <SectionH3>{t('onboarding/formats/title')}</SectionH3>
       <div
         className={css({
           display: 'flex',
@@ -109,7 +109,7 @@ function FormatsSection() {
           />
         ))}
       </div>
-    </OnboardingSection>
+    </Section>
   )
 }
 

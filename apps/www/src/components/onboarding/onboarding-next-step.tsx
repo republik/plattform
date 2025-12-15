@@ -3,34 +3,6 @@ import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
-export function OnboardingH3({ children }: { children: ReactNode }) {
-  return (
-    <h3
-      className={css({
-        fontFamily: 'gtAmericaStandard',
-        fontWeight: 'bold',
-        mb: 6,
-        mx: 2,
-        md: {
-          textAlign: 'center',
-        },
-      })}
-    >
-      {children}
-    </h3>
-  )
-}
-
-export function OnboardingSection({ children }: { children: ReactNode }) {
-  return (
-    <section
-      className={css({ pt: 4, pb: 16, md: { maxWidth: 'shop', mx: 'auto' } })}
-    >
-      {children}
-    </section>
-  )
-}
-
 export function OnboardingNextStep({
   href,
   children,

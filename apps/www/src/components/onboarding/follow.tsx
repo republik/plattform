@@ -7,7 +7,7 @@ import { Frame } from '../ui/containers'
 import AuthorsSection from './authors-section'
 import FormatsSection from './formats-section'
 import OnboardingHeader, { OnboardingBackButton } from './onboarding-header'
-import { OnboardingNextStep } from './onboarding-ui'
+import { OnboardingNextStep } from './onboarding-next-step'
 import PodcastsSection from './podcasts-section'
 
 function OnboardingFollow() {

@@ -7800,6 +7800,18 @@
       "value": "Sonntags"
     },
     {
+      "key": "newsletters/PROJECTR/name",
+      "value": "Project R"
+    },
+    {
+      "key": "newsletters/PROJECTR/description",
+      "value": "Der schonungslose Blick hinter die Kulissen unseres Unternehmens."
+    },
+    {
+      "key": "newsletters/PROJECTR/schedule",
+      "value": "Alle 2 bis 3 Wochen"
+    },
+    {
       "key": "onboarding/newsletters/step",
       "value": "Tipp 1 von 2"
     },

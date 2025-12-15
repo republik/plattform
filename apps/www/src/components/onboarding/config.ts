@@ -7,11 +7,12 @@ import formatGedankensplitter from './assets/format-gedankensplitter.png'
 import formatPfister from './assets/format-pfister.png'
 import formatRosenwasser from './assets/format-rosenwasser.png'
 import formatVahland from './assets/format-vahland.png'
-import nlClimate from './assets/nl_challenge_accepted.png'
-import nlSunday from './assets/nl_republik_am_sonntag.png'
-import nlWeekly from './assets/nl_republik_am_wochenende.png'
-import nlDaily from './assets/nl_republik_heute.png'
-import nlWdwww from './assets/nl_wdwww.png'
+
+type StyleType = {
+  backgroundColor?: string
+  color?: string
+  imageSrc?: StaticImageData
+}
 
 export const NL_FEATURED: NewsletterName[] = [
   NewsletterName.Daily,
@@ -22,30 +23,6 @@ export const NL_MORE: NewsletterName[] = [
   NewsletterName.Climate,
   NewsletterName.Sunday,
 ]
-
-type StyleType = {
-  backgroundColor?: string
-  color?: string
-  imageSrc?: StaticImageData
-}
-
-export const NL_STYLE: { [key: string]: StyleType } = {
-  [NewsletterName.Daily]: {
-    imageSrc: nlDaily,
-  },
-  [NewsletterName.Wdwww]: {
-    imageSrc: nlWdwww,
-  },
-  [NewsletterName.Weekly]: {
-    imageSrc: nlWeekly,
-  },
-  [NewsletterName.Climate]: {
-    imageSrc: nlClimate,
-  },
-  [NewsletterName.Sunday]: {
-    imageSrc: nlSunday,
-  },
-}
 
 export const FORMATS_FEATURED: string[] = [
   'republik/format-binswanger',
