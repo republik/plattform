@@ -155,8 +155,8 @@ const isReadingMinutesSuppressed = (fields, resolvedFields) =>
   // Paths
   ((fields.path && suppressReadingMinutes?.paths?.includes(fields.path)) ||
     // Series
-    (resolvedFields.series?.title &&
-      suppressReadingMinutes.series?.includes(resolvedFields.series.title)) ||
+    (resolvedFields?.series?.title &&
+      suppressReadingMinutes?.series?.includes(resolvedFields.series.title)) ||
     // Formats
     (resolvedFields.format?.meta?.repoId &&
       suppressReadingMinutes.formats?.includes(

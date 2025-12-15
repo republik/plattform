@@ -177,7 +177,7 @@ const metaFieldResolver = (meta, _all = [], _users = [], errors) => {
   // string, aka github url if this document belongs to a series
   if (typeof series === 'string') {
     const seriesDocument = resolver(meta.series)
-    series = seriesDocument?.content.meta.series
+    series = seriesDocument?.content?.meta?.series
   }
   if (series) {
     series = {
@@ -225,7 +225,7 @@ const contentUrlResolver = (
   errors,
   urlPrefix,
   searchString,
-  user,
+  _user,
 ) => {
   const docResolver = createResolver(_all, _users, errors)
 
@@ -411,7 +411,7 @@ const stringifyNode = (node) =>
           'FIGURE',
           'NOTE',
           'HTML',
-          ].includes(node.identifier),
+        ].includes(node.identifier),
     ),
     '\n',
   )
