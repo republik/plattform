@@ -15,7 +15,7 @@ const lockTtlSecs = 30 // increased from 10 to 30 seconds because of front publi
 
 const getScheduledDocuments = async (elastic) => {
   const res = await elastic.search({
-    index: getIndexAlias(index.type.toLocaleLowerCase(), 'read'),
+    index: getIndexAlias(index.type.toLowerCase(), 'read'),
     size: lockTtlSecs, // Amount publishing 1 document a second
     body: {
       sort: { 'meta.scheduledAt': 'asc' },

@@ -13,7 +13,7 @@ const timeout = (ms: number) =>
 
 module.exports = async ({
   indices: indicesFilter = mappings.list.map(({ type }: { type: string }) =>
-    type.toLocaleLowerCase(),
+    type.toLowerCase(),
   ),
   switch: doSwitch = true,
   inserts: doInserts = true,
@@ -30,7 +30,7 @@ module.exports = async ({
   const redis = Redis.connect()
 
   const indices = mappings.list.filter(({ type }: { type: string }) =>
-    indicesFilter.includes(type.toLocaleLowerCase()),
+    indicesFilter.includes(type.toLowerCase()),
   )
 
   await Promise.all(
