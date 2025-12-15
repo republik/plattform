@@ -152,8 +152,8 @@ const notificationHandler = async (
     )
 
     if (mappings.dict[table]) {
-      const { type, name, path } = mappings.dict[table]
-      const { insert } = inserts.dict[name]
+      const { type, path } = mappings.dict[table]
+      const { insert } = inserts.dict[type.toLowerCase()]
 
       const updateIds = rows
         .filter((row) => row.op !== 'DELETE')
@@ -165,7 +165,7 @@ const notificationHandler = async (
       debug(table, { updateIds, deleteIds })
 
       await insert({
-        indexName: getIndexAlias(name, 'write'),
+        indexName: getIndexAlias(type.toLowerCase(), 'write'),
         type,
         pgdb,
         elastic,
