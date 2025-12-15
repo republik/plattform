@@ -50,7 +50,7 @@ export function OnboardingNextStep({
         pt: 2,
         borderTopWidth: '1px',
         borderTopStyle: 'solid',
-        borderTopColor: 'black',
+        borderTopColor: 'contrast',
       })}
     >
       <p className={css({ fontSize: 's', color: 'textSoft' })}>

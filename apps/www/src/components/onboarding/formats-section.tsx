@@ -8,10 +8,10 @@ import {
 import { useQuery } from '@apollo/client'
 import { OnboardingFollowButton } from '@app/components/onboarding/follow-button'
 import { css } from '@republik/theme/css'
+import Image from 'next/image'
 import { useTranslation } from '../../../lib/withT'
 import { FORMATS_FEATURED, FORMATS_STYLE } from './config'
 import { OnboardingH3, OnboardingSection } from './onboarding-ui'
-import Image from 'next/image'
 
 function FormatCard({ format }: { format?: Document }) {
   const { t } = useTranslation()
@@ -22,6 +22,7 @@ function FormatCard({ format }: { format?: Document }) {
 
   return (
     <div
+      data-theme='light'
       className={css({
         flex: '0 0 280px',
         scrollSnapAlign: 'start',
@@ -30,6 +31,7 @@ function FormatCard({ format }: { format?: Document }) {
         p: 4,
         display: 'flex',
         flexDirection: 'column',
+        color: 'text',
         md: {
           mx: 'initial',
         },

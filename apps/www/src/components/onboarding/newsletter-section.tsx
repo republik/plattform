@@ -56,10 +56,13 @@ function NewsletterCard({
 
   return (
     <div
+      data-theme='light'
       className={css({
         borderWidth: '1px',
         borderStyle: 'solid',
         borderColor: 'divider',
+        background: 'background',
+        color: 'text',
         p: 4,
         cursor: 'pointer',
         textAlign: 'left',
@@ -135,9 +138,9 @@ function NewsletterCard({
               size={20}
               className={css({
                 color: 'text.inverted',
-                background: 'black',
+                background: 'contrast',
                 borderRadius: '100%',
-                borderColor: 'black',
+                borderColor: 'contrast',
                 borderWidth: '2px',
                 borderStyle: 'solid',
                 boxSizing: 'content-box',
