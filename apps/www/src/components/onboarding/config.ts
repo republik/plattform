@@ -11,6 +11,7 @@ import nlClimate from './assets/nl_challenge_accepted.png'
 import nlSunday from './assets/nl_republik_am_sonntag.png'
 import nlWeekly from './assets/nl_republik_am_wochenende.png'
 import nlDaily from './assets/nl_republik_heute.png'
+import nlWdwww from './assets/nl_wdwww.png'
 
 export const NL_FEATURED: NewsletterName[] = [
   NewsletterName.Daily,
@@ -33,7 +34,7 @@ export const NL_STYLE: { [key: string]: StyleType } = {
     imageSrc: nlDaily,
   },
   [NewsletterName.Wdwww]: {
-    imageSrc: nlDaily,
+    imageSrc: nlWdwww,
   },
   [NewsletterName.Weekly]: {
     imageSrc: nlWeekly,
