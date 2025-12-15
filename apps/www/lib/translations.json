@@ -8065,11 +8065,11 @@
     },
     {
       "key": "newsletters/DAILY/name",
-      "value": "Republik Heute"
+      "value": "Republik heute"
     },
     {
       "key": "newsletters/DAILY/description",
-      "value": "Jeden Morgen die kompakte Übersicht: Was die Republik aktuell zu bieten hat."
+      "value": "Jeden Morgen die kompakte Übersicht: was die Republik aktuell zu bieten hat."
     },
     {
       "key": "newsletters/DAILY/schedule",
@@ -8109,7 +8109,7 @@
     },
     {
       "key": "newsletters/CLIMATE/schedule",
-      "value": "Alle 2-3 Wochen"
+      "value": "Alle 2 bis 3 Wochen"
     },
     {
       "key": "newsletters/SUNDAY/name",
@@ -8241,7 +8241,7 @@
     },
     {
       "key": "onboarding/podcasts/republik/format-sondersession/description",
-      "value": "Ein Gespräch, ein Ziel: Mehr Durchblick im Schweizer Politikdschungel."
+      "value": "Ein Gespräch, ein Ziel: mehr Durchblick im Schweizer Politikdschungel."
     },
     {
       "key": "onboarding/podcasts/republik/format-gute-frage/title",

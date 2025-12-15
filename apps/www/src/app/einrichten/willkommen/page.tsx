@@ -68,7 +68,7 @@ export default async function Page() {
           Willkommen!
         </h1>
         <p>
-          Wir haben noch <b>zwei Tipps für Sie</b>, um Ihnen zu helfen, das
+          Wir haben noch <b>zwei Tipps für Sie,</b> um Ihnen zu helfen, das
           Beste aus Ihrem Abonnement herauszuholen.
         </p>
         <div className={css({ mt: 8, maxWidth: '280px', mx: 'auto' })}>
