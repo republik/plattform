@@ -6,10 +6,12 @@ import {
   UpdateNewsletterSubscriptionDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
+import { NL_STYLE } from '@app/components/onboarding/config'
 import { Spinner } from '@app/components/ui/spinner'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { Check, Plus } from 'lucide-react'
+import Image from 'next/image'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { OnboardingH3, OnboardingSection } from './onboarding-ui'
@@ -73,15 +75,15 @@ function NewsletterCard({
           height: '100%',
         })}
       >
-        <img
+        <Image
           className={css({
             flex: '0 0 1',
             alignSelf: 'flex-start',
             pt: 1,
           })}
-          width='42'
-          src='https://cdn.repub.ch/s3/republik-assets/repos/republik/wdwww-21-nov/images/93bddbde7caa064aab732fe6c42d474abab7a962.png?size=1890x945&format=auto&resize=768x'
-          alt='newletter icon'
+          width='64'
+          src={NL_STYLE[newsletter]?.imageSrc}
+          alt=''
         />
         <div
           className={css({

@@ -7,6 +7,10 @@ import formatGedankensplitter from './assets/format-gedankensplitter.png'
 import formatPfister from './assets/format-pfister.png'
 import formatRosenwasser from './assets/format-rosenwasser.png'
 import formatVahland from './assets/format-vahland.png'
+import nlClimate from './assets/nl_challenge_accepted.png'
+import nlSunday from './assets/nl_republik_am_sonntag.png'
+import nlWeekly from './assets/nl_republik_am_wochenende.png'
+import nlDaily from './assets/nl_republik_heute.png'
 
 export const NL_FEATURED: NewsletterName[] = [
   NewsletterName.Daily,
@@ -18,6 +22,30 @@ export const NL_MORE: NewsletterName[] = [
   NewsletterName.Sunday,
 ]
 
+type StyleType = {
+  backgroundColor?: string
+  color?: string
+  imageSrc?: StaticImageData
+}
+
+export const NL_STYLE: { [key: string]: StyleType } = {
+  [NewsletterName.Daily]: {
+    imageSrc: nlDaily,
+  },
+  [NewsletterName.Wdwww]: {
+    imageSrc: nlDaily,
+  },
+  [NewsletterName.Weekly]: {
+    imageSrc: nlWeekly,
+  },
+  [NewsletterName.Climate]: {
+    imageSrc: nlClimate,
+  },
+  [NewsletterName.Sunday]: {
+    imageSrc: nlSunday,
+  },
+}
+
 export const FORMATS_FEATURED: string[] = [
   'republik/format-binswanger',
   'republik/format-rosenwasser',
@@ -26,12 +54,6 @@ export const FORMATS_FEATURED: string[] = [
   'republik/format-gedankensplitter',
   'republik/format-format-wie-reden-wir-eigentlich',
 ]
-
-type StyleType = {
-  backgroundColor?: string
-  color?: string
-  imageSrc?: StaticImageData
-}
 
 export const FORMATS_STYLE: { [key: string]: StyleType } = {
   'republik/format-binswanger': {
@@ -77,7 +99,7 @@ export const AUTHORS_FEATURED: AuthorType[] = [
   { id: 'c8fe5f34-0130-4049-831b-c32fe471a705', slug: 'asscholl' },
 ]
 
-/*export const PODCASTS_FEATURED: string[] = [
+export const PODCASTS_FEATURED: string[] = [
   'republik/format-dritte-gewalt',
   'republik/format-sondersession',
   'republik/format-gute-frage',
@@ -101,10 +123,10 @@ export const PODCASTS_STYLE: { [key: string]: StyleType } = {
     backgroundColor: '#D4C800',
     color: '#000000',
   },
-}*/
+}
 
 // STAGING
-export const PODCASTS_FEATURED: string[] = [
+/* export const PODCASTS_FEATURED: string[] = [
   'republik/format-am-klavier',
   'republik/format-wochenrevue',
   'republik/format-republik-live',
@@ -128,4 +150,4 @@ export const PODCASTS_STYLE: { [key: string]: StyleType } = {
     backgroundColor: '#D4C800',
     color: '#000000',
   },
-}
+} */
