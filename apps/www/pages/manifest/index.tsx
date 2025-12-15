@@ -6,8 +6,8 @@ import {
   NarrowContainer,
 } from '@project-r/styleguide'
 
-import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
-import { withDefaultSSR } from '../lib/apollo/helpers'
+import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../../lib/constants'
+import { withDefaultSSR } from '../../lib/apollo/helpers'
 import Frame from 'components/Frame'
 
 const Page = ({ router }) => {

@@ -9,7 +9,6 @@ import {
   fontStyles,
 } from '@project-r/styleguide'
 
-import { SPACE } from '../components/Frame/PureFooter'
 
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import { withDefaultSSR } from '../lib/apollo/helpers'
@@ -28,7 +27,7 @@ const styles = {
     marginRight: 'auto',
     [mediaQueries.mUp]: {
       width: 280,
-      paddingTop: SPACE * 2,
+      paddingTop: 60 * 2,
     },
   }),
   whiteOnBlack: css({
