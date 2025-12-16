@@ -7,6 +7,18 @@ import nlWeekly from './assets/nl_republik_am_wochenende.png'
 import nlDaily from './assets/nl_republik_heute.png'
 import nlWdwww from './assets/nl_wdwww.png'
 
+export const NL_FEATURED = [
+  NewsletterName.Daily,
+  NewsletterName.Wdwww,
+  NewsletterName.Weekly,
+]
+
+export const NL_MORE = [
+  NewsletterName.Climate,
+  NewsletterName.Sunday,
+  NewsletterName.Projectr,
+]
+
 export const NL_STYLE: { [key: string]: { imageSrc: StaticImageData } } = {
   [NewsletterName.Daily]: {
     imageSrc: nlDaily,
