@@ -50,7 +50,6 @@ const styles = {
   }),
   hintA: css({
     textDecoration: 'underline',
-    textDecorationSkip: 'ink',
     color: colors.lightText,
     ':hover': {
       color: colors.text,

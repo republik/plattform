@@ -12,7 +12,6 @@ export const paragraphStyle = {
 export const linkStyle = {
   color: colors.text,
   textDecoration: 'underline',
-  textDecorationSkip: 'ink',
 }
 
 const strikeThroughStyle = {

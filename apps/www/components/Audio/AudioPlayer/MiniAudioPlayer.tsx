@@ -59,7 +59,6 @@ const styles = {
     textDecoration: 'none',
     '&[href]:hover': {
       textDecoration: 'underline',
-      textDecorationSkip: 'ink',
     },
   }),
 }

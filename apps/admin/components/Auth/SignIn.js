@@ -49,7 +49,6 @@ const styles = {
   }),
   hintA: css({
     textDecoration: 'underline',
-    textDecorationSkip: 'ink',
     color: colors.lightText,
     ':hover': {
       color: colors.text,
@@ -230,7 +229,7 @@ class SignIn extends Component {
         </Label>
         {!!serverError && <ErrorMessage error={serverError} />}
       </div>
-    );
+    )
   }
 }
 

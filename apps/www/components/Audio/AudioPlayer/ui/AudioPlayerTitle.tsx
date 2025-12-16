@@ -12,7 +12,6 @@ const styles = {
     overflow: 'hidden',
     '&[href]:hover': {
       textDecoration: 'underline',
-      textDecorationSkip: 'ink',
     },
   }),
   buttonFix: css({
@@ -26,7 +25,6 @@ const styles = {
     cursor: 'pointer',
     '&:hover > *': {
       textDecoration: 'underline',
-      textDecorationSkip: 'ink',
     },
   }),
 }
