@@ -172,7 +172,7 @@ const SyncMe = () => {
       postMessage({ type: 'initial-state', payload: { me } })
       // isSignedIn is only relevant to trigger push notification permission request
       // and we don't want it to happen before onboarding is completed
-    } else if (me.onboarded) {
+    } else if (me?.onboarded) {
       postMessage({ type: 'isSignedIn', payload: !!me })
     }
   }, [me, meLoading, inNativeAppLegacy])
