@@ -1,0 +1,17 @@
+query OnboardingFormats($repoIds: [ID!]) {
+  documents(repoIds: $repoIds) {
+    nodes {
+      id
+      repoId
+      meta {
+        title
+        audioCover
+      }
+      subscribedBy(onlyMe: true) {
+        nodes {
+          ...SubscriptionFields
+        }
+      }
+    }
+  }
+}

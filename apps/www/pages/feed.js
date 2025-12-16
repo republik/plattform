@@ -1,11 +1,12 @@
+import { ForceOnboarding } from '@app/components/onboarding/force-onboarding'
 import compose from 'lodash/flowRight'
-import Feed from '../components/Feed'
 import { enforceMembership } from '../components/Auth/withMembership'
+import Feed from '../components/Feed'
+import { withDefaultSSR } from '../lib/apollo/helpers'
 import withMe from '../lib/apollo/withMe'
-import withT from '../lib/withT'
 
 import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
-import { withDefaultSSR } from '../lib/apollo/helpers'
+import withT from '../lib/withT'
 
 const FeedPage = ({ t }) => {
   const meta = {
@@ -13,7 +14,11 @@ const FeedPage = ({ t }) => {
     image: `${CDN_FRONTEND_BASE_URL}/static/social-media/logo.png`,
   }
 
-  return <Feed meta={meta} />
+  return (
+    <ForceOnboarding>
+      <Feed meta={meta} />
+    </ForceOnboarding>
+  )
 }
 
 export default withDefaultSSR(

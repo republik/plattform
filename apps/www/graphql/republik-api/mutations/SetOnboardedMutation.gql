@@ -1,0 +1,6 @@
+mutation setOnboarded {
+  setOnboarded {
+    id
+    onboarded
+  }
+}

@@ -33,10 +33,6 @@
       "value": "Republik teilen"
     },
     {
-      "key": "nav/onboarding",
-      "value": "Einrichtungsassistent"
-    },
-    {
       "key": "nav/invite-friends",
       "value": "Verstärkung holen"
     },
@@ -392,7 +388,6 @@
       "key": "marketing/signup/lead",
       "value": "Bitte tragen Sie unten Ihre E-Mail-Adresse ein. Im Gegenzug laden wir Sie auf einen Streifzug durch die Republik ein. Gerne schicken wir Ihnen zudem einen aktuellen Newsletter, dann sehen Sie einen Tag lang, worüber wir berichten. "
     },
-
     {
       "key": "marketing/signup/button/label",
       "value": "Anmelden"
@@ -1164,14 +1159,6 @@
     {
       "key": "Account/Access/Campaigns/Grants/beginBefore",
       "value": "einlösbar bis zum {beginBefore}"
-    },
-    {
-      "key": "Account/Onboarding/title",
-      "value": "Konto einrichten"
-    },
-    {
-      "key": "Account/Onboarding/text",
-      "value": "Mit dem Wichtigsten hilft der kurze {link}."
     },
     {
       "key": "Account/Onboarding/link",
@@ -5417,218 +5404,6 @@
       "value": "Reissen alle Stricke, verzagen Sie nicht: Schreiben Sie unserem Erste-Hilfe-Team unter kontakt@republik.ch."
     },
     {
-      "key": "Onboarding/Page/meta/title",
-      "value": "Einrichtungsassistent"
-    },
-    {
-      "key": "Onboarding/Page/title",
-      "value": "Konto einrichten 🔧"
-    },
-    {
-      "key": "Onboarding/Page/preface",
-      "value": "Das Wichtigste zum Republik-Nutzen können Sie hier einstellen."
-    },
-    {
-      "key": "Onboarding/Page/pledge/title",
-      "value": "Danke 🌟"
-    },
-    {
-      "key": "Onboarding/Page/pledge/preface",
-      "value": "Mit Ihrer Mitgliedschaft können Sie ab sofort nicht nur die Republik konsumieren, sondern Sie können und sollen sie auch beeinflussen."
-    },
-    {
-      "key": "Onboarding/Page/context:pledge/packageName:YEARLY_ABO/preface",
-      "value": "Mit Ihrem Abo können Sie ab sofort nicht nur die Republik lesen und hören, Sie können auch mitdiskutieren."
-    },
-    {
-      "key": "Onboarding/Page/pledge/introduction",
-      "value": "Dieser kurze Einrichtungsassistent hilft Ihnen mit dem Wichtigsten vorab."
-    },
-    {
-      "key": "Onboarding/Page/claim/title",
-      "value": "Willkommen auf der «Verlagsetage» 🐘"
-    },
-    {
-      "key": "Onboarding/Page/claim/preface",
-      "value": "Mit Ihrer Mitgliedschaft können Sie ab sofort nicht nur die Republik konsumieren, sondern Sie können und sollen sie auch beeinflussen."
-    },
-    {
-      "key": "Onboarding/Page/claim/introduction",
-      "value": "Dieser kurze Einrichtungsassistent hilft Ihnen mit dem Wichtigsten vorab."
-    },
-    {
-      "key": "Onboarding/Page/access/title",
-      "value": "Ihre «Tour de la Republik» 🚴‍"
-    },
-    {
-      "key": "Onboarding/Page/access/preface",
-      "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen. Und wir versuchen Sie ganz unumwunden von uns zu überzeugen."
-    },
-    {
-      "key": "Onboarding/Page/access/introduction",
-      "value": "Damit Ihre wenigen Probetage zu vielen Bleibetagen werden, hilft Ihnen dieser Einrichtungsassistent mit dem Wichtigsten."
-    },
-    {
-      "key": "Onboarding/Page/trial/title",
-      "value": "Ihre «Tour de la Republik» 🚴‍"
-    },
-    {
-      "key": "Onboarding/Page/trial/preface",
-      "value": "Sie können sich in den kommenden Tagen ohne Einschränkung bei uns umsehen. Und wir versuchen Sie ganz unumwunden von uns zu überzeugen."
-    },
-    {
-      "key": "Onboarding/Page/trial/introduction",
-      "value": "Damit Ihre wenigen Probetage zu vielen Bleibetagen werden, hilft Ihnen dieser Einrichtungsassistent mit dem Wichtigsten."
-    },
-    {
-      "key": "Onboarding/Page/start",
-      "value": "Start"
-    },
-    {
-      "key": "Onboarding/Page/button",
-      "value": "Zum Magazin"
-    },
-    {
-      "key": "Onboarding/Page/more/account",
-      "value": "Weitere Einstellungen finden Sie im {link}."
-    },
-    {
-      "key": "Onboarding/Page/more/account/link",
-      "value": "Konto"
-    },
-    {
-      "key": "Onboarding/Page/more/questions",
-      "value": "Falls Sie weitere Fragen zur Nutzung der Republik haben, lesen Sie unsere {linkManual} oder die {linkFaq}."
-    },
-    {
-      "key": "Onboarding/Page/more/questions/linkManual",
-      "value": "Gebrauchsanleitung"
-    },
-    {
-      "key": "Onboarding/Page/more/questions/linkFaq",
-      "value": "FAQs"
-    },
-    {
-      "key": "Onboarding/Page/more/help",
-      "value": "Nötigenfalls steht Ihnen auch unser Erste-Hilfe-Team Rede und Antwort unter {email}."
-    },
-    {
-      "key": "Onboarding/Page/more/help/email",
-      "value": "kontakt@republik.ch"
-    },
-    {
-      "key": "Onboarding/Section/button/continue",
-      "value": "Weiter"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/heading",
-      "value": "App und Login"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/paragraph1",
-      "value": "Wir empfehlen Ihnen unsere App."
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/paragraph2",
-      "value": "Bei der Republik melden Sie sich nicht mit einem Passwort an, sondern über einen Bestätigungs-Link an Ihre E-Mail-Adresse."
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/paragraph3",
-      "value": "Ganz einfach geht das mit der App: Anstatt eines Bestätigungs-Links schicken wir Ihnen eine Push-Notification aufs Handy."
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/hasDevice/true/paragraph1",
-      "value": "Sie nutzen bereits die Republik-App."
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/hasDevice/true/paragraph2",
-      "value": "Die App können Sie auf einer beliebigen Anzahl von Geräten installieren."
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/ios",
-      "value": "iPhone oder iPad:"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/ios/alt",
-      "value": "im Apple App Store erhältlich"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/android",
-      "value": "Android-Geräte:"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/android/alt",
-      "value": "bei Google Play erhältlich"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/apk",
-      "value": "APK für Android:"
-    },
-    {
-      "key": "Onboarding/Sections/AppLogin/apk/link",
-      "value": "APK herunterladen"
-    },
-    {
-      "key": "Onboarding/Sections/Newsletter/preamble",
-      "value": "Mit den E-Mail-Newslettern halten wir Sie auf dem Laufenden."
-    },
-    {
-      "key": "Onboarding/Sections/Newsletter/hint",
-      "value": "Diese Einstellungen lassen sich im {link} anpassen."
-    },
-    {
-      "key": "Onboarding/Sections/Newsletter/hint/link",
-      "value": "Konto"
-    },
-    {
-      "key": "Onboarding/Sections/Usability/heading",
-      "value": "Lesen, Hören, Sehen"
-    },
-    {
-      "key": "Onboarding/Sections/Usability/paragraph1",
-      "value": "Auf Wunsch merken wir uns Ihre Lese- und Hörposition in Beiträgen."
-    },
-    {
-      "key": "Onboarding/Sections/Usability/paragraph2",
-      "value": "So können Sie auf unterschiedlichen Geräten an der letzten Stelle weiterlesen."
-    },
-    {
-      "key": "Onboarding/Sections/Usability/paragraph3",
-      "value": "Mehr Lesekomfort, für den wir allerdings Ihr persönliches Leseverhalten aufzeichnen müssen. {linkMore}"
-    },
-    {
-      "key": "Onboarding/Sections/Usability/linkMore",
-      "value": "Mehr Informationen"
-    },
-    {
-      "key": "Onboarding/Sections/Usability/button/submitConsent",
-      "value": "Ja"
-    },
-    {
-      "key": "Onboarding/Sections/Usability/button/revokeConsent",
-      "value": "Nein"
-    },
-    {
-      "key": "Onboarding/Sections/Profile/heading",
-      "value": "Profil"
-    },
-    {
-      "key": "Onboarding/Sections/Profile/paragraph1",
-      "value": "Das Profil ist Ihre Visitenkarte bei der Republik."
-    },
-    {
-      "key": "Onboarding/Sections/Profile/paragraph2",
-      "value": "Wir verlinken Ihr Profil zum Beispiel bei Ihren Dialogbeiträgen."
-    },
-    {
-      "key": "Onboarding/Sections/Profile/button/save",
-      "value": "Speichern"
-    },
-    {
-      "key": "Onboarding/Sections/Profile/button/continue",
-      "value": "Später"
-    },
-    {
       "key": "Climatelab/Postcard/PostcardPreview/merci1",
       "value": "Danke für Ihre Postkarte. Sie wird uns helfen, zu verstehen, wie Sie in die Zukunft blicken. Darum wird es im Klimalabor immer wieder gehen: Wir wollen über die Zukunft nachdenken, den Blick für positive Entwicklungen schärfen und herausfinden, was es braucht, damit wir zuversichtlich und handlungsfähig bleiben."
     },
@@ -7963,6 +7738,294 @@
     {
       "key": "loginPopup/description",
       "value": "Bitte <b>melden Sie sich an</b>, um den Beitrag zu lesen."
+    },
+    {
+      "key": "newsletters/DAILY/name",
+      "value": "Republik heute"
+    },
+    {
+      "key": "newsletters/DAILY/description",
+      "value": "Jeden Morgen die kompakte Übersicht: was die Republik aktuell zu bieten hat."
+    },
+    {
+      "key": "newsletters/DAILY/schedule",
+      "value": "Montag bis Freitag"
+    },
+    {
+      "key": "newsletters/WDWWW/name",
+      "value": "Was diese Woche wichtig war"
+    },
+    {
+      "key": "newsletters/WDWWW/description",
+      "value": "Die News der Woche, sorgfältig ausgewählt und kompakt eingeordnet."
+    },
+    {
+      "key": "newsletters/WDWWW/schedule",
+      "value": "Freitag"
+    },
+    {
+      "key": "newsletters/WEEKLY/name",
+      "value": "Republik am Wochenende"
+    },
+    {
+      "key": "newsletters/WEEKLY/description",
+      "value": "Lektüre für das Wochenende und alle Beiträge der Woche nochmals im Überblick."
+    },
+    {
+      "key": "newsletters/WEEKLY/schedule",
+      "value": "Samstag"
+    },
+    {
+      "key": "newsletters/CLIMATE/name",
+      "value": "Challenge Accepted"
+    },
+    {
+      "key": "newsletters/CLIMATE/description",
+      "value": "Der Newsletter für alle, die sich der Klimakrise stellen."
+    },
+    {
+      "key": "newsletters/CLIMATE/schedule",
+      "value": "Alle 2 bis 3 Wochen"
+    },
+    {
+      "key": "newsletters/SUNDAY/name",
+      "value": "Republik am Sonntag"
+    },
+    {
+      "key": "newsletters/SUNDAY/description",
+      "value": "Lesegenuss fernab aktueller News-Hektik."
+    },
+    {
+      "key": "newsletters/SUNDAY/schedule",
+      "value": "Sonntags"
+    },
+    {
+      "key": "newsletters/PROJECTR/name",
+      "value": "Project R"
+    },
+    {
+      "key": "newsletters/PROJECTR/description",
+      "value": "Der schonungslose Blick hinter die Kulissen unseres Unternehmens."
+    },
+    {
+      "key": "newsletters/PROJECTR/schedule",
+      "value": "Alle 2 bis 3 Wochen"
+    },
+    {
+      "key": "onboarding/newsletters/step",
+      "value": "Tipp 1 von 2"
+    },
+    {
+      "key": "onboarding/newsletters/title",
+      "value": "Lassen Sie sich die Republik ins Postfach liefern"
+    },
+    {
+      "key": "onboarding/newsletters/description",
+      "value": "Welche Newsletter möchten Sie erhalten?"
+    },
+    {
+      "key": "onboarding/newsletters/next",
+      "value": "Weiter"
+    },
+    {
+      "key": "onboarding/follow/step",
+      "value": "Tipp 2 von 2"
+    },
+    {
+      "key": "onboarding/follow/title",
+      "value": "Folgen Sie Stimmen, die Sie interessieren"
+    },
+    {
+      "key": "onboarding/follow/web/description",
+      "value": "Wir informieren Sie per E-Mail über neue Beiträge."
+    },
+    {
+      "key": "onboarding/follow/app/description",
+      "value": "Wir informieren Sie per Push-Benachrichtigung über neue Beiträge."
+    },
+    {
+      "key": "onboarding/follow/next",
+      "value": "Fertig!"
+    },
+    {
+      "key": "onboarding/formats/title",
+      "value": "Kolumnen"
+    },
+    {
+      "key": "onboarding/authors/title",
+      "value": "Autorinnen"
+    },
+    {
+      "key": "onboarding/authors/more",
+      "value": "Mehr anzeigen"
+    },
+    {
+      "key": "onboarding/authors/less",
+      "value": "Weniger anzeigen"
+    },
+    {
+      "key": "onboarding/podcasts/title",
+      "value": "Podcasts"
+    },
+    {
+      "key": "onboarding/formats/republik/format-binswanger/author",
+      "value": "Daniel Binswanger"
+    },
+    {
+      "key": "onboarding/formats/republik/format-binswanger/description",
+      "value": "Der Wochenkommentar"
+    },
+    {
+      "key": "onboarding/formats/republik/format-rosenwasser/author",
+      "value": "Anna Rosenwasser"
+    },
+    {
+      "key": "onboarding/formats/republik/format-rosenwasser/description",
+      "value": "Der queere Blick unter die Oberfläche"
+    },
+    {
+      "key": "onboarding/formats/republik/format-format-wie-reden-wir-eigentlich/author",
+      "value": "Marie-José Kolly"
+    },
+    {
+      "key": "onboarding/formats/republik/format-format-wie-reden-wir-eigentlich/description",
+      "value": "Was unsere Sprache über uns verrät"
+    },
+    {
+      "key": "onboarding/formats/republik/format-vahland/author",
+      "value": "Kia Vahland"
+    },
+    {
+      "key": "onboarding/formats/republik/format-vahland/description",
+      "value": "Aktualität durch die Brille grosser Kunst"
+    },
+    {
+      "key": "onboarding/formats/republik/format-pfister/author",
+      "value": "Gerhard Pfister"
+    },
+    {
+      "key": "onboarding/formats/republik/format-pfister/description",
+      "value": "Politphilosophischer Blick auf die Schweiz"
+    },
+    {
+      "key": "onboarding/formats/republik/format-gedankensplitter/author",
+      "value": "Daniel Strassberg"
+    },
+    {
+      "key": "onboarding/formats/republik/format-gedankensplitter/description",
+      "value": "Philosopisches Schlaglicht auf die Gegenwart"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-dritte-gewalt/title",
+      "value": "Dritte Gewalt"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-dritte-gewalt/description",
+      "value": "Gerichtsreporterin Brigitte Hürlimann erzählt von ihren spannendsten Fällen."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-sondersession/title",
+      "value": "Sonder session"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-sondersession/description",
+      "value": "Ein Gespräch, ein Ziel: mehr Durchblick im Schweizer Politikdschungel."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-gute-frage/title",
+      "value": "Gute Frage"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-gute-frage/description",
+      "value": "Gemeinsam entwirren wir Fragen, die uns nicht loslassen."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-was-wurde-eigentlich-aus/title",
+      "value": "Update!"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-was-wurde-eigentlich-aus/description",
+      "value": "Die Geschichten nach den Geschichten. Wir liefern ein Update."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-am-klavier/title",
+      "value": "Dritte Gewalt"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-am-klavier/description",
+      "value": "Gerichtsreporterin Brigitte Hürlimann erzählt von ihren spannendsten Fällen."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-republik-live/title",
+      "value": "Sonder session"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-republik-live/description",
+      "value": "Ein Gespräch, ein Ziel: Mehr Durchblick im Schweizer Politikdschungel."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-wochenrevue/title",
+      "value": "Gute Frage"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-wochenrevue/description",
+      "value": "Der Podcast für alle, die genug haben von einfachen Antworten."
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-im-gespraech/title",
+      "value": "Update!"
+    },
+    {
+      "key": "onboarding/podcasts/republik/format-im-gespraech/description",
+      "value": "Die Geschichten nach den Geschichten. Wir liefern ein Update."
+    },
+    {
+      "key": "onboarding/authors/adriennefichter/beat",
+      "value": "Big Tech"
+    },
+    {
+      "key": "onboarding/authors/dbuehler/beat",
+      "value": "Medien"
+    },
+    {
+      "key": "onboarding/authors/sabrinamweiss/beat",
+      "value": "Klimakrise"
+    },
+    {
+      "key": "onboarding/authors/palbrecht/beat",
+      "value": "Wirtschaft"
+    },
+    {
+      "key": "onboarding/authors/angelikahardegger/beat",
+      "value": "Reporterin"
+    },
+    {
+      "key": "onboarding/authors/ceisenach/beat",
+      "value": "Wissenschaft"
+    },
+    {
+      "key": "onboarding/authors/graf/beat",
+      "value": "Literatur"
+    },
+    {
+      "key": "onboarding/authors/bhurlimann/beat",
+      "value": "Justiz"
+    },
+    {
+      "key": "onboarding/authors/chanimann/beat",
+      "value": "Reporter"
+    },
+    {
+      "key": "onboarding/authors/luciaherrmann/beat",
+      "value": "Community"
+    },
+    {
+      "key": "onboarding/authors/ywegelin/beat",
+      "value": "Wirtschaft"
+    },
+    {
+      "key": "onboarding/authors/asscholl/beat",
+      "value": "Film"
     }
   ]
 }

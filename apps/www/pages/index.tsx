@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import { ForceOnboarding } from '@app/components/onboarding/force-onboarding'
 import { ParsedUrlQuery } from 'querystring'
 import Front from '../components/Front'
 import { FRONT_QUERY } from '../components/Front/graphql/getFrontQuery.graphql'
@@ -14,17 +15,19 @@ const FRONT_PATH = '/'
 const FrontPage = () => {
   const router = useRouter()
   return (
-    <Front
-      shouldAutoRefetch
-      hasOverviewNav
-      extractId={router.query.extractId}
-      finite
-      renderBefore={undefined}
-      renderAfter={undefined}
-      containerStyle={undefined}
-      serverContext={undefined}
-      documentPath={FRONT_PATH}
-    />
+    <ForceOnboarding>
+      <Front
+        shouldAutoRefetch
+        hasOverviewNav
+        extractId={router.query.extractId}
+        finite
+        renderBefore={undefined}
+        renderAfter={undefined}
+        containerStyle={undefined}
+        serverContext={undefined}
+        documentPath={FRONT_PATH}
+      />
+    </ForceOnboarding>
   )
 }
 

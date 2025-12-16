@@ -102,16 +102,6 @@ const UserNav = () => {
                     >
                       {t('Frame/Popover/myprofile')}
                     </NavLink>
-                    <NavLink
-                      {...fontStyles.sansSerifLight16}
-                      href={{
-                        pathname: '/einrichten',
-                      }}
-                      currentPath={currentPath}
-                      large
-                    >
-                      {t('nav/onboarding')}
-                    </NavLink>
                   </div>
                 </div>
                 <hr

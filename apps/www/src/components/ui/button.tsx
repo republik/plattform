@@ -1,10 +1,10 @@
 'use client'
 
-import { Spinner } from './spinner'
+import { Slot } from '@radix-ui/react-slot'
 import { css, cx } from '@republik/theme/css'
 import { button, type ButtonVariantProps } from '@republik/theme/recipes'
-import { Slot } from '@radix-ui/react-slot'
 import { useMemo } from 'react'
+import { Spinner } from './spinner'
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
   ButtonVariantProps & {
@@ -15,7 +15,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
 export const Button = ({
   className,
   variant,
-  size,
+  size = 'default',
   asChild = false,
   children,
   loading,
@@ -29,7 +29,7 @@ export const Button = ({
     return (
       <div className={css({ display: 'flex', flexDirection: 'row' })}>
         {children}
-        <Spinner />
+        <Spinner size={size} />
       </div>
     )
   }, [children, loading])

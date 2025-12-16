@@ -1,0 +1,14 @@
+query NewsletterSettings {
+  me {
+    id
+    newsletterSettings {
+      id
+      status
+      subscriptions {
+        id
+        name
+        subscribed
+      }
+    }
+  }
+}
