@@ -58,7 +58,7 @@ const ProlongBox = ({ t, prolongBeforeDate, membership }) => {
 
   if (
     (membership.type.name === 'ABO_GIVE_MONTHS' && numberOfDays <= 7) ||
-    (membership.type.name !== 'ABO_GIVE_MONTHS' && numberOfDays <= 30)
+    (membership.type.name !== 'ABO_GIVE_MONTHS' && numberOfDays <= 14)
   ) {
     const key =
       (numberOfDays < 0 && 'overdue') ||
