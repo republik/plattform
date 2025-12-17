@@ -7,6 +7,7 @@ import {
 import { useQuery } from '@apollo/client'
 import FollowAuthor from '@app/components/follow/follow-author'
 import { ArticleSection } from '@app/components/ui/section'
+import { css } from '@republik/theme/css'
 
 function FollowAuthors({
   subscriptions,
@@ -16,11 +17,13 @@ function FollowAuthors({
   if (subscriptions?.length === 0) return null
 
   return (
-    <ArticleSection>
-      {subscriptions.map((sub) => (
-        <FollowAuthor key={sub.id} subscription={sub} />
-      ))}
-    </ArticleSection>
+    <div className={css({ marginTop: 8 })}>
+      <ArticleSection>
+        {subscriptions.map((sub) => (
+          <FollowAuthor key={sub.id} subscription={sub} />
+        ))}
+      </ArticleSection>
+    </div>
   )
 }
 

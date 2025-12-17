@@ -1,5 +1,3 @@
-'use client'
-
 import { getFragmentData } from '#graphql/republik-api/__generated__/gql'
 import {
   SubscriptionFieldsFragment,
@@ -9,15 +7,12 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { FollowButton } from '@app/components/follow/follow-button'
 import { css } from '@republik/theme/css'
-import { useTranslation } from '../../../lib/withT'
 
 function FollowAuthorCard({
   subscription,
 }: {
   subscription: SubscriptionFieldsFragment
 }) {
-  const { t } = useTranslation()
-
   if (!subscription) {
     return null
   }
@@ -54,9 +49,6 @@ function FollowAuthorCard({
         display: 'flex',
         alignItems: 'center',
         gap: 4,
-        md: {
-          maxWidth: '350px',
-        },
       })}
     >
       <img
@@ -70,11 +62,7 @@ function FollowAuthorCard({
       />
       <div>
         <h4 className={css({ fontWeight: 'bold' })}>{author.name}</h4>
-        <p className={css({ fontSize: 'sm' })}>
-          {t(`onboarding/authors/${author.slug}/beat`, {
-            defaultValue: getDescription(author),
-          })}
-        </p>
+        <p className={css({ fontSize: 'sm' })}>{getDescription(author)}</p>
         <div
           className={css({
             display: 'block',
