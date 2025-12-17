@@ -9,7 +9,6 @@ import {
   fontStyles,
 } from '@project-r/styleguide'
 
-
 import { PUBLIC_BASE_URL, CDN_FRONTEND_BASE_URL } from '../lib/constants'
 import { withDefaultSSR } from '../lib/apollo/helpers'
 
@@ -46,7 +45,6 @@ const styles = {
     marginTop: 40,
     '& a': {
       color: '#fff',
-      textDecorationSkip: 'ink',
     },
   }),
 }

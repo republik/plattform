@@ -11,6 +11,7 @@ import Link from 'next/link'
 const styles = {
   link: css({
     textDecoration: 'none',
+    lineHeight: 1.15,
     '@media (hover)': {
       ':hover': {
         textDecoration: 'underline',

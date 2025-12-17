@@ -13,6 +13,7 @@ export const presetRepublik = definePreset({
   },
   globalCss: {
     html: {
+      '--global-font-body': 'fonts.gtAmericaStandard',
       WebkitFontSmoothing: 'auto',
       MozOsxFontSmoothing: 'auto',
     },

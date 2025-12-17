@@ -69,7 +69,6 @@ export const styles = {
     '@media (hover)': {
       '[href]:hover': {
         textDecoration: 'underline',
-        textDecorationSkip: 'ink',
       },
     },
   }),

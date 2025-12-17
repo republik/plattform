@@ -1,6 +1,5 @@
 import { CSSProperties, ReactNode, useMemo, useEffect } from 'react'
 import { css } from 'glamor'
-import 'glamor/reset'
 import {
   Container,
   RawHtml,
@@ -27,34 +26,6 @@ import { useMe } from '../../lib/context/MeContext'
 import { checkRoles } from '../../lib/apollo/withMe'
 import CallToActionBanner from '../CallToActions/CallToActionBanner'
 import { DraftModeIndicator } from 'components/DraftModeIndicator'
-
-css.global('html', { boxSizing: 'border-box' })
-css.global('*, *:before, *:after', { boxSizing: 'inherit' })
-
-css.global('body', {
-  width: '100%',
-  fontFamily: fontFamilies.sansSerifRegular,
-})
-
-css.global('button', {
-  fontFamily: fontFamilies.sansSerifRegular,
-})
-
-// avoid gray rects over links and icons on iOS
-css.global('*', {
-  WebkitTapHighlightColor: 'transparent',
-})
-// avoid orange highlight, observed around full screen gallery, on Android
-css.global('div:focus', {
-  outline: 'none',
-})
-
-// Manually set hyphenate-character to U+002D
-// Used as a workaround for chrome on MacOS Monterrey
-// Underlying issue: https://bugs.chromium.org/p/chromium/issues/detail?id=1267606#c24
-css.global('body', {
-  WebkitHyphenateCharacter: "'\\2D'",
-})
 
 const styles = {
   bodyGrowerContainer: css({

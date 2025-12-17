@@ -3,7 +3,6 @@ import { presets } from '@republik/theme/presets'
 
 export default defineConfig({
   preflight: true,
-  polyfill: true,
   prefix: 'r',
   // strictTokens: true,
 
