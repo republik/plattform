@@ -65,9 +65,7 @@ const SubscribeMenu = ({
           subscriptions.filter(
             (node) => node.object?.__typename === 'Document',
           ),
-        authorSubscriptions:
-          subscriptions &&
-          subscriptions.filter((node) => node.object?.__typename === 'User'),
+        authorSubscriptions: [], // replaced by a custom component at the end of the article
       }),
       [data, subscriptions],
     )
