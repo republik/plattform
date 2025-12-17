@@ -7,8 +7,8 @@
   "main": "build/index.js",
   "types": "build/@types",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc --w"
+    "dev": "tsc -w",
+    "build": "tsc"
   },
   "dependencies": {
     "@orbiting/backend-modules-scalars": "*",
@@ -17,4 +17,3 @@
     "apollo-modules-node": "*"
   }
 }
-
