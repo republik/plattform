@@ -1,5 +1,4 @@
 import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
-import { LazyBackgroundImage } from '@app/components/ui/lazy-background-image'
 import {
   EventTrackingContext,
   useTrackEvent,
@@ -68,8 +67,7 @@ function MostCommentedWithImage({
   index: number
 }) {
   return (
-    <LazyBackgroundImage
-      backgroundImage={document.meta.image}
+    <div
       className={css({
         width: '100%',
         aspectRatio: '9/16',
@@ -85,8 +83,24 @@ function MostCommentedWithImage({
         backgroundRepeat: 'no-repeat',
       }}
     >
+      {document.meta.image && (
+        <img
+          loading='lazy'
+          className={css({
+            objectFit: 'cover',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            zIndex: 0,
+          })}
+          src={document.meta.image}
+        />
+      )}
       <div
         className={css({
+          zIndex: 1,
           width: '100%',
           paddingBottom: 16,
           color: 'white',
@@ -97,7 +111,7 @@ function MostCommentedWithImage({
       >
         <MostCommentedCoverText document={document} index={index} />
       </div>
-    </LazyBackgroundImage>
+    </div>
   )
 }
 
