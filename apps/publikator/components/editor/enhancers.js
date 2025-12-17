@@ -66,6 +66,19 @@ export const withCommitData = graphql(getCommitById, {
       commitId: router.query.commitId,
     },
   }),
+  props: ({ data, ownProps: { router, t } }) => {
+    if (data?.repo === null) {
+      return {
+        data: {
+          error: t('repo/warn/missing', {
+            repoId: getRepoIdFromQuery(router.query),
+          }),
+        },
+      }
+    }
+
+    return { data }
+  },
 })
 
 export const withLatestCommit = graphql(getLatestCommit, {
@@ -88,6 +101,15 @@ export const withLatestCommit = graphql(getLatestCommit, {
         }
       }
       return {}
+    }
+    if (data?.repo === null) {
+      return {
+        data: {
+          error: t('repo/warn/missing', {
+            repoId: getRepoIdFromQuery(router.query),
+          }),
+        },
+      }
     }
     return {
       data,

@@ -18,6 +18,9 @@ export const buttonRecipe = defineRecipe({
     transitionTimingFunction: 'in-out',
     transitionDuration: 'fast',
     cursor: 'pointer',
+    borderColor: 'transparent',
+    borderStyle: 'solid',
+    borderWidth: '1px',
     '&:disabled:not([data-loading], [aria-busy="true"])': {
       opacity: '50%',
       cursor: 'default',
@@ -41,10 +44,8 @@ export const buttonRecipe = defineRecipe({
         textDecoration: 'underline',
       },
       outline: {
-        bg: 'transparent',
         borderColor: 'current',
-        borderStyle: 'solid',
-        borderWidth: '1px',
+        bg: 'transparent',
       },
     },
     size: {

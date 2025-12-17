@@ -1,0 +1,19 @@
+fragment SubscriptionFields on Subscription {
+  id
+  active
+  object {
+    ... on User {
+      id
+      name
+    }
+    ... on Document {
+      id
+      meta {
+        title
+      }
+    }
+    ... on Discussion {
+      id
+    }
+  }
+}

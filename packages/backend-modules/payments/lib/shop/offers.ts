@@ -1,112 +1,13 @@
+import { Offer, OfferId, SubscriptionOffer } from '../types'
 import { getConfig } from '../config'
-import { Company } from '../types'
+import { GIFTS_ENABLED } from '../constants'
 
-export const GIFTS_ENABLED = () =>
-  process.env.PAYMENTS_SHOP_GIFTS_ENABLED === 'true'
-
-export type OfferType = 'SUBSCRIPTION' | 'ONETIME_PAYMENT'
-
-export type PriceDefinition = {
-  type: 'PRICE'
-  lookupKey: string
-  taxRateId?: string
-}
-export type DiscountDefinition = { type: 'DISCOUNT'; coupon: string }
-
-export type ComplimentaryItem = {
-  id: string
-  maxQuantity: number
-  lookupKey: string
-}
-
-export type PriceInfo = {
-  amount: number
-  currency: string
-  recurring?: {
-    interval: 'year' | 'month'
-    intervalCount: number
-  }
-}
-
-export type ComplimentaryItemOrder = {
-  id: string
-  quantity: number
-}
-
-export type Offer = {
-  id: string
-  company: Company
-  name: string
-  type: OfferType
-  items: PriceDefinition[]
-  complimentaryItems?: ComplimentaryItem[]
-  discountOpitions?: DiscountDefinition[]
-  suggestedDonations?: number[]
-  fixedDiscount?: string
-  requiresLogin: boolean
-  requiresAddress: boolean
-  allowPromotions: boolean
-  metaData?: {
-    [name: string]: string | number | null
-  }
-  taxRateId?: string
-}
-
-export type OfferAPIResult = {
-  id: string
-  company: Company
-  name: string
-  requiresLogin: boolean
-  price: {
-    amount: number
-    currency: string
-    recurring?: {
-      interval: 'year' | 'month'
-      intervalCount: number
-    }
-  }
-  suggestedDonations?: number[]
-  discount?: APIDiscountResult
-}
-
-export interface APIDiscountResult {
-  id?: string
-  name: string
-  amountOff: number
-  duration: 'forever' | 'once' | 'repeating'
-  durationInMonths: number | null
-  currency: string
-}
-
-export type Discount = {
-  id: string
-  type: 'DISCOUNT'
-  name: string
-  amountOff: number
-  duration: 'forever' | 'once' | 'repeating'
-  durationInMonths: number | null
-  currency: string
-}
-
-export type Promotion = {
-  id: string
-  type: 'PROMO'
-  name: string
-  amountOff: number
-  duration: 'forever' | 'once' | 'repeating'
-  durationInMonths: number | null
-  currency: string
-}
-
-export type DiscountOption =
-  | { type: 'DISCOUNT'; value: Discount }
-  | { type: 'PROMO'; value: Promotion }
-
-export const Offers: Readonly<Offer>[] = [
+export const Offers: Readonly<Offer | SubscriptionOffer>[] = [
   {
-    id: 'YEARLY',
+    id: 'YEARLY' as OfferId,
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'YEARLY_SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
@@ -115,9 +16,10 @@ export const Offers: Readonly<Offer>[] = [
     allowPromotions: true,
   },
   {
-    id: 'YEARLY_REDUCED',
+    id: 'YEARLY_REDUCED' as OfferId,
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'YEARLY_SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
@@ -127,15 +29,16 @@ export const Offers: Readonly<Offer>[] = [
         lookupKey: 'ABO',
       },
     ],
-    discountOpitions: getConfig().PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS.map(
+    discountOptions: getConfig().PROJECT_R_REDUCED_MEMBERSHIP_DISCOUNTS.map(
       (couponId) => ({ type: 'DISCOUNT', coupon: couponId }),
     ),
     allowPromotions: false,
   },
   {
-    id: 'BENEFACTOR',
+    id: 'BENEFACTOR' as OfferId,
     name: 'Gönnermitgliedschaft',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'BENEFACTOR_SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
@@ -144,8 +47,8 @@ export const Offers: Readonly<Offer>[] = [
     allowPromotions: false,
   },
   {
-    id: 'DONATION',
-    name: 'Einmalige Spende',
+    id: 'DONATION' as OfferId,
+    name: 'Freiwilliger Beitrag',
     type: 'ONETIME_PAYMENT',
     company: 'PROJECT_R',
     requiresLogin: true,
@@ -155,9 +58,10 @@ export const Offers: Readonly<Offer>[] = [
     allowPromotions: false,
   },
   {
-    id: 'STUDENT',
+    id: 'STUDENT' as OfferId,
     name: 'Jahresmitgliedschaft',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'YEARLY_SUBSCRIPTION',
     company: 'PROJECT_R',
     requiresLogin: true,
     requiresAddress: true,
@@ -169,9 +73,10 @@ export const Offers: Readonly<Offer>[] = [
     },
   },
   {
-    id: 'MONTHLY',
+    id: 'MONTHLY' as OfferId,
     name: 'Monats-Abo',
     type: 'SUBSCRIPTION',
+    subscriptionType: 'MONTHLY_SUBSCRIPTION',
     company: 'REPUBLIK',
     requiresLogin: true,
     requiresAddress: false,
@@ -188,7 +93,7 @@ export const Offers: Readonly<Offer>[] = [
 
 export const GIFTS_OFFERS: Offer[] = [
   {
-    id: 'GIFT_YEARLY',
+    id: 'GIFT_YEARLY' as OfferId,
     name: 'Jahresmitgliedschaft als Geschenk',
     type: 'ONETIME_PAYMENT',
     company: 'PROJECT_R',
@@ -199,7 +104,7 @@ export const GIFTS_OFFERS: Offer[] = [
     items: [{ type: 'PRICE', lookupKey: 'GIFT_YEARLY' }],
   },
   {
-    id: 'GIFT_MONTHLY',
+    id: 'GIFT_MONTHLY' as OfferId,
     name: '3-Monats-Abo als Geschenk',
     type: 'ONETIME_PAYMENT',
     company: 'REPUBLIK',

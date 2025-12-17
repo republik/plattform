@@ -50,7 +50,8 @@ const nextConfig = {
 
   poweredByHeader: false,
   assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
-
+  // Maximum amount of time where stale content is allowed to be served from cache (CDN, browser etc.)
+  expireTime: 60,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -256,6 +257,10 @@ const nextConfig = {
           '/politik-in-26-fragen-ihre-antworten?share=submission-:id',
         permanent: true,
       },
+      // Redirect overview pages to 1st month
+      { source: '/:year(\\d{4})', destination: '/archiv/:year/1', permanent: false },
+      { source: '/archiv/:year(\\d{4})', destination: '/archiv/:year/1', permanent: false },
+      { source: '/en', destination: '/manifest/en', permanent: false },
     ].filter(Boolean)
   },
   experimental: {

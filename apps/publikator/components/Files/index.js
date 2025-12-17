@@ -33,11 +33,22 @@ const styles = {
   }),
 }
 
-const FilesPage = ({ router }) => {
+const FilesPage = ({ router, t }) => {
   const repoId = getRepoIdFromQuery(router.query)
   const variables = { id: repoId }
 
-  const { data, loading, error } = useQuery(GET_FILES, { variables })
+  const {
+    data,
+    loading,
+    error: queryError,
+  } = useQuery(GET_FILES, { variables })
+
+  const error =
+    data?.repo === null
+      ? t('repo/warn/missing', {
+          repoId,
+        })
+      : queryError
 
   return (
     <Frame>

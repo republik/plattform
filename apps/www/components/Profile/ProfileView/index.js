@@ -179,6 +179,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
                 height={PORTRAIT_SIZE}
                 alt='Profilbild'
                 src={user.portrait}
+                unoptimized
               />
             ) : (
               <img src={CDN_FRONTEND_BASE_URL + '/static/profiledefault.png'} />

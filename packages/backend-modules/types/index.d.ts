@@ -4,6 +4,8 @@ import type { Logger } from 'pino'
 declare const __brand: unique symbol
 type Brand<B> = { [__brand]: B }
 
+export type Logger = Logger
+
 export type Branded<T, B> = T & Brand<B>
 
 export interface ConnectionContext {
@@ -57,7 +59,7 @@ export interface UserRow {
   previewsSentAt: any | null
   adminNotes: string | null
   defaultDiscussionNotificationOption: string
-  discussionNotificationChannels: string[]
+  notificationChannels: string[]
   enabledSecondFactors: string[] | null
   deletedAt: Date | null
   preferredFirstFactor: string | null

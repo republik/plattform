@@ -4,7 +4,6 @@
 export enum AudioPlayerLocations {
   AUDIO_PLAYER = 'AudioPlayer',
   FRONT = 'Front',
-  MARKETING_FRONT = 'MarketingFront',
   ACTION_BAR = 'ActionBar',
   ARTICLE = 'Article',
   ARTICLE_PLAYER = 'ArticlePlayer',

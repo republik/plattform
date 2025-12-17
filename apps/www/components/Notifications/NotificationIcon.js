@@ -1,7 +1,7 @@
 import { css } from 'glamor'
 import { useState, useEffect } from 'react'
 import compose from 'lodash/flowRight'
-import { useColorContext, mediaQueries } from '@project-r/styleguide'
+import { useColorContext } from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 
@@ -10,20 +10,18 @@ import { containsUnread } from './index'
 
 const styles = {
   unreadNotifications: css({
-    display: 'inline-block',
-    position: 'relative',
+    display: 'block',
+    position: 'absolute',
     width: 8,
     height: 8,
     borderRadius: 8,
     borderWidth: 1,
     borderStyle: 'solid',
     backgroundColor: 'red',
-    top: 8,
-    right: 15,
-    [mediaQueries.mUp]: {
-      top: 12,
-      right: 19,
-    },
+    top: -2,
+    right: -2,
+    pointerEvents: 'none',
+
   }),
 }
 

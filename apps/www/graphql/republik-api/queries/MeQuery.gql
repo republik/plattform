@@ -12,8 +12,9 @@ query Me {
     roles
     isListed
     hasPublicProfile
-    discussionNotificationChannels
+    notificationChannels
     regwallTrialStatus
+    onboarded
     accessCampaigns {
       id
     }
@@ -39,5 +40,8 @@ query Me {
     }
     prolitterisOptOut: hasConsentedTo(name: "PROLITTERIS_OPT_OUT")
     progressOptOut: hasConsentedTo(name: "PROGRESS_OPT_OUT")
+  }
+  ipAllowlistAccess {
+    name
   }
 }

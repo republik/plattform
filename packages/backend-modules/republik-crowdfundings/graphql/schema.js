@@ -40,10 +40,6 @@ type queries {
     booleanFilter: BooleanFilter
   ): PostfinancePayments!
 
-  # This exports a CSV containing all payments IN paymentIds
-  # required role: accountant
-  paymentsCSV(companyName: String!, paymentIds: [ID!]): String!
-
   cancellationCategories(showMore: Boolean): [CancellationCategory!]!
 
   membershipPotStats: MembershipPotStats!

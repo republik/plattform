@@ -1,0 +1,17 @@
+query getCompleteFrontOverview($path: String!) {
+  front: document(path: $path) {
+    id
+    content
+  }
+}
+
+query getFrontOverviewYear($after: ID, $before: ID) {
+  front: document(path: "/") {
+    id
+    children(after: $after, before: $before) {
+      nodes {
+        body
+      }
+    }
+  }
+}

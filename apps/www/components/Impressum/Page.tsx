@@ -1,13 +1,13 @@
-import { Fragment } from 'react'
-
-import Employees from './Employees'
+import { EmployeeRecord } from '#graphql/cms/__generated__/gql/graphql'
 import { A, Interaction } from '@project-r/styleguide'
 import { useInNativeApp } from '../../lib/withInNativeApp'
+
+import Employees from './Employees'
+
 const { H1, H2, P } = Interaction
-import { EmployeeRecord } from '#graphql/cms/__generated__/gql/graphql'
 
 export default function Impressum({ data }: { data: EmployeeRecord[] }) {
-  const { inNativeIOSApp } = useInNativeApp()
+  const { inNativeApp } = useInNativeApp()
   const meta = {
     title: 'Impressum',
     description: '',
@@ -43,7 +43,7 @@ export default function Impressum({ data }: { data: EmployeeRecord[] }) {
 
       <br />
       <P>
-        Anonyme oder vertrauliche Kontaktaufnahme: {' '}
+        Anonyme oder vertrauliche Kontaktaufnahme:{' '}
         <A href='/vertraulich'>republik.ch/vertraulich</A>
       </P>
 
@@ -92,7 +92,7 @@ export default function Impressum({ data }: { data: EmployeeRecord[] }) {
       </P>
       <br />
 
-      {!inNativeIOSApp && (
+      {!inNativeApp && (
         <>
           <H2>Mitgliedschaften und Abonnements</H2>
           <P>

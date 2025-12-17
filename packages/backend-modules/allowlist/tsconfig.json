@@ -1,0 +1,18 @@
+{
+  "extends": "@orbiting/backend-modules-types/tsconfig-backend.json",
+  "compilerOptions": {
+    "outDir": "build",
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "declaration": true,
+    "declarationDir": "build/@types",
+    "declarationMap": true
+  },
+  "include": ["."],
+  "exclude": [
+    "node_modules",
+    "build"
+  ]
+}
+

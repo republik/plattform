@@ -5,11 +5,13 @@ import { CustomerInfoService } from '../../services/CustomerInfoService'
 import { SubscriptionService } from '../../services/SubscriptionService'
 import { Queue } from '@orbiting/backend-modules-job-queue'
 import { NoticeRenewalTransactionalWorker } from '../../workers/NoticeRenewalTransactionalWorker'
+import { PaymentService } from '../../services/PaymentService'
 
 export class InvoiceUpcomingWorkflow
   implements PaymentWorkflow<Stripe.InvoiceUpcomingEvent>
 {
   constructor(
+    protected readonly paymentService: PaymentService,
     protected readonly customerInfoService: CustomerInfoService,
     protected readonly subscriptionService: SubscriptionService,
   ) {}
@@ -25,7 +27,8 @@ export class InvoiceUpcomingWorkflow
     }
 
     const customerId = event.data.object.customer as string
-    const externalSubscriptionId = event.data.object.subscription as string
+    const externalSubscriptionId = event.data.object.parent!
+      .subscription_details!.subscription! as string
 
     const userId = await this.customerInfoService.getUserIdForCompanyCustomer(
       company,
@@ -46,14 +49,16 @@ export class InvoiceUpcomingWorkflow
 
     const queue = Queue.getInstance()
 
-    await queue.send<NoticeRenewalTransactionalWorker>('payments:transactional:notice:subscription_renewal',
+    await queue.send<NoticeRenewalTransactionalWorker>(
+      'payments:transactional:notice:subscription_renewal',
       {
         $version: 'v1',
         eventSourceId: event.id,
         userId: userId,
         subscriptionId: subscription.id,
-        company: company
-      },)
+        company: company,
+      },
+    )
   }
 }
 
@@ -63,6 +68,7 @@ export async function processInvoiceUpcoming(
   event: Stripe.InvoiceUpcomingEvent,
 ) {
   return new InvoiceUpcomingWorkflow(
+    new PaymentService(),
     new CustomerInfoService(ctx.pgdb),
     new SubscriptionService(ctx.pgdb),
   ).run(company, event)

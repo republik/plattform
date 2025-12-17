@@ -2,7 +2,23 @@ const debug = require('debug')('crowdfundings:cancelMembership')
 
 const cancelSubscription = require('./payments/stripe/cancelSubscription')
 
-const { overdue } = require('../graphql/resolvers/Membership')
+async function overdue(membership, pgdb) {
+  if (!membership.active) return false
+
+  const latestPeriod = await pgdb.public.membershipPeriods.findFirst(
+    {
+      membershipId: membership.id,
+    },
+    { orderBy: { endDate: 'DESC' } },
+  )
+
+  if (!latestPeriod) {
+    return false
+  }
+
+  const isLatestPeriodEnded = new Date(latestPeriod.endDate) < new Date()
+  return isLatestPeriodEnded
+}
 
 module.exports = async (membership, details, options, t, pgdb) => {
   const {
@@ -14,7 +30,7 @@ module.exports = async (membership, details, options, t, pgdb) => {
   } = details
   let { immediately } = options
 
-  if (immediately || (await overdue(membership, null, { pgdb }))) {
+  if (immediately || (await overdue(membership, pgdb))) {
     immediately = true
   }
 

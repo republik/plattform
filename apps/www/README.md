@@ -126,20 +126,6 @@ export default function FAQList({
 
 Your logo, fonts and colors? See [orbiting/styleguide](https://github.com/orbiting/styleguide#theming)
 
-### Curtain
-
-You can configure a curtain message, to show a teaser website.
-
-```text
-CURTAIN_MESSAGE=""
-```
-
-Additionally you can configure a backdoor URL. Opening that URL sets a cookie which allows to circumvent the countdown page.
-
-```text
-CURTAIN_BACKDOOR_URL=/iftah-ya-simsim
-```
-
 ### Testing App Views
 
 You can test how this front end looks in the app by adding following custom device to your browsers device emulator:

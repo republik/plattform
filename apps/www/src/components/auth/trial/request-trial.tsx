@@ -39,11 +39,11 @@ const RequestTrial = (props: TrialFormProps) => {
         mutation: RequestAccessDocument,
         variables: {
           campaignId: REGWALL_CAMPAIGN,
-          payload: getConversionPayload(query, props.analyticsProps),
+          payload: getConversionPayload(query),
         },
       })
       .then(() => {
-        trackEvent({ action: 'Requested a trial', ...props.analyticsProps })
+        trackEvent({ action: 'Requested a trial' })
         reloadPage('trial')
       })
       .catch((err) => {

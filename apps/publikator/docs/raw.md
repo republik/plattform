@@ -7,7 +7,7 @@ Es gibt 3 wichtige Usecases dafür:
 
 * [Templating](#templating): bestehende Dokumente kopieren und als Muster für neue Dokumente verwenden
 * [Copy-paste](#copy-paste): komplexe Elemente (z.B. Liste, Infoboxen) in einem Dokument verschieben
-* [Copy-paste, Front Edition](#copy-paste-front-edition): Kacheln von der Front in ein anderes Dokument duplizieren (e.g. Marketingseite)
+* [Copy-paste, Front Edition](#copy-paste-front-edition): Kacheln von der Front in ein anderes Dokument duplizieren
 
 ## Templating
 
@@ -57,7 +57,7 @@ Komplexe Elemente im selben Dokument verschieben. Hier wollen wir z.B. eine Umfr
 
 ## Copy-paste, Front Edition
 
-Kacheln von der Front in ein anderes Dokument duplizieren (e.g. Marketingseite)
+Kacheln von der Front in ein anderes Dokument duplizieren
 
 –  Im Text der Kachel rein: dann wird ein Menu sichtbar (oben links in der Kachel). Kachel Markdown durch das inline UI Menu kopieren:
 > ![](./images/copypastefront/inline.png)

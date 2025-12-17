@@ -98,7 +98,7 @@ const envMergeVars = [
   },
   {
     name: 'link_account_goto',
-    content: `${FRONTEND_BASE_URL}/angebote?goto=account`,
+    content: `${FRONTEND_BASE_URL}/konto`,
   },
   {
     name: 'link_account_abos',
@@ -106,7 +106,7 @@ const envMergeVars = [
   },
   {
     name: 'link_account_abos_goto',
-    content: `${FRONTEND_BASE_URL}/angebote?goto=account`,
+    content: `${FRONTEND_BASE_URL}/konto`,
   },
   {
     name: 'link_account_newsletter',

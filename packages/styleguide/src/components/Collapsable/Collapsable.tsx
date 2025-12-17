@@ -1,14 +1,13 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react'
 import { css, merge } from 'glamor'
-
-import { sansSerifRegular14 } from '../Typography/styles'
-import { mUp } from '../../theme/mediaQueries'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import scrollIntoView from 'scroll-into-view'
-import { useMediaQuery } from '../../lib/useMediaQuery'
 import { useBoundingClientRect } from '../../lib/useBoundingClientRect'
-import { convertStyleToRem, pxToRem } from '../Typography/utils'
+import { useMediaQuery } from '../../lib/useMediaQuery'
+import { mUp } from '../../theme/mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
 import { recalculateLazyLoads } from '../LazyLoad'
+import { sansSerifMedium14 } from '../Typography/styles'
+import { convertStyleToRem, pxToRem } from '../Typography/utils'
 
 const COLLAPSED_HEIGHT = {
   mobile: 180,
@@ -152,19 +151,6 @@ const Collapsable = ({
     [colorScheme, isOnOverlay],
   )
 
-  const buttonRules = useMemo(
-    () =>
-      css({
-        color: colorScheme.getCSSColor('primary'),
-        '@media (hover)': {
-          ':hover': {
-            color: colorScheme.getCSSColor('textSoft'),
-          },
-        },
-      }),
-    [colorScheme],
-  )
-
   const collapsedEditorPreviewRule = useMemo(
     () =>
       css({
@@ -200,14 +186,13 @@ const Collapsable = ({
           {...merge(
             collapsed ? styles.buttonContainer : {},
             collapsed ? buttonContainerBefore : {},
-            !alwaysCollapsed && styles.buttonContainerDivider,
             !alwaysCollapsed && colorScheme.set('borderColor', 'divider'),
           )}
         >
           {!alwaysCollapsed && (
             <button
               {...styles.button}
-              {...buttonRules}
+              {...colorScheme.set('color', 'textSoft')}
               onClick={onToggleCollapsed}
               title={collapseLabel}
             >
@@ -232,22 +217,16 @@ const styles = {
       content: '""',
       left: 0,
       right: 0,
-      top: -60,
-      height: 60,
+      top: -80,
+      height: 80,
     },
     '@media print': {
       display: 'none',
     },
   }),
-  buttonContainerDivider: css({
-    borderTopWidth: 1,
-    borderTopStyle: 'solid',
-    '&::before': {
-      top: -61,
-    },
-  }),
   button: css({
-    ...convertStyleToRem(sansSerifRegular14),
+    ...convertStyleToRem(sansSerifMedium14),
+    textDecoration: 'underline',
     outline: 'none',
     WebkitAppearance: 'none',
     background: 'transparent',
@@ -255,8 +234,8 @@ const styles = {
     padding: '0',
     display: 'block',
     cursor: 'pointer',
-    height: pxToRem('32px'),
-    lineHeight: pxToRem('32px'),
+    height: pxToRem('24px'),
+    lineHeight: pxToRem('24px'),
     '@media print': {
       display: 'none',
     },

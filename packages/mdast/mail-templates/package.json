@@ -31,15 +31,15 @@
     "glamor": "^2.20.40",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^29.7.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
     "ts-jest": "^29.1.0",
     "tsup": "^8.5.0"
   },
   "peerDependencies": {
     "d3-time-format": "^2.2.3",
     "glamor": "^2.20.40",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
   }
 }

@@ -1,0 +1,14 @@
+query OnboardingAuthor($id: ID!) {
+  user(id: $id) {
+    id
+    slug
+    name
+    portrait
+    subscribedBy(onlyMe: true) {
+      nodes {
+        id
+        active
+      }
+    }
+  }
+}

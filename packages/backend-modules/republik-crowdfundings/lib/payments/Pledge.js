@@ -225,7 +225,7 @@ const makePledgeSuccessfulWithCharge = async (
               "endDate" = :endDate,
               "updatedAt" = :now
             WHERE
-              ARRAY[mp."membershipId"] && :membershipIds AND
+              mp."membershipId" = ANY(:membershipIds) AND
               mp."webhookEventId" is null
           `,
             {

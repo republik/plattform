@@ -72,7 +72,7 @@ const deleteRelatedData = async (
       DELETE
         FROM sessions s
       WHERE
-        ARRAY[(s.sess #>> '{passport, user}')::uuid] && :userIds
+        (s.sess #>> '{passport, user}')::uuid = ANY(:userIds)
     `,
       {
         userIds: [userId],

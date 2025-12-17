@@ -8,7 +8,7 @@ module.exports = async (_, args, context) => {
 
   const repo = await loaders.Repo.byId.load(args.id)
   if (!repo) {
-    throw new Error(`repo "${args.id}" does not exist`)
+    return null
   }
 
   const phase = getPhase(repo.currentPhase)

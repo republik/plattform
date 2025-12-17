@@ -13,6 +13,23 @@ query UserMagazineSubscriptions($userId: ID!) {
       endedAt
       canceledAt
       renewsAtPrice
+
+      donation {
+        amount
+      }
+
+      upgrade {
+        id
+        createdAt
+        scheduledStart
+        subscriptionType
+        billingDetails {
+          total
+          donation {
+            amount
+          }
+        }
+      }
     }
   }
 }

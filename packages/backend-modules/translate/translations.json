@@ -41,6 +41,10 @@
       "value": "Ihr Gutscheincode ist leider ungültig."
     },
     {
+      "key": "api/membership/claim/can-not-redeem-membership-with-new-subscription",
+      "value": "Ups, es ist ein Fehler aufgetreten. Melden Sie sich bitte mit dem Gutscheincode bei unserem Support-Team: kontakt@republik.ch."
+    },
+    {
       "key": "api/membership/claim/ownerIsClaimer",
       "value": "Sie können keinen eigenen Gutscheincode einlösen."
     },
@@ -1465,10 +1469,6 @@
       "value": "Sie können sich selbst keinen Zugriff teilen."
     },
     {
-      "key": "api/access/constraint/requirePackage/error",
-      "value": "Sie benötigen ein bestimmtes Abonnement oder Mitgliedschaft um den Zugriff zu teilen."
-    },
-    {
       "key": "api/access/constraint/requireActiveMembershipOrSubscription/error",
       "value": "Sie benötigen ein aktives Abonnement oder eine Mitgliedschaft um den Zugriff zu teilen."
     },
@@ -1535,6 +1535,10 @@
     {
       "key": "api/access/claim/404",
       "value": "Ihr Gutscheincode ist leider ungültig. Da hat sich vielleicht ein Vertipper eingeschlichen, oder der Gutscheincode ist bereits abgelaufen."
+    },
+    {
+      "key": "api/access/claim/can-not-claim-access-with-active-subscription",
+      "value": "Ups, es ist ein Fehler aufgetreten. Kontaktieren Sie bitte das Support-Team via kontakt@republik.ch."
     },
     {
       "key": "api/access/request/campaign/error",
@@ -2198,7 +2202,7 @@
     },
     {
       "key": "api/notifications/doc/title",
-      "value": "{title} jetzt online"
+      "value": "Neuer Beitrag in {formatTitle}: {articleTitle}"
     },
     {
       "key": "api/notifications/doc/author/title",
@@ -2767,6 +2771,38 @@
     {
       "key": "api/payments/dicsount_duration_display_years/other",
       "value": "{years} Jahre"
+    },
+    {
+      "key": "api/payments/subscription_type/MONTHLY_SUBSCRIPTION",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "api/payments/subscription_type/YEARLY_SUBSCRIPTION",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/payments/subscription_type/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_setup_successful_upgrade_TO_MONTHLY/subject",
+      "value": "Ihr Wechsel zum Monats-Abo"
+    },
+    {
+      "key": "api/email/subscription_setup_successful_upgrade_MONTHLY_TO_YEARLY/subject",
+      "value": "Ihr Wechsel zur Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_setup_successful_upgrade_MONTHLY_TO_BENEFACTOR/subject",
+      "value": "Ihr Wechsel zur Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/subscription_upgrade_activated_YEARLY/subject",
+      "value": "Ihre Jahresmitgliedschaft ist aktiviert"
+    },
+    {
+      "key": "api/email/subscription_upgrade_activated_BENEFACTOR/subject",
+      "value": "Ihre Gönner-Mitgliedschaft ist aktiviert"
     }
   ]
 }

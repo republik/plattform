@@ -1,0 +1,20 @@
+{
+  "name": "@orbiting/backend-modules-allowlist",
+  "version": "0.1.0",
+  "description": "IP Allowlist for institutional access",
+  "author": "Republik",
+  "private": true,
+  "main": "build/index.js",
+  "types": "build/@types",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --w"
+  },
+  "dependencies": {
+    "@orbiting/backend-modules-scalars": "*",
+    "@orbiting/backend-modules-types": "*",
+    "@orbiting/backend-modules-utils": "*",
+    "apollo-modules-node": "*"
+  }
+}
+

@@ -1,27 +1,27 @@
-import { useMemo } from 'react'
-import { css } from 'glamor'
 import {
+  Button,
+  Center,
   fontStyles,
   mediaQueries,
-  Center,
-  Button,
   useColorContext,
 } from '@project-r/styleguide'
-import { HEADER_HEIGHT } from '../../constants'
-
-import { useTranslation } from '../../../lib/withT'
-import { useInNativeApp } from '../../../lib/withInNativeApp'
-import SignIn from '../../Auth/SignIn'
-import SignOut from '../../Auth/SignOut'
-import Footer from '../../Footer'
-import NavLink, { NavA } from './NavLink'
-import NotificationFeedMini from '../../Notifications/NotificationFeedMini'
-import BookmarkMiniFeed from '../../Bookmarks/BookmarkMiniFeed'
-import { registerQueryVariables } from '../../Bookmarks/queries'
-import DarkmodeSwitch from '../DarkmodeSwitch'
+import { css } from 'glamor'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useMemo } from 'react'
 import { useMe } from '../../../lib/context/MeContext'
+import { useInNativeApp } from '../../../lib/withInNativeApp'
+
+import { useTranslation } from '../../../lib/withT'
+import SignIn from '../../Auth/SignIn'
+import SignOut from '../../Auth/SignOut'
+import BookmarkMiniFeed from '../../Bookmarks/BookmarkMiniFeed'
+import { registerQueryVariables } from '../../Bookmarks/queries'
+import { HEADER_HEIGHT } from '../../constants'
+import Footer from '../../Footer'
+import NotificationFeedMini from '../../Notifications/NotificationFeedMini'
+import DarkmodeSwitch from '../DarkmodeSwitch'
+import NavLink, { NavA } from './NavLink'
 
 const SignoutLink = ({ children, ...props }) => (
   <div {...styles.signout}>
@@ -32,7 +32,7 @@ const SignoutLink = ({ children, ...props }) => (
 const UserNav = () => {
   const { me, progressConsent, hasActiveMembership } = useMe()
   const { t } = useTranslation()
-  const { inNativeApp, inNativeIOSApp } = useInNativeApp()
+  const { inNativeApp } = useInNativeApp()
   const router = useRouter()
 
   const [colorScheme] = useColorContext()
@@ -66,7 +66,7 @@ const UserNav = () => {
                 </div>
               </>
             )}
-            {!hasActiveMembership && !inNativeIOSApp && (
+            {!hasActiveMembership && !inNativeApp && (
               <Link href='/angebote' passHref legacyBehavior>
                 <Button style={{ marginTop: 24, marginBottom: 24 }} block>
                   {t('nav/becomemember')}
@@ -111,7 +111,7 @@ const UserNav = () => {
                 />
                 <div {...styles.navSection}>
                   <div {...styles.navLinks}>
-                    {!inNativeIOSApp && (
+                    {!inNativeApp && (
                       <>
                         {me?.activeMembership?.canProlong && (
                           <NavLink
@@ -126,10 +126,7 @@ const UserNav = () => {
                           </NavLink>
                         )}
                         <NavLink
-                          href={{
-                            pathname: '/angebote',
-                            query: { group: 'GIVE' },
-                          }}
+                          href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/geschenke`}
                           currentPath={currentPath}
                           large
                         >
@@ -137,14 +134,21 @@ const UserNav = () => {
                         </NavLink>
                         <NavLink
                           {...fontStyles.sansSerifLight16}
-                          href={{
-                            pathname: '/angebote',
-                            query: { package: 'DONATE' },
-                          }}
+                          href={`${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/DONATION`}
                           currentPath={currentPath}
                           large
                         >
                           {t('nav/donate')}
+                        </NavLink>
+                        <NavLink
+                          {...fontStyles.sansSerifLight16}
+                          href={{
+                            pathname: '/teilen',
+                          }}
+                          currentPath={currentPath}
+                          large
+                        >
+                          {t('nav/share')}
                         </NavLink>
                       </>
                     )}

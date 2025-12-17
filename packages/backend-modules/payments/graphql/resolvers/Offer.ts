@@ -1,5 +1,6 @@
 import { PaymentService } from '../../lib/services/PaymentService'
-import { activeOffers, couponToDiscount, Offer } from '../../lib/shop'
+import { activeOffers, utils } from '../../lib/shop'
+import { Offer } from '../../lib/types'
 
 export = {
   __resolveType: (offer: Offer, _args: never, _context: never) => {
@@ -16,18 +17,18 @@ export = {
       throw new Error('api/shop/unknownOffer')
     }
 
-    if (typeof offer.discountOpitions === 'undefined') {
+    if (typeof offer.discountOptions === 'undefined') {
       return []
     }
 
     const results = (
       await Promise.allSettled(
-        offer.discountOpitions.map(async (code) => {
+        offer.discountOptions.map(async (code) => {
           const coupon = await paymentService.getCoupon(
             offer.company,
             code.coupon,
           )
-          return coupon ? { ...couponToDiscount(coupon) } : null
+          return coupon ? { ...utils.couponToDiscount(coupon) } : null
         }),
       )
     )

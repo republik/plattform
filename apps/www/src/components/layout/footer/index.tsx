@@ -1,20 +1,14 @@
 import LightSwitch from '@app/components/lightswitch'
 import { getMe } from '@app/lib/auth/me'
 import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
+import { IconInstagram, IconLogoBluesky, IconLogoFacebook, IconLogoMastodon, IconOpensource } from '@republik/icons'
 import { css } from '@republik/theme/css'
+import logo from '@republik/theme/logo.json'
 import { vstack } from '@republik/theme/patterns'
-import {
-  IconInstagram,
-  IconLogoFacebook,
-  IconLogoMastodon,
-  IconLogoBluesky,
-  IconOpensource,
-} from '@republik/icons'
 import { PUBLIC_BASE_URL } from 'lib/constants'
 import Link, { LinkProps } from 'next/link'
-import { ComponentType, ReactElement, isValidElement } from 'react'
+import { ComponentType, isValidElement, ReactElement } from 'react'
 import { UrlObject } from 'url'
-import logo from '@republik/theme/logo.json'
 
 /**
  * isLinkOfSameHost checks if a link is of the same host as the host provided.
@@ -72,7 +66,7 @@ const CONTACT_EMAIL = 'kontakt@republik.ch'
 export default async function Footer() {
   const { me, hasActiveMembership } = await getMe()
 
-  const { isIOSApp } = await getPlatformInformation()
+  const { isNativeApp } = await getPlatformInformation()
 
   const navs: FooterNavigationGroup[] = [
     {
@@ -80,12 +74,14 @@ export default async function Footer() {
       links: {
         Konto: me ? '/konto' : null,
         Profil: me ? `/~${me.slug || me.id}` : null,
-        Angebote: !isIOSApp && !hasActiveMembership ? '/angebote' : null,
-        Verschenken:
-          !isIOSApp && hasActiveMembership
-            ? { pathname: '/verschenken', query: { group: 'GIVE' } }
-            : null,
-        'Gutschein einlösen': !isIOSApp ? '/abholen' : null,
+        Angebote: !isNativeApp ? process.env.NEXT_PUBLIC_SHOP_BASE_URL : null,
+        Verschenken: !isNativeApp
+          ? `${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/geschenke`
+          : null,
+        'Freiwilliger Beitrag': !isNativeApp
+          ? `${process.env.NEXT_PUBLIC_SHOP_BASE_URL}/angebot/DONATION`
+          : null,
+        'Gutschein einlösen': !isNativeApp ? '/abholen' : null,
         'Republik teilen':
           me &&
           me.accessCampaigns?.length &&

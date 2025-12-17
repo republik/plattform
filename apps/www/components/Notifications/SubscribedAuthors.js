@@ -1,50 +1,56 @@
-import { useMemo } from 'react'
-import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
-import { myUserSubscriptions } from './enhancers'
-import {
-  Editorial,
-  Interaction,
-  mediaQueries,
-  useColorContext,
-} from '@project-r/styleguide'
+import { Interaction, mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
-import SubscribeCheckbox from './SubscribeCheckbox'
+import compose from 'lodash/flowRight'
+import Image from 'next/image'
+import Link from 'next/link'
 import withT from '../../lib/withT'
 import Loader from '../Loader'
-import Link from 'next/link'
+import { myUserSubscriptions } from './enhancers'
+import SubscribeCheckbox from './SubscribeCheckbox'
 
 const styles = {
   checkboxes: css({
     margin: '20px 0',
   }),
-  authorContainer: css({
+  authors: css({
     display: 'flex',
     flexDirection: 'column',
-    paddingTop: 8,
-    ':first-of-type': {
-      paddingTop: 0,
-    },
-    paddingBottom: 5,
+    gap: 16,
+  }),
+  authorContainer: css({
+    display: 'grid',
+    columnGap: 16,
+    gridTemplateColumns: '64px 1fr',
+    gridTemplateAreas: `"portrait name"
+      "portrait actions"`,
+    placeItems: 'center start',
     [mediaQueries.mUp]: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      gridTemplateColumns: '64px 1fr max-content',
+      gridTemplateAreas: '"portrait name actions"',
     },
   }),
-  author: css({
-    display: 'flex',
-    flexDirection: 'row',
-    marginBottom: 10,
-    [mediaQueries.mUp]: {
-      marginBottom: 0,
-    },
+  authorName: css({
+    gridArea: 'name',
+    display: 'block',
+    fontWeight: '700',
+    textDecoration: 'none',
+  }),
+  authorPortrait: css({
+    gridArea: 'portrait',
+    backgroundColor: 'var(--color-hover)',
+    display: 'block',
+    borderRadius: 64,
+    width: 64,
+    height: 64,
+    objectFit: 'cover',
   }),
   checkbox: css({
+    gridArea: 'actions',
     display: 'flex',
     flexDirection: 'row',
-    ' div': {
-      marginRight: 16,
-    },
+    alignItems: 'center',
+    gap: 16,
   }),
 }
 
@@ -52,36 +58,23 @@ const SubscribedAuthors = ({
   t,
   data: { myUserSubscriptions, loading, error },
 }) => {
-  const [colorScheme] = useColorContext()
-
-  const authorContainerRule = useMemo(
-    () =>
-      css({
-        [mediaQueries.mUp]: {
-          '&:nth-child(even)': {
-            backgroundColor: colorScheme.getCSSColor('hover'),
-          },
-        },
-      }),
-    [colorScheme],
-  )
-
   return (
     <Loader
       loading={loading}
       error={error}
       render={() => {
         const allSubscribedUsers = myUserSubscriptions.subscribedTo.nodes
-        
+
         const subscribedAuthors = allSubscribedUsers
           .filter((user) => user.userDetails.documents.totalCount > 0)
           .sort((a, b) => a.object.name.localeCompare(b.object.name))
-        
-          const subscribedUsers = allSubscribedUsers
+
+        const subscribedUsers = allSubscribedUsers
           .filter((user) => user.userDetails.documents.totalCount === 0)
           .sort((a, b) => a.object.name.localeCompare(b.object.name))
 
-        const susbcribedAuthorsAndUsersSorted = subscribedAuthors.concat(subscribedUsers)
+        const susbcribedAuthorsAndUsersSorted =
+          subscribedAuthors.concat(subscribedUsers)
 
         const totalSubs =
           allSubscribedUsers &&
@@ -94,39 +87,51 @@ const SubscribedAuthors = ({
                 count: totalSubs,
               })}
             </Interaction.P>
-            <div style={{ margin: '20px 0' }}>
-              {susbcribedAuthorsAndUsersSorted.map((user) => (
-                <div
-                  {...styles.authorContainer}
-                  {...authorContainerRule}
-                  key={user.object.id}
-                >
-                  <div {...styles.author}>
-                    <Link
-                      href={`/~${user.userDetails.slug}`}
-                      passHref
-                      legacyBehavior
-                    >
-                      <Editorial.A>{user.object.name}</Editorial.A>
-                    </Link>
-                  </div>
-                  <div {...styles.checkbox}>
-                    {(user.userDetails.documents.totalCount ||
-                    (user.active && user.filters.includes('Document'))
-                      ? ['Document', 'Comment']
-                      : ['Comment']
-                    ).map((filter) => (
-                      <SubscribeCheckbox
-                        key={`${user.object.id}-${filter}`}
-                        subscription={user}
-                        filterName={filter}
-                        filterLabel
-                        callout
+            <div {...styles.authors}>
+              {susbcribedAuthorsAndUsersSorted.map((user) => {
+                const portraitUrl = user.userDetails.portrait
+                  ? new URL(user.userDetails.portrait)
+                  : null
+                portraitUrl?.searchParams.set('resize', '128x128')
+
+                return (
+                  <div {...styles.authorContainer} key={user.object.id}>
+                    {portraitUrl ? (
+                      <Image
+                        className={styles.authorPortrait}
+                        src={portraitUrl.toString()}
+                        width={128}
+                        height={128}
+                        unoptimized
+                        alt=''
                       />
-                    ))}
+                    ) : (
+                      <div className={styles.authorPortrait}></div>
+                    )}
+                    <Link
+                      {...styles.authorName}
+                      href={`/~${user.userDetails.slug}`}
+                    >
+                      {user.object.name}
+                    </Link>
+                    <div {...styles.checkbox}>
+                      {(user.userDetails.documents.totalCount ||
+                      (user.active && user.filters.includes('Document'))
+                        ? ['Document', 'Comment']
+                        : ['Comment']
+                      ).map((filter) => (
+                        <SubscribeCheckbox
+                          key={`${user.object.id}-${filter}`}
+                          subscription={user}
+                          filterName={filter}
+                          filterLabel
+                          callout
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </>
         )

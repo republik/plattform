@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react'
 import { gql, useApolloClient, useMutation } from '@apollo/client'
-import { parse } from 'url'
 import { useRouter } from 'next/router'
-
-import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
+import { useEffect, useState } from 'react'
+import { parse } from 'url'
 import { PUBLIC_BASE_URL } from '../../lib/constants'
-
-import AppSignInOverlay from './AppSignInOverlay'
-import { useMediaProgress } from '../Audio/MediaProgress'
-import { usePersistedOSColorSchemeKey } from '../ColorScheme/useColorScheme'
 import { useMe } from '../../lib/context/MeContext'
 import AppMessageEventEmitter from '../../lib/react-native/AppMessageEventEmitter'
+
+import { postMessage, useInNativeApp } from '../../lib/withInNativeApp'
+import { useMediaProgress } from '../Audio/MediaProgress'
+import { usePersistedOSColorSchemeKey } from '../ColorScheme/useColorScheme'
+
+import AppSignInOverlay from './AppSignInOverlay'
 
 let routeChangeStarted
 
@@ -73,6 +73,7 @@ const NewAppMessageSync = () => {
         setSignInQuery(query)
       }
     }
+
     if (me) {
       checkPendingAppSignIn()
     }
@@ -169,7 +170,9 @@ const SyncMe = () => {
     // Post current user data to native app
     if (inNativeAppLegacy) {
       postMessage({ type: 'initial-state', payload: { me } })
-    } else {
+      // isSignedIn is only relevant to trigger push notification permission request
+      // and we don't want it to happen before onboarding is completed
+    } else if (me?.onboarded) {
       postMessage({ type: 'isSignedIn', payload: !!me })
     }
   }, [me, meLoading, inNativeAppLegacy])

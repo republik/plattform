@@ -4,7 +4,7 @@ import NextHead from 'next/head'
 import { ApolloError, useQuery } from '@apollo/client'
 import { checkRoles } from '../apollo/withMe'
 import { css } from 'glamor'
-import { getInitials } from '../../components/Frame/User'
+import { getInitials } from '../../components/Frame/Avatar'
 import {
   MeDocument,
   MeQuery,
@@ -90,6 +90,8 @@ type MeContextValues = {
   isClimateLabMember: boolean
   trialStatus?: TrialStatusType
   progressConsent: boolean
+  allowlistName: string | null
+  hasAllowlistAccess: boolean
 }
 
 const getTrialStatus = (me?: MeObjectType | undefined): TrialStatusType => {
@@ -145,6 +147,9 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
 
   const portraitOrInitials = me ? me.portrait ?? getInitials(me) : false
   const trialStatus = getTrialStatus(me)
+
+  const allowlistName = data?.ipAllowlistAccess?.name ?? null
+  const hasAllowlistAccess = !!allowlistName
 
   useEffect(() => {
     if (loading) return
@@ -218,6 +223,8 @@ const MeContextProvider = ({ children, assumeAccess = false }: Props) => {
         trialStatus,
         // Progress consent requires a logged in user AND them not having opted out
         progressConsent: me && me.progressOptOut !== true,
+        allowlistName,
+        hasAllowlistAccess,
       }}
     >
       <NextHead>

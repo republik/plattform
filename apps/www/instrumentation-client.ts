@@ -17,6 +17,7 @@ if (process.env.NEXT_PUBLIC_SENTRY_DISABLED !== 'true') {
       /NetworkError when attempting to fetch resource/i,
       /Invariant: attempted to hard navigate to the same URL/i,
       /Sie müssen sich zuerst anmelden/i,
+      /__firefox__/i,
     ],
     denyUrls: [/https?:\/\/datawrapper\.dwcdn\.net\//],
     integrations: [

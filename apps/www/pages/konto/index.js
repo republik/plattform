@@ -67,47 +67,6 @@ const AccountPage = () => {
         </div>
       )}
 
-      {hasActiveMembership && (
-        <div {...styles.container}>
-          <div {...styles.column}>
-            <AccountSection
-              id='onboarding'
-              title={t('Account/Onboarding/title')}
-            >
-              <HintArea>
-                {t.elements('Account/Onboarding/text', {
-                  link: (
-                    <Link key='link' href='/einrichten' passHref legacyBehavior>
-                      <A>
-                        <Emphasis>{t('Account/Onboarding/link')}</Emphasis>
-                      </A>
-                    </Link>
-                  ),
-                })}
-              </HintArea>
-            </AccountSection>
-          </div>
-
-          <div {...styles.column}>
-            <AccountSection
-              id='teilen'
-              title={t('Account/Access/Campaigns/title')}
-            >
-              <HintArea>
-                {t.elements('Account/Access/text', {
-                  link: (
-                    <Link key='link' href='/teilen' passHref legacyBehavior>
-                      <A>
-                        <Emphasis>{t('Account/Access/link')}</Emphasis>
-                      </A>
-                    </Link>
-                  ),
-                })}
-              </HintArea>
-            </AccountSection>
-          </div>
-        </div>
-      )}
       <Memberships />
       <AccountSection id='account' title={t('Account/Update/title')}>
         <div style={{ marginBottom: 24 }}>

@@ -6,6 +6,7 @@ import { MailNotificationService } from '../services/MailNotificationService'
 import { parseStripeDate } from '../handlers/stripe/utils'
 import { PaymentService } from '../services/PaymentService'
 import { Company } from '../types'
+import { getConfig } from '../config'
 
 type Args = {
   $version: 'v1'
@@ -14,6 +15,8 @@ type Args = {
   subscriptionId: string
   company: Company
 }
+
+const { PROJECT_R_DONATION_PRODUCT_ID } = getConfig()
 
 export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
   readonly queue = 'payments:transactional:notice:subscription_renewal'
@@ -54,10 +57,12 @@ export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
     }
 
     const event = wh.payload
+    const upcomingInvoice = event.data.object
+    const parent = event.data.object.parent
 
     const paymentMethod = await paymentService.getPaymentMethodForSubscription(
       job.data.company,
-      event.data.object.subscription as string,
+      parent?.subscription_details?.subscription as string,
     )
 
     try {
@@ -65,11 +70,17 @@ export class NoticeRenewalTransactionalWorker extends BaseWorker<Args> {
       await mailService.sendNoticeSubscriptionRenewalTransactionalMail({
         userId: job.data.userId,
         subscriptionId: job.data.subscriptionId,
-        isDiscounted: !!event.data.object.total_discount_amounts?.length,
-        withDonation: !!event.data.object.lines.data.filter((line) => line.description?.includes('Spende')).length,
-        amount: event.data.object.amount_due,
-        paymentAttemptDate: parseStripeDate(event.data.object.next_payment_attempt),
-        paymentMethod: paymentMethod
+        isDiscounted: !!upcomingInvoice.total_discount_amounts?.length,
+        withDonation: !!upcomingInvoice.lines.data.filter(
+          (line) =>
+            line.pricing?.price_details?.product ===
+            PROJECT_R_DONATION_PRODUCT_ID,
+        ).length,
+        amount: upcomingInvoice.amount_due,
+        paymentAttemptDate: parseStripeDate(
+          event.data.object.next_payment_attempt,
+        ),
+        paymentMethod: paymentMethod,
       })
     } catch (e) {
       this.logger.error(
