@@ -1,0 +1,11 @@
+query FollowArticle($path: String!) {
+  article: document(path: $path) {
+    id
+    repoId
+    subscribedBy(includeParents: true, onlyMe: true, filters: [Document]) {
+      nodes {
+        ...SubscriptionFields
+      }
+    }
+  }
+}

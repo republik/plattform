@@ -1,11 +1,15 @@
 'use client'
 
+import { getFragmentData } from '#graphql/republik-api/__generated__/gql'
 import {
   OnboardingAuthorDocument,
+  SubscriptionFieldsFragment,
+  SubscriptionFieldsFragmentDoc,
+  SubscriptionFieldsUserFragmentDoc,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { OnboardingFollowButton } from '@app/components/onboarding/follow-button'
+import { FollowButton } from '@app/components/follow/follow-button'
 import { Section, SectionH3 } from '@app/components/ui/section'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
@@ -14,33 +18,32 @@ import { Button } from '../ui/button'
 import { AUTHORS_FEATURED, AuthorType } from './config'
 
 function AuthorCard({
-  author,
-  showAll,
+  subscription,
 }: {
-  author: AuthorType
-  showAll: boolean
+  subscription: SubscriptionFieldsFragment
 }) {
   const { t } = useTranslation()
-  const { data } = useQuery(OnboardingAuthorDocument, {
-    variables: { id: author.id },
-  })
 
-  const authorData = data?.user
+  if (!subscription) {
+    return null
+  }
 
-  const subscriptionId = authorData?.subscribedBy.nodes.find(
-    (n) => n.active,
-  )?.id
+  const author =
+    subscription.object.__typename === 'User' &&
+    getFragmentData(SubscriptionFieldsUserFragmentDoc, subscription.object)
+
+  const subscriptionId = subscription.active && subscription.id
 
   return (
     <div
-      className={`${css({
-        display: 'none',
+      className={css({
+        display: 'flex',
         alignItems: 'center',
         gap: 2,
         md: {
           maxWidth: '350px',
         },
-      })} author-card ${showAll ? 'show-author-card' : ''}`}
+      })}
     >
       <img
         width='84'
@@ -49,12 +52,10 @@ function AuthorCard({
           borderRadius: '96px',
           backgroundColor: 'divider',
         })}
-        src={authorData?.portrait || '/static/profiledefault.png'}
+        src={author.portrait}
       />
       <div>
-        <h4 className={css({ fontWeight: 'bold' })}>
-          {authorData?.name || '...'}
-        </h4>
+        <h4 className={css({ fontWeight: 'bold' })}>{author.name}</h4>
         <p className={css({ color: 'textSoft' })}>
           {t(`onboarding/authors/${author.slug}/beat`)}
         </p>
@@ -64,7 +65,7 @@ function AuthorCard({
             md: { display: 'block', mt: 2 },
           })}
         >
-          <OnboardingFollowButton
+          <FollowButton
             subscriptionId={subscriptionId}
             objectId={author.id}
             type={SubscriptionObjectType.User}
@@ -72,12 +73,42 @@ function AuthorCard({
         </div>
       </div>
       <div className={css({ ml: 'auto', md: { display: 'none' } })}>
-        <OnboardingFollowButton
+        <FollowButton
           subscriptionId={subscriptionId}
           objectId={author.id}
           type={SubscriptionObjectType.User}
         />
       </div>
+    </div>
+  )
+}
+
+function OnboardingAuthor({
+  author,
+  showAll,
+}: {
+  author: AuthorType
+  showAll: boolean
+}) {
+  const { data } = useQuery(OnboardingAuthorDocument, {
+    variables: { id: author.id },
+  })
+
+  const subscriptions = data?.user?.subscribedBy?.nodes?.map((subscription) =>
+    getFragmentData(SubscriptionFieldsFragmentDoc, subscription),
+  )
+
+  if (!subscriptions) return null
+
+  const subscription = subscriptions.length && subscriptions[0]
+
+  return (
+    <div
+      className={`${css({
+        display: 'none',
+      })} author-card ${showAll ? 'show-author-card' : ''}`}
+    >
+      <AuthorCard subscription={subscription} />
     </div>
   )
 }
@@ -114,7 +145,11 @@ function AuthorsSection() {
         })}
       >
         {AUTHORS_FEATURED.map((author) => (
-          <AuthorCard author={author} key={author.slug} showAll={showAll} />
+          <OnboardingAuthor
+            author={author}
+            key={author.slug}
+            showAll={showAll}
+          />
         ))}
       </div>
 

@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { LoginPopup } from '@app/components/auth/login/login-popup'
+import FollowArticle from '@app/components/follow/follow-article'
 import NextReads from '@app/components/next-reads'
 import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
@@ -507,6 +508,7 @@ const ArticlePage = ({
                   </Center>
                 )}
                 <PaynoteInline />
+                <FollowArticle path={cleanedPath} />
                 {episodes && !isSeriesOverview && (
                   <SeriesNav
                     inline

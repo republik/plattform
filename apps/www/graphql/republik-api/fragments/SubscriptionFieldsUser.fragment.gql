@@ -1,0 +1,11 @@
+fragment SubscriptionFieldsUser on User {
+  id
+  slug
+  name
+  portrait
+  credentials {
+    isListed
+    description
+    verified
+  }
+}

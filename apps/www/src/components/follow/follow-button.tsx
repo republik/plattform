@@ -5,6 +5,7 @@ import {
 import {
   SubscribeDocument,
   SubscriptionFieldsFragmentDoc,
+  SubscriptionFieldsUserFragment,
   SubscriptionObjectType,
   UnsubscribeDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
@@ -15,7 +16,7 @@ import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import { postMessage } from '../../../lib/withInNativeApp'
 
-export function OnboardingFollowButton({
+export function FollowButton({
   subscriptionId,
   objectId,
   type,
@@ -41,7 +42,8 @@ export function OnboardingFollowButton({
         action,
         name:
           object.__typename === 'User'
-            ? `Author: ${object.name}`
+            ? // This is ugly and probably wrong
+              `Author: ${(object as SubscriptionFieldsUserFragment).name}`
             : object.__typename === 'Document'
             ? `Format: ${object.meta.title}`
             : object.id,

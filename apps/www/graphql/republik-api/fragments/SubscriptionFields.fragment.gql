@@ -1,10 +1,10 @@
 fragment SubscriptionFields on Subscription {
   id
   active
+  isEligibleForNotifications
   object {
     ... on User {
-      id
-      name
+      ...SubscriptionFieldsUser
     }
     ... on Document {
       id

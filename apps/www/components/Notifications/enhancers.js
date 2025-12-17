@@ -19,7 +19,14 @@ export const subInfo = gql`
     object {
       ... on User {
         id
+        slug
         name
+        portrait
+        credentials {
+          isListed
+          description
+          verified
+        }
       }
       ... on Document {
         id
