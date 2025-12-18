@@ -27,5 +27,7 @@ export const renderEmail = (mdast, schema, options = {}) => {
       )
       .split('</mso>')
       .join('<![endif]-->')
+      // Remove all soft hyphens to fix layout bug in iOS 26.2 Mail
+      .replace(/(\u00AD|&shy;)/g, '')
   )
 }
