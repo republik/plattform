@@ -7564,20 +7564,12 @@
       "value": "<p>Damit wir Ihnen zeigen können, wie wir arbeiten und warum es sich lohnt, unseren Journalismus zu unterstützen. Über Ihre E-Mail-Adresse können wir direkt mit Ihnen in Kontakt treten, ohne dass externe Suchmaschinen oder Social-Media-Plattformen zwischengeschaltet sind. <b>Wir geben Ihre E-Mail-Adresse niemals ausserhalb der Republik weiter</b>.</p><p>Wenn Sie keine Nachrichten mehr von der Republik erhalten möchten, können Sie sich <b>jederzeit abmelden</b>.</p>"
     },
     {
-      "key": "regwall/a/offers/description",
+      "key": "regwall/offers/description",
       "value": "<b>Für Grosszügige und Unerschrockene:</b>"
     },
     {
-      "key": "regwall/a/offers/cta",
+      "key": "regwall/offers/cta",
       "value": "Abo ab CHF 22.– / Monat"
-    },
-    {
-      "key": "regwall/b/offers/description",
-      "value": "<b>Als Abonnent*in:</b> Unterstützen Sie unabhängigen und werbefreien Journalismus."
-    },
-    {
-      "key": "regwall/b/offers/cta",
-      "value": "Abonnieren ab CHF 22.– / Monat"
     },
     {
       "key": "regwall/offers/cancellable",
