@@ -1,8 +1,12 @@
 'use client'
 
+import { getFragmentData } from '#graphql/republik-api/__generated__/gql'
 import {
-  Document,
   OnboardingFormatsDocument,
+  SubscriptionFieldsDocumentFragment,
+  SubscriptionFieldsDocumentFragmentDoc,
+  SubscriptionFieldsFragment,
+  SubscriptionFieldsFragmentDoc,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
@@ -13,12 +17,20 @@ import Image from 'next/image'
 import { useTranslation } from '../../../lib/withT'
 import { FORMATS_FEATURED, FORMATS_STYLE } from './config'
 
-function FormatCard({ format }: { format?: Document }) {
+function FormatCard({
+  subscription,
+}: {
+  subscription?: SubscriptionFieldsFragment & {
+    object: SubscriptionFieldsDocumentFragment
+  }
+}) {
   const { t } = useTranslation()
 
-  if (!format) return null
+  if (!subscription) return null
 
-  const subscriptionId = format.subscribedBy.nodes.find((n) => n.active)?.id
+  const format = subscription.object
+
+  const subscriptionId = subscription.active && subscription.id
 
   return (
     <div
@@ -82,9 +94,23 @@ function FormatsSection() {
     variables: { repoIds: FORMATS_FEATURED },
   })
 
-  const formats = data?.documents.nodes as Document[]
+  const subscriptions = data?.documents.nodes.map((document) => {
+    const subscription = getFragmentData(
+      SubscriptionFieldsFragmentDoc,
+      document.subscribedBy.nodes,
+    )[0]
+    return {
+      ...subscription,
+      object:
+        subscription.object.__typename === 'Document' &&
+        getFragmentData(
+          SubscriptionFieldsDocumentFragmentDoc,
+          subscription.object,
+        ),
+    }
+  })
 
-  if (!formats?.length) return null
+  if (!subscriptions?.length) return null
 
   return (
     <Section>
@@ -105,7 +131,9 @@ function FormatsSection() {
         {FORMATS_FEATURED.map((repoId) => (
           <FormatCard
             key={repoId}
-            format={formats.find((format) => format.repoId === repoId)}
+            subscription={subscriptions.find(
+              (sub) => sub.object?.repoId === repoId,
+            )}
           />
         ))}
       </div>

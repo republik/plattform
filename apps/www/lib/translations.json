@@ -8026,6 +8026,10 @@
     {
       "key": "onboarding/authors/asscholl/beat",
       "value": "Film"
+    },
+    {
+      "key": "follow/authors/all",
+      "value": "Alle Autorinnen anzeigen"
     }
   ]
 }

@@ -1,31 +1,11 @@
 import { getFragmentData } from '#graphql/republik-api/__generated__/gql'
 import {
   FollowArticleDocument,
-  SubscriptionFieldsFragment,
   SubscriptionFieldsFragmentDoc,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import FollowAuthor from '@app/components/follow/follow-author'
-import { ArticleSection } from '@app/components/ui/section'
-import { css } from '@republik/theme/css'
-
-function FollowAuthors({
-  subscriptions,
-}: {
-  subscriptions: SubscriptionFieldsFragment[]
-}) {
-  if (subscriptions?.length === 0) return null
-
-  return (
-    <div className={css({ marginTop: 8 })}>
-      <ArticleSection>
-        {subscriptions.map((sub) => (
-          <FollowAuthor key={sub.id} subscription={sub} />
-        ))}
-      </ArticleSection>
-    </div>
-  )
-}
+import FollowAuthors from '@app/components/follow/follow-authors'
+import FollowFormat from '@app/components/follow/follow-format'
 
 function FollowArticle({ path }: { path: string }) {
   const { data } = useQuery(FollowArticleDocument, {
@@ -40,14 +20,19 @@ function FollowArticle({ path }: { path: string }) {
   const authorsSubscription = subscriptions?.filter(
     (sub) => sub.isEligibleForNotifications && sub.object.__typename === 'User',
   )
-  // if series: show series follow
-  // if format: show format follow
-  // else show auhtors follow
-  return (
-    <div>
-      <FollowAuthors subscriptions={authorsSubscription} />
-    </div>
+
+  const formatSubscription = subscriptions?.find(
+    (sub) =>
+      sub.isEligibleForNotifications && sub.object.__typename === 'Document',
   )
+
+  // if series: show series follow
+
+  if (formatSubscription) {
+    return <FollowFormat subscription={formatSubscription} />
+  }
+
+  return <FollowAuthors subscriptions={authorsSubscription} />
 }
 
 export default FollowArticle

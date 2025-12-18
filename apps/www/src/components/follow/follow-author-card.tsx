@@ -45,36 +45,40 @@ function FollowAuthorCard({
         pt: 4,
         borderTopStyle: 'solid',
         borderTopWidth: '1px',
-        borderTopColor: 'text',
+        borderTopColor: 'divider',
         display: 'flex',
         alignItems: 'center',
         gap: 4,
       })}
     >
-      <img
-        width='84'
-        height='84'
-        className={css({
-          borderRadius: '96px',
-          backgroundColor: 'divider',
-        })}
-        src={author.portrait}
-      />
+      {author.portrait && (
+        <img
+          width='84'
+          height='84'
+          className={css({
+            borderRadius: '96px',
+          })}
+          src={author.portrait}
+        />
+      )}
       <div>
         <h4 className={css({ fontWeight: 'bold' })}>{author.name}</h4>
-        <p className={css({ fontSize: 'sm' })}>{getDescription(author)}</p>
+        <p className={css({ fontSize: 'sm', color: 'textSoft', mt: 1 })}>
+          {getDescription(author)}
+        </p>
         <div
           className={css({
             display: 'block',
             mt: 2,
           })}
-        >
-          <FollowButton
-            subscriptionId={subscriptionId}
-            objectId={author.id}
-            type={SubscriptionObjectType.User}
-          />
-        </div>
+        ></div>
+      </div>
+      <div className={css({ ml: 'auto' })}>
+        <FollowButton
+          subscriptionId={subscriptionId}
+          objectId={author.id}
+          type={SubscriptionObjectType.User}
+        />
       </div>
     </div>
   )
