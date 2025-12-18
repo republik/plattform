@@ -212,14 +212,6 @@ const Container = ({ children, meta, variableContext }) => {
         />
       </head>
       <body style={{ margin: 0, padding: 0, backgroundColor: '#fff' }}>
-        <Mso>
-          {`
-    <div>
-      <table cellspacing="0" cellpadding="0" border="0" width="800">
-        <tr>
-          <td>
-    `}
-        </Mso>
         <table border='0' cellPadding='0' cellSpacing='0' width='100%'>
           <tbody>
             <VariableContext.Provider value={variableContext}>
@@ -229,14 +221,6 @@ const Container = ({ children, meta, variableContext }) => {
             </VariableContext.Provider>
           </tbody>
         </table>
-        <Mso>
-          {`
-          </td>
-        </tr>
-      </table>
-    </div>
-    `}
-        </Mso>
       </body>
     </html>
   )
