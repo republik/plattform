@@ -22,7 +22,6 @@
   "homepage": "https://github.com/republik/plattform#readme",
   "devDependencies": {
     "@orbiting/backend-modules-types": "*",
-    "@types/jsonwebtoken": "^8.5.8",
     "@types/uuid": "^8.3.0"
   },
   "dependencies": {
@@ -35,7 +34,6 @@
     "express-basic-auth": "^1.1.5",
     "express-session": "^1.17.1",
     "is-uuid": "^1.0.2",
-    "jsonwebtoken": "^9.0.0",
     "kraut": "^0.1.1",
     "maxmind": "^4.3.11",
     "otp": "^0.1.3",

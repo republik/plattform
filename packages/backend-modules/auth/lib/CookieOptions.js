@@ -17,11 +17,9 @@ const CookieExpirationTimeInMS = {
 }
 
 const COOKIE_NAME = process.env.COOKIE_NAME || 'connect.sid'
-const JWT_COOKIE_NAME = process.env.JWT_COOKIE_NAME || 'user-token'
 
 module.exports = {
   COOKIE_NAME,
-  JWT_COOKIE_NAME,
   getCookieOptions,
   CookieExpirationTimeInMS,
 }

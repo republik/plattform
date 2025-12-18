@@ -154,11 +154,6 @@ For more about the available env variables see the individual readme of the apps
 The `COOKIE_NAME` env-variable can be defined in `apps/api` and `apps/www`. It's crucial that the value defined in the apps/www file matches the one of the API that you're developing against.
 If these two env-variables don't match, www will be stuck in a redirection loop when trying to open the URL `/`.
 
-In addition to the cookie name, there the following env-variables must be set to allow for token based authentication.
-The env-variables `JWT_COOKIE_NAME` and `JWT_ISSUER` are present in both the api and www env-files and must be identical.
-Additionally a private-key must be provided to the api with the`JWT_PRIVATE_KEY` env-variable and a public-key must be provided to www with the `JWT_PUBLIC_KEY` env-variable.
-There is a script under `scripts/generate-keypair.sh` that can generate keys in the right format to be directly passed into the corresponding env-files.
-
 ### Database Setup
 
 ```bash
