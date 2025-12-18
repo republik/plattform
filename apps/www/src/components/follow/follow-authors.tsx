@@ -8,7 +8,7 @@ import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 
-const MAX_AUTHORS = 2
+const MAX_AUTHORS = 3
 
 function FollowAuthors({
   subscriptions,
