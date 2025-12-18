@@ -115,9 +115,7 @@ const notifyPublish = async (
     const format = await loaders.Document.byRepoId.load(docId)
 
     // Do not send notifications for newsletter formats
-    if (format.meta.newsletter) {
-      return
-    }
+    const skipEmailForNewsletterFormat = !!format.meta.newsletter
 
     const title =
       format.meta.notificationTitle ||
@@ -141,45 +139,47 @@ const notifyPublish = async (
             ...appContent,
             title,
           },
-          mail: (u) => {
-            return {
-              to: u.email,
-              subject: title,
-              fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
-              fromName: DEFAULT_MAIL_FROM_NAME,
-              templateName: 'publish_article_notification',
-              globalMergeVars: [
-                {
-                  name: 'TITLE',
-                  content: doc.meta.title,
-                },
-                {
-                  name: 'FORMAT_TITLE',
-                  content: format.meta.title,
-                },
-                {
-                  name: 'FORMAT_URL',
-                  content: formatUrl.toString(),
-                },
-                {
-                  name: 'FORMAT_COLOR',
-                  content: formatColor,
-                },
-                {
-                  name: 'DESCRIPTION',
-                  content: doc.meta.description,
-                },
-                {
-                  name: 'CREDITS',
-                  content: doc.meta.creditsString,
-                },
-                {
-                  name: 'URL',
-                  content: appContent.url,
-                },
-              ],
-            }
-          },
+          mail: skipEmailForNewsletterFormat
+            ? undefined
+            : (u) => {
+                return {
+                  to: u.email,
+                  subject: title,
+                  fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
+                  fromName: DEFAULT_MAIL_FROM_NAME,
+                  templateName: 'publish_article_notification',
+                  globalMergeVars: [
+                    {
+                      name: 'TITLE',
+                      content: doc.meta.title,
+                    },
+                    {
+                      name: 'FORMAT_TITLE',
+                      content: format.meta.title,
+                    },
+                    {
+                      name: 'FORMAT_URL',
+                      content: formatUrl.toString(),
+                    },
+                    {
+                      name: 'FORMAT_COLOR',
+                      content: formatColor,
+                    },
+                    {
+                      name: 'DESCRIPTION',
+                      content: doc.meta.description,
+                    },
+                    {
+                      name: 'CREDITS',
+                      content: doc.meta.creditsString,
+                    },
+                    {
+                      name: 'URL',
+                      content: appContent.url,
+                    },
+                  ],
+                }
+              },
         },
       },
       context,
