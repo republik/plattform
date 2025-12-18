@@ -5,13 +5,6 @@ const Center = ({ children }) => {
   return (
     <tr>
       <td align='center' valign='top'>
-        <Mso>
-          {`
-      <table cellspacing="0" cellpadding="0" border="0" width="600">
-        <tr>
-          <td>
-        `}
-        </Mso>
         <table
           align='center'
           border='0'
@@ -33,13 +26,6 @@ const Center = ({ children }) => {
             </tr>
           </tbody>
         </table>
-        <Mso>
-          {`
-      </td>
-    </tr>
-  </table>
-        `}
-        </Mso>
       </td>
     </tr>
   )
