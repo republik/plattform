@@ -1,12 +1,11 @@
 const debug = require('debug')('publikator:lib:scheduler')
-const Promise = require('bluebird')
 const { intervalScheduler } = require('@orbiting/backend-modules-schedulers')
 const indices = require('@orbiting/backend-modules-search/lib/indices')
 const index = indices.dict.documents
 const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
 const { handleRedirection } = require('./Document')
 const {
-  maybeDelcareMilestonePublished,
+  maybeDeclareMilestonePublished,
   updateCurrentPhase,
 } = require('./postgres')
 const { notifyPublish } = require('./Notifications')
@@ -15,8 +14,8 @@ const { upsert: upsertDiscussion } = require('./Discussion')
 const lockTtlSecs = 30 // increased from 10 to 30 seconds because of front publishing issues and elastic version conflict errors
 
 const getScheduledDocuments = async (elastic) => {
-  const { body } = await elastic.search({
-    index: getIndexAlias(index.name, 'read'),
+  const res = await elastic.search({
+    index: getIndexAlias(index.type.toLowerCase(), 'read'),
     size: lockTtlSecs, // Amount publishing 1 document a second
     body: {
       sort: { 'meta.scheduledAt': 'asc' },
@@ -33,7 +32,7 @@ const getScheduledDocuments = async (elastic) => {
     },
   })
 
-  return body.hits.hits.map((hit) => hit._source)
+  return res.hits.hits.map((hit) => hit._source)
 }
 
 const init = async (context) => {
@@ -51,7 +50,7 @@ const init = async (context) => {
         debug('scheduled documents found', docs.length)
       }
 
-      await Promise.each(docs, async (doc) => {
+      const doPublish = async (doc) => {
         // repos:republik/article-briefing-aus-bern-14/scheduled-publication
         const versionName = doc.versionName
         const repoId = doc.meta.repoId
@@ -69,7 +68,7 @@ const init = async (context) => {
 
         const tx = await pgdb.transactionBegin()
         try {
-          await maybeDelcareMilestonePublished(milestone, tx)
+          await maybeDeclareMilestonePublished(milestone, tx)
           await updateCurrentPhase(repoId, tx)
 
           if (milestone.scope === 'publication') {
@@ -131,7 +130,22 @@ const init = async (context) => {
           versionName: doc.versionName,
           scheduledAt: doc.meta.scheduledAt,
         })
-      })
+      }
+
+      for (const doc of docs) {
+        try {
+          await doPublish(doc)
+        } catch (err) {
+          context?.logger?.error(
+            {
+              repoId: doc.meta.repoId,
+              versionName: doc.versionName,
+              error: err,
+            },
+            '[PublicationScheduler]: error while publishing document',
+          )
+        }
+      }
     },
     lockTtlSecs,
     runIntervalSecs: lockTtlSecs,

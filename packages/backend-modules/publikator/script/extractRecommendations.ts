@@ -16,7 +16,7 @@ const {
   stringify: mdastStringify,
 } = require('@republik/remark-preset')
 
-const { maybeDelcareMilestonePublished } = require('../lib/postgres')
+const { maybeDeclareMilestonePublished } = require('../lib/postgres')
 
 const debug = _debug('publikator:script:extractRecommendations')
 
@@ -300,7 +300,7 @@ const handleBatch = async (rows: any[], count: number, pgdb: any) => {
         })
         debug('inserted milestone: %s (%s)', milestone.id, versionName)
 
-        await maybeDelcareMilestonePublished(milestone, tx)
+        await maybeDeclareMilestonePublished(milestone, tx)
 
         console.log(
           'inserted milestone',

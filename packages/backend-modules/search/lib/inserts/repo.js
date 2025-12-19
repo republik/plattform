@@ -1,5 +1,4 @@
 const visit = require('unist-util-visit')
-const Promise = require('bluebird')
 
 const {
   stringifyNode,
@@ -13,10 +12,10 @@ function getCommit(restCommit) {
   return { id, message, createdAt }
 }
 
-async function toStrings(type, nodes) {
+function toStrings(_type, nodes) {
   const keys = Object.keys(nodes)
 
-  const nodeToString = async (key) => {
+  const nodeToString = (key) => {
     const node = nodes[key]
     const string = stringifyNode(node)
     return { [key]: string }
@@ -29,7 +28,7 @@ async function toStrings(type, nodes) {
     }
   }
 
-  return Promise.map(keys, nodeToString).reduce(toObject)
+  return keys.map(nodeToString).reduce(toObject)
 }
 
 async function getCommitStrings(type, content) {
@@ -72,7 +71,7 @@ async function getCommitStrings(type, content) {
     })
   }
 
-  return { strings: await toStrings(type, nodes) }
+  return { strings: toStrings(type, nodes) }
 }
 
 function getCommitMeta(meta) {
@@ -121,7 +120,7 @@ async function transform(row) {
     ...row,
     commit: {
       ...getCommit(restCommit),
-      ...(await getCommitStrings(type, content)),
+      ...getCommitStrings(type, content),
       ...getCommitMeta(meta),
     },
   }
@@ -131,14 +130,21 @@ const getDefaultResource = async ({ pgdb }) => {
   return {
     table: pgdb.publikator.repos,
     payload: {
-      getLatestCommit: async function (repoId) {
-        return pgdb.publikator.commits
-          .findOne({ repoId }, { orderBy: { createdAt: 'desc' }, limit: 1 })
-          .then((row) => ({
-            ...row,
-            content: row.content || mdastParse(row.content__markdown),
-            type: row.type || 'mdast',
-          }))
+      getLatestCommit: async (repoId) => {
+        const row = await pgdb.publikator.commits.findOne(
+          { repoId },
+          { orderBy: { createdAt: 'desc' }, limit: 1 },
+        )
+
+        if (!row) {
+          return
+        }
+
+        return {
+          ...row,
+          content: row.content || mdastParse(row.content__markdown),
+          type: row.type || 'mdast',
+        }
       },
     },
     transform,

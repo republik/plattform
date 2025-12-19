@@ -178,7 +178,7 @@ const count = async (args, elastic) => {
     const submissionSort = createSubmissionsSort(args)
     const submissionsQuery = createSubmissionsQuery(args)
 
-    const { body: submissionsBody } = await elastic.search({
+    const res = await elastic.search({
       index: utils.getIndexAlias('questionnairesubmission', 'read'),
       track_total_hits: true,
       size: 0,
@@ -188,7 +188,7 @@ const count = async (args, elastic) => {
       },
     })
 
-    const total = submissionsBody.hits.total
+    const total = res.hits.total
     return Number.isFinite(total?.value) ? total.value : total
   } catch (e) {
     console.warn(e.message)
@@ -204,7 +204,7 @@ const find = async (args, cursors, elastic) => {
     const submissionSort = createSubmissionsSort(args, cursors)
     const submissionsQuery = createSubmissionsQuery(args, cursors)
 
-    const { body: submissionsBody } = await elastic.search({
+    const res = await elastic.search({
       index: utils.getIndexAlias('questionnairesubmission', 'read'),
       _source: { excludes: ['resolved.*'] },
       from: submissionsFrom,
@@ -215,7 +215,7 @@ const find = async (args, cursors, elastic) => {
       },
     })
 
-    const hits = submissionsBody.hits.hits
+    const hits = res.hits.hits
 
     return hits.map(({ _source, inner_hits }) => {
       const matchedAnswers = inner_hits?.['resolved.answers']?.hits?.hits

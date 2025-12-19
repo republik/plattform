@@ -82,7 +82,7 @@ const toRecords = ({ _id, _source }) => ({
 
 const count = async ({ user, filters }, elastic) => {
   try {
-    const { statusCode, body } = await elastic.search({
+    const res = await elastic.search({
       index: getIndexAlias('mail', 'read'),
       body: {
         size: 0,
@@ -91,7 +91,7 @@ const count = async ({ user, filters }, elastic) => {
       },
     })
 
-    const total = (statusCode === 200 && body.hits.total) || 0
+    const total = res?.hits?.total || 0
     const count = Number.isFinite(total.value) ? total.value : total
 
     return count
@@ -104,7 +104,7 @@ const count = async ({ user, filters }, elastic) => {
 
 const find = async ({ user, size, filters }, { after, before }, elastic) => {
   try {
-    const { statusCode, body } = await elastic.search({
+    const res = await elastic.search({
       index: getIndexAlias('mail', 'read'),
       body: {
         size,
@@ -123,11 +123,7 @@ const find = async ({ user, size, filters }, { after, before }, elastic) => {
       },
     })
 
-    if (statusCode !== 200) {
-      throw Error('query failed')
-    }
-
-    return body.hits.hits.map(toRecords)
+    return res.hits.hits.map(toRecords)
   } catch (e) {
     console.warn(e.message)
   }

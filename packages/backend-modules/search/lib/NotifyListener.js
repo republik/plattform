@@ -82,12 +82,12 @@ const cascadeUpdateConfig = {
   ],
 }
 
-const updateCascade = async function ({ table, rows }, { pgdb, elastic }) {
+const updateCascade = async ({ table, rows }, { pgdb, elastic }) => {
   if (cascadeUpdateConfig[table]) {
     debug('found cascade configuration')
 
     return Promise.all(
-      cascadeUpdateConfig[table].map(async function (config) {
+      cascadeUpdateConfig[table].map(async (config) => {
         const sources =
           config.via === 'id'
             ? rows.map((row) => ({ id: row.id }))
@@ -152,8 +152,8 @@ const notificationHandler = async (
     )
 
     if (mappings.dict[table]) {
-      const { type, name, path } = mappings.dict[table]
-      const { insert } = inserts.dict[name]
+      const { type, path } = mappings.dict[table]
+      const { insert } = inserts.dict[type.toLowerCase()]
 
       const updateIds = rows
         .filter((row) => row.op !== 'DELETE')
@@ -165,7 +165,7 @@ const notificationHandler = async (
       debug(table, { updateIds, deleteIds })
 
       await insert({
-        indexName: getIndexAlias(name, 'write'),
+        indexName: getIndexAlias(type.toLowerCase(), 'write'),
         type,
         pgdb,
         elastic,
@@ -201,7 +201,7 @@ const run = async (workQueue, context) => {
 }
 
 let singleton
-const start = async function ({ pgdb, elastic }) {
+const start = async ({ pgdb, elastic }) => {
   if (singleton) {
     // this is just a precautionary measure, the limitation could be lifted
     // without the need to change other code here
