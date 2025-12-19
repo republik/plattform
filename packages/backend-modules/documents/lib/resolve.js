@@ -60,7 +60,8 @@ const extractUserPath = (path) => {
   if (!path) {
     return
   }
-  const [id] = String(path).match(userPath) || []
+  const match = String(path).match(userPath)
+  const id = match?.[1]
   if (id) {
     return {
       id,
