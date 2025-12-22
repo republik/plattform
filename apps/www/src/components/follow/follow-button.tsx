@@ -72,7 +72,6 @@ export function FollowButton({
       className={css({
         fontWeight: 500,
         textDecoration: 'none',
-        zIndex: 1,
       })}
       onClick={toggleSubscription}
       disabled={isPending}

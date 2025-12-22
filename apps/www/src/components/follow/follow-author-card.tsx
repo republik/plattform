@@ -78,7 +78,7 @@ function FollowAuthorCard({ authorId }: { authorId: string }) {
           })}
         ></div>
       </div>
-      <div className={css({ ml: 'auto' })}>
+      <div className={css({ ml: 'auto', position: 'relative', zIndex: 10 })}>
         <FollowButton
           type={SubscriptionObjectType.User}
           subscriptionId={subscriptionId}
