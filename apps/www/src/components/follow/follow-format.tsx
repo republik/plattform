@@ -35,7 +35,7 @@ function FollowFormat({ path }: { path: string }) {
   // (At least on authors and formats – I have given little thought to discussion subscriptions)
   const subscriptionId = format.subscribedBy.nodes.find((n) => n.active)?.id
   const { main } = splitByTitle(format.content)
-  const text = mdastToString(main)
+  const text = mdastToString(main, ['NOTE'])
 
   return (
     <ArticleSection>

@@ -22,6 +22,7 @@ function FormatRecommendedReads({
     <div>
       {articles
         .filter((doc) => doc.meta.path !== pathname)
+        .slice(0, 3)
         .map((doc) => (
           <div
             key={doc.id}

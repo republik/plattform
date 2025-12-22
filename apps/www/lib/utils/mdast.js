@@ -1,9 +1,14 @@
-export const mdastToString = (node) =>
-  node
-    ? node.value ||
-      (node.children && node.children.map(mdastToString).join('')) ||
-      ''
-    : ''
+export const mdastToString = (node, skip) => {
+  if (skip?.length && node?.identifier && skip?.indexOf(node.identifier) !== -1)
+    return ''
+
+  return (
+    node?.value ||
+    (node.children &&
+      node.children.map((child) => mdastToString(child, skip)).join(' ')) ||
+    ''
+  )
+}
 
 const TRUNCATE_AFTER_CHARS = 700
 
