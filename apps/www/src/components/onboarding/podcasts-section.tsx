@@ -1,12 +1,8 @@
 'use client'
 
-import { getFragmentData } from '#graphql/republik-api/__generated__/gql'
 import {
-  OnboardingFormatsDocument,
-  SubscriptionFieldsDocumentFragment,
-  SubscriptionFieldsDocumentFragmentDoc,
-  SubscriptionFieldsFragment,
-  SubscriptionFieldsFragmentDoc,
+  Document,
+  FollowableDocumentsDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
@@ -16,20 +12,12 @@ import { css } from '@republik/theme/css'
 import { useTranslation } from '../../../lib/withT'
 import { PODCASTS_FEATURED, PODCASTS_STYLE } from './config'
 
-function PodcastCard({
-  subscription,
-}: {
-  subscription?: SubscriptionFieldsFragment & {
-    object: SubscriptionFieldsDocumentFragment
-  }
-}) {
+function PodcastCard({ podcast }: { podcast?: Document }) {
   const { t } = useTranslation()
 
-  if (!subscription) return null
+  if (!podcast) return null
 
-  const podcast = subscription.object
-
-  const subscriptionId = subscription.active && subscription.id
+  const subscriptionId = podcast.subscribedBy.nodes.find((n) => n.active)?.id
 
   return (
     <div
@@ -81,9 +69,10 @@ function PodcastCard({
       </p>
       <div className={css({ mt: 2 })}>
         <FollowButton
+          type={SubscriptionObjectType.Document}
           subscriptionId={subscriptionId}
           objectId={podcast.id}
-          type={SubscriptionObjectType.Document}
+          objectName={podcast.meta.title}
         />
       </div>
     </div>
@@ -92,27 +81,13 @@ function PodcastCard({
 
 function PodcastsSection() {
   const { t } = useTranslation()
-  const { data } = useQuery(OnboardingFormatsDocument, {
+  const { data } = useQuery(FollowableDocumentsDocument, {
     variables: { repoIds: PODCASTS_FEATURED },
   })
 
-  const subscriptions = data?.documents.nodes.map((document) => {
-    const subscription = getFragmentData(
-      SubscriptionFieldsFragmentDoc,
-      document.subscribedBy.nodes,
-    )[0]
-    return {
-      ...subscription,
-      object:
-        subscription.object.__typename === 'Document' &&
-        getFragmentData(
-          SubscriptionFieldsDocumentFragmentDoc,
-          subscription.object,
-        ),
-    }
-  })
+  const podcasts = data?.documents.nodes as Document[]
 
-  if (!subscriptions?.length) return null
+  if (!podcasts?.length) return null
 
   return (
     <Section>
@@ -132,9 +107,7 @@ function PodcastsSection() {
         {PODCASTS_FEATURED.map((repoId) => (
           <PodcastCard
             key={repoId}
-            subscription={subscriptions.find(
-              (sub) => sub.object?.repoId === repoId,
-            )}
+            podcast={podcasts.find((podcast) => podcast.repoId === repoId)}
           />
         ))}
       </div>

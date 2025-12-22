@@ -1,8 +1,0 @@
-fragment SubscriptionFieldsDocument on Document {
-  id
-  repoId
-  meta {
-    title
-    audioCover
-  }
-}

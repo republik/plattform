@@ -1,12 +1,8 @@
 'use client'
 
-import { getFragmentData } from '#graphql/republik-api/__generated__/gql'
 import {
-  OnboardingFormatsDocument,
-  SubscriptionFieldsDocumentFragment,
-  SubscriptionFieldsDocumentFragmentDoc,
-  SubscriptionFieldsFragment,
-  SubscriptionFieldsFragmentDoc,
+  Document,
+  FollowableDocumentsDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
@@ -17,20 +13,12 @@ import Image from 'next/image'
 import { useTranslation } from '../../../lib/withT'
 import { FORMATS_FEATURED, FORMATS_STYLE } from './config'
 
-function FormatCard({
-  subscription,
-}: {
-  subscription?: SubscriptionFieldsFragment & {
-    object: SubscriptionFieldsDocumentFragment
-  }
-}) {
+function FormatCard({ format }: { format?: Document }) {
   const { t } = useTranslation()
 
-  if (!subscription) return null
+  if (!format) return null
 
-  const format = subscription.object
-
-  const subscriptionId = subscription.active && subscription.id
+  const subscriptionId = format.subscribedBy.nodes.find((n) => n.active)?.id
 
   return (
     <div
@@ -74,9 +62,10 @@ function FormatCard({
         }}
       >
         <FollowButton
+          type={SubscriptionObjectType.Document}
           subscriptionId={subscriptionId}
           objectId={format.id}
-          type={SubscriptionObjectType.Document}
+          objectName={format.meta.title}
         />
         <Image
           className={css({ maxHeight: '160px', maxWidth: '120px' })}
@@ -90,27 +79,13 @@ function FormatCard({
 
 function FormatsSection() {
   const { t } = useTranslation()
-  const { data } = useQuery(OnboardingFormatsDocument, {
+  const { data } = useQuery(FollowableDocumentsDocument, {
     variables: { repoIds: FORMATS_FEATURED },
   })
 
-  const subscriptions = data?.documents.nodes.map((document) => {
-    const subscription = getFragmentData(
-      SubscriptionFieldsFragmentDoc,
-      document.subscribedBy.nodes,
-    )[0]
-    return {
-      ...subscription,
-      object:
-        subscription.object.__typename === 'Document' &&
-        getFragmentData(
-          SubscriptionFieldsDocumentFragmentDoc,
-          subscription.object,
-        ),
-    }
-  })
+  const formats = data?.documents.nodes as Document[]
 
-  if (!subscriptions?.length) return null
+  if (!formats?.length) return null
 
   return (
     <Section>
@@ -131,9 +106,7 @@ function FormatsSection() {
         {FORMATS_FEATURED.map((repoId) => (
           <FormatCard
             key={repoId}
-            subscription={subscriptions.find(
-              (sub) => sub.object?.repoId === repoId,
-            )}
+            format={formats.find((format) => format.repoId === repoId)}
           />
         ))}
       </div>

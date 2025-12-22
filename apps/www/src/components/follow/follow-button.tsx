@@ -1,11 +1,5 @@
 import {
-  FragmentType,
-  getFragmentData,
-} from '#graphql/republik-api/__generated__/gql'
-import {
   SubscribeDocument,
-  SubscriptionFieldsFragmentDoc,
-  SubscriptionFieldsUserFragment,
   SubscriptionObjectType,
   UnsubscribeDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
@@ -17,39 +11,22 @@ import { useState } from 'react'
 import { postMessage } from '../../../lib/withInNativeApp'
 
 export function FollowButton({
+  type,
   subscriptionId,
   objectId,
-  type,
+  objectName,
 }: {
+  type: SubscriptionObjectType
   subscriptionId?: string
   objectId: string
-  type: SubscriptionObjectType
+  objectName: string
 }) {
   const [subscribe] = useMutation(SubscribeDocument)
   const [unsubscribe] = useMutation(UnsubscribeDocument)
   const [isPending, setIsPending] = useState(false)
   const [showSpinner, setShowSpinner] = useState(false)
   const track = useTrackEvent()
-
-  function trackSubscription(
-    action: string,
-    sub: FragmentType<typeof SubscriptionFieldsFragmentDoc>,
-  ) {
-    const { object } = getFragmentData(SubscriptionFieldsFragmentDoc, sub)
-
-    if (object) {
-      track({
-        action,
-        name:
-          object.__typename === 'User'
-            ? // This is ugly and probably wrong
-              `Author: ${(object as SubscriptionFieldsUserFragment).name}`
-            : object.__typename === 'Document'
-            ? `Format: ${object.meta.title}`
-            : object.id,
-      })
-    }
-  }
+  const trackingInfo = `${type}: ${objectName}`
 
   async function toggleSubscription(e) {
     e.stopPropagation()
@@ -62,25 +39,28 @@ export function FollowButton({
     const spinner = setTimeout(() => setShowSpinner(true), 1000)
 
     if (subscriptionId) {
-      const { data } = await unsubscribe({
+      await unsubscribe({
         variables: {
           subscriptionId,
         },
       })
-      if (data) {
-        trackSubscription('Unfollow', data.unsubscribe)
-      }
+      track({
+        action: 'Unfollow',
+        name: trackingInfo,
+      })
     } else {
-      const { data } = await subscribe({
+      await subscribe({
         variables: {
           objectId,
           type,
         },
       })
-      if (data) {
-        trackSubscription('Follow', data.subscribe)
-        postMessage({ type: 'isSignedIn', payload: true })
-      }
+      track({
+        action: 'Follow',
+        name: trackingInfo,
+      })
+      // triggers the push permission popup in the app
+      postMessage({ type: 'isSignedIn', payload: true })
     }
     clearTimeout(spinner)
     setShowSpinner(false)

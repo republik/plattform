@@ -1,61 +1,60 @@
 'use client'
 
-import { getFragmentData } from '#graphql/republik-api/__generated__/gql'
 import {
-  OnboardingAuthorDocument,
-  SubscriptionFieldsFragment,
-  SubscriptionFieldsFragmentDoc,
-  SubscriptionFieldsUserFragmentDoc,
+  FollowableAuthorDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import { FollowButton } from '@app/components/follow/follow-button'
 import { Section, SectionH3 } from '@app/components/ui/section'
 import { css } from '@republik/theme/css'
+import Image from 'next/image'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { Button } from '../ui/button'
 import { AUTHORS_FEATURED, AuthorType } from './config'
 
 function AuthorCard({
-  subscription,
+  author,
+  showAll,
 }: {
-  subscription: SubscriptionFieldsFragment
+  author: AuthorType
+  showAll: boolean
 }) {
   const { t } = useTranslation()
+  const { data } = useQuery(FollowableAuthorDocument, {
+    variables: { id: author.id },
+  })
 
-  if (!subscription) {
-    return null
-  }
+  const authorData = data?.user
 
-  const author =
-    subscription.object.__typename === 'User' &&
-    getFragmentData(SubscriptionFieldsUserFragmentDoc, subscription.object)
+  if (!authorData) return null
 
-  const subscriptionId = subscription.active && subscription.id
+  const subscriptionId = authorData.subscribedBy.nodes.find((n) => n.active)?.id
 
   return (
     <div
-      className={css({
-        display: 'flex',
+      className={`${css({
+        display: 'none',
         alignItems: 'center',
         gap: 2,
         md: {
           maxWidth: '350px',
         },
-      })}
+      })} author-card ${showAll ? 'show-author-card' : ''}`}
     >
-      <img
+      <Image
         width='84'
         height='84'
         className={css({
           borderRadius: '96px',
           backgroundColor: 'divider',
         })}
-        src={author.portrait}
+        src={authorData.portrait}
+        alt=''
       />
       <div>
-        <h4 className={css({ fontWeight: 'bold' })}>{author.name}</h4>
+        <h4 className={css({ fontWeight: 'bold' })}>{authorData.name}</h4>
         <p className={css({ color: 'textSoft' })}>
           {t(`onboarding/authors/${author.slug}/beat`)}
         </p>
@@ -66,49 +65,21 @@ function AuthorCard({
           })}
         >
           <FollowButton
+            type={SubscriptionObjectType.User}
             subscriptionId={subscriptionId}
             objectId={author.id}
-            type={SubscriptionObjectType.User}
+            objectName={authorData.name}
           />
         </div>
       </div>
       <div className={css({ ml: 'auto', md: { display: 'none' } })}>
         <FollowButton
+          type={SubscriptionObjectType.User}
           subscriptionId={subscriptionId}
           objectId={author.id}
-          type={SubscriptionObjectType.User}
+          objectName={authorData.name}
         />
       </div>
-    </div>
-  )
-}
-
-function OnboardingAuthor({
-  author,
-  showAll,
-}: {
-  author: AuthorType
-  showAll: boolean
-}) {
-  const { data } = useQuery(OnboardingAuthorDocument, {
-    variables: { id: author.id },
-  })
-
-  const subscriptions = data?.user?.subscribedBy?.nodes?.map((subscription) =>
-    getFragmentData(SubscriptionFieldsFragmentDoc, subscription),
-  )
-
-  if (!subscriptions) return null
-
-  const subscription = subscriptions.length && subscriptions[0]
-
-  return (
-    <div
-      className={`${css({
-        display: 'none',
-      })} author-card ${showAll ? 'show-author-card' : ''}`}
-    >
-      <AuthorCard subscription={subscription} />
     </div>
   )
 }
@@ -145,11 +116,7 @@ function AuthorsSection() {
         })}
       >
         {AUTHORS_FEATURED.map((author) => (
-          <OnboardingAuthor
-            author={author}
-            key={author.slug}
-            showAll={showAll}
-          />
+          <AuthorCard author={author} key={author.slug} showAll={showAll} />
         ))}
       </div>
 

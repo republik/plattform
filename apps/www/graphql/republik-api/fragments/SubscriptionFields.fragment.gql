@@ -2,15 +2,4 @@ fragment SubscriptionFields on Subscription {
   id
   active
   isEligibleForNotifications
-  object {
-    ... on User {
-      ...SubscriptionFieldsUser
-    }
-    ... on Document {
-      ...SubscriptionFieldsDocument
-    }
-    ... on Discussion {
-      id
-    }
-  }
 }

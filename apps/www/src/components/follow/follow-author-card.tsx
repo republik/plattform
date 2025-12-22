@@ -1,37 +1,32 @@
-import { getFragmentData } from '#graphql/republik-api/__generated__/gql'
 import {
-  SubscriptionFieldsFragment,
-  SubscriptionFieldsUserFragment,
-  SubscriptionFieldsUserFragmentDoc,
+  FollowableAuthorDocument,
   SubscriptionObjectType,
+  User,
 } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useQuery } from '@apollo/client'
 import { FollowButton } from '@app/components/follow/follow-button'
 import { css } from '@republik/theme/css'
+import Image from 'next/image'
 
-function FollowAuthorCard({
-  subscription,
-}: {
-  subscription: SubscriptionFieldsFragment
-}) {
-  if (!subscription) {
-    return null
-  }
+function FollowAuthorCard({ authorId }: { authorId: string }) {
+  const { data } = useQuery(FollowableAuthorDocument, {
+    variables: { id: authorId },
+  })
 
-  const author =
-    subscription.object.__typename === 'User' &&
-    getFragmentData(SubscriptionFieldsUserFragmentDoc, subscription.object)
+  const author = data?.user as User
 
-  const subscriptionId = subscription.active && subscription.id
+  if (!author) return null
 
-  // fallback if there is no hardcoded beat in translation.js
-  function getDescription(author: SubscriptionFieldsUserFragment) {
-    const verifiedRole = author.credentials?.find(
+  const subscriptionId = author.subscribedBy.nodes.find((n) => n.active)?.id
+
+  function getDescription(user: User) {
+    const verifiedRole = user.credentials?.find(
       (cred) => cred.isListed && cred.verified,
     )
     if (verifiedRole) {
       return verifiedRole.description
     }
-    const listedRole = author.credentials?.find((cred) => cred.isListed)
+    const listedRole = user.credentials?.find((cred) => cred.isListed)
     if (listedRole) {
       return listedRole.description
     }
@@ -52,13 +47,14 @@ function FollowAuthorCard({
       })}
     >
       {author.portrait && (
-        <img
+        <Image
           width='84'
           height='84'
           className={css({
             borderRadius: '96px',
           })}
           src={author.portrait}
+          alt=''
         />
       )}
       <div>
@@ -75,9 +71,10 @@ function FollowAuthorCard({
       </div>
       <div className={css({ ml: 'auto' })}>
         <FollowButton
-          subscriptionId={subscriptionId}
-          objectId={author.id}
           type={SubscriptionObjectType.User}
+          subscriptionId={subscriptionId}
+          objectId={authorId}
+          objectName={author.name}
         />
       </div>
     </div>

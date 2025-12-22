@@ -1,6 +1,5 @@
 'use client'
 
-import { SubscriptionFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
 import FollowAuthorCard from '@app/components/follow/follow-author-card'
 import { Button } from '@app/components/ui/button'
 import { ArticleSection } from '@app/components/ui/section'
@@ -10,25 +9,21 @@ import { useTranslation } from '../../../lib/withT'
 
 const MAX_AUTHORS = 3
 
-function FollowAuthors({
-  subscriptions,
-}: {
-  subscriptions: SubscriptionFieldsFragment[]
-}) {
+function FollowAuthors({ authorIds }: { authorIds: string[] }) {
   const [showAll, setShowAll] = useState(false)
   const { t } = useTranslation()
 
-  if (subscriptions?.length === 0) return null
+  if (authorIds?.length === 0) return null
 
   return (
     <div className={css({ marginTop: 8 })}>
       <ArticleSection>
-        {subscriptions
-          .slice(0, showAll ? subscriptions.length : MAX_AUTHORS)
-          .map((sub) => (
-            <FollowAuthorCard key={sub.id} subscription={sub} />
+        {authorIds
+          .slice(0, showAll ? authorIds.length : MAX_AUTHORS)
+          .map((authorId) => (
+            <FollowAuthorCard key={authorId} authorId={authorId} />
           ))}
-        {subscriptions.length > MAX_AUTHORS && !showAll && (
+        {authorIds.length > MAX_AUTHORS && !showAll && (
           <div
             className={css({
               mt: 8,

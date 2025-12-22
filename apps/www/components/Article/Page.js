@@ -508,7 +508,10 @@ const ArticlePage = ({
                   </Center>
                 )}
                 <PaynoteInline />
-                <FollowArticle path={cleanedPath} />
+                <FollowArticle
+                  contributors={articleMeta?.contributors}
+                  format={articleMeta?.format}
+                />
                 {episodes && !isSeriesOverview && (
                   <SeriesNav
                     inline

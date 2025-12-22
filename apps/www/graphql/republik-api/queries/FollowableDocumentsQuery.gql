@@ -1,7 +1,14 @@
-query OnboardingFormats($repoIds: [ID!]) {
+query FollowableDocuments($repoIds: [ID!]) {
   documents(repoIds: $repoIds) {
     nodes {
       id
+      repoId
+      content
+      meta {
+        title
+        path
+        audioCover
+      }
       subscribedBy(onlyMe: true) {
         nodes {
           ...SubscriptionFields
