@@ -293,7 +293,6 @@ export const presetRepublik = definePreset({
             fontWeight: 700,
             fontSize: 20,
             lineHeight: 1,
-            mb: 4,
           },
         },
         title: {

@@ -14,6 +14,7 @@ export const nextReadHeader = css({
   mb: 8,
   '& h3': {
     textStyle: 'subtitleBold',
+    mb: 4,
   },
   '& .tagline': {
     fontFamily: 'rubis',

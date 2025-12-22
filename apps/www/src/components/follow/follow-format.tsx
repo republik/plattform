@@ -54,6 +54,7 @@ function FollowFormat({ path }: { path: string }) {
         <h3
           className={css({
             textStyle: 'subtitleBold',
+            mb: 4,
           })}
         >
           Mehr von «{format.meta.title}»
