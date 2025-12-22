@@ -1,14 +1,14 @@
-import { graphql } from '@apollo/client/react/hoc'
-import { CalloutMenu, IconButton } from '@project-r/styleguide'
-import { IconNotifications, IconNotificationsNone } from '@republik/icons'
+import { useState, useEffect, useMemo } from 'react'
 import compose from 'lodash/flowRight'
+import { graphql } from '@apollo/client/react/hoc'
 import { withRouter } from 'next/router'
-import { useEffect, useMemo, useState } from 'react'
-import withMe from '../../lib/apollo/withMe'
-import EventObjectType from '../../lib/graphql-types/EventObjectType'
-import { DISCUSSION_PREFERENCES_QUERY } from '../Discussion/graphql/queries/DiscussionPreferencesQuery.graphql'
+import { CalloutMenu, IconButton } from '@project-r/styleguide'
 import SubscribeCallout from './SubscribeCallout'
 import { getSelectedDiscussionPreference } from './SubscribeDebate'
+import withMe from '../../lib/apollo/withMe'
+import { DISCUSSION_PREFERENCES_QUERY } from '../Discussion/graphql/queries/DiscussionPreferencesQuery.graphql'
+import EventObjectType from '../../lib/graphql-types/EventObjectType'
+import { IconNotifications, IconNotificationsNone } from '@republik/icons'
 
 const checkIfSubscribedToAny = ({ data, subscriptions, showAuthorFilter }) =>
   //checks if any of the subscription nodes is set to active
