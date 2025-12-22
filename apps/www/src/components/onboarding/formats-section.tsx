@@ -62,7 +62,6 @@ function FormatCard({ format }: { format?: Document }) {
         }}
       >
         {' '}
-        d
         <FollowButton
           type={SubscriptionObjectType.Document}
           subscriptionId={subscriptionId}
