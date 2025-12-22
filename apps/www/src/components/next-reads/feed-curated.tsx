@@ -1,3 +1,5 @@
+'use client'
+
 import { getFragmentData } from '#graphql/republik-api/__generated__/gql'
 import {
   DocumentRecommendationsDocument,

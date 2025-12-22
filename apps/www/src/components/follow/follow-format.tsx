@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Document,
   FollowableDocumentDocument,
@@ -7,11 +9,15 @@ import { useQuery } from '@apollo/client'
 import { FollowButton } from '@app/components/follow/follow-button'
 import FormatRecommendedReads from '@app/components/next-reads/format-recommended-reads'
 import { ArticleSection } from '@app/components/ui/section'
+import { IconArrowRight } from '@republik/icons'
 import { css } from '@republik/theme/css'
+import Link from 'next/link'
 import React from 'react'
 import { mdastToString, splitByTitle } from '../../../lib/utils/mdast'
+import { useTranslation } from '../../../lib/withT'
 
 function FollowFormat({ path }: { path: string }) {
+  const { t } = useTranslation()
   const { data } = useQuery(FollowableDocumentDocument, {
     variables: { path },
   })
@@ -61,6 +67,15 @@ function FollowFormat({ path }: { path: string }) {
         />
       </div>
       <FormatRecommendedReads articles={format.linkedDocuments?.nodes} />
+      <Link
+        href={format.meta.path}
+        className={css({
+          alignSelf: 'flex-start',
+          justifySelf: 'center',
+        })}
+      >
+        {t('follow/format/all')} <IconArrowRight size={20} />
+      </Link>
     </ArticleSection>
   )
 }

@@ -1,42 +1,14 @@
-import { useState, Fragment } from 'react'
-import { css } from 'glamor'
-import compose from 'lodash/flowRight'
-import {
-  IconButton,
-  shouldIgnoreClick,
-  ProgressCircle,
-} from '@project-r/styleguide'
-import withT from '../../lib/withT'
-
-import { postMessage } from '../../lib/withInNativeApp'
-
-import { splitByTitle } from '../../lib/utils/mdast'
+import { getAnalyticsDashboardUrl } from '@app/lib/analytics/dashboard-url'
 import { trackEvent } from '@app/lib/analytics/event-tracking'
-import { getDiscussionLinkProps } from './utils'
-import { PUBLIC_BASE_URL, PUBLIKATOR_BASE_URL } from '../../lib/constants'
-import PdfOverlay, { getPdfUrl } from '../Article/PdfOverlay'
-import FontSizeOverlay from '../FontSize/Overlay'
-import ShareOverlay from './ShareOverlay'
-import PodcastOverlay from './PodcastOverlay'
-import { useAudioContext } from '../Audio/AudioProvider'
-
-import SubscribeMenu from '../Notifications/SubscribeMenu'
-import BookmarkButton from './BookmarkButton'
-import DiscussionLinkButton from './DiscussionLinkButton'
-import UserProgress, { FeedUserProgress } from './UserProgress'
-import { useMe } from '../../lib/context/MeContext'
-import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
-
+import { IconButton, shouldIgnoreClick } from '@project-r/styleguide'
 import {
-  AudioPlayerLocations,
-  AudioPlayerActions,
-} from '../Audio/types/AudioActionTracking'
-import {
+  IconChart,
   IconDownload,
   IconEdit,
   IconEtiquette,
   IconFontSize,
+  IconPauseCircleOutline,
   IconPdf,
   IconPlayCircleOutline,
   IconPlaylistAdd,
@@ -44,10 +16,34 @@ import {
   IconPodcast,
   IconReadTime,
   IconShare,
-  IconPauseCircleOutline,
-  IconChart,
 } from '@republik/icons'
-import { getAnalyticsDashboardUrl } from '@app/lib/analytics/dashboard-url'
+import { css } from 'glamor'
+import compose from 'lodash/flowRight'
+import { Fragment, useState } from 'react'
+import { PUBLIC_BASE_URL, PUBLIKATOR_BASE_URL } from '../../lib/constants'
+import { useMe } from '../../lib/context/MeContext'
+
+import { splitByTitle } from '../../lib/utils/mdast'
+
+import { postMessage } from '../../lib/withInNativeApp'
+import withT from '../../lib/withT'
+import PdfOverlay, { getPdfUrl } from '../Article/PdfOverlay'
+import { useAudioContext } from '../Audio/AudioProvider'
+import useAudioQueue from '../Audio/hooks/useAudioQueue'
+
+import {
+  AudioPlayerActions,
+  AudioPlayerLocations,
+} from '../Audio/types/AudioActionTracking'
+import FontSizeOverlay from '../FontSize/Overlay'
+
+import SubscribeMenu from '../Notifications/SubscribeMenu'
+import BookmarkButton from './BookmarkButton'
+import DiscussionLinkButton from './DiscussionLinkButton'
+import PodcastOverlay from './PodcastOverlay'
+import ShareOverlay from './ShareOverlay'
+import UserProgress, { FeedUserProgress } from './UserProgress'
+import { getDiscussionLinkProps } from './utils'
 
 const RenderItems = ({ items }) => (
   <>
@@ -366,11 +362,9 @@ const ActionBar = ({
       ),
       modes: ['articleTop', 'articleBottom'],
       show:
-        // only show if there is something to subscribe to
-        (isDiscussion ||
-          meta.template === 'format' ||
-          meta.format ||
-          meta.contributors?.some((c) => c.user)) &&
+        // only show for formats and discussions
+        // (we are replacing the action bar element with an subscribe bloc at the end of the article)
+        (isDiscussion || meta.template === 'format') &&
         // and signed in or loading me
         (me || meLoading) &&
         // and not a newsletter

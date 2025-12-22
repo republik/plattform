@@ -8030,6 +8030,10 @@
     {
       "key": "follow/authors/all",
       "value": "Alle Autorinnen anzeigen"
+    },
+    {
+      "key": "follow/format/all",
+      "value": "Alle anzeigen"
     }
   ]
 }
