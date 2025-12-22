@@ -6,7 +6,10 @@ import {
 import { useQuery } from '@apollo/client'
 import { FollowButton } from '@app/components/follow/follow-button'
 import { css } from '@republik/theme/css'
+import { linkOverlay } from '@republik/theme/patterns'
 import Image from 'next/image'
+import Link from 'next/link'
+import React from 'react'
 
 function FollowAuthorCard({ authorId }: { authorId: string }) {
   const { data } = useQuery(FollowableAuthorDocument, {
@@ -44,6 +47,8 @@ function FollowAuthorCard({ authorId }: { authorId: string }) {
         display: 'flex',
         alignItems: 'center',
         gap: 4,
+        position: 'relative',
+        cursor: 'pointer',
       })}
     >
       {author.portrait && (
@@ -58,7 +63,11 @@ function FollowAuthorCard({ authorId }: { authorId: string }) {
         />
       )}
       <div>
-        <h4 className={css({ fontWeight: 'bold' })}>{author.name}</h4>
+        <h4 className={css({ fontWeight: 'bold' })}>
+          <Link href={`/~${author.slug}`} className={linkOverlay()}>
+            {author.name}
+          </Link>
+        </h4>
         <p className={css({ fontSize: 'sm', color: 'textSoft', mt: 1 })}>
           {getDescription(author)}
         </p>

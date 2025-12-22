@@ -82,7 +82,6 @@ export const getDocument = gql`
         isPaywallExcluded
         format {
           id
-          repoId
           meta {
             path
             title

@@ -514,7 +514,7 @@ const ArticlePage = ({
                       contributors={articleMeta?.contributors}
                       format={articleMeta?.format}
                     />
-                    <NextReads repoId={repoId} />
+                    <NextReads path={cleanedPath} repoId={repoId} />
                   </>
                 )}
                 {episodes && !isSeriesOverview && (

@@ -1,5 +1,3 @@
-'use client'
-
 import { getFragmentData } from '#graphql/republik-api/__generated__/gql'
 import {
   DocumentRecommendationsDocument,
@@ -13,7 +11,6 @@ import {
   useTrackEvent,
 } from '@app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
-import { usePathname } from 'next/navigation'
 import React, { useEffect } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { CategoryLabel, NextReadAuthor, NextReadLink } from './helpers'
@@ -79,11 +76,10 @@ function CuratedList({
   )
 }
 
-export function CuratedFeed() {
-  const pathname = usePathname()
+export function CuratedFeed({ path }: { path: string }) {
   const { t } = useTranslation()
   const { data, loading } = useQuery(DocumentRecommendationsDocument, {
-    variables: { path: pathname },
+    variables: { path },
   })
 
   const documents = data?.document.meta.recommendations?.nodes
