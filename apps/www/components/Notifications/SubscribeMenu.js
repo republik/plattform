@@ -41,8 +41,6 @@ const SubscribeMenu = ({
 }) => {
   const [animate, setAnimate] = useState(false)
 
-  console.log('SubscribeMenu render', { subscriptions })
-
   useEffect(() => {
     if (animate) {
       const timeout = setTimeout(() => {
@@ -65,7 +63,9 @@ const SubscribeMenu = ({
           subscriptions.filter(
             (node) => node.object?.__typename === 'Document',
           ),
-        authorSubscriptions: [], // replaced by a custom component at the end of the article
+        authorSubscriptions:
+          subscriptions &&
+          subscriptions.filter((node) => node.object?.__typename === 'User'),
       }),
       [data, subscriptions],
     )
