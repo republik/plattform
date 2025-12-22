@@ -1,9 +1,8 @@
-query FollowableDocuments($repoIds: [ID!]) {
+query OnboardingDocuments($repoIds: [ID!]) {
   documents(repoIds: $repoIds) {
     nodes {
       id
       repoId
-      content
       meta {
         title
         path

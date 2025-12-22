@@ -2,7 +2,7 @@
 
 import {
   Document,
-  FollowableDocumentsDocument,
+  OnboardingDocumentsDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
@@ -61,6 +61,8 @@ function FormatCard({ format }: { format?: Document }) {
           alignItems: 'end',
         }}
       >
+        {' '}
+        d
         <FollowButton
           type={SubscriptionObjectType.Document}
           subscriptionId={subscriptionId}
@@ -79,7 +81,7 @@ function FormatCard({ format }: { format?: Document }) {
 
 function FormatsSection() {
   const { t } = useTranslation()
-  const { data } = useQuery(FollowableDocumentsDocument, {
+  const { data } = useQuery(OnboardingDocumentsDocument, {
     variables: { repoIds: FORMATS_FEATURED },
   })
 

@@ -2,7 +2,7 @@
 
 import {
   Document,
-  FollowableDocumentsDocument,
+  OnboardingDocumentsDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
@@ -81,7 +81,7 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
 
 function PodcastsSection() {
   const { t } = useTranslation()
-  const { data } = useQuery(FollowableDocumentsDocument, {
+  const { data } = useQuery(OnboardingDocumentsDocument, {
     variables: { repoIds: PODCASTS_FEATURED },
   })
 

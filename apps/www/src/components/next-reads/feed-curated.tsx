@@ -11,6 +11,7 @@ import {
   useTrackEvent,
 } from '@app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
+import { usePathname } from 'next/navigation'
 import React, { useEffect } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { CategoryLabel, NextReadAuthor, NextReadLink } from './helpers'
@@ -76,10 +77,11 @@ function CuratedList({
   )
 }
 
-export function CuratedFeed({ path }: { path: string }) {
+export function CuratedFeed() {
+  const pathname = usePathname()
   const { t } = useTranslation()
   const { data, loading } = useQuery(DocumentRecommendationsDocument, {
-    variables: { path },
+    variables: { path: pathname },
   })
 
   const documents = data?.document.meta.recommendations?.nodes

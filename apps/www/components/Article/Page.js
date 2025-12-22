@@ -508,10 +508,15 @@ const ArticlePage = ({
                   </Center>
                 )}
                 <PaynoteInline />
-                <FollowArticle
-                  contributors={articleMeta?.contributors}
-                  format={articleMeta?.format}
-                />
+                {isArticle && !isSeriesOverview && (
+                  <>
+                    <FollowArticle
+                      contributors={articleMeta?.contributors}
+                      format={articleMeta?.format}
+                    />
+                    <NextReads repoId={repoId} />
+                  </>
+                )}
                 {episodes && !isSeriesOverview && (
                   <SeriesNav
                     inline
@@ -536,10 +541,6 @@ const ArticlePage = ({
                     formatId={article.repoId}
                     variables={feedQueryVariables}
                   />
-                )}
-
-                {isArticle && !isSeriesOverview && (
-                  <NextReads path={cleanedPath} repoId={repoId} />
                 )}
               </div>
             </>

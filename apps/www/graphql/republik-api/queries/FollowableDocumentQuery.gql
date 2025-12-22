@@ -1,0 +1,28 @@
+query FollowableDocument($path: String!) {
+  document(path: $path) {
+    id
+    content
+    meta {
+      title
+      path
+    }
+    subscribedBy(onlyMe: true) {
+      nodes {
+        ...SubscriptionFields
+      }
+    }
+    linkedDocuments(first: 4) {
+      nodes {
+        id
+        repoId
+        meta {
+          path
+          title
+          description
+          estimatedReadingMinutes
+          estimatedConsumptionMinutes
+        }
+      }
+    }
+  }
+}

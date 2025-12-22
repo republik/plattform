@@ -3,10 +3,10 @@ import { css } from '@republik/theme/css'
 import { CuratedFeed } from './feed-curated'
 import { FeedsNonCurated } from './feeds-non-curated'
 
-function NextReads({ repoId, path }: { repoId: string; path: string }) {
+function NextReads({ repoId }: { repoId: string }) {
   return (
     <div className={css({ pt: 16 })}>
-      <CuratedFeed path={path} />
+      <CuratedFeed />
       <FeedsNonCurated repoId={repoId} />
     </div>
   )

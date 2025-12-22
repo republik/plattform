@@ -9,6 +9,13 @@ type ContributorType = {
   }
 }
 
+const mdastToString = (node) =>
+  node
+    ? node.value ||
+      (node.children && node.children.map(mdastToString).join('')) ||
+      ''
+    : ''
+
 function FollowArticle({
   contributors,
   format,
@@ -16,9 +23,8 @@ function FollowArticle({
   contributors?: ContributorType[]
   format?: Document
 }) {
-  console.log(format)
   if (format) {
-    return <FollowFormat format={format} />
+    return <FollowFormat path={format.meta.path} />
   }
 
   const authorIds = contributors

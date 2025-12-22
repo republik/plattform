@@ -1,4 +1,9 @@
-import { mdastToString } from '@project-r/styleguide'
+export const mdastToString = (node) =>
+  node
+    ? node.value ||
+      (node.children && node.children.map(mdastToString).join('')) ||
+      ''
+    : ''
 
 const TRUNCATE_AFTER_CHARS = 700
 
