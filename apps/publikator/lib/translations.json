@@ -1149,6 +1149,18 @@
       "value": "Profile sollten immer via ID verlinkt werden."
     },
     {
+      "key": "publish/validation/link/issue/privateAsset",
+      "value": "Diese Datei ist nicht öffentlich zugänglich. Bitte unter «Dateien» veröffentlichen."
+    },
+    {
+      "key": "publish/validation/privateAsset/error",
+      "value": "Nicht öffentliche Datei ({location}): {link} – Bitte unter «Dateien» veröffentlichen."
+    },
+    {
+      "key": "publish/validation/privateAsset/audio",
+      "value": "Audiodatei"
+    },
+    {
       "key": "publish/validation/hasErrors",
       "value": "Diese Version kann nicht veröffentlicht werden:"
     },
@@ -1179,6 +1191,10 @@
     {
       "key": "publish/validation/syntheticVoice/empty",
       "value": "Synthetische Stimme fehlt"
+    },
+    {
+      "key": "publish/validation/audioSourceDurationMs/missing",
+      "value": "Audio-Datei vorhanden, aber Dauer fehlt. Vorherige Dokumentversion verwenden oder Audio-File neu hochladen."
     },
     {
       "key": "publish/validation/facebookImage/empty",
