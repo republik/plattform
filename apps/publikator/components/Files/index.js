@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { gql, useQuery } from '@apollo/client'
 import { Container } from '@project-r/styleguide'
 import { css } from 'glamor'
@@ -13,6 +14,7 @@ import { Table, Th, Tr } from '../Table'
 import Info from './Info'
 import Row from './Row'
 import Upload from './Upload'
+import { getFileUsageInContent } from './utils/extractUrlsFromContent'
 
 const GET_FILES = gql`
   query getFiles($id: ID!) {
@@ -20,6 +22,13 @@ const GET_FILES = gql`
       id
       files {
         ...RepoFile
+      }
+      latestCommit {
+        id
+        document {
+          id
+          content
+        }
       }
     }
   }
@@ -50,6 +59,14 @@ const FilesPage = ({ router, t }) => {
         })
       : queryError
 
+  // Compute which files are used in the document content
+  const fileUsageMap = useMemo(() => {
+    const content = data?.repo?.latestCommit?.document?.content
+    const files = data?.repo?.files
+    if (!content || !files) return new Map()
+    return getFileUsageInContent(files, content)
+  }, [data?.repo?.latestCommit?.document?.content, data?.repo?.files])
+
   return (
     <Frame>
       <Frame.Header>
@@ -76,7 +93,11 @@ const FilesPage = ({ router, t }) => {
                     </thead>
                     <tbody>
                       {data.repo.files.map((file) => (
-                        <Row key={file.id} file={file} />
+                        <Row
+                          key={file.id}
+                          file={file}
+                          usages={fileUsageMap.get(file.url)}
+                        />
                       ))}
                     </tbody>
                   </Table>
