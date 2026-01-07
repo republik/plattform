@@ -1194,7 +1194,7 @@
     },
     {
       "key": "publish/validation/audioSourceDurationMs/missing",
-      "value": "Audio-Datei vorhanden, aber Dauer fehlt. Audio-Datei neu hinzufügen und committen um Fehler zu beheben."
+      "value": "Audio-Datei vorhanden, aber Dauer fehlt. Vorherige Dokumentversion verwenden oder aus vorherigem Quellcode kopieren."
     },
     {
       "key": "publish/validation/facebookImage/empty",
