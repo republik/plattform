@@ -22,19 +22,19 @@ const styles = {
   }),
 }
 
-const WebOnly = ({ children, attributes }) => {
+const EmailOnly = ({ children, attributes }) => {
   return (
     <div
       {...attributes}
       {...styles.container}
-      style={{ borderLeftColor: '#A9A7E0' }}
+      style={{ borderLeftColor: '#DAFF8D' }}
     >
       <div
         {...styles.label}
-        style={{ backgroundColor: '#A9A7E0' }}
+        style={{ backgroundColor: '#DAFF8D' }}
         contentEditable={false}
       >
-        Web-Only
+        Email-Only
       </div>
       {children}
     </div>
@@ -76,7 +76,7 @@ export default ({ rule, TYPE, context }) => {
       {
         renderNode({ node, children, attributes }) {
           if (!serializerRule.match(node)) return
-          return <WebOnly attributes={attributes}>{children}</WebOnly>
+          return <EmailOnly attributes={attributes}>{children}</EmailOnly>
         },
       },
     ],

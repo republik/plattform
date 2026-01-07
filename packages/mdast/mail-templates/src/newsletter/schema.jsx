@@ -114,6 +114,11 @@ const createNewsletterSchema = ({
     component: () => null,
   }
 
+  const emailOnly = {
+    matchMdast: matchZone('EMAILONLY'),
+    component: ({ children }) => <>{children}</>,
+  }
+
   const figureCaption = {
     matchMdast: matchParagraph,
     component: Caption,
@@ -202,6 +207,7 @@ const createNewsletterSchema = ({
               figure,
               datawrapperRule,
               webOnly,
+              emailOnly,
               {
                 matchMdast: matchHeading(2),
                 component: H2,

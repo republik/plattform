@@ -19,6 +19,7 @@ import createDocumentPlainModule from './modules/document'
 import createFrontDossier from './modules/dossier/front'
 import createDossierIntro from './modules/dossier/intro'
 import createDynamicComponentModule from './modules/dynamiccomponent'
+import createEmailOnlyModule from './modules/emailonly'
 import {
   createEmbedCommentModule,
   createEmbedTwitterModule,
@@ -106,6 +107,7 @@ const moduleCreators = {
   seriesNav: createSeriesNavModule,
   author: createAuthorModule,
   webOnly: createWebOnlyModule,
+  emailOnly: createEmailOnlyModule,
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule

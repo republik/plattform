@@ -268,6 +268,16 @@ const createNewsletterSchema = ({
     },
   }
 
+  const emailOnly = {
+    matchMdast: matchZone('EMAILONLY'),
+    component: () => null,
+    editorModule: 'emailOnly',
+    editorOptions: {
+      insertTypes: ['PARAGRAPH'],
+      type: 'EMAILONLY',
+    },
+  }
+
   return {
     emailTemplate: 'newsletter-editorial',
     repoPrefix: 'newsletter-editorial-',
@@ -306,6 +316,7 @@ const createNewsletterSchema = ({
               figure,
               embedDataWrapperRule({ emailFirst: true }),
               webOnly,
+              emailOnly,
               {
                 matchMdast: matchHeading(2),
                 component: H2,
