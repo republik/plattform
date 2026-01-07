@@ -100,6 +100,12 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
     return assets
   }, [content, meta, t])
 
+  // Check if audio source exists but duration is missing
+  const audioSourceMp3 = meta?.audioSourceMp3 || content?.meta?.audioSourceMp3
+  const audioSourceDurationMs =
+    meta?.audioSourceDurationMs || content?.meta?.audioSourceDurationMs
+  const hasAudioWithoutDuration = !!audioSourceMp3 && !audioSourceDurationMs
+
   const errors = [
     meta.template !== 'front' &&
       !meta.slug &&
@@ -111,6 +117,8 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
       !content.meta.suppressSyntheticReadAloud &&
       !content.meta.syntheticVoice &&
       t('publish/validation/syntheticVoice/empty'),
+    hasAudioWithoutDuration &&
+      t('publish/validation/audioSourceDurationMs/missing'),
   ].filter(Boolean)
 
   const socialWarnings = SOCIAL_MEDIA.map(
