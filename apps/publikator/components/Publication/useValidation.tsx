@@ -9,6 +9,24 @@ import { Editorial, mdastToString } from '@project-r/styleguide'
 // Used to check for relative urls
 const FAKE_BASE_URL = `http://${uuid()}.local`
 
+/**
+ * Check if a URL is a private S3 signed URL
+ * Private URLs contain AWS signature parameters like X-Amz-Signature
+ */
+const isPrivateAssetUrl = (url: string): boolean => {
+  try {
+    const urlObject = new URL(url)
+    // AWS signed URLs contain these parameters
+    return (
+      urlObject.searchParams.has('X-Amz-Signature') ||
+      urlObject.searchParams.has('X-Amz-Algorithm') ||
+      urlObject.searchParams.has('X-Amz-Credential')
+    )
+  } catch {
+    return false
+  }
+}
+
 const useValidation = ({ meta, content, t, updateMailchimp }) => {
   const links = useMemo(() => {
     const toText = mdastToString
@@ -47,6 +65,10 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
           ) {
             warnings.push('wwwws')
           }
+          // Check for private S3 signed URLs
+          if (isPrivateAssetUrl(node[urlKey])) {
+            warnings.push('privateAsset')
+          }
         } catch (e) {
           console.log('Error validating URL', e)
         }
@@ -61,6 +83,22 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
     })
     return all
   }, [content])
+
+  // Check for private asset URLs in audio and other file fields
+  const privateAssets = useMemo(() => {
+    const assets: Array<{ url: string; location: string }> = []
+
+    // Check audio source in metadata
+    const audioSourceMp3 = meta?.audioSourceMp3 || content?.meta?.audioSourceMp3
+    if (audioSourceMp3 && isPrivateAssetUrl(audioSourceMp3)) {
+      assets.push({
+        url: audioSourceMp3,
+        location: t('publish/validation/privateAsset/audio'),
+      })
+    }
+
+    return assets
+  }, [content, meta, t])
 
   const errors = [
     meta.template !== 'front' &&
@@ -144,6 +182,26 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
             ),
           [],
         ),
+    )
+    // Add warnings for private asset URLs (files not yet made public)
+    .concat(
+      privateAssets.map((asset) =>
+        t.elements('publish/validation/privateAsset/warning', {
+          location: asset.location,
+          link: (
+            <Editorial.A
+              key='link'
+              href={asset.url}
+              target='_blank'
+              style={{ wordBreak: 'break-all' }}
+            >
+              {asset.url.length > 80
+                ? asset.url.substring(0, 80) + '...'
+                : asset.url}
+            </Editorial.A>
+          ),
+        }),
+      ),
     )
 
   return { errors, warnings, links }
