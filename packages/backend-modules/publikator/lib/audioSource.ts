@@ -37,7 +37,6 @@ export const maybeApplyAudioSourceDuration = async (
     (!previousMeta ||
       previousMeta.audioSourceMp3 !== currentMeta.audioSourceMp3)
   ) {
-    // Audio URL is new or changed - fetch and calculate duration
     debug(
       'fetching audio source and measure duration: %s',
       currentMeta.audioSourceMp3,
@@ -56,19 +55,6 @@ export const maybeApplyAudioSourceDuration = async (
         console.error(e, currentMeta.audioSourceMp3)
         throw e
       })
-  } else if (
-    !!currentMeta.audioSourceMp3 &&
-    previousMeta?.audioSourceMp3 === currentMeta.audioSourceMp3 &&
-    previousMeta?.audioSourceDurationMs &&
-    !currentMeta.audioSourceDurationMs
-  ) {
-    // Audio URL unchanged but duration missing from current commit (race condition fix)
-    // Preserve duration from previous commit
-    debug(
-      'preserving audioSourceDurationMs from previous commit: %s',
-      previousMeta.audioSourceDurationMs,
-    )
-    currentMeta.audioSourceDurationMs = previousMeta.audioSourceDurationMs
   }
 
   if (!currentMeta.audioSourceMp3 && 'audioSourceDurationMs' in currentMeta) {
