@@ -65,9 +65,9 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
           ) {
             warnings.push('wwwws')
           }
-          // Check for private S3 signed URLs
+          // Check for private S3 signed URLs - block publication
           if (isPrivateAssetUrl(node[urlKey])) {
-            warnings.push('privateAsset')
+            errors.push('privateAsset')
           }
         } catch (e) {
           console.log('Error validating URL', e)
@@ -119,6 +119,24 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
       t('publish/validation/syntheticVoice/empty'),
     hasAudioWithoutDuration &&
       t('publish/validation/audioSourceDurationMs/missing'),
+    // Add errors for private asset URLs in audio files
+    ...privateAssets.map((asset) =>
+      t.elements('publish/validation/privateAsset/error', {
+        location: asset.location,
+        link: (
+          <Editorial.A
+            key='link'
+            href={asset.url}
+            target='_blank'
+            style={{ wordBreak: 'break-all' }}
+          >
+            {asset.url.length > 80
+              ? asset.url.substring(0, 80) + '...'
+              : asset.url}
+          </Editorial.A>
+        ),
+      }),
+    ),
   ].filter(Boolean)
 
   const socialWarnings = SOCIAL_MEDIA.map(
@@ -165,54 +183,33 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
           [],
         ),
     )
-    // to start we do not block any publication
-    .concat(
-      links
-        .filter(({ errors }) => errors.length)
-        .reduce(
-          (all, link) =>
-            all.concat(
-              link.errors.map((error) =>
-                t.elements('publish/validation/link/error', {
-                  text: link.text,
-                  link: (
-                    <Editorial.A
-                      key='link'
-                      href={link.url}
-                      style={{ wordBreak: 'break-all' }}
-                    >
-                      {link.url}
-                    </Editorial.A>
-                  ),
-                  reason: t(`publish/validation/link/issue/${error}`),
-                }),
+
+  // Add link errors to the errors array to block publication
+  const linkErrors = links
+    .filter(({ errors }) => errors.length)
+    .reduce(
+      (all, link) =>
+        all.concat(
+          link.errors.map((error) =>
+            t.elements('publish/validation/link/error', {
+              text: link.text,
+              link: (
+                <Editorial.A
+                  key='link'
+                  href={link.url}
+                  style={{ wordBreak: 'break-all' }}
+                >
+                  {link.url}
+                </Editorial.A>
               ),
-            ),
-          [],
-        ),
-    )
-    // Add warnings for private asset URLs (files not yet made public)
-    .concat(
-      privateAssets.map((asset) =>
-        t.elements('publish/validation/privateAsset/warning', {
-          location: asset.location,
-          link: (
-            <Editorial.A
-              key='link'
-              href={asset.url}
-              target='_blank'
-              style={{ wordBreak: 'break-all' }}
-            >
-              {asset.url.length > 80
-                ? asset.url.substring(0, 80) + '...'
-                : asset.url}
-            </Editorial.A>
+              reason: t(`publish/validation/link/issue/${error}`),
+            }),
           ),
-        }),
-      ),
+        ),
+      [],
     )
 
-  return { errors, warnings, links }
+  return { errors: [...errors, ...linkErrors], warnings, links }
 }
 
 export default useValidation

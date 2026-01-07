@@ -1153,7 +1153,7 @@
       "value": "Diese Datei ist nicht öffentlich zugänglich. Bitte unter «Dateien» veröffentlichen."
     },
     {
-      "key": "publish/validation/privateAsset/warning",
+      "key": "publish/validation/privateAsset/error",
       "value": "Nicht öffentliche Datei ({location}): {link} – Bitte unter «Dateien» veröffentlichen."
     },
     {
@@ -1194,7 +1194,7 @@
     },
     {
       "key": "publish/validation/audioSourceDurationMs/missing",
-      "value": "Audio-Datei vorhanden, aber Dauer fehlt. Vorherige Dokumentversion verwenden oder aus vorherigem Quellcode kopieren."
+      "value": "Audio-Datei vorhanden, aber Dauer fehlt. Vorherige Dokumentversion verwenden oder Audio-File neu hochladen."
     },
     {
       "key": "publish/validation/facebookImage/empty",
