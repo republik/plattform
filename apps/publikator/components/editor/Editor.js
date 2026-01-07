@@ -19,6 +19,7 @@ import createDocumentPlainModule from './modules/document'
 import createFrontDossier from './modules/dossier/front'
 import createDossierIntro from './modules/dossier/intro'
 import createDynamicComponentModule from './modules/dynamiccomponent'
+import createEmailOnlyModule from './modules/emailonly'
 import {
   createEmbedCommentModule,
   createEmbedTwitterModule,
@@ -54,6 +55,7 @@ import createTeaserGroupModule from './modules/teasergroup'
 import createTitleModule from './modules/title'
 import createVariableModule from './modules/variable'
 import createVariableConditionModule from './modules/variable/condition'
+import createWebOnlyModule from './modules/webonly'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -104,6 +106,8 @@ const moduleCreators = {
   variableCondition: createVariableConditionModule,
   seriesNav: createSeriesNavModule,
   author: createAuthorModule,
+  webOnly: createWebOnlyModule,
+  emailOnly: createEmailOnlyModule,
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule
