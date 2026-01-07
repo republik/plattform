@@ -102,7 +102,7 @@ const moduleCreators = {
   liveteaser: createLiveTeaserModule,
   button: createButtonModule,
   variable: createVariableModule,
-  variableCondition: createVariableConditionModule,s
+  variableCondition: createVariableConditionModule,
   seriesNav: createSeriesNavModule,
   author: createAuthorModule,
   webOnly: createWebOnlyModule,
