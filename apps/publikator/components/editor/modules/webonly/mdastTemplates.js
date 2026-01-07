@@ -15,7 +15,7 @@ export const webOnlyTemplate = {
               children: [
                 {
                   type: 'text',
-                  value: 'Nur sichtbar auf der Webseite.',
+                  value: 'Nur sichtbar auf der Website und in der App.',
                 },
               ],
             },

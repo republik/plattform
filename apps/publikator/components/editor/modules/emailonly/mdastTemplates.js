@@ -15,7 +15,7 @@ export const emailOnlyTemplate = {
               children: [
                 {
                   type: 'text',
-                  value: 'Nur sichtbar per Email.',
+                  value: 'Nur sichtbar im Newsletter.',
                 },
               ],
             },
