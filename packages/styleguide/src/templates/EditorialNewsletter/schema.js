@@ -263,7 +263,6 @@ const createNewsletterSchema = ({
     },
     editorModule: 'webOnly',
     editorOptions: {
-      insertBlocks: ['webOnly'],
       insertTypes: ['PARAGRAPH'],
       type: 'WEBONLY',
     },
