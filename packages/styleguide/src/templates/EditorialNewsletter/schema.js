@@ -256,6 +256,19 @@ const createNewsletterSchema = ({
     ],
   }
 
+  const webOnly = {
+    matchMdast: matchZone('WEBONLY'),
+    component: ({ children }) => {
+      return <>{children}</>
+    },
+    editorModule: 'webOnly',
+    editorOptions: {
+      insertBlocks: ['webOnly'],
+      insertTypes: ['PARAGRAPH'],
+      type: 'WEBONLY',
+    },
+  }
+
   return {
     emailTemplate: 'newsletter-editorial',
     repoPrefix: 'newsletter-editorial-',
@@ -293,6 +306,7 @@ const createNewsletterSchema = ({
               paragraph,
               figure,
               embedDataWrapperRule({ emailFirst: true }),
+              webOnly,
               {
                 matchMdast: matchHeading(2),
                 component: H2,

@@ -54,6 +54,7 @@ import createTeaserGroupModule from './modules/teasergroup'
 import createTitleModule from './modules/title'
 import createVariableModule from './modules/variable'
 import createVariableConditionModule from './modules/variable/condition'
+import createWebOnlyModule from './modules/webonly'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -101,9 +102,10 @@ const moduleCreators = {
   liveteaser: createLiveTeaserModule,
   button: createButtonModule,
   variable: createVariableModule,
-  variableCondition: createVariableConditionModule,
+  variableCondition: createVariableConditionModule,s
   seriesNav: createSeriesNavModule,
   author: createAuthorModule,
+  webOnly: createWebOnlyModule,
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule

@@ -1,20 +1,19 @@
-import createNewsletterSchema from './schema'
+import Center from '../../components/Center'
+import {
+  FigureByline,
+  FigureCaption,
+  FigureCover,
+  FigureImage,
+} from '../../components/Figure'
+import { List, ListItem } from '../../components/List'
+import { Sub, Sup } from '../../components/Typography'
+import { A, P, Subhead } from '../../components/Typography/Editorial'
+import Button from './components/Button'
 
 import Container from './components/Container'
 import StyledFigure from './components/Figure'
-import Button from './components/Button'
 import ListP from './components/ListP'
-
-import Center from '../../components/Center'
-import {
-  FigureCover,
-  FigureImage,
-  FigureCaption,
-  FigureByline,
-} from '../../components/Figure'
-import { Sub, Sup } from '../../components/Typography'
-import { P, Subhead, A } from '../../components/Typography/Editorial'
-import { List, ListItem } from '../../components/List'
+import createNewsletterSchema from './schema'
 
 const createNewsletterWebSchema = ({ ...args } = {}) => {
   return createNewsletterSchema({
