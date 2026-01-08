@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { LoginPopup } from '@app/components/auth/login/login-popup'
+import FollowArticle from '@app/components/follow/follow-article'
 import NextReads from '@app/components/next-reads'
 import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
@@ -507,6 +508,15 @@ const ArticlePage = ({
                   </Center>
                 )}
                 <PaynoteInline />
+                {isArticle && !isSeriesOverview && (
+                  <>
+                    <FollowArticle
+                      contributors={articleMeta?.contributors}
+                      format={articleMeta?.format}
+                    />
+                    <NextReads path={cleanedPath} repoId={repoId} />
+                  </>
+                )}
                 {episodes && !isSeriesOverview && (
                   <SeriesNav
                     inline
@@ -531,10 +541,6 @@ const ArticlePage = ({
                     formatId={article.repoId}
                     variables={feedQueryVariables}
                   />
-                )}
-
-                {isArticle && !isSeriesOverview && (
-                  <NextReads path={cleanedPath} repoId={repoId} />
                 )}
               </div>
             </>
