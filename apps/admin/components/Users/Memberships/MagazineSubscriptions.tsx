@@ -156,17 +156,12 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                                 ⏹️ Abgelaufen am{' '}
                                 <b>{displayDateTime(subscription.endedAt)}</b>
                               </>
-                            ) : (
+                            ) : subscription.cancelAt ? (
                               <>
                                 ⏯️ Läuft ab am{' '}
-                                <b>
-                                  {displayDateTime(
-                                    subscription.cancelAt ??
-                                      subscription.currentPeriodEnd,
-                                  )}
-                                </b>
+                                <b>{displayDateTime(subscription.cancelAt)}</b>
                               </>
-                            )}
+                            ) : null}
                           </div>
                         ) : (
                           <div>
