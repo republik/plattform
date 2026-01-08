@@ -97,7 +97,15 @@ const TimelineNavigation: React.FC<TimelineNavigationProps> = ({
     }
   }, [year])
 
-  const months = Array.from({ length: 12 }, (_, i) => i + 1)
+  const now = new Date()
+  const currentYear = now.getFullYear()
+  const currentCalendarMonth = now.getMonth() + 1 // 1-indexed
+
+  // For current year, only show months up to current month
+  // For past years, show all 12 months
+  const maxMonth = year === currentYear ? currentCalendarMonth : 12
+  const months = Array.from({ length: maxMonth }, (_, i) => i + 1)
+
   const years = Array.from(
     { length: maxYear - minYear + 1 },
     (_, i) => minYear + i,
