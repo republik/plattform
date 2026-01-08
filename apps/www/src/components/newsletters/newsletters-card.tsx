@@ -134,7 +134,6 @@ function NewsletterCard({
 
   return (
     <div
-      data-theme='light'
       className={css({
         borderWidth: '1px',
         borderStyle: 'solid',
@@ -160,9 +159,22 @@ function NewsletterCard({
           flex: '0 0 1',
           alignSelf: 'flex-start',
           pt: 1,
+          _dark: { display: 'none' },
         })}
         width='64'
         src={NL_STYLE[newsletter]?.imageSrc}
+        alt=''
+      />
+      <Image
+        className={css({
+          display: 'none',
+          flex: '0 0 1',
+          alignSelf: 'flex-start',
+          pt: 1,
+          _dark: { display: 'block' },
+        })}
+        width='64'
+        src={NL_STYLE[newsletter]?.imageSrcDark}
         alt=''
       />
       <div
