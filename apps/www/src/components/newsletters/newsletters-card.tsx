@@ -160,9 +160,13 @@ function NewsletterCard({
         md: {
           flexDirection: 'column',
         },
+        _disabled: {
+          cursor: 'default',
+        },
       })}
       onClick={toggleSubscription}
       aria-disabled={disabled}
+      data-disabled={disabled}
       role='button'
     >
       <Image
