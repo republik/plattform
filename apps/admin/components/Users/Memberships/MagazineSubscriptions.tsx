@@ -161,7 +161,8 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                                 ⏯️ Läuft ab am{' '}
                                 <b>
                                   {displayDateTime(
-                                    subscription.currentPeriodEnd,
+                                    subscription.cancelAt ??
+                                      subscription.currentPeriodEnd,
                                   )}
                                 </b>
                               </>
