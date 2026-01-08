@@ -4,7 +4,6 @@ const PgSession = require('connect-pg-simple')(session)
 const transformUser = require('../lib/transformUser')
 const basicAuthMiddleware = require('./basicAuth')
 const { specialRoles, userIsInRoles } = require('../lib/Roles')
-const { JWTMiddleware } = require('../lib/middlewares/JWTMiddleware')
 const {
   CookieExpirationTimeInMS,
   getCookieOptions,
@@ -85,8 +84,6 @@ exports.configure = ({
 
     return next()
   })
-
-  server.use(JWTMiddleware())
 
   const close = () => {
     return store.close()

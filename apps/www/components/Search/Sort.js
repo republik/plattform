@@ -31,7 +31,6 @@ const styles = {
   }),
   linkSelected: css({
     textDecoration: 'underline',
-    textDecorationSkip: 'ink',
   }),
   icon: css({
     display: 'inline-block',

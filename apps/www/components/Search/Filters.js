@@ -38,7 +38,6 @@ const styles = {
   }),
   linkSelected: css({
     textDecoration: 'underline',
-    textDecorationSkip: 'ink',
   }),
 }
 

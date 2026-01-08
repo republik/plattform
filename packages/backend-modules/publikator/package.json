@@ -39,7 +39,6 @@
     "is-uuid": "^1.0.2",
     "istanbul": "1.1.0-alpha.1",
     "js-yaml": "^3.14.0",
-    "jsonwebtoken": "^8.2.1",
     "lodash": "^4.17.19",
     "mdast-util-to-string": "^1.1.0",
     "pogi": "^2.11.1",

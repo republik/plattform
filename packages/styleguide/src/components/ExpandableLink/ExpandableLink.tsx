@@ -20,7 +20,6 @@ const styles = {
     padding: 0,
     textDecorationLine: 'underline',
     textDecorationStyle: 'dotted',
-    textDecorationSkip: 'ink',
     textDecorationThickness: 2,
     textUnderlineOffset: 3,
   }),
