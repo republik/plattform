@@ -23,11 +23,13 @@ export function NewslettersStatus({
 
   return (
     <div
+      data-theme='light'
       className={css({
         display: 'flex',
         flexDirection: 'column',
         gap: '4',
         alignItems: 'flex-start',
+        color: 'text',
         backgroundColor: 'background.marketing',
         p: '8',
         mb: '16',
