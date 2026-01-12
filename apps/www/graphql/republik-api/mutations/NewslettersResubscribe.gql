@@ -1,0 +1,6 @@
+mutation NewslettersResubscribe($userId: ID!) {
+  resubscribeEmail(userId: $userId) {
+    id
+    status
+  }
+}
