@@ -33,7 +33,9 @@ import { Video } from '../../components/Video'
 import { VideoPlayer } from '../../components/VideoPlayer'
 import authorRule from '../shared/email/rules/authorRule'
 import elseRule from '../shared/email/rules/elseRule'
+import emailOnlyRule from '../shared/email/rules/emailOnlyRule'
 import ifRule from '../shared/email/rules/ifRule'
+import webOnlyRule from '../shared/email/rules/webOnlyRule'
 import { embedDataWrapperRule } from '../shared/rules/embedDatawrapperRule'
 
 import createBase from './base'
@@ -499,6 +501,8 @@ const createSchema = ({
                 ...elseRule,
                 component: () => null,
               },
+              webOnlyRule,
+              emailOnlyRule,
               base.list,
               {
                 matchMdast: matchType('thematicBreak'),
