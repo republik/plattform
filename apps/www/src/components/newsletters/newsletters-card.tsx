@@ -19,10 +19,12 @@ function MobileButton({
   toggleSubscription,
   isPending,
   subscribed,
+  disabled,
 }: {
   toggleSubscription: (e: any) => Promise<void>
   isPending: boolean
   subscribed: boolean
+  disabled?: boolean
 }) {
   return (
     <button
@@ -32,9 +34,13 @@ function MobileButton({
         top: 4,
         right: 4,
         md: { display: 'none' },
+        '&:disabled:not([data-loading], [aria-busy="true"])': {
+          opacity: 0.5,
+        },
       })}
       onClick={toggleSubscription}
-      disabled={isPending}
+      disabled={disabled || isPending}
+      aria-busy={isPending}
     >
       {isPending ? (
         <Spinner size='large' />
@@ -69,10 +75,12 @@ function DesktopButton({
   toggleSubscription,
   isPending,
   subscribed,
+  disabled,
 }: {
   toggleSubscription: (e: any) => Promise<void>
   isPending: boolean
   subscribed: boolean
+  disabled?: boolean
 }) {
   return (
     <Button
@@ -83,7 +91,7 @@ function DesktopButton({
         md: { display: 'block' },
       })}
       onClick={toggleSubscription}
-      disabled={isPending}
+      disabled={disabled || isPending}
       type='button'
       size='small'
       variant={subscribed ? 'outline' : 'default'}
@@ -97,9 +105,11 @@ function DesktopButton({
 function NewsletterCard({
   newsletter,
   subscribed,
+  disabled,
 }: {
   newsletter: NewsletterName
   subscribed?: boolean
+  disabled?: boolean
 }) {
   const { t } = useTranslation()
   const [updateNewsletterSubscription] = useMutation(
@@ -111,7 +121,7 @@ function NewsletterCard({
   async function toggleSubscription(e) {
     e.stopPropagation()
 
-    if (isPending) return
+    if (disabled || isPending) return
 
     setIsPending(true)
     const { data } = await updateNewsletterSubscription({
@@ -134,7 +144,6 @@ function NewsletterCard({
 
   return (
     <div
-      data-theme='light'
       className={css({
         borderWidth: '1px',
         borderStyle: 'solid',
@@ -151,8 +160,13 @@ function NewsletterCard({
         md: {
           flexDirection: 'column',
         },
+        _disabled: {
+          cursor: 'default',
+        },
       })}
       onClick={toggleSubscription}
+      aria-disabled={disabled}
+      data-disabled={disabled}
       role='button'
     >
       <Image
@@ -160,9 +174,22 @@ function NewsletterCard({
           flex: '0 0 1',
           alignSelf: 'flex-start',
           pt: 1,
+          _dark: { display: 'none' },
         })}
         width='64'
         src={NL_STYLE[newsletter]?.imageSrc}
+        alt=''
+      />
+      <Image
+        className={css({
+          display: 'none',
+          flex: '0 0 1',
+          alignSelf: 'flex-start',
+          pt: 1,
+          _dark: { display: 'block' },
+        })}
+        width='64'
+        src={NL_STYLE[newsletter]?.imageSrcDark}
         alt=''
       />
       <div
@@ -198,11 +225,13 @@ function NewsletterCard({
             toggleSubscription={toggleSubscription}
             isPending={isPending}
             subscribed={subscribed}
+            disabled={disabled}
           />
           <MobileButton
             toggleSubscription={toggleSubscription}
             isPending={isPending}
             subscribed={subscribed}
+            disabled={disabled}
           />
         </div>
       )}

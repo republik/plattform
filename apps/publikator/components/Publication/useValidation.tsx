@@ -9,6 +9,24 @@ import { Editorial, mdastToString } from '@project-r/styleguide'
 // Used to check for relative urls
 const FAKE_BASE_URL = `http://${uuid()}.local`
 
+/**
+ * Check if a URL is a private S3 signed URL
+ * Private URLs contain AWS signature parameters like X-Amz-Signature
+ */
+const isPrivateAssetUrl = (url: string): boolean => {
+  try {
+    const urlObject = new URL(url)
+    // AWS signed URLs contain these parameters
+    return (
+      urlObject.searchParams.has('X-Amz-Signature') ||
+      urlObject.searchParams.has('X-Amz-Algorithm') ||
+      urlObject.searchParams.has('X-Amz-Credential')
+    )
+  } catch {
+    return false
+  }
+}
+
 const useValidation = ({ meta, content, t, updateMailchimp }) => {
   const links = useMemo(() => {
     const toText = mdastToString
@@ -47,6 +65,10 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
           ) {
             warnings.push('wwwws')
           }
+          // Check for private S3 signed URLs - block publication
+          if (isPrivateAssetUrl(node[urlKey])) {
+            errors.push('privateAsset')
+          }
         } catch (e) {
           console.log('Error validating URL', e)
         }
@@ -62,6 +84,28 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
     return all
   }, [content])
 
+  // Check for private asset URLs in audio and other file fields
+  const privateAssets = useMemo(() => {
+    const assets: Array<{ url: string; location: string }> = []
+
+    // Check audio source in metadata
+    const audioSourceMp3 = meta?.audioSourceMp3 || content?.meta?.audioSourceMp3
+    if (audioSourceMp3 && isPrivateAssetUrl(audioSourceMp3)) {
+      assets.push({
+        url: audioSourceMp3,
+        location: t('publish/validation/privateAsset/audio'),
+      })
+    }
+
+    return assets
+  }, [content, meta, t])
+
+  // Check if audio source exists but duration is missing
+  const audioSourceMp3 = meta?.audioSourceMp3 || content?.meta?.audioSourceMp3
+  const audioSourceDurationMs =
+    meta?.audioSourceDurationMs || content?.meta?.audioSourceDurationMs
+  const hasAudioWithoutDuration = !!audioSourceMp3 && !audioSourceDurationMs
+
   const errors = [
     meta.template !== 'front' &&
       !meta.slug &&
@@ -73,6 +117,26 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
       !content.meta.suppressSyntheticReadAloud &&
       !content.meta.syntheticVoice &&
       t('publish/validation/syntheticVoice/empty'),
+    hasAudioWithoutDuration &&
+      t('publish/validation/audioSourceDurationMs/missing'),
+    // Add errors for private asset URLs in audio files
+    ...privateAssets.map((asset) =>
+      t.elements('publish/validation/privateAsset/error', {
+        location: asset.location,
+        link: (
+          <Editorial.A
+            key='link'
+            href={asset.url}
+            target='_blank'
+            style={{ wordBreak: 'break-all' }}
+          >
+            {asset.url.length > 80
+              ? asset.url.substring(0, 80) + '...'
+              : asset.url}
+          </Editorial.A>
+        ),
+      }),
+    ),
   ].filter(Boolean)
 
   const socialWarnings = SOCIAL_MEDIA.map(
@@ -119,34 +183,33 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
           [],
         ),
     )
-    // to start we do not block any publication
-    .concat(
-      links
-        .filter(({ errors }) => errors.length)
-        .reduce(
-          (all, link) =>
-            all.concat(
-              link.errors.map((error) =>
-                t.elements('publish/validation/link/error', {
-                  text: link.text,
-                  link: (
-                    <Editorial.A
-                      key='link'
-                      href={link.url}
-                      style={{ wordBreak: 'break-all' }}
-                    >
-                      {link.url}
-                    </Editorial.A>
-                  ),
-                  reason: t(`publish/validation/link/issue/${error}`),
-                }),
+
+  // Add link errors to the errors array to block publication
+  const linkErrors = links
+    .filter(({ errors }) => errors.length)
+    .reduce(
+      (all, link) =>
+        all.concat(
+          link.errors.map((error) =>
+            t.elements('publish/validation/link/error', {
+              text: link.text,
+              link: (
+                <Editorial.A
+                  key='link'
+                  href={link.url}
+                  style={{ wordBreak: 'break-all' }}
+                >
+                  {link.url}
+                </Editorial.A>
               ),
-            ),
-          [],
+              reason: t(`publish/validation/link/issue/${error}`),
+            }),
+          ),
         ),
+      [],
     )
 
-  return { errors, warnings, links }
+  return { errors: [...errors, ...linkErrors], warnings, links }
 }
 
 export default useValidation
