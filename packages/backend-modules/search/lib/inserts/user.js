@@ -21,12 +21,11 @@ const getDefaultResource = async ({ pgdb }) => {
   return {
     table: pgdb.public.users,
     payload: {
-      getCredentials: async function (userId) {
-        return pgdb.public.credentials.findOne(
+      getCredentials: async (userId) =>
+        pgdb.public.credentials.findOne(
           { userId, isListed: true },
           { fields: ['id', 'userId', 'description', 'isListed'], limit: 1 },
-        )
-      },
+        ),
     },
     transform,
   }

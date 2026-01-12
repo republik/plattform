@@ -26,18 +26,12 @@ const elastic = new Client({
 
 const ES_INDEX_PREFIX = process.env.ES_INDEX_PREFIX || 'republik'
 
-type ElasticHit = {
-  _index: string
-  _type: string
-  _id: string
-  _score: number
-  _source: {
-    meta: {
-      repoId: string
-      publishDate: Date
-      creditsString: string
-      contributors: ElasticContributor[]
-    }
+type ElasticDocumentMeta = {
+  meta: {
+    repoId: string
+    publishDate: Date
+    creditsString: string
+    contributors: ElasticContributor[]
   }
 }
 
@@ -47,11 +41,11 @@ type Args = {
 }
 
 async function queryElastic(query: any): Promise<RepoData[] | undefined> {
-  let repoContributors: RepoData[] = []
+  let repoContributors: (RepoData | null)[] = []
   try {
     console.log(`Querying elastic on ${ELASTIC_NODE}`)
 
-    const response = await elastic.search({
+    const response = await elastic.search<ElasticDocumentMeta>({
       index: ES_INDEX_PREFIX + '-document-read',
       _source: [
         'meta.contributors',
@@ -62,8 +56,8 @@ async function queryElastic(query: any): Promise<RepoData[] | undefined> {
       body: query,
     })
 
-    if (response.body.hits && response.body.hits.hits) {
-      repoContributors = response.body.hits.hits.map((hit: ElasticHit) => {
+    if (response.hits && response.hits.hits) {
+      repoContributors = response.hits.hits.map((hit) => {
         if (hit._source?.meta) {
           const repo: RepoData = {
             contributors: hit._source.meta.contributors,
@@ -85,7 +79,7 @@ async function queryElastic(query: any): Promise<RepoData[] | undefined> {
   } catch (e) {
     console.error('Error while querying elastic: ', e)
   }
-  return repoContributors
+  return repoContributors.filter((e) => e != null)
 }
 
 function maybeFindContributor(
@@ -248,7 +242,9 @@ async function main(args: Args) {
   console.log(`Entries to check: `)
   console.log(JSON.stringify([...reposToCheck]))
 
-  console.log(`There are ${reposToCheck.length} repos with contributors you should check`)
+  console.log(
+    `There are ${reposToCheck.length} repos with contributors you should check`,
+  )
   console.log(`Inserted ${inserted.length} repoContributors`)
 
   if (args.save) {
@@ -260,12 +256,16 @@ async function main(args: Args) {
         'utf8',
         (error) => {
           if (error) {
-            console.error(`Error while writing repo-contributors-to-check-${now}.json`)
+            console.error(
+              `Error while writing repo-contributors-to-check-${now}.json`,
+            )
           }
         },
       )
 
-      console.log(`successfully saved to repo-contributors-to-check-${now}.json`)
+      console.log(
+        `successfully saved to repo-contributors-to-check-${now}.json`,
+      )
 
       await fs.writeFile(
         `imported-repo-contributors-${now}.json`,
@@ -273,12 +273,16 @@ async function main(args: Args) {
         'utf8',
         (error) => {
           if (error) {
-            console.error(`Error while writing imported-repo-contributors-${now}.json`)
+            console.error(
+              `Error while writing imported-repo-contributors-${now}.json`,
+            )
           }
         },
       )
 
-      console.log(`successfully saved to imported-repo-contributors-${now}.json`)
+      console.log(
+        `successfully saved to imported-repo-contributors-${now}.json`,
+      )
     } catch (error) {
       console.error(
         'Error while trying to save imported repoContributors as file',

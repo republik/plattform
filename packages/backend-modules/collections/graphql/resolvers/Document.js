@@ -29,7 +29,7 @@ module.exports = {
       context,
     )
   },
-  userProgress({ meta: { repoId } }, args, context) {
+  userProgress({ meta: { repoId } }, _args, context) {
     const { user: me } = context
 
     if (!repoId || !me) {
