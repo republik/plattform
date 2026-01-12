@@ -1,21 +1,53 @@
 import visit from 'unist-util-visit'
+import type { Node } from 'unist'
+
+interface MetaUrlField {
+  key: string
+  label: string
+}
+
+interface UrlInfo {
+  url: string
+  type: 'meta' | 'link' | 'image' | 'embed'
+  text: string
+}
+
+interface ContentMeta {
+  [key: string]: unknown
+}
+
+interface MdastContent extends Node {
+  meta?: ContentMeta
+  children?: MdastContent[]
+  url?: string
+  alt?: string
+  title?: string
+  value?: string
+  data?: {
+    url?: string
+    [key: string]: unknown
+  }
+  identifier?: string
+}
+
+interface RepoFile {
+  url: string
+  [key: string]: unknown
+}
 
 /**
  * Metadata fields that may contain unpublished file URLs
  */
-const META_URL_FIELDS = [{ key: 'audioSourceMp3', label: 'Audio' }]
+const META_URL_FIELDS: MetaUrlField[] = [{ key: 'audioSourceMp3', label: 'Audio' }]
 
 /**
  * Extract all URLs from MDAST content that could reference uploaded files.
  * This includes links, images, metadata fields (audio, cover image), and other embedded content.
- *
- * @param {Object} content - The MDAST document content
- * @returns {Array<{url: string, type: string, text?: string}>} - Array of found URLs with their context
  */
-const extractUrlsFromContent = (content) => {
+const extractUrlsFromContent = (content: MdastContent | null | undefined): UrlInfo[] => {
   if (!content) return []
 
-  const urls = []
+  const urls: UrlInfo[] = []
 
   // Check metadata fields for URLs (audioSourceMp3, image, etc.)
   if (content.meta) {
@@ -32,7 +64,7 @@ const extractUrlsFromContent = (content) => {
   }
 
   // Visit all link nodes
-  visit(content, 'link', (node) => {
+  visit(content, 'link', (node: MdastContent) => {
     if (node?.url) {
       urls.push({
         url: node.url,
@@ -43,7 +75,7 @@ const extractUrlsFromContent = (content) => {
   })
 
   // Visit all image nodes
-  visit(content, 'image', (node) => {
+  visit(content, 'image', (node: MdastContent) => {
     if (node?.url) {
       urls.push({
         url: node.url,
@@ -54,7 +86,7 @@ const extractUrlsFromContent = (content) => {
   })
 
   // Visit zone nodes (embeds, etc.) that may have URLs in their data
-  visit(content, 'zone', (node) => {
+  visit(content, 'zone', (node: MdastContent) => {
     if (node?.data?.url) {
       urls.push({
         url: node.data.url,
@@ -70,7 +102,7 @@ const extractUrlsFromContent = (content) => {
 /**
  * Get text content from a node
  */
-const getNodeText = (node) => {
+const getNodeText = (node: MdastContent | null | undefined): string => {
   if (!node) return ''
   if (typeof node.value === 'string') return node.value
   if (Array.isArray(node.children)) {
@@ -81,10 +113,8 @@ const getNodeText = (node) => {
 
 /**
  * Normalize a URL for comparison by removing query parameters and trailing slashes
- * @param {string} url - The URL to normalize
- * @returns {string} - The normalized URL
  */
-const normalizeUrl = (url) => {
+const normalizeUrl = (url: string | null | undefined): string => {
   if (!url) return ''
   try {
     const urlObj = new URL(url)
@@ -98,28 +128,26 @@ const normalizeUrl = (url) => {
 
 /**
  * Check if two URLs match (comparing normalized versions)
- * @param {string} url1 - First URL
- * @param {string} url2 - Second URL
- * @returns {boolean} - Whether the URLs match
  */
-const urlsMatch = (url1, url2) => {
+const urlsMatch = (url1: string | null | undefined, url2: string | null | undefined): boolean => {
   if (!url1 || !url2) return false
   const norm1 = normalizeUrl(url1)
   const norm2 = normalizeUrl(url2)
   return norm1 === norm2 || norm1.includes(norm2) || norm2.includes(norm1)
 }
 
+export type FileUsageMap = Map<string, UrlInfo[]>
+
 /**
  * Check which files are being used in the document content.
  * Returns a Map of file URLs to their usage contexts.
- *
- * @param {Array} files - Array of file objects with url property
- * @param {Object} content - The MDAST document content
- * @returns {Map<string, Array<{type: string, text: string}>>} - Map of file URLs to usage contexts
  */
-export const getFileUsageInContent = (files, content) => {
+export const getFileUsageInContent = (
+  files: RepoFile[] | null | undefined,
+  content: MdastContent | null | undefined
+): FileUsageMap => {
   const contentUrls = extractUrlsFromContent(content)
-  const fileUsage = new Map()
+  const fileUsage: FileUsageMap = new Map()
 
   if (!files || !contentUrls.length) {
     return fileUsage
@@ -140,4 +168,3 @@ export const getFileUsageInContent = (files, content) => {
 }
 
 export default extractUrlsFromContent
-

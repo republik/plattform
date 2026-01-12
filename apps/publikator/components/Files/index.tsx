@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { gql, useQuery } from '@apollo/client'
 import { Container } from '@project-r/styleguide'
-import { css } from 'glamor'
 import { RepoFile } from '../../lib/graphql/fragments'
 
 import { getRepoIdFromQuery } from '../../lib/repoIdHelper'
@@ -9,12 +8,40 @@ import Nav from '../editor/Nav'
 import Frame from '../Frame'
 
 import Loader from '../Loader'
-import { Table, Th, Tr } from '../Table'
 
 import Info from './Info'
-import Row from './Row'
+import FilesTable from './FilesTable'
 import Upload from './Upload'
 import { getFileUsageInContent } from './utils/extractUrlsFromContent'
+import type { RepoFile as RepoFileType } from './FilesTable'
+
+interface Author {
+  name: string
+}
+
+interface Document {
+  id: string
+  content: unknown
+}
+
+interface Commit {
+  id: string
+  document: Document
+}
+
+interface Repo {
+  id: string
+  files: RepoFileType[]
+  latestCommit: Commit
+}
+
+interface GetFilesData {
+  repo: Repo | null
+}
+
+interface GetFilesVariables {
+  id: string
+}
 
 const GET_FILES = gql`
   query getFiles($id: ID!) {
@@ -36,21 +63,26 @@ const GET_FILES = gql`
   ${RepoFile}
 `
 
-const styles = {
-  container: css({
-    overflow: 'scroll',
-  }),
+interface NextRouter {
+  query: Record<string, string | string[] | undefined>
 }
 
-const FilesPage = ({ router, t }) => {
+type TFunction = (key: string, options?: Record<string, unknown>) => string
+
+interface FilesPageProps {
+  router: NextRouter
+  t: TFunction
+}
+
+const FilesPage: React.FC<FilesPageProps> = ({ router, t }) => {
   const repoId = getRepoIdFromQuery(router.query)
-  const variables = { id: repoId }
+  const variables: GetFilesVariables = { id: repoId }
 
   const {
     data,
     loading,
     error: queryError,
-  } = useQuery(GET_FILES, { variables })
+  } = useQuery<GetFilesData, GetFilesVariables>(GET_FILES, { variables })
 
   const error =
     data?.repo === null
@@ -81,27 +113,12 @@ const FilesPage = ({ router, t }) => {
           render={() => (
             <Container>
               <Info />
-              <Upload repoId={data.repo.id} />
-              {!!data.repo.files.length && (
-                <div {...styles.container}>
-                  <Table>
-                    <thead>
-                      <Tr>
-                        <Th style={{ width: '70%' }}>Datei</Th>
-                        <Th style={{ width: '30%' }}></Th>
-                      </Tr>
-                    </thead>
-                    <tbody>
-                      {data.repo.files.map((file) => (
-                        <Row
-                          key={file.id}
-                          file={file}
-                          usages={fileUsageMap.get(file.url)}
-                        />
-                      ))}
-                    </tbody>
-                  </Table>
-                </div>
+              <Upload repoId={data!.repo!.id} />
+              {!!data!.repo!.files.length && (
+                <FilesTable
+                  files={data!.repo!.files}
+                  fileUsageMap={fileUsageMap}
+                />
               )}
             </Container>
           )}
