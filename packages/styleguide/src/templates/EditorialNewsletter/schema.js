@@ -18,7 +18,9 @@ import {
 } from '../Article/utils'
 import authorRule from '../shared/email/rules/authorRule'
 import elseRule from '../shared/email/rules/elseRule'
+import emailOnlyRule from '../shared/email/rules/emailOnlyRule'
 import ifRule from '../shared/email/rules/ifRule'
+import webOnlyRule from '../shared/email/rules/webOnlyRule'
 import { embedDataWrapperRule } from '../shared/rules/embedDatawrapperRule'
 import Blockquote, {
   BlockquoteSource,
@@ -256,28 +258,6 @@ const createNewsletterSchema = ({
     ],
   }
 
-  const webOnly = {
-    matchMdast: matchZone('WEBONLY'),
-    component: ({ children }) => {
-      return <>{children}</>
-    },
-    editorModule: 'webOnly',
-    editorOptions: {
-      insertTypes: ['PARAGRAPH'],
-      type: 'WEBONLY',
-    },
-  }
-
-  const emailOnly = {
-    matchMdast: matchZone('EMAILONLY'),
-    component: () => null,
-    editorModule: 'emailOnly',
-    editorOptions: {
-      insertTypes: ['PARAGRAPH'],
-      type: 'EMAILONLY',
-    },
-  }
-
   return {
     emailTemplate: 'newsletter-editorial',
     repoPrefix: 'newsletter-editorial-',
@@ -315,8 +295,8 @@ const createNewsletterSchema = ({
               paragraph,
               figure,
               embedDataWrapperRule({ emailFirst: true }),
-              webOnly,
-              emailOnly,
+              webOnlyRule,
+              emailOnlyRule,
               {
                 matchMdast: matchHeading(2),
                 component: H2,
