@@ -809,6 +809,18 @@
       "value": "Lesegenuss fernab aktueller News-Hektik. Jeden Sonntag präsentieren wir Ihnen einen Beitrag aus dem Archiv der Republik, der heute genauso lesenswert ist wie damals."
     },
     {
+      "key": "account/newsletterSubscriptions/BAB/label",
+      "value": "Briefing aus Bern"
+    },
+    {
+      "key": "account/newsletterSubscriptions/BAB/frequency",
+      "value": "Jeden Donnerstag"
+    },
+    {
+      "key": "account/newsletterSubscriptions/BAB/description",
+      "value": "Das Wichtigste aus der Schweizer Politik auf einen Blick."
+    },
+    {
       "key": "account/newsletterSubscriptions/PROJECTR/label",
       "value": "Project-R-Newsletter"
     },
@@ -7790,6 +7802,18 @@
     {
       "key": "newsletters/SUNDAY/schedule",
       "value": "Sonntag"
+    },
+    {
+      "key": "newsletters/BAB/name",
+      "value": "Briefing aus Bern"
+    },
+    {
+      "key": "newsletters/BAB/description",
+      "value": "Das Wichtigste aus der Schweizer Politik auf einen Blick."
+    },
+    {
+      "key": "newsletters/BAB/schedule",
+      "value": "Donnerstag"
     },
     {
       "key": "newsletters/PROJECTR/name",

@@ -4,7 +4,8 @@ const config = {
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR: 'MAILCHIMP_INTEREST_MEMBER_BENEFACTOR',
   MAILCHIMP_INTEREST_PLEDGE: 'MAILCHIMP_INTEREST_PLEDGE',
   MAILCHIMP_INTEREST_GRANTED_ACCESS: 'MAILCHIMP_INTEREST_GRANTED_ACCESS',
-  MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL: 'MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL',
+  MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL:
+    'MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL',
   MAILCHIMP_MAIN_LIST_ID: 'MAILCHIMP_MAIN_LIST_ID',
   MAILCHIMP_ONBOARDING_AUDIENCE_ID: 'MAILCHIMP_ONBOARDING_AUDIENCE_ID',
   MAILCHIMP_MARKETING_AUDIENCE_ID: 'MAILCHIMP_MARKETING_AUDIENCE_ID',
@@ -16,9 +17,10 @@ const config = {
     'MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE',
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW: 'MAILCHIMP_INTEREST_NEWSLETTER_WDWWW',
   MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY: 'MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY',
+  MAILCHIMP_INTEREST_NEWSLETTER_BAB: 'MAILCHIMP_INTEREST_NEWSLETTER_BAB',
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY: 'MAILCHIMP_INTEREST_NEWSLETTER_DAILY',
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY: 'MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY',
-  REGWALL_TRIAL_CAMPAIGN_ID: 'REGWALL_TRIAL_CAMPAIGN_ID'
+  REGWALL_TRIAL_CAMPAIGN_ID: 'REGWALL_TRIAL_CAMPAIGN_ID',
 }
 jest.mock('../../config', () => ({
   getConfig() {
@@ -29,8 +31,8 @@ jest.mock('@orbiting/backend-modules-republik/lib/Newsletter', () => ({
   getConsentLink: jest.fn(() => 'getConsentLink mocked'),
 }))
 jest.mock('../../lib/getInterestsForUser', () => ({
-  getInterestsForUser: 
-    jest.fn()
+  getInterestsForUser: jest
+    .fn()
     // active membership
     .mockImplementationOnce(() => ({
       [config.MAILCHIMP_INTEREST_PLEDGE]: true,
@@ -104,21 +106,31 @@ import {
 } from '../../lib/addUserToAudience'
 jest.mock('../../lib/addUserToAudience', () => ({
   addUserToAudience: jest.fn(() => 'addUserToAudience mocked'),
-  addUserToMarketingAudience: jest.fn(() => 'addUserToMarketingAudience mocked')
+  addUserToMarketingAudience: jest.fn(
+    () => 'addUserToMarketingAudience mocked',
+  ),
 }))
-const addUserToAudienceMock = addUserToAudience as unknown as jest.Mock<typeof addUserToAudience>
-const addUserToMarketingAudienceMock = addUserToMarketingAudience as unknown as jest.Mock<typeof addUserToMarketingAudience>
+const addUserToAudienceMock = addUserToAudience as unknown as jest.Mock<
+  typeof addUserToAudience
+>
+const addUserToMarketingAudienceMock =
+  addUserToMarketingAudience as unknown as jest.Mock<
+    typeof addUserToMarketingAudience
+  >
 
 import { getSegmentDataForUser } from '../../lib/getSegmentDataForUser'
 jest.mock('../../lib/getSegmentDataForUser', () => ({
-  getSegmentDataForUser: jest.fn(() => 'getSegmentDataForUser mocked')
+  getSegmentDataForUser: jest.fn(() => 'getSegmentDataForUser mocked'),
 }))
 
 import { archiveMemberInAudience } from '../../lib/archiveMemberInAudience'
 jest.mock('../../lib/archiveMemberInAudience', () => ({
   archiveMemberInAudience: jest.fn(() => 'archiveMemberInAudience mocked'),
 }))
-const archiveMemberInAudienceMock = archiveMemberInAudience as unknown as jest.Mock<typeof archiveMemberInAudience>
+const archiveMemberInAudienceMock =
+  archiveMemberInAudience as unknown as jest.Mock<
+    typeof archiveMemberInAudience
+  >
 
 import { updateNewsletterSubscriptions } from '../../lib/updateNewsletterSubscriptions'
 jest.mock('../../lib/updateNewsletterSubscriptions', () => ({
@@ -129,7 +141,7 @@ jest.mock('../../lib/updateNewsletterSubscriptions', () => ({
 
 import { getMailchimpMember } from '../../lib/getMailchimpMember'
 jest.mock('../../lib/getMailchimpMember', () => ({
-  getMailchimpMember: jest.fn()
+  getMailchimpMember: jest.fn(),
 }))
 
 import MailchimpInterface from '../../MailchimpInterface'
@@ -159,7 +171,7 @@ describe('test enforceSubscriptions', () => {
       email: 'user@example.com',
       subscribeToOnboardingMails: true,
       subscribeToEditorialNewsletters: true,
-      pgdb: pgdb as any, 
+      pgdb: pgdb as any,
       name: '',
       subscribed: true,
     })
@@ -201,6 +213,7 @@ describe('test enforceSubscriptions', () => {
         NL_CLIMATE: undefined,
         NL_WDWWW: undefined,
         NL_SUNDAY: undefined,
+        NL_BAB: undefined,
         NL_ACCOMPL: undefined,
       },
       statusIfNew: MailchimpInterface.MemberStatus.Subscribed,

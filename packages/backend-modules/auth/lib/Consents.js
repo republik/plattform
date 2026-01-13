@@ -17,6 +17,7 @@ const VALID_POLICIES = [
   'NEWSLETTER_PROJECTR',
   'NEWSLETTER_WDWWW',
   'NEWSLETTER_SUNDAY',
+  'NEWSLETTER_BAB',
 ]
 
 const REVOKABLE_POLICIES = [
@@ -29,6 +30,7 @@ const REVOKABLE_POLICIES = [
   'NEWSLETTER_PROJECTR',
   'NEWSLETTER_WDWWW',
   'NEWSLETTER_SUNDAY',
+  'NEWSLETTER_BAB',
 ]
 
 const getAllConsentRecords = ({ userId, pgdb }) =>
@@ -75,12 +77,13 @@ const statusForPolicyForUser = async ({ userId, policy, pgdb }) =>
   )
 
 const requiredConsents = async ({ userId, pgdb }) => {
-
   const { ENFORCE_CONSENTS = '' } = process.env
 
   if (ENFORCE_CONSENTS) {
     const consented = userId ? await consentsOfUser({ userId, pgdb }) : []
-    return ENFORCE_CONSENTS.split(',').filter((consent) => !consented.includes(consent))
+    return ENFORCE_CONSENTS.split(',').filter(
+      (consent) => !consented.includes(consent),
+    )
   }
   return []
 }
@@ -114,7 +117,7 @@ const saveConsents = async ({ userId, consents = [], req, pgdb, t }) => {
   const insertConsents = consents.filter(
     (consent) => existingConsents.indexOf(consent) === -1,
   )
- return Promise.all(
+  return Promise.all(
     insertConsents.map((consent) =>
       pgdb.public.consents.insert({
         userId,
