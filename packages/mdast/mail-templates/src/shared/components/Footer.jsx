@@ -74,17 +74,17 @@ const Footer = ({ meta }) => {
         </a>{' '}
         |{' '}
         <a
-          href='https://www.republik.ch/format/was-diese-woche-wichtig-war'
-          style={footerLinkStyle}
-        >
-          Was diese Woche wichtig war
-        </a>{' '}
-        |{' '}
-        <a
           href='https://www.republik.ch/format/briefing-aus-bern'
           style={footerLinkStyle}
         >
           Briefing aus Bern
+        </a>{' '}
+        |{' '}
+        <a
+          href='https://www.republik.ch/format/was-diese-woche-wichtig-war'
+          style={footerLinkStyle}
+        >
+          Was diese Woche wichtig war
         </a>{' '}
         |{' '}
         <a
