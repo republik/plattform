@@ -11,10 +11,13 @@ import nlWdwww from './assets/04_WWW_L.svg'
 import nlSundayDark from './assets/05_Sonntag_D.svg'
 import nlSunday from './assets/05_Sonntag_L.svg'
 import nlProjectRDark from './assets/06_Project_R_D.svg'
-import nlProjectR from './assets/07_Project_R_L.svg'
+import nlProjectR from './assets/06_Project_R_L.svg'
+import nlBabDark from './assets/07_BaB_D.svg'
+import nlBab from './assets/07_BaB_L.svg'
 
 export const NL_FEATURED = [
   NewsletterName.Daily,
+  NewsletterName.Bab,
   NewsletterName.Wdwww,
   NewsletterName.Weekly,
 ]
@@ -39,6 +42,10 @@ export const NL_STYLE: {
   [NewsletterName.Weekly]: {
     imageSrc: nlWeekly,
     imageSrcDark: nlWeeklyDark,
+  },
+  [NewsletterName.Bab]: {
+    imageSrc: nlBab,
+    imageSrcDark: nlBabDark,
   },
   [NewsletterName.Climate]: {
     imageSrc: nlClimate,
