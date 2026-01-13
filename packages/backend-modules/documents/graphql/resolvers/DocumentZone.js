@@ -1,7 +1,7 @@
 const getDocuments = require('./_queries/documents')
 
 module.exports = {
-  document: async (zone, args, context, info) => {
+  document: async (zone, _args, context, info) => {
     const { repoId, commitId } = zone
 
     return getDocuments(

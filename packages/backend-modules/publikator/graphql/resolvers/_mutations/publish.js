@@ -25,7 +25,7 @@ const {
 } = require('@orbiting/backend-modules-redirections')
 
 const {
-  maybeDelcareMilestonePublished,
+  maybeDeclareMilestonePublished,
   updateCurrentPhase,
   updateRepo,
   publicationVersionRegex,
@@ -131,7 +131,7 @@ module.exports = async (_, args, context) => {
 
   const { _all, _users } = connection.nodes[0].entity
 
-  const resolvedDoc = JSON.parse(JSON.stringify(doc))
+  const resolvedDoc = structuredClone(doc)
 
   const utmParams = {
     utm_source: 'newsletter',
@@ -141,9 +141,9 @@ module.exports = async (_, args, context) => {
 
   const base64Email = 'email=*|EMAILB64U|*'
 
-  const searchString = '?' + querystring.stringify(utmParams) + '&' + base64Email
+  const searchString = `?${querystring.stringify(utmParams)}&${base64Email}`
 
-  await contentUrlResolver(
+  contentUrlResolver(
     resolvedDoc,
     _all,
     _users,
@@ -153,7 +153,6 @@ module.exports = async (_, args, context) => {
   )
 
   metaUrlResolver(
-    resolvedDoc.type,
     resolvedDoc.content.meta,
     _all,
     _users,
@@ -266,7 +265,12 @@ module.exports = async (_, args, context) => {
       campaignId = id
     }
     debug('mailchimp campaign id: ')
-    debug(JSON.stringify({ repoMetaCampaignId: repoMeta.mailchimpCampaignId, campaignId: campaignId }))
+    debug(
+      JSON.stringify({
+        repoMetaCampaignId: repoMeta.mailchimpCampaignId,
+        campaignId: campaignId,
+      }),
+    )
   }
 
   // calc version number
@@ -275,7 +279,7 @@ module.exports = async (_, args, context) => {
     .then((tags) =>
       tags
         .filter((tag) => publicationVersionRegex.test(tag.name))
-        .map((tag) => parseInt(publicationVersionRegex.exec(tag.name)[1]))
+        .map((tag) => parseInt(publicationVersionRegex.exec(tag.name)[1], 10))
         .sort((a, b) => descending(a, b))
         .shift(),
     )
@@ -314,7 +318,7 @@ module.exports = async (_, args, context) => {
       publishedAt: (!scheduledAt && now) || null,
     })
 
-    await maybeDelcareMilestonePublished(milestone, tx)
+    await maybeDeclareMilestonePublished(milestone, tx)
     await updateCurrentPhase(repoId, tx)
     if (campaignId && repoMeta.campaignId !== campaignId) {
       await updateRepo(repoId, { mailchimpCampaignId: campaignId }, tx)
@@ -366,11 +370,7 @@ module.exports = async (_, args, context) => {
     await updateCampaign({
       campaignId,
       campaignConfig: {
-        key:
-          resolved.meta &&
-          resolved.meta.format &&
-          resolved.meta.format.meta &&
-          resolved.meta.format.meta.repoId,
+        key: resolved.meta?.format?.meta?.repoId,
         subject_line: emailSubject,
         title,
       },

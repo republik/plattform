@@ -1,9 +1,8 @@
 const debug = require('debug')('publikator:lib:postgres')
-const Promise = require('bluebird')
 
 const { getCurrentPhase } = require('../phases')
 
-const updateRepo = async function (repoId, meta, pgdb) {
+const updateRepo = async (repoId, meta, pgdb) => {
   const existingMeta = await pgdb.publikator.repos.findOneFieldOnly(
     { id: repoId },
     'meta',
@@ -22,11 +21,11 @@ const updateRepo = async function (repoId, meta, pgdb) {
   return repo
 }
 
-const updateCurrentPhase = async function (repoId, pgdb) {
-  const { repo, milestones } = await Promise.props({
-    repo: pgdb.publikator.repos.findOne({ id: repoId }),
-    milestones: pgdb.publikator.milestones.find({ repoId }),
-  })
+const updateCurrentPhase = async (repoId, pgdb) => {
+  const [repo, milestones] = await Promise.all([
+    pgdb.publikator.repos.findOne({ id: repoId }),
+    pgdb.publikator.milestones.find({ repoId }),
+  ])
 
   const { key: currentPhase } = getCurrentPhase(repo, milestones)
 
@@ -35,7 +34,7 @@ const updateCurrentPhase = async function (repoId, pgdb) {
   await pgdb.publikator.repos.update({ id: repoId }, { currentPhase })
 }
 
-const maybeDelcareMilestonePublished = async function (milestone, pgdb) {
+const maybeDeclareMilestonePublished = async (milestone, pgdb) => {
   const { id } = milestone
 
   const now = new Date()
@@ -76,7 +75,7 @@ const publicationVersionRegex = /^v(\d+)(-prepublication)?.*/
 module.exports = {
   updateRepo,
   updateCurrentPhase,
-  maybeDelcareMilestonePublished,
+  maybeDeclareMilestonePublished,
 
   toCommit,
 

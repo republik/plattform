@@ -7,7 +7,7 @@ const BULK_SIZE = 500
 
 module.exports = {
   before: () => {},
-  insert: async ({ indexName, type: indexType, elastic, pgdb, redis }) => {
+  insert: async ({ indexName, type: indexType, elastic }) => {
     const stats = { [indexType]: { added: 0, total: 0 } }
     const statsInterval = setInterval(() => {
       console.log(indexName, stats)

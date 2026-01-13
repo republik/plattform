@@ -1,5 +1,4 @@
 const debug = require('debug')('search:lib:indexPgTable')
-const Promise = require('bluebird')
 
 // Amount of rows, documents in a single bulk request.
 const BULK_SIZE = 1000
@@ -40,7 +39,7 @@ const index = async ({ indexName, type, elastic, resource }) => {
 
     const upsertDocs =
       (resource.transform &&
-        (await Promise.map(rows, resource.transform.bind(resource)))) ||
+        (await Promise.all(rows.map(resource.transform.bind(resource))))) ||
       rows
 
     await bulk({
@@ -92,7 +91,7 @@ const bulk = async ({
     payload.body.push({
       update: {
         _index: indexName,
-        _type: type,
+        // _type: type,
         _id: doc.id,
         retry_on_conflict: 3,
       },
@@ -112,7 +111,7 @@ const bulk = async ({
     payload.body.push({
       delete: {
         _index: indexName,
-        _type: type,
+        // _type: type,
         _id: id,
       },
     })

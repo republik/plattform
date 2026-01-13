@@ -109,6 +109,16 @@ const createNewsletterSchema = ({
   const paragraph = createParagraphRule()
   const listParagraph = createParagraphRule(ListP)
 
+  const webOnly = {
+    matchMdast: matchZone('WEBONLY'),
+    component: () => null,
+  }
+
+  const emailOnly = {
+    matchMdast: matchZone('EMAILONLY'),
+    component: ({ children }) => <>{children}</>,
+  }
+
   const figureCaption = {
     matchMdast: matchParagraph,
     component: Caption,
@@ -196,6 +206,8 @@ const createNewsletterSchema = ({
               paragraph,
               figure,
               datawrapperRule,
+              webOnly,
+              emailOnly,
               {
                 matchMdast: matchHeading(2),
                 component: H2,
