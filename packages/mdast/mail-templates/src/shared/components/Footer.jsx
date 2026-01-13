@@ -1,12 +1,11 @@
-import React from 'react'
-import HR from './HR'
-import Center from './Center'
 import colors from '../../styleguide-clone/theme/colors'
 import { fontFamilies } from '../../styleguide-clone/theme/fonts'
+import Center from './Center'
+import HR from './HR'
 
 import {
-  paragraphStyle,
   linkStyle,
+  paragraphStyle,
 } from '../../newsletter/components/Paragraph'
 import { matchProjectR } from '../util/project-r'
 
@@ -65,13 +64,56 @@ const Footer = ({ meta }) => {
         </a>
       </p>
       <p style={footerParagraphStyle}>
-        Alle unsere Newsletter:<br/>
-        <a href= 'https://www.republik.ch/format/republik-heute' style={footerLinkStyle} >Republik heute</a> |{' '} 
-        <a href='https://www.republik.ch/format/was-diese-woche-wichtig-war' style={footerLinkStyle}>Was diese Woche wichtig war</a> |{' '} 
-        <a href='https://www.republik.ch/format/republik-am-wochenende' style={footerLinkStyle}>Republik am Wochenende</a> |{' '} 
-        <a href='https://www.republik.ch/format/republik-am-sonntag' style={footerLinkStyle}>Republik am Sonntag</a> |{' '} 
-        <a href='https://www.republik.ch/challenge-accepted' style={footerLinkStyle}>Challenge Accepted</a> |{' '} 
-        <a href='https://www.republik.ch/format/project-r-newsletter' style={footerLinkStyle}>Project R</a>
+        Alle unsere Newsletter:
+        <br />
+        <a
+          href='https://www.republik.ch/format/republik-heute'
+          style={footerLinkStyle}
+        >
+          Republik heute
+        </a>{' '}
+        |{' '}
+        <a
+          href='https://www.republik.ch/format/was-diese-woche-wichtig-war'
+          style={footerLinkStyle}
+        >
+          Was diese Woche wichtig war
+        </a>{' '}
+        |{' '}
+        <a
+          href='https://www.republik.ch/format/briefing-aus-bern'
+          style={footerLinkStyle}
+        >
+          Briefing aus Bern
+        </a>{' '}
+        |{' '}
+        <a
+          href='https://www.republik.ch/format/republik-am-wochenende'
+          style={footerLinkStyle}
+        >
+          Republik am Wochenende
+        </a>{' '}
+        |{' '}
+        <a
+          href='https://www.republik.ch/format/republik-am-sonntag'
+          style={footerLinkStyle}
+        >
+          Republik am Sonntag
+        </a>{' '}
+        |{' '}
+        <a
+          href='https://www.republik.ch/challenge-accepted'
+          style={footerLinkStyle}
+        >
+          Challenge Accepted
+        </a>{' '}
+        |{' '}
+        <a
+          href='https://www.republik.ch/format/project-r-newsletter'
+          style={footerLinkStyle}
+        >
+          Project R
+        </a>
       </p>
       <p style={footerParagraphStyle}>
         Um{' '}
