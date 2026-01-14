@@ -17,12 +17,12 @@ import nlBab from './assets/07_BaB_L.svg'
 
 export const NL_FEATURED = [
   NewsletterName.Daily,
-  NewsletterName.Bab,
   NewsletterName.Wdwww,
   NewsletterName.Weekly,
 ]
 
 export const NL_MORE = [
+  NewsletterName.Bab,
   NewsletterName.Climate,
   NewsletterName.Sunday,
   NewsletterName.Projectr,
