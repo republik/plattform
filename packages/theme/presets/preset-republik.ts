@@ -1,5 +1,6 @@
 import { definePreset } from '@pandacss/dev'
 import { buttonRecipe } from '../src/recipes/button'
+import { legacyButtonRecipe } from '../src/recipes/legacy/legacy-button'
 
 export const presetRepublik = definePreset({
   name: 'republik',
@@ -141,6 +142,9 @@ export const presetRepublik = definePreset({
             },
             marketingAccent: {
               value: '#FF6969',
+            },
+            primaryForeground: {
+              value: 'white',
             },
           },
           contrast: {
@@ -487,6 +491,7 @@ export const presetRepublik = definePreset({
 
     recipes: {
       button: buttonRecipe,
+      legacyButton: legacyButtonRecipe,
     },
 
     keyframes: {
