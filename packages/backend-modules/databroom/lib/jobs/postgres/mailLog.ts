@@ -9,7 +9,7 @@ import {
 
 const AGE_DAYS = 90
 
-export default module.exports = function setup(
+export = function setup(
   options: Options,
   context: JobContext,
 ): JobFn {
