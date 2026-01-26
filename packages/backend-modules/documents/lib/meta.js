@@ -38,7 +38,7 @@ try {
  */
 const getAudioSource = (doc) => {
   // after publish
-  if (doc.meta && doc.meta.audioSource) {
+  if (doc.meta?.audioSource) {
     return doc.meta.audioSource
   }
   // before published - render in publikator (preview)
@@ -143,8 +143,7 @@ const getWordsPerMinute = () => WORDS_PER_MIN
  * @return {Number}      Minutes to read content
  */
 const getEstimatedReadingMinutes = (doc) => {
-  const count =
-    (doc._storedFields && doc._storedFields['contentString.count']) || false
+  const count = doc._storedFields?.['contentString.count'] || false
   if (count && count[0] > getWordsPerMinute()) {
     return Math.round(count[0] / getWordsPerMinute())
   }
@@ -154,20 +153,13 @@ const getEstimatedReadingMinutes = (doc) => {
 const isReadingMinutesSuppressed = (fields, resolvedFields) =>
   suppressReadingMinutes &&
   // Paths
-  ((fields.path &&
-    suppressReadingMinutes.paths &&
-    suppressReadingMinutes.paths.includes(fields.path)) ||
+  ((fields.path && suppressReadingMinutes?.paths?.includes(fields.path)) ||
     // Series
-    (resolvedFields.series &&
-      resolvedFields.series.title &&
-      suppressReadingMinutes.series &&
-      suppressReadingMinutes.series.includes(resolvedFields.series.title)) ||
+    (resolvedFields?.series?.title &&
+      suppressReadingMinutes?.series?.includes(resolvedFields.series.title)) ||
     // Formats
-    (resolvedFields.format &&
-      resolvedFields.format.meta &&
-      resolvedFields.format.meta.repoId &&
-      suppressReadingMinutes.formats &&
-      suppressReadingMinutes.formats.includes(
+    (resolvedFields.format?.meta?.repoId &&
+      suppressReadingMinutes.formats?.includes(
         resolvedFields.format.meta.repoId,
       )))
 

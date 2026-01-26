@@ -18,7 +18,9 @@ import {
 } from '../Article/utils'
 import authorRule from '../shared/email/rules/authorRule'
 import elseRule from '../shared/email/rules/elseRule'
+import emailOnlyRule from '../shared/email/rules/emailOnlyRule'
 import ifRule from '../shared/email/rules/ifRule'
+import webOnlyRule from '../shared/email/rules/webOnlyRule'
 import { embedDataWrapperRule } from '../shared/rules/embedDatawrapperRule'
 import Blockquote, {
   BlockquoteSource,
@@ -293,6 +295,8 @@ const createNewsletterSchema = ({
               paragraph,
               figure,
               embedDataWrapperRule({ emailFirst: true }),
+              webOnlyRule,
+              emailOnlyRule,
               {
                 matchMdast: matchHeading(2),
                 component: H2,

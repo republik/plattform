@@ -2,7 +2,6 @@ const type = 'DocumentZone'
 
 module.exports = {
   type,
-  name: type.toLowerCase(),
   search: {
     termFields: {
       text: {
@@ -75,54 +74,52 @@ module.exports = {
     },
   },
   mapping: {
-    [type]: {
-      dynamic: false,
-      properties: {
-        __type: {
-          type: 'keyword',
-        },
-        __state: {
-          properties: {
-            published: {
-              type: 'boolean',
-            },
-            prepublished: {
-              type: 'boolean',
-            },
+    dynamic: false,
+    properties: {
+      __type: {
+        type: 'keyword',
+      },
+      __state: {
+        properties: {
+          published: {
+            type: 'boolean',
+          },
+          prepublished: {
+            type: 'boolean',
           },
         },
-        __sort: {
-          properties: {
-            date: {
-              type: 'date',
-            },
+      },
+      __sort: {
+        properties: {
+          date: {
+            type: 'date',
           },
         },
-        repoId: {
-          type: 'keyword',
-        },
-        commitId: {
-          type: 'keyword',
-        },
-        versionName: {
-          type: 'keyword',
-        },
-        identifier: {
-          // CHART, FIGURE, ...
-          type: 'keyword',
-        },
-        text: {
-          // stringified(node)
-          type: 'text',
-          analyzer: 'german_with_stopwords',
-        },
-        data: {
-          // node.data
-          properties: {
-            // CHART node.data.type
-            type: {
-              type: 'keyword',
-            },
+      },
+      repoId: {
+        type: 'keyword',
+      },
+      commitId: {
+        type: 'keyword',
+      },
+      versionName: {
+        type: 'keyword',
+      },
+      identifier: {
+        // CHART, FIGURE, ...
+        type: 'keyword',
+      },
+      text: {
+        // stringified(node)
+        type: 'text',
+        analyzer: 'german_with_stopwords',
+      },
+      data: {
+        // node.data
+        properties: {
+          // CHART node.data.type
+          type: {
+            type: 'keyword',
           },
         },
       },

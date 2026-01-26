@@ -11,7 +11,6 @@ const type = 'Document'
 
 module.exports = {
   type,
-  name: type.toLowerCase(),
   search: {
     termFields: {
       'meta.title': {
@@ -149,68 +148,66 @@ module.exports = {
     },
   },
   mapping: {
-    [type]: {
-      dynamic: false,
-      properties: {
-        __type: {
-          type: 'keyword',
-        },
-        __state: {
-          properties: {
-            published: {
-              type: 'boolean',
-            },
-            prepublished: {
-              type: 'boolean',
-            },
+    dynamic: false,
+    properties: {
+      __type: {
+        type: 'keyword',
+      },
+      __state: {
+        properties: {
+          published: {
+            type: 'boolean',
+          },
+          prepublished: {
+            type: 'boolean',
           },
         },
-        __sort: {
-          properties: {
-            date: {
-              type: 'date',
-            },
+      },
+      __sort: {
+        properties: {
+          date: {
+            type: 'date',
           },
         },
-        resolved: {
-          properties: {
-            meta: {
-              properties: {
-                section: {
-                  properties: {
-                    meta: {
-                      properties: {
-                        title: {
-                          type: 'text',
-                          analyzer: 'german_with_stopwords',
-                        },
+      },
+      resolved: {
+        properties: {
+          meta: {
+            properties: {
+              section: {
+                properties: {
+                  meta: {
+                    properties: {
+                      title: {
+                        type: 'text',
+                        analyzer: 'german_with_stopwords',
                       },
                     },
                   },
                 },
-                format: {
-                  properties: {
-                    meta: {
-                      properties: {
-                        title: {
-                          type: 'text',
-                          analyzer: 'german_with_stopwords',
-                        },
-                        kind: {
-                          type: 'keyword',
-                        },
+              },
+              format: {
+                properties: {
+                  meta: {
+                    properties: {
+                      title: {
+                        type: 'text',
+                        analyzer: 'german_with_stopwords',
+                      },
+                      kind: {
+                        type: 'keyword',
                       },
                     },
                   },
                 },
-                dossier: {
-                  properties: {
-                    meta: {
-                      properties: {
-                        title: {
-                          type: 'text',
-                          analyzer: 'german_with_stopwords',
-                        },
+              },
+              dossier: {
+                properties: {
+                  meta: {
+                    properties: {
+                      title: {
+                        type: 'text',
+                        analyzer: 'german_with_stopwords',
                       },
                     },
                   },
@@ -219,128 +216,128 @@ module.exports = {
             },
           },
         },
-        commitId: {
-          type: 'keyword',
-        },
-        versionName: {
-          type: 'keyword',
-        },
+      },
+      commitId: {
+        type: 'keyword',
+      },
+      versionName: {
+        type: 'keyword',
+      },
 
-        contentString: {
-          type: 'text',
-          analyzer: 'german',
-          fielddata: true,
-          fields: {
-            count: {
-              type: 'token_count',
-              analyzer: 'standard',
-              store: true,
-            },
+      contentString: {
+        type: 'text',
+        analyzer: 'german',
+        fielddata: true,
+        fields: {
+          count: {
+            type: 'token_count',
+            analyzer: 'standard',
+            store: true,
           },
         },
+      },
 
-        meta: {
-          properties: {
-            repoId: {
-              type: 'keyword',
-            },
-            title: {
-              type: 'text',
-              analyzer: 'german_with_stopwords',
-            },
-            shortTitle: {
-              type: 'text',
-              analyzer: 'german_with_stopwords',
-            },
-            description: {
-              type: 'text',
-              analyzer: 'german',
-            },
-            publishDate: {
-              type: 'date',
-            },
-            scheduledAt: {
-              type: 'date',
-            },
-            prepublication: {
-              type: 'boolean',
-            },
-            path: {
-              type: 'text',
-              ...keywordPartial,
-            },
-            feed: {
-              type: 'boolean',
-            },
-            creditsString: {
-              type: 'text',
-              analyzer: 'german_with_stopwords',
-            },
-            contributors: {
-              properties: {
-                userId: {
-                  type: 'keyword',
-                },
+      meta: {
+        properties: {
+          repoId: {
+            type: 'keyword',
+          },
+          title: {
+            type: 'text',
+            analyzer: 'german_with_stopwords',
+          },
+          shortTitle: {
+            type: 'text',
+            analyzer: 'german_with_stopwords',
+          },
+          description: {
+            type: 'text',
+            analyzer: 'german',
+          },
+          publishDate: {
+            type: 'date',
+          },
+          scheduledAt: {
+            type: 'date',
+          },
+          prepublication: {
+            type: 'boolean',
+          },
+          path: {
+            type: 'text',
+            ...keywordPartial,
+          },
+          feed: {
+            type: 'boolean',
+          },
+          creditsString: {
+            type: 'text',
+            analyzer: 'german_with_stopwords',
+          },
+          contributors: {
+            properties: {
+              userId: {
+                type: 'keyword',
               },
             },
-            dossier: {
-              type: 'keyword',
-            },
-            format: {
-              type: 'keyword',
-            },
-            section: {
-              type: 'keyword',
-            },
-            kind: {
-              type: 'keyword',
-            },
-            template: {
-              type: 'keyword',
-            },
-            discussionId: {
-              type: 'keyword',
-            },
-            // series <- not indexed, inconsistent types
-            isSeriesMaster: {
-              type: 'boolean',
-            },
-            isSeriesEpisode: {
-              type: 'boolean',
-            },
-            seriesEpisodes: {
-              properties: {
-                title: {
-                  type: 'text',
-                  analyzer: 'german_with_stopwords',
-                },
+          },
+          dossier: {
+            type: 'keyword',
+          },
+          format: {
+            type: 'keyword',
+          },
+          section: {
+            type: 'keyword',
+          },
+          kind: {
+            type: 'keyword',
+          },
+          template: {
+            type: 'keyword',
+          },
+          discussionId: {
+            type: 'keyword',
+          },
+          // series <- not indexed, inconsistent types
+          isSeriesMaster: {
+            type: 'boolean',
+          },
+          isSeriesEpisode: {
+            type: 'boolean',
+          },
+          seriesEpisodes: {
+            properties: {
+              title: {
+                type: 'text',
+                analyzer: 'german_with_stopwords',
               },
             },
-            hasAudio: {
-              type: 'boolean',
-            },
-            hasVideo: {
-              type: 'boolean',
-            },
-            audioSource: {
-              properties: {
-                kind: {
-                  type: 'keyword',
-                },
-                mp3: {
-                  type: 'keyword',
-                },
-                aac: {
-                  type: 'keyword',
-                },
-                ogg: {
-                  type: 'keyword',
-                },
+          },
+          hasAudio: {
+            type: 'boolean',
+          },
+          hasVideo: {
+            type: 'boolean',
+          },
+          audioSource: {
+            properties: {
+              kind: {
+                type: 'keyword',
+              },
+              mp3: {
+                type: 'keyword',
+              },
+              aac: {
+                type: 'keyword',
+              },
+              ogg: {
+                type: 'keyword',
               },
             },
-            suggestSubscription: {
-              type: 'boolean',
-            },
+          },
+          suggestSubscription: {
+            type: 'boolean',
           },
         },
       },

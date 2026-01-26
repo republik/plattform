@@ -151,7 +151,7 @@ export default ({ rule, subModules, TYPE }) => {
     changes: {},
     plugins: [
       {
-        onPaste: createPasteHtml(centerModule),
+        onPaste: createPasteHtml(centerModule, figureModule),
         renderEditor: ({ children, value }) => (
           <Container>{children}</Container>
         ),

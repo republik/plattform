@@ -19,11 +19,11 @@ const ELASTIC_INDEX = 'republik-document-read'
 
 function getPrompt(content) {
   return `
-The following text is an article in an online medium. I want to find out who the named protagonists and experts mentioned 
-in the articles are and what their presumed genders are, because I want to do an analysis of the gender balance in the articles 
-of that medium. Please only include named people. Make a list of JSON objects with who the protagonists and cited experts are, 
+The following text is an article in an online medium. I want to find out who the named protagonists and experts mentioned
+in the articles are and what their presumed genders are, because I want to do an analysis of the gender balance in the articles
+of that medium. Please only include named people. Make a list of JSON objects with who the protagonists and cited experts are,
 and what you assume to be their genders. Use male, female, non-binary, not applicable, or unknown for gender.
-Respond in a JSON object of the shape \`\`\`{ protagonists: [ { name: "name of the person", assumed_gender: "assumed gender 
+Respond in a JSON object of the shape \`\`\`{ protagonists: [ { name: "name of the person", assumed_gender: "assumed gender
 of the person" }]} \`\`\`
 
 This is the article: ${content}
@@ -31,12 +31,12 @@ This is the article: ${content}
 }
 
 /*
-* Use for sending a prompt to an Ollama LLM model for each article in the specified timeframe, to find out an articles protagonists and their gender.
-* Modify the prompt, elastic query filter, and expected JSON object shape from the LLM as needed.
-* Limit: max number of articles, default is 10 
-* begin, end: start and end date of published articles in the format '2025-12-31'
-* Usage example: node protagonistsStats.js --limit 100 --begin 2025-01-01 --end 2025-02-01
-*/
+ * Use for sending a prompt to an Ollama LLM model for each article in the specified timeframe, to find out an articles protagonists and their gender.
+ * Modify the prompt, elastic query filter, and expected JSON object shape from the LLM as needed.
+ * Limit: max number of articles, default is 10
+ * begin, end: start and end date of published articles in the format '2025-12-31'
+ * Usage example: node protagonistsStats.js --limit 100 --begin 2025-01-01 --end 2025-02-01
+ */
 
 function getStats(llmReponse) {
   const responseObject = JSON.parse(llmReponse)
@@ -62,7 +62,7 @@ async function main(argv) {
             range: {
               'meta.publishDate': {
                 gte: beginDate, // + interval, // 1M = Last 1 Month
-                lte: endDate
+                lte: endDate,
               },
             },
           },
@@ -109,9 +109,9 @@ async function main(argv) {
       publish_date_field: {
         script: {
           lang: 'painless',
-          source: "return params['_source']['meta']['publishDate'];"
-        }
-      }
+          source: "return params['_source']['meta']['publishDate'];",
+        },
+      },
     },
     _source: false,
     size: limit,
@@ -125,14 +125,10 @@ async function main(argv) {
       body: query,
     })
 
-    if (response.body.hits && response.body.hits.hits) {
-      documentsContent = response.body.hits.hits
+    if (response.hits?.hits) {
+      documentsContent = response.hits.hits
         .map((hit) => {
-          if (
-            hit.fields &&
-            hit.fields.content_string_field &&
-            hit.fields.content_string_field[0]
-          ) {
+          if (hit.fields?.content_string_field?.[0]) {
             const publishedAt = hit.fields.publish_date_field[0]
             const repoId = hit.fields.repo_id_field[0]
             const content = hit.fields.content_string_field[0]
@@ -230,7 +226,7 @@ async function main(argv) {
 
       const data = await response.json()
 
-      if (data && data.message?.content) {
+      if (data?.message?.content) {
         const stats = getStats(data.message.content)
         results.push({
           publishedAt: publishedAt,
@@ -243,7 +239,7 @@ async function main(argv) {
           repoId: repoId,
           male: stats.male || 0,
           female: stats.female || 0,
-          total: stats.total || 0
+          total: stats.total || 0,
         })
       } else {
         console.log('Ollama response data was empty or malformed.')
@@ -274,11 +270,17 @@ async function main(argv) {
 
   console.log('-----------------')
 
-  const male = results.map((r) => r.stats?.male || 0).reduce((a,b) => a+b, 0)
-  const female = results.map((r) => r.stats?.female || 0).reduce((a,b) => a+b, 0)
-  const protagonists = results.map((r) => r.stats?.total || 0).reduce((a,b) => a+b, 0)
+  const male = results.map((r) => r.stats?.male || 0).reduce((a, b) => a + b, 0)
+  const female = results
+    .map((r) => r.stats?.female || 0)
+    .reduce((a, b) => a + b, 0)
+  const protagonists = results
+    .map((r) => r.stats?.total || 0)
+    .reduce((a, b) => a + b, 0)
 
-  console.log(`total: ${results.length} documents, ${protagonists} protagonists, ${male} male, ${female} female`)
+  console.log(
+    `total: ${results.length} documents, ${protagonists} protagonists, ${male} male, ${female} female`,
+  )
 
   console.log('-----------------')
 

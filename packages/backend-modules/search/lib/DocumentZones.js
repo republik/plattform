@@ -1,6 +1,5 @@
 const crypto = require('crypto')
 const visit = require('unist-util-visit')
-const Promise = require('bluebird')
 const debug = require('debug')('search:lib:DocumentZones')
 
 const {
@@ -14,7 +13,7 @@ const { termCriteriaBuilder } = require('./filters')
 const indexType = 'DocumentZone'
 const indexRef = {
   index: getIndexAlias(indexType.toLowerCase(), 'write'),
-  type: indexType,
+  // type: indexType,
 }
 
 const schema = {
@@ -80,18 +79,18 @@ const getElasticDoc = async (
     type,
     node,
     data: node?.data || {},
-    text: (stringifyNode(node)).trim() || '',
+    text: stringifyNode(node).trim() || '',
   }
 }
 
-const switchState = async function (
+const switchState = async (
   elastic,
   state,
   repoId,
   commitId,
   versionName,
   immediate,
-) {
+) => {
   debug('switchState', { state, repoId, commitId })
   const queries = []
   const painless = []
@@ -172,23 +171,25 @@ const createPublish = (elastic, elasticDoc) => {
 
   return {
     insert: async (desiredState) => {
-      const inserts = await Promise.map(findNodes(elasticDoc), async (node) => {
-        const documentZoneElasticDoc = await getElasticDoc(
-          repoId,
-          commitId,
-          versionName,
-          desiredState,
-          publishDate,
-          elasticDoc.type,
-          node,
-        )
+      const inserts = await Promise.all(
+        findNodes(elasticDoc).map(async (node) => {
+          const documentZoneElasticDoc = await getElasticDoc(
+            repoId,
+            commitId,
+            versionName,
+            desiredState,
+            publishDate,
+            elasticDoc.type,
+            node,
+          )
 
-        return elastic.index({
-          ...indexRef,
-          id: documentZoneElasticDoc.id,
-          body: documentZoneElasticDoc,
-        })
-      })
+          return elastic.index({
+            ...indexRef,
+            id: documentZoneElasticDoc.id,
+            body: documentZoneElasticDoc,
+          })
+        }),
+      )
 
       actions.push('insert')
 

@@ -3,7 +3,7 @@ const crypto = require('crypto')
 const _ = require('lodash')
 
 const termCriteriaBuilder = (fieldName) => (value, options) => ({
-  clause: options && options.not ? 'must_not' : 'must',
+  clause: options?.not ? 'must_not' : 'must',
   filter: {
     ...(_.isArray(value)
       ? { terms: { [fieldName]: [...new Set(value)] } }
@@ -67,35 +67,38 @@ const rangeCriteriaBuilder =
     }
   }
 
+const getFilter = (key, value, not) => {
+  const filterData = {
+    key,
+    value,
+    options: { not },
+  }
+  debug('filterData', filterData)
+  const filterHash =
+    key +
+    crypto.createHash('md5').update(JSON.stringify(filterData)).digest('hex')
+  return {
+    [filterHash]: filterData,
+  }
+}
+
 // converts a filter array (with generic value as string) to a (typed) filter obj
 // adds a type filter if the schema implies it and no type filter
 // is explicitly added
 const filterReducer = (schemas) => (filters) => {
-  const getFilter = (key, value, not) => {
-    const filterData = {
-      key,
-      value,
-      options: { not },
-    }
-    debug('filterData', filterData)
-    const filterHash =
-      key +
-      crypto.createHash('md5').update(JSON.stringify(filterData)).digest('hex')
-    return {
-      [filterHash]: filterData,
-    }
-  }
-
   let impliedType
   const typeFilter = filters.find((f) => f.key === 'type')
-  let filter = filters.reduce((filterObj, { key, value, not }) => {
+  const filter = filters.reduce((filterObj, { key, value, not }) => {
     debug('filterReducer', { key, value, not })
 
     const schema = schemas.find((schema) => !!schema[key])
     const schemaEntry = schema?.[key]
     debug('schemaEntry', schemaEntry)
     if (!schemaEntry) {
-      console.warn('missing schemaEntry for filter:', { key, value })
+      console.warn('missing schemaEntry for filter:', {
+        key: key,
+        value,
+      })
       return filterObj
     }
 
@@ -116,16 +119,11 @@ const filterReducer = (schemas) => (filters) => {
       impliedType = schema.__type
     }
 
-    return {
-      ...filterObj,
-      ...getFilter(key, filterValue, not),
-    }
+    return Object.assign(filterObj, getFilter(key, filterValue, not))
   }, {})
+
   if (impliedType) {
-    filter = {
-      ...filter,
-      ...getFilter('type', impliedType),
-    }
+    Object.assign(filter, getFilter('type', impliedType))
   }
   return filter
 }
@@ -162,7 +160,9 @@ const elasticFilterBuilder = (schemas) => (filterInput) => {
       const { key, value, options } = filterInput[hash]
 
       const schema = schemas.find((schema) => !!schema[key])
+
       const schemaEntry = schema[key]
+
       if (!schemaEntry) {
         throw new Error(`Missing schemaEntry for filter: ${key}`)
       }
