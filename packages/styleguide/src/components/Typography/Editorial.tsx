@@ -1,12 +1,12 @@
-import React, { useMemo } from 'react'
-import * as styles from './styles'
 import { css } from 'glamor'
-import { mUp } from '../../theme/mediaQueries'
-import { fontStyles } from '../../theme/fonts'
+import React, { useMemo } from 'react'
 import { underline } from '../../lib/styleMixins'
-import { convertStyleToRem, pxToRem } from './utils'
+import { fontStyles } from '../../theme/fonts'
+import { mUp } from '../../theme/mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
 import { editorialFontRule as fontRule, interactionFontRule } from './fontRules'
+import * as styles from './styles'
+import { convertStyleToRem, pxToRem } from './utils'
 
 export {
   List,
@@ -233,15 +233,20 @@ type ParagraphProps = {
   children: React.ReactNode
   attributes?: React.ComponentPropsWithoutRef<'p'>
   noMarginTop?: boolean
+  isEmpty?: boolean
 } & React.ComponentPropsWithoutRef<'p'>
 
 export const P = ({
   children,
   attributes,
   noMarginTop,
+  isEmpty,
   ...props
 }: ParagraphProps) => {
   const [colorScheme] = useColorContext()
+
+  if (isEmpty) return null
+
   const className = [attributes?.className, noMarginTop && 'no-margin-top']
     .filter(Boolean)
     .join(' ')
