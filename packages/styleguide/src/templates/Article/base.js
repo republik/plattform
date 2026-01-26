@@ -1,42 +1,41 @@
+import {
+  imageSizeInfo,
+  matchHeading,
+  matchParagraph,
+  matchType,
+  matchZone,
+} from '@republik/mdast-react-render'
 import React from 'react'
 import scrollIntoView from 'scroll-into-view'
-import globalMediaState, { parseTimeHash } from '../../lib/globalMediaState'
-
-import * as Editorial from '../../components/Typography/Editorial'
-import * as Meta from '../../components/Typography/Meta'
+import { ExpandableLink } from '../../components/ExpandableLink'
+import { SEPARATOR as EXPANDABLE_LINK_SEPARATOR } from '../../components/ExpandableLink/ExpandableLink'
 
 import {
   Figure,
-  FigureImage,
-  FigureCaption,
   FigureByline,
+  FigureCaption,
   FigureGroup,
+  FigureImage,
 } from '../../components/Figure'
+import { MIN_GALLERY_IMG_WIDTH } from '../../components/Figure/Image'
 
 import { List, ListItem } from '../../components/List'
+
+import * as Editorial from '../../components/Typography/Editorial'
+import * as Meta from '../../components/Typography/Meta'
+import globalMediaState, { parseTimeHash } from '../../lib/globalMediaState'
 
 import { slug } from '../../lib/slug'
 
 import {
-  matchHeading,
-  matchType,
-  matchZone,
-  matchParagraph,
-  imageSizeInfo,
-} from '@republik/mdast-react-render'
-
-import {
-  matchFigure,
+  extractImages,
   getDisplayWidth,
   globalInlines,
-  styles,
-  mdastToString,
-  extractImages,
+  matchFigure,
   matchImagesParagraph,
+  mdastToString,
+  styles,
 } from './utils'
-import { MIN_GALLERY_IMG_WIDTH } from '../../components/Figure/Image'
-import { ExpandableLink } from '../../components/ExpandableLink'
-import { SEPARATOR as EXPANDABLE_LINK_SEPARATOR } from '../../components/ExpandableLink/ExpandableLink'
 
 const DefaultLink = ({ children }) => children
 
@@ -141,7 +140,12 @@ const createBase = ({ metaBody, metaHeadlines, Link = DefaultLink }) => {
   const paragraph = {
     matchMdast: matchParagraph,
     props: (node, index, parent) => {
+      const isEmpty =
+        node?.children.length === 1 &&
+        node.children[0].type === 'text' &&
+        !node.children[0].value
       return {
+        isEmpty,
         noMarginTop: matchZone('INTERVIEWANSWER')(parent),
       }
     },
