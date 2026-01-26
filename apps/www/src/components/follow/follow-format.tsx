@@ -13,7 +13,6 @@ import { IconArrowRight } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import React from 'react'
-import { mdastToString, splitByTitle } from '../../../lib/utils/mdast'
 import { useTranslation } from '../../../lib/withT'
 
 function FollowFormat({ path }: { path: string }) {
@@ -34,8 +33,6 @@ function FollowFormat({ path }: { path: string }) {
   // [active, inactive, not eligible]
   // (At least on authors and formats – I have given little thought to discussion subscriptions)
   const subscriptionId = format.subscribedBy.nodes.find((n) => n.active)?.id
-  const { main } = splitByTitle(format.content)
-  const text = mdastToString(main, ['NOTE'])
 
   return (
     <ArticleSection>
@@ -59,7 +56,9 @@ function FollowFormat({ path }: { path: string }) {
         >
           Mehr von «{format.meta.title}»
         </h3>
-        <p className={css({ py: 4, textStyle: 'airy' })}>{text}</p>
+        <p className={css({ py: 4, textStyle: 'airy' })}>
+          {format.meta.description}
+        </p>
         <FollowButton
           type={SubscriptionObjectType.Document}
           subscriptionId={subscriptionId}

@@ -4,6 +4,7 @@ query FollowableDocument($path: String!) {
     content
     meta {
       title
+      description
       path
     }
     subscribedBy(onlyMe: true) {
