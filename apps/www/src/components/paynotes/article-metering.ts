@@ -15,7 +15,7 @@ type ArticleMetering = {
 
 type MeteringStatus = 'READING_GRANTED' | 'READING_DENIED'
 
-// We used to have one group with 3 reads per month: { maxArticles: 3, daysToExpire: 30 } 
+// We used to have one group with 3 reads per month: { maxArticles: 3, daysToExpire: 30 }
 // and one without (no expiration date): { maxArticles: 1 }.
 // We stopped the test but kept the code in case we want to test other metering configurations.
 const AB_CONFIGS: MeteringConfig[] = [{ maxArticles: 1 }]
@@ -53,32 +53,46 @@ function generateMeteringObject(): ArticleMetering {
 // try and retrieve the metering object from local storage
 // if it doesn't exist, create a new one
 function getMetering(): ArticleMetering {
-  const metering = localStorage.getItem(METERING_KEY)
-  if (!metering) return generateMeteringObject()
-  return JSON.parse(metering)
+  try {
+    const metering = localStorage.getItem(METERING_KEY)
+    if (metering) {
+      return JSON.parse(metering)
+    }
+  } catch {}
+  return generateMeteringObject()
 }
 
 // for analytics purposes
 export function getMeteringData(prefix = ''): {
   [key: string]: string
 } {
-  if (typeof window === 'undefined') return {}
-  if (!window.localStorage) return {}
+  if (typeof window === 'undefined') {
+    return {}
+  }
+  try {
+    const metering = localStorage.getItem(METERING_KEY)
+    if (!metering) {
+      return {}
+    }
 
-  const metering = localStorage.getItem(METERING_KEY)
-  if (!metering) return {}
+    const config = (JSON.parse(metering) as ArticleMetering).config
+    if (!config) {
+      return {}
+    }
 
-  const config = (JSON.parse(metering) as ArticleMetering).config
-  if (!config) return {}
-
-  return {
-    [prefix + 'metering_max_articles']: config.maxArticles.toString(),
-    [prefix + 'metering_days_to_expire']: config.daysToExpire?.toString(),
+    return {
+      [prefix + 'metering_max_articles']: config.maxArticles.toString(),
+      [prefix + 'metering_days_to_expire']: config.daysToExpire?.toString(),
+    }
+  } catch {
+    return {}
   }
 }
 
 function setMetering(metering: ArticleMetering) {
-  localStorage.setItem(METERING_KEY, JSON.stringify(metering))
+  try {
+    localStorage.setItem(METERING_KEY, JSON.stringify(metering))
+  } catch {}
 }
 
 // TODO: write unit tests
