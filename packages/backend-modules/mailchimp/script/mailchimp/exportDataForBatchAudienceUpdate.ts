@@ -117,7 +117,7 @@ async function main(argv: any) {
       FNAME: `"${user.firstName ?? ''}"`,
       LNAME: `"${user.lastName ?? ''}"`,
       PL_AMOUNT: mergeFields.PL_AMOUNT,
-      END_DATE: mergeFields.END_DATE,
+      END_DATE: mergeFields.END_DATE ? new Date(mergeFields.END_DATE).toISOString() : undefined,
       SUB_TYPE: mergeFields.SUB_TYPE,
       SUB_STATE: mergeFields.SUB_STATE,
       TRIAL: mergeFields.TRIAL,
@@ -198,19 +198,19 @@ async function getMailchimpMember(
     [MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY]: false,
   }
 
-  if (data.includes('DAILY')) {
+  if (data.includes('Täglich')) {
     interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
   }
 
-  if (data.includes('WEEKLY')) {
+  if (data.includes('Wochenende')) {
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
   }
 
-  if (data.includes('PROJECTR')) {
+  if (data.includes('Project R')) {
     interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
   }
 
-  if (data.includes('CHALLENGE_ACCEPTED')) {
+  if (data.includes('CLIMATE')) {
     interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] = true
   }
 
@@ -245,7 +245,7 @@ async function parse(readStream: Readable) {
 
   for await (const line of stream) {
     results.push({
-      email: line['email address'],
+      email: line['e-mail-adresse'],
       newsletters: line['republik nl'].split(', '),
     })
   }
