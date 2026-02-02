@@ -78,6 +78,7 @@ function FollowFormat({ path }: { path: string }) {
               width: 120,
               height: 120,
               ml: 'auto',
+              objectFit: 'cover',
             })}
           />
         </div>
