@@ -6,6 +6,7 @@ query FollowableDocument($path: String!) {
       title
       description
       path
+      image
     }
     subscribedBy(onlyMe: true) {
       nodes {

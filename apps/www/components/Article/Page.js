@@ -509,13 +509,13 @@ const ArticlePage = ({
                 )}
                 <PaynoteInline />
                 {isArticle && !isSeriesOverview && (
-                  <>
+                  <div style={{ marginTop: 48 }}>
                     <FollowArticle
                       contributors={articleMeta?.contributors}
                       format={articleMeta?.format}
                     />
                     <NextReads path={cleanedPath} repoId={repoId} />
-                  </>
+                  </div>
                 )}
                 {episodes && !isSeriesOverview && (
                   <SeriesNav

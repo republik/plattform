@@ -16,7 +16,7 @@ function FollowAuthors({ authorIds }: { authorIds: string[] }) {
   if (authorIds?.length === 0) return null
 
   return (
-    <div className={css({ marginTop: 8 })}>
+    <div className={css({ my: 8 })}>
       <ArticleSection>
         {authorIds
           .slice(0, showAll ? authorIds.length : MAX_AUTHORS)
