@@ -12,18 +12,5 @@ query FollowableDocument($path: String!) {
         ...SubscriptionFields
       }
     }
-    linkedDocuments(first: 4) {
-      nodes {
-        id
-        repoId
-        meta {
-          path
-          title
-          description
-          estimatedReadingMinutes
-          estimatedConsumptionMinutes
-        }
-      }
-    }
   }
 }
