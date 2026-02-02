@@ -9,13 +9,6 @@ type ContributorType = {
   }
 }
 
-const mdastToString = (node) =>
-  node
-    ? node.value ||
-      (node.children && node.children.map(mdastToString).join('')) ||
-      ''
-    : ''
-
 function FollowArticle({
   contributors,
   format,
