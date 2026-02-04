@@ -1,7 +1,6 @@
 'use client'
 
 import {
-  Document,
   FollowableDocumentDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
@@ -16,7 +15,7 @@ function FollowFormat({ path }: { path: string }) {
   const { data } = useQuery(FollowableDocumentDocument, {
     variables: { path },
   })
-  const format = data?.document as Document
+  const format = data?.document
 
   if (
     !format ||

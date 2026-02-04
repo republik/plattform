@@ -10,7 +10,9 @@ query FollowableDocument($path: String!) {
     }
     subscribedBy(onlyMe: true) {
       nodes {
-        ...SubscriptionFields
+        id
+        active
+        isEligibleForNotifications
       }
     }
   }
