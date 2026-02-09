@@ -1,9 +1,9 @@
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
 
-import { createPropertyForm, matchBlock } from '../../utils'
-import createUi from './ui'
+import { matchBlock } from '../../utils'
 import InlineUI from '../../utils/InlineUI'
 import { matchAncestor } from '../../utils/matchers'
+import createUi from './ui'
 
 export default ({ rule, subModules, TYPE }) => {
   const editorOptions = rule.editorOptions || {}
@@ -126,26 +126,16 @@ export default ({ rule, subModules, TYPE }) => {
 
           // unwrap empty paragraph on enter
           const block = value.startBlock
-          if (
-            !block.text &&
-            !isBackspace &&
-            !(
-              // let list module handle it
-              (
-                listModule &&
-                value.document.getClosest(
-                  block.key,
-                  matchBlock(listModule.TYPE),
-                )
-              )
-            )
-          ) {
+          const isList =
+            listModule &&
+            value.document.getClosest(block.key, matchBlock(listModule.TYPE))
+          if (!block.text && !isBackspace && !isList) {
             event.preventDefault()
             return change.unwrapBlock(TYPE).unwrapBlock(paragraphModule.TYPE)
           }
 
           // rm info box if empty on backspace
-          if (isBackspace) {
+          if (isBackspace && !isList) {
             event.preventDefault()
             const t = change.deleteBackward()
             if (isEmpty) {
