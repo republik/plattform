@@ -1,7 +1,9 @@
-import { matchBlock } from '../../utils'
+import { fontStyles } from '@project-r/styleguide'
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import { css } from 'glamor'
-import { fontStyles } from '@project-r/styleguide'
+import { matchBlock } from '../../utils'
+import InlineUI from '../../utils/InlineUI'
+import { matchAncestor } from '../../utils/matchers'
 import createUi from './ui'
 
 const COLORS = {
@@ -14,6 +16,8 @@ const styles = {
   container: css({
     borderLeft: '2px solid',
     paddingLeft: 5,
+    marginTop: 20,
+    marginBottom: 20,
     '& > p:nth-child(2)': {
       marginTop: 0,
     },
@@ -81,16 +85,22 @@ export default ({ rule, subModules, TYPE, context }) => {
     ui: createUi({ TYPE, editorOptions, context }),
     plugins: [
       {
-        renderNode({ node, children, attributes }) {
+        renderNode({ node, children, attributes, editor }) {
           if (!serializerRule.match(node)) return
+          const isOuterCondition = editorOptions.type === 'IF'
           return (
-            <VisibleCondition
-              attributes={attributes}
-              type={editorOptions.type}
-              data={node.data}
-            >
-              {children}
-            </VisibleCondition>
+            <div attributes={attributes}>
+              {isOuterCondition && (
+                <InlineUI
+                  node={node}
+                  editor={editor}
+                  isMatch={matchAncestor(TYPE)}
+                />
+              )}
+              <VisibleCondition type={editorOptions.type} data={node.data}>
+                {children}
+              </VisibleCondition>
+            </div>
           )
         },
       },
