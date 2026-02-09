@@ -13,7 +13,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 
-function NewsletterCard({
+function NewsletterArticleCard({
   newsletter,
   subscribed,
   disabled,
@@ -56,12 +56,8 @@ function NewsletterCard({
   return (
     <div
       className={css({
-        borderWidth: '1px',
-        borderStyle: 'solid',
-        borderColor: 'divider',
         background: 'background',
         color: 'text',
-        p: 4,
         cursor: 'pointer',
         textAlign: 'left',
         position: 'relative',
@@ -113,17 +109,16 @@ function NewsletterCard({
           md: { pr: 0 },
         })}
       >
-        <h4
+        <h3
           className={css({
-            textStyle: 'sansSerifMedium',
-            fontSize: 'l',
-            lineHeight: '1',
-            mb: 1,
+            textStyle: 'subtitleBold',
+            lineHeight: 1.2,
+            mb: 2,
           })}
         >
           {t(`newsletters/${newsletter}/name`)}
-        </h4>
-        <p className={css({ lineHeight: '1.2', mb: 2 })}>
+        </h3>
+        <p className={css({ textStyle: 'airy' })}>
           {t(`newsletters/${newsletter}/description`)}
         </p>
         <p className={css({ color: 'textSoft' })}>
@@ -142,4 +137,4 @@ function NewsletterCard({
   )
 }
 
-export default NewsletterCard
+export default NewsletterArticleCard
