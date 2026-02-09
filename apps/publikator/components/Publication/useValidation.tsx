@@ -51,7 +51,7 @@ const useValidation = ({ meta, content, t, updateMailchimp }) => {
                 warnings.push('profiles')
               }
             } else {
-              errors.push('relative')
+              warnings.push('relative')
             }
           }
           // WebP?
