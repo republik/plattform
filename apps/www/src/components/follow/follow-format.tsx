@@ -42,22 +42,20 @@ function FollowFormat({ path }: { path: string }) {
   })
   const format = data?.document
 
+  // Newsletters can be subscribed to, even with users are anonymous.
+  const newsletter = format.meta.newsletter
+  if (newsletter)
+    return (
+      <FollowFormatContainer>
+        <NewsletterArticleCard newsletter={newsletter.name as NewsletterName} />
+      </FollowFormatContainer>
+    )
+
   if (
     !format ||
     !format.subscribedBy.nodes.find((n) => n.isEligibleForNotifications)
   )
     return null
-
-  const newsletter = format.meta.newsletter
-  if (newsletter)
-    return (
-      <FollowFormatContainer>
-        <NewsletterArticleCard
-          newsletter={newsletter.name as NewsletterName}
-          subscribed={false}
-        />
-      </FollowFormatContainer>
-    )
 
   // Note: this generic subscribedBy array makes no sense…
   // we could just have a subscription enum instead:
