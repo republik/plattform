@@ -19,10 +19,9 @@ function NewsletterArticleCard({ newsletter }: { newsletter: NewsletterName }) {
         display: 'flex',
         gap: 4,
         height: '100%',
+        width: '100%',
         mb: 6,
-        md: {
-          flexDirection: 'column',
-        },
+        flexDirection: 'column',
       })}
     >
       <Image

@@ -42,8 +42,11 @@ function FollowFormat({ path }: { path: string }) {
   })
   const format = data?.document
 
-  // Newsletters can be subscribed to, even with users are anonymous.
-  const newsletter = format.meta.newsletter
+  if (!format) return null
+
+  // Newsletters are handled by a special newsletter component
+  // They can be subscribed to, even with users are anonymous.
+  const newsletter = format.meta?.newsletter
   if (newsletter)
     return (
       <FollowFormatContainer>
@@ -51,10 +54,7 @@ function FollowFormat({ path }: { path: string }) {
       </FollowFormatContainer>
     )
 
-  if (
-    !format ||
-    !format.subscribedBy.nodes.find((n) => n.isEligibleForNotifications)
-  )
+  if (!format.subscribedBy.nodes.find((n) => n.isEligibleForNotifications))
     return null
 
   // Note: this generic subscribedBy array makes no sense…
