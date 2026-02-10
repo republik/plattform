@@ -6,7 +6,7 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
 import { NL_STYLE } from '@app/components/newsletters/config'
-import NewsletterSubscribe from '@app/components/newsletters/newsletter-subscribe'
+import { NewsletterSubscribeButton } from '@app/components/newsletters/newsletter-subscribe'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
@@ -58,23 +58,16 @@ function NewsletterArticleCard({
       className={css({
         background: 'background',
         color: 'text',
-        cursor: 'pointer',
         textAlign: 'left',
         position: 'relative',
         display: 'flex',
-        gap: 2,
+        gap: 4,
         height: '100%',
+        mb: 6,
         md: {
           flexDirection: 'column',
         },
-        _disabled: {
-          cursor: 'default',
-        },
       })}
-      onClick={toggleSubscription}
-      aria-disabled={disabled}
-      data-disabled={disabled}
-      role='button'
     >
       <Image
         className={css({
@@ -92,33 +85,29 @@ function NewsletterArticleCard({
           display: 'none',
           flex: '0 0 1',
           alignSelf: 'flex-start',
-          pt: 1,
           _dark: { display: 'block' },
         })}
         width='64'
         src={NL_STYLE[newsletter]?.imageSrcDark}
         alt=''
       />
-      <div
-        className={css({
-          textAlign: 'left',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          pr: '22px',
-          md: { pr: 0 },
-        })}
-      >
+      <div>
         <h3
           className={css({
             textStyle: 'subtitleBold',
             lineHeight: 1.2,
-            mb: 2,
           })}
         >
-          {t(`newsletters/${newsletter}/name`)}
+          {t(`newsletters/${newsletter}/name`)}{' '}
+          <span
+            className={css({
+              fontWeight: 500,
+            })}
+          >
+            in den Postfach bekommen
+          </span>
         </h3>
-        <p className={css({ textStyle: 'airy' })}>
+        <p className={css({ textStyle: 'airy', my: 1 })}>
           {t(`newsletters/${newsletter}/description`)}
         </p>
         <p className={css({ color: 'textSoft' })}>
@@ -126,12 +115,15 @@ function NewsletterArticleCard({
         </p>
       </div>
       {subscribed !== undefined && (
-        <NewsletterSubscribe
-          toggleSubscription={toggleSubscription}
-          isPending={isPending}
-          subscribed={subscribed}
-          disabled={disabled}
-        />
+        <div>
+          <NewsletterSubscribeButton
+            toggleSubscription={toggleSubscription}
+            isPending={isPending}
+            subscribed={subscribed}
+            disabled={disabled}
+            longCopy
+          />
+        </div>
       )}
     </div>
   )
