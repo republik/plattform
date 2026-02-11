@@ -519,9 +519,7 @@ const Page = ({
                 <ChartTitle>
                   Wie viele Verlegerinnen beteiligen sich am Dialog
                 </ChartTitle>
-                <ChartLead>
-                  Anzahl Schreibende und Reagierende (Up- und Downvotes)
-                </ChartLead>
+                <ChartLead>Anzahl Schreibende und Reagierende</ChartLead>
                 <Chart
                   config={{
                     type: 'Line',
