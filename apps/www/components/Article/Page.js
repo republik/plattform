@@ -366,7 +366,6 @@ const ArticlePage = ({
 
           const isFreeNewsletter = !!newsletterMeta && newsletterMeta.free
           const showNewsletterSignupTop = isFormat && isFreeNewsletter
-          const showNewsletterSignupBottom = isFreeNewsletter && !isFormat
 
           const rawContentMeta = articleContent.meta
 
@@ -482,18 +481,6 @@ const ArticlePage = ({
                     >
                       <Discussion documentMeta={rawContentMeta} showPayNotes />
                     </DiscussionContextProvider>
-                  </Center>
-                )}
-                {showNewsletterSignupBottom && (
-                  <Center
-                    breakout={breakout}
-                    {...styles.newsletterSignUpBottom}
-                  >
-                    <NewsletterSignUp
-                      showTitle
-                      showDescription
-                      {...newsletterMeta}
-                    />
                   </Center>
                 )}
                 {showBottomActionBar && (
