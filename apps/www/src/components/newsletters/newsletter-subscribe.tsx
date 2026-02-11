@@ -86,15 +86,28 @@ function NewsletterSubscribeForm({
           display: 'flex',
           alignItems: 'end',
           flexDirection: 'column',
-          lg: { flexDirection: 'row' },
+          pb: 2,
+          md: { flexDirection: 'row' },
         })}
       >
         <FormField label='Ihre E-Mail-Adresse' name='email' type='email' />
-        <Button type='submit' disabled={isPending} loading={isPending}>
+        <div className={css({ display: 'none', md: { display: 'block' } })}>
+          <Button type='submit' disabled={isPending} loading={isPending}>
+            Newsletter abonnieren
+          </Button>
+        </div>
+      </div>
+      {error && <ErrorMessage error={error} />}
+      <div className={css({ md: { display: 'none' } })}>
+        <Button
+          type='submit'
+          size='full'
+          disabled={isPending}
+          loading={isPending}
+        >
           Newsletter abonnieren
         </Button>
       </div>
-      {error && <ErrorMessage error={error} />}
     </form>
   )
 }
