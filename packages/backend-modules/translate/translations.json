@@ -1025,6 +1025,10 @@
       "value": "Bestätigen Sie Ihre Anmeldung zum Republik am Sonntag Newsletter."
     },
     {
+      "key": "api/newsletters/request/BAB/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Briefing aus Bern Newsletter."
+    },
+    {
       "key": "api/newsletters/request/notSupported",
       "value": "Diese Art der Anmeldung zum gewählten Newsletter wird noch nicht unterstützt."
     },

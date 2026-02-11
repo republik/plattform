@@ -3,6 +3,35 @@ import colors from '../../styleguide-clone/theme/colors'
 import { getFormatLine } from '../../styleguide-clone/components/TeaserFeed/utils'
 import { matchProjectR } from '../util/project-r'
 
+const HEADER_VARIANTS = [
+  // Challenge Accepted
+  {
+    repoId: 'republik/format-das-neue-klimaprojekt',
+    width: 157,
+    height: 140,
+    imageSrc: '/static/logo_republik_newsletter_challenge_accepted.png?v=2',
+    backgroundColor: '#EBEA2B',
+  },
+  {
+    repoId: 'republik/format-was-diese-woche-wichtig-war',
+    width: 220,
+    height: 71,
+    imageSrc: '/static/logo_republik_newsletter_wdwww.png',
+  },
+  {
+    repoId: 'republik/format-briefing-aus-bern',
+    width: 220,
+    height: 71,
+    imageSrc: '/static/logo_republik_newsletter_bab.png',
+  },
+]
+
+const HEADER_VARIANT_DEFAULT = {
+  width: 178,
+  height: 79,
+  imageSrc: '/static/logo_republik_newsletter.png',
+}
+
 const Header = ({ meta }) => {
   const { slug, path, format } = meta
 
@@ -17,32 +46,16 @@ const Header = ({ meta }) => {
 
   const isProjectR = matchProjectR(format)
 
-  if (isProjectR) return null
+  if (isProjectR) {
+    return null
+  }
 
-  // support for old format string pending backend change
-  // https://github.com/orbiting/backends/compare/feat-article-email
-  // specifically resolved meta object
-  // https://github.com/orbiting/backends/commit/cce72915353d60c3cd3b4ecafefa3a11fb092933
-  const isClimate =
-    (typeof format === 'string' &&
-      format.includes('format-das-neue-klimaprojekt')) ||
-    format?.repoId?.includes('format-das-neue-klimaprojekt')
+  const formatRepoId = typeof format === 'string' ? format : format?.repoId
 
-  const isWdwww =
-    (typeof format === 'string' &&
-      format.includes('format-was-diese-woche-wichtig-war')) ||
-    format?.repoId?.includes('format-was-diese-woche-wichtig-war')
-
-  const { width, height } = isClimate
-    ? { width: 157, height: 140 } // case of climate (= Challenge Accepted)
-    : isWdwww
-    ? { width: 220, height: 71 } // case of wdwww
-    : { width: 178, height: 79 } // default
-
-  const imageFile =
-    (isClimate && 'logo_republik_newsletter_challenge_accepted.png?v=2') ||
-    (isWdwww && 'logo_republik_newsletter_wdwww.png') ||
-    'logo_republik_newsletter.png'
+  const { width, height, backgroundColor, imageSrc } =
+    HEADER_VARIANTS.find(({ repoId }) => {
+      return formatRepoId?.includes(repoId)
+    }) ?? HEADER_VARIANT_DEFAULT
 
   const logoLink = (
     <a
@@ -52,7 +65,7 @@ const Header = ({ meta }) => {
       <img
         width={width}
         height={height}
-        src={`https://www.republik.ch/static/${imageFile}`}
+        src={`https://www.republik.ch${imageSrc}`}
         style={{
           border: 0,
           width: `${width}px !important`,
@@ -72,7 +85,7 @@ const Header = ({ meta }) => {
           align={'center'}
           valign='top'
           style={{
-            backgroundColor: isClimate ? '#EBEA2B' : null,
+            backgroundColor,
             borderBottom:
               formatLine && formatLine.color
                 ? `3px solid ${formatLine.color}`

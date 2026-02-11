@@ -3,7 +3,8 @@ const config = {
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR: 'MAILCHIMP_INTEREST_MEMBER_BENEFACTOR',
   MAILCHIMP_INTEREST_PLEDGE: 'MAILCHIMP_INTEREST_PLEDGE',
   MAILCHIMP_INTEREST_GRANTED_ACCESS: 'MAILCHIMP_INTEREST_GRANTED_ACCESS',
-  MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL: 'MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL',
+  MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL:
+    'MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL',
   MAILCHIMP_MAIN_LIST_ID: 'MAILCHIMP_MAIN_LIST_ID',
   MAILCHIMP_ONBOARDING_AUDIENCE_ID: 'MAILCHIMP_ONBOARDING_AUDIENCE_ID',
   MAILCHIMP_MARKETING_AUDIENCE_ID: 'MAILCHIMP_MARKETING_AUDIENCE_ID',
@@ -15,9 +16,10 @@ const config = {
     'MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE',
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW: 'MAILCHIMP_INTEREST_NEWSLETTER_WDWWW',
   MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY: 'MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY',
+  MAILCHIMP_INTEREST_NEWSLETTER_BAB: 'MAILCHIMP_INTEREST_NEWSLETTER_BAB',
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY: 'MAILCHIMP_INTEREST_NEWSLETTER_DAILY',
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY: 'MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY',
-  REGWALL_TRIAL_CAMPAIGN_ID: 'REGWALL_TRIAL_CAMPAIGN_ID'
+  REGWALL_TRIAL_CAMPAIGN_ID: 'REGWALL_TRIAL_CAMPAIGN_ID',
 }
 jest.mock('../../config', () => ({
   getConfig() {
@@ -68,6 +70,7 @@ describe('test that merge fields are generated correctly from user data with mis
       NL_CLIMATE: undefined,
       NL_WDWWW: undefined,
       NL_SUNDAY: undefined,
+      NL_BAB: undefined,
       NL_ACCOMPL: undefined,
     }
     expect(mergeFields).resolves.toStrictEqual(expectedResult)
@@ -109,6 +112,7 @@ describe('test that merge fields are generated correctly from user data with mis
       NL_CLIMATE: undefined,
       NL_WDWWW: undefined,
       NL_SUNDAY: undefined,
+      NL_BAB: undefined,
       NL_ACCOMPL: undefined,
     }
     expect(mergeFields).resolves.toStrictEqual(expectedResult)
@@ -274,14 +278,14 @@ describe('latest pledge amount', () => {
 
   test('several invoices, no pledges, active subscription', async () => {
     const segmentData: SegmentData = {
-      activeSubscription: { 
-        id: 'sub_123-345', 
-        userId: userId, 
-        type: 'MONTHLY_SUBSCRIPTION', 
-        status: 'active', 
-        cancelAt: undefined, 
+      activeSubscription: {
+        id: 'sub_123-345',
+        userId: userId,
+        type: 'MONTHLY_SUBSCRIPTION',
+        status: 'active',
+        cancelAt: undefined,
         currentPeriodStart: new Date('2023-02-01'),
-        currentPeriodEnd: new Date('2035-01-01')
+        currentPeriodEnd: new Date('2035-01-01'),
       },
       invoices: [
         {
@@ -316,14 +320,14 @@ describe('latest pledge amount', () => {
 
   test('several invoices, a pledge, active subscription', async () => {
     const segmentData: SegmentData = {
-      activeSubscription: { 
-        id: 'sub_123-345', 
-        userId: userId, 
-        type: 'MONTHLY_SUBSCRIPTION', 
-        status: 'active', 
-        cancelAt: undefined, 
+      activeSubscription: {
+        id: 'sub_123-345',
+        userId: userId,
+        type: 'MONTHLY_SUBSCRIPTION',
+        status: 'active',
+        cancelAt: undefined,
         currentPeriodStart: new Date('2023-02-01'),
-        currentPeriodEnd: new Date('2035-01-01')
+        currentPeriodEnd: new Date('2035-01-01'),
       },
       invoices: [
         {
@@ -466,7 +470,7 @@ describe('subscription end date', () => {
       status: 'active',
       cancelAt: undefined,
       currentPeriodStart: new Date('2019-01-01'),
-      currentPeriodEnd: new Date('2040-01-01')
+      currentPeriodEnd: new Date('2040-01-01'),
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.END_DATE).toStrictEqual(new Date('2040-01-01'))
@@ -487,7 +491,7 @@ describe('subscription end date', () => {
       status: 'active',
       cancelAt: undefined,
       currentPeriodStart: new Date('2019-01-01'),
-      currentPeriodEnd: undefined as any
+      currentPeriodEnd: undefined as any,
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.END_DATE).toBeUndefined()
@@ -502,12 +506,11 @@ describe('subscription end date', () => {
       status: 'active',
       cancelAt: undefined,
       currentPeriodStart: new Date('2019-01-01'),
-      currentPeriodEnd: new Date('2041-01-01')
+      currentPeriodEnd: new Date('2041-01-01'),
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.END_DATE).toStrictEqual(new Date('2041-01-01'))
   })
-
 })
 
 describe('subscription state', () => {
@@ -654,7 +657,7 @@ describe('subscription state', () => {
       status: 'active',
       cancelAt: undefined,
       currentPeriodStart: new Date('2023-05-01'),
-      currentPeriodEnd: new Date('2045-01-01')
+      currentPeriodEnd: new Date('2045-01-01'),
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.SUB_STATE).toBe('Autopay')
@@ -680,7 +683,7 @@ describe('subscription state', () => {
       status: 'active',
       cancelAt: new Date('2026-01-01'),
       currentPeriodStart: new Date('2023-05-01'),
-      currentPeriodEnd: new Date('2045-01-01')
+      currentPeriodEnd: new Date('2045-01-01'),
     }
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
     expect(mergeFields.SUB_STATE).toBe('Cancelled')

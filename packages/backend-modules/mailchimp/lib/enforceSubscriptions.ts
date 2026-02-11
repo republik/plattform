@@ -28,6 +28,7 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
   MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
+  MAILCHIMP_INTEREST_NEWSLETTER_BAB,
   MAILCHIMP_INTEREST_GRANTED_ACCESS,
   MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL,
 } = getConfig()
@@ -80,11 +81,14 @@ export async function enforceSubscriptions({
     interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] ||
     interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ||
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW] ||
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY]
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY] ||
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_BAB]
 
-  const activeOrPastRegwallTrial = interests[MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]
+  const activeOrPastRegwallTrial =
+    interests[MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]
 
-  const receivesEditorialNewsletters = activeOrPastRegwallTrial || subscribedToFreeNewsletters
+  const receivesEditorialNewsletters =
+    activeOrPastRegwallTrial || subscribedToFreeNewsletters
 
   const newsletterSubscription = createNewsletterSubscription(
     NewsletterSubscriptionConfig,
