@@ -1,4 +1,4 @@
-import { Job, ScheduleOptions, SendOptions, WorkOptions } from 'pg-boss'
+import PgBoss, { Job, ScheduleOptions, SendOptions, WorkOptions } from 'pg-boss'
 
 export type JobState =
   | 'created'
@@ -15,6 +15,7 @@ export interface Worker<T extends BasePayload> {
   readonly queue: WorkerQueue
   readonly options: SendOptions
   readonly performOptions?: WorkOptions
+  readonly queueOptions?: PgBoss.Queue
   perform: (jobs: Job<T>[]) => Promise<void>
   schedule: (cron: string, data?: T, options?: ScheduleOptions) => Promise<void>
   send: (data: T) => Promise<string | null>
