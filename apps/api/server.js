@@ -384,7 +384,7 @@ const runOnce = async () => {
     )
   }
 
-  const queue = setupQueue(connectionContext, 120)
+  const queue = setupQueue(context, 120)
   await queue.start()
   await queue.startWorkers()
   if (!DEV) {

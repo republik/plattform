@@ -5,7 +5,7 @@ import { Logger } from '@orbiting/backend-modules-logger'
 
 export const GlobalQueue = Symbol('Global PGBoss queue')
 
-type WorkerConstructor = new (
+export type WorkerConstructor = new (
   pgBoss: PgBoss,
   logger: Logger,
   context: ConnectionContext,
