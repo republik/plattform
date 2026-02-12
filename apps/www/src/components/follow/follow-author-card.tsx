@@ -36,6 +36,8 @@ function FollowAuthorCard({ authorId }: { authorId: string }) {
     return ''
   }
 
+  const authorDescription = getDescription(author)
+
   return (
     <div
       className={css({
@@ -68,15 +70,11 @@ function FollowAuthorCard({ authorId }: { authorId: string }) {
             {author.name}
           </Link>
         </h4>
-        <p className={css({ fontSize: 'sm', color: 'textSoft', mt: 1 })}>
-          {getDescription(author)}
-        </p>
-        <div
-          className={css({
-            display: 'block',
-            mt: 2,
-          })}
-        ></div>
+        {!!authorDescription && (
+          <p className={css({ fontSize: 'sm', color: 'textSoft', mt: 1 })}>
+            {authorDescription}
+          </p>
+        )}
       </div>
       <div className={css({ ml: 'auto', position: 'relative', zIndex: 10 })}>
         <FollowButton

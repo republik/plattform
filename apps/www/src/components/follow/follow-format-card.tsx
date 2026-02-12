@@ -36,9 +36,13 @@ function FollowFormatContainer({ children }: { children: React.ReactNode }) {
   )
 }
 
-function FollowFormat({ path, button }: { path: string; button?: boolean }) {
-  console.log('FollowFormat', { path })
-
+function FollowFormat({
+  path,
+  buttonOnly,
+}: {
+  path: string
+  buttonOnly?: boolean
+}) {
   const { data } = useQuery(FollowableDocumentDocument, {
     variables: { path },
   })
@@ -66,7 +70,7 @@ function FollowFormat({ path, button }: { path: string; button?: boolean }) {
   const subscriptionId = format.subscribedBy.nodes.find((n) => n.active)?.id
 
   return (
-    <FollowFormatContainer>
+    <>
       <div className={css({ maxWidth: '480px' })}>
         <h3
           className={css({
@@ -103,7 +107,7 @@ function FollowFormat({ path, button }: { path: string; button?: boolean }) {
           objectFit: 'cover',
         })}
       />
-    </FollowFormatContainer>
+    </>
   )
 }
 
