@@ -44,7 +44,7 @@ const {
 const {
   onPublish: onPublishSyntheticReadAloud,
 } = require('../../../lib/Derivative/SyntheticReadAloud')
-const { notifyPublish } = require('../../../lib/Notifications')
+const { finalizePublication } = require('../../../lib/Publication')
 const { document: getDocument } = require('../Commit')
 
 const { FRONTEND_BASE_URL, DISABLE_PUBLISH } = process.env
@@ -391,16 +391,13 @@ module.exports = async (_, args, context) => {
     await maybeUpsertAuphonic(repoId, { ...resolvedDoc, resolved }, context)
   }
 
-  // @TODO: Safe to remove, once repoChange is adopted
-  await pubsub.publish('repoUpdate', {
-    repoUpdate: {
-      id: repoId,
-    },
+  await finalizePublication({
+    repoId,
+    prepublication,
+    notifyFilters: !scheduledAt ? notifyFilters : null,
+    meta: null, // discussion already created by prepareMetaForPublish
+    context,
   })
-
-  if (!prepublication && !scheduledAt && notifyFilters) {
-    await notifyPublish(repoId, notifyFilters, context)
-  }
 
   const publication = (
     await loaders.Milestone.Publication.byRepoId.load(repoId)

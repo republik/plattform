@@ -8,8 +8,7 @@ const {
   maybeDeclareMilestonePublished,
   updateCurrentPhase,
 } = require('../postgres')
-const { notifyPublish } = require('../Notifications')
-const { upsert: upsertDiscussion } = require('../Discussion')
+const { finalizePublication } = require('../Publication')
 
 const MAX_DOCS_PER_RUN = 60
 
@@ -48,7 +47,7 @@ class PublicationWorker extends BaseWorker {
 
   async perform() {
     const context = this.context
-    const { pgdb, redis, elastic, pubsub } = context
+    const { pgdb, redis, elastic } = context
 
     const docs = await getScheduledDocuments(elastic)
 
@@ -58,7 +57,7 @@ class PublicationWorker extends BaseWorker {
 
     for (const doc of docs) {
       try {
-        await this.doPublish(doc, { pgdb, redis, elastic, pubsub, context })
+        await this.doPublish(doc, { pgdb, redis, elastic, context })
       } catch (err) {
         context?.logger?.error(
           {
@@ -72,7 +71,7 @@ class PublicationWorker extends BaseWorker {
     }
   }
 
-  async doPublish(doc, { pgdb, redis, elastic, pubsub, context }) {
+  async doPublish(doc, { pgdb, redis, elastic, context }) {
     const versionName = doc.versionName
     const repoId = doc.meta.repoId
 
@@ -124,23 +123,12 @@ class PublicationWorker extends BaseWorker {
 
     await publish.afterScheduled()
 
-    // flush dataloaders
-    await context.loaders.Document.byRepoId.clear(repoId)
-
-    if (!prepublication) {
-      await upsertDiscussion(doc.meta, context)
-    }
-
-    if (!prepublication && notifyFilters) {
-      await notifyPublish(repoId, notifyFilters, context).catch((e) => {
-        console.error('error in notifyPublish', e)
-      })
-    }
-
-    await pubsub.publish('repoUpdate', {
-      repoUpdate: {
-        id: repoId,
-      },
+    await finalizePublication({
+      repoId,
+      prepublication,
+      notifyFilters,
+      meta: !prepublication ? doc.meta : null,
+      context,
     })
 
     debug('published', {

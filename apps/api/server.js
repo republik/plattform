@@ -87,6 +87,7 @@ const {
 } = require('@orbiting/backend-modules-access')
 const {
   PublicationWorker,
+  PublicationNotificationWorker,
 } = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
 const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
 const {
@@ -135,6 +136,7 @@ function setupQueue(context, monitorQueueState = undefined) {
     NextReadsFeedRefreshWorker,
     SlackNotifierWorker,
     PublicationWorker,
+    PublicationNotificationWorker,
     MembershipOwnersWorker,
     YearlyAboWinbacksWorker,
     UpgradeWorker,
