@@ -227,6 +227,7 @@ const ArticlePage = ({
     }
   }, [template, isSeriesOverview, isPaywallExcluded, hasMeta, cleanedPath])
 
+  const isArticle = template === 'article'
   const isEditorialNewsletter = template === 'editorialNewsletter'
   const isFormat = meta.template === 'format'
   const isSection = meta.template === 'section'
@@ -477,16 +478,22 @@ const ArticlePage = ({
                   </Center>
                 )}
                 <PaynoteInline />
-                {!isSeriesOverview && !isSection && !isFormat && (
-                  <div style={{ marginTop: 48 }}>
-                    <FollowArticle
-                      contributors={articleMeta?.contributors}
-                      format={articleMeta?.format}
-                    />
+                {(isArticle || isEditorialNewsletter) && (
+                  <>
+                    <Center>
+                      <FollowArticle
+                        contributors={articleMeta?.contributors}
+                        format={articleMeta?.format}
+                      />
+                    </Center>
                     <NextReads path={cleanedPath} repoId={repoId} />
-                  </div>
+                  </>
                 )}
-                {isFormat && <FollowFormat path={cleanedPath} button />}
+                {isFormat && (
+                  <Center style={{ textAlign: 'center', marginBottom: 40 }}>
+                    <FollowFormat path={cleanedPath} button />
+                  </Center>
+                )}
                 {episodes && !isSeriesOverview && (
                   <SeriesNav
                     inline

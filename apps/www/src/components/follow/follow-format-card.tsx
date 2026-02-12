@@ -1,65 +1,22 @@
 'use client'
 
 import {
-  FollowableDocumentDocument,
-  NewsletterName,
+  FollowableDocumentQuery,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useQuery } from '@apollo/client'
 import { FollowButton } from '@app/components/follow/follow-button'
-import NewsletterArticleCard from '@app/components/newsletters/newsletter-article-card'
-import { ArticleSection } from '@app/components/ui/section'
+import FollowFormatContainer from '@app/components/follow/follow-format-container'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
 import React from 'react'
 
-function FollowFormatContainer({ children }: { children: React.ReactNode }) {
-  return (
-    <div className={css({ my: 8 })}>
-      <ArticleSection>
-        <div
-          className={css({
-            mt: 8,
-            pt: 8,
-            borderTopWidth: '1px',
-            borderTopStyle: 'solid',
-            borderTopColor: 'text',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 4,
-          })}
-        >
-          {children}
-        </div>
-      </ArticleSection>
-    </div>
-  )
-}
-
-function FollowFormat({
-  path,
-  buttonOnly,
+function FollowFormatCard({
+  format,
+  button,
 }: {
-  path: string
-  buttonOnly?: boolean
+  format: FollowableDocumentQuery['document']
+  button?: boolean
 }) {
-  const { data } = useQuery(FollowableDocumentDocument, {
-    variables: { path },
-  })
-  const format = data?.document
-
-  if (!format) return null
-
-  // Newsletters are handled by a special newsletter component
-  // They can be subscribed to, even with users are anonymous.
-  const newsletter = format.meta?.newsletter
-  if (newsletter)
-    return (
-      <FollowFormatContainer>
-        <NewsletterArticleCard newsletter={newsletter.name as NewsletterName} />
-      </FollowFormatContainer>
-    )
-
   if (!format.subscribedBy.nodes.find((n) => n.isEligibleForNotifications))
     return null
 
@@ -69,8 +26,18 @@ function FollowFormat({
   // (At least on authors and formats – I have given little thought to discussion subscriptions)
   const subscriptionId = format.subscribedBy.nodes.find((n) => n.active)?.id
 
+  if (button)
+    return (
+      <FollowButton
+        type={SubscriptionObjectType.Document}
+        subscriptionId={subscriptionId}
+        objectId={format.id}
+        objectName={format.meta.title}
+      />
+    )
+
   return (
-    <>
+    <FollowFormatContainer>
       <div className={css({ maxWidth: '480px' })}>
         <h3
           className={css({
@@ -92,6 +59,7 @@ function FollowFormat({
           subscriptionId={subscriptionId}
           objectId={format.id}
           objectName={format.meta.title}
+          size='small'
         />
       </div>
       <Image
@@ -107,8 +75,8 @@ function FollowFormat({
           objectFit: 'cover',
         })}
       />
-    </>
+    </FollowFormatContainer>
   )
 }
 
-export default FollowFormat
+export default FollowFormatCard

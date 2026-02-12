@@ -7,6 +7,7 @@ import { useMutation } from '@apollo/client'
 import { Button } from '@app/components/ui/button'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
+import { ButtonVariantProps } from '@republik/theme/recipes'
 import { useState } from 'react'
 import { postMessage } from '../../../lib/withInNativeApp'
 
@@ -15,11 +16,13 @@ export function FollowButton({
   subscriptionId,
   objectId,
   objectName,
+  size,
 }: {
   type: SubscriptionObjectType
   subscriptionId?: string
   objectId: string
   objectName: string
+  size?: ButtonVariantProps['size']
 }) {
   const [subscribe] = useMutation(SubscribeDocument)
   const [unsubscribe] = useMutation(UnsubscribeDocument)
@@ -76,7 +79,7 @@ export function FollowButton({
       onClick={toggleSubscription}
       disabled={isPending}
       type='button'
-      size='small'
+      size={size}
       variant={subscriptionId ? 'outline' : 'default'}
       loading={showSpinner}
     >
