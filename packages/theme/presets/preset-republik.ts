@@ -287,6 +287,15 @@ export const presetRepublik = definePreset({
             },
           },
         },
+        subtitleBold: {
+          description: 'Bold sans serif subtitle',
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: 700,
+            fontSize: 20,
+            lineHeight: 1,
+          },
+        },
         title: {
           value: {
             fontFamily: 'republikSerif',

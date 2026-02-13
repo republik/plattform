@@ -4,16 +4,10 @@ import {
   NewsletterName,
   NewsletterSettingsQuery,
 } from '#graphql/republik-api/__generated__/gql/graphql'
+import { isSubscribedToNewsletter } from '@app/components/newsletters/helpers'
 import { Section, SectionH3 } from '@app/components/ui/section'
 import { css } from '@republik/theme/css'
 import NewsletterCard from './newsletters-card'
-
-const isSubscribed = (
-  name: NewsletterName,
-  subscriptions?: NonNullable<
-    NewsletterSettingsQuery['me']['newsletterSettings']['subscriptions']
-  >,
-) => subscriptions?.find((s) => s?.name === name)?.subscribed
 
 function NewslettersSection({
   title,
@@ -47,7 +41,7 @@ function NewslettersSection({
             <NewsletterCard
               key={newsletter}
               newsletter={newsletter}
-              subscribed={isSubscribed(newsletter, subscriptions)}
+              subscribed={isSubscribedToNewsletter(newsletter, subscriptions)}
               disabled={disabled}
             />
           ))}

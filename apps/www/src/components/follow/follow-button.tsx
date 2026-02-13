@@ -1,10 +1,5 @@
 import {
-  FragmentType,
-  getFragmentData,
-} from '#graphql/republik-api/__generated__/gql'
-import {
   SubscribeDocument,
-  SubscriptionFieldsFragmentDoc,
   SubscriptionObjectType,
   UnsubscribeDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
@@ -12,42 +7,29 @@ import { useMutation } from '@apollo/client'
 import { Button } from '@app/components/ui/button'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
+import { ButtonVariantProps } from '@republik/theme/recipes'
 import { useState } from 'react'
 import { postMessage } from '../../../lib/withInNativeApp'
 
-export function OnboardingFollowButton({
+export function FollowButton({
+  type,
   subscriptionId,
   objectId,
-  type,
+  objectName,
+  size,
 }: {
+  type: SubscriptionObjectType
   subscriptionId?: string
   objectId: string
-  type: SubscriptionObjectType
+  objectName: string
+  size?: ButtonVariantProps['size']
 }) {
   const [subscribe] = useMutation(SubscribeDocument)
   const [unsubscribe] = useMutation(UnsubscribeDocument)
   const [isPending, setIsPending] = useState(false)
   const [showSpinner, setShowSpinner] = useState(false)
   const track = useTrackEvent()
-
-  function trackSubscription(
-    action: string,
-    sub: FragmentType<typeof SubscriptionFieldsFragmentDoc>,
-  ) {
-    const { object } = getFragmentData(SubscriptionFieldsFragmentDoc, sub)
-
-    if (object) {
-      track({
-        action,
-        name:
-          object.__typename === 'User'
-            ? `Author: ${object.name}`
-            : object.__typename === 'Document'
-            ? `Format: ${object.meta.title}`
-            : object.id,
-      })
-    }
-  }
+  const trackingInfo = `${type}: ${objectName}`
 
   async function toggleSubscription(e) {
     e.stopPropagation()
@@ -60,25 +42,28 @@ export function OnboardingFollowButton({
     const spinner = setTimeout(() => setShowSpinner(true), 1000)
 
     if (subscriptionId) {
-      const { data } = await unsubscribe({
+      await unsubscribe({
         variables: {
           subscriptionId,
         },
       })
-      if (data) {
-        trackSubscription('Unfollow', data.unsubscribe)
-      }
+      track({
+        action: 'Unfollow',
+        name: trackingInfo,
+      })
     } else {
-      const { data } = await subscribe({
+      await subscribe({
         variables: {
           objectId,
           type,
         },
       })
-      if (data) {
-        trackSubscription('Follow', data.subscribe)
-        postMessage({ type: 'isSignedIn', payload: true })
-      }
+      track({
+        action: 'Follow',
+        name: trackingInfo,
+      })
+      // triggers the push permission popup in the app
+      postMessage({ type: 'isSignedIn', payload: true })
     }
     clearTimeout(spinner)
     setShowSpinner(false)
@@ -94,7 +79,7 @@ export function OnboardingFollowButton({
       onClick={toggleSubscription}
       disabled={isPending}
       type='button'
-      size='small'
+      size={size}
       variant={subscriptionId ? 'outline' : 'default'}
       loading={showSpinner}
     >
