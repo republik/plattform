@@ -8,6 +8,7 @@ import { FollowButton } from '@app/components/follow/follow-button'
 import FollowFormatContainer from '@app/components/follow/follow-format-container'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
 function FollowFormatCard({
@@ -49,7 +50,7 @@ function FollowFormatCard({
             Das war:
           </span>
           <br />
-          {format.meta.title}
+          <Link href={format.meta.path}>{format.meta.title}</Link>
         </h3>
         <p className={css({ py: 4, textStyle: 'airy' })}>
           {format.meta.description}

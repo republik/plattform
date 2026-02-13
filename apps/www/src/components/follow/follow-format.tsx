@@ -24,6 +24,7 @@ function FollowFormat({ path, button }: { path: string; button?: boolean }) {
     return (
       <NewsletterArticleCard
         newsletter={newsletter.name as NewsletterName}
+        path={path}
         button={button}
       />
     )

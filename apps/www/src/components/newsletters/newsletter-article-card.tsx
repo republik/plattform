@@ -6,13 +6,16 @@ import { NL_STYLE } from '@app/components/newsletters/config'
 import { NewsletterSubscribeButton } from '@app/components/newsletters/newsletter-subscribe'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useTranslation } from '../../../lib/withT'
 
 function NewsletterArticleCard({
   newsletter,
+  path,
   button,
 }: {
   newsletter: NewsletterName
+  path: string
   button?: boolean
 }) {
   const { t } = useTranslation()
@@ -64,7 +67,7 @@ function NewsletterArticleCard({
               lineHeight: 1.2,
             })}
           >
-            {t(`newsletters/${newsletter}/name`)}{' '}
+            <Link href={path}>{t(`newsletters/${newsletter}/name`)}</Link>{' '}
             <span
               className={css({
                 fontWeight: 500,

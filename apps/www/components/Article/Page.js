@@ -229,10 +229,10 @@ const ArticlePage = ({
 
   const isArticle = template === 'article'
   const isEditorialNewsletter = template === 'editorialNewsletter'
-  const isFormat = meta.template === 'format'
-  const isSection = meta.template === 'section'
-  const isPage = meta.template === 'page'
-  const ownDiscussion = meta.ownDiscussion
+  const isFormat = template === 'format'
+  const isSection = template === 'section'
+  const isPage = template === 'page'
+  const ownDiscussion = meta?.ownDiscussion
 
   const disableActionBar =
     meta?.disableActionBar || isSeriesOverview || isSection || isFormat
