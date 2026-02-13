@@ -1,12 +1,9 @@
 import {
-<<<<<<< Updated upstream:apps/www/src/components/onboarding/follow-button.tsx
   FragmentType,
   getFragmentData,
 } from '#graphql/republik-api/__generated__/gql'
 import {
-=======
   EventObjectType,
->>>>>>> Stashed changes:apps/www/src/components/follow/follow-button.tsx
   SubscribeDocument,
   SubscriptionFieldsFragmentDoc,
   SubscriptionObjectType,
