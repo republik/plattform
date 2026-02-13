@@ -5,7 +5,7 @@ import { Logger } from '@orbiting/backend-modules-logger'
 
 export const GlobalQueue = Symbol('Global PGBoss queue')
 
-type WorkerConstructor = new (
+export type WorkerConstructor = new (
   pgBoss: PgBoss,
   logger: Logger,
   context: ConnectionContext,
@@ -27,7 +27,7 @@ export class Queue {
       context: ConnectionContext
     },
   ) {
-    this.instances[id] = new Queue(
+    Queue.instances[id] = new Queue(
       {
         application_name: id.description,
         connectionString: config.connectionString,
@@ -37,15 +37,15 @@ export class Queue {
       config.context,
     )
 
-    return this.instances[id]
+    return Queue.instances[id]
   }
 
   static getInstance(id: symbol = GlobalQueue): Queue {
-    if (!this.instances[id]) {
+    if (!Queue.instances[id]) {
       throw new Error('Unknown queue instance')
     }
 
-    return this.instances[id]
+    return Queue.instances[id]
   }
 
   constructor(options: PgBoss.ConstructorOptions, context: ConnectionContext) {
@@ -81,8 +81,11 @@ export class Queue {
   async start() {
     await this.pgBoss.start()
 
-    for (const queue of this.workers.keys()) {
-      await this.pgBoss.createQueue(queue)
+    for (const worker of this.workers.values()) {
+      await this.pgBoss.createQueue(
+        worker.queue,
+        worker.queueOptions ?? undefined,
+      )
     }
 
     return
@@ -117,7 +120,13 @@ export class Queue {
     const workers: Promise<string>[] = []
 
     for (const worker of this.workers.values()) {
-      workers.push(this.pgBoss.work(worker.queue, worker.perform.bind(worker)))
+      workers.push(
+        this.pgBoss.work(
+          worker.queue,
+          worker.performOptions ?? {},
+          worker.perform.bind(worker),
+        ),
+      )
     }
 
     return Promise.all(workers)
