@@ -37,7 +37,6 @@ import {
 } from '../Audio/types/AudioActionTracking'
 import FontSizeOverlay from '../FontSize/Overlay'
 
-import SubscribeMenu from '../Notifications/SubscribeMenu'
 import BookmarkButton from './BookmarkButton'
 import DiscussionLinkButton from './DiscussionLinkButton'
 import PodcastOverlay from './PodcastOverlay'
@@ -129,19 +128,12 @@ const ActionBar = ({
           />
         )}
         {discussion && me && (
-          <>
-            <SubscribeMenu
-              discussionId={discussion}
-              label={t('SubscribeMenu/title')}
-              padded
-            />
-            <IconButton
-              Icon={IconEtiquette}
-              label={t('components/Discussion/etiquette')}
-              labelShort={t('components/Discussion/etiquette')}
-              href='/etikette'
-            />
-          </>
+          <IconButton
+            Icon={IconEtiquette}
+            label={t('components/Discussion/etiquette')}
+            labelShort={t('components/Discussion/etiquette')}
+            href='/etikette'
+          />
         )}
         {share && (
           <IconButton
@@ -335,42 +327,6 @@ const ActionBar = ({
       modes: ['articleTop'],
       show: true,
     },
-    // The subscription menu is available for all logged-in users
-    {
-      title: t('SubscribeMenu/title'),
-      element: (
-        <SubscribeMenu
-          discussionId={isDiscussion && meta.ownDiscussion?.id}
-          subscriptions={document?.subscribedBy?.nodes?.filter(
-            (subscription) =>
-              // keep all subscriptions onto Users objects
-              subscription?.object?.__typename === 'User' ||
-              // keep some subscriptions onto Documents objects …
-              (subscription?.object?.__typename === 'Document' &&
-                // … subscription object is not referring to current doc
-                (subscription?.object?.id !== document.id ||
-                  // … current doc is a format and subscription object referrs to current doc
-                  (meta.template === 'format' &&
-                    subscription?.object?.id === document.id))),
-          )}
-          label={t('SubscribeMenu/title')}
-          labelShort={isArticleBottom ? t('SubscribeMenu/title') : undefined}
-          padded
-          loading={meLoading || documentLoading}
-          attributes={{ ['data-show-if-me']: true }}
-        />
-      ),
-      modes: ['articleTop', 'articleBottom'],
-      show:
-        // only show for formats and discussions
-        // (we are replacing the action bar element with an subscribe bloc at the end of the article)
-        (isDiscussion || meta.template === 'format') &&
-        // and signed in or loading me
-        (me || meLoading) &&
-        // and not a newsletter
-        !isNewsletterFormat,
-    },
-    // The subscription menu is available for all users with an active-membership.
     {
       title: t('bookmark/title/default'),
       element: (
