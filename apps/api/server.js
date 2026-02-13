@@ -88,7 +88,7 @@ const {
 const {
   PublicationWorker,
   PublicationNotificationWorker,
-} = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
+} = require('@orbiting/backend-modules-publikator/lib/workers')
 const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
 const {
   MembershipOwnersWorker,
@@ -135,6 +135,7 @@ function setupQueue(context, monitorQueueState = undefined) {
     ReadingPositionRefreshWorker,
     NextReadsFeedRefreshWorker,
     SlackNotifierWorker,
+    // port of old schedulers
     PublicationWorker,
     PublicationNotificationWorker,
     MembershipOwnersWorker,
