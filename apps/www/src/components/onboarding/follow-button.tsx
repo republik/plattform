@@ -3,6 +3,7 @@ import {
   getFragmentData,
 } from '#graphql/republik-api/__generated__/gql'
 import {
+  EventObjectType,
   SubscribeDocument,
   SubscriptionFieldsFragmentDoc,
   SubscriptionObjectType,
@@ -73,6 +74,7 @@ export function OnboardingFollowButton({
         variables: {
           objectId,
           type,
+          filters: [EventObjectType.Document],
         },
       })
       if (data) {
