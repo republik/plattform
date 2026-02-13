@@ -1,5 +1,5 @@
-mutation Subscribe($objectId: ID!, $type: SubscriptionObjectType!) {
-  subscribe(objectId: $objectId, type: $type) {
+mutation Subscribe($objectId: ID!, $type: SubscriptionObjectType!, $filters: [EventObjectType!]) {
+  subscribe(objectId: $objectId, type: $type, filters: $filters) {
     ...SubscriptionFields
   }
 }
