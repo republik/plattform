@@ -71,7 +71,13 @@ function FollowAuthorCard({ authorId }: { authorId: string }) {
           </Link>
         </h4>
         {!!authorDescription && (
-          <p className={css({ fontSize: 'sm', color: 'textSoft', mt: 1 })}>
+          <p
+            className={css({
+              fontSize: 'sm',
+              color: 'textSoft',
+              lineHeight: '1',
+            })}
+          >
             {authorDescription}
           </p>
         )}
