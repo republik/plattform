@@ -14,7 +14,6 @@ jest.mock('@orbiting/backend-modules-publikator/lib/Notifications', () => ({
   notifyPublish: mockNotifyPublish,
 }))
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 import { PublicationNotificationWorker } from '@orbiting/backend-modules-publikator/lib/workers/PublicationNotificationWorker'
 
 describe('PublicationNotificationWorker', () => {
@@ -32,6 +31,7 @@ describe('PublicationNotificationWorker', () => {
       { logger } as ConnectionContext,
     )
 
+    // @ts-expect-error "typescript has problems matching the constructor"
     queue.registerWorker(PublicationNotificationWorker)
 
     await queue.start()
