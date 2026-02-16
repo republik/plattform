@@ -114,7 +114,7 @@ function setupQueue(context, monitorQueueState = undefined) {
     monitorStateIntervalSeconds: monitorQueueState,
   })
 
-  queue.registerWorkers([
+  const workers = [
     StripeWebhookWorker,
     StripeCustomerCreateWorker,
     SyncAddressDataWorker,
@@ -136,15 +136,31 @@ function setupQueue(context, monitorQueueState = undefined) {
     NextReadsFeedRefreshWorker,
     SlackNotifierWorker,
     // port of old schedulers
-    PublicationWorker,
-    PublicationNotificationWorker,
-    MembershipOwnersWorker,
-    YearlyAboWinbacksWorker,
-    UpgradeWorker,
-    ChangeoverDeactivateWorker,
-    ReferralRewardsWorker,
+
     StatsCacheWorker,
-  ])
+  ]
+
+  if (
+    PUBLICATION_SCHEDULER !== 'false' &&
+    (!DEV || PUBLICATION_SCHEDULER === 'true')
+  ) {
+    workers.push(PublicationWorker, PublicationNotificationWorker)
+  }
+
+  if (
+    MEMBERSHIP_SCHEDULER !== 'false' &&
+    (!DEV || MEMBERSHIP_SCHEDULER === 'true')
+  ) {
+    workers.push(
+      MembershipOwnersWorker,
+      YearlyAboWinbacksWorker,
+      UpgradeWorker,
+      ChangeoverDeactivateWorker,
+      ReferralRewardsWorker,
+    )
+  }
+
+  queue.registerWorkers(workers)
 
   return queue
 }
