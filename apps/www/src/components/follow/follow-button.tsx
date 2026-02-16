@@ -1,4 +1,5 @@
 import {
+  EventObjectType,
   SubscribeDocument,
   SubscriptionObjectType,
   UnsubscribeDocument,
@@ -56,6 +57,7 @@ export function FollowButton({
         variables: {
           objectId,
           type,
+          filters: [EventObjectType.Document],
         },
       })
       track({
