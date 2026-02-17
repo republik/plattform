@@ -1,4 +1,5 @@
-import { css } from 'glamor'
+import FollowDiscussionButton from '@app/components/follow/follow-discussion-button'
+import { DialogPaynote } from '@app/components/paynotes/paynotes-in-trial/dialog'
 import {
   Center,
   Editorial,
@@ -6,20 +7,20 @@ import {
   Interaction,
   mediaQueries,
 } from '@project-r/styleguide'
-import Frame from '../../components/Frame'
+import { css } from 'glamor'
+import { withDefaultSSR } from 'lib/apollo/helpers'
+import { PUBLIC_BASE_URL } from 'lib/constants'
 import Link from 'next/link'
-import { useTranslation } from '../../lib/withT'
 import { useRouter } from 'next/router'
-import Discussion from '../../components/Discussion/Discussion'
-import DiscussionContextProvider from '../../components/Discussion/context/DiscussionContextProvider'
+import ActionBar from '../../components/ActionBar'
+import DiscussionTitle from '../../components/Dialog/DiscussionTitle'
 import { useDiscussion } from '../../components/Discussion/context/DiscussionContext'
+import DiscussionContextProvider from '../../components/Discussion/context/DiscussionContextProvider'
+import Discussion from '../../components/Discussion/Discussion'
+import Frame from '../../components/Frame'
 import Meta from '../../components/Frame/Meta'
 import StatusError from '../../components/StatusError'
-import { DialogPaynote } from '@app/components/paynotes/paynotes-in-trial/dialog'
-import DiscussionTitle from '../../components/Dialog/DiscussionTitle'
-import ActionBar from '../../components/ActionBar'
-import { PUBLIC_BASE_URL } from 'lib/constants'
-import { withDefaultSSR } from 'lib/apollo/helpers'
+import { useTranslation } from '../../lib/withT'
 
 const styles = {
   container: css({
@@ -70,10 +71,15 @@ const DialogContent = () => {
               <DiscussionTitle />
             </Interaction.H1>
             <br />
-            <ActionBar
-              discussion={discussionContext?.discussion?.id}
-              fontSize
-            />
+            <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+              <FollowDiscussionButton
+                discussionId={discussionContext?.discussion?.id}
+              />
+              <ActionBar
+                discussion={discussionContext?.discussion?.id}
+                fontSize
+              />
+            </div>
             {!discussionContext?.discussion?.userCanComment && (
               <DialogPaynote />
             )}

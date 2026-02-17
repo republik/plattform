@@ -8026,6 +8026,30 @@
     {
       "key": "follow/format/all",
       "value": "Alle anzeigen"
+    },
+    {
+      "key": "follow/discussion/all/label",
+      "value": "Alle neuen Kommentare"
+    },
+    {
+      "key": "follow/discussion/all/action",
+      "value": "Gefolgt"
+    },
+    {
+      "key": "follow/discussion/answers/label",
+      "value": "Antwort auf meinen Kommentar"
+    },
+    {
+      "key": "follow/discussion/answers/action",
+      "value": "Gefolgt"
+    },
+    {
+      "key": "follow/discussion/none/label",
+      "value": "Entfolgen"
+    },
+    {
+      "key": "follow/discussion/none/action",
+      "value": "Folgen"
     }
   ]
 }

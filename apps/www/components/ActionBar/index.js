@@ -118,6 +118,14 @@ const ActionBar = ({
         {download && (
           <IconButton href={download} Icon={IconDownload} target='_blank' />
         )}
+        {discussion && me && (
+          <IconButton
+            Icon={IconEtiquette}
+            label={t('components/Discussion/etiquette')}
+            labelShort={t('components/Discussion/etiquette')}
+            href='/etikette'
+          />
+        )}
         {fontSize && (
           <IconButton
             Icon={IconFontSize}
@@ -125,14 +133,6 @@ const ActionBar = ({
               e.preventDefault()
               setFontSizeOverlayVisible(!fontSizeOverlayVisible)
             }}
-          />
-        )}
-        {discussion && me && (
-          <IconButton
-            Icon={IconEtiquette}
-            label={t('components/Discussion/etiquette')}
-            labelShort={t('components/Discussion/etiquette')}
-            href='/etikette'
           />
         )}
         {share && (

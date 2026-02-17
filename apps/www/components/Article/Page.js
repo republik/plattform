@@ -478,22 +478,6 @@ const ArticlePage = ({
                   </Center>
                 )}
                 <PaynoteInline />
-                {(isArticle || isEditorialNewsletter) && (
-                  <>
-                    <Center>
-                      <FollowArticle
-                        contributors={articleMeta?.contributors}
-                        format={articleMeta?.format}
-                      />
-                    </Center>
-                    <NextReads path={cleanedPath} repoId={repoId} />
-                  </>
-                )}
-                {isFormat && (
-                  <Center style={{ textAlign: 'center', marginBottom: 40 }}>
-                    <FollowFormat path={cleanedPath} button />
-                  </Center>
-                )}
                 {episodes && !isSeriesOverview && (
                   <SeriesNav
                     inline
@@ -504,6 +488,23 @@ const ArticlePage = ({
                     t={t}
                     seriesDescription={hasPaywall}
                   />
+                )}
+                {(isArticle || isEditorialNewsletter) &&
+                  !(isSeriesOverview || episodes) && (
+                    <>
+                      <Center>
+                        <FollowArticle
+                          contributors={articleMeta?.contributors}
+                          format={articleMeta?.format}
+                        />
+                      </Center>
+                      <NextReads path={cleanedPath} repoId={repoId} />
+                    </>
+                  )}
+                {isFormat && (
+                  <Center style={{ textAlign: 'center', marginBottom: 40 }}>
+                    <FollowFormat path={cleanedPath} button />
+                  </Center>
                 )}
                 {isSection && !hideFeed && (
                   <SectionFeed
