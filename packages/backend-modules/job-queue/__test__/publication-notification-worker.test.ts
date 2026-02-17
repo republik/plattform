@@ -31,7 +31,6 @@ describe('PublicationNotificationWorker', () => {
       { logger } as ConnectionContext,
     )
 
-    // @ts-expect-error "typescript has problems matching the constructor"
     queue.registerWorker(PublicationNotificationWorker)
 
     await queue.start()

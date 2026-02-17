@@ -8,6 +8,10 @@ class PublicationNotificationWorker extends BaseWorker {
     this.options = { retryLimit: 0 }
   }
 
+  /**
+   *
+   * @param {import('@orbiting/backend-modules-job-queue').Job<any>[]} param0
+   */
   async perform([job]) {
     const { repoId, notifyFilters } = job.data
     await notifyPublish(repoId, notifyFilters, this.context)
