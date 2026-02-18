@@ -36,6 +36,7 @@ const {
 
 const keepalive = require('./express/keepalive')
 const { createCORSMatcher } = require('./lib/corsRegex')
+const { gatewayGuard } = require('./express/gateway-guard')
 
 // init httpServer and express and start listening
 const start = async (
@@ -65,6 +66,8 @@ const start = async (
       },
     }),
   )
+
+  server.use(gatewayGuard)
 
   if (IP_BLOCKLIST) {
     const ipBlocklist = IP_BLOCKLIST.split(',')
