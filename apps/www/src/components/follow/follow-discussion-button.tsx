@@ -2,10 +2,9 @@
 
 import * as Select from '@radix-ui/react-select'
 
-import { IconCheckSmall } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
-import { ChevronDown } from 'lucide-react'
+import { Check, ChevronDown } from 'lucide-react'
 import React from 'react'
 import { useTranslation } from '../../../lib/withT'
 
@@ -13,15 +12,27 @@ function FollowDiscussionButton({ discussionId }: { discussionId: string }) {
   const [followState, setFollowState] = React.useState('none')
   const [loading, setLoading] = React.useState(false)
   const { t } = useTranslation()
-  const OPTIONS = [{ value: 'all' }, { value: 'answers' }, { value: 'none' }]
+  const OPTIONS = [
+    { value: 'all' },
+    { value: 'answers' },
+    { value: 'none', warning: true },
+  ]
 
-  console.log('followState', followState)
+  function handleChange(value: string) {
+    if (loading) return
+
+    setLoading(true)
+    // api call goes here
+    setFollowState(value)
+    setLoading(false)
+  }
 
   return (
     <>
       <Select.Root
         value={followState}
-        onValueChange={setFollowState}
+        disabled={loading}
+        onValueChange={handleChange}
         onOpenChange={(open) => {
           if (open && followState === 'none') {
             setFollowState('all')
@@ -29,7 +40,7 @@ function FollowDiscussionButton({ discussionId }: { discussionId: string }) {
         }}
       >
         <Select.Trigger
-          aria-label='follow discussion status'
+          aria-label='follow discussion'
           className={cx(
             button({
               variant: followState === 'none' ? 'default' : 'outline',
@@ -54,10 +65,13 @@ function FollowDiscussionButton({ discussionId }: { discussionId: string }) {
         </Select.Trigger>
         <Select.Portal>
           <Select.Content
+            position='popper'
+            side='bottom'
+            sideOffset={8}
             className={css({
               overflow: 'hidden',
-              backgroundColor: 'white',
-              boxShadow: 'shadows.sm',
+              backgroundColor: 'background',
+              boxShadow: 'sm',
             })}
           >
             <Select.Viewport>
@@ -69,16 +83,26 @@ function FollowDiscussionButton({ discussionId }: { discussionId: string }) {
                     borderTopWidth: '1px',
                     borderTopColor: 'divider',
                     borderTopStyle: 'solid',
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: option.warning ? 'error' : 'text',
+                    cursor: 'pointer',
+                    gap: 3,
                     py: 2,
-                    px: 4,
+                    pr: 6,
+                    pl: 3,
                     userSelect: 'none',
                     _first: { borderTop: 'none' },
-                    _highlighted: { outline: 'none' },
+                    _highlighted: { outline: 'none', background: 'hover' },
                   })}
                 >
-                  <Select.ItemIndicator>
-                    <IconCheckSmall />
-                  </Select.ItemIndicator>
+                  <Check
+                    size={18}
+                    className={css({ color: 'text' })}
+                    style={{
+                      opacity: option.value === followState ? 1 : 0,
+                    }}
+                  />
                   <Select.ItemText>
                     {t(`follow/discussion/${option.value}/label`)}
                   </Select.ItemText>
