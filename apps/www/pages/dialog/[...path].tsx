@@ -72,9 +72,7 @@ const DialogContent = () => {
             </Interaction.H1>
             <br />
             <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-              <FollowDiscussionButton
-                discussionId={discussionContext?.discussion?.id}
-              />
+              <FollowDiscussionButton />
               <ActionBar
                 discussion={discussionContext?.discussion?.id}
                 fontSize
