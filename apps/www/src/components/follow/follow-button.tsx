@@ -18,12 +18,14 @@ export function FollowButton({
   objectId,
   objectName,
   size,
+  filters = [EventObjectType.Document],
 }: {
   type: SubscriptionObjectType
   subscriptionId?: string
   objectId: string
   objectName: string
   size?: ButtonVariantProps['size']
+  filters?: EventObjectType[]
 }) {
   const [subscribe] = useMutation(SubscribeDocument)
   const [unsubscribe] = useMutation(UnsubscribeDocument)
@@ -57,7 +59,7 @@ export function FollowButton({
         variables: {
           objectId,
           type,
-          filters: [EventObjectType.Document],
+          filters,
         },
       })
       track({

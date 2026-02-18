@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import { css } from 'glamor'
 import {
+  IconButton,
   Scroller,
   TabButton,
-  IconButton,
   useColorContext,
 } from '@project-r/styleguide'
-import { useTranslation } from '../../../lib/withT'
+import { IconReport } from '@republik/icons'
+import { css } from 'glamor'
+import { useState } from 'react'
 import { useMe } from '../../../lib/context/MeContext'
+import { useTranslation } from '../../../lib/withT'
+import { useReportUserMutation } from '../graphql/useReportUserMutation'
 import ProfileCommentsFeed from './ProfileCommentsFeed'
 import ProifleDocumentsFeed from './ProifleDocumentsFeed'
-import { IconReport } from '@republik/icons'
-import { useReportUserMutation } from '../graphql/useReportUserMutation'
 
 const styles = {
   tabsContainer: css({
@@ -128,7 +128,7 @@ export default function ProfileCommentsAndDocuments({
           {...colorScheme.set('borderColor', 'divider')}
           {...styles.tabFiller}
         >
-          {!!user.hasPublicProfile && !isMe && (
+          {!!user.hasPublicProfile && !user.documents.totalCount && !isMe && (
             <IconButton
               Icon={IconReport}
               title={t('profile/report/label')}
