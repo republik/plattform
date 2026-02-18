@@ -1,41 +1,77 @@
 'use client'
 
+import {
+  DiscussionNotificationOption,
+  SetDiscussionPreferencesDocument,
+} from '#graphql/republik-api/__generated__/gql/graphql'
+import { ApolloError, useMutation } from '@apollo/client'
+import { ErrorMessage } from '@app/components/auth/login/error-message'
 import * as Select from '@radix-ui/react-select'
 
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import { Check, ChevronDown } from 'lucide-react'
 import React from 'react'
+import { useDiscussion } from '../../../components/Discussion/context/DiscussionContext'
 import { useTranslation } from '../../../lib/withT'
 
-function FollowDiscussionButton({ discussionId }: { discussionId: string }) {
-  const [followState, setFollowState] = React.useState('none')
+function FollowDiscussionButton() {
+  const discussionContext = useDiscussion()
+  const [followState, setFollowState] = React.useState<
+    DiscussionNotificationOption | undefined
+  >(
+    discussionContext?.discussion?.userPreference
+      ?.notifications as DiscussionNotificationOption,
+  )
   const [loading, setLoading] = React.useState(false)
+  const [error, setError] = React.useState<ApolloError>()
   const { t } = useTranslation()
+  const [updateState] = useMutation(SetDiscussionPreferencesDocument)
+
+  if (!discussionContext?.discussion) {
+    return null
+  }
+
   const OPTIONS = [
-    { value: 'all' },
-    { value: 'answers' },
-    { value: 'none', warning: true },
+    { value: DiscussionNotificationOption.All },
+    { value: DiscussionNotificationOption.MyChildren }, // only replies to own comments
+    { value: DiscussionNotificationOption.None, warning: true },
   ]
 
-  function handleChange(value: string) {
+  async function handleChange(value: DiscussionNotificationOption) {
     if (loading) return
 
+    const previousState = followState // optimistically update UI
+
+    setFollowState(value)
     setLoading(true)
-    // api call goes here
+
+    const result = await updateState({
+      variables: {
+        discussionId: discussionContext.discussion.id,
+        discussionPreferences: { notifications: value },
+      },
+    })
+
+    if (result.errors && result.errors.length > 0) {
+      setError(new ApolloError({ graphQLErrors: result.errors }))
+      setFollowState(previousState) // revert to previous state on error
+      return setLoading(false)
+    }
+
     setFollowState(value)
     setLoading(false)
   }
 
   return (
-    <>
+    <div className={css({ position: 'relative' })}>
       <Select.Root
         value={followState}
         disabled={loading}
         onValueChange={handleChange}
         onOpenChange={(open) => {
-          if (open && followState === 'none') {
-            setFollowState('all')
+          if (open && followState === DiscussionNotificationOption.None) {
+            handleChange(DiscussionNotificationOption.All)
           }
         }}
       >
@@ -43,7 +79,10 @@ function FollowDiscussionButton({ discussionId }: { discussionId: string }) {
           aria-label='follow discussion'
           className={cx(
             button({
-              variant: followState === 'none' ? 'default' : 'outline',
+              variant:
+                followState === DiscussionNotificationOption.None
+                  ? 'default'
+                  : 'outline',
               size: 'small',
             }),
             loading && css({ cursor: 'loading' }),
@@ -112,7 +151,12 @@ function FollowDiscussionButton({ discussionId }: { discussionId: string }) {
           </Select.Content>
         </Select.Portal>
       </Select.Root>
-    </>
+      {error && (
+        <div className={css({ position: 'absolute', bottom: -43, left: 0 })}>
+          <ErrorMessage error={error} />
+        </div>
+      )}
+    </div>
   )
 }
 

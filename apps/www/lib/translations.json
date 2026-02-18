@@ -8028,27 +8028,27 @@
       "value": "Alle anzeigen"
     },
     {
-      "key": "follow/discussion/all/label",
+      "key": "follow/discussion/ALL/label",
       "value": "Alle neuen Kommentare"
     },
     {
-      "key": "follow/discussion/all/action",
+      "key": "follow/discussion/ALL/action",
       "value": "Gefolgt"
     },
     {
-      "key": "follow/discussion/answers/label",
+      "key": "follow/discussion/MY_CHILDREN/label",
       "value": "Antwort auf meinen Kommentar"
     },
     {
-      "key": "follow/discussion/answers/action",
+      "key": "follow/discussion/MY_CHILDREN/action",
       "value": "Gefolgt"
     },
     {
-      "key": "follow/discussion/none/label",
+      "key": "follow/discussion/NONE/label",
       "value": "Entfolgen"
     },
     {
-      "key": "follow/discussion/none/action",
+      "key": "follow/discussion/NONE/action",
       "value": "Folgen"
     }
   ]
