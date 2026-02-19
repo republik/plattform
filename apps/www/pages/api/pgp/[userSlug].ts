@@ -23,6 +23,10 @@ export default withReqMethodGuard(
         options.headers = {}
       }
       options.headers['cookie'] = req.headers.cookie
+      options.headers['x-api-gateway-client'] =
+        process.env.API_GATEWAY_CLIENT ?? 'www'
+      options.headers['x-api-gateway-token'] =
+        process.env.API_GATEWAY_TOKEN ?? ''
 
       next()
     })

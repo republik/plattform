@@ -32,7 +32,7 @@ function graphqlRewrite(req: NextRequest): NextResponse | null {
     headers.set('x-api-gateway-client', process.env.API_GATEWAY_CLIENT ?? 'www')
     headers.set('x-api-gateway-token', process.env.API_GATEWAY_TOKEN ?? '')
 
-    const res = NextResponse.rewrite(new URL(process.env.API_URL), {
+    const res = NextResponse.rewrite(new URL(process.env.NEXT_PUBLIC_API_URL), {
       request: {
         headers,
       },
