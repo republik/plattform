@@ -12,22 +12,21 @@ import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import { Check, ChevronDown } from 'lucide-react'
 import React from 'react'
-import { useDiscussion } from '../../../components/Discussion/context/DiscussionContext'
 import { useTranslation } from '../../../lib/withT'
 
-function FollowDiscussionButton() {
-  const discussionContext = useDiscussion()
-  const [followState, setFollowState] =
-    React.useState<DiscussionNotificationOption>(
-      discussionContext?.discussion?.userPreference
-        ?.notifications as DiscussionNotificationOption,
-    )
+function FollowDiscussionButton({
+  discussionId,
+  notificationOption,
+}: {
+  discussionId: string
+  notificationOption: DiscussionNotificationOption
+}) {
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<ApolloError>()
   const { t } = useTranslation()
   const [updateState] = useMutation(SetDiscussionPreferencesDocument)
 
-  if (!discussionContext?.discussion) {
+  if (!discussionId || !notificationOption) {
     return null
   }
 
@@ -39,37 +38,34 @@ function FollowDiscussionButton() {
 
   async function handleChange(value: DiscussionNotificationOption) {
     if (loading) return
-
-    const previousState = followState // optimistically update UI
-
-    setFollowState(value)
     setLoading(true)
 
     const result = await updateState({
       variables: {
-        discussionId: discussionContext.discussion.id,
+        discussionId,
         discussionPreferences: { notifications: value },
       },
     })
 
     if (result.errors && result.errors.length > 0) {
       setError(new ApolloError({ graphQLErrors: result.errors }))
-      setFollowState(previousState) // revert to previous state on error
       return setLoading(false)
     }
 
-    setFollowState(value)
     setLoading(false)
   }
 
   return (
     <div className={css({ position: 'relative' })}>
       <Select.Root
-        value={followState}
+        value={notificationOption}
         disabled={loading}
         onValueChange={handleChange}
         onOpenChange={(open) => {
-          if (open && followState === DiscussionNotificationOption.None) {
+          if (
+            open &&
+            notificationOption === DiscussionNotificationOption.None
+          ) {
             handleChange(DiscussionNotificationOption.All)
           }
         }}
@@ -79,7 +75,7 @@ function FollowDiscussionButton() {
           className={cx(
             button({
               variant:
-                followState === DiscussionNotificationOption.None
+                notificationOption === DiscussionNotificationOption.None
                   ? 'default'
                   : 'outline',
               size: 'small',
@@ -95,7 +91,7 @@ function FollowDiscussionButton() {
           )}
         >
           <Select.Value>
-            {t(`follow/discussion/${followState}/action`)}
+            {t(`follow/discussion/${notificationOption}/action`)}
           </Select.Value>
           <Select.Icon>
             <ChevronDown className={css({ marginTop: '3px' })} size={16} />
@@ -138,7 +134,7 @@ function FollowDiscussionButton() {
                     size={18}
                     className={css({ color: 'text' })}
                     style={{
-                      opacity: option.value === followState ? 1 : 0,
+                      opacity: option.value === notificationOption ? 1 : 0,
                     }}
                   />
                   <Select.ItemText>

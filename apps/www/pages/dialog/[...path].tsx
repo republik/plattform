@@ -1,3 +1,4 @@
+import { DiscussionNotificationOption } from '#graphql/republik-api/__generated__/gql/graphql'
 import FollowDiscussionButton from '@app/components/follow/follow-discussion-button'
 import { DialogPaynote } from '@app/components/paynotes/paynotes-in-trial/dialog'
 import {
@@ -72,7 +73,13 @@ const DialogContent = () => {
             </Interaction.H1>
             <br />
             <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-              <FollowDiscussionButton />
+              <FollowDiscussionButton
+                discussionId={discussionContext?.discussion?.id}
+                notificationOption={
+                  discussionContext?.discussion?.userPreference
+                    ?.notifications as DiscussionNotificationOption
+                }
+              />
               <ActionBar
                 discussion={discussionContext?.discussion?.id}
                 fontSize
