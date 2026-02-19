@@ -15,7 +15,7 @@ export const { initializeApollo, withApollo } = createApolloClientUtilities({
     ? {}
     : {
         'x-api-gateway-client': process.env.API_GATEWAY_CLIENT ?? 'www',
-        'x-api-gateway-token': process.env.API_GATEWAY_TOKEN,
+        'x-api-gateway-token': process.env.API_GATEWAY_TOKEN ?? '',
       },
   mobileConfigOptions: {
     isInMobileApp: inNativeAppBrowser && inNativeAppBrowserLegacy,
