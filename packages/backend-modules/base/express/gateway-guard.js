@@ -27,7 +27,17 @@ const GATEWAY_TOKENS = (() => {
 })()
 
 // Paths that don't require the gateway token
-const PUBLIC_PATHS = ['/healthz', '/webhooks/', '/webhook/']
+const PUBLIC_PATHS = [
+  '/healthz',
+  '/graphiql',
+  '/webhooks/',
+  '/webhook/',
+  '/mail/',
+  '/publikator/uncommittedChanges',
+  '/publikator/webhook/',
+  '/invoices/',
+  '/payments/',
+]
 
 function isPublicPath(path) {
   return PUBLIC_PATHS.some((p) => path === p || path.startsWith(p))
