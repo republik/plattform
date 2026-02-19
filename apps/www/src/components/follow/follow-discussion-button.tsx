@@ -17,12 +17,11 @@ import { useTranslation } from '../../../lib/withT'
 
 function FollowDiscussionButton() {
   const discussionContext = useDiscussion()
-  const [followState, setFollowState] = React.useState<
-    DiscussionNotificationOption | undefined
-  >(
-    discussionContext?.discussion?.userPreference
-      ?.notifications as DiscussionNotificationOption,
-  )
+  const [followState, setFollowState] =
+    React.useState<DiscussionNotificationOption>(
+      discussionContext?.discussion?.userPreference
+        ?.notifications as DiscussionNotificationOption,
+    )
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState<ApolloError>()
   const { t } = useTranslation()
