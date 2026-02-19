@@ -13,7 +13,7 @@ class YearlyAboWinbacksWorker extends BaseWorker {
   }
 
   async perform() {
-    await yearlyAboWinbacksHandler({ dryRun: false }, this.context)
+    await yearlyAboWinbacksHandler({ now: new Date() }, this.context)
   }
 }
 

@@ -13,7 +13,7 @@ class UpgradeWorker extends BaseWorker {
   }
 
   async perform() {
-    await informUpgrade({ dryRun: false }, this.context)
+    await informUpgrade({}, this.context)
   }
 }
 

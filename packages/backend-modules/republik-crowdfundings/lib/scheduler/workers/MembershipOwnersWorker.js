@@ -13,7 +13,7 @@ class MembershipOwnersWorker extends BaseWorker {
   }
 
   async perform() {
-    await membershipsOwnersHandler({ dryRun: false }, this.context)
+    await membershipsOwnersHandler({ now: new Date() }, this.context)
   }
 }
 
