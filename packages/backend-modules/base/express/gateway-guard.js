@@ -61,8 +61,8 @@ function gatewayGuard(req, res, next) {
   const token = req.headers[HEADER_TOKEN]
 
   if (!client || !token) {
-    console.warn(
-      `Gateway: missing headers [path=${req.path}, client=${client ?? 'none'}]`,
+    req.log.warn(
+      { path: req.path, client: client ?? 'none' }`Gateway: missing headers`,
     )
     if (GATEWAY_MODE === 'enforce') {
       return res.status(403).json({ error: 'Forbidden' })
@@ -72,7 +72,9 @@ function gatewayGuard(req, res, next) {
 
   const expectedToken = GATEWAY_TOKENS[client]
   if (!expectedToken || !safeEqual(token, expectedToken)) {
-    console.warn(`Gateway: invalid token [path=${req.path}, client=${client}]`)
+    req.log.error(
+      { path: req.path, client: client ?? 'none' }`Gateway: invalid token`,
+    )
     if (GATEWAY_MODE === 'enforce') {
       return res.status(403).json({ error: 'Forbidden' })
     }
