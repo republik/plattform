@@ -12,7 +12,7 @@ export const { initializeApollo, withApollo } = createApolloClientUtilities({
   headers: isClient
     ? {}
     : {
-        'x-api-gateway-client': 'publikator',
+        'x-api-gateway-client': process.env.API_GATEWAY_CLIENT ?? 'publikator',
         'x-api-gateway-token': process.env.API_GATEWAY_TOKEN,
       },
 })

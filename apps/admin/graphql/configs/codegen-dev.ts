@@ -11,7 +11,7 @@ const config: CodegenConfig = {
       schema: {
         [process.env.NEXT_PUBLIC_API_URL]: {
           headers: {
-            'x-api-gateway-client': 'admin',
+            'x-api-gateway-client': process.env.API_GATEWAY_CLIENT ?? 'admin',
             'x-api-gateway-token': process.env.API_GATEWAY_TOKEN,
           },
         },

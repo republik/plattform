@@ -6,7 +6,10 @@ export async function middleware(req: NextRequest) {
    */
   if (req.nextUrl.pathname === '/graphql') {
     const headers = new Headers(req.headers)
-    headers.set('x-api-gateway-client', 'publikator')
+    headers.set(
+      'x-api-gateway-client',
+      process.env.API_GATEWAY_CLIENT ?? 'publikator',
+    )
     headers.set('x-api-gateway-token', process.env.API_GATEWAY_TOKEN ?? '')
 
     const res = NextResponse.rewrite(new URL(process.env.NEXT_PUBLIC_API_URL), {

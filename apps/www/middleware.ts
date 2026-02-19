@@ -29,7 +29,7 @@ function redirectToHTTPS(req: NextRequest): NextResponse | null {
 function graphqlRewrite(req: NextRequest): NextResponse | null {
   if (req.nextUrl.pathname === '/graphql') {
     const headers = new Headers(req.headers)
-    headers.set('x-api-gateway-client', 'www')
+    headers.set('x-api-gateway-client', process.env.API_GATEWAY_CLIENT ?? 'www')
     headers.set('x-api-gateway-token', process.env.API_GATEWAY_TOKEN ?? '')
 
     const res = NextResponse.rewrite(new URL(process.env.API_URL), {
