@@ -4,10 +4,18 @@ import {
 } from '@republik/nextjs-apollo-client'
 import { API_URL } from '../../server/constants'
 
+const isClient = typeof window !== 'undefined'
+
 export const { withApollo, initializeApollo } = createApolloClientUtilities({
   name: '@orbiting/admin-app',
   version: process.env.BUILD_ID,
-  apiUrl: API_URL,
+  apiUrl: isClient ? '/graphql' : API_URL,
+  headers: isClient
+    ? {}
+    : {
+        'x-api-gateway-client': 'admin',
+        'x-api-gateway-token': process.env.API_GATEWAY_TOKEN,
+      },
 })
 
 export const withDefaultSSR = makeWithDefaultSSR(initializeApollo)

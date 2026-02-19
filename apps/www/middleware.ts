@@ -26,6 +26,23 @@ function redirectToHTTPS(req: NextRequest): NextResponse | null {
   })
 }
 
+function graphqlRewrite(req: NextRequest): NextResponse | null {
+  if (req.nextUrl.pathname === '/graphql') {
+    const headers = new Headers(req.headers)
+    headers.set('x-api-gateway-client', 'www')
+    headers.set('x-api-gateway-token', process.env.API_GATEWAY_TOKEN ?? '')
+
+    const res = NextResponse.rewrite(new URL(process.env.API_URL), {
+      request: {
+        headers,
+      },
+    })
+
+    return res
+  }
+  return null
+}
+
 /**
  * Middleware used to redirect to HTTPS if not already on HTTPS and block IP addresses in the IP_BLOCKLIST.
  * @param req
@@ -34,6 +51,11 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
   const httpsRedirect = redirectToHTTPS(req)
   if (httpsRedirect) {
     return httpsRedirect
+  }
+
+  const gqlRewrite = graphqlRewrite(req)
+  if (gqlRewrite) {
+    return gqlRewrite
   }
 
   // Block if request is coming from IP_BLOCKLIST
