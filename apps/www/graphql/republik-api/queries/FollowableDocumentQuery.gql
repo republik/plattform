@@ -1,0 +1,22 @@
+query FollowableDocument($path: String!) {
+  document(path: $path) {
+    id
+    content
+    meta {
+      title
+      description
+      path
+      image
+      newsletter {
+        name
+      }
+    }
+    subscribedBy(onlyMe: true) {
+      nodes {
+        id
+        active
+        isEligibleForNotifications
+      }
+    }
+  }
+}

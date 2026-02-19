@@ -1,0 +1,14 @@
+mutation SetDiscussionPreferences(
+    $discussionId: ID!
+    $discussionPreferences: DiscussionPreferencesInput!
+  ) {
+    setDiscussionPreferences(
+      id: $discussionId
+      discussionPreferences: $discussionPreferences
+    ) {
+      id
+      userPreference {
+        notifications
+      }
+    }
+  }

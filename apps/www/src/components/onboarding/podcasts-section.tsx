@@ -2,11 +2,11 @@
 
 import {
   Document,
-  OnboardingFormatsDocument,
+  OnboardingDocumentsDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { OnboardingFollowButton } from '@app/components/onboarding/follow-button'
+import { FollowButton } from '@app/components/follow/follow-button'
 import { Section, SectionH3 } from '@app/components/ui/section'
 import { css } from '@republik/theme/css'
 import { useTranslation } from '../../../lib/withT'
@@ -68,10 +68,11 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
         {t(`onboarding/podcasts/${podcast.repoId}/description`)}
       </p>
       <div className={css({ mt: 2 })}>
-        <OnboardingFollowButton
+        <FollowButton
+          type={SubscriptionObjectType.Document}
           subscriptionId={subscriptionId}
           objectId={podcast.id}
-          type={SubscriptionObjectType.Document}
+          objectName={podcast.meta.title}
         />
       </div>
     </div>
@@ -80,7 +81,7 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
 
 function PodcastsSection() {
   const { t } = useTranslation()
-  const { data } = useQuery(OnboardingFormatsDocument, {
+  const { data } = useQuery(OnboardingDocumentsDocument, {
     variables: { repoIds: PODCASTS_FEATURED },
   })
 
