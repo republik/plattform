@@ -248,7 +248,7 @@ const createJobs = (now) => [
     },
     payload: {
       templateName: 'membership_owner_prolong_yearly_abo_winback_5',
-      fromName: 'Daniel Binswanger, Co-Chefredaktor'
+      fromName: 'Daniel Binswanger, Co-Chefredaktor',
     },
     predicateFn: ({
       id: userId,
@@ -258,7 +258,8 @@ const createJobs = (now) => [
       hasOtherActiveMagazineAccess,
     }) => {
       return (
-        !hasOtherActiveMagazineAccess && membershipType === 'YEARLY_ABO' &&
+        !hasOtherActiveMagazineAccess &&
+        membershipType === 'YEARLY_ABO' &&
         (membershipAutoPay === false ||
           (membershipAutoPay === true &&
             (!autoPay || (autoPay && userId !== autoPay.userId))))
@@ -283,7 +284,8 @@ const createJobs = (now) => [
       hasOtherActiveMagazineAccess,
     }) => {
       return (
-        !hasOtherActiveMagazineAccess && ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
+        !hasOtherActiveMagazineAccess &&
+        ['ABO', 'BENEFACTOR_ABO'].includes(membershipType) &&
         (membershipAutoPay === false ||
           (membershipAutoPay === true &&
             (!autoPay || (autoPay && userId !== autoPay.userId))))
@@ -308,7 +310,8 @@ const createJobs = (now) => [
       hasOtherActiveMagazineAccess,
     }) => {
       return (
-        !hasOtherActiveMagazineAccess && membershipType === 'YEARLY_ABO' &&
+        !hasOtherActiveMagazineAccess &&
+        membershipType === 'YEARLY_ABO' &&
         (membershipAutoPay === false ||
           (membershipAutoPay === true &&
             (!autoPay || (autoPay && userId !== autoPay.userId))))
@@ -324,7 +327,7 @@ const createJobs = (now) => [
     },
     payload: {
       templateName: 'membership_owner_prolong_yearly_abo_winback_12',
-      fromName: 'Dennis Bühler, Bundeshaus- und Medienredaktor'
+      fromName: 'Dennis Bühler, Bundeshaus- und Medienredaktor',
     },
     predicateFn: ({
       id: userId,
@@ -334,7 +337,8 @@ const createJobs = (now) => [
       hasOtherActiveMagazineAccess,
     }) => {
       return (
-        !hasOtherActiveMagazineAccess && membershipType === 'YEARLY_ABO' &&
+        !hasOtherActiveMagazineAccess &&
+        membershipType === 'YEARLY_ABO' &&
         (membershipAutoPay === false ||
           (membershipAutoPay === true &&
             (!autoPay || (autoPay && userId !== autoPay.userId))))
@@ -409,14 +413,12 @@ const createMaybeAppendProlongBeforeDate = (context) => async (user) => ({
 
 const hasProlongBeforeDate = (user) => user.prolongBeforeDate
 
-const createUserJobs = (jobs, context) => async (user) =>
-  Promise.each(jobs, async (job) => {
-    try {
-      const { pgdb } = context
-      const { prolongBefore, payload, predicateFn, handleFn } = job
+const createUserJobs = (jobs, context) => async (user) => {
+  const { pgdb } = context
 
-      const otherActiveMembership = await hasUserOtherActiveMagazineAccess({ userId: user.id, membershipId: user.membershipId, pgdb })
-      user.hasOtherActiveMagazineAccess = otherActiveMembership
+  return Promise.each(jobs, async (job) => {
+    try {
+      const { prolongBefore, payload, predicateFn, handleFn } = job
 
       if (
         user.prolongBeforeDate.isBetween(
@@ -424,7 +426,7 @@ const createUserJobs = (jobs, context) => async (user) =>
           prolongBefore.maxDate,
         )
       ) {
-        if (user.membershipAutoPay) {
+        if (user.membershipAutoPay && !user.autoPay) {
           user.autoPay = await autoPaySuggest(user.membershipId, pgdb)
 
           if (!user.autoPay) {
@@ -448,8 +450,32 @@ const createUserJobs = (jobs, context) => async (user) =>
       })
     }
   })
+}
+
+const getOtherActiveMagazineAccessMap = async ({ users, pgdb }) => {
+  const rows = await pgdb.query(
+    `SELECT
+      m.id AS "membershipId",
+      (
+        (SELECT COUNT(*) FROM payments.subscriptions s
+         WHERE s."userId" = m."userId"
+         AND s.status NOT IN ('paused', 'canceled', 'incomplete'))
+        +
+        (SELECT COUNT(*) FROM public.memberships m2
+         WHERE m2."userId" = m."userId"
+         AND m2.active = true
+         AND m2.id != m.id)
+      ) AS count
+    FROM public.memberships m
+    WHERE m.id = ANY(:membershipIds)`,
+    { membershipIds: users.map((u) => u.membershipId) },
+  )
+  return new Map(rows.map((r) => [r.membershipId, r.count > 0]))
+}
 
 const createHandleFn = (jobs, context) => async (rows, count) => {
+  const { pgdb } = context
+
   const users = await Promise.map(
     rows.map(transformUser).map(pickAdditionals),
     createMaybeAppendProlongBeforeDate(context),
@@ -457,6 +483,13 @@ const createHandleFn = (jobs, context) => async (rows, count) => {
   ).filter(hasProlongBeforeDate)
 
   debug({ count, rows: rows.length, withProlongBeforeDate: users.length })
+
+  if (users.length > 0) {
+    const accessMap = await getOtherActiveMagazineAccessMap({ users, pgdb })
+    users.forEach((u) => {
+      u.hasOtherActiveMagazineAccess = accessMap.get(u.membershipId) ?? false
+    })
+  }
 
   await Promise.map(users, createUserJobs(jobs, context), {
     concurrency: Number(MEMBERSHIP_SCHEDULER_CONCURRENCY),
@@ -508,26 +541,6 @@ const run = async (args, context) => {
 module.exports = {
   DAYS_BEFORE_END_DATE,
   run,
-}
-
-async function hasUserOtherActiveMagazineAccess({ userId, membershipId, pgdb}) {
-  const res = await pgdb.queryOne(
-    `SELECT
-        (
-          (
-            SELECT COUNT(*) FROM payments.subscriptions s
-            WHERE s."userId" = :userId and s.status not in ('paused', 'canceled', 'incomplete')
-          )
-          +
-          (
-            SELECT COUNT(*) FROM public.memberships m
-            WHERE m."userId" = :userId and m.active = true
-            and m.id != :membershipId
-          )
-        ) AS count`,
-    { userId: userId, membershipId: membershipId},
-  )
-  return res?.count > 0
 }
 
 async function setAutoPayToFalse({ user, membershipId, pgdb }) {
