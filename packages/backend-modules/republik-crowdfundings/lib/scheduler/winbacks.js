@@ -3,6 +3,8 @@ const moment = require('moment')
 const Promise = require('bluebird')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
+const { hasUserOtherActiveMagazineAccess } = require('./utils')
+
 const { PARKING_USER_ID } = process.env
 
 const DAYS_AFTER_CANCELLATION = 3
@@ -127,26 +129,6 @@ const inform = async (args, context) => {
     },
     { concurrency: 2 },
   )
-}
-
-const hasUserOtherActiveMagazineAccess = async ({ userId, membershipId, pgdb}) => {
-  const res = await pgdb.queryOne(
-    `SELECT
-        (
-          (
-            SELECT COUNT(*) FROM payments.subscriptions s
-            WHERE s."userId" = :userId and s.status not in ('paused', 'canceled', 'incomplete')
-          )
-          +
-          (
-            SELECT COUNT(*) FROM public.memberships m
-            WHERE m."userId" = :userId and m.active = true
-            and m.id != :membershipId
-          )
-        ) AS count`,
-    { userId: userId, membershipId: membershipId},
-  )
-  return res?.count > 0
 }
 
 module.exports = {
