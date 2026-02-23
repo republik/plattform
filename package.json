@@ -74,7 +74,7 @@
     "yaproxy": "^1.0.2"
   },
   "engines": {
-    "node": "^20 || ^22 || ^24"
+    "node": "^24"
   },
   "packageManager": "yarn@1.22.10",
   "resolutions": {

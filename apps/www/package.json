@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "engines": {
-    "node": "^20 || ^22 || ^24"
+    "node": "^24"
   },
   "description": "",
   "main": "server/index.js",
