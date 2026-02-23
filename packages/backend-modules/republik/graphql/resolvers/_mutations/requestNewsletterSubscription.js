@@ -20,7 +20,7 @@ module.exports = async (_, args, context) => {
     {
       to: email,
       subject: t(`api/newsletters/request/${name}/subject`),
-      templateName: `newsletter_request_${name}`,
+      templateName: `newsletter_request`,
       globalMergeVars: [
         {
           name: 'CONFIRM_LINK',
