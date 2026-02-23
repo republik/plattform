@@ -124,12 +124,9 @@ export default async function Page({ params }: PageProps) {
 
   return (
     <div>
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(eventStructuredData).replace(/</g, '\\u003c'),
-        }}
-      />
+      <script type='application/ld+json'>
+        {JSON.stringify(eventStructuredData)}
+      </script>
       <EventTeaser key={event.id} event={event} isPage isMember={isMember} />
       <p className={css({ mt: '6' })}>
         <Link

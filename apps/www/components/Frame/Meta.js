@@ -113,11 +113,9 @@ const Meta = ({ data, t }) => {
           .map(([key, value]) => <meta key={key} name={key} content={value} />)}
 
       {jsonLds?.map((jsonLd, index) => (
-        <script
-          key={index}
-          type='application/ld+json'
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <script key={index} type='application/ld+json'>
+          {JSON.stringify(jsonLd)}
+        </script>
       ))}
     </Head>
   )
