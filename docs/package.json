@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "main": "./lib/index.ts",
+  "engines": {
+    "node": "^24"
+  },
   "scripts": {
     "dev": "concurrently \"panda --watch\" next",
     "build": "panda && next build",
