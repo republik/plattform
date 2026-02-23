@@ -803,6 +803,14 @@
       "value": "Jeden Sonntag"
     },
     {
+      "key": "account/newsletterSubscriptions/BAB/label",
+      "value": "Briefing aus Bern"
+    },
+    {
+      "key": "account/newsletterSubscriptions/BAB/frequency",
+      "value": "Jeden Donnerstag"
+    },
+    {
       "key": "account/authSettings/title",
       "value": "Anmeldung"
     },
