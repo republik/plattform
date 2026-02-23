@@ -11068,9 +11068,9 @@ code-point-at@^1.0.0:
   integrity sha512-RpAVKQA5T63xEj6/giIbUEtZwJ4UFIc3ZtvEkiaUERylqe8xb5IvqcgOurZLahv93CLKfxcw5YI+DZcUBRyLXA==
 
 codemirror@^5.57.0:
-  version "5.65.16"
-  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.65.16.tgz#efc0661be6bf4988a6a1c2fe6893294638cdb334"
-  integrity sha512-br21LjYmSlVL0vFCPWPfhzUCT34FM/pAdK7rRIZwa0rrtrIdotvP4Oh4GUHsu2E3IrQMCfRkL/fN3ytMNxVQvg==
+  version "5.65.21"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.65.21.tgz#cacf320606c5450ad3b3da34bb9c666afec21068"
+  integrity sha512-6teYk0bA0nR3QP0ihGMoxuKzpl5W80FpnHpBJpgy66NK3cZv5b/d/HY8PnRvfSsCG1MTfr92u2WUl+wT0E40mQ==
 
 collapse-white-space@^1.0.0, collapse-white-space@^1.0.2:
   version "1.0.6"
@@ -22334,10 +22334,10 @@ react-autosize-textarea@^5.0.1:
     line-height "^0.3.1"
     prop-types "^15.5.6"
 
-react-codemirror2@^7.2.1:
-  version "7.3.0"
-  resolved "https://registry.yarnpkg.com/react-codemirror2/-/react-codemirror2-7.3.0.tgz#c26e9fe655458389c6218496076e4bc7a4c31166"
-  integrity sha512-gCgJPXDX+5iaPolkHAu1YbJ92a2yL7Je4TuyO3QEqOtI/d6mbEk08l0oIm18R4ctuT/Sl87X63xIMBnRQBXYXA==
+react-codemirror2@^9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/react-codemirror2/-/react-codemirror2-9.0.1.tgz#1f1adf0801e47fae0295d4aeb6daa63b42006e21"
+  integrity sha512-JqTQg8NxTyU1RgJdPNIHqSg5loIp2Y4KEocKVJBzhRrWzVX7At3wWGUUCfulSe3f4bSbRmDIv9iwzQ31r/ny3w==
 
 react-color@^2.18.1:
   version "2.19.3"
