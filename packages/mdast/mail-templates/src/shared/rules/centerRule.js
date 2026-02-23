@@ -1,21 +1,23 @@
 import { matchZone } from '@republik/mdast-react-render'
-import { editorialParagraphRule } from './paragraphRule'
-import inlineHeadingsRules from './inlineHeadingsRule'
-import blockQuoteRule from './blockQuoteRule'
-import hrRule from './hrRule'
 import Center from '../components/Center'
-import { figureRule } from './figureRule'
-import figureGroupRule from './figureGroupRule'
-import noteRule from './noteRule'
 import articleCollectionRule from './articleCollectionRule'
-import listRule from './listRule'
-import pullQuoteRule from './pullQuoteRule'
-import infoBoxRule from './infoBoxRule'
-import ifRule from './ifRule'
-import elseRule from './elseRule'
 import authorRule from './authorRule'
+import blockQuoteRule from './blockQuoteRule'
 import buttonRule from './buttonRule'
 import datawrapperRule from './datawrapperRule'
+import elseRule from './elseRule'
+import emailOnlyRule from './emailOnlyRule'
+import figureGroupRule from './figureGroupRule'
+import { figureRule } from './figureRule'
+import hrRule from './hrRule'
+import ifRule from './ifRule'
+import infoBoxRule from './infoBoxRule'
+import inlineHeadingsRules from './inlineHeadingsRule'
+import listRule from './listRule'
+import noteRule from './noteRule'
+import { editorialParagraphRule } from './paragraphRule'
+import pullQuoteRule from './pullQuoteRule'
+import webOnlyRule from './webOnlyRule'
 
 const centerRule = {
   matchMdast: matchZone('CENTER'),
@@ -37,6 +39,8 @@ const centerRule = {
     authorRule,
     buttonRule,
     datawrapperRule,
+    webOnlyRule,
+    emailOnlyRule,
   ],
 }
 

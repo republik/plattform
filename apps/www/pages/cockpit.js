@@ -434,6 +434,7 @@ const Page = ({
                       '2023-01',
                       '2024-01',
                       '2025-01',
+                      '2026-01',
                     ],
                     height: 300,
                     domain: [0, 35000],
@@ -518,9 +519,7 @@ const Page = ({
                 <ChartTitle>
                   Wie viele Verlegerinnen beteiligen sich am Dialog
                 </ChartTitle>
-                <ChartLead>
-                  Anzahl Schreibende und Reagierende (Up- und Downvotes)
-                </ChartLead>
+                <ChartLead>Anzahl Schreibende und Reagierende</ChartLead>
                 <Chart
                   config={{
                     type: 'Line',
@@ -534,7 +533,7 @@ const Page = ({
                     endLabel: false,
                     colorLegend: false,
                     xTicks: isMobile
-                      ? ['2018-01', '2020-01', '2022-01']
+                      ? ['2018-01', '2020-01', '2022-01', '2024-01', '2026-01']
                       : [
                           '2018-01',
                           '2019-01',
@@ -543,6 +542,8 @@ const Page = ({
                           '2022-01',
                           '2023-01',
                           '2024-01',
+                          '2025-01',
+                          '2026-01',
                         ], // lastSeenBucket.key
                     yNice: 0,
                     yTicks: [0, 1000, 2000, 3000, 4000, 5000],

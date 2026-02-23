@@ -24,13 +24,11 @@ const config: CodegenConfig = {
   overwrite: true,
   generates: {
     './graphql/cms/__generated__/gql/': {
-      schema: [
-        {
-          [process.env.DATO_CMS_API_URL]: {
-            headers,
-          },
+      schema: {
+        [process.env.DATO_CMS_API_URL]: {
+          headers,
         },
-      ],
+      },
       documents: ['./graphql/cms/**/*.{ts,tsx,gql,graphql}'],
       preset: 'client',
       presetConfig: {
@@ -48,7 +46,14 @@ const config: CodegenConfig = {
       plugins: [],
     },
     './graphql/republik-api/__generated__/gql/': {
-      schema: process.env.NEXT_PUBLIC_API_URL,
+      schema: {
+        [process.env.NEXT_PUBLIC_API_URL]: {
+          headers: {
+            'x-api-gateway-client': process.env.API_GATEWAY_CLIENT ?? 'www',
+            'x-api-gateway-token': process.env.API_GATEWAY_TOKEN,
+          },
+        },
+      },
       documents: ['./graphql/republik-api/**/*.{ts,tsx,gql,graphql}'],
       preset: 'client',
       presetConfig: {

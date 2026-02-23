@@ -1,11 +1,11 @@
-import React from 'react'
-import * as styles from './styles'
 import { css } from 'glamor'
+import React from 'react'
 import colors from '../../theme/colors'
-import { mUp } from '../../theme/mediaQueries'
 import { fontStyles } from '../../theme/fonts'
-import { convertStyleToRem, pxToRem } from './utils'
+import { mUp } from '../../theme/mediaQueries'
 import { useColorContext } from '../Colors/useColorContext'
+import * as styles from './styles'
+import { convertStyleToRem, pxToRem } from './utils'
 
 export const fontRule = css({
   ...fontStyles.sansSerifRegular,
@@ -101,10 +101,14 @@ const metaP = css({
 
 type ParagraphProps = {
   children: React.ReactNode
+  isEmpty?: boolean
 } & React.ComponentPropsWithoutRef<'p'>
 
-export const P = ({ children, ...props }: ParagraphProps) => {
+export const P = ({ isEmpty, children, ...props }: ParagraphProps) => {
   const [colorScheme] = useColorContext()
+
+  if (isEmpty) return null
+  
   return (
     <p
       {...props}

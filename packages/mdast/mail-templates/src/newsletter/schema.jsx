@@ -8,7 +8,9 @@ import HR from '../shared/components/HR'
 import authorRule from '../shared/rules/authorRule'
 import datawrapperRule from '../shared/rules/datawrapperRule'
 import elseRule from '../shared/rules/elseRule'
+import emailOnlyRule from '../shared/rules/emailOnlyRule'
 import ifRule from '../shared/rules/ifRule'
+import webOnlyRule from '../shared/rules/webOnlyRule'
 
 import {
   extractImages,
@@ -109,16 +111,6 @@ const createNewsletterSchema = ({
   const paragraph = createParagraphRule()
   const listParagraph = createParagraphRule(ListP)
 
-  const webOnly = {
-    matchMdast: matchZone('WEBONLY'),
-    component: () => null,
-  }
-
-  const emailOnly = {
-    matchMdast: matchZone('EMAILONLY'),
-    component: ({ children }) => <>{children}</>,
-  }
-
   const figureCaption = {
     matchMdast: matchParagraph,
     component: Caption,
@@ -206,8 +198,8 @@ const createNewsletterSchema = ({
               paragraph,
               figure,
               datawrapperRule,
-              webOnly,
-              emailOnly,
+              webOnlyRule,
+              emailOnlyRule,
               {
                 matchMdast: matchHeading(2),
                 component: H2,

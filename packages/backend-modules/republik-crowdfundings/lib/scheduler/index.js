@@ -1,32 +1,17 @@
 const DEV = process.env.NODE_ENV ? process.env.NODE_ENV !== 'production' : true
 
 const debug = require('debug')('crowdfundings:lib:scheduler')
-const Promise = require('bluebird')
 
-const {
-  intervalScheduler,
-  timeScheduler,
-} = require('@orbiting/backend-modules-schedulers')
+const { timeScheduler } = require('@orbiting/backend-modules-schedulers')
 
 const lockTtlSecs = 60 * 5 // 5 mins
 
 const { inform: informGivers } = require('./givers')
 const { inform: informWinback } = require('./winbacks')
-const { inform: informUpgrade } = require('./upgrade')
-const { run: membershipsOwnersHandler } = require('./owners')
-const { run: yearlyAboWinbacksHandler } = require('./yearlyAboWinbacks')
-const { deactivate } = require('./deactivate')
-const { changeover } = require('./changeover')
 const { importPayments } = require('./importPayments')
 const {
   sendPaymentReminders,
 } = require('../../lib/payments/paymentslip/sendPaymentReminders')
-
-const {
-  rewardReferrers,
-} = require('@orbiting/backend-modules-referral-campaigns')
-
-const surplus = require('@orbiting/backend-modules-republik/graphql/resolvers/RevenueStats/surplus')
 
 const init = async (context) => {
   debug('init')
@@ -66,36 +51,6 @@ const init = async (context) => {
   )
 
   schedulers.push(
-    intervalScheduler.init({
-      name: 'memberships-owners',
-      context,
-      runFunc: membershipsOwnersHandler,
-      lockTtlSecs,
-      runIntervalSecs: 60 * 10,
-    }),
-  )
-
-  schedulers.push(
-    intervalScheduler.init({
-      name: 'memberships-yearly-abo-winbacks',
-      context,
-      runFunc: yearlyAboWinbacksHandler,
-      lockTtlSecs,
-      runIntervalSecs: 60 * 10,
-    }),
-  )
-
-  schedulers.push(
-    intervalScheduler.init({
-      name: 'upgrade',
-      context,
-      runFunc: informUpgrade,
-      lockTtlSecs,
-      runIntervalSecs: 60 * 10,
-    }),
-  )
-
-  schedulers.push(
     timeScheduler.init({
       name: 'winback',
       context,
@@ -107,47 +62,10 @@ const init = async (context) => {
     }),
   )
 
-  schedulers.push(
-    intervalScheduler.init({
-      name: 'changeover-deactivate',
-      context,
-      runFunc: async (args, context) => {
-        await changeover(args, context)
-        await deactivate(args, context)
-      },
-      lockTtlSecs,
-      runIntervalSecs: 60 * 10,
-    }),
-  )
-
-  schedulers.push(
-    intervalScheduler.init({
-      name: 'referral-rewards',
-      context,
-      runFunc: async (args, context) => {
-        const { pgdb } = context
-        await rewardReferrers(args, pgdb)
-      },
-      lockTtlSecs,
-      runIntervalSecs: 60 * 60 * 6,
-    }),
-  )
-
-  schedulers.push(
-    intervalScheduler.init({
-      name: 'stats-cache',
-      context,
-      runFunc: (args, context) =>
-        Promise.all([
-          surplus(null, { min: '2019-12-01', forceRecache: true }, context),
-        ]),
-      lockTtlSecs,
-      runIntervalSecs: 60 * 60,
-    }),
-  )
-
   const close = async () => {
-    await Promise.each(schedulers, (scheduler) => scheduler.close())
+    for (const scheduler of schedulers) {
+      await scheduler.close()
+    }
   }
 
   return {

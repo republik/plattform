@@ -2,12 +2,16 @@ import { fontStyles } from '@project-r/styleguide'
 import MarkdownSerializer from '@republik/slate-mdast-serializer'
 import { css } from 'glamor'
 import { matchBlock } from '../../utils'
+import InlineUI from '../../utils/InlineUI'
+import { matchAncestor } from '../../utils/matchers'
 import createUi from './ui'
 
 const styles = {
   container: css({
     borderLeft: '2px solid',
     paddingLeft: 5,
+    marginTop: 20,
+    marginBottom: 20,
     '& > p:nth-child(2)': {
       marginTop: 0,
     },
@@ -74,9 +78,55 @@ export default ({ rule, TYPE, context }) => {
     ui: createUi({ TYPE, editorOptions, context }),
     plugins: [
       {
-        renderNode({ node, children, attributes }) {
+        renderNode({ node, children, attributes, editor }) {
           if (!serializerRule.match(node)) return
-          return <WebOnly attributes={attributes}>{children}</WebOnly>
+          return (
+            <div attributes={attributes}>
+              <InlineUI
+                node={node}
+                editor={editor}
+                isMatch={matchAncestor(TYPE)}
+              />
+              <WebOnly>{children}</WebOnly>
+            </div>
+          )
+        },
+        // this is a copy of the INFOBOX onKeDown handler. It's here to improve the
+        // usability of the module, but could be removed if it causes unexpected issues.
+        onKeyDown(event, change) {
+          const isBackspace = event.key === 'Backspace'
+          if (event.key !== 'Enter' && !isBackspace) return
+
+          const { value } = change
+          const inBox = value.document.getClosest(
+            value.startBlock.key,
+            matchBlock(TYPE),
+          )
+          if (!inBox) return
+
+          const isEmpty = !inBox || !inBox.text
+
+          // unwrap empty paragraph on enter
+          const block = value.startBlock
+          const isList = value.document.getClosest(
+            block.key,
+            matchBlock('LIST'),
+          )
+
+          if (!block.text && !isBackspace && !isList) {
+            event.preventDefault()
+            return change.unwrapBlock(TYPE).unwrapBlock('PARAGRAPH')
+          }
+
+          // rm info box if empty on backspace
+          if (isBackspace && !isList) {
+            event.preventDefault()
+            const t = change.deleteBackward()
+            if (isEmpty) {
+              t.removeNodeByKey(inBox.key)
+            }
+            return t
+          }
         },
       },
     ],
