@@ -74,13 +74,6 @@ const Footer = ({ meta }) => {
         </a>{' '}
         |{' '}
         <a
-          href='https://www.republik.ch/format/briefing-aus-bern'
-          style={footerLinkStyle}
-        >
-          Briefing aus Bern
-        </a>{' '}
-        |{' '}
-        <a
           href='https://www.republik.ch/format/was-diese-woche-wichtig-war'
           style={footerLinkStyle}
         >
@@ -92,6 +85,13 @@ const Footer = ({ meta }) => {
           style={footerLinkStyle}
         >
           Republik am Wochenende
+        </a>{' '}
+        |{' '}
+        <a
+          href='https://www.republik.ch/format/briefing-aus-bern'
+          style={footerLinkStyle}
+        >
+          Briefing aus Bern
         </a>{' '}
         |{' '}
         <a
