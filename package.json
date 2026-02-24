@@ -20,7 +20,6 @@
     "start": "scripts/start.sh",
     "start:scheduler": "cd apps/api && yarn start:scheduler",
     "build": "scripts/build.sh",
-    "build:cnb": "node packages/container-builder/index.js",
     "dev": "turbo run dev --parallel --concurrency=100",
     "dev:docs": "turbo run dev --filter=@republik/docs...",
     "dev:www": "turbo run dev --filter=@orbiting/www-app...",

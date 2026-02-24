@@ -42,9 +42,7 @@ const {
 const {
   graphql: contributors,
 } = require('@orbiting/backend-modules-contributors')
-const {
-  graphql: allowlist,
-} = require('@orbiting/backend-modules-allowlist')
+const { graphql: allowlist } = require('@orbiting/backend-modules-allowlist')
 
 const {
   graphql: paymentsGraphql,
@@ -87,8 +85,19 @@ const {
   AccessScheduler,
   graphql: access,
 } = require('@orbiting/backend-modules-access')
-const PublicationScheduler = require('@orbiting/backend-modules-publikator/lib/PublicationScheduler')
+const {
+  PublicationWorker,
+  PublicationNotificationWorker,
+} = require('@orbiting/backend-modules-publikator/lib/workers')
 const MembershipScheduler = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler')
+const {
+  MembershipOwnersWorker,
+  YearlyAboWinbacksWorker,
+  UpgradeWorker,
+  ChangeoverDeactivateWorker,
+  ReferralRewardsWorker,
+  StatsCacheWorker,
+} = require('@orbiting/backend-modules-republik-crowdfundings/lib/scheduler/workers')
 const DatabroomScheduler = require('@orbiting/backend-modules-databroom/lib/scheduler')
 const MailchimpScheduler = require('@orbiting/backend-modules-mailchimp')
 const MailScheduler = require('@orbiting/backend-modules-mail/lib/scheduler')
@@ -105,7 +114,7 @@ function setupQueue(context, monitorQueueState = undefined) {
     monitorStateIntervalSeconds: monitorQueueState,
   })
 
-  queue.registerWorkers([
+  const workers = [
     StripeWebhookWorker,
     StripeCustomerCreateWorker,
     SyncAddressDataWorker,
@@ -126,7 +135,32 @@ function setupQueue(context, monitorQueueState = undefined) {
     ReadingPositionRefreshWorker,
     NextReadsFeedRefreshWorker,
     SlackNotifierWorker,
-  ])
+    // port of old schedulers
+
+    StatsCacheWorker,
+  ]
+
+  if (
+    PUBLICATION_SCHEDULER !== 'false' &&
+    (!DEV || PUBLICATION_SCHEDULER === 'true')
+  ) {
+    workers.push(PublicationWorker, PublicationNotificationWorker)
+  }
+
+  if (
+    MEMBERSHIP_SCHEDULER !== 'false' &&
+    (!DEV || MEMBERSHIP_SCHEDULER === 'true')
+  ) {
+    workers.push(
+      MembershipOwnersWorker,
+      YearlyAboWinbacksWorker,
+      UpgradeWorker,
+      ChangeoverDeactivateWorker,
+      ReferralRewardsWorker,
+    )
+  }
+
+  queue.registerWorkers(workers)
 
   return queue
 }
@@ -239,7 +273,7 @@ const run = async (workerId, config) => {
     const loaders = {}
     // Per web standard, x-forwarded-for format is: "client, proxy1, proxy2"
     const forwardedFor = defaultContext.req?.headers['x-forwarded-for']
-    const clientIp = forwardedFor 
+    const clientIp = forwardedFor
       ? forwardedFor.split(',')[0].trim()
       : defaultContext.req?.connection?.remoteAddress
     const context = {
@@ -331,24 +365,6 @@ const runOnce = async () => {
     membershipScheduler = await MembershipScheduler.init(context)
   }
 
-  let publicationScheduler
-  if (
-    PUBLICATION_SCHEDULER === 'false' ||
-    (DEV && PUBLICATION_SCHEDULER !== 'true')
-  ) {
-    console.log(
-      'PUBLICATION_SCHEDULER prevented scheduler from being started',
-      { PUBLICATION_SCHEDULER, DEV },
-    )
-  } else {
-    publicationScheduler = await PublicationScheduler.init(context).catch(
-      (error) => {
-        console.log(error)
-        throw new Error(error)
-      },
-    )
-  }
-
   let databroomScheduler
   if (
     DATABROOM_SCHEDULER === 'false' ||
@@ -387,7 +403,7 @@ const runOnce = async () => {
     )
   }
 
-  const queue = setupQueue(connectionContext, 120)
+  const queue = setupQueue(context, 120)
   await queue.start()
   await queue.startWorkers()
   if (!DEV) {
@@ -405,13 +421,31 @@ const runOnce = async () => {
     )
   }
 
+  if (
+    PUBLICATION_SCHEDULER !== 'false' &&
+    (!DEV || PUBLICATION_SCHEDULER === 'true')
+  ) {
+    await queue.schedule('scheduler:publication', '* * * * *')
+  }
+
+  if (
+    MEMBERSHIP_SCHEDULER !== 'false' &&
+    (!DEV || MEMBERSHIP_SCHEDULER === 'true')
+  ) {
+    await queue.schedule('scheduler:memberships-owners', '*/10 * * * *') // every 10 minutes
+    await queue.schedule('scheduler:yearly-abo-winbacks', '*/10 * * * *') // every 10 minutes
+    await queue.schedule('scheduler:upgrade', '*/10 * * * *') // every 10 minutes
+    await queue.schedule('scheduler:changeover-deactivate', '*/10 * * * *') // every 10 minutes
+    await queue.schedule('scheduler:referral-rewards', '0 */6 * * *') // every 6 hours
+    await queue.schedule('scheduler:stats-cache', '0 * * * *') // every hour
+  }
+
   const close = async () => {
     await Promise.all(
       [
         searchNotifyListener && searchNotifyListener.close(),
         accessScheduler && accessScheduler.close(),
         membershipScheduler && membershipScheduler.close(),
-        publicationScheduler && (await publicationScheduler.close()),
         databroomScheduler && databroomScheduler.close(),
         mailScheduler && mailScheduler.close(),
         mailchimpScheduler && mailchimpScheduler.close(),

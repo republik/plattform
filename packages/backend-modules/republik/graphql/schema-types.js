@@ -135,6 +135,7 @@ enum NewsletterName {
   CLIMATE
   WDWWW
   SUNDAY
+  BAB
 }
 
 type Video {
@@ -188,7 +189,7 @@ type MembershipStats {
   """
   geo: MembershipStatsGeo
   """
-  Returns active membership counts per city and year 
+  Returns active membership counts per city and year
   """
   geoCities: MembershipStatsgeoCities
 }

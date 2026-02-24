@@ -11,10 +11,11 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
+  MAILCHIMP_INTEREST_NEWSLETTER_BAB,
   REGWALL_TRIAL_CAMPAIGN_ID,
 } = getConfig()
 
-type User = { id: string, firstName?: string; lastName?: string; email: string }
+type User = { id: string; firstName?: string; lastName?: string; email: string }
 type GetInterestsForUserParams = {
   user: User
   subscribeToEditorialNewsletters?: boolean
@@ -46,7 +47,11 @@ export async function getInterestsForUser({
 
   const hasActiveGrantedAccess = !!user && !!activeAccessGrants?.length
 
-  const hasActiveOrPastRegwallTrial = !!user && !!segmentData.accessGrants?.filter((ag) => ag.accessCampaignId === REGWALL_TRIAL_CAMPAIGN_ID).length
+  const hasActiveOrPastRegwallTrial =
+    !!user &&
+    !!segmentData.accessGrants?.filter(
+      (ag) => ag.accessCampaignId === REGWALL_TRIAL_CAMPAIGN_ID,
+    ).length
 
   const interests = { ...segmentData.mailchimpMember?.interests }
 
@@ -59,13 +64,17 @@ export async function getInterestsForUser({
 
   if (
     subscribeToEditorialNewsletters &&
-    (hasMembership || hasSubscription || hasActiveGrantedAccess || hasActiveOrPastRegwallTrial)
+    (hasMembership ||
+      hasSubscription ||
+      hasActiveGrantedAccess ||
+      hasActiveOrPastRegwallTrial)
   ) {
     // Autosubscribe all newsletters when new user just paid the membersh.
     interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
     interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
     interests[MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY] = true
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_BAB] = true
   }
 
   return interests

@@ -23,6 +23,7 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
   MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
   MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
+  MAILCHIMP_INTEREST_NEWSLETTER_BAB,
   MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
 } = getConfig()
 
@@ -69,6 +70,7 @@ async function main(argv: any) {
       'NL_CLIMATE',
       'NL_WDWWW',
       'NL_SUNDAY',
+      'NL_BAB',
       'NL_ACCOMPL',
     ].join(','),
   )
@@ -141,6 +143,9 @@ async function main(argv: any) {
       NL_SUNDAY: interests[MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY]
         ? 'Subscribed'
         : 'Unsubscribed',
+      NL_BAB: interests[MAILCHIMP_INTEREST_NEWSLETTER_BAB]
+        ? 'Subscribed'
+        : 'Unsubscribed',
       NL_ACCOMPL: interests[MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]
         ? 'Subscribed'
         : 'Unsubscribed',
@@ -196,6 +201,7 @@ async function getMailchimpMember(
     [MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]: false,
     [MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]: false,
     [MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY]: false,
+    [MAILCHIMP_INTEREST_NEWSLETTER_BAB]: false,
   }
 
   if (data.includes('DAILY')) {
@@ -224,6 +230,10 @@ async function getMailchimpMember(
 
   if (data.includes('SUNDAY')) {
     interests[MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY] = true
+  }
+
+  if (data.includes('BAB')) {
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_BAB] = true
   }
 
   mailchimpMember.interests = interests

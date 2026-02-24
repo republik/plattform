@@ -374,6 +374,9 @@ export class CheckoutSessionBuilder {
             .resolveUpgradePaths(sub.type)
             .includes(this.offer.id)
         ) {
+          if ('DONATION' === this.offer.id) {
+            return 'PURCHASABLE'
+          }
           return 'UPGRADEABLE'
         } else {
           const [offerType] = this.offer.id.split('_')

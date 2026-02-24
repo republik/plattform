@@ -20,6 +20,7 @@ export const NL_FEATURED: NewsletterName[] = [
   NewsletterName.Weekly,
 ]
 export const NL_MORE: NewsletterName[] = [
+  NewsletterName.Bab,
   NewsletterName.Climate,
   NewsletterName.Sunday,
 ]

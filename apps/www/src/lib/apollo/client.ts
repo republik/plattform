@@ -4,7 +4,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
 import { registerApolloClient } from '@apollo/client-integration-nextjs'
 
 export const { getClient } = registerApolloClient(async () => {
-  const _headers = await headers()
+  const requestHeaders = await headers()
   return new ApolloClient({
     cache: new InMemoryCache(),
     link: new HttpLink({
@@ -14,8 +14,10 @@ export const { getClient } = registerApolloClient(async () => {
       // (this does not work if you are rendering your page with `export const dynamic = "force-static"`)
       // fetchOptions: { cache: "no-store" },
       headers: {
-        cookie: _headers.get('cookie') ?? '',
-        Authorization: _headers.get('Authorization') ?? '',
+        cookie: requestHeaders.get('cookie') ?? '',
+        authorization: requestHeaders.get('authorization') ?? '',
+        'x-api-gateway-client': process.env.API_GATEWAY_CLIENT ?? 'www',
+        'x-api-gateway-token': process.env.API_GATEWAY_TOKEN ?? '',
       },
       fetchOptions: {
         next: {

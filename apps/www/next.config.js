@@ -109,10 +109,6 @@ const nextConfig = {
           source: '/_ssr/:path*',
           destination: '/404',
         },
-        {
-          source: '/graphql',
-          destination: process.env.NEXT_PUBLIC_API_URL,
-        },
       ],
       afterFiles: [
         // impossible route via file system path
@@ -258,8 +254,16 @@ const nextConfig = {
         permanent: true,
       },
       // Redirect overview pages to 1st month
-      { source: '/:year(\\d{4})', destination: '/archiv/:year/1', permanent: false },
-      { source: '/archiv/:year(\\d{4})', destination: '/archiv/:year/1', permanent: false },
+      {
+        source: '/:year(\\d{4})',
+        destination: '/archiv/:year/1',
+        permanent: false,
+      },
+      {
+        source: '/archiv/:year(\\d{4})',
+        destination: '/archiv/:year/1',
+        permanent: false,
+      },
       { source: '/en', destination: '/manifest/en', permanent: false },
     ].filter(Boolean)
   },

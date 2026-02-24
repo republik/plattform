@@ -12,7 +12,7 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/email/invalid'))
   }
 
-  if (!['PROJECTR', 'CLIMATE', 'WDWWW', 'SUNDAY'].includes(name)) {
+  if (!['PROJECTR', 'CLIMATE', 'WDWWW', 'SUNDAY', 'BAB'].includes(name)) {
     throw new Error(t('api/newsletters/request/notSupported'))
   }
 
@@ -20,7 +20,7 @@ module.exports = async (_, args, context) => {
     {
       to: email,
       subject: t(`api/newsletters/request/${name}/subject`),
-      templateName: `newsletter_request_${name}`,
+      templateName: `newsletter_request`,
       globalMergeVars: [
         {
           name: 'CONFIRM_LINK',
