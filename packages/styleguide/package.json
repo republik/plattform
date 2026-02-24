@@ -23,7 +23,7 @@
     }
   },
   "engines": {
-    "node": "^24"
+    "node": "24"
   },
   "files": [
     "dist"

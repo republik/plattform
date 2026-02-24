@@ -2,7 +2,7 @@
   "name": "@orbiting/assets-app",
   "version": "0.0.1",
   "engines": {
-    "node": "^24"
+    "node": "24"
   },
   "private": true,
   "license": "AGPL-3.0",
