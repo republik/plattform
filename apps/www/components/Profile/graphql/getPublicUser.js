@@ -1,5 +1,5 @@
-import { documentListQueryFragment } from '../../Feed/DocumentListContainer'
 import { gql } from '@apollo/client'
+import { documentListQueryFragment } from '../../Feed/DocumentListContainer'
 
 const getPublicUser = gql`
   query getPublicUser(
@@ -43,21 +43,11 @@ const getPublicUser = gql`
       documents(first: $firstDocuments, after: $afterDocument) {
         ...DocumentListConnection
       }
-      subscribedByMe {
-        id
-        active
-        filters
-        object {
-          ... on User {
-            id
-            name
-          }
-          ... on Document {
-            id
-            meta {
-              title
-            }
-          }
+      subscribedBy(onlyMe: true) {
+        nodes {
+          id
+          active
+          isEligibleForNotifications
         }
       }
       comments(first: $firstComments, after: $afterComment) {

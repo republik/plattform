@@ -13,10 +13,7 @@ export const nextReadHeader = css({
   mt: 8,
   mb: 8,
   '& h3': {
-    fontFamily: 'gtAmericaStandard',
-    fontWeight: 700,
-    fontSize: 20,
-    lineHeight: 1,
+    textStyle: 'subtitleBold',
     mb: 4,
   },
   '& .tagline': {

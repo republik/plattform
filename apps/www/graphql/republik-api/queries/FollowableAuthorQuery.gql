@@ -1,13 +1,19 @@
-query OnboardingAuthor($id: ID!) {
+query FollowableAuthor($id: ID!) {
   user(id: $id) {
     id
     slug
     name
     portrait
+    credentials {
+      isListed
+      description
+      verified
+    }
     subscribedBy(onlyMe: true) {
       nodes {
         id
         active
+        isEligibleForNotifications
       }
     }
   }

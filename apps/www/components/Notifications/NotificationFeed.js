@@ -1,25 +1,25 @@
-import { useMemo } from 'react'
 import {
-  Interaction,
-  Center,
-  RawHtml,
-  mediaQueries,
-  Label,
-  fontStyles,
-  useColorContext,
   A,
+  Center,
+  fontStyles,
+  Interaction,
+  Label,
+  mediaQueries,
   plainButtonRule,
+  RawHtml,
+  useColorContext,
 } from '@project-r/styleguide'
-import DateLabel from '../Feed/DateLabel'
-import CommentNotification from './CommentNotification'
-import InfiniteScroll from '../Frame/InfiniteScroll'
-import { timeFormat } from '../../lib/utils/format'
 import { nest } from 'd3-collection'
 import { css } from 'glamor'
-import DocumentNotification from './DocumentNotification'
-import withT from '../../lib/withT'
-import Link from 'next/link'
 import compose from 'lodash/flowRight'
+import Link from 'next/link'
+import { useMemo } from 'react'
+import { timeFormat } from '../../lib/utils/format'
+import withT from '../../lib/withT'
+import DateLabel from '../Feed/DateLabel'
+import InfiniteScroll from '../Frame/InfiniteScroll'
+import CommentNotification from './CommentNotification'
+import DocumentNotification from './DocumentNotification'
 import { withMarkAllAsReadMutation } from './enhancers'
 
 const dateFormat = timeFormat('%A,\n%d.%m.%Y')
@@ -244,7 +244,6 @@ export default compose(
                       <DocumentNotification
                         isNew={isNew(node)}
                         node={node}
-                        me={me}
                         key={j}
                       />
                     ) : (

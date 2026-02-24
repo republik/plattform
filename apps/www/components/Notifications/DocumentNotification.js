@@ -1,10 +1,9 @@
 import { TeaserFeed } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import withT from '../../lib/withT'
-import SubscribeCallout from './SubscribeCallout'
 
-export default compose(withT)(({ t, node, isNew, me }) => {
-  const { subscription, object } = node
+export default compose(withT)(({ t, node, isNew }) => {
+  const { object } = node
   return (
     <TeaserFeed
       {...object.meta}
@@ -13,20 +12,6 @@ export default compose(withT)(({ t, node, isNew, me }) => {
       credits={object.meta.credits}
       t={t}
       key={object.meta.path}
-      menu={
-        <SubscribeCallout
-          authorSubscriptions={
-            subscription.object.__typename === 'User'
-              ? [subscription]
-              : undefined
-          }
-          formatSubscriptions={
-            subscription.object.__typename === 'Document'
-              ? [subscription]
-              : undefined
-          }
-        />
-      }
       highlighted={isNew}
     />
   )

@@ -1,10 +1,11 @@
-query OnboardingFormats($repoIds: [ID!]) {
+query OnboardingDocuments($repoIds: [ID!]) {
   documents(repoIds: $repoIds) {
     nodes {
       id
       repoId
       meta {
         title
+        path
         audioCover
       }
       subscribedBy(onlyMe: true) {

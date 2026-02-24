@@ -1,24 +1,28 @@
+import { FollowButton } from '@app/components/follow/follow-button'
+import {
+  Container,
+  fontStyles,
+  IconButton,
+  Interaction,
+  mediaQueries,
+  useColorContext,
+} from '@project-r/styleguide'
+import { IconMailOutline, IconNoteAdd, IconVpnKey } from '@republik/icons'
 import { css } from 'glamor'
 import Image from 'next/image'
 import Link from 'next/link'
-import { IconMailOutline, IconVpnKey, IconNoteAdd } from '@republik/icons'
 import {
-  fontStyles,
-  Interaction,
-  mediaQueries,
-  IconButton,
-  useColorContext,
-  Container,
-} from '@project-r/styleguide'
+  EventObjectType,
+  SubscriptionObjectType,
+} from '../../../graphql/republik-api/__generated__/gql/graphql'
+import { checkRoles } from '../../../lib/apollo/withMe'
+import { ADMIN_BASE_URL, CDN_FRONTEND_BASE_URL } from '../../../lib/constants'
 
 import { useMe } from '../../../lib/context/MeContext'
 import { useTranslation } from '../../../lib/withT'
-import { checkRoles } from '../../../lib/apollo/withMe'
 import Credential from '../../Credential'
-import SubscribeMenu from '../../Notifications/SubscribeMenu'
 import ProfileCommentsAndDocuments from './ProfileCommentsAndDocuments'
 import ProfileUrls from './ProfileUrls'
-import { CDN_FRONTEND_BASE_URL, ADMIN_BASE_URL } from '../../../lib/constants'
 
 export const PORTRAIT_SIZE = 210
 
@@ -136,6 +140,8 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
   const isMe = me && me.id === user.id
   const isSupporter = checkRoles(me, ['supporter'])
   const listedCredential = user.credentials?.filter((c) => c.isListed)[0]
+  const isFollowable = !!me && user.subscribedBy && user.id !== me.id
+  const subscriptionId = user.subscribedBy?.nodes.find((n) => n.active)?.id
   return (
     <Container {...styles.container}>
       {isMe && (
@@ -239,16 +245,30 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
                 />
               )}
             </div>
-            {!!me && user.subscribedByMe && user.id !== me.id && (
-              <SubscribeMenu
-                label={t('SubscribeMenu/title')}
-                labelShort={t('SubscribeMenu/title')}
-                showAuthorFilter
-                userHasNoDocuments={!user.documents.totalCount}
-                subscriptions={[user.subscribedByMe]}
-              />
-            )}
           </div>
+          {isFollowable && !!user.documents.totalCount && (
+            <div>
+              <FollowButton
+                type={SubscriptionObjectType.User}
+                subscriptionId={subscriptionId}
+                objectId={user.id}
+                objectName={user.name}
+              />
+            </div>
+          )}
+          {isFollowable &&
+            !user.documents.totalCount &&
+            checkRoles(me, ['moderator', 'admin']) && (
+              <div>
+                <FollowButton
+                  type={SubscriptionObjectType.User}
+                  subscriptionId={subscriptionId}
+                  objectId={user.id}
+                  objectName={user.name}
+                  filters={[EventObjectType.Comment]}
+                />
+              </div>
+            )}
           {!!user.biography && <p {...styles.biography}>{user.biography}</p>}
           <div {...styles.contactLinks} {...styles.hiddenDesktop}>
             <ProfileUrls user={user} />

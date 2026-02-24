@@ -2,11 +2,11 @@
 
 import {
   Document,
-  OnboardingFormatsDocument,
+  OnboardingDocumentsDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { OnboardingFollowButton } from '@app/components/onboarding/follow-button'
+import { FollowButton } from '@app/components/follow/follow-button'
 import { Section, SectionH3 } from '@app/components/ui/section'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
@@ -61,10 +61,12 @@ function FormatCard({ format }: { format?: Document }) {
           alignItems: 'end',
         }}
       >
-        <OnboardingFollowButton
+        {' '}
+        <FollowButton
+          type={SubscriptionObjectType.Document}
           subscriptionId={subscriptionId}
           objectId={format.id}
-          type={SubscriptionObjectType.Document}
+          objectName={format.meta.title}
         />
         <Image
           className={css({ maxHeight: '160px', maxWidth: '120px' })}
@@ -78,7 +80,7 @@ function FormatCard({ format }: { format?: Document }) {
 
 function FormatsSection() {
   const { t } = useTranslation()
-  const { data } = useQuery(OnboardingFormatsDocument, {
+  const { data } = useQuery(OnboardingDocumentsDocument, {
     variables: { repoIds: FORMATS_FEATURED },
   })
 

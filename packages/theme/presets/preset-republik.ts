@@ -216,6 +216,13 @@ export const presetRepublik = definePreset({
               _dark: '#4C4C4C',
             },
           },
+          hover: {
+            value: {
+              base: '#F6F8F7',
+              _light: '#F6F8F7',
+              _dark: '#292929',
+            },
+          },
           disabled: {
             value: {
               base: '#B8BDC1',
@@ -285,6 +292,15 @@ export const presetRepublik = definePreset({
             '& b': {
               fontWeight: 500,
             },
+          },
+        },
+        subtitleBold: {
+          description: 'Bold sans serif subtitle',
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: 700,
+            fontSize: 20,
+            lineHeight: 1,
           },
         },
         title: {

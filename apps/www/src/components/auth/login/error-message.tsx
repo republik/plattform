@@ -27,7 +27,7 @@ export const ErrorMessage = ({
         mb: '4',
       })}
     >
-      <IconInfoOutline size={32} />
+      <IconInfoOutline />
       <p className={css({ textAlign: 'left' })}>{message || 'Error'}</p>
     </div>
   )

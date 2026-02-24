@@ -1,13 +1,14 @@
 'use client'
 
 import {
-  OnboardingAuthorDocument,
+  FollowableAuthorDocument,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { OnboardingFollowButton } from '@app/components/onboarding/follow-button'
+import { FollowButton } from '@app/components/follow/follow-button'
 import { Section, SectionH3 } from '@app/components/ui/section'
 import { css } from '@republik/theme/css'
+import Image from 'next/image'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 import { Button } from '../ui/button'
@@ -21,15 +22,15 @@ function AuthorCard({
   showAll: boolean
 }) {
   const { t } = useTranslation()
-  const { data } = useQuery(OnboardingAuthorDocument, {
+  const { data } = useQuery(FollowableAuthorDocument, {
     variables: { id: author.id },
   })
 
   const authorData = data?.user
 
-  const subscriptionId = authorData?.subscribedBy.nodes.find(
-    (n) => n.active,
-  )?.id
+  if (!authorData) return null
+
+  const subscriptionId = authorData.subscribedBy.nodes.find((n) => n.active)?.id
 
   return (
     <div
@@ -42,19 +43,18 @@ function AuthorCard({
         },
       })} author-card ${showAll ? 'show-author-card' : ''}`}
     >
-      <img
+      <Image
         width='84'
         height='84'
         className={css({
           borderRadius: '96px',
           backgroundColor: 'divider',
         })}
-        src={authorData?.portrait || '/static/profiledefault.png'}
+        src={authorData.portrait}
+        alt=''
       />
       <div>
-        <h4 className={css({ fontWeight: 'bold' })}>
-          {authorData?.name || '...'}
-        </h4>
+        <h4 className={css({ fontWeight: 'bold' })}>{authorData.name}</h4>
         <p className={css({ color: 'textSoft' })}>
           {t(`onboarding/authors/${author.slug}/beat`)}
         </p>
@@ -64,18 +64,20 @@ function AuthorCard({
             md: { display: 'block', mt: 2 },
           })}
         >
-          <OnboardingFollowButton
+          <FollowButton
+            type={SubscriptionObjectType.User}
             subscriptionId={subscriptionId}
             objectId={author.id}
-            type={SubscriptionObjectType.User}
+            objectName={authorData.name}
           />
         </div>
       </div>
       <div className={css({ ml: 'auto', md: { display: 'none' } })}>
-        <OnboardingFollowButton
+        <FollowButton
+          type={SubscriptionObjectType.User}
           subscriptionId={subscriptionId}
           objectId={author.id}
-          type={SubscriptionObjectType.User}
+          objectName={authorData.name}
         />
       </div>
     </div>

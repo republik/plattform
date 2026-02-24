@@ -4,6 +4,7 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import { NL_FEATURED, NL_MORE } from '@app/components/newsletters/config'
+import { css } from '@republik/theme/css'
 import NewslettersSection from './newsletters-section'
 import { NewslettersStatus } from './newsletters-status'
 
@@ -24,10 +25,12 @@ function NewslettersOverview({
 
   return (
     <>
-      <NewslettersStatus
-        userId={data.me.id}
-        status={data.me.newsletterSettings.status}
-      />
+      <div className={css({ mb: '16' })}>
+        <NewslettersStatus
+          userId={data.me.id}
+          status={data.me.newsletterSettings.status}
+        />
+      </div>
       <NewslettersSection
         title='Beliebteste'
         newsletters={nlFeatured}

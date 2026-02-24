@@ -28,3 +28,18 @@ export function Section({ children }: { children: ReactNode }) {
     </section>
   )
 }
+
+export const ArticleSection = ({ children }: { children: ReactNode }) => {
+  return (
+    <div
+      className={css({
+        margin: '0 auto',
+        maxWidth: 'center',
+        pl: '15px',
+        pr: '15px',
+      })}
+    >
+      {children}
+    </div>
+  )
+}
