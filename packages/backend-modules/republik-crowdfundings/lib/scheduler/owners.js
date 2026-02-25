@@ -426,7 +426,7 @@ const createUserJobs = (jobs, context) => async (user) => {
           prolongBefore.maxDate,
         )
       ) {
-        if (user.membershipAutoPay && !user.autoPay) {
+        if (user.membershipAutoPay) {
           user.autoPay = await autoPaySuggest(user.membershipId, pgdb)
 
           if (!user.autoPay) {
