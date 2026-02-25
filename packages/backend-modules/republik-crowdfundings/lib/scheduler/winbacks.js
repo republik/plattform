@@ -3,6 +3,8 @@ const moment = require('moment')
 const Promise = require('bluebird')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
+const { getOtherActiveMagazineAccessMap } = require('./utils')
+
 const { PARKING_USER_ID } = process.env
 
 const DAYS_AFTER_CANCELLATION = 3
@@ -85,6 +87,10 @@ const getCancellations = async ({ now }, { pgdb }) => {
 
 const inform = async (args, context) => {
   const cancellations = await getCancellations(args, context)
+  const accessMap = await getOtherActiveMagazineAccessMap({
+    memberships: cancellations.map((c) => ({ membershipId: c.membershipId })),
+    pgdb: context.pgdb,
+  })
 
   return Promise.map(
     cancellations,
@@ -95,9 +101,7 @@ const inform = async (args, context) => {
       cancelledAt,
       cancellationId,
     }) => {
-      const otherActiveMembership = await hasUserOtherActiveMagazineAccess({ userId, membershipId, pgdb: context.pgdb })
-
-      if (otherActiveMembership) {
+      if (accessMap.get(membershipId)) {
         // if user came back with a new membership or subscription, don't send winback mail
         // this is very much an edge case, because winback mails are sent after the cancellation,
         // mostly when the membership is still active
@@ -127,26 +131,6 @@ const inform = async (args, context) => {
     },
     { concurrency: 2 },
   )
-}
-
-const hasUserOtherActiveMagazineAccess = async ({ userId, membershipId, pgdb}) => {
-  const res = await pgdb.queryOne(
-    `SELECT
-        (
-          (
-            SELECT COUNT(*) FROM payments.subscriptions s
-            WHERE s."userId" = :userId and s.status not in ('paused', 'canceled', 'incomplete')
-          )
-          +
-          (
-            SELECT COUNT(*) FROM public.memberships m
-            WHERE m."userId" = :userId and m.active = true
-            and m.id != :membershipId
-          )
-        ) AS count`,
-    { userId: userId, membershipId: membershipId},
-  )
-  return res?.count > 0
 }
 
 module.exports = {
