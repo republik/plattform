@@ -3,7 +3,7 @@ const moment = require('moment')
 const Promise = require('bluebird')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
-const { hasUserOtherActiveMagazineAccess } = require('./utils')
+const { getOtherActiveMagazineAccessMap } = require('./utils')
 
 const { PARKING_USER_ID } = process.env
 
@@ -87,6 +87,10 @@ const getCancellations = async ({ now }, { pgdb }) => {
 
 const inform = async (args, context) => {
   const cancellations = await getCancellations(args, context)
+  const accessMap = await getOtherActiveMagazineAccessMap({
+    memberships: cancellations.map((c) => ({ membershipId: c.membershipId })),
+    pgdb: context.pgdb,
+  })
 
   return Promise.map(
     cancellations,
@@ -97,9 +101,7 @@ const inform = async (args, context) => {
       cancelledAt,
       cancellationId,
     }) => {
-      const otherActiveMembership = await hasUserOtherActiveMagazineAccess({ userId, membershipId, pgdb: context.pgdb })
-
-      if (otherActiveMembership) {
+      if (accessMap.get(membershipId)) {
         // if user came back with a new membership or subscription, don't send winback mail
         // this is very much an edge case, because winback mails are sent after the cancellation,
         // mostly when the membership is still active

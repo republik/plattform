@@ -13,6 +13,8 @@ const {
 
 const { suggest: autoPaySuggest } = require('../AutoPay')
 
+const { getOtherActiveMagazineAccessMap } = require('./utils')
+
 const mailings = require('./owners/mailings')
 const charging = require('./owners/charging')
 
@@ -452,27 +454,6 @@ const createUserJobs = (jobs, context) => async (user) => {
   })
 }
 
-const getOtherActiveMagazineAccessMap = async ({ users, pgdb }) => {
-  const rows = await pgdb.query(
-    `SELECT
-      m.id AS "membershipId",
-      (
-        (SELECT COUNT(*) FROM payments.subscriptions s
-         WHERE s."userId" = m."userId"
-         AND s.status NOT IN ('paused', 'canceled', 'incomplete'))
-        +
-        (SELECT COUNT(*) FROM public.memberships m2
-         WHERE m2."userId" = m."userId"
-         AND m2.active = true
-         AND m2.id != m.id)
-      ) AS count
-    FROM public.memberships m
-    WHERE m.id = ANY(:membershipIds)`,
-    { membershipIds: users.map((u) => u.membershipId) },
-  )
-  return new Map(rows.map((r) => [r.membershipId, r.count > 0]))
-}
-
 const createHandleFn = (jobs, context) => async (rows, count) => {
   const { pgdb } = context
 
@@ -485,7 +466,10 @@ const createHandleFn = (jobs, context) => async (rows, count) => {
   debug({ count, rows: rows.length, withProlongBeforeDate: users.length })
 
   if (users.length > 0) {
-    const accessMap = await getOtherActiveMagazineAccessMap({ users, pgdb })
+    const accessMap = await getOtherActiveMagazineAccessMap({
+      memberships: users.map((u) => ({ membershipId: u.membershipId })),
+      pgdb,
+    })
     users.forEach((u) => {
       u.hasOtherActiveMagazineAccess = accessMap.get(u.membershipId) ?? false
     })
