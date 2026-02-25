@@ -20,7 +20,14 @@ const nextConfig = {
     '@republik/slate-react',
   ],
   generateBuildId: () => buildId,
-  env: { BUILD_ID: buildId },
+  env: {
+    BUILD_ID: buildId,
+
+    // TODO: (GQL-PROXY) don't expose gql gateway headers when image upload is solved
+    API_GATEWAY_CLIENT: process.env.API_GATEWAY_CLIENT,
+    API_GATEWAY_TOKEN: process.env.API_GATEWAY_TOKEN,
+  },
+
   poweredByHeader: false,
   async redirects() {
     return [
