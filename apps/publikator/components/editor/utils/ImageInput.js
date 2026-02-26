@@ -1,14 +1,17 @@
+import { Label, Spinner } from '@project-r/styleguide'
+import { IconClose as MdClose } from '@republik/icons'
 import { css } from 'glamor'
-import { Label } from '@project-r/styleguide'
+import { getRepoIdFromQuery } from 'lib/repoIdHelper'
+import { useRouter } from 'next/router'
+import { useState, useTransition } from 'react'
 import withT from '../../../lib/withT'
-import {
-  IconClose as MdClose
-} from '@republik/icons'
+import ErrorMessage from '../../ErrorMessage'
 
 const styles = {
   label: css({
     display: 'block',
     marginBottom: 5,
+    position: 'relative',
   }),
   input: css({
     display: 'none',
@@ -20,46 +23,32 @@ const styles = {
     marginTop: 7,
     cursor: 'pointer',
   }),
+  spinner: css({
+    position: 'absolute',
+    inset: 0,
+    display: 'grid',
+    placeContent: 'center',
+  }),
 }
 
-const readImage = (onChange, t) => (e) => {
-  const files = e.target.files
+async function getImageData(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const result = e.target?.result
 
-  if (files.length < 1) {
-    return
-  }
-  const file = files[0]
-
-  const [type, format] = file.type.split('/')
-  if (type !== 'image') {
-    window.alert(t('image/upload/notImage'))
-    return
-  }
-
-  const sizeInMb = file.size / 1000 / 1000
-  const jpegMb = 7.9
-  const restMb = 1.5
-  if (
-    (format === 'jpeg' && sizeInMb > jpegMb) ||
-    (format !== 'jpeg' && sizeInMb > restMb)
-  ) {
-    if (
-      !window.confirm(
-        t('image/upload/excessiveSize', {
-          sizeInMb: Math.round(sizeInMb * 10) / 10,
-          jpegMb,
-          restMb,
-          format: format.toUpperCase(),
-        }),
-      )
-    ) {
-      return
+      const image = new Image()
+      image.onload = (e) => {
+        resolve({
+          dataURL: result,
+          width: e.target.width,
+          height: e.target.height,
+        })
+      }
+      image.src = result
     }
-  }
-
-  const reader = new window.FileReader()
-  reader.addEventListener('load', () => onChange(e, reader.result))
-  reader.readAsDataURL(file)
+    reader.readAsDataURL(file)
+  })
 }
 
 const ImageInput = ({
@@ -74,41 +63,122 @@ const ImageInput = ({
   maxWidth = 200,
   width,
   height,
-}) => (
-  <div style={{ position: 'relative' }}>
-    <label>
-      <Label {...styles.label}>{label}</Label>
-      {src && (
-        <MdClose
-          {...styles.close}
-          onClick={(e) => {
-            e.preventDefault()
-            onChange(e, undefined)
+}) => {
+  const { query } = useRouter()
+  const repoId = getRepoIdFromQuery(query)
+  const [error, setError] = useState(null)
+
+  const [isPending, startTransition] = useTransition()
+
+  const handleImageUpload = (event) => {
+    setError(null)
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    startTransition(async () => {
+      try {
+        // Show preview immediately
+        const { width, height } = await getImageData(file)
+
+        // Get upload URL
+        const uploadUrlRes = await fetch('/api/upload-image', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            filename: file.name,
+            path: `repos/${repoId}/images`,
+            contentType: file.type,
+          }),
+        })
+
+        // Upload the image
+        if (uploadUrlRes.ok) {
+          const { url, fields } = await uploadUrlRes.json()
+
+          const formData = new FormData()
+          Object.entries(fields).forEach(([key, value]) => {
+            formData.append(key, value)
+          })
+          formData.append('file', file)
+
+          const uploadRes = await fetch(url, {
+            method: 'POST',
+            body: formData,
+          })
+
+          // Upload succeeded
+          if (uploadRes.ok) {
+            const finalUrl = new URL(
+              fields.key,
+              process.env.NEXT_PUBLIC_S3_ASSETS_BASE_URL.replace(/\/?$/, '/'),
+            )
+            // Append original image dimensions
+            finalUrl.searchParams.set('size', `${width}x${height}`)
+            onChange(event, finalUrl.toString())
+          } else {
+            console.error('Upload Error:', uploadRes)
+            setError(uploadRes.statusText)
+          }
+        } else {
+          console.error('Failed to get pre-signed URL.', uploadUrlRes)
+          setError(uploadUrlRes.statusText)
+        }
+      } catch (error) {
+        setError(error.message)
+        console.error(error)
+      }
+    })
+  }
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <label>
+        <Label {...styles.label}>{label}</Label>
+        {src && (
+          <MdClose
+            {...styles.close}
+            onClick={(e) => {
+              e.preventDefault()
+              onChange(e, undefined)
+            }}
+          />
+        )}
+        <img
+          src={src || placeholder || '/static/placeholder.png'}
+          {...imageStyles}
+          style={{
+            maxWidth,
+            maxHeight,
+            objectFit: 'cover',
+            objectPosition: 'center',
+            width: width || '100%',
+            height,
+            backgroundColor: dark ? '#1F1F1F' : '#fff',
           }}
+          alt=''
         />
-      )}
-      <img
-        src={src || placeholder || '/static/placeholder.png'}
-        {...imageStyles}
-        style={{
-          maxWidth,
-          maxHeight,
-          objectFit: 'cover',
-          objectPosition: 'center',
-          width: width || (src ? undefined : '100%'),
-          height,
-          backgroundColor: dark ? '#1F1F1F' : '#fff',
-        }}
-        alt=''
-      />
-      <input
-        type='file'
-        accept='image/jpeg,image/png,image/gif,image/svg+xml'
-        {...styles.input}
-        onChange={readImage(onChange, t)}
-      />
-    </label>
-  </div>
-)
+        <input
+          type='file'
+          accept='image/jpeg,image/png,image/gif,image/svg+xml'
+          {...styles.input}
+          onChange={handleImageUpload}
+          disabled={isPending}
+        />
+        {isPending && (
+          <div {...styles.spinner}>
+            <Spinner />
+          </div>
+        )}
+        {error && (
+          <div {...styles.spinner}>
+            <ErrorMessage error={error} />
+          </div>
+        )}
+      </label>
+    </div>
+  )
+}
 
 export default withT(ImageInput)
