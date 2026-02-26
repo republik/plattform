@@ -1,8 +1,14 @@
-import { createPresignedPost } from '@aws-sdk/s3-presigned-post'
 import { S3Client } from '@aws-sdk/client-s3'
+import { createPresignedPost } from '@aws-sdk/s3-presigned-post'
+import { meHasRole } from 'lib/graphql/me-has-role'
 import { v4 as uuidv4 } from 'uuid'
 
 export async function POST(request: Request) {
+  const userHasNecessaryPermissions = await meHasRole('editor')
+  if (!userHasNecessaryPermissions) {
+    return new Response('Unauthorized', { status: 401 })
+  }
+
   const { filename, path, contentType } = await request.json()
 
   const ext = filename.match(/(\.[a-zA-Z0-9]+)$/)?.[1] ?? ''

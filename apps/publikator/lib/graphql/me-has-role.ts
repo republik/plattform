@@ -15,6 +15,8 @@ export async function meHasRole(role: string): Promise<boolean> {
         'Content-Type': 'application/json',
         // Attach headers to the request to ensure `me` is returned
         Cookie: cookie.toString(),
+        'x-api-gateway-client': process.env.API_GATEWAY_CLIENT ?? 'publikator',
+        'x-api-gateway-token': process.env.API_GATEWAY_TOKEN ?? '',
       },
     },
   )
