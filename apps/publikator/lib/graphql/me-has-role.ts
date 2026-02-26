@@ -4,7 +4,7 @@ import { cookies } from 'next/headers'
  * Function to fetch the roles of the user and updated cookies
  */
 export async function meHasRole(role: string): Promise<boolean> {
-  const cookie = cookies()
+  const cookie = await cookies()
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}?query={me{roles}}`,
