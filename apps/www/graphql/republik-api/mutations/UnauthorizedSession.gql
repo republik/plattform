@@ -1,0 +1,29 @@
+query unauthorizedSession(
+  $email: String!
+  $token: String!
+  $tokenType: SignInTokenType!
+) {
+  echo {
+    ipAddress
+    userAgent
+    country
+    city
+  }
+  unauthorizedSession(
+    email: $email
+    token: { type: $tokenType, payload: $token }
+  ) {
+    newUser
+    enabledSecondFactors
+    requiredConsents
+    requiredFields
+    session {
+      ipAddress
+      userAgent
+      country
+      city
+      phrase
+      isCurrent
+    }
+  }
+}
