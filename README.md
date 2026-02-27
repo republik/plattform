@@ -52,65 +52,8 @@ This turborepo has some additional tools already setup for you:
 To get started you'll need:
 
 - yarn v1.22
-- Node.js v20
-- Docker or native postgresql@14, elasticsearch@6 and redis
-
-<details><summary>Setup with Docker</summary>
-<p>
-
-The included [docker-compose.yml](docker-compose.yml) starts all external-services. Currently that's: postgresql, redis, elasticsearch (and kibana).
-
-The data is persisted in `./docker-data/`.
-
-```
-docker-compose up [-d]
-```
-
-##### Postgresql in docker
-
-We recommend you install the postgresql client tools on your machine to interact with the database. The tests scripts also depend on the clients being installed.
-
-```
-# linux
-sudo apt install postgresql-client-12
-```
-
-When postgresql is running in docker, client tools like `psql` or `createdb`/`dropdb` don't automatically connect to it. They try to access postgresql via a local socket, when instead you want them to connect via network to localhost. To make your life easier, you can add the following environment variables to `~/.bashrc` / `~/.zshrc` so the client tools connect to localhost per default.
-
-```
-export PGHOST=127.0.0.1
-export PGUSER=postgres
-```
-
-</p>
-</details>
-
-<details><summary>Native Setup with Homebrew</summary>
-<p>
-
-```bash
-brew install postgresql@12 elasticsearch@6 redis nvm
-nvm install 14
-nvm alias default 14
-npm install -g yarn@1.22
-brew services start postgresql@12
-brew services start elasticsearch@6
-brew services start redis
-```
-
-#### Docker Kibana accessing native Elasticsearch
-
-```bash
-docker run -p 5601:5601 -e ELASTICSEARCH_HOSTS=http://host.docker.internal:9200 docker.elastic.co/kibana/kibana-oss:6.7.0
-```
-
-Note:
-
-- Elasticsearch and Kibana versions must match, ckeck ES version at `http://localhost:9200/`
-- `ELASTICSEARCH_HOSTS` must be accessible [within docker](https://nickjanetakis.com/blog/docker-tip-65-get-your-docker-hosts-ip-address-from-in-a-container).
-
-</p>
-</details>
+- Node.js v24
+- Docker
 
 ### Env
 
@@ -157,6 +100,10 @@ If these two env-variables don't match, www will be stuck in a redirection loop 
 ### Database Setup
 
 ```bash
+docker compose up
+```
+
+```bash
 yarn install
 yarn build
 yarn dev:setup
@@ -165,6 +112,12 @@ yarn dev:setup
 ### Develop
 
 To develop all apps and packages, run the following command:
+
+```bash
+docker compose up
+```
+
+And in a second shell
 
 ```bash
 yarn dev
@@ -179,6 +132,13 @@ If you don't want all apps to run when using the `dev` script, you can use the `
 For example if you only want to run the republik frontend run `yarn dev --filter=@orbiting/www-app`.
 
 In most cases you have certain dependencies that should be run as well, for example the styleguide if you're developing in the frontend. In that case simply append `...` directly after the filter, to ensure that the additionally to the filtered app, all dependencies are executed as well. (For example in www run: `yarn dev --filter=@orbiting/www-app...`)
+
+For start only frontend and api use:
+
+```bash
+yarn dev --filter=@orbiting/www-app... --filter=@orbiting/api-app...
+```
+
 
 ### Commit Message Format
 
@@ -216,58 +176,6 @@ yarn dev:www
 
 (Obvious )Warning: whatever you do here is for realz, if you login to your account and change things they are changed on republik.ch!
 
-### Development in a secure context
-
-Install the `ngrok` cli: `brew install --cask ngrok`
-
-Login to ngrok with `ngrok authtoken <token>` (You can find your token at https://dashboard.ngrok.com/auth)
-
-After adding the authtoken, you must now add the following tunnels to your ngrok configuration file:
-(Default config path is `~/.ngrok2/ngrok.yml`)
-```yaml
-tunnels:
-  republik-frontend:
-    proto: http
-    addr: 3010
-    hostname: republik.eu.ngrok.io
-  republik-backend:
-    proto: http
-    addr: 5010
-    hostname: api.republik.eu.ngrok.io
-```
-
-Now you must update the following environment variables:
-
-#### Frontend Environment Variables
-```
-API_URL=https://api.republik.eu.ngrok.io/graphql
-API_WS_URL=wss://api.republik.eu.ngrok.io/graphql
-```
-
-#### Backend Environment Variables
-```
-FRONTEND_BASE_URL=https://republik.eu.ngrok.io # optional
-COOKIE_DOMAIN=.republik.eu.ngrok.io
-CORS_ALLOWLIST_URL=http://localhost:3003,http://localhost:3005,http://localhost:3006,http://localhost:3010,http://localhost:3000,https://republik.eu.ngrok.io
-```
-
-Start your frontend and api using:
-
-```bash
-yarn dev --filter=@orbiting/www-app... --filter=@orbiting/api-app...
-```
-
-
-Now run `yarn ngrok:start` in a new terminal inside the workspace-root.
-
-Your local development servers are now relayed to the following ngrok tunnels.
-
-| local-address | ngrok-address                    |
-| :------------ |:---------------------------------|
-| http://localhost:3010 | https://republik.eu.ngrok.io     |
-| http://localhost:5010 | https://api.republik.eu.ngrok.io |
-
-With this you're now able to test payment-options (such as Apple Pay) that are only available in a secure context.
 
 ## Deployment
 
