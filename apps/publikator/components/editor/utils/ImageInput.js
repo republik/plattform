@@ -1,9 +1,9 @@
 import { Label, Spinner } from '@project-r/styleguide'
 import { IconClose as MdClose } from '@republik/icons'
 import { css } from 'glamor'
-import { getRepoIdFromQuery } from 'lib/repoIdHelper'
 import { useRouter } from 'next/router'
 import { useState, useTransition } from 'react'
+import { getRepoIdFromQuery } from '../../../lib/repoIdHelper'
 import withT from '../../../lib/withT'
 import ErrorMessage from '../../ErrorMessage'
 
