@@ -97,7 +97,7 @@ const SignUp = ({
 const signUpMutation = gql`
   mutation requestNewsletter(
     $email: String!
-    $name: NewsletterName!
+    $name: String!
     $context: String!
   ) {
     requestNewsletterSubscription(email: $email, name: $name, context: $context)

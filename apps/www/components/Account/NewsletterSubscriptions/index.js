@@ -27,10 +27,7 @@ export const RESUBSCRIBE_EMAIL = gql`
 `
 
 export const UPDATE_NEWSLETTER_SUBSCRIPTION = gql`
-  mutation updateNewsletterSubscription(
-    $name: NewsletterName!
-    $subscribed: Boolean!
-  ) {
+  mutation updateNewsletterSubscription($name: String!, $subscribed: Boolean!) {
     updateNewsletterSubscription(name: $name, subscribed: $subscribed) {
       ...NewsletterInfo
     }
@@ -39,7 +36,7 @@ export const UPDATE_NEWSLETTER_SUBSCRIPTION = gql`
 `
 
 export const NEWSLETTER_SETTINGS = gql`
-  query myNewsletterSettings($onlyName: NewsletterName) {
+  query myNewsletterSettings($onlyName: String) {
     me {
       id
       newsletterSettings {

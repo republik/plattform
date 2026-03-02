@@ -28,7 +28,7 @@ export const RESUBSCRIBE_EMAIL = gql`
 export const UPDATE_NEWSLETTER_SUBSCRIPTION = gql`
   mutation updateNewsletterSubscription(
     $userId: ID!
-    $name: NewsletterName!
+    $name: String!
     $subscribed: Boolean!
   ) {
     updateNewsletterSubscription(
