@@ -46,9 +46,7 @@ function FollowFormatCard({
             lineHeight: 1.2,
           })}
         >
-          <span data-theme='dark' className={css({ color: 'textSoft' })}>
-            Das war:
-          </span>
+          <span style={{ color: '#909090' }}>Das war:</span>
           <br />
           <Link href={format.meta.path}>{format.meta.title}</Link>
         </h3>
