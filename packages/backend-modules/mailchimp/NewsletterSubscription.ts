@@ -1,66 +1,48 @@
+import { NewsletterConfig } from './config'
+
 export interface NewsletterSubscriptionInterface {
   buildSubscription(
     userId: string,
     interestId: string,
-    subscribed: any,
-    roles: any,
-  ): any
-  allInterestConfigurations(): any
-  interestIdByName(name: any): any
-  interestConfiguration(interestId: any): any
+    subscribed: boolean,
+    roles: string[],
+  ):
+    | (NewsletterConfig & {
+        userId: string
+        subscribed: boolean
+        roles: string[]
+      })
+    | null
+  allInterestConfigurations(): NewsletterConfig[]
+  interestIdByName(name: string): NewsletterConfig | null
+  interestConfiguration(interestId: string): NewsletterConfig | null
 }
 
-const createNewsletterSubscription = (interestConfigurationMap: any) => ({
-  buildSubscription(
-    userId: string,
-    interestId: string,
-    subscribed: any,
-    roles: any,
-  ) {
+export const createNewsletterSubscription = (
+  interestConfigurations: NewsletterConfig[],
+): NewsletterSubscriptionInterface => ({
+  buildSubscription(userId, interestId, subscribed, roles) {
     const interestConfig = this.interestConfiguration(interestId)
     if (!interestConfig) {
-      return
+      return null
     }
     const { name, ...rest } = interestConfig
     const id = Buffer.from(userId + name).toString('base64')
-    return { ...rest, name, id, userId, interestId, subscribed, roles }
+    return { ...rest, name, id, userId, subscribed, roles }
   },
 
   allInterestConfigurations() {
-    return interestConfigurationMap || []
+    return interestConfigurations || []
   },
 
   interestIdByName(name: string) {
-    return interestConfigurationMap.reduce(
-      (
-        oldResult: any,
-        { name: currentName, interestId }: { name: string; interestId: string },
-      ) => {
-        if (currentName === name) return interestId
-        return oldResult
-      },
-      null,
-    )
+    return interestConfigurations.find((config) => config.name === name) ?? null
   },
 
   interestConfiguration(interestId: string) {
-    const interests = interestConfigurationMap.filter(
-      ({ interestId: currentInterestId }: { interestId: string }) =>
-        currentInterestId === interestId,
+    const interest = interestConfigurations.find(
+      (config) => config.interestId === interestId,
     )
-    return interests.length !== 0 ? interests[0] : null
+    return interest ?? null
   },
 })
-
-/* fn is of signature: (data, NewsletterSubscription) => any */
-const withConfiguration = (
-  interestConfiguration: any,
-  fn: (data: any, n: NewsletterSubscriptionInterface) => any,
-) => {
-  const NewsletterSubscription = createNewsletterSubscription(
-    interestConfiguration,
-  )
-  return (data: any) => fn(data, NewsletterSubscription)
-}
-
-export { withConfiguration, createNewsletterSubscription }

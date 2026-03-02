@@ -1,12 +1,5 @@
-import MailchimpInterface from './MailchimpInterface'
-import { NewsletterSubscriptionConfig } from './NewsletterSubscriptionConfig'
-import { withConfiguration, createNewsletterSubscription } from './NewsletterSubscription'
+export { getConfig as getNewsletterSubscriptionConfig } from './config'
 export * from './lib'
 export * from './lib/scheduler'
-
-export {
-  MailchimpInterface,
-  NewsletterSubscriptionConfig,
-  withConfiguration,
-  createNewsletterSubscription
-}
+export { default as MailchimpInterface } from './MailchimpInterface'
+export { createNewsletterSubscription } from './NewsletterSubscription'

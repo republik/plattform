@@ -1,20 +1,21 @@
 import type { PgDb } from 'pogi'
 import { getInterestsForUser } from './getInterestsForUser'
 
+import { getConfig } from '../config'
 import {
   addUserToAudience,
   addUserToMarketingAudience,
 } from './addUserToAudience'
 import { archiveMemberInAudience } from './archiveMemberInAudience'
-import { updateNewsletterSubscriptions } from './updateNewsletterSubscriptions'
-import { getConfig } from '../config'
 import { getSegmentDataForUser } from './getSegmentDataForUser'
+import { updateNewsletterSubscriptions } from './updateNewsletterSubscriptions'
 
 import MailchimpInterface from '../MailchimpInterface'
-import { NewsletterSubscriptionConfig } from '../NewsletterSubscriptionConfig'
 import { createNewsletterSubscription } from '../NewsletterSubscription'
-import { getMergeFieldsForUser } from './getMergeFieldsForUser'
 import { getMailchimpMember } from './getMailchimpMember'
+import { getMergeFieldsForUser } from './getMergeFieldsForUser'
+
+const config = getConfig()
 
 const {
   MAILCHIMP_INTEREST_MEMBER,
@@ -24,14 +25,10 @@ const {
   MAILCHIMP_PROBELESEN_AUDIENCE_ID,
   MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
   MAILCHIMP_REGWALL_TRIAL_AUDIENCE_ID,
-  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-  MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-  MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
-  MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
-  MAILCHIMP_INTEREST_NEWSLETTER_BAB,
   MAILCHIMP_INTEREST_GRANTED_ACCESS,
   MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL,
-} = getConfig()
+  MAILCHIMP_NEWSLETTER_CONFIGS,
+} = config
 
 export type EnforceSubscriptionsParams = {
   userId: string
@@ -77,12 +74,11 @@ export async function enforceSubscriptions({
 
   const hasActiveTrial = interests[MAILCHIMP_INTEREST_GRANTED_ACCESS]
 
-  const subscribedToFreeNewsletters =
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] ||
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] ||
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW] ||
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY] ||
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_BAB]
+  const subscribedToFreeNewsletters = MAILCHIMP_NEWSLETTER_CONFIGS.some(
+    (config) => {
+      return config.free && interests[config.interestId]
+    },
+  )
 
   const activeOrPastRegwallTrial =
     interests[MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]
@@ -91,7 +87,7 @@ export async function enforceSubscriptions({
     activeOrPastRegwallTrial || subscribedToFreeNewsletters
 
   const newsletterSubscription = createNewsletterSubscription(
-    NewsletterSubscriptionConfig,
+    MAILCHIMP_NEWSLETTER_CONFIGS,
   )
 
   await updateNewsletterSubscriptions(

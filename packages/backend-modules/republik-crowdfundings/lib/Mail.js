@@ -23,14 +23,16 @@ const {
   addUserToAudience,
   addUserToMarketingAudience,
   archiveMemberInAudience,
-  NewsletterSubscriptionConfig,
+  getNewsletterSubscriptionConfig,
   enforceSubscriptions,
   resubscribeEmail,
 } = require('@orbiting/backend-modules-mailchimp')
 
 const { FRONTEND_BASE_URL } = process.env
 
-const mail = createMail(NewsletterSubscriptionConfig)
+const mail = createMail(
+  getNewsletterSubscriptionConfig().MAILCHIMP_NEWSLETTER_CONFIGS,
+)
 
 mail.getSegmentDataForUser = getSegmentDataForUser
 mail.getInterestsForUser = getInterestsForUser
@@ -815,7 +817,7 @@ mail.getPledgeMergeVars = async (
   const creditor = payment?.pledge?.package?.bankAccount
 
   const monthlyActiveMemberships = await pgdb.queryOneColumn(`
-    SELECT m.id 
+    SELECT m.id
     FROM memberships m
     JOIN "membershipTypes" t
       ON m."membershipTypeId" = t.id
