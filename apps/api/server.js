@@ -432,7 +432,10 @@ const runOnce = async () => {
     MEMBERSHIP_SCHEDULER !== 'false' &&
     (!DEV || MEMBERSHIP_SCHEDULER === 'true')
   ) {
-    await queue.schedule('scheduler:memberships-owners', '*/10 * * * *') // every 10 minutes
+    await queue.schedule('scheduler:memberships-owners', '*/15 * * * *', null, {
+      retryLimit: 0,
+      expireInMinutes: 30,
+    }) // every 15 minutes
     await queue.schedule('scheduler:yearly-abo-winbacks', '*/10 * * * *') // every 10 minutes
     await queue.schedule('scheduler:upgrade', '*/10 * * * *') // every 10 minutes
     await queue.schedule('scheduler:changeover-deactivate', '*/10 * * * *') // every 10 minutes

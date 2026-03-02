@@ -4,7 +4,7 @@ import { cookies } from 'next/headers'
  * Function to fetch the roles of the user and updated cookies
  */
 export async function meHasRole(role: string): Promise<boolean> {
-  const cookie = cookies()
+  const cookie = await cookies()
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}?query={me{roles}}`,
@@ -15,6 +15,8 @@ export async function meHasRole(role: string): Promise<boolean> {
         'Content-Type': 'application/json',
         // Attach headers to the request to ensure `me` is returned
         Cookie: cookie.toString(),
+        'x-api-gateway-client': process.env.API_GATEWAY_CLIENT ?? 'publikator',
+        'x-api-gateway-token': process.env.API_GATEWAY_TOKEN ?? '',
       },
     },
   )
