@@ -1,14 +1,13 @@
 import { User } from '@orbiting/backend-modules-types'
 import MailchimpInterface from '../MailchimpInterface'
 import { SubscriptionHandlerMissingMailError } from './errors'
-import { mergeFieldNames } from './getMergeFieldsForUser'
 import { NewsletterSubscriptionInterface } from '../NewsletterSubscription'
 
 type UpdateNewsletterSubsciptionsParams = {
   user: User
   // interests: { "some_interest_id": true }
   interests: Record<string, boolean>
-  mergeFields: Record<string, string>
+  mergeFields: Record<string, string | Date | number | undefined>
   status: any
 }
 

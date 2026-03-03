@@ -1,33 +1,17 @@
 import { getConfig } from '../config'
 import {
   MembershipType,
-  MergeFieldName,
   SegmentData,
   SubscriptionType,
+  UserMergeFields,
 } from '../types'
 
 type User = { firstName: string; lastName: string; email: string }
 type GetMergeFieldsForUserParams = { user: User; segmentData: SegmentData }
 type SubscriptionState = 'Cancelled' | 'Autopay' | 'Active' | undefined
 type TrialState = 'Active' | 'Past' | undefined
-export type UserMergeFields = Record<
-  MergeFieldName,
-  string | number | Date | undefined
->
 
 const { MAILCHIMP_NEWSLETTER_CONFIGS, REGWALL_TRIAL_CAMPAIGN_ID } = getConfig()
-
-export const mergeFieldNames = {
-  firstName: 'FNAME',
-  lastName: 'LNAME',
-  latestPledgeAmount: 'PL_AMOUNT',
-  subscriptionEndDate: 'END_DATE',
-  subscriptionType: 'SUB_TYPE',
-  subscriptionState: 'SUB_STATE',
-  trialState: 'TRIAL',
-  regwallTrialState: 'REG_TRIAL',
-  specialOffer: 'DISCOUNT',
-} as const
 
 export async function getMergeFieldsForUser({
   user,
@@ -54,15 +38,15 @@ export async function getMergeFieldsForUser({
   )
 
   return {
-    [mergeFieldNames.firstName]: user?.firstName,
-    [mergeFieldNames.lastName]: user?.lastName,
-    [mergeFieldNames.latestPledgeAmount]: latestMembershipPledgeAmount,
-    [mergeFieldNames.subscriptionEndDate]: subscriptionEndDate,
-    [mergeFieldNames.subscriptionType]: subscriptionType,
-    [mergeFieldNames.subscriptionState]: subscriptionState,
-    [mergeFieldNames.trialState]: trialState,
-    [mergeFieldNames.regwallTrialState]: regwallTrialState,
-    [mergeFieldNames.specialOffer]: specialOffer,
+    FNAME: user?.firstName ?? '',
+    LNAME: user?.lastName ?? '',
+    PL_AMOUNT: latestMembershipPledgeAmount,
+    END_DATE: subscriptionEndDate,
+    SUB_TYPE: subscriptionType,
+    SUB_STATE: subscriptionState,
+    TRIAL: trialState,
+    REG_TRIAL: regwallTrialState,
+    DISCOUNT: specialOffer,
     ...newsletterMergeFields,
   }
 }
