@@ -37,7 +37,7 @@ export async function listSftpFiles(
   ).flat()
 
   const camtFiles = await client
-    .list(basePath, 'camt.053*')
+    .list(basePath, (fileInfo) => !!fileInfo.name.match(/camt\.053/))
     .then((fileInfos) => {
       return fileInfos.map((fileInfo) => {
         return path.join(basePath, fileInfo.name)
