@@ -5,15 +5,26 @@ const config = {
   MAILCHIMP_INTEREST_GRANTED_ACCESS: 'MAILCHIMP_INTEREST_GRANTED_ACCESS',
   MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL:
     'MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL',
-  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR:
-    'MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR',
-  MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE:
-    'MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE',
-  MAILCHIMP_INTEREST_NEWSLETTER_WDWWW: 'MAILCHIMP_INTEREST_NEWSLETTER_WDWWW',
-  MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY: 'MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY',
-  MAILCHIMP_INTEREST_NEWSLETTER_BAB: 'MAILCHIMP_INTEREST_NEWSLETTER_BAB',
-  MAILCHIMP_INTEREST_NEWSLETTER_DAILY: 'MAILCHIMP_INTEREST_NEWSLETTER_DAILY',
-  MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY: 'MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY',
+  MAILCHIMP_NEWSLETTER_CONFIGS: [
+    {
+      name: 'DAILY',
+      interestID: 'daily',
+      mergeField: 'NL_DAILY',
+      autoSubscribeNewMember: true,
+    },
+    {
+      name: 'WEEKLY',
+      interestID: 'interest_WEEKLY',
+      mergeField: 'NL_WEEKLY',
+      autoSubscribeNewMember: true,
+    },
+    {
+      name: 'SUNDAY',
+      interestID: 'interest_SUNDAY',
+      mergeField: 'NL_SUNDAY',
+      autoSubscribeNewMember: true,
+    },
+  ],
   REGWALL_TRIAL_CAMPAIGN_ID: 'REGWALL_TRIAL_CAMPAIGN_ID',
 }
 jest.mock('../../config', () => ({
@@ -81,9 +92,8 @@ describe('tests that interests are returned correctly from user data', () => {
     expect(interests[config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]).toBeFalsy()
     expect(interests[config.MAILCHIMP_INTEREST_GRANTED_ACCESS]).toBeTruthy()
     expect(interests[config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]).toBeFalsy()
-    expect(interests[config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]).toBeFalsy()
-    expect(interests[config.MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY]).toBeFalsy()
-    expect(interests[config.MAILCHIMP_INTEREST_NEWSLETTER_BAB]).toBeFalsy()
+    expect(interests['interest_WEEKLY']).toBeFalsy()
+    expect(interests['interest_SUNDAY']).toBeFalsy()
   })
 
   test('has past regwall trial', async () => {

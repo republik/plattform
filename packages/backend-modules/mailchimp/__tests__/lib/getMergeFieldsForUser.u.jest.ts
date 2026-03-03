@@ -10,15 +10,26 @@ const config = {
   MAILCHIMP_MARKETING_AUDIENCE_ID: 'MAILCHIMP_MARKETING_AUDIENCE_ID',
   MAILCHIMP_PROBELESEN_AUDIENCE_ID: 'MAILCHIMP_PROBELESEN_AUDIENCE_ID',
   MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID: 'MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID',
-  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR:
-    'MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR',
-  MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE:
-    'MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE',
-  MAILCHIMP_INTEREST_NEWSLETTER_WDWWW: 'MAILCHIMP_INTEREST_NEWSLETTER_WDWWW',
-  MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY: 'MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY',
-  MAILCHIMP_INTEREST_NEWSLETTER_BAB: 'MAILCHIMP_INTEREST_NEWSLETTER_BAB',
-  MAILCHIMP_INTEREST_NEWSLETTER_DAILY: 'MAILCHIMP_INTEREST_NEWSLETTER_DAILY',
-  MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY: 'MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY',
+  MAILCHIMP_NEWSLETTER_CONFIGS: [
+    {
+      name: 'DAILY',
+      interestID: 'daily',
+      mergeField: 'NL_DAILY',
+      autoSubscribeNewMember: true,
+    },
+    {
+      name: 'WEEKLY',
+      interestID: 'WEEKLY',
+      mergeField: 'NL_WEEKLY',
+      autoSubscribeNewMember: true,
+    },
+    {
+      name: 'PROJECTR',
+      interestID: 'PROJECTR',
+      mergeField: 'NL_PROJ_R',
+      autoSubscribeNewMember: true,
+    },
+  ],
   REGWALL_TRIAL_CAMPAIGN_ID: 'REGWALL_TRIAL_CAMPAIGN_ID',
 }
 jest.mock('../../config', () => ({
@@ -27,11 +38,8 @@ jest.mock('../../config', () => ({
   },
 }))
 
-import { SegmentData } from '../../types'
-import {
-  getMergeFieldsForUser,
-  UserMergeFields,
-} from './../../lib/getMergeFieldsForUser'
+import { SegmentData, UserMergeFields } from '../../types'
+import { getMergeFieldsForUser } from './../../lib/getMergeFieldsForUser'
 
 jest.mock('@orbiting/backend-modules-republik/lib/Newsletter', () => ({
   getConsentLink: jest.fn(() => 'getConsentLink mocked'),
@@ -52,9 +60,9 @@ describe('test that merge fields are generated correctly from user data with mis
     }
 
     const mergeFields = getMergeFieldsForUser({ user, segmentData })
-    const expectedResult: UserMergeFields = {
-      FNAME: undefined,
-      LNAME: undefined,
+    const expectedResult: UserMergeFields & { [x: string]: any } = {
+      FNAME: '',
+      LNAME: '',
       PL_AMOUNT: 0,
       END_DATE: undefined,
       SUB_TYPE: undefined,
@@ -65,11 +73,6 @@ describe('test that merge fields are generated correctly from user data with mis
       NL_DAILY: undefined,
       NL_WEEKLY: undefined,
       NL_PROJ_R: undefined,
-      NL_CLIMATE: undefined,
-      NL_WDWWW: undefined,
-      NL_SUNDAY: undefined,
-      NL_BAB: undefined,
-      NL_ACCOMPL: undefined,
     }
     expect(mergeFields).resolves.toStrictEqual(expectedResult)
   })
@@ -92,7 +95,7 @@ describe('test that merge fields are generated correctly from user data with mis
     }
 
     const mergeFields = getMergeFieldsForUser({ user, segmentData })
-    const expectedResult: UserMergeFields = {
+    const expectedResult: UserMergeFields & { [x: string]: any } = {
       FNAME: 'Test',
       LNAME: 'Test',
       PL_AMOUNT: 0,
@@ -105,11 +108,6 @@ describe('test that merge fields are generated correctly from user data with mis
       NL_DAILY: undefined,
       NL_WEEKLY: undefined,
       NL_PROJ_R: undefined,
-      NL_CLIMATE: undefined,
-      NL_WDWWW: undefined,
-      NL_SUNDAY: undefined,
-      NL_BAB: undefined,
-      NL_ACCOMPL: undefined,
     }
     expect(mergeFields).resolves.toStrictEqual(expectedResult)
   })
