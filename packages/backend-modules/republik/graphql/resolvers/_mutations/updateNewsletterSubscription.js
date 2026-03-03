@@ -7,6 +7,9 @@ const {
 } = require('@orbiting/backend-modules-auth')
 
 const { authenticate } = require('../../../lib/Newsletter')
+const {
+  getNewsletterSubscriptionConfig,
+} = require('@orbiting/backend-modules-mailchimp')
 
 // this endpoint is called for two distinct situations
 // first: from the frontend and admin via userId, name, subscribed
@@ -82,12 +85,16 @@ module.exports = async (_, args, context) => {
   }
 
   try {
+    const nlconfig =
+      getNewsletterSubscriptionConfig().MAILCHIMP_NEWSLETTER_CONFIGS.find(
+        (config) => config.name === name,
+      )
     const subscriptions = await updateNewsletterSubscriptions(
       {
         user,
-        interests: {},
-        name,
-        subscribed,
+        interests: {
+          [nlconfig.interestId]: subscribed,
+        },
       },
       context,
     )
@@ -99,8 +106,6 @@ module.exports = async (_, args, context) => {
       subscribeToOnboardingMails: false,
       subscribeToEditorialNewsletters: false,
       pgdb,
-      name,
-      subscribed,
     })
 
     if (subscriptions.length) {

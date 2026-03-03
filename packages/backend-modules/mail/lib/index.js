@@ -28,13 +28,12 @@ const errors = require('../errors')
 
 module.exports = {
   ...handlers,
-  createMail: (interestConfigurations) => {
-    if (!interestConfigurations)
+  createMail: (newsletterConfigs) => {
+    if (!newsletterConfigs)
       throw new errors.SubscriptionConfigurationMissingMailError()
 
-    const NewsletterSubscription = createNewsletterSubscription(
-      interestConfigurations,
-    )
+    const NewsletterSubscription =
+      createNewsletterSubscription(newsletterConfigs)
 
     const mail = { ...errors }
 

@@ -36,8 +36,6 @@ export type EnforceSubscriptionsParams = {
   subscribeToOnboardingMails?: boolean
   subscribeToEditorialNewsletters?: boolean
   pgdb: PgDb
-  name?: string
-  subscribed?: boolean
 }
 
 export async function enforceSubscriptions({
@@ -46,8 +44,6 @@ export async function enforceSubscriptions({
   subscribeToOnboardingMails = false,
   subscribeToEditorialNewsletters = false,
   pgdb,
-  name,
-  subscribed,
 }: EnforceSubscriptionsParams) {
   const user = !!userId && (await pgdb.public.users.findOne({ id: userId }))
 
@@ -95,8 +91,6 @@ export async function enforceSubscriptions({
       user: user || { email },
       interests,
       mergeFields,
-      name,
-      subscribed,
       status: mailchimpMember?.status,
     },
     newsletterSubscription,

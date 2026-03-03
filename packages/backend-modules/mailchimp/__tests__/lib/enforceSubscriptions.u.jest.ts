@@ -205,8 +205,6 @@ describe('test enforceSubscriptions', () => {
         SUB_STATE: undefined,
         SUB_TYPE: undefined,
         TRIAL: undefined,
-        NL_LINK_CA: undefined,
-        NL_LINK_WD: undefined,
         NL_DAILY: undefined,
         NL_WEEKLY: undefined,
         NL_PROJ_R: undefined,

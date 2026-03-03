@@ -14,12 +14,12 @@ export interface NewsletterSubscriptionInterface {
       })
     | null
   allInterestConfigurations(): NewsletterConfig[]
-  interestIdByName(name: string): NewsletterConfig | null
+  interestConfigByName(name: string): NewsletterConfig | null
   interestConfiguration(interestId: string): NewsletterConfig | null
 }
 
 export const createNewsletterSubscription = (
-  interestConfigurations: NewsletterConfig[],
+  newsletterConfigs: NewsletterConfig[],
 ): NewsletterSubscriptionInterface => ({
   buildSubscription(userId, interestId, subscribed, roles) {
     const interestConfig = this.interestConfiguration(interestId)
@@ -32,15 +32,15 @@ export const createNewsletterSubscription = (
   },
 
   allInterestConfigurations() {
-    return interestConfigurations || []
+    return newsletterConfigs || []
   },
 
-  interestIdByName(name: string) {
-    return interestConfigurations.find((config) => config.name === name) ?? null
+  interestConfigByName(name: string) {
+    return newsletterConfigs.find((config) => config.name === name) ?? null
   },
 
   interestConfiguration(interestId: string) {
-    const interest = interestConfigurations.find(
+    const interest = newsletterConfigs.find(
       (config) => config.interestId === interestId,
     )
     return interest ?? null

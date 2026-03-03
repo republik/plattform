@@ -6,10 +6,9 @@ import { NewsletterSubscriptionInterface } from '../NewsletterSubscription'
 
 type UpdateNewsletterSubsciptionsParams = {
   user: User
-  interests: any
-  mergeFields: any
-  name?: string
-  subscribed?: boolean
+  // interests: { "some_interest_id": true }
+  interests: Record<string, boolean>
+  mergeFields: Record<string, string>
   status: any
 }
 
@@ -18,29 +17,21 @@ export async function updateNewsletterSubscriptions(
     user,
     interests = {},
     mergeFields = {},
-    name,
-    subscribed,
     status,
   }: UpdateNewsletterSubsciptionsParams,
   NewsletterSubscription: NewsletterSubscriptionInterface,
 ) {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
-  // single subscription update
-  if (!Object.keys(interests).length && !!name) {
-    const interestId = NewsletterSubscription.interestIdByName(name)
-    interests[interestId] = subscribed
-    mergeFields[mergeFieldNames[interestId]] = subscribed
-      ? 'Subscribed'
-      : 'Unsubscribed'
-  }
-
   const { email, roles } = user
 
   Object.keys(interests).forEach((interestId) => {
-    mergeFields[mergeFieldNames[interestId]] = interests[interestId]
-      ? 'Subscribed'
-      : 'Unsubscribed'
+    const config = NewsletterSubscription.interestConfiguration(interestId)
+    if (config) {
+      mergeFields[config.mergeField] = interests[interestId]
+        ? 'Subscribed'
+        : 'Unsubscribed'
+    }
   })
 
   const body: any = {

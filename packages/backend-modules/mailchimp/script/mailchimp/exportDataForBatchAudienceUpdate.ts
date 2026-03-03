@@ -62,8 +62,6 @@ async function main(argv: any) {
       'SUB_TYPE',
       'SUB_STATE',
       'TRIAL',
-      'NL_LINK_CA',
-      'NL_LINK_WD',
       'NL_DAILY',
       'NL_WEEKLY',
       'NL_PROJ_R',
@@ -123,8 +121,6 @@ async function main(argv: any) {
       SUB_TYPE: mergeFields.SUB_TYPE,
       SUB_STATE: mergeFields.SUB_STATE,
       TRIAL: mergeFields.TRIAL,
-      NL_LINK_CA: mergeFields.NL_LINK_CA,
-      NL_LINK_WD: mergeFields.NL_LINK_WD,
       NL_DAILY: interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY]
         ? 'Subscribed'
         : 'Unsubscribed',
