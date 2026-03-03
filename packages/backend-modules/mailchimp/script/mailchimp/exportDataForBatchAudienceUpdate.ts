@@ -7,24 +7,20 @@ import csvParser from 'csv-parser'
 import { PgDb } from '@orbiting/backend-modules-base/lib'
 import { UserRow } from '@orbiting/backend-modules-types'
 import bluebird from 'bluebird'
-import {
-  getInterestsForUser,
-  getMergeFieldsForUser,
-  getSegmentDataForUser,
-} from '../../lib'
+import { getMergeFieldsForUser, getSegmentDataForUser } from '../../lib'
 import { MailchimpContact } from '../../types'
 import { getConfig } from '../../config'
 import MailchimpInterface from '../../MailchimpInterface'
 
 const {
-  MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
-  MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-  MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-  MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
-  MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
-  MAILCHIMP_INTEREST_NEWSLETTER_BAB,
-  MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
+  // MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
+  // MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
+  // MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
+  // MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
+  // MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
+  // MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
+  // MAILCHIMP_INTEREST_NEWSLETTER_BAB,
+  // MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
 } = getConfig()
 
 type CsvImport = {
@@ -108,7 +104,7 @@ async function main(argv: any) {
       pgdb,
       mailchimpMember,
     })
-    const interests = await getInterestsForUser({ user, segmentData })
+    // const interests = await getInterestsForUser({ user, segmentData })
     const mergeFields = await getMergeFieldsForUser({ user, segmentData })
 
     const record: Record<string, any> = {
@@ -121,30 +117,30 @@ async function main(argv: any) {
       SUB_TYPE: mergeFields.SUB_TYPE,
       SUB_STATE: mergeFields.SUB_STATE,
       TRIAL: mergeFields.TRIAL,
-      NL_DAILY: interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY]
-        ? 'Subscribed'
-        : 'Unsubscribed',
-      NL_WEEKLY: interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]
-        ? 'Subscribed'
-        : 'Unsubscribed',
-      NL_PROJ_R: interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]
-        ? 'Subscribed'
-        : 'Unsubscribed',
-      NL_CLIMATE: interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE]
-        ? 'Subscribed'
-        : 'Unsubscribed',
-      NL_WDWWW: interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]
-        ? 'Subscribed'
-        : 'Unsubscribed',
-      NL_SUNDAY: interests[MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY]
-        ? 'Subscribed'
-        : 'Unsubscribed',
-      NL_BAB: interests[MAILCHIMP_INTEREST_NEWSLETTER_BAB]
-        ? 'Subscribed'
-        : 'Unsubscribed',
-      NL_ACCOMPL: interests[MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]
-        ? 'Subscribed'
-        : 'Unsubscribed',
+      // NL_DAILY: interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY]
+      //   ? 'Subscribed'
+      //   : 'Unsubscribed',
+      // NL_WEEKLY: interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]
+      //   ? 'Subscribed'
+      //   : 'Unsubscribed',
+      // NL_PROJ_R: interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]
+      //   ? 'Subscribed'
+      //   : 'Unsubscribed',
+      // NL_CLIMATE: interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE]
+      //   ? 'Subscribed'
+      //   : 'Unsubscribed',
+      // NL_WDWWW: interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]
+      //   ? 'Subscribed'
+      //   : 'Unsubscribed',
+      // NL_SUNDAY: interests[MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY]
+      //   ? 'Subscribed'
+      //   : 'Unsubscribed',
+      // NL_BAB: interests[MAILCHIMP_INTEREST_NEWSLETTER_BAB]
+      //   ? 'Subscribed'
+      //   : 'Unsubscribed',
+      // NL_ACCOMPL: interests[MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]
+      //   ? 'Subscribed'
+      //   : 'Unsubscribed',
     }
 
     if (audience === 'newsletter') {
@@ -180,6 +176,7 @@ async function main(argv: any) {
 
 async function getMailchimpMember(
   email: string,
+  // @ts-expect-error value never read
   data: string[],
 ): Promise<MailchimpContact | undefined> {
   const mailchimpMember: MailchimpContact = {
@@ -190,47 +187,47 @@ async function getMailchimpMember(
     interests: {},
   }
   const interests = {
-    [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
-    [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false,
-    [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
-    [MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE]: false,
-    [MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]: false,
-    [MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]: false,
-    [MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY]: false,
-    [MAILCHIMP_INTEREST_NEWSLETTER_BAB]: false,
+    // [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
+    // [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false,
+    // [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
+    // [MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE]: false,
+    // [MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]: false,
+    // [MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]: false,
+    // [MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY]: false,
+    // [MAILCHIMP_INTEREST_NEWSLETTER_BAB]: false,
   }
 
-  if (data.includes('DAILY')) {
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
-  }
+  // if (data.includes('DAILY')) {
+  //   interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
+  // }
 
-  if (data.includes('WEEKLY')) {
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
-  }
+  // if (data.includes('WEEKLY')) {
+  //   interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
+  // }
 
-  if (data.includes('PROJECTR')) {
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
-  }
+  // if (data.includes('PROJECTR')) {
+  //   interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
+  // }
 
-  if (data.includes('CHALLENGE_ACCEPTED')) {
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] = true
-  }
+  // if (data.includes('CHALLENGE_ACCEPTED')) {
+  //   interests[MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE] = true
+  // }
 
-  if (data.includes('WDWWW')) {
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW] = true
-  }
+  // if (data.includes('WDWWW')) {
+  //   interests[MAILCHIMP_INTEREST_NEWSLETTER_WDWWW] = true
+  // }
 
-  if (data.includes('ACCOMPLICE')) {
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE] = true
-  }
+  // if (data.includes('ACCOMPLICE')) {
+  //   interests[MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE] = true
+  // }
 
-  if (data.includes('SUNDAY')) {
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY] = true
-  }
+  // if (data.includes('SUNDAY')) {
+  //   interests[MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY] = true
+  // }
 
-  if (data.includes('BAB')) {
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_BAB] = true
-  }
+  // if (data.includes('BAB')) {
+  //   interests[MAILCHIMP_INTEREST_NEWSLETTER_BAB] = true
+  // }
 
   mailchimpMember.interests = interests
   return mailchimpMember
