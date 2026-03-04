@@ -47,6 +47,7 @@ const getPublicUser = gql`
         nodes {
           id
           active
+          filters
           isEligibleForNotifications
         }
       }

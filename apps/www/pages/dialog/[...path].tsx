@@ -1,5 +1,5 @@
 import { DiscussionNotificationOption } from '#graphql/republik-api/__generated__/gql/graphql'
-import FollowDiscussionButton from '@app/components/follow/follow-discussion-button'
+import FollowDiscussionDropdown from '@app/components/follow/follow-discussion-dropdown'
 import { DialogPaynote } from '@app/components/paynotes/paynotes-in-trial/dialog'
 import {
   Center,
@@ -73,7 +73,7 @@ const DialogContent = () => {
             </Interaction.H1>
             <br />
             <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
-              <FollowDiscussionButton
+              <FollowDiscussionDropdown
                 discussionId={discussionContext?.discussion?.id}
                 notificationOption={
                   discussionContext?.discussion?.userPreference

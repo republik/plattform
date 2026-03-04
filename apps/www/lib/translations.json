@@ -7032,18 +7032,6 @@
       "value": "Gefolgte Profile"
     },
     {
-      "key": "Notifications/settings/authors/summary/0",
-      "value": "Sie folgen noch keinen Personen."
-    },
-    {
-      "key": "Notifications/settings/authors/summary/1",
-      "value": "Sie folgen einer Person:"
-    },
-    {
-      "key": "Notifications/settings/authors/summary/other",
-      "value": "Sie folgen {count} Personen:"
-    },
-    {
       "key": "Notifications/settings/back",
       "value": "Zu Ihren Benachrichtigungen"
     },
@@ -8085,6 +8073,30 @@
     },
     {
       "key": "follow/discussion/NONE/action",
+      "value": "Folgen"
+    },
+    {
+      "key": "follow/author/ALL/label",
+      "value": "Im Magazin und im Dialog"
+    },
+    {
+      "key": "follow/author/ALL/action",
+      "value": "Gefolgt"
+    },
+    {
+      "key": "follow/author/DOCUMENTS/label",
+      "value": "Im Magazin"
+    },
+    {
+      "key": "follow/author/DOCUMENTS/action",
+      "value": "Gefolgt"
+    },
+    {
+      "key": "follow/author/NONE/label",
+      "value": "Entfolgen"
+    },
+    {
+      "key": "follow/author/NONE/action",
       "value": "Folgen"
     }
   ]

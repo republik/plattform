@@ -14,7 +14,7 @@ import { Check, ChevronDown } from 'lucide-react'
 import React from 'react'
 import { useTranslation } from '../../../lib/withT'
 
-function FollowDiscussionButton({
+function FollowDiscussionDropdown({
   discussionId,
   notificationOption,
 }: {
@@ -155,4 +155,4 @@ function FollowDiscussionButton({
   )
 }
 
-export default FollowDiscussionButton
+export default FollowDiscussionDropdown

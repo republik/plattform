@@ -2,4 +2,5 @@ fragment SubscriptionFields on Subscription {
   id
   active
   isEligibleForNotifications
+  filters
 }
