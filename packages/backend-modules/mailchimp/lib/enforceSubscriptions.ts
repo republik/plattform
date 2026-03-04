@@ -135,6 +135,7 @@ export async function enforceSubscriptions({
       audienceId: MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
     })
 
+    // FIXME: this leads to an edge case where users without membership/subscription can subscribe to a NL but immediately get archived after that
     if (!receivesEditorialNewsletters && !hasActiveTrial) {
       await archiveMemberInAudience({
         user: user || { email },
