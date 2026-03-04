@@ -9,7 +9,8 @@
   "dependencies": {
     "@orbiting/backend-modules-scalars": "*",
     "@orbiting/backend-modules-types": "*",
-    "apollo-modules-node": "*"
+    "apollo-modules-node": "*",
+    "zod": "3.22.2"
   },
   "devDependencies": {
     "ts-jest": "^29.1.5"

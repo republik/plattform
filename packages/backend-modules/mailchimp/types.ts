@@ -1,4 +1,3 @@
-import { mergeFieldNames, UserMergeFields } from './lib/getMergeFieldsForUser'
 import MailchimpInterface from './MailchimpInterface'
 
 export type UserInterests = {
@@ -8,8 +7,22 @@ export type UserInterests = {
 export type MemberStatus =
   (typeof MailchimpInterface.MemberStatus)[keyof typeof MailchimpInterface.MemberStatus]
 
-export type MergeFieldName =
-  (typeof mergeFieldNames)[keyof typeof mergeFieldNames]
+type RequiredMergeFieldName =
+  | 'FNAME'
+  | 'LNAME'
+  | 'PL_AMOUNT'
+  | 'END_DATE'
+  | 'SUB_TYPE'
+  | 'SUB_STATE'
+  | 'TRIAL'
+  | 'REG_TRIAL'
+  | 'DISCOUNT'
+
+type MergeFieldValue = string | number | Date | undefined
+type RequiredMergeFields = Record<RequiredMergeFieldName, MergeFieldValue>
+type OtherMergeFields = Record<string, MergeFieldValue>
+
+export type UserMergeFields = RequiredMergeFields & OtherMergeFields
 
 export type MemberData = {
   email_address: string

@@ -6,7 +6,7 @@ const {
   updateNewsletterSubscriptions,
   covidAccessToken,
   nameAndEmailBase64u,
-  withConfiguration,
+  createNewsletterSubscription,
 } = require('@orbiting/backend-modules-mailchimp')
 
 const handlers = {
@@ -28,20 +28,19 @@ const errors = require('../errors')
 
 module.exports = {
   ...handlers,
-  createMail: (interestConfiguration) => {
-    if (!interestConfiguration)
+  createMail: (newsletterConfigs) => {
+    if (!newsletterConfigs)
       throw new errors.SubscriptionConfigurationMissingMailError()
-    return Object.keys(handlers).reduce(
-      (result, handlerName) => {
-        return {
-          ...result,
-          [handlerName]: withConfiguration(
-            interestConfiguration,
-            handlers[handlerName],
-          ),
-        }
-      },
-      { ...errors },
-    )
+
+    const NewsletterSubscription =
+      createNewsletterSubscription(newsletterConfigs)
+
+    const mail = { ...errors }
+
+    for (const [key, handler] of Object.entries(handlers)) {
+      mail[key] = (data) => handler(data, NewsletterSubscription)
+    }
+
+    return mail
   },
 }

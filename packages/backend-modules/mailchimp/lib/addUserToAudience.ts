@@ -1,17 +1,21 @@
 import { User } from '@orbiting/backend-modules-types'
 
-import { MemberStatus, UserInterests, MemberData } from '../types'
+import {
+  MemberStatus,
+  UserInterests,
+  MemberData,
+  UserMergeFields,
+} from '../types'
 
 import { getConfig } from './../config'
 
 import MailchimpInterface from '../MailchimpInterface'
-import { UserMergeFields } from './getMergeFieldsForUser'
 
 export type AddUserToAudienceParams = {
   user: User
   audienceId: string
   interests: UserInterests
-  mergeFields?: Partial<UserMergeFields>,
+  mergeFields?: Partial<UserMergeFields>
   statusIfNew: MemberStatus
   defaultStatus: MemberStatus
 }
@@ -47,7 +51,10 @@ export async function addUserToAudience({
   await mailchimp.updateMember(email, data, audienceId)
 }
 
-export async function addUserToMarketingAudience(user: User, mergeFields: UserMergeFields) {
+export async function addUserToMarketingAudience(
+  user: User,
+  mergeFields: UserMergeFields,
+) {
   const interest: UserInterests = {}
 
   interest[MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY] = true

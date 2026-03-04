@@ -59,6 +59,8 @@ const nextConfig = {
     domains: [
       'www.datocms-assets.com',
       'cdn.republik.pink',
+      'cdn.republik.pink',
+      'assets.republik.pink',
       'cdn.repub.ch',
       'localhost',
     ],

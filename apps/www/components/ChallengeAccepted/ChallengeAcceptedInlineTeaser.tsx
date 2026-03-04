@@ -234,7 +234,7 @@ export default withLocalColorScheme(
 
 export const CA_NEWSLETTER_QUERY = gql(`
   query CANewsletterQuery(
-    $name: NewsletterName!
+    $name: String!
   ) {
     me {
       newsletterSettings {

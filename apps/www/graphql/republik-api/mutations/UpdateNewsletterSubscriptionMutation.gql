@@ -1,7 +1,4 @@
-mutation UpdateNewsletterSubscription(
-  $name: NewsletterName!
-  $subscribed: Boolean!
-) {
+mutation UpdateNewsletterSubscription($name: String!, $subscribed: Boolean!) {
   updateNewsletterSubscription(name: $name, subscribed: $subscribed) {
     id
     name

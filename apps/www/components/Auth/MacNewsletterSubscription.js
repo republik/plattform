@@ -96,7 +96,7 @@ class NewsletterSubscription extends Component {
 
 const mutation = gql`
   mutation updateNewsletterSubscriptionWithMac(
-    $name: NewsletterName!
+    $name: String!
     $subscribed: Boolean!
     $email: String!
     $mac: String!

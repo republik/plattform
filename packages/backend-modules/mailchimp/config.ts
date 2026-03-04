@@ -1,82 +1,45 @@
-assertEnvVariableExists(process.env, [
-  'MAILCHIMP_INTEREST_NEWSLETTER_DAILY',
-  'MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY',
-  'MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR',
-  'MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE',
-  'MAILCHIMP_INTEREST_NEWSLETTER_WDWWW',
-  'MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY',
-  'MAILCHIMP_INTEREST_NEWSLETTER_BAB',
-  'MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE',
-  'MAILCHIMP_INTEREST_MEMBER',
-  'MAILCHIMP_INTEREST_MEMBER_BENEFACTOR',
-  'MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL',
-  'MAILCHIMP_MAIN_LIST_ID',
-  'MAILCHIMP_ONBOARDING_AUDIENCE_ID',
-  'MAILCHIMP_MARKETING_AUDIENCE_ID',
-  'MAILCHIMP_PROBELESEN_AUDIENCE_ID',
-  'MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID',
-  'MAILCHIMP_INTEREST_PLEDGE',
-  'MAILCHIMP_INTEREST_GRANTED_ACCESS',
-  'MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY',
-  'REGWALL_TRIAL_CAMPAIGN_ID',
-])
+import { z } from 'zod'
 
-const config = {
-  MAILCHIMP_INTEREST_NEWSLETTER_DAILY:
-    process.env.MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
-  MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY:
-    process.env.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR:
-    process.env.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-  MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE:
-    process.env.MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-  MAILCHIMP_INTEREST_NEWSLETTER_WDWWW:
-    process.env.MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
-  MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE:
-    process.env.MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
-  MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY:
-    process.env.MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
-  MAILCHIMP_INTEREST_NEWSLETTER_BAB:
-    process.env.MAILCHIMP_INTEREST_NEWSLETTER_BAB,
-  MAILCHIMP_INTEREST_MEMBER: process.env.MAILCHIMP_INTEREST_MEMBER,
-  MAILCHIMP_INTEREST_MEMBER_BENEFACTOR:
-    process.env.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
-  MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL:
-    process.env.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL,
-  MAILCHIMP_MAIN_LIST_ID: process.env.MAILCHIMP_MAIN_LIST_ID,
-  MAILCHIMP_ONBOARDING_AUDIENCE_ID:
-    process.env.MAILCHIMP_ONBOARDING_AUDIENCE_ID,
-  MAILCHIMP_MARKETING_AUDIENCE_ID: process.env.MAILCHIMP_MARKETING_AUDIENCE_ID,
-  MAILCHIMP_PROBELESEN_AUDIENCE_ID:
-    process.env.MAILCHIMP_PROBELESEN_AUDIENCE_ID,
-  MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID:
-    process.env.MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
-  MAILCHIMP_REGWALL_TRIAL_AUDIENCE_ID:
-    process.env.MAILCHIMP_REGWALL_TRIAL_AUDIENCE_ID,
-  MAILCHIMP_INTEREST_PLEDGE: process.env.MAILCHIMP_INTEREST_PLEDGE,
-  MAILCHIMP_INTEREST_GRANTED_ACCESS:
-    process.env.MAILCHIMP_INTEREST_GRANTED_ACCESS,
-  MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY:
-    process.env.MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY,
-  REGWALL_TRIAL_CAMPAIGN_ID: process.env.REGWALL_TRIAL_CAMPAIGN_ID,
-}
+const NewsletterConfig = z.object({
+  name: z.string(),
+  free: z.boolean().default(false),
+  interestId: z.string(),
+  mergeField: z.string(),
+  visibleToRoles: z.array(z.string()).optional(),
+  autoSubscribeNewMember: z.boolean().default(false),
+})
 
-function assertEnvVariableExists(
-  obj: any,
-  keys: string | string[],
-): asserts obj is Record<string, string> {
-  if (Array.isArray(keys)) {
-    for (const key of keys) {
-      if (typeof obj[key] !== 'string') {
-        throw new Error(`Config key ${key} is missing.`)
-      }
-    }
-  } else {
-    if (typeof obj[keys] !== 'string')
-      throw new Error(`Config key ${keys} is missing.`)
-  }
-}
+export type NewsletterConfig = z.infer<typeof NewsletterConfig>
+
+const configSchema = z.object({
+  MAILCHIMP_NEWSLETTER_CONFIGS: z
+    .string()
+    .transform((s) => JSON.parse(s))
+    .pipe(z.array(NewsletterConfig)),
+  MAILCHIMP_INTEREST_MEMBER: z.string(),
+  MAILCHIMP_INTEREST_MEMBER_BENEFACTOR: z.string(),
+  MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL: z.string(),
+  MAILCHIMP_MAIN_LIST_ID: z.string(),
+  MAILCHIMP_ONBOARDING_AUDIENCE_ID: z.string(),
+  MAILCHIMP_MARKETING_AUDIENCE_ID: z.string(),
+  MAILCHIMP_PROBELESEN_AUDIENCE_ID: z.string(),
+  MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID: z.string(),
+  MAILCHIMP_INTEREST_PLEDGE: z.string(),
+  MAILCHIMP_INTEREST_GRANTED_ACCESS: z.string(),
+  MAILCHIMP_MARKETING_INTEREST_FREE_OFFERS_ONLY: z.string(),
+  REGWALL_TRIAL_CAMPAIGN_ID: z.string(),
+  MAILCHIMP_REGWALL_TRIAL_AUDIENCE_ID: z.string(),
+})
 
 export function getConfig() {
-  return config
+  const result = configSchema.safeParse(process.env)
+
+  if (!result.success) {
+    const errors = result.error.errors
+      .map((err) => `${err.path.join('.')}: ${err.message}`)
+      .join('\n')
+    throw new Error(`Configuration validation failed:\n${errors}`)
+  }
+
+  return result.data
 }

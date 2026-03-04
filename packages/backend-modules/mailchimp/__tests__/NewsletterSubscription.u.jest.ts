@@ -1,4 +1,4 @@
-const { createNewsletterSubscription } = require('../NewsletterSubscription')
+import { createNewsletterSubscription } from '../NewsletterSubscription'
 
 const INTEREST_ID_MEMBER_RESTRICTED = 'daily_interest_id'
 const INTEREST_ID_PUBLIC = 'public_interest_id'
@@ -7,9 +7,17 @@ const interestConfiguration = [
   {
     name: 'MEMBER',
     interestId: INTEREST_ID_MEMBER_RESTRICTED,
-    roles: ['member'],
+    mergeField: 'NL_MEMBER',
+    free: false,
+    autoSubscribeNewMember: true,
   },
-  { name: 'PUBLIC', interestId: INTEREST_ID_PUBLIC, roles: [] },
+  {
+    name: 'PUBLIC',
+    interestId: INTEREST_ID_PUBLIC,
+    free: true,
+    mergeField: 'NL_PUBLIC',
+    autoSubscribeNewMember: false,
+  },
 ]
 
 test('NewsletterSubscription -> correct flags', async () => {
@@ -23,8 +31,8 @@ test('NewsletterSubscription -> correct flags', async () => {
     ['member'],
   )
   expect({
-    name: sub1.name,
-    subscribed: sub1.subscribed,
+    name: sub1?.name,
+    subscribed: sub1?.subscribed,
   }).toEqual({
     name: 'MEMBER',
     subscribed: true,
@@ -37,8 +45,8 @@ test('NewsletterSubscription -> correct flags', async () => {
     [],
   )
   expect({
-    name: sub2.name,
-    subscribed: sub2.subscribed,
+    name: sub2?.name,
+    subscribed: sub2?.subscribed,
   }).toEqual({
     name: 'MEMBER',
     subscribed: true,
@@ -51,8 +59,8 @@ test('NewsletterSubscription -> correct flags', async () => {
     [],
   )
   expect({
-    name: sub3.name,
-    subscribed: sub3.subscribed,
+    name: sub3?.name,
+    subscribed: sub3?.subscribed,
   }).toEqual({
     name: 'PUBLIC',
     subscribed: false,
@@ -72,8 +80,9 @@ test('NewsletterSubscription -> single interest', async () => {
   const NewsletterSubscription = createNewsletterSubscription(
     interestConfiguration,
   )
-  const interestId = NewsletterSubscription.interestIdByName('PUBLIC')
+  const config = NewsletterSubscription.interestConfigByName('PUBLIC')
+  const interestId = config?.interestId
   expect(interestId).toEqual(interestConfiguration[1].interestId)
-  const interest = NewsletterSubscription.interestConfiguration(interestId)
+  const interest = NewsletterSubscription.interestConfiguration(interestId!)
   expect(interest).toEqual(interestConfiguration[1])
 })

@@ -1,55 +1,17 @@
-import { getConsentLink } from '@orbiting/backend-modules-republik/lib/Newsletter'
+import { getConfig } from '../config'
 import {
   MembershipType,
-  MergeFieldName,
   SegmentData,
   SubscriptionType,
-  UserInterests,
+  UserMergeFields,
 } from '../types'
-import { getConfig } from '../config'
 
 type User = { firstName: string; lastName: string; email: string }
 type GetMergeFieldsForUserParams = { user: User; segmentData: SegmentData }
 type SubscriptionState = 'Cancelled' | 'Autopay' | 'Active' | undefined
 type TrialState = 'Active' | 'Past' | undefined
-export type UserMergeFields = Record<
-  MergeFieldName,
-  string | number | Date | undefined
->
 
-const {
-  MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
-  MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-  MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-  MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
-  MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
-  MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
-  MAILCHIMP_INTEREST_NEWSLETTER_BAB,
-  REGWALL_TRIAL_CAMPAIGN_ID,
-} = getConfig()
-
-export const mergeFieldNames = {
-  firstName: 'FNAME',
-  lastName: 'LNAME',
-  latestPledgeAmount: 'PL_AMOUNT',
-  subscriptionEndDate: 'END_DATE',
-  subscriptionType: 'SUB_TYPE',
-  subscriptionState: 'SUB_STATE',
-  newsletterOptInCa: 'NL_LINK_CA',
-  newsletterOptInWb: 'NL_LINK_WD',
-  trialState: 'TRIAL',
-  regwallTrialState: 'REG_TRIAL',
-  specialOffer: 'DISCOUNT',
-  [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: 'NL_DAILY',
-  [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: 'NL_WEEKLY',
-  [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: 'NL_PROJ_R',
-  [MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE]: 'NL_CLIMATE',
-  [MAILCHIMP_INTEREST_NEWSLETTER_WDWWW]: 'NL_WDWWW',
-  [MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE]: 'NL_ACCOMPL',
-  [MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY]: 'NL_SUNDAY',
-  [MAILCHIMP_INTEREST_NEWSLETTER_BAB]: 'NL_BAB',
-} as const
+const { MAILCHIMP_NEWSLETTER_CONFIGS, REGWALL_TRIAL_CAMPAIGN_ID } = getConfig()
 
 export async function getMergeFieldsForUser({
   user,
@@ -60,64 +22,32 @@ export async function getMergeFieldsForUser({
   const subscriptionEndDate = getSubscriptionEndDate(segmentData)
   const subscriptionType = getSubscriptionType(segmentData)
   const subscriptionState = getSubscriptionState(segmentData)
-  const linkCa = user?.email && getConsentLink(user.email, 'CLIMATE')
-  const linkWdwww = user?.email && getConsentLink(user.email, 'WDWWW')
   const trialState = getTrialState(segmentData)
   const regwallTrialState = getRegwallTrialState(segmentData)
   const specialOffer = segmentData.activeSubscription?.metadata?.discountName
 
   const newsletterInterests = segmentData.mailchimpMember?.interests
 
-  return {
-    [mergeFieldNames.firstName]: user?.firstName,
-    [mergeFieldNames.lastName]: user?.lastName,
-    [mergeFieldNames.latestPledgeAmount]: latestMembershipPledgeAmount,
-    [mergeFieldNames.subscriptionEndDate]: subscriptionEndDate,
-    [mergeFieldNames.subscriptionType]: subscriptionType,
-    [mergeFieldNames.subscriptionState]: subscriptionState,
-    [mergeFieldNames.newsletterOptInCa]: linkCa,
-    [mergeFieldNames.newsletterOptInWb]: linkWdwww,
-    [mergeFieldNames.trialState]: trialState,
-    [mergeFieldNames.regwallTrialState]: regwallTrialState,
-    [mergeFieldNames.specialOffer]: specialOffer,
-    NL_DAILY: hasInterest(
-      newsletterInterests,
-      MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
-    ),
-    NL_WEEKLY: hasInterest(
-      newsletterInterests,
-      MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-    ),
-    NL_PROJ_R: hasInterest(
-      newsletterInterests,
-      MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-    ),
-    NL_CLIMATE: hasInterest(
-      newsletterInterests,
-      MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE,
-    ),
-    NL_WDWWW: hasInterest(
-      newsletterInterests,
-      MAILCHIMP_INTEREST_NEWSLETTER_WDWWW,
-    ),
-    NL_SUNDAY: hasInterest(
-      newsletterInterests,
-      MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
-    ),
-    NL_BAB: hasInterest(newsletterInterests, MAILCHIMP_INTEREST_NEWSLETTER_BAB),
-    NL_ACCOMPL: hasInterest(
-      newsletterInterests,
-      MAILCHIMP_INTEREST_NEWSLETTER_ACCOMPLICE,
-    ),
-  }
-}
+  const newsletterMergeFields = Object.fromEntries(
+    MAILCHIMP_NEWSLETTER_CONFIGS.map((config) => {
+      const subscriptionStatus = newsletterInterests?.[config.interestId]
+        ? 'Subscribed'
+        : undefined // This should be "Unsubscribed" but previously that was never returned
+      return [config.mergeField, subscriptionStatus]
+    }),
+  )
 
-function hasInterest(
-  userInterests: UserInterests | undefined,
-  interestId: string,
-): 'Subscribed' | 'Unsubscribed' | undefined {
-  if (userInterests && userInterests[interestId]) {
-    return 'Subscribed'
+  return {
+    FNAME: user?.firstName ?? '',
+    LNAME: user?.lastName ?? '',
+    PL_AMOUNT: latestMembershipPledgeAmount,
+    END_DATE: subscriptionEndDate,
+    SUB_TYPE: subscriptionType,
+    SUB_STATE: subscriptionState,
+    TRIAL: trialState,
+    REG_TRIAL: regwallTrialState,
+    DISCOUNT: specialOffer,
+    ...newsletterMergeFields,
   }
 }
 

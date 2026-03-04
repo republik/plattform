@@ -1,34 +1,35 @@
+import {
+  addUserToAudience,
+  addUserToMarketingAudience,
+} from './addUserToAudience'
+import { archiveMemberInAudience } from './archiveMemberInAudience'
 import { changeEmailOnMailchimp } from './changeEmailOnMailchimp'
 import { deleteEmail } from './deleteEmail'
+import { enforceSubscriptions } from './enforceSubscriptions'
+import { getInterestsForUser } from './getInterestsForUser'
+import { getMailchimpMember } from './getMailchimpMember'
+import { getMergeFieldsForUser } from './getMergeFieldsForUser'
 import { getNewsletterSettings } from './getNewsletterSettings'
+import { getSegmentDataForUser } from './getSegmentDataForUser'
+import { isUserInAudience } from './isUserInAudience'
+import { resubscribeEmail } from './resubscribeEmail'
 import { updateNameMergeFields } from './updateNameMergeFields'
 import { updateNewsletterSubscriptions } from './updateNewsletterSubscriptions'
-import { getInterestsForUser } from './getInterestsForUser'
-import { isUserInAudience } from './isUserInAudience'
-import { addUserToAudience, addUserToMarketingAudience } from './addUserToAudience'
-import { archiveMemberInAudience } from './archiveMemberInAudience'
-import { NewsletterSubscriptionConfig } from '../NewsletterSubscriptionConfig'
-import { enforceSubscriptions } from './enforceSubscriptions'
-import { resubscribeEmail } from './resubscribeEmail'
-import { getSegmentDataForUser } from './getSegmentDataForUser'
-import { getMergeFieldsForUser } from './getMergeFieldsForUser'
-import { getMailchimpMember } from './getMailchimpMember'
 
 export {
-  changeEmailOnMailchimp,
-  deleteEmail,
-  getNewsletterSettings,
-  updateNameMergeFields,
-  updateNewsletterSubscriptions,
-  getInterestsForUser,
-  isUserInAudience,
   addUserToAudience,
   addUserToMarketingAudience,
   archiveMemberInAudience,
-  NewsletterSubscriptionConfig,
+  changeEmailOnMailchimp,
+  deleteEmail,
   enforceSubscriptions,
-  resubscribeEmail,
-  getSegmentDataForUser,
-  getMergeFieldsForUser,
+  getInterestsForUser,
   getMailchimpMember,
+  getMergeFieldsForUser,
+  getNewsletterSettings,
+  getSegmentDataForUser,
+  isUserInAudience,
+  resubscribeEmail,
+  updateNameMergeFields,
+  updateNewsletterSubscriptions,
 }

@@ -11,15 +11,26 @@ const config = {
   MAILCHIMP_MARKETING_AUDIENCE_ID: 'MAILCHIMP_MARKETING_AUDIENCE_ID',
   MAILCHIMP_PROBELESEN_AUDIENCE_ID: 'MAILCHIMP_PROBELESEN_AUDIENCE_ID',
   MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID: 'MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID',
-  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR:
-    'MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR',
-  MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE:
-    'MAILCHIMP_INTEREST_NEWSLETTER_CLIMATE',
-  MAILCHIMP_INTEREST_NEWSLETTER_WDWWW: 'MAILCHIMP_INTEREST_NEWSLETTER_WDWWW',
-  MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY: 'MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY',
-  MAILCHIMP_INTEREST_NEWSLETTER_BAB: 'MAILCHIMP_INTEREST_NEWSLETTER_BAB',
-  MAILCHIMP_INTEREST_NEWSLETTER_DAILY: 'MAILCHIMP_INTEREST_NEWSLETTER_DAILY',
-  MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY: 'MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY',
+  MAILCHIMP_NEWSLETTER_CONFIGS: [
+    {
+      name: 'DAILY',
+      interestID: 'daily',
+      mergeField: 'NL_DAILY',
+      autoSubscribeNewMember: true,
+    },
+    {
+      name: 'WEEKLY',
+      interestID: 'WEEKLY',
+      mergeField: 'NL_WEEKLY',
+      autoSubscribeNewMember: true,
+    },
+    {
+      name: 'PROJECTR',
+      interestID: 'PROJECTR',
+      mergeField: 'NL_PROJ_R',
+      autoSubscribeNewMember: true,
+    },
+  ],
   REGWALL_TRIAL_CAMPAIGN_ID: 'REGWALL_TRIAL_CAMPAIGN_ID',
 }
 jest.mock('../../config', () => ({
@@ -40,9 +51,9 @@ jest.mock('../../lib/getInterestsForUser', () => ({
       [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
       [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: false,
       [config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]: false,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true,
+      ['DAILY']: true,
+      ['WEEKLY']: true,
+      ['PROJECTR']: true,
     }))
     // no active membership
     .mockImplementationOnce(() => ({
@@ -51,9 +62,9 @@ jest.mock('../../lib/getInterestsForUser', () => ({
       [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
       [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: false,
       [config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]: false,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true,
+      ['DAILY']: true,
+      ['WEEKLY']: true,
+      ['PROJECTR']: true,
     }))
     // no active membership, no free newsletters
     .mockImplementationOnce(() => ({
@@ -62,9 +73,9 @@ jest.mock('../../lib/getInterestsForUser', () => ({
       [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
       [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: false,
       [config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]: false,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
+      ['DAILY']: true,
+      ['WEEKLY']: true,
+      ['PROJECTR']: false,
     }))
     // no active membership, no free newsletters, active trial
     .mockImplementationOnce(() => ({
@@ -73,9 +84,9 @@ jest.mock('../../lib/getInterestsForUser', () => ({
       [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
       [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: true,
       [config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]: false,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
+      ['DAILY']: true,
+      ['WEEKLY']: true,
+      ['PROJECTR']: false,
     }))
     // no active membership, active regwall trial
     .mockImplementationOnce(() => ({
@@ -84,9 +95,9 @@ jest.mock('../../lib/getInterestsForUser', () => ({
       [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
       [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: true,
       [config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
+      ['DAILY']: true,
+      ['WEEKLY']: true,
+      ['PROJECTR']: false,
     }))
     // no active membership, no active trial, no free newsletters, past regwall trial
     .mockImplementationOnce(() => ({
@@ -95,9 +106,9 @@ jest.mock('../../lib/getInterestsForUser', () => ({
       [config.MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: false,
       [config.MAILCHIMP_INTEREST_GRANTED_ACCESS]: false,
       [config.MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
-      [config.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: false,
+      ['DAILY']: true,
+      ['WEEKLY']: true,
+      ['PROJECTR']: false,
     })),
 }))
 import {
@@ -172,8 +183,6 @@ describe('test enforceSubscriptions', () => {
       subscribeToOnboardingMails: true,
       subscribeToEditorialNewsletters: true,
       pgdb: pgdb as any,
-      name: '',
-      subscribed: true,
     })
 
     expect(getMailchimpMember).toHaveBeenCalled()
@@ -198,15 +207,15 @@ describe('test enforceSubscriptions', () => {
       audienceId: config.MAILCHIMP_PRODUKTINFOS_AUDIENCE_ID,
       interests: {},
       mergeFields: {
-        FNAME: undefined,
-        LNAME: undefined,
+        FNAME: '',
+        LNAME: '',
         PL_AMOUNT: 0,
         END_DATE: undefined,
         SUB_STATE: undefined,
         SUB_TYPE: undefined,
+        DISCOUNT: undefined,
+        REG_TRIAL: undefined,
         TRIAL: undefined,
-        NL_LINK_CA: undefined,
-        NL_LINK_WD: undefined,
         NL_DAILY: undefined,
         NL_WEEKLY: undefined,
         NL_PROJ_R: undefined,
@@ -248,8 +257,6 @@ describe('test enforceSubscriptions', () => {
       subscribeToOnboardingMails: false,
       subscribeToEditorialNewsletters: false,
       pgdb: pgdb as any,
-      name: '',
-      subscribed: true,
     })
 
     expect(addUserToAudience).not.toHaveBeenCalled()
@@ -284,8 +291,6 @@ describe('test enforceSubscriptions', () => {
       subscribeToOnboardingMails: false,
       subscribeToEditorialNewsletters: false,
       pgdb: pgdb as any,
-      name: '',
-      subscribed: true,
     })
 
     expect(addUserToAudience).not.toHaveBeenCalled()
@@ -319,8 +324,6 @@ describe('test enforceSubscriptions', () => {
       subscribeToOnboardingMails: false,
       subscribeToEditorialNewsletters: true,
       pgdb: pgdb as any,
-      name: '',
-      subscribed: true,
     })
 
     expect(addUserToAudience).not.toHaveBeenCalled()
@@ -354,8 +357,6 @@ describe('test enforceSubscriptions', () => {
       subscribeToOnboardingMails: false,
       subscribeToEditorialNewsletters: false,
       pgdb: pgdb as any,
-      name: '',
-      subscribed: true,
     })
 
     expect(addUserToAudience).not.toHaveBeenCalled()
@@ -389,8 +390,6 @@ describe('test enforceSubscriptions', () => {
       subscribeToOnboardingMails: false,
       subscribeToEditorialNewsletters: false,
       pgdb: pgdb as any,
-      name: '',
-      subscribed: true,
     })
 
     expect(addUserToAudience).not.toHaveBeenCalled()

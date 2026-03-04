@@ -76,12 +76,12 @@ extend type User {
 type NewsletterSettings {
   id: ID!
   status: String!
-  subscriptions(name: NewsletterName): [NewsletterSubscription]
+  subscriptions(name: String): [NewsletterSubscription]
 }
 
 type NewsletterSubscription {
   id: ID!
-  name: NewsletterName!
+  name: String!
   subscribed: Boolean!
   isEligible: Boolean! @deprecated(reason: "Eligability is handeld elsewhere. Subscription changes are always possible.")
 }

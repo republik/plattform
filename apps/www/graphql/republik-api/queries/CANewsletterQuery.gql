@@ -1,4 +1,4 @@
-query CANewsletter($name: NewsletterName!) {
+query CANewsletter($name: String!) {
   me {
     id
     newsletterSettings {

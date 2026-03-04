@@ -63,13 +63,13 @@ type mutations {
   updateUser(
     firstName: String
     lastName: String
-    
+
     address: AddressInput
 
     birthyear: Int
     gender: String
     phoneNumber: String
-    
+
     userId: ID!
   ): User!
 
@@ -95,7 +95,7 @@ type mutations {
   # if email and hmac is set, the user is upserted (used for newsletter signup)
   updateNewsletterSubscription(
     userId: ID,
-    name: NewsletterName!
+    name: String!
     subscribed: Boolean!
     email: String,
     mac: String,
@@ -108,7 +108,7 @@ type mutations {
 
   requestNewsletterSubscription(
     email: String!
-    name: NewsletterName!
+    name: String!
     context: String!
   ): Boolean!
 

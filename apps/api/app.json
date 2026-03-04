@@ -65,15 +65,6 @@
     "MAILCHIMP_INTEREST_MEMBER_BENEFACTOR": {
       "required": true
     },
-    "MAILCHIMP_INTEREST_NEWSLETTER_DAILY": {
-      "required": true
-    },
-    "MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR": {
-      "required": true
-    },
-    "MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY": {
-      "required": true
-    },
     "MAILCHIMP_INTEREST_PLEDGE": {
       "required": true
     },

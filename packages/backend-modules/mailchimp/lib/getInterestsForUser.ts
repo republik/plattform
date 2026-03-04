@@ -2,16 +2,12 @@ import { SegmentData, UserInterests } from '../types'
 import { getConfig } from '../config'
 
 const {
+  MAILCHIMP_NEWSLETTER_CONFIGS,
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
   MAILCHIMP_INTEREST_GRANTED_ACCESS,
   MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL,
-  MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
-  MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
-  MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY,
-  MAILCHIMP_INTEREST_NEWSLETTER_BAB,
   REGWALL_TRIAL_CAMPAIGN_ID,
 } = getConfig()
 
@@ -69,12 +65,11 @@ export async function getInterestsForUser({
       hasActiveGrantedAccess ||
       hasActiveOrPastRegwallTrial)
   ) {
-    // Autosubscribe all newsletters when new user just paid the membersh.
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_SUNDAY] = true
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_BAB] = true
+    MAILCHIMP_NEWSLETTER_CONFIGS.forEach((config) => {
+      if (config.autoSubscribeNewMember) {
+        interests[config.interestId] = true
+      }
+    })
   }
 
   return interests
