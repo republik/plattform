@@ -247,29 +247,29 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
                 />
               )}
             </div>
+            {isFollowable && !!user.documents.totalCount && (
+              <div>
+                <FollowAuthorDropdown
+                  subscriptionId={subscription?.id}
+                  subscriptionFilters={subscription?.filters}
+                  objectId={user.id}
+                  objectName={user.name}
+                />
+              </div>
+            )}
+            {isFollowable && !user.documents.totalCount && (
+              <div>
+                <FollowButton
+                  type={SubscriptionObjectType.User}
+                  subscriptionId={subscription?.id}
+                  objectId={user.id}
+                  objectName={user.name}
+                  filters={[EventObjectType.Comment]}
+                  size='default'
+                />
+              </div>
+            )}
           </div>
-          {isFollowable && !!user.documents.totalCount && (
-            <div>
-              <FollowAuthorDropdown
-                subscriptionId={subscription?.id}
-                subscriptionFilters={subscription?.filters}
-                objectId={user.id}
-                objectName={user.name}
-              />
-            </div>
-          )}
-          {isFollowable && !user.documents.totalCount && (
-            <div>
-              <FollowButton
-                type={SubscriptionObjectType.User}
-                subscriptionId={subscription?.id}
-                objectId={user.id}
-                objectName={user.name}
-                filters={[EventObjectType.Comment]}
-                size='default'
-              />
-            </div>
-          )}
           {!!user.biography && <p {...styles.biography}>{user.biography}</p>}
           <div {...styles.contactLinks} {...styles.hiddenDesktop}>
             <ProfileUrls user={user} />
