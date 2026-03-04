@@ -43,6 +43,7 @@ function FollowAuthorCard({ authorId }: { authorId: string }) {
       className={css({
         marginTop: 4,
         pt: 4,
+        px: 4,
         borderTopStyle: 'solid',
         borderTopWidth: '1px',
         borderTopColor: 'divider',
