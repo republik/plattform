@@ -1,8 +1,10 @@
 'use client'
 
-import { NewsletterName } from '#graphql/republik-api/__generated__/gql/graphql'
 import FollowFormatContainer from '@app/components/follow/follow-format-container'
-import { NL_STYLE } from '@app/components/newsletters/config'
+import {
+  type NewsletterName,
+  NL_STYLE,
+} from '@app/components/newsletters/config'
 import { NewsletterSubscribeButton } from '@app/components/newsletters/newsletter-subscribe'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
