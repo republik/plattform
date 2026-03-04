@@ -2,7 +2,6 @@ import { CommentTeaser, useColorContext } from '@project-r/styleguide'
 import compose from 'lodash/flowRight'
 import withT from '../../lib/withT'
 import CommentLink from '../Discussion/shared/CommentLink'
-import SubscribeCallout from './SubscribeCallout'
 
 export default compose(withT)(({ t, node, isNew }) => {
   const [colorScheme] = useColorContext()
@@ -17,12 +16,6 @@ export default compose(withT)(({ t, node, isNew }) => {
         CommentLink={CommentLink}
         t={t}
         highlighted={isNew}
-        menu={
-          <SubscribeCallout
-            authorSubscriptions={[node.subscription].filter(Boolean)}
-            discussionId={node.object.discussion.id}
-          />
-        }
       />
     </div>
   )

@@ -7029,19 +7029,7 @@
     },
     {
       "key": "Notifications/settings/authors",
-      "value": "Abonnierte Profile"
-    },
-    {
-      "key": "Notifications/settings/authors/summary/0",
-      "value": "Sie haben keine Profile abonniert"
-    },
-    {
-      "key": "Notifications/settings/authors/summary/1",
-      "value": "Sie haben ein Profil abonniert:"
-    },
-    {
-      "key": "Notifications/settings/authors/summary/other",
-      "value": "Sie haben {count} Profile abonniert:"
+      "value": "Gefolgte Profile"
     },
     {
       "key": "Notifications/settings/back",
@@ -7053,7 +7041,7 @@
     },
     {
       "key": "Notifications/settings/formats",
-      "value": "Abonnierte Rubriken"
+      "value": "Gefolgte Rubriken"
     },
     {
       "key": "Notifications/settings/formats/show",
@@ -7065,15 +7053,15 @@
     },
     {
       "key": "Notifications/settings/formats/summary/0",
-      "value": "Sie haben keine Rubriken abonniert."
+      "value": "Sie folgen noch keinen Rubriken."
     },
     {
       "key": "Notifications/settings/formats/summary/1",
-      "value": "Sie haben eine Rubrik abonniert:"
+      "value": "Sie folgen eine Rubrik:"
     },
     {
       "key": "Notifications/settings/formats/summary/other",
-      "value": "Sie haben {count} Rubriken abonniert:"
+      "value": "Sie folgen {count} Rubriken:"
     },
     {
       "key": "Notifications/settings/discussion",
@@ -7744,6 +7732,18 @@
       "value": "Bitte <b>melden Sie sich an</b>, um den Beitrag zu lesen."
     },
     {
+      "key": "newsletter/subscribe",
+      "value": "Newsletter abonnieren"
+    },
+    {
+      "key": "newsletter/isSubscribed",
+      "value": "Newsletter abonniert"
+    },
+    {
+      "key": "newsletters/postbox",
+      "value": "ins Postfach bekommen"
+    },
+    {
       "key": "newsletters/DAILY/name",
       "value": "Republik heute"
     },
@@ -8042,6 +8042,62 @@
     {
       "key": "onboarding/authors/asscholl/beat",
       "value": "Film"
+    },
+    {
+      "key": "follow/authors/all",
+      "value": "Alle Autorinnen anzeigen"
+    },
+    {
+      "key": "follow/format/all",
+      "value": "Alle anzeigen"
+    },
+    {
+      "key": "follow/discussion/ALL/label",
+      "value": "Alle neuen Kommentare"
+    },
+    {
+      "key": "follow/discussion/ALL/action",
+      "value": "Gefolgt"
+    },
+    {
+      "key": "follow/discussion/MY_CHILDREN/label",
+      "value": "Antwort auf meinen Kommentar"
+    },
+    {
+      "key": "follow/discussion/MY_CHILDREN/action",
+      "value": "Gefolgt"
+    },
+    {
+      "key": "follow/discussion/NONE/label",
+      "value": "Entfolgen"
+    },
+    {
+      "key": "follow/discussion/NONE/action",
+      "value": "Folgen"
+    },
+    {
+      "key": "follow/author/ALL/label",
+      "value": "Im Magazin und im Dialog"
+    },
+    {
+      "key": "follow/author/ALL/action",
+      "value": "Gefolgt"
+    },
+    {
+      "key": "follow/author/DOCUMENTS/label",
+      "value": "Im Magazin"
+    },
+    {
+      "key": "follow/author/DOCUMENTS/action",
+      "value": "Gefolgt"
+    },
+    {
+      "key": "follow/author/NONE/label",
+      "value": "Entfolgen"
+    },
+    {
+      "key": "follow/author/NONE/action",
+      "value": "Folgen"
     }
   ]
 }

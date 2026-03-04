@@ -1,5 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { LoginPopup } from '@app/components/auth/login/login-popup'
+import FollowArticle from '@app/components/follow/follow-article'
+import FollowFormat from '@app/components/follow/follow-format'
 import NextReads from '@app/components/next-reads'
 import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
@@ -31,7 +33,6 @@ import withT from '../../lib/withT'
 import ActionBar from '../ActionBar'
 import { ArticleAudioPlayer } from '../Audio/AudioPlayer/ArticleAudioPlayer'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
-import NewsletterSignUp from '../Auth/NewsletterSignUp'
 
 import DiscussionContextProvider from '../Discussion/context/DiscussionContextProvider'
 import Discussion from '../Discussion/Discussion'
@@ -116,7 +117,6 @@ const ArticlePage = ({
   const article = articleData?.article
   const documentId = article?.id
   const repoId = article?.repoId
-  const treeType = article?.type
 
   const articleMeta = article?.meta
   const articleContent = article?.content
@@ -200,8 +200,6 @@ const ArticlePage = ({
     (meta.podcast || (meta.audioSource && meta.format?.meta?.podcast))
 
   const hasAudioSource = !!meta?.audioSource
-  const newsletterMeta =
-    hasMeta && (meta.newsletter || meta.format?.meta?.newsletter)
 
   const isSeriesOverview = hasMeta && meta.series?.overview?.id === documentId
   const showSeriesNav = hasMeta && !!meta.series && !isSeriesOverview
@@ -229,8 +227,15 @@ const ArticlePage = ({
     }
   }, [template, isSeriesOverview, isPaywallExcluded, hasMeta, cleanedPath])
 
+  const isArticle = template === 'article'
   const isEditorialNewsletter = template === 'editorialNewsletter'
-  const disableActionBar = meta?.disableActionBar
+  const isFormat = template === 'format'
+  const isSection = template === 'section'
+  const isPage = template === 'page'
+  const ownDiscussion = meta?.ownDiscussion
+
+  const disableActionBar =
+    meta?.disableActionBar || isSeriesOverview || isSection || isFormat
   const actionBar = article && !disableActionBar && (
     <ActionBar
       mode='articleTop'
@@ -338,12 +343,6 @@ const ArticlePage = ({
             )
           }
 
-          const isArticle = meta.template === 'article'
-          const isFormat = meta.template === 'format'
-          const isSection = meta.template === 'section'
-          const isPage = meta.template === 'page'
-          const ownDiscussion = meta.ownDiscussion
-
           const ProgressComponent =
             !!me &&
             !isSection &&
@@ -363,10 +362,6 @@ const ArticlePage = ({
 
           const breakout = titleNode?.data?.breakout || titleBreakout
 
-          const isFreeNewsletter = !!newsletterMeta && newsletterMeta.free
-          const showNewsletterSignupTop = isFormat && isFreeNewsletter
-          const showNewsletterSignupBottom = isFreeNewsletter && !isFormat
-
           const rawContentMeta = articleContent.meta
 
           const feedQueryVariables = rawContentMeta.feedQueryVariables
@@ -382,7 +377,7 @@ const ArticlePage = ({
 
           const showBottomActionBar =
             (!hasPaywall && meta.template === 'article') ||
-            (isEditorialNewsletter && newsletterMeta && newsletterMeta.free)
+            isEditorialNewsletter
 
           const showPodcastButtons = !!podcast && meta.template !== 'article'
 
@@ -411,20 +406,8 @@ const ArticlePage = ({
                             repoId={repoId}
                           />
                         )}
-                        {(showNewsletterSignupTop ||
-                          actionBar ||
-                          showAudioPlayer ||
-                          showSectionNav) && (
+                        {(actionBar || showAudioPlayer || showSectionNav) && (
                           <Center breakout={breakout} {...styles.hidePrint}>
-                            {showNewsletterSignupTop && (
-                              <div {...styles.newsletterSignUpTop}>
-                                <NewsletterSignUp
-                                  {...newsletterMeta}
-                                  smallButton
-                                  showDescription
-                                />
-                              </div>
-                            )}
                             {actionBar && (
                               <div
                                 ref={actionBarRef}
@@ -483,18 +466,6 @@ const ArticlePage = ({
                     </DiscussionContextProvider>
                   </Center>
                 )}
-                {showNewsletterSignupBottom && (
-                  <Center
-                    breakout={breakout}
-                    {...styles.newsletterSignUpBottom}
-                  >
-                    <NewsletterSignUp
-                      showTitle
-                      showDescription
-                      {...newsletterMeta}
-                    />
-                  </Center>
-                )}
                 {showBottomActionBar && (
                   <Center breakout={breakout}>
                     <div ref={bottomActionBarRef}>{actionBarEnd}</div>
@@ -518,6 +489,23 @@ const ArticlePage = ({
                     seriesDescription={hasPaywall}
                   />
                 )}
+                {(isArticle || isEditorialNewsletter) &&
+                  !(isSeriesOverview || episodes) && (
+                    <>
+                      <Center>
+                        <FollowArticle
+                          contributors={articleMeta?.contributors}
+                          format={articleMeta?.format}
+                        />
+                      </Center>
+                      <NextReads path={cleanedPath} repoId={repoId} />
+                    </>
+                  )}
+                {isFormat && (
+                  <Center style={{ textAlign: 'center', marginBottom: 40 }}>
+                    <FollowFormat path={cleanedPath} button />
+                  </Center>
+                )}
                 {isSection && !hideFeed && (
                   <SectionFeed
                     key={`sectionFeed${article?.issuedForUserId}`}
@@ -531,10 +519,6 @@ const ArticlePage = ({
                     formatId={article.repoId}
                     variables={feedQueryVariables}
                   />
-                )}
-
-                {isArticle && !isSeriesOverview && (
-                  <NextReads path={cleanedPath} repoId={repoId} />
                 )}
               </div>
             </>
