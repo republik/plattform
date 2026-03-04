@@ -34,6 +34,7 @@ function FollowFormatCard({
         subscriptionId={subscriptionId}
         objectId={format.id}
         objectName={format.meta.title}
+        size='default'
       />
     )
 
