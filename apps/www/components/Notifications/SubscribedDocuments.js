@@ -1,18 +1,17 @@
-import { useMemo, useState, useEffect } from 'react'
-import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
-import { possibleSubscriptions } from './enhancers'
 import {
-  TeaserSectionTitle,
-  plainButtonRule,
   A,
-  Interaction,
+  plainButtonRule,
+  TeaserSectionTitle,
   useColorContext,
 } from '@project-r/styleguide'
 import { css } from 'glamor'
-import SubscribeCheckbox from './SubscribeCheckbox'
+import compose from 'lodash/flowRight'
+import { useEffect, useMemo, useState } from 'react'
 import withT from '../../lib/withT'
 import { withMembership } from '../Auth/checkRoles'
+import { possibleSubscriptions } from './enhancers'
+import SubscribeCheckbox from './SubscribeCheckbox'
 
 const styles = {
   checkboxes: css({
@@ -76,11 +75,6 @@ const SubscribedDocuments = ({ t, data: { sections } }) => {
 
   return (
     <>
-      <Interaction.P style={{ marginBottom: 16 }}>
-        {t.pluralize('Notifications/settings/formats/summary', {
-          count: totalSubs,
-        })}
-      </Interaction.P>
       {(showAll ? sectionsWithFormat : visibleSections).map((section) => (
         <div
           {...colorScheme.set(

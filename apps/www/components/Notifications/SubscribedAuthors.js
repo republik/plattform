@@ -1,5 +1,5 @@
 import { graphql } from '@apollo/client/react/hoc'
-import { Interaction, mediaQueries } from '@project-r/styleguide'
+import { mediaQueries } from '@project-r/styleguide'
 import { css } from 'glamor'
 import compose from 'lodash/flowRight'
 import Image from 'next/image'
@@ -82,11 +82,6 @@ const SubscribedAuthors = ({
 
         return (
           <>
-            <Interaction.P style={{ marginBottom: 10 }}>
-              {t.pluralize('Notifications/settings/authors/summary', {
-                count: totalSubs,
-              })}
-            </Interaction.P>
             <div {...styles.authors}>
               {susbcribedAuthorsAndUsersSorted.map((user) => {
                 const portraitUrl = user.userDetails.portrait

@@ -5,6 +5,7 @@ import {
   NextReadDocumentFieldsFragmentDoc,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
+import { ArticleSection } from '@app/components/ui/section'
 import {
   EventTrackingContext,
   useTrackEvent,
@@ -87,14 +88,7 @@ export function CuratedFeed({ path }: { path: string }) {
 
   return (
     <EventTrackingContext category='NextReads:CuratedFeed'>
-      <div
-        className={css({
-          margin: '0 auto',
-          maxWidth: '695px',
-          pl: '15px',
-          pr: '15px',
-        })}
-      >
+      <ArticleSection>
         <div className={nextReadsSection}>
           <div className={cx(nextReadHeader, css({ textAlign: 'left' }))}>
             <h3>{t('nextReads/curatedFeed/title')}</h3>
@@ -109,7 +103,7 @@ export function CuratedFeed({ path }: { path: string }) {
             )}
           />
         )}
-      </div>
+      </ArticleSection>
     </EventTrackingContext>
   )
 }

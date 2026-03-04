@@ -32,7 +32,6 @@ export function NewslettersStatus({
         color: 'text',
         backgroundColor: 'background.marketing',
         p: '8',
-        mb: '16',
       })}
     >
       {data?.resubscribeEmail.status === 'pending' ? (
