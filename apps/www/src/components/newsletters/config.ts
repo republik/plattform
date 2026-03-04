@@ -1,4 +1,3 @@
-import { NewsletterName } from '#graphql/republik-api/__generated__/gql/graphql'
 import { type StaticImageData } from 'next/image'
 import nlDailyDark from './assets/01_Heute_D.svg'
 import nlDaily from './assets/01_Heute_L.svg'
@@ -15,47 +14,53 @@ import nlProjectR from './assets/06_Project_R_L.svg'
 import nlBabDark from './assets/07_BaB_D.svg'
 import nlBab from './assets/07_BaB_L.svg'
 
-export const NL_FEATURED = [
-  NewsletterName.Daily,
-  NewsletterName.Wdwww,
-  NewsletterName.Weekly,
+export type NewsletterName =
+  | 'DAILY'
+  | 'WEEKLY'
+  | 'WDWWW'
+  | 'BAB'
+  | 'CLIMATE'
+  | 'SUNDAY'
+  | 'PROJECTR'
+
+export const NL_FEATURED: NewsletterName[] = ['DAILY', 'WDWWW', 'WEEKLY']
+
+export const NL_MORE: NewsletterName[] = [
+  'BAB',
+  'CLIMATE',
+  'SUNDAY',
+  'PROJECTR',
 ]
 
-export const NL_MORE = [
-  NewsletterName.Bab,
-  NewsletterName.Climate,
-  NewsletterName.Sunday,
-  NewsletterName.Projectr,
-]
-
-export const NL_STYLE: {
-  [key: string]: { imageSrc: StaticImageData; imageSrcDark: StaticImageData }
-} = {
-  [NewsletterName.Daily]: {
+export const NL_STYLE: Record<
+  NewsletterName,
+  { imageSrc: StaticImageData; imageSrcDark: StaticImageData }
+> = {
+  DAILY: {
     imageSrc: nlDaily,
     imageSrcDark: nlDailyDark,
   },
-  [NewsletterName.Wdwww]: {
+  WDWWW: {
     imageSrc: nlWdwww,
     imageSrcDark: nlWdwwwDark,
   },
-  [NewsletterName.Weekly]: {
+  WEEKLY: {
     imageSrc: nlWeekly,
     imageSrcDark: nlWeeklyDark,
   },
-  [NewsletterName.Bab]: {
+  BAB: {
     imageSrc: nlBab,
     imageSrcDark: nlBabDark,
   },
-  [NewsletterName.Climate]: {
+  CLIMATE: {
     imageSrc: nlClimate,
     imageSrcDark: nlClimateDark,
   },
-  [NewsletterName.Sunday]: {
+  SUNDAY: {
     imageSrc: nlSunday,
     imageSrcDark: nlSundayDark,
   },
-  [NewsletterName.Projectr]: {
+  PROJECTR: {
     imageSrc: nlProjectR,
     imageSrcDark: nlProjectRDark,
   },

@@ -1,13 +1,13 @@
 'use client'
 
 import {
-  NewsletterName,
   NewsletterSettingsDocument,
   SignUpForNewsletterDocument,
   UpdateNewsletterSubscriptionDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { ApolloError, useMutation, useQuery } from '@apollo/client'
 import { ErrorMessage } from '@app/components/auth/login/error-message'
+import { type NewsletterName } from '@app/components/newsletters/config'
 import { isSubscribedToNewsletter } from '@app/components/newsletters/helpers'
 import { NewslettersStatus } from '@app/components/newsletters/newsletters-status'
 import { Button } from '@app/components/ui/button'

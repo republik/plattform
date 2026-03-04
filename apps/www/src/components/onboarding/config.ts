@@ -1,6 +1,5 @@
-import { NewsletterName } from '#graphql/republik-api/__generated__/gql/graphql'
 import { type StaticImageData } from 'next/image'
-
+import { type NewsletterName } from '../newsletters/config'
 import formatBinswanger from './assets/format-binswanger.png'
 import formatWieRedenWirEigentlich from './assets/format-format-wie-reden-wir-eigentlich.png'
 import formatGedankensplitter from './assets/format-gedankensplitter.png'
@@ -14,16 +13,8 @@ type StyleType = {
   imageSrc?: StaticImageData
 }
 
-export const NL_FEATURED: NewsletterName[] = [
-  NewsletterName.Daily,
-  NewsletterName.Wdwww,
-  NewsletterName.Weekly,
-]
-export const NL_MORE: NewsletterName[] = [
-  NewsletterName.Bab,
-  NewsletterName.Climate,
-  NewsletterName.Sunday,
-]
+export const NL_FEATURED: NewsletterName[] = ['DAILY', 'WDWWW', 'WEEKLY']
+export const NL_MORE: NewsletterName[] = ['BAB', 'CLIMATE', 'SUNDAY']
 
 export const FORMATS_FEATURED: string[] = [
   'republik/format-binswanger',
