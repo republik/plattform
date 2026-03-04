@@ -42,7 +42,7 @@ export async function updateNewsletterSubscriptions(
     },
   }
 
-  const mailchimp = MailchimpInterface({ console })
+  const mailchimp = MailchimpInterface({ logger: console })
 
   let mailchimpStatus
   if (!status) {
