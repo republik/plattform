@@ -256,19 +256,17 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
               />
             </div>
           )}
-          {isFollowable &&
-            !user.documents.totalCount &&
-            checkRoles(me, ['moderator', 'admin']) && (
-              <div>
-                <FollowButton
-                  type={SubscriptionObjectType.User}
-                  subscriptionId={subscriptionId}
-                  objectId={user.id}
-                  objectName={user.name}
-                  filters={[EventObjectType.Comment]}
-                />
-              </div>
-            )}
+          {isFollowable && !user.documents.totalCount && (
+            <div>
+              <FollowButton
+                type={SubscriptionObjectType.User}
+                subscriptionId={subscriptionId}
+                objectId={user.id}
+                objectName={user.name}
+                filters={[EventObjectType.Comment]}
+              />
+            </div>
+          )}
           {!!user.biography && <p {...styles.biography}>{user.biography}</p>}
           <div {...styles.contactLinks} {...styles.hiddenDesktop}>
             <ProfileUrls user={user} />
