@@ -811,6 +811,14 @@
       "value": "Jeden Donnerstag"
     },
     {
+      "key": "account/newsletterSubscriptions/TECH/label",
+      "value": "CTRL"
+    },
+    {
+      "key": "account/newsletterSubscriptions/TECH/frequency",
+      "value": "Alle 2 – 3 Wochen"
+    },
+    {
       "key": "account/authSettings/title",
       "value": "Anmeldung"
     },

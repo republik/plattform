@@ -21,6 +21,7 @@ export const NL_FEATURED: NewsletterName[] = [
 ]
 export const NL_MORE: NewsletterName[] = [
   NewsletterName.Bab,
+  NewsletterName.Tech,
   NewsletterName.Climate,
   NewsletterName.Sunday,
 ]

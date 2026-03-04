@@ -14,6 +14,8 @@ import nlProjectRDark from './assets/06_Project_R_D.svg'
 import nlProjectR from './assets/06_Project_R_L.svg'
 import nlBabDark from './assets/07_BaB_D.svg'
 import nlBab from './assets/07_BaB_L.svg'
+import nlTechDark from './assets/08_Tech_D.svg'
+import nlTech from './assets/08_Tech_L.svg'
 
 export const NL_FEATURED = [
   NewsletterName.Daily,
@@ -23,6 +25,7 @@ export const NL_FEATURED = [
 
 export const NL_MORE = [
   NewsletterName.Bab,
+  NewsletterName.Tech,
   NewsletterName.Climate,
   NewsletterName.Sunday,
   NewsletterName.Projectr,
@@ -46,6 +49,10 @@ export const NL_STYLE: {
   [NewsletterName.Bab]: {
     imageSrc: nlBab,
     imageSrcDark: nlBabDark,
+  },
+  [NewsletterName.Tech]: {
+    imageSrc: nlTech,
+    imageSrcDark: nlTechDark,
   },
   [NewsletterName.Climate]: {
     imageSrc: nlClimate,
