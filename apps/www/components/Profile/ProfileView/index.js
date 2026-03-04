@@ -141,7 +141,6 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
   const isMe = me && me.id === user.id
   const isSupporter = checkRoles(me, ['supporter'])
   const listedCredential = user.credentials?.filter((c) => c.isListed)[0]
-  console.log(user.subscribedBy?.nodes)
   const isFollowable = !!me && user.subscribedBy && user.id !== me.id
   const subscription = user.subscribedBy?.nodes.find((n) => n.active)
 
@@ -267,6 +266,7 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
                 objectId={user.id}
                 objectName={user.name}
                 filters={[EventObjectType.Comment]}
+                size='default'
               />
             </div>
           )}
