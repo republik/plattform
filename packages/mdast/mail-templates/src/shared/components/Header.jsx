@@ -24,6 +24,12 @@ const HEADER_VARIANTS = [
     height: 71,
     imageSrc: '/static/logo_republik_newsletter_bab.png',
   },
+  {
+    repoId: 'republik/format-ctrl',
+    width: 220,
+    height: 71,
+    imageSrc: '/static/logo_republik_newsletter_ctrl.gif',
+  },
 ]
 
 const HEADER_VARIANT_DEFAULT = {
