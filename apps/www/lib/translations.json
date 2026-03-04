@@ -7037,7 +7037,7 @@
     },
     {
       "key": "Notifications/settings/authors/summary/1",
-      "value": "Sie folgen eine Person:"
+      "value": "Sie folgen einer Person:"
     },
     {
       "key": "Notifications/settings/authors/summary/other",
@@ -7742,6 +7742,18 @@
     {
       "key": "loginPopup/description",
       "value": "Bitte <b>melden Sie sich an</b>, um den Beitrag zu lesen."
+    },
+    {
+      "key": "newsletter/subscribe",
+      "value": "Newsletter abonnieren"
+    },
+    {
+      "key": "newsletter/isSubscribed",
+      "value": "Newsletter abonniert"
+    },
+    {
+      "key": "newsletters/postbox",
+      "value": "ins Postfach bekommen"
     },
     {
       "key": "newsletters/DAILY/name",

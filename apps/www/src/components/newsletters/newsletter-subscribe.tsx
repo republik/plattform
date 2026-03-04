@@ -93,7 +93,7 @@ function NewsletterSubscribeForm({
         <FormField label='Ihre E-Mail-Adresse' name='email' type='email' />
         <div className={css({ display: 'none', md: { display: 'block' } })}>
           <Button type='submit' disabled={isPending} loading={isPending}>
-            Newsletter abonnieren
+            {t('newsletter/subscribe')}
           </Button>
         </div>
       </div>
@@ -105,7 +105,7 @@ function NewsletterSubscribeForm({
           disabled={isPending}
           loading={isPending}
         >
-          Newsletter abonnieren
+          {t('newsletter/subscribe')}
         </Button>
       </div>
     </form>
@@ -117,6 +117,7 @@ export function NewsletterSubscribeButton({
 }: {
   newsletter: NewsletterName
 }) {
+  const { t } = useTranslation()
   const [updateNewsletterSubscription] = useMutation(
     UpdateNewsletterSubscriptionDocument,
   )
@@ -174,7 +175,7 @@ export function NewsletterSubscribeButton({
       variant={isSubscribed ? 'outline' : 'default'}
       loading={isPending}
     >
-      Newsletter {isSubscribed ? 'abonniert' : 'abonnieren'}
+      {t(isSubscribed ? 'newsletter/isSubscribed' : 'newsletter/subscribe')}
     </Button>
   )
 }

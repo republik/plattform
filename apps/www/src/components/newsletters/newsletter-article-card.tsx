@@ -73,7 +73,7 @@ function NewsletterArticleCard({
                 fontWeight: 500,
               })}
             >
-              in den Postfach bekommen
+              {t('newsletters/postbox')}
             </span>
           </h3>
           <p className={css({ textStyle: 'airy', my: 1 })}>
