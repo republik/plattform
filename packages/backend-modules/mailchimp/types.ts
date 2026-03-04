@@ -7,7 +7,7 @@ export type UserInterests = {
 export type MemberStatus =
   (typeof MailchimpInterface.MemberStatus)[keyof typeof MailchimpInterface.MemberStatus]
 
-export type MergeFieldName =
+type RequiredMergeFieldName =
   | 'FNAME'
   | 'LNAME'
   | 'PL_AMOUNT'
@@ -18,10 +18,11 @@ export type MergeFieldName =
   | 'REG_TRIAL'
   | 'DISCOUNT'
 
-export type UserMergeFields = Record<
-  MergeFieldName,
-  string | number | Date | undefined
->
+type MergeFieldValue = string | number | Date | undefined
+type RequiredMergeFields = Record<RequiredMergeFieldName, MergeFieldValue>
+type OtherMergeFields = Record<string, MergeFieldValue>
+
+export type UserMergeFields = RequiredMergeFields & OtherMergeFields
 
 export type MemberData = {
   email_address: string
