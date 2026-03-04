@@ -39,7 +39,7 @@ function FollowFormatCard({
 
   return (
     <FollowFormatContainer>
-      <div className={css({ maxWidth: '480px' })}>
+      <div>
         <h3
           className={css({
             textStyle: 'subtitleBold',
@@ -61,19 +61,21 @@ function FollowFormatCard({
           size='small'
         />
       </div>
-      <Image
-        src={format.meta.image}
-        width={120}
-        height={120}
-        alt=''
-        className={css({
-          borderRadius: 120,
-          width: 120,
-          height: 120,
-          ml: 'auto',
-          objectFit: 'cover',
-        })}
-      />
+      {!!format.meta.image && (
+        <Image
+          src={format.meta.image}
+          width={120}
+          height={120}
+          alt=''
+          className={css({
+            borderRadius: 120,
+            width: 120,
+            height: 120,
+            ml: 'auto',
+            objectFit: 'cover',
+          })}
+        />
+      )}
     </FollowFormatContainer>
   )
 }
