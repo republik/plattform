@@ -27,7 +27,7 @@ function FollowAuthors({ authorIds }: { authorIds: string[] }) {
   const authorsHidden = authorIds.slice(MAX_AUTHORS)
 
   return (
-    <div className={css({ mt: 8, mb: 16 })}>
+    <div className={css({ mt: 8, mb: 12, md: { mb: 16 } })}>
       <AuthorsList authorIds={authorsShown} />
       {!!authorsHidden?.length && (
         <RadixCollapsible.Root open={showAll} onOpenChange={setShowAll}>

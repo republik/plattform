@@ -43,15 +43,18 @@ function FollowAuthorCard({ authorId }: { authorId: string }) {
       className={css({
         marginTop: 4,
         pt: 4,
-        px: 4,
         borderTopStyle: 'solid',
         borderTopWidth: '1px',
         borderTopColor: 'divider',
         display: 'flex',
         alignItems: 'center',
-        gap: 4,
+        gap: 2,
         position: 'relative',
         cursor: 'pointer',
+        md: {
+          gap: 4,
+          px: 4,
+        },
       })}
     >
       {author.portrait && (
@@ -66,7 +69,7 @@ function FollowAuthorCard({ authorId }: { authorId: string }) {
         />
       )}
       <div>
-        <h4 className={css({ fontWeight: 'bold' })}>
+        <h4 className={css({ fontWeight: 'bold', lineHeight: '1.2' })}>
           <Link href={`/~${author.slug}`} className={linkOverlay()}>
             {author.name}
           </Link>
@@ -76,14 +79,17 @@ function FollowAuthorCard({ authorId }: { authorId: string }) {
             className={css({
               fontSize: 'sm',
               color: 'textSoft',
-              lineHeight: '1',
+              lineHeight: '1.2',
+              wordBreak: 'break-word',
             })}
           >
             {authorDescription}
           </p>
         )}
       </div>
-      <div className={css({ ml: 'auto', position: 'relative', zIndex: 10 })}>
+      <div
+        className={css({ ml: 'auto', position: 'relative', zIndex: 10, pl: 2 })}
+      >
         <FollowButton
           type={SubscriptionObjectType.User}
           subscriptionId={subscriptionId}

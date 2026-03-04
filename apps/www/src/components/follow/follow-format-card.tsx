@@ -50,7 +50,7 @@ function FollowFormatCard({
           <br />
           <Link href={format.meta.path}>{format.meta.title}</Link>
         </h3>
-        <p className={css({ py: 4, textStyle: 'airy' })}>
+        <p className={css({ pt: 1, pb: 4, textStyle: 'airy' })}>
           {format.meta.description}
         </p>
         <FollowButton

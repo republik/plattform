@@ -141,7 +141,6 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
   const isMe = me && me.id === user.id
   const isSupporter = checkRoles(me, ['supporter'])
   const listedCredential = user.credentials?.filter((c) => c.isListed)[0]
-  console.log(user.subscribedBy?.nodes)
   const isFollowable = !!me && user.subscribedBy && user.id !== me.id
   const subscription = user.subscribedBy?.nodes.find((n) => n.active)
 
@@ -248,28 +247,29 @@ const ProfileView = ({ data: { user }, fetchMore }) => {
                 />
               )}
             </div>
+            {isFollowable && !!user.documents.totalCount && (
+              <div>
+                <FollowAuthorDropdown
+                  subscriptionId={subscription?.id}
+                  subscriptionFilters={subscription?.filters}
+                  objectId={user.id}
+                  objectName={user.name}
+                />
+              </div>
+            )}
+            {isFollowable && !user.documents.totalCount && (
+              <div>
+                <FollowButton
+                  type={SubscriptionObjectType.User}
+                  subscriptionId={subscription?.id}
+                  objectId={user.id}
+                  objectName={user.name}
+                  filters={[EventObjectType.Comment]}
+                  size='default'
+                />
+              </div>
+            )}
           </div>
-          {isFollowable && !!user.documents.totalCount && (
-            <div>
-              <FollowAuthorDropdown
-                subscriptionId={subscription?.id}
-                subscriptionFilters={subscription?.filters}
-                objectId={user.id}
-                objectName={user.name}
-              />
-            </div>
-          )}
-          {isFollowable && !user.documents.totalCount && (
-            <div>
-              <FollowButton
-                type={SubscriptionObjectType.User}
-                subscriptionId={subscription?.id}
-                objectId={user.id}
-                objectName={user.name}
-                filters={[EventObjectType.Comment]}
-              />
-            </div>
-          )}
           {!!user.biography && <p {...styles.biography}>{user.biography}</p>}
           <div {...styles.contactLinks} {...styles.hiddenDesktop}>
             <ProfileUrls user={user} />
