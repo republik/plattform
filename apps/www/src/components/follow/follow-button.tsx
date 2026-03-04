@@ -17,7 +17,7 @@ export function FollowButton({
   subscriptionId,
   objectId,
   objectName,
-  size,
+  size = 'small',
   filters = [EventObjectType.Document],
 }: {
   type: SubscriptionObjectType
