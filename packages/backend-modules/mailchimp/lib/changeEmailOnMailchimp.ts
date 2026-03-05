@@ -18,14 +18,17 @@ export async function changeEmailOnMailchimp({
   const mailchimp = MailchimpInterface({ logger })
 
   await Promise.allSettled(
-    MailchimpInterface.audiences.map((audienceId) => {
-      return mailchimp.updateMember(
-        oldEmail,
-        {
-          email_address: newEmail,
-        },
-        audienceId,
-      )
+    MailchimpInterface.audiences.map(async (audienceId) => {
+      const oldUser = await mailchimp.getMember(oldEmail, audienceId)
+      if (oldUser) {
+        return mailchimp.updateMember(
+          oldEmail,
+          {
+            email_address: newEmail,
+          },
+          audienceId,
+        )
+      }
     }),
   )
 }
