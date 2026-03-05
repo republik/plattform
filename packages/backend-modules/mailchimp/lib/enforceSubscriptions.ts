@@ -86,8 +86,6 @@ export async function enforceSubscriptions({
     MAILCHIMP_NEWSLETTER_CONFIGS,
   )
 
-  console.log('ENFORCE SUBS')
-
   await updateNewsletterSubscriptions(
     {
       user: user || { email },
