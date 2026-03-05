@@ -111,7 +111,9 @@ const MailchimpInterface = ({ logger }: any) => {
         const json = (await response.json()) as any
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
           debug('mail:MailchimpInterface:updateError')(
-            `could not update member in audience '${audienceId}': ${email} ${json.detail}`,
+            `could not update member in audience '${audienceId}': ${email} ${
+              json.detail
+            }, ${JSON.stringify(json)}`,
           )
           return null
         }
