@@ -32,13 +32,13 @@ import {
 import { IconBack } from '@republik/icons'
 import Link from 'next/link'
 import { IpAllowlistBanner } from '../../src/components/ip-allowlist-banner'
+import { useMe } from '../../lib/context/MeContext'
 
 const BACK_BUTTON_SIZE = 24
 
 const Header = ({
   isAnyNavExpanded,
   hasSecondaryNav,
-  me,
   secondaryNav,
   formatColor,
   pullable = true,
@@ -48,6 +48,7 @@ const Header = ({
   const { t } = useTranslation()
   const { inNativeIOSApp, inNativeApp } = useInNativeApp()
   const { isExpanded: audioPlayerExpanded } = useAudioContext()
+  const { me, meLoading } = useMe()
   const [colorScheme] = useColorContext()
   const router = useRouter()
   const scrollableHeaderHeight = useMemo(() => {
@@ -118,7 +119,7 @@ const Header = ({
                   router.push(me ? '/meine-republik' : '/anmelden')
                 }}
               />
-            ) : (
+            ) : meLoading ? null : (
               <Link
                 href='/anmelden'
                 {...styles.signInLink}
