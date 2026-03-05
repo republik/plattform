@@ -73,7 +73,9 @@ const MailchimpInterface = ({ logger }: any) => {
         const response = await this.fetchAuthenticated('GET', url)
         const json = (await response.json()) as any
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug('mail:MailchimpInterface:getMember')(`could not get member: ${email} ${json.detail}`)
+          debug('mail:MailchimpInterface:getMember')(
+            `could not get member: ${email} ${json.detail}`,
+          )
           return null
         }
         return json
@@ -99,13 +101,18 @@ const MailchimpInterface = ({ logger }: any) => {
             EMAILB64U: base64u.encode(email),
           },
         }
-        debug('mail:MailchimpInterface:updateMember')('MailchimpInterface.updateMember PUT', { body })
+        debug('mail:MailchimpInterface:updateMember')(
+          'MailchimpInterface.updateMember PUT',
+          { body },
+        )
         const response = await this.fetchAuthenticated('PUT', url, {
           body: JSON.stringify(body),
         })
         const json = (await response.json()) as any
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug('mail:MailchimpInterface:updateError')(`could not update member: ${email} ${json.detail}`)
+          debug('mail:MailchimpInterface:updateError')(
+            `could not update member in audience '${audienceId}': ${email} ${json.detail}`,
+          )
           return null
         }
         return json
@@ -152,7 +159,9 @@ const MailchimpInterface = ({ logger }: any) => {
       try {
         const response = await this.fetchAuthenticated('DELETE', url)
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug('mail:MailchimpInterface:archiveError')(`could not archive member: ${email}`)
+          debug('mail:MailchimpInterface:archiveError')(
+            `could not archive member: ${email}`,
+          )
           return null
         }
         return true
@@ -168,7 +177,9 @@ const MailchimpInterface = ({ logger }: any) => {
       try {
         const response = await this.fetchAuthenticated('POST', url)
         if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
-          debug('mail:MailchimpInterface:deleteError')(`could not delete member from audience ${audienceId}: ${email}`)
+          debug('mail:MailchimpInterface:deleteError')(
+            `could not delete member from audience ${audienceId}: ${email}`,
+          )
           return false
         }
         return true

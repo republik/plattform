@@ -7,7 +7,7 @@ const {
   MAILCHIMP_INTEREST_MEMBER,
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
   MAILCHIMP_INTEREST_GRANTED_ACCESS,
-  MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL,
+  // MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL,
   REGWALL_TRIAL_CAMPAIGN_ID,
 } = getConfig()
 
@@ -56,7 +56,7 @@ export async function getInterestsForUser({
   interests[MAILCHIMP_INTEREST_MEMBER] = hasMembership || hasSubscription
   interests[MAILCHIMP_INTEREST_MEMBER_BENEFACTOR] = isBenefactor
   interests[MAILCHIMP_INTEREST_GRANTED_ACCESS] = hasActiveGrantedAccess
-  interests[MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL] = hasActiveOrPastRegwallTrial
+  // interests[MAILCHIMP_INTEREST_PAST_REGWALL_TRIAL] = hasActiveOrPastRegwallTrial
 
   if (
     subscribeToEditorialNewsletters &&
