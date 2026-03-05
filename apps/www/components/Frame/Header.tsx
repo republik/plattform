@@ -129,12 +129,8 @@ const Header = ({
               </Link>
             )}
           </div>
-          <Link
-            {...styles.logoLink}
-            aria-label={t('header/logo/magazine/aria')}
-            href={'/'}
-          >
-            <Logo fill='var(--color-text)' />
+          <Link aria-label={t('header/logo/magazine/aria')} href={'/'}>
+            <Logo {...styles.logo} />
           </Link>
           <div {...styles.right}>
             <AudioPlayerToggle />
@@ -229,11 +225,12 @@ const styles = {
     width: '100%',
     padding: '0 16px',
   }),
-  logoLink: css({
-    flexShrink: 0,
+  logo: css({
     width: LOGO_WIDTH_MOBILE,
+    height: 'auto',
     [mediaQueries.mUp]: {
       width: LOGO_WIDTH,
+      height: 'auto',
     },
   }),
   left: css({

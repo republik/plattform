@@ -134,11 +134,9 @@ const styles = {
     zIndex: ZINDEX_HEADER,
     height: SUBHEADER_HEIGHT,
     display: 'flex',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     padding: `0px 15px`,
-    [mediaQueries.mUp]: {
-      justifyContent: 'center',
-    },
+    [mediaQueries.mUp]: {},
   }),
   miniNav: css({
     overflowY: 'hidden',
@@ -156,9 +154,6 @@ const styles = {
     msOverflowStyle: 'none' /* IE 10+ */,
     '::-webkit-scrollbar': {
       display: 'none',
-    },
-    [mediaQueries.sDown]: {
-      justifyContent: 'flex-start',
     },
     '& a': {
       display: 'inline-block',
