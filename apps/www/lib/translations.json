@@ -821,6 +821,18 @@
       "value": "Das Wichtigste aus der Schweizer Politik auf einen Blick."
     },
     {
+      "key": "account/newsletterSubscriptions/TECH/label",
+      "value": "CTRL"
+    },
+    {
+      "key": "account/newsletterSubscriptions/TECH/frequency",
+      "value": "Alle 2 bis 3 Wochen"
+    },
+    {
+      "key": "account/newsletterSubscriptions/BAB/description",
+      "value": "Technologie ist politisch. Wir schauen genau hin. Der Digitalpolitik-Newsletter der Republik mit Adrienne Fichter."
+    },
+    {
       "key": "account/newsletterSubscriptions/PROJECTR/label",
       "value": "Project-R-Newsletter"
     },
@@ -850,7 +862,7 @@
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/frequency",
-      "value": "Alle 2–3 Wochen"
+      "value": "Alle 2 bis 3 Wochen"
     },
     {
       "key": "account/newsletterSubscriptions/CLIMATE/description",
@@ -7814,6 +7826,18 @@
     {
       "key": "newsletters/BAB/schedule",
       "value": "Donnerstag"
+    },
+    {
+      "key": "newsletters/TECH/name",
+      "value": "CTRL"
+    },
+    {
+      "key": "newsletters/TECH/description",
+      "value": "Technologie ist politisch. Wir schauen genau hin. Der Digitalpolitik-Newsletter der Republik mit Adrienne Fichter."
+    },
+    {
+      "key": "newsletters/TECH/schedule",
+      "value": "Alle 2 bis 3 Wochen"
     },
     {
       "key": "newsletters/PROJECTR/name",

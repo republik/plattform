@@ -14,7 +14,7 @@ type StyleType = {
 }
 
 export const NL_FEATURED: NewsletterName[] = ['DAILY', 'WDWWW', 'WEEKLY']
-export const NL_MORE: NewsletterName[] = ['BAB', 'CLIMATE', 'SUNDAY']
+export const NL_MORE: NewsletterName[] = ['BAB', 'TECH', 'CLIMATE', 'SUNDAY']
 
 export const FORMATS_FEATURED: string[] = [
   'republik/format-binswanger',
