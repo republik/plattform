@@ -27,7 +27,10 @@ module.exports = async (commentId, vote, pgdb, user, t, pubsub, loaders) => {
     }
 
     const discussion = await loaders.Discussion.byId.load(comment.discussionId)
-    Roles.ensureUserIsInRoles(user, discussion.allowedRoles)
+    const isMember = Roles.userIsInRoles(user, ['member'])
+    if (!isMember) {
+      throw new Error(t('api/unauthorized'))
+    }
 
     const existingUserVote = comment.votes.find(
       (vote) => vote.userId === user.id,
