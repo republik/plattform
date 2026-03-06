@@ -226,6 +226,7 @@ const styles = {
     padding: '0 16px',
   }),
   logo: css({
+    fill: 'var(--color-logo)',
     width: LOGO_WIDTH_MOBILE,
     height: 'auto',
     [mediaQueries.mUp]: {
