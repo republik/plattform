@@ -13,61 +13,23 @@ const HEIGHT = VIEWBOX_ARRAY[3] - VIEWBOX_ARRAY[1]
 const ratio = WIDTH / HEIGHT
 
 const styles = {
-  container: css({
-    position: 'relative',
-    height: 0,
-    width: '100%',
-    paddingBottom: `${(HEIGHT / WIDTH) * 100}%`,
-  }),
   svg: css({
-    position: 'absolute',
-    height: '100%',
     width: '100%',
-    left: 0,
-    top: 0,
   }),
 }
 
 type LogoProps = {
   width?: number | string
   height?: number | string
-  fill: string
+  fill?: string
 } & React.SVGProps<SVGSVGElement>
 
-const LogoSvg = ({ width, height, fill, ...props }: LogoProps) => {
-  const [colorScheme] = useColorContext()
+const Logo = (props: LogoProps) => {
   return (
-    <svg
-      {...colorScheme.set('fill', 'logo')}
-      {...props}
-      width={width}
-      height={height}
-      viewBox={VIEWBOX}
-    >
-      {GRADIENT && <defs dangerouslySetInnerHTML={{ __html: GRADIENT }} />}
-      <path fill={GRADIENT ? 'url(#logo-gradient)' : fill} d={PATH} />
+    <svg {...props} width={162} height={24} viewBox={VIEWBOX}>
+      <path fill={props.fill} d={PATH} />
     </svg>
   )
-}
-
-const Logo = (props: LogoProps) => {
-  let width
-  let height
-  if (props.width) {
-    width = props.width
-    height = width / ratio
-  } else if (props.height) {
-    height = props.height
-    width = height * ratio
-  } else {
-    return (
-      <div {...styles.container}>
-        <LogoSvg {...styles.svg} width='100%' fill={props.fill} />
-      </div>
-    )
-  }
-
-  return <LogoSvg width={width} height={height} fill={props.fill} />
 }
 
 Logo.ratio = ratio

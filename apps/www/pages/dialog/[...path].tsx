@@ -53,6 +53,8 @@ const DialogContent = () => {
     url: `${PUBLIC_BASE_URL}/dialog${discussionContext.discussion.path}`,
   }
 
+  const isLoaded = !discussionContext.loading && !discussionContext.error
+
   return (
     <>
       {metaData && <Meta data={metaData} />}
@@ -71,8 +73,19 @@ const DialogContent = () => {
             <Interaction.H1>
               <DiscussionTitle />
             </Interaction.H1>
-            <br />
-            <div style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+            {isLoaded && !discussionContext?.discussion?.userCanComment && (
+              <div style={{ marginTop: 30 }}>
+                <DialogPaynote />
+              </div>
+            )}
+            <div
+              style={{
+                display: 'flex',
+                gap: 24,
+                alignItems: 'center',
+                marginTop: 30,
+              }}
+            >
               <FollowDiscussionDropdown
                 discussionId={discussionContext?.discussion?.id}
                 notificationOption={
@@ -85,9 +98,6 @@ const DialogContent = () => {
                 fontSize
               />
             </div>
-            {!discussionContext?.discussion?.userCanComment && (
-              <DialogPaynote />
-            )}
           </div>
           <Discussion />
         </div>
