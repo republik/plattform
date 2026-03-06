@@ -1,22 +1,13 @@
-import React from 'react'
-import { css } from 'glamor'
-import { useColorContext } from '../Colors/useColorContext'
 import logo from '@republik/theme/logo.json'
+import React from 'react'
 
 const VIEWBOX = logo.LOGO_VIEWBOX || '0 0 4 1.5'
-const GRADIENT = logo.LOGO_GRADIENT
 const PATH = logo.LOGO_PATH || 'M0 0 L4 0 L4 1.5 L3 0.5 L2 4 L1 0.5 L0 1.5 Z'
 const VIEWBOX_ARRAY = VIEWBOX.split(' ').map((d) => +d)
 const WIDTH = VIEWBOX_ARRAY[2] - VIEWBOX_ARRAY[0]
 const HEIGHT = VIEWBOX_ARRAY[3] - VIEWBOX_ARRAY[1]
 
 const ratio = WIDTH / HEIGHT
-
-const styles = {
-  svg: css({
-    width: '100%',
-  }),
-}
 
 type LogoProps = {
   width?: number | string
