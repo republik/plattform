@@ -7057,7 +7057,7 @@
     },
     {
       "key": "Notifications/settings/formats/summary/1",
-      "value": "Sie folgen eine Rubrik:"
+      "value": "Sie folgen einer Rubrik:"
     },
     {
       "key": "Notifications/settings/formats/summary/other",
@@ -8061,7 +8061,7 @@
     },
     {
       "key": "follow/discussion/MY_CHILDREN/label",
-      "value": "Antwort auf meinen Kommentar"
+      "value": "Antworten auf meine Kommentare"
     },
     {
       "key": "follow/discussion/MY_CHILDREN/action",
