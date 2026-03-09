@@ -492,12 +492,14 @@ const ArticlePage = ({
                 {(isArticle || isEditorialNewsletter) &&
                   !(isSeriesOverview || episodes) && (
                     <>
-                      <Center>
-                        <FollowArticle
-                          contributors={articleMeta?.contributors}
-                          format={articleMeta?.format}
-                        />
-                      </Center>
+                      {me && (
+                        <Center>
+                          <FollowArticle
+                            contributors={articleMeta?.contributors}
+                            format={articleMeta?.format}
+                          />
+                        </Center>
+                      )}
                       <NextReads path={cleanedPath} repoId={repoId} />
                     </>
                   )}

@@ -36,7 +36,7 @@ module.exports = {
   async subscribedBy(user, args, context) {
     const { user: me } = context
     if (args.onlyMe && !me) {
-      return
+      return paginate(args, [])
     }
     return createSubscriptionConnection(
       await getSubscriptionsForUserAndObject(
