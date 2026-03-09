@@ -35,6 +35,9 @@ module.exports = {
   },
   async subscribedBy(user, args, context) {
     const { user: me } = context
+    if (args.onlyMe && !me) {
+      return
+    }
     return createSubscriptionConnection(
       await getSubscriptionsForUserAndObject(
         args.onlyMe ? me.id : null,
