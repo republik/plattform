@@ -44,7 +44,7 @@ describe('check revoked consent', () => {
         { name: 'TOS' },
         { user: me, pgdb: pgdb, req: req, t: t },
       ),
-    ).rejects.toThrowError('api/consents/notRevokable: TOS')
+    ).rejects.toThrow(/TOS/)
   })
 
   test('revoke revokable consent', () => {

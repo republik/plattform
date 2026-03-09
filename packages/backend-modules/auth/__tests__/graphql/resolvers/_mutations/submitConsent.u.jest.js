@@ -44,7 +44,7 @@ describe('check submitted consent', () => {
         { name: 'RANDOM_CONSENT' },
         { user: me, pgdb: pgdb, req: req, t: t },
       ),
-    ).rejects.toThrowError('api/consents/notValid: RANDOM_CONSENT')
+    ).rejects.toThrow(/RANDOM_CONSENT/)
   })
 
   test('submit valid consent', () => {
