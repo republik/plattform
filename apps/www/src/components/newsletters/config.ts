@@ -13,12 +13,15 @@ import nlProjectRDark from './assets/06_Project_R_D.svg'
 import nlProjectR from './assets/06_Project_R_L.svg'
 import nlBabDark from './assets/07_BaB_D.svg'
 import nlBab from './assets/07_BaB_L.svg'
+import nlTechDark from './assets/08_Tech_D.svg'
+import nlTech from './assets/08_Tech_L.svg'
 
 export type NewsletterName =
   | 'DAILY'
   | 'WEEKLY'
   | 'WDWWW'
   | 'BAB'
+  | 'TECH'
   | 'CLIMATE'
   | 'SUNDAY'
   | 'PROJECTR'
@@ -27,6 +30,7 @@ export const NL_FEATURED: NewsletterName[] = ['DAILY', 'WDWWW', 'WEEKLY']
 
 export const NL_MORE: NewsletterName[] = [
   'BAB',
+  'TECH',
   'CLIMATE',
   'SUNDAY',
   'PROJECTR',
@@ -51,6 +55,10 @@ export const NL_STYLE: Record<
   BAB: {
     imageSrc: nlBab,
     imageSrcDark: nlBabDark,
+  },
+  TECH: {
+    imageSrc: nlTech,
+    imageSrcDark: nlTechDark,
   },
   CLIMATE: {
     imageSrc: nlClimate,
