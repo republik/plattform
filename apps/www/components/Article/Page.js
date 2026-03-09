@@ -3,6 +3,7 @@ import { LoginPopup } from '@app/components/auth/login/login-popup'
 import FollowArticle from '@app/components/follow/follow-article'
 import FollowFormat from '@app/components/follow/follow-format'
 import NextReads from '@app/components/next-reads'
+import CampaignPaywall from '@app/components/paynotes/campaign/campaign-paywall'
 import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import { WelcomeBanner } from '@app/components/paynotes/paynotes-in-trial/welcome'
@@ -75,9 +76,8 @@ const ArticlePage = ({
   const { share, extract, showAll } = router.query
 
   const { me, meLoading, isEditor } = useMe()
-  const { paynoteKind, setTemplateForPaynotes, setIsPaywallExcluded } =
+  const { setTemplateForPaynotes, setIsPaywallExcluded, hasPaywall } =
     usePaynotes()
-  const hasPaywall = paynoteKind === 'PAYWALL' || paynoteKind === 'REGWALL'
 
   const { isAudioQueueAvailable } = useAudioQueue()
 
@@ -452,6 +452,7 @@ const ArticlePage = ({
                     </div>
                     <Regwall />
                     <Paywall />
+                    <CampaignPaywall />
                   </article>
                 </ProgressComponent>
                 <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
