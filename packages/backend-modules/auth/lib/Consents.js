@@ -18,6 +18,7 @@ const VALID_POLICIES = [
   'NEWSLETTER_WDWWW',
   'NEWSLETTER_SUNDAY',
   'NEWSLETTER_BAB',
+  'NEWSLETTER_TECH',
 ]
 
 const REVOKABLE_POLICIES = [
@@ -31,6 +32,7 @@ const REVOKABLE_POLICIES = [
   'NEWSLETTER_WDWWW',
   'NEWSLETTER_SUNDAY',
   'NEWSLETTER_BAB',
+  'NEWSLETTER_TECH',
 ]
 
 const getAllConsentRecords = ({ userId, pgdb }) =>
