@@ -1,6 +1,9 @@
 const validator = require('validator')
 
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const {
+  getNewsletterSubscriptionConfig,
+} = require('@orbiting/backend-modules-mailchimp')
 
 const { getConsentLink } = require('../../../lib/Newsletter')
 
@@ -12,9 +15,12 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/email/invalid'))
   }
 
-  if (
-    !['PROJECTR', 'CLIMATE', 'WDWWW', 'SUNDAY', 'BAB', 'TECH'].includes(name)
-  ) {
+  const newsletterConfig =
+    getNewsletterSubscriptionConfig().MAILCHIMP_NEWSLETTER_CONFIGS.find(
+      (config) => config.name === name,
+    )
+
+  if (!newsletterConfig?.free) {
     throw new Error(t('api/newsletters/request/notSupported'))
   }
 
