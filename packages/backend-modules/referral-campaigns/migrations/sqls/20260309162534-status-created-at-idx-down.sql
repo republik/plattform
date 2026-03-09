@@ -1,0 +1,2 @@
+DROP INDEX pledges_status_created_at_idx;
+DROP INDEX payments.orders_status_created_at_idx;

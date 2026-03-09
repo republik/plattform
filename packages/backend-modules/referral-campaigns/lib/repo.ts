@@ -55,6 +55,38 @@ export class PGReferralsRepo implements ReferralCampaignRepo, ReferralCodeRepo {
     })
   }
 
+  async getCampaignNewMemberCount(campaignId: string): Promise<number> {
+    return await this.#pgdb.public.query(
+      `WITH
+      campaign_time_range AS (
+        SELECT
+          "beginDate" AS begin_date,
+          "endDate" AS end_date
+        FROM
+          campaigns
+        WHERE id = :campaign_id
+      ), pledge_count AS (
+        SELECT
+          count(*) count
+        FROM
+          pledges p
+          CROSS JOIN campaign_time_range c
+        WHERE
+          p."createdAt" BETWEEN c.begin_date AND c.end_date and status = 'SUCCESSFUL'
+      ), subscription_count AS (
+        SELECT
+          count(*) count
+        FROM
+          payments.orders o
+          CROSS JOIN campaign_time_range c
+        WHERE
+          o."createdAt" BETWEEN c.begin_date AND c.end_date and status = 'paid'
+    ) SELECT (SELECT sc.count from subscription_count sc) + (SELECT pc.count from pledge_count pc) as count;
+    `,
+      { campaign_id: campaignId },
+    )
+  }
+
   async getUserCampaignReferralCount(
     campaignId: string,
     userId: string,
