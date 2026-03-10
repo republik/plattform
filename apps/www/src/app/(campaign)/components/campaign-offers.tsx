@@ -1,7 +1,7 @@
 'use client'
 
+import { OfferOptionLabelOnly } from '@app/app/(campaign)/components/campaign-offer-options'
 import NativeCta from '@app/components/paynotes/native-cta'
-import { OfferOptionLabelOnly } from '@app/components/paynotes/offer-options'
 import { Button } from '@app/components/ui/button'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
@@ -27,14 +27,16 @@ const radioContainerStyle = css({
   px: '2',
   py: '3',
   border: '2px solid',
-  borderColor: 'rgba(0,0,0,0.3)',
+  borderColor: 'campaign2026.frozenYogurt',
   borderRadius: '6',
   width: 'full',
-  background: 'background.marketing',
   whiteSpace: 'nowrap',
+  background: 'transparent',
+  color: 'white',
   _peerChecked: {
-    background: 'background',
-    borderColor: 'text',
+    background: 'white',
+    borderColor: 'white',
+    color: 'campaign2026.happyCherry',
   },
   fontSize: '2xl',
   fontWeight: 'medium',
@@ -78,66 +80,51 @@ export function Offers({
       ))}
 
       <div
-        data-theme='light'
         className={css({
-          display: 'flex',
-          gap: '4',
-          flexDir: 'column',
-          textStyle: 'body',
-          // alignItems: 'center',
+          width: 'full',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(60px, 1fr))',
+          gap: '2',
+          mb: '4',
         })}
       >
-        <p
-          className={css({
-            color: 'textSoft',
-            fontSize: 's',
-          })}
-        >
-          Wählen Sie einen Betrag aus:
-        </p>
-
-        <div
-          className={css({
-            width: 'full',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(60px, 1fr))',
-            gap: '2',
-          })}
-        >
-          {DISCOUNT_OPTIONS.map(({ promoCode, amount }) => {
-            return (
-              <OfferOptionLabelOnly
-                key={promoCode}
-                name='promo_code'
-                value={promoCode}
-                checked={
-                  selectedPromoCode === promoCode && customAmount === undefined
-                }
-                onChange={() => {
-                  setSelectedPromoCode(promoCode)
-                  setCustomAmount(undefined)
-                }}
-                className='peer'
-              >
-                <div key={promoCode} className={radioContainerStyle}>
-                  <span className={css({ display: 'block' })}>
-                    <small
-                      className={css({ fontWeight: 'normal', fontSize: 'xs' })}
-                    >
-                      CHF
-                    </small>{' '}
-                    <span>{amount}.–</span>
-                  </span>
-                </div>
-              </OfferOptionLabelOnly>
-            )
-          })}
-        </div>
-
-        <Button size='full' type='submit'>
-          Weiter
-        </Button>
+        {DISCOUNT_OPTIONS.map(({ promoCode, amount }) => {
+          return (
+            <OfferOptionLabelOnly
+              key={promoCode}
+              name='promo_code'
+              value={promoCode}
+              checked={
+                selectedPromoCode === promoCode && customAmount === undefined
+              }
+              onChange={() => {
+                setSelectedPromoCode(promoCode)
+                setCustomAmount(undefined)
+              }}
+              className='peer'
+            >
+              <div key={promoCode} className={radioContainerStyle}>
+                <span className={css({ display: 'block' })}>
+                  <small
+                    className={css({ fontWeight: 'normal', fontSize: 'xs' })}
+                  >
+                    CHF
+                  </small>{' '}
+                  <span>{amount}.–</span>
+                </span>
+              </div>
+            </OfferOptionLabelOnly>
+          )
+        })}
       </div>
+
+      <Button
+        size='full'
+        type='submit'
+        className={css({ background: 'campaign2026.justChocolate' })}
+      >
+        Weiter
+      </Button>
     </form>
   )
 }

@@ -3,7 +3,7 @@ import {
   PastAccessGrantsDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { OfferOptionRadio } from '@app/components/paynotes/offer-options'
+import { OfferOptionRadio } from '@app/app/(campaign)/components/campaign-offer-options'
 import { Button } from '@app/components/ui/button'
 import { PaynoteSection } from '@app/components/ui/containers'
 import { ArrowLink } from '@app/components/ui/links'
