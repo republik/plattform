@@ -31,7 +31,7 @@ export const tableStyles = {
       borderBottom: `1px solid ${colors.divider}`,
       background: 'white',
       position: 'sticky',
-      top: -20,
+      top: -16,
       zIndex: 10,
     },
   }),

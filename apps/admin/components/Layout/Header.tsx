@@ -2,6 +2,7 @@ import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 import { Logo } from './Logo'
 import Me from '../Auth/Me'
+import { ComponentPropsWithoutRef } from 'react'
 
 const link = css({
   textDecoration: 'none',
@@ -14,7 +15,7 @@ const link = css({
   },
 })
 
-const HeaderSection = (props) => (
+const HeaderSection = (props: ComponentPropsWithoutRef<'div'>) => (
   <div
     {...props}
     className={cx(
@@ -30,14 +31,12 @@ const HeaderComponent = ({ ...props }) => {
   return (
     <header
       className={css({
-        position: 'sticky',
-        top: '0',
         borderBottomStyle: 'solid',
         borderBottomWidth: '1px',
         borderBottomColor: 'divider',
         background: 'background',
         display: 'grid',
-        gridTemplateColumns: '52px 1fr max-content',
+        gridTemplateColumns: '[52px 1fr max-content]',
         alignItems: 'center',
         gap: '4',
         py: '3',
