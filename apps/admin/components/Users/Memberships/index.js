@@ -219,7 +219,6 @@ const MembershipCard = ({ membership, ...props }) => {
 }
 
 const MembershipDetails = ({ userId, membership, ...props }) => {
-  console.log(membership)
   return (
     <tr {...props}>
       <td {...tableStyles.paddedCell} colSpan={2}>
