@@ -13,13 +13,6 @@ const App = ({ router, children }) => {
       <Head>
         <title>{router.pathname.replace('/', '')} – Admin</title>
         <meta name='viewport' content='initial-scale=1.0, width=device-width' />
-        <style>{`
-      html, body {
-        padding: 0;
-        margin: 0;
-        font-family: ${fontFamilies.sansSerifRegular}
-      }
-    `}</style>
       </Head>
       {children}
     </main>

@@ -1,127 +1,102 @@
-import { css } from 'glamor'
-import compose from 'lodash/flowRight'
-import { createContainer, createTile } from './Grid'
-import Me from '../Auth/Me'
-import { BrandMark, Interaction, colors } from '@project-r/styleguide'
+import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
+import { Logo } from './Logo'
+import Me from '../Auth/Me'
 
 const link = css({
   textDecoration: 'none',
-  color: colors.primary,
-  ':visited': {
-    color: colors.primary,
+  color: 'primary',
+  _visited: {
+    color: 'primary',
   },
-  ':hover': {
-    color: colors.secondary,
+  _hover: {
+    color: 'primaryHover',
   },
 })
 
-const Header = compose(
-  createTile(
-    {
-      flex: '0 0 80px',
-    },
-    {
-      style: {
-        borderBottom: `1px solid ${colors.divider}`,
-      },
-    },
-  ),
-  createContainer({
-    direction: 'row',
-    justifyContent: 'stretch',
-  }),
-)('header')
-
-const HeaderSection = compose(
-  createTile(),
-  createContainer({
-    direction: 'column',
-    justifyContent: 'center',
-  }),
-)('div')
-
-const logoStyles = {
-  width: '50px',
-  marginLeft: '15px',
-  display: 'inline-block',
-}
-
-const navLinkStyles = {
-  display: 'inline-block',
-  marginRight: '12px',
-  cursor: 'pointer',
-}
+const HeaderSection = (props) => (
+  <div
+    {...props}
+    className={cx(
+      css({ display: 'flex', flexDirection: 'column' }),
+      props.className,
+    )}
+  />
+)
 
 const HeaderComponent = ({ ...props }) => {
   const searchParams = props.search ? { search: props.search } : {}
 
   return (
-    <Header {...props}>
-      <HeaderSection flex='0 0 85px'>
-        <span style={logoStyles}>
-          <BrandMark />
-        </span>
+    <header
+      className={css({
+        position: 'sticky',
+        top: '0',
+        borderBottomStyle: 'solid',
+        borderBottomWidth: '1px',
+        borderBottomColor: 'divider',
+        background: 'background',
+        display: 'grid',
+        gridTemplateColumns: '52px 1fr max-content',
+        alignItems: 'center',
+        gap: '4',
+        py: '3',
+        px: '4',
+        zIndex: 1,
+      })}
+    >
+      <HeaderSection>
+        <Logo className={css({ width: 'full', height: 'auto' })} />
       </HeaderSection>
-      <HeaderSection flex='1 1 auto'>
-        <Interaction.H2>Admin</Interaction.H2>
-        <nav>
+      <HeaderSection>
+        <h1 className={css({ textStyle: 'h1Sans' })}>Admin</h1>
+        <nav className={css({ display: 'flex', gap: '3' })}>
           <Link
             href={{
               pathname: '/users',
               query: searchParams,
             }}
-            className={`${link}`}
-            style={navLinkStyles}>
-            
-              Users
-            
+            className={link}
+          >
+            Users
           </Link>
           <Link
             href={{
               pathname: '/mailbox',
               query: searchParams,
             }}
-            className={`${link}`}
-            style={navLinkStyles}>
-            
-              E-Mails
-            
+            className={link}
+          >
+            E-Mails
           </Link>
           <Link
             href={{
               pathname: '/payments',
               query: searchParams,
             }}
-            className={`${link}`}
-            style={navLinkStyles}>
-            
-              Payments
-            
+            className={link}
+          >
+            Payments
           </Link>
           <Link
             href={{
               pathname: '/postfinance-payments',
               query: searchParams,
             }}
-            className={`${link}`}
-            style={navLinkStyles}>
-            
-              Postfinance Payments
-            
+            className={link}
+          >
+            Postfinance Payments
           </Link>
-          <Link href='/merge-users' className={`${link}`} style={navLinkStyles}>
-            
-              Users zusammenführen
-            
+          <Link href='/merge-users' className={link}>
+            Users zusammenführen
           </Link>
         </nav>
       </HeaderSection>
-      <HeaderSection flex='0 0 200px'>
+      <HeaderSection>
         <Me />
       </HeaderSection>
-    </Header>
-  );
+    </header>
+  )
 }
 
 export default HeaderComponent
