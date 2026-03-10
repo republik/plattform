@@ -45,6 +45,8 @@ export const Section = (props: ComponentPropsWithoutRef<'div'>) => (
       margin: '2',
       backgroundColor: 'background',
       position: 'relative',
+      display: 'flex',
+      flexDirection: 'column',
     })}
   />
 )
@@ -59,6 +61,8 @@ export const InteractiveSection = (props: ComponentPropsWithoutRef<'div'>) => (
         margin: '2',
         backgroundColor: 'background',
         position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
       }),
       css({
         '& .show-on-focus': {
@@ -66,7 +70,7 @@ export const InteractiveSection = (props: ComponentPropsWithoutRef<'div'>) => (
         },
         '&:focus, &:hover': {
           outline: 'none',
-          backgroundColor: 'overlay',
+          backgroundColor: 'hover',
           '& .show-on-focus': {
             opacity: 1,
           },
@@ -104,28 +108,35 @@ export const SectionNav = (props: ComponentPropsWithoutRef<'nav'>) => (
 export const SectionMenu = (props: ComponentPropsWithoutRef<'div'>) => (
   <div
     {...props}
-    className={css({ position: 'absolute', top: '2', right: '5' })}
+    className={css({
+      position: 'absolute',
+      top: '2',
+      right: '2',
+    })}
   />
 )
 
 export const TextButton = (props: ComponentPropsWithoutRef<'button'>) => (
   <button
     {...props}
-    className={css({
-      cursor: 'pointer',
-      display: 'inline-block',
-      outline: 'none',
-      background: 'transparent',
-      border: 'none',
-      padding: '0',
-      color: 'primary',
-      '&:not([disabled]):focus, &:hover': {
-        color: 'primaryHover',
-      },
-      _disabled: {
-        color: 'disabled',
-      },
-    })}
+    className={cx(
+      css({
+        cursor: 'pointer',
+        display: 'inline-block',
+        outline: 'none',
+        background: 'transparent',
+        border: 'none',
+        padding: '0',
+        color: 'primary',
+        '&:not([disabled]):focus, &:hover': {
+          color: 'primaryHover',
+        },
+        _disabled: {
+          color: 'disabled',
+        },
+      }),
+      props.className,
+    )}
   />
 )
 
@@ -138,6 +149,7 @@ export const DT = (props: ComponentPropsWithoutRef<'div'>) => (
     {...props}
     className={css({
       textStyle: 'body',
+
       '&:not(:first-child)': {
         mt: '4',
       },
@@ -146,5 +158,5 @@ export const DT = (props: ComponentPropsWithoutRef<'div'>) => (
 )
 
 export const DD = (props: ComponentPropsWithoutRef<'div'>) => (
-  <div {...props} className={css({})} />
+  <div {...props} className={css({ textStyle: 'body', fontSize: 'l' })} />
 )

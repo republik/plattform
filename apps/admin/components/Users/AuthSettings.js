@@ -4,7 +4,7 @@ import { gql } from '@apollo/client'
 
 import { InlineSpinner, Loader, Radio } from '@project-r/styleguide'
 
-import { InteractiveSection, SectionTitle } from '../Display/utils'
+import { InteractiveSection, Section, SectionTitle } from '../Display/utils'
 
 import withT from '../../lib/withT'
 
@@ -62,7 +62,7 @@ class UpdatePreferredFirstFactor extends Component {
       >
         {(mutation, { loading }) => {
           return (
-            <InteractiveSection>
+            <Section>
               {loading && (
                 <span style={{ float: 'right' }}>
                   <InlineSpinner size={32} />
@@ -91,7 +91,7 @@ class UpdatePreferredFirstFactor extends Component {
                   )
                 })}
               </form>
-            </InteractiveSection>
+            </Section>
           )
         }}
       </Mutation>

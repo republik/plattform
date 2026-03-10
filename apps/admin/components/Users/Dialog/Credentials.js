@@ -114,7 +114,7 @@ const Credentials = ({ userId }) => {
               }
 
               return (
-                <InteractiveSection>
+                <Section>
                   <SectionTitle>Rollen verifizieren</SectionTitle>
                   {[...credentials]
                     .sort((a) => (a.isListed ? -1 : 0)) // bubble listed credentials to top
@@ -125,7 +125,7 @@ const Credentials = ({ userId }) => {
                         credential={credential}
                       />
                     ))}
-                </InteractiveSection>
+                </Section>
               )
             }}
           />

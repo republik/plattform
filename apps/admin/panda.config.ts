@@ -4,7 +4,7 @@ import { presets } from '@republik/theme/presets'
 export default defineConfig({
   preflight: true,
   prefix: 'r',
-  // strictTokens: true,
+  strictTokens: true,
 
   presets,
 
