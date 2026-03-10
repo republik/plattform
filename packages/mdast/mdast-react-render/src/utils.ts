@@ -13,6 +13,10 @@ export const matchImageParagraph = (node) =>
   matchImage(node.children[0])
 
 export const imageSizeInfo = (url) => {
+  if (!url) {
+    return url
+  }
+
   const urlObject = parse(url, true)
   const { size } = urlObject.query
   if (!size || typeof size !== 'string') {
