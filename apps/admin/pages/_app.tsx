@@ -1,4 +1,5 @@
 import '@republik/theme/fonts.css'
+import '@republik/theme/styles.css'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { RootColorVariables } from '@project-r/styleguide'
