@@ -28,6 +28,7 @@ import {
   MetaSectionTitle,
 } from '../../../MetaDataForm/components/Layout'
 import TextToSpeechForm from './TextToSpeechForm'
+import NewsletterForm from './NewsletterForm'
 
 const styles = {
   container: css({
@@ -342,6 +343,7 @@ const MetaData = ({
           onInputChange={onInputChange}
           format={titleData?.format?.meta}
         />
+        <NewsletterForm editor={editor} node={node} />
         <ArticleRecommendations editor={editor} node={node} />
       </div>
     </div>
