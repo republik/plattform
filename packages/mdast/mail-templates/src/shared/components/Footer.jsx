@@ -101,10 +101,7 @@ const Footer = ({ meta }) => {
           Republik am Sonntag
         </a>{' '}
         |{' '}
-        <a
-          href='https://www.republik.ch/format/briefing-ctrl'
-          style={footerLinkStyle}
-        >
+        <a href='https://www.republik.ch/format/ctrl' style={footerLinkStyle}>
           CTRL
         </a>{' '}
         |{' '}
