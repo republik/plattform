@@ -304,6 +304,8 @@ const MetaData = ({
           </div>
         )}
 
+        <NewsletterForm editor={editor} node={node} />
+
         <MetaSection>
           <MetaSectionTitle>Social</MetaSectionTitle>
           <ShareImageForm
@@ -343,7 +345,6 @@ const MetaData = ({
           onInputChange={onInputChange}
           format={titleData?.format?.meta}
         />
-        <NewsletterForm editor={editor} node={node} />
         <ArticleRecommendations editor={editor} node={node} />
       </div>
     </div>
