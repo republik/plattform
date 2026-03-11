@@ -100,7 +100,7 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
             abonniert.
           </p>
           <Button asChild>
-            <Link href='/newsletters'>Zu den Newslettern</Link>
+            <Link href='/newsletter'>Zu den Newslettern</Link>
           </Button>
         </div>
       )}
