@@ -27,16 +27,16 @@ const radioContainerStyle = css({
   px: '2',
   py: '3',
   border: '2px solid',
-  borderColor: 'campaign2026.frozenYogurt',
+  borderColor: 'radioOutline',
   borderRadius: '6',
   width: 'full',
   whiteSpace: 'nowrap',
   background: 'transparent',
-  color: 'white',
+  color: 'radioText',
   _peerChecked: {
-    background: 'white',
-    borderColor: 'white',
-    color: 'campaign2026.happyCherry',
+    background: 'radioChecked',
+    borderColor: 'radioChecked',
+    color: 'radioTextChecked',
   },
   fontSize: '2xl',
   fontWeight: 'medium',
@@ -49,7 +49,6 @@ export function Offers({
 }) {
   const [selectedPromoCode, setSelectedPromoCode] =
     useState<DiscountOption['promoCode']>(undefined)
-  const [customAmount, setCustomAmount] = useState<number | undefined>()
 
   const utmParams = getUTMSessionStorage()
   const trackEvent = useTrackEvent()
@@ -94,12 +93,9 @@ export function Offers({
               key={promoCode}
               name='promo_code'
               value={promoCode}
-              checked={
-                selectedPromoCode === promoCode && customAmount === undefined
-              }
+              checked={selectedPromoCode === promoCode}
               onChange={() => {
                 setSelectedPromoCode(promoCode)
-                setCustomAmount(undefined)
               }}
               className='peer'
             >
@@ -121,7 +117,8 @@ export function Offers({
       <Button
         size='full'
         type='submit'
-        className={css({ background: 'campaign2026.justChocolate' })}
+        className={css({ background: 'button', color: 'white' })}
+        disabled={selectedPromoCode === undefined}
       >
         Weiter
       </Button>
