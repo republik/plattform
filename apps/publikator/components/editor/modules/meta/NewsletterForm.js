@@ -1,4 +1,4 @@
-import { Checkbox, Field } from '@project-r/styleguide'
+import { Button, Checkbox, Field } from '@project-r/styleguide'
 import { useState } from 'react'
 import isEmail from 'validator/lib/isEmail'
 import {
@@ -32,15 +32,39 @@ export default function NewsletterForm({ editor, node }) {
       }
     }
 
+    const updatedNewsletter = {
+      ...newsletter,
+      [field]:
+        field === 'savedSegmentId' && value ? parseInt(value, 10) : value,
+    }
+
+    const isEmpty = Object.values(updatedNewsletter).every((v) => !v)
+
     editor.change((change) => {
-      change.setNodeByKey(node.key, {
-        data: node.data.set('newsletter', {
-          ...newsletter,
-          [field]:
-            field === 'savedSegmentId' && value ? parseInt(value, 10) : value,
-        }),
-      })
+      if (isEmpty) {
+        change.setNodeByKey(node.key, {
+          data: node.data.delete('newsletter'),
+        })
+      } else {
+        change.setNodeByKey(node.key, {
+          data: node.data.set('newsletter', updatedNewsletter),
+        })
+      }
     })
+  }
+
+  const handleReset = () => {
+    if (
+      window.confirm(
+        'Alle Newsletter-Einstellungen dieses Formats zurücksetzen?',
+      )
+    ) {
+      editor.change((change) => {
+        change.setNodeByKey(node.key, {
+          data: node.data.delete('newsletter'),
+        })
+      })
+    }
   }
 
   return (
@@ -49,18 +73,18 @@ export default function NewsletterForm({ editor, node }) {
 
       <Field
         label={'Absender-Name'}
-        value={newsletter?.fromName}
+        value={newsletter?.fromName ?? ''}
         onChange={handleChange('fromName')}
       />
       <Field
         label={'Absender-Adresse'}
-        value={newsletter?.replyTo}
+        value={newsletter?.replyTo ?? ''}
         onChange={handleChange('replyTo')}
         error={errors?.replyTo}
       />
       <Checkbox
         black
-        checked={newsletter?.free}
+        checked={newsletter?.free ?? false}
         onChange={handleChange('free')}
       >
         Nicht-Mitglieder können diesen Newsletter abonnieren
@@ -77,15 +101,29 @@ export default function NewsletterForm({ editor, node }) {
         >
           <Field
             label={'Newsletter-ID'}
-            value={newsletter?.name}
+            value={newsletter?.name ?? ''}
             onChange={handleChange('name')}
           />
 
           <Field
             label={'MailChimp-Segment-ID'}
-            value={newsletter?.savedSegmentId}
+            value={newsletter?.savedSegmentId ?? ''}
             onChange={handleChange('savedSegmentId')}
           />
+
+          {newsletter && (
+            <div>
+              <Button
+                type='button'
+                naked
+                small
+                style={{ padding: 0 }}
+                onClick={handleReset}
+              >
+                Newsletter-Einstellungen zurücksetzen
+              </Button>
+            </div>
+          )}
         </div>
       </MetaOptionGroup>
     </MetaSection>
