@@ -1,4 +1,6 @@
 import { Checkbox, Field } from '@project-r/styleguide'
+import { useState } from 'react'
+import isEmail from 'validator/lib/isEmail'
 import {
   MetaOptionGroup,
   MetaOptionGroupTitle,
@@ -7,6 +9,7 @@ import {
 } from '../../../MetaDataForm/components/Layout'
 
 export default function NewsletterForm({ editor, node }) {
+  const [errors, setErrors] = useState({})
   const template = node.data.get('template')
 
   if (template !== 'format') {
@@ -15,7 +18,20 @@ export default function NewsletterForm({ editor, node }) {
 
   const newsletter = node.data.get('newsletter')
 
-  const handleChange = (field) => (_, value) => {
+  const handleChange = (field) => (_, value, shouldValidate) => {
+    if (shouldValidate) {
+      if (field === 'replyTo' && value && !isEmail(value)) {
+        setErrors((errors) => {
+          return {
+            ...errors,
+            [field]: 'Absender muss eine gültige E-Mail-Adresse sein',
+          }
+        })
+      } else {
+        setErrors({})
+      }
+    }
+
     editor.change((change) => {
       change.setNodeByKey(node.key, {
         data: node.data.set('newsletter', {
@@ -40,6 +56,7 @@ export default function NewsletterForm({ editor, node }) {
         label={'Absender-Adresse'}
         value={newsletter?.replyTo}
         onChange={handleChange('replyTo')}
+        error={errors?.replyTo}
       />
       <Checkbox
         black
