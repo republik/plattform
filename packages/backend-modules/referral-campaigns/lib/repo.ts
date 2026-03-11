@@ -57,6 +57,7 @@ export class PGReferralsRepo implements ReferralCampaignRepo, ReferralCodeRepo {
 
   async getCampaignNewMemberCount(campaignId: string): Promise<number> {
     return await this.#pgdb.public.query(
+      /* sql */
       `WITH
       campaign_time_range AS (
         SELECT
@@ -72,7 +73,11 @@ export class PGReferralsRepo implements ReferralCampaignRepo, ReferralCodeRepo {
           pledges p
           CROSS JOIN campaign_time_range c
         WHERE
-          p."createdAt" BETWEEN c.begin_date AND c.end_date and status = 'SUCCESSFUL'
+          p."packageId" in (select id from packages where name in (
+            'ABO', 'BENEFACTOR', 'MONTHLY_ABO', 'YEARLY_ABO'
+          ))
+          AND p."createdAt" BETWEEN c.begin_date
+          AND c.end_date and status = 'SUCCESSFUL'
       ), subscription_count AS (
         SELECT
           count(*) count
