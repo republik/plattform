@@ -10,7 +10,5 @@ import { presetRepublik } from './presets/preset-republik'
 export const presets = [
   presetRepublik,
   presetChallengeAccepted,
-  presetCampaign2024,
-  // presetCampaign2025,
   presetCampaign2026,
 ]

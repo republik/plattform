@@ -21,105 +21,119 @@ function CampaignPaywall() {
   }, [trackEvent])
 
   return (
-    <div data-testid='campaignPaywall' data-page-theme='campaign-2026'>
-      <div
-        data-theme='light'
-        className={css({
-          borderBottomStyle: 'solid',
-          borderBottomWidth: '1',
-          borderBottomColor: 'black',
-          background: 'background',
-          color: 'text',
-        })}
-      >
-        <ArticleSection
+    <>
+      <div data-testid='campaignPaywall' data-page-theme='campaign-2026'>
+        <div
+          data-theme='light'
           className={css({
-            py: '6',
+            borderBottomStyle: 'solid',
+            borderBottomWidth: '1',
+            borderBottomColor: 'black',
+            background: 'campaign26Background',
+            color: 'campaign26',
           })}
         >
-          <CampaignMembershipsCounter />
-          <h2
+          <ArticleSection
             className={css({
-              textStyle: 'campaignHeading',
-              mb: '2',
-              md: { mb: '4' },
+              py: '6',
             })}
           >
-            Mit einem Abo lesen Sie weiter. Und Schülerinnen in der Schweiz
-            auch.
-          </h2>
-          <p
-            className={css({
-              textStyle: 'heavy',
-            })}
-          >
-            Bis 14. April: Wenn wir 2000 neue Mitglieder finden, dann lösen wir{' '}
-            <span
-              className={css({ textDecoration: 'underline', fontWeight: 700 })}
+            <CampaignMembershipsCounter />
+            <h2
+              className={css({
+                textStyle: 'campaignHeading',
+                mb: '2',
+                md: { mb: '4' },
+              })}
             >
-              <Link href='/drei-versprechen'>3 Versprechen</Link>
-            </span>{' '}
-            ein.
-          </p>
-        </ArticleSection>
-        <ArticleSection
-          className={css({
-            py: '6',
-            background: 'campaign2026.happyCherry',
-            color: 'white',
-            md: {
-              pt: 0,
-              background: 'campaign2026.frozenYogurt',
-              color: 'campaign2026.happyCherry',
-            },
-          })}
-        >
-          <p
-            className={css({
-              textStyle: 'airy',
-              mb: '4',
-              md: { textStyle: 'heavy' },
-            })}
-          >
-            Wählen Sie Ihren Preis für das erste Jahr:
-          </p>
-          <div data-theme='bright' className={css({ md: { display: 'none' } })}>
-            <Offers
-              additionalShopParams={{
-                rep_ui_component: 'campaign-paywall',
-              }}
-            />
-          </div>
-          <div
-            data-theme='light'
-            className={css({ display: 'none', md: { display: 'block' } })}
-          >
-            <Offers
-              additionalShopParams={{
-                rep_ui_component: 'campaign-paywall',
-              }}
-            />
-          </div>
-          <p
-            className={css({
-              color: 'campaign2026.frozenYogurt',
-              textAlign: 'center',
-              my: '4',
-              md: {
+              Mit einem Abo lesen Sie weiter. Und Schülerinnen in der Schweiz
+              auch.
+            </h2>
+            <p
+              className={css({
                 textStyle: 'heavy',
-                color: 'campaign2026.happyCherry',
-                mt: '6',
+              })}
+            >
+              Bis 14. April: Wenn wir 2000 neue Mitglieder finden, dann lösen
+              wir{' '}
+              <span
+                className={css({
+                  textDecoration: 'underline',
+                  fontWeight: 700,
+                })}
+              >
+                <Link href='/drei-versprechen'>3 Versprechen</Link>
+              </span>{' '}
+              ein.
+            </p>
+          </ArticleSection>
+          <ArticleSection
+            className={css({
+              py: '6',
+              background: 'campaign26.happyCherry',
+              color: 'white',
+              md: {
+                pt: 0,
+                background: 'campaign26.frozenYogurt',
+                color: 'campaign26.happyCherry',
               },
             })}
           >
-            Jederzeit kündbar
-          </p>
-        </ArticleSection>
+            <p
+              className={css({
+                textStyle: 'airy',
+                mb: '4',
+                md: { textStyle: 'heavy' },
+              })}
+            >
+              Wählen Sie Ihren Preis für das erste Jahr:
+            </p>
+            <div
+              data-theme='bright'
+              className={css({ md: { display: 'none' } })}
+            >
+              <Offers
+                additionalShopParams={{
+                  rep_ui_component: 'campaign-paywall',
+                }}
+              />
+            </div>
+            <div
+              data-theme='light'
+              className={css({ display: 'none', md: { display: 'block' } })}
+            >
+              <Offers
+                additionalShopParams={{
+                  rep_ui_component: 'campaign-paywall',
+                }}
+              />
+            </div>
+            <p
+              className={css({
+                color: 'campaign26.frozenYogurt',
+                textAlign: 'center',
+                my: '4',
+                md: {
+                  textStyle: 'heavy',
+                  color: 'campaign26.happyCherry',
+                  mt: '6',
+                },
+              })}
+            >
+              Jederzeit kündbar
+            </p>
+          </ArticleSection>
+        </div>
       </div>
-      <div className={css({ my: '2', md: { my: '4' } })}>
+      <div
+        className={css({
+          my: '2',
+          md: { my: '4' },
+        })}
+      >
         <Login />
       </div>
-    </div>
+    </>
   )
 }
 

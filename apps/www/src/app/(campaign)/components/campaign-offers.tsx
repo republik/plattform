@@ -27,17 +27,17 @@ const radioContainerStyle = css({
   px: '2',
   py: '3',
   border: '2px solid',
-  borderColor: 'radioOutline',
+  borderColor: 'campaign26RadioOutline',
   borderRadius: '6',
   width: 'full',
   whiteSpace: 'nowrap',
   background: 'transparent',
-  color: 'radioText',
+  color: 'campaign26RadioText',
   position: 'relative',
   _peerChecked: {
-    background: 'radioChecked',
-    borderColor: 'radioChecked',
-    color: 'radioTextChecked',
+    background: 'campaign26RadioChecked',
+    borderColor: 'campaign26RadioChecked',
+    color: 'campaign26RadioTextChecked',
   },
   fontSize: '2xl',
   fontWeight: 'medium',
@@ -86,6 +86,7 @@ export function Offers({
           gridTemplateColumns: 'repeat(auto-fit, minmax(60px, 1fr))',
           gap: '2',
           mb: '4',
+          md: { gap: '4', mb: '6' },
         })}
       >
         {DISCOUNT_OPTIONS.map(({ promoCode, amount, highlighted }) => {
@@ -115,8 +116,8 @@ export function Offers({
                       fontSize: 'xs',
                       lineHeight: 1,
                       position: 'absolute',
-                      color: 'tagText',
-                      background: 'tag',
+                      color: 'campaign26TagText',
+                      background: 'campaign26Tag',
                       px: '2',
                       py: '1',
                       borderRadius: '2',
@@ -136,8 +137,7 @@ export function Offers({
       <Button
         size='full'
         type='submit'
-        className={css({ background: 'button', color: 'white' })}
-        disabled={selectedPromoCode === undefined}
+        className={css({ background: 'campaign26Button', color: 'white' })}
       >
         Weiter
       </Button>

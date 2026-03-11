@@ -4,12 +4,12 @@ export const presetCampaign2026 = definePreset({
   name: 'campaign-2026',
   conditions: {
     extend: {
-      campaign2026Bright:
+      campaign26: '[data-page-theme="campaign-2026"] &',
+      campaign26Bright:
         '[data-page-theme="campaign-2026"] [data-theme="bright"] &',
-      campaign2026Light:
+      campaign26Light:
         '[data-page-theme="campaign-2026"] [data-theme="light"] &',
-      campaign2026Dark:
-        '[data-page-theme="campaign-2026"] [data-theme="dark"] &',
+      campaign26Dark: '[data-page-theme="campaign-2026"] [data-theme="dark"] &',
     },
   },
 
@@ -18,7 +18,7 @@ export const presetCampaign2026 = definePreset({
     extend: {
       tokens: {
         colors: {
-          campaign2026: {
+          campaign26: {
             happyCherry: { value: '#F0084C' },
             frozenYogurt: { value: '#FED9E1' },
             justChocolate: { value: '#60031E' },
@@ -46,67 +46,67 @@ export const presetCampaign2026 = definePreset({
       },
       semanticTokens: {
         colors: {
-          text: {
+          campaign26: {
             value: {
-              _campaign2026Bright: '{colors.campaign2026.frozenYogurt}',
-              _campaign2026Light: '{colors.campaign2026.happyCherry}',
-              _campaign2026Dark: '{colors.campaign2026.happyCherry}',
+              _campaign26Bright: '{colors.campaign26.frozenYogurt}',
+              _campaign26Light: '{colors.campaign26.happyCherry}',
+              _campaign26Dark: '{colors.campaign26.happyCherry}',
             },
           },
-          background: {
+          campaign26Background: {
             value: {
-              _campaign2026Bright: '{colors.campaign2026.happyCherry}',
-              _campaign2026Light: '{colors.campaign2026.frozenYogurt}',
-              _campaign2026Dark: '{colors.campaign2026.justChocolate}',
+              _campaign26Bright: '{colors.campaign26.happyCherry}',
+              _campaign26Light: '{colors.campaign26.frozenYogurt}',
+              _campaign26Dark: '{colors.campaign26.justChocolate}',
             },
           },
-          tag: {
+          campaign26Tag: {
             value: {
-              _campaign2026Bright: '{colors.campaign2026.justChocolate}',
-              _campaign2026Light: '{colors.campaign2026.justChocolate}',
-              _campaign2026Dark: '{colors.campaign2026.frozenYogurt}',
+              _campaign26Bright: '{colors.campaign26.justChocolate}',
+              _campaign26Light: '{colors.campaign26.justChocolate}',
+              _campaign26Dark: '{colors.campaign26.frozenYogurt}',
             },
           },
-          tagText: {
+          campaign26TagText: {
             value: {
-              _campaign2026Bright: '{colors.campaign2026.frozenYogurt}',
-              _campaign2026Light: '{colors.campaign2026.frozenYogurt}',
-              _campaign2026Dark: '{colors.campaign2026.justChocolate}',
+              _campaign26Bright: '{colors.campaign26.frozenYogurt}',
+              _campaign26Light: '{colors.campaign26.frozenYogurt}',
+              _campaign26Dark: '{colors.campaign26.justChocolate}',
             },
           },
-          button: {
+          campaign26Button: {
             value: {
-              _campaign2026Bright: '{colors.campaign2026.justChocolate}',
-              _campaign2026Light: '{colors.campaign2026.justChocolate}',
-              _campaign2026Dark: '{colors.campaign2026.happyCherry}',
+              _campaign26Bright: '{colors.campaign26.justChocolate}',
+              _campaign26Light: '{colors.campaign26.justChocolate}',
+              _campaign26Dark: '{colors.campaign26.happyCherry}',
             },
           },
-          radioText: {
+          campaign26RadioText: {
             value: {
-              _campaign2026Bright: 'white',
-              _campaign2026Light: '{colors.campaign2026.happyCherry}',
-              _campaign2026Dark: '{colors.campaign2026.frozenYogurt}',
+              _campaign26Bright: 'white',
+              _campaign26Light: '{colors.campaign26.happyCherry}',
+              _campaign26Dark: '{colors.campaign26.frozenYogurt}',
             },
           },
-          radioTextChecked: {
+          campaign26RadioTextChecked: {
             value: {
-              _campaign2026Bright: '{colors.campaign2026.happyCherry}',
-              _campaign2026Light: 'white',
-              _campaign2026Dark: '{colors.campaign2026.justChocolate}',
+              _campaign26Bright: '{colors.campaign26.happyCherry}',
+              _campaign26Light: 'white',
+              _campaign26Dark: '{colors.campaign26.justChocolate}',
             },
           },
-          radioOutline: {
+          campaign26RadioOutline: {
             value: {
-              _campaign2026Bright: 'rgba(255, 255, 255, 0.4)',
-              _campaign2026Light: 'rgba(240, 8, 76, 0.4)',
-              _campaign2026Dark: 'rgba(255, 255, 255, 0.4)',
+              _campaign26Bright: 'rgba(255, 255, 255, 0.4)',
+              _campaign26Light: 'rgba(240, 8, 76, 0.4)',
+              _campaign26Dark: 'rgba(255, 255, 255, 0.4)',
             },
           },
-          radioChecked: {
+          campaign26RadioChecked: {
             value: {
-              _campaign2026Bright: 'white',
-              _campaign2026Light: '{colors.campaign2026.happyCherry}',
-              _campaign2026Dark: '{campaign2026.frozenYogurt}',
+              _campaign26Bright: 'white',
+              _campaign26Light: '{colors.campaign26.happyCherry}',
+              _campaign26Dark: '{campaign26.frozenYogurt}',
             },
           },
         },
