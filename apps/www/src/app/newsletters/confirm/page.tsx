@@ -1,3 +1,6 @@
+import Container from '@app/components/container'
+import { PageLayout } from '@app/components/layout'
+import { css } from '@republik/theme/css'
 import { type Metadata } from 'next'
 import { NewsletterConfirm } from './newsletter-confirm'
 
@@ -17,27 +20,24 @@ type PageProps = {
 export default async function Page({ searchParams }: PageProps) {
   const { name, email, subscribed, mac } = await searchParams
 
-  if (!name || !email || !mac) {
-    return (
-      <div
-        style={{
-          maxWidth: 480,
-          margin: '64px auto',
-          padding: '0 15px',
-          textAlign: 'center',
-        }}
-      >
-        <p>Ungültiger Bestätigungslink.</p>
-      </div>
-    )
-  }
-
   return (
-    <NewsletterConfirm
-      name={name}
-      email={email}
-      subscribed={subscribed ?? '1'}
-      mac={mac}
-    />
+    <PageLayout>
+      <div className={css({ color: 'text', pb: '16-32', pt: '4' })}>
+        <Container>
+          {!name || !email || !mac ? (
+            <p className={css({ textAlign: 'center', color: 'textSoft' })}>
+              Ungültiger Bestätigungslink.
+            </p>
+          ) : (
+            <NewsletterConfirm
+              name={name}
+              email={email}
+              subscribed={subscribed ?? '1'}
+              mac={mac}
+            />
+          )}
+        </Container>
+      </div>
+    </PageLayout>
   )
 }
