@@ -41,11 +41,6 @@ const createFormatSchema = ({
         ref: 'bool',
       },
       {
-        label: 'Als Email verschickbar',
-        key: 'sendAsEmail',
-        ref: 'bool',
-      },
-      {
         label: 'Ebene',
         key: 'kind',
         items: [

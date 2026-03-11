@@ -77,7 +77,7 @@ const MetaData = ({
     [
       'feed',
       ...additionalFields,
-      formatData?.sendAsEmail && 'emailSubject',
+      formatData?.newsletter?.name && 'emailSubject',
       'title',
       'shortTitle',
       'image',
