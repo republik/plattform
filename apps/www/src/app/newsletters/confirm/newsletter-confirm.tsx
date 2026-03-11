@@ -7,6 +7,7 @@ import { ApolloError, useMutation } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from '../../../../lib/withT'
 import * as base64u from '../../../../lib/utils/base64u'
 
 type Props = {
@@ -17,6 +18,8 @@ type Props = {
 }
 
 export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
+  const { t } = useTranslation()
+  const displayName = t(`newsletters/${name}/name`, undefined, name)
   const decodedEmail = base64u.maybeDecode(email)
   const hasRun = useRef(false)
 
@@ -85,7 +88,7 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
             Anmeldung bestätigt
           </h1>
           <p className={css({ color: 'textSoft', maxWidth: '480px' })}>
-            Sie haben den Newsletter <strong>{name}</strong> erfolgreich
+            Sie haben den Newsletter <strong>{displayName}</strong> erfolgreich
             abonniert.
           </p>
           <Link
