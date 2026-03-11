@@ -29,8 +29,6 @@ import { withDefaultSSR } from '../lib/apollo/helpers'
 
 import withMe from '../lib/apollo/withMe'
 
-import { CDN_FRONTEND_BASE_URL } from '../lib/constants'
-
 import { intersperse } from '../lib/utils/helpers'
 import withInNativeApp from '../lib/withInNativeApp'
 import { useTranslation } from '../lib/withT'
@@ -70,12 +68,6 @@ const styles = {
       width: LOGO_WIDTH + LOGO_PADDING * 2,
     },
     verticalAlign: 'middle',
-  }),
-  logoProjectR: css({
-    display: 'block',
-    margin: '26px auto -16px',
-    maxWidth: 520,
-    textAlign: 'left',
   }),
   text: css({
     margin: '30px auto',
@@ -117,29 +109,16 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
       },
   ].filter(Boolean)
 
-  const isProjectR = context === 'projectr'
   const logoTarget =
     type === 'token-authorization' ? '_blank' : undefined
 
-  const logo = isProjectR ? (
-    <a
-      href='https://project-r.construction/'
-      rel='noreferrer'
-      target='_blank'
-      {...styles.logoProjectR}
-    >
-      <img
-        style={{ height: 50 }}
-        src={`${CDN_FRONTEND_BASE_URL}/static/project_r_logo.png`}
-      />
-    </a>
-  ) : (
+  const logo = (
     <a href='/' target={logoTarget} {...styles.logoRepublik}>
       <Logo />
     </a>
   )
 
-  const stickyBar = !isProjectR
+  const stickyBar = true
 
   const hasRedirect = router.query.redirect
 
@@ -179,7 +158,6 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
                       pathname: link.pathname,
                       query: link.query,
                     }}
-                    params={link.params}
                     passHref
                     legacyBehavior
                   >
