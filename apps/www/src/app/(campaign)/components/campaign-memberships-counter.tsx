@@ -1,7 +1,8 @@
 import * as Progress from '@radix-ui/react-progress'
 import { css } from '@republik/theme/css'
-import React from 'react'
+import React from 'react' // TODO: get real numbers
 
+// TODO: get real numbers
 function CampaignMembershipsCounter() {
   const [progress, setProgress] = React.useState(13)
 
@@ -11,7 +12,7 @@ function CampaignMembershipsCounter() {
   }, [])
 
   return (
-    <div className={css({ mb: '20' })}>
+    <div>
       <Progress.Root
         className={css({
           position: 'relative',

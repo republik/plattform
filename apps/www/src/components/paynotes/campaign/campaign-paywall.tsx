@@ -31,17 +31,23 @@ function CampaignPaywall() {
             borderBottomColor: 'black',
             background: 'campaign26Background',
             color: 'campaign26',
+            position: 'relative',
+            mt: -8,
+            zIndex: 1,
+            boxShadow: '0px -12px 24px 0px rgba(0, 0, 0, 0.25)',
           })}
         >
           <ArticleSection
             className={css({
               py: '6',
+              md: { pt: '8' },
             })}
           >
             <CampaignMembershipsCounter />
             <h2
               className={css({
                 textStyle: 'campaignHeading',
+                mt: '20',
                 mb: '2',
                 md: { mb: '4' },
               })}

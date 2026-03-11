@@ -443,9 +443,7 @@ const ArticlePage = ({
                     )}
                     <div className='regwall'>
                       {hasPaywall ? (
-                        <div {...styles.regwallFade}>
-                          {renderSchema(splitContent.mainTruncated)}
-                        </div>
+                        <>{renderSchema(splitContent.mainTruncated)}</>
                       ) : (
                         <>{renderSchema(splitContent.main)}</>
                       )}
@@ -550,19 +548,6 @@ const styles = {
   hidePrint: css({
     '@media print': {
       display: 'none',
-    },
-  }),
-  regwallFade: css({
-    position: 'relative',
-    '&:before': {
-      content: ' ',
-      display: 'block',
-      position: 'absolute',
-      left: 0,
-      bottom: 0,
-      right: 0,
-      top: 120,
-      background: 'var(--color-fadeOutGradientDefault)',
     },
   }),
 }
