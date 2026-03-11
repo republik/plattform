@@ -6,6 +6,7 @@ import { Button } from '@app/components/ui/button'
 import { Spinner } from '@app/components/ui/spinner'
 import { ApolloError, useMutation } from '@apollo/client'
 import { css } from '@republik/theme/css'
+import { CheckCircleIcon } from "lucide-react";
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from '../../../../lib/withT'
@@ -87,6 +88,7 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
             alignItems: 'center',
           })}
         >
+          <CheckCircleIcon size={28} />
           <h1
             className={css({
               textStyle: 'sansSerifMedium',
