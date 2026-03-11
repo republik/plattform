@@ -118,17 +118,8 @@ const Page = ({ router: { query: rawQuery }, me, inNativeApp }) => {
   ].filter(Boolean)
 
   const isProjectR = context === 'projectr'
-  const logoTarget = [
-    'token-authorization',
-    // Deprecated (superseeded by "newsletter")
-    'newsletter-subscription',
-    // Deprecated (superseeded by "newsletter")
-    // Workaround to handle "script" replacements in email clients
-    'newsletter-subscript-disabledion',
-    'newsletter',
-  ].includes(type)
-    ? '_blank'
-    : undefined
+  const logoTarget =
+    type === 'token-authorization' ? '_blank' : undefined
 
   const logo = isProjectR ? (
     <a
