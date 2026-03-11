@@ -22,7 +22,7 @@ const authenticate = (email, name, subscribed, t) => {
 }
 
 const getConsentLink = (email, name, context) => {
-  const link = new URL('/newsletters/confirm', FRONTEND_BASE_URL)
+  const link = new URL('/newsletter-confirm', FRONTEND_BASE_URL)
 
   link.searchParams.set('name', name)
   link.searchParams.set('subscribed', '1')
