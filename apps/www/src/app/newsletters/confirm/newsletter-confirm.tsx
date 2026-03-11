@@ -2,6 +2,7 @@
 
 import { UpdateNewsletterSubscriptionWithMacDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { ErrorMessage } from '@app/components/auth/login/error-message'
+import { Button } from '@app/components/ui/button'
 import { Spinner } from '@app/components/ui/spinner'
 import { ApolloError, useMutation } from '@apollo/client'
 import { css } from '@republik/theme/css'
@@ -78,7 +79,14 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
       )}
 
       {status === 'success' && (
-        <div className={css({ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'center' })}>
+        <div
+          className={css({
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 6,
+            alignItems: 'center',
+          })}
+        >
           <h1
             className={css({
               textStyle: 'sansSerifMedium',
@@ -91,26 +99,21 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
             Sie haben den Newsletter <strong>{displayName}</strong> erfolgreich
             abonniert.
           </p>
-          <Link
-            href='/newsletters'
-            className={css({
-              display: 'inline-block',
-              mt: 4,
-              px: 6,
-              py: 3,
-              background: 'contrast',
-              color: 'text.inverted',
-              textDecoration: 'none',
-              _hover: { opacity: 0.85 },
-            })}
-          >
-            Zu den Newslettern
-          </Link>
+          <Button asChild>
+            <Link href='/newsletters'>Zu den Newslettern</Link>
+          </Button>
         </div>
       )}
 
       {status === 'error' && (
-        <div className={css({ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' })}>
+        <div
+          className={css({
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4,
+            alignItems: 'center',
+          })}
+        >
           <h1
             className={css({
               textStyle: 'sansSerifMedium',
@@ -120,15 +123,9 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
             Anmeldung fehlgeschlagen
           </h1>
           <ErrorMessage error={error} />
-          <Link
-            href='/newsletters'
-            className={css({
-              color: 'text',
-              textDecoration: 'underline',
-            })}
-          >
-            Zu den Newslettern
-          </Link>
+          <Button asChild>
+            <Link href='/newsletter'>Zu den Newslettern</Link>
+          </Button>
         </div>
       )}
     </div>
