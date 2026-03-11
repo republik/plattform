@@ -17,7 +17,7 @@ type DiscountOption = {
 
 // There needs to be one Stripe promo code for each discounted amount. (Promo codes are named after the amount *off*, but we display the final amount in the UI)
 const DISCOUNT_OPTIONS: DiscountOption[] = [
-  { promoCode: 'H25OFF21', amount: 120, highlighted: '50%' },
+  { promoCode: 'H25OFF21', amount: 120, highlighted: '50 %' },
   { promoCode: 'H25OFF13', amount: 180 },
   { promoCode: '', amount: 240 },
 ]
@@ -33,6 +33,7 @@ const radioContainerStyle = css({
   whiteSpace: 'nowrap',
   background: 'transparent',
   color: 'radioText',
+  position: 'relative',
   _peerChecked: {
     background: 'radioChecked',
     borderColor: 'radioChecked',
@@ -87,7 +88,7 @@ export function Offers({
           mb: '4',
         })}
       >
-        {DISCOUNT_OPTIONS.map(({ promoCode, amount }) => {
+        {DISCOUNT_OPTIONS.map(({ promoCode, amount, highlighted }) => {
           return (
             <OfferOptionLabelOnly
               key={promoCode}
@@ -108,6 +109,24 @@ export function Offers({
                   </small>{' '}
                   <span>{amount}.–</span>
                 </span>
+                {highlighted && (
+                  <span
+                    className={css({
+                      fontSize: 'xs',
+                      lineHeight: 1,
+                      position: 'absolute',
+                      color: 'tagText',
+                      background: 'tag',
+                      px: '2',
+                      py: '1',
+                      borderRadius: '2',
+                      top: '-10px',
+                      left: '10px',
+                    })}
+                  >
+                    {highlighted}
+                  </span>
+                )}
               </div>
             </OfferOptionLabelOnly>
           )

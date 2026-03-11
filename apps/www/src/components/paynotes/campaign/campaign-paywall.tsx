@@ -28,12 +28,12 @@ function CampaignPaywall() {
           borderBottomStyle: 'solid',
           borderBottomWidth: '1',
           borderBottomColor: 'black',
+          background: 'background',
+          color: 'text',
         })}
       >
         <ArticleSection
           className={css({
-            background: 'background',
-            color: 'text',
             py: '6',
           })}
         >
