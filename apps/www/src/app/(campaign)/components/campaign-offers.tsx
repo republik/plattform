@@ -137,7 +137,10 @@ export function Offers({
       <Button
         size='full'
         type='submit'
-        className={css({ background: 'campaign26Button', color: 'white' })}
+        className={css({
+          background: 'campaign26Button',
+          color: 'white',
+        })}
       >
         Weiter
       </Button>

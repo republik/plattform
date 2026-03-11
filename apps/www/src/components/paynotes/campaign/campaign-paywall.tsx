@@ -83,7 +83,7 @@ function CampaignPaywall() {
               className={css({
                 textStyle: 'airy',
                 mb: '4',
-                md: { textStyle: 'heavy' },
+                md: { textStyle: 'heavy', mb: '6' },
               })}
             >
               Wählen Sie Ihren Preis für das erste Jahr:
@@ -112,7 +112,7 @@ function CampaignPaywall() {
               className={css({
                 color: 'campaign26.frozenYogurt',
                 textAlign: 'center',
-                my: '4',
+                mt: '2',
                 md: {
                   textStyle: 'heavy',
                   color: 'campaign26.happyCherry',

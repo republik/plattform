@@ -50,7 +50,7 @@ export const presetCampaign2026 = definePreset({
             value: {
               _campaign26Bright: '{colors.campaign26.frozenYogurt}',
               _campaign26Light: '{colors.campaign26.happyCherry}',
-              _campaign26Dark: '{colors.campaign26.happyCherry}',
+              _campaign26Dark: '{colors.campaign26.frozenYogurt}',
             },
           },
           campaign26Background: {
@@ -107,6 +107,13 @@ export const presetCampaign2026 = definePreset({
               _campaign26Bright: 'white',
               _campaign26Light: '{colors.campaign26.happyCherry}',
               _campaign26Dark: '{campaign26.frozenYogurt}',
+            },
+          },
+          campaign26ProgressBackground: {
+            value: {
+              _campaign26Bright: 'rgba(246, 107, 148, 1)',
+              _campaign26Light: 'rgba(240, 8, 76, 0.2)',
+              _campaign26Dark: 'rgba(254, 217, 225, 0.3)',
             },
           },
         },
