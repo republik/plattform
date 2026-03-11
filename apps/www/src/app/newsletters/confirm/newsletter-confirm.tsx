@@ -52,6 +52,9 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
   return (
     <div
       className={css({
+        maxWidth: 'center',
+        mx: 'auto',
+        px: '15px',
         py: 16,
         textAlign: 'center',
       })}
