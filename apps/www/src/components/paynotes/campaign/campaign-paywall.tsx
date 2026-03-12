@@ -79,8 +79,8 @@ function CampaignPaywall() {
               color: 'white',
               md: {
                 pt: 0,
-                background: 'initial',
-                color: 'campaign26.happyCherry',
+                background: 'campaign26Background',
+                color: 'campaign26',
               },
             })}
           >
@@ -112,12 +112,10 @@ function CampaignPaywall() {
             </div>
             <p
               className={css({
-                color: 'campaign26.frozenYogurt',
                 textAlign: 'center',
                 mt: '2',
                 md: {
                   textStyle: 'heavy',
-                  color: 'campaign26.happyCherry',
                   mt: '6',
                 },
               })}
