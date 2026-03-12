@@ -31,8 +31,17 @@ export const presetCampaign2026 = definePreset({
             fontFamily: 'republikSerif',
             fontWeight: 900,
             fontStyle: 'normal',
-            fontSize: '3xl',
+            fontSize: '36px',
             lineHeight: 1.16667,
+          },
+        },
+        campaignSubhead: {
+          value: {
+            fontFamily: 'republikSerif',
+            fontWeight: 700,
+            fontStyle: 'normal',
+            fontSize: '28px',
+            lineHeight: 1.2,
           },
         },
         heavy: {
@@ -64,14 +73,14 @@ export const presetCampaign2026 = definePreset({
             value: {
               _campaign26Bright: '{colors.campaign26.justChocolate}',
               _campaign26Light: '{colors.campaign26.justChocolate}',
-              _campaign26Dark: '{colors.campaign26.frozenYogurt}',
+              _campaign26Dark: '{colors.campaign26.happyCherry}',
             },
           },
           campaign26TagText: {
             value: {
               _campaign26Bright: '{colors.campaign26.frozenYogurt}',
               _campaign26Light: '{colors.campaign26.frozenYogurt}',
-              _campaign26Dark: '{colors.campaign26.justChocolate}',
+              _campaign26Dark: '{colors.campaign26.frozenYogurt}',
             },
           },
           campaign26Button: {
@@ -106,7 +115,7 @@ export const presetCampaign2026 = definePreset({
             value: {
               _campaign26Bright: 'white',
               _campaign26Light: '{colors.campaign26.happyCherry}',
-              _campaign26Dark: '{campaign26.frozenYogurt}',
+              _campaign26Dark: '{colors.campaign26.frozenYogurt}',
             },
           },
           campaign26ProgressBackground: {

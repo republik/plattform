@@ -1,7 +1,7 @@
-import logo from '@republik/theme/logo.json'
 import { css } from '@republik/theme/css'
+import logo from '@republik/theme/logo.json'
 
-export const Logo = () => {
+export const Logo = ({ inverted }: { inverted?: boolean }) => {
   return (
     <svg
       viewBox={logo.LOGO_VIEWBOX}

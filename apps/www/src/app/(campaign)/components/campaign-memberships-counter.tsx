@@ -1,3 +1,5 @@
+'use client'
+
 import * as Progress from '@radix-ui/react-progress'
 import { css } from '@republik/theme/css'
 import React from 'react' // TODO: get real numbers
