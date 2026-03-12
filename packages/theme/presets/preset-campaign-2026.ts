@@ -8,8 +8,9 @@ export const presetCampaign2026 = definePreset({
       campaign26Bright:
         '[data-page-theme="campaign-2026"] [data-theme="bright"] &',
       campaign26Light:
-        '[data-page-theme="campaign-2026"] [data-theme="light"] &',
-      campaign26Dark: '[data-page-theme="campaign-2026"] [data-theme="dark"] &',
+        '[data-page-theme="campaign-2026"] [data-theme="light"] &, [data-theme="light"] [data-page-theme="campaign-2026"] &',
+      campaign26Dark:
+        '[data-page-theme="campaign-2026"] [data-theme="dark"] &, [data-theme="dark"] [data-page-theme="campaign-2026"] &',
     },
   },
 

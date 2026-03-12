@@ -24,7 +24,6 @@ function CampaignPaywall() {
     <>
       <div data-testid='campaignPaywall' data-page-theme='campaign-2026'>
         <div
-          data-theme='light'
           className={css({
             borderBottomStyle: 'solid',
             borderBottomWidth: '1',
@@ -80,7 +79,7 @@ function CampaignPaywall() {
               color: 'white',
               md: {
                 pt: 0,
-                background: 'campaign26.frozenYogurt',
+                background: 'initial',
                 color: 'campaign26.happyCherry',
               },
             })}
@@ -104,10 +103,7 @@ function CampaignPaywall() {
                 }}
               />
             </div>
-            <div
-              data-theme='light'
-              className={css({ display: 'none', md: { display: 'block' } })}
-            >
+            <div className={css({ display: 'none', md: { display: 'block' } })}>
               <Offers
                 additionalShopParams={{
                   rep_ui_component: 'campaign-paywall',
