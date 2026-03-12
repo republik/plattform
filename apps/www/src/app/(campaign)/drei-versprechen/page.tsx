@@ -6,7 +6,7 @@ import { css } from '@republik/theme/css'
 import Link from 'next/link'
 
 const journalismPromiseStyle = css({
-  mb: 8,
+  pb: 8,
   '& h3': {
     textStyle: 'campaignSubhead',
     mb: 2,
@@ -115,9 +115,20 @@ export default async function Page() {
       >
         <ArticleSection
           className={css({
-            py: '8',
+            py: 6,
           })}
         >
+          <p
+            className={css({
+              fontFamily: 'gtAmericaStandard',
+              fontWeight: 700,
+              fontSize: '2xl',
+              color: 'campaign26.justChocolate',
+              mb: 6,
+            })}
+          >
+            Was wir umsetzen:
+          </p>
           <JournalismPromise count={1}>
             <h3>
               Journalismus für
