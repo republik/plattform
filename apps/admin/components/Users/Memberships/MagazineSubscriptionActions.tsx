@@ -158,7 +158,6 @@ export function MagazineSubscriptionActions({
         )
       ) : (
         <TextButton
-          small
           onClick={() => {
             setConfirmAction('cancel')
           }}
