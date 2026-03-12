@@ -1,8 +1,8 @@
-import { Component, Fragment } from 'react'
-import PropTypes from 'prop-types'
-import compose from 'lodash/flowRight'
 import { gql } from '@apollo/client'
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
+import compose from 'lodash/flowRight'
+import PropTypes from 'prop-types'
+import { Component, Fragment } from 'react'
 import isEmail from 'validator/lib/isEmail'
 
 import Link from 'next/link'
@@ -12,17 +12,16 @@ import ErrorMessage from '../ErrorMessage'
 
 import {
   Button,
+  Field,
   InlineSpinner,
   Interaction,
-  Field,
   Label,
   RawHtml,
-  colors,
 } from '@project-r/styleguide'
 
-import Poller from './Poller'
-import { withRouter } from 'next/router'
 import { graphql } from '@apollo/client/react/hoc'
+import { withRouter } from 'next/router'
+import Poller from './Poller'
 
 const styles = {
   form: css({
@@ -43,15 +42,15 @@ const styles = {
   }),
   hint: css({
     marginTop: -5,
-    color: colors.lightText,
+    color: 'textSoft',
     display: 'block',
     lineHeight: '20px',
   }),
   hintA: css({
     textDecoration: 'underline',
-    color: colors.lightText,
+    color: 'textSoft',
     ':hover': {
-      color: colors.text,
+      color: 'text',
     },
   }),
 }
@@ -186,8 +185,8 @@ class SignIn extends Component {
       <div>
         {beforeForm}
         <form onSubmit={this.onFormSubmit}>
-          <div {...styles.form}>
-            <div {...styles.input}>
+          <div className={styles.form}>
+            <div className={styles.input}>
               <Field
                 name='email'
                 type='email'
@@ -205,7 +204,7 @@ class SignIn extends Component {
                 value={email}
               />
             </div>
-            <div {...styles.button}>
+            <div className={styles.button}>
               {loading ? (
                 <InlineSpinner />
               ) : (
@@ -216,12 +215,12 @@ class SignIn extends Component {
             </div>
           </div>
         </form>
-        <Label {...styles.hint}>
-          <Link href='/legal/privacy' {...styles.hintA}>
+        <Label className={styles.hint}>
+          <Link href='/legal/privacy' className={styles.hintA}>
             {t('signIn/privacy')}
           </Link>
           {' – '}
-          <Link href='/faq' {...styles.hintA}>
+          <Link href='/faq' className={styles.hintA}>
             {t('signIn/faq')}
           </Link>
           {' – '}

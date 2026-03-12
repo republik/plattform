@@ -13,7 +13,7 @@ export const fragments = gql`
 
 export const Sessions = ({ sessions }) =>
   !!sessions?.length && (
-    <div {...styles.part}>
+    <div className={styles.part}>
       {sessions.map(({ id, userAgent }) => (
         <div key={id}>{userAgent}</div>
       ))}

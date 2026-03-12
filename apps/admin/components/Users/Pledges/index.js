@@ -1,31 +1,31 @@
-import { Fragment, Component } from 'react'
-import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import { merge } from 'glamor'
+import { Query } from '@apollo/client/react/components'
+import { cx } from '@republik/theme/css'
 import Link from 'next/link'
+import { Component, Fragment } from 'react'
 
-import { Loader, Label, A } from '@project-r/styleguide'
+import { A, Label, Loader } from '@project-r/styleguide'
 
 import { chfFormat } from '../../../lib/utils/formats'
 
 import {
-  displayStyles,
-  Section,
-  SectionTitle,
-  SectionSubhead,
-  displayDateTime,
+  DD,
   displayDate,
+  displayDateTime,
+  displayStyles,
   DL,
   DT,
-  DD,
+  Section,
+  SectionSubhead,
+  SectionTitle,
 } from '../../Display/utils'
 import { tableStyles } from '../../Tables/utils'
 
+import CancelPledge from './CancelPledge'
 import MovePledge from './MovePledge'
 import ResolvePledgeToPayment from './ResolvePledgeToPayment'
-import CancelPledge from './CancelPledge'
-import UpdatePayment from './UpdatePayment'
 import UpdateAddress from './UpdateAddress'
+import UpdatePayment from './UpdatePayment'
 
 const GET_PLEDGES = gql`
   fragment MembershipDetails on Membership {
@@ -118,8 +118,8 @@ const PledgeCard = ({ pledge, ...props }) => {
   const membership = pledge.memberships[0]
   const { shippingAddress } = pledge
   return (
-    <tr {...merge(tableStyles.row, tableStyles.selectableRow)} {...props}>
-      <td {...tableStyles.paddedCell}>
+    <tr className={cx(tableStyles.row, tableStyles.selectableRow)} {...props}>
+      <td className={tableStyles.paddedCell}>
         {pledge.package.name.split('_').join(' ')}
         {membership && ` #${membership.sequenceNumber}`}
         {' - '}
@@ -137,7 +137,7 @@ const PledgeCard = ({ pledge, ...props }) => {
           </>
         )}
       </td>
-      <td {...tableStyles.paddedCell}>
+      <td className={tableStyles.paddedCell}>
         {chfFormat(pledge.total / 100)}
         {payment && (
           <Fragment>
@@ -145,7 +145,7 @@ const PledgeCard = ({ pledge, ...props }) => {
             <Label>
               {payment.method === 'STRIPE' && (
                 <A
-                  {...tableStyles.link}
+                  className={tableStyles.link}
                   href={`https://dashboard.stripe.com/payments/${payment.pspId}`}
                   target='_blank'
                 >
@@ -170,8 +170,8 @@ const PledgeDetails = ({ userId, pledge, ...props }) => {
   const { shippingAddress } = pledge
 
   return (
-    <tr {...tableStyles.emphasisedRow} {...props}>
-      <td {...tableStyles.paddedCell} colSpan={2}>
+    <tr className={tableStyles.emphasisedRow} {...props}>
+      <td className={tableStyles.paddedCell} colSpan={2}>
         <DL>
           {shippingAddress && (
             <>
@@ -319,7 +319,7 @@ const PaymentDetails = ({ payment, ...props }) => {
       <Label>Erstellt am {displayDateTime(new Date(payment.createdAt))}</Label>
       <br />
       <Label>ID: {payment.id}</Label>
-      <div {...displayStyles.hFlexBox}>
+      <div className={displayStyles.hFlexBox}>
         <div>
           <DL>
             <DT>Total</DT>
@@ -434,7 +434,7 @@ export default class Pledges extends Component {
                 return (
                   <Section>
                     <SectionTitle>Pledges</SectionTitle>
-                    <table {...tableStyles.table}>
+                    <table className={tableStyles.table}>
                       <colgroup>
                         <col style={{ width: '50%' }} />
                         <col style={{ width: '50%' }} />

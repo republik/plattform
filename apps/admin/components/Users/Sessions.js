@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
 import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
@@ -44,7 +44,7 @@ const clearSessionsMutation = gql`
 const styles = {
   session: css({
     padding: 10,
-    backgroundColor: colors.secondaryBg,
+    backgroundColor: 'hover',
   }),
 }
 
@@ -61,7 +61,7 @@ class SessionOverview extends Component {
         <List>
           {sessions.map((session, index) => (
             <Item key={`session-${index}`}>
-              <div {...styles.session}>
+              <div className={styles.session}>
                 <Label>Gültig bis {displayDateTime(session.expiresAt)}</Label>
                 <Interaction.P>
                   {session.city} {session.country}

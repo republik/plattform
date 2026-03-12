@@ -28,7 +28,7 @@ export default withDebouncedSearch(
     return (
       <div
         style={{
-          borderBottom: `1px solid ${colors.divider}`,
+          borderBottom: `1px solid token(colors.divider)`,
         }}
       >
         <div style={formSectionStyles}>

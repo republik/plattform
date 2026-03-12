@@ -1,9 +1,9 @@
+import { css } from '@republik/theme/css'
 import { Fragment } from 'react'
 import withMe from '../../lib/withMe'
 import withT from '../../lib/withT'
-import SignIn from './SignIn'
 import Me from './Me'
-import { css } from 'glamor'
+import SignIn from './SignIn'
 
 import { Interaction } from '@project-r/styleguide'
 
@@ -24,7 +24,7 @@ const styles = {
   }),
 }
 export const PageCenter = ({ children }) => (
-  <div {...styles.center}>{children}</div>
+  <div className={styles.center}>{children}</div>
 )
 
 const withAuthorization =

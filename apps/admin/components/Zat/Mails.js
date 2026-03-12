@@ -25,7 +25,7 @@ const Mails = ({ mails }) => {
     <div>
       {mails.map((mail) => {
         return (
-          <div key={mail.id} {...styles.mail}>
+          <div key={mail.id} className={styles.mail}>
             <div>
               <Date mail={mail} />
             </div>

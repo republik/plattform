@@ -2,7 +2,7 @@ import { Component, Fragment } from 'react'
 import { Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import Textarea from 'react-textarea-autosize'
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
 
 import {
   Button,
@@ -86,7 +86,7 @@ export default class ResolvePledgeToPayment extends Component {
                             renderInput={(inputProps) => (
                               <Textarea
                                 {...inputProps}
-                                {...css({
+                                className={css({
                                   minHeight: 40,
                                   paddingTop: '7px !important',
                                   paddingBottom: '6px !important',

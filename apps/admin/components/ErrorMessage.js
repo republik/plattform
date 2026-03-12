@@ -7,7 +7,7 @@ const { P } = Interaction
 const ErrorMessage = ({ error }) => (
   <P
     style={{
-      color: colors.error,
+      color: 'error',
       margin: '20px 0',
     }}
   >

@@ -5,7 +5,7 @@ import compose from 'lodash/flowRight'
 import { enforceAuthorization } from '../../components/Auth/withAuthorization'
 import App from '../../components/App'
 
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
 
 import User from '../../components/Users/Particulars'
 import Email from '../../components/Users/Email'
@@ -29,16 +29,15 @@ import Links from '../../components/Users/Links'
 import Campaigns from '../../components/Users/Campaigns'
 
 const styles = {
-  row: css({
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    '& > *': {
-      flex: '0 0 25%',
-    },
+  grid: css({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
   }),
-  fifty: css({
-    flex: '0 0 50%',
+  span1: css({
+    gridColumn: 'span 1',
+  }),
+  span2: css({
+    gridColumn: 'span 2',
   }),
 }
 
@@ -61,27 +60,27 @@ const SectionSwitch = ({ userId, section }) => {
   }
 
   return (
-    <div {...styles.row}>
-      <div>
+    <div className={styles.grid}>
+      <div className={styles.span1}>
         <User userId={userId} />
         <Email userId={userId} />
       </div>
-      <div>
+      <div className={styles.span1}>
         <NewsletterSubscriptions userId={userId} />
         <Roles userId={userId} />
         <Actions userId={userId} />
       </div>
-      <div {...styles.fifty}>
+      <div className={styles.span2}>
         <AuthSettings userId={userId} />
         <Mailbox userId={userId} narrow={3} />
         <Links userId={userId} />
         <Campaigns userId={userId} />
         <AdminNotes userId={userId} />
       </div>
-      <div {...styles.fifty}>
+      <div className={styles.span2}>
         <Memberships userId={userId} />
       </div>
-      <div {...styles.fifty}>
+      <div className={styles.span2}>
         <Pledges userId={userId} />
       </div>
     </div>

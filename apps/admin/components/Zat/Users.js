@@ -40,7 +40,7 @@ const Users = ({ email, name, users, t }) => {
   return (
     <>
       {!hasMatchingUsers && (
-        <div {...styles.hint}>
+        <div className={styles.hint}>
           Keinen User unter «{email || name}» gefunden.{' '}
           {!!email && !!users?.length && (
             <>
@@ -73,7 +73,7 @@ const Users = ({ email, name, users, t }) => {
           newsletterSettings,
           sessions,
         }) => (
-          <div key={id} {...styles.item}>
+          <div key={id} className={styles.item}>
             {/* Name, email address */}
             <div>
               <A href={`/users/${id}`} target='_blank'>

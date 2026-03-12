@@ -1,7 +1,7 @@
 import Credentials from './Credentials'
 import Suspensions from './DiscussionSuspensions'
 
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
 
 const styles = {
   row: css({
@@ -14,11 +14,11 @@ const styles = {
 
 const Dialog = ({ userId }) => {
   return (
-    <div {...styles.row}>
-      <div {...styles.fifty}>
+    <div className={styles.row}>
+      <div className={styles.fifty}>
         <Credentials userId={userId} />
       </div>
-      <div {...styles.fifty}>
+      <div className={styles.fifty}>
         <Suspensions userId={userId} />
       </div>
     </div>

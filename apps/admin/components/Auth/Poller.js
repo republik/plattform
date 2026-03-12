@@ -1,8 +1,8 @@
-import { Component, Fragment } from 'react'
-import PropTypes from 'prop-types'
+import { css } from '@republik/theme/css'
 import compose from 'lodash/flowRight'
+import PropTypes from 'prop-types'
+import { Component, Fragment } from 'react'
 import { ME_QUERY } from '../../lib/withMe'
-import { css } from 'glamor'
 
 import withT from '../../lib/withT'
 
@@ -12,8 +12,8 @@ import { SUPPORTED_TOKEN_TYPES } from '../constants'
 
 import { IconDevices, IconMailOutline } from '@republik/icons'
 
-import { Label, Interaction, RawHtml, linkRule } from '@project-r/styleguide'
 import { graphql } from '@apollo/client/react/hoc'
+import { Interaction, Label, RawHtml, linkRule } from '@project-r/styleguide'
 
 const { H3, P } = Interaction
 
@@ -24,11 +24,11 @@ const Icons = {
 
 const styles = {
   group: css({
-    marginTop: '.5em',
+    marginTop: '4',
   }),
   hint: css({
-    marginTop: '.2em',
-    lineHeight: '1em',
+    marginTop: '0.5',
+    lineHeight: '4',
   }),
 }
 
@@ -65,7 +65,7 @@ class Poller extends Component {
       const elapsedMs = this.state.now - this.state.start
       this.props.data.stopPolling()
 
-      onSuccess && onSuccess(me, elapsedMs)
+      onSuccess?.(me, elapsedMs)
     }
   }
   componentWillUnmount() {
@@ -131,17 +131,17 @@ class Poller extends Component {
         </H3>
         <RawHtml
           type={P}
-          {...styles.group}
+          className={styles.group}
           dangerouslySetInnerHTML={{
             __html: t(`signIn/polling/${tokenType}/text`),
           }}
         />
         {!!onTokenTypeChange &&
           alternativeFirstFactors.map((altTokenType) => (
-            <P key={altTokenType} {...styles.group}>
+            <P key={altTokenType} className={styles.group}>
               <Label>
                 <a
-                  {...linkRule}
+                  className={linkRule}
                   href='#'
                   onClick={(e) => {
                     e.preventDefault()
@@ -153,7 +153,7 @@ class Poller extends Component {
               </Label>
             </P>
           ))}
-        <P {...styles.group}>
+        <P className={styles.group}>
           <Label>{t('signIn/polling/email')}</Label>
           <br />
           {email}
@@ -161,7 +161,7 @@ class Poller extends Component {
           {!!onCancel && (
             <Label>
               <a
-                {...linkRule}
+                className={linkRule}
                 href='#'
                 onClick={(e) => {
                   e.preventDefault()
@@ -173,16 +173,16 @@ class Poller extends Component {
             </Label>
           )}
         </P>
-        <P {...styles.group}>
+        <P className={styles.group}>
           <Label>{t('signIn/polling/phrase')}</Label>
           <br />
           {phrase}
         </P>
-        <P {...styles.hint}>
+        <P className={styles.hint}>
           {!showPhraseHint && (
             <Label>
               <a
-                {...linkRule}
+                className={linkRule}
                 href='#'
                 onClick={(e) => {
                   e.preventDefault()
@@ -194,7 +194,7 @@ class Poller extends Component {
             </Label>
           )}
           {showPhraseHint && (
-            <Label {...styles.hint}>
+            <Label className={styles.hint}>
               {t(`signIn/polling/phrase/${tokenType}/hint`)}
             </Label>
           )}

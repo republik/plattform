@@ -1,14 +1,14 @@
-import { useState } from 'react'
-import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
-import MessageForm from './MessageForm'
+import { css, cx } from '@republik/theme/css'
+import { useState } from 'react'
 import { chfFormat } from '../../../lib/utils/formats'
 import { displayDate } from '../../Display/utils'
+import MessageForm from './MessageForm'
 
 import {
-  tableStyles as styles,
   createSortHandler,
   createSortIndicator,
+  tableStyles as styles,
 } from '../../Tables/utils'
 
 const Table = ({
@@ -23,7 +23,7 @@ const Table = ({
   const sortHandler = createSortHandler(sort || {}, onSort)
   const indicator = createSortIndicator(sort || {})
   return (
-    <table {...props} {...styles.table}>
+    <table {...props} className={styles.table}>
       <colgroup>
         <col style={{ width: '120px' }} />
         <col style={{ width: '100px' }} />
@@ -37,56 +37,50 @@ const Table = ({
         <col style={{ maxWidth: '150px' }} />
       </colgroup>
       <thead>
-        <tr {...styles.headRow}>
+        <tr className={styles.headRow}>
           <th
-            {...styles.interactive}
-            {...styles.left}
+            className={cx(styles.interactive, styles.left)}
             onClick={sortHandler('createdAt')}
           >
             <Label>Erstellt{indicator('createdAt')}</Label>
           </th>
           <th
-            {...styles.interactive}
-            {...styles.left}
+            className={cx(styles.interactive, styles.left)}
             onClick={sortHandler('valuta')}
           >
             <Label>Valuta {indicator('valuta')}</Label>
           </th>
           <th
-            {...styles.interactive}
-            {...styles.left}
+            className={cx(styles.interactive, styles.left)}
             onClick={sortHandler('konto')}
           >
             <Label>Konto{indicator('konto')}</Label>
           </th>
-          <th {...styles.interactive} {...styles.left}>
+          <th className={cx(styles.interactive, styles.left)}>
             <Label>Avisierungstext</Label>
           </th>
           <th
-            {...styles.interactive}
-            {...styles.left}
+            className={cx(styles.interactive, styles.left)}
             onClick={sortHandler('gutschrift')}
           >
             <Label>Gutschrift{indicator('gutschrift')}</Label>
           </th>
-          <th {...styles.interactive} {...styles.left}>
+          <th className={cx(styles.interactive, styles.left)}>
             <Label>Mitteilung</Label>
           </th>
           <th
-            {...styles.interactive}
-            {...styles.left}
+            className={cx(styles.interactive, styles.left)}
             onClick={sortHandler('matched')}
           >
             <Label>Matched{indicator('matched')}</Label>
           </th>
           <th
-            {...styles.interactive}
-            {...styles.left}
+            className={cx(styles.interactive, styles.left)}
             onClick={sortHandler('buchungsdatum')}
           >
             <Label>Buchungsdatum {indicator('buchungsdatum')}</Label>
           </th>
-          <th {...styles.interactive} {...styles.left}>
+          <th className={cx(styles.interactive, styles.left)}>
             <Label>Zahlungs-ID</Label>
           </th>
           <th />
@@ -96,7 +90,7 @@ const Table = ({
         {items
           .filter((v) => v.hidden !== true)
           .map((postfinancePayment, index) => (
-            <tr key={`postfinancePayment-${index}`} {...styles.row}>
+            <tr key={`postfinancePayment-${index}`} className={styles.row}>
               <td>{displayDate(postfinancePayment.createdAt)}</td>
               <td>{postfinancePayment.valuta}</td>
               <td>{postfinancePayment.konto}</td>
@@ -133,7 +127,7 @@ const Table = ({
                 {!postfinancePayment.matched && (
                   <span>
                     <a
-                      {...styles.link}
+                      className={styles.link}
                       onClick={() =>
                         onHide({
                           id: postfinancePayment.id,
@@ -144,7 +138,7 @@ const Table = ({
                     </a>
                     <br />
                     <a
-                      {...styles.link}
+                      className={styles.link}
                       onClick={() =>
                         onMatch({
                           id: postfinancePayment.id,
@@ -181,7 +175,7 @@ function Einzahlungsschein({ image }) {
     setIsSmall(!isSmall)
   }
   return (
-    <a href='#' {...{ onClick }} {...linkStyle}>
+    <a href='#' {...{ onClick }} className={linkStyle}>
       <img src={'data:image/png;base64, ' + image} {...imgStyles}></img>
     </a>
   )

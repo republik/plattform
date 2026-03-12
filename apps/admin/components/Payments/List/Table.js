@@ -1,13 +1,14 @@
-import { Label, colors } from '@project-r/styleguide'
+import { Label } from '@project-r/styleguide'
 import Link from 'next/link'
 import { chfFormat } from '../../../lib/utils/formats'
 
 import { displayDate } from '../../Display/utils'
 
+import { cx } from '@republik/theme/css'
 import {
-  tableStyles as styles,
   createSortHandler,
   createSortIndicator,
+  tableStyles as styles,
 } from '../../Tables/utils'
 
 const getDueDate = (status, dueDate) => {
@@ -17,7 +18,7 @@ const getDueDate = (status, dueDate) => {
     return (
       <span
         style={{
-          color: colors.error,
+          color: 'error',
         }}
       >
         {displayDate(dueDate)}
@@ -31,7 +32,7 @@ const Table = ({ items, sort, onSort, ...props }) => {
   const sortHandler = createSortHandler(sort || {}, onSort)
   const indicator = createSortIndicator(sort || {})
   return (
-    <table {...props} {...styles.table}>
+    <table {...props} className={styles.table}>
       <colgroup>
         <col style={{ width: '120px' }} />
         <col style={{ width: '100px' }} />
@@ -42,51 +43,45 @@ const Table = ({ items, sort, onSort, ...props }) => {
         <col style={{ width: '100px' }} />
       </colgroup>
       <thead>
-        <tr {...styles.headRow}>
+        <tr className={styles.headRow}>
           <th
-            {...styles.interactive}
-            {...styles.left}
+            className={cx(styles.interactive, styles.left)}
             onClick={sortHandler('createdAt')}
           >
             <Label>Erstellt{indicator('createdAt')}</Label>
           </th>
           <th
-            {...styles.interactive}
-            {...styles.left}
+            className={cx(styles.interactive, styles.left)}
             onClick={sortHandler('dueDate')}
           >
             <Label>Fälligkeit{indicator('dueDate')}</Label>
           </th>
           <th
-            {...styles.interactive}
-            {...styles.left}
+            className={cx(styles.interactive, styles.left)}
             onClick={sortHandler('method')}
           >
             <Label>Zahlungsart{indicator('method')}</Label>
           </th>
-          <th {...styles.left}>
+          <th className={styles.left}>
             <Label>Name</Label>
           </th>
-          <th {...styles.left}>
+          <th className={styles.left}>
             <Label>Anschrift</Label>
           </th>
           <th
-            {...styles.interactive}
-            {...styles.left}
+            className={cx(styles.interactive, styles.left)}
             onClick={sortHandler('total')}
           >
             <Label>Total{indicator('total')}</Label>
           </th>
           <th
-            {...styles.interactive}
-            {...styles.left}
+            className={cx(styles.interactive, styles.left)}
             onClick={sortHandler('hrid')}
           >
             <Label>HR-Nummer {indicator('hrid')}</Label>
           </th>
           <th
-            {...styles.interactive}
-            {...styles.left}
+            className={cx(styles.interactive, styles.left)}
             onClick={sortHandler('status')}
           >
             <Label>Status{indicator('status')}</Label>
@@ -103,12 +98,12 @@ const Table = ({ items, sort, onSort, ...props }) => {
           const name = user.name || `${user.firstName} ${user.lastName}`
 
           return (
-            <tr key={`payment-${index}`} {...styles.row}>
+            <tr key={`payment-${index}`} className={styles.row}>
               <td>{displayDate(payment.createdAt)}</td>
               <td>{getDueDate(payment.status, payment.dueDate)}</td>
               <td>{payment.method}</td>
               <td>
-                <Link href={`/users/${user.id}`} {...styles.link}>
+                <Link href={`/users/${user.id}`} className={styles.link}>
                   {name}
                 </Link>
               </td>
@@ -128,11 +123,11 @@ const Table = ({ items, sort, onSort, ...props }) => {
               <td>{payment.hrid}</td>
               <td>{payment.status}</td>
             </tr>
-          );
+          )
         })}
       </tbody>
     </table>
-  );
+  )
 }
 
 export default Table

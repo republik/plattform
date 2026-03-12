@@ -1,5 +1,4 @@
-import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
+import { css } from '@republik/theme/css'
 
 const svgIcon = css({
   display: 'inline-flex',
@@ -11,7 +10,7 @@ const svgIcon = css({
     display: 'inline',
     height: '1em',
     width: '1em',
-    fill: colors.secondary,
+    fill: 'secondary',
   },
 })
 

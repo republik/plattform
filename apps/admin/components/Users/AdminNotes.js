@@ -1,20 +1,19 @@
-import { Component, Fragment } from 'react'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
 import {
-  Interaction,
-  Loader,
-  Label,
-  InlineSpinner,
-  Button,
-  Field,
   A,
+  Field,
+  InlineSpinner,
+  Interaction,
+  Label,
+  Loader,
 } from '@project-r/styleguide'
+import compose from 'lodash/flowRight'
+import { Component, Fragment } from 'react'
 
+import TextareaAutosize from 'react-autosize-textarea'
 import remark from 'remark'
 import remarkReactRenderer from 'remark-react'
-import TextareaAutosize from 'react-autosize-textarea'
 
 import { swissTime } from '../../lib/utils/formats'
 import withMe from '../../lib/withMe'

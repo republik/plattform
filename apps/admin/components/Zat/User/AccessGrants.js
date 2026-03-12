@@ -17,7 +17,7 @@ export const AccessGrants = ({ accessGrants }) =>
     const { id, endAt } = accessGrant
 
     return (
-      <div key={id} {...styles.part}>
+      <div key={id} className={styles.part}>
         Access Grant bis {displayDate(endAt)}
       </div>
     )

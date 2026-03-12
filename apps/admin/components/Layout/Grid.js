@@ -1,5 +1,5 @@
+import { css } from '@republik/theme/css'
 import { createElement } from 'react'
-import { css } from 'glamor'
 import mergeClassNames from '../../lib/mergeClassNames'
 
 const containerStyles = ({

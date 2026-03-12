@@ -1,8 +1,8 @@
+import { RootColorVariables } from '@project-r/styleguide'
 import '@republik/theme/fonts.css'
 import '@republik/theme/styles.css'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
-import { RootColorVariables } from '@project-r/styleguide'
 
 import { PagePropsWithApollo } from '@republik/nextjs-apollo-client'
 import { withApollo } from '../lib/apollo'

@@ -1,8 +1,8 @@
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
-import { Logo } from './Logo'
-import Me from '../Auth/Me'
 import { ComponentPropsWithoutRef } from 'react'
+import Me from '../Auth/Me'
+import { Logo } from './Logo'
 
 const link = css({
   textDecoration: 'none',

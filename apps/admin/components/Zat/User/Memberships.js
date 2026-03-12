@@ -44,7 +44,7 @@ export const Memberships = ({ activeMembership, memberships }) => {
   if (!activeMembership) {
     return (
       lastPeriod && (
-        <div {...styles.part}>
+        <div className={styles.part}>
           ehemalig{' · '}bis {displayDate(lastPeriod.endDate)}
         </div>
       )
@@ -54,7 +54,7 @@ export const Memberships = ({ activeMembership, memberships }) => {
   const firstPeriod = getFirstPeriod(periods)
 
   return (
-    <div {...styles.part}>
+    <div className={styles.part}>
       {activeMembership.type?.name}
       {!activeMembership.renew && <>{' · '}gekündigt</>}
       {!!activeMembership.overdue && !!activeMembership.renew && (
