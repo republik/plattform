@@ -116,53 +116,105 @@ export default async function Page() {
         <ArticleSection
           className={css({
             py: 6,
+            md: { display: 'grid', gridTemplateColumns: '1fr 1fr' },
           })}
         >
-          <p
+          <div>
+            <p
+              className={css({
+                fontFamily: 'gtAmericaStandard',
+                fontWeight: 700,
+                fontSize: '2xl',
+                color: 'campaign26.justChocolate',
+                mb: 6,
+              })}
+            >
+              Was wir umsetzen:
+            </p>
+            <JournalismPromise count={1}>
+              <h3>
+                Journalismus für
+                <br />
+                Erstwählerinnen
+              </h3>
+              <p>
+                Wir verschenken ein Jahresabo der Republik an Menschen, die zum
+                ersten Mal abstimmen oder wählen.
+              </p>
+              <div
+                className={css({
+                  mt: 6,
+                  mb: 3,
+                  '& iframe': {
+                    aspectRatio: '9/16',
+                    width: '100%',
+                    height: 'auto',
+                  },
+                  md: {
+                    display: 'none',
+                  },
+                })}
+              >
+                <iframe
+                  src='https://player.vimeo.com/video/613729649?autoplay=1&loop=1'
+                  frameBorder='0'
+                  allow='autoplay'
+                ></iframe>
+              </div>
+            </JournalismPromise>
+            <JournalismPromise count={2}>
+              <h3>
+                Journalismus für
+                <br />
+                Schulen
+              </h3>
+              <p>
+                Wir stellen die Republik an Schweizer Schulen der Sekundarstufe
+                I und II kostenlos zur Verfügung.
+              </p>
+            </JournalismPromise>
+            <JournalismPromise count={3}>
+              <h3>
+                Journalismus für
+                <br />
+                Freunde
+              </h3>
+              <p>
+                Wer bis zum 14. April an Bord kommt, darf eine Freundin
+                kostenlos für drei Monate neu zur Republik einladen.
+              </p>
+            </JournalismPromise>
+          </div>
+          <div
             className={css({
-              fontFamily: 'gtAmericaStandard',
-              fontWeight: 700,
-              fontSize: '2xl',
-              color: 'campaign26.justChocolate',
-              mb: 6,
+              display: 'none',
+              md: {
+                display: 'flex',
+                alignItems: 'center',
+              },
+              lg: {
+                ml: 20,
+                mr: -20,
+              },
             })}
           >
-            Was wir umsetzen:
-          </p>
-          <JournalismPromise count={1}>
-            <h3>
-              Journalismus für
-              <br />
-              Erstwählerinnen
-            </h3>
-            <p>
-              Wir verschenken ein Jahresabo der Republik an Menschen, die zum
-              ersten Mal abstimmen oder wählen.
-            </p>
-            <div>VIDEO</div>
-          </JournalismPromise>
-          <JournalismPromise count={2}>
-            <h3>
-              Journalismus für
-              <br />
-              Schulen
-            </h3>
-            <p>
-              Wir stellen die Republik an Schweizer Schulen der Sekundarstufe I
-              und II kostenlos zur Verfügung.
-            </p>
-          </JournalismPromise>
-          <JournalismPromise count={3}>
-            <h3>
-              Journalismus für
-              <br />
-              Freunde
-            </h3>
-            <p>
-              Wer bis zum 14. April an Bord kommt, darf eine Freundin kostenlos
-              für drei Monate neu zur Republik einladen.
-            </p>
-          </JournalismPromise>
+            <div
+              className={css({
+                width: '100%',
+                '& iframe': {
+                  aspectRatio: '9/16',
+                  width: '100%',
+                  height: 'auto',
+                },
+              })}
+            >
+              <iframe
+                src='https://player.vimeo.com/video/613729649?autoplay=1&loop=1'
+                frameBorder='0'
+                allow='autoplay'
+              ></iframe>
+            </div>
+          </div>
         </ArticleSection>
       </div>
       <div
