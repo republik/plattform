@@ -1,16 +1,12 @@
 mutation UpdateNewsletterSubscriptionWithMac(
   $name: String!
   $subscribed: Boolean!
-  $email: String!
-  $mac: String!
-  $consents: [String!]
+  $signup: NewsletterSignupInput!
 ) {
   updateNewsletterSubscription(
     name: $name
     subscribed: $subscribed
-    email: $email
-    mac: $mac
-    consents: $consents
+    signup: $signup
   ) {
     id
     name

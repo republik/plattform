@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "@orbiting/backend-modules-assets": "*",
+    "@orbiting/backend-modules-translate": "*",
+    "@orbiting/backend-modules-lead-tracking": "*",
     "apollo-modules-node": "*",
     "d3-array": "^2.4.0",
     "d3-dsv": "^1.2.0",
@@ -38,7 +40,8 @@
     "stripe": "^8.119.0",
     "uuid": "^8.1.0",
     "validator": "^13.7.0",
-    "yargs": "^17.0.1"
+    "yargs": "^17.0.1",
+    "zod": "3.22.2"
   },
   "devDependencies": {
     "@orbiting/backend-modules-types": "*"

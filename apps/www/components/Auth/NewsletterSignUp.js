@@ -11,6 +11,7 @@ import EmailForm, { checkEmail } from './EmailForm'
 
 import { Interaction } from '@project-r/styleguide'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 
 const SignUp = ({
   me,
@@ -75,6 +76,7 @@ const SignUp = ({
                 name,
                 email: state.email,
                 context,
+                meta: getUTMSessionStorage(),
               },
             })
               .then(() => {
@@ -99,8 +101,9 @@ const signUpMutation = gql`
     $email: String!
     $name: String!
     $context: String!
+    $meta: JSON
   ) {
-    requestNewsletterSubscription(email: $email, name: $name, context: $context)
+    requestNewsletterSubscription(email: $email, name: $name, context: $context, meta: $meta)
   }
 `
 
