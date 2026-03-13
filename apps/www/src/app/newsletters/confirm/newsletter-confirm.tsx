@@ -15,7 +15,6 @@ import * as base64u from '../../../../lib/utils/base64u'
 type Props = {
   name: string
   email: string
-  subscribed: string
   mac: string
   signupRef?: string
 }
