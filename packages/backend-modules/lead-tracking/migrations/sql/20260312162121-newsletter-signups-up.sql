@@ -1,7 +1,7 @@
 -- migrate up here: CREATE TABLE...
 --
 CREATE TABlE newsletter_signups (
-	id uuid PRIMARY KEY default uuid_generate_v4(),
+	id uuid PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
 	user_id uuid REFERENCES users(id),
 	newsletter text not null,
 	requested_at timestamptz,
