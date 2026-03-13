@@ -10,8 +10,8 @@
     "strictNullChecks": false,
     "baseUrl": ".",
     "paths": {
-      "@app/*": [
-        "./src/*"
+      "@/*": [
+        "./*"
       ],
       "#graphql/*": [
         "./graphql/*"

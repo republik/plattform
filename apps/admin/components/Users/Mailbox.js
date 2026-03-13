@@ -3,12 +3,12 @@ import { gql } from '@apollo/client'
 
 import { A, Loader } from '@project-r/styleguide'
 
-import withT from '../../lib/withT'
+import withT from '@/lib/withT'
 
-import { Section, SectionTitle, SectionNav } from '../Display/utils'
+import { Section, SectionTitle, SectionNav } from '@/components/Display/utils'
 
-import List from '../Mailbox/List'
-import { fragments } from '../Mailbox/utils'
+import List from '@/components/Mailbox/List'
+import { fragments } from '@/components/Mailbox/utils'
 
 const GET_USER_MAILBOX = gql`
   query getUserMailbox($id: String, $first: Int, $after: String) {

@@ -1,10 +1,11 @@
+'use client'
 import { Component } from 'react'
 import PropTypes from 'prop-types'
 import compose from 'lodash/flowRight'
 import { gql } from '@apollo/client'
-import withT from '../../lib/withT'
-import { errorToString } from '../../lib/utils/errors'
-import { ME_QUERY } from '../../lib/withMe'
+import withT from '@/lib/withT'
+import { errorToString } from '@/lib/utils/errors'
+import { ME_QUERY } from '@/lib/withMe'
 
 import { A, InlineSpinner } from '@project-r/styleguide'
 import { graphql } from '@apollo/client/react/hoc'
@@ -83,7 +84,7 @@ export const withSignOut = compose(
               query: ME_QUERY,
             },
           ],
-        }),
+        }).then(() => window.reload()),
     }),
   }),
 )

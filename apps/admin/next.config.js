@@ -17,10 +17,6 @@ const nextConfig = withBundleAnalyzer({
     ignoreDuringBuilds: true,
   },
   generateBuildId: () => buildId,
-  transpilePackages: [
-    '@project-r/styleguide',
-    '@republik/nextjs-apollo-client',
-  ],
   env: { BUILD_ID: buildId },
   async redirects() {
     return [

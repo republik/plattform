@@ -1,21 +1,20 @@
-import { useState, useEffect } from 'react'
-import compose from 'lodash/flowRight'
-import { Query } from '@apollo/client/react/components'
-import { withRouter } from 'next/router'
+'use client'
+
 import { gql } from '@apollo/client'
+import { Query } from '@apollo/client/react/components'
 import { Loader } from '@project-r/styleguide'
+import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-import { enforceAuthorization } from '../components/Auth/withAuthorization'
-import Info from '../components/Zat/Info'
-import Users, { fragments as UsersFragments } from '../components/Zat/Users'
-import Mails, { fragments as MailsFragments } from '../components/Zat/Mails'
-import App from '../components/App'
-import { Body } from '../components/Layout'
+import App from '@/components/App'
+import { Body } from '@/components/Layout'
+import Info from '@/components/Zat/Info'
+import Mails, { fragments as MailsFragments } from '@/components/Zat/Mails'
+import Users, { fragments as UsersFragments } from '@/components/Zat/Users'
 
-import ZafClient from '../lib/zat/client'
-import { withDefaultSSR } from '../lib/apollo'
+import ZafClient from '@/lib/zat/client'
 
-export const GET_ZAT_SEARCH = gql`
+const GET_ZAT_SEARCH = gql`
   query zatSearch($search: String!) {
     adminUsers(search: $search, limit: 5) {
       ...UsersFragment
@@ -29,14 +28,18 @@ export const GET_ZAT_SEARCH = gql`
   ${MailsFragments}
 `
 
-const Zat = (props) => {
+const Zat = () => {
+  const searchParams = useSearchParams()
   const [zafClient, setZafClient] = useState(null)
   const [zafContext, setZafContext] = useState(null)
   const [zafUser, setZafUser] = useState(null)
   const [searchEmail, setSearchEmail] = useState(null)
   const [searchName, setSearchName] = useState(null)
 
-  const { origin, app_guid, email, name } = props.router.query
+  const origin = searchParams.get('origin')
+  const app_guid = searchParams.get('app_guid')
+  const email = searchParams.get('email')
+  const name = searchParams.get('name')
 
   useEffect(() => {
     if (typeof window !== 'undefined' && origin && app_guid) {
@@ -45,7 +48,6 @@ const Zat = (props) => {
 
       const fetchZafContext = async () => {
         const context = await client.context()
-        // console.log('zaf, context', context)
         setZafContext(context)
       }
       fetchZafContext()
@@ -75,12 +77,11 @@ const Zat = (props) => {
               .get('ticket')
               .then(({ ticket }) => ticket.requester))) ||
           null
-        // console.log('zaf, user', user)
         setZafUser(user)
       }
       fetchZafUser()
     }
-  }, [zafContext])
+  }, [zafContext, zafClient])
 
   useEffect(() => {
     if (zafUser) {
@@ -133,6 +134,4 @@ const Zat = (props) => {
   )
 }
 
-export default withDefaultSSR(
-  compose(enforceAuthorization(['supporter']), withRouter)(Zat),
-)
+export default Zat

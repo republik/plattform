@@ -1,11 +1,11 @@
 import { Component } from 'react'
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
 import PropTypes from 'prop-types'
 import { gql } from '@apollo/client'
 import { colors, Interaction, Button } from '@project-r/styleguide'
 import Link from 'next/link'
-import ErrorMessage from '../../ErrorMessage'
-import SearchUser from '../../Form/SearchUser'
+import ErrorMessage from '@/components/ErrorMessage'
+import SearchUser from '@/components/Form/SearchUser'
 
 const interactiveStyles = {
   cursor: 'pointer',
@@ -13,12 +13,12 @@ const interactiveStyles = {
 
 const link = css({
   textDecoration: 'none',
-  color: colors.primary,
+  color: 'primary',
   ':visited': {
-    color: colors.primary,
+    color: 'primary',
   },
   ':hover': {
-    color: colors.secondary,
+    color: 'secondary',
   },
 })
 
@@ -33,7 +33,12 @@ const mergeUsersMutation = gql`
 
 const CheckIcon = () => (
   <span>
-    <svg fill={colors.primary} height='24' viewBox='0 0 24 24' width='24'>
+    <svg
+      className={css({ fill: 'primary' })}
+      height='24'
+      viewBox='0 0 24 24'
+      width='24'
+    >
       <path d='M0 0h24v24H0z' fill='none' />
       <path d='M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z' />
     </svg>
@@ -154,15 +159,14 @@ class MergeUsers extends Component {
             <Link
               href={`/users/${mergedUser.id}`}
               className={`${link}`}
-              style={interactiveStyles}>
-              
-                Zum neuen User-Profil
-              
+              style={interactiveStyles}
+            >
+              Zum neuen User-Profil
             </Link>
           </div>
         )}
       </div>
-    );
+    )
   }
 }
 

@@ -12,8 +12,8 @@ import {
   Loader,
 } from '@project-r/styleguide'
 
-import SearchUser from '../../Form/SearchUser'
-import { displayDateTime, TextButton } from '../../Display/utils'
+import SearchUser from '@/components/Form/SearchUser'
+import { displayDateTime, TextButton } from '@/components/Display/utils'
 
 const MOVE_PLEDGE = gql`
   mutation movePledge($pledgeId: ID!, $userId: ID!) {

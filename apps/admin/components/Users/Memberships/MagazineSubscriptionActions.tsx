@@ -11,15 +11,14 @@ import {
 import { useMutation, useQuery } from '@apollo/client'
 import {
   Button,
-  colors,
   Field,
   Interaction,
   Overlay,
   OverlayBody,
   OverlayToolbar,
 } from '@project-r/styleguide'
+import { css } from '@republik/theme/css'
 import { TextButton } from 'components/Display/utils'
-import { css } from 'glamor'
 import { useTranslation } from 'lib/useT'
 import { ReactNode, useState } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
@@ -158,7 +157,6 @@ export function MagazineSubscriptionActions({
         )
       ) : (
         <TextButton
-          small
           onClick={() => {
             setConfirmAction('cancel')
           }}
@@ -197,10 +195,10 @@ function ConfirmOverlay({
 
         {error && (
           <div
-            {...css({
-              background: colors.error,
+            className={css({
+              background: 'error',
               color: 'white',
-              padding: '1rem',
+              padding: '4',
             })}
           >
             {error.message}
@@ -214,8 +212,8 @@ function ConfirmOverlay({
           }}
         >
           <div
-            {...css({
-              marginBlock: '1rem',
+            className={css({
+              marginBlock: '4',
             })}
           >
             {children}

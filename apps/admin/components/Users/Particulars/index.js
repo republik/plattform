@@ -19,11 +19,11 @@ import {
   DT,
   DD,
   TextButton,
-} from '../../Display/utils'
+} from '@/components/Display/utils'
 
 import UserForm from './UserForm'
 
-import { GET_PROFILE } from '../ProfileHeader'
+import { GET_PROFILE } from '@/components/Users/ProfileHeader'
 
 export const GET_USER = gql`
   query user($id: String) {

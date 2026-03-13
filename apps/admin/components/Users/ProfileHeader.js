@@ -1,5 +1,5 @@
 import { Query } from '@apollo/client/react/components'
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
 import { gql } from '@apollo/client'
 import {
   colors,
@@ -11,9 +11,9 @@ import {
 import Head from 'next/head'
 import Link from 'next/link'
 
-import { REPUBLIK_FRONTEND_URL } from '../../server/constants'
+import { REPUBLIK_FRONTEND_URL } from '@/server/constants'
 
-import { Section, displayDate } from '../Display/utils'
+import { Section, displayDate } from '@/components/Display/utils'
 
 const styles = {
   header: css({
@@ -81,7 +81,7 @@ const Subnav = ({ userId, section }) => (
   <div>
     <Link
       href={`/users/${userId}`}
-      {...styles.navLink}
+      className={styles.navLink}
       data-active={section === 'index'}
     >
       Übersicht
@@ -93,7 +93,7 @@ const Subnav = ({ userId, section }) => (
           section: 'sessions',
         },
       }}
-      {...styles.navLink}
+      className={styles.navLink}
       data-active={section === 'sessions'}
     >
       Sessions
@@ -105,7 +105,7 @@ const Subnav = ({ userId, section }) => (
           section: 'access-grants',
         },
       }}
-      {...styles.navLink}
+      className={styles.navLink}
       data-active={section === 'access-grants'}
     >
       Access Grants
@@ -117,7 +117,7 @@ const Subnav = ({ userId, section }) => (
           section: 'mailbox',
         },
       }}
-      {...styles.navLink}
+      className={styles.navLink}
       data-active={section === 'mailbox'}
     >
       E-Mails
@@ -129,7 +129,7 @@ const Subnav = ({ userId, section }) => (
           section: 'dialog',
         },
       }}
-      {...styles.navLink}
+      className={styles.navLink}
       data-active={section === 'dialog'}
     >
       Dialog
@@ -210,7 +210,7 @@ const ProfileHeader = ({ userId, section }) => {
                 )
               )
               return (
-                <Section {...styles.header}>
+                <Section className={styles.header}>
                   <Head>
                     <title>
                       {section !== 'index' ? `${section}: ` : ''}
@@ -222,10 +222,10 @@ const ProfileHeader = ({ userId, section }) => {
                   </Head>
                   <div style={{ clear: 'both', margin: '0 2px' }}>
                     {user.portrait && (
-                      <img src={user.portrait} {...styles.portrait} />
+                      <img src={user.portrait} className={styles.portrait} />
                     )}
                     <Interaction.H3>{name || user.email}</Interaction.H3>
-                    <div {...styles.byline}>
+                    <div className={styles.byline}>
                       {byline}
                       {membership}
                     </div>

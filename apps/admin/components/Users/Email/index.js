@@ -17,7 +17,7 @@ import {
   DT,
   DD,
   TextButton,
-} from '../../Display/utils'
+} from '@/components/Display/utils'
 
 import EmailForm from './EmailForm'
 import { IconEdit } from '@republik/icons'

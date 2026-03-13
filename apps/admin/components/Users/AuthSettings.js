@@ -1,14 +1,14 @@
-import { Component, Fragment } from 'react'
-import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
+import { Mutation, Query } from '@apollo/client/react/components'
+import { Component, Fragment } from 'react'
 
 import { InlineSpinner, Loader, Radio } from '@project-r/styleguide'
 
-import { InteractiveSection, SectionTitle } from '../Display/utils'
+import { Section, SectionTitle } from '@/components/Display/utils'
 
-import withT from '../../lib/withT'
+import withT from '@/lib/withT'
 
-import { SUPPORTED_TOKEN_TYPES } from '../constants'
+import { SUPPORTED_TOKEN_TYPES } from '@/components/constants'
 
 export const firstFactorFragment = gql`
   fragment FirstFactors on User {
@@ -62,7 +62,7 @@ class UpdatePreferredFirstFactor extends Component {
       >
         {(mutation, { loading }) => {
           return (
-            <InteractiveSection>
+            <Section>
               {loading && (
                 <span style={{ float: 'right' }}>
                   <InlineSpinner size={32} />
@@ -91,7 +91,7 @@ class UpdatePreferredFirstFactor extends Component {
                   )
                 })}
               </form>
-            </InteractiveSection>
+            </Section>
           )
         }}
       </Mutation>

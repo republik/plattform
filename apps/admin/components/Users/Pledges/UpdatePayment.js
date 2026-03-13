@@ -2,7 +2,7 @@ import { Component, Fragment } from 'react'
 import { Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 import Textarea from 'react-textarea-autosize'
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
 
 import {
   Button,
@@ -14,7 +14,7 @@ import {
   Loader,
 } from '@project-r/styleguide'
 
-import { TextButton } from '../../Display/utils'
+import { TextButton } from '@/components/Display/utils'
 
 const UPDATE_PAYMENT = gql`
   mutation updatePayment(
@@ -105,7 +105,7 @@ export default class UpdatePayment extends Component {
                               renderInput={(inputProps) => (
                                 <Textarea
                                   {...inputProps}
-                                  {...css({
+                                  className={css({
                                     minHeight: 40,
                                     paddingTop: '7px !important',
                                     paddingBottom: '6px !important',

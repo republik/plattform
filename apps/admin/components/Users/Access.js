@@ -1,30 +1,33 @@
-import { Component, Fragment } from 'react'
-import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import { css } from 'glamor'
+import { Mutation, Query } from '@apollo/client/react/components'
+import { css, cx } from '@republik/theme/css'
 import moment from 'moment'
+import { Component, Fragment } from 'react'
 
-import withT from '../../lib/withT'
+import withT from '@/lib/withT'
 
 import {
-  colors,
-  Button,
-  Interaction,
-  InlineSpinner,
-  Label,
-  HR,
   A,
+  Button,
+  fontStyles,
+  HR,
+  InlineSpinner,
+  Interaction,
+  Label,
   Loader,
   Overlay,
-  OverlayToolbar,
   OverlayBody,
-  fontStyles,
+  OverlayToolbar,
 } from '@project-r/styleguide'
 
-import ErrorMessage from '../ErrorMessage'
-import List, { Item } from '../List'
 import Link from 'next/link'
-import { displayDateTime, Section, SectionTitle } from '../Display/utils'
+import {
+  displayDateTime,
+  Section,
+  SectionTitle,
+} from '@/components/Display/utils'
+import ErrorMessage from '@/components/ErrorMessage'
+import List, { Item } from '@/components/List'
 
 const GET_ACCESS_GRANTS = gql`
   query user($id: String) {
@@ -122,7 +125,7 @@ const styles = {
   grant: css({
     width: `calc(50% - ${GUTTER}px)`,
     padding: 10,
-    backgroundColor: colors.secondaryBg,
+    backgroundColor: 'hover',
     marginBottom: GUTTER,
   }),
   button: css({
@@ -241,7 +244,7 @@ class Grant extends Component {
     const { isExpanded, isOpenRevoke, isOpenInvalidate } = this.state
 
     return (
-      <div {...styles.grant}>
+      <div className={styles.grant}>
         {grant.granter && (
           <Interaction.P>
             <Label>{t('account/access/Grant/granter/label')}</Label>
@@ -381,7 +384,7 @@ class Grant extends Component {
           <HR />
           {!grant.revokedAt && !grant.beginAt && !grant.invalidatedAt && (
             <>
-              <div {...styles.button}>
+              <div className={styles.button}>
                 <Button primary onClick={this.openHandlerRevoke}>
                   {t('account/access/Grant/button/revoke')}
                 </Button>
@@ -415,8 +418,10 @@ class Grant extends Component {
                                 {loading && <InlineSpinner />}
                                 {!loading && (
                                   <div
-                                    {...styles.button}
-                                    {...styles.confirmButton}
+                                    className={cx(
+                                      styles.button,
+                                      styles.confirmButton,
+                                    )}
                                   >
                                     <Button
                                       primary
@@ -439,7 +444,7 @@ class Grant extends Component {
           )}
           {(!grant.invalidatedAt || !grant.followupAt) && (
             <>
-              <div {...styles.button}>
+              <div className={styles.button}>
                 <Button primary onClick={this.openHandlerInvalidate}>
                   {!grant.invalidatedAt
                     ? t('account/access/Grant/button/invalidate')
@@ -474,7 +479,7 @@ class Grant extends Component {
                                     : t(
                                         'account/access/Grant/button/noFollowup/confirm/description',
                                       )}
-                                  <p {...styles.info}>
+                                  <p className={styles.info}>
                                     {!grant.invalidatedAt &&
                                       t(
                                         'account/access/Grant/button/invalidate/confirm/description/detail',
@@ -485,8 +490,10 @@ class Grant extends Component {
                                 {loading && <InlineSpinner />}
                                 {!loading && (
                                   <div
-                                    {...styles.button}
-                                    {...styles.confirmButton}
+                                    className={cx(
+                                      styles.button,
+                                      styles.confirmButton,
+                                    )}
                                   >
                                     <Button
                                       primary
@@ -511,7 +518,7 @@ class Grant extends Component {
           )}
         </Fragment>
       </div>
-    );
+    )
   }
 }
 
@@ -526,9 +533,9 @@ const Slots = ({ slots, t }) => {
 }
 
 const Grants = ({ grants, userId, t }) => (
-  <div {...styles.container}>
+  <div className={styles.container}>
     <SectionTitle>{t('account/access/Grants/title')}</SectionTitle>
-    <div {...styles.grants}>
+    <div className={styles.grant}>
       {grants && grants.length > 0 ? (
         grants.map((grant) => (
           <Grant
@@ -546,7 +553,7 @@ const Grants = ({ grants, userId, t }) => (
 )
 
 const Campaigns = ({ campaigns, userId, t }) => (
-  <div {...styles.container}>
+  <div className={styles.container}>
     <SectionTitle>{t('account/access/Campaigns/title')}</SectionTitle>
     {campaigns &&
       campaigns.length > 0 &&
@@ -566,7 +573,7 @@ const Campaigns = ({ campaigns, userId, t }) => (
             )}
           </Label>
           {campaign.slots && <Slots slots={campaign.slots} t={t} />}
-          <div {...styles.grants}>
+          <div className={styles.grant}>
             {campaign.grants.map((grant) => (
               <Grant
                 key={`camp-grants-${grant.id}`}
