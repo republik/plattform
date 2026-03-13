@@ -8,7 +8,7 @@ import {
   Section,
   SectionTitle,
   TextButton,
-} from '../Display/utils'
+} from '@/components/Display/utils'
 import { IconDone } from '@republik/icons'
 import { css } from '@republik/theme/css'
 

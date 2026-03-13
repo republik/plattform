@@ -6,7 +6,7 @@ import { Component, Fragment } from 'react'
 
 import { A, Label, Loader } from '@project-r/styleguide'
 
-import { chfFormat } from '../../../lib/utils/formats'
+import { chfFormat } from '@/lib/utils/formats'
 
 import {
   DD,
@@ -18,8 +18,8 @@ import {
   Section,
   SectionSubhead,
   SectionTitle,
-} from '../../Display/utils'
-import { tableStyles } from '../../Tables/utils'
+} from '@/components/Display/utils'
+import { tableStyles } from '@/components/Tables/utils'
 
 import CancelPledge from './CancelPledge'
 import MovePledge from './MovePledge'

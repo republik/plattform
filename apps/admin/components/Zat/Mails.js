@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 import { A } from '@project-r/styleguide'
 
-import { Date, Subject } from '../Mailbox/List'
-import { fragments as mailboxFragments } from '../Mailbox/utils'
+import { Date, Subject } from '@/components/Mailbox/List'
+import { fragments as mailboxFragments } from '@/components/Mailbox/utils'
 
 import { styles } from './utils'
 

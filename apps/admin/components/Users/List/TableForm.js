@@ -1,6 +1,6 @@
 import { colors, A, Label, Field } from '@project-r/styleguide'
 
-import withDebouncedSearch from '../../Form/withDebouncedSearch'
+import withDebouncedSearch from '@/components/Form/withDebouncedSearch'
 import { css } from '@republik/theme/css'
 
 export default withDebouncedSearch(({ search, onSearch }) => {

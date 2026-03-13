@@ -3,14 +3,14 @@ import { useState } from 'react'
 
 import { A, Label } from '@project-r/styleguide'
 
-import { displayDateTime } from '../Display/utils'
-import { tableStyles } from '../Tables/utils'
+import { displayDateTime } from '@/components/Display/utils'
+import { tableStyles } from '@/components/Tables/utils'
 
 import Address, { Bucket as AddressBucket } from './Address'
 import Mail from './Mail'
 
 import { IconCallReceived, IconError } from '@republik/icons'
-import { MAILBOX_SELF } from '../../server/constants'
+import { MAILBOX_SELF } from '@/server/constants'
 
 const self = MAILBOX_SELF?.split(',') ?? []
 

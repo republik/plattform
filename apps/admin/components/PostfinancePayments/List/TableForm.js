@@ -1,10 +1,9 @@
-import { colors } from '@project-r/styleguide'
-import Input from '../../Form/Input'
+import Input from '@/components/Form/Input'
 
-import withDebouncedSearch from '../../Form/withDebouncedSearch'
+import withDebouncedSearch from '@/components/Form/withDebouncedSearch'
 
-import DateRange from '../../Form/DateRange'
-import Boolean from '../../Form/Boolean'
+import Boolean from '@/components/Form/Boolean'
+import DateRange from '@/components/Form/DateRange'
 import UploadForm from './UploadForm'
 
 const searchHandler = (handler) => (event) => {

@@ -11,7 +11,7 @@ import {
   OverlayToolbar,
 } from '@project-r/styleguide'
 
-import { displayDateTime } from '../Display/utils'
+import { displayDateTime } from '@/components/Display/utils'
 import Address, { Bucket as AddressBucket } from './Address'
 import { fragments } from './utils'
 

@@ -1,4 +1,4 @@
-import { errorToString } from '../lib/utils/errors'
+import { errorToString } from '@/lib/utils/errors'
 
 import { Interaction, colors } from '@project-r/styleguide'
 

@@ -15,7 +15,7 @@ import {
   Loader,
 } from '@project-r/styleguide'
 
-import { TextButton, displayDate } from '../../Display/utils'
+import { TextButton, displayDate } from '@/components/Display/utils'
 
 const GET_CANCELLATION_CATEGORIES = gql`
   query cancellationCategories {

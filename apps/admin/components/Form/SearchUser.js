@@ -3,7 +3,7 @@ import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { Autocomplete, Interaction, Label } from '@project-r/styleguide'
 
-import withT from '../../lib/withT'
+import withT from '@/lib/withT'
 
 const usersQuery = gql`
   query users($search: String) {

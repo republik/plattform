@@ -10,7 +10,7 @@ import NewsletterSettings, {
 } from './User/NewsletterSettings'
 import Sessions, { fragments as UserSessions } from './User/Sessions'
 
-import { MagazineSubscriptions } from '../Users/Memberships/MagazineSubscriptions'
+import { MagazineSubscriptions } from '@/components/Users/Memberships/MagazineSubscriptions'
 
 import { styles } from './utils'
 
@@ -33,7 +33,7 @@ export const fragments = gql`
   ${UserSessions}
 `
 
-const Users = ({ email, name, users, t }) => {
+const Users = ({ email, name, users }) => {
   const matchingUser = users?.find((u) => u.email === email)
   const hasMatchingUsers = !!matchingUser
 

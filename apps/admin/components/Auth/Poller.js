@@ -2,13 +2,13 @@ import { css } from '@republik/theme/css'
 import compose from 'lodash/flowRight'
 import PropTypes from 'prop-types'
 import { Component, Fragment } from 'react'
-import { ME_QUERY } from '../../lib/withMe'
+import { ME_QUERY } from '@/lib/withMe'
 
-import withT from '../../lib/withT'
+import withT from '@/lib/withT'
 
-import ErrorMessage from '../ErrorMessage'
+import ErrorMessage from '@/components/ErrorMessage'
 
-import { SUPPORTED_TOKEN_TYPES } from '../constants'
+import { SUPPORTED_TOKEN_TYPES } from '@/components/constants'
 
 import { IconDevices, IconMailOutline } from '@republik/icons'
 

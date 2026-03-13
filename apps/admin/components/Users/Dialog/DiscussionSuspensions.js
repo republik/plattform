@@ -8,7 +8,7 @@ import {
   DT,
   DD,
   dateDiff,
-} from '../../Display/utils'
+} from '@/components/Display/utils'
 import {
   Loader,
   Label,
@@ -19,7 +19,7 @@ import {
   OverlayBody,
   Dropdown,
 } from '@project-r/styleguide'
-import List, { Item } from '../../List'
+import List, { Item } from '@/components/List'
 import { useState } from 'react'
 
 const GET_SUSPENSIONS = gql`

@@ -1,3 +1,4 @@
+'use client'
 import { gql } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import compose from 'lodash/flowRight'
@@ -6,9 +7,9 @@ import { Component, Fragment } from 'react'
 import isEmail from 'validator/lib/isEmail'
 
 import Link from 'next/link'
-import withT from '../../lib/withT'
+import withT from '@/lib/withT'
 
-import ErrorMessage from '../ErrorMessage'
+import ErrorMessage from '@/components/ErrorMessage'
 
 import {
   Button,
@@ -20,7 +21,6 @@ import {
 } from '@project-r/styleguide'
 
 import { graphql } from '@apollo/client/react/hoc'
-import { withRouter } from 'next/router'
 import Poller from './Poller'
 
 const styles = {
@@ -263,4 +263,4 @@ export const withSignIn = graphql(signInMutation, {
   }),
 })
 
-export default compose(withSignIn, withT, withRouter)(SignIn)
+export default compose(withSignIn, withT)(SignIn)

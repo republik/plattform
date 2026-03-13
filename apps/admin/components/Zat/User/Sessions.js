@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-import { styles } from '../utils'
+import { styles } from '@/components/Zat/utils'
 
 export const fragments = gql`
   fragment UserSessions on User {

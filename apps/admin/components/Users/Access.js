@@ -4,7 +4,7 @@ import { css, cx } from '@republik/theme/css'
 import moment from 'moment'
 import { Component, Fragment } from 'react'
 
-import withT from '../../lib/withT'
+import withT from '@/lib/withT'
 
 import {
   A,
@@ -21,9 +21,13 @@ import {
 } from '@project-r/styleguide'
 
 import Link from 'next/link'
-import { displayDateTime, Section, SectionTitle } from '../Display/utils'
-import ErrorMessage from '../ErrorMessage'
-import List, { Item } from '../List'
+import {
+  displayDateTime,
+  Section,
+  SectionTitle,
+} from '@/components/Display/utils'
+import ErrorMessage from '@/components/ErrorMessage'
+import List, { Item } from '@/components/List'
 
 const GET_ACCESS_GRANTS = gql`
   query user($id: String) {

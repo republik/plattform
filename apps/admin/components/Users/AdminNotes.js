@@ -15,12 +15,12 @@ import TextareaAutosize from 'react-autosize-textarea'
 import remark from 'remark'
 import remarkReactRenderer from 'remark-react'
 
-import { swissTime } from '../../lib/utils/formats'
-import withMe from '../../lib/withMe'
+import { swissTime } from '@/lib/utils/formats'
+import withMe from '@/lib/withMe'
 
-import ErrorMessage from '../ErrorMessage'
+import ErrorMessage from '@/components/ErrorMessage'
 
-import { Section, SectionTitle } from '../Display/utils'
+import { Section, SectionTitle } from '@/components/Display/utils'
 
 const getAdminNotes = gql`
   query user($userId: String) {

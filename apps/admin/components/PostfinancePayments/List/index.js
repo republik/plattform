@@ -5,15 +5,15 @@ import { gql } from '@apollo/client'
 import InfiniteScroller from 'react-infinite-scroller'
 import { Loader } from '@project-r/styleguide'
 
-import DateRange from '../../Form/DateRange'
-import Bool from '../../Form/Boolean'
-import ErrorMessage from '../../ErrorMessage'
+import DateRange from '@/components/Form/DateRange'
+import Bool from '@/components/Form/Boolean'
+import ErrorMessage from '@/components/ErrorMessage'
 
 import {
   serializeOrderBy,
   deserializeOrderBy,
   createChangeHandler,
-} from '../../Tables/utils'
+} from '@/components/Tables/utils'
 
 import TableForm from './TableForm'
 import Table from './Table'

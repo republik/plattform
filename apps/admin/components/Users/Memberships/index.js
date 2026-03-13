@@ -24,8 +24,8 @@ import {
   DT,
   Section,
   SectionTitle,
-} from '../../Display/utils'
-import { tableStyles } from '../../Tables/utils'
+} from '@/components/Display/utils'
+import { tableStyles } from '@/components/Tables/utils'
 
 import ActivateMembership from './ActivateMembership'
 import AppendPeriod from './AppendPeriod'
@@ -35,7 +35,7 @@ import MoveMembership from './MoveMembership'
 import ReactivateMembership from './ReactivateMembership'
 import ResetMembership from './ResetMembership'
 
-import { intersperse } from '../../../lib/helpers'
+import { intersperse } from '@/lib/helpers'
 
 const styles = {
   icon: css({

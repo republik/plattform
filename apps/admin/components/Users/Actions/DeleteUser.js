@@ -12,7 +12,11 @@ import {
   OverlayToolbar,
 } from '@project-r/styleguide'
 
-import { displayDate, SectionSubhead, TextButton } from '../../Display/utils'
+import {
+  displayDate,
+  SectionSubhead,
+  TextButton,
+} from '@/components/Display/utils'
 
 const DELETE_USER = gql`
   mutation deleteUser($userId: ID!, $unpublishComments: Boolean!) {

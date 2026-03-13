@@ -14,7 +14,7 @@ import {
   Loader,
 } from '@project-r/styleguide'
 
-import { TextButton } from '../../Display/utils'
+import { TextButton } from '@/components/Display/utils'
 
 const RESOLVE_PLEDGE_TO_PAYMENT = gql`
   mutation resolvePledgeToPayment($pledgeId: ID!, $reason: String!) {

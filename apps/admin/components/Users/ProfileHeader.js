@@ -11,9 +11,9 @@ import {
 import Head from 'next/head'
 import Link from 'next/link'
 
-import { REPUBLIK_FRONTEND_URL } from '../../server/constants'
+import { REPUBLIK_FRONTEND_URL } from '@/server/constants'
 
-import { Section, displayDate } from '../Display/utils'
+import { Section, displayDate } from '@/components/Display/utils'
 
 const styles = {
   header: css({

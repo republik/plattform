@@ -4,8 +4,8 @@ import PropTypes from 'prop-types'
 import { gql } from '@apollo/client'
 import { colors, Interaction, Button } from '@project-r/styleguide'
 import Link from 'next/link'
-import ErrorMessage from '../../ErrorMessage'
-import SearchUser from '../../Form/SearchUser'
+import ErrorMessage from '@/components/ErrorMessage'
+import SearchUser from '@/components/Form/SearchUser'
 
 const interactiveStyles = {
   cursor: 'pointer',

@@ -1,6 +1,6 @@
 import { css } from '@republik/theme/css'
 import { createElement } from 'react'
-import mergeClassNames from '../../lib/mergeClassNames'
+import mergeClassNames from '@/lib/mergeClassNames'
 
 const containerStyles = ({
   display = 'flex',

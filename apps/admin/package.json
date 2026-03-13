@@ -57,6 +57,7 @@
     "@graphql-codegen/schema-ast": "^4.0.0",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@next/env": "15.3.9",
+    "@pandacss/dev": "^0.46.1",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
     "@testing-library/jest-dom": "^6.4.5",

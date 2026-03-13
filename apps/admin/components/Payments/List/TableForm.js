@@ -1,10 +1,7 @@
-import { colors } from '@project-r/styleguide'
-import Input from '../../Form/Input'
-import DateRange from '../../Form/DateRange'
-import StringArray from '../../Form/StringArray'
-import withDebouncedSearch from '../../Form/withDebouncedSearch'
-
-import { useApolloClient } from '@apollo/client'
+import DateRange from '@/components/Form/DateRange'
+import Input from '@/components/Form/Input'
+import StringArray from '@/components/Form/StringArray'
+import withDebouncedSearch from '@/components/Form/withDebouncedSearch'
 
 const searchHandler = (handler) => (event) => {
   handler(event.target.value)
@@ -23,8 +20,6 @@ export default withDebouncedSearch(
     stringArray,
     onStringArray,
   }) => {
-    const apolloClient = useApolloClient()
-
     return (
       <div
         style={{

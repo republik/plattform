@@ -11,9 +11,9 @@ import {
   FieldSet,
 } from '@project-r/styleguide'
 
-import { TextButton } from '../../Display/utils'
+import { TextButton } from '@/components/Display/utils'
 
-import AddressFieldSet from '../Particulars/AddressFieldSet'
+import AddressFieldSet from '@/components/Users/Particulars/AddressFieldSet'
 
 const MUTATION = gql`
   mutation updateAddress($id: ID!, $address: AddressInput!) {

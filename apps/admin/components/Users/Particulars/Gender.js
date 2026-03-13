@@ -1,5 +1,5 @@
 import compose from 'lodash/flowRight'
-import withT from '../../../lib/withT'
+import withT from '@/lib/withT'
 
 import { useState } from 'react'
 

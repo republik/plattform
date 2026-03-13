@@ -10,7 +10,7 @@ import {
   Section,
   SectionTitle,
   TextButton,
-} from '../../Display/utils'
+} from '@/components/Display/utils'
 
 const GET_CREDENTIALS = gql`
   query user($id: String) {

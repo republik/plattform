@@ -1,22 +1,20 @@
-import Head from 'next/head'
-import { withRouter } from 'next/router'
-import { fontFamilies } from '@project-r/styleguide'
-import { useMe } from '../lib/useMe'
+'use client'
+
+import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
+import { useMe } from '@/lib/useMe'
 import { setUser as setSentryUser } from '@sentry/nextjs'
 
-const App = ({ router, children }) => {
+const App = ({ children }) => {
   const { me } = useMe()
+  const pathname = usePathname()
   setSentryUser(me?.id ? { id: me.id } : null)
 
-  return (
-    <main>
-      <Head>
-        <title>{router.pathname.replace('/', '')} – Admin</title>
-        <meta name='viewport' content='initial-scale=1.0, width=device-width' />
-      </Head>
-      {children}
-    </main>
-  )
+  useEffect(() => {
+    document.title = `${pathname?.replace('/', '') ?? ''} – Admin`
+  }, [pathname])
+
+  return <main>{children}</main>
 }
 
-export default withRouter(App)
+export default App

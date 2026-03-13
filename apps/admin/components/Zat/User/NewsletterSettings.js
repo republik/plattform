@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-import withT from '../../../lib/withT'
+import withT from '@/lib/withT'
 import { styles } from './../utils'
 
 export const fragments = gql`

@@ -1,15 +1,15 @@
 import { Label } from '@project-r/styleguide'
 import Link from 'next/link'
-import { chfFormat } from '../../../lib/utils/formats'
+import { chfFormat } from '@/lib/utils/formats'
 
-import { displayDate } from '../../Display/utils'
+import { displayDate } from '@/components/Display/utils'
 
 import { cx } from '@republik/theme/css'
 import {
   createSortHandler,
   createSortIndicator,
   tableStyles as styles,
-} from '../../Tables/utils'
+} from '@/components/Tables/utils'
 
 const getDueDate = (status, dueDate) => {
   if (!dueDate) {

@@ -6,9 +6,9 @@ import debounce from 'lodash.debounce'
 
 import { Loader, A, Field } from '@project-r/styleguide'
 
-import withT from '../../lib/withT'
+import withT from '@/lib/withT'
 
-import { SectionNav } from '../Display/utils'
+import { SectionNav } from '@/components/Display/utils'
 
 import { fragments } from './utils'
 import List from './List'

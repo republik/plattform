@@ -1,5 +1,5 @@
 import { css } from '@republik/theme/css'
-import SortIndicator from '../SortIndicator'
+import SortIndicator from '@/components/SortIndicator'
 
 export const tableStyles = {
   table: css({

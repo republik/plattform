@@ -1,4 +1,4 @@
-import withT from '../../../lib/withT'
+import withT from '@/lib/withT'
 import { FieldSet } from '@project-r/styleguide'
 
 const fields = (t) => [

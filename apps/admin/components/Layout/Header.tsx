@@ -1,7 +1,7 @@
+import Me from '@/components/Auth/Me'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
-import Me from '../Auth/Me'
 import { Logo } from './Logo'
 
 const link = css({
@@ -92,7 +92,7 @@ const HeaderComponent = ({ ...props }) => {
         </nav>
       </HeaderSection>
       <HeaderSection>
-        <Me />
+        <Me email='' />
       </HeaderSection>
     </header>
   )

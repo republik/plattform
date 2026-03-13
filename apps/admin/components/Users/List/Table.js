@@ -1,7 +1,7 @@
 import { Label } from '@project-r/styleguide'
 import Link from 'next/link'
-import { displayDate } from '../../Display/utils'
-import { tableStyles as styles } from '../../Tables/utils'
+import { displayDate } from '@/components/Display/utils'
+import { tableStyles as styles } from '@/components/Tables/utils'
 
 const Table = ({ items, ...props }) => {
   return (

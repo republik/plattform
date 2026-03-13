@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-import { displayDate } from '../../Display/utils'
+import { displayDate } from '@/components/Display/utils'
 import { styles } from './../utils'
 
 export const fragments = gql`

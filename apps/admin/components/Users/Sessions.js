@@ -4,14 +4,14 @@ import compose from 'lodash/flowRight'
 import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
 import { Label, Interaction, colors } from '@project-r/styleguide'
-import List, { Item } from '../List'
+import List, { Item } from '@/components/List'
 
 import {
   displayDateTime,
   Section,
   SectionTitle,
   TextButton,
-} from '../Display/utils'
+} from '@/components/Display/utils'
 
 const sessionQuery = gql`
   query user($id: String) {
