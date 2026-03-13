@@ -30,10 +30,6 @@ function CampaignPaywall() {
             borderBottomColor: 'black',
             background: 'campaign26Background',
             color: 'campaign26',
-            position: 'relative',
-            mt: -8,
-            zIndex: 1,
-            boxShadow: '0px -12px 24px 0px rgba(0, 0, 0, 0.25)',
           })}
         >
           <ArticleSection

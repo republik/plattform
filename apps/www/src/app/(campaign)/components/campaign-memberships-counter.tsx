@@ -9,7 +9,7 @@ function CampaignMembershipsCounter() {
   const [progress, setProgress] = React.useState(13)
 
   React.useEffect(() => {
-    const timer = setTimeout(() => setProgress(66), 500)
+    const timer = setTimeout(() => setProgress(61.5), 500)
     return () => clearTimeout(timer)
   }, [])
 
@@ -46,7 +46,7 @@ function CampaignMembershipsCounter() {
         Neue Mitglieder
       </span>
       <span className={css({ float: 'right' })}>
-        <span className={css({ fontWeight: 500 })}>120</span>
+        <span className={css({ fontWeight: 500 })}>1230</span>
         /2000
       </span>
     </div>
