@@ -43,7 +43,7 @@ module.exports = async (_, args, context) => {
     const message = result.error.errors.map((e) => e.message).join('\n')
     throw new Error(message)
   }
-  const { email, name, context: newsletterContext, meta } = result.data
+  const { email, name, meta } = result.data
 
   const { id: ref_id } = await trackSignupRequest(context.pgdb, name, meta)
 
@@ -55,12 +55,7 @@ module.exports = async (_, args, context) => {
       globalMergeVars: [
         {
           name: 'CONFIRM_LINK',
-          content: getConsentLink(
-            email,
-            name,
-            newsletterContext,
-            uuidToRef(ref_id),
-          ),
+          content: getConsentLink(email, name, uuidToRef(ref_id)),
         },
       ],
     },

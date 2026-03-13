@@ -13,6 +13,7 @@ import { NewslettersStatus } from '@app/components/newsletters/newsletters-statu
 import { Button } from '@app/components/ui/button'
 import { FormField } from '@app/components/ui/form'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import isEmail from 'validator/lib/isEmail'
@@ -54,6 +55,7 @@ function NewsletterSubscribeForm({
         email: email,
         name: newsletter,
         context: 'newsletter',
+        meta: getUTMSessionStorage(),
       },
     })
 

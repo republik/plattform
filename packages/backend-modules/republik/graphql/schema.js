@@ -92,15 +92,12 @@ type mutations {
 
   # if userId is null, the logged in user's subscription is changed
   # required role to change other users: supporter
-  # if email and hmac is set, the user is upserted (used for newsletter signup)
+  # if signup is set, the user is upserted via email+mac (used for newsletter signup confirmation)
   updateNewsletterSubscription(
-    userId: ID,
+    userId: ID
     name: String!
     subscribed: Boolean!
-    email: String,
-    mac: String,
-    consents: [String!]
-    ref: String
+    signup: NewsletterSignupInput
   ): NewsletterSubscription!
 
   resubscribeEmail(

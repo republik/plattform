@@ -6,7 +6,7 @@ import { Button } from '@app/components/ui/button'
 import { Spinner } from '@app/components/ui/spinner'
 import { useMutation } from '@apollo/client'
 import { css } from '@republik/theme/css'
-import { CheckCircleIcon } from "lucide-react";
+import { CheckCircleIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from '../../../../lib/withT'
@@ -17,16 +17,18 @@ type Props = {
   email: string
   subscribed: string
   mac: string
+  signupRef?: string
 }
 
-export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
+export function NewsletterConfirm({ name, email, mac, signupRef }: Props) {
   const { t } = useTranslation()
   const displayName = t(`newsletters/${name}/name`, undefined, name)
   const decodedEmail = base64u.maybeDecode(email)
   const hasRun = useRef(false)
 
-  const [updateNewsletterSubscription, { data, loading, error }] =
-    useMutation(UpdateNewsletterSubscriptionWithMacDocument)
+  const [updateNewsletterSubscription, { data, loading, error }] = useMutation(
+    UpdateNewsletterSubscriptionWithMacDocument,
+  )
 
   useEffect(() => {
     if (hasRun.current) return
@@ -35,13 +37,16 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
     updateNewsletterSubscription({
       variables: {
         name,
-        subscribed: subscribed === '1',
-        email: decodedEmail,
-        mac,
-        consents: ['PRIVACY'],
+        subscribed: true, // newsletter confirmations will always subscribe the user.
+        signup: {
+          email: decodedEmail,
+          mac,
+          consents: ['PRIVACY'],
+          ref: signupRef,
+        },
       },
     })
-  }, [decodedEmail, mac, name, subscribed, updateNewsletterSubscription])
+  }, [decodedEmail, mac, name, signupRef, updateNewsletterSubscription])
 
   return (
     <div

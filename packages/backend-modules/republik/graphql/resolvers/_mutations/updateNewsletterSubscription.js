@@ -20,21 +20,20 @@ const {
 const { MAILCHIMP_NEWSLETTER_CONFIGS } = getNewsletterSubscriptionConfig()
 
 const ArgsSchema = z.object({
-  userId: z.string().uuid(),
+  userId: z.string().uuid().optional(),
   name: z.enum(MAILCHIMP_NEWSLETTER_CONFIGS.map((config) => config.name)),
-  consents: z
-    .array(z.string())
-    .transform((arr) =>
-      // only allow PRIVACY consent via this endpint
-      arr.filter((item) => {
-        return item === 'PRIVACY'
-      }),
-    )
-    .optional(),
   subscribed: z.boolean(),
-  email: z.string().email(t('api/email/invalid')).optional(),
-  mac: z.string().optional(),
-  ref: z.string().optional(),
+  signup: z
+    .object({
+      email: z.string().email(t('api/email/invalid')),
+      mac: z.string(),
+      consents: z
+        .array(z.string())
+        .transform((arr) => arr.filter((item) => item === 'PRIVACY'))
+        .optional(),
+      ref: z.string().optional(),
+    })
+    .optional(),
 })
 
 // this endpoint is called for two distinct situations
@@ -47,7 +46,8 @@ module.exports = async (_, args, context) => {
     throw new Error(result.error.errors[0].message)
   }
 
-  const { userId, name, subscribed, email, mac, ref, consents } = result.data
+  const { userId, name, subscribed, signup } = result.data
+  const { email, mac, consents, ref } = signup ?? {}
 
   const {
     user: me,
