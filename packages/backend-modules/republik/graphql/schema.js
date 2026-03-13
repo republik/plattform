@@ -100,6 +100,7 @@ type mutations {
     email: String,
     mac: String,
     consents: [String!]
+    ref: String
   ): NewsletterSubscription!
 
   resubscribeEmail(
@@ -110,6 +111,7 @@ type mutations {
     email: String!
     name: String!
     context: String!
+    meta: JSON
   ): Boolean!
 
   reportUser(

@@ -1,4 +1,9 @@
-const validator = require('validator')
+const { z } = require('zod')
+const { t } = require('@orbiting/backend-modules-translate')
+const {
+  trackSignupRequest,
+  uuidToRef,
+} = require('@orbiting/backend-modules-lead-tracking')
 
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const {
@@ -7,22 +12,40 @@ const {
 
 const { getConsentLink } = require('../../../lib/Newsletter')
 
+const { MAILCHIMP_NEWSLETTER_CONFIGS } = getNewsletterSubscriptionConfig()
+
+const freeNewsletters = MAILCHIMP_NEWSLETTER_CONFIGS.filter((c) => c.free).map(
+  (config) => config.name,
+)
+
+/**
+ * @typedef {z.infer<typeof ArgsSchema>} Args
+ */
+const ArgsSchema = z.object({
+  email: z.string().email(t('api/email/invalid')),
+  name: z.enum(freeNewsletters, {
+    errorMap: () => ({ message: t('api/newsletters/request/notSupported') }),
+  }),
+  context: z.string(),
+  meta: z.record(z.any()).optional().default({}),
+})
+/**
+ *
+ * @param {never} _
+ * @param {Args} args
+ * @param {import('@orbiting/backend-modules-types').GraphqlContext} context
+ * @returns
+ */
 module.exports = async (_, args, context) => {
-  const { email, name, context: newsletterContext } = args
-  const { t } = context
+  const result = ArgsSchema.safeParse(args)
 
-  if (!validator.isEmail(email)) {
-    throw new Error(t('api/email/invalid'))
+  if (!result.success) {
+    const message = result.error.errors.map((e) => e.message).join('\n')
+    throw new Error(message)
   }
+  const { email, name, context: newsletterContext, meta } = result.data
 
-  const newsletterConfig =
-    getNewsletterSubscriptionConfig().MAILCHIMP_NEWSLETTER_CONFIGS.find(
-      (config) => config.name === name,
-    )
-
-  if (!newsletterConfig?.free) {
-    throw new Error(t('api/newsletters/request/notSupported'))
-  }
+  const { id: ref_id } = await trackSignupRequest(context.pgdb, name, meta)
 
   const { status } = await sendMailTemplate(
     {
@@ -32,7 +55,12 @@ module.exports = async (_, args, context) => {
       globalMergeVars: [
         {
           name: 'CONFIRM_LINK',
-          content: getConsentLink(email, name, newsletterContext),
+          content: getConsentLink(
+            email,
+            name,
+            newsletterContext,
+            uuidToRef(ref_id),
+          ),
         },
       ],
     },

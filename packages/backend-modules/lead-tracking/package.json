@@ -3,7 +3,16 @@
   "description": "Simplify from mailchimp lead tracking imports",
   "authors": "Henning Dahlheim",
   "version": "1.0.0",
+  "main": "build/index.js",
+  "types": "build/@types",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc"
+  },
   "dependencies": {
+    "uuid": "^13.0.0",
+    "pogi": "^2.11.1",
     "csv-parser": "^3.0.0",
     "@orbiting/backend-modules-base": "*",
     "@orbiting/backend-modules-env": "*"
