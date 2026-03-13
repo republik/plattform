@@ -133,7 +133,8 @@ module.exports = async (_, args, context) => {
     if (ref) {
       try {
         await confirmNewsletterSignupRequest(pgdb, refToUUID(ref), user.id)
-      } catch {
+      } catch (error) {
+        context.logger.error({ error }, 'confirmNewsletterSignupRequest failed')
         // ref was invalid — track signup directly
         await trackNewsletterSignup(pgdb, user.id, name)
       }

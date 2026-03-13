@@ -18,10 +18,13 @@ export async function confirmNewsletterSignupRequest(
   request_id: string,
   userId: string,
 ) {
-  return pgdb.public.newsletter_signups.updateAndGet(request_id, {
-    user_id: userId,
-    confirmed_at: new Date(),
-  })
+  return pgdb.public.newsletter_signups.updateAndGet(
+    { id: request_id },
+    {
+      user_id: userId,
+      confirmed_at: new Date(),
+    },
+  )
 }
 
 export async function trackNewsletterSignup(
