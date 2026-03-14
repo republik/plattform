@@ -5,8 +5,8 @@ import { ReactNode } from 'react'
 
 // TODO: new copy
 export const metadata: Metadata = {
-  title: `Uns ist es nicht egal, was Sie von der Welt erfahren.`,
-  description: 'Bis zum 28. September 2025 ab CHF 1.– für einen Monat.',
+  title: '2000 neuen Mitgliedern, 3 Versprechen',
+  description: 'Republik Jahresabo: 50% günstiger bis zum 14. April 2026.',
   robots: { index: false, follow: false },
 }
 

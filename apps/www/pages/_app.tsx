@@ -3,7 +3,7 @@ import '@republik/theme/styles.css'
 import '../globals.css'
 import '../lib/polyfill'
 import { IpAllowlistBanner } from '@app/components/ip-allowlist-banner'
-import { CampaignOverlay } from '@app/components/paynotes/campaign/campaign-overlay'
+import CampaignPaynote from '@app/components/paynotes/campaign/campaign-paynote'
 
 import { PaynoteOverlay } from '@app/components/paynotes/paynote/paynote-overlay'
 import { PaynotesProvider } from '@app/components/paynotes/paynotes-context'
@@ -33,9 +33,9 @@ type WebAppProps = {
 }
 
 const WebApp = ({
-  Component,
-  pageProps,
-}: AppProps<PagePropsWithApollo<WebAppProps>>) => {
+                  Component,
+                  pageProps,
+                }: AppProps<PagePropsWithApollo<WebAppProps>>) => {
   const {
     // SSR only props
     providedUserAgent = undefined,
@@ -54,19 +54,19 @@ const WebApp = ({
                 <AppVariableContext>
                   <ThemeProvider>
                     <RootColorVariables />
-                    <ColorContextProvider colorSchemeKey='auto'>
+                    <ColorContextProvider colorSchemeKey="auto">
                       <PaynotesProvider>
                         <MessageSync />
                         <Head>
                           <meta
-                            name='viewport'
-                            content='width=device-width, initial-scale=1, viewport-fit=cover'
+                            name="viewport"
+                            content="width=device-width, initial-scale=1, viewport-fit=cover"
                           />
                           <link
-                            rel='alternate'
-                            type='application/rss+xml'
-                            title='RSS Feed'
-                            href='/feed.xml'
+                            rel="alternate"
+                            type="application/rss+xml"
+                            title="RSS Feed"
+                            href="/feed.xml"
                           />
                         </Head>
                         <IpAllowlistBanner />
@@ -77,7 +77,7 @@ const WebApp = ({
                         <AudioPlayerOrchestrator />
                         <SyncUTMToSessionStorage />
                         <PaynoteOverlay />
-                        <CampaignOverlay />
+                        <CampaignPaynote />
                       </PaynotesProvider>
                     </ColorContextProvider>
                   </ThemeProvider>

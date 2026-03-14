@@ -67,7 +67,7 @@ export default async function Page() {
           <h2
             className={css({
               textStyle: 'campaignHeading',
-              mt: '20',
+              mt: '12',
               mb: '2',
               md: { mb: '4' },
             })}

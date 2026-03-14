@@ -17,7 +17,7 @@ export type PaynoteKindType =
   | 'BANNER'
   | 'PAYNOTE_INLINE'
   | 'WELCOME_BANNER'
-  | 'CAMPAIGN_OVERLAY'
+  | 'CAMPAIGN_PAYNOTE'
   | 'CAMPAIGN_PAYWALL'
 
 const PAYWALL_KINDS: PaynoteKindType[] = [
@@ -145,7 +145,7 @@ export const PaynotesProvider = ({ children }) => {
 
     // CAMPAIGN active and *not* an article
     if (isCampaignActive && template !== 'article') {
-      return setPaynoteKind('CAMPAIGN_OVERLAY')
+      return setPaynoteKind('CAMPAIGN_PAYNOTE')
     }
 
     // anything else that's not an article: minimized paynote overlay
@@ -174,7 +174,7 @@ export const PaynotesProvider = ({ children }) => {
 
     // CAMPAIGN edge case: already in a trial during the campaign
     if (trialStatus.includes('TRIAL_GROUP') && isCampaignActive) {
-      return setPaynoteKind('CAMPAIGN_OVERLAY')
+      return setPaynoteKind('CAMPAIGN_PAYNOTE')
     }
 
     // one trial group (group A) is shown an inline paynote

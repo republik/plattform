@@ -42,13 +42,15 @@ function CampaignMembershipsCounter() {
           style={{ transform: `translateX(-${100 - progress}%)` }}
         />
       </Progress.Root>
-      <span className={css({ float: 'left', fontWeight: 500 })}>
-        Neue Mitglieder
-      </span>
-      <span className={css({ float: 'right' })}>
-        <span className={css({ fontWeight: 500 })}>1230</span>
-        /2000
-      </span>
+      <div
+        className={css({ display: 'flex', justifyContent: 'space-between' })}
+      >
+        <span className={css({ fontWeight: 500 })}>Neue Mitglieder</span>
+        <span>
+          <span className={css({ fontWeight: 500 })}>1230</span>
+          /2000
+        </span>
+      </div>
     </div>
   )
 }
