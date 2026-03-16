@@ -1,10 +1,9 @@
-import Article from '../components/Article/Page'
-import { GetStaticPaths } from 'next'
-import { ParsedUrlQuery } from 'querystring'
 import { gql } from '@apollo/client'
+import { ParsedUrlQuery } from 'querystring'
 import { getDocument } from '../components/Article/graphql/getDocument'
-import { createGetStaticProps } from '../lib/apollo/helpers'
+import Article from '../components/Article/Page'
 import { isExternal } from '../components/StatusError'
+import { createGetServerSideProps } from '../lib/apollo/helpers'
 
 type Params = {
   path: string[]
@@ -14,17 +13,8 @@ type Props = {
   clientRedirection?: any
 }
 
-export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  }
-}
-
-const REVALIDATE_SECONDS = 10
-
-export const getStaticProps = createGetStaticProps<Props, Params>(
-  async (client, { params }) => {
+export const getServerSideProps = createGetServerSideProps<Props, Params>(
+  async ({ client, ctx: { params } }) => {
     const path = '/' + params.path.join('/')
 
     const {
@@ -40,7 +30,6 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
 
     if (article) {
       return {
-        revalidate: REVALIDATE_SECONDS,
         props: {},
       }
     }
@@ -67,11 +56,9 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
           props: {
             clientRedirection: redirection,
           },
-          revalidate: REVALIDATE_SECONDS,
         }
       }
       return {
-        revalidate: REVALIDATE_SECONDS,
         redirect: {
           destination: redirection.target,
           statusCode: redirection.status,
@@ -81,7 +68,6 @@ export const getStaticProps = createGetStaticProps<Props, Params>(
 
     return {
       notFound: true,
-      revalidate: REVALIDATE_SECONDS,
     }
   },
 )
