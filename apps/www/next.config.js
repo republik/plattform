@@ -228,11 +228,6 @@ const nextConfig = {
       },
       // Migrated from custom express server
       {
-        source: '/vote',
-        destination: '/503',
-        permanent: false,
-      },
-      {
         source: '/updates',
         destination: '/crowdfunding-updates',
         permanent: true,
