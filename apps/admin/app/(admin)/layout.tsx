@@ -11,7 +11,16 @@ export default async function AdminLayout({ children }: PropsWithChildren) {
   })
 
   if (!data?.me?.roles.includes('supporter')) {
-    redirect('/login')
+    const loginUrl = new URL(
+      '/anmelden',
+      process.env.NEXT_PUBLIC_REPUBLIK_FRONTEND_URL,
+    )
+    loginUrl.searchParams.set(
+      'redirect',
+      process.env.NEXT_PUBLIC_PUBLIC_BASE_URL,
+    )
+
+    redirect(loginUrl.toString())
   }
 
   return <>{children}</>
