@@ -18,7 +18,7 @@ function NotFound() {
       >
         404
       </h1>
-      <p>Die Seite konnte nicht gefunden werden</p>
+      <p>Die Seite konnte nicht gefunden werden.</p>
       <Link
         href='/'
         className={css({
