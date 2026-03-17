@@ -5,8 +5,8 @@ import {
   SignOutDocument,
 } from '@/graphql/republik-api/__generated__/gql/graphql'
 import { useMutation, useQuery } from '@apollo/client'
-import { css } from '@republik/theme/css'
 import { vstack } from '@republik/theme/patterns'
+import { Button } from '@republik/ui'
 
 export function Me() {
   const { data, loading } = useQuery(MeDocument)
@@ -21,9 +21,8 @@ export function Me() {
       <div className={vstack({ alignItems: 'end', gap: '1', fontSize: 's' })}>
         {data.me.name ?? data.me.email}
 
-        <button
-          className={css({ color: 'primary' })}
-          type='button'
+        <Button
+          variant='link'
           disabled={signOutLoading}
           onClick={() => {
             signOut().then(() => {
@@ -32,7 +31,7 @@ export function Me() {
           }}
         >
           Abmelden
-        </button>
+        </Button>
       </div>
     )
   }
