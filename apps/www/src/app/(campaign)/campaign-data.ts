@@ -27,7 +27,7 @@ export async function getSenderData() {
   return data
 }
 
-export async function getCampaignData() {
+export async function getCampaignReferralsData() {
   const client = await getClient()
   const { data } = await client.query({
     query: CampaignReferralsDocument,
