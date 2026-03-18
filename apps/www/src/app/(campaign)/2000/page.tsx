@@ -194,9 +194,8 @@ export default async function Page() {
                 })}
               >
                 <iframe
-                  src='https://player.vimeo.com/video/613729649?autoplay=1&loop=1'
+                  src='https://player.vimeo.com/video/613729649'
                   frameBorder='0'
-                  allow='autoplay'
                 ></iframe>
               </div>
             </JournalismPromise>
@@ -247,9 +246,8 @@ export default async function Page() {
               })}
             >
               <iframe
-                src='https://player.vimeo.com/video/613729649?autoplay=1&loop=1'
+                src='https://player.vimeo.com/video/613729649'
                 frameBorder='0'
-                allow='autoplay'
               ></iframe>
             </div>
           </div>
