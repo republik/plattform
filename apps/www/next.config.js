@@ -260,6 +260,13 @@ const nextConfig = {
         source: '/:year(\\d{4})',
         destination: '/archiv/:year/1',
         permanent: false,
+        has: [
+          {
+            type: 'header',
+            key: 'x-pathname',
+            value: '(?!/2000).*',
+          },
+        ],
       },
       {
         source: '/archiv/:year(\\d{4})',

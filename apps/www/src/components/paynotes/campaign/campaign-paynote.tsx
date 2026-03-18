@@ -73,7 +73,7 @@ function CampaignPaynote() {
             </p>
             <div className={css({ textAlign: 'center', ml: 'auto' })}>
               <Link
-                href='/drei-versprechen'
+                href='/2000'
                 className={cx(
                   button(),
                   css({

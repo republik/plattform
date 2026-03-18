@@ -63,7 +63,7 @@ function CampaignPaywall() {
                   fontWeight: 700,
                 })}
               >
-                <Link href='/drei-versprechen'>3 Versprechen</Link>
+                <Link href='/2000'>3 Versprechen</Link>
               </span>{' '}
               ein.
             </p>

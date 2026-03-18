@@ -130,7 +130,7 @@ function CampaignBannerMd({
                 <div className={css({ mt: 'auto' })}>
                   <Share
                     title='2000 neue Mitglieder, 3 Versprechen'
-                    url={`${PUBLIC_BASE_URL}/drei-versprechen`}
+                    url={`${PUBLIC_BASE_URL}/2000`}
                     emailSubject='2000 neue Mitglieder, 3 Versprechen'
                   >
                     <Button
@@ -151,7 +151,7 @@ function CampaignBannerMd({
                 </div>
                 <div className={css({ mt: 'auto' })}>
                   <Link
-                    href='/drei-versprechen'
+                    href='//2000'
                     className={cx(
                       button({ variant: 'outline', size: 'large' }),
                       css({
@@ -180,7 +180,7 @@ function CampaignBanner({
   handleOpen: (isOpen: boolean) => void
 }) {
   const trackEvent = useTrackEvent()
-  
+
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
       <div
@@ -249,7 +249,7 @@ function CampaignBanner({
             })}
           >
             <Link
-              href='/drei-versprechen'
+              href='/2000'
               className={css({
                 textDecoration: 'underline',
                 cursor: 'pointer',
@@ -264,7 +264,7 @@ function CampaignBanner({
             </div>
             <Share
               title='2000 neue Mitglieder, 3 Versprechen'
-              url={`${PUBLIC_BASE_URL}/drei-versprechen`}
+              url={`${PUBLIC_BASE_URL}/2000`}
               emailSubject='2000 neue Mitglieder, 3 Versprechen'
             >
               <Button
