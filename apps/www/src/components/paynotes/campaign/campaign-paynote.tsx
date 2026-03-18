@@ -21,14 +21,9 @@ function CampaignPaynote() {
           position: 'fixed',
           inset: 'auto 0 0 0',
           zIndex: 9998,
-          p: '6',
           boxShadow: 'sm',
           '@media print': {
             display: 'none',
-          },
-          md: {
-            px: 0,
-            pb: '8',
           },
         })}
       >
@@ -36,7 +31,11 @@ function CampaignPaynote() {
           className={css({
             maxWidth: 'carousel',
             mx: 'auto',
-            px: '15px',
+            p: 6,
+            md: {
+              px: '15px',
+              pb: '8',
+            },
           })}
         >
           <CampaignMembershipsCounter />

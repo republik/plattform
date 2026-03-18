@@ -42,7 +42,7 @@ function CampaignPaywall() {
             <h2
               className={css({
                 textStyle: 'campaignHeading',
-                mt: '20',
+                mt: 10,
                 mb: '2',
                 md: { mb: '4' },
               })}

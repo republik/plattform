@@ -110,13 +110,13 @@ export function Offers({
                 {highlighted && (
                   <span
                     className={css({
-                      fontSize: 'xs',
+                      fontSize: 's',
                       lineHeight: 1,
                       position: 'absolute',
                       color: 'campaign26TagText',
                       background: 'campaign26Tag',
-                      px: '2',
-                      py: '1',
+                      px: 2,
+                      py: 1,
                       borderRadius: '2',
                       top: '-10px',
                       left: '10px',
