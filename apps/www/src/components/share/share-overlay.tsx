@@ -1,5 +1,5 @@
 'use client'
-import { css } from '@republik/theme/css'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Root as VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import {
@@ -11,10 +11,10 @@ import {
   IconLogoWhatsApp,
   IconMail,
 } from '@republik/icons'
+import { css } from '@republik/theme/css'
+import copyToClipboard from 'clipboard-copy'
 import { ComponentPropsWithoutRef, useState } from 'react'
 import { ShareProps } from './types'
-import copyToClipboard from 'clipboard-copy'
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 
 function ShareButton({
   icon: Icon,
@@ -59,11 +59,8 @@ function ShareButton({
 
 export function ShareOverlay({
   triggerLabel,
-  title,
   url,
   emailSubject,
-  emailBody,
-  emailAttachURL = true,
 }: {
   triggerLabel: React.ReactNode
   emailBody?: string
@@ -131,7 +128,9 @@ export function ShareOverlay({
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <button className={css({ textAlign: 'left' })}>{triggerLabel}</button>
+        <div role='button' className={css({ textAlign: 'left' })}>
+          {triggerLabel}
+        </div>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay

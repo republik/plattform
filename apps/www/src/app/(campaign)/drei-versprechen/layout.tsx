@@ -3,10 +3,9 @@ import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { Metadata } from 'next'
 import { ReactNode } from 'react'
 
-// TODO: new copy
 export const metadata: Metadata = {
-  title: '2000 neuen Mitgliedern, 3 Versprechen',
-  description: 'Republik Jahresabo: 50% günstiger bis zum 14. April 2026.',
+  title: '2000 neue Mitglieder, 3 Versprechen',
+  description: 'Republik abonnieren: 50 % Rabatt bis zum 14. April 2026.',
   robots: { index: false, follow: false },
 }
 

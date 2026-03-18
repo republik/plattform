@@ -2,6 +2,7 @@
 
 import CampaignMembershipsCounter from '@app/app/(campaign)/components/campaign-memberships-counter'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
+import { Share } from '@app/components/share/share'
 import { Button } from '@app/components/ui/button'
 import {
   EventTrackingContext,
@@ -13,6 +14,7 @@ import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { PUBLIC_BASE_URL } from '../../../../lib/constants'
 
 const localStorageKey = 'republik-campaign-banner-is-open'
 const DEFAULT_IS_OPEN = true
@@ -35,6 +37,8 @@ const setLocalIsOpen = (data) => {
   } catch (e) {}
 }
 
+// I know the duplication is not ideal but the styles are too different
+// and things would have been really tricky to read.
 function CampaignBannerMd() {
   const trackEvent = useTrackEvent()
   const [open, setOpen] = useState(true)
@@ -129,21 +133,26 @@ function CampaignBannerMd() {
                   Mit 2000 neuen Mitgliedern lösen wir 3 Versprechen ein.
                 </p>
                 <div className={css({ mt: 'auto' })}>
-                  <Button
-                    size='large'
-                    className={css({
-                      background: 'campaign26Button',
-                      color: 'white',
-                    })}
-                    onClick={() => {
-                      trackEvent({
-                        action: 'click',
-                        label: 'cta',
-                      })
-                    }}
+                  <Share
+                    title='2000 neue Mitglieder, 3 Versprechen'
+                    url={`${PUBLIC_BASE_URL}/drei-versprechen`}
+                    emailSubject='2000 neue Mitglieder, 3 Versprechen'
                   >
-                    Kampagne teilen
-                  </Button>
+                    <Button
+                      size='large'
+                      className={css({
+                        background: 'campaign26Button',
+                        color: 'white',
+                      })}
+                      onClick={() => {
+                        trackEvent({
+                          action: 'open share overlay',
+                        })
+                      }}
+                    >
+                      Kampagne teilen
+                    </Button>
+                  </Share>
                 </div>
                 <div className={css({ mt: 'auto' })}>
                   <Link
@@ -172,6 +181,15 @@ function CampaignBanner() {
   const trackEvent = useTrackEvent()
   const [open, setOpen] = useState(true)
 
+  useEffect(() => {
+    setOpen(getLocalIsOpen())
+  }, [])
+
+  function handleOpen(isOpen: boolean) {
+    setOpen(isOpen)
+    setLocalIsOpen(isOpen)
+  }
+
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
       <div
@@ -185,7 +203,7 @@ function CampaignBanner() {
           },
         })}
       >
-        <RadixCollapsible.Root open={open} onOpenChange={setOpen}>
+        <RadixCollapsible.Root open={open} onOpenChange={handleOpen}>
           <RadixCollapsible.Trigger asChild>
             <button
               className={css({
@@ -253,22 +271,27 @@ function CampaignBanner() {
             <div className={css({ my: 6 })}>
               <CampaignMembershipsCounter />
             </div>
-            <Button
-              size='full'
-              className={css({
-                background: 'campaign26Button',
-                color: 'white',
-                mb: 2,
-              })}
-              onClick={() => {
-                trackEvent({
-                  action: 'click',
-                  label: 'cta',
-                })
-              }}
+            <Share
+              title='2000 neue Mitglieder, 3 Versprechen'
+              url={`${PUBLIC_BASE_URL}/drei-versprechen`}
+              emailSubject='2000 neue Mitglieder, 3 Versprechen'
             >
-              Kampagne teilen
-            </Button>
+              <Button
+                size='full'
+                className={css({
+                  background: 'campaign26Button',
+                  color: 'white',
+                  mb: 2,
+                })}
+                onClick={() => {
+                  trackEvent({
+                    action: 'open share overlay',
+                  })
+                }}
+              >
+                Kampagne teilen
+              </Button>
+            </Share>
           </RadixCollapsible.Content>
         </RadixCollapsible.Root>
       </div>
