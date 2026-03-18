@@ -19,6 +19,7 @@ export type PaynoteKindType =
   | 'WELCOME_BANNER'
   | 'CAMPAIGN_PAYNOTE'
   | 'CAMPAIGN_PAYWALL'
+  | 'CAMPAIGN_BANNER' // not a paynote per se, but logic depends on the same params
 
 const PAYWALL_KINDS: PaynoteKindType[] = [
   'REGWALL',
@@ -123,6 +124,9 @@ export const PaynotesProvider = ({ children }) => {
       return
     }
     // console.log({ template, trialStatus, pathname, searchParams })
+    if (trialStatus === 'MEMBER' && isCampaignActive) {
+      return setPaynoteKind('CAMPAIGN_BANNER')
+    }
 
     // Active membership: no paynote
     if (trialStatus === 'MEMBER') {

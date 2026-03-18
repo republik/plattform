@@ -1,31 +1,31 @@
-import { CSSProperties, ReactNode, useMemo, useEffect } from 'react'
-import { css } from 'glamor'
+import CampaignBanner from '@app/app/(campaign)/components/campaign-banner'
 import {
-  Container,
-  RawHtml,
-  fontFamilies,
-  mediaQueries,
   ColorContextProvider,
+  Container,
+  mediaQueries,
+  RawHtml,
 } from '@project-r/styleguide'
-import OptionalLocalColorContext from './OptionalLocalColorContext'
-import Meta from './Meta'
-import Header from './Header'
-import Footer from '../Footer'
-import Box from './Box'
-import ProlongBox from './ProlongBox'
+import { DraftModeIndicator } from 'components/DraftModeIndicator'
+import { css } from 'glamor'
+import { CSSProperties, ReactNode, useEffect, useMemo } from 'react'
+import { checkRoles } from '../../lib/apollo/withMe'
+import { useMe } from '../../lib/context/MeContext'
+import { postMessage, useInNativeApp } from '../../lib/withInNativeApp'
+import { useTranslation } from '../../lib/withT'
+import CallToActionBanner from '../CallToActions/CallToActionBanner'
 import {
-  HEADER_HEIGHT,
-  SUBHEADER_HEIGHT,
   FRAME_CONTENT_PADDING,
   FRAME_CONTENT_PADDING_MOBILE,
+  HEADER_HEIGHT,
+  SUBHEADER_HEIGHT,
 } from '../constants'
-import { useTranslation } from '../../lib/withT'
-import { useInNativeApp, postMessage } from '../../lib/withInNativeApp'
+import Footer from '../Footer'
+import Box from './Box'
+import Header from './Header'
 import LegacyAppNoticeBox from './LegacyAppNoticeBox'
-import { useMe } from '../../lib/context/MeContext'
-import { checkRoles } from '../../lib/apollo/withMe'
-import CallToActionBanner from '../CallToActions/CallToActionBanner'
-import { DraftModeIndicator } from 'components/DraftModeIndicator'
+import Meta from './Meta'
+import OptionalLocalColorContext from './OptionalLocalColorContext'
+import ProlongBox from './ProlongBox'
 
 const styles = {
   bodyGrowerContainer: css({
@@ -194,6 +194,8 @@ const Frame = ({
                 {!hideCTA && <CallToActionBanner />}
 
                 {draftMode && <DraftModeIndicator />}
+
+                <CampaignBanner />
 
                 {raw ? (
                   <>{children}</>

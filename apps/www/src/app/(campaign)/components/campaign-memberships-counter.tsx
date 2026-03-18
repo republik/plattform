@@ -6,15 +6,10 @@ import React from 'react' // TODO: get real numbers
 
 // TODO: get real numbers
 function CampaignMembershipsCounter() {
-  const [progress, setProgress] = React.useState(13)
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => setProgress(61.5), 500)
-    return () => clearTimeout(timer)
-  }, [])
+  const progress = (1230 / 2000) * 100
 
   return (
-    <div>
+    <span>
       <Progress.Root
         className={css({
           position: 'relative',
@@ -42,7 +37,7 @@ function CampaignMembershipsCounter() {
           style={{ transform: `translateX(-${100 - progress}%)` }}
         />
       </Progress.Root>
-      <div
+      <span
         className={css({ display: 'flex', justifyContent: 'space-between' })}
       >
         <span className={css({ fontWeight: 500 })}>Neue Mitglieder</span>
@@ -50,8 +45,8 @@ function CampaignMembershipsCounter() {
           <span className={css({ fontWeight: 500 })}>1230</span>
           /2000
         </span>
-      </div>
-    </div>
+      </span>
+    </span>
   )
 }
 
