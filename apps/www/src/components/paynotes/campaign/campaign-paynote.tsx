@@ -68,7 +68,7 @@ function CampaignPaynote() {
               <br
                 className={css({ display: 'none', lg: { display: 'initial' } })}
               />
-              Sind Sie dabei?
+              Machen Sie mit?
             </p>
             <div className={css({ textAlign: 'center', ml: 'auto' })}>
               <Link

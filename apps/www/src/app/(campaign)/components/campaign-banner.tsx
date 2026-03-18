@@ -128,7 +128,8 @@ function CampaignBannerMd({
                     mr: 'auto',
                   })}
                 >
-                  Mit 2000 neuen Mitgliedern lösen wir 3 Versprechen ein.
+                  Mit 2000 neuen Mitgliedern an Bord lösen wir 3 Versprechen
+                  ein.
                 </p>
                 <div>
                   <Share
@@ -147,7 +148,7 @@ function CampaignBannerMd({
                         })
                       }}
                     >
-                      Kampagne teilen
+                      Weitersagen
                     </Button>
                   </Share>
                 </div>
@@ -283,7 +284,7 @@ function CampaignBanner({
                   })
                 }}
               >
-                Kampagne teilen
+                Weitersagen
               </Button>
             </Share>
           </RadixCollapsible.Content>

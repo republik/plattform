@@ -20,6 +20,10 @@ function CampaignPaywall() {
     })
   }, [trackEvent])
 
+  // Mit einem Abo lesen Sie weiter. Und Erstwählerinnen in der Schweiz auch.
+
+  // Mit einem Abo lesen Sie weiter. Und Ihr Freund auch.
+
   return (
     <>
       <div data-testid='campaignPaywall' data-page-theme='campaign-2026'>

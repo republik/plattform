@@ -88,8 +88,8 @@ export default async function Page() {
                   mb: '6',
                 })}
               >
-                Help us find 2000 new Mitgliedern before the 14. April and make
-                Republik a public good for many young...
+                Mit Ihrer Hilfe erreichen wir unser Ziel: Erzählen Sie Ihren
+                Freundinnen und Bekannten bis zum 14. April von unserem Angebot!
               </p>
               <Share
                 title='2000 neue Mitglieder, 3 Versprechen'
@@ -104,7 +104,7 @@ export default async function Page() {
                     mb: 2,
                   })}
                 >
-                  Kampagne teilen
+                  Weitersagen
                 </Button>
               </Share>
             </>
@@ -276,7 +276,7 @@ export default async function Page() {
             })}
           >
             Diese 3 Versprechen lösen wir ein, wenn wir bis zum 14. April unser
-            Ziel von 2000 neuen Mitgliedern erreichen. Helfen Sie uns?
+            Ziel von 2000 neuen Mitgliedern erreichen. Machen Sie mit?
           </h3>
           <p
             className={css({
