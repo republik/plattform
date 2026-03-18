@@ -56,7 +56,7 @@ export class PGReferralsRepo implements ReferralCampaignRepo, ReferralCodeRepo {
   }
 
   async getCampaignNewMemberCount(campaignId: string): Promise<number> {
-    return await this.#pgdb.public.query(
+    const res = await this.#pgdb.public.queryOne(
       /* sql */
       `WITH
       campaign_time_range AS (
@@ -90,6 +90,8 @@ export class PGReferralsRepo implements ReferralCampaignRepo, ReferralCodeRepo {
     `,
       { campaign_id: campaignId },
     )
+
+    return res?.count || 0
   }
 
   async getUserCampaignReferralCount(
