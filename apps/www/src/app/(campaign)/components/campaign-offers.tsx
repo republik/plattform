@@ -72,10 +72,6 @@ export function Offers({
         })
       }}
     >
-      {selectedPromoCode ? (
-        <input type='hidden' name='promo_code' value={selectedPromoCode} />
-      ) : null}
-
       {Object.entries(allHiddenParams).map(([k, v]) => (
         <input type='hidden' hidden key={k} name={k} value={v} />
       ))}
