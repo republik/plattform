@@ -36,6 +36,7 @@ function CampaignPaynote() {
           className={css({
             maxWidth: 'carousel',
             mx: 'auto',
+            px: '15px',
           })}
         >
           <CampaignMembershipsCounter />

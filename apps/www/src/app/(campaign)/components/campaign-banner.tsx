@@ -9,16 +9,137 @@ import {
 } from '@app/lib/analytics/event-tracking'
 import * as RadixCollapsible from '@radix-ui/react-collapsible'
 import { IconExpandLess, IconExpandMore } from '@republik/icons'
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
+import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
 import { useState } from 'react'
+
+function CampaignBannerMd() {
+  const trackEvent = useTrackEvent()
+  const [open, setOpen] = useState(true)
+  return (
+    <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
+      <div
+        className={css({
+          backgroundColor: 'campaign26Background',
+          color: 'campaign26',
+          pt: 6,
+          pb: 4,
+          '@media print': {
+            display: 'none',
+          },
+        })}
+      >
+        <div
+          className={css({
+            maxWidth: 'carousel',
+            mx: 'auto',
+            px: '15px',
+          })}
+        >
+          <RadixCollapsible.Root open={open} onOpenChange={setOpen}>
+            <RadixCollapsible.Trigger asChild>
+              <button
+                className={css({
+                  display: 'flex',
+                  width: 'full',
+                  cursor: 'pointer',
+                  alignItems: 'start',
+                  gap: 6,
+                })}
+              >
+                <span className={css({ display: 'inline-block', flexGrow: 1 })}>
+                  <CampaignMembershipsCounter />
+                </span>
+                <span
+                  className={css({ flexShrink: 0, display: 'inline-block' })}
+                >
+                  {open ? (
+                    <IconExpandLess size={32} />
+                  ) : (
+                    <IconExpandMore size={32} />
+                  )}
+                </span>
+              </button>
+            </RadixCollapsible.Trigger>
+            <RadixCollapsible.Content
+              data-collapsible-collapsed-items
+              className={css({
+                overflow: 'hidden',
+                animationTimingFunction: 'ease-out',
+                animationDuration: '300ms',
+                '&[data-state="open"]': {
+                  animationName: 'radixCollapsibleSlideDown',
+                },
+                '&[data-state="closed"]:not([hidden])': {
+                  animationName: 'radixCollapsibleSlideUp',
+                },
+              })}
+            >
+              <div
+                className={css({
+                  mt: 8,
+                  display: 'flex',
+                  gap: 2,
+                })}
+              >
+                <p
+                  className={css({
+                    maxWidth: '600px',
+                    flexGrow: 1,
+                    textAlign: 'left',
+                    fontWeight: 700,
+                    fontSize: '3xl',
+                    fontFamily: 'republikSerif',
+                    lineHeight: '1',
+                    mr: 'auto',
+                  })}
+                >
+                  Mit 2000 neuen Mitgliedern lösen wir 3 Versprechen ein.
+                </p>
+                <div className={css({ mt: 'auto' })}>
+                  <Button
+                    size='large'
+                    className={css({
+                      background: 'campaign26Button',
+                      color: 'white',
+                    })}
+                    onClick={() => {
+                      trackEvent({
+                        action: 'click',
+                        label: 'cta',
+                      })
+                    }}
+                  >
+                    Kampagne teilen
+                  </Button>
+                </div>
+                <div className={css({ mt: 'auto' })}>
+                  <Link
+                    href='/drei-versprechen'
+                    className={cx(
+                      button({ variant: 'outline', size: 'large' }),
+                      css({
+                        color: 'campaign26',
+                        outlineColor: 'campaign26RadioOutline',
+                      }),
+                    )}
+                  >
+                    <span>Mehr erfahren</span>
+                  </Link>
+                </div>
+              </div>
+            </RadixCollapsible.Content>
+          </RadixCollapsible.Root>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function CampaignBanner() {
   const trackEvent = useTrackEvent()
   const [open, setOpen] = useState(true)
-  const { paynoteKind } = usePaynotes()
-
-  if (paynoteKind !== 'CAMPAIGN_BANNER') return null
 
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
@@ -30,10 +151,6 @@ function CampaignBanner() {
           pb: 2,
           '@media print': {
             display: 'none',
-          },
-          md: {
-            px: 0,
-            pb: '8',
           },
         })}
       >
@@ -59,11 +176,6 @@ function CampaignBanner() {
                       fontWeight: 700,
                       fontSize: 'l',
                       lineHeight: '1.2',
-                      md: {
-                        fontSize: '3xl',
-                        fontFamily: 'republikSerif',
-                        lineHeight: '1',
-                      },
                     })}
                   >
                     Mit 2000 neuen Mitgliedern an Bord lösen wir 3 Versprechen
@@ -96,43 +208,36 @@ function CampaignBanner() {
               },
             })}
           >
-            <div
+            <Link
+              href='/drei-versprechen'
               className={css({
-                maxWidth: 'carousel',
-                mx: 'auto',
+                textDecoration: 'underline',
+                cursor: 'pointer',
+                textStyle: 'airy',
+                mb: 6,
               })}
             >
-              <Link
-                href='/drei-versprechen'
-                className={css({
-                  textDecoration: 'underline',
-                  cursor: 'pointer',
-                  textStyle: 'airy',
-                  mb: 6,
-                })}
-              >
-                Mehr erfahren
-              </Link>
-              <div className={css({ my: 6 })}>
-                <CampaignMembershipsCounter />
-              </div>
-              <Button
-                size='full'
-                className={css({
-                  background: 'campaign26Button',
-                  color: 'white',
-                  mb: 2,
-                })}
-                onClick={() => {
-                  trackEvent({
-                    action: 'click',
-                    label: 'cta',
-                  })
-                }}
-              >
-                Kampagne teilen
-              </Button>
+              Mehr erfahren
+            </Link>
+            <div className={css({ my: 6 })}>
+              <CampaignMembershipsCounter />
             </div>
+            <Button
+              size='full'
+              className={css({
+                background: 'campaign26Button',
+                color: 'white',
+                mb: 2,
+              })}
+              onClick={() => {
+                trackEvent({
+                  action: 'click',
+                  label: 'cta',
+                })
+              }}
+            >
+              Kampagne teilen
+            </Button>
           </RadixCollapsible.Content>
         </RadixCollapsible.Root>
       </div>
@@ -141,9 +246,18 @@ function CampaignBanner() {
 }
 
 function CampaignBannerWithEvents() {
+  const { paynoteKind } = usePaynotes()
+
+  if (paynoteKind !== 'CAMPAIGN_BANNER') return null
+
   return (
     <EventTrackingContext category='CampaignBanner'>
-      <CampaignBanner />
+      <div className={css({ display: 'initial', md: { display: 'none' } })}>
+        <CampaignBanner />
+      </div>
+      <div className={css({ display: 'none', md: { display: 'initial' } })}>
+        <CampaignBannerMd />
+      </div>
     </EventTrackingContext>
   )
 }
