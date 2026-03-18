@@ -10,15 +10,15 @@ import { css } from '@republik/theme/css'
 import { useState } from 'react'
 
 type DiscountOption = {
-  promoCode: `H25OFF${number}` | ''
+  promoCode: `SPRING26OFF${number}` | ''
   amount: number
   highlighted?: string
 }
 
 // There needs to be one Stripe promo code for each discounted amount. (Promo codes are named after the amount *off*, but we display the final amount in the UI)
 const DISCOUNT_OPTIONS: DiscountOption[] = [
-  { promoCode: 'H25OFF21', amount: 120, highlighted: '50 %' },
-  { promoCode: 'H25OFF13', amount: 180 },
+  { promoCode: 'SPRING26OFF120', amount: 120, highlighted: '50 %' },
+  { promoCode: 'SPRING26OFF60', amount: 180 },
   { promoCode: '', amount: 240 },
 ]
 
