@@ -1,9 +1,13 @@
 import CampaignMembershipsCounter from '@app/app/(campaign)/components/campaign-memberships-counter'
 import { Offers } from '@app/app/(campaign)/components/campaign-offers'
 import { Logo } from '@app/components/layout/header/logo'
+import { Share } from '@app/components/share/share'
+import { Button } from '@app/components/ui/button'
 import { ArticleSection } from '@app/components/ui/section'
+import { getMe } from '@app/lib/auth/me'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
+import { PUBLIC_BASE_URL } from '../../../../lib/constants'
 
 const journalismPromiseStyle = css({
   pb: 8,
@@ -43,6 +47,8 @@ function JournalismPromise({
 }
 
 export default async function Page() {
+  const { hasActiveMembership } = await getMe()
+
   return (
     <>
       <div
@@ -74,36 +80,68 @@ export default async function Page() {
           >
             Mit 2000 neuen Mitgliedern lösen wir 3 Versprechen ein.
           </h2>
-          <p
-            className={css({
-              textStyle: 'airy',
-              mb: '0',
-              md: { textStyle: 'heavy', mb: '6' },
-            })}
-          >
-            Kommen Sie bis zum 14. April an Bord.
-          </p>
-          <p
-            className={css({
-              textStyle: 'airy',
-              mb: '6',
-            })}
-          >
-            Sie bestimmen, wie viel Sie im ersten Jahr zahlen:
-          </p>
-          <Offers
-            additionalShopParams={{
-              rep_ui_component: 'campaign-paywall',
-            }}
-          />
-          <p
-            className={css({
-              textAlign: 'center',
-              mt: '6',
-            })}
-          >
-            Jederzeit kündbar
-          </p>
+          {hasActiveMembership ? (
+            <>
+              <p
+                className={css({
+                  textStyle: 'airy',
+                  mb: '6',
+                })}
+              >
+                Help us find 2000 new Mitgliedern before the 14. April and make
+                Republik a public good for many young...
+              </p>
+              <Share
+                title='2000 neue Mitglieder, 3 Versprechen'
+                url={`${PUBLIC_BASE_URL}/drei-versprechen`}
+                emailSubject='2000 neue Mitglieder, 3 Versprechen'
+              >
+                <Button
+                  size='full'
+                  className={css({
+                    background: 'campaign26Button',
+                    color: 'white',
+                    mb: 2,
+                  })}
+                >
+                  Kampagne teilen
+                </Button>
+              </Share>
+            </>
+          ) : (
+            <>
+              <p
+                className={css({
+                  textStyle: 'airy',
+                  mb: '0',
+                  md: { textStyle: 'heavy', mb: '6' },
+                })}
+              >
+                Kommen Sie bis zum 14. April an Bord.
+              </p>
+              <p
+                className={css({
+                  textStyle: 'airy',
+                  mb: '6',
+                })}
+              >
+                Sie bestimmen, wie viel Sie im ersten Jahr zahlen:
+              </p>
+              <Offers
+                additionalShopParams={{
+                  rep_ui_component: 'campaign-paywall',
+                }}
+              />
+              <p
+                className={css({
+                  textAlign: 'center',
+                  mt: '6',
+                })}
+              >
+                Jederzeit kündbar
+              </p>
+            </>
+          )}
         </ArticleSection>
       </div>
       <div

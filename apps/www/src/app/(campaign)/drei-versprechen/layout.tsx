@@ -14,11 +14,6 @@ export default async function CampaignLayout({
 }: {
   children: ReactNode
 }) {
-  /*const [{ me }, { campaign }] = await Promise.all([
-    getMe(),
-    getCampaignReferralsData(),
-  ])*/
-
   return (
     <div data-page-theme='campaign-2026'>
       <PageLayout showHeader={false} showFooter={false}>
