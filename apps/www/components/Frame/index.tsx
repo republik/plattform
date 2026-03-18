@@ -1,4 +1,3 @@
-import CampaignBanner from '@app/app/(campaign)/components/campaign-banner'
 import {
   ColorContextProvider,
   Container,
@@ -194,8 +193,6 @@ const Frame = ({
                 {!hideCTA && <CallToActionBanner />}
 
                 {draftMode && <DraftModeIndicator />}
-
-                <CampaignBanner />
 
                 {raw ? (
                   <>{children}</>

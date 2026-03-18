@@ -1,37 +1,38 @@
-import { Fragment, useMemo, useEffect, useState } from 'react'
-import { css } from 'glamor'
-import { renderMdast } from '@republik/mdast-react-render'
-import Head from 'next/head'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import CampaignBanner from '@app/app/(campaign)/components/campaign-banner'
 
 import {
   colors,
+  createFrontSchema,
   Editorial,
   InlineSpinner,
   Interaction,
-  createFrontSchema,
 } from '@project-r/styleguide'
-import StatusError from '../StatusError'
-
-import { useTranslation } from '../../lib/withT'
-import Loader from '../Loader'
-import Frame from '../Frame'
-import HrefLink from '../Link/Href'
-import ErrorMessage from '../ErrorMessage'
-import CommentLink from '../Discussion/shared/CommentLink'
-import DiscussionLink from '../Discussion/shared/DiscussionLink'
-import ActionBar from '../ActionBar'
+import { IconCheckCircle } from '@republik/icons'
+import { renderMdast } from '@republik/mdast-react-render'
+import { css } from 'glamor'
+import Head from 'next/head'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 
 import { PUBLIC_BASE_URL } from '../../lib/constants'
 import { useMe } from '../../lib/context/MeContext'
 import { useInfiniteScroll } from '../../lib/hooks/useInfiniteScroll'
 import { intersperse } from '../../lib/utils/helpers'
 import { cleanAsPath } from '../../lib/utils/link'
-import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
+
+import { useTranslation } from '../../lib/withT'
+import ActionBar from '../ActionBar'
 import TeaserAudioPlayButton from '../Audio/shared/TeaserAudioPlayButton'
+import CommentLink from '../Discussion/shared/CommentLink'
+import DiscussionLink from '../Discussion/shared/DiscussionLink'
+import ErrorMessage from '../ErrorMessage'
+import Frame from '../Frame'
+import HrefLink from '../Link/Href'
+import Loader from '../Loader'
+import StatusError from '../StatusError'
+import { useGetFrontQuery } from './graphql/getFrontQuery.graphql'
 import * as withData from './withData'
-import { IconCheckCircle } from '@republik/icons'
 
 const styles = {
   prepublicationNotice: css({
@@ -210,6 +211,7 @@ const Front = ({
 
   return (
     <Frame hasOverviewNav={hasOverviewNav} raw meta={meta}>
+      <CampaignBanner />
       {renderBefore && renderBefore(meta)}
       <Loader
         loading={loading || isRefetching}

@@ -39,18 +39,14 @@ const setLocalIsOpen = (data) => {
 
 // I know the duplication is not ideal but the styles are too different
 // and things would have been really tricky to read.
-function CampaignBannerMd() {
+function CampaignBannerMd({
+  open,
+  handleOpen,
+}: {
+  open: boolean
+  handleOpen: (isOpen: boolean) => void
+}) {
   const trackEvent = useTrackEvent()
-  const [open, setOpen] = useState(true)
-
-  useEffect(() => {
-    setOpen(getLocalIsOpen())
-  }, [])
-
-  function handleOpen(isOpen: boolean) {
-    setOpen(isOpen)
-    setLocalIsOpen(isOpen)
-  }
 
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
@@ -120,13 +116,12 @@ function CampaignBannerMd() {
               >
                 <p
                   className={css({
-                    maxWidth: '600px',
                     flexGrow: 1,
                     textAlign: 'left',
+                    fontFamily: 'gtAmericaStandard',
                     fontWeight: 700,
-                    fontSize: '3xl',
-                    fontFamily: 'republikSerif',
-                    lineHeight: '1',
+                    fontSize: '2xl',
+                    lineHeight: '1.2',
                     mr: 'auto',
                   })}
                 >
@@ -177,19 +172,15 @@ function CampaignBannerMd() {
   )
 }
 
-function CampaignBanner() {
+function CampaignBanner({
+  open,
+  handleOpen,
+}: {
+  open: boolean
+  handleOpen: (isOpen: boolean) => void
+}) {
   const trackEvent = useTrackEvent()
-  const [open, setOpen] = useState(true)
-
-  useEffect(() => {
-    setOpen(getLocalIsOpen())
-  }, [])
-
-  function handleOpen(isOpen: boolean) {
-    setOpen(isOpen)
-    setLocalIsOpen(isOpen)
-  }
-
+  
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
       <div
@@ -301,16 +292,26 @@ function CampaignBanner() {
 
 function CampaignBannerWithEvents() {
   const { paynoteKind } = usePaynotes()
+  const [open, setOpen] = useState(true)
+
+  useEffect(() => {
+    setOpen(getLocalIsOpen())
+  }, [])
+
+  function handleOpen(isOpen: boolean) {
+    setOpen(isOpen)
+    setLocalIsOpen(isOpen)
+  }
 
   if (paynoteKind !== 'CAMPAIGN_BANNER') return null
 
   return (
     <EventTrackingContext category='CampaignBanner'>
       <div className={css({ display: 'initial', md: { display: 'none' } })}>
-        <CampaignBanner />
+        <CampaignBanner open={open} handleOpen={handleOpen} />
       </div>
       <div className={css({ display: 'none', md: { display: 'initial' } })}>
-        <CampaignBannerMd />
+        <CampaignBannerMd open={open} handleOpen={handleOpen} />
       </div>
     </EventTrackingContext>
   )
