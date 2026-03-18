@@ -2,7 +2,7 @@ query CampaignReferrals($campaignSlug: String!) {
   campaign(slug: $campaignSlug) {
     id
     isActive
-    newMembers {
+    referrals {
       count
     }
   }

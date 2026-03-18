@@ -87,12 +87,8 @@ function isPaynoteOverlayHidden(
 //
 // See also: Figma, Registration experience, for a
 // visual overview of the paynote flow.
-//
-// TODO: add metering for TRIAL_ELIGIBLE users
-function isDialogPage(
-  pathname: string,
-  searchParams: URLSearchParams,
-): boolean {
+
+function isDialogPage(pathname: string): boolean {
   return pathname.startsWith('/dialog/')
 }
 
@@ -116,14 +112,15 @@ export const PaynotesProvider = ({ children }) => {
 
   useEffect(() => {})
 
-  // const isCampaignActive = campaign?.isActive
-  const isCampaignActive = true
+  const isCampaignActive = campaign?.isActive
 
   useEffect(() => {
     if (meLoading) {
       return
     }
+
     // console.log({ template, trialStatus, pathname, searchParams })
+
     if (trialStatus === 'MEMBER' && isCampaignActive) {
       return setPaynoteKind('CAMPAIGN_BANNER')
     }
@@ -143,7 +140,7 @@ export const PaynotesProvider = ({ children }) => {
       return setPaynoteKind(null)
     }
     // dialog page: we show a special paynote
-    if (isDialogPage(pathname, searchParams) || template === 'discussion') {
+    if (isDialogPage(pathname) || template === 'discussion') {
       return setPaynoteKind('DIALOG')
     }
 
