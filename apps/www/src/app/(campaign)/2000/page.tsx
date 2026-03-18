@@ -282,7 +282,7 @@ export default async function Page() {
               mb: '6',
             })}
           >
-            Wählen Sie Ihren Preis für das erste Jahr:
+            Ein Jahr Republik zum Preis Ihrer Wahl:
           </p>
           <Offers
             additionalShopParams={{

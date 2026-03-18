@@ -9,9 +9,16 @@ import {
 } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+
+const PROMISE_COPIES = [
+  'Mit einem Abo lesen Sie weiter. Und Schülerinnen in der Schweiz auch.',
+  'Mit einem Abo lesen Sie weiter. Und Erstwählerinnen in der Schweiz auch.',
+  'Mit einem Abo lesen Sie weiter. Und Ihr Freund auch.',
+]
 
 function CampaignPaywall() {
+  const [promiseCopy] = useState(PROMISE_COPIES[Math.floor(Math.random() * 3)])
   const trackEvent = useTrackEvent()
 
   useEffect(() => {
@@ -19,10 +26,6 @@ function CampaignPaywall() {
       action: 'is showing',
     })
   }, [trackEvent])
-
-  // Mit einem Abo lesen Sie weiter. Und Erstwählerinnen in der Schweiz auch.
-
-  // Mit einem Abo lesen Sie weiter. Und Ihr Freund auch.
 
   return (
     <>
@@ -51,8 +54,7 @@ function CampaignPaywall() {
                 md: { mb: '4' },
               })}
             >
-              Mit einem Abo lesen Sie weiter. Und Schülerinnen in der Schweiz
-              auch.
+              {promiseCopy}
             </h2>
             <p
               className={css({
@@ -100,6 +102,7 @@ function CampaignPaywall() {
               <Offers
                 additionalShopParams={{
                   rep_ui_component: 'campaign-paywall',
+                  rep_paynote_title: promiseCopy,
                 }}
               />
             </div>
@@ -107,6 +110,7 @@ function CampaignPaywall() {
               <Offers
                 additionalShopParams={{
                   rep_ui_component: 'campaign-paywall',
+                  rep_paynote_title: promiseCopy,
                 }}
               />
             </div>
