@@ -1,12 +1,20 @@
 'use client'
 
+import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
 import * as Progress from '@radix-ui/react-progress'
 import { css } from '@republik/theme/css'
 import React from 'react' // TODO: get real numbers
 
-// TODO: get real numbers
+const TARGET_MEMBERS = 2000
+
 function CampaignMembershipsCounter() {
-  const progress = (1230 / 2000) * 100
+  const { campaign, loading } = useCampaign()
+  if (loading) return null
+  const members = campaign?.newMembers?.totalCount ?? 0
+  const progress = (members / TARGET_MEMBERS) * 100
+
+  // TODO: emoji
+  // const isSuccess = members >= TARGET_MEMBERS
 
   return (
     <span>
@@ -42,8 +50,8 @@ function CampaignMembershipsCounter() {
       >
         <span className={css({ fontWeight: 500 })}>Neue Mitglieder</span>
         <span>
-          <span className={css({ fontWeight: 500 })}>1230</span>
-          /2000
+          <span className={css({ fontWeight: 500 })}>{members}</span>/
+          {TARGET_MEMBERS}
         </span>
       </span>
     </span>
