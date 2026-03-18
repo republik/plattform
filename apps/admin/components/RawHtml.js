@@ -1,18 +1,18 @@
-import { createElement } from 'react'
+import { fontFamilies } from '@project-r/styleguide'
+import { css } from '@republik/theme/css'
 import PropTypes from 'prop-types'
-import { css } from 'glamor'
-import { colors, fontFamilies } from '@project-r/styleguide'
+import { createElement } from 'react'
 
 const styles = {
   default: css({
     '& a': {
       textDecoration: 'none',
-      color: colors.primary,
+      color: 'primary',
       ':visited': {
-        color: colors.primary,
+        color: 'primary',
       },
       ':hover': {
-        color: colors.secondary,
+        color: 'secondary',
       },
     },
     '& ul, & ol': {

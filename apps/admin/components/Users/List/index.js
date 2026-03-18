@@ -5,7 +5,7 @@ import InfiniteScroller from 'react-infinite-scroller'
 
 import { Loader, Interaction } from '@project-r/styleguide'
 
-import { createChangeHandler } from '../../Tables/utils'
+import { createChangeHandler } from '@/components/Tables/utils'
 
 import Table from './Table'
 import TableForm from './TableForm'

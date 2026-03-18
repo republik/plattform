@@ -1,9 +1,10 @@
-import React from 'react'
-import App from '../components/App'
-import { Body, Content, Header } from '../components/Layout'
-import { useMe } from '../lib/useMe'
+'use client'
 
-export default function Custom404() {
+import App from '@/components/App'
+import { Body, Content, Header } from '@/components/Layout'
+import { useMe } from '@/lib/useMe'
+
+export default function NotFound() {
   const { me } = useMe()
 
   if (!me) {

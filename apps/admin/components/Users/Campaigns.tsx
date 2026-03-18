@@ -1,8 +1,8 @@
 import { A, IconButton, Loader } from '@project-r/styleguide'
-import { DD, DL, Section, SectionTitle } from '../Display/utils'
-import { REPUBLIK_FRONTEND_URL } from '../../server/constants'
-import { IconContentCopy } from '../../../../packages/icons/dist/index.cjs'
-import { css } from 'glamor'
+import { DD, DL, Section, SectionTitle } from '@/components/Display/utils'
+import { REPUBLIK_FRONTEND_URL } from '@/server/constants'
+import { IconContentCopy } from '@republik/icons'
+import { css } from '@republik/theme/css'
 import { useQuery } from '@apollo/client'
 import { UserCampaignDetailsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 
@@ -29,11 +29,11 @@ export default function Campaigns({ userId }: { userId: string }) {
             <DL>
               <DD>
                 <div
-                  {...css({
+                  className={css({
                     display: 'flex',
                     flexDirection: 'row',
                     alignItems: 'center',
-                    gap: 6,
+                    gap: '1.5',
                   })}
                 >
                   <A href={campaignUrl} target='_blank'>

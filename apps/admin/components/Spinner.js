@@ -1,4 +1,4 @@
-import { css, keyframes } from 'glamor'
+import { css, keyframes } from '@republik/theme/css'
 
 const containerStyle = css({
   display: 'block',
@@ -30,11 +30,11 @@ const Spinner = ({ size = 50 }) => {
     style.WebkitTransform = style.transform =
       'rotate(' + i * 30 + 'deg) translate(146%)'
 
-    bars.push(<span {...barStyle} style={style} key={i} />)
+    bars.push(<span className={barStyle} style={style} key={i} />)
   }
 
   return (
-    <span {...containerStyle} style={{ width: size, height: size }}>
+    <span className={containerStyle} style={{ width: size, height: size }}>
       {bars}
     </span>
   )
@@ -46,7 +46,7 @@ const inlineBlock = css({
 })
 
 export const InlineSpinner = ({ size = 50 }) => (
-  <span {...inlineBlock} style={{ width: size, height: size }}>
+  <span className={inlineBlock} style={{ width: size, height: size }}>
     <Spinner size={size} />
   </span>
 )

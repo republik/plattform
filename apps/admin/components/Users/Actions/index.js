@@ -4,7 +4,7 @@ import { gql } from '@apollo/client'
 
 import { Loader, InlineSpinner } from '@project-r/styleguide'
 
-import { Section, SectionTitle } from '../../Display/utils'
+import { Section, SectionTitle } from '@/components/Display/utils'
 import DeleteUser from './DeleteUser'
 
 const GET_ACTIONS = gql`

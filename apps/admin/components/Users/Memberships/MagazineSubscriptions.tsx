@@ -1,9 +1,9 @@
 import { UserMagazineSubscriptionsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { colors, linkRule, Loader } from '@project-r/styleguide'
+import { Loader } from '@project-r/styleguide'
 import { IconLink } from '@republik/icons'
+import { css } from '@republik/theme/css'
 import { MagazineSubscriptionActions } from 'components/Users/Memberships/MagazineSubscriptionActions'
-import { css } from 'glamor'
 import { useTranslation } from 'lib/useT'
 import { swissTime } from 'lib/utils/formats'
 import { useEffect } from 'react'
@@ -65,53 +65,53 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
 
         return (
           <ul
-            {...css({
+            className={css({
               listStyle: 'none',
-              padding: 0,
-              margin: 0,
+              padding: '0',
+              margin: '0',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1rem',
+              gap: '4',
 
-              '& b': { fontWeight: '500' },
+              '& b': { fontWeight: 'medium' },
             })}
           >
             {magazineSubscriptions.map((subscription) => {
               return (
                 <li
                   key={subscription.stripeId}
-                  {...css({
-                    padding: '1rem',
+                  className={css({
+                    padding: '4',
                     '&:nth-child(odd)': {
-                      background: colors.secondaryBg,
+                      background: 'overlay',
                     },
                   })}
                 >
                   <details>
                     <summary
-                      {...css({
+                      className={css({
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'flex-start',
-                        gap: '1rem',
+                        gap: '4',
                         cursor: 'pointer',
                       })}
                     >
                       <div
-                        {...css({
+                        className={css({
                           display: 'flex',
                           flexDirection: 'column',
-                          gap: '0.5rem',
+                          gap: '2',
                         })}
                       >
                         <h4
-                          {...css({
-                            fontWeight: '500',
-                            margin: 0,
+                          className={css({
+                            fontWeight: 'medium',
+                            margin: '0',
                             display: 'flex',
                             alignItems: 'center',
-                            fontSize: '1.2em',
-                            gap: 12,
+                            fontSize: 'l',
+                            gap: '3',
                           })}
                         >
                           {t(
@@ -122,7 +122,7 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                             status={subscription.status}
                           />
                         </h4>
-                        <div {...css({ fontSize: 'small' })}>
+                        <div className={css({ fontSize: 's' })}>
                           Erstellt am {displayDateTime(subscription.createdAt)}
                           {subscription.canceledAt && (
                             <>
@@ -181,9 +181,9 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                         )}
                       </div>
                       <div
-                        {...css({
+                        className={css({
                           display: 'flex',
-                          gap: '1rem',
+                          gap: '4',
                           alignItems: 'center',
                         })}
                       >
@@ -193,7 +193,10 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                         />
 
                         <a
-                          {...css({ ...linkRule })}
+                          className={css({
+                            color: 'primary',
+                            _hover: { color: 'primaryHover' },
+                          })}
                           href={`${STRIPE_DOMAIN}/${
                             subscription.company === 'REPUBLIK'
                               ? REPUBLIK_STRIPE_ID

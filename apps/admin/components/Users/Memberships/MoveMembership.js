@@ -11,8 +11,8 @@ import {
   Loader,
 } from '@project-r/styleguide'
 
-import SearchUser from '../../Form/SearchUser'
-import { displayDateTime, TextButton } from '../../Display/utils'
+import SearchUser from '@/components/Form/SearchUser'
+import { displayDateTime, TextButton } from '@/components/Display/utils'
 
 const MOVE_MEMBERSHIP = gql`
   mutation moveMembership($membershipId: ID!, $userId: ID!) {

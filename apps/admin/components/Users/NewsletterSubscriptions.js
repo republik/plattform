@@ -2,12 +2,12 @@ import { Component } from 'react'
 import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 
-import withT from '../../lib/withT'
+import withT from '@/lib/withT'
 
 import { InlineSpinner, Loader, Checkbox } from '@project-r/styleguide'
 
-import { Section, SectionTitle, TextButton } from '../Display/utils'
-import ErrorMessage from '../ErrorMessage'
+import { Section, SectionTitle, TextButton } from '@/components/Display/utils'
+import ErrorMessage from '@/components/ErrorMessage'
 import { IconDone } from '@republik/icons'
 
 export const RESUBSCRIBE_EMAIL = gql`

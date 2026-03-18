@@ -1,11 +1,11 @@
-import withT from '../../../lib/withT'
 import compose from 'lodash/flowRight'
+import withT from '@/lib/withT'
 
 import { useState } from 'react'
 
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
 
-import { Field, Radio, Label, useColorContext } from '@project-r/styleguide'
+import { Field, Label, Radio, useColorContext } from '@project-r/styleguide'
 
 const styles = {
   radio: css({
@@ -25,7 +25,6 @@ const X_GENDER = 'weiteres'
 const NO_GENDER = 'keine Angabe'
 
 const GenderField = ({ values, onChange, t }) => {
-  const [colorScheme] = useColorContext()
   const [gender, setGender] = useState(values.gender)
   const [customGender, setCustomGender] = useState(
     !GENDER_SUGGESTIONS.some((suggestion) => values.gender === suggestion) &&
@@ -50,7 +49,7 @@ const GenderField = ({ values, onChange, t }) => {
     <>
       <div style={{ marginBottom: 10 }}>
         <Label>
-          <span {...colorScheme.set('color', 'disabled')}>
+          <span className={css('color', 'disabled')}>
             {t('Account/Update/gender/label/optional')}
           </span>
         </Label>
@@ -66,7 +65,7 @@ const GenderField = ({ values, onChange, t }) => {
             onChangeHandler(suggestion)
           }}
         >
-          <span {...styles.radio}>{suggestion}</span>
+          <span className={styles.radio}>{suggestion}</span>
         </Radio>
       ))}
       <Radio
@@ -78,7 +77,7 @@ const GenderField = ({ values, onChange, t }) => {
           onChangeHandler(X_GENDER)
         }}
       >
-        <span {...styles.radio}>{X_GENDER}</span>
+        <span className={styles.radio}>{X_GENDER}</span>
       </Radio>
       <Radio
         value={NO_GENDER}
@@ -89,7 +88,7 @@ const GenderField = ({ values, onChange, t }) => {
           onChangeHandler(null)
         }}
       >
-        <span {...styles.radio}>{NO_GENDER}</span>
+        <span className={styles.radio}>{NO_GENDER}</span>
       </Radio>
       <Field
         disabled={!isX}

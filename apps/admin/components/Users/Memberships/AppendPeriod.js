@@ -2,7 +2,7 @@ import { Component } from 'react'
 import { Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
 
-import { TextButton, displayDate } from '../../Display/utils'
+import { TextButton, displayDate } from '@/components/Display/utils'
 
 import {
   Overlay,
@@ -80,64 +80,66 @@ class AppendPeriod extends Component {
             this.state.duration > 1 &&
             (() => this.setState({ duration: this.state.duration - 1 || 0 }))
 
-          return <>
-            <TextButton
-              onClick={() => {
-                !loading && this.setState({ showForm: true })
-              }}
-            >
-              Laufzeit hinzufügen {loading && <InlineSpinner size={18} />}
-            </TextButton>
-            {this.state.showForm && (
-              <Overlay onClose={onClose}>
-                <OverlayToolbar onClose={onClose} />
-                <OverlayBody>
-                  <Interaction.P>
-                    #{membership.sequenceNumber} –{' '}
-                    {membership.type.name.split('_').join(' ')} – Aktuelles
-                    Auslaufdatum: {displayDate(membership.periods[0].endDate)}
-                  </Interaction.P>
-                  <Interaction.H3 style={{ margin: '20px 0' }}>
-                    Zeit hinzufügen
-                  </Interaction.H3>
-                  <Field
-                    label='Betrag'
-                    value={this.state.duration}
-                    onChange={(_, value) => {
-                      if (value.match(/\D/)) {
-                        return
+          return (
+            <>
+              <TextButton
+                onClick={() => {
+                  !loading && this.setState({ showForm: true })
+                }}
+              >
+                Laufzeit hinzufügen {loading && <InlineSpinner size={18} />}
+              </TextButton>
+              {this.state.showForm && (
+                <Overlay onClose={onClose}>
+                  <OverlayToolbar onClose={onClose} />
+                  <OverlayBody>
+                    <Interaction.P>
+                      #{membership.sequenceNumber} –{' '}
+                      {membership.type.name.split('_').join(' ')} – Aktuelles
+                      Auslaufdatum: {displayDate(membership.periods[0].endDate)}
+                    </Interaction.P>
+                    <Interaction.H3 style={{ margin: '20px 0' }}>
+                      Zeit hinzufügen
+                    </Interaction.H3>
+                    <Field
+                      label='Betrag'
+                      value={this.state.duration}
+                      onChange={(_, value) => {
+                        if (value.match(/\D/)) {
+                          return
+                        }
+                        const numberValue = parseInt(value, 10)
+                        this.setState({ duration: numberValue })
+                      }}
+                      onInc={() =>
+                        this.setState({ duration: this.state.duration + 1 })
                       }
-                      const numberValue = parseInt(value, 10)
-                      this.setState({ duration: numberValue })
-                    }}
-                    onInc={() =>
-                      this.setState({ duration: this.state.duration + 1 })
-                    }
-                    onDec={ondec}
-                  />
-                  <Dropdown
-                    label='Einheit'
-                    items={durationUnits}
-                    value={this.state.durationUnit}
-                    onChange={(item) => {
-                      this.setState({ durationUnit: item.value })
-                    }}
-                  />
-                  <Button
-                    onClick={() => {
-                      mutation()
-                      this.setState({ showForm: false })
-                    }}
-                  >
-                    Speichern
-                  </Button>
-                </OverlayBody>
-              </Overlay>
-            )}
-          </>;
+                      onDec={ondec}
+                    />
+                    <Dropdown
+                      label='Einheit'
+                      items={durationUnits}
+                      value={this.state.durationUnit}
+                      onChange={(item) => {
+                        this.setState({ durationUnit: item.value })
+                      }}
+                    />
+                    <Button
+                      onClick={() => {
+                        mutation()
+                        this.setState({ showForm: false })
+                      }}
+                    >
+                      Speichern
+                    </Button>
+                  </OverlayBody>
+                </Overlay>
+              )}
+            </>
+          )
         }}
       </Mutation>
-    );
+    )
   }
 }
 

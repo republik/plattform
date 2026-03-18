@@ -1,16 +1,16 @@
+import { css, cx } from '@republik/theme/css'
 import { useState } from 'react'
-import { css, merge } from 'glamor'
 
-import { Label, A, colors } from '@project-r/styleguide'
+import { A, Label } from '@project-r/styleguide'
 
-import { displayDateTime } from '../Display/utils'
-import { tableStyles } from '../Tables/utils'
+import { displayDateTime } from '@/components/Display/utils'
+import { tableStyles } from '@/components/Tables/utils'
 
-import Mail from './Mail'
 import Address, { Bucket as AddressBucket } from './Address'
+import Mail from './Mail'
 
-import { MAILBOX_SELF } from '../../server/constants'
 import { IconCallReceived, IconError } from '@republik/icons'
+import { MAILBOX_SELF } from '@/server/constants'
 
 const self = MAILBOX_SELF?.split(',') ?? []
 
@@ -20,10 +20,10 @@ const styles = {
     marginRight: 5,
     marginBottom: '-0.2em',
     fontSize: '1.2em',
-    color: colors.text,
+    color: 'text',
   }),
   error: css({
-    color: colors.error,
+    color: 'error',
   }),
 }
 
@@ -35,9 +35,9 @@ export const Subject = ({ mail }) => {
 
   return (
     <>
-      {hasFrom && !isSelfSent && <IconCallReceived {...styles.icon} />}
+      {hasFrom && !isSelfSent && <IconCallReceived className={styles.icon} />}
       {mail.status !== 'sent' && mail.error && (
-        <IconError {...merge(styles.icon, styles.error)} />
+        <IconError className={cx(styles.icon, styles.error)} />
       )}
       {mail.subject || mail.template || mail.type}
     </>
@@ -62,18 +62,18 @@ const Row = ({ mail, narrow }) => {
   }
 
   return (
-    <tr key={mail.id} {...tableStyles.row}>
-      <td {...tableStyles.paddedCell}>
+    <tr key={mail.id} className={tableStyles.row}>
+      <td className={tableStyles.paddedCell}>
         <Date mail={mail} />
       </td>
-      <td {...tableStyles.paddedCell}>
+      <td className={tableStyles.paddedCell}>
         <A href={`/mailbox?mailId=${mail.id}`} target='_blank' onClick={show}>
           <Subject mail={mail} />
         </A>
         {showEmail && <Mail mail={mail} onClose={hide} />}
       </td>
       {!narrow && (
-        <td {...tableStyles.paddedCell}>
+        <td className={tableStyles.paddedCell}>
           {!!from && (
             <div>
               <Label>Von</Label> <Address address={from} />
@@ -91,7 +91,7 @@ const Row = ({ mail, narrow }) => {
 }
 
 const List = ({ nodes, narrow = false }) => (
-  <table {...tableStyles.table}>
+  <table className={tableStyles.table}>
     {!narrow ? (
       <colgroup>
         <col style={{ width: '15%' }} />

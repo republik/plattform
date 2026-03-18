@@ -1,6 +1,7 @@
 import { colors, A, Label, Field } from '@project-r/styleguide'
 
-import withDebouncedSearch from '../../Form/withDebouncedSearch'
+import withDebouncedSearch from '@/components/Form/withDebouncedSearch'
+import { css } from '@republik/theme/css'
 
 export default withDebouncedSearch(({ search, onSearch }) => {
   const onSearchFor = (prefix) => {
@@ -10,7 +11,7 @@ export default withDebouncedSearch(({ search, onSearch }) => {
   }
 
   return (
-    <div style={{ borderBottom: `1px solid ${colors.divider}` }}>
+    <div className={css({ borderBottom: `1px solid token(colors.divider)` })}>
       <div style={{ margin: '0 0 30px 0' }}>
         <Field
           label='Suche'
