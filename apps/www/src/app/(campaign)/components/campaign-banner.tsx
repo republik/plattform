@@ -12,11 +12,42 @@ import { IconExpandLess, IconExpandMore } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+const localStorageKey = 'republik-campaign-banner-is-open'
+const DEFAULT_IS_OPEN = true
+
+const getLocalIsOpen = (): boolean => {
+  if (typeof window === 'undefined') return DEFAULT_IS_OPEN
+  try {
+    return (
+      JSON.parse(window.localStorage.getItem(localStorageKey)) ??
+      DEFAULT_IS_OPEN
+    )
+  } catch (e) {
+    return DEFAULT_IS_OPEN
+  }
+}
+
+const setLocalIsOpen = (data) => {
+  try {
+    window.localStorage.setItem(localStorageKey, JSON.stringify(data))
+  } catch (e) {}
+}
 
 function CampaignBannerMd() {
   const trackEvent = useTrackEvent()
   const [open, setOpen] = useState(true)
+
+  useEffect(() => {
+    setOpen(getLocalIsOpen())
+  }, [])
+
+  function handleOpen(isOpen: boolean) {
+    setOpen(isOpen)
+    setLocalIsOpen(isOpen)
+  }
+
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
       <div
@@ -37,7 +68,7 @@ function CampaignBannerMd() {
             px: '15px',
           })}
         >
-          <RadixCollapsible.Root open={open} onOpenChange={setOpen}>
+          <RadixCollapsible.Root open={open} onOpenChange={handleOpen}>
             <RadixCollapsible.Trigger asChild>
               <button
                 className={css({
