@@ -51,6 +51,7 @@ function CampaignBannerMd({
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
       <div
+        data-theme='bright'
         className={css({
           backgroundColor: 'campaign26Background',
           color: 'campaign26',
@@ -112,29 +113,30 @@ function CampaignBannerMd({
                   mt: 8,
                   display: 'flex',
                   gap: 2,
+                  alignItems: 'center',
                 })}
               >
                 <p
                   className={css({
+                    maxWidth: '700px',
                     flexGrow: 1,
                     textAlign: 'left',
                     fontFamily: 'gtAmericaStandard',
                     fontWeight: 700,
-                    fontSize: '2xl',
+                    fontSize: '3xl',
                     lineHeight: '1.2',
                     mr: 'auto',
                   })}
                 >
                   Mit 2000 neuen Mitgliedern lösen wir 3 Versprechen ein.
                 </p>
-                <div className={css({ mt: 'auto' })}>
+                <div>
                   <Share
                     title='2000 neue Mitglieder, 3 Versprechen'
                     url={`${PUBLIC_BASE_URL}/2000`}
                     emailSubject='2000 neue Mitglieder, 3 Versprechen'
                   >
                     <Button
-                      size='large'
                       className={css({
                         background: 'campaign26Button',
                         color: 'white',
@@ -149,11 +151,11 @@ function CampaignBannerMd({
                     </Button>
                   </Share>
                 </div>
-                <div className={css({ mt: 'auto' })}>
+                <div>
                   <Link
                     href='//2000'
                     className={cx(
-                      button({ variant: 'outline', size: 'large' }),
+                      button({ variant: 'outline' }),
                       css({
                         color: 'campaign26',
                         outlineColor: 'campaign26RadioOutline',
@@ -184,6 +186,7 @@ function CampaignBanner({
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
       <div
+        data-theme='bright'
         className={css({
           backgroundColor: 'campaign26Background',
           color: 'campaign26',

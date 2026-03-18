@@ -10,7 +10,7 @@ const TARGET_MEMBERS = 2000
 function CampaignMembershipsCounter() {
   const { campaign, loading } = useCampaign()
   if (loading) return null
-  const members = campaign?.newMembers?.totalCount ?? 0
+  const members = campaign?.newMembers?.count ?? 0
   const progress = (members / TARGET_MEMBERS) * 100
 
   // TODO: emoji
