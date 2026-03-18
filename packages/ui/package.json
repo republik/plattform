@@ -25,10 +25,12 @@
   },
   "peerDependencies": {
     "@base-ui/react": "^1.3.0",
+    "lucide-react": "^0.563.0",
     "react": "^19.2.3"
   },
   "devDependencies": {
     "@base-ui/react": "^1.3.0",
+    "lucide-react": "^0.563.0",
     "react": "^19.2.3",
     "tsup": "^8.5.0"
   },

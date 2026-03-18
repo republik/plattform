@@ -1,5 +1,6 @@
 import { definePreset } from '@pandacss/dev'
 import { buttonRecipe } from '../src/recipes/button'
+import { dialogRecipe } from '../src/recipes/dialog'
 
 export const presetRepublik = definePreset({
   name: 'republik',
@@ -503,6 +504,10 @@ export const presetRepublik = definePreset({
 
     recipes: {
       button: buttonRecipe,
+    },
+
+    slotRecipes: {
+      dialog: dialogRecipe,
     },
 
     keyframes: {

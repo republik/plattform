@@ -1,17 +1,9 @@
 import { Button as BaseButton } from '@base-ui/react/button'
-import { button } from '@republik/theme/recipes'
 import type { ButtonVariantProps } from '@republik/theme/recipes'
-import type { ComponentPropsWithoutRef } from 'react'
+import { button } from '@republik/theme/recipes'
 
-type ButtonProps = ButtonVariantProps &
-  Omit<ComponentPropsWithoutRef<'button'>, keyof ButtonVariantProps>
+type ButtonProps = ButtonVariantProps & BaseButton.Props
 
-export function Button({ variant, size, className, ...props }: ButtonProps) {
-  const recipeClassName = button({ variant, size })
-  return (
-    <BaseButton
-      className={className ? `${recipeClassName} ${className}` : recipeClassName}
-      {...props}
-    />
-  )
+export function Button({ variant, size, ...props }: ButtonProps) {
+  return <BaseButton className={button({ variant, size })} {...props} />
 }
