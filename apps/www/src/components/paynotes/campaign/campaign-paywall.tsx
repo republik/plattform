@@ -76,7 +76,7 @@ function CampaignPaywall() {
           </ArticleSection>
           <ArticleSection
             className={css({
-              py: '6',
+              py: 8,
               background: 'campaign26.happyCherry',
               color: 'white',
               md: {
@@ -89,11 +89,11 @@ function CampaignPaywall() {
             <p
               className={css({
                 textStyle: 'airy',
-                mb: '4',
+                mb: 4,
                 md: { textStyle: 'heavy', mb: '6' },
               })}
             >
-              Wählen Sie Ihren Preis für das erste Jahr:
+              Ein Jahr Republik zum Preis Ihrer Wahl:
             </p>
             <div
               data-theme='bright'
@@ -117,10 +117,10 @@ function CampaignPaywall() {
             <p
               className={css({
                 textAlign: 'center',
-                mt: '2',
+                mt: 4,
                 md: {
                   textStyle: 'heavy',
-                  mt: '6',
+                  mt: 6,
                 },
               })}
             >
