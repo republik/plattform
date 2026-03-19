@@ -51,7 +51,6 @@ function CampaignBannerMd({
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
       <div
-        data-theme='bright'
         className={css({
           backgroundColor: 'campaign26Background',
           color: 'campaign26',
@@ -139,7 +138,7 @@ function CampaignBannerMd({
                   >
                     <Button
                       className={css({
-                        background: 'campaign26Button',
+                        background: 'campaign26.happyCherry',
                         color: 'white',
                       })}
                       onClick={() => {
@@ -274,7 +273,7 @@ function CampaignBanner({
               <Button
                 size='full'
                 className={css({
-                  background: 'campaign26Button',
+                  background: 'campaign26.happyCherry',
                   color: 'white',
                   mb: 2,
                 })}
