@@ -61,13 +61,6 @@ function isPaynoteOverlayHidden(
     pathname === '/meine-republik' ||
     pathname === '/probelesen' ||
     pathname === '/community' ||
-    pathname === '/format/jobs' ||
-    pathname ===
-      '/2026/02/09/stellenausschreibung-junior-community-relationship-manager-support-und-moderation' ||
-    pathname ===
-      '/2026/02/09/stellenausschreibung-audience-development-manager-social' ||
-    pathname ===
-      '/2025/04/30/trainee-unternehmensmanagement-fokus-hr-und-finanzen' ||
     searchParams.has('extract') ||
     searchParams.has('extractId')
   )
