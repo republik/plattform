@@ -88,12 +88,6 @@ export default class UserForm extends Component {
     this.submitHandler = (event) => {
       event.preventDefault()
       if (this.props.onSubmit) {
-        console.log({
-          ...cleanUser(this.state.user.values),
-          ...{
-            address: this.state.address.values,
-          },
-        })
         this.props.onSubmit({
           ...cleanUser(this.state.user.values),
           ...{
