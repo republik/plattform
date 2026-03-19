@@ -34,7 +34,7 @@ enum AudioSourceKind {
   podcast
   readAloud
   syntheticReadAloud
-} 
+}
 
 type Podcast {
   podigeeSlug: String
@@ -52,7 +52,7 @@ enum PaynoteMode {
   button
   trialForm
   noPaynote
-} 
+}
 
 type Contributor {
   name: String!
@@ -64,7 +64,7 @@ type Crop {
   x: Int
   y: Int
   width: Int
-  height: Int 
+  height: Int
 }
 
 type Meta {
@@ -129,14 +129,16 @@ type Meta {
   indicateChart: Boolean
   indicateGallery: Boolean
   indicateVideo: Boolean
-  
+
   paynotes: [JSON]
   paynoteMode: PaynoteMode
-  
+
   sendAsEmail: Boolean
 
-  # article is excluded from paywall
+  # Article is excluded from paywall
   isPaywallExcluded: Boolean
+  # Article is excluded from paynote (Störer)
+  isPaynoteExcluded: Boolean
 }
 
 enum DocumenSchemaType {

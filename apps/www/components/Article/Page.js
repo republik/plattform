@@ -75,8 +75,12 @@ const ArticlePage = ({
   const { share, extract, showAll } = router.query
 
   const { me, meLoading, isEditor } = useMe()
-  const { paynoteKind, setTemplateForPaynotes, setIsPaywallExcluded } =
-    usePaynotes()
+  const {
+    paynoteKind,
+    setTemplateForPaynotes,
+    setIsPaywallExcluded,
+    setIsPaynoteExcluded,
+  } = usePaynotes()
   const hasPaywall = paynoteKind === 'PAYWALL' || paynoteKind === 'REGWALL'
 
   const { isAudioQueueAvailable } = useAudioQueue()
@@ -209,23 +213,38 @@ const ArticlePage = ({
 
   // is true if the article or the format are paywall excluded
   const isPaywallExcluded = meta?.isPaywallExcluded
+  // is true if the article or the format are paynote (Störer) excluded
+  const isPaynoteExcluded = meta?.isPaynoteExcluded
   useEffect(() => {
     const resetPaynotes = () => {
       // console.log('resetPaynotes')
       setTemplateForPaynotes(null)
       setIsPaywallExcluded(false)
+      setIsPaynoteExcluded(false)
     }
     if (hasMeta) {
       // console.log('set template for paynotes', template)
       setTemplateForPaynotes(isSeriesOverview ? 'seriesOverview' : template)
       setIsPaywallExcluded(isPaywallExcluded)
+      setIsPaynoteExcluded(isPaynoteExcluded)
       // we use router events so that the reset happens before the pathname changes
       router.events.on('routeChangeStart', resetPaynotes)
     }
     return () => {
       router.events.off('routeChangeStart', resetPaynotes)
     }
-  }, [template, isSeriesOverview, isPaywallExcluded, hasMeta, cleanedPath])
+  }, [
+    template,
+    isSeriesOverview,
+    isPaywallExcluded,
+    isPaynoteExcluded,
+    setIsPaywallExcluded,
+    setIsPaynoteExcluded,
+    setTemplateForPaynotes,
+    router.events,
+    hasMeta,
+    cleanedPath,
+  ])
 
   const isArticle = template === 'article'
   const isEditorialNewsletter = template === 'editorialNewsletter'

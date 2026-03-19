@@ -41,6 +41,11 @@ const createFormatSchema = ({
         ref: 'bool',
       },
       {
+        label: 'Störer ausschalten',
+        key: 'isPaynoteExcluded',
+        ref: 'bool',
+      },
+      {
         label: 'Ebene',
         key: 'kind',
         items: [
