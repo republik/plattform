@@ -154,7 +154,7 @@ function CampaignBannerMd({
                 </div>
                 <div>
                   <Link
-                    href='//2000'
+                    href='/2000'
                     className={cx(
                       button({ variant: 'outline' }),
                       css({
