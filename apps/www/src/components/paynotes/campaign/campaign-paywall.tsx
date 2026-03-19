@@ -1,5 +1,5 @@
-import CampaignMembershipsCounter from '@app/app/(campaign)/components/campaign-memberships-counter'
-import { Offers } from '@app/app/(campaign)/components/campaign-offers'
+import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
+import { Offers } from '@app/app/kampagne/components/campaign-offers'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import Login from '@app/components/paynotes/regwall/login'
 import { ArticleSection } from '@app/components/ui/section'
@@ -69,7 +69,9 @@ function CampaignPaywall() {
                   fontWeight: 700,
                 })}
               >
-                <Link href='/2000'>3 Versprechen</Link>
+                <Link href='/kampagne/2000-mitglieder-3-versprechen'>
+                  3 Versprechen
+                </Link>
               </span>{' '}
               ein.
             </p>

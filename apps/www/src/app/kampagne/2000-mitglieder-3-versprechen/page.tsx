@@ -1,5 +1,5 @@
-import CampaignMembershipsCounter from '@app/app/(campaign)/components/campaign-memberships-counter'
-import { Offers } from '@app/app/(campaign)/components/campaign-offers'
+import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
+import { Offers } from '@app/app/kampagne/components/campaign-offers'
 import { Logo } from '@app/components/layout/header/logo'
 import { Share } from '@app/components/share/share'
 import { Button } from '@app/components/ui/button'
@@ -93,7 +93,7 @@ export default async function Page() {
               </p>
               <Share
                 title='2000 neue Mitglieder, 3 Versprechen'
-                url={`${PUBLIC_BASE_URL}/2000`}
+                url={`${PUBLIC_BASE_URL}/kampagne/2000-mitglieder-3-versprechen`}
                 emailSubject='2000 neue Mitglieder, 3 Versprechen'
               >
                 <Button

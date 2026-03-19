@@ -1,6 +1,6 @@
 'use client'
 
-import CampaignMembershipsCounter from '@app/app/(campaign)/components/campaign-memberships-counter'
+import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import { Share } from '@app/components/share/share'
 import { Button } from '@app/components/ui/button'
@@ -133,7 +133,7 @@ function CampaignBannerMd({
                 <div>
                   <Share
                     title='2000 neue Mitglieder, 3 Versprechen'
-                    url={`${PUBLIC_BASE_URL}/2000`}
+                    url={`${PUBLIC_BASE_URL}/kampagne/2000-mitglieder-3-versprechen`}
                     emailSubject='2000 neue Mitglieder, 3 Versprechen'
                   >
                     <Button
@@ -153,7 +153,7 @@ function CampaignBannerMd({
                 </div>
                 <div>
                   <Link
-                    href='/2000'
+                    href='/kampagne/2000-mitglieder-3-versprechen'
                     className={cx(
                       button({ variant: 'outline' }),
                       css({
@@ -186,7 +186,6 @@ function CampaignBanner({
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
       <div
-        data-theme='bright'
         className={css({
           backgroundColor: 'campaign26Background',
           color: 'campaign26',
@@ -252,7 +251,7 @@ function CampaignBanner({
             })}
           >
             <Link
-              href='/2000'
+              href='/kampagne/2000-mitglieder-3-versprechen'
               className={css({
                 textDecoration: 'underline',
                 cursor: 'pointer',
@@ -267,7 +266,7 @@ function CampaignBanner({
             </div>
             <Share
               title='2000 neue Mitglieder, 3 Versprechen'
-              url={`${PUBLIC_BASE_URL}/2000`}
+              url={`${PUBLIC_BASE_URL}/kampagne/2000-mitglieder-3-versprechen`}
               emailSubject='2000 neue Mitglieder, 3 Versprechen'
             >
               <Button

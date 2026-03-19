@@ -1,4 +1,4 @@
-import CampaignBanner from '@app/app/(campaign)/components/campaign-banner'
+import CampaignBanner from '@app/app/kampagne/components/campaign-banner'
 
 import {
   colors,

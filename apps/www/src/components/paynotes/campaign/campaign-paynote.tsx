@@ -1,4 +1,4 @@
-import CampaignMembershipsCounter from '@app/app/(campaign)/components/campaign-memberships-counter'
+import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
@@ -72,7 +72,7 @@ function CampaignPaynote() {
             </p>
             <div className={css({ textAlign: 'center', ml: 'auto' })}>
               <Link
-                href='/2000'
+                href='/kampagne/2000-mitglieder-3-versprechen'
                 className={cx(
                   button(),
                   css({
