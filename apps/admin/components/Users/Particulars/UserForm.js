@@ -14,15 +14,6 @@ const isDirty = (state) =>
     !state.dirty ? false : !!state.dirty[fieldName],
   )
 
-const cleanAddress = ({ name, line1, line2, postalCode, city, country }) => ({
-  name,
-  line1,
-  line2,
-  postalCode,
-  city,
-  country,
-})
-
 const cleanUser = ({
   id,
   name,
@@ -97,16 +88,10 @@ export default class UserForm extends Component {
     this.submitHandler = (event) => {
       event.preventDefault()
       if (this.props.onSubmit) {
-        console.log({
-          ...cleanUser(this.state.user.values),
-          ...{
-            address: cleanAddress(this.state.address.values),
-          },
-        })
         this.props.onSubmit({
           ...cleanUser(this.state.user.values),
           ...{
-            address: cleanAddress(this.state.address.values),
+            address: this.state.address.values,
           },
         })
       }

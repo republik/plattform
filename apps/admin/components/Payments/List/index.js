@@ -100,6 +100,7 @@ const paymentsQuery = gql`
           lastName
           address {
             id
+            companyName
             name
             line1
             line2
