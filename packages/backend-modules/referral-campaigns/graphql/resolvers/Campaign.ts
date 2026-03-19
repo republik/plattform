@@ -3,7 +3,7 @@ import type { Campaign } from '../types'
 import { PGReferralsRepo } from '../../lib/repo'
 
 export = {
-  async referrals(campaign: Campaign, _args: any, ctx: GraphqlContext) {
+  async referrals(campaign: Campaign, _args: never, ctx: GraphqlContext) {
     const referralCount =
       (await new PGReferralsRepo(ctx.pgdb).getCampaignReferralCount(
         campaign.id,
