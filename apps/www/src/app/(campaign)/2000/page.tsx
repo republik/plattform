@@ -206,8 +206,9 @@ export default async function Page() {
                 Schulen
               </h3>
               <p>
-                Wir stellen die Republik an Schweizer Schulen der Sekundarstufe
-                I und II kostenlos zur Verfügung.
+                Wir stellen die Republik an Schweizer Schulen der
+                Oberstufenschulen, Gymnasien und Berufsschulen kostenlos zur
+                Verfügung.
               </p>
             </JournalismPromise>
             <JournalismPromise count={3}>
