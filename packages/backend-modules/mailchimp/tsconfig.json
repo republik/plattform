@@ -17,6 +17,6 @@
     "__tests__",
     "build",
     "./build/**/*",
-    "./build/@types/**/*"
+    "./build/@types/**/*",
   ]
 }

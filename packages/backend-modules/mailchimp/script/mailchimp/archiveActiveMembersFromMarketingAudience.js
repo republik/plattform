@@ -21,7 +21,7 @@ const fs = require('fs')
 const csvParser = require('csv-parser')
 const yargs = require('yargs')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
-const MailchimpInterface = require('../../MailchimpInterface')
+const MailchimpInterface = require('../../build/MailchimpInterface').default
 
 const argv = yargs
   .option('file', {
@@ -60,7 +60,7 @@ async function parseCsv(readStream) {
     }),
   )
   for await (const row of stream) {
-    const email = row['email address']
+    const email = row['email address'] ?? row['e-mail-adresse']
     if (email) {
       emails.push(email.toLowerCase().trim())
     }
