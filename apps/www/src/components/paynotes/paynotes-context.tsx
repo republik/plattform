@@ -37,7 +37,7 @@ type PaynotesContextValues = {
   paynoteKind: PaynoteKindType
   setTemplateForPaynotes: (template: TemplateType) => void
   setIsPaywallExcluded: (isExcluded: boolean) => void
-  setIsPanoteExcluded: (isExcluded: boolean) => void
+  setIsPaynoteExcluded: (isExcluded: boolean) => void
   paynoteInlineHeight: number
   setPaynoteInlineHeight: (height: number) => void
 }
