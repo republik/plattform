@@ -67,6 +67,7 @@ const GET_PLEDGES = gql`
         }
         shippingAddress {
           id
+          companyName
           name
           line1
           line2
