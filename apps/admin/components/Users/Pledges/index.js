@@ -132,7 +132,11 @@ const PledgeCard = ({ pledge, ...props }) => {
           <>
             <br />
             <Label>
-              Lieferadresse: {shippingAddress.name}, {shippingAddress.city}
+              Lieferadresse:{' '}
+              {shippingAddress.companyName
+                ? `${shippingAddress.companyName}, `
+                : ''}
+              {shippingAddress.name}, {shippingAddress.city}
             </Label>
           </>
         )}
@@ -176,6 +180,9 @@ const PledgeDetails = ({ userId, pledge, ...props }) => {
           {shippingAddress && (
             <>
               <DT>Lieferadresse</DT>
+              {shippingAddress.companyName && (
+                <DD>{shippingAddress.companyName}</DD>
+              )}
               <DD>{shippingAddress.name}</DD>
               <DD>{shippingAddress.line1}</DD>
               {shippingAddress.line2 && <DD>{shippingAddress.line2}</DD>}

@@ -14,7 +14,16 @@ const isDirty = (state) =>
     !state.dirty ? false : !!state.dirty[fieldName],
   )
 
-const cleanAddress = ({ name, line1, line2, postalCode, city, country }) => ({
+const cleanAddress = ({
+  companyName,
+  name,
+  line1,
+  line2,
+  postalCode,
+  city,
+  country,
+}) => ({
+  companyName,
   name,
   line1,
   line2,
