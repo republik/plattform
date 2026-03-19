@@ -19,28 +19,43 @@
  */
 
 import { existsSync, createReadStream } from 'fs'
+import { createHash } from 'crypto'
 import csvParser from 'csv-parser'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 import env from '@orbiting/backend-modules-env'
 import PgDb from '@orbiting/backend-modules-base/lib/PgDb.js'
-import mailchimpModule from '../../build/MailchimpInterface.js'
 
 env.config()
 
-const MailchimpInterface = mailchimpModule.default ?? mailchimpModule
+const { MAILCHIMP_API_KEY, MAILCHIMP_URL, MAILCHIMP_MARKETING_AUDIENCE_ID } =
+  process.env
 
-const argv = await yargs(hideBin(process.argv))
-  .option('file', {
-    description: 'Path to Mailchimp audience export CSV (omit to read from stdin)',
-    type: 'string',
+function authHeader() {
+  return (
+    'Basic ' + Buffer.from(`anystring:${MAILCHIMP_API_KEY}`).toString('base64')
+  )
+}
+
+function subscriberHash(email) {
+  return createHash('md5').update(email.toLowerCase()).digest('hex')
+}
+
+async function mailchimpFetch(method, path, body) {
+  return fetch(`${MAILCHIMP_URL}/3.0${path}`, {
+    method,
+    headers: { Authorization: authHeader() },
+    ...(body && { body: JSON.stringify(body) }),
   })
-  .option('dry-run', {
-    description: 'Preview without making changes',
-    default: true,
-    type: 'boolean',
-  })
-  .parseAsync()
+}
+
+async function archiveMember(email, audienceId) {
+  const res = await mailchimpFetch(
+    'DELETE',
+    `/lists/${audienceId}/members/${subscriberHash(email)}`,
+  )
+  return res.status < 400
+}
 
 const ACTIVE_MEMBERS_SQL = `
   WITH users_with_membership_data AS (
@@ -73,9 +88,21 @@ async function parseCsv(readStream) {
   return emails
 }
 
+const argv = await yargs(hideBin(process.argv))
+  .option('file', {
+    description:
+      'Path to Mailchimp audience export CSV (omit to read from stdin)',
+    type: 'string',
+  })
+  .option('dry-run', {
+    description: 'Preview without making changes',
+    default: true,
+    type: 'boolean',
+  })
+  .parseAsync()
+
 const { file, dryRun } = argv
 
-const { MAILCHIMP_MARKETING_AUDIENCE_ID } = process.env
 if (!MAILCHIMP_MARKETING_AUDIENCE_ID) {
   console.error('MAILCHIMP_MARKETING_AUDIENCE_ID is not set')
   process.exit(1)
@@ -107,17 +134,18 @@ try {
   const toArchive = csvEmails.filter((email) => activeEmails.has(email))
 
   if (dryRun) {
-    console.log(`DRY RUN — ${toArchive.length} emails would be archived:`)
+    console.log(
+      `DRY RUN — no changes made. E-Mails to be archived: ${toArchive.length}`,
+    )
     toArchive.forEach((email) => console.log(` ${email}`))
     process.exit(0)
   }
 
-  const mailchimp = MailchimpInterface({ logger: console })
   let succeeded = 0
   let failed = 0
 
   for (const email of toArchive) {
-    const ok = await mailchimp.archiveMember(email, MAILCHIMP_MARKETING_AUDIENCE_ID)
+    const ok = await archiveMember(email, MAILCHIMP_MARKETING_AUDIENCE_ID)
     if (ok) {
       console.log(`Archived: ${email}`)
       succeeded++
