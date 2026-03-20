@@ -3,17 +3,22 @@
 import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
 import * as Progress from '@radix-ui/react-progress'
 import { css } from '@republik/theme/css'
-import React from 'react' // TODO: get real numbers
+import React, { useEffect } from 'react' // TODO: get real numbers
 
 const TARGET_MEMBERS = 2000
 
 function CampaignMembershipsCounter() {
-  const { campaign, loading } = useCampaign()
-  if (loading) return null
-  const members = campaign?.newMembers?.count ?? 0
-  const progress = (members / TARGET_MEMBERS) * 100
+  const { campaign } = useCampaign()
+  const [members, setMembers] = React.useState(0)
+  const [progress, setProgress] = React.useState(0)
 
-  // TODO: emoji
+  useEffect(() => {
+    const count = campaign?.newMembers?.count ?? 0
+    setMembers(count)
+    setProgress((count / TARGET_MEMBERS) * 100)
+  }, [campaign, setMembers, setProgress])
+
+  // TODO: emoji (+ confetti?)
   // const isSuccess = members >= TARGET_MEMBERS
 
   return (
@@ -41,6 +46,7 @@ function CampaignMembershipsCounter() {
             borderRadius: '1000px',
             width: '100%',
             height: '100%',
+            transition: 'transform 660ms cubic-bezier(0.65, 0, 0.35, 1)',
           })}
           style={{ transform: `translateX(-${100 - progress}%)` }}
         />

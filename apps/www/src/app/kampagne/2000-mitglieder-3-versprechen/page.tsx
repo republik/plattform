@@ -196,8 +196,10 @@ export default async function Page() {
                 })}
               >
                 <iframe
-                  src='https://player.vimeo.com/video/613729649'
+                  src='https://player.vimeo.com/video/1175425419?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479'
                   frameBorder='0'
+                  allow='autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share'
+                  title='Frühlingskampagne 2026'
                 ></iframe>
               </div>
             </JournalismPromise>
@@ -249,8 +251,10 @@ export default async function Page() {
               })}
             >
               <iframe
-                src='https://player.vimeo.com/video/613729649'
+                src='https://player.vimeo.com/video/1175425419?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479'
                 frameBorder='0'
+                allow='autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share'
+                title='Frühlingskampagne 2026'
               ></iframe>
             </div>
           </div>
