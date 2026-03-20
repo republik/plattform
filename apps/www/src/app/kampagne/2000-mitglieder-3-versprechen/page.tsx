@@ -254,52 +254,54 @@ export default async function Page() {
           </div>
         </ArticleSection>
       </div>
-      <div
-        data-theme='dark'
-        className={css({
-          background: 'campaign26Background',
-          color: 'campaign26',
-        })}
-      >
-        <ArticleSection
+      {!hasActiveMembership && (
+        <div
+          data-theme='dark'
           className={css({
-            py: '8',
-            md: { pt: '12' },
+            background: 'campaign26Background',
+            color: 'campaign26',
           })}
         >
-          <h3
+          <ArticleSection
             className={css({
-              textStyle: 'campaignSubhead',
-              color: 'campaign26.happyCherry',
-              mb: '6',
+              py: '8',
+              md: { pt: '12' },
             })}
           >
-            Diese 3 Versprechen lösen wir ein, wenn wir bis zum 14. April unser
-            Ziel von 2000 neuen Mitgliedern erreichen. Machen Sie mit?
-          </h3>
-          <p
-            className={css({
-              textStyle: 'airy',
-              mb: '6',
-            })}
-          >
-            Ein Jahr Republik zum Preis Ihrer Wahl:
-          </p>
-          <Offers
-            additionalShopParams={{
-              rep_ui_component: 'campaign-paywall',
-            }}
-          />
-          <p
-            className={css({
-              textAlign: 'center',
-              mt: '6',
-            })}
-          >
-            Jederzeit kündbar
-          </p>
-        </ArticleSection>
-      </div>
+            <h3
+              className={css({
+                textStyle: 'campaignSubhead',
+                color: 'campaign26.happyCherry',
+                mb: '6',
+              })}
+            >
+              Diese 3 Versprechen lösen wir ein, wenn wir bis zum 14. April
+              unser Ziel von 2000 neuen Mitgliedern erreichen. Machen Sie mit?
+            </h3>
+            <p
+              className={css({
+                textStyle: 'airy',
+                mb: '6',
+              })}
+            >
+              Ein Jahr Republik zum Preis Ihrer Wahl:
+            </p>
+            <Offers
+              additionalShopParams={{
+                rep_ui_component: 'campaign-paywall',
+              }}
+            />
+            <p
+              className={css({
+                textAlign: 'center',
+                mt: '6',
+              })}
+            >
+              Jederzeit kündbar
+            </p>
+          </ArticleSection>
+        </div>
+      )}
     </>
   )
 }
