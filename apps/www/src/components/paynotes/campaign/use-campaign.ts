@@ -1,6 +1,6 @@
 import { CampaignReferralsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { CAMPAIGN_SLUG } from '@app/app/(campaign)/campaign-config'
+import { CAMPAIGN_SLUG } from '@app/app/kampagne/campaign-config'
 
 export function useCampaign() {
   const { data, loading } = useQuery(CampaignReferralsDocument, {
