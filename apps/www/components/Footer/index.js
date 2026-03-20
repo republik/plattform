@@ -165,7 +165,10 @@ const Footer = ({ t, me, signOut, hasActiveMembership }) => {
           <FooterNavLink href='/'>
             <a>
               <div {...styles.logo}>
-                <Logo {...colorScheme.set('fill', 'text')} height={20} />
+                <Logo
+                  {...colorScheme.set('fill', 'text')}
+                  style={{ height: 20, width: 'auto' }}
+                />
                 <span
                   {...colorScheme.set('color', 'textSoft')}
                   {...styles.since}

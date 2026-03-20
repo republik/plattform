@@ -11,15 +11,10 @@ const {
 const { v4: uuid } = require('uuid')
 const mergeCustomers = require('../../../lib/payments/stripe/mergeCustomers')
 const cache = require('../../../lib/cache')
+const { mergeUsersOnMailchimp } = require('@orbiting/backend-modules-mailchimp')
 
 module.exports = async (_, args, context) => {
-  const {
-    pgdb,
-    redis,
-    req,
-    t,
-    mail: { changeEmailOnMailchimp },
-  } = context
+  const { pgdb, redis, req, t } = context
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const { targetUserId, sourceUserId } = args
@@ -315,9 +310,9 @@ module.exports = async (_, args, context) => {
     await transaction.transactionCommit()
 
     try {
-      await changeEmailOnMailchimp({
-        user: sourceUser,
-        newEmail: targetUser.email,
+      await mergeUsersOnMailchimp({
+        sourceUserEmail: sourceUser.email,
+        targetUserEmail: targetUser.email,
       })
     } catch (e) {
       context.logger.error(

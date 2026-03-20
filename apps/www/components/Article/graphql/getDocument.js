@@ -74,9 +74,13 @@ export const getDocument = gql`
         }
         color
         contributors {
+          name
           kind
           user {
             id
+            username
+            slug
+            profileUrls
           }
         }
         isPaywallExcluded

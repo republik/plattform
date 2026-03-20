@@ -1,11 +1,11 @@
 'use client'
 
-import {
-  NewsletterName,
-  UpdateNewsletterSubscriptionDocument,
-} from '#graphql/republik-api/__generated__/gql/graphql'
+import { UpdateNewsletterSubscriptionDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
-import { NL_STYLE } from '@app/components/newsletters/config'
+import {
+  type NewsletterName,
+  NL_STYLE,
+} from '@app/components/newsletters/config'
 import { Button } from '@app/components/ui/button'
 import { Spinner } from '@app/components/ui/spinner'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'

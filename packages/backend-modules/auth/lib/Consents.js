@@ -1,4 +1,6 @@
+const { t } = require('@orbiting/backend-modules-translate')
 const { newAuthError } = require('./AuthError')
+
 const MissingConsentsError = newAuthError(
   'missing-consents',
   'api/consents/missing',
@@ -18,6 +20,7 @@ const VALID_POLICIES = [
   'NEWSLETTER_WDWWW',
   'NEWSLETTER_SUNDAY',
   'NEWSLETTER_BAB',
+  'NEWSLETTER_TECH',
 ]
 
 const REVOKABLE_POLICIES = [
@@ -31,6 +34,7 @@ const REVOKABLE_POLICIES = [
   'NEWSLETTER_WDWWW',
   'NEWSLETTER_SUNDAY',
   'NEWSLETTER_BAB',
+  'NEWSLETTER_TECH',
 ]
 
 const getAllConsentRecords = ({ userId, pgdb }) =>
@@ -106,7 +110,7 @@ const ensureAllRequiredConsents = async (args) => {
   }
 }
 
-const saveConsents = async ({ userId, consents = [], req, pgdb, t }) => {
+const saveConsents = async ({ userId, consents = [], req, pgdb }) => {
   if (!consents.every((consent) => VALID_POLICIES.includes(consent))) {
     throw new Error(
       t('api/consents/notValid', { consent: consents.join(', ') }),
@@ -129,7 +133,7 @@ const saveConsents = async ({ userId, consents = [], req, pgdb, t }) => {
 }
 
 const revokeConsent = async ({ userId, consent }, context) => {
-  const { req, pgdb, t } = context
+  const { req, pgdb } = context
   if (!REVOKABLE_POLICIES.includes(consent)) {
     throw new Error(t('api/consents/notRevokable', { consent: consent }))
   }

@@ -151,4 +151,5 @@ export type MailchimpContact = {
   status: MemberStatus
   merge_fields: object
   interests: UserInterests
+  tags: { id: number; name: string }[]
 }

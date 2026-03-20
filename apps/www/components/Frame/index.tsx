@@ -166,7 +166,6 @@ const Frame = ({
         >
           {!!meta && <Meta data={meta} />}
           <Header
-            me={me}
             cover={cover}
             secondaryNav={secondaryNav}
             formatColor={formatColor}

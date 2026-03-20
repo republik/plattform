@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import { css } from 'glamor'
-import { serifRegular16 } from '../../Typography/styles'
+import { sansSerifRegular16 } from '../../Typography/styles'
 import { convertStyleToRem, pxToRem } from '../../Typography/utils'
 import { useColorContext } from '../../Colors/ColorContext'
 
 const styles = {
   root: css({
-    ...convertStyleToRem(serifRegular16),
+    ...convertStyleToRem(sansSerifRegular16),
     display: 'flex',
     alignItems: 'center',
     padding: '8px',

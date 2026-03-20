@@ -4,7 +4,10 @@ import { css } from 'glamor'
 import Textarea from 'react-textarea-autosize'
 import scrollIntoView from 'scroll-into-view'
 import { mBreakPoint } from '../../../theme/mediaQueries'
-import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
+import {
+  sansSerifRegular12,
+  sansSerifRegular16,
+} from '../../Typography/styles'
 
 import { Header, Tags, Actions, Error } from '../Internal/Composer'
 import { convertStyleToRem } from '../../Typography/utils'
@@ -31,7 +34,7 @@ const styles = {
     border: 'none',
     outline: 'none',
     boxSizing: 'border-box',
-    ...convertStyleToRem(serifRegular16),
+    ...convertStyleToRem(sansSerifRegular16),
   }),
   textAreaLimit: css({
     paddingBottom: '28px',

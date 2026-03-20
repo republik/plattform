@@ -1,9 +1,10 @@
-import {
-  NewsletterName,
-  NewsletterSettingsDocument,
-} from '#graphql/republik-api/__generated__/gql/graphql'
+import { NewsletterSettingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { NL_FEATURED, NL_MORE } from '@app/components/newsletters/config'
+import {
+  type NewsletterName,
+  NL_FEATURED,
+  NL_MORE,
+} from '@app/components/newsletters/config'
 import { css } from '@republik/theme/css'
 import NewslettersSection from './newsletters-section'
 import { NewslettersStatus } from './newsletters-status'
