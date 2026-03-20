@@ -17,8 +17,7 @@ export function ShareNative({
   const postMessage = usePostMessage()
   const trackEvent = useTrackEvent()
   return (
-    <div
-      role='button'
+    <button
       className={css({ textAlign: 'left' })}
       onClick={(e) => {
         e.preventDefault()
@@ -36,6 +35,6 @@ export function ShareNative({
       }}
     >
       {triggerLabel}
-    </div>
+    </button>
   )
 }

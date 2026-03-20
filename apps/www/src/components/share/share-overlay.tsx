@@ -128,9 +128,7 @@ export function ShareOverlay({
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <div role='button' className={css({ textAlign: 'left' })}>
-          {triggerLabel}
-        </div>
+        <button className={css({ textAlign: 'left' })}>{triggerLabel}</button>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay

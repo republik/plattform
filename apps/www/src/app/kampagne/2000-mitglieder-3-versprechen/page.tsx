@@ -2,10 +2,10 @@ import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-me
 import { Offers } from '@app/app/kampagne/components/campaign-offers'
 import { Logo } from '@app/components/layout/header/logo'
 import { Share } from '@app/components/share/share'
-import { Button } from '@app/components/ui/button'
 import { ArticleSection } from '@app/components/ui/section'
 import { getMe } from '@app/lib/auth/me'
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
+import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
 import { PUBLIC_BASE_URL } from '../../../../lib/constants'
 
@@ -96,16 +96,18 @@ export default async function Page() {
                 url={`${PUBLIC_BASE_URL}/kampagne/2000-mitglieder-3-versprechen`}
                 emailSubject='2000 neue Mitglieder, 3 Versprechen'
               >
-                <Button
-                  size='full'
-                  className={css({
-                    background: 'campaign26Button',
-                    color: 'white',
-                    mb: 2,
-                  })}
+                <span
+                  className={cx(
+                    button({ size: 'full' }),
+                    css({
+                      background: 'campaign26Button',
+                      color: 'white',
+                      mb: 2,
+                    }),
+                  )}
                 >
                   Weitersagen
-                </Button>
+                </span>
               </Share>
             </>
           ) : (

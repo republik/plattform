@@ -3,7 +3,6 @@
 import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import { Share } from '@app/components/share/share'
-import { Button } from '@app/components/ui/button'
 import {
   EventTrackingContext,
   useTrackEvent,
@@ -136,19 +135,17 @@ function CampaignBannerMd({
                     url={`${PUBLIC_BASE_URL}/kampagne/2000-mitglieder-3-versprechen`}
                     emailSubject='2000 neue Mitglieder, 3 Versprechen'
                   >
-                    <Button
-                      className={css({
-                        background: 'campaign26.happyCherry',
-                        color: 'white',
-                      })}
-                      onClick={() => {
-                        trackEvent({
-                          action: 'open share overlay',
-                        })
-                      }}
+                    <span
+                      className={cx(
+                        button(),
+                        css({
+                          background: 'campaign26.happyCherry',
+                          color: 'white',
+                        }),
+                      )}
                     >
                       Weitersagen
-                    </Button>
+                    </span>
                   </Share>
                 </div>
                 <div>
@@ -264,27 +261,26 @@ function CampaignBanner({
             <div className={css({ my: 6 })}>
               <CampaignMembershipsCounter />
             </div>
-            <Share
-              title='2000 neue Mitglieder, 3 Versprechen'
-              url={`${PUBLIC_BASE_URL}/kampagne/2000-mitglieder-3-versprechen`}
-              emailSubject='2000 neue Mitglieder, 3 Versprechen'
-            >
-              <Button
-                size='full'
-                className={css({
-                  background: 'campaign26.happyCherry',
-                  color: 'white',
-                  mb: 2,
-                })}
-                onClick={() => {
-                  trackEvent({
-                    action: 'open share overlay',
-                  })
-                }}
+            <div className={css({ display: 'flex', flexDirection: 'column' })}>
+              <Share
+                title='2000 neue Mitglieder, 3 Versprechen'
+                url={`${PUBLIC_BASE_URL}/kampagne/2000-mitglieder-3-versprechen`}
+                emailSubject='2000 neue Mitglieder, 3 Versprechen'
               >
-                Weitersagen
-              </Button>
-            </Share>
+                <span
+                  className={cx(
+                    button({ size: 'full' }),
+                    css({
+                      background: 'campaign26.happyCherry',
+                      color: 'white',
+                      mb: 2,
+                    }),
+                  )}
+                >
+                  Weitersagen
+                </span>
+              </Share>
+            </div>
           </RadixCollapsible.Content>
         </RadixCollapsible.Root>
       </div>
