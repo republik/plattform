@@ -77,13 +77,11 @@ const ArticlePage = ({
 
   const { me, meLoading, isEditor } = useMe()
   const {
-    paynoteKind,
     hasPaywall,
     setTemplateForPaynotes,
     setIsPaywallExcluded,
     setIsPaynoteExcluded,
   } = usePaynotes()
-  const hasPaywall = paynoteKind === 'PAYWALL' || paynoteKind === 'REGWALL'
 
   const { isAudioQueueAvailable } = useAudioQueue()
 
