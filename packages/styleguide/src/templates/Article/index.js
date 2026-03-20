@@ -118,6 +118,11 @@ const createSchema = ({
       ref: 'bool',
     },
     {
+      label: 'Störer ausschalten',
+      key: 'isPaynoteExcluded',
+      ref: 'bool',
+    },
+    {
       label: 'Bildergalerie aktiv',
       key: 'gallery',
       ref: 'bool',

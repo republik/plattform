@@ -45,6 +45,7 @@ type PaynotesContextValues = {
   hasPaywall?: boolean
   setTemplateForPaynotes: (template: TemplateType) => void
   setIsPaywallExcluded: (isExcluded: boolean) => void
+  setIsPaynoteExcluded: (isExcluded: boolean) => void
   paynoteInlineHeight: number
   setPaynoteInlineHeight: (height: number) => void
 }
@@ -68,13 +69,6 @@ function isPaynoteOverlayHidden(
     pathname === '/meine-republik' ||
     pathname === '/probelesen' ||
     pathname === '/community' ||
-    pathname === '/format/jobs' ||
-    pathname ===
-      '/2026/02/09/stellenausschreibung-junior-community-relationship-manager-support-und-moderation' ||
-    pathname ===
-      '/2026/02/09/stellenausschreibung-audience-development-manager-social' ||
-    pathname ===
-      '/2025/04/30/trainee-unternehmensmanagement-fokus-hr-und-finanzen' ||
     searchParams.has('extract') ||
     searchParams.has('extractId')
   )
@@ -109,6 +103,7 @@ export const PaynotesProvider = ({ children }) => {
   const [template, setTemplateForPaynotes] = useState<TemplateType>(null)
 
   const [isPaywallExcluded, setIsPaywallExcluded] = useState<boolean>(false)
+  const [isPaynoteExcluded, setIsPaynoteExcluded] = useState<boolean>(false)
 
   useEffect(() => {})
 
@@ -136,7 +131,7 @@ export const PaynotesProvider = ({ children }) => {
     // ANYTHING THAT'S NOT AN ARTICLE:
     //
     // special pages without any paynote
-    if (isPaynoteOverlayHidden(pathname, searchParams)) {
+    if (isPaynoteExcluded || isPaynoteOverlayHidden(pathname, searchParams)) {
       return setPaynoteKind(null)
     }
     // dialog page: we show a special paynote
@@ -228,6 +223,7 @@ export const PaynotesProvider = ({ children }) => {
     isSearchBot,
     template,
     isPaywallExcluded,
+    isPaynoteExcluded,
     isCampaignActive,
     hasAllowlistAccess,
   ])
@@ -241,6 +237,7 @@ export const PaynotesProvider = ({ children }) => {
         hasPaywall: PAYWALL_KINDS.includes(paynoteKind),
         setTemplateForPaynotes,
         setIsPaywallExcluded,
+        setIsPaynoteExcluded,
         paynoteInlineHeight,
         setPaynoteInlineHeight,
       }}

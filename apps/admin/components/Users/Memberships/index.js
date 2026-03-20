@@ -31,6 +31,7 @@ import Link from 'next/link'
 import MoveMembership from './MoveMembership'
 import CancelMembership from './CancelMembership'
 import ReactivateMembership from './ReactivateMembership'
+import ActivateMembership from './ActivateMembership'
 import ResetMembership from './ResetMembership'
 import AppendPeriod from './AppendPeriod'
 import { MagazineSubscriptions } from './MagazineSubscriptions'
@@ -409,6 +410,18 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                       ]}
                     />
                   ),
+                !membership.active && (
+                  <ActivateMembership
+                    key='ActivateMembership'
+                    membership={membership}
+                    refetchQueries={() => [
+                      {
+                        query: GET_MEMBERSHIPS,
+                        variables: { userId },
+                      },
+                    ]}
+                  />
+                ),
                 membership.canReset && (
                   <ResetMembership
                     key='ResetMembership'

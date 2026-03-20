@@ -1,0 +1,20 @@
+mutation UpdateNewsletterSubscriptionWithMac(
+  $name: String!
+  $subscribed: Boolean!
+  $email: String!
+  $mac: String!
+  $consents: [String!]
+) {
+  updateNewsletterSubscription(
+    name: $name
+    subscribed: $subscribed
+    email: $email
+    mac: $mac
+    consents: $consents
+  ) {
+    id
+    name
+    subscribed
+    isEligible
+  }
+}

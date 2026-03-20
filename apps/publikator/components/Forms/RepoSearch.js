@@ -62,7 +62,9 @@ export const filterRepos = gql`
               shareLogo
               shareBackgroundImage
               shareBackgroundImageInverted
-              sendAsEmail
+              newsletter {
+                name
+              }
               format {
                 id
                 repoId
