@@ -674,7 +674,7 @@
     },
     {
       "key": "metaData/tts/voice2/dropdown",
-      "value": "Secondäre synthetische Stimme (optional)"
+      "value": "Sekundäre synthetische Stimme (optional)"
     },
     {
       "key": "metaData/tts/voice/warning",
