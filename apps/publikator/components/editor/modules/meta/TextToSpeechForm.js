@@ -69,8 +69,9 @@ const DeprecatedVoiceWarning = ({ voice }) => {
   }
   return (
     <Label>
-      Die gewählte Stimme &#34;{voice}&#34; ist veraltet – kann aber für
-      Korrekturen usw. weiterhin verwendet werden.
+      Die für diesen Beitrag gewählte Stimme &#34;{voice}&#34; ist veraltet.
+      Korrekturen und andere kleine Anpassungen können aber weiterhin
+      vorgenommen werden, ohne dass mit einer neuen Stimme vertont werden muss.
     </Label>
   )
 }
