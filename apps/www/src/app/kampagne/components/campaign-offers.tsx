@@ -89,8 +89,8 @@ export function Offers({
         {DISCOUNT_OPTIONS.map(({ promoCode, amount, highlighted }) => {
           return (
             <OfferOptionLabelOnly
-              key={promoCode}
-              name='promo_code'
+              key={promoCode || 'no-discount'}
+              name={promoCode ? 'promo_code' : undefined}
               value={promoCode}
               checked={selectedPromoCode === promoCode}
               onChange={() => {
