@@ -17,12 +17,12 @@ const VoiceOption = ({ text, description }) => {
   const [colorScheme] = useColorContext()
 
   return (
-    <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
       <span>{text}</span>
       <small style={{ color: colorScheme.getCSSColor('textSoft') }}>
         {description}
       </small>
-    </span>
+    </div>
   )
 }
 
@@ -59,6 +59,22 @@ const VOICES = [
   },
 ]
 
+const isDeprecatedVoice = (voice) => {
+  return !VOICES.find((v) => v.value === voice)
+}
+
+const DeprecatedVoiceWarning = ({ voice }) => {
+  if (!isDeprecatedVoice(voice)) {
+    return null
+  }
+  return (
+    <Label>
+      Die gewählte Stimme &#34;{voice}&#34; ist veraltet – kann aber für
+      Korrekturen usw. weiterhin verwendet werden.
+    </Label>
+  )
+}
+
 export default withT(({ t, editor, node, onInputChange }) => {
   const voice = node.data.get('syntheticVoice')
   const voice2 = node.data.get('syntheticVoice2')
@@ -77,33 +93,39 @@ export default withT(({ t, editor, node, onInputChange }) => {
       </MetaOption>
 
       <div style={{ marginBottom: 40 }}>
-        <Dropdown
-          label={t('metaData/tts/voice/dropdown')}
-          value={voice}
-          items={VOICES}
-          onChange={(item) => {
-            editor.change((change) => {
-              change.setNodeByKey(node.key, {
-                data: node.data.set('syntheticVoice', item.value),
+        <div>
+          <Dropdown
+            label={t('metaData/tts/voice/dropdown')}
+            value={voice}
+            items={VOICES}
+            onChange={(item) => {
+              editor.change((change) => {
+                change.setNodeByKey(node.key, {
+                  data: node.data.set('syntheticVoice', item.value),
+                })
               })
-            })
-          }}
-        ></Dropdown>
+            }}
+          ></Dropdown>
+        </div>
+        <DeprecatedVoiceWarning voice={voice} />
       </div>
 
       <div style={{ marginBottom: 60 }}>
-        <Dropdown
-          label={t('metaData/tts/voice2/dropdown')}
-          value={voice2}
-          items={VOICES}
-          onChange={(item) => {
-            editor.change((change) => {
-              change.setNodeByKey(node.key, {
-                data: node.data.set('syntheticVoice2', item.value),
+        <div>
+          <Dropdown
+            label={t('metaData/tts/voice2/dropdown')}
+            value={voice2}
+            items={VOICES}
+            onChange={(item) => {
+              editor.change((change) => {
+                change.setNodeByKey(node.key, {
+                  data: node.data.set('syntheticVoice2', item.value),
+                })
               })
-            })
-          }}
-        ></Dropdown>
+            }}
+          ></Dropdown>
+        </div>
+        <DeprecatedVoiceWarning voice={voice2} />
       </div>
       <Label>{t('metaData/tts/voice/warning')}</Label>
     </MetaSection>
