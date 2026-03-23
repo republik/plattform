@@ -178,8 +178,8 @@ export default async function Page() {
                 Erstwählerinnen
               </h3>
               <p>
-                Wir verschenken ein Jahresabo der Republik an Menschen, die zum
-                ersten Mal abstimmen oder wählen.
+                Wir verschenken ein Jahr Republik an Menschen, die zum ersten
+                Mal abstimmen oder wählen.
               </p>
               <div
                 className={css({
@@ -210,9 +210,8 @@ export default async function Page() {
                 Schulen
               </h3>
               <p>
-                Wir stellen die Republik an Schweizer Schulen der
-                Oberstufenschulen, Gymnasien und Berufsschulen kostenlos zur
-                Verfügung.
+                Wir stellen die Republik an Schweizer Oberstufenschulen,
+                Gymnasien und Berufsschulen kostenlos zur Verfügung.
               </p>
             </JournalismPromise>
             <JournalismPromise count={3}>
