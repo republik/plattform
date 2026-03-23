@@ -11,8 +11,8 @@ export const DEFAULT_COUNTRY = COUNTRIES[0]
 
 export const fields = (t) => [
   {
-    label: t('Account/AddressForm/companyName/label'),
-    name: 'companyName',
+    label: t('Account/AddressForm/organization/label'),
+    name: 'organization',
     autoComplete: 'organization',
   },
   {
@@ -71,7 +71,7 @@ export const fields = (t) => [
 
 export const isEmptyAddress = (values, me) => {
   const addressString = [
-    values.companyName,
+    values.organization,
     values.name,
     values.line1,
     values.line2,
@@ -101,7 +101,7 @@ export const AddressView = ({ values }) => {
     <Interaction.P>
       {intersperse(
         [
-          values.companyName,
+          values.organization,
           values.name,
           values.line1,
           values.line2,

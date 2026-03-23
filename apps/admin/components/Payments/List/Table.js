@@ -115,7 +115,7 @@ const Table = ({ items, sort, onSort, ...props }) => {
               <td>
                 {address &&
                   [
-                    address.companyName,
+                    address.organization,
                     name !== address.name && address.name,
                     address.line1,
                     address.line2,

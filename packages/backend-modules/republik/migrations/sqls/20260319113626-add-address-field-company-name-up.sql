@@ -1,3 +1,3 @@
 ALTER TABLE "addresses"
-  ADD COLUMN "companyName" text
+  ADD COLUMN "organization" text
 ;

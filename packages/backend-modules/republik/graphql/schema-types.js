@@ -101,7 +101,7 @@ type UserConnection {
 
 type Address {
   id: ID!
-  companyName: String
+  organization: String
   name: String
   line1: String!
   line2: String
@@ -113,7 +113,7 @@ type Address {
 }
 
 input AddressInput {
-  companyName: String
+  organization: String
   name: String!
   line1: String!
   line2: String

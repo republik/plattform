@@ -647,7 +647,7 @@
       "value": "Ihre Adresse"
     },
     {
-      "key": "Account/AddressForm/companyName/label",
+      "key": "Account/AddressForm/organization/label",
       "value": "Firma (optional)"
     },
     {
@@ -3927,7 +3927,7 @@
       "value": "Ihre Adresse"
     },
     {
-      "key": "me/addressForm/companyName/label",
+      "key": "me/addressForm/organization/label",
       "value": "Firma (optional)"
     },
     {

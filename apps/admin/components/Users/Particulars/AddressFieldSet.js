@@ -5,8 +5,8 @@ export const COUNTRIES = ['Schweiz', 'Deutschland', 'Österreich']
 
 export const fields = (t) => [
   {
-    label: t('me/addressForm/companyName/label'),
-    name: 'companyName',
+    label: t('me/addressForm/organization/label'),
+    name: 'organization',
   },
   {
     label: t('me/addressForm/name/label'),

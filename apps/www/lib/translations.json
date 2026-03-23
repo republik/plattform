@@ -657,7 +657,7 @@
       "value": "Ihre Adresse"
     },
     {
-      "key": "Account/AddressForm/companyName/label",
+      "key": "Account/AddressForm/organization/label",
       "value": "Firma (optional)"
     },
     {
