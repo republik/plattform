@@ -670,11 +670,11 @@
     },
     {
       "key": "metaData/tts/voice/dropdown",
-      "value": "Synthetische Stimme auswählen"
+      "value": "Synthetische Stimme"
     },
     {
       "key": "metaData/tts/voice2/dropdown",
-      "value": "Secondäre synthetische Stimme auswählen (optional)"
+      "value": "Secondäre synthetische Stimme (optional)"
     },
     {
       "key": "metaData/tts/voice/warning",
