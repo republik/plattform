@@ -288,9 +288,9 @@ export class UpgradeService {
   ) {
     const localSub = await this.getSubscription(subscriptionId)
 
-    Auth.Roles.userIsMeOrInRoles({ id: localSub?.userId }, actor, [
+    Auth.Roles.ensureUserIsMeOrInRoles({ id: localSub?.userId }, actor, [
       'admin',
-      'support',
+      'supporter',
     ])
 
     return localSub

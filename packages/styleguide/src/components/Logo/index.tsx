@@ -18,7 +18,7 @@ type LogoProps = {
 const Logo = (props: LogoProps) => {
   return (
     <svg {...props} width={162} height={24} viewBox={VIEWBOX}>
-      <path fill={props.fill} d={PATH} />
+      <path fill={props.fill || 'var(--color-logo)'} d={PATH} />
     </svg>
   )
 }
