@@ -677,6 +677,10 @@
       "value": "Sekundäre synthetische Stimme (optional)"
     },
     {
+      "key": "metaData/tts/deprecated",
+      "value": "Die für diesen Beitrag gewählte Stimme “{voice}” ist veraltet. Korrekturen und andere kleine Anpassungen können aber weiterhin vorgenommen werden, ohne dass mit einer neuen Stimme vertont werden muss."
+    },
+    {
       "key": "metaData/tts/voice/warning",
       "value": "⚠️ Achtung, Budget-Warnung! Falls schon eine Audio-Version erzeugt wurde, führt das Ändern der ausgewählten synthetischen Stimme dazu, dass eine ganz neue Audio-Version generiert wird (die dann auch nochmal voll berechnet wird)."
     },

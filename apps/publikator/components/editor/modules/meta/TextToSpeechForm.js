@@ -63,18 +63,12 @@ const isDeprecatedVoice = (voice) => {
   return !VOICES.find((v) => v.value === voice)
 }
 
-const DeprecatedVoiceWarning = ({ voice }) => {
+const DeprecatedVoiceWarning = withT(({ voice, t }) => {
   if (!isDeprecatedVoice(voice)) {
     return null
   }
-  return (
-    <Label>
-      Die für diesen Beitrag gewählte Stimme &#34;{voice}&#34; ist veraltet.
-      Korrekturen und andere kleine Anpassungen können aber weiterhin
-      vorgenommen werden, ohne dass mit einer neuen Stimme vertont werden muss.
-    </Label>
-  )
-}
+  return <Label>{t('metaData/tts/deprecated', { voice })}</Label>
+})
 
 export default withT(({ t, editor, node, onInputChange }) => {
   const voice = node.data.get('syntheticVoice')
