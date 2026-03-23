@@ -64,7 +64,7 @@ const isDeprecatedVoice = (voice) => {
 }
 
 const DeprecatedVoiceWarning = withT(({ voice, t }) => {
-  if (!isDeprecatedVoice(voice)) {
+  if (!voice || !isDeprecatedVoice(voice)) {
     return null
   }
   return <Label>{t('metaData/tts/deprecated', { voice })}</Label>
