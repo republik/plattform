@@ -14,6 +14,25 @@ const isDirty = (state) =>
     !state.dirty ? false : !!state.dirty[fieldName],
   )
 
+// Removes extra fields from address object which are not accepted by the AddressInput type
+const cleanAddress = ({
+  organization,
+  name,
+  line1,
+  line2,
+  postalCode,
+  city,
+  country,
+}) => ({
+  organization,
+  name,
+  line1,
+  line2,
+  postalCode,
+  city,
+  country,
+})
+
 const cleanUser = ({
   id,
   name,
@@ -91,7 +110,7 @@ export default class UserForm extends Component {
         this.props.onSubmit({
           ...cleanUser(this.state.user.values),
           ...{
-            address: this.state.address.values,
+            address: cleanAddress(this.state.address.values),
           },
         })
       }
