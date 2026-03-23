@@ -657,21 +657,22 @@
       "value": "Ihre Adresse"
     },
     {
+      "key": "Account/AddressForm/organization/label",
+      "value": "Firma (optional)"
+    },
+    {
       "key": "Account/AddressForm/name/label",
-      "value": "Eindeutige Anschrift"
+      "value": "Ihr Name"
     },
     {
       "key": "Account/AddressForm/name/error/empty",
-      "value": "Eindeutige Anschrift fehlt"
+      "value": "Ihr Name fehlt"
     },
     {
       "key": "Account/AddressForm/name/error/tooLong",
       "value": "Ihr Name, maximal {maxLength} Zeichen"
     },
-    {
-      "key": "Account/AddressForm/name/explanation",
-      "value": "Ihr Name für Postsendungen, falls nötig mit c/o."
-    },
+
     {
       "key": "Account/AddressForm/line1/label",
       "value": "Strasse und Hausnummer"
@@ -687,6 +688,10 @@
     {
       "key": "Account/AddressForm/line2/label",
       "value": "Zusatz (optional)"
+    },
+    {
+      "key": "Account/AddressForm/line2/explanation",
+      "value": "Postfach, Stockwerk, Gebäude etc."
     },
     {
       "key": "Account/AddressForm/postalCode/label",
