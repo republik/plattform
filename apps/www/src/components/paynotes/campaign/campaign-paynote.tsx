@@ -45,6 +45,7 @@ function CampaignPaynote() {
                 display: 'flex',
                 alignItems: 'top',
                 mt: 8,
+                gap: 4,
               },
             })}
           >
@@ -64,7 +65,7 @@ function CampaignPaynote() {
                 },
               })}
             >
-              Mit 2000 neuen Mitgliedern lösen wir 3 Versprechen ein.{' '}
+              Mit 2000&nbsp;neuen Mitgliedern lösen wir 3&nbsp;Versprechen ein.{' '}
               <br
                 className={css({ display: 'none', lg: { display: 'initial' } })}
               />

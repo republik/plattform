@@ -61,8 +61,8 @@ function CampaignPaywall() {
                 textStyle: 'heavy',
               })}
             >
-              Bis 14. April: Wenn wir 2000 neue Mitglieder finden, dann lösen
-              wir{' '}
+              Bis 14.&nbsp;April: Wenn wir 2000&nbsp;neue Mitglieder finden,
+              dann lösen wir{' '}
               <span
                 className={css({
                   textDecoration: 'underline',
@@ -70,7 +70,7 @@ function CampaignPaywall() {
                 })}
               >
                 <Link href='/kampagne/2000-mitglieder-3-versprechen'>
-                  3 Versprechen
+                  3&nbsp;Versprechen
                 </Link>
               </span>{' '}
               ein.

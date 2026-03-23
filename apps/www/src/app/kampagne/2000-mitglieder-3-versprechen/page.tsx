@@ -78,7 +78,7 @@ export default async function Page() {
               md: { mb: '4' },
             })}
           >
-            Mit 2000 neuen Mitgliedern lösen wir 3 Versprechen ein.
+            Mit 2000&nbsp;neuen Mitgliedern lösen wir 3&nbsp;Versprechen ein.
           </h2>
           {hasActiveMembership ? (
             <>
@@ -89,7 +89,8 @@ export default async function Page() {
                 })}
               >
                 Mit Ihrer Hilfe erreichen wir unser Ziel: Erzählen Sie Ihren
-                Freundinnen und Bekannten bis zum 14. April von unserem Angebot!
+                Freundinnen und Bekannten bis zum 14.&nbsp;April von unserem
+                Angebot!
               </p>
               <Share
                 title='2000 neue Mitglieder, 3 Versprechen'
@@ -119,7 +120,7 @@ export default async function Page() {
                   md: { textStyle: 'heavy', mb: '6' },
                 })}
               >
-                Kommen Sie bis zum 14. April an Bord.
+                Kommen Sie bis zum 14.&nbsp;April an Bord.
               </p>
               <p
                 className={css({
@@ -221,7 +222,7 @@ export default async function Page() {
                 Freunde
               </h3>
               <p>
-                Wer bis zum 14. April an Bord kommt, darf eine Freundin
+                Wer bis zum 14.&nbsp;April an Bord kommt, darf eine Freundin
                 kostenlos für drei Monate neu zur Republik einladen.
               </p>
             </JournalismPromise>
@@ -280,8 +281,9 @@ export default async function Page() {
                 mb: '6',
               })}
             >
-              Diese 3 Versprechen lösen wir ein, wenn wir bis zum 14. April
-              unser Ziel von 2000 neuen Mitgliedern erreichen. Machen Sie mit?
+              Diese 3&nbsp;Versprechen lösen wir ein, wenn wir bis zum
+              14.&nbsp;April unser Ziel von 2000&nbsp;neuen Mitgliedern
+              erreichen. Machen Sie mit?
             </h3>
             <p
               className={css({

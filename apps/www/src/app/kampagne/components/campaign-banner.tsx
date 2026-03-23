@@ -217,8 +217,8 @@ function CampaignBanner({
                       lineHeight: '1.2',
                     })}
                   >
-                    Mit 2000 neuen Mitgliedern an Bord lösen wir 3 Versprechen
-                    ein.
+                    Mit 2000&nbsp;neuen Mitgliedern an Bord lösen wir
+                    3&nbsp;Versprechen ein.
                   </span>
                 ) : (
                   <CampaignMembershipsCounter />
