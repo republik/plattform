@@ -35,6 +35,7 @@ const radioContainerStyle = css({
   color: 'campaign26RadioText',
   cursor: 'pointer',
   position: 'relative',
+  userSelect: 'none',
   _peerChecked: {
     background: 'campaign26RadioChecked',
     borderColor: 'campaign26RadioChecked',
