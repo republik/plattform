@@ -133,6 +133,7 @@ export function ShareOverlay({
       <Dialog.Portal>
         <Dialog.Overlay
           className={css({
+            zIndex: 100,
             position: 'fixed',
             inset: '0',
             display: 'grid',
