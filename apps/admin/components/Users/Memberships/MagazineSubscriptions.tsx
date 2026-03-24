@@ -80,7 +80,7 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
                   className={css({
                     padding: '4',
                     '&:nth-child(odd)': {
-                      background: 'overlay',
+                      background: 'hover',
                     },
                   })}
                 >
