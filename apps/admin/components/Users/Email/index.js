@@ -1,26 +1,21 @@
-import { Component } from 'react'
-import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
+import { Mutation, Query } from '@apollo/client/react/components'
+import { Component } from 'react'
+
+import { InlineSpinner, Loader } from '@project-r/styleguide'
 
 import {
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
-  Loader,
-  InlineSpinner,
-} from '@project-r/styleguide'
-
-import {
-  InteractiveSection,
-  SectionMenu,
+  DD,
   DL,
   DT,
-  DD,
+  InteractiveSection,
+  SectionMenu,
   TextButton,
 } from '@/components/Display/utils'
 
-import EmailForm from './EmailForm'
 import { IconEdit } from '@republik/icons'
+import { SimpleDialog } from '@republik/ui'
+import EmailForm from './EmailForm'
 
 const GET_EMAIL = gql`
   query user($id: String) {
@@ -109,19 +104,20 @@ export default class Email extends Component {
                         <IconEdit size={28} />
                       </TextButton>
                     </SectionMenu>
-                    {isOpen && (
-                      <Overlay onClose={this.closeHandler}>
-                        <OverlayToolbar onClose={this.closeHandler} />
-                        <OverlayBody>
-                          <UpdateEmail
-                            user={user}
-                            onSubmit={(promise) =>
-                              promise.then(this.closeHandler)
-                            }
-                          />
-                        </OverlayBody>
-                      </Overlay>
-                    )}
+                    <SimpleDialog
+                      title={'E-Mail-Adresse bearbeiten'}
+                      open={isOpen}
+                      onOpenChange={(open) => {
+                        if (!open) {
+                          this.closeHandler()
+                        }
+                      }}
+                    >
+                      <UpdateEmail
+                        user={user}
+                        onSubmit={(promise) => promise.then(this.closeHandler)}
+                      />
+                    </SimpleDialog>
                   </InteractiveSection>
                 )
               }}

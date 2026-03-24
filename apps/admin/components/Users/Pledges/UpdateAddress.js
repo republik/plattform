@@ -1,19 +1,13 @@
-import { Component, Fragment } from 'react'
-import { Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
+import { Mutation } from '@apollo/client/react/components'
+import { Component, Fragment } from 'react'
 
-import {
-  Button,
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
-  Loader,
-  FieldSet,
-} from '@project-r/styleguide'
+import { Button, FieldSet, Loader } from '@project-r/styleguide'
 
 import { TextButton } from '@/components/Display/utils'
 
 import AddressFieldSet from '@/components/Users/Particulars/AddressFieldSet'
+import { SimpleDialog } from '@republik/ui'
 
 const MUTATION = gql`
   mutation updateAddress($id: ID!, $address: AddressInput!) {
@@ -77,28 +71,31 @@ export default class UpdateAddress extends Component {
           <Mutation mutation={MUTATION}>
             {(mutate, { loading, error }) => {
               return (
-                <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar onClose={this.closeHandler} />
-                  <OverlayBody>
-                    <Loader
-                      loading={loading}
-                      error={error}
-                      render={() => (
-                        <Fragment>
-                          <AddressFieldSet
-                            onChange={(fields) => {
-                              this.setState(FieldSet.utils.mergeFields(fields))
-                            }}
-                            {...this.state}
-                          />
-                          <Button primary onClick={this.submitHandler(mutate)}>
-                            ändern
-                          </Button>
-                        </Fragment>
-                      )}
-                    />
-                  </OverlayBody>
-                </Overlay>
+                <SimpleDialog
+                  onOpenChangeComplete={(open) => {
+                    if (!open) {
+                      this.closeHandler()
+                    }
+                  }}
+                >
+                  <Loader
+                    loading={loading}
+                    error={error}
+                    render={() => (
+                      <Fragment>
+                        <AddressFieldSet
+                          onChange={(fields) => {
+                            this.setState(FieldSet.utils.mergeFields(fields))
+                          }}
+                          {...this.state}
+                        />
+                        <Button primary onClick={this.submitHandler(mutate)}>
+                          ändern
+                        </Button>
+                      </Fragment>
+                    )}
+                  />
+                </SimpleDialog>
               )
             }}
           </Mutation>

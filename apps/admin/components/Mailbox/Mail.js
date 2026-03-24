@@ -2,16 +2,10 @@ import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
 import { css, cx } from '@republik/theme/css'
 
-import {
-  A,
-  Label,
-  Loader,
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
-} from '@project-r/styleguide'
+import { A, Label, Loader } from '@project-r/styleguide'
 
 import { displayDateTime } from '@/components/Display/utils'
+import { SimpleDialog } from '@republik/ui'
 import Address, { Bucket as AddressBucket } from './Address'
 import { fragments } from './utils'
 
@@ -126,12 +120,9 @@ const Mail = (props) => {
   const { mail, onClose } = props
 
   return (
-    <Overlay onClose={onClose}>
-      <OverlayToolbar onClose={onClose} />
-      <OverlayBody>
-        <Body mail={mail} />
-      </OverlayBody>
-    </Overlay>
+    <SimpleDialog open title='E-Mail' onClose={onClose}>
+      <Body mail={mail} />
+    </SimpleDialog>
   )
 }
 

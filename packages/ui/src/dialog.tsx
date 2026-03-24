@@ -31,7 +31,7 @@ export function SimpleDialog({
 }: PropsWithChildren<
   {
     title: ReactNode
-    trigger: ReactNode
+    trigger?: ReactNode
   } & BaseDialog.Root.Props
 >) {
   return (

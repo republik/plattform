@@ -1,25 +1,17 @@
+import {
+  DD,
+  DT,
+  Section,
+  SectionSubhead,
+  SectionTitle,
+  dateDiff,
+  displayDate,
+} from '@/components/Display/utils'
+import List, { Item } from '@/components/List'
 import { gql, useMutation } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
-import {
-  Section,
-  SectionTitle,
-  displayDate,
-  SectionSubhead,
-  DT,
-  DD,
-  dateDiff,
-} from '@/components/Display/utils'
-import {
-  Loader,
-  Label,
-  Button,
-  Field,
-  Overlay,
-  OverlayToolbar,
-  OverlayBody,
-  Dropdown,
-} from '@project-r/styleguide'
-import List, { Item } from '@/components/List'
+import { Button, Dropdown, Field, Label, Loader } from '@project-r/styleguide'
+import { SimpleDialog } from '@republik/ui'
 import { useState } from 'react'
 
 const GET_SUSPENSIONS = gql`
@@ -138,62 +130,57 @@ const SuspendActions = ({ userId, isSuspended }) => {
   if (showSuspensionFields) {
     return (
       <>
-        <Overlay
-          onClose={() => {
-            resetDialogForm()
+        <SimpleDialog
+          title='Sperren'
+          open
+          onOpenChangeComplete={(open) => {
+            if (!open) {
+              resetDialogForm()
+            }
           }}
         >
-          <OverlayToolbar
-            title='Sperren'
-            onClose={() => {
+          <Field
+            label='Sperrung für'
+            value={intervalAmount.value}
+            error={intervalAmount.dirty && intervalAmount.error}
+            dirty={intervalAmount.dirty}
+            onChange={(_, value, shouldValidate) => {
+              handleIntervalAmount(value, shouldValidate)
+            }}
+          />
+          <Dropdown
+            label=''
+            value={interval}
+            items={SUSPENSION_INTERVALS}
+            onChange={(item) => {
+              setInterval(item.value)
+            }}
+          ></Dropdown>
+          <Field
+            label='Grund für die Sperrung (kann für Nutzerin sichtbar sein)'
+            value={reason}
+            onChange={(e) => {
+              setReason(e.currentTarget.value)
+            }}
+          ></Field>
+          <Button
+            primary
+            disabled={intervalAmount.error}
+            onClick={() => {
+              suspendUser()
+            }}
+          >
+            Sperren
+          </Button>
+          <Button
+            naked
+            onClick={() => {
               resetDialogForm()
             }}
-          ></OverlayToolbar>
-
-          <OverlayBody>
-            <Field
-              label='Sperrung für'
-              value={intervalAmount.value}
-              error={intervalAmount.dirty && intervalAmount.error}
-              dirty={intervalAmount.dirty}
-              onChange={(_, value, shouldValidate) => {
-                handleIntervalAmount(value, shouldValidate)
-              }}
-            />
-            <Dropdown
-              label=''
-              value={interval}
-              items={SUSPENSION_INTERVALS}
-              onChange={(item) => {
-                setInterval(item.value)
-              }}
-            ></Dropdown>
-            <Field
-              label='Grund für die Sperrung (kann für Nutzerin sichtbar sein)'
-              value={reason}
-              onChange={(e) => {
-                setReason(e.currentTarget.value)
-              }}
-            ></Field>
-            <Button
-              primary
-              disabled={intervalAmount.error}
-              onClick={() => {
-                suspendUser()
-              }}
-            >
-              Sperren
-            </Button>
-            <Button
-              naked
-              onClick={() => {
-                resetDialogForm()
-              }}
-            >
-              Abbrechen
-            </Button>
-          </OverlayBody>
-        </Overlay>
+          >
+            Abbrechen
+          </Button>
+        </SimpleDialog>
       </>
     )
   }

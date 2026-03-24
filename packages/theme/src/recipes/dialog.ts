@@ -13,12 +13,15 @@ export const dialogRecipe = defineSlotRecipe({
       '&[data-starting-style], &[data-ending-style]': {
         opacity: '0',
       },
+      zIndex: 50,
     },
     viewport: {
       position: 'fixed',
       inset: '0',
       display: 'grid',
       placeContent: 'center',
+      p: '4',
+      zIndex: 50,
     },
     popup: {
       position: 'relative',
@@ -26,8 +29,8 @@ export const dialogRecipe = defineSlotRecipe({
       borderRadius: '5px',
       shadow: 'sm',
       p: '6',
-      maxW: 'narrow',
-      w: 'full',
+      maxW: 'viewportWidth',
+      w: 'center',
       overflow: 'auto',
       outline: 'none',
       transition: 'opacity 200ms ease-in-out, translate 200ms ease-in-out',
@@ -47,8 +50,8 @@ export const dialogRecipe = defineSlotRecipe({
     },
     close: {
       position: 'absolute',
-      top: '2',
-      right: '2',
+      top: '6',
+      right: '6',
     },
   },
   staticCss: [{}],

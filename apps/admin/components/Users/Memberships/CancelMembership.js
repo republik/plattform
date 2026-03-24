@@ -1,21 +1,19 @@
-import { Component, Fragment } from 'react'
-import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
+import { Mutation, Query } from '@apollo/client/react/components'
+import { Component, Fragment } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
 
 import {
   Button,
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
-  Interaction,
-  Radio,
   Checkbox,
   Field,
+  Interaction,
   Loader,
+  Radio,
 } from '@project-r/styleguide'
 
 import { TextButton, displayDate } from '@/components/Display/utils'
+import { SimpleDialog } from '@republik/ui'
 
 const GET_CANCELLATION_CATEGORIES = gql`
   query cancellationCategories {
@@ -136,120 +134,122 @@ export default class CancelPledge extends Component {
           >
             {(cancelPledge, { loading, error }) => {
               return (
-                <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar onClose={this.closeHandler} />
-                  <OverlayBody>
-                    <Query query={GET_CANCELLATION_CATEGORIES}>
-                      {({
-                        loading: queryLoading,
-                        error: queryError,
-                        data: queryData,
-                      }) => {
-                        const { cancellationCategories } = queryData || {}
-                        return (
-                          <Loader
-                            loading={loading || queryLoading}
-                            error={error || queryError}
-                            render={() => (
-                              <Fragment>
-                                <Interaction.H2>
-                                  {isEditing
-                                    ? 'Kündigung editieren'
-                                    : 'Membership canceln'}
-                                </Interaction.H2>
-                                <br />
-                                <Interaction.P>
-                                  #{membership.sequenceNumber} –{' '}
-                                  {membership.type.name.split('_').join(' ')} –{' '}
-                                  {displayDate(membership.createdAt)} –{' '}
-                                  {(!!membership.renew && 'ACTIVE') ||
-                                    'INACTIVE'}
-                                </Interaction.P>
-                                {membership.periods.map((period, i) => (
-                                  <span key={`period-${i}`}>
-                                    {displayDate(period.beginDate)}
-                                    {' - '}
-                                    {displayDate(period.endDate)}
-                                  </span>
-                                ))}
-                                <br />
-                                {cancellationCategories &&
-                                  cancellationCategories.map(
-                                    ({ type, label }) => (
-                                      <Interaction.P key={type}>
-                                        <Radio
-                                          value={cancellationType}
-                                          checked={cancellationType === type}
-                                          onChange={() =>
-                                            this.setState({
-                                              cancellationType: type,
-                                            })
-                                          }
-                                        >
-                                          {label}
-                                        </Radio>
-                                      </Interaction.P>
-                                    ),
-                                  )}
-                                <Field
-                                  value={reason}
-                                  label={'Erläuterungen'}
-                                  onChange={this.reasonChangeHandler}
-                                  renderInput={(props) => (
-                                    <TextareaAutosize
-                                      {...props}
-                                      style={{ lineHeight: '30px' }}
-                                    />
-                                  )}
-                                />
-                                <p>
-                                  <Checkbox
-                                    checked={this.state.immediately}
-                                    onChange={this.immediatelyChangeHandler}
-                                    disabled={isEditing}
-                                  >
-                                    Sofort canceln
-                                  </Checkbox>
-                                </p>
-                                <p>
-                                  <Checkbox
-                                    checked={this.state.suppressConfirmation}
-                                    onChange={
-                                      this.suppressConfirmationChangeHandler
-                                    }
-                                    disabled={isEditing}
-                                  >
-                                    Kündigungsbestätigung unterdrücken
-                                  </Checkbox>
-                                </p>
-                                <p>
-                                  <Checkbox
-                                    checked={this.state.suppressWinback}
-                                    onChange={this.suppressWinbackChangeHandler}
-                                    disabled={
-                                      cancellation &&
-                                      (cancellation.winbackSentAt ||
-                                        !cancellation.winbackCanBeSent)
-                                    }
-                                  >
-                                    Winback unterdrücken
-                                  </Checkbox>
-                                </p>
-                                <Button
-                                  primary
-                                  disabled={!cancellationType}
-                                  onClick={this.submitHandler(cancelPledge)}
+                <SimpleDialog
+                  onOpenChangeComplete={(open) => {
+                    if (!open) {
+                      this.closeHandler()
+                    }
+                  }}
+                >
+                  <Query query={GET_CANCELLATION_CATEGORIES}>
+                    {({
+                      loading: queryLoading,
+                      error: queryError,
+                      data: queryData,
+                    }) => {
+                      const { cancellationCategories } = queryData || {}
+                      return (
+                        <Loader
+                          loading={loading || queryLoading}
+                          error={error || queryError}
+                          render={() => (
+                            <Fragment>
+                              <Interaction.H2>
+                                {isEditing
+                                  ? 'Kündigung editieren'
+                                  : 'Membership canceln'}
+                              </Interaction.H2>
+                              <br />
+                              <Interaction.P>
+                                #{membership.sequenceNumber} –{' '}
+                                {membership.type.name.split('_').join(' ')} –{' '}
+                                {displayDate(membership.createdAt)} –{' '}
+                                {(!!membership.renew && 'ACTIVE') || 'INACTIVE'}
+                              </Interaction.P>
+                              {membership.periods.map((period, i) => (
+                                <span key={`period-${i}`}>
+                                  {displayDate(period.beginDate)}
+                                  {' - '}
+                                  {displayDate(period.endDate)}
+                                </span>
+                              ))}
+                              <br />
+                              {cancellationCategories &&
+                                cancellationCategories.map(
+                                  ({ type, label }) => (
+                                    <Interaction.P key={type}>
+                                      <Radio
+                                        value={cancellationType}
+                                        checked={cancellationType === type}
+                                        onChange={() =>
+                                          this.setState({
+                                            cancellationType: type,
+                                          })
+                                        }
+                                      >
+                                        {label}
+                                      </Radio>
+                                    </Interaction.P>
+                                  ),
+                                )}
+                              <Field
+                                value={reason}
+                                label={'Erläuterungen'}
+                                onChange={this.reasonChangeHandler}
+                                renderInput={(props) => (
+                                  <TextareaAutosize
+                                    {...props}
+                                    style={{ lineHeight: '30px' }}
+                                  />
+                                )}
+                              />
+                              <p>
+                                <Checkbox
+                                  checked={this.state.immediately}
+                                  onChange={this.immediatelyChangeHandler}
+                                  disabled={isEditing}
                                 >
-                                  Speichern
-                                </Button>
-                              </Fragment>
-                            )}
-                          />
-                        )
-                      }}
-                    </Query>
-                  </OverlayBody>
-                </Overlay>
+                                  Sofort canceln
+                                </Checkbox>
+                              </p>
+                              <p>
+                                <Checkbox
+                                  checked={this.state.suppressConfirmation}
+                                  onChange={
+                                    this.suppressConfirmationChangeHandler
+                                  }
+                                  disabled={isEditing}
+                                >
+                                  Kündigungsbestätigung unterdrücken
+                                </Checkbox>
+                              </p>
+                              <p>
+                                <Checkbox
+                                  checked={this.state.suppressWinback}
+                                  onChange={this.suppressWinbackChangeHandler}
+                                  disabled={
+                                    cancellation &&
+                                    (cancellation.winbackSentAt ||
+                                      !cancellation.winbackCanBeSent)
+                                  }
+                                >
+                                  Winback unterdrücken
+                                </Checkbox>
+                              </p>
+                              <Button
+                                primary
+                                disabled={!cancellationType}
+                                onClick={this.submitHandler(cancelPledge)}
+                              >
+                                Speichern
+                              </Button>
+                            </Fragment>
+                          )}
+                        />
+                      )
+                    }}
+                  </Query>
+                </SimpleDialog>
               )
             }}
           </Mutation>

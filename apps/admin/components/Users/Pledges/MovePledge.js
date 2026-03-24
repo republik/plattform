@@ -1,19 +1,12 @@
-import { Component, Fragment } from 'react'
-import { Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
+import { Mutation } from '@apollo/client/react/components'
+import { Component, Fragment } from 'react'
 
-import {
-  Button,
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
-  Interaction,
-  Label,
-  Loader,
-} from '@project-r/styleguide'
+import { Button, Interaction, Label, Loader } from '@project-r/styleguide'
 
-import SearchUser from '@/components/Form/SearchUser'
 import { displayDateTime, TextButton } from '@/components/Display/utils'
+import SearchUser from '@/components/Form/SearchUser'
+import { SimpleDialog } from '@republik/ui'
 
 const MOVE_PLEDGE = gql`
   mutation movePledge($pledgeId: ID!, $userId: ID!) {
@@ -66,46 +59,48 @@ export default class MovePledge extends Component {
           <Mutation mutation={MOVE_PLEDGE} refetchQueries={refetchQueries}>
             {(movePledge, { loading, error }) => {
               return (
-                <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar onClose={this.closeHandler} />
-                  <OverlayBody>
-                    <Loader
-                      loading={loading}
-                      error={error}
-                      render={() => (
-                        <Fragment>
-                          <Interaction.H2>Pledge verschieben</Interaction.H2>
+                <SimpleDialog
+                  onOpenChangeComplete={(open) => {
+                    if (!open) {
+                      this.closeHandler()
+                    }
+                  }}
+                >
+                  <Loader
+                    loading={loading}
+                    error={error}
+                    render={() => (
+                      <Fragment>
+                        <Interaction.H2>Pledge verschieben</Interaction.H2>
+                        <br />
+                        <Interaction.H3>
+                          {pledge.package.name.split('_').join(' ')} –{' '}
+                          {displayDateTime(pledge.createdAt)} – {pledge.status}
                           <br />
-                          <Interaction.H3>
-                            {pledge.package.name.split('_').join(' ')} –{' '}
-                            {displayDateTime(pledge.createdAt)} –{' '}
-                            {pledge.status}
-                            <br />
-                            <Label>
-                              Created:{' '}
-                              {displayDateTime(new Date(pledge.createdAt))}
-                              {' – '}
-                              Updated:{' '}
-                              {displayDateTime(new Date(pledge.updatedAt))}
-                            </Label>
-                          </Interaction.H3>
-                          <SearchUser
-                            label='User auswählen'
-                            value={user}
-                            onChange={this.userChangeHandler}
-                          />
-                          <Button
-                            primary
-                            disabled={!user}
-                            onClick={this.submitHandler(movePledge)}
-                          >
-                            Speichern
-                          </Button>
-                        </Fragment>
-                      )}
-                    />
-                  </OverlayBody>
-                </Overlay>
+                          <Label>
+                            Created:{' '}
+                            {displayDateTime(new Date(pledge.createdAt))}
+                            {' – '}
+                            Updated:{' '}
+                            {displayDateTime(new Date(pledge.updatedAt))}
+                          </Label>
+                        </Interaction.H3>
+                        <SearchUser
+                          label='User auswählen'
+                          value={user}
+                          onChange={this.userChangeHandler}
+                        />
+                        <Button
+                          primary
+                          disabled={!user}
+                          onClick={this.submitHandler(movePledge)}
+                        >
+                          Speichern
+                        </Button>
+                      </Fragment>
+                    )}
+                  />
+                </SimpleDialog>
               )
             }}
           </Mutation>

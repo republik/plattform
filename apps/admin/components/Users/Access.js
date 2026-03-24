@@ -15,12 +15,8 @@ import {
   Interaction,
   Label,
   Loader,
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
 } from '@project-r/styleguide'
 
-import Link from 'next/link'
 import {
   displayDateTime,
   Section,
@@ -28,6 +24,8 @@ import {
 } from '@/components/Display/utils'
 import ErrorMessage from '@/components/ErrorMessage'
 import List, { Item } from '@/components/List'
+import { SimpleDialog } from '@republik/ui'
+import Link from 'next/link'
 
 const GET_ACCESS_GRANTS = gql`
   query user($id: String) {
@@ -389,57 +387,61 @@ class Grant extends Component {
                   {t('account/access/Grant/button/revoke')}
                 </Button>
               </div>
-              {isOpenRevoke && (
-                <Mutation
-                  mutation={REVOKE_ACCESS}
-                  refetchQueries={() => [
-                    {
-                      query: GET_ACCESS_GRANTS,
-                      variables: { id: userId },
-                    },
-                  ]}
-                >
-                  {(revokeAccess, { loading, error }) => {
-                    return (
-                      <Overlay onClose={this.closeHandlerRevoke}>
-                        <OverlayToolbar onClose={this.closeHandlerRevoke} />
-                        <OverlayBody>
-                          <Loader
-                            loading={loading}
-                            error={error}
-                            render={() => (
-                              <Fragment>
-                                <div>
-                                  {t(
-                                    'account/access/Grant/button/revoke/confirm/description',
-                                  )}
-                                </div>
-                                {error && <ErrorMessage error={error} />}
-                                {loading && <InlineSpinner />}
-                                {!loading && (
-                                  <div
-                                    className={cx(
-                                      styles.button,
-                                      styles.confirmButton,
-                                    )}
-                                  >
-                                    <Button
-                                      primary
-                                      onClick={this.revokeHandler(revokeAccess)}
-                                    >
-                                      {t('account/access/Grant/button/confirm')}
-                                    </Button>
-                                  </div>
+
+              <Mutation
+                mutation={REVOKE_ACCESS}
+                refetchQueries={() => [
+                  {
+                    query: GET_ACCESS_GRANTS,
+                    variables: { id: userId },
+                  },
+                ]}
+              >
+                {(revokeAccess, { loading, error }) => {
+                  return (
+                    <SimpleDialog
+                      title='Access Grant zurückziehen'
+                      open={isOpenRevoke}
+                      onOpenChangeComplete={(open) => {
+                        if (!open) {
+                          this.closeHandlerRevoke()
+                        }
+                      }}
+                    >
+                      <Loader
+                        loading={loading}
+                        error={error}
+                        render={() => (
+                          <Fragment>
+                            <div>
+                              {t(
+                                'account/access/Grant/button/revoke/confirm/description',
+                              )}
+                            </div>
+                            {error && <ErrorMessage error={error} />}
+                            {loading && <InlineSpinner />}
+                            {!loading && (
+                              <div
+                                className={cx(
+                                  styles.button,
+                                  styles.confirmButton,
                                 )}
-                              </Fragment>
+                              >
+                                <Button
+                                  primary
+                                  onClick={this.revokeHandler(revokeAccess)}
+                                >
+                                  {t('account/access/Grant/button/confirm')}
+                                </Button>
+                              </div>
                             )}
-                          />
-                        </OverlayBody>
-                      </Overlay>
-                    )
-                  }}
-                </Mutation>
-              )}
+                          </Fragment>
+                        )}
+                      />
+                    </SimpleDialog>
+                  )
+                }}
+              </Mutation>
             </>
           )}
           {(!grant.invalidatedAt || !grant.followupAt) && (
@@ -451,7 +453,7 @@ class Grant extends Component {
                     : t('account/access/Grant/button/noFollowup')}
                 </Button>
               </div>
-              {isOpenInvalidate && (
+              {
                 <Mutation
                   mutation={INVALIDATE_ACCESS}
                   refetchQueries={() => [
@@ -463,57 +465,62 @@ class Grant extends Component {
                 >
                   {(invalidateAccess, { loading, error }) => {
                     return (
-                      <Overlay onClose={this.closeHandlerInvalidate}>
-                        <OverlayToolbar onClose={this.closeHandlerInvalidate} />
-                        <OverlayBody>
-                          <Loader
-                            loading={loading}
-                            error={error}
-                            render={() => (
-                              <Fragment>
-                                <div>
-                                  {!grant.invalidatedAt
-                                    ? t(
-                                        'account/access/Grant/button/invalidate/confirm/description',
-                                      )
-                                    : t(
-                                        'account/access/Grant/button/noFollowup/confirm/description',
-                                      )}
-                                  <p className={styles.info}>
-                                    {!grant.invalidatedAt &&
-                                      t(
-                                        'account/access/Grant/button/invalidate/confirm/description/detail',
-                                      )}
-                                  </p>
-                                </div>
-                                {error && <ErrorMessage error={error} />}
-                                {loading && <InlineSpinner />}
-                                {!loading && (
-                                  <div
-                                    className={cx(
-                                      styles.button,
-                                      styles.confirmButton,
+                      <SimpleDialog
+                        title='Access Grant vorzeitig beenden'
+                        open={isOpenInvalidate}
+                        onOpenChangeComplete={(open) => {
+                          if (!open) {
+                            this.closeHandlerInvalidate()
+                          }
+                        }}
+                      >
+                        <Loader
+                          loading={loading}
+                          error={error}
+                          render={() => (
+                            <Fragment>
+                              <div>
+                                {!grant.invalidatedAt
+                                  ? t(
+                                      'account/access/Grant/button/invalidate/confirm/description',
+                                    )
+                                  : t(
+                                      'account/access/Grant/button/noFollowup/confirm/description',
+                                    )}
+                                <p className={styles.info}>
+                                  {!grant.invalidatedAt &&
+                                    t(
+                                      'account/access/Grant/button/invalidate/confirm/description/detail',
+                                    )}
+                                </p>
+                              </div>
+                              {error && <ErrorMessage error={error} />}
+                              {loading && <InlineSpinner />}
+                              {!loading && (
+                                <div
+                                  className={cx(
+                                    styles.button,
+                                    styles.confirmButton,
+                                  )}
+                                >
+                                  <Button
+                                    primary
+                                    onClick={this.invalidateHandler(
+                                      invalidateAccess,
                                     )}
                                   >
-                                    <Button
-                                      primary
-                                      onClick={this.invalidateHandler(
-                                        invalidateAccess,
-                                      )}
-                                    >
-                                      {t('account/access/Grant/button/confirm')}
-                                    </Button>
-                                  </div>
-                                )}
-                              </Fragment>
-                            )}
-                          />
-                        </OverlayBody>
-                      </Overlay>
+                                    {t('account/access/Grant/button/confirm')}
+                                  </Button>
+                                </div>
+                              )}
+                            </Fragment>
+                          )}
+                        />
+                      </SimpleDialog>
                     )
                   }}
                 </Mutation>
-              )}
+              }
             </>
           )}
         </Fragment>

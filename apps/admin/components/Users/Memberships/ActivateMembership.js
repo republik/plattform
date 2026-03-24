@@ -1,17 +1,11 @@
-import { Component, Fragment } from 'react'
-import { Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
+import { Mutation } from '@apollo/client/react/components'
+import { Component, Fragment } from 'react'
 
-import {
-  Button,
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
-  Interaction,
-  Loader,
-} from '@project-r/styleguide'
+import { Button, Interaction, Loader } from '@project-r/styleguide'
 
 import { TextButton } from '@/components/Display/utils'
+import { SimpleDialog } from '@republik/ui'
 
 const ACTIVATE_MEMBERSHIP = gql`
   mutation activateMembership($membershipId: ID!) {
@@ -62,27 +56,30 @@ export default class ActivateMembership extends Component {
           >
             {(activateMembership, { loading, error }) => {
               return (
-                <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar onClose={this.closeHandler} />
-                  <OverlayBody>
-                    <Loader
-                      loading={loading}
-                      error={error}
-                      render={() => (
-                        <Fragment>
-                          <Interaction.H2>Bist du dir sicher?</Interaction.H2>
-                          <br />
-                          <Button
-                            primary
-                            onClick={this.submitHandler(activateMembership)}
-                          >
-                            Ja
-                          </Button>
-                        </Fragment>
-                      )}
-                    />
-                  </OverlayBody>
-                </Overlay>
+                <SimpleDialog
+                  onOpenChangeComplete={(open) => {
+                    if (!open) {
+                      this.closeHandler()
+                    }
+                  }}
+                >
+                  <Loader
+                    loading={loading}
+                    error={error}
+                    render={() => (
+                      <Fragment>
+                        <Interaction.H2>Bist du dir sicher?</Interaction.H2>
+                        <br />
+                        <Button
+                          primary
+                          onClick={this.submitHandler(activateMembership)}
+                        >
+                          Ja
+                        </Button>
+                      </Fragment>
+                    )}
+                  />
+                </SimpleDialog>
               )
             }}
           </Mutation>

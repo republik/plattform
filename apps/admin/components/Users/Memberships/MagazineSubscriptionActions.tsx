@@ -9,15 +9,9 @@ import {
   UserMagazineSubscriptionsQuery,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation, useQuery } from '@apollo/client'
-import {
-  Button,
-  Field,
-  Interaction,
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
-} from '@project-r/styleguide'
+import { Button, Field } from '@project-r/styleguide'
 import { css } from '@republik/theme/css'
+import { SimpleDialog } from '@republik/ui'
 import { TextButton } from 'components/Display/utils'
 import { useTranslation } from 'lib/useT'
 import { ReactNode, useState } from 'react'
@@ -186,13 +180,17 @@ function ConfirmOverlay({
   children,
 }: ConfirmOverlayProps) {
   return (
-    <Overlay onClose={() => close()}>
-      <OverlayToolbar onClose={() => close()} />
-      <OverlayBody>
-        <Interaction.H2 style={{ marginBottom: '1rem' }}>
-          {title}
-        </Interaction.H2>
-
+    <SimpleDialog
+      title={title}
+      trigger={null}
+      open
+      onOpenChange={(open) => {
+        if (!open) {
+          close()
+        }
+      }}
+    >
+      <>
         {error && (
           <div
             className={css({
@@ -223,8 +221,8 @@ function ConfirmOverlay({
             {buttonLabel}
           </Button>
         </form>
-      </OverlayBody>
-    </Overlay>
+      </>
+    </SimpleDialog>
   )
 }
 

@@ -72,7 +72,6 @@ const SectionSwitch = ({ userId, section }) => {
         <AuthSettings userId={userId} />
         <Mailbox userId={userId} narrow={3} />
         <Links userId={userId} />
-        <Campaigns userId={userId} />
         {/* @ts-expect-error not typed */}
         <AdminNotes userId={userId} />
       </div>
