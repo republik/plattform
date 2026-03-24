@@ -1,3 +1,4 @@
+'use client'
 import { gql, useQuery } from '@apollo/client'
 import { A, Label } from '@project-r/styleguide'
 

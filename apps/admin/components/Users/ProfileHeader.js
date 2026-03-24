@@ -1,15 +1,16 @@
+'use client'
+
 import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
 import {
-    A,
-    colors,
-    fontStyles,
-    Interaction,
-    Loader,
+  A,
+  colors,
+  fontStyles,
+  Interaction,
+  Loader,
 } from '@project-r/styleguide'
 import { css } from '@republik/theme/css'
 import Head from 'next/head'
-import Link from 'next/link'
 
 import { REPUBLIK_FRONTEND_URL } from '@/server/constants'
 
@@ -29,15 +30,6 @@ const styles = {
     float: 'left',
     height: '50px',
     marginRight: '10px',
-  }),
-  navLink: css({
-    color: '#000',
-    padding: '0 3px',
-    textDecoration: 'none',
-    '&[data-active="true"]': {
-      textDecoration: 'underline',
-    },
-    marginRight: 5,
   }),
 }
 
@@ -76,66 +68,6 @@ const getLastPeriod = (periods) =>
       ? currentValue
       : accumulator
   }, false)
-
-const Subnav = ({ userId, section }) => (
-  <div>
-    <Link
-      href={`/users/${userId}`}
-      className={styles.navLink}
-      data-active={section === 'index'}
-    >
-      Übersicht
-    </Link>
-    <Link
-      href={{
-        pathname: `/users/${userId}`,
-        query: {
-          section: 'sessions',
-        },
-      }}
-      className={styles.navLink}
-      data-active={section === 'sessions'}
-    >
-      Sessions
-    </Link>
-    <Link
-      href={{
-        pathname: `/users/${userId}`,
-        query: {
-          section: 'access-grants',
-        },
-      }}
-      className={styles.navLink}
-      data-active={section === 'access-grants'}
-    >
-      Access Grants
-    </Link>
-    <Link
-      href={{
-        pathname: `/users/${userId}`,
-        query: {
-          section: 'mailbox',
-        },
-      }}
-      className={styles.navLink}
-      data-active={section === 'mailbox'}
-    >
-      E-Mails
-    </Link>
-    <Link
-      href={{
-        pathname: `/users/${userId}`,
-        query: {
-          section: 'dialog',
-        },
-      }}
-      className={styles.navLink}
-      data-active={section === 'dialog'}
-    >
-      Dialog
-    </Link>
-  </div>
-)
 
 const ProfileHeader = ({ userId, section }) => {
   return (
@@ -229,9 +161,6 @@ const ProfileHeader = ({ userId, section }) => {
                       {byline}
                       {membership}
                     </div>
-                  </div>
-                  <div style={{ clear: 'both', margin: '10px 0' }}>
-                    <Subnav userId={userId} section={section} />
                   </div>
                 </Section>
               )

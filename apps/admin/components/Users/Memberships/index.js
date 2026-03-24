@@ -1,3 +1,4 @@
+'use client'
 import { gql } from '@apollo/client'
 import { Mutation, Query } from '@apollo/client/react/components'
 import { IconChevronLeft } from '@republik/icons'
@@ -6,7 +7,6 @@ import * as React from 'react'
 import { Fragment } from 'react'
 
 import {
-  A,
   Checkbox,
   Dropdown,
   Label,
@@ -236,12 +236,8 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
               <Fragment>
                 <DT>Gekauft durch</DT>
                 <DD>
-                  <Link
-                    href={`/users/${membership.pledge.user.id}`}
-                    passHref
-                    legacyBehavior
-                  >
-                    <A>{membership.pledge.user.name}</A>
+                  <Link href={`/users/${membership.pledge.user.id}`}>
+                    {membership.pledge.user.name}
                   </Link>
                 </DD>
               </Fragment>

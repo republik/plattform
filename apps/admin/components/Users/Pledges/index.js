@@ -1,3 +1,4 @@
+'use client'
 import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
 import { cx } from '@republik/theme/css'
@@ -9,15 +10,15 @@ import { A, Label, Loader } from '@project-r/styleguide'
 import { chfFormat } from '@/lib/utils/formats'
 
 import {
-    DD,
-    displayDate,
-    displayDateTime,
-    displayStyles,
-    DL,
-    DT,
-    Section,
-    SectionSubhead,
-    SectionTitle,
+  DD,
+  displayDate,
+  displayDateTime,
+  displayStyles,
+  DL,
+  DT,
+  Section,
+  SectionSubhead,
+  SectionTitle,
 } from '@/components/Display/utils'
 import { tableStyles } from '@/components/Tables/utils'
 
@@ -396,8 +397,8 @@ const MembershipDetails = ({ membership, ...props }) => {
         <DL>
           <DT>eingelöst von</DT>
           <DD>
-            <Link href={`/users/${membership.user.id}`} passHref legacyBehavior>
-              <A>{membership.claimerName}</A>
+            <Link href={`/users/${membership.user.id}`}>
+              {membership.claimerName}
             </Link>
           </DD>
         </DL>

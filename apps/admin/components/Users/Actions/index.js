@@ -1,3 +1,4 @@
+'use client'
 import { gql } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
 import { Component } from 'react'

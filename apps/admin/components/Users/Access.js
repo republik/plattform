@@ -1,3 +1,5 @@
+'use client'
+
 import { gql } from '@apollo/client'
 import { Mutation, Query } from '@apollo/client/react/components'
 import { css, cx } from '@republik/theme/css'
@@ -247,8 +249,8 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/granter/label')}</Label>
             <br />
-            <Link href={`/users/${grant.granter.id}`} passHref legacyBehavior>
-              <A>{`${grant.granter.name} (${grant.granter.email})`}</A>
+            <Link href={`/users/${grant.granter.id}`}>
+              {`${grant.granter.name} (${grant.granter.email})`}
             </Link>
           </Interaction.P>
         )}
@@ -257,8 +259,8 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/recipient/label')}</Label>
             <br />
-            <Link href={`/users/${grant.recipient.id}`} passHref legacyBehavior>
-              <A>{`${grant.recipient.name} (${grant.recipient.email})`}</A>
+            <Link href={`/users/${grant.recipient.id}`}>
+              {`${grant.recipient.name} (${grant.recipient.email})`}
             </Link>
           </Interaction.P>
         )}

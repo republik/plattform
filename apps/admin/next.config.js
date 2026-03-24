@@ -30,6 +30,12 @@ const nextConfig = withBundleAnalyzer({
         destination: '/users/:userId',
         permanent: false,
       },
+      {
+        source: '/users/:userId',
+        has: [{ type: 'query', key: 'section', value: '(?<section>.*)' }],
+        destination: '/users/:userId/:section',
+        permanent: false,
+      },
     ]
   },
   headers: async () => {

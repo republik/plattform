@@ -1,3 +1,5 @@
+'use client'
+
 import Credentials from './Credentials'
 import Suspensions from './DiscussionSuspensions'
 

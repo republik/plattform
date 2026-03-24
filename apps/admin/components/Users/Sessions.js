@@ -1,3 +1,5 @@
+'use client'
+
 import List, { Item } from '@/components/List'
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'

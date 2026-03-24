@@ -1,3 +1,4 @@
+'use client'
 import { gql } from '@apollo/client'
 import { Mutation, Query } from '@apollo/client/react/components'
 import { Checkbox, InlineSpinner, Loader } from '@project-r/styleguide'
