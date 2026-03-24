@@ -153,7 +153,7 @@ export default async function Page() {
               </p>
               <Offers
                 additionalShopParams={{
-                  rep_ui_component: 'campaign-paywall',
+                  rep_ui_component: 'campaign-landing-page',
                 }}
               />
               <p
@@ -296,7 +296,7 @@ export default async function Page() {
             </p>
             <Offers
               additionalShopParams={{
-                rep_ui_component: 'campaign-paywall',
+                rep_ui_component: 'campaign-landing-page',
               }}
             />
             <p
