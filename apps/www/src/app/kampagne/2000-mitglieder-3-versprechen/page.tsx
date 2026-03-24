@@ -5,6 +5,7 @@ import { Logo } from '@app/components/layout/header/logo'
 import { Share } from '@app/components/share/share'
 import { ArticleSection } from '@app/components/ui/section'
 import { getMe } from '@app/lib/auth/me'
+import { IconClose } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
@@ -66,7 +67,26 @@ export default async function Page() {
           })}
         >
           <div className={css({ pb: '12' })} data-theme='dark'>
-            <Link href='/' className={css({ textDecoration: 'none' })}>
+            <Link
+              aria-label='Close'
+              className={cx(
+                button({ variant: 'link' }),
+                css({ position: 'absolute', right: 4, top: 4 }),
+              )}
+              href='/'
+            >
+              <IconClose size={32} />
+            </Link>
+            <Link
+              href='/'
+              className={css({
+                display: 'block',
+                textDecoration: 'none',
+                cursor: 'pointer',
+                pt: 4,
+                md: { pt: 0 },
+              })}
+            >
               <Logo />
             </Link>
           </div>
