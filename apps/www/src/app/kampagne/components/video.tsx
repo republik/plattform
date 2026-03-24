@@ -7,6 +7,7 @@ export function Video() {
       poster='https://cdn.repub.ch/s3/republik-assets/repos/republik/article-republik-versus-amazon-2-0/files/10e17214-9910-4703-99c0-860c4e6cb333/thumb.jpg'
       controls
       playsInline
+      preload='metadata'
       className={css({ aspectRatio: '9/16', width: '100%' })}
     />
   )
