@@ -48,7 +48,7 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
             textAlign: 'right',
           })}
         >
-          {t(`onboarding/podcasts/${podcast.repoId}/title`)}
+          {podcast.meta.title}
         </h4>
         <span
           className={css({
@@ -65,7 +65,7 @@ function PodcastCard({ podcast }: { podcast?: Document }) {
           mt: 1,
         })}
       >
-        {t(`onboarding/podcasts/${podcast.repoId}/description`)}
+        {podcast.meta.description}
       </p>
       <div className={css({ mt: 2 })}>
         <FollowButton
