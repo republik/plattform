@@ -1,5 +1,6 @@
 import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
 import { Offers } from '@app/app/kampagne/components/campaign-offers'
+import { Video } from '@app/app/kampagne/components/video'
 import { Logo } from '@app/components/layout/header/logo'
 import { Share } from '@app/components/share/share'
 import { ArticleSection } from '@app/components/ui/section'
@@ -186,24 +187,12 @@ export default async function Page() {
                 className={css({
                   mt: 6,
                   mb: 3,
-                  '& iframe': {
-                    aspectRatio: '9/16',
-                    width: '100%',
-                    height: 'auto',
-                  },
                   md: {
                     display: 'none',
                   },
                 })}
               >
-                <iframe
-                  src='https://player.vimeo.com/video/1175425419?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&dnt=1'
-                  frameBorder='0'
-                  referrerPolicy='no-referrer'
-                  allow='autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media'
-                  sandbox='allow-scripts allow-same-origin'
-                  title='Frühlingskampagne 2026'
-                ></iframe>
+                <Video />
               </div>
             </JournalismPromise>
             <JournalismPromise count={2}>
@@ -245,21 +234,9 @@ export default async function Page() {
             <div
               className={css({
                 width: '100%',
-                '& iframe': {
-                  aspectRatio: '9/16',
-                  width: '100%',
-                  height: 'auto',
-                },
               })}
             >
-              <iframe
-                src='https://player.vimeo.com/video/1175425419?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&dnt=1'
-                frameBorder='0'
-                allow='autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media'
-                referrerPolicy='no-referrer'
-                sandbox='allow-scripts allow-same-origin'
-                title='Frühlingskampagne 2026'
-              ></iframe>
+              <Video />
             </div>
           </div>
         </ArticleSection>
