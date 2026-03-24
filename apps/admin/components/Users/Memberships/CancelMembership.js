@@ -135,7 +135,7 @@ export default class CancelPledge extends Component {
             {(cancelPledge, { loading, error }) => {
               return (
                 <SimpleDialog
-                  onOpenChangeComplete={(open) => {
+                  onOpenChange={(open) => {
                     if (!open) {
                       this.closeHandler()
                     }
@@ -237,7 +237,6 @@ export default class CancelPledge extends Component {
                                 </Checkbox>
                               </p>
                               <Button
-                                primary
                                 disabled={!cancellationType}
                                 onClick={this.submitHandler(cancelPledge)}
                               >

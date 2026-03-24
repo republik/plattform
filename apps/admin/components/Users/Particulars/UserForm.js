@@ -1,8 +1,9 @@
+import {} from '@project-r/styleguide'
 import { Component } from 'react'
-import { Button } from '@project-r/styleguide'
 import AddressFieldSet from './AddressFieldSet'
-import ParticularsFieldSet from './ParticularsFieldSet'
 import GenderForm from './Gender'
+import ParticularsFieldSet from './ParticularsFieldSet'
+import { Button } from '@republik/ui'
 
 const hasErrors = (state) =>
   Object.keys(state.errors).some((fieldName) =>
@@ -129,7 +130,7 @@ export default class UserForm extends Component {
           onChange={this.addressChangeHandler}
           {...this.state.address}
         />
-        <Button primary type='submit' disabled={!dirty || error}>
+        <Button type='submit' disabled={!dirty || error}>
           ändern
         </Button>
       </form>

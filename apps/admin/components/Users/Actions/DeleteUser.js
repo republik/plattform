@@ -2,14 +2,14 @@ import { gql } from '@apollo/client'
 import { Mutation } from '@apollo/client/react/components'
 import { Component, Fragment } from 'react'
 
-import { Button, Checkbox, Loader } from '@project-r/styleguide'
+import { Checkbox, Loader } from '@project-r/styleguide'
 
 import {
   displayDate,
   SectionSubhead,
   TextButton,
 } from '@/components/Display/utils'
-import { SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@republik/ui'
 
 const DELETE_USER = gql`
   mutation deleteUser($userId: ID!, $unpublishComments: Boolean!) {
@@ -93,10 +93,7 @@ export default class DeleteUser extends Component {
                         </Checkbox>
                         <br />
                         <br />
-                        <Button
-                          primary
-                          onClick={this.submitHandler(deleteUser)}
-                        >
+                        <Button onClick={this.submitHandler(deleteUser)}>
                           User löschen
                         </Button>
                       </Fragment>

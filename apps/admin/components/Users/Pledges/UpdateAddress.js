@@ -2,12 +2,12 @@ import { gql } from '@apollo/client'
 import { Mutation } from '@apollo/client/react/components'
 import { Component, Fragment } from 'react'
 
-import { Button, FieldSet, Loader } from '@project-r/styleguide'
+import { FieldSet, Loader } from '@project-r/styleguide'
 
 import { TextButton } from '@/components/Display/utils'
 
 import AddressFieldSet from '@/components/Users/Particulars/AddressFieldSet'
-import { SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@republik/ui'
 
 const MUTATION = gql`
   mutation updateAddress($id: ID!, $address: AddressInput!) {
@@ -72,7 +72,7 @@ export default class UpdateAddress extends Component {
             {(mutate, { loading, error }) => {
               return (
                 <SimpleDialog
-                  onOpenChangeComplete={(open) => {
+                  onOpenChange={(open) => {
                     if (!open) {
                       this.closeHandler()
                     }
@@ -89,7 +89,7 @@ export default class UpdateAddress extends Component {
                           }}
                           {...this.state}
                         />
-                        <Button primary onClick={this.submitHandler(mutate)}>
+                        <Button onClick={this.submitHandler(mutate)}>
                           ändern
                         </Button>
                       </Fragment>

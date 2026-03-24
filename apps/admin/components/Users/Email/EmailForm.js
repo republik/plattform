@@ -1,7 +1,8 @@
-import { Component } from 'react'
-import { Field, Button } from '@project-r/styleguide'
-import isEmail from 'validator/lib/isEmail'
 import { errorToString } from '@/lib/utils/errors'
+import { Field } from '@project-r/styleguide'
+import { Button } from '@republik/ui'
+import { Component } from 'react'
+import isEmail from 'validator/lib/isEmail'
 
 const getInitialState = ({ user, error }) => ({
   id: user.id,
@@ -47,7 +48,6 @@ export default class EmailForm extends Component {
           onChange={this.emailChangeHandler}
         />
         <Button
-          primary
           type='submit'
           disabled={!this.state.isDirty || this.state.error}
         >

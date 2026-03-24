@@ -1,4 +1,4 @@
-import { fontStyles, colors } from '@project-r/styleguide'
+import { fontStyles } from '@project-r/styleguide'
 
 import { css } from '@republik/theme/css'
 

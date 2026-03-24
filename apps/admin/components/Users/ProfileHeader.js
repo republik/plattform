@@ -1,19 +1,19 @@
-import { Query } from '@apollo/client/react/components'
-import { css } from '@republik/theme/css'
 import { gql } from '@apollo/client'
+import { Query } from '@apollo/client/react/components'
 import {
-  colors,
-  fontStyles,
-  Loader,
-  Interaction,
-  A,
+    A,
+    colors,
+    fontStyles,
+    Interaction,
+    Loader,
 } from '@project-r/styleguide'
+import { css } from '@republik/theme/css'
 import Head from 'next/head'
 import Link from 'next/link'
 
 import { REPUBLIK_FRONTEND_URL } from '@/server/constants'
 
-import { Section, displayDate } from '@/components/Display/utils'
+import { displayDate, Section } from '@/components/Display/utils'
 
 const styles = {
   header: css({

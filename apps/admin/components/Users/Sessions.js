@@ -1,10 +1,10 @@
-import { Component } from 'react'
+import List, { Item } from '@/components/List'
+import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
+import { Interaction, Label } from '@project-r/styleguide'
 import { css } from '@republik/theme/css'
 import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
-import { gql } from '@apollo/client'
-import { Label, Interaction, colors } from '@project-r/styleguide'
-import List, { Item } from '@/components/List'
+import { Component } from 'react'
 
 import {
   displayDateTime,

@@ -1,11 +1,12 @@
-import { Component } from 'react'
-import { css } from '@republik/theme/css'
-import PropTypes from 'prop-types'
-import { gql } from '@apollo/client'
-import { colors, Interaction, Button } from '@project-r/styleguide'
-import Link from 'next/link'
-import ErrorMessage from '@/components/ErrorMessage'
+mport ErrorMessage from '@/components/ErrorMessage'
 import SearchUser from '@/components/Form/SearchUser'
+import { gql } from '@apollo/client'
+import { Interaction } from '@project-r/styleguide'
+import { css } from '@republik/theme/css'
+import { Button } from '@republik/ui'
+import Link from 'next/link'
+import PropTypes from 'prop-types'
+import { Component } from 'react'
 
 const interactiveStyles = {
   cursor: 'pointer',
@@ -147,7 +148,6 @@ class MergeUsers extends Component {
           </div>
         </div>
         <Button
-          primary
           disabled={!sourceUser || !targetUser}
           onClick={this.mergeUsers}
         >

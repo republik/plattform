@@ -1,14 +1,14 @@
+import { displayDate } from '@/components/Display/utils'
+import { chfFormat } from '@/lib/utils/formats'
 import { Label } from '@project-r/styleguide'
 import { css, cx } from '@republik/theme/css'
 import { useState } from 'react'
-import { chfFormat } from '@/lib/utils/formats'
-import { displayDate } from '@/components/Display/utils'
 import MessageForm from './MessageForm'
 
 import {
-  createSortHandler,
-  createSortIndicator,
-  tableStyles as styles,
+    createSortHandler,
+    createSortIndicator,
+    tableStyles as styles,
 } from '@/components/Tables/utils'
 
 const Table = ({

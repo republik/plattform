@@ -1,6 +1,6 @@
-import { Fragment, useState } from 'react'
 import { A } from '@project-r/styleguide'
 import Link from 'next/link'
+import { Fragment, useState } from 'react'
 
 const Address = ({ address: _address }) => {
   const { address, name, user } = _address
@@ -10,7 +10,7 @@ const Address = ({ address: _address }) => {
       <Link href={`/users/${user.id}`} passHref legacyBehavior>
         <A>{user.name || address}</A>
       </Link>
-    );
+    )
   }
 
   const label = [!name && address, name, name && `<${address}>`]

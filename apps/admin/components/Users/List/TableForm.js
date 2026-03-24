@@ -1,4 +1,4 @@
-import { colors, A, Label, Field } from '@project-r/styleguide'
+import { A, Field, Label } from '@project-r/styleguide'
 
 import withDebouncedSearch from '@/components/Form/withDebouncedSearch'
 import { css } from '@republik/theme/css'

@@ -116,11 +116,17 @@ export const Body = ({ mail }) => (
   </>
 )
 
-const Mail = (props) => {
-  const { mail, onClose } = props
-
+const Mail = ({ open, mail, onClose }) => {
   return (
-    <SimpleDialog open title='E-Mail' onClose={onClose}>
+    <SimpleDialog
+      open={open}
+      title='E-Mail'
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose()
+        }
+      }}
+    >
       <Body mail={mail} />
     </SimpleDialog>
   )

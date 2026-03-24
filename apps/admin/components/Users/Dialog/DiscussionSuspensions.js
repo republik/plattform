@@ -10,8 +10,8 @@ import {
 import List, { Item } from '@/components/List'
 import { gql, useMutation } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
-import { Button, Dropdown, Field, Label, Loader } from '@project-r/styleguide'
-import { SimpleDialog } from '@republik/ui'
+import { Dropdown, Field, Label, Loader } from '@project-r/styleguide'
+import { Button, SimpleDialog } from '@republik/ui'
 import { useState } from 'react'
 
 const GET_SUSPENSIONS = gql`
@@ -115,8 +115,7 @@ const SuspendActions = ({ userId, isSuspended }) => {
   if (isSuspended) {
     return (
       <Button
-        small
-        primary
+        size='small'
         onClick={() => {
           resetDialogForm()
           unsuspendUser()
@@ -133,7 +132,7 @@ const SuspendActions = ({ userId, isSuspended }) => {
         <SimpleDialog
           title='Sperren'
           open
-          onOpenChangeComplete={(open) => {
+          onOpenChange={(open) => {
             if (!open) {
               resetDialogForm()
             }
@@ -164,7 +163,6 @@ const SuspendActions = ({ userId, isSuspended }) => {
             }}
           ></Field>
           <Button
-            primary
             disabled={intervalAmount.error}
             onClick={() => {
               suspendUser()
@@ -173,7 +171,7 @@ const SuspendActions = ({ userId, isSuspended }) => {
             Sperren
           </Button>
           <Button
-            naked
+            variant='link'
             onClick={() => {
               resetDialogForm()
             }}
@@ -188,7 +186,7 @@ const SuspendActions = ({ userId, isSuspended }) => {
   return (
     <>
       <Button
-        small
+        size='small'
         onClick={() => {
           setShowSuspensionFields(true)
         }}

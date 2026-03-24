@@ -14,7 +14,6 @@ import {
   Spinner,
 } from '@project-r/styleguide'
 
-import Link from 'next/link'
 import {
   DD,
   displayDate,
@@ -26,6 +25,7 @@ import {
   SectionTitle,
 } from '@/components/Display/utils'
 import { tableStyles } from '@/components/Tables/utils'
+import Link from 'next/link'
 
 import ActivateMembership from './ActivateMembership'
 import AppendPeriod from './AppendPeriod'

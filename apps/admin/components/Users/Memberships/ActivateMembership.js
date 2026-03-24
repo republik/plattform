@@ -2,10 +2,10 @@ import { gql } from '@apollo/client'
 import { Mutation } from '@apollo/client/react/components'
 import { Component, Fragment } from 'react'
 
-import { Button, Interaction, Loader } from '@project-r/styleguide'
+import { Interaction, Loader } from '@project-r/styleguide'
 
 import { TextButton } from '@/components/Display/utils'
-import { SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@republik/ui'
 
 const ACTIVATE_MEMBERSHIP = gql`
   mutation activateMembership($membershipId: ID!) {
@@ -57,7 +57,7 @@ export default class ActivateMembership extends Component {
             {(activateMembership, { loading, error }) => {
               return (
                 <SimpleDialog
-                  onOpenChangeComplete={(open) => {
+                  onOpenChange={(open) => {
                     if (!open) {
                       this.closeHandler()
                     }
@@ -71,7 +71,6 @@ export default class ActivateMembership extends Component {
                         <Interaction.H2>Bist du dir sicher?</Interaction.H2>
                         <br />
                         <Button
-                          primary
                           onClick={this.submitHandler(activateMembership)}
                         >
                           Ja

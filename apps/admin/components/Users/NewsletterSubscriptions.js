@@ -1,10 +1,10 @@
-import { Component } from 'react'
-import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
+import { Mutation, Query } from '@apollo/client/react/components'
+import { Component } from 'react'
 
 import withT from '@/lib/withT'
 
-import { InlineSpinner, Loader, Checkbox } from '@project-r/styleguide'
+import { Checkbox, InlineSpinner, Loader } from '@project-r/styleguide'
 
 import { Section, SectionTitle, TextButton } from '@/components/Display/utils'
 import ErrorMessage from '@/components/ErrorMessage'

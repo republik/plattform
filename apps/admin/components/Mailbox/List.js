@@ -9,8 +9,8 @@ import { tableStyles } from '@/components/Tables/utils'
 import Address, { Bucket as AddressBucket } from './Address'
 import Mail from './Mail'
 
-import { IconCallReceived, IconError } from '@republik/icons'
 import { MAILBOX_SELF } from '@/server/constants'
+import { IconCallReceived, IconError } from '@republik/icons'
 
 const self = MAILBOX_SELF?.split(',') ?? []
 
@@ -45,7 +45,7 @@ export const Subject = ({ mail }) => {
 }
 
 const Row = ({ mail, narrow }) => {
-  const [showEmail, setShowEmail] = useState()
+  const [showEmail, setShowEmail] = useState(false)
 
   const from =
     mail.from?.address && !self.includes(mail.from.address) && mail.from
@@ -70,7 +70,7 @@ const Row = ({ mail, narrow }) => {
         <A href={`/mailbox?mailId=${mail.id}`} target='_blank' onClick={show}>
           <Subject mail={mail} />
         </A>
-        {showEmail && <Mail mail={mail} onClose={hide} />}
+        {<Mail open={showEmail} mail={mail} onClose={hide} />}
       </td>
       {!narrow && (
         <td className={tableStyles.paddedCell}>

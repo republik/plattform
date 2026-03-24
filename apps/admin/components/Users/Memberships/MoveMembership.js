@@ -2,11 +2,11 @@ import { gql } from '@apollo/client'
 import { Mutation } from '@apollo/client/react/components'
 import { Component, Fragment } from 'react'
 
-import { Button, Interaction, Loader } from '@project-r/styleguide'
+import { Interaction, Loader } from '@project-r/styleguide'
 
 import { displayDateTime, TextButton } from '@/components/Display/utils'
 import SearchUser from '@/components/Form/SearchUser'
-import { SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@republik/ui'
 
 const MOVE_MEMBERSHIP = gql`
   mutation moveMembership($membershipId: ID!, $userId: ID!) {
@@ -60,7 +60,7 @@ export default class MoveMembership extends Component {
             {(movePledge, { loading, error }) => {
               return (
                 <SimpleDialog
-                  onOpenChangeComplete={(open) => {
+                  onOpenChange={(open) => {
                     if (!open) {
                       this.closeHandler()
                     }
@@ -92,7 +92,6 @@ export default class MoveMembership extends Component {
                           onChange={this.userChangeHandler}
                         />
                         <Button
-                          primary
                           disabled={!user}
                           onClick={this.submitHandler(movePledge)}
                         >

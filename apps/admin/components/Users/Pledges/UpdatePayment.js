@@ -4,10 +4,10 @@ import { css } from '@republik/theme/css'
 import { Component, Fragment } from 'react'
 import Textarea from 'react-textarea-autosize'
 
-import { Button, Field, Interaction, Loader } from '@project-r/styleguide'
+import { Field, Interaction, Loader } from '@project-r/styleguide'
 
 import { TextButton } from '@/components/Display/utils'
-import { SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@republik/ui'
 
 const UPDATE_PAYMENT = gql`
   mutation updatePayment(
@@ -83,7 +83,7 @@ export default class UpdatePayment extends Component {
             {(updatePayment, { loading, error }) => {
               return (
                 <SimpleDialog
-                  onOpenChangeComplete={(open) => {
+                  onOpenChange={(open) => {
                     if (!open) {
                       this.closeHandler()
                     }
@@ -113,7 +113,6 @@ export default class UpdatePayment extends Component {
                           />
                         )}
                         <Button
-                          primary
                           disabled={payment.status === 'WAITING' && !reason}
                           onClick={this.submitHandler(updatePayment)}
                         >

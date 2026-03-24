@@ -2,10 +2,10 @@ import { gql } from '@apollo/client'
 import { Mutation } from '@apollo/client/react/components'
 import { Component, Fragment } from 'react'
 
-import { Button, Interaction, Loader } from '@project-r/styleguide'
+import { Interaction, Loader } from '@project-r/styleguide'
 
 import { TextButton } from '@/components/Display/utils'
-import { SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@republik/ui'
 
 const CANCEL_PLEDGE = gql`
   mutation cancelPledge($pledgeId: ID!) {
@@ -54,7 +54,7 @@ export default class CancelPledge extends Component {
             {(cancelPledge, { loading, error }) => {
               return (
                 <SimpleDialog
-                  onOpenChangeComplete={(open) => {
+                  onOpenChange={(open) => {
                     if (!open) {
                       this.closeHandler()
                     }
@@ -67,10 +67,7 @@ export default class CancelPledge extends Component {
                       <Fragment>
                         <Interaction.H2>Bist du dir sicher?</Interaction.H2>
                         <br />
-                        <Button
-                          primary
-                          onClick={this.submitHandler(cancelPledge)}
-                        >
+                        <Button onClick={this.submitHandler(cancelPledge)}>
                           Ja
                         </Button>
                       </Fragment>

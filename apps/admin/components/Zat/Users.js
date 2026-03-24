@@ -1,10 +1,10 @@
 import { gql } from '@apollo/client'
 import { A } from '@project-r/styleguide'
 
-import Memberships, { fragments as UserMemberships } from './User/Memberships'
 import AccessGrants, {
   fragments as UserAccessGrants,
 } from './User/AccessGrants'
+import Memberships, { fragments as UserMemberships } from './User/Memberships'
 import NewsletterSettings, {
   fragments as UserNewsletterSettings,
 } from './User/NewsletterSettings'

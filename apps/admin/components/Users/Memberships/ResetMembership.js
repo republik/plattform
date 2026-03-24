@@ -2,10 +2,10 @@ import { gql } from '@apollo/client'
 import { Mutation } from '@apollo/client/react/components'
 import { Component } from 'react'
 
-import { Button, Interaction, Loader } from '@project-r/styleguide'
+import { Interaction, Loader } from '@project-r/styleguide'
 
 import { TextButton } from '@/components/Display/utils'
-import { SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@republik/ui'
 
 const RESET_MEMBERSHIP = gql`
   mutation resetMembership($membershipId: ID!) {
@@ -53,7 +53,7 @@ export default class ResetMembership extends Component {
             {(resetMembership, { loading, error }) => {
               return (
                 <SimpleDialog
-                  onOpenChangeComplete={(open) => {
+                  onOpenChange={(open) => {
                     if (!open) {
                       this.handleClose()
                     }
@@ -74,10 +74,7 @@ export default class ResetMembership extends Component {
                           oder eingelöst werden.
                         </Interaction.P>
                         <br />
-                        <Button
-                          primary
-                          onClick={this.submitHandler(resetMembership)}
-                        >
+                        <Button onClick={this.submitHandler(resetMembership)}>
                           Ja
                         </Button>
                       </>

@@ -9,15 +9,15 @@ import { A, Label, Loader } from '@project-r/styleguide'
 import { chfFormat } from '@/lib/utils/formats'
 
 import {
-  DD,
-  displayDate,
-  displayDateTime,
-  displayStyles,
-  DL,
-  DT,
-  Section,
-  SectionSubhead,
-  SectionTitle,
+    DD,
+    displayDate,
+    displayDateTime,
+    displayStyles,
+    DL,
+    DT,
+    Section,
+    SectionSubhead,
+    SectionTitle,
 } from '@/components/Display/utils'
 import { tableStyles } from '@/components/Tables/utils'
 

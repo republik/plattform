@@ -1,11 +1,11 @@
-import compose from 'lodash/flowRight'
 import withT from '@/lib/withT'
+import compose from 'lodash/flowRight'
 
 import { useState } from 'react'
 
 import { css } from '@republik/theme/css'
 
-import { Field, Label, Radio, useColorContext } from '@project-r/styleguide'
+import { Field, Label, Radio } from '@project-r/styleguide'
 
 const styles = {
   radio: css({

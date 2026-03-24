@@ -1,7 +1,7 @@
-import { Component } from 'react'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
 import { Autocomplete, Interaction, Label } from '@project-r/styleguide'
+import { Component } from 'react'
 
 import withT from '@/lib/withT'
 

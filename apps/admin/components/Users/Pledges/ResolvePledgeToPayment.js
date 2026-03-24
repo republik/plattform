@@ -4,10 +4,10 @@ import { css } from '@republik/theme/css'
 import { Component, Fragment } from 'react'
 import Textarea from 'react-textarea-autosize'
 
-import { Button, Field, Interaction, Loader } from '@project-r/styleguide'
+import { Field, Interaction, Loader } from '@project-r/styleguide'
 
 import { TextButton } from '@/components/Display/utils'
-import { SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@republik/ui'
 
 const RESOLVE_PLEDGE_TO_PAYMENT = gql`
   mutation resolvePledgeToPayment($pledgeId: ID!, $reason: String!) {
@@ -65,7 +65,7 @@ export default class ResolvePledgeToPayment extends Component {
             {(movePledge, { loading, error }) => {
               return (
                 <SimpleDialog
-                  onOpenChangeComplete={(open) => {
+                  onOpenChange={(open) => {
                     if (!open) {
                       this.closeHandler()
                     }
@@ -93,7 +93,6 @@ export default class ResolvePledgeToPayment extends Component {
                           onChange={this.reasonChangeHandler}
                         />
                         <Button
-                          primary
                           disabled={!reason}
                           onClick={this.submitHandler(movePledge)}
                         >

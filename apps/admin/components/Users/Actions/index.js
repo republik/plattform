@@ -1,8 +1,8 @@
-import { Component } from 'react'
-import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
+import { Query } from '@apollo/client/react/components'
+import { Component } from 'react'
 
-import { Loader, InlineSpinner } from '@project-r/styleguide'
+import { InlineSpinner, Loader } from '@project-r/styleguide'
 
 import { Section, SectionTitle } from '@/components/Display/utils'
 import DeleteUser from './DeleteUser'

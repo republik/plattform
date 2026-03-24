@@ -383,7 +383,7 @@ class Grant extends Component {
           {!grant.revokedAt && !grant.beginAt && !grant.invalidatedAt && (
             <>
               <div className={styles.button}>
-                <Button primary onClick={this.openHandlerRevoke}>
+                <Button onClick={this.openHandlerRevoke}>
                   {t('account/access/Grant/button/revoke')}
                 </Button>
               </div>
@@ -402,7 +402,7 @@ class Grant extends Component {
                     <SimpleDialog
                       title='Access Grant zurückziehen'
                       open={isOpenRevoke}
-                      onOpenChangeComplete={(open) => {
+                      onOpenChange={(open) => {
                         if (!open) {
                           this.closeHandlerRevoke()
                         }
@@ -428,7 +428,6 @@ class Grant extends Component {
                                 )}
                               >
                                 <Button
-                                  primary
                                   onClick={this.revokeHandler(revokeAccess)}
                                 >
                                   {t('account/access/Grant/button/confirm')}
@@ -447,7 +446,7 @@ class Grant extends Component {
           {(!grant.invalidatedAt || !grant.followupAt) && (
             <>
               <div className={styles.button}>
-                <Button primary onClick={this.openHandlerInvalidate}>
+                <Button onClick={this.openHandlerInvalidate}>
                   {!grant.invalidatedAt
                     ? t('account/access/Grant/button/invalidate')
                     : t('account/access/Grant/button/noFollowup')}
@@ -468,7 +467,7 @@ class Grant extends Component {
                       <SimpleDialog
                         title='Access Grant vorzeitig beenden'
                         open={isOpenInvalidate}
-                        onOpenChangeComplete={(open) => {
+                        onOpenChange={(open) => {
                           if (!open) {
                             this.closeHandlerInvalidate()
                           }
@@ -504,7 +503,6 @@ class Grant extends Component {
                                   )}
                                 >
                                   <Button
-                                    primary
                                     onClick={this.invalidateHandler(
                                       invalidateAccess,
                                     )}

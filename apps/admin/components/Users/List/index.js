@@ -1,9 +1,9 @@
-import { Fragment } from 'react'
-import { graphql } from '@apollo/client/react/hoc'
 import { gql } from '@apollo/client'
+import { graphql } from '@apollo/client/react/hoc'
+import { Fragment } from 'react'
 import InfiniteScroller from 'react-infinite-scroller'
 
-import { Loader, Interaction } from '@project-r/styleguide'
+import { Interaction, Loader } from '@project-r/styleguide'
 
 import { createChangeHandler } from '@/components/Tables/utils'
 

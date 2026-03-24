@@ -9,9 +9,9 @@ import {
   UserMagazineSubscriptionsQuery,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation, useQuery } from '@apollo/client'
-import { Button, Field } from '@project-r/styleguide'
+import { Field } from '@project-r/styleguide'
 import { css } from '@republik/theme/css'
-import { SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@republik/ui'
 import { TextButton } from 'components/Display/utils'
 import { useTranslation } from 'lib/useT'
 import { ReactNode, useState } from 'react'
@@ -217,9 +217,7 @@ function ConfirmOverlay({
             {children}
           </div>
 
-          <Button primary type='submit'>
-            {buttonLabel}
-          </Button>
+          <Button type='submit'>{buttonLabel}</Button>
         </form>
       </>
     </SimpleDialog>

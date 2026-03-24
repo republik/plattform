@@ -91,7 +91,7 @@ class AppendPeriod extends Component {
               </TextButton>
               {this.state.showForm && (
                 <SimpleDialog
-                  onOpenChangeComplete={(open) => {
+                  onOpenChange={(open) => {
                     if (!open) {
                       onClose()
                     }
