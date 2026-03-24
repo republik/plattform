@@ -1,7 +1,6 @@
 'use client'
 
 import { useParams, useSearchParams } from 'next/navigation'
-import { Fragment } from 'react'
 
 import App from '@/components/App'
 
@@ -21,7 +20,6 @@ import { Body, Content } from '@/components/Layout'
 import Header from '@/components/Layout/Header'
 import Access from '@/components/Users/Access'
 import Actions from '@/components/Users/Actions'
-import Campaigns from '@/components/Users/Campaigns'
 import Dialog from '@/components/Users/Dialog'
 import Links from '@/components/Users/Links'
 import Mailbox from '@/components/Users/Mailbox'

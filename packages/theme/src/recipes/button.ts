@@ -72,7 +72,7 @@ export const buttonRecipe = defineRecipe({
   compoundVariants: [
     {
       variant: 'link',
-      size: 'default',
+      size: ['default', 'small', 'large'],
       css: {
         p: '0',
       },

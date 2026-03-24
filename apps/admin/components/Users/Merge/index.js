@@ -1,4 +1,4 @@
-mport ErrorMessage from '@/components/ErrorMessage'
+import ErrorMessage from '@/components/ErrorMessage'
 import SearchUser from '@/components/Form/SearchUser'
 import { gql } from '@apollo/client'
 import { Interaction } from '@project-r/styleguide'
@@ -147,10 +147,7 @@ class MergeUsers extends Component {
             {targetUser && <CheckIcon />}
           </div>
         </div>
-        <Button
-          disabled={!sourceUser || !targetUser}
-          onClick={this.mergeUsers}
-        >
+        <Button disabled={!sourceUser || !targetUser} onClick={this.mergeUsers}>
           Zusammenführen
         </Button>
         {mergedUser && (

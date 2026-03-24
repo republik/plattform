@@ -3,6 +3,7 @@ import { formatDuration, intervalToDuration } from 'date-fns'
 import { de } from 'date-fns/locale'
 import { ComponentPropsWithoutRef } from 'react'
 import { swissTime } from '@/lib/utils/formats'
+import { Button } from '@republik/ui'
 
 export const displayStyles = {
   hFlexBox: css({
@@ -117,27 +118,7 @@ export const SectionMenu = (props: ComponentPropsWithoutRef<'div'>) => (
 )
 
 export const TextButton = (props: ComponentPropsWithoutRef<'button'>) => (
-  <button
-    {...props}
-    className={cx(
-      css({
-        cursor: 'pointer',
-        display: 'inline-block',
-        outline: 'none',
-        background: 'transparent',
-        border: 'none',
-        padding: '0',
-        color: 'primary',
-        '&:not([disabled]):focus, &:hover': {
-          color: 'primaryHover',
-        },
-        _disabled: {
-          color: 'disabled',
-        },
-      }),
-      props.className,
-    )}
-  />
+  <Button variant='link' {...props} />
 )
 
 export const DL = (props: ComponentPropsWithoutRef<'div'>) => (
