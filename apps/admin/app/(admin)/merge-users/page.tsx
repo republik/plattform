@@ -5,7 +5,6 @@ import { useApolloClient } from '@apollo/client'
 import App from '@/components/App'
 import { Body, Content, Header } from '@/components/Layout'
 import MergeUsers from '@/components/Users/Merge'
-import { Container } from '@project-r/styleguide'
 
 const MergeUser = () => {
   const apolloClient = useApolloClient()
@@ -14,9 +13,7 @@ const MergeUser = () => {
       <Body>
         <Header />
         <Content id='content'>
-          <Container>
-            <MergeUsers apolloClient={apolloClient} />
-          </Container>
+          <MergeUsers apolloClient={apolloClient} />
         </Content>
       </Body>
     </App>

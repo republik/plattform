@@ -167,8 +167,4 @@ class MergeUsers extends Component {
   }
 }
 
-MergeUsers.contextTypes = {
-  client: PropTypes.object,
-}
-
 export default MergeUsers
