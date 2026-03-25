@@ -9,6 +9,7 @@ import Roles from '@/components/Users/Roles'
 import Actions from '@/components/Users/Actions'
 import Links from '@/components/Users/Links'
 import Mailbox from '@/components/Users/Mailbox'
+import { UserEmail } from './user-email'
 
 const styles = {
   grid: css({
@@ -30,7 +31,8 @@ export default async function UserPage({ params }) {
     <div className={styles.grid}>
       <div className={styles.span1}>
         <User userId={userId} />
-        <Email userId={userId} />
+
+        <UserEmail userId={userId} />
       </div>
       <div className={styles.span1}>
         <Roles userId={userId} />
