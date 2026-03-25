@@ -1,8 +1,7 @@
+import { UserHeader } from '@/app/(admin)/users/[userId]/user-header'
 import Header from '@/components/Layout/Header'
-import ProfileHeader from '@/components/Users/header/ProfileHeader'
 import { css } from '@republik/theme/css'
 import { UserMenu } from './user-menu'
-import { UserHeader } from '@/components/Users/header/user-header'
 
 export default async function UserLayout({ children, params }) {
   const { userId } = await params

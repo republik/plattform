@@ -4,7 +4,7 @@ import { UserProfileDocument } from '@/graphql/republik-api/__generated__/gql/gr
 import { useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
-import { Avatar } from './avatar'
+import { Avatar } from './user-avatar'
 
 export function UserHeader({ userId }: { userId: string }) {
   const { data } = useQuery(UserProfileDocument, {

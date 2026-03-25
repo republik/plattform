@@ -15,7 +15,7 @@ import Head from 'next/head'
 import { REPUBLIK_FRONTEND_URL } from '@/server/constants'
 
 import { displayDate, Section } from '@/components/Display/utils'
-import { Avatar } from './avatar'
+import { Avatar } from '../../../app/(admin)/users/[userId]/user-avatar'
 
 const styles = {
   header: css({
