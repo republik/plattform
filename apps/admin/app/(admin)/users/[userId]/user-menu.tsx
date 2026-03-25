@@ -27,7 +27,7 @@ function NavLink({ href, label }: { href: string; label: string }) {
 
 export function UserMenu({ userId }: { userId: string }) {
   return (
-    <div className={css({ display: 'flex', gap: '4' })}>
+    <div className={css({ display: 'flex', gap: '4', px: '4' })}>
       <NavLink href={`/users/${userId}`} label='Übersicht' />
       <NavLink href={`/users/${userId}/sessions`} label='Sessions' />
       <NavLink href={`/users/${userId}/access-grants`} label='Access Grants' />
