@@ -29,7 +29,8 @@ export function UserMenu({ userId }: { userId: string }) {
   return (
     <div className={css({ display: 'flex', gap: '4', px: '4' })}>
       <NavLink href={`/users/${userId}`} label='Übersicht' />
-      <NavLink href={`/users/${userId}/sessions`} label='Sessions' />
+      <NavLink href={`/users/${userId}/subscriptions`} label='Abonnements' />
+      <NavLink href={`/users/${userId}/newsletters`} label='Newsletter' />
       <NavLink href={`/users/${userId}/access-grants`} label='Access Grants' />
       <NavLink href={`/users/${userId}/mailbox`} label='E-Mails' />
       <NavLink href={`/users/${userId}/dialog`} label='Dialog' />

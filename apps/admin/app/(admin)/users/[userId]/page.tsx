@@ -3,10 +3,7 @@ import { css } from '@republik/theme/css'
 import AdminNotes from '@/components/Users/AdminNotes'
 import AuthSettings from '@/components/Users/AuthSettings'
 import Email from '@/components/Users/Email'
-import Memberships from '@/components/Users/Memberships'
-import NewsletterSubscriptions from '@/components/Users/NewsletterSubscriptions'
 import User from '@/components/Users/Particulars'
-import Pledges from '@/components/Users/Pledges'
 import Roles from '@/components/Users/Roles'
 
 import Actions from '@/components/Users/Actions'
@@ -36,7 +33,6 @@ export default async function UserPage({ params }) {
         <Email userId={userId} />
       </div>
       <div className={styles.span1}>
-        <NewsletterSubscriptions userId={userId} />
         <Roles userId={userId} />
         <Actions userId={userId} />
       </div>
@@ -46,12 +42,6 @@ export default async function UserPage({ params }) {
         <Links userId={userId} />
         {/* @ts-expect-error not typed */}
         <AdminNotes userId={userId} />
-      </div>
-      <div className={styles.span2}>
-        <Memberships userId={userId} />
-      </div>
-      <div className={styles.span2}>
-        <Pledges userId={userId} />
       </div>
     </div>
   )
