@@ -40,14 +40,14 @@ export function UserMenu({ userId }: { userId: string }) {
         display: 'flex',
         flexDirection: 'column',
         gap: '1',
-        py: '4',
-        px: '2',
+        p: '2',
       })}
     >
       <NavLink href={`/users/${userId}`} label='Übersicht' />
       <NavLink href={`/users/${userId}/subscriptions`} label='Abonnements' />
       <NavLink href={`/users/${userId}/newsletters`} label='Newsletter' />
       <NavLink href={`/users/${userId}/access-grants`} label='Access Grants' />
+      <NavLink href={`/users/${userId}/sessions`} label='Sessions' />
       <NavLink href={`/users/${userId}/mailbox`} label='E-Mails' />
       <NavLink href={`/users/${userId}/dialog`} label='Dialog' />
     </div>

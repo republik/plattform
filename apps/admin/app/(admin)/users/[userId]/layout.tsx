@@ -1,7 +1,8 @@
 import Header from '@/components/Layout/Header'
-import ProfileHeader from '@/components/Users/ProfileHeader'
+import ProfileHeader from '@/components/Users/header/ProfileHeader'
 import { css } from '@republik/theme/css'
 import { UserMenu } from './user-menu'
+import { UserHeader } from '@/components/Users/header/user-header'
 
 export default async function UserLayout({ children, params }) {
   const { userId } = await params
@@ -22,13 +23,12 @@ export default async function UserLayout({ children, params }) {
         className={css({
           gridArea: 'header',
 
-          borderBottomColor: 'divider',
-          borderBottomStyle: 'solid',
-          borderBottomWidth: '1px',
+          borderColor: 'divider',
+          borderBottom: '1px solid',
         })}
       >
         <Header />
-        <ProfileHeader userId={userId} section={'index'} />
+        <UserHeader userId={userId} />
       </div>
 
       <div

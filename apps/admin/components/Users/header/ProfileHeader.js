@@ -15,6 +15,7 @@ import Head from 'next/head'
 import { REPUBLIK_FRONTEND_URL } from '@/server/constants'
 
 import { displayDate, Section } from '@/components/Display/utils'
+import { Avatar } from './avatar'
 
 const styles = {
   header: css({
@@ -153,9 +154,7 @@ const ProfileHeader = ({ userId, section }) => {
                     </title>
                   </Head>
                   <div style={{ clear: 'both', margin: '0 2px' }}>
-                    {user.portrait && (
-                      <img src={user.portrait} className={styles.portrait} />
-                    )}
+                    <Avatar {...user} />
                     <Interaction.H3>{name || user.email}</Interaction.H3>
                     <div className={styles.byline}>
                       {byline}
