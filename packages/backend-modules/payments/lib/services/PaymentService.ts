@@ -240,7 +240,7 @@ export class PaymentService {
     })
   }
 
-  async getPromotion(
+  async getPromotionByCode(
     company: Company,
     promoCode: string,
   ): Promise<Stripe.PromotionCode | null> {
@@ -251,6 +251,17 @@ export class PaymentService {
     })
 
     return promotion.data.length === 1 ? promotion.data[0] : null
+  }
+
+  async getPromotionById(
+    company: Company,
+    id: string,
+  ): Promise<Stripe.PromotionCode | null> {
+    const promotion = await this.#stripeAdapters[
+      company
+    ].promotionCodes.retrieve(id)
+
+    return promotion
   }
 
   async getCoupon(

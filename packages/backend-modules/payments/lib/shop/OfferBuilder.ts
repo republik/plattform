@@ -181,7 +181,7 @@ export class OfferBuilder {
     offer: Offer,
   ): Promise<APIDiscountResult | null> {
     if (offer.fixedDiscount) {
-      const promotion = await this.paymentService.getPromotion(
+      const promotion = await this.paymentService.getPromotionByCode(
         offer.company,
         offer.fixedDiscount,
       )
@@ -190,7 +190,7 @@ export class OfferBuilder {
     }
 
     if (this.promoCode && offer.allowPromotions) {
-      const promotion = await this.paymentService.getPromotion(
+      const promotion = await this.paymentService.getPromotionByCode(
         offer.company,
         this.promoCode,
       )
