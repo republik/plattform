@@ -669,7 +669,7 @@ export class GiftShop {
 
   private async buildGiftItems(args: { offerId: string }): Promise<Item[]> {
     this.#offerService.isValidOffer(args.offerId)
-    const companyName = this.#offerService.getOfferMerchent(args.offerId)
+    const companyName = this.#offerService.getOfferMerchant(args.offerId)
 
     const lookupKeys = this.#offerService
       .getOfferItems(args.offerId)

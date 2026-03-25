@@ -33,7 +33,7 @@ export class OfferService {
     }
   }
 
-  getOfferMerchent(offerId: OfferId): Company {
+  getOfferMerchant(offerId: OfferId): Company {
     return this.offers.get(offerId)!.company
   }
 
