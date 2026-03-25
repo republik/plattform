@@ -12,11 +12,19 @@ function NavLink({ href, label }: { href: string; label: string }) {
       href={href}
       data-active={pathname === href}
       className={css({
-        color: 'text',
+        color: 'textSoft',
+        py: '1',
+        px: '2',
+        borderRadius: '[5px]',
 
         textDecoration: 'none',
+        _hover: {
+          background: 'hover',
+          color: 'text',
+        },
         '&[data-active="true"]': {
-          textDecoration: 'underline',
+          background: 'hover',
+          color: 'text',
         },
       })}
     >
@@ -27,7 +35,15 @@ function NavLink({ href, label }: { href: string; label: string }) {
 
 export function UserMenu({ userId }: { userId: string }) {
   return (
-    <div className={css({ display: 'flex', gap: '4', px: '4' })}>
+    <div
+      className={css({
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1',
+        py: '4',
+        px: '2',
+      })}
+    >
       <NavLink href={`/users/${userId}`} label='Übersicht' />
       <NavLink href={`/users/${userId}/subscriptions`} label='Abonnements' />
       <NavLink href={`/users/${userId}/newsletters`} label='Newsletter' />
