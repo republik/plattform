@@ -1977,6 +1977,10 @@
       "value": "Der gewählte Token-Typ steht nicht zur Verfügung. Bitte versuchen Sie sich mittels eines anderen Verfahrens anzumelden."
     },
     {
+      "key": "api/auth/tokenType/notSupported",
+      "value": "Der gewählte Token-Typ wird nicht unterstützt."
+    },
+    {
       "key": "api/auth/shared-secret-not-supported",
       "value": "Der angegebene Token Challenge unterstützt keine Shared Secrets."
     },
