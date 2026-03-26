@@ -1,42 +1,62 @@
+'use client'
 import { Me } from '@/components/Auth/Me'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { Logo } from './Logo'
-
-const link = css({
-  textDecoration: 'none',
-  color: 'primary',
-  _visited: {
-    color: 'primary',
-  },
-  _hover: {
-    color: 'primaryHover',
-  },
-})
+import { usePathname, useSearchParams } from 'next/navigation'
 
 const HeaderSection = (props: ComponentPropsWithoutRef<'div'>) => (
   <div
     {...props}
-    className={cx(
-      css({ display: 'flex', flexDirection: 'column' }),
-      props.className,
-    )}
+    className={cx(css({ display: 'flex', gap: '4' }), props.className)}
   />
 )
 
-const HeaderComponent = ({ ...props }) => {
-  const searchParams = props.search ? { search: props.search } : {}
+function NavLink({
+  href,
+  children,
+  ...props
+}: ComponentPropsWithoutRef<typeof Link>) {
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
 
+  return (
+    <Link
+      data-active={pathname.startsWith(href.toString())}
+      className={css({
+        textDecoration: 'none',
+        color: 'current',
+        _visited: {
+          color: 'current',
+        },
+        _hover: {
+          textDecoration: 'underline',
+        },
+
+        '&[data-active="true"]': {
+          textDecoration: 'underline',
+        },
+      })}
+      href={`${href}?${searchParams}`}
+      {...props}
+    >
+      {children}
+    </Link>
+  )
+}
+
+const HeaderComponent = () => {
   return (
     <header
       className={css({
         borderBottomStyle: 'solid',
         borderBottomWidth: '1px',
         borderBottomColor: 'divider',
-        background: 'background',
+        background: 'text',
+        color: 'text.inverted',
         display: 'grid',
-        gridTemplateColumns: '[52px 1fr max-content]',
+        gridTemplateColumns: '[auto 1fr max-content]',
         alignItems: 'center',
         gap: '4',
         py: '3',
@@ -44,51 +64,25 @@ const HeaderComponent = ({ ...props }) => {
         zIndex: 1,
       })}
     >
+      <div
+        className={css({
+          display: 'flex',
+          alignItems: 'baseline',
+          gap: '2',
+        })}
+      >
+        <Logo className={css({ width: '[20px]', height: 'auto' })} />
+        <h2 className={css({ textStyle: 'h2Sans' })}>Admin</h2>
+      </div>
       <HeaderSection>
-        <Logo className={css({ width: 'full', height: 'auto' })} />
-      </HeaderSection>
-      <HeaderSection>
-        <h1 className={css({ textStyle: 'h1Sans' })}>Admin</h1>
-        <nav className={css({ display: 'flex', gap: '3' })}>
-          <Link
-            href={{
-              pathname: '/users',
-              query: searchParams,
-            }}
-            className={link}
-          >
-            Users
-          </Link>
-          <Link
-            href={{
-              pathname: '/mailbox',
-              query: searchParams,
-            }}
-            className={link}
-          >
-            E-Mails
-          </Link>
-          <Link
-            href={{
-              pathname: '/payments',
-              query: searchParams,
-            }}
-            className={link}
-          >
-            Payments
-          </Link>
-          <Link
-            href={{
-              pathname: '/postfinance-payments',
-              query: searchParams,
-            }}
-            className={link}
-          >
-            Postfinance Payments
-          </Link>
-          <Link href='/merge-users' className={link}>
-            Users zusammenführen
-          </Link>
+        <nav
+          className={css({ display: 'flex', gap: '3', alignItems: 'baseline' })}
+        >
+          <NavLink href='/users'>Users</NavLink>
+          <NavLink href='/mailbox'>E-Mails</NavLink>
+          <NavLink href='/payments'>Payments</NavLink>
+          <NavLink href='/postfinance-payments'>Postfinance Payments</NavLink>
+          <NavLink href='/merge-users'>Users zusammenführen</NavLink>
         </nav>
       </HeaderSection>
       <HeaderSection>
