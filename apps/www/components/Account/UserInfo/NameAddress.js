@@ -72,6 +72,7 @@ const getValues = (me) => {
   let addressState = {}
   if (me.address) {
     addressState = {
+      organization: me.address.organization,
       name: me.address.name || me.name,
       line1: me.address.line1,
       line2: me.address.line2,
@@ -130,6 +131,7 @@ const UserNameAddress = compose(
               <P>
                 {intersperse(
                   [
+                    me.address.organization,
                     me.address.name,
                     me.address.line1,
                     me.address.line2,
@@ -340,6 +342,7 @@ class UpdateMe extends Component {
                                 address: isEmptyAddress(values, me)
                                   ? undefined
                                   : {
+                                      organization: values.organization,
                                       name: values.name,
                                       line1: values.line1,
                                       line2: values.line2,

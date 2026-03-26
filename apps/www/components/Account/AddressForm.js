@@ -11,6 +11,11 @@ export const DEFAULT_COUNTRY = COUNTRIES[0]
 
 export const fields = (t) => [
   {
+    label: t('Account/AddressForm/organization/label'),
+    name: 'organization',
+    autoComplete: 'organization',
+  },
+  {
     label: t('Account/AddressForm/name/label'),
     name: 'name',
     autoComplete: 'name',
@@ -19,7 +24,6 @@ export const fields = (t) => [
       (!value?.length && t('Account/AddressForm/name/error/empty')) ||
       (value?.length > 70 &&
         t('Account/AddressForm/name/error/tooLong', { maxLength: 70 })),
-    explanation: <Hint t={t} tKey={'Account/AddressForm/name/explanation'} />,
   },
   {
     label: t('Account/AddressForm/line1/label'),
@@ -35,6 +39,7 @@ export const fields = (t) => [
     label: t('Account/AddressForm/line2/label'),
     name: 'line2',
     autoComplete: 'address-line2',
+    explanation: <Hint t={t} tKey={'Account/AddressForm/line2/explanation'} />,
   },
   {
     label: t('Account/AddressForm/postalCode/label'),
@@ -66,6 +71,7 @@ export const fields = (t) => [
 
 export const isEmptyAddress = (values, me) => {
   const addressString = [
+    values.organization,
     values.name,
     values.line1,
     values.line2,
@@ -95,6 +101,7 @@ export const AddressView = ({ values }) => {
     <Interaction.P>
       {intersperse(
         [
+          values.organization,
           values.name,
           values.line1,
           values.line2,

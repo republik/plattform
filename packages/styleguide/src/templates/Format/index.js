@@ -41,8 +41,8 @@ const createFormatSchema = ({
         ref: 'bool',
       },
       {
-        label: 'Als Email verschickbar',
-        key: 'sendAsEmail',
+        label: 'Störer ausschalten',
+        key: 'isPaynoteExcluded',
         ref: 'bool',
       },
       {

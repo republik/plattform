@@ -5,6 +5,10 @@ export const COUNTRIES = ['Schweiz', 'Deutschland', 'Österreich']
 
 export const fields = (t) => [
   {
+    label: t('me/addressForm/organization/label'),
+    name: 'organization',
+  },
+  {
     label: t('me/addressForm/name/label'),
     name: 'name',
     validator: (value) =>

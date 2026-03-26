@@ -367,16 +367,20 @@ module.exports = async (_, args, context) => {
       })
     }
 
+    // Get newsletter campaign config from format meta
+    const newsletterConfig = resolved.meta?.format?.meta?.newsletter ?? {}
+
     await updateCampaign({
       campaignId,
       campaignConfig: {
-        key: resolved.meta?.format?.meta?.repoId,
-        subject_line: emailSubject,
+        ...newsletterConfig,
+        subjectLine: emailSubject,
         title,
       },
     }).catch((error) => {
-      console.error(error)
-      throw new Error(t('api/publish/error/updateCampaign'))
+      throw new Error(
+        `${t('api/publish/error/updateCampaign')}: ${error.message}`,
+      )
     })
 
     const html = getHTML(resolvedDoc)

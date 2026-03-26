@@ -110,6 +110,7 @@ const Table = ({ items, sort, onSort, ...props }) => {
               <td>
                 {address &&
                   [
+                    address.organization,
                     name !== address.name && address.name,
                     address.line1,
                     address.line2,

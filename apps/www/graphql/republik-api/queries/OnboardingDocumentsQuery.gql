@@ -5,6 +5,7 @@ query OnboardingDocuments($repoIds: [ID!]) {
       repoId
       meta {
         title
+        description
         path
         audioCover
       }

@@ -47,6 +47,7 @@ export const presetRepublik = definePreset({
           narrow: { value: '30rem' },
           center: { value: '695px' },
           shop: { value: '866px' },
+          carousel: { value: '1300px' },
         },
         spacing: {
           0: { value: '0rem' },
@@ -65,6 +66,8 @@ export const presetRepublik = definePreset({
           10: { value: '2.5rem' },
           12: { value: '3rem' },
           16: { value: '4rem' },
+          20: { value: '5rem' },
+          24: { value: '6rem' },
           32: { value: '8rem' },
         },
         radii: {

@@ -11,7 +11,6 @@ import { DEFAULT_TOKEN_TYPE } from '../constants'
 import RawHtmlTranslation from '../RawHtmlTranslation'
 import Me from './Me'
 import TokenAuthorization from './TokenAuthorization'
-import MacNewsletterSubscription from './MacNewsletterSubscription'
 import Link from 'next/link'
 
 const { H1, P } = Interaction
@@ -20,12 +19,6 @@ const knownTypes = [
   'email-confirmed',
   'invalid-email',
   'invalid-token',
-  // Deprecated (superseeded by "newsletter")
-  'newsletter-subscription',
-  // Deprecated (superseeded by "newsletter")
-  // Workaround to handle "script" replacements in email clients
-  'newsletter-subscript-disabledion',
-  'newsletter',
   'session-denied',
   'token-authorization',
   'unavailable',
@@ -69,34 +62,6 @@ const AuthNotification = ({ query, goTo, onClose, t, me }) => {
         noAutoAuthorize={noAutoAuthorize}
         context={context}
         goTo={goTo}
-      />
-    )
-  } else if (
-    [
-      // Deprecated (superseeded by "newsletter")
-      'newsletter-subscription',
-      // Deprecated (superseeded by "newsletter")
-      // Workaround to handle "script" replacements in email clients
-      'newsletter-subscript-disabledion',
-      'newsletter',
-    ].includes(type)
-  ) {
-    const { name, subscribed, mac } = query
-    title = t.first(
-      [
-        `notifications/newsletter/name:${name}/title`,
-        `notifications/newsletter/title`,
-      ],
-      undefined,
-      '',
-    )
-    content = (
-      <MacNewsletterSubscription
-        name={name}
-        subscribed={!!subscribed}
-        mac={mac}
-        email={email}
-        context={context}
       />
     )
   } else {
