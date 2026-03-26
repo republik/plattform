@@ -44,6 +44,7 @@ export function UserMenu({ userId }: { userId: string }) {
       })}
     >
       <NavLink href={`/users/${userId}`} label='Übersicht' />
+      <NavLink href={`/users/${userId}/details`} label='Personalien' />
       <NavLink href={`/users/${userId}/subscriptions`} label='Abonnements' />
       <NavLink href={`/users/${userId}/newsletters`} label='Newsletter' />
       <NavLink href={`/users/${userId}/access-grants`} label='Access Grants' />

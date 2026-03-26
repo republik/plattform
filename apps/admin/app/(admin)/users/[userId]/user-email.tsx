@@ -2,12 +2,12 @@
 import { EditInline } from '@/components/edit-inline'
 import {
   UserProfileDocument,
-  UserUpdateEmailDocument,
+  UpdateUserEmailDocument,
 } from '@/graphql/republik-api/__generated__/gql/graphql'
 import { useMutation, useQuery } from '@apollo/client'
 import { Form, Field, Input, Button } from '@republik/ui'
 
-function EditUserEmail({
+export function EditUserEmail({
   userId,
   email,
   onComplete,
@@ -17,7 +17,7 @@ function EditUserEmail({
   onComplete?: () => void
 }) {
   const [updateEmail, { loading, error }] = useMutation(
-    UserUpdateEmailDocument,
+    UpdateUserEmailDocument,
     {},
   )
 
@@ -37,9 +37,11 @@ function EditUserEmail({
         <Input type='email' defaultValue={email} />
       </Field.Root>
 
-      <Button type='submit' disabled={loading}>
-        Ändern
-      </Button>
+      <div>
+        <Button type='submit' disabled={loading}>
+          Ändern
+        </Button>
+      </div>
     </Form>
   )
 }

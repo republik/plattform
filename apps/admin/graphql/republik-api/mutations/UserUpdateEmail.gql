@@ -1,6 +1,0 @@
-mutation UserUpdateEmail($id: ID!, $email: String!) {
-  updateEmail(userId: $id, email: $email) {
-    id
-    email
-  }
-}

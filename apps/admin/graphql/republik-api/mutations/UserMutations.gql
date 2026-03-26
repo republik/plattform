@@ -1,0 +1,43 @@
+mutation UpdateUserEmail($id: ID!, $email: String!) {
+  updateEmail(userId: $id, email: $email) {
+    id
+    email
+  }
+}
+
+mutation UpdateUserDetails(
+  $id: ID!
+  $birthyear: Int
+  $firstName: String!
+  $lastName: String!
+  $phoneNumber: String
+  $gender: String
+  $address: AddressInput
+) {
+  updateUser(
+    userId: $id
+    birthyear: $birthyear
+    firstName: $firstName
+    lastName: $lastName
+    phoneNumber: $phoneNumber
+    gender: $gender
+    address: $address
+  ) {
+    id
+    name
+    firstName
+    lastName
+    phoneNumber
+    birthyear
+    gender
+    address {
+      id
+      name
+      line1
+      line2
+      postalCode
+      city
+      country
+    }
+  }
+}
