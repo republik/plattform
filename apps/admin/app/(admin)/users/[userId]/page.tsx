@@ -2,15 +2,13 @@ import { css } from '@republik/theme/css'
 
 import AdminNotes from '@/components/Users/AdminNotes'
 import AuthSettings from '@/components/Users/AuthSettings'
-import Email from '@/components/Users/Email'
-import User from '@/components/Users/Particulars'
 import Roles from '@/components/Users/Roles'
 
 import Actions from '@/components/Users/Actions'
 import Links from '@/components/Users/Links'
 import Mailbox from '@/components/Users/Mailbox'
-import { UserEmail } from './user-email'
 import { UserDetails } from './user-details'
+import { FormCard } from '@/components/form-card'
 
 const styles = {
   grid: css({
@@ -29,24 +27,21 @@ export default async function UserPage({ params }) {
   const { userId } = await params
 
   return (
-    <div className={styles.grid}>
-      <div className={styles.span1}>
+    <>
+      <FormCard>
         <UserDetails userId={userId} />
-        <UserEmail userId={userId} />
-        <hr />
-        <User userId={userId} />
-      </div>
-      <div className={styles.span1}>
+      </FormCard>
+      <FormCard>
         <Roles userId={userId} />
         <Actions userId={userId} />
-      </div>
-      <div className={styles.span2}>
+      </FormCard>
+      <FormCard>
         <AuthSettings userId={userId} />
         <Mailbox userId={userId} narrow={3} />
         <Links userId={userId} />
         {/* @ts-expect-error not typed */}
         <AdminNotes userId={userId} />
-      </div>
-    </div>
+      </FormCard>
+    </>
   )
 }

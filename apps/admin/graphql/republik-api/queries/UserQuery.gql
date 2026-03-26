@@ -10,6 +10,15 @@ query UserProfile($id: String) {
     phoneNumber
     username
     portrait(size: SMALL)
+    address {
+      organization
+      name
+      line1
+      line2
+      postalCode
+      city
+      country
+    }
     activeMembership {
       type {
         name

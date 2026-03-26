@@ -7,6 +7,7 @@ import {
 } from '@/graphql/republik-api/__generated__/gql/graphql'
 import { useMutation, useQuery } from '@apollo/client'
 import { Button, Field, Form, Input } from '@republik/ui'
+import Link from 'next/link'
 
 export function EditUserDetails({
   userId,
@@ -64,17 +65,21 @@ export function UserDetails({ userId }: { userId: string }) {
   })
 
   return (
-    <EditInline
-      title='Personalien'
-      renderEditing={({ onComplete }) => (
-        <EditUserDetails
-          userId={userId}
-          values={data?.user}
-          onComplete={onComplete}
-        />
-      )}
-    >
-      {data?.user?.name}
-    </EditInline>
+    <div>
+      <h2>Personalien</h2>
+      <div>
+        {data?.user?.firstName} {data?.user?.lastName}
+      </div>
+      <h2>E-Mail-Adresse</h2>
+      <Link href={`mailto:${data?.user?.email}`}>{data?.user?.email}</Link>
+      <h2>Adresse</h2>
+      <div>{data?.user?.address.organization}</div>
+      <div>{data?.user?.address.name}</div>
+      <div>{data?.user?.address.line1}</div>
+      <div>{data?.user?.address.line2}</div>
+      <div>{data?.user?.address.postalCode}</div>
+      <div>{data?.user?.address.city}</div>
+      <div>{data?.user?.address.country}</div>
+    </div>
   )
 }

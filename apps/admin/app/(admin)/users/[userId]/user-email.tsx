@@ -1,11 +1,7 @@
 'use client'
-import { EditInline } from '@/components/edit-inline'
-import {
-  UserProfileDocument,
-  UpdateUserEmailDocument,
-} from '@/graphql/republik-api/__generated__/gql/graphql'
-import { useMutation, useQuery } from '@apollo/client'
-import { Form, Field, Input, Button } from '@republik/ui'
+import { UpdateUserEmailDocument } from '@/graphql/republik-api/__generated__/gql/graphql'
+import { useMutation } from '@apollo/client'
+import { Button, Field, Form, Input } from '@republik/ui'
 
 export function EditUserEmail({
   userId,
@@ -43,29 +39,5 @@ export function EditUserEmail({
         </Button>
       </div>
     </Form>
-  )
-}
-
-export function UserEmail({ userId }: { userId: string }) {
-  const { data } = useQuery(UserProfileDocument, {
-    variables: {
-      id: userId,
-    },
-  })
-
-  return (
-    <EditInline
-      title='E-Mail-Adresse'
-      renderEditing={({ onComplete }) => (
-        <EditUserEmail
-          key={data?.user?.email}
-          userId={userId}
-          email={data?.user?.email ?? ''}
-          onComplete={onComplete}
-        />
-      )}
-    >
-      {data?.user?.email}
-    </EditInline>
   )
 }
