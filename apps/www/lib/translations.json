@@ -7852,6 +7852,30 @@
       "value": "Alle 1 bis 2 Monate"
     },
     {
+      "key": "newsletters/COURSE-BIGTECH/name",
+      "value": "Kurs: Big Tech"
+    },
+    {
+      "key": "newsletters/COURSE-BIGTECH/description",
+      "value": "Wie grosse Technologiekonzerne unsere Gesellschaft prägen – und was wir dagegen tun können."
+    },
+    {
+      "key": "newsletters/COURSE-BIGTECH/schedule",
+      "value": "Kurs"
+    },
+    {
+      "key": "newsletters/COURSE-CLIMATE/name",
+      "value": "Kurs: Klima"
+    },
+    {
+      "key": "newsletters/COURSE-CLIMATE/description",
+      "value": "Die Klimakrise verstehen, einordnen und handeln – ein Kurs der Republik."
+    },
+    {
+      "key": "newsletters/COURSE-CLIMATE/schedule",
+      "value": "Kurs"
+    },
+    {
       "key": "onboarding/newsletters/step",
       "value": "Tipp 1 von 2"
     },

@@ -8,6 +8,16 @@ export default defineConfig({
 
   presets,
 
+  theme: {
+    extend: {
+      containerSizes: {
+        sm: '375px',
+        md: '768px',
+        lg: '1025px',
+      },
+    },
+  },
+
   // Files where CSS is extracted from
   // NOTE: must include any component packages that are imported in the app
   include: ['./{pages,components,src}/**/*.{js,jsx,ts,tsx}'],

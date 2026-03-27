@@ -20,8 +20,12 @@ import { useTranslation } from '../../../lib/withT'
 
 function NewsletterSubscribeForm({
   newsletter,
+  accentColor,
+  accentTextColor,
 }: {
   newsletter: NewsletterName
+  accentColor?: string
+  accentTextColor?: string
 }) {
   const { t } = useTranslation()
   const track = useTrackEvent()
@@ -80,33 +84,41 @@ function NewsletterSubscribeForm({
 
   return (
     <form action='POST' onSubmit={submitEmail} key='email-submit'>
-      <div
-        className={css({
-          gap: '2',
-          display: 'flex',
-          alignItems: 'end',
-          flexDirection: 'column',
-          pb: 2,
-          md: { flexDirection: 'row' },
-        })}
-      >
-        <FormField label='Ihre E-Mail-Adresse' name='email' type='email' />
-        <div className={css({ display: 'none', md: { display: 'block' } })}>
-          <Button type='submit' disabled={isPending} loading={isPending}>
+      <div className={css({ containerType: 'inline-size' })}>
+        <div
+          className={css({
+            gap: '2',
+            display: 'flex',
+            alignItems: 'end',
+            flexDirection: 'column',
+            pb: 2,
+            '@/md': { flexDirection: 'row' },
+          })}
+        >
+          <FormField label='Ihre E-Mail-Adresse' name='email' type='email' />
+          <div className={css({ display: 'none', '@/md': { display: 'block' } })}>
+            <Button
+              type='submit'
+              disabled={isPending}
+              loading={isPending}
+              style={accentColor ? { backgroundColor: accentColor, color: accentTextColor, borderColor: accentColor } : undefined}
+            >
+              {t('newsletter/subscribe')}
+            </Button>
+          </div>
+        </div>
+        {error && <ErrorMessage error={error} />}
+        <div className={css({ '@/md': { display: 'none' } })}>
+          <Button
+            type='submit'
+            size='full'
+            disabled={isPending}
+            loading={isPending}
+            style={accentColor ? { backgroundColor: accentColor, color: accentTextColor, borderColor: accentColor } : undefined}
+          >
             {t('newsletter/subscribe')}
           </Button>
         </div>
-      </div>
-      {error && <ErrorMessage error={error} />}
-      <div className={css({ md: { display: 'none' } })}>
-        <Button
-          type='submit'
-          size='full'
-          disabled={isPending}
-          loading={isPending}
-        >
-          {t('newsletter/subscribe')}
-        </Button>
       </div>
     </form>
   )
@@ -114,8 +126,12 @@ function NewsletterSubscribeForm({
 
 export function NewsletterSubscribeButton({
   newsletter,
+  accentColor,
+  accentTextColor,
 }: {
   newsletter: NewsletterName
+  accentColor?: string
+  accentTextColor?: string
 }) {
   const { t } = useTranslation()
   const [updateNewsletterSubscription] = useMutation(
@@ -129,7 +145,7 @@ export function NewsletterSubscribeButton({
   if (!data) return null
 
   if (!data.me) {
-    return <NewsletterSubscribeForm newsletter={newsletter} />
+    return <NewsletterSubscribeForm newsletter={newsletter} accentColor={accentColor} accentTextColor={accentTextColor} />
   }
 
   const subscriptions = data.me.newsletterSettings.subscriptions
@@ -174,6 +190,7 @@ export function NewsletterSubscribeButton({
       type='button'
       variant={isSubscribed ? 'outline' : 'default'}
       loading={isPending}
+      style={accentColor && !isSubscribed ? { backgroundColor: accentColor, color: accentTextColor, borderColor: accentColor } : undefined}
     >
       {t(isSubscribed ? 'newsletter/isSubscribed' : 'newsletter/subscribe')}
     </Button>

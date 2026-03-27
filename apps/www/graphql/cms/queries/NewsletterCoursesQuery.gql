@@ -1,0 +1,58 @@
+query NewsletterCourses {
+  allNewsletterCourses {
+    title
+    newsletterId
+    promise
+    content
+    slug
+    heroBackgroundColor {
+      hex
+    }
+    heroTextColor {
+      hex
+    }
+    backgroundColor {
+      hex
+    }
+    textColor {
+      hex
+    }
+    accentColor {
+      hex
+    }
+    accentTextColor {
+      hex
+    }
+    image {
+      url(imgixParams: { w: 900, fit: crop })
+      width
+      height
+      alt
+    }
+    entries {
+      title
+      description
+    }
+    numberOfParticipants
+    testimonials {
+      testimonial
+    }
+    reasons {
+      testimonial
+    }
+    credits {
+      ... on NewsletterCourseContributorRecord {
+        name
+        role
+        url
+        mainContributor
+        image {
+          url(imgixParams: { w: 900, fit: crop })
+          width
+          height
+          alt
+        }
+      }
+    }
+  }
+}

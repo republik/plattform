@@ -25,6 +25,8 @@ export type NewsletterName =
   | 'CLIMATE'
   | 'SUNDAY'
   | 'PROJECTR'
+  | 'COURSE-BIGTECH'
+  | 'COURSE-CLIMATE'
 
 export const NL_FEATURED: NewsletterName[] = ['DAILY', 'WDWWW', 'WEEKLY']
 
@@ -36,9 +38,8 @@ export const NL_MORE: NewsletterName[] = [
   'PROJECTR',
 ]
 
-export const NL_STYLE: Record<
-  NewsletterName,
-  { imageSrc: StaticImageData; imageSrcDark: StaticImageData }
+export const NL_STYLE: Partial<
+  Record<NewsletterName, { imageSrc: StaticImageData; imageSrcDark: StaticImageData }>
 > = {
   DAILY: {
     imageSrc: nlDaily,
