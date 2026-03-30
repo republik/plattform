@@ -10,6 +10,7 @@ function FollowFormat({ path, button }: { path: string; button?: boolean }) {
   const { data } = useQuery(FollowableDocumentDocument, {
     variables: { path },
   })
+
   const format = data?.document
 
   if (!format) return null
