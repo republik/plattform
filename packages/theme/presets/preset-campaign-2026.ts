@@ -128,6 +128,24 @@ export const presetCampaign2026 = definePreset({
           },
         },
       },
+      keyframes: {
+        campaign26ArrowLoops: {
+          from: {
+            strokeDashoffset: 300,
+          },
+          to: {
+            strokeDashoffset: 0,
+          },
+        },
+        campaign26ArrowTip: {
+          from: {
+            strokeDashoffset: 80,
+          },
+          to: {
+            strokeDashoffset: 0,
+          },
+        },
+      },
     },
   },
 })

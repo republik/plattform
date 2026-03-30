@@ -1,5 +1,6 @@
 import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
 import { Offers } from '@app/app/kampagne/components/campaign-offers'
+import { Dank } from '@app/app/kampagne/components/handdrawn/dank'
 import { Video } from '@app/app/kampagne/components/video'
 import { Logo } from '@app/components/layout/header/logo'
 import { Share } from '@app/components/share/share'
@@ -99,7 +100,8 @@ export default async function Page() {
               md: { mb: '4' },
             })}
           >
-            Mit 2000&nbsp;neuen Mitgliedern lösen wir 3&nbsp;Versprechen ein.
+            <Dank>Mit</Dank> 2000&nbsp;neuen Mitgliedern lösen wir
+            3&nbsp;Versprechen ein.
           </h2>
           {hasActiveMembership ? (
             <>

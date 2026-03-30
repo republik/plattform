@@ -1,25 +1,25 @@
 'use client'
 
+import { AnimatedArrow } from '@app/app/kampagne/components/handdrawn/animated-arrow'
 import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
 import * as Progress from '@radix-ui/react-progress'
 import { css } from '@republik/theme/css'
 import React, { useEffect } from 'react' // TODO: get real numbers
 
-const TARGET_MEMBERS = 2000
+const TARGET_MEMBERS = 4
 
 function CampaignMembershipsCounter() {
   const { campaign } = useCampaign()
   const [members, setMembers] = React.useState(0)
   const [progress, setProgress] = React.useState(0)
+  const [success, setSuccess] = React.useState(false)
 
   useEffect(() => {
     const count = campaign?.newMembers?.count ?? 0
     setMembers(count)
     setProgress((count / TARGET_MEMBERS) * 100)
-  }, [campaign, setMembers, setProgress])
-
-  // TODO: emoji (+ confetti?)
-  // const isSuccess = members >= TARGET_MEMBERS
+    setSuccess(count >= TARGET_MEMBERS)
+  }, [campaign, setMembers, setProgress, setSuccess])
 
   return (
     <span>
@@ -56,8 +56,10 @@ function CampaignMembershipsCounter() {
       >
         <span className={css({ fontWeight: 500 })}>Neue Mitglieder</span>
         <span>
-          <span className={css({ fontWeight: 500 })}>{members}</span>/
-          {TARGET_MEMBERS}
+          <AnimatedArrow showArrow={success}>
+            <span className={css({ fontWeight: 500 })}>{members}</span>
+          </AnimatedArrow>
+          /{TARGET_MEMBERS}
         </span>
       </span>
     </span>
