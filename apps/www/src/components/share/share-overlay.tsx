@@ -15,6 +15,7 @@ import { css } from '@republik/theme/css'
 import copyToClipboard from 'clipboard-copy'
 import { ComponentPropsWithoutRef, useState } from 'react'
 import { ShareProps } from './types'
+import { addShareUtmParams } from '@app/lib/analytics/share-url'
 
 function ShareButton({
   icon: Icon,
@@ -73,7 +74,7 @@ export function ShareOverlay({
       name: 'facebook',
       target: '_blank',
       href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        url,
+        addShareUtmParams(url),
       )}`,
       icon: IconLogoFacebook,
       title: 'Auf Facebook teilen',
@@ -82,7 +83,9 @@ export function ShareOverlay({
     {
       name: 'whatsapp',
       target: '_blank',
-      href: `https://api.whatsapp.com/send?text=${encodeURIComponent(url)}`,
+      href: `https://api.whatsapp.com/send?text=${encodeURIComponent(
+        addShareUtmParams(url),
+      )}`,
       icon: IconLogoWhatsApp,
       title: 'Auf WhatsApp teilen',
       label: 'WhatsApp',
@@ -90,7 +93,9 @@ export function ShareOverlay({
     {
       name: 'threema',
       target: '_blank',
-      href: `https://threema.id/compose?text=${encodeURIComponent(url)}`,
+      href: `https://threema.id/compose?text=${encodeURIComponent(
+        addShareUtmParams(url),
+      )}`,
       icon: IconLogoThreema,
       title: 'Auf Threema teilen',
       label: 'Threema',
@@ -98,7 +103,9 @@ export function ShareOverlay({
     {
       name: 'telegram',
       target: '_blank',
-      href: `https://t.me/share/url?url=${encodeURIComponent(url)}`,
+      href: `https://t.me/share/url?url=${encodeURIComponent(
+        addShareUtmParams(url),
+      )}`,
       icon: IconLogoTelegram,
       title: 'Auf Telegram teilen',
       label: 'Telegram',
@@ -107,20 +114,20 @@ export function ShareOverlay({
       name: 'mail',
       href: `mailto:?subject=${encodeURIComponent(
         emailSubject,
-      )}&body=${encodeURIComponent(url)}`,
+      )}&body=${encodeURIComponent(addShareUtmParams(url))}`,
       icon: IconMail,
       title: 'Per E-Mail verschicken',
       label: 'E-Mail',
     },
     {
       name: 'copyLink',
-      href: url,
+      href: addShareUtmParams(url),
       icon: IconLink,
       title: 'Link kopieren',
       label: linkCopied ? 'Link kopiert' : 'Link kopieren',
       onClick: (e) => {
         e.preventDefault()
-        copyToClipboard(url).then(() => setLinkCopied(true))
+        copyToClipboard(addShareUtmParams(url)).then(() => setLinkCopied(true))
       },
     },
   ].filter(Boolean)
