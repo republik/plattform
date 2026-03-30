@@ -63,7 +63,7 @@ export class UpgradeService {
     args: SubscriptionUpgradeConfig,
   ) {
     this.offerService.isValidSubscriptionOffer(args.offerId)
-    const company = this.offerService.getOfferMerchent(args.offerId)
+    const company = this.offerService.getOfferMerchant(args.offerId)
     const subscriptionType = this.offerService.getSubscriptionType(args.offerId)
     const subscription = await this.validateSubscriptionCanBeUpgraded(
       subscriptionId,
@@ -86,7 +86,7 @@ export class UpgradeService {
   ): Promise<SubscriptionUpgrade> {
     this.logger.debug(
       { subscriptionId, actor },
-      'scheduling subscription update',
+      'canceling subscription update',
     )
 
     const localSub = await this.validateSubscriptionOwnership(
@@ -171,7 +171,10 @@ export class UpgradeService {
 
     const { items, additionalItems } = await this.buildUpgradeItems(args)
 
-    const companyName = this.offerService.getOfferMerchent(args.offerId)
+    const companyName = this.offerService.getOfferMerchant(args.offerId)
+
+    const discounts = await this.resolveDiscount(companyName, args)
+
     const subscriptionUpgrade = await this.paymentService.scheduleSubscription(
       companyName,
       await this.getCustomerId(companyName, subscription.userId),
@@ -179,7 +182,7 @@ export class UpgradeService {
         internalRef: upgrade.id,
         items: items,
         add_invoice_items: additionalItems,
-        discounts: this.offerService.buildDiscount(args.discount),
+        discounts: discounts,
         startDate: scheduledStart,
         metadata: args.metadata,
         collectionMethod: 'charge_automatically',
@@ -190,6 +193,27 @@ export class UpgradeService {
       externalId: subscriptionUpgrade.id,
       status: 'registered',
     })
+  }
+
+  private async resolveDiscount(
+    companyName: Company,
+    args: SubscriptionUpgradeConfig,
+  ) {
+    this.logger.debug({ args }, 'resolving discount')
+
+    if (args?.discount?.type === 'PROMO') {
+      const promotion = await this.paymentService.getPromotionById(
+        companyName,
+        args.discount.value.id,
+      )
+      this.logger.debug({ promotion }, 'transforming promotion')
+      if (promotion) {
+        return [{ coupon: promotion.coupon.id }]
+      }
+    } else if (args?.discount?.type === 'DISCOUNT') {
+      return [{ coupon: args.discount.value.id }]
+    }
+    return []
   }
 
   public async markUpgradeAsProcessing(upgradeId: string) {
@@ -288,9 +312,9 @@ export class UpgradeService {
   ) {
     const localSub = await this.getSubscription(subscriptionId)
 
-    Auth.Roles.userIsMeOrInRoles({ id: localSub?.userId }, actor, [
+    Auth.Roles.ensureUserIsMeOrInRoles({ id: localSub?.userId }, actor, [
       'admin',
-      'support',
+      'supporter',
     ])
 
     return localSub
@@ -374,7 +398,7 @@ export class UpgradeService {
     args: SubscriptionUpgradeConfig,
   ): Promise<{ items: Item[]; additionalItems: LineItem[] }> {
     this.offerService.isValidOffer(args.offerId)
-    const companyName = this.offerService.getOfferMerchent(args.offerId)
+    const companyName = this.offerService.getOfferMerchant(args.offerId)
 
     const lookupKeys = this.offerService
       .getOfferItems(args.offerId)

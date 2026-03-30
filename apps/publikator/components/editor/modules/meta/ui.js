@@ -28,6 +28,7 @@ import {
   MetaSectionTitle,
 } from '../../../MetaDataForm/components/Layout'
 import TextToSpeechForm from './TextToSpeechForm'
+import NewsletterForm from './NewsletterForm'
 
 const styles = {
   container: css({
@@ -76,7 +77,7 @@ const MetaData = ({
     [
       'feed',
       ...additionalFields,
-      formatData?.sendAsEmail && 'emailSubject',
+      formatData?.newsletter?.name && 'emailSubject',
       'title',
       'shortTitle',
       'image',
@@ -302,6 +303,8 @@ const MetaData = ({
             />
           </div>
         )}
+
+        <NewsletterForm editor={editor} node={node} />
 
         <MetaSection>
           <MetaSectionTitle>Social</MetaSectionTitle>

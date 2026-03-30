@@ -52,7 +52,9 @@ export const CommitWithDocument = gql`
             shareLogo
             shareBackgroundImage
             shareBackgroundImageInverted
-            sendAsEmail
+            newsletter {
+              name
+            }
             section {
               id
               meta {

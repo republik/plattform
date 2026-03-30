@@ -1,4 +1,4 @@
-import { useCampaign } from '@app/components/paynotes/campaign-paynote/use-campaign'
+import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
 
 import { useMe } from 'lib/context/MeContext'
 import { useUserAgent } from 'lib/context/UserAgentContext'
@@ -17,8 +17,15 @@ export type PaynoteKindType =
   | 'BANNER'
   | 'PAYNOTE_INLINE'
   | 'WELCOME_BANNER'
-  | 'CAMPAIGN_OVERLAY_OPEN'
-  | 'CAMPAIGN_OVERLAY_CLOSED'
+  | 'CAMPAIGN_PAYNOTE'
+  | 'CAMPAIGN_PAYWALL'
+  | 'CAMPAIGN_BANNER' // not a paynote per se, but logic depends on the same params
+
+const PAYWALL_KINDS: PaynoteKindType[] = [
+  'REGWALL',
+  'PAYWALL',
+  'CAMPAIGN_PAYWALL',
+]
 
 type TemplateType =
   | null
@@ -35,8 +42,10 @@ type TemplateType =
 
 type PaynotesContextValues = {
   paynoteKind: PaynoteKindType
+  hasPaywall?: boolean
   setTemplateForPaynotes: (template: TemplateType) => void
   setIsPaywallExcluded: (isExcluded: boolean) => void
+  setIsPaynoteExcluded: (isExcluded: boolean) => void
   paynoteInlineHeight: number
   setPaynoteInlineHeight: (height: number) => void
 }
@@ -60,13 +69,6 @@ function isPaynoteOverlayHidden(
     pathname === '/meine-republik' ||
     pathname === '/probelesen' ||
     pathname === '/community' ||
-    pathname === '/format/jobs' ||
-    pathname ===
-      '/2026/02/09/stellenausschreibung-junior-community-relationship-manager-support-und-moderation' ||
-    pathname ===
-      '/2026/02/09/stellenausschreibung-audience-development-manager-social' ||
-    pathname ===
-      '/2025/04/30/trainee-unternehmensmanagement-fokus-hr-und-finanzen' ||
     searchParams.has('extract') ||
     searchParams.has('extractId')
   )
@@ -79,12 +81,8 @@ function isPaynoteOverlayHidden(
 //
 // See also: Figma, Registration experience, for a
 // visual overview of the paynote flow.
-//
-// TODO: add metering for TRIAL_ELIGIBLE users
-function isDialogPage(
-  pathname: string,
-  searchParams: URLSearchParams,
-): boolean {
+
+function isDialogPage(pathname: string): boolean {
   return pathname.startsWith('/dialog/')
 }
 
@@ -105,6 +103,7 @@ export const PaynotesProvider = ({ children }) => {
   const [template, setTemplateForPaynotes] = useState<TemplateType>(null)
 
   const [isPaywallExcluded, setIsPaywallExcluded] = useState<boolean>(false)
+  const [isPaynoteExcluded, setIsPaynoteExcluded] = useState<boolean>(false)
 
   useEffect(() => {})
 
@@ -114,7 +113,12 @@ export const PaynotesProvider = ({ children }) => {
     if (meLoading) {
       return
     }
+
     // console.log({ template, trialStatus, pathname, searchParams })
+
+    if (trialStatus === 'MEMBER' && isCampaignActive) {
+      return setPaynoteKind('CAMPAIGN_BANNER')
+    }
 
     // Active membership: no paynote
     if (trialStatus === 'MEMBER') {
@@ -127,17 +131,17 @@ export const PaynotesProvider = ({ children }) => {
     // ANYTHING THAT'S NOT AN ARTICLE:
     //
     // special pages without any paynote
-    if (isPaynoteOverlayHidden(pathname, searchParams)) {
+    if (isPaynoteExcluded || isPaynoteOverlayHidden(pathname, searchParams)) {
       return setPaynoteKind(null)
     }
     // dialog page: we show a special paynote
-    if (isDialogPage(pathname, searchParams) || template === 'discussion') {
+    if (isDialogPage(pathname) || template === 'discussion') {
       return setPaynoteKind('DIALOG')
     }
 
-    // Campaign active and *not* an article
+    // CAMPAIGN active and *not* an article
     if (isCampaignActive && template !== 'article') {
-      return setPaynoteKind('CAMPAIGN_OVERLAY_CLOSED')
+      return setPaynoteKind('CAMPAIGN_PAYNOTE')
     }
 
     // anything else that's not an article: minimized paynote overlay
@@ -152,11 +156,6 @@ export const PaynotesProvider = ({ children }) => {
     // spoofing the user agent to read our content, we still
     // want to show these clever foxes the paywall)
 
-    // When a campaign is active:
-    if (isCampaignActive) {
-      return setPaynoteKind('CAMPAIGN_OVERLAY_OPEN')
-    }
-
     if (isSearchBot) {
       return setPaynoteKind('OVERLAY_OPEN')
     }
@@ -168,6 +167,12 @@ export const PaynotesProvider = ({ children }) => {
     ) {
       return setPaynoteKind('WELCOME_BANNER')
     }
+
+    // CAMPAIGN edge case: already in a trial during the campaign
+    if (trialStatus.includes('TRIAL_GROUP') && isCampaignActive) {
+      return setPaynoteKind('CAMPAIGN_PAYNOTE')
+    }
+
     // one trial group (group A) is shown an inline paynote
     if (trialStatus === 'TRIAL_GROUP_A') {
       return setPaynoteKind('PAYNOTE_INLINE')
@@ -181,9 +186,20 @@ export const PaynotesProvider = ({ children }) => {
     if (trialStatus === 'TRIAL_GROUP_TEILEN') {
       return setPaynoteKind('PAYNOTE_INLINE')
     }
+
+    // exception for marked articles (via metadata)
+    if (isPaywallExcluded && isCampaignActive) {
+      return setPaynoteKind('CAMPAIGN_PAYNOTE')
+    }
+
     // exception for marked articles (via metadata)
     if (isPaywallExcluded) {
       return setPaynoteKind('OVERLAY_CLOSED')
+    }
+
+    // CAMPAIGN active
+    if (isCampaignActive) {
+      return setPaynoteKind('CAMPAIGN_PAYWALL')
     }
 
     // trial expired: show paywall
@@ -213,6 +229,7 @@ export const PaynotesProvider = ({ children }) => {
     isSearchBot,
     template,
     isPaywallExcluded,
+    isPaynoteExcluded,
     isCampaignActive,
     hasAllowlistAccess,
   ])
@@ -223,8 +240,10 @@ export const PaynotesProvider = ({ children }) => {
     <PaynotesContext.Provider
       value={{
         paynoteKind,
+        hasPaywall: PAYWALL_KINDS.includes(paynoteKind),
         setTemplateForPaynotes,
         setIsPaywallExcluded,
+        setIsPaynoteExcluded,
         paynoteInlineHeight,
         setPaynoteInlineHeight,
       }}

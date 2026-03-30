@@ -4,11 +4,11 @@ import { UpdateNewsletterSubscriptionWithMacDocument } from '#graphql/republik-a
 import { ErrorMessage } from '@app/components/auth/login/error-message'
 import { Button } from '@app/components/ui/button'
 import { Spinner } from '@app/components/ui/spinner'
-import { ApolloError, useMutation } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { CheckCircleIcon } from "lucide-react";
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from '../../../../lib/withT'
 import * as base64u from '../../../../lib/utils/base64u'
 
@@ -25,14 +25,8 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
   const decodedEmail = base64u.maybeDecode(email)
   const hasRun = useRef(false)
 
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>(
-    'loading',
-  )
-  const [error, setError] = useState<ApolloError | string | undefined>()
-
-  const [updateNewsletterSubscription] = useMutation(
-    UpdateNewsletterSubscriptionWithMacDocument,
-  )
+  const [updateNewsletterSubscription, { data, loading, error }] =
+    useMutation(UpdateNewsletterSubscriptionWithMacDocument)
 
   useEffect(() => {
     if (hasRun.current) return
@@ -47,11 +41,6 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
         consents: ['PRIVACY'],
       },
     })
-      .then(() => setStatus('success'))
-      .catch((err) => {
-        setError(err)
-        setStatus('error')
-      })
   }, [decodedEmail, mac, name, subscribed, updateNewsletterSubscription])
 
   return (
@@ -64,7 +53,7 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
         textAlign: 'center',
       })}
     >
-      {status === 'loading' && (
+      {loading && (
         <div
           className={css({
             display: 'flex',
@@ -79,7 +68,7 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
         </div>
       )}
 
-      {status === 'success' && (
+      {data && !error && (
         <div
           className={css({
             display: 'flex',
@@ -107,7 +96,7 @@ export function NewsletterConfirm({ name, email, subscribed, mac }: Props) {
         </div>
       )}
 
-      {status === 'error' && (
+      {error && (
         <div
           className={css({
             display: 'flex',

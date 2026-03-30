@@ -4,6 +4,10 @@ type Referrals {
   count: Int!
 }
 
+type NewMembers {
+  count: Int!
+}
+
 extend type User {
   referrals(campaignSlug: String): Referrals
   # A user specific referral code
@@ -20,6 +24,7 @@ type Campaign {
   beginDate: DateTime!
   endDate: DateTime!
   referrals: Referrals!
+  newMembers: NewMembers!
 }
 
 enum ReferralCodeValidationResult {

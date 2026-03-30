@@ -1,6 +1,6 @@
 'use client'
 
-import { OfferOptionRadio } from '@app/components/paynotes/offer-options'
+import { OfferOptionRadio } from '@app/app/kampagne/components/campaign-offer-options'
 import { Button } from '@app/components/ui/button'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'

@@ -84,6 +84,7 @@ export const getDocument = gql`
           }
         }
         isPaywallExcluded
+        isPaynoteExcluded
         format {
           id
           meta {
@@ -112,6 +113,7 @@ export const getDocument = gql`
               free
             }
             isPaywallExcluded
+            isPaynoteExcluded
           }
         }
         section {

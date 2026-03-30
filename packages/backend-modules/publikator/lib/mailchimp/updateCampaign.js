@@ -3,42 +3,42 @@ const debug = require('debug')('publikator:lib:mailchimp:updateCampaign')
 const {
   MAILCHIMP_URL,
   MAILCHIMP_API_KEY,
-  MAILCHIMP_CAMPAIGN_CONFIGS,
   DEFAULT_MAIL_FROM_NAME,
   DEFAULT_MAIL_FROM_ADDRESS,
+  MAILCHIMP_MAIN_LIST_ID,
 } = process.env
 
-const mailchimpCampaignConfigs = MAILCHIMP_CAMPAIGN_CONFIGS
-  ? JSON.parse(MAILCHIMP_CAMPAIGN_CONFIGS)
-  : []
-
 module.exports = async ({ campaignId, campaignConfig = {} }) => {
-  const config = {
-    ...mailchimpCampaignConfigs.find((c) => c.key === campaignConfig.key),
-    ...campaignConfig,
-  }
-
   const body = {
     recipients: {
-      ...(config.list_id && { list_id: config.list_id }),
+      list_id: MAILCHIMP_MAIN_LIST_ID,
       segment_opts: {
-        ...(config.saved_segment_id && {
-          saved_segment_id: Number(config.saved_segment_id),
-        }),
+        saved_segment_id: campaignConfig.savedSegmentId,
+
+        // NOTE: this would work too but for now we'll probably just use the saved segment IDs
+        // match: 'all',
+        // conditions: [
+        //   {
+        //     condition_type: 'Interests',
+        //     field: `interests-${'xyz'}`, // interest group id
+        //     op: 'interestcontainsall',
+        //     value: ['abc'], // interest id
+        //   },
+        // ],
       },
     },
     settings: {
-      ...(config.subject_line && { subject_line: config.subject_line }),
-      ...(config.title && { title: config.title }),
-      to_name: config.to_name || '*|FNAME|* *|LNAME|*',
-      from_name: config.from_name || DEFAULT_MAIL_FROM_NAME,
-      reply_to: config.reply_to || DEFAULT_MAIL_FROM_ADDRESS,
+      subject_line: campaignConfig.subjectLine,
+      title: campaignConfig.title,
+      to_name: campaignConfig.toName || '*|FNAME|* *|LNAME|*',
+      from_name: campaignConfig.fromName || DEFAULT_MAIL_FROM_NAME,
+      reply_to: campaignConfig.replyTo || DEFAULT_MAIL_FROM_ADDRESS,
     },
   }
 
-  debug('%o', { campaignId, campaignConfig, config, body })
+  debug('%o', { campaignId, campaignConfig, body })
 
-  return fetch(`${MAILCHIMP_URL}/3.0/campaigns/${campaignId}`, {
+  const response = await fetch(`${MAILCHIMP_URL}/3.0/campaigns/${campaignId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -47,10 +47,13 @@ module.exports = async ({ campaignId, campaignConfig = {} }) => {
       ).toString('base64')}`,
     },
     body: JSON.stringify(body),
-  }).then((response) => {
-    if (!response.ok) {
-      throw Error(response.statusText)
-    }
-    return response
   })
+
+  if (!response.ok) {
+    const json = await response.json()
+    console.error(json)
+    throw Error(json.detail)
+  }
+
+  return response
 }

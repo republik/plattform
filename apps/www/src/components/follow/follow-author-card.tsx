@@ -18,7 +18,8 @@ function FollowAuthorCard({ authorId }: { authorId: string }) {
 
   const author = data?.user as User
 
-  if (!author) return null
+  if (!author?.subscribedBy.nodes.find((n) => n.isEligibleForNotifications))
+    return null
 
   const subscriptionId = author.subscribedBy.nodes.find((n) => n.active)?.id
 

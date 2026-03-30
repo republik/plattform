@@ -66,7 +66,7 @@ export const AUTHORS_FEATURED: AuthorType[] = [
   { id: '5b6da6a6-c9fa-4ebb-a020-8dc85258310e', slug: 'chanimann' },
   { id: 'f565eb39-460e-46f7-bb33-9ef18199dafc', slug: 'luciaherrmann' },
   { id: 'f2fdfd74-3177-41f2-9738-d00b28de2c1a', slug: 'ywegelin' },
-  { id: 'c8fe5f34-0130-4049-831b-c32fe471a705', slug: 'asscholl' },
+  { id: 'ad3d0577-451d-42dd-b0f0-30fd41061892', slug: 'vheintges' },
 ]
 
 export const PODCASTS_FEATURED: string[] = [

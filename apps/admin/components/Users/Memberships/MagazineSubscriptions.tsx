@@ -54,7 +54,10 @@ export function MagazineSubscriptions(props: MagazineSubscriptionsProps) {
       loading={!data || loading}
       error={error}
       render={() => {
-        const magazineSubscriptions = data?.user?.magazineSubscriptions ?? []
+        const magazineSubscriptions =
+          data?.user?.magazineSubscriptions.toSorted((a, b) =>
+            b.createdAt.localeCompare(a.createdAt),
+          ) ?? []
 
         if (magazineSubscriptions.length === 0) {
           return null
