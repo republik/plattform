@@ -11,19 +11,13 @@ query NewsletterCourses {
     heroTextColor {
       hex
     }
-    backgroundColor {
-      hex
-    }
-    textColor {
-      hex
-    }
     accentColor {
       hex
     }
     accentTextColor {
       hex
     }
-    image {
+    images {
       url(imgixParams: { w: 900, fit: crop })
       width
       height

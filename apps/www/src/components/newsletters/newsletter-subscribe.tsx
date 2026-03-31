@@ -20,10 +20,12 @@ import { useTranslation } from '../../../lib/withT'
 
 function NewsletterSubscribeForm({
   newsletter,
+  course,
   accentColor,
   accentTextColor,
 }: {
   newsletter: NewsletterName
+  course?: boolean
   accentColor?: string
   accentTextColor?: string
 }) {
@@ -96,14 +98,26 @@ function NewsletterSubscribeForm({
           })}
         >
           <FormField label='Ihre E-Mail-Adresse' name='email' type='email' />
-          <div className={css({ display: 'none', '@/md': { display: 'block' } })}>
+          <div
+            className={css({ display: 'none', '@/md': { display: 'block' } })}
+          >
             <Button
               type='submit'
               disabled={isPending}
               loading={isPending}
-              style={accentColor ? { backgroundColor: accentColor, color: accentTextColor, borderColor: accentColor } : undefined}
+              style={
+                accentColor
+                  ? {
+                      backgroundColor: accentColor,
+                      color: accentTextColor,
+                      borderColor: accentColor,
+                    }
+                  : undefined
+              }
             >
-              {t('newsletter/subscribe')}
+              {t(
+                course ? 'newsletter/subscribeCourse' : 'newsletter/subscribe',
+              )}
             </Button>
           </div>
         </div>
@@ -114,9 +128,17 @@ function NewsletterSubscribeForm({
             size='full'
             disabled={isPending}
             loading={isPending}
-            style={accentColor ? { backgroundColor: accentColor, color: accentTextColor, borderColor: accentColor } : undefined}
+            style={
+              accentColor
+                ? {
+                    backgroundColor: accentColor,
+                    color: accentTextColor,
+                    borderColor: accentColor,
+                  }
+                : undefined
+            }
           >
-            {t('newsletter/subscribe')}
+            {t(course ? 'newsletter/subscribeCourse' : 'newsletter/subscribe')}
           </Button>
         </div>
       </div>
@@ -126,10 +148,12 @@ function NewsletterSubscribeForm({
 
 export function NewsletterSubscribeButton({
   newsletter,
+  course,
   accentColor,
   accentTextColor,
 }: {
   newsletter: NewsletterName
+  course?: boolean
   accentColor?: string
   accentTextColor?: string
 }) {
@@ -145,7 +169,14 @@ export function NewsletterSubscribeButton({
   if (!data) return null
 
   if (!data.me) {
-    return <NewsletterSubscribeForm newsletter={newsletter} accentColor={accentColor} accentTextColor={accentTextColor} />
+    return (
+      <NewsletterSubscribeForm
+        newsletter={newsletter}
+        course={course}
+        accentColor={accentColor}
+        accentTextColor={accentTextColor}
+      />
+    )
   }
 
   const subscriptions = data.me.newsletterSettings.subscriptions
@@ -190,9 +221,25 @@ export function NewsletterSubscribeButton({
       type='button'
       variant={isSubscribed ? 'outline' : 'default'}
       loading={isPending}
-      style={accentColor && !isSubscribed ? { backgroundColor: accentColor, color: accentTextColor, borderColor: accentColor } : undefined}
+      style={
+        accentColor && !isSubscribed
+          ? {
+              backgroundColor: accentColor,
+              color: accentTextColor,
+              borderColor: accentColor,
+            }
+          : undefined
+      }
     >
-      {t(isSubscribed ? 'newsletter/isSubscribed' : 'newsletter/subscribe')}
+      {t(
+        isSubscribed
+          ? course
+            ? 'newsletter/isSubscribedCourse'
+            : 'newsletter/isSubscribed'
+          : course
+          ? 'newsletter/subscribeCourse'
+          : 'newsletter/subscribe',
+      )}
     </Button>
   )
 }

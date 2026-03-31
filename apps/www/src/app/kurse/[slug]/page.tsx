@@ -2,7 +2,7 @@ import type { Metadata, ResolvingMetadata } from 'next'
 import React from 'react'
 
 import { NewsletterCoursesDocument } from '#graphql/cms/__generated__/gql/graphql'
-import Container, { ContainerNarrow } from '@app/components/container'
+import { ContainerNarrow } from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
 import { type NewsletterName } from '@app/components/newsletters/config'
 import { NewsletterSubscribeButton } from '@app/components/newsletters/newsletter-subscribe'
@@ -57,7 +57,7 @@ export async function generateMetadata(
     openGraph: {
       title: course.title,
       description: course.promise,
-      images: [course.image.url],
+      images: [course.images[0].url],
     },
   }
 }
@@ -75,11 +75,9 @@ export default async function CoursePage({ params }: PageProps) {
     promise,
     content,
     credits,
-    image,
+    images,
     heroBackgroundColor,
     heroTextColor,
-    backgroundColor,
-    textColor,
     accentColor,
     accentTextColor,
     entries,
@@ -108,11 +106,12 @@ export default async function CoursePage({ params }: PageProps) {
             },
           })}
         >
-          {image.width && image.height && (
+          {/* First image is the hero image */}
+          {images[0].width && images[0].height && (
             <div
               style={
                 {
-                  '--image-ar': `${image.width}/${image.height}`,
+                  '--image-ar': `${images[0].width}/${images[0].height}`,
                 } as React.CSSProperties
               }
               className={css({
@@ -130,9 +129,9 @@ export default async function CoursePage({ params }: PageProps) {
               })}
             >
               <Image
-                src={image.url}
+                src={images[0].url}
                 fill
-                alt={image.alt ?? title}
+                alt={images[0].alt ?? title}
                 className={css({
                   objectFit: 'cover',
                   objectPosition: 'center',
@@ -153,17 +152,17 @@ export default async function CoursePage({ params }: PageProps) {
                 <h1
                   className={css({
                     textStyle: 'title',
-                    fontWeight: 'bold',
+                    lineHeight: 'normal',
                     fontSize: '3xl',
+                    mb: '2',
                   })}
                 >
                   {title}
                 </h1>
                 <p
                   className={css({
-                    textStyle: 'sansSerifRegular',
-                    fontSize: 'md',
-                    lineHeight: 'normal',
+                    textStyle: 'sans',
+                    fontSize: 'l',
                   })}
                 >
                   {promise}
@@ -173,19 +172,19 @@ export default async function CoursePage({ params }: PageProps) {
                 newsletter={newsletterId as NewsletterName}
                 accentColor={accentColor?.hex ?? undefined}
                 accentTextColor={accentTextColor?.hex ?? undefined}
+                course={true}
               />
-              <p>Abmeldung jederzeit möglich.</p>
+              <p className={css({ textAlign: 'center' })}>
+                Abmeldung jederzeit möglich.
+              </p>
             </div>
           </ContainerNarrow>
         </section>
 
         <section
-          style={{
-            backgroundColor: backgroundColor?.hex,
-            color: textColor?.hex,
-          }}
           className={css({
             pb: '96px',
+            bg: 'background.marketing',
           })}
         >
           <ContainerNarrow>
@@ -193,7 +192,7 @@ export default async function CoursePage({ params }: PageProps) {
               className={css({
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '72px',
+                gap: '20',
                 pt: '8',
               })}
             >
@@ -206,12 +205,15 @@ export default async function CoursePage({ params }: PageProps) {
               >
                 <p
                   className={css({
-                    textStyle: 'sansSerifRegular',
+                    textStyle: 'sans',
                     fontSize: 'l',
                   })}
                 >
-                  Schon mehr als <b>{numberOfParticipants}</b> Menschen haben
-                  den Kurs gemacht. Das sagen sie:
+                  Schon mehr als{' '}
+                  <span className={css({ textStyle: 'sansSerifMedium' })}>
+                    {numberOfParticipants}
+                  </span>{' '}
+                  Menschen haben den Kurs gemacht. Das sagen sie:
                 </p>
                 <Testimonials testimonials={testimonials} />
               </div>
@@ -224,27 +226,33 @@ export default async function CoursePage({ params }: PageProps) {
               >
                 <h2
                   className={css({
-                    textStyle: 'sansSerifBold',
+                    textStyle: 'sans',
                     fontSize: 'l',
                     fontWeight: 'bold',
-                    color: textColor?.hex,
                   })}
                 >
                   Inhalt
                 </h2>
                 <p
                   className={css({
-                    textStyle: 'sansSerifRegular',
+                    textStyle: 'sans',
                     fontSize: 'l',
                   })}
                 >
                   {/* Since we allow bold decoration in the content, we need to split 
                   the content into parts and wrap the bold parts in <b> tags */}
-                  {content
-                    .split(/\*\*(.+?)\*\*/)
-                    .map((part, i) =>
-                      i % 2 === 0 ? part : <b key={i}>{part}</b>,
-                    )}
+                  {content.split(/\*\*(.+?)\*\*/).map((part, i) =>
+                    i % 2 === 0 ? (
+                      part
+                    ) : (
+                      <span
+                        className={css({ textStyle: 'sansSerifMedium' })}
+                        key={i}
+                      >
+                        {part}
+                      </span>
+                    ),
+                  )}
                 </p>
               </div>
               <div
@@ -256,10 +264,9 @@ export default async function CoursePage({ params }: PageProps) {
               >
                 <h2
                   className={css({
-                    textStyle: 'sansSerifBold',
+                    textStyle: 'sans',
                     fontSize: 'l',
                     fontWeight: 'bold',
-                    color: textColor?.hex,
                   })}
                 >
                   Kapitel
@@ -275,7 +282,8 @@ export default async function CoursePage({ params }: PageProps) {
               >
                 <h2
                   className={css({
-                    textStyle: 'title',
+                    textStyle: 'sans',
+                    fontWeight: 'medium',
                     fontSize: 'xl',
                     mb: '2',
                   })}
@@ -310,10 +318,9 @@ export default async function CoursePage({ params }: PageProps) {
               >
                 <h2
                   className={css({
-                    textStyle: 'sansSerifBold',
+                    textStyle: 'sans',
                     fontSize: 'l',
                     fontWeight: 'bold',
-                    color: textColor?.hex,
                   })}
                 >
                   Durch den Kurs führen Sie
@@ -337,7 +344,7 @@ export default async function CoursePage({ params }: PageProps) {
                   flexDirection: 'column',
                   gap: '6',
                   bg: 'rgba(0, 0, 0, 0.1)',
-                  p: '8',
+                  p: '6',
                 })}
               >
                 <h1
@@ -351,10 +358,11 @@ export default async function CoursePage({ params }: PageProps) {
                 </h1>
                 <NewsletterSubscribeButton
                   newsletter={newsletterId as NewsletterName}
-                  accentColor={accentColor?.hex ?? undefined}
-                  accentTextColor={accentTextColor?.hex ?? undefined}
+                  course={true}
                 />
-                <p>Abmeldung jederzeit möglich.</p>
+                <p className={css({ textAlign: 'center' })}>
+                  Abmeldung jederzeit möglich.
+                </p>
               </div>
 
               <p>

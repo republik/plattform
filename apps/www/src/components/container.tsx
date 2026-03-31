@@ -28,7 +28,7 @@ export function ContainerNarrow({ children }: ContainerProps) {
       className={css({
         mx: 'auto',
         px: '4',
-        maxWidth: 'content.narrow',
+        maxWidth: 'narrow',
         width: 'full',
       })}
     >

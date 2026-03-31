@@ -7757,6 +7757,14 @@
       "value": "Newsletter abonniert"
     },
     {
+      "key": "newsletter/subscribeCourse",
+      "value": "Kostenlosen Kurs abonnieren"
+    },
+    {
+      "key": "newsletter/isSubscribedCourse",
+      "value": "Kurs abonniert"
+    },
+    {
       "key": "newsletters/postbox",
       "value": "ins Postfach bekommen"
     },
