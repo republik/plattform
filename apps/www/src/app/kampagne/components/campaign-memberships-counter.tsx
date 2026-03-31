@@ -1,24 +1,16 @@
 'use client'
 
-import { TARGET } from '@app/app/kampagne/campaign-config'
 import { AnimatedArrow } from '@app/app/kampagne/components/handdrawn/animated-arrow'
 import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
 import * as Progress from '@radix-ui/react-progress'
 import { css } from '@republik/theme/css'
-import React, { useEffect } from 'react'
 
-function CampaignMembershipsCounter() {
-  const { campaign } = useCampaign()
-  const [members, setMembers] = React.useState(0)
-  const [progress, setProgress] = React.useState(0)
-  const [success, setSuccess] = React.useState(false)
-
-  useEffect(() => {
-    const count = campaign?.newMembers?.count ?? 0
-    setMembers(count)
-    setProgress((count / TARGET) * 100)
-    setSuccess(count >= TARGET)
-  }, [campaign, setMembers, setProgress, setSuccess])
+function CampaignMembershipsCounter({
+  arrowSize,
+}: {
+  arrowSize?: 'xs' | 'sm' | 'md'
+}) {
+  const { members, progress, success } = useCampaign()
 
   return (
     <span>
@@ -55,10 +47,10 @@ function CampaignMembershipsCounter() {
       >
         <span className={css({ fontWeight: 500 })}>Neue Mitglieder</span>
         <span>
-          <AnimatedArrow showArrow={success}>
-            <span className={css({ fontWeight: 500 })}>{members}</span>
+          <AnimatedArrow showArrow={success} size={arrowSize}>
+            <span className={css({ fontWeight: 500 })}>2010</span>
           </AnimatedArrow>
-          /{TARGET}
+          /2000
         </span>
       </span>
     </span>

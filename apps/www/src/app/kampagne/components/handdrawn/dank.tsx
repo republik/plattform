@@ -1,7 +1,7 @@
 'use client'
 
 import { css } from '@republik/theme/css'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 
 const containerStyle = css({
   position: 'relative',
@@ -20,11 +20,14 @@ const strikeStyle = css({
 
 const dankStyle = css({
   position: 'absolute',
-  left: '-20px',
-  bottom: '80%',
-  width: 'auto',
-  height: 'auto',
+  top: '-1.85rem',
+  left: '-44%',
+  right: '100%',
+  width: '200%',
   pointerEvents: 'none',
+  md: {
+    top: '-2rem',
+  },
 })
 
 type DankProps = {
@@ -34,7 +37,7 @@ type DankProps = {
 
 export function Dank({ children, showDank }: DankProps) {
   if (!showDank) return <>{children}</>
-  
+
   return (
     <span className={containerStyle}>
       {children}
