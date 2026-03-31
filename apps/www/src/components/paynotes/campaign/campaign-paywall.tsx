@@ -1,5 +1,7 @@
+'use client'
 import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
 import { Offers } from '@app/app/kampagne/components/campaign-offers'
+import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import Login from '@app/components/paynotes/regwall/login'
 import { ArticleSection } from '@app/components/ui/section'
@@ -20,6 +22,7 @@ const PROMISE_COPIES = [
 function CampaignPaywall() {
   const [promiseCopy] = useState(PROMISE_COPIES[Math.floor(Math.random() * 3)])
   const trackEvent = useTrackEvent()
+  const { success } = useCampaign()
 
   useEffect(() => {
     trackEvent({
@@ -56,25 +59,50 @@ function CampaignPaywall() {
             >
               {promiseCopy}
             </h2>
-            <p
-              className={css({
-                textStyle: 'heavy',
-              })}
-            >
-              Bis 14.&nbsp;April: Wenn wir 2000&nbsp;neue Mitglieder finden,
-              dann lösen wir{' '}
-              <span
+            {success ? (
+              <p
                 className={css({
-                  textDecoration: 'underline',
-                  fontWeight: 700,
+                  textStyle: 'heavy',
                 })}
               >
-                <Link href='/kampagne/2000-mitglieder-3-versprechen'>
-                  3&nbsp;Versprechen
-                </Link>
-              </span>{' '}
-              ein.
-            </p>
+                <span className={css({ fontWeight: 400 })}>
+                  Dank 2000&nbsp;neuen Mitgliedern lösen wir{' '}
+                  <span
+                    className={css({
+                      textDecoration: 'underline',
+                      fontWeight: 700,
+                    })}
+                  >
+                    <Link href='/kampagne/2000-mitglieder-3-versprechen'>
+                      3&nbsp;Versprechen
+                    </Link>
+                  </span>{' '}
+                  ein.
+                </span>
+                <br />
+                Sie fehlen noch!
+              </p>
+            ) : (
+              <p
+                className={css({
+                  textStyle: 'heavy',
+                })}
+              >
+                Bis 14.&nbsp;April: Wenn wir 2000&nbsp;neue Mitglieder finden,
+                dann lösen wir{' '}
+                <span
+                  className={css({
+                    textDecoration: 'underline',
+                    fontWeight: 700,
+                  })}
+                >
+                  <Link href='/kampagne/2000-mitglieder-3-versprechen'>
+                    3&nbsp;Versprechen
+                  </Link>
+                </span>{' '}
+                ein.
+              </p>
+            )}
           </ArticleSection>
           <ArticleSection
             className={css({
