@@ -10,6 +10,7 @@ query UserProfile($id: String) {
     phoneNumber
     username
     portrait(size: SMALL)
+    roles
     address {
       organization
       name

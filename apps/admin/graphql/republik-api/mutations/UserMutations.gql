@@ -41,3 +41,14 @@ mutation UpdateUserDetails(
     }
   }
 }
+
+mutation RemoveUserFromRole($userId: ID!, $role: String!) {
+  removeUserFromRole(userId: $userId, role: $role) {
+    id
+  }
+}
+mutation AddUserToRole($userId: ID!, $role: String!) {
+  addUserToRole(userId: $userId, role: $role) {
+    id
+  }
+}

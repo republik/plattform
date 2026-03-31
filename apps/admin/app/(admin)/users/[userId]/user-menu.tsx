@@ -40,11 +40,11 @@ function NavLink({
         textDecoration: 'none',
         _hover: {
           color: 'text',
-          borderColor: 'divider',
+          fontWeight: 'medium',
         },
         '&[data-active="true"]': {
           color: 'text',
-          borderColor: 'divider',
+          fontWeight: 'medium',
         },
 
         display: 'flex',

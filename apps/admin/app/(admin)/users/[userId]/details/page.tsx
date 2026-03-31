@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client'
 import { useParams } from 'next/navigation'
 import { EditUserDetails } from '../user-details'
 import { EditUserEmail } from '../user-email'
+import { EditUserRoles } from '../user-roles'
 
 export default function SubscriptionsPage() {
   const { userId } = useParams()
@@ -27,6 +28,10 @@ export default function SubscriptionsPage() {
       <Card>
         <CardTitle>Personalien</CardTitle>
         <EditUserDetails userId={userId} values={data?.user} />
+      </Card>
+      <Card>
+        <CardTitle>Rollen</CardTitle>
+        <EditUserRoles userId={userId} roles={data?.user.roles} />
       </Card>
     </>
   )
