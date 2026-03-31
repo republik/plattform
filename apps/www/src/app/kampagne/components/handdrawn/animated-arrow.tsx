@@ -7,14 +7,14 @@ const arrowBodyMaskStyle = css({
   strokeDasharray: 300,
   strokeDashoffset: 300,
   strokeLinecap: 'round',
-  animation: 'campaign26ArrowLoops 1s ease-out 1.5s forwards',
+  animation: 'campaign26ArrowLoops 0.7s ease-out 0.1s forwards',
 })
 
 const arrowTipMaskStyle = css({
   strokeDasharray: 80,
   strokeDashoffset: 80,
   strokeLinecap: 'round',
-  animation: 'campaign26ArrowTip 0.4s ease-out 2.5s forwards',
+  animation: 'campaign26ArrowTip 0.2s ease-out 0.8s forwards',
 })
 
 type AnimatedArrowProps = {
