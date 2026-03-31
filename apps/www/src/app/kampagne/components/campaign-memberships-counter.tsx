@@ -1,5 +1,6 @@
 'use client'
 
+import { TARGET } from '@app/app/kampagne/campaign-config'
 import { AnimatedArrow } from '@app/app/kampagne/components/handdrawn/animated-arrow'
 import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
 import * as Progress from '@radix-ui/react-progress'
@@ -48,9 +49,9 @@ function CampaignMembershipsCounter({
         <span className={css({ fontWeight: 500 })}>Neue Mitglieder</span>
         <span>
           <AnimatedArrow showArrow={success} size={arrowSize}>
-            <span className={css({ fontWeight: 500 })}>2010</span>
+            <span className={css({ fontWeight: 500 })}>{members}</span>
           </AnimatedArrow>
-          /2000
+          /{TARGET}
         </span>
       </span>
     </span>
