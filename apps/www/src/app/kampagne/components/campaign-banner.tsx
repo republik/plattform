@@ -78,7 +78,7 @@ function CampaignBannerMd({
                 })}
               >
                 <span className={css({ display: 'inline-block', flexGrow: 1 })}>
-                  <CampaignMembershipsCounter arrowSize={open ? 'sm' : 'xs'} />
+                  <CampaignMembershipsCounter arrowSize={open ? 'md' : 'xs'} />
                 </span>
                 <span
                   className={css({ flexShrink: 0, display: 'inline-block' })}
@@ -277,7 +277,7 @@ function CampaignBanner({
               Mehr erfahren
             </Link>
             <div className={css({ my: 6 })}>
-              <CampaignMembershipsCounter arrowSize='xs' />
+              <CampaignMembershipsCounter arrowSize='sm' />
             </div>
             <div className={css({ display: 'flex', flexDirection: 'column' })}>
               <Share
