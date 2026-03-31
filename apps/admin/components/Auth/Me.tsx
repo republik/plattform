@@ -1,12 +1,12 @@
 'use client'
 
+import { Button } from '@/components/ui'
 import {
   MeDocument,
   SignOutDocument,
 } from '@/graphql/republik-api/__generated__/gql/graphql'
 import { useMutation, useQuery } from '@apollo/client'
 import { vstack } from '@republik/theme/patterns'
-import { Button } from '@republik/ui'
 
 export function Me() {
   const { data, loading } = useQuery(MeDocument)

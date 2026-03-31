@@ -1,5 +1,5 @@
+import { Button } from '@/components/ui'
 import { css } from '@republik/theme/css'
-import { Button } from '@republik/ui'
 import { useState } from 'react'
 
 export function EditInline({

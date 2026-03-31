@@ -5,7 +5,7 @@ import { css, cx } from '@republik/theme/css'
 import { A, Label, Loader } from '@project-r/styleguide'
 
 import { displayDateTime } from '@/components/Display/utils'
-import { SimpleDialog } from '@republik/ui'
+import { SimpleDialog } from '@/components/ui'
 import Address, { Bucket as AddressBucket } from './Address'
 import { fragments } from './utils'
 

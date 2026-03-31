@@ -8,10 +8,10 @@ import {
   displayDate,
 } from '@/components/Display/utils'
 import List, { Item } from '@/components/List'
+import { Button, SimpleDialog } from '@/components/ui'
 import { gql, useMutation } from '@apollo/client'
 import { Query } from '@apollo/client/react/components'
 import { Dropdown, Field, Label, Loader } from '@project-r/styleguide'
-import { Button, SimpleDialog } from '@republik/ui'
 import { useState } from 'react'
 
 const GET_SUSPENSIONS = gql`

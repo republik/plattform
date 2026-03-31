@@ -1,12 +1,12 @@
 'use client'
-import { EditInline } from '@/components/edit-inline'
+import { Card, CardTitle } from '@/components/card'
+import { Button, Field, Form, Input } from '@/components/ui'
 import {
   UpdateUserDetailsDocument,
   UpdateUserDetailsMutationVariables,
   UserProfileDocument,
 } from '@/graphql/republik-api/__generated__/gql/graphql'
 import { useMutation, useQuery } from '@apollo/client'
-import { Button, Field, Form, Input } from '@republik/ui'
 import Link from 'next/link'
 
 export function EditUserDetails({
@@ -65,21 +65,19 @@ export function UserDetails({ userId }: { userId: string }) {
   })
 
   return (
-    <div>
-      <h2>Personalien</h2>
-      <div>
-        {data?.user?.firstName} {data?.user?.lastName}
-      </div>
-      <h2>E-Mail-Adresse</h2>
+    <Card>
+      <CardTitle>E-Mail-Adresse</CardTitle>
       <Link href={`mailto:${data?.user?.email}`}>{data?.user?.email}</Link>
-      <h2>Adresse</h2>
-      <div>{data?.user?.address.organization}</div>
-      <div>{data?.user?.address.name}</div>
-      <div>{data?.user?.address.line1}</div>
-      <div>{data?.user?.address.line2}</div>
-      <div>{data?.user?.address.postalCode}</div>
-      <div>{data?.user?.address.city}</div>
-      <div>{data?.user?.address.country}</div>
-    </div>
+      <CardTitle>Adresse</CardTitle>
+      <div>
+        <div>{data?.user?.address.organization}</div>
+        <div>{data?.user?.address.name}</div>
+        <div>{data?.user?.address.line1}</div>
+        <div>{data?.user?.address.line2}</div>
+        <div>{data?.user?.address.postalCode}</div>
+        <div>{data?.user?.address.city}</div>
+        <div>{data?.user?.address.country}</div>
+      </div>
+    </Card>
   )
 }

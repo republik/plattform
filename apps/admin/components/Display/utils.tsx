@@ -1,9 +1,9 @@
+import { Button } from '@/components/ui'
+import { swissTime } from '@/lib/utils/formats'
 import { css, cx } from '@republik/theme/css'
 import { formatDuration, intervalToDuration } from 'date-fns'
 import { de } from 'date-fns/locale'
 import { ComponentPropsWithoutRef } from 'react'
-import { swissTime } from '@/lib/utils/formats'
-import { Button } from '@republik/ui'
 
 export const displayStyles = {
   hFlexBox: css({

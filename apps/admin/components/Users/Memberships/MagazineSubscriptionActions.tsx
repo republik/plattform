@@ -8,10 +8,10 @@ import {
   ReactivateMagazineSubscriptionDocument,
   UserMagazineSubscriptionsQuery,
 } from '#graphql/republik-api/__generated__/gql/graphql'
+import { Button, SimpleDialog } from '@/components/ui'
 import { useMutation, useQuery } from '@apollo/client'
 import { Field } from '@project-r/styleguide'
 import { css } from '@republik/theme/css'
-import { Button, SimpleDialog } from '@republik/ui'
 import { TextButton } from 'components/Display/utils'
 import { useTranslation } from 'lib/useT'
 import { ReactNode, useState } from 'react'

@@ -8,7 +8,7 @@ import Actions from '@/components/Users/Actions'
 import Links from '@/components/Users/Links'
 import Mailbox from '@/components/Users/Mailbox'
 import { UserDetails } from './user-details'
-import { FormCard } from '@/components/form-card'
+import { Card } from '@/components/card'
 
 const styles = {
   grid: css({
@@ -28,20 +28,20 @@ export default async function UserPage({ params }) {
 
   return (
     <>
-      <FormCard>
+      <Card>
         <UserDetails userId={userId} />
-      </FormCard>
-      <FormCard>
+      </Card>
+      <Card>
         <Roles userId={userId} />
         <Actions userId={userId} />
-      </FormCard>
-      <FormCard>
+      </Card>
+      <Card>
         <AuthSettings userId={userId} />
         <Mailbox userId={userId} narrow={3} />
         <Links userId={userId} />
         {/* @ts-expect-error not typed */}
         <AdminNotes userId={userId} />
-      </FormCard>
+      </Card>
     </>
   )
 }

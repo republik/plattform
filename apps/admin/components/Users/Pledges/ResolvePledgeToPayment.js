@@ -7,7 +7,7 @@ import Textarea from 'react-textarea-autosize'
 import { Field, Interaction, Loader } from '@project-r/styleguide'
 
 import { TextButton } from '@/components/Display/utils'
-import { Button, SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@/components/ui'
 
 const RESOLVE_PLEDGE_TO_PAYMENT = gql`
   mutation resolvePledgeToPayment($pledgeId: ID!, $reason: String!) {

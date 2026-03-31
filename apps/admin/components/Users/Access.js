@@ -26,7 +26,7 @@ import {
 } from '@/components/Display/utils'
 import ErrorMessage from '@/components/ErrorMessage'
 import List, { Item } from '@/components/List'
-import { SimpleDialog } from '@republik/ui'
+import { SimpleDialog } from '@/components/ui'
 import Link from 'next/link'
 
 const GET_ACCESS_GRANTS = gql`

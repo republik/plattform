@@ -6,7 +6,7 @@ import { Interaction, Label, Loader } from '@project-r/styleguide'
 
 import { displayDateTime, TextButton } from '@/components/Display/utils'
 import SearchUser from '@/components/Form/SearchUser'
-import { Button, SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@/components/ui'
 
 const MOVE_PLEDGE = gql`
   mutation movePledge($pledgeId: ID!, $userId: ID!) {

@@ -24,7 +24,7 @@
     "@project-r/styleguide": "*",
     "@republik/icons": "*",
     "@republik/theme": "*",
-    "@republik/ui": "*",
+    "@/components/ui": "*",
     "@sentry/nextjs": "^9.32.0",
     "d3-format": "^1.4.5",
     "d3-time-format": "^2.3.0",

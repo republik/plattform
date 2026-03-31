@@ -9,7 +9,7 @@ import {
   SectionSubhead,
   TextButton,
 } from '@/components/Display/utils'
-import { Button, SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@/components/ui'
 
 const DELETE_USER = gql`
   mutation deleteUser($userId: ID!, $unpublishComments: Boolean!) {

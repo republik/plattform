@@ -34,9 +34,11 @@ export default async function UserLayout({ children, params }) {
         className={css({
           gridArea: 'sidebar',
 
-          borderRightColor: 'divider',
-          borderRightStyle: 'solid',
-          borderRightWidth: '1px',
+          background: 'hover',
+
+          // borderRightColor: 'divider',
+          // borderRightStyle: 'solid',
+          // borderRightWidth: '1px',
         })}
       >
         <UserMenu userId={userId} />
@@ -47,14 +49,12 @@ export default async function UserLayout({ children, params }) {
 
           position: 'relative',
           overflowY: 'auto',
-
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8',
-          maxWidth: 'center',
-          width: 'full',
-          mx: 'auto',
           p: '4',
+
+          display: 'grid',
+          gridTemplateColumns: '[repeat(auto-fill, minmax(400px, 1fr))]',
+          gridAutoRows: 'max',
+          gap: '8',
         })}
       >
         {children}

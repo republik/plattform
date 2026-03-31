@@ -7,7 +7,7 @@ import { FieldSet, Loader } from '@project-r/styleguide'
 import { TextButton } from '@/components/Display/utils'
 
 import AddressFieldSet from '@/components/Users/Particulars/AddressFieldSet'
-import { Button, SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@/components/ui'
 
 const MUTATION = gql`
   mutation updateAddress($id: ID!, $address: AddressInput!) {

@@ -1,5 +1,5 @@
 'use client'
-import { FormCard } from '@/components/form-card'
+import { Card, CardTitle } from '@/components/card'
 import { UserProfileDocument } from '@/graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
 import { useParams } from 'next/navigation'
@@ -20,14 +20,14 @@ export default function SubscriptionsPage() {
 
   return (
     <>
-      <FormCard>
-        <h2>E-Mail</h2>
+      <Card>
+        <CardTitle>E-Mail</CardTitle>
         <EditUserEmail userId={userId} email={data?.user?.email} />
-      </FormCard>
-      <FormCard>
-        <h2>Personalien</h2>
+      </Card>
+      <Card>
+        <CardTitle>Personalien</CardTitle>
         <EditUserDetails userId={userId} values={data?.user} />
-      </FormCard>
+      </Card>
     </>
   )
 }

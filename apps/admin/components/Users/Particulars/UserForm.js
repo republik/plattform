@@ -1,9 +1,9 @@
+import { Button } from '@/components/ui'
 import {} from '@project-r/styleguide'
 import { Component } from 'react'
 import AddressFieldSet from './AddressFieldSet'
 import GenderForm from './Gender'
 import ParticularsFieldSet from './ParticularsFieldSet'
-import { Button } from '@republik/ui'
 
 const hasErrors = (state) =>
   Object.keys(state.errors).some((fieldName) =>

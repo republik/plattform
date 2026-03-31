@@ -1,11 +1,10 @@
 import ErrorMessage from '@/components/ErrorMessage'
 import SearchUser from '@/components/Form/SearchUser'
+import { Button } from '@/components/ui'
 import { gql } from '@apollo/client'
 import { Interaction } from '@project-r/styleguide'
 import { css } from '@republik/theme/css'
-import { Button } from '@republik/ui'
 import Link from 'next/link'
-import PropTypes from 'prop-types'
 import { Component } from 'react'
 
 const interactiveStyles = {

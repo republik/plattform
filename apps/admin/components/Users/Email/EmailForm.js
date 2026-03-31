@@ -1,6 +1,6 @@
+import { Button } from '@/components/ui'
 import { errorToString } from '@/lib/utils/errors'
 import { Field } from '@project-r/styleguide'
-import { Button } from '@republik/ui'
 import { Component } from 'react'
 import isEmail from 'validator/lib/isEmail'
 

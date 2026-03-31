@@ -5,7 +5,7 @@ import { Component, Fragment } from 'react'
 import { Interaction, Loader } from '@project-r/styleguide'
 
 import { TextButton } from '@/components/Display/utils'
-import { Button, SimpleDialog } from '@republik/ui'
+import { Button, SimpleDialog } from '@/components/ui'
 
 const ACTIVATE_MEMBERSHIP = gql`
   mutation activateMembership($membershipId: ID!) {

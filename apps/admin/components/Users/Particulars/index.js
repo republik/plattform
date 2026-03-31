@@ -19,7 +19,7 @@ import {
 import UserForm from './UserForm'
 
 import { GET_PROFILE } from '@/components/Users/header/ProfileHeader'
-import { SimpleDialog } from '@republik/ui'
+import { SimpleDialog } from '@/components/ui'
 
 export const GET_USER = gql`
   query user($id: String) {

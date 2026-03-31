@@ -14,8 +14,8 @@ import {
   TextButton,
 } from '@/components/Display/utils'
 
+import { SimpleDialog } from '@/components/ui'
 import { IconEdit } from '@republik/icons'
-import { SimpleDialog } from '@republik/ui'
 import EmailForm from './EmailForm'
 
 const GET_EMAIL = gql`

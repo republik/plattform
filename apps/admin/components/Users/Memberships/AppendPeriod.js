@@ -4,6 +4,7 @@ import { Component } from 'react'
 
 import { TextButton, displayDate } from '@/components/Display/utils'
 
+import { SimpleDialog } from '@/components/ui'
 import {
   Button,
   Dropdown,
@@ -11,7 +12,6 @@ import {
   InlineSpinner,
   Interaction,
 } from '@project-r/styleguide'
-import { SimpleDialog } from '@republik/ui'
 
 const APPEND_PERIOD = gql`
   mutation appendPeriod(

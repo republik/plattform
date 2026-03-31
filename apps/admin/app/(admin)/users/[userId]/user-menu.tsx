@@ -34,15 +34,17 @@ function NavLink({
         py: '1',
         px: '2',
         borderRadius: '[5px]',
+        border: '1px solid ',
+        borderColor: 'transparent',
 
         textDecoration: 'none',
         _hover: {
-          background: 'hover',
           color: 'text',
+          borderColor: 'divider',
         },
         '&[data-active="true"]': {
-          background: 'hover',
           color: 'text',
+          borderColor: 'divider',
         },
 
         display: 'flex',

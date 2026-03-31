@@ -1,7 +1,7 @@
 'use client'
+import { Button, Field, Form, Input } from '@/components/ui'
 import { UpdateUserEmailDocument } from '@/graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
-import { Button, Field, Form, Input } from '@republik/ui'
 
 export function EditUserEmail({
   userId,

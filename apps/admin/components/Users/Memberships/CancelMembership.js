@@ -13,7 +13,7 @@ import {
 } from '@project-r/styleguide'
 
 import { TextButton, displayDate } from '@/components/Display/utils'
-import { SimpleDialog } from '@republik/ui'
+import { SimpleDialog } from '@/components/ui'
 
 const GET_CANCELLATION_CATEGORIES = gql`
   query cancellationCategories {
