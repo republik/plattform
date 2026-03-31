@@ -29,12 +29,14 @@ const dankStyle = css({
 
 type DankProps = {
   children: ReactNode
-  className?: string
+  showDank?: boolean
 }
 
-export function Dank({ children, className }: DankProps) {
+export function Dank({ children, showDank }: DankProps) {
+  if (!showDank) return <>{children}</>
+  
   return (
-    <span className={`${containerStyle} ${className ?? ''}`}>
+    <span className={containerStyle}>
       {children}
       {/* Strike line through the text */}
       <svg

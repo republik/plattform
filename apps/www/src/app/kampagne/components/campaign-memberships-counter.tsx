@@ -1,12 +1,11 @@
 'use client'
 
+import { TARGET } from '@app/app/kampagne/campaign-config'
 import { AnimatedArrow } from '@app/app/kampagne/components/handdrawn/animated-arrow'
 import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
 import * as Progress from '@radix-ui/react-progress'
 import { css } from '@republik/theme/css'
-import React, { useEffect } from 'react' // TODO: get real numbers
-
-const TARGET_MEMBERS = 4
+import React, { useEffect } from 'react'
 
 function CampaignMembershipsCounter() {
   const { campaign } = useCampaign()
@@ -17,8 +16,8 @@ function CampaignMembershipsCounter() {
   useEffect(() => {
     const count = campaign?.newMembers?.count ?? 0
     setMembers(count)
-    setProgress((count / TARGET_MEMBERS) * 100)
-    setSuccess(count >= TARGET_MEMBERS)
+    setProgress((count / TARGET) * 100)
+    setSuccess(count >= TARGET)
   }, [campaign, setMembers, setProgress, setSuccess])
 
   return (
@@ -59,7 +58,7 @@ function CampaignMembershipsCounter() {
           <AnimatedArrow showArrow={success}>
             <span className={css({ fontWeight: 500 })}>{members}</span>
           </AnimatedArrow>
-          /{TARGET_MEMBERS}
+          /{TARGET}
         </span>
       </span>
     </span>
