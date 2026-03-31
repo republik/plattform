@@ -18,8 +18,8 @@ type DiscountOption = {
 // There needs to be one Stripe promo code for each discounted amount. (Promo codes are named after the amount *off*, but we display the final amount in the UI)
 const DISCOUNT_OPTIONS: DiscountOption[] = [
   { promoCode: 'SPRING26-OFF120', amount: 120, highlighted: '50 %' },
+  { promoCode: 'SPRING26-OFF100', amount: 140 },
   { promoCode: 'SPRING26-OFF60', amount: 180 },
-  { promoCode: '', amount: 240 },
 ]
 
 const radioContainerStyle = css({
