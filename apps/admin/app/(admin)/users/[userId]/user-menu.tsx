@@ -9,6 +9,7 @@ import {
   MailsIcon,
   MessageCircleMoreIcon,
   NewspaperIcon,
+  UserRoundKeyIcon,
   WalletIcon,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -77,6 +78,11 @@ export function UserMenu({ userId }: { userId: string }) {
         href={`/users/${userId}/details`}
         label='Personalien'
         icon={<BookUserIcon size={18} />}
+      />
+      <NavLink
+        href={`/users/${userId}/access`}
+        label='Rollen & Zugriff'
+        icon={<UserRoundKeyIcon size={18} />}
       />
       <NavLink
         href={`/users/${userId}/subscriptions`}

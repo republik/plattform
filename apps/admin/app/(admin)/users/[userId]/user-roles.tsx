@@ -1,5 +1,6 @@
 'use client'
 import { Field, Form } from '@/components/ui'
+import { InlineField } from '@/components/ui/forms/field'
 import { Switch } from '@/components/ui/forms/switch'
 import { useToastManager } from '@/components/ui/toast'
 import {
@@ -42,7 +43,7 @@ function EditRoleSwitch({ userId, role, checked }) {
   const loading = addLoading || removeLoading
 
   return (
-    <Field.Root key={role} name={role} label={role + (loading ? '…' : '')}>
+    <InlineField key={role} name={role} label={role + (loading ? '…' : '')}>
       <Switch
         checked={checked}
         onCheckedChange={(checked) => {
@@ -64,7 +65,7 @@ function EditRoleSwitch({ userId, role, checked }) {
             })
         }}
       />
-    </Field.Root>
+    </InlineField>
   )
 }
 

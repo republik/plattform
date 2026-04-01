@@ -1,5 +1,6 @@
 'use client'
 import { Button, Field, Form, Input } from '@/components/ui'
+import { TextField } from '@/components/ui/forms/field'
 import { UpdateUserEmailDocument } from '@/graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
 
@@ -29,9 +30,9 @@ export function EditUserEmail({
         } catch {}
       }}
     >
-      <Field.Root name='email' label='E-Mail'>
+      <TextField name='email' label='E-Mail'>
         <Input type='email' defaultValue={email} />
-      </Field.Root>
+      </TextField>
 
       <div>
         <Button type='submit' disabled={loading}>

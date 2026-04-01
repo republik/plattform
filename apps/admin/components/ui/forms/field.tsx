@@ -5,7 +5,9 @@ const styles = {
   Field: css({ display: 'flex', flexDirection: 'column', gap: '2' }),
   Label: css({
     fontSize: 's',
-    display: 'block',
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: '2',
     color: 'text',
     fontWeight: 'medium',
     textAlign: 'left',
@@ -21,7 +23,7 @@ const styles = {
   }),
 }
 
-function FieldRoot({
+export function TextField({
   label,
   description,
   children,
@@ -47,6 +49,29 @@ function FieldRoot({
   )
 }
 
-export const Field = {
-  Root: FieldRoot,
+export function InlineField({
+  label,
+  description,
+  children,
+  ...rootProps
+}: {
+  label: string
+  description?: string
+} & BaseField.Root.Props) {
+  return (
+    <BaseField.Root className={styles.Field} {...rootProps}>
+      <BaseField.Label className={styles.Label}>
+        {children}
+        {label}
+      </BaseField.Label>
+
+      <BaseField.Error className={styles.Error} />
+
+      {description && (
+        <BaseField.Description className={styles.Description}>
+          {description}
+        </BaseField.Description>
+      )}
+    </BaseField.Root>
+  )
 }

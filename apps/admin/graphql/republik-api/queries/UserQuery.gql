@@ -8,6 +8,8 @@ query UserProfile($id: String) {
     initials
     email
     phoneNumber
+    gender
+    birthyear
     username
     portrait(size: SMALL)
     roles

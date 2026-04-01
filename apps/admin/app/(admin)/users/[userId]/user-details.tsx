@@ -1,13 +1,33 @@
 'use client'
 import { Card, CardTitle } from '@/components/card'
-import { Button, Field, Form, Input } from '@/components/ui'
+import { Button, Form, Input } from '@/components/ui'
+import { InlineField, TextField } from '@/components/ui/forms/field'
+import { useToastManager } from '@/components/ui/toast'
 import {
   UpdateUserDetailsDocument,
   UpdateUserDetailsMutationVariables,
-  UserProfileDocument,
 } from '@/graphql/republik-api/__generated__/gql/graphql'
-import { useMutation, useQuery } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import Link from 'next/link'
+import { z } from 'zod'
+import { useUserProfileData } from './use-user-profile-data'
+import { Radio, RadioGroup } from '@/components/ui/forms/radio'
+
+const OptionalString = z.preprocess(
+  (val) => (val === '' ? null : val),
+  z.string().nullable(),
+)
+const OptionalNumber = z.preprocess(
+  (val) => (val === '' ? null : val),
+  z.coerce.number().nullable(),
+)
+const UserFormInput = z.object({
+  firstName: z.string(),
+  lastName: z.string(),
+  phoneNumber: OptionalString,
+  gender: OptionalString,
+  birthyear: OptionalNumber,
+})
 
 export function EditUserDetails({
   userId,
@@ -18,9 +38,19 @@ export function EditUserDetails({
   values: UpdateUserDetailsMutationVariables
   onComplete?: () => void
 }) {
+  const toastManager = useToastManager()
+
   const [updateUserDetails, { loading, error }] = useMutation(
     UpdateUserDetailsDocument,
-    {},
+    {
+      onError: (err) => {
+        toastManager.add({
+          title: 'Ups!',
+          description: err.message,
+          type: 'error',
+        })
+      },
+    },
   )
 
   const formErrors = error ? { email: error?.message } : {}
@@ -28,26 +58,41 @@ export function EditUserDetails({
   return (
     <Form
       errors={formErrors}
-      onFormSubmit={async (values) => {
-        try {
-          await updateUserDetails({ variables: { id: userId, ...values } })
-          onComplete?.()
-        } catch {}
+      onFormSubmit={(values) => {
+        const fields = UserFormInput.parse({
+          ...values,
+          gender: values.selectedGender || values.customGender,
+        })
+
+        console.log(fields)
+
+        updateUserDetails({ variables: { id: userId, ...fields } })
       }}
     >
-      <Field.Root name='firstName' label='Vorname'>
+      <TextField name='firstName' label='Vorname'>
         <Input required type='text' defaultValue={values.firstName} />
-      </Field.Root>
-      <Field.Root name='lastName' label='Nachname'>
+      </TextField>
+      <TextField name='lastName' label='Nachname'>
         <Input required type='text' defaultValue={values.lastName} />
-      </Field.Root>
-      <Field.Root name='phoneNumber' label='Telefon'>
+      </TextField>
+      <TextField name='phoneNumber' label='Telefon'>
         <Input type='text' defaultValue={values.phoneNumber} />
-      </Field.Root>
-      <Field.Root name='birthyear' label='Geburtsjahr'>
+      </TextField>
+      <TextField name='birthyear' label='Geburtsjahr'>
         <Input type='number' defaultValue={values.birthyear} />
-      </Field.Root>
+      </TextField>
 
+      <RadioGroup name='selectedGender' defaultValue={values.gender}>
+        <InlineField label='Männlich'>
+          <Radio value='männlich' />
+        </InlineField>
+        <InlineField label='Weiblich'>
+          <Radio value='weiblich' />
+        </InlineField>
+      </RadioGroup>
+      <TextField name='customGender' label='Geschlecht'>
+        <Input type='text' defaultValue={values.gender} />
+      </TextField>
       <div>
         <Button type='submit' disabled={loading}>
           Ändern
@@ -57,26 +102,26 @@ export function EditUserDetails({
   )
 }
 
-export function UserDetails({ userId }: { userId: string }) {
-  const { data } = useQuery(UserProfileDocument, {
-    variables: {
-      id: userId,
-    },
-  })
+export function UserDetails() {
+  const user = useUserProfileData()
+
+  if (!user) return null
+
+  const { email, address } = user
 
   return (
     <Card>
       <CardTitle>E-Mail-Adresse</CardTitle>
-      <Link href={`mailto:${data?.user?.email}`}>{data?.user?.email}</Link>
+      <Link href={`mailto:${email}`}>{email}</Link>
       <CardTitle>Adresse</CardTitle>
       <div>
-        <div>{data?.user?.address.organization}</div>
-        <div>{data?.user?.address.name}</div>
-        <div>{data?.user?.address.line1}</div>
-        <div>{data?.user?.address.line2}</div>
-        <div>{data?.user?.address.postalCode}</div>
-        <div>{data?.user?.address.city}</div>
-        <div>{data?.user?.address.country}</div>
+        <div>{address.organization}</div>
+        <div>{address.name}</div>
+        <div>{address.line1}</div>
+        <div>{address.line2}</div>
+        <div>{address.postalCode}</div>
+        <div>{address.city}</div>
+        <div>{address.country}</div>
       </div>
     </Card>
   )

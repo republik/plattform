@@ -8,7 +8,7 @@ const styles = toast()
 
 export function ToastContainer({ children }: { children: React.ReactNode }) {
   return (
-    <BaseToast.Provider timeout={0}>
+    <BaseToast.Provider>
       <BaseToast.Portal>
         <BaseToast.Viewport className={styles.viewport}>
           <ToastList />
@@ -27,7 +27,7 @@ function ToastList() {
       <BaseToast.Content className={styles.content}>
         <BaseToast.Title className={styles.title} />
         <BaseToast.Description className={styles.description} />
-        <BaseToast.Close className={styles.close} aria-label='Close'>
+        <BaseToast.Close className={styles.close} aria-label='Schliessen'>
           <XIcon size={16} />
         </BaseToast.Close>
         <BaseToast.Action render={<Button size='small' />} />

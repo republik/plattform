@@ -1,37 +1,23 @@
 'use client'
 import { Card, CardTitle } from '@/components/card'
-import { UserProfileDocument } from '@/graphql/republik-api/__generated__/gql/graphql'
-import { useQuery } from '@apollo/client'
-import { useParams } from 'next/navigation'
+import { useUserProfileData } from '../use-user-profile-data'
 import { EditUserDetails } from '../user-details'
 import { EditUserEmail } from '../user-email'
-import { EditUserRoles } from '../user-roles'
 
 export default function SubscriptionsPage() {
-  const { userId } = useParams()
+  const user = useUserProfileData()
 
-  const { data } = useQuery(UserProfileDocument, {
-    variables: {
-      id: userId,
-    },
-    skip: !userId,
-  })
-
-  if (!data?.user) return null
+  if (!user) return null
 
   return (
     <>
       <Card>
         <CardTitle>E-Mail</CardTitle>
-        <EditUserEmail userId={userId} email={data?.user?.email} />
+        <EditUserEmail userId={user.id} email={user.email} />
       </Card>
       <Card>
         <CardTitle>Personalien</CardTitle>
-        <EditUserDetails userId={userId} values={data?.user} />
-      </Card>
-      <Card>
-        <CardTitle>Rollen</CardTitle>
-        <EditUserRoles userId={userId} roles={data?.user.roles} />
+        <EditUserDetails userId={user.id} values={user} />
       </Card>
     </>
   )
