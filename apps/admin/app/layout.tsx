@@ -1,6 +1,8 @@
-import { RootColorVariables } from '@project-r/styleguide'
 import '@republik/theme/fonts.css'
 import '@republik/theme/styles.css'
+
+import { ToastContainer } from '@/components/ui/toast'
+import { RootColorVariables } from '@project-r/styleguide'
 import { GraphqlProvider } from 'lib/apollo/client-browser'
 import { Metadata, Viewport } from 'next'
 import { PropsWithChildren } from 'react'
@@ -20,7 +22,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       <body>
         <GraphqlProvider>
           <RootColorVariables />
-          {children}
+          <ToastContainer>{children}</ToastContainer>
         </GraphqlProvider>
       </body>
     </html>

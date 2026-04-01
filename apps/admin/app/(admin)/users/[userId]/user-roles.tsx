@@ -1,6 +1,7 @@
 'use client'
 import { Field, Form } from '@/components/ui'
 import { Switch } from '@/components/ui/forms/switch'
+import { useToastManager } from '@/components/ui/toast'
 import {
   AddUserToRoleDocument,
   RemoveUserFromRoleDocument,
@@ -36,6 +37,8 @@ function EditRoleSwitch({ userId, role, checked }) {
     },
   )
 
+  const toastManager = useToastManager()
+
   const loading = addLoading || removeLoading
 
   return (
@@ -43,11 +46,22 @@ function EditRoleSwitch({ userId, role, checked }) {
       <Switch
         checked={checked}
         onCheckedChange={(checked) => {
-          if (checked) {
-            addUserToRole()
-          } else {
-            removeUserFromRole()
-          }
+          const action = checked ? addUserToRole : removeUserFromRole
+
+          action()
+            .then(() => {
+              toastManager.add({
+                description: `Rolle '${role}' ${
+                  checked ? 'hinzugefügt' : 'entfernt'
+                }.`,
+              })
+            })
+            .catch((err) => {
+              toastManager.add({
+                title: 'Ups!',
+                description: err.message,
+              })
+            })
         }}
       />
     </Field.Root>

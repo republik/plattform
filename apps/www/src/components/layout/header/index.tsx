@@ -137,7 +137,7 @@ export function PageHeader({
             </Link>
           )}
         </div>
-        <div className={css({ m: 'header.logoMargin', md: { width: '100%' } })}>
+        <div className={css({ m: 'header.logoMargin', md: { width: 'full' } })}>
           <Link href='/'>
             <Logo />
           </Link>
@@ -145,7 +145,7 @@ export function PageHeader({
         <div
           className={css({
             alignSelf: 'stretch',
-            md: { width: '100%' },
+            md: { width: 'full' },
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'flex-end',
