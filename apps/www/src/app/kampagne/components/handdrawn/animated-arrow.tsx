@@ -53,6 +53,7 @@ export function AnimatedArrow({
         display: 'inline-block',
         position: 'relative',
         overflow: 'visible',
+        stroke: 'campaign26Button',
       })}
     >
       <svg
@@ -69,7 +70,6 @@ export function AnimatedArrow({
         <path
           d='M9.09,18.38c.29,7.6,5.78,14.82,14.12,12.63,6.12-1.41,14.32-9.06,14.77-14.59.2-1.85-1.25-3.01-3.07-2.52-1.99.47-3.77,1.83-5.36,3.46-4.34,4.4-7.11,11.88-4.22,17.73,3.99,7.93,13.79,5.25,20.59,2.1,8.28-3.91,17.23-9.65,21.92-17.56,3.13-5.6.26-8.47-4.95-6.08-4.5,2.07-8.15,6.04-11,10.08-4.04,5.59-6.91,13.27-5.35,20.56.88,4.7,3.59,9.46,8.11,11.31,11.19,4.46,29.85-8.41,38.51-14.66'
           strokeWidth='3.55'
-          stroke='#60031e'
           fill='none'
           className={arrowBodyMaskStyle}
         />
@@ -78,7 +78,6 @@ export function AnimatedArrow({
           strokeWidth='3.27'
           strokeLinejoin='round'
           strokeMiterlimit='10'
-          stroke='#60031e'
           fill='none'
           className={arrowTipMaskStyle}
         />
