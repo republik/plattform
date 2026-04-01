@@ -162,7 +162,18 @@ export const presetRepublik = definePreset({
               },
             },
             marketing: {
-              value: '#F2ECE6',
+              value: {
+                base: '#F2ECE6',
+                _light: '#F2ECE6',
+                _dark: '#2A2520',
+              },
+            },
+            marketingSurface: {
+              value: {
+                base: 'white',
+                _light: 'white',
+                _dark: '#352F2A',
+              },
             },
             marketingAlt: {
               value: '#E2FBA6',
@@ -207,6 +218,13 @@ export const presetRepublik = definePreset({
               base: 'rgba(0,0,0,0.2)',
               _light: 'rgba(0,0,0,0.2)',
               _dark: 'rgba(0,0,0,0.4)',
+            },
+          },
+          overlaySubtle: {
+            value: {
+              base: 'rgba(0,0,0,0.1)',
+              _light: 'rgba(0,0,0,0.1)',
+              _dark: 'rgba(255,255,255,0.08)',
             },
           },
           error: {

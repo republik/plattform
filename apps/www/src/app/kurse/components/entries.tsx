@@ -30,7 +30,7 @@ export function Entries({ slug, entries }: EntriesProps) {
               <span
                 className={css({
                   alignSelf: 'start',
-                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                  bg: 'overlaySubtle',
                   py: '1',
                   px: '3',
                   borderRadius: 'full',

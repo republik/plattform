@@ -277,7 +277,7 @@ export default async function CoursePage({ params }: PageProps) {
 
               <div
                 className={css({
-                  bg: 'white',
+                  bg: 'background.marketingSurface',
                   p: '6',
                 })}
               >
@@ -352,7 +352,7 @@ export default async function CoursePage({ params }: PageProps) {
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '6',
-                  bg: 'rgba(0, 0, 0, 0.1)',
+                  bg: 'overlaySubtle',
                   p: '6',
                 })}
               >

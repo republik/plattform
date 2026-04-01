@@ -19,7 +19,7 @@ export function Testimonials({
             width: '2/3',
             alignSelf: 'flex-start',
             '&:nth-child(even)': { alignSelf: 'flex-end' },
-            bg: 'white',
+            bg: 'background.marketingSurface',
             p: '4',
             borderRadius: '4px',
           })}
