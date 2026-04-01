@@ -1,6 +1,8 @@
 import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
 import { Offers } from '@app/app/kampagne/components/campaign-offers'
+import { Dank } from '@app/app/kampagne/components/handdrawn/dank'
 import { Video } from '@app/app/kampagne/components/video'
+import { getCampaignSuccess } from '@app/app/kampagne/get-campaign-success'
 import { Logo } from '@app/components/layout/header/logo'
 import { Share } from '@app/components/share/share'
 import { ArticleSection } from '@app/components/ui/section'
@@ -50,6 +52,7 @@ function JournalismPromise({
 
 export default async function Page() {
   const { hasActiveMembership } = await getMe()
+  const { success } = await getCampaignSuccess()
 
   return (
     <>
@@ -99,9 +102,44 @@ export default async function Page() {
               md: { mb: '4' },
             })}
           >
-            Mit 2000&nbsp;neuen Mitgliedern lösen wir 3&nbsp;Versprechen ein.
+            <Dank showDank={success}>Mit</Dank> 2000&nbsp;neuen Mitgliedern
+            lösen wir 3&nbsp;Versprechen ein.
           </h2>
-          {hasActiveMembership ? (
+          {hasActiveMembership && success ? (
+            <>
+              <p
+                className={css({
+                  textStyle: 'airy',
+                  mb: '6',
+                })}
+              >
+                <span className={css({ fontWeight: 500 })}>
+                  Und wir machen weiter!
+                </span>
+                <br />
+                Das vergünstigte Angebot gilt bis zum 14. April. Wie viele neue
+                Verleger finden wir?
+              </p>
+              <Share
+                title='2000 neue Mitglieder, 3 Versprechen'
+                url={`${PUBLIC_BASE_URL}/kampagne/2000-mitglieder-3-versprechen`}
+                emailSubject='2000 neue Mitglieder, 3 Versprechen'
+              >
+                <span
+                  className={cx(
+                    button({ size: 'full' }),
+                    css({
+                      background: 'campaign26Button',
+                      color: 'white',
+                      mb: 2,
+                    }),
+                  )}
+                >
+                  Weitersagen
+                </span>
+              </Share>
+            </>
+          ) : hasActiveMembership ? (
             <>
               <p
                 className={css({
@@ -131,6 +169,34 @@ export default async function Page() {
                   Weitersagen
                 </span>
               </Share>
+            </>
+          ) : success ? (
+            <>
+              <p
+                className={css({
+                  textStyle: 'airy',
+                  mb: '6',
+                })}
+              >
+                <span className={css({ fontWeight: 500 })}>
+                  Aber Sie fehlen noch.{' '}
+                </span>
+                Profitieren Sie bis zum 14. April von unserem vergünstigten
+                Angebot!
+              </p>
+              <Offers
+                additionalShopParams={{
+                  rep_ui_component: 'campaign-landing-page',
+                }}
+              />
+              <p
+                className={css({
+                  textAlign: 'center',
+                  mt: '6',
+                })}
+              >
+                Jederzeit kündbar
+              </p>
             </>
           ) : (
             <>
@@ -275,17 +341,30 @@ export default async function Page() {
               md: { pt: '12' },
             })}
           >
-            <h3
-              className={css({
-                textStyle: 'campaignSubhead',
-                color: 'campaign26.happyCherry',
-                mb: '6',
-              })}
-            >
-              Diese 3&nbsp;Versprechen lösen wir ein, wenn wir bis zum
-              14.&nbsp;April unser Ziel von 2000&nbsp;neuen Mitgliedern
-              erreichen. Machen Sie mit?
-            </h3>
+            {success ? (
+              <h3
+                className={css({
+                  textStyle: 'campaignSubhead',
+                  color: 'campaign26.happyCherry',
+                  mb: '6',
+                })}
+              >
+                Diese 3&nbsp;Versprechen werden wir einlösen. Die Frage ist
+                bloss: Sind Sie dabei?
+              </h3>
+            ) : (
+              <h3
+                className={css({
+                  textStyle: 'campaignSubhead',
+                  color: 'campaign26.happyCherry',
+                  mb: '6',
+                })}
+              >
+                Diese 3&nbsp;Versprechen lösen wir ein, wenn wir bis zum
+                14.&nbsp;April unser Ziel von 2000&nbsp;neuen Mitgliedern
+                erreichen. Machen Sie mit?
+              </h3>
+            )}
             <p
               className={css({
                 textStyle: 'airy',

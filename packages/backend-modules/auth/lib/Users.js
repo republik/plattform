@@ -77,6 +77,12 @@ const AuthorizationRateLimitError = newAuthError(
   'authorize-rate-limit-tokens-email',
   'api/auth/errorAuthorizationRateLimit',
 )
+const TokenTypeNotSupportedError = newAuthError(
+  'token-type-not-supported',
+  'api/auth/tokenType/notSupported',
+)
+
+const UNAUTHORIZED_SESSION_SUPPORTED_TYPES = ['EMAIL_TOKEN', 'APP']
 
 const { AUTO_LOGIN_REGEX, FRONTEND_BASE_URL } = process.env
 
@@ -161,7 +167,14 @@ const setPreferredFirstFactor = async (user, tokenType = null, pgdb) => {
   )
 }
 
-const signIn = async (_email, signInContext, consents, _tokenType, accessToken, context) => {
+const signIn = async (
+  _email,
+  signInContext,
+  consents,
+  _tokenType,
+  accessToken,
+  context,
+) => {
   const { pgdb, req } = context
   if (req.user) {
     // req is authenticated
@@ -318,6 +331,10 @@ const unauthorizedSession = async ({
   req,
   me,
 }) => {
+  if (!UNAUTHORIZED_SESSION_SUPPORTED_TYPES.includes(token.type)) {
+    throw new TokenTypeNotSupportedError({ type: token.type })
+  }
+
   if (!validator.isEmail(emailFromQuery)) {
     throw new EmailInvalidError({ email: emailFromQuery })
   }

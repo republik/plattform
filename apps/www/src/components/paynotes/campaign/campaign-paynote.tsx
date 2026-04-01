@@ -1,5 +1,10 @@
+'use client'
+
 import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
+import { Dank } from '@app/app/kampagne/components/handdrawn/dank'
+import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
+
 import {
   EventTrackingContext,
   useTrackEvent,
@@ -10,6 +15,7 @@ import Link from 'next/link'
 
 function CampaignPaynote() {
   const trackEvent = useTrackEvent()
+  const { success } = useCampaign()
 
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
@@ -38,7 +44,8 @@ function CampaignPaynote() {
             },
           })}
         >
-          <CampaignMembershipsCounter />
+          <CampaignMembershipsCounter arrowSize='sm' />
+
           <div
             className={css({
               md: {
@@ -65,11 +72,12 @@ function CampaignPaynote() {
                 },
               })}
             >
-              Mit 2000&nbsp;neuen Mitgliedern lösen wir 3&nbsp;Versprechen ein.{' '}
+              <Dank showDank={success}>Mit</Dank> 2000&nbsp;neuen Mitgliedern
+              lösen wir 3&nbsp;Versprechen ein.{' '}
               <br
                 className={css({ display: 'none', lg: { display: 'initial' } })}
               />
-              Machen Sie mit?
+              {success ? 'Aber Sie fehlen noch!' : 'Machen Sie mit?'}
             </p>
             <div className={css({ textAlign: 'center', ml: 'auto' })}>
               <Link

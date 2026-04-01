@@ -1,18 +1,18 @@
 'use client'
 
 import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
+import { Dank } from '@app/app/kampagne/components/handdrawn/dank'
+import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import { Share } from '@app/components/share/share'
-import {
-  EventTrackingContext,
-  useTrackEvent,
-} from '@app/lib/analytics/event-tracking'
+import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import * as RadixCollapsible from '@radix-ui/react-collapsible'
 import { IconExpandLess, IconExpandMore } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+
 import { PUBLIC_BASE_URL } from '../../../../lib/constants'
 
 const localStorageKey = 'republik-campaign-banner-is-open'
@@ -45,8 +45,7 @@ function CampaignBannerMd({
   open: boolean
   handleOpen: (isOpen: boolean) => void
 }) {
-  const trackEvent = useTrackEvent()
-
+  const { success } = useCampaign()
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
       <div
@@ -60,15 +59,15 @@ function CampaignBannerMd({
           },
         })}
       >
-        <div
-          className={css({
-            maxWidth: 'carousel',
-            mx: 'auto',
-            px: '15px',
-          })}
-        >
-          <RadixCollapsible.Root open={open} onOpenChange={handleOpen}>
-            <RadixCollapsible.Trigger asChild>
+        <RadixCollapsible.Root open={open} onOpenChange={handleOpen}>
+          <RadixCollapsible.Trigger asChild>
+            <div
+              className={css({
+                maxWidth: 'carousel',
+                mx: 'auto',
+                px: '15px',
+              })}
+            >
               <button
                 className={css({
                   display: 'flex',
@@ -79,7 +78,7 @@ function CampaignBannerMd({
                 })}
               >
                 <span className={css({ display: 'inline-block', flexGrow: 1 })}>
-                  <CampaignMembershipsCounter />
+                  <CampaignMembershipsCounter arrowSize={open ? 'md' : 'xs'} />
                 </span>
                 <span
                   className={css({ flexShrink: 0, display: 'inline-block' })}
@@ -91,19 +90,27 @@ function CampaignBannerMd({
                   )}
                 </span>
               </button>
-            </RadixCollapsible.Trigger>
-            <RadixCollapsible.Content
-              data-collapsible-collapsed-items
+            </div>
+          </RadixCollapsible.Trigger>
+          <RadixCollapsible.Content
+            data-collapsible-collapsed-items
+            className={css({
+              overflow: 'hidden',
+              animationTimingFunction: 'ease-out',
+              animationDuration: '300ms',
+              '&[data-state="open"]': {
+                animationName: 'radixCollapsibleSlideDown',
+              },
+              '&[data-state="closed"]:not([hidden])': {
+                animationName: 'radixCollapsibleSlideUp',
+              },
+            })}
+          >
+            <div
               className={css({
-                overflow: 'hidden',
-                animationTimingFunction: 'ease-out',
-                animationDuration: '300ms',
-                '&[data-state="open"]': {
-                  animationName: 'radixCollapsibleSlideDown',
-                },
-                '&[data-state="closed"]:not([hidden])': {
-                  animationName: 'radixCollapsibleSlideUp',
-                },
+                maxWidth: 'carousel',
+                mx: 'auto',
+                px: '15px',
               })}
             >
               <div
@@ -116,7 +123,7 @@ function CampaignBannerMd({
               >
                 <p
                   className={css({
-                    maxWidth: '700px',
+                    maxWidth: '750px',
                     flexGrow: 1,
                     textAlign: 'left',
                     fontFamily: 'gtAmericaStandard',
@@ -126,8 +133,14 @@ function CampaignBannerMd({
                     mr: 'auto',
                   })}
                 >
-                  Mit 2000 neuen Mitgliedern an Bord lösen wir 3 Versprechen
-                  ein.
+                  <Dank showDank={success}>Mit</Dank> 2000 neuen Mitgliedern an
+                  Bord lösen wir 3&nbsp;Versprechen ein.
+                  {success && (
+                    <span className={css({ fontWeight: 400 })}>
+                      {' '}
+                      Und wir machen weiter!
+                    </span>
+                  )}
                 </p>
                 <div>
                   <Share
@@ -163,9 +176,9 @@ function CampaignBannerMd({
                   </Link>
                 </div>
               </div>
-            </RadixCollapsible.Content>
-          </RadixCollapsible.Root>
-        </div>
+            </div>
+          </RadixCollapsible.Content>
+        </RadixCollapsible.Root>
       </div>
     </div>
   )
@@ -178,8 +191,7 @@ function CampaignBanner({
   open: boolean
   handleOpen: (isOpen: boolean) => void
 }) {
-  const trackEvent = useTrackEvent()
-
+  const { success } = useCampaign()
   return (
     <div data-testid='campaignPaynote' data-page-theme='campaign-2026'>
       <div
@@ -217,11 +229,17 @@ function CampaignBanner({
                       lineHeight: '1.2',
                     })}
                   >
-                    Mit 2000&nbsp;neuen Mitgliedern an Bord lösen wir
-                    3&nbsp;Versprechen ein.
+                    <Dank showDank={success}>Mit</Dank> 2000&nbsp;neuen
+                    Mitgliedern an Bord lösen wir 3&nbsp;Versprechen ein.
+                    {success && (
+                      <span className={css({ fontWeight: 400 })}>
+                        {' '}
+                        Und wir machen weiter!
+                      </span>
+                    )}
                   </span>
                 ) : (
-                  <CampaignMembershipsCounter />
+                  <CampaignMembershipsCounter arrowSize='xs' />
                 )}
               </span>
               <span className={css({ flexShrink: 0, display: 'inline-block' })}>
@@ -259,7 +277,7 @@ function CampaignBanner({
               Mehr erfahren
             </Link>
             <div className={css({ my: 6 })}>
-              <CampaignMembershipsCounter />
+              <CampaignMembershipsCounter arrowSize='sm' />
             </div>
             <div className={css({ display: 'flex', flexDirection: 'column' })}>
               <Share

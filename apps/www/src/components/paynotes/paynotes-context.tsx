@@ -186,6 +186,12 @@ export const PaynotesProvider = ({ children }) => {
     if (trialStatus === 'TRIAL_GROUP_TEILEN') {
       return setPaynoteKind('PAYNOTE_INLINE')
     }
+
+    // exception for marked articles (via metadata)
+    if (isPaywallExcluded && isCampaignActive) {
+      return setPaynoteKind('CAMPAIGN_PAYNOTE')
+    }
+
     // exception for marked articles (via metadata)
     if (isPaywallExcluded) {
       return setPaynoteKind('OVERLAY_CLOSED')
