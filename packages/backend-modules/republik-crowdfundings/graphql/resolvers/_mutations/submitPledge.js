@@ -1,11 +1,5 @@
-const postfinanceSHA = require('../../../lib/payments/postfinance/sha')
-const { v4: uuid } = require('uuid')
 const validator = require('validator')
-const {
-  minTotal,
-  regularTotal,
-  getPledgeOptionsTree,
-} = require('../../../lib/Pledge')
+const { minTotal, regularTotal } = require('../../../lib/Pledge')
 const {
   resolvePackages,
   getCustomOptions,
@@ -15,7 +9,6 @@ const {
   Consents: { ensureAllRequiredConsents, saveConsents },
   AccessToken: { getUserByAccessToken, ensureCanPledgePackage },
 } = require('@orbiting/backend-modules-auth')
-const { hasUserActiveMembership } = require('@orbiting/backend-modules-utils')
 const {
   insertAddress,
   upsertAddress,
@@ -253,7 +246,6 @@ module.exports = async (_, args, context) => {
 
     // check user
     let user = null
-    let pfAliasId = null
     if (req.user) {
       // user logged in
       if (
@@ -267,20 +259,6 @@ module.exports = async (_, args, context) => {
         throw new Error(t('api/unexpected'))
       }
       user = req.user._raw
-
-      // load possible existing PF alias, only exists if the user is logged in,
-      // otherwise he can't have an alias already
-      const paymentSource = await transaction.public.paymentSources.findFirst(
-        {
-          userId: user.id,
-          method: 'POSTFINANCECARD',
-        },
-        { orderBy: ['createdAt desc'] },
-      )
-
-      if (paymentSource) {
-        pfAliasId = paymentSource.pspId
-      }
     } else {
       if (accessTokenUser) {
         if (pledge.user && pledge.user.email !== accessTokenUser.email) {
@@ -358,50 +336,6 @@ module.exports = async (_, args, context) => {
       pgdb: transaction,
     })
 
-    // if we didn't load a alias, generate one
-    if (!pfAliasId) {
-      pfAliasId = uuid()
-    }
-
-    // MONTHLY_ABO can only be bought if user has no active membership
-    // and if user did not buy a MONTHLY already (then he has to reactivateMembership)
-    const userHasActiveMembership = await hasUserActiveMembership(
-      user,
-      transaction,
-    )
-    const userHasMonthlyMembership = await transaction.queryOneField(
-      `
-      SELECT COUNT(*)
-      FROM memberships m
-      JOIN "membershipTypes" mt
-        ON m."membershipTypeId" = mt.id
-      WHERE
-        m."userId" = :userId AND
-        mt.name = :membershipTypeName
-    `,
-      {
-        userId: user.id,
-        membershipTypeName: 'MONTHLY_ABO',
-      },
-    )
-    if (userHasActiveMembership || userHasMonthlyMembership) {
-      const pledgeOptionsTree = await getPledgeOptionsTree(
-        pledge.options,
-        transaction,
-      )
-      for (const plo of pledgeOptionsTree) {
-        if (
-          plo.packageOption.reward &&
-          plo.packageOption.reward.membershipType &&
-          plo.packageOption.reward.membershipType.name === 'MONTHLY_ABO'
-        ) {
-          if (userHasActiveMembership) {
-            throw new Error(t('api/membership/monthly/hasActive'))
-          }
-        }
-      }
-    }
-
     const shippingAddress = await insertAddress(
       pledge.shippingAddress,
       transaction,
@@ -454,19 +388,9 @@ module.exports = async (_, args, context) => {
     // commit transaction
     await transaction.transactionCommit()
 
-    // generate PF SHA
-    const pfSHA = postfinanceSHA({
-      orderId: newPledge.id,
-      amount: newPledge.total,
-      alias: pfAliasId,
-      userId: user.id,
-    })
-
     return {
       pledgeId: newPledge.id,
       userId: user.id,
-      pfSHA,
-      pfAliasId,
     }
   } catch (e) {
     await transaction.transactionRollback()
