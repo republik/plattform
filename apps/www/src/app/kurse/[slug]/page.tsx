@@ -10,7 +10,6 @@ import { getCMSClientBase } from '@app/lib/apollo/cms-client-base'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { css } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
-import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { Credits } from '../components/credits'
 import { Entries } from '../components/entries'
@@ -18,6 +17,8 @@ import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import Link from 'next/link'
 import { Testimonials } from '../components/testimonials'
 import { Share } from '@app/components/share/share'
+import Image from 'next/image'
+import { cx } from '@republik/theme/css'
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -183,7 +184,7 @@ export default async function CoursePage({ params }: PageProps) {
 
         <section
           className={css({
-            pb: '96px',
+            pb: '20',
             bg: 'background.marketing',
           })}
         >
@@ -192,7 +193,7 @@ export default async function CoursePage({ params }: PageProps) {
               className={css({
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '20',
+                gap: '16',
                 pt: '8',
               })}
             >
@@ -326,17 +327,25 @@ export default async function CoursePage({ params }: PageProps) {
                   Durch den Kurs führen Sie
                 </h2>
                 <Credits credits={credits} />
-              </div>
 
-              <Share
-                title={title}
-                url={`${process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL}/kurse/${slug}`}
-                emailSubject={title}
-              >
-                <div className={button({ variant: 'outline', size: 'full' })}>
-                  Kurs teilen
-                </div>
-              </Share>
+                <Share
+                  title={title}
+                  url={`${process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL}/kurse/${slug}`}
+                  emailSubject={title}
+                >
+                  <div
+                    className={cx(
+                      button({
+                        variant: 'outline',
+                        size: 'full',
+                      }),
+                      css({ mt: '4' }),
+                    )}
+                  >
+                    Kurs teilen
+                  </div>
+                </Share>
+              </div>
 
               <div
                 className={css({
@@ -367,9 +376,14 @@ export default async function CoursePage({ params }: PageProps) {
 
               <p>
                 Mit Ihrer Anmeldung stimmen Sie den{' '}
-                <Link href='/datenschutz'>Datenschutzbestimmungen</Link> der
-                Republik zu und erlauben uns, Sie nach Ablauf des Kurses über
-                Angebote der Republik zu informieren. Abmeldung jederzeit
+                <Link
+                  href='/datenschutz'
+                  className={button({ variant: 'link' })}
+                >
+                  Datenschutzbestimmungen
+                </Link>{' '}
+                der Republik zu und erlauben uns, Sie nach Ablauf des Kurses
+                über Angebote der Republik zu informieren. Abmeldung jederzeit
                 möglich.
               </p>
             </div>
