@@ -49,6 +49,11 @@ module.exports = async (_, args, context) => {
       id: pledgeOptions.map((plo) => plo.templateId),
     })
 
+    if (packageOptions.length === 0) {
+      context.logger.error({ args }, 'no matching packageOptions found')
+      throw new Error(t('api/unexpected'))
+    }
+
     const rewardIds = packageOptions.map((option) => option.rewardId)
     const rewards =
       rewardIds.length > 0
@@ -88,6 +93,11 @@ module.exports = async (_, args, context) => {
 
     const packageId = packageOptions[0].packageId
     const pkg = await pgdb.public.packages.findOne({ id: packageId })
+
+    if (!pkg) {
+      context.logger.error({ args, packageId }, 'package not found')
+      throw new Error(t('api/unexpected'))
+    }
 
     // wrong tokens are just ignored
     const accessTokenUser =
@@ -215,8 +225,7 @@ module.exports = async (_, args, context) => {
       id: pkg.crowdfundingId,
     })
     const now = new Date()
-    const gracefulEnd = new Date(crowdfunding.endDate)
-    gracefulEnd.setMinutes(now.getMinutes() + 20)
+    const gracefulEnd = new Date(crowdfunding.endDate.getTime() + 20 * 60 * 1000)
     if (gracefulEnd < now) {
       context.logger.error({ args }, 'crowdfunding already closed')
       throw new Error(t('api/crowdfunding/tooLate'))
@@ -289,20 +298,14 @@ module.exports = async (_, args, context) => {
         user = await transaction.public.users.findOne({
           email: pledge.user.email,
         }) // try to load existing user by email
-        if (
-          user &&
-          !!(await transaction.public.pledges.count({
-            userId: user.id,
-            'status !=': 'DRAFT',
-          }))
-        ) {
-          // user has pledges
+        if (user) {
+          // any existing account requires login before pledging
           await transaction.transactionRollback()
           return {
             // user must login before he can submitPledge
             emailVerify: true,
           }
-        } else if (!user) {
+        } else {
           // create user
           user = await transaction.public.users.insertAndGet({
             email: pledge.user.email,
