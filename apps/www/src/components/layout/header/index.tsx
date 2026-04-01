@@ -1,15 +1,15 @@
 'use client'
 
+import { MeQuery } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useScrollDirection } from '@app/lib/hooks/useScrollDirection'
+import { IconAccountBox, IconMic, IconSearchMenu } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import { hstack } from '@republik/theme/patterns'
-import Link from 'next/link'
-import { IconAccountBox, IconMic, IconSearchMenu } from '@republik/icons'
 import Image from 'next/image'
-import { NavLink } from './nav-link'
-import { MeQuery } from '#graphql/republik-api/__generated__/gql/graphql'
+import Link from 'next/link'
 import { ComponentPropsWithoutRef, useRef } from 'react'
-import { useScrollDirection } from '@app/lib/hooks/useScrollDirection'
 import { Logo } from './logo'
+import { NavLink } from './nav-link'
 
 const getInitials = (name, email) =>
   (name && name.trim()

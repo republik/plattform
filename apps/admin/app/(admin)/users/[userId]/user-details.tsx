@@ -32,7 +32,6 @@ const UserFormInput = z.object({
 export function EditUserDetails({
   userId,
   values,
-  onComplete,
 }: {
   userId: string
   values: UpdateUserDetailsMutationVariables

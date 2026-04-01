@@ -1,6 +1,6 @@
 import {
-  RadioGroup as BaseRadioGroup,
   Radio as BaseRadio,
+  RadioGroup as BaseRadioGroup,
 } from '@base-ui/react'
 
 import { css } from '@republik/theme/css'
@@ -15,8 +15,8 @@ const styles = {
   Radio: css({
     display: 'grid',
     placeContent: 'center',
-    width: '20px',
-    height: '20px',
+    width: '[20px]',
+    height: '[20px]',
     background: 'transparent',
     border: '2px solid',
     borderRadius: 'full',
