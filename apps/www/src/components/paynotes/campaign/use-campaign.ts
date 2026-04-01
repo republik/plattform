@@ -17,7 +17,7 @@ export function useCampaign() {
     const count = data?.campaign?.newMembers?.count
     if (!count) return
     setMembers(count)
-    setProgress((count / TARGET) * 100)
+    setProgress(Math.min((count / TARGET) * 100, 100))
     setSuccess(count >= TARGET)
   }, [loading, data, setMembers, setProgress, setSuccess])
 
