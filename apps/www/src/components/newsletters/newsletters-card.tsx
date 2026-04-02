@@ -4,14 +4,17 @@ import { UpdateNewsletterSubscriptionDocument } from '#graphql/republik-api/__ge
 import { useMutation } from '@apollo/client'
 import {
   type NewsletterName,
+  NL_COURSE_SLUG,
   NL_STYLE,
 } from '@app/components/newsletters/config'
 import { Button } from '@app/components/ui/button'
 import { Spinner } from '@app/components/ui/spinner'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
+import { button } from '@republik/theme/recipes'
 import { Check, Plus } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 
@@ -164,34 +167,38 @@ function NewsletterCard({
           cursor: 'default',
         },
       })}
-      onClick={toggleSubscription}
+      onClick={NL_COURSE_SLUG[newsletter] ? undefined : toggleSubscription}
       aria-disabled={disabled}
       data-disabled={disabled}
       role='button'
     >
-      <Image
-        className={css({
-          flex: '0 0 1',
-          alignSelf: 'flex-start',
-          pt: 1,
-          _dark: { display: 'none' },
-        })}
-        width='64'
-        src={NL_STYLE[newsletter]?.imageSrc}
-        alt=''
-      />
-      <Image
-        className={css({
-          display: 'none',
-          flex: '0 0 1',
-          alignSelf: 'flex-start',
-          pt: 1,
-          _dark: { display: 'block' },
-        })}
-        width='64'
-        src={NL_STYLE[newsletter]?.imageSrcDark}
-        alt=''
-      />
+      {NL_STYLE[newsletter] && (
+        <>
+          <Image
+            className={css({
+              flex: '0 0 1',
+              alignSelf: 'flex-start',
+              pt: 1,
+              _dark: { display: 'none' },
+            })}
+            width='64'
+            src={NL_STYLE[newsletter].imageSrc}
+            alt=''
+          />
+          <Image
+            className={css({
+              display: 'none',
+              flex: '0 0 1',
+              alignSelf: 'flex-start',
+              pt: 1,
+              _dark: { display: 'block' },
+            })}
+            width='64'
+            src={NL_STYLE[newsletter].imageSrcDark}
+            alt=''
+          />
+        </>
+      )}
       <div
         className={css({
           textAlign: 'left',
@@ -219,21 +226,33 @@ function NewsletterCard({
           {t(`newsletters/${newsletter}/schedule`)}
         </p>
       </div>
-      {subscribed !== undefined && (
-        <div>
-          <DesktopButton
-            toggleSubscription={toggleSubscription}
-            isPending={isPending}
-            subscribed={subscribed}
-            disabled={disabled}
-          />
-          <MobileButton
-            toggleSubscription={toggleSubscription}
-            isPending={isPending}
-            subscribed={subscribed}
-            disabled={disabled}
-          />
+      {NL_COURSE_SLUG[newsletter] ? (
+        <div className={css({ mt: 'auto', pt: 2 })}>
+          <Link
+            href={`/kurse/${NL_COURSE_SLUG[newsletter]}`}
+            className={button({ variant: 'default', size: 'small' })}
+            onClick={(e) => e.stopPropagation()}
+          >
+            Zum Kurs
+          </Link>
         </div>
+      ) : (
+        subscribed !== undefined && (
+          <div>
+            <DesktopButton
+              toggleSubscription={toggleSubscription}
+              isPending={isPending}
+              subscribed={subscribed}
+              disabled={disabled}
+            />
+            <MobileButton
+              toggleSubscription={toggleSubscription}
+              isPending={isPending}
+              subscribed={subscribed}
+              disabled={disabled}
+            />
+          </div>
+        )
       )}
     </div>
   )

@@ -38,6 +38,13 @@ export const NL_MORE: NewsletterName[] = [
   'PROJECTR',
 ]
 
+export const NL_COURSES: NewsletterName[] = ['COURSE-BIGTECH', 'COURSE-CLIMATE']
+
+export const NL_COURSE_SLUG: Partial<Record<NewsletterName, string>> = {
+  'COURSE-BIGTECH': 'byebyebigtech',
+  'COURSE-CLIMATE': 'klimakurs',
+}
+
 export const NL_STYLE: Partial<
   Record<NewsletterName, { imageSrc: StaticImageData; imageSrcDark: StaticImageData }>
 > = {
@@ -72,5 +79,5 @@ export const NL_STYLE: Partial<
   PROJECTR: {
     imageSrc: nlProjectR,
     imageSrcDark: nlProjectRDark,
-  },
+  }
 }

@@ -2,6 +2,7 @@ import { NewsletterSettingsDocument } from '#graphql/republik-api/__generated__/
 import { useQuery } from '@apollo/client'
 import {
   type NewsletterName,
+  NL_COURSES,
   NL_FEATURED,
   NL_MORE,
 } from '@app/components/newsletters/config'
@@ -12,9 +13,11 @@ import { NewslettersStatus } from './newsletters-status'
 function NewslettersOverview({
   nlFeatured = NL_FEATURED,
   nlMore = NL_MORE,
+  nlCourses = NL_COURSES,
 }: {
   nlFeatured?: NewsletterName[]
   nlMore?: NewsletterName[]
+  nlCourses?: NewsletterName[]
 }) {
   const { data } = useQuery(NewsletterSettingsDocument)
 
@@ -41,6 +44,12 @@ function NewslettersOverview({
       <NewslettersSection
         title='Was für Sie?'
         newsletters={nlMore}
+        subscriptions={subscriptions}
+        disabled={data.me.newsletterSettings.status !== 'subscribed'}
+      />
+      <NewslettersSection
+        title='Kurse'
+        newsletters={nlCourses}
         subscriptions={subscriptions}
         disabled={data.me.newsletterSettings.status !== 'subscribed'}
       />
