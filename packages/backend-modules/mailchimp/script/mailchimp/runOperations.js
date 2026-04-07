@@ -17,8 +17,10 @@ const yargs = require('yargs')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
-const MailchimpInterface = require('../../MailchimpInterface')
-const { operations: operationsFns } = require('../../lib')
+const {
+  default: MailchimpInterface,
+} = require('../../build/MailchimpInterface')
+const { operations: operationsFns } = require('../../lib/operations')
 
 const mailchimp = MailchimpInterface({ logger: console })
 
