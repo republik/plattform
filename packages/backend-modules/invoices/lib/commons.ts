@@ -88,6 +88,7 @@ interface Period {
   membership?: Membership
   beginDate: Date
   endDate: Date
+  createdAt: Date
 }
 
 interface Membership {
@@ -222,7 +223,11 @@ export async function resolvePayment(
     )
 
     pledgeOptions[index].period = periods.find(
-      (p) => p.membershipId === pledgeOption.membershipId,
+      (p) =>
+        p.membershipId === pledgeOption.membershipId &&
+        // Find the period which was created within 1 hour of the payment
+        p.createdAt.getTime() >= payment?.createdAt.getTime() &&
+        p.createdAt.getTime() <= payment?.createdAt.getTime() + 60 * 60 * 1000,
     )
   })
 
