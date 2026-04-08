@@ -97,7 +97,7 @@ export default async function CoursePage({ params }: PageProps) {
             color: heroTextColor.hex,
           }}
           className={css({
-            height: 'calc(100dvh - token(sizes.header.height))',
+            height: '[calc(100dvh - token(sizes.header.height))]',
             display: 'flex',
             flexDirection: 'column',
             md: {
@@ -119,7 +119,7 @@ export default async function CoursePage({ params }: PageProps) {
                 flex: '1',
                 position: 'relative',
                 overflow: 'hidden',
-                minHeight: '0',
+                minHeight: '[0]',
                 md: {
                   flex: 'none',
                   width: 'full',
@@ -330,7 +330,7 @@ export default async function CoursePage({ params }: PageProps) {
 
                 <Share
                   title={title}
-                  url={`${process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL}/kurse/${slug}`}
+                  url={`${process.env.NEXT_PUBLIC_URL}/kurse/${slug}`}
                   emailSubject={title}
                 >
                   <div

@@ -10,14 +10,15 @@ export function Credits({ credits }: { credits: Credits }) {
   const mainContributors = credits.filter((c) => c.mainContributor)
   const secondaryContributors = credits.filter((c) => !c.mainContributor)
 
-  const secondaryByRole = secondaryContributors.reduce<
-    Map<string, Credits>
-  >((map, contributor) => {
-    const role = contributor.role ?? ''
-    if (!map.has(role)) map.set(role, [])
-    map.get(role)!.push(contributor)
-    return map
-  }, new Map())
+  const secondaryByRole = secondaryContributors.reduce<Map<string, Credits>>(
+    (map, contributor) => {
+      const role = contributor.role ?? ''
+      if (!map.has(role)) map.set(role, [])
+      map.get(role)!.push(contributor)
+      return map
+    },
+    new Map(),
+  )
 
   return (
     <div>
@@ -69,7 +70,7 @@ export function Credits({ credits }: { credits: Credits }) {
                   <p className={css({ fontWeight: 'bold' })}>{credit.name}</p>
                 )}
                 {credit.role && (
-                  <p className={css({ fontSize: 'md' })}>{credit.role}</p>
+                  <p className={css({ fontSize: 'base' })}>{credit.role}</p>
                 )}
               </div>
             </li>
@@ -79,7 +80,7 @@ export function Credits({ credits }: { credits: Credits }) {
       {secondaryByRole.size > 0 && (
         <p
           className={css({
-            fontSize: 'sm',
+            fontSize: 's',
             mt: mainContributors.length ? '4' : '0',
           })}
         >

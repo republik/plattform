@@ -71,6 +71,10 @@ export const presetRepublik = definePreset({
         },
         radii: {
           full: { value: '9999px' },
+          sm: { value: '4px' },
+          md: { value: '8px' },
+          lg: { value: '16px' },
+          xl: { value: '32px' },
         },
         fonts: {
           republikSerif: {
@@ -110,6 +114,7 @@ export const presetRepublik = definePreset({
         },
         lineHeights: {
           1: { value: 1 },
+          normal: { value: 'normal' },
         },
         animations: {
           spin: { value: 'spin 1s linear infinite' },

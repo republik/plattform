@@ -21,7 +21,7 @@ export function Testimonials({
             '&:nth-child(even)': { alignSelf: 'flex-end' },
             bg: 'background.marketingSurface',
             p: '4',
-            borderRadius: '4px',
+            borderRadius: 'sm',
           })}
         >
           <p>{testimonial.testimonial}</p>

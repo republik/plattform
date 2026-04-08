@@ -25,7 +25,7 @@ const styles = {
     '&::-webkit-details-marker': { display: 'none' },
     '& svg': {
       flexShrink: 0,
-      transition: 'transform 200ms ease',
+      transition: '[transform 200ms ease]',
     },
   }),
   content: css({
