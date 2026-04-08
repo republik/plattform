@@ -6,6 +6,7 @@ import { IconButton } from '@project-r/styleguide'
 import withT from '../../lib/withT'
 import { trackEvent } from '@app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { addShareUtmParams } from '@app/lib/analytics/share-url'
 
 import copyToClipboard from 'clipboard-copy'
 import {
@@ -42,14 +43,14 @@ const ShareButtons = ({
     }
   }, [copyLinkSuffix])
 
-  const emailAttache = emailAttachUrl ? `\n\n${url}` : ''
+  const emailAttache = emailAttachUrl ? `\n\n${addShareUtmParams(url)}` : ''
 
   const shareOptions = [
     {
       name: 'facebook',
       target: '_blank',
       href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        url,
+        addShareUtmParams(url),
       )}`,
       icon: IconLogoFacebook,
       title: t(''),
@@ -58,7 +59,9 @@ const ShareButtons = ({
     {
       name: 'bluesky',
       target: '_blank',
-      href: `https://bsky.app/intent/compose?text=${encodeURIComponent(url)}`,
+      href: `https://bsky.app/intent/compose?text=${encodeURIComponent(
+        addShareUtmParams(url),
+      )}`,
       icon: IconLogoBluesky,
       title: t('article/actionbar/bluesky/title'),
       label: t('article/actionbar/bluesky/label'),
@@ -66,7 +69,9 @@ const ShareButtons = ({
     {
       name: 'whatsapp',
       target: '_blank',
-      href: `https://api.whatsapp.com/send?text=${encodeURIComponent(url)}`,
+      href: `https://api.whatsapp.com/send?text=${encodeURIComponent(
+        addShareUtmParams(url),
+      )}`,
       icon: IconLogoWhatsApp,
       title: t('article/actionbar/whatsapp/title'),
       label: t('article/actionbar/whatsapp/label'),
@@ -74,7 +79,9 @@ const ShareButtons = ({
     {
       name: 'threema',
       target: '_blank',
-      href: `https://threema.id/compose?text=${encodeURIComponent(url)}`,
+      href: `https://threema.id/compose?text=${encodeURIComponent(
+        addShareUtmParams(url),
+      )}`,
       icon: IconLogoThreema,
       title: t('article/actionbar/threema/title'),
       label: t('article/actionbar/threema/label'),
@@ -82,7 +89,9 @@ const ShareButtons = ({
     {
       name: 'telegram',
       target: '_blank',
-      href: `https://t.me/share/url?url=${encodeURIComponent(url)}`,
+      href: `https://t.me/share/url?url=${encodeURIComponent(
+        addShareUtmParams(url),
+      )}`,
       icon: IconLogoTelegram,
       title: t('article/actionbar/telegram/title'),
       label: t('article/actionbar/telegram/label'),
@@ -98,7 +107,7 @@ const ShareButtons = ({
     },
     {
       name: 'copyLink',
-      href: url,
+      href: addShareUtmParams(url),
       icon: IconLink,
       title: t('article/actionbar/link/title'),
       label: (
@@ -112,7 +121,7 @@ const ShareButtons = ({
       ),
       onClick: (e) => {
         e.preventDefault()
-        copyToClipboard(url)
+        copyToClipboard(addShareUtmParams(url))
           .then(() => setLinkCopySuffix('success'))
           .catch(() => setLinkCopySuffix('error'))
       },
