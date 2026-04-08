@@ -98,7 +98,8 @@ const MailchimpInterface = ({ logger }: any) => {
           ...(data.interests && { interests: omitBy(data.interests, isNil) }),
           merge_fields: {
             ...(data.merge_fields && omitBy(data.merge_fields, isNil)),
-            EMAILB64U: base64u.encode(email),
+            // When changing the email address of a user, `email` is the old address and `data.email_address` is the new one.
+            EMAILB64U: base64u.encode(data.email_address || email),
           },
         }
         debug('mail:MailchimpInterface:updateMember')(

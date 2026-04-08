@@ -44,6 +44,7 @@ function AuthorCard({
       })} author-card ${showAll ? 'show-author-card' : ''}`}
     >
       <Image
+        unoptimized // CDN images don't need to be re-processed
         width='84'
         height='84'
         className={css({
