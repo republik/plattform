@@ -20,12 +20,12 @@ import { useTranslation } from '../../../lib/withT'
 
 function NewsletterSubscribeForm({
   newsletter,
-  course,
+  labels,
   accentColor,
   accentTextColor,
 }: {
   newsletter: NewsletterName
-  course?: boolean
+  labels?: { subscribe?: string; isSubscribed?: string }
   accentColor?: string
   accentTextColor?: string
 }) {
@@ -115,9 +115,7 @@ function NewsletterSubscribeForm({
                   : undefined
               }
             >
-              {t(
-                course ? 'newsletter/subscribeCourse' : 'newsletter/subscribe',
-              )}
+              {labels?.subscribe ?? t('newsletter/subscribe')}
             </Button>
           </div>
         </div>
@@ -138,7 +136,7 @@ function NewsletterSubscribeForm({
                 : undefined
             }
           >
-            {t(course ? 'newsletter/subscribeCourse' : 'newsletter/subscribe')}
+            {labels?.subscribe ?? t('newsletter/subscribe')}
           </Button>
         </div>
       </div>
@@ -148,12 +146,12 @@ function NewsletterSubscribeForm({
 
 export function NewsletterSubscribeButton({
   newsletter,
-  course,
+  labels,
   accentColor,
   accentTextColor,
 }: {
   newsletter: NewsletterName
-  course?: boolean
+  labels?: { subscribe?: string; isSubscribed?: string }
   accentColor?: string
   accentTextColor?: string
 }) {
@@ -172,7 +170,7 @@ export function NewsletterSubscribeButton({
     return (
       <NewsletterSubscribeForm
         newsletter={newsletter}
-        course={course}
+        labels={labels}
         accentColor={accentColor}
         accentTextColor={accentTextColor}
       />
@@ -231,15 +229,9 @@ export function NewsletterSubscribeButton({
           : undefined
       }
     >
-      {t(
-        isSubscribed
-          ? course
-            ? 'newsletter/isSubscribedCourse'
-            : 'newsletter/isSubscribed'
-          : course
-          ? 'newsletter/subscribeCourse'
-          : 'newsletter/subscribe',
-      )}
+      {isSubscribed
+        ? (labels?.isSubscribed ?? t('newsletter/isSubscribed'))
+        : (labels?.subscribe ?? t('newsletter/subscribe'))}
     </Button>
   )
 }

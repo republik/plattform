@@ -1,12 +1,11 @@
 import type { Metadata, ResolvingMetadata } from 'next'
 import React from 'react'
 
-import { NewsletterCoursesDocument } from '#graphql/cms/__generated__/gql/graphql'
+import { NewsletterCourseDocument } from '#graphql/cms/__generated__/gql/graphql'
 import { ContainerNarrow } from '@app/components/container'
 import { PageLayout } from '@app/components/layout'
 import { type NewsletterName } from '@app/components/newsletters/config'
 import { NewsletterSubscribeButton } from '@app/components/newsletters/newsletter-subscribe'
-import { getCMSClientBase } from '@app/lib/apollo/cms-client-base'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { css } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
@@ -24,22 +23,15 @@ type PageProps = {
   params: Promise<{ slug: string }>
 }
 
-const courseQueryOptions = {
-  query: NewsletterCoursesDocument,
+const courseQueryOptions = (slug: string) => ({
+  query: NewsletterCourseDocument,
+  variables: { slug },
   context: {
     fetchOptions: {
       next: { tags: ['newsletter-courses'] },
     },
   },
-}
-
-export async function generateStaticParams() {
-  const client = getCMSClientBase({ draftMode: false })
-  const { data } = await client.query(courseQueryOptions)
-  return data.allNewsletterCourses.map((course) => ({
-    slug: course.slug,
-  }))
-}
+})
 
 export async function generateMetadata(
   { params }: PageProps,
@@ -47,8 +39,8 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug } = await params
   const client = await getCMSClient()
-  const { data } = await client.query(courseQueryOptions)
-  const course = data.allNewsletterCourses.find((c) => c.slug === slug)
+  const { data } = await client.query(courseQueryOptions(slug))
+  const course = data.newsletterCourse
 
   if (!course) return (await parent) as Metadata
 
@@ -66,8 +58,8 @@ export async function generateMetadata(
 export default async function CoursePage({ params }: PageProps) {
   const { slug } = await params
   const client = await getCMSClient()
-  const { data } = await client.query(courseQueryOptions)
-  const course = data.allNewsletterCourses.find((c) => c.slug === slug)
+  const { data } = await client.query(courseQueryOptions(slug))
+  const course = data.newsletterCourse
 
   if (!course) notFound()
 
@@ -173,7 +165,10 @@ export default async function CoursePage({ params }: PageProps) {
                 newsletter={newsletterId as NewsletterName}
                 accentColor={accentColor?.hex ?? undefined}
                 accentTextColor={accentTextColor?.hex ?? undefined}
-                course={true}
+                labels={{
+                  subscribe: 'Kostenlosen Kurs abonnieren',
+                  isSubscribed: 'Kurs abonniert',
+                }}
               />
               <p className={css({ textAlign: 'center' })}>
                 Abmeldung jederzeit möglich.
@@ -368,7 +363,10 @@ export default async function CoursePage({ params }: PageProps) {
                 </h1>
                 <NewsletterSubscribeButton
                   newsletter={newsletterId as NewsletterName}
-                  course={true}
+                  labels={{
+                    subscribe: 'Kostenlosen Kurs abonnieren',
+                    isSubscribed: 'Kurs abonniert',
+                  }}
                 />
                 <p className={css({ textAlign: 'center' })}>
                   Abmeldung jederzeit möglich.

@@ -7,6 +7,7 @@ import {
   NL_MORE,
 } from '@app/components/newsletters/config'
 import { css } from '@republik/theme/css'
+import { NewsletterCourseCard } from './newsletters-card'
 import NewslettersSection from './newsletters-section'
 import { NewslettersStatus } from './newsletters-status'
 
@@ -50,8 +51,7 @@ function NewslettersOverview({
       <NewslettersSection
         title='Kurse'
         newsletters={nlCourses}
-        subscriptions={subscriptions}
-        disabled={data.me.newsletterSettings.status !== 'subscribed'}
+        CardComponent={NewsletterCourseCard}
       />
     </>
   )
