@@ -1,10 +1,10 @@
 import { css } from '@republik/theme/css'
-import { type NewsletterCoursesQuery } from '#graphql/cms/__generated__/gql/graphql'
+import { type NewsletterCourseQuery } from '#graphql/cms/__generated__/gql/graphql'
 
 export function Testimonials({
   testimonials,
 }: {
-  testimonials: NewsletterCoursesQuery['allNewsletterCourses'][number]['testimonials']
+  testimonials: NonNullable<NewsletterCourseQuery['newsletterCourse']>['testimonials']
 }) {
   if (testimonials.length === 0) return null
 

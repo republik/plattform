@@ -1,8 +1,8 @@
 import { css } from '@republik/theme/css'
-import { type NewsletterCoursesQuery } from '#graphql/cms/__generated__/gql/graphql'
+import { type NewsletterCourseQuery } from '#graphql/cms/__generated__/gql/graphql'
 import Image from 'next/image'
 
-type Credits = NewsletterCoursesQuery['allNewsletterCourses'][number]['credits']
+type Credits = NonNullable<NewsletterCourseQuery['newsletterCourse']>['credits']
 
 export function Credits({ credits }: { credits: Credits }) {
   if (!credits.length) return null

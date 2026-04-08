@@ -1,4 +1,5 @@
 import { NewsletterCoursesDocument } from '#graphql/cms/__generated__/gql/graphql'
+import type { Metadata, ResolvingMetadata } from 'next'
 import { PageLayout } from '@app/components/layout'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { css } from '@republik/theme/css'
@@ -13,6 +14,18 @@ const courseQueryOptions = {
       next: { tags: ['newsletter-courses'] },
     },
   },
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Republik Newsletter Kurse',
+    description: 'Kostenlose Online-Kurse von Republik',
+    openGraph: {
+      title: 'Republik Newsletter Kurse',
+      description: 'Kostenlose Online-Kurse von Republik',
+      images: ['/static/social-media/teilen.png'],
+    },
+  }
 }
 
 export default async function KursePage() {
@@ -50,64 +63,67 @@ export default async function KursePage() {
                   },
                 })}
               >
-              {image?.url && image?.width && image?.height && (
-                <div
-                  className={css({
-                    px: '6',
-                    md: { px: '0', width: '1/2', flexShrink: '0' },
-                  })}
-                >
-                  <Image
-                    src={image.url}
-                    width={image.width}
-                    height={image.height}
-                    alt={image.alt ?? course.title}
-                    className={css({ width: 'full', height: 'auto' })}
-                  />
-                </div>
-              )}
-              <div
-                className={css({
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '4',
-                  px: '6',
-                  md: { px: '0' },
-                })}
-              >
+                {image?.url && image?.width && image?.height && (
+                  <div
+                    className={css({
+                      px: '6',
+                      md: { px: '0', width: '1/2', flexShrink: '0' },
+                    })}
+                  >
+                    <Image
+                      src={image.url}
+                      width={image.width}
+                      height={image.height}
+                      alt={image.alt ?? course.title}
+                      className={css({ width: 'full', height: 'auto' })}
+                    />
+                  </div>
+                )}
                 <div
                   className={css({
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '2',
+                    gap: '4',
+                    px: '6',
+                    md: { px: '0' },
                   })}
                 >
-                  <h2
+                  <div
                     className={css({
-                      textStyle: 'title',
-                      fontSize: '2xl',
-                      lineHeight: 'normal',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '2',
                     })}
                   >
-                    {course.title}
-                  </h2>
-                  <p className={css({ textStyle: 'sans', fontSize: 'l' })}>
-                    {course.promise}
-                  </p>
+                    <h2
+                      className={css({
+                        textStyle: 'title',
+                        fontSize: '2xl',
+                        lineHeight: 'normal',
+                      })}
+                    >
+                      {course.title}
+                    </h2>
+                    <p className={css({ textStyle: 'sans', fontSize: 'l' })}>
+                      {course.promise}
+                    </p>
+                  </div>
+                  <div>
+                    <Link
+                      href={`/kurse/${course.slug}`}
+                      style={{
+                        backgroundColor: course.accentColor?.hex ?? undefined,
+                        color: course.accentTextColor?.hex ?? undefined,
+                      }}
+                      className={button({
+                        variant: 'default',
+                        size: 'default',
+                      })}
+                    >
+                      Zum Kurs
+                    </Link>
+                  </div>
                 </div>
-                <div>
-                  <Link
-                    href={`/kurse/${course.slug}`}
-                    style={{
-                      backgroundColor: course.accentColor?.hex ?? undefined,
-                      color: course.accentTextColor?.hex ?? undefined,
-                    }}
-                    className={button({ variant: 'default', size: 'default' })}
-                  >
-                    Zum Kurs
-                  </Link>
-                </div>
-              </div>
               </div>
             </div>
           )

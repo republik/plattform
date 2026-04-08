@@ -1,5 +1,5 @@
 import { css } from '@republik/theme/css'
-import { type NewsletterCoursesQuery } from '#graphql/cms/__generated__/gql/graphql'
+import { type NewsletterCourseQuery } from '#graphql/cms/__generated__/gql/graphql'
 import {
   Accordion,
   AccordionContent,
@@ -9,7 +9,7 @@ import {
 
 type EntriesProps = {
   slug: string
-  entries: NewsletterCoursesQuery['allNewsletterCourses'][number]['entries']
+  entries: NonNullable<NewsletterCourseQuery['newsletterCourse']>['entries']
 }
 
 export function Entries({ slug, entries }: EntriesProps) {
