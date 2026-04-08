@@ -256,16 +256,6 @@ export default async function CoursePage({ params }: PageProps) {
                   )}
                 </p>
               </div>
-              {images[1]?.url && (
-                <div>
-                  <Image
-                    src={images[1].url}
-                    alt={title}
-                    width={images[1].width}
-                    height={images[1].height}
-                  />
-                </div>
-              )}
               <div
                 className={css({
                   display: 'flex',
@@ -320,16 +310,6 @@ export default async function CoursePage({ params }: PageProps) {
                   ))}
                 </ul>
               </div>
-              {images[2]?.url && (
-                <div>
-                  <Image
-                    src={images[2].url}
-                    alt={title}
-                    width={images[2].width}
-                    height={images[2].height}
-                  />
-                </div>
-              )}
               <div
                 className={css({
                   display: 'flex',
