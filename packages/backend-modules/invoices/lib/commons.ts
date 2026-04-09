@@ -239,7 +239,8 @@ export async function resolvePayment(
   pledge.options = pledgeOptions.filter((pledgeOption) => {
     if (pledgeOption.option?.reward?.rewardType === 'Goodie') {
       const isWithinHour =
-        pledgeOption.createdAt.getTime() >= payment?.createdAt.getTime() &&
+        pledgeOption.createdAt.getTime() >=
+          payment?.createdAt.getTime() - 60 * 60 * 1000 &&
         pledgeOption.createdAt.getTime() <=
           payment?.createdAt.getTime() + 60 * 60 * 1000
       if (!isWithinHour) {
