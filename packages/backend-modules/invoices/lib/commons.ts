@@ -126,6 +126,7 @@ export interface User {
 
 export interface Address {
   id: string
+  organization?: string
   name: string
   line1: string
   line2?: string
@@ -368,7 +369,9 @@ export function getSwissQrBillData(payment: PaymentResolved): types.Data {
     },
     ...(debtorAddress && {
       debtor: {
-        name: debtorAddress.name,
+        name: debtorAddress.organization
+          ? `${debtorAddress.organization}, ${debtorAddress.name}`
+          : debtorAddress.name,
         address: debtorAddress.line1,
         zip: debtorAddress.postalCode,
         city: debtorAddress.city,
