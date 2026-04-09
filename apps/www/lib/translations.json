@@ -7757,6 +7757,14 @@
       "value": "Newsletter abonniert"
     },
     {
+      "key": "newsletter/subscribeCourse",
+      "value": "Kostenlosen Kurs abonnieren"
+    },
+    {
+      "key": "newsletter/isSubscribedCourse",
+      "value": "Kurs abonniert"
+    },
+    {
       "key": "newsletters/postbox",
       "value": "ins Postfach bekommen"
     },
@@ -7855,6 +7863,30 @@
     {
       "key": "newsletters/PROJECTR/schedule",
       "value": "Alle 1 bis 2 Monate"
+    },
+    {
+      "key": "newsletters/COURSE-BIGTECH/name",
+      "value": "Bye-Bye Big Tech"
+    },
+    {
+      "key": "newsletters/COURSE-BIGTECH/description",
+      "value": "In 5 Wochen digital unabhängiger werden."
+    },
+    {
+      "key": "newsletters/COURSE-BIGTECH/schedule",
+      "value": "5 Wochen"
+    },
+    {
+      "key": "newsletters/COURSE-CLIMATE/name",
+      "value": "Klimakrise – challenge accepted!"
+    },
+    {
+      "key": "newsletters/COURSE-CLIMATE/description",
+      "value": "Wir zeigen Ihnen, wie Sie ab sofort mehr fürs Klima tun können."
+    },
+    {
+      "key": "newsletters/COURSE-CLIMATE/schedule",
+      "value": "5 Wochen"
     },
     {
       "key": "onboarding/newsletters/step",

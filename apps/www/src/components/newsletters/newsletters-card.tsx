@@ -4,14 +4,17 @@ import { UpdateNewsletterSubscriptionDocument } from '#graphql/republik-api/__ge
 import { useMutation } from '@apollo/client'
 import {
   type NewsletterName,
+  NL_COURSE_SLUG,
   NL_STYLE,
 } from '@app/components/newsletters/config'
 import { Button } from '@app/components/ui/button'
 import { Spinner } from '@app/components/ui/spinner'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
+import { button } from '@republik/theme/recipes'
 import { Check, Plus } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
 import { useTranslation } from '../../../lib/withT'
 
@@ -102,6 +105,71 @@ function DesktopButton({
   )
 }
 
+function NewsletterCardImages({ newsletter }: { newsletter: NewsletterName }) {
+  const style = NL_STYLE[newsletter]
+  if (!style) return null
+
+  return (
+    <>
+      <Image
+        className={css({
+          flex: '0 0 1',
+          alignSelf: 'flex-start',
+          pt: 1,
+          _dark: { display: 'none' },
+        })}
+        width='64'
+        src={style.imageSrc}
+        alt=''
+      />
+      <Image
+        className={css({
+          display: 'none',
+          flex: '0 0 1',
+          alignSelf: 'flex-start',
+          pt: 1,
+          _dark: { display: 'block' },
+        })}
+        width='64'
+        src={style.imageSrcDark}
+        alt=''
+      />
+    </>
+  )
+}
+
+function NewsletterCardBody({ newsletter }: { newsletter: NewsletterName }) {
+  const { t } = useTranslation()
+
+  return (
+    <div
+      className={css({
+        textAlign: 'left',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+      })}
+    >
+      <h4
+        className={css({
+          textStyle: 'sansSerifMedium',
+          fontSize: 'l',
+          lineHeight: '1',
+          mb: 1,
+        })}
+      >
+        {t(`newsletters/${newsletter}/name`)}
+      </h4>
+      <p className={css({ lineHeight: '1.2', mb: 2 })}>
+        {t(`newsletters/${newsletter}/description`)}
+      </p>
+      <p className={css({ color: 'textSoft' })}>
+        {t(`newsletters/${newsletter}/schedule`)}
+      </p>
+    </div>
+  )
+}
+
 function NewsletterCard({
   newsletter,
   subscribed,
@@ -111,7 +179,6 @@ function NewsletterCard({
   subscribed?: boolean
   disabled?: boolean
 }) {
-  const { t } = useTranslation()
   const [updateNewsletterSubscription] = useMutation(
     UpdateNewsletterSubscriptionDocument,
   )
@@ -157,41 +224,15 @@ function NewsletterCard({
         display: 'flex',
         gap: 2,
         height: '100%',
-        md: {
-          flexDirection: 'column',
-        },
-        _disabled: {
-          cursor: 'default',
-        },
+        md: { flexDirection: 'column' },
+        _disabled: { cursor: 'default' },
       })}
       onClick={toggleSubscription}
       aria-disabled={disabled}
       data-disabled={disabled}
       role='button'
     >
-      <Image
-        className={css({
-          flex: '0 0 1',
-          alignSelf: 'flex-start',
-          pt: 1,
-          _dark: { display: 'none' },
-        })}
-        width='64'
-        src={NL_STYLE[newsletter]?.imageSrc}
-        alt=''
-      />
-      <Image
-        className={css({
-          display: 'none',
-          flex: '0 0 1',
-          alignSelf: 'flex-start',
-          pt: 1,
-          _dark: { display: 'block' },
-        })}
-        width='64'
-        src={NL_STYLE[newsletter]?.imageSrcDark}
-        alt=''
-      />
+      <NewsletterCardImages newsletter={newsletter} />
       <div
         className={css({
           textAlign: 'left',
@@ -202,39 +243,74 @@ function NewsletterCard({
           md: { pr: 0 },
         })}
       >
-        <h4
-          className={css({
-            textStyle: 'sansSerifMedium',
-            fontSize: 'l',
-            lineHeight: '1',
-            mb: 1,
-          })}
-        >
-          {t(`newsletters/${newsletter}/name`)}
-        </h4>
-        <p className={css({ lineHeight: '1.2', mb: 2 })}>
-          {t(`newsletters/${newsletter}/description`)}
-        </p>
-        <p className={css({ color: 'textSoft' })}>
-          {t(`newsletters/${newsletter}/schedule`)}
-        </p>
+        <NewsletterCardBody newsletter={newsletter} />
+        {subscribed !== undefined && (
+          <div>
+            <DesktopButton
+              toggleSubscription={toggleSubscription}
+              isPending={isPending}
+              subscribed={subscribed}
+              disabled={disabled}
+            />
+            <MobileButton
+              toggleSubscription={toggleSubscription}
+              isPending={isPending}
+              subscribed={subscribed}
+              disabled={disabled}
+            />
+          </div>
+        )}
       </div>
-      {subscribed !== undefined && (
-        <div>
-          <DesktopButton
-            toggleSubscription={toggleSubscription}
-            isPending={isPending}
-            subscribed={subscribed}
-            disabled={disabled}
-          />
-          <MobileButton
-            toggleSubscription={toggleSubscription}
-            isPending={isPending}
-            subscribed={subscribed}
-            disabled={disabled}
-          />
-        </div>
-      )}
+    </div>
+  )
+}
+
+export function NewsletterCourseCard({
+  newsletter,
+}: {
+  newsletter: NewsletterName
+}) {
+  const slug = NL_COURSE_SLUG[newsletter]
+
+  return (
+    <div
+      className={css({
+        borderWidth: '1px',
+        borderStyle: 'solid',
+        borderColor: 'divider',
+        background: 'background',
+        color: 'text',
+        p: 4,
+        textAlign: 'left',
+        position: 'relative',
+        display: 'flex',
+        gap: 2,
+        height: '100%',
+        md: { flexDirection: 'column' },
+      })}
+    >
+      <NewsletterCardImages newsletter={newsletter} />
+      <div
+        className={css({
+          textAlign: 'left',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          pr: 0,
+        })}
+      >
+        <NewsletterCardBody newsletter={newsletter} />
+        {slug && (
+          <div className={css({ mt: 'auto', pt: '2' })}>
+            <Link
+              href={`/kurse/${slug}`}
+              className={button({ variant: 'default', size: 'small' })}
+            >
+              Zum Kurs
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
