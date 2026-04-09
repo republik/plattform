@@ -67,6 +67,7 @@ export interface PledgeOption {
   periods: number
   option?: PackageOption
   period?: Period
+  createdAt: Date
 }
 
 interface PackageOption {
@@ -168,10 +169,8 @@ export async function resolvePayment(
       }))) ||
     []
 
-  periods.forEach((period, index, periods) => {
-    periods[index].membership = memberships.find(
-      (m) => m.id === period.membershipId,
-    )
+  periods.forEach((period) => {
+    period.membership = memberships.find((m) => m.id === period.membershipId)
   })
 
   const pledgeOptions: PledgeOption[] =
@@ -212,18 +211,18 @@ export async function resolvePayment(
 
   const rewards: Reward[] = [...rewardGoodies, ...rewardMembershipTypes]
 
-  packageOptions.forEach((packageOption, index, packageOptions) => {
-    packageOptions[index].reward = rewards.find(
+  packageOptions.forEach((packageOption) => {
+    packageOption.reward = rewards.find(
       (r) => r.rewardId === packageOption.rewardId,
     )
   })
 
-  pledgeOptions.forEach((pledgeOption, index, pledgeOptions) => {
-    pledgeOptions[index].option = packageOptions.find(
+  pledgeOptions.forEach((pledgeOption) => {
+    pledgeOption.option = packageOptions.find(
       (o) => o.id === pledgeOption.templateId,
     )
 
-    pledgeOptions[index].period = periods.find(
+    pledgeOption.period = periods.find(
       (p) =>
         p.membershipId === pledgeOption.membershipId &&
         // Find the period which was created within 1 hour of the payment
@@ -236,7 +235,19 @@ export async function resolvePayment(
     pledgePayment?.pledgeId &&
     (await pgdb.public.pledges.findOne({ id: pledgePayment.pledgeId }))
 
-  pledge.options = pledgeOptions
+  // Filter out pledge options for goodies that don't fall within 1 hour of the payment
+  pledge.options = pledgeOptions.filter((pledgeOption) => {
+    if (pledgeOption.option?.reward?.rewardType === 'Goodie') {
+      const isWithinHour =
+        pledgeOption.createdAt.getTime() >= payment?.createdAt.getTime() &&
+        pledgeOption.createdAt.getTime() <=
+          payment?.createdAt.getTime() + 60 * 60 * 1000
+      if (!isWithinHour) {
+        return false
+      }
+    }
+    return true
+  })
 
   const pkg: Package =
     pledge?.packageId &&
