@@ -37,6 +37,7 @@ export const GET_USER = gql`
       gender
       address {
         id
+        organization
         name
         line1
         line2
@@ -76,6 +77,7 @@ export const UPDATE_USER = gql`
       gender
       address {
         id
+        organization
         name
         line1
         line2
@@ -159,6 +161,7 @@ const UserCard = ({ user }) => {
           <DD>Keine Angaben</DD>
         ) : (
           <Fragment>
+            {user.address.organization && <DD>{user.address.organization}</DD>}
             <DD>{user.address.name}</DD>
             <DD>{user.address.line1}</DD>
             {user.address.line2 && <DD>{user.address.line2}</DD>}

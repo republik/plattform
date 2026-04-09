@@ -115,6 +115,7 @@ const Table = ({ items, sort, onSort, ...props }) => {
               <td>
                 {address &&
                   [
+                    address.organization,
                     name !== address.name && address.name,
                     address.line1,
                     address.line2,
@@ -128,11 +129,11 @@ const Table = ({ items, sort, onSort, ...props }) => {
               <td>{payment.hrid}</td>
               <td>{payment.status}</td>
             </tr>
-          );
+          )
         })}
       </tbody>
     </table>
-  );
+  )
 }
 
 export default Table

@@ -138,7 +138,7 @@ export class CheckoutSessionBuilder {
   public withPromoCode(code?: string): this {
     if (code) {
       this.optionalSessionVars.couponMetadata = (async () => {
-        const promo = await this.paymentService.getPromotion(
+        const promo = await this.paymentService.getPromotionByCode(
           this.offer.company,
           code,
         )
@@ -414,7 +414,7 @@ export class CheckoutSessionBuilder {
     const { promoCode, selectedDiscount } = this.optionalSessionVars
 
     if (this.offer.fixedDiscount) {
-      const promotion = await this.paymentService.getPromotion(
+      const promotion = await this.paymentService.getPromotionByCode(
         this.offer.company,
         this.offer.fixedDiscount,
       )
@@ -430,7 +430,7 @@ export class CheckoutSessionBuilder {
     }
 
     if (promoCode && this.offer.allowPromotions) {
-      const promotion = await this.paymentService.getPromotion(
+      const promotion = await this.paymentService.getPromotionByCode(
         this.offer.company,
         promoCode,
       )

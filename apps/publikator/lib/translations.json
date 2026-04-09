@@ -670,11 +670,15 @@
     },
     {
       "key": "metaData/tts/voice/dropdown",
-      "value": "Synthetische Stimme auswählen"
+      "value": "Synthetische Stimme"
     },
     {
       "key": "metaData/tts/voice2/dropdown",
-      "value": "Secondäre synthetische Stimme auswählen (optional)"
+      "value": "Sekundäre synthetische Stimme (optional)"
+    },
+    {
+      "key": "metaData/tts/deprecated",
+      "value": "Die für diesen Beitrag gewählte Stimme “{voice}” ist veraltet. Korrekturen und andere kleine Anpassungen können aber weiterhin vorgenommen werden, ohne dass mit einer neuen Stimme vertont werden muss."
     },
     {
       "key": "metaData/tts/voice/warning",

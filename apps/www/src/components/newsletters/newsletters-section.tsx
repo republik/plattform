@@ -7,11 +7,18 @@ import { Section, SectionH3 } from '@app/components/ui/section'
 import { css } from '@republik/theme/css'
 import NewsletterCard from './newsletters-card'
 
+type CardComponentProps = {
+  newsletter: NewsletterName
+  subscribed?: boolean
+  disabled?: boolean
+}
+
 function NewslettersSection({
   title,
   newsletters,
   subscriptions,
   disabled,
+  CardComponent = NewsletterCard,
 }: {
   title: string
   newsletters: NewsletterName[]
@@ -19,6 +26,7 @@ function NewslettersSection({
     NewsletterSettingsQuery['me']['newsletterSettings']['subscriptions']
   >
   disabled?: boolean
+  CardComponent?: React.ComponentType<CardComponentProps>
 }) {
   return (
     <Section>
@@ -36,7 +44,7 @@ function NewslettersSection({
           })}
         >
           {newsletters.map((newsletter) => (
-            <NewsletterCard
+            <CardComponent
               key={newsletter}
               newsletter={newsletter}
               subscribed={isSubscribedToNewsletter(newsletter, subscriptions)}

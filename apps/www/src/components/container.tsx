@@ -1,18 +1,21 @@
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
 
-type ContainerProps = {
+type ContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   children: React.ReactNode
 }
 
-export default function Container({ children }: ContainerProps) {
+export default function Container({ children, className }: ContainerProps) {
   return (
     <div
-      className={css({
-        mx: 'auto',
-        px: '4',
-        maxWidth: 'maxContentWidth',
-        width: 'full',
-      })}
+      className={cx(
+        css({
+          mx: 'auto',
+          px: '4',
+          maxWidth: 'maxContentWidth',
+          width: 'full',
+        }),
+        className,
+      )}
     >
       {children}
     </div>
@@ -25,7 +28,7 @@ export function ContainerNarrow({ children }: ContainerProps) {
       className={css({
         mx: 'auto',
         px: '4',
-        maxWidth: 'content.narrow',
+        maxWidth: 'narrow',
         width: 'full',
       })}
     >

@@ -207,6 +207,9 @@ const metaFieldResolver = (meta, _all = [], _users = [], errors) => {
   const isPaywallExcluded =
     meta.isPaywallExcluded || format?.meta.isPaywallExcluded
 
+  const isPaynoteExcluded =
+    meta.isPaynoteExcluded || format?.meta.isPaynoteExcluded
+
   return {
     series,
     dossier: resolver(meta.dossier),
@@ -216,6 +219,7 @@ const metaFieldResolver = (meta, _all = [], _users = [], errors) => {
     paynotes,
     recommendations,
     isPaywallExcluded,
+    isPaynoteExcluded,
   }
 }
 

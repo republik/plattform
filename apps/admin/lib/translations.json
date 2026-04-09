@@ -647,6 +647,10 @@
       "value": "Ihre Adresse"
     },
     {
+      "key": "Account/AddressForm/organization/label",
+      "value": "Firma (optional)"
+    },
+    {
       "key": "Account/AddressForm/name/label",
       "value": "Anschrift"
     },
@@ -3923,8 +3927,12 @@
       "value": "Ihre Adresse"
     },
     {
+      "key": "me/addressForm/organization/label",
+      "value": "Firma (optional)"
+    },
+    {
       "key": "me/addressForm/name/label",
-      "value": "Anschrift"
+      "value": "Name"
     },
     {
       "key": "me/addressForm/name/error/empty",

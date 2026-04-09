@@ -90,7 +90,6 @@ const PersonBubbleItem = ({
         borderRadius: 'full',
         touchAction: 'manipulation',
         userSelect: 'none',
-        // @ts-expect-error for prefixed value
         WebkitUserSelect: 'none',
 
         // Initial opacity

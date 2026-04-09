@@ -208,8 +208,8 @@ const nextConfig = {
       // - this redirection must take precedence (which normal redirections don't if a page/article exists already)
       {
         source: '/klimakurs',
-        destination: 'https://mailchi.mp/republik.ch/klimakurs',
-        permanent: false,
+        destination: '/kurse/klimakurs',
+        permanent: true,
       },
       /**
        * Migrated from custom express server
@@ -227,11 +227,6 @@ const nextConfig = {
         permanent: false,
       },
       // Migrated from custom express server
-      {
-        source: '/vote',
-        destination: '/503',
-        permanent: false,
-      },
       {
         source: '/updates',
         destination: '/crowdfunding-updates',

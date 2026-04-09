@@ -14,6 +14,7 @@ export const userDetailsFragment = `
     id
     phoneNumber
     address {
+    organization
       name
       line1
       line2

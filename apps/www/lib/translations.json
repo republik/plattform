@@ -657,21 +657,22 @@
       "value": "Ihre Adresse"
     },
     {
+      "key": "Account/AddressForm/organization/label",
+      "value": "Firma (optional)"
+    },
+    {
       "key": "Account/AddressForm/name/label",
-      "value": "Eindeutige Anschrift"
+      "value": "Ihr Name"
     },
     {
       "key": "Account/AddressForm/name/error/empty",
-      "value": "Eindeutige Anschrift fehlt"
+      "value": "Ihr Name fehlt"
     },
     {
       "key": "Account/AddressForm/name/error/tooLong",
       "value": "Ihr Name, maximal {maxLength} Zeichen"
     },
-    {
-      "key": "Account/AddressForm/name/explanation",
-      "value": "Ihr Name für Postsendungen, falls nötig mit c/o."
-    },
+
     {
       "key": "Account/AddressForm/line1/label",
       "value": "Strasse und Hausnummer"
@@ -687,6 +688,10 @@
     {
       "key": "Account/AddressForm/line2/label",
       "value": "Zusatz (optional)"
+    },
+    {
+      "key": "Account/AddressForm/line2/explanation",
+      "value": "Postfach, Stockwerk, Gebäude etc."
     },
     {
       "key": "Account/AddressForm/postalCode/label",
@@ -7752,6 +7757,14 @@
       "value": "Newsletter abonniert"
     },
     {
+      "key": "newsletter/subscribeCourse",
+      "value": "Kostenlosen Kurs abonnieren"
+    },
+    {
+      "key": "newsletter/isSubscribedCourse",
+      "value": "Kurs abonniert"
+    },
+    {
       "key": "newsletters/postbox",
       "value": "ins Postfach bekommen"
     },
@@ -7852,6 +7865,30 @@
       "value": "Alle 1 bis 2 Monate"
     },
     {
+      "key": "newsletters/COURSE-BIGTECH/name",
+      "value": "Bye-Bye Big Tech"
+    },
+    {
+      "key": "newsletters/COURSE-BIGTECH/description",
+      "value": "In 5 Wochen digital unabhängiger werden."
+    },
+    {
+      "key": "newsletters/COURSE-BIGTECH/schedule",
+      "value": "5 Wochen"
+    },
+    {
+      "key": "newsletters/COURSE-CLIMATE/name",
+      "value": "Klimakrise – challenge accepted!"
+    },
+    {
+      "key": "newsletters/COURSE-CLIMATE/description",
+      "value": "Wir zeigen Ihnen, wie Sie ab sofort mehr fürs Klima tun können."
+    },
+    {
+      "key": "newsletters/COURSE-CLIMATE/schedule",
+      "value": "5 Wochen"
+    },
+    {
       "key": "onboarding/newsletters/step",
       "value": "Tipp 1 von 2"
     },
@@ -7912,112 +7949,56 @@
       "value": "Daniel Binswanger"
     },
     {
-      "key": "onboarding/formats/republik/format-binswanger/description",
-      "value": "Der Wochenkommentar"
-    },
-    {
       "key": "onboarding/formats/republik/format-rosenwasser/author",
       "value": "Anna Rosenwasser"
-    },
-    {
-      "key": "onboarding/formats/republik/format-rosenwasser/description",
-      "value": "Der queere Blick unter die Oberfläche"
     },
     {
       "key": "onboarding/formats/republik/format-format-wie-reden-wir-eigentlich/author",
       "value": "Marie-José Kolly"
     },
     {
-      "key": "onboarding/formats/republik/format-format-wie-reden-wir-eigentlich/description",
-      "value": "Was unsere Sprache über uns verrät"
-    },
-    {
       "key": "onboarding/formats/republik/format-vahland/author",
       "value": "Kia Vahland"
-    },
-    {
-      "key": "onboarding/formats/republik/format-vahland/description",
-      "value": "Aktualität durch die Brille grosser Kunst"
     },
     {
       "key": "onboarding/formats/republik/format-pfister/author",
       "value": "Gerhard Pfister"
     },
     {
-      "key": "onboarding/formats/republik/format-pfister/description",
-      "value": "Politphilosophischer Blick auf die Schweiz"
-    },
-    {
       "key": "onboarding/formats/republik/format-gedankensplitter/author",
       "value": "Daniel Strassberg"
-    },
-    {
-      "key": "onboarding/formats/republik/format-gedankensplitter/description",
-      "value": "Philosopisches Schlaglicht auf die Gegenwart"
     },
     {
       "key": "onboarding/podcasts/republik/format-dritte-gewalt/title",
       "value": "Dritte Gewalt"
     },
     {
-      "key": "onboarding/podcasts/republik/format-dritte-gewalt/description",
-      "value": "Gerichtsreporterin Brigitte Hürlimann erzählt von ihren spannendsten Fällen."
-    },
-    {
       "key": "onboarding/podcasts/republik/format-sondersession/title",
       "value": "Sonder session"
-    },
-    {
-      "key": "onboarding/podcasts/republik/format-sondersession/description",
-      "value": "Ein Gespräch, ein Ziel: mehr Durchblick im Schweizer Politikdschungel."
     },
     {
       "key": "onboarding/podcasts/republik/format-gute-frage/title",
       "value": "Gute Frage"
     },
     {
-      "key": "onboarding/podcasts/republik/format-gute-frage/description",
-      "value": "Gemeinsam entwirren wir Fragen, die uns nicht loslassen."
-    },
-    {
       "key": "onboarding/podcasts/republik/format-was-wurde-eigentlich-aus/title",
       "value": "Update!"
-    },
-    {
-      "key": "onboarding/podcasts/republik/format-was-wurde-eigentlich-aus/description",
-      "value": "Die Geschichten nach den Geschichten. Wir liefern ein Update."
     },
     {
       "key": "onboarding/podcasts/republik/format-am-klavier/title",
       "value": "Dritte Gewalt"
     },
     {
-      "key": "onboarding/podcasts/republik/format-am-klavier/description",
-      "value": "Gerichtsreporterin Brigitte Hürlimann erzählt von ihren spannendsten Fällen."
-    },
-    {
       "key": "onboarding/podcasts/republik/format-republik-live/title",
       "value": "Sonder session"
-    },
-    {
-      "key": "onboarding/podcasts/republik/format-republik-live/description",
-      "value": "Ein Gespräch, ein Ziel: Mehr Durchblick im Schweizer Politikdschungel."
     },
     {
       "key": "onboarding/podcasts/republik/format-wochenrevue/title",
       "value": "Gute Frage"
     },
     {
-      "key": "onboarding/podcasts/republik/format-wochenrevue/description",
-      "value": "Der Podcast für alle, die genug haben von einfachen Antworten."
-    },
-    {
       "key": "onboarding/podcasts/republik/format-im-gespraech/title",
       "value": "Update!"
-    },
-    {
-      "key": "onboarding/podcasts/republik/format-im-gespraech/description",
-      "value": "Die Geschichten nach den Geschichten. Wir liefern ein Update."
     },
     {
       "key": "onboarding/authors/adriennefichter/beat",
@@ -8064,8 +8045,8 @@
       "value": "Wirtschaft"
     },
     {
-      "key": "onboarding/authors/asscholl/beat",
-      "value": "Film"
+      "key": "onboarding/authors/vheintges/beat",
+      "value": "Theater"
     },
     {
       "key": "follow/authors/all",

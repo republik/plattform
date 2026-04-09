@@ -1,4 +1,4 @@
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
 import { ReactNode } from 'react'
 
 export function SectionH3({ children }: { children: ReactNode }) {
@@ -29,15 +29,25 @@ export function Section({ children }: { children: ReactNode }) {
   )
 }
 
-export const ArticleSection = ({ children }: { children: ReactNode }) => {
+type ArticleSectionProps = React.HTMLAttributes<HTMLDivElement> & {
+  children: React.ReactNode
+}
+
+export const ArticleSection = ({
+  children,
+  className,
+}: ArticleSectionProps) => {
   return (
     <div
-      className={css({
-        margin: '0 auto',
-        maxWidth: 'center',
-        pl: '15px',
-        pr: '15px',
-      })}
+      className={cx(
+        css({
+          margin: '0 auto',
+          maxWidth: 'center',
+          pl: '15px',
+          pr: '15px',
+        }),
+        className,
+      )}
     >
       {children}
     </div>

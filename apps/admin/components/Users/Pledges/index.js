@@ -67,6 +67,7 @@ const GET_PLEDGES = gql`
         }
         shippingAddress {
           id
+          organization
           name
           line1
           line2
@@ -132,7 +133,11 @@ const PledgeCard = ({ pledge, ...props }) => {
           <>
             <br />
             <Label>
-              Lieferadresse: {shippingAddress.name}, {shippingAddress.city}
+              Lieferadresse:{' '}
+              {shippingAddress.organization
+                ? `${shippingAddress.organization}, `
+                : ''}
+              {shippingAddress.name}, {shippingAddress.city}
             </Label>
           </>
         )}
@@ -176,6 +181,9 @@ const PledgeDetails = ({ userId, pledge, ...props }) => {
           {shippingAddress && (
             <>
               <DT>Lieferadresse</DT>
+              {shippingAddress.organization && (
+                <DD>{shippingAddress.organization}</DD>
+              )}
               <DD>{shippingAddress.name}</DD>
               <DD>{shippingAddress.line1}</DD>
               {shippingAddress.line2 && <DD>{shippingAddress.line2}</DD>}

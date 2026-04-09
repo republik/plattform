@@ -101,6 +101,7 @@ type UserConnection {
 
 type Address {
   id: ID!
+  organization: String
   name: String
   line1: String!
   line2: String
@@ -112,6 +113,7 @@ type Address {
 }
 
 input AddressInput {
+  organization: String
   name: String!
   line1: String!
   line2: String

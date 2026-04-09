@@ -47,7 +47,7 @@ function FormatCard({ format }: { format?: Document }) {
           pb: 2,
         })}
       >
-        {t(`onboarding/formats/${format.repoId}/description`)}
+        {format.meta.description}
       </h4>
       <p className={css({ fontSize: 'l', letterSpacing: '-0.11' })}>
         Von {t(`onboarding/formats/${format.repoId}/author`)}
