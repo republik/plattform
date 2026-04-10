@@ -405,4 +405,10 @@ type MembershipStatsLastSeenBucket {
   users: Int!
 }
 
+input NewsletterSignupInput {
+  email: String!
+  mac: String!
+  consents: [String!]
+  ref: String
+}
 `

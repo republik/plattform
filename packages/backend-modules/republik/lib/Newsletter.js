@@ -21,14 +21,15 @@ const authenticate = (email, name, subscribed, t) => {
     .digest('hex')
 }
 
-const getConsentLink = (email, name, context) => {
+const getConsentLink = (email, name, ref) => {
   const link = new URL('/newsletters/confirm', FRONTEND_BASE_URL)
 
   link.searchParams.set('name', name)
-  link.searchParams.set('subscribed', '1')
   link.searchParams.set('email', base64u.encode(email))
   link.searchParams.set('mac', authenticate(email, name, true))
-  link.searchParams.set('context', context || 'newsletter')
+  if (ref) {
+    link.searchParams.set('ref', ref)
+  }
 
   return link.toString()
 }
