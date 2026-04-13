@@ -39,7 +39,7 @@ export function Entries({ slug, entries }: EntriesProps) {
                   textStyle: 'sansSerifMedium',
                 })}
               >
-                {i + 1} Woche
+                {i + 1}. Woche
               </span>
               <span
                 className={css({
