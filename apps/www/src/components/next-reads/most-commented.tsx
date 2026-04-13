@@ -176,7 +176,7 @@ const mostCommentedGrid = css({
   margin: '0 auto',
   display: 'grid',
   gridTemplateRows: 'auto',
-  gridTemplateColumns: '1',
+  gridTemplateColumns: '1fr',
   gap: 1,
   mb: 1,
   mt: 12,
