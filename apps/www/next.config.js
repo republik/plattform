@@ -15,7 +15,7 @@ const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
   // ... and on Vercel
   process.env.VERCEL_GIT_COMMIT_SHA?.substring(0, 10) ||
-  new Date(Date.now()).toISOString()
+  `${Date.now()}`
 
 function appendProtocol(href) {
   if (href && !href.startsWith('http')) {
