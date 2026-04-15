@@ -1,8 +1,8 @@
 // welcome page for the onboarding, only shown when extra context is necessary
 // (e.g.: automatic redirect after sign-in)
 
-import { Logo } from '@/app/components/layout/header/logo'
-import { getMe } from '@/app/lib/auth/me'
+import { Logo } from '@app/components/layout/header/logo'
+import { getMe } from '@app/lib/auth/me'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import { Metadata } from 'next'

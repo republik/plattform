@@ -1,16 +1,16 @@
 'use client'
 
 import { UpdateNewsletterSubscriptionWithMacDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import { ErrorMessage } from '@/app/components/auth/login/error-message'
-import { Button } from '@/app/components/ui/button'
-import { Spinner } from '@/app/components/ui/spinner'
+import { ErrorMessage } from '@app/components/auth/login/error-message'
+import { Button } from '@app/components/ui/button'
+import { Spinner } from '@app/components/ui/spinner'
 import { useMutation } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { CheckCircleIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef } from 'react'
-import { useTranslation } from '@/lib/withT'
-import * as base64u from '@/lib/utils/base64u'
+import { useTranslation } from '../../../../lib/withT'
+import * as base64u from '../../../../lib/utils/base64u'
 
 type Props = {
   name: string

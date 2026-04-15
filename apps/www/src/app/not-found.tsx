@@ -1,4 +1,4 @@
-import { ErrorPage } from '@/app/components/layout/error-page'
+import { ErrorPage } from '@app/components/layout/error-page'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 

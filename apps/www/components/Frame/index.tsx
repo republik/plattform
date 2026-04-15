@@ -1,0 +1,213 @@
+import {
+  ColorContextProvider,
+  Container,
+  mediaQueries,
+  RawHtml,
+} from '@project-r/styleguide'
+import { DraftModeIndicator } from 'components/DraftModeIndicator'
+import { css } from 'glamor'
+import { CSSProperties, ReactNode, useEffect, useMemo } from 'react'
+import { checkRoles } from '../../lib/apollo/withMe'
+import { useMe } from '../../lib/context/MeContext'
+import { postMessage, useInNativeApp } from '../../lib/withInNativeApp'
+import { useTranslation } from '../../lib/withT'
+import CallToActionBanner from '../CallToActions/CallToActionBanner'
+import {
+  FRAME_CONTENT_PADDING,
+  FRAME_CONTENT_PADDING_MOBILE,
+  HEADER_HEIGHT,
+  SUBHEADER_HEIGHT,
+} from '../constants'
+import Footer from '../Footer'
+import Box from './Box'
+import Header from './Header'
+import LegacyAppNoticeBox from './LegacyAppNoticeBox'
+import Meta from './Meta'
+import OptionalLocalColorContext from './OptionalLocalColorContext'
+import ProlongBox from './ProlongBox'
+
+const styles = {
+  bodyGrowerContainer: css({
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+  }),
+  padHeader: css({
+    // minus 1px for first sticky hr from header
+    // - otherwise there is a jump when scroll 0 and opening hamburger
+    paddingTop: HEADER_HEIGHT - 1,
+    '@media print': {
+      paddingTop: 0,
+    },
+  }),
+  bodyGrower: css({
+    flexGrow: 1,
+  }),
+  page: css({
+    backgroundColor: 'var(--color-default)',
+    color: 'var(--color-text)',
+  }),
+  content: css({
+    paddingTop: FRAME_CONTENT_PADDING_MOBILE,
+    paddingBottom: FRAME_CONTENT_PADDING_MOBILE * 2,
+    [mediaQueries.mUp]: {
+      paddingTop: FRAME_CONTENT_PADDING,
+      paddingBottom: FRAME_CONTENT_PADDING * 2,
+    },
+  }),
+}
+
+export const MainContainer = ({
+  children,
+  maxWidth = '840px',
+}: {
+  children: ReactNode
+  maxWidth?: string | number
+}) => <Container style={{ maxWidth }}>{children}</Container>
+
+export const Content = ({
+  children,
+  style,
+}: {
+  children: ReactNode
+  style?: CSSProperties
+}) => (
+  <div {...styles.content} style={style}>
+    {children}
+  </div>
+)
+
+type FrameProps = {
+  children: ReactNode
+  raw?: boolean
+  meta?: Record<string, string | object>
+  cover?: ReactNode
+  secondaryNav?: ReactNode
+  formatColor?: string
+  footer?: boolean
+  pullable?: boolean
+  hasOverviewNav?: boolean
+  stickySecondaryNav?: boolean
+  pageColorSchemeKey?: 'light' | 'dark' | 'auto'
+  containerMaxWidth?: string | number
+  customContentColorContext?: Record<string, string>
+  hideCTA?: boolean
+  draftMode?: boolean
+}
+
+const Frame = ({
+  children,
+  raw = false,
+  meta,
+  cover = undefined,
+  secondaryNav,
+  formatColor,
+  footer = true,
+  pullable,
+  hasOverviewNav: wantOverviewNav,
+  stickySecondaryNav,
+  pageColorSchemeKey,
+  containerMaxWidth,
+  draftMode,
+  /**
+   * customContentColorContext are the colors passed to the color-context
+   * that only wraps the content of the page.
+   * (This will not be applied to the header, footer and body of the page)
+   */
+  customContentColorContext,
+  hideCTA = false,
+}: FrameProps) => {
+  const { inNativeApp, inNativeAppLegacy } = useInNativeApp()
+  const { t } = useTranslation()
+  const { me, hasAccess } = useMe()
+  const isClimateLabOnlyUser = checkRoles(me, ['climate'])
+
+  const hasOverviewNav = (hasAccess || isClimateLabOnlyUser) && wantOverviewNav
+  const hasSecondaryNav = !!(secondaryNav || hasOverviewNav)
+  const padHeaderRule = useMemo(() => {
+    return css({
+      paddingTop: hasSecondaryNav
+        ? HEADER_HEIGHT + SUBHEADER_HEIGHT
+        : HEADER_HEIGHT - 1,
+      '@media print': {
+        paddingTop: 0,
+      },
+    })
+  }, [hasSecondaryNav])
+
+  useEffect(() => {
+    if (inNativeApp) {
+      postMessage({
+        type: 'setColorScheme',
+        colorSchemeKey: pageColorSchemeKey,
+      })
+    }
+  }, [inNativeApp, pageColorSchemeKey])
+
+  return (
+    <ColorContextProvider colorSchemeKey={pageColorSchemeKey}>
+      <noscript>
+        <Box style={{ padding: 30 }}>
+          <RawHtml
+            dangerouslySetInnerHTML={{
+              __html: t('noscript'),
+            }}
+          />
+        </Box>
+      </noscript>
+      <div
+        {...(footer || inNativeApp ? styles.bodyGrowerContainer : undefined)}
+      >
+        {/* body growing only needed when rendering a footer */}
+        <div
+          {...(footer || inNativeApp ? styles.bodyGrower : undefined)}
+          {...padHeaderRule}
+          {...styles.page}
+        >
+          {!!meta && <Meta data={meta} />}
+          <Header
+            cover={cover}
+            secondaryNav={secondaryNav}
+            formatColor={formatColor}
+            pullable={pullable}
+            hasOverviewNav={hasOverviewNav}
+            stickySecondaryNav={stickySecondaryNav}
+            pageColorSchemeKey={pageColorSchemeKey}
+          >
+            {inNativeAppLegacy && <LegacyAppNoticeBox t={t} />}
+            {me &&
+              !me.activeMagazineSubscription &&
+              me.prolongBeforeDate !== null &&
+              me.activeMembership !== null && (
+                <ProlongBox
+                  t={t}
+                  prolongBeforeDate={me.prolongBeforeDate}
+                  membership={me.activeMembership}
+                />
+              )}
+            <OptionalLocalColorContext
+              localColorVariables={customContentColorContext}
+            >
+              <div {...styles.page} data-template={meta?.template}>
+                {!hideCTA && <CallToActionBanner />}
+
+                {draftMode && <DraftModeIndicator />}
+
+                {raw ? (
+                  <>{children}</>
+                ) : (
+                  <MainContainer maxWidth={containerMaxWidth}>
+                    <Content>{children}</Content>
+                  </MainContainer>
+                )}
+              </div>
+            </OptionalLocalColorContext>
+          </Header>
+        </div>
+        {!inNativeApp && footer && <Footer />}
+      </div>
+    </ColorContextProvider>
+  )
+}
+
+export default Frame

@@ -1,7 +1,7 @@
 import { FaqDocument } from '#graphql/cms/__generated__/gql/graphql'
-import { getCMSClient } from '@/app/lib/apollo/cms-client'
-import Container from '@/app/components/container'
-import { PageLayout } from '@/app/components/layout'
+import { getCMSClient } from '@app/lib/apollo/cms-client'
+import Container from '@app/components/container'
+import { PageLayout } from '@app/components/layout'
 import { css } from '@republik/theme/css'
 import FAQList from './components/faq-list'
 

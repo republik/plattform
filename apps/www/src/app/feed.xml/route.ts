@@ -1,5 +1,5 @@
 import { RssFeedDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import { getClient } from '@/app/lib/apollo/client'
+import { getClient } from '@app/lib/apollo/client'
 import { Feed } from 'feed'
 import crypto from 'node:crypto'
 

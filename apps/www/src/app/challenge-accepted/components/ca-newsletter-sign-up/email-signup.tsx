@@ -7,8 +7,8 @@ import {
   UpdateNewsletterSubscriptionDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
-import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
-import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'
+import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { css } from '@republik/theme/css'
 import { stack, wrap } from '@republik/theme/patterns'

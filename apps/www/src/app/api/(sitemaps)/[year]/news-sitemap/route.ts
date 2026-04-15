@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getClient } from '@/app/lib/apollo/client'
+import { getClient } from '../../../../../lib/apollo/client'
 import {
   SitemapByYearDocument,
   type SitemapByYearQuery,
   type Document,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { parseJSONObject } from '@/lib/safeJSON'
+import { parseJSONObject } from '../../../../../../lib/safeJSON'
 import { toXML } from 'jstoxml'
 
 const BASE_URL = process.env.PUBLIC_BASE_URL

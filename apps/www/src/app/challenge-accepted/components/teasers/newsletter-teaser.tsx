@@ -1,6 +1,6 @@
 import { ArticleTeaserDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import { getClient } from '@/app/lib/apollo/client'
-import { getMe } from '@/app/lib/auth/me'
+import { getClient } from '@app/lib/apollo/client'
+import { getMe } from '@app/lib/auth/me'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 

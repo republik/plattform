@@ -2,7 +2,7 @@ import {
   EmployeesDocument,
   EmployeesQuery,
 } from '#graphql/cms/__generated__/gql/graphql'
-import { getCMSClient } from '@/app/lib/apollo/cms-client'
+import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { NextResponse } from 'next/server'
 
 type Employees = {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getClient } from '@/app/lib/apollo/client'
+import { getClient } from '../../../../../lib/apollo/client'
 import {
   SitemapByYearDocument,
   type SitemapByYearQuery,

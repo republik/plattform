@@ -1,7 +1,7 @@
 // as the first "onboarding tip," this page takes the place of the old /einrichten page
 
-import NewslettersOnboarding from '@/app/components/onboarding/newsletters'
-import { getMe } from '@/app/lib/auth/me'
+import NewslettersOnboarding from '@app/components/onboarding/newsletters'
+import { getMe } from '@app/lib/auth/me'
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 

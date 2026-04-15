@@ -1,5 +1,5 @@
-import Container from '@/app/components/container'
-import { PageLayout } from '@/app/components/layout'
+import Container from '@app/components/container'
+import { PageLayout } from '@app/components/layout'
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 
