@@ -1,5 +1,5 @@
-import { PageLayout } from '@app/components/layout'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import { PageLayout } from '@/app/components/layout'
+import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { Metadata } from 'next'
 import { ReactNode } from 'react'
 
@@ -16,7 +16,7 @@ export default async function CampaignLayout({
 }) {
   return (
     <div data-page-theme='campaign-2026'>
-      <PageLayout showHeader={false} showFooter={false}>
+      <PageLayout showHeader={false}>
         <EventTrackingContext category='CampaignLandingPage'>
           {children}
         </EventTrackingContext>

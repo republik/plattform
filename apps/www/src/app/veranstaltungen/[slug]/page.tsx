@@ -1,6 +1,6 @@
 import { getFragmentData } from '#graphql/cms/__generated__/gql'
-import { getCMSClient } from '@app/lib/apollo/cms-client'
-import { getMe } from '@app/lib/auth/me'
+import { getCMSClient } from '@/app/lib/apollo/cms-client'
+import { getMe } from '@/app/lib/auth/me'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -11,7 +11,7 @@ import {
   EventDocument,
   EventRecordFieldsFragmentDoc,
 } from '#graphql/cms/__generated__/gql/graphql'
-import { PUBLIC_BASE_URL } from 'lib/constants'
+import { PUBLIC_BASE_URL } from '@/lib/constants'
 
 type PageProps = {
   params: Promise<{ slug: string }>

@@ -76,6 +76,10 @@ export const presetRepublik = definePreset({
           sm: { value: '5px' },
           md: { value: '10px' },
           full: { value: '9999px' },
+          sm: { value: '4px' },
+          md: { value: '8px' },
+          lg: { value: '16px' },
+          xl: { value: '32px' },
         },
         fonts: {
           republikSerif: {
@@ -115,6 +119,7 @@ export const presetRepublik = definePreset({
         },
         lineHeights: {
           1: { value: 1 },
+          normal: { value: 'normal' },
         },
         animations: {
           spin: { value: 'spin 1s linear infinite' },
@@ -181,7 +186,18 @@ export const presetRepublik = definePreset({
               },
             },
             marketing: {
-              value: '#F2ECE6',
+              value: {
+                base: '#F2ECE6',
+                _light: '#F2ECE6',
+                _dark: '#2A2520',
+              },
+            },
+            marketingSurface: {
+              value: {
+                base: 'white',
+                _light: 'white',
+                _dark: '#352F2A',
+              },
             },
             marketingAlt: {
               value: '#E2FBA6',
@@ -226,6 +242,13 @@ export const presetRepublik = definePreset({
               base: 'rgba(0,0,0,0.2)',
               _light: 'rgba(0,0,0,0.2)',
               _dark: 'rgba(0,0,0,0.4)',
+            },
+          },
+          overlaySubtle: {
+            value: {
+              base: 'rgba(0,0,0,0.1)',
+              _light: 'rgba(0,0,0,0.1)',
+              _dark: 'rgba(255,255,255,0.08)',
             },
           },
           error: {

@@ -1033,6 +1033,14 @@
       "value": "Bestätigen Sie Ihre Anmeldung zum CTRL Newsletter."
     },
     {
+      "key": "api/newsletters/request/COURSE-BIGTECH/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Bye-Bye Big Tech Kurs."
+    },
+    {
+      "key": "api/newsletters/request/COURSE-CLIMATE/subject",
+      "value": "Bestätigen Sie Ihre Anmeldung zum Challenge Accepted Kurs."
+    },
+    {
       "key": "api/newsletters/request/notSupported",
       "value": "Diese Art der Anmeldung zum gewählten Newsletter wird noch nicht unterstützt."
     },

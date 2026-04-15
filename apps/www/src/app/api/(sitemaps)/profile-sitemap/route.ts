@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { getCMSClientBase } from '@app/lib/apollo/cms-client-base'
+import { getCMSClientBase } from '@/app/lib/apollo/cms-client-base'
 import {
   EmployeesDocument,
   EmployeesQuery,
