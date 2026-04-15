@@ -1,17 +1,13 @@
-import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
-import { Offers } from '@app/app/kampagne/components/campaign-offers'
-import { Dank } from '@app/app/kampagne/components/handdrawn/dank'
+import { FinalCount } from '@app/app/kampagne/components/handdrawn/final-count'
+import { ShopLink } from '@app/app/kampagne/components/simple-shop-link'
 import { Video } from '@app/app/kampagne/components/video'
-import { getCampaignSuccess } from '@app/app/kampagne/get-campaign-success'
 import { Logo } from '@app/components/layout/header/logo'
-import { Share } from '@app/components/share/share'
 import { ArticleSection } from '@app/components/ui/section'
 import { getMe } from '@app/lib/auth/me'
 import { IconClose } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
-import { PUBLIC_BASE_URL } from '../../../../lib/constants'
 
 const journalismPromiseStyle = css({
   pb: 8,
@@ -33,6 +29,11 @@ const journalismPromiseStyle = css({
     fontWeight: 500,
     mb: 4,
   },
+  '& .status': {
+    fontWeight: 500,
+    fontSize: 'medium',
+    mt: '2',
+  },
 })
 
 function JournalismPromise({
@@ -52,7 +53,6 @@ function JournalismPromise({
 
 export default async function Page() {
   const { hasActiveMembership } = await getMe()
-  const { success } = await getCampaignSuccess()
 
   return (
     <>
@@ -93,7 +93,6 @@ export default async function Page() {
               <Logo />
             </Link>
           </div>
-          <CampaignMembershipsCounter />
           <h2
             className={css({
               textStyle: 'campaignHeading',
@@ -102,136 +101,25 @@ export default async function Page() {
               md: { mb: '4' },
             })}
           >
-            <Dank showDank={success}>Mit</Dank> 2000&nbsp;neuen Mitgliedern
-            lösen wir 3&nbsp;Versprechen ein.
+            Dank <FinalCount>2000</FinalCount>&nbsp;neuen Mitgliedern lösen wir
+            3&nbsp;Versprechen ein.
           </h2>
-          {hasActiveMembership && success ? (
-            <>
-              <p
-                className={css({
-                  textStyle: 'airy',
-                  mb: '6',
-                })}
-              >
-                <span className={css({ fontWeight: 500 })}>
-                  Und wir machen weiter!
-                </span>
-                <br />
-                Das vergünstigte Angebot gilt bis zum 14. April. Wie viele neue
-                Verleger finden wir?
-              </p>
-              <Share
-                title='2000 neue Mitglieder, 3 Versprechen'
-                url={`${PUBLIC_BASE_URL}/kampagne/2000-mitglieder-3-versprechen`}
-                emailSubject='2000 neue Mitglieder, 3 Versprechen'
-              >
-                <span
-                  className={cx(
-                    button({ size: 'full' }),
-                    css({
-                      background: 'campaign26Button',
-                      color: 'white',
-                      mb: 2,
-                    }),
-                  )}
-                >
-                  Weitersagen
-                </span>
-              </Share>
-            </>
-          ) : hasActiveMembership ? (
-            <>
-              <p
-                className={css({
-                  textStyle: 'airy',
-                  mb: '6',
-                })}
-              >
-                Mit Ihrer Hilfe erreichen wir unser Ziel: Erzählen Sie Ihren
-                Freundinnen und Bekannten bis zum 14.&nbsp;April von unserem
-                Angebot!
-              </p>
-              <Share
-                title='2000 neue Mitglieder, 3 Versprechen'
-                url={`${PUBLIC_BASE_URL}/kampagne/2000-mitglieder-3-versprechen`}
-                emailSubject='2000 neue Mitglieder, 3 Versprechen'
-              >
-                <span
-                  className={cx(
-                    button({ size: 'full' }),
-                    css({
-                      background: 'campaign26Button',
-                      color: 'white',
-                      mb: 2,
-                    }),
-                  )}
-                >
-                  Weitersagen
-                </span>
-              </Share>
-            </>
-          ) : success ? (
-            <>
-              <p
-                className={css({
-                  textStyle: 'airy',
-                  mb: '6',
-                })}
-              >
-                <span className={css({ fontWeight: 500 })}>
-                  Aber Sie fehlen noch.{' '}
-                </span>
-                Profitieren Sie bis zum 14. April von unserem vergünstigten
-                Angebot!
-              </p>
-              <Offers
-                additionalShopParams={{
-                  rep_ui_component: 'campaign-landing-page',
-                }}
-              />
-              <p
-                className={css({
-                  textAlign: 'center',
-                  mt: '6',
-                })}
-              >
-                Jederzeit kündbar
-              </p>
-            </>
-          ) : (
-            <>
-              <p
-                className={css({
-                  textStyle: 'airy',
-                  mb: '0',
-                  md: { textStyle: 'heavy', mb: '6' },
-                })}
-              >
-                Kommen Sie bis zum 14.&nbsp;April an Bord.
-              </p>
-              <p
-                className={css({
-                  textStyle: 'airy',
-                  mb: '6',
-                })}
-              >
-                Sie bestimmen, wie viel Sie im ersten Jahr zahlen:
-              </p>
-              <Offers
-                additionalShopParams={{
-                  rep_ui_component: 'campaign-landing-page',
-                }}
-              />
-              <p
-                className={css({
-                  textAlign: 'center',
-                  mt: '6',
-                })}
-              >
-                Jederzeit kündbar
-              </p>
-            </>
-          )}
+          <p
+            className={css({
+              textStyle: 'airy',
+              mb: '6',
+            })}
+          >
+            Unser eigentliches Ziel von 2000 haben wir bei weitem übertroffen,
+            das ist grossartig! Jetzt machen wir uns an die Arbeit.{' '}
+            <br
+              className={css({
+                display: 'none',
+                md: { display: 'block', mb: '2' },
+              })}
+            />
+            Hier sehen Sie, wo wir stehen.
+          </p>
         </ArticleSection>
       </div>
       <div
@@ -269,6 +157,7 @@ export default async function Page() {
                 Wir verschenken ein Jahr Republik an Menschen, die zum ersten
                 Mal abstimmen oder wählen.
               </p>
+              <p className='status'>Status: in Arbeit</p>
               <div
                 className={css({
                   mt: 6,
@@ -291,6 +180,7 @@ export default async function Page() {
                 Wir stellen die Republik an Schweizer Oberstufenschulen,
                 Gymnasien und Berufsschulen kostenlos zur Verfügung.
               </p>
+              <p className='status'>Status: in Arbeit</p>
             </JournalismPromise>
             <JournalismPromise count={3}>
               <h3>
@@ -302,6 +192,7 @@ export default async function Page() {
                 Wer bis zum 14.&nbsp;April an Bord kommt, darf eine Freundin
                 kostenlos für drei Monate neu zur Republik einladen.
               </p>
+              <p className='status'>Status: Umsetzung September 2026</p>
             </JournalismPromise>
           </div>
           <div
@@ -327,68 +218,44 @@ export default async function Page() {
           </div>
         </ArticleSection>
       </div>
-      {!hasActiveMembership && (
-        <div
-          data-theme='dark'
+      <div
+        data-theme='dark'
+        className={css({
+          background: 'campaign26Background',
+          color: 'campaign26',
+        })}
+      >
+        <ArticleSection
           className={css({
-            background: 'campaign26Background',
-            color: 'campaign26',
+            py: '8',
+            md: { pt: '12' },
           })}
         >
-          <ArticleSection
+          <h3
             className={css({
-              py: '8',
-              md: { pt: '12' },
+              textStyle: 'campaignSubhead',
+              color: 'campaign26.happyCherry',
+              mb: '6',
             })}
           >
-            {success ? (
-              <h3
+            Wir freuen uns sehr und danken allen, die uns bei dieser Kampagne
+            unterstützt haben!
+          </h3>
+          {!hasActiveMembership && (
+            <>
+              <p
                 className={css({
-                  textStyle: 'campaignSubhead',
-                  color: 'campaign26.happyCherry',
+                  textStyle: 'airy',
                   mb: '6',
                 })}
               >
-                Diese 3&nbsp;Versprechen werden wir einlösen. Die Frage ist
-                bloss: Sind Sie dabei?
-              </h3>
-            ) : (
-              <h3
-                className={css({
-                  textStyle: 'campaignSubhead',
-                  color: 'campaign26.happyCherry',
-                  mb: '6',
-                })}
-              >
-                Diese 3&nbsp;Versprechen lösen wir ein, wenn wir bis zum
-                14.&nbsp;April unser Ziel von 2000&nbsp;neuen Mitgliedern
-                erreichen. Machen Sie mit?
-              </h3>
-            )}
-            <p
-              className={css({
-                textStyle: 'airy',
-                mb: '6',
-              })}
-            >
-              Ein Jahr Republik zum Preis Ihrer Wahl:
-            </p>
-            <Offers
-              additionalShopParams={{
-                rep_ui_component: 'campaign-landing-page',
-              }}
-            />
-            <p
-              className={css({
-                textAlign: 'center',
-                mt: '6',
-              })}
-            >
-              Jederzeit kündbar
-            </p>
-          </ArticleSection>
-        </div>
-      )}
+                Noch nicht an Bord?
+              </p>
+              <ShopLink />
+            </>
+          )}
+        </ArticleSection>
+      </div>
     </>
   )
 }
