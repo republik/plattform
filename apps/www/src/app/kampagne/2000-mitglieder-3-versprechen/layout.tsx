@@ -16,7 +16,7 @@ export default async function CampaignLayout({
 }) {
   return (
     <div data-page-theme='campaign-2026'>
-      <PageLayout showHeader={false} showFooter={false}>
+      <PageLayout showHeader={false}>
         <EventTrackingContext category='CampaignLandingPage'>
           {children}
         </EventTrackingContext>
