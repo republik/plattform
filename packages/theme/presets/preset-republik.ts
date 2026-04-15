@@ -73,8 +73,6 @@ export const presetRepublik = definePreset({
           32: { value: '8rem' },
         },
         radii: {
-          sm: { value: '5px' },
-          md: { value: '10px' },
           full: { value: '9999px' },
           sm: { value: '4px' },
           md: { value: '8px' },
