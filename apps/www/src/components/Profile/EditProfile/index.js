@@ -23,7 +23,7 @@ import { useMe } from '@/lib/context/MeContext'
 import { useTranslation } from '@/lib/withT'
 import FieldSet from '../../FieldSet'
 import { PORTRAIT_SIZE } from '../ProfileView'
-import { usePaynotes } from '@/components/paynotes/paynotes-context'
+import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
 
 const styles = {
   container: css({

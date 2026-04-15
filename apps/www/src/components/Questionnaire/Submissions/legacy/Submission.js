@@ -15,7 +15,7 @@ import { max, shuffle } from 'd3-array'
 import { css } from 'glamor'
 import Link from 'next/link'
 
-import { AnswerText } from '@/components/AnswerText'
+import { AnswerText } from '../components/AnswerText'
 import PlainButton from './PlainButton'
 
 import { swissTime } from '@/lib/utils/format'

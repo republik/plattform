@@ -1,7 +1,7 @@
 import '@republik/theme/fonts.css'
 import '@republik/theme/styles.css'
-import '../globals.css'
-import '../lib/polyfill'
+import '@/globals.css'
+import '@/lib/polyfill'
 import { IpAllowlistBanner } from '@app/components/ip-allowlist-banner'
 import CampaignPaynote from '@app/components/paynotes/campaign/campaign-paynote'
 

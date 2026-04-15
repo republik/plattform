@@ -8,7 +8,7 @@ import { screenshotUrl } from '@app/lib/util/screenshot-api'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import { useTranslation } from '@/lib/withT'
 import Meta from '../../../Frame/Meta'
-import { AnswerText } from '@/components/AnswerText'
+import { AnswerText } from '../components/AnswerText'
 import { replaceText } from '../utils'
 
 export const SHARE_IMAGE_WIDTH = 1200

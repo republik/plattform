@@ -15,7 +15,7 @@ import Link from 'next/link'
 import {
   EventObjectType,
   SubscriptionObjectType,
-} from '../../../graphql/republik-api/__generated__/gql/graphql'
+} from '#graphql/republik-api/__generated__/gql/graphql'
 import { checkRoles } from '@/lib/apollo/withMe'
 import { ADMIN_BASE_URL, CDN_FRONTEND_BASE_URL } from '@/lib/constants'
 

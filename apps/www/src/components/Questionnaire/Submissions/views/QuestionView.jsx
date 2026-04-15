@@ -21,13 +21,13 @@ import {
   loadMoreSubmissions,
   QUESTIONNAIRE_WITH_SUBMISSIONS_QUERY,
 } from '../graphql'
-import { AnswersChart, getTargetedAnswers } from '@/components/QaBlock'
-import { ShareImage } from '@/components/ShareImage'
-import QuestionnaireMeta from '@/components/QuestionnaireMeta'
+import { AnswersChart, getTargetedAnswers } from '../components/QaBlock'
+import { ShareImage } from '../components/ShareImage'
+import QuestionnaireMeta from '../components/QuestionnaireMeta'
 import { replaceText } from '../utils'
 
-import { OverviewLink, SubmissionLink } from '@/components/Links'
-import { AnswersCombo } from '@/components/AnswersCombo'
+import { OverviewLink, SubmissionLink } from '../components/Links'
+import { AnswersCombo } from '../components/AnswersCombo'
 
 const QuestionView = ({
   slug,
