@@ -192,7 +192,7 @@ export default async function Page() {
                 Wer bis zum 14.&nbsp;April an Bord kommt, darf eine Freundin
                 kostenlos für drei Monate neu zur Republik einladen.
               </p>
-              <p className='status'>Status: Umsetzung September 2026</p>
+              <p className='status'>Status: in Arbeit</p>
             </JournalismPromise>
           </div>
           <div
