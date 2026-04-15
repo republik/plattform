@@ -10,9 +10,9 @@ const containerStyle = css({
 
 const strikeStyle = css({
   position: 'absolute',
-  left: '-6%',
-  top: '-83%',
-  width: '120%',
+  left: '0',
+  top: '-63%',
+  width: '100%',
   height: 'auto',
   pointerEvents: 'none',
   fill: 'campaign26Button',
