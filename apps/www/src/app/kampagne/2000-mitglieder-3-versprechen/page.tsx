@@ -1,8 +1,8 @@
-import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
-import { Offers } from '@app/app/kampagne/components/campaign-offers'
-import { Dank } from '@app/app/kampagne/components/handdrawn/dank'
-import { Video } from '@app/app/kampagne/components/video'
-import { getCampaignSuccess } from '@app/app/kampagne/get-campaign-success'
+import CampaignMembershipsCounter from '@/app/kampagne/components/campaign-memberships-counter'
+import { Offers } from '@/app/kampagne/components/campaign-offers'
+import { Dank } from '@/app/kampagne/components/handdrawn/dank'
+import { Video } from '@/app/kampagne/components/video'
+import { getCampaignSuccess } from '@/app/kampagne/get-campaign-success'
 import { Logo } from '@app/components/layout/header/logo'
 import { Share } from '@app/components/share/share'
 import { ArticleSection } from '@app/components/ui/section'
@@ -11,7 +11,7 @@ import { IconClose } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
-import { PUBLIC_BASE_URL } from '../../../../lib/constants'
+import { PUBLIC_BASE_URL } from '@/lib/constants'
 
 const journalismPromiseStyle = css({
   pb: 8,

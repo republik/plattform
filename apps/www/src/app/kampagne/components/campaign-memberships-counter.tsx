@@ -1,7 +1,7 @@
 'use client'
 
-import { TARGET } from '@app/app/kampagne/campaign-config'
-import { AnimatedArrow } from '@app/app/kampagne/components/handdrawn/animated-arrow'
+import { TARGET } from '@/app/kampagne/campaign-config'
+import { AnimatedArrow } from '@/app/kampagne/components/handdrawn/animated-arrow'
 import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
 import * as Progress from '@radix-ui/react-progress'
 import { css } from '@republik/theme/css'

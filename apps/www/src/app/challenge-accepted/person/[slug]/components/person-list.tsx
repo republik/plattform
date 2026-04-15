@@ -1,4 +1,4 @@
-import { Collapsible } from '@app/app/challenge-accepted/components/collapsible'
+import { Collapsible } from '@/app/challenge-accepted/components/collapsible'
 import {
   ChallengeAcceptedPersonListDocument,
   type ChallengeAcceptedPersonListQuery,

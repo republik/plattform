@@ -1,6 +1,6 @@
 'use client'
 
-import { OfferOptionLabelOnly } from '@app/app/kampagne/components/campaign-offer-options'
+import { OfferOptionLabelOnly } from '@/app/kampagne/components/campaign-offer-options'
 import NativeCta from '@app/components/paynotes/native-cta'
 import { Button } from '@app/components/ui/button'
 import { useTrackEvent } from '@app/lib/analytics/event-tracking'

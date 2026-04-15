@@ -1,4 +1,4 @@
-import CollectionRenderer from '@app/app/challenge-accepted/components/collection-render'
+import CollectionRenderer from '@/app/challenge-accepted/components/collection-render'
 import Container from '@app/components/container'
 import { Share } from '@app/components/share/share'
 import type { PersonDetailQuery } from '#graphql/cms/__generated__/gql/graphql'
@@ -7,7 +7,7 @@ import { hstack, vstack } from '@republik/theme/patterns'
 import { IconShare } from '@republik/icons'
 import Image from 'next/image'
 import { StructuredText } from 'react-datocms/structured-text'
-import { PUBLIC_BASE_URL } from 'lib/constants'
+import { PUBLIC_BASE_URL } from '@/lib/constants'
 
 type PersonDetailProps = {
   person: PersonDetailQuery['person']

@@ -1,5 +1,5 @@
 import { CampaignReferralsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import { CAMPAIGN_SLUG, TARGET } from '@app/app/kampagne/campaign-config'
+import { CAMPAIGN_SLUG, TARGET } from '@/app/kampagne/campaign-config'
 import { getClient } from '@app/lib/apollo/client'
 
 export async function getCampaignSuccess() {

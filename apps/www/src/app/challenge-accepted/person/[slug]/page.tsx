@@ -9,8 +9,8 @@ import { PersonDetail } from './components/person-detail'
 
 import { PersonDetailDocument } from '#graphql/cms/__generated__/gql/graphql'
 import { NewsletterName } from '#graphql/republik-api/__generated__/gql/graphql'
-import { EmailSignUp } from '@app/app/challenge-accepted/components/ca-newsletter-sign-up/email-signup'
-import { PersonList } from '@app/app/challenge-accepted/person/[slug]/components/person-list'
+import { EmailSignUp } from '@/app/challenge-accepted/components/ca-newsletter-sign-up/email-signup'
+import { PersonList } from '@/app/challenge-accepted/person/[slug]/components/person-list'
 import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
 import { getNewsletterSubscriptionStatus } from '@app/lib/newsletters'
 import { vstack } from '@republik/theme/patterns'
@@ -146,8 +146,11 @@ export default async function Page({ params }: PageProps) {
   )
 }
 
-export async function generateMetadata(props: PageProps, parent: ResolvingMetadata): Promise<Metadata> {
-  const params = await props.params;
+export async function generateMetadata(
+  props: PageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const params = await props.params
   // read route params
 
   const res = await fetch(process.env.DATO_CMS_API_URL, {

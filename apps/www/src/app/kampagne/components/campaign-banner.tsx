@@ -1,7 +1,7 @@
 'use client'
 
-import CampaignMembershipsCounter from '@app/app/kampagne/components/campaign-memberships-counter'
-import { Dank } from '@app/app/kampagne/components/handdrawn/dank'
+import CampaignMembershipsCounter from '@/app/kampagne/components/campaign-memberships-counter'
+import { Dank } from '@/app/kampagne/components/handdrawn/dank'
 import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
 import { usePaynotes } from '@app/components/paynotes/paynotes-context'
 import { Share } from '@app/components/share/share'
@@ -13,7 +13,7 @@ import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-import { PUBLIC_BASE_URL } from '../../../../lib/constants'
+import { PUBLIC_BASE_URL } from '@/lib/constants'
 
 const localStorageKey = 'republik-campaign-banner-is-open'
 const DEFAULT_IS_OPEN = true

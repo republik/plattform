@@ -1,5 +1,5 @@
 import { PaynotesDocument } from '#graphql/cms/__generated__/gql/graphql'
-import { Paynotes } from '@app/app/api/paynote/types'
+import { Paynotes } from '@/app/api/paynote/types'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 import { NextResponse } from 'next/server'
 

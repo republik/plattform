@@ -1,4 +1,4 @@
-import { PersonBubbleForce } from '@app/app/challenge-accepted/person/[slug]/components/person-bubble-graphic'
+import { PersonBubbleForce } from '@/app/challenge-accepted/person/[slug]/components/person-bubble-graphic'
 import { ChallengeAcceptedPersonListDocument } from '#graphql/cms/__generated__/gql/graphql'
 import { getCMSClient } from '@app/lib/apollo/cms-client'
 
