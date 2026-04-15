@@ -1,5 +1,5 @@
-import { PageLayout } from '@app/components/layout'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import { PageLayout } from '@/app/components/layout'
+import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { Metadata } from 'next'
 import { ReactNode } from 'react'
 

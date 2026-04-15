@@ -3,19 +3,20 @@ import {
   EventDocument,
   EventRecordFieldsFragmentDoc,
 } from '#graphql/cms/__generated__/gql/graphql'
-import { getCMSClient } from '@app/lib/apollo/cms-client'
+import { getCMSClient } from '@/app/lib/apollo/cms-client'
 import dayjs from 'dayjs'
 import ical, { ICalCalendarMethod } from 'ical-generator'
-import { PUBLIC_BASE_URL } from 'lib/constants'
+import { PUBLIC_BASE_URL } from '@/lib/constants'
 import { notFound } from 'next/navigation'
 import { v5 as uuidV5 } from 'uuid'
 
-export async function GET(request: Request, props: { params: Promise<{ slug: string }> }) {
-  const params = await props.params;
+export async function GET(
+  request: Request,
+  props: { params: Promise<{ slug: string }> },
+) {
+  const params = await props.params
 
-  const {
-    slug
-  } = params;
+  const { slug } = params
 
   const client = await getCMSClient()
   const { data } = await client.query({

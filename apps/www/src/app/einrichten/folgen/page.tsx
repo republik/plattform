@@ -1,7 +1,7 @@
 // second "onbarding tip"
 
-import FollowOnboarding from '@app/components/onboarding/follow'
-import { getMe } from '@app/lib/auth/me'
+import FollowOnboarding from '@/app/components/onboarding/follow'
+import { getMe } from '@/app/lib/auth/me'
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 

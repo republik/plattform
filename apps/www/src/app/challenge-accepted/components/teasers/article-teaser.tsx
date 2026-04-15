@@ -1,17 +1,17 @@
-import { getClient } from '@app/lib/apollo/client'
+import { getClient } from '@/app/lib/apollo/client'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import Image from 'next/image'
-import formatCredits from 'components/Feed/formatCredits'
+import formatCredits from '@/components/Feed/formatCredits'
 import { vstack } from '@republik/theme/patterns'
 
-import { renderMdast } from '@app/lib/mdast/render'
-import { getMe } from '@app/lib/auth/me'
+import { renderMdast } from '@/app/lib/mdast/render'
+import { getMe } from '@/app/lib/auth/me'
 import {
   ArticleTeaserDocument,
   ArticleTeaserQuery,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { PUBLIC_BASE_URL } from 'lib/constants'
+import { PUBLIC_BASE_URL } from '@/lib/constants'
 
 const getResizefromURL = (url, size) => {
   const imgURL = new URL(url)
