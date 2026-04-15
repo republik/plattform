@@ -1,4 +1,4 @@
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 
 import { IconArrowRight } from '@republik/icons'
 import { css } from '@republik/theme/css'

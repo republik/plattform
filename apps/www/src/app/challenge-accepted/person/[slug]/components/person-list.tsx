@@ -3,7 +3,7 @@ import {
   ChallengeAcceptedPersonListDocument,
   type ChallengeAcceptedPersonListQuery,
 } from '#graphql/cms/__generated__/gql/graphql'
-import { getCMSClient } from '@app/lib/apollo/cms-client'
+import { getCMSClient } from '@/app/lib/apollo/cms-client'
 import { css } from '@republik/theme/css'
 import { hstack } from '@republik/theme/patterns'
 import Image from 'next/image'

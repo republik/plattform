@@ -1,5 +1,5 @@
 import { CaNewsletterDocument } from '#graphql/republik-api/__generated__/gql/graphql'
-import { getClient } from '@app/lib/apollo/client'
+import { getClient } from '@/app/lib/apollo/client'
 
 export async function getNewsletterSubscriptionStatus({
   newsletterName,

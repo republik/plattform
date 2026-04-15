@@ -1,5 +1,5 @@
-import FollowAuthorDropdown from '@app/components/follow/follow-author-dropdown'
-import { FollowButton } from '@app/components/follow/follow-button'
+import FollowAuthorDropdown from '@/app/components/follow/follow-author-dropdown'
+import { FollowButton } from '@/app/components/follow/follow-button'
 import {
   Container,
   fontStyles,

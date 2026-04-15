@@ -1,7 +1,7 @@
 'use client'
 
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
-import { usePostMessage } from '@app/lib/hooks/usePostMessage'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
+import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 import { css } from '@republik/theme/css'
 import { ReactNode } from 'react'
 import type { ShareProps } from './types'

@@ -1,12 +1,12 @@
 'use client'
 
-import { Offers } from '@app/components/paynotes/paynote/paynote-offers'
-import { usePaynotes } from '@app/components/paynotes/paynotes-context'
+import { Offers } from '@/app/components/paynotes/paynote/paynote-offers'
+import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
   useTrackEvent,
-} from '@app/lib/analytics/event-tracking'
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+} from '@/app/lib/analytics/event-tracking'
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 
 import * as Dialog from '@radix-ui/react-dialog'
 import { IconExpandMore } from '@republik/icons'

@@ -1,7 +1,7 @@
 import logo from '@republik/theme/logo.json'
 import { PropsWithChildren } from 'react'
 
-import Container from '@app/components/container'
+import Container from '@/app/components/container'
 import { css } from '@republik/theme/css'
 import { stack } from '@republik/theme/patterns'
 import Link from 'next/link'

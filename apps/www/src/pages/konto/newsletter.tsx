@@ -1,5 +1,5 @@
-import NewslettersOverview from '@app/components/newsletters/newsletters-overview'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import NewslettersOverview from '@/app/components/newsletters/newsletters-overview'
+import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import compose from 'lodash/flowRight'
 
 import AccountTabs from '@/components/Account/AccountTabs'

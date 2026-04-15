@@ -2,20 +2,20 @@ import type { Metadata, ResolvingMetadata } from 'next'
 import React from 'react'
 
 import { NewsletterCourseDocument } from '#graphql/cms/__generated__/gql/graphql'
-import { ContainerNarrow } from '@app/components/container'
-import { PageLayout } from '@app/components/layout'
-import { type NewsletterName } from '@app/components/newsletters/config'
-import { NewsletterSubscribeButton } from '@app/components/newsletters/newsletter-subscribe'
-import { getCMSClient } from '@app/lib/apollo/cms-client'
+import { ContainerNarrow } from '@/app/components/container'
+import { PageLayout } from '@/app/components/layout'
+import { type NewsletterName } from '@/app/components/newsletters/config'
+import { NewsletterSubscribeButton } from '@/app/components/newsletters/newsletter-subscribe'
+import { getCMSClient } from '@/app/lib/apollo/cms-client'
 import { css } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import { notFound } from 'next/navigation'
 import { Credits } from '../components/credits'
 import { Entries } from '../components/entries'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import Link from 'next/link'
 import { Testimonials } from '../components/testimonials'
-import { Share } from '@app/components/share/share'
+import { Share } from '@/app/components/share/share'
 import Image from 'next/image'
 import { cx } from '@republik/theme/css'
 
@@ -235,7 +235,7 @@ export default async function CoursePage({ params }: PageProps) {
                     fontSize: 'l',
                   })}
                 >
-                  {/* Since we allow bold decoration in the content, we need to split 
+                  {/* Since we allow bold decoration in the content, we need to split
                   the content into parts and wrap the bold parts in <b> tags */}
                   {content.split(/\*\*(.+?)\*\*/).map((part, i) =>
                     i % 2 === 0 ? (

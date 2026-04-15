@@ -1,6 +1,6 @@
 import { css } from '@republik/theme/css'
 
-import { usePaynotes } from '@app/components/paynotes/paynotes-context'
+import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
 
 import { useTranslation } from '@/lib/withT'
 import { IconClose } from '@republik/icons'

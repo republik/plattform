@@ -1,14 +1,14 @@
 import { useQuery } from '@apollo/client'
 import { LoginPopup } from '@/app/components/auth/login/login-popup'
-import FollowArticle from '@app/components/follow/follow-article'
-import FollowFormat from '@app/components/follow/follow-format'
-import NextReads from '@app/components/next-reads'
-import CampaignPaywall from '@app/components/paynotes/campaign/campaign-paywall'
-import PaynoteInline from '@app/components/paynotes/paynote/paynote-inline'
-import { usePaynotes } from '@app/components/paynotes/paynotes-context'
-import { WelcomeBanner } from '@app/components/paynotes/paynotes-in-trial/welcome'
-import Paywall from '@app/components/paynotes/paywall'
-import Regwall from '@app/components/paynotes/regwall'
+import FollowArticle from '@/app/components/follow/follow-article'
+import FollowFormat from '@/app/components/follow/follow-format'
+import NextReads from '@/app/components/next-reads'
+import CampaignPaywall from '@/app/components/paynotes/campaign/campaign-paywall'
+import PaynoteInline from '@/app/components/paynotes/paynote/paynote-inline'
+import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
+import { WelcomeBanner } from '@/app/components/paynotes/paynotes-in-trial/welcome'
+import Paywall from '@/app/components/paynotes/paywall'
+import Regwall from '@/app/components/paynotes/regwall'
 
 import {
   Breakout,

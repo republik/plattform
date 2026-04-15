@@ -1,6 +1,6 @@
 import { NewslettersResubscribeDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
-import { Button } from '@app/components/ui/button'
+import { Button } from '@/app/components/ui/button'
 import { css } from '@republik/theme/css'
 import { useTranslation } from '@/lib/withT'
 

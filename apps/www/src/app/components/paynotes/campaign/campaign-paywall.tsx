@@ -1,14 +1,14 @@
 'use client'
 import CampaignMembershipsCounter from '@/app/kampagne/components/campaign-memberships-counter'
 import { Offers } from '@/app/kampagne/components/campaign-offers'
-import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
-import { usePaynotes } from '@app/components/paynotes/paynotes-context'
-import Login from '@app/components/paynotes/regwall/login'
-import { ArticleSection } from '@app/components/ui/section'
+import { useCampaign } from '@/app/components/paynotes/campaign/use-campaign'
+import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
+import Login from '@/app/components/paynotes/regwall/login'
+import { ArticleSection } from '@/app/components/ui/section'
 import {
   EventTrackingContext,
   useTrackEvent,
-} from '@app/lib/analytics/event-tracking'
+} from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'

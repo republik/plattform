@@ -2,8 +2,8 @@
 
 import { UpdateNewsletterSubscriptionWithMacDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { ErrorMessage } from '@/app/components/auth/login/error-message'
-import { Button } from '@app/components/ui/button'
-import { Spinner } from '@app/components/ui/spinner'
+import { Button } from '@/app/components/ui/button'
+import { Spinner } from '@/app/components/ui/spinner'
 import { useMutation } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { CheckCircleIcon } from 'lucide-react'

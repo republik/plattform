@@ -15,7 +15,7 @@ import { SubmissionAuthor } from '../../Questionnaire/Submissions/legacy/Submiss
 
 import HeaderShare from '../shared/HeaderShare'
 
-import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { screenshotUrl } from '@/app/lib/util/screenshot-api'
 import { PORTRAITS } from './config'
 import { Author, QuestionAnswer, ShareProps } from './index'
 

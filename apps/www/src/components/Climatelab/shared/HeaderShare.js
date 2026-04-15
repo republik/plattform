@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { IconButton } from '@project-r/styleguide'
 
-import { trackEvent } from '@app/lib/analytics/event-tracking'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
 import { postMessage, useInNativeApp } from '@/lib/withInNativeApp'
 import { useTranslation } from '@/lib/withT'
 

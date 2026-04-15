@@ -1,6 +1,6 @@
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
-import FollowAuthors from '@app/components/follow/follow-authors'
-import FollowFormat from '@app/components/follow/follow-format'
+import FollowAuthors from '@/app/components/follow/follow-authors'
+import FollowFormat from '@/app/components/follow/follow-format'
 
 type ContributorType = {
   kind: string

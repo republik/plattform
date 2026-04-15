@@ -34,7 +34,7 @@ import { CDN_FRONTEND_BASE_URL } from '@/lib/constants'
 import { swissTime } from '@/lib/utils/format'
 import withInNativeApp from '@/lib/withInNativeApp'
 
-import { getCMSClientBase } from '@app/lib/apollo/cms-client-base'
+import { getCMSClientBase } from '@/app/lib/apollo/cms-client-base'
 import { CockpitDocument } from '#graphql/cms/__generated__/gql/graphql'
 import { StructuredText } from 'react-datocms/structured-text'
 

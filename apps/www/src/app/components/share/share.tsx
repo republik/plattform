@@ -1,5 +1,5 @@
 'use client'
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { ReactNode } from 'react'
 import { ShareNative } from './share-native'
 import { ShareOverlay } from './share-overlay'

@@ -1,4 +1,4 @@
-import { PageLayout } from '@app/components/layout'
+import { PageLayout } from '@/app/components/layout'
 import { css } from '@republik/theme/css'
 
 export const revalidate = 60 // revalidate all pages every minute

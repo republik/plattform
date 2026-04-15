@@ -6,10 +6,10 @@ import {
   type NewsletterName,
   NL_COURSE_SLUG,
   NL_STYLE,
-} from '@app/components/newsletters/config'
-import { Button } from '@app/components/ui/button'
-import { Spinner } from '@app/components/ui/spinner'
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+} from '@/app/components/newsletters/config'
+import { Button } from '@/app/components/ui/button'
+import { Spinner } from '@/app/components/ui/spinner'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import { Check, Plus } from 'lucide-react'

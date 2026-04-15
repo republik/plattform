@@ -1,4 +1,4 @@
-import { useCampaign } from '@app/components/paynotes/campaign/use-campaign'
+import { useCampaign } from '@/app/components/paynotes/campaign/use-campaign'
 
 import { useMe } from '@/lib/context/MeContext'
 import { useUserAgent } from '@/lib/context/UserAgentContext'

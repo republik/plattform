@@ -1,6 +1,6 @@
 import { css } from '@republik/theme/css'
 
-import { Collapsible } from '@app/components/ui/collapsible'
+import { Collapsible } from '@/app/components/ui/collapsible'
 
 import { CDN_FRONTEND_BASE_URL } from '@/lib/constants'
 import { useTranslation } from '@/lib/withT'

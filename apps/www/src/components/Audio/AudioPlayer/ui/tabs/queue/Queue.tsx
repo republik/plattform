@@ -25,7 +25,7 @@ import {
   AudioPlayerLocations,
   AudioPlayerActions,
 } from '../../../../types/AudioActionTracking'
-import { trackEvent } from '@app/lib/analytics/event-tracking'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
 import { AudioQueueItem } from '@/components/Audio/types/AudioPlayerItem'
 import { IconButton } from '@project-r/styleguide'
 import { IconRemoveCircle } from '@republik/icons'

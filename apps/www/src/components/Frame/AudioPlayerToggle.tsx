@@ -8,7 +8,7 @@ import { css } from 'glamor'
 import { ZINDEX_FRAME_TOGGLE, TRANSITION_MS } from '../constants'
 import useAudioQueue from '../Audio/hooks/useAudioQueue'
 import { useAudioContext } from '../Audio/AudioProvider'
-import { trackEvent } from '@app/lib/analytics/event-tracking'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
 import { IconMic } from '@republik/icons'
 
 const SIZE = 28

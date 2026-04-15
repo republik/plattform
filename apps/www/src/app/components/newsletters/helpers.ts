@@ -1,5 +1,5 @@
 import { NewsletterSettingsQuery } from '#graphql/republik-api/__generated__/gql/graphql'
-import { type NewsletterName } from '@app/components/newsletters/config'
+import { type NewsletterName } from '@/app/components/newsletters/config'
 
 export const isSubscribedToNewsletter = (
   name: NewsletterName,

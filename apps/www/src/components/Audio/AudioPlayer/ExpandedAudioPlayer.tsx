@@ -21,7 +21,7 @@ import { useUserAgent } from '@/lib/context/UserAgentContext'
 import { useMe } from '@/lib/context/MeContext'
 import { useInNativeApp } from '@/lib/withInNativeApp'
 import downloadAudioSourceFile from '../helpers/DownloadAudioSource'
-import { trackEvent } from '@app/lib/analytics/event-tracking'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
 import {
   AudioPlayerLocations,
   AudioPlayerActions,

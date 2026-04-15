@@ -1,11 +1,11 @@
 'use client'
 
-import FollowFormatContainer from '@app/components/follow/follow-format-container'
+import FollowFormatContainer from '@/app/components/follow/follow-format-container'
 import {
   type NewsletterName,
   NL_STYLE,
-} from '@app/components/newsletters/config'
-import { NewsletterSubscribeButton } from '@app/components/newsletters/newsletter-subscribe'
+} from '@/app/components/newsletters/config'
+import { NewsletterSubscribeButton } from '@/app/components/newsletters/newsletter-subscribe'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
 import Link from 'next/link'

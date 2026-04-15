@@ -1,6 +1,6 @@
-import { getAnalyticsDashboardUrl } from '@app/lib/analytics/dashboard-url'
-import { trackEvent } from '@app/lib/analytics/event-tracking'
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { getAnalyticsDashboardUrl } from '@/app/lib/analytics/dashboard-url'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { IconButton, shouldIgnoreClick } from '@project-r/styleguide'
 import {
   IconChart,

@@ -1,7 +1,7 @@
 'use client'
 
-import { Overlay } from '@app/components/ui/overlay'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import { Overlay } from '@/app/components/ui/overlay'
+import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import * as Dialog from '@radix-ui/react-dialog'
 
 import { css } from '@republik/theme/css'

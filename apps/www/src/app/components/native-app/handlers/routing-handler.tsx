@@ -1,7 +1,7 @@
 'use client'
 
-import useNativeAppEvent from '@app/lib/hooks/useNativeAppEvent'
-import { usePostMessage } from '@app/lib/hooks/usePostMessage'
+import useNativeAppEvent from '@/app/lib/hooks/useNativeAppEvent'
+import { usePostMessage } from '@/app/lib/hooks/usePostMessage'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef } from 'react'

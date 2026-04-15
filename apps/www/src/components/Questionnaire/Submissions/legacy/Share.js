@@ -4,7 +4,7 @@ import { format } from 'url'
 
 import { fontStyles } from '@project-r/styleguide'
 
-import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { screenshotUrl } from '@/app/lib/util/screenshot-api'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import { useTranslation } from '@/lib/withT'
 import Meta from '../../../Frame/Meta'

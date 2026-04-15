@@ -1,6 +1,6 @@
 'use client' // Error components must be Client Components
 
-import { ErrorPage } from '@app/components/layout/error-page'
+import { ErrorPage } from '@/app/components/layout/error-page'
 import { css } from '@republik/theme/css'
 import * as Sentry from '@sentry/nextjs'
 import { PUBLIC_BASE_URL } from '@/lib/constants'

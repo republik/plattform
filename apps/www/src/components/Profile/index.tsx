@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import { useMe } from '@/lib/context/MeContext'
 import getPublicUser from './graphql/getPublicUser'
 
-import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { screenshotUrl } from '@/app/lib/util/screenshot-api'
 import EditProfile from './EditProfile'
 import ProfileView from './ProfileView'
 

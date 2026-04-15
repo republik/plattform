@@ -1,5 +1,5 @@
 import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
 import { token } from '@republik/theme/tokens'
 import Link from 'next/link'

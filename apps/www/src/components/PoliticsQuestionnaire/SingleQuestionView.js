@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 
 import NextLink from 'next/link'
 
-import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { screenshotUrl } from '@/app/lib/util/screenshot-api'
 import {
   Center,
   ColorContextProvider,

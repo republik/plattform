@@ -4,7 +4,7 @@ import {
   User,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { FollowButton } from '@app/components/follow/follow-button'
+import { FollowButton } from '@/app/components/follow/follow-button'
 import { css } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Image from 'next/image'

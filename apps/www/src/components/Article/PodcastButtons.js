@@ -4,7 +4,7 @@ import { css } from 'glamor'
 import { IconButton, shouldIgnoreClick } from '@project-r/styleguide'
 
 import withT from '@/lib/withT'
-import { trackEvent } from '@app/lib/analytics/event-tracking'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
 
 import { useUserAgent } from '@/lib/context/UserAgentContext'
 import {

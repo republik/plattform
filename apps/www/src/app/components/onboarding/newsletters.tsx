@@ -2,8 +2,8 @@
 
 import { SetOnboardedDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
-import NewslettersOverview from '@app/components/newsletters/newsletters-overview'
-import { NL_FEATURED, NL_MORE } from '@app/components/onboarding/config'
+import NewslettersOverview from '@/app/components/newsletters/newsletters-overview'
+import { NL_FEATURED, NL_MORE } from '@/app/components/onboarding/config'
 import { css } from '@republik/theme/css'
 import { useEffect } from 'react'
 import { useMe } from '@/lib/context/MeContext'

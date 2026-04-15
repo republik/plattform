@@ -4,8 +4,8 @@ import {
   FollowableDocumentQuery,
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { FollowButton } from '@app/components/follow/follow-button'
-import FollowFormatContainer from '@app/components/follow/follow-format-container'
+import { FollowButton } from '@/app/components/follow/follow-button'
+import FollowFormatContainer from '@/app/components/follow/follow-format-container'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
 import Link from 'next/link'

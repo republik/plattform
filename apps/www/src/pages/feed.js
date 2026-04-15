@@ -1,4 +1,4 @@
-import { ForceOnboarding } from '@app/components/onboarding/force-onboarding'
+import { ForceOnboarding } from '@/app/components/onboarding/force-onboarding'
 import compose from 'lodash/flowRight'
 import { enforceMembership } from '@/components/Auth/withMembership'
 import Feed from '@/components/Feed'

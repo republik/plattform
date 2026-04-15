@@ -10,8 +10,8 @@ import NewsletterSubscriptions from '../Account/NewsletterSubscriptions'
 import EmailForm, { checkEmail } from './EmailForm'
 
 import { Interaction } from '@project-r/styleguide'
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
-import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
+import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'
 
 const SignUp = ({
   me,

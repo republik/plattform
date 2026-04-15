@@ -140,7 +140,7 @@ const CompactDetailsForm = dynamic(
 
 const TrialForm = dynamic(
   () =>
-    import('@app/components/auth/trial/register-for-trial').then(
+    import('@/app/components/auth/trial/register-for-trial').then(
       (m) => m.RegisterForTrialMinimal,
     ),
   {

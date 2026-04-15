@@ -12,7 +12,7 @@ import {
 } from '@project-r/styleguide'
 import { useTranslation } from '@/lib/withT'
 import { postMessage, useInNativeApp } from '@/lib/withInNativeApp'
-import { useScrollDirection } from '@app/lib/hooks/useScrollDirection'
+import { useScrollDirection } from '@/app/lib/hooks/useScrollDirection'
 import { useAudioContext } from '../Audio/AudioProvider'
 import HLine from './HLine'
 
@@ -31,7 +31,7 @@ import {
 } from '../constants'
 import { IconBack } from '@republik/icons'
 import Link from 'next/link'
-import { IpAllowlistBanner } from '@app/components/ip-allowlist-banner'
+import { IpAllowlistBanner } from '@/app/components/ip-allowlist-banner'
 import { useMe } from '@/lib/context/MeContext'
 
 const BACK_BUTTON_SIZE = 24

@@ -1,6 +1,6 @@
-import LightSwitch from '@app/components/lightswitch'
-import { getMe } from '@app/lib/auth/me'
-import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
+import LightSwitch from '@/app/components/lightswitch'
+import { getMe } from '@/app/lib/auth/me'
+import { getPlatformInformation } from '@/app/lib/util/useragent/platform-information'
 import {
   IconInstagram,
   IconLogoBluesky,

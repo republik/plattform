@@ -8,7 +8,7 @@ import {
 
 import { ApolloError, useApolloClient } from '@apollo/client'
 
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 
 import { visuallyHidden, vstack } from '@republik/theme/patterns'

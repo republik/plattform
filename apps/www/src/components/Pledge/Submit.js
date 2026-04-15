@@ -13,7 +13,7 @@ import { errorToString } from '@/lib/utils/errors'
 import withT from '@/lib/withT'
 import withMe from '@/lib/apollo/withMe'
 import { chfFormat } from '@/lib/utils/format'
-import { trackRevenue } from '@app/lib/analytics/event-tracking'
+import { trackRevenue } from '@/app/lib/analytics/event-tracking'
 import { getConversionPayload } from '@/lib/utils/conversion-payload'
 
 import { gotoMerci, encodeSignInResponseQuery } from './Merci'

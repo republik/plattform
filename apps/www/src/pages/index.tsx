@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { ForceOnboarding } from '@app/components/onboarding/force-onboarding'
+import { ForceOnboarding } from '@/app/components/onboarding/force-onboarding'
 import { ParsedUrlQuery } from 'querystring'
 import Front from '@/components/Front'
 import { FRONT_QUERY } from '@/components/Front/graphql/getFrontQuery.graphql'

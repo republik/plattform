@@ -1,7 +1,7 @@
 import {
   EventTrackingContext,
   useTrackEvent,
-} from '@app/lib/analytics/event-tracking'
+} from '@/app/lib/analytics/event-tracking'
 import { IconArrowRight } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import Link from 'next/link'

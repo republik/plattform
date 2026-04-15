@@ -5,8 +5,8 @@ import {
   UnsubscribeDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
-import { Button } from '@app/components/ui/button'
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { Button } from '@/app/components/ui/button'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { ButtonVariantProps } from '@republik/theme/recipes'
 import { useState } from 'react'

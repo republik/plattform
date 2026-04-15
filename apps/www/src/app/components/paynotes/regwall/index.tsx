@@ -1,8 +1,8 @@
-import { usePaynotes } from '@app/components/paynotes/paynotes-context'
+import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
 import {
   EventTrackingContext,
   useTrackEvent,
-} from '@app/lib/analytics/event-tracking'
+} from '@/app/lib/analytics/event-tracking'
 import { useMe } from '@/lib/context/MeContext'
 import { useEffect } from 'react'
 

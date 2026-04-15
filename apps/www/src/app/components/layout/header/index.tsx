@@ -8,7 +8,7 @@ import Image from 'next/image'
 import { NavLink } from './nav-link'
 import { MeQuery } from '#graphql/republik-api/__generated__/gql/graphql'
 import { ComponentPropsWithoutRef, useRef } from 'react'
-import { useScrollDirection } from '@app/lib/hooks/useScrollDirection'
+import { useScrollDirection } from '@/app/lib/hooks/useScrollDirection'
 import { Logo } from './logo'
 
 const getInitials = (name, email) =>

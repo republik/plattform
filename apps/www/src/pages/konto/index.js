@@ -1,4 +1,4 @@
-import { AccountPaynote } from '@app/components/paynotes/paynotes-in-trial/account'
+import { AccountPaynote } from '@/app/components/paynotes/paynotes-in-trial/account'
 import { A, Interaction, mediaQueries } from '@project-r/styleguide'
 
 import { css } from 'glamor'

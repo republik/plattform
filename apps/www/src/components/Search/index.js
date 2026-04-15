@@ -12,7 +12,7 @@ import withSearchRouter from './withSearchRouter'
 import { withResults, withAggregations } from './enhancers'
 import ZeroResults from './ZeroResults'
 
-import { trackEvent } from '@app/lib/analytics/event-tracking'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
 
 import {
   DEFAULT_FILTER,

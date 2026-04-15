@@ -1,7 +1,7 @@
 'use client'
 
 import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
-import { nextReadItemTypography } from '@app/components/next-reads/styles'
+import { nextReadItemTypography } from '@/app/components/next-reads/styles'
 import { css, cx } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'

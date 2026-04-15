@@ -16,7 +16,7 @@ import { css } from 'glamor'
 
 import withT from '@/lib/withT'
 import { useFontSize } from '@/lib/fontSize'
-import { trackEvent } from '@app/lib/analytics/event-tracking'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
 import { IconAdd, IconRemove } from '@republik/icons'
 
 const FONT_SIZE_STEP = 3.2

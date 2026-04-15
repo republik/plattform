@@ -5,7 +5,7 @@ import { useMutation, useQuery } from '@apollo/client'
 
 import { css } from '@republik/theme/css'
 
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 
 import {
   QuestionnaireDocument,

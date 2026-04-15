@@ -1,4 +1,4 @@
-import { Offers } from '@app/components/paynotes/paynote/paynote-offers'
+import { Offers } from '@/app/components/paynotes/paynote/paynote-offers'
 import { Interaction } from '@project-r/styleguide'
 import AccessCampaigns from '@/components/Access/Campaigns'
 import SignIn from '@/components/Auth/SignIn'

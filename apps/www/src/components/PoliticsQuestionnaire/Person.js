@@ -1,4 +1,4 @@
-import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { screenshotUrl } from '@/app/lib/util/screenshot-api'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 

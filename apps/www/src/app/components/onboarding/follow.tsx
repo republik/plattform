@@ -1,6 +1,6 @@
 'use client'
 
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { css } from '@republik/theme/css'
 import { useTranslation } from '@/lib/withT'
 import { Frame } from '../ui/containers'

@@ -12,7 +12,7 @@ import Detail from './Detail'
 
 import { CDN_FRONTEND_BASE_URL, PUBLIC_BASE_URL } from '@/lib/constants'
 
-import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { screenshotUrl } from '@/app/lib/util/screenshot-api'
 import {
   A,
   Field,

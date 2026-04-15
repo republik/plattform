@@ -2,7 +2,7 @@ import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generate
 import {
   EventTrackingContext,
   useTrackEvent,
-} from '@app/lib/analytics/event-tracking'
+} from '@/app/lib/analytics/event-tracking'
 import { css, cx } from '@republik/theme/css'
 import React, { useEffect } from 'react'
 import { useTranslation } from '@/lib/withT'

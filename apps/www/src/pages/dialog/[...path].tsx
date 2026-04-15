@@ -1,6 +1,6 @@
 import { DiscussionNotificationOption } from '#graphql/republik-api/__generated__/gql/graphql'
-import FollowDiscussionDropdown from '@app/components/follow/follow-discussion-dropdown'
-import { DialogPaynote } from '@app/components/paynotes/paynotes-in-trial/dialog'
+import FollowDiscussionDropdown from '@/app/components/follow/follow-discussion-dropdown'
+import { DialogPaynote } from '@/app/components/paynotes/paynotes-in-trial/dialog'
 import {
   Center,
   Editorial,

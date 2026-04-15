@@ -5,8 +5,8 @@ import {
   SubscriptionObjectType,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { useQuery } from '@apollo/client'
-import { FollowButton } from '@app/components/follow/follow-button'
-import { Section, SectionH3 } from '@app/components/ui/section'
+import { FollowButton } from '@/app/components/follow/follow-button'
+import { Section, SectionH3 } from '@/app/components/ui/section'
 import { css } from '@republik/theme/css'
 import Image from 'next/image'
 import { useState } from 'react'

@@ -1,4 +1,4 @@
-import { ForceOnboarding } from '@app/components/onboarding/force-onboarding'
+import { ForceOnboarding } from '@/app/components/onboarding/force-onboarding'
 import {
   A,
   Interaction,

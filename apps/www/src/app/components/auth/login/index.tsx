@@ -7,7 +7,7 @@ import {
 
 import { ApolloError, useMutation } from '@apollo/client'
 
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 
 import { vstack } from '@republik/theme/patterns'
 

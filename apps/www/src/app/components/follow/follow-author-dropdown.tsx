@@ -8,7 +8,7 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { ApolloError, useMutation } from '@apollo/client'
 import { ErrorMessage } from '@/app/components/auth/login/error-message'
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import * as Select from '@radix-ui/react-select'
 
 import { css, cx } from '@republik/theme/css'

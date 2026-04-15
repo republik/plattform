@@ -1,7 +1,7 @@
 'use client'
 
-import { Offers } from '@app/components/paynotes/paynote/paynote-offers'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import { Offers } from '@/app/components/paynotes/paynote/paynote-offers'
+import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { useMe } from '@/lib/context/MeContext'
 import { StructuredText } from 'react-datocms/structured-text'

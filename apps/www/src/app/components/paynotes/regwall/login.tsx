@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation'
 
 import { css } from '@republik/theme/css'
 
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 
 import { useTranslation } from '@/lib/withT'
 

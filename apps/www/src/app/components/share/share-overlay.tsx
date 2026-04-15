@@ -1,5 +1,5 @@
 'use client'
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Root as VisuallyHidden } from '@radix-ui/react-visually-hidden'
 import {

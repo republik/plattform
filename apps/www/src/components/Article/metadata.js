@@ -1,6 +1,6 @@
 import { SHARE_IMAGE_HEIGHT, SHARE_IMAGE_WIDTH } from '@project-r/styleguide'
 
-import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { screenshotUrl } from '@/app/lib/util/screenshot-api'
 import { PUBLIC_BASE_URL, SCHEMA_PUBLISHER } from '@/lib/constants'
 import { parseJSONObject } from '@/lib/safeJSON'
 import { deduplicate } from '@/lib/utils/helpers'

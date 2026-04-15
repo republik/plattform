@@ -6,7 +6,7 @@ import {
 
 import { inNativeAppBrowserAppVersion } from '../withInNativeApp'
 
-import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
+import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'
 
 export const getUtmParams = (query) => {
   // support /probelesen?campaign=x

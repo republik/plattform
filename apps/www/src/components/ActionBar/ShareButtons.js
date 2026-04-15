@@ -4,8 +4,8 @@ import { css } from 'glamor'
 import { IconButton } from '@project-r/styleguide'
 
 import withT from '@/lib/withT'
-import { trackEvent } from '@app/lib/analytics/event-tracking'
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 
 import copyToClipboard from 'clipboard-copy'
 import {

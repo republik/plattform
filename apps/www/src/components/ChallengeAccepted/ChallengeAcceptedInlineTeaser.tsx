@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client'
-import { EventTrackingContext } from '@app/lib/analytics/event-tracking'
+import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import {
   Center,
   fontStyles,

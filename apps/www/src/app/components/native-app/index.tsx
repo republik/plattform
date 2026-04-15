@@ -1,6 +1,6 @@
-import { getPlatformInformation } from '@app/lib/util/useragent/platform-information'
+import { getPlatformInformation } from '@/app/lib/util/useragent/platform-information'
 import { NativeAppHandlers } from './native-app-handlers'
-import { getMe } from '@app/lib/auth/me'
+import { getMe } from '@/app/lib/auth/me'
 
 /**
  * Render the client side component that

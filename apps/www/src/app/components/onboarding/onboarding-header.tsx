@@ -1,4 +1,4 @@
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { css } from '@republik/theme/css'
 import { ChevronLeft } from 'lucide-react'
 import Link from 'next/link'

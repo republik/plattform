@@ -1,4 +1,4 @@
-import { screenshotUrl } from '@app/lib/util/screenshot-api'
+import { screenshotUrl } from '@/app/lib/util/screenshot-api'
 import { useRouter } from 'next/router'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import Meta from '../../../Frame/Meta'

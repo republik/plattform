@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@app/components/ui/button'
+import { Button } from '@/app/components/ui/button'
 import * as Dialog from '@radix-ui/react-dialog'
 import { IconClose } from '@republik/icons'
 

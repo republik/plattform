@@ -1,6 +1,6 @@
-import { CMSItemStatus } from '@app/components/cms/item-status'
-import { Share } from '@app/components/share/share'
-import { formatEventDateRange, isFutureEvent } from '@app/lib/util/time-format'
+import { CMSItemStatus } from '@/app/components/cms/item-status'
+import { Share } from '@/app/components/share/share'
+import { formatEventDateRange, isFutureEvent } from '@/app/lib/util/time-format'
 import { css } from '@republik/theme/css'
 import { hstack, vstack } from '@republik/theme/patterns'
 import { IconCalendar, IconShare } from '@republik/icons'
@@ -8,7 +8,7 @@ import { PUBLIC_BASE_URL } from '@/lib/constants'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms/structured-text'
-import { Button } from '@app/components/ui/button'
+import { Button } from '@/app/components/ui/button'
 
 type EventProps = {
   event: {

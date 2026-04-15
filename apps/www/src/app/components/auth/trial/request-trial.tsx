@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 
 import { ApolloError, useApolloClient } from '@apollo/client'
 
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 
 import { RequestAccessDocument } from '#graphql/republik-api/__generated__/gql/graphql'
 

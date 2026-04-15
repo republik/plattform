@@ -1,6 +1,6 @@
-import { useTrackEvent } from '@app/lib/analytics/event-tracking'
-import { getUTMSessionStorage } from '@app/lib/analytics/utm-session-storage'
-import { usePlatformInformation } from '@app/lib/hooks/usePlatformInformation'
+import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
+import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'
+import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
 import { css } from '@republik/theme/css'
 
 import { useTranslation } from '@/lib/withT'

@@ -2,7 +2,7 @@ import { mediaQueries } from '@project-r/styleguide'
 import BottomPanel from '../Frame/BottomPanel'
 import { useAudioContext } from '../Audio/AudioProvider'
 import { MINI_AUDIO_PLAYER_HEIGHT } from '../Audio/AudioPlayer/MiniAudioPlayer'
-import { useScrollDirection } from '@app/lib/hooks/useScrollDirection'
+import { useScrollDirection } from '@/app/lib/hooks/useScrollDirection'
 import { useMediaQuery } from '@project-r/styleguide'
 import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
 

@@ -1,7 +1,7 @@
 'use client'
 
-import FollowAuthorCard from '@app/components/follow/follow-author-card'
-import { Button } from '@app/components/ui/button'
+import FollowAuthorCard from '@/app/components/follow/follow-author-card'
+import { Button } from '@/app/components/ui/button'
 import * as RadixCollapsible from '@radix-ui/react-collapsible'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'

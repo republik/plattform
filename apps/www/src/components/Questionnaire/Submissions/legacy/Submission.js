@@ -22,7 +22,7 @@ import { swissTime } from '@/lib/utils/format'
 import { HEADER_HEIGHT } from '../../../constants'
 import { useInNativeApp, postMessage } from '@/lib/withInNativeApp'
 import ShareOverlay from '../../../ActionBar/ShareOverlay'
-import { trackEvent } from '@app/lib/analytics/event-tracking'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
 import { getSubmissionUrl } from './Share'
 import { useTranslation } from '@/lib/withT'
 import {

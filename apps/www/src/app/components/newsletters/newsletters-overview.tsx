@@ -5,7 +5,7 @@ import {
   NL_COURSES,
   NL_FEATURED,
   NL_MORE,
-} from '@app/components/newsletters/config'
+} from '@/app/components/newsletters/config'
 import { css } from '@republik/theme/css'
 import { NewsletterCourseCard } from './newsletters-card'
 import NewslettersSection from './newsletters-section'

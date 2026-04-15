@@ -1,7 +1,7 @@
 import Frame from '@/components/Frame'
 import Page from '@/components/Impressum/Page'
 import { createGetStaticProps } from '@/lib/apollo/helpers'
-import { getCMSClientBase } from '@app/lib/apollo/cms-client-base'
+import { getCMSClientBase } from '@/app/lib/apollo/cms-client-base'
 import {
   EmployeesDocument,
   EmployeeRecord,

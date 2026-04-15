@@ -3,7 +3,7 @@ import {
   EventDocument,
   EventRecordFieldsFragmentDoc,
 } from '#graphql/cms/__generated__/gql/graphql'
-import { getCMSClient } from '@app/lib/apollo/cms-client'
+import { getCMSClient } from '@/app/lib/apollo/cms-client'
 import dayjs from 'dayjs'
 import ical, { ICalCalendarMethod } from 'ical-generator'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
