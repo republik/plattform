@@ -15,7 +15,7 @@ const buildId =
   process.env.SOURCE_VERSION?.substring(0, 10) ||
   // ... and on Vercel
   process.env.VERCEL_GIT_COMMIT_SHA?.substring(0, 10) ||
-  new Date(Date.now()).toISOString()
+  `${Date.now()}`
 
 function appendProtocol(href) {
   if (href && !href.startsWith('http')) {
@@ -208,8 +208,8 @@ const nextConfig = {
       // - this redirection must take precedence (which normal redirections don't if a page/article exists already)
       {
         source: '/klimakurs',
-        destination: 'https://mailchi.mp/republik.ch/klimakurs',
-        permanent: false,
+        destination: '/kurse/klimakurs',
+        permanent: true,
       },
       /**
        * Migrated from custom express server

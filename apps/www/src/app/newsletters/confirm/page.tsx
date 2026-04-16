@@ -1,5 +1,5 @@
-import Container from '@app/components/container'
-import { PageLayout } from '@app/components/layout'
+import Container from '@/app/components/container'
+import { PageLayout } from '@/app/components/layout'
 import { css } from '@republik/theme/css'
 import { type Metadata } from 'next'
 import { NewsletterConfirm } from './newsletter-confirm'
@@ -12,13 +12,13 @@ type PageProps = {
   searchParams: Promise<{
     name?: string
     email?: string
-    subscribed?: string
     mac?: string
+    ref?: string
   }>
 }
 
 export default async function Page({ searchParams }: PageProps) {
-  const { name, email, subscribed, mac } = await searchParams
+  const { name, email, mac, ref } = await searchParams
 
   return (
     <PageLayout>
@@ -32,8 +32,8 @@ export default async function Page({ searchParams }: PageProps) {
             <NewsletterConfirm
               name={name}
               email={email}
-              subscribed={subscribed ?? '1'}
               mac={mac}
+              signupRef={ref}
             />
           )}
         </Container>

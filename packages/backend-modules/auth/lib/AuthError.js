@@ -17,6 +17,7 @@ class AuthError extends TranslatedError {
         super(contextCode, meta, replacements)
         Error.captureStackTrace(this, this.constructor)
       }
+
       translatedMessage(message, replacements) {
         return t(i18nKey, replacements, message)
       }

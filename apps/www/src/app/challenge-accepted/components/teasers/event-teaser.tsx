@@ -1,14 +1,14 @@
-import { CMSItemStatus } from '@app/components/cms/item-status'
-import { Share } from '@app/components/share/share'
+import { CMSItemStatus } from '@/app/components/cms/item-status'
+import { Share } from '@/app/components/share/share'
 import {
   formatDateShort,
   formatEventDateRange,
   isFutureEvent,
-} from '@app/lib/util/time-format'
+} from '@/app/lib/util/time-format'
 import { css } from '@republik/theme/css'
 import { hstack } from '@republik/theme/patterns'
 import { IconCalendar, IconShare } from '@republik/icons'
-import { PUBLIC_BASE_URL } from 'lib/constants'
+import { PUBLIC_BASE_URL } from '@/lib/constants'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef } from 'react'
 import { StructuredText } from 'react-datocms/structured-text'

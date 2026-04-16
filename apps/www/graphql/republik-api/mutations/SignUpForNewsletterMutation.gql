@@ -2,6 +2,7 @@ mutation SignUpForNewsletter(
   $email: String!
   $name: String!
   $context: String!
+  $meta: JSON
 ) {
-  requestNewsletterSubscription(email: $email, name: $name, context: $context)
+  requestNewsletterSubscription(email: $email, name: $name, context: $context, meta: $meta)
 }

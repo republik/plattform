@@ -15,9 +15,7 @@ function StoryComponent({
   componentData,
   size,
 }: StoryComponentProps) {
-  // const url = 'http://localhost:5173/dist/index.js' // for local testing
-
-  const CustomCompponent = tagname as any
+  // const url = 'http://localhost:5173/dist/index.js?v=8' // for local testing
 
   if (!url) return <p>Component URL missing</p>
   if (!tagname) return <p>Tag name missing</p>
@@ -33,13 +31,17 @@ function StoryComponent({
     </div>
   )
 
+  const CustomComponent = tagname as any
+
   return (
-    <Figure size={size}>
-      <CustomCompponent componentdata={JSON.stringify(componentData)}>
-        {Loader}
-      </CustomCompponent>
-      <Script type='module' src={url} strategy='lazyOnload' />
-    </Figure>
+    <>
+      <Figure size={size}>
+        <CustomComponent componentdata={JSON.stringify(componentData)}>
+          {Loader}
+        </CustomComponent>
+        <Script type='module' src={url} strategy='lazyOnload' />
+      </Figure>
+    </>
   )
 }
 

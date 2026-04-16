@@ -1,0 +1,25 @@
+query NewsletterCourses {
+  allNewsletterCourses {
+    title
+    promise
+    slug
+    heroBackgroundColor {
+      hex
+    }
+    heroTextColor {
+      hex
+    }
+    accentColor {
+      hex
+    }
+    accentTextColor {
+      hex
+    }
+    images {
+      url(imgixParams: { w: 900, fit: crop })
+      width
+      height
+      alt
+    }
+  }
+}
