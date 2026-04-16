@@ -1,11 +1,12 @@
-import { PDF } from 'swissqrbill'
+import PDFDocument from 'pdfkit'
+import { SwissQRBill } from 'swissqrbill/pdf'
 
 import {
-  PaymentMethod,
-  PaymentStatus,
+  GenerateFn,
   getSwissQrBillData,
   IsApplicableFn,
-  GenerateFn,
+  PaymentMethod,
+  PaymentStatus,
 } from './commons'
 
 export const isApplicable: IsApplicableFn = function (payment) {
@@ -29,7 +30,11 @@ export const generate: GenerateFn = function (payment) {
 
   return new Promise((resolve, reject) => {
     try {
-      const doc = new PDF(data, '/dev/null')
+      const doc = new PDFDocument({ size: 'A4' })
+
+      const qrBill = new SwissQRBill(data)
+      qrBill.attachTo(doc)
+      doc.end()
 
       const buffers: Buffer[] = []
       doc.on('data', buffers.push.bind(buffers))
