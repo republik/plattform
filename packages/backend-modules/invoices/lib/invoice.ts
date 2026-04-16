@@ -103,9 +103,15 @@ function getDebtorAddress(address: Address | undefined): string {
     return ''
   }
 
-  const { name, line1, line2, postalCode, city } = address
+  const { organization, name, line1, line2, postalCode, city } = address
 
-  const string = [name, line1, line2, `${postalCode} ${city}`.trim()]
+  const string = [
+    organization,
+    name,
+    line1,
+    line2,
+    `${postalCode} ${city}`.trim(),
+  ]
     .filter(Boolean)
     .join('\n')
 
