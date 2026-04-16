@@ -112,16 +112,23 @@ export function UserDetails() {
     <Card>
       <CardTitle>E-Mail-Adresse</CardTitle>
       <Link href={`mailto:${email}`}>{email}</Link>
+
       <CardTitle>Adresse</CardTitle>
-      <div>
-        <div>{address.organization}</div>
-        <div>{address.name}</div>
-        <div>{address.line1}</div>
-        <div>{address.line2}</div>
-        <div>{address.postalCode}</div>
-        <div>{address.city}</div>
-        <div>{address.country}</div>
-      </div>
+      {address ? (
+        <div>
+          <div>{address.organization}</div>
+          <div>{address.name}</div>
+          <div>{address.line1}</div>
+          <div>{address.line2}</div>
+          <div>{address.postalCode}</div>
+          <div>{address.city}</div>
+          <div>{address.country}</div>
+        </div>
+      ) : (
+        '–'
+      )}
+
+      <Link href={`/users/${user.id}/details`}>Bearbeiten</Link>
     </Card>
   )
 }
