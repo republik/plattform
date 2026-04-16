@@ -2,7 +2,7 @@
 import { Form } from '@/components/ui'
 import { InlineField } from '@/components/ui/forms/field'
 import { Switch } from '@/components/ui/forms/switch'
-import { useToastManager } from '@/components/ui/toast'
+import { toast } from 'sonner'
 import {
   AddUserToRoleDocument,
   RemoveUserFromRoleDocument,
@@ -38,8 +38,6 @@ function EditRoleSwitch({ userId, role, checked }) {
     },
   )
 
-  const toastManager = useToastManager()
-
   const loading = addLoading || removeLoading
 
   return (
@@ -51,17 +49,10 @@ function EditRoleSwitch({ userId, role, checked }) {
 
           action()
             .then(() => {
-              toastManager.add({
-                description: `Rolle '${role}' ${
-                  checked ? 'hinzugefügt' : 'entfernt'
-                }.`,
-              })
+              toast(`Rolle '${role}' ${checked ? 'hinzugefügt' : 'entfernt'}.`)
             })
             .catch((err) => {
-              toastManager.add({
-                title: 'Ups!',
-                description: err.message,
-              })
+              toast.error('Ups!', { description: err.message })
             })
         }}
       />

@@ -1,13 +1,13 @@
-import { Switch as BaseSwitch } from '@base-ui/react'
+import { Switch as RadixSwitch } from 'radix-ui'
 
 import { switchRecipe } from '@republik/theme/recipes'
 
 const styles = switchRecipe()
 
-export function Switch(props: BaseSwitch.Root.Props) {
+export function Switch(props: RadixSwitch.SwitchProps) {
   return (
-    <BaseSwitch.Root className={styles.root} {...props}>
-      <BaseSwitch.Thumb className={styles.thumb} />
-    </BaseSwitch.Root>
+    <RadixSwitch.Root className={styles.root} {...props}>
+      <RadixSwitch.Thumb className={styles.thumb} />
+    </RadixSwitch.Root>
   )
 }

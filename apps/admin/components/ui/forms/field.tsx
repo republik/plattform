@@ -1,5 +1,5 @@
-import { Field as BaseField } from '@base-ui/react/field'
 import { css } from '@republik/theme/css'
+import { Form as RadixForm } from 'radix-ui'
 
 const styles = {
   Field: css({ display: 'flex', flexDirection: 'column', gap: '2' }),
@@ -31,21 +31,17 @@ export function TextField({
 }: {
   label: string
   description?: string
-} & BaseField.Root.Props) {
+} & RadixForm.FormFieldProps) {
   return (
-    <BaseField.Root className={styles.Field} {...rootProps}>
-      <BaseField.Label className={styles.Label}>{label}</BaseField.Label>
+    <RadixForm.Field className={styles.Field} {...rootProps}>
+      <RadixForm.Label className={styles.Label}>{label}</RadixForm.Label>
 
       {children}
 
-      <BaseField.Error className={styles.Error} />
+      {/*<RadixForm.Message className={styles.Error} />*/}
 
-      {description && (
-        <BaseField.Description className={styles.Description}>
-          {description}
-        </BaseField.Description>
-      )}
-    </BaseField.Root>
+      {description && <p className={styles.Description}>{description}</p>}
+    </RadixForm.Field>
   )
 }
 
@@ -57,21 +53,15 @@ export function InlineField({
 }: {
   label: string
   description?: string
-} & BaseField.Root.Props) {
+} & RadixForm.FormFieldProps) {
   return (
-    <BaseField.Root className={styles.Field} {...rootProps}>
-      <BaseField.Label className={styles.Label}>
+    <RadixForm.Field className={styles.Field} {...rootProps}>
+      <RadixForm.Label className={styles.Label}>
         {children}
         {label}
-      </BaseField.Label>
+      </RadixForm.Label>
 
-      <BaseField.Error className={styles.Error} />
-
-      {description && (
-        <BaseField.Description className={styles.Description}>
-          {description}
-        </BaseField.Description>
-      )}
-    </BaseField.Root>
+      {description && <p className={styles.Description}>{description}</p>}
+    </RadixForm.Field>
   )
 }

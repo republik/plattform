@@ -3,6 +3,7 @@ import { Card, CardTitle } from '@/components/card'
 import { useUserProfileData } from '../use-user-profile-data'
 import { EditUserDetails } from '../user-details'
 import { EditUserEmail } from '../user-email'
+import { EditUserAddress } from '../user-address'
 
 export default function SubscriptionsPage() {
   const user = useUserProfileData()
@@ -18,6 +19,10 @@ export default function SubscriptionsPage() {
       <Card>
         <CardTitle>Personalien</CardTitle>
         <EditUserDetails userId={user.id} values={user} />
+      </Card>
+      <Card>
+        <CardTitle>Adresse</CardTitle>
+        <EditUserAddress userId={user.id} values={user} />
       </Card>
     </>
   )

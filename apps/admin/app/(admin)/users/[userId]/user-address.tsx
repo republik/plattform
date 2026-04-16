@@ -1,35 +1,33 @@
 'use client'
 import { Card, CardTitle } from '@/components/card'
 import { Button, Form, Input } from '@/components/ui'
-import { InlineField, TextField } from '@/components/ui/forms/field'
-import { toast } from 'sonner'
+import { TextField } from '@/components/ui/forms/field'
 import {
-  UpdateUserDetailsDocument,
+  UpdateUserAddressDocument,
   UpdateUserDetailsMutationVariables,
 } from '@/graphql/republik-api/__generated__/gql/graphql'
+import { z } from '@/lib/zod'
 import { useMutation } from '@apollo/client'
 import Link from 'next/link'
-import { z } from '@/lib/zod'
+import { toast } from 'sonner'
 import { useUserProfileData } from './use-user-profile-data'
-import { Radio, RadioGroup } from '@/components/ui/forms/radio'
 
 const OptionalString = z.preprocess(
   (val) => (val === '' ? null : val),
   z.string().nullable(),
 )
-const OptionalNumber = z.preprocess(
-  (val) => (val === '' ? null : val),
-  z.coerce.number().nullable(),
-)
+
 const UserFormInput = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  phoneNumber: OptionalString,
-  gender: OptionalString,
-  birthyear: OptionalNumber,
+  organization: OptionalString,
+  name: z.string(),
+  line1: z.string(),
+  line2: OptionalString,
+  postalCode: z.string(),
+  city: z.string(),
+  country: z.string(),
 })
 
-export function EditUserDetails({
+export function EditUserAddress({
   userId,
   values,
 }: {
@@ -38,13 +36,15 @@ export function EditUserDetails({
   onComplete?: () => void
 }) {
   const [updateUserDetails, { loading, error }] = useMutation(
-    UpdateUserDetailsDocument,
+    UpdateUserAddressDocument,
     {
       onError: (err) => {
         toast.error('Ups!', { description: err.message })
       },
     },
   )
+
+  const { address } = values
 
   return (
     <Form
@@ -56,35 +56,32 @@ export function EditUserDetails({
         })
 
         if (fields.success) {
-          updateUserDetails({ variables: { id: userId, ...fields.data } })
+          updateUserDetails({ variables: { id: userId, address: fields.data } })
         } else {
           toast.error('Ups!', { description: z.prettifyError(fields.error) })
         }
       }}
     >
-      <TextField name='firstName' label='Vorname'>
-        <Input required type='text' defaultValue={values.firstName} />
+      <TextField name='organization' label='Organisation'>
+        <Input type='text' defaultValue={address?.organization ?? ''} />
       </TextField>
-      <TextField name='lastName' label='Nachname'>
-        <Input required type='text' defaultValue={values.lastName} />
+      <TextField name='name' label='Name'>
+        <Input type='text' required defaultValue={address?.name ?? ''} />
       </TextField>
-      <TextField name='phoneNumber' label='Telefon'>
-        <Input type='text' defaultValue={values.phoneNumber} />
+      <TextField name='line1' label='Straße'>
+        <Input type='text' required defaultValue={address?.line1 ?? ''} />
       </TextField>
-      <TextField name='birthyear' label='Geburtsjahr'>
-        <Input type='number' defaultValue={values.birthyear} />
+      <TextField name='line2' label='Zusatz'>
+        <Input type='text' defaultValue={address?.line2 ?? ''} />
       </TextField>
-
-      {/*<RadioGroup name='selectedGender' defaultValue={values.gender}>
-        <InlineField label='Männlich' name='selectedGender'>
-          <Radio value='männlich' />
-        </InlineField>
-        <InlineField label='Weiblich' name='selectedGender'>
-          <Radio value='weiblich' />
-        </InlineField>
-      </RadioGroup>*/}
-      <TextField name='customGender' label='Geschlecht'>
-        <Input type='text' defaultValue={values.gender} />
+      <TextField name='postalCode' label='Postleitzahl'>
+        <Input type='text' required defaultValue={address?.postalCode ?? ''} />
+      </TextField>
+      <TextField name='city' label='Stadt'>
+        <Input type='text' required defaultValue={address?.city ?? ''} />
+      </TextField>
+      <TextField name='country' label='Land'>
+        <Input type='text' required defaultValue={address?.country ?? ''} />
       </TextField>
       <div>
         <Button type='submit' disabled={loading}>

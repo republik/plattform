@@ -21,7 +21,6 @@ mutation UpdateUserDetails(
     lastName: $lastName
     phoneNumber: $phoneNumber
     gender: $gender
-    address: $address
   ) {
     id
     name
@@ -30,6 +29,12 @@ mutation UpdateUserDetails(
     phoneNumber
     birthyear
     gender
+  }
+}
+
+mutation UpdateUserAddress($id: ID!, $address: AddressInput) {
+  updateUser(userId: $id, address: $address) {
+    id
     address {
       id
       name

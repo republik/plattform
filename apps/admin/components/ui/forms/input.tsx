@@ -1,8 +1,9 @@
-import { Input as BaseInput } from '@base-ui/react'
+import { Form as RadixForm } from 'radix-ui'
 import { css } from '@republik/theme/css'
-export function Input(props: BaseInput.Props) {
+
+export function Input(props: React.ComponentPropsWithoutRef<'input'>) {
   return (
-    <BaseInput
+    <RadixForm.Control
       className={css({
         background: 'white',
         borderWidth: '1px',
@@ -22,10 +23,10 @@ export function Input(props: BaseInput.Props) {
           color: 'text.tertiary',
           fontWeight: 'regular',
         },
-        _invalid: {
-          borderColor: 'error',
-          color: 'error',
-        },
+        // _invalid: {
+        //   borderColor: 'error',
+        //   color: 'error',
+        // },
       })}
       {...props}
     />

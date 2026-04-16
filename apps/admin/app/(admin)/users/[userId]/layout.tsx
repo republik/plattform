@@ -49,15 +49,24 @@ export default async function UserLayout({ children, params }) {
 
           position: 'relative',
           overflowY: 'auto',
-          p: '4',
-
-          display: 'grid',
-          gridTemplateColumns: '[repeat(auto-fill, minmax(400px, 1fr))]',
-          gridAutoRows: 'max',
-          gap: '8',
         })}
       >
-        {children}
+        <div
+          className={css({
+            width: 'full',
+            maxWidth: 'narrow',
+            mx: 'auto',
+            p: '4',
+            display: 'flex',
+            flexDirection: 'column',
+            // display: 'grid',
+            // gridTemplateColumns: '[repeat(auto-fill, minmax(400px, 1fr))]',
+            // gridAutoRows: 'max',
+            gap: '8',
+          })}
+        >
+          {children}
+        </div>
       </div>
     </div>
   )

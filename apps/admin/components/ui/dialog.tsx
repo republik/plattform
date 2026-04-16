@@ -1,26 +1,26 @@
 'use client'
 
-import { Dialog as BaseDialog } from '@base-ui/react/dialog'
+import { Dialog as RadixDialog } from 'radix-ui'
 import { dialog } from '@republik/theme/recipes'
 import { XIcon } from 'lucide-react'
 import type { PropsWithChildren, ReactNode } from 'react'
 
 const styles = dialog()
 
-function Backdrop(props: BaseDialog.Backdrop.Props) {
-  return <BaseDialog.Backdrop className={styles.backdrop} {...props} />
+function Backdrop(props: RadixDialog.DialogOverlayProps) {
+  return <RadixDialog.Overlay className={styles.backdrop} {...props} />
 }
 
-function Title(props: BaseDialog.Title.Props) {
-  return <BaseDialog.Title className={styles.title} {...props} />
+function Title(props: RadixDialog.DialogTitleProps) {
+  return <RadixDialog.Title className={styles.title} {...props} />
 }
 
-function Description(props: BaseDialog.Description.Props) {
-  return <BaseDialog.Description className={styles.description} {...props} />
+function Description(props: RadixDialog.DialogDescriptionProps) {
+  return <RadixDialog.Description className={styles.description} {...props} />
 }
 
-function Popup(props: BaseDialog.Popup.Props) {
-  return <BaseDialog.Popup className={styles.popup} {...props} />
+function Popup(props: RadixDialog.DialogContentProps) {
+  return <RadixDialog.Content className={styles.popup} {...props} />
 }
 
 export function SimpleDialog({
@@ -32,32 +32,32 @@ export function SimpleDialog({
   {
     title: ReactNode
     trigger?: ReactNode
-  } & BaseDialog.Root.Props
+  } & RadixDialog.DialogProps
 >) {
   return (
-    <BaseDialog.Root {...rootProps}>
+    <RadixDialog.Root {...rootProps}>
       {trigger}
-      <BaseDialog.Portal>
+      <RadixDialog.Portal>
         <Backdrop />
-        <BaseDialog.Viewport className={styles.viewport}>
+        <div className={styles.viewport}>
           <Popup>
             <Title>{title}</Title>
             {children}
-            <BaseDialog.Close className={styles.close}>
+            <RadixDialog.Close className={styles.close}>
               <XIcon />
-            </BaseDialog.Close>
+            </RadixDialog.Close>
           </Popup>
-        </BaseDialog.Viewport>
-      </BaseDialog.Portal>
-    </BaseDialog.Root>
+        </div>
+      </RadixDialog.Portal>
+    </RadixDialog.Root>
   )
 }
 
 export const Dialog = {
-  Root: BaseDialog.Root,
-  Trigger: BaseDialog.Trigger,
-  Portal: BaseDialog.Portal,
-  Close: BaseDialog.Close,
+  Root: RadixDialog.Root,
+  Trigger: RadixDialog.Trigger,
+  Portal: RadixDialog.Portal,
+  Close: RadixDialog.Close,
   Backdrop,
   Popup,
   Title,

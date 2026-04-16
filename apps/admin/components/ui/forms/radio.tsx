@@ -1,7 +1,4 @@
-import {
-  Radio as BaseRadio,
-  RadioGroup as BaseRadioGroup,
-} from '@base-ui/react'
+import { Form as RadixForm, RadioGroup as RadixRadioGroup } from 'radix-ui'
 
 import { css } from '@republik/theme/css'
 
@@ -37,13 +34,13 @@ const styles = {
   }),
 }
 
-export function RadioGroup(props: BaseRadioGroup.Props) {
-  return <BaseRadioGroup className={styles.Group} {...props} />
+export function RadioGroup(props: RadixRadioGroup.RadioGroupProps) {
+  return <RadixRadioGroup.Root className={styles.Group} {...props} />
 }
-export function Radio(props: BaseRadio.Root.Props) {
+export function Radio(props: RadixRadioGroup.RadioGroupItemProps) {
   return (
-    <BaseRadio.Root className={styles.Radio} {...props}>
-      <BaseRadio.Indicator className={styles.Indicator} />
-    </BaseRadio.Root>
+    <RadixRadioGroup.Item className={styles.Radio} {...props}>
+      <RadixRadioGroup.Indicator className={styles.Indicator} />
+    </RadixRadioGroup.Item>
   )
 }

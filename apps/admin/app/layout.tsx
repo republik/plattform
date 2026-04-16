@@ -1,11 +1,11 @@
 import '@republik/theme/fonts.css'
 import '@republik/theme/styles.css'
 
-import { ToastContainer } from '@/components/ui/toast'
 import { RootColorVariables } from '@project-r/styleguide'
 import { GraphqlProvider } from 'lib/apollo/client-browser'
 import { Metadata, Viewport } from 'next'
 import { PropsWithChildren } from 'react'
+import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
   title: 'Admin',
@@ -22,7 +22,8 @@ export default async function RootLayout({ children }: PropsWithChildren) {
       <body>
         <GraphqlProvider>
           <RootColorVariables />
-          <ToastContainer>{children}</ToastContainer>
+          <Toaster />
+          {children}
         </GraphqlProvider>
       </body>
     </html>

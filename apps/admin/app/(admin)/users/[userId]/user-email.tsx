@@ -1,8 +1,14 @@
 'use client'
-import { Button, Field, Form, Input } from '@/components/ui'
+import { Button, Form, Input } from '@/components/ui'
 import { TextField } from '@/components/ui/forms/field'
 import { UpdateUserEmailDocument } from '@/graphql/republik-api/__generated__/gql/graphql'
 import { useMutation } from '@apollo/client'
+import { toast } from 'sonner'
+import { z } from '@/lib/zod'
+
+const UserFormInput = z.object({
+  email: z.email(),
+})
 
 export function EditUserEmail({
   userId,
@@ -15,19 +21,26 @@ export function EditUserEmail({
 }) {
   const [updateEmail, { loading, error }] = useMutation(
     UpdateUserEmailDocument,
-    {},
+    {
+      onError: (err) => {
+        toast.error('Ups!', { description: err.message })
+      },
+    },
   )
-
-  const formErrors = error ? { email: error?.message } : {}
 
   return (
     <Form
-      errors={formErrors}
-      onFormSubmit={async ({ email }) => {
-        try {
-          await updateEmail({ variables: { id: userId, email } })
+      action={async (formData) => {
+        const values = Object.fromEntries(formData.entries())
+        const fields = UserFormInput.safeParse(values)
+        if (fields.success) {
+          await updateEmail({
+            variables: { id: userId, email: fields.data.email },
+          })
           onComplete?.()
-        } catch {}
+        } else {
+          toast.error('Ups!', { description: z.prettifyError(fields.error) })
+        }
       }}
     >
       <TextField name='email' label='E-Mail'>
@@ -36,7 +49,7 @@ export function EditUserEmail({
 
       <div>
         <Button type='submit' disabled={loading}>
-          Ändern
+          Speichern
         </Button>
       </div>
     </Form>

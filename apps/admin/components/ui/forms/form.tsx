@@ -1,9 +1,9 @@
-import { Form as BaseForm } from '@base-ui/react'
+import { Form as RadixForm } from 'radix-ui'
 import { css } from '@republik/theme/css'
 
-export function Form(props: BaseForm.Props) {
+export function Form(props: RadixForm.FormProps) {
   return (
-    <BaseForm
+    <RadixForm.Root
       className={css({
         display: 'flex',
         flexDirection: 'column',
