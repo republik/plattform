@@ -8,7 +8,7 @@ export const buttonRecipe = defineRecipe({
     display: 'inline-flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: '5px',
+    borderRadius: 'sm',
     fontSize: 'md',
     lineHeight: '1',
     fontWeight: 'medium',
@@ -72,7 +72,7 @@ export const buttonRecipe = defineRecipe({
   compoundVariants: [
     {
       variant: 'link',
-      size: 'default',
+      size: ['default', 'small', 'large'],
       css: {
         p: '0',
       },

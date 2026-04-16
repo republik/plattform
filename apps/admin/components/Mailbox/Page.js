@@ -1,18 +1,18 @@
-import { useState, useEffect, useCallback } from 'react'
-import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import InfiniteScroller from 'react-infinite-scroller'
+import { Query } from '@apollo/client/react/components'
 import debounce from 'lodash.debounce'
+import { useCallback, useEffect, useState } from 'react'
+import InfiniteScroller from 'react-infinite-scroller'
 
-import { Loader, A, Field } from '@project-r/styleguide'
+import { A, Field, Loader } from '@project-r/styleguide'
 
-import withT from '../../lib/withT'
+import withT from '@/lib/withT'
 
-import { SectionNav } from '../Display/utils'
+import { SectionNav } from '@/components/Display/utils'
 
-import { fragments } from './utils'
 import List from './List'
 import { Body as MailBody } from './Mail'
+import { fragments } from './utils'
 
 const GET_MAILBOX = gql`
   query getMailbox(

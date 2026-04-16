@@ -1,13 +1,13 @@
-import { errorToString } from '../lib/utils/errors'
+import { errorToString } from '@/lib/utils/errors'
 
-import { Interaction, colors } from '@project-r/styleguide'
+import { Interaction } from '@project-r/styleguide'
 
 const { P } = Interaction
 
 const ErrorMessage = ({ error }) => (
   <P
     style={{
-      color: colors.error,
+      color: 'error',
       margin: '20px 0',
     }}
   >

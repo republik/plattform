@@ -77,35 +77,25 @@ const Overlay: React.FC<OverlayProps> = ({
   mini,
 }) => {
   const rootDom = useRef<HTMLDivElement>(null)
-  const isDomAvailable = typeof document !== 'undefined'
-  if (isDomAvailable && !rootDom.current) {
-    rootDom.current = document.createElement('div')
-    document.body.appendChild(rootDom.current)
-  }
 
-  const [ssrMode, setSsrMode] = useState(
-    () =>
-      !isDomAvailable ||
-      (isDomAvailable &&
-        document.querySelectorAll(`[${ssrAttribute}]`).length > 0),
-  )
-  const [isVisible, setIsVisible] = useState(ssrMode)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    const isDomAvailable = typeof document !== 'undefined'
+    if (isDomAvailable && !rootDom.current) {
+      rootDom.current = document.createElement('div')
+      document.body.appendChild(rootDom.current)
+    }
+
     const fadeInTimeout = setTimeout(() => {
       setIsVisible(true)
     }, 33)
     return () => {
       clearTimeout(fadeInTimeout)
       document.body.removeChild(rootDom.current)
+      rootDom.current = null
     }
   }, [])
-
-  useEffect(() => {
-    if (ssrMode) {
-      setSsrMode(false)
-    }
-  }, [ssrMode])
 
   useEffect(() => {
     const handleEscClick = (e: KeyboardEvent) => {
@@ -121,24 +111,20 @@ const Overlay: React.FC<OverlayProps> = ({
     }
   }, [onClose])
 
-  const [scrollRef] = useBodyScrollLock<HTMLDivElement>(!ssrMode)
+  const [scrollRef] = useBodyScrollLock<HTMLDivElement>(true)
   const element = (
     <OverlayRenderer
       onClose={onClose}
       mUpStyle={mUpStyle}
       scrollRef={scrollRef}
       isVisible={isVisible}
-      ssrMode={ssrMode}
       mini={mini}
     >
       {children}
     </OverlayRenderer>
   )
 
-  if (!ssrMode) {
-    return ReactDOM.createPortal(element, rootDom.current)
-  }
-  return element
+  return ReactDOM.createPortal(element, rootDom.current)
 }
 
 export default Overlay
@@ -158,7 +144,7 @@ export const OverlayRenderer: React.FC<
     ssrMode?: boolean
     scrollRef?: Ref<HTMLDivElement>
   }
-> = ({ isVisible, mUpStyle, children, onClose, mini, ssrMode, scrollRef }) => {
+> = ({ isVisible, mUpStyle, children, onClose, mini, scrollRef }) => {
   const close = (e) => {
     e.preventDefault()
     onClose(e)
@@ -168,7 +154,6 @@ export const OverlayRenderer: React.FC<
   return (
     <div
       {...styles.root}
-      {...(ssrMode && { [ssrAttribute]: true })}
       style={{ opacity: isVisible ? 1 : 0 }}
       ref={scrollRef}
     >

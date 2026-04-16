@@ -1,11 +1,11 @@
+import { displayDate } from '@/components/Display/utils'
+import { tableStyles as styles } from '@/components/Tables/utils'
 import { Label } from '@project-r/styleguide'
 import Link from 'next/link'
-import { displayDate } from '../../Display/utils'
-import { tableStyles as styles } from '../../Tables/utils'
 
 const Table = ({ items, ...props }) => {
   return (
-    <table {...props} {...styles.table}>
+    <table {...props} className={styles.table}>
       <colgroup>
         <col />
         <col style={{ width: '20%' }} />
@@ -14,14 +14,14 @@ const Table = ({ items, ...props }) => {
         <col style={{ maxWidth: '100px' }} />
       </colgroup>
       <thead>
-        <tr {...styles.headRow}>
-          <th {...styles.left}>
+        <tr className={styles.headRow}>
+          <th className={styles.left}>
             <Label>Email</Label>
           </th>
-          <th {...styles.left}>
+          <th className={styles.left}>
             <Label>First name</Label>
           </th>
-          <th {...styles.left}>
+          <th className={styles.left}>
             <Label>Last name</Label>
           </th>
           <th>
@@ -34,19 +34,19 @@ const Table = ({ items, ...props }) => {
       </thead>
       <tbody>
         {items.map((user) => (
-          <tr key={`user-${user.id}`} {...styles.row}>
+          <tr key={`user-${user.id}`} className={styles.row}>
             <td>
-              <Link href={`/users/${user.id}`} {...styles.link}>
+              <Link href={`/users/${user.id}`} className={styles.link}>
                 {user.email}
               </Link>
             </td>
             <td>{user.firstName}</td>
             <td>{user.lastName}</td>
-            <td {...styles.center}>
+            <td className={styles.center}>
               {user.activeMembership?.type?.name ??
                 user.activeMagazineSubscription?.type}
             </td>
-            <td {...styles.center}>{displayDate(user.createdAt)}</td>
+            <td className={styles.center}>{displayDate(user.createdAt)}</td>
           </tr>
         ))}
       </tbody>

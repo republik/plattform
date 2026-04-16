@@ -1,13 +1,11 @@
-import { Component } from 'react'
-import { Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
+import { Mutation } from '@apollo/client/react/components'
+import { Component } from 'react'
 
-import { TextButton, displayDate } from '../../Display/utils'
+import { TextButton, displayDate } from '@/components/Display/utils'
 
+import { SimpleDialog } from '@/components/ui'
 import {
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
   Button,
   Dropdown,
   Field,
@@ -80,18 +78,25 @@ class AppendPeriod extends Component {
             this.state.duration > 1 &&
             (() => this.setState({ duration: this.state.duration - 1 || 0 }))
 
-          return <>
-            <TextButton
-              onClick={() => {
-                !loading && this.setState({ showForm: true })
-              }}
-            >
-              Laufzeit hinzufügen {loading && <InlineSpinner size={18} />}
-            </TextButton>
-            {this.state.showForm && (
-              <Overlay onClose={onClose}>
-                <OverlayToolbar onClose={onClose} />
-                <OverlayBody>
+          return (
+            <>
+              <TextButton
+                onClick={() => {
+                  if (!loading) {
+                    this.setState({ showForm: true })
+                  }
+                }}
+              >
+                Laufzeit hinzufügen {loading && <InlineSpinner size={18} />}
+              </TextButton>
+              {this.state.showForm && (
+                <SimpleDialog
+                  onOpenChange={(open) => {
+                    if (!open) {
+                      onClose()
+                    }
+                  }}
+                >
                   <Interaction.P>
                     #{membership.sequenceNumber} –{' '}
                     {membership.type.name.split('_').join(' ')} – Aktuelles
@@ -131,13 +136,13 @@ class AppendPeriod extends Component {
                   >
                     Speichern
                   </Button>
-                </OverlayBody>
-              </Overlay>
-            )}
-          </>;
+                </SimpleDialog>
+              )}
+            </>
+          )
         }}
       </Mutation>
-    );
+    )
   }
 }
 
