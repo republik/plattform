@@ -1,6 +1,7 @@
-import PDFDocument from 'pdfkit'
-import { Context } from '@orbiting/backend-modules-types'
 import { formatPrice, timeFormat } from '@orbiting/backend-modules-formats'
+import { Context } from '@orbiting/backend-modules-types'
+import PDFDocument from 'pdfkit'
+import { Table } from 'swissqrbill/pdf'
 
 type PDFDocument = typeof PDFDocument
 
@@ -33,18 +34,14 @@ type Invoice = {
   updatedAt: Date
 }
 
+import utils from 'swissqrbill/utils'
 import {
-  IsApplicableFn,
-  PaymentResolved,
-  PledgeOption,
-  User,
   Address,
   getReference,
-  getSwissQrBillData,
-  GenerateFn,
+  IsApplicableFn,
+  PledgeOption,
+  User,
 } from './commons'
-import * as paymentslip from './paymentslip'
-import { utils } from 'swissqrbill'
 
 interface RowConfig {
   bold?: boolean
@@ -73,7 +70,7 @@ export const isApplicable: IsApplicableFn = function () {
   return true
 }
 
-function addTopLeftPadding(doc: PDF) {
+function addTopLeftPadding(doc: PDFDocument) {
   doc.x = doc.y = utils.mm2pt(PADDING_MM)
 }
 
@@ -280,60 +277,61 @@ function getDonationOrDiscount(
   return donation + Math.max(0, total - optionsTotal - donation)
 }
 
-// function addTable(doc: PDF, invoice: Invoice, context: Context) {
-//   const { t } = context
+function addTable(doc: PDFDocument, invoice: Invoice, context: Context) {
+  const { t } = context
 
-//   const pledgeTotal = payment.pledge?.total || 0
-//   const companyName = payment?.pledge.package.company.name
+  const totalAmount = invoice.total || 0
+  const companyName = invoice.company
 
-//   const header = getTableRow(
-//     t('api/invoices/table/option'),
-//     t('api/invoices/table/units'),
-//     t('api/invoices/table/rowTotal'),
-//   )
+  const header = getTableRow(
+    t('api/invoices/table/option'),
+    t('api/invoices/table/units'),
+    t('api/invoices/table/rowTotal'),
+  )
 
-//   // Relevant are only pledge options w/ rewards, like a Goodie or MembershipType
-//   const relevantOptions = payment.pledge?.options.filter(
-//     (option) => option.option?.reward,
-//   )
+  // Relevant are only pledge options w/ rewards, like a Goodie or MembershipType
+  const relevantOptions = invoice.items
 
-//   const options =
-//     relevantOptions.map((option) => getTableOptionRows(option, context)) || []
+  const options =
+    relevantOptions.map((option) => getTableOptionRows(option, context)) || []
 
-//   const rows = [header, ...options]
+  const rows = [header, ...options]
 
-//   const donationOrDiscount = getDonationOrDiscount(
-//     pledgeTotal,
-//     payment.pledge.donation,
-//     relevantOptions,
-//   )
+  // const donationOrDiscount = getDonationOrDiscount(
+  //   totalAmount,
+  //   payment.pledge.donation,
+  //   relevantOptions,
+  // )
 
-//   if (donationOrDiscount !== 0) {
-//     const type = donationOrDiscount > 0 ? 'donation' : 'discount'
+  // if (donationOrDiscount !== 0) {
+  //   const type = donationOrDiscount > 0 ? 'donation' : 'discount'
 
-//     rows.push(
-//       getTableRow(t(`api/invoices/table/${type}`), null, donationOrDiscount),
-//     )
-//   }
+  //   rows.push(
+  //     getTableRow(t(`api/invoices/table/${type}`), null, donationOrDiscount),
+  //   )
+  // }
 
-//   const total = getTableRow(
-//     t.first([
-//       `api/invoices/table/${companyName}/total`,
-//       'api/invoices/table/total',
-//     ]),
-//     null,
-//     pledgeTotal,
-//     {
-//       bold: true,
-//     },
-//   )
+  const total = getTableRow(
+    t.first([
+      `api/invoices/table/${companyName}/total`,
+      'api/invoices/table/total',
+    ]),
+    null,
+    totalAmount,
+    {
+      bold: true,
+    },
+  )
 
-//   rows.push(total)
+  rows.push(total)
 
-//   const padding: [number, number, number, number] = [0, 0, utils.mm2pt(5), 0]
+  const padding: [number, number, number, number] = [0, 0, utils.mm2pt(5), 0]
 
-//   doc.moveDown().addTable({ padding, width: utils.mm2pt(170), rows })
-// }
+  const table = new Table({ padding, width: utils.mm2pt(170), rows })
+
+  doc.moveDown()
+  table.attachTo(doc)
+}
 
 export async function generate(
   invoice: Invoice,
@@ -383,7 +381,7 @@ export async function generate(
       )
       addDebtor(doc, { address: userAddress, email: user.email })
       addMeta(doc, invoice, context)
-      // addTable(doc, invoice, context)
+      addTable(doc, invoice, context)
 
       doc.end()
 

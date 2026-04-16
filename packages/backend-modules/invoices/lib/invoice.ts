@@ -1,4 +1,6 @@
-import { utils, PDF } from 'swissqrbill'
+import PDFDocument from 'pdfkit'
+import { SwissQRBill, Table } from 'swissqrbill/pdf'
+import utils from 'swissqrbill/utils'
 
 import { Context } from '@orbiting/backend-modules-types'
 import { formatPrice, timeFormat } from '@orbiting/backend-modules-formats'
@@ -15,6 +17,8 @@ import {
   GenerateFn,
 } from './commons'
 import * as paymentslip from './paymentslip'
+
+type PDFDocument = typeof PDFDocument
 
 interface RowConfig {
   bold?: boolean
@@ -46,11 +50,15 @@ export const isApplicable: IsApplicableFn = function (payment) {
   return true
 }
 
-function addTopLeftPadding(doc: PDF) {
+function addTopLeftPadding(doc: PDFDocument) {
   doc.x = doc.y = utils.mm2pt(PADDING_MM)
 }
 
-function addCreditor(doc: PDF, payment: PaymentResolved, context: Context) {
+function addCreditor(
+  doc: PDFDocument,
+  payment: PaymentResolved,
+  context: Context,
+) {
   const { t } = context
 
   const companyName = payment?.pledge.package.company.name
@@ -124,7 +132,7 @@ function getDebtorEmail(user: User): string {
   return [`${firstName} ${lastName}`.trim(), email].filter(Boolean).join('\n')
 }
 
-function addDebtor(doc: PDF, payment: PaymentResolved) {
+function addDebtor(doc: PDFDocument, payment: PaymentResolved) {
   doc
     .fontSize(DEBTOR_FONT_SIZE)
     .text(
@@ -134,7 +142,7 @@ function addDebtor(doc: PDF, payment: PaymentResolved) {
     .moveDown()
 }
 
-function addMeta(doc: PDF, payment: PaymentResolved, context: Context) {
+function addMeta(doc: PDFDocument, payment: PaymentResolved, context: Context) {
   const { t } = context
 
   const { method, status } = payment
@@ -253,7 +261,11 @@ function getDonationOrDiscount(
   return donation + Math.max(0, total - optionsTotal - donation)
 }
 
-function addTable(doc: PDF, payment: PaymentResolved, context: Context) {
+function addTable(
+  doc: PDFDocument,
+  payment: PaymentResolved,
+  context: Context,
+) {
   const { t } = context
 
   const pledgeTotal = payment.pledge?.total || 0
@@ -305,7 +317,10 @@ function addTable(doc: PDF, payment: PaymentResolved, context: Context) {
 
   const padding: [number, number, number, number] = [0, 0, utils.mm2pt(5), 0]
 
-  doc.moveDown().addTable({ padding, width: utils.mm2pt(170), rows })
+  const table = new Table({ padding, width: utils.mm2pt(170), rows })
+
+  doc.moveDown()
+  table.attachTo(doc)
 }
 
 export const generate: GenerateFn = function (payment, context) {
@@ -317,8 +332,7 @@ export const generate: GenerateFn = function (payment, context) {
 
   return new Promise((resolve, reject) => {
     try {
-      const doc = new PDF(data, '/dev/null', {
-        autoGenerate: false,
+      const doc = new PDFDocument({
         size: 'A4',
       })
 
@@ -329,7 +343,8 @@ export const generate: GenerateFn = function (payment, context) {
       addTable(doc, payment, context)
 
       if (paymentslip.isApplicable(payment)) {
-        doc.addQRBill()
+        const qrBill = new SwissQRBill(data)
+        qrBill.attachTo(doc)
       }
 
       doc.end()
