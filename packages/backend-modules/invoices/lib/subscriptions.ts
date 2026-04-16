@@ -187,77 +187,56 @@ function getTableRow(
   rowTotal: number | string,
   config?: RowConfig,
 ) {
-  const font = config?.bold ? BOLD_FONT_NAME : REGULAR_FONT_NAME
+  const fontName = config?.bold ? BOLD_FONT_NAME : REGULAR_FONT_NAME
 
   return {
+    fontName,
     columns: [
       {
         text: option,
-        font,
       },
       {
         text: units || '',
         width: utils.mm2pt(20),
-        font,
       },
       {
         text: typeof rowTotal === 'number' ? formatPrice(rowTotal) : rowTotal,
         width: utils.mm2pt(30),
-        font,
       },
     ],
   }
 }
 
-function getTableOptionRows(option: PledgeOption, context: Context) {
-  const {
-    price,
-    periods,
-    amount,
-    option: { reward } = {},
-    period: { beginDate, endDate, membership } = {},
-  } = option
+function getItemRow(item: Invoice['items'], context: Context) {
   const { t } = context
 
-  const type = reward?.rewardType
-  const name = reward?.name
-  const interval = reward?.interval
+  // const replacements = {
+  //   count: amount,
+  //   interval: labelFragmentInterval,
+  //   sequenceNumber: membership?.sequenceNumber,
+  //   period: beginDate && `${formatDate(beginDate)} - ${formatDate(endDate)}`,
+  // }
 
-  const pricePerUnit = price * (periods || 1)
-  const rowTotal = amount * pricePerUnit
+  const label = t(`api/invoices/option/MembershipType/${item.price.id}/1`)
 
-  const labelFragmentInterval = t.pluralize(
-    `api/email/option/interval/${interval}/periods`,
-    { count: periods },
-  )
+  // const meta = t.first(
+  //   [
+  //     replacements.period &&
+  //       `api/invoices/option/${type}/${name}/withPeriod/meta`,
+  //     `api/invoices/option/${type}/${name}/meta`,
+  //     replacements.period && `api/invoices/option/${type}/withPeriod/meta`,
+  //     `api/invoices/option/${type}/meta`,
+  //     `api/invoices/option/meta`,
+  //   ].filter(Boolean),
+  //   replacements,
+  //   '',
+  // )
 
-  const replacements = {
-    count: amount,
-    interval: labelFragmentInterval,
-    sequenceNumber: membership?.sequenceNumber,
-    period: beginDate && `${formatDate(beginDate)} - ${formatDate(endDate)}`,
-  }
+  return getTableRow(label, item.quantity, item.amount)
+}
 
-  const label = t.pluralize(`api/invoices/option/${type}/${name}`, replacements)
-
-  const meta = t.first(
-    [
-      replacements.period &&
-        `api/invoices/option/${type}/${name}/withPeriod/meta`,
-      `api/invoices/option/${type}/${name}/meta`,
-      replacements.period && `api/invoices/option/${type}/withPeriod/meta`,
-      `api/invoices/option/${type}/meta`,
-      `api/invoices/option/meta`,
-    ].filter(Boolean),
-    replacements,
-    '',
-  )
-
-  return getTableRow(
-    [label, meta].filter(Boolean).join('\n'),
-    amount || 0,
-    rowTotal,
-  )
+function getDiscountRow(item: Invoice['discounts'], context: Context) {
+  return getTableRow(item.coupon.name, null, -item.coupon.amount_off)
 }
 
 function getDonationOrDiscount(
@@ -289,13 +268,13 @@ function addTable(doc: PDFDocument, invoice: Invoice, context: Context) {
     t('api/invoices/table/rowTotal'),
   )
 
-  // Relevant are only pledge options w/ rewards, like a Goodie or MembershipType
-  const relevantOptions = invoice.items
+  const items = invoice.items.map((item) => getItemRow(item, context)) || []
 
-  const options =
-    relevantOptions.map((option) => getTableOptionRows(option, context)) || []
+  const discounts =
+    invoice.discounts?.map((discount) => getDiscountRow(discount, context)) ||
+    []
 
-  const rows = [header, ...options]
+  const rows = [header, ...items, ...discounts]
 
   // const donationOrDiscount = getDonationOrDiscount(
   //   totalAmount,
@@ -310,6 +289,8 @@ function addTable(doc: PDFDocument, invoice: Invoice, context: Context) {
   //     getTableRow(t(`api/invoices/table/${type}`), null, donationOrDiscount),
   //   )
   // }
+  //
+  //
 
   const total = getTableRow(
     t.first([
