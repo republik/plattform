@@ -10,7 +10,7 @@ const {
 
 const {
   lib: {
-    resolve: { metaFieldResolver, contentUrlResolver },
+    resolve: { metaFieldResolver },
   },
 } = require('@orbiting/backend-modules-documents')
 
@@ -42,7 +42,7 @@ module.exports = async (_, { commitId }, context) => {
 
   const doc = await getDocument(commit, {}, context)
 
-  // Resolve format, credits/users etc. — same approach as publish.js
+  // Resolve format — same approach as publish.js
   const connection = {
     nodes: [
       {
@@ -57,14 +57,13 @@ module.exports = async (_, { commitId }, context) => {
     context,
   })
 
-  const { _all, _users } = connection.nodes[0].entity
+  const { _all } = connection.nodes[0].entity
 
-  contentUrlResolver(doc, _all, _users)
+  const resolved = metaFieldResolver(doc.content.meta, _all)
 
-  const resolved = metaFieldResolver(doc.content.meta, _all, _users)
-
-  doc.content.meta.format = resolved.format
-  doc.content.meta.collaborators = _users
+  doc.content.meta.format = resolved.format?.meta
+    ? { meta: resolved.format.meta }
+    : null
 
   const derivative = await deriveSyntheticReadAloud(
     doc,
