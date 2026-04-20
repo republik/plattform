@@ -39,6 +39,29 @@ const pillFulfilled = css({
   color: 'campaign26.frozenYogurt',
 })
 
+const pillFulfilledAnimated = css({
+  background: 'campaign26.happyCherry',
+  color: 'campaign26.frozenYogurt',
+  position: 'relative',
+  overflow: 'hidden',
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '60%',
+    height: '100%',
+    background:
+      'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.38) 50%, transparent 100%)',
+    animationName: 'shimmerSweep',
+    animationDuration: '4s',
+    animationTimingFunction: 'ease-in-out',
+    animationDelay: '1.5s',
+    animationIterationCount: 'infinite',
+    animationFillMode: 'backwards',
+  },
+})
+
 const pillPending = css({
   background: 'transparent',
   border: '2px solid token(colors.campaign26.happyCherry)',
@@ -78,11 +101,11 @@ export function JournalismPromise({
   fulfilled?: boolean
   children: React.ReactNode
 }) {
-  const pillRef = useRef<HTMLSpanElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const [animationKey, setAnimationKey] = useState(0)
 
   useEffect(() => {
-    const el = pillRef.current
+    const el = containerRef.current
     if (!el || !fulfilled) return
 
     const observer = new IntersectionObserver(
@@ -99,7 +122,7 @@ export function JournalismPromise({
   }, [fulfilled])
 
   return (
-    <div className={journalismPromiseStyle}>
+    <div ref={containerRef} className={journalismPromiseStyle}>
       <style>{`
         @keyframes checkBounce {
           0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
@@ -113,10 +136,19 @@ export function JournalismPromise({
           80%  { transform: rotate(20deg); }
           100% { transform: rotate(0deg); }
         }
+        @keyframes shimmerSweep {
+          0%     { transform: translateX(-200%); opacity: 1; }
+          25%    { transform: translateX(280%);  opacity: 1; }
+          25.1%  { transform: translateX(-200%); opacity: 0; }
+          99%    { transform: translateX(-200%); opacity: 0; }
+          100%   { transform: translateX(-200%); opacity: 1; }
+        }
       `}</style>
       <span
-        ref={pillRef}
-        className={cx(pillBase, fulfilled ? pillFulfilled : pillPending)}
+        className={cx(
+          pillBase,
+          fulfilled ? pillFulfilledAnimated : pillPending,
+        )}
       >
         {fulfilled ? (
           <span
