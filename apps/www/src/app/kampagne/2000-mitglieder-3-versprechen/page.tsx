@@ -8,48 +8,7 @@ import { IconClose } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import Link from 'next/link'
-
-const journalismPromiseStyle = css({
-  pb: 8,
-  '& h3': {
-    textStyle: 'campaignSubhead',
-    mb: 2,
-  },
-  '& p': {
-    textStyle: 'airy',
-  },
-  '& .pill': {
-    display: 'inline-block',
-    background: 'campaign26.happyCherry',
-    color: 'campaign26.frozenYogurt',
-    px: 4,
-    py: 1,
-    borderRadius: 'full',
-    fontSize: 's',
-    fontWeight: 500,
-    mb: 4,
-  },
-  '& .status': {
-    fontWeight: 500,
-    fontSize: 'medium',
-    mt: '2',
-  },
-})
-
-function JournalismPromise({
-  count,
-  children,
-}: {
-  count: number
-  children: React.ReactNode
-}) {
-  return (
-    <div className={journalismPromiseStyle}>
-      <span className='pill'>Versprechen {count} von 3</span>
-      {children}
-    </div>
-  )
-}
+import { JournalismPromise } from './JournalismPromise'
 
 export default async function Page() {
   const { hasActiveMembership } = await getMe()
@@ -170,7 +129,7 @@ export default async function Page() {
                 <Video />
               </div>
             </JournalismPromise>
-            <JournalismPromise count={2}>
+            <JournalismPromise count={2} fulfilled>
               <h3>
                 Journalismus für
                 <br />
