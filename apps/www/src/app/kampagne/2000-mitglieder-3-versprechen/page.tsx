@@ -1,8 +1,8 @@
+import { Logo } from '@/app/components/layout/header/logo'
+import { ArticleSection } from '@/app/components/ui/section'
 import { FinalCount } from '@/app/kampagne/components/handdrawn/final-count'
 import { ShopLink } from '@/app/kampagne/components/simple-shop-link'
 import { Video } from '@/app/kampagne/components/video'
-import { Logo } from '@/app/components/layout/header/logo'
-import { ArticleSection } from '@/app/components/ui/section'
 import { getMe } from '@/app/lib/auth/me'
 import { IconClose } from '@republik/icons'
 import { css, cx } from '@republik/theme/css'
@@ -180,7 +180,15 @@ export default async function Page() {
                 Wir stellen die Republik an Schweizer Oberstufenschulen,
                 Gymnasien und Berufsschulen kostenlos zur Verfügung.
               </p>
-              <p className='status'>Status: in Arbeit</p>
+              <p className='status'>
+                Status: umgesetzt
+                <br />
+                <span className={css({ color: 'campaign26.justChocolate' })}>
+                  <a href='https://shop.republik.ch/schulen'>
+                    shop.republik.ch/schulen
+                  </a>
+                </span>
+              </p>
             </JournalismPromise>
             <JournalismPromise count={3}>
               <h3>
