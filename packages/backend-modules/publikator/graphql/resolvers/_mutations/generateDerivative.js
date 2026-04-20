@@ -25,6 +25,7 @@ const { document: getDocument } = require('../Commit')
 const {
   associateReadAloudDerivativeWithCommit,
 } = require('../../../lib/Derivative/associateReadAloudDerivativeWithCommit')
+const pick = require('lodash/pick')
 
 module.exports = async (_, { commitId }, context) => {
   const { user, pgdb, loaders, pubsub, t } = context
@@ -58,14 +59,17 @@ module.exports = async (_, { commitId }, context) => {
   })
 
   const { _all, _users } = connection.nodes[0].entity
-  doc._all = _all
-  doc._users = _users
 
-  const resolvedMeta = await getMeta(doc)
+  // Clone doc and attach references for getMeta resolution (same as publish.js)
+  const resolvedDoc = structuredClone(doc)
+  resolvedDoc._all = _all
+  resolvedDoc._users = _users
 
-  doc.content.meta.format = resolvedMeta.format?.meta
-    ? { meta: resolvedMeta.format.meta }
-    : null
+  const resolvedMeta = await getMeta(resolvedDoc)
+
+  const { format } = pick(resolvedMeta, ['format.meta'])
+
+  doc.content.meta.format = format
   doc.content.meta.contributors = resolvedMeta.contributors
 
   const derivative = await deriveSyntheticReadAloud(
