@@ -10,7 +10,7 @@ const {
 
 const {
   lib: {
-    resolve: { metaFieldResolver },
+    meta: { getMeta },
   },
 } = require('@orbiting/backend-modules-documents')
 
@@ -57,13 +57,16 @@ module.exports = async (_, { commitId }, context) => {
     context,
   })
 
-  const { _all } = connection.nodes[0].entity
+  const { _all, _users } = connection.nodes[0].entity
+  doc._all = _all
+  doc._users = _users
 
-  const resolved = metaFieldResolver(doc.content.meta, _all)
+  const resolvedMeta = await getMeta(doc)
 
-  doc.content.meta.format = resolved.format?.meta
-    ? { meta: resolved.format.meta }
+  doc.content.meta.format = resolvedMeta.format?.meta
+    ? { meta: resolvedMeta.format.meta }
     : null
+  doc.content.meta.contributors = resolvedMeta.contributors
 
   const derivative = await deriveSyntheticReadAloud(
     doc,
