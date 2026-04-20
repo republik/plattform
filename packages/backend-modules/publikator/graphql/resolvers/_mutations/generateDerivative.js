@@ -8,9 +8,24 @@ const {
   applyAssetsAudioUrl,
 } = require('../../../lib/Derivative/SyntheticReadAloud')
 
+const {
+  lib: {
+    meta: { getMeta },
+  },
+} = require('@orbiting/backend-modules-documents')
+
+const {
+  lib: {
+    Documents: { getElasticDoc, addRelatedDocs },
+  },
+} = require('@orbiting/backend-modules-search')
+
 const { document: getDocument } = require('../Commit')
 
-const { associateReadAloudDerivativeWithCommit } = require('../../../lib/Derivative/associateReadAloudDerivativeWithCommit')
+const {
+  associateReadAloudDerivativeWithCommit,
+} = require('../../../lib/Derivative/associateReadAloudDerivativeWithCommit')
+const pick = require('lodash/pick')
 
 module.exports = async (_, { commitId }, context) => {
   const { user, pgdb, loaders, pubsub, t } = context
@@ -27,6 +42,36 @@ module.exports = async (_, { commitId }, context) => {
   }
 
   const doc = await getDocument(commit, {}, context)
+
+  // Resolve format — same approach as publish.js
+  const connection = {
+    nodes: [
+      {
+        type: 'Document',
+        entity: await getElasticDoc({ indexType: 'Document', doc }),
+      },
+    ],
+  }
+
+  await addRelatedDocs({
+    connection,
+    context,
+  })
+
+  const { _all, _users } = connection.nodes[0].entity
+
+  // Clone doc and attach references for getMeta resolution (same as publish.js)
+  const resolvedDoc = structuredClone(doc)
+  resolvedDoc._all = _all
+  resolvedDoc._users = _users
+
+  const resolvedMeta = await getMeta(resolvedDoc)
+
+  const { format } = pick(resolvedMeta, ['format.meta'])
+
+  doc.content.meta.format = format
+  doc.content.meta.contributors = resolvedMeta.contributors
+
   const derivative = await deriveSyntheticReadAloud(
     doc,
     { force: true },
