@@ -1,5 +1,4 @@
 import { type StaticImageData } from 'next/image'
-import { type NewsletterName } from '../newsletters/config'
 import formatBinswanger from './assets/format-binswanger.png'
 import formatWieRedenWirEigentlich from './assets/format-format-wie-reden-wir-eigentlich.png'
 import formatGedankensplitter from './assets/format-gedankensplitter.png'
@@ -12,9 +11,6 @@ type StyleType = {
   color?: string
   imageSrc?: StaticImageData
 }
-
-export const NL_FEATURED: NewsletterName[] = ['DAILY', 'WDWWW', 'WEEKLY']
-export const NL_MORE: NewsletterName[] = ['BAB', 'TECH', 'CLIMATE', 'SUNDAY']
 
 export const FORMATS_FEATURED: string[] = [
   'republik/format-binswanger',
