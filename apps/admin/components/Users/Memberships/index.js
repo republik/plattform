@@ -1,14 +1,13 @@
-import { Fragment } from 'react'
-import * as React from 'react'
-import { css } from 'glamor'
-import { Query, Mutation } from '@apollo/client/react/components'
+'use client'
 import { gql } from '@apollo/client'
+import { Mutation, Query } from '@apollo/client/react/components'
 import { IconChevronLeft } from '@republik/icons'
+import { css } from '@republik/theme/css'
+import * as React from 'react'
+import { Fragment } from 'react'
 
 import {
-  A,
   Checkbox,
-  colors,
   Dropdown,
   Label,
   Loader,
@@ -16,27 +15,27 @@ import {
 } from '@project-r/styleguide'
 
 import {
+  DD,
   displayDate,
-  displayStyles,
   displayDateTime,
-  Section,
-  SectionTitle,
+  displayStyles,
   DL,
   DT,
-  DD,
-} from '../../Display/utils'
-import { tableStyles } from '../../Tables/utils'
+  Section,
+  SectionTitle,
+} from '@/components/Display/utils'
+import { tableStyles } from '@/components/Tables/utils'
 import Link from 'next/link'
 
-import MoveMembership from './MoveMembership'
-import CancelMembership from './CancelMembership'
-import ReactivateMembership from './ReactivateMembership'
 import ActivateMembership from './ActivateMembership'
-import ResetMembership from './ResetMembership'
 import AppendPeriod from './AppendPeriod'
+import CancelMembership from './CancelMembership'
 import { MagazineSubscriptions } from './MagazineSubscriptions'
+import MoveMembership from './MoveMembership'
+import ReactivateMembership from './ReactivateMembership'
+import ResetMembership from './ResetMembership'
 
-import { intersperse } from '../../../lib/helpers'
+import { intersperse } from '@/lib/helpers'
 
 const styles = {
   icon: css({
@@ -170,7 +169,9 @@ const AutoPayToggle = (membership) => {
               {error && (
                 <React.Fragment>
                   <br />
-                  <span style={{ color: colors.error }}>{error.message}</span>
+                  <span className={css({ color: 'error' })}>
+                    {error.message}
+                  </span>
                 </React.Fragment>
               )}
             </DT>
@@ -205,15 +206,15 @@ const AutoPayToggle = (membership) => {
 
 const MembershipCard = ({ membership, ...props }) => {
   return (
-    <tr {...tableStyles.row} {...props}>
-      <td {...tableStyles.paddedCell}>
+    <tr className={tableStyles.row} {...props}>
+      <td className={tableStyles.paddedCell}>
         {membership.type.name.split('_').join(' ')} #{membership.sequenceNumber}{' '}
         <br />
         <Label>Erstellt am {displayDateTime(membership.createdAt)}</Label>
         <br />
         <Label>ID: {membership.id}</Label>
       </td>
-      <td {...tableStyles.paddedCell}>{getState(membership)}</td>
+      <td className={tableStyles.paddedCell}>{getState(membership)}</td>
     </tr>
   )
 }
@@ -221,8 +222,8 @@ const MembershipCard = ({ membership, ...props }) => {
 const MembershipDetails = ({ userId, membership, ...props }) => {
   return (
     <tr {...props}>
-      <td {...tableStyles.paddedCell} colSpan={2}>
-        <div {...displayStyles.hFlexBox}>
+      <td className={tableStyles.paddedCell} colSpan={2}>
+        <div className={displayStyles.hFlexBox}>
           <DL>
             <AutoPayToggle {...membership}></AutoPayToggle>
             {!!membership.voucherCode && (
@@ -235,12 +236,8 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
               <Fragment>
                 <DT>Gekauft durch</DT>
                 <DD>
-                  <Link
-                    href={`/users/${membership.pledge.user.id}`}
-                    passHref
-                    legacyBehavior
-                  >
-                    <A>{membership.pledge.user.name}</A>
+                  <Link href={`/users/${membership.pledge.user.id}`}>
+                    {membership.pledge.user.name}
                   </Link>
                 </DD>
               </Fragment>
@@ -267,7 +264,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                     {displayDate(new Date(period.beginDate))} –{' '}
                     {displayDate(new Date(period.endDate))}
                     {period.isCurrent && (
-                      <IconChevronLeft size='1.1em' {...styles.icon} />
+                      <IconChevronLeft size='1.1em' className={styles.icon} />
                     )}
                   </DD>
                 ))}
@@ -281,7 +278,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
             <DT>Kündigungen</DT>
             {membership.cancellations.map((cancellation, i) => (
               <Fragment key={`cancellation-${i}`}>
-                <div {...displayStyles.hFlexBox}>
+                <div className={displayStyles.hFlexBox}>
                   <DL>
                     <DT>Gekündigt am</DT>
                     <DD>{displayDateTime(cancellation.createdAt)}</DD>
@@ -318,7 +315,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                     </DD>
                   </DL>
                 </div>
-                <div {...displayStyles.hFlexBox}>
+                <div className={displayStyles.hFlexBox}>
                   <DL>
                     {cancellation.reason && (
                       <Fragment>
@@ -328,7 +325,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                     )}
                   </DL>
                 </div>
-                <div {...displayStyles.hFlexBox}>
+                <div className={displayStyles.hFlexBox}>
                   {cancellation.winbackSentAt && (
                     <DL>
                       <DT>Winback verschickt am</DT>
@@ -342,7 +339,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                     </DL>
                   )}
                 </div>
-                <div {...displayStyles.hFlexBox}>
+                <div className={displayStyles.hFlexBox}>
                   <DL>
                     <DT>Kündigungs Aktionen</DT>
                     <DD>
@@ -461,7 +458,7 @@ const Index = ({ userId }) => {
                 <Section>
                   <SectionTitle>Memberships</SectionTitle>
                   <MagazineSubscriptions userId={userId} />
-                  <table {...tableStyles.table}>
+                  <table className={tableStyles.table}>
                     <colgroup>
                       <col style={{ width: '50%' }} />
                       <col style={{ width: '50%' }} />

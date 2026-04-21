@@ -1,16 +1,16 @@
 import { gql } from '@apollo/client'
 import { A } from '@project-r/styleguide'
 
-import Memberships, { fragments as UserMemberships } from './User/Memberships'
 import AccessGrants, {
   fragments as UserAccessGrants,
 } from './User/AccessGrants'
+import Memberships, { fragments as UserMemberships } from './User/Memberships'
 import NewsletterSettings, {
   fragments as UserNewsletterSettings,
 } from './User/NewsletterSettings'
 import Sessions, { fragments as UserSessions } from './User/Sessions'
 
-import { MagazineSubscriptions } from '../Users/Memberships/MagazineSubscriptions'
+import { MagazineSubscriptions } from '@/components/Users/Memberships/MagazineSubscriptions'
 
 import { styles } from './utils'
 
@@ -33,14 +33,14 @@ export const fragments = gql`
   ${UserSessions}
 `
 
-const Users = ({ email, name, users, t }) => {
+const Users = ({ email, name, users }) => {
   const matchingUser = users?.find((u) => u.email === email)
   const hasMatchingUsers = !!matchingUser
 
   return (
     <>
       {!hasMatchingUsers && (
-        <div {...styles.hint}>
+        <div className={styles.hint}>
           Keinen User unter «{email || name}» gefunden.{' '}
           {!!email && !!users?.length && (
             <>
@@ -73,7 +73,7 @@ const Users = ({ email, name, users, t }) => {
           newsletterSettings,
           sessions,
         }) => (
-          <div key={id} {...styles.item}>
+          <div key={id} className={styles.item}>
             {/* Name, email address */}
             <div>
               <A href={`/users/${id}`} target='_blank'>

@@ -3,7 +3,7 @@ import { A } from '@project-r/styleguide'
 import { styles } from './utils'
 
 const Info = ({ email, name }) => (
-  <div {...styles.hint}>
+  <div className={styles.hint}>
     Suche{' '}
     <A href={`/users?search=${encodeURI(email || name)}`} target='_blank'>
       E-Mail-Adresse

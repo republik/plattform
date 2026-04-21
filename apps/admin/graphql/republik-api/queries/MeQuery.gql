@@ -10,23 +10,5 @@ query Me {
     email
     initials
     roles
-    isListed
-    hasPublicProfile
-    notificationChannels
-    accessCampaigns {
-      id
-    }
-    hasDormantMembership
-    prolongBeforeDate
-    activeMembership {
-      id
-      type {
-        name
-      }
-      renew
-      endDate
-      graceEndDate
-      canProlong
-    }
   }
 }

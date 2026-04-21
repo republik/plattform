@@ -1,18 +1,15 @@
-import { Component, Fragment } from 'react'
-import { Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
+import { Mutation } from '@apollo/client/react/components'
+import { Component, Fragment } from 'react'
+
+import { Checkbox, Loader } from '@project-r/styleguide'
 
 import {
-  Button,
-  Checkbox,
-  Interaction,
-  Loader,
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
-} from '@project-r/styleguide'
-
-import { displayDate, SectionSubhead, TextButton } from '../../Display/utils'
+  displayDate,
+  SectionSubhead,
+  TextButton,
+} from '@/components/Display/utils'
+import { Button, SimpleDialog } from '@/components/ui'
 
 const DELETE_USER = gql`
   mutation deleteUser($userId: ID!, $unpublishComments: Boolean!) {
@@ -65,43 +62,44 @@ export default class DeleteUser extends Component {
           </TextButton>
         )}
 
-        {isOpen && !deletedAt && (
+        {!deletedAt && (
           <Mutation mutation={DELETE_USER} refetchQueries={refetchQueries}>
             {(deleteUser, { loading, error }) => {
               return (
-                <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar onClose={this.closeHandler} />
-                  <OverlayBody>
-                    <Loader
-                      loading={loading}
-                      error={error}
-                      render={() => (
-                        <Fragment>
-                          <Interaction.H2>User löschen</Interaction.H2>
-                          <br />
-                          <Checkbox
-                            checked={unpublishComments}
-                            onChange={(_, checked) =>
-                              this.setState({
-                                unpublishComments: checked,
-                              })
-                            }
-                          >
-                            Dialoginhalte löschen
-                          </Checkbox>
-                          <br />
-                          <br />
-                          <Button
-                            primary
-                            onClick={this.submitHandler(deleteUser)}
-                          >
-                            User löschen
-                          </Button>
-                        </Fragment>
-                      )}
-                    />
-                  </OverlayBody>
-                </Overlay>
+                <SimpleDialog
+                  title={'Nutzer löschen'}
+                  open={isOpen}
+                  onOpenChange={(open) => {
+                    if (!open) {
+                      this.closeHandler()
+                    }
+                  }}
+                >
+                  <Loader
+                    loading={loading}
+                    error={error}
+                    render={() => (
+                      <Fragment>
+                        <br />
+                        <Checkbox
+                          checked={unpublishComments}
+                          onChange={(_, checked) =>
+                            this.setState({
+                              unpublishComments: checked,
+                            })
+                          }
+                        >
+                          Dialoginhalte löschen
+                        </Checkbox>
+                        <br />
+                        <br />
+                        <Button onClick={this.submitHandler(deleteUser)}>
+                          User löschen
+                        </Button>
+                      </Fragment>
+                    )}
+                  />
+                </SimpleDialog>
               )
             }}
           </Mutation>

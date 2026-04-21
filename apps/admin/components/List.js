@@ -1,6 +1,6 @@
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
 
-import { colors, fontFamilies } from '@project-r/styleguide'
+import { fontFamilies } from '@project-r/styleguide'
 
 const styles = {
   list: css({
@@ -12,10 +12,10 @@ const styles = {
     padding: 0,
   }),
   item: css({
-    borderTop: `1px solid ${colors.divider}`,
+    borderTop: `1px solid token(colors.divider)`,
     padding: '5px 0',
     ':last-child': {
-      borderBottom: `1px solid ${colors.divider}`,
+      borderBottom: `1px solid token(colors.divider)`,
     },
   }),
   highlight: css({
@@ -24,16 +24,18 @@ const styles = {
   }),
 }
 
-export const Item = ({ children }) => <li {...styles.item}>{children}</li>
+export const Item = ({ children }) => (
+  <li className={styles.item}>{children}</li>
+)
 
 const List = ({ children, ...props }) => (
-  <ul {...props} {...styles.list}>
+  <ul {...props} className={styles.list}>
     {children}
   </ul>
 )
 
 export const Highlight = ({ children }) => (
-  <span {...styles.highlight}>{children}</span>
+  <span className={styles.highlight}>{children}</span>
 )
 
 export default List

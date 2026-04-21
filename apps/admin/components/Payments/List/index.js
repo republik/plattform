@@ -1,21 +1,21 @@
-import { Fragment } from 'react'
-import { graphql } from '@apollo/client/react/hoc'
+import ErrorMessage from '@/components/ErrorMessage'
 import { gql } from '@apollo/client'
-import ErrorMessage from '../../ErrorMessage'
-import InfiniteScroller from 'react-infinite-scroller'
+import { graphql } from '@apollo/client/react/hoc'
 import { Loader } from '@project-r/styleguide'
+import { Fragment } from 'react'
+import InfiniteScroller from 'react-infinite-scroller'
 
-import DateRange from '../../Form/DateRange'
-import StringArray from '../../Form/StringArray'
+import DateRange from '@/components/Form/DateRange'
+import StringArray from '@/components/Form/StringArray'
 
 import {
-  serializeOrderBy,
-  deserializeOrderBy,
   createChangeHandler,
-} from '../../Tables/utils'
+  deserializeOrderBy,
+  serializeOrderBy,
+} from '@/components/Tables/utils'
 
-import TableForm from './TableForm'
 import Table from './Table'
+import TableForm from './TableForm'
 
 const PAYMENTS_LIMIT = 200
 

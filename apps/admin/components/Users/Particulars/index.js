@@ -1,29 +1,25 @@
-import { Component, Fragment } from 'react'
-import { Query, Mutation } from '@apollo/client/react/components'
+'use client'
 import { gql } from '@apollo/client'
+import { Mutation, Query } from '@apollo/client/react/components'
+import { Component, Fragment } from 'react'
 
-import {
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
-  Loader,
-  InlineSpinner,
-} from '@project-r/styleguide'
+import { InlineSpinner, Loader } from '@project-r/styleguide'
 import { IconEdit } from '@republik/icons'
 
 import {
+  DD,
+  DL,
+  DT,
   InteractiveSection,
   SectionMenu,
   SectionTitle,
-  DL,
-  DT,
-  DD,
   TextButton,
-} from '../../Display/utils'
+} from '@/components/Display/utils'
 
 import UserForm from './UserForm'
 
-import { GET_PROFILE } from '../ProfileHeader'
+import { GET_PROFILE } from '@/components/Users/header/ProfileHeader'
+import { SimpleDialog } from '@/components/ui'
 
 export const GET_USER = gql`
   query user($id: String) {
@@ -194,6 +190,7 @@ export default class User extends Component {
   render() {
     const { userId } = this.props
     const { isOpen } = this.state
+
     return (
       <Query query={GET_USER} variables={{ id: userId }}>
         {({ loading, error, data }) => {
@@ -223,19 +220,20 @@ export default class User extends Component {
                         <IconEdit size={28} />
                       </TextButton>
                     </SectionMenu>
-                    {isOpen && (
-                      <Overlay onClose={this.closeHandler}>
-                        <OverlayToolbar onClose={this.closeHandler} />
-                        <OverlayBody>
-                          <UpdateUser
-                            user={user}
-                            onSubmit={(promise) =>
-                              promise.then(this.closeHandler)
-                            }
-                          />
-                        </OverlayBody>
-                      </Overlay>
-                    )}
+                    <SimpleDialog
+                      title={'Personalien bearbeiten'}
+                      open={isOpen}
+                      onOpenChange={(open) => {
+                        if (!open) {
+                          this.closeHandler()
+                        }
+                      }}
+                    >
+                      <UpdateUser
+                        user={user}
+                        onSubmit={(promise) => promise.then(this.closeHandler)}
+                      />
+                    </SimpleDialog>
                   </InteractiveSection>
                 )
               }}

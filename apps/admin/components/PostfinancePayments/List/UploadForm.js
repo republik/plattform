@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import ErrorMessage from '../../ErrorMessage'
+import ErrorMessage from '@/components/ErrorMessage'
 
 const readFile = (file) => {
   return new Promise((resolve, reject) => {
@@ -22,7 +22,7 @@ const readFile = (file) => {
     })
 
     fileReader.readAsDataURL(file)
-  });
+  })
 }
 
 const getInitialState = () => ({
