@@ -1,20 +1,15 @@
 import { NewsletterSettingsDocument } from '#graphql/republik-api/__generated__/gql/graphql'
+import { type NewsletterName } from '@/app/components/newsletters/config'
 import { useQuery } from '@apollo/client'
-import {
-  type NewsletterName,
-  NL_COURSES,
-  NL_FEATURED,
-  NL_MORE,
-} from '@/app/components/newsletters/config'
 import { css } from '@republik/theme/css'
 import { NewsletterCourseCard } from './newsletters-card'
 import NewslettersSection from './newsletters-section'
 import { NewslettersStatus } from './newsletters-status'
 
 function NewslettersOverview({
-  nlFeatured = NL_FEATURED,
-  nlMore = NL_MORE,
-  nlCourses = NL_COURSES,
+  nlFeatured,
+  nlMore,
+  nlCourses,
 }: {
   nlFeatured?: NewsletterName[]
   nlMore?: NewsletterName[]
@@ -36,23 +31,29 @@ function NewslettersOverview({
           status={data.me.newsletterSettings.status}
         />
       </div>
-      <NewslettersSection
-        title='Beliebteste'
-        newsletters={nlFeatured}
-        subscriptions={subscriptions}
-        disabled={data.me.newsletterSettings.status !== 'subscribed'}
-      />
-      <NewslettersSection
-        title='Was für Sie?'
-        newsletters={nlMore}
-        subscriptions={subscriptions}
-        disabled={data.me.newsletterSettings.status !== 'subscribed'}
-      />
-      <NewslettersSection
-        title='Kurse'
-        newsletters={nlCourses}
-        CardComponent={NewsletterCourseCard}
-      />
+      {nlFeatured?.length && (
+        <NewslettersSection
+          title='Beliebteste'
+          newsletters={nlFeatured}
+          subscriptions={subscriptions}
+          disabled={data.me.newsletterSettings.status !== 'subscribed'}
+        />
+      )}
+      {nlMore?.length && (
+        <NewslettersSection
+          title='Was für Sie?'
+          newsletters={nlMore}
+          subscriptions={subscriptions}
+          disabled={data.me.newsletterSettings.status !== 'subscribed'}
+        />
+      )}
+      {nlCourses?.length && (
+        <NewslettersSection
+          title='Kurse'
+          newsletters={nlCourses}
+          CardComponent={NewsletterCourseCard}
+        />
+      )}
     </>
   )
 }
