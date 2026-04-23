@@ -43,7 +43,6 @@ module.exports = async (_, { commitId }, context) => {
 
   const doc = await getDocument(commit, {}, context)
 
-  // Resolve format — same approach as publish.js
   const connection = {
     nodes: [
       {
@@ -60,7 +59,6 @@ module.exports = async (_, { commitId }, context) => {
 
   const { _all, _users } = connection.nodes[0].entity
 
-  // Clone doc and attach references for getMeta resolution (same as publish.js)
   const resolvedDoc = structuredClone(doc)
   resolvedDoc._all = _all
   resolvedDoc._users = _users
