@@ -1,4 +1,4 @@
-FROM node:20-trixie AS base
+FROM node:24-trixie AS base
 
 FROM base AS pruner
 
@@ -23,7 +23,7 @@ RUN yarn turbo run build --filter='@orbiting/api-app...' --no-cache
 # Prune dev dependencies
 RUN yarn install --frozen-lockfile --production --ignore-scripts --prefer-offline
 
-FROM node:20-trixie-slim AS runner
+FROM node:24-trixie-slim AS runner
 
 WORKDIR /app
 
