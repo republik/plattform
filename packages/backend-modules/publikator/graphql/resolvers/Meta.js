@@ -5,24 +5,10 @@ const {
   Roles: { userHasRole },
 } = require('@orbiting/backend-modules-auth')
 
-const {
-  lib: { resolve },
-} = require('@orbiting/backend-modules-documents')
-
-const commit = require('./Commit')
 const { getPath } = require('../../lib/Document')
+const resolveMetaLink = require('../../lib/resolveMetaLink')
 
-const getDocFromMetaLink = async (url, context) => {
-  const { repoId } = resolve.getRepoId(url)
-  if (!repoId) {
-    return null
-  }
-
-  const latestCommit = await context.loaders.Commit.byRepoIdLatest.load(repoId)
-  return (
-    (latestCommit && (await commit.document(latestCommit, {}, context))) || null
-  )
-}
+const getDocFromMetaLink = resolveMetaLink
 
 const resolveSeriesEpisodes = async (series, context) => {
   if (!series) {

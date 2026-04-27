@@ -14,7 +14,7 @@ const {
   associateReadAloudDerivativeWithCommit,
 } = require('../../../lib/Derivative/associateReadAloudDerivativeWithCommit')
 
-const { getDocFromMetaLink } = require('../Meta')
+const resolveMetaLink = require('../../lib/resolveMetaLink')
 
 module.exports = async (_, { commitId }, context) => {
   const { user, pgdb, loaders, pubsub, t } = context
@@ -35,7 +35,7 @@ module.exports = async (_, { commitId }, context) => {
   // Resolve format name (no elastic needed)
   const formatUrl = doc.content.meta.format
   if (formatUrl && typeof formatUrl === 'string') {
-    const formatDoc = await getDocFromMetaLink(formatUrl, context)
+    const formatDoc = await resolveMetaLink(formatUrl, context)
     if (formatDoc?.content?.meta) {
       doc.content.meta.format = {
         meta: {
