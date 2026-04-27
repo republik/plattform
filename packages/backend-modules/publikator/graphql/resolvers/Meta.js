@@ -128,6 +128,7 @@ const resolveRecommendations = async (meta, args, context) => {
 }
 
 module.exports = {
+  getDocFromMetaLink,
   format: resolveRepoId('format'),
   section: resolveRepoId('section'),
   dossier: resolveRepoId('dossier'),
