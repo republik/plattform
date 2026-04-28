@@ -1,14 +1,13 @@
 import { formatPrice, timeFormat } from '@orbiting/backend-modules-formats'
 import { Context } from '@orbiting/backend-modules-types'
 import PDFDocument from 'pdfkit'
+import type { Stripe } from 'stripe'
 import { Table } from 'swissqrbill/pdf'
 
 type PDFDocument = typeof PDFDocument
 
 // Types copied from backend-modules/payments/lib/types.ts
 type Company = 'PROJECT_R' | 'REPUBLIK'
-
-type InvoiceStatus = 'draft' | 'paid' | 'void' | 'refunded' | 'open'
 
 type Invoice = {
   id: string
@@ -17,21 +16,23 @@ type Invoice = {
   userId: string
   company: Company
   externalId: string
-  metadata: Record<string, any>
-  status: InvoiceStatus
+  metadata: Stripe.Invoice['metadata']
+  status: Stripe.Invoice['status']
   total: number
   totalBeforeDiscount: number
   totalDiscountAmount: number
-  totalDiscountAmounts: any
+  totalDiscountAmounts: Stripe.Invoice['total_discount_amounts']
   totalExcludingTax: number
-  totalTaxAmounts: any
+  totalTaxAmounts: Stripe.Invoice['total_taxes']
   totalTaxAmount: number
-  discounts: string[]
-  items: any
+  discounts: Stripe.Invoice['discounts']
+  items: Stripe.Invoice['lines']['data']
   periodStart: Date
   periodEnd: Date
   createdAt: Date
   updatedAt: Date
+  paymentMethodType?: 'CARD' | 'TWINT' | 'PAPAL' | null
+  subscriptionType?: string
 }
 
 import utils from 'swissqrbill/utils'
@@ -61,7 +62,49 @@ export async function findInvoice(
   input: { hrid: string },
   { pgdb }: Context,
 ): Promise<Invoice | undefined> {
-  const invoice = await pgdb.payments.invoices.findOne({ hrId: input.hrid })
+  // const invoice = await pgdb.payments.invoices.findOne({ hrId: input.hrid })
+
+  const invoice = await pgdb.queryOne(
+    `SELECT
+      i.id,
+      i."hrId",
+      i."subscriptionId",
+      i."userId",
+      i."company",
+      i."externalId",
+      i."metadata",
+      i."status",
+      i."total",
+      i."totalBeforeDiscount",
+      i."totalDiscountAmount",
+      i."totalDiscountAmounts",
+      i."totalExcludingTax",
+      i."totalTaxAmounts",
+      i."totalTaxAmount",
+      i."discounts",
+      i."items",
+      i."periodStart",
+      i."periodEnd",
+      i."createdAt",
+      i."updatedAt",
+      c."paymentMethodType",
+      s.type AS "subscriptionType"
+    FROM payments.invoices i
+    JOIN payments.charges c
+      ON c."invoiceId" = i.id
+    JOIN payments.subscriptions s
+      ON i."subscriptionId" = s.id
+    WHERE "hrId" = $1`,
+    [input.hrid],
+  )
+
+  if (!invoice) {
+    return undefined
+  }
+
+  const charge = await pgdb.payments.charges.findOne({ invoiceId: invoice.id })
+
+  invoice.charge = charge
 
   return invoice
 }
@@ -162,21 +205,29 @@ function addDebtor(
 
 function addMeta(
   doc: PDFDocument,
-  { status, hrId, createdAt }: Invoice,
+  { status, hrId, createdAt, paymentMethodType }: Invoice,
   { t }: Context,
 ) {
   doc
     .fontSize(TITLE_FONT_SIZE)
     .moveDown()
-    .text(t.first([`api/invoices/${status}/title`, 'api/invoices/title']))
+    .text(
+      t.first([
+        `api/invoices/${status?.toUpperCase()}/title`,
+        'api/invoices/title',
+      ]),
+    )
     .fontSize(REGULAR_FONT_SIZE)
     .moveDown()
     .text(
-      t.first([`api/invoices/${status}/meta`, 'api/invoices/meta'], {
-        date: formatDate(createdAt),
-        reference: getReference(hrId, true),
-        paymentMethod: '?????? TODO ??????',
-      }),
+      t.first(
+        [`api/invoices/${status?.toUpperCase()}/meta`, 'api/invoices/meta'],
+        {
+          date: formatDate(createdAt),
+          reference: getReference(hrId, true),
+          paymentMethod: paymentMethodType ?? '',
+        },
+      ),
     )
     .moveDown()
 }
@@ -207,7 +258,16 @@ function getTableRow(
   }
 }
 
-function getItemRow(item: Invoice['items'], context: Context) {
+function getItemRow(
+  {
+    item,
+    invoice,
+  }: {
+    item: Invoice['items'][number]
+    invoice: Invoice
+  },
+  context: Context,
+) {
   const { t } = context
 
   // const replacements = {
@@ -217,7 +277,12 @@ function getItemRow(item: Invoice['items'], context: Context) {
   //   period: beginDate && `${formatDate(beginDate)} - ${formatDate(endDate)}`,
   // }
 
-  const label = t(`api/invoices/option/MembershipType/${item.price.id}/1`)
+  const label =
+    item.parent?.type === 'subscription_item_details'
+      ? t(`api/invoices/option/subscriptionType/${invoice.subscriptionType}`) +
+        `\n` +
+        `${formatDate(invoice.periodStart)} – ${formatDate(invoice.periodEnd)}`
+      : item.description
 
   // const meta = t.first(
   //   [
@@ -232,11 +297,14 @@ function getItemRow(item: Invoice['items'], context: Context) {
   //   '',
   // )
 
-  return getTableRow(label, item.quantity, item.amount)
+  return getTableRow(label ?? 'Transaktion', item.quantity, item.amount)
 }
 
-function getDiscountRow(item: Invoice['discounts'], context: Context) {
-  return getTableRow(item.coupon.name, null, -item.coupon.amount_off)
+function getDiscountRow(
+  { name, amountOff }: { name: string; amountOff: number },
+  context: Context,
+) {
+  return getTableRow(name, null, -amountOff)
 }
 
 function getDonationOrDiscount(
@@ -268,11 +336,28 @@ function addTable(doc: PDFDocument, invoice: Invoice, context: Context) {
     t('api/invoices/table/rowTotal'),
   )
 
-  const items = invoice.items.map((item) => getItemRow(item, context)) || []
+  const items =
+    invoice.items.map((item) => getItemRow({ item, invoice }, context)) || []
 
   const discounts =
-    invoice.discounts?.map((discount) => getDiscountRow(discount, context)) ||
-    []
+    invoice.totalDiscountAmounts?.map((discountAmount) => {
+      const discount = invoice.discounts.find((d) => {
+        if (typeof d === 'string') {
+          return false
+          // return d === discountAmount.discount
+        }
+
+        return d.id === discountAmount.discount
+      }) as Stripe.Discount | undefined
+
+      return getDiscountRow(
+        {
+          name: discount?.coupon?.name ?? 'Rabatt',
+          amountOff: discountAmount.amount,
+        },
+        context,
+      )
+    }) || []
 
   const rows = [header, ...items, ...discounts]
 
@@ -293,10 +378,7 @@ function addTable(doc: PDFDocument, invoice: Invoice, context: Context) {
   //
 
   const total = getTableRow(
-    t.first([
-      `api/invoices/table/${companyName}/total`,
-      'api/invoices/table/total',
-    ]),
+    t.first(['api/invoices/table/total']),
     null,
     totalAmount,
     {

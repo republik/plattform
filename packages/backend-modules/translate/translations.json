@@ -2525,6 +2525,18 @@
       "value": "Republik-Guetsliformen"
     },
     {
+      "key": "api/invoices/option/subscriptionType/YEARLY_SUBSCRIPTION",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/invoices/option/subscriptionType/MONTHLY_SUBSCRIPTION",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "api/invoices/option/subscriptionType/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
       "key": "api/invoices/option/MembershipType/ABO/1",
       "value": "Jahresmitgliedschaft"
     },
