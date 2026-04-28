@@ -14,7 +14,21 @@ const {
   associateReadAloudDerivativeWithCommit,
 } = require('../../../lib/Derivative/associateReadAloudDerivativeWithCommit')
 
-const resolveMetaLink = require('../../lib/resolveMetaLink')
+const {
+  lib: { resolve },
+} = require('@orbiting/backend-modules-documents')
+
+async function resolveMetaLink(url, context) {
+  const { repoId } = resolve.getRepoId(url)
+  if (!repoId) {
+    return null
+  }
+
+  const latestCommit = await context.loaders.Commit.byRepoIdLatest.load(repoId)
+  return (
+    (latestCommit && (await getDocument(latestCommit, {}, context))) || null
+  )
+}
 
 module.exports = async (_, { commitId }, context) => {
   const { user, pgdb, loaders, pubsub, t } = context
