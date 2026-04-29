@@ -1,3 +1,5 @@
+const { document: getDocument } = require('../Commit')
+
 const {
   Roles: { ensureUserHasRole },
 } = require('@orbiting/backend-modules-auth')
@@ -9,23 +11,24 @@ const {
 } = require('../../../lib/Derivative/SyntheticReadAloud')
 
 const {
-  lib: {
-    meta: { getMeta },
-  },
-} = require('@orbiting/backend-modules-documents')
-
-const {
-  lib: {
-    Documents: { getElasticDoc, addRelatedDocs },
-  },
-} = require('@orbiting/backend-modules-search')
-
-const { document: getDocument } = require('../Commit')
-
-const {
   associateReadAloudDerivativeWithCommit,
 } = require('../../../lib/Derivative/associateReadAloudDerivativeWithCommit')
-const pick = require('lodash/pick')
+
+const {
+  lib: { resolve },
+} = require('@orbiting/backend-modules-documents')
+
+async function resolveMetaLink(url, context) {
+  const { repoId } = resolve.getRepoId(url)
+  if (!repoId) {
+    return null
+  }
+
+  const latestCommit = await context.loaders.Commit.byRepoIdLatest.load(repoId)
+  return (
+    (latestCommit && (await getDocument(latestCommit, {}, context))) || null
+  )
+}
 
 module.exports = async (_, { commitId }, context) => {
   const { user, pgdb, loaders, pubsub, t } = context
@@ -43,32 +46,18 @@ module.exports = async (_, { commitId }, context) => {
 
   const doc = await getDocument(commit, {}, context)
 
-  const connection = {
-    nodes: [
-      {
-        type: 'Document',
-        entity: await getElasticDoc({ indexType: 'Document', doc }),
-      },
-    ],
+  // Resolve format name (no elastic needed)
+  const formatUrl = doc.content.meta.format
+  if (formatUrl && typeof formatUrl === 'string') {
+    const formatDoc = await resolveMetaLink(formatUrl, context)
+    if (formatDoc?.content?.meta) {
+      doc.content.meta.format = {
+        meta: {
+          title: formatDoc.content.meta.title,
+        },
+      }
+    }
   }
-
-  await addRelatedDocs({
-    connection,
-    context,
-  })
-
-  const { _all, _users } = connection.nodes[0].entity
-
-  const resolvedDoc = structuredClone(doc)
-  resolvedDoc._all = _all
-  resolvedDoc._users = _users
-
-  const resolvedMeta = await getMeta(resolvedDoc)
-
-  const { format } = pick(resolvedMeta, ['format.meta'])
-
-  doc.content.meta.format = format
-  doc.content.meta.contributors = resolvedMeta.contributors
 
   const derivative = await deriveSyntheticReadAloud(
     doc,
