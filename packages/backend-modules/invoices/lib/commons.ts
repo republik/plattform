@@ -1,4 +1,4 @@
-import { types } from 'swissqrbill'
+import { Data } from 'swissqrbill/types'
 import {
   generate as generateReference,
   validate as validateReference,
@@ -348,7 +348,7 @@ export function getHrId(string: string): string | null {
   return hrid.toUpperCase()
 }
 
-export function getSwissQrBillData(payment: PaymentResolved): types.Data {
+export function getSwissQrBillData(payment: PaymentResolved): Data {
   if (!payment.hrid) {
     throw new Error('Payment HR-ID missing')
   }

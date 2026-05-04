@@ -21,10 +21,13 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@orbiting/backend-modules-payments": "*",
     "node-iso11649": "^2.1.2",
-    "swissqrbill": "^3.2.1"
+    "pdfkit": "^0.18.0",
+    "swissqrbill": "^4.3.0"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-types": "*"
+    "@orbiting/backend-modules-types": "*",
+    "@types/pdfkit": "^0.17.5"
   }
 }
