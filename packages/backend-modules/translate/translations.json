@@ -2437,6 +2437,14 @@
       "value": "Gesamtbetrag"
     },
     {
+      "key": "api/invoices/table/totalInclTaxes",
+      "value": "Gesamtbetrag (inkl. {taxRate} % MWST)"
+    },
+    {
+      "key": "api/invoices/table/totalNoTaxes",
+      "value": "Gesamtbetrag (nicht MWST-pflichtig)"
+    },
+    {
       "key": "api/invoices/option/Goodie/NOTEBOOK/1",
       "value": "Notizbuch"
     },

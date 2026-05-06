@@ -2,7 +2,7 @@ import { formatPrice, timeFormat } from '@orbiting/backend-modules-formats'
 import { Context } from '@orbiting/backend-modules-types'
 import PDFDocument from 'pdfkit'
 import type { Stripe } from 'stripe'
-import { Table } from 'swissqrbill/pdf'
+import { PDFRow, Table } from 'swissqrbill/pdf'
 
 type PDFDocument = typeof PDFDocument
 
@@ -10,30 +10,9 @@ type PDFDocument = typeof PDFDocument
 type Company = 'PROJECT_R' | 'REPUBLIK'
 
 type Invoice = {
-  id: string
-  hrId: string
-  subscriptionId: string
   userId: string
   company: Company
-  externalId: string
-  metadata: Stripe.Invoice['metadata']
-  status: Stripe.Invoice['status']
-  total: number
-  totalBeforeDiscount: number
-  totalDiscountAmount: number
-  totalDiscountAmounts: Stripe.Invoice['total_discount_amounts']
-  totalExcludingTax: number
-  totalTaxAmounts: Stripe.Invoice['total_taxes']
-  totalTaxAmount: number
-  discounts: Stripe.Invoice['discounts']
-  items: Stripe.Invoice['lines']['data']
-  periodStart: Date
-  periodEnd: Date
-  createdAt: Date
-  updatedAt: Date
-  paymentMethodType?: 'CARD' | 'TWINT' | 'PAPAL' | null
-  subscriptionType?: string
-}
+} & Stripe.Invoice
 
 import utils from 'swissqrbill/utils'
 import {
@@ -43,6 +22,7 @@ import {
   PledgeOption,
   User,
 } from './commons'
+import { StripeInvoiceService } from './StripeInvoiceService'
 
 interface RowConfig {
   bold?: boolean
@@ -62,51 +42,41 @@ export async function findInvoice(
   input: { hrid: string },
   { pgdb }: Context,
 ): Promise<Invoice | undefined> {
-  // const invoice = await pgdb.payments.invoices.findOne({ hrId: input.hrid })
+  const invoiceEntry = await pgdb.payments.invoices.findOne({
+    hrId: input.hrid,
+  })
 
-  const invoice = await pgdb.queryOne(
-    `SELECT
-      i.id,
-      i."hrId",
-      i."subscriptionId",
-      i."userId",
-      i."company",
-      i."externalId",
-      i."metadata",
-      i."status",
-      i."total",
-      i."totalBeforeDiscount",
-      i."totalDiscountAmount",
-      i."totalDiscountAmounts",
-      i."totalExcludingTax",
-      i."totalTaxAmounts",
-      i."totalTaxAmount",
-      i."discounts",
-      i."items",
-      i."periodStart",
-      i."periodEnd",
-      i."createdAt",
-      i."updatedAt",
-      c."paymentMethodType",
-      s.type AS "subscriptionType"
-    FROM payments.invoices i
-    JOIN payments.charges c
-      ON c."invoiceId" = i.id
-    JOIN payments.subscriptions s
-      ON i."subscriptionId" = s.id
-    WHERE "hrId" = $1`,
-    [input.hrid],
-  )
-
-  if (!invoice) {
+  if (!invoiceEntry) {
     return undefined
   }
 
-  const charge = await pgdb.payments.charges.findOne({ invoiceId: invoice.id })
+  const chargeEntry = await pgdb.payments.charges.findOne({
+    invoiceId: invoiceEntry.id,
+  })
 
-  invoice.charge = charge
+  const invoiceService = new StripeInvoiceService()
 
-  return invoice
+  const [invoice, charge] = await Promise.all([
+    invoiceService.getInvoice(
+      invoiceEntry.company as Company,
+      invoiceEntry.externalId,
+    ),
+    invoiceService.getCharge(
+      chargeEntry.company as Company,
+      chargeEntry.externalId,
+    ),
+  ])
+
+  if (!invoice || !charge) {
+    return undefined
+  }
+
+  return {
+    ...invoice,
+    // From our DB
+    company: invoiceEntry.company,
+    userId: invoiceEntry.userId,
+  }
 }
 
 export const isApplicable: IsApplicableFn = function () {
@@ -203,11 +173,7 @@ function addDebtor(
     .moveDown()
 }
 
-function addMeta(
-  doc: PDFDocument,
-  { status, hrId, createdAt, paymentMethodType }: Invoice,
-  { t }: Context,
-) {
+function addMeta(doc: PDFDocument, invoice: Invoice, { t }: Context) {
   doc
     .fontSize(TITLE_FONT_SIZE)
     .moveDown()
@@ -237,7 +203,7 @@ function getTableRow(
   units: number | null,
   rowTotal: number | string,
   config?: RowConfig,
-) {
+): PDFRow {
   const fontName = config?.bold ? BOLD_FONT_NAME : REGULAR_FONT_NAME
 
   return {
@@ -253,6 +219,7 @@ function getTableRow(
       {
         text: typeof rowTotal === 'number' ? formatPrice(rowTotal) : rowTotal,
         width: utils.mm2pt(30),
+        align: 'right',
       },
     ],
   }
@@ -263,11 +230,11 @@ function getItemRow(
     item,
     invoice,
   }: {
-    item: Invoice['items'][number]
+    item: Invoice['lines']['data'][number]
     invoice: Invoice
   },
   context: Context,
-) {
+): PDFRow {
   const { t } = context
 
   // const replacements = {
@@ -278,12 +245,15 @@ function getItemRow(
   // }
 
   const label =
-    item.parent?.type === 'subscription_item_details'
-      ? t(`api/invoices/option/subscriptionType/${invoice.subscriptionType}`) +
-        `\n` +
-        `${formatDate(invoice.periodStart)} – ${formatDate(invoice.periodEnd)}`
-      : item.description
+    item.pricing?.price_details?.price?.product?.name ??
+    item.description ??
+    'Transaktion'
 
+  const period = item.period
+    ? `${formatDate(new Date(item.period.start * 1000))} – ${formatDate(
+        new Date(item.period.end * 1000),
+      )}`
+    : ''
   // const meta = t.first(
   //   [
   //     replacements.period &&
@@ -297,38 +267,24 @@ function getItemRow(
   //   '',
   // )
 
-  return getTableRow(label ?? 'Transaktion', item.quantity, item.amount)
+  return getTableRow(
+    `${label}${period ? `\n${period}` : ''}`,
+    item.quantity,
+    item.amount,
+  )
 }
 
 function getDiscountRow(
   { name, amountOff }: { name: string; amountOff: number },
   context: Context,
-) {
+): PDFRow {
   return getTableRow(name, null, -amountOff)
-}
-
-function getDonationOrDiscount(
-  total: number,
-  donation: number,
-  options: PledgeOption[],
-) {
-  const optionsTotal = options.reduce((prev: number, option) => {
-    const { price, periods, amount } = option
-
-    const pricePerUnit = price * (periods || 1)
-    const optionTotal = amount * pricePerUnit
-
-    return prev + optionTotal
-  }, 0)
-
-  return donation + Math.max(0, total - optionsTotal - donation)
 }
 
 function addTable(doc: PDFDocument, invoice: Invoice, context: Context) {
   const { t } = context
 
   const totalAmount = invoice.total || 0
-  const companyName = invoice.company
 
   const header = getTableRow(
     t('api/invoices/table/option'),
@@ -337,10 +293,11 @@ function addTable(doc: PDFDocument, invoice: Invoice, context: Context) {
   )
 
   const items =
-    invoice.items.map((item) => getItemRow({ item, invoice }, context)) || []
+    invoice.lines.data.map((item) => getItemRow({ item, invoice }, context)) ||
+    []
 
   const discounts =
-    invoice.totalDiscountAmounts?.map((discountAmount) => {
+    invoice.total_discount_amounts?.map((discountAmount) => {
       const discount = invoice.discounts.find((d) => {
         if (typeof d === 'string') {
           return false
@@ -359,7 +316,19 @@ function addTable(doc: PDFDocument, invoice: Invoice, context: Context) {
       )
     }) || []
 
-  const rows = [header, ...items, ...discounts]
+  const taxes =
+    invoice.total_taxes?.map((tax) => {
+      return getTableRow(
+        t('api/invoices/table/totalInclTaxes', {
+          taxRate: tax.tax_rate_details?.tax_rate?.percentage,
+        }),
+        null,
+        totalAmount,
+        { bold: true },
+      )
+    }) ?? []
+
+  const rows = [header, ...items, ...discounts, ...taxes]
 
   // const donationOrDiscount = getDonationOrDiscount(
   //   totalAmount,
@@ -378,7 +347,12 @@ function addTable(doc: PDFDocument, invoice: Invoice, context: Context) {
   //
 
   const total = getTableRow(
-    t.first(['api/invoices/table/total']),
+    invoice.total_taxes?.length > 0
+      ? t('api/invoices/table/totalInclTaxes', {
+          taxRate:
+            invoice.total_taxes?.[0].tax_rate_details?.tax_rate?.percentage,
+        })
+      : t('api/invoices/table/totalNoTaxes'),
     null,
     totalAmount,
     {
@@ -443,7 +417,7 @@ export async function generate(
         context,
       )
       addDebtor(doc, { address: userAddress, email: user.email })
-      addMeta(doc, invoice, context)
+      // addMeta(doc, invoice, context)
       addTable(doc, invoice, context)
 
       doc.end()
