@@ -25,7 +25,7 @@ const Destroy = ({ file }) => {
   }
 
   return (
-    <Button onClick={onClick} disabled={loading} small>
+    <Button onClick={onClick} disabled={loading} small style={{ whiteSpace: 'nowrap' }}>
       entfernen
     </Button>
   )
