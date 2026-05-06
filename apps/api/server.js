@@ -236,6 +236,8 @@ const run = async (workerId, config) => {
     require('@orbiting/backend-modules-publikator/express/uncommittedChanges'),
     require('@orbiting/backend-modules-publikator/express/webhook'),
     require('@orbiting/backend-modules-invoices/express'),
+    // needed for the gender sheet import
+    require('@orbiting/backend-modules-gsheets/express/gsheets'),
   ]
 
   if (MAIL_EXPRESS_RENDER) {
