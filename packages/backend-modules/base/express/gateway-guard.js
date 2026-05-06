@@ -37,6 +37,7 @@ const PUBLIC_PATHS = [
   '/publikator/webhook/',
   '/invoices/',
   '/payments/',
+  '/gsheets/',
 ]
 
 function isPublicPath(path) {
