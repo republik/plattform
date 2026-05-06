@@ -1,9 +1,10 @@
+'use client'
 import { gql, useQuery } from '@apollo/client'
-import { Label, A } from '@project-r/styleguide'
+import { A, Label } from '@project-r/styleguide'
 
-import { REPUBLIK_FRONTEND_URL } from '../../server/constants'
-import { DD, DL, Section, SectionTitle } from '../Display/utils'
-import ErrorMessage from '../ErrorMessage'
+import { DD, DL, Section, SectionTitle } from '@/components/Display/utils'
+import ErrorMessage from '@/components/ErrorMessage'
+import { REPUBLIK_FRONTEND_URL } from '@/server/constants'
 
 const GET_ACCESS_TOKENS = gql`
   query getAccessTokens($userId: String) {

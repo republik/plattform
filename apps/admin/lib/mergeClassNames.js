@@ -1,4 +1,4 @@
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
 
 const mergeClassNames = (classA, classB) =>
   typeof classB === 'undefined'

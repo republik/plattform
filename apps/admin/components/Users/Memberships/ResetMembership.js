@@ -1,17 +1,11 @@
-import { Component } from 'react'
-import { Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
+import { Mutation } from '@apollo/client/react/components'
+import { Component } from 'react'
 
-import {
-  Button,
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
-  Interaction,
-  Loader,
-} from '@project-r/styleguide'
+import { Interaction, Loader } from '@project-r/styleguide'
 
-import { TextButton } from '../../Display/utils'
+import { TextButton } from '@/components/Display/utils'
+import { Button, SimpleDialog } from '@/components/ui'
 
 const RESET_MEMBERSHIP = gql`
   mutation resetMembership($membershipId: ID!) {
@@ -58,35 +52,35 @@ export default class ResetMembership extends Component {
           <Mutation mutation={RESET_MEMBERSHIP} refetchQueries={refetchQueries}>
             {(resetMembership, { loading, error }) => {
               return (
-                <Overlay onClose={this.handleClose}>
-                  <OverlayToolbar onClose={this.handleClose} />
-                  <OverlayBody>
-                    <Loader
-                      loading={loading}
-                      error={error}
-                      render={() => (
-                        <>
-                          <Interaction.H2>
-                            Mitgliedschaft tatsächlich zurücksetzen?
-                          </Interaction.H2>
-                          <Interaction.P>
-                            Durch das Zurücksetzen einer Mitliedschaft wird sie
-                            deaktivert, Perioden entfernt und an den Pledger
-                            zurückgegeben. Sie kann daraufhin wieder aktiviert
-                            oder eingelöst werden.
-                          </Interaction.P>
-                          <br />
-                          <Button
-                            primary
-                            onClick={this.submitHandler(resetMembership)}
-                          >
-                            Ja
-                          </Button>
-                        </>
-                      )}
-                    />
-                  </OverlayBody>
-                </Overlay>
+                <SimpleDialog
+                  onOpenChange={(open) => {
+                    if (!open) {
+                      this.handleClose()
+                    }
+                  }}
+                >
+                  <Loader
+                    loading={loading}
+                    error={error}
+                    render={() => (
+                      <>
+                        <Interaction.H2>
+                          Mitgliedschaft tatsächlich zurücksetzen?
+                        </Interaction.H2>
+                        <Interaction.P>
+                          Durch das Zurücksetzen einer Mitliedschaft wird sie
+                          deaktivert, Perioden entfernt und an den Pledger
+                          zurückgegeben. Sie kann daraufhin wieder aktiviert
+                          oder eingelöst werden.
+                        </Interaction.P>
+                        <br />
+                        <Button onClick={this.submitHandler(resetMembership)}>
+                          Ja
+                        </Button>
+                      </>
+                    )}
+                  />
+                </SimpleDialog>
               )
             }}
           </Mutation>

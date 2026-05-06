@@ -17,10 +17,6 @@ const nextConfig = withBundleAnalyzer({
     ignoreDuringBuilds: true,
   },
   generateBuildId: () => buildId,
-  transpilePackages: [
-    '@project-r/styleguide',
-    '@republik/nextjs-apollo-client',
-  ],
   env: { BUILD_ID: buildId },
   async redirects() {
     return [
@@ -32,6 +28,12 @@ const nextConfig = withBundleAnalyzer({
       {
         source: '/~:userId',
         destination: '/users/:userId',
+        permanent: false,
+      },
+      {
+        source: '/users/:userId',
+        has: [{ type: 'query', key: 'section', value: '(?<section>.*)' }],
+        destination: '/users/:userId/:section',
         permanent: false,
       },
     ]

@@ -1,6 +1,6 @@
-import { fontStyles, colors } from '@project-r/styleguide'
+import { fontStyles } from '@project-r/styleguide'
 
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
 
 export const styles = {
   info: css({
@@ -32,7 +32,7 @@ export const styles = {
     paddingTop: 5,
     paddingBottom: 5,
     '&:nth-child(odd)': {
-      backgroundColor: colors.secondaryBg,
+      backgroundColor: 'hover',
     },
   }),
 }

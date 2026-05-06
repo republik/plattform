@@ -1,9 +1,10 @@
-import { Component } from 'react'
-import { Query, Mutation } from '@apollo/client/react/components'
+'use client'
 import { gql } from '@apollo/client'
-import { Checkbox, Loader, InlineSpinner } from '@project-r/styleguide'
+import { Mutation, Query } from '@apollo/client/react/components'
+import { Checkbox, InlineSpinner, Loader } from '@project-r/styleguide'
+import { Component } from 'react'
 
-import { InteractiveSection, SectionTitle, TextButton } from '../Display/utils'
+import { Section, SectionTitle, TextButton } from '@/components/Display/utils'
 import { IconDone } from '@republik/icons'
 
 const ROLES = [
@@ -133,7 +134,7 @@ const Roles = ({ userId }) => {
               const { user } = data
 
               return (
-                <InteractiveSection>
+                <Section>
                   <SectionTitle>Rollen</SectionTitle>
                   {ROLES.map((role) => (
                     <UpdateRole
@@ -142,7 +143,7 @@ const Roles = ({ userId }) => {
                       role={role}
                     />
                   ))}
-                </InteractiveSection>
+                </Section>
               )
             }}
           />

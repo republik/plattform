@@ -8,18 +8,11 @@ import {
   ReactivateMagazineSubscriptionDocument,
   UserMagazineSubscriptionsQuery,
 } from '#graphql/republik-api/__generated__/gql/graphql'
+import { Button, SimpleDialog } from '@/components/ui'
 import { useMutation, useQuery } from '@apollo/client'
-import {
-  Button,
-  colors,
-  Field,
-  Interaction,
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
-} from '@project-r/styleguide'
+import { Field } from '@project-r/styleguide'
+import { css } from '@republik/theme/css'
 import { TextButton } from 'components/Display/utils'
-import { css } from 'glamor'
 import { useTranslation } from 'lib/useT'
 import { ReactNode, useState } from 'react'
 import TextareaAutosize from 'react-autosize-textarea'
@@ -158,7 +151,6 @@ export function MagazineSubscriptionActions({
         )
       ) : (
         <TextButton
-          small
           onClick={() => {
             setConfirmAction('cancel')
           }}
@@ -188,19 +180,23 @@ function ConfirmOverlay({
   children,
 }: ConfirmOverlayProps) {
   return (
-    <Overlay onClose={() => close()}>
-      <OverlayToolbar onClose={() => close()} />
-      <OverlayBody>
-        <Interaction.H2 style={{ marginBottom: '1rem' }}>
-          {title}
-        </Interaction.H2>
-
+    <SimpleDialog
+      title={title}
+      trigger={null}
+      open
+      onOpenChange={(open) => {
+        if (!open) {
+          close()
+        }
+      }}
+    >
+      <>
         {error && (
           <div
-            {...css({
-              background: colors.error,
+            className={css({
+              background: 'error',
               color: 'white',
-              padding: '1rem',
+              padding: '4',
             })}
           >
             {error.message}
@@ -214,19 +210,17 @@ function ConfirmOverlay({
           }}
         >
           <div
-            {...css({
-              marginBlock: '1rem',
+            className={css({
+              marginBlock: '4',
             })}
           >
             {children}
           </div>
 
-          <Button primary type='submit'>
-            {buttonLabel}
-          </Button>
+          <Button type='submit'>{buttonLabel}</Button>
         </form>
-      </OverlayBody>
-    </Overlay>
+      </>
+    </SimpleDialog>
   )
 }
 

@@ -1,30 +1,33 @@
-import { Component, Fragment } from 'react'
-import { Query, Mutation } from '@apollo/client/react/components'
-import { gql } from '@apollo/client'
-import { css } from 'glamor'
-import moment from 'moment'
+'use client'
 
-import withT from '../../lib/withT'
+import { gql } from '@apollo/client'
+import { Mutation, Query } from '@apollo/client/react/components'
+import { css, cx } from '@republik/theme/css'
+import moment from 'moment'
+import { Component, Fragment } from 'react'
+
+import withT from '@/lib/withT'
 
 import {
-  colors,
-  Button,
-  Interaction,
-  InlineSpinner,
-  Label,
-  HR,
   A,
-  Loader,
-  Overlay,
-  OverlayToolbar,
-  OverlayBody,
+  Button,
   fontStyles,
+  HR,
+  InlineSpinner,
+  Interaction,
+  Label,
+  Loader,
 } from '@project-r/styleguide'
 
-import ErrorMessage from '../ErrorMessage'
-import List, { Item } from '../List'
+import {
+  displayDateTime,
+  Section,
+  SectionTitle,
+} from '@/components/Display/utils'
+import ErrorMessage from '@/components/ErrorMessage'
+import List, { Item } from '@/components/List'
+import { SimpleDialog } from '@/components/ui'
 import Link from 'next/link'
-import { displayDateTime, Section, SectionTitle } from '../Display/utils'
 
 const GET_ACCESS_GRANTS = gql`
   query user($id: String) {
@@ -122,7 +125,7 @@ const styles = {
   grant: css({
     width: `calc(50% - ${GUTTER}px)`,
     padding: 10,
-    backgroundColor: colors.secondaryBg,
+    backgroundColor: 'hover',
     marginBottom: GUTTER,
   }),
   button: css({
@@ -241,13 +244,13 @@ class Grant extends Component {
     const { isExpanded, isOpenRevoke, isOpenInvalidate } = this.state
 
     return (
-      <div {...styles.grant}>
+      <div className={styles.grant}>
         {grant.granter && (
           <Interaction.P>
             <Label>{t('account/access/Grant/granter/label')}</Label>
             <br />
-            <Link href={`/users/${grant.granter.id}`} passHref legacyBehavior>
-              <A>{`${grant.granter.name} (${grant.granter.email})`}</A>
+            <Link href={`/users/${grant.granter.id}`}>
+              {`${grant.granter.name} (${grant.granter.email})`}
             </Link>
           </Interaction.P>
         )}
@@ -256,8 +259,8 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/recipient/label')}</Label>
             <br />
-            <Link href={`/users/${grant.recipient.id}`} passHref legacyBehavior>
-              <A>{`${grant.recipient.name} (${grant.recipient.email})`}</A>
+            <Link href={`/users/${grant.recipient.id}`}>
+              {`${grant.recipient.name} (${grant.recipient.email})`}
             </Link>
           </Interaction.P>
         )}
@@ -381,72 +384,77 @@ class Grant extends Component {
           <HR />
           {!grant.revokedAt && !grant.beginAt && !grant.invalidatedAt && (
             <>
-              <div {...styles.button}>
-                <Button primary onClick={this.openHandlerRevoke}>
+              <div className={styles.button}>
+                <Button onClick={this.openHandlerRevoke}>
                   {t('account/access/Grant/button/revoke')}
                 </Button>
               </div>
-              {isOpenRevoke && (
-                <Mutation
-                  mutation={REVOKE_ACCESS}
-                  refetchQueries={() => [
-                    {
-                      query: GET_ACCESS_GRANTS,
-                      variables: { id: userId },
-                    },
-                  ]}
-                >
-                  {(revokeAccess, { loading, error }) => {
-                    return (
-                      <Overlay onClose={this.closeHandlerRevoke}>
-                        <OverlayToolbar onClose={this.closeHandlerRevoke} />
-                        <OverlayBody>
-                          <Loader
-                            loading={loading}
-                            error={error}
-                            render={() => (
-                              <Fragment>
-                                <div>
-                                  {t(
-                                    'account/access/Grant/button/revoke/confirm/description',
-                                  )}
-                                </div>
-                                {error && <ErrorMessage error={error} />}
-                                {loading && <InlineSpinner />}
-                                {!loading && (
-                                  <div
-                                    {...styles.button}
-                                    {...styles.confirmButton}
-                                  >
-                                    <Button
-                                      primary
-                                      onClick={this.revokeHandler(revokeAccess)}
-                                    >
-                                      {t('account/access/Grant/button/confirm')}
-                                    </Button>
-                                  </div>
+
+              <Mutation
+                mutation={REVOKE_ACCESS}
+                refetchQueries={() => [
+                  {
+                    query: GET_ACCESS_GRANTS,
+                    variables: { id: userId },
+                  },
+                ]}
+              >
+                {(revokeAccess, { loading, error }) => {
+                  return (
+                    <SimpleDialog
+                      title='Access Grant zurückziehen'
+                      open={isOpenRevoke}
+                      onOpenChange={(open) => {
+                        if (!open) {
+                          this.closeHandlerRevoke()
+                        }
+                      }}
+                    >
+                      <Loader
+                        loading={loading}
+                        error={error}
+                        render={() => (
+                          <Fragment>
+                            <div>
+                              {t(
+                                'account/access/Grant/button/revoke/confirm/description',
+                              )}
+                            </div>
+                            {error && <ErrorMessage error={error} />}
+                            {loading && <InlineSpinner />}
+                            {!loading && (
+                              <div
+                                className={cx(
+                                  styles.button,
+                                  styles.confirmButton,
                                 )}
-                              </Fragment>
+                              >
+                                <Button
+                                  onClick={this.revokeHandler(revokeAccess)}
+                                >
+                                  {t('account/access/Grant/button/confirm')}
+                                </Button>
+                              </div>
                             )}
-                          />
-                        </OverlayBody>
-                      </Overlay>
-                    )
-                  }}
-                </Mutation>
-              )}
+                          </Fragment>
+                        )}
+                      />
+                    </SimpleDialog>
+                  )
+                }}
+              </Mutation>
             </>
           )}
           {(!grant.invalidatedAt || !grant.followupAt) && (
             <>
-              <div {...styles.button}>
-                <Button primary onClick={this.openHandlerInvalidate}>
+              <div className={styles.button}>
+                <Button onClick={this.openHandlerInvalidate}>
                   {!grant.invalidatedAt
                     ? t('account/access/Grant/button/invalidate')
                     : t('account/access/Grant/button/noFollowup')}
                 </Button>
               </div>
-              {isOpenInvalidate && (
+              {
                 <Mutation
                   mutation={INVALIDATE_ACCESS}
                   refetchQueries={() => [
@@ -458,60 +466,66 @@ class Grant extends Component {
                 >
                   {(invalidateAccess, { loading, error }) => {
                     return (
-                      <Overlay onClose={this.closeHandlerInvalidate}>
-                        <OverlayToolbar onClose={this.closeHandlerInvalidate} />
-                        <OverlayBody>
-                          <Loader
-                            loading={loading}
-                            error={error}
-                            render={() => (
-                              <Fragment>
-                                <div>
-                                  {!grant.invalidatedAt
-                                    ? t(
-                                        'account/access/Grant/button/invalidate/confirm/description',
-                                      )
-                                    : t(
-                                        'account/access/Grant/button/noFollowup/confirm/description',
-                                      )}
-                                  <p {...styles.info}>
-                                    {!grant.invalidatedAt &&
-                                      t(
-                                        'account/access/Grant/button/invalidate/confirm/description/detail',
-                                      )}
-                                  </p>
-                                </div>
-                                {error && <ErrorMessage error={error} />}
-                                {loading && <InlineSpinner />}
-                                {!loading && (
-                                  <div
-                                    {...styles.button}
-                                    {...styles.confirmButton}
+                      <SimpleDialog
+                        title='Access Grant vorzeitig beenden'
+                        open={isOpenInvalidate}
+                        onOpenChange={(open) => {
+                          if (!open) {
+                            this.closeHandlerInvalidate()
+                          }
+                        }}
+                      >
+                        <Loader
+                          loading={loading}
+                          error={error}
+                          render={() => (
+                            <Fragment>
+                              <div>
+                                {!grant.invalidatedAt
+                                  ? t(
+                                      'account/access/Grant/button/invalidate/confirm/description',
+                                    )
+                                  : t(
+                                      'account/access/Grant/button/noFollowup/confirm/description',
+                                    )}
+                                <p className={styles.info}>
+                                  {!grant.invalidatedAt &&
+                                    t(
+                                      'account/access/Grant/button/invalidate/confirm/description/detail',
+                                    )}
+                                </p>
+                              </div>
+                              {error && <ErrorMessage error={error} />}
+                              {loading && <InlineSpinner />}
+                              {!loading && (
+                                <div
+                                  className={cx(
+                                    styles.button,
+                                    styles.confirmButton,
+                                  )}
+                                >
+                                  <Button
+                                    onClick={this.invalidateHandler(
+                                      invalidateAccess,
+                                    )}
                                   >
-                                    <Button
-                                      primary
-                                      onClick={this.invalidateHandler(
-                                        invalidateAccess,
-                                      )}
-                                    >
-                                      {t('account/access/Grant/button/confirm')}
-                                    </Button>
-                                  </div>
-                                )}
-                              </Fragment>
-                            )}
-                          />
-                        </OverlayBody>
-                      </Overlay>
+                                    {t('account/access/Grant/button/confirm')}
+                                  </Button>
+                                </div>
+                              )}
+                            </Fragment>
+                          )}
+                        />
+                      </SimpleDialog>
                     )
                   }}
                 </Mutation>
-              )}
+              }
             </>
           )}
         </Fragment>
       </div>
-    );
+    )
   }
 }
 
@@ -526,9 +540,9 @@ const Slots = ({ slots, t }) => {
 }
 
 const Grants = ({ grants, userId, t }) => (
-  <div {...styles.container}>
+  <div className={styles.container}>
     <SectionTitle>{t('account/access/Grants/title')}</SectionTitle>
-    <div {...styles.grants}>
+    <div className={styles.grant}>
       {grants && grants.length > 0 ? (
         grants.map((grant) => (
           <Grant
@@ -546,7 +560,7 @@ const Grants = ({ grants, userId, t }) => (
 )
 
 const Campaigns = ({ campaigns, userId, t }) => (
-  <div {...styles.container}>
+  <div className={styles.container}>
     <SectionTitle>{t('account/access/Campaigns/title')}</SectionTitle>
     {campaigns &&
       campaigns.length > 0 &&
@@ -566,7 +580,7 @@ const Campaigns = ({ campaigns, userId, t }) => (
             )}
           </Label>
           {campaign.slots && <Slots slots={campaign.slots} t={t} />}
-          <div {...styles.grants}>
+          <div className={styles.grant}>
             {campaign.grants.map((grant) => (
               <Grant
                 key={`camp-grants-${grant.id}`}

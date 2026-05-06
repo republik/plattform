@@ -1,17 +1,11 @@
-import { Component, Fragment } from 'react'
-import { Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
+import { Mutation } from '@apollo/client/react/components'
+import { Component, Fragment } from 'react'
 
-import {
-  Button,
-  Overlay,
-  OverlayBody,
-  OverlayToolbar,
-  Interaction,
-  Loader,
-} from '@project-r/styleguide'
+import { Interaction, Loader } from '@project-r/styleguide'
 
-import { TextButton } from '../../Display/utils'
+import { TextButton } from '@/components/Display/utils'
+import { Button, SimpleDialog } from '@/components/ui'
 
 const CANCEL_PLEDGE = gql`
   mutation cancelPledge($pledgeId: ID!) {
@@ -59,27 +53,27 @@ export default class CancelPledge extends Component {
           <Mutation mutation={CANCEL_PLEDGE} refetchQueries={refetchQueries}>
             {(cancelPledge, { loading, error }) => {
               return (
-                <Overlay onClose={this.closeHandler}>
-                  <OverlayToolbar onClose={this.closeHandler} />
-                  <OverlayBody>
-                    <Loader
-                      loading={loading}
-                      error={error}
-                      render={() => (
-                        <Fragment>
-                          <Interaction.H2>Bist du dir sicher?</Interaction.H2>
-                          <br />
-                          <Button
-                            primary
-                            onClick={this.submitHandler(cancelPledge)}
-                          >
-                            Ja
-                          </Button>
-                        </Fragment>
-                      )}
-                    />
-                  </OverlayBody>
-                </Overlay>
+                <SimpleDialog
+                  onOpenChange={(open) => {
+                    if (!open) {
+                      this.closeHandler()
+                    }
+                  }}
+                >
+                  <Loader
+                    loading={loading}
+                    error={error}
+                    render={() => (
+                      <Fragment>
+                        <Interaction.H2>Bist du dir sicher?</Interaction.H2>
+                        <br />
+                        <Button onClick={this.submitHandler(cancelPledge)}>
+                          Ja
+                        </Button>
+                      </Fragment>
+                    )}
+                  />
+                </SimpleDialog>
               )
             }}
           </Mutation>

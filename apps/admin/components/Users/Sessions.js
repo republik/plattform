@@ -1,17 +1,19 @@
-import { Component } from 'react'
-import { css } from 'glamor'
-import compose from 'lodash/flowRight'
-import { graphql } from '@apollo/client/react/hoc'
+'use client'
+
+import List, { Item } from '@/components/List'
 import { gql } from '@apollo/client'
-import { Label, Interaction, colors } from '@project-r/styleguide'
-import List, { Item } from '../List'
+import { graphql } from '@apollo/client/react/hoc'
+import { Interaction, Label } from '@project-r/styleguide'
+import { css } from '@republik/theme/css'
+import compose from 'lodash/flowRight'
+import { Component } from 'react'
 
 import {
   displayDateTime,
   Section,
   SectionTitle,
   TextButton,
-} from '../Display/utils'
+} from '@/components/Display/utils'
 
 const sessionQuery = gql`
   query user($id: String) {
@@ -44,7 +46,7 @@ const clearSessionsMutation = gql`
 const styles = {
   session: css({
     padding: 10,
-    backgroundColor: colors.secondaryBg,
+    backgroundColor: 'hover',
   }),
 }
 
@@ -61,7 +63,7 @@ class SessionOverview extends Component {
         <List>
           {sessions.map((session, index) => (
             <Item key={`session-${index}`}>
-              <div {...styles.session}>
+              <div className={styles.session}>
                 <Label>Gültig bis {displayDateTime(session.expiresAt)}</Label>
                 <Interaction.P>
                   {session.city} {session.country}

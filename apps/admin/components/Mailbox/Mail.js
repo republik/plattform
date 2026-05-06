@@ -1,20 +1,13 @@
-import { Query } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import { css, merge } from 'glamor'
+import { Query } from '@apollo/client/react/components'
+import { css, cx } from '@republik/theme/css'
 
-import {
-  Loader,
-  A,
-  Label,
-  Overlay,
-  OverlayToolbar,
-  OverlayBody,
-  colors,
-} from '@project-r/styleguide'
+import { A, Label, Loader } from '@project-r/styleguide'
 
-import { displayDateTime } from '../Display/utils'
-import { fragments } from './utils'
+import { displayDateTime } from '@/components/Display/utils'
+import { SimpleDialog } from '@/components/ui'
 import Address, { Bucket as AddressBucket } from './Address'
+import { fragments } from './utils'
 
 const GET_MAILBOX_HTML = gql`
   query getMailboxHtml($id: ID) {
@@ -35,7 +28,7 @@ const styles = {
     whiteSpace: 'normal',
   }),
   errornous: css({
-    color: colors.error,
+    color: 'error',
   }),
   contentFrame: css({
     marginTop: 10,
@@ -46,10 +39,8 @@ const styles = {
 }
 
 const HeaderLine = ({ label, errornous, children }) => {
-  const styling = merge(styles.headerLine, errornous && styles.errornous)
-
   return (
-    <div {...styling}>
+    <div className={cx(styles.headerLine, errornous && styles.errornous)}>
       <Label>{label}</Label> {children}
     </div>
   )
@@ -94,7 +85,7 @@ export const Body = ({ mail }) => (
                     frameBorder='0'
                     sandbox={''}
                     srcDoc={mail.html}
-                    {...styles.contentFrame}
+                    className={styles.contentFrame}
                   />
                 )
               )
@@ -125,16 +116,19 @@ export const Body = ({ mail }) => (
   </>
 )
 
-const Mail = (props) => {
-  const { mail, onClose } = props
-
+const Mail = ({ open, mail, onClose }) => {
   return (
-    <Overlay onClose={onClose}>
-      <OverlayToolbar onClose={onClose} />
-      <OverlayBody>
-        <Body mail={mail} />
-      </OverlayBody>
-    </Overlay>
+    <SimpleDialog
+      open={open}
+      title='E-Mail'
+      onOpenChange={(open) => {
+        if (!open) {
+          onClose()
+        }
+      }}
+    >
+      <Body mail={mail} />
+    </SimpleDialog>
   )
 }
 

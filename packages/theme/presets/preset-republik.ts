@@ -1,5 +1,8 @@
 import { definePreset } from '@pandacss/dev'
 import { buttonRecipe } from '../src/recipes/button'
+import { dialogRecipe } from '../src/recipes/dialog'
+import { switchRecipe } from '../src/recipes/switch'
+import { toastRecipe } from '../src/recipes/toast'
 
 export const presetRepublik = definePreset({
   name: 'republik',
@@ -132,6 +135,20 @@ export const presetRepublik = definePreset({
                 base: '{colors.neutral.950}',
                 _light: '{colors.neutral.950}',
                 _dark: '{colors.neutral.50}',
+              },
+            },
+            secondary: {
+              value: {
+                base: 'rgba(0,0,0,0.55)',
+                _light: 'rgba(0,0,0,0.55)',
+                _dark: '#rgba(255,255,255,0.55)',
+              },
+            },
+            tertiary: {
+              value: {
+                base: 'rgba(0,0,0,0.45)',
+                _light: 'rgba(0,0,0,0.45)',
+                _dark: '#rgba(255,255,255,0.45)',
               },
             },
             inverted: {
@@ -529,6 +546,12 @@ export const presetRepublik = definePreset({
 
     recipes: {
       button: buttonRecipe,
+    },
+
+    slotRecipes: {
+      dialog: dialogRecipe,
+      switchRecipe: switchRecipe,
+      toast: toastRecipe,
     },
 
     keyframes: {

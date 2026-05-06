@@ -1,16 +1,11 @@
-import { useState } from 'react'
-import { Query, Mutation } from '@apollo/client/react/components'
 import { gql } from '@apollo/client'
-import { Checkbox, Loader, InlineSpinner } from '@project-r/styleguide'
+import { Mutation, Query } from '@apollo/client/react/components'
+import { Checkbox, InlineSpinner, Loader } from '@project-r/styleguide'
+import { useState } from 'react'
 
 import { IconDone } from '@republik/icons'
 
-import {
-  InteractiveSection,
-  Section,
-  SectionTitle,
-  TextButton,
-} from '../../Display/utils'
+import { Section, SectionTitle, TextButton } from '@/components/Display/utils'
 
 const GET_CREDENTIALS = gql`
   query user($id: String) {
@@ -114,7 +109,7 @@ const Credentials = ({ userId }) => {
               }
 
               return (
-                <InteractiveSection>
+                <Section>
                   <SectionTitle>Rollen verifizieren</SectionTitle>
                   {[...credentials]
                     .sort((a) => (a.isListed ? -1 : 0)) // bubble listed credentials to top
@@ -125,7 +120,7 @@ const Credentials = ({ userId }) => {
                         credential={credential}
                       />
                     ))}
-                </InteractiveSection>
+                </Section>
               )
             }}
           />

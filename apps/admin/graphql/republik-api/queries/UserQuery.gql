@@ -1,0 +1,41 @@
+query UserProfile($id: String) {
+  user(slug: $id) {
+    id
+    firstName
+    lastName
+    name
+    slug
+    initials
+    email
+    phoneNumber
+    gender
+    birthyear
+    username
+    portrait(size: SMALL)
+    roles
+    address {
+      organization
+      name
+      line1
+      line2
+      postalCode
+      city
+      country
+    }
+    activeMembership {
+      type {
+        name
+      }
+      overdue
+      renew
+    }
+    isListed
+    hasPublicProfile
+    memberships {
+      id
+      periods {
+        endDate
+      }
+    }
+  }
+}

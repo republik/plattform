@@ -1,0 +1,59 @@
+mutation UpdateUserEmail($id: ID!, $email: String!) {
+  updateEmail(userId: $id, email: $email) {
+    id
+    email
+  }
+}
+
+mutation UpdateUserDetails(
+  $id: ID!
+  $birthyear: Int
+  $firstName: String!
+  $lastName: String!
+  $phoneNumber: String
+  $gender: String
+  $address: AddressInput
+) {
+  updateUser(
+    userId: $id
+    birthyear: $birthyear
+    firstName: $firstName
+    lastName: $lastName
+    phoneNumber: $phoneNumber
+    gender: $gender
+  ) {
+    id
+    name
+    firstName
+    lastName
+    phoneNumber
+    birthyear
+    gender
+  }
+}
+
+mutation UpdateUserAddress($id: ID!, $address: AddressInput) {
+  updateUser(userId: $id, address: $address) {
+    id
+    address {
+      id
+      name
+      line1
+      line2
+      postalCode
+      city
+      country
+    }
+  }
+}
+
+mutation RemoveUserFromRole($userId: ID!, $role: String!) {
+  removeUserFromRole(userId: $userId, role: $role) {
+    id
+  }
+}
+mutation AddUserToRole($userId: ID!, $role: String!) {
+  addUserToRole(userId: $userId, role: $role) {
+    id
+  }
+}

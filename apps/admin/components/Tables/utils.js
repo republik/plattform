@@ -1,6 +1,5 @@
-import { css } from 'glamor'
-import { colors } from '@project-r/styleguide'
-import SortIndicator from '../SortIndicator'
+import { css } from '@republik/theme/css'
+import SortIndicator from '@/components/SortIndicator'
 
 export const tableStyles = {
   table: css({
@@ -9,51 +8,52 @@ export const tableStyles = {
   }),
   link: css({
     textDecoration: 'none',
-    color: colors.primary,
-    ':visited': {
-      color: colors.primary,
+    color: 'primary',
+    _visited: {
+      color: 'primary',
     },
-    ':hover': {
-      color: colors.secondary,
+    _hover: {
+      color: 'primaryHover',
     },
     cursor: 'pointer',
   }),
   row: css({
     height: '35px',
-    '&:nth-child(odd)': {
-      backgroundColor: colors.secondaryBg,
+    _odd: {
+      backgroundColor: 'hover',
     },
   }),
   headRow: css({
     height: '40px',
     backgroundColor: '#fff',
-    '&:nth-child(1) th': {
-      borderBottom: `1px solid ${colors.divider}`,
-      background: 'white',
+    '& > th': {
       position: 'sticky',
-      top: -20,
+      top: '-4',
       zIndex: 10,
+      borderBottom: `1px solid token(colors.divider)`,
+      background: 'white',
     },
   }),
   selectableRow: css({
     '& td': {
       transition: 'border-color 0.2s',
-      borderTop: `1px solid ${colors.secondary}00`,
-      borderBottom: `1px solid ${colors.secondary}00`,
+      borderTop: `1px solid transparent`,
+      borderBottom: `1px solid transparent`,
+      borderColor: 'transparent',
     },
     '&[data-active="true"] td': {
       transition: 'none',
-      borderColor: colors.secondary,
+      borderColor: 'text',
     },
     '&:hover, &[data-active="true"]': {
-      color: colors.primary,
+      color: 'primary',
     },
     transition: 'color 0.2s',
     cursor: 'pointer',
   }),
   emphasisedRow: css({
     '& td': {
-      borderBottom: `1px solid ${colors.text}`,
+      borderBottom: `1px solid token(colors.text)`,
     },
   }),
   left: css({

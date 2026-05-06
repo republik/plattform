@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
-import { displayDate } from '../../Display/utils'
-import { styles } from '../utils'
+import { displayDate } from '@/components/Display/utils'
+import { styles } from '@/components/Zat/utils'
 
 export const fragments = gql`
   fragment UserAccessGrants on User {
@@ -17,7 +17,7 @@ export const AccessGrants = ({ accessGrants }) =>
     const { id, endAt } = accessGrant
 
     return (
-      <div key={id} {...styles.part}>
+      <div key={id} className={styles.part}>
         Access Grant bis {displayDate(endAt)}
       </div>
     )
