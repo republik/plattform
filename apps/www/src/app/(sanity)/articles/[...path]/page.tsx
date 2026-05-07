@@ -1,0 +1,60 @@
+import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { defineQuery } from 'next-sanity'
+import { notFound } from 'next/navigation'
+
+// Update with your own queries
+const ARTICLE_QUERY = defineQuery(
+  `*[_type == "article" && slug.current == $slug][0]{_id, title, content}`,
+)
+
+const ARTICLE_SLUGS_QUERY = defineQuery(`
+  *[_type == "article" && defined(slug.current)]{
+    "slug": slug.current
+  }`)
+
+type Props = {
+  params: Promise<{ path: string[] }>
+}
+
+// 1. Static params: published perspective, no stega
+export async function generateStaticParams() {
+  const { data } = await sanityFetch({
+    query: ARTICLE_SLUGS_QUERY,
+    perspective: 'published',
+    stega: false,
+  })
+  return data
+}
+
+// 2. Metadata: stega disabled to keep invisible characters out of <title>
+export async function generateMetadata({ params }: Props) {
+  const { path } = await params
+  const slug = path.join('/')
+
+  const { data } = await sanityFetch({
+    query: ARTICLE_QUERY,
+    params: { slug },
+    stega: false,
+  })
+  return { title: data?.title ?? 'Post not found' }
+}
+
+// 3. Page component: default settings (stega active in Draft Mode)
+export default async function PostPage({ params }: Props) {
+  const { path } = await params
+  const slug = path.join('/')
+
+  const { data: post } = await sanityFetch({
+    query: ARTICLE_QUERY,
+    params: { slug },
+  })
+
+  if (!post) notFound()
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      {/* ... */}
+    </article>
+  )
+}
