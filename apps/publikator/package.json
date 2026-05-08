@@ -95,7 +95,7 @@
     "prop-types": "^15.6.2",
     "query-string": "^7.1.1",
     "ramda": "^0.29.0",
-    "react": "^19.2.5",
+    "react": "^19.2.6",
     "react-codemirror2": "^9.0.1",
     "react-color": "^2.18.1",
     "react-diff-viewer": "^3.1.1",
