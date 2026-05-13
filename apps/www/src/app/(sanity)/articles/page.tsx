@@ -11,7 +11,6 @@ const ARTICLES_QUERY = defineQuery(`
 export default async function FeedPage() {
   const { data: articles } = await sanityFetch({
     query: ARTICLES_QUERY,
-    stega: false,
   })
 
   return (

@@ -1,4 +1,5 @@
 import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { css } from '@republik/theme/css'
 import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation'
 
@@ -53,7 +54,7 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <article>
-      <h1>{post.title}</h1>
+      <h1 className={css({ textStyle: 'h1Sans' })}>{post.title}</h1>
       {/* ... */}
     </article>
   )

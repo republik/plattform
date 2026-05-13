@@ -92,7 +92,7 @@ const nextConfig = {
             }; includeSubDomains; preload`,
             'X-Content-Type-Options': 'nosniff',
             'X-Download-Options': 'noopen',
-            'X-Frame-Options': 'SAMEORIGIN',
+            // 'X-Frame-Options': 'SAMEORIGIN',
             // removed by helmet by default, but we keep it for now
             'X-Powered-By': 'Republik',
             'X-XSS-Protection': '1; mode=block',
