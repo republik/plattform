@@ -130,6 +130,12 @@ const nextConfig = {
           destination: '/_ssr/:path*',
           has: [{ type: 'query', key: 'share' }],
         },
+        // Rewrite to new Sanity renderer based on quey param
+        {
+          source: '/:path*',
+          destination: '/articles/:path*',
+          has: [{ type: 'query', key: 'sanity' }],
+        },
         // Rewrite for crawlers when a comment is focused inside a debate on the article-site
         {
           source: '/:path*',
