@@ -145,7 +145,7 @@
     "react-hook-form": "^7.46.2",
     "react-maskedinput": "^4.0.1",
     "react-textarea-autosize": "^7.1.2",
-    "sanity": "^5.24.0",
+    "sanity": "^5.25.1",
     "scroll-into-view": "1.16.2",
     "sharp": "^0.32.6",
     "styled-components": "^6.4.1",
