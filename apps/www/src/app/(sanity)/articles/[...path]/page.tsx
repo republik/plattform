@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: Props) {
     params: { slug },
     stega: false,
   })
+  // @ts-expect-error query not typed
   return { title: data?.title ?? 'Post not found' }
 }
 
@@ -45,16 +46,17 @@ export default async function PostPage({ params }: Props) {
   const { path } = await params
   const slug = path.join('/')
 
-  const { data: post } = await sanityFetch({
+  const { data: article } = await sanityFetch({
     query: ARTICLE_QUERY,
     params: { slug },
   })
 
-  if (!post) notFound()
+  if (!article) notFound()
 
   return (
     <article>
-      <h1 className={css({ textStyle: 'h1Sans' })}>{post.title}</h1>
+      {/* @ts-expect-error query not typed*/}
+      <h1 className={css({ textStyle: 'h1Sans' })}>{article.title}</h1>
       {/* ... */}
     </article>
   )

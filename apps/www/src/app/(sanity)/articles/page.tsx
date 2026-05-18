@@ -15,6 +15,7 @@ export default async function FeedPage() {
 
   return (
     <div>
+      {/* @ts-expect-error query not typed*/}
       {articles?.map((article) => (
         <div key={article.slug}>
           <h2>
