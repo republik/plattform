@@ -65,7 +65,7 @@
     "@republik/slate-mdast-serializer": "*",
     "@republik/slate-react": "*",
     "@republik/theme": "*",
-    "@sentry/nextjs": "^9.32.0",
+    "@sentry/nextjs": "^10.53.1",
     "axios": "^1.0.0",
     "clipboard-copy": "^3.1.0",
     "codemirror": "^5.57.0",
