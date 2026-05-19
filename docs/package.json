@@ -18,7 +18,7 @@
     "@republik/icons": "*",
     "@republik/theme": "*",
     "@republik/ui-docs-demo": "*",
-    "next": "^15.5.18",
+    "next": "^16.2.6",
     "nextra": "^4.2.17",
     "nextra-theme-docs": "^4.2.17",
     "react": "^19.2.6",
