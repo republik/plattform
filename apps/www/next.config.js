@@ -14,7 +14,7 @@ const buildId =
   // Git commit hash on Heroku
   process.env.SOURCE_VERSION?.substring(0, 10) ||
   // ... and on Vercel
-  process.env.VERCEL_GIT_COMMIT_SHA?.substring(0, 10) ||
+  process.env.NEXT_DEPLOYMENT_ID ||
   `${Date.now()}`
 
 function appendProtocol(href) {
