@@ -52,9 +52,6 @@ const nextConfig = {
   assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
   // Maximum amount of time where stale content is allowed to be served from cache (CDN, browser etc.)
   expireTime: 60,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   images: {
     domains: [
       'www.datocms-assets.com',

@@ -13,9 +13,6 @@ const buildId =
  */
 const nextConfig = withBundleAnalyzer({
   poweredByHeader: false,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   generateBuildId: () => buildId,
   transpilePackages: [
     '@project-r/styleguide',

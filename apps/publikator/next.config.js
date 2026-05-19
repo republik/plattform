@@ -12,9 +12,6 @@ const buildId =
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   transpilePackages: [
     '@republik/nextjs-apollo-client',
     '@republik/slate-react',
