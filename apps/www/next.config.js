@@ -49,13 +49,12 @@ const nextConfig = {
   // Maximum amount of time where stale content is allowed to be served from cache (CDN, browser etc.)
   expireTime: 60,
   images: {
-    domains: [
-      'www.datocms-assets.com',
-      'cdn.republik.pink',
-      'cdn.republik.pink',
-      'assets.republik.pink',
-      'cdn.repub.ch',
-      'localhost',
+    remotePatterns: [
+      { protocol: 'https', hostname: 'www.datocms-assets.com', port: '' },
+      { protocol: 'https', hostname: 'cdn.repub.ch', port: '' },
+      { protocol: 'https', hostname: 'cdn.republik.pink', port: '' },
+      { protocol: 'https', hostname: 'assets.republik.pink', port: '' },
+      { protocol: 'http', hostname: 'localhost' },
     ],
   },
   compiler: {
