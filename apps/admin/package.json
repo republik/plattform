@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@apollo/client": "^3.13.8",
-    "@next/bundle-analyzer": "^16.2.6",
     "@project-r/styleguide": "*",
     "@republik/icons": "*",
     "@republik/mdast-react-render": "*",
