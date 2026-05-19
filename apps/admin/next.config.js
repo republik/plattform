@@ -7,7 +7,7 @@ const buildId =
 /**
  * @type {import('next').NextConfig}
  */
-const nextConfig = withBundleAnalyzer({
+const nextConfig = {
   poweredByHeader: false,
   generateBuildId: () => buildId,
   transpilePackages: [
@@ -48,7 +48,7 @@ const nextConfig = withBundleAnalyzer({
       },
     ]
   },
-})
+}
 
 module.exports = withSentryConfig(nextConfig, {
   // For all available options, see:
