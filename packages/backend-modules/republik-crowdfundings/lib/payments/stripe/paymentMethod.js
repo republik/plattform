@@ -46,6 +46,14 @@ const getPaymentMethods = async ({
         const connectedCustomer = customers.find(
           (c) => c.companyId === connectedAccount.company.id,
         )
+        if (!connectedCustomer) {
+          console.error(
+            new Error(
+              `missing stripeCustomer for connectedAccount companyId: ${connectedAccount.company.id} userId: ${userId}`,
+            ),
+          )
+          return null
+        }
         const cpms = await platform.stripe.paymentMethods.list(
           {
             customer: connectedCustomer.id,
@@ -67,7 +75,7 @@ const getPaymentMethods = async ({
   }
 
   // add connected paymentMethods to paymentMethods.connectedPaymentMethods
-  for (const ca of connectedAccountsPaymentMethods) {
+  for (const ca of connectedAccountsPaymentMethods.filter(Boolean)) {
     const { companyId } = ca
     for (const cpm of ca.paymentMethods) {
       const { original_payment_method_id } = cpm.metadata
@@ -75,13 +83,15 @@ const getPaymentMethods = async ({
         const pm = paymentMethods.data.find(
           (pm) => pm.id === original_payment_method_id,
         )
-        if (!pm.connectedPaymentMethods) {
-          pm.connectedPaymentMethods = []
+        if (pm) {
+          if (!pm.connectedPaymentMethods) {
+            pm.connectedPaymentMethods = []
+          }
+          pm.connectedPaymentMethods.push({
+            id: cpm.id,
+            companyId,
+          })
         }
-        pm.connectedPaymentMethods.push({
-          id: cpm.id,
-          companyId,
-        })
       }
     }
   }
@@ -160,7 +170,7 @@ exports.getPaymentMethodForCompany = async ({
   if (platformPaymentMethod.companyId === companyId) {
     paymentMethod = platformPaymentMethod
   } else {
-    paymentMethod = platformPaymentMethod.connectedPaymentMethods.find(
+    paymentMethod = platformPaymentMethod?.connectedPaymentMethods?.find(
       (cpm) => cpm.companyId === companyId,
     )
   }
