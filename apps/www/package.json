@@ -10,12 +10,12 @@
   "scripts": {
     "dev": "concurrently \"PORT=3010 next dev\" \"yarn gql:types --watch\" \"panda --watch\"",
     "start": "next start",
-    "build": "panda && yarn gql:types && next build",
+    "build": "panda && yarn gql:types && next build --webpack",
     "test": "jest",
     "test:watch": "jest --watch",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "next lint",
-    "analyze": "ANALYZE=true next build",
+    "analyze": "next experimental-analyze",
     "prepare": "panda codegen",
     "gql:types": "graphql-codegen --config graphql/configs/codegen-dev.ts"
   },
