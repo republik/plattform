@@ -25,7 +25,8 @@ const PUBLIC_BASE_URL = appendProtocol(
   process.env.NEXT_PUBLIC_BASE_URL ||
     process.env.VERCEL_BRANCH_URL ||
     process.env.VERCEL_URL ||
-    process.env.NEXT_PUBLIC_VERCEL_URL,
+    process.env.NEXT_PUBLIC_VERCEL_URL ||
+    `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`,
 )
 
 const PUBLIC_CDN_URL = process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
