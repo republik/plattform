@@ -108,13 +108,11 @@ const DialogContent = () => {
 
 const DialogPage = () => {
   const router = useRouter()
-  const { dialogPath } = router.query
-
+  const { path } = router.query
+  const discussionPath = '/' + [].concat(path || []).join('/')
   return (
     <Frame hasOverviewNav raw formatColor='primary' stickySecondaryNav={true}>
-      <DiscussionContextProvider
-        discussionPath={`/${(dialogPath as string[]).join('/')}`}
-      >
+      <DiscussionContextProvider discussionPath={discussionPath}>
         <DialogContent />
       </DiscussionContextProvider>
     </Frame>
