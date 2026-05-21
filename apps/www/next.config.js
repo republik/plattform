@@ -1,9 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { withSentryConfig } = require('@sentry/nextjs')
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-})
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { withPlausibleProxy } = require('next-plausible')
@@ -14,6 +10,7 @@ const buildId =
   // Git commit hash on Heroku
   process.env.SOURCE_VERSION?.substring(0, 10) ||
   // ... and on Vercel
+  process.env.NEXT_DEPLOYMENT_ID ||
   process.env.VERCEL_GIT_COMMIT_SHA?.substring(0, 10) ||
   `${Date.now()}`
 
@@ -28,7 +25,8 @@ const PUBLIC_BASE_URL = appendProtocol(
   process.env.NEXT_PUBLIC_BASE_URL ||
     process.env.VERCEL_BRANCH_URL ||
     process.env.VERCEL_URL ||
-    process.env.NEXT_PUBLIC_VERCEL_URL,
+    process.env.NEXT_PUBLIC_VERCEL_URL ||
+    `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`,
 )
 
 const PUBLIC_CDN_URL = process.env.NEXT_PUBLIC_CDN_FRONTEND_BASE_URL
@@ -52,17 +50,13 @@ const nextConfig = {
   assetPrefix: isProduction ? PUBLIC_CDN_URL : undefined,
   // Maximum amount of time where stale content is allowed to be served from cache (CDN, browser etc.)
   expireTime: 60,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   images: {
-    domains: [
-      'www.datocms-assets.com',
-      'cdn.republik.pink',
-      'cdn.republik.pink',
-      'assets.republik.pink',
-      'cdn.repub.ch',
-      'localhost',
+    remotePatterns: [
+      { protocol: 'https', hostname: 'www.datocms-assets.com', port: '' },
+      { protocol: 'https', hostname: 'cdn.repub.ch', port: '' },
+      { protocol: 'https', hostname: 'cdn.republik.pink', port: '' },
+      { protocol: 'https', hostname: 'assets.republik.pink', port: '' },
+      { protocol: 'http', hostname: 'localhost' },
     ],
   },
   compiler: {
@@ -276,29 +270,26 @@ const withConfiguredPlausibleProxy = withPlausibleProxy({
   subdirectory: '__plsb',
 })
 
-module.exports = withSentryConfig(
-  withBundleAnalyzer(withConfiguredPlausibleProxy(nextConfig)),
-  {
-    // For all available options, see:
-    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+module.exports = withSentryConfig(withConfiguredPlausibleProxy(nextConfig), {
+  // For all available options, see:
+  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
-    org: process.env.SENTRY_ORG,
-    project: process.env.SENTRY_PROJECT,
-    authToken: process.env.SENTRY_AUTH_TOKEN,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
 
-    // Only print logs for uploading source maps in CI
-    silent: !process.env.CI,
+  // Only print logs for uploading source maps in CI
+  silent: !process.env.CI,
 
-    // Upload a larger set of source maps for prettier stack traces (increases build time)
-    widenClientFileUpload: true,
+  // Upload a larger set of source maps for prettier stack traces (increases build time)
+  widenClientFileUpload: true,
 
-    // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-    // This can increase your server load as well as your hosting bill.
-    // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
-    // side errors will fail.
-    tunnelRoute: '/monitoring',
+  // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
+  // This can increase your server load as well as your hosting bill.
+  // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
+  // side errors will fail.
+  tunnelRoute: '/monitoring',
 
-    // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
-  },
-)
+  // Automatically tree-shake Sentry logger statements to reduce bundle size
+  disableLogger: true,
+})

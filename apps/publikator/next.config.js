@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.ANALYZE === 'true',
-})
 const { withSentryConfig } = require('@sentry/nextjs')
 
 const buildId =
@@ -12,9 +8,6 @@ const buildId =
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   transpilePackages: [
     '@republik/nextjs-apollo-client',
     '@republik/slate-react',
@@ -46,7 +39,7 @@ const nextConfig = {
   },
 }
 
-module.exports = withSentryConfig(withBundleAnalyzer(nextConfig), {
+module.exports = withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 

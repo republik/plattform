@@ -47,7 +47,7 @@ function graphqlRewrite(req: NextRequest): NextResponse | null {
  * Middleware used to redirect to HTTPS if not already on HTTPS and block IP addresses in the IP_BLOCKLIST.
  * @param req
  */
-async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
+export async function proxy(req: NextRequest): Promise<NextResponse> {
   const httpsRedirect = redirectToHTTPS(req)
   if (httpsRedirect) {
     return httpsRedirect
@@ -74,8 +74,6 @@ async function middlewareFunc(req: NextRequest): Promise<NextResponse> {
 
   return NextResponse.next()
 }
-
-export const middleware = middlewareFunc
 
 export const config = {
   matcher: [
