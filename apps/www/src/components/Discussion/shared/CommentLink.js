@@ -1,21 +1,40 @@
+import { parse, format } from 'url'
+
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import Link from 'next/link'
 
 export const getFocusHref = (discussion, comment) => {
-  const pathPrefix =
-    discussion.document?.meta?.template === 'article' ? '/dialog' : ''
-
-  const href = comment?.id
-    ? `${pathPrefix}${discussion.path}?focus=${comment.id}`
-    : `${pathPrefix}${discussion.path}`
-
-  return href
+  const focusParams = { focus: comment?.id }
+  if (discussion.document?.meta?.template === 'article') {
+    return {
+      pathname: `/dialog${discussion.path}`,
+      query: { ...focusParams },
+    }
+  } else if (discussion.path) {
+    const { pathname, query } = parse(discussion.path, true)
+    return {
+      pathname,
+      query: {
+        ...query,
+        ...focusParams,
+      },
+    }
+  }
 }
 
 export const getFocusUrl = (discussion, comment) => {
   const focusHref = getFocusHref(discussion, comment)
-  const focusUrl = new URL(focusHref, PUBLIC_BASE_URL)
-  return focusUrl.toString()
+  if (focusHref) {
+    const baseUrl = new URL(PUBLIC_BASE_URL)
+    const { pathname, query } = focusHref
+    return format({
+      protocol: baseUrl.protocol.slice(0, -1), // Remove trailing ':'
+      hostname: baseUrl.hostname,
+      port: baseUrl.port,
+      pathname,
+      query,
+    })
+  }
 }
 
 const CommentLink = ({ displayAuthor, comment, discussion, ...props }) => {
