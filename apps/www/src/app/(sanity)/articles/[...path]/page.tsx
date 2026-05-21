@@ -11,6 +11,7 @@ const ARTICLE_QUERY = defineQuery(
     description,
     content,
     contributors[]{
+      _id,
       kind,
       "name": contributor->title,
     }

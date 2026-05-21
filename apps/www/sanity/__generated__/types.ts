@@ -496,13 +496,14 @@ export type AllSanitySchemaTypes =
 
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
 // Variable: ARTICLE_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    content,    contributors[]{      kind,      "name": contributor->title,    }  }
+// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    content,    contributors[]{      _id,      kind,      "name": contributor->title,    }  }
 export type ARTICLE_QUERY_RESULT = {
   _id: string
   title: string | null
   description: string | null
   content: null
   contributors: Array<{
+    _id: null
     kind: string | null
     name: string | null
   }> | null
@@ -527,7 +528,7 @@ export type ARTICLES_QUERY_RESULT = Array<{
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    content,\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n  }': ARTICLE_QUERY_RESULT
+    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    content,\n    contributors[]{\n      _id,\n      kind,\n      "name": contributor->title,\n    }\n  }': ARTICLE_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)]{\n    "slug": slug.current\n  }': ARTICLE_SLUGS_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
   }
