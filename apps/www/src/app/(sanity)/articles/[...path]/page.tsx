@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props) {
 // 3. Page component: default settings (stega active in Draft Mode)
 export default async function PostPage({ params }: Props) {
   const { path } = await params
-  const slug = path.join('/')
+  const slug = `/${path.join('/')}`
 
   const { data: article } = await sanityFetch({
     query: ARTICLE_QUERY,
