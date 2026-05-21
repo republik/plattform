@@ -55,9 +55,9 @@ export async function revalidateBasedOnReqBody(reqBody: unknown) {
     } else if (type === 'paths') {
       value.forEach((path) => revalidatePath(path))
     } else if (type === 'tag') {
-      revalidateTag(value)
+      revalidateTag(value, 'max')
     } else if (type === 'tags') {
-      value.forEach((tag) => revalidateTag(tag))
+      value.forEach((tag) => revalidateTag(tag, 'max'))
     }
   } else {
     throw new Error('invalid body')

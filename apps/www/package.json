@@ -10,12 +10,12 @@
   "scripts": {
     "dev": "concurrently \"PORT=3010 next dev\" \"yarn gql:types --watch\" \"panda --watch\"",
     "start": "next start",
-    "build": "panda && yarn gql:types && next build",
+    "build": "panda && yarn gql:types && next build --webpack",
     "test": "jest",
     "test:watch": "jest --watch",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "lint": "next lint",
-    "analyze": "ANALYZE=true next build",
+    "analyze": "next experimental-analyze",
     "prepare": "panda codegen",
     "gql:types": "graphql-codegen --config graphql/configs/codegen-dev.ts"
   },
@@ -84,7 +84,7 @@
     "@republik/nextjs-apollo-client": "*",
     "@republik/theme": "*",
     "@sanity/image-url": "^2.1.1",
-    "@sentry/nextjs": "^9.32.0",
+    "@sentry/nextjs": "^10.53.1",
     "@stripe/react-stripe-js": "^1.7.0",
     "@use-it/event-listener": "^0.1.7",
     "apollo-fetch": "^0.7.0",
