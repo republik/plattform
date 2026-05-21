@@ -509,13 +509,6 @@ export type ARTICLE_QUERY_RESULT = {
   }> | null
 } | null
 
-// Source: src/app/(sanity)/articles/[...path]/page.tsx
-// Variable: ARTICLE_SLUGS_QUERY
-// Query: *[_type == "article" && defined(slug.current)]{    "slug": slug.current  }
-export type ARTICLE_SLUGS_QUERY_RESULT = Array<{
-  slug: string
-}>
-
 // Source: src/app/(sanity)/articles/page.tsx
 // Variable: ARTICLES_QUERY
 // Query: *[_type == "article" && defined(slug.current)][0...100]{    "slug": slug.current,    title  }
@@ -529,7 +522,6 @@ import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    content,\n    contributors[]{\n      _id,\n      kind,\n      "name": contributor->title,\n    }\n  }': ARTICLE_QUERY_RESULT
-    '\n  *[_type == "article" && defined(slug.current)]{\n    "slug": slug.current\n  }': ARTICLE_SLUGS_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
   }
 }

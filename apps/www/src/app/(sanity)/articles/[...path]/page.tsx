@@ -18,27 +18,10 @@ const ARTICLE_QUERY = defineQuery(
   }`,
 )
 
-const ARTICLE_SLUGS_QUERY = defineQuery(`
-  *[_type == "article" && defined(slug.current)]{
-    "slug": slug.current
-  }`)
-
-type Props = {
-  params: Promise<{ path: string[] }>
-}
-
-// 1. Static params: published perspective, no stega
-export async function generateStaticParams() {
-  const { data } = await sanityFetch({
-    query: ARTICLE_SLUGS_QUERY,
-    perspective: 'published',
-    stega: false,
-  })
-  return data
-}
-
-// 2. Metadata: stega disabled to keep invisible characters out of <title>
-export async function generateMetadata({ params }: Props) {
+// Metadata: stega disabled to keep invisible characters out of <title>
+export async function generateMetadata({
+  params,
+}: PageProps<'/articles/[...path]'>) {
   const { path } = await params
   const slug = path.join('/')
 
@@ -50,8 +33,10 @@ export async function generateMetadata({ params }: Props) {
   return { title: data?.title ?? 'Article not found' }
 }
 
-// 3. Page component: default settings (stega active in Draft Mode)
-export default async function PostPage({ params }: Props) {
+// Page component: default settings (stega active in Draft Mode)
+export default async function PostPage({
+  params,
+}: PageProps<'/articles/[...path]'>) {
   const { path } = await params
   const slug = `/${path.join('/')}`
 
