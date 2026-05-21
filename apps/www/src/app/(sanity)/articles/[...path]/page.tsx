@@ -46,8 +46,7 @@ export async function generateMetadata({ params }: Props) {
     params: { slug },
     stega: false,
   })
-  // @ts-expect-error query not typed
-  return { title: data?.title ?? 'Post not found' }
+  return { title: data?.title ?? 'Article not found' }
 }
 
 // 3. Page component: default settings (stega active in Draft Mode)
@@ -64,7 +63,6 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <article>
-      {/* @ts-expect-error query not typed*/}
       <h1 className={css({ textStyle: 'h1Sans' })}>{article.title}</h1>
       <p>{article.description}</p>
       <ul>
