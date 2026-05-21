@@ -32,3 +32,6 @@ graphql/*/__generated__
 
 # Vercel
 .vercel
+
+# Sanity
+sanity/__generated__
