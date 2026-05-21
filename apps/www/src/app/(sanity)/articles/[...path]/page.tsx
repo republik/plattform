@@ -5,7 +5,16 @@ import { notFound } from 'next/navigation'
 
 // Update with your own queries
 const ARTICLE_QUERY = defineQuery(
-  `*[_type == "article" && slug.current == $slug][0]{_id, title, content}`,
+  `*[_type == "article" && slug.current == $slug][0]{
+    _id,
+    title,
+    description,
+    content,
+    contributors[]{
+      kind,
+      "name": contributor->title,
+    }
+  }`,
 )
 
 const ARTICLE_SLUGS_QUERY = defineQuery(`
@@ -57,6 +66,14 @@ export default async function PostPage({ params }: Props) {
     <article>
       {/* @ts-expect-error query not typed*/}
       <h1 className={css({ textStyle: 'h1Sans' })}>{article.title}</h1>
+      <p>{article.description}</p>
+      <ul>
+        {article.contributors?.map((contributor) => (
+          <li key={contributor._id}>
+            {contributor.name} ({contributor.kind})
+          </li>
+        ))}
+      </ul>
       {/* ... */}
     </article>
   )

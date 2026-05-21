@@ -3,7 +3,7 @@ import { sanityFetch } from '@/app/(sanity)/lib/live'
 import Link from 'next/link'
 
 const ARTICLES_QUERY = defineQuery(`
-  *[_type == "article" && defined(slug.current)]{
+  *[_type == "article" && defined(slug.current)][0...100]{
     "slug": slug.current,
     title
   }`)
