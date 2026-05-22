@@ -44,7 +44,7 @@ export const presetRepublik = definePreset({
           viewportWidth: { value: '100vw' },
           24: { value: '6rem' },
           narrow: { value: '30rem' },
-          center: { value: '695px' },
+          editorial: { value: '695px' },
           shop: { value: '866px' },
           carousel: { value: '1300px' },
         },
@@ -329,12 +329,31 @@ export const presetRepublik = definePreset({
             lineHeight: 1,
           },
         },
-        title: {
+        editorialTitle: {
           value: {
             fontFamily: 'republikSerif',
             fontWeight: 'black',
             fontStyle: 'normal',
-            fontSize: '4em',
+            fontSize: { base: '1.875rem', md: '3.625rem' },
+            lineHeight: 1.1,
+          },
+        },
+        editorialLead: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: '400',
+            fontStyle: 'normal',
+            fontSize: { base: '1.1875rem', md: '1.4375rem' },
+            lineHeight: 1.25,
+          },
+        },
+        editorialByline: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: '400',
+            fontStyle: 'normal',
+            fontSize: { base: '0.875rem', md: '0.9375rem' },
+            lineHeight: 1.25,
           },
         },
         teaserTitle: {

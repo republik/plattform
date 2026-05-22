@@ -1,6 +1,8 @@
+import { Byline } from '@/app/(sanity)/components/byline'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { css } from '@republik/theme/css'
 import { defineQuery } from 'next-sanity'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 // Update with your own queries
@@ -9,12 +11,7 @@ const ARTICLE_QUERY = defineQuery(
     _id,
     title,
     description,
-    content,
-    contributors[]{
-      _id,
-      kind,
-      "name": contributor->title,
-    }
+    content
   }`,
 )
 
@@ -33,6 +30,11 @@ export async function generateMetadata({
   return { title: data?.title ?? 'Article not found' }
 }
 
+function ContributorLink({ contributor }) {
+  if (!contributor.slug) return contributor.name
+  return <Link href={`/~${contributor.slug}`}>{contributor.name}</Link>
+}
+
 // Page component: default settings (stega active in Draft Mode)
 export default async function PostPage({
   params,
@@ -49,15 +51,25 @@ export default async function PostPage({
 
   return (
     <article>
-      <h1 className={css({ textStyle: 'h1Sans' })}>{article.title}</h1>
-      <p>{article.description}</p>
-      <ul>
-        {article.contributors?.map((contributor) => (
-          <li key={contributor._id}>
-            {contributor.name} ({contributor.kind})
-          </li>
-        ))}
-      </ul>
+      <div
+        className={css({
+          mx: 'auto',
+          px: '15px',
+          maxWidth: 'editorial',
+          width: 'full',
+          '& a': { textDecoration: 'underline' },
+        })}
+      >
+        <h1 className={css({ textStyle: 'editorialTitle', mt: '12' })}>
+          {article.title}
+        </h1>
+        <p className={css({ textStyle: 'editorialLead', mt: '4' })}>
+          {article.description}
+        </p>
+        <p className={css({ textStyle: 'editorialByline', mt: '4' })}>
+          <Byline articleSlug={slug} />
+        </p>
+      </div>
       {/* ... */}
     </article>
   )

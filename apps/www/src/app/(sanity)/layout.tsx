@@ -1,5 +1,4 @@
 import { SanityLive } from '@/app/(sanity)/lib/live'
-import Container from '@/app/components/container'
 import { PageLayout } from '@/app/components/layout'
 import { css } from '@republik/theme/css'
 import { VisualEditing } from 'next-sanity/visual-editing'
@@ -18,10 +17,9 @@ export default async function RootLayout({
           className={css({
             color: 'text',
             pb: '16-32',
-            pt: '4',
           })}
         >
-          <Container>{children}</Container>
+          {children}
         </div>
       </PageLayout>
       <SanityLive />
