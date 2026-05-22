@@ -2,8 +2,7 @@ import { Byline } from '@/app/(sanity)/components/byline'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { css } from '@republik/theme/css'
 import { defineQuery } from 'next-sanity'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound } from 'next/navigation' // Update with your own queries
 
 // Update with your own queries
 const ARTICLE_QUERY = defineQuery(
@@ -11,7 +10,12 @@ const ARTICLE_QUERY = defineQuery(
     _id,
     title,
     description,
-    content
+    content,
+    "collection": articleCollection->title,
+    theme->{
+      kind,
+      color
+    }
   }`,
 )
 
@@ -30,11 +34,6 @@ export async function generateMetadata({
   return { title: data?.title ?? 'Article not found' }
 }
 
-function ContributorLink({ contributor }) {
-  if (!contributor.slug) return contributor.name
-  return <Link href={`/~${contributor.slug}`}>{contributor.name}</Link>
-}
-
 // Page component: default settings (stega active in Draft Mode)
 export default async function PostPage({
   params,
@@ -50,7 +49,22 @@ export default async function PostPage({
   if (!article) notFound()
 
   return (
-    <article>
+    <article
+      style={{
+        ['--accent-color' as any]: article.theme?.color?.hex || 'transparent',
+      }}
+    >
+      {article.theme?.color && (
+        <hr
+          className={css({
+            height: '3px',
+            color: 'var(--accent-color)',
+            backgroundColor: 'var(--accent-color)',
+            left: 0,
+            right: 0,
+          })}
+        />
+      )}
       <div
         className={css({
           mx: 'auto',
@@ -60,12 +74,24 @@ export default async function PostPage({
           '& a': { textDecoration: 'underline' },
         })}
       >
+        {article.collection && (
+          <p
+            className={css({
+              textStyle: 'editorialCollection',
+              mb: '-6',
+              mt: '8',
+            })}
+            style={{ color: 'var(--accent-color)' }}
+          >
+            {article.collection}
+          </p>
+        )}
         <h1 className={css({ textStyle: 'editorialTitle', mt: '12' })}>
           {article.title}
         </h1>
-        <p className={css({ textStyle: 'editorialLead', mt: '4' })}>
+        <h3 className={css({ textStyle: 'editorialLead', mt: '4' })}>
           {article.description}
-        </p>
+        </h3>
         <p className={css({ textStyle: 'editorialByline', mt: '4' })}>
           <Byline articleSlug={slug} />
         </p>

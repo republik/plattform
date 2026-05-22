@@ -356,6 +356,14 @@ export const presetRepublik = definePreset({
             lineHeight: 1.25,
           },
         },
+        editorialCollection: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: '500',
+            fontStyle: 'normal',
+            fontSize: { base: '1rem', md: '1.25rem' },
+          },
+        },
         teaserTitle: {
           value: {
             fontFamily: 'republikSerif',
