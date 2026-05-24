@@ -1,0 +1,7 @@
+{
+  "driver": "pg",
+  "connectionString": "${DATABASE_URL}?lock_timeout=5000",
+  "migrationsTable": "migrations",
+  "schema": "public",
+  "charset": "utf8"
+}
