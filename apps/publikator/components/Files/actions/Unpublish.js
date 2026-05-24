@@ -13,7 +13,7 @@ const MAKE_PRIVATE = gql`
   ${RepoFile}
 `
 
-const Publish = ({ file }) => {
+const Unpublish = ({ file, isInUse }) => {
   const [makePrivate, { loading }] = useMutation(MAKE_PRIVATE)
 
   const onClick = () => {
@@ -26,11 +26,24 @@ const Publish = ({ file }) => {
     }
   }
 
+  // Disable the button if the file is being used in the document
+  const disabled = loading || isInUse
+
   return (
-    <Button onClick={onClick} disabled={loading} small>
+    <Button
+      onClick={onClick}
+      disabled={disabled}
+      small
+      style={{ whiteSpace: 'nowrap' }}
+      title={
+        isInUse
+          ? 'Diese Datei wird im Dokument verwendet und kann nicht zurückgezogen werden. Entfernen Sie zuerst alle Links zur Datei aus dem Dokument.'
+          : undefined
+      }
+    >
       Nicht mehr veröffentlichen
     </Button>
   )
 }
 
-export default Publish
+export default Unpublish
