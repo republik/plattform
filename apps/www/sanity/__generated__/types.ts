@@ -496,7 +496,7 @@ export type AllSanitySchemaTypes =
 
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
 // Variable: ARTICLE_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    content,    "collection": articleCollection->title,    theme->{      kind,      color    }  }
+// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    content,    "collection": articleCollection->title,    theme->{      color    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,    },    articleRecommendations[]->{      _id,      title,      description,      slug,      "collection": articleCollection->title,      theme->{        color      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
 export type ARTICLE_QUERY_RESULT = {
   _id: string
   title: string | null
@@ -504,9 +504,28 @@ export type ARTICLE_QUERY_RESULT = {
   content: null
   collection: string | null
   theme: {
-    kind: string | null
     color: Color | null
   } | null
+  contributors: Array<{
+    _id: null
+    kind: string | null
+    slug: string | null
+    name: string | null
+  }> | null
+  articleRecommendations: Array<{
+    _id: string
+    title: string | null
+    description: string | null
+    slug: Slug
+    collection: string | null
+    theme: {
+      color: Color | null
+    } | null
+    contributors: Array<{
+      kind: string | null
+      name: string | null
+    }> | null
+  }> | null
 } | null
 
 // Source: src/app/(sanity)/articles/page.tsx
@@ -517,25 +536,11 @@ export type ARTICLES_QUERY_RESULT = Array<{
   title: string | null
 }>
 
-// Source: src/app/(sanity)/components/byline.tsx
-// Variable: BYLINE_QUERY
-// Query: *[_type == "article" && slug.current == $articleSlug][0]{    _id,    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,    }  }
-export type BYLINE_QUERY_RESULT = {
-  _id: string
-  contributors: Array<{
-    _id: null
-    kind: string | null
-    slug: string | null
-    name: string | null
-  }> | null
-} | null
-
 // Query TypeMap
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    content,\n    "collection": articleCollection->title,\n    theme->{\n      kind,\n      color\n    }\n  }': ARTICLE_QUERY_RESULT
+    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    content,\n    "collection": articleCollection->title,\n    theme->{\n      color\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      "collection": articleCollection->title,\n      theme->{\n        color\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
-    '*[_type == "article" && slug.current == $articleSlug][0]{\n    _id,\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n    }\n  }': BYLINE_QUERY_RESULT
   }
 }

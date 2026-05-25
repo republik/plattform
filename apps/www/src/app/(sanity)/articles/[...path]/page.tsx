@@ -1,5 +1,8 @@
 import { Byline } from '@/app/(sanity)/components/byline'
+import { EditLink } from '@/app/(sanity)/components/edit-link'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { ArticleRecommendations } from '@/app/components/next-reads/article-recommendations'
+import { ArticleSection } from '@/app/components/ui/section'
 import { css } from '@republik/theme/css'
 import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation' // Update with your own queries
@@ -13,8 +16,27 @@ const ARTICLE_QUERY = defineQuery(
     content,
     "collection": articleCollection->title,
     theme->{
-      kind,
       color
+    },
+    contributors[]{
+      _id,
+      kind,
+      "slug": contributor->userId,
+      "name": contributor->title,
+    },
+    articleRecommendations[]->{
+      _id,
+      title,
+      description,
+      slug,
+      "collection": articleCollection->title,
+      theme->{
+        color
+      },
+      contributors[]{
+        kind,
+        "name": contributor->title,
+      }
     }
   }`,
 )
@@ -56,19 +78,14 @@ export default async function PostPage({
 
   if (!article) notFound()
 
+  console.log({ article })
+
   return (
     <>
       <style>{`:root { --page-theme-accent-color: ${article.theme?.color?.hex}; }`}</style>
       <article>
-        <div
-          className={css({
-            mx: 'auto',
-            px: '15px',
-            maxWidth: 'editorial',
-            width: 'full',
-            '& a': { textDecoration: 'underline' },
-          })}
-        >
+        {/* TITLE BLOCK */}
+        <ArticleSection>
           {article.collection && (
             <p
               className={css({
@@ -87,12 +104,26 @@ export default async function PostPage({
           <h3 className={css({ textStyle: 'editorialLead', mt: '4' })}>
             {article.description}
           </h3>
-          <p className={css({ textStyle: 'editorialByline', mt: '4' })}>
-            <Byline articleSlug={slug} />
+          <p
+            className={css({
+              textStyle: 'editorialByline',
+              mt: '4',
+              '& a': { textDecoration: 'underline' },
+            })}
+          >
+            <Byline contributors={article.contributors} />
           </p>
-        </div>
-        <div className={css({ height: '1000px' })}></div>
-        {/* ... */}
+
+          <div className={css({ mt: '4' })}>
+            <EditLink _id={article._id} />
+          </div>
+        </ArticleSection>
+
+        <div className={css({ height: '300px' })}></div>
+
+        <ArticleRecommendations
+          recommendations={article.articleRecommendations}
+        />
       </article>
     </>
   )

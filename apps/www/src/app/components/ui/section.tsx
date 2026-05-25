@@ -42,7 +42,7 @@ export const ArticleSection = ({
       className={cx(
         css({
           margin: '0 auto',
-          maxWidth: 'center',
+          maxWidth: 'editorial',
           pl: '15px',
           pr: '15px',
         }),
