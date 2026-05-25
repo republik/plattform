@@ -4,6 +4,7 @@ import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { ArticleSection } from '@/app/components/ui/section'
+import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation'
@@ -95,7 +96,7 @@ export default async function PostPage({
   console.log({ article })
 
   return (
-    <>
+    <EventTrackingContext category='Article'>
       <style>{`:root { --page-theme-accent-color: ${article.theme?.color?.hex}; }`}</style>
       <article>
         {/* TITLE BLOCK */}
@@ -149,6 +150,6 @@ export default async function PostPage({
           />
         </ArticleSection>
       </article>
-    </>
+    </EventTrackingContext>
   )
 }

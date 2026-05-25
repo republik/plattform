@@ -1,6 +1,5 @@
 'use client'
 
-import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { useTranslation } from '@/lib/withT'
 import { css, cx } from '@republik/theme/css'
 import React from 'react'
@@ -45,7 +44,7 @@ export function ArticleRecommendations({ recommendations }) {
   if (!recommendations?.length) return null
 
   return (
-    <EventTrackingContext category='NextReads:ArticleRecommendations'>
+    <>
       <div className={nextReadsSection}>
         <div className={cx(nextReadHeader, css({ textAlign: 'left' }))}>
           <h3>{t('nextReads/curatedFeed/title')}</h3>
@@ -56,6 +55,6 @@ export function ArticleRecommendations({ recommendations }) {
           <RecommendedRead key={rec._id} article={rec} index={index} />
         ))}
       </div>
-    </EventTrackingContext>
+    </>
   )
 }
