@@ -13,11 +13,17 @@ const ARTICLE_QUERY = defineQuery(
     _id,
     title,
     description,
-    content,
     articleCollection->{
       title,
       description,
       image
+    },
+    newsletter->{
+      title,
+      description,
+      frequency,
+      image,
+      name,
     },
     theme->{
       color
@@ -27,6 +33,8 @@ const ARTICLE_QUERY = defineQuery(
       kind,
       "slug": contributor->userId,
       "name": contributor->title,
+      "description": contributor->description,
+      "portrait": contributor->portrait
     },
     articleRecommendations[]->{
       _id,
@@ -131,6 +139,7 @@ export default async function PostPage({
           <FollowArticle
             contributors={article.contributors}
             collection={article.articleCollection}
+            newsletter={article.newsletter}
           />
         </ArticleSection>
 

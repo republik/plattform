@@ -335,7 +335,7 @@ export const presetRepublik = definePreset({
             fontWeight: 'black',
             fontStyle: 'normal',
             fontSize: { base: '1.875rem', md: '3.625rem' },
-            lineHeight: 1.1,
+            lineHeight: 1.05,
           },
         },
         editorialLead: {

@@ -1,8 +1,8 @@
 import { SubscriptionObjectType } from '#graphql/republik-api/__generated__/gql/graphql'
 import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
+import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
-import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
@@ -27,13 +27,13 @@ function FollowContributorCard({ contributor }) {
       })}
     >
       {contributor.portrait && (
-        <Image
+        <img
+          src={urlFor(contributor.portrait).width(250).height(250).url()}
           width='84'
           height='84'
           className={css({
             borderRadius: '96px',
           })}
-          src={contributor.portrait}
           alt=''
         />
       )}

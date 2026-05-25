@@ -1,31 +1,16 @@
 'use client'
 
-import FollowFormatContainer from '@/app/components/follow/follow-format-container'
-import {
-  type NewsletterName,
-  NL_STYLE,
-} from '@/app/components/newsletters/config'
-import { NewsletterSubscribeButton } from '@/app/components/newsletters/newsletter-subscribe'
-import { css } from '@republik/theme/css'
-import Image from 'next/image'
-import Link from 'next/link'
+import FollowCollectionContainer from '@/app/(sanity)/components/follow/follow-collection-container'
+import { NewsletterSubscribeButton } from '@/app/(sanity)/components/newsletters/newsletter-subscribe'
+import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { useTranslation } from '@/lib/withT'
+import { css } from '@republik/theme/css'
 
-function NewsletterArticleCard({
-  newsletter,
-  path,
-  button,
-}: {
-  newsletter: NewsletterName
-  path: string
-  button?: boolean
-}) {
+function NewsletterArticleCard({ newsletter }) {
   const { t } = useTranslation()
 
-  if (button) return <NewsletterSubscribeButton newsletter={newsletter} />
-
   return (
-    <FollowFormatContainer>
+    <FollowCollectionContainer>
       <div
         className={css({
           background: 'background',
@@ -40,26 +25,14 @@ function NewsletterArticleCard({
           flexDirection: 'column',
         })}
       >
-        <Image
+        <img
           className={css({
             flex: '0 0 1',
             alignSelf: 'flex-start',
             pt: 1,
-            _dark: { display: 'none' },
+            width: 64,
           })}
-          width='64'
-          src={NL_STYLE[newsletter]?.imageSrc}
-          alt=''
-        />
-        <Image
-          className={css({
-            display: 'none',
-            flex: '0 0 1',
-            alignSelf: 'flex-start',
-            _dark: { display: 'block' },
-          })}
-          width='64'
-          src={NL_STYLE[newsletter]?.imageSrcDark}
+          src={urlFor(newsletter.image).width(192).height(192).url()}
           alt=''
         />
         <div>
@@ -69,7 +42,7 @@ function NewsletterArticleCard({
               lineHeight: 1.2,
             })}
           >
-            <Link href={path}>{t(`newsletters/${newsletter}/name`)}</Link>{' '}
+            {newsletter.title}{' '}
             <span
               className={css({
                 fontWeight: 500,
@@ -79,17 +52,15 @@ function NewsletterArticleCard({
             </span>
           </h3>
           <p className={css({ textStyle: 'airy', my: 1 })}>
-            {t(`newsletters/${newsletter}/description`)}
+            {newsletter.description}
           </p>
-          <p className={css({ color: 'textSoft' })}>
-            {t(`newsletters/${newsletter}/schedule`)}
-          </p>
+          <p className={css({ color: 'textSoft' })}>{newsletter.frequency}</p>
         </div>
         <div>
           <NewsletterSubscribeButton newsletter={newsletter} />
         </div>
       </div>
-    </FollowFormatContainer>
+    </FollowCollectionContainer>
   )
 }
 

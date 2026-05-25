@@ -5,31 +5,20 @@ import {
   SignUpForNewsletterDocument,
   UpdateNewsletterSubscriptionDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { ApolloError, useMutation, useQuery } from '@apollo/client'
 import { ErrorMessage } from '@/app/components/auth/login/error-message'
-import { type NewsletterName } from '@/app/components/newsletters/config'
 import { isSubscribedToNewsletter } from '@/app/components/newsletters/helpers'
 import { NewslettersStatus } from '@/app/components/newsletters/newsletters-status'
 import { Button } from '@/app/components/ui/button'
 import { FormField } from '@/app/components/ui/form'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { getUTMSessionStorage } from '@/app/lib/analytics/utm-session-storage'
+import { useTranslation } from '@/lib/withT'
+import { ApolloError, useMutation, useQuery } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import isEmail from 'validator/lib/isEmail'
-import { useTranslation } from '@/lib/withT'
 
-function NewsletterSubscribeForm({
-  newsletter,
-  labels,
-  accentColor,
-  accentTextColor,
-}: {
-  newsletter: NewsletterName
-  labels?: { subscribe?: string; isSubscribed?: string }
-  accentColor?: string
-  accentTextColor?: string
-}) {
+function NewsletterSubscribeForm({ newsletter }) {
   const { t } = useTranslation()
   const track = useTrackEvent()
   const [subscribe] = useMutation(SignUpForNewsletterDocument)
@@ -59,7 +48,7 @@ function NewsletterSubscribeForm({
     const result = await subscribe({
       variables: {
         email: email,
-        name: newsletter,
+        name: newsletter.name,
         context: 'newsletter',
         meta: getUTMSessionStorage(),
       },
@@ -72,7 +61,7 @@ function NewsletterSubscribeForm({
 
     track({
       action: 'Anonymous Newsletter Subscribe',
-      name: newsletter,
+      name: newsletter.title,
     })
     setIsPending(false)
     setConfirmEmail(true)
@@ -103,21 +92,8 @@ function NewsletterSubscribeForm({
           <div
             className={css({ display: 'none', '@/md': { display: 'block' } })}
           >
-            <Button
-              type='submit'
-              disabled={isPending}
-              loading={isPending}
-              style={
-                accentColor
-                  ? {
-                      backgroundColor: accentColor,
-                      color: accentTextColor,
-                      borderColor: accentColor,
-                    }
-                  : undefined
-              }
-            >
-              {labels?.subscribe ?? t('newsletter/subscribe')}
+            <Button type='submit' disabled={isPending} loading={isPending}>
+              {t('newsletter/subscribe')}
             </Button>
           </div>
         </div>
@@ -128,17 +104,8 @@ function NewsletterSubscribeForm({
             size='full'
             disabled={isPending}
             loading={isPending}
-            style={
-              accentColor
-                ? {
-                    backgroundColor: accentColor,
-                    color: accentTextColor,
-                    borderColor: accentColor,
-                  }
-                : undefined
-            }
           >
-            {labels?.subscribe ?? t('newsletter/subscribe')}
+            {t('newsletter/subscribe')}
           </Button>
         </div>
       </div>
@@ -146,17 +113,7 @@ function NewsletterSubscribeForm({
   )
 }
 
-export function NewsletterSubscribeButton({
-  newsletter,
-  labels,
-  accentColor,
-  accentTextColor,
-}: {
-  newsletter: NewsletterName
-  labels?: { subscribe?: string; isSubscribed?: string }
-  accentColor?: string
-  accentTextColor?: string
-}) {
+export function NewsletterSubscribeButton({ newsletter }) {
   const { t } = useTranslation()
   const [updateNewsletterSubscription] = useMutation(
     UpdateNewsletterSubscriptionDocument,
@@ -169,14 +126,7 @@ export function NewsletterSubscribeButton({
   if (!data) return null
 
   if (!data.me) {
-    return (
-      <NewsletterSubscribeForm
-        newsletter={newsletter}
-        labels={labels}
-        accentColor={accentColor}
-        accentTextColor={accentTextColor}
-      />
-    )
+    return <NewsletterSubscribeForm newsletter={newsletter} />
   }
 
   const subscriptions = data.me.newsletterSettings.subscriptions
@@ -191,7 +141,7 @@ export function NewsletterSubscribeButton({
     setIsPending(true)
     const { data } = await updateNewsletterSubscription({
       variables: {
-        name: newsletter,
+        name: newsletter.name,
         subscribed: !isSubscribed,
       },
     })
@@ -201,7 +151,7 @@ export function NewsletterSubscribeButton({
         action: data.updateNewsletterSubscription.subscribed
           ? 'Newsletter Subscribe'
           : 'Newsletter Unsubscribe',
-        name: data.updateNewsletterSubscription.name,
+        name: newsletter.title,
       })
     }
     setIsPending(false)
@@ -221,19 +171,8 @@ export function NewsletterSubscribeButton({
       type='button'
       variant={isSubscribed ? 'outline' : 'default'}
       loading={isPending}
-      style={
-        accentColor && !isSubscribed
-          ? {
-              backgroundColor: accentColor,
-              color: accentTextColor,
-              borderColor: accentColor,
-            }
-          : undefined
-      }
     >
-      {isSubscribed
-        ? labels?.isSubscribed ?? t('newsletter/isSubscribed')
-        : labels?.subscribe ?? t('newsletter/subscribe')}
+      {isSubscribed ? t('newsletter/isSubscribed') : t('newsletter/subscribe')}
     </Button>
   )
 }
