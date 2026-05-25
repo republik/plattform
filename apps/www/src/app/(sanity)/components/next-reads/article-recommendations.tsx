@@ -1,5 +1,6 @@
 'use client'
 
+import type { ArticleRecommendation } from '@/app/(sanity)/lib/types'
 import { useTranslation } from '@/lib/withT'
 import { css, cx } from '@republik/theme/css'
 import React from 'react'
@@ -11,7 +12,13 @@ import {
   nextReadsSection,
 } from './styles'
 
-function RecommendedRead({ article, index }) {
+function RecommendedRead({
+  article,
+  index,
+}: {
+  article: ArticleRecommendation
+  index: number
+}) {
   return (
     <div
       className={cx(
@@ -38,7 +45,11 @@ function RecommendedRead({ article, index }) {
   )
 }
 
-export function ArticleRecommendations({ recommendations }) {
+export function ArticleRecommendations({
+  recommendations,
+}: {
+  recommendations: ArticleRecommendation[]
+}) {
   const { t } = useTranslation()
 
   if (!recommendations?.length) return null

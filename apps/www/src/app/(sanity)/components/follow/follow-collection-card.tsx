@@ -3,11 +3,16 @@
 import { SubscriptionObjectType } from '#graphql/republik-api/__generated__/gql/graphql'
 import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
 import FollowCollectionContainer from '@/app/(sanity)/components/follow/follow-collection-container'
+import type { ArticleCollection } from '@/app/(sanity)/lib/types'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css } from '@republik/theme/css'
 import React from 'react'
 
-function FollowCollectionCard({ collection }) {
+function FollowCollectionCard({
+  collection,
+}: {
+  collection: ArticleCollection
+}) {
   return (
     <FollowCollectionContainer>
       <div>

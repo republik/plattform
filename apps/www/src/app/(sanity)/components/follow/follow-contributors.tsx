@@ -1,6 +1,7 @@
 'use client'
 
 import FollowContributorCard from '@/app/(sanity)/components/follow/follow-contributor-card'
+import type { ArticleContributor } from '@/app/(sanity)/lib/types'
 import { Button } from '@/app/components/ui/button'
 import { useTranslation } from '@/lib/withT'
 import * as RadixCollapsible from '@radix-ui/react-collapsible'
@@ -9,19 +10,32 @@ import { useState } from 'react'
 
 const CONTRIBUTORS_SHOWN = 3
 
-function ContributorsList({ contributors }) {
-  {
-    return contributors.map((contributor) => (
-      <FollowContributorCard key={contributor.slug} contributor={contributor} />
-    ))
-  }
+function ContributorsList({
+  contributors,
+}: {
+  contributors: ArticleContributor[]
+}) {
+  return (
+    <>
+      {contributors.map((contributor) => (
+        <FollowContributorCard
+          key={contributor.slug}
+          contributor={contributor}
+        />
+      ))}
+    </>
+  )
 }
 
-function FollowContributors({ contributors }) {
+function FollowContributors({
+  contributors,
+}: {
+  contributors: ArticleContributor[]
+}) {
   const [showAll, setShowAll] = useState(false)
   const { t } = useTranslation()
 
-  if (contributors?.length === 0) return null
+  if (!contributors?.length) return null
 
   const contributorsShown = contributors.slice(0, CONTRIBUTORS_SHOWN)
   const contributorsHidden = contributors.slice(CONTRIBUTORS_SHOWN)

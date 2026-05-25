@@ -7,6 +7,7 @@ import {
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { isSubscribedToNewsletter } from '@/app/(sanity)/components/newsletters/helpers'
 import { NewslettersStatus } from '@/app/(sanity)/components/newsletters/newsletters-status'
+import type { ArticleNewsletter } from '@/app/(sanity)/lib/types'
 import { ErrorMessage } from '@/app/components/auth/login/error-message'
 import { Button } from '@/app/components/ui/button'
 import { FormField } from '@/app/components/ui/form'
@@ -18,7 +19,11 @@ import { css } from '@republik/theme/css'
 import { useState } from 'react'
 import isEmail from 'validator/lib/isEmail'
 
-function NewsletterSubscribeForm({ newsletter }) {
+function NewsletterSubscribeForm({
+  newsletter,
+}: {
+  newsletter: ArticleNewsletter
+}) {
   const { t } = useTranslation()
   const track = useTrackEvent()
   const [subscribe] = useMutation(SignUpForNewsletterDocument)
@@ -113,7 +118,11 @@ function NewsletterSubscribeForm({ newsletter }) {
   )
 }
 
-export function NewsletterSubscribeButton({ newsletter }) {
+export function NewsletterSubscribeButton({
+  newsletter,
+}: {
+  newsletter: ArticleNewsletter
+}) {
   const { t } = useTranslation()
   const [updateNewsletterSubscription] = useMutation(
     UpdateNewsletterSubscriptionDocument,

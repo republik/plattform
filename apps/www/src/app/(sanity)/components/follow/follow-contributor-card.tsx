@@ -1,12 +1,17 @@
 import { SubscriptionObjectType } from '#graphql/republik-api/__generated__/gql/graphql'
 import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
+import type { ArticleContributor } from '@/app/(sanity)/lib/types'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
 import React from 'react'
 
-function FollowContributorCard({ contributor }) {
+function FollowContributorCard({
+  contributor,
+}: {
+  contributor: ArticleContributor
+}) {
   return (
     <div
       className={css({
@@ -39,7 +44,7 @@ function FollowContributorCard({ contributor }) {
       )}
       <div>
         <h4 className={css({ fontWeight: 'bold', lineHeight: '1.2' })}>
-          <Link href={`/~${contributor.userId}`} className={linkOverlay()}>
+          <Link href={`/~${contributor.slug}`} className={linkOverlay()}>
             {contributor.name}
           </Link>
         </h4>

@@ -1,19 +1,24 @@
+import type { ArticleContributor } from '@/app/(sanity)/lib/types'
 import Link from 'next/link'
 
 // TODO: add publish date
 
-function ContributorLink({ contributor }) {
+function ContributorLink({ contributor }: { contributor: ArticleContributor }) {
   if (!contributor.slug) return contributor.name
   return <Link href={`/~${contributor.slug}`}>{contributor.name}</Link>
 }
 
-export async function Byline({ contributors }) {
+export async function Byline({
+  contributors,
+}: {
+  contributors: ArticleContributor[]
+}) {
   if (!contributors) return null
 
   // voice: listed directly in the audio player
   const bylineContributors = contributors.filter((c) => c.kind !== 'voice')
 
-  if (!bylineContributors) return null
+  if (!bylineContributors.length) return null
 
   return (
     <span>

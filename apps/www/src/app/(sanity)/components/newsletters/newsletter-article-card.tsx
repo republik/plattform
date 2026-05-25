@@ -2,11 +2,16 @@
 
 import FollowCollectionContainer from '@/app/(sanity)/components/follow/follow-collection-container'
 import { NewsletterSubscribeButton } from '@/app/(sanity)/components/newsletters/newsletter-subscribe'
+import type { ArticleNewsletter } from '@/app/(sanity)/lib/types'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
 
-function NewsletterArticleCard({ newsletter }) {
+function NewsletterArticleCard({
+  newsletter,
+}: {
+  newsletter: ArticleNewsletter
+}) {
   const { t } = useTranslation()
 
   return (

@@ -1,15 +1,20 @@
 import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
+import type { ArticleRecommendation } from '@/app/(sanity)/lib/types'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
 import React from 'react'
 
-export function NextReadAuthor({ article }) {
+export function NextReadAuthor({
+  article,
+}: {
+  article: ArticleRecommendation
+}) {
   const authorsNames = article.contributors
-    .filter((contributor) => contributor.kind?.includes('Text'))
+    ?.filter((contributor) => contributor.kind?.includes('Text'))
     .map((contributor) => contributor.name)
 
-  if (authorsNames?.length === 0) return null
+  if (!authorsNames?.length) return null
 
   return <p className='author'>Von {authorsNames.join(', ')}</p>
 }
@@ -31,7 +36,11 @@ export function NextReadDuration({
   return <p className='duration'>{duration} min</p>
 }
 
-export function CategoryLabel({ article }) {
+export function CategoryLabel({
+  article,
+}: {
+  article: ArticleRecommendation
+}) {
   const label = article.collection
   if (!label) return null
 
@@ -40,17 +49,23 @@ export function CategoryLabel({ article }) {
   return <h5 style={{ color }}>{label}</h5>
 }
 
-export function NextReadLink({ article, index }) {
+export function NextReadLink({
+  article,
+  index,
+}: {
+  article: ArticleRecommendation
+  index: number
+}) {
   const trackEvent = useTrackEvent()
 
   return (
     <Link
-      href={article.slug.current}
+      href={article.slug?.current ?? '#'}
       className={linkOverlay()}
       onClick={() => {
         trackEvent({
           action: 'click recommended read',
-          slug: article.slug.current,
+          slug: article.slug?.current,
           index,
         })
       }}
