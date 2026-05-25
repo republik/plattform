@@ -24,14 +24,22 @@ export async function generateMetadata({
   params,
 }: PageProps<'/articles/[...path]'>) {
   const { path } = await params
-  const slug = path.join('/')
+  const slug = `/${path.join('/')}`
 
   const { data } = await sanityFetch({
     query: ARTICLE_QUERY,
     params: { slug },
     stega: false,
   })
-  return { title: data?.title ?? 'Article not found' }
+  const collectionPrefix = data.collection ? `${data.collection}: ` : ''
+  const siteSuffix = ' - Republik'
+  return {
+    title: data
+      ? `${collectionPrefix}
+          ${data.title}
+          ${siteSuffix}`
+      : 'Article not found',
+  }
 }
 
 // Page component: default settings (stega active in Draft Mode)

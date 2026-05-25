@@ -30,10 +30,15 @@ export async function Byline({ articleSlug }: { articleSlug: string }) {
 
   if (!contributors) return null
 
+  // voice: listed directly in the audio player
+  const bylineContributors = contributors.filter((c) => c.kind !== 'voice')
+
+  if (!bylineContributors) return null
+
   return (
     <span>
       Von{' '}
-      {contributors?.map((contributor, i) => [
+      {bylineContributors.map((contributor, i) => [
         i > 0 && ', ',
         <ContributorLink contributor={contributor} key={i} />,
         ` (${contributor.kind})`,
