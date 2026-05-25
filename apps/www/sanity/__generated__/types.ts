@@ -14,7 +14,7 @@
 
 export declare const internalGroqTypeReferenceTo: unique symbol
 
-// Source: ../../../../../../studio/schema.json
+// Source: ../../../studio/schema.json
 export type AudioCover = {
   color?: string
   anchor?: string
@@ -496,17 +496,17 @@ export type AllSanitySchemaTypes =
 
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
 // Variable: ARTICLE_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    content,    contributors[]{      _id,      kind,      "name": contributor->title,    }  }
+// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    content,    "collection": articleCollection->title,    theme->{      kind,      color    }  }
 export type ARTICLE_QUERY_RESULT = {
   _id: string
   title: string | null
   description: string | null
   content: null
-  contributors: Array<{
-    _id: null
+  collection: string | null
+  theme: {
     kind: string | null
-    name: string | null
-  }> | null
+    color: Color | null
+  } | null
 } | null
 
 // Source: src/app/(sanity)/articles/page.tsx
@@ -517,11 +517,25 @@ export type ARTICLES_QUERY_RESULT = Array<{
   title: string | null
 }>
 
+// Source: src/app/(sanity)/components/byline.tsx
+// Variable: BYLINE_QUERY
+// Query: *[_type == "article" && slug.current == $articleSlug][0]{    _id,    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,    }  }
+export type BYLINE_QUERY_RESULT = {
+  _id: string
+  contributors: Array<{
+    _id: null
+    kind: string | null
+    slug: string | null
+    name: string | null
+  }> | null
+} | null
+
 // Query TypeMap
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    content,\n    contributors[]{\n      _id,\n      kind,\n      "name": contributor->title,\n    }\n  }': ARTICLE_QUERY_RESULT
+    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    content,\n    "collection": articleCollection->title,\n    theme->{\n      kind,\n      color\n    }\n  }': ARTICLE_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
+    '*[_type == "article" && slug.current == $articleSlug][0]{\n    _id,\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n    }\n  }': BYLINE_QUERY_RESULT
   }
 }

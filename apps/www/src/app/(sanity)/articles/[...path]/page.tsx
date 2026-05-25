@@ -49,54 +49,43 @@ export default async function PostPage({
   if (!article) notFound()
 
   return (
-    <article
-      style={{
-        ['--accent-color' as any]: article.theme?.color?.hex || 'transparent',
-      }}
-    >
-      {article.theme?.color && (
-        <hr
+    <>
+      <style>{`:root { --page-theme-accent-color: ${article.theme?.color?.hex}; }`}</style>
+      <article>
+        <div
           className={css({
-            height: '3px',
-            color: 'var(--accent-color)',
-            backgroundColor: 'var(--accent-color)',
-            left: 0,
-            right: 0,
+            mx: 'auto',
+            px: '15px',
+            maxWidth: 'editorial',
+            width: 'full',
+            '& a': { textDecoration: 'underline' },
           })}
-        />
-      )}
-      <div
-        className={css({
-          mx: 'auto',
-          px: '15px',
-          maxWidth: 'editorial',
-          width: 'full',
-          '& a': { textDecoration: 'underline' },
-        })}
-      >
-        {article.collection && (
-          <p
-            className={css({
-              textStyle: 'editorialCollection',
-              mb: '-6',
-              mt: '8',
-            })}
-            style={{ color: 'var(--accent-color)' }}
-          >
-            {article.collection}
+        >
+          {article.collection && (
+            <p
+              className={css({
+                textStyle: 'editorialCollection',
+                mb: '-6',
+                mt: '8',
+              })}
+              style={{ color: 'var(--page-theme-accent-color)' }}
+            >
+              {article.collection}
+            </p>
+          )}
+          <h1 className={css({ textStyle: 'editorialTitle', mt: '12' })}>
+            {article.title}
+          </h1>
+          <h3 className={css({ textStyle: 'editorialLead', mt: '4' })}>
+            {article.description}
+          </h3>
+          <p className={css({ textStyle: 'editorialByline', mt: '4' })}>
+            <Byline articleSlug={slug} />
           </p>
-        )}
-        <h1 className={css({ textStyle: 'editorialTitle', mt: '12' })}>
-          {article.title}
-        </h1>
-        <h3 className={css({ textStyle: 'editorialLead', mt: '4' })}>
-          {article.description}
-        </h3>
-        <p className={css({ textStyle: 'editorialByline', mt: '4' })}>
-          <Byline articleSlug={slug} />
-        </p>
-      </div>
-      {/* ... */}
-    </article>
+        </div>
+        <div className={css({ height: '1000px' })}></div>
+        {/* ... */}
+      </article>
+    </>
   )
 }
