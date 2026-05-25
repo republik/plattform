@@ -5,9 +5,9 @@ import {
   SignUpForNewsletterDocument,
   UpdateNewsletterSubscriptionDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
+import { isSubscribedToNewsletter } from '@/app/(sanity)/components/newsletters/helpers'
+import { NewslettersStatus } from '@/app/(sanity)/components/newsletters/newsletters-status'
 import { ErrorMessage } from '@/app/components/auth/login/error-message'
-import { isSubscribedToNewsletter } from '@/app/components/newsletters/helpers'
-import { NewslettersStatus } from '@/app/components/newsletters/newsletters-status'
 import { Button } from '@/app/components/ui/button'
 import { FormField } from '@/app/components/ui/form'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
@@ -131,7 +131,7 @@ export function NewsletterSubscribeButton({ newsletter }) {
 
   const subscriptions = data.me.newsletterSettings.subscriptions
   const isDisabled = data.me.newsletterSettings.status !== 'subscribed'
-  const isSubscribed = isSubscribedToNewsletter(newsletter, subscriptions)
+  const isSubscribed = isSubscribedToNewsletter(newsletter.name, subscriptions)
 
   async function toggleSubscription(e) {
     e.stopPropagation()
