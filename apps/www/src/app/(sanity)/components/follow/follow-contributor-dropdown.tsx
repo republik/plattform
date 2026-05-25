@@ -6,16 +6,16 @@ import {
   SubscriptionObjectType,
   UnsubscribeDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { ApolloError, useMutation } from '@apollo/client'
 import { ErrorMessage } from '@/app/components/auth/login/error-message'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
+import { useTranslation } from '@/lib/withT'
+import { ApolloError, useMutation } from '@apollo/client'
 import * as Select from '@radix-ui/react-select'
 
 import { css, cx } from '@republik/theme/css'
 import { button } from '@republik/theme/recipes'
 import { Check, ChevronDown } from 'lucide-react'
 import React from 'react'
-import { useTranslation } from '@/lib/withT'
 
 type AuthorNotificationOption = 'DOCUMENTS' | 'ALL' | 'NONE'
 
@@ -25,7 +25,7 @@ const OPTIONS: { value: AuthorNotificationOption; warning?: boolean }[] = [
   { value: 'NONE', warning: true },
 ]
 
-function FollowAuthorDropdown({
+function FollowContributorDropdown({
   subscriptionId,
   subscriptionFilters,
   objectId,
@@ -187,4 +187,4 @@ function FollowAuthorDropdown({
   )
 }
 
-export default FollowAuthorDropdown
+export default FollowContributorDropdown

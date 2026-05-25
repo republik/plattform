@@ -1,31 +1,27 @@
-import { Document } from '#graphql/republik-api/__generated__/gql/graphql'
-import FollowAuthors from '@/app/components/follow/follow-authors'
-import FollowFormat from '@/app/components/follow/follow-format'
+'use client'
 
-type ContributorType = {
-  kind: string
-  user?: {
-    id: string
+import FollowCollectionCard from '@/app/(sanity)/components/follow/follow-collection-card'
+import FollowContributors from '@/app/(sanity)/components/follow/follow-contributors'
+import { useMe } from '@/lib/context/MeContext' // order of priority:
+
+// order of priority:
+// subscribe to newsletter > follow collection > follow contributors
+function FollowArticle({ contributors, collection }) {
+  const { me, meLoading } = useMe()
+
+  if (meLoading) return null
+
+  /*if (newsletter) {
+    return <NewsletterArticleCard newsletter={newsletter} />
+  }*/
+
+  if (!me) return null
+
+  if (collection) {
+    return <FollowCollectionCard collection={collection} />
   }
-}
 
-function FollowArticle({
-  contributors,
-  format,
-}: {
-  contributors?: ContributorType[]
-  format?: Document
-}) {
-  if (format) {
-    return <FollowFormat path={format.meta.path} />
-  }
-
-  const authorIds = contributors
-    ?.filter((contributor) => contributor.kind === 'Text')
-    .map((contributor) => contributor.user?.id)
-    .filter(Boolean)
-
-  return <FollowAuthors authorIds={authorIds} />
+  return <FollowContributors contributors={contributors} />
 }
 
 export default FollowArticle

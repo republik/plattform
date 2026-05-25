@@ -3,7 +3,11 @@
 import { css } from '@republik/theme/css'
 import React from 'react'
 
-function FollowFormatContainer({ children }: { children: React.ReactNode }) {
+function FollowCollectionContainer({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <div
       className={css({
@@ -22,4 +26,4 @@ function FollowFormatContainer({ children }: { children: React.ReactNode }) {
   )
 }
 
-export default FollowFormatContainer
+export default FollowCollectionContainer

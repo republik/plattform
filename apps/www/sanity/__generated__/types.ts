@@ -496,13 +496,23 @@ export type AllSanitySchemaTypes =
 
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
 // Variable: ARTICLE_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    content,    "collection": articleCollection->title,    theme->{      color    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,    },    articleRecommendations[]->{      _id,      title,      description,      slug,      "collection": articleCollection->title,      theme->{        color      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
+// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    content,    articleCollection->{      title,      description,      image    },    theme->{      color    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,    },    articleRecommendations[]->{      _id,      title,      description,      slug,      "collection": articleCollection->title,      theme->{        color      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
 export type ARTICLE_QUERY_RESULT = {
   _id: string
   title: string | null
   description: string | null
   content: null
-  collection: string | null
+  articleCollection: {
+    title: string
+    description: string | null
+    image: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+    } | null
+  } | null
   theme: {
     color: Color | null
   } | null
@@ -540,7 +550,7 @@ export type ARTICLES_QUERY_RESULT = Array<{
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    content,\n    "collection": articleCollection->title,\n    theme->{\n      color\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      "collection": articleCollection->title,\n      theme->{\n        color\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
+    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    content,\n    articleCollection->{\n      title,\n      description,\n      image\n    },\n    theme->{\n      color\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      "collection": articleCollection->title,\n      theme->{\n        color\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
   }
 }

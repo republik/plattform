@@ -4,14 +4,15 @@ import {
   SubscriptionObjectType,
   UnsubscribeDocument,
 } from '#graphql/republik-api/__generated__/gql/graphql'
-import { useMutation } from '@apollo/client'
 import { Button } from '@/app/components/ui/button'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
+import { postMessage } from '@/lib/withInNativeApp'
+import { useMutation } from '@apollo/client'
 import { css } from '@republik/theme/css'
 import { ButtonVariantProps } from '@republik/theme/recipes'
 import { useState } from 'react'
-import { postMessage } from '@/lib/withInNativeApp'
 
+// TODO: figure out subscribes with sanity
 export function FollowButton({
   type,
   subscriptionId,
@@ -22,8 +23,8 @@ export function FollowButton({
 }: {
   type: SubscriptionObjectType
   subscriptionId?: string
-  objectId: string
-  objectName: string
+  objectId?: string
+  objectName?: string
   size?: ButtonVariantProps['size']
   filters?: EventObjectType[]
 }) {

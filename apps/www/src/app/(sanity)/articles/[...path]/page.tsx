@@ -1,20 +1,24 @@
-import { Byline } from '@/app/(sanity)/components/byline'
-import { EditLink } from '@/app/(sanity)/components/edit-link'
+import { Byline } from '@/app/(sanity)/articles/[...path]/components/byline'
+import { EditLink } from '@/app/(sanity)/articles/[...path]/components/edit-link'
+import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
+import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
-import { ArticleRecommendations } from '@/app/components/next-reads/article-recommendations'
 import { ArticleSection } from '@/app/components/ui/section'
 import { css } from '@republik/theme/css'
 import { defineQuery } from 'next-sanity'
-import { notFound } from 'next/navigation' // Update with your own queries
+import { notFound } from 'next/navigation'
 
-// Update with your own queries
 const ARTICLE_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
     _id,
     title,
     description,
     content,
-    "collection": articleCollection->title,
+    articleCollection->{
+      title,
+      description,
+      image
+    },
     theme->{
       color
     },
@@ -53,7 +57,9 @@ export async function generateMetadata({
     params: { slug },
     stega: false,
   })
-  const collectionPrefix = data.collection ? `${data.collection}: ` : ''
+  const collectionPrefix = data.articleCollection
+    ? `${data.articleCollection.title}: `
+    : ''
   const siteSuffix = ' - Republik'
   return {
     title: data
@@ -86,7 +92,7 @@ export default async function PostPage({
       <article>
         {/* TITLE BLOCK */}
         <ArticleSection>
-          {article.collection && (
+          {article.articleCollection && (
             <p
               className={css({
                 textStyle: 'editorialCollection',
@@ -95,7 +101,7 @@ export default async function PostPage({
               })}
               style={{ color: 'var(--page-theme-accent-color)' }}
             >
-              {article.collection}
+              {article.articleCollection.title}
             </p>
           )}
           <h1 className={css({ textStyle: 'editorialTitle', mt: '12' })}>
@@ -119,11 +125,20 @@ export default async function PostPage({
           </div>
         </ArticleSection>
 
-        <div className={css({ height: '300px' })}></div>
+        <div className={css({ height: '80px' })}></div>
 
-        <ArticleRecommendations
-          recommendations={article.articleRecommendations}
-        />
+        <ArticleSection>
+          <FollowArticle
+            contributors={article.contributors}
+            collection={article.articleCollection}
+          />
+        </ArticleSection>
+
+        <ArticleSection>
+          <ArticleRecommendations
+            recommendations={article.articleRecommendations}
+          />
+        </ArticleSection>
       </article>
     </>
   )

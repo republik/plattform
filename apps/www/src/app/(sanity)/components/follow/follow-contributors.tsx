@@ -1,35 +1,35 @@
 'use client'
 
-import FollowAuthorCard from '@/app/components/follow/follow-author-card'
+import FollowContributorCard from '@/app/(sanity)/components/follow/follow-contributor-card'
 import { Button } from '@/app/components/ui/button'
+import { useTranslation } from '@/lib/withT'
 import * as RadixCollapsible from '@radix-ui/react-collapsible'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
-import { useTranslation } from '@/lib/withT'
 
-const MAX_AUTHORS = 3
+const CONTRIBUTORS_SHOWN = 3
 
-function AuthorsList({ authorIds }: { authorIds: string[] }) {
+function ContributorsList({ contributors }) {
   {
-    return authorIds?.map((authorId) => (
-      <FollowAuthorCard key={authorId} authorId={authorId} />
+    return contributors.map((contributor) => (
+      <FollowContributorCard key={contributor.slug} contributor={contributor} />
     ))
   }
 }
 
-function FollowAuthors({ authorIds }: { authorIds: string[] }) {
+function FollowContributors({ contributors }) {
   const [showAll, setShowAll] = useState(false)
   const { t } = useTranslation()
 
-  if (authorIds?.length === 0) return null
+  if (contributors?.length === 0) return null
 
-  const authorsShown = authorIds.slice(0, MAX_AUTHORS)
-  const authorsHidden = authorIds.slice(MAX_AUTHORS)
+  const contributorsShown = contributors.slice(0, CONTRIBUTORS_SHOWN)
+  const contributorsHidden = contributors.slice(CONTRIBUTORS_SHOWN)
 
   return (
     <div className={css({ mt: 8, mb: 12, md: { mb: 16 } })}>
-      <AuthorsList authorIds={authorsShown} />
-      {!!authorsHidden?.length && (
+      <ContributorsList contributors={contributorsShown} />
+      {!!contributorsHidden?.length && (
         <RadixCollapsible.Root open={showAll} onOpenChange={setShowAll}>
           {!showAll && (
             <RadixCollapsible.Trigger asChild>
@@ -64,7 +64,7 @@ function FollowAuthors({ authorIds }: { authorIds: string[] }) {
               },
             })}
           >
-            <AuthorsList authorIds={authorsHidden} />
+            <ContributorsList contributors={contributorsHidden} />
           </RadixCollapsible.Content>
         </RadixCollapsible.Root>
       )}
@@ -72,4 +72,4 @@ function FollowAuthors({ authorIds }: { authorIds: string[] }) {
   )
 }
 
-export default FollowAuthors
+export default FollowContributors
