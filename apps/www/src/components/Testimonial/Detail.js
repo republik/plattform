@@ -46,7 +46,6 @@ const Detail = ({
     id,
     slug,
     name,
-    credentials,
     statement,
     portrait,
     sequenceNumber,
@@ -63,9 +62,6 @@ const Detail = ({
     emailBody: `${PUBLIC_BASE_URL}/community?id=${id}`,
     overlayTitle: t('statement/share/overlayTitle', { name }),
   }
-
-  const listedCredential = credentials?.filter((c) => c.isListed)[0]
-
   return (
     <div {...styles.detail}>
       <div
@@ -86,13 +82,7 @@ const Detail = ({
             </Link>
           ) : (
             <span>{name}</span>
-          )}{' '}
-          <span
-            {...styles.detailRole}
-            {...colorScheme.set('color', 'textSoft')}
-          >
-            {listedCredential?.description}
-          </span>
+          )}
         </H3>
         {video ? (
           <div
