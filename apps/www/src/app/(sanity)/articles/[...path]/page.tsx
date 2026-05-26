@@ -1,12 +1,13 @@
 import { Byline } from '@/app/(sanity)/articles/[...path]/components/byline'
 import { EditLink } from '@/app/(sanity)/articles/[...path]/components/edit-link'
+import { articleTypography } from '@/app/(sanity)/articles/[...path]/styles'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { ArticleSection } from '@/app/components/ui/section'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
-import { defineQuery } from 'next-sanity'
+import { defineQuery, PortableText } from 'next-sanity'
 import { notFound } from 'next/navigation'
 
 const ARTICLE_QUERY = defineQuery(
@@ -14,6 +15,7 @@ const ARTICLE_QUERY = defineQuery(
     _id,
     title,
     description,
+    content,
     articleCollection->{
       title,
       description,
@@ -100,7 +102,7 @@ export default async function PostPage({
       <style>{`:root { --page-theme-accent-color: ${article.theme?.color?.hex}; }`}</style>
       <article>
         {/* TITLE BLOCK */}
-        <ArticleSection>
+        <ArticleSection className={css({ mb: '8' })}>
           {article.articleCollection && (
             <p
               className={css({
@@ -134,7 +136,9 @@ export default async function PostPage({
           </div>
         </ArticleSection>
 
-        <div className={css({ height: '80px' })}></div>
+        <ArticleSection className={articleTypography}>
+          <PortableText value={article.content} />
+        </ArticleSection>
 
         <ArticleSection>
           <FollowArticle
