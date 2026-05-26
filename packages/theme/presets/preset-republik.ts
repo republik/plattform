@@ -364,6 +364,25 @@ export const presetRepublik = definePreset({
             fontSize: { base: '1rem', md: '1.25rem' },
           },
         },
+        editorialParagraph: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: 400,
+            fontStyle: 'normal',
+            fontSize: { base: '1.0625rem', md: '1.1875rem' },
+            lineHeight: { base: 1.5, md: 1.6 },
+          },
+        },
+        editorialH2: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: 700,
+            fontStyle: 'normal',
+            fontSize: { base: '1.1875rem', md: '1.5rem' },
+            lineHeight: 1.5,
+            letterSpacing: { base: 0, md: -0.21 },
+          },
+        },
         teaserTitle: {
           value: {
             fontFamily: 'republikSerif',

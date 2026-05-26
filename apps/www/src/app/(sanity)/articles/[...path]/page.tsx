@@ -102,7 +102,7 @@ export default async function PostPage({
       <style>{`:root { --page-theme-accent-color: ${article.theme?.color?.hex}; }`}</style>
       <article>
         {/* TITLE BLOCK */}
-        <ArticleSection className={css({ mb: '8' })}>
+        <ArticleSection>
           {article.articleCollection && (
             <p
               className={css({
