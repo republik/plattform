@@ -35,7 +35,9 @@ function FollowArticle({
     return <FollowCollectionCard collection={collection} />
   }
 
-  return <FollowContributors contributors={contributors} />
+  return (
+    <FollowContributors contributors={contributors.filter((c) => c.slug)} />
+  )
 }
 
 export default FollowArticle
