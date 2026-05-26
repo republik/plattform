@@ -18,9 +18,9 @@ export const articleTypography = css({
     _lastOfType: {
       marginBottom: 0,
     },
-    'h2 + &': {
-      marginTop: 0,
-    },
+  },
+  '& h2 + p': {
+    marginTop: 0,
   },
   '& h2': {
     textStyle: 'editorialH2',
