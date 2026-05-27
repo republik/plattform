@@ -8,6 +8,7 @@ import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { ArticleSection } from '@/app/components/ui/section'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
+import { Metadata } from 'next'
 import { defineQuery, PortableText } from 'next-sanity'
 import { notFound } from 'next/navigation'
 
@@ -60,7 +61,7 @@ const ARTICLE_QUERY = defineQuery(
 // Metadata: stega disabled to keep invisible characters out of <title>
 export async function generateMetadata({
   params,
-}: PageProps<'/articles/[...path]'>) {
+}: PageProps<'/articles/[...path]'>): Promise<Metadata> {
   const { path } = await params
   const slug = `/${path.join('/')}`
 
