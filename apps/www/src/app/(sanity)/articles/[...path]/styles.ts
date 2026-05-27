@@ -3,6 +3,10 @@ import { css } from '@republik/theme/css'
 export const articleTypography = css({
   mt: '12',
   mb: '20',
+  '& a': {
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
   '& p': {
     my: '8',
     textStyle: 'editorialParagraph',
