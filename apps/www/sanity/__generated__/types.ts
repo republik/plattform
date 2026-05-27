@@ -48,6 +48,28 @@ export type ArticlePreview = {
   }
 }
 
+export type EditorialImage = {
+  _type: 'editorialImage'
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  imageDark?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  alt?: string
+  legend?: string
+  credit?: string
+  size?: 'NORMAL' | 'LARGE' | 'FULL'
+}
+
 export type SeoImageBuilder = {
   _type: 'seoImageBuilder'
   text?: string
@@ -196,14 +218,9 @@ export type Article = {
         _type: 'block'
         _key: string
       }
-    | {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        _type: 'image'
+    | ({
         _key: string
-      }
+      } & EditorialImage)
   >
   contributors?: Array<{
     kind?: string
@@ -516,6 +533,7 @@ export type AllSanitySchemaTypes =
   | AudioCoverCrop
   | SanityImageAssetReference
   | ArticlePreview
+  | EditorialImage
   | SeoImageBuilder
   | Seo
   | LegacyMeta
@@ -559,6 +577,9 @@ export type ARTICLE_QUERY_RESULT = {
   title: string | null
   description: string | null
   content: Array<
+    | ({
+        _key: string
+      } & EditorialImage)
     | {
         children?: Array<
           | {
@@ -587,14 +608,6 @@ export type ARTICLE_QUERY_RESULT = {
         }>
         level?: number
         _type: 'block'
-        _key: string
-      }
-    | {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        _type: 'image'
         _key: string
       }
   > | null

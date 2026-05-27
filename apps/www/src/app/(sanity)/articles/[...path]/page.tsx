@@ -1,5 +1,6 @@
 import { Byline } from '@/app/(sanity)/articles/[...path]/components/byline'
 import { EditLink } from '@/app/(sanity)/articles/[...path]/components/edit-link'
+import { EditorialImage } from '@/app/(sanity)/articles/[...path]/components/editorial-image'
 import { articleTypography } from '@/app/(sanity)/articles/[...path]/styles'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
@@ -137,7 +138,14 @@ export default async function PostPage({
         </ArticleSection>
 
         <ArticleSection className={articleTypography}>
-          <PortableText value={article.content} />
+          <PortableText
+            value={article.content}
+            components={{
+              types: {
+                editorialImage: EditorialImage,
+              },
+            }}
+          />
         </ArticleSection>
 
         <ArticleSection>
