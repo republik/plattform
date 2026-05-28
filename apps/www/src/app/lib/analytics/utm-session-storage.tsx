@@ -1,5 +1,6 @@
 'use client'
 import { useEffect } from 'react'
+import { reportError } from '@/lib/errors/reportError'
 
 const STORAGE_KEY = 'republik-utm'
 
@@ -14,16 +15,22 @@ function setUTMSessionStorage(): void {
     }
 
     window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(params))
-  } catch {
-    // ignore
+  } catch (error) {
+    reportError(
+      'setUTMSessionStorage',
+      error instanceof Error ? error : String(error),
+    )
   }
 }
 
 export function getUTMSessionStorage(): Record<string, string> {
   try {
     return JSON.parse(window.sessionStorage.getItem(STORAGE_KEY) ?? '{}')
-  } catch {
-    // ignore
+  } catch (error) {
+    reportError(
+      'getUTMSessionStorage',
+      error instanceof Error ? error : String(error),
+    )
   }
   return {}
 }
