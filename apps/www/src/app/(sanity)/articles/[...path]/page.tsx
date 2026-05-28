@@ -1,6 +1,5 @@
 import { Byline } from '@/app/(sanity)/articles/[...path]/components/byline'
 import { EditLink } from '@/app/(sanity)/articles/[...path]/components/edit-link'
-import { EditorialImage } from '@/app/(sanity)/articles/[...path]/components/editorial-image'
 import { articleTypography } from '@/app/(sanity)/articles/[...path]/styles'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
@@ -9,24 +8,15 @@ import { ArticleSection } from '@/app/components/ui/section'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
-import { defineQuery, PortableText } from 'next-sanity'
-import Link from 'next/link'
+import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation'
+import { ArticleContent } from './components/article-content'
 
 const ARTICLE_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
     _id,
     title,
     description,
-    content[]{
-        ...,
-        markDefs[]{
-          ...,
-          _type == "internalLink" => {
-            "slug": @.reference->slug
-          }
-        }
-    },
     articleCollection->{
       title,
       description,
@@ -148,19 +138,7 @@ export default async function PostPage({
         </ArticleSection>
 
         <ArticleSection className={articleTypography}>
-          <PortableText
-            value={article.content}
-            components={{
-              types: {
-                editorialImage: EditorialImage,
-              },
-              marks: {
-                internalLink: (props) => (
-                  <Link href={props.value.slug?.current}>{props.text}</Link>
-                ),
-              },
-            }}
-          />
+          <ArticleContent slug={slug} />
         </ArticleSection>
 
         <ArticleSection>
