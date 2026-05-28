@@ -1,5 +1,13 @@
 import { css } from '@republik/theme/css'
 
+const editorialWidth = {
+  marginX: 'auto',
+  maxWidth: 'editorial',
+  pl: '15px',
+  pr: '15px',
+  display: 'block',
+}
+
 export const articleTypography = css({
   mt: '12',
   mb: '20',
@@ -8,6 +16,7 @@ export const articleTypography = css({
     cursor: 'pointer',
   },
   '& p': {
+    ...editorialWidth,
     my: '8',
     textStyle: 'editorialParagraph',
     '& em, & i': {
@@ -27,10 +36,13 @@ export const articleTypography = css({
     marginTop: 0,
   },
   '& h2': {
+    ...editorialWidth,
     textStyle: 'editorialH2',
-    margin: '36px 0 8px 0',
+    mt: '36px',
+    mb: '8px',
     md: {
-      margin: '46px 0 12px 0',
+      mt: '46px',
+      mb: '12px',
     },
     _first: {
       marginTop: 0,
@@ -38,5 +50,9 @@ export const articleTypography = css({
     _last: {
       marginBottom: 0,
     },
+  },
+  '& figure': {
+    ...editorialWidth,
+    mb: '4',
   },
 })

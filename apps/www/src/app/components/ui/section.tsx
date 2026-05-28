@@ -38,7 +38,7 @@ export const ArticleSection = ({
   className,
 }: ArticleSectionProps) => {
   return (
-    <div
+    <section
       className={cx(
         css({
           margin: '0 auto',
@@ -50,6 +50,6 @@ export const ArticleSection = ({
       )}
     >
       {children}
-    </div>
+    </section>
   )
 }

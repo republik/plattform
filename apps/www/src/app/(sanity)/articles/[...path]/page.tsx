@@ -137,7 +137,7 @@ export default async function PostPage({
           </div>
         </ArticleSection>
 
-        <ArticleSection className={articleTypography}>
+        <section className={articleTypography}>
           <PortableText
             value={article.content}
             components={{
@@ -146,7 +146,7 @@ export default async function PostPage({
               },
             }}
           />
-        </ArticleSection>
+        </section>
 
         <ArticleSection>
           <FollowArticle

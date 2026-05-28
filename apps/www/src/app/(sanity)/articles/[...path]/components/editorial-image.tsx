@@ -1,13 +1,6 @@
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 // import type { EditorialImage as EditorialImageType } from '@/sanity/__generated__/types'
-import { css, cx } from '@republik/theme/css'
-
-const figure = css({
-  margin: 0,
-  marginBottom: '15px',
-  padding: 0,
-  width: '100%',
-})
+import { css } from '@republik/theme/css'
 
 const sizeStyles = {
   NORMAL: css({}),
@@ -50,6 +43,7 @@ const caption = css({
 })
 
 const creditStyle = css({
+  fontSize: '10px',
   '&::before': {
     content: '" "',
   },
@@ -66,7 +60,7 @@ export function EditorialImage({ value }) {
     : undefined
 
   return (
-    <figure className={cx(figure, sizeStyles[size])}>
+    <figure className={sizeStyles[size]}>
       {darkSrc ? (
         <picture>
           <source srcSet={darkSrc} media='(prefers-color-scheme: dark)' />
