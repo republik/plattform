@@ -10,6 +10,7 @@ import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import { defineQuery, PortableText } from 'next-sanity'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 const ARTICLE_QUERY = defineQuery(
@@ -17,7 +18,15 @@ const ARTICLE_QUERY = defineQuery(
     _id,
     title,
     description,
-    content,
+    content[]{
+        ...,
+        markDefs[]{
+          ...,
+          _type == "internalLink" => {
+            "slug": @.reference->slug
+          }
+        }
+    },
     articleCollection->{
       title,
       description,
@@ -144,6 +153,11 @@ export default async function PostPage({
             components={{
               types: {
                 editorialImage: EditorialImage,
+              },
+              marks: {
+                internalLink: (props) => (
+                  <Link href={props.value.slug?.current}>{props.text}</Link>
+                ),
               },
             }}
           />

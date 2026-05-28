@@ -14,7 +14,7 @@
 
 export declare const internalGroqTypeReferenceTo: unique symbol
 
-// Source: ../../../studio/schema.json
+// Source: ../../../../../../studio/schema.json
 export type AudioCover = {
   color?: string
   anchor?: string
@@ -46,28 +46,6 @@ export type ArticlePreview = {
     crop?: SanityImageCrop
     _type: 'image'
   }
-}
-
-export type EditorialImage = {
-  _type: 'editorialImage'
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  imageDark?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  alt?: string
-  legend?: string
-  credit?: string
-  size?: 'NORMAL' | 'LARGE' | 'FULL'
 }
 
 export type SeoImageBuilder = {
@@ -187,41 +165,6 @@ export type Article = {
     _type: 'image'
   }
   repoId?: string
-  content?: Array<
-    | {
-        children?: Array<
-          | {
-              marks?: Array<string>
-              text?: string
-              _type: 'span'
-              _key: string
-            }
-          | {
-              value?: string
-              _type: 'softHyphen'
-              _key: string
-            }
-          | {
-              value?: string
-              _type: 'nonBreakingSpace'
-              _key: string
-            }
-        >
-        style?: 'normal' | 'h2'
-        listItem?: 'bullet' | 'number'
-        markDefs?: Array<{
-          href?: string
-          _type: 'link'
-          _key: string
-        }>
-        level?: number
-        _type: 'block'
-        _key: string
-      }
-    | ({
-        _key: string
-      } & EditorialImage)
-  >
   contributors?: Array<{
     kind?: string
     contributor?: ContributorReference
@@ -287,7 +230,7 @@ export type PageTheme = {
   _updatedAt: string
   _rev: string
   title: string
-  kind?: 'EDITORIAL' | 'META'
+  kind?: string
   color?: Color
   darkMode?: boolean
 }
@@ -320,16 +263,6 @@ export type Newsletter = {
   _updatedAt: string
   _rev: string
   title: string
-  description?: string
-  frequency?: string
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  name: string
   replyTo?: string
   fromName?: string
   savedSegmentId?: number
@@ -382,14 +315,7 @@ export type Contributor = {
   _updatedAt: string
   _rev: string
   title: string
-  description?: string
-  portrait?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
+  kind?: string
   userId?: string
 }
 
@@ -533,7 +459,6 @@ export type AllSanitySchemaTypes =
   | AudioCoverCrop
   | SanityImageAssetReference
   | ArticlePreview
-  | EditorialImage
   | SeoImageBuilder
   | Seo
   | LegacyMeta
@@ -571,46 +496,12 @@ export type AllSanitySchemaTypes =
 
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
 // Variable: ARTICLE_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    content,    articleCollection->{      title,      description,      image    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme->{      color    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    articleRecommendations[]->{      _id,      title,      description,      slug,      "collection": articleCollection->title,      theme->{        color      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
+// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    content[]{        ...,        markDefs[]{          ...,          _type == "internalLink" => {            "slug": @.reference->slug          }        }    },    articleCollection->{      title,      description,      image    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme->{      color    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    articleRecommendations[]->{      _id,      title,      description,      slug,      "collection": articleCollection->title,      theme->{        color      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
 export type ARTICLE_QUERY_RESULT = {
   _id: string
   title: string | null
   description: string | null
-  content: Array<
-    | ({
-        _key: string
-      } & EditorialImage)
-    | {
-        children?: Array<
-          | {
-              value?: string
-              _type: 'nonBreakingSpace'
-              _key: string
-            }
-          | {
-              value?: string
-              _type: 'softHyphen'
-              _key: string
-            }
-          | {
-              marks?: Array<string>
-              text?: string
-              _type: 'span'
-              _key: string
-            }
-        >
-        style?: 'h2' | 'normal'
-        listItem?: 'bullet' | 'number'
-        markDefs?: Array<{
-          href?: string
-          _type: 'link'
-          _key: string
-        }>
-        level?: number
-        _type: 'block'
-        _key: string
-      }
-  > | null
+  content: null
   articleCollection: {
     title: string
     description: string | null
@@ -624,16 +515,10 @@ export type ARTICLE_QUERY_RESULT = {
   } | null
   newsletter: {
     title: string
-    description: string | null
-    frequency: string | null
-    image: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-    } | null
-    name: string
+    description: null
+    frequency: null
+    image: null
+    name: null
   } | null
   theme: {
     color: Color | null
@@ -643,14 +528,8 @@ export type ARTICLE_QUERY_RESULT = {
     kind: string | null
     slug: string | null
     name: string | null
-    description: string | null
-    portrait: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-    } | null
+    description: null
+    portrait: null
   }> | null
   articleRecommendations: Array<{
     _id: string
@@ -680,7 +559,7 @@ export type ARTICLES_QUERY_RESULT = Array<{
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    content,\n    articleCollection->{\n      title,\n      description,\n      image\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme->{\n      color\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      "collection": articleCollection->title,\n      theme->{\n        color\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
+    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    content[]{\n        ...,\n        markDefs[]{\n          ...,\n          _type == "internalLink" => {\n            "slug": @.reference->slug\n          }\n        }\n    },\n    articleCollection->{\n      title,\n      description,\n      image\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme->{\n      color\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      "collection": articleCollection->title,\n      theme->{\n        color\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
   }
 }
