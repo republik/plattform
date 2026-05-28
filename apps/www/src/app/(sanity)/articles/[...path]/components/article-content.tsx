@@ -1,7 +1,8 @@
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { defineQuery, PortableText } from 'next-sanity'
-import { EditorialImage } from './editorial-image'
 import Link from 'next/link'
+import { EditorialImage } from './editorial-image'
+import { InfoBox } from './infobox'
 
 const ARTICLE_CONTENT_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -35,6 +36,7 @@ export async function ArticleContent({ slug }: { slug: string }) {
         ),
         types: {
           editorialImage: EditorialImage,
+          infoBoxBlock: InfoBox,
         },
         marks: {
           link: ({ text, value }) => (
