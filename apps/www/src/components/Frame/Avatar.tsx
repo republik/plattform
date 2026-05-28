@@ -1,27 +1,14 @@
-import { css } from 'glamor'
+import { getInitials } from '@/lib/context/getInitials'
+import { ME_PORTRAIT_STORAGE_KEY, MeObjectType } from '@/lib/context/MeContext'
 import {
   fontStyles,
   plainButtonRule,
   useColorContext,
 } from '@project-r/styleguide'
+import { css } from 'glamor'
 import NotificationIcon from '../Notifications/NotificationIcon'
-import { MeObjectType } from '@/lib/context/MeContext'
-import { ME_PORTRAIT_STORAGE_KEY } from '@/lib/context/MeContext'
 
 const USER_IMAGE_SIZE = 32
-
-export const getInitials = (me: MeObjectType): string =>
-  (me.name && me.name.trim()
-    ? me.name.split(' ').filter((n, i, all) => i === 0 || all.length - 1 === i)
-    : me.email
-        .split('@')[0]
-        .split(/\.|-|_/)
-        .slice(0, 2)
-  )
-    .slice(0, 2)
-    .filter(Boolean)
-    .map((s) => s[0])
-    .join('')
 
 const User = ({
   me,
