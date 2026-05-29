@@ -1,3 +1,4 @@
+import { ArticleTheme } from '@/app/(sanity)/articles/[...path]/components/article-theme'
 import { Byline } from '@/app/(sanity)/articles/[...path]/components/byline'
 import { EditLink } from '@/app/(sanity)/articles/[...path]/components/edit-link'
 import { articleTypography } from '@/app/(sanity)/articles/[...path]/styles'
@@ -30,6 +31,7 @@ const ARTICLE_QUERY = defineQuery(
       name,
     },
     theme->{
+      darkMode,
       color
     },
     contributors[]{
@@ -100,7 +102,7 @@ export default async function PostPage({
 
   return (
     <EventTrackingContext category='Article'>
-      <style>{`:root { --page-theme-accent-color: ${article.theme?.color?.hex}; }`}</style>
+      <ArticleTheme theme={article.theme} />
       <article>
         {/* TITLE BLOCK */}
         <ArticleSection>

@@ -11,3 +11,5 @@ export type ArticleRecommendation = NonNullable<
 >[number]
 
 export type ArticleContributor = NonNullable<Article['contributors']>[number]
+
+export type ArticleThemeType = NonNullable<Article['theme']>
