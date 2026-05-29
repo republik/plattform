@@ -51,8 +51,4 @@ export const articleTypography = css({
       marginBottom: 0,
     },
   },
-  '& figure': {
-    ...editorialWidth,
-    mb: '4',
-  },
 })

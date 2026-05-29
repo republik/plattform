@@ -1,25 +1,19 @@
-import { urlFor } from '@/app/(sanity)/lib/urlFor'
-// import type { EditorialImage as EditorialImageType } from '@/sanity/__generated__/types'
+import { editorialWidth } from '@/app/(sanity)/articles/[...path]/styles'
+import { urlFor } from '@/app/(sanity)/lib/urlFor' // import type { EditorialImage as EditorialImageType } from '@/sanity/__generated__/types'
 import { css } from '@republik/theme/css'
 
 const sizeStyles = {
-  NORMAL: css({}),
+  NORMAL: css({
+    ...editorialWidth,
+  }),
   LARGE: css({
     md: {
-      marginLeft: '-155px',
-      marginRight: '-155px',
-      width: 'calc(100% + 310px)',
-      maxWidth: 'none',
+      width: 'large',
+      mx: 'auto',
     },
   }),
   FULL: css({
-    position: 'relative',
-    left: '50%',
-    right: '50%',
-    marginLeft: '-50vw',
-    marginRight: '-50vw',
-    width: '100vw',
-    maxWidth: '100vw',
+    width: '100%',
   }),
 }
 
@@ -29,23 +23,25 @@ const image = css({
   height: 'auto',
 })
 
-const caption = css({
+const legendStyle = css({
   margin: '5px auto 0 auto',
   width: '100%',
   fontFamily: 'gtAmericaStandard',
-  fontSize: '12px',
-  lineHeight: '15px',
+  fontSize: '0.75rem',
+  lineHeight: '1.2',
   color: 'text',
   md: {
-    fontSize: '15px',
-    lineHeight: '18px',
+    fontSize: '0.9375rem',
   },
 })
 
 const creditStyle = css({
-  fontSize: '10px',
+  fontSize: '0.625rem',
   '&::before': {
     content: '" "',
+  },
+  md: {
+    fontSize: '0.75rem',
   },
 })
 
@@ -70,7 +66,7 @@ export function EditorialImage({ value }) {
         <img className={image} src={src} alt={alt ?? ''} />
       )}
       {(legend || credit) && (
-        <figcaption className={caption}>
+        <figcaption className={legendStyle}>
           {legend}
           {credit && <span className={creditStyle}>{credit}</span>}
         </figcaption>

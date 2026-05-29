@@ -45,6 +45,7 @@ export const presetRepublik = definePreset({
           24: { value: '6rem' },
           narrow: { value: '30rem' },
           editorial: { value: '695px' },
+          large: { value: '1005px' },
           shop: { value: '866px' },
           carousel: { value: '1300px' },
         },
