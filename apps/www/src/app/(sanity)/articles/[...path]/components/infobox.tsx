@@ -1,3 +1,4 @@
+import { editorialWidth } from '@/app/(sanity)/articles/[...path]/styles'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css, cx } from '@republik/theme/css'
 import { PortableText } from 'next-sanity'
@@ -56,6 +57,7 @@ export function InfoBox({ value }) {
           borderStyle: 'solid',
           borderTopWidth: '1px',
           borderBottomWidth: '1px',
+          ...editorialWidth,
         }),
         hasImage &&
           css({

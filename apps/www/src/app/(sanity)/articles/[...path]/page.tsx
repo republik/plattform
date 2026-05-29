@@ -137,9 +137,9 @@ export default async function PostPage({
           </div>
         </ArticleSection>
 
-        <ArticleSection className={articleTypography}>
+        <div className={articleTypography}>
           <ArticleContent slug={slug} />
-        </ArticleSection>
+        </div>
 
         <ArticleSection>
           <FollowArticle

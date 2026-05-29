@@ -14,7 +14,7 @@
 
 export declare const internalGroqTypeReferenceTo: unique symbol
 
-// Source: ../../../../../../studio/schema.json
+// Source: ../../../studio/schema.json
 export type AudioCover = {
   color?: string
   anchor?: string
@@ -46,6 +46,28 @@ export type ArticlePreview = {
     crop?: SanityImageCrop
     _type: 'image'
   }
+}
+
+export type EditorialImage = {
+  _type: 'editorialImage'
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  imageDark?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  alt?: string
+  legend?: string
+  credit?: string
+  size?: 'NORMAL' | 'LARGE' | 'FULL'
 }
 
 export type SeoImageBuilder = {
@@ -165,6 +187,41 @@ export type Article = {
     _type: 'image'
   }
   repoId?: string
+  content?: Array<
+    | {
+        children?: Array<
+          | {
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }
+          | {
+              value?: string
+              _type: 'softHyphen'
+              _key: string
+            }
+          | {
+              value?: string
+              _type: 'nonBreakingSpace'
+              _key: string
+            }
+        >
+        style?: 'normal' | 'h2'
+        listItem?: 'bullet' | 'number'
+        markDefs?: Array<{
+          href?: string
+          _type: 'link'
+          _key: string
+        }>
+        level?: number
+        _type: 'block'
+        _key: string
+      }
+    | ({
+        _key: string
+      } & EditorialImage)
+  >
   contributors?: Array<{
     kind?: string
     contributor?: ContributorReference
@@ -230,7 +287,7 @@ export type PageTheme = {
   _updatedAt: string
   _rev: string
   title: string
-  kind?: string
+  kind?: 'EDITORIAL' | 'META'
   color?: Color
   darkMode?: boolean
 }
@@ -263,6 +320,16 @@ export type Newsletter = {
   _updatedAt: string
   _rev: string
   title: string
+  description?: string
+  frequency?: string
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  name: string
   replyTo?: string
   fromName?: string
   savedSegmentId?: number
@@ -315,7 +382,14 @@ export type Contributor = {
   _updatedAt: string
   _rev: string
   title: string
-  kind?: string
+  description?: string
+  portrait?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
   userId?: string
 }
 
@@ -459,6 +533,7 @@ export type AllSanitySchemaTypes =
   | AudioCoverCrop
   | SanityImageAssetReference
   | ArticlePreview
+  | EditorialImage
   | SeoImageBuilder
   | Seo
   | LegacyMeta
@@ -499,7 +574,61 @@ export type AllSanitySchemaTypes =
 // Query: *[_type == "article" && slug.current == $slug][0]{    _id,    content[]{        ...,        markDefs[]{          ...,          _type == "internalLink" => {            "slug": @.reference->slug          }        }    }  }
 export type ARTICLE_CONTENT_QUERY_RESULT = {
   _id: string
-  content: null
+  content: Array<
+    | {
+        children?: Array<
+          | {
+              value?: string
+              _type: 'nonBreakingSpace'
+              _key: string
+            }
+          | {
+              value?: string
+              _type: 'softHyphen'
+              _key: string
+            }
+          | {
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }
+        >
+        style?: 'h2' | 'normal'
+        listItem?: 'bullet' | 'number'
+        markDefs: Array<{
+          href?: string
+          _type: 'link'
+          _key: string
+        }> | null
+        level?: number
+        _type: 'block'
+        _key: string
+      }
+    | {
+        _key: string
+        _type: 'editorialImage'
+        image?: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          _type: 'image'
+        }
+        imageDark?: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          _type: 'image'
+        }
+        alt?: string
+        legend?: string
+        credit?: string
+        size?: 'FULL' | 'LARGE' | 'NORMAL'
+        markDefs: null
+      }
+  > | null
 } | null
 
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
@@ -522,10 +651,16 @@ export type ARTICLE_QUERY_RESULT = {
   } | null
   newsletter: {
     title: string
-    description: null
-    frequency: null
-    image: null
-    name: null
+    description: string | null
+    frequency: string | null
+    image: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+    } | null
+    name: string
   } | null
   theme: {
     color: Color | null
@@ -535,8 +670,14 @@ export type ARTICLE_QUERY_RESULT = {
     kind: string | null
     slug: string | null
     name: string | null
-    description: null
-    portrait: null
+    description: string | null
+    portrait: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+    } | null
   }> | null
   articleRecommendations: Array<{
     _id: string

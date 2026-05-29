@@ -36,7 +36,7 @@ export async function ArticleContent({ slug }: { slug: string }) {
         ),
         types: {
           editorialImage: EditorialImage,
-          infoBoxBlock: InfoBox,
+          infoBox: InfoBox,
         },
         marks: {
           link: ({ text, value }) => (

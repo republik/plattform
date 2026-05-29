@@ -1,6 +1,6 @@
 import { css } from '@republik/theme/css'
 
-const editorialWidth = {
+export const editorialWidth = {
   marginX: 'auto',
   maxWidth: 'editorial',
   pl: '15px',
