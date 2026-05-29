@@ -2,6 +2,7 @@ import { Caption } from '@/app/(sanity)/articles/[...path]/components/caption'
 import { editorialWidthAttrs } from '@/app/(sanity)/articles/[...path]/styles'
 import { css } from '@republik/theme/css'
 import { PortableText } from 'next-sanity'
+import { ReactNode } from 'react'
 
 const containerStyle = css({
   backgroundColor: 'hover',
@@ -26,7 +27,9 @@ const quoteParagraph = css({
   },
 })
 
-function QuoteP({}) {}
+function QuoteP({ children }: { children?: ReactNode }) {
+  return <p className={quoteParagraph}>{children}</p>
+}
 
 // TODO: quid list support??
 
@@ -40,9 +43,7 @@ export function BlockQuote({ value }) {
           value={body}
           components={{
             block: {
-              normal: ({ children }) => (
-                <p className={quoteParagraph}>{children}</p>
-              ),
+              normal: QuoteP,
             },
           }}
         />
