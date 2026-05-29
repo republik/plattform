@@ -22,19 +22,32 @@ const creditStyle = css({
   },
 })
 
+const captionSizeStyles = {
+  FULL: css({
+    '&::before': {
+      content: '" "',
+      pl: '4',
+    },
+  }),
+}
+
 export function Caption({
   legend,
   credit,
+  size = 'NORMAL',
   className,
 }: {
   legend: string
   credit: string
+  size?: string
   className?: string
 }) {
   if (!legend && !credit) return null
   return (
     (legend || credit) && (
-      <figcaption className={cx(legendStyle, className)}>
+      <figcaption
+        className={cx(legendStyle, className, captionSizeStyles[size])}
+      >
         {legend}
         {credit && <span className={creditStyle}>{credit}</span>}
       </figcaption>

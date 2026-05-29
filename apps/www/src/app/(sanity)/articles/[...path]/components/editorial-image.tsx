@@ -19,6 +19,11 @@ const sizeStyles = {
   FULL: css({
     width: '100%',
   }),
+  // we don't use FULL for GROUP images because edge-to-edge also
+  // has an influence on the caption's styles (which we don't want)
+  GROUP: css({
+    width: '100%',
+  }),
 }
 
 const image = css({
@@ -47,7 +52,7 @@ export function EditorialImage({ value }) {
       ) : (
         <img className={image} src={src} alt={alt ?? ''} />
       )}
-      <Caption legend={legend} credit={credit} />
+      <Caption legend={legend} credit={credit} size={size} />
     </figure>
   )
 }

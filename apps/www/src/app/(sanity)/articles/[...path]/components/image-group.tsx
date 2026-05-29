@@ -24,7 +24,7 @@ const groupStyle = css({
   position: 'relative',
   md: {
     display: 'grid',
-    gap: '15px',
+    gap: '4',
   },
 })
 
@@ -50,7 +50,7 @@ export function ImageGroup({ value }) {
     >
       {images.map((img) => {
         return (
-          <EditorialImage value={{ ...img, size: 'FULL' }} key={img._key} />
+          <EditorialImage value={{ ...img, size: 'GROUP' }} key={img._key} />
         )
       })}
       <Caption
