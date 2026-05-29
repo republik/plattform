@@ -46,7 +46,6 @@ const Detail = ({
     id,
     slug,
     name,
-    credentials,
     statement,
     portrait,
     sequenceNumber,
@@ -83,13 +82,7 @@ const Detail = ({
             </Link>
           ) : (
             <span>{name}</span>
-          )}{' '}
-          <span
-            {...styles.detailRole}
-            {...colorScheme.set('color', 'textSoft')}
-          >
-            {credentials && credentials[0] && credentials[0].description}
-          </span>
+          )}
         </H3>
         {video ? (
           <div

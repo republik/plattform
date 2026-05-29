@@ -326,7 +326,6 @@ export class List extends Component {
       totalCount,
       singleRow,
       minColumns,
-      showCredentials,
       share,
       serverContext,
     } = this.props
@@ -358,7 +357,7 @@ export class List extends Component {
             open[0] &&
             statements.find((statement) => statement.id === open[0])
 
-          statements.forEach(({ id, portrait, name, credentials }, i) => {
+          statements.forEach(({ id, portrait, name }, i) => {
             const row = singleRow ? 0 : Math.floor(i / columns)
             const offset = i % columns
             const openId = open[row - 1]
@@ -379,12 +378,7 @@ export class List extends Component {
             }
 
             const isActive = open[row] === id
-            const credential =
-              showCredentials &&
-              credentials &&
-              credentials[0] &&
-              credentials[0].description
-            const label = [name, credential].filter(Boolean).join(', ')
+            const label = name
 
             items.push(
               <Item
@@ -512,9 +506,6 @@ export const testimonialFields = `
   slug
   name
   statement
-  credentials {
-    description
-  }
   portrait
   updatedAt
   sequenceNumber

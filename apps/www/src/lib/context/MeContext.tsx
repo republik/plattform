@@ -4,12 +4,12 @@ import NextHead from 'next/head'
 import { ApolloError, useQuery } from '@apollo/client'
 import { checkRoles } from '../apollo/withMe'
 import { css } from 'glamor'
-import { getInitials } from '@/components/Frame/Avatar'
 import {
   MeDocument,
   MeQuery,
 } from '#graphql/republik-api/__generated__/gql/graphql'
 import { OPEN_ACCESS } from '@/lib/constants'
+import { getInitials } from './getInitials'
 
 const HAS_ACTIVE_MEMBERSHIP_ATTRIBUTE = 'data-has-active-membership'
 const HAS_ACTIVE_MEMBERSHIP_STORAGE_KEY = 'me.hasActiveMembership'
