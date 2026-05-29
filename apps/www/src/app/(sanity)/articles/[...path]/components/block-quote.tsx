@@ -4,45 +4,37 @@ import { css } from '@republik/theme/css'
 import { PortableText } from 'next-sanity'
 
 const containerStyle = css({
-  ...editorialWidthAttrs,
   backgroundColor: 'hover',
-  margin: '30px auto',
+  padding: '12px 15px',
   md: {
-    margin: '40px auto',
-  },
-  _first: {
-    marginTop: 0,
-  },
-  _last: {
-    marginBottom: 0,
+    padding: '20px 25px',
   },
 })
 
 const quoteParagraph = css({
-  margin: 0,
-  padding: '0 15px 12px 15px',
   fontFamily: 'gtAmericaStandard',
   fontSize: '0.9375rem',
   lineHeight: 1.4,
-  color: 'text',
-  _first: {
-    paddingTop: '12px',
-  },
+  pb: '12px',
   md: {
     fontSize: '1.125rem',
     lineHeight: 1.5,
-    padding: '0 25px 20px 25px',
-    _first: {
-      paddingTop: '20px',
-    },
+    pb: '20px',
+  },
+  _last: {
+    pb: 0,
   },
 })
+
+function QuoteP({}) {}
+
+// TODO: quid list support??
 
 export function BlockQuote({ value }) {
   const { body, caption } = value
 
   return (
-    <>
+    <div className={css({ ...editorialWidthAttrs, margin: '30px auto' })}>
       <div className={containerStyle}>
         <PortableText
           value={body}
@@ -56,6 +48,6 @@ export function BlockQuote({ value }) {
         />
       </div>
       <Caption caption={caption} />
-    </>
+    </div>
   )
 }
