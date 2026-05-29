@@ -1,7 +1,6 @@
 import { ArticleTheme } from '@/app/(sanity)/articles/[...path]/components/article-theme'
 import { Byline } from '@/app/(sanity)/articles/[...path]/components/byline'
 import { EditLink } from '@/app/(sanity)/articles/[...path]/components/edit-link'
-import { articleTypography } from '@/app/(sanity)/articles/[...path]/styles'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
@@ -139,7 +138,12 @@ export default async function PostPage({
           </div>
         </ArticleSection>
 
-        <div className={articleTypography}>
+        <div
+          className={css({
+            mt: '12',
+            mb: '20',
+          })}
+        >
           <ArticleContent slug={slug} />
         </div>
 

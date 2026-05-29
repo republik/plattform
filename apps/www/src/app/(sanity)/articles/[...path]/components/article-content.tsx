@@ -1,6 +1,16 @@
+import {
+  EditorialParagraph,
+  EditorialSubhead,
+  Em,
+  Strong,
+  Sub,
+  Sup,
+} from '@/app/(sanity)/articles/[...path]/components/typography'
+import { linkStyle } from '@/app/(sanity)/articles/[...path]/styles'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { defineQuery, PortableText } from 'next-sanity'
 import Link from 'next/link'
+import { BlockQuote } from './block-quote'
 import { EditorialImage } from './editorial-image'
 import { ImageGroup } from './image-group'
 import { InfoBox } from './infobox'
@@ -26,6 +36,8 @@ export async function ArticleContent({ slug }: { slug: string }) {
     params: { slug },
   })
 
+  console.log('article', article.content)
+
   return (
     <PortableText
       value={article.content}
@@ -36,18 +48,34 @@ export async function ArticleContent({ slug }: { slug: string }) {
           </div>
         ),
         types: {
+          blockQuote: BlockQuote,
           editorialImage: EditorialImage,
           imageGroup: ImageGroup,
           infoBox: InfoBox,
         },
+        block: {
+          normal: EditorialParagraph,
+          h2: EditorialSubhead,
+        },
         marks: {
+          strong: Strong,
+          em: Em,
+          sub: Sub,
+          sup: Sup,
           link: ({ text, value }) => (
-            <a href={value.href} target='_blank' rel='noreferrer'>
+            <a
+              href={value.href}
+              target='_blank'
+              rel='noreferrer'
+              className={linkStyle}
+            >
               {text}
             </a>
           ),
           internalLink: ({ text, value }) => (
-            <Link href={value.slug?.current}>{text}</Link>
+            <Link href={value.slug?.current} className={linkStyle}>
+              {text}
+            </Link>
           ),
         },
       }}

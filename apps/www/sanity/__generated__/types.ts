@@ -64,6 +64,12 @@ export type ArticlePreview = {
   }
 }
 
+export type Caption = {
+  _type: 'caption'
+  legend?: string
+  credit?: string
+}
+
 export type ArticleReference = {
   _ref: string
   _type: 'reference'
@@ -388,6 +394,7 @@ export type BlockQuote = {
     _type: 'block'
     _key: string
   }>
+  caption?: Caption
 }
 
 export type InfoBox = {
@@ -480,8 +487,7 @@ export type ImageGroup = {
       _key: string
     } & GroupedEditorialImage
   >
-  groupLegend?: string
-  groupCredit?: string
+  caption?: Caption
   size?: 'NARROW' | 'NORMAL' | 'LARGE'
 }
 
@@ -490,8 +496,7 @@ export type GroupedEditorialImage = {
   image?: Image1
   imageDark?: ImageDark
   alt?: string
-  legend?: string
-  credit?: string
+  caption?: Caption
 }
 
 export type EditorialImage = {
@@ -499,8 +504,7 @@ export type EditorialImage = {
   image?: Image1
   imageDark?: ImageDark
   alt?: string
-  legend?: string
-  credit?: string
+  caption?: Caption
   size?: 'NORMAL' | 'LARGE' | 'FULL'
 }
 
@@ -1015,6 +1019,7 @@ export type AllSanitySchemaTypes =
   | Image1
   | ImageDark
   | ArticlePreview
+  | Caption
   | ArticleReference
   | ArticleCollectionReference
   | InternalLink
@@ -1144,6 +1149,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
           _type: 'block'
           _key: string
         }>
+        caption?: Caption
         markDefs: null
       }
     | {
@@ -1186,8 +1192,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
         image?: Image1
         imageDark?: ImageDark
         alt?: string
-        legend?: string
-        credit?: string
+        caption?: Caption
         size?: 'FULL' | 'LARGE' | 'NORMAL'
         markDefs: null
       }
@@ -1412,8 +1417,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
             _key: string
           } & GroupedEditorialImage
         >
-        groupLegend?: string
-        groupCredit?: string
+        caption?: Caption
         size?: 'LARGE' | 'NARROW' | 'NORMAL'
         markDefs: null
       }

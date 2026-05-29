@@ -24,24 +24,23 @@ const creditStyle = css({
 
 const captionSizeStyles = {
   FULL: css({
-    '&::before': {
-      content: '" "',
-      pl: '4',
-    },
+    pl: '4',
   }),
 }
 
 export function Caption({
-  legend,
-  credit,
-  size = 'NORMAL',
-  className,
-}: {
-  legend: string
-  credit: string
+                          caption = {},
+                          size = 'NORMAL',
+                          className,
+                        }: {
+  caption?: {
+    legend?: string
+    credit?: string
+  }
   size?: string
   className?: string
 }) {
+  const { legend, credit } = caption
   if (!legend && !credit) return null
   return (
     (legend || credit) && (

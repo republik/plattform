@@ -1,4 +1,4 @@
-import { editorialWidth } from '@/app/(sanity)/articles/[...path]/styles'
+import { editorialWidthAttrs } from '@/app/(sanity)/articles/[...path]/styles'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 // import type { EditorialImage as EditorialImageType } from '@/sanity/__generated__/types'
 import { css, cx } from '@republik/theme/css'
@@ -10,17 +10,15 @@ const figure = css({
 
 const sizeStyles = {
   NORMAL: css({
-    ...editorialWidth,
+    ...editorialWidthAttrs,
   }),
   LARGE: css({
-    ...editorialWidth,
+    ...editorialWidthAttrs,
     maxWidth: 'large',
   }),
   FULL: css({
     width: '100%',
   }),
-  // we don't use FULL for GROUP images because edge-to-edge also
-  // has an influence on the caption's styles (which we don't want)
   GROUP: css({
     width: '100%',
   }),
@@ -33,7 +31,7 @@ const image = css({
 })
 
 export function EditorialImage({ value }) {
-  const { image: img, imageDark, alt, legend, credit, size = 'NORMAL' } = value
+  const { image: img, imageDark, alt, caption, size = 'NORMAL' } = value
 
   if (!img?.asset) return null
 
@@ -52,7 +50,7 @@ export function EditorialImage({ value }) {
       ) : (
         <img className={image} src={src} alt={alt ?? ''} />
       )}
-      <Caption legend={legend} credit={credit} size={size} />
+      <Caption caption={caption} size={size} />
     </figure>
   )
 }

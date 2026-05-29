@@ -1,18 +1,18 @@
 import { Caption } from '@/app/(sanity)/articles/[...path]/components/caption'
 import { EditorialImage } from '@/app/(sanity)/articles/[...path]/components/editorial-image'
-import { editorialWidth } from '@/app/(sanity)/articles/[...path]/styles'
+import { editorialWidthAttrs } from '@/app/(sanity)/articles/[...path]/styles'
 import { css, cx } from '@republik/theme/css'
 
 const sizeStyles = {
   NARROW: css({
-    ...editorialWidth,
+    ...editorialWidthAttrs,
     maxWidth: 'narrow',
   }),
   NORMAL: css({
-    ...editorialWidth,
+    ...editorialWidthAttrs,
   }),
   LARGE: css({
-    ...editorialWidth,
+    ...editorialWidthAttrs,
     maxWidth: 'large',
   }),
 }
@@ -38,7 +38,7 @@ const groupCaptionStyle = css({
 })
 
 export function ImageGroup({ value }) {
-  const { images = [], groupLegend, groupCredit, size = 'NORMAL' } = value
+  const { images = [], caption, size = 'NORMAL' } = value
 
   if (!images.length) return null
 
@@ -49,15 +49,13 @@ export function ImageGroup({ value }) {
       style={{ gridTemplateColumns: `repeat(${images.length}, 1fr)` }}
     >
       {images.map((img) => {
+        // we don't use size: FULL for GROUP images since FULL also adds
+        // padding to the caption (which we don't want here)
         return (
           <EditorialImage value={{ ...img, size: 'GROUP' }} key={img._key} />
         )
       })}
-      <Caption
-        legend={groupLegend}
-        credit={groupCredit}
-        className={groupCaptionStyle}
-      />
+      <Caption caption={caption} className={groupCaptionStyle} />
     </figure>
   )
 }
