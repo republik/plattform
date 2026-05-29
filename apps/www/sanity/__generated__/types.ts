@@ -35,6 +35,22 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
 }
 
+export type Image1 = {
+  asset?: SanityImageAssetReference
+  media?: unknown
+  hotspot?: SanityImageHotspot
+  crop?: SanityImageCrop
+  _type: 'image'
+}
+
+export type ImageDark = {
+  asset?: SanityImageAssetReference
+  media?: unknown
+  hotspot?: SanityImageHotspot
+  crop?: SanityImageCrop
+  _type: 'image'
+}
+
 export type ArticlePreview = {
   _type: 'articlePreview'
   title?: string
@@ -48,22 +64,440 @@ export type ArticlePreview = {
   }
 }
 
-export type EditorialImage = {
-  _type: 'editorialImage'
+export type ArticleReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'article'
+}
+
+export type ArticleCollectionReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'articleCollection'
+}
+
+export type InternalLink = {
+  _type: 'internalLink'
+  reference?: ArticleReference | ArticleCollectionReference
+}
+
+export type Link = {
+  _type: 'link'
+  href?: string
+}
+
+export type Variable = {
+  _type: 'variable'
+  name?: string
+}
+
+export type IfNot = {
+  _type: 'ifNot'
+  present?: string
+  body?: Array<
+    | {
+        children?: Array<
+          | {
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }
+          | ({
+              _key: string
+            } & Variable)
+        >
+        style?: 'normal' | 'h3'
+        listItem?: 'bullet' | 'number'
+        markDefs?: Array<
+          | ({
+              _key: string
+            } & Link)
+          | ({
+              _key: string
+            } & InternalLink)
+        >
+        level?: number
+        _type: 'block'
+        _key: string
+      }
+    | ({
+        _key: string
+      } & EditorialImage)
+    | ({
+        _key: string
+      } & InfoBox)
+    | ({
+        _key: string
+      } & BlockQuote)
+    | ({
+        _key: string
+      } & Note)
+    | ({
+        _key: string
+      } & InterviewAnswer)
+    | ({
+        _key: string
+      } & CodeBlock)
+    | ({
+        _key: string
+      } & Divider)
+    | ({
+        _key: string
+      } & Chart)
+    | ({
+        _key: string
+      } & EmbedVideo)
+    | ({
+        _key: string
+      } & EmbedTwitter)
+    | ({
+        _key: string
+      } & EmbedDataWrapper)
+    | ({
+        _key: string
+      } & Html)
+    | ({
+        _key: string
+      } & DynamicComponent)
+    | ({
+        _key: string
+      } & Button)
+  >
+}
+
+export type If = {
+  _type: 'if'
+  present?: string
+  body?: Array<
+    | {
+        children?: Array<
+          | {
+              marks?: Array<string>
+              text?: string
+              _type: 'span'
+              _key: string
+            }
+          | ({
+              _key: string
+            } & Variable)
+        >
+        style?: 'normal' | 'h3'
+        listItem?: 'bullet' | 'number'
+        markDefs?: Array<
+          | ({
+              _key: string
+            } & Link)
+          | ({
+              _key: string
+            } & InternalLink)
+        >
+        level?: number
+        _type: 'block'
+        _key: string
+      }
+    | ({
+        _key: string
+      } & EditorialImage)
+    | ({
+        _key: string
+      } & InfoBox)
+    | ({
+        _key: string
+      } & BlockQuote)
+    | ({
+        _key: string
+      } & Note)
+    | ({
+        _key: string
+      } & InterviewAnswer)
+    | ({
+        _key: string
+      } & CodeBlock)
+    | ({
+        _key: string
+      } & Divider)
+    | ({
+        _key: string
+      } & Chart)
+    | ({
+        _key: string
+      } & EmbedVideo)
+    | ({
+        _key: string
+      } & EmbedTwitter)
+    | ({
+        _key: string
+      } & EmbedDataWrapper)
+    | ({
+        _key: string
+      } & Html)
+    | ({
+        _key: string
+      } & DynamicComponent)
+    | ({
+        _key: string
+      } & Button)
+  >
+}
+
+export type EmailOnly = {
+  _type: 'emailOnly'
+  body?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>
+          text?: string
+          _type: 'span'
+          _key: string
+        }>
+        style?: 'normal' | 'h3'
+        listItem?: 'bullet' | 'number'
+        markDefs?: Array<
+          | ({
+              _key: string
+            } & Link)
+          | ({
+              _key: string
+            } & InternalLink)
+        >
+        level?: number
+        _type: 'block'
+        _key: string
+      }
+    | ({
+        _key: string
+      } & Divider)
+    | ({
+        _key: string
+      } & Html)
+    | ({
+        _key: string
+      } & Button)
+  >
+}
+
+export type WebOnly = {
+  _type: 'webOnly'
+  body?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>
+          text?: string
+          _type: 'span'
+          _key: string
+        }>
+        style?: 'normal' | 'h3'
+        listItem?: 'bullet' | 'number'
+        markDefs?: Array<
+          | ({
+              _key: string
+            } & Link)
+          | ({
+              _key: string
+            } & InternalLink)
+        >
+        level?: number
+        _type: 'block'
+        _key: string
+      }
+    | ({
+        _key: string
+      } & Divider)
+    | ({
+        _key: string
+      } & Html)
+    | ({
+        _key: string
+      } & Button)
+  >
+}
+
+export type InterviewAnswer = {
+  _type: 'interviewAnswer'
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<
+      | ({
+          _key: string
+        } & Link)
+      | ({
+          _key: string
+        } & InternalLink)
+    >
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+}
+
+export type Note = {
+  _type: 'note'
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<
+      | ({
+          _key: string
+        } & Link)
+      | ({
+          _key: string
+        } & InternalLink)
+    >
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+}
+
+export type BlockQuote = {
+  _type: 'blockQuote'
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<
+      | ({
+          _key: string
+        } & Link)
+      | ({
+          _key: string
+        } & InternalLink)
+    >
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+}
+
+export type InfoBox = {
+  _type: 'infoBox'
+  title?: string
   image?: {
     asset?: SanityImageAssetReference
     media?: unknown
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
+    credit?: string
     _type: 'image'
   }
-  imageDark?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
+  body?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal' | 'h3'
+    listItem?: 'bullet' | 'number'
+    markDefs?: Array<
+      | ({
+          _key: string
+        } & Link)
+      | ({
+          _key: string
+        } & InternalLink)
+    >
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+}
+
+export type Button = {
+  _type: 'button'
+  text?: string
+  url?: string
+}
+
+export type DynamicComponent = {
+  _type: 'dynamicComponent'
+  src?: string
+  props?: string
+  autoHtml?: boolean
+}
+
+export type Html = {
+  _type: 'html'
+  html?: string
+}
+
+export type EmbedDataWrapper = {
+  _type: 'embedDataWrapper'
+  data?: string
+}
+
+export type EmbedTwitter = {
+  _type: 'embedTwitter'
+  data?: string
+}
+
+export type EmbedVideo = {
+  _type: 'embedVideo'
+  data?: string
+}
+
+export type Chart = {
+  _type: 'chart'
+  data?: string
+}
+
+export type Divider = {
+  _type: 'divider'
+  style?: string
+}
+
+export type CodeBlock = {
+  _type: 'codeBlock'
+  language?: string
+  code?: string
+}
+
+export type ImageGroup = {
+  _type: 'imageGroup'
+  images?: Array<
+    {
+      _key: string
+    } & GroupedEditorialImage
+  >
+  groupLegend?: string
+  groupCredit?: string
+  size?: 'NARROW' | 'NORMAL' | 'LARGE'
+}
+
+export type GroupedEditorialImage = {
+  _type: 'groupedEditorialImage'
+  image?: Image1
+  imageDark?: ImageDark
+  alt?: string
+  legend?: string
+  credit?: string
+}
+
+export type EditorialImage = {
+  _type: 'editorialImage'
+  image?: Image1
+  imageDark?: ImageDark
   alt?: string
   legend?: string
   credit?: string
@@ -127,25 +561,11 @@ export type ContributorReference = {
   [internalGroqTypeReferenceTo]?: 'contributor'
 }
 
-export type ArticleReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'article'
-}
-
 export type DiscussionReference = {
   _ref: string
   _type: 'reference'
   _weak?: boolean
   [internalGroqTypeReferenceTo]?: 'discussion'
-}
-
-export type ArticleCollectionReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'articleCollection'
 }
 
 export type NewsletterReference = {
@@ -206,14 +626,20 @@ export type Article = {
               _type: 'nonBreakingSpace'
               _key: string
             }
+          | ({
+              _key: string
+            } & Variable)
         >
-        style?: 'normal' | 'h2'
+        style?: 'normal' | 'h2' | 'h1' | 'h3' | 'h4' | 'h6'
         listItem?: 'bullet' | 'number'
-        markDefs?: Array<{
-          href?: string
-          _type: 'link'
-          _key: string
-        }>
+        markDefs?: Array<
+          | ({
+              _key: string
+            } & Link)
+          | ({
+              _key: string
+            } & InternalLink)
+        >
         level?: number
         _type: 'block'
         _key: string
@@ -221,6 +647,60 @@ export type Article = {
     | ({
         _key: string
       } & EditorialImage)
+    | ({
+        _key: string
+      } & ImageGroup)
+    | ({
+        _key: string
+      } & InfoBox)
+    | ({
+        _key: string
+      } & BlockQuote)
+    | ({
+        _key: string
+      } & Note)
+    | ({
+        _key: string
+      } & InterviewAnswer)
+    | ({
+        _key: string
+      } & WebOnly)
+    | ({
+        _key: string
+      } & EmailOnly)
+    | ({
+        _key: string
+      } & If)
+    | ({
+        _key: string
+      } & IfNot)
+    | ({
+        _key: string
+      } & CodeBlock)
+    | ({
+        _key: string
+      } & Divider)
+    | ({
+        _key: string
+      } & Chart)
+    | ({
+        _key: string
+      } & EmbedVideo)
+    | ({
+        _key: string
+      } & EmbedTwitter)
+    | ({
+        _key: string
+      } & EmbedDataWrapper)
+    | ({
+        _key: string
+      } & Html)
+    | ({
+        _key: string
+      } & DynamicComponent)
+    | ({
+        _key: string
+      } & Button)
   >
   contributors?: Array<{
     kind?: string
@@ -532,16 +1012,40 @@ export type AllSanitySchemaTypes =
   | AudioCover
   | AudioCoverCrop
   | SanityImageAssetReference
+  | Image1
+  | ImageDark
   | ArticlePreview
+  | ArticleReference
+  | ArticleCollectionReference
+  | InternalLink
+  | Link
+  | Variable
+  | IfNot
+  | If
+  | EmailOnly
+  | WebOnly
+  | InterviewAnswer
+  | Note
+  | BlockQuote
+  | InfoBox
+  | Button
+  | DynamicComponent
+  | Html
+  | EmbedDataWrapper
+  | EmbedTwitter
+  | EmbedVideo
+  | Chart
+  | Divider
+  | CodeBlock
+  | ImageGroup
+  | GroupedEditorialImage
   | EditorialImage
   | SeoImageBuilder
   | Seo
   | LegacyMeta
   | Mdast
   | ContributorReference
-  | ArticleReference
   | DiscussionReference
-  | ArticleCollectionReference
   | NewsletterReference
   | PodcastReference
   | PageThemeReference
@@ -577,6 +1081,9 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
   content: Array<
     | {
         children?: Array<
+          | ({
+              _key: string
+            } & Variable)
           | {
               value?: string
               _type: 'nonBreakingSpace'
@@ -594,38 +1101,444 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
               _key: string
             }
         >
-        style?: 'h2' | 'normal'
+        style?: 'h1' | 'h2' | 'h3' | 'h4' | 'h6' | 'normal'
         listItem?: 'bullet' | 'number'
-        markDefs: Array<{
-          href?: string
-          _type: 'link'
-          _key: string
-        }> | null
+        markDefs: Array<
+          | {
+              _key: string
+              _type: 'internalLink'
+              reference?: ArticleReference | ArticleCollectionReference
+              slug: Slug | null
+            }
+          | {
+              _key: string
+              _type: 'link'
+              href?: string
+            }
+        > | null
         level?: number
         _type: 'block'
         _key: string
       }
     | {
         _key: string
+        _type: 'blockQuote'
+        body?: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'normal'
+          listItem?: 'bullet' | 'number'
+          markDefs?: Array<
+            | ({
+                _key: string
+              } & InternalLink)
+            | ({
+                _key: string
+              } & Link)
+          >
+          level?: number
+          _type: 'block'
+          _key: string
+        }>
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'button'
+        text?: string
+        url?: string
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'chart'
+        data?: string
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'codeBlock'
+        language?: string
+        code?: string
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'divider'
+        style?: string
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'dynamicComponent'
+        src?: string
+        props?: string
+        autoHtml?: boolean
+        markDefs: null
+      }
+    | {
+        _key: string
         _type: 'editorialImage'
+        image?: Image1
+        imageDark?: ImageDark
+        alt?: string
+        legend?: string
+        credit?: string
+        size?: 'FULL' | 'LARGE' | 'NORMAL'
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'emailOnly'
+        body?: Array<
+          | ({
+              _key: string
+            } & Button)
+          | ({
+              _key: string
+            } & Divider)
+          | ({
+              _key: string
+            } & Html)
+          | {
+              children?: Array<{
+                marks?: Array<string>
+                text?: string
+                _type: 'span'
+                _key: string
+              }>
+              style?: 'h3' | 'normal'
+              listItem?: 'bullet' | 'number'
+              markDefs?: Array<
+                | ({
+                    _key: string
+                  } & InternalLink)
+                | ({
+                    _key: string
+                  } & Link)
+              >
+              level?: number
+              _type: 'block'
+              _key: string
+            }
+        >
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'embedDataWrapper'
+        data?: string
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'embedTwitter'
+        data?: string
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'embedVideo'
+        data?: string
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'html'
+        html?: string
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'if'
+        present?: string
+        body?: Array<
+          | ({
+              _key: string
+            } & BlockQuote)
+          | ({
+              _key: string
+            } & Button)
+          | ({
+              _key: string
+            } & Chart)
+          | ({
+              _key: string
+            } & CodeBlock)
+          | ({
+              _key: string
+            } & Divider)
+          | ({
+              _key: string
+            } & DynamicComponent)
+          | ({
+              _key: string
+            } & EditorialImage)
+          | ({
+              _key: string
+            } & EmbedDataWrapper)
+          | ({
+              _key: string
+            } & EmbedTwitter)
+          | ({
+              _key: string
+            } & EmbedVideo)
+          | ({
+              _key: string
+            } & Html)
+          | ({
+              _key: string
+            } & InfoBox)
+          | ({
+              _key: string
+            } & InterviewAnswer)
+          | ({
+              _key: string
+            } & Note)
+          | {
+              children?: Array<
+                | ({
+                    _key: string
+                  } & Variable)
+                | {
+                    marks?: Array<string>
+                    text?: string
+                    _type: 'span'
+                    _key: string
+                  }
+              >
+              style?: 'h3' | 'normal'
+              listItem?: 'bullet' | 'number'
+              markDefs?: Array<
+                | ({
+                    _key: string
+                  } & InternalLink)
+                | ({
+                    _key: string
+                  } & Link)
+              >
+              level?: number
+              _type: 'block'
+              _key: string
+            }
+        >
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'ifNot'
+        present?: string
+        body?: Array<
+          | ({
+              _key: string
+            } & BlockQuote)
+          | ({
+              _key: string
+            } & Button)
+          | ({
+              _key: string
+            } & Chart)
+          | ({
+              _key: string
+            } & CodeBlock)
+          | ({
+              _key: string
+            } & Divider)
+          | ({
+              _key: string
+            } & DynamicComponent)
+          | ({
+              _key: string
+            } & EditorialImage)
+          | ({
+              _key: string
+            } & EmbedDataWrapper)
+          | ({
+              _key: string
+            } & EmbedTwitter)
+          | ({
+              _key: string
+            } & EmbedVideo)
+          | ({
+              _key: string
+            } & Html)
+          | ({
+              _key: string
+            } & InfoBox)
+          | ({
+              _key: string
+            } & InterviewAnswer)
+          | ({
+              _key: string
+            } & Note)
+          | {
+              children?: Array<
+                | ({
+                    _key: string
+                  } & Variable)
+                | {
+                    marks?: Array<string>
+                    text?: string
+                    _type: 'span'
+                    _key: string
+                  }
+              >
+              style?: 'h3' | 'normal'
+              listItem?: 'bullet' | 'number'
+              markDefs?: Array<
+                | ({
+                    _key: string
+                  } & InternalLink)
+                | ({
+                    _key: string
+                  } & Link)
+              >
+              level?: number
+              _type: 'block'
+              _key: string
+            }
+        >
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'imageGroup'
+        images?: Array<
+          {
+            _key: string
+          } & GroupedEditorialImage
+        >
+        groupLegend?: string
+        groupCredit?: string
+        size?: 'LARGE' | 'NARROW' | 'NORMAL'
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'infoBox'
+        title?: string
         image?: {
           asset?: SanityImageAssetReference
           media?: unknown
           hotspot?: SanityImageHotspot
           crop?: SanityImageCrop
+          credit?: string
           _type: 'image'
         }
-        imageDark?: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          _type: 'image'
-        }
-        alt?: string
-        legend?: string
-        credit?: string
-        size?: 'FULL' | 'LARGE' | 'NORMAL'
+        body?: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'h3' | 'normal'
+          listItem?: 'bullet' | 'number'
+          markDefs?: Array<
+            | ({
+                _key: string
+              } & InternalLink)
+            | ({
+                _key: string
+              } & Link)
+          >
+          level?: number
+          _type: 'block'
+          _key: string
+        }>
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'interviewAnswer'
+        body?: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'normal'
+          listItem?: 'bullet' | 'number'
+          markDefs?: Array<
+            | ({
+                _key: string
+              } & InternalLink)
+            | ({
+                _key: string
+              } & Link)
+          >
+          level?: number
+          _type: 'block'
+          _key: string
+        }>
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'note'
+        body?: Array<{
+          children?: Array<{
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }>
+          style?: 'normal'
+          listItem?: 'bullet' | 'number'
+          markDefs?: Array<
+            | ({
+                _key: string
+              } & InternalLink)
+            | ({
+                _key: string
+              } & Link)
+          >
+          level?: number
+          _type: 'block'
+          _key: string
+        }>
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'webOnly'
+        body?: Array<
+          | ({
+              _key: string
+            } & Button)
+          | ({
+              _key: string
+            } & Divider)
+          | ({
+              _key: string
+            } & Html)
+          | {
+              children?: Array<{
+                marks?: Array<string>
+                text?: string
+                _type: 'span'
+                _key: string
+              }>
+              style?: 'h3' | 'normal'
+              listItem?: 'bullet' | 'number'
+              markDefs?: Array<
+                | ({
+                    _key: string
+                  } & InternalLink)
+                | ({
+                    _key: string
+                  } & Link)
+              >
+              level?: number
+              _type: 'block'
+              _key: string
+            }
+        >
         markDefs: null
       }
   > | null

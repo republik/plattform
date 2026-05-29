@@ -53,10 +53,6 @@ export function InfoBox({ value }) {
       className={cx(
         css({
           py: '4',
-          borderColor: 'current',
-          borderStyle: 'solid',
-          borderTopWidth: '1px',
-          borderBottomWidth: '1px',
           ...editorialWidth,
         }),
         hasImage &&
@@ -69,8 +65,18 @@ export function InfoBox({ value }) {
     >
       {image?.asset && <InfoBoxImage image={image} />}
 
-      <div>
-        <h2 className={css({ textStyle: 'h3Sans' })}>{title}</h2>
+      <div className={css({ '& p': { ml: '0', mr: '0' } })}>
+        <h3
+          className={css({
+            textStyle: 'h3Sans',
+            borderColor: 'current',
+            borderStyle: 'solid',
+            borderTopWidth: '1px',
+            py: '2',
+          })}
+        >
+          {title}
+        </h3>
         <PortableText value={body} />
       </div>
     </div>

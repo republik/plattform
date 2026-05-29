@@ -25,12 +25,6 @@ export const articleTypography = css({
     '& strong, & b': {
       fontWeight: 700,
     },
-    _firstOfType: {
-      marginTop: 0,
-    },
-    _lastOfType: {
-      marginBottom: 0,
-    },
   },
   '& h2 + p': {
     marginTop: 0,

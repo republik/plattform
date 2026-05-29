@@ -1,16 +1,20 @@
 import { editorialWidth } from '@/app/(sanity)/articles/[...path]/styles'
-import { urlFor } from '@/app/(sanity)/lib/urlFor' // import type { EditorialImage as EditorialImageType } from '@/sanity/__generated__/types'
-import { css } from '@republik/theme/css'
+import { urlFor } from '@/app/(sanity)/lib/urlFor'
+// import type { EditorialImage as EditorialImageType } from '@/sanity/__generated__/types'
+import { css, cx } from '@republik/theme/css'
+import { Caption } from './caption'
+
+const figure = css({
+  mb: '15px',
+})
 
 const sizeStyles = {
   NORMAL: css({
     ...editorialWidth,
   }),
   LARGE: css({
-    md: {
-      width: 'large',
-      mx: 'auto',
-    },
+    ...editorialWidth,
+    maxWidth: 'large',
   }),
   FULL: css({
     width: '100%',
@@ -21,28 +25,6 @@ const image = css({
   display: 'block',
   width: '100%',
   height: 'auto',
-})
-
-const legendStyle = css({
-  margin: '5px auto 0 auto',
-  width: '100%',
-  fontFamily: 'gtAmericaStandard',
-  fontSize: '0.75rem',
-  lineHeight: '1.2',
-  color: 'text',
-  md: {
-    fontSize: '0.9375rem',
-  },
-})
-
-const creditStyle = css({
-  fontSize: '0.625rem',
-  '&::before': {
-    content: '" "',
-  },
-  md: {
-    fontSize: '0.75rem',
-  },
 })
 
 export function EditorialImage({ value }) {
@@ -56,7 +38,7 @@ export function EditorialImage({ value }) {
     : undefined
 
   return (
-    <figure className={sizeStyles[size]}>
+    <figure className={cx(sizeStyles[size], figure)}>
       {darkSrc ? (
         <picture>
           <source srcSet={darkSrc} media='(prefers-color-scheme: dark)' />
@@ -65,12 +47,7 @@ export function EditorialImage({ value }) {
       ) : (
         <img className={image} src={src} alt={alt ?? ''} />
       )}
-      {(legend || credit) && (
-        <figcaption className={legendStyle}>
-          {legend}
-          {credit && <span className={creditStyle}>{credit}</span>}
-        </figcaption>
-      )}
+      <Caption legend={legend} credit={credit} />
     </figure>
   )
 }

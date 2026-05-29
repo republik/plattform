@@ -2,6 +2,7 @@ import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { defineQuery, PortableText } from 'next-sanity'
 import Link from 'next/link'
 import { EditorialImage } from './editorial-image'
+import { ImageGroup } from './image-group'
 import { InfoBox } from './infobox'
 
 const ARTICLE_CONTENT_QUERY = defineQuery(
@@ -36,6 +37,7 @@ export async function ArticleContent({ slug }: { slug: string }) {
         ),
         types: {
           editorialImage: EditorialImage,
+          imageGroup: ImageGroup,
           infoBox: InfoBox,
         },
         marks: {
