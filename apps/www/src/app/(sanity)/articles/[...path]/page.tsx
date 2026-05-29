@@ -1,6 +1,5 @@
 import { Byline } from '@/app/(sanity)/articles/[...path]/components/byline'
 import { EditLink } from '@/app/(sanity)/articles/[...path]/components/edit-link'
-import { EditorialImage } from '@/app/(sanity)/articles/[...path]/components/editorial-image'
 import { articleTypography } from '@/app/(sanity)/articles/[...path]/styles'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
@@ -8,15 +7,16 @@ import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { ArticleSection } from '@/app/components/ui/section'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
-import { defineQuery, PortableText } from 'next-sanity'
+import { Metadata } from 'next'
+import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation'
+import { ArticleContent } from './components/article-content'
 
 const ARTICLE_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
     _id,
     title,
     description,
-    content,
     articleCollection->{
       title,
       description,
@@ -60,7 +60,7 @@ const ARTICLE_QUERY = defineQuery(
 // Metadata: stega disabled to keep invisible characters out of <title>
 export async function generateMetadata({
   params,
-}: PageProps<'/articles/[...path]'>) {
+}: PageProps<'/articles/[...path]'>): Promise<Metadata> {
   const { path } = await params
   const slug = `/${path.join('/')}`
 
@@ -137,16 +137,9 @@ export default async function PostPage({
           </div>
         </ArticleSection>
 
-        <section className={articleTypography}>
-          <PortableText
-            value={article.content}
-            components={{
-              types: {
-                editorialImage: EditorialImage,
-              },
-            }}
-          />
-        </section>
+        <ArticleSection className={articleTypography}>
+          <ArticleContent slug={slug} />
+        </ArticleSection>
 
         <ArticleSection>
           <FollowArticle
