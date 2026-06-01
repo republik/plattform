@@ -17,6 +17,10 @@ const ARTICLE_QUERY = defineQuery(
     _id,
     title,
     description,
+    seo {
+      title,
+      description
+    },
     articleCollection->{
       title,
       description,
@@ -70,14 +74,10 @@ export async function generateMetadata({
     params: { slug },
     stega: false,
   })
-  const collectionPrefix = data.articleCollection
-    ? `${data.articleCollection.title}: `
-    : ''
-  const siteSuffix = ' - Republik'
+
   return {
-    title: data
-      ? `${collectionPrefix} ${data.title} ${siteSuffix}`
-      : 'Article not found',
+    title: data?.seo?.title ?? data?.title ?? 'Nicht gefunden',
+    description: data?.seo?.description ?? data?.description ?? '',
   }
 }
 
