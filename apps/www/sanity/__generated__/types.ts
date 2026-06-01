@@ -14,7 +14,7 @@
 
 export declare const internalGroqTypeReferenceTo: unique symbol
 
-// Source: ../../../studio/schema.json
+// Source: ../../../../../../studio/schema.json
 export type AudioCover = {
   color?: string
   anchor?: string
@@ -140,9 +140,6 @@ export type IfNot = {
       } & BlockQuote)
     | ({
         _key: string
-      } & Note)
-    | ({
-        _key: string
       } & InterviewAnswer)
     | ({
         _key: string
@@ -213,9 +210,6 @@ export type If = {
     | ({
         _key: string
       } & BlockQuote)
-    | ({
-        _key: string
-      } & Note)
     | ({
         _key: string
       } & InterviewAnswer)
@@ -323,31 +317,6 @@ export type WebOnly = {
 
 export type InterviewAnswer = {
   _type: 'interviewAnswer'
-  body?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<
-      | ({
-          _key: string
-        } & Link)
-      | ({
-          _key: string
-        } & InternalLink)
-    >
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
-}
-
-export type Note = {
-  _type: 'note'
   body?: Array<{
     children?: Array<{
       marks?: Array<string>
@@ -634,7 +603,7 @@ export type Article = {
               _key: string
             } & Variable)
         >
-        style?: 'normal' | 'h2' | 'h1' | 'h3' | 'h4' | 'h6'
+        style?: 'normal' | 'h2' | 'h1' | 'h3' | 'h4' | 'h6' | 'note'
         listItem?: 'bullet' | 'number'
         markDefs?: Array<
           | ({
@@ -660,9 +629,6 @@ export type Article = {
     | ({
         _key: string
       } & BlockQuote)
-    | ({
-        _key: string
-      } & Note)
     | ({
         _key: string
       } & InterviewAnswer)
@@ -1030,7 +996,6 @@ export type AllSanitySchemaTypes =
   | EmailOnly
   | WebOnly
   | InterviewAnswer
-  | Note
   | BlockQuote
   | InfoBox
   | Button
@@ -1106,7 +1071,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
               _key: string
             }
         >
-        style?: 'h1' | 'h2' | 'h3' | 'h4' | 'h6' | 'normal'
+        style?: 'h1' | 'h2' | 'h3' | 'h4' | 'h6' | 'normal' | 'note'
         listItem?: 'bullet' | 'number'
         markDefs: Array<
           | {
@@ -1301,9 +1266,6 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
           | ({
               _key: string
             } & InterviewAnswer)
-          | ({
-              _key: string
-            } & Note)
           | {
               children?: Array<
                 | ({
@@ -1377,9 +1339,6 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
           | ({
               _key: string
             } & InterviewAnswer)
-          | ({
-              _key: string
-            } & Note)
           | {
               children?: Array<
                 | ({
@@ -1459,32 +1418,6 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'interviewAnswer'
-        body?: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'normal'
-          listItem?: 'bullet' | 'number'
-          markDefs?: Array<
-            | ({
-                _key: string
-              } & InternalLink)
-            | ({
-                _key: string
-              } & Link)
-          >
-          level?: number
-          _type: 'block'
-          _key: string
-        }>
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'note'
         body?: Array<{
           children?: Array<{
             marks?: Array<string>
