@@ -76,9 +76,7 @@ export async function generateMetadata({
   const siteSuffix = ' - Republik'
   return {
     title: data
-      ? `${collectionPrefix}
-          ${data.title}
-          ${siteSuffix}`
+      ? `${collectionPrefix} ${data.title} ${siteSuffix}`
       : 'Article not found',
   }
 }
