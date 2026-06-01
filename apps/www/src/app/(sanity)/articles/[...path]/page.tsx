@@ -19,6 +19,25 @@ const ARTICLE_SEO_QUERY = defineQuery(
   }`,
 )
 
+// Metadata: stega disabled to keep invisible characters out of <title>
+export async function generateMetadata({
+  params,
+}: PageProps<'/articles/[...path]'>): Promise<Metadata> {
+  const { path } = await params
+  const slug = `/${path.join('/')}`
+
+  const { data } = await sanityFetch({
+    query: ARTICLE_SEO_QUERY,
+    params: { slug },
+    stega: false,
+  })
+
+  return {
+    title: data?.title ?? 'Artikel nicht gefunden',
+    description: data?.description ?? '',
+  }
+}
+
 const ARTICLE_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
     _id,
@@ -69,25 +88,6 @@ const ARTICLE_QUERY = defineQuery(
   }`,
 )
 
-// Metadata: stega disabled to keep invisible characters out of <title>
-export async function generateMetadata({
-  params,
-}: PageProps<'/articles/[...path]'>): Promise<Metadata> {
-  const { path } = await params
-  const slug = `/${path.join('/')}`
-
-  const { data } = await sanityFetch({
-    query: ARTICLE_SEO_QUERY,
-    params: { slug },
-    stega: false,
-  })
-
-  return {
-    title: data?.title ?? 'Artikel nicht gefunden',
-    description: data?.description ?? '',
-  }
-}
-
 // Page component: default settings (stega active in Draft Mode)
 export default async function PostPage({
   params,
@@ -101,8 +101,6 @@ export default async function PostPage({
   })
 
   if (!article) notFound()
-
-  console.log({ article })
 
   return (
     <EventTrackingContext category='Article'>
