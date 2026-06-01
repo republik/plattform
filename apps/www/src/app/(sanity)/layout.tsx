@@ -6,13 +6,6 @@ import { VisualEditing } from 'next-sanity/visual-editing'
 import { draftMode } from 'next/headers'
 import { DisableDraftMode } from './components/disable-draft-mode'
 
-export const metadata: Metadata = {
-  title: {
-    default: 'Republik',
-    template: '%s – Republik',
-  },
-}
-
 export default async function RootLayout({
   children,
 }: Readonly<{

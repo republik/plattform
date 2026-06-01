@@ -12,6 +12,13 @@ import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation'
 import { ArticleContent } from './components/article-content'
 
+const ARTICLE_SEO_QUERY = defineQuery(
+  `*[_type == "article" && slug.current == $slug][0]{
+    "title": coalesce(seo.title, title),
+    "description": coalesce(seo.description, description)
+  }`,
+)
+
 const ARTICLE_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
     _id,
@@ -70,14 +77,14 @@ export async function generateMetadata({
   const slug = `/${path.join('/')}`
 
   const { data } = await sanityFetch({
-    query: ARTICLE_QUERY,
+    query: ARTICLE_SEO_QUERY,
     params: { slug },
     stega: false,
   })
 
   return {
-    title: data?.seo?.title ?? data?.title ?? 'Nicht gefunden',
-    description: data?.seo?.description ?? data?.description ?? '',
+    title: data?.title ?? 'Artikel nicht gefunden',
+    description: data?.description ?? '',
   }
 }
 
