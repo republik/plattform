@@ -67,6 +67,11 @@ const nextConfig = {
           }
         : false,
   },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   async headers() {
     return [
       // Migrated from custom express server
