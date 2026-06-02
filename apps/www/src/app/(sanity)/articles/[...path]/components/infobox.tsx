@@ -2,6 +2,7 @@ import { editorialWidthAttrs } from '@/app/(sanity)/articles/[...path]/styles'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css, cx } from '@republik/theme/css'
 import { PortableText } from 'next-sanity'
+import { Caption } from './caption'
 
 const caption = css({
   margin: '5px auto 0 auto',
@@ -36,9 +37,7 @@ function InfoBoxImage({ image }) {
         src={src}
         alt={image.alt ?? ''}
       />
-      {image.credit && (
-        <figcaption className={caption}>{image.credit}</figcaption>
-      )}
+      {image.caption && <Caption caption={image.caption} />}
     </figure>
   )
 }
