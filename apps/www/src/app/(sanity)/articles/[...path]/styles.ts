@@ -5,7 +5,6 @@ export const editorialWidthAttrs = {
   maxWidth: 'editorial',
   pl: '15px',
   pr: '15px',
-  display: 'block',
 }
 
 export const linkStyle = css({
