@@ -15,6 +15,7 @@ import { EditorialImage } from './editorial-image'
 import { ImageGroup } from './image-group'
 import { InfoBox } from './infobox'
 import { PullQuote } from './pull-quote'
+import { Note } from './note'
 
 const ARTICLE_CONTENT_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -58,6 +59,7 @@ export async function ArticleContent({ slug }: { slug: string }) {
         block: {
           normal: EditorialParagraph,
           h2: EditorialSubhead,
+          note: Note,
         },
         marks: {
           strong: Strong,
