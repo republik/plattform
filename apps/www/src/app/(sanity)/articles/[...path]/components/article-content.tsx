@@ -72,11 +72,16 @@ export async function ArticleContent({ slug }: { slug: string }) {
               {text}
             </a>
           ),
-          internalLink: ({ text, value }) => (
-            <Link href={value.slug?.current} className={linkStyle}>
-              {text}
-            </Link>
-          ),
+          internalLink: ({ text, value }) => {
+            const href = value.slug?.current
+            return href ? (
+              <Link href={href} className={linkStyle}>
+                {text}
+              </Link>
+            ) : (
+              text
+            )
+          },
         },
       }}
     />
