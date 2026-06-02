@@ -1,46 +1,7 @@
 import { editorialWidthAttrs } from '@/app/(sanity)/articles/[...path]/styles'
-import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css, cx } from '@republik/theme/css'
 import { PortableText } from 'next-sanity'
-import { Caption } from './caption'
-
-const caption = css({
-  margin: '5px auto 0 auto',
-  width: '100%',
-  fontFamily: 'gtAmericaStandard',
-  fontSize: '12px',
-  lineHeight: '15px',
-  color: 'text',
-  md: {
-    fontSize: '15px',
-    lineHeight: '18px',
-  },
-})
-
-function InfoBoxImage({ image }) {
-  const src = urlFor(image).auto('format').width(384).url()
-  return (
-    <figure
-      className={css({
-        margin: 0,
-        marginBottom: '15px',
-        padding: 0,
-        width: '100%',
-      })}
-    >
-      <img
-        className={css({
-          display: 'block',
-          width: '100%',
-          height: 'auto',
-        })}
-        src={src}
-        alt={image.alt ?? ''}
-      />
-      {image.caption && <Caption caption={image.caption} />}
-    </figure>
-  )
-}
+import { AsideImage } from './aside-image'
 
 export function InfoBox({ value }) {
   const { title, image, body } = value
@@ -62,7 +23,7 @@ export function InfoBox({ value }) {
           }),
       )}
     >
-      {image?.asset && <InfoBoxImage image={image} />}
+      {image?.asset && <AsideImage image={image} />}
 
       <div className={css({ '& p': { ml: '0', mr: '0' } })}>
         <h3

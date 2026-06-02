@@ -14,6 +14,7 @@ import { BlockQuote } from './block-quote'
 import { EditorialImage } from './editorial-image'
 import { ImageGroup } from './image-group'
 import { InfoBox } from './infobox'
+import { PullQuote } from './pull-quote'
 
 const ARTICLE_CONTENT_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -49,6 +50,7 @@ export async function ArticleContent({ slug }: { slug: string }) {
         ),
         types: {
           blockQuote: BlockQuote,
+          pullQuote: PullQuote,
           editorialImage: EditorialImage,
           imageGroup: ImageGroup,
           infoBox: InfoBox,
