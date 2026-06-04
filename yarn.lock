@@ -20552,7 +20552,7 @@ groq@^5.23.0:
   resolved "https://registry.yarnpkg.com/groq/-/groq-5.24.0.tgz#24f0e17ea4e6691526b18636cceb3ee163c0fd43"
   integrity sha512-YMumFhEJjROiE4czCBMbno/xbQSz/phlosTJhGM/gJg7ZiR/dqAhx5nfUUt0p7ytiRokyEFc/sHT4xKIPo6HJA==
 
-groq@^5.29.0:
+groq@^5.30.0:
   version "5.30.0"
   resolved "https://registry.yarnpkg.com/groq/-/groq-5.30.0.tgz#f460e9a99650b660baa8ee72d179a9ebd9c935c2"
   integrity sha512-jtjDc8JVVwE34tVQvA1r3U4ALkESREXEFPz8rZEBgCIr2lgpvNotiqxQk5goHtzO5j5F8gYci8/70noIJ8QwRw==
@@ -25875,10 +25875,10 @@ next-plausible@^3.12.4:
   resolved "https://registry.yarnpkg.com/next-plausible/-/next-plausible-3.12.4.tgz#d0ac1d7dcbe9836b6c93e37d42b80e3661fdaa34"
   integrity sha512-cD3+ixJxf8yBYvsideTxqli3fvrB7R4BXcvsNJz8Sm2X1QN039WfiXjCyNWkub4h5++rRs6fHhchUMnOuJokcg==
 
-next-sanity@^13.0.10:
-  version "13.0.10"
-  resolved "https://registry.yarnpkg.com/next-sanity/-/next-sanity-13.0.10.tgz#dc7f2d96b98ede1cddc10e8812f8905769be224e"
-  integrity sha512-8zPKrED6rpUvbJ848TZbwyMhUnmXXCKZENpsrD6XnkoHMbk01yfiH/Cw/Uk5LBvFiZ5ZWS4pr7mtPgZMHJczhg==
+next-sanity@^13.0.11:
+  version "13.0.11"
+  resolved "https://registry.yarnpkg.com/next-sanity/-/next-sanity-13.0.11.tgz#a8d17f052f9a164aa3f25818ff893d6d44b68339"
+  integrity sha512-ld0gRz5ZqsL22Imh5gksi0min4oKeMtoTXiivPoRG7a8/eMX5rxRQdQIMHgLaOCYXnmDBOIOutxAxE+1hFmaVw==
   dependencies:
     "@portabletext/react" "^6.2.0"
     "@sanity/client" "^7.22.1"
@@ -25886,7 +25886,7 @@ next-sanity@^13.0.10:
     "@sanity/preview-url-secret" "^4.0.7"
     "@sanity/visual-editing" "^5.4.3"
     "@sanity/webhook" "^4.0.4"
-    groq "^5.29.0"
+    groq "^5.30.0"
     history "^5.3.0"
 
 next-themes@^0.4.0, next-themes@^0.4.6:
