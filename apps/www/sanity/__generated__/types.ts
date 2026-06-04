@@ -340,6 +340,21 @@ export type InterviewAnswer = {
   }>
 }
 
+export type PullQuote = {
+  _type: 'pullQuote'
+  text?: string
+  source?: string
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    caption?: Caption
+    _type: 'image'
+  }
+  size?: 'narrow' | 'float' | 'breakout'
+}
+
 export type BlockQuote = {
   _type: 'blockQuote'
   body?: Array<{
@@ -374,7 +389,7 @@ export type InfoBox = {
     media?: unknown
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
-    credit?: string
+    caption?: Caption
     _type: 'image'
   }
   body?: Array<{
@@ -398,6 +413,10 @@ export type InfoBox = {
     _type: 'block'
     _key: string
   }>
+  size?: 'float' | 'breakout'
+  figureSize?: 'S' | 'M' | 'L'
+  figureFloat?: boolean
+  collapsible?: boolean
 }
 
 export type Button = {
@@ -631,6 +650,9 @@ export type Article = {
       } & BlockQuote)
     | ({
         _key: string
+      } & PullQuote)
+    | ({
+        _key: string
       } & InterviewAnswer)
     | ({
         _key: string
@@ -849,6 +871,15 @@ export type Slug = {
   source?: string
 }
 
+export type MediaTag = {
+  _id: string
+  _type: 'media.tag'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: Slug
+}
+
 export type RgbaColor = {
   _type: 'rgbaColor'
   r?: number
@@ -996,6 +1027,7 @@ export type AllSanitySchemaTypes =
   | EmailOnly
   | WebOnly
   | InterviewAnswer
+  | PullQuote
   | BlockQuote
   | InfoBox
   | Button
@@ -1030,6 +1062,7 @@ export type AllSanitySchemaTypes =
   | Discussion
   | Contributor
   | Slug
+  | MediaTag
   | RgbaColor
   | HsvaColor
   | HslaColor
@@ -1389,7 +1422,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
           media?: unknown
           hotspot?: SanityImageHotspot
           crop?: SanityImageCrop
-          credit?: string
+          caption?: Caption
           _type: 'image'
         }
         body?: Array<{
@@ -1413,6 +1446,10 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
           _type: 'block'
           _key: string
         }>
+        size?: 'breakout' | 'float'
+        figureSize?: 'L' | 'M' | 'S'
+        figureFloat?: boolean
+        collapsible?: boolean
         markDefs: null
       }
     | {
@@ -1439,6 +1476,22 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
           _type: 'block'
           _key: string
         }>
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'pullQuote'
+        text?: string
+        source?: string
+        image?: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          caption?: Caption
+          _type: 'image'
+        }
+        size?: 'breakout' | 'float' | 'narrow'
         markDefs: null
       }
     | {
