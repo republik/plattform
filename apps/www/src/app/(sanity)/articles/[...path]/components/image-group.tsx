@@ -1,65 +1,70 @@
 import { Caption } from '@/app/(sanity)/articles/[...path]/components/caption'
 import { EditorialImage } from '@/app/(sanity)/articles/[...path]/components/editorial-image'
-import { css, cx } from '@republik/theme/css'
+import { cva } from '@republik/theme/css'
 import { useId } from 'react'
 
-const sizeStyles = {
-  NARROW: css({
-    maxWidth: 'narrow',
-  }),
-  NORMAL: css({}),
-  LARGE: css({
-    maxWidth: 'large',
-  }),
-}
-
-const groupStyle = css({
-  margin: 0,
-  padding: 0,
-
-  position: 'relative',
-  md: {
-    display: 'grid',
-    gap: '4',
+const figureGroupStyle = cva({
+  base: {
+    '& > figcaption': {
+      mt: '1',
+    },
+  },
+  variants: {
+    size: {
+      NARROW: {
+        maxWidth: 'narrow',
+        mx: 'auto',
+      },
+      BREAKOUT: {
+        gridColumn: 'breakout',
+      },
+      FULL: {
+        gridColumn: 'full',
+        '& > figcaption': {
+          ml: '4',
+        },
+      },
+    },
   },
 })
 
-const groupCaptionStyle = css({
-  marginBottom: '15px',
-  marginTop: '-10px',
-  md: {
-    marginTop: '-25px',
-    gridColumn: '1/-1',
+const imageGridStyle = cva({
+  base: {
+    display: 'grid',
+    gap: '4',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+  },
+
+  variants: {
+    size: {
+      NARROW: {
+        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+      },
+    },
   },
 })
 
 export function ImageGroup({ value }) {
   const captionId = useId()
-  const { images = [], caption, size = 'NORMAL' } = value
+  const { images = [], caption, size } = value
 
   if (!images.length) return null
 
   return (
     <figure
       role='group'
-      className={cx(sizeStyles[size], groupStyle)}
-      style={{ gridTemplateColumns: `repeat(${images.length}, 1fr)` }}
       aria-labelledby={captionId}
+      className={figureGroupStyle({ size })}
     >
-      {images.map((img) => {
-        // we don't use size: FULL for GROUP images since FULL also adds
-        // padding to the caption (which we don't want here)
-        return (
-          <EditorialImage value={{ ...img, size: 'GROUP' }} key={img._key} />
-        )
-      })}
-      {caption && (
-        <Caption
-          id={captionId}
-          caption={caption}
-          className={groupCaptionStyle}
-        />
-      )}
+      <div className={imageGridStyle({ size })}>
+        {images.map((img) => {
+          // remove size of grouped images, which would mess up their position in the image grid
+          return (
+            <EditorialImage value={{ ...img, size: null }} key={img._key} />
+          )
+        })}
+      </div>
+      {caption && <Caption id={captionId} caption={caption} />}
     </figure>
   )
 }

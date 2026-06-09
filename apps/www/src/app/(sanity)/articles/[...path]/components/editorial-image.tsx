@@ -3,9 +3,8 @@ import { css, cva } from '@republik/theme/css'
 import { useId } from 'react'
 import { Caption } from './caption'
 
-const figureStyles = cva({
+const figureStyle = cva({
   base: {
-    mb: '4',
     '& > figcaption': {
       mt: '1',
     },
@@ -44,7 +43,7 @@ export function EditorialImage({ value }) {
 
   return (
     <figure
-      className={figureStyles({ size })}
+      className={figureStyle({ size })}
       // role=group signals the grouping to legacy screen readers and browsers that don't understand the <figure> semantics
       role='group'
       aria-labelledby={captionId}
