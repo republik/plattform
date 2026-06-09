@@ -1,5 +1,4 @@
 import {
-  EditorialParagraph,
   EditorialSubhead,
   Em,
   Strong,
@@ -8,14 +7,19 @@ import {
 } from '@/app/(sanity)/articles/[...path]/components/typography'
 import { linkStyle } from '@/app/(sanity)/articles/[...path]/styles'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
-import { defineQuery, PortableText } from 'next-sanity'
+import {
+  defineQuery,
+  PortableText,
+  PortableTextComponentProps,
+  UnknownNodeType,
+} from 'next-sanity'
 import Link from 'next/link'
 import { BlockQuote } from './block-quote'
 import { EditorialImage } from './editorial-image'
 import { ImageGroup } from './image-group'
 import { InfoBox } from './infobox'
-import { PullQuote } from './pull-quote'
 import { Note } from './note'
+import { PullQuote } from './pull-quote'
 
 const ARTICLE_CONTENT_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -32,6 +36,28 @@ const ARTICLE_CONTENT_QUERY = defineQuery(
   }`,
 )
 
+function UnknownType({
+  value,
+  isInline,
+}: PortableTextComponentProps<UnknownNodeType>) {
+  return (
+    <span
+      style={
+        isInline
+          ? { background: 'hotpink' }
+          : {
+              background: 'hotpink',
+              display: 'block',
+              padding: 30,
+              overflowWrap: 'anywhere',
+            }
+      }
+    >
+      {JSON.stringify(value, null, 2)}
+    </span>
+  )
+}
+
 export async function ArticleContent({ slug }: { slug: string }) {
   const { data: article } = await sanityFetch({
     query: ARTICLE_CONTENT_QUERY,
@@ -44,17 +70,7 @@ export async function ArticleContent({ slug }: { slug: string }) {
     <PortableText
       value={article.content}
       components={{
-        unknownType: ({ value, isInline }) => (
-          <span
-            style={
-              isInline
-                ? { background: 'hotpink' }
-                : { background: 'hotpink', display: 'block', padding: 30 }
-            }
-          >
-            {JSON.stringify(value)}
-          </span>
-        ),
+        unknownType: UnknownType,
 
         types: {
           blockQuote: BlockQuote,
