@@ -1,9 +1,8 @@
 import { type Caption } from '@/sanity.types'
 import { css, cx } from '@republik/theme/css'
-import { PortableText, PortableTextProps } from 'next-sanity'
+import { PortableText } from 'next-sanity'
 
 const legendStyle = css({
-  margin: '5px auto 0 auto',
   width: '100%',
   fontFamily: 'gtAmericaStandard',
   fontSize: '0.75rem',
@@ -16,7 +15,7 @@ const legendStyle = css({
 
 const creditStyle = css({
   fontSize: '0.625rem',
-  '&::before': {
+  _before: {
     content: '" "',
   },
   md: {
@@ -24,19 +23,17 @@ const creditStyle = css({
   },
 })
 
-const captionSizeStyles = {
-  FULL: css({
-    pl: '4',
-  }),
+const ptComponents = {
+  block: { normal: ({ children }) => <>{children}</> },
 }
 
 export function Caption({
   caption,
-  size = 'NORMAL',
+  id,
   className,
 }: {
   caption: Caption
-  size?: string
+  id?: string
   className?: string
 }) {
   const { legend, credit } = caption
@@ -44,13 +41,11 @@ export function Caption({
   if (!legend && !credit) return null
   return (
     (legend || credit) && (
-      <figcaption
-        className={cx(legendStyle, className, captionSizeStyles[size])}
-      >
-        <PortableText value={legend} />
+      <figcaption id={id} className={cx(legendStyle, className)}>
+        <PortableText components={ptComponents} value={legend} />
         {credit && (
           <span className={creditStyle}>
-            <PortableText value={credit} />
+            <PortableText components={ptComponents} value={credit} />
           </span>
         )}
       </figcaption>

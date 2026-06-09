@@ -1,24 +1,30 @@
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
-// import type { EditorialImage as EditorialImageType } from '@/sanity/__generated__/types'
-import { css, cx } from '@republik/theme/css'
+import { css, cva } from '@republik/theme/css'
+import { useId } from 'react'
 import { Caption } from './caption'
 
-const figure = css({
-  mb: '15px',
+const figureStyles = cva({
+  base: {
+    width: '100%',
+    mb: '4',
+    '& > figcaption': {
+      mt: '1',
+    },
+  },
+  variants: {
+    size: {
+      BREAKOUT: {
+        gridColumn: 'breakout',
+      },
+      FULL: {
+        gridColumn: 'full',
+        '& > figcaption': {
+          ml: '4',
+        },
+      },
+    },
+  },
 })
-
-const sizeStyles = {
-  NORMAL: css({}),
-  LARGE: css({
-    maxWidth: 'large',
-  }),
-  FULL: css({
-    width: '100%',
-  }),
-  GROUP: css({
-    width: '100%',
-  }),
-}
 
 const image = css({
   display: 'block',
@@ -27,7 +33,8 @@ const image = css({
 })
 
 export function EditorialImage({ value }) {
-  const { image: img, imageDark, alt, caption, size = 'NORMAL' } = value
+  const captionId = useId()
+  const { image: img, imageDark, alt, caption, size } = value
 
   if (!img?.asset) return null
 
@@ -37,7 +44,12 @@ export function EditorialImage({ value }) {
     : undefined
 
   return (
-    <figure className={cx(sizeStyles[size], figure)}>
+    <figure
+      className={figureStyles({ size })}
+      // role=group signals the grouping to legacy screen readers and browsers that don't understand the <figure> semantics
+      role='group'
+      aria-labelledby={captionId}
+    >
       {darkSrc ? (
         <picture>
           <source srcSet={darkSrc} media='(prefers-color-scheme: dark)' />
@@ -46,7 +58,7 @@ export function EditorialImage({ value }) {
       ) : (
         <img className={image} src={src} alt={alt ?? ''} />
       )}
-      {caption && <Caption caption={caption} size={size} />}
+      {caption && <Caption id={captionId} caption={caption} />}
     </figure>
   )
 }

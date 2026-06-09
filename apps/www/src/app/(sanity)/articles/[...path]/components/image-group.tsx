@@ -1,6 +1,7 @@
 import { Caption } from '@/app/(sanity)/articles/[...path]/components/caption'
 import { EditorialImage } from '@/app/(sanity)/articles/[...path]/components/editorial-image'
 import { css, cx } from '@republik/theme/css'
+import { useId } from 'react'
 
 const sizeStyles = {
   NARROW: css({
@@ -33,6 +34,7 @@ const groupCaptionStyle = css({
 })
 
 export function ImageGroup({ value }) {
+  const captionId = useId()
   const { images = [], caption, size = 'NORMAL' } = value
 
   if (!images.length) return null
@@ -42,6 +44,7 @@ export function ImageGroup({ value }) {
       role='group'
       className={cx(sizeStyles[size], groupStyle)}
       style={{ gridTemplateColumns: `repeat(${images.length}, 1fr)` }}
+      aria-labelledby={captionId}
     >
       {images.map((img) => {
         // we don't use size: FULL for GROUP images since FULL also adds
@@ -50,7 +53,13 @@ export function ImageGroup({ value }) {
           <EditorialImage value={{ ...img, size: 'GROUP' }} key={img._key} />
         )
       })}
-      {caption && <Caption caption={caption} className={groupCaptionStyle} />}
+      {caption && (
+        <Caption
+          id={captionId}
+          caption={caption}
+          className={groupCaptionStyle}
+        />
+      )}
     </figure>
   )
 }
