@@ -42,6 +42,7 @@
     "@parcel/watcher": "^2.3.0",
     "@republik/eslint-config-frontend": "*",
     "@republik/tsconfig": "*",
+    "@sanity/client": "^7.22.1",
     "@stripe/stripe-js": "^1.22.0",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.7",
