@@ -3,7 +3,6 @@ import { css, cx } from '@republik/theme/css'
 import { PortableText } from 'next-sanity'
 
 const legendStyle = css({
-  width: '100%',
   fontFamily: 'gtAmericaStandard',
   fontSize: '0.75rem',
   lineHeight: '1.2',

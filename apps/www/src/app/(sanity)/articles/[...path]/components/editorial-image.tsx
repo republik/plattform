@@ -5,7 +5,6 @@ import { Caption } from './caption'
 
 const figureStyles = cva({
   base: {
-    width: '100%',
     mb: '4',
     '& > figcaption': {
       mt: '1',
