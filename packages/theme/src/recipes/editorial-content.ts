@@ -47,15 +47,23 @@ export const editorialContentRecipe = defineRecipe({
 
         '& > h2': {
           textStyle: 'editorialH2',
-          mt: '8',
           mb: '2',
           md: {
-            mt: '16',
+            mt: '8',
             mb: '3',
+          },
+          '& + p': { mt: 0 },
+          _first: {
+            mt: 0,
+          },
+          _last: {
+            mb: 0,
           },
         },
       },
-      meta: {},
+      meta: {
+        // TODO
+      },
     },
   },
 

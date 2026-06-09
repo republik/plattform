@@ -1,5 +1,4 @@
 import {
-  EditorialSubhead,
   Em,
   Strong,
   Sub,
@@ -81,7 +80,7 @@ export async function ArticleContent({ slug }: { slug: string }) {
         },
         block: {
           // normal: EditorialParagraph,
-          h2: EditorialSubhead,
+          // h2: EditorialSubhead,
           note: Note,
         },
         marks: {
