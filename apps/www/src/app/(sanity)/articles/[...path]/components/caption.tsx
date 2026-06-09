@@ -1,3 +1,4 @@
+import { type Caption } from '@/sanity.types'
 import { css, cx } from '@republik/theme/css'
 import { PortableText, PortableTextProps } from 'next-sanity'
 
@@ -30,14 +31,11 @@ const captionSizeStyles = {
 }
 
 export function Caption({
-  caption = {},
+  caption,
   size = 'NORMAL',
   className,
 }: {
-  caption?: {
-    legend?: PortableTextProps<any>
-    credit?: PortableTextProps<any>
-  }
+  caption?: Caption
   size?: string
   className?: string
 }) {

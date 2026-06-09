@@ -15,6 +15,11 @@
 export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: ../../../../../../studio/schema.json
+export type ChartConfig = {
+  settings?: Code
+  data?: Code
+}
+
 export type AudioCover = {
   color?: string
   anchor?: string
@@ -64,10 +69,39 @@ export type ArticlePreview = {
   }
 }
 
+export type ArticleTheme = {
+  _type: 'articleTheme'
+  kind?: 'EDITORIAL' | 'META'
+  color?: Color
+  darkMode?: boolean
+}
+
+export type InlineEditor = Array<{
+  children?: Array<{
+    marks?: Array<string>
+    text?: string
+    _type: 'span'
+    _key: string
+  }>
+  style?: 'normal'
+  listItem?: 'bullet' | 'number'
+  markDefs?: Array<
+    | ({
+        _key: string
+      } & Link)
+    | ({
+        _key: string
+      } & InternalLink)
+  >
+  level?: number
+  _type: 'block'
+  _key: string
+}>
+
 export type Caption = {
   _type: 'caption'
-  legend?: string
-  credit?: string
+  legend?: InlineEditor
+  credit?: InlineEditor
 }
 
 export type ArticleReference = {
@@ -143,9 +177,6 @@ export type IfNot = {
       } & InterviewAnswer)
     | ({
         _key: string
-      } & CodeBlock)
-    | ({
-        _key: string
       } & Divider)
     | ({
         _key: string
@@ -213,9 +244,6 @@ export type If = {
     | ({
         _key: string
       } & InterviewAnswer)
-    | ({
-        _key: string
-      } & CodeBlock)
     | ({
         _key: string
       } & Divider)
@@ -425,11 +453,27 @@ export type Button = {
   url?: string
 }
 
+export type SeriesNav = {
+  _type: 'seriesNav'
+  series?: ArticleCollectionReference
+}
+
+export type StoryComponent = {
+  _type: 'storyComponent'
+  url?: string
+  tagname?: string
+  componentData?: Code
+  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
+}
+
 export type DynamicComponent = {
   _type: 'dynamicComponent'
+  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
   src?: string
-  props?: string
+  identifier?: string
+  props?: Code
   autoHtml?: boolean
+  html?: Code
 }
 
 export type Html = {
@@ -439,7 +483,10 @@ export type Html = {
 
 export type EmbedDataWrapper = {
   _type: 'embedDataWrapper'
-  data?: string
+  datawrapperId?: string
+  forceDark?: boolean
+  plain?: boolean
+  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
 }
 
 export type EmbedTwitter = {
@@ -454,18 +501,16 @@ export type EmbedVideo = {
 
 export type Chart = {
   _type: 'chart'
-  data?: string
+  title?: InlineEditor
+  lead?: InlineEditor
+  chartConfig?: ChartConfig
+  source?: InlineEditor
+  size?: 'FLOAT_TINY' | 'NARROW' | 'NORMAL' | 'BREAKOUT'
 }
 
 export type Divider = {
   _type: 'divider'
   style?: string
-}
-
-export type CodeBlock = {
-  _type: 'codeBlock'
-  language?: string
-  code?: string
 }
 
 export type ImageGroup = {
@@ -476,7 +521,7 @@ export type ImageGroup = {
     } & GroupedEditorialImage
   >
   caption?: Caption
-  size?: 'NARROW' | 'NORMAL' | 'LARGE'
+  size?: 'NARROW' | 'NORMAL' | 'BREAKOUT'
 }
 
 export type GroupedEditorialImage = {
@@ -493,7 +538,7 @@ export type EditorialImage = {
   imageDark?: ImageDark
   alt?: string
   caption?: Caption
-  size?: 'NORMAL' | 'LARGE' | 'FULL'
+  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
 }
 
 export type SeoImageBuilder = {
@@ -574,13 +619,6 @@ export type PodcastReference = {
   [internalGroqTypeReferenceTo]?: 'podcast'
 }
 
-export type PageThemeReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'pageTheme'
-}
-
 export type Article = {
   _id: string
   _type: 'article'
@@ -622,7 +660,7 @@ export type Article = {
               _key: string
             } & Variable)
         >
-        style?: 'normal' | 'h2' | 'h1' | 'h3' | 'h4' | 'h6' | 'note'
+        style?: 'normal' | 'h2' | 'h1' | 'note'
         listItem?: 'bullet' | 'number'
         markDefs?: Array<
           | ({
@@ -668,9 +706,6 @@ export type Article = {
       } & IfNot)
     | ({
         _key: string
-      } & CodeBlock)
-    | ({
-        _key: string
       } & Divider)
     | ({
         _key: string
@@ -690,6 +725,12 @@ export type Article = {
     | ({
         _key: string
       } & DynamicComponent)
+    | ({
+        _key: string
+      } & StoryComponent)
+    | ({
+        _key: string
+      } & SeriesNav)
     | ({
         _key: string
       } & Button)
@@ -730,7 +771,7 @@ export type Article = {
   podcast?: PodcastReference
   showTextProgress?: boolean
   readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
-  theme?: PageThemeReference
+  theme?: ArticleTheme
   seo?: Seo
   mdast?: Mdast
   publikatorMeta?: LegacyMeta
@@ -750,18 +791,6 @@ export type SanityImageHotspot = {
   y: number
   height: number
   width: number
-}
-
-export type PageTheme = {
-  _id: string
-  _type: 'pageTheme'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title: string
-  kind?: 'EDITORIAL' | 'META'
-  color?: Color
-  darkMode?: boolean
 }
 
 export type Color = {
@@ -865,6 +894,14 @@ export type Contributor = {
   userId?: string
 }
 
+export type Code = {
+  _type: 'code'
+  language?: string
+  filename?: string
+  code?: string
+  highlightedLines?: Array<number>
+}
+
 export type Slug = {
   _type: 'slug'
   current: string
@@ -902,14 +939,6 @@ export type HslaColor = {
   s?: number
   l?: number
   a?: number
-}
-
-export type Code = {
-  _type: 'code'
-  language?: string
-  filename?: string
-  code?: string
-  highlightedLines?: Array<number>
 }
 
 export type SanityImagePaletteSwatch = {
@@ -1010,12 +1039,15 @@ export type Geopoint = {
 }
 
 export type AllSanitySchemaTypes =
+  | ChartConfig
   | AudioCover
   | AudioCoverCrop
   | SanityImageAssetReference
   | Image1
   | ImageDark
   | ArticlePreview
+  | ArticleTheme
+  | InlineEditor
   | Caption
   | ArticleReference
   | ArticleCollectionReference
@@ -1031,6 +1063,8 @@ export type AllSanitySchemaTypes =
   | BlockQuote
   | InfoBox
   | Button
+  | SeriesNav
+  | StoryComponent
   | DynamicComponent
   | Html
   | EmbedDataWrapper
@@ -1038,7 +1072,6 @@ export type AllSanitySchemaTypes =
   | EmbedVideo
   | Chart
   | Divider
-  | CodeBlock
   | ImageGroup
   | GroupedEditorialImage
   | EditorialImage
@@ -1050,23 +1083,21 @@ export type AllSanitySchemaTypes =
   | DiscussionReference
   | NewsletterReference
   | PodcastReference
-  | PageThemeReference
   | Article
   | SanityImageCrop
   | SanityImageHotspot
-  | PageTheme
   | Color
   | Podcast
   | Newsletter
   | ArticleCollection
   | Discussion
   | Contributor
+  | Code
   | Slug
   | MediaTag
   | RgbaColor
   | HsvaColor
   | HslaColor
-  | Code
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -1104,7 +1135,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
               _key: string
             }
         >
-        style?: 'h1' | 'h2' | 'h3' | 'h4' | 'h6' | 'normal' | 'note'
+        style?: 'h1' | 'h2' | 'normal' | 'note'
         listItem?: 'bullet' | 'number'
         markDefs: Array<
           | {
@@ -1160,14 +1191,11 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'chart'
-        data?: string
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'codeBlock'
-        language?: string
-        code?: string
+        title?: InlineEditor
+        lead?: InlineEditor
+        chartConfig?: ChartConfig
+        source?: InlineEditor
+        size?: 'BREAKOUT' | 'FLOAT_TINY' | 'NARROW' | 'NORMAL'
         markDefs: null
       }
     | {
@@ -1179,9 +1207,12 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'dynamicComponent'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
         src?: string
-        props?: string
+        identifier?: string
+        props?: Code
         autoHtml?: boolean
+        html?: Code
         markDefs: null
       }
     | {
@@ -1191,7 +1222,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
         imageDark?: ImageDark
         alt?: string
         caption?: Caption
-        size?: 'FULL' | 'LARGE' | 'NORMAL'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
         markDefs: null
       }
     | {
@@ -1234,7 +1265,10 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'embedDataWrapper'
-        data?: string
+        datawrapperId?: string
+        forceDark?: boolean
+        plain?: boolean
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
         markDefs: null
       }
     | {
@@ -1269,9 +1303,6 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
           | ({
               _key: string
             } & Chart)
-          | ({
-              _key: string
-            } & CodeBlock)
           | ({
               _key: string
             } & Divider)
@@ -1344,9 +1375,6 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
             } & Chart)
           | ({
               _key: string
-            } & CodeBlock)
-          | ({
-              _key: string
             } & Divider)
           | ({
               _key: string
@@ -1410,7 +1438,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
           } & GroupedEditorialImage
         >
         caption?: Caption
-        size?: 'LARGE' | 'NARROW' | 'NORMAL'
+        size?: 'BREAKOUT' | 'NARROW' | 'NORMAL'
         markDefs: null
       }
     | {
@@ -1496,6 +1524,21 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
       }
     | {
         _key: string
+        _type: 'seriesNav'
+        series?: ArticleCollectionReference
+        markDefs: null
+      }
+    | {
+        _key: string
+        _type: 'storyComponent'
+        url?: string
+        tagname?: string
+        componentData?: Code
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+        markDefs: null
+      }
+    | {
+        _key: string
         _type: 'webOnly'
         body?: Array<
           | ({
@@ -1577,10 +1620,7 @@ export type ARTICLE_QUERY_RESULT = {
     } | null
     name: string
   } | null
-  theme: {
-    darkMode: boolean | null
-    color: Color | null
-  } | null
+  theme: null
   contributors: Array<{
     _id: null
     kind: string | null
@@ -1601,9 +1641,7 @@ export type ARTICLE_QUERY_RESULT = {
     description: string | null
     slug: Slug
     collection: string | null
-    theme: {
-      color: Color | null
-    } | null
+    theme: null
     contributors: Array<{
       kind: string | null
       name: string | null
