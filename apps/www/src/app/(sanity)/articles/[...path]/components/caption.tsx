@@ -35,7 +35,7 @@ export function Caption({
   size = 'NORMAL',
   className,
 }: {
-  caption?: Caption
+  caption: Caption
   size?: string
   className?: string
 }) {

@@ -50,7 +50,7 @@ export function ImageGroup({ value }) {
           <EditorialImage value={{ ...img, size: 'GROUP' }} key={img._key} />
         )
       })}
-      <Caption caption={caption} className={groupCaptionStyle} />
+      {caption && <Caption caption={caption} className={groupCaptionStyle} />}
     </figure>
   )
 }

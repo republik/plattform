@@ -47,7 +47,7 @@ export function BlockQuote({ value }) {
           }}
         />
       </div>
-      <Caption caption={caption} />
+      {caption && <Caption caption={caption} />}
     </div>
   )
 }

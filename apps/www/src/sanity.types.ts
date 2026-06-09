@@ -1587,7 +1587,7 @@ export type ARTICLE_SEO_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
 // Variable: ARTICLE_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    seo {      title,      description    },    articleCollection->{      title,      description,      image    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme->{      darkMode,      color    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    articleRecommendations[]->{      _id,      title,      description,      slug,      "collection": articleCollection->title,      theme->{        color      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
+// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    seo {      title,      description    },    articleCollection->{      title,      description,      image    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      darkMode,      color    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    articleRecommendations[]->{      _id,      title,      description,      slug,      "collection": articleCollection->title,      theme {        color      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
 export type ARTICLE_QUERY_RESULT = {
   _id: string
   title: string | null
@@ -1620,7 +1620,10 @@ export type ARTICLE_QUERY_RESULT = {
     } | null
     name: string
   } | null
-  theme: null
+  theme: {
+    darkMode: boolean | null
+    color: Color | null
+  } | null
   contributors: Array<{
     _id: null
     kind: string | null
@@ -1641,7 +1644,9 @@ export type ARTICLE_QUERY_RESULT = {
     description: string | null
     slug: Slug
     collection: string | null
-    theme: null
+    theme: {
+      color: Color | null
+    } | null
     contributors: Array<{
       kind: string | null
       name: string | null
@@ -1663,7 +1668,7 @@ declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    content[]{\n        ...,\n        markDefs[]{\n          ...,\n          _type == "internalLink" => {\n            "slug": @.reference->slug\n          }\n        }\n    }\n  }': ARTICLE_CONTENT_QUERY_RESULT
     '*[_type == "article" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, title),\n    "description": coalesce(seo.description, description)\n  }': ARTICLE_SEO_QUERY_RESULT
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    seo {\n      title,\n      description\n    },\n    articleCollection->{\n      title,\n      description,\n      image\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme->{\n      darkMode,\n      color\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      "collection": articleCollection->title,\n      theme->{\n        color\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
+    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    seo {\n      title,\n      description\n    },\n    articleCollection->{\n      title,\n      description,\n      image\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      darkMode,\n      color\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      "collection": articleCollection->title,\n      theme {\n        color\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
   }
 }

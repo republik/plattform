@@ -1,4 +1,4 @@
-import type { ARTICLE_QUERY_RESULT } from '../../../../sanity/__generated__/types'
+import type { ARTICLE_QUERY_RESULT } from '@/sanity.types'
 
 export type Article = NonNullable<ARTICLE_QUERY_RESULT>
 

@@ -60,7 +60,7 @@ const ARTICLE_QUERY = defineQuery(
       image,
       name,
     },
-    theme->{
+    theme {
       darkMode,
       color
     },
@@ -78,7 +78,7 @@ const ARTICLE_QUERY = defineQuery(
       description,
       slug,
       "collection": articleCollection->title,
-      theme->{
+      theme {
         color
       },
       contributors[]{

@@ -46,7 +46,7 @@ export function EditorialImage({ value }) {
       ) : (
         <img className={image} src={src} alt={alt ?? ''} />
       )}
-      <Caption caption={caption} size={size} />
+      {caption && <Caption caption={caption} size={size} />}
     </figure>
   )
 }
