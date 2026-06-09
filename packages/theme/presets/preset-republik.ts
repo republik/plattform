@@ -1,5 +1,6 @@
 import { definePreset } from '@pandacss/dev'
 import { buttonRecipe } from '../src/recipes/button'
+import { editorialContentRecipe } from '../src/recipes/editorial-content'
 
 export const presetRepublik = definePreset({
   name: 'republik',
@@ -69,6 +70,9 @@ export const presetRepublik = definePreset({
           20: { value: '5rem' },
           24: { value: '6rem' },
           32: { value: '8rem' },
+          40: { value: '10rem' },
+          48: { value: '12rem' },
+          64: { value: '16rem' },
         },
         radii: {
           full: { value: '9999px' },
@@ -576,6 +580,7 @@ export const presetRepublik = definePreset({
 
     recipes: {
       button: buttonRecipe,
+      editorialContent: editorialContentRecipe,
     },
 
     keyframes: {

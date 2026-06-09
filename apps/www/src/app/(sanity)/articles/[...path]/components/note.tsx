@@ -1,6 +1,5 @@
 import { css } from '@republik/theme/css'
 import { ReactNode } from 'react'
-import { editorialWidthAttrs } from '../styles'
 
 export function Note({ children }: { children?: ReactNode }) {
   return (
@@ -11,7 +10,6 @@ export function Note({ children }: { children?: ReactNode }) {
         md: {
           fontSize: 's',
         },
-        ...editorialWidthAttrs,
       })}
     >
       {children}

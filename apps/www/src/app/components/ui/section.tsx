@@ -1,4 +1,5 @@
 import { css, cx } from '@republik/theme/css'
+import { editorialContent } from '@republik/theme/recipes'
 import { ReactNode } from 'react'
 
 export function SectionH3({ children }: { children: ReactNode }) {
@@ -38,18 +39,6 @@ export const ArticleSection = ({
   className,
 }: ArticleSectionProps) => {
   return (
-    <section
-      className={cx(
-        css({
-          margin: '0 auto',
-          maxWidth: 'editorial',
-          pl: '15px',
-          pr: '15px',
-        }),
-        className,
-      )}
-    >
-      {children}
-    </section>
+    <section className={cx(editorialContent(), className)}>{children}</section>
   )
 }

@@ -1,4 +1,3 @@
-import { editorialWidthAttrs } from '@/app/(sanity)/articles/[...path]/styles'
 import { css, cx } from '@republik/theme/css'
 import { stegaClean } from 'next-sanity'
 import { AsideImage } from './aside-image'
@@ -26,7 +25,7 @@ export function PullQuote({ value }) {
   return (
     <aside
       className={cx(
-        css({ ...editorialWidthAttrs, margin: '30px auto' }),
+        css({ margin: '30px auto' }),
         hasImage &&
           css({
             display: 'grid',

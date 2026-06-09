@@ -1,5 +1,4 @@
 import { Caption } from '@/app/(sanity)/articles/[...path]/components/caption'
-import { editorialWidthAttrs } from '@/app/(sanity)/articles/[...path]/styles'
 import { css } from '@republik/theme/css'
 import { PortableText } from 'next-sanity'
 import { ReactNode } from 'react'
@@ -37,7 +36,7 @@ export function BlockQuote({ value }) {
   const { body, caption } = value
 
   return (
-    <div className={css({ ...editorialWidthAttrs, margin: '30px auto' })}>
+    <div className={css({})}>
       <div className={containerStyle}>
         <PortableText
           value={body}

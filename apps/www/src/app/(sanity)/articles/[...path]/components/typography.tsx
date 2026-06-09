@@ -1,4 +1,3 @@
-import { editorialWidthAttrs } from '@/app/(sanity)/articles/[...path]/styles'
 import { css } from '@republik/theme/css'
 import { ReactNode } from 'react'
 
@@ -7,17 +6,7 @@ export const EditorialParagraph = function ({
 }: {
   children?: ReactNode
 }) {
-  return (
-    <p
-      className={css({
-        ...editorialWidthAttrs,
-        textStyle: 'editorialParagraph',
-        my: '8',
-      })}
-    >
-      {children}
-    </p>
-  )
+  return <p>{children}</p>
 }
 
 export const EditorialSubhead = function ({
@@ -28,7 +17,6 @@ export const EditorialSubhead = function ({
   return (
     <h2
       className={css({
-        ...editorialWidthAttrs,
         textStyle: 'editorialH2',
         mt: '36px',
         mb: '8px',

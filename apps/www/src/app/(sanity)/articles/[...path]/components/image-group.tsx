@@ -1,18 +1,13 @@
 import { Caption } from '@/app/(sanity)/articles/[...path]/components/caption'
 import { EditorialImage } from '@/app/(sanity)/articles/[...path]/components/editorial-image'
-import { editorialWidthAttrs } from '@/app/(sanity)/articles/[...path]/styles'
 import { css, cx } from '@republik/theme/css'
 
 const sizeStyles = {
   NARROW: css({
-    ...editorialWidthAttrs,
     maxWidth: 'narrow',
   }),
-  NORMAL: css({
-    ...editorialWidthAttrs,
-  }),
+  NORMAL: css({}),
   LARGE: css({
-    ...editorialWidthAttrs,
     maxWidth: 'large',
   }),
 }

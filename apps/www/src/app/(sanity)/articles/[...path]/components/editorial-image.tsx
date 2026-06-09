@@ -1,4 +1,3 @@
-import { editorialWidthAttrs } from '@/app/(sanity)/articles/[...path]/styles'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 // import type { EditorialImage as EditorialImageType } from '@/sanity/__generated__/types'
 import { css, cx } from '@republik/theme/css'
@@ -9,11 +8,8 @@ const figure = css({
 })
 
 const sizeStyles = {
-  NORMAL: css({
-    ...editorialWidthAttrs,
-  }),
+  NORMAL: css({}),
   LARGE: css({
-    ...editorialWidthAttrs,
     maxWidth: 'large',
   }),
   FULL: css({

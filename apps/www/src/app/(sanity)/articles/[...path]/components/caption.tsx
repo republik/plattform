@@ -1,4 +1,5 @@
 import { css, cx } from '@republik/theme/css'
+import { PortableText, PortableTextProps } from 'next-sanity'
 
 const legendStyle = css({
   margin: '5px auto 0 auto',
@@ -29,26 +30,31 @@ const captionSizeStyles = {
 }
 
 export function Caption({
-                          caption = {},
-                          size = 'NORMAL',
-                          className,
-                        }: {
+  caption = {},
+  size = 'NORMAL',
+  className,
+}: {
   caption?: {
-    legend?: string
-    credit?: string
+    legend?: PortableTextProps<any>
+    credit?: PortableTextProps<any>
   }
   size?: string
   className?: string
 }) {
   const { legend, credit } = caption
+
   if (!legend && !credit) return null
   return (
     (legend || credit) && (
       <figcaption
         className={cx(legendStyle, className, captionSizeStyles[size])}
       >
-        {legend}
-        {credit && <span className={creditStyle}>{credit}</span>}
+        <PortableText value={legend} />
+        {credit && (
+          <span className={creditStyle}>
+            <PortableText value={credit} />
+          </span>
+        )}
       </figcaption>
     )
   )

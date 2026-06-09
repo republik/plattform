@@ -1,4 +1,3 @@
-import { editorialWidthAttrs } from '@/app/(sanity)/articles/[...path]/styles'
 import { css, cx } from '@republik/theme/css'
 import { PortableText } from 'next-sanity'
 import { AsideImage } from './aside-image'
@@ -13,7 +12,6 @@ export function InfoBox({ value }) {
       className={cx(
         css({
           py: '4',
-          ...editorialWidthAttrs,
         }),
         hasImage &&
           css({

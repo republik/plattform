@@ -44,11 +44,18 @@ export async function ArticleContent({ slug }: { slug: string }) {
     <PortableText
       value={article.content}
       components={{
-        unknownType: ({ value }) => (
-          <div style={{ background: 'hotpink', padding: 30 }}>
+        unknownType: ({ value, isInline }) => (
+          <span
+            style={
+              isInline
+                ? { background: 'hotpink' }
+                : { background: 'hotpink', display: 'block', padding: 30 }
+            }
+          >
             {JSON.stringify(value)}
-          </div>
+          </span>
         ),
+
         types: {
           blockQuote: BlockQuote,
           pullQuote: PullQuote,
@@ -57,7 +64,7 @@ export async function ArticleContent({ slug }: { slug: string }) {
           infoBox: InfoBox,
         },
         block: {
-          normal: EditorialParagraph,
+          // normal: EditorialParagraph,
           h2: EditorialSubhead,
           note: Note,
         },

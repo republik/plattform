@@ -11,6 +11,7 @@ import { Metadata } from 'next'
 import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation'
 import { ArticleContent } from './components/article-content'
+import { editorialContent } from '@republik/theme/recipes'
 
 const ARTICLE_SEO_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -105,64 +106,56 @@ export default async function PostPage({
   return (
     <EventTrackingContext category='Article'>
       <ArticleTheme theme={article.theme} />
-      <article>
+      <article className={editorialContent()}>
         {/* TITLE BLOCK */}
-        <ArticleSection>
-          {article.articleCollection && (
-            <p
-              className={css({
-                textStyle: 'editorialCollection',
-                mb: '-6',
-                mt: '8',
-              })}
-              style={{ color: 'var(--page-theme-accent-color)' }}
-            >
-              {article.articleCollection.title}
-            </p>
-          )}
-          <h1 className={css({ textStyle: 'editorialTitle', mt: '12' })}>
-            {article.title}
-          </h1>
-          <h3 className={css({ textStyle: 'editorialLead', mt: '4' })}>
-            {article.description}
-          </h3>
+        {article.articleCollection && (
           <p
             className={css({
-              textStyle: 'editorialByline',
-              mt: '4',
-              '& a': { textDecoration: 'underline' },
+              textStyle: 'editorialCollection',
+              mb: '-6',
+              mt: '8',
             })}
+            style={{ color: 'var(--page-theme-accent-color)' }}
           >
-            <Byline contributors={article.contributors} />
+            {article.articleCollection.title}
           </p>
-
-          <div className={css({ mt: '4' })}>
-            <EditLink _id={article._id} />
-          </div>
-        </ArticleSection>
-
-        <div
+        )}
+        <h1
           className={css({
+            textStyle: 'editorialTitle',
             mt: '12',
-            mb: '20',
           })}
         >
-          <ArticleContent slug={slug} />
+          {article.title}
+        </h1>
+        <h3 className={css({ textStyle: 'editorialLead', mt: '4' })}>
+          {article.description}
+        </h3>
+        <p
+          className={css({
+            textStyle: 'editorialByline',
+            mt: '4',
+            '& a': { textDecoration: 'underline' },
+          })}
+        >
+          <Byline contributors={article.contributors} />
+        </p>
+
+        <div className={css({ mt: '4' })}>
+          <EditLink _id={article._id} />
         </div>
 
-        <ArticleSection>
-          <FollowArticle
-            contributors={article.contributors}
-            collection={article.articleCollection}
-            newsletter={article.newsletter}
-          />
-        </ArticleSection>
+        <ArticleContent slug={slug} />
 
-        <ArticleSection>
-          <ArticleRecommendations
-            recommendations={article.articleRecommendations}
-          />
-        </ArticleSection>
+        <FollowArticle
+          contributors={article.contributors}
+          collection={article.articleCollection}
+          newsletter={article.newsletter}
+        />
+
+        <ArticleRecommendations
+          recommendations={article.articleRecommendations}
+        />
       </article>
     </EventTrackingContext>
   )
