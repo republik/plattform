@@ -6,17 +6,18 @@ export const editorialContentRecipe = defineRecipe({
 
   base: {
     display: 'grid',
-    rowGap: '4',
     gridTemplateColumns: `
-    [full-start] minmax(token(spacing.4), 1fr)
-
-      [breakout-start] minmax(0, token(spacing.40))
-
-        [content-start] token(sizes.editorial) [content-end]
-
-      minmax(0, token(spacing.40)) [breakout-end]
-
-    minmax(token(spacing.4), 1fr) [full-end]
+    [full-start]
+      minmax(token(spacing.4), 1fr)
+      [breakout-start]
+        minmax(0, token(spacing.40))
+        [content-start]
+          min(token(sizes.editorial), calc(100% - token(spacing.8)))
+        [content-end]
+        minmax(0, token(spacing.40))
+      [breakout-end]
+      minmax(token(spacing.4), 1fr)
+    [full-end]
     `,
 
     '& > *': {
@@ -41,6 +42,17 @@ export const editorialContentRecipe = defineRecipe({
       editorial: {
         '& > p': {
           textStyle: 'editorialParagraph',
+          mb: '8',
+        },
+
+        '& > h2': {
+          textStyle: 'editorialH2',
+          mt: '8',
+          mb: '2',
+          md: {
+            mt: '16',
+            mb: '3',
+          },
         },
       },
       meta: {},
