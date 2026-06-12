@@ -188,21 +188,32 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
   return grant
 }
 
-const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
-  const sanatizedVoucherCode = voucherCode.trim().toUpperCase()
+/**
+ * Applies a begun grant's side-effects: perks, member role, newsletter
+ * subscriptions and onboarding/claim notice emails. Runs inline on
+ * claim/request, or via scheduler once beginAt is reached for campaigns
+ * with a grantBeginInterval. Guarded by accessGrants.activatedAt.
+ */
+const activateGrant = async (grant, t, pgdb, redis, mail) => {
+  const now = moment()
+  const updated = await pgdb.public.accessGrants.update(
+    { id: grant.id, activatedAt: null },
+    { activatedAt: now, updatedAt: now },
+  )
 
-  const grantByVoucherCode = await findByVoucherCode(sanatizedVoucherCode, {
-    pgdb,
-  })
-
-  if (!grantByVoucherCode) {
-    throw new Error(t('api/access/claim/404'))
+  if (updated < 1) {
+    debug('activateGrant, already activated', { id: grant.id })
+    return false
   }
 
-  const grant = await beginGrant(grantByVoucherCode, payload, user, pgdb)
-  await eventsLib.log(grant, 'grant', pgdb)
-
-  const { granter, recipient, campaign } = grant
+  const campaign =
+    grant.campaign || (await campaignsLib.findOne(grant.accessCampaignId, pgdb))
+  const granter =
+    grant.granter ||
+    (await pgdb.public.users.findOne({ id: grant.granterUserId }))
+  const recipient =
+    grant.recipient ||
+    (await pgdb.public.users.findOne({ id: grant.recipientUserId }))
 
   const perks = await grantPerks(
     grant,
@@ -218,10 +229,12 @@ const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
 
     await Promise.map(perks, (perk) => {
       if (perk) {
-        const { name, ...other } = perk
+        const { name, eventLogExtend, ...other } = perk
         grant.perks[perk.name] = other
 
-        eventsLib.log(grant, `perk.${name}`, pgdb)
+        const event = `perk.${name}${eventLogExtend || ''}`
+
+        eventsLib.log(grant, event, pgdb)
       }
     })
   }
@@ -268,6 +281,35 @@ const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
     t,
     pgdb,
   )
+
+  debug('activateGrant', { id: grant.id })
+
+  return true
+}
+
+const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
+  const sanatizedVoucherCode = voucherCode.trim().toUpperCase()
+
+  const grantByVoucherCode = await findByVoucherCode(sanatizedVoucherCode, {
+    pgdb,
+  })
+
+  if (!grantByVoucherCode) {
+    throw new Error(t('api/access/claim/404'))
+  }
+
+  const grant = await beginGrant(grantByVoucherCode, payload, user, pgdb)
+  await eventsLib.log(grant, 'grant', pgdb)
+
+  if (moment(grant.beginAt).isAfter(moment())) {
+    // campaign has a grantBeginInterval; scheduler activates at beginAt
+    debug('claim, activation deferred', {
+      id: grant.id,
+      beginAt: grant.beginAt,
+    })
+  } else {
+    await activateGrant(grant, t, pgdb, redis, mail)
+  }
 
   debug('grant', { grant })
 
@@ -342,61 +384,30 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
 
   await eventsLib.log(grant, 'request', pgdb)
 
-  const perks = await grantPerks(grant, granter, campaign, t, pgdb, redis, mail)
-  if (perks.length > 0) {
-    grant.perks = {}
-
-    await Promise.map(perks, (perk) => {
-      if (perk) {
-        const { name, eventLogExtend, ...other } = perk
-        grant.perks[perk.name] = other
-
-        const event = `perk.${name}${eventLogExtend || ''}`
-
-        eventsLib.log(grant, event, pgdb)
-      }
+  if (campaign.grantBeginInterval) {
+    // activation (perks, member role, onboarding email) is deferred to the
+    // scheduler once beginAt is reached
+    debug('request, activation deferred', {
+      id: grant.id,
+      beginAt: grant.beginAt,
     })
+
+    const { enabled: confirmationEnabled = false } =
+      mailLib.getConfigEmails('recipient', 'confirmation', campaign) || {}
+
+    if (confirmationEnabled) {
+      await mailLib.sendRecipientConfirmation(
+        granter,
+        campaign,
+        granter,
+        grant,
+        t,
+        pgdb,
+      )
+    }
+  } else {
+    await activateGrant(grant, t, pgdb, redis, mail)
   }
-
-  const hasAddedMemberRole = await membershipsLib.addMemberRole(
-    grant,
-    granter,
-    pgdb,
-  )
-
-  const subscribeToEditorialNewsletters =
-    campaign.config?.subscribeToEditorialNewsletters ||
-    perks.some(({ settings }) => !!settings.subscribeToEditorialNewsletters) ||
-    hasAddedMemberRole
-
-  await mail.enforceSubscriptions({
-    userId: grant.granter.id,
-    pgdb,
-    subscribeToEditorialNewsletters,
-  })
-
-  const { enabled: onboardingEnabled = false } =
-    mailLib.getConfigEmails('recipient', 'onboarding', campaign) || {}
-
-  if (!(await hasUserActiveMembership(granter, pgdb)) || !!onboardingEnabled) {
-    await mailLib.sendRecipientOnboarding(
-      granter,
-      campaign,
-      granter,
-      grant,
-      t,
-      pgdb,
-    )
-  }
-
-  await mailLib.sendGranterClaimNotice(
-    granter,
-    campaign,
-    granter,
-    grant,
-    t,
-    pgdb,
-  )
 
   return grant
 }
@@ -489,7 +500,11 @@ const invalidate = async (grant, reason, t, pgdb, mail, requestUserId) => {
         })
       }
 
-      if (!(await hasUserActiveMembership(recipient, pgdb)) && sendMail) {
+      if (
+        !!grant.activatedAt &&
+        !(await hasUserActiveMembership(recipient, pgdb)) &&
+        sendMail
+      ) {
         const granter = await pgdb.public.users.findOne({
           id: grant.granterUserId,
         })
@@ -680,6 +695,31 @@ const findUnassignedByEmail = async (email, pgdb) => {
   })
 }
 
+const findUnactivated = async (pgdb) => {
+  debug('findUnactivated')
+  return pgdb.public.accessGrants.find({
+    'beginAt <=': moment(),
+    activatedAt: null,
+    'recipientUserId !=': null,
+    invalidatedAt: null,
+    revokedAt: null,
+  })
+}
+
+const findPendingByRecipient = async (recipient, { pgdb }) => {
+  debug('findPendingByRecipient', { recipient: recipient.id })
+
+  return pgdb.public.accessGrants.find(
+    {
+      recipientUserId: recipient.id,
+      'beginAt >': moment(),
+      invalidatedAt: null,
+      revokedAt: null,
+    },
+    { orderBy: { createdAt: 'desc' } },
+  )
+}
+
 const findInvalid = async (pgdb) => {
   debug('findInvalid')
   const now = moment()
@@ -699,8 +739,10 @@ const beginGrant = async (grant, payload, recipient, pgdb) => {
   ])
 
   const now = moment()
-  const beginAt = now.clone()
-  const endAt = addInterval(beginAt, campaign.grantPeriodInterval)
+  const beginAt = campaign.grantBeginInterval
+    ? addInterval(now.clone(), campaign.grantBeginInterval)
+    : now.clone()
+  const endAt = addInterval(beginAt.clone(), campaign.grantPeriodInterval)
 
   const updateFields = {
     recipientUserId: recipient.id,
@@ -774,6 +816,7 @@ module.exports = {
   grant,
   claim,
   request,
+  activateGrant,
   revoke,
   recommendations,
   invalidate,
@@ -786,6 +829,8 @@ module.exports = {
   regwallTrialStatus,
 
   findUnassignedByEmail,
+  findUnactivated,
+  findPendingByRecipient,
   findInvalid,
   findEmptyRecommendations,
   findEmptyFollowup,

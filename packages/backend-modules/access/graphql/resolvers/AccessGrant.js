@@ -72,6 +72,10 @@ module.exports = {
       return t('api/access/resolvers/AccessGrant/status/unclaimed')
     }
 
+    if (grant.beginAt && new Date(grant.beginAt) > new Date()) {
+      return t('api/access/resolvers/AccessGrant/status/pending')
+    }
+
     return t('api/access/resolvers/AccessGrant/status/valid')
   },
   events: (grant, args, { user: me, pgdb }) => {
