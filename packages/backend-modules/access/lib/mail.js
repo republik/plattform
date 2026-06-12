@@ -69,23 +69,6 @@ const sendRecipientOnboarding = async (
     pgdb,
   })
 
-const sendRecipientConfirmation = async (
-  granter,
-  campaign,
-  recipient,
-  grant,
-  t,
-  pgdb,
-) =>
-  sendMail(recipient.email, 'recipient', 'confirmation', {
-    granter,
-    recipient,
-    campaign,
-    grant,
-    t,
-    pgdb,
-  })
-
 const sendRecipientInReview = async (
   granter,
   campaign,
@@ -376,9 +359,6 @@ module.exports = {
 
   // Onboarding
   sendRecipientOnboarding,
-
-  // Confirmation when access begins later (campaign.grantBeginInterval)
-  sendRecipientConfirmation,
 
   // Notice that a request is being reviewed (campaign.grantBeginInterval)
   sendRecipientInReview,

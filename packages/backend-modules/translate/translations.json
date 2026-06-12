@@ -1405,10 +1405,6 @@
       "value": "Willkommen an Bord"
     },
     {
-      "key": "api/access/email/recipient/confirmation/subject",
-      "value": "Ihr Republik-Zugang startet in Kürze"
-    },
-    {
       "key": "api/access/email/recipient/in_review/subject",
       "value": "Ihre Anfrage wird geprüft"
     },

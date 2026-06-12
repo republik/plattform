@@ -392,20 +392,6 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
       beginAt: grant.beginAt,
     })
 
-    const { enabled: confirmationEnabled = false } =
-      mailLib.getConfigEmails('recipient', 'confirmation', campaign) || {}
-
-    if (confirmationEnabled) {
-      await mailLib.sendRecipientConfirmation(
-        granter,
-        campaign,
-        granter,
-        grant,
-        t,
-        pgdb,
-      )
-    }
-
     const { enabled: inReviewEnabled = false } =
       mailLib.getConfigEmails('recipient', 'in_review', campaign) || {}
 
