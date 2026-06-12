@@ -405,6 +405,20 @@ const request = async (granter, campaignId, payload, t, pgdb, redis, mail) => {
         pgdb,
       )
     }
+
+    const { enabled: inReviewEnabled = false } =
+      mailLib.getConfigEmails('recipient', 'in_review', campaign) || {}
+
+    if (inReviewEnabled) {
+      await mailLib.sendRecipientInReview(
+        granter,
+        campaign,
+        granter,
+        grant,
+        t,
+        pgdb,
+      )
+    }
   } else {
     await activateGrant(grant, t, pgdb, redis, mail)
   }
