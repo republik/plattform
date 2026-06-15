@@ -1,6 +1,6 @@
 import { Caption } from '@/app/(sanity)/articles/[...path]/components/caption'
 import { css } from '@republik/theme/css'
-import { PortableText } from 'next-sanity'
+import { PortableText, PortableTextReactComponents } from 'next-sanity'
 import { ReactNode } from 'react'
 
 const containerStyle = css({
@@ -26,8 +26,12 @@ const quoteParagraph = css({
   },
 })
 
-function QuoteP({ children }: { children?: ReactNode }) {
-  return <p className={quoteParagraph}>{children}</p>
+const ptComponents: Partial<PortableTextReactComponents> = {
+  block: {
+    normal({ children }: { children?: ReactNode }) {
+      return <p className={quoteParagraph}>{children}</p>
+    },
+  },
 }
 
 // TODO: quid list support??
@@ -38,14 +42,7 @@ export function BlockQuote({ value }) {
   return (
     <div className={css({})}>
       <div className={containerStyle}>
-        <PortableText
-          value={body}
-          components={{
-            block: {
-              normal: QuoteP,
-            },
-          }}
-        />
+        <PortableText value={body} components={ptComponents} />
       </div>
       {caption && <Caption caption={caption} />}
     </div>

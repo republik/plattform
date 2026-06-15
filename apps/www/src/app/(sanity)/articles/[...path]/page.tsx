@@ -2,21 +2,21 @@ import { ArticleTheme } from '@/app/(sanity)/articles/[...path]/components/artic
 import { Byline } from '@/app/(sanity)/articles/[...path]/components/byline'
 import { EditLink } from '@/app/(sanity)/articles/[...path]/components/edit-link'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
+import { InlinePortableText } from '@/app/(sanity)/components/inline-portable-text'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
-import { ArticleSection } from '@/app/components/ui/section'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
+import { editorialContent } from '@republik/theme/recipes'
 import { Metadata } from 'next'
 import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation'
 import { ArticleContent } from './components/article-content'
-import { editorialContent } from '@republik/theme/recipes'
 
 const ARTICLE_SEO_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
-    "title": coalesce(seo.title, title),
-    "description": coalesce(seo.description, description)
+    "title": coalesce(seo.title, pt::text(title)),
+    "description": coalesce(seo.description, pt::text(description))
   }`,
 )
 
@@ -126,10 +126,10 @@ export default async function PostPage({
             mt: '12',
           })}
         >
-          {article.title}
+          <InlinePortableText value={article.title} />
         </h1>
         <h3 className={css({ textStyle: 'editorialLead', mt: '4' })}>
-          {article.description}
+          <InlinePortableText value={article.description} />
         </h3>
         <p
           className={css({

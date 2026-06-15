@@ -1,5 +1,6 @@
-import { defineQuery } from 'next-sanity'
+import { InlinePortableText } from '@/app/(sanity)/components/inline-portable-text'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { defineQuery } from 'next-sanity'
 import Link from 'next/link'
 
 const ARTICLES_QUERY = defineQuery(`
@@ -18,7 +19,9 @@ export default async function FeedPage() {
       {articles?.map((article) => (
         <div key={article.slug}>
           <h2>
-            <Link href={`/articles/${article.slug}`}>{article.title}</Link>
+            <Link href={`/articles/${article.slug}`}>
+              <InlinePortableText value={article.title} />
+            </Link>
           </h2>
         </div>
       ))}

@@ -10,6 +10,7 @@ import {
   defineQuery,
   PortableText,
   PortableTextComponentProps,
+  PortableTextReactComponents,
   UnknownNodeType,
 } from 'next-sanity'
 import Link from 'next/link'
@@ -57,6 +58,49 @@ function UnknownType({
   )
 }
 
+const ptComponents: Partial<PortableTextReactComponents> = {
+  unknownType: UnknownType,
+
+  types: {
+    blockQuote: BlockQuote,
+    pullQuote: PullQuote,
+    editorialImage: EditorialImage,
+    imageGroup: ImageGroup,
+    infoBox: InfoBox,
+  },
+  block: {
+    // normal: EditorialParagraph,
+    // h2: EditorialSubhead,
+    note: Note,
+  },
+  marks: {
+    strong: Strong,
+    em: Em,
+    sub: Sub,
+    sup: Sup,
+    link: ({ text, value }) => (
+      <a
+        href={value.href}
+        target='_blank'
+        rel='noreferrer'
+        className={linkStyle}
+      >
+        {text}
+      </a>
+    ),
+    internalLink: ({ text, value }) => {
+      const href = value.slug?.current
+      return href ? (
+        <Link href={href} className={linkStyle}>
+          {text}
+        </Link>
+      ) : (
+        text
+      )
+    },
+  },
+}
+
 export async function ArticleContent({ slug }: { slug: string }) {
   const { data: article } = await sanityFetch({
     query: ARTICLE_CONTENT_QUERY,
@@ -65,51 +109,5 @@ export async function ArticleContent({ slug }: { slug: string }) {
 
   console.log('article', article.content)
 
-  return (
-    <PortableText
-      value={article.content}
-      components={{
-        unknownType: UnknownType,
-
-        types: {
-          blockQuote: BlockQuote,
-          pullQuote: PullQuote,
-          editorialImage: EditorialImage,
-          imageGroup: ImageGroup,
-          infoBox: InfoBox,
-        },
-        block: {
-          // normal: EditorialParagraph,
-          // h2: EditorialSubhead,
-          note: Note,
-        },
-        marks: {
-          strong: Strong,
-          em: Em,
-          sub: Sub,
-          sup: Sup,
-          link: ({ text, value }) => (
-            <a
-              href={value.href}
-              target='_blank'
-              rel='noreferrer'
-              className={linkStyle}
-            >
-              {text}
-            </a>
-          ),
-          internalLink: ({ text, value }) => {
-            const href = value.slug?.current
-            return href ? (
-              <Link href={href} className={linkStyle}>
-                {text}
-              </Link>
-            ) : (
-              text
-            )
-          },
-        },
-      }}
-    />
-  )
+  return <PortableText value={article.content} components={ptComponents} />
 }

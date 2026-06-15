@@ -1,9 +1,9 @@
 import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
+import { InlinePortableText } from '@/app/(sanity)/components/inline-portable-text'
 import type { ArticleRecommendation } from '@/app/(sanity)/lib/types'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
-import React from 'react'
 
 export function NextReadAuthor({
   article,
@@ -36,11 +36,7 @@ export function NextReadDuration({
   return <p className='duration'>{duration} min</p>
 }
 
-export function CategoryLabel({
-  article,
-}: {
-  article: ArticleRecommendation
-}) {
+export function CategoryLabel({ article }: { article: ArticleRecommendation }) {
   const label = article.collection
   if (!label) return null
 
@@ -70,7 +66,7 @@ export function NextReadLink({
         })
       }}
     >
-      {article.title}
+      <InlinePortableText value={article.title} />
     </Link>
   )
 }

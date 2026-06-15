@@ -3,8 +3,8 @@
 import type { ArticleRecommendation } from '@/app/(sanity)/lib/types'
 import { useTranslation } from '@/lib/withT'
 import { css, cx } from '@republik/theme/css'
-import React from 'react'
 // TODO: rename ./sanity-helpers to ./helpers once we are fully migrated
+import { InlinePortableText } from '@/app/(sanity)/components/inline-portable-text'
 import { CategoryLabel, NextReadAuthor, NextReadLink } from './helpers'
 import {
   nextReadHeader,
@@ -39,7 +39,9 @@ function RecommendedRead({
       <h4>
         <NextReadLink article={article} index={index} />
       </h4>
-      <p className='description'>{article.description}</p>
+      <p className='description'>
+        <InlinePortableText value={article.description} />
+      </p>
       <NextReadAuthor article={article} />
     </div>
   )
