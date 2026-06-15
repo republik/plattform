@@ -35,7 +35,15 @@ export function InfoBox({ value }) {
         >
           {title}
         </h3>
-        <PortableText value={body} />
+        <div
+          className={css({
+            textStyle: 'sans',
+            lineHeight: '1.5',
+            fontSize: { base: 's', md: 'xl' },
+          })}
+        >
+          <PortableText value={body} />
+        </div>
       </div>
     </div>
   )
