@@ -40,22 +40,6 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
 }
 
-export type Image1 = {
-  asset?: SanityImageAssetReference
-  media?: unknown
-  hotspot?: SanityImageHotspot
-  crop?: SanityImageCrop
-  _type: 'image'
-}
-
-export type ImageDark = {
-  asset?: SanityImageAssetReference
-  media?: unknown
-  hotspot?: SanityImageHotspot
-  crop?: SanityImageCrop
-  _type: 'image'
-}
-
 export type ArticlePreview = {
   _type: 'articlePreview'
   title?: string
@@ -69,12 +53,43 @@ export type ArticlePreview = {
   }
 }
 
-export type ArticleTheme = {
-  _type: 'articleTheme'
-  kind?: 'EDITORIAL' | 'META'
-  color?: Color
-  darkMode?: boolean
-}
+export type NestedEditor = Array<
+  | {
+      children?: Array<
+        | {
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }
+        | ({
+            _key: string
+          } & Variable)
+        | ({
+            _key: string
+          } & VoiceTag)
+      >
+      style?: 'normal' | 'heading'
+      listItem?: 'bullet' | 'number'
+      markDefs?: Array<
+        | ({
+            _key: string
+          } & Link)
+        | ({
+            _key: string
+          } & InternalLink)
+      >
+      level?: number
+      _type: 'block'
+      _key: string
+    }
+  | ({
+      _key: string
+    } & Divider)
+  | ({
+      _key: string
+    } & Button)
+>
 
 export type InlineEditor = Array<{
   children?: Array<{
@@ -98,10 +113,28 @@ export type InlineEditor = Array<{
   _key: string
 }>
 
+export type ArticleTheme = {
+  _type: 'articleTheme'
+  kind?: 'EDITORIAL' | 'META'
+  color?: Color
+  darkMode?: boolean
+}
+
 export type Caption = {
   _type: 'caption'
   legend?: InlineEditor
   credit?: InlineEditor
+}
+
+export type VoiceTag = {
+  _type: 'voiceTag'
+  voice:
+    | 'huebsch-01150-rpblk'
+    | 'huebsch-62964-rpblk'
+    | 'huebsch-714-109-rpblk'
+    | 'huebsch-82170-rpblk'
+    | 'huebsch-285-169-rpblk'
+    | 'huebsch-gen-female-e-rpblk'
 }
 
 export type ArticleReference = {
@@ -136,236 +169,23 @@ export type Variable = {
 export type IfNot = {
   _type: 'ifNot'
   present?: string
-  body?: Array<
-    | {
-        children?: Array<
-          | {
-              marks?: Array<string>
-              text?: string
-              _type: 'span'
-              _key: string
-            }
-          | ({
-              _key: string
-            } & Variable)
-        >
-        style?: 'normal' | 'h3'
-        listItem?: 'bullet' | 'number'
-        markDefs?: Array<
-          | ({
-              _key: string
-            } & Link)
-          | ({
-              _key: string
-            } & InternalLink)
-        >
-        level?: number
-        _type: 'block'
-        _key: string
-      }
-    | ({
-        _key: string
-      } & EditorialImage)
-    | ({
-        _key: string
-      } & InfoBox)
-    | ({
-        _key: string
-      } & BlockQuote)
-    | ({
-        _key: string
-      } & InterviewAnswer)
-    | ({
-        _key: string
-      } & Divider)
-    | ({
-        _key: string
-      } & Chart)
-    | ({
-        _key: string
-      } & EmbedVideo)
-    | ({
-        _key: string
-      } & EmbedTwitter)
-    | ({
-        _key: string
-      } & EmbedDataWrapper)
-    | ({
-        _key: string
-      } & Html)
-    | ({
-        _key: string
-      } & DynamicComponent)
-    | ({
-        _key: string
-      } & Button)
-  >
+  body?: NestedEditor
 }
 
 export type If = {
   _type: 'if'
   present?: string
-  body?: Array<
-    | {
-        children?: Array<
-          | {
-              marks?: Array<string>
-              text?: string
-              _type: 'span'
-              _key: string
-            }
-          | ({
-              _key: string
-            } & Variable)
-        >
-        style?: 'normal' | 'h3'
-        listItem?: 'bullet' | 'number'
-        markDefs?: Array<
-          | ({
-              _key: string
-            } & Link)
-          | ({
-              _key: string
-            } & InternalLink)
-        >
-        level?: number
-        _type: 'block'
-        _key: string
-      }
-    | ({
-        _key: string
-      } & EditorialImage)
-    | ({
-        _key: string
-      } & InfoBox)
-    | ({
-        _key: string
-      } & BlockQuote)
-    | ({
-        _key: string
-      } & InterviewAnswer)
-    | ({
-        _key: string
-      } & Divider)
-    | ({
-        _key: string
-      } & Chart)
-    | ({
-        _key: string
-      } & EmbedVideo)
-    | ({
-        _key: string
-      } & EmbedTwitter)
-    | ({
-        _key: string
-      } & EmbedDataWrapper)
-    | ({
-        _key: string
-      } & Html)
-    | ({
-        _key: string
-      } & DynamicComponent)
-    | ({
-        _key: string
-      } & Button)
-  >
+  body?: NestedEditor
 }
 
 export type EmailOnly = {
   _type: 'emailOnly'
-  body?: Array<
-    | {
-        children?: Array<{
-          marks?: Array<string>
-          text?: string
-          _type: 'span'
-          _key: string
-        }>
-        style?: 'normal' | 'h3'
-        listItem?: 'bullet' | 'number'
-        markDefs?: Array<
-          | ({
-              _key: string
-            } & Link)
-          | ({
-              _key: string
-            } & InternalLink)
-        >
-        level?: number
-        _type: 'block'
-        _key: string
-      }
-    | ({
-        _key: string
-      } & Divider)
-    | ({
-        _key: string
-      } & Html)
-    | ({
-        _key: string
-      } & Button)
-  >
+  body?: NestedEditor
 }
 
 export type WebOnly = {
   _type: 'webOnly'
-  body?: Array<
-    | {
-        children?: Array<{
-          marks?: Array<string>
-          text?: string
-          _type: 'span'
-          _key: string
-        }>
-        style?: 'normal' | 'h3'
-        listItem?: 'bullet' | 'number'
-        markDefs?: Array<
-          | ({
-              _key: string
-            } & Link)
-          | ({
-              _key: string
-            } & InternalLink)
-        >
-        level?: number
-        _type: 'block'
-        _key: string
-      }
-    | ({
-        _key: string
-      } & Divider)
-    | ({
-        _key: string
-      } & Html)
-    | ({
-        _key: string
-      } & Button)
-  >
-}
-
-export type InterviewAnswer = {
-  _type: 'interviewAnswer'
-  body?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<
-      | ({
-          _key: string
-        } & Link)
-      | ({
-          _key: string
-        } & InternalLink)
-    >
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
+  body?: NestedEditor
 }
 
 export type PullQuote = {
@@ -385,27 +205,7 @@ export type PullQuote = {
 
 export type BlockQuote = {
   _type: 'blockQuote'
-  body?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<
-      | ({
-          _key: string
-        } & Link)
-      | ({
-          _key: string
-        } & InternalLink)
-    >
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
+  body?: NestedEditor
   caption?: Caption
 }
 
@@ -420,27 +220,7 @@ export type InfoBox = {
     caption?: Caption
     _type: 'image'
   }
-  body?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal' | 'h3'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<
-      | ({
-          _key: string
-        } & Link)
-      | ({
-          _key: string
-        } & InternalLink)
-    >
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
+  body?: NestedEditor
   size?: 'float' | 'breakout'
   figureSize?: 'S' | 'M' | 'L'
   figureFloat?: boolean
@@ -526,16 +306,34 @@ export type ImageGroup = {
 
 export type GroupedEditorialImage = {
   _type: 'groupedEditorialImage'
-  image?: Image1
-  imageDark?: ImageDark
+  asset?: SanityImageAssetReference
+  media?: unknown
+  hotspot?: SanityImageHotspot
+  crop?: SanityImageCrop
+  imageDark?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
   alt?: string
   caption?: Caption
 }
 
 export type EditorialImage = {
   _type: 'editorialImage'
-  image?: Image1
-  imageDark?: ImageDark
+  asset?: SanityImageAssetReference
+  media?: unknown
+  hotspot?: SanityImageHotspot
+  crop?: SanityImageCrop
+  imageDark?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
   alt?: string
   caption?: Caption
   size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
@@ -591,20 +389,6 @@ export type Mdast = {
   content?: string
 }
 
-export type ContributorReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'contributor'
-}
-
-export type DiscussionReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'discussion'
-}
-
 export type NewsletterReference = {
   _ref: string
   _type: 'reference'
@@ -619,23 +403,32 @@ export type PodcastReference = {
   [internalGroqTypeReferenceTo]?: 'podcast'
 }
 
+export type DiscussionReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'discussion'
+}
+
+export type ContributorReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'contributor'
+}
+
 export type Article = {
   _id: string
   _type: 'article'
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: string
-  description?: string
-  autoSlug?: boolean
+  cover?: EditorialImage
+  title?: InlineEditor
+  description?: InlineEditor
+  byline?: InlineEditor
+  publishDate?: string
   slug: Slug
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
   repoId?: string
   content?: Array<
     | {
@@ -646,21 +439,14 @@ export type Article = {
               _type: 'span'
               _key: string
             }
-          | {
-              value?: string
-              _type: 'softHyphen'
-              _key: string
-            }
-          | {
-              value?: string
-              _type: 'nonBreakingSpace'
-              _key: string
-            }
           | ({
               _key: string
             } & Variable)
+          | ({
+              _key: string
+            } & VoiceTag)
         >
-        style?: 'normal' | 'h2' | 'h1' | 'note'
+        style?: 'normal' | 'heading' | 'note'
         listItem?: 'bullet' | 'number'
         markDefs?: Array<
           | ({
@@ -689,9 +475,6 @@ export type Article = {
     | ({
         _key: string
       } & PullQuote)
-    | ({
-        _key: string
-      } & InterviewAnswer)
     | ({
         _key: string
       } & WebOnly)
@@ -735,23 +518,7 @@ export type Article = {
         _key: string
       } & Button)
   >
-  contributors?: Array<{
-    kind?: string
-    contributor?: ContributorReference
-    _type: 'contributorEntry'
-    _key: string
-  }>
-  articleRecommendations?: Array<
-    {
-      _key: string
-    } & ArticleReference
-  >
-  discussion?: DiscussionReference
-  inlineDiscussion?: boolean
-  notificationTitle?: string
-  articleCollection?: ArticleCollectionReference
-  emailSubject?: string
-  newsletter?: NewsletterReference
+  estimatedReadingMinutes?: number
   suppressSyntheticReadAloud?: boolean
   syntheticVoice?:
     | 'huebsch-01150-rpblk'
@@ -760,21 +527,68 @@ export type Article = {
     | 'huebsch-82170-rpblk'
     | 'huebsch-285-169-rpblk'
     | 'huebsch-gen-female-e-rpblk'
-  syntheticVoice2?:
-    | 'huebsch-01150-rpblk'
-    | 'huebsch-62964-rpblk'
-    | 'huebsch-714-109-rpblk'
-    | 'huebsch-82170-rpblk'
-    | 'huebsch-285-169-rpblk'
-    | 'huebsch-gen-female-e-rpblk'
   audioSourceMp3?: string
-  podcast?: PodcastReference
-  showTextProgress?: boolean
-  readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
-  theme?: ArticleTheme
+  audioDurationMs?: number
+  estimatedConsumptionMinutes?: number
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
   seo?: Seo
+  feed?: boolean
+  notificationTitle?: string
+  articleCollection?: ArticleCollectionReference
+  emailSubject?: string
+  newsletter?: NewsletterReference
+  podcast?: PodcastReference
+  discussion?: DiscussionReference
+  inlineDiscussion?: boolean
+  articleRecommendations?: Array<
+    {
+      _key: string
+    } & ArticleReference
+  >
+  contributors?: Array<{
+    kind?: string
+    contributor?: ContributorReference
+    _type: 'contributorEntry'
+    _key: string
+  }>
+  readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
+  showTextProgress?: boolean
+  theme?: ArticleTheme
   mdast?: Mdast
   publikatorMeta?: LegacyMeta
+}
+
+export type Color = {
+  _type: 'color'
+  hex?: string
+  alpha?: number
+  hsl?: HslaColor
+  hsv?: HsvaColor
+  rgb?: RgbaColor
+}
+
+export type Contributor = {
+  _id: string
+  _type: 'contributor'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  description?: string
+  portrait?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  userId?: string
 }
 
 export type SanityImageCrop = {
@@ -793,13 +607,19 @@ export type SanityImageHotspot = {
   width: number
 }
 
-export type Color = {
-  _type: 'color'
-  hex?: string
-  alpha?: number
-  hsl?: HslaColor
-  hsv?: HsvaColor
-  rgb?: RgbaColor
+export type Discussion = {
+  _id: string
+  _type: 'discussion'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  discussionClosed?: boolean
+  commentsMaxLength?: number
+  commentsMinInterval?: number
+  discussionAnonymity?: 'ALLOWED' | 'ENFORCED' | 'FORBIDDEN'
+  tags?: Array<string>
+  tagRequired?: boolean
 }
 
 export type Podcast = {
@@ -859,39 +679,6 @@ export type ArticleCollection = {
         _key: string
       } & ArticlePreview)
   >
-}
-
-export type Discussion = {
-  _id: string
-  _type: 'discussion'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title: string
-  discussionClosed?: boolean
-  commentsMaxLength?: number
-  commentsMinInterval?: number
-  discussionAnonymity?: 'ALLOWED' | 'ENFORCED' | 'FORBIDDEN'
-  tags?: Array<string>
-  tagRequired?: boolean
-}
-
-export type Contributor = {
-  _id: string
-  _type: 'contributor'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title: string
-  description?: string
-  portrait?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  userId?: string
 }
 
 export type Code = {
@@ -1043,12 +830,12 @@ export type AllSanitySchemaTypes =
   | AudioCover
   | AudioCoverCrop
   | SanityImageAssetReference
-  | Image1
-  | ImageDark
   | ArticlePreview
-  | ArticleTheme
+  | NestedEditor
   | InlineEditor
+  | ArticleTheme
   | Caption
+  | VoiceTag
   | ArticleReference
   | ArticleCollectionReference
   | InternalLink
@@ -1058,7 +845,6 @@ export type AllSanitySchemaTypes =
   | If
   | EmailOnly
   | WebOnly
-  | InterviewAnswer
   | PullQuote
   | BlockQuote
   | InfoBox
@@ -1079,19 +865,19 @@ export type AllSanitySchemaTypes =
   | Seo
   | LegacyMeta
   | Mdast
-  | ContributorReference
-  | DiscussionReference
   | NewsletterReference
   | PodcastReference
+  | DiscussionReference
+  | ContributorReference
   | Article
+  | Color
+  | Contributor
   | SanityImageCrop
   | SanityImageHotspot
-  | Color
+  | Discussion
   | Podcast
   | Newsletter
   | ArticleCollection
-  | Discussion
-  | Contributor
   | Code
   | Slug
   | MediaTag
@@ -1118,16 +904,9 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
           | ({
               _key: string
             } & Variable)
-          | {
-              value?: string
-              _type: 'nonBreakingSpace'
+          | ({
               _key: string
-            }
-          | {
-              value?: string
-              _type: 'softHyphen'
-              _key: string
-            }
+            } & VoiceTag)
           | {
               marks?: Array<string>
               text?: string
@@ -1135,7 +914,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
               _key: string
             }
         >
-        style?: 'h1' | 'h2' | 'normal' | 'note'
+        style?: 'heading' | 'normal' | 'note'
         listItem?: 'bullet' | 'number'
         markDefs: Array<
           | {
@@ -1157,27 +936,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'blockQuote'
-        body?: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'normal'
-          listItem?: 'bullet' | 'number'
-          markDefs?: Array<
-            | ({
-                _key: string
-              } & InternalLink)
-            | ({
-                _key: string
-              } & Link)
-          >
-          level?: number
-          _type: 'block'
-          _key: string
-        }>
+        body?: NestedEditor
         caption?: Caption
         markDefs: null
       }
@@ -1218,8 +977,17 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'editorialImage'
-        image?: Image1
-        imageDark?: ImageDark
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        imageDark?: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          _type: 'image'
+        }
         alt?: string
         caption?: Caption
         size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
@@ -1228,38 +996,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'emailOnly'
-        body?: Array<
-          | ({
-              _key: string
-            } & Button)
-          | ({
-              _key: string
-            } & Divider)
-          | ({
-              _key: string
-            } & Html)
-          | {
-              children?: Array<{
-                marks?: Array<string>
-                text?: string
-                _type: 'span'
-                _key: string
-              }>
-              style?: 'h3' | 'normal'
-              listItem?: 'bullet' | 'number'
-              markDefs?: Array<
-                | ({
-                    _key: string
-                  } & InternalLink)
-                | ({
-                    _key: string
-                  } & Link)
-              >
-              level?: number
-              _type: 'block'
-              _key: string
-            }
-        >
+        body?: NestedEditor
         markDefs: null
       }
     | {
@@ -1293,140 +1030,14 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
         _key: string
         _type: 'if'
         present?: string
-        body?: Array<
-          | ({
-              _key: string
-            } & BlockQuote)
-          | ({
-              _key: string
-            } & Button)
-          | ({
-              _key: string
-            } & Chart)
-          | ({
-              _key: string
-            } & Divider)
-          | ({
-              _key: string
-            } & DynamicComponent)
-          | ({
-              _key: string
-            } & EditorialImage)
-          | ({
-              _key: string
-            } & EmbedDataWrapper)
-          | ({
-              _key: string
-            } & EmbedTwitter)
-          | ({
-              _key: string
-            } & EmbedVideo)
-          | ({
-              _key: string
-            } & Html)
-          | ({
-              _key: string
-            } & InfoBox)
-          | ({
-              _key: string
-            } & InterviewAnswer)
-          | {
-              children?: Array<
-                | ({
-                    _key: string
-                  } & Variable)
-                | {
-                    marks?: Array<string>
-                    text?: string
-                    _type: 'span'
-                    _key: string
-                  }
-              >
-              style?: 'h3' | 'normal'
-              listItem?: 'bullet' | 'number'
-              markDefs?: Array<
-                | ({
-                    _key: string
-                  } & InternalLink)
-                | ({
-                    _key: string
-                  } & Link)
-              >
-              level?: number
-              _type: 'block'
-              _key: string
-            }
-        >
+        body?: NestedEditor
         markDefs: null
       }
     | {
         _key: string
         _type: 'ifNot'
         present?: string
-        body?: Array<
-          | ({
-              _key: string
-            } & BlockQuote)
-          | ({
-              _key: string
-            } & Button)
-          | ({
-              _key: string
-            } & Chart)
-          | ({
-              _key: string
-            } & Divider)
-          | ({
-              _key: string
-            } & DynamicComponent)
-          | ({
-              _key: string
-            } & EditorialImage)
-          | ({
-              _key: string
-            } & EmbedDataWrapper)
-          | ({
-              _key: string
-            } & EmbedTwitter)
-          | ({
-              _key: string
-            } & EmbedVideo)
-          | ({
-              _key: string
-            } & Html)
-          | ({
-              _key: string
-            } & InfoBox)
-          | ({
-              _key: string
-            } & InterviewAnswer)
-          | {
-              children?: Array<
-                | ({
-                    _key: string
-                  } & Variable)
-                | {
-                    marks?: Array<string>
-                    text?: string
-                    _type: 'span'
-                    _key: string
-                  }
-              >
-              style?: 'h3' | 'normal'
-              listItem?: 'bullet' | 'number'
-              markDefs?: Array<
-                | ({
-                    _key: string
-                  } & InternalLink)
-                | ({
-                    _key: string
-                  } & Link)
-              >
-              level?: number
-              _type: 'block'
-              _key: string
-            }
-        >
+        body?: NestedEditor
         markDefs: null
       }
     | {
@@ -1453,57 +1064,11 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
           caption?: Caption
           _type: 'image'
         }
-        body?: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'h3' | 'normal'
-          listItem?: 'bullet' | 'number'
-          markDefs?: Array<
-            | ({
-                _key: string
-              } & InternalLink)
-            | ({
-                _key: string
-              } & Link)
-          >
-          level?: number
-          _type: 'block'
-          _key: string
-        }>
+        body?: NestedEditor
         size?: 'breakout' | 'float'
         figureSize?: 'L' | 'M' | 'S'
         figureFloat?: boolean
         collapsible?: boolean
-        markDefs: null
-      }
-    | {
-        _key: string
-        _type: 'interviewAnswer'
-        body?: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'normal'
-          listItem?: 'bullet' | 'number'
-          markDefs?: Array<
-            | ({
-                _key: string
-              } & InternalLink)
-            | ({
-                _key: string
-              } & Link)
-          >
-          level?: number
-          _type: 'block'
-          _key: string
-        }>
         markDefs: null
       }
     | {
@@ -1540,38 +1105,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'webOnly'
-        body?: Array<
-          | ({
-              _key: string
-            } & Button)
-          | ({
-              _key: string
-            } & Divider)
-          | ({
-              _key: string
-            } & Html)
-          | {
-              children?: Array<{
-                marks?: Array<string>
-                text?: string
-                _type: 'span'
-                _key: string
-              }>
-              style?: 'h3' | 'normal'
-              listItem?: 'bullet' | 'number'
-              markDefs?: Array<
-                | ({
-                    _key: string
-                  } & InternalLink)
-                | ({
-                    _key: string
-                  } & Link)
-              >
-              level?: number
-              _type: 'block'
-              _key: string
-            }
-        >
+        body?: NestedEditor
         markDefs: null
       }
   > | null
@@ -1581,8 +1115,8 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
 // Variable: ARTICLE_SEO_QUERY
 // Query: *[_type == "article" && slug.current == $slug][0]{    "title": coalesce(seo.title, title),    "description": coalesce(seo.description, description)  }
 export type ARTICLE_SEO_QUERY_RESULT = {
-  title: string | null
-  description: string | null
+  title: InlineEditor | string | null
+  description: InlineEditor | string | null
 } | null
 
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
@@ -1590,8 +1124,8 @@ export type ARTICLE_SEO_QUERY_RESULT = {
 // Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    seo {      title,      description    },    articleCollection->{      title,      description,      image    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      darkMode,      color    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    articleRecommendations[]->{      _id,      title,      description,      slug,      "collection": articleCollection->title,      theme {        color      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
 export type ARTICLE_QUERY_RESULT = {
   _id: string
-  title: string | null
-  description: string | null
+  title: InlineEditor | null
+  description: InlineEditor | null
   seo: {
     title: string | null
     description: string | null
@@ -1640,8 +1174,8 @@ export type ARTICLE_QUERY_RESULT = {
   }> | null
   articleRecommendations: Array<{
     _id: string
-    title: string | null
-    description: string | null
+    title: InlineEditor | null
+    description: InlineEditor | null
     slug: Slug
     collection: string | null
     theme: {
@@ -1659,7 +1193,7 @@ export type ARTICLE_QUERY_RESULT = {
 // Query: *[_type == "article" && defined(slug.current)][0...100]{    "slug": slug.current,    title  }
 export type ARTICLES_QUERY_RESULT = Array<{
   slug: string
-  title: string | null
+  title: InlineEditor | null
 }>
 
 // Query TypeMap
