@@ -1,6 +1,6 @@
 import { type Caption } from '@/sanity.types'
 import { css, cx } from '@republik/theme/css'
-import { PortableText } from 'next-sanity'
+import { PortableText, PortableTextReactComponents } from 'next-sanity'
 
 const legendStyle = css({
   fontFamily: 'gtAmericaStandard',
@@ -22,7 +22,7 @@ const creditStyle = css({
   },
 })
 
-const ptComponents = {
+const ptComponents: Partial<PortableTextReactComponents> = {
   block: { normal: ({ children }) => <>{children}</> },
 }
 
