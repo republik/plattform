@@ -288,9 +288,9 @@ const activateGrant = async (grant, t, pgdb, redis, mail) => {
 }
 
 const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
-  const sanatizedVoucherCode = voucherCode.trim().toUpperCase()
+  const sanitizedVoucherCode = voucherCode.trim().toUpperCase()
 
-  const grantByVoucherCode = await findByVoucherCode(sanatizedVoucherCode, {
+  const grantByVoucherCode = await findByVoucherCode(sanitizedVoucherCode, {
     pgdb,
   })
 
