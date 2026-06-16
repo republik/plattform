@@ -33,11 +33,89 @@ export type AudioCoverCrop = {
   height?: number
 }
 
+export type ArticleReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'article'
+}
+
+export type Page = {
+  _id: string
+  _type: 'page'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  slug?: Slug
+  teaser?: ArticleReference
+}
+
+export type Slug = {
+  _type: 'slug'
+  current: string
+  source?: string
+}
+
+export type FrontTeaser = {
+  _type: 'frontTeaser'
+  title?: string
+  article?: ArticleReference
+  color?: Color
+  backgroundColor?: Color
+}
+
+export type Color = {
+  _type: 'color'
+  hex?: string
+  alpha?: number
+  hsl?: HslaColor
+  hsv?: HsvaColor
+  rgb?: RgbaColor
+}
+
 export type SanityImageAssetReference = {
   _ref: string
   _type: 'reference'
   _weak?: boolean
   [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+}
+
+export type FrontTeaserImage = {
+  _type: 'frontTeaserImage'
+  title?: string
+  article?: ArticleReference
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  textPlacement?:
+    | 'center'
+    | 'top_left'
+    | 'top_right'
+    | 'bottom_left'
+    | 'bottom_right'
+  color?: Color
+  backgroundColor?: Color
+}
+
+export type SanityImageCrop = {
+  _type: 'sanity.imageCrop'
+  top: number
+  bottom: number
+  left: number
+  right: number
+}
+
+export type SanityImageHotspot = {
+  _type: 'sanity.imageHotspot'
+  x: number
+  y: number
+  height: number
+  width: number
 }
 
 export type ArticlePreview = {
@@ -99,7 +177,7 @@ export type InlineEditor = Array<{
     _key: string
   }>
   style?: 'normal'
-  listItem?: 'bullet' | 'number'
+  listItem?: never
   markDefs?: Array<
     | ({
         _key: string
@@ -135,13 +213,6 @@ export type VoiceTag = {
     | 'huebsch-82170-rpblk'
     | 'huebsch-285-169-rpblk'
     | 'huebsch-gen-female-e-rpblk'
-}
-
-export type ArticleReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'article'
 }
 
 export type ArticleCollectionReference = {
@@ -537,6 +608,33 @@ export type Article = {
     crop?: SanityImageCrop
     _type: 'image'
   }
+  frontTeaser?: {
+    title?: InlineEditor
+    lead?: InlineEditor
+    layout?: 'VIGNETTE' | 'TEXT' | 'IMAGE' | 'SPLIT'
+    image?: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+    }
+    imageCredits?: string
+    imagePosition?: 'LEFT' | 'RIGHT'
+    imagePadding?: boolean
+    textSize?: 'SMALL' | 'MEDIUM' | 'LARGE' | 'STANDARD'
+    textPosition?:
+      | 'TOP'
+      | 'MIDDLE'
+      | 'BOTTOM'
+      | 'TOP_LEFT'
+      | 'TOP_RIGHT'
+      | 'BOTTOM_LEFT'
+      | 'BOTTOM_RIGHT'
+      | 'UNDERNEATH'
+    color?: Color
+    backgroundColor?: Color
+  }
   seo?: Seo
   feed?: boolean
   notificationTitle?: string
@@ -564,15 +662,6 @@ export type Article = {
   publikatorMeta?: LegacyMeta
 }
 
-export type Color = {
-  _type: 'color'
-  hex?: string
-  alpha?: number
-  hsl?: HslaColor
-  hsv?: HsvaColor
-  rgb?: RgbaColor
-}
-
 export type Contributor = {
   _id: string
   _type: 'contributor'
@@ -589,22 +678,6 @@ export type Contributor = {
     _type: 'image'
   }
   userId?: string
-}
-
-export type SanityImageCrop = {
-  _type: 'sanity.imageCrop'
-  top: number
-  bottom: number
-  left: number
-  right: number
-}
-
-export type SanityImageHotspot = {
-  _type: 'sanity.imageHotspot'
-  x: number
-  y: number
-  height: number
-  width: number
 }
 
 export type Discussion = {
@@ -687,12 +760,6 @@ export type Code = {
   filename?: string
   code?: string
   highlightedLines?: Array<number>
-}
-
-export type Slug = {
-  _type: 'slug'
-  current: string
-  source?: string
 }
 
 export type MediaTag = {
@@ -829,14 +896,21 @@ export type AllSanitySchemaTypes =
   | ChartConfig
   | AudioCover
   | AudioCoverCrop
+  | ArticleReference
+  | Page
+  | Slug
+  | FrontTeaser
+  | Color
   | SanityImageAssetReference
+  | FrontTeaserImage
+  | SanityImageCrop
+  | SanityImageHotspot
   | ArticlePreview
   | NestedEditor
   | InlineEditor
   | ArticleTheme
   | Caption
   | VoiceTag
-  | ArticleReference
   | ArticleCollectionReference
   | InternalLink
   | Link
@@ -870,16 +944,12 @@ export type AllSanitySchemaTypes =
   | DiscussionReference
   | ContributorReference
   | Article
-  | Color
   | Contributor
-  | SanityImageCrop
-  | SanityImageHotspot
   | Discussion
   | Podcast
   | Newsletter
   | ArticleCollection
   | Code
-  | Slug
   | MediaTag
   | RgbaColor
   | HsvaColor

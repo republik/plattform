@@ -1,4 +1,5 @@
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
+import type { EditorialImage } from '@/sanity.types'
 import { css, cva } from '@republik/theme/css'
 import { useId } from 'react'
 import { Caption } from './caption'
@@ -11,6 +12,7 @@ const figureStyle = cva({
   },
   variants: {
     size: {
+      NORMAL: {},
       BREAKOUT: {
         gridColumn: 'breakout',
       },
@@ -30,13 +32,13 @@ const image = css({
   height: 'auto',
 })
 
-export function EditorialImage({ value }) {
+export function EditorialImage({ value }: { value: EditorialImage }) {
   const captionId = useId()
-  const { image: img, imageDark, alt, caption, size } = value
+  const { asset, imageDark, alt, caption, size } = value
 
-  if (!img?.asset) return null
+  if (!asset) return null
 
-  const src = urlFor(img).auto('format').url()
+  const src = urlFor(asset).auto('format').url()
   const darkSrc = imageDark?.asset
     ? urlFor(imageDark).auto('format').url()
     : undefined

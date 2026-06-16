@@ -1,5 +1,6 @@
 import { Caption } from '@/app/(sanity)/articles/[...path]/components/caption'
 import { EditorialImage } from '@/app/(sanity)/articles/[...path]/components/editorial-image'
+import type { ImageGroup } from '@/sanity.types'
 import { cva } from '@republik/theme/css'
 import { useId } from 'react'
 
@@ -11,6 +12,7 @@ const figureGroupStyle = cva({
   },
   variants: {
     size: {
+      NORMAL: {},
       NARROW: {
         maxWidth: 'narrow',
         mx: 'auto',
@@ -37,18 +39,21 @@ const imageGridStyle = cva({
 
   variants: {
     size: {
+      NORMAL: {},
       NARROW: {
         gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
       },
+      BREAKOUT: {},
+      FULL: {},
     },
   },
 })
 
-export function ImageGroup({ value }) {
+export function ImageGroup({ value }: { value: ImageGroup }) {
   const captionId = useId()
-  const { images = [], caption, size } = value
+  const { images, caption, size } = value
 
-  if (!images.length) return null
+  if (!images?.length) return null
 
   return (
     <figure
@@ -60,7 +65,10 @@ export function ImageGroup({ value }) {
         {images.map((img) => {
           // remove size of grouped images, which would mess up their position in the image grid
           return (
-            <EditorialImage value={{ ...img, size: null }} key={img._key} />
+            <EditorialImage
+              value={{ ...img, _type: 'editorialImage', size: null }}
+              key={img._key}
+            />
           )
         })}
       </div>

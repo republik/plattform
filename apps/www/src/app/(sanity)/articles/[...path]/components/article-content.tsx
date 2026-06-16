@@ -67,10 +67,12 @@ const ptComponents: Partial<PortableTextReactComponents> = {
     editorialImage: EditorialImage,
     imageGroup: ImageGroup,
     infoBox: InfoBox,
+    divider: () => <hr />,
   },
   block: {
     // normal: EditorialParagraph,
     // h2: EditorialSubhead,
+    heading: ({ children }) => <h2>{children}</h2>,
     note: Note,
   },
   marks: {
