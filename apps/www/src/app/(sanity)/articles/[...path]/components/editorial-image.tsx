@@ -71,8 +71,12 @@ export function EditorialImage({
   const src = urlFor(asset).url()
   const dimensions = getImageDimensions(src)
 
-  const darkSrc = imageDark?.asset ? urlFor(imageDark).url() : undefined
-  const darkDimensions = darkSrc ? getImageDimensions(darkSrc) : undefined
+  const darkImage = imageDark?.asset
+    ? {
+        src: urlFor(imageDark).url(),
+        dimensions: getImageDimensions(imageDark.asset),
+      }
+    : undefined
 
   return (
     <figure
@@ -81,35 +85,24 @@ export function EditorialImage({
       role='group'
       aria-labelledby={captionId}
     >
-      {darkSrc ? (
-        <picture>
-          <Image
-            className={image({ only: 'dark' })}
-            src={darkSrc}
-            alt={alt ?? ''}
-            width={darkDimensions.width}
-            height={darkDimensions.height}
-            sizes={sizes}
-          />
-          <Image
-            className={image({ only: 'light' })}
-            src={src}
-            alt={alt ?? ''}
-            width={dimensions.width}
-            height={dimensions.height}
-            sizes={sizes}
-          />
-        </picture>
-      ) : (
+      {darkImage && (
         <Image
-          className={image()}
-          src={src}
+          className={image({ only: 'dark' })}
+          src={darkImage.src}
           alt={alt ?? ''}
-          width={dimensions.width}
-          height={dimensions.height}
+          width={darkImage.dimensions.width}
+          height={darkImage.dimensions.height}
           sizes={sizes}
         />
       )}
+      <Image
+        className={image({ only: darkImage ? 'light' : undefined })}
+        src={src}
+        alt={alt ?? ''}
+        width={dimensions.width}
+        height={dimensions.height}
+        sizes={sizes}
+      />
       {caption && <Caption id={captionId} caption={caption} />}
     </figure>
   )
