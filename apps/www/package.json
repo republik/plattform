@@ -85,6 +85,7 @@
     "@republik/mdast-react-render": "*",
     "@republik/nextjs-apollo-client": "*",
     "@republik/theme": "*",
+    "@sanity/asset-utils": "^2.3.0",
     "@sanity/image-url": "^2.1.1",
     "@sentry/nextjs": "^10.53.1",
     "@stripe/react-stripe-js": "^1.7.0",

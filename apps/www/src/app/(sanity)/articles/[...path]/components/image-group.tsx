@@ -63,13 +63,7 @@ export function ImageGroup({ value }: { value: ImageGroup }) {
     >
       <div className={imageGridStyle({ size })}>
         {images.map((img) => {
-          // remove size of grouped images, which would mess up their position in the image grid
-          return (
-            <EditorialImage
-              value={{ ...img, _type: 'editorialImage', size: null }}
-              key={img._key}
-            />
-          )
+          return <EditorialImage value={img} key={img._key} />
         })}
       </div>
       {caption && <Caption id={captionId} caption={caption} />}
