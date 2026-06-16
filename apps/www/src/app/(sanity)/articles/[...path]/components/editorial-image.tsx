@@ -56,6 +56,14 @@ export function EditorialImage({
 
   const size = _type === 'editorialImage' ? value.size : undefined
 
+  const isGrouped = _type === 'groupedEditorialImage'
+
+  // Grouped images can scale to up to 280px each with 48px total gap and padding,
+  // which makes them switch to a grid layout at 608px.
+  // We could make more sophisticated calculations based on the size of the group
+  // (to optimize image loading) but this media query gives us the best quality.
+  const sizes = isGrouped ? '(max-width: 607px) 100vw, 50vw' : '100vw'
+
   if (!asset) {
     return null
   }
@@ -81,6 +89,7 @@ export function EditorialImage({
             alt={alt ?? ''}
             width={darkDimensions.width}
             height={darkDimensions.height}
+            sizes={sizes}
           />
           <Image
             className={image({ only: 'light' })}
@@ -88,6 +97,7 @@ export function EditorialImage({
             alt={alt ?? ''}
             width={dimensions.width}
             height={dimensions.height}
+            sizes={sizes}
           />
         </picture>
       ) : (
@@ -97,6 +107,7 @@ export function EditorialImage({
           alt={alt ?? ''}
           width={dimensions.width}
           height={dimensions.height}
+          sizes={sizes}
         />
       )}
       {caption && <Caption id={captionId} caption={caption} />}
