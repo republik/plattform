@@ -2,7 +2,7 @@ import { ArticleTheme } from '@/app/(sanity)/articles/[...path]/components/artic
 import { Byline } from '@/app/(sanity)/articles/[...path]/components/byline'
 import { EditLink } from '@/app/(sanity)/articles/[...path]/components/edit-link'
 import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
-import { InlinePortableText } from '@/app/(sanity)/components/inline-portable-text'
+import { InlinePortableText } from '@/app/(sanity)/components/portable-text/portable-text-renderers'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'

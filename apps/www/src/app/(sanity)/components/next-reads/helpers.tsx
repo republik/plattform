@@ -1,5 +1,5 @@
 import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
-import { InlinePortableText } from '@/app/(sanity)/components/inline-portable-text'
+import { InlinePortableText } from '@/app/(sanity)/components/portable-text/portable-text-renderers'
 import type { ArticleRecommendation } from '@/app/(sanity)/lib/types'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'

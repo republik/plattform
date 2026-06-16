@@ -1,19 +1,20 @@
+import { WebOnly } from '@/app/(sanity)/articles/[...path]/components/web-only'
 import {
   Em,
+  ExternalLink,
+  InternalLink,
   Strong,
   Sub,
   Sup,
-} from '@/app/(sanity)/articles/[...path]/components/typography'
-import { linkStyle } from '@/app/(sanity)/articles/[...path]/styles'
+} from '@/app/(sanity)/components/portable-text/marks'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import {
   defineQuery,
   PortableText,
-  PortableTextComponentProps,
-  PortableTextReactComponents,
-  UnknownNodeType,
+  type PortableTextComponentProps,
+  type PortableTextReactComponents,
+  type UnknownNodeType,
 } from 'next-sanity'
-import Link from 'next/link'
 import { BlockQuote } from './block-quote'
 import { EditorialImage } from './editorial-image'
 import { ImageGroup } from './image-group'
@@ -68,10 +69,11 @@ const ptComponents: Partial<PortableTextReactComponents> = {
     imageGroup: ImageGroup,
     infoBox: InfoBox,
     divider: () => <hr />,
+    // This is the web, we never render emailOnly blocks :)
+    emailOnly: () => null,
+    webOnly: WebOnly,
   },
   block: {
-    // normal: EditorialParagraph,
-    // h2: EditorialSubhead,
     heading: ({ children }) => <h2>{children}</h2>,
     note: Note,
   },
@@ -80,26 +82,8 @@ const ptComponents: Partial<PortableTextReactComponents> = {
     em: Em,
     sub: Sub,
     sup: Sup,
-    link: ({ text, value }) => (
-      <a
-        href={value.href}
-        target='_blank'
-        rel='noreferrer'
-        className={linkStyle}
-      >
-        {text}
-      </a>
-    ),
-    internalLink: ({ text, value }) => {
-      const href = value.slug?.current
-      return href ? (
-        <Link href={href} className={linkStyle}>
-          {text}
-        </Link>
-      ) : (
-        text
-      )
-    },
+    link: ExternalLink,
+    internalLink: InternalLink,
   },
 }
 
