@@ -12,7 +12,10 @@ import {
 import { css } from 'glamor'
 import copyToClipboard from 'clipboard-copy'
 import { trackEvent } from '@/app/lib/analytics/event-tracking'
-import { GIFT_ARTICLE_STATUS, CREATE_GIFT_ARTICLE_LINK } from './giftArticle.graphql'
+import {
+  GIFT_ARTICLE_STATUS,
+  CREATE_GIFT_ARTICLE_LINK,
+} from './giftArticle.graphql'
 
 const styles = {
   container: css({
@@ -23,11 +26,9 @@ const styles = {
     fontSize: 16,
     fontWeight: 500,
     marginBottom: 4,
-  }),
-  count: css({
-    fontSize: 14,
-    opacity: 0.7,
-    marginBottom: 12,
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: 4,
   }),
   description: css({
     fontSize: 14,
@@ -150,34 +151,36 @@ export default function GiftArticleButton({
       whatsapp: `https://api.whatsapp.com/send?text=${encoded}`,
       threema: `https://threema.id/compose?text=${encoded}`,
       telegram: `https://t.me/share/url?url=${encoded}`,
-      mail: `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encoded}`,
+      mail: `mailto:?subject=${encodeURIComponent(
+        emailSubject,
+      )}&body=${encoded}`,
     }
     window.open(links[platform], '_blank')
   }
 
   const isExhausted = remaining === 0 && !existingUrl
 
-  const Icon = forwardRef<HTMLButtonElement>((props, ref) => (
+  const Icon = forwardRef<HTMLAnchorElement & HTMLButtonElement>((props, ref) => (
     <IconButton
       Icon={IconGift}
       label={label || ''}
       labelShort={labelShort || ''}
       ref={ref}
+      style={{ marginRight: 24 }}
       {...props}
     />
   ))
 
   return (
-    <CalloutMenu Element={Icon} align='right'>
+    <CalloutMenu Element={Icon} elementProps={{}} align='right'>
       <div {...styles.container}>
         <div {...styles.header}>
+          <span>
           {t('article/actionbar/gift/title')}
-        </div>
-        <div {...styles.count}>
-          {t('article/actionbar/gift/remaining', {
-            remaining,
-            max,
-          })}
+          </span>
+          <span>
+            {remaining}/{max}
+          </span>
         </div>
 
         {isExhausted ? (
@@ -222,10 +225,7 @@ export default function GiftArticleButton({
               >
                 <IconLogoTelegram size={24} />
               </span>
-              <span
-                {...styles.shareIcon}
-                onClick={() => handleShare('mail')}
-              >
+              <span {...styles.shareIcon} onClick={() => handleShare('mail')}>
                 <IconMail size={24} />
               </span>
             </div>

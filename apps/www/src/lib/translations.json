@@ -3106,10 +3106,6 @@
       "value": "Beitrag verschenken"
     },
     {
-      "key": "article/actionbar/gift/remaining",
-      "value": "{remaining} von {max} Geschenk-Beitrag diesen Monat"
-    },
-    {
       "key": "article/actionbar/gift/description",
       "value": "Teilen Sie diesen Beitrag mit jemandem. Der Zugang ist 14 Tage gültig."
     },  
