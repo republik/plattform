@@ -1437,6 +1437,10 @@
       "value": "Geschenk-Mitgliedschaft von {recipientName} eingelöst"
     },
     {
+      "key": "api/access/email/granter/claim_notice_3months/subject",
+      "value": "Republik-Zugang wurde eingelöst"
+    },
+    {
       "key": "api/access/grant/email/error",
       "value": "Wir konnten «{email}» nicht als gültige E-Mail-Adresse erkennen."
     },
