@@ -11,7 +11,7 @@ import {
   IconMail,
   IconShare,
 } from '@republik/icons'
-import { css } from 'glamor'
+import { css } from '@republik/theme/css'
 import copyToClipboard from 'clipboard-copy'
 import { trackEvent } from '@/app/lib/analytics/event-tracking'
 import { usePlatformInformation } from '@/app/lib/hooks/usePlatformInformation'
@@ -23,47 +23,48 @@ import {
 
 const styles = {
   container: css({
-    width: 260,
-    padding: '4px 0',
+    width: '260px',
+    padding: '1 0',
   }),
   header: css({
-    fontSize: 16,
-    fontWeight: 500,
-    marginBottom: 4,
+    textStyle: 'sansSerifMedium',
+    fontSize: 'base',
+    marginBottom: '1',
     display: 'flex',
     justifyContent: 'space-between',
-    gap: 4,
+    gap: '1',
   }),
   description: css({
-    fontSize: 14,
+    fontSize: 's',
     lineHeight: '1.4',
-    marginBottom: 16,
-    opacity: 0.8,
+    marginBottom: '4',
+    color: 'textSoft',
   }),
   linkButton: css({
     display: 'flex',
     alignItems: 'center',
-    gap: 8,
-    width: '100%',
-    padding: '8px 0',
+    gap: '2',
+    width: 'full',
+    padding: '2 0',
     cursor: 'pointer',
     border: 'none',
     background: 'none',
-    fontSize: 14,
+    fontSize: 's',
     textAlign: 'left',
-    ':hover': {
+    color: 'text',
+    _hover: {
       opacity: 0.7,
     },
   }),
   divider: css({
-    borderTop: '1px solid',
-    borderColor: 'inherit',
-    opacity: 0.2,
-    marginTop: 4,
+    borderTopWidth: '1px',
+    borderTopStyle: 'solid',
+    borderColor: 'divider',
+    marginTop: '1',
   }),
   exhausted: css({
-    fontSize: 14,
-    opacity: 0.6,
+    fontSize: 's',
+    color: 'textSoft',
     fontStyle: 'italic',
   }),
 }
@@ -116,30 +117,30 @@ function ShareOptions({
 
   return (
     <>
-      <button {...styles.linkButton} onClick={onCopyLink}>
+      <button className={styles.linkButton} onClick={onCopyLink}>
         <IconLink size={20} />
         <span>
           {linkCopied ? t('article/actionbar/gift/copied') : copyLabel}
         </span>
       </button>
-      <div {...styles.divider} />
-      <button {...styles.linkButton} onClick={() => handleOpen('facebook')}>
+      <div className={styles.divider} />
+      <button className={styles.linkButton} onClick={() => handleOpen('facebook')}>
         <IconLogoFacebook size={20} />
         <span>Facebook</span>
       </button>
-      <button {...styles.linkButton} onClick={() => handleOpen('bluesky')}>
+      <button className={styles.linkButton} onClick={() => handleOpen('bluesky')}>
         <IconLogoBluesky size={20} />
         <span>Bluesky</span>
       </button>
-      <button {...styles.linkButton} onClick={() => handleOpen('whatsapp')}>
+      <button className={styles.linkButton} onClick={() => handleOpen('whatsapp')}>
         <IconLogoWhatsApp size={20} />
         <span>WhatsApp</span>
       </button>
-      <button {...styles.linkButton} onClick={() => handleOpen('telegram')}>
+      <button className={styles.linkButton} onClick={() => handleOpen('telegram')}>
         <IconLogoTelegram size={20} />
         <span>Telegram</span>
       </button>
-      <button {...styles.linkButton} onClick={() => handleOpen('mail')}>
+      <button className={styles.linkButton} onClick={() => handleOpen('mail')}>
         <IconMail size={20} />
         <span>E-Mail</span>
       </button>
@@ -270,8 +271,8 @@ export default function GiftArticleButton({
 
   return (
     <CalloutMenu Element={Icon} elementProps={{}} align='right'>
-      <div {...styles.container}>
-        <div {...styles.header}>
+      <div className={styles.container}>
+        <div className={styles.header}>
           <span>{t('article/actionbar/gift/title')}</span>
           <span>
             {remaining}/{max}
@@ -280,17 +281,22 @@ export default function GiftArticleButton({
 
         {isExhausted ? (
           <>
-            <div {...styles.exhausted}>
+            <div className={styles.exhausted}>
               {t('article/actionbar/gift/exhausted')}
             </div>
             <div
-              {...styles.description}
-              style={{ marginTop: 12, marginBottom: 8 }}
+              className={css({
+                fontSize: 's',
+                lineHeight: '1.4',
+                marginTop: '3',
+                marginBottom: '2',
+                color: 'textSoft',
+              })}
             >
               {t('article/actionbar/gift/shareAnyway')}
             </div>
             {useNativeShare ? (
-              <button {...styles.linkButton} onClick={handleNativeShareRegular}>
+              <button className={styles.linkButton} onClick={handleNativeShareRegular}>
                 <IconShare size={20} />
                 <span>{t('article/actionbar/share')}</span>
               </button>
@@ -308,12 +314,12 @@ export default function GiftArticleButton({
           </>
         ) : (
           <>
-            <div {...styles.description}>
+            <div className={styles.description}>
               {t('article/actionbar/gift/description')}
             </div>
             {useNativeShare ? (
               <button
-                {...styles.linkButton}
+                className={styles.linkButton}
                 onClick={handleNativeShare}
                 disabled={creating || loading}
               >
