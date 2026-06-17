@@ -43,26 +43,3 @@ Gift-to-conversion tracking piggybacks on the existing UTM mechanism. When a rec
 ### Mutations
 
 **`createGiftArticleLink(documentPath: String!): GiftArticleLink!`** — Requires `member` role. Wrapped in a transaction with `pg_advisory_xact_lock(hashtext('gift-article:' + userId))` to prevent race conditions. Returns the existing link if the same article was already gifted this month. Validates that `documentPath` starts with `/`.
-
-## Files
-
-```
-gift-articles/
-├── index.js                          Module entry, exports { graphql }
-├── package.json
-├── graphql/
-│   ├── index.js                      loadModule(__dirname)
-│   ├── schema.js                     Query/mutation definitions
-│   ├── schema-types.js               Type definitions
-│   └── resolvers/
-│       ├── _mutations/
-│       │   └── createGiftArticleLink.js
-│       └── _queries/
-│           ├── giftArticleStatus.js
-│           └── validateGiftToken.js
-├── lib/
-│   └── allowance.js                  Constants + monthly count/existing link helpers
-└── migrations/sqls/
-    ├── 20260617120000-gift-articles-up.sql
-    └── 20260617120000-gift-articles-down.sql
-```
