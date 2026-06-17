@@ -3107,7 +3107,7 @@
     },
     {
       "key": "article/actionbar/gift/description",
-      "value": "Teilen Sie diesen Beitrag mit jemandem. Der Zugang ist 14 Tage gültig."
+      "value": "Freien Zugriff auf diesen Beitrag für 14 Tage geben. Sie haben noch {remaining} Geschenk-Beiträge diesen Monat verfügbar. Mehr erfahren."
     },  
     {
       "key": "article/actionbar/gift/copyLink",
@@ -3120,6 +3120,18 @@
     {
       "key": "article/actionbar/gift/exhausted",
       "value": "Sie haben diesen Monat alle Geschenk-Beiträge aufgebraucht."
+    },
+    {
+      "key": "article/actionbar/gift/shareAnyway",
+      "value": "Sie können den Beitrag teilen. Empfänger*innen müssen ein Probeabo abschliessen um den Beitrag zu lesen."
+    },
+    {
+      "key": "article/actionbar/gift/copyLink/regular",
+      "value": "Link kopieren"
+    },
+    {
+      "key": "article/actionbar/gift/nativeShare",
+      "value": "Link verschenken"
     },
     {
       "key": "article/actionbar/gift/paynote/personal",

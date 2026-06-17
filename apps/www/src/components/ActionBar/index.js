@@ -359,7 +359,9 @@ const ActionBar = ({
           element: (
             <GiftArticleButton
               documentPath={meta.path}
+              shareUrl={shareUrl}
               emailSubject={emailSubject}
+              title={document.meta.title}
               t={t}
               label={
                 !forceShortLabel

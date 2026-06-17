@@ -8,7 +8,6 @@ import { useGiftAccess } from './use-gift-access'
 
 function GiftPaynote() {
   const { paynoteKind } = usePaynotes()
-  const { granterId } = useGiftAccess()
 
   if (paynoteKind !== 'GIFT_PAYNOTE') {
     return null
