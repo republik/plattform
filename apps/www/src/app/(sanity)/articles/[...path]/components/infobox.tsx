@@ -1,8 +1,9 @@
 import { css, cx } from '@republik/theme/css'
 import { PortableText } from 'next-sanity'
 import { AsideImage } from './aside-image'
+import type { InfoBox } from '@/sanity.types'
 
-export function InfoBox({ value }) {
+export function InfoBox({ value }: { value: InfoBox }) {
   const { title, image, body } = value
 
   const hasImage = image?.asset

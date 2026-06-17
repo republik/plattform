@@ -14,6 +14,12 @@
 
 export declare const internalGroqTypeReferenceTo: unique symbol
 
+type ArrayOf<T> = Array<
+  T & {
+    _key: string
+  }
+>
+
 // Source: ../../../../../../studio/schema.json
 export type ChartConfig = {
   settings?: Code
@@ -33,11 +39,117 @@ export type AudioCoverCrop = {
   height?: number
 }
 
+export type ArticleCollectionReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'articleCollection'
+}
+
 export type ArticleReference = {
   _ref: string
   _type: 'reference'
   _weak?: boolean
   [internalGroqTypeReferenceTo]?: 'article'
+}
+
+export type PageReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'page'
+}
+
+export type Source = {
+  sourceType?: 'COLLECTION' | 'QUERY' | 'MANUAL'
+  collection?: ArticleCollectionReference
+  query?: Code
+  items?: ArrayOf<ArticleReference | PageReference>
+}
+
+export type SanityImageAssetReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+}
+
+export type Image1 = {
+  asset?: SanityImageAssetReference
+  media?: unknown // Unable to locate the referenced type "image.media1" in schema
+  hotspot?: SanityImageHotspot
+  crop?: SanityImageCrop
+  _type: 'image'
+}
+
+export type SearchBlock = {
+  _type: 'searchBlock'
+  enabled?: boolean
+}
+
+export type EditorBlock = {
+  _type: 'editorBlock'
+  content?: ArticleEditor
+}
+
+export type NewsletterReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'newsletter'
+}
+
+export type PodcastReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'podcast'
+}
+
+export type CallToAction = {
+  _type: 'callToAction'
+  target: NewsletterReference | ArticleCollectionReference | PodcastReference
+  title?: string
+  ctaText: string
+}
+
+export type Menu = {
+  _type: 'menu'
+  title?: string
+  pages?: Array<
+    {
+      _key: string
+    } & PageReference
+  >
+}
+
+export type MeineRepublik = {
+  _type: 'meineRepublik'
+  enabled?: boolean
+}
+
+export type BestOfDialogue = {
+  _type: 'bestOfDialogue'
+  enabled?: boolean
+}
+
+export type TitleBlock = {
+  _type: 'titleBlock'
+  title: string
+}
+
+export type TeaserList = {
+  _type: 'teaserList'
+  source?: Source
+  appearance?: 'FRONT' | 'FEED' | 'OVERVIEW' | 'CAROUSEL'
+  overviewLayout?: 'GRID' | 'COLUMN'
+  maxItems?: number
+  counter?: boolean
+}
+
+export type TeaserItem = {
+  _type: 'teaserItem'
+  reference: ArticleReference | PageReference
 }
 
 export type Page = {
@@ -48,74 +160,141 @@ export type Page = {
   _rev: string
   title?: string
   slug?: Slug
-  teaser?: ArticleReference
+  pageBuilder?: Array<
+    | ({
+        _key: string
+      } & TitleBlock)
+    | ({
+        _key: string
+      } & TeaserItem)
+    | ({
+        _key: string
+      } & TeaserList)
+    | ({
+        _key: string
+      } & BestOfDialogue)
+    | ({
+        _key: string
+      } & MeineRepublik)
+    | ({
+        _key: string
+      } & CallToAction)
+    | ({
+        _key: string
+      } & Menu)
+    | ({
+        _key: string
+      } & EditorBlock)
+    | ({
+        _key: string
+      } & SearchBlock)
+  >
+  image?: Image1
+  frontTeaser?: FrontTeaser
+  seo?: Seo
+}
+
+export type ArticleEditor = Array<
+  | {
+      children?: Array<
+        | {
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }
+        | ({
+            _key: string
+          } & Variable)
+        | ({
+            _key: string
+          } & VoiceTag)
+      >
+      style?: 'normal' | 'heading' | 'note'
+      listItem?: 'bullet' | 'number'
+      markDefs?: Array<
+        | ({
+            _key: string
+          } & Link)
+        | ({
+            _key: string
+          } & InternalLink)
+      >
+      level?: number
+      _type: 'block'
+      _key: string
+    }
+  | ({
+      _key: string
+    } & EditorialImage)
+  | ({
+      _key: string
+    } & ImageGroup)
+  | ({
+      _key: string
+    } & InfoBox)
+  | ({
+      _key: string
+    } & BlockQuote)
+  | ({
+      _key: string
+    } & PullQuote)
+  | ({
+      _key: string
+    } & WebOnly)
+  | ({
+      _key: string
+    } & EmailOnly)
+  | ({
+      _key: string
+    } & If)
+  | ({
+      _key: string
+    } & IfNot)
+  | ({
+      _key: string
+    } & Divider)
+  | ({
+      _key: string
+    } & Chart)
+  | ({
+      _key: string
+    } & EmbedVideo)
+  | ({
+      _key: string
+    } & EmbedTwitter)
+  | ({
+      _key: string
+    } & EmbedDataWrapper)
+  | ({
+      _key: string
+    } & Html)
+  | ({
+      _key: string
+    } & DynamicComponent)
+  | ({
+      _key: string
+    } & StoryComponent)
+  | ({
+      _key: string
+    } & SeriesNav)
+  | ({
+      _key: string
+    } & Button)
+>
+
+export type Code = {
+  _type: 'code'
+  language?: string
+  filename?: string
+  code?: string
+  highlightedLines?: Array<number>
 }
 
 export type Slug = {
   _type: 'slug'
   current: string
   source?: string
-}
-
-export type FrontTeaser = {
-  _type: 'frontTeaser'
-  title?: string
-  article?: ArticleReference
-  color?: Color
-  backgroundColor?: Color
-}
-
-export type Color = {
-  _type: 'color'
-  hex?: string
-  alpha?: number
-  hsl?: HslaColor
-  hsv?: HsvaColor
-  rgb?: RgbaColor
-}
-
-export type SanityImageAssetReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-}
-
-export type FrontTeaserImage = {
-  _type: 'frontTeaserImage'
-  title?: string
-  article?: ArticleReference
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  textPlacement?:
-    | 'center'
-    | 'top_left'
-    | 'top_right'
-    | 'bottom_left'
-    | 'bottom_right'
-  color?: Color
-  backgroundColor?: Color
-}
-
-export type SanityImageCrop = {
-  _type: 'sanity.imageCrop'
-  top: number
-  bottom: number
-  left: number
-  right: number
-}
-
-export type SanityImageHotspot = {
-  _type: 'sanity.imageHotspot'
-  x: number
-  y: number
-  height: number
-  width: number
 }
 
 export type ArticlePreview = {
@@ -129,6 +308,25 @@ export type ArticlePreview = {
     crop?: SanityImageCrop
     _type: 'image'
   }
+}
+
+export type ArticleTheme = {
+  _type: 'articleTheme'
+  kind?: 'EDITORIAL' | 'META'
+  color?: Color
+  darkMode?: boolean
+}
+
+export type LegacyMeta = {
+  _type: 'legacyMeta'
+  template?: string
+  audioCover?: AudioCover
+  audioCoverCrop?: AudioCoverCrop
+}
+
+export type Mdast = {
+  _type: 'mdast'
+  content?: string
 }
 
 export type NestedEditor = Array<
@@ -191,13 +389,6 @@ export type InlineEditor = Array<{
   _key: string
 }>
 
-export type ArticleTheme = {
-  _type: 'articleTheme'
-  kind?: 'EDITORIAL' | 'META'
-  color?: Color
-  darkMode?: boolean
-}
-
 export type Caption = {
   _type: 'caption'
   legend?: InlineEditor
@@ -215,16 +406,232 @@ export type VoiceTag = {
     | 'huebsch-gen-female-e-rpblk'
 }
 
-export type ArticleCollectionReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'articleCollection'
-}
-
 export type InternalLink = {
   _type: 'internalLink'
   reference?: ArticleReference | ArticleCollectionReference
+}
+
+export type DiscussionReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'discussion'
+}
+
+export type ContributorReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'contributor'
+}
+
+export type Article = {
+  _id: string
+  _type: 'article'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  cover?: EditorialImage
+  title?: InlineEditor
+  description?: InlineEditor
+  byline?: InlineEditor
+  publishDate?: string
+  slug: Slug
+  repoId?: string
+  content?: ArticleEditor
+  estimatedReadingMinutes?: number
+  suppressSyntheticReadAloud?: boolean
+  syntheticVoice?:
+    | 'huebsch-01150-rpblk'
+    | 'huebsch-62964-rpblk'
+    | 'huebsch-714-109-rpblk'
+    | 'huebsch-82170-rpblk'
+    | 'huebsch-285-169-rpblk'
+    | 'huebsch-gen-female-e-rpblk'
+  audioSourceMp3?: string
+  audioDurationMs?: number
+  estimatedConsumptionMinutes?: number
+  image?: Image1
+  frontTeaser?: FrontTeaser
+  seo?: Seo
+  feed?: boolean
+  notificationTitle?: string
+  articleCollection?: ArticleCollectionReference
+  emailSubject?: string
+  newsletter?: NewsletterReference
+  podcast?: PodcastReference
+  discussion?: DiscussionReference
+  inlineDiscussion?: boolean
+  articleRecommendations?: Array<
+    {
+      _key: string
+    } & ArticleReference
+  >
+  contributors?: Array<{
+    kind?: string
+    contributor?: ContributorReference
+    _type: 'contributorEntry'
+    _key: string
+  }>
+  readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
+  showTextProgress?: boolean
+  theme?: ArticleTheme
+  mdast?: Mdast
+  publikatorMeta?: LegacyMeta
+}
+
+export type Color = {
+  _type: 'color'
+  hex?: string
+  alpha?: number
+  hsl?: HslaColor
+  hsv?: HsvaColor
+  rgb?: RgbaColor
+}
+
+export type Contributor = {
+  _id: string
+  _type: 'contributor'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  description?: string
+  portrait?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  userId?: string
+}
+
+export type SanityImageCrop = {
+  _type: 'sanity.imageCrop'
+  top: number
+  bottom: number
+  left: number
+  right: number
+}
+
+export type SanityImageHotspot = {
+  _type: 'sanity.imageHotspot'
+  x: number
+  y: number
+  height: number
+  width: number
+}
+
+export type Discussion = {
+  _id: string
+  _type: 'discussion'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  discussionClosed?: boolean
+  commentsMaxLength?: number
+  commentsMinInterval?: number
+  discussionAnonymity?: 'ALLOWED' | 'ENFORCED' | 'FORBIDDEN'
+  tags?: Array<string>
+  tagRequired?: boolean
+}
+
+export type Podcast = {
+  _id: string
+  _type: 'podcast'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  appleUrl?: string
+  spotifyUrl?: string
+  podigeeSlug?: string
+}
+
+export type Newsletter = {
+  _id: string
+  _type: 'newsletter'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  description?: string
+  frequency?: string
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  name: string
+  replyTo?: string
+  fromName?: string
+  savedSegmentId?: number
+}
+
+export type Seo = {
+  _type: 'seo'
+  title?: string
+  description?: string
+  useImageBuilder?: boolean
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  imageBuilder?: SeoImageBuilder
+}
+
+export type FrontTeaser = {
+  _type: 'frontTeaser'
+  layout?: 'VIGNETTE' | 'TEXT' | 'IMAGE' | 'SPLIT'
+  title?: InlineEditor
+  lead?: InlineEditor
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  imageCredits?: string
+  imagePosition?: 'LEFT' | 'RIGHT'
+  imagePadding?: boolean
+  textSize?: 'SMALL' | 'MEDIUM' | 'LARGE' | 'STANDARD'
+  textPosition?:
+    | 'TOP'
+    | 'MIDDLE'
+    | 'BOTTOM'
+    | 'TOP_LEFT'
+    | 'TOP_RIGHT'
+    | 'BOTTOM_LEFT'
+    | 'BOTTOM_RIGHT'
+    | 'UNDERNEATH'
+  color?: Color
+  backgroundColor?: Color
+}
+
+export type EditorialImage = {
+  _type: 'editorialImage'
+  asset?: SanityImageAssetReference
+  media?: unknown
+  hotspot?: SanityImageHotspot
+  crop?: SanityImageCrop
+  imageDark?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  alt?: string
+  caption?: Caption
+  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
 }
 
 export type Link = {
@@ -263,15 +670,18 @@ export type PullQuote = {
   _type: 'pullQuote'
   text?: string
   source?: string
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    caption?: Caption
-    _type: 'image'
-  }
+  image?: AsideImage
   size?: 'narrow' | 'float' | 'breakout'
+}
+
+export type AsideImage = {
+  _type: 'asideImage'
+  asset?: SanityImageAssetReference
+  media?: unknown
+  hotspot?: SanityImageHotspot
+  crop?: SanityImageCrop
+  alt?: string
+  caption?: Caption
 }
 
 export type BlockQuote = {
@@ -283,14 +693,7 @@ export type BlockQuote = {
 export type InfoBox = {
   _type: 'infoBox'
   title?: string
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    caption?: Caption
-    _type: 'image'
-  }
+  image?: AsideImage
   body?: NestedEditor
   size?: 'float' | 'breakout'
   figureSize?: 'S' | 'M' | 'L'
@@ -307,6 +710,31 @@ export type Button = {
 export type SeriesNav = {
   _type: 'seriesNav'
   series?: ArticleCollectionReference
+}
+
+export type ArticleCollection = {
+  _id: string
+  _type: 'articleCollection'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  description?: string
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  overview?: Array<
+    | ({
+        _key: string
+      } & ArticleReference)
+    | ({
+        _key: string
+      } & ArticlePreview)
+  >
 }
 
 export type StoryComponent = {
@@ -392,24 +820,6 @@ export type GroupedEditorialImage = {
   caption?: Caption
 }
 
-export type EditorialImage = {
-  _type: 'editorialImage'
-  asset?: SanityImageAssetReference
-  media?: unknown
-  hotspot?: SanityImageHotspot
-  crop?: SanityImageCrop
-  imageDark?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  alt?: string
-  caption?: Caption
-  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
-}
-
 export type SeoImageBuilder = {
   _type: 'seoImageBuilder'
   text?: string
@@ -431,335 +841,6 @@ export type SeoImageBuilder = {
     crop?: SanityImageCrop
     _type: 'image'
   }
-}
-
-export type Seo = {
-  _type: 'seo'
-  title?: string
-  description?: string
-  useImageBuilder?: boolean
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  imageBuilder?: SeoImageBuilder
-}
-
-export type LegacyMeta = {
-  _type: 'legacyMeta'
-  template?: string
-  audioCover?: AudioCover
-  audioCoverCrop?: AudioCoverCrop
-}
-
-export type Mdast = {
-  _type: 'mdast'
-  content?: string
-}
-
-export type NewsletterReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'newsletter'
-}
-
-export type PodcastReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'podcast'
-}
-
-export type DiscussionReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'discussion'
-}
-
-export type ContributorReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'contributor'
-}
-
-export type Article = {
-  _id: string
-  _type: 'article'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  cover?: EditorialImage
-  title?: InlineEditor
-  description?: InlineEditor
-  byline?: InlineEditor
-  publishDate?: string
-  slug: Slug
-  repoId?: string
-  content?: Array<
-    | {
-        children?: Array<
-          | {
-              marks?: Array<string>
-              text?: string
-              _type: 'span'
-              _key: string
-            }
-          | ({
-              _key: string
-            } & Variable)
-          | ({
-              _key: string
-            } & VoiceTag)
-        >
-        style?: 'normal' | 'heading' | 'note'
-        listItem?: 'bullet' | 'number'
-        markDefs?: Array<
-          | ({
-              _key: string
-            } & Link)
-          | ({
-              _key: string
-            } & InternalLink)
-        >
-        level?: number
-        _type: 'block'
-        _key: string
-      }
-    | ({
-        _key: string
-      } & EditorialImage)
-    | ({
-        _key: string
-      } & ImageGroup)
-    | ({
-        _key: string
-      } & InfoBox)
-    | ({
-        _key: string
-      } & BlockQuote)
-    | ({
-        _key: string
-      } & PullQuote)
-    | ({
-        _key: string
-      } & WebOnly)
-    | ({
-        _key: string
-      } & EmailOnly)
-    | ({
-        _key: string
-      } & If)
-    | ({
-        _key: string
-      } & IfNot)
-    | ({
-        _key: string
-      } & Divider)
-    | ({
-        _key: string
-      } & Chart)
-    | ({
-        _key: string
-      } & EmbedVideo)
-    | ({
-        _key: string
-      } & EmbedTwitter)
-    | ({
-        _key: string
-      } & EmbedDataWrapper)
-    | ({
-        _key: string
-      } & Html)
-    | ({
-        _key: string
-      } & DynamicComponent)
-    | ({
-        _key: string
-      } & StoryComponent)
-    | ({
-        _key: string
-      } & SeriesNav)
-    | ({
-        _key: string
-      } & Button)
-  >
-  estimatedReadingMinutes?: number
-  suppressSyntheticReadAloud?: boolean
-  syntheticVoice?:
-    | 'huebsch-01150-rpblk'
-    | 'huebsch-62964-rpblk'
-    | 'huebsch-714-109-rpblk'
-    | 'huebsch-82170-rpblk'
-    | 'huebsch-285-169-rpblk'
-    | 'huebsch-gen-female-e-rpblk'
-  audioSourceMp3?: string
-  audioDurationMs?: number
-  estimatedConsumptionMinutes?: number
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  frontTeaser?: {
-    title?: InlineEditor
-    lead?: InlineEditor
-    layout?: 'VIGNETTE' | 'TEXT' | 'IMAGE' | 'SPLIT'
-    image?: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-    }
-    imageCredits?: string
-    imagePosition?: 'LEFT' | 'RIGHT'
-    imagePadding?: boolean
-    textSize?: 'SMALL' | 'MEDIUM' | 'LARGE' | 'STANDARD'
-    textPosition?:
-      | 'TOP'
-      | 'MIDDLE'
-      | 'BOTTOM'
-      | 'TOP_LEFT'
-      | 'TOP_RIGHT'
-      | 'BOTTOM_LEFT'
-      | 'BOTTOM_RIGHT'
-      | 'UNDERNEATH'
-    color?: Color
-    backgroundColor?: Color
-  }
-  seo?: Seo
-  feed?: boolean
-  notificationTitle?: string
-  articleCollection?: ArticleCollectionReference
-  emailSubject?: string
-  newsletter?: NewsletterReference
-  podcast?: PodcastReference
-  discussion?: DiscussionReference
-  inlineDiscussion?: boolean
-  articleRecommendations?: Array<
-    {
-      _key: string
-    } & ArticleReference
-  >
-  contributors?: Array<{
-    kind?: string
-    contributor?: ContributorReference
-    _type: 'contributorEntry'
-    _key: string
-  }>
-  readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
-  showTextProgress?: boolean
-  theme?: ArticleTheme
-  mdast?: Mdast
-  publikatorMeta?: LegacyMeta
-}
-
-export type Contributor = {
-  _id: string
-  _type: 'contributor'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title: string
-  description?: string
-  portrait?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  userId?: string
-}
-
-export type Discussion = {
-  _id: string
-  _type: 'discussion'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title: string
-  discussionClosed?: boolean
-  commentsMaxLength?: number
-  commentsMinInterval?: number
-  discussionAnonymity?: 'ALLOWED' | 'ENFORCED' | 'FORBIDDEN'
-  tags?: Array<string>
-  tagRequired?: boolean
-}
-
-export type Podcast = {
-  _id: string
-  _type: 'podcast'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title: string
-  appleUrl?: string
-  spotifyUrl?: string
-  podigeeSlug?: string
-}
-
-export type Newsletter = {
-  _id: string
-  _type: 'newsletter'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title: string
-  description?: string
-  frequency?: string
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  name: string
-  replyTo?: string
-  fromName?: string
-  savedSegmentId?: number
-}
-
-export type ArticleCollection = {
-  _id: string
-  _type: 'articleCollection'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title: string
-  description?: string
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  overview?: Array<
-    | ({
-        _key: string
-      } & ArticleReference)
-    | ({
-        _key: string
-      } & ArticlePreview)
-  >
-}
-
-export type Code = {
-  _type: 'code'
-  language?: string
-  filename?: string
-  code?: string
-  highlightedLines?: Array<number>
 }
 
 export type MediaTag = {
@@ -896,23 +977,49 @@ export type AllSanitySchemaTypes =
   | ChartConfig
   | AudioCover
   | AudioCoverCrop
+  | ArticleCollectionReference
   | ArticleReference
-  | Page
-  | Slug
-  | FrontTeaser
-  | Color
+  | PageReference
+  | Source
   | SanityImageAssetReference
-  | FrontTeaserImage
-  | SanityImageCrop
-  | SanityImageHotspot
+  | Image1
+  | SearchBlock
+  | EditorBlock
+  | NewsletterReference
+  | PodcastReference
+  | CallToAction
+  | Menu
+  | MeineRepublik
+  | BestOfDialogue
+  | TitleBlock
+  | TeaserList
+  | TeaserItem
+  | Page
+  | ArticleEditor
+  | Code
+  | Slug
   | ArticlePreview
+  | ArticleTheme
+  | LegacyMeta
+  | Mdast
   | NestedEditor
   | InlineEditor
-  | ArticleTheme
   | Caption
   | VoiceTag
-  | ArticleCollectionReference
   | InternalLink
+  | DiscussionReference
+  | ContributorReference
+  | Article
+  | Color
+  | Contributor
+  | SanityImageCrop
+  | SanityImageHotspot
+  | Discussion
+  | Podcast
+  | Newsletter
+  | Seo
+  | FrontTeaser
+  | EditorialImage
   | Link
   | Variable
   | IfNot
@@ -920,10 +1027,12 @@ export type AllSanitySchemaTypes =
   | EmailOnly
   | WebOnly
   | PullQuote
+  | AsideImage
   | BlockQuote
   | InfoBox
   | Button
   | SeriesNav
+  | ArticleCollection
   | StoryComponent
   | DynamicComponent
   | Html
@@ -934,22 +1043,7 @@ export type AllSanitySchemaTypes =
   | Divider
   | ImageGroup
   | GroupedEditorialImage
-  | EditorialImage
   | SeoImageBuilder
-  | Seo
-  | LegacyMeta
-  | Mdast
-  | NewsletterReference
-  | PodcastReference
-  | DiscussionReference
-  | ContributorReference
-  | Article
-  | Contributor
-  | Discussion
-  | Podcast
-  | Newsletter
-  | ArticleCollection
-  | Code
   | MediaTag
   | RgbaColor
   | HsvaColor
@@ -1126,14 +1220,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
         _key: string
         _type: 'infoBox'
         title?: string
-        image?: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          caption?: Caption
-          _type: 'image'
-        }
+        image?: AsideImage
         body?: NestedEditor
         size?: 'breakout' | 'float'
         figureSize?: 'L' | 'M' | 'S'
@@ -1146,14 +1233,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
         _type: 'pullQuote'
         text?: string
         source?: string
-        image?: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          caption?: Caption
-          _type: 'image'
-        }
+        image?: AsideImage
         size?: 'breakout' | 'float' | 'narrow'
         markDefs: null
       }

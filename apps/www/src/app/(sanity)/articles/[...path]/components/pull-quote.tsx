@@ -1,3 +1,4 @@
+import type { PullQuote } from '@/sanity.types'
 import { css, cx } from '@republik/theme/css'
 import { stegaClean } from 'next-sanity'
 import { AsideImage } from './aside-image'
@@ -12,7 +13,7 @@ const sourceStyle = css({
   fontSize: 's',
 })
 
-export function PullQuote({ value }) {
+export function PullQuote({ value }: { value: PullQuote }) {
   const { text, source, image, size } = value
 
   const hasImage = image?.asset
