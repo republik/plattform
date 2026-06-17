@@ -20,6 +20,28 @@ const VOUCHER_CODE_LENGTH = 5
 
 const { REGWALL_TRIAL_CAMPAIGN_ID } = process.env
 
+const ensureUserHasNoActiveMembershipOrSubscription = async (user, pgdb, t) => {
+  if (await hasUserActiveMembership(user, pgdb)) {
+    throw new Error(
+      t('api/access/claim/can-not-claim-access-with-active-membership'),
+    )
+  }
+
+  const subscription = await pgdb.payments.subscriptions.findFirst(
+    {
+      userId: user.id,
+      status: ['active', 'past_due', 'unpaid', 'paused'],
+    },
+    { fields: ['id'] },
+  )
+
+  if (subscription) {
+    throw new Error(
+      t('api/access/claim/can-not-claim-access-with-active-subscription'),
+    )
+  }
+}
+
 const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
   const errors = []
 
@@ -664,10 +686,13 @@ const findByVoucherCode = async (voucherCode, { pgdb }) => {
 }
 
 const regwallTrialStatus = async (user, { pgdb }) => {
-  const trialGrant = await pgdb.public.accessGrants.findFirst({
-    recipientUserId: user.id,
-    accessCampaignId: REGWALL_TRIAL_CAMPAIGN_ID,
-  }, {orderBy: {createdAt: 'desc'}})
+  const trialGrant = await pgdb.public.accessGrants.findFirst(
+    {
+      recipientUserId: user.id,
+      accessCampaignId: REGWALL_TRIAL_CAMPAIGN_ID,
+    },
+    { orderBy: { createdAt: 'desc' } },
+  )
   if (!trialGrant) {
     return null
   }
@@ -680,7 +705,12 @@ const regwallTrialStatus = async (user, { pgdb }) => {
 
 const isGrantActive = (grant) => {
   const now = new Date()
-  return !grant.invalidatedAt && !grant.revokedAt && grant.beginAt <= now && grant.endAt > now
+  return (
+    !grant.invalidatedAt &&
+    !grant.revokedAt &&
+    grant.beginAt <= now &&
+    grant.endAt > now
+  )
 }
 
 const findUnassignedByEmail = async (email, pgdb) => {
@@ -834,4 +864,6 @@ module.exports = {
   findInvalid,
   findEmptyRecommendations,
   findEmptyFollowup,
+
+  ensureUserHasNoActiveMembershipOrSubscription,
 }

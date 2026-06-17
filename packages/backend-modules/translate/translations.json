@@ -1562,7 +1562,11 @@
     },
     {
       "key": "api/access/claim/can-not-claim-access-with-active-subscription",
-      "value": "Ups, es ist ein Fehler aufgetreten. Kontaktieren Sie bitte das Support-Team via kontakt@republik.ch."
+      "value": "Sie haben bereits ein aktives Abonnement und können deshalb keinen Zugang einlösen."
+    },
+    {
+      "key": "api/access/claim/can-not-claim-access-with-active-membership",
+      "value": "Sie haben bereits eine aktive Mitgliedschaft oder ein aktives Abo und können deshalb keinen Zugang einlösen."
     },
     {
       "key": "api/access/request/campaign/error",
