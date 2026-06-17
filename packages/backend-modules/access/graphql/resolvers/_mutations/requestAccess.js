@@ -4,13 +4,6 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
 const { request } = require('../../../lib/grants')
 
-let recordGiftConversion
-try {
-  ;({ recordGiftConversion } = require('@orbiting/backend-modules-gift-articles/lib/attribution'))
-} catch {
-  recordGiftConversion = null
-}
-
 module.exports = async (
   _,
   { campaignId, payload },
@@ -34,10 +27,6 @@ module.exports = async (
     await transaction.transactionCommit()
 
     debug('commit', { campaignId, user: user.id })
-
-    if (recordGiftConversion) {
-      recordGiftConversion(pgdb, user.id, payload, 'trial').catch(() => {})
-    }
 
     return result
   } catch (e) {

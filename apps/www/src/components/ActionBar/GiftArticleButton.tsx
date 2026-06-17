@@ -159,7 +159,11 @@ export default function GiftArticleButton({
   const [linkCopied, setLinkCopied] = useState(false)
   const [giftUrl, setGiftUrl] = useState<string | null>(null)
   const { isNativeApp, isIOS, isAndroid } = usePlatformInformation()
-  const useNativeShare = isNativeApp || (typeof navigator !== 'undefined' && !!navigator?.share && (isAndroid || isIOS))
+  const useNativeShare =
+    isNativeApp ||
+    (typeof navigator !== 'undefined' &&
+      !!navigator?.share &&
+      (isAndroid || isIOS))
 
   const { data, loading } = useQuery(GIFT_ARTICLE_STATUS, {
     variables: { documentPath },
@@ -180,7 +184,7 @@ export default function GiftArticleButton({
   const max = status?.maxGiftsPerMonth ?? 10
   const existingUrl = status?.existingLink?.url
   const effectiveUrl = giftUrl || existingUrl
-  const isExhausted = remaining === 0 && !existingUrl
+  const isExhausted = remaining === 0 && !existingUrl // exhausted only if no gifts left AND no existing gift URL
 
   const ensureGiftUrl = async (): Promise<string | null> => {
     if (effectiveUrl) return effectiveUrl
@@ -251,23 +255,27 @@ export default function GiftArticleButton({
     }
   }
 
-  const Icon = forwardRef<HTMLAnchorElement & HTMLButtonElement>((props, ref) => (
-    <IconButton
-      Icon={IconGift}
-      label={label || ''}
-      labelShort={labelShort || ''}
-      ref={ref}
-      style={{ marginRight: 24 }}
-      {...props}
-    />
-  ))
+  const Icon = forwardRef<HTMLAnchorElement & HTMLButtonElement>(
+    (props, ref) => (
+      <IconButton
+        Icon={IconGift}
+        label={label || ''}
+        labelShort={labelShort || ''}
+        ref={ref}
+        style={{ marginRight: 24 }}
+        {...props}
+      />
+    ),
+  )
 
   return (
     <CalloutMenu Element={Icon} elementProps={{}} align='right'>
       <div {...styles.container}>
         <div {...styles.header}>
           <span>{t('article/actionbar/gift/title')}</span>
-          <span>{remaining}/{max}</span>
+          <span>
+            {remaining}/{max}
+          </span>
         </div>
 
         {isExhausted ? (
@@ -275,7 +283,10 @@ export default function GiftArticleButton({
             <div {...styles.exhausted}>
               {t('article/actionbar/gift/exhausted')}
             </div>
-            <div {...styles.description} style={{ marginTop: 12, marginBottom: 8 }}>
+            <div
+              {...styles.description}
+              style={{ marginTop: 12, marginBottom: 8 }}
+            >
               {t('article/actionbar/gift/shareAnyway')}
             </div>
             {useNativeShare ? (
