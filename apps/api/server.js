@@ -43,6 +43,9 @@ const {
   graphql: contributors,
 } = require('@orbiting/backend-modules-contributors')
 const { graphql: allowlist } = require('@orbiting/backend-modules-allowlist')
+const {
+  graphql: giftArticles,
+} = require('@orbiting/backend-modules-gift-articles')
 
 const {
   graphql: paymentsGraphql,
@@ -226,6 +229,7 @@ const run = async (workerId, config) => {
     nextReads,
     contributors,
     allowlist,
+    giftArticles,
   ])
 
   // middlewares

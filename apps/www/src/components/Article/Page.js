@@ -9,6 +9,7 @@ import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
 import { WelcomeBanner } from '@/app/components/paynotes/paynotes-in-trial/welcome'
 import Paywall from '@/app/components/paynotes/paywall'
 import Regwall from '@/app/components/paynotes/regwall'
+import GiftPaynote, { GiftExpiredPaynote } from '@/app/components/paynotes/gift-paynote'
 
 import {
   Breakout,
@@ -472,6 +473,7 @@ const ArticlePage = ({
                     <Regwall />
                     <Paywall />
                     <CampaignPaywall />
+                    <GiftExpiredPaynote />
                   </article>
                 </ProgressComponent>
                 <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
@@ -498,6 +500,7 @@ const ArticlePage = ({
                   </Center>
                 )}
                 <PaynoteInline />
+                <GiftPaynote />
                 {episodes && !isSeriesOverview && (
                   <SeriesNav
                     inline

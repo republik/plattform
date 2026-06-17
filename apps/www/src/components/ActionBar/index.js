@@ -38,6 +38,7 @@ import {
 import FontSizeOverlay from '../FontSize/Overlay'
 
 import BookmarkButton from './BookmarkButton'
+import GiftArticleButton from './GiftArticleButton'
 import DiscussionLinkButton from './DiscussionLinkButton'
 import PodcastOverlay from './PodcastOverlay'
 import ShareOverlay from './ShareOverlay'
@@ -352,29 +353,60 @@ const ActionBar = ({
       ],
       show: !notBookmarkable && (meLoading || isMember),
     },
-    {
-      title: t('article/actionbar/share'),
-      Icon: IconShare,
-      href: shareUrl,
-      onClick: (e) => handleShareClick(e),
-      label: !forceShortLabel
-        ? t(
-            `article/actionbar/${mode}/share`,
-            undefined,
-            t('article/actionbar/share'),
-          )
-        : '',
-      labelShort:
-        !forceShortLabel && isArticleBottom
-          ? t(
-              `article/actionbar/${mode}/share`,
-              undefined,
-              t('article/actionbar/share'),
-            )
-          : '',
-      modes: ['articleTop', 'articleOverlay', 'articleBottom'],
-      show: true,
-    },
+    isMember
+      ? {
+          title: t('article/actionbar/gift'),
+          element: (
+            <GiftArticleButton
+              documentPath={meta.path}
+              emailSubject={emailSubject}
+              t={t}
+              label={
+                !forceShortLabel
+                  ? t(
+                      `article/actionbar/${mode}/gift`,
+                      undefined,
+                      t('article/actionbar/gift'),
+                    )
+                  : ''
+              }
+              labelShort={
+                !forceShortLabel && isArticleBottom
+                  ? t(
+                      `article/actionbar/${mode}/gift`,
+                      undefined,
+                      t('article/actionbar/gift'),
+                    )
+                  : ''
+              }
+            />
+          ),
+          modes: ['articleTop', 'articleOverlay', 'articleBottom'],
+          show: true,
+        }
+      : {
+          title: t('article/actionbar/share'),
+          Icon: IconShare,
+          href: shareUrl,
+          onClick: (e) => handleShareClick(e),
+          label: !forceShortLabel
+            ? t(
+                `article/actionbar/${mode}/share`,
+                undefined,
+                t('article/actionbar/share'),
+              )
+            : '',
+          labelShort:
+            !forceShortLabel && isArticleBottom
+              ? t(
+                  `article/actionbar/${mode}/share`,
+                  undefined,
+                  t('article/actionbar/share'),
+                )
+              : '',
+          modes: ['articleTop', 'articleOverlay', 'articleBottom'],
+          show: true,
+        },
     {
       title: readingTimeTitle,
       Icon: IconReadTime,

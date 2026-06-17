@@ -3098,6 +3098,46 @@
       "value": "Teilen"
     },
     {
+      "key": "article/actionbar/gift",
+      "value": "Verschenken"
+    },
+    {
+      "key": "article/actionbar/gift/title",
+      "value": "Artikel verschenken"
+    },
+    {
+      "key": "article/actionbar/gift/remaining",
+      "value": "{remaining} von {max} Geschenk-Artikeln diesen Monat"
+    },
+    {
+      "key": "article/actionbar/gift/description",
+      "value": "Teilen Sie diesen Artikel mit jemandem. Der Zugang ist 14 Tage gültig."
+    },
+    {
+      "key": "article/actionbar/gift/copyLink",
+      "value": "Geschenk-Link kopieren"
+    },
+    {
+      "key": "article/actionbar/gift/copied",
+      "value": "Link kopiert!"
+    },
+    {
+      "key": "article/actionbar/gift/exhausted",
+      "value": "Sie haben diesen Monat alle Geschenk-Artikel aufgebraucht."
+    },
+    {
+      "key": "article/actionbar/gift/paynote/personal",
+      "value": "Dieser Artikel wurde Ihnen von {name} geschenkt"
+    },
+    {
+      "key": "article/actionbar/gift/paynote/anonymous",
+      "value": "Dieser Artikel wurde Ihnen geschenkt"
+    },
+    {
+      "key": "article/actionbar/gift/expired",
+      "value": "Dieser Geschenk-Link ist abgelaufen"
+    },
+    {
       "key": "article/actionbar/facebook/title",
       "value": "Auf Facebook teilen"
     },

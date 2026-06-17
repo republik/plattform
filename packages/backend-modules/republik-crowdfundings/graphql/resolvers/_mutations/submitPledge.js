@@ -14,6 +14,13 @@ const {
   upsertAddress,
 } = require('@orbiting/backend-modules-republik/lib/address')
 
+let recordGiftConversion
+try {
+  ;({ recordGiftConversion } = require('@orbiting/backend-modules-gift-articles/lib/attribution'))
+} catch {
+  recordGiftConversion = null
+}
+
 module.exports = async (_, args, context) => {
   const { pgdb, req, t } = context
   const transaction = await pgdb.transactionBegin()
@@ -387,6 +394,10 @@ module.exports = async (_, args, context) => {
 
     // commit transaction
     await transaction.transactionCommit()
+
+    if (recordGiftConversion) {
+      recordGiftConversion(pgdb, user.id, pledge.payload, 'pledge').catch(() => {})
+    }
 
     return {
       pledgeId: newPledge.id,

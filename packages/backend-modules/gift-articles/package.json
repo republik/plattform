@@ -1,0 +1,21 @@
+{
+  "name": "@orbiting/backend-modules-gift-articles",
+  "version": "0.0.1",
+  "description": "Gift article links for subscribers",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/republik/plattform.git"
+  },
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/republik/plattform/issues"
+  },
+  "homepage": "https://github.com/republik/plattform#readme",
+  "dependencies": {
+    "apollo-modules-node": "*"
+  }
+}
