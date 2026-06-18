@@ -110,6 +110,37 @@ function GiftGranterInfo() {
   )
 }
 
+export function GiftInlineBanner() {
+  const { paynoteKind } = usePaynotes()
+  const { granterName, hasPublicProfile } = useGiftAccess()
+
+  if (paynoteKind !== 'GIFT_PAYNOTE') {
+    return null
+  }
+
+  const message =
+    hasPublicProfile && granterName
+      ? `Dieser Artikel wurde Ihnen von ${granterName} geschenkt.`
+      : 'Dieser Artikel wurde Ihnen geschenkt.'
+
+  return (
+    <div
+      data-theme='light'
+      className={css({
+        background: 'background.marketingAccent',
+        color: 'text',
+        padding: '4 6',
+        textAlign: 'center',
+        textStyle: 'sansSerifRegular',
+        fontSize: 'base',
+        lineHeight: 1.5,
+      })}
+    >
+      {message} Viel Vergnügen bei der Lektüre.
+    </div>
+  )
+}
+
 export function GiftExpiredPaynote() {
   const { paynoteKind } = usePaynotes()
 
