@@ -22,6 +22,7 @@ import { InfoBox } from './infobox'
 import { Note } from './note'
 import { PullQuote } from './pull-quote'
 import { LegacyEmbedVideo } from '@/app/(sanity)/articles/[...path]/components/legacy-embed-video'
+import { EmbedDataWrapper } from '@/app/(sanity)/articles/[...path]/components/embed-datawrapper'
 
 const ARTICLE_CONTENT_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -74,6 +75,8 @@ const ptComponents: Partial<PortableTextReactComponents> = {
     emailOnly: () => null,
     webOnly: WebOnly,
     embedVideo: LegacyEmbedVideo,
+    // Wrap function because renderNode can't be passed to a client component
+    embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
   },
   block: {
     heading: ({ children }) => <h2>{children}</h2>,
