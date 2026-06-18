@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import Head from 'next/head'
 import { ShareImagePreview } from '@project-r/styleguide'
 
-const ShareImage = ({ meta, isGift }) => (
+const ShareImage = ({ meta, isGift = false }) => (
   <Fragment>
     <Head>
       <meta name='robots' content='noindex' />
