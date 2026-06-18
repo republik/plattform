@@ -26,6 +26,7 @@ import { ImageGroup } from './image-group'
 import { InfoBox } from './infobox'
 import { Note } from './note'
 import { PullQuote } from './pull-quote'
+import { SeriesNav } from '@/app/(sanity)/articles/[...path]/components/series-nav'
 
 const ARTICLE_CONTENT_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -79,6 +80,7 @@ const ptComponents: Partial<PortableTextReactComponents> = {
     webOnly: WebOnly,
     html: Html,
     embedVideo: LegacyEmbedVideo,
+    seriesNav: SeriesNav,
     // Wrap function because renderNode can't be passed to a client component
     button: ({ value }) => <Button value={value} />,
     if: ({ value }) => <Conditional value={value} />,

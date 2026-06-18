@@ -1255,6 +1255,28 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
   > | null
 } | null
 
+// Source: src/app/(sanity)/articles/[...path]/components/series-nav.tsx
+// Variable: SERIES_NAV_QUERY
+// Query: *[_type == "articleCollection" && _id == $id][0]{    _id,    title,    description,    image,    "episodes": *[_type == "article" && references(^._id)]{      _id,      title,      description,      image    }  }
+export type SERIES_NAV_QUERY_RESULT = {
+  _id: string
+  title: string
+  description: string | null
+  image: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  } | null
+  episodes: Array<{
+    _id: string
+    title: InlineEditor | null
+    description: InlineEditor | null
+    image: Image1 | null
+  }>
+} | null
+
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
 // Variable: ARTICLE_SEO_QUERY
 // Query: *[_type == "article" && slug.current == $slug][0]{    "title": coalesce(seo.title, pt::text(title)),    "description": coalesce(seo.description, pt::text(description))  }
@@ -1335,6 +1357,7 @@ import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    content[]{\n        ...,\n        markDefs[]{\n          ...,\n          _type == "internalLink" => {\n            "slug": @.reference->slug\n          }\n        }\n    }\n  }': ARTICLE_CONTENT_QUERY_RESULT
+    '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n\n    "episodes": *[_type == "article" && references(^._id)]{\n      _id,\n      title,\n      description,\n      image\n    }\n  }': SERIES_NAV_QUERY_RESULT
     '*[_type == "article" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description))\n  }': ARTICLE_SEO_QUERY_RESULT
     '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    seo {\n      title,\n      description\n    },\n    articleCollection->{\n      title,\n      description,\n      image\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      darkMode,\n      color\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      "collection": articleCollection->title,\n      theme {\n        color\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
