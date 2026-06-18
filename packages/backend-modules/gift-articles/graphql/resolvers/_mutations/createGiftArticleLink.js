@@ -4,7 +4,7 @@ const { ensureUserHasRole } = require('@orbiting/backend-modules-auth/lib/Roles'
 const {
   MAX_GIFTS_PER_MONTH,
   GIFT_LINK_TTL_DAYS,
-} = require('../../lib/allowance')
+} = require('../../../lib/allowance')
 
 const { FRONTEND_BASE_URL } = process.env
 

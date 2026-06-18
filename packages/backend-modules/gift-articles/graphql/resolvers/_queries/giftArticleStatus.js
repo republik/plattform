@@ -2,7 +2,7 @@ const {
   MAX_GIFTS_PER_MONTH,
   getMonthlyGiftCount,
   findExistingLink,
-} = require('../../lib/allowance')
+} = require('../../../lib/allowance')
 
 const { FRONTEND_BASE_URL } = process.env
 
