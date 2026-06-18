@@ -1,3 +1,8 @@
+import { Button } from '@/app/(sanity)/articles/[...path]/components/button'
+import { Conditional } from '@/app/(sanity)/articles/[...path]/components/conditional'
+import { EmbedDataWrapper } from '@/app/(sanity)/articles/[...path]/components/embed-datawrapper'
+import { Html } from '@/app/(sanity)/articles/[...path]/components/html'
+import { LegacyEmbedVideo } from '@/app/(sanity)/articles/[...path]/components/legacy-embed-video'
 import { WebOnly } from '@/app/(sanity)/articles/[...path]/components/web-only'
 import {
   Em,
@@ -21,8 +26,6 @@ import { ImageGroup } from './image-group'
 import { InfoBox } from './infobox'
 import { Note } from './note'
 import { PullQuote } from './pull-quote'
-import { LegacyEmbedVideo } from '@/app/(sanity)/articles/[...path]/components/legacy-embed-video'
-import { EmbedDataWrapper } from '@/app/(sanity)/articles/[...path]/components/embed-datawrapper'
 
 const ARTICLE_CONTENT_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -74,8 +77,12 @@ const ptComponents: Partial<PortableTextReactComponents> = {
     // This is the web, we never render emailOnly blocks :)
     emailOnly: () => null,
     webOnly: WebOnly,
+    html: Html,
     embedVideo: LegacyEmbedVideo,
     // Wrap function because renderNode can't be passed to a client component
+    button: ({ value }) => <Button value={value} />,
+    if: ({ value }) => <Conditional value={value} />,
+    ifNot: ({ value }) => <Conditional value={value} />,
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
   },
   block: {
