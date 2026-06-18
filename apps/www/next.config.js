@@ -137,20 +137,6 @@ const nextConfig = {
             },
           ],
         },
-        // Rewrite for crawlers on gift article URLs so the OG image includes the gift badge
-        {
-          source: '/:path*',
-          destination: '/_ssr/:path*',
-          has: [
-            { type: 'query', key: 'gift' },
-            {
-              type: 'header',
-              key: 'User-Agent',
-              value:
-                '.*(Googlebot|facebookexternalhit|Twitterbot|Bluesky|WhatsApp|TelegramBot).*',
-            },
-          ],
-        },
         {
           source: '/pgp/:userSlug',
           destination: '/api/pgp/:userSlug',
