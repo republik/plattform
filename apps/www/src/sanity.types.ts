@@ -76,7 +76,7 @@ export type SanityImageAssetReference = {
 
 export type Image1 = {
   asset?: SanityImageAssetReference
-  media?: unknown // Unable to locate the referenced type "image.media1" in schema
+  media?: unknown // Unable to locate the referenced type "media1" in schema
   hotspot?: SanityImageHotspot
   crop?: SanityImageCrop
   _type: 'image'
@@ -135,7 +135,8 @@ export type BestOfDialogue = {
 
 export type TitleBlock = {
   _type: 'titleBlock'
-  title: string
+  cover?: EditorialImage
+  heading?: PageReference
 }
 
 export type TeaserList = {
@@ -152,47 +153,77 @@ export type TeaserItem = {
   reference: ArticleReference | PageReference
 }
 
-export type Page = {
-  _id: string
-  _type: 'page'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title?: string
-  slug?: Slug
-  pageBuilder?: Array<
-    | ({
-        _key: string
-      } & TitleBlock)
-    | ({
-        _key: string
-      } & TeaserItem)
-    | ({
-        _key: string
-      } & TeaserList)
-    | ({
-        _key: string
-      } & BestOfDialogue)
-    | ({
-        _key: string
-      } & MeineRepublik)
-    | ({
-        _key: string
-      } & CallToAction)
-    | ({
-        _key: string
-      } & Menu)
-    | ({
-        _key: string
-      } & EditorBlock)
-    | ({
-        _key: string
-      } & SearchBlock)
-  >
-  image?: Image1
-  frontTeaser?: FrontTeaser
-  seo?: Seo
+export type LegacyMeta = {
+  _type: 'legacyMeta'
+  template?: string
+  audioCover?: AudioCover
+  audioCoverCrop?: AudioCoverCrop
 }
+
+export type Mdast = {
+  _type: 'mdast'
+  content?: string
+}
+
+export type NestedEditor = Array<
+  | {
+      children?: Array<
+        | {
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }
+        | ({
+            _key: string
+          } & Variable)
+        | ({
+            _key: string
+          } & VoiceTag)
+      >
+      style?: 'normal' | 'heading'
+      listItem?: 'bullet' | 'number'
+      markDefs?: Array<
+        | ({
+            _key: string
+          } & Link)
+        | ({
+            _key: string
+          } & InternalLink)
+      >
+      level?: number
+      _type: 'block'
+      _key: string
+    }
+  | ({
+      _key: string
+    } & Divider)
+  | ({
+      _key: string
+    } & Button)
+>
+
+export type InlineEditor = Array<{
+  children?: Array<{
+    marks?: Array<string>
+    text?: string
+    _type: 'span'
+    _key: string
+  }>
+  style?: 'normal'
+  listItem?: never
+  markDefs?: Array<
+    | ({
+        _key: string
+      } & Link)
+    | ({
+        _key: string
+      } & InternalLink)
+  >
+  level?: number
+  _type: 'block'
+  _key: string
+}>
 
 export type ArticleEditor = Array<
   | {
@@ -283,112 +314,6 @@ export type ArticleEditor = Array<
     } & Button)
 >
 
-export type Code = {
-  _type: 'code'
-  language?: string
-  filename?: string
-  code?: string
-  highlightedLines?: Array<number>
-}
-
-export type Slug = {
-  _type: 'slug'
-  current: string
-  source?: string
-}
-
-export type ArticlePreview = {
-  _type: 'articlePreview'
-  title?: string
-  lead?: string
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-}
-
-export type ArticleTheme = {
-  _type: 'articleTheme'
-  kind?: 'EDITORIAL' | 'META'
-  color?: Color
-  darkMode?: boolean
-}
-
-export type LegacyMeta = {
-  _type: 'legacyMeta'
-  template?: string
-  audioCover?: AudioCover
-  audioCoverCrop?: AudioCoverCrop
-}
-
-export type Mdast = {
-  _type: 'mdast'
-  content?: string
-}
-
-export type NestedEditor = Array<
-  | {
-      children?: Array<
-        | {
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }
-        | ({
-            _key: string
-          } & Variable)
-        | ({
-            _key: string
-          } & VoiceTag)
-      >
-      style?: 'normal' | 'heading'
-      listItem?: 'bullet' | 'number'
-      markDefs?: Array<
-        | ({
-            _key: string
-          } & Link)
-        | ({
-            _key: string
-          } & InternalLink)
-      >
-      level?: number
-      _type: 'block'
-      _key: string
-    }
-  | ({
-      _key: string
-    } & Divider)
-  | ({
-      _key: string
-    } & Button)
->
-
-export type InlineEditor = Array<{
-  children?: Array<{
-    marks?: Array<string>
-    text?: string
-    _type: 'span'
-    _key: string
-  }>
-  style?: 'normal'
-  listItem?: never
-  markDefs?: Array<
-    | ({
-        _key: string
-      } & Link)
-    | ({
-        _key: string
-      } & InternalLink)
-  >
-  level?: number
-  _type: 'block'
-  _key: string
-}>
-
 export type Caption = {
   _type: 'caption'
   legend?: InlineEditor
@@ -432,6 +357,7 @@ export type Article = {
   _updatedAt: string
   _rev: string
   cover?: EditorialImage
+  heading?: PageReference
   title?: InlineEditor
   description?: InlineEditor
   byline?: InlineEditor
@@ -452,11 +378,17 @@ export type Article = {
   audioDurationMs?: number
   estimatedConsumptionMinutes?: number
   image?: Image1
+  shortTitle?: InlineEditor
+  shortLead?: InlineEditor
   frontTeaser?: FrontTeaser
   seo?: Seo
   feed?: boolean
   notificationTitle?: string
-  articleCollection?: ArticleCollectionReference
+  articleCollection?: Array<
+    {
+      _key: string
+    } & ArticleCollectionReference
+  >
   emailSubject?: string
   newsletter?: NewsletterReference
   podcast?: PodcastReference
@@ -475,18 +407,18 @@ export type Article = {
   }>
   readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
   showTextProgress?: boolean
-  theme?: ArticleTheme
+  theme?: Theme
   mdast?: Mdast
   publikatorMeta?: LegacyMeta
 }
 
-export type Color = {
-  _type: 'color'
-  hex?: string
-  alpha?: number
-  hsl?: HslaColor
-  hsv?: HsvaColor
-  rgb?: RgbaColor
+export type Theme = {
+  _type: 'theme'
+  titleFont?: 'SERIF' | 'SANS'
+  bodyFont?: 'SERIF' | 'SANS'
+  accentColor?: Color
+  backgroundColor?: Color
+  darkMode?: boolean
 }
 
 export type Contributor = {
@@ -572,6 +504,60 @@ export type Newsletter = {
   savedSegmentId?: number
 }
 
+export type Slug = {
+  _type: 'slug'
+  current: string
+  source?: string
+}
+
+export type Page = {
+  _id: string
+  _type: 'page'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: InlineEditor
+  description?: InlineEditor
+  publishDate?: string
+  slug: Slug
+  repoId?: string
+  pageBuilder?: Array<
+    | ({
+        _key: string
+      } & TitleBlock)
+    | ({
+        _key: string
+      } & TeaserItem)
+    | ({
+        _key: string
+      } & TeaserList)
+    | ({
+        _key: string
+      } & EditorBlock)
+    | ({
+        _key: string
+      } & CallToAction)
+    | ({
+        _key: string
+      } & Menu)
+    | ({
+        _key: string
+      } & SearchBlock)
+    | ({
+        _key: string
+      } & BestOfDialogue)
+    | ({
+        _key: string
+      } & MeineRepublik)
+  >
+  image?: Image1
+  shortTitle?: InlineEditor
+  shortLead?: InlineEditor
+  frontTeaser?: FrontTeaser
+  seo?: Seo
+  theme?: Theme
+}
+
 export type Seo = {
   _type: 'seo'
   title?: string
@@ -614,6 +600,14 @@ export type FrontTeaser = {
     | 'UNDERNEATH'
   color?: Color
   backgroundColor?: Color
+}
+
+export type Code = {
+  _type: 'code'
+  language?: string
+  filename?: string
+  code?: string
+  highlightedLines?: Array<number>
 }
 
 export type EditorialImage = {
@@ -727,14 +721,6 @@ export type ArticleCollection = {
     crop?: SanityImageCrop
     _type: 'image'
   }
-  overview?: Array<
-    | ({
-        _key: string
-      } & ArticleReference)
-    | ({
-        _key: string
-      } & ArticlePreview)
-  >
 }
 
 export type StoryComponent = {
@@ -818,6 +804,15 @@ export type GroupedEditorialImage = {
   }
   alt?: string
   caption?: Caption
+}
+
+export type Color = {
+  _type: 'color'
+  hex?: string
+  alpha?: number
+  hsl?: HslaColor
+  hsv?: HsvaColor
+  rgb?: RgbaColor
 }
 
 export type SeoImageBuilder = {
@@ -994,31 +989,29 @@ export type AllSanitySchemaTypes =
   | TitleBlock
   | TeaserList
   | TeaserItem
-  | Page
-  | ArticleEditor
-  | Code
-  | Slug
-  | ArticlePreview
-  | ArticleTheme
   | LegacyMeta
   | Mdast
   | NestedEditor
   | InlineEditor
+  | ArticleEditor
   | Caption
   | VoiceTag
   | InternalLink
   | DiscussionReference
   | ContributorReference
   | Article
-  | Color
+  | Theme
   | Contributor
   | SanityImageCrop
   | SanityImageHotspot
   | Discussion
   | Podcast
   | Newsletter
+  | Slug
+  | Page
   | Seo
   | FrontTeaser
+  | Code
   | EditorialImage
   | Link
   | Variable
@@ -1043,6 +1036,7 @@ export type AllSanitySchemaTypes =
   | Divider
   | ImageGroup
   | GroupedEditorialImage
+  | Color
   | SeoImageBuilder
   | MediaTag
   | RgbaColor
@@ -1280,17 +1274,7 @@ export type ARTICLE_QUERY_RESULT = {
     title: string | null
     description: string | null
   } | null
-  articleCollection: {
-    title: string
-    description: string | null
-    image: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-    } | null
-  } | null
+  articleCollection: null
   newsletter: {
     title: string
     description: string | null
@@ -1306,7 +1290,7 @@ export type ARTICLE_QUERY_RESULT = {
   } | null
   theme: {
     darkMode: boolean | null
-    color: Color | null
+    color: null
   } | null
   contributors: Array<{
     _id: null
@@ -1327,9 +1311,9 @@ export type ARTICLE_QUERY_RESULT = {
     title: InlineEditor | null
     description: InlineEditor | null
     slug: Slug
-    collection: string | null
+    collection: null
     theme: {
-      color: Color | null
+      color: null
     } | null
     contributors: Array<{
       kind: string | null

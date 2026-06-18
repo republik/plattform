@@ -21,6 +21,7 @@ import { ImageGroup } from './image-group'
 import { InfoBox } from './infobox'
 import { Note } from './note'
 import { PullQuote } from './pull-quote'
+import { LegacyEmbedVideo } from '@/app/(sanity)/articles/[...path]/components/legacy-embed-video'
 
 const ARTICLE_CONTENT_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -72,6 +73,7 @@ const ptComponents: Partial<PortableTextReactComponents> = {
     // This is the web, we never render emailOnly blocks :)
     emailOnly: () => null,
     webOnly: WebOnly,
+    embedVideo: LegacyEmbedVideo,
   },
   block: {
     heading: ({ children }) => <h2>{children}</h2>,
