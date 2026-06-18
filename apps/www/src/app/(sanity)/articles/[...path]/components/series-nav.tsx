@@ -47,6 +47,7 @@ export async function SeriesNav({ value }: { value: SeriesNav }) {
           scrollSnapType: 'x mandatory',
           display: 'grid',
           gridAutoFlow: 'column',
+          gridAutoColumns: 'min(280px, 80vw)',
           gap: '4',
         })}
       >
@@ -70,9 +71,8 @@ export async function SeriesNav({ value }: { value: SeriesNav }) {
                 borderColor: 'divider',
                 borderStyle: 'solid',
                 borderWidth: '1px',
-                width: '240px',
-
-                scrollSnapAlign: 'start',
+                width: 'full',
+                scrollSnapAlign: 'center',
               })}
             >
               <p>Folge {i + 1}</p>
