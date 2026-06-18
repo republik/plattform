@@ -26,11 +26,11 @@ const SERIES_NAV_QUERY = defineQuery(
 export async function SeriesNav({ value }: { value: SeriesNav }) {
   const { data: series } = await sanityFetch({
     query: SERIES_NAV_QUERY,
-    params: { id: value.series?._ref },
+    params: { id: value.series._ref },
   })
 
   if (!series) {
-    return <div>KEINE SERIE '{value.series?._ref}' GEFUNDEN</div>
+    return <div>KEINE SERIE '{value.series._ref}' GEFUNDEN</div>
   }
 
   return (

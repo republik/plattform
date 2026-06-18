@@ -703,7 +703,7 @@ export type Button = {
 
 export type SeriesNav = {
   _type: 'seriesNav'
-  series?: ArticleCollectionReference
+  series: ArticleCollectionReference
 }
 
 export type ArticleCollection = {
@@ -1234,7 +1234,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'seriesNav'
-        series?: ArticleCollectionReference
+        series: ArticleCollectionReference
         markDefs: null
       }
     | {
