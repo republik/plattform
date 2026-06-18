@@ -1,9 +1,9 @@
 'use client'
 
-import { ArticleThemeType } from '@/app/(sanity)/lib/types'
 import { useForceTheme } from '@/app/components/theme-provider'
+import type { Theme } from '@/sanity.types'
 
-export function ArticleTheme({ theme }: { theme?: ArticleThemeType }) {
+export function ArticleTheme({ theme }: { theme?: Omit<Theme, '_type'> }) {
   if (!theme) return null
 
   if (theme.darkMode) {
@@ -11,6 +11,6 @@ export function ArticleTheme({ theme }: { theme?: ArticleThemeType }) {
   }
 
   return (
-    <style>{`:root { --page-theme-accent-color: ${theme?.color?.hex}; }`}</style>
+    <style>{`:root { --page-theme-accent-color: ${theme?.accentColor?.hex}; }`}</style>
   )
 }

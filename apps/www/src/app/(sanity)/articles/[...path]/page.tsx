@@ -62,7 +62,7 @@ const ARTICLE_QUERY = defineQuery(
     },
     theme {
       darkMode,
-      color
+      accentColor
     },
     contributors[]{
       _id,
@@ -79,7 +79,7 @@ const ARTICLE_QUERY = defineQuery(
       slug,
       "collection": articleCollection->title,
       theme {
-        color
+        accentColor
       },
       contributors[]{
         kind,
@@ -108,7 +108,8 @@ export default async function PostPage({
       <ArticleTheme theme={article.theme} />
       <article className={editorialContent()}>
         {/* TITLE BLOCK */}
-        {article.articleCollection && (
+        {/* TODO:  DISABLED BECAUSE OF SCHEMA DATA MISMATCH*/}
+        {/*{article.articleCollection && (
           <p
             className={css({
               textStyle: 'editorialCollection',
@@ -119,7 +120,7 @@ export default async function PostPage({
           >
             {article.articleCollection.title}
           </p>
-        )}
+        )}*/}
         <h1
           className={css({
             textStyle: 'editorialTitle',
@@ -147,11 +148,13 @@ export default async function PostPage({
 
         <ArticleContent slug={slug} />
 
+        {/* TODO:  DISABLED BECAUSE OF SCHEMA DATA MISMATCH*/}
+        {/*
         <FollowArticle
           contributors={article.contributors}
           collection={article.articleCollection}
           newsletter={article.newsletter}
-        />
+        />*/}
 
         <ArticleRecommendations
           recommendations={article.articleRecommendations}

@@ -1,7 +1,6 @@
 import { definePreset } from '@pandacss/dev'
 import { buttonRecipe } from '../src/recipes/button'
 import { editorialContentRecipe } from '../src/recipes/editorial-content'
-import { contentContainerRecipe } from '../src/recipes/content-container'
 
 export const presetRepublik = definePreset({
   name: 'republik',

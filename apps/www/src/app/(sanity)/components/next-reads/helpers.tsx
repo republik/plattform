@@ -40,7 +40,7 @@ export function CategoryLabel({ article }: { article: ArticleRecommendation }) {
   const label = article.collection
   if (!label) return null
 
-  const color = article.theme?.color?.hex
+  const color = article.theme?.accentColor?.hex
 
   return <h5 style={{ color }}>{label}</h5>
 }
