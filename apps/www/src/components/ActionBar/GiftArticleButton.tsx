@@ -24,7 +24,7 @@ import {
 const styles = {
   container: css({
     width: '260px',
-    padding: '1 0',
+    padding: '1',
   }),
   header: css({
     textStyle: 'sansSerifMedium',
@@ -35,17 +35,16 @@ const styles = {
     gap: '1',
   }),
   description: css({
-    fontSize: 's',
+    fontSize: 'xs',
     lineHeight: '1.4',
-    marginBottom: '4',
-    color: 'textSoft',
+    marginBottom: '2',
   }),
   linkButton: css({
     display: 'flex',
     alignItems: 'center',
     gap: '2',
     width: 'full',
-    padding: '2 0',
+    paddingTop: '4',
     cursor: 'pointer',
     border: 'none',
     background: 'none',
@@ -60,7 +59,7 @@ const styles = {
     borderTopWidth: '1px',
     borderTopStyle: 'solid',
     borderColor: 'divider',
-    marginTop: '1',
+    marginTop: '4',
   }),
   exhausted: css({
     fontSize: 's',
@@ -124,19 +123,31 @@ function ShareOptions({
         </span>
       </button>
       <div className={styles.divider} />
-      <button className={styles.linkButton} onClick={() => handleOpen('facebook')}>
+      <button
+        className={styles.linkButton}
+        onClick={() => handleOpen('facebook')}
+      >
         <IconLogoFacebook size={20} />
         <span>Facebook</span>
       </button>
-      <button className={styles.linkButton} onClick={() => handleOpen('bluesky')}>
+      <button
+        className={styles.linkButton}
+        onClick={() => handleOpen('bluesky')}
+      >
         <IconLogoBluesky size={20} />
         <span>Bluesky</span>
       </button>
-      <button className={styles.linkButton} onClick={() => handleOpen('whatsapp')}>
+      <button
+        className={styles.linkButton}
+        onClick={() => handleOpen('whatsapp')}
+      >
         <IconLogoWhatsApp size={20} />
         <span>WhatsApp</span>
       </button>
-      <button className={styles.linkButton} onClick={() => handleOpen('telegram')}>
+      <button
+        className={styles.linkButton}
+        onClick={() => handleOpen('telegram')}
+      >
         <IconLogoTelegram size={20} />
         <span>Telegram</span>
       </button>
@@ -296,7 +307,10 @@ export default function GiftArticleButton({
               {t('article/actionbar/gift/shareAnyway')}
             </div>
             {useNativeShare ? (
-              <button className={styles.linkButton} onClick={handleNativeShareRegular}>
+              <button
+                className={styles.linkButton}
+                onClick={handleNativeShareRegular}
+              >
                 <IconShare size={20} />
                 <span>{t('article/actionbar/share')}</span>
               </button>

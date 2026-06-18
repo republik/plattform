@@ -3107,8 +3107,8 @@
     },
     {
       "key": "article/actionbar/gift/description",
-      "value": "Freien Zugriff auf diesen Beitrag für 14 Tage geben. Sie haben noch {remaining} Geschenk-Beiträge diesen Monat verfügbar. Mehr erfahren."
-    },  
+      "value": "Freien Zugriff auf diesen Beitrag schenken. Mehr erfahren."
+    },
     {
       "key": "article/actionbar/gift/copyLink",
       "value": "Geschenk-Link kopieren"
