@@ -33,6 +33,7 @@ const init = async (context) => {
         1000 * intervalSecs,
       )
 
+      await activateDeferredGrants(t, pgdb, redis, mail)
       await recommendations(t, pgdb, mail)
       await expireGrants(t, pgdb, mail)
       await followupGrants(t, pgdb, mail)
@@ -78,6 +79,31 @@ const init = async (context) => {
 }
 
 module.exports = { init }
+
+/**
+ * Activates begun grants whose activation was deferred by a campaign's
+ * grantBeginInterval: applies perks, member role and onboarding emails
+ * once beginAt is reached.
+ */
+const activateDeferredGrants = async (t, pgdb, redis, mail) => {
+  debug('activateGrants...')
+  for (const grant of await grantsLib.findUnactivatedDeferred(pgdb)) {
+    const transaction = await pgdb.transactionBegin()
+
+    try {
+      await grantsLib.activateGrant(grant, t, transaction, redis, mail)
+      await transaction.transactionCommit()
+    } catch (e) {
+      await transaction.transactionRollback()
+
+      console.error('activateDeferredGrants, grant failed', {
+        error: e,
+        grant: grant.id,
+      })
+    }
+  }
+  debug('activateGrants done')
+}
 
 /**
  * Sends recommendations on current grants (only for campaigns with active recommendations)

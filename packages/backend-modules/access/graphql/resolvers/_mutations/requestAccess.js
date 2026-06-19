@@ -2,7 +2,7 @@ const debug = require('debug')('access:mutation:requestAccess')
 
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
-const { request } = require('../../../lib/grants')
+const { request, ensureUserHasNoActiveMembershipOrSubscription } = require('../../../lib/grants')
 
 module.exports = async (
   _,
@@ -10,6 +10,7 @@ module.exports = async (
   { req, user, pgdb, redis, t, mail },
 ) => {
   ensureSignedIn(req)
+  await ensureUserHasNoActiveMembershipOrSubscription(user, pgdb, t)
   debug('begin', { campaignId, user: user.id })
 
   const transaction = await pgdb.transactionBegin()
@@ -37,3 +38,4 @@ module.exports = async (
     throw e
   }
 }
+

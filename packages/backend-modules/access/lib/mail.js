@@ -69,6 +69,23 @@ const sendRecipientOnboarding = async (
     pgdb,
   })
 
+const sendRecipientInReview = async (
+  granter,
+  campaign,
+  recipient,
+  grant,
+  t,
+  pgdb,
+) =>
+  sendMail(recipient.email, 'recipient', 'in_review', {
+    granter,
+    recipient,
+    campaign,
+    grant,
+    t,
+    pgdb,
+  })
+
 const sendRecipientExpired = async (
   granter,
   campaign,
@@ -342,6 +359,9 @@ module.exports = {
 
   // Onboarding
   sendRecipientOnboarding,
+
+  // Notice that a request is being reviewed (campaign.grantBeginInterval)
+  sendRecipientInReview,
 
   // Offboarding when access expired
   sendRecipientExpired,

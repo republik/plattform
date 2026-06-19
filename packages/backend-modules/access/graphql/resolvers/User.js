@@ -15,9 +15,19 @@ module.exports = {
 
     const grants = await grantsLib.findByRecipient(user, { withPast, pgdb })
 
-    debug('accessGrants', { user: user.id, grants: grants.length })
+    // include grants which were requested but begin in the future
+    // (campaigns with a grantBeginInterval); withPast already covers them
+    const pendingGrants = withPast
+      ? []
+      : await grantsLib.findPendingByRecipient(user, { pgdb })
 
-    return grants
+    debug('accessGrants', {
+      user: user.id,
+      grants: grants.length,
+      pendingGrants: pendingGrants.length,
+    })
+
+    return [...pendingGrants, ...grants]
   },
   accessCampaigns: async (user, { withPast }, { user: me, pgdb }) => {
     if (!Roles.userIsMeOrInRoles(user, me, PRIVILEDGED_ROLES)) {

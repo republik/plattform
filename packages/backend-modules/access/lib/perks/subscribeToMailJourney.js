@@ -20,11 +20,17 @@ const give = async (
   redis,
   mail,
 ) => {
-  if (!(settings?.audience)) {
-    throw new Error(`Error while subscribing user to mailchimp journey ${settings?.audience}, valid audience settings are REGWALL_TRIAL and PROBELESEN`)
-  }
+  // audienceId (direct Mailchimp audience id from campaign config) takes
+  // precedence over the symbolic audience name mapped to env vars
+  const audienceId = settings?.audienceId || audiences[settings?.audience]
 
-  const audienceId = audiences[settings.audience]
+  if (!audienceId) {
+    throw new Error(
+      `Error while subscribing user to mailchimp journey: provide settings.audienceId or settings.audience (REGWALL_TRIAL or PROBELESEN, requires the corresponding env var); got ${JSON.stringify(
+        settings,
+      )}`,
+    )
+  }
 
   await mail.addUserToAudience({
     user: recipient,
