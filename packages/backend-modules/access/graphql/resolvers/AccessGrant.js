@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 const campaignsLib = require('../../lib/campaigns')
 const eventsLib = require('../../lib/events')
 
@@ -72,7 +74,7 @@ module.exports = {
       return t('api/access/resolvers/AccessGrant/status/unclaimed')
     }
 
-    if (grant.beginAt && new Date(grant.beginAt) > new Date()) {
+    if (grant.beginAt && moment(grant.beginAt).isAfter(moment())) {
       return t('api/access/resolvers/AccessGrant/status/pending')
     }
 
