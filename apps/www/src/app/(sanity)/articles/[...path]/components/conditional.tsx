@@ -4,7 +4,7 @@ import { useMe } from '@/lib/context/MeContext'
 import type { If, IfNot } from '@/sanity.types'
 
 export function Conditional({ value }: { value: If | IfNot }) {
-  const { meLoading, hasActiveMembership } = useMe()
+  const { meLoading, hasAccess } = useMe()
 
   if (meLoading) {
     return null
@@ -13,9 +13,8 @@ export function Conditional({ value }: { value: If | IfNot }) {
   // TODO: exhaustively check for conditions
   let conditionIsSatisfied: boolean
   switch (value.present) {
-    case 'hasActiveMembership':
-      conditionIsSatisfied =
-        value._type === 'if' ? hasActiveMembership : !hasActiveMembership
+    case 'hasAccess':
+      conditionIsSatisfied = value._type === 'if' ? hasAccess : !hasAccess
       break
     default:
       conditionIsSatisfied = true

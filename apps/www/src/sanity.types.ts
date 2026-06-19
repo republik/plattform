@@ -111,6 +111,7 @@ export type CallToAction = {
   target: NewsletterReference | ArticleCollectionReference | PodcastReference
   title?: string
   ctaText: string
+  useAccentColor?: boolean
 }
 
 export type Menu = {
@@ -136,6 +137,7 @@ export type BestOfDialogue = {
 export type TitleBlock = {
   _type: 'titleBlock'
   cover?: EditorialImage
+  useCoverAsTitle?: boolean
   heading?: PageReference
 }
 
@@ -382,7 +384,7 @@ export type Article = {
   shortLead?: InlineEditor
   frontTeaser?: FrontTeaser
   seo?: Seo
-  feed?: boolean
+  showInFeed?: boolean
   notificationTitle?: string
   articleCollection?: Array<
     {
@@ -415,7 +417,6 @@ export type Article = {
 export type Theme = {
   _type: 'theme'
   titleFont?: 'SERIF' | 'SANS'
-  bodyFont?: 'SERIF' | 'SANS'
   accentColor?: Color
   backgroundColor?: Color
   darkMode?: boolean
@@ -635,18 +636,18 @@ export type Link = {
 
 export type Variable = {
   _type: 'variable'
-  name?: string
+  name: 'firstName' | 'lastName'
 }
 
 export type IfNot = {
   _type: 'ifNot'
-  present?: string
+  present: 'hasAccess' | 'lastName'
   body?: NestedEditor
 }
 
 export type If = {
   _type: 'if'
-  present?: string
+  present: 'hasAccess' | 'lastName'
   body?: NestedEditor
 }
 
@@ -735,7 +736,31 @@ export type DynamicComponent = {
   _type: 'dynamicComponent'
   size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
   src?: string
-  identifier?: string
+  identifier?:
+    | 'MANIFEST'
+    | 'TEAM_TEASER'
+    | 'REASONS_VIDEO'
+    | 'VOTEBOX'
+    | 'VOTE_COUNTER'
+    | 'VOTE_RESULT'
+    | 'TESTIMONIAL_LIST'
+    | 'ELECTION_CANDIDACY'
+    | 'ELECTION'
+    | 'ELECTION_RESULT'
+    | 'ELECTION_RESULT_DIVERSITY'
+    | 'INSTANT_SURVEY'
+    | 'QUESTIONNAIRE'
+    | 'QUESTIONNAIRE_SUBMISSIONS'
+    | 'QUESTIONNAIRE_OVERVIEW'
+    | 'EDGE_QUESTION'
+    | 'NEWSLETTER_SIGNUP'
+    | 'CLIMATE_LAB_COUNTER'
+    | 'CLIMATE_LAB_INLINE_TEASER'
+    | 'POSTCARD'
+    | 'POSTCARD_GALLERY'
+    | 'CHALLENGE_ACCEPTED_INLINE_TEASER'
+    | 'COMPACT_DETAILS_FORM'
+    | 'TRIAL_FORM'
   props?: Code
   autoHtml?: boolean
   html?: Code
@@ -1126,7 +1151,31 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
         _type: 'dynamicComponent'
         size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
         src?: string
-        identifier?: string
+        identifier?:
+          | 'CHALLENGE_ACCEPTED_INLINE_TEASER'
+          | 'CLIMATE_LAB_COUNTER'
+          | 'CLIMATE_LAB_INLINE_TEASER'
+          | 'COMPACT_DETAILS_FORM'
+          | 'EDGE_QUESTION'
+          | 'ELECTION_CANDIDACY'
+          | 'ELECTION_RESULT_DIVERSITY'
+          | 'ELECTION_RESULT'
+          | 'ELECTION'
+          | 'INSTANT_SURVEY'
+          | 'MANIFEST'
+          | 'NEWSLETTER_SIGNUP'
+          | 'POSTCARD_GALLERY'
+          | 'POSTCARD'
+          | 'QUESTIONNAIRE_OVERVIEW'
+          | 'QUESTIONNAIRE_SUBMISSIONS'
+          | 'QUESTIONNAIRE'
+          | 'REASONS_VIDEO'
+          | 'TEAM_TEASER'
+          | 'TESTIMONIAL_LIST'
+          | 'TRIAL_FORM'
+          | 'VOTE_COUNTER'
+          | 'VOTE_RESULT'
+          | 'VOTEBOX'
         props?: Code
         autoHtml?: boolean
         html?: Code
@@ -1187,14 +1236,14 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'if'
-        present?: string
+        present: 'hasAccess' | 'lastName'
         body?: NestedEditor
         markDefs: null
       }
     | {
         _key: string
         _type: 'ifNot'
-        present?: string
+        present: 'hasAccess' | 'lastName'
         body?: NestedEditor
         markDefs: null
       }
