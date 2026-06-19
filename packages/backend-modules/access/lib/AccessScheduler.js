@@ -96,9 +96,10 @@ const activateDeferredGrants = async (t, pgdb, redis, mail) => {
     } catch (e) {
       await transaction.transactionRollback()
 
-      debug('rollback', { grant: grant.id })
-
-      throw e
+      console.error('activateDeferredGrants, grant failed', {
+        error: e,
+        grant: grant.id,
+      })
     }
   }
   debug('activateGrants done')

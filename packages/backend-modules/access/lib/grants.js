@@ -269,7 +269,7 @@ const activateGrant = async (grant, t, pgdb, redis, mail) => {
 
   const subscribeToEditorialNewsletters =
     campaign.config?.subscribeToEditorialNewsletters ||
-    perks.some(({ settings }) => !!settings.subscribeToEditorialNewsletters) ||
+    perks.filter(Boolean).some(({ settings }) => !!settings.subscribeToEditorialNewsletters) ||
     hasAddedMemberRole
 
   await mail.enforceSubscriptions({
@@ -329,6 +329,18 @@ const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
       id: grant.id,
       beginAt: grant.beginAt,
     })
+
+    const [campaign, granter] = await Promise.all([
+      campaignsLib.findOne(grant.accessCampaignId, pgdb),
+      pgdb.public.users.findOne({ id: grant.granterUserId }),
+    ])
+
+    const { enabled: inReviewEnabled = false } =
+      mailLib.getConfigEmails('recipient', 'in_review', campaign) || {}
+
+    if (inReviewEnabled) {
+      await mailLib.sendRecipientInReview(granter, campaign, user, grant, t, pgdb)
+    }
   } else {
     await activateGrant(grant, t, pgdb, redis, mail)
   }
