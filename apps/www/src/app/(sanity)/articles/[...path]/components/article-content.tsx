@@ -3,6 +3,8 @@ import { Conditional } from '@/app/(sanity)/articles/[...path]/components/condit
 import { EmbedDataWrapper } from '@/app/(sanity)/articles/[...path]/components/embed-datawrapper'
 import { Html } from '@/app/(sanity)/articles/[...path]/components/html'
 import { LegacyEmbedVideo } from '@/app/(sanity)/articles/[...path]/components/legacy-embed-video'
+import { SeriesNav } from '@/app/(sanity)/articles/[...path]/components/series-nav'
+import { Variable } from '@/app/(sanity)/articles/[...path]/components/variable'
 import { WebOnly } from '@/app/(sanity)/articles/[...path]/components/web-only'
 import {
   Em,
@@ -26,7 +28,6 @@ import { ImageGroup } from './image-group'
 import { InfoBox } from './infobox'
 import { Note } from './note'
 import { PullQuote } from './pull-quote'
-import { SeriesNav } from '@/app/(sanity)/articles/[...path]/components/series-nav'
 
 const ARTICLE_CONTENT_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -86,6 +87,7 @@ const ptComponents: Partial<PortableTextReactComponents> = {
     if: ({ value }) => <Conditional value={value} />,
     ifNot: ({ value }) => <Conditional value={value} />,
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
+    variable: ({ value }) => <Variable value={value} />,
   },
   block: {
     heading: ({ children }) => <h2>{children}</h2>,
