@@ -330,10 +330,7 @@ const claim = async (voucherCode, payload, user, t, pgdb, redis, mail) => {
       beginAt: grant.beginAt,
     })
 
-    const [campaign, granter] = await Promise.all([
-      campaignsLib.findOne(grant.accessCampaignId, pgdb),
-      pgdb.public.users.findOne({ id: grant.granterUserId }),
-    ])
+    const { campaign, granter } = grant
 
     const { enabled: inReviewEnabled = false } =
       mailLib.getConfigEmails('recipient', 'in_review', campaign) || {}
@@ -534,8 +531,11 @@ const invalidate = async (grant, reason, t, pgdb, mail, requestUserId) => {
         })
       }
 
+      const wasActivated =
+        !!grant.activatedAt || moment(grant.beginAt).isSameOrBefore(moment())
+
       if (
-        !!grant.activatedAt &&
+        wasActivated &&
         !(await hasUserActiveMembership(recipient, pgdb)) &&
         sendMail
       ) {
