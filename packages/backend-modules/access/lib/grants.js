@@ -725,9 +725,16 @@ const findUnassignedByEmail = async (email, pgdb) => {
   })
 }
 
-const findUnactivated = async (pgdb) => {
-  debug('findUnactivated')
+const findUnactivatedDeferred = async (pgdb) => {
+  debug('findUnactivatedDeferred')
+  const campaignsWithBeginInterval = await pgdb.public.accessCampaigns.find({
+    'grantBeginInterval !=': null,
+  })
+  if (!campaignsWithBeginInterval.length) {
+    return []
+  }
   return pgdb.public.accessGrants.find({
+    'accessCampaignId in': campaignsWithBeginInterval.map((c) => c.id),
     'beginAt <=': moment(),
     activatedAt: null,
     'recipientUserId !=': null,
@@ -859,7 +866,7 @@ module.exports = {
   regwallTrialStatus,
 
   findUnassignedByEmail,
-  findUnactivated,
+  findUnactivatedDeferred,
   findPendingByRecipient,
   findInvalid,
   findEmptyRecommendations,

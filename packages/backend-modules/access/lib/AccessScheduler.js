@@ -33,7 +33,7 @@ const init = async (context) => {
         1000 * intervalSecs,
       )
 
-      await activateGrants(t, pgdb, redis, mail)
+      await activateDeferredGrants(t, pgdb, redis, mail)
       await recommendations(t, pgdb, mail)
       await expireGrants(t, pgdb, mail)
       await followupGrants(t, pgdb, mail)
@@ -85,9 +85,9 @@ module.exports = { init }
  * grantBeginInterval: applies perks, member role and onboarding emails
  * once beginAt is reached.
  */
-const activateGrants = async (t, pgdb, redis, mail) => {
+const activateDeferredGrants = async (t, pgdb, redis, mail) => {
   debug('activateGrants...')
-  for (const grant of await grantsLib.findUnactivated(pgdb)) {
+  for (const grant of await grantsLib.findUnactivatedDeferred(pgdb)) {
     const transaction = await pgdb.transactionBegin()
 
     try {
