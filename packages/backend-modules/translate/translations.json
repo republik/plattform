@@ -2453,6 +2453,14 @@
       "value": "Gesamtbetrag"
     },
     {
+      "key": "api/invoices/table/totalInclTaxes",
+      "value": "Gesamtbetrag (inkl. {taxRate} % MWST)"
+    },
+    {
+      "key": "api/invoices/table/totalNoTaxes",
+      "value": "Gesamtbetrag (nicht MWST-pflichtig)"
+    },
+    {
       "key": "api/invoices/option/Goodie/NOTEBOOK/1",
       "value": "Notizbuch"
     },
@@ -2539,6 +2547,18 @@
     {
       "key": "api/invoices/option/Goodie/COOKIE/other",
       "value": "Republik-Guetsliformen"
+    },
+    {
+      "key": "api/invoices/option/subscriptionType/YEARLY_SUBSCRIPTION",
+      "value": "Jahresmitgliedschaft"
+    },
+    {
+      "key": "api/invoices/option/subscriptionType/MONTHLY_SUBSCRIPTION",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "api/invoices/option/subscriptionType/BENEFACTOR_SUBSCRIPTION",
+      "value": "Gönner-Mitgliedschaft"
     },
     {
       "key": "api/invoices/option/MembershipType/ABO/1",
