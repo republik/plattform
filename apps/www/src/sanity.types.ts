@@ -1507,7 +1507,7 @@ export type ARTICLE_QUERY_RESULT = {
   }> | null
 } | null
 
-// Source: src/app/(sanity)/articles/page.tsx
+// Source: src/app/(sanity)/articles/feed/page.tsx
 // Variable: ARTICLES_QUERY
 // Query: *[_type == "article" && defined(slug.current)][0...100]{    "slug": slug.current,    title  }
 export type ARTICLES_QUERY_RESULT = Array<{
