@@ -22,9 +22,9 @@ const containerStyle = cva({
 
 export function LegacyEmbedVideo({ value }: { value: EmbedVideo }) {
   try {
-    const { src, size, aspectRatio } = JSON.parse(value.data)
+    const { src, size, aspectRatio } = value
     return (
-      <div className={containerStyle({ size: size?.toUpperCase() })}>
+      <div className={containerStyle({ size })}>
         {src?.mp4 ? (
           <video
             src={src.mp4}

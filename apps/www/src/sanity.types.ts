@@ -26,6 +26,18 @@ export type ChartConfig = {
   data?: Code
 }
 
+export type Src = {
+  mp4?: string
+  hls?: string
+  thumbnail?: string
+}
+
+export type EmbedCommentDiscussion = {
+  id?: string
+  path?: string
+  title?: string
+}
+
 export type AudioCover = {
   color?: string
   anchor?: string
@@ -252,6 +264,9 @@ export type ArticleEditor = Array<
         | ({
             _key: string
           } & InternalLink)
+        | ({
+            _key: string
+          } & ExpandableLink)
       >
       level?: number
       _type: 'block'
@@ -298,6 +313,9 @@ export type ArticleEditor = Array<
     } & EmbedTwitter)
   | ({
       _key: string
+    } & EmbedComment)
+  | ({
+      _key: string
     } & EmbedDataWrapper)
   | ({
       _key: string
@@ -335,6 +353,13 @@ export type VoiceTag = {
 
 export type InternalLink = {
   _type: 'internalLink'
+  reference?: ArticleReference | ArticleCollectionReference
+}
+
+export type ExpandableLink = {
+  _type: 'expandableLink'
+  content?: InlineEditor
+  href?: string
   reference?: ArticleReference | ArticleCollectionReference
 }
 
@@ -481,6 +506,7 @@ export type Podcast = {
   appleUrl?: string
   spotifyUrl?: string
   podigeeSlug?: string
+  archived?: boolean
 }
 
 export type Newsletter = {
@@ -499,6 +525,7 @@ export type Newsletter = {
     crop?: SanityImageCrop
     _type: 'image'
   }
+  archived?: boolean
   name: string
   replyTo?: string
   fromName?: string
@@ -722,6 +749,7 @@ export type ArticleCollection = {
     crop?: SanityImageCrop
     _type: 'image'
   }
+  archived?: boolean
 }
 
 export type StoryComponent = {
@@ -771,6 +799,17 @@ export type Html = {
   html?: string
 }
 
+export type EmbedComment = {
+  _type: 'embedComment'
+  id?: string
+  content?: string
+  tags?: Array<string>
+  createdAt?: string
+  updatedAt?: string
+  parentIds?: Array<string>
+  discussion?: EmbedCommentDiscussion
+}
+
 export type EmbedDataWrapper = {
   _type: 'embedDataWrapper'
   datawrapperId?: string
@@ -781,12 +820,38 @@ export type EmbedDataWrapper = {
 
 export type EmbedTwitter = {
   _type: 'embedTwitter'
-  data?: string
+  url?: string
+  id?: string
+  createdAt?: string
+  retrievedAt?: string
+  text?: string
+  html?: string
+  userId?: string
+  userName?: string
+  userScreenName?: string
+  userProfileImageUrl?: string
+  image?: string
+  more?: string
+  playable?: boolean
 }
 
 export type EmbedVideo = {
   _type: 'embedVideo'
-  data?: string
+  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
+  platform?: 'youtube' | 'vimeo'
+  url?: string
+  id?: string
+  title?: string
+  createdAt?: string
+  retrievedAt?: string
+  userName?: string
+  userUrl?: string
+  userProfileImageUrl?: string
+  thumbnail?: string
+  aspectRatio?: number
+  durationMs?: number
+  mediaId?: string
+  src?: Src
 }
 
 export type Chart = {
@@ -995,6 +1060,8 @@ export type Geopoint = {
 
 export type AllSanitySchemaTypes =
   | ChartConfig
+  | Src
+  | EmbedCommentDiscussion
   | AudioCover
   | AudioCoverCrop
   | ArticleCollectionReference
@@ -1022,6 +1089,7 @@ export type AllSanitySchemaTypes =
   | Caption
   | VoiceTag
   | InternalLink
+  | ExpandableLink
   | DiscussionReference
   | ContributorReference
   | Article
@@ -1054,6 +1122,7 @@ export type AllSanitySchemaTypes =
   | StoryComponent
   | DynamicComponent
   | Html
+  | EmbedComment
   | EmbedDataWrapper
   | EmbedTwitter
   | EmbedVideo
@@ -1100,6 +1169,13 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
         style?: 'heading' | 'normal' | 'note'
         listItem?: 'bullet' | 'number'
         markDefs: Array<
+          | {
+              _key: string
+              _type: 'expandableLink'
+              content?: InlineEditor
+              href?: string
+              reference?: ArticleReference | ArticleCollectionReference
+            }
           | {
               _key: string
               _type: 'internalLink'
@@ -1208,6 +1284,18 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
       }
     | {
         _key: string
+        _type: 'embedComment'
+        id?: string
+        content?: string
+        tags?: Array<string>
+        createdAt?: string
+        updatedAt?: string
+        parentIds?: Array<string>
+        discussion?: EmbedCommentDiscussion
+        markDefs: null
+      }
+    | {
+        _key: string
         _type: 'embedDataWrapper'
         datawrapperId?: string
         forceDark?: boolean
@@ -1218,13 +1306,39 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'embedTwitter'
-        data?: string
+        url?: string
+        id?: string
+        createdAt?: string
+        retrievedAt?: string
+        text?: string
+        html?: string
+        userId?: string
+        userName?: string
+        userScreenName?: string
+        userProfileImageUrl?: string
+        image?: string
+        more?: string
+        playable?: boolean
         markDefs: null
       }
     | {
         _key: string
         _type: 'embedVideo'
-        data?: string
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+        platform?: 'vimeo' | 'youtube'
+        url?: string
+        id?: string
+        title?: string
+        createdAt?: string
+        retrievedAt?: string
+        userName?: string
+        userUrl?: string
+        userProfileImageUrl?: string
+        thumbnail?: string
+        aspectRatio?: number
+        durationMs?: number
+        mediaId?: string
+        src?: Src
         markDefs: null
       }
     | {
