@@ -60,6 +60,38 @@ export const editorialContentRecipe = defineRecipe({
             mb: 0,
           },
         },
+
+        '& > hr': {
+          mb: '8',
+        },
+
+        '& :where(ul)': {
+          mb: '8',
+          pl: '0',
+          listStyle: 'none',
+        },
+
+        '& :where(ol)': {
+          mb: '8',
+          pl: '[1.7em]',
+          '& > li': {
+            pl: '2',
+          },
+        },
+
+        '& :where(li)': {
+          textStyle: 'editorialParagraph',
+          pl: '6',
+          position: 'relative',
+          mb: '4',
+          _lastOfType: { mb: '0' },
+          _before: {
+            content: '"–"',
+            position: 'absolute',
+            left: 0,
+          },
+          '& p': {},
+        },
       },
       meta: {
         // TODO
