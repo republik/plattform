@@ -84,7 +84,12 @@ class SessionOverview extends Component {
                     {displayDateTime(session.device.lastSeen)}
                   </Interaction.P>
                 ) : (
-                  <Interaction.P>{session.userAgent}</Interaction.P>
+                  <>
+                    <Interaction.P>{session.userAgent}</Interaction.P>
+                    <Label>
+                      Geräte und Betriebssysteminformationen dieser Session können veraltet sein.
+                    </Label>
+                  </>
                 )}
                 <TextButton
                   onClick={() => {
