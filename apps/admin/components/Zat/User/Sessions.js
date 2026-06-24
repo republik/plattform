@@ -7,6 +7,15 @@ export const fragments = gql`
     sessions {
       id
       userAgent
+      device {
+        information {
+          appVersion
+          os
+          osVersion
+          model
+        }
+        lastSeen
+      }
     }
   }
 `
@@ -14,8 +23,12 @@ export const fragments = gql`
 export const Sessions = ({ sessions }) =>
   !!sessions?.length && (
     <div {...styles.part}>
-      {sessions.map(({ id, userAgent }) => (
-        <div key={id}>{userAgent}</div>
+      {sessions.map(({ id, userAgent, device }) => (
+        <div key={id}>
+          {device
+            ? `${device.information.os.toUpperCase()} ${device.information.osVersion} · ${device.information.model} · App ${device.information.appVersion}`
+            : userAgent}
+        </div>
       ))}
     </div>
   )
