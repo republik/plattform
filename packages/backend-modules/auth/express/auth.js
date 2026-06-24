@@ -82,6 +82,11 @@ exports.configure = ({
       req.session.cookie.maxAge = maxAgeSpecialRoles
     }
 
+   // Refresh stored user-agent when it changes (e.g. after an OS or app update).
+    const currentUA = req.headers['user-agent']
+    if (req.session && req.session.ua && currentUA && req.session.ua !== currentUA) {
+      req.session.ua = currentUA
+    }
     return next()
   })
 
