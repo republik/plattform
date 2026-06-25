@@ -1,98 +1,103 @@
-import { defineRecipe } from '@pandacss/dev'
+import { defineParts, defineRecipe } from '@pandacss/dev'
+
+const contentParts = defineParts({
+  root: { selector: '&' },
+  allBlocks: { selector: '& > *' },
+  allBlocksAfterHeadings: {
+    selector: '& > :is(h2,h3,h4,h5,h6) + *',
+  },
+  breakoutBlocks: { selector: '& > .breakout' },
+  breakoutLeftBlocks: { selector: '& > .breakout-left' },
+  breakoutRightBlocks: { selector: '& > .breakout' },
+  fullWidthBlocks: { selector: '& > .full' },
+  paragraphs: { selector: '& > p' },
+  subheadings: { selector: '& > h2' },
+  unorderedLists: { selector: '& > ul' },
+  orderedLists: { selector: '& > ol' },
+  unorderedListItems: { selector: '& > ul li' },
+  orderedListItems: { selector: '& > ol li' },
+})
 
 export const editorialContentRecipe = defineRecipe({
   className: 'editorial-content',
   description: 'Styles for editorial content (like articles)',
 
-  base: {
-    display: 'grid',
-    gridTemplateColumns: `
-    [full-start]
-      minmax(token(spacing.4), 1fr)
-      [breakout-start]
-        minmax(0, token(spacing.40))
-        [content-start]
-          min(token(sizes.editorial), calc(100% - token(spacing.8)))
-        [content-end]
-        minmax(0, token(spacing.40))
-      [breakout-end]
-      minmax(token(spacing.4), 1fr)
-    [full-end]
-    `,
-
-    '& > *': {
-      gridColumn: 'content',
+  base: contentParts({
+    root: {
+      display: 'grid',
+      gridTemplateColumns: `
+        [full-start]
+          minmax(token(spacing.4), 1fr)
+          [breakout-start]
+            minmax(0, token(spacing.40))
+            [content-start]
+              min(token(sizes.editorial), calc(100% - token(spacing.8)))
+            [content-end]
+            minmax(0, token(spacing.40))
+          [breakout-end]
+          minmax(token(spacing.4), 1fr)
+        [full-end]
+        `,
     },
-    '& > .breakout': {
+    allBlocks: {
+      gridColumn: 'content',
+      mt: '8',
+      _first: { mt: '0' },
+    },
+    allBlocksAfterHeadings: {
+      mt: '2',
+      md: {
+        mt: '3',
+      },
+    },
+    breakoutBlocks: {
       gridColumn: 'breakout',
     },
-    '& > .breakout-left': {
+    breakoutLeftBlocks: {
       gridColumn: 'breakout / content',
     },
-    '& > .breakout-right': {
+    breakoutRightBlocks: {
       gridColumn: 'content / breakout',
     },
-    '& > .full': {
+    fullWidthBlocks: {
       gridColumn: 'full',
     },
-  },
+
+    unorderedLists: {
+      pl: '0',
+      listStyle: 'none',
+    },
+    orderedLists: {
+      listStyleType: 'decimal',
+      pl: '10',
+    },
+    unorderedListItems: {
+      pl: '6',
+      position: 'relative',
+      _before: {
+        content: '"–"',
+        position: 'absolute',
+        left: 0,
+      },
+    },
+    orderedListItems: {
+      pl: '2',
+      _before: { display: 'none' },
+    },
+  }),
 
   variants: {
     theme: {
-      editorial: {
-        '& > p': {
+      editorial: contentParts({
+        paragraphs: { textStyle: 'editorialParagraph' },
+        subheadings: { textStyle: 'editorialH2' },
+        unorderedListItems: {
           textStyle: 'editorialParagraph',
-          mb: '8',
         },
-
-        '& > h2': {
-          textStyle: 'editorialH2',
-          mb: '2',
-          md: {
-            mt: '8',
-            mb: '3',
-          },
-          '& + p': { mt: 0 },
-          _first: {
-            mt: 0,
-          },
-          _last: {
-            mb: 0,
-          },
-        },
-
-        '& > hr': {
-          mb: '8',
-        },
-
-        '& :where(ul)': {
-          mb: '8',
-          pl: '0',
-          listStyle: 'none',
-        },
-
-        '& :where(ol)': {
-          mb: '8',
-          pl: '[1.7em]',
-          '& > li': {
-            pl: '2',
-          },
-        },
-
-        '& :where(li)': {
+        orderedListItems: {
           textStyle: 'editorialParagraph',
-          pl: '6',
-          position: 'relative',
-          mb: '4',
-          _lastOfType: { mb: '0' },
-          _before: {
-            content: '"–"',
-            position: 'absolute',
-            left: 0,
-          },
-          '& p': {},
         },
-      },
+      }),
       meta: {
         // TODO
       },
