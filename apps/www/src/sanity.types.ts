@@ -156,8 +156,8 @@ export type TitleBlock = {
 export type TeaserList = {
   _type: 'teaserList'
   source?: Source
-  appearance?: 'FRONT' | 'FEED' | 'OVERVIEW' | 'CAROUSEL'
-  overviewLayout?: 'GRID' | 'COLUMN'
+  appearance?: 'FEED' | 'GRID' | 'CAROUSEL' | 'FRONT'
+  feedElementAppearance?: 'TEXT' | 'TEASER'
   maxItems?: number
   counter?: boolean
 }
@@ -377,6 +377,13 @@ export type ContributorReference = {
   [internalGroqTypeReferenceTo]?: 'contributor'
 }
 
+export type SanityFileAssetReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+}
+
 export type Article = {
   _id: string
   _type: 'article'
@@ -385,7 +392,7 @@ export type Article = {
   _rev: string
   cover?: EditorialImage
   heading?: PageReference
-  title?: InlineEditor
+  title: InlineEditor
   description?: InlineEditor
   byline?: InlineEditor
   publishDate?: string
@@ -411,7 +418,7 @@ export type Article = {
   seo?: Seo
   showInFeed?: boolean
   notificationTitle?: string
-  articleCollection?: Array<
+  articleCollections?: Array<
     {
       _key: string
     } & ArticleCollectionReference
@@ -435,6 +442,12 @@ export type Article = {
   readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
   showTextProgress?: boolean
   theme?: Theme
+  files?: Array<{
+    asset?: SanityFileAssetReference
+    media?: unknown
+    _type: 'file'
+    _key: string
+  }>
   mdast?: Mdast
   publikatorMeta?: LegacyMeta
 }
@@ -544,7 +557,7 @@ export type Page = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  title?: InlineEditor
+  title: InlineEditor
   description?: InlineEditor
   publishDate?: string
   slug: Slug
@@ -1092,6 +1105,7 @@ export type AllSanitySchemaTypes =
   | ExpandableLink
   | DiscussionReference
   | ContributorReference
+  | SanityFileAssetReference
   | Article
   | Theme
   | Contributor
@@ -1434,7 +1448,7 @@ export type SERIES_NAV_QUERY_RESULT = {
   } | null
   episodes: Array<{
     _id: string
-    title: InlineEditor | null
+    title: InlineEditor
     description: InlineEditor | null
     image: Image1 | null
   }>
@@ -1453,7 +1467,7 @@ export type ARTICLE_SEO_QUERY_RESULT = {
 // Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    seo {      title,      description    },    articleCollection->{      title,      description,      image    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      darkMode,      accentColor    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    articleRecommendations[]->{      _id,      title,      description,      slug,      "collection": articleCollection->title,      theme {        accentColor      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
 export type ARTICLE_QUERY_RESULT = {
   _id: string
-  title: InlineEditor | null
+  title: InlineEditor
   description: InlineEditor | null
   seo: {
     title: string | null
@@ -1493,7 +1507,7 @@ export type ARTICLE_QUERY_RESULT = {
   }> | null
   articleRecommendations: Array<{
     _id: string
-    title: InlineEditor | null
+    title: InlineEditor
     description: InlineEditor | null
     slug: Slug
     collection: null
@@ -1512,7 +1526,7 @@ export type ARTICLE_QUERY_RESULT = {
 // Query: *[_type == "article" && defined(slug.current)][0...100]{    "slug": slug.current,    title  }
 export type ARTICLES_QUERY_RESULT = Array<{
   slug: string
-  title: InlineEditor | null
+  title: InlineEditor
 }>
 
 // Query TypeMap
