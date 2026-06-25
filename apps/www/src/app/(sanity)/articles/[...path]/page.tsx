@@ -12,6 +12,7 @@ import { Metadata } from 'next'
 import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation'
 import { ArticleContent } from './components/article-content'
+import { EditorialImage } from '@/app/(sanity)/articles/[...path]/components/editorial-image'
 
 const ARTICLE_SEO_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -47,6 +48,9 @@ const ARTICLE_QUERY = defineQuery(
     seo {
       title,
       description
+    },
+    cover {
+      ...
     },
     articleCollection->{
       title,
@@ -121,6 +125,7 @@ export default async function PostPage({
             {article.articleCollection.title}
           </p>
         )}*/}
+        {article.cover && <EditorialImage value={article.cover} />}
         <h1
           className={css({
             textStyle: 'editorialTitle',
