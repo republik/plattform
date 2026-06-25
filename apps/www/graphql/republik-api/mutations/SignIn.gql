@@ -1,0 +1,19 @@
+mutation signIn(
+  $email: String!
+  $context: String
+  $consents: [String!]
+  $tokenType: SignInTokenType
+  $accessToken: ID
+) {
+  signIn(
+    email: $email
+    context: $context
+    consents: $consents
+    tokenType: $tokenType
+    accessToken: $accessToken
+  ) {
+    phrase
+    tokenType
+    alternativeFirstFactors
+  }
+}
