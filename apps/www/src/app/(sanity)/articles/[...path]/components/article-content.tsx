@@ -28,6 +28,7 @@ import { ImageGroup } from './image-group'
 import { InfoBox } from './infobox'
 import { Note } from './note'
 import { PullQuote } from './pull-quote'
+import { DynamicComponent } from '@/app/(sanity)/articles/[...path]/components/dynamic-compontent'
 
 const ARTICLE_CONTENT_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -88,6 +89,7 @@ const ptComponents: Partial<PortableTextReactComponents> = {
     ifNot: ({ value }) => <Conditional value={value} />,
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
     variable: ({ value }) => <Variable value={value} />,
+    dynamicComponent: ({ value }) => <DynamicComponent value={value} />,
   },
   block: {
     heading: ({ children }) => <h2>{children}</h2>,
