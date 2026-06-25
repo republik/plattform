@@ -1,5 +1,6 @@
 import { definePreset } from '@pandacss/dev'
 import { buttonRecipe } from '../src/recipes/button'
+import { editorialContentRecipe } from '../src/recipes/editorial-content'
 
 export const presetRepublik = definePreset({
   name: 'republik',
@@ -44,7 +45,8 @@ export const presetRepublik = definePreset({
           viewportWidth: { value: '100vw' },
           24: { value: '6rem' },
           narrow: { value: '30rem' },
-          center: { value: '695px' },
+          editorial: { value: '695px' },
+          large: { value: '1035px' },
           shop: { value: '866px' },
           carousel: { value: '1300px' },
         },
@@ -68,6 +70,9 @@ export const presetRepublik = definePreset({
           20: { value: '5rem' },
           24: { value: '6rem' },
           32: { value: '8rem' },
+          40: { value: '10rem' },
+          48: { value: '12rem' },
+          64: { value: '16rem' },
         },
         radii: {
           full: { value: '9999px' },
@@ -329,12 +334,58 @@ export const presetRepublik = definePreset({
             lineHeight: 1,
           },
         },
-        title: {
+        editorialTitle: {
           value: {
             fontFamily: 'republikSerif',
             fontWeight: 'black',
             fontStyle: 'normal',
-            fontSize: '4em',
+            fontSize: { base: '1.875rem', md: '3.625rem' },
+            lineHeight: 1.05,
+          },
+        },
+        editorialLead: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: '400',
+            fontStyle: 'normal',
+            fontSize: { base: '1.1875rem', md: '1.4375rem' },
+            lineHeight: 1.25,
+          },
+        },
+        editorialByline: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: '400',
+            fontStyle: 'normal',
+            fontSize: { base: '0.875rem', md: '0.9375rem' },
+            lineHeight: 1.25,
+          },
+        },
+        editorialCollection: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: '500',
+            fontStyle: 'normal',
+            fontSize: { base: '1rem', md: '1.25rem' },
+          },
+        },
+        editorialParagraph: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: 400,
+            fontStyle: 'normal',
+            fontSize: { base: '1.0625rem', md: '1.1875rem' },
+            lineHeight: { base: 1.5, md: 1.6 },
+          },
+        },
+        editorialH2: {
+          value: {
+            fontFamily: 'rubis',
+            fontWeight: 700,
+            fontStyle: 'normal',
+            fontSize: { base: '1.1875rem', md: '1.5rem' },
+            lineHeight: 1.5,
+            letterSpacing: { base: 0, md: -0.21 },
           },
         },
         teaserTitle: {
@@ -529,6 +580,7 @@ export const presetRepublik = definePreset({
 
     recipes: {
       button: buttonRecipe,
+      editorialContent: editorialContentRecipe,
     },
 
     keyframes: {

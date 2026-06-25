@@ -1,15 +1,15 @@
 'use client'
 
+import { MeQuery } from '#graphql/republik-api/__generated__/gql/graphql'
+import { useScrollDirection } from '@/app/lib/hooks/useScrollDirection'
+import { IconAccountBox, IconMic, IconSearchMenu } from '@republik/icons'
 import { css } from '@republik/theme/css'
 import { hstack } from '@republik/theme/patterns'
-import Link from 'next/link'
-import { IconAccountBox, IconMic, IconSearchMenu } from '@republik/icons'
 import Image from 'next/image'
-import { NavLink } from './nav-link'
-import { MeQuery } from '#graphql/republik-api/__generated__/gql/graphql'
+import Link from 'next/link'
 import { ComponentPropsWithoutRef, useRef } from 'react'
-import { useScrollDirection } from '@/app/lib/hooks/useScrollDirection'
 import { Logo } from './logo'
+import { NavLink } from './nav-link'
 
 const getInitials = (name, email) =>
   (name && name.trim()
@@ -83,9 +83,6 @@ export function PageHeader({
       ref={headerRef}
       className={css({
         bg: 'pageBackground',
-        borderBottomWidth: 1,
-        borderBottomStyle: 'solid',
-        borderBottomColor: 'divider',
         position: 'sticky',
         top: 0,
         transition: 'transform 0.3s ease-out',
@@ -93,7 +90,7 @@ export function PageHeader({
       })}
       style={{
         transform: `translateY(${
-          scrollDirection === 'down' ? -(MAX_HEADER_HEIGHT + 1) : 0
+          scrollDirection === 'down' ? -(MAX_HEADER_HEIGHT - 1) : 0
         }px)`,
       }}
     >
@@ -229,6 +226,18 @@ export function PageHeader({
           ))}
         </div>
       ) : null}
+      <hr
+        className={css({
+          left: 0,
+          right: 0,
+          height: '3px',
+          color: 'divider', // panda's currentcolor is the fallback for borderTopColor
+          backgroundColor: 'var(--page-theme-accent-color)',
+          borderTopColor: 'var(--page-theme-accent-color)',
+          borderTopWidth: 1,
+          borderTopStyle: 'solid',
+        })}
+      />
     </div>
   )
 }

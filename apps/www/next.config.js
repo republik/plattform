@@ -67,6 +67,11 @@ const nextConfig = {
           }
         : false,
   },
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   async headers() {
     return [
       // Migrated from custom express server
@@ -86,7 +91,7 @@ const nextConfig = {
             }; includeSubDomains; preload`,
             'X-Content-Type-Options': 'nosniff',
             'X-Download-Options': 'noopen',
-            'X-Frame-Options': 'SAMEORIGIN',
+            // 'X-Frame-Options': 'SAMEORIGIN',
             // removed by helmet by default, but we keep it for now
             'X-Powered-By': 'Republik',
             'X-XSS-Protection': '1; mode=block',
@@ -123,6 +128,12 @@ const nextConfig = {
           source: '/:path*',
           destination: '/_ssr/:path*',
           has: [{ type: 'query', key: 'share' }],
+        },
+        // Rewrite to new Sanity renderer based on quey param
+        {
+          source: '/:path*',
+          destination: '/articles/:path*',
+          has: [{ type: 'query', key: 'sanity' }],
         },
         // Rewrite for crawlers when a comment is focused inside a debate on the article-site
         {
