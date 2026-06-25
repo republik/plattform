@@ -3098,6 +3098,54 @@
       "value": "Teilen"
     },
     {
+      "key": "article/actionbar/gift",
+      "value": "Verschenken"
+    },
+    {
+      "key": "article/actionbar/gift/title",
+      "value": "Beitrag verschenken"
+    },
+    {
+      "key": "article/actionbar/gift/description",
+      "value": "Freien Zugriff auf diesen Beitrag schenken. Mehr erfahren."
+    },
+    {
+      "key": "article/actionbar/gift/copyLink",
+      "value": "Geschenk-Link kopieren"
+    },
+    {
+      "key": "article/actionbar/gift/copied",
+      "value": "Link kopiert!"
+    },
+    {
+      "key": "article/actionbar/gift/exhausted",
+      "value": "Sie haben diesen Monat alle Geschenk-Beiträge aufgebraucht."
+    },
+    {
+      "key": "article/actionbar/gift/shareAnyway",
+      "value": "Sie können den Beitrag teilen. Empfänger*innen müssen ein Probeabo abschliessen um den Beitrag zu lesen."
+    },
+    {
+      "key": "article/actionbar/gift/copyLink/regular",
+      "value": "Link kopieren"
+    },
+    {
+      "key": "article/actionbar/gift/nativeShare",
+      "value": "Link verschenken"
+    },
+    {
+      "key": "article/actionbar/gift/paynote/personal",
+      "value": "Dieser Beitrag wurde Ihnen von {name} geschenkt"
+    },
+    {
+      "key": "article/actionbar/gift/paynote/anonymous",
+      "value": "Dieser Beitrag wurde Ihnen geschenkt"
+    },
+    {
+      "key": "article/actionbar/gift/expired",
+      "value": "Dieser Geschenk-Link ist abgelaufen"
+    },
+    {
       "key": "article/actionbar/facebook/title",
       "value": "Auf Facebook teilen"
     },

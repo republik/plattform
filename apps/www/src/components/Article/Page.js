@@ -9,6 +9,7 @@ import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
 import { WelcomeBanner } from '@/app/components/paynotes/paynotes-in-trial/welcome'
 import Paywall from '@/app/components/paynotes/paywall'
 import Regwall from '@/app/components/paynotes/regwall'
+import GiftPaynote, { GiftExpiredPaynote } from '@/app/components/paynotes/gift-paynote'
 
 import {
   Breakout,
@@ -74,7 +75,7 @@ const ArticlePage = ({
   const galleryRef = useRef()
 
   const router = useRouter()
-  const { share, extract, showAll } = router.query
+  const { share, extract, showAll, gift } = router.query
 
   const { me, meLoading, isEditor } = useMe()
   const {
@@ -184,12 +185,12 @@ const ArticlePage = ({
     () =>
       articleMeta &&
       articleContent && {
-        ...getMetaData(documentId, articleMeta),
+        ...getMetaData(documentId, articleMeta, { isGift: !!gift }),
         ...(metaJSONStringFromQuery
           ? JSON.parse(metaJSONStringFromQuery)
           : undefined),
       },
-    [articleMeta, articleContent, metaJSONStringFromQuery, documentId],
+    [articleMeta, articleContent, metaJSONStringFromQuery, documentId, gift],
   )
 
   const { renderSchema, schema } = useSchema({
@@ -309,7 +310,7 @@ const ArticlePage = ({
           }
 
           if (extract === 'share') {
-            return <ShareImage meta={meta} />
+            return <ShareImage meta={meta} isGift={!!gift} />
           }
 
           return (
@@ -474,6 +475,7 @@ const ArticlePage = ({
                     <Regwall />
                     <Paywall />
                     <CampaignPaywall />
+                    <GiftExpiredPaynote />
                   </article>
                 </ProgressComponent>
                 <ActionBarOverlay>{actionBarOverlay}</ActionBarOverlay>
@@ -500,6 +502,7 @@ const ArticlePage = ({
                   </Center>
                 )}
                 <PaynoteInline />
+                <GiftPaynote />
                 {episodes && !isSeriesOverview && (
                   <SeriesNav
                     inline

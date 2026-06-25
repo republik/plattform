@@ -6,6 +6,12 @@ import { useUserAgent } from '@/lib/context/UserAgentContext'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { updateArticleMetering } from './article-metering'
+import {
+  getGiftAccessForPath,
+  getExpiredGiftAccessForPath,
+  storeGiftAccess,
+  storeGiftAttribution,
+} from './gift-access'
 
 export type PaynoteKindType =
   | null
@@ -20,11 +26,14 @@ export type PaynoteKindType =
   | 'CAMPAIGN_PAYNOTE'
   | 'CAMPAIGN_PAYWALL'
   | 'CAMPAIGN_BANNER' // not a paynote per se, but logic depends on the same params
+  | 'GIFT_PAYNOTE'
+  | 'GIFT_EXPIRED'
 
 const PAYWALL_KINDS: PaynoteKindType[] = [
   'REGWALL',
   'PAYWALL',
   'CAMPAIGN_PAYWALL',
+  'GIFT_EXPIRED',
 ]
 
 type TemplateType =
@@ -104,8 +113,71 @@ export const PaynotesProvider = ({ children }) => {
 
   const [isPaywallExcluded, setIsPaywallExcluded] = useState<boolean>(false)
   const [isPaynoteExcluded, setIsPaynoteExcluded] = useState<boolean>(false)
+  const [hasGiftAccess, setHasGiftAccess] = useState<boolean | null>(null)
+  const [giftExpired, setGiftExpired] = useState<boolean>(false)
 
-  useEffect(() => {})
+  // Handle gift token validation
+  useEffect(() => {
+    const giftToken = searchParams.get('gift')
+    if (giftToken) {
+      fetch('/graphql', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: `query ValidateGiftToken($token: String!) {
+            validateGiftToken(token: $token) {
+              valid
+              documentPath
+              expiresAt
+              granter { name portrait hasPublicProfile }
+            }
+          }`,
+          variables: { token: giftToken },
+        }),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          const result = json?.data?.validateGiftToken
+          if (result?.valid) {
+            storeGiftAccess({
+              token: giftToken,
+              documentPath: result.documentPath,
+              expiresAt: result.expiresAt,
+              granter: result.granter,
+            })
+            storeGiftAttribution(giftToken, result.documentPath)
+            setHasGiftAccess(true)
+            setGiftExpired(false)
+          } else if (result && !result.valid) {
+            setHasGiftAccess(false)
+            setGiftExpired(true)
+          } else {
+            setHasGiftAccess(false)
+          }
+        })
+        .catch(() => setHasGiftAccess(false))
+      return
+    }
+
+    // Check localStorage for previously stored gift access
+    const storedAccess = getGiftAccessForPath(pathname)
+    if (storedAccess) {
+      setHasGiftAccess(true)
+      setGiftExpired(false)
+      return
+    }
+
+    const expiredAccess = getExpiredGiftAccessForPath(pathname)
+    if (expiredAccess) {
+      setHasGiftAccess(false)
+      setGiftExpired(true)
+      return
+    }
+
+    setHasGiftAccess(false)
+    setGiftExpired(false)
+  }, [pathname, searchParams])
 
   const isCampaignActive = campaign?.isActive
 
@@ -127,6 +199,15 @@ export const PaynotesProvider = ({ children }) => {
     // IP allowlist access: no paynote
     if (hasAllowlistAccess) {
       return setPaynoteKind(null)
+    }
+
+    // Gift article access: show gift paynote (non-blocking)
+    if (hasGiftAccess) {
+      return setPaynoteKind('GIFT_PAYNOTE')
+    }
+    // Expired gift link: show expired paynote (blocking)
+    if (giftExpired) {
+      return setPaynoteKind('GIFT_EXPIRED')
     }
     // ANYTHING THAT'S NOT AN ARTICLE:
     //
@@ -232,6 +313,8 @@ export const PaynotesProvider = ({ children }) => {
     isPaynoteExcluded,
     isCampaignActive,
     hasAllowlistAccess,
+    hasGiftAccess,
+    giftExpired,
   ])
 
   // console.log({ paynoteKind })
