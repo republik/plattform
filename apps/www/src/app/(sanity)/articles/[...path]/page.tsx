@@ -45,6 +45,7 @@ const ARTICLE_QUERY = defineQuery(
     _id,
     title,
     description,
+    byline,
     seo {
       title,
       description
@@ -144,7 +145,7 @@ export default async function PostPage({
             '& a': { textDecoration: 'underline' },
           })}
         >
-          <Byline contributors={article.contributors} />
+          <InlinePortableText value={article.byline} />
         </p>
 
         <div className={css({ mt: '4' })}>
