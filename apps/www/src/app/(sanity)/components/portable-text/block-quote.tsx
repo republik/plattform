@@ -1,4 +1,4 @@
-import { Caption } from '@/app/(sanity)/articles/[...path]/components/caption'
+import { Caption } from '@/app/(sanity)/components/portable-text/caption'
 import { css } from '@republik/theme/css'
 import { PortableText, PortableTextReactComponents } from 'next-sanity'
 import { ReactNode } from 'react'

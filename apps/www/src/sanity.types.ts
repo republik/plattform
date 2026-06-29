@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../../../../studio/schema.json
+// Source: ../../../studio/schema.json
 export type ChartConfig = {
   settings?: Code
   data?: Code
@@ -440,11 +440,7 @@ export type Article = {
   podcast?: PodcastReference
   discussion?: DiscussionReference
   inlineDiscussion?: boolean
-  articleRecommendations?: Array<
-    {
-      _key: string
-    } & ArticleReference
-  >
+  articleRecommendations?: ArrayOf<ArticleReference | PageReference>
   contributors?: Array<{
     kind?: string
     contributor?: ContributorReference
@@ -1450,28 +1446,6 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
   > | null
 } | null
 
-// Source: src/app/(sanity)/articles/[...path]/components/series-nav.tsx
-// Variable: SERIES_NAV_QUERY
-// Query: *[_type == "articleCollection" && _id == $id][0]{    _id,    title,    description,    image,    "episodes": *[_type == "article" && references(^._id)]{      _id,      title,      description,      image    }  }
-export type SERIES_NAV_QUERY_RESULT = {
-  _id: string
-  title: string
-  description: string | null
-  image: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  } | null
-  episodes: Array<{
-    _id: string
-    title: InlineEditor
-    description: InlineEditor | null
-    image: Image1 | null
-  }>
-} | null
-
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
 // Variable: ARTICLE_SEO_QUERY
 // Query: *[_type == "article" && slug.current == $slug][0]{    "title": coalesce(seo.title, pt::text(title)),    "description": coalesce(seo.description, pt::text(description))  }
@@ -1482,7 +1456,7 @@ export type ARTICLE_SEO_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
 // Variable: ARTICLE_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    byline,    seo {      title,      description    },    cover {      ...    },    articleCollection->{      title,      description,      image    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      darkMode,      accentColor    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    articleRecommendations[]->{      _id,      title,      description,      slug,      "collection": articleCollection->title,      theme {        accentColor      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
+// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    byline,    seo {      title,      description    },    cover {      ...    },    heading->{      _id,      "title": pt::text(title),    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      darkMode,      accentColor    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    "articleCollection": articleCollections[0]->{      _id,      title,      description,      image    },    articleRecommendations[]->{      _id,      title,      description,      slug,      heading->{        _id,        "title": pt::text(title),      },      theme {        accentColor      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
 export type ARTICLE_QUERY_RESULT = {
   _id: string
   title: InlineEditor
@@ -1509,7 +1483,10 @@ export type ARTICLE_QUERY_RESULT = {
     caption?: Caption
     size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
   } | null
-  articleCollection: null
+  heading: {
+    _id: string
+    title: string
+  } | null
   newsletter: {
     title: string
     description: string | null
@@ -1541,20 +1518,48 @@ export type ARTICLE_QUERY_RESULT = {
       _type: 'image'
     } | null
   }> | null
-  articleRecommendations: Array<{
+  articleCollection: {
     _id: string
-    title: InlineEditor
-    description: InlineEditor | null
-    slug: Slug
-    collection: null
-    theme: {
-      accentColor: Color | null
+    title: string
+    description: string | null
+    image: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
     } | null
-    contributors: Array<{
-      kind: string | null
-      name: string | null
-    }> | null
-  }> | null
+  } | null
+  articleRecommendations: Array<
+    | {
+        _id: string
+        title: InlineEditor
+        description: InlineEditor | null
+        slug: Slug
+        heading: null
+        theme: {
+          accentColor: Color | null
+        } | null
+        contributors: null
+      }
+    | {
+        _id: string
+        title: InlineEditor
+        description: InlineEditor | null
+        slug: Slug
+        heading: {
+          _id: string
+          title: string
+        } | null
+        theme: {
+          accentColor: Color | null
+        } | null
+        contributors: Array<{
+          kind: string | null
+          name: string | null
+        }> | null
+      }
+  > | null
 } | null
 
 // Source: src/app/(sanity)/articles/feed/page.tsx
@@ -1565,14 +1570,36 @@ export type ARTICLES_QUERY_RESULT = Array<{
   title: InlineEditor
 }>
 
+// Source: src/app/(sanity)/components/portable-text/series-nav.tsx
+// Variable: SERIES_NAV_QUERY
+// Query: *[_type == "articleCollection" && _id == $id][0]{    _id,    title,    description,    image,    "episodes": *[_type == "article" && references(^._id)]{      _id,      title,      description,      image    }  }
+export type SERIES_NAV_QUERY_RESULT = {
+  _id: string
+  title: string
+  description: string | null
+  image: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  } | null
+  episodes: Array<{
+    _id: string
+    title: InlineEditor
+    description: InlineEditor | null
+    image: Image1 | null
+  }>
+} | null
+
 // Query TypeMap
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    content[]{\n        ...,\n        markDefs[]{\n          ...,\n          _type == "internalLink" => {\n            "slug": @.reference->slug\n          }\n        }\n    }\n  }': ARTICLE_CONTENT_QUERY_RESULT
-    '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n\n    "episodes": *[_type == "article" && references(^._id)]{\n      _id,\n      title,\n      description,\n      image\n    }\n  }': SERIES_NAV_QUERY_RESULT
     '*[_type == "article" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description))\n  }': ARTICLE_SEO_QUERY_RESULT
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    seo {\n      title,\n      description\n    },\n    cover {\n      ...\n    },\n    articleCollection->{\n      title,\n      description,\n      image\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      "collection": articleCollection->title,\n      theme {\n        accentColor\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
+    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    seo {\n      title,\n      description\n    },\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      "title": pt::text(title),\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    "articleCollection": articleCollections[0]->{\n      _id,\n      title,\n      description,\n      image\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      heading->{\n        _id,\n        "title": pt::text(title),\n      },\n      theme {\n        accentColor\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
+    '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n\n    "episodes": *[_type == "article" && references(^._id)]{\n      _id,\n      title,\n      description,\n      image\n    }\n  }': SERIES_NAV_QUERY_RESULT
   }
 }

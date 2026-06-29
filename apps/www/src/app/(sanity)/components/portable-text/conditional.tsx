@@ -1,5 +1,5 @@
 'use client'
-import { NestedPortableText } from '@/app/(sanity)/components/portable-text/portable-text-renderers'
+import { NestedPortableText } from '@/app/(sanity)/components/portable-text/render'
 import { useMe } from '@/lib/context/MeContext'
 import type { If, IfNot } from '@/sanity.types'
 

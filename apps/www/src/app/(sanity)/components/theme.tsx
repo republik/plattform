@@ -3,7 +3,7 @@
 import { useForceTheme } from '@/app/components/theme-provider'
 import type { Theme } from '@/sanity.types'
 
-export function ArticleTheme({ theme }: { theme?: Omit<Theme, '_type'> }) {
+export function Theme({ theme }: { theme?: Omit<Theme, '_type'> }) {
   if (!theme) return null
 
   if (theme.darkMode) {

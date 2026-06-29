@@ -1,5 +1,5 @@
-import { Caption } from '@/app/(sanity)/articles/[...path]/components/caption'
-import { EditorialImage } from '@/app/(sanity)/articles/[...path]/components/editorial-image'
+import { Caption } from '@/app/(sanity)/components/portable-text/caption'
+import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import type { ImageGroup } from '@/sanity.types'
 import { cva } from '@republik/theme/css'
 import { useId } from 'react'

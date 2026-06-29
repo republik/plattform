@@ -10,7 +10,7 @@ import { css } from '@republik/theme/css'
 function FollowCollectionCard({
   collection,
 }: {
-  collection: ArticleCollection
+  collection: Partial<ArticleCollection>
 }) {
   return (
     <FollowCollectionContainer>

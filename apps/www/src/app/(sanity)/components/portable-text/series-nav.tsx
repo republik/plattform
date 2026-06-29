@@ -1,4 +1,4 @@
-import { InlinePortableText } from '@/app/(sanity)/components/portable-text/portable-text-renderers'
+import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import type { SeriesNav } from '@/sanity.types'

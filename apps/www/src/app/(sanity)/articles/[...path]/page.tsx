@@ -1,9 +1,8 @@
-import { ArticleTheme } from '@/app/(sanity)/articles/[...path]/components/article-theme'
-import { Byline } from '@/app/(sanity)/articles/[...path]/components/byline'
-import { EditLink } from '@/app/(sanity)/articles/[...path]/components/edit-link'
-import FollowArticle from '@/app/(sanity)/components/follow/follow-article'
-import { InlinePortableText } from '@/app/(sanity)/components/portable-text/portable-text-renderers'
+import { EditLink } from '@/app/(sanity)/components/edit-link'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
+import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
+import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { Theme } from '@/app/(sanity)/components/theme'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
@@ -11,8 +10,8 @@ import { editorialContent } from '@republik/theme/recipes'
 import { Metadata } from 'next'
 import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation'
+import FollowArticle from '../../components/follow/follow-article'
 import { ArticleContent } from './components/article-content'
-import { EditorialImage } from '@/app/(sanity)/articles/[...path]/components/editorial-image'
 
 const ARTICLE_SEO_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -53,10 +52,9 @@ const ARTICLE_QUERY = defineQuery(
     cover {
       ...
     },
-    articleCollection->{
-      title,
-      description,
-      image
+    heading->{
+      _id,
+      "title": pt::text(title),
     },
     newsletter->{
       title,
@@ -77,12 +75,21 @@ const ARTICLE_QUERY = defineQuery(
       "description": contributor->description,
       "portrait": contributor->portrait
     },
+    "articleCollection": articleCollections[0]->{
+      _id,
+      title,
+      description,
+      image
+    },
     articleRecommendations[]->{
       _id,
       title,
       description,
       slug,
-      "collection": articleCollection->title,
+      heading->{
+        _id,
+        "title": pt::text(title),
+      },
       theme {
         accentColor
       },
@@ -110,11 +117,11 @@ export default async function PostPage({
 
   return (
     <EventTrackingContext category='Article'>
-      <ArticleTheme theme={article.theme} />
+      <Theme theme={article.theme} />
       <article className={editorialContent()}>
         {/* TITLE BLOCK */}
-        {/* TODO:  DISABLED BECAUSE OF SCHEMA DATA MISMATCH*/}
-        {/*{article.articleCollection && (
+        {article.cover && <EditorialImage value={article.cover} />}
+        {article.heading && (
           <p
             className={css({
               textStyle: 'editorialCollection',
@@ -123,10 +130,9 @@ export default async function PostPage({
             })}
             style={{ color: 'var(--page-theme-accent-color)' }}
           >
-            {article.articleCollection.title}
+            {article.heading.title}
           </p>
-        )}*/}
-        {article.cover && <EditorialImage value={article.cover} />}
+        )}
         <h1
           className={css({
             textStyle: 'editorialTitle',
@@ -154,13 +160,11 @@ export default async function PostPage({
 
         <ArticleContent slug={slug} />
 
-        {/* TODO:  DISABLED BECAUSE OF SCHEMA DATA MISMATCH*/}
-        {/*
         <FollowArticle
           contributors={article.contributors}
           collection={article.articleCollection}
           newsletter={article.newsletter}
-        />*/}
+        />
 
         <ArticleRecommendations
           recommendations={article.articleRecommendations}

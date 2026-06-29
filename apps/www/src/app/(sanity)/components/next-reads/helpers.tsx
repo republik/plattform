@@ -1,5 +1,5 @@
 import { NextReadDocumentFieldsFragment } from '#graphql/republik-api/__generated__/gql/graphql'
-import { InlinePortableText } from '@/app/(sanity)/components/portable-text/portable-text-renderers'
+import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import type { ArticleRecommendation } from '@/app/(sanity)/lib/types'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
@@ -37,7 +37,7 @@ export function NextReadDuration({
 }
 
 export function CategoryLabel({ article }: { article: ArticleRecommendation }) {
-  const label = article.collection
+  const label = article.heading?.title
   if (!label) return null
 
   const color = article.theme?.accentColor?.hex

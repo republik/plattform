@@ -1,10 +1,10 @@
 'use client'
 
+// TODO: rename ./sanity-helpers to ./helpers once we are fully migrated
+import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import type { ArticleRecommendation } from '@/app/(sanity)/lib/types'
 import { useTranslation } from '@/lib/withT'
 import { css, cx } from '@republik/theme/css'
-// TODO: rename ./sanity-helpers to ./helpers once we are fully migrated
-import { InlinePortableText } from '@/app/(sanity)/components/portable-text/portable-text-renderers'
 import { CategoryLabel, NextReadAuthor, NextReadLink } from './helpers'
 import {
   nextReadHeader,
