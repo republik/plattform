@@ -1523,16 +1523,12 @@ export type ARTICLE_SEO_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
 // Variable: ARTICLE_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    byline,    seo {      title,      description    },    cover {      ...    },    heading->{      _id,      "title": pt::text(title),    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      darkMode,      accentColor    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    "articleCollection": articleCollections[0]->{      _id,      title,      description,      image    },    articleRecommendations[]->{      _id,      title,      description,      slug,      heading->{        _id,        "title": pt::text(title),      },      theme {        accentColor      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
+// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    byline,    cover {      ...    },    heading->{      _id,      "title": pt::text(title),    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      darkMode,      accentColor    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    "articleCollection": articleCollections[0]->{      _id,      title,      description,      image    },    articleRecommendations[]->{      _id,      title,      description,      slug,      heading->{        _id,        "title": pt::text(title),      },      theme {        accentColor      },      contributors[]{        kind,        "name": contributor->title,      }    }  }
 export type ARTICLE_QUERY_RESULT = {
   _id: string
   title: InlineEditor
   description: InlineEditor | null
   byline: InlineEditor | null
-  seo: {
-    title: string | null
-    description: string | null
-  } | null
   cover: {
     _type: 'editorialImage'
     asset?: SanityImageAssetReference
@@ -1659,14 +1655,114 @@ export type SERIES_NAV_QUERY_RESULT = {
   }>
 } | null
 
+// Source: src/app/(sanity)/pages/[...path]/components/page-content.tsx
+// Variable: PAGE_CONTENT_QUERY
+// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    pageBuilder[]{      ...,    }  }
+export type PAGE_CONTENT_QUERY_RESULT = {
+  _id: string
+  pageBuilder: Array<
+    | {
+        _key: string
+        _type: 'bestOfDialogue'
+        enabled?: boolean
+      }
+    | {
+        _key: string
+        _type: 'callToAction'
+        target:
+          | ArticleCollectionReference
+          | NewsletterReference
+          | PodcastReference
+        title?: string
+        ctaText: string
+        useAccentColor?: boolean
+      }
+    | {
+        _key: string
+        _type: 'editorBlock'
+        content?: PageEditor
+      }
+    | {
+        _key: string
+        _type: 'meineRepublik'
+        enabled?: boolean
+      }
+    | {
+        _key: string
+        _type: 'menu'
+        hasSeparator?: boolean
+        heading?: Heading
+        pages?: Array<
+          | ({
+              _key: string
+            } & Link)
+          | ({
+              _key: string
+            } & PageReference)
+        >
+      }
+    | {
+        _key: string
+        _type: 'searchBlock'
+        enabled?: boolean
+      }
+    | {
+        _key: string
+        _type: 'teaserItem'
+        reference: ArticleReference | PageReference
+      }
+    | {
+        _key: string
+        _type: 'teaserList'
+        source?: Source
+        appearance?: 'CAROUSEL' | 'FEED' | 'FRONT' | 'GRID'
+        feedElementAppearance?: 'TEASER' | 'TEXT'
+        maxItems?: number
+        counter?: boolean
+      }
+    | {
+        _key: string
+        _type: 'titleBlock'
+        cover?: EditorialImage
+        useCoverAsTitle?: boolean
+        heading?: PageReference
+      }
+  > | null
+} | null
+
+// Source: src/app/(sanity)/pages/[...path]/page.tsx
+// Variable: PAGE_SEO_QUERY
+// Query: *[_type == "page" && slug.current == $slug][0]{    "title": coalesce(seo.title, pt::text(title)),    "description": coalesce(seo.description, pt::text(description))  }
+export type PAGE_SEO_QUERY_RESULT = {
+  title: string
+  description: string
+} | null
+
+// Source: src/app/(sanity)/pages/[...path]/page.tsx
+// Variable: PAGE_QUERY
+// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    title,    description,    byline,    theme {      darkMode,      accentColor    },  }
+export type PAGE_QUERY_RESULT = {
+  _id: string
+  title: InlineEditor
+  description: InlineEditor | null
+  byline: null
+  theme: {
+    darkMode: boolean | null
+    accentColor: Color | null
+  } | null
+} | null
+
 // Query TypeMap
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    content[]{\n        ...,\n        markDefs[]{\n          ...,\n          _type == "internalLink" => {\n            "slug": @.reference->slug\n          }\n        }\n    }\n  }': ARTICLE_CONTENT_QUERY_RESULT
     '*[_type == "article" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description))\n  }': ARTICLE_SEO_QUERY_RESULT
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    seo {\n      title,\n      description\n    },\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      "title": pt::text(title),\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    "articleCollection": articleCollections[0]->{\n      _id,\n      title,\n      description,\n      image\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      heading->{\n        _id,\n        "title": pt::text(title),\n      },\n      theme {\n        accentColor\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
+    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      "title": pt::text(title),\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    "articleCollection": articleCollections[0]->{\n      _id,\n      title,\n      description,\n      image\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      heading->{\n        _id,\n        "title": pt::text(title),\n      },\n      theme {\n        accentColor\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
     '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n\n    "episodes": *[_type == "article" && references(^._id)]{\n      _id,\n      title,\n      description,\n      image\n    }\n  }': SERIES_NAV_QUERY_RESULT
+    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    pageBuilder[]{\n      ...,\n    }\n  }': PAGE_CONTENT_QUERY_RESULT
+    '*[_type == "page" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description))\n  }': PAGE_SEO_QUERY_RESULT
+    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    theme {\n      darkMode,\n      accentColor\n    },\n  }': PAGE_QUERY_RESULT
   }
 }

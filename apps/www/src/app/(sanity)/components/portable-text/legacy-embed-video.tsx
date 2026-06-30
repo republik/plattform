@@ -1,4 +1,3 @@
-import { linkStyle } from '@/app/(sanity)/articles/[...path]/styles'
 import type { EmbedVideo } from '@/sanity.types'
 import { css, cva } from '@republik/theme/css'
 import Link from 'next/link'
@@ -37,7 +36,15 @@ export function LegacyEmbedVideo({ value }: { value: EmbedVideo }) {
             playsInline
           />
         ) : typeof src === 'string' ? (
-          <Link className={linkStyle} href={src} target='_blank' rel='noopener'>
+          <Link
+            className={css({
+              textDecoration: 'underline',
+              cursor: 'pointer',
+            })}
+            href={src}
+            target='_blank'
+            rel='noopener'
+          >
             {src}
           </Link>
         ) : null}

@@ -45,10 +45,6 @@ const ARTICLE_QUERY = defineQuery(
     title,
     description,
     byline,
-    seo {
-      title,
-      description
-    },
     cover {
       ...
     },
