@@ -9,11 +9,13 @@ import { Metadata } from 'next'
 import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation'
 import { PageContent } from './components/page-content'
+import { urlFor } from '@/app/(sanity)/lib/urlFor'
 
 const PAGE_SEO_QUERY = defineQuery(
   `*[_type == "page" && slug.current == $slug][0]{
     "title": coalesce(seo.title, pt::text(title)),
-    "description": coalesce(seo.description, pt::text(description))
+    "description": coalesce(seo.description, pt::text(description)),
+    "image": coalesce(seo.image, image)
   }`,
 )
 
@@ -30,9 +32,27 @@ export async function generateMetadata({
     stega: false,
   })
 
+  if (!data) {
+    return { title: 'Seite nicht gefunden' }
+  }
+
+  const images = data.image?.asset
+    ? {
+        url: urlFor(data.image?.asset).width(1200).height(630).url(),
+        width: 1200,
+        height: 630,
+      }
+    : null
+
   return {
-    title: data?.title ?? 'Seite nicht gefunden',
-    description: data?.description ?? '',
+    title: data.title,
+    description: data.description,
+    openGraph: {
+      title: data.title,
+      description: data?.description,
+      url: new URL(slug, process.env.NEXT_PUBLIC_BASE_URL),
+      images,
+    },
   }
 }
 

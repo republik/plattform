@@ -1742,10 +1742,20 @@ export type PAGE_CONTENT_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/pages/[...path]/page.tsx
 // Variable: PAGE_SEO_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{    "title": coalesce(seo.title, pt::text(title)),    "description": coalesce(seo.description, pt::text(description))  }
+// Query: *[_type == "page" && slug.current == $slug][0]{    "title": coalesce(seo.title, pt::text(title)),    "description": coalesce(seo.description, pt::text(description)),    "image": coalesce(seo.image, image)  }
 export type PAGE_SEO_QUERY_RESULT = {
   title: string
   description: string
+  image:
+    | Image1
+    | {
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        _type: 'image'
+      }
+    | null
 } | null
 
 // Source: src/app/(sanity)/pages/[...path]/page.tsx
@@ -1772,7 +1782,7 @@ declare module '@sanity/client' {
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
     '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n\n    "episodes": *[_type == "article" && references(^._id)]{\n      _id,\n      title,\n      description,\n      image\n    }\n  }': SERIES_NAV_QUERY_RESULT
     '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    pageBuilder[]{\n      ...,\n    }\n  }': PAGE_CONTENT_QUERY_RESULT
-    '*[_type == "page" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description))\n  }': PAGE_SEO_QUERY_RESULT
+    '*[_type == "page" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image)\n  }': PAGE_SEO_QUERY_RESULT
     '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    theme {\n      darkMode,\n      accentColor\n    },\n  }': PAGE_QUERY_RESULT
   }
 }
