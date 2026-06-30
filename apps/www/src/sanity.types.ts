@@ -106,7 +106,7 @@ export type SearchBlock = {
 
 export type EditorBlock = {
   _type: 'editorBlock'
-  content?: ArticleEditor
+  content?: PageEditor
 }
 
 export type NewsletterReference = {
@@ -247,6 +247,72 @@ export type InlineEditor = Array<{
   _type: 'block'
   _key: string
 }>
+
+export type PageEditor = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'normal' | 'heading' | 'note'
+      listItem?: 'bullet' | 'number'
+      markDefs?: Array<
+        | ({
+            _key: string
+          } & Link)
+        | ({
+            _key: string
+          } & InternalLink)
+        | ({
+            _key: string
+          } & ExpandableLink)
+      >
+      level?: number
+      _type: 'block'
+      _key: string
+    }
+  | ({
+      _key: string
+    } & EditorialImage)
+  | ({
+      _key: string
+    } & ImageGroup)
+  | ({
+      _key: string
+    } & InfoBox)
+  | ({
+      _key: string
+    } & BlockQuote)
+  | ({
+      _key: string
+    } & PullQuote)
+  | ({
+      _key: string
+    } & Divider)
+  | ({
+      _key: string
+    } & Chart)
+  | ({
+      _key: string
+    } & EmbedVideo)
+  | ({
+      _key: string
+    } & EmbedTwitter)
+  | ({
+      _key: string
+    } & EmbedComment)
+  | ({
+      _key: string
+    } & EmbedDataWrapper)
+  | ({
+      _key: string
+    } & Html)
+  | ({
+      _key: string
+    } & Button)
+>
 
 export type ArticleEditor = Array<
   | {
@@ -1108,6 +1174,7 @@ export type AllSanitySchemaTypes =
   | Mdast
   | NestedEditor
   | InlineEditor
+  | PageEditor
   | ArticleEditor
   | Caption
   | VoiceTag
