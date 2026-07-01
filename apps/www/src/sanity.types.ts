@@ -1665,9 +1665,9 @@ export type SERIES_NAV_QUERY_RESULT = {
   }>
 } | null
 
-// Source: src/app/(sanity)/pages/[...path]/components/page-content.tsx
+// Source: src/app/(sanity)/pages/[...path]/components/page-builder.tsx
 // Variable: PAGE_CONTENT_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    pageBuilder[]{      ...,    }  }
+// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    pageBuilder[]{      ...,        _type == "titleBlock" => {    heading->{      _id,      "title": pt::text(title),      "slug": slug.current    }  },        _type == "menu" => {    heading {      title,      page->{        _id,        "title": pt::text(title),        "slug": slug.current      }    },    pages[]{      _key,      _type,      _type == "link" => {        href,        title      },      _type == "reference" => {        "page": @->{          _id,          "title": pt::text(title),          "slug": slug.current        }      }    }  },        _type == "callToAction" => {    target->{      _id,      _type,      _type == "newsletter" => {        title,        description,        frequency,        image,        name      },      _type == "podcast" => {        title      },      _type == "articleCollection" => {        title,        description      }    }  },        _type == "teaserItem" => {    reference->{        _id,  _type,  title,  description,  slug,  _type == "article" => {    heading->{      "title": pt::text(title)    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title    }  }    }  },        _type == "teaserList" => {    "items": select(      source.sourceType == "MANUAL" => source.items[]->{          _id,  _type,  title,  description,  slug,  _type == "article" => {    heading->{      "title": pt::text(title)    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title    }  }      },      source.sourceType == "COLLECTION" => *[        _type == "article" &&        ^.source.collection._ref in articleCollections[]._ref      ] | order(publishDate desc) {          _id,  _type,  title,  description,  slug,  _type == "article" => {    heading->{      "title": pt::text(title)    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title    }  }      },      []    )  }    }  }
 export type PAGE_CONTENT_QUERY_RESULT = {
   _id: string
   pageBuilder: Array<
@@ -1680,9 +1680,32 @@ export type PAGE_CONTENT_QUERY_RESULT = {
         _key: string
         _type: 'callToAction'
         target:
-          | ArticleCollectionReference
-          | NewsletterReference
-          | PodcastReference
+          | {
+              _id: string
+              _type: 'articleCollection'
+              title: string
+              description: string | null
+            }
+          | {
+              _id: string
+              _type: 'newsletter'
+              title: string
+              description: string | null
+              frequency: string | null
+              image: {
+                asset?: SanityImageAssetReference
+                media?: unknown
+                hotspot?: SanityImageHotspot
+                crop?: SanityImageCrop
+                _type: 'image'
+              } | null
+              name: string
+            }
+          | {
+              _id: string
+              _type: 'podcast'
+              title: string
+            }
         title?: string
         ctaText: string
         useAccentColor?: boolean
@@ -1701,15 +1724,31 @@ export type PAGE_CONTENT_QUERY_RESULT = {
         _key: string
         _type: 'menu'
         hasSeparator?: boolean
-        heading?: Heading
-        pages?: Array<
-          | ({
+        heading: {
+          title: string | null
+          page: {
+            _id: string
+            title: string
+            slug: string
+          } | null
+        } | null
+        pages: Array<
+          | {
               _key: string
-            } & Link)
-          | ({
+              _type: 'link'
+              href: string | null
+              title: string | null
+            }
+          | {
               _key: string
-            } & PageReference)
-        >
+              _type: 'reference'
+              page: {
+                _id: string
+                title: string
+                slug: string
+              }
+            }
+        > | null
       }
     | {
         _key: string
@@ -1719,7 +1758,31 @@ export type PAGE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'teaserItem'
-        reference: ArticleReference | PageReference
+        reference:
+          | {
+              _id: string
+              _type: 'article'
+              title: InlineEditor
+              description: InlineEditor | null
+              slug: Slug
+              heading: {
+                title: string
+              } | null
+              theme: {
+                accentColor: Color | null
+              } | null
+              contributors: Array<{
+                kind: string | null
+                name: string | null
+              }> | null
+            }
+          | {
+              _id: string
+              _type: 'page'
+              title: InlineEditor
+              description: InlineEditor | null
+              slug: Slug
+            }
       }
     | {
         _key: string
@@ -1729,13 +1792,63 @@ export type PAGE_CONTENT_QUERY_RESULT = {
         feedElementAppearance?: 'TEASER' | 'TEXT'
         maxItems?: number
         counter?: boolean
+        items:
+          | Array<{
+              _id: string
+              _type: 'article'
+              title: InlineEditor
+              description: InlineEditor | null
+              slug: Slug
+              heading: {
+                title: string
+              } | null
+              theme: {
+                accentColor: Color | null
+              } | null
+              contributors: Array<{
+                kind: string | null
+                name: string | null
+              }> | null
+            }>
+          | Array<never>
+          | Array<
+              | {
+                  _id: string
+                  _type: 'article'
+                  title: InlineEditor
+                  description: InlineEditor | null
+                  slug: Slug
+                  heading: {
+                    title: string
+                  } | null
+                  theme: {
+                    accentColor: Color | null
+                  } | null
+                  contributors: Array<{
+                    kind: string | null
+                    name: string | null
+                  }> | null
+                }
+              | {
+                  _id: string
+                  _type: 'page'
+                  title: InlineEditor
+                  description: InlineEditor | null
+                  slug: Slug
+                }
+            >
+          | null
       }
     | {
         _key: string
         _type: 'titleBlock'
         cover?: EditorialImage
         useCoverAsTitle?: boolean
-        heading?: PageReference
+        heading: {
+          _id: string
+          title: string
+          slug: string
+        } | null
       }
   > | null
 } | null
@@ -1781,6 +1894,8 @@ declare module '@sanity/client' {
     '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      "title": pt::text(title),\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    "articleCollection": articleCollections[0]->{\n      _id,\n      title,\n      description,\n      image\n    },\n    articleRecommendations[]->{\n      _id,\n      title,\n      description,\n      slug,\n      heading->{\n        _id,\n        "title": pt::text(title),\n      },\n      theme {\n        accentColor\n      },\n      contributors[]{\n        kind,\n        "name": contributor->title,\n      }\n    }\n  }': ARTICLE_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
     '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n\n    "episodes": *[_type == "article" && references(^._id)]{\n      _id,\n      title,\n      description,\n      image\n    }\n  }': SERIES_NAV_QUERY_RESULT
+    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    pageBuilder[]{\n      ...,\n      \n  _type == "titleBlock" => {\n    heading->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  }\n,\n      \n  _type == "menu" => {\n    heading {\n      title,\n      page->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current\n      }\n    },\n    pages[]{\n      _key,\n      _type,\n      _type == "link" => {\n        href,\n        title\n      },\n      _type == "reference" => {\n        "page": @->{\n          _id,\n          "title": pt::text(title),\n          "slug": slug.current\n        }\n      }\n    }\n  }\n,\n      \n  _type == "callToAction" => {\n    target->{\n      _id,\n      _type,\n      _type == "newsletter" => {\n        title,\n        description,\n        frequency,\n        image,\n        name\n      },\n      _type == "podcast" => {\n        title\n      },\n      _type == "articleCollection" => {\n        title,\n        description\n      }\n    }\n  }\n,\n      \n  _type == "teaserItem" => {\n    reference->{\n      \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  _type == "article" => {\n    heading->{\n      "title": pt::text(title)\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title\n    }\n  }\n\n    }\n  }\n,\n      \n  _type == "teaserList" => {\n    "items": select(\n      source.sourceType == "MANUAL" => source.items[]->{\n        \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  _type == "article" => {\n    heading->{\n      "title": pt::text(title)\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title\n    }\n  }\n\n      },\n      source.sourceType == "COLLECTION" => *[\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[]._ref\n      ] | order(publishDate desc) {\n        \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  _type == "article" => {\n    heading->{\n      "title": pt::text(title)\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title\n    }\n  }\n\n      },\n      []\n    )\n  }\n\n    }\n  }': PAGE_CONTENT_QUERY_RESULT
+    '*[_type == "page" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description))\n  }': PAGE_SEO_QUERY_RESULT
     '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    pageBuilder[]{\n      ...,\n    }\n  }': PAGE_CONTENT_QUERY_RESULT
     '*[_type == "page" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image)\n  }': PAGE_SEO_QUERY_RESULT
     '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    theme {\n      darkMode,\n      accentColor\n    },\n  }': PAGE_QUERY_RESULT

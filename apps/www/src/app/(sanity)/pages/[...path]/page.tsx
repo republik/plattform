@@ -2,14 +2,14 @@ import { EditLink } from '@/app/(sanity)/components/edit-link'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { Theme } from '@/app/(sanity)/components/theme'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import { Metadata } from 'next'
 import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation'
-import { PageContent } from './components/page-content'
-import { urlFor } from '@/app/(sanity)/lib/urlFor'
+import { PageBuilder } from './components/page-builder'
 
 const PAGE_SEO_QUERY = defineQuery(
   `*[_type == "page" && slug.current == $slug][0]{
@@ -113,7 +113,7 @@ export default async function PostPage({
           <EditLink _id={page._id} />
         </div>
 
-        <PageContent slug={slug} />
+        <PageBuilder slug={slug} />
       </article>
     </EventTrackingContext>
   )
