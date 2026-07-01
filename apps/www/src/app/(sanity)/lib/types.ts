@@ -1,0 +1,15 @@
+import type { ARTICLE_QUERY_RESULT } from '@/sanity.types'
+
+export type Article = NonNullable<ARTICLE_QUERY_RESULT>
+
+export type ArticleNewsletter = NonNullable<Article['newsletter']>
+
+export type ArticleCollection = NonNullable<Article['articleCollection']>
+
+export type ArticleRecommendation = NonNullable<
+  Article['articleRecommendations']
+>[number]
+
+export type ArticleContributor = NonNullable<Article['contributors']>[number]
+
+export type ArticleThemeType = NonNullable<Article['theme']>

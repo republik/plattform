@@ -11,6 +11,7 @@ import { PullToRefresh } from './pull-to-refresh'
 type LayoutProps = {
   showHeader?: boolean
   showFooter?: boolean
+  showDraftModeIndicator?: boolean
   children: React.ReactNode
 }
 
@@ -21,6 +22,7 @@ type LayoutProps = {
 export async function PageLayout({
   showHeader = true,
   showFooter = true,
+  showDraftModeIndicator = true,
   children,
 }: LayoutProps) {
   const { isNativeApp } = await getPlatformInformation()
@@ -49,7 +51,7 @@ export async function PageLayout({
       )}
 
       <CTABanner />
-      {draftModeEnabled && <DraftModeIndicator />}
+      {showDraftModeIndicator && draftModeEnabled && <DraftModeIndicator />}
       {isNativeApp ? (
         <PullToRefresh
           className={css({
