@@ -2,8 +2,10 @@ import { EditLink } from '@/app/(sanity)/components/edit-link'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { feedTeaserFragment } from '@/app/(sanity)/components/teasers/feed'
 import { Theme } from '@/app/(sanity)/components/theme'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
@@ -12,7 +14,6 @@ import { defineQuery } from 'next-sanity'
 import { notFound } from 'next/navigation'
 import FollowArticle from '../../components/follow/follow-article'
 import { ArticleContent } from './components/article-content'
-import { urlFor } from '@/app/(sanity)/lib/urlFor'
 
 const ARTICLE_SEO_QUERY = defineQuery(
   `*[_type == "article" && slug.current == $slug][0]{
@@ -98,21 +99,7 @@ const ARTICLE_QUERY = defineQuery(
       image
     },
     articleRecommendations[]->{
-      _id,
-      title,
-      description,
-      slug,
-      heading->{
-        _id,
-        "title": pt::text(title),
-      },
-      theme {
-        accentColor
-      },
-      contributors[]{
-        kind,
-        "name": contributor->title,
-      }
+      ${feedTeaserFragment}
     }
   }`,
 )
