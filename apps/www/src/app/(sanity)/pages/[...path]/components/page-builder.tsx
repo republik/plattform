@@ -1,27 +1,25 @@
-import { PagePortableText } from '@/app/(sanity)/components/portable-text/renderPage'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
-import type { PAGE_CONTENT_QUERY_RESULT } from '@/sanity.types'
+import { EditorBlock } from '@/app/(sanity)/pages/[...path]/components/blocks/editor-block'
 import { css } from '@republik/theme/css'
 import { defineQuery } from 'next-sanity'
-import { CallToAction, callToActionFragment } from './blocks/call-to-action'
-import { Menu, menuFragment } from './blocks/menu'
-import { TeaserItem, teaserItemFragment } from './blocks/teaser-item'
-import { TeaserList, teaserListFragment } from './blocks/teaser-list'
-import { TitleBlock, titleBlockFragment } from './blocks/title-block'
+import { CallToAction } from './blocks/call-to-action'
+import { Menu } from './blocks/menu'
+import { TeaserList } from './blocks/teaser-list'
+import { TitleBlock } from './blocks/title-block'
 
-type Page = NonNullable<PAGE_CONTENT_QUERY_RESULT>
-type PageBuilderBlock = NonNullable<Page['pageBuilder']>[number]
+export type PageBuilderBlock = {
+  _key: string
+  _type: string
+  appearance?: string
+}
 
 const PAGE_CONTENT_QUERY = defineQuery(
   `*[_type == "page" && slug.current == $slug][0]{
     _id,
     pageBuilder[]{
-      ...,
-      ${titleBlockFragment},
-      ${menuFragment},
-      ${callToActionFragment},
-      ${teaserItemFragment},
-      ${teaserListFragment}
+      _key,
+      _type,
+      appearance
     }
   }`,
 )
@@ -45,25 +43,30 @@ export async function PageBuilder({ slug }: { slug: string }) {
   return (
     <>
       {pageBuilder.map((block) => (
-        <Block key={block._key} block={block} />
+        <Block key={block._key} block={block} documentId={page._id} />
       ))}
     </>
   )
 }
 
-function Block({ block }: { block: PageBuilderBlock }) {
-  switch (block._type) {
+function Block({
+  block,
+  documentId,
+}: {
+  block: PageBuilderBlock
+  documentId: string
+}) {
+  const { _type, _key } = block
+
+  switch (_type) {
     case 'editorBlock':
-      return block.content ? <PagePortableText value={block.content} /> : null
+      return <EditorBlock blockKey={_key} documentId={documentId} />
+
+    case 'teaserList':
+      return <TeaserList block={block} documentId={documentId} />
 
     case 'titleBlock':
       return <TitleBlock block={block} />
-
-    case 'teaserItem':
-      return <TeaserItem block={block} />
-
-    case 'teaserList':
-      return <TeaserList block={block} />
 
     case 'callToAction':
       return <CallToAction block={block} />
@@ -71,17 +74,17 @@ function Block({ block }: { block: PageBuilderBlock }) {
     case 'menu':
       return <Menu block={block} />
 
+    /*case 'teaserItem':
+      return <TeaserItem block={block} />
+
     case 'searchBlock':
-      // TODO: render search widget
       return <UnimplementedBlock block={block} />
 
     case 'bestOfDialogue':
-      // TODO: render best-of-dialogue widget
       return <UnimplementedBlock block={block} />
 
     case 'meineRepublik':
-      // TODO: render "Meine Republik" widget
-      return <UnimplementedBlock block={block} />
+      return <UnimplementedBlock block={block} />*/
 
     default:
       return <UnimplementedBlock block={block} />

@@ -1,9 +1,11 @@
 'use client'
 
+import FeedTeaser, {
+  FeedTeaserType,
+} from '@/app/(sanity)/components/teaser/feed'
 // TODO: rename ./sanity-helpers to ./helpers once we are fully migrated
 import { useTranslation } from '@/lib/withT'
 import { css, cx } from '@republik/theme/css'
-import FeedTeaser, { FeedTeaserType } from '../teasers/feed'
 import { nextReadHeader, nextReadsSection } from './styles'
 
 export function ArticleRecommendations({

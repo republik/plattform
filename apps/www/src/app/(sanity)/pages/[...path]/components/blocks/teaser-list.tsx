@@ -1,69 +1,58 @@
-import type { PAGE_CONTENT_QUERY_RESULT } from '@/sanity.types'
-import { css } from '@republik/theme/css'
-import { stegaClean } from 'next-sanity'
-import { Teaser, teaserFragment, type TeaserData } from './teaser'
+import { feedTeaserFragment } from '@/app/(sanity)/components/teaser/feed'
+import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { PageBuilderBlock } from '@/app/(sanity)/pages/[...path]/components/page-builder'
+import { defineQuery } from 'next-sanity'
 import { TeaserFeed } from './teaser-feed'
 
-type PageBuilderBlock = NonNullable<
-  NonNullable<PAGE_CONTENT_QUERY_RESULT>['pageBuilder']
->[number]
+const MAX_TEASERS = 20
 
-export type TeaserListBlock = Extract<PageBuilderBlock, { _type: 'teaserList' }>
-
-/** GROQ projection for the `teaserList` block, resolving its `source`. */
-export const teaserListFragment = /* groq */ `
-  _type == "teaserList" => {
-    "items": select(
-      source.sourceType == "MANUAL" => source.items[]->{
-        ${teaserFragment}
-      },
-      source.sourceType == "COLLECTION" => *[
-        _type == "article" &&
-        ^.source.collection._ref in articleCollections[]._ref
-      ] | order(publishDate desc) {
-        ${teaserFragment}
-      },
-      []
-    )
+// TODO: load first 20. Then more on click
+// handle the teasers loading logic here
+// delegate presentation to nested components
+export const PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY = defineQuery(`
+  *[_type == "page" && _id == $documentId][0]{
+    "block": pageBuilder[_key == $blockKey][0]{
+      maxItems,
+      "teasers": select(
+        source.sourceType == "MANUAL" => source.items[0...${MAX_TEASERS}]->{
+          ${feedTeaserFragment}
+        },
+        source.sourceType == "COLLECTION" => *[
+          _type == "article" &&
+          ^.source.collection._ref in articleCollections[]._ref
+        ] | order(publishDate desc) [0...${MAX_TEASERS}] {
+          ${feedTeaserFragment}
+        },
+        []
+      )
+    }
   }
-`
+`)
 
-/** Renders a list of teasers resolved from a collection or manual selection. */
-export function TeaserList({ block }: { block: TeaserListBlock }) {
-  const maxItems = block.maxItems
-  const items: TeaserData[] =
-    maxItems != null ? (block.items ?? []).slice(0, maxItems) : (block.items ?? [])
+export async function TeaserList({
+  block,
+  documentId,
+}: {
+  block: PageBuilderBlock
+  documentId: string
+}) {
+  const { appearance, _key: blockKey } = block
+  const { data } = await sanityFetch({
+    query: PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY,
+    params: { documentId, blockKey },
+  })
 
-  if (!items.length) {
-    return null
-  }
+  if (!data || !data.block) return null
 
-  const appearance = stegaClean(block.appearance)
+  const { maxItems, teasers } = data.block
 
-  // A feed renders the first batch and reveals the rest on click.
+  if (!teasers?.length) return null
+
+  const shownTeasers = teasers.slice(0, maxItems ?? undefined)
+
   if (appearance === 'FEED') {
-    return <TeaserFeed items={items} counter={block.counter} />
+    return <TeaserFeed teasers={shownTeasers} />
   }
 
-  const isGrid = appearance === 'GRID'
-
-  return (
-    <div
-      className={css({
-        display: isGrid ? 'grid' : 'block',
-        gridTemplateColumns: isGrid
-          ? { base: '1fr', md: 'repeat(2, 1fr)' }
-          : undefined,
-        columnGap: isGrid ? 8 : undefined,
-      })}
-    >
-      {items.map((teaser, index) => (
-        <Teaser
-          key={teaser._id}
-          teaser={teaser}
-          counter={block.counter ? index + 1 : undefined}
-        />
-      ))}
-    </div>
-  )
+  return null
 }

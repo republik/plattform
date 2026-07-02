@@ -1539,7 +1539,7 @@ export type ARTICLE_SEO_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
 // Variable: ARTICLE_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    byline,    cover {      ...    },    heading->{      _id,      "title": pt::text(title),    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      darkMode,      accentColor    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    "articleCollection": articleCollections[0]->{      _id,      title,      description,      image    },    articleRecommendations[]->{          _id,    title,    description,    slug,    heading->{      _id,      title,    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title,    }    }  }
+// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    byline,    cover {      ...    },    heading->{      _id,      "title": pt::text(title),    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      darkMode,      accentColor    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    "articleCollection": articleCollections[0]->{      _id,      title,      description,      image    },    articleRecommendations[]->{          _id,    type,    title,    description,    slug,    heading->{      _id,      title,    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title,    }    }  }
 export type ARTICLE_QUERY_RESULT = {
   _id: string
   title: InlineEditor
@@ -1612,6 +1612,7 @@ export type ARTICLE_QUERY_RESULT = {
   articleRecommendations: Array<
     | {
         _id: string
+        type: null
         title: InlineEditor
         description: InlineEditor | null
         slug: Slug
@@ -1623,6 +1624,7 @@ export type ARTICLE_QUERY_RESULT = {
       }
     | {
         _id: string
+        type: null
         title: InlineEditor
         description: InlineEditor | null
         slug: Slug
@@ -1671,11 +1673,12 @@ export type SERIES_NAV_QUERY_RESULT = {
   }>
 } | null
 
-// Source: src/app/(sanity)/components/teasers/feed/index.tsx
+// Source: src/app/(sanity)/components/teaser/feed/index.tsx
 // Variable: FEED_TEASER_FRAGMENT_QUERY
-// Query: *[_type=="article"]{         _id,    title,    description,    slug,    heading->{      _id,      title,    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title,    }   }
+// Query: *[_type=="article"]{         _id,    type,    title,    description,    slug,    heading->{      _id,      title,    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title,    }   }
 export type FEED_TEASER_FRAGMENT_QUERY_RESULT = Array<{
   _id: string
+  type: null
   title: InlineEditor
   description: InlineEditor | null
   slug: Slug
@@ -1692,142 +1695,227 @@ export type FEED_TEASER_FRAGMENT_QUERY_RESULT = Array<{
   }> | null
 }>
 
-// Source: src/app/(sanity)/pages/[...path]/components/page-builder.tsx
-// Variable: PAGE_CONTENT_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    pageBuilder[]{      ...,        _type == "titleBlock" => {    heading->{      _id,      "title": pt::text(title),      "slug": slug.current    }  },        _type == "menu" => {    heading {      title,      page->{        _id,        "title": pt::text(title),        "slug": slug.current      }    },    pages[]{      _key,      _type,      _type == "link" => {        href,        title      },      _type == "reference" => {        "page": @->{          _id,          "title": pt::text(title),          "slug": slug.current        }      }    }  },        _type == "callToAction" => {    target->{      _id,      _type,      _type == "newsletter" => {        title,        description,        frequency,        image,        name      },      _type == "podcast" => {        title      },      _type == "articleCollection" => {        title,        description      }    }  },        _type == "teaserItem" => {    reference->{        _id,  _type,  title,  description,  slug,  _type == "article" => {    heading->{      "title": pt::text(title)    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title    }  }    }  },        _type == "teaserList" => {    "items": select(      source.sourceType == "MANUAL" => source.items[]->{          _id,  _type,  title,  description,  slug,  _type == "article" => {    heading->{      "title": pt::text(title)    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title    }  }      },      source.sourceType == "COLLECTION" => *[        _type == "article" &&        ^.source.collection._ref in articleCollections[]._ref      ] | order(publishDate desc) {          _id,  _type,  title,  description,  slug,  _type == "article" => {    heading->{      "title": pt::text(title)    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title    }  }      },      []    )  }    }  }
-export type PAGE_CONTENT_QUERY_RESULT = {
+// Source: src/app/(sanity)/pages/[...path]/components/blocks/editor-block.tsx
+// Variable: PAGE_BUILDER_EDITOR_BLOCK_QUERY
+// Query: *[_type == "page" && _id == $documentId][0]{    _id,    "block": pageBuilder[_key == $blockKey][0]{      content[]{        ...,        markDefs[]{          ...,          _type == "internalLink" => {            "slug": @.reference->slug          }        }      }    }  }
+export type PAGE_BUILDER_EDITOR_BLOCK_QUERY_RESULT = {
   _id: string
-  pageBuilder: Array<
+  block:
     | {
-        _key: string
-        _type: 'bestOfDialogue'
-        enabled?: boolean
+        content: null
       }
     | {
-        _key: string
-        _type: 'callToAction'
-        target:
+        content: Array<
           | {
-              _id: string
-              _type: 'articleCollection'
-              title: string
-              description: string | null
+              children?: Array<{
+                marks?: Array<string>
+                text?: string
+                _type: 'span'
+                _key: string
+              }>
+              style?: 'heading' | 'normal' | 'note'
+              listItem?: 'bullet' | 'number'
+              markDefs: Array<
+                | {
+                    _key: string
+                    _type: 'expandableLink'
+                    content?: InlineEditor
+                    href?: string
+                    reference?: ArticleReference | ArticleCollectionReference
+                  }
+                | {
+                    _key: string
+                    _type: 'internalLink'
+                    reference?:
+                      | ArticleReference
+                      | ArticleCollectionReference
+                      | ContributorReference
+                    slug: Slug | null
+                  }
+                | {
+                    _key: string
+                    _type: 'link'
+                    href?: string
+                    title?: string
+                  }
+              > | null
+              level?: number
+              _type: 'block'
+              _key: string
             }
           | {
-              _id: string
-              _type: 'newsletter'
-              title: string
-              description: string | null
-              frequency: string | null
-              image: {
+              _key: string
+              _type: 'blockQuote'
+              body?: NestedEditor
+              caption?: Caption
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'button'
+              text?: string
+              url?: string
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'chart'
+              title?: InlineEditor
+              lead?: InlineEditor
+              chartConfig?: ChartConfig
+              source?: InlineEditor
+              size?: 'BREAKOUT' | 'FLOAT_TINY' | 'NARROW' | 'NORMAL'
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'divider'
+              style?: string
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'editorialImage'
+              asset?: SanityImageAssetReference
+              media?: unknown
+              hotspot?: SanityImageHotspot
+              crop?: SanityImageCrop
+              imageDark?: {
                 asset?: SanityImageAssetReference
                 media?: unknown
                 hotspot?: SanityImageHotspot
                 crop?: SanityImageCrop
                 _type: 'image'
-              } | null
-              name: string
-            }
-          | {
-              _id: string
-              _type: 'podcast'
-              title: string
-            }
-        title?: string
-        ctaText: string
-        useAccentColor?: boolean
-      }
-    | {
-        _key: string
-        _type: 'editorBlock'
-        content?: PageEditor
-      }
-    | {
-        _key: string
-        _type: 'meineRepublik'
-        enabled?: boolean
-      }
-    | {
-        _key: string
-        _type: 'menu'
-        hasSeparator?: boolean
-        heading: {
-          title: string | null
-          page: {
-            _id: string
-            title: string
-            slug: string
-          } | null
-        } | null
-        pages: Array<
-          | {
-              _key: string
-              _type: 'link'
-              href: string | null
-              title: string | null
-            }
-          | {
-              _key: string
-              _type: 'reference'
-              page: {
-                _id: string
-                title: string
-                slug: string
               }
+              alt?: string
+              caption?: Caption
+              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'embedComment'
+              id?: string
+              content?: string
+              tags?: Array<string>
+              createdAt?: string
+              updatedAt?: string
+              parentIds?: Array<string>
+              discussion?: EmbedCommentDiscussion
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'embedDataWrapper'
+              datawrapperId?: string
+              forceDark?: boolean
+              plain?: boolean
+              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'embedTwitter'
+              url?: string
+              id?: string
+              createdAt?: string
+              retrievedAt?: string
+              text?: string
+              html?: string
+              userId?: string
+              userName?: string
+              userScreenName?: string
+              userProfileImageUrl?: string
+              image?: string
+              more?: string
+              playable?: boolean
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'embedVideo'
+              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+              platform?: 'vimeo' | 'youtube'
+              url?: string
+              id?: string
+              title?: string
+              createdAt?: string
+              retrievedAt?: string
+              userName?: string
+              userUrl?: string
+              userProfileImageUrl?: string
+              thumbnail?: string
+              aspectRatio?: number
+              durationMs?: number
+              mediaId?: string
+              src?: Src
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'html'
+              html?: string
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'imageGroup'
+              images?: Array<
+                {
+                  _key: string
+                } & GroupedEditorialImage
+              >
+              caption?: Caption
+              size?: 'BREAKOUT' | 'NARROW' | 'NORMAL'
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'infoBox'
+              title?: string
+              image?: AsideImage
+              body?: NestedEditor
+              size?: 'breakout' | 'float'
+              figureSize?: 'L' | 'M' | 'S'
+              figureFloat?: boolean
+              collapsible?: boolean
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'pullQuote'
+              text?: string
+              source?: string
+              image?: AsideImage
+              size?: 'breakout' | 'float' | 'narrow'
+              markDefs: null
             }
         > | null
       }
+    | null
+} | null
+
+// Source: src/app/(sanity)/pages/[...path]/components/blocks/teaser-list.tsx
+// Variable: PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY
+// Query: *[_type == "page" && _id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{      maxItems,      "teasers": select(        source.sourceType == "MANUAL" => source.items[0...20]->{              _id,    type,    title,    description,    slug,    heading->{      _id,      title,    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title,    }        },        source.sourceType == "COLLECTION" => *[          _type == "article" &&          ^.source.collection._ref in articleCollections[]._ref        ] | order(publishDate desc) [0...20] {              _id,    type,    title,    description,    slug,    heading->{      _id,      title,    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title,    }        },        []      )    }  }
+export type PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY_RESULT = {
+  block:
     | {
-        _key: string
-        _type: 'searchBlock'
-        enabled?: boolean
+        maxItems: null
+        teasers: Array<never>
       }
     | {
-        _key: string
-        _type: 'teaserItem'
-        reference:
-          | {
-              _id: string
-              _type: 'article'
-              title: InlineEditor
-              description: InlineEditor | null
-              slug: Slug
-              heading: {
-                title: string
-              } | null
-              theme: {
-                accentColor: Color | null
-              } | null
-              contributors: Array<{
-                kind: string | null
-                name: string | null
-              }> | null
-            }
-          | {
-              _id: string
-              _type: 'page'
-              title: InlineEditor
-              description: InlineEditor | null
-              slug: Slug
-            }
-      }
-    | {
-        _key: string
-        _type: 'teaserList'
-        source?: Source
-        appearance?: 'CAROUSEL' | 'FEED' | 'FRONT' | 'GRID'
-        feedElementAppearance?: 'TEASER' | 'TEXT'
-        maxItems?: number
-        counter?: boolean
-        items:
+        maxItems: number | null
+        teasers:
           | Array<{
               _id: string
-              _type: 'article'
+              type: null
               title: InlineEditor
               description: InlineEditor | null
               slug: Slug
               heading: {
-                title: string
+                _id: string
+                title: InlineEditor
               } | null
               theme: {
                 accentColor: Color | null
@@ -1841,12 +1929,25 @@ export type PAGE_CONTENT_QUERY_RESULT = {
           | Array<
               | {
                   _id: string
-                  _type: 'article'
+                  type: null
+                  title: InlineEditor
+                  description: InlineEditor | null
+                  slug: Slug
+                  heading: null
+                  theme: {
+                    accentColor: Color | null
+                  } | null
+                  contributors: null
+                }
+              | {
+                  _id: string
+                  type: null
                   title: InlineEditor
                   description: InlineEditor | null
                   slug: Slug
                   heading: {
-                    title: string
+                    _id: string
+                    title: InlineEditor
                   } | null
                   theme: {
                     accentColor: Color | null
@@ -1856,26 +1957,62 @@ export type PAGE_CONTENT_QUERY_RESULT = {
                     name: string | null
                   }> | null
                 }
-              | {
-                  _id: string
-                  _type: 'page'
-                  title: InlineEditor
-                  description: InlineEditor | null
-                  slug: Slug
-                }
             >
           | null
+      }
+    | null
+} | null
+
+// Source: src/app/(sanity)/pages/[...path]/components/page-builder.tsx
+// Variable: PAGE_CONTENT_QUERY
+// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    pageBuilder[]{      _key,      _type,      appearance    }  }
+export type PAGE_CONTENT_QUERY_RESULT = {
+  _id: string
+  pageBuilder: Array<
+    | {
+        _key: string
+        _type: 'bestOfDialogue'
+        appearance: null
+      }
+    | {
+        _key: string
+        _type: 'callToAction'
+        appearance: null
+      }
+    | {
+        _key: string
+        _type: 'editorBlock'
+        appearance: null
+      }
+    | {
+        _key: string
+        _type: 'meineRepublik'
+        appearance: null
+      }
+    | {
+        _key: string
+        _type: 'menu'
+        appearance: null
+      }
+    | {
+        _key: string
+        _type: 'searchBlock'
+        appearance: null
+      }
+    | {
+        _key: string
+        _type: 'teaserItem'
+        appearance: null
+      }
+    | {
+        _key: string
+        _type: 'teaserList'
+        appearance: 'CAROUSEL' | 'FEED' | 'FRONT' | 'GRID' | null
       }
     | {
         _key: string
         _type: 'titleBlock'
-        cover?: EditorialImage
-        useCoverAsTitle?: boolean
-        heading: {
-          _id: string
-          title: string
-          slug: string
-        } | null
+        appearance: null
       }
   > | null
 } | null
@@ -1918,11 +2055,13 @@ declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    content[]{\n        ...,\n        markDefs[]{\n          ...,\n          _type == "internalLink" => {\n            "slug": @.reference->slug\n          }\n        }\n    }\n  }': ARTICLE_CONTENT_QUERY_RESULT
     '*[_type == "article" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image)\n  }': ARTICLE_SEO_QUERY_RESULT
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      "title": pt::text(title),\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    "articleCollection": articleCollections[0]->{\n      _id,\n      title,\n      description,\n      image\n    },\n    articleRecommendations[]->{\n      \n    _id,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n\n    }\n  }': ARTICLE_QUERY_RESULT
+    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      "title": pt::text(title),\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    "articleCollection": articleCollections[0]->{\n      _id,\n      title,\n      description,\n      image\n    },\n    articleRecommendations[]->{\n      \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n\n    }\n  }': ARTICLE_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
     '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n\n    "episodes": *[_type == "article" && references(^._id)]{\n      _id,\n      title,\n      description,\n      image\n    }\n  }': SERIES_NAV_QUERY_RESULT
-    '*[_type=="article"]{ \n    \n    _id,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n \n  }': FEED_TEASER_FRAGMENT_QUERY_RESULT
-    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    pageBuilder[]{\n      ...,\n      \n  _type == "titleBlock" => {\n    heading->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  }\n,\n      \n  _type == "menu" => {\n    heading {\n      title,\n      page->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current\n      }\n    },\n    pages[]{\n      _key,\n      _type,\n      _type == "link" => {\n        href,\n        title\n      },\n      _type == "reference" => {\n        "page": @->{\n          _id,\n          "title": pt::text(title),\n          "slug": slug.current\n        }\n      }\n    }\n  }\n,\n      \n  _type == "callToAction" => {\n    target->{\n      _id,\n      _type,\n      _type == "newsletter" => {\n        title,\n        description,\n        frequency,\n        image,\n        name\n      },\n      _type == "podcast" => {\n        title\n      },\n      _type == "articleCollection" => {\n        title,\n        description\n      }\n    }\n  }\n,\n      \n  _type == "teaserItem" => {\n    reference->{\n      \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  _type == "article" => {\n    heading->{\n      "title": pt::text(title)\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title\n    }\n  }\n\n    }\n  }\n,\n      \n  _type == "teaserList" => {\n    "items": select(\n      source.sourceType == "MANUAL" => source.items[]->{\n        \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  _type == "article" => {\n    heading->{\n      "title": pt::text(title)\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title\n    }\n  }\n\n      },\n      source.sourceType == "COLLECTION" => *[\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[]._ref\n      ] | order(publishDate desc) {\n        \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  _type == "article" => {\n    heading->{\n      "title": pt::text(title)\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title\n    }\n  }\n\n      },\n      []\n    )\n  }\n\n    }\n  }': PAGE_CONTENT_QUERY_RESULT
+    '*[_type=="article"]{ \n    \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n \n  }': FEED_TEASER_FRAGMENT_QUERY_RESULT
+    '*[_type == "page" && _id == $documentId][0]{\n    _id,\n    "block": pageBuilder[_key == $blockKey][0]{\n      content[]{\n        ...,\n        markDefs[]{\n          ...,\n          _type == "internalLink" => {\n            "slug": @.reference->slug\n          }\n        }\n      }\n    }\n  }': PAGE_BUILDER_EDITOR_BLOCK_QUERY_RESULT
+    '\n  *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n      maxItems,\n      "teasers": select(\n        source.sourceType == "MANUAL" => source.items[0...20]->{\n          \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n\n        },\n        source.sourceType == "COLLECTION" => *[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[]._ref\n        ] | order(publishDate desc) [0...20] {\n          \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n\n        },\n        []\n      )\n    }\n  }\n': PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY_RESULT
+    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    pageBuilder[]{\n      _key,\n      _type,\n      appearance\n    }\n  }': PAGE_CONTENT_QUERY_RESULT
     '*[_type == "page" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image)\n  }': PAGE_SEO_QUERY_RESULT
     '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    theme {\n      darkMode,\n      accentColor\n    },\n  }': PAGE_QUERY_RESULT
   }

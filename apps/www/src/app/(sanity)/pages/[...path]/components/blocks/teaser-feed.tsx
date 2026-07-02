@@ -1,13 +1,11 @@
-import { FeedTeaserType } from '@/app/(sanity)/components/teasers/feed'
-import FeedTeaser from '../../../../components/teasers/feed'
+import FeedTeaser, {
+  FeedTeaserType,
+} from '@/app/(sanity)/components/teaser/feed'
 
-// TODO: query here.
-// TODO: load first 20. Then more on click
-
-export function TeaserFeed({ items }: { items: FeedTeaserType[] }) {
+export async function TeaserFeed({ teasers }: { teasers: FeedTeaserType[] }) {
   return (
     <div>
-      {items.map((teaser, index) => (
+      {teasers.map((teaser, index) => (
         <FeedTeaser
           key={teaser._id}
           teaser={teaser}

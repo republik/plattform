@@ -12,7 +12,6 @@ export type CallToActionBlock = Extract<
   { _type: 'callToAction' }
 >
 
-/** GROQ projection for the `callToAction` block, resolving its `target`. */
 export const callToActionFragment = /* groq */ `
   _type == "callToAction" => {
     target->{

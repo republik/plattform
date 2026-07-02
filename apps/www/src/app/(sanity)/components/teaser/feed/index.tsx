@@ -3,14 +3,15 @@ import {
   BylineShort,
   Heading,
   LinkOverlay,
-} from '@/app/(sanity)/components/teasers/feed/helpers'
-import { feedTeaserTypography } from '@/app/(sanity)/components/teasers/feed/styles'
+} from '@/app/(sanity)/components/teaser/feed/helpers'
+import { feedTeaserTypography } from '@/app/(sanity)/components/teaser/feed/styles'
 import { FEED_TEASER_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { css, cx } from '@republik/theme/css'
 import { defineQuery } from 'next-sanity'
 
 export const feedTeaserFragment = /* groq */ `
     _id,
+    type,
     title,
     description,
     slug,
@@ -39,7 +40,7 @@ export type FeedTeaserType =
 export default function Teaser({
   teaser,
   index,
-  skipHeading = false,
+  skipHeading = false, // split into different components if we need more than 1-2 configs
 }: {
   teaser: FeedTeaserType
   index: number

@@ -1,7 +1,7 @@
 'use client'
 
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { FeedTeaserType } from '@/app/(sanity)/components/teasers/feed/index'
+import { FeedTeaserType } from '@/app/(sanity)/components/teaser/feed/index'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
