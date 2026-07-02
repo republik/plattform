@@ -1,11 +1,11 @@
 import { BlockQuote } from '@/app/(sanity)/components/portable-text/block-quote'
 import { Button } from '@/app/(sanity)/components/portable-text/button'
-import { DynamicComponent } from '@/app/(sanity)/components/portable-text/dynamic-compontent'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-datawrapper'
 import { Html } from '@/app/(sanity)/components/portable-text/html'
 import { ImageGroup } from '@/app/(sanity)/components/portable-text/image-group'
 import { InfoBox } from '@/app/(sanity)/components/portable-text/infobox'
+import { LegacyDynamicComponent } from '@/app/(sanity)/components/portable-text/legacy-dynamic-component'
 import { LegacyEmbedVideo } from '@/app/(sanity)/components/portable-text/legacy-embed-video'
 import {
   Em,
@@ -36,7 +36,7 @@ const pageComponents: Partial<PortableTextReactComponents> = {
     // Wrap function because renderNode can't be passed to a client component
     button: ({ value }) => <Button value={value} />,
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
-    dynamicComponent: ({ value }) => <DynamicComponent value={value} />,
+    dynamicComponent: ({ value }) => <LegacyDynamicComponent value={value} />,
   },
   block: {
     heading: ({ children }) => <h2>{children}</h2>,

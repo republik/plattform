@@ -1,4 +1,5 @@
 'use client'
+import { dynamicComponentIdentifiers } from '@/components/Article/DynamicComponents'
 import type { DynamicComponent as DynamicComponentT } from '@/sanity.types'
 import { ApolloConsumer, ApolloProvider, gql } from '@apollo/client'
 import { Mutation, Query, Subscription } from '@apollo/client/react/components'
@@ -61,7 +62,7 @@ const figureStyle = cva({
   },
 })
 
-export function DynamicComponentStyleguide({
+export function LegacyDynamicComponent({
   value,
 }: {
   value: DynamicComponentT
@@ -96,6 +97,7 @@ export function DynamicComponentStyleguide({
       <RootColorVariables />
       <DynamicComponent
         require={dynamicComponentRequire}
+        identifiers={dynamicComponentIdentifiers}
         identifier={value.identifier}
         src={value.src}
         // size={value.size}
