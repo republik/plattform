@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../studio/schema.json
+// Source: ../../../../../../studio/schema.json
 export type ChartConfig = {
   settings?: Code
   data?: Code
@@ -153,13 +153,6 @@ export type MeineRepublik = {
 export type BestOfDialogue = {
   _type: 'bestOfDialogue'
   enabled?: boolean
-}
-
-export type TitleBlock = {
-  _type: 'titleBlock'
-  cover?: EditorialImage
-  useCoverAsTitle?: boolean
-  heading?: PageReference
 }
 
 export type TeaserList = {
@@ -636,6 +629,10 @@ export type Page = {
   _createdAt: string
   _updatedAt: string
   _rev: string
+  skipTitleBlock?: boolean
+  cover?: EditorialImage
+  useCoverAsTitle?: boolean
+  heading?: PageReference
   title: InlineEditor
   description?: InlineEditor
   publishDate?: string
@@ -644,16 +641,13 @@ export type Page = {
   pageBuilder?: Array<
     | ({
         _key: string
-      } & TitleBlock)
+      } & EditorBlock)
     | ({
         _key: string
       } & TeaserItem)
     | ({
         _key: string
       } & TeaserList)
-    | ({
-        _key: string
-      } & EditorBlock)
     | ({
         _key: string
       } & CallToAction)
@@ -1172,7 +1166,6 @@ export type AllSanitySchemaTypes =
   | Menu
   | MeineRepublik
   | BestOfDialogue
-  | TitleBlock
   | TeaserList
   | TeaserItem
   | ContributorReference
@@ -1615,7 +1608,10 @@ export type ARTICLE_QUERY_RESULT = {
         title: InlineEditor
         description: InlineEditor | null
         slug: Slug
-        heading: null
+        heading: {
+          _id: string
+          title: InlineEditor
+        } | null
         theme: {
           accentColor: Color | null
         } | null
@@ -1865,17 +1861,6 @@ export type PAGE_CONTENT_QUERY_RESULT = {
                 }
             >
           | null
-      }
-    | {
-        _key: string
-        _type: 'titleBlock'
-        cover?: EditorialImage
-        useCoverAsTitle?: boolean
-        heading: {
-          _id: string
-          title: string
-          slug: string
-        } | null
       }
   > | null
 } | null
