@@ -1,11 +1,6 @@
-import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { EditorBlock } from '@/app/(sanity)/pages/[...path]/components/blocks/editor-block'
 import { css } from '@republik/theme/css'
-import { defineQuery } from 'next-sanity'
-import { CallToAction } from './blocks/call-to-action'
-import { Menu } from './blocks/menu'
 import { TeaserList } from './blocks/teaser-list'
-import { TitleBlock } from './blocks/title-block'
 
 export type PageBuilderBlock = {
   _key: string
@@ -13,37 +8,17 @@ export type PageBuilderBlock = {
   appearance?: string
 }
 
-const PAGE_CONTENT_QUERY = defineQuery(
-  `*[_type == "page" && slug.current == $slug][0]{
-    _id,
-    pageBuilder[]{
-      _key,
-      _type,
-      appearance
-    }
-  }`,
-)
-
-export async function PageBuilder({ slug }: { slug: string }) {
-  const { data: page } = await sanityFetch({
-    query: PAGE_CONTENT_QUERY,
-    params: { slug },
-  })
-
-  if (!page) {
-    return null
-  }
-
-  const { pageBuilder } = page
-
-  if (!pageBuilder?.length) {
-    return null
-  }
-
+export function PageBuilder({
+  blocks,
+  documentId,
+}: {
+  blocks: PageBuilderBlock[]
+  documentId: string
+}) {
   return (
     <>
-      {pageBuilder.map((block) => (
-        <Block key={block._key} block={block} documentId={page._id} />
+      {blocks.map((block) => (
+        <Block key={block._key} block={block} documentId={documentId} />
       ))}
     </>
   )
@@ -65,16 +40,13 @@ function Block({
     case 'teaserList':
       return <TeaserList block={block} documentId={documentId} />
 
-    case 'titleBlock':
-      return <TitleBlock block={block} />
-
-    case 'callToAction':
+    /*case 'callToAction':
       return <CallToAction block={block} />
 
     case 'menu':
       return <Menu block={block} />
 
-    /*case 'teaserItem':
+    case 'teaserItem':
       return <TeaserItem block={block} />
 
     case 'searchBlock':

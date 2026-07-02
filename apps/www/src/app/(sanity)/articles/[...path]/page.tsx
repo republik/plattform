@@ -127,7 +127,6 @@ export default async function PostPage({
         {article.heading && (
           <p
             className={css({
-              textStyle: 'editorialCollection',
               mb: '-6',
               mt: '8',
             })}
@@ -138,13 +137,12 @@ export default async function PostPage({
         )}
         <h1
           className={css({
-            textStyle: 'editorialTitle',
             mt: '12',
           })}
         >
           <InlinePortableText value={article.title} />
         </h1>
-        <h3 className={css({ textStyle: 'editorialLead', mt: '4' })}>
+        <h3 className={css({ mt: '4' })}>
           <InlinePortableText value={article.description} />
         </h3>
         <p
@@ -158,7 +156,7 @@ export default async function PostPage({
         </p>
 
         <div className={css({ mt: '4' })}>
-          <EditLink _id={article._id} />
+          <EditLink _id={article._id} documentType='article' />
         </div>
 
         <ArticleContent slug={slug} />

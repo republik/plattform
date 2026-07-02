@@ -155,13 +155,6 @@ export type BestOfDialogue = {
   enabled?: boolean
 }
 
-export type TitleBlock = {
-  _type: 'titleBlock'
-  cover?: EditorialImage
-  useCoverAsTitle?: boolean
-  heading?: PageReference
-}
-
 export type TeaserList = {
   _type: 'teaserList'
   source?: Source
@@ -636,24 +629,24 @@ export type Page = {
   _createdAt: string
   _updatedAt: string
   _rev: string
+  skipTitleBlock?: boolean
+  cover?: EditorialImage
+  useCoverAsTitle?: boolean
+  heading?: PageReference
   title: InlineEditor
-  description?: InlineEditor
   publishDate?: string
   slug: Slug
   repoId?: string
   pageBuilder?: Array<
     | ({
         _key: string
-      } & TitleBlock)
+      } & EditorBlock)
     | ({
         _key: string
       } & TeaserItem)
     | ({
         _key: string
       } & TeaserList)
-    | ({
-        _key: string
-      } & EditorBlock)
     | ({
         _key: string
       } & CallToAction)
@@ -1172,7 +1165,6 @@ export type AllSanitySchemaTypes =
   | Menu
   | MeineRepublik
   | BestOfDialogue
-  | TitleBlock
   | TeaserList
   | TeaserItem
   | ContributorReference
@@ -1614,9 +1606,12 @@ export type ARTICLE_QUERY_RESULT = {
         _id: string
         type: null
         title: InlineEditor
-        description: InlineEditor | null
+        description: null
         slug: Slug
-        heading: null
+        heading: {
+          _id: string
+          title: InlineEditor
+        } | null
         theme: {
           accentColor: Color | null
         } | null
@@ -1932,9 +1927,12 @@ export type PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY_RESULT = {
                   _id: string
                   type: null
                   title: InlineEditor
-                  description: InlineEditor | null
+                  description: null
                   slug: Slug
-                  heading: null
+                  heading: {
+                    _id: string
+                    title: InlineEditor
+                  } | null
                   theme: {
                     accentColor: Color | null
                   } | null
@@ -1965,11 +1963,57 @@ export type PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY_RESULT = {
     | null
 } | null
 
-// Source: src/app/(sanity)/pages/[...path]/components/page-builder.tsx
-// Variable: PAGE_CONTENT_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    pageBuilder[]{      _key,      _type,      appearance    }  }
-export type PAGE_CONTENT_QUERY_RESULT = {
+// Source: src/app/(sanity)/pages/[...path]/page.tsx
+// Variable: PAGE_SEO_QUERY
+// Query: *[_type == "page" && slug.current == $slug][0]{    "title": coalesce(seo.title, pt::text(title)),    "description": coalesce(seo.description, pt::text(description)),    "image": coalesce(seo.image, image)  }
+export type PAGE_SEO_QUERY_RESULT = {
+  title: string
+  description: string
+  image:
+    | Image1
+    | {
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        _type: 'image'
+      }
+    | null
+} | null
+
+// Source: src/app/(sanity)/pages/[...path]/page.tsx
+// Variable: PAGE_QUERY
+// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    title,    cover {      ...    },    useCoverAsTitle,    heading->{      _id,      title,      "slug": slug.current    },    theme {      darkMode,      accentColor    },    pageBuilder[]{      _key,      _type,      appearance    }  }
+export type PAGE_QUERY_RESULT = {
   _id: string
+  title: InlineEditor
+  cover: {
+    _type: 'editorialImage'
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    imageDark?: {
+      asset?: SanityImageAssetReference
+      media?: unknown
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+    }
+    alt?: string
+    caption?: Caption
+    size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+  } | null
+  useCoverAsTitle: boolean | null
+  heading: {
+    _id: string
+    title: InlineEditor
+    slug: string
+  } | null
+  theme: {
+    darkMode: boolean | null
+    accentColor: Color | null
+  } | null
   pageBuilder: Array<
     | {
         _key: string
@@ -2011,44 +2055,7 @@ export type PAGE_CONTENT_QUERY_RESULT = {
         _type: 'teaserList'
         appearance: 'CAROUSEL' | 'FEED' | 'FRONT' | 'GRID' | null
       }
-    | {
-        _key: string
-        _type: 'titleBlock'
-        appearance: null
-      }
   > | null
-} | null
-
-// Source: src/app/(sanity)/pages/[...path]/page.tsx
-// Variable: PAGE_SEO_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{    "title": coalesce(seo.title, pt::text(title)),    "description": coalesce(seo.description, pt::text(description)),    "image": coalesce(seo.image, image)  }
-export type PAGE_SEO_QUERY_RESULT = {
-  title: string
-  description: string
-  image:
-    | Image1
-    | {
-        asset?: SanityImageAssetReference
-        media?: unknown
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        _type: 'image'
-      }
-    | null
-} | null
-
-// Source: src/app/(sanity)/pages/[...path]/page.tsx
-// Variable: PAGE_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    title,    description,    byline,    theme {      darkMode,      accentColor    },  }
-export type PAGE_QUERY_RESULT = {
-  _id: string
-  title: InlineEditor
-  description: InlineEditor | null
-  byline: null
-  theme: {
-    darkMode: boolean | null
-    accentColor: Color | null
-  } | null
 } | null
 
 // Query TypeMap
@@ -2063,8 +2070,7 @@ declare module '@sanity/client' {
     '*[_type=="article"]{ \n    \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n \n  }': FEED_TEASER_FRAGMENT_QUERY_RESULT
     '*[_type == "page" && _id == $documentId][0]{\n    _id,\n    "block": pageBuilder[_key == $blockKey][0]{\n      content[]{\n        ...,\n        markDefs[]{\n          ...,\n          _type == "internalLink" => {\n            "slug": @.reference->slug\n          }\n        }\n      }\n    }\n  }': PAGE_BUILDER_EDITOR_BLOCK_QUERY_RESULT
     '\n  *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n      maxItems,\n      "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n\n        },\n        source.sourceType == "COLLECTION" => *[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[]._ref\n        ] | order(publishDate desc) [$start...$end] {\n          \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n\n        },\n        []\n      ),\n      "total": select(\n        source.sourceType == "MANUAL" => count(source.items),\n        source.sourceType == "COLLECTION" => count(*[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[]._ref\n        ]),\n        0\n      )\n    }\n  }\n': PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY_RESULT
-    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    pageBuilder[]{\n      _key,\n      _type,\n      appearance\n    }\n  }': PAGE_CONTENT_QUERY_RESULT
     '*[_type == "page" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image)\n  }': PAGE_SEO_QUERY_RESULT
-    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    theme {\n      darkMode,\n      accentColor\n    },\n  }': PAGE_QUERY_RESULT
+    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    cover {\n      ...\n    },\n    useCoverAsTitle,\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    pageBuilder[]{\n      _key,\n      _type,\n      appearance\n    }\n  }': PAGE_QUERY_RESULT
   }
 }

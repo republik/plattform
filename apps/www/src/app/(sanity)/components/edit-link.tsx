@@ -4,10 +4,16 @@ import Link from 'next/link'
 
 const STUDIO_URL = process.env.NEXT_PUBLIC_SANITY_STUDIO_URL
 
-export function EditLink({ _id }: { _id: string }) {
+export function EditLink({
+  _id,
+  documentType,
+}: {
+  _id: string
+  documentType: string
+}) {
   return (
     <Link
-      href={`${STUDIO_URL}/structure/article;${_id}`}
+      href={`${STUDIO_URL}/structure/${documentType};${_id}`}
       target='_blank'
       title='Edit in Studio'
       className={css({ color: 'orange' })}

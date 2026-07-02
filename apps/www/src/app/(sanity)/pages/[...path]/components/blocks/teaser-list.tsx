@@ -61,7 +61,8 @@ export async function TeaserList({
     })
     return data?.block?.teasers ?? []
   }
-  
+
+  // TODO: CAROUSEL; GRID; FRONT
   if (appearance !== 'FEED') return null
 
   return (

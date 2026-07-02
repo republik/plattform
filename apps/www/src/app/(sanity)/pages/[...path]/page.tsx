@@ -1,4 +1,5 @@
 import { EditLink } from '@/app/(sanity)/components/edit-link'
+import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { Theme } from '@/app/(sanity)/components/theme'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
@@ -60,12 +61,24 @@ const PAGE_QUERY = defineQuery(
   `*[_type == "page" && slug.current == $slug][0]{
     _id,
     title,
-    description,
-    byline,
+    cover {
+      ...
+    },
+    useCoverAsTitle,
+    heading->{
+      _id,
+      title,
+      "slug": slug.current
+    },
     theme {
       darkMode,
       accentColor
     },
+    pageBuilder[]{
+      _key,
+      _type,
+      appearance
+    }
   }`,
 )
 
@@ -83,38 +96,46 @@ export default async function PostPage({
 
   if (!page) notFound()
 
+  const { _id, title, cover, heading, useCoverAsTitle, theme, pageBuilder } =
+    page
+
   return (
-    <EventTrackingContext category='Article'>
-      <Theme theme={page.theme} />
-      <article className={editorialContent()}>
-        {/* TITLE BLOCK */}
-        <h1
-          className={css({
-            textStyle: 'editorialTitle',
-            mt: '12',
-          })}
-        >
-          <InlinePortableText value={page.title} />
-        </h1>
-        <h3 className={css({ textStyle: 'editorialLead', mt: '4' })}>
-          <InlinePortableText value={page.description} />
-        </h3>
-        <p
-          className={css({
-            textStyle: 'editorialByline',
-            mt: '4',
-            '& a': { textDecoration: 'underline' },
-          })}
-        >
-          <InlinePortableText value={page.byline} />
-        </p>
+    <EventTrackingContext category='Page'>
+      <Theme theme={theme} />
 
-        <div className={css({ mt: '4' })}>
-          <EditLink _id={page._id} />
-        </div>
+      <div className={editorialContent({ theme: 'page' })}>
+        {cover && <EditorialImage value={cover} />}
 
-        <PageBuilder slug={slug} />
-      </article>
+        {!useCoverAsTitle && (
+          <>
+            {heading && (
+              <p
+                className={css({
+                  mb: '-6',
+                  mt: '8',
+                })}
+                style={{ color: 'var(--page-theme-accent-color)' }}
+              >
+                <InlinePortableText value={heading.title} />
+              </p>
+            )}
+
+            <h1
+              className={css({
+                mt: '12',
+              })}
+            >
+              <InlinePortableText value={title} />
+            </h1>
+
+            <div className={css({ mt: '8' })}>
+              <EditLink _id={_id} documentType='page' />
+            </div>
+          </>
+        )}
+
+        <PageBuilder blocks={pageBuilder} documentId={_id} />
+      </div>
     </EventTrackingContext>
   )
 }

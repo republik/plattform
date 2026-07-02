@@ -4,6 +4,7 @@ import FeedTeaser, {
   FeedTeaserType,
 } from '@/app/(sanity)/components/teaser/feed'
 import { Button } from '@/app/components/ui/button'
+import { ArticleSection } from '@/app/components/ui/section'
 import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
@@ -36,29 +37,32 @@ export function TeaserFeed({
   const showLoadMoreButton =
     total > teasers.length && shownTeasers.length < (maxItems ?? Infinity)
 
+  // TODO: alternative teaser style
   return (
-    <div>
-      {shownTeasers.map((teaser, index) => (
-        <FeedTeaser
-          key={teaser._id}
-          teaser={teaser}
-          index={index}
-          skipHeading
-        />
-      ))}
-      {showLoadMoreButton && (
-        <Button
-          type='button'
-          variant='link'
-          className={css({ color: 'primary', textDecoration: 'none' })}
-          onClick={onLoadMore}
-        >
-          {t('feed/loadMore', {
-            count: pageSize,
-            remaining: total - shownTeasers.length,
-          })}
-        </Button>
-      )}
-    </div>
+    <ArticleSection>
+      <div>
+        {shownTeasers.map((teaser, index) => (
+          <FeedTeaser
+            key={teaser._id}
+            teaser={teaser}
+            index={index}
+            skipHeading
+          />
+        ))}
+        {showLoadMoreButton && (
+          <Button
+            type='button'
+            variant='link'
+            className={css({ color: 'primary', textDecoration: 'none' })}
+            onClick={onLoadMore}
+          >
+            {t('feed/loadMore', {
+              count: pageSize,
+              remaining: total - shownTeasers.length,
+            })}
+          </Button>
+        )}
+      </div>
+    </ArticleSection>
   )
 }
