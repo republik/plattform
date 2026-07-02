@@ -1,17 +1,11 @@
-'use client'
-
 import { feedTeaserFragment } from '@/app/(sanity)/components/teaser/feed'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { PageBuilderBlock } from '@/app/(sanity)/pages/[...path]/components/page-builder'
 import { defineQuery } from 'next-sanity'
-import { useState } from 'react'
 import { TeaserFeed } from './teaser-feed'
 
 const MAX_TEASERS = 20
 
-// TODO: load first 20. Then more on click
-// handle the teasers loading logic here
-// delegate presentation to nested components
 const PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY = defineQuery(`
   *[_type == "page" && _id == $documentId][0]{
     "block": pageBuilder[_key == $blockKey][0]{
@@ -47,41 +41,34 @@ export async function TeaserList({
   block: PageBuilderBlock
   documentId: string
 }) {
-  const [showAll, setShowAll] = useState(false)
-  const [teasers, setTeasers] = useState([])
   const { appearance, _key: blockKey } = block
 
   const { data } = await sanityFetch({
     query: PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY,
     params: { documentId, blockKey, start: 0, end: MAX_TEASERS },
   })
+  if (!data?.block) return null
 
-  const { maxItems, total } = data.block
-  setTeasers(data.block.teasers)
+  const { teasers, total, maxItems } = data.block
+  if (!teasers?.length) return null
 
-  async function loadAll() {
-    const { data: more } = await sanityFetch({
+  // we only offer this option when: list has > 20 teasers
+  async function loadMore() {
+    'use server'
+    const { data } = await sanityFetch({
       query: PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY,
       params: { documentId, blockKey, start: MAX_TEASERS, end: total },
     })
-    setTeasers(teasers.concat(more.block.teasers))
-    setShowAll(true)
+    return data?.block?.teasers ?? []
   }
 
-  if (!data || !data.block) return null
-  if (!teasers?.length) return null
-
-  const shownTeasers = teasers.slice(0, maxItems ?? undefined)
-  const showLoadMore = total > MAX_TEASERS && !showAll
-
-  if (appearance === 'FEED') {
-    return (
-      <>
-        <TeaserFeed teasers={shownTeasers} />
-        {showLoadMore && <button onClick={() => loadAll()}>Load all</button>}
-      </>
-    )
-  }
-
-  return null
+  if (appearance !== 'FEED') return null
+  return (
+    <TeaserFeed
+      initialTeasers={teasers}
+      hasMore={total > teasers.length}
+      maxItems={maxItems}
+      loadMoreAction={loadMore}
+    />
+  )
 }
