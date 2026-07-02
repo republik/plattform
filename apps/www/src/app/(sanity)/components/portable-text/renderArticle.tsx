@@ -1,7 +1,7 @@
 import { BlockQuote } from '@/app/(sanity)/components/portable-text/block-quote'
 import { Button } from '@/app/(sanity)/components/portable-text/button'
 import { Conditional } from '@/app/(sanity)/components/portable-text/conditional'
-import { DynamicComponent } from '@/app/(sanity)/components/portable-text/dynamic-compontent'
+import { LegacyDynamicComponent } from '@/app/(sanity)/components/portable-text/legacy-dynamic-component'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-datawrapper'
 import { Html } from '@/app/(sanity)/components/portable-text/html'
@@ -24,6 +24,8 @@ import { Variable } from '@/app/(sanity)/components/portable-text/variable'
 import { WebOnly } from '@/app/(sanity)/components/portable-text/web-only'
 import { type ArticleEditor } from '@/sanity.types'
 import { PortableText, type PortableTextReactComponents } from 'next-sanity'
+import { LegacyChart } from '@/app/(sanity)/components/portable-text/legacy-chart'
+import { StoryComponent } from '@/app/(sanity)/components/portable-text/story-component'
 
 const articleComponents: Partial<PortableTextReactComponents> = {
   unknownType: UnknownType,
@@ -47,7 +49,9 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     ifNot: ({ value }) => <Conditional value={value} />,
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
     variable: ({ value }) => <Variable value={value} />,
-    dynamicComponent: ({ value }) => <DynamicComponent value={value} />,
+    storyComponent: ({ value }) => <StoryComponent value={value} />,
+    dynamicComponent: ({ value }) => <LegacyDynamicComponent value={value} />,
+    chart: ({ value }) => <LegacyChart value={value} />,
   },
   block: {
     heading: ({ children }) => <h2>{children}</h2>,
