@@ -1,7 +1,7 @@
 import { BlockQuote } from '@/app/(sanity)/components/portable-text/block-quote'
 import { Button } from '@/app/(sanity)/components/portable-text/button'
 import { Conditional } from '@/app/(sanity)/components/portable-text/conditional'
-import { DynamicComponent } from '@/app/(sanity)/components/portable-text/dynamic-compontent'
+import { DynamicComponentStyleguide } from '@/app/(sanity)/components/portable-text/dynamic-compontent-styleguide'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-datawrapper'
 import { Html } from '@/app/(sanity)/components/portable-text/html'
@@ -47,7 +47,9 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     ifNot: ({ value }) => <Conditional value={value} />,
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
     variable: ({ value }) => <Variable value={value} />,
-    dynamicComponent: ({ value }) => <DynamicComponent value={value} />,
+    dynamicComponent: ({ value }) => (
+      <DynamicComponentStyleguide value={value} />
+    ),
   },
   block: {
     heading: ({ children }) => <h2>{children}</h2>,
