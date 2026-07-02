@@ -9,6 +9,7 @@ import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import { Metadata } from 'next'
 import { defineQuery } from 'next-sanity'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { PageBuilder } from './components/page-builder'
 
@@ -99,6 +100,8 @@ export default async function PostPage({
   const { _id, title, cover, heading, useCoverAsTitle, theme, pageBuilder } =
     page
 
+  console.log({ cover })
+
   return (
     <EventTrackingContext category='Page'>
       <Theme theme={theme} />
@@ -118,7 +121,9 @@ export default async function PostPage({
                 })}
                 style={{ color: 'var(--page-theme-accent-color)' }}
               >
-                <InlinePortableText value={heading.title} />
+                <Link href={heading.slug}>
+                  <InlinePortableText value={heading.title} />
+                </Link>
               </p>
             )}
 

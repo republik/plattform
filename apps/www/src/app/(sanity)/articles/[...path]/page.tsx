@@ -11,6 +11,7 @@ import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import { Metadata } from 'next'
 import { defineQuery } from 'next-sanity'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import FollowArticle from '../../components/follow/follow-article'
 import { ArticleContent } from './components/article-content'
@@ -71,7 +72,8 @@ const ARTICLE_QUERY = defineQuery(
     },
     heading->{
       _id,
-      "title": pt::text(title),
+      title,
+      "slug": slug.current
     },
     newsletter->{
       title,
@@ -118,13 +120,15 @@ export default async function PostPage({
 
   if (!article) notFound()
 
+  const { theme, cover, heading, title, description, byline } = article
+
   return (
     <EventTrackingContext category='Article'>
-      <Theme theme={article.theme} />
+      <Theme theme={theme} />
       <article className={editorialContent()}>
         {/* TITLE BLOCK */}
-        {article.cover && <EditorialImage value={article.cover} />}
-        {article.heading && (
+        {cover && <EditorialImage value={cover} />}
+        {heading && (
           <p
             className={css({
               mb: '-6',
@@ -132,7 +136,9 @@ export default async function PostPage({
             })}
             style={{ color: 'var(--page-theme-accent-color)' }}
           >
-            {article.heading.title}
+            <Link href={heading.slug}>
+              <InlinePortableText value={heading.title} />
+            </Link>
           </p>
         )}
         <h1
@@ -140,10 +146,10 @@ export default async function PostPage({
             mt: '12',
           })}
         >
-          <InlinePortableText value={article.title} />
+          <InlinePortableText value={title} />
         </h1>
         <h3 className={css({ mt: '4' })}>
-          <InlinePortableText value={article.description} />
+          <InlinePortableText value={description} />
         </h3>
         <p
           className={css({
@@ -152,7 +158,7 @@ export default async function PostPage({
             '& a': { textDecoration: 'underline' },
           })}
         >
-          <InlinePortableText value={article.byline} />
+          <InlinePortableText value={byline} />
         </p>
 
         <div className={css({ mt: '4' })}>

@@ -14,6 +14,12 @@ const figureStyle = cva({
   },
   variants: {
     size: {
+      TINY: {
+        // TODO: migrate as token to panda, maybe?
+        maxWidth: '325px',
+        mx: 'auto',
+        my: '4',
+      },
       NORMAL: {},
       BREAKOUT: {
         gridColumn: 'breakout',

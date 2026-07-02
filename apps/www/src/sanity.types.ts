@@ -738,7 +738,7 @@ export type EditorialImage = {
   }
   alt?: string
   caption?: Caption
-  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
+  size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
 }
 
 export type Link = {
@@ -843,12 +843,12 @@ export type StoryComponent = {
   url?: string
   tagname?: string
   componentData?: Code
-  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
+  size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
 }
 
 export type DynamicComponent = {
   _type: 'dynamicComponent'
-  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
+  size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
   src?: string
   identifier?:
     | 'MANIFEST'
@@ -901,7 +901,7 @@ export type EmbedDataWrapper = {
   datawrapperId?: string
   forceDark?: boolean
   plain?: boolean
-  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
+  size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
 }
 
 export type EmbedTwitter = {
@@ -923,7 +923,7 @@ export type EmbedTwitter = {
 
 export type EmbedVideo = {
   _type: 'embedVideo'
-  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
+  size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
   platform?: 'youtube' | 'vimeo'
   url?: string
   id?: string
@@ -1318,7 +1318,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'dynamicComponent'
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
         src?: string
         identifier?:
           | 'CHALLENGE_ACCEPTED_INLINE_TEASER'
@@ -1366,7 +1366,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
         }
         alt?: string
         caption?: Caption
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
         markDefs: null
       }
     | {
@@ -1393,7 +1393,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
         datawrapperId?: string
         forceDark?: boolean
         plain?: boolean
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
         markDefs: null
       }
     | {
@@ -1417,7 +1417,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'embedVideo'
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
         platform?: 'vimeo' | 'youtube'
         url?: string
         id?: string
@@ -1499,7 +1499,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
         url?: string
         tagname?: string
         componentData?: Code
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
         markDefs: null
       }
     | {
@@ -1531,7 +1531,7 @@ export type ARTICLE_SEO_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/articles/[...path]/page.tsx
 // Variable: ARTICLE_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    byline,    cover {      ...    },    heading->{      _id,      "title": pt::text(title),    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      darkMode,      accentColor    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    "articleCollection": articleCollections[0]->{      _id,      title,      description,      image    },    articleRecommendations[]->{          _id,    type,    title,    description,    slug,    heading->{      _id,      title,    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title,    }    }  }
+// Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,    byline,    cover {      ...    },    heading->{      _id,      title,      "slug": slug.current    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      darkMode,      accentColor    },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    "articleCollection": articleCollections[0]->{      _id,      title,      description,      image    },    articleRecommendations[]->{          _id,    type,    title,    description,    slug,    heading->{      _id,      title,    },    theme {      accentColor    },    contributors[]{      kind,      "name": contributor->title,    }    }  }
 export type ARTICLE_QUERY_RESULT = {
   _id: string
   title: InlineEditor
@@ -1552,11 +1552,12 @@ export type ARTICLE_QUERY_RESULT = {
     }
     alt?: string
     caption?: Caption
-    size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+    size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
   } | null
   heading: {
     _id: string
-    title: string
+    title: InlineEditor
+    slug: string
   } | null
   newsletter: {
     title: string
@@ -1784,7 +1785,7 @@ export type PAGE_BUILDER_EDITOR_BLOCK_QUERY_RESULT = {
               }
               alt?: string
               caption?: Caption
-              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+              size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
               markDefs: null
             }
           | {
@@ -1805,7 +1806,7 @@ export type PAGE_BUILDER_EDITOR_BLOCK_QUERY_RESULT = {
               datawrapperId?: string
               forceDark?: boolean
               plain?: boolean
-              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+              size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
               markDefs: null
             }
           | {
@@ -1829,7 +1830,7 @@ export type PAGE_BUILDER_EDITOR_BLOCK_QUERY_RESULT = {
           | {
               _key: string
               _type: 'embedVideo'
-              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+              size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
               platform?: 'vimeo' | 'youtube'
               url?: string
               id?: string
@@ -2002,7 +2003,7 @@ export type PAGE_QUERY_RESULT = {
     }
     alt?: string
     caption?: Caption
-    size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+    size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
   } | null
   useCoverAsTitle: boolean | null
   heading: {
@@ -2064,7 +2065,7 @@ declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    content[]{\n        ...,\n        markDefs[]{\n          ...,\n          _type == "internalLink" => {\n            "slug": @.reference->slug\n          }\n        }\n    }\n  }': ARTICLE_CONTENT_QUERY_RESULT
     '*[_type == "article" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image)\n  }': ARTICLE_SEO_QUERY_RESULT
-    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      "title": pt::text(title),\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    "articleCollection": articleCollections[0]->{\n      _id,\n      title,\n      description,\n      image\n    },\n    articleRecommendations[]->{\n      \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n\n    }\n  }': ARTICLE_QUERY_RESULT
+    '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    "articleCollection": articleCollections[0]->{\n      _id,\n      title,\n      description,\n      image\n    },\n    articleRecommendations[]->{\n      \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n\n    }\n  }': ARTICLE_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    "slug": slug.current,\n    title\n  }': ARTICLES_QUERY_RESULT
     '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n\n    "episodes": *[_type == "article" && references(^._id)]{\n      _id,\n      title,\n      description,\n      image\n    }\n  }': SERIES_NAV_QUERY_RESULT
     '*[_type=="article"]{ \n    \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n    },\n    theme {\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n \n  }': FEED_TEASER_FRAGMENT_QUERY_RESULT
