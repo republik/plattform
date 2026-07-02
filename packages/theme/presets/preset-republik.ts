@@ -361,7 +361,7 @@ export const presetRepublik = definePreset({
             lineHeight: 1.25,
           },
         },
-        editorialCollection: {
+        editorialHeading: {
           value: {
             fontFamily: 'gtAmericaStandard',
             fontWeight: '500',
@@ -386,6 +386,24 @@ export const presetRepublik = definePreset({
             fontSize: { base: '1.1875rem', md: '1.5rem' },
             lineHeight: 1.5,
             letterSpacing: { base: 0, md: -0.21 },
+          },
+        },
+        interactionTitle: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: 'medium',
+            fontStyle: 'normal',
+            fontSize: { base: '1.875rem', md: '3.625rem' },
+            lineHeight: { base: 1.133, md: 1.035 },
+          },
+        },
+        interactionParagraph: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: 400,
+            fontStyle: 'normal',
+            fontSize: { base: '1.0625rem', md: '1.1875rem' },
+            lineHeight: { base: 1.625, md: '1.875rem' },
           },
         },
         teaserTitle: {

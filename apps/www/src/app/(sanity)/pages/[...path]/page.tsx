@@ -113,6 +113,8 @@ export default async function PostPage({
                 className={css({
                   mb: '-6',
                   mt: '8',
+                  textAlign: 'center',
+                  gridColumn: 'breakout',
                 })}
                 style={{ color: 'var(--page-theme-accent-color)' }}
               >
@@ -123,12 +125,21 @@ export default async function PostPage({
             <h1
               className={css({
                 mt: '12',
+                textAlign: 'center',
+                gridColumn: 'breakout',
               })}
             >
               <InlinePortableText value={title} />
             </h1>
 
-            <div className={css({ mt: '8' })}>
+            <div
+              className={css({
+                mt: '8',
+                position: 'absolute',
+                top: 110,
+                right: 30,
+              })}
+            >
               <EditLink _id={_id} documentType='page' />
             </div>
           </>

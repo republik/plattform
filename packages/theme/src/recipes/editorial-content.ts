@@ -12,6 +12,9 @@ const contentParts = defineParts({
   fullWidthBlocks: { selector: '& > .full' },
   paragraphs: { selector: '& > p' },
   subheadings: { selector: '& > h2' },
+  heading: { selector: '& > p:has(~ h1)' },
+  title: { selector: '& > h1' },
+  lead: { selector: '& > h3' },
   unorderedLists: { selector: '& > ul' },
   orderedLists: { selector: '& > ol' },
   unorderedListItems: { selector: '& > ul li' },
@@ -89,6 +92,9 @@ export const editorialContentRecipe = defineRecipe({
   variants: {
     theme: {
       editorial: contentParts({
+        heading: { textStyle: 'editorialHeading' },
+        title: { textStyle: 'editorialTitle' },
+        lead: { textStyle: 'editorialLead' },
         paragraphs: { textStyle: 'editorialParagraph' },
         subheadings: { textStyle: 'editorialH2' },
         unorderedListItems: {
@@ -98,9 +104,18 @@ export const editorialContentRecipe = defineRecipe({
           textStyle: 'editorialParagraph',
         },
       }),
-      meta: {
-        // TODO
-      },
+      page: contentParts({
+        heading: { textStyle: 'editorialHeading' },
+        title: { textStyle: 'interactionTitle' },
+        paragraphs: { textStyle: 'interactionParagraph' },
+        subheadings: { textStyle: 'editorialH2' },
+        unorderedListItems: {
+          textStyle: 'interactionParagraph',
+        },
+        orderedListItems: {
+          textStyle: 'interactionParagraph',
+        },
+      }),
     },
   },
 
