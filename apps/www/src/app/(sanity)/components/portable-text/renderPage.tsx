@@ -18,6 +18,7 @@ import {
 } from '@/app/(sanity)/components/portable-text/marks'
 import { Note } from '@/app/(sanity)/components/portable-text/note'
 import { PullQuote } from '@/app/(sanity)/components/portable-text/pull-quote'
+import { StoryComponent } from '@/app/(sanity)/components/portable-text/story-component'
 import { UnknownType } from '@/app/(sanity)/components/portable-text/unknownComponent'
 import { type PageEditor } from '@/sanity.types'
 import { PortableText, type PortableTextReactComponents } from 'next-sanity'
@@ -37,6 +38,7 @@ const pageComponents: Partial<PortableTextReactComponents> = {
     // Wrap function because renderNode can't be passed to a client component
     button: ({ value }) => <Button value={value} />,
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
+    storyComponent: ({ value }) => <StoryComponent value={value} />,
     dynamicComponent: ({ value }) => <LegacyDynamicComponent value={value} />,
     chart: ({ value }) => <LegacyChart value={value} />,
   },

@@ -25,6 +25,7 @@ import { WebOnly } from '@/app/(sanity)/components/portable-text/web-only'
 import { type ArticleEditor } from '@/sanity.types'
 import { PortableText, type PortableTextReactComponents } from 'next-sanity'
 import { LegacyChart } from '@/app/(sanity)/components/portable-text/legacy-chart'
+import { StoryComponent } from '@/app/(sanity)/components/portable-text/story-component'
 
 const articleComponents: Partial<PortableTextReactComponents> = {
   unknownType: UnknownType,
@@ -48,6 +49,7 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     ifNot: ({ value }) => <Conditional value={value} />,
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
     variable: ({ value }) => <Variable value={value} />,
+    storyComponent: ({ value }) => <StoryComponent value={value} />,
     dynamicComponent: ({ value }) => <LegacyDynamicComponent value={value} />,
     chart: ({ value }) => <LegacyChart value={value} />,
   },
