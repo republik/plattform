@@ -843,12 +843,12 @@ export type StoryComponent = {
   url?: string
   tagname?: string
   componentData?: Code
-  size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
+  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
 }
 
 export type DynamicComponent = {
   _type: 'dynamicComponent'
-  size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
+  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
   src?: string
   identifier?:
     | 'MANIFEST'
@@ -901,7 +901,7 @@ export type EmbedDataWrapper = {
   datawrapperId?: string
   forceDark?: boolean
   plain?: boolean
-  size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
+  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
 }
 
 export type EmbedTwitter = {
@@ -923,7 +923,7 @@ export type EmbedTwitter = {
 
 export type EmbedVideo = {
   _type: 'embedVideo'
-  size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
+  size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
   platform?: 'youtube' | 'vimeo'
   url?: string
   id?: string
@@ -1318,7 +1318,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'dynamicComponent'
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
         src?: string
         identifier?:
           | 'CHALLENGE_ACCEPTED_INLINE_TEASER'
@@ -1393,7 +1393,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
         datawrapperId?: string
         forceDark?: boolean
         plain?: boolean
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
         markDefs: null
       }
     | {
@@ -1417,7 +1417,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
     | {
         _key: string
         _type: 'embedVideo'
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
         platform?: 'vimeo' | 'youtube'
         url?: string
         id?: string
@@ -1499,7 +1499,7 @@ export type ARTICLE_CONTENT_QUERY_RESULT = {
         url?: string
         tagname?: string
         componentData?: Code
-        size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
+        size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
         markDefs: null
       }
     | {
@@ -1806,7 +1806,7 @@ export type PAGE_BUILDER_EDITOR_BLOCK_QUERY_RESULT = {
               datawrapperId?: string
               forceDark?: boolean
               plain?: boolean
-              size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
+              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
               markDefs: null
             }
           | {
@@ -1830,7 +1830,7 @@ export type PAGE_BUILDER_EDITOR_BLOCK_QUERY_RESULT = {
           | {
               _key: string
               _type: 'embedVideo'
-              size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
+              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
               platform?: 'vimeo' | 'youtube'
               url?: string
               id?: string
