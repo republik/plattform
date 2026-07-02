@@ -5,6 +5,7 @@ import { EmbedDataWrapper } from '@/app/(sanity)/components/portable-text/embed-
 import { Html } from '@/app/(sanity)/components/portable-text/html'
 import { ImageGroup } from '@/app/(sanity)/components/portable-text/image-group'
 import { InfoBox } from '@/app/(sanity)/components/portable-text/infobox'
+import { LegacyChart } from '@/app/(sanity)/components/portable-text/legacy-chart'
 import { LegacyDynamicComponent } from '@/app/(sanity)/components/portable-text/legacy-dynamic-component'
 import { LegacyEmbedVideo } from '@/app/(sanity)/components/portable-text/legacy-embed-video'
 import {
@@ -37,6 +38,7 @@ const pageComponents: Partial<PortableTextReactComponents> = {
     button: ({ value }) => <Button value={value} />,
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
     dynamicComponent: ({ value }) => <LegacyDynamicComponent value={value} />,
+    chart: ({ value }) => <LegacyChart value={value} />,
   },
   block: {
     heading: ({ children }) => <h2>{children}</h2>,

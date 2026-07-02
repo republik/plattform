@@ -24,6 +24,7 @@ import { Variable } from '@/app/(sanity)/components/portable-text/variable'
 import { WebOnly } from '@/app/(sanity)/components/portable-text/web-only'
 import { type ArticleEditor } from '@/sanity.types'
 import { PortableText, type PortableTextReactComponents } from 'next-sanity'
+import { LegacyChart } from '@/app/(sanity)/components/portable-text/legacy-chart'
 
 const articleComponents: Partial<PortableTextReactComponents> = {
   unknownType: UnknownType,
@@ -48,6 +49,7 @@ const articleComponents: Partial<PortableTextReactComponents> = {
     embedDataWrapper: ({ value }) => <EmbedDataWrapper value={value} />,
     variable: ({ value }) => <Variable value={value} />,
     dynamicComponent: ({ value }) => <LegacyDynamicComponent value={value} />,
+    chart: ({ value }) => <LegacyChart value={value} />,
   },
   block: {
     heading: ({ children }) => <h2>{children}</h2>,
