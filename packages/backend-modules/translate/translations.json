@@ -1405,6 +1405,10 @@
       "value": "Willkommen an Bord"
     },
     {
+      "key": "api/access/email/recipient/in_review/subject",
+      "value": "Ihre Anfrage wird geprüft"
+    },
+    {
       "key": "api/access/email/recipient/recommendations/subject",
       "value": "Leseempfehlungen aus der Republik"
     },
@@ -1431,6 +1435,10 @@
     {
       "key": "api/access/email/granter/claim_notice_gifted_membership/subject",
       "value": "Geschenk-Mitgliedschaft von {recipientName} eingelöst"
+    },
+    {
+      "key": "api/access/email/granter/claim_notice_3months/subject",
+      "value": "Republik-Zugang wurde eingelöst"
     },
     {
       "key": "api/access/grant/email/error",
@@ -1541,6 +1549,10 @@
       "value": "gültig, uneingelöst"
     },
     {
+      "key": "api/access/resolvers/AccessGrant/status/pending",
+      "value": "gültig, noch nicht begonnen"
+    },
+    {
       "key": "api/access/resolvers/AccessGrant/status/valid",
       "value": "gültig"
     },
@@ -1554,7 +1566,11 @@
     },
     {
       "key": "api/access/claim/can-not-claim-access-with-active-subscription",
-      "value": "Ups, es ist ein Fehler aufgetreten. Kontaktieren Sie bitte das Support-Team via kontakt@republik.ch."
+      "value": "Sie haben bereits ein aktives Abonnement und können deshalb keinen Zugang einlösen."
+    },
+    {
+      "key": "api/access/claim/can-not-claim-access-with-active-membership",
+      "value": "Sie haben bereits eine aktive Mitgliedschaft oder ein aktives Abo und können deshalb keinen Zugang einlösen."
     },
     {
       "key": "api/access/request/campaign/error",

@@ -35,9 +35,8 @@ function NativeCta() {
   const { isMinimalNativeAppVersion } = useInNativeApp()
   const { isIOSApp, isAndroidApp } = usePlatformInformation()
   const canUseIOSLinkCta = isIOSApp && isMinimalNativeAppVersion('2.3.0')
-  const canUseAndroidLinkCta = isAndroidApp && isMinimalNativeAppVersion('2.4.1')
 
-  if (canUseIOSLinkCta || canUseAndroidLinkCta) {
+  if (canUseIOSLinkCta) {
     return (
       <div className={nativeCtaStyle}>
         <p>

@@ -25,7 +25,7 @@ import { useMe } from '@/lib/context/MeContext'
 
 import { splitByTitle } from '@/lib/utils/mdast'
 
-import { postMessage } from '@/lib/withInNativeApp'
+import { postMessage, useInNativeApp } from '@/lib/withInNativeApp'
 import withT from '@/lib/withT'
 import PdfOverlay, { getPdfUrl } from '../Article/PdfOverlay'
 import { useAudioContext } from '../Audio/AudioProvider'
@@ -81,6 +81,7 @@ const ActionBar = ({
   } = useAudioContext()
   const { isAudioQueueAvailable, checkIfInQueue } = useAudioQueue()
   const { isNativeApp, isIOS, isAndroid } = usePlatformInformation()
+  const { inNativeAndroidApp } = useInNativeApp()
 
   const handleShareClick = async (e, shareData = {}) => {
     e.preventDefault()
@@ -502,7 +503,7 @@ const ActionBar = ({
         setPodcastOverlayVisible(!podcastOverlayVisible)
       },
       label: t('PodcastButtons/title'),
-      show: !!podcast && meta.template !== 'format',
+      show: !!podcast && meta.template !== 'format' && !inNativeAndroidApp,
       modes: ['articleBottom'],
       group: mode === 'articleTop' ? 'audio' : undefined,
     },

@@ -28,7 +28,7 @@ const VoiceOption = ({ text, description }) => {
 
 const VOICES = [
   {
-    value: 'huebsch-01150-rpblk',
+    value: 'huebsch-311-054-rpblk',
     text: 'Mann 1',
     element: <VoiceOption text='Mann 1' description='erzählend (*)' />,
   },

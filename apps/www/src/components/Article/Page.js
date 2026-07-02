@@ -67,6 +67,7 @@ const ArticlePage = ({
   markAsReadMutation,
   serverContext,
   clientRedirection,
+  inNativeAndroidApp,
 }) => {
   const actionBarRef = useRef()
   const bottomActionBarRef = useRef()
@@ -398,7 +399,8 @@ const ArticlePage = ({
             (!hasPaywall && meta.template === 'article') ||
             isEditorialNewsletter
 
-          const showPodcastButtons = !!podcast && meta.template !== 'article'
+          const showPodcastButtons =
+            !!podcast && meta.template !== 'article' && !inNativeAndroidApp
 
           return (
             <>
