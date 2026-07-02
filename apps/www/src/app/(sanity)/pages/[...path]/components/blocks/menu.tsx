@@ -1,4 +1,4 @@
-import type { PAGE_CONTENT_QUERY_RESULT } from '@/sanity.types'
+/*import type { PAGE_CONTENT_QUERY_RESULT } from '@/sanity.types'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 
@@ -8,8 +8,8 @@ type PageBuilderBlock = NonNullable<
 
 export type MenuBlock = Extract<PageBuilderBlock, { _type: 'menu' }>
 
-/** GROQ projection for the `menu` block, resolving heading + page links. */
-export const menuFragment = /* groq */ `
+
+export const menuFragment = `
   _type == "menu" => {
     heading {
       title,
@@ -37,7 +37,6 @@ export const menuFragment = /* groq */ `
   }
 `
 
-/** A navigation menu with an optional heading and a list of links/page refs. */
 export function Menu({ block }: { block: MenuBlock }) {
   const items = (block.pages ?? []).flatMap((item) => {
     if (item._type === 'link') {
@@ -98,4 +97,4 @@ export function Menu({ block }: { block: MenuBlock }) {
       </ul>
     </nav>
   )
-}
+}*/

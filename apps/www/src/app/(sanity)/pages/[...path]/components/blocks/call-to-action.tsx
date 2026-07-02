@@ -1,4 +1,4 @@
-import { NewsletterSubscribeButton } from '@/app/(sanity)/components/newsletters/newsletter-subscribe'
+/*import { NewsletterSubscribeButton } from '@/app/(sanity)/components/newsletters/newsletter-subscribe'
 import { Button } from '@/app/components/ui/button'
 import type { PAGE_CONTENT_QUERY_RESULT } from '@/sanity.types'
 import { css } from '@republik/theme/css'
@@ -12,7 +12,7 @@ export type CallToActionBlock = Extract<
   { _type: 'callToAction' }
 >
 
-export const callToActionFragment = /* groq */ `
+export const callToActionFragment = `
   _type == "callToAction" => {
     target->{
       _id,
@@ -35,11 +35,6 @@ export const callToActionFragment = /* groq */ `
   }
 `
 
-/**
- * A call-to-action box for a newsletter, podcast or article collection.
- * Newsletter targets render an inline subscribe form; other targets render a
- * generic button labelled with `ctaText`.
- */
 export function CallToAction({ block }: { block: CallToActionBlock }) {
   const { target } = block
   if (!target) {
@@ -84,4 +79,4 @@ export function CallToAction({ block }: { block: CallToActionBlock }) {
       </div>
     </div>
   )
-}
+}*/
