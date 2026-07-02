@@ -51,7 +51,6 @@ export async function TeaserList({
 
   const { teasers, total, maxItems } = data.block
   if (!teasers?.length) return null
-  if (appearance !== 'FEED') return null
 
   // we only offer this option when: list has > 20 teasers
   async function loadMore() {
@@ -63,11 +62,14 @@ export async function TeaserList({
     return data?.block?.teasers ?? []
   }
   
+  if (appearance !== 'FEED') return null
+
   return (
     <TeaserFeed
       initialTeasers={teasers}
       total={total}
       maxItems={maxItems}
+      pageSize={MAX_TEASERS}
       loadMoreAction={loadMore}
     />
   )
