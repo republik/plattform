@@ -3,16 +3,17 @@
 import FeedTeaser, {
   FeedTeaserType,
 } from '@/app/(sanity)/components/teaser/feed'
+import { MAX_TEASERS } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-list'
 import { useState } from 'react'
 
 export function TeaserFeed({
   initialTeasers,
-  hasMore,
+  total,
   maxItems,
   loadMoreAction,
 }: {
   initialTeasers: FeedTeaserType[]
-  hasMore: boolean
+  total: number
   maxItems: number
   loadMoreAction: () => Promise<FeedTeaserType[]>
 }) {
@@ -24,8 +25,11 @@ export function TeaserFeed({
   }
 
   const shownTeasers = teasers.slice(0, maxItems ?? undefined)
+
+  // - we still have more teasers to load
+  // - we haven't hit the user-defined cap
   const showLoadMoreButton =
-    hasMore && shownTeasers.length < (maxItems ?? Infinity)
+    total > teasers.length && shownTeasers.length < (maxItems ?? Infinity)
 
   return (
     <div>
@@ -39,7 +43,8 @@ export function TeaserFeed({
       ))}
       {showLoadMoreButton && (
         <button type='button' onClick={onLoadMore}>
-          'Alle anzeigen'
+          Das waren die neuesten {MAX_TEASERS} Beiträge. Weitere{' '}
+          {total - shownTeasers.length} anschauen?
         </button>
       )}
     </div>
