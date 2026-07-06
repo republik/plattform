@@ -7,11 +7,16 @@ import {
   Sup,
 } from '@/app/(sanity)/components/portable-text/marks'
 import { UnknownType } from '@/app/(sanity)/components/portable-text/unknownComponent'
+import { Variable } from '@/app/(sanity)/components/portable-text/variable'
 import { type InlineEditor, type NestedEditor } from '@/sanity.types'
 import { PortableText, type PortableTextReactComponents } from 'next-sanity'
 
 const inlineComponents: Partial<PortableTextReactComponents> = {
   unknownType: UnknownType,
+
+  types: {
+    variable: ({ value }) => <Variable value={value} />,
+  },
 
   block: {
     // Inline PT can only contain 1 paragraph, so we unwrap it
@@ -33,6 +38,10 @@ export function InlinePortableText({ value }: { value: InlineEditor }) {
 
 const nestedComponents: Partial<PortableTextReactComponents> = {
   unknownType: UnknownType,
+
+  types: {
+    variable: ({ value }) => <Variable value={value} />,
+  },
 
   block: {
     heading: ({ children }) => <h2>{children}</h2>,
