@@ -2054,7 +2054,7 @@ export type PAGE_SEO_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/pages/[...path]/page.tsx
 // Variable: PAGE_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    title,    cover {      ...    },    useCoverAsTitle,    heading->{      _id,      title,      "slug": slug.current    },    theme {      darkMode,      accentColor    },    pageBuilder[]{      _key,      _type,    }  }
+// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    title,    cover {      ...    },    skipTitleBlock,    useCoverAsTitle,    heading->{      _id,      title,      "slug": slug.current    },    theme {      darkMode,      accentColor    },    pageBuilder[]{      _key,      _type,    }  }
 export type PAGE_QUERY_RESULT = {
   _id: string
   title: InlineEditor
@@ -2075,6 +2075,7 @@ export type PAGE_QUERY_RESULT = {
     caption?: Caption
     size?: 'BREAKOUT' | 'FULL' | 'NORMAL' | 'TINY'
   } | null
+  skipTitleBlock: boolean | null
   useCoverAsTitle: boolean | null
   heading: {
     _id: string
@@ -2132,6 +2133,6 @@ declare module '@sanity/client' {
     '\n  *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n      heading {\n        title,\n        page->{\n          _id,\n          "title": pt::text(title),\n          "slug": slug.current\n        }\n      },\n      pages[]{\n        _key,\n        _type,\n        _type == "link" => {\n          href,\n          title\n        },\n        _type == "reference" => {\n          "page": @->{\n            _id,\n            "title": pt::text(title),\n            "slug": slug.current\n          }\n        }\n      },\n      hasSeparator\n    }\n  }\n': PAGE_BUILDER_MENU_BLOCK_QUERY_RESULT
     '\n  *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n      appearance,\n      maxItems,\n      "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n      slug,\n    },\n    theme{\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n\n        },\n        source.sourceType == "COLLECTION" => *[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[]._ref\n        ] | order(publishDate desc) [$start...$end] {\n          \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n      slug,\n    },\n    theme{\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n\n        },\n        []\n      ),\n      "total": select(\n        source.sourceType == "MANUAL" => count(source.items),\n        source.sourceType == "COLLECTION" => count(*[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[]._ref\n        ]),\n        0\n      )\n    }\n  }\n': PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY_RESULT
     '*[_type == "page" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image)\n  }': PAGE_SEO_QUERY_RESULT
-    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    cover {\n      ...\n    },\n    useCoverAsTitle,\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    pageBuilder[]{\n      _key,\n      _type,\n    }\n  }': PAGE_QUERY_RESULT
+    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    cover {\n      ...\n    },\n    skipTitleBlock,\n    useCoverAsTitle,\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    pageBuilder[]{\n      _key,\n      _type,\n    }\n  }': PAGE_QUERY_RESULT
   }
 }

@@ -65,6 +65,7 @@ const PAGE_QUERY = defineQuery(
     cover {
       ...
     },
+    skipTitleBlock,
     useCoverAsTitle,
     heading->{
       _id,
@@ -96,8 +97,18 @@ export default async function PostPage({
 
   if (!page) notFound()
 
-  const { _id, title, cover, heading, useCoverAsTitle, theme, pageBuilder } =
-    page
+  const {
+    _id,
+    title,
+    cover,
+    heading,
+    useCoverAsTitle,
+    theme,
+    pageBuilder,
+    skipTitleBlock,
+  } = page
+
+  const renderTitle = !useCoverAsTitle && !skipTitleBlock
 
   return (
     <EventTrackingContext category='Page'>
@@ -106,7 +117,7 @@ export default async function PostPage({
       <div className={editorialContent({ theme: 'page' })}>
         {cover && <EditorialImage value={cover} />}
 
-        {!useCoverAsTitle && (
+        {renderTitle && (
           <>
             {heading && (
               <p

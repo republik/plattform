@@ -50,9 +50,7 @@ export async function Menu({
 
   const { pages, heading, hasSeparator } = data.block
 
-  if (!pages?.length) return null
-
-  const items = pages.flatMap((item) => {
+  const items = (pages ?? []).flatMap((item) => {
     if (item._type === 'link') {
       return item.href
         ? [{ key: item._key, href: item.href, label: item.title ?? item.href }]
@@ -71,7 +69,7 @@ export async function Menu({
   }
 
   return (
-    <nav className={css({ mt: 8, gridColumn: 'breakout' })}>
+    <nav className={css({ mt: 6 })}>
       {hasSeparator && (
         <hr
           className={css({
@@ -79,7 +77,7 @@ export async function Menu({
             borderTopWidth: 1,
             borderTopStyle: 'solid',
             borderTopColor: 'divider',
-            mb: 4,
+            mb: '6',
           })}
         />
       )}
@@ -87,8 +85,9 @@ export async function Menu({
         <h3
           className={css({
             textStyle: 'sansSerifMedium',
-            fontSize: 'l',
-            mb: 2,
+            textAlign: 'center',
+            color: 'textSoft',
+            mb: '2',
           })}
         >
           {headingHref ? (
@@ -102,12 +101,16 @@ export async function Menu({
         className={css({
           listStyle: 'none',
           display: 'flex',
+          // wrap whole items to the next line instead of overflowing
+          flexWrap: 'wrap',
           justifyContent: 'center',
-          columnGap: 8,
+          columnGap: 6,
+          rowGap: 1,
         })}
       >
         {items.map((item) => (
-          <li key={item.key}>
+          // keep each title on a single line; wrapping happens between items
+          <li key={item.key} className={css({ whiteSpace: 'nowrap' })}>
             <Link
               href={item.href}
               className={css({
