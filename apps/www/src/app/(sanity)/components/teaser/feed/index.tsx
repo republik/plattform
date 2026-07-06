@@ -41,11 +41,9 @@ export type FeedTeaserType =
 export default function Teaser({
   teaser,
   index,
-  skipHeading = false, // split into different components if we need more than 1-2 configs
 }: {
   teaser: FeedTeaserType
   index: number
-  skipHeading?: boolean
 }) {
   return (
     <div
@@ -63,7 +61,7 @@ export default function Teaser({
         }),
       )}
     >
-      {!skipHeading && <Heading teaser={teaser} />}
+      <Heading teaser={teaser} />
       <h4>
         <LinkOverlay teaser={teaser} index={index} />
       </h4>
