@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../studio/schema.json
+// Source: ../../../../../../studio/schema.json
 export type ChartConfig = {
   settings?: Code
   data?: Code
@@ -1956,6 +1956,46 @@ export type PAGE_BUILDER_MENU_BLOCK_QUERY_RESULT = {
     | null
 } | null
 
+// Source: src/app/(sanity)/pages/[...path]/components/blocks/teaser-item.tsx
+// Variable: TEASER_BLOCK_QUERY
+// Query: *[_type == "page" && _id == $documentId][0]{    _id,    "block": pageBuilder[_key == $blockKey && _type == "teaserItem"][0]{      reference -> {        "slug": slug.current,        frontTeaser {          layout,          title,          lead,          image,          imageCredits,          imagePosition,          imagePadding,          textPosition,          textSize,          color,          backgroundColor        }      }    }  }
+export type TEASER_BLOCK_QUERY_RESULT = {
+  _id: string
+  block: {
+    reference: {
+      slug: string
+      frontTeaser: {
+        layout: 'IMAGE' | 'SPLIT' | 'TEXT' | 'VIGNETTE' | null
+        title: InlineEditor | null
+        lead: InlineEditor | null
+        image: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          _type: 'image'
+        } | null
+        imageCredits: string | null
+        imagePosition: 'LEFT' | 'RIGHT' | null
+        imagePadding: boolean | null
+        textPosition:
+          | 'BOTTOM_LEFT'
+          | 'BOTTOM_RIGHT'
+          | 'BOTTOM'
+          | 'MIDDLE'
+          | 'TOP_LEFT'
+          | 'TOP_RIGHT'
+          | 'TOP'
+          | 'UNDERNEATH'
+          | null
+        textSize: 'LARGE' | 'MEDIUM' | 'SMALL' | 'STANDARD' | null
+        color: Color | null
+        backgroundColor: Color | null
+      } | null
+    }
+  } | null
+} | null
+
 // Source: src/app/(sanity)/pages/[...path]/components/blocks/teaser-list.tsx
 // Variable: PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY
 // Query: *[_type == "page" && _id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{      appearance,      maxItems,      "teasers": select(        source.sourceType == "MANUAL" => source.items[$start...$end]->{              _id,    type,    title,    description,    slug,    heading->{      _id,      title,      slug,    },    theme{      accentColor    },    contributors[]{      kind,      "name": contributor->title,    }        },        source.sourceType == "COLLECTION" => *[          _type == "article" &&          ^.source.collection._ref in articleCollections[]._ref        ] | order(publishDate desc) [$start...$end] {              _id,    type,    title,    description,    slug,    heading->{      _id,      title,      slug,    },    theme{      accentColor    },    contributors[]{      kind,      "name": contributor->title,    }        },        []      ),      "total": select(        source.sourceType == "MANUAL" => count(source.items),        source.sourceType == "COLLECTION" => count(*[          _type == "article" &&          ^.source.collection._ref in articleCollections[]._ref        ]),        0      )    }  }
@@ -2131,6 +2171,7 @@ declare module '@sanity/client' {
     '\n  *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n      target->{\n        _id,\n        _type,\n        _type == "newsletter" => {\n          name,\n          title\n        },\n        _type == "podcast" => {\n          podigeeSlug,\n          spotifyUrl,\n          appleUrl\n        },\n        _type == "articleCollection" => {\n          title,\n          description\n        }\n      }\n    }\n  }\n': PAGE_BUILDER_CTA_BLOCK_QUERY_RESULT
     '*[_type == "page" && _id == $documentId][0]{\n    _id,\n    "block": pageBuilder[_key == $blockKey][0]{\n      content[]{\n        ...,\n        markDefs[]{\n          ...,\n          _type == "internalLink" => {\n            "slug": @.reference->slug\n          }\n        }\n      }\n    }\n  }': PAGE_BUILDER_EDITOR_BLOCK_QUERY_RESULT
     '\n  *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n      heading {\n        title,\n        page->{\n          _id,\n          "title": pt::text(title),\n          "slug": slug.current\n        }\n      },\n      pages[]{\n        _key,\n        _type,\n        _type == "link" => {\n          href,\n          title\n        },\n        _type == "reference" => {\n          "page": @->{\n            _id,\n            "title": pt::text(title),\n            "slug": slug.current\n          }\n        }\n      },\n      hasSeparator\n    }\n  }\n': PAGE_BUILDER_MENU_BLOCK_QUERY_RESULT
+    '*[_type == "page" && _id == $documentId][0]{\n    _id,\n    "block": pageBuilder[_key == $blockKey && _type == "teaserItem"][0]{\n      reference -> {\n        "slug": slug.current,\n        frontTeaser {\n          layout,\n          title,\n          lead,\n          image,\n          imageCredits,\n          imagePosition,\n          imagePadding,\n          textPosition,\n          textSize,\n          color,\n          backgroundColor\n        }\n      }\n    }\n  }': TEASER_BLOCK_QUERY_RESULT
     '\n  *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n      appearance,\n      maxItems,\n      "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n      slug,\n    },\n    theme{\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n\n        },\n        source.sourceType == "COLLECTION" => *[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[]._ref\n        ] | order(publishDate desc) [$start...$end] {\n          \n    _id,\n    type,\n    title,\n    description,\n    slug,\n    heading->{\n      _id,\n      title,\n      slug,\n    },\n    theme{\n      accentColor\n    },\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    }\n\n        },\n        []\n      ),\n      "total": select(\n        source.sourceType == "MANUAL" => count(source.items),\n        source.sourceType == "COLLECTION" => count(*[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[]._ref\n        ]),\n        0\n      )\n    }\n  }\n': PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY_RESULT
     '*[_type == "page" && slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image)\n  }': PAGE_SEO_QUERY_RESULT
     '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    cover {\n      ...\n    },\n    skipTitleBlock,\n    useCoverAsTitle,\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    pageBuilder[]{\n      _key,\n      _type,\n    }\n  }': PAGE_QUERY_RESULT

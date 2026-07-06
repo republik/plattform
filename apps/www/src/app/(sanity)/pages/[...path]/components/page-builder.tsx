@@ -1,6 +1,6 @@
 import { CallToAction } from '@/app/(sanity)/pages/[...path]/components/blocks/call-to-action'
 import { EditorBlock } from '@/app/(sanity)/pages/[...path]/components/blocks/editor-block'
-import { Menu } from '@/app/(sanity)/pages/[...path]/components/blocks/menu'
+import { TeaserItem } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-item'
 import { TeaserList } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-list'
 import { css } from '@republik/theme/css'
 
@@ -43,6 +43,12 @@ function Block({
 
     case 'callToAction':
       return <CallToAction blockKey={_key} documentId={documentId} />
+
+    case 'teaserItem':
+      return <TeaserItem blockKey={_key} documentId={documentId} />
+
+    /*case 'callToAction':
+      return <CallToAction block={block} />
 
     case 'menu':
       return <Menu blockKey={_key} documentId={documentId} />
