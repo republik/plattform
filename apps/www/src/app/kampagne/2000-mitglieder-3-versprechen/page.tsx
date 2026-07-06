@@ -205,24 +205,6 @@ export default async function Page() {
                   </a>
                 </span>
               </p>
-              <iframe
-                title='Schulen mit kostenlosem Zugang'
-                aria-label='Choroplethen-Karte'
-                id='datawrapper-chart-7GMbw'
-                src='https://datawrapper.dwcdn.net/7GMbw/4/'
-                scrolling='no'
-                frameBorder='0'
-                style={{ width: 0, minWidth: '100%', border: 'none' }}
-                height='347'
-                data-external='1'
-              ></iframe>
-              <Script
-                id='datawrapper-resize-7GMbw'
-                strategy='afterInteractive'
-                dangerouslySetInnerHTML={{
-                  __html: `!function(){"use strict";window.addEventListener("message",function(a){if(void 0!==a.data["datawrapper-height"]){var e=document.querySelectorAll("iframe");for(var t in a.data["datawrapper-height"])for(var r=0;r<e.length;r++)if(e[r].contentWindow===a.source){var i=a.data["datawrapper-height"][t]+"px";e[r].style.height=i}}})}();`,
-                }}
-              />
             </JournalismPromise>
             <JournalismPromise count={3}>
               <h3>
