@@ -23,7 +23,7 @@ export function Heading({ teaser }: { teaser: FeedTeaserType }) {
 
   if (!teaser?.heading) return null
 
-  // Don't repeat the heading when we're already on its page. The heading slug
+  // Don't display the heading when we're already on the correct page. The heading slug
   // matches the browser path directly (via rewrite) or under /pages.
   const headingPath = stegaClean(teaser.heading.slug?.current)
   if (

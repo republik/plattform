@@ -99,8 +99,6 @@ export default async function PostPage({
   const { _id, title, cover, heading, useCoverAsTitle, theme, pageBuilder } =
     page
 
-  console.log({ cover })
-
   return (
     <EventTrackingContext category='Page'>
       <Theme theme={theme} />

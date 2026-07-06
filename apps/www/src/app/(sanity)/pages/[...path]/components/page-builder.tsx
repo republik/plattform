@@ -1,7 +1,8 @@
+import { CallToAction } from '@/app/(sanity)/pages/[...path]/components/blocks/call-to-action'
 import { EditorBlock } from '@/app/(sanity)/pages/[...path]/components/blocks/editor-block'
+import { Menu } from '@/app/(sanity)/pages/[...path]/components/blocks/menu'
+import { TeaserList } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-list'
 import { css } from '@republik/theme/css'
-import { CallToAction } from './blocks/call-to-action'
-import { TeaserList } from './blocks/teaser-list'
 
 export type PageBuilderBlock = {
   _key: string
@@ -43,10 +44,10 @@ function Block({
     case 'callToAction':
       return <CallToAction blockKey={_key} documentId={documentId} />
 
-    /*case 'menu':
-      return <Menu block={block} />
+    case 'menu':
+      return <Menu blockKey={_key} documentId={documentId} />
 
-    case 'teaserItem':
+    /*case 'teaserItem':
       return <TeaserItem block={block} />
 
     case 'searchBlock':

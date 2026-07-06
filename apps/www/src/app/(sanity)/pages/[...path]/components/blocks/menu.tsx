@@ -1,44 +1,58 @@
-/*import type { PAGE_CONTENT_QUERY_RESULT } from '@/sanity.types'
+import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { css } from '@republik/theme/css'
+import { defineQuery } from 'next-sanity'
 import Link from 'next/link'
 
-type PageBuilderBlock = NonNullable<
-  NonNullable<PAGE_CONTENT_QUERY_RESULT>['pageBuilder']
->[number]
-
-export type MenuBlock = Extract<PageBuilderBlock, { _type: 'menu' }>
-
-
-export const menuFragment = `
-  _type == "menu" => {
-    heading {
-      title,
-      page->{
-        _id,
-        "title": pt::text(title),
-        "slug": slug.current
-      }
-    },
-    pages[]{
-      _key,
-      _type,
-      _type == "link" => {
-        href,
-        title
-      },
-      _type == "reference" => {
-        "page": @->{
+const PAGE_BUILDER_MENU_BLOCK_QUERY = defineQuery(`
+  *[_type == "page" && _id == $documentId][0]{
+    "block": pageBuilder[_key == $blockKey][0]{
+      heading {
+        title,
+        page->{
           _id,
           "title": pt::text(title),
           "slug": slug.current
         }
-      }
+      },
+      pages[]{
+        _key,
+        _type,
+        _type == "link" => {
+          href,
+          title
+        },
+        _type == "reference" => {
+          "page": @->{
+            _id,
+            "title": pt::text(title),
+            "slug": slug.current
+          }
+        }
+      },
+      hasSeparator
     }
   }
-`
+`)
 
-export function Menu({ block }: { block: MenuBlock }) {
-  const items = (block.pages ?? []).flatMap((item) => {
+export async function Menu({
+  blockKey,
+  documentId,
+}: {
+  blockKey: string
+  documentId: string
+}) {
+  const { data } = await sanityFetch({
+    query: PAGE_BUILDER_MENU_BLOCK_QUERY,
+    params: { documentId, blockKey },
+  })
+
+  if (!data || !data.block) return null
+
+  const { pages, heading, hasSeparator } = data.block
+
+  if (!pages?.length) return null
+
+  const items = pages.flatMap((item) => {
     if (item._type === 'link') {
       return item.href
         ? [{ key: item._key, href: item.href, label: item.title ?? item.href }]
@@ -49,7 +63,6 @@ export function Menu({ block }: { block: MenuBlock }) {
       : []
   })
 
-  const heading = block.heading
   const headingHref = heading?.page?.slug
   const headingLabel = heading?.title ?? heading?.page?.title
 
@@ -58,8 +71,8 @@ export function Menu({ block }: { block: MenuBlock }) {
   }
 
   return (
-    <nav className={css({ my: 6 })}>
-      {block.hasSeparator && (
+    <nav className={css({ mt: 8, gridColumn: 'breakout' })}>
+      {hasSeparator && (
         <hr
           className={css({
             border: 'none',
@@ -70,8 +83,14 @@ export function Menu({ block }: { block: MenuBlock }) {
           })}
         />
       )}
-      {headingLabel && (
-        <h3 className={css({ textStyle: 'sansSerifMedium', fontSize: 'l', mb: 2 })}>
+      {heading && (
+        <h3
+          className={css({
+            textStyle: 'sansSerifMedium',
+            fontSize: 'l',
+            mb: 2,
+          })}
+        >
           {headingHref ? (
             <Link href={headingHref}>{headingLabel}</Link>
           ) : (
@@ -79,22 +98,28 @@ export function Menu({ block }: { block: MenuBlock }) {
           )}
         </h3>
       )}
-      <ul className={css({ listStyle: 'none', display: 'grid', gap: 1 })}>
+      <ul
+        className={css({
+          listStyle: 'none',
+          display: 'flex',
+          justifyContent: 'center',
+          columnGap: 8,
+        })}
+      >
         {items.map((item) => (
           <li key={item.key}>
             <Link
               href={item.href}
               className={css({
-                textStyle: 'sans',
-                fontSize: 'm',
-                _hover: { textDecoration: 'underline' },
+                textStyle: 'airy',
+                color: 'var(--page-theme-accent-color)',
               })}
             >
-              {item.label}
+              <b>{item.label}</b>
             </Link>
           </li>
         ))}
       </ul>
     </nav>
   )
-}*/
+}
