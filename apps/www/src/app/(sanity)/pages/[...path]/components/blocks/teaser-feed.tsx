@@ -45,12 +45,7 @@ export function TeaserFeed({
         })}
       </h2>
       {shownTeasers.map((teaser, index) => (
-        <FeedTeaser
-          key={teaser._id}
-          teaser={teaser}
-          index={index}
-          skipHeading
-        />
+        <FeedTeaser key={teaser._id} teaser={teaser} index={index} />
       ))}
       {showLoadMoreButton && (
         <Button

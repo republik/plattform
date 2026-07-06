@@ -18,8 +18,9 @@ export const feedTeaserFragment = /* groq */ `
     heading->{
       _id,
       title,
+      slug,
     },
-    theme {
+    theme{
       accentColor
     },
     contributors[]{

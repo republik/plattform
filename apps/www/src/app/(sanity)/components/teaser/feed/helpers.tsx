@@ -16,12 +16,12 @@ export function BylineShort({ teaser }: { teaser: FeedTeaserType }) {
   return <p className='author'>Von {authorsNames.join(', ')}</p>
 }
 
+// TODO: don't show heading if heading.slug matches the current path
 export function Heading({ teaser }: { teaser: FeedTeaserType }) {
   if (!teaser?.heading) return null
 
-  // TODO: accent color
   return (
-    <h5>
+    <h5 style={{ color: teaser.theme?.accentColor?.hex }}>
       <InlinePortableText value={teaser.heading.title} />
     </h5>
   )
