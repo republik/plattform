@@ -746,7 +746,7 @@ const findUnactivatedDeferred = async (pgdb) => {
     return []
   }
   return pgdb.public.accessGrants.find({
-    'accessCampaignId in': campaignsWithBeginInterval.map((c) => c.id),
+    accessCampaignId: campaignsWithBeginInterval.map((c) => c.id),
     'beginAt <=': moment(),
     activatedAt: null,
     'recipientUserId !=': null,
