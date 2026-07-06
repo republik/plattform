@@ -38,7 +38,12 @@ export function TeaserFeed({
 
   // TODO: alternative teaser style
   return (
-    <div className={css({ mt: '20' })}>
+    <div className={css({ mt: '16' })}>
+      <h2 className={css({ textStyle: 'h1Sans', mb: '8' })}>
+        {t.pluralize('feed/title', {
+          count: total,
+        })}
+      </h2>
       {shownTeasers.map((teaser, index) => (
         <FeedTeaser
           key={teaser._id}
