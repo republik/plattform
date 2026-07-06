@@ -1,6 +1,7 @@
 import { feedTeaserFragment } from '@/app/(sanity)/components/teaser/feed'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { defineQuery, stegaClean } from 'next-sanity'
+import { Carousel } from './carousel'
 import { TeaserFeed } from './teaser-feed'
 
 export const MAX_TEASERS = 20
@@ -61,16 +62,21 @@ export async function TeaserList({
     return data?.block?.teasers ?? []
   }
 
-  // TODO: CAROUSEL; GRID
-  if (appearance !== 'FEED') return null
+  // TODO: GRID
 
-  return (
-    <TeaserFeed
-      initialTeasers={teasers}
-      total={total}
-      maxItems={maxItems}
-      pageSize={MAX_TEASERS}
-      loadMoreAction={loadMore}
-    />
-  )
+  if (appearance === 'FEED')
+    return (
+      <TeaserFeed
+        initialTeasers={teasers}
+        total={total}
+        maxItems={maxItems}
+        pageSize={MAX_TEASERS}
+        loadMoreAction={loadMore}
+      />
+    )
+
+  if (appearance === 'CAROUSEL')
+    return <Carousel teasers={teasers} maxItems={maxItems} />
+
+  return null
 }
