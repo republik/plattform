@@ -6,7 +6,6 @@ import { TeaserList } from './blocks/teaser-list'
 export type PageBuilderBlock = {
   _key: string
   _type: string
-  appearance?: string
 }
 
 export function PageBuilder({
@@ -39,7 +38,7 @@ function Block({
       return <EditorBlock blockKey={_key} documentId={documentId} />
 
     case 'teaserList':
-      return <TeaserList block={block} documentId={documentId} />
+      return <TeaserList blockKey={_key} documentId={documentId} />
 
     case 'callToAction':
       return <CallToAction blockKey={_key} documentId={documentId} />

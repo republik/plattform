@@ -1,5 +1,6 @@
 import { SubscriptionObjectType } from '#graphql/republik-api/__generated__/gql/graphql'
 import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
+import FollowPodcast from '@/app/(sanity)/components/follow/follow-podcast'
 import { NewsletterSubscribeButton } from '@/app/(sanity)/components/newsletters/newsletter-subscribe'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { css } from '@republik/theme/css'
@@ -16,7 +17,9 @@ const PAGE_BUILDER_CTA_BLOCK_QUERY = defineQuery(`
           title
         },
         _type == "podcast" => {
-          title
+          podigeeSlug,
+          spotifyUrl,
+          appleUrl
         },
         _type == "articleCollection" => {
           title,
@@ -52,7 +55,7 @@ export async function CallToAction({
       ) : target._type === 'articleCollection' ? (
         <FollowButton type={SubscriptionObjectType.Document} />
       ) : target._type === 'podcast' ? (
-        <div>PODCAST</div>
+        <FollowPodcast podcast={target} />
       ) : null}
     </div>
   )

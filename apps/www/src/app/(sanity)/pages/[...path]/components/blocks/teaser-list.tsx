@@ -1,7 +1,6 @@
 import { feedTeaserFragment } from '@/app/(sanity)/components/teaser/feed'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
-import { PageBuilderBlock } from '@/app/(sanity)/pages/[...path]/components/page-builder'
-import { defineQuery } from 'next-sanity'
+import { defineQuery, stegaClean } from 'next-sanity'
 import { TeaserFeed } from './teaser-feed'
 
 export const MAX_TEASERS = 20
@@ -9,6 +8,7 @@ export const MAX_TEASERS = 20
 const PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY = defineQuery(`
   *[_type == "page" && _id == $documentId][0]{
     "block": pageBuilder[_key == $blockKey][0]{
+      appearance,
       maxItems,
       "teasers": select(
         source.sourceType == "MANUAL" => source.items[$start...$end]->{
@@ -35,14 +35,12 @@ const PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY = defineQuery(`
 `)
 
 export async function TeaserList({
-  block,
+  blockKey,
   documentId,
 }: {
-  block: PageBuilderBlock
+  blockKey: string
   documentId: string
 }) {
-  const { appearance, _key: blockKey } = block
-
   const { data } = await sanityFetch({
     query: PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY,
     params: { documentId, blockKey, start: 0, end: MAX_TEASERS },
@@ -50,6 +48,7 @@ export async function TeaserList({
   if (!data?.block) return null
 
   const { teasers, total, maxItems } = data.block
+  const appearance = stegaClean(data.block.appearance)
   if (!teasers?.length) return null
 
   // we only offer this option when: list has > 20 teasers
@@ -62,7 +61,7 @@ export async function TeaserList({
     return data?.block?.teasers ?? []
   }
 
-  // TODO: CAROUSEL; GRID; FRONT
+  // TODO: CAROUSEL; GRID
   if (appearance !== 'FEED') return null
 
   return (

@@ -8,6 +8,7 @@ import { SyncUTMToSessionStorage } from '@/app/lib/analytics/utm-session-storage
 import { ApolloWrapper } from '@/app/lib/apollo/provider'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import MeContextProvider from '@/lib/context/MeContext'
+import UserAgentProvider from '@/lib/context/UserAgentContext'
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import { ReactNode } from 'react'
@@ -57,10 +58,12 @@ export default async function RootLayout({
           <ApolloWrapper>
             <MeContextProvider>
               <AnalyticsProvider>
-                {children}
-                <NativeAppMessageSync />
-                <SyncUTMToSessionStorage />
-                {/* <PaynoteOverlay /> */}
+                <UserAgentProvider>
+                  {children}
+                  <NativeAppMessageSync />
+                  <SyncUTMToSessionStorage />
+                  {/* <PaynoteOverlay /> */}
+                </UserAgentProvider>
               </AnalyticsProvider>
             </MeContextProvider>
           </ApolloWrapper>

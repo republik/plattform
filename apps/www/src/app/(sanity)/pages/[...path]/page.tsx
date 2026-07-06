@@ -78,7 +78,6 @@ const PAGE_QUERY = defineQuery(
     pageBuilder[]{
       _key,
       _type,
-      appearance
     }
   }`,
 )
