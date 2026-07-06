@@ -1,5 +1,6 @@
 import { EditorBlock } from '@/app/(sanity)/pages/[...path]/components/blocks/editor-block'
 import { css } from '@republik/theme/css'
+import { CallToAction } from './blocks/call-to-action'
 import { TeaserList } from './blocks/teaser-list'
 
 export type PageBuilderBlock = {
@@ -40,10 +41,10 @@ function Block({
     case 'teaserList':
       return <TeaserList block={block} documentId={documentId} />
 
-    /*case 'callToAction':
-      return <CallToAction block={block} />
+    case 'callToAction':
+      return <CallToAction blockKey={_key} documentId={documentId} />
 
-    case 'menu':
+    /*case 'menu':
       return <Menu block={block} />
 
     case 'teaserItem':

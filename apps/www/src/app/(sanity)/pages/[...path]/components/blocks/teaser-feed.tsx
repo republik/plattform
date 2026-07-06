@@ -38,7 +38,7 @@ export function TeaserFeed({
 
   // TODO: alternative teaser style
   return (
-    <div>
+    <div className={css({ mt: '20' })}>
       {shownTeasers.map((teaser, index) => (
         <FeedTeaser
           key={teaser._id}

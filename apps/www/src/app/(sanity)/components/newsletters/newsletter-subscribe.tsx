@@ -22,7 +22,7 @@ import isEmail from 'validator/lib/isEmail'
 function NewsletterSubscribeForm({
   newsletter,
 }: {
-  newsletter: ArticleNewsletter
+  newsletter: Pick<ArticleNewsletter, 'name' | 'title'>
 }) {
   const { t } = useTranslation()
   const track = useTrackEvent()
@@ -121,7 +121,7 @@ function NewsletterSubscribeForm({
 export function NewsletterSubscribeButton({
   newsletter,
 }: {
-  newsletter: ArticleNewsletter
+  newsletter: Pick<ArticleNewsletter, 'name' | 'title'>
 }) {
   const { t } = useTranslation()
   const [updateNewsletterSubscription] = useMutation(

@@ -1,82 +1,59 @@
-/*import { NewsletterSubscribeButton } from '@/app/(sanity)/components/newsletters/newsletter-subscribe'
-import { Button } from '@/app/components/ui/button'
-import type { PAGE_CONTENT_QUERY_RESULT } from '@/sanity.types'
+import { SubscriptionObjectType } from '#graphql/republik-api/__generated__/gql/graphql'
+import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
+import { NewsletterSubscribeButton } from '@/app/(sanity)/components/newsletters/newsletter-subscribe'
+import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { css } from '@republik/theme/css'
+import { defineQuery } from 'next-sanity'
 
-type PageBuilderBlock = NonNullable<
-  NonNullable<PAGE_CONTENT_QUERY_RESULT>['pageBuilder']
->[number]
-
-export type CallToActionBlock = Extract<
-  PageBuilderBlock,
-  { _type: 'callToAction' }
->
-
-export const callToActionFragment = `
-  _type == "callToAction" => {
-    target->{
-      _id,
-      _type,
-      _type == "newsletter" => {
-        title,
-        description,
-        frequency,
-        image,
-        name
-      },
-      _type == "podcast" => {
-        title
-      },
-      _type == "articleCollection" => {
-        title,
-        description
+const PAGE_BUILDER_CTA_BLOCK_QUERY = defineQuery(`
+  *[_type == "page" && _id == $documentId][0]{
+    "block": pageBuilder[_key == $blockKey][0]{
+      target->{
+        _id,
+        _type,
+        _type == "newsletter" => {
+          name,
+          title
+        },
+        _type == "podcast" => {
+          title
+        },
+        _type == "articleCollection" => {
+          title,
+          description
+        }
       }
     }
   }
-`
+`)
 
-export function CallToAction({ block }: { block: CallToActionBlock }) {
-  const { target } = block
-  if (!target) {
-    return null
-  }
+export async function CallToAction({
+  blockKey,
+  documentId,
+}: {
+  blockKey: string
+  documentId: string
+}) {
+  const { data } = await sanityFetch({
+    query: PAGE_BUILDER_CTA_BLOCK_QUERY,
+    params: { documentId, blockKey },
+  })
 
-  const heading = block.title || target.title
-  const description = 'description' in target ? target.description : null
+  if (!data || !data.block) return null
+
+  const {
+    block: { target },
+  } = data
 
   return (
-    <div
-      className={css({
-        my: 6,
-        p: 6,
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderColor: block.useAccentColor
-          ? 'var(--page-theme-accent-color)'
-          : 'divider',
-        borderRadius: 4,
-      })}
-    >
-      {heading && (
-        <h3 className={css({ textStyle: 'sansSerifMedium', fontSize: 'l' })}>
-          {heading}
-        </h3>
-      )}
-      {description && (
-        <p className={css({ textStyle: 'serif', fontSize: 'm', mt: 2 })}>
-          {description}
-        </p>
-      )}
-      <div className={css({ mt: 4 })}>
-        {target._type === 'newsletter' ? (
-          <NewsletterSubscribeButton newsletter={target} />
-        ) : (
-          // TODO: wire up link target for podcast / collection CTAs
-          <Button asChild>
-            <a href='#'>{block.ctaText}</a>
-          </Button>
-        )}
-      </div>
+    <div className={css({ mx: 'auto' })}>
+      {target._type === 'newsletter' ? (
+        <NewsletterSubscribeButton newsletter={target} />
+      ) : target._type === 'articleCollection' ? (
+        <FollowButton type={SubscriptionObjectType.Document} />
+      ) : target._type === 'podcast' ? (
+        <div>PODCAST</div>
+      ) : null}
     </div>
   )
-}*/
+}
