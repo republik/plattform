@@ -1,5 +1,5 @@
 import { FrontTeaser } from '@/app/(sanity)/components/portable-text/front-teaser'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
+import { TeaserBlockFragmentType } from '@/app/(sanity)/groq/teaser-block-fragment'
 import { defineQuery } from 'next-sanity'
 
 const TEASER_BLOCK_QUERY = defineQuery(
@@ -27,25 +27,14 @@ const TEASER_BLOCK_QUERY = defineQuery(
 )
 
 export async function TeaserItem({
-  blockKey,
-  documentId,
+  teaser,
 }: {
-  blockKey: string
-  documentId: string
+  teaser: TeaserBlockFragmentType
 }) {
-  const { data } = await sanityFetch({
-    query: TEASER_BLOCK_QUERY,
-    params: { documentId, blockKey },
-  })
-
-  console.log(data)
-
-  if (!data || !data.block) return null
-
   return (
     <FrontTeaser
-      href={`/articles${data.block.reference.slug}`}
-      value={data.block.reference.frontTeaser}
+      href={`/articles${teaser.reference.slug}`}
+      value={teaser.reference.frontTeaser}
     />
   )
 }

@@ -52,18 +52,9 @@ function Block({
       return <Menu menu={block} />
 
     case 'teaserItem':
-      return <TeaserItem blockKey={_key} documentId={documentId} />
+      return <TeaserItem teaser={block} />
 
-    /*case 'callToAction':
-      return <CallToAction block={block} />
-
-
-    /*case 'teaserItem':
-      return <TeaserItem block={block} />
-
-    case 'searchBlock':
-      return <UnimplementedBlock block={block} />
-
+    /*
     case 'bestOfDialogue':
       return <UnimplementedBlock block={block} />
 

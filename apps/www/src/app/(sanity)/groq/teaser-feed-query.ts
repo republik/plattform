@@ -1,7 +1,7 @@
 import { FEED_TEASER_FRAGMENT } from '@/app/(sanity)/groq/feed-teaser-fragment'
 import { defineQuery } from 'next-sanity'
 
-export const TEASER_FEED_BLOCK_QUERY = defineQuery(`
+export const TEASER_FEED_QUERY = defineQuery(`
   *[_type == "page" && _id == $documentId][0]{
     "block": pageBuilder[_key == $blockKey][0]{
       "teasers": select(

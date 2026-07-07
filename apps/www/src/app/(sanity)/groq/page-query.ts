@@ -4,6 +4,7 @@ import { PORTABLE_TEXT_CONTENT_FRAGMENT } from '@/app/(sanity)/groq/portable-tex
 import { TEASER_LIST_BLOCK_FRAGMENT } from '@/app/(sanity)/groq/teaser-list-block-fragment'
 import type { PAGE_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
+import { TEASER_BLOCK_FRAGMENT } from './teaser-block-fragment'
 
 export const PAGE_QUERY = defineQuery(
   `*[_type == "page" && slug.current == $slug][0]{
@@ -37,7 +38,10 @@ export const PAGE_QUERY = defineQuery(
       },
       _type == "teaserList" => {
         ${TEASER_LIST_BLOCK_FRAGMENT}
-      }
+      },
+      _type == "teaserItem" => {
+        ${TEASER_BLOCK_FRAGMENT}
+      },
     }
   }`,
 )
