@@ -1,6 +1,5 @@
 import { FrontTeaser } from '@/app/(sanity)/components/teaser/front/front-teaser'
-import { ARTICLE_QUERY } from '@/app/(sanity)/groq/article-query'
-import { ARTICLE_TEASER_QUERY } from '@/app/(sanity)/groq/article-teaser-query'
+import { TEASER_QUERY } from '@/app/(sanity)/groq/article-teaser-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import type { Metadata } from 'next'
 
@@ -17,7 +16,7 @@ export default async function ArticleTeaserPage({
   const slug = `/${path.join('/')}`
 
   const { data: article } = await sanityFetch({
-    query: ARTICLE_TEASER_QUERY,
+    query: TEASER_QUERY,
     params: { slug },
   })
 

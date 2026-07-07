@@ -7,7 +7,7 @@ import type { TeaserBlockFragmentType } from '@/app/(sanity)/groq/teaser-block-f
 type TeaserProps = TeaserBlockFragmentType['reference']
 
 export function FrontTeaser(props: TeaserProps) {
-  switch (props.teaser.layout) {
+  switch (props.teaser?.layout) {
     case 'IMAGE':
       return <ImageTeaser {...props} />
     case 'TEXT':

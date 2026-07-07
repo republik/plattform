@@ -1,17 +1,177 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
 import type { TeaserBlockFragmentType } from '@/app/(sanity)/groq/teaser-block-fragment'
+import { urlFor } from '@/app/(sanity)/lib/urlFor'
+import { css, cva } from '@republik/theme/css'
+import { linkOverlay } from '@republik/theme/patterns'
+import { getImageDimensions } from '@sanity/asset-utils'
+import { stegaClean } from 'next-sanity'
+import { Image } from 'next-sanity/image'
+import Link from 'next/link'
 
 type TeaserProps = TeaserBlockFragmentType['reference']
 
-export function SplitTeaser({ teaser }: TeaserProps) {
+const teaserStyle = cva({
+  base: {
+    margin: 0,
+    overflow: 'hidden',
+    position: 'relative',
+
+    gap: '5%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    md: {
+      display: 'grid',
+      padding: '70px 5%',
+    },
+  },
+  variants: {
+    imagePosition: {
+      LEFT: {
+        gridTemplateAreas: '"image content"',
+        gridTemplateColumns: '50% 1fr',
+      },
+      RIGHT: {
+        gridTemplateAreas: '"content image"',
+        gridTemplateColumns: '1fr 50%',
+      },
+    },
+    imagePadding: {
+      TRUE: {},
+      FALSE: {},
+    },
+  },
+  compoundVariants: [
+    {
+      imagePadding: 'FALSE',
+      imagePosition: 'LEFT',
+      css: {
+        gridTemplateAreas: '"image content empty"',
+        gridTemplateColumns: '40% 1fr 0',
+        alignItems: 'start',
+        md: {
+          padding: 0,
+        },
+      },
+    },
+    {
+      imagePadding: 'FALSE',
+      imagePosition: 'RIGHT',
+      css: {
+        gridTemplateAreas: '"empty content image"',
+        gridTemplateColumns: '0 1fr 40%',
+        alignItems: 'start',
+        md: {
+          padding: 0,
+        },
+      },
+    },
+  ],
+  defaultVariants: {
+    imagePosition: 'LEFT',
+    imagePadding: 'FALSE',
+  },
+})
+
+const teaserTitle = cva({
+  base: {
+    textStyle: 'editorialTitle',
+    fontSize: '38px',
+    lineHeight: '43px',
+    md: { fontSize: '58px', lineHeight: '60px' },
+    lg: { fontSize: '80px', lineHeight: '90px' },
+  },
+  variants: {
+    size: {
+      SMALL: {
+        md: {
+          fontSize: '58px',
+          lineHeight: '60px',
+        },
+      },
+      MEDIUM: {
+        md: { fontSize: '60px', lineHeight: '70px' },
+        lg: { fontSize: '80px', lineHeight: '90px' },
+      },
+      LARGE: {
+        md: { fontSize: '80px', lineHeight: '90px' },
+        lg: { fontSize: '100px', lineHeight: '110px' },
+      },
+      STANDARD: {},
+    },
+  },
+  defaultVariants: {
+    size: 'STANDARD',
+  },
+})
+
+const teaserLead = css({
+  textStyle: 'editorialLead',
+  fontSize: '19px',
+  lineHeight: '27px',
+  md: {
+    fontSize: '23px',
+  },
+})
+
+export function SplitTeaser({
+  _type,
+  slug,
+  contributors,
+  teaser,
+}: TeaserProps) {
+  const asset = teaser.image?.asset
+
+  const src = urlFor(asset).url()
+  const dimensions = getImageDimensions(src)
+  const href = _type === 'article' ? `/article${slug}` : `/page/${slug}`
+
   return (
-    <div>
-      <h2>
-        <InlinePortableText value={teaser.title} />
-      </h2>
-      <p>
-        <InlinePortableText value={teaser.lead} />
-      </p>
+    <div
+      className={teaserStyle({
+        imagePosition: stegaClean(teaser.imagePosition),
+        imagePadding: teaser.imagePadding ? 'TRUE' : 'FALSE',
+      })}
+      style={{ backgroundColor: teaser.backgroundColor?.hex }}
+    >
+      <div
+        className={css({
+          gridArea: 'image',
+          position: 'relative',
+        })}
+      >
+        <Image
+          className={css({ display: 'block', width: '100%', height: 'auto' })}
+          src={src}
+          alt={''}
+          width={dimensions.width}
+          height={dimensions.height}
+          sizes={'(max-width: 768px) 100vw, 50vw'}
+        />
+      </div>
+      <div
+        className={css({
+          gridArea: 'content',
+          padding: '15px 15px 40px 15px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '3',
+          md: {
+            padding: 0,
+          },
+        })}
+        style={{ color: teaser.color?.hex }}
+      >
+        <Link href={href} className={linkOverlay()}>
+          <h2 className={teaserTitle({ size: stegaClean(teaser.textSize) })}>
+            <InlinePortableText value={teaser.title} />
+          </h2>
+        </Link>
+        <p className={teaserLead}>
+          <InlinePortableText value={teaser.lead} />
+        </p>
+        {contributors && <BylineShort contributors={contributors} />}
+      </div>
     </div>
   )
 }

@@ -2,7 +2,9 @@ import { InlinePortableText } from '@/app/(sanity)/components/portable-text/rend
 import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
 import type { TeaserBlockFragmentType } from '@/app/(sanity)/groq/teaser-block-fragment'
 import { css, cva } from '@republik/theme/css'
+import { linkOverlay } from '@republik/theme/patterns'
 import { stegaClean } from 'next-sanity'
+import Link from 'next/link'
 
 type TeaserProps = TeaserBlockFragmentType['reference']
 
@@ -52,7 +54,9 @@ const teaserLead = css({
   },
 })
 
-export function TextTeaser({ contributors, teaser }: TeaserProps) {
+export function TextTeaser({ _type, slug, contributors, teaser }: TeaserProps) {
+  const href = _type === 'article' ? `/article${slug}` : `/page/${slug}`
+
   return (
     <div
       className={css({
@@ -81,9 +85,11 @@ export function TextTeaser({ contributors, teaser }: TeaserProps) {
         })}
         style={{ color: teaser.color?.hex }}
       >
-        <h2 className={teaserTitle({ size: stegaClean(teaser.textSize) })}>
-          <InlinePortableText value={teaser.title} />
-        </h2>
+        <Link href={href} className={linkOverlay()}>
+          <h2 className={teaserTitle({ size: stegaClean(teaser.textSize) })}>
+            <InlinePortableText value={teaser.title} />
+          </h2>
+        </Link>
         <p className={teaserLead}>
           <InlinePortableText value={teaser.lead} />
         </p>

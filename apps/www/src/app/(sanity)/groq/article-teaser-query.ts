@@ -1,7 +1,7 @@
 import { defineQuery } from 'next-sanity'
 
-export const ARTICLE_TEASER_QUERY = defineQuery(
-  `*[_type == "article" && slug.current == $slug][0]{
+export const TEASER_QUERY = defineQuery(
+  `*[(_type == "article" || _type == "page") && slug.current == $slug][0]{
     _type,
     "slug": slug.current,
     contributors[]{

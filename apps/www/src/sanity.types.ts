@@ -1627,44 +1627,79 @@ export type ARTICLE_QUERY_RESULT = {
 } | null
 
 // Source: src/app/(sanity)/groq/article-teaser-query.ts
-// Variable: ARTICLE_TEASER_QUERY
-// Query: *[_type == "article" && slug.current == $slug][0]{    _type,    "slug": slug.current,    contributors[]{      kind,      "name": contributor->title,    },    "teaser": frontTeaser {      layout,      title,      lead,      image,      imageCredits,      imagePosition,      imagePadding,      textPosition,      textSize,      color,      backgroundColor    }  }
-export type ARTICLE_TEASER_QUERY_RESULT = {
-  _type: 'article'
-  slug: string
-  contributors: Array<{
-    kind: string | null
-    name: string | null
-  }> | null
-  teaser: {
-    layout: 'IMAGE' | 'SPLIT' | 'TEXT' | 'VIGNETTE' | null
-    title: InlineEditor | null
-    lead: InlineEditor | null
-    image: {
-      asset?: SanityImageAssetReference
-      media?: unknown
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      _type: 'image'
-    } | null
-    imageCredits: string | null
-    imagePosition: 'LEFT' | 'RIGHT' | null
-    imagePadding: boolean | null
-    textPosition:
-      | 'BOTTOM_LEFT'
-      | 'BOTTOM_RIGHT'
-      | 'BOTTOM'
-      | 'MIDDLE'
-      | 'TOP_LEFT'
-      | 'TOP_RIGHT'
-      | 'TOP'
-      | 'UNDERNEATH'
-      | null
-    textSize: 'LARGE' | 'MEDIUM' | 'SMALL' | 'STANDARD' | null
-    color: Color | null
-    backgroundColor: Color | null
-  } | null
-} | null
+// Variable: TEASER_QUERY
+// Query: *[(_type == "article" || _type == "page") && slug.current == $slug][0]{    _type,    "slug": slug.current,    contributors[]{      kind,      "name": contributor->title,    },    "teaser": frontTeaser {      layout,      title,      lead,      image,      imageCredits,      imagePosition,      imagePadding,      textPosition,      textSize,      color,      backgroundColor    }  }
+export type TEASER_QUERY_RESULT =
+  | {
+      _type: 'article'
+      slug: string
+      contributors: Array<{
+        kind: string | null
+        name: string | null
+      }> | null
+      teaser: {
+        layout: 'IMAGE' | 'SPLIT' | 'TEXT' | 'VIGNETTE' | null
+        title: InlineEditor | null
+        lead: InlineEditor | null
+        image: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          _type: 'image'
+        } | null
+        imageCredits: string | null
+        imagePosition: 'LEFT' | 'RIGHT' | null
+        imagePadding: boolean | null
+        textPosition:
+          | 'BOTTOM_LEFT'
+          | 'BOTTOM_RIGHT'
+          | 'BOTTOM'
+          | 'MIDDLE'
+          | 'TOP_LEFT'
+          | 'TOP_RIGHT'
+          | 'TOP'
+          | 'UNDERNEATH'
+          | null
+        textSize: 'LARGE' | 'MEDIUM' | 'SMALL' | 'STANDARD' | null
+        color: Color | null
+        backgroundColor: Color | null
+      } | null
+    }
+  | {
+      _type: 'page'
+      slug: string
+      contributors: null
+      teaser: {
+        layout: 'IMAGE' | 'SPLIT' | 'TEXT' | 'VIGNETTE' | null
+        title: InlineEditor | null
+        lead: InlineEditor | null
+        image: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          _type: 'image'
+        } | null
+        imageCredits: string | null
+        imagePosition: 'LEFT' | 'RIGHT' | null
+        imagePadding: boolean | null
+        textPosition:
+          | 'BOTTOM_LEFT'
+          | 'BOTTOM_RIGHT'
+          | 'BOTTOM'
+          | 'MIDDLE'
+          | 'TOP_LEFT'
+          | 'TOP_RIGHT'
+          | 'TOP'
+          | 'UNDERNEATH'
+          | null
+        textSize: 'LARGE' | 'MEDIUM' | 'SMALL' | 'STANDARD' | null
+        color: Color | null
+        backgroundColor: Color | null
+      } | null
+    }
+  | null
 
 // Source: src/app/(sanity)/groq/articles-query.ts
 // Variable: ARTICLES_QUERY
@@ -2565,7 +2600,7 @@ declare module '@sanity/client' {
   interface SanityQueries {
     '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n\n    "episodes": *[_type == "article" && references(^._id)]{\n      _id,\n      title,\n      description,\n      image\n    }\n  }': SERIES_NAV_QUERY_RESULT
     '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    byline,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": @.reference->slug\n      }\n    }\n  }\n,\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    "articleCollection": articleCollections[0]->{\n      _id,\n      title,\n      description,\n      image\n    },\n    articleRecommendations[]->{\n      \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  heading->{\n    _id,\n    title,\n    slug,\n  },\n  theme{\n    accentColor\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n    }\n  }': ARTICLE_QUERY_RESULT
-    '*[_type == "article" && slug.current == $slug][0]{\n    _type,\n    "slug": slug.current,\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    },\n    "teaser": frontTeaser {\n      layout,\n      title,\n      lead,\n      image,\n      imageCredits,\n      imagePosition,\n      imagePadding,\n      textPosition,\n      textSize,\n      color,\n      backgroundColor\n    }\n  }': ARTICLE_TEASER_QUERY_RESULT
+    '*[(_type == "article" || _type == "page") && slug.current == $slug][0]{\n    _type,\n    "slug": slug.current,\n    contributors[]{\n      kind,\n      "name": contributor->title,\n    },\n    "teaser": frontTeaser {\n      layout,\n      title,\n      lead,\n      image,\n      imageCredits,\n      imagePosition,\n      imagePadding,\n      textPosition,\n      textSize,\n      color,\n      backgroundColor\n    }\n  }': TEASER_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  heading->{\n    _id,\n    title,\n    slug,\n  },\n  theme{\n    accentColor\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n  }': ARTICLES_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "callToAction"][0]{\n      \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n    }\n  }': CTA_BLOCK_FRAGMENT_QUERY_RESULT
     '\n  *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n      "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  heading->{\n    _id,\n    title,\n    slug,\n  },\n  theme{\n    accentColor\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n        },\n        source.sourceType == "COLLECTION" => *[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[]._ref\n        ] | order(publishDate desc) [$start...$end] {\n          \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  heading->{\n    _id,\n    title,\n    slug,\n  },\n  theme{\n    accentColor\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n        }, []\n      ),\n    }\n  }\n': FEED_BLOCK_QUERY_RESULT
