@@ -1,13 +1,10 @@
+import { PageBuilderBlock } from '@/app/(sanity)/groq/page-query'
 import { CallToAction } from '@/app/(sanity)/pages/[...path]/components/blocks/call-to-action'
 import { EditorBlock } from '@/app/(sanity)/pages/[...path]/components/blocks/editor-block'
 import { TeaserItem } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-item'
 import { TeaserList } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-list'
-import type { PAGE_QUERY_RESULT } from '@/sanity.types'
 import { css } from '@republik/theme/css'
-
-export type PageBuilderBlock = NonNullable<
-  NonNullable<PAGE_QUERY_RESULT>['pageBuilder']
->[number]
+import { Menu } from './blocks/menu'
 
 export function PageBuilder({
   blocks,
@@ -51,14 +48,15 @@ function Block({
     case 'callToAction':
       return <CallToAction cta={block} />
 
+    case 'menu':
+      return <Menu menu={block} />
+
     case 'teaserItem':
       return <TeaserItem blockKey={_key} documentId={documentId} />
 
     /*case 'callToAction':
       return <CallToAction block={block} />
 
-    case 'menu':
-      return <Menu menu={block} />
 
     /*case 'teaserItem':
       return <TeaserItem block={block} />

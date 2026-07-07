@@ -2,6 +2,7 @@ import { CTA_BLOCK_FRAGMENT } from '@/app/(sanity)/groq/cta-block-fragment'
 import { MENU_BLOCK_FRAGMENT } from '@/app/(sanity)/groq/menu-block-fragment'
 import { PORTABLE_TEXT_CONTENT_FRAGMENT } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { TEASER_LIST_BLOCK_FRAGMENT } from '@/app/(sanity)/groq/teaser-list-block-fragment'
+import type { PAGE_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
 export const PAGE_QUERY = defineQuery(
@@ -40,3 +41,7 @@ export const PAGE_QUERY = defineQuery(
     }
   }`,
 )
+
+export type PageBuilderBlock = NonNullable<
+  NonNullable<PAGE_QUERY_RESULT>['pageBuilder']
+>[number]
