@@ -1,6 +1,7 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
-import type { FrontTeaser } from '@/sanity.types'
+import type { FrontTeaser, TEASER_BLOCK_QUERY_RESULT } from '@/sanity.types'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import { getImageDimensions } from '@sanity/asset-utils'
@@ -8,7 +9,7 @@ import { stegaClean } from 'next-sanity'
 import { Image } from 'next-sanity/image'
 import Link from 'next/link'
 
-type TeaserProps = { href: string; value: Omit<FrontTeaser, '_type'> }
+type TeaserProps = TEASER_BLOCK_QUERY_RESULT['block']['reference']
 
 export function FrontTeaser({ href, value }: TeaserProps) {
   switch (value.layout) {
@@ -150,6 +151,7 @@ function ImageTeaser({ href, value }: TeaserProps) {
           <p className={teaserLead}>
             <InlinePortableText value={value.lead} />
           </p>
+          <BylineShort teaser={value} />
         </div>
       </div>
     </div>
