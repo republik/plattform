@@ -15,7 +15,7 @@ export function BylineShort({
 }) {
   const authorsNames = contributors
     ?.filter((contributor) => contributor?.kind?.includes('Text'))
-    .map((contributor) => contributor.name)
+    .map((contributor) => stegaClean(contributor.name))
 
   if (!authorsNames?.length) return null
 

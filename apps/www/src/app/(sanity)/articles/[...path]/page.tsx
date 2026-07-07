@@ -54,7 +54,7 @@ export async function generateMetadata({
 }
 
 // Page component: default settings (stega active in Draft Mode)
-export default async function PostPage({
+export default async function ArticlePage({
   params,
 }: PageProps<'/articles/[...path]'>) {
   const { path } = await params
