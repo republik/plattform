@@ -4,7 +4,11 @@ import { defineQuery } from 'next-sanity'
 export const TEASER_BLOCK_FRAGMENT = defineQuery(
   `reference -> {
     "slug": slug.current,
-    frontTeaser {
+    contributors[]{
+      kind,
+      "name": contributor->title,
+    },
+    "teaser": frontTeaser {
       layout,
       title,
       lead,

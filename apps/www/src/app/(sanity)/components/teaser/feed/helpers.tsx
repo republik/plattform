@@ -8,8 +8,12 @@ import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-export function BylineShort({ teaser }: { teaser: FeedTeaserFragmentType }) {
-  const authorsNames = teaser.contributors
+export function BylineShort({
+  contributors,
+}: {
+  contributors: FeedTeaserFragmentType['contributors']
+}) {
+  const authorsNames = contributors
     ?.filter((contributor) => contributor?.kind?.includes('Text'))
     .map((contributor) => contributor.name)
 

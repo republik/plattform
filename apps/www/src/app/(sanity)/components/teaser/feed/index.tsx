@@ -38,7 +38,7 @@ export default function Teaser({
       <p className='description'>
         <InlinePortableText value={teaser.description} />
       </p>
-      <BylineShort teaser={teaser} />
+      <BylineShort contributors={teaser.contributors} />
     </div>
   )
 }

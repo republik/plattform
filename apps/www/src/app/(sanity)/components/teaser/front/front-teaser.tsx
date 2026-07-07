@@ -1,7 +1,7 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
+import type { TeaserBlockFragmentType } from '@/app/(sanity)/groq/teaser-block-fragment'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
-import type { FrontTeaser, TEASER_BLOCK_QUERY_RESULT } from '@/sanity.types'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import { getImageDimensions } from '@sanity/asset-utils'
@@ -9,18 +9,18 @@ import { stegaClean } from 'next-sanity'
 import { Image } from 'next-sanity/image'
 import Link from 'next/link'
 
-type TeaserProps = TEASER_BLOCK_QUERY_RESULT['block']['reference']
+type TeaserProps = TeaserBlockFragmentType['reference']
 
-export function FrontTeaser({ href, value }: TeaserProps) {
-  switch (value.layout) {
+export function FrontTeaser(props: TeaserProps) {
+  switch (props.teaser.layout) {
     case 'IMAGE':
-      return <ImageTeaser href={href} value={value} />
+      return <ImageTeaser {...props} />
     case 'TEXT':
-      return <TextTeaser href={href} value={value} />
+      return <TextTeaser {...props} />
     case 'VIGNETTE':
-      return <VignetteTeaser href={href} value={value} />
+      return <VignetteTeaser {...props} />
     case 'SPLIT':
-      return <SplitTeaser href={href} value={value} />
+      return <SplitTeaser {...props} />
     default:
       return null
   }
@@ -117,8 +117,8 @@ const teaserContainer = css({
   gridColumn: 'full',
 })
 
-function ImageTeaser({ href, value }: TeaserProps) {
-  const asset = value.image?.asset
+function ImageTeaser({ slug, contributors, teaser }: TeaserProps) {
+  const asset = teaser.image?.asset
 
   const src = urlFor(asset).url()
   const dimensions = getImageDimensions(src)
@@ -126,7 +126,7 @@ function ImageTeaser({ href, value }: TeaserProps) {
   return (
     <div
       className={teaserContainer}
-      style={{ backgroundColor: value.backgroundColor?.hex }}
+      style={{ backgroundColor: teaser.backgroundColor?.hex }}
     >
       <Image
         className={css({ display: 'block', width: '100%', height: 'auto' })}
@@ -139,59 +139,59 @@ function ImageTeaser({ href, value }: TeaserProps) {
       <div className={teaserTextContainer}>
         <div
           className={teaserTextPosition({
-            position: stegaClean(value.textPosition),
+            position: stegaClean(teaser.textPosition),
           })}
-          style={{ color: value.color?.hex }}
+          style={{ color: teaser.color?.hex }}
         >
-          <Link href={href} className={linkOverlay()}>
-            <h2 className={teaserTitle({ size: stegaClean(value.textSize) })}>
-              <InlinePortableText value={value.title} />
+          <Link href={slug} className={linkOverlay()}>
+            <h2 className={teaserTitle({ size: stegaClean(teaser.textSize) })}>
+              <InlinePortableText value={teaser.title} />
             </h2>
           </Link>
           <p className={teaserLead}>
-            <InlinePortableText value={value.lead} />
+            <InlinePortableText value={teaser.lead} />
           </p>
-          <BylineShort teaser={value} />
+          {contributors && <BylineShort contributors={contributors} />}
         </div>
       </div>
     </div>
   )
 }
 
-function TextTeaser({ value }: TeaserProps) {
+function TextTeaser({ teaser }: TeaserProps) {
   return (
     <div>
       <h2>
-        <InlinePortableText value={value.title} />
+        <InlinePortableText value={teaser.title} />
       </h2>
       <p>
-        <InlinePortableText value={value.lead} />
+        <InlinePortableText value={teaser.lead} />
       </p>
     </div>
   )
 }
 
-function VignetteTeaser({ value }: TeaserProps) {
+function VignetteTeaser({ teaser }: TeaserProps) {
   return (
     <div>
       <h2>
-        <InlinePortableText value={value.title} />
+        <InlinePortableText value={teaser.title} />
       </h2>
       <p>
-        <InlinePortableText value={value.lead} />
+        <InlinePortableText value={teaser.lead} />
       </p>
     </div>
   )
 }
 
-function SplitTeaser({ value }: TeaserProps) {
+function SplitTeaser({ teaser }: TeaserProps) {
   return (
     <div>
       <h2>
-        <InlinePortableText value={value.title} />
+        <InlinePortableText value={teaser.title} />
       </h2>
       <p>
-        <InlinePortableText value={value.lead} />
+        <InlinePortableText value={teaser.lead} />
       </p>
     </div>
   )

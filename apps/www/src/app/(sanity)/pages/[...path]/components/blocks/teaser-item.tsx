@@ -6,10 +6,5 @@ export async function TeaserItem({
 }: {
   teaser: TeaserBlockFragmentType
 }) {
-  return (
-    <FrontTeaser
-      href={`/articles${teaser.reference.slug}`}
-      value={teaser.reference.frontTeaser}
-    />
-  )
+  return <FrontTeaser {...teaser.reference} />
 }
