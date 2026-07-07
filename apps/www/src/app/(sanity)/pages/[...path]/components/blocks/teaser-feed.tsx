@@ -1,8 +1,7 @@
 'use client'
 
-import FeedTeaser, {
-  FeedTeaserType,
-} from '@/app/(sanity)/components/teaser/feed'
+import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
+import { FeedTeaserFragmentType } from '@/app/(sanity)/groq/feed-teaser-fragment'
 import { Button } from '@/app/components/ui/button'
 import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
@@ -15,11 +14,11 @@ export function TeaserFeed({
   pageSize,
   loadMoreAction,
 }: {
-  initialTeasers: FeedTeaserType[]
+  initialTeasers: FeedTeaserFragmentType[]
   total: number
   maxItems: number
   pageSize: number
-  loadMoreAction: () => Promise<FeedTeaserType[]>
+  loadMoreAction: () => Promise<FeedTeaserFragmentType[]>
 }) {
   const [teasers, setTeasers] = useState(initialTeasers)
   const { t } = useTranslation()

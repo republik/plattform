@@ -1,14 +1,14 @@
 'use client'
 
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { FeedTeaserType } from '@/app/(sanity)/components/teaser/feed'
+import { FeedTeaserFragmentType } from '@/app/(sanity)/groq/feed-teaser-fragment'
 import { css } from '@republik/theme/css'
 
 export function Carousel({
   teasers,
   maxItems,
 }: {
-  teasers: FeedTeaserType[]
+  teasers: FeedTeaserFragmentType[]
   maxItems: number
 }) {
   const shownTeasers = teasers.slice(0, maxItems ?? undefined)

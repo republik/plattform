@@ -2,27 +2,19 @@ import { EditLink } from '@/app/(sanity)/components/edit-link'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { feedTeaserFragment } from '@/app/(sanity)/components/teaser/feed'
+import { ArticlePortableText } from '@/app/(sanity)/components/portable-text/renderArticle'
 import { Theme } from '@/app/(sanity)/components/theme'
+import { ARTICLE_QUERY } from '@/app/(sanity)/groq/article-query'
+import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import { Metadata } from 'next'
-import { defineQuery } from 'next-sanity'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import FollowArticle from '../../components/follow/follow-article'
-import { ArticleContent } from './components/article-content'
-
-const ARTICLE_SEO_QUERY = defineQuery(
-  `*[_type == "article" && slug.current == $slug][0]{
-    "title": coalesce(seo.title, pt::text(title)),
-    "description": coalesce(seo.description, pt::text(description)),
-    "image": coalesce(seo.image, image)
-  }`,
-)
 
 // Metadata: stega disabled to keep invisible characters out of <title>
 export async function generateMetadata({
@@ -32,7 +24,7 @@ export async function generateMetadata({
   const slug = `/${path.join('/')}`
 
   const { data } = await sanityFetch({
-    query: ARTICLE_SEO_QUERY,
+    query: SEO_QUERY,
     params: { slug },
     stega: false,
   })
@@ -60,51 +52,6 @@ export async function generateMetadata({
     },
   }
 }
-
-const ARTICLE_QUERY = defineQuery(
-  `*[_type == "article" && slug.current == $slug][0]{
-    _id,
-    title,
-    description,
-    byline,
-    cover {
-      ...
-    },
-    heading->{
-      _id,
-      title,
-      "slug": slug.current
-    },
-    newsletter->{
-      title,
-      description,
-      frequency,
-      image,
-      name,
-    },
-    theme {
-      darkMode,
-      accentColor
-    },
-    contributors[]{
-      _id,
-      kind,
-      "slug": contributor->userId,
-      "name": contributor->title,
-      "description": contributor->description,
-      "portrait": contributor->portrait
-    },
-    "articleCollection": articleCollections[0]->{
-      _id,
-      title,
-      description,
-      image
-    },
-    articleRecommendations[]->{
-      ${feedTeaserFragment}
-    }
-  }`,
-)
 
 // Page component: default settings (stega active in Draft Mode)
 export default async function PostPage({
@@ -165,7 +112,7 @@ export default async function PostPage({
           <EditLink _id={article._id} documentType='article' />
         </div>
 
-        <ArticleContent slug={slug} />
+        <ArticlePortableText value={article.content} />
 
         <FollowArticle
           contributors={article.contributors}

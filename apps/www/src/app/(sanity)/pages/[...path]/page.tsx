@@ -2,24 +2,17 @@ import { EditLink } from '@/app/(sanity)/components/edit-link'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { Theme } from '@/app/(sanity)/components/theme'
+import { PAGE_QUERY } from '@/app/(sanity)/groq/page-query'
+import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import { Metadata } from 'next'
-import { defineQuery } from 'next-sanity'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { PageBuilder } from './components/page-builder'
-
-const PAGE_SEO_QUERY = defineQuery(
-  `*[_type == "page" && slug.current == $slug][0]{
-    "title": coalesce(seo.title, pt::text(title)),
-    "description": coalesce(seo.description, pt::text(description)),
-    "image": coalesce(seo.image, image)
-  }`,
-)
 
 // Metadata: stega disabled to keep invisible characters out of <title>
 export async function generateMetadata({
@@ -29,7 +22,7 @@ export async function generateMetadata({
   const slug = `/${path.join('/')}`
 
   const { data } = await sanityFetch({
-    query: PAGE_SEO_QUERY,
+    query: SEO_QUERY,
     params: { slug },
     stega: false,
   })
@@ -57,31 +50,6 @@ export async function generateMetadata({
     },
   }
 }
-
-const PAGE_QUERY = defineQuery(
-  `*[_type == "page" && slug.current == $slug][0]{
-    _id,
-    title,
-    cover {
-      ...
-    },
-    skipTitleBlock,
-    useCoverAsTitle,
-    heading->{
-      _id,
-      title,
-      "slug": slug.current
-    },
-    theme {
-      darkMode,
-      accentColor
-    },
-    pageBuilder[]{
-      _key,
-      _type,
-    }
-  }`,
-)
 
 // Page component: default settings (stega active in Draft Mode)
 export default async function PostPage({

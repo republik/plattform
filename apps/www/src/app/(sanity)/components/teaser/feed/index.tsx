@@ -5,44 +5,14 @@ import {
   LinkOverlay,
 } from '@/app/(sanity)/components/teaser/feed/helpers'
 import { feedTeaserTypography } from '@/app/(sanity)/components/teaser/feed/styles'
-import { FEED_TEASER_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
+import { FeedTeaserFragmentType } from '@/app/(sanity)/groq/feed-teaser-fragment'
 import { css, cx } from '@republik/theme/css'
-import { defineQuery } from 'next-sanity'
-
-export const feedTeaserFragment = /* groq */ `
-    _id,
-    type,
-    title,
-    description,
-    slug,
-    heading->{
-      _id,
-      title,
-      slug,
-    },
-    theme{
-      accentColor
-    },
-    contributors[]{
-      kind,
-      "name": contributor->title,
-    }
-`
-
-// Hack to not rely of the main query for types
-export const FEED_TEASER_FRAGMENT_QUERY = defineQuery(
-  `*[_type=="article"]{ 
-    ${feedTeaserFragment} 
-  }`,
-)
-export type FeedTeaserType =
-  NonNullable<FEED_TEASER_FRAGMENT_QUERY_RESULT>[number]
 
 export default function Teaser({
   teaser,
   index,
 }: {
-  teaser: FeedTeaserType
+  teaser: FeedTeaserFragmentType
   index: number
 }) {
   return (

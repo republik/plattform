@@ -1,14 +1,14 @@
 'use client'
 
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { FeedTeaserType } from '@/app/(sanity)/components/teaser/feed/index'
+import { FeedTeaserFragmentType } from '@/app/(sanity)/groq/feed-teaser-fragment'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
 import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-export function BylineShort({ teaser }: { teaser: FeedTeaserType }) {
+export function BylineShort({ teaser }: { teaser: FeedTeaserFragmentType }) {
   const authorsNames = teaser.contributors
     ?.filter((contributor) => contributor?.kind?.includes('Text'))
     .map((contributor) => contributor.name)
@@ -18,7 +18,7 @@ export function BylineShort({ teaser }: { teaser: FeedTeaserType }) {
   return <p className='author'>Von {authorsNames.join(', ')}</p>
 }
 
-export function Heading({ teaser }: { teaser: FeedTeaserType }) {
+export function Heading({ teaser }: { teaser: FeedTeaserFragmentType }) {
   const pathname = usePathname()
 
   if (!teaser?.heading) return null
@@ -44,7 +44,7 @@ export function LinkOverlay({
   teaser,
   index,
 }: {
-  teaser: FeedTeaserType
+  teaser: FeedTeaserFragmentType
   index: number
 }) {
   const trackEvent = useTrackEvent()

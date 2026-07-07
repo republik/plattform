@@ -2,12 +2,12 @@ import { CallToAction } from '@/app/(sanity)/pages/[...path]/components/blocks/c
 import { EditorBlock } from '@/app/(sanity)/pages/[...path]/components/blocks/editor-block'
 import { Menu } from '@/app/(sanity)/pages/[...path]/components/blocks/menu'
 import { TeaserList } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-list'
+import type { PAGE_QUERY_RESULT } from '@/sanity.types'
 import { css } from '@republik/theme/css'
 
-export type PageBuilderBlock = {
-  _key: string
-  _type: string
-}
+export type PageBuilderBlock = NonNullable<
+  NonNullable<PAGE_QUERY_RESULT>['pageBuilder']
+>[number]
 
 export function PageBuilder({
   blocks,
@@ -32,20 +32,27 @@ function Block({
   block: PageBuilderBlock
   documentId: string
 }) {
-  const { _type, _key } = block
+  const { _key } = block
 
-  switch (_type) {
+  switch (block._type) {
     case 'editorBlock':
-      return <EditorBlock blockKey={_key} documentId={documentId} />
+      return <EditorBlock editorBlock={block} />
 
+    // we need blockKey & documentId to query the teasers…
     case 'teaserList':
-      return <TeaserList blockKey={_key} documentId={documentId} />
+      return (
+        <TeaserList
+          teaserList={block}
+          blockKey={_key}
+          documentId={documentId}
+        />
+      )
 
     case 'callToAction':
-      return <CallToAction blockKey={_key} documentId={documentId} />
+      return <CallToAction cta={block} />
 
     case 'menu':
-      return <Menu blockKey={_key} documentId={documentId} />
+      return <Menu menu={block} />
 
     /*case 'teaserItem':
       return <TeaserItem block={block} />

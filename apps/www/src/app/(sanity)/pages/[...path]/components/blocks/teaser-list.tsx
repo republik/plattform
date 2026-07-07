@@ -1,62 +1,37 @@
-import { feedTeaserFragment } from '@/app/(sanity)/components/teaser/feed'
+import { TEASER_FEED_BLOCK_QUERY } from '@/app/(sanity)/groq/teaser-feed-block-query'
+import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
-import { defineQuery, stegaClean } from 'next-sanity'
+import { stegaClean } from 'next-sanity'
 import { Carousel } from './carousel'
 import { TeaserFeed } from './teaser-feed'
 
 export const MAX_TEASERS = 20
 
-const PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY = defineQuery(`
-  *[_type == "page" && _id == $documentId][0]{
-    "block": pageBuilder[_key == $blockKey][0]{
-      appearance,
-      maxItems,
-      "teasers": select(
-        source.sourceType == "MANUAL" => source.items[$start...$end]->{
-          ${feedTeaserFragment}
-        },
-        source.sourceType == "COLLECTION" => *[
-          _type == "article" &&
-          ^.source.collection._ref in articleCollections[]._ref
-        ] | order(publishDate desc) [$start...$end] {
-          ${feedTeaserFragment}
-        },
-        []
-      ),
-      "total": select(
-        source.sourceType == "MANUAL" => count(source.items),
-        source.sourceType == "COLLECTION" => count(*[
-          _type == "article" &&
-          ^.source.collection._ref in articleCollections[]._ref
-        ]),
-        0
-      )
-    }
-  }
-`)
-
 export async function TeaserList({
-  blockKey,
+  teaserList,
   documentId,
+  blockKey,
 }: {
-  blockKey: string
+  teaserList: TeaserListBlockFragmentType
   documentId: string
+  blockKey: string
 }) {
   const { data } = await sanityFetch({
-    query: PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY,
+    query: TEASER_FEED_BLOCK_QUERY,
     params: { documentId, blockKey, start: 0, end: MAX_TEASERS },
   })
-  if (!data?.block) return null
 
-  const { teasers, total, maxItems } = data.block
-  const appearance = stegaClean(data.block.appearance)
+  const teasers = data?.block?.teasers
   if (!teasers?.length) return null
+
+  const { total, maxItems } = teaserList
+  const appearance = stegaClean(teaserList.appearance)
 
   // we only offer this option when: list has > 20 teasers
   async function loadMore() {
     'use server'
     const { data } = await sanityFetch({
-      query: PAGE_BUILDER_TEASER_LIST_BLOCK_QUERY,
+      query: TEASER_FEED_BLOCK_QUERY,
       params: { documentId, blockKey, start: MAX_TEASERS, end: total },
     })
     return data?.block?.teasers ?? []

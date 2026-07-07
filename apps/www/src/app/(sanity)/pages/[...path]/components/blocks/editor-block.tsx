@@ -1,37 +1,10 @@
 import { PagePortableText } from '@/app/(sanity)/components/portable-text/renderPage'
-import { sanityFetch } from '@/app/(sanity)/lib/live'
-import { defineQuery } from 'next-sanity'
-
-const PAGE_BUILDER_EDITOR_BLOCK_QUERY = defineQuery(
-  `*[_type == "page" && _id == $documentId][0]{
-    _id,
-    "block": pageBuilder[_key == $blockKey][0]{
-      content[]{
-        ...,
-        markDefs[]{
-          ...,
-          _type == "internalLink" => {
-            "slug": @.reference->slug
-          }
-        }
-      }
-    }
-  }`,
-)
+import { PortableTextContentFragmentType } from '@/app/(sanity)/groq/portable-text-content-fragment'
 
 export async function EditorBlock({
-  blockKey,
-  documentId,
+  editorBlock,
 }: {
-  blockKey: string
-  documentId: string
+  editorBlock: PortableTextContentFragmentType
 }) {
-  const { data } = await sanityFetch({
-    query: PAGE_BUILDER_EDITOR_BLOCK_QUERY,
-    params: { documentId, blockKey },
-  })
-
-  if (!data || !data.block) return null
-
-  return <PagePortableText value={data.block.content} />
+  return <PagePortableText value={editorBlock.content} />
 }
