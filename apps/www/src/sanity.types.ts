@@ -2352,6 +2352,46 @@ export type TEASER_LIST_BLOCK_FRAGMENT_QUERY_RESULT = {
   } | null
 } | null
 
+// Source: src/app/(sanity)/pages/[...path]/components/blocks/teaser-item.tsx
+// Variable: TEASER_BLOCK_QUERY
+// Query: *[_type == "page" && _id == $documentId][0]{    _id,    "block": pageBuilder[_key == $blockKey && _type == "teaserItem"][0]{      reference -> {        "slug": slug.current,        frontTeaser {          layout,          title,          lead,          image,          imageCredits,          imagePosition,          imagePadding,          textPosition,          textSize,          color,          backgroundColor        }      }    }  }
+export type TEASER_BLOCK_QUERY_RESULT = {
+  _id: string
+  block: {
+    reference: {
+      slug: string
+      frontTeaser: {
+        layout: 'IMAGE' | 'SPLIT' | 'TEXT' | 'VIGNETTE' | null
+        title: InlineEditor | null
+        lead: InlineEditor | null
+        image: {
+          asset?: SanityImageAssetReference
+          media?: unknown
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          _type: 'image'
+        } | null
+        imageCredits: string | null
+        imagePosition: 'LEFT' | 'RIGHT' | null
+        imagePadding: boolean | null
+        textPosition:
+          | 'BOTTOM_LEFT'
+          | 'BOTTOM_RIGHT'
+          | 'BOTTOM'
+          | 'MIDDLE'
+          | 'TOP_LEFT'
+          | 'TOP_RIGHT'
+          | 'TOP'
+          | 'UNDERNEATH'
+          | null
+        textSize: 'LARGE' | 'MEDIUM' | 'SMALL' | 'STANDARD' | null
+        color: Color | null
+        backgroundColor: Color | null
+      } | null
+    }
+  } | null
+} | null
+
 // Query TypeMap
 import '@sanity/client'
 declare module '@sanity/client' {
@@ -2367,5 +2407,6 @@ declare module '@sanity/client' {
     '*[slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image)\n  }': SEO_QUERY_RESULT
     '\n  *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n      "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  heading->{\n    _id,\n    title,\n    slug,\n  },\n  theme{\n    accentColor\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n        },\n        source.sourceType == "COLLECTION" => *[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[]._ref\n        ] | order(publishDate desc) [$start...$end] {\n          \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  heading->{\n    _id,\n    title,\n    slug,\n  },\n  theme{\n    accentColor\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n        }, []\n      ),\n    }\n  }\n': TEASER_FEED_BLOCK_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "teaserList"][0]{\n      \n  appearance,\n  maxItems,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      _type == "article" &&\n      ^.source.collection._ref in articleCollections[]._ref\n    ]),\n    0\n  )\n\n    }\n  }': TEASER_LIST_BLOCK_FRAGMENT_QUERY_RESULT
+    '*[_type == "page" && _id == $documentId][0]{\n    _id,\n    "block": pageBuilder[_key == $blockKey && _type == "teaserItem"][0]{\n      reference -> {\n        "slug": slug.current,\n        frontTeaser {\n          layout,\n          title,\n          lead,\n          image,\n          imageCredits,\n          imagePosition,\n          imagePadding,\n          textPosition,\n          textSize,\n          color,\n          backgroundColor\n        }\n      }\n    }\n  }': TEASER_BLOCK_QUERY_RESULT
   }
 }
