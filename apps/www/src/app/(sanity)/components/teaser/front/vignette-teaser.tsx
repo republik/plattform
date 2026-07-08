@@ -1,12 +1,10 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
+import { FrontTeaserImage } from '@/app/(sanity)/components/teaser/front/helpers'
 import type { TeaserBlockFragmentType } from '@/app/(sanity)/groq/teaser-block-fragment'
-import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
-import { getImageDimensions } from '@sanity/asset-utils'
 import { stegaClean } from 'next-sanity'
-import { Image } from 'next-sanity/image'
 import Link from 'next/link'
 
 type TeaserProps = TeaserBlockFragmentType['reference']
@@ -14,6 +12,8 @@ type TeaserProps = TeaserBlockFragmentType['reference']
 const teaserStyle = cva({
   base: {
     position: 'relative',
+    px: '4',
+    py: '8',
     padding: '30px 15px 40px 15px',
     display: 'flex',
     flexDirection: 'column',
@@ -21,7 +21,7 @@ const teaserStyle = cva({
     justifyContent: 'center',
     gap: '6',
     md: {
-      padding: '60px 0',
+      py: '16',
     },
   },
   variants: {},
@@ -92,10 +92,6 @@ export function VignetteTeaser({
   contributors,
   teaser,
 }: TeaserProps) {
-  const asset = teaser.image?.asset
-
-  const src = urlFor(asset).url()
-  const dimensions = getImageDimensions(src)
   const href = _type === 'article' ? `/article${slug}` : `/page/${slug}`
 
   return (
@@ -104,12 +100,10 @@ export function VignetteTeaser({
       style={{ backgroundColor: teaser.backgroundColor?.hex }}
     >
       <div>
-        <Image
+        <FrontTeaserImage
+          asset={teaser.image?.asset}
           className={imageStyle}
-          src={src}
           alt={''}
-          width={dimensions.width}
-          height={dimensions.height}
           sizes={'(max-width: 768px) 100vw, 50vw'}
         />
       </div>
