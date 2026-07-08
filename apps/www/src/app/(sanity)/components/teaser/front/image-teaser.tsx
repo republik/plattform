@@ -1,12 +1,10 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
+import { FrontTeaserImage } from '@/app/(sanity)/components/teaser/front/helpers'
 import type { TeaserBlockFragmentType } from '@/app/(sanity)/groq/teaser-block-fragment'
-import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
-import { getImageDimensions } from '@sanity/asset-utils'
 import { stegaClean } from 'next-sanity'
-import { Image } from 'next-sanity/image'
 import Link from 'next/link'
 
 type TeaserProps = TeaserBlockFragmentType['reference']
@@ -118,13 +116,6 @@ export function ImageTeaser({
   contributors,
   teaser,
 }: TeaserProps) {
-  const asset = teaser.image?.asset
-  const { src, dimensions } = asset
-    ? {
-        src: urlFor(asset).url(),
-        dimensions: getImageDimensions(asset),
-      }
-    : {}
   const href = _type === 'article' ? `/article${slug}` : `/page/${slug}`
 
   return (
@@ -132,16 +123,12 @@ export function ImageTeaser({
       className={teaserContainer}
       style={{ backgroundColor: teaser.backgroundColor?.hex }}
     >
-      {asset && (
-        <Image
-          className={css({ display: 'block', width: '100%', height: 'auto' })}
-          src={src}
-          alt={''}
-          width={dimensions.width}
-          height={dimensions.height}
-          sizes={'100vw'}
-        />
-      )}
+      <FrontTeaserImage
+        asset={teaser.image?.asset}
+        className={css({ display: 'block', width: '100%', height: 'auto' })}
+        alt={''}
+        sizes={'100vw'}
+      />
       <div className={teaserTextContainer}>
         <div
           className={teaserTextPosition({
