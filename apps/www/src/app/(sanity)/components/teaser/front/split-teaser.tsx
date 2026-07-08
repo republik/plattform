@@ -121,9 +121,12 @@ export function SplitTeaser({
   teaser,
 }: TeaserProps) {
   const asset = teaser.image?.asset
-
-  const src = urlFor(asset).url()
-  const dimensions = getImageDimensions(src)
+  const { src, dimensions } = asset
+    ? {
+        src: urlFor(asset).url(),
+        dimensions: getImageDimensions(asset),
+      }
+    : {}
   const href = _type === 'article' ? `/article${slug}` : `/page/${slug}`
 
   return (
@@ -140,14 +143,16 @@ export function SplitTeaser({
           position: 'relative',
         })}
       >
-        <Image
-          className={css({ display: 'block', width: '100%', height: 'auto' })}
-          src={src}
-          alt={''}
-          width={dimensions.width}
-          height={dimensions.height}
-          sizes={'(max-width: 768px) 100vw, 50vw'}
-        />
+        {asset && (
+          <Image
+            className={css({ display: 'block', width: '100%', height: 'auto' })}
+            src={src}
+            alt={''}
+            width={dimensions.width}
+            height={dimensions.height}
+            sizes={'(max-width: 768px) 100vw, 50vw'}
+          />
+        )}
       </div>
       <div
         className={css({

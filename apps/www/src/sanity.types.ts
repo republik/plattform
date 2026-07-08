@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../studio/schema.json
+// Source: ../../../../../../studio/schema.json
 export type ChartConfig = {
   settings?: Code
   data?: Code
@@ -160,6 +160,23 @@ export type TeaserList = {
 export type TeaserItem = {
   _type: 'teaserItem'
   reference: ArticleReference | PageReference
+}
+
+export type LogEntry = {
+  _type: 'logEntry'
+  text?: string
+  userId?: string
+  userName?: string
+  loggedAt?: string
+}
+
+export type SignOff = {
+  _type: 'signOff'
+  itemKey?: string
+  userId?: string
+  userName?: string
+  signedAt?: string
+  versionRef?: string
 }
 
 export type ContributorReference = {
@@ -537,6 +554,16 @@ export type Article = {
     {
       _key: string
     } & ContributorEntry
+  >
+  editorialSignOffs?: Array<
+    {
+      _key: string
+    } & SignOff
+  >
+  editorialLog?: Array<
+    {
+      _key: string
+    } & LogEntry
   >
   readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
   showTextProgress?: boolean
@@ -1156,6 +1183,8 @@ export type AllSanitySchemaTypes =
   | BestOfDialogue
   | TeaserList
   | TeaserItem
+  | LogEntry
+  | SignOff
   | ContributorReference
   | ContributorEntry
   | LegacyMeta

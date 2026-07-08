@@ -119,9 +119,12 @@ export function ImageTeaser({
   teaser,
 }: TeaserProps) {
   const asset = teaser.image?.asset
-
-  const src = urlFor(asset).url()
-  const dimensions = getImageDimensions(src)
+  const { src, dimensions } = asset
+    ? {
+        src: urlFor(asset).url(),
+        dimensions: getImageDimensions(asset),
+      }
+    : {}
   const href = _type === 'article' ? `/article${slug}` : `/page/${slug}`
 
   return (
@@ -129,14 +132,16 @@ export function ImageTeaser({
       className={teaserContainer}
       style={{ backgroundColor: teaser.backgroundColor?.hex }}
     >
-      <Image
-        className={css({ display: 'block', width: '100%', height: 'auto' })}
-        src={src}
-        alt={''}
-        width={dimensions.width}
-        height={dimensions.height}
-        sizes={'100vw'}
-      />
+      {asset && (
+        <Image
+          className={css({ display: 'block', width: '100%', height: 'auto' })}
+          src={src}
+          alt={''}
+          width={dimensions.width}
+          height={dimensions.height}
+          sizes={'100vw'}
+        />
+      )}
       <div className={teaserTextContainer}>
         <div
           className={teaserTextPosition({
