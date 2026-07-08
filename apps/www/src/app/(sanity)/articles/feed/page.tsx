@@ -13,8 +13,8 @@ export default async function FeedPage() {
     <div className={css({ my: '8' })}>
       <article className={editorialContent()}>
         <div>
-          {articles.map((article, index) => (
-            <FeedTeaser key={article._id} teaser={article} index={index} />
+          {articles.map((article) => (
+            <FeedTeaser key={article._id} teaser={article} />
           ))}
         </div>
       </article>
