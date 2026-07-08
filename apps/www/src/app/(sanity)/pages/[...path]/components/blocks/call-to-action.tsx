@@ -8,6 +8,8 @@ import { css } from '@republik/theme/css'
 export async function CallToAction({ cta }: { cta: CtaBlockFragmentType }) {
   const { target } = cta
 
+  if (!target) return null
+
   return (
     <div className={css({ mx: 'auto' })}>
       {target._type === 'newsletter' ? (

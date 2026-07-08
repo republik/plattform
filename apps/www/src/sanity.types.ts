@@ -20,7 +20,7 @@ type ArrayOf<T> = Array<
   }
 >
 
-// Source: ../../../../../../studio/schema.json
+// Source: ../../../studio/schema.json
 export type ChartConfig = {
   settings?: Code
   data?: Code
@@ -149,6 +149,7 @@ export type BestOfDialogue = {
 
 export type TeaserList = {
   _type: 'teaserList'
+  title?: string
   source?: Source
   appearance?: 'FEED' | 'GRID' | 'CAROUSEL'
   feedElementAppearance?: 'TEXT' | 'TEASER'
