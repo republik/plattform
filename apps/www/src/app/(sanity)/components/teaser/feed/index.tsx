@@ -1,19 +1,17 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import {
-  BylineShort,
   Heading,
   LinkOverlay,
-} from '@/app/(sanity)/components/teaser/feed/helpers'
+} from '@/app/(sanity)/components/teaser/_shared/helpers'
+import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
 import { feedTeaserTypography } from '@/app/(sanity)/components/teaser/feed/styles'
 import { FeedTeaserFragmentType } from '@/app/(sanity)/groq/feed-teaser-fragment'
 import { css, cx } from '@republik/theme/css'
 
-export default function Teaser({
+export default function FeedTeaser({
   teaser,
-  index,
 }: {
   teaser: FeedTeaserFragmentType
-  index: number
 }) {
   return (
     <div
@@ -33,7 +31,7 @@ export default function Teaser({
     >
       <Heading teaser={teaser} />
       <h4>
-        <LinkOverlay teaser={teaser} index={index} />
+        <LinkOverlay teaser={teaser} />
       </h4>
       <p className='description'>
         <InlinePortableText value={teaser.description} />

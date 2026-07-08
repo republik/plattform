@@ -7,6 +7,7 @@ export const FEED_TEASER_FRAGMENT = /* groq */ `
   title,
   description,
   slug,
+  image,
   heading->{
     _id,
     title,

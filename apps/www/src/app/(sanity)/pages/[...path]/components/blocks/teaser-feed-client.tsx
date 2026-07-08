@@ -7,7 +7,7 @@ import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
 import { useState } from 'react'
 
-export function TeaserFeed({
+export function TeaserFeedClient({
   initialTeasers,
   total,
   maxItems,
@@ -43,8 +43,8 @@ export function TeaserFeed({
           count: total,
         })}
       </h2>
-      {shownTeasers.map((teaser, index) => (
-        <FeedTeaser key={teaser._id} teaser={teaser} index={index} />
+      {shownTeasers.map((teaser) => (
+        <FeedTeaser key={teaser._id} teaser={teaser} />
       ))}
       {showLoadMoreButton && (
         <Button

@@ -24,8 +24,8 @@ export function ArticleRecommendations({
         </div>
       </div>
       <div className={css({ pt: 4, pb: 16 })}>
-        {recommendations.map((rec, index) => (
-          <FeedTeaser key={rec._id} teaser={rec} index={index} />
+        {recommendations.map((rec) => (
+          <FeedTeaser key={rec._id} teaser={rec} />
         ))}
       </div>
     </>

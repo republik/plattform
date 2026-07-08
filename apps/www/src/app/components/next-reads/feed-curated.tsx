@@ -76,7 +76,6 @@ function CuratedList({
   )
 }
 
-// TODO: use the groq query
 export function CuratedFeed({ path }: { path: string }) {
   const { t } = useTranslation()
   const { data, loading } = useQuery(DocumentRecommendationsDocument, {

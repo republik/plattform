@@ -33,3 +33,19 @@ export const SquareCover = ({
     />
   )
 }
+
+export const SanitySquareCover = ({ size }) => {
+  return (
+    <img
+      loading='lazy'
+      className={css({
+        aspectRatio: '1/1',
+        objectFit: 'cover',
+        height: 'auto',
+        backgroundColor: 'red',
+      })}
+      style={{ width: size }}
+      alt={'cover img'}
+    />
+  )
+}
