@@ -1,27 +1,10 @@
+import { FRONT_TEASER_FRAGMENT } from '@/app/(sanity)/groq/front-teaser-fragment'
 import { TEASER_BLOCK_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
 export const TEASER_BLOCK_FRAGMENT = defineQuery(
   `reference -> {
-    _type,
-    "slug": slug.current,
-    contributors[]{
-      kind,
-      "name": contributor->title,
-    },
-    "teaser": frontTeaser {
-      layout,
-      title,
-      lead,
-      image,
-      imageCredits,
-      imagePosition,
-      imagePadding,
-      textPosition,
-      textSize,
-      color,
-      backgroundColor
-    }
+  ${FRONT_TEASER_FRAGMENT}
   }`,
 )
 

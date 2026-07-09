@@ -2,9 +2,9 @@ import { ImageTeaser } from '@/app/(sanity)/components/teaser/front/image-teaser
 import { SplitTeaser } from '@/app/(sanity)/components/teaser/front/split-teaser'
 import { TextTeaser } from '@/app/(sanity)/components/teaser/front/text-teaser'
 import { VignetteTeaser } from '@/app/(sanity)/components/teaser/front/vignette-teaser'
-import type { TeaserBlockFragmentType } from '@/app/(sanity)/groq/teaser-block-fragment'
+import type { FrontTeaserFragmentType } from '@/app/(sanity)/groq/front-teaser-fragment'
 
-type TeaserProps = TeaserBlockFragmentType['reference']
+type TeaserProps = FrontTeaserFragmentType
 
 export function FrontTeaser(props: TeaserProps) {
   switch (props.teaser?.layout) {

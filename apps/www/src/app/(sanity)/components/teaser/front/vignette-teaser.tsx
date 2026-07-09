@@ -1,13 +1,13 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
 import { FrontTeaserImage } from '@/app/(sanity)/components/teaser/front/helpers'
-import type { TeaserBlockFragmentType } from '@/app/(sanity)/groq/teaser-block-fragment'
+import type { FrontTeaserFragmentType } from '@/app/(sanity)/groq/front-teaser-fragment'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 
-type TeaserProps = TeaserBlockFragmentType['reference']
+type TeaserProps = FrontTeaserFragmentType
 
 const teaserStyle = cva({
   base: {

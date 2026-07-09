@@ -1,25 +1,8 @@
+import { FRONT_TEASER_FRAGMENT } from '@/app/(sanity)/groq/front-teaser-fragment'
 import { defineQuery } from 'next-sanity'
 
 export const TEASER_QUERY = defineQuery(
   `*[(_type == "article" || _type == "page") && slug.current == $slug][0]{
-    _type,
-    "slug": slug.current,
-    contributors[]{
-      kind,
-      "name": contributor->title,
-    },
-    "teaser": frontTeaser {
-      layout,
-      title,
-      lead,
-      image,
-      imageCredits,
-      imagePosition,
-      imagePadding,
-      textPosition,
-      textSize,
-      color,
-      backgroundColor
-    }
+    ${FRONT_TEASER_FRAGMENT}
   }`,
 )
