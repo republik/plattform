@@ -14,7 +14,6 @@ export function PageBuilder({
   blocks: PageBuilderBlock[]
   documentId: string
 }) {
-  console.log({ blocks })
   return (
     <>
       {blocks.map((block) => (
