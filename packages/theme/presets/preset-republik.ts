@@ -378,7 +378,7 @@ export const presetRepublik = definePreset({
             lineHeight: { base: 1.5, md: 1.6 },
           },
         },
-        editorialH2: {
+        editorialSubheading: {
           value: {
             fontFamily: 'rubis',
             fontWeight: 700,
@@ -388,7 +388,7 @@ export const presetRepublik = definePreset({
             letterSpacing: { base: 0, md: -0.21 },
           },
         },
-        interactionTitle: {
+        metaTitle: {
           value: {
             fontFamily: 'gtAmericaStandard',
             fontWeight: 'medium',
@@ -397,7 +397,16 @@ export const presetRepublik = definePreset({
             lineHeight: { base: 1.133, md: 1.035 },
           },
         },
-        interactionParagraph: {
+        metaSubheading: {
+          value: {
+            fontFamily: 'gtAmericaStandard',
+            fontWeight: 'medium',
+            fontStyle: 'normal',
+            fontSize: { base: '1.1875rem', md: '1.5rem' },
+            lineHeight: { base: 1.579, md: 1.035 },
+          },
+        },
+        metaParagraph: {
           value: {
             fontFamily: 'gtAmericaStandard',
             fontWeight: 400,

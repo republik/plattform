@@ -83,6 +83,17 @@ const teaserTitle = cva({
     },
   },
   variants: {
+    theme: {
+      META: {
+        textStyle: 'metaTitle',
+      },
+      EDITORIAL: {
+        textStyle: 'editorialTitle',
+      },
+      PAGE: {
+        textStyle: 'metaTitle',
+      },
+    },
     size: {
       SMALL: {},
       LARGE: { md: { fontSize: '125px', lineHeight: '137px' } },
@@ -90,9 +101,7 @@ const teaserTitle = cva({
       STANDARD: { md: { fontSize: '80px', lineHeight: '90px' } },
     },
   },
-  defaultVariants: {
-    size: 'STANDARD',
-  },
+  defaultVariants: { theme: 'META', size: 'STANDARD' },
 })
 
 const teaserLead = css({
@@ -114,6 +123,7 @@ export function ImageTeaser({
   _type,
   slug,
   contributors,
+  theme,
   teaser,
 }: TeaserProps) {
   const href = _type === 'article' ? `/article${slug}` : `/page/${slug}`
@@ -137,7 +147,12 @@ export function ImageTeaser({
           style={{ color: teaser.color?.hex }}
         >
           <Link href={href} className={linkOverlay()}>
-            <h2 className={teaserTitle({ size: stegaClean(teaser.textSize) })}>
+            <h2
+              className={teaserTitle({
+                theme: stegaClean(theme?.name),
+                size: stegaClean(teaser.textSize),
+              })}
+            >
               <InlinePortableText value={teaser.title} />
             </h2>
           </Link>

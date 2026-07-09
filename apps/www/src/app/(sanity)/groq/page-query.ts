@@ -24,8 +24,10 @@ export const PAGE_QUERY = defineQuery(
       "slug": slug.current
     },
     theme {
-      darkMode,
-      accentColor
+      name,
+      accentColor,
+      backgroundColor,
+      darkMode
     },
     pageBuilder[]{
       _key,

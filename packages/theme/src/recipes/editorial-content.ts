@@ -96,7 +96,7 @@ export const editorialContentRecipe = defineRecipe({
         title: { textStyle: 'editorialTitle' },
         lead: { textStyle: 'editorialLead' },
         paragraphs: { textStyle: 'editorialParagraph' },
-        subheadings: { textStyle: 'editorialH2' },
+        subheadings: { textStyle: 'editorialSubheading' },
         unorderedListItems: {
           textStyle: 'editorialParagraph',
         },
@@ -106,14 +106,14 @@ export const editorialContentRecipe = defineRecipe({
       }),
       page: contentParts({
         heading: { textStyle: 'editorialHeading' },
-        title: { textStyle: 'interactionTitle' },
-        paragraphs: { textStyle: 'interactionParagraph' },
-        subheadings: { textStyle: 'editorialH2' },
+        title: { textStyle: 'metaTitle' },
+        paragraphs: { textStyle: 'metaParagraph' },
+        subheadings: { textStyle: 'metaSubheading' },
         unorderedListItems: {
-          textStyle: 'interactionParagraph',
+          textStyle: 'metaParagraph',
         },
         orderedListItems: {
-          textStyle: 'interactionParagraph',
+          textStyle: 'metaParagraph',
         },
       }),
     },

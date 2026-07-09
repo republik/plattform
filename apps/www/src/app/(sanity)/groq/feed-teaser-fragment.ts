@@ -13,8 +13,11 @@ export const FEED_TEASER_FRAGMENT = /* groq */ `
     title,
     slug,
   },
-  theme{
-    accentColor
+  theme {
+    name,
+    accentColor,
+    backgroundColor,
+    darkMode
   },
   contributors[]{
     kind,

@@ -16,7 +16,10 @@ export const CAROUSEL_TEASER_FRAGMENT = /* groq */ `
     slug,
   },
   theme{
-    accentColor
+    name,
+    accentColor,
+    backgroundColor,
+    darkMode
   },
 `
 

@@ -7,11 +7,13 @@ export const FRONT_TEASER_FRAGMENT = defineQuery(`
   heading->{
     _id,
     title,
-    slug,
+    "slug": slug.current,
   },
   theme {
-    titleFont,
-    accentColor
+    name,
+    accentColor,
+    backgroundColor,
+    darkMode
   },
   contributors[]{
     kind,

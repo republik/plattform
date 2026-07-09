@@ -24,8 +24,10 @@ export const ARTICLE_QUERY = defineQuery(
       name,
     },
     theme {
-      darkMode,
-      accentColor
+      name,
+      accentColor,
+      backgroundColor,
+      darkMode
     },
     ${PORTABLE_TEXT_CONTENT_FRAGMENT},
     contributors[]{
