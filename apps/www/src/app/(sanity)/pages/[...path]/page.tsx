@@ -63,6 +63,8 @@ export default async function PostPage({
     params: { slug },
   })
 
+  console.log(page)
+
   if (!page) notFound()
 
   const {

@@ -580,7 +580,7 @@ export type Article = {
 
 export type Theme = {
   _type: 'theme'
-  titleFont?: 'SERIF' | 'SANS'
+  name?: 'EDITORIAL' | 'META' | 'PAGE'
   accentColor?: Color
   backgroundColor?: Color
   darkMode?: boolean
@@ -1669,7 +1669,7 @@ export type TEASER_QUERY_RESULT =
         slug: Slug
       } | null
       theme: {
-        titleFont: 'SANS' | 'SERIF' | null
+        titleFont: null
         accentColor: Color | null
       } | null
       contributors: Array<{
@@ -1714,7 +1714,7 @@ export type TEASER_QUERY_RESULT =
         slug: Slug
       } | null
       theme: {
-        titleFont: 'SANS' | 'SERIF' | null
+        titleFont: null
         accentColor: Color | null
       } | null
       contributors: null
@@ -2041,7 +2041,7 @@ export type FRONT_TEASER_FRAGMENT_QUERY_RESULT =
         slug: Slug
       } | null
       theme: {
-        titleFont: 'SANS' | 'SERIF' | null
+        titleFont: null
         accentColor: Color | null
       } | null
       contributors: Array<{
@@ -2086,7 +2086,7 @@ export type FRONT_TEASER_FRAGMENT_QUERY_RESULT =
         slug: Slug
       } | null
       theme: {
-        titleFont: 'SANS' | 'SERIF' | null
+        titleFont: null
         accentColor: Color | null
       } | null
       contributors: null
@@ -2157,7 +2157,7 @@ export type MENU_BLOCK_FRAGMENT_QUERY_RESULT = {
 
 // Source: src/app/(sanity)/groq/page-query.ts
 // Variable: PAGE_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    title,    cover {      ...    },    skipTitleBlock,    useCoverAsTitle,    heading->{      _id,      title,      "slug": slug.current    },    theme {      darkMode,      accentColor    },    pageBuilder[]{      _key,      _type,      _type == "menu" => {          hasSeparator,  heading {    title,    page->{      _id,      "title": pt::text(title),      "slug": slug.current    }  },  pages[]{    _key,    _type,    _type == "link" => {      href,      title    },    _type == "reference" => {      "page": @->{        _id,        "title": pt::text(title),        "slug": slug.current      }    }  }      },      _type == "callToAction" => {          target->{    _id,    _type,    _type == "newsletter" => {      name,      title    },    _type == "podcast" => {      podigeeSlug,      spotifyUrl,      appleUrl    },    _type == "articleCollection" => {      title,      description    }  }      },      _type == "editorBlock" => {          content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": @.reference->slug      }    }  }      },      _type == "teaserList" => {          appearance,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      _type == "article" &&      ^.source.collection._ref in articleCollections[]._ref    ]),    0  )      },      _type == "teaserItem" => {        reference -> {    _type,  "slug": slug.current,  heading->{    _id,    title,    slug,  },  theme {    titleFont,    accentColor  },  contributors[]{    kind,    "name": contributor->title,  },  "teaser": frontTeaser {    layout,    title,    lead,    image,    imageCredits,    imagePosition,    imagePadding,    textPosition,    textSize,    color,    backgroundColor  }  }      },    }  }
+// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    title,    cover {      ...    },    skipTitleBlock,    useCoverAsTitle,    heading->{      _id,      title,      "slug": slug.current    },    theme {      darkMode,      accentColor    },    pageBuilder[]{      _key,      _type,      _type == "menu" => {          hasSeparator,  heading {    title,    page->{      _id,      "title": pt::text(title),      "slug": slug.current    }  },  pages[]{    _key,    _type,    _type == "link" => {      href,      title    },    _type == "reference" => {      "page": @->{        _id,        "title": pt::text(title),        "slug": slug.current      }    }  }      },      _type == "callToAction" => {          target->{    _id,    _type,    _type == "newsletter" => {      name,      title    },    _type == "podcast" => {      podigeeSlug,      spotifyUrl,      appleUrl    },    _type == "articleCollection" => {      title,      description    }  }      },      _type == "editorBlock" => {          content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": @.reference->slug      }    }  }      },      _type == "teaserList" => {          appearance,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      _type == "article" &&      ^.source.collection._ref in articleCollections[]._ref    ]),    0  )      },      _type == "frontTeaser" => {        "reference": @->{  _type,  "slug": slug.current,  heading->{    _id,    title,    slug,  },  theme {    titleFont,    accentColor  },  contributors[]{    kind,    "name": contributor->title,  },  "teaser": frontTeaser {    layout,    title,    lead,    image,    imageCredits,    imagePosition,    imagePadding,    textPosition,    textSize,    color,    backgroundColor  }}      },    }  }
 export type PAGE_QUERY_RESULT = {
   _id: string
   title: InlineEditor
@@ -2732,7 +2732,7 @@ declare module '@sanity/client' {
     '*[_type in ["article", "page"]]{\n    \n  _id,\n  _type,\n  title,\n  description,\n  slug,\n  image,\n  heading->{\n    _id,\n    title,\n    slug,\n  },\n  theme{\n    accentColor\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n  }': FEED_TEASER_FRAGMENT_QUERY_RESULT
     '*[_type in ["article", "page"]][0]{\n    \n  _type,\n  "slug": slug.current,\n  heading->{\n    _id,\n    title,\n    slug,\n  },\n  theme {\n    titleFont,\n    accentColor\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  },\n  "teaser": frontTeaser {\n    layout,\n    title,\n    lead,\n    image,\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textSize,\n    color,\n    backgroundColor\n  }\n\n  }': FRONT_TEASER_FRAGMENT_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "menu"][0]{\n      \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current\n      }\n    }\n  }\n\n    }\n  }': MENU_BLOCK_FRAGMENT_QUERY_RESULT
-    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    cover {\n      ...\n    },\n    skipTitleBlock,\n    useCoverAsTitle,\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    pageBuilder[]{\n      _key,\n      _type,\n      _type == "menu" => {\n        \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current\n      }\n    }\n  }\n\n      },\n      _type == "callToAction" => {\n        \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n      },\n      _type == "editorBlock" => {\n        \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": @.reference->slug\n      }\n    }\n  }\n\n      },\n      _type == "teaserList" => {\n        \n  appearance,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      _type == "article" &&\n      ^.source.collection._ref in articleCollections[]._ref\n    ]),\n    0\n  )\n\n      },\n      _type == "teaserItem" => {\n        reference -> {\n  \n  _type,\n  "slug": slug.current,\n  heading->{\n    _id,\n    title,\n    slug,\n  },\n  theme {\n    titleFont,\n    accentColor\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  },\n  "teaser": frontTeaser {\n    layout,\n    title,\n    lead,\n    image,\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textSize,\n    color,\n    backgroundColor\n  }\n\n  }\n      },\n    }\n  }': PAGE_QUERY_RESULT
+    '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    cover {\n      ...\n    },\n    skipTitleBlock,\n    useCoverAsTitle,\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      darkMode,\n      accentColor\n    },\n    pageBuilder[]{\n      _key,\n      _type,\n      _type == "menu" => {\n        \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current\n      }\n    }\n  }\n\n      },\n      _type == "callToAction" => {\n        \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n      },\n      _type == "editorBlock" => {\n        \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": @.reference->slug\n      }\n    }\n  }\n\n      },\n      _type == "teaserList" => {\n        \n  appearance,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      _type == "article" &&\n      ^.source.collection._ref in articleCollections[]._ref\n    ]),\n    0\n  )\n\n      },\n      _type == "frontTeaser" => {\n        "reference": @->{\n  _type,\n  "slug": slug.current,\n  heading->{\n    _id,\n    title,\n    slug,\n  },\n  theme {\n    titleFont,\n    accentColor\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  },\n  "teaser": frontTeaser {\n    layout,\n    title,\n    lead,\n    image,\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textSize,\n    color,\n    backgroundColor\n  }\n}\n      },\n    }\n  }': PAGE_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "editorBlock"][0]{\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": @.reference->slug\n      }\n    }\n  }\n\n    }\n  }': PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT
     '*[slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image)\n  }': SEO_QUERY_RESULT
     'reference -> {\n  \n  _type,\n  "slug": slug.current,\n  heading->{\n    _id,\n    title,\n    slug,\n  },\n  theme {\n    titleFont,\n    accentColor\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  },\n  "teaser": frontTeaser {\n    layout,\n    title,\n    lead,\n    image,\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textSize,\n    color,\n    backgroundColor\n  }\n\n  }': TEASER_BLOCK_FRAGMENT_RESULT

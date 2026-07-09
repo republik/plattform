@@ -5,6 +5,7 @@ import { TeaserItem } from '@/app/(sanity)/pages/[...path]/components/blocks/tea
 import { TeaserList } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-list'
 import { css } from '@republik/theme/css'
 import { Menu } from './blocks/menu'
+import { FrontTeaser } from '@/app/(sanity)/components/teaser/front/front-teaser'
 
 export function PageBuilder({
   blocks,
@@ -13,6 +14,7 @@ export function PageBuilder({
   blocks: PageBuilderBlock[]
   documentId: string
 }) {
+  console.log({ blocks })
   return (
     <>
       {blocks.map((block) => (
@@ -51,8 +53,8 @@ function Block({
     case 'menu':
       return <Menu menu={block} />
 
-    case 'teaserItem':
-      return <TeaserItem teaser={block} />
+    case 'frontTeaser':
+      return <TeaserItem reference={block.reference} />
 
     /*
     case 'bestOfDialogue':
