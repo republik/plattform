@@ -750,6 +750,10 @@
       "value": "Erstellt am {formattedDate} um {formattedTime}"
     },
     {
+      "key": "account/transactions/empty",
+      "value": "Sie haben noch keine Transaktionen."
+    },
+    {
       "key": "pages/account/newsletter/lead",
       "value": "Abonnieren Sie unsere Newsletter per E-Mail, um auf dem Laufenden zu bleiben."
     },
