@@ -1,12 +1,12 @@
 import { CAROUSEL_TEASER_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
-import { defineQuery } from 'next-sanity'
+import { defineQuery } from 'next-sanity' // TODO: rename shortLead to shortDescription to be consistent
 
 // TODO: rename shortLead to shortDescription to be consistent
 export const CAROUSEL_TEASER_FRAGMENT = /* groq */ `
   _id,
   _type,
-  title,
-  description,
+  "title": coalesce(shortTitle, title),
+  "description": coalesce(shortLead, description),
   slug,
   image,
   publishDate,

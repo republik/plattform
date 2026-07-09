@@ -16,7 +16,10 @@ export function Heading({
 }) {
   const pathname = usePathname()
 
+  // we only show the heading for articles, not pages
   if (!teaser?.heading) return null
+
+  if (teaser._type != 'article') return null
 
   // Don't display the heading when we're already on the correct page. The heading slug
   // matches the browser path directly (via rewrite) or under /pages.

@@ -3,8 +3,8 @@ import {
   Heading,
   LinkOverlay,
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
+import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-in-groups-typography'
 import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
-import { feedTeaserTypography } from '@/app/(sanity)/components/teaser/feed/styles'
 import { FeedTeaserFragmentType } from '@/app/(sanity)/groq/feed-teaser-fragment'
 import { css, cx } from '@republik/theme/css'
 
@@ -16,7 +16,7 @@ export default function FeedTeaser({
   return (
     <div
       className={cx(
-        feedTeaserTypography,
+        typography,
         css({
           pb: 8,
           mb: 8,

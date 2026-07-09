@@ -5,34 +5,15 @@ import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { css } from '@republik/theme/css'
 import React from 'react'
 
-const DEFAULT_TEASERS_LIMIT = 5
+const DEFAULT_TEASERS_LIMIT = 20
 
-const carouselGrid = css({
-  display: 'grid',
-  gridTemplateColumns: 'repeat(5, 1fr)',
-  gridTemplateRows: 'auto',
-  overflowX: 'auto',
+const carousel = css({
+  gridColumn: 'full',
+  display: 'flex',
+  overflowX: 'scroll',
   scrollSnapType: 'x mandatory',
-  gap: 0,
-  mt: 12,
-  md: {
-    mx: 8,
-  },
-})
-
-const carouselHeader = css({
-  mt: 8,
-  mb: 8,
-  '& h3': {
-    textStyle: 'subtitleBold',
-    mb: 4,
-  },
-  '& .tagline': {
-    fontFamily: 'rubis',
-    fontWeight: 300,
-    fontStyle: 'italic',
-    fontSize: 16,
-  },
+  pb: '2',
+  mb: '6',
 })
 
 export async function Carousel({
@@ -44,13 +25,14 @@ export async function Carousel({
   documentId: string
   blockKey: string
 }) {
+  const { title, maxItems } = teaserList
   const { data } = await sanityFetch({
     query: CAROUSEL_BLOCK_QUERY,
     params: {
       documentId,
       blockKey,
       start: 0,
-      end: teaserList.maxItems ?? DEFAULT_TEASERS_LIMIT,
+      end: maxItems ?? DEFAULT_TEASERS_LIMIT,
     },
   })
 
@@ -58,22 +40,23 @@ export async function Carousel({
   if (!teasers?.length) return null
 
   return (
-    <div
-      className={css({
-        mb: '-6',
-        mt: '8',
-        textAlign: 'center',
-        gridColumn: 'breakout',
-      })}
-    >
-      <div className={carouselHeader}>
-        <h3>CAROUSEL</h3>
-      </div>
-      <div className={carouselGrid}>
+    <>
+      {!!title && (
+        <h2
+          className={css({
+            textStyle: 'subtitleBold',
+            textAlign: 'center',
+            mt: '8',
+          })}
+        >
+          {title}
+        </h2>
+      )}
+      <div className={carousel}>
         {teasers.map((teaser) => (
           <CarouselTeaser key={teaser._id} teaser={teaser} />
         ))}
       </div>
-    </div>
+    </>
   )
 }

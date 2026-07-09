@@ -1,6 +1,6 @@
 import { css } from '@republik/theme/css'
 
-export const feedTeaserTypography = css({
+export const typography = css({
   // title of the document
   '& h4': {
     fontFamily: 'rubis',
@@ -32,7 +32,7 @@ export const feedTeaserTypography = css({
     lineHeight: 1.2,
     letterSpacing: '0.01em',
   },
-  '& p.duration': {
+  '& p.time': {
     fontFamily: 'gtAmericaStandard',
     fontWeight: 400,
     fontSize: 14,

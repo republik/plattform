@@ -4,6 +4,7 @@ import { defineQuery } from 'next-sanity'
 export const TEASER_LIST_BLOCK_FRAGMENT = /* groq */ `
   appearance,
   maxItems,
+  title,
   "total": select(
     source.sourceType == "MANUAL" => count(source.items),
     source.sourceType == "COLLECTION" => count(*[

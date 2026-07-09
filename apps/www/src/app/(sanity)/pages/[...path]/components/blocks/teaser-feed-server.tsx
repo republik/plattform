@@ -23,7 +23,7 @@ export async function TeaserFeedServer({
   const teasers = data?.block?.teasers
   if (!teasers?.length) return null
 
-  const { total, maxItems } = teaserList
+  const { total, maxItems, title } = teaserList
   const appearance = stegaClean(teaserList.appearance)
 
   // we only offer this option when: list has > 20 teasers
@@ -43,6 +43,7 @@ export async function TeaserFeedServer({
       maxItems={maxItems}
       pageSize={MAX_TEASERS}
       loadMoreAction={loadMore}
+      title={title}
     />
   )
 }

@@ -5,7 +5,7 @@ import { FeedTeaserFragmentType } from '@/app/(sanity)/groq/feed-teaser-fragment
 import { Button } from '@/app/components/ui/button'
 import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 export function TeaserFeedClient({
   initialTeasers,
@@ -13,12 +13,14 @@ export function TeaserFeedClient({
   maxItems,
   pageSize,
   loadMoreAction,
+  title,
 }: {
   initialTeasers: FeedTeaserFragmentType[]
   total: number
-  maxItems: number
+  maxItems?: number
   pageSize: number
   loadMoreAction: () => Promise<FeedTeaserFragmentType[]>
+  title?: string
 }) {
   const [teasers, setTeasers] = useState(initialTeasers)
   const { t } = useTranslation()
@@ -38,11 +40,13 @@ export function TeaserFeedClient({
   // TODO: alternative teaser style
   return (
     <div className={css({ mt: '16' })}>
-      <h2 className={css({ textStyle: 'h1Sans', mb: '8' })}>
-        {t.pluralize('feed/title', {
-          count: total,
-        })}
+      <h2 className={css({ textStyle: 'subtitleBold', mb: '8' })}>
+        {title ||
+          t.pluralize('feed/title', {
+            count: total,
+          })}
       </h2>
+      <h2 className={css({ textStyle: 'subtitleBold' })}>{title}</h2>
       {shownTeasers.map((teaser) => (
         <FeedTeaser key={teaser._id} teaser={teaser} />
       ))}

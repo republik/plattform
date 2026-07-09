@@ -42,10 +42,9 @@ export const SanitySquareCover = ({ size }) => {
         aspectRatio: '1/1',
         objectFit: 'cover',
         height: 'auto',
-        backgroundColor: 'red',
+        backgroundColor: 'background.marketing',
       })}
       style={{ width: size }}
-      alt={'cover img'}
     />
   )
 }
