@@ -10,14 +10,12 @@ export const FEED_TEASER_FRAGMENT = /* groq */ `
   image,
   heading->{
     _id,
-    title,
+    "title": pt::text(title),
     slug,
   },
   theme {
     name,
     accentColor,
-    backgroundColor,
-    darkMode
   },
   contributors[]{
     kind,

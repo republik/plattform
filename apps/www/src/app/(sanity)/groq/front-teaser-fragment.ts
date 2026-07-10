@@ -1,19 +1,15 @@
-import type { FRONT_TEASER_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
+import { FRONT_TEASER_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
-export const FRONT_TEASER_FRAGMENT = defineQuery(`
+export const FRONT_TEASER_FRAGMENT = /* groq */ `
   _type,
   "slug": slug.current,
   heading->{
     _id,
-    title,
-    "slug": slug.current,
+    "title": pt::text(title),
   },
   theme {
     name,
-    accentColor,
-    backgroundColor,
-    darkMode
   },
   contributors[]{
     kind,
@@ -28,11 +24,12 @@ export const FRONT_TEASER_FRAGMENT = defineQuery(`
     imagePosition,
     imagePadding,
     textPosition,
+    textAlignment,
     textSize,
     color,
     backgroundColor
   }
-`)
+`
 
 // Hack to not rely on the main query for types
 const FRONT_TEASER_FRAGMENT_QUERY = defineQuery(

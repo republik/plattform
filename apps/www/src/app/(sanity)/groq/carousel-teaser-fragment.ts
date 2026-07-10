@@ -12,14 +12,12 @@ export const CAROUSEL_TEASER_FRAGMENT = /* groq */ `
   publishDate,
   heading->{
     _id,
-    title,
+    "title": pt::text(title),
     slug,
   },
   theme{
     name,
     accentColor,
-    backgroundColor,
-    darkMode
   },
 `
 

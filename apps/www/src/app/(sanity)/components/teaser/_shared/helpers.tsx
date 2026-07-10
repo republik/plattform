@@ -33,7 +33,7 @@ export function Heading({
 
   return (
     <h5 style={{ color: teaser.theme?.accentColor?.hex }}>
-      <InlinePortableText value={teaser.heading.title} />
+      {teaser.heading.title}
     </h5>
   )
 }

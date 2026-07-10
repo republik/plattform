@@ -69,6 +69,8 @@ export default async function ArticlePage({
 
   const { theme, cover, heading, title, description, byline } = article
 
+  console.log(description)
+
   return (
     <EventTrackingContext category='Article'>
       <Theme theme={theme} />
