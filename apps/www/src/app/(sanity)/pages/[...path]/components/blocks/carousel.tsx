@@ -1,6 +1,9 @@
 import { CarouselTeaser } from '@/app/(sanity)/components/teaser/carousel'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
-import { TEASERS_QUERY_DESC } from '@/app/(sanity)/groq/teasers-query'
+import {
+  TEASERS_QUERY_ASC,
+  TEASERS_QUERY_DESC,
+} from '@/app/(sanity)/groq/teasers-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { css } from '@republik/theme/css'
 import React from 'react'
@@ -25,9 +28,12 @@ export async function Carousel({
   documentId: string
   blockKey: string
 }) {
-  const { title, maxItems } = teaserList
+  const { title, maxItems, series } = teaserList
+  // We display series in chronological order, starting with the first episode
+  const QUERY = series ? TEASERS_QUERY_ASC : TEASERS_QUERY_DESC
+
   const { data } = await sanityFetch({
-    query: TEASERS_QUERY_DESC,
+    query: QUERY,
     params: {
       documentId,
       blockKey,

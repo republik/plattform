@@ -26,7 +26,6 @@ export const ARTICLE_QUERY = defineQuery(
     theme {
       name,
       accentColor,
-      backgroundColor,
       darkMode
     },
     ${PORTABLE_TEXT_CONTENT_FRAGMENT},
@@ -38,7 +37,7 @@ export const ARTICLE_QUERY = defineQuery(
       "description": contributor->description,
       "portrait": contributor->portrait
     },
-    "articleCollection": articleCollections[0]->{
+    "articleCollection": articleCollections[featured == true][0].collection->{
       _id,
       title,
       description,

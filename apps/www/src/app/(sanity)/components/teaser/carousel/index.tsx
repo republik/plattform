@@ -34,7 +34,16 @@ export function CarouselTeaser({ teaser }: { teaser: TeaserFragmentType }) {
     >
       <div className={cx(typography, carouselItemStyle)}>
         <SanitySquareCover size={248} />
-        <div className={css({ px: '4', py: '6', textAlign: 'center' })}>
+        <div
+          className={css({
+            px: '3',
+            py: '6',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '2',
+          })}
+        >
           <Heading teaser={teaser} />
           <h4 className='editorial'>
             <LinkOverlay teaser={teaser} />

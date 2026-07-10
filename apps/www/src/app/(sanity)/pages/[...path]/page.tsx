@@ -88,30 +88,24 @@ export default async function PostPage({
         {cover && <EditorialImage value={cover} />}
 
         {renderTitle && (
-          <>
+          <div
+            className={css({
+              my: '8',
+              gridColumn: 'breakout',
+            })}
+            style={{
+              textAlign: theme.name === 'EDITORIAL' ? 'left' : 'center',
+            }}
+          >
             {heading && (
-              <p
-                className={css({
-                  mb: '-6',
-                  mt: '8',
-                  textAlign: 'center',
-                  gridColumn: 'breakout',
-                })}
-                style={{ color: 'var(--page-theme-accent-color)' }}
-              >
+              <p style={{ color: 'var(--page-theme-accent-color)' }}>
                 <Link href={heading.slug}>
                   <InlinePortableText value={heading.title} />
                 </Link>
               </p>
             )}
 
-            <h1
-              className={css({
-                mt: '12',
-                textAlign: 'center',
-                gridColumn: 'breakout',
-              })}
-            >
+            <h1 className={css({ mt: '12' })}>
               <InlinePortableText value={title} />
             </h1>
 
@@ -131,7 +125,7 @@ export default async function PostPage({
             >
               <EditLink _id={_id} documentType='page' />
             </div>
-          </>
+          </div>
         )}
 
         <PageBuilder blocks={pageBuilder} documentId={_id} />

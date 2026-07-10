@@ -6,7 +6,6 @@ import {
   TEASERS_QUERY_DESC,
 } from '@/app/(sanity)/groq/teasers-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
-import { stegaClean } from 'next-sanity'
 import { TeaserLoaderClient } from './teaser-loader-client'
 
 const MAX_TEASERS = 24
@@ -20,8 +19,8 @@ export async function TeaserLoaderServer({
   documentId: string
   blockKey: string
 }) {
-  const appearance = stegaClean(teaserList.appearance)
-  const QUERY = appearance === 'GRID' ? TEASERS_QUERY_ASC : TEASERS_QUERY_DESC
+  // We display series in chronological order, starting with the first episode
+  const QUERY = teaserList.series ? TEASERS_QUERY_ASC : TEASERS_QUERY_DESC
 
   const { data } = await sanityFetch({
     query: QUERY,

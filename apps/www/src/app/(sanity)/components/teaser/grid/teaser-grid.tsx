@@ -11,19 +11,27 @@ import React from 'react'
 
 export default function GridTeaser({ teaser }: { teaser: TeaserFragmentType }) {
   return (
-    <div className={cx(typography, css({ position: 'relative' }))}>
+    <div
+      className={cx(
+        typography,
+        css({
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2',
+        }),
+      )}
+    >
       <Heading teaser={teaser} />
       <SanitySquareCover size='100%' />
-      <div className={css({ mt: '4' })}>
-        <h4 className='editorial'>
-          <LinkOverlay teaser={teaser} />
-        </h4>
-        {teaser.description && (
-          <p className='description'>
-            <InlinePortableText value={teaser.description} />
-          </p>
-        )}
-      </div>
+      <h4 className='editorial'>
+        <LinkOverlay teaser={teaser} />
+      </h4>
+      {teaser.description && (
+        <p className='description'>
+          <InlinePortableText value={teaser.description} />
+        </p>
+      )}
     </div>
   )
 }

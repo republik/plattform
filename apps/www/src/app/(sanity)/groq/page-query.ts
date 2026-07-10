@@ -27,7 +27,6 @@ export const PAGE_QUERY = defineQuery(
     theme {
       name,
       accentColor,
-      backgroundColor,
       darkMode
     },
     pageBuilder[]{

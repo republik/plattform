@@ -9,10 +9,12 @@ export const TEASER_LIST_BLOCK_FRAGMENT = /* groq */ `
     source.sourceType == "MANUAL" => count(source.items),
     source.sourceType == "COLLECTION" => count(*[
       _type == "article" &&
-      ^.source.collection._ref in articleCollections[]._ref
+      ^.source.collection._ref in articleCollections[].collection._ref
     ]),
     0
-  )
+  ),
+  "series": source.sourceType == "COLLECTION" &&
+    source.collection->series == true
 `
 
 // Hack to not rely on the main query for types

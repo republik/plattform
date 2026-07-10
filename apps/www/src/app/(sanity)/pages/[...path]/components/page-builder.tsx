@@ -5,7 +5,6 @@ import { TeaserItem } from '@/app/(sanity)/pages/[...path]/components/blocks/tea
 import { TeaserList } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-list'
 import { css } from '@republik/theme/css'
 import { Menu } from './blocks/menu'
-import { FrontTeaser } from '@/app/(sanity)/components/teaser/front/front-teaser'
 
 export function PageBuilder({
   blocks,

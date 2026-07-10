@@ -20,13 +20,16 @@ export default function FeedTeaser({ teaser }: { teaser: TeaserFragmentType }) {
           borderBottomStyle: 'solid',
           borderBottomColor: 'divider',
           position: 'relative', // for the link overlay placement
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '2',
           // exclude last item from border
           '&:last-of-type': { borderBottom: 'none', pb: 0 },
         }),
       )}
     >
       <Heading teaser={teaser} />
-      <h4>
+      <h4 className={teaser.theme.name !== 'EDITORIAL' ? 'meta' : ''}>
         <LinkOverlay teaser={teaser} />
       </h4>
       <p className='description'>
