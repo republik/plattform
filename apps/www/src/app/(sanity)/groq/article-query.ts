@@ -1,5 +1,5 @@
-import { FEED_TEASER_FRAGMENT } from '@/app/(sanity)/groq/feed-teaser-fragment'
 import { PORTABLE_TEXT_CONTENT_FRAGMENT } from '@/app/(sanity)/groq/portable-text-content-fragment'
+import { TEASER_FRAGMENT } from '@/app/(sanity)/groq/teaser-fragment'
 import { defineQuery } from 'next-sanity'
 
 export const ARTICLE_QUERY = defineQuery(
@@ -45,7 +45,7 @@ export const ARTICLE_QUERY = defineQuery(
       image
     },
     articleRecommendations[]->{
-      ${FEED_TEASER_FRAGMENT}
+      ${TEASER_FRAGMENT}
     }
   }`,
 )

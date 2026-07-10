@@ -5,14 +5,10 @@ import {
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-in-groups-typography'
 import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
-import { FeedTeaserFragmentType } from '@/app/(sanity)/groq/feed-teaser-fragment'
+import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 import { css, cx } from '@republik/theme/css'
 
-export default function FeedTeaser({
-  teaser,
-}: {
-  teaser: FeedTeaserFragmentType
-}) {
+export default function FeedTeaser({ teaser }: { teaser: TeaserFragmentType }) {
   return (
     <div
       className={cx(

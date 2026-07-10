@@ -4,7 +4,7 @@ import {
   LinkOverlay,
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-in-groups-typography'
-import { CarouselTeaserFragmentType } from '@/app/(sanity)/groq/carousel-teaser-fragment'
+import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 import { SanitySquareCover } from '@/app/components/assets/SquareCover'
 import { css, cx } from '@republik/theme/css'
 import React from 'react'
@@ -21,11 +21,7 @@ const carouselItemStyle = css({
   borderColor: 'divider',
 })
 
-export function CarouselTeaser({
-  teaser,
-}: {
-  teaser: CarouselTeaserFragmentType
-}) {
+export function CarouselTeaser({ teaser }: { teaser: TeaserFragmentType }) {
   return (
     <div
       className={css({

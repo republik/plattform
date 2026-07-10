@@ -1,19 +1,14 @@
 'use client'
 
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { CarouselTeaserFragmentType } from '@/app/(sanity)/groq/carousel-teaser-fragment'
-import { FeedTeaserFragmentType } from '@/app/(sanity)/groq/feed-teaser-fragment'
+import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
 import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-export function Heading({
-  teaser,
-}: {
-  teaser: FeedTeaserFragmentType | CarouselTeaserFragmentType
-}) {
+export function Heading({ teaser }: { teaser: TeaserFragmentType }) {
   const pathname = usePathname()
 
   // we only show the heading for articles, not pages
@@ -38,11 +33,7 @@ export function Heading({
   )
 }
 
-export function LinkOverlay({
-  teaser,
-}: {
-  teaser: FeedTeaserFragmentType | CarouselTeaserFragmentType
-}) {
+export function LinkOverlay({ teaser }: { teaser: TeaserFragmentType }) {
   const trackEvent = useTrackEvent()
 
   return (

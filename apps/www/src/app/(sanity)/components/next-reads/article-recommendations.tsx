@@ -1,7 +1,7 @@
 'use client'
 
 import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
-import { FeedTeaserFragmentType } from '@/app/(sanity)/groq/feed-teaser-fragment'
+import { FeedTeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 // TODO: rename ./sanity-helpers to ./helpers once we are fully migrated
 import { useTranslation } from '@/lib/withT'
 import { css, cx } from '@republik/theme/css'

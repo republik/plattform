@@ -7,7 +7,12 @@ export const typography = css({
     fontWeight: 'medium',
     fontSize: 18,
     lineHeight: 1.2,
-    marginBottom: 2,
+    /*fontFamily: 'republikSerif',
+    fontWeight: 'black',
+    fontSize: 'l',
+    lineHeight: 1.1,
+    md: { fontSize: 'xl' },*/
+    marginBottom: 3,
   },
   // format or series name
   '& h5': {
@@ -16,7 +21,7 @@ export const typography = css({
     fontSize: 14,
     lineHeight: 1,
     letterSpacing: '-0.02em',
-    marginBottom: 4,
+    marginBottom: 3,
   },
   '& p.description': {
     fontFamily: 'rubis',

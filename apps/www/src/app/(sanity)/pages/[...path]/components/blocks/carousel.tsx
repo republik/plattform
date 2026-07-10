@@ -1,6 +1,6 @@
 import { CarouselTeaser } from '@/app/(sanity)/components/teaser/carousel'
-import { CAROUSEL_BLOCK_QUERY } from '@/app/(sanity)/groq/carousel-block-query'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
+import { TEASERS_QUERY } from '@/app/(sanity)/groq/teasers-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { css } from '@republik/theme/css'
 import React from 'react'
@@ -27,7 +27,7 @@ export async function Carousel({
 }) {
   const { title, maxItems } = teaserList
   const { data } = await sanityFetch({
-    query: CAROUSEL_BLOCK_QUERY,
+    query: TEASERS_QUERY,
     params: {
       documentId,
       blockKey,

@@ -1,12 +1,12 @@
 'use client'
 
-import { FeedTeaserFragmentType } from '@/app/(sanity)/groq/feed-teaser-fragment'
+import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 import { stegaClean } from 'next-sanity'
 
 export function BylineShort({
   contributors,
 }: {
-  contributors: FeedTeaserFragmentType['contributors']
+  contributors: TeaserFragmentType['contributors']
 }) {
   const authorsNames = contributors
     ?.filter((contributor) => contributor?.kind?.includes('Text'))
