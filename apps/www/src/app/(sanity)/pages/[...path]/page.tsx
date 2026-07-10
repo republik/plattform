@@ -1,5 +1,6 @@
 import { EditLink } from '@/app/(sanity)/components/edit-link'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
+import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasContent'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { Theme } from '@/app/(sanity)/components/theme'
 import { PAGE_QUERY } from '@/app/(sanity)/groq/page-query'
@@ -68,6 +69,7 @@ export default async function PostPage({
   const {
     _id,
     title,
+    description,
     cover,
     heading,
     useCoverAsTitle,
@@ -82,7 +84,7 @@ export default async function PostPage({
     <EventTrackingContext category='Page'>
       <Theme theme={theme} />
 
-      <div className={editorialContent({ theme: 'page' })}>
+      <div className={editorialContent({ theme: theme.name })}>
         {cover && <EditorialImage value={cover} />}
 
         {renderTitle && (
@@ -112,6 +114,12 @@ export default async function PostPage({
             >
               <InlinePortableText value={title} />
             </h1>
+
+            {hasContent(description) && (
+              <h3 className={css({ mt: '4' })}>
+                <InlinePortableText value={description} />
+              </h3>
+            )}
 
             <div
               className={css({

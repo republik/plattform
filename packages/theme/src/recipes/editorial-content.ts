@@ -91,7 +91,7 @@ export const editorialContentRecipe = defineRecipe({
 
   variants: {
     theme: {
-      editorial: contentParts({
+      EDITORIAL: contentParts({
         heading: { textStyle: 'editorialHeading' },
         title: { textStyle: 'editorialTitle' },
         lead: { textStyle: 'editorialLead' },
@@ -104,7 +104,20 @@ export const editorialContentRecipe = defineRecipe({
           textStyle: 'editorialParagraph',
         },
       }),
-      page: contentParts({
+      META: contentParts({
+        heading: { textStyle: 'editorialHeading' },
+        title: { textStyle: 'metaTitle' },
+        lead: { textStyle: 'editorialLead' },
+        paragraphs: { textStyle: 'editorialParagraph' },
+        subheadings: { textStyle: 'editorialSubheading' },
+        unorderedListItems: {
+          textStyle: 'editorialParagraph',
+        },
+        orderedListItems: {
+          textStyle: 'editorialParagraph',
+        },
+      }),
+      PAGE: contentParts({
         heading: { textStyle: 'editorialHeading' },
         title: { textStyle: 'metaTitle' },
         paragraphs: { textStyle: 'metaParagraph' },
@@ -120,6 +133,6 @@ export const editorialContentRecipe = defineRecipe({
   },
 
   defaultVariants: {
-    theme: 'editorial',
+    theme: 'EDITORIAL',
   },
 })

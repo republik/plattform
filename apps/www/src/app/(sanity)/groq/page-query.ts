@@ -13,6 +13,7 @@ export const PAGE_QUERY = defineQuery(
   `*[_type == "page" && slug.current == $slug][0]{
     _id,
     title,
+    description,
     cover {
       ...
     },

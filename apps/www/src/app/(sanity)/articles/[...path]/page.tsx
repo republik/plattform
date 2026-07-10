@@ -1,6 +1,7 @@
 import { EditLink } from '@/app/(sanity)/components/edit-link'
 import { ArticleRecommendations } from '@/app/(sanity)/components/next-reads/article-recommendations'
 import { EditorialImage } from '@/app/(sanity)/components/portable-text/editorial-image'
+import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasContent'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { ArticlePortableText } from '@/app/(sanity)/components/portable-text/renderArticle'
 import { Theme } from '@/app/(sanity)/components/theme'
@@ -69,12 +70,10 @@ export default async function ArticlePage({
 
   const { theme, cover, heading, title, description, byline } = article
 
-  console.log(description)
-
   return (
     <EventTrackingContext category='Article'>
       <Theme theme={theme} />
-      <article className={editorialContent()}>
+      <article className={editorialContent({ theme: theme.name })}>
         {/* TITLE BLOCK */}
         {cover && <EditorialImage value={cover} />}
         {heading && (
@@ -97,9 +96,11 @@ export default async function ArticlePage({
         >
           <InlinePortableText value={title} />
         </h1>
-        <h3 className={css({ mt: '4' })}>
-          <InlinePortableText value={description} />
-        </h3>
+        {hasContent(description) && (
+          <h3 className={css({ mt: '4' })}>
+            <InlinePortableText value={description} />
+          </h3>
+        )}
         <p
           className={css({
             textStyle: 'editorialByline',
