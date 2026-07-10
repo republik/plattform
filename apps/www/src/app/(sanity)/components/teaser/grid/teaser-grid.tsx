@@ -14,14 +14,16 @@ export default function GridTeaser({ teaser }: { teaser: TeaserFragmentType }) {
     <div className={cx(typography, css({ position: 'relative' }))}>
       <Heading teaser={teaser} />
       <SanitySquareCover size='100%' />
-      <h4>
-        <LinkOverlay teaser={teaser} />
-      </h4>
-      {teaser.description && (
-        <p className='description'>
-          <InlinePortableText value={teaser.description} />
-        </p>
-      )}
+      <div className={css({ mt: '4' })}>
+        <h4 className='editorial'>
+          <LinkOverlay teaser={teaser} />
+        </h4>
+        {teaser.description && (
+          <p className='description'>
+            <InlinePortableText value={teaser.description} />
+          </p>
+        )}
+      </div>
     </div>
   )
 }

@@ -15,7 +15,7 @@ export const typography = css({
     fontSize: 'l',
     lineHeight: 1.1,
     md: { fontSize: 'xl' },
-    marginBottom: 2,
+    marginBottom: '1',
   },
   '& h4.meta': {
     fontFamily: 'gtAmericaStandard',
