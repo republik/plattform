@@ -6,6 +6,7 @@ import { TeaserFeed } from '@/app/(sanity)/pages/[...path]/components/blocks/tea
 import { TeaserGrid } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-grid'
 import { Button } from '@/app/components/ui/button'
 import { useTranslation } from '@/lib/withT'
+import { SeriesNav } from '@project-r/styleguide'
 import { css } from '@republik/theme/css'
 import { stegaClean } from 'next-sanity'
 import React, { useState } from 'react'
@@ -21,7 +22,7 @@ export function TeaserLoaderClient({
   pageSize: number
   loadMoreAction: () => Promise<TeaserFragmentType[]>
 }) {
-  const { total, title, maxItems } = teaserList
+  const { total, title, maxItems, series } = teaserList
   const appearance = stegaClean(teaserList.appearance)
 
   const [teasers, setTeasers] = useState(initialTeasers)
@@ -42,7 +43,7 @@ export function TeaserLoaderClient({
   return (
     <>
       {appearance === 'GRID' ? (
-        <TeaserGrid teasers={teasers} title={title} />
+        <TeaserGrid teasers={teasers} title={title} series={series} />
       ) : (
         <TeaserFeed total={total} teasers={shownTeasers} title={title} />
       )}

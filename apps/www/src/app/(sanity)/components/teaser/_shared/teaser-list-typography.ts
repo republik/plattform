@@ -29,6 +29,14 @@ export const typography = css({
     lineHeight: 1,
     letterSpacing: '-0.02em',
   },
+  // above image label
+  '& h6': {
+    fontFamily: 'gtAmericaStandard',
+    fontWeight: 300,
+    fontSize: 14,
+    lineHeight: 1,
+    letterSpacing: '-0.02em',
+  },
   '& p.description': {
     fontFamily: 'rubis',
     fontWeight: 400,
