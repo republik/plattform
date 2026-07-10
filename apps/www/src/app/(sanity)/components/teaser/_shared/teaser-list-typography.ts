@@ -7,11 +7,21 @@ export const typography = css({
     fontWeight: 'medium',
     fontSize: 18,
     lineHeight: 1.2,
-    /*fontFamily: 'republikSerif',
+    marginBottom: 3,
+  },
+  '& h4.editorial': {
+    fontFamily: 'republikSerif',
     fontWeight: 'black',
     fontSize: 'l',
     lineHeight: 1.1,
-    md: { fontSize: 'xl' },*/
+    md: { fontSize: 'xl' },
+    marginBottom: 2,
+  },
+  '& h4.meta': {
+    fontFamily: 'gtAmericaStandard',
+    fontWeight: 'medium',
+    fontSize: 18,
+    lineHeight: 1.2,
     marginBottom: 3,
   },
   // format or series name

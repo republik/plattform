@@ -3,7 +3,7 @@ import {
   Heading,
   LinkOverlay,
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
-import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-in-groups-typography'
+import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
 import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 import { SanitySquareCover } from '@/app/components/assets/SquareCover'
 import { css, cx } from '@republik/theme/css'
@@ -36,7 +36,7 @@ export function CarouselTeaser({ teaser }: { teaser: TeaserFragmentType }) {
         <SanitySquareCover size={248} />
         <div className={css({ px: '4', py: '6', textAlign: 'center' })}>
           <Heading teaser={teaser} />
-          <h4>
+          <h4 className='editorial'>
             <LinkOverlay teaser={teaser} />
           </h4>
           {teaser.description && (

@@ -1,3 +1,5 @@
+'use server'
+
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
 import {
   TEASERS_QUERY_ASC,
@@ -7,7 +9,7 @@ import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { stegaClean } from 'next-sanity'
 import { TeaserLoaderClient } from './teaser-loader-client'
 
-export const MAX_TEASERS = 24
+const MAX_TEASERS = 24
 
 export async function TeaserLoaderServer({
   teaserList,

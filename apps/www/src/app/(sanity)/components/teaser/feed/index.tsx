@@ -3,7 +3,7 @@ import {
   Heading,
   LinkOverlay,
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
-import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-in-groups-typography'
+import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
 import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
 import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 import { css, cx } from '@republik/theme/css'
