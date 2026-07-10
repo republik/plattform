@@ -8,7 +8,7 @@ import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import { Metadata } from 'next'
 import Link from 'next/link'
@@ -89,10 +89,13 @@ export default async function PostPage({
 
         {renderTitle && (
           <div
-            className={css({
-              my: '8',
-              gridColumn: 'breakout',
-            })}
+            className={cx(
+              'title-block',
+              css({
+                my: '8',
+                gridColumn: 'breakout',
+              }),
+            )}
             style={{
               textAlign: theme.name === 'EDITORIAL' ? 'left' : 'center',
             }}
@@ -105,12 +108,12 @@ export default async function PostPage({
               </p>
             )}
 
-            <h1 className={css({ mt: '12' })}>
+            <h1 className={css({ mt: '12', mb: '4' })}>
               <InlinePortableText value={title} />
             </h1>
 
             {hasContent(description) && (
-              <h3 className={css({ mt: '4' })}>
+              <h3 className={css({ mb: '8' })}>
                 <InlinePortableText value={description} />
               </h3>
             )}

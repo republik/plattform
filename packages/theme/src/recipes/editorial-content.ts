@@ -12,9 +12,9 @@ const contentParts = defineParts({
   fullWidthBlocks: { selector: '& > .full' },
   paragraphs: { selector: '& > p' },
   subheadings: { selector: '& > h2' },
-  heading: { selector: '& > p:has(~ h1)' },
-  title: { selector: '& > h1' },
-  lead: { selector: '& > h3' },
+  heading: { selector: '& > p:has(~ h1), , & .title-block p' },
+  title: { selector: '& > h1, & .title-block h1' },
+  lead: { selector: '& > h3, & .title-block h3' },
   unorderedLists: { selector: '& > ul' },
   orderedLists: { selector: '& > ol' },
   unorderedListItems: { selector: '& > ul li' },
@@ -135,4 +135,8 @@ export const editorialContentRecipe = defineRecipe({
   defaultVariants: {
     theme: 'EDITORIAL',
   },
+
+  // The variant is chosen at runtime (from Sanity theme.name), so Panda's
+  // static extractor can't see which ones are used — generate them all.
+  staticCss: [{ theme: ['*'] }],
 })
