@@ -7,10 +7,8 @@ import {
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
 import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 import { SanitySquareCover } from '@/app/components/assets/SquareCover'
-import { Button } from '@/app/components/ui/button'
-import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
-import React, { useState } from 'react'
+import React from 'react'
 
 const gridStyle = css({
   gridColumn: 'breakout',
@@ -60,33 +58,12 @@ function GridTeaser({ teaser }: { teaser: TeaserFragmentType }) {
 }
 
 export async function TeaserGrid({
-  initialTeasers,
-  total,
-  maxItems,
-  pageSize,
-  loadMoreAction,
+  teasers,
   title,
 }: {
-  initialTeasers: TeaserFragmentType[]
-  total: number
-  maxItems?: number
-  pageSize: number
-  loadMoreAction: () => Promise<TeaserFragmentType[]>
+  teasers: TeaserFragmentType[]
   title?: string
 }) {
-  const [teasers, setTeasers] = useState(initialTeasers)
-  const { t } = useTranslation()
-
-  async function onLoadMore() {
-    const more = await loadMoreAction()
-    setTeasers((prev) => prev.concat(more))
-  }
-
-  const shownTeasers = teasers.slice(0, maxItems ?? undefined)
-
-  const showLoadMoreButton =
-    total > teasers.length && shownTeasers.length < (maxItems ?? Infinity)
-
   return (
     <>
       {!!title && (
@@ -105,19 +82,6 @@ export async function TeaserGrid({
           <GridTeaser key={teaser._id} teaser={teaser} />
         ))}
       </div>
-      {showLoadMoreButton && (
-        <Button
-          type='button'
-          variant='link'
-          className={css({ color: 'primary', textDecoration: 'none' })}
-          onClick={onLoadMore}
-        >
-          {t('feed/loadMore', {
-            count: pageSize,
-            remaining: total - shownTeasers.length,
-          })}
-        </Button>
-      )}
     </>
   )
 }

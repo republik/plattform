@@ -1,6 +1,6 @@
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
 import { Carousel } from '@/app/(sanity)/pages/[...path]/components/blocks/carousel'
-import { TeaserLoader } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-loader'
+import { TeaserLoaderServer } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-loader-server'
 import { stegaClean } from 'next-sanity'
 
 export async function TeaserList({
@@ -18,7 +18,7 @@ export async function TeaserList({
 
   if (needsLoader)
     return (
-      <TeaserLoader
+      <TeaserLoaderServer
         teaserList={teaserList}
         documentId={documentId}
         blockKey={blockKey}

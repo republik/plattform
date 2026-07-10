@@ -2534,9 +2534,90 @@ export type TEASER_LIST_BLOCK_FRAGMENT_QUERY_RESULT = {
 } | null
 
 // Source: src/app/(sanity)/groq/teasers-query.ts
-// Variable: TEASERS_QUERY
-// Query: *[_type == "page" && _id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{      "teasers": select(        source.sourceType == "MANUAL" => source.items[$start...$end]->{            _id,  _type,  "title": coalesce(shortTitle, title),  "description": coalesce(shortLead, description),  slug,  image,  publishDate,  heading->{    _id,    "title": pt::text(title),    slug,  },  theme {    name,    accentColor,  },  contributors[]{    kind,    "name": contributor->title,  }        },        source.sourceType == "COLLECTION" => *[          _type == "article" &&          ^.source.collection._ref in articleCollections[]._ref        ] | order(publishDate desc) [$start...$end] {            _id,  _type,  "title": coalesce(shortTitle, title),  "description": coalesce(shortLead, description),  slug,  image,  publishDate,  heading->{    _id,    "title": pt::text(title),    slug,  },  theme {    name,    accentColor,  },  contributors[]{    kind,    "name": contributor->title,  }        }, []      ),    }  }
-export type TEASERS_QUERY_RESULT = {
+// Variable: TEASERS_QUERY_DESC
+// Query: *[_type == "page" && _id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{     "teasers": select(        source.sourceType == "MANUAL" => source.items[$start...$end]->{            _id,  _type,  "title": coalesce(shortTitle, title),  "description": coalesce(shortLead, description),  slug,  image,  publishDate,  heading->{    _id,    "title": pt::text(title),    slug,  },  theme {    name,    accentColor,  },  contributors[]{    kind,    "name": contributor->title,  }        },        source.sourceType == "COLLECTION" => *[          _type == "article" &&          ^.source.collection._ref in articleCollections[]._ref        ] | order(publishDate desc) [$start...$end] {            _id,  _type,  "title": coalesce(shortTitle, title),  "description": coalesce(shortLead, description),  slug,  image,  publishDate,  heading->{    _id,    "title": pt::text(title),    slug,  },  theme {    name,    accentColor,  },  contributors[]{    kind,    "name": contributor->title,  }        }, []      ),    }  }
+export type TEASERS_QUERY_DESC_RESULT = {
+  block:
+    | {
+        teasers:
+          | Array<{
+              _id: string
+              _type: 'article'
+              title: InlineEditor
+              description: InlineEditor | null
+              slug: Slug
+              image: Image1 | null
+              publishDate: string | null
+              heading: {
+                _id: string
+                title: string
+                slug: Slug
+              } | null
+              theme: {
+                name: 'EDITORIAL' | 'META' | 'PAGE' | null
+                accentColor: Color | null
+              } | null
+              contributors: Array<{
+                kind: string | null
+                name: string | null
+              }> | null
+            }>
+          | Array<never>
+          | Array<
+              | {
+                  _id: string
+                  _type: 'article'
+                  title: InlineEditor
+                  description: InlineEditor | null
+                  slug: Slug
+                  image: Image1 | null
+                  publishDate: string | null
+                  heading: {
+                    _id: string
+                    title: string
+                    slug: Slug
+                  } | null
+                  theme: {
+                    name: 'EDITORIAL' | 'META' | 'PAGE' | null
+                    accentColor: Color | null
+                  } | null
+                  contributors: Array<{
+                    kind: string | null
+                    name: string | null
+                  }> | null
+                }
+              | {
+                  _id: string
+                  _type: 'page'
+                  title: InlineEditor
+                  description: InlineEditor | null
+                  slug: Slug
+                  image: Image1 | null
+                  publishDate: string | null
+                  heading: {
+                    _id: string
+                    title: string
+                    slug: Slug
+                  } | null
+                  theme: {
+                    name: 'EDITORIAL' | 'META' | 'PAGE' | null
+                    accentColor: Color | null
+                  } | null
+                  contributors: null
+                }
+            >
+          | null
+      }
+    | {
+        teasers: Array<never>
+      }
+    | null
+} | null
+
+// Source: src/app/(sanity)/groq/teasers-query.ts
+// Variable: TEASERS_QUERY_ASC
+// Query: *[_type == "page" && _id == $documentId][0]{    "block": pageBuilder[_key == $blockKey][0]{     "teasers": select(        source.sourceType == "MANUAL" => source.items[$start...$end]->{            _id,  _type,  "title": coalesce(shortTitle, title),  "description": coalesce(shortLead, description),  slug,  image,  publishDate,  heading->{    _id,    "title": pt::text(title),    slug,  },  theme {    name,    accentColor,  },  contributors[]{    kind,    "name": contributor->title,  }        },        source.sourceType == "COLLECTION" => *[          _type == "article" &&          ^.source.collection._ref in articleCollections[]._ref        ] | order(publishDate asc) [$start...$end] {            _id,  _type,  "title": coalesce(shortTitle, title),  "description": coalesce(shortLead, description),  slug,  image,  publishDate,  heading->{    _id,    "title": pt::text(title),    slug,  },  theme {    name,    accentColor,  },  contributors[]{    kind,    "name": contributor->title,  }        }, []      ),    }  }
+export type TEASERS_QUERY_ASC_RESULT = {
   block:
     | {
         teasers:
@@ -2630,6 +2711,7 @@ declare module '@sanity/client' {
     '*[slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image)\n  }': SEO_QUERY_RESULT
     '*[_type in ["article", "page"]]{\n    \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  slug,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    slug,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n  }': TEASER_FRAGMENT_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "teaserList"][0]{\n      \n  appearance,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      _type == "article" &&\n      ^.source.collection._ref in articleCollections[]._ref\n    ]),\n    0\n  )\n\n    }\n  }': TEASER_LIST_BLOCK_FRAGMENT_QUERY_RESULT
-    '\n  *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n      "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  slug,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    slug,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n        },\n        source.sourceType == "COLLECTION" => *[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[]._ref\n        ] | order(publishDate desc) [$start...$end] {\n          \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  slug,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    slug,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n        }, []\n      ),\n    }\n  }\n': TEASERS_QUERY_RESULT
+    '\n  *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n     "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  slug,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    slug,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n        },\n        source.sourceType == "COLLECTION" => *[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[]._ref\n        ] | order(publishDate desc) [$start...$end] {\n          \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  slug,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    slug,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n        }, []\n      ),\n    }\n  }\n': TEASERS_QUERY_DESC_RESULT
+    '\n   *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n     "teasers": select(\n        source.sourceType == "MANUAL" => source.items[$start...$end]->{\n          \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  slug,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    slug,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n        },\n        source.sourceType == "COLLECTION" => *[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[]._ref\n        ] | order(publishDate asc) [$start...$end] {\n          \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  slug,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    slug,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n  contributors[]{\n    kind,\n    "name": contributor->title,\n  }\n\n        }, []\n      ),\n    }\n  }\n': TEASERS_QUERY_ASC_RESULT
   }
 }
