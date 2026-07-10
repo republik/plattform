@@ -18,7 +18,7 @@ export function TeaserFeed({
   const { t } = useTranslation()
 
   return (
-    <>
+    <div>
       <h2 className={css({ textStyle: 'subtitleBold', mb: '8', mt: '16' })}>
         {title ||
           t.pluralize('feed/title', {
@@ -29,6 +29,6 @@ export function TeaserFeed({
       {teasers.map((teaser) => (
         <FeedTeaser key={teaser._id} teaser={teaser} />
       ))}
-    </>
+    </div>
   )
 }
