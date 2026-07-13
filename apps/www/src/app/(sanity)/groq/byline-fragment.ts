@@ -1,8 +1,8 @@
-import { PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
+import { BYLINE_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
-export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
-  content[]{
+export const BYLINE_FRAGMENT = /* groq */ `
+  byline[] {
     ...,
     markDefs[]{
       ...,
@@ -17,14 +17,12 @@ export const PORTABLE_TEXT_CONTENT_FRAGMENT = /* groq */ `
   }
 `
 // Hack to not rely on the main query for types
-const PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY = defineQuery(
-  `*[_type == "page"][0]{
-    "block": pageBuilder[_type == "editorBlock"][0]{
-      ${PORTABLE_TEXT_CONTENT_FRAGMENT}
-    }
+const BYLINE_FRAGMENT_QUERY = defineQuery(
+  `*[_type == "article"][0]{
+    ${BYLINE_FRAGMENT}
   }`,
 )
 
-export type PortableTextContentFragmentType = NonNullable<
-  NonNullable<PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT>['block']
+export type BylineFragmentType = NonNullable<
+  NonNullable<BYLINE_FRAGMENT_QUERY_RESULT>['byline']
 >

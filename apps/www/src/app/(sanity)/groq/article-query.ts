@@ -1,3 +1,4 @@
+import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
 import { PORTABLE_TEXT_CONTENT_FRAGMENT } from '@/app/(sanity)/groq/portable-text-content-fragment'
 import { TEASER_FRAGMENT } from '@/app/(sanity)/groq/teaser-fragment'
 import { defineQuery } from 'next-sanity'
@@ -7,7 +8,7 @@ export const ARTICLE_QUERY = defineQuery(
     _id,
     title,
     description,
-    byline,
+    ${BYLINE_FRAGMENT},
     cover {
       ...
     },

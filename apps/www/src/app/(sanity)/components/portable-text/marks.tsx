@@ -40,7 +40,8 @@ const linkStyle = css({
 })
 
 export function InternalLink({ text, value }: PortableTextMarkComponentProps) {
-  const href = value.slug?.current
+  const href = value?.slug
+
   return href ? (
     <Link href={href} className={linkStyle}>
       {text}
