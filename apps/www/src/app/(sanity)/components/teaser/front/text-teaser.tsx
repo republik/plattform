@@ -1,5 +1,4 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
 import type { FrontTeaserFragmentType } from '@/app/(sanity)/groq/front-teaser-fragment'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
@@ -66,13 +65,12 @@ const teaserLead = css({
   },
 })
 
-export function TextTeaser({
-  _type,
-  slug,
-  contributors,
-  theme,
-  teaser,
-}: TeaserProps) {
+const teaserByline = css({
+  textStyle: 'metaParagraph',
+  fontSize: 's',
+})
+
+export function TextTeaser({ _type, slug, theme, teaser }: TeaserProps) {
   const href = _type === 'article' ? `/article${slug}` : `/page/${slug}`
 
   return (
@@ -116,7 +114,9 @@ export function TextTeaser({
         <p className={teaserLead}>
           <InlinePortableText value={teaser.lead} />
         </p>
-        {contributors && <BylineShort contributors={contributors} />}
+        <p className={teaserByline}>
+          <InlinePortableText value={teaser.byline} />
+        </p>
       </div>
     </div>
   )

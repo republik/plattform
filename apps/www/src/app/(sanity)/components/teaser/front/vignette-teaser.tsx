@@ -1,5 +1,4 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
 import { FrontTeaserImage } from '@/app/(sanity)/components/teaser/front/helpers'
 import type { FrontTeaserFragmentType } from '@/app/(sanity)/groq/front-teaser-fragment'
 import { css, cva } from '@republik/theme/css'
@@ -81,6 +80,11 @@ const teaserLead = css({
   },
 })
 
+const teaserByline = css({
+  textStyle: 'metaParagraph',
+  fontSize: 's',
+})
+
 const imageStyle = css({
   display: 'block',
   width: 'full',
@@ -97,13 +101,7 @@ const imageStyle = css({
   },
 })
 
-export function VignetteTeaser({
-  _type,
-  slug,
-  contributors,
-  theme,
-  teaser,
-}: TeaserProps) {
+export function VignetteTeaser({ _type, slug, theme, teaser }: TeaserProps) {
   const href = _type === 'article' ? `/article${slug}` : `/page/${slug}`
 
   return (
@@ -145,7 +143,9 @@ export function VignetteTeaser({
         <p className={teaserLead}>
           <InlinePortableText value={teaser.lead} />
         </p>
-        {contributors && <BylineShort contributors={contributors} />}
+        <p className={teaserByline}>
+          <InlinePortableText value={teaser.byline} />
+        </p>
       </div>
     </div>
   )

@@ -4,7 +4,6 @@ import {
   LinkOverlay,
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
-import { BylineShort } from '@/app/(sanity)/components/teaser/feed/helpers'
 import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 import { css, cx } from '@republik/theme/css'
 
@@ -29,13 +28,15 @@ export default function FeedTeaser({ teaser }: { teaser: TeaserFragmentType }) {
       )}
     >
       <Heading teaser={teaser} />
-      <h4 className={teaser.theme.name !== 'EDITORIAL' ? 'meta' : ''}>
+      <h4 className={teaser.theme?.name !== 'EDITORIAL' ? 'meta' : ''}>
         <LinkOverlay teaser={teaser} />
       </h4>
       <p className='description'>
         <InlinePortableText value={teaser.description} />
       </p>
-      <BylineShort contributors={teaser.contributors} />
+      <p className='byline'>
+        <InlinePortableText value={teaser.byline} />
+      </p>
     </div>
   )
 }

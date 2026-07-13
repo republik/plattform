@@ -43,12 +43,11 @@ export const typography = css({
     fontSize: 16,
     lineHeight: 1.5,
   },
-  '& p.author': {
+  '& p.byline': {
     fontFamily: 'gtAmericaStandard',
     fontWeight: 500,
     fontSize: 14,
     lineHeight: 1.2,
-    letterSpacing: '0.01em',
   },
   '& p.time': {
     fontFamily: 'gtAmericaStandard',

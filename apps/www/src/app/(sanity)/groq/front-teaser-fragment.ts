@@ -1,3 +1,4 @@
+import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
 import { FRONT_TEASER_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
@@ -11,10 +12,6 @@ export const FRONT_TEASER_FRAGMENT = /* groq */ `
   theme {
     name,
   },
-  contributors[]{
-    kind,
-    "name": contributor->title,
-  },
   "teaser": frontTeaser {
     layout,
     title,
@@ -27,7 +24,8 @@ export const FRONT_TEASER_FRAGMENT = /* groq */ `
     textAlignment,
     textSize,
     color,
-    backgroundColor
+    backgroundColor,
+    ${BYLINE_FRAGMENT},
   }
 `
 

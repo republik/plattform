@@ -1,3 +1,4 @@
+import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
 import { TEASER_FRAGMENT_QUERY_RESULT } from '@/sanity.types'
 import { defineQuery } from 'next-sanity'
 
@@ -18,10 +19,7 @@ export const TEASER_FRAGMENT = /* groq */ `
     name,
     accentColor,
   },
-  contributors[]{
-    kind,
-    "name": contributor->title,
-  }
+  ${BYLINE_FRAGMENT}
 `
 
 // Hack to not rely on the main query for types
