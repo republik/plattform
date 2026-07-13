@@ -6,13 +6,13 @@ export const TEASER_FRAGMENT = /* groq */ `
   _type,
   "title": coalesce(shortTitle, title),
   "description": coalesce(shortLead, description),
-  slug,
+  "slug": slug.current,
   image,
   publishDate,
   heading->{
     _id,
     "title": pt::text(title),
-    slug,
+    "slug": slug.current,
   },
   theme {
     name,

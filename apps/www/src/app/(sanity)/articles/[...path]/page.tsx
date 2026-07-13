@@ -73,7 +73,7 @@ export default async function ArticlePage({
   return (
     <EventTrackingContext category='Article'>
       <Theme theme={theme} />
-      <article className={editorialContent({ theme: theme.name })}>
+      <article className={editorialContent({ theme: theme?.name })}>
         {/* TITLE BLOCK */}
         {cover && <EditorialImage value={cover} />}
         {heading && (

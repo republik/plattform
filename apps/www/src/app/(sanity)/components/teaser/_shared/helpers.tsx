@@ -18,7 +18,8 @@ export function Heading({ teaser }: { teaser: TeaserFragmentType }) {
 
   // Don't display the heading when we're already on the correct page. The heading slug
   // matches the browser path directly (via rewrite) or under /pages.
-  const headingPath = stegaClean(teaser.heading.slug?.current)
+  const headingPath = stegaClean(teaser.heading.slug)
+
   if (
     headingPath &&
     (pathname === headingPath || pathname === `/pages${headingPath}`)
@@ -36,14 +37,19 @@ export function Heading({ teaser }: { teaser: TeaserFragmentType }) {
 export function LinkOverlay({ teaser }: { teaser: TeaserFragmentType }) {
   const trackEvent = useTrackEvent()
 
+  const href =
+    teaser._type === 'article'
+      ? `/articles${teaser.slug}`
+      : `/pages${teaser.slug}`
+
   return (
     <Link
-      href={teaser.slug?.current ?? '#'}
+      href={href}
       className={linkOverlay()}
       onClick={() => {
         trackEvent({
           action: 'click teaser',
-          slug: teaser.slug?.current,
+          slug: href,
         })
       }}
     >

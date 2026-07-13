@@ -19,7 +19,7 @@ function FollowArticle({
 }: {
   newsletter: ArticleNewsletter
   collection: ArticleCollection
-  contributors: ArticleContributor[]
+  contributors?: ArticleContributor[]
 }) {
   const { me, meLoading } = useMe()
 
@@ -36,7 +36,7 @@ function FollowArticle({
   }
 
   return (
-    <FollowContributors contributors={contributors.filter((c) => c.slug)} />
+    <FollowContributors contributors={contributors?.filter((c) => c.slug)} />
   )
 }
 
