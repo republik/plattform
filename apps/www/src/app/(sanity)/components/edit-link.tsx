@@ -11,9 +11,14 @@ export function EditLink({
   _id: string
   documentType: string
 }) {
+  const structurePath =
+    documentType === 'article'
+      ? [documentType, 'articles-all', _id]
+      : [documentType, _id]
+
   return (
     <Link
-      href={`${STUDIO_URL}/structure/${documentType};${_id}`}
+      href={`${STUDIO_URL}/structure/${structurePath.join(';')}`}
       target='_blank'
       title='Edit in Studio'
       className={css({ color: 'orange' })}
