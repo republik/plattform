@@ -16,6 +16,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import FollowArticle from '../../components/follow/follow-article'
+import { stegaClean } from 'next-sanity'
 
 // Metadata: stega disabled to keep invisible characters out of <title>
 export async function generateMetadata({
@@ -73,7 +74,11 @@ export default async function ArticlePage({
   return (
     <EventTrackingContext category='Article'>
       <Theme theme={theme} />
-      <article className={editorialContent({ theme: theme?.name })}>
+      <article
+        className={editorialContent({
+          theme: stegaClean(theme?.name),
+        })}
+      >
         {/* TITLE BLOCK */}
         {cover && <EditorialImage value={cover} />}
         {heading && (

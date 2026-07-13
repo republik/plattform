@@ -14,6 +14,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { PageBuilder } from './components/page-builder'
+import { stegaClean } from 'next-sanity'
 
 // Metadata: stega disabled to keep invisible characters out of <title>
 export async function generateMetadata({
@@ -84,7 +85,11 @@ export default async function PostPage({
     <EventTrackingContext category='Page'>
       <Theme theme={theme} />
 
-      <div className={editorialContent({ theme: theme.name })}>
+      <div
+        className={editorialContent({
+          theme: stegaClean(theme?.name),
+        })}
+      >
         {cover && <EditorialImage value={cover} />}
 
         {renderTitle && (
@@ -97,7 +102,8 @@ export default async function PostPage({
               }),
             )}
             style={{
-              textAlign: theme.name === 'EDITORIAL' ? 'left' : 'center',
+              textAlign:
+                stegaClean(theme?.name) === 'EDITORIAL' ? 'left' : 'center',
             }}
           >
             {heading && (
