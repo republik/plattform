@@ -94,33 +94,33 @@ export default async function PostPage({
 
         {renderTitle && (
           <div
-            className={cx(
-              'title-block',
-              css({
-                my: '8',
-                gridColumn: 'breakout',
-              }),
-            )}
+            className={css({
+              my: '8',
+              gridColumn: 'breakout',
+            })}
             style={{
               textAlign: theme?.name === 'EDITORIAL' ? 'left' : 'center',
             }}
           >
             {heading && (
-              <p style={{ color: 'var(--page-theme-accent-color)' }}>
+              <p
+                className='page-heading'
+                style={{ color: 'var(--page-theme-accent-color)' }}
+              >
                 <Link href={`/pages${heading.slug}`}>
                   <InlinePortableText value={heading.title} />
                 </Link>
               </p>
             )}
 
-            <h1 className={css({ mt: '12', mb: '4' })}>
+            <h1 className={cx('page-title', css({ mt: '12', mb: '4' }))}>
               <InlinePortableText value={title} />
             </h1>
 
             {hasContent(description) && (
-              <h3 className={css({ mb: '8' })}>
+              <p className={cx('page-lead', css({ mb: '8' }))}>
                 <InlinePortableText value={description} />
-              </h3>
+              </p>
             )}
 
             <div

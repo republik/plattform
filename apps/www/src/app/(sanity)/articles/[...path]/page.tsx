@@ -10,7 +10,7 @@ import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
-import { css } from '@republik/theme/css'
+import { css, cx } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
@@ -83,10 +83,13 @@ export default async function ArticlePage({
         {cover && <EditorialImage value={cover} />}
         {heading && (
           <p
-            className={css({
-              mb: '-6',
-              mt: '8',
-            })}
+            className={cx(
+              'page-heading',
+              css({
+                mb: '-6',
+                mt: '8',
+              }),
+            )}
             style={{ color: 'var(--page-theme-accent-color)' }}
           >
             <Link href={`/pages${heading.slug}`}>
@@ -95,16 +98,19 @@ export default async function ArticlePage({
           </p>
         )}
         <h1
-          className={css({
-            mt: '12',
-          })}
+          className={cx(
+            'page-title',
+            css({
+              mt: '12',
+            }),
+          )}
         >
           <InlinePortableText value={title} />
         </h1>
         {hasContent(description) && (
-          <h3 className={css({ mt: '4' })}>
+          <p className={cx('page-lead', css({ mt: '4' }))}>
             <InlinePortableText value={description} />
-          </h3>
+          </p>
         )}
         <p
           className={css({
