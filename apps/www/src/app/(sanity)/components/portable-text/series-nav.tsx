@@ -52,12 +52,10 @@ export async function SeriesNav({ value }: { value: SeriesNav }) {
         })}
       >
         {series.episodes?.map((episode, i) => {
-          const src = episode.image?.asset
-            ? urlFor(episode.image?.asset).url()
+          const src = episode.image
+            ? urlFor(episode.image).width(280).url()
             : undefined
-          const dimensions = episode.image?.asset
-            ? getImageDimensions(src)
-            : undefined
+          const dimensions = src ? getImageDimensions(src) : undefined
 
           return (
             <div
@@ -76,11 +74,11 @@ export async function SeriesNav({ value }: { value: SeriesNav }) {
               })}
             >
               <p>Folge {i + 1}</p>
-              {episode.image?.asset && (
+              {episode.image && (
                 <Image
                   src={src}
-                  width={dimensions.width}
-                  height={dimensions.height}
+                  width={280}
+                  height={280 / dimensions.aspectRatio}
                   alt=''
                 />
               )}
