@@ -123,7 +123,7 @@ const teaserByline = css({
 })
 
 export function ImageTeaser({ _type, slug, theme, teaser }: TeaserProps) {
-  const href = _type === 'article' ? `/article${slug}` : `/page/${slug}`
+  const href = _type === 'article' ? `/articles${slug}` : `/pages${slug}`
 
   return (
     <div
