@@ -4,6 +4,7 @@ import { css } from '@republik/theme/css'
 import { getImageDimensions } from '@sanity/asset-utils'
 import { useId } from 'react'
 import { Caption } from './caption'
+import { Image } from 'next-sanity/image'
 
 export function AsideImage({
   image,
@@ -14,10 +15,7 @@ export function AsideImage({
 }) {
   const captionId = useId()
 
-  const src = urlFor(image)
-    .auto('format')
-    .width(width * 2)
-    .url()
+  const src = urlFor(image).width(width).url()
 
   const dimensions = getImageDimensions(src)
 
@@ -33,8 +31,7 @@ export function AsideImage({
       role='group'
       aria-labelledby={captionId}
     >
-      {/* We don't use next-sanity/image here because we don't need srcset */}
-      <img
+      <Image
         className={css({
           display: 'block',
           width: '100%',
@@ -42,10 +39,8 @@ export function AsideImage({
         })}
         src={src}
         alt={image.alt ?? ''}
-        width={dimensions.width}
-        height={dimensions.height}
-        loading='lazy'
-        decoding='async'
+        width={width}
+        height={width / dimensions.aspectRatio}
       />
       {image.caption && <Caption id={captionId} caption={image.caption} />}
     </figure>

@@ -1,17 +1,18 @@
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
-import type { SanityImageAssetReference } from '@/sanity.types'
 import { css } from '@republik/theme/css'
 import { getImageDimensions } from '@sanity/asset-utils'
+import type { SanityImageSource } from '@sanity/image-url'
 import { Image, type ImageProps } from 'next-sanity/image'
 
 export function FrontTeaserImage({
-  asset,
+  image,
   ...imageProps
-}: { asset: SanityImageAssetReference | undefined | null } & Omit<
+}: { image: SanityImageSource | undefined | null } & Omit<
   ImageProps,
   'src' | 'width' | 'height'
 >) {
-  if (!asset) {
+  console.log(image)
+  if (!image) {
     return (
       <div
         className={css({
@@ -29,7 +30,7 @@ export function FrontTeaserImage({
     )
   }
 
-  const src = urlFor(asset).url()
+  const src = urlFor(image).url()
   const dimensions = getImageDimensions(src)
 
   return (

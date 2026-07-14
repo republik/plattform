@@ -35,9 +35,9 @@ export async function generateMetadata({
     return { title: 'Artikel nicht gefunden' }
   }
 
-  const images = data.image?.asset
+  const images = data.image
     ? {
-        url: urlFor(data.image?.asset).width(1200).height(630).url(),
+        url: urlFor(data.image).width(1200).height(630).url(),
         width: 1200,
         height: 630,
       }

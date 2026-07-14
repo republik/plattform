@@ -74,13 +74,13 @@ export function EditorialImage({
     return null
   }
 
-  const src = urlFor(asset).url()
+  const src = urlFor(value).url()
   const dimensions = getImageDimensions(src)
 
-  const darkImage = imageDark?.asset
+  const darkImage = imageDark
     ? {
         src: urlFor(imageDark).url(),
-        dimensions: getImageDimensions(imageDark.asset),
+        dimensions: getImageDimensions(urlFor(imageDark).url()),
       }
     : undefined
 

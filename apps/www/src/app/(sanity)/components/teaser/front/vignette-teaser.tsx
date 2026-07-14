@@ -110,7 +110,7 @@ export function VignetteTeaser({ _type, slug, theme, teaser }: TeaserProps) {
     >
       <div>
         <FrontTeaserImage
-          asset={teaser.image?.asset}
+          image={teaser.image}
           className={imageStyle}
           alt={''}
           sizes={'(max-width: 768px) 100vw, 50vw'}

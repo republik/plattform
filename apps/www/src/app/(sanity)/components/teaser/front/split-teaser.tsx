@@ -142,7 +142,7 @@ export function SplitTeaser({ _type, slug, theme, teaser }: TeaserProps) {
         })}
       >
         <FrontTeaserImage
-          asset={teaser.image?.asset}
+          image={teaser.image}
           className={css({ display: 'block', width: '100%', height: 'auto' })}
           alt={''}
           sizes={'(max-width: 768px) 100vw, 50vw'}

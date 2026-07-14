@@ -131,7 +131,7 @@ export function ImageTeaser({ _type, slug, theme, teaser }: TeaserProps) {
       style={{ backgroundColor: teaser.backgroundColor?.hex }}
     >
       <FrontTeaserImage
-        asset={teaser.image?.asset}
+        image={teaser.image}
         className={css({ display: 'block', width: '100%', height: 'auto' })}
         alt={''}
         sizes={'100vw'}
