@@ -2,6 +2,7 @@ import { css, cx } from '@republik/theme/css'
 import { PortableText } from 'next-sanity'
 import { AsideImage } from './aside-image'
 import type { InfoBox } from '@/sanity.types'
+import { NestedPortableText } from '@/app/(sanity)/components/portable-text/render'
 
 export function InfoBox({ value }: { value: InfoBox }) {
   const { title, image, body } = value
@@ -32,6 +33,7 @@ export function InfoBox({ value }: { value: InfoBox }) {
             borderStyle: 'solid',
             borderTopWidth: '1px',
             py: '2',
+            fontSize: { base: 'base', md: 'l' },
           })}
         >
           {title}
@@ -40,10 +42,10 @@ export function InfoBox({ value }: { value: InfoBox }) {
           className={css({
             textStyle: 'sans',
             lineHeight: '1.5',
-            fontSize: { base: 's', md: 'xl' },
+            fontSize: { base: 'base', md: 'l' },
           })}
         >
-          <PortableText value={body} />
+          <NestedPortableText value={body} />
         </div>
       </div>
     </div>
