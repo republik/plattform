@@ -27,8 +27,6 @@ export function SquareTeaserImage({
     )
   }
 
-  console.log(size)
-
   // If an image with crop/hotspot is provided, those will be applied automatically
   const src = urlFor(image).width(size).height(size).url()
 

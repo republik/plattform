@@ -25,7 +25,16 @@ export default function GridTeaser({
       )}
     >
       {label && <h6>{label}</h6>}
-      <SquareTeaserImage image={teaser.image} alt='' size={300} />
+      <SquareTeaserImage
+        className={css({
+          width: 'full',
+          height: 'auto',
+        })}
+        image={teaser.image}
+        alt=''
+        size={640}
+        sizes='(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw'
+      />
       <h4 className='editorial'>
         <LinkOverlay teaser={teaser} />
       </h4>
