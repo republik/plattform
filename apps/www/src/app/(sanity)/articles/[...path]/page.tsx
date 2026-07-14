@@ -13,10 +13,10 @@ import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import { Metadata } from 'next'
+import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import FollowArticle from '../../components/follow/follow-article'
-import { stegaClean } from 'next-sanity'
 
 // Metadata: stega disabled to keep invisible characters out of <title>
 export async function generateMetadata({
@@ -89,7 +89,7 @@ export default async function ArticlePage({
             })}
             style={{ color: 'var(--page-theme-accent-color)' }}
           >
-            <Link href={heading.slug}>
+            <Link href={`/pages${heading.slug}`}>
               <InlinePortableText value={heading.title} />
             </Link>
           </p>

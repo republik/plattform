@@ -2,24 +2,29 @@ import { MenuBlockFragmentType } from '@/app/(sanity)/groq/menu-block-fragment'
 import { css } from '@republik/theme/css'
 import Link from 'next/link'
 
+function MenuItem({ href, title }) {
+  return (
+    <li className={css({ whiteSpace: 'nowrap' })}>
+      <Link
+        href={href}
+        className={css({
+          textStyle: 'airy',
+          color: 'var(--page-theme-accent-color)',
+        })}
+      >
+        <b>{title}</b>
+      </Link>
+    </li>
+  )
+}
+
 export async function Menu({ menu }: { menu: MenuBlockFragmentType }) {
   const { pages, heading, hasSeparator } = menu
 
-  const items = (pages ?? []).flatMap((item) => {
-    if (item._type === 'link') {
-      return item.href
-        ? [{ key: item._key, href: item.href, label: item.title ?? item.href }]
-        : []
-    }
-    return item.page?.slug
-      ? [{ key: item._key, href: item.page.slug, label: item.page.title }]
-      : []
-  })
-
-  const headingHref = heading?.page?.slug
+  const headingHref = heading && `/pages${heading?.page?.slug}`
   const headingLabel = heading?.title ?? heading?.page?.title
 
-  if (!items.length && !headingLabel) {
+  if (!pages.length && !headingLabel) {
     return null
   }
 
@@ -62,18 +67,14 @@ export async function Menu({ menu }: { menu: MenuBlockFragmentType }) {
           rowGap: 1,
         })}
       >
-        {items.map((item) => (
-          <li key={item.key} className={css({ whiteSpace: 'nowrap' })}>
-            <Link
-              href={item.href}
-              className={css({
-                textStyle: 'airy',
-                color: 'var(--page-theme-accent-color)',
-              })}
-            >
-              <b>{item.label}</b>
-            </Link>
-          </li>
+        {pages.map((item) => (
+          <MenuItem
+            key={item._key}
+            href={item._type === 'link' ? item.href : `/pages${item.page.slug}`}
+            title={
+              item._type === 'link' ? item.title ?? item.href : item.page.title
+            }
+          />
         ))}
       </ul>
     </nav>
