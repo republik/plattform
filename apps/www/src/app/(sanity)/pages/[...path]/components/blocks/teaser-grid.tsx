@@ -6,7 +6,13 @@ import React from 'react'
 const gridStyle = css({
   gridColumn: 'breakout',
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+  gridTemplateColumns: '1fr',
+  md: {
+    gridTemplateColumns: 'repeat(2, 1fr)',
+  },
+  lg: {
+    gridTemplateColumns: 'repeat(3, 1fr)',
+  },
   columnGap: '4',
   rowGap: '12',
 })
@@ -20,15 +26,8 @@ export function TeaserGrid({
   series: boolean
   title?: string
 }) {
-  // label per teaser: its heading, or a sequential episode number
-  const labels: string[] = []
-
-  if (series) {
-    let episode = 1
-    for (const teaser of teasers) {
-      labels.push(teaser.heading?.title ?? `Folge ${episode++}`)
-    }
-  }
+  const withoutHeading = series ? teasers.filter((t) => !t.heading?.title) : teasers
+  const withHeading = series ? teasers.filter((t) => !!t.heading?.title) : []
 
   return (
     <>
@@ -44,8 +43,11 @@ export function TeaserGrid({
         </h2>
       )}
       <div className={gridStyle}>
-        {teasers.map((teaser, index) => (
-          <GridTeaser key={teaser._id} teaser={teaser} label={labels[index]} />
+        {withoutHeading.map((teaser, index) => (
+          <GridTeaser key={teaser._id} teaser={teaser} label={series ? `Folge ${index + 1}` : undefined} />
+        ))}
+        {withHeading.map((teaser) => (
+          <GridTeaser key={teaser._id} teaser={teaser} label={teaser.heading!.title} />
         ))}
       </div>
     </>
