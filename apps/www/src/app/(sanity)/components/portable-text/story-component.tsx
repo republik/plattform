@@ -2,7 +2,6 @@
 import { Spinner } from '@/app/components/ui/spinner'
 import type { StoryComponent } from '@/sanity.types'
 import { css, cva } from '@republik/theme/css'
-import { stegaClean } from 'next-sanity'
 import Script from 'next/script'
 import { useState } from 'react'
 const figureStyle = cva({
@@ -39,8 +38,7 @@ export function StoryComponent({ value }: { value: StoryComponent }) {
     setError(`Invalid component name: ${value.tagname}`)
   }
 
-  // Attention: JSON is only valid if Sanity Stega chars are removed
-  const dataJson = stegaClean(value.componentData?.code ?? '{}')
+  const dataJson = value.componentData?.code ?? '{}'
 
   return (
     <div

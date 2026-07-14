@@ -4,7 +4,6 @@ import { InlinePortableText } from '@/app/(sanity)/components/portable-text/rend
 import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
-import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -18,7 +17,7 @@ export function Heading({ teaser }: { teaser: TeaserFragmentType }) {
 
   // Don't display the heading when we're already on the correct page. The heading slug
   // matches the browser path directly (via rewrite) or under /pages.
-  const headingPath = stegaClean(teaser.heading.slug)
+  const headingPath = teaser.heading.slug
 
   if (
     headingPath &&

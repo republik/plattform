@@ -17,7 +17,6 @@ import {
 } from '@project-r/styleguide'
 import { cva } from '@republik/theme/css'
 import compose from 'lodash/flowRight'
-import { stegaClean } from 'next-sanity'
 
 const dynamicComponentRequire = createRequire().alias({
   'react-apollo': {
@@ -86,8 +85,7 @@ export function LegacyDynamicComponent({
     componentName = value.identifier
   }
 
-  // Attention: JSON is only valid if Sanity Stega chars are removed
-  const props = JSON.parse(stegaClean(value.props?.code ?? '{}'))
+  const props = JSON.parse(value.props?.code ?? '{}')
 
   return (
     <div

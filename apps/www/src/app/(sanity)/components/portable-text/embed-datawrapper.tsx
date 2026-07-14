@@ -1,9 +1,9 @@
 'use client'
+import type { EmbedDataWrapper } from '@/sanity.types'
+import { css, cva, cx } from '@republik/theme/css'
 import { useTheme } from 'next-themes'
 import Script from 'next/script'
 import { useEffect, useRef, useState } from 'react'
-import { css, cva, cx } from '@republik/theme/css'
-import type { EmbedDataWrapper } from '@/sanity.types'
 
 declare global {
   interface Window {

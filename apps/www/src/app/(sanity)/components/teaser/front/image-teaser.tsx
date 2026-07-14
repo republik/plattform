@@ -3,7 +3,6 @@ import { FrontTeaserImage } from '@/app/(sanity)/components/teaser/front/helpers
 import type { FrontTeaserFragmentType } from '@/app/(sanity)/groq/front-teaser-fragment'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
-import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 
 type TeaserProps = FrontTeaserFragmentType
@@ -140,15 +139,15 @@ export function ImageTeaser({ _type, slug, theme, teaser }: TeaserProps) {
       <div className={teaserTextContainer}>
         <div
           className={teaserTextPosition({
-            position: stegaClean(teaser.textPosition),
+            position: teaser.textPosition,
           })}
           style={{ color: teaser.color?.hex }}
         >
           <Link href={href} className={linkOverlay()}>
             <h2
               className={teaserTitle({
-                theme: stegaClean(theme?.name),
-                size: stegaClean(teaser.textSize),
+                theme: theme?.name,
+                size: teaser.textSize,
               })}
             >
               <InlinePortableText value={teaser.title} />

@@ -76,7 +76,7 @@ export default async function ArticlePage({
       <Theme theme={theme} />
       <article
         className={editorialContent({
-          theme: stegaClean(theme?.name),
+          theme: theme?.name,
         })}
       >
         {/* TITLE BLOCK */}

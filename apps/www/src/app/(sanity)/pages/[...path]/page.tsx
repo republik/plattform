@@ -87,7 +87,7 @@ export default async function PostPage({
 
       <div
         className={editorialContent({
-          theme: stegaClean(theme?.name),
+          theme: theme?.name,
         })}
       >
         {cover && <EditorialImage value={cover} />}
@@ -102,8 +102,7 @@ export default async function PostPage({
               }),
             )}
             style={{
-              textAlign:
-                stegaClean(theme?.name) === 'EDITORIAL' ? 'left' : 'center',
+              textAlign: theme?.name === 'EDITORIAL' ? 'left' : 'center',
             }}
           >
             {heading && (

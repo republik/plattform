@@ -1,6 +1,5 @@
 import type { PullQuote } from '@/sanity.types'
 import { css, cx } from '@republik/theme/css'
-import { stegaClean } from 'next-sanity'
 import { AsideImage } from './aside-image'
 
 const quoteStyle = css({
@@ -35,8 +34,7 @@ export function PullQuote({ value }: { value: PullQuote }) {
           }),
       )}
       style={{
-        textAlign:
-          stegaClean(size) === 'narrow' && !hasImage ? 'center' : undefined,
+        textAlign: size === 'narrow' && !hasImage ? 'center' : undefined,
       }}
     >
       {hasImage && <AsideImage image={image} width={155} />}
