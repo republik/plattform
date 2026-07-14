@@ -3,11 +3,10 @@ import {
   Heading,
   LinkOverlay,
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
+import { SquareTeaserImage } from '@/app/(sanity)/components/teaser/_shared/square-teaser-image'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
 import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
-import { SanitySquareCover } from '@/app/components/assets/SquareCover'
 import { css, cx } from '@republik/theme/css'
-import React from 'react'
 
 const carouselItemStyle = css({
   cursor: 'pointer',
@@ -33,7 +32,7 @@ export function CarouselTeaser({ teaser }: { teaser: TeaserFragmentType }) {
       })}
     >
       <div className={cx(typography, carouselItemStyle)}>
-        <SanitySquareCover size={248} />
+        <SquareTeaserImage image={teaser.image} alt='' size={248} />
         <div
           className={css({
             px: '3',

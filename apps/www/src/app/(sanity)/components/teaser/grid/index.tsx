@@ -1,10 +1,9 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
+import { SquareTeaserImage } from '@/app/(sanity)/components/teaser/_shared/square-teaser-image'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
 import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
-import { SanitySquareCover } from '@/app/components/assets/SquareCover'
 import { css, cx } from '@republik/theme/css'
-import React from 'react'
 
 export default function GridTeaser({
   teaser,
@@ -26,7 +25,7 @@ export default function GridTeaser({
       )}
     >
       {label && <h6>{label}</h6>}
-      <SanitySquareCover size='100%' />
+      <SquareTeaserImage image={teaser.image} alt='' size={300} />
       <h4 className='editorial'>
         <LinkOverlay teaser={teaser} />
       </h4>
