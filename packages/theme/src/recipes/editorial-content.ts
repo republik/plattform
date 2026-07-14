@@ -14,7 +14,9 @@ const contentParts = defineParts({
   subheadings: { selector: '& > h2' },
   heading: { selector: '& .page-heading' },
   title: { selector: '& .page-title' },
+  titleAfterHeading: { selector: '& .page-heading + .page-title' },
   lead: { selector: '& .page-lead' },
+  byline: { selector: '& .page-byline' },
   unorderedLists: { selector: '& > ul' },
   orderedLists: { selector: '& > ol' },
   unorderedListItems: { selector: '& > ul li' },
@@ -87,6 +89,24 @@ export const editorialContentRecipe = defineRecipe({
       pl: '2',
       _before: { display: 'none' },
     },
+    heading: {
+      color: 'var(--page-theme-accent-color)',
+      _first: {
+        mt: '12',
+      },
+    },
+    title: {
+      mt: '12',
+    },
+    titleAfterHeading: {
+      mt: '8',
+    },
+    lead: {
+      mt: '4',
+    },
+    byline: {
+      mt: '4',
+    },
   }),
 
   variants: {
@@ -95,6 +115,7 @@ export const editorialContentRecipe = defineRecipe({
         heading: { textStyle: 'editorialHeading' },
         title: { textStyle: 'editorialTitle' },
         lead: { textStyle: 'editorialLead' },
+        byline: { textStyle: 'editorialByline' },
         paragraphs: { textStyle: 'editorialParagraph' },
         subheadings: { textStyle: 'editorialSubheading' },
         unorderedListItems: {
@@ -108,6 +129,7 @@ export const editorialContentRecipe = defineRecipe({
         heading: { textStyle: 'editorialHeading' },
         title: { textStyle: 'metaTitle' },
         lead: { textStyle: 'editorialLead' },
+        byline: { textStyle: 'editorialByline' },
         paragraphs: { textStyle: 'editorialParagraph' },
         subheadings: { textStyle: 'editorialSubheading' },
         unorderedListItems: {
@@ -118,8 +140,21 @@ export const editorialContentRecipe = defineRecipe({
         },
       }),
       PAGE: contentParts({
-        heading: { textStyle: 'editorialHeading' },
-        title: { textStyle: 'metaTitle' },
+        heading: {
+          textStyle: 'editorialHeading',
+          textAlign: 'center',
+          gridColumn: 'breakout',
+        },
+        title: {
+          textStyle: 'metaTitle',
+          textAlign: 'center',
+          gridColumn: 'breakout',
+        },
+        lead: {
+          textStyle: 'editorialLead',
+          textAlign: 'center',
+          gridColumn: 'breakout',
+        },
         paragraphs: { textStyle: 'metaParagraph' },
         subheadings: { textStyle: 'metaSubheading' },
         unorderedListItems: {

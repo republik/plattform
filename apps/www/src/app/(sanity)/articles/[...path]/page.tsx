@@ -81,48 +81,27 @@ export default async function ArticlePage({
       >
         {/* TITLE BLOCK */}
         {cover && <EditorialImage value={cover} />}
+
         {heading && (
-          <p
-            className={cx(
-              'page-heading',
-              css({
-                mb: '-6',
-                mt: '8',
-              }),
-            )}
-            style={{ color: 'var(--page-theme-accent-color)' }}
-          >
+          <p className='page-heading'>
             <Link href={`/pages${heading.slug}`}>
               <InlinePortableText value={heading.title} />
             </Link>
           </p>
         )}
-        <h1
-          className={cx(
-            'page-title',
-            css({
-              mt: '12',
-            }),
-          )}
-        >
+        <h1 className='page-title'>
           <InlinePortableText value={title} />
         </h1>
         {hasContent(description) && (
-          <p className={cx('page-lead', css({ mt: '4' }))}>
+          <p className='page-lead'>
             <InlinePortableText value={description} />
           </p>
         )}
-        <p
-          className={css({
-            textStyle: 'editorialByline',
-            mt: '4',
-            '& a': { textDecoration: 'underline' },
-          })}
-        >
+        <p className='page-byline'>
           <InlinePortableText value={byline} />
         </p>
 
-        <div className={css({ mt: '4' })}>
+        <div>
           <EditLink _id={article._id} documentType='article' />
         </div>
 

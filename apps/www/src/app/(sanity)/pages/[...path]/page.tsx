@@ -93,48 +93,30 @@ export default async function PostPage({
         {cover && <EditorialImage value={cover} />}
 
         {renderTitle && (
-          <div
-            className={css({
-              my: '8',
-              gridColumn: 'breakout',
-            })}
-            style={{
-              textAlign: theme?.name === 'EDITORIAL' ? 'left' : 'center',
-            }}
-          >
+          <>
             {heading && (
-              <p
-                className='page-heading'
-                style={{ color: 'var(--page-theme-accent-color)' }}
-              >
+              <p className='page-heading'>
                 <Link href={`/pages${heading.slug}`}>
                   <InlinePortableText value={heading.title} />
                 </Link>
               </p>
             )}
 
-            <h1 className={cx('page-title', css({ mt: '12', mb: '4' }))}>
+            <h1 className='page-title'>
               <InlinePortableText value={title} />
             </h1>
 
             {hasContent(description) && (
-              <p className={cx('page-lead', css({ mb: '8' }))}>
+              <p className='page-lead'>
                 <InlinePortableText value={description} />
               </p>
             )}
-
-            <div
-              className={css({
-                mt: '8',
-                position: 'absolute',
-                top: 110,
-                right: 30,
-              })}
-            >
-              <EditLink _id={_id} documentType='page' />
-            </div>
-          </div>
+          </>
         )}
+
+        <div className={css({ display: 'grid', placeContent: 'center' })}>
+          <EditLink _id={_id} documentType='page' />
+        </div>
 
         <PageBuilder blocks={pageBuilder} documentId={_id} />
       </div>
