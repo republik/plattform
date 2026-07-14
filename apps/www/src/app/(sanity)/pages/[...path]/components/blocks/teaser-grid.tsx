@@ -1,5 +1,6 @@
 import GridTeaser from '@/app/(sanity)/components/teaser/grid'
 import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
+import { UpcomingTeaserFragmentType } from '@/app/(sanity)/groq/upcoming-teaser-fragment'
 import { css } from '@republik/theme/css'
 import React from 'react'
 
@@ -19,14 +20,18 @@ const gridStyle = css({
 
 export function TeaserGrid({
   teasers,
+  upcomingTeasers = [],
   series,
   title,
 }: {
   teasers: TeaserFragmentType[]
+  upcomingTeasers?: UpcomingTeaserFragmentType[]
   series: boolean
   title?: string
 }) {
-  const withoutHeading = series ? teasers.filter((t) => !t.heading?.title) : teasers
+  const withoutHeading = series
+    ? teasers.filter((t) => !t.heading?.title)
+    : teasers
   const withHeading = series ? teasers.filter((t) => !!t.heading?.title) : []
 
   return (
@@ -44,10 +49,28 @@ export function TeaserGrid({
       )}
       <div className={gridStyle}>
         {withoutHeading.map((teaser, index) => (
-          <GridTeaser key={teaser._id} teaser={teaser} label={series ? `Folge ${index + 1}` : undefined} />
+          <GridTeaser
+            key={teaser._id}
+            teaser={teaser}
+            label={series ? `Folge ${index + 1}` : undefined}
+          />
         ))}
         {withHeading.map((teaser) => (
-          <GridTeaser key={teaser._id} teaser={teaser} label={teaser.heading!.title} />
+          <GridTeaser
+            key={teaser._id}
+            teaser={teaser}
+            label={teaser.heading!.title}
+          />
+        ))}
+        {upcomingTeasers.map((teaser, index) => (
+          <GridTeaser
+            comingSoon={true}
+            key={teaser._id}
+            teaser={teaser}
+            label={
+              series ? `Folge ${index + 1 + withoutHeading.length}` : undefined
+            }
+          />
         ))}
       </div>
     </>

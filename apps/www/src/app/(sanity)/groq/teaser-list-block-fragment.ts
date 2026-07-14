@@ -14,7 +14,8 @@ export const TEASER_LIST_BLOCK_FRAGMENT = /* groq */ `
     0
   ),
   "series": source.sourceType == "COLLECTION" &&
-    source.collection->series == true
+    source.collection->series == true,
+  "collectionId": source.collection._ref
 `
 
 // Hack to not rely on the main query for types

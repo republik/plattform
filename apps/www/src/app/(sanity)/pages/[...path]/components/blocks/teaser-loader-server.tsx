@@ -1,10 +1,11 @@
-'use server'
-
+// NOTE: deliberately no file-level 'use server' — that would turn every
+// exported async function (including the component) into a publicly callable
+// Server Action with attacker-controlled arguments. Only `loadMore` is an
+// action, via its inline directive.
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
-import {
-  TEASERS_QUERY_ASC,
-  TEASERS_QUERY_DESC,
-} from '@/app/(sanity)/groq/teasers-query'
+import { TEASERS_QUERY_ASC, TEASERS_QUERY_DESC } from '@/app/(sanity)/groq/teasers-query'
+import { UPCOMING_TEASERS_QUERY } from '@/app/(sanity)/groq/upcoming-teasers-query'
+import { draftsClient } from '@/app/(sanity)/lib/drafts-client'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { TeaserLoaderClient } from './teaser-loader-client'
 
@@ -35,6 +36,13 @@ export async function TeaserLoaderServer({
   const teasers = data?.block?.teasers
   if (!teasers?.length) return null
 
+  const upcomingTeasers =
+    teaserList.series && teaserList.collectionId
+      ? await draftsClient.fetch(UPCOMING_TEASERS_QUERY, {
+          collectionId: teaserList.collectionId,
+        })
+      : []
+
   const { total } = teaserList
 
   // we only offer this option when: list has > 20 teasers
@@ -50,6 +58,7 @@ export async function TeaserLoaderServer({
   return (
     <TeaserLoaderClient
       initialTeasers={teasers}
+      upcomingTeasers={upcomingTeasers}
       teaserList={teaserList}
       pageSize={MAX_TEASERS}
       loadMoreAction={loadMore}

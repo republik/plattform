@@ -2,6 +2,7 @@
 
 import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
+import { UpcomingTeaserFragmentType } from '@/app/(sanity)/groq/upcoming-teaser-fragment'
 import { TeaserFeed } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-feed'
 import { TeaserGrid } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-grid'
 import { Button } from '@/app/components/ui/button'
@@ -11,11 +12,13 @@ import { useState } from 'react'
 
 export function TeaserLoaderClient({
   initialTeasers,
+  upcomingTeasers = [],
   teaserList,
   pageSize,
   loadMoreAction,
 }: {
   initialTeasers: TeaserFragmentType[]
+  upcomingTeasers?: UpcomingTeaserFragmentType[]
   teaserList: TeaserListBlockFragmentType
   pageSize: number
   loadMoreAction: () => Promise<TeaserFragmentType[]>
@@ -41,7 +44,12 @@ export function TeaserLoaderClient({
   return (
     <>
       {appearance === 'GRID' ? (
-        <TeaserGrid teasers={teasers} title={title} series={series} />
+        <TeaserGrid
+          teasers={teasers}
+          upcomingTeasers={upcomingTeasers}
+          title={title}
+          series={series}
+        />
       ) : (
         <TeaserFeed total={total} teasers={shownTeasers} title={title} />
       )}
