@@ -14,8 +14,9 @@ export const FRONT_TEASER_FRAGMENT = /* groq */ `
   },
   "teaser": frontTeaser {
     layout,
-    title,
-    lead,
+    "title": coalesce(title, ^.title),
+    "lead": coalesce(lead, ^.lead),
+    "byline": coalesce(${BYLINE_FRAGMENT}, ^.${BYLINE_FRAGMENT}),
     image,
     imageCredits,
     imagePosition,
@@ -25,7 +26,6 @@ export const FRONT_TEASER_FRAGMENT = /* groq */ `
     textSize,
     color,
     backgroundColor,
-    ${BYLINE_FRAGMENT},
   }
 `
 

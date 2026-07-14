@@ -7,6 +7,7 @@ export const TEASER_FRAGMENT = /* groq */ `
   _type,
   "title": coalesce(shortTitle, title),
   "description": coalesce(shortLead, description),
+  "byline": coalesce(${BYLINE_FRAGMENT}, ^.${BYLINE_FRAGMENT}),
   "slug": slug.current,
   image,
   publishDate,
@@ -19,7 +20,6 @@ export const TEASER_FRAGMENT = /* groq */ `
     name,
     accentColor,
   },
-  ${BYLINE_FRAGMENT}
 `
 
 // Hack to not rely on the main query for types
