@@ -25,7 +25,15 @@ export function PullQuote({ value }: { value: PullQuote }) {
   return (
     <aside
       className={cx(
-        css({ width: 'full', py: '8' }),
+        css({
+          width: 'full',
+          mt: '10',
+          mb: '2',
+          md: {
+            mt: '12',
+            mb: '4',
+          },
+        }),
         hasImage &&
           css({
             display: 'grid',
