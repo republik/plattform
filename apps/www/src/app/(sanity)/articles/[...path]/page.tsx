@@ -17,6 +17,7 @@ import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import FollowArticle from '../../components/follow/follow-article'
+import type { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 
 // Metadata: stega disabled to keep invisible characters out of <title>
 export async function generateMetadata({
@@ -114,7 +115,9 @@ export default async function ArticlePage({
         />
 
         <ArticleRecommendations
-          recommendations={article.articleRecommendations}
+          recommendations={
+            article.articleRecommendations as TeaserFragmentType[]
+          }
         />
       </article>
     </EventTrackingContext>
