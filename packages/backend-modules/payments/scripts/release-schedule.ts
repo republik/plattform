@@ -18,11 +18,19 @@ async function main() {
     process.exit(1)
   }
 
-  const schedule = await ProjectRStripe.subscriptionSchedules.release(
-    scheduleId,
-  )
+  try {
+    const schedule = await ProjectRStripe.subscriptionSchedules.release(
+      scheduleId,
+    )
 
-  console.log(schedule)
+    console.log(schedule)
+  } catch (e) {
+    if (e instanceof Stripe.errors.StripeInvalidRequestError && e.code === 'resource_missing') {
+      console.log(`schedule ${scheduleId} does not exist on Stripe; skipping`)
+      return
+    }
+    throw e
+  }
 }
 
 main()

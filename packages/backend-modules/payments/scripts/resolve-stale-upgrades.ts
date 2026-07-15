@@ -47,50 +47,68 @@ async function main() {
         continue
       }
 
-      const schedule = await stripe.subscriptionSchedules.retrieve(
-        upgrade.external_id,
-      )
-
-      if (schedule.status === 'canceled') {
-        console.log(
-          `[skip] upgrade ${upgrade.id}: schedule ${schedule.id} was canceled; needs manual review`,
+      try {
+        const schedule = await stripe.subscriptionSchedules.retrieve(
+          upgrade.external_id,
         )
-        continue
-      }
 
-      const subscriptionId =
-        typeof schedule.subscription === 'string'
-          ? schedule.subscription
-          : schedule.subscription?.id
-
-      if (!subscriptionId) {
-        console.log(
-          `[skip] upgrade ${upgrade.id}: schedule ${schedule.id} has no resulting subscription yet`,
-        )
-        continue
-      }
-
-      const subscription = await stripe.subscriptions.retrieve(subscriptionId)
-
-      if (subscription.status !== 'active') {
-        console.log(
-          `[skip] upgrade ${upgrade.id}: subscription ${subscription.id} not active (status: ${subscription.status})`,
-        )
-        continue
-      }
-
-      console.log(
-        `[fix] upgrade ${upgrade.id}: releasing schedule ${schedule.id}, marking resolved`,
-      )
-
-      if (!DRY_RUN) {
-        if (schedule.status !== 'released' && schedule.status !== 'completed') {
-          await stripe.subscriptionSchedules.release(schedule.id)
+        if (schedule.status === 'canceled') {
+          console.log(
+            `[skip] upgrade ${upgrade.id}: schedule ${schedule.id} was canceled; needs manual review`,
+          )
+          continue
         }
-        await pgdb.payments.subscription_upgrades.updateOne(
-          { id: upgrade.id },
-          { status: 'resolved', updated_at: new Date() },
+
+        const subscriptionId =
+          typeof schedule.subscription === 'string'
+            ? schedule.subscription
+            : schedule.subscription?.id
+
+        if (!subscriptionId) {
+          console.log(
+            `[skip] upgrade ${upgrade.id}: schedule ${schedule.id} has no resulting subscription yet`,
+          )
+          continue
+        }
+
+        const subscription = await stripe.subscriptions.retrieve(
+          subscriptionId,
         )
+
+        if (subscription.status !== 'active') {
+          console.log(
+            `[skip] upgrade ${upgrade.id}: subscription ${subscription.id} not active (status: ${subscription.status})`,
+          )
+          continue
+        }
+
+        console.log(
+          `[fix] upgrade ${upgrade.id}: releasing schedule ${schedule.id}, marking resolved`,
+        )
+
+        if (!DRY_RUN) {
+          if (
+            schedule.status !== 'released' &&
+            schedule.status !== 'completed'
+          ) {
+            await stripe.subscriptionSchedules.release(schedule.id)
+          }
+          await pgdb.payments.subscription_upgrades.updateOne(
+            { id: upgrade.id },
+            { status: 'resolved', updated_at: new Date() },
+          )
+        }
+      } catch (e) {
+        if (
+          e instanceof Stripe.errors.StripeInvalidRequestError &&
+          e.code === 'resource_missing'
+        ) {
+          console.log(
+            `[skip] upgrade ${upgrade.id}: ${e.message}`,
+          )
+          continue
+        }
+        throw e
       }
     }
   } finally {
