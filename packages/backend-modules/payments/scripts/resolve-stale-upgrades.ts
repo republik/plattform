@@ -1,15 +1,15 @@
 import Stripe from 'stripe'
 import { PgDb } from 'pogi'
 
-const PROJECT_R_STRIPE_API_KEY = process.env.PROJECT_R_STRIPE_API_KEY
-const REPUBLIK_STRIPE_API_KEY = process.env.REPUBLIK_STRIPE_API_KEY
+const PROJECT_R_STRIPE_API_KEY = process.env.STRIPE_SECRET_KEY_PROJECT_R
+const REPUBLIK_STRIPE_API_KEY = process.env.STRIPE_SECRET_KEY_REPUBLIK
 const DATABASE_URL = process.env.DATABASE_URL
 // require an explicit --no-dry-run flag to make changes; default is a safe dry run
 const DRY_RUN = !process.argv.includes('--no-dry-run')
 
 if (!PROJECT_R_STRIPE_API_KEY || !REPUBLIK_STRIPE_API_KEY || !DATABASE_URL) {
   console.log(
-    'missing required env vars: PROJECT_R_STRIPE_API_KEY, REPUBLIK_STRIPE_API_KEY, DATABASE_URL',
+    'missing required env vars: STRIPE_SECRET_KEY_PROJECT_R, STRIPE_SECRET_KEY_REPUBLIK, DATABASE_URL',
   )
   process.exit(1)
 }

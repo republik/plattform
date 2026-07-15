@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 
-const PROJECT_R_STRIPE_API_KEY = process.env.PROJECT_R_STRIPE_API_KEY
+const PROJECT_R_STRIPE_API_KEY = process.env.STRIPE_SECRET_KEY_PROJECT_R
 
 if (PROJECT_R_STRIPE_API_KEY === undefined) {
   console.log('STRIPE KEYS missing')
