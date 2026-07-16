@@ -3,6 +3,7 @@
 import FollowContributorCard from '@/app/(sanity)/components/follow/follow-contributor-card'
 import type { ArticleContributor } from '@/app/(sanity)/lib/types'
 import { Button } from '@/app/components/ui/button'
+import { useMe } from '@/lib/context/MeContext'
 import { useTranslation } from '@/lib/withT'
 import * as RadixCollapsible from '@radix-ui/react-collapsible'
 import { css } from '@republik/theme/css'
@@ -34,7 +35,9 @@ function FollowContributors({
 }) {
   const [showAll, setShowAll] = useState(false)
   const { t } = useTranslation()
+  const { me, meLoading } = useMe()
 
+  if (meLoading || !me) return null
   if (!contributors?.length) return null
 
   const contributorsShown = contributors.slice(0, CONTRIBUTORS_SHOWN)

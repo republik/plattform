@@ -7,17 +7,15 @@ import { ArticlePortableText } from '@/app/(sanity)/components/portable-text/ren
 import { Theme } from '@/app/(sanity)/components/theme'
 import { ARTICLE_QUERY } from '@/app/(sanity)/groq/article-query'
 import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
+import type { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
-import { css, cx } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import { Metadata } from 'next'
-import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import FollowArticle from '../../components/follow/follow-article'
-import type { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 
 // Metadata: stega disabled to keep invisible characters out of <title>
 export async function generateMetadata({
@@ -70,7 +68,16 @@ export default async function ArticlePage({
 
   if (!article) notFound()
 
-  const { theme, cover, heading, title, description, byline } = article
+  const {
+    theme,
+    cover,
+    heading,
+    title,
+    description,
+    byline,
+    articleCollection,
+  } = article
+  const seriesId = articleCollection?.series && articleCollection?._id
 
   return (
     <EventTrackingContext category='Article'>
@@ -109,6 +116,7 @@ export default async function ArticlePage({
         <ArticlePortableText value={article.content} />
 
         <FollowArticle
+          seriesId={seriesId}
           contributors={article.contributors}
           collection={article.articleCollection}
           newsletter={article.newsletter}

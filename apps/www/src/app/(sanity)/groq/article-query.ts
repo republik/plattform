@@ -42,7 +42,8 @@ export const ARTICLE_QUERY = defineQuery(
       _id,
       title,
       description,
-      image
+      image,
+      series
     },
     articleRecommendations[]->{
       ${TEASER_FRAGMENT}

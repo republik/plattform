@@ -4,6 +4,7 @@ import { SubscriptionObjectType } from '#graphql/republik-api/__generated__/gql/
 import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
 import FollowCollectionContainer from '@/app/(sanity)/components/follow/follow-collection-container'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
+import { useMe } from '@/lib/context/MeContext'
 import type { ArticleCollection } from '@/sanity.types'
 import { css } from '@republik/theme/css'
 
@@ -12,6 +13,10 @@ function FollowCollectionCard({
 }: {
   collection: Partial<ArticleCollection>
 }) {
+  const { me, meLoading } = useMe()
+
+  if (meLoading || !me) return null
+
   return (
     <FollowCollectionContainer>
       <div>
