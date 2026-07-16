@@ -1,30 +1,25 @@
 'use client'
 
+import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
 import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
-import { UpcomingTeaserFragmentType } from '@/app/(sanity)/groq/upcoming-teaser-fragment'
-import { TeaserFeed } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-feed'
-import { TeaserGrid } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-grid'
 import { Button } from '@/app/components/ui/button'
 import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
-export function TeaserLoaderClient({
+export function TeaserFeedClient({
   initialTeasers,
-  upcomingTeasers = [],
   teaserList,
   pageSize,
   loadMoreAction,
 }: {
   initialTeasers: TeaserFragmentType[]
-  upcomingTeasers?: UpcomingTeaserFragmentType[]
   teaserList: TeaserListBlockFragmentType
   pageSize: number
   loadMoreAction: () => Promise<TeaserFragmentType[]>
 }) {
-  const { total, title, maxItems, series } = teaserList
-  const appearance = teaserList.appearance
+  const { total, title, maxItems } = teaserList
 
   const [teasers, setTeasers] = useState(initialTeasers)
   const { t } = useTranslation()
@@ -41,18 +36,22 @@ export function TeaserLoaderClient({
   const showLoadMoreButton =
     total > teasers.length && shownTeasers.length < (maxItems ?? Infinity)
 
+  console.log('shownTeasers', shownTeasers)
+
   return (
     <>
-      {appearance === 'GRID' ? (
-        <TeaserGrid
-          teasers={teasers}
-          upcomingTeasers={upcomingTeasers}
-          title={title}
-          series={series}
-        />
-      ) : (
-        <TeaserFeed total={total} teasers={shownTeasers} title={title} />
-      )}
+      <div>
+        <h2 className={css({ textStyle: 'subtitleBold', mb: '8', mt: '16' })}>
+          {title ||
+            t.pluralize('feed/title', {
+              count: total,
+            })}
+        </h2>
+
+        {shownTeasers.map((teaser) => (
+          <FeedTeaser key={teaser._id} teaser={teaser} />
+        ))}
+      </div>
 
       {showLoadMoreButton && (
         <Button

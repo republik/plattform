@@ -67,7 +67,7 @@ export async function Menu({ menu }: { menu: MenuBlockFragmentType }) {
           rowGap: 1,
         })}
       >
-        {pages.map((item) => (
+        {pages?.map((item) => (
           <MenuItem
             key={item._key}
             href={item._type === 'link' ? item.href : `/pages${item.page.slug}`}

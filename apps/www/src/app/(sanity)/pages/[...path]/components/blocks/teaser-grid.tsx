@@ -1,6 +1,10 @@
 import GridTeaser from '@/app/(sanity)/components/teaser/grid'
-import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
-import { UpcomingTeaserFragmentType } from '@/app/(sanity)/groq/upcoming-teaser-fragment'
+import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
+import {
+  TEASERS_QUERY_ASC,
+  TEASERS_QUERY_DESC,
+} from '@/app/(sanity)/groq/teasers-query'
+import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { css } from '@republik/theme/css'
 import React from 'react'
 
@@ -18,21 +22,45 @@ const gridStyle = css({
   rowGap: '12',
 })
 
-export function TeaserGrid({
-  teasers,
-  upcomingTeasers = [],
-  series,
-  title,
+export async function TeaserGrid({
+  teaserList,
+  documentId,
+  blockKey,
 }: {
-  teasers: TeaserFragmentType[]
-  upcomingTeasers?: UpcomingTeaserFragmentType[]
-  series: boolean
-  title?: string
+  teaserList: TeaserListBlockFragmentType
+  documentId: string
+  blockKey: string
 }) {
-  const withoutHeading = series
-    ? teasers.filter((t) => !t.heading?.title)
-    : teasers
-  const withHeading = series ? teasers.filter((t) => !!t.heading?.title) : []
+  const { title, series } = teaserList
+
+  // We display series in chronological order, starting with the first episode
+  const QUERY = series ? TEASERS_QUERY_ASC : TEASERS_QUERY_DESC
+
+  const { data } = await sanityFetch({
+    query: QUERY,
+    params: {
+      documentId,
+      blockKey,
+      start: 0,
+    },
+  })
+
+  const teasers = data?.block?.teasers
+  if (!teasers?.length) return null
+
+  const labels = []
+  if (series) {
+    let firstEpisode = 1
+    for (const teaser of teasers) {
+      // TODO: add use case of a label on the teaser
+      if (teaser.heading?.title) {
+        labels.push(teaser.heading.title)
+      } else {
+        labels.push(`Folge ${firstEpisode}`)
+        firstEpisode++
+      }
+    }
+  }
 
   return (
     <>
@@ -48,21 +76,14 @@ export function TeaserGrid({
         </h2>
       )}
       <div className={gridStyle}>
-        {withoutHeading.map((teaser, index) => (
+        {teasers.map((teaser, index) => (
           <GridTeaser
             key={teaser._id}
             teaser={teaser}
-            label={series ? `Folge ${index + 1}` : undefined}
+            label={series && labels[index]}
           />
         ))}
-        {withHeading.map((teaser) => (
-          <GridTeaser
-            key={teaser._id}
-            teaser={teaser}
-            label={teaser.heading!.title}
-          />
-        ))}
-        {upcomingTeasers.map((teaser, index) => (
+        {/*upcomingTeasers.map((teaser, index) => (
           <GridTeaser
             comingSoon={true}
             key={teaser._id}
@@ -71,7 +92,7 @@ export function TeaserGrid({
               series ? `Folge ${index + 1 + withoutHeading.length}` : undefined
             }
           />
-        ))}
+        ))*/}
       </div>
     </>
   )

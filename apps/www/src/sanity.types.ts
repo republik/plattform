@@ -72,15 +72,39 @@ export type PageReference = {
   [internalGroqTypeReferenceTo]?: 'page'
 }
 
+export type TeaserReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'teaser'
+}
+
 export type Source = {
   sourceType?: 'COLLECTION' | 'MANUAL'
   collection?: ArticleCollectionReference
-  items?: ArrayOf<ArticleReference | PageReference>
+  items?: ArrayOf<ArticleReference | PageReference | TeaserReference>
 }
 
 export type Heading = {
   page?: PageReference
   title?: string
+}
+
+export type Teaser = {
+  _id: string
+  _type: 'teaser'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  target?: Array<
+    | ArticleReference
+    | PageReference
+    | ({
+        _key: string
+      } & Link)
+  >
+  teaserSmall?: TeaserSmall
+  teaserLarge?: TeaserLarge
 }
 
 export type SanityImageAssetReference = {
@@ -90,12 +114,46 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
 }
 
-export type Image1 = {
-  asset?: SanityImageAssetReference
-  media?: unknown // Unable to locate the referenced type "media1" in schema
-  hotspot?: SanityImageHotspot
-  crop?: SanityImageCrop
-  _type: 'image'
+export type TeaserLarge = {
+  _type: 'teaserLarge'
+  layout?: 'VIGNETTE' | 'TEXT' | 'IMAGE' | 'SPLIT'
+  heading?: string
+  title?: InlineEditor
+  lead?: InlineEditor
+  byline?: InlineEditor
+  color?: Color
+  backgroundColor?: Color
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  imageCredits?: string
+  imagePosition?: 'LEFT' | 'RIGHT'
+  imagePadding?: boolean
+  textSize?: 'SMALL' | 'MEDIUM' | 'LARGE' | 'STANDARD'
+  textPosition?:
+    | 'TOP'
+    | 'MIDDLE'
+    | 'BOTTOM'
+    | 'TOP_LEFT'
+    | 'TOP_RIGHT'
+    | 'BOTTOM_LEFT'
+    | 'BOTTOM_RIGHT'
+    | 'UNDERNEATH'
+  textAlignment?: 'LEFT' | 'CENTER'
+}
+
+export type TeaserSmall = {
+  _type: 'teaserSmall'
+  heading?: string
+  title?: InlineEditor
+  lead?: InlineEditor
+  byline?: InlineEditor
+  color?: Color
+  backgroundColor?: Color
 }
 
 export type EditorBlock = {
@@ -152,6 +210,87 @@ export type TeaserList = {
   source?: Source
   appearance?: 'FEED' | 'GRID' | 'CAROUSEL'
   maxItems?: number
+}
+
+export type SanityFileAssetReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+}
+
+export type Vorlage = {
+  _id: string
+  _type: 'vorlage'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  cover?: EditorialImage
+  heading?: PageReference
+  title: InlineEditor
+  description?: InlineEditor
+  byline?: InlineEditor
+  publishDate?: string
+  slug?: Slug
+  repoId?: string
+  content?: ArticleEditor
+  estimatedReadingMinutes?: number
+  suppressSyntheticReadAloud?: boolean
+  syntheticVoice?:
+    | 'huebsch-311-054-rpblk'
+    | 'huebsch-62964-rpblk'
+    | 'huebsch-714-109-rpblk'
+    | 'huebsch-82170-rpblk'
+    | 'huebsch-285-169-rpblk'
+    | 'huebsch-gen-female-e-rpblk'
+  syntheticVoice2?:
+    | 'huebsch-311-054-rpblk'
+    | 'huebsch-62964-rpblk'
+    | 'huebsch-714-109-rpblk'
+    | 'huebsch-82170-rpblk'
+    | 'huebsch-285-169-rpblk'
+    | 'huebsch-gen-female-e-rpblk'
+  audioSourceMp3?: string
+  audioDurationMs?: number
+  estimatedConsumptionMinutes?: number
+  teaserSmall?: TeaserSmall
+  teaserLarge?: TeaserLarge
+  seo?: Seo
+  showInFeed?: boolean
+  notificationTitle?: string
+  articleCollections?: Array<{
+    collection: ArticleCollectionReference
+    featured?: boolean
+    _type: 'articleCollectionEntry'
+    _key: string
+  }>
+  emailSubject?: string
+  newsletter?: NewsletterReference
+  mailchimpCampaignId?: string
+  mailchimpCampaignUrl?: string
+  podcast?: PodcastReference
+  articleRecommendations?: ArrayOf<ArticleReference | PageReference>
+  contributors?: Array<
+    {
+      _key: string
+    } & ContributorEntry
+  >
+  readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
+  showTextProgress?: boolean
+  theme?: Theme
+  excludeFromSearch?: boolean
+  files?: Array<{
+    asset?: SanityFileAssetReference
+    media?: unknown
+    _type: 'file'
+    _key: string
+  }>
+}
+
+export type Slug = {
+  _type: 'slug'
+  current: string
+  source?: string
 }
 
 export type LogEntry = {
@@ -320,6 +459,12 @@ export type PageEditor = Array<
   | ({
       _key: string
     } & Button)
+  | ({
+      _key: string
+    } & DynamicComponent)
+  | ({
+      _key: string
+    } & StoryComponent)
 >
 
 export type ArticleEditor = Array<
@@ -465,12 +610,6 @@ export type Contributor = {
   slug?: Slug
 }
 
-export type Slug = {
-  _type: 'slug'
-  current: string
-  source?: string
-}
-
 export type SanityImageCrop = {
   _type: 'sanity.imageCrop'
   top: number
@@ -492,13 +631,6 @@ export type DiscussionReference = {
   _type: 'reference'
   _weak?: boolean
   [internalGroqTypeReferenceTo]?: 'discussion'
-}
-
-export type SanityFileAssetReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
 }
 
 export type Article = {
@@ -535,11 +667,8 @@ export type Article = {
   audioSourceMp3?: string
   audioDurationMs?: number
   estimatedConsumptionMinutes?: number
-  image?: Image1
-  shortTitle?: InlineEditor
-  shortLead?: InlineEditor
-  shortByline?: InlineEditor
-  frontTeaser?: FrontTeaser
+  teaserSmall?: TeaserSmall
+  teaserLarge?: TeaserLarge
   seo?: Seo
   showInFeed?: boolean
   notificationTitle?: string
@@ -673,6 +802,7 @@ export type Page = {
       } & EditorBlock)
     | ArticleReference
     | PageReference
+    | TeaserReference
     | ({
         _key: string
       } & TeaserList)
@@ -683,11 +813,8 @@ export type Page = {
         _key: string
       } & Menu)
   >
-  image?: Image1
-  shortTitle?: InlineEditor
-  shortLead?: InlineEditor
-  shortByline?: InlineEditor
-  frontTeaser?: FrontTeaser
+  teaserSmall?: TeaserSmall
+  teaserLarge?: TeaserLarge
   seo?: Seo
   theme?: Theme
 }
@@ -705,37 +832,6 @@ export type Seo = {
     _type: 'image'
   }
   imageBuilder?: SeoImageBuilder
-}
-
-export type FrontTeaser = {
-  _type: 'frontTeaser'
-  layout?: 'VIGNETTE' | 'TEXT' | 'IMAGE' | 'SPLIT'
-  title?: InlineEditor
-  lead?: InlineEditor
-  byline?: InlineEditor
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  imageCredits?: string
-  imagePosition?: 'LEFT' | 'RIGHT'
-  imagePadding?: boolean
-  textSize?: 'SMALL' | 'MEDIUM' | 'LARGE' | 'STANDARD'
-  textPosition?:
-    | 'TOP'
-    | 'MIDDLE'
-    | 'BOTTOM'
-    | 'TOP_LEFT'
-    | 'TOP_RIGHT'
-    | 'BOTTOM_LEFT'
-    | 'BOTTOM_RIGHT'
-    | 'UNDERNEATH'
-  textAlignment?: 'LEFT' | 'CENTER'
-  color?: Color
-  backgroundColor?: Color
 }
 
 export type EditorialImage = {
@@ -1177,10 +1273,13 @@ export type AllSanitySchemaTypes =
   | ArticleCollectionReference
   | ArticleReference
   | PageReference
+  | TeaserReference
   | Source
   | Heading
+  | Teaser
   | SanityImageAssetReference
-  | Image1
+  | TeaserLarge
+  | TeaserSmall
   | EditorBlock
   | NewsletterReference
   | PodcastReference
@@ -1189,6 +1288,9 @@ export type AllSanitySchemaTypes =
   | MeineRepublik
   | BestOfDialogue
   | TeaserList
+  | SanityFileAssetReference
+  | Vorlage
+  | Slug
   | LogEntry
   | SignOff
   | ContributorReference
@@ -1204,11 +1306,9 @@ export type AllSanitySchemaTypes =
   | InternalLink
   | ExpandableLink
   | Contributor
-  | Slug
   | SanityImageCrop
   | SanityImageHotspot
   | DiscussionReference
-  | SanityFileAssetReference
   | Article
   | Theme
   | Discussion
@@ -1216,7 +1316,6 @@ export type AllSanitySchemaTypes =
   | Newsletter
   | Page
   | Seo
-  | FrontTeaser
   | EditorialImage
   | Link
   | Variable
@@ -1276,7 +1375,7 @@ export type SERIES_NAV_QUERY_RESULT = {
     _id: string
     title: InlineEditor
     description: InlineEditor | null
-    image: Image1 | null
+    image: null
   }>
 } | null
 
@@ -1690,7 +1789,7 @@ export type ARTICLE_QUERY_RESULT = {
           _key: string
         }> | null
         slug: string
-        image: Image1 | null
+        image: null
         publishDate: string | null
         heading: {
           _id: string
@@ -1738,7 +1837,7 @@ export type ARTICLE_QUERY_RESULT = {
           _key: string
         }> | null
         slug: string
-        image: Image1 | null
+        image: null
         publishDate: string | null
         heading: {
           _id: string
@@ -1767,65 +1866,7 @@ export type TEASER_QUERY_RESULT =
       theme: {
         name: 'EDITORIAL' | 'META' | 'PAGE' | null
       } | null
-      teaser: {
-        layout: 'IMAGE' | 'SPLIT' | 'TEXT' | 'VIGNETTE' | null
-        title: InlineEditor
-        lead: InlineEditor | null
-        byline: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'normal'
-          listItem?: never
-          markDefs: Array<
-            | {
-                _key: string
-                _type: 'internalLink'
-                reference?:
-                  | ArticleReference
-                  | ContributorReference
-                  | PageReference
-                slug: string | null
-              }
-            | {
-                _key: string
-                _type: 'link'
-                href?: string
-                title?: string
-              }
-          > | null
-          level?: number
-          _type: 'block'
-          _key: string
-        }> | null
-        image: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          _type: 'image'
-        } | null
-        imageCredits: string | null
-        imagePosition: 'LEFT' | 'RIGHT' | null
-        imagePadding: boolean | null
-        textPosition:
-          | 'BOTTOM_LEFT'
-          | 'BOTTOM_RIGHT'
-          | 'BOTTOM'
-          | 'MIDDLE'
-          | 'TOP_LEFT'
-          | 'TOP_RIGHT'
-          | 'TOP'
-          | 'UNDERNEATH'
-          | null
-        textAlignment: 'CENTER' | 'LEFT' | null
-        textSize: 'LARGE' | 'MEDIUM' | 'SMALL' | 'STANDARD' | null
-        color: Color | null
-        backgroundColor: Color | null
-      } | null
+      teaser: null
     }
   | {
       _type: 'page'
@@ -1837,65 +1878,7 @@ export type TEASER_QUERY_RESULT =
       theme: {
         name: 'EDITORIAL' | 'META' | 'PAGE' | null
       } | null
-      teaser: {
-        layout: 'IMAGE' | 'SPLIT' | 'TEXT' | 'VIGNETTE' | null
-        title: InlineEditor
-        lead: InlineEditor | null
-        byline: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'normal'
-          listItem?: never
-          markDefs: Array<
-            | {
-                _key: string
-                _type: 'internalLink'
-                reference?:
-                  | ArticleReference
-                  | ContributorReference
-                  | PageReference
-                slug: string | null
-              }
-            | {
-                _key: string
-                _type: 'link'
-                href?: string
-                title?: string
-              }
-          > | null
-          level?: number
-          _type: 'block'
-          _key: string
-        }> | null
-        image: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          _type: 'image'
-        } | null
-        imageCredits: string | null
-        imagePosition: 'LEFT' | 'RIGHT' | null
-        imagePadding: boolean | null
-        textPosition:
-          | 'BOTTOM_LEFT'
-          | 'BOTTOM_RIGHT'
-          | 'BOTTOM'
-          | 'MIDDLE'
-          | 'TOP_LEFT'
-          | 'TOP_RIGHT'
-          | 'TOP'
-          | 'UNDERNEATH'
-          | null
-        textAlignment: 'CENTER' | 'LEFT' | null
-        textSize: 'LARGE' | 'MEDIUM' | 'SMALL' | 'STANDARD' | null
-        color: Color | null
-        backgroundColor: Color | null
-      } | null
+      teaser: null
     }
   | null
 
@@ -1935,7 +1918,7 @@ export type ARTICLES_QUERY_RESULT = Array<{
     _key: string
   }> | null
   slug: string
-  image: Image1 | null
+  image: null
   publishDate: string | null
   heading: {
     _id: string
@@ -2023,65 +2006,7 @@ export type FRONT_TEASER_FRAGMENT_QUERY_RESULT =
       theme: {
         name: 'EDITORIAL' | 'META' | 'PAGE' | null
       } | null
-      teaser: {
-        layout: 'IMAGE' | 'SPLIT' | 'TEXT' | 'VIGNETTE' | null
-        title: InlineEditor
-        lead: InlineEditor | null
-        byline: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'normal'
-          listItem?: never
-          markDefs: Array<
-            | {
-                _key: string
-                _type: 'internalLink'
-                reference?:
-                  | ArticleReference
-                  | ContributorReference
-                  | PageReference
-                slug: string | null
-              }
-            | {
-                _key: string
-                _type: 'link'
-                href?: string
-                title?: string
-              }
-          > | null
-          level?: number
-          _type: 'block'
-          _key: string
-        }> | null
-        image: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          _type: 'image'
-        } | null
-        imageCredits: string | null
-        imagePosition: 'LEFT' | 'RIGHT' | null
-        imagePadding: boolean | null
-        textPosition:
-          | 'BOTTOM_LEFT'
-          | 'BOTTOM_RIGHT'
-          | 'BOTTOM'
-          | 'MIDDLE'
-          | 'TOP_LEFT'
-          | 'TOP_RIGHT'
-          | 'TOP'
-          | 'UNDERNEATH'
-          | null
-        textAlignment: 'CENTER' | 'LEFT' | null
-        textSize: 'LARGE' | 'MEDIUM' | 'SMALL' | 'STANDARD' | null
-        color: Color | null
-        backgroundColor: Color | null
-      } | null
+      teaser: null
     }
   | {
       _type: 'page'
@@ -2093,65 +2018,7 @@ export type FRONT_TEASER_FRAGMENT_QUERY_RESULT =
       theme: {
         name: 'EDITORIAL' | 'META' | 'PAGE' | null
       } | null
-      teaser: {
-        layout: 'IMAGE' | 'SPLIT' | 'TEXT' | 'VIGNETTE' | null
-        title: InlineEditor
-        lead: InlineEditor | null
-        byline: Array<{
-          children?: Array<{
-            marks?: Array<string>
-            text?: string
-            _type: 'span'
-            _key: string
-          }>
-          style?: 'normal'
-          listItem?: never
-          markDefs: Array<
-            | {
-                _key: string
-                _type: 'internalLink'
-                reference?:
-                  | ArticleReference
-                  | ContributorReference
-                  | PageReference
-                slug: string | null
-              }
-            | {
-                _key: string
-                _type: 'link'
-                href?: string
-                title?: string
-              }
-          > | null
-          level?: number
-          _type: 'block'
-          _key: string
-        }> | null
-        image: {
-          asset?: SanityImageAssetReference
-          media?: unknown
-          hotspot?: SanityImageHotspot
-          crop?: SanityImageCrop
-          _type: 'image'
-        } | null
-        imageCredits: string | null
-        imagePosition: 'LEFT' | 'RIGHT' | null
-        imagePadding: boolean | null
-        textPosition:
-          | 'BOTTOM_LEFT'
-          | 'BOTTOM_RIGHT'
-          | 'BOTTOM'
-          | 'MIDDLE'
-          | 'TOP_LEFT'
-          | 'TOP_RIGHT'
-          | 'TOP'
-          | 'UNDERNEATH'
-          | null
-        textAlignment: 'CENTER' | 'LEFT' | null
-        textSize: 'LARGE' | 'MEDIUM' | 'SMALL' | 'STANDARD' | null
-        color: Color | null
-        backgroundColor: Color | null
-      } | null
+      teaser: null
     }
   | null
 
@@ -2330,6 +2197,41 @@ export type PAGE_QUERY_RESULT = {
             }
           | {
               _key: string
+              _type: 'dynamicComponent'
+              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+              src?: string
+              identifier?:
+                | 'CHALLENGE_ACCEPTED_INLINE_TEASER'
+                | 'CLIMATE_LAB_COUNTER'
+                | 'CLIMATE_LAB_INLINE_TEASER'
+                | 'COMPACT_DETAILS_FORM'
+                | 'EDGE_QUESTION'
+                | 'ELECTION_CANDIDACY'
+                | 'ELECTION_RESULT_DIVERSITY'
+                | 'ELECTION_RESULT'
+                | 'ELECTION'
+                | 'INSTANT_SURVEY'
+                | 'MANIFEST'
+                | 'NEWSLETTER_SIGNUP'
+                | 'POSTCARD_GALLERY'
+                | 'POSTCARD'
+                | 'QUESTIONNAIRE_OVERVIEW'
+                | 'QUESTIONNAIRE_SUBMISSIONS'
+                | 'QUESTIONNAIRE'
+                | 'REASONS_VIDEO'
+                | 'TEAM_TEASER'
+                | 'TESTIMONIAL_LIST'
+                | 'TRIAL_FORM'
+                | 'VOTE_COUNTER'
+                | 'VOTE_RESULT'
+                | 'VOTEBOX'
+              props?: Code
+              autoHtml?: boolean
+              html?: Code
+              markDefs: null
+            }
+          | {
+              _key: string
               _type: 'editorialImage'
               asset?: SanityImageAssetReference
               media?: unknown
@@ -2443,6 +2345,15 @@ export type PAGE_QUERY_RESULT = {
               source?: string
               image?: AsideImage
               size?: 'breakout' | 'float' | 'narrow'
+              markDefs: null
+            }
+          | {
+              _key: string
+              _type: 'storyComponent'
+              url?: string
+              tagname?: string
+              componentData?: Code
+              size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
               markDefs: null
             }
         > | null
@@ -2568,6 +2479,41 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
         }
       | {
           _key: string
+          _type: 'dynamicComponent'
+          size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+          src?: string
+          identifier?:
+            | 'CHALLENGE_ACCEPTED_INLINE_TEASER'
+            | 'CLIMATE_LAB_COUNTER'
+            | 'CLIMATE_LAB_INLINE_TEASER'
+            | 'COMPACT_DETAILS_FORM'
+            | 'EDGE_QUESTION'
+            | 'ELECTION_CANDIDACY'
+            | 'ELECTION_RESULT_DIVERSITY'
+            | 'ELECTION_RESULT'
+            | 'ELECTION'
+            | 'INSTANT_SURVEY'
+            | 'MANIFEST'
+            | 'NEWSLETTER_SIGNUP'
+            | 'POSTCARD_GALLERY'
+            | 'POSTCARD'
+            | 'QUESTIONNAIRE_OVERVIEW'
+            | 'QUESTIONNAIRE_SUBMISSIONS'
+            | 'QUESTIONNAIRE'
+            | 'REASONS_VIDEO'
+            | 'TEAM_TEASER'
+            | 'TESTIMONIAL_LIST'
+            | 'TRIAL_FORM'
+            | 'VOTE_COUNTER'
+            | 'VOTE_RESULT'
+            | 'VOTEBOX'
+          props?: Code
+          autoHtml?: boolean
+          html?: Code
+          markDefs: null
+        }
+      | {
+          _key: string
           _type: 'editorialImage'
           asset?: SanityImageAssetReference
           media?: unknown
@@ -2683,6 +2629,15 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
           size?: 'breakout' | 'float' | 'narrow'
           markDefs: null
         }
+      | {
+          _key: string
+          _type: 'storyComponent'
+          url?: string
+          tagname?: string
+          componentData?: Code
+          size?: 'BREAKOUT' | 'FULL' | 'NORMAL'
+          markDefs: null
+        }
     > | null
   } | null
 } | null
@@ -2694,16 +2649,13 @@ export type SEO_QUERY_RESULT =
   | {
       title: string
       description: string
-      image:
-        | Image1
-        | {
-            asset?: SanityImageAssetReference
-            media?: unknown
-            hotspot?: SanityImageHotspot
-            crop?: SanityImageCrop
-            _type: 'image'
-          }
-        | null
+      image: {
+        asset?: SanityImageAssetReference
+        media?: unknown
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        _type: 'image'
+      } | null
     }
   | {
       title: string
@@ -2763,7 +2715,7 @@ export type TEASER_FRAGMENT_QUERY_RESULT = Array<
         _key: string
       }> | null
       slug: string
-      image: Image1 | null
+      image: null
       publishDate: string | null
       heading: {
         _id: string
@@ -2782,7 +2734,7 @@ export type TEASER_FRAGMENT_QUERY_RESULT = Array<
       description: InlineEditor | null
       byline: null
       slug: string
-      image: Image1 | null
+      image: null
       publishDate: string | null
       heading: {
         _id: string
@@ -2853,7 +2805,7 @@ export type TEASERS_QUERY_DESC_RESULT = {
                 _key: string
               }> | null
               slug: string
-              image: Image1 | null
+              image: null
               publishDate: string | null
               heading: {
                 _id: string
@@ -2903,7 +2855,7 @@ export type TEASERS_QUERY_DESC_RESULT = {
                     _key: string
                   }> | null
                   slug: string
-                  image: Image1 | null
+                  image: null
                   publishDate: string | null
                   heading: {
                     _id: string
@@ -2922,7 +2874,7 @@ export type TEASERS_QUERY_DESC_RESULT = {
                   description: InlineEditor | null
                   byline: null
                   slug: string
-                  image: Image1 | null
+                  image: null
                   publishDate: string | null
                   heading: {
                     _id: string
@@ -2933,6 +2885,18 @@ export type TEASERS_QUERY_DESC_RESULT = {
                     name: 'EDITORIAL' | 'META' | 'PAGE' | null
                     accentColor: Color | null
                   } | null
+                }
+              | {
+                  _id: string
+                  _type: 'teaser'
+                  title: null
+                  description: null
+                  byline: null
+                  slug: null
+                  image: null
+                  publishDate: null
+                  heading: null
+                  theme: null
                 }
             >
           | null
@@ -2986,7 +2950,7 @@ export type TEASERS_QUERY_ASC_RESULT = {
                 _key: string
               }> | null
               slug: string
-              image: Image1 | null
+              image: null
               publishDate: string | null
               heading: {
                 _id: string
@@ -3036,7 +3000,7 @@ export type TEASERS_QUERY_ASC_RESULT = {
                     _key: string
                   }> | null
                   slug: string
-                  image: Image1 | null
+                  image: null
                   publishDate: string | null
                   heading: {
                     _id: string
@@ -3055,7 +3019,7 @@ export type TEASERS_QUERY_ASC_RESULT = {
                   description: InlineEditor | null
                   byline: null
                   slug: string
-                  image: Image1 | null
+                  image: null
                   publishDate: string | null
                   heading: {
                     _id: string
@@ -3066,6 +3030,18 @@ export type TEASERS_QUERY_ASC_RESULT = {
                     name: 'EDITORIAL' | 'META' | 'PAGE' | null
                     accentColor: Color | null
                   } | null
+                }
+              | {
+                  _id: string
+                  _type: 'teaser'
+                  title: null
+                  description: null
+                  byline: null
+                  slug: null
+                  image: null
+                  publishDate: null
+                  heading: null
+                  theme: null
                 }
             >
           | null
@@ -3115,7 +3091,7 @@ export type UPCOMING_TEASER_FRAGMENT_QUERY_RESULT = Array<
         _type: 'block'
         _key: string
       }> | null
-      image: Image1 | null
+      image: null
       publishDate: string | null
       theme: {
         name: 'EDITORIAL' | 'META' | 'PAGE' | null
@@ -3128,7 +3104,7 @@ export type UPCOMING_TEASER_FRAGMENT_QUERY_RESULT = Array<
       title: InlineEditor
       description: InlineEditor | null
       byline: null
-      image: Image1 | null
+      image: null
       publishDate: string | null
       theme: {
         name: 'EDITORIAL' | 'META' | 'PAGE' | null
@@ -3172,7 +3148,7 @@ export type UPCOMING_TEASERS_QUERY_RESULT = Array<{
     _type: 'block'
     _key: string
   }> | null
-  image: Image1 | null
+  image: null
   publishDate: string | null
   theme: {
     name: 'EDITORIAL' | 'META' | 'PAGE' | null

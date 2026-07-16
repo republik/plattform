@@ -8,7 +8,7 @@ import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { css } from '@republik/theme/css'
 import React from 'react'
 
-const DEFAULT_TEASERS_LIMIT = 20
+const DEFAULT_TEASERS_LIMIT = 12
 
 const carousel = css({
   gridColumn: 'full',

@@ -11,7 +11,9 @@ export default function GridTeaser({
   label,
   comingSoon = false,
 }: {
-  teaser: TeaserFragmentType | UpcomingTeaserFragmentType
+  teaser:
+    | Omit<TeaserFragmentType, '_type'>
+    | Omit<UpcomingTeaserFragmentType, '_type'>
   label?: string
   comingSoon?: boolean
 }) {
