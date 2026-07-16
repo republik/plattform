@@ -10,14 +10,20 @@ import { getImageDimensions } from '@sanity/asset-utils'
 import { Image } from 'next-sanity/image'
 import Link from 'next/link'
 
-export async function SeriesNav({ value }: { value: SeriesNav }) {
+export async function SeriesNav({
+  value,
+  compact = false,
+}: {
+  value: SeriesNav
+  compact?: boolean
+}) {
   const { data: series } = await sanityFetch({
     query: SERIES_NAV_QUERY,
     params: { id: value.series._ref },
   })
 
   if (!series) {
-    return <div>KEINE SERIE '{value.series._ref}' GEFUNDEN</div>
+    return null
   }
 
   const labels = getSeriesLabels(series.episodes)
@@ -25,24 +31,31 @@ export async function SeriesNav({ value }: { value: SeriesNav }) {
   return (
     <>
       <Infobox title={series.title}>
-        <p>
-          {series.description}{' '}
-          <Link href={`/pages${series.slug}`}>Zur Übersicht.</Link>
-        </p>
+        {!compact && (
+          <p>
+            {series.description}{' '}
+            <Link href={`/pages${series.slug}`}>Zur Übersicht.</Link>
+          </p>
+        )}
       </Infobox>
       <div
         className={css({
           gridColumn: 'full',
+          display: 'flex',
+          justifyContent: 'center',
         })}
       >
         <div
           className={css({
-            overflowX: 'auto',
+            overflowX: 'scroll',
+            overflowY: 'hidden',
             scrollSnapType: 'x mandatory',
-            display: 'grid',
+            display: 'inline-grid',
             gridAutoFlow: 'column',
-            gridAutoColumns: 'min(280px, 80vw)',
+            gridAutoColumns: 'min(170px, 80vw)',
             gap: '4',
+            pb: '8',
+            mx: 'auto',
           })}
         >
           {series.episodes?.map((episode, i) => {
@@ -59,22 +72,28 @@ export async function SeriesNav({ value }: { value: SeriesNav }) {
                   flexDirection: 'column',
                   gap: '1',
                   alignItems: 'center',
-                  p: '1',
                   scrollSnapAlign: 'center',
                 })}
               >
-                <p>{labels[i]}</p>
+                <h6 className={css({ fontSize: 's' })}>{labels[i]}</h6>
                 {episode.image && (
                   <Image
                     src={src}
-                    width={200}
-                    height={200 / dimensions.aspectRatio}
+                    width={170}
+                    height={170 / dimensions.aspectRatio}
                     alt=''
                   />
                 )}
-                <h3 className={css({ textStyle: 'h3Serif', fontSize: 'l' })}>
+                <h5
+                  className={css({
+                    textStyle: 'h3Serif',
+                    fontSize: 'medium',
+                    textAlign: 'left',
+                    width: '100%',
+                  })}
+                >
                   <InlinePortableText value={episode.title} />
-                </h3>
+                </h5>
               </div>
             )
           })}
