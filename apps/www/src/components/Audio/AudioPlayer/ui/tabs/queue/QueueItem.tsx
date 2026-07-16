@@ -1,6 +1,4 @@
-import { useColorContext } from '@project-r/styleguide'
-import { css } from 'glamor'
-import AudioListItem from '../shared/AudioListItem'
+import { AudioQueueItem } from '@/components/Audio/types/AudioPlayerItem'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import {
@@ -9,7 +7,9 @@ import {
   IconLink,
   IconRemoveCircle,
 } from '@republik/icons'
-import { AudioQueueItem } from '@/components/Audio/types/AudioPlayerItem'
+import { token } from '@republik/theme/tokens'
+import { css } from 'glamor'
+import AudioListItem from '../shared/AudioListItem'
 
 const styles = {
   root: css({
@@ -25,6 +25,7 @@ const styles = {
     cursor: 'pointer',
   }),
   dragControl: css({
+    color: token.var('colors.disabled'),
     padding: 0,
     cursor: 'grab',
     '&:hover': {
@@ -56,7 +57,6 @@ const QueueItem = ({
   onDownload,
   onOpen,
 }: QueueItemProps) => {
-  const [colorScheme] = useColorContext()
   const {
     attributes,
     listeners,
@@ -86,10 +86,9 @@ const QueueItem = ({
             {...styles.buttonFix}
             {...css({
               '&:hover, &:active': {
-                ...colorScheme.set('backgroundColor', 'hover'),
+                backgroundColor: token.var('colors.hover'),
               },
             })}
-            {...colorScheme.set('color', 'disabled')}
             {...attributes}
             {...listeners}
           >

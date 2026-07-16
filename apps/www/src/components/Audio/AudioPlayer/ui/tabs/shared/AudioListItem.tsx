@@ -1,12 +1,13 @@
-import { fontStyles, useColorContext } from '@project-r/styleguide'
-import { css } from 'glamor'
-import { dateFormatter, formatMinutes } from '../../../shared'
-import AudioPlayerTitle from '../../AudioPlayerTitle'
-import AudioCover from '../../AudioCover'
-import { useInNativeApp } from '@/lib/withInNativeApp'
-import { ReactNode } from 'react'
-import AudioCalloutMenu, { AudioListItemAction } from './AudioCalloutMenu'
 import { AudioQueueItem } from '@/components/Audio/types/AudioPlayerItem'
+import { useInNativeApp } from '@/lib/withInNativeApp'
+import { fontStyles } from '@project-r/styleguide'
+import { token } from '@republik/theme/tokens'
+import { css } from 'glamor'
+import { ReactNode } from 'react'
+import { dateFormatter, formatMinutes } from '../../../shared'
+import AudioCover from '../../AudioCover'
+import AudioPlayerTitle from '../../AudioPlayerTitle'
+import AudioCalloutMenu, { AudioListItemAction } from './AudioCalloutMenu'
 
 const styles = {
   root: css({
@@ -50,6 +51,7 @@ const styles = {
     fontSize: 12,
     gap: 12,
     display: 'flex',
+    color: token.var('colors.textSoft'),
   }),
   actions: css({
     alignSelf: 'stretch',
@@ -86,7 +88,6 @@ const AudioListItem = ({
   beforeActionItem,
   actions,
 }: AudioListItemProps) => {
-  const [colorScheme] = useColorContext()
   const { inNativeApp } = useInNativeApp()
 
   const { meta } = item
@@ -100,9 +101,9 @@ const AudioListItem = ({
   return (
     <div
       {...styles.root}
-      {...(inNativeApp
-        ? colorScheme.set('backgroundColor', 'default')
-        : colorScheme.set('backgroundColor', 'overlay'))}
+      style={{
+        backgroundColor: token.var('colors.background.overlay'),
+      }}
     >
       {beforeActionItem}
       <button
@@ -122,10 +123,7 @@ const AudioListItem = ({
           <div {...styles.dataWrapper}>
             <div {...styles.dataText}>
               <AudioPlayerTitle title={meta.title} />
-              <span
-                {...styles.metaLine}
-                {...colorScheme.set('color', 'textSoft')}
-              >
+              <span {...styles.metaLine}>
                 <span>{dateFormatter(publishDate)}</span>
                 <span style={{ whiteSpace: 'nowrap' }}>
                   {durationString} min
@@ -145,12 +143,15 @@ const AudioListItem = ({
             </div>
             {audioSource.userProgress?.secs >= 10 && (
               <div
-                {...colorScheme.set('backgroundColor', 'hover')}
-                style={{ width: '100%', height: 2 }}
+                style={{
+                  width: '100%',
+                  height: 2,
+                  backgroundColor: token.var('colors.hover'),
+                }}
               >
                 <div
-                  {...colorScheme.set('backgroundColor', 'divider')}
                   style={{
+                    backgroundColor: token.var('colors.divider'),
                     position: 'relative',
                     width: `${
                       (audioSource.userProgress.secs /

@@ -86,12 +86,19 @@ const IconButton = React.forwardRef<
           height={size || ICON_SIZE}
           {...colorScheme.set('fill', fillValue)}
           {...colorScheme.set('color', fillValue)}
+          style={{
+            fill: `var(--r-colors-${fillValue})`,
+            color: `var(--r-colors-${fillValue})`,
+          }}
         />
         {label && (
           <span
             {...styles.label}
             {...styles.long}
             {...colorScheme.set('color', fillValue)}
+            style={{
+              color: `var(--r-colors-${fillValue})`,
+            }}
           >
             {label}
           </span>
@@ -101,6 +108,9 @@ const IconButton = React.forwardRef<
             {...styles.label}
             {...styles.short}
             {...colorScheme.set('color', fillValue)}
+            style={{
+              color: `var(--r-colors-${fillValue})`,
+            }}
           >
             {labelShort}
           </span>

@@ -1,12 +1,11 @@
-import React from 'react'
-import { css } from 'glamor'
+import { useTranslation } from '@/lib/withT'
 import {
-  plainButtonRule,
   fontStyles,
   mediaQueries,
-  useColorContext,
+  plainButtonRule,
 } from '@project-r/styleguide'
-import { useTranslation } from '@/lib/withT'
+import { token } from '@republik/theme/tokens'
+import { css } from 'glamor'
 
 const styles = {
   root: css({
@@ -17,6 +16,7 @@ const styles = {
     [mediaQueries.mUp]: {
       ...fontStyles.sansSerifRegular15,
     },
+    color: token.var('colors.error'),
   }),
   button: css({
     display: 'inline-block',
@@ -26,10 +26,9 @@ const styles = {
 
 const AudioError = () => {
   const { t } = useTranslation()
-  const [colorScheme] = useColorContext()
 
   return (
-    <div {...styles.root} {...colorScheme.set('color', 'error')}>
+    <div {...styles.root}>
       <span>{t('AudioPlayer/error')}</span>
       <button
         {...plainButtonRule}

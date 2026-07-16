@@ -57,7 +57,7 @@ const AudioPlayerToggle = () => {
   return isAudioQueueAvailable ? (
     <button {...styles.menuToggle} onClick={onClick}>
       <div {...styles.audioButton}>
-        <IconMic {...colorScheme.set('fill', 'text')} size={SIZE} />
+        <IconMic size={SIZE} />
         {!!lazyCount && (
           <span
             {...colorScheme.set('background', 'default')}
