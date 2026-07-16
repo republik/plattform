@@ -5,7 +5,7 @@ export const TEASERS_QUERY_DESC = defineQuery(`
   *[_type == "page" && _id == $documentId][0]{
     "block": pageBuilder[_key == $blockKey][0]{
      "teasers": select(
-        source.sourceType == "MANUAL" => source.items[$start...$end]->{
+        source.sourceType == "MANUAL" => source.items[@->_type in ["article", "page"]][$start...$end]->{
           ${TEASER_FRAGMENT}
         },
         source.sourceType == "COLLECTION" => *[
@@ -23,7 +23,7 @@ export const TEASERS_QUERY_ASC = defineQuery(`
    *[_type == "page" && _id == $documentId][0]{
     "block": pageBuilder[_key == $blockKey][0]{
      "teasers": select(
-        source.sourceType == "MANUAL" => source.items[$start...$end]->{
+        source.sourceType == "MANUAL" => source.items[@->_type in ["article", "page"]][$start...$end]->{
           ${TEASER_FRAGMENT}
         },
         source.sourceType == "COLLECTION" => *[

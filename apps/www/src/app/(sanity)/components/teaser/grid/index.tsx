@@ -3,7 +3,6 @@ import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
 import { SquareTeaserImage } from '@/app/(sanity)/components/teaser/_shared/square-teaser-image'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
 import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
-import { UpcomingTeaserFragmentType } from '@/app/(sanity)/groq/upcoming-teaser-fragment'
 import { css, cx } from '@republik/theme/css'
 
 export default function GridTeaser({
@@ -11,9 +10,7 @@ export default function GridTeaser({
   label,
   comingSoon = false,
 }: {
-  teaser:
-    | Omit<TeaserFragmentType, '_type'>
-    | Omit<UpcomingTeaserFragmentType, '_type'>
+  teaser: TeaserFragmentType
   label?: string
   comingSoon?: boolean
 }) {
