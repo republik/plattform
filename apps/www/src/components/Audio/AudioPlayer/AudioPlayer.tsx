@@ -6,7 +6,7 @@ import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
 import ExpandedAudioPlayer from './ExpandedAudioPlayer'
 import MiniAudioPlayer from './MiniAudioPlayer'
 import Backdrop from './ui/Backdrop'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import {
   useMediaQuery,
   mediaQueries,

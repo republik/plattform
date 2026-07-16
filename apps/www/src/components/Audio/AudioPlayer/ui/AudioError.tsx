@@ -1,5 +1,4 @@
 import React from 'react'
-import { useRouter } from 'next/router'
 import { css } from 'glamor'
 import {
   plainButtonRule,
@@ -27,13 +26,16 @@ const styles = {
 
 const AudioError = () => {
   const { t } = useTranslation()
-  const { reload } = useRouter()
   const [colorScheme] = useColorContext()
 
   return (
     <div {...styles.root} {...colorScheme.set('color', 'error')}>
       <span>{t('AudioPlayer/error')}</span>
-      <button {...plainButtonRule} {...styles.button} onClick={() => reload()}>
+      <button
+        {...plainButtonRule}
+        {...styles.button}
+        onClick={() => window.location.reload()}
+      >
         {t('AudioPlayer/error/reload')}
       </button>
     </div>

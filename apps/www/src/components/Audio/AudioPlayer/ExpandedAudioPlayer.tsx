@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useMemo } from 'react'
 import { css } from 'glamor'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import {
   IconButton,
   mediaQueries,
@@ -153,13 +153,15 @@ const ExpandedAudioPlayer = ({
     if (isDesktop || !isAndroid) {
       return
     }
-    router.beforePopState(() => {
+    // FIXME: this does not actually prevent navigation if there is no state that was pushed before
+    const handlePopState = (e) => {
+      e.preventDefault()
       handleMinimize()
       return false
-    })
-
-    return () => router.beforePopState(() => true)
-  }, [router.beforePopState, handleMinimize])
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [handleMinimize])
 
   const handleDownload = async (item: AudioQueueItem['document']) => {
     try {
