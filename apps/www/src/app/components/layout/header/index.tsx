@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { ComponentPropsWithoutRef, useRef } from 'react'
 import { Logo } from './logo'
 import { NavLink } from './nav-link'
+import AudioPlayerToggle from '@/components/Frame/AudioPlayerToggle'
 
 const getInitials = (name, email) =>
   (name && name.trim()
@@ -74,6 +75,7 @@ export function PageHeader({
   const navLinks = [
     { href: '/', label: 'Magazin' },
     { href: '/feed', label: 'Feed' },
+    { href: '/articles/feed', label: 'Feed (Sanity)' },
     { href: '/dialog', label: 'Dialog' },
     { href: '/suche', label: 'Suche', icon: <IconSearchMenu size={18} /> },
   ]
@@ -158,11 +160,7 @@ export function PageHeader({
             })}
           >
             {
-              hasActiveMembership ? (
-                <button disabled className={css({ p: '0' })}>
-                  <IconMic size={28} />
-                </button>
-              ) : null
+              <AudioPlayerToggle />
 
               // TODO: decide what to do with this abonnieren CTA
 
