@@ -119,7 +119,7 @@ export type TeaserLarge = {
   layout?: 'VIGNETTE' | 'TEXT' | 'IMAGE' | 'SPLIT'
   heading?: string
   title?: InlineEditor
-  lead?: InlineEditor
+  description?: InlineEditor
   byline?: InlineEditor
   color?: Color
   backgroundColor?: Color
@@ -157,7 +157,7 @@ export type TeaserSmall = {
   }
   heading?: string
   title?: InlineEditor
-  lead?: InlineEditor
+  description?: InlineEditor
   byline?: InlineEditor
   color?: Color
   backgroundColor?: Color
@@ -1070,7 +1070,7 @@ export type EmbedVideo = {
 export type Chart = {
   _type: 'chart'
   title?: InlineEditor
-  lead?: InlineEditor
+  description?: InlineEditor
   chartConfig?: ChartConfig
   source?: InlineEditor
   size?: 'FLOAT_TINY' | 'NARROW' | 'NORMAL' | 'BREAKOUT'
@@ -1364,28 +1364,6 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | Geopoint
 
-// Source: src/app/(sanity)/components/portable-text/series-nav.tsx
-// Variable: SERIES_NAV_QUERY
-// Query: *[_type == "articleCollection" && _id == $id][0]{    _id,    title,    description,    image,    "episodes": *[_type == "article" && references(^._id)]{      _id,      title,      description,      image    }  }
-export type SERIES_NAV_QUERY_RESULT = {
-  _id: string
-  title: string
-  description: string | null
-  image: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  } | null
-  episodes: Array<{
-    _id: string
-    title: InlineEditor
-    description: InlineEditor | null
-    image: null
-  }>
-} | null
-
 // Source: src/app/(sanity)/groq/article-query.ts
 // Variable: ARTICLE_QUERY
 // Query: *[_type == "article" && slug.current == $slug][0]{    _id,    title,    description,      byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },    cover {      ...    },    heading->{      _id,      title,      "slug": slug.current    },    newsletter->{      title,      description,      frequency,      image,      name,    },    theme {      name,      accentColor,      darkMode    },      content[]{    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  },    contributors[]{      _id,      kind,      "slug": contributor->userId,      "name": contributor->title,      "description": contributor->description,      "portrait": contributor->portrait    },    "articleCollection": articleCollections[featured == true][0].collection->{      _id,      title,      description,      image    },    articleRecommendations[]->{        _id,  _type,  "title": coalesce(shortTitle, title),  "description": coalesce(shortLead, description),  "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, ^.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),  "slug": slug.current,  image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current,  },  theme {    name,    accentColor,  },    }  }
@@ -1527,7 +1505,7 @@ export type ARTICLE_QUERY_RESULT = {
         _key: string
         _type: 'chart'
         title?: InlineEditor
-        lead?: InlineEditor
+        description?: InlineEditor
         chartConfig?: ChartConfig
         source?: InlineEditor
         size?: 'BREAKOUT' | 'FLOAT_TINY' | 'NARROW' | 'NORMAL'
@@ -2190,7 +2168,7 @@ export type PAGE_QUERY_RESULT = {
               _key: string
               _type: 'chart'
               title?: InlineEditor
-              lead?: InlineEditor
+              description?: InlineEditor
               chartConfig?: ChartConfig
               source?: InlineEditor
               size?: 'BREAKOUT' | 'FLOAT_TINY' | 'NARROW' | 'NORMAL'
@@ -2472,7 +2450,7 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
           _key: string
           _type: 'chart'
           title?: InlineEditor
-          lead?: InlineEditor
+          description?: InlineEditor
           chartConfig?: ChartConfig
           source?: InlineEditor
           size?: 'BREAKOUT' | 'FLOAT_TINY' | 'NARROW' | 'NORMAL'
@@ -2681,6 +2659,68 @@ export type SEO_QUERY_RESULT =
       } | null
     }
   | null
+
+// Source: src/app/(sanity)/groq/series-nav-query.ts
+// Variable: SERIES_NAV_QUERY
+// Query: *[_type == "articleCollection" && _id == $id][0]{    _id,    title,    description,    image,    slug,    "episodes": *[_type == "article" && references(^._id)]{        _id,  _type,  "title": coalesce(shortTitle, title),  "description": coalesce(shortLead, description),  "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, ^.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),  "slug": slug.current,  image,  publishDate,  heading->{    _id,    "title": pt::text(title),    "slug": slug.current,  },  theme {    name,    accentColor,  },    }  }
+export type SERIES_NAV_QUERY_RESULT = {
+  _id: string
+  title: string
+  description: string | null
+  image: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  } | null
+  slug: null
+  episodes: Array<{
+    _id: string
+    _type: 'article'
+    title: InlineEditor
+    description: InlineEditor | null
+    byline: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'normal'
+      listItem?: never
+      markDefs: Array<
+        | {
+            _key: string
+            _type: 'internalLink'
+            reference?: ArticleReference | ContributorReference | PageReference
+            slug: string | null
+          }
+        | {
+            _key: string
+            _type: 'link'
+            href?: string
+            title?: string
+          }
+      > | null
+      level?: number
+      _type: 'block'
+      _key: string
+    }> | null
+    slug: string
+    image: null
+    publishDate: string | null
+    heading: {
+      _id: string
+      title: string
+      slug: string
+    } | null
+    theme: {
+      name: 'EDITORIAL' | 'META' | 'PAGE' | null
+      accentColor: Color | null
+    } | null
+  }>
+} | null
 
 // Source: src/app/(sanity)/groq/teaser-fragment.ts
 // Variable: TEASER_FRAGMENT_QUERY
@@ -3039,7 +3079,6 @@ export type TEASERS_QUERY_ASC_RESULT = {
 import '@sanity/client'
 declare module '@sanity/client' {
   interface SanityQueries {
-    '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n\n    "episodes": *[_type == "article" && references(^._id)]{\n      _id,\n      title,\n      description,\n      image\n    }\n  }': SERIES_NAV_QUERY_RESULT
     '*[_type == "article" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n    cover {\n      ...\n    },\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    newsletter->{\n      title,\n      description,\n      frequency,\n      image,\n      name,\n    },\n    theme {\n      name,\n      accentColor,\n      darkMode\n    },\n    \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n,\n    contributors[]{\n      _id,\n      kind,\n      "slug": contributor->userId,\n      "name": contributor->title,\n      "description": contributor->description,\n      "portrait": contributor->portrait\n    },\n    "articleCollection": articleCollections[featured == true][0].collection->{\n      _id,\n      title,\n      description,\n      image\n    },\n    articleRecommendations[]->{\n      \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, ^.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n  "slug": slug.current,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n\n    }\n  }': ARTICLE_QUERY_RESULT
     '*[(_type == "article" || _type == "page") && slug.current == $slug][0]{\n    \n  _type,\n  "slug": slug.current,\n  heading->{\n    _id,\n    "title": pt::text(title),\n  },\n  theme {\n    name,\n  },\n  "teaser": frontTeaser {\n    layout,\n    "title": coalesce(title, ^.title),\n    "lead": coalesce(lead, ^.lead),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, ^.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    image,\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n\n  }': TEASER_QUERY_RESULT
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, ^.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n  "slug": slug.current,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n\n  }': ARTICLES_QUERY_RESULT
@@ -3050,6 +3089,7 @@ declare module '@sanity/client' {
     '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    cover {\n      ...\n    },\n    skipTitleBlock,\n    useCoverAsTitle,\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      name,\n      accentColor,\n      darkMode\n    },\n    pageBuilder[]{\n      _key,\n      _type,\n      _type == "menu" => {\n        \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current\n      }\n    }\n  }\n\n      },\n      _type == "callToAction" => {\n        \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n      },\n      _type == "editorBlock" => {\n        \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n\n      },\n      _type == "teaserList" => {\n        \n  appearance,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items[@->_type in ["article", "page"]]),\n    source.sourceType == "COLLECTION" => count(*[\n      _type == "article" &&\n      ^.source.collection._ref in articleCollections[].collection._ref\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n      },\n      _type == "frontTeaser" => {\n        "reference": @->{\n  _type,\n  "slug": slug.current,\n  heading->{\n    _id,\n    "title": pt::text(title),\n  },\n  theme {\n    name,\n  },\n  "teaser": frontTeaser {\n    layout,\n    "title": coalesce(title, ^.title),\n    "lead": coalesce(lead, ^.lead),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, ^.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    image,\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n}\n      },\n    }\n  }': PAGE_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "editorBlock"][0]{\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n\n    }\n  }': PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT
     '*[slug.current == $slug][0]{\n    "title": coalesce(seo.title, pt::text(title)),\n    "description": coalesce(seo.description, pt::text(description)),\n    "image": coalesce(seo.image, image)\n  }': SEO_QUERY_RESULT
+    '*[_type == "articleCollection" && _id == $id][0]{\n    _id,\n    title,\n    description,\n    image,\n    slug,\n\n    "episodes": *[_type == "article" && references(^._id)]{\n      \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, ^.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n  "slug": slug.current,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n\n    }\n  }': SERIES_NAV_QUERY_RESULT
     '*[_type in ["article", "page"]]{\n    \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, ^.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n  "slug": slug.current,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n\n  }': TEASER_FRAGMENT_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "teaserList"][0]{\n      \n  appearance,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items[@->_type in ["article", "page"]]),\n    source.sourceType == "COLLECTION" => count(*[\n      _type == "article" &&\n      ^.source.collection._ref in articleCollections[].collection._ref\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n    }\n  }': TEASER_LIST_BLOCK_FRAGMENT_QUERY_RESULT
     '\n  *[_type == "page" && _id == $documentId][0]{\n    "block": pageBuilder[_key == $blockKey][0]{\n     "teasers": select(\n        source.sourceType == "MANUAL" => source.items[@->_type in ["article", "page"]][$start...$end]->{\n          \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, ^.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n  "slug": slug.current,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n\n        },\n        source.sourceType == "COLLECTION" => *[\n          _type == "article" &&\n          ^.source.collection._ref in articleCollections[].collection._ref\n        ] | order(publishDate desc) [$start...$end] {\n          \n  _id,\n  _type,\n  "title": coalesce(shortTitle, title),\n  "description": coalesce(shortLead, description),\n  "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, ^.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n  "slug": slug.current,\n  image,\n  publishDate,\n  heading->{\n    _id,\n    "title": pt::text(title),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n    accentColor,\n  },\n\n        }, []\n      ),\n    }\n  }\n': TEASERS_QUERY_DESC_RESULT

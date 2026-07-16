@@ -1,27 +1,14 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { getSeriesLabels } from '@/app/(sanity)/components/series-labels'
+import { SERIES_NAV_QUERY } from '@/app/(sanity)/groq/series-nav-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
+import { Infobox } from '@/app/components/ui/infobox'
 import type { SeriesNav } from '@/sanity.types'
 import { css } from '@republik/theme/css'
 import { getImageDimensions } from '@sanity/asset-utils'
-import { defineQuery } from 'next-sanity'
 import { Image } from 'next-sanity/image'
-
-const SERIES_NAV_QUERY = defineQuery(
-  `*[_type == "articleCollection" && _id == $id][0]{
-    _id,
-    title,
-    description,
-    image,
-
-    "episodes": *[_type == "article" && references(^._id)]{
-      _id,
-      title,
-      description,
-      image
-    }
-  }`,
-)
+import Link from 'next/link'
 
 export async function SeriesNav({ value }: { value: SeriesNav }) {
   const { data: series } = await sanityFetch({
@@ -33,62 +20,66 @@ export async function SeriesNav({ value }: { value: SeriesNav }) {
     return <div>KEINE SERIE '{value.series._ref}' GEFUNDEN</div>
   }
 
-  return (
-    <div
-      className={css({
-        gridColumn: 'full',
-      })}
-    >
-      <h2>Serie «{series.title}»</h2>
+  const labels = getSeriesLabels(series.episodes)
 
+  return (
+    <>
+      <Infobox title={series.title}>
+        <p>
+          {series.description}{' '}
+          <Link href={`/pages${series.slug}`}>Zur Übersicht.</Link>
+        </p>
+      </Infobox>
       <div
         className={css({
-          overflowX: 'auto',
-          scrollSnapType: 'x mandatory',
-          display: 'grid',
-          gridAutoFlow: 'column',
-          gridAutoColumns: 'min(280px, 80vw)',
-          gap: '4',
+          gridColumn: 'full',
         })}
       >
-        {series.episodes?.map((episode, i) => {
-          const src = episode.image
-            ? urlFor(episode.image).width(280).url()
-            : undefined
-          const dimensions = src ? getImageDimensions(src) : undefined
+        <div
+          className={css({
+            overflowX: 'auto',
+            scrollSnapType: 'x mandatory',
+            display: 'grid',
+            gridAutoFlow: 'column',
+            gridAutoColumns: 'min(280px, 80vw)',
+            gap: '4',
+          })}
+        >
+          {series.episodes?.map((episode, i) => {
+            const src = episode.image
+              ? urlFor(episode.image).width(280).url()
+              : undefined
+            const dimensions = src ? getImageDimensions(src) : undefined
 
-          return (
-            <div
-              key={episode._id}
-              className={css({
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '4',
-                alignItems: 'center',
-                p: '4',
-                borderColor: 'divider',
-                borderStyle: 'solid',
-                borderWidth: '1px',
-                width: 'full',
-                scrollSnapAlign: 'center',
-              })}
-            >
-              <p>Folge {i + 1}</p>
-              {episode.image && (
-                <Image
-                  src={src}
-                  width={280}
-                  height={280 / dimensions.aspectRatio}
-                  alt=''
-                />
-              )}
-              <h3 className={css({ textStyle: 'h3Serif', fontSize: 'l' })}>
-                <InlinePortableText value={episode.title} />
-              </h3>
-            </div>
-          )
-        })}
+            return (
+              <div
+                key={episode._id}
+                className={css({
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1',
+                  alignItems: 'center',
+                  p: '1',
+                  scrollSnapAlign: 'center',
+                })}
+              >
+                <p>{labels[i]}</p>
+                {episode.image && (
+                  <Image
+                    src={src}
+                    width={200}
+                    height={200 / dimensions.aspectRatio}
+                    alt=''
+                  />
+                )}
+                <h3 className={css({ textStyle: 'h3Serif', fontSize: 'l' })}>
+                  <InlinePortableText value={episode.title} />
+                </h3>
+              </div>
+            )
+          })}
+        </div>
       </div>
-    </div>
+    </>
   )
 }

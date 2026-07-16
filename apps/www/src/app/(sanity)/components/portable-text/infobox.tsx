@@ -1,10 +1,10 @@
-import { css, cx } from '@republik/theme/css'
-import { PortableText } from 'next-sanity'
-import { AsideImage } from './aside-image'
-import type { InfoBox } from '@/sanity.types'
 import { NestedPortableText } from '@/app/(sanity)/components/portable-text/render'
+import { Infobox } from '@/app/components/ui/infobox'
+import type { InfoBox as InfoBoxType } from '@/sanity.types'
+import { css, cx } from '@republik/theme/css'
+import { AsideImage } from './aside-image'
 
-export function InfoBox({ value }: { value: InfoBox }) {
+export function InfoBox({ value }: { value: InfoBoxType }) {
   const { title, image, body } = value
 
   const hasImage = image?.asset
@@ -25,29 +25,9 @@ export function InfoBox({ value }: { value: InfoBox }) {
     >
       {image?.asset && <AsideImage image={image} />}
 
-      <div className={css({ '& p': { ml: '0', mr: '0' } })}>
-        <h3
-          className={css({
-            textStyle: 'h3Sans',
-            borderColor: 'current',
-            borderStyle: 'solid',
-            borderTopWidth: '1px',
-            py: '2',
-            fontSize: { base: 'base', md: 'l' },
-          })}
-        >
-          {title}
-        </h3>
-        <div
-          className={css({
-            textStyle: 'sans',
-            lineHeight: '1.5',
-            fontSize: { base: 'base', md: 'l' },
-          })}
-        >
-          <NestedPortableText value={body} />
-        </div>
-      </div>
+      <Infobox title={title}>
+        <NestedPortableText value={body} />
+      </Infobox>
     </div>
   )
 }
