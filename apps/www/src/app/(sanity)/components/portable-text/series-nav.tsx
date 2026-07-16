@@ -55,6 +55,7 @@ export async function SeriesNav({
             gridAutoColumns: 'min(170px, 80vw)',
             gap: '4',
             pb: '8',
+            px: '4',
             mx: 'auto',
           })}
         >

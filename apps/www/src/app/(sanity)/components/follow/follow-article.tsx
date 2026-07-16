@@ -8,8 +8,9 @@ import type {
   ArticleNewsletter,
 } from '@/app/(sanity)/lib/types'
 
+// TODO: add follow option to series
 // order of priority:
-// subscribe to newsletter > follow collection > follow contributors
+// series > subscribe to newsletter > follow collection > follow contributors
 function FollowArticle({
   newsletter,
   collection,
