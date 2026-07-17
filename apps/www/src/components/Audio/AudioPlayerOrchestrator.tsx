@@ -1,3 +1,4 @@
+'use client'
 import AudioPlayerController from './AudioPlayerController'
 import dynamic from 'next/dynamic'
 import useAudioQueue from './hooks/useAudioQueue'

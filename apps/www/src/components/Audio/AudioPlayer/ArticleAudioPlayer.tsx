@@ -1,10 +1,15 @@
+import { AudioSourceKind } from '#graphql/republik-api/__generated__/gql/graphql'
+import { trackEvent } from '@/app/lib/analytics/event-tracking'
+import { useMe } from '@/lib/context/MeContext'
+import EventObjectType from '@/lib/graphql-types/EventObjectType'
+import { intersperse } from '@/lib/utils/helpers'
+import { useTranslation } from '@/lib/withT'
 import {
   Editorial,
   IconButton,
   convertStyleToRem,
   fontStyles,
   mediaQueries,
-  useColorContext,
 } from '@project-r/styleguide'
 import {
   IconNotificationsActive,
@@ -14,14 +19,10 @@ import {
   IconPlaylistAdd,
   IconPlaylistRemove,
 } from '@republik/icons'
+import { token } from '@republik/theme/tokens'
 import { css } from 'glamor'
 import Link from 'next/link'
 import { Fragment, useEffect, useMemo, useState } from 'react'
-import { useMe } from '@/lib/context/MeContext'
-import EventObjectType from '@/lib/graphql-types/EventObjectType'
-import { trackEvent } from '@/app/lib/analytics/event-tracking'
-import { intersperse } from '@/lib/utils/helpers'
-import { useTranslation } from '@/lib/withT'
 import {
   useSubscribeDocumentMutation,
   useUnsubscribeDocumentMutation,
@@ -37,7 +38,6 @@ import {
 import { AudioPlayerItem } from '../types/AudioPlayerItem'
 import { AUDIO_PLAYER_WRAPPER_ID } from './constants'
 import Time from './ui/Time'
-import { AudioSourceKind } from '#graphql/republik-api/__generated__/gql/graphql'
 
 const styles = {
   container: css({
@@ -47,6 +47,7 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'stretch',
     gap: 12,
+    backgroundColor: token.var('colors.hover'),
   }),
   labels: css({
     display: 'flex',
@@ -96,7 +97,6 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
     isPlaying,
   } = useAudioContext()
   const { t } = useTranslation()
-  const [colorScheme] = useColorContext()
 
   const { currentTime } = useGlobalAudioState()
   const { checkIfInQueue } = useAudioQueue()
@@ -156,7 +156,7 @@ export const ArticleAudioPlayer = ({ document }: PlayerProps) => {
   }
 
   return (
-    <div {...styles.container} {...colorScheme.set('background', 'hover')}>
+    <div {...styles.container}>
       <IconButton
         aria-controls={AUDIO_PLAYER_WRAPPER_ID}
         Icon={itemPlaying ? IconPauseCircleOutline : IconPlayCircleOutline}
@@ -288,22 +288,21 @@ const subscribeStyles = {
   }),
 }
 const SubscribeReadAloud = ({ meta, subscription }) => {
-  const [colorScheme] = useColorContext()
   const { t } = useTranslation()
 
   const linkStyleRule = useMemo(
     () =>
       css({
-        color: colorScheme.getCSSColor('textSoft'),
-        fill: colorScheme.getCSSColor('textSoft'),
+        color: token.var('colors.textSoft'),
+        fill: token.var('colors.textSoft'),
         '@media (hover)': {
           ':hover': {
-            color: colorScheme.getCSSColor('text'),
-            fill: colorScheme.getCSSColor('text'),
+            color: token.var('colors.text'),
+            fill: token.var('colors.text'),
           },
         },
       }),
-    [colorScheme],
+    [],
   )
 
   const [subscribe, { loading: loadingSubscribe }] =

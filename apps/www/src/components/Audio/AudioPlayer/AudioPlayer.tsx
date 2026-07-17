@@ -1,24 +1,24 @@
-import { useEffect, useState, useMemo } from 'react'
-import { AudioPlayerProps } from '../AudioPlayerController'
+import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
+import { useUserAgent } from '@/lib/context/UserAgentContext'
 import { useInNativeApp } from '@/lib/withInNativeApp'
 import { useTranslation } from '@/lib/withT'
-import { usePaynotes } from '@/app/components/paynotes/paynotes-context'
+import {
+  mediaQueries,
+  useBodyScrollLock,
+  useMediaQuery,
+} from '@project-r/styleguide'
+import { token } from '@republik/theme/tokens'
+import { css } from 'glamor'
+import { AnimatePresence, motion } from 'motion/react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
+import { ZINDEX_POPOVER } from '../../constants'
+import { AudioPlayerProps } from '../AudioPlayerController'
+import AudioPlaybackElement from './AudioPlaybackElement'
+import { AUDIO_PLAYER_WRAPPER_ID } from './constants'
 import ExpandedAudioPlayer from './ExpandedAudioPlayer'
 import MiniAudioPlayer from './MiniAudioPlayer'
 import Backdrop from './ui/Backdrop'
-import { useRouter } from 'next/router'
-import {
-  useMediaQuery,
-  mediaQueries,
-  useBodyScrollLock,
-  useColorContext,
-} from '@project-r/styleguide'
-import { AnimatePresence, motion } from 'motion/react'
-import { css } from 'glamor'
-import AudioPlaybackElement from './AudioPlaybackElement'
-import { useUserAgent } from '@/lib/context/UserAgentContext'
-import { ZINDEX_POPOVER } from '../../constants'
-import { AUDIO_PLAYER_WRAPPER_ID } from './constants'
 
 const MARGIN = 15
 
@@ -85,7 +85,6 @@ const AudioPlayer = ({
   )
   const { t } = useTranslation()
   const router = useRouter()
-  const [colorScheme] = useColorContext()
   const [, ...queuedItems] = queue || [] // filter active-item from queue
   const { paynoteInlineHeight } = usePaynotes()
 
@@ -224,11 +223,9 @@ const AudioPlayer = ({
                 {...desktopWrapperStyle}
                 {...(isExpanded && desktopWrapperExpandedStyle)}
                 {...(isExpanded ? styles.wrapperExpanded : styles.wrapperMini)}
-                {...(inNativeApp && isExpanded
-                  ? colorScheme.set('backgroundColor', 'default')
-                  : colorScheme.set('backgroundColor', 'overlay'))}
-                {...colorScheme.set('boxShadow', 'overlayShadow')}
                 style={{
+                  backgroundColor: token.var('colors.background.overlay'),
+                  boxShadow: token.var('shadows.overlay'),
                   marginBottom:
                     paynoteInlineHeight !== 0
                       ? `calc(${

@@ -38,7 +38,9 @@ export const presetRepublik = definePreset({
           current: { value: 'currentColor' },
         },
         shadows: {
-          sm: { value: '0 0 6px 0 rgba(0, 0, 0, 0.35)' },
+          sm: { value: '0 0 6px 0 rgba(0, 0, 0, 0.3)' },
+          md: { value: '0 0 15px 0 rgba(0, 0, 0, 0.3)' },
+          overlay: { value: 'rgba(0, 0, 0, 0.1) 0px -5px 15px -3px' },
         },
         sizes: {
           full: { value: '100%' },
@@ -169,6 +171,13 @@ export const presetRepublik = definePreset({
                 base: 'white',
                 _light: 'white',
                 _dark: '#191919',
+              },
+            },
+            overlay: {
+              value: {
+                base: 'white',
+                _light: 'white',
+                _dark: '#1F1F1F',
               },
             },
             marketing: {

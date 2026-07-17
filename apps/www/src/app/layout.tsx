@@ -9,6 +9,11 @@ import { ApolloWrapper } from '@/app/lib/apollo/provider'
 import { PUBLIC_BASE_URL } from '@/lib/constants'
 import MeContextProvider from '@/lib/context/MeContext'
 import UserAgentProvider from '@/lib/context/UserAgentContext'
+
+import AudioPlayerOrchestrator from '@/components/Audio/AudioPlayerOrchestrator'
+import AudioProvider from '@/components/Audio/AudioProvider'
+import MediaProgressContext from '@/components/Audio/MediaProgress'
+
 import { css } from '@republik/theme/css'
 import { Metadata } from 'next'
 import { ReactNode } from 'react'
@@ -59,10 +64,15 @@ export default async function RootLayout({
             <MeContextProvider>
               <AnalyticsProvider>
                 <UserAgentProvider>
-                  {children}
-                  <NativeAppMessageSync />
-                  <SyncUTMToSessionStorage />
-                  {/* <PaynoteOverlay /> */}
+                  <MediaProgressContext>
+                    <AudioProvider>
+                      {children}
+                      <NativeAppMessageSync />
+                      <AudioPlayerOrchestrator />
+                      <SyncUTMToSessionStorage />
+                      {/* <PaynoteOverlay /> */}
+                    </AudioProvider>
+                  </MediaProgressContext>
                 </UserAgentProvider>
               </AnalyticsProvider>
             </MeContextProvider>

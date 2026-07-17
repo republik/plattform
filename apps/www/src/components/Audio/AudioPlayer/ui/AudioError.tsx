@@ -1,13 +1,11 @@
-import React from 'react'
-import { useRouter } from 'next/router'
-import { css } from 'glamor'
+import { useTranslation } from '@/lib/withT'
 import {
-  plainButtonRule,
   fontStyles,
   mediaQueries,
-  useColorContext,
+  plainButtonRule,
 } from '@project-r/styleguide'
-import { useTranslation } from '@/lib/withT'
+import { token } from '@republik/theme/tokens'
+import { css } from 'glamor'
 
 const styles = {
   root: css({
@@ -18,6 +16,7 @@ const styles = {
     [mediaQueries.mUp]: {
       ...fontStyles.sansSerifRegular15,
     },
+    color: token.var('colors.error'),
   }),
   button: css({
     display: 'inline-block',
@@ -27,13 +26,15 @@ const styles = {
 
 const AudioError = () => {
   const { t } = useTranslation()
-  const { reload } = useRouter()
-  const [colorScheme] = useColorContext()
 
   return (
-    <div {...styles.root} {...colorScheme.set('color', 'error')}>
+    <div {...styles.root}>
       <span>{t('AudioPlayer/error')}</span>
-      <button {...plainButtonRule} {...styles.button} onClick={() => reload()}>
+      <button
+        {...plainButtonRule}
+        {...styles.button}
+        onClick={() => window.location.reload()}
+      >
         {t('AudioPlayer/error/reload')}
       </button>
     </div>

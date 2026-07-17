@@ -1,3 +1,8 @@
+import { useInNativeApp } from '@/lib/withInNativeApp'
+import { fontStyles } from '@project-r/styleguide'
+import { token } from '@republik/theme/tokens'
+import { css } from 'glamor'
+import debounce from 'lodash/debounce'
 import {
   MouseEvent,
   TouchEventHandler,
@@ -6,8 +11,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { css } from 'glamor'
-import debounce from 'lodash/debounce'
+import { clamp } from '../../helpers/clamp'
 import {
   PROGRESS_HEIGHT,
   SLIDERTHUMB_SIZE,
@@ -15,10 +19,7 @@ import {
   ZINDEX_AUDIOPLAYER_PROGRESS,
   ZINDEX_AUDIOPLAYER_SCRUB,
 } from '../constants'
-import { useColorContext, fontStyles } from '@project-r/styleguide'
 import { renderTime } from '../shared'
-import { clamp } from '../../helpers/clamp'
-import { useInNativeApp } from '@/lib/withInNativeApp'
 
 function times(x) {
   return Array.from({ length: x }, (_, i) => i)
@@ -29,13 +30,14 @@ const styles = {
     position: 'relative',
     width: '100%',
     height: PROGRESS_HEIGHT,
-    backgroundColor: '#eee',
+    backgroundColor: token.var('colors.overlaySubtle'),
   }),
   progress: css({
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_PROGRESS,
     inset: 0,
     height: PROGRESS_HEIGHT,
+    backgroundColor: token.var('colors.text'),
   }),
   scrubber: (disabled: boolean) =>
     css({
@@ -48,6 +50,7 @@ const styles = {
       marginBottom: -12,
       paddingBottom: 10,
       cursor: disabled ? 'default' : 'ew-resize',
+      // backgroundColor: token.var('colors.text'),
     }),
   bufferedWrapper: css({
     position: 'relative',
@@ -61,6 +64,7 @@ const styles = {
     height: PROGRESS_HEIGHT,
     zIndex: ZINDEX_AUDIOPLAYER_BUFFER,
     opacity: 0.25,
+    backgroundColor: token.var('colors.text'),
   }),
   sliderThumb: css({
     zIndex: 2,
@@ -70,12 +74,14 @@ const styles = {
     width: SLIDERTHUMB_SIZE,
     height: SLIDERTHUMB_SIZE,
     transition: 'opacity ease-out 0.3s',
+    backgroundColor: token.var('colors.text'),
   }),
   timeWrapper: css({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: '0.5rem',
+    color: token.var('colors.textSoft'),
   }),
   time: css({
     ...fontStyles.sansSerifRegular14,
@@ -107,7 +113,6 @@ const Scrubber = ({
   showTime = false,
   disabled = false,
 }: ScrubberProps) => {
-  const [colorScheme] = useColorContext()
   const { isAndroid } = useInNativeApp()
   const scrubber = useRef<HTMLDivElement>(null)
   const [isSeeking, setIsSeeking] = useState(false)
@@ -211,10 +216,7 @@ const Scrubber = ({
   return (
     <div>
       <div {...styles.progressRoot}>
-        <div
-          {...styles.bufferedWrapper}
-          {...colorScheme.set('backgroundColor', 'divider')}
-        >
+        <div {...styles.bufferedWrapper}>
           {buffered &&
             times(buffered.length).map((i) => {
               const start = buffered.start(i)
@@ -224,7 +226,6 @@ const Scrubber = ({
                 <div
                   key={i}
                   {...styles.buffer}
-                  {...colorScheme.set('backgroundColor', 'defaultInverted')}
                   style={{
                     left: `${(start / duration) * 100})%`,
                     width: `${width}%`,
@@ -235,13 +236,14 @@ const Scrubber = ({
         </div>
         <div
           {...styles.progress}
-          {...colorScheme.set('backgroundColor', 'text')}
-          style={{ width: `${visibleProgress * 100}%`, maxWidth: '100%' }}
+          style={{
+            width: `${visibleProgress * 100}%`,
+            maxWidth: '100%',
+          }}
         />
         {showScrubber && (
           <div
             {...styles.sliderThumb}
-            {...colorScheme.set('backgroundColor', 'defaultInverted')}
             style={{
               left: `calc(${clamp(
                 visibleProgress,
@@ -264,7 +266,7 @@ const Scrubber = ({
         />
       </div>
       {showTime && (
-        <div {...styles.timeWrapper} {...colorScheme.set('color', 'textSoft')}>
+        <div {...styles.timeWrapper}>
           <span {...styles.time}>{currentPositionString}</span>
           <span {...styles.time}>-{remainingTimeString}</span>
         </div>

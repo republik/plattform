@@ -1,5 +1,5 @@
-import React from 'react'
-import { fontStyles, useColorContext } from '@project-r/styleguide'
+import { fontStyles } from '@project-r/styleguide'
+import { token } from '@republik/theme/tokens'
 import { css } from 'glamor'
 
 const styles = {
@@ -13,6 +13,7 @@ const styles = {
     '&[href]:hover': {
       textDecoration: 'underline',
     },
+    color: token.var('colors.text'),
   }),
   buttonFix: css({
     color: 'inherit',
@@ -42,11 +43,9 @@ const AudioPlayerTitle = ({
   lineClamp = 2,
   fontSize = 16,
 }: AudioPlayerTitleProps) => {
-  const [colorScheme] = useColorContext()
   const titleElement = (
     <span
       {...styles.title}
-      {...colorScheme.set('color', 'text')}
       {...css({
         WebkitLineClamp: lineClamp,
         fontSize: fontSize,
