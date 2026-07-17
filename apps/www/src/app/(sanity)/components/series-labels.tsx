@@ -1,6 +1,6 @@
-import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
+import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 
-export function getSeriesLabels(teasers: TeaserFragmentType[]) {
+export function getSeriesLabels(teasers: TeaserSmallFragmentType[]) {
   const labels = []
   let firstEpisode = 1
   for (const teaser of teasers) {

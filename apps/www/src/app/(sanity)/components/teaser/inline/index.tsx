@@ -1,7 +1,7 @@
 'use client'
 
 import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
-import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
+import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css } from '@republik/theme/css'
 import { getImageDimensions } from '@sanity/asset-utils'
@@ -12,7 +12,7 @@ export function InlineTeaser({
   teaser,
   label,
 }: {
-  teaser: TeaserFragmentType
+  teaser: TeaserSmallFragmentType
   label?: string
 }) {
   const src = teaser.image ? urlFor(teaser.image).width(280).url() : undefined

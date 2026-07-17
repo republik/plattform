@@ -29,5 +29,5 @@ const TEASER_SMALL_FRAGMENT_QUERY = defineQuery(
   }`,
 )
 
-export type TeaserFragmentType =
+export type TeaserSmallFragmentType =
   NonNullable<TEASER_SMALL_FRAGMENT_QUERY_RESULT>[number]

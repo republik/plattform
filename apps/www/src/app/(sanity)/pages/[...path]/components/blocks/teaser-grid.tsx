@@ -46,7 +46,7 @@ export async function TeaserGrid({
   documentId: string
   blockKey: string
 }) {
-  const { title, series } = teaserList
+  const { title, series, maxItems, total } = teaserList
 
   // We display series in chronological order, starting with the first episode
   const QUERY = series ? TEASERS_SMALL_QUERY_ASC : TEASERS_SMALL_QUERY_DESC
@@ -57,6 +57,7 @@ export async function TeaserGrid({
       documentId,
       blockKey,
       start: 0,
+      end: maxItems ?? total,
     },
   })
 

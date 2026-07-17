@@ -2,7 +2,7 @@
 
 import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
-import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
+import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { Button } from '@/app/components/ui/button'
 import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
@@ -14,10 +14,10 @@ export function TeaserFeedClient({
   pageSize,
   loadMoreAction,
 }: {
-  initialTeasers: TeaserFragmentType[]
+  initialTeasers: TeaserSmallFragmentType[]
   teaserList: TeaserListBlockFragmentType
   pageSize: number
-  loadMoreAction: () => Promise<TeaserFragmentType[]>
+  loadMoreAction: () => Promise<TeaserSmallFragmentType[]>
 }) {
   const { total, title, maxItems } = teaserList
 
@@ -35,8 +35,6 @@ export function TeaserFeedClient({
   // - we haven't hit the user-defined cap
   const showLoadMoreButton =
     total > teasers.length && shownTeasers.length < (maxItems ?? Infinity)
-
-  console.log('shownTeasers', shownTeasers)
 
   return (
     <>

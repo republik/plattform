@@ -1,5 +1,5 @@
 import { TeaserLarge } from '@/app/(sanity)/components/teaser/large'
-import { TEASER_QUERY } from '@/app/(sanity)/groq/article-teaser-query'
+import { ARTICLE_TEASER_QUERY } from '@/app/(sanity)/groq/article-teaser-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import type { Metadata } from 'next'
 
@@ -16,7 +16,7 @@ export default async function ArticleTeaserPage({
   const slug = `/${path.join('/')}`
 
   const { data: article } = await sanityFetch({
-    query: TEASER_QUERY,
+    query: ARTICLE_TEASER_QUERY,
     params: { slug },
   })
 

@@ -5,7 +5,7 @@ import {
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
 import { SquareTeaserImage } from '@/app/(sanity)/components/teaser/_shared/square-teaser-image'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
-import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
+import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { css, cx } from '@republik/theme/css'
 
 const carouselItemStyle = css({
@@ -20,7 +20,11 @@ const carouselItemStyle = css({
   borderColor: 'divider',
 })
 
-export function CarouselTeaser({ teaser }: { teaser: TeaserFragmentType }) {
+export function CarouselTeaser({
+  teaser,
+}: {
+  teaser: TeaserSmallFragmentType
+}) {
   return (
     <div
       className={css({
