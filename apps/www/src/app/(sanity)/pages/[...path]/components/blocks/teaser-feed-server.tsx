@@ -1,7 +1,7 @@
 'use server'
 
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
-import { TEASERS_QUERY_DESC } from '@/app/(sanity)/groq/teasers-query'
+import { TEASERS_SMALL_QUERY_DESC } from '@/app/(sanity)/groq/teasers-small-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { TeaserFeedClient } from './teaser-feed-client'
 
@@ -17,7 +17,7 @@ export async function TeaserFeedServer({
   blockKey: string
 }) {
   const { data } = await sanityFetch({
-    query: TEASERS_QUERY_DESC,
+    query: TEASERS_SMALL_QUERY_DESC,
     params: {
       documentId,
       blockKey,
@@ -35,7 +35,7 @@ export async function TeaserFeedServer({
   async function loadMore() {
     'use server'
     const { data } = await sanityFetch({
-      query: TEASERS_QUERY_DESC,
+      query: TEASERS_SMALL_QUERY_DESC,
       params: { documentId, blockKey, start: MAX_TEASERS, end: total },
     })
     return data?.block?.teasers ?? []

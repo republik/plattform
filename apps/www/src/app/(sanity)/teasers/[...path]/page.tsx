@@ -1,4 +1,4 @@
-import { FrontTeaser } from '@/app/(sanity)/components/teaser/front/front-teaser'
+import { TeaserLarge } from '@/app/(sanity)/components/teaser/large'
 import { TEASER_QUERY } from '@/app/(sanity)/groq/article-teaser-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import type { Metadata } from 'next'
@@ -20,5 +20,5 @@ export default async function ArticleTeaserPage({
     params: { slug },
   })
 
-  return <FrontTeaser {...article} />
+  return <TeaserLarge {...article} />
 }

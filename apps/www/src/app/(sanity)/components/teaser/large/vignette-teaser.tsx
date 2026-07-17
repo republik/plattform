@@ -1,20 +1,36 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import type { FrontTeaserFragmentType } from '@/app/(sanity)/groq/front-teaser-fragment'
+import { TeaserLargeImage } from '@/app/(sanity)/components/teaser/large/helpers'
+import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
 
-type TeaserProps = FrontTeaserFragmentType
+const teaserStyle = cva({
+  base: {
+    position: 'relative',
+    px: '4',
+    py: '8',
+    padding: '30px 15px 40px 15px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '6',
+    md: {
+      py: '16',
+    },
+  },
+  variants: {},
+
+  defaultVariants: {},
+})
 
 const teaserTitle = cva({
   base: {
-    textStyle: 'editorialTitle',
     fontSize: '38px',
-    lineHeight: '45px',
-    md: {
-      fontSize: '100px',
-      lineHeight: '110px',
-    },
+    lineHeight: '43px',
+    md: { fontSize: '58px', lineHeight: '60px' },
+    lg: { fontSize: '80px', lineHeight: '90px' },
   },
   variants: {
     theme: {
@@ -30,22 +46,19 @@ const teaserTitle = cva({
     },
     size: {
       SMALL: {
-        fontSize: '26px',
-        lineHeight: '31px',
         md: {
-          fontSize: '50px',
-          lineHeight: '57px',
+          fontSize: '58px',
+          lineHeight: '60px',
         },
-        lg: {
-          fontSize: '64px',
-          lineHeight: '72px',
-        },
+      },
+      MEDIUM: {
+        md: { fontSize: '60px', lineHeight: '70px' },
+        lg: { fontSize: '80px', lineHeight: '90px' },
       },
       LARGE: {
-        md: { fontSize: '125px', lineHeight: '137px' },
-        lg: { fontSize: '156px', lineHeight: '169px' },
+        md: { fontSize: '80px', lineHeight: '90px' },
+        lg: { fontSize: '100px', lineHeight: '110px' },
       },
-      MEDIUM: { md: { fontSize: '125px', lineHeight: '137px' } },
       STANDARD: {},
     },
   },
@@ -69,33 +82,52 @@ const teaserByline = css({
   fontSize: 's',
 })
 
-export function TextTeaser({ _type, slug, theme, teaser }: TeaserProps) {
+const imageStyle = css({
+  display: 'block',
+  width: 'full',
+  minWidth: '100px',
+  maxWidth: '220px',
+  maxHeight: '220px',
+  md: {
+    maxWidth: '300px',
+    maxHeight: '300px',
+  },
+  lg: {
+    maxWidth: '360px',
+    maxHeight: '360px',
+  },
+})
+
+export function VignetteTeaser({
+  _type,
+  slug,
+  theme,
+  teaser,
+}: TeaserLargeFragmentType) {
   const href = _type === 'article' ? `/articles${slug}` : `/pages${slug}`
 
   return (
     <div
-      className={css({
-        position: 'relative',
-        display: 'grid',
-        gridColumn: 'full',
-      })}
+      className={teaserStyle()}
       style={{ backgroundColor: teaser.backgroundColor?.hex }}
     >
+      <div>
+        <TeaserLargeImage
+          image={teaser.image}
+          className={imageStyle}
+          alt={''}
+          sizes={'(max-width: 768px) 100vw, 50vw'}
+        />
+      </div>
       <div
         className={css({
-          margin: '0 auto',
-          padding: '15px 15px 40px 15px',
+          padding: '0',
           textAlign: 'center',
           display: 'flex',
           flexDirection: 'column',
           gap: '3',
           md: {
-            maxWidth: `70%`,
-            padding: '60px 0 80px 0',
-            gap: '6',
-          },
-          lg: {
-            padding: '80px 0 100px 0',
+            padding: '0 13%',
           },
         })}
         style={{ color: teaser.color?.hex }}
@@ -111,7 +143,7 @@ export function TextTeaser({ _type, slug, theme, teaser }: TeaserProps) {
           </h2>
         </Link>
         <p className={teaserLead}>
-          <InlinePortableText value={teaser.lead} />
+          <InlinePortableText value={teaser.description} />
         </p>
         <p className={teaserByline}>
           <InlinePortableText value={teaser.byline} />

@@ -4,14 +4,13 @@ import { getImageDimensions } from '@sanity/asset-utils'
 import type { SanityImageSource } from '@sanity/image-url'
 import { Image, type ImageProps } from 'next-sanity/image'
 
-export function FrontTeaserImage({
+export function TeaserLargeImage({
   image,
   ...imageProps
 }: { image: SanityImageSource | undefined | null } & Omit<
   ImageProps,
   'src' | 'width' | 'height'
 >) {
-  console.log(image)
   if (!image) {
     return (
       <div

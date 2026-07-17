@@ -51,8 +51,9 @@ function Block({
     case 'menu':
       return <Menu menu={block} />
 
-    case 'frontTeaser':
-      return <TeaserItem reference={block.reference} />
+    case 'reference':
+      // teaser-document references are not supported yet (reference is null)
+      return block.reference ? <TeaserItem reference={block.reference} /> : null
 
     /*
     case 'bestOfDialogue':

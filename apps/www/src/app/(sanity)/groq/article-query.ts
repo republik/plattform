@@ -1,6 +1,6 @@
 import { BYLINE_FRAGMENT } from '@/app/(sanity)/groq/byline-fragment'
 import { PORTABLE_TEXT_CONTENT_FRAGMENT } from '@/app/(sanity)/groq/portable-text-content-fragment'
-import { TEASER_FRAGMENT } from '@/app/(sanity)/groq/teaser-fragment'
+import { TEASER_SMALL_FRAGMENT } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { defineQuery } from 'next-sanity'
 
 export const ARTICLE_QUERY = defineQuery(
@@ -46,7 +46,7 @@ export const ARTICLE_QUERY = defineQuery(
       series
     },
     articleRecommendations[]->{
-      ${TEASER_FRAGMENT}
+      ${TEASER_SMALL_FRAGMENT}
     }
   }`,
 )

@@ -157,60 +157,16 @@ export function PageHeader({
               placeContent: 'center center',
             })}
           >
-            {
-              hasActiveMembership ? (
-                <button disabled className={css({ p: '0' })}>
-                  <IconMic size={28} />
-                </button>
-              ) : null
-
-              // TODO: decide what to do with this abonnieren CTA
-
-              // <Link
-              //   href='/angebote'
-              //   className={css({
-              //     textDecoration: 'none',
-              //     display: 'flex',
-              //     alignItems: 'center',
-              //     justifyContent: 'center',
-              //     flexDirection: 'row',
-              //     alignSelf: 'stretch',
-              //     background: 'text',
-              //     color: 'text.inverted',
-              //     padding: '10px 20px',
-              //     fontSize: '16px',
-              //     height: '100%',
-              //     md: {
-              //       padding: '10px 30px',
-              //       fontSize: '22px',
-              //     },
-              //   })}
-              // >
-              //   <span
-              //     className={css({
-              //       display: 'none',
-              //       md: { display: 'inline-block' },
-              //     })}
-              //   >
-              //     Jetzt abonnieren
-              //   </span>
-              //   <span
-              //     className={css({
-              //       display: 'inline-block',
-              //       md: {
-              //         display: 'none',
-              //       },
-              //     })}
-              //   >
-              //     Abo
-              //   </span>
-              // </Link>
-            }
+            {hasActiveMembership ? (
+              <button disabled className={css({ p: '0' })}>
+                <IconMic size={28} />
+              </button>
+            ) : null}
           </div>
         </div>
       </div>
 
-      {hasActiveMembership ? (
+      <div className={css({ position: 'relative' })}>
         <div
           className={hstack({
             gap: '0',
@@ -225,7 +181,7 @@ export function PageHeader({
             </NavLink>
           ))}
         </div>
-      ) : null}
+      </div>
       <hr
         className={css({
           left: 0,

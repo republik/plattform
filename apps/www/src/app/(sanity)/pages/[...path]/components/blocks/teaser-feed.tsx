@@ -1,7 +1,7 @@
 'use client'
 
 import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
-import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
+import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
 import React from 'react'

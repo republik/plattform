@@ -1,4 +1,4 @@
-import { TEASER_FRAGMENT } from '@/app/(sanity)/groq/teaser-fragment'
+import { TEASER_SMALL_FRAGMENT } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { defineQuery } from 'next-sanity'
 
 export const SERIES_NAV_QUERY = defineQuery(
@@ -9,8 +9,11 @@ export const SERIES_NAV_QUERY = defineQuery(
     image,
     slug,
 
-    "episodes": *[_type == "article" && references(^._id)]{
-      ${TEASER_FRAGMENT}
+    "episodes": *[
+      _type == "article" &&
+      ^._id in articleCollections[].collection._ref
+    ] | order(publishDate asc) {
+      ${TEASER_SMALL_FRAGMENT}
     }
   }`,
 )

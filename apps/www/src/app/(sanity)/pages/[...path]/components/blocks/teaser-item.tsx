@@ -1,5 +1,5 @@
-import { FrontTeaser } from '@/app/(sanity)/components/teaser/front/front-teaser'
-import type { FrontTeaserFragmentType } from '@/app/(sanity)/groq/front-teaser-fragment'
+import { TeaserLarge } from '@/app/(sanity)/components/teaser/large'
+import type { FrontTeaserFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { css } from '@republik/theme/css'
 
 export async function TeaserItem({
@@ -9,7 +9,7 @@ export async function TeaserItem({
 }) {
   return (
     <div className={css({ gridColumn: 'full', m: 0 })}>
-      <FrontTeaser {...reference} />
+      <TeaserLarge {...reference} />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
+import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
 import { stegaClean } from 'next-sanity'

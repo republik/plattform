@@ -34,7 +34,7 @@ export function LegacyChart({ value }: { value: ChartT }) {
         <InlinePortableText value={value.title} />
       </h3>
       <p className={css({ textStyle: 'body', fontSize: 'l', mb: '4' })}>
-        <InlinePortableText value={value.lead} />
+        <InlinePortableText value={value.description} />
       </p>
 
       <Chart config={config} values={values} />

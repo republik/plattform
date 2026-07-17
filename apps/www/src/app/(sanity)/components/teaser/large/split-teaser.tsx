@@ -1,11 +1,10 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { FrontTeaserImage } from '@/app/(sanity)/components/teaser/front/helpers'
-import type { FrontTeaserFragmentType } from '@/app/(sanity)/groq/front-teaser-fragment'
+import { TeaserLargeImage } from '@/app/(sanity)/components/teaser/large/helpers'
+import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
+
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
-
-type TeaserProps = FrontTeaserFragmentType
 
 const teaserStyle = cva({
   base: {
@@ -124,7 +123,12 @@ const teaserByline = css({
   fontSize: 's',
 })
 
-export function SplitTeaser({ _type, slug, theme, teaser }: TeaserProps) {
+export function SplitTeaser({
+  _type,
+  slug,
+  theme,
+  teaser,
+}: TeaserLargeFragmentType) {
   const href = _type === 'article' ? `/articles${slug}` : `/pages${slug}`
 
   return (
@@ -141,7 +145,7 @@ export function SplitTeaser({ _type, slug, theme, teaser }: TeaserProps) {
           position: 'relative',
         })}
       >
-        <FrontTeaserImage
+        <TeaserLargeImage
           image={teaser.image}
           className={css({ display: 'block', width: '100%', height: 'auto' })}
           alt={''}
@@ -172,7 +176,7 @@ export function SplitTeaser({ _type, slug, theme, teaser }: TeaserProps) {
           </h2>
         </Link>
         <p className={teaserLead}>
-          <InlinePortableText value={teaser.lead} />
+          <InlinePortableText value={teaser.description} />
         </p>
         <p className={teaserByline}>
           <InlinePortableText value={teaser.byline} />

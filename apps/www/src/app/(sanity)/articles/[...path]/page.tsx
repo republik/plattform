@@ -7,7 +7,7 @@ import { ArticlePortableText } from '@/app/(sanity)/components/portable-text/ren
 import { Theme } from '@/app/(sanity)/components/theme'
 import { ARTICLE_QUERY } from '@/app/(sanity)/groq/article-query'
 import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
-import type { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
+import type { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'

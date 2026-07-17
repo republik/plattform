@@ -1,7 +1,7 @@
 'use client'
 
 import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
-import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
+import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css } from '@republik/theme/css'
 import { getImageDimensions } from '@sanity/asset-utils'

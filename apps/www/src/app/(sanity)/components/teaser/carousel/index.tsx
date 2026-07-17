@@ -5,7 +5,7 @@ import {
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
 import { SquareTeaserImage } from '@/app/(sanity)/components/teaser/_shared/square-teaser-image'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
-import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-fragment'
+import { TeaserFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { css, cx } from '@republik/theme/css'
 
 const carouselItemStyle = css({
