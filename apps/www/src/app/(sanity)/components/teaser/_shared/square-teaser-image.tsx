@@ -11,25 +11,32 @@ export function SquareTeaserImage({
   ImageProps,
   'src' | 'width' | 'height'
 >) {
+  const Placeholder = (
+    <div
+      className={css({
+        color: 'overlay',
+        bg: 'overlay',
+        width: 'full',
+        minWidth: '100px',
+        aspectRatio: '1 / 1',
+        display: 'grid',
+        placeContent: 'center',
+      })}
+    ></div>
+  )
+
   if (!image) {
-    return (
-      <div
-        className={css({
-          color: 'overlay',
-          bg: 'overlay',
-          width: 'full',
-          minWidth: '100px',
-          aspectRatio: '1 / 1',
-          display: 'grid',
-          placeContent: 'center',
-        })}
-      ></div>
-    )
+    return Placeholder
   }
 
   // If an image with crop/hotspot is provided, those will be applied automatically
-  console.log({ image })
-  const src = urlFor(image).width(size).height(size).url()
+  let src: string
+  try {
+    src = urlFor(image).width(size).height(size).url()
+  } catch (e) {
+    console.error(e)
+    return Placeholder
+  }
 
   return <Image src={src} width={size} height={size} {...imageProps} />
 }

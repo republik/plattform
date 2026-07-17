@@ -1,11 +1,9 @@
 'use client'
 
 import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
+import { SquareTeaserImage } from '@/app/(sanity)/components/teaser/_shared/square-teaser-image'
 import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
-import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { css } from '@republik/theme/css'
-import { getImageDimensions } from '@sanity/asset-utils'
-import { Image } from 'next-sanity/image'
 import { usePathname } from 'next/navigation'
 
 export function InlineTeaser({
@@ -15,9 +13,6 @@ export function InlineTeaser({
   teaser: TeaserSmallFragmentType
   label?: string
 }) {
-  const src = teaser.image ? urlFor(teaser.image).width(280).url() : undefined
-  const dimensions = src ? getImageDimensions(src) : undefined
-
   const pathname = usePathname()
   const isCurrentEpisode = pathname === `/articles${teaser.slug}`
 
@@ -39,14 +34,16 @@ export function InlineTeaser({
       >
         {isCurrentEpisode ? `Sie lesen: ${label}` : label}
       </h6>
-      {teaser.image && (
-        <Image
-          src={src}
-          width={170}
-          height={170 / dimensions.aspectRatio}
-          alt=''
-        />
-      )}
+      <SquareTeaserImage
+        className={css({
+          width: 'full',
+          height: 'auto',
+        })}
+        image={teaser.image}
+        alt=''
+        size={640}
+        sizes='(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw'
+      />
       <h5
         className={css({
           textStyle: 'h3Serif',

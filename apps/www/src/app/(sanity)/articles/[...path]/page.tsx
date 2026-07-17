@@ -34,13 +34,19 @@ export async function generateMetadata({
     return { title: 'Artikel nicht gefunden' }
   }
 
-  const images = data.image
-    ? {
-        url: urlFor(data.image).width(1200).height(630).url(),
-        width: 1200,
-        height: 630,
-      }
-    : null
+  let images = null
+
+  try {
+    images = data.image
+      ? {
+          url: urlFor(data.image).width(1200).height(630).url(),
+          width: 1200,
+          height: 630,
+        }
+      : null
+  } catch (error) {
+    console.error('Error generating image URL:', error)
+  }
 
   return {
     title: data.title,
