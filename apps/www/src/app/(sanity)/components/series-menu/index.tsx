@@ -1,32 +1,17 @@
-import { SERIES_NAV_QUERY } from '@/app/(sanity)/groq/series-nav-query'
+import { SERIES_MENU_QUERY } from '@/app/(sanity)/groq/series-menu-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
-import { css } from '@republik/theme/css'
-import { headers } from 'next/headers'
+import { SeriesMenuBar } from './series-menu-bar'
 
-export async function SeriesMenu() {
-  const headersList = await headers()
-  const pathname = headersList.get('x-pathname') ?? ''
-  const slug = pathname.split('/').filter(Boolean).pop() ?? ''
-
+// Expandable series navigation at the top of an article that belongs to a
+// series (modelled after components/Article/SeriesNavBar.js).
+export async function SeriesMenu({ slug }: { slug: string }) {
   const { data } = await sanityFetch({
-    query: SERIES_NAV_QUERY,
+    query: SERIES_MENU_QUERY,
     params: { slug },
   })
 
-  console.log(data)
+  const collection = data?.articleCollection
+  if (!collection?.series || !collection.episodes?.length) return null
 
-  return (
-    <div
-      className={css({
-        position: 'absolute',
-        background: 'background',
-        top: 1,
-        left: 0,
-        right: 0,
-        bottom: 0,
-      })}
-    >
-      HELLO
-    </div>
-  )
+  return <SeriesMenuBar collection={collection} currentSlug={slug} />
 }

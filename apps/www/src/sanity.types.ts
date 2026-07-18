@@ -234,16 +234,19 @@ export type Vorlage = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  cover?: EditorialImage
-  heading?: PageReference
   title: InlineEditor
   description?: InlineEditor
   byline?: InlineEditor
-  publishDate?: string
-  slug?: Slug
-  repoId?: string
+  heading?: PageReference
   content?: ArticleEditor
-  estimatedReadingMinutes?: number
+  publishDate?: string
+  emailSubject?: string
+  notificationTitle?: string
+  articleRecommendations?: ArrayOf<ArticleReference | PageReference>
+  cover?: EditorialImage
+  teaserSmall?: TeaserSmall
+  teaserLarge?: TeaserLarge
+  seo?: Seo
   suppressSyntheticReadAloud?: boolean
   syntheticVoice?:
     | 'huebsch-311-054-rpblk'
@@ -260,40 +263,37 @@ export type Vorlage = {
     | 'huebsch-285-169-rpblk'
     | 'huebsch-gen-female-e-rpblk'
   audioSourceMp3?: string
-  audioDurationMs?: number
-  estimatedConsumptionMinutes?: number
-  teaserSmall?: TeaserSmall
-  teaserLarge?: TeaserLarge
-  seo?: Seo
-  showInFeed?: boolean
-  notificationTitle?: string
-  articleCollections?: Array<{
-    collection: ArticleCollectionReference
-    featured?: boolean
-    _type: 'articleCollectionEntry'
-    _key: string
-  }>
-  emailSubject?: string
-  newsletter?: NewsletterReference
-  mailchimpCampaignId?: string
-  mailchimpCampaignUrl?: string
-  podcast?: PodcastReference
-  articleRecommendations?: ArrayOf<ArticleReference | PageReference>
-  contributors?: Array<
-    {
-      _key: string
-    } & ContributorEntry
-  >
-  readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
-  showTextProgress?: boolean
-  theme?: Theme
-  excludeFromSearch?: boolean
   files?: Array<{
     asset?: SanityFileAssetReference
     media?: unknown
     _type: 'file'
     _key: string
   }>
+  slug?: Slug
+  articleCollections?: Array<{
+    collection: ArticleCollectionReference
+    featured?: boolean
+    _type: 'articleCollectionEntry'
+    _key: string
+  }>
+  newsletter?: NewsletterReference
+  podcast?: PodcastReference
+  showInFeed?: boolean
+  excludeFromSearch?: boolean
+  readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
+  showTextProgress?: boolean
+  theme?: Theme
+  mailchimpCampaignId?: string
+  mailchimpCampaignUrl?: string
+  repoId?: string
+  estimatedReadingMinutes?: number
+  estimatedConsumptionMinutes?: number
+  contributors?: Array<
+    {
+      _key: string
+    } & ContributorEntry
+  >
+  audioDurationMs?: number
 }
 
 export type Slug = {
@@ -590,7 +590,7 @@ export type VoiceTag = {
 
 export type InternalLink = {
   _type: 'internalLink'
-  reference?: ArticleReference | PageReference | ContributorReference
+  reference: ArticleReference | PageReference | ContributorReference
 }
 
 export type ExpandableLink = {
@@ -648,16 +648,19 @@ export type Article = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  cover?: EditorialImage
-  heading?: PageReference
   title: InlineEditor
   description?: InlineEditor
   byline?: InlineEditor
-  publishDate?: string
-  slug: Slug
-  repoId?: string
+  heading?: PageReference
   content?: ArticleEditor
-  estimatedReadingMinutes?: number
+  publishDate?: string
+  emailSubject?: string
+  notificationTitle?: string
+  articleRecommendations?: ArrayOf<ArticleReference | PageReference>
+  cover?: EditorialImage
+  teaserSmall?: TeaserSmall
+  teaserLarge?: TeaserLarge
+  seo?: Seo
   suppressSyntheticReadAloud?: boolean
   syntheticVoice?:
     | 'huebsch-311-054-rpblk'
@@ -674,32 +677,49 @@ export type Article = {
     | 'huebsch-285-169-rpblk'
     | 'huebsch-gen-female-e-rpblk'
   audioSourceMp3?: string
-  audioDurationMs?: number
-  estimatedConsumptionMinutes?: number
-  teaserSmall?: TeaserSmall
-  teaserLarge?: TeaserLarge
-  seo?: Seo
-  showInFeed?: boolean
-  notificationTitle?: string
+  files?: Array<{
+    asset?: SanityFileAssetReference
+    media?: unknown
+    _type: 'file'
+    _key: string
+  }>
+  slug: Slug
   articleCollections?: Array<{
     collection: ArticleCollectionReference
     featured?: boolean
     _type: 'articleCollectionEntry'
     _key: string
   }>
-  emailSubject?: string
   newsletter?: NewsletterReference
-  mailchimpCampaignId?: string
-  mailchimpCampaignUrl?: string
   podcast?: PodcastReference
+  showInFeed?: boolean
+  excludeFromSearch?: boolean
+  readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
+  showTextProgress?: boolean
+  theme?: Theme
   discussion?: DiscussionReference
   inlineDiscussion?: boolean
-  articleRecommendations?: ArrayOf<ArticleReference | PageReference>
+  mailchimpCampaignId?: string
+  mailchimpCampaignUrl?: string
+  repoId?: string
+  estimatedReadingMinutes?: number
+  estimatedConsumptionMinutes?: number
+  mdast?: Mdast
+  publikatorMeta?: LegacyMeta
+  notificationTrigger?: string
+  mailchimpSyncTrigger?: string
+  mailchimpSyncResult?: {
+    status?: string
+    syncedAt?: string
+    error?: string
+  }
+  audioGenerationTrigger?: string
   contributors?: Array<
     {
       _key: string
     } & ContributorEntry
   >
+  audioDurationMs?: number
   editorialSignOffs?: Array<
     {
       _key: string
@@ -710,33 +730,6 @@ export type Article = {
       _key: string
     } & LogEntry
   >
-  readingAccess?: 'OPEN' | 'PAYNOTE' | 'REGWALL'
-  showTextProgress?: boolean
-  theme?: Theme
-  excludeFromSearch?: boolean
-  notificationTrigger?: string
-  mailchimpSyncTrigger?: string
-  mailchimpSyncResult?: {
-    status?: string
-    syncedAt?: string
-    error?: string
-  }
-  audioGenerationTrigger?: string
-  files?: Array<{
-    asset?: SanityFileAssetReference
-    media?: unknown
-    _type: 'file'
-    _key: string
-  }>
-  mdast?: Mdast
-  publikatorMeta?: LegacyMeta
-}
-
-export type Theme = {
-  _type: 'theme'
-  name?: 'EDITORIAL' | 'META' | 'PAGE'
-  accentColor?: Color
-  darkMode?: boolean
 }
 
 export type Discussion = {
@@ -752,6 +745,13 @@ export type Discussion = {
   discussionAnonymity?: 'ALLOWED' | 'ENFORCED' | 'FORBIDDEN'
   tags?: Array<string>
   tagRequired?: boolean
+}
+
+export type Theme = {
+  _type: 'theme'
+  name?: 'EDITORIAL' | 'META' | 'PAGE'
+  accentColor?: Color
+  darkMode?: boolean
 }
 
 export type Podcast = {
@@ -790,6 +790,39 @@ export type Newsletter = {
   savedSegmentId?: number
 }
 
+export type Seo = {
+  _type: 'seo'
+  title?: string
+  description?: string
+  useImageBuilder?: boolean
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  imageBuilder?: SeoImageBuilder
+}
+
+export type EditorialImage = {
+  _type: 'editorialImage'
+  asset?: SanityImageAssetReference
+  media?: unknown
+  hotspot?: SanityImageHotspot
+  crop?: SanityImageCrop
+  imageDark?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  alt?: string
+  caption?: Caption
+  size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
+}
+
 export type Page = {
   _id: string
   _type: 'page'
@@ -826,39 +859,6 @@ export type Page = {
   teaserLarge?: TeaserLarge
   seo?: Seo
   theme?: Theme
-}
-
-export type Seo = {
-  _type: 'seo'
-  title?: string
-  description?: string
-  useImageBuilder?: boolean
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  imageBuilder?: SeoImageBuilder
-}
-
-export type EditorialImage = {
-  _type: 'editorialImage'
-  asset?: SanityImageAssetReference
-  media?: unknown
-  hotspot?: SanityImageHotspot
-  crop?: SanityImageCrop
-  imageDark?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  alt?: string
-  caption?: Caption
-  size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
 }
 
 export type Link = {
@@ -1319,13 +1319,13 @@ export type AllSanitySchemaTypes =
   | SanityImageHotspot
   | DiscussionReference
   | Article
-  | Theme
   | Discussion
+  | Theme
   | Podcast
   | Newsletter
-  | Page
   | Seo
   | EditorialImage
+  | Page
   | Link
   | Variable
   | IfNot
@@ -1386,7 +1386,7 @@ export type ARTICLE_QUERY_RESULT = {
       | {
           _key: string
           _type: 'internalLink'
-          reference?: ArticleReference | ContributorReference | PageReference
+          reference: ArticleReference | ContributorReference | PageReference
           slug: string | null
         }
       | {
@@ -1472,10 +1472,7 @@ export type ARTICLE_QUERY_RESULT = {
           | {
               _key: string
               _type: 'internalLink'
-              reference?:
-                | ArticleReference
-                | ContributorReference
-                | PageReference
+              reference: ArticleReference | ContributorReference | PageReference
               slug: string | null
             }
           | {
@@ -1759,7 +1756,7 @@ export type ARTICLE_QUERY_RESULT = {
             | {
                 _key: string
                 _type: 'internalLink'
-                reference?:
+                reference:
                   | ArticleReference
                   | ContributorReference
                   | PageReference
@@ -1813,7 +1810,7 @@ export type ARTICLE_QUERY_RESULT = {
             | {
                 _key: string
                 _type: 'internalLink'
-                reference?:
+                reference:
                   | ArticleReference
                   | ContributorReference
                   | PageReference
@@ -1883,7 +1880,7 @@ export type ARTICLE_TEASER_QUERY_RESULT =
             | {
                 _key: string
                 _type: 'internalLink'
-                reference?:
+                reference:
                   | ArticleReference
                   | ContributorReference
                   | PageReference
@@ -1953,7 +1950,7 @@ export type ARTICLE_TEASER_QUERY_RESULT =
             | {
                 _key: string
                 _type: 'internalLink'
-                reference?:
+                reference:
                   | ArticleReference
                   | ContributorReference
                   | PageReference
@@ -2019,7 +2016,7 @@ export type ARTICLES_QUERY_RESULT = Array<{
       | {
           _key: string
           _type: 'internalLink'
-          reference?: ArticleReference | ContributorReference | PageReference
+          reference: ArticleReference | ContributorReference | PageReference
           slug: string | null
         }
       | {
@@ -2070,7 +2067,7 @@ export type BYLINE_FRAGMENT_QUERY_RESULT = {
       | {
           _key: string
           _type: 'internalLink'
-          reference?: ArticleReference | ContributorReference | PageReference
+          reference: ArticleReference | ContributorReference | PageReference
           slug: string | null
         }
       | {
@@ -2240,7 +2237,7 @@ export type PAGE_QUERY_RESULT = {
                 | {
                     _key: string
                     _type: 'internalLink'
-                    reference?:
+                    reference:
                       | ArticleReference
                       | ContributorReference
                       | PageReference
@@ -2522,7 +2519,7 @@ export type PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT = {
             | {
                 _key: string
                 _type: 'internalLink'
-                reference?:
+                reference:
                   | ArticleReference
                   | ContributorReference
                   | PageReference
@@ -2802,10 +2799,7 @@ export type SERIES_MENU_QUERY_RESULT = {
           | {
               _key: string
               _type: 'internalLink'
-              reference?:
-                | ArticleReference
-                | ContributorReference
-                | PageReference
+              reference: ArticleReference | ContributorReference | PageReference
               slug: string | null
             }
           | {
@@ -2874,7 +2868,7 @@ export type SERIES_NAV_QUERY_RESULT = {
         | {
             _key: string
             _type: 'internalLink'
-            reference?: ArticleReference | ContributorReference | PageReference
+            reference: ArticleReference | ContributorReference | PageReference
             slug: string | null
           }
         | {
@@ -2940,7 +2934,7 @@ export type TEASER_LARGE_FRAGMENT_QUERY_RESULT =
             | {
                 _key: string
                 _type: 'internalLink'
-                reference?:
+                reference:
                   | ArticleReference
                   | ContributorReference
                   | PageReference
@@ -3010,7 +3004,7 @@ export type TEASER_LARGE_FRAGMENT_QUERY_RESULT =
             | {
                 _key: string
                 _type: 'internalLink'
-                reference?:
+                reference:
                   | ArticleReference
                   | ContributorReference
                   | PageReference
@@ -3091,10 +3085,7 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
           | {
               _key: string
               _type: 'internalLink'
-              reference?:
-                | ArticleReference
-                | ContributorReference
-                | PageReference
+              reference: ArticleReference | ContributorReference | PageReference
               slug: string | null
             }
           | {
@@ -3145,10 +3136,7 @@ export type TEASER_SMALL_FRAGMENT_QUERY_RESULT = Array<
           | {
               _key: string
               _type: 'internalLink'
-              reference?:
-                | ArticleReference
-                | ContributorReference
-                | PageReference
+              reference: ArticleReference | ContributorReference | PageReference
               slug: string | null
             }
           | {
@@ -3208,7 +3196,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT = {
                   | {
                       _key: string
                       _type: 'internalLink'
-                      reference?:
+                      reference:
                         | ArticleReference
                         | ContributorReference
                         | PageReference
@@ -3264,7 +3252,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT = {
                       | {
                           _key: string
                           _type: 'internalLink'
-                          reference?:
+                          reference:
                             | ArticleReference
                             | ContributorReference
                             | PageReference
@@ -3318,7 +3306,7 @@ export type TEASERS_SMALL_QUERY_DESC_RESULT = {
                       | {
                           _key: string
                           _type: 'internalLink'
-                          reference?:
+                          reference:
                             | ArticleReference
                             | ContributorReference
                             | PageReference
@@ -3388,7 +3376,7 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT = {
                   | {
                       _key: string
                       _type: 'internalLink'
-                      reference?:
+                      reference:
                         | ArticleReference
                         | ContributorReference
                         | PageReference
@@ -3444,7 +3432,7 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT = {
                       | {
                           _key: string
                           _type: 'internalLink'
-                          reference?:
+                          reference:
                             | ArticleReference
                             | ContributorReference
                             | PageReference
@@ -3498,7 +3486,7 @@ export type TEASERS_SMALL_QUERY_ASC_RESULT = {
                       | {
                           _key: string
                           _type: 'internalLink'
-                          reference?:
+                          reference:
                             | ArticleReference
                             | ContributorReference
                             | PageReference

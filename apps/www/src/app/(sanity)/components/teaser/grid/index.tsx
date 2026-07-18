@@ -27,7 +27,7 @@ export default function GridTeaser({
         }),
       )}
     >
-      {label && <h6>{label}</h6>}
+      {label && <h6 dangerouslySetInnerHTML={{ __html: label }} />}
       <SquareTeaserImage
         className={css({
           width: 'full',

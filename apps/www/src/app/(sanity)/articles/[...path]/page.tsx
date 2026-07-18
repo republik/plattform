@@ -4,6 +4,7 @@ import { EditorialImage } from '@/app/(sanity)/components/portable-text/editoria
 import { hasContent } from '@/app/(sanity)/components/portable-text/helpers/hasContent'
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { ArticlePortableText } from '@/app/(sanity)/components/portable-text/renderArticle'
+import { SeriesMenu } from '@/app/(sanity)/components/series-menu'
 import { Theme } from '@/app/(sanity)/components/theme'
 import { ARTICLE_QUERY } from '@/app/(sanity)/groq/article-query'
 import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
@@ -88,6 +89,7 @@ export default async function ArticlePage({
   return (
     <EventTrackingContext category='Article'>
       <Theme theme={theme} />
+      {seriesId && <SeriesMenu slug={slug} />}
       <article
         className={editorialContent({
           theme: theme?.name,
