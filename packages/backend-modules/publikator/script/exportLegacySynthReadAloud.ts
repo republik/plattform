@@ -1,19 +1,3 @@
-require('@orbiting/backend-modules-env').config()
-
-import fs from 'fs'
-import Debug from 'debug'
-
-const {
-  lib: { ConnectionContext },
-} = require('@orbiting/backend-modules-base')
-
-const debug = Debug('publikator:script:exportLegacySynthReadAloud')
-
-const { ASSETS_SERVER_BASE_URL } = process.env
-
-const OUTPUT_PATH =
-  process.argv[2] || 'legacy-synth-read-aloud.json'
-
 /**
  * One-off export for the Sanity `backfill-legacy-synthetic-audio` migration.
  *
@@ -22,7 +6,29 @@ const OUTPUT_PATH =
  * reconstruct the old audio URL — `${ASSETS_SERVER_BASE_URL}/s3/{bucket}/{key}`
  * — since that URL was only ever computed at read-time (see
  * lib/Derivative/SyntheticReadAloud.ts#processMeta), never persisted anywhere.
+ *
+ * Writes the resulting JSON array to stdout only (like
+ * script/finance/calculateKpis.js) — no file output, so it works the same
+ * run locally or via `heroku run`:
+ * $ node --experimental-strip-types script/exportLegacySynthReadAloud.ts > legacy-synth-read-aloud.json
+ * $ heroku run --app <app> node --experimental-strip-types script/exportLegacySynthReadAloud.ts > legacy-synth-read-aloud.json
+ *
+ * Plain CommonJS (no top-level `import`/`export`) so it runs directly under
+ * Node's type-stripping without tripping the ESM/CJS auto-detection — this
+ * package has no "type": "module" and mixing `import` with `require` here
+ * would make Node treat the file as ESM and choke on the `require` calls.
  */
+require('@orbiting/backend-modules-env').config()
+
+const Debug = require('debug')
+const {
+  lib: { ConnectionContext },
+} = require('@orbiting/backend-modules-base')
+
+const debug = Debug('publikator:script:exportLegacySynthReadAloud')
+
+const { ASSETS_SERVER_BASE_URL } = process.env
+
 const QUERY = `
   SELECT DISTINCT ON (repos.id)
     repos.id AS "repoId",
@@ -74,8 +80,8 @@ ConnectionContext.create('backends publikator script exportLegacySynthReadAloud'
       }
     })
 
-    fs.writeFileSync(OUTPUT_PATH, JSON.stringify(entries, null, 2))
-    debug('wrote %i entries to %s', entries.length, OUTPUT_PATH)
+    console.log(JSON.stringify(entries, null, 2))
+    debug('wrote %i entries to stdout', entries.length)
 
     return context
   })
