@@ -1,7 +1,7 @@
+import { Carousel } from '@/app/(sanity)/components/page-builder/carousel'
+import { TeaserFeedServer } from '@/app/(sanity)/components/page-builder/teaser-feed-server'
+import { TeaserGrid } from '@/app/(sanity)/components/page-builder/teaser-grid'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
-import { Carousel } from '@/app/(sanity)/pages/[...path]/components/blocks/carousel'
-import { TeaserFeedServer } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-feed-server'
-import { TeaserGrid } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-grid'
 
 export async function TeaserList({
   teaserList,

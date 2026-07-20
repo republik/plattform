@@ -168,9 +168,57 @@ export type TeaserSmall = {
   headingColor?: Color
 }
 
-export type EditorBlock = {
-  _type: 'editorBlock'
-  content?: PageEditor
+export type Front = {
+  _id: string
+  _type: 'front'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: InlineEditor
+  publishDate?: string
+  pageBuilder?: Array<
+    | ArticleReference
+    | PageReference
+    | TeaserReference
+    | ({
+        _key: string
+      } & TeaserList)
+    | ({
+        _key: string
+      } & MeineRepublik)
+    | ({
+        _key: string
+      } & BestOfDialogue)
+  >
+}
+
+export type InlineEditor = Array<{
+  children?: Array<{
+    marks?: Array<string>
+    text?: string
+    _type: 'span'
+    _key: string
+  }>
+  style?: 'normal'
+  listItem?: never
+  markDefs?: Array<
+    | ({
+        _key: string
+      } & Link)
+    | ({
+        _key: string
+      } & InternalLink)
+  >
+  level?: number
+  _type: 'block'
+  _key: string
+}>
+
+export type SanityFileAssetReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
 }
 
 export type NewsletterReference = {
@@ -185,50 +233,6 @@ export type PodcastReference = {
   _type: 'reference'
   _weak?: boolean
   [internalGroqTypeReferenceTo]?: 'podcast'
-}
-
-export type CallToAction = {
-  _type: 'callToAction'
-  target: NewsletterReference | ArticleCollectionReference | PodcastReference
-}
-
-export type Menu = {
-  _type: 'menu'
-  hasSeparator?: boolean
-  heading?: Heading
-  pages?: Array<
-    | ({
-        _key: string
-      } & PageReference)
-    | ({
-        _key: string
-      } & Link)
-  >
-}
-
-export type MeineRepublik = {
-  _type: 'meineRepublik'
-  enabled?: boolean
-}
-
-export type BestOfDialogue = {
-  _type: 'bestOfDialogue'
-  enabled?: boolean
-}
-
-export type TeaserList = {
-  _type: 'teaserList'
-  title?: string
-  source?: Source
-  appearance?: 'FEED' | 'GRID' | 'CAROUSEL'
-  maxItems?: number
-}
-
-export type SanityFileAssetReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
 }
 
 export type Vorlage = {
@@ -377,28 +381,6 @@ export type NestedEditor = Array<
       _key: string
     } & Button)
 >
-
-export type InlineEditor = Array<{
-  children?: Array<{
-    marks?: Array<string>
-    text?: string
-    _type: 'span'
-    _key: string
-  }>
-  style?: 'normal'
-  listItem?: never
-  markDefs?: Array<
-    | ({
-        _key: string
-      } & Link)
-    | ({
-        _key: string
-      } & InternalLink)
-  >
-  level?: number
-  _type: 'block'
-  _key: string
-}>
 
 export type PageEditor = Array<
   | {
@@ -743,42 +725,6 @@ export type Theme = {
   darkMode?: boolean
 }
 
-export type Podcast = {
-  _id: string
-  _type: 'podcast'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title: string
-  appleUrl?: string
-  spotifyUrl?: string
-  podigeeSlug?: string
-  archived?: boolean
-}
-
-export type Newsletter = {
-  _id: string
-  _type: 'newsletter'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title: string
-  description?: string
-  frequency?: string
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  archived?: boolean
-  name: string
-  replyTo?: string
-  fromName?: string
-  savedSegmentId?: number
-}
-
 export type Seo = {
   _type: 'seo'
   title?: string
@@ -810,44 +756,6 @@ export type EditorialImage = {
   alt?: string
   caption?: Caption
   size?: 'TINY' | 'NORMAL' | 'BREAKOUT' | 'FULL'
-}
-
-export type Page = {
-  _id: string
-  _type: 'page'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  skipTitleBlock?: boolean
-  cover?: EditorialImage
-  useCoverAsTitle?: boolean
-  heading?: PageReference
-  title: InlineEditor
-  description?: InlineEditor
-  publishDate?: string
-  slug: Slug
-  repoId?: string
-  pageBuilder?: Array<
-    | ({
-        _key: string
-      } & EditorBlock)
-    | ArticleReference
-    | PageReference
-    | TeaserReference
-    | ({
-        _key: string
-      } & TeaserList)
-    | ({
-        _key: string
-      } & CallToAction)
-    | ({
-        _key: string
-      } & Menu)
-  >
-  teaserSmall?: TeaserSmall
-  teaserLarge?: TeaserLarge
-  seo?: Seo
-  theme?: Theme
 }
 
 export type Link = {
@@ -891,16 +799,6 @@ export type PullQuote = {
   size?: 'narrow' | 'float' | 'breakout'
 }
 
-export type AsideImage = {
-  _type: 'asideImage'
-  asset?: SanityImageAssetReference
-  media?: unknown
-  hotspot?: SanityImageHotspot
-  crop?: SanityImageCrop
-  alt?: string
-  caption?: Caption
-}
-
 export type BlockQuote = {
   _type: 'blockQuote'
   body?: NestedEditor
@@ -929,39 +827,12 @@ export type SeriesNav = {
   series: ArticleCollectionReference
 }
 
-export type ArticleCollection = {
-  _id: string
-  _type: 'articleCollection'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title: string
-  description?: string
-  image?: {
-    asset?: SanityImageAssetReference
-    media?: unknown
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
-  series?: boolean
-  archived?: boolean
-}
-
 export type StoryComponent = {
   _type: 'storyComponent'
   url?: string
   tagname?: string
   componentData?: Code
   size?: 'NORMAL' | 'BREAKOUT' | 'FULL'
-}
-
-export type Code = {
-  _type: 'code'
-  language?: string
-  filename?: string
-  code?: string
-  highlightedLines?: Array<number>
 }
 
 export type DynamicComponent = {
@@ -1098,6 +969,159 @@ export type GroupedEditorialImage = {
   }
   alt?: string
   caption?: Caption
+}
+
+export type AsideImage = {
+  _type: 'asideImage'
+  asset?: SanityImageAssetReference
+  media?: unknown
+  hotspot?: SanityImageHotspot
+  crop?: SanityImageCrop
+  alt?: string
+  caption?: Caption
+}
+
+export type EditorBlock = {
+  _type: 'editorBlock'
+  content?: PageEditor
+}
+
+export type CallToAction = {
+  _type: 'callToAction'
+  target: NewsletterReference | ArticleCollectionReference | PodcastReference
+}
+
+export type Podcast = {
+  _id: string
+  _type: 'podcast'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  appleUrl?: string
+  spotifyUrl?: string
+  podigeeSlug?: string
+  archived?: boolean
+}
+
+export type Newsletter = {
+  _id: string
+  _type: 'newsletter'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  description?: string
+  frequency?: string
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  archived?: boolean
+  name: string
+  replyTo?: string
+  fromName?: string
+  savedSegmentId?: number
+}
+
+export type Menu = {
+  _type: 'menu'
+  hasSeparator?: boolean
+  heading?: Heading
+  pages?: Array<
+    | ({
+        _key: string
+      } & PageReference)
+    | ({
+        _key: string
+      } & Link)
+  >
+}
+
+export type Page = {
+  _id: string
+  _type: 'page'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  skipTitleBlock?: boolean
+  cover?: EditorialImage
+  useCoverAsTitle?: boolean
+  heading?: PageReference
+  title: InlineEditor
+  description?: InlineEditor
+  publishDate?: string
+  slug: Slug
+  repoId?: string
+  pageBuilder?: Array<
+    | ({
+        _key: string
+      } & EditorBlock)
+    | ArticleReference
+    | PageReference
+    | TeaserReference
+    | ({
+        _key: string
+      } & TeaserList)
+    | ({
+        _key: string
+      } & CallToAction)
+    | ({
+        _key: string
+      } & Menu)
+  >
+  teaserSmall?: TeaserSmall
+  teaserLarge?: TeaserLarge
+  seo?: Seo
+  theme?: Theme
+}
+
+export type Code = {
+  _type: 'code'
+  language?: string
+  filename?: string
+  code?: string
+  highlightedLines?: Array<number>
+}
+
+export type MeineRepublik = {
+  _type: 'meineRepublik'
+  enabled?: boolean
+}
+
+export type BestOfDialogue = {
+  _type: 'bestOfDialogue'
+  enabled?: boolean
+}
+
+export type TeaserList = {
+  _type: 'teaserList'
+  title?: string
+  source?: Source
+  appearance?: 'FEED' | 'GRID' | 'CAROUSEL'
+  maxItems?: number
+}
+
+export type ArticleCollection = {
+  _id: string
+  _type: 'articleCollection'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title: string
+  description?: string
+  image?: {
+    asset?: SanityImageAssetReference
+    media?: unknown
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
+  series?: boolean
+  archived?: boolean
 }
 
 export type Color = {
@@ -1278,15 +1302,11 @@ export type AllSanitySchemaTypes =
   | SanityImageAssetReference
   | TeaserLarge
   | TeaserSmall
-  | EditorBlock
+  | Front
+  | InlineEditor
+  | SanityFileAssetReference
   | NewsletterReference
   | PodcastReference
-  | CallToAction
-  | Menu
-  | MeineRepublik
-  | BestOfDialogue
-  | TeaserList
-  | SanityFileAssetReference
   | Vorlage
   | Slug
   | LogEntry
@@ -1296,7 +1316,6 @@ export type AllSanitySchemaTypes =
   | LegacyMeta
   | Mdast
   | NestedEditor
-  | InlineEditor
   | PageEditor
   | ArticleEditor
   | Caption
@@ -1310,11 +1329,8 @@ export type AllSanitySchemaTypes =
   | Article
   | Discussion
   | Theme
-  | Podcast
-  | Newsletter
   | Seo
   | EditorialImage
-  | Page
   | Link
   | Variable
   | IfNot
@@ -1322,14 +1338,11 @@ export type AllSanitySchemaTypes =
   | EmailOnly
   | WebOnly
   | PullQuote
-  | AsideImage
   | BlockQuote
   | InfoBox
   | Button
   | SeriesNav
-  | ArticleCollection
   | StoryComponent
-  | Code
   | DynamicComponent
   | Html
   | EmbedComment
@@ -1340,6 +1353,18 @@ export type AllSanitySchemaTypes =
   | Divider
   | ImageGroup
   | GroupedEditorialImage
+  | AsideImage
+  | EditorBlock
+  | CallToAction
+  | Podcast
+  | Newsletter
+  | Menu
+  | Page
+  | Code
+  | MeineRepublik
+  | BestOfDialogue
+  | TeaserList
+  | ArticleCollection
   | Color
   | SeoImageBuilder
   | MediaTag

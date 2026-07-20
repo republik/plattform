@@ -1,10 +1,10 @@
+import { CallToAction } from '@/app/(sanity)/components/page-builder/call-to-action'
+import { EditorBlock } from '@/app/(sanity)/components/page-builder/editor-block'
+import { Menu } from '@/app/(sanity)/components/page-builder/menu'
+import { TeaserItem } from '@/app/(sanity)/components/page-builder/teaser-item'
+import { TeaserList } from '@/app/(sanity)/components/page-builder/teaser-list'
 import { PageBuilderBlock } from '@/app/(sanity)/groq/page-query'
-import { CallToAction } from '@/app/(sanity)/pages/[...path]/components/blocks/call-to-action'
-import { EditorBlock } from '@/app/(sanity)/pages/[...path]/components/blocks/editor-block'
-import { TeaserItem } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-item'
-import { TeaserList } from '@/app/(sanity)/pages/[...path]/components/blocks/teaser-list'
 import { css } from '@republik/theme/css'
-import { Menu } from './blocks/menu'
 
 export function PageBuilder({
   blocks,
