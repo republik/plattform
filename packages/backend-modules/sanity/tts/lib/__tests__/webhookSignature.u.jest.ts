@@ -13,7 +13,7 @@ import {
 } from '../webhookSignature'
 
 beforeAll(() => {
-  process.env.WEBHOOK_SIGNING_SECRET = 'test-secret'
+  process.env.HUEBSCH_WEBHOOK_SIGNING_SECRET = 'test-secret'
 })
 
 const parseSignedPath = (path: string) => {
