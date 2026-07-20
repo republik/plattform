@@ -10,13 +10,8 @@
  * Writes the resulting JSON array to stdout only (like
  * script/finance/calculateKpis.js) — no file output, so it works the same
  * run locally or via `heroku run`:
- * $ node --experimental-strip-types script/exportLegacySynthReadAloud.ts > legacy-synth-read-aloud.json
- * $ heroku run --app <app> node --experimental-strip-types script/exportLegacySynthReadAloud.ts > legacy-synth-read-aloud.json
- *
- * Plain CommonJS (no top-level `import`/`export`) so it runs directly under
- * Node's type-stripping without tripping the ESM/CJS auto-detection — this
- * package has no "type": "module" and mixing `import` with `require` here
- * would make Node treat the file as ESM and choke on the `require` calls.
+ * $ node script/exportLegacySynthReadAloud.js > legacy-synth-read-aloud.json
+ * $ heroku run --app <app> node script/exportLegacySynthReadAloud.js > legacy-synth-read-aloud.json
  */
 require('@orbiting/backend-modules-env').config()
 
@@ -54,7 +49,7 @@ const QUERY = `
 `
 
 ConnectionContext.create('backends publikator script exportLegacySynthReadAloud')
-  .then(async (context: any) => {
+  .then(async (context) => {
     const { pgdb } = context
 
     if (!ASSETS_SERVER_BASE_URL) {
@@ -66,7 +61,7 @@ ConnectionContext.create('backends publikator script exportLegacySynthReadAloud'
     const rows = await pgdb.query(QUERY)
     debug('found %i rows', rows.length)
 
-    const entries = rows.map((row: any) => {
+    const entries = rows.map((row) => {
       const { repoId, derivativeId, result, readyAt } = row
       const { bucket, key } = result.s3
       const audioDuration = result.audioDuration
@@ -85,5 +80,5 @@ ConnectionContext.create('backends publikator script exportLegacySynthReadAloud'
 
     return context
   })
-  .then((context: any) => ConnectionContext.close(context))
+  .then((context) => ConnectionContext.close(context))
   .finally(() => process.exit())
