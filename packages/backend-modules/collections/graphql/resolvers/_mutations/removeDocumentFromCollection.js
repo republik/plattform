@@ -1,8 +1,9 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { getParsedDocumentId } = require('../../../../search/lib/Documents')
 const Collection = require('../../../lib/Collection')
 
 module.exports = async (_, { documentId, collectionName }, context) => {
-  const { user: me, t, req } = context
+  const { user: me, t, req, loaders } = context
   ensureSignedIn(req)
 
   const collection = await Collection.byNameForUser(
@@ -14,11 +15,10 @@ module.exports = async (_, { documentId, collectionName }, context) => {
     throw new Error(t(`api/collections/collection/404`))
   }
 
-  const repoId = Buffer.from(documentId, 'base64')
-    .toString('utf-8')
-    .split('/')
-    .slice(0, 2)
-    .join('/')
+  const { repoId: parsedRepoId } = getParsedDocumentId(documentId)
+  const doc = await loaders.Document.byRepoId.load(parsedRepoId)
+  const repoId = doc ? doc.meta.repoId : parsedRepoId
+
   const item = await Collection.deleteDocumentItem(
     me.id,
     collection.id,

@@ -4,8 +4,15 @@ import { verifySanityToken } from './auth'
 import { discussionsHandler } from './discussions'
 import { generateAudioHandler } from './generateAudio'
 import { huebschWebhookHandler } from './huebschWebhook'
+import { publishNotificationHandler } from './publishNotification'
 
-const middleware = async (server: Express, pgdb: any, t: any) => {
+const middleware = async (
+  server: Express,
+  pgdb: any,
+  t: any,
+  _redis: any,
+  context: any,
+) => {
   server.post(
     '/webhooks/sanity/discussions',
     bodyParser.json(),
@@ -18,6 +25,13 @@ const middleware = async (server: Express, pgdb: any, t: any) => {
     bodyParser.json(),
     verifySanityToken,
     generateAudioHandler,
+  )
+
+  server.post(
+    '/webhooks/sanity/publish-notification',
+    bodyParser.json(),
+    verifySanityToken,
+    publishNotificationHandler(context),
   )
 
   // No auth middleware — the signature is HMAC-verified inline

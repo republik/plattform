@@ -17,7 +17,11 @@ const getObjectByIdAndType = ({ id, type }, { loaders, t }) => {
     const { repoId } = getParsedDocumentId(id)
     return loaders.Document.byRepoId
       .load(repoId)
-      .then((o) => o && { ...o, objectId: repoId })
+      // `o.meta.repoId` (not the parsed input `repoId`) is the canonical
+      // storage key — for a publikator document these are always equal;
+      // for a Sanity-backed one it's the loader's normalized `sanity:`-
+      // prefixed ref (see documents/loaders/Document.js).
+      .then((o) => o && { ...o, objectId: o.meta.repoId })
       .then(normalize)
   }
   throw new Error(t('api/subscriptions/type/notSupported'))

@@ -9859,7 +9859,7 @@
   resolved "https://registry.yarnpkg.com/@types/useragent/-/useragent-2.3.1.tgz#c971243faa04f50df399da35d77538ab5fabae20"
   integrity sha512-w70ziElAVDD8lEOQ2Id3YBDE0sn2DTVA1zLB59H4kFngYoOJAIlnMkndiZFrzzHE0jmFDZ9AEWNvmeTm6Rvj9A==
 
-"@types/uuid@^8.3.0":
+"@types/uuid@^8.3.0", "@types/uuid@^8.3.4":
   version "8.3.4"
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.4.tgz#bd86a43617df0594787d38b735f55c805becf1bc"
   integrity sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==

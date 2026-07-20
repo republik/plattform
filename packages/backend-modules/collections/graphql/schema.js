@@ -7,6 +7,12 @@ schema {
 type queries {
   mediaProgress(mediaId: ID!): MediaProgress
   collectionsStats: CollectionsStats!
+
+  """
+  Root-level equivalent of \`Document.userCollectionItem\`, for content
+  (e.g. Sanity-backed articles) that doesn't resolve to a GraphQL \`Document\`.
+  """
+  userCollectionItem(documentId: ID!, collectionName: String!): CollectionItem
 }
 
 type mutations {

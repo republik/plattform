@@ -9,3 +9,12 @@ export {
   errorMessage,
 } from './lib/audio'
 export type { ArticleDoc, AudioVersion, AudioVersionChapter } from './lib/audio'
+export {
+  toSanityRef,
+  isSanityRef,
+  fromSanityRef,
+  fetchDocumentById,
+  fetchDocumentByLegacyRepoId,
+} from './lib/document'
+export type { GenericDocument } from './lib/document'
+export { repoIdToSanityId } from './lib/legacyId'

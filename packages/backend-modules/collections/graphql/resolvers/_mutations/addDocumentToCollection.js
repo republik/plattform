@@ -1,4 +1,5 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { getParsedDocumentId } = require('../../../../search/lib/Documents')
 const Collection = require('../../../lib/Collection')
 
 module.exports = async (_, { documentId, collectionName, data }, context) => {
@@ -14,15 +15,15 @@ module.exports = async (_, { documentId, collectionName, data }, context) => {
     throw new Error(t(`api/collections/collection/404`))
   }
 
-  const repoId = Buffer.from(documentId, 'base64')
-    .toString('utf-8')
-    .split('/')
-    .slice(0, 2)
-    .join('/')
-  const doc = await loaders.Document.byRepoId.load(repoId)
+  const { repoId: parsedRepoId } = getParsedDocumentId(documentId)
+  const doc = await loaders.Document.byRepoId.load(parsedRepoId)
   if (!doc) {
     throw new Error(t(`api/collections/document/404`))
   }
+  // `doc.meta.repoId` (not the parsed input) is the canonical storage key —
+  // for a publikator document these are always equal; for a Sanity-backed
+  // one it's the loader's normalized `sanity:`-prefixed ref.
+  const repoId = doc.meta.repoId
 
   const item = await Collection.upsertDocumentItem(
     me.id,
