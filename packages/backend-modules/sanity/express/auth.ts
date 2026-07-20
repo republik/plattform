@@ -17,7 +17,7 @@ export const verifySanityToken = (
 ) => {
   const secret = process.env.SANITY_WEBHOOK_TOKEN
   if (!secret) {
-    console.error('SANITY_WEBHOOK_TOKEN is not set')
+    req.log.error('SANITY_WEBHOOK_TOKEN is not set')
     return res.status(500).end()
   }
 

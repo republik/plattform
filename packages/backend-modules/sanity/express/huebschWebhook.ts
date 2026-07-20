@@ -1,4 +1,7 @@
 import { Request, Response } from 'express'
+// Importing this brings pino-http's global Express Request.log
+// augmentation into scope for this module's compilation.
+import type {} from '@orbiting/backend-modules-logger'
 import {
   recordAudioVersion,
   reportAudioGenerationError,
@@ -51,14 +54,17 @@ export const huebschWebhookHandler = async (req: Request, res: Response) => {
   // ack immediately, process in the background — mirrors the old service's
   // res.sendStatus(204) + await publish() split, so Huebsch doesn't have to
   // wait on our Sanity/S3 round trips.
-  processResult(documentId, titleSlug, contentHash, body).catch((e: unknown) => {
-    reportAudioGenerationError(documentId, e)
-  })
+  processResult(req, documentId, titleSlug, contentHash, body).catch(
+    (e: unknown) => {
+      reportAudioGenerationError(documentId, e)
+    },
+  )
 
   return res.status(204).end()
 }
 
 const processResult = async (
+  req: Request,
   documentId: string,
   titleSlug: string,
   contentHash: string,
@@ -105,7 +111,14 @@ const processResult = async (
     },
   )
 
-  await mirrorToS3(documentId, buffer)
+  // A failed S3 mirror is an internal backup-copy concern, not something
+  // that should surface as a failed generation on the Sanity document —
+  // the audio itself (the asset of record) is already saved at this point.
+  try {
+    await mirrorToS3(documentId, buffer)
+  } catch (e) {
+    req.log.error({ error: e }, `S3 mirror failed for ${documentId}`)
+  }
 
   await reportAudioGenerationSuccess(documentId)
 }

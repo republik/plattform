@@ -23,6 +23,7 @@
   "dependencies": {
     "@orbiting/backend-modules-assets": "*",
     "@orbiting/backend-modules-discussions": "*",
+    "@orbiting/backend-modules-logger": "*",
     "@orbiting/backend-modules-subscriptions": "*",
     "@portabletext/toolkit": "^2.0.16",
     "@sanity/client": "^6.24.1",

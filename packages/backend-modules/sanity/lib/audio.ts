@@ -1,3 +1,4 @@
+import { logger } from '@orbiting/backend-modules-logger'
 import { createSanityClient } from './client'
 
 const sanityClient = createSanityClient()
@@ -83,7 +84,7 @@ export const reportAudioGenerationError = async (
   documentId: string,
   error: unknown,
 ) => {
-  console.error(`audio generation failed for ${documentId}:`, error)
+  logger.error({ error }, `audio generation failed for ${documentId}`)
   try {
     await sanityClient
       .patch(documentId)
@@ -96,9 +97,9 @@ export const reportAudioGenerationError = async (
       })
       .commit({ autoGenerateArrayKeys: true })
   } catch (e) {
-    console.error(
-      `failed to report audio generation error for ${documentId}:`,
-      e,
+    logger.error(
+      { error: e },
+      `failed to report audio generation error for ${documentId}`,
     )
   }
 }
