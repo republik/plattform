@@ -14,8 +14,8 @@ import crypto from 'crypto'
 // since neither is separately validated against the document at webhook time.
 
 const secret = () => {
-  const value = process.env.WEBHOOK_SIGNING_SECRET
-  if (!value) throw new Error('WEBHOOK_SIGNING_SECRET is not set')
+  const value = process.env.HUEBSCH_WEBHOOK_SIGNING_SECRET
+  if (!value) throw new Error('HUEBSCH_WEBHOOK_SIGNING_SECRET is not set')
   return value
 }
 
