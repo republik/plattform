@@ -4,8 +4,11 @@ import {
   LinkOverlay,
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
 import { SquareTeaserImage } from '@/app/(sanity)/components/teaser/_shared/square-teaser-image'
+import {
+  TeaserListItemType,
+  upcomingTeaser,
+} from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
-import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { css, cx } from '@republik/theme/css'
 
 const carouselItemStyle = css({
@@ -20,13 +23,10 @@ const carouselItemStyle = css({
   borderColor: 'divider',
 })
 
-export function CarouselTeaser({
-  teaser,
-}: {
-  teaser: TeaserSmallFragmentType
-}) {
+export function CarouselTeaser({ teaser }: { teaser: TeaserListItemType }) {
   return (
     <div
+      style={{ opacity: upcomingTeaser(teaser) ? 0.5 : 1 }}
       className={css({
         scrollSnapAlign: 'start',
         scrollSnapMarginLeft: '15px',

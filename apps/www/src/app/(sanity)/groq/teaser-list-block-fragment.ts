@@ -6,10 +6,15 @@ export const TEASER_LIST_BLOCK_FRAGMENT = /* groq */ `
   maxItems,
   title,
   "total": select(
-    source.sourceType == "MANUAL" => count(source.items[@->_type in ["article", "page"]]),
+    source.sourceType == "MANUAL" => count(source.items),
     source.sourceType == "COLLECTION" => count(*[
-      _type == "article" &&
-      ^.source.collection._ref in articleCollections[].collection._ref
+      (
+        _type == "article" &&
+        ^.source.collection._ref in articleCollections[].collection._ref
+      ) || (
+        _type == "teaser" &&
+        collection._ref == ^.source.collection._ref
+      )
     ]),
     0
   ),

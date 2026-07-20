@@ -1,22 +1,27 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
 import { SquareTeaserImage } from '@/app/(sanity)/components/teaser/_shared/square-teaser-image'
+import {
+  TeaserListItemType,
+  upcomingTeaser,
+} from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
-import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { css, cx } from '@republik/theme/css'
 
 export default function GridTeaser({
   teaser,
   label,
-  comingSoon = false,
 }: {
-  teaser: TeaserSmallFragmentType
+  teaser: TeaserListItemType
   label?: string
-  comingSoon?: boolean
 }) {
+  const upcoming = upcomingTeaser(teaser)
+
+  console.log({ upcoming })
+
   return (
     <div
-      style={{ opacity: comingSoon ? 0.5 : 1 }}
+      style={{ opacity: upcoming ? 0.5 : 1 }}
       className={cx(
         typography,
         css({
@@ -39,11 +44,7 @@ export default function GridTeaser({
         sizes='(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw'
       />
       <h4 className='editorial'>
-        {comingSoon ? (
-          <InlinePortableText value={teaser.title} />
-        ) : (
-          <LinkOverlay teaser={teaser as TeaserSmallFragmentType} />
-        )}
+        <LinkOverlay teaser={teaser} />
       </h4>
       {teaser.description && (
         <p className='description'>

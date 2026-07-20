@@ -1,3 +1,7 @@
+import {
+  getNotExpiredTeasers,
+  TeaserListItemType,
+} from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import GridTeaser from '@/app/(sanity)/components/teaser/grid'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
 import {
@@ -61,8 +65,8 @@ export async function TeaserGrid({
     },
   })
 
-  const teasers = data?.block?.teasers
-  if (!teasers?.length) return null
+  const teasers = getNotExpiredTeasers(data?.block?.teasers)
+  if (!teasers.length) return null
 
   const labels = series && getSeriesLabels(teasers)
 
@@ -83,20 +87,10 @@ export async function TeaserGrid({
         {teasers.map((teaser, index) => (
           <GridTeaser
             key={teaser._id}
-            teaser={teaser}
+            teaser={teaser as TeaserListItemType}
             label={labels && labels[index]}
           />
         ))}
-        {/*upcomingTeasers.map((teaser, index) => (
-          <GridTeaser
-            comingSoon={true}
-            key={teaser._id}
-            teaser={teaser}
-            label={
-              series ? `Folge ${index + 1 + withoutHeading.length}` : undefined
-            }
-          />
-        ))*/}
       </div>
     </>
   )

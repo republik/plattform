@@ -1,8 +1,8 @@
 'use client'
 
+import { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import FeedTeaser from '@/app/(sanity)/components/teaser/feed'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
-import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { Button } from '@/app/components/ui/button'
 import { useTranslation } from '@/lib/withT'
 import { css } from '@republik/theme/css'
@@ -14,10 +14,10 @@ export function TeaserFeedClient({
   pageSize,
   loadMoreAction,
 }: {
-  initialTeasers: TeaserSmallFragmentType[]
+  initialTeasers: TeaserListItemType[]
   teaserList: TeaserListBlockFragmentType
   pageSize: number
-  loadMoreAction: () => Promise<TeaserSmallFragmentType[]>
+  loadMoreAction: () => Promise<TeaserListItemType[]>
 }) {
   const { total, title, maxItems } = teaserList
 

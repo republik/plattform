@@ -1,5 +1,6 @@
 'use server'
 
+import { getNotExpiredTeasers } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
 import { TEASERS_SMALL_QUERY_DESC } from '@/app/(sanity)/groq/teasers-small-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
@@ -26,8 +27,8 @@ export async function TeaserFeedServer({
     },
   })
 
-  const teasers = data?.block?.teasers
-  if (!teasers?.length) return null
+  const teasers = getNotExpiredTeasers(data?.block?.teasers)
+  if (!teasers.length) return null
 
   const { total } = teaserList
 
@@ -38,7 +39,7 @@ export async function TeaserFeedServer({
       query: TEASERS_SMALL_QUERY_DESC,
       params: { documentId, blockKey, start: MAX_TEASERS, end: total },
     })
-    return data?.block?.teasers ?? []
+    return getNotExpiredTeasers(data?.block?.teasers)
   }
 
   return (

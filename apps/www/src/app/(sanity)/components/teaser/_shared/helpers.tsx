@@ -1,14 +1,14 @@
 'use client'
 
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
+import { TeaserListItemType } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { useTrackEvent } from '@/app/lib/analytics/event-tracking'
 import { linkOverlay } from '@republik/theme/patterns'
 import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-export function Heading({ teaser }: { teaser: TeaserSmallFragmentType }) {
+export function Heading({ teaser }: { teaser: TeaserListItemType }) {
   const pathname = usePathname()
 
   // we only show the heading for articles, not pages
@@ -19,8 +19,6 @@ export function Heading({ teaser }: { teaser: TeaserSmallFragmentType }) {
   // Don't display the heading when we're already on the correct page. The heading slug
   // matches the browser path directly (via rewrite) or under /pages.
   const headingPath = stegaClean(teaser.heading.slug)
-
-  console.log(teaser.heading)
 
   if (
     headingPath &&
@@ -36,13 +34,20 @@ export function Heading({ teaser }: { teaser: TeaserSmallFragmentType }) {
   )
 }
 
-export function LinkOverlay({ teaser }: { teaser: TeaserSmallFragmentType }) {
+export function LinkOverlay({ teaser }: { teaser: TeaserListItemType }) {
   const trackEvent = useTrackEvent()
 
   const href =
-    teaser._type === 'article'
+    teaser._type === 'teaser'
+      ? stegaClean(teaser.href)
+      : teaser._type === 'article'
       ? `/articles${teaser.slug}`
       : `/pages${teaser.slug}`
+
+  // standalone teasers may link nowhere
+  if (!href) {
+    return <InlinePortableText value={teaser.title} />
+  }
 
   return (
     <Link

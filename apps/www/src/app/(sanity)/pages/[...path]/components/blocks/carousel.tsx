@@ -1,3 +1,7 @@
+import {
+  isExpiredUpcomingTeaser,
+  TeaserListItemType,
+} from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { CarouselTeaser } from '@/app/(sanity)/components/teaser/carousel'
 import { TeaserListBlockFragmentType } from '@/app/(sanity)/groq/teaser-list-block-fragment'
 import {
@@ -42,8 +46,11 @@ export async function Carousel({
     },
   })
 
-  const teasers = data?.block?.teasers
-  if (!teasers?.length) return null
+  const teasers = (data?.block?.teasers ?? []).filter(
+    (teaser): teaser is TeaserListItemType =>
+      '_id' in teaser && !isExpiredUpcomingTeaser(teaser as TeaserListItemType),
+  )
+  if (!teasers.length) return null
 
   return (
     <>

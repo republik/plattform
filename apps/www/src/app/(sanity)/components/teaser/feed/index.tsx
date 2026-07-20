@@ -3,17 +3,17 @@ import {
   Heading,
   LinkOverlay,
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
+import {
+  TeaserListItemType,
+  upcomingTeaser,
+} from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
-import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { css, cx } from '@republik/theme/css'
 
-export default function FeedTeaser({
-  teaser,
-}: {
-  teaser: TeaserSmallFragmentType
-}) {
+export default function FeedTeaser({ teaser }: { teaser: TeaserListItemType }) {
   return (
     <div
+      style={{ opacity: upcomingTeaser(teaser) ? 0.5 : 1 }}
       className={cx(
         typography,
         css({
@@ -32,7 +32,14 @@ export default function FeedTeaser({
       )}
     >
       <Heading teaser={teaser} />
-      <h4 className={teaser.theme?.name !== 'EDITORIAL' ? 'meta' : ''}>
+      {/* standalone teaser documents carry no theme */}
+      <h4
+        className={
+          ('theme' in teaser ? teaser.theme?.name : undefined) !== 'EDITORIAL'
+            ? 'meta'
+            : ''
+        }
+      >
         <LinkOverlay teaser={teaser} />
       </h4>
       <p className='description'>
