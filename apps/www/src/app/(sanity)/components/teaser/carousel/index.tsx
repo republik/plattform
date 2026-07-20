@@ -10,6 +10,8 @@ import {
 } from '@/app/(sanity)/components/teaser/_shared/teaser-list-item'
 import { typography } from '@/app/(sanity)/components/teaser/_shared/teaser-list-typography'
 import { css, cx } from '@republik/theme/css'
+import { stegaClean } from 'next-sanity'
+import type { CSSProperties } from 'react'
 
 const carouselItemStyle = css({
   cursor: 'pointer',
@@ -19,11 +21,22 @@ const carouselItemStyle = css({
   display: 'flex',
   flexShrink: 0,
   flexDirection: 'column',
+  // fall back to no background / inherited text color when the teaser
+  // doesn't define custom colors
+  backgroundColor: 'var(--teaser-bg, transparent)',
+  color: 'var(--teaser-color, inherit)',
   border: '1px solid',
   borderColor: 'divider',
+  // a custom background replaces the border
+  '&[data-has-background]': {
+    border: 'none',
+  },
 })
 
 export function CarouselTeaser({ teaser }: { teaser: TeaserListItemType }) {
+  const backgroundColor = stegaClean(teaser.backgroundColor?.hex)
+  const color = stegaClean(teaser.color?.hex)
+
   return (
     <div
       style={{ opacity: upcomingTeaser(teaser) ? 0.5 : 1 }}
@@ -35,7 +48,16 @@ export function CarouselTeaser({ teaser }: { teaser: TeaserListItemType }) {
         '&:last-child': { mr: 'auto' },
       })}
     >
-      <div className={cx(typography, carouselItemStyle)}>
+      <div
+        className={cx(typography, carouselItemStyle)}
+        data-has-background={backgroundColor ? '' : undefined}
+        style={
+          {
+            ...(backgroundColor && { '--teaser-bg': backgroundColor }),
+            ...(color && { '--teaser-color': color }),
+          } as CSSProperties
+        }
+      >
         <SquareTeaserImage image={teaser.image} alt='' size={248} />
         <div
           className={css({

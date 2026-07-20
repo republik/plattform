@@ -23,6 +23,9 @@ export const TEASER_SMALL_DOCUMENT_FRAGMENT = /* groq */ `
   "heading": {
     "title": teaserSmall.heading
   },
+  "color": teaserSmall.color,
+  "backgroundColor": teaserSmall.backgroundColor,
+  "headingColor": teaserSmall.headingColor,
 `
 
 // Hack to not rely on the main query for types

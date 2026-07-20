@@ -17,8 +17,6 @@ export default function GridTeaser({
 }) {
   const upcoming = upcomingTeaser(teaser)
 
-  console.log({ upcoming })
-
   return (
     <div
       style={{ opacity: upcoming ? 0.5 : 1 }}
