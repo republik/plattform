@@ -14,22 +14,24 @@ export function TeaserLargeImage({
   ImageProps,
   'src' | 'width' | 'height'
 >) {
+  const Placeholder = (
+    <div
+      className={css({
+        color: 'overlay',
+        bg: 'overlay',
+        width: 'full',
+        minWidth: '100px',
+        aspectRatio: '4 / 3',
+        display: 'grid',
+        placeContent: 'center',
+      })}
+    >
+      Bild
+    </div>
+  )
+
   if (!image) {
-    return (
-      <div
-        className={css({
-          color: 'overlay',
-          bg: 'overlay',
-          width: 'full',
-          minWidth: '100px',
-          aspectRatio: '4 / 3',
-          display: 'grid',
-          placeContent: 'center',
-        })}
-      >
-        Bild
-      </div>
-    )
+    return Placeholder
   }
 
   // If an image with crop/hotspot is provided, those will be applied automatically
@@ -39,8 +41,9 @@ export function TeaserLargeImage({
     src = urlFor(image).url()
     dimensions = getImageDimensions(src)
   } catch (e) {
+    src = ''
     console.error(e)
-    return null
+    return Placeholder
   }
 
   return (

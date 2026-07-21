@@ -3,7 +3,7 @@ import { TEASER_SMALL_FRAGMENT } from '@/app/(sanity)/groq/teaser-small-fragment
 import { defineQuery } from 'next-sanity'
 
 export const TEASERS_SMALL_QUERY_DESC = defineQuery(`
-  *[_type == "page" && _id == $documentId][0]{
+  *[_id == $documentId][0]{
     "block": pageBuilder[_key == $blockKey][0]{
      "teasers": select(
         source.sourceType == "MANUAL" => source.items[$start...$end]->{
@@ -36,7 +36,7 @@ export const TEASERS_SMALL_QUERY_DESC = defineQuery(`
 `)
 
 export const TEASERS_SMALL_QUERY_ASC = defineQuery(`
-   *[_type == "page" && _id == $documentId][0]{
+   *[_id == $documentId][0]{
     "block": pageBuilder[_key == $blockKey][0]{
      "teasers": select(
         source.sourceType == "MANUAL" => source.items[$start...$end]->{
