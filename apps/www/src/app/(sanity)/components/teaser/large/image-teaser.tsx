@@ -1,12 +1,21 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { TeaserLargeImage } from '@/app/(sanity)/components/teaser/large/helpers'
+import {
+  Heading,
+  TeaserLargeImage,
+} from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
 
 const teaserTextContainer = css({
+  py: '10',
+  px: '4',
   md: {
+    py: '20',
+    px: '15%',
+  },
+  lg: {
     position: 'absolute',
     inset: 0,
     overflow: 'hidden',
@@ -71,6 +80,7 @@ const teaserTextPosition = cva({
 const teaserTitle = cva({
   base: {
     textStyle: 'editorialTitle',
+    textWrap: 'balance',
     fontSize: '38px',
     lineHeight: '43px',
     md: {
@@ -127,6 +137,7 @@ export function ImageTeaser({
   _type,
   slug,
   theme,
+  heading,
   teaser,
 }: TeaserLargeFragmentType) {
   const href = _type === 'article' ? `/articles${slug}` : `/pages${slug}`
@@ -149,6 +160,8 @@ export function ImageTeaser({
           })}
           style={{ color: teaser.color?.hex }}
         >
+          {heading && <Heading heading={heading} />}
+
           <Link href={href} className={linkOverlay()}>
             <h2
               className={teaserTitle({

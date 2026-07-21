@@ -1,5 +1,8 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { TeaserLargeImage } from '@/app/(sanity)/components/teaser/large/helpers'
+import {
+  Heading,
+  TeaserLargeImage,
+} from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 
@@ -18,7 +21,8 @@ const teaserStyle = cva({
     justifyContent: 'center',
     md: {
       display: 'grid',
-      padding: '70px 5%',
+      py: '16',
+      px: '5%',
     },
   },
   variants: {
@@ -70,10 +74,9 @@ const teaserStyle = cva({
 const teaserTitle = cva({
   base: {
     textStyle: 'editorialTitle',
+    textWrap: 'balance',
     fontSize: '38px',
     lineHeight: '43px',
-    sm: { fontSize: '58px', lineHeight: '60px' },
-    md: { fontSize: '80px', lineHeight: '90px' },
     position: 'relative', // place above the link overlay
   },
   variants: {
@@ -96,14 +99,19 @@ const teaserTitle = cva({
         },
       },
       MEDIUM: {
-        sm: { fontSize: '60px', lineHeight: '70px' },
-        md: { fontSize: '80px', lineHeight: '90px' },
+        md: { fontSize: '60px', lineHeight: '70px' },
+        lg: { fontSize: '80px', lineHeight: '90px' },
+        xlg: { fontSize: '100px', lineHeight: '110px' },
       },
       LARGE: {
-        sm: { fontSize: '80px', lineHeight: '90px' },
-        md: { fontSize: '100px', lineHeight: '110px' },
+        md: { fontSize: '80px', lineHeight: '90px' },
+        lg: { fontSize: '100px', lineHeight: '110px' },
+        xlg: { fontSize: '125px', lineHeight: '135px' },
       },
-      STANDARD: {},
+      STANDARD: {
+        lg: { fontSize: '60px', lineHeight: '70px' },
+        xlg: { fontSize: '80px', lineHeight: '90px' },
+      },
     },
   },
   defaultVariants: { theme: 'META', size: 'STANDARD' },
@@ -130,6 +138,7 @@ export function SplitTeaser({
   _type,
   slug,
   theme,
+  heading,
   teaser,
 }: TeaserLargeFragmentType) {
   const href = _type === 'article' ? `/articles${slug}` : `/pages${slug}`
@@ -168,13 +177,12 @@ export function SplitTeaser({
       <div
         className={css({
           gridArea: 'content',
-          padding: '4',
+          padding: '8',
           display: 'flex',
           flexDirection: 'column',
           gap: '3',
           md: {
-            py: '8',
-            px: '0',
+            padding: '0',
           },
         })}
         style={{
@@ -182,6 +190,8 @@ export function SplitTeaser({
           textAlign: teaser.textAlignment === 'CENTER' ? 'center' : 'left',
         }}
       >
+        {heading && <Heading heading={heading} />}
+
         <Link href={href} className={linkOverlay()}>
           <h2
             className={teaserTitle({

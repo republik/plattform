@@ -8,7 +8,8 @@ export const TEASER_LARGE_FRAGMENT = /* groq */ `
   "slug": slug.current,
   heading->{
     _id,
-    "title": pt::text(title),
+    "title": coalesce(^.teaserLarge.heading, pt::text(title)),
+    "slug": slug.current,
   },
   theme {
     name,
