@@ -3,7 +3,7 @@
 import { SubscriptionObjectType } from '#graphql/republik-api/__generated__/gql/graphql'
 import { FollowButton } from '@/app/(sanity)/components/follow/follow-button'
 import FollowCollectionContainer from '@/app/(sanity)/components/follow/follow-collection-container'
-import { urlFor } from '@/app/(sanity)/lib/urlFor'
+import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import { useMe } from '@/lib/context/MeContext'
 import type { ArticleCollection } from '@/sanity.types'
 import { css } from '@republik/theme/css'
@@ -36,15 +36,11 @@ function FollowCollectionCard({
         <FollowButton type={SubscriptionObjectType.Document} size='small' />
       </div>
       {!!collection.image && (
-        <img
-          src={urlFor(collection.image).width(360).height(360).url()}
-          className={css({
-            width: 120,
-            height: 120,
-            borderRadius: 120,
-            ml: 'auto',
-            objectFit: 'cover',
-          })}
+        <TeaserImage
+          image={collection.image}
+          width={360}
+          alt={collection.title}
+          style={{ objectFit: 'cover', borderRadius: 120, marginLeft: 'auto' }}
         />
       )}
     </FollowCollectionContainer>
