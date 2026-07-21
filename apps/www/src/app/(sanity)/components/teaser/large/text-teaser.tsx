@@ -13,6 +13,7 @@ const teaserTitle = cva({
       fontSize: '100px',
       lineHeight: '110px',
     },
+    position: 'relative', // place above the link overlay
   },
   variants: {
     theme: {
@@ -60,11 +61,13 @@ const teaserLead = css({
   md: {
     fontSize: '23px',
   },
+  position: 'relative', // place above the link overlay
 })
 
 const teaserByline = css({
   textStyle: 'metaParagraph',
   fontSize: 's',
+  position: 'relative', // place above the link overlay
 })
 
 export function TextTeaser({

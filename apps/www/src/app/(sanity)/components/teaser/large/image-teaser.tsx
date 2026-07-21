@@ -77,6 +77,7 @@ const teaserTitle = cva({
       fontSize: '58px',
       lineHeight: '60px',
     },
+    position: 'relative', // place above the link overlay
   },
   variants: {
     theme: {
@@ -107,6 +108,7 @@ const teaserLead = css({
   md: {
     fontSize: '23px',
   },
+  position: 'relative', // place above the link overlay
 })
 
 const teaserContainer = css({
@@ -118,6 +120,7 @@ const teaserContainer = css({
 const teaserByline = css({
   textStyle: 'metaParagraph',
   fontSize: 's',
+  position: 'relative', // place above the link overlay
 })
 
 export function ImageTeaser({

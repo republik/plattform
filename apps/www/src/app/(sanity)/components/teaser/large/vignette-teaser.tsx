@@ -1,6 +1,7 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { TeaserLargeImage } from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
+import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
 import Link from 'next/link'
@@ -31,6 +32,7 @@ const teaserTitle = cva({
     lineHeight: '43px',
     md: { fontSize: '58px', lineHeight: '60px' },
     lg: { fontSize: '80px', lineHeight: '90px' },
+    position: 'relative', // place above the link overlay
   },
   variants: {
     theme: {
@@ -75,11 +77,13 @@ const teaserLead = css({
   md: {
     fontSize: '23px',
   },
+  position: 'relative', // place above the link overlay
 })
 
 const teaserByline = css({
   textStyle: 'metaParagraph',
   fontSize: 's',
+  position: 'relative', // place above the link overlay
 })
 
 const imageStyle = css({
@@ -96,9 +100,11 @@ const imageStyle = css({
     maxWidth: '360px',
     maxHeight: '360px',
   },
+  zIndex: 1, // place above the link overlay
 })
 
 export function VignetteTeaser({
+  _id,
   _type,
   slug,
   theme,
@@ -111,8 +117,13 @@ export function VignetteTeaser({
       className={teaserStyle()}
       style={{ backgroundColor: teaser.backgroundColor?.hex }}
     >
-      <div>
+      <div className={css({ position: 'relative', zIndex: 1 })}>
         <TeaserLargeImage
+          data-sanity={dataAttribute({
+            id: _id,
+            type: _type,
+            path: 'teaserLarge.image',
+          })}
           image={teaser.image}
           className={imageStyle}
           alt={''}

@@ -1,6 +1,7 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { TeaserLargeImage } from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
+import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
@@ -43,7 +44,6 @@ const teaserStyle = cva({
       css: {
         gridTemplateAreas: '"image content empty"',
         gridTemplateColumns: '40% 1fr 0',
-        alignItems: 'start',
         md: {
           padding: 0,
         },
@@ -55,7 +55,6 @@ const teaserStyle = cva({
       css: {
         gridTemplateAreas: '"empty content image"',
         gridTemplateColumns: '0 1fr 40%',
-        alignItems: 'start',
         md: {
           padding: 0,
         },
@@ -73,8 +72,9 @@ const teaserTitle = cva({
     textStyle: 'editorialTitle',
     fontSize: '38px',
     lineHeight: '43px',
-    md: { fontSize: '58px', lineHeight: '60px' },
-    lg: { fontSize: '80px', lineHeight: '90px' },
+    sm: { fontSize: '58px', lineHeight: '60px' },
+    md: { fontSize: '80px', lineHeight: '90px' },
+    position: 'relative', // place above the link overlay
   },
   variants: {
     theme: {
@@ -96,12 +96,12 @@ const teaserTitle = cva({
         },
       },
       MEDIUM: {
-        md: { fontSize: '60px', lineHeight: '70px' },
-        lg: { fontSize: '80px', lineHeight: '90px' },
+        sm: { fontSize: '60px', lineHeight: '70px' },
+        md: { fontSize: '80px', lineHeight: '90px' },
       },
       LARGE: {
-        md: { fontSize: '80px', lineHeight: '90px' },
-        lg: { fontSize: '100px', lineHeight: '110px' },
+        sm: { fontSize: '80px', lineHeight: '90px' },
+        md: { fontSize: '100px', lineHeight: '110px' },
       },
       STANDARD: {},
     },
@@ -116,14 +116,17 @@ const teaserLead = css({
   md: {
     fontSize: '23px',
   },
+  position: 'relative', // place above the link overlay
 })
 
 const teaserByline = css({
   textStyle: 'metaParagraph',
   fontSize: 's',
+  position: 'relative', // place above the link overlay
 })
 
 export function SplitTeaser({
+  _id,
   _type,
   slug,
   theme,
@@ -134,7 +137,7 @@ export function SplitTeaser({
   return (
     <div
       className={teaserStyle({
-        imagePosition: teaser.imagePosition,
+        imagePosition: teaser.imagePosition ?? 'LEFT',
         imagePadding: teaser.imagePadding ? 'TRUE' : 'FALSE',
       })}
       style={{ backgroundColor: teaser.backgroundColor?.hex }}
@@ -143,11 +146,21 @@ export function SplitTeaser({
         className={css({
           gridArea: 'image',
           position: 'relative',
+          zIndex: 1, // place above the link overlay
         })}
       >
         <TeaserLargeImage
+          data-sanity={dataAttribute({
+            id: _id,
+            type: _type,
+            path: 'teaserLarge.image',
+          })}
           image={teaser.image}
-          className={css({ display: 'block', width: '100%', height: 'auto' })}
+          className={css({
+            display: 'block',
+            width: '100%',
+            height: 'auto',
+          })}
           alt={''}
           sizes={'(max-width: 768px) 100vw, 50vw'}
         />
@@ -155,15 +168,19 @@ export function SplitTeaser({
       <div
         className={css({
           gridArea: 'content',
-          padding: '15px 15px 40px 15px',
+          padding: '4',
           display: 'flex',
           flexDirection: 'column',
           gap: '3',
           md: {
-            padding: 0,
+            py: '8',
+            px: '0',
           },
         })}
-        style={{ color: teaser.color?.hex }}
+        style={{
+          color: teaser.color?.hex,
+          textAlign: teaser.textAlignment === 'CENTER' ? 'center' : 'left',
+        }}
       >
         <Link href={href} className={linkOverlay()}>
           <h2

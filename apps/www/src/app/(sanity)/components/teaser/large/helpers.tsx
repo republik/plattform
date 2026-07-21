@@ -7,15 +7,10 @@ import type {
 } from '@sanity/image-url'
 import { Image, type ImageProps } from 'next-sanity/image'
 
-export function TeaserLargeImage({
-  image,
-  ...imageProps
-}: { image: SanityImageSource | undefined | null } & Omit<
-  ImageProps,
-  'src' | 'width' | 'height'
->) {
-  const Placeholder = (
+function ImagePlaceholder(props: { 'data-sanity'?: string }) {
+  return (
     <div
+      data-sanity={props['data-sanity']}
       className={css({
         color: 'overlay',
         bg: 'overlay',
@@ -29,11 +24,15 @@ export function TeaserLargeImage({
       Bild
     </div>
   )
+}
 
-  if (!image) {
-    return Placeholder
-  }
-
+export function TeaserLargeImage({
+  image,
+  ...imageProps
+}: { image: SanityImageSource | undefined | null } & Omit<
+  ImageProps,
+  'src' | 'width' | 'height'
+>) {
   // If an image with crop/hotspot is provided, those will be applied automatically
   let src: string
   let dimensions: SanityImageDimensions
@@ -41,9 +40,8 @@ export function TeaserLargeImage({
     src = urlFor(image).url()
     dimensions = getImageDimensions(src)
   } catch (e) {
-    src = ''
-    console.error(e)
-    return Placeholder
+    console.warn(e)
+    return <ImagePlaceholder {...imageProps} />
   }
 
   return (
