@@ -26,6 +26,7 @@ export const presetRepublik = definePreset({
         sm: '375px',
         md: '768px',
         lg: '1025px',
+        xlg: '1400px',
       },
       tokens: {
         colors: {

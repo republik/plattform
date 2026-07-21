@@ -11,6 +11,7 @@ export function TeaserLarge(props: TeaserLargeFragmentType) {
     id: props._id,
     path: 'teaserLarge',
   })
+
   switch (props.teaser?.layout) {
     case 'IMAGE':
       return (

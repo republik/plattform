@@ -7,6 +7,7 @@ import Link from 'next/link'
 const teaserTitle = cva({
   base: {
     textStyle: 'editorialTitle',
+    textWrap: 'balance',
     fontSize: '38px',
     lineHeight: '45px',
     md: {

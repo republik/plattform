@@ -70,10 +70,9 @@ const teaserStyle = cva({
 const teaserTitle = cva({
   base: {
     textStyle: 'editorialTitle',
+    textWrap: 'balance',
     fontSize: '38px',
     lineHeight: '43px',
-    sm: { fontSize: '58px', lineHeight: '60px' },
-    md: { fontSize: '80px', lineHeight: '90px' },
     position: 'relative', // place above the link overlay
   },
   variants: {
@@ -96,14 +95,19 @@ const teaserTitle = cva({
         },
       },
       MEDIUM: {
-        sm: { fontSize: '60px', lineHeight: '70px' },
-        md: { fontSize: '80px', lineHeight: '90px' },
+        md: { fontSize: '60px', lineHeight: '70px' },
+        lg: { fontSize: '80px', lineHeight: '90px' },
+        xlg: { fontSize: '100px', lineHeight: '110px' },
       },
       LARGE: {
-        sm: { fontSize: '80px', lineHeight: '90px' },
-        md: { fontSize: '100px', lineHeight: '110px' },
+        md: { fontSize: '80px', lineHeight: '90px' },
+        lg: { fontSize: '100px', lineHeight: '110px' },
+        xlg: { fontSize: '125px', lineHeight: '135px' },
       },
-      STANDARD: {},
+      STANDARD: {
+        lg: { fontSize: '60px', lineHeight: '70px' },
+        xlg: { fontSize: '80px', lineHeight: '90px' },
+      },
     },
   },
   defaultVariants: { theme: 'META', size: 'STANDARD' },
@@ -168,12 +172,12 @@ export function SplitTeaser({
       <div
         className={css({
           gridArea: 'content',
-          padding: '4',
+          padding: '8',
           display: 'flex',
           flexDirection: 'column',
           gap: '3',
           md: {
-            py: '8',
+            py: '16',
             px: '0',
           },
         })}

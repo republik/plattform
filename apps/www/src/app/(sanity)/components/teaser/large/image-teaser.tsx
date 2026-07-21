@@ -71,6 +71,7 @@ const teaserTextPosition = cva({
 const teaserTitle = cva({
   base: {
     textStyle: 'editorialTitle',
+    textWrap: 'balance',
     fontSize: '38px',
     lineHeight: '43px',
     md: {
