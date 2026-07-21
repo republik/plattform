@@ -17,9 +17,8 @@ const carouselItemStyle = css({
   cursor: 'pointer',
   position: 'relative',
   m: '2',
-  width: '248px',
+  width: 'full',
   display: 'flex',
-  flexShrink: 0,
   flexDirection: 'column',
   // fall back to no background / inherited text color when the teaser
   // doesn't define custom colors
@@ -44,8 +43,10 @@ export function CarouselTeaser({ teaser }: { teaser: TeaserListItemType }) {
         scrollSnapAlign: 'start',
         scrollSnapMarginLeft: '15px',
         display: 'flex',
-        '&:first-child': { ml: 'auto' },
-        '&:last-child': { mr: 'auto' },
+        // grow to fill leftover space (up to a cap) when few tiles, but keep
+        // a fixed basis and never shrink so many tiles overflow and scroll
+        flex: '1 0 248px',
+        maxWidth: '400px',
       })}
     >
       <div
@@ -58,7 +59,12 @@ export function CarouselTeaser({ teaser }: { teaser: TeaserListItemType }) {
           } as CSSProperties
         }
       >
-        <TeaserImage image={teaser.image} alt='' width={248} />
+        <TeaserImage
+          image={teaser.image}
+          alt=''
+          width={400}
+          className={css({ width: 'full', height: 'auto' })}
+        />
         <div
           className={css({
             px: '3',

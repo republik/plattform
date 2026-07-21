@@ -6,6 +6,10 @@ import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
 import { css } from '@republik/theme/css'
 import { notFound } from 'next/navigation'
 
+function RestOfTheFront({ from }: { from?: string } = {}) {
+  return null
+}
+
 export default async function FrontPage() {
   const { data: front } = await sanityFetch({ query: FRONT_QUERY })
 
@@ -22,6 +26,8 @@ export default async function FrontPage() {
       {(pageBuilder ?? []).map((block) => (
         <Block key={block._key} block={block} documentId={_id} />
       ))}
+
+      <RestOfTheFront />
     </EventTrackingContext>
   )
 }

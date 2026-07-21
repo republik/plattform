@@ -12,6 +12,7 @@ export const TEASER_LARGE_FRAGMENT = /* groq */ `
   theme {
     name,
   },
+  publishDate,
   "teaser": teaserLarge {
     layout,
     "title": coalesce(title, ^.title),

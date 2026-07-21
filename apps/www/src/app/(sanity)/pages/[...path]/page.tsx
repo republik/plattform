@@ -66,19 +66,7 @@ export default async function PostPage({
 
   if (!page) notFound()
 
-  const {
-    _id,
-    title,
-    description,
-    cover,
-    heading,
-    useCoverAsTitle,
-    theme,
-    pageBuilder,
-    skipTitleBlock,
-  } = page
-
-  const renderTitle = !useCoverAsTitle && !skipTitleBlock
+  const { _id, title, description, cover, heading, theme, pageBuilder } = page
 
   return (
     <EventTrackingContext category='Page'>
@@ -91,26 +79,22 @@ export default async function PostPage({
       >
         {cover && <EditorialImage value={cover} />}
 
-        {renderTitle && (
-          <>
-            {heading && (
-              <p className='page-heading'>
-                <Link href={`/pages${heading.slug}`}>
-                  <InlinePortableText value={heading.title} />
-                </Link>
-              </p>
-            )}
+        {heading && (
+          <p className='page-heading'>
+            <Link href={`/pages${heading.slug}`}>
+              <InlinePortableText value={heading.title} />
+            </Link>
+          </p>
+        )}
 
-            <h1 className='page-title'>
-              <InlinePortableText value={title} />
-            </h1>
+        <h1 className='page-title'>
+          <InlinePortableText value={title} />
+        </h1>
 
-            {hasContent(description) && (
-              <p className='page-lead'>
-                <InlinePortableText value={description} />
-              </p>
-            )}
-          </>
+        {hasContent(description) && (
+          <p className='page-lead'>
+            <InlinePortableText value={description} />
+          </p>
         )}
 
         <div className={css({ display: 'grid', placeContent: 'center' })}>
