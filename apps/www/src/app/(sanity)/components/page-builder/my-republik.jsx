@@ -1,9 +1,13 @@
 'use client'
 
-import { HrefLink } from '@/app/(sanity)/components/page-builder/_shared/live-teasers-helpers'
+import HrefLink from '@/components/Link/Href'
 import { gql } from '@apollo/client'
 import { graphql } from '@apollo/client/react/hoc'
-import { Loader, TeaserMyMagazine } from '@project-r/styleguide'
+import {
+  Loader,
+  RootColorVariables,
+  TeaserMyMagazine,
+} from '@project-r/styleguide'
 import React from 'react'
 
 const teaserData = {
@@ -109,26 +113,29 @@ const withMyMagazineData = graphql(
 
 export const MyRepublik = withMyMagazineData(({ data }) => {
   return (
-    <Loader
-      error={null /* ignore error */}
-      loading={data.loading}
-      style={{ minHeight: 210 }}
-      render={() => {
-        return (
-          <TeaserMyMagazine
-            latestSubscribedArticles={data.latestSubscribedArticles}
-            latestProgressOrBookmarkedArticles={
-              data.latestProgressOrBookmarkedArticles
-            }
-            bookmarksLabel='Weiterlesen'
-            bookmarksUrl='/lesezeichen'
-            notificationsLabel='Abonnierte Beiträge'
-            notificationsUrl='/benachrichtigungen'
-            Link={HrefLink}
-            ActionBar={() => null}
-          />
-        )
-      }}
-    />
+    <>
+      <RootColorVariables />
+      <Loader
+        error={null /* ignore error */}
+        loading={data.loading}
+        style={{ minHeight: 210 }}
+        render={() => {
+          return (
+            <TeaserMyMagazine
+              latestSubscribedArticles={data.latestSubscribedArticles}
+              latestProgressOrBookmarkedArticles={
+                data.latestProgressOrBookmarkedArticles
+              }
+              bookmarksLabel='Weiterlesen'
+              bookmarksUrl='/lesezeichen'
+              notificationsLabel='Abonnierte Beiträge'
+              notificationsUrl='/benachrichtigungen'
+              Link={HrefLink}
+              ActionBar={() => null}
+            />
+          )
+        }}
+      />
+    </>
   )
 })
