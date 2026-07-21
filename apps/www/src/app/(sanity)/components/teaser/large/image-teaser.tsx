@@ -145,20 +145,46 @@ export function ImageTeaser({
   return (
     <div
       className={teaserContainer}
-      style={{ backgroundColor: teaser.backgroundColor?.hex }}
+      style={{
+        color: teaser.color?.hex,
+        backgroundColor: teaser.backgroundColor?.hex,
+      }}
     >
-      <TeaserLargeImage
-        image={teaser.image}
-        className={css({ display: 'block', width: '100%', height: 'auto' })}
-        alt={''}
-        sizes={'100vw'}
-      />
+      <div className={css({ position: 'relative' })}>
+        <TeaserLargeImage
+          image={teaser.image}
+          className={css({ display: 'block', width: '100%', height: 'auto' })}
+          alt={''}
+          sizes={'100vw'}
+        />
+
+        {teaser.imageCredits && (
+          <span
+            className={css({
+              fontSize: 'xs',
+              pl: '2',
+              pt: '1',
+              display: 'block',
+
+              md: {
+                position: 'absolute',
+                bottom: '0',
+                left: 'calc(1lh + 0.25rem)',
+                transform: 'rotate(-90deg)',
+                transformOrigin: 'bottom left',
+              },
+            })}
+          >
+            {teaser.imageCredits}
+          </span>
+        )}
+      </div>
+
       <div className={teaserTextContainer}>
         <div
           className={teaserTextPosition({
             position: teaser.textPosition,
           })}
-          style={{ color: teaser.color?.hex }}
         >
           {heading && <Heading heading={heading} />}
 

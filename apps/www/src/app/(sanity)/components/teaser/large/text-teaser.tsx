@@ -88,7 +88,10 @@ export function TextTeaser({
         display: 'grid',
         gridColumn: 'full',
       })}
-      style={{ backgroundColor: teaser.backgroundColor?.hex }}
+      style={{
+        color: teaser.color?.hex,
+        backgroundColor: teaser.backgroundColor?.hex,
+      }}
     >
       <div
         className={css({
@@ -109,7 +112,6 @@ export function TextTeaser({
             py: '24',
           },
         })}
-        style={{ color: teaser.color?.hex }}
       >
         {heading && <Heading heading={heading} />}
 

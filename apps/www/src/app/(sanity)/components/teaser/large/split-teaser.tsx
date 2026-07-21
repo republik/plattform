@@ -49,7 +49,8 @@ const teaserStyle = cva({
         gridTemplateAreas: '"image content empty"',
         gridTemplateColumns: '40% 1fr 0',
         md: {
-          padding: 0,
+          px: '0',
+          py: '0',
         },
       },
     },
@@ -60,7 +61,8 @@ const teaserStyle = cva({
         gridTemplateAreas: '"empty content image"',
         gridTemplateColumns: '0 1fr 40%',
         md: {
-          padding: 0,
+          px: '0',
+          py: '0',
         },
       },
     },
@@ -133,6 +135,62 @@ const teaserByline = css({
   position: 'relative', // place above the link overlay
 })
 
+const imageCredits = cva({
+  base: {
+    fontSize: 'xs',
+    display: 'block',
+    whiteSpace: 'nowrap',
+  },
+  variants: {
+    imagePadding: {
+      TRUE: {
+        position: 'absolute',
+        left: 0,
+        top: '100%',
+        mt: '1',
+      },
+      FALSE: {
+        mt: '1',
+        pl: '1',
+        md: {
+          position: 'absolute',
+          bottom: '1',
+          transform: 'rotate(-90deg)',
+          transformOrigin: 'bottom left',
+        },
+      },
+    },
+    imagePosition: {
+      LEFT: {},
+      RIGHT: {},
+    },
+  },
+  compoundVariants: [
+    {
+      imagePadding: 'FALSE',
+      imagePosition: 'LEFT',
+      css: {
+        md: {
+          left: 'calc(100% + 1lh + 0.25rem)',
+        },
+      },
+    },
+    {
+      imagePadding: 'FALSE',
+      imagePosition: 'RIGHT',
+      css: {
+        md: {
+          left: '-1',
+        },
+      },
+    },
+  ],
+  defaultVariants: {
+    imagePadding: 'FALSE',
+    imagePosition: 'LEFT',
+  },
+})
+
 export function SplitTeaser({
   _id,
   _type,
@@ -149,7 +207,10 @@ export function SplitTeaser({
         imagePosition: teaser.imagePosition ?? 'LEFT',
         imagePadding: teaser.imagePadding ? 'TRUE' : 'FALSE',
       })}
-      style={{ backgroundColor: teaser.backgroundColor?.hex }}
+      style={{
+        color: teaser.color?.hex,
+        backgroundColor: teaser.backgroundColor?.hex,
+      }}
     >
       <div
         className={css({
@@ -173,6 +234,17 @@ export function SplitTeaser({
           alt={''}
           sizes={'(max-width: 768px) 100vw, 50vw'}
         />
+
+        {teaser.imageCredits && (
+          <span
+            className={imageCredits({
+              imagePosition: teaser.imagePosition ?? 'LEFT',
+              imagePadding: teaser.imagePadding ? 'TRUE' : 'FALSE',
+            })}
+          >
+            {teaser.imageCredits}
+          </span>
+        )}
       </div>
       <div
         className={css({
@@ -186,7 +258,6 @@ export function SplitTeaser({
           },
         })}
         style={{
-          color: teaser.color?.hex,
           textAlign: teaser.textAlignment === 'CENTER' ? 'center' : 'left',
         }}
       >

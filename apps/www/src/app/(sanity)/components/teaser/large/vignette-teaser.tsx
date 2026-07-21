@@ -121,7 +121,10 @@ export function VignetteTeaser({
   return (
     <div
       className={teaserStyle()}
-      style={{ backgroundColor: teaser.backgroundColor?.hex }}
+      style={{
+        color: teaser.color?.hex,
+        backgroundColor: teaser.backgroundColor?.hex,
+      }}
     >
       <div className={css({ position: 'relative', zIndex: 1 })}>
         <TeaserLargeImage
@@ -135,6 +138,18 @@ export function VignetteTeaser({
           alt={''}
           sizes={'(max-width: 768px) 100vw, 50vw'}
         />
+
+        {teaser.imageCredits && (
+          <span
+            className={css({
+              fontSize: 'xs',
+              pt: '1',
+              display: 'block',
+            })}
+          >
+            {teaser.imageCredits}
+          </span>
+        )}
       </div>
       <div
         className={css({
@@ -147,7 +162,6 @@ export function VignetteTeaser({
             px: '13%',
           },
         })}
-        style={{ color: teaser.color?.hex }}
       >
         {heading && <Heading heading={heading} />}
 
