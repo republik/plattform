@@ -12,7 +12,7 @@ export const FRONT_REST_QUERY = defineQuery(`
     _type == "article" &&
     defined(publishDate) &&
     publishDate < $before &&
-    count(articleCollections[collection->title in $excludedCollections]) == 0
+    coalesce(count(articleCollections[collection->title in $excludedCollections]), 0) == 0
   ] | order(publishDate desc) [$start...$end] {
     ${TEASER_LARGE_FRAGMENT}
   }

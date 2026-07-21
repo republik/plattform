@@ -21,6 +21,7 @@ export function RestOfTheFrontClient({
   const loadMore = useCallback(() => {
     startTransition(async () => {
       const more = await loadMoreAction(teasers.length)
+      console.log({ more })
       setTeasers((prev) => prev.concat(more))
       if (more.length < pageSize) setHasMore(false)
     })

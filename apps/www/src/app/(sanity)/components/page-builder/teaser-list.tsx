@@ -14,8 +14,6 @@ export async function TeaserList({
 }) {
   const appearance = teaserList.appearance
 
-  console.log({ teaserList })
-
   if (appearance === 'FEED')
     return (
       <TeaserFeedServer
