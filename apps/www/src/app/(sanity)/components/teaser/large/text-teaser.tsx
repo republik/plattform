@@ -1,4 +1,5 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
+import { Heading } from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { css, cva } from '@republik/theme/css'
 import { linkOverlay } from '@republik/theme/patterns'
@@ -76,6 +77,7 @@ export function TextTeaser({
   slug,
   theme,
   teaser,
+  heading,
 }: TeaserLargeFragmentType) {
   const href = _type === 'article' ? `/articles${slug}` : `/pages${slug}`
 
@@ -91,22 +93,26 @@ export function TextTeaser({
       <div
         className={css({
           margin: '0 auto',
-          padding: '15px 15px 40px 15px',
+          py: '10',
+          px: '4',
           textAlign: 'center',
           display: 'flex',
           flexDirection: 'column',
           gap: '3',
           md: {
-            maxWidth: `70%`,
-            padding: '60px 0 80px 0',
+            width: '70%',
+            minWidth: 'min-content',
+            py: '20',
             gap: '6',
           },
           lg: {
-            padding: '80px 0 100px 0',
+            py: '24',
           },
         })}
         style={{ color: teaser.color?.hex }}
       >
+        {heading && <Heading heading={heading} />}
+
         <Link href={href} className={linkOverlay()}>
           <h2
             className={teaserTitle({

@@ -1,5 +1,8 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { TeaserLargeImage } from '@/app/(sanity)/components/teaser/large/helpers'
+import {
+  Heading,
+  TeaserLargeImage,
+} from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 import { css, cva } from '@republik/theme/css'
@@ -11,12 +14,11 @@ const teaserStyle = cva({
     position: 'relative',
     px: '4',
     py: '8',
-    padding: '30px 15px 40px 15px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '6',
+    gap: '8',
     md: {
       py: '16',
     },
@@ -49,9 +51,11 @@ const teaserTitle = cva({
     },
     size: {
       SMALL: {
+        fontSize: '26px',
+        lineHeight: '32px',
         md: {
-          fontSize: '58px',
-          lineHeight: '60px',
+          fontSize: '48px',
+          lineHeight: '54px',
         },
       },
       MEDIUM: {
@@ -109,6 +113,7 @@ export function VignetteTeaser({
   _type,
   slug,
   theme,
+  heading,
   teaser,
 }: TeaserLargeFragmentType) {
   const href = _type === 'article' ? `/articles${slug}` : `/pages${slug}`
@@ -139,11 +144,13 @@ export function VignetteTeaser({
           flexDirection: 'column',
           gap: '3',
           md: {
-            padding: '0 13%',
+            px: '13%',
           },
         })}
         style={{ color: teaser.color?.hex }}
       >
+        {heading && <Heading heading={heading} />}
+
         <Link href={href} className={linkOverlay()}>
           <h2
             className={teaserTitle({

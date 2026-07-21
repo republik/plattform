@@ -1,5 +1,8 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
-import { TeaserLargeImage } from '@/app/(sanity)/components/teaser/large/helpers'
+import {
+  Heading,
+  TeaserLargeImage,
+} from '@/app/(sanity)/components/teaser/large/helpers'
 import type { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { dataAttribute } from '@/app/(sanity)/lib/data-attribute'
 
@@ -18,7 +21,8 @@ const teaserStyle = cva({
     justifyContent: 'center',
     md: {
       display: 'grid',
-      padding: '70px 5%',
+      py: '16',
+      px: '5%',
     },
   },
   variants: {
@@ -134,6 +138,7 @@ export function SplitTeaser({
   _type,
   slug,
   theme,
+  heading,
   teaser,
 }: TeaserLargeFragmentType) {
   const href = _type === 'article' ? `/articles${slug}` : `/pages${slug}`
@@ -177,8 +182,7 @@ export function SplitTeaser({
           flexDirection: 'column',
           gap: '3',
           md: {
-            py: '16',
-            px: '0',
+            padding: '0',
           },
         })}
         style={{
@@ -186,6 +190,8 @@ export function SplitTeaser({
           textAlign: teaser.textAlignment === 'CENTER' ? 'center' : 'left',
         }}
       >
+        {heading && <Heading heading={heading} />}
+
         <Link href={href} className={linkOverlay()}>
           <h2
             className={teaserTitle({
