@@ -1,7 +1,7 @@
 'use client'
 
 import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
-import { SquareTeaserImage } from '@/app/(sanity)/components/teaser/_shared/square-teaser-image'
+import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import { TeaserSmallFragmentType } from '@/app/(sanity)/groq/teaser-small-fragment'
 import { css } from '@republik/theme/css'
 import { usePathname } from 'next/navigation'
@@ -34,14 +34,15 @@ export function InlineTeaser({
       >
         {isCurrentEpisode ? `Sie lesen: ${label}` : label}
       </h6>
-      <SquareTeaserImage
+      <TeaserImage
         className={css({
           width: 'full',
           height: 'auto',
         })}
         image={teaser.image}
         alt=''
-        size={640}
+        height={640}
+        width={480}
         sizes='(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw'
       />
       <h5

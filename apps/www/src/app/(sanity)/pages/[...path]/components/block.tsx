@@ -4,25 +4,8 @@ import { Menu } from '@/app/(sanity)/components/page-builder/menu'
 import { TeaserItem } from '@/app/(sanity)/components/page-builder/teaser-item'
 import { TeaserList } from '@/app/(sanity)/components/page-builder/teaser-list'
 import { PageBuilderBlock } from '@/app/(sanity)/groq/page-query'
-import { css } from '@republik/theme/css'
 
-export function PageBuilder({
-  blocks,
-  documentId,
-}: {
-  blocks: PageBuilderBlock[]
-  documentId: string
-}) {
-  return (
-    <>
-      {blocks.map((block) => (
-        <Block key={block._key} block={block} documentId={documentId} />
-      ))}
-    </>
-  )
-}
-
-function Block({
+export function Block({
   block,
   documentId,
 }: {
@@ -54,37 +37,7 @@ function Block({
     case 'teaserLarge':
       return <TeaserItem reference={block.reference} />
 
-    /*
-    case 'bestOfDialogue':
-      return <UnimplementedBlock block={block} />
-
-    case 'meineRepublik':
-      return <UnimplementedBlock block={block} />*/
-
     default:
-      return <UnimplementedBlock block={block} />
+      return null
   }
-}
-
-function UnimplementedBlock({ block }: { block: PageBuilderBlock }) {
-  if (process.env.NODE_ENV === 'production') {
-    return null
-  }
-  return (
-    <pre
-      className={css({
-        textStyle: 'sans',
-        fontSize: 's',
-        background: 'hover',
-        color: 'text',
-        p: 4,
-        my: 4,
-        borderRadius: 4,
-        overflowX: 'auto',
-      })}
-    >
-      {`<${block._type}> not implemented yet\n\n`}
-      {JSON.stringify(block, null, 2)}
-    </pre>
-  )
 }

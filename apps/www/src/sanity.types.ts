@@ -51,6 +51,12 @@ export type AudioCoverCrop = {
   height?: number
 }
 
+export type AudioGenerationResult = {
+  status?: string
+  updatedAt?: string
+  error?: string
+}
+
 export type ArticleCollectionReference = {
   _ref: string
   _type: 'reference'
@@ -263,6 +269,13 @@ export type Vorlage = {
     | 'huebsch-285-169-rpblk'
     | 'huebsch-gen-female-e-rpblk'
   audioSourceMp3?: string
+  audioVersions?: Array<
+    {
+      _key: string
+    } & AudioVersion
+  >
+  audioGenerationResult?: AudioGenerationResult
+  audioContentHash?: string
   files?: Array<{
     asset?: SanityFileAssetReference
     media?: unknown
@@ -300,6 +313,26 @@ export type Slug = {
   _type: 'slug'
   current: string
   source?: string
+}
+
+export type AudioVersion = {
+  _type: 'audioVersion'
+  file?: {
+    asset?: SanityFileAssetReference
+    media?: unknown
+    _type: 'file'
+  }
+  url?: string
+  durationMs?: number
+  generatedAt?: string
+  source?: string
+  label?: string
+  chapters?: Array<{
+    name?: string
+    at?: number
+    _type: 'audioChapter'
+    _key: string
+  }>
 }
 
 export type LogEntry = {
@@ -648,6 +681,13 @@ export type Article = {
     | 'huebsch-285-169-rpblk'
     | 'huebsch-gen-female-e-rpblk'
   audioSourceMp3?: string
+  audioVersions?: Array<
+    {
+      _key: string
+    } & AudioVersion
+  >
+  audioGenerationResult?: AudioGenerationResult
+  audioContentHash?: string
   files?: Array<{
     asset?: SanityFileAssetReference
     media?: unknown
@@ -1292,6 +1332,7 @@ export type AllSanitySchemaTypes =
   | EmbedCommentDiscussion
   | AudioCover
   | AudioCoverCrop
+  | AudioGenerationResult
   | ArticleCollectionReference
   | ArticleReference
   | PageReference
@@ -1309,6 +1350,7 @@ export type AllSanitySchemaTypes =
   | PodcastReference
   | Vorlage
   | Slug
+  | AudioVersion
   | LogEntry
   | SignOff
   | ContributorReference
@@ -2129,6 +2171,38 @@ export type CTA_BLOCK_FRAGMENT_QUERY_RESULT = {
           appleUrl: string | null
         }
   } | null
+} | null
+
+// Source: src/app/(sanity)/groq/front-query.ts
+// Variable: FRONT_QUERY
+// Query: *[_type == "front"] | order(publishDate desc)[0]{    _id,    title,    pageBuilder[]{      _key,      _type,      _type == "teaserList" => {          appearance,  maxItems,  title,  "total": select(    source.sourceType == "MANUAL" => count(source.items),    source.sourceType == "COLLECTION" => count(*[      (        _type == "article" &&        ^.source.collection._ref in articleCollections[].collection._ref      ) || (        _type == "teaser" &&        collection._ref == ^.source.collection._ref      )    ]),    0  ),  "series": source.sourceType == "COLLECTION" &&    source.collection->series == true,  "collectionId": source.collection._ref      },      _type == "teaserLarge" => {        "reference": @->{  _type,  "slug": slug.current,  heading->{    _id,    "title": pt::text(title),  },  theme {    name,  },  "teaser": teaserLarge {    layout,    "title": coalesce(title, ^.title),    "description": coalesce(description, ^.description),    "byline": coalesce(  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }, ^.  byline[] {    ...,    markDefs[]{      ...,      _type == "internalLink" => {        "slug": select(          reference->_type == "article" => "/articles" + reference->slug.current,          reference->_type == "page" => "/pages" + reference->slug.current,          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)        )      }    }  }),    image,    imageCredits,    imagePosition,    imagePadding,    textPosition,    textAlignment,    textSize,    color,    backgroundColor,  }}      },    }  }
+export type FRONT_QUERY_RESULT = {
+  _id: string
+  title: InlineEditor
+  pageBuilder: Array<
+    | {
+        _key: null
+        _type: 'reference'
+      }
+    | {
+        _key: string
+        _type: 'bestOfDialogue'
+      }
+    | {
+        _key: string
+        _type: 'meineRepublik'
+      }
+    | {
+        _key: string
+        _type: 'teaserList'
+        appearance: 'CAROUSEL' | 'FEED' | 'GRID' | null
+        maxItems: number | null
+        title: string | null
+        total: number | 0 | null
+        series: boolean | false
+        collectionId: string | null
+      }
+  > | null
 } | null
 
 // Source: src/app/(sanity)/groq/menu-block-fragment.ts
@@ -3847,6 +3921,7 @@ declare module '@sanity/client' {
     '\n  *[_type == "article" && defined(slug.current)][0...100]{\n    \n  _id,\n  _type,\n  "title": coalesce(teaserSmall.title, title),\n  "description": coalesce(teaserSmall.description, description),\n  "byline": coalesce(teaserSmall.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n  "slug": slug.current,\n  "image": teaserSmall.image,\n  publishDate,\n  heading->{\n    _id,\n    "title": coalesce(^.teaserSmall.heading, pt::text(title)),\n    "slug": slug.current,\n  },\n  theme {\n    name,\n  },\n  "color": teaserSmall.color,\n  "backgroundColor": teaserSmall.backgroundColor,\n  "headingColor": coalesce(teaserSmall.headingColor, theme.accentColor),\n\n  }': ARTICLES_QUERY_RESULT
     '*[_type == "article"][0]{\n    \n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n\n  }': BYLINE_FRAGMENT_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "callToAction"][0]{\n      \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n    }\n  }': CTA_BLOCK_FRAGMENT_QUERY_RESULT
+    '*[_type == "front"] | order(publishDate desc)[0]{\n    _id,\n    title,\n    pageBuilder[]{\n      _key,\n      _type,\n      _type == "teaserList" => {\n        \n  appearance,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaser" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n      },\n      _type == "teaserLarge" => {\n        "reference": @->{\n  _type,\n  "slug": slug.current,\n  heading->{\n    _id,\n    "title": pt::text(title),\n  },\n  theme {\n    name,\n  },\n  "teaser": teaserLarge {\n    layout,\n    "title": coalesce(title, ^.title),\n    "description": coalesce(description, ^.description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, ^.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    image,\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n}\n      },\n    }\n  }': FRONT_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "menu"][0]{\n      \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current\n      }\n    }\n  }\n\n    }\n  }': MENU_BLOCK_FRAGMENT_QUERY_RESULT
     '*[_type == "page" && slug.current == $slug][0]{\n    _id,\n    title,\n    description,\n    cover {\n      ...\n    },\n    skipTitleBlock,\n    useCoverAsTitle,\n    heading->{\n      _id,\n      title,\n      "slug": slug.current\n    },\n    theme {\n      name,\n      accentColor,\n      darkMode\n    },\n    pageBuilder[]{\n      _key,\n      _type,\n      _type == "menu" => {\n        \n  hasSeparator,\n  heading {\n    title,\n    page->{\n      _id,\n      "title": pt::text(title),\n      "slug": slug.current\n    }\n  },\n  pages[]{\n    _key,\n    _type,\n    _type == "link" => {\n      href,\n      title\n    },\n    _type == "reference" => {\n      "page": @->{\n        _id,\n        "title": pt::text(title),\n        "slug": slug.current\n      }\n    }\n  }\n\n      },\n      _type == "callToAction" => {\n        \n  target->{\n    _id,\n    _type,\n    _type == "newsletter" => {\n      name,\n      title\n    },\n    _type == "podcast" => {\n      podigeeSlug,\n      spotifyUrl,\n      appleUrl\n    },\n    _type == "articleCollection" => {\n      title,\n      description\n    }\n  }\n\n      },\n      _type == "editorBlock" => {\n        \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n\n      },\n      _type == "teaserList" => {\n        \n  appearance,\n  maxItems,\n  title,\n  "total": select(\n    source.sourceType == "MANUAL" => count(source.items),\n    source.sourceType == "COLLECTION" => count(*[\n      (\n        _type == "article" &&\n        ^.source.collection._ref in articleCollections[].collection._ref\n      ) || (\n        _type == "teaser" &&\n        collection._ref == ^.source.collection._ref\n      )\n    ]),\n    0\n  ),\n  "series": source.sourceType == "COLLECTION" &&\n    source.collection->series == true,\n  "collectionId": source.collection._ref\n\n      },\n      _type == "teaserLarge" => {\n        "reference": @->{\n  _type,\n  "slug": slug.current,\n  heading->{\n    _id,\n    "title": pt::text(title),\n  },\n  theme {\n    name,\n  },\n  "teaser": teaserLarge {\n    layout,\n    "title": coalesce(title, ^.title),\n    "description": coalesce(description, ^.description),\n    "byline": coalesce(\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n, ^.\n  byline[] {\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n),\n    image,\n    imageCredits,\n    imagePosition,\n    imagePadding,\n    textPosition,\n    textAlignment,\n    textSize,\n    color,\n    backgroundColor,\n  }\n}\n      },\n    }\n  }': PAGE_QUERY_RESULT
     '*[_type == "page"][0]{\n    "block": pageBuilder[_type == "editorBlock"][0]{\n      \n  content[]{\n    ...,\n    markDefs[]{\n      ...,\n      _type == "internalLink" => {\n        "slug": select(\n          reference->_type == "article" => "/articles" + reference->slug.current,\n          reference->_type == "page" => "/pages" + reference->slug.current,\n          reference->_type == "contributor" => "/~" + coalesce(reference->slug.current, reference->userId)\n        )\n      }\n    }\n  }\n\n    }\n  }': PORTABLE_TEXT_CONTENT_FRAGMENT_QUERY_RESULT

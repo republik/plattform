@@ -3,7 +3,7 @@ import {
   Heading,
   LinkOverlay,
 } from '@/app/(sanity)/components/teaser/_shared/helpers'
-import { SquareTeaserImage } from '@/app/(sanity)/components/teaser/_shared/square-teaser-image'
+import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import {
   TeaserListItemType,
   upcomingTeaser,
@@ -58,7 +58,7 @@ export function CarouselTeaser({ teaser }: { teaser: TeaserListItemType }) {
           } as CSSProperties
         }
       >
-        <SquareTeaserImage image={teaser.image} alt='' size={248} />
+        <TeaserImage image={teaser.image} alt='' width={248} />
         <div
           className={css({
             px: '3',

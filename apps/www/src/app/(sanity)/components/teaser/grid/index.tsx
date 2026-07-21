@@ -1,6 +1,6 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { LinkOverlay } from '@/app/(sanity)/components/teaser/_shared/helpers'
-import { SquareTeaserImage } from '@/app/(sanity)/components/teaser/_shared/square-teaser-image'
+import { TeaserImage } from '@/app/(sanity)/components/teaser/_shared/teaser-image'
 import {
   TeaserListItemType,
   upcomingTeaser,
@@ -31,14 +31,15 @@ export default function GridTeaser({
       )}
     >
       {label && <h6 dangerouslySetInnerHTML={{ __html: label }} />}
-      <SquareTeaserImage
+      <TeaserImage
         className={css({
           width: 'full',
           height: 'auto',
         })}
         image={teaser.image}
         alt=''
-        size={640}
+        width={640}
+        height={480}
         sizes='(max-width: 640px) 100vw, (max-width: 960px) 50vw, 33vw'
       />
       <h4 className='editorial'>
