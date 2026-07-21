@@ -21,11 +21,6 @@ type ArrayOf<T> = Array<
 >
 
 // Source: ../../../studio/schema.json
-export type ChartConfig = {
-  settings?: Code
-  data?: Code
-}
-
 export type Src = {
   mp4?: string
   hls?: string
@@ -36,6 +31,11 @@ export type EmbedCommentDiscussion = {
   id?: string
   path?: string
   title?: string
+}
+
+export type ChartConfig = {
+  settings?: Code
+  data?: Code
 }
 
 export type AudioCover = {
@@ -460,16 +460,7 @@ export type PageEditor = Array<
     } & Divider)
   | ({
       _key: string
-    } & Chart)
-  | ({
-      _key: string
     } & EmbedVideo)
-  | ({
-      _key: string
-    } & EmbedTwitter)
-  | ({
-      _key: string
-    } & EmbedComment)
   | ({
       _key: string
     } & EmbedDataWrapper)
@@ -481,10 +472,19 @@ export type PageEditor = Array<
     } & Button)
   | ({
       _key: string
+    } & StoryComponent)
+  | ({
+      _key: string
+    } & EmbedTwitter)
+  | ({
+      _key: string
+    } & EmbedComment)
+  | ({
+      _key: string
     } & DynamicComponent)
   | ({
       _key: string
-    } & StoryComponent)
+    } & Chart)
 >
 
 export type ArticleEditor = Array<
@@ -552,25 +552,13 @@ export type ArticleEditor = Array<
     } & Divider)
   | ({
       _key: string
-    } & Chart)
-  | ({
-      _key: string
     } & EmbedVideo)
-  | ({
-      _key: string
-    } & EmbedTwitter)
-  | ({
-      _key: string
-    } & EmbedComment)
   | ({
       _key: string
     } & EmbedDataWrapper)
   | ({
       _key: string
     } & Html)
-  | ({
-      _key: string
-    } & DynamicComponent)
   | ({
       _key: string
     } & StoryComponent)
@@ -580,6 +568,18 @@ export type ArticleEditor = Array<
   | ({
       _key: string
     } & Button)
+  | ({
+      _key: string
+    } & EmbedTwitter)
+  | ({
+      _key: string
+    } & EmbedComment)
+  | ({
+      _key: string
+    } & DynamicComponent)
+  | ({
+      _key: string
+    } & Chart)
 >
 
 export type Caption = {
@@ -1327,9 +1327,9 @@ export type Geopoint = {
 }
 
 export type AllSanitySchemaTypes =
-  | ChartConfig
   | Src
   | EmbedCommentDiscussion
+  | ChartConfig
   | AudioCover
   | AudioCoverCrop
   | AudioGenerationResult

@@ -32,7 +32,6 @@ export async function Carousel({
   documentId: string
   blockKey: string
 }) {
-  console.log('CAROUSEL')
   const { title, maxItems, series } = teaserList
   // We display series in chronological order, starting with the first episode
   const QUERY = series ? TEASERS_SMALL_QUERY_ASC : TEASERS_SMALL_QUERY_DESC
@@ -46,8 +45,6 @@ export async function Carousel({
       end: maxItems ?? DEFAULT_TEASERS_LIMIT,
     },
   })
-
-  console.log('data', data)
 
   const teasers = (data?.block?.teasers ?? []).filter(
     (teaser): teaser is TeaserListItemType =>
