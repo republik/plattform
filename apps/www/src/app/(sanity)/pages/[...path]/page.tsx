@@ -8,13 +8,12 @@ import { SEO_QUERY } from '@/app/(sanity)/groq/seo-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { urlFor } from '@/app/(sanity)/lib/urlFor'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
-import { css, cx } from '@republik/theme/css'
+import { css } from '@republik/theme/css'
 import { editorialContent } from '@republik/theme/recipes'
 import { Metadata } from 'next'
-import { stegaClean } from 'next-sanity'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { PageBuilder } from './components/page-builder'
+import { Block } from './components/block'
 
 // Metadata: stega disabled to keep invisible characters out of <title>
 export async function generateMetadata({
@@ -118,7 +117,9 @@ export default async function PostPage({
           <EditLink _id={_id} documentType='page' />
         </div>
 
-        <PageBuilder blocks={pageBuilder} documentId={_id} />
+        {(pageBuilder ?? []).map((block) => (
+          <Block key={block._key} block={block} documentId={_id} />
+        ))}
       </div>
     </EventTrackingContext>
   )
