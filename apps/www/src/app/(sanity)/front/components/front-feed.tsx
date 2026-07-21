@@ -1,21 +1,21 @@
 import {
-  FRONT_REST_EXCLUDED_COLLECTIONS,
-  FRONT_REST_QUERY,
-} from '@/app/(sanity)/groq/front-rest-query'
+  FRONT_FEED_EXCLUDED_COLLECTIONS,
+  FRONT_FEED_QUERY,
+} from '@/app/(sanity)/groq/front-feed-query'
 import { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
-import { RestOfTheFrontClient } from './rest-of-the-front-client'
+import { FrontFeedClient } from './front-feed-client'
 
 const PAGE_SIZE = 20
 
-export async function RestOfTheFront({ before }: { before: string }) {
+export async function FrontFeed({ before }: { before: string }) {
   async function fetchPage(offset: number): Promise<TeaserLargeFragmentType[]> {
     'use server'
     const { data } = await sanityFetch({
-      query: FRONT_REST_QUERY,
+      query: FRONT_FEED_QUERY,
       params: {
         before,
-        excludedCollections: FRONT_REST_EXCLUDED_COLLECTIONS,
+        excludedCollections: FRONT_FEED_EXCLUDED_COLLECTIONS,
         start: offset,
         end: offset + PAGE_SIZE,
       },
@@ -27,7 +27,7 @@ export async function RestOfTheFront({ before }: { before: string }) {
   if (!initialTeasers.length) return null
 
   return (
-    <RestOfTheFrontClient
+    <FrontFeedClient
       initialTeasers={initialTeasers}
       pageSize={PAGE_SIZE}
       loadMoreAction={fetchPage}

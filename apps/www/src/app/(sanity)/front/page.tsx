@@ -1,6 +1,6 @@
 import { InlinePortableText } from '@/app/(sanity)/components/portable-text/render'
 import { Block } from '@/app/(sanity)/front/components/block'
-import { RestOfTheFront } from '@/app/(sanity)/front/components/rest-of-the-front'
+import { FrontFeed } from '@/app/(sanity)/front/components/front-feed'
 import { FRONT_QUERY } from '@/app/(sanity)/groq/front-query'
 import { sanityFetch } from '@/app/(sanity)/lib/live'
 import { EventTrackingContext } from '@/app/lib/analytics/event-tracking'
@@ -29,7 +29,7 @@ export default async function FrontPage() {
         <Block key={block._key} block={block} documentId={_id} />
       ))}
 
-      {restOfFrontStart && <RestOfTheFront before={restOfFrontStart} />}
+      {restOfFrontStart && <FrontFeed before={restOfFrontStart} />}
     </EventTrackingContext>
   )
 }

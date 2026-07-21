@@ -4,7 +4,7 @@ import { TeaserItem } from '@/app/(sanity)/components/page-builder/teaser-item'
 import { TeaserLargeFragmentType } from '@/app/(sanity)/groq/teaser-large-fragment'
 import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
 
-export function RestOfTheFrontClient({
+export function FrontFeedClient({
   initialTeasers,
   pageSize,
   loadMoreAction,
@@ -21,7 +21,6 @@ export function RestOfTheFrontClient({
   const loadMore = useCallback(() => {
     startTransition(async () => {
       const more = await loadMoreAction(teasers.length)
-      console.log({ more })
       setTeasers((prev) => prev.concat(more))
       if (more.length < pageSize) setHasMore(false)
     })

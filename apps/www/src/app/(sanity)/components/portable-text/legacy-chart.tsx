@@ -27,7 +27,6 @@ export function LegacyChart({ value }: { value: ChartT }) {
 
   const values = csvParse(chartConfig.data?.code ?? '')
   const config = JSON.parse(chartConfig.settings?.code ?? '{}')
-  console.log(config, values)
   return (
     <div className={containerStyle({ size })}>
       <h3 className={css({ textStyle: 'h2Sans' })}>
