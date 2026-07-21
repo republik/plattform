@@ -30,6 +30,7 @@ const teaserTextPosition = cva({
     display: 'flex',
     flexDirection: 'column',
     gap: '3',
+    md: { gap: '6' },
   },
   variants: {
     position: {

@@ -160,6 +160,7 @@ export function VignetteTeaser({
           gap: '3',
           md: {
             px: '13%',
+            gap: '6',
           },
         })}
       >

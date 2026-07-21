@@ -254,7 +254,9 @@ export function SplitTeaser({
           flexDirection: 'column',
           gap: '3',
           md: {
-            padding: '0',
+            px: '0',
+            py: '6',
+            gap: '6',
           },
         })}
         style={{
